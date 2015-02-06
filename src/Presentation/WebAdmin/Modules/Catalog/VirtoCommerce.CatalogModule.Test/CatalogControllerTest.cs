@@ -3,10 +3,9 @@ using System.Linq;
 using System.Web.Http.Results;
 using VirtoCommerce.CatalogModule.Data.Repositories;
 using VirtoCommerce.CatalogModule.Data.Services;
-using VirtoCommerce.CatalogModule.Repositories;
-using VirtoCommerce.CatalogModule.Services;
 using VirtoCommerce.CatalogModule.Web.Controllers.Api;
 using webModel = VirtoCommerce.CatalogModule.Web.Model;
+using VirtoCommerce.Domain.Catalog.Services;
 
 namespace VirtoCommerce.CatalogModule.Test
 {

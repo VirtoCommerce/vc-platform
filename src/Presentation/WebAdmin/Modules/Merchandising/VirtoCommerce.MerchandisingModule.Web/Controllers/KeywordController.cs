@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Web.Http;
 using System.Web.Http.Description;
-using VirtoCommerce.CatalogModule.Repositories;
+using VirtoCommerce.CatalogModule.Data.Repositories;
 using VirtoCommerce.MerchandisingModule.Web.Converters;
 using VirtoCommerce.MerchandisingModule.Web.Model;
 

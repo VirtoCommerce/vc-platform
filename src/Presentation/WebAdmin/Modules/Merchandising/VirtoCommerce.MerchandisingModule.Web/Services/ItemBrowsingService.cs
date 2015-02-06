@@ -5,20 +5,20 @@ using VirtoCommerce.Foundation.Search.Schemas;
 
 namespace VirtoCommerce.MerchandisingModule.Web.Services
 {
-    using VirtoCommerce.CatalogModule.Repositories;
-    using VirtoCommerce.CatalogModule.Services;
-    using VirtoCommerce.Foundation;
-    using VirtoCommerce.Foundation.Assets.Services;
-    using VirtoCommerce.Foundation.Catalogs;
-    using VirtoCommerce.Foundation.Catalogs.Repositories;
-    using VirtoCommerce.Foundation.Catalogs.Search;
-    using VirtoCommerce.Foundation.Frameworks;
-    using VirtoCommerce.Foundation.Frameworks.Extensions;
-    using VirtoCommerce.Foundation.Search;
-    using VirtoCommerce.MerchandisingModule.Web.Converters;
-    using VirtoCommerce.MerchandisingModule.Web.Model;
-    using foundation = VirtoCommerce.Foundation.Catalogs.Model;
-    using moduleModel = VirtoCommerce.CatalogModule.Model;
+	using VirtoCommerce.CatalogModule.Data.Repositories;
+	using VirtoCommerce.Domain.Catalog.Services;
+	using VirtoCommerce.Foundation;
+	using VirtoCommerce.Foundation.Assets.Services;
+	using VirtoCommerce.Foundation.Catalogs;
+	using VirtoCommerce.Foundation.Catalogs.Repositories;
+	using VirtoCommerce.Foundation.Catalogs.Search;
+	using VirtoCommerce.Foundation.Frameworks;
+	using VirtoCommerce.Foundation.Frameworks.Extensions;
+	using VirtoCommerce.Foundation.Search;
+	using VirtoCommerce.MerchandisingModule.Web.Converters;
+	using VirtoCommerce.MerchandisingModule.Web.Model;
+	using foundation = VirtoCommerce.Foundation.Catalogs.Model;
+	using moduleModel = VirtoCommerce.Domain.Catalog.Model;
 
     public class ItemBrowsingService : IItemBrowsingService
     {

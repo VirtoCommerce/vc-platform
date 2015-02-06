@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Omu.ValueInjecter;
-using VirtoCommerce.CatalogModule.Model;
 using webModel = VirtoCommerce.MerchandisingModule.Web.Model;
 using foundation = VirtoCommerce.Foundation.AppConfig.Model;
+using VirtoCommerce.Domain.Catalog.Model;
 
 namespace VirtoCommerce.MerchandisingModule.Web.Converters
 {

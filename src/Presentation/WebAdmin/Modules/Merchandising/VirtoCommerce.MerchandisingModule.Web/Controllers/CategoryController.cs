@@ -4,12 +4,12 @@ using System.Linq;
 using System.Net;
 using System.Web.Http;
 using System.Web.Http.Description;
-using VirtoCommerce.CatalogModule.Repositories;
-using VirtoCommerce.CatalogModule.Services;
+using VirtoCommerce.CatalogModule.Data.Repositories;
+using VirtoCommerce.Domain.Catalog.Services;
 using VirtoCommerce.Foundation.AppConfig.Model;
 using VirtoCommerce.Foundation.Stores.Repositories;
 using VirtoCommerce.MerchandisingModule.Web.Converters;
-using moduleModel = VirtoCommerce.CatalogModule.Model;
+using moduleModel = VirtoCommerce.Domain.Catalog.Model;
 using webModel = VirtoCommerce.MerchandisingModule.Web.Model;
 namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 {

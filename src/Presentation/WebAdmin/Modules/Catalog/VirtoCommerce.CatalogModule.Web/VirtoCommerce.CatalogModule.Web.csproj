@@ -327,13 +327,13 @@
       <Project>{47d7c89c-62a8-44ec-b544-f24e874192ac}</Project>
       <Name>VirtoCommerce.CoreModule.Web</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\Core\VirtoCommerce.Domain\VirtoCommerce.Domain.csproj">
+      <Project>{67c58a78-ddea-4fa3-a969-1cab582918e4}</Project>
+      <Name>VirtoCommerce.Domain</Name>
+    </ProjectReference>
     <ProjectReference Include="..\VirtoCommerce.CatalogModule.Data\VirtoCommerce.CatalogModule.Data.csproj">
       <Project>{b8c758d7-822f-40d8-b28c-ef21c873af49}</Project>
       <Name>VirtoCommerce.CatalogModule.Data</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\VirtoCommerce.CatalogModule\VirtoCommerce.CatalogModule.csproj">
-      <Project>{f3063592-5fa7-4ce1-a89d-9579aef64db6}</Project>
-      <Name>VirtoCommerce.CatalogModule</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />

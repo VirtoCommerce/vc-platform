@@ -1,13 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
-using VirtoCommerce.CatalogModule.Repositories;
 using VirtoCommerce.Foundation.Data.Catalogs;
 using VirtoCommerce.Foundation.Data.Infrastructure.Interceptors;
 using VirtoCommerce.Foundation.Frameworks.Extensions;
 using foundationConfig = VirtoCommerce.Foundation.AppConfig.Model;
 using foundation = VirtoCommerce.Foundation.Catalogs.Model;
-using moduleModel = VirtoCommerce.CatalogModule.Model;
+using moduleModel = VirtoCommerce.Domain.Catalog.Model;
 using VirtoCommerce.Foundation.AppConfig.Repositories;
 
 namespace VirtoCommerce.CatalogModule.Data.Repositories

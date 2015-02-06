@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using foundationConfig = VirtoCommerce.Foundation.AppConfig.Model;
-using module = VirtoCommerce.CatalogModule.Model;
+using module = VirtoCommerce.Domain.Catalog.Model;
 
 namespace VirtoCommerce.CatalogModule.Data.Converters
 {

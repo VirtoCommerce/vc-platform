@@ -3,13 +3,13 @@ using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Linq;
 using VirtoCommerce.CatalogModule.Data.Converters;
-using VirtoCommerce.CatalogModule.Repositories;
-using VirtoCommerce.CatalogModule.Services;
+using VirtoCommerce.CatalogModule.Data.Repositories;
+using VirtoCommerce.Domain.Catalog.Services;
 using VirtoCommerce.Foundation.Frameworks.Caching;
 using VirtoCommerce.Foundation.Frameworks.Extensions;
 using foundation = VirtoCommerce.Foundation.Catalogs.Model;
 using foundationConfig = VirtoCommerce.Foundation.AppConfig.Model;
-using module = VirtoCommerce.CatalogModule.Model;
+using module = VirtoCommerce.Domain.Catalog.Model;
 
 namespace VirtoCommerce.CatalogModule.Data.Services
 {
@@ -30,7 +30,7 @@ namespace VirtoCommerce.CatalogModule.Data.Services
 
         public module.Category GetById(string categoryId)
         {
-			Model.Category retVal = null;
+			module.Category retVal = null;
             using (var repository = _catalogRepositoryFactory())
 			using (var appConfigRepository = _appConfigRepositoryFactory())
             {

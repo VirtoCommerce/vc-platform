@@ -4,12 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using VirtoCommerce.CatalogModule.Data.Converters;
-using VirtoCommerce.CatalogModule.Repositories;
-using VirtoCommerce.CatalogModule.Services;
+using VirtoCommerce.CatalogModule.Data.Repositories;
+using VirtoCommerce.Domain.Catalog.Services;
 using VirtoCommerce.Foundation.Frameworks;
 using VirtoCommerce.Foundation.Frameworks.Caching;
 using foundation = VirtoCommerce.Foundation.Catalogs.Model;
-using module = VirtoCommerce.CatalogModule.Model;
+using module = VirtoCommerce.Domain.Catalog.Model;
 
 namespace VirtoCommerce.CatalogModule.Data.Services
 {
@@ -27,7 +27,7 @@ namespace VirtoCommerce.CatalogModule.Data.Services
 
 		public module.Catalog GetById(string catalogId)
 		{
-			Model.Catalog retVal = null;
+			module.Catalog retVal = null;
 			using (var repository = _catalogRepositoryFactory())
 			{
 				var dbCatalogBase = repository.GetCatalogById(catalogId);

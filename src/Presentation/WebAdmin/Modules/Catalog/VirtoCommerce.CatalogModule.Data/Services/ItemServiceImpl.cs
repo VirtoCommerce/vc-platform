@@ -2,14 +2,14 @@
 using System.Collections.ObjectModel;
 using System.Linq;
 using VirtoCommerce.CatalogModule.Data.Converters;
-using VirtoCommerce.CatalogModule.Repositories;
-using VirtoCommerce.CatalogModule.Services;
 using VirtoCommerce.Foundation.Frameworks.Caching;
 using foundation = VirtoCommerce.Foundation.Catalogs.Model;
 using foundationConfig = VirtoCommerce.Foundation.AppConfig.Model;
-using module = VirtoCommerce.CatalogModule.Model;
+using module = VirtoCommerce.Domain.Catalog.Model;
 using VirtoCommerce.Foundation.Frameworks.Extensions;
 using System.Collections.Generic;
+using VirtoCommerce.Domain.Catalog.Services;
+using VirtoCommerce.CatalogModule.Data.Repositories;
 
 namespace VirtoCommerce.CatalogModule.Data.Services
 {
@@ -148,7 +148,7 @@ namespace VirtoCommerce.CatalogModule.Data.Services
 			return retVal;
 		}
 
-		public void Update(Model.CatalogProduct[] items)
+		public void Update(module.CatalogProduct[] items)
 		{
 			using (var repository = _catalogRepositoryFactory())
 			using (var appConfigRepository = _appConfigRepositoryFactory())

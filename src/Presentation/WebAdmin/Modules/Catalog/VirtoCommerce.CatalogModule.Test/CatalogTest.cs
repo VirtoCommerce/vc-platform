@@ -2,15 +2,14 @@
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using foundation = VirtoCommerce.Foundation.Catalogs.Model;
-using module = VirtoCommerce.CatalogModule.Model;
 using VirtoCommerce.CatalogModule.Data.Converters;
 using VirtoCommerce.Foundation.Frameworks;
-using VirtoCommerce.CatalogModule.Repositories;
 using VirtoCommerce.CatalogModule.Data.Repositories;
 using VirtoCommerce.CatalogModule.Data.Services;
-using VirtoCommerce.CatalogModule.Services;
-using VirtoCommerce.CatalogModule.Model;
 using System.Collections.Generic;
+using module = VirtoCommerce.Domain.Catalog.Model;
+using VirtoCommerce.Domain.Catalog.Model;
+using VirtoCommerce.Domain.Catalog.Services;
 
 namespace VirtoCommerce.CatalogModule.Test
 {

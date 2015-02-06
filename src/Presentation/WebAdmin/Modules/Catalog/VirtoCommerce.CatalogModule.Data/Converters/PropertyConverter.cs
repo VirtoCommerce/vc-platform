@@ -5,7 +5,7 @@ using System.Linq;
 using VirtoCommerce.Foundation.Frameworks;
 using VirtoCommerce.Foundation.Frameworks.Extensions;
 using foundation = VirtoCommerce.Foundation.Catalogs.Model;
-using module = VirtoCommerce.CatalogModule.Model;
+using module = VirtoCommerce.Domain.Catalog.Model;
 
 namespace VirtoCommerce.CatalogModule.Data.Converters
 {

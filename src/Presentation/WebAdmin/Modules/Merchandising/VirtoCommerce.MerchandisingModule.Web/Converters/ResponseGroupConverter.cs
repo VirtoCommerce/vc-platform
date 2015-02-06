@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using moduleModel = VirtoCommerce.CatalogModule.Model;
+using moduleModel = VirtoCommerce.Domain.Catalog.Model;
 using webModel = VirtoCommerce.MerchandisingModule.Web.Model;
 
 namespace VirtoCommerce.MerchandisingModule.Web.Converters

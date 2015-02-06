@@ -5,10 +5,10 @@ using System.Net;
 using System.Web.Http;
 using System.Web.Http.Description;
 using VirtoCommerce.CatalogModule.Web.Converters;
-using VirtoCommerce.CatalogModule.Services;
-using moduleModel = VirtoCommerce.CatalogModule.Model;
+using moduleModel = VirtoCommerce.Domain.Catalog.Model;
 using webModel = VirtoCommerce.CatalogModule.Web.Model;
 using Microsoft.Practices.Unity;
+using VirtoCommerce.Domain.Catalog.Services;
 
 namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 {

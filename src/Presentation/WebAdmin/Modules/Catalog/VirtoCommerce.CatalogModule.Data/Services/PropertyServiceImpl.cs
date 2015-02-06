@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Linq;
 using VirtoCommerce.CatalogModule.Data.Converters;
-using VirtoCommerce.CatalogModule.Repositories;
-using VirtoCommerce.CatalogModule.Services;
+using VirtoCommerce.CatalogModule.Data.Repositories;
+using VirtoCommerce.Domain.Catalog.Services;
 using VirtoCommerce.Foundation.Frameworks.Caching;
-using module = VirtoCommerce.CatalogModule.Model;
+using module = VirtoCommerce.Domain.Catalog.Model;
 
 namespace VirtoCommerce.CatalogModule.Data.Services
 {
@@ -23,7 +23,7 @@ namespace VirtoCommerce.CatalogModule.Data.Services
 
 		public module.Property GetById(string propertyId)
 		{
-			Model.Property retVal = null;
+			module.Property retVal = null;
 			using (var repository = _catalogRepositoryFactory())
 			{
 				var dbProperty = repository.GetPropertiesByIds(new string[] { propertyId }).FirstOrDefault();
@@ -43,7 +43,7 @@ namespace VirtoCommerce.CatalogModule.Data.Services
 
 		public module.Property[] GetCategoryProperties(string categoryId)
 		{
-			Model.Property[] retVal = null;
+			module.Property[] retVal = null;
 			using (var repository = _catalogRepositoryFactory())
 			{
 				var dbCategory = repository.GetCategoryById(categoryId);

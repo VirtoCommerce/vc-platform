@@ -1,5 +1,5 @@
-﻿using VirtoCommerce.CatalogModule.Model;
-using foundation = VirtoCommerce.Foundation.Catalogs.Model;
+﻿using foundation = VirtoCommerce.Foundation.Catalogs.Model;
+using module = VirtoCommerce.Domain.Catalog.Model;
 
 namespace VirtoCommerce.CatalogModule.Data.Converters
 {
@@ -10,26 +10,26 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
         /// </summary>
         /// <param name="catalogBase"></param>
         /// <returns></returns>
-        public static PropertyValueType ToModuleModel(this foundation.PropertyValueType db)
+		public static module.PropertyValueType ToModuleModel(this foundation.PropertyValueType db)
         {
-            PropertyValueType retVal;
+			module.PropertyValueType retVal;
             switch (db)
             {
                 case foundation.PropertyValueType.Decimal:
                 case foundation.PropertyValueType.Integer:
-                    retVal = PropertyValueType.Number;
+					retVal = module.PropertyValueType.Number;
                     break;
 
                 case foundation.PropertyValueType.LongString:
-                    retVal = PropertyValueType.LongText;
+					retVal = module.PropertyValueType.LongText;
                     break;
 
                 case foundation.PropertyValueType.ShortString:
-                    retVal = PropertyValueType.ShortText;
+					retVal = module.PropertyValueType.ShortText;
                     break;
 
                 default:
-                    retVal = PropertyValueType.ShortText;
+					retVal = module.PropertyValueType.ShortText;
                     break;
             }
 
@@ -41,18 +41,18 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
         /// </summary>
         /// <param></param>
         /// <returns></returns>
-        public static foundation.PropertyValueType ToFoundation(this PropertyValueType module)
+		public static foundation.PropertyValueType ToFoundation(this module.PropertyValueType valType)
         {
             var retVal = foundation.PropertyValueType.ShortString;
-            switch (module)
+			switch (valType)
             {
                 //case PropertyValueType.ShortText:
                 //retVal=foundation.PropertyValueType.ShortString;
                 //break;
-                case PropertyValueType.LongText:
+                case module.PropertyValueType.LongText:
                     retVal = foundation.PropertyValueType.LongString;
                     break;
-                case PropertyValueType.Number:
+				case module.PropertyValueType.Number:
                     retVal = foundation.PropertyValueType.Decimal; // ??
                     break;
             }

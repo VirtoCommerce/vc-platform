@@ -60,6 +60,35 @@
     <Compile Include="Cart\Model\Weight.cs" />
     <Compile Include="Cart\Services\IShoppingCartSearchService.cs" />
     <Compile Include="Cart\Services\IShoppingCartService.cs" />
+    <Compile Include="Catalog\Model\Catalog.cs" />
+    <Compile Include="Catalog\Model\CatalogLanguage.cs" />
+    <Compile Include="Catalog\Model\CatalogProduct.cs" />
+    <Compile Include="Catalog\Model\Category.cs" />
+    <Compile Include="Catalog\Model\CategoryLink.cs" />
+    <Compile Include="Catalog\Model\EditorialReview.cs" />
+    <Compile Include="Catalog\Model\ILanguageSupport.cs" />
+    <Compile Include="Catalog\Model\ILinkSupport.cs" />
+    <Compile Include="Catalog\Model\ISeoSupport.cs" />
+    <Compile Include="Catalog\Model\ItemAsset.cs" />
+    <Compile Include="Catalog\Model\ItemAssetType.cs" />
+    <Compile Include="Catalog\Model\ItemResponseGroup.cs" />
+    <Compile Include="Catalog\Model\ProductAssociation.cs" />
+    <Compile Include="Catalog\Model\Property.cs" />
+    <Compile Include="Catalog\Model\PropertyAttribute.cs" />
+    <Compile Include="Catalog\Model\PropertyDictionaryValue.cs" />
+    <Compile Include="Catalog\Model\PropertyDisplayName.cs" />
+    <Compile Include="Catalog\Model\PropertyType.cs" />
+    <Compile Include="Catalog\Model\PropertyValue.cs" />
+    <Compile Include="Catalog\Model\PropertyValueType.cs" />
+    <Compile Include="Catalog\Model\ResponseGroup.cs" />
+    <Compile Include="Catalog\Model\SearchCriteria.cs" />
+    <Compile Include="Catalog\Model\SearchResult.cs" />
+    <Compile Include="Catalog\Model\SeoInfo.cs" />
+    <Compile Include="Catalog\Services\ICatalogSearchService.cs" />
+    <Compile Include="Catalog\Services\ICatalogService.cs" />
+    <Compile Include="Catalog\Services\ICategoryService.cs" />
+    <Compile Include="Catalog\Services\IItemService.cs" />
+    <Compile Include="Catalog\Services\IPropertyService.cs" />
     <Compile Include="Inventory\Model\InventoryInfo.cs" />
     <Compile Include="Inventory\Services\IInventoryService.cs" />
     <Compile Include="Order\Model\Address.cs" />
@@ -93,9 +122,7 @@
     <Compile Include="Payment\Services\IPaymentGatewayManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Catalog\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\..\Core\CommerceFoundation\CommerceFoundation.csproj">
       <Project>{e7fc9a51-1b39-4bdc-983a-8a059c5fc58b}</Project>
