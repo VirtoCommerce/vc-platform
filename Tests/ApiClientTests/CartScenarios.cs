@@ -51,6 +51,7 @@ namespace ApiClientTests
             var item = new CartItem()
             {
                 CatalogId = "sample",
+                ProductId = "asdasd",
                 CategoryId = "category",
                 ListPrice = 10,
                 PlacedPrice = 20,

@@ -5,7 +5,6 @@ using System.Web.Http.Results;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using VirtoCommerce.CartModule.Data.Repositories;
 using VirtoCommerce.CartModule.Data.Services;
-using VirtoCommerce.CatalogModule.Web.Controllers.Api;
 using VirtoCommerce.Domain.Cart.Model;
 using VirtoCommerce.Domain.Cart.Services;
 using VirtoCommerce.Foundation.Data.Infrastructure.Interceptors;
@@ -17,7 +16,9 @@ using VirtoCommerce.CartModule.Data.Workflow;
 
 namespace VirtoCommerce.CartModule.Test
 {
-	[TestClass]
+    using VirtoCommerce.CartModule.Web.Controllers.Api;
+
+    [TestClass]
 	public class ShoppingCartControllerTest
 	{
 		[TestMethod]
