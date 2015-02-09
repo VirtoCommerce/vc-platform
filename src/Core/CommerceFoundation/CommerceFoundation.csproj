@@ -240,7 +240,9 @@
     <Compile Include="Frameworks\Caching\CacheManager.cs" />
     <Compile Include="Frameworks\Caching\CacheSettings.cs" />
     <Compile Include="Frameworks\Common\EnumUtility.cs" />
+    <Compile Include="Frameworks\ConventionInjections\PatchInjection.cs" />
     <Compile Include="Frameworks\Entity.cs" />
+    <Compile Include="Frameworks\Extensions\AnnonymousComparer.cs" />
     <Compile Include="Frameworks\Extensions\CollectionExtensions.cs" />
     <Compile Include="Frameworks\Extensions\KeyValuePairExtensions.cs" />
     <Compile Include="Frameworks\IAuditable.cs" />
