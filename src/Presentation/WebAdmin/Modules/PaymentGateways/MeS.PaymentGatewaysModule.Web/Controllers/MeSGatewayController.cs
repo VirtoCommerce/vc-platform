@@ -14,7 +14,7 @@ using VirtoCommerce.Framework.Web.Settings;
 
 namespace MeS.PaymentGatewaysModule.Web.Controllers
 {
-	[RoutePrefix("api/mesgateway")]
+	[RoutePrefix("api/paymentgateway")]
 	public class MeSGatewayController : ApiController
 	{
 		private string _mesAccountId;
@@ -35,7 +35,7 @@ namespace MeS.PaymentGatewaysModule.Web.Controllers
 		}
 
 		[HttpPost]
-		[Route("push")]
+		[Route("mes/push")]
 		public IHttpActionResult PushMes([FromBody] MeSPushRequestModel mesPushRequest)
 		{
 			return Ok();
@@ -43,7 +43,7 @@ namespace MeS.PaymentGatewaysModule.Web.Controllers
 
 		[HttpGet]
 		[ResponseType(typeof(GetPaymentParametersResult))]
-		[Route("create")]
+		[Route("mes/create")]
 		public IHttpActionResult CreatePayment()
 		{
 			var retVal = new GetPaymentParametersResult();

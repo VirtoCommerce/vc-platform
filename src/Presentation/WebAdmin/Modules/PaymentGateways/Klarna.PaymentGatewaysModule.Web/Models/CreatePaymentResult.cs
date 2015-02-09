@@ -7,12 +7,7 @@ namespace Klarna.PaymentGatewaysModule.Web.Models
 {
 	public class CreatePaymentResult
 	{
-		public CreatePaymentResult()
-		{
-			this.IsSuccess = true;
-		}
-
-		public bool IsSuccess { get; set; }
 		public string Html { get; set; }
+		public bool IsSuccess { get; set; }
 	}
 }

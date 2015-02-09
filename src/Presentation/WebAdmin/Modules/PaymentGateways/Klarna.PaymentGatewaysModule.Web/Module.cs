@@ -22,14 +22,19 @@ namespace Klarna.PaymentGatewaysModule.Web
 
 		public void Initialize()
 		{
-			var settingsManager = ServiceLocator.Current.GetInstance<ISettingsManager>();
+			var settingsManager = _container.Resolve<ISettingsManager>();
 
 			var klarnaEid = settingsManager.GetValue("Klarna.PaymentGateway.Credentials.AppKey", 0);
 			var klarnaSecret = settingsManager.GetValue("Klarna.PaymentGateway.Credentials.SecretKey", string.Empty);
 
-			//var paymentGatewayManager = ServiceLocator.Current.GetInstance<IPaymentGatewayManager>();
+			var klarnaGatewayCode = settingsManager.GetValue("Klarna.PaymentGateway.GatewayDescription.GatewayCode", string.Empty);
+			var klarnaDescription = settingsManager.GetValue("Klarna.PaymentGateway.GatewayDescription.Description", string.Empty);
+			var klarnaLogoUrl = settingsManager.GetValue("Klarna.PaymentGateway.GatewayDescription.LogoUrl", string.Empty);
 
-			var klarnaPaymentGateway = new KlarnaPaymentGatewayImpl(klarnaEid, klarnaSecret);
+
+			//var paymentGatewayManager = _container.Resolve<IPaymentGatewayManager>();
+
+			var klarnaPaymentGateway = new KlarnaPaymentGatewayImpl(klarnaEid, klarnaSecret, klarnaGatewayCode, klarnaDescription, klarnaLogoUrl);
 
 			//paymentGatewayManager.RegisterGateway(klarnaPaymentGateway);
 

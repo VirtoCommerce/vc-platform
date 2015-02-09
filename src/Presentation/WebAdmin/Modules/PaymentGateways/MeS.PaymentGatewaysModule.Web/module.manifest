@@ -30,14 +30,38 @@
 	</scripts>-->
 
 	<settings>
-		<group>
+		<group name="Credentials">
 			<setting>
-				<name>MeS.PaymentGateway.Credentials.AppKey</name>
+				<name>Mes.PaymentGateway.Credentials.AppKey</name>
 				<valueType>string</valueType>
 				<defaultValue>qwerty</defaultValue>
-				<title>AppKey</title>
-				<description>App key of your's mes account</description>
+				<title>Application Key</title>
+				<description>Merchant e-solutions application key</description>
 			</setting>
 		</group>
+		<group name="Gateway Description">
+			<setting>
+				<name>Mes.PaymentGateway.GatewayDescription.GatewayCode</name>
+				<valueType>string</valueType>
+				<defaultValue>Mes</defaultValue>
+				<title>Gateway code</title>
+				<description>Code that indentificates merchant e-solutions gateway provider</description>
+			</setting>
+			<setting>
+				<name>Mes.PaymentGateway.GatewayDescription.Description</name>
+				<valueType>string</valueType>
+				<defaultValue>Merchant e-solutions public site description</defaultValue>
+				<title>Description</title>
+				<description>Description of merchant e-solutions for public site</description>
+			</setting>
+			<setting>
+				<name>Mes.PaymentGateway.GatewayDescription.LogoUrl</name>
+				<valueType>string</valueType>
+				<defaultValue>https://www.merchante-solutions.com/wp-content/themes/Foundation-master/img/logo2.png</defaultValue>
+				<title>Logo url</title>
+				<description>Merchant e-solutions logo url</description>
+			</setting>
+		</group>
+		
 	</settings>
 </module>

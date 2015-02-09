@@ -23,11 +23,15 @@ namespace MeS.PaymentGatewaysModule.Web
 		{
 			var settingsManager = ServiceLocator.Current.GetInstance<ISettingsManager>();
 
-			var mesAccountId = settingsManager.GetValue("MeS.PaymentGateway.Credentials.AppKey", string.Empty);
+			var mesAccountId = settingsManager.GetValue("Mes.PaymentGateway.Credentials.AppKey", string.Empty);
+
+			var mesGatewayCode = settingsManager.GetValue("Mes.PaymentGateway.GatewayDescription.GatewayCode", string.Empty);
+			var mesDescription = settingsManager.GetValue("Mes.PaymentGateway.GatewayDescription.Description", string.Empty);
+			var mesLogoUrl = settingsManager.GetValue("Mes.PaymentGateway.GatewayDescription.LogoUrl", string.Empty);
 
 			//var paymentGatewayManager = ServiceLocator.Current.GetInstance<IPaymentGatewayManager>();
 
-			var mesPaymentGateway = new MeSPaymentGatewayImpl();
+			var mesPaymentGateway = new MeSPaymentGatewayImpl(mesAccountId, mesGatewayCode, mesDescription, mesLogoUrl);
 
 			//paymentGatewayManager.RegisterGateway(mesPaymentGateway);
 
