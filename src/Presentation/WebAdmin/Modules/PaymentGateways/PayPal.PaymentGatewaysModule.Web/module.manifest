@@ -1,13 +1,13 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <module>
-	<id>MeS.PaymentGateway</id>
+	<id>Paypal.PaymentGateway</id>
 	<version>1.0.0.0</version>
 	<dependencies>
 		<dependency>VirtoCommerce.Core</dependency>
 	</dependencies>
 
-	<title>MeS PaymentGateway Web</title>
-	<description>APIs and UI for merchant e-solutions payment gateway</description>
+	<title>Paypal PaymentGateway Web</title>
+	<description>APIs and UI for paypal payment gateway</description>
 	<authors>
 		<author>Virto Commerce</author>
 	</authors>
@@ -18,10 +18,10 @@
 	<iconUrl>http://nuget.org/Content/Images/packageDefaultIcon-50x50.png</iconUrl>
 	<releaseNotes>First version.</releaseNotes>
 	<copyright>Copyright © 2011-2015 Virto Commerce. All rights reserved</copyright>
-	<tags>mes payment gateway</tags>
+	<tags>paypal payment gateway</tags>
 
-	<assemblyFile>MeS.PaymentGatewaysModule.Web.dll</assemblyFile>
-	<moduleType>MeS.PaymentGatewaysModule.Web.Module, MeS.PaymentGatewaysModule.Web</moduleType>
+	<assemblyFile>PayPal.PaymentGatewaysModule.Web.dll</assemblyFile>
+	<moduleType>PayPal.PaymentGatewaysModule.Web.Module, PayPal.PaymentGatewaysModule.Web</moduleType>
 	<!--<styles>
 		<directory virtualPath="$/Content/css" searchPattern="*.css" searchSubdirectories="true" />
 	</styles>-->
