@@ -21,7 +21,7 @@ namespace Klarna.PaymentGatewaysModule.Web.Models
 		public string ConfirmationUrl { get; set; }
 		public string PushUrl { get; set; }
 
-		public decimal Amount { get; set; }
+		//public decimal Amount { get; set; }
 
 		public string Html { get; set; }
 		public bool Success
