@@ -7,12 +7,12 @@
     <ProductVersion>
     </ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{F212ED2F-6E93-4931-A8DF-7A128D5DD96B}</ProjectGuid>
+    <ProjectGuid>{DE5181F4-3191-4882-8138-1537A9A1684C}</ProjectGuid>
     <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Klarna.PaymentGatewaysModule.Web</RootNamespace>
-    <AssemblyName>Klarna.PaymentGatewaysModule.Web</AssemblyName>
+    <RootNamespace>PayPal.PaymentGatewaysModule.Web</RootNamespace>
+    <AssemblyName>PayPal.PaymentGatewaysModule.Web</AssemblyName>
     <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
     <UseIISExpress>true</UseIISExpress>
@@ -41,15 +41,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="CookComputing.XmlRpcV2">
-      <HintPath>..\..\..\..\..\..\packages\xmlrpcnet.3.0.0.266\lib\net20\CookComputing.XmlRpcV2.dll</HintPath>
-    </Reference>
-    <Reference Include="Klarna.Checkout">
-      <HintPath>..\..\..\..\..\..\packages\Klarna.Checkout.1.0.4.0\lib\net30\Klarna.Checkout.dll</HintPath>
-    </Reference>
-    <Reference Include="Klarna.Net.Api">
-      <HintPath>..\..\..\..\..\..\packages\Klarna.Net.Api.4.0.0.0\lib\net35\Klarna.Net.Api.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.Practices.ServiceLocation">
       <HintPath>..\..\..\..\..\..\packages\CommonServiceLocator.1.3\lib\portable-net4+sl5+netcore45+wpa81+wp8\Microsoft.Practices.ServiceLocation.dll</HintPath>
@@ -140,17 +131,14 @@
     <Folder Include="Scripts\" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Controllers\KlarnaGatewayController.cs" />
-    <Compile Include="Managers\KlarnaPaymentGatewayImpl.cs" />
-    <Compile Include="Models\CreatePaymentResult.cs" />
-    <Compile Include="Models\KlarnaPaymentInfo.cs" />
-    <Compile Include="Models\PaymentLineItem.cs" />
+    <Compile Include="Controllers\PayPalGatewayController.cs" />
+    <Compile Include="Managers\PayPalPaymentGatewayImpl.cs" />
+    <Compile Include="Models\PayPalPushRequestModel.cs" />
     <Compile Include="Module.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="CHANGELOG.txt" />
-    <Content Include="module.manifest" />
+    <Content Include="favicon.ico" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -176,6 +164,9 @@
   <ItemGroup>
     <Content Include="packages.config" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="module.manifest" />
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
@@ -192,9 +183,9 @@
         <WebProjectProperties>
           <UseIIS>True</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
-          <DevelopmentServerPort>62187</DevelopmentServerPort>
+          <DevelopmentServerPort>49447</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:62071/</IISUrl>
+          <IISUrl>http://localhost:49447/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

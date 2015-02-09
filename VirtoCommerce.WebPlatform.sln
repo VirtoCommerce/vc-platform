@@ -119,6 +119,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Klarna.PaymentGatewaysModul
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MeS.PaymentGatewaysModule.Web", "src\Presentation\WebAdmin\Modules\PaymentGateways\MeS.PaymentGatewaysModule.Web\MeS.PaymentGatewaysModule.Web.csproj", "{E8E2B720-4C70-4714-B1F8-591EB4DA4BA9}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PayPal.PaymentGatewaysModule.Web", "src\Presentation\WebAdmin\Modules\PaymentGateways\PayPal.PaymentGatewaysModule.Web\PayPal.PaymentGatewaysModule.Web.csproj", "{DE5181F4-3191-4882-8138-1537A9A1684C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -225,14 +227,6 @@ Global
 		{C6AD60D0-25C3-4049-B0BC-970C10D8B862}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C6AD60D0-25C3-4049-B0BC-970C10D8B862}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C6AD60D0-25C3-4049-B0BC-970C10D8B862}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F212ED2F-6E93-4931-A8DF-7A128D5DD96B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F212ED2F-6E93-4931-A8DF-7A128D5DD96B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F212ED2F-6E93-4931-A8DF-7A128D5DD96B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F212ED2F-6E93-4931-A8DF-7A128D5DD96B}.Release|Any CPU.Build.0 = Release|Any CPU
-		{E8E2B720-4C70-4714-B1F8-591EB4DA4BA9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{E8E2B720-4C70-4714-B1F8-591EB4DA4BA9}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{E8E2B720-4C70-4714-B1F8-591EB4DA4BA9}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{E8E2B720-4C70-4714-B1F8-591EB4DA4BA9}.Release|Any CPU.Build.0 = Release|Any CPU
 		{FB17571F-ED1B-4521-A120-58023AB1C6BF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{FB17571F-ED1B-4521-A120-58023AB1C6BF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FB17571F-ED1B-4521-A120-58023AB1C6BF}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -245,6 +239,18 @@ Global
 		{02D4C049-C185-4F59-A10E-03AF76451844}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{02D4C049-C185-4F59-A10E-03AF76451844}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{02D4C049-C185-4F59-A10E-03AF76451844}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F212ED2F-6E93-4931-A8DF-7A128D5DD96B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F212ED2F-6E93-4931-A8DF-7A128D5DD96B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F212ED2F-6E93-4931-A8DF-7A128D5DD96B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F212ED2F-6E93-4931-A8DF-7A128D5DD96B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E8E2B720-4C70-4714-B1F8-591EB4DA4BA9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E8E2B720-4C70-4714-B1F8-591EB4DA4BA9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E8E2B720-4C70-4714-B1F8-591EB4DA4BA9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E8E2B720-4C70-4714-B1F8-591EB4DA4BA9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DE5181F4-3191-4882-8138-1537A9A1684C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DE5181F4-3191-4882-8138-1537A9A1684C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DE5181F4-3191-4882-8138-1537A9A1684C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DE5181F4-3191-4882-8138-1537A9A1684C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -291,5 +297,6 @@ Global
 		{4E79CE95-D200-41C9-B191-324B741494BE} = {A4C0D164-BF77-4B57-8970-B5459B100AC3}
 		{F212ED2F-6E93-4931-A8DF-7A128D5DD96B} = {4E79CE95-D200-41C9-B191-324B741494BE}
 		{E8E2B720-4C70-4714-B1F8-591EB4DA4BA9} = {4E79CE95-D200-41C9-B191-324B741494BE}
+		{DE5181F4-3191-4882-8138-1537A9A1684C} = {4E79CE95-D200-41C9-B191-324B741494BE}
 	EndGlobalSection
 EndGlobal

@@ -9,9 +9,20 @@ namespace MeS.PaymentGatewaysModule.Web.Managers
 {
 	public class MeSPaymentGatewayImpl : IPaymentGateway
 	{
-		private const string _gatewayCode = "MeS";
-		private const string _description = "MeS Description";
-		private const string _logoUrl = "https://www.merchante-solutions.com/wp-content/themes/Foundation-master/img/logo2.png";
+		private string _gatewayCode;
+		private string _description;
+		private string _logoUrl;
+
+
+		public MeSPaymentGatewayImpl(string appKey, string gatewayCode, string description, string logoUrl)
+		{
+			if (string.IsNullOrEmpty(appKey))
+				throw new ArgumentNullException("appKey");
+
+			_gatewayCode = gatewayCode;
+			_description = description;
+			_logoUrl = logoUrl;
+		}
 
 		public string GatewayCode
 		{
@@ -40,7 +51,7 @@ namespace MeS.PaymentGatewaysModule.Web.Managers
 
 		public PaymentInfo CreatePayment(PaymentInfo paymentInfo)
 		{
-			throw new NotImplementedException();
+			return paymentInfo;
 		}
 	}
 }

@@ -1,6 +1,5 @@
 ﻿using Klarna.Api;
 using Klarna.Checkout;
-using Klarna.PaymentGatewaysModule.Web.Exceptions;
 using Klarna.PaymentGatewaysModule.Web.Models;
 using Newtonsoft.Json.Linq;
 using System;
@@ -15,7 +14,7 @@ using VirtoCommerce.Framework.Web.Settings;
 
 namespace Klarna.PaymentGatewaysModule.Web.Controllers
 {
-	[RoutePrefix("api/klarnagateway")]
+	[RoutePrefix("api/paymentgateway")]
 	public class KlarnaGatewayController : ApiController
 	{
 		private const string ContentType = "application/vnd.klarna.checkout.aggregated-order-v2+json";
@@ -31,10 +30,10 @@ namespace Klarna.PaymentGatewaysModule.Web.Controllers
 				throw new ArgumentNullException("paymentGateway");
 
 			if (klarnaEid == 0)
-				throw new KlarnaCredentialsException("Eid is wrong");
+				throw new ArgumentNullException("Eid");
 
 			if (string.IsNullOrEmpty(klarnaSecret))
-				throw new KlarnaCredentialsException("KlarnaSecret is wrong");
+				throw new ArgumentNullException("KlarnaSecret");
 
 			_paymentGateway = paymentGateway;
 
@@ -43,14 +42,7 @@ namespace Klarna.PaymentGatewaysModule.Web.Controllers
 		}
 
 		[HttpGet]
-		[Route("pusher")]
-		public IHttpActionResult Push(string klarna, string sid)
-		{
-			return Ok();
-		}
-
-		[HttpGet]
-		[Route("push")]
+		[Route("klarna/push")]
 		public IHttpActionResult PushKlarnaResult(string klarna, string sid)
 		{
 			//Gets klarna order
@@ -73,12 +65,12 @@ namespace Klarna.PaymentGatewaysModule.Web.Controllers
 					var data = new Dictionary<string, object> { { "status", "created" } };
 					order.Update(data);
 					//Activate order
-					//ActivateKlarnaPayment(order);
+					ActivateKlarnaPayment(order);
 					break;
 
 				case "created":
 					//Activate order
-					//ActivateKlarnaPayment(order);
+					ActivateKlarnaPayment(order);
 					break;
 
 				default:
@@ -91,90 +83,18 @@ namespace Klarna.PaymentGatewaysModule.Web.Controllers
 
 		[HttpPost]
 		[ResponseType(typeof(CreatePaymentResult))]
-		[Route("create")]
+		[Route("klarna/create")]
 		public IHttpActionResult CreateKlarnaPayment(KlarnaPaymentInfo model)
 		{
-			CreatePaymentResult retVal = new CreatePaymentResult(); ;
+			CreatePaymentResult retVal = new CreatePaymentResult();
+			var paymentInfo = _paymentGateway.CreatePayment(model);
 
-			try
+			var klarnaPaymentInfo = paymentInfo as KlarnaPaymentInfo;
+
+			if (klarnaPaymentInfo != null)
 			{
-				//Create lineItems
-				var cartItems = new List<Dictionary<string, object>>();
-				foreach (var lineItem in model.LineItems)
-				{
-					var addedItem = new Dictionary<string, object>();
-
-					if (!string.IsNullOrEmpty(lineItem.Type))
-					{
-						addedItem.Add("type", lineItem.Type);
-					}
-					if (!string.IsNullOrEmpty(lineItem.Name))
-					{
-						addedItem.Add("name", lineItem.Name);
-					}
-					if (!string.IsNullOrEmpty(lineItem.Reference))
-					{
-						addedItem.Add("reference", lineItem.Reference);
-					}
-					if (lineItem.Quantity > 0)
-					{
-						addedItem.Add("quantity", lineItem.Quantity);
-					}
-					if (lineItem.UnitPrice > 0)
-					{
-						addedItem.Add("unit_price", lineItem.UnitPrice);
-					}
-					if (lineItem.DiscountRate > 0)
-					{
-						addedItem.Add("discount_rate", lineItem.DiscountRate);
-					}
-					if (lineItem.TaxRate > 0)
-					{
-						addedItem.Add("tax_rate", lineItem.TaxRate);
-					}
-					cartItems.Add(addedItem);
-				}
-
-				//Create cart
-				var cart = new Dictionary<string, object> { { "items", cartItems } };
-				var data = new Dictionary<string, object>
-				{
-					{ "cart", cart }
-				};
-
-				//Create klarna order
-				var connector = Connector.Create(_klarnaSecret);
-				Order order = null;
-				var merchant = new Dictionary<string, object>
-				{
-					{ "id", _klarnaEid.ToString() },
-					{ "terms_uri", model.TermsUrl },
-					{ "checkout_uri", model.CheckoutUrl },
-					{ "confirmation_uri", model.ConfirmationUrl },
-					{ "push_uri", model.PushUrl }
-				};
-				data.Add("purchase_country", model.PurchaseCountry);
-				data.Add("purchase_currency", model.PurchaseCurrency);
-				data.Add("locale", model.Locale);
-				data.Add("merchant", merchant);
-				order =
-					new Order(connector)
-					{
-						BaseUri = new Uri("https://checkout.testdrive.klarna.com/checkout/orders"),
-						ContentType = ContentType
-					};
-				order.Create(data);
-				order.Fetch();
-
-				//Gets snippet
-				var gui = order.GetValue("gui") as JObject;
-				var html = gui["snippet"].Value<string>();
-
-				retVal.Html = html;
-			}
-			catch (Exception)
-			{
-				retVal.IsSuccess = false;
+				retVal.Html = klarnaPaymentInfo.Html;
+				retVal.IsSuccess = klarnaPaymentInfo.Success;
 			}
 
 			return Ok(retVal);
@@ -199,7 +119,7 @@ namespace Klarna.PaymentGatewaysModule.Web.Controllers
 
 			var activateResponse = api.Activate(order.GetValue("id") as string);
 			if (activateResponse == null || activateResponse.RiskStatus != RiskStatus.Ok)
-				throw new KlarnaActivateException("activateResponse is wrong");
+				throw new NullReferenceException("activateResponse is wrong");
 		}
 	}
 }
