@@ -3,11 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using VirtoCommerce.CatalogModule.Repositories;
 using VirtoCommerce.Foundation.Data.AppConfig;
 using VirtoCommerce.Foundation.Data.Infrastructure.Interceptors;
 using foundation = VirtoCommerce.Foundation.AppConfig.Model;
-using moduleModel = VirtoCommerce.CatalogModule.Model;
+using moduleModel = VirtoCommerce.Domain.Catalog.Model;
 
 namespace VirtoCommerce.CatalogModule.Data.Repositories
 {

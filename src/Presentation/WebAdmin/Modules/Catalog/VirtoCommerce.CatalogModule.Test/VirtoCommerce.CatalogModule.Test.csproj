@@ -89,6 +89,10 @@
       <Project>{039e7914-2925-44c4-acad-6bccfa2a370e}</Project>
       <Name>ElasticSearchProvider</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\Core\VirtoCommerce.Domain\VirtoCommerce.Domain.csproj">
+      <Project>{67c58a78-ddea-4fa3-a969-1cab582918e4}</Project>
+      <Name>VirtoCommerce.Domain</Name>
+    </ProjectReference>
     <ProjectReference Include="..\VirtoCommerce.CatalogModule.Data\VirtoCommerce.CatalogModule.Data.csproj">
       <Project>{b8c758d7-822f-40d8-b28c-ef21c873af49}</Project>
       <Name>VirtoCommerce.CatalogModule.Data</Name>
@@ -96,10 +100,6 @@
     <ProjectReference Include="..\VirtoCommerce.CatalogModule.Web\VirtoCommerce.CatalogModule.Web.csproj">
       <Project>{988cb3e9-2594-499c-90b4-9399eb481c79}</Project>
       <Name>VirtoCommerce.CatalogModule.Web</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\VirtoCommerce.CatalogModule\VirtoCommerce.CatalogModule.csproj">
-      <Project>{f3063592-5fa7-4ce1-a89d-9579aef64db6}</Project>
-      <Name>VirtoCommerce.CatalogModule</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
-VisualStudioVersion = 12.0.31101.0
+VisualStudioVersion = 12.0.30723.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{0E0CB22C-4501-4E16-B9B7-744B51076524}"
 	ProjectSection(SolutionItems) = preProject
@@ -18,8 +18,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.Framework.Web", "src\Presentation\WebAdmin\VirtoCommerce.Framework.Web\VirtoCommerce.Framework.Web.csproj", "{F7C9313B-522E-4619-ABC9-8C7D4600D6B5}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Catalog", "Catalog", "{7C7428C3-DDE2-4783-87EB-13E9A7C405C5}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.CatalogModule", "src\Presentation\WebAdmin\Modules\Catalog\VirtoCommerce.CatalogModule\VirtoCommerce.CatalogModule.csproj", "{F3063592-5FA7-4CE1-A89D-9579AEF64DB6}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.CatalogModule.Data", "src\Presentation\WebAdmin\Modules\Catalog\VirtoCommerce.CatalogModule.Data\VirtoCommerce.CatalogModule.Data.csproj", "{B8C758D7-822F-40D8-B28C-EF21C873AF49}"
 EndProject
@@ -131,10 +129,6 @@ Global
 		{F7C9313B-522E-4619-ABC9-8C7D4600D6B5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F7C9313B-522E-4619-ABC9-8C7D4600D6B5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F7C9313B-522E-4619-ABC9-8C7D4600D6B5}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F3063592-5FA7-4CE1-A89D-9579AEF64DB6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F3063592-5FA7-4CE1-A89D-9579AEF64DB6}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F3063592-5FA7-4CE1-A89D-9579AEF64DB6}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F3063592-5FA7-4CE1-A89D-9579AEF64DB6}.Release|Any CPU.Build.0 = Release|Any CPU
 		{B8C758D7-822F-40D8-B28C-EF21C873AF49}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{B8C758D7-822F-40D8-B28C-EF21C873AF49}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B8C758D7-822F-40D8-B28C-EF21C873AF49}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -258,7 +252,6 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{3874AF7E-4491-48BB-BF11-5F7D7A23EFED} = {A4C0D164-BF77-4B57-8970-B5459B100AC3}
 		{7C7428C3-DDE2-4783-87EB-13E9A7C405C5} = {A4C0D164-BF77-4B57-8970-B5459B100AC3}
-		{F3063592-5FA7-4CE1-A89D-9579AEF64DB6} = {7C7428C3-DDE2-4783-87EB-13E9A7C405C5}
 		{B8C758D7-822F-40D8-B28C-EF21C873AF49} = {7C7428C3-DDE2-4783-87EB-13E9A7C405C5}
 		{988CB3E9-2594-499C-90B4-9399EB481C79} = {7C7428C3-DDE2-4783-87EB-13E9A7C405C5}
 		{C0E969B6-946A-4E53-BA27-1CFEBCF65CFC} = {3874AF7E-4491-48BB-BF11-5F7D7A23EFED}

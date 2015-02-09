@@ -1,117 +1,118 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Web.Http;
-using System.Web.Http.Description;
-using VirtoCommerce.Domain.Cart.Services;
-using VirtoCommerce.CartModule.Web.Converters;
-using coreModel = VirtoCommerce.Domain.Cart.Model;
-using webModel = VirtoCommerce.CatalogModule.Web.Model;
-using System.Web.Http.ModelBinding;
-using VirtoCommerce.CartModule.Web.Binders;
-using VirtoCommerce.Foundation.Money;
-
-namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
+﻿namespace VirtoCommerce.CartModule.Web.Controllers.Api
 {
-	[RoutePrefix("api/cart")]
+    using System;
+    using System.Linq;
+    using System.Net;
+    using System.Web.Http;
+    using System.Web.Http.Description;
+    using System.Web.Http.ModelBinding;
+
+    using VirtoCommerce.CartModule.Web.Binders;
+    using VirtoCommerce.CartModule.Web.Converters;
+    using VirtoCommerce.Domain.Cart.Services;
+    using VirtoCommerce.Foundation.Money;
+
+    [RoutePrefix("api/cart")]
 	public class CartController : ApiController
 	{
 		private readonly IShoppingCartService _shoppingCartService;
 		private readonly IShoppingCartSearchService _searchService;
 		public CartController(IShoppingCartService cartService, IShoppingCartSearchService searchService)
 		{
-			_shoppingCartService = cartService;
-			_searchService = searchService;
+			this._shoppingCartService = cartService;
+			this._searchService = searchService;
 		}
 
 		// GET: api/cart/store1/carts/current
 		[HttpGet]
-		[ResponseType(typeof(webModel.ShoppingCart))]
+		[ResponseType(typeof(CatalogModule.Web.Model.ShoppingCart))]
 		[Route("{storeId}/carts/current")]
 		public IHttpActionResult GetCurrentCart(string storeId)
 		{
-			var customerId = User.Identity.Name;
-			var criteria = new coreModel.SearchCriteria
+            var customerId = this.User.Identity.Name;
+            if (String.IsNullOrEmpty(customerId)) customerId = "anonymous";
+
+			var criteria = new Domain.Cart.Model.SearchCriteria
 			{
 				CustomerId = customerId,
 				StoreId = storeId
 			};
 
-			var searchResult = _searchService.Search(criteria);
+			var searchResult = this._searchService.Search(criteria);
 			var retVal = searchResult.ShopingCarts.FirstOrDefault(x=>x.Name == "default");
 			if (retVal == null)
 			{
-				var newCart = new webModel.ShoppingCart
+				var newCart = new CatalogModule.Web.Model.ShoppingCart
 				{
 					Id = Guid.NewGuid().ToString(),
 					CustomerId = customerId,
-					IsAnonymous = User.Identity.IsAuthenticated,
+					IsAnonymous = this.User.Identity.IsAuthenticated,
 					StoreId = storeId,
 					Name = "default",
 					Currency = CurrencyCodes.USD
 				};
-				retVal = _shoppingCartService.Create(newCart.ToCoreModel());
+				retVal = this._shoppingCartService.Create(newCart.ToCoreModel());
 			}
-			return Ok(retVal.ToWebModel());
+			return this.Ok(retVal.ToWebModel());
 		}
 
 		// GET: api/cart/carts/{id}
 		[HttpGet]
-		[ResponseType(typeof(webModel.ShoppingCart))]
+		[ResponseType(typeof(CatalogModule.Web.Model.ShoppingCart))]
 		[Route("carts/{id}")]
 		public IHttpActionResult GetCartById(string id)
 		{
-			var retVal = _shoppingCartService.GetById(id);
+			var retVal = this._shoppingCartService.GetById(id);
 			if(retVal == null)
 			{
-				return NotFound();
+				return this.NotFound();
 			}
-			return Ok(retVal.ToWebModel());
+			return this.Ok(retVal.ToWebModel());
 		}
 
 		// GET: api/cart/carts?q=ddd&site=site1&customer=user1&start=0&count=20
 		[HttpGet]
-		[ResponseType(typeof(webModel.SearchResult))]
+		[ResponseType(typeof(CatalogModule.Web.Model.SearchResult))]
 		[Route("carts")]
-		public IHttpActionResult SearchCarts([ModelBinder(typeof(SearchCriteriaBinder))] webModel.SearchCriteria criteria)
+		public IHttpActionResult SearchCarts([ModelBinder(typeof(SearchCriteriaBinder))] CatalogModule.Web.Model.SearchCriteria criteria)
 		{
-			var retVal = _searchService.Search(criteria.ToCoreModel());
-			return Ok(retVal.ToWebModel());
+			var retVal = this._searchService.Search(criteria.ToCoreModel());
+			return this.Ok(retVal.ToWebModel());
 		}
 
 		// POST: api/cart/carts
 		[HttpPost]
 		[ResponseType(typeof(void))]
 		[Route("carts")]
-		public IHttpActionResult Create(webModel.ShoppingCart cart)
+		public IHttpActionResult Create(CatalogModule.Web.Model.ShoppingCart cart)
 		{
 			var coreCart = cart.ToCoreModel();
-			_shoppingCartService.Create(coreCart);
-			return StatusCode(HttpStatusCode.NoContent);
+			this._shoppingCartService.Create(coreCart);
+			return this.StatusCode(HttpStatusCode.NoContent);
 		}
 
 		// PUT: api/cart/carts
-		[HttpPut]
-		[ResponseType(typeof(void))]
-		[Route("carts")]
-		public IHttpActionResult Update(webModel.ShoppingCart cart)
-		{
-			var coreCart = cart.ToCoreModel();
-			_shoppingCartService.Update(new coreModel.ShoppingCart[] { coreCart });
-			return StatusCode(HttpStatusCode.NoContent);
-		}
+        [HttpPut]
+        [ResponseType(typeof(CatalogModule.Web.Model.ShoppingCart))]
+        [Route("carts")]
+        public IHttpActionResult Update(CatalogModule.Web.Model.ShoppingCart cart)
+        {
+            var coreCart = cart.ToCoreModel();
+            this._shoppingCartService.Update(new[] { coreCart });
+            var retVal = this._shoppingCartService.GetById(coreCart.Id);
+            return this.Ok(retVal.ToWebModel());
+        }
 
 		// GET: api/cart/carts/{cartId}/shipmentMethods
 		[HttpGet]
-		[ResponseType(typeof(webModel.ShipmentMethod[]))]
+		[ResponseType(typeof(CatalogModule.Web.Model.ShipmentMethod[]))]
 		[Route("carts/{cartId}/shipmentMethods")]
 		public IHttpActionResult GetShipmentMethods(string cartId)
 		{
-			var cart = _shoppingCartService.GetById(cartId);
-			var retVal = new webModel.ShipmentMethod[] 
+			var cart = this._shoppingCartService.GetById(cartId);
+			var retVal = new[] 
 			{
-				 new webModel.ShipmentMethod {
+				 new CatalogModule.Web.Model.ShipmentMethod {
 					 Currency = cart.Currency,
 					 Name = "USPS",
 					 Price = 10,
@@ -119,42 +120,42 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 				 }
 			};
 
-			return Ok(retVal);
+			return this.Ok(retVal);
 		}
 
 		// GET: api/cart/carts/{cartId}/paymentMethods
 		[HttpGet]
-		[ResponseType(typeof(webModel.PaymentMethod[]))]
+		[ResponseType(typeof(CatalogModule.Web.Model.PaymentMethod[]))]
 		[Route("carts/{cartId}/paymentMethods")]
 		public IHttpActionResult GetPaymentMethods(string cartId)
 		{
-			var cart = _shoppingCartService.GetById(cartId);
-			var retVal = new webModel.PaymentMethod[] 
+			var cart = this._shoppingCartService.GetById(cartId);
+			var retVal = new[] 
 			{
-				 new webModel.PaymentMethod {
+				 new CatalogModule.Web.Model.PaymentMethod {
 					GatewayCode = "PayPal",
 					Name = "PayPal"
 				 }
 			};
 
-			return Ok(retVal);
+			return this.Ok(retVal);
 		}
 
 		// POST: api/cart/carts/{cartId}/coupons/{couponCode}
 		[HttpPost]
-		[ResponseType(typeof(webModel.ShoppingCart))]
+		[ResponseType(typeof(CatalogModule.Web.Model.ShoppingCart))]
 		[Route("carts/{cartId}/coupons/{couponCode}")]
 		public IHttpActionResult ApplyCoupon(string cartId, string couponCode)
 		{
-			var retVal = _shoppingCartService.GetById(cartId);
+			var retVal = this._shoppingCartService.GetById(cartId);
 
 			//TODO: check coupon from marketing service 
 
-			var coupon = new coreModel.Coupon
+			var coupon = new Domain.Cart.Model.Coupon
 			{
 				CouponCode = couponCode
 			};
-			var discount = new coreModel.Discount
+			var discount = new Domain.Cart.Model.Discount
 			{
 				Description = couponCode,
 				PromotionId = couponCode,
@@ -162,11 +163,10 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 			};
 			retVal.Discounts.Add(discount);
 			retVal.Coupon = coupon;
-			_shoppingCartService.Update(new coreModel.ShoppingCart[] { retVal });
+			this._shoppingCartService.Update(new[] { retVal });
 
 
-			return Ok(retVal.ToWebModel());
+			return this.Ok(retVal.ToWebModel());
 		}
-
-	}
+    }
 }

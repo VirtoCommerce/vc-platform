@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Net;
 using System.Web.Http;
 using System.Web.Http.Description;
-using VirtoCommerce.CatalogModule.Services;
 using VirtoCommerce.CatalogModule.Web.Converters;
+using VirtoCommerce.Domain.Catalog.Services;
 using webModel = VirtoCommerce.CatalogModule.Web.Model;
 
 namespace VirtoCommerce.CatalogModule.Web.Controllers.Api

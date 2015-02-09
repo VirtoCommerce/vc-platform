@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using VirtoCommerce.CatalogModule.Repositories;
+using VirtoCommerce.CatalogModule.Data.Repositories;
 using VirtoCommerce.Foundation.Frameworks;
 using VirtoCommerce.Foundation.Frameworks.Extensions;
 namespace VirtoCommerce.CatalogModule.Data.Services

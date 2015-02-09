@@ -2,7 +2,6 @@
 using System;
 using VirtoCommerce.CatalogModule.Data.Repositories;
 using VirtoCommerce.CatalogModule.Data.Services;
-using VirtoCommerce.CatalogModule.Repositories;
 using VirtoCommerce.CatalogModule.Web.Controllers.Api;
 using VirtoCommerce.Foundation.Assets.Factories;
 using VirtoCommerce.Foundation.Assets.Services;

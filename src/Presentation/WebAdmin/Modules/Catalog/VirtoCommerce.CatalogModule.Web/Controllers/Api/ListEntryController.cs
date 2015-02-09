@@ -6,11 +6,11 @@ using System.Web.Http;
 using System.Web.Http.Description;
 using System.Web.Http.ModelBinding;
 using Microsoft.Practices.Unity;
-using VirtoCommerce.CatalogModule.Services;
 using VirtoCommerce.CatalogModule.Web.Binders;
 using VirtoCommerce.CatalogModule.Web.Converters;
+using VirtoCommerce.Domain.Catalog.Services;
 using VirtoCommerce.Foundation.Frameworks.Extensions;
-using moduleModel = VirtoCommerce.CatalogModule.Model;
+using moduleModel = VirtoCommerce.Domain.Catalog.Model;
 using webModel = VirtoCommerce.CatalogModule.Web.Model;
 
 namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
