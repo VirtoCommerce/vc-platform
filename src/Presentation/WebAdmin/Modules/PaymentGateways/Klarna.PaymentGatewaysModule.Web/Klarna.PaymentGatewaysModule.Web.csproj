@@ -141,11 +141,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\KlarnaGatewayController.cs" />
-    <Compile Include="Exceptions\KlarnaActivateException.cs" />
-    <Compile Include="Exceptions\KlarnaCredentialsException.cs" />
     <Compile Include="Managers\KlarnaPaymentGatewayImpl.cs" />
     <Compile Include="Models\CreatePaymentResult.cs" />
     <Compile Include="Models\KlarnaPaymentInfo.cs" />
+    <Compile Include="Models\PaymentLineItem.cs" />
     <Compile Include="Module.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

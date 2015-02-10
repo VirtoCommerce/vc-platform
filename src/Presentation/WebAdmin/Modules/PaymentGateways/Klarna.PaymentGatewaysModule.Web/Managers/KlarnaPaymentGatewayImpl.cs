@@ -1,5 +1,5 @@
 ﻿using Klarna.Checkout;
-using Klarna.PaymentGatewaysModule.Web.Exceptions;
+using Klarna.PaymentGatewaysModule.Web.Models;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -14,23 +14,27 @@ namespace Klarna.PaymentGatewaysModule.Web.Managers
 	{
 		private int _appKey;
 		private string _secretKey;
-		private const string ContentType = "application/vnd.klarna.checkout.aggregated-order-v2+json";
+		private string _contentType = "application/vnd.klarna.checkout.aggregated-order-v2+json";
 
-		public KlarnaPaymentGatewayImpl(int appKey, string secretKey)
+		private string _gatewayCode;
+		private string _description;
+		private string _logoUrl;
+
+		public KlarnaPaymentGatewayImpl(int appKey, string secretKey, string gatewayCode, string description, string logoUrl)
 		{
 			if (appKey == 0)
-				throw new KlarnaCredentialsException("appKey is wrong");
+				throw new ArgumentNullException("appKey");
 
 			if (string.IsNullOrEmpty(secretKey))
-				throw new KlarnaCredentialsException("secretKey is wrong");
+				throw new ArgumentNullException("secretKey");
 
 			_appKey = appKey;
 			_secretKey = secretKey;
-		}
 
-		private const string _gatewayCode = "Klarna";
-		private const string _description = "Klarna description";
-		private const string _logoUrl = "https://cdn.klarna.com/1.0/shared/image/generic/logo/global/tagline/vertical-blue.png";
+			_gatewayCode = gatewayCode;
+			_description = description;
+			_logoUrl = logoUrl;
+		}
 
 		public string GatewayCode
 		{
@@ -57,17 +61,23 @@ namespace Klarna.PaymentGatewaysModule.Web.Managers
 
 			Order order = new Order(connector, resourceUri)
 			{
-				ContentType = ContentType
+				ContentType = _contentType
 			};
 
 			order.Fetch();
+			var status = order.GetValue("status") as string;
+
+			if (status == "checkout_complete")
+			{
+				var data = new Dictionary<string, object> { { "status", "created" } };
+				order.Update(data);
+			}
 
 			var klarnaCart = order.GetValue("cart") as JObject;
 
 			var amount = (decimal)klarnaCart["total_price_including_tax"];
 			retVal.Amount = amount;
 
-			var status = order.GetValue("status") as string;
 			retVal.IsApproved = status == "checkout_complete";
 
 			var createdDate = order.GetValue("started_at") as string;
@@ -85,7 +95,86 @@ namespace Klarna.PaymentGatewaysModule.Web.Managers
 
 		public PaymentInfo CreatePayment(PaymentInfo paymentInfo)
 		{
-			throw new NotImplementedException();
+			var klarnaPaymentInfo = paymentInfo as KlarnaPaymentInfo;
+
+			if (klarnaPaymentInfo != null)
+			{
+				//Create lineItems
+				var cartItems = new List<Dictionary<string, object>>();
+				foreach (var lineItem in klarnaPaymentInfo.LineItems)
+				{
+					var addedItem = new Dictionary<string, object>();
+
+					if (!string.IsNullOrEmpty(lineItem.Type))
+					{
+						addedItem.Add("type", lineItem.Type);
+					}
+					if (!string.IsNullOrEmpty(lineItem.Name))
+					{
+						addedItem.Add("name", lineItem.Name);
+					}
+					if (!string.IsNullOrEmpty(lineItem.Reference))
+					{
+						addedItem.Add("reference", lineItem.Reference);
+					}
+					if (lineItem.Quantity > 0)
+					{
+						addedItem.Add("quantity", lineItem.Quantity);
+					}
+					if (lineItem.UnitPrice > 0)
+					{
+						addedItem.Add("unit_price", lineItem.UnitPrice);
+					}
+					if (lineItem.DiscountRate > 0)
+					{
+						addedItem.Add("discount_rate", lineItem.DiscountRate);
+					}
+					if (lineItem.TaxRate > 0)
+					{
+						addedItem.Add("tax_rate", lineItem.TaxRate);
+					}
+					cartItems.Add(addedItem);
+				}
+
+				//Create cart
+				var cart = new Dictionary<string, object> { { "items", cartItems } };
+				var data = new Dictionary<string, object>
+				{
+					{ "cart", cart }
+				};
+
+				//Create klarna order
+				var connector = Connector.Create(_secretKey);
+				Order order = null;
+				var merchant = new Dictionary<string, object>
+				{
+					{ "id", _appKey.ToString() },
+					{ "terms_uri", klarnaPaymentInfo.TermsUrl },
+					{ "checkout_uri", klarnaPaymentInfo.CheckoutUrl },
+					{ "confirmation_uri", klarnaPaymentInfo.ConfirmationUrl },
+					{ "push_uri", klarnaPaymentInfo.PushUrl }
+				};
+				data.Add("purchase_country", klarnaPaymentInfo.PurchaseCountry);
+				data.Add("purchase_currency", klarnaPaymentInfo.PurchaseCurrency);
+				data.Add("locale", klarnaPaymentInfo.Locale);
+				data.Add("merchant", merchant);
+				order =
+					new Order(connector)
+					{
+						BaseUri = new Uri("https://checkout.testdrive.klarna.com/checkout/orders"),
+						ContentType = _contentType
+					};
+				order.Create(data);
+				order.Fetch();
+
+				//Gets snippet
+				var gui = order.GetValue("gui") as JObject;
+				var html = gui["snippet"].Value<string>();
+
+				klarnaPaymentInfo.Html = html;
+			}
+
+			return klarnaPaymentInfo;
 		}
 	}
 }

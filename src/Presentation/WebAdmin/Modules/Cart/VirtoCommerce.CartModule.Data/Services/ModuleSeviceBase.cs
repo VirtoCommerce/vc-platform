@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using VirtoCommerce.Foundation.Frameworks;
 using VirtoCommerce.Foundation.Frameworks.Extensions;
 
-namespace VirtoCommerce.CartModule.Data.Repositories
+namespace VirtoCommerce.CartModule.Data.Services
 {
 	public abstract class ModuleServiceBase
 	{
