@@ -1,15 +1,13 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Configuration;
-using System.Threading;
 using System.Web.Configuration;
-using Microsoft.WindowsAzure;
 
 namespace VirtoCommerce.ApiClient.Utilities
 {
     public class ConnectionHelper
     {
-        private static ConcurrentDictionary<string, string> _dictionary = new ConcurrentDictionary<string, string>();
+        private static readonly ConcurrentDictionary<string, string> Dictionary = new ConcurrentDictionary<string, string>();
 
         /// <summary>
         /// Gets the connection string.
@@ -18,19 +16,13 @@ namespace VirtoCommerce.ApiClient.Utilities
         /// <returns>connection string</returns>
         public static string GetConnectionString(string nameOrConnectionString)
         {
-            if (_dictionary.ContainsKey(nameOrConnectionString))
+            if (Dictionary.ContainsKey(nameOrConnectionString))
             {
-                return _dictionary[nameOrConnectionString];
+                return Dictionary[nameOrConnectionString];
             }
 
             // try getting a settings first
-            string settingValue;
-
-            // check if we running in azure, since the code below cause EF6 to stop disposing of objects
-            //if (!String.IsNullOrEmpty(Environment.GetEnvironmentVariable("RoleRoot")))
-            {
-                settingValue = CloudConfigurationManager.GetSetting(nameOrConnectionString);
-            }
+            var settingValue = String.Empty;
 
             if (String.IsNullOrEmpty(settingValue))
             {
@@ -49,23 +41,11 @@ namespace VirtoCommerce.ApiClient.Utilities
             // add value to dictionary
             if (!String.IsNullOrEmpty(settingValue))
             {
-                _dictionary.TryAdd(nameOrConnectionString, settingValue);
+                Dictionary.TryAdd(nameOrConnectionString, settingValue);
             }
 
             return settingValue;
         }
-
-        /*
-        public static string ApiConnectionString(string nameOrConnectionString)
-        {
-            return ApiConnectionString(nameOrConnectionString, ConfigurationManager.AppSettings["DefaultStore"]).ToLower();
-        }
-
-        public static string ApiConnectionString(string nameOrConnectionString, string catalog, string language = null)
-        {
-            return string.Format(GetConnectionString(nameOrConnectionString), catalog ?? "", language ?? Thread.CurrentThread.CurrentUICulture.Name).ToLower();
-        }
-         * */
 
         public static void SetConnectionString(string name, string connectionString)
         {
