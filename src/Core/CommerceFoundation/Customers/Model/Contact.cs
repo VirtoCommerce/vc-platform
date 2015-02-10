@@ -144,6 +144,10 @@ namespace VirtoCommerce.Foundation.Customers.Model
 
                 return _ContactPropertyValues;
             }
+			set
+			{
+				_ContactPropertyValues = value;
+			}
         }
 
         #endregion

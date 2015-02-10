@@ -314,6 +314,10 @@ namespace VirtoCommerce.Foundation.Stores.Model
 
 				return _Languages;
 			}
+			set
+			{
+				_Languages = value;
+			}
 		}
 
 		ObservableCollection<StoreCurrency> _Currencies = null;
@@ -326,6 +330,10 @@ namespace VirtoCommerce.Foundation.Stores.Model
 					_Currencies = new ObservableCollection<StoreCurrency>();
 
 				return _Currencies;
+			}
+			set
+			{
+				_Currencies = value;
 			}
 		}
 
@@ -340,6 +348,10 @@ namespace VirtoCommerce.Foundation.Stores.Model
 
 				return _Settings;
 			}
+			set
+			{
+				_Settings = value;
+			}
 		}
 
 		ObservableCollection<StoreLinkedStore> _LinkedStores = null;
@@ -352,6 +364,10 @@ namespace VirtoCommerce.Foundation.Stores.Model
 					_LinkedStores = new ObservableCollection<StoreLinkedStore>();
 
 				return _LinkedStores;
+			}
+			set
+			{
+				_LinkedStores = value;
 			}
 		}
 
@@ -366,6 +382,10 @@ namespace VirtoCommerce.Foundation.Stores.Model
 
 				return _SupportedCardTypes;
 			}
+			set
+			{
+				_SupportedCardTypes = value;
+			}
 		}
 
 		ObservableCollection<StorePaymentGateway> _PaymentGateways = null;
@@ -378,6 +398,10 @@ namespace VirtoCommerce.Foundation.Stores.Model
 					_PaymentGateways = new ObservableCollection<StorePaymentGateway>();
 
 				return _PaymentGateways;
+			}
+			set
+			{
+				_PaymentGateways = value;
 			}
 		}
 
@@ -392,6 +416,10 @@ namespace VirtoCommerce.Foundation.Stores.Model
 
 				return _TaxCodes;
 			}
+			set
+			{
+				_TaxCodes = value;
+			}
 		}
 
 		ObservableCollection<StoreTaxJurisdiction> _TaxJurisdiction = null;
@@ -404,6 +432,10 @@ namespace VirtoCommerce.Foundation.Stores.Model
 					_TaxJurisdiction = new ObservableCollection<StoreTaxJurisdiction>();
 
 				return _TaxJurisdiction;
+			}
+			set
+			{
+				_TaxJurisdiction = value;
 			}
 		}
 		#endregion

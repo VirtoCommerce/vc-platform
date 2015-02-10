@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 using VirtoCommerce.Foundation.Frameworks;
 using VirtoCommerce.Foundation.Frameworks.Extensions;
 
-namespace VirtoCommerce.OrderModule.Data.Repositories
+namespace VirtoCommerce.Foundation.Data.Infrastructure
 {
-	public abstract class ModuleServiceBase
+	public abstract class ServiceBase
 	{
-		protected void CommitChanges(IRepository repository)
+		protected virtual void CommitChanges(IRepository repository)
 		{
 			try
 			{
@@ -22,7 +22,7 @@ namespace VirtoCommerce.OrderModule.Data.Repositories
 			}
 		}
 
-		protected ObservableChangeTracker GetChangeTracker(IRepository repository)
+		protected virtual ObservableChangeTracker GetChangeTracker(IRepository repository)
 		{
 			var retVal = new ObservableChangeTracker
 			{

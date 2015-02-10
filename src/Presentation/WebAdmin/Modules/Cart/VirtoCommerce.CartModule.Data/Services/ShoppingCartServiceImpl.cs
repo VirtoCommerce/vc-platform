@@ -7,11 +7,12 @@ using VirtoCommerce.CartModule.Data.Converters;
 using VirtoCommerce.CartModule.Data.Repositories;
 using VirtoCommerce.Domain.Cart.Model;
 using VirtoCommerce.Domain.Cart.Services;
+using VirtoCommerce.Foundation.Data.Infrastructure;
 using VirtoCommerce.Foundation.Frameworks.Workflow.Services;
 
 namespace VirtoCommerce.CartModule.Data.Services
 {
-	public class ShoppingCartServiceImpl : ModuleServiceBase, IShoppingCartService
+	public class ShoppingCartServiceImpl : ServiceBase, IShoppingCartService
 	{
 		private const string _workflowName = "CartRecalculate";
 		private Func<ICartRepository> _repositoryFactory;
