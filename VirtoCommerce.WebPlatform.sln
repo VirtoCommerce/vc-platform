@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
-VisualStudioVersion = 12.0.30723.0
+VisualStudioVersion = 12.0.31101.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{0E0CB22C-4501-4E16-B9B7-744B51076524}"
 	ProjectSection(SolutionItems) = preProject
@@ -118,6 +118,12 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MeS.PaymentGatewaysModule.Web", "src\Presentation\WebAdmin\Modules\PaymentGateways\MeS.PaymentGatewaysModule.Web\MeS.PaymentGatewaysModule.Web.csproj", "{E8E2B720-4C70-4714-B1F8-591EB4DA4BA9}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PayPal.PaymentGatewaysModule.Web", "src\Presentation\WebAdmin\Modules\PaymentGateways\PayPal.PaymentGatewaysModule.Web\PayPal.PaymentGatewaysModule.Web.csproj", "{DE5181F4-3191-4882-8138-1537A9A1684C}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CMS", "CMS", "{D1556CC7-62A5-4D89-BD35-FC5B5AE17AE8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerceCMS.PagesModule.Web", "src\Presentation\WebAdmin\Modules\CMS\VirtoCommerceCMS.PagesModule.Web\VirtoCommerceCMS.PagesModule.Web.csproj", "{11FF29EB-5D91-46E4-B593-0DEB2F67B094}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerceCMS.ThemeModule.Web", "src\Presentation\WebAdmin\Modules\CMS\VirtoCommerceCMS.ThemeModule.Web\VirtoCommerceCMS.ThemeModule.Web.csproj", "{639FA8E1-99BE-4386-9808-FC1AEC35FD61}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -245,6 +251,14 @@ Global
 		{DE5181F4-3191-4882-8138-1537A9A1684C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DE5181F4-3191-4882-8138-1537A9A1684C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DE5181F4-3191-4882-8138-1537A9A1684C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{11FF29EB-5D91-46E4-B593-0DEB2F67B094}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{11FF29EB-5D91-46E4-B593-0DEB2F67B094}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{11FF29EB-5D91-46E4-B593-0DEB2F67B094}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{11FF29EB-5D91-46E4-B593-0DEB2F67B094}.Release|Any CPU.Build.0 = Release|Any CPU
+		{639FA8E1-99BE-4386-9808-FC1AEC35FD61}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{639FA8E1-99BE-4386-9808-FC1AEC35FD61}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{639FA8E1-99BE-4386-9808-FC1AEC35FD61}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{639FA8E1-99BE-4386-9808-FC1AEC35FD61}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -291,5 +305,8 @@ Global
 		{F212ED2F-6E93-4931-A8DF-7A128D5DD96B} = {4E79CE95-D200-41C9-B191-324B741494BE}
 		{E8E2B720-4C70-4714-B1F8-591EB4DA4BA9} = {4E79CE95-D200-41C9-B191-324B741494BE}
 		{DE5181F4-3191-4882-8138-1537A9A1684C} = {4E79CE95-D200-41C9-B191-324B741494BE}
+		{D1556CC7-62A5-4D89-BD35-FC5B5AE17AE8} = {A4C0D164-BF77-4B57-8970-B5459B100AC3}
+		{11FF29EB-5D91-46E4-B593-0DEB2F67B094} = {D1556CC7-62A5-4D89-BD35-FC5B5AE17AE8}
+		{639FA8E1-99BE-4386-9808-FC1AEC35FD61} = {D1556CC7-62A5-4D89-BD35-FC5B5AE17AE8}
 	EndGlobalSection
 EndGlobal
