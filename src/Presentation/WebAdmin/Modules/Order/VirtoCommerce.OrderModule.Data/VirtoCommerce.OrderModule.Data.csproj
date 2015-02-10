@@ -79,7 +79,6 @@
     <Compile Include="Repositories\IOrderRepository.cs" />
     <Compile Include="Repositories\OrderRepositoryImpl.cs" />
     <Compile Include="Services\CustomerOrderSearchServiceImpl.cs" />
-    <Compile Include="Services\ModuleSeviceBase.cs" />
     <Compile Include="Services\CustomerOrderServiceImpl.cs" />
     <Compile Include="Services\TimeBasedNumberGeneratorImpl.cs" />
     <Compile Include="Workflow\CalculateTotalsActivity.cs" />

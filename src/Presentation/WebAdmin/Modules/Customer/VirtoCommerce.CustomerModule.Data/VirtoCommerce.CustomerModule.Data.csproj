@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{6DB023E9-E32F-4537-8448-074F88AA55D6}</ProjectGuid>
+    <ProjectGuid>{1E7CB134-7D2C-45FF-8EB7-3C6D474D9536}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>VirtoCommerce.StoreModule.Data</RootNamespace>
-    <AssemblyName>VirtoCommerce.StoreModule.Data</AssemblyName>
+    <RootNamespace>VirtoCommerce.CustomerModule.Data</RootNamespace>
+    <AssemblyName>VirtoCommerce.CustomerModule.Data</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\..\..\..\..\</SolutionDir>
@@ -32,12 +32,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="EntityFramework">
       <HintPath>..\..\..\..\..\..\packages\EntityFramework.6.1.1\lib\net45\EntityFramework.dll</HintPath>
     </Reference>
-    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="EntityFramework.SqlServer">
       <HintPath>..\..\..\..\..\..\packages\EntityFramework.6.1.1\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
     <Reference Include="Omu.ValueInjecter">
@@ -53,18 +51,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Converters\FulfillmentCenterConverter.cs" />
-    <Compile Include="Converters\StoreConverter.cs" />
-    <Compile Include="Converters\StoreSettingConverter.cs" />
+    <Compile Include="Converters\AddressConverter.cs" />
+    <Compile Include="Converters\ContactConverter.cs" />
+    <Compile Include="Converters\NoteConverter.cs" />
+    <Compile Include="Converters\PropertyConverter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Repositories\FoundationStoreRepositoryImpl.cs" />
-    <Compile Include="Repositories\IFoundationStoreRepository.cs" />
-    <Compile Include="Services\StoreServiceImpl.cs" />
+    <Compile Include="Repositories\CustomerRepositoryImpl.cs" />
+    <Compile Include="Repositories\IFoundationCustomerRepository.cs" />
+    <Compile Include="Services\ContactServiceImpl.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <None Include="App.config" />
-    <None Include="packages.config" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\..\Core\CommerceFoundation.Data\CommerceFoundation.Data.csproj">
       <Project>{bb168a74-0f1e-43be-a616-134902238b80}</Project>
@@ -78,6 +74,10 @@
       <Project>{67c58a78-ddea-4fa3-a969-1cab582918e4}</Project>
       <Name>VirtoCommerce.Domain</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />

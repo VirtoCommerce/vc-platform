@@ -50,6 +50,10 @@ namespace VirtoCommerce.Foundation.Customers.Model
 
                 return _Notes;
             }
+			set
+			{
+				_Notes = value;
+			}
         }
 
         private ObservableCollection<Address> _Adresses = null;
@@ -63,6 +67,10 @@ namespace VirtoCommerce.Foundation.Customers.Model
 
                 return _Adresses;
             }
+			set
+			{
+				_Adresses = value;
+			}
         }
 
         ObservableCollection<Contract> _Contracts = null;
@@ -76,6 +84,10 @@ namespace VirtoCommerce.Foundation.Customers.Model
 
                 return _Contracts;
             }
+			set
+			{
+				_Contracts = value;
+			}
         }
 
         ObservableCollection<MemberRelation> _MemberRelations = null;
@@ -89,6 +101,10 @@ namespace VirtoCommerce.Foundation.Customers.Model
 
                 return _MemberRelations;
             }
+			set
+			{
+				_MemberRelations = value;
+			}
         }
 
         private ObservableCollection<Phone> _Phones = null;
@@ -102,6 +118,10 @@ namespace VirtoCommerce.Foundation.Customers.Model
 
                 return _Phones;
             }
+			set
+			{
+				_Phones = value;
+			}
         }
 
 	    private ObservableCollection<Email> _Emails = null;
@@ -114,6 +134,10 @@ namespace VirtoCommerce.Foundation.Customers.Model
                     _Emails=new ObservableCollection<Email>();
 	            return _Emails;
 	        }
+			set
+			{
+				_Emails = value;
+			}
 	    }
 
 
@@ -128,6 +152,10 @@ namespace VirtoCommerce.Foundation.Customers.Model
 
                 return _Labels;
             }
+			set
+			{
+				_Labels = value;
+			}
         }
 
 	    #endregion

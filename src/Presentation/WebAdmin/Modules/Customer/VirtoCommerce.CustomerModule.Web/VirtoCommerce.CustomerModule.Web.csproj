@@ -7,12 +7,12 @@
     <ProductVersion>
     </ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{683AE5A9-C093-45C3-AB86-F916153AAC28}</ProjectGuid>
+    <ProjectGuid>{037CFE60-6A94-4B7E-8608-59602A059640}</ProjectGuid>
     <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>VirtoCommerce.StoreModule.Web</RootNamespace>
-    <AssemblyName>VirtoCommerce.StoreModule.Web</AssemblyName>
+    <RootNamespace>VirtoCommerce.CustomerModule.Web</RootNamespace>
+    <AssemblyName>VirtoCommerce.CustomerModule.Web</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <UseIISExpress>true</UseIISExpress>
     <IISExpressSSLPort />
@@ -104,15 +104,25 @@
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Controllers\Api\StoreModuleController.cs" />
-    <Compile Include="Converters\FulfillmentConverter.cs" />
-    <Compile Include="Converters\StoreConverter.cs" />
-    <Compile Include="Converters\StoreSettingConverter.cs" />
-    <Compile Include="Model\FulfillmentCenter.cs" />
-    <Compile Include="Model\Store.cs" />
-    <Compile Include="Model\StoreSetting.cs" />
+    <Compile Include="Binders\SearchCriteriaBinder.cs" />
+    <Compile Include="Controllers\Api\ContactController.cs" />
+    <Compile Include="Converters\AddressConverter.cs" />
+    <Compile Include="Converters\ContactConverter.cs" />
+    <Compile Include="Converters\NoteConverter.cs" />
+    <Compile Include="Converters\PropertyConverter.cs" />
+    <Compile Include="Converters\SearchCriteriaConverter.cs" />
+    <Compile Include="Converters\SearchResultConverter.cs" />
+    <Compile Include="Model\Address.cs" />
+    <Compile Include="Model\Contact.cs" />
+    <Compile Include="Model\Note.cs" />
+    <Compile Include="Model\Property.cs" />
+    <Compile Include="Model\SearchCriteria.cs" />
+    <Compile Include="Model\SearchResult.cs" />
     <Compile Include="Module.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Scripts\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\..\Core\CommerceFoundation.Data\CommerceFoundation.Data.csproj">
@@ -131,17 +141,10 @@
       <Project>{67c58a78-ddea-4fa3-a969-1cab582918e4}</Project>
       <Name>VirtoCommerce.Domain</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Customer\VirtoCommerce.CustomerModule.Data\VirtoCommerce.CustomerModule.Data.csproj">
+    <ProjectReference Include="..\VirtoCommerce.CustomerModule.Data\VirtoCommerce.CustomerModule.Data.csproj">
       <Project>{1e7cb134-7d2c-45ff-8eb7-3c6d474d9536}</Project>
       <Name>VirtoCommerce.CustomerModule.Data</Name>
     </ProjectReference>
-    <ProjectReference Include="..\VirtoCommerce.StoreModule.Data\VirtoCommerce.StoreModule.Data.csproj">
-      <Project>{6db023e9-e32f-4537-8448-074f88aa55d6}</Project>
-      <Name>VirtoCommerce.StoreModule.Data</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Scripts\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
@@ -156,9 +159,9 @@
         <WebProjectProperties>
           <UseIIS>True</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
-          <DevelopmentServerPort>62308</DevelopmentServerPort>
+          <DevelopmentServerPort>52554</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:62205/</IISUrl>
+          <IISUrl>http://localhost:52554/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

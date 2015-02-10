@@ -8,10 +8,11 @@ using coreModel = VirtoCommerce.Domain.Store.Model;
 using VirtoCommerce.Domain.Store.Services;
 using VirtoCommerce.StoreModule.Data.Repositories;
 using VirtoCommerce.StoreModule.Data.Converters;
+using VirtoCommerce.Foundation.Data.Infrastructure;
 
 namespace VirtoCommerce.StoreModule.Data.Services
 {
-	public class StoreServiceImpl : ModuleServiceBase, IStoreService
+	public class StoreServiceImpl : ServiceBase, IStoreService
 	{
 		private readonly Func<IFoundationStoreRepository> _repositoryFactory;
 		public StoreServiceImpl(Func<IFoundationStoreRepository> repositoryFactory)

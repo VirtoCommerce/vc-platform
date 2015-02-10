@@ -12,10 +12,11 @@ using VirtoCommerce.OrderModule.Data.Repositories;
 using VirtoCommerce.Foundation.Frameworks.Extensions;
 using VirtoCommerce.Foundation.Frameworks;
 using VirtoCommerce.Foundation.Frameworks.Workflow.Services;
+using VirtoCommerce.Foundation.Data.Infrastructure;
 
 namespace VirtoCommerce.OrderModule.Data.Services
 {
-	public class CustomerOrderServiceImpl : ModuleServiceBase, ICustomerOrderService
+	public class CustomerOrderServiceImpl : ServiceBase, ICustomerOrderService
 	{
 		private const string _workflowName = "OrderRecalculate";
 		private readonly Func<IOrderRepository> _repositoryFactory;

@@ -89,6 +89,16 @@
     <Compile Include="Catalog\Services\ICategoryService.cs" />
     <Compile Include="Catalog\Services\IItemService.cs" />
     <Compile Include="Catalog\Services\IPropertyService.cs" />
+    <Compile Include="Customer\Model\Address.cs" />
+    <Compile Include="Customer\Model\AddressType.cs" />
+    <Compile Include="Customer\Model\Contact.cs" />
+    <Compile Include="Customer\Model\Note.cs" />
+    <Compile Include="Customer\Model\Property.cs" />
+    <Compile Include="Customer\Model\PropertyValueType.cs" />
+    <Compile Include="Customer\Model\SearchCriteria.cs" />
+    <Compile Include="Customer\Model\SearchResult.cs" />
+    <Compile Include="Customer\Services\IContactSearchService.cs" />
+    <Compile Include="Customer\Services\IContactService.cs" />
     <Compile Include="Inventory\Model\InventoryInfo.cs" />
     <Compile Include="Inventory\Services\IInventoryService.cs" />
     <Compile Include="Order\Model\Address.cs" />

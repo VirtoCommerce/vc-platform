@@ -50,10 +50,10 @@ namespace VirtoCommerce.StoreModule.Data.Converters
 			if (target == null)
 				throw new ArgumentNullException("target");
 
-			var patchInjection = new PatchInjection<foundationModel.FulfillmentCenter>(x => x.City, x => x.CountryCode, x => x.CountryName, x => x.DaytimePhoneNumber,
+			var patchInjectionPolicy = new PatchInjection<foundationModel.FulfillmentCenter>(x => x.City, x => x.CountryCode, x => x.CountryName, x => x.DaytimePhoneNumber,
 																							x => x.Description, x => x.Line2, x => x.Line1, x => x.MaxReleasesPerPickBatch, x => x.Name,
 																							x => x.PickDelay, x => x.PostalCode);
-			target.InjectFrom(patchInjection, source);
+			target.InjectFrom(patchInjectionPolicy, source);
 
 		}
 	}

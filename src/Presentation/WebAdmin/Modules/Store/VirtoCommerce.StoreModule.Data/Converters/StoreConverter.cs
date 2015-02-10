@@ -134,13 +134,13 @@ namespace VirtoCommerce.StoreModule.Data.Converters
 		{
 			if (target == null)
 				throw new ArgumentNullException("target");
-			var patchInjection = new PatchInjection<foundationModel.Store>(x => x.AdminEmail, x => x.Catalog,
+			var patchInjectionPolicy = new PatchInjection<foundationModel.Store>(x => x.AdminEmail, x => x.Catalog,
 																		   x => x.Country, x => x.CreditCardSavePolicy,
 																		   x => x.DefaultCurrency, x => x.DefaultLanguage,
 																		   x => x.Description, x => x.DisplayOutOfStock,
 																		   x => x.Email, x => x.Name, x => x.Region, x => x.SecureUrl,
 																		   x => x.TimeZone, x => x.Url, x=>x.StoreState);
-			target.InjectFrom(patchInjection, source);
+			target.InjectFrom(patchInjectionPolicy, source);
 
 
 			if (source.FulfillmentCenter != null)
