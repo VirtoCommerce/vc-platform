@@ -140,6 +140,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerceCMS.PagesModul
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerceCMS.ThemeModule.Web", "src\Presentation\WebAdmin\Modules\CMS\VirtoCommerceCMS.ThemeModule.Web\VirtoCommerceCMS.ThemeModule.Web.csproj", "{639FA8E1-99BE-4386-9808-FC1AEC35FD61}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerceCMS.Data", "src\Presentation\WebAdmin\Modules\CMS\VirtoCommerceCMS.Data\VirtoCommerceCMS.Data.csproj", "{E55E08B5-3AF9-467D-8F90-4BEF27BAFA28}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerceCMS.Test", "src\Presentation\WebAdmin\Modules\CMS\VirtoCommerceCMS.Test\VirtoCommerceCMS.Test.csproj", "{8CD7D981-DFAB-4DA6-80C9-9C661FA831B1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -298,6 +302,14 @@ Global
 		{639FA8E1-99BE-4386-9808-FC1AEC35FD61}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{639FA8E1-99BE-4386-9808-FC1AEC35FD61}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{639FA8E1-99BE-4386-9808-FC1AEC35FD61}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E55E08B5-3AF9-467D-8F90-4BEF27BAFA28}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E55E08B5-3AF9-467D-8F90-4BEF27BAFA28}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E55E08B5-3AF9-467D-8F90-4BEF27BAFA28}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E55E08B5-3AF9-467D-8F90-4BEF27BAFA28}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8CD7D981-DFAB-4DA6-80C9-9C661FA831B1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8CD7D981-DFAB-4DA6-80C9-9C661FA831B1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8CD7D981-DFAB-4DA6-80C9-9C661FA831B1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8CD7D981-DFAB-4DA6-80C9-9C661FA831B1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -355,5 +367,7 @@ Global
 		{D1556CC7-62A5-4D89-BD35-FC5B5AE17AE8} = {A4C0D164-BF77-4B57-8970-B5459B100AC3}
 		{11FF29EB-5D91-46E4-B593-0DEB2F67B094} = {D1556CC7-62A5-4D89-BD35-FC5B5AE17AE8}
 		{639FA8E1-99BE-4386-9808-FC1AEC35FD61} = {D1556CC7-62A5-4D89-BD35-FC5B5AE17AE8}
+		{E55E08B5-3AF9-467D-8F90-4BEF27BAFA28} = {D1556CC7-62A5-4D89-BD35-FC5B5AE17AE8}
+		{8CD7D981-DFAB-4DA6-80C9-9C661FA831B1} = {D1556CC7-62A5-4D89-BD35-FC5B5AE17AE8}
 	EndGlobalSection
 EndGlobal
