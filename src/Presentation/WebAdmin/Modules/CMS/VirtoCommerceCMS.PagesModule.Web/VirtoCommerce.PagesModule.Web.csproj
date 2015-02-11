@@ -7,12 +7,12 @@
     <ProductVersion>
     </ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{639FA8E1-99BE-4386-9808-FC1AEC35FD61}</ProjectGuid>
+    <ProjectGuid>{11FF29EB-5D91-46E4-B593-0DEB2F67B094}</ProjectGuid>
     <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>VirtoCommerceCMS.ThemeModule.Web</RootNamespace>
-    <AssemblyName>VirtoCommerceCMS.ThemeModule.Web</AssemblyName>
+    <RootNamespace>VirtoCommerce.PagesModule.Web</RootNamespace>
+    <AssemblyName>VirtoCommerce.PagesModule.Web</AssemblyName>
     <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
     <UseIISExpress>true</UseIISExpress>
     <IISExpressSSLPort />
@@ -110,28 +110,22 @@
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Controllers\Api\ThemeController.cs" />
-    <Compile Include="Converters\ContentItemConverter.cs" />
-    <Compile Include="Models\ContentItem.cs" />
-    <Compile Include="Models\ContentType.cs" />
+    <Compile Include="Controllers\Api\PagesController.cs" />
     <Compile Include="Module.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="App_Data\" />
     <Folder Include="Scripts\app\wizards\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\..\Core\CommerceFoundation\CommerceFoundation.csproj">
-      <Project>{e7fc9a51-1b39-4bdc-983a-8a059c5fc58b}</Project>
-      <Name>CommerceFoundation</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\..\VirtoCommerce.Framework.Web\VirtoCommerce.Framework.Web.csproj">
       <Project>{f7c9313b-522e-4619-abc9-8c7d4600d6b5}</Project>
       <Name>VirtoCommerce.Framework.Web</Name>
     </ProjectReference>
-    <ProjectReference Include="..\VirtoCommerceCMS.Data\VirtoCommerceCMS.Data.csproj">
+    <ProjectReference Include="..\VirtoCommerceCMS.Data\VirtoCommerce.Content.Data.csproj">
       <Project>{e55e08b5-3af9-467d-8f90-4bef27bafa28}</Project>
-      <Name>VirtoCommerceCMS.Data</Name>
+      <Name>VirtoCommerce.Content.Data</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
@@ -147,9 +141,9 @@
         <WebProjectProperties>
           <UseIIS>True</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
-          <DevelopmentServerPort>52814</DevelopmentServerPort>
+          <DevelopmentServerPort>52805</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:52814/</IISUrl>
+          <IISUrl>http://localhost:52805/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

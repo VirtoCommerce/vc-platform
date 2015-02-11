@@ -7,8 +7,8 @@
     <ProjectGuid>{8CD7D981-DFAB-4DA6-80C9-9C661FA831B1}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>VirtoCommerceCMS.Test</RootNamespace>
-    <AssemblyName>VirtoCommerceCMS.Test</AssemblyName>
+    <RootNamespace>VirtoCommerce.Content.Tests</RootNamespace>
+    <AssemblyName>VirtoCommerce.Content.Tests</AssemblyName>
     <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -85,13 +85,13 @@
       <Project>{f7c9313b-522e-4619-abc9-8c7d4600d6b5}</Project>
       <Name>VirtoCommerce.Framework.Web</Name>
     </ProjectReference>
-    <ProjectReference Include="..\VirtoCommerceCMS.Data\VirtoCommerceCMS.Data.csproj">
+    <ProjectReference Include="..\VirtoCommerceCMS.Data\VirtoCommerce.Content.Data.csproj">
       <Project>{e55e08b5-3af9-467d-8f90-4bef27bafa28}</Project>
-      <Name>VirtoCommerceCMS.Data</Name>
+      <Name>VirtoCommerce.Content.Data</Name>
     </ProjectReference>
-    <ProjectReference Include="..\VirtoCommerceCMS.ThemeModule.Web\VirtoCommerceCMS.ThemeModule.Web.csproj">
+    <ProjectReference Include="..\VirtoCommerceCMS.ThemeModule.Web\VirtoCommerce.ThemeModule.Web.csproj">
       <Project>{639fa8e1-99be-4386-9808-fc1aec35fd61}</Project>
-      <Name>VirtoCommerceCMS.ThemeModule.Web</Name>
+      <Name>VirtoCommerce.ThemeModule.Web</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

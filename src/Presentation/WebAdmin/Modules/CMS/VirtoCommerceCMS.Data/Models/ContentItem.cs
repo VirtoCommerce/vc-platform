@@ -1,54 +1,61 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using VirtoCommerce.Foundation.Frameworks;
-
-namespace VirtoCommerceCMS.Data.Models
+﻿namespace VirtoCommerce.Content.Data.Models
 {
-	public class ContentItem : Entity
-	{
-		[Required]
-		public DateTime CreatedDate { get; set; }
-		[Required]
-		[StringLength(64)]
-		public string CreatedBy { get; set; }
-		public DateTime? ModifiedDate { get; set; }
-		[StringLength(64)]
-		public string ModifiedBy { get; set; }
+    #region
 
-		[Required]
-		public string Content { get; set; }
+    using System;
+    using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
 
-		[NotMapped]
-		public ContentType ContentType 
-		{
-			get
-			{
-				return (ContentType)Enum.Parse(typeof(ContentType), this.Type);
-			}
-			set
-			{
-				this.Type = value.ToString();
-			}
-		}
+    using VirtoCommerce.Foundation.Frameworks;
 
-		[Required]
-		public string Type { get; set; }
-		//public 
+    #endregion
 
-		[StringLength(128)]
-		public string ParentContentItemId { get; set; }
+    public class ContentItem : Entity
+    {
+        #region Public Properties
 
-		public virtual ContentItem ParentContentItem { get; set; }
+        [Required]
+        public string Content { get; set; }
 
-		[Required]
-		public string Path { get; set; }
+        [NotMapped]
+        public ContentType ContentType
+        {
+            get
+            {
+                return (ContentType)Enum.Parse(typeof(ContentType), this.Type);
+            }
+            set
+            {
+                this.Type = value.ToString();
+            }
+        }
 
-		[Required]
-		public string Name { get; set; }
-	}
+        [Required]
+        [StringLength(64)]
+        public string CreatedBy { get; set; }
+
+        [Required]
+        public DateTime CreatedDate { get; set; }
+
+        [StringLength(64)]
+        public string ModifiedBy { get; set; }
+
+        public DateTime? ModifiedDate { get; set; }
+
+        [Required]
+        public string Name { get; set; }
+
+        public virtual ContentItem ParentContentItem { get; set; }
+
+        [StringLength(128)]
+        public string ParentContentItemId { get; set; }
+
+        [Required]
+        public string Path { get; set; }
+
+        [Required]
+        public string Type { get; set; }
+
+        #endregion
+    }
 }

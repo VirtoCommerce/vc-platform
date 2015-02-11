@@ -1,72 +1,93 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
-using System.Web.Http;
-using System.Web.Http.Description;
-using VirtoCommerce.Framework.Web.Settings;
-using VirtoCommerceCMS.Data.Repositories;
-using VirtoCommerceCMS.ThemeModule.Web.Models;
-
-namespace VirtoCommerceCMS.ThemeModule.Web.Controllers.Api
+﻿namespace VirtoCommerce.ThemeModule.Web.Controllers.Api
 {
-	[RoutePrefix("api/cms/theme")]
-	public class ThemeController : ApiController
-	{
-		private IFileRepository _fileRepository;
+    #region
 
-		public ThemeController(Func<string, IFileRepository> factory, ISettingsManager manager)
-		{
-			if (factory == null)
-				throw new ArgumentNullException("factory");
+    using System;
+    using System.Linq;
+    using System.Web.Http;
+    using System.Web.Http.Description;
 
-			if (manager == null)
-				throw new ArgumentNullException("manager");
+    using VirtoCommerce.Content.Data.Repositories;
+    using VirtoCommerce.Framework.Web.Settings;
+    using VirtoCommerce.ThemeModule.Web.Converters;
+    using VirtoCommerce.ThemeModule.Web.Models;
 
-			var choosenRepository = manager.GetValue("VirtoCommerceCMS.ThemeModule.MainProperties.ThemesRepositoryType", string.Empty);
+    #endregion
 
-			var fileRepository = factory.Invoke(choosenRepository);
-			_fileRepository = fileRepository;
-		}
+    [RoutePrefix("api/cms/theme")]
+    public class ThemeController : ApiController
+    {
+        #region Fields
 
-		[HttpGet]
-		[ResponseType(typeof(ContentItem[]))]
-		[Route("items")]
-		public IHttpActionResult GetItems(string path)
-		{
-			var items = _fileRepository.GetContentItems(path);
+        private readonly IFileRepository _fileRepository;
 
-			var retValItems = items.Select(i => i.ToWebModel());
+        #endregion
 
-			return Ok(retValItems.ToArray());
-		}
+        #region Constructors and Destructors
 
-		[HttpGet]
-		[ResponseType(typeof(ContentItem))]
-		[Route("item")]
-		public IHttpActionResult GetItem(string path)
-		{
-			var item = _fileRepository.GetContentItem(path);
-			return Ok(item.ToWebModel());
-		}
+        public ThemeController(Func<string, IFileRepository> factory, ISettingsManager manager)
+        {
+            if (factory == null)
+            {
+                throw new ArgumentNullException("factory");
+            }
 
-		[HttpPost]
-		[Route("save")]
-		public IHttpActionResult SaveItem(ContentItem item)
-		{
-			var domainItem = item.ToDomainModel();
-			_fileRepository.SaveContentItem(domainItem);
-			return Ok();
-		}
+            if (manager == null)
+            {
+                throw new ArgumentNullException("manager");
+            }
 
-		[HttpDelete]
-		[Route("delete")]
-		public IHttpActionResult DeleteItem(ContentItem item)
-		{
-			var domainItem = item.ToDomainModel();
-			_fileRepository.DeleteContentItem(domainItem);
-			return Ok();
-		}
-	}
+            var choosenRepository = manager.GetValue(
+                "VirtoCommerce.ThemeModule.MainProperties.ThemesRepositoryType",
+                string.Empty);
+
+            var fileRepository = factory.Invoke(choosenRepository);
+            this._fileRepository = fileRepository;
+        }
+
+        #endregion
+
+        #region Public Methods and Operators
+
+        [HttpDelete]
+        [Route("delete")]
+        public IHttpActionResult DeleteItem(ContentItem item)
+        {
+            var domainItem = item.ToDomainModel();
+            this._fileRepository.DeleteContentItem(domainItem);
+            return this.Ok();
+        }
+
+        [HttpGet]
+        [ResponseType(typeof(ContentItem))]
+        [Route("item")]
+        public IHttpActionResult GetItem(string path)
+        {
+            var item = this._fileRepository.GetContentItem(path);
+            return this.Ok(item.ToWebModel());
+        }
+
+        [HttpGet]
+        [ResponseType(typeof(ContentItem[]))]
+        [Route("items")]
+        public IHttpActionResult GetItems(string path)
+        {
+            var items = this._fileRepository.GetContentItems(path);
+
+            var retValItems = items.Select(i => i.ToWebModel());
+
+            return this.Ok(retValItems.ToArray());
+        }
+
+        [HttpPost]
+        [Route("save")]
+        public IHttpActionResult SaveItem(ContentItem item)
+        {
+            var domainItem = item.ToDomainModel();
+            this._fileRepository.SaveContentItem(domainItem);
+            return this.Ok();
+        }
+
+        #endregion
+    }
 }

@@ -1,39 +1,46 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using webModels = VirtoCommerceCMS.ThemeModule.Web.Models;
-using dataModels = VirtoCommerceCMS.Data.Models;
-
-namespace VirtoCommerceCMS.ThemeModule.Web
+﻿namespace VirtoCommerce.ThemeModule.Web.Converters
 {
-	public static class ContentItemConverter
-	{
-		public static dataModels.ContentItem ToDomainModel(this webModels.ContentItem item)
-		{
-			var retVal = new dataModels.ContentItem();
+    #region
 
-			retVal.Content = item.Content;
-			retVal.CreatedDate = DateTime.UtcNow;
-			retVal.ContentType = item.Type == webModels.ContentType.Directory ? dataModels.ContentType.Directory : dataModels.ContentType.File;
-			retVal.Name = item.Name;
-			retVal.Path = item.Path;
-			retVal.ParentContentItemId = item.ParentContentItemId;
+    using System;
 
-			return retVal;
-		}
+    using VirtoCommerce.Content.Data.Models;
 
-		public static webModels.ContentItem ToWebModel(this dataModels.ContentItem item)
-		{
-			var retVal = new webModels.ContentItem();
+    #endregion
 
-			retVal.Content = item.Content;
-			retVal.Name = item.Name;
-			retVal.Path = item.Path;
-			retVal.ParentContentItemId = item.ParentContentItemId;
-			retVal.Type = item.ContentType == dataModels.ContentType.Directory ? webModels.ContentType.Directory : webModels.ContentType.File;
+    public static class ContentItemConverter
+    {
+        #region Public Methods and Operators
 
-			return retVal;
-		}
-	}
+        public static ContentItem ToDomainModel(this Models.ContentItem item)
+        {
+            var retVal = new ContentItem();
+
+            retVal.Content = item.Content;
+            retVal.CreatedDate = DateTime.UtcNow;
+            retVal.ContentType = item.Type == Models.ContentType.Directory ? ContentType.Directory : ContentType.File;
+            retVal.Name = item.Name;
+            retVal.Path = item.Path;
+            retVal.ParentContentItemId = item.ParentContentItemId;
+
+            return retVal;
+        }
+
+        public static Models.ContentItem ToWebModel(this ContentItem item)
+        {
+            var retVal = new Models.ContentItem();
+
+            retVal.Content = item.Content;
+            retVal.Name = item.Name;
+            retVal.Path = item.Path;
+            retVal.ParentContentItemId = item.ParentContentItemId;
+            retVal.Type = item.ContentType == ContentType.Directory
+                ? Models.ContentType.Directory
+                : Models.ContentType.File;
+
+            return retVal;
+        }
+
+        #endregion
+    }
 }

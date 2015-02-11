@@ -1,36 +1,40 @@
-﻿using System;
-using System.Collections.Generic;
-using Microsoft.Practices.Unity;
-using VirtoCommerce.Framework.Web.Modularity;
-
-namespace VirtoCommerceCMS.PagesModule.Web
+﻿namespace VirtoCommerce.PagesModule.Web
 {
-	public class Module : IModule//, IDatabaseModule
-	{
-		private readonly IUnityContainer _container;
-		public Module(IUnityContainer container)
-		{
-			_container = container;
-		}
+    #region
 
-		#region IModule Members
+    using Microsoft.Practices.Unity;
 
-		public void Initialize()
-		{
+    using VirtoCommerce.Framework.Web.Modularity;
 
-		}
+    #endregion
 
-		#endregion
+    public class Module : IModule //, IDatabaseModule
+    {
+        #region Fields
 
+        private readonly IUnityContainer _container;
 
+        #endregion
 
-		#region IDatabaseModule Members
+        #region Constructors and Destructors
 
-		public void SetupDatabase(SampleDataLevel sampleDataLevel)
-		{
+        public Module(IUnityContainer container)
+        {
+            this._container = container;
+        }
 
-		}
+        #endregion
 
-		#endregion
-	}
+        #region Public Methods and Operators
+
+        public void Initialize()
+        {
+        }
+
+        public void SetupDatabase(SampleDataLevel sampleDataLevel)
+        {
+        }
+
+        #endregion
+    }
 }

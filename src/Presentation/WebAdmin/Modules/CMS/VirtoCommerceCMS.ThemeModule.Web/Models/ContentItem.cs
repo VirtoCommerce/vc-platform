@@ -1,17 +1,27 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-
-namespace VirtoCommerceCMS.ThemeModule.Web.Models
+﻿namespace VirtoCommerce.ThemeModule.Web.Models
 {
-	public class ContentItem
-	{
-		public DateTime Created { get; set; }
-		public string Content { get; set; }
-		public string Name { get; set; }
-		public string Path { get; set; }
-		public ContentType Type { get; set; }
-		public string ParentContentItemId { get; set; }
-	}
+    #region
+
+    using System;
+
+    #endregion
+
+    public class ContentItem
+    {
+        #region Public Properties
+
+        public string Content { get; set; }
+
+        public DateTime Created { get; set; }
+
+        public string Name { get; set; }
+
+        public string ParentContentItemId { get; set; }
+
+        public string Path { get; set; }
+
+        public ContentType Type { get; set; }
+
+        #endregion
+    }
 }

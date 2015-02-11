@@ -1,72 +1,85 @@
-﻿using System;
-using System.Collections.Generic;
-using Microsoft.Practices.Unity;
-using VirtoCommerce.Framework.Web.Modularity;
-using VirtoCommerceCMS.Data.Repositories;
-using VirtoCommerce.Framework.Web.Settings;
-using VirtoCommerceCMS.ThemeModule.Web.Controllers.Api;
-using System.IO;
-using System.Web.Hosting;
-
-namespace VirtoCommerceCMS.ThemeModule.Web
+﻿namespace VirtoCommerce.ThemeModule.Web
 {
-	public class Module : IModule//, IDatabaseModule
-	{
-		private readonly IUnityContainer _container;
-		public Module(IUnityContainer container)
-		{
-			_container = container;
-		}
+    #region
 
-		#region IModule Members
+    using System;
 
-		public void Initialize()
-		{
-			var settingsManager = _container.Resolve<ISettingsManager>();
+    using Microsoft.Practices.Unity;
 
-			var githubLogin = settingsManager.GetValue("VirtoCommerceCMS.ThemeModule.GitHub.Login", string.Empty);
-			var githubPassword = settingsManager.GetValue("VirtoCommerceCMS.ThemeModule.GitHub.Password", string.Empty);
-			var githubProductHeaderValue = settingsManager.GetValue("VirtoCommerceCMS.ThemeModule.GitHub.ProductHeaderValue", string.Empty);
-			var githubOwnerName = settingsManager.GetValue("VirtoCommerceCMS.ThemeModule.GitHub.OwnerName", string.Empty);
-			var githubRepositoryName = settingsManager.GetValue("VirtoCommerceCMS.ThemeModule.GitHub.RepositoryName", string.Empty);
+    using VirtoCommerce.Content.Data.Repositories;
+    using VirtoCommerce.Framework.Web.Modularity;
+    using VirtoCommerce.Framework.Web.Settings;
+    using VirtoCommerce.ThemeModule.Web.Controllers.Api;
 
-			Func<string, IFileRepository> factory = (x) =>
-				{
-					switch (x)
-					{
-						case "GitHub":
-							return new GitHubFileRepositoryImpl(githubLogin, githubPassword, githubProductHeaderValue, githubOwnerName, githubRepositoryName);
+    #endregion
 
-						case "Database":
-							return new DatabaseFileRepositoryImpl();
+    public class Module : IModule //, IDatabaseModule
+    {
+        #region Fields
 
-						case "File System":
-							return new FileSystemFileRepositoryImpl();
+        private readonly IUnityContainer _container;
 
-						default:
-							return new FileSystemFileRepositoryImpl();
-					}
-				};
+        #endregion
 
-			//if(!Directory.Exists(HostingEnvironment.MapPath("~/Themes/")))
-			//{
-			//	Directory.CreateDirectory(HostingEnvironment.MapPath("~/Themes/"));
-			//}
+        #region Constructors and Destructors
 
-			_container.RegisterType<ThemeController>(new InjectionConstructor(factory, settingsManager));
-		}
+        public Module(IUnityContainer container)
+        {
+            this._container = container;
+        }
 
-		#endregion
+        #endregion
 
+        #region Public Methods and Operators
 
+        public void Initialize()
+        {
+            var settingsManager = this._container.Resolve<ISettingsManager>();
 
-		#region IDatabaseModule Members
+            var githubLogin = settingsManager.GetValue("VirtoCommerce.ThemeModule.GitHub.Login", string.Empty);
+            var githubPassword = settingsManager.GetValue("VirtoCommerce.ThemeModule.GitHub.Password", string.Empty);
+            var githubProductHeaderValue =
+                settingsManager.GetValue("VirtoCommerce.ThemeModule.GitHub.ProductHeaderValue", string.Empty);
+            var githubOwnerName = settingsManager.GetValue("VirtoCommerce.ThemeModule.GitHub.OwnerName", string.Empty);
+            var githubRepositoryName = settingsManager.GetValue(
+                "VirtoCommerce.ThemeModule.GitHub.RepositoryName",
+                string.Empty);
 
-		public void SetupDatabase(SampleDataLevel sampleDataLevel)
-		{
+            Func<string, IFileRepository> factory = (x) =>
+            {
+                switch (x)
+                {
+                    case "GitHub":
+                        return new GitHubFileRepositoryImpl(
+                            githubLogin,
+                            githubPassword,
+                            githubProductHeaderValue,
+                            githubOwnerName,
+                            githubRepositoryName);
 
-		}
+                    case "Database":
+                        return new DatabaseFileRepositoryImpl();
 
-		#endregion
-	}
+                    case "File System":
+                        return new FileSystemFileRepositoryImpl();
+
+                    default:
+                        return new FileSystemFileRepositoryImpl();
+                }
+            };
+
+            //if(!Directory.Exists(HostingEnvironment.MapPath("~/Themes/")))
+            //{
+            //	Directory.CreateDirectory(HostingEnvironment.MapPath("~/Themes/"));
+            //}
+
+            this._container.RegisterType<ThemeController>(new InjectionConstructor(factory, settingsManager));
+        }
+
+        public void SetupDatabase(SampleDataLevel sampleDataLevel)
+        {
+        }
+
+        #endregion
+    }
 }

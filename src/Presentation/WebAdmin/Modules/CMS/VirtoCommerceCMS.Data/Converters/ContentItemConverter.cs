@@ -1,33 +1,39 @@
-﻿using Octokit;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using VirtoCommerceCMS.Data.Models;
-
-namespace VirtoCommerceCMS.Data.Converters
+﻿namespace VirtoCommerce.Content.Data.Converters
 {
-	public static class ContentItemConverter
-	{
-		public static ContentItem RepositoryContent2ContentItem(RepositoryContent repositoryContent)
-		{
-			ContentItem retVal = null;
+    #region
 
-			if (repositoryContent.Type == Octokit.ContentType.Dir || repositoryContent.Type == Octokit.ContentType.File)
-			{
-				retVal = new ContentItem();
+    using Octokit;
 
-				retVal.Content = repositoryContent.Content;
-				retVal.ContentType = repositoryContent.Type == Octokit.ContentType.Dir ?
-					Models.ContentType.Directory :
-					Models.ContentType.File;
+    using VirtoCommerce.Content.Data.Models;
 
-				retVal.Name = repositoryContent.Name;
-				retVal.Path = repositoryContent.Path;
-			}
+    using ContentType = Octokit.ContentType;
 
-			return retVal;
-		}
-	}
+    #endregion
+
+    public static class ContentItemConverter
+    {
+        #region Public Methods and Operators
+
+        public static ContentItem RepositoryContent2ContentItem(RepositoryContent repositoryContent)
+        {
+            ContentItem retVal = null;
+
+            if (repositoryContent.Type == ContentType.Dir || repositoryContent.Type == ContentType.File)
+            {
+                retVal = new ContentItem();
+
+                retVal.Content = repositoryContent.Content;
+                retVal.ContentType = repositoryContent.Type == ContentType.Dir
+                    ? Models.ContentType.Directory
+                    : Models.ContentType.File;
+
+                retVal.Name = repositoryContent.Name;
+                retVal.Path = repositoryContent.Path;
+            }
+
+            return retVal;
+        }
+
+        #endregion
+    }
 }

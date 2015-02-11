@@ -1,18 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using VirtoCommerce.Foundation.Frameworks;
-using VirtoCommerceCMS.Data.Models;
-
-namespace VirtoCommerceCMS.Data.Repositories
+﻿namespace VirtoCommerce.Content.Data.Repositories
 {
-	public interface IFileRepository
-	{
-		ContentItem[] GetContentItems(string path);
-		ContentItem GetContentItem(string path);
-		void SaveContentItem(ContentItem item);
-		void DeleteContentItem(ContentItem item);
-	}
+    #region
+
+    using VirtoCommerce.Content.Data.Models;
+
+    #endregion
+
+    public interface IFileRepository
+    {
+        #region Public Methods and Operators
+
+        void DeleteContentItem(ContentItem item);
+
+        ContentItem GetContentItem(string path);
+
+        ContentItem[] GetContentItems(string path);
+
+        void SaveContentItem(ContentItem item);
+
+        #endregion
+    }
 }

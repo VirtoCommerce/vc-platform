@@ -1,40 +1,48 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace VirtoCommerceCMS.Data.Repositories
+﻿namespace VirtoCommerce.Content.Data.Repositories
 {
-	public class FileSystemFileRepositoryImpl : IFileRepository
-	{
-		private string _mainPath;
+    #region
 
-		//public FileSystemFileRepositoryImpl(string mainPath)
-		//{
-		//	_mainPath = mainPath;
-		//}
+    using System;
 
-		public Models.ContentItem[] GetContentItems(string path)
-		{
-			throw new NotImplementedException();
-		}
+    using VirtoCommerce.Content.Data.Models;
 
-		public Models.ContentItem GetContentItem(string path)
-		{
-			throw new NotImplementedException();
-		}
+    #endregion
 
-		public void SaveContentItem(Models.ContentItem item)
-		{
-			throw new NotImplementedException();
-		}
+    public class FileSystemFileRepositoryImpl : IFileRepository
+    {
+        #region Fields
 
-		public void DeleteContentItem(Models.ContentItem item)
-		{
-			throw new NotImplementedException();
-		}
+        #endregion
 
-		//private string 
-	}
+        #region Public Methods and Operators
+
+        public void DeleteContentItem(ContentItem item)
+        {
+            throw new NotImplementedException();
+        }
+
+        //public FileSystemFileRepositoryImpl(string mainPath)
+        //{
+        //	_mainPath = mainPath;
+        //}
+
+        public ContentItem GetContentItem(string path)
+        {
+            throw new NotImplementedException();
+        }
+
+        public ContentItem[] GetContentItems(string path)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void SaveContentItem(ContentItem item)
+        {
+            throw new NotImplementedException();
+        }
+
+        #endregion
+
+        //private string 
+    }
 }
