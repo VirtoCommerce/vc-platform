@@ -11,15 +11,24 @@ namespace VirtoCommerce.Foundation.Data.Security
 		protected override void Seed(EFSecurityRepository context)
 		{
 			base.Seed(context);
-			CreateAspNetSecurity(context);
 
+			CreateAdminAccount(context);
 			CreatePermissions(context);
 			CreateRoles(context);
 		}
 
-		private void CreateAspNetSecurity(EFSecurityRepository context)
+		private static void CreateAdminAccount(EFSecurityRepository context)
 		{
-			ExecuteSqlScriptFile(context, "AspNetIdentity.sql", "Security");
+			context.Add(new Account
+			{
+				AccountId = "1",
+				MemberId = "1",
+				UserName = "admin",
+				RegisterType = (int)RegisterType.Administrator,
+				AccountState = (int)AccountState.Approved,
+			});
+
+			context.UnitOfWork.Commit();
 		}
 
 		private void CreatePermissions(EFSecurityRepository client)
