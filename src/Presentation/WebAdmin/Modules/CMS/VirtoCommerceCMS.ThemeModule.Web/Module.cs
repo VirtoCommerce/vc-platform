@@ -5,6 +5,8 @@ using VirtoCommerce.Framework.Web.Modularity;
 using VirtoCommerceCMS.Data.Repositories;
 using VirtoCommerce.Framework.Web.Settings;
 using VirtoCommerceCMS.ThemeModule.Web.Controllers.Api;
+using System.IO;
+using System.Web.Hosting;
 
 namespace VirtoCommerceCMS.ThemeModule.Web
 {
@@ -45,6 +47,11 @@ namespace VirtoCommerceCMS.ThemeModule.Web
 							return new FileSystemFileRepositoryImpl();
 					}
 				};
+
+			//if(!Directory.Exists(HostingEnvironment.MapPath("~/Themes/")))
+			//{
+			//	Directory.CreateDirectory(HostingEnvironment.MapPath("~/Themes/"));
+			//}
 
 			_container.RegisterType<ThemeController>(new InjectionConstructor(factory, settingsManager));
 		}

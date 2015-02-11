@@ -8,6 +8,13 @@ namespace VirtoCommerceCMS.Data.Repositories
 {
 	public class FileSystemFileRepositoryImpl : IFileRepository
 	{
+		private string _mainPath;
+
+		//public FileSystemFileRepositoryImpl(string mainPath)
+		//{
+		//	_mainPath = mainPath;
+		//}
+
 		public Models.ContentItem[] GetContentItems(string path)
 		{
 			throw new NotImplementedException();
@@ -27,5 +34,7 @@ namespace VirtoCommerceCMS.Data.Repositories
 		{
 			throw new NotImplementedException();
 		}
+
+		//private string 
 	}
 }
