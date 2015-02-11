@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Management.Automation;
 using VirtoCommerce.Foundation.Data.Security;
+using VirtoCommerce.Foundation.Data.Security.Identity;
 using VirtoCommerce.Foundation.Frameworks;
 
 namespace VirtoCommerce.PowerShell.DatabaseSetup.Cmdlet
@@ -17,6 +18,18 @@ namespace VirtoCommerce.PowerShell.DatabaseSetup.Cmdlet
 
 			try
 			{
+				using (var db = new SecurityDbContext(connection))
+				{
+					if (sample)
+					{
+						new IdentitySampleDatabaseInitializer().InitializeDatabase(db);
+					}
+					else
+					{
+						new IdentityDatabaseInitializer().InitializeDatabase(db);
+					}
+				}
+
 				using (var db = new EFSecurityRepository(connection))
 				{
 					if (sample)
