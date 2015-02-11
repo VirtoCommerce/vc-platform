@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using VirtoCommerce.Foundation.Security.Model;
 
 namespace VirtoCommerce.Foundation.Data.Security
 {
@@ -7,14 +8,30 @@ namespace VirtoCommerce.Foundation.Data.Security
 		protected override void Seed(EFSecurityRepository context)
 		{
 			base.Seed(context);
-			FillScripts(context);
+
+			CreateTestAccount(context);
+			UpdateAdminAccount(context);
 		}
 
-		private void FillScripts(EFSecurityRepository context)
+		private static void CreateTestAccount(EFSecurityRepository context)
 		{
-			ExecuteSqlScriptFile(context, "FillTestAccounts.sql", "Security");
+			context.Add(new Account
+			{
+				AccountId = "2",
+				MemberId = "2",
+				UserName = "test",
+				RegisterType = (int)RegisterType.Administrator,
+				AccountState = (int)AccountState.Approved,
+				StoreId = "SampleStore",
+			});
 
+			context.UnitOfWork.Commit();
+		}
+
+		private static void UpdateAdminAccount(EFSecurityRepository context)
+		{
 			context.Accounts.First(a => a.AccountId == "1").StoreId = "SampleStore";
+			context.UnitOfWork.Commit();
 		}
 	}
 }

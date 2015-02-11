@@ -38,5 +38,7 @@ namespace VirtoCommerce.Foundation.Data.Infrastructure
 
 			return retVal;
 		}
+
+		
 	}
 }

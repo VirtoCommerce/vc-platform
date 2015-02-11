@@ -273,6 +273,13 @@
     <Compile Include="Orders\SqlOrderSampleDatabaseInitializer.cs" />
     <Compile Include="Reviews\SqlReviewDatabaseInitializer.cs" />
     <Compile Include="Reviews\SqlReviewSampleDatabaseInitializer.cs" />
+    <Compile Include="Security\Identity\IdentityDatabaseInitializer.cs" />
+    <Compile Include="Security\Identity\IdentitySampleDatabaseInitializer.cs" />
+    <Compile Include="Security\Identity\Migrations\201411101625303_InitialCreate.cs" />
+    <Compile Include="Security\Identity\Migrations\201411101625303_InitialCreate.Designer.cs">
+      <DependentUpon>201411101625303_InitialCreate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Security\Identity\Migrations\Configuration.cs" />
     <Compile Include="Security\Identity\SecurityDbContext.cs" />
     <Compile Include="Security\Identity\ApplicationUser.cs" />
     <Compile Include="Security\Migrations\201411061448001_AccountIdToString.cs" />
@@ -421,6 +428,9 @@
     <EmbeddedResource Include="Orders\Migrations\201411180915307_Indexes.resx">
       <DependentUpon>201411180915307_Indexes.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Security\Identity\Migrations\201411101625303_InitialCreate.resx">
+      <DependentUpon>201411101625303_InitialCreate.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Security\Migrations\201411061448001_AccountIdToString.resx">
       <DependentUpon>201411061448001_AccountIdToString.cs</DependentUpon>
     </EmbeddedResource>
@@ -499,8 +509,6 @@
     <EmbeddedResource Include="Catalogs\Data\PropertySetProperty.sql" />
     <EmbeddedResource Include="Catalogs\Data\TaxCategory.sql" />
     <EmbeddedResource Include="Catalogs\Data\VirtualCatalog.sql" />
-    <EmbeddedResource Include="Security\Data\FillTestAccounts.sql" />
-    <EmbeddedResource Include="Security\Data\AspNetIdentity.sql" />
     <EmbeddedResource Include="Reviews\Data\ReviewFieldValue.sql" />
     <EmbeddedResource Include="Reviews\Data\ReviewComment.sql" />
     <EmbeddedResource Include="Reviews\Data\Review.sql" />

@@ -130,6 +130,10 @@
     <Compile Include="Payment\Model\PaymentInfo.cs" />
     <Compile Include="Payment\Services\IPaymentGateway.cs" />
     <Compile Include="Payment\Services\IPaymentGatewayManager.cs" />
+    <Compile Include="Pricing\Model\Price.cs" />
+    <Compile Include="Pricing\Model\PriceEvaluationContext.cs" />
+    <Compile Include="Pricing\Model\PriceList.cs" />
+    <Compile Include="Pricing\Services\IPricingService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Store\Model\FulfillmentCenter.cs" />
     <Compile Include="Store\Model\SettingValueType.cs" />
