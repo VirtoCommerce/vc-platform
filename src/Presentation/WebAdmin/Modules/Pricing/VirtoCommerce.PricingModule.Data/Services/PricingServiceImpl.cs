@@ -69,12 +69,12 @@ namespace VirtoCommerce.PricingModule.Data.Services
 			return retVal;
 		}
 
-		public virtual coreModel.PriceList GetPriceListById(string id)
+		public virtual coreModel.Pricelist GetPricelistById(string id)
 		{
-			coreModel.PriceList retVal = null;
+			coreModel.Pricelist retVal = null;
 			using (var repository = _repositoryFactory())
 			{
-				var entity = repository.GetPriceListById(id);
+				var entity = repository.GetPricelistById(id);
 				if (entity != null)
 				{
 					retVal = entity.ToCoreModel();
@@ -89,19 +89,22 @@ namespace VirtoCommerce.PricingModule.Data.Services
 			coreModel.Price retVal = null;
 			using (var repository = _repositoryFactory())
 			{
-				if (price.PriceListId == null)
+				if (price.PricelistId == null)
 				{
-					var defaultPriceListName = "Default" + price.Currency.ToString();
-
-					var defaultPriceList = new coreModel.PriceList
+					var defaultPriceListId = "Default" + price.Currency.ToString();
+					var foundationDefaultPriceList = repository.GetPricelistById(defaultPriceListId);
+					if (foundationDefaultPriceList == null)
 					{
-						Id = defaultPriceListName,
-						Currency = price.Currency,
-						Name = defaultPriceListName,
-						Description = defaultPriceListName
-					};
-					entity.Pricelist = defaultPriceList.ToFoundation();
-					entity.PricelistId = defaultPriceList.Id;
+						var defaultPriceList = new coreModel.Pricelist
+						{
+							Id = defaultPriceListId,
+							Currency = price.Currency,
+							Name = defaultPriceListId,
+							Description = defaultPriceListId
+						};
+						foundationDefaultPriceList = defaultPriceList.ToFoundation();
+					}
+					entity.Pricelist = foundationDefaultPriceList;
 				}
 				repository.Add(entity);
 				CommitChanges(repository);
@@ -110,16 +113,16 @@ namespace VirtoCommerce.PricingModule.Data.Services
 			return retVal;
 		}
 
-		public virtual coreModel.PriceList CreatePriceList(coreModel.PriceList priceList)
+		public virtual coreModel.Pricelist CreatePricelist(coreModel.Pricelist priceList)
 		{
 			var entity = priceList.ToFoundation();
-			coreModel.PriceList retVal = null;
+			coreModel.Pricelist retVal = null;
 			using (var repository = _repositoryFactory())
 			{
 				repository.Add(entity);
 				CommitChanges(repository);
 			}
-			retVal = GetPriceListById(priceList.Id);
+			retVal = GetPricelistById(priceList.Id);
 			return retVal;
 		}
 
@@ -144,7 +147,7 @@ namespace VirtoCommerce.PricingModule.Data.Services
 			}
 		}
 
-		public virtual void UpdatePriceLists(coreModel.PriceList[] priceLists)
+		public virtual void UpdatePricelists(coreModel.Pricelist[] priceLists)
 		{
 			using (var repository = _repositoryFactory())
 			using (var changeTracker = base.GetChangeTracker(repository))
@@ -152,7 +155,7 @@ namespace VirtoCommerce.PricingModule.Data.Services
 				foreach (var priceList in priceLists)
 				{
 					var sourceEntity = priceList.ToFoundation();
-					var targetEntity = repository.GetPriceListById(priceList.Id);
+					var targetEntity = repository.GetPricelistById(priceList.Id);
 					if (targetEntity == null)
 					{
 						throw new NullReferenceException("targetEntity");
@@ -169,9 +172,9 @@ namespace VirtoCommerce.PricingModule.Data.Services
 		{
 			GenericDelete(ids, (repository, id) => repository.GetPriceById(id));
 		}
-		public virtual void DeletePriceLists(string[] ids)
+		public virtual void DeletePricelists(string[] ids)
 		{
-			GenericDelete(ids, (repository, id) => repository.GetPriceListById(id));
+			GenericDelete(ids, (repository, id) => repository.GetPricelistById(id));
 		}
 		#endregion
 

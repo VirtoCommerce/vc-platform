@@ -6,7 +6,7 @@ namespace VirtoCommerce.Domain.Order.Model
 	public class Shipment : Operation, IStockOutOperation
 	{
 		public string OrganizationId { get; set; }
-		public string FulfilmentCenterId { get; set; }
+		public string FulfillmentCenterId { get; set; }
 		public string EmployeeId { get; set; }
 
 		public string CustomerOrderId { get; set; }

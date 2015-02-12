@@ -17,7 +17,7 @@ namespace VirtoCommerce.OrderModule.Web.Converters
 			retVal.InjectFrom(shipment);
 
 			retVal.Organization = retVal.OrganizationId;
-			retVal.FulfilmentCenter = retVal.FulfilmentCenterId;
+			retVal.FulfillmentCenter = retVal.FulfillmentCenterId;
 			retVal.Employee = retVal.EmployeeId;
 
 			if (shipment.DeliveryAddress != null)

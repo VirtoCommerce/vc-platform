@@ -78,8 +78,8 @@ namespace VirtoCommerce.OrderModule.Data.Converters
 
 			if (source.OrganizationId != null)
 				target.OrganizationId = source.OrganizationId;
-			if (source.FulfilmentCenterId != null)
-				target.FulfilmentCenterId = source.FulfilmentCenterId;
+			if (source.FulfillmentCenterId != null)
+				target.FulfillmentCenterId = source.FulfillmentCenterId;
 			if (source.EmployeeId != null)
 				target.EmployeeId = source.EmployeeId;
 

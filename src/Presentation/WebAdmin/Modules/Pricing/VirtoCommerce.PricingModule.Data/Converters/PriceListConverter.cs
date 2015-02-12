@@ -14,25 +14,25 @@ using coreModel = VirtoCommerce.Domain.Pricing.Model;
 
 namespace VirtoCommerce.PricingModule.Data.Converters
 {
-	public static class PriceListConverter
+	public static class PricelistConverter
 	{
 		/// <summary>
 		/// Converting to model type
 		/// </summary>
 		/// <param name="catalogBase"></param>
 		/// <returns></returns>
-		public static coreModel.PriceList ToCoreModel(this foundationModel.Pricelist dbEntity)
+		public static coreModel.Pricelist ToCoreModel(this foundationModel.Pricelist dbEntity)
 		{
 			if (dbEntity == null)
 				throw new ArgumentNullException("dbEntity");
 
-			var retVal = new coreModel.PriceList();
+			var retVal = new coreModel.Pricelist();
 			retVal.InjectFrom(dbEntity);
 			retVal.Id = dbEntity.PricelistId;
 
 			retVal.CreatedDate = dbEntity.Created.Value;
 			retVal.ModifiedDate = dbEntity.LastModified;
-
+			retVal.Currency = (CurrencyCodes)Enum.Parse(typeof(CurrencyCodes), dbEntity.Currency);
 			retVal.Prices = dbEntity.Prices.Select(x => x.ToCoreModel()).ToList();
 		
 			return retVal;
@@ -40,7 +40,7 @@ namespace VirtoCommerce.PricingModule.Data.Converters
 		}
 
 
-		public static foundationModel.Pricelist ToFoundation(this coreModel.PriceList priceList)
+		public static foundationModel.Pricelist ToFoundation(this coreModel.Pricelist priceList)
 		{
 			if (priceList == null)
 				throw new ArgumentNullException("priceList");
@@ -48,6 +48,7 @@ namespace VirtoCommerce.PricingModule.Data.Converters
 			var retVal = new foundationModel.Pricelist();
 
 			retVal.InjectFrom(priceList);
+			retVal.Currency = priceList.Currency.ToString();
 
 			if (priceList.Id != null)
 			{

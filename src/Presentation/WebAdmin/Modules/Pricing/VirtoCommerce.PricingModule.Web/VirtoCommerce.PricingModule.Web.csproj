@@ -108,7 +108,7 @@
     <Compile Include="Converters\PriceListConverter.cs" />
     <Compile Include="Converters\PriceConverter.cs" />
     <Compile Include="Model\Price.cs" />
-    <Compile Include="Model\PriceList.cs" />
+    <Compile Include="Model\Pricelist.cs" />
     <Compile Include="Module.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

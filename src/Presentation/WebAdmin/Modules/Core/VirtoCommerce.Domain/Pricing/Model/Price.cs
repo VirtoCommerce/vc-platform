@@ -18,7 +18,7 @@ namespace VirtoCommerce.Domain.Pricing.Model
 		public string ModifiedBy { get; set; }
 
 		#endregion
-		public string PriceListId { get; set; }
+		public string PricelistId { get; set; }
 		public CurrencyCodes Currency { get; set; }
 		public string ProductId { get; set; }
 		public decimal? Sale { get; set; }

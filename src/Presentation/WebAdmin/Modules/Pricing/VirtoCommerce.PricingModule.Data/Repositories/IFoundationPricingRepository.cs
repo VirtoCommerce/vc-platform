@@ -10,6 +10,6 @@ namespace VirtoCommerce.PricingModule.Data.Repositories
 	public interface IFoundationPricingRepository : IPricelistRepository
 	{
 		foundation.Price GetPriceById(string priceId);
-		foundation.Pricelist GetPriceListById(string priceListId);
+		foundation.Pricelist GetPricelistById(string priceListId);
 	}
 }

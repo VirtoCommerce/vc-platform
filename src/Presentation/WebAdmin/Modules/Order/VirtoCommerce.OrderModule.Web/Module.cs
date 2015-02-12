@@ -49,7 +49,7 @@ namespace VirtoCommerce.OrderModule.Web
 			_container.RegisterInstance<IWorkflowService>(orderWorkflowService);
 		
 			_container.RegisterType<Func<IOrderRepository>>(new InjectionFactory(x => orderRepositoryFactory));
-			_container.RegisterInstance<IInventoryService>(mockInventory.Object);
+			//_container.RegisterInstance<IInventoryService>(mockInventory.Object);
 			_container.RegisterType<IOperationNumberGenerator, TimeBasedNumberGeneratorImpl>();
 
 			_container.RegisterType<ICustomerOrderService, CustomerOrderServiceImpl>();
