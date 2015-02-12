@@ -81,9 +81,9 @@
 				Directory.CreateDirectory(directoryPath);
 			}
 
-			using(FileStream fs = new FileStream(fullPath, FileMode.OpenOrCreate, FileAccess.Write))
+			using(var fs = new FileStream(fullPath, FileMode.OpenOrCreate, FileAccess.Write))
 			{
-				using (StreamWriter sw = new StreamWriter(fullPath))
+				using (var sw = new StreamWriter(fs))
 				{
 					sw.Write(item.Content);
 					sw.Close();
