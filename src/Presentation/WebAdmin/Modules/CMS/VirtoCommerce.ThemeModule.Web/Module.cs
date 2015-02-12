@@ -10,6 +10,7 @@
     using VirtoCommerce.Framework.Web.Modularity;
     using VirtoCommerce.Framework.Web.Settings;
     using VirtoCommerce.ThemeModule.Web.Controllers.Api;
+	using VirtoCommerce.Content.Data.Services;
 
     #endregion
 
@@ -49,27 +50,31 @@
 			var fileSystemMainPath = "~/Themes/";
 			var databaseMainPath = "Themes/";
 
-            Func<string, IFileRepository> factory = (x) =>
+            Func<string, IThemeService> factory = (x) =>
             {
                 switch (x)
                 {
                     case "GitHub":
-                        return new GitHubFileRepositoryImpl(
+                        return new ThemeServiceImpl(new GitHubFileRepositoryImpl(
                             githubLogin,
                             githubPassword,
                             githubProductHeaderValue,
                             githubOwnerName,
 							githubRepositoryName,
-							githubMainPath);
+							githubMainPath),
+							new ThemeRepositoryImpl());
 
                     case "Database":
-                        return new DatabaseFileRepositoryImpl(databaseMainPath);
+                        return new ThemeServiceImpl(new DatabaseFileRepositoryImpl(databaseMainPath),
+							new ThemeRepositoryImpl());
 
                     case "File System":
-                        return new FileSystemFileRepositoryImpl(fileSystemMainPath);
+						return new ThemeServiceImpl(new FileSystemFileRepositoryImpl(fileSystemMainPath),
+							new ThemeRepositoryImpl());
 
                     default:
-						return new FileSystemFileRepositoryImpl(fileSystemMainPath);
+						return new ThemeServiceImpl(new FileSystemFileRepositoryImpl(fileSystemMainPath),
+							new ThemeRepositoryImpl());
                 }
             };
 

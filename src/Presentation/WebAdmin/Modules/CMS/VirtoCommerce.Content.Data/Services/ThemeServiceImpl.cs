@@ -11,6 +11,8 @@ namespace VirtoCommerce.Content.Data.Services
 {
 	public class ThemeServiceImpl : IThemeService
 	{
+		private object _lockObject = new object();
+
 		private IFileRepository _repository;
 		private IThemeRepository _themeRepository;
 
@@ -63,7 +65,7 @@ namespace VirtoCommerce.Content.Data.Services
 			return _repository.GetContentItems(path);
 		}
 
-		public Models.ContentItem GetContenttItem(string path)
+		public Models.ContentItem GetContentItem(string path)
 		{
 			return _repository.GetContentItem(path);
 		}

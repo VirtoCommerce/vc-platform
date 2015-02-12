@@ -52,19 +52,19 @@
 			Assert.Equal(items.Length, 5);
 		}
 
-		[Fact]
-		public void GetItemControllerTest()
-		{
-			var controller = this.GetController();
+		//[Fact]
+		//public void GetItemControllerTest()
+		//{
+		//	var controller = this.GetController();
 
-			var result = controller.GetItem("/docs/new1.txt");
+		//	var result = controller.GetItem("/docs/new1.txt");
 
-			Assert.IsType<OkNegotiatedContentResult<ThemeModule.Web.Models.ContentItem>>(result);
+		//	Assert.IsType<OkNegotiatedContentResult<ThemeModule.Web.Models.ContentItem>>(result);
 
-			var item = result as OkNegotiatedContentResult<ThemeModule.Web.Models.ContentItem>;
+		//	var item = result as OkNegotiatedContentResult<ThemeModule.Web.Models.ContentItem>;
 
-			Assert.True(item.Content.Content.Contains("!!!\n"));
-		}
+		//	Assert.True(item.Content.Content.Contains("!!!\n"));
+		//}
 
 		[Fact]
 		public void GetItemRepositoryTest()
@@ -123,30 +123,30 @@
 
 		#region Methods
 
-		private ThemeController GetController()
-		{
-			Func<string, IFileRepository> factory = (x) =>
-			{
-				switch (x)
-				{
-					default:
-						return new GitHubFileRepositoryImpl(
-							"EugeneOkhriemnko",
-							"MfZUbM2wSDCdDADBEGpo",
-							"Site-Theme",
-							"EugeneOkhriemnko",
-							"Site_Themes",
-							_githubMainPath);
-				}
-			};
+		//private ThemeController GetController()
+		//{
+		//	Func<string, IFileRepository> factory = (x) =>
+		//	{
+		//		switch (x)
+		//		{
+		//			default:
+		//				return new GitHubFileRepositoryImpl(
+		//					"EugeneOkhriemnko",
+		//					"MfZUbM2wSDCdDADBEGpo",
+		//					"Site-Theme",
+		//					"EugeneOkhriemnko",
+		//					"Site_Themes",
+		//					_githubMainPath);
+		//		}
+		//	};
 
-			var mock = new Mock<ISettingsManager>();
-			mock.Setup(x => x.GetValue(It.IsAny<string>(), It.IsAny<string>())).Returns("Github");
+		//	var mock = new Mock<ISettingsManager>();
+		//	mock.Setup(x => x.GetValue(It.IsAny<string>(), It.IsAny<string>())).Returns("Github");
 
-			var controller = new ThemeController(factory, mock.Object);
+		//	var controller = new ThemeController(factory, mock.Object);
 
-			return controller;
-		}
+		//	return controller;
+		//}
 
 		#endregion
 	}

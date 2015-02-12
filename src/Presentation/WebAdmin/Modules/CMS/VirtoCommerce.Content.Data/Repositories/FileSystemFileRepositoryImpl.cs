@@ -26,15 +26,17 @@
 
 			var fullPath = GetFullPath(path);
 
-			var item = File.OpenText(fullPath);
-			var itemName = Path.GetFileName(fullPath);
+			using (var sr = File.OpenText(fullPath))
+			{
+				var itemName = Path.GetFileName(fullPath);
 
-			var content = item.ReadToEnd();
+				var content = sr.ReadToEnd();
 
-			retVal.Content = content;
-			retVal.ContentType = ContentType.File;
-			retVal.Name = itemName;
-			retVal.Path = path;
+				retVal.Content = content;
+				retVal.ContentType = ContentType.File;
+				retVal.Name = itemName;
+				retVal.Path = path;
+			}
 
 			return retVal;
         }

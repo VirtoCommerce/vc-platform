@@ -95,43 +95,27 @@
 			var item = repository.GetContentItem("Expo/new/new123.liquid");
 
 			Assert.True(item.Content.Contains("Some"));
-		}
 
-		[Fact]
-		public void UpdateFileTest()
-		{
-			var fullPath = string.Format("{0}\\Themes\\", _path);
-
-			var repository = new FileSystemFileRepositoryImpl(fullPath);
-
-			var content = new ContentItem();
+			content = new ContentItem();
 			content.Content = "Some new stuff. Changes";
 			content.Path = "Expo/new/new123.liquid";
 
 			repository.SaveContentItem(content);
 
-			var items = repository.GetContentItems("Expo/new");
+			items = repository.GetContentItems("Expo/new");
 
 			Assert.Equal(items.Length, 1);
 
-			var item = repository.GetContentItem("Expo/new/new123.liquid");
+			item = repository.GetContentItem("Expo/new/new123.liquid");
 
 			Assert.True(item.Content.Contains("Some") && item.Content.Contains("Changes"));
-		}
 
-		[Fact]
-		public void DeleteFile()
-		{
-			var fullPath = string.Format("{0}\\Themes\\", _path);
-
-			var repository = new FileSystemFileRepositoryImpl(fullPath);
-
-			var content = new ContentItem();
+			content = new ContentItem();
 			content.Path = "Expo/new/new123.liquid";
 
 			repository.DeleteContentItem(content);
 
-			var items = repository.GetContentItems("Expo/new");
+			items = repository.GetContentItems("Expo/new");
 
 			Assert.Equal(items.Length, 0);
 		}
@@ -140,24 +124,24 @@
 
         #region Methods
 
-        private ThemeController GetController()
-        {
-            Func<string, IFileRepository> factory = (x) =>
-            {
-                switch (x)
-                {
-                    default:
-                        return new FileSystemFileRepositoryImpl(_path);
-                }
-            };
+		//private ThemeController GetController()
+		//{
+		//	Func<string, IFileRepository> factory = (x) =>
+		//	{
+		//		switch (x)
+		//		{
+		//			default:
+		//				return new FileSystemFileRepositoryImpl(_path);
+		//		}
+		//	};
 
-            var mock = new Mock<ISettingsManager>();
-            mock.Setup(x => x.GetValue(It.IsAny<string>(), It.IsAny<string>())).Returns("FileSystem");
+		//	var mock = new Mock<ISettingsManager>();
+		//	mock.Setup(x => x.GetValue(It.IsAny<string>(), It.IsAny<string>())).Returns("FileSystem");
 
-            var controller = new ThemeController(factory, mock.Object);
+		//	var controller = new ThemeController(factory, mock.Object);
 
-            return controller;
-        }
+		//	return controller;
+		//}
 
         #endregion
     }

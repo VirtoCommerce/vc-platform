@@ -13,7 +13,7 @@ namespace VirtoCommerce.Content.Data.Services
 		void SetThemeAsActive(string storeId, string themeName);
 
 		ContentItem[] GetContentItems(string path);
-		ContentItem GetContenttItem(string path);
+		ContentItem GetContentItem(string path);
 
 		void SaveContentItem(ContentItem item);
 		void DeleteContentItem(ContentItem item);
