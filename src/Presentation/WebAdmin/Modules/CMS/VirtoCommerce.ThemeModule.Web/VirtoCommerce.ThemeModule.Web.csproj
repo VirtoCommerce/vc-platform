@@ -129,7 +129,7 @@
       <Project>{f7c9313b-522e-4619-abc9-8c7d4600d6b5}</Project>
       <Name>VirtoCommerce.Framework.Web</Name>
     </ProjectReference>
-    <ProjectReference Include="..\VirtoCommerceCMS.Data\VirtoCommerce.Content.Data.csproj">
+    <ProjectReference Include="..\VirtoCommerce.Content.Data\VirtoCommerce.Content.Data.csproj">
       <Project>{e55e08b5-3af9-467d-8f90-4bef27bafa28}</Project>
       <Name>VirtoCommerce.Content.Data</Name>
     </ProjectReference>
