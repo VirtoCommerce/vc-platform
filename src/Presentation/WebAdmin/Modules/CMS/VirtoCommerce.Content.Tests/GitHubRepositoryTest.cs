@@ -4,6 +4,7 @@
 
 	using System;
 	using System.Web.Http.Results;
+	using System.Linq;
 
 	using Moq;
 
@@ -18,7 +19,7 @@
 
 	public class GitHubRepositoryTest
 	{
-		private string _githubMainPath = "/Themes/";
+		private string _githubMainPath = "Themes/";
 
 		#region Public Methods and Operators
 
@@ -47,9 +48,9 @@
 				"Site_Themes",
 				_githubMainPath);
 
-			var items = repository.GetContentItems("/");
+			var items = repository.GetContentItems("");
 
-			Assert.Equal(items.Length, 5);
+			Assert.Equal(items.Length, 6);
 		}
 
 		//[Fact]
@@ -77,10 +78,10 @@
 				"Site_Themes",
 				_githubMainPath);
 
-			var item = repository.GetContentItem("/docs/new1.txt");
+			var item = repository.GetContentItem("Expo/layout/theme.liquid");
 
-			Assert.Equal(item.Path, "docs/new1.txt");
-			Assert.True(item.Content.Contains("!!!\n"));
+			Assert.Equal(item.Path, "Themes/Expo/layout/theme.liquid");
+			Assert.True(item.Content.Contains("<!DO"));
 		}
 
 		[Fact]
@@ -94,29 +95,42 @@
 				"Site_Themes",
 				_githubMainPath);
 
-			var items = repository.GetContentItems("/docs/");
-
-			Assert.Equal(items.Length, 1);
-
 			var content = new ContentItem();
 			content.Content = "Some new stuff";
-			content.Path = "docs/some.txt";
+			content.Path = "Expo/new/new123.liquid";
 
 			repository.SaveContentItem(content);
 
-			items = repository.GetContentItems("/docs/");
+			var items = repository.GetContentItems("Expo/new");
 
-			Assert.Equal(items.Length, 2);
+			Assert.Equal(items.Length, 1);
 
-			var item = repository.GetContentItem("/docs/some.txt");
+			var item = repository.GetContentItem("Expo/new/new123.liquid");
 
-			Assert.Equal(item.Content, "Some new stuff");
+			Assert.True(item.Content.Contains("Some"));
+
+			content = new ContentItem();
+			content.Content = "Some new stuff. Changes";
+			content.Path = "Expo/new/new123.liquid";
+
+			repository.SaveContentItem(content);
+
+			items = repository.GetContentItems("Expo/new");
+
+			Assert.Equal(items.Length, 1);
+
+			item = repository.GetContentItem("Expo/new/new123.liquid");
+
+			Assert.True(item.Content.Contains("Some") && item.Content.Contains("Changes"));
+
+			content = new ContentItem();
+			content.Path = "Expo/new/new123.liquid";
 
 			repository.DeleteContentItem(content);
 
-			items = repository.GetContentItems("/docs/");
+			items = repository.GetContentItems("Expo");
 
-			Assert.Equal(items.Length, 1);
+			Assert.Equal(items.Where(i => i.Path.Contains("new")).Count(), 0);
 		}
 
 		#endregion

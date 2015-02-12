@@ -72,7 +72,7 @@
 			var item = repository.GetContentItem("Expo/layout/theme.liquid");
 
 			Assert.Equal(item.Path, "Expo/layout/theme.liquid");
-			Assert.True(item.Content.Contains("!!!\n"));
+			Assert.True(item.Content.Contains("<!DO"));
 		}
 
 		[Fact]
