@@ -142,13 +142,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.PricingModule
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CMS", "CMS", "{D1556CC7-62A5-4D89-BD35-FC5B5AE17AE8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.PagesModule.Web", "src\Presentation\WebAdmin\Modules\CMS\VirtoCommerceCMS.PagesModule.Web\VirtoCommerce.PagesModule.Web.csproj", "{11FF29EB-5D91-46E4-B593-0DEB2F67B094}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.PagesModule.Web", "src\Presentation\WebAdmin\Modules\CMS\VirtoCommerce.PagesModule.Web\VirtoCommerce.PagesModule.Web.csproj", "{11FF29EB-5D91-46E4-B593-0DEB2F67B094}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.ThemeModule.Web", "src\Presentation\WebAdmin\Modules\CMS\VirtoCommerceCMS.ThemeModule.Web\VirtoCommerce.ThemeModule.Web.csproj", "{639FA8E1-99BE-4386-9808-FC1AEC35FD61}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.ThemeModule.Web", "src\Presentation\WebAdmin\Modules\CMS\VirtoCommerce.ThemeModule.Web\VirtoCommerce.ThemeModule.Web.csproj", "{639FA8E1-99BE-4386-9808-FC1AEC35FD61}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.Content.Data", "src\Presentation\WebAdmin\Modules\CMS\VirtoCommerceCMS.Data\VirtoCommerce.Content.Data.csproj", "{E55E08B5-3AF9-467D-8F90-4BEF27BAFA28}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.Content.Data", "src\Presentation\WebAdmin\Modules\CMS\VirtoCommerce.Content.Data\VirtoCommerce.Content.Data.csproj", "{E55E08B5-3AF9-467D-8F90-4BEF27BAFA28}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.Content.Tests", "src\Presentation\WebAdmin\Modules\CMS\VirtoCommerceCMS.Test\VirtoCommerce.Content.Tests.csproj", "{8CD7D981-DFAB-4DA6-80C9-9C661FA831B1}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.Content.Tests", "src\Presentation\WebAdmin\Modules\CMS\VirtoCommerce.Content.Tests\VirtoCommerce.Content.Tests.csproj", "{8CD7D981-DFAB-4DA6-80C9-9C661FA831B1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
