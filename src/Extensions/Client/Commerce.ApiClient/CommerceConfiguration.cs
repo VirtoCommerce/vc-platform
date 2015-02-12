@@ -1,46 +1,59 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace VirtoCommerce.ApiClient
+﻿namespace VirtoCommerce.ApiClient
 {
+    #region
+
+    using System;
+
     using VirtoCommerce.ApiClient.Utilities;
+
+    #endregion
 
     public class CommerceConfiguration
     {
+        #region Fields
+
         private string _ConnectionString = String.Empty;
+
+        private bool _IsCacheEnabled = true;
+
+        #endregion
+
+        #region Public Properties
+
         public string ConnectionString
         {
             get
             {
-                if (String.IsNullOrEmpty(_ConnectionString))
+                if (String.IsNullOrEmpty(this._ConnectionString))
                 {
-                    _ConnectionString = ConnectionHelper.GetConnectionString("VirtoCommerce");
+                    this._ConnectionString = ConnectionHelper.GetConnectionString("VirtoCommerce");
                 }
 
-                if (!_ConnectionString.EndsWith("/")) _ConnectionString += "/";
+                if (!this._ConnectionString.EndsWith("/"))
+                {
+                    this._ConnectionString += "/";
+                }
 
-                return _ConnectionString;
+                return this._ConnectionString;
             }
             set
             {
-                _ConnectionString = value;
+                this._ConnectionString = value;
             }
         }
 
-        private bool _IsCacheEnabled = true;
         public bool IsCacheEnabled
         {
             get
             {
-                return _IsCacheEnabled;
+                return this._IsCacheEnabled;
             }
             set
             {
-                _IsCacheEnabled = false;
+                this._IsCacheEnabled = false;
             }
         }
+
+        #endregion
     }
 }

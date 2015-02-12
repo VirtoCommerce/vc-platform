@@ -1,18 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace VirtoCommerce.ApiClient
+﻿namespace VirtoCommerce.ApiClient
 {
     public sealed class CommerceClients
     {
+        #region Constructors and Destructors
+
         /// <summary>
-        /// Initializes a new instance of the CommerceClients class.
+        ///     Initializes a new instance of the CommerceClients class.
         /// </summary>
         internal CommerceClients()
         {
         }
+
+        #endregion
     }
 }

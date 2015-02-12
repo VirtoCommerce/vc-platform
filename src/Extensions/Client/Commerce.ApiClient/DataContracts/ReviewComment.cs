@@ -1,19 +1,29 @@
-﻿using System;
-
-namespace VirtoCommerce.Web.Core.DataContracts
+﻿namespace VirtoCommerce.Web.Core.DataContracts
 {
+    #region
+
+    using System;
+
+    #endregion
+
     public class ReviewComment
     {
-        public string Id { get; set; }
+        #region Public Properties
+
+        public int AbuseCount { get; set; }
+
         public string Author { get; set; }
+
         public string Comment { get; set; }
 
         public DateTime? CreatedDateTime { get; set; }
 
-        public int PositiveFeedbackCount { get; set; }
+        public string Id { get; set; }
 
         public int NegativeFeedbackCount { get; set; }
 
-        public int AbuseCount { get; set; }
+        public int PositiveFeedbackCount { get; set; }
+
+        #endregion
     }
 }

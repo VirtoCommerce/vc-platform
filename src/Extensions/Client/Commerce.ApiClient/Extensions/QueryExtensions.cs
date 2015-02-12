@@ -1,16 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Web;
-using VirtoCommerce.Web.Core.DataContracts;
-
-namespace VirtoCommerce.ApiClient.Extensions
+﻿namespace VirtoCommerce.ApiClient.Extensions
 {
+    #region
+
+    using System;
+    using System.Collections.Generic;
+    using System.Globalization;
+    using System.Linq;
+    using System.Web;
+
+    using VirtoCommerce.Web.Core.DataContracts;
+
+    #endregion
+
     internal static class QueryExtensions
     {
+        #region Public Methods and Operators
+
         /// <summary>
-        /// Gets an HTTP query string serialization of this query compatible with FromQueryString
+        ///     Gets an HTTP query string serialization of this query compatible with FromQueryString
         /// </summary>
         public static string GetQueryString(this BrowseQuery query, ItemResponseGroups? responseGroup)
         {
@@ -48,12 +55,16 @@ namespace VirtoCommerce.ApiClient.Extensions
 
             if (query.StartDateFrom.HasValue)
             {
-                parts.Add("startdatefrom=" + HttpUtility.UrlEncode(query.StartDateFrom.Value.ToString(CultureInfo.InvariantCulture)));
+                parts.Add(
+                    "startdatefrom="
+                    + HttpUtility.UrlEncode(query.StartDateFrom.Value.ToString(CultureInfo.InvariantCulture)));
             }
 
             if (query.Filters != null && query.Filters.Count > 0)
             {
-                parts.AddRange(query.Filters.Select(filter => String.Format("t_{0}={1}", filter.Key, String.Join(",", filter.Value))));
+                parts.AddRange(
+                    query.Filters.Select(
+                        filter => String.Format("t_{0}={1}", filter.Key, String.Join(",", filter.Value))));
             }
 
             if (responseGroup.HasValue)
@@ -69,10 +80,15 @@ namespace VirtoCommerce.ApiClient.Extensions
 
             if (query.Names != null)
             {
-                parts.AddRange(from name in query.Names let value = query[name] select "tags=" + HttpUtility.UrlEncode(name) + ":" + HttpUtility.UrlEncode(value.ToString()));
+                parts.AddRange(
+                    from name in query.Names
+                    let value = query[name]
+                    select "tags=" + HttpUtility.UrlEncode(name) + ":" + HttpUtility.UrlEncode(value.ToString()));
             }
 
             return string.Join("&", parts);
         }
+
+        #endregion
     }
 }

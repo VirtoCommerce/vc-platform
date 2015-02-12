@@ -1,19 +1,29 @@
 ﻿namespace VirtoCommerce.Web.Core.DataContracts
 {
     /// <summary>
-    /// A base class for relation links
+    ///     A base class for relation links
     /// </summary>
     public class Link
     {
-        public string Rel { get; private set; }
-        public string Href { get; private set; }
-        public string Title { get; private set; }
+        #region Constructors and Destructors
 
         public Link(string relation, string href, string title = null)
         {
-            Rel = relation;
-            Href = href;
-            Title = title;
+            this.Rel = relation;
+            this.Href = href;
+            this.Title = title;
         }
+
+        #endregion
+
+        #region Public Properties
+
+        public string Href { get; private set; }
+
+        public string Rel { get; private set; }
+
+        public string Title { get; private set; }
+
+        #endregion
     }
 }

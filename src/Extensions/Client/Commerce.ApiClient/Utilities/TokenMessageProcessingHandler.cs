@@ -1,23 +1,29 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-
-namespace VirtoCommerce.ApiClient.Utilities
+﻿namespace VirtoCommerce.ApiClient.Utilities
 {
+    #region
+
+    using System;
+    using System.Net.Http;
+    using System.Net.Http.Headers;
+    using System.Threading;
+
+    #endregion
+
     /// <summary>
-    /// Handler to add tokens to the request header
+    ///     Handler to add tokens to the request header
     /// </summary>
     public class TokenMessageProcessingHandler : MessageProcessingHandler
     {
-        private string token;
+        #region Fields
+
+        private readonly string token;
+
+        #endregion
+
+        #region Constructors and Destructors
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="TokenMessageProcessingHandler"/> class.
+        ///     Initializes a new instance of the <see cref="TokenMessageProcessingHandler" /> class.
         /// </summary>
         /// <param name="token">The token.</param>
         /// <exception cref="System.ArgumentException">Security token</exception>
@@ -32,31 +38,47 @@ namespace VirtoCommerce.ApiClient.Utilities
             this.token = token;
         }
 
+        #endregion
+
+        #region Methods
+
         /// <summary>
-        /// Processes an HTTP request message.
+        ///     Processes an HTTP request message.
         /// </summary>
         /// <param name="request">The HTTP request message to process.</param>
-        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+        /// <param name="cancellationToken">
+        ///     A cancellation token that can be used by other objects or threads to receive notice of
+        ///     cancellation.
+        /// </param>
         /// <returns>
-        /// Returns <see cref="T:System.Net.Http.HttpRequestMessage" />.The HTTP request message that was processed.
+        ///     Returns <see cref="T:System.Net.Http.HttpRequestMessage" />.The HTTP request message that was processed.
         /// </returns>
-        protected override HttpRequestMessage ProcessRequest(HttpRequestMessage request, CancellationToken cancellationToken)
+        protected override HttpRequestMessage ProcessRequest(
+            HttpRequestMessage request,
+            CancellationToken cancellationToken)
         {
-            request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", this.token);
             return request;
         }
 
         /// <summary>
-        /// Processes an HTTP response message.
+        ///     Processes an HTTP response message.
         /// </summary>
         /// <param name="response">The HTTP response message to process.</param>
-        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+        /// <param name="cancellationToken">
+        ///     A cancellation token that can be used by other objects or threads to receive notice of
+        ///     cancellation.
+        /// </param>
         /// <returns>
-        /// Returns <see cref="T:System.Net.Http.HttpResponseMessage" />.The HTTP response message that was processed.
+        ///     Returns <see cref="T:System.Net.Http.HttpResponseMessage" />.The HTTP response message that was processed.
         /// </returns>
-        protected override HttpResponseMessage ProcessResponse(HttpResponseMessage response, CancellationToken cancellationToken)
+        protected override HttpResponseMessage ProcessResponse(
+            HttpResponseMessage response,
+            CancellationToken cancellationToken)
         {
             return response;
         }
+
+        #endregion
     }
 }

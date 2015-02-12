@@ -23,7 +23,7 @@ namespace ApiClientTests
         public void Can_get_current_cart()
         {
             var client = Cart;
-            var cart = Task.Run(()=>client.GetCurrentCartAsync("SampleStore")).Result;
+            var cart = Task.Run(()=>client.GetCurrentCartAsync()).Result;
             Assert.NotNull(cart);
         }
 
@@ -31,7 +31,7 @@ namespace ApiClientTests
         public void Can_save_current_cart()
         {
             var client = Cart;
-            var cart = Task.Run(() => client.GetCurrentCartAsync("samplestore")).Result;
+            var cart = Task.Run(() => client.GetCurrentCartAsync()).Result;
             cart.CustomerName = "Sample Customer";
             cart.Items.Add(CreateItem("shoes"));
             cart.Items.Add(CreateItem("socks"));
@@ -43,7 +43,7 @@ namespace ApiClientTests
         public void Can_create_order_from_cart()
         {
             var client = Cart;
-            var cart = Task.Run(() => client.GetCurrentCartAsync("samplestore")).Result;
+            var cart = Task.Run(() => client.GetCurrentCartAsync()).Result;
         }
 
         private CartItem CreateItem(string name)
