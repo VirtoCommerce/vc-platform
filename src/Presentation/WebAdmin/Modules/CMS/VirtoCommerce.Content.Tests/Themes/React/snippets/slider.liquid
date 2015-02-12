@@ -1,0 +1,20 @@
+<div class="flexslider">
+  <ul class="slides">
+
+    {% for i in (1..6) %}
+      {% capture slide %}slide_{{ i }}{% endcapture %}
+      {% capture slide_link %}slide_{{ i }}_link{% endcapture %}
+      {% capture slide_img %}slide_{{ i }}.jpg{% endcapture %}
+      {% capture slide_alt %}slide_{{ i }}_alt.jpg{% endcapture %}
+      {% if settings[slide] %}
+        <li>
+          <a href="{{ settings[slide_link] }}" class="slide-link">
+            {{ slide_img | asset_url | img_tag: slide_alt }}
+          </a>
+        </li>
+      {% endif %}
+    {% endfor %}
+  </ul>
+</div>
+
+{{ 'jquery.flexslider.min.js' | asset_url | script_tag }}

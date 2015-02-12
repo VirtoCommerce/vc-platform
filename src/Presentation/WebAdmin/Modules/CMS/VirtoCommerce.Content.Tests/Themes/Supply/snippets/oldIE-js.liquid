@@ -1,0 +1,14 @@
+{% comment %}
+  oldIE fixes/shivs
+  HTML5 shiv, Selectivizer
+  - respond.js Gavin Ballard
+  - http://gavinballard.com/using-respond.js-with-shopify-redux/
+{% endcomment %}
+{% assign respond_js_secret_key = shop.domain | md5 %}
+<!--[if lt IE 9]>
+{{ '//html5shiv.googlecode.com/svn/trunk/html5.js' | script_tag }}
+{{ 'respond.min.js' | asset_url | script_tag }}
+<link href="{{ 'respond-proxy.html' | asset_url | split: '?' | first }}" id="respond-proxy" rel="respond-proxy" />
+<link href="//{{ shop.domain }}/search?q={{ respond_js_secret_key }}" id="respond-redirect" rel="respond-redirect" />
+<script src="//{{ shop.domain }}/search?q={{ respond_js_secret_key }}" type="text/javascript"></script>
+<![endif]-->

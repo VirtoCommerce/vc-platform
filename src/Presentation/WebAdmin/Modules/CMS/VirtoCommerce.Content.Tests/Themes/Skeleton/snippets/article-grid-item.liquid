@@ -1,0 +1,73 @@
+{% comment %}If no value is passed to the snippet, we will set the snippet variable to a sensible default.{% endcomment %}
+{% if article-grid-item == '' %}{% assign article-grid-item = 'three-per-row' %}{% endif %}
+
+{% assign article_has_image = false %}
+{% assign img_tag = '<' | append: 'img' %}
+{% if article.excerpt_or_content contains img_tag %}
+  {% assign src = article.excerpt_or_content | split: 'src="' %}
+  {% assign src = src[1] | split: '"' | first %}
+  {% if src %}
+    {% assign article_has_image = true %}
+    {% assign image_src = src | replace: '_small', '' | replace: '_compact', '' | replace: '_medium', '' | replace: '_large', '' | replace: '_grande', '' %}
+  {% endif %}
+{% endif %}
+
+<li class="{{ article-grid-item }}">
+  
+  {% if article.tags.size > 0 %}
+  <h4><a href="/blogs/{{ blog.handle }}/tagged/{{ tag | handle }}">{{ article.tags.first }}</a></h4>
+  {% endif %}
+
+  {% if article_has_image %}
+  <div class="article-image-wrap">  
+    <a href="{{ article.url }}">
+      <img src="{{ image_src }}" alt="{{ article.title | escape }}" />
+    </a>
+  </div><!-- .prod-image-wrap -->
+  {% endif %}
+  
+  <div class="article-caption">
+      <h3>
+        <a href="{{ article.url }}">
+        {{ article.title }}
+        </a>
+      </h3>
+      <p class="article-summary">
+        {% if article.excerpt.size > 0 %}
+        {{ article.excerpt | strip_html }}
+        {% else %}
+        {{ article.content | strip_html | truncatewords: 50 }}
+        {% endif %}
+      </p>
+  </div><!-- .prod-caption -->
+  
+  <p class="date left left-aligned">
+    <time pubdate datetime="{{ article.published_at | date: '%Y-%m-%d' }}">{{ article.published_at | date: '%b %d, %Y' }}</time>
+  </p>
+   
+  <p class="right right-aligned">
+    <a href="{{ article.url }}">Read more &#8594;</a>
+  </p>
+  
+</li>
+
+{% comment %}
+You don't need to use a clearing div. Use whatever it is you use to clear
+floated elements. The code that follows just just shows you how to use a cycle element.
+Notice that we named it ( 'clear' ). We need to name it because there's another cycle
+element in this file ( we called that other one 'last' ). If you have more than one
+cycle element in a rendered view, you'll need to name all of them.
+The cycle element is documented here: http://docs.shopify.com/themes/liquid-basics/logic#cycle
+{% endcomment %}
+
+{% if article-grid-item == 'six-per-row' %}
+{% cycle 'clear': '', '', '', '', '', '<div style="clear:both"></div>' %}
+{% elsif article-grid-item == 'five-per-row' %}
+{% cycle 'clear': '', '', '', '', '<div style="clear:both"></div>' %}
+{% elsif article-grid-item == 'four-per-row' %}
+{% cycle 'clear': '', '', '', '<div style="clear:both"></div>' %}
+{% elsif article-grid-item == 'three-per-row' %}
+{% cycle 'clear': '', '', '<div style="clear:both"></div>' %}
+{% elsif article-grid-item == 'two-per-row' %}
+{% cycle 'clear': '', '<div style="clear:both"></div>' %}
+{% endif %}

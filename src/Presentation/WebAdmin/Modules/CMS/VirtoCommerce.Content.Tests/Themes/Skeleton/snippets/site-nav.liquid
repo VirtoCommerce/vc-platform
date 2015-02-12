@@ -1,0 +1,57 @@
+{% comment %}
+  A word on drop-down menus: Shopify has no concept of them.
+  Drop-down menus in Shopify themes are a hack that relies on a naming convention.
+  To create a drop-down menu, the merchant must create a link list that has the same name as the link he wants the drop-down for.
+  For example, if he wants a drop-down under a 'Shop by brand' link (say, he has such link in his Main Menu), he needs to create a linklist called 'Shop by brand', and populate it with links. Once he has done that, there'll be a drop-down under 'Shop by brand'.
+  Shopify has a visual how-to guide here: http://docs.shopify.com/manual/your-website/navigation/create-drop-down-menu.
+  The naming convention hack won't work well if a shop's navigation uses non-English characters. There's a much more verbose coding solution that handles non-English characters here: http://docs.shopify.com/manual/configuration/store-customization/currencies-and-translations/translations/can-i-have-drop-down-menus-that-use-non-english-characters.
+  A word on sub-categories: Shopify manages sub-categories using product tags: http://docs.shopify.com/manual/configuration/store-customization/page-specific/collections/subcategories
+{% endcomment %}
+
+<nav role="navigation" class="left">
+  <ul class="nav">
+    {% for link in linklists.main-menu.links %}
+    {% assign has_sub_menu = false %}
+    {% assign has_sub_categories = false %}
+    {% assign parent_link_active = false %}
+    {% assign child_list_handle = link.title | handle %}
+    {% if linklists[child_list_handle] and linklists[child_list_handle].links.size > 0 %}
+      {% assign has_sub_menu = true %}
+      {% for l in linklists[child_list_handle].links %}
+        {% if handle != blank and handle == l.object.handle %}
+          {% assign parent_link_active = true %}
+        {% elsif page_title == l.title %}
+          {% assign parent_link_active = true %}
+        {% endif %}
+      {% endfor %}
+    {% elsif link.type == 'collection_link' and link.object.all_tags.size > 0 %}
+      {% assign has_sub_categories = true %}
+    {% endif %}
+    <li class="{% if link.active or parent_link_active %} active{% endif %}{% if has_sub_menu or has_sub_categories %} has-dropdown{% endif %}{% if forloop.first %} first{% elsif forloop.last %} last{% endif %}">
+      <a href="{{ link.url }}">{{ link.title }}{% if has_sub_menu or has_sub_categories %} <i class="fa fa-angle-down"></i>{% endif %}</a> 
+      {% if has_sub_menu or has_sub_categories %}
+      <ul class="sub-nav">
+        {% if has_sub_menu %}
+          {% for l in linklists[child_list_handle].links %}
+          <li class="{% if l.active %} active{% endif %}">
+            <a href="{{ l.url }}">{{ l.title }}</a>
+          </li>
+          {% endfor %}
+        {% elsif has_sub_categories %}
+          {% for tag in link.object.all_tags %}
+          <li class="{% if current_tags contains tag %} active{% endif %}">
+            <a href="{{ link.url }}/{{ tag | handle }}">{{ tag }}</a>
+          </li>
+          {% endfor %}
+        {% endif %}
+      </ul>
+      {% endif %}
+    </li>
+    {% endfor %}
+    <li class="show-on-small{% if template == 'search' %} active{% endif %}">
+      <a href="/search">
+        <i class="fa fa-search"></i>
+      </a>
+    </li>
+  </ul>
+</nav>

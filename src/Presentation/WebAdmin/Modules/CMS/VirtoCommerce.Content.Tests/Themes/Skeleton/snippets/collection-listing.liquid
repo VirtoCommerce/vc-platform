@@ -1,0 +1,46 @@
+{% comment %}
+  Be prepared to use this snippet to showcase collections specified in a link list as per this solution here: 
+  "Featuring collections using a Link List" http://docs.shopify.com/support/your-store/collections/featuring-collections-using-link-lists
+  If this snippet is called with an argument, we'll assume it is the handle of a link list, and we will use that list.
+  If this snippet is not called with an argument, we'll assume we are on the /collections page and will list all collections in the shop, all except the 'frontpage' and 'all' collections.
+  Merchants often create an 'all' collection to control their Catalog page at /collections/all as per these instructions:
+  "Taking Control of your Catalog Page" http://docs.shopify.com/support/your-store/collections/taking-control-of-your-catalog-page
+  and don't want that collection to appear on their /collections page.
+{% endcomment %}
+
+{% assign products_per_page = settings.products_per_row | times: settings.number_of_rows %}
+{% assign numbers = 'one, two, three, four, five, six' | split: ',' %}
+{% assign products_per_row = settings.products_per_row | minus: 1 %}
+{% assign products_per_row = numbers[products_per_row] | strip | append: '-per-row' %}
+
+{% assign using_link_list = false %}
+
+{% if collection-listing != '' and linklists[collection-listing].handle == collection-listing and linklists[collection-listing].links.size > 0 %}
+  {% assign using_link_list = true %}
+{% endif %}
+
+<h1>{% if using_link_list %}{{ linklists[collection-listing].title }}{% else %}Collections{% endif %}</h1>
+
+{% if using_link_list %}
+<ul class="grid clearfix">
+{% for link in linklists[collection-listing].links %}
+  {% if link.type == 'collection_link' %}
+  {% assign collection = link.object %}
+  {% include 'collection-grid-item' with products_per_row %}
+  {% endif %}
+{% endfor %}
+</ul>
+{% else %}
+{% paginate collections by products_per_page %}
+<ul class="grid clearfix">
+{% for collection in collections %}
+  {% include 'collection-grid-item' with products_per_row %}
+{% endfor %}
+</ul>
+{% if paginate.pages > 1 %}
+<div id="pagination">
+  {{ paginate | default_pagination }}
+</div>
+{% endif %}
+{% endpaginate %}
+{% endif %}

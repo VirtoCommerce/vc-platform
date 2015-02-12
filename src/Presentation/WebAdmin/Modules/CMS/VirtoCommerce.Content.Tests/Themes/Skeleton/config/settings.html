@@ -1,0 +1,217 @@
+<p>Theme settings allow designers to provide an easy way for any user to customize the look and feel of their shop without having to delve into HTML or CSS code. Please see our <a title="Open Theme Settings documentation in a new window" target="docs" href="http://docs.shopify.com/themes/theme-templates/settings">help page on theme settings</a> to learn more about how you can make your theme customizable.</p>
+
+<fieldset>
+  <legend>Colors</legend>
+  <h3>Background</h3>
+  <table>
+    <tr>
+      <th><label for="background_color">Background color</label></th>
+      <td><input id="background_color" name="background_color" type="text" class="color" /></td>
+    </tr>
+  </table>
+  <h3>Text</h3>
+  <table>
+    <tr>
+      <th><label for="text_color">Text color</label></th>
+      <td><input id="text_color" name="text_color" type="text" class="color" /></td>
+    </tr>
+    <tr>
+      <th><label for="link_color">Link color</label></th>
+      <td><input id="link_color" name="link_color" type="text" class="color" /></td>
+    </tr>
+  </table>
+</fieldset>
+
+<fieldset>
+  <legend>Typography</legend>
+  <table>
+    <tr>
+      <th><label for="base_font_family">Typeface</label></th>
+      <td>
+        <select id="base_font_family" name="base_font_family" class="font">
+          <optgroup label="Google Fonts">
+            <option value="'Source Sans Pro', sans-serif">Source Sans Pro</option>
+          </optgroup>
+        </select>
+      </td>
+    </tr>
+    <tr>
+      <th><label for="base_font_size">Base font size</label></th>
+      <td>
+        <select id="base_font_size" name="base_font_size">
+          <option value="13px">13px</option>
+          <option value="14px">14px</option>
+          <option value="15px">15px</option>
+          <option value="16px">16px</option>
+        </select>
+       </td>
+    </tr>
+  </table>
+</fieldset>
+
+<fieldset>
+  <legend>Header</legend>
+  <h3>Logo Options</h3>
+  <table>
+    <tr>
+      <td><label for="use_logo">Use Custom Logo?</label></td>
+      <td><input type="checkbox" id="use_logo" name="use_logo" /></td>
+    </tr>
+    <tr>
+      <td><label for="logo_image">Custom Logo</label></td>
+      <td><input type="file" name="logo.png" id="logo_image" data-max-width="1200" data-max-height="1200" /></td>
+    </tr>
+    <tr>
+      <td colspan="2"><small>Recommend the optimal width and height for your logo here.</small></td>
+    </tr>
+  </table>
+  <h3>Social links</h3>
+  <table>
+    <tr>
+      <td colspan="2"><small>All links, except the email one, must begin with <i>http://</i>, <i>https://</i> or <i>//</i>. The email must be your email address with no <i>mailto:</i> prefix. Leave the text box blank if you don't want to use the corresponding icon.</small></td>
+    </tr>
+    <tr>
+      <th><label for="facebook_url">Facebook URL</label></th>
+      <td><input type="text" id="facebook_url" name="facebook_url" /></td>
+    </tr>
+    <tr>
+      <th><label for="twitter_url">Twitter URL</label></th>
+      <td><input type="text" id="twitter_url" name="twitter_url" /></td>
+    </tr>
+    <tr>
+      <th><label for="pinterest_url">Pinterest URL</label></th>
+      <td><input type="text" id="pinterest_url" name="pinterest_url" /></td>
+    </tr>
+    <tr>
+      <th><label for="googleplus_url">Google+ URL</label></th>
+      <td><input type="text" id="googleplus_url" name="googleplus_url" /></td>
+    </tr>
+    <tr>
+      <th><label for="flickr_url">Flickr URL</label></th>
+      <td><input type="text" id="flickr_url" name="flickr_url" /></td>
+    </tr>
+    <tr>
+      <th><label for="instagram_url">Instagram URL</label></th>
+      <td><input type="text" id="instagram_url" name="instagram_url" /></td>
+    </tr>
+    <tr>
+      <th><label for="linkedin_url">Linkedin URL</label></th>
+      <td><input type="text" id="linkedin_url" name="linkedin_url" /></td>
+    </tr>
+    <tr>
+      <th><label for="vimeo_url">Vimeo URL</label></th>
+      <td><input type="text" id="vimeo_url" name="vimeo_url" /></td>
+    </tr>
+    <tr>
+      <th><label for="youtube_url">Youtube URL</label></th>
+      <td><input type="text" id="youtube_url" name="youtube_url" /></td>
+    </tr>
+    <tr>
+      <th><label for="tumblr_url">Tumblr URL</label></th>
+      <td><input type="text" id="tumblr_url" name="tumblr_url" /></td>
+    </tr>
+    <tr>
+      <th><label for="wordpress_url">Wordpress URL</label></th>
+      <td><input type="text" id="wordpress_url" name="wordpress_url" /></td>
+    </tr>
+    <tr>
+      <th><label for="yelp_url">Yelp URL</label></th>
+      <td><input type="text" id="yelp_url" name="yelp_url" /></td>
+    </tr>
+    <tr>
+      <th><label for="contact_email">Email</label></th>
+      <td><input type="email" id="contact_email" name="contact_email" /></td>
+    </tr>
+    <tr>
+      <th><label for="featured_blog">Blog feed</label></th>
+      <td><select class="blog" id="featured_blog" name="featured_blog" value="news" /></td>
+    </tr>
+    <tr>
+      <th><label for="social_icons_style">Social icons style</label></th>
+      <td>
+        <select id="social_icons_style" name="social_icons_style">
+          <option value="">Silhouette</option>
+          <option value="-circle">Circle</option>
+          <option value="-rounded">Rounded corners</option>
+          <option value="-square">Square</option>      
+        </select>
+      </td>
+    </tr>
+  </table>
+</fieldset>
+
+<fieldset>
+  <legend>Footer</legend>
+  <table>
+  </table>
+</fieldset>
+
+<fieldset>
+  <legend>Homepage</legend>
+  <h3>Content</h3>
+  <table>
+    <tr>
+      <th><label for="homepage_page">Show content of this page</label></th>
+      <td><select id="homepage_page" class="page" name="homepage_page" value="frontpage" /></td>
+    </tr>
+  </table>
+  <h3>Featured collection</h3>
+  <table>
+    <tr>
+      <th><label for="homepage_collection">Feature products from this collection</label></th>
+      <td><select id="homepage_collection" class="collection" name="homepage_collection" value="frontpage" /></td>
+    </tr>
+  </table>
+</fieldset>
+
+<fieldset>
+  <legend>Product pages</legend>
+  <table>
+  </table>
+</fieldset>
+
+<fieldset>
+  <legend>Collection pages</legend>
+  <h3>Product Grid</h3>
+  <table>
+    <tr>
+      <th><label for="products_per_row">Number of products per row</label></th>
+      <td>
+        <select id="products_per_row" name="products_per_row">
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4" selected="selected">4</option>
+          <option value="5">5</option>
+          <option value="6">6</option>
+        </select>
+      </td>
+    </tr>
+    <tr>
+      <th><label for="number_of_rows">Number of rows</label></th>
+      <td>
+        <select id="number_of_rows" name="number_of_rows">
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3" selected="selected">3</option>
+          <option value="4">4</option>
+          <option value="5">5</option>
+          <option value="6">6</option>
+          <option value="7">7</option>
+          <option value="8">8</option>
+        </select>
+      </td>
+    </tr>
+  </table>
+</fieldset>
+
+<fieldset>
+  <legend>Blog pages</legend>
+  <table>
+  </table>
+</fieldset>
+
+<fieldset>
+  <legend>Cart page</legend>
+  <table>
+  </table>
+</fieldset>

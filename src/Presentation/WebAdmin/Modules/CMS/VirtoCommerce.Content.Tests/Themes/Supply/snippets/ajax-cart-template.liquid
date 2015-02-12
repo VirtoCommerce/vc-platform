@@ -1,0 +1,90 @@
+{% comment %}
+
+  This snippet provides the default handlebars.js templates for
+  the ajaxify cart plugin. Use the raw liquid tags to keep the
+  handlebar.js template tags as available hooks.
+
+{% endcomment %}
+  <script id="cartTemplate" type="text/template">
+  {% raw %}
+    <form action="/cart" method="post" novalidate>
+      <div class="ajaxifyCart--products">
+        {{#items}}
+        <div class="ajaxifyCart--product">
+          <div class="ajaxifyCart--row" data-id="{{id}}">
+            <div class="grid">
+              <div class="grid-item large--two-thirds">
+                <div class="grid">
+                  <div class="grid-item one-quarter">
+                    <a href="{{url}}" class="ajaxCart--product-image"><img src="{{img}}" alt=""></a>
+                  </div>
+                  <div class="grid-item three-quarters">
+                    <a href="{{url}}" class="h4">{{name}}</a>
+                    <p>{{variation}}</p>
+                  </div>
+                </div>
+              </div>
+              <div class="grid-item large--one-third">
+                <div class="grid">
+                  <div class="grid-item one-third">
+                    <div class="ajaxifyCart--qty">
+                      <input type="text" class="ajaxifyCart--num" value="{{itemQty}}" min="0" data-id="{{id}}" aria-label="quantity" pattern="[0-9]*">
+                      <span class="ajaxifyCart--qty-adjuster ajaxifyCart--add" data-id="{{id}}" data-qty="{{itemAdd}}">+</span>
+                      <span class="ajaxifyCart--qty-adjuster ajaxifyCart--minus" data-id="{{id}}" data-qty="{{itemMinus}}">-</span>
+                    </div>
+                  </div>
+                  <div class="grid-item one-third text-center">
+                    <p>{{price}}</p>
+                  </div>
+                  <div class="grid-item one-third text-right">
+                    <p>
+                      <small><a href="/cart/change?id={{id}}&amp;quantity=0" class="ajaxifyCart--remove" data-id="{{id}}">Remove</a></small>
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        {{/items}}
+      </div>
+      <div class="ajaxifyCart--row text-right medium-down--text-center">
+        <span class="h3">Subtotal {{totalPrice}}</span>
+        <input type="submit" class="{{btnClass}}" name="checkout" value="Checkout">
+      </div>
+    </form>
+  {% endraw %}
+  </script>
+  <script id="drawerTemplate" type="text/template">
+  {% raw %}
+    <div id="ajaxifyDrawer" class="ajaxify-drawer">
+      <div id="ajaxifyCart" class="ajaxifyCart--content {{wrapperClass}}"></div>
+    </div>
+    <div class="ajaxifyDrawer-caret"><span></span></div>
+  {% endraw %}
+  </script>
+  <script id="modalTemplate" type="text/template">
+  {% raw %}
+    <div id="ajaxifyModal" class="ajaxify-modal">
+      <div id="ajaxifyCart" class="ajaxifyCart--content"></div>
+    </div>
+  {% endraw %}
+  </script>
+  <script id="ajaxifyQty" type="text/template">
+  {% raw %}
+    <div class="ajaxifyCart--qty">
+      <input type="text" class="ajaxifyCart--num" value="{{itemQty}}" min="0" data-id="{{id}}" aria-label="quantity" pattern="[0-9]*">
+      <span class="ajaxifyCart--qty-adjuster ajaxifyCart--add" data-id="{{id}}" data-qty="{{itemAdd}}">+</span>
+      <span class="ajaxifyCart--qty-adjuster ajaxifyCart--minus" data-id="{{id}}" data-qty="{{itemMinus}}">-</span>
+    </div>
+  {% endraw %}
+  </script>
+  <script id="jsQty" type="text/template">
+  {% raw %}
+    <div class="js-qty">
+      <input type="text" class="js--num" value="{{itemQty}}" min="1" data-id="{{id}}" aria-label="quantity" pattern="[0-9]*" name="{{inputName}}" id="{{inputId}}">
+      <span class="js--qty-adjuster js--add" data-id="{{id}}" data-qty="{{itemAdd}}">+</span>
+      <span class="js--qty-adjuster js--minus" data-id="{{id}}" data-qty="{{itemMinus}}">-</span>
+    </div>
+  {% endraw %}
+  </script>

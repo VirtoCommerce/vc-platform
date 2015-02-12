@@ -1,0 +1,47 @@
+<!-- /templates/customers/activate_account.liquid -->
+{% comment %}
+
+  This template will be automatically generated for you if the file doesn't exist,
+  but where's the fun in having no control? Define your layout below.
+
+  The 'layout settings.customer_layout' line is inserted at the top of every customer account template.
+  Your theme's settings determine to use the 'default' or 'theme' customer templates.
+  More info:
+    - http://www.tetchi.ca/shopify-theme-from-scratch-part-11/
+
+  Template note:
+    - All IDs on this template are required to make the form(s) submit properly
+
+{% endcomment %}
+
+{% layout settings.customer_layout %}
+
+<div class="grid">
+  <div class="grid__item large--one-third push--large--one-third">
+
+    <h2>{{ 'customer.activate_account.title' | t }}</h2>
+    <p>{{ 'customer.activate_account.subtext' | t }}</p>
+
+    {% comment %}
+      This form must use 'activate_customer_password'
+    {% endcomment %}
+    {% form 'activate_customer_password' %}
+
+      {{ form.errors | default_errors }}
+
+      <label for="CustomerPassword">{{ 'customer.activate_account.password' | t }}</label>
+      <input type="password" value="" name="customer[password]" id="CustomerPassword">
+
+      <label for="CustomerPasswordConfirmation">{{ 'customer.activate_account.password_confirm' | t }}</label>
+      <input type="password" value="" name="customer[password_confirmation]" id="CustomerPasswordConfirmation">
+
+      <div class="text-center">
+        <p>
+          <input type="submit" class="btn" value="{{ 'customer.activate_account.submit' | t }}">
+        </p>
+        <input type="submit" class="btn--secondary" name="decline" value="{{ 'customer.activate_account.cancel' | t }}">
+      </div>
+    {% endform %}
+
+  </div>
+</div>

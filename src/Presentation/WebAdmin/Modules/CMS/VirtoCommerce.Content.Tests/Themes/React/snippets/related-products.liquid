@@ -1,0 +1,40 @@
+{% assign number_of_products = settings.collection_products_per_row %}
+{% assign number_of_products_to_fetch = number_of_products | plus: 1 %}
+
+{% if collection == null or collection.handle == 'frontpage' or collection.handle == 'all' %}
+  {% assign found_a_collection = false %}
+  {% for c in product.collections %}
+    {% if found_a_collection == false and c.handle != 'frontpage' and c.handle != 'all' and c.all_products_count > 1 %}
+      {% assign found_a_collection = true %}
+      {% assign collection = c %}
+    {% endif %}
+  {% endfor %}
+{% endif %}
+
+{% if collection and collection.products_count > 1 %}
+  <hr>
+  <div class="section-header text-center">
+    <span class="h3 section-header--title">{{ 'products.general.related_products_title' | t }}</span>
+  </div>
+  <div class="grid-uniform product-grid">
+    {% assign current_product = product %}
+    {% assign current_product_found = false %}
+    {% case number_of_products %}
+      {% when '3' %}
+        {% assign grid_item_width = 'medium--one-third large--one-third' %}
+      {% when '4' %}
+        {% assign grid_item_width = 'medium-down--one-half large--one-quarter' %}
+      {% when '5' %}
+        {% assign grid_item_width = 'medium-down--one-half large--one-fifth' %}
+    {% endcase %}
+    {% for product in collection.products limit: number_of_products_to_fetch %}
+      {% if product.handle == current_product.handle %}
+        {% assign current_product_found = true %}
+      {% else %}
+        {% unless current_product_found == false and forloop.last %}
+          {% include 'product-grid-item' %}
+        {% endunless %}
+      {% endif %}
+    {% endfor %}
+  </div>
+{% endif %}

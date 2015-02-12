@@ -1,0 +1,29 @@
+<footer class="site-footer text-center" role="contentinfo">
+  <div class="wrapper">
+    <div class="grid">
+      <div class="grid-item{% unless shop.enabled_payment_types == empty %} large--one-third{% endunless %}">
+        {% include 'search-bar' %}
+      </div>
+      <div class="grid-item large--two-thirds large--text-right">
+        {% unless shop.enabled_payment_types == empty %}
+          <ul class="payment-icons">
+            {% for type in shop.enabled_payment_types %}
+              <li>
+                <span class="icon-fallback-text">
+                  <span class="icon icon-{{type}}" aria-hidden="true"></span>
+                  <span class="fallback-text">{{type | replace: '_',' '}}</span>
+                </span>
+              </li>
+            {% endfor %}
+          </ul>
+        {% endunless %}
+      </div>
+      <div class="grid-item">
+        <small>
+          {{ 'layout.footer.copyright' | t }} &copy; {{ 'now' | date: "%Y" }} {{ shop.name }}<br>
+          {{ powered_by_link }}
+        </small>
+      </div>
+    </div>
+  </div>
+</footer>

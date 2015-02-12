@@ -1,0 +1,41 @@
+{% comment %}
+
+  This snippet renders meta data needed to create a Twitter card
+  for products and articles.
+
+  Your cards must be approved by Twitter to be activated
+   - https://dev.twitter.com/docs/cards/validation/validator
+
+  More information:
+   - https://dev.twitter.com/docs/cards/types/product-card
+   - https://dev.twitter.com/docs/cards/types/summary-card
+
+{% endcomment %}
+ 
+{% if template contains 'product' %}
+  <meta name="twitter:card" content="product" />
+  <meta name="twitter:title" content="{{ product.title | escape }}" />
+  <meta name="twitter:description" content="{{ product.description | strip_html | strip_newlines | truncatewords: 60, '' | escape }}" />
+  <meta name="twitter:image" content="http:{{ product | img_url: 'large' }}" />
+  <meta name="twitter:label1" content="Price" />
+  <meta name="twitter:data1" content="{% if product.price_varies %}From {% endif %}{{ product.price | money_with_currency | strip_html }}" />
+  {% if product.vendor == blank %}
+  <meta name="twitter:label2" content="Availability" />
+  <meta name="twitter:data2" content="In stock" />  
+  {% else %}
+  <meta name="twitter:label2" content="Brand" />
+  <meta name="twitter:data2" content="{{ product.vendor | escape }}" />
+  {% endif %}
+{% elsif template contains 'article' %}
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="{{ article.title | escape }}" />
+  <meta name="twitter:description" content="{{ article.excerpt_or_content | strip_html | truncatewords: 60, '' | escape }}" />
+  {% assign img_tag = '<' | append: 'img' %}
+  {% if article.content contains img_tag %}
+    {% assign src = article.content | split: 'src="' %}
+    {% assign src = src[1] | split: '"' | first | remove: 'https:' | remove: 'http:' %}
+    {% if src %}
+    <meta property="twitter:image" content="http:{{ src }}" />
+    {% endif %}
+ {% endif %}
+{% endif %}

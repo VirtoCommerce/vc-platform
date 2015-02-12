@@ -1,0 +1,188 @@
+<div id="product" class="{{ product.handle }}{% if product.images.size == 1 %} one_image{% endif %} clearfix" itemscope itemtype="http://schema.org/Product">
+  <meta itemprop="url" content="{{ shop.url }}{{ product.url }}" />
+  <meta itemprop="image" content="{{ product.featured_image.src | product_img_url: 'grande' }}" />
+  <meta itemprop="name" content="{{ product.title }}" />
+  <div class="product_body clearfix">
+    <div class="images">
+      <div class="featured">
+        <div class="image">
+          {% assign featured_image = product.selected_or_first_available_variant.featured_image | default: product.featured_image %}
+          <img src="{{ featured_image | product_img_url: 'grande' }}" alt="{{ featured_image.alt | escape }}" />
+        </div>
+        {% if product.price_min < product.compare_at_price_min %}<span class="sale">{{ 'products.product.sale_html' | t }}</span>{% endif %}
+      </div> <!-- /.featured -->
+      {% if product.images.size > 1 %}
+      <div class="thumbs clearfix">
+        {% for image in product.images %}
+        <div class="image">
+          <a href="{{ image | img_url: 'grande' }}">
+            <img src="{{ image | img_url: 'small' }}" alt="{{ image.alt | escape }}" />
+          </a>
+        </div>
+        {% endfor %}
+      </div><!-- /.thumbs -->
+      {% endif %}
+    </div> <!-- /.images -->
+
+    <div class="content" itemprop="offers" itemscope itemtype="http://schema.org/Offer">
+
+      <meta itemprop="priceCurrency" content="{{ shop.currency }}" />
+      {% if product.available %}
+      <link itemprop="availability" href="http://schema.org/InStock" />
+      {% else %}
+      <link itemprop="availability" href="http://schema.org/OutOfStock" />
+      {% endif %}
+
+      
+      <h2 class="title">{{ product.title }}</h2>
+      
+      {% assign variant = product.selected_or_first_available_variant %}
+      {% assign compare_at_price = variant.compare_at_price | money %}
+      {% if product.price_min < product.compare_at_price_min %}
+      <h4 class="price" id="price-preview"><span itemprop="price">{{ variant.price | money }}</span> <span>
+      <span>{{ 'products.product.compare_at_html' | t: compare_at_price: compare_at_price }}</span></span></h4>
+      {% else %}
+      <h4 class="price" id="price-preview"><span itemprop="price">{{ variant.price | money }}</span></h4>
+      {% endif %}
+
+      {% if settings.product_description_position == "top" %}
+      <div class="description" itemprop="description">
+        {{ product.description }}
+      </div>
+      {% endif %}
+      
+      {% assign hide_default_title = false %}
+      {% if product.variants.size == 1 and product.variants.first.title contains 'Default' %}
+        {% assign hide_default_title = true %}
+      {% endif %} 
+
+      <form id="add-item-form" action="/cart/add" method="post" class="variants clearfix">
+        <div class="select clearfix" {% if hide_default_title %} style="display:none"{% endif %}>
+          <select id="product-select" name="id" style="display:none">
+            {% for variant in product.variants %}
+            <option {% if variant == product.selected_or_first_available_variant %} selected="selected" {% endif %} value="{{ variant.id }}">{{ variant.title }} - {{ variant.price | money }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="purchase clearfix">
+          {% unless product.available %}
+            <span><input type="submit" name="add" id="add-to-cart" value="{{ 'products.product.sold_out_html' | t }}" class="cart disabled" disabled="disabled" /></span>
+          {% else %}
+            <span><input type="submit" name="add" id="add-to-cart" value="{{ 'products.product.add_to_cart_html' | t }}" class="cart" /></span>
+          {% endunless %}
+        </div>
+      </form>
+
+      {% if settings.product_description_position == "bottom" %}
+      <div class="description" itemprop="description">
+        {{ product.description }}
+      </div>
+      {% endif %}
+
+      {% if collection %}
+      <div class="collection-nav clearfix">
+        {% if collection.previous_product %}
+        <div class="fl">
+          <a href="{{ collection.previous_product }}" class="previous_product">&larr; {{ 'products.general.previous_product' | t }}</a>
+        </div>
+        {% endif %}
+        {% if collection.next_product %}
+        <div class="fl">
+          <a href="{{ collection.next_product }}" class="next_product">{{ 'products.general.next_product' | t }} &rarr;</a>
+        </div>
+        {% endif %}
+      </div>
+      {% endif %}
+
+    </div> <!-- /.content -->
+  </div> <!-- /.product_body -->
+
+
+  {% if settings.show_tweet_button or settings.show_facebook_like %}
+  <div class="social">
+    {% if settings.show_tweet_button %}
+    <div class="tweet">
+      <a href="//twitter.com/share" class="twitter-share-button" data-url="{{ shop.url }}{{ product.url }}" data-count="horizontal" {% if settings.twitter_account != "" %}data-via="{{ settings.twitter_account }}"{% endif %}>Tweet</a><script src="//platform.twitter.com/widgets.js"></script>
+    </div>
+    {% endif %}
+    {% if settings.show_facebook_like %}
+    {% include 'like' with product %}
+    {% endif %}
+  </div>
+  {% endif %}
+
+  {% if settings.show_facebook_comments %}
+  <div class="facebook-comments" style="margin-top:15px">
+    <script src="//connect.facebook.net/en_US/all.js#xfbml=1"></script><fb:comments href="{{ shop.url }}/products/{{ product.handle }}" num_posts="4" width="660"></fb:comments>
+  </div>
+  {% endif %}
+
+  {% if settings.show_related_products %}
+  {% if collection and collection.products.size > 1 %}
+
+  <div class="related-products">
+    <h3>{{ 'products.product.related_products' | t }}</h3>
+    <div class="collection clearfix">
+      {% for product in collection.products limit:8 %}
+      {% include 'product-loop' with collection.handle %}
+      {% endfor %}
+    </div>
+  </div>
+  {% endif %}
+  {% endif %}
+</div> <!-- /#product -->
+
+{% include 'recently-viewed' %}
+<script type="text/javascript">
+// <![CDATA[  
+var selectCallback = function(variant, selector) {
+  if (variant) {
+    if (variant.featured_image) {
+      var newImage = variant.featured_image;
+      var mainImageEl = $('.featured .image img')[0];
+      Shopify.Image.switchImage(newImage, mainImageEl, ExpoTheme.switchImage);
+    }    
+    if(variant.price < variant.compare_at_price){
+      jQuery('#price-preview').html(Shopify.formatMoney(variant.price, "{{shop.money_format}}")  + " <span>" + {{ 'products.product.compare_at_html' | t: compare_at_price: '[$]' | json }}.replace('[$]', Shopify.formatMoney(variant.compare_at_price, "{{shop.money_format}}")) + "</span>");
+    } else {
+      jQuery('#price-preview').html(Shopify.formatMoney(variant.price, "{{shop.money_format}}"));
+    }
+    
+    if (variant.available) {
+      jQuery('#add-to-cart').removeAttr('disabled').removeClass('disabled').val({{ "products.product.add_to_cart_html" | t | json }});
+    }
+    else { 
+      // variant is sold out.
+      jQuery('#add-to-cart').val({{ "products.product.sold_out_html" | t | json }}).addClass('disabled').attr('disabled', 'disabled');      
+    }
+
+
+  } else {
+    // variant doesn't exist.
+    jQuery('#add-to-cart').val({{ "products.product.unavailable_html" | t | json }}).addClass('disabled').attr('disabled', 'disabled');  
+    jQuery('#price-preview').empty();
+  }
+};
+
+function remove(s, t) {
+  i = s.indexOf(t);
+  r = "";
+  if (i == -1) return s;
+  r += s.substring(0,i) + remove(s.substring(i + t.length), t);
+  return r;
+}
+
+// initialize multi selector for product
+jQuery(function() {
+  new Shopify.OptionSelectors("product-select", { product: {{ product | json }}, onVariantSelected: selectCallback, enableHistoryState: true });
+  
+  {% if product.options.size == 1 and product.options.first != 'Title' %}
+  jQuery('.selector-wrapper:eq(0)').prepend('<label>{{ product.options.first | escape }}</label>');
+  {% endif %}
+
+});
+   
+Shopify.Image.preload({{ product.images | json }}, 'grande');
+   
+// ]]>
+</script>

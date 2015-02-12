@@ -1,0 +1,43 @@
+{% if settings.show_recent_products %}
+<div id="recently-viewed" class="collection recently-viewed-products" style="display:none;">
+  <h3>{{ 'products.general.recently_viewed' | t }}</h3>
+  <div class="products clearfix"></div>
+</div> <!-- /#recently-viewed -->
+{% endif %}
+
+<script type="text/javascript">
+jQuery(function() {
+  if(jQuery.cookie("viewed-products") != null){ // if cookie exists...
+    var products = jQuery.cookie("viewed-products");
+    var productHandles = products.split(" ");
+    var matches = 0;
+    var limit = 4;
+    for(var i = (productHandles.length - 1); i >= 0; i--) {
+      {% if template == "product" %}
+      if(productHandles[i] != "{{ product.handle }}" && productHandles[i] != "" && (matches < limit)){
+        Shopify.getProduct(productHandles[i]);
+        matches++;
+      }
+      {% else %}
+      if(productHandles[i] != "" && (matches < limit)){
+        Shopify.getProduct(productHandles[i]);
+        matches++;
+      }
+      {% endif %}
+    }
+
+    {% if template == "product" %}
+    if(products.indexOf("{{ product.handle }}") == -1){ // add current product to list if it isn't already there
+    products += " {{ product.handle }}";
+    jQuery.cookie("viewed-products", products, {path: "/"});
+    } else { // if it is already there, push it to the end of the string
+      var newstring = remove(products, '{{ product.handle }}');
+      newstring += " {{ product.handle }}";
+      jQuery.cookie("viewed-products", newstring.replace(/ /g,' '), {path: "/"});
+    }
+    {% endif %}
+    } else { // create cookie if it doesn't already exist
+    jQuery.cookie("viewed-products", "{{ product.handle }}", {path: "/"});
+  }
+});
+</script>

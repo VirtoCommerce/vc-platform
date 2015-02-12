@@ -1,0 +1,4 @@
+body {padding-bottom:40px;}
+header .cart-summary {position:relative; z-index:18000 !important;}
+#article textarea {width:260px !important;}
+.sidebar li, .dropdown li {list-style:none outside none !important;}

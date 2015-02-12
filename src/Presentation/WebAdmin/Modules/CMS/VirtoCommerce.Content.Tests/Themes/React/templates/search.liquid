@@ -1,0 +1,55 @@
+{% comment %}
+  Check to enforce respond.js
+{% endcomment %}
+{% assign respond_js_secret_key = shop.domain | md5 %}
+{% unless search.terms == respond_js_secret_key %}
+
+  <div class="grid">
+    <div class="grid-item large--two-thirds push--large--one-sixth">
+
+      {% if search.performed %}
+
+        {% paginate search.results by 10 %}
+
+          {% if search.results_count == 0 %}
+
+            <div class="section-header text-center">
+              <h1 class="h3 section-header--title">{{ 'general.search.no_results_html' | t: terms: search.terms }}</h1>
+              {% include 'search-bar' %}
+            </div>
+
+          {% else %}
+
+            <div class="section-header text-center">
+              <h1 class="h3 section-header--title">{{ 'general.search.results_for_html' | t: terms: search.terms }}</h1>
+              {% include 'search-bar' %}
+            </div>
+
+            {% for item in search.results %}
+              {% include 'search-result' %}
+            {% endfor %}
+
+          {% endif %}
+
+          {% if paginate.pages > 1 %}
+            <div class="text-center">
+              {% include 'pagination-custom' %}
+            </div>
+          {% endif %}
+
+        {% endpaginate %}
+
+      {% else %}
+        <div class="section-header text-center">
+          <h1 class="h3 section-header--title">{{ 'general.search.title' | t }}</h1>
+          {% include 'search-bar' %}
+        </div>
+      {% endif %}
+
+    </div>
+  </div>
+
+{% else %}
+  {% include 'respond' %}
+  {% layout none %}
+{% endunless %}

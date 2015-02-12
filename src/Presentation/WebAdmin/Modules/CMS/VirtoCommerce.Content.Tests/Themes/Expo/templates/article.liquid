@@ -1,0 +1,92 @@
+<div id="article" class="clearfix">
+  <div class="article-body clearfix">
+    <h2>{{ article.title }}</h2>
+    <span class="date subtext">{{ 'blogs.article.posted_on' | t }} {{ article.published_at | date: format: 'short' }} </span>
+    <div class="content">
+      {{ article.content }}
+    </div>
+  </div> <!-- /.article-body -->
+
+  {% if settings.comment_method == "facebook" %}
+  <div class="facebook-comments" style="padding-top:20px;">
+    <script src="//connect.facebook.net/en_US/all.js#xfbml=1"></script>
+    <fb:comments href="{{ shop.url }}{{ article.url }}" num_posts="30" width="660"></fb:comments>
+  </div>
+  {% endif %}
+
+  {% if blog.comments_enabled? %}
+  <div id="comments" class="comments">
+    {% if article.comments.size > 0 %}
+    {% paginate article.comments by 100 %}
+
+    <h3>{{ 'blogs.comments.title' | t }}</h3>
+    <span class="subtext">{{ 'blogs.comments.comments_with_count' | t: count: article.comments_count }}</span>
+    {% for comment in article.comments %}
+    <div id="comment-{{ comment.id }}" class="comment clearfix">
+      <h5>{{ comment.author }}</h5>
+      <span class="subtext">{{ comment.created_at | date: format: 'short' }}</span>
+      <div class="content">{{ comment.content }}</div>
+    </div> <!-- /.comment -->
+    {% endfor %}
+
+    <div class="clearfix">
+      <div class="paginate fr">
+        {% include 'pagination' %}
+      </div>
+    </div>
+    {% endpaginate %}
+
+    {% endif %}
+    <div class="comment_form">
+	  {% form "new_comment", article %}
+      <h3>{{ 'blogs.comments.form_title' | t }} </h3>
+
+      {% if form.posted_successfully? %}
+      {% if blog.moderated? %}
+      <span class="subtext">{{ 'blogs.comments.success_moderated' | t }}</span>
+      {% else %}
+      <span class="subtext">{{ 'blogs.comments.success' | t }}</span>
+      {% endif %}
+      {% endif %}
+
+      {% if form.errors %}
+      <span class="subtext error">{{ 'blogs.comments.error' | t }}</span>
+      <ul class="disc">
+        {% for field in form.errors %}
+  
+          {% comment %}
+            Check if it's a generic 'form' error and don't show the {{ field }}
+          {% endcomment %}
+  
+          {% if field == 'form' %}
+            <li>
+              {{ form.errors.messages[field] }}
+            </li>
+          {% else %}
+            <li>
+              {% assign field_name = field | replace: 'body', 'message' %}
+              {{ 'general.forms.post_field_error_html' | t: field: field_name, error: form.errors.messages[field] }}
+            </li>
+          {% endif %}
+  
+        {% endfor %}
+       </ul>
+      {% endif %}
+
+      <input type="text" id="comment_author" name="comment[author]" size="40" value="{{ 'blogs.comments.name' | t }}" class="replace{% if form.errors contains 'author' %} input-error{% endif %}" />
+      <input type="text" id="comment_email" name="comment[email]" size="40" value="{{ 'blogs.comments.email' | t }}" class="replace{% if form.errors contains 'email' %} input-error{% endif %}" />
+      <textarea id="comment_body" name="comment[body]" cols="40" rows="5" class="replace{% if form.errors contains 'body' %} input-error{% endif %}">{{form.body}}</textarea>
+
+      <input type="submit" value="{{ 'blogs.comments.post' | t }}" id="comment-submit" />
+
+      {% if blog.moderated? %}
+      <div class="notice">{{ 'blogs.comments.moderated' | t }}</div>
+      {% endif %}
+
+      {% endform %}
+    </div> <!-- /#comments -->
+  </div> <!-- /div.comment_form -->
+  {% endif %}
+</div> <!-- /#article -->
+
+{% include 'recently-viewed' %}

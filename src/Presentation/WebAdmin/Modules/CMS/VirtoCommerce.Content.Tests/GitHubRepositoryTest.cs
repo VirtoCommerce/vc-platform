@@ -18,6 +18,8 @@
 
     public class GitHubRepositoryTest
     {
+		private string _githubMainPath = "/Themes/";
+
         #region Public Methods and Operators
 
         [Fact]
@@ -42,7 +44,8 @@
                 "MfZUbM2wSDCdDADBEGpo",
                 "Site-Theme",
                 "EugeneOkhriemnko",
-                "Site_Themes");
+                "Site_Themes",
+				_githubMainPath);
 
             var items = repository.GetContentItems("/");
 
@@ -71,7 +74,8 @@
                 "MfZUbM2wSDCdDADBEGpo",
                 "Site-Theme",
                 "EugeneOkhriemnko",
-                "Site_Themes");
+                "Site_Themes",
+				_githubMainPath);
 
             var item = repository.GetContentItem("/docs/new1.txt");
 
@@ -87,7 +91,8 @@
                 "MfZUbM2wSDCdDADBEGpo",
                 "Site-Theme",
                 "EugeneOkhriemnko",
-                "Site_Themes");
+                "Site_Themes",
+				_githubMainPath);
 
             var items = repository.GetContentItems("/docs/");
 
@@ -130,7 +135,8 @@
                             "MfZUbM2wSDCdDADBEGpo",
                             "Site-Theme",
                             "EugeneOkhriemnko",
-                            "Site_Themes");
+							"Site_Themes",
+							_githubMainPath);
                 }
             };
 

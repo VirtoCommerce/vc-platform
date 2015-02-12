@@ -1,0 +1,67 @@
+{% assign featured = settings.home_featured_products %}
+{% assign products_per_row = settings.home_featured_products_num %}
+{% assign rows = settings.home_featured_products_row_num %}
+
+<div class="section-header text-center">
+  {% if featured == 'frontpage' %}
+    <h3 class="section-header--title">{{ 'home_page.sections.featured_products' | t }}</h3>
+  {% else %}
+    <h3 class="section-header--title">{{ collections[featured].title | escape }}</h3>
+  {% endif %}
+</div>
+
+{% case products_per_row %}
+  {% when '3' %}
+    {% assign grid_item_width = 'medium--one-third large--one-third' %}
+  {% when '4' %}
+    {% assign grid_item_width = 'medium-down--one-half large--one-quarter' %}
+  {% when '5' %}
+    {% assign grid_item_width = 'medium-down--one-half large--one-fifth' %}
+{% endcase %}
+
+<div class="grid-uniform product-grid">
+  {% for product in collections[featured].products limit: products_per_row %}
+    {% include 'product-grid-item' %}
+  {% else %}
+
+    <div class="grid-item">
+      <p>{{ 'home_page.onboarding.no_products_html' | t }}</p>
+    </div>
+
+    <div class="grid-item">
+      <div class="grid-uniform">
+        <div class="grid-item large--one-quarter medium--one-half text-center">
+          <a href="/admin/products" class="demo-image">
+            {{ 'home_page.onboarding.add_product' | t }}
+          </a>
+          <p><a href="/admin/products">{{ 'home_page.onboarding.product_title' | t }}</a> $19.99</p>
+        </div>
+        <div class="grid-item large--one-quarter medium--one-half text-center">
+          <a href="/admin/products" class="demo-image">
+            {{ 'home_page.onboarding.add_product' | t }}
+          </a>
+          <p><a href="/admin/products">{{ 'home_page.onboarding.product_title' | t }}</a> $19.99</p>
+        </div>
+        <div class="grid-item large--one-quarter medium--one-half text-center">
+          <a href="/admin/products" class="demo-image">
+            {{ 'home_page.onboarding.add_product' | t }}
+          </a>
+          <p><a href="/admin/products">{{ 'home_page.onboarding.product_title' | t }}</a> $19.99</p>
+        </div>
+        <div class="grid-item large--one-quarter medium--one-half text-center">
+          <a href="/admin/products" class="demo-image">
+            {{ 'home_page.onboarding.add_product' | t }}
+          </a>
+          <p><a href="/admin/products">{{ 'home_page.onboarding.product_title' | t }}</a> $19.99</p>
+        </div>
+      </div>
+    </div>
+
+  {% endfor %}
+
+  {% if rows == "2" %}
+    {% for product in collections[featured].products limit: products_per_row offset: products_per_row %}
+      {% include 'product-grid-item' %}
+    {% endfor %}
+  {% endif %}
+</div>

@@ -1,0 +1,6 @@
+{% if settings.home_page_content != empty %}
+  <h2 class="h1 text-center">{{ pages[settings.home_page_content].title }}</h2>
+  <div class="rte">
+    {{ pages[settings.home_page_content].content }}
+  </div>
+{% endif %}

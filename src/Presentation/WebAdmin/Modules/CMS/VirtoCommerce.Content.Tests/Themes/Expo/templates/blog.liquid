@@ -1,0 +1,33 @@
+<div id="blog" class="clearfix">
+
+  {% paginate blog.articles by settings.pagination_limit %}
+
+  <div class="clearfix">
+    <h2 class="fl">{{ blog.title }}</h2>
+    <div class="paginate fr cy">
+      {% include 'pagination' %}
+    </div>
+  </div>
+
+  <div class="articles clearfix">
+    {% for article in blog.articles %}
+    <div class="article clearfix">
+      <div class="content">
+        <h4><a href="{{ article.url }}">{{ article.title }}</a></h4>
+        {{ article.content | strip_html | truncatewords:70 }}
+      </div>
+      <a href="{{ article.url }}">{{ 'blogs.article.read_more' | t }}</a>
+    </div> <!-- /.article -->
+    {% endfor %}
+  </div> <!-- /.articles -->
+
+  <div class="clearfix">
+    <div class="paginate fr">
+      {% include 'pagination' %}
+    </div>
+  </div>
+
+  {% endpaginate %}
+</div> <!-- /#blog -->
+
+{% include 'recently-viewed' %}

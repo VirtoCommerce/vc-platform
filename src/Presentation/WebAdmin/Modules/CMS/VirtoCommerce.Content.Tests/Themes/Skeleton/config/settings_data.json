@@ -1,0 +1,26 @@
+{
+  "current": "Slate",
+  "presets": {
+    "Slate": {
+      "customer_layout": "theme",
+      "background_color": "#e6ebeb",
+      "text_color": "#555555",
+      "link_color": "#b5792b",
+      "facebook_url": "https://www.facebook.com/shopify",
+      "twitter_url": "https://twitter.com/shopify",
+      "pinterest_url": "http://pinterest.com/shopify/",
+      "instagram_url": "http://instagram.com/shopify",
+      "vimeo_url": "http://vimeo.com/shopify",
+      "youtube_url": "https://www.youtube.com/user/shopify",
+      "social_icons_style": "",
+      "use_logo": false,
+      "base_font_size": "16px",
+      "base_font_family": "'Source Sans Pro', sans-serif",
+      "featured_blog": "news",
+      "homepage_page": "frontpage",
+      "homepage_collection": "frontpage",
+      "products_per_row": "3",
+      "number_of_rows": "4"
+    }
+  }
+}

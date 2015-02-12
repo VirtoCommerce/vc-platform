@@ -1,0 +1,15 @@
+{% if paginate.pages > 1 %}
+<div class="pagination">
+  {% for part in paginate.parts %}
+  {% if part.is_link %}
+  <a href="{{ part.url }}">{{ part.title }}</a>
+  {% else %}
+  {% if part.title == '&hellip;' %}
+  {{ part.title }}
+  {% else %}
+  <span class="current">{{ part.title }}</span>
+  {% endif %}
+  {% endif %}
+  {% endfor %}
+</div>
+{% endif %}

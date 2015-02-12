@@ -1,0 +1,146 @@
+<footer class="site-footer medium-down--text-center" role="contentinfo">
+  <div class="grid">
+
+    {% comment %}
+      Calculate the number of footer columns shown
+    {% endcomment %}
+    {% assign num_footer_columns = 0 %}
+    {% if settings.footer_social_enable %}
+      {% assign num_footer_columns = num_footer_columns | plus: 1 %}
+    {% endif %}
+    {% if settings.footer_contact_enable %}
+      {% assign num_footer_columns = num_footer_columns | plus: 1 %}
+    {% endif %}
+    {% if settings.footer_quicklinks_enable %}
+      {% assign num_footer_columns = num_footer_columns | plus: 1 %}
+    {% endif %}
+    {% if settings.footer_newsletter_enable %}
+      {% assign num_footer_columns = num_footer_columns | plus: 1 %}
+    {% endif %}
+
+    {% case num_footer_columns %}
+      {% when 0 %}
+      {% when 1 %}
+        {% assign footer_column_width = '' %}
+      {% when 2 %}
+        {% assign footer_column_width = 'large--one-half' %}
+      {% when 3 %}
+        {% assign footer_column_width = 'large--one-third' %}
+      {% when 4 %}
+        {% assign footer_column_width = 'large--one-quarter' %}
+    {% endcase %}
+
+    {% if settings.footer_social_enable %}
+      <div class="grid-item {{ footer_column_width }} large--text-left">
+        <div class="site-footer--bucket">
+          <h3>{{ 'layout.footer.social_title' | t }}</h3>
+          <ul class="inline-list social-icons">
+            {% if settings.social_twitter_link != blank %}
+              <li>
+                <a class="icon-fallback-text" href="{{ settings.social_twitter_link }}" title="{{ 'layout.footer.social_platform' | t: name: shop.name, platform: 'Twitter' }}">
+                  <span class="icon icon-twitter" aria-hidden="true"></span>
+                  <span class="fallback-text">Twitter</span>
+                </a>
+              </li>
+            {% endif %}
+            {% if settings.social_facebook_link != blank %}
+              <li>
+                <a class="icon-fallback-text" href="{{ settings.social_facebook_link }}" title="{{ 'layout.footer.social_platform' | t: name: shop.name, platform: 'Facebook' }}">
+                  <span class="icon icon-facebook" aria-hidden="true"></span>
+                  <span class="fallback-text">Facebook</span>
+                </a>
+              </li>
+            {% endif %}
+            {% if settings.social_pinterest_link != blank %}
+              <li>
+                <a class="icon-fallback-text" href="{{ settings.social_pinterest_link }}" title="{{ 'layout.footer.social_platform' | t: name: shop.name, platform: 'Pinterest' }}">
+                  <span class="icon icon-pinterest" aria-hidden="true"></span>
+                  <span class="fallback-text">Pinterest</span>
+                </a>
+              </li>
+            {% endif %}
+            {% if settings.social_google_plus_link != blank %}
+              <li>
+                <a class="icon-fallback-text" href="{{ settings.social_google_plus_link }}" title="{{ 'layout.footer.social_platform' | t: name: shop.name, platform: 'Google Plus' }}">
+                  <span class="icon icon-google" aria-hidden="true"></span>
+                  <span class="fallback-text">Google</span>
+                </a>
+              </li>
+            {% endif %}
+            {% if settings.social_instagram_link != blank %}
+              <li>
+                <a class="icon-fallback-text" href="{{ settings.social_instagram_link }}" title="{{ 'layout.footer.social_platform' | t: name: shop.name, platform: 'Instagram' }}">
+                  <span class="icon icon-instagram" aria-hidden="true"></span>
+                  <span class="fallback-text">Instagram</span>
+                </a>
+              </li>
+            {% endif %}
+            {% if settings.social_tumblr_link != blank %}
+              <li>
+                <a class="icon-fallback-text" href="{{ settings.social_tumblr_link }}" title="{{ 'layout.footer.social_platform' | t: name: shop.name, platform: 'Tumblr' }}">
+                  <span class="icon icon-tumblr" aria-hidden="true"></span>
+                  <span class="fallback-text">Tumblr</span>
+                </a>
+              </li>
+            {% endif %}
+            {% if settings.social_youtube_link != blank %}
+              <li>
+                <a class="icon-fallback-text" href="{{ settings.social_youtube_link }}" title="{{ 'layout.footer.social_platform' | t: name: shop.name, platform: 'YouTube' }}">
+                  <span class="icon icon-youtube" aria-hidden="true"></span>
+                  <span class="fallback-text">YouTube</span>
+                </a>
+              </li>
+            {% endif %}
+            {% if settings.social_vimeo_link != blank %}
+              <li>
+                <a class="icon-fallback-text" href="{{ settings.social_vimeo_link }}" title="{{ 'layout.footer.social_platform' | t: name: shop.name, platform: 'Vimeo' }}">
+                  <span class="icon icon-vimeo" aria-hidden="true"></span>
+                  <span class="fallback-text">Vimeo</span>
+                </a>
+              </li>
+            {% endif %}
+            {% if settings.social_fancy_link != blank %}
+              <li>
+                <a class="icon-fallback-text" href="{{ settings.social_fancy_link }}" title="{{ 'layout.footer.social_platform' | t: name: shop.name, platform: 'Fancy' }}">
+                  <span class="icon icon-fancy" aria-hidden="true"></span>
+                  <span class="fallback-text">Fancy</span>
+                </a>
+              </li>
+            {% endif %}
+          </ul>
+        </div>
+      </div>
+    {% endif %}
+
+    {% if settings.footer_contact_enable %}
+      <div class="grid-item {{ footer_column_width }}">
+        <div class="site-footer--bucket">
+          <h3>{{ 'layout.footer.contact_title' | t }}</h3>
+          <div>{{ settings.footer_contact_text }}</div>
+        </div>
+      </div>
+    {% endif %}
+
+    {% if settings.footer_quicklinks_enable %}
+      <div class="grid-item {{ footer_column_width }}">
+        <div class="site-footer--bucket">
+          <h3>{{ 'layout.footer.linklist_title' | t }}</h3>
+          <ul class="site-footer--linklist">
+            {% for link in linklists[settings.footer_quicklinks_linklist].links %}
+              <li><a href="{{ link.url }}">{{ link.title }}</a></li>
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
+    {% endif %}
+
+    {% if settings.footer_newsletter_enable %}
+    <div class="grid-item {{ footer_column_width }}">
+      <div class="site-footer--bucket">
+        <h3>{{ 'layout.footer.newsletter_title' | t }}</h3>
+        {% include 'newsletter-form' %}
+      </div>
+    </div>
+    {% endif %}
+  </div>
+</footer>

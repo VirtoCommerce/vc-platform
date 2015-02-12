@@ -1,0 +1,25 @@
+{% include 'breadcrumb' %}
+
+{% comment %}
+  Custom order collections by 'all-collections' linklist
+{% endcomment %}
+{% for link in linklists.all-collections.links %}
+
+  {% assign collection = link.object %}
+  {% include 'collection-list-item' %}
+  {% unless forloop.last %}<hr>{% endunless %}
+
+{% else %}
+  {% comment %}
+    Default collection order
+  {% endcomment %}
+  {% for collection in collections %}
+
+    {% unless collection.handle == 'frontpage' or collection.handle == 'all' %}
+      {% include 'collection-list-item' %}
+      {% unless forloop.last %}<hr>{% endunless %}
+    {% endunless %}
+
+  {% endfor %}
+
+{% endfor %}

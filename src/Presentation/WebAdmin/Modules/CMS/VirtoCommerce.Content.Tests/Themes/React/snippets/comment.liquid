@@ -1,0 +1,12 @@
+<div class="comment">
+  <p>
+    <span class="h3">{{ comment.author }}</span> <span class="meta-spacer">&#8226;</span>
+    <time datetime="{{ comment.created_at | date: '%Y-%m-%d' }}">
+      {{ comment.created_at | date: format: 'month_day_year' }}
+    </time>
+  </p>
+
+  <div class="rte">
+    {{ comment.content }}
+  </div>
+</div>

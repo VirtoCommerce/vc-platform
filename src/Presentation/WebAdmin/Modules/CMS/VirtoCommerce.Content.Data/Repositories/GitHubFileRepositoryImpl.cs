@@ -35,7 +35,8 @@
             string password,
             string productHeaderValue,
             string ownerName,
-            string repositoryName)
+            string repositoryName,
+			string mainPath)
         {
             this._client = new GitHubClient(new ProductHeaderValue(productHeaderValue), new Uri("https://github.com/"))
                            {

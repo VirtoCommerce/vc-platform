@@ -45,6 +45,10 @@
                 "VirtoCommerce.ThemeModule.GitHub.RepositoryName",
                 string.Empty);
 
+			var githubMainPath = "/Themes/";
+			var fileSystemMainPath = "~/Themes/";
+			var databaseMainPath = "Themes/";
+
             Func<string, IFileRepository> factory = (x) =>
             {
                 switch (x)
@@ -55,16 +59,17 @@
                             githubPassword,
                             githubProductHeaderValue,
                             githubOwnerName,
-                            githubRepositoryName);
+							githubRepositoryName,
+							githubMainPath);
 
                     case "Database":
-                        return new DatabaseFileRepositoryImpl();
+                        return new DatabaseFileRepositoryImpl(databaseMainPath);
 
                     case "File System":
-                        return new FileSystemFileRepositoryImpl();
+                        return new FileSystemFileRepositoryImpl(fileSystemMainPath);
 
                     default:
-                        return new FileSystemFileRepositoryImpl();
+						return new FileSystemFileRepositoryImpl(fileSystemMainPath);
                 }
             };
 

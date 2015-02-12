@@ -1,0 +1,69 @@
+<div id="index" class="clearfix">
+
+  {% if settings.display_slideshow_1 or settings.display_slideshow_2 or settings.display_slideshow_3 or settings.display_slideshow_4 %}
+
+  <div class="slider-container">
+    <ul id="slider" class="slider">
+      {% if settings.display_slideshow_1 %}
+      <li class="slide"><img src="{{ 'slideshow_1.jpg' | asset_url }}" data-url="{{ settings.image_1_link }}" class="slide-img" alt="{{ settings.image_1_alt }}" /></li>
+      {% endif %}
+      {% if settings.display_slideshow_2 %}
+      <li class="slide"><img src="{{ 'slideshow_2.jpg' | asset_url }}" data-url="{{ settings.image_2_link }}" class="slide-img" alt="{{ settings.image_2_alt }}" /></li>
+      {% endif %}
+      {% if settings.display_slideshow_3 %}
+      <li class="slide"><img src="{{ 'slideshow_3.jpg' | asset_url }}" data-url="{{ settings.image_3_link }}" class="slide-img" alt="{{ settings.image_3_alt }}" /></li>
+      {% endif %}
+      {% if settings.display_slideshow_4 %}
+      <li class="slide"><img src="{{ 'slideshow_4.jpg' | asset_url }}" data-url="{{ settings.image_4_link }}" class="slide-img" alt="{{ settings.image_4_alt }}" /></li>
+      {% endif %}
+      {% if settings.display_slideshow_5 %}
+      <li class="slide"><img src="{{ 'slideshow_5.jpg' | asset_url }}" data-url="{{ settings.image_5_link }}" class="slide-img" alt="{{ settings.image_5_alt }}" /></li>
+      {% endif %}
+      {% if settings.display_slideshow_6 %}
+      <li class="slide"><img src="{{ 'slideshow_6.jpg' | asset_url }}" data-url="{{ settings.image_6_link }}" class="slide-img" alt="{{ settings.image_6_alt }}" /></li>
+      {% endif %}
+      {% if settings.display_slideshow_7 %}
+      <li class="slide"><img src="{{ 'slideshow_7.jpg' | asset_url }}" data-url="{{ settings.image_7_link }}" class="slide-img" alt="{{ settings.image_7_alt }}" /></li>
+      {% endif %}
+      {% if settings.display_slideshow_8 %}
+      <li class="slide"><img src="{{ 'slideshow_8.jpg' | asset_url }}" data-url="{{ settings.image_8_link }}" class="slide-img" alt="{{ settings.image_8_alt }}" /></li>
+      {% endif %}
+      {% if settings.display_slideshow_9 %}
+      <li class="slide"><img src="{{ 'slideshow_9.jpg' | asset_url }}" data-url="{{ settings.image_9_link }}" class="slide-img" alt="{{ settings.image_9_alt }}" /></li>
+      {% endif %}
+      {% if settings.display_slideshow_10 %}
+      <li class="slide"><img src="{{ 'slideshow_10.jpg' | asset_url }}" data-url="{{ settings.image_10_link }}" class="slide-img" alt="{{ settings.image_10_alt }}" /></li>
+      {% endif %}
+    </ul>
+    <div id="slider-empty" style="display:none; background:#f0f0f0; padding:120px 0; text-align:center;">
+      <h4>{{ 'home_page.onboarding.no_slideshow' | t }}</h4>
+      {{ 'home_page.onboarding.no_slideshow_html' | t }}
+    </div>
+  </div>
+  
+  {% endif %}
+
+  {% if settings.frontpage_collection != empty and settings.frontpage_collection == collections[settings.frontpage_collection].handle %}
+  <h3>{{ 'home_page.sections.frontpage_title' | t }}</h3>
+
+  <div id="collection" class="clearfix">
+    {% for product in collections[settings.frontpage_collection].products limit: settings.frontpage_pagination_limit %}
+    {% include 'product-loop' with settings.frontpage_collection %}
+    {% else %}
+    <p>{{ 'home_page.onboarding.no_products_html' | t }}</p>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  {% if settings.index_page_content != empty %}
+  <div class="index-page">
+    <h3>{{ pages[settings.index_page_content].title }}</h3>
+    <div class="page-content">
+      {{ pages[settings.index_page_content].content }}
+    </div>
+  </div>
+  {% endif %}
+
+</div> <!-- /#index -->
+
+{% include 'recently-viewed' %}

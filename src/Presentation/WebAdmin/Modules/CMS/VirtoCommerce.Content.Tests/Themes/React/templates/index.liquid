@@ -1,0 +1,20 @@
+{% if settings.home_section_1 != blank %}
+  {% include settings.home_section_1 %}
+{% endif %}
+
+{% if settings.home_section_2 != blank %}
+  {% unless settings.home_section_1 == 'slider' %}
+    <hr>
+  {% endunless %}
+  {% include settings.home_section_2 %}
+{% endif %}
+
+{% if settings.home_section_3 != blank %}
+  <hr>
+  {% include settings.home_section_3 %}
+{% endif %}
+
+{% if settings.home_section_4 != blank %}
+  <hr>
+  {% include settings.home_section_4 %}
+{% endif %}

@@ -1,0 +1,181 @@
+<!doctype html>
+<!--[if lt IE 7]><html class="no-js lt-ie9 lt-ie8 lt-ie7" lang="en"> <![endif]-->
+<!--[if IE 7]><html class="no-js lt-ie9 lt-ie8" lang="en"> <![endif]-->
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en"> <![endif]-->
+<!--[if IE 9 ]><html class="ie9 no-js"> <![endif]-->
+<!--[if (gt IE 9)|!(IE)]><!--> <html class="no-js"> <!--<![endif]-->  
+<head>
+  <meta charset="utf-8" />
+  <!--[if IE]><meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1' /><![endif]-->
+
+  <title>
+  {{ page_title }}{% if current_tags %} &ndash; tagged "{{ current_tags | join: ', ' }}"{% endif %}{% if current_page != 1 %} &ndash; Page {{ current_page }}{% endif %}{% unless page_title contains shop.name %} &ndash; {{ shop.name }}{% endunless %}
+  </title>
+
+  {% if page_description %}
+  <meta name="description" content="{{ page_description | escape }}" />
+  {% endif %}
+
+  <link rel="canonical" href="{{ canonical_url }}" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  
+  {% include 'open-graph-tags' %}
+  {% include 'twitter-card' %}
+
+  {{ content_for_header }}
+
+  {{ 'style.scss.css' | asset_url | stylesheet_tag }}
+  {{ 'social/social-icons.css' | global_asset_url | stylesheet_tag }}
+  {{ '//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.0.3/css/font-awesome.css' | stylesheet_tag }}
+  
+  {{ '//fonts.googleapis.com/css?family=Source+Sans+Pro:400,600,700,400italic,600italic,700italic' | stylesheet_tag }}
+
+  <!--[if lt IE 9]>
+  {{ '//html5shiv.googlecode.com/svn/trunk/html5.js' | script_tag }}
+  <![endif]-->
+
+  {{ 'shopify_common.js' | shopify_asset_url | script_tag }}
+  {% if template contains 'customers' %}  
+  {{ 'customer_area.js'  | shopify_asset_url | script_tag }}
+  {% endif %}
+  
+  <!-- Additional Shopify helpers that will likely be added to the global shopify_common.js some day soon. -->
+  {{ 'shopify_common.js'  | asset_url | script_tag }}
+
+  {{ 'option_selection.js' | shopify_asset_url | script_tag }}
+
+  {{ '//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js' | script_tag }}
+  <script>jQuery('html').removeClass('no-js').addClass('js');</script>
+
+</head>
+
+<body id="{{ page_title | handle }}" class="{% if customer %}customer-logged-in {% endif %}template-{{ template | replace: '.', ' ' | truncatewords: 1, '' | handle }}" >
+
+  <div class="container">
+
+    <header class="row">
+      
+      <div class="social-links half column left-aligned">
+      {% include 'social-links' %}
+      </div>      
+      
+      {% comment %}
+        Note on checkout link: it is a good idea to avoid linking to /checkout directly because shops that use 
+        Paypal Express Checkout and/or Google Checkout have special checkout buttons on the /cart page. Also,
+        special instructions for the seller are entered on the /cart page. Finally, the universal tracking code 
+        of Google Analytics may not work if linking directly to the /checkout page.
+      {% endcomment %}
+      
+      <div class="half column right-aligned">
+              
+        <div class="cart-link">
+          <a href="/cart"><img src="{{ 'cart.svg' | asset_url }}" /> {{ cart.item_count }} {{ cart.item_count | pluralize: 'item', 'items' }} ({{ cart.total_price | money }})</a>
+        </div>
+            
+        {% if shop.customer_accounts_enabled %}
+        <div class="customer-links">
+          {% if customer %}
+            Logged in as <a href="/account">{{ customer.first_name }}</a> · {{ 'Log out' | customer_logout_link }}
+          {% else %}
+            {{ 'Log in' | customer_login_link }}
+            {% if shop.customer_accounts_optional %}
+            or {{ 'Create an account' | customer_register_link }}
+            {% endif %}
+          {% endif %}
+        </div>
+        {% endif %}
+        
+      </div>
+      
+      {% comment %}
+        It would be nice if the logo was a shop setting, rather than a theme setting.
+        But for now, it is a theme setting. The shop logo is uploaded on the theme settings page.
+        Link to the theme settings page of currently published theme will always be:
+        http://www.shopify.com/admin/themes/current/settings.
+        To add theme settings to a theme, see this: http://docs.shopify.com/themes/theme-templates/settings
+        Theme settings are added to http://www.shopify.com/admin/themes/current#config/settings.html
+      {% endcomment %}
+    
+      <div class="masthead full column clear centered" role="banner">
+        {% if settings.use_logo %}
+        <a id="logo" href="/">
+          {{ 'logo.png' | asset_url | img_tag: shop.name }}
+        </a>
+        {% else %}
+        <a id="site-title" href="/">
+          {{ shop.name }}
+        </a>
+        {% endif %}
+        {% if template == 'index' %}
+        {% comment %}
+          Many SEO audit tools look for a h1 tag on the home page. Let's give 'em one.
+          Other pages should use the resource name as h1 tag. For example, on the product
+          page, the product title will use a h1 tag.
+        {% endcomment %}
+        <h1 class="hidden">{{ shop.name }}</h1>
+        {% endif %}
+      </div>
+      
+      <div class="clear full column">
+      
+        {% comment %}
+          Main Navigation 
+        {% endcomment %}
+        {% include 'site-nav' %}
+      
+        {% comment %}
+          IE8 and IE9 don't support the HTML5 placeholder attribute, so it's a good idea to use JavaScript
+          to show and hide the placeholder text.
+          Have a look in assets/shop.js.liquid to see sample JavaScript for this.
+        {% endcomment %}      
+        <form action="/search" method="get" class="search-form right" role="search">
+          <input name="q" type="search" id="search-field" placeholder="Search store..." value="{{ search.terms | escape }}" />
+          <input type="submit" id="search-submit" value="Search" />
+        </form>
+
+      </div>
+      
+    </header>
+
+    <div id="main" role="main">
+      {% comment %}}
+        We have a template file to render.
+        That's what content_for_layout is for.
+      {% endcomment %}
+      {{ content_for_layout }}
+    </div>
+
+    <footer>
+  
+      {% if linklists.footer.links.size > 0 %}
+      <p role="navigation">
+      {% for link in linklists.footer.links %}
+        <a href="{{ link.url }}" title="{{ link.title }}"{% if link.active %} class="active"{% endif %}>{{ link.title }}</a>
+      {% endfor %}
+      </p>
+      {% endif %}
+      
+      {% unless shop.enabled_payment_types == empty %}
+	  <div class="payment-types">
+        {% for type in shop.enabled_payment_types %}
+        <img width="40" src="{{ type | payment_type_img_url }}" />
+        {% endfor %}
+      </div>
+      {% endunless %}
+      
+      <p role="contentinfo" class="small-print">Copyright &copy; {{ "now" | date: "%Y" }} {{ shop.name }}. {{ powered_by_link }}.</p>
+
+    </footer>
+
+    {% comment %}Shopify does not support Internet Explorer 6 nor 7. It does encourage themes to support IE8 until the end of 2014.{% endcomment %}
+    <!--[if lt IE 8]>
+    <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
+    <![endif]-->
+    
+  </div><!-- end of #container -->
+
+  {{ 'shop.js'  | asset_url | script_tag }}
+
+</body>
+</html>

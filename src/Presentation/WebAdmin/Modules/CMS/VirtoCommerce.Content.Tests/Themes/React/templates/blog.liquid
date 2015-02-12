@@ -1,0 +1,62 @@
+{% paginate blog.articles by 5 %}
+
+<div class="section-header text-center">
+  <h3 class="section-header--title">
+    {{ blog.title }}
+  </h3>
+  {% if blog.all_tags.size > 0 %}
+    <ul class="inline-list text-center">
+      {% for tag in blog.all_tags %}
+        {% if current_tags contains tag %}
+          <li class="tag tag--active">{{ tag }}</li>
+        {% else %}
+          <li class="tag">{{ tag | link_to_tag: tag }}</li>
+        {% endif %}
+      {% endfor %}
+    </ul>
+  {% endif %}
+
+</div>
+<div class="grid">
+
+  <div class="grid-item large--two-thirds push--large--one-sixth">
+
+    {% for article in blog.articles %}
+
+      <h2><a href="{{ article.url }}">{{ article.title }}</a></h2>
+      <p class="blog-meta">
+        <time datetime="{{ article.published_at | date: '%Y-%m-%d' }}">
+          {{ article.published_at | date: format: 'month_day_year' }}
+        </time>
+        {% if article.tags.size > 0 %}
+          {% for tag in article.tags %}
+            <span class="meta-spacer">&#8226;</span> <a href="{{ blog.url }}/tagged/{{ tag | handle }}">{{ tag }}</a>
+          {% endfor %}
+        {% endif %}
+      </p>
+
+      <div class="rte">
+        {% if article.excerpt.size > 0 %}
+          {{ article.excerpt }}
+        {% else %}
+          <p>{{ article.content | strip_html | truncatewords: 100 }}</p>
+        {% endif %}
+      </div>
+
+      <p><a href="{{ article.url }}">{{ 'blogs.article.read_more' | t }} &rarr;</a></p>
+
+      {% unless forloop.last %}<hr>{% endunless %}
+
+    {% endfor %}
+
+    {% if paginate.pages > 1 %}
+    <div class="text-center">
+      {% include 'pagination-custom' %}
+    </div>
+    {% endif %}
+
+  </div>
+
+</div>
+
+{% endpaginate %}

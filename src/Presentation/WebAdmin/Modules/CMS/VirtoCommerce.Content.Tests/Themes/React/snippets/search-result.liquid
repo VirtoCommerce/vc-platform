@@ -1,0 +1,28 @@
+<div class="grid">
+
+  {% if item.featured_image %}
+    <div class="grid-item one-third">
+      <a href="{{ item.url }}" title="{{ item.title | escape }}">
+        {{ item.featured_image.src | img_url: 'medium' | img_tag: item.featured_image.alt }}
+      </a>
+    </div>
+  {% endif %}
+
+  <div class="grid-item two-thirds {% unless item.featured_image %}push--one-third{% endunless %}">
+    <p class="h4">{{ item.title | link_to: item.url }}</p>
+
+    {% if item.price %}
+      <p class="h3">
+        {% if item.compare_at_price > item.price %}
+          <span class="compare-price">{{ item.compare_at_price_max | money }}</span>
+        {% endif %}
+        <span itemprop="price">{{ item.price | money }}</span>
+      </p>
+    {% endif %}
+
+    <p>{{ item.content | strip_html | truncatewords: 50 }}</p>
+  </div>
+
+</div>
+
+{% unless forloop.last %}<hr>{% endunless %}

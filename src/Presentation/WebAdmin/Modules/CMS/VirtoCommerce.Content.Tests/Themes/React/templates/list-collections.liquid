@@ -1,0 +1,22 @@
+<div class="section-header text-center">
+  <h3 class="section-header--title">{{ 'collections.general.page_title' | t }}</h3>
+</div>
+
+{% comment %}
+  Loop through each collection, except 'frontpage'
+{% endcomment %}
+<div class="grid-uniform text-center collection-grid">
+  {% for collection in collections %}
+
+    {% unless collection.handle == 'frontpage' %}
+
+      {% assign featured = collection.handle %}
+      {% assign featured_collection_width = 'one-half small--one-whole' %}
+      {% assign featured_collection_size = 'large' %}
+      {% assign featured_collection_description = true %}
+      {% include 'featured-collection' %}
+
+    {% endunless %}
+
+  {% endfor %}
+</div>

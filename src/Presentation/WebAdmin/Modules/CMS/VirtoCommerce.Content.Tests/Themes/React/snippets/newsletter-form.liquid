@@ -1,0 +1,9 @@
+{% if settings.newsletter_form_action != blank %}
+  {% assign form_action = settings.newsletter_form_action %}
+{% else %}
+  {% assign form_action = '#' %}
+{% endif %}
+<form action="{{ form_action }}" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" target="_blank">
+  <input type="email" value="{% if customer %}{{ customer.email }}{% endif %}" name="EMAIL" id="mail" placeholder="{{ 'general.newsletter_form.newsletter_email' | t }}" aria-label="{{ 'general.newsletter_form.newsletter_email' | t }}" autocorrect="off" autocapitalize="off">
+  <input type="submit" class="btn" name="subscribe" id="subscribe" value="{{ 'general.newsletter_form.submit' | t }}">
+</form>

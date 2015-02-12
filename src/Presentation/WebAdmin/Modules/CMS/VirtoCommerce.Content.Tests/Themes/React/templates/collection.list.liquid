@@ -1,0 +1,48 @@
+{% paginate collection.products by 20 %}
+
+<div class="section-header text-center">
+  <h3 class="section-header--title">{{ collection.title }}</h3>
+  {% if collection.description != blank %}
+    <div class="rte section-header--description">
+      {{ collection.description }}
+    </div>
+  {% endif %}
+</div>
+
+{% if settings.collection_tags_enable and collection.tags.size > 0 %}
+  {% assign tag_sorting = true %}
+{% endif %}
+
+{% if tag_sorting or settings.collection_sort_enable %}
+  <div class="grid collection-sorting">
+    {% if tag_sorting %}
+      <div class="grid-item{% if settings.collection_sort_enable %} large--two-thirds{% else %} text-center{% endif %}">
+        {% include 'collection-tags' %}
+      </div>
+    {% endif %}
+    {% if settings.collection_sort_enable %}
+      <div class="grid-item{% if tag_sorting %} large--one-third large--text-right{% else %} text-center{% endif %}">
+        {% include 'collection-sorting' %}
+      </div>
+    {% endif %}
+  </div>
+{% endif %}
+
+<div class="grid-uniform product-grid">
+  {% for product in collection.products %}
+    {% include 'product-list-item' %}
+  {% else %}
+    <div class="grid-item">
+      <p>{{ 'collections.general.no_matches' | t }}</p>
+    </div>
+  {% endfor %}
+</div>
+
+{% if paginate.pages > 1 %}
+  <hr>
+
+  <div class="text-center">
+    {% include 'pagination-custom' %}
+  </div>
+{% endif %}
+{% endpaginate %}

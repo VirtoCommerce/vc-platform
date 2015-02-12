@@ -1,0 +1,505 @@
+/* Simple jQuery Equal Heights @version 1.5.1. Copyright (c) 2013 Matt Banks. Dual licensed under the MIT and GPL licenses. */
+!function(a){a.fn.equalHeights=function(){var b=0,c=a(this);return c.each(function(){var c=a(this).innerHeight();c>b&&(b=c)}),c.css("height",b)},a("[data-equal]").each(function(){var b=a(this),c=b.data("equal");b.find(c).equalHeights()})}(jQuery);
+
+/* Run function after window resize */
+var afterResize=(function(){var t={};return function(callback,ms,uniqueId){if(!uniqueId){uniqueId="Don't call this twice without a uniqueId";}if(t[uniqueId]){clearTimeout(t[uniqueId]);}t[uniqueId]=setTimeout(callback,ms);};})();
+
+window.timber = window.timber || {};
+
+timber.cacheSelectors = function () {
+  timber.cache = {
+    // General
+    $html: $('html'),
+    $body: $('body'),
+    breakpointLarge: 769,
+    windowWidth: window.innerWidth,
+
+    // Home Page
+    $slider: $('.flexslider'),
+
+    // Navigation
+    $navigation: $('#accessibleNav'),
+    $hasDropdownItem: $('.site-nav--has-dropdown'),
+    $stickyNav: $('#stickyNav'),
+    stickyInfo: {},
+
+    // Collection pages
+    $tagList: $('#sortTags'),
+
+    // Product Page
+    $productImageWrap: $('#productPhoto'),
+    $productImage: $('#productPhotoImg'),
+    $thumbImages: $('#productThumbs').find('a.product-photo-thumb'),
+    $shareButtons: $('.social-sharing'),
+
+    // Cart Page
+    cartNoteAdd: '.cart__note-add',
+    cartNote: '.cart__note',
+
+    // Equal height elements
+    $featuredBoxes: $('.featured-box'),
+    $featuredImages: $('.featured-box--image'),
+    $productGridImages: $('.product-grid-image')
+  }
+};
+
+timber.init = function () {
+  timber.cacheSelectors();
+  timber.responsiveNav();
+  timber.equalHeights();
+  timber.sliders();
+  timber.productImageSwitch();
+  timber.responsiveVideos();
+  timber.collectionSorting();
+  timber.cartPage();
+
+  {% if settings.nav_sticky %}
+  timber.stickyNav();
+  {% endif %}
+
+  {% if settings.product_image_zoom %}
+  timber.productImageZoom();
+  {% endif %}
+
+  {% if settings.social_sharing_products or settings.social_sharing_blog %}
+  timber.socialSharing();
+  {% endif %}
+
+  $('a[href="#"]').on('click', function(evt) {
+    evt.preventDefault();
+  });
+};
+
+timber.calculateStickyNav = function () {
+  timber.cache.stickyInfo.offset = timber.cache.$stickyNav.offset().top;
+  timber.cache.stickyInfo.height = timber.cache.$stickyNav.height();
+  timber.cache.windowWidth = window.innerWidth;
+};
+
+timber.stickyNav = function () {
+  timber.calculateStickyNav();
+  var nav = timber.cache.$stickyNav;
+
+  $(window).scroll(function(){
+    if (timber.cache.windowWidth < timber.cache.breakpointLarge) {
+      return;
+    };
+
+    if ($(window).scrollTop() > timber.cache.stickyInfo.offset) {
+      timber.cache.$body.addClass('sticky-nav').css('padding-top', timber.cache.stickyInfo.height + 'px');
+      nav.css('margin-left', - nav.outerWidth() / 2);
+    } else {
+      timber.cache.$body.removeClass('sticky-nav').css('padding-top', 0);
+      nav.css('margin-left', 0);
+    }
+  });
+
+  // Recalculate and reset nav on resize
+  $(window).resize(function () {
+    afterResize(function() {
+      timber.calculateStickyNav();
+
+      if (timber.cache.windowWidth < timber.cache.breakpointLarge) {
+        nav.css('margin-left', 0);
+        return;
+      };
+
+      if (timber.cache.$body.hasClass('sticky-nav')) {
+        nav.css('margin-left', - nav.outerWidth() / 2);
+      } else {
+        nav.css('margin-left', 0);
+      }
+    }, 200, 'stickyNav');
+  });
+};
+
+timber.responsiveNav = function () {
+  $(window).resize(function () {
+    afterResize(function(){
+      // Replace original nav items and remove more link
+      timber.cache.$navigation.append($('#moreMenuList').html());
+      $('#moreMenu').remove();
+
+      timber.alignMenu();
+      timber.accessibleNav();
+    }, 200, 'uniqueID');
+  });
+  timber.alignMenu();
+  timber.accessibleNav();
+};
+
+timber.accessibleNav = function () {
+  var $nav = timber.cache.$navigation,
+      $allLinks = $nav.find('a'),
+      $topLevel = $nav.children('li').find('a'),
+      $parents = $nav.find('.site-nav--has-dropdown'),
+      $subMenuLinks = $nav.find('.site-nav--dropdown').find('a'),
+      activeClass = 'nav-hover',
+      focusClass = 'nav-focus';
+
+  // Mouseenter
+  $parents.on('mouseenter touchstart', function(evt) {
+    var $el = $(this);
+
+    if (!$el.hasClass(activeClass)) {
+      evt.preventDefault();
+    }
+
+    showDropdown($el);
+  });
+
+  // Mouseout
+  $parents.on('mouseleave', function() {
+    hideDropdown($(this));
+  });
+
+  $subMenuLinks.on('touchstart', function(evt) {
+    // Prevent touchstart on body from firing instead of link
+    evt.stopImmediatePropagation();
+  });
+
+  $allLinks.focus(function() {
+    handleFocus($(this));
+  });
+
+  $allLinks.blur(function() {
+    removeFocus($topLevel);
+  });
+
+  // accessibleNav private methods
+  function handleFocus ($el) {
+    var $subMenu = $el.next('ul');
+        hasSubMenu = $subMenu.hasClass('sub-nav') ? true : false,
+        isSubItem = $('.site-nav--dropdown').has($el).length,
+        $newFocus = null;
+
+    // Add focus class for top level items, or keep menu shown
+    if (!isSubItem) {
+      removeFocus($topLevel);
+      addFocus($el);
+    } else {
+      $newFocus = $el.closest('.site-nav--has-dropdown').find('a');
+      addFocus($newFocus);
+    }
+  }
+
+  function showDropdown ($el) {
+    $el.addClass(activeClass);
+
+    setTimeout(function() {
+      timber.cache.$body.on('touchstart', function() {
+        hideDropdown($el);
+      });
+    }, 250);
+  }
+
+  function hideDropdown ($el) {
+    $el.removeClass(activeClass);
+    timber.cache.$body.off('touchstart');
+  }
+
+  function addFocus ($el) {
+    $el.addClass(focusClass);
+  }
+
+  function removeFocus ($el) {
+    $el.removeClass(focusClass);
+  }
+};
+
+timber.alignMenu = function () {
+  var $nav = timber.cache.$navigation,
+      w = 0,
+      i = 0;
+      // 95 is a magic number to subtract the general width of the 'more' link
+      wrapperWidth = $nav.outerWidth() - 95,
+      menuhtml = '',
+      more = {{ 'layout.navigation.more_link_html' | t | json }};
+
+  $.each($nav.children(), function () {
+    var $el = $(this);
+
+    w += $el.outerWidth(true);
+
+    if (wrapperWidth < w) {
+      menuhtml += $('<div>').append($el.clone()).html();
+      $el.remove();
+      i++;
+    }
+  });
+
+  if (wrapperWidth < w) {
+    $nav.append(
+      '<li id="moreMenu" class="site-nav--has-dropdown">'
+        + '<a href="#">'+ more +' <span class="icon icon-arrow-down" aria-hidden="true"></span></a>'
+        + '<ul id="moreMenuList" class="site-nav--dropdown">' + menuhtml + '</ul></li>'
+    );
+  }
+};
+
+timber.productPage = function (options) {
+  var moneyFormat = options.moneyFormat,
+      variant = options.variant,
+      selector = options.selector;
+
+  // Selectors
+  var $addToCart = $('#addToCart'),
+      $productPrice = $('#productPrice'),
+      $comparePrice = $('#comparePrice'),
+      $variantQuantity = $('#variantQuantity'),
+      $quantityElements = $('.quantity-selector, label + .js-qty'),
+      $addToCartText = $('#addToCartText'),
+      $featuredImage = $('#productPhotoImg');
+
+  if (variant) {
+
+    if (variant.featured_image) {
+      var newImg = variant.featured_image,
+          el = $featuredImage[0];
+      Shopify.Image.switchImage(newImg, el, timber.switchImage);
+    }
+
+    // Select a valid variant if available
+    if (variant.available) {
+      // We have a valid product variant, so enable the submit button
+      $addToCart.removeClass('disabled').prop('disabled', false);
+      $addToCartText.text({{ 'products.product.add_to_cart' | t | json }});
+
+      // Show how many items are left, if below 10
+      if (variant.inventory_management) {
+        if (variant.inventory_quantity < 10 && variant.inventory_quantity > 0) {
+          $variantQuantity.html({{ 'products.product.only_left' | t: count: '1' | json }}.replace('1', variant.inventory_quantity)).show();
+        } else {
+          $variantQuantity.hide();
+        }
+      }
+
+      $quantityElements.show();
+    } else {
+      // Variant is sold out, disable the submit button
+      $addToCart.addClass('disabled').prop('disabled', true);
+      $addToCartText.text({{ 'products.product.sold_out' | t | json }});
+      $variantQuantity.hide();
+      $quantityElements.hide();
+    }
+
+    // Regardless of stock, update the product price
+    $productPrice.html(Shopify.formatMoney(variant.price, moneyFormat));
+
+    // Also update and show the product's compare price if necessary
+    if (variant.compare_at_price > variant.price) {
+      $comparePrice
+        .html(Shopify.formatMoney(variant.compare_at_price, moneyFormat))
+        .show();
+    } else {
+      $comparePrice.hide();
+    }
+
+  } else {
+    // The variant doesn't exist, disable submit button
+    $addToCart.addClass('disabled').prop('disabled', true);
+    $addToCartText.text({{ 'products.product.unavailable' | t | json }});
+    $variantQuantity.hide();
+    $quantityElements.hide();
+  }
+};
+
+timber.productImageSwitch = function () {
+  if (timber.cache.$thumbImages.length) {
+    // Switch the main image with one of the thumbnails
+    // Note: this does not change the variant selected, just the image
+    timber.cache.$thumbImages.on('click', function(evt) {
+      evt.preventDefault();
+      var newImage = $(this).attr('href');
+      timber.switchImage(newImage, null, timber.cache.$productImage);
+    });
+  }
+};
+
+timber.switchImage = function (src, imgObject, el) {
+  // Make sure element is a jquery object
+  var $el = $(el);
+  $el.attr('src', src);
+
+  {% if settings.product_image_zoom %}
+    // Update new image src to grande
+    var zoomSrc = src.replace('_medium','_grande').replace('_large','_grande');
+    $el.attr('data-zoom', zoomSrc);
+
+    $(function() {
+      timber.productImageZoom();
+    });
+  {% endif %}
+};
+
+timber.productImageZoom = function () {
+  {% if settings.product_image_zoom %}
+
+    if (!timber.cache.$productImageWrap.length) {
+      return;
+    };
+
+    // Destroy zoom (in case it was already set), then set it up again
+    timber.cache.$productImageWrap.trigger('zoom.destroy');
+
+    timber.cache.$productImageWrap.addClass('image-zoom').zoom({
+      url: timber.cache.$productImage.attr('data-zoom')
+    })
+  {% endif %}
+};
+
+timber.socialSharing = function () {
+  // General selectors
+  var $buttons = timber.cache.$shareButtons,
+      $shareLinks = $buttons.find('a'),
+      permalink = $buttons.attr('data-permalink');
+
+  // Share button selectors
+  var $fbLink = $('.share-facebook'),
+      $twitLink = $('.share-twitter'),
+      $pinLink = $('.share-pinterest'),
+      $googleLink = $('.share-google');
+
+  if ($fbLink.length) {
+    $.getJSON('https://graph.facebook.com/?id=' + permalink + '&callback=?', function(data) {
+      if (data.shares) {
+        $fbLink.find('.share-count').text(data.shares).addClass('is-loaded');
+      } else {
+        $fbLink.find('.share-count').remove();
+      }
+    });
+  };
+
+  if ($twitLink.length) {
+    $.getJSON('https://cdn.api.twitter.com/1/urls/count.json?url=' + permalink + '&callback=?', function(data) {
+      if (data.count > 0) {
+        $twitLink.find('.share-count').text(data.count).addClass('is-loaded');
+      } else {
+        $twitLink.find('.share-count').remove();
+      }
+    });
+  };
+
+  if ($pinLink.length) {
+    $.getJSON('https://api.pinterest.com/v1/urls/count.json?url=' + permalink + '&callback=?', function(data) {
+      if (data.count > 0) {
+        $pinLink.find('.share-count').text(data.count).addClass('is-loaded');
+      } else {
+        $pinLink.find('.share-count').remove();
+      }
+    });
+  };
+
+  if ($googleLink.length) {
+    // Can't currently get Google+ count with JS, so just pretend it loaded
+    $googleLink.find('.share-count').addClass('is-loaded');
+  }
+
+  // Share popups
+  $shareLinks.on('click', function(e) {
+    e.preventDefault();
+    var el = $(this),
+        popup = el.attr('class').replace('-','_'),
+        link = el.attr('href'),
+        w = 700,
+        h = 400;
+
+    // Set popup sizes
+    switch (popup) {
+      case 'share-twitter':
+        h = 300;
+        break;
+      case 'share-fancy':
+        w = 480;
+        h = 720;
+        break;
+      case 'share-google':
+        w = 500;
+        break;
+    }
+
+    window.open(link, popup, 'width=' + w + ', height=' + h);
+  });
+};
+
+timber.responsiveVideos = function () {
+  $('iframe[src*="youtube.com/embed"]').wrap('<div class="video-wrapper"></div>');
+  $('iframe[src*="player.vimeo"]').wrap('<div class="video-wrapper"></div>');
+};
+
+timber.sliders = function () {
+  var $slider = timber.cache.$slider;
+
+  if ($slider.length) {
+    $(window).on('load', function() {
+      $slider.flexslider({
+        animation: '{{ settings.slider_home_transition }}',
+        animationSpeed: 500,
+        pauseOnHover: true,
+        keyboard: false,
+        slideshow: {{ settings.slider_home_auto }},
+        slideshowSpeed: {{ settings.slider_home_rate }},
+        smoothHeight: true
+      });
+    });
+  }
+};
+
+timber.equalHeights = function () {
+  $(window).load(function() {
+    resizeElements();
+  });
+
+  $(window).resize(function() {
+    afterResize(function() {
+      resizeElements();
+    }, 250, 'id');
+  });
+
+  function resizeElements() {
+    // IE8 doesn't handle all instances of this right, so just skip it
+    if (timber.cache.$html.hasClass('lt-ie9')) {
+      return;
+    }
+    timber.cache.$featuredImages.css('height', 'auto').equalHeights();
+    timber.cache.$featuredBoxes.css('height', 'auto').equalHeights();
+    timber.cache.$productGridImages.css('height', 'auto').equalHeights();
+  }
+};
+
+timber.collectionSorting = function () {
+  if (timber.cache.$tagList.length) {
+    timber.cache.$tagList.on('change', function() {
+      window.location.href = $(this).val();
+    });
+  }
+};
+
+timber.cartPage = function () {
+  {% unless settings.cart_notes_enable %}
+    return;
+  {% endunless %}
+
+  timber.cache.$body.on('click', timber.cache.cartNoteAdd, function (evt) {
+    evt.preventDefault();
+    $(this).addClass('is-hidden');
+    $(timber.cache.cartNote).addClass('is-active');
+  });
+};
+
+timber.cartToggleCallback = function (data) {
+  setTimeout(function() {
+    timber.calculateStickyNav();
+  }, 1000);
+
+  if (data.is_visible) {
+    // timeout used because of Timber bug
+    // - https://github.com/Shopify/Timber/issues/244
+    setTimeout(function() {
+      timber.cartPage();
+    }, 1000);
+  }
+};
+
+// Initialize Timber's JS on docready
+$(timber.init)

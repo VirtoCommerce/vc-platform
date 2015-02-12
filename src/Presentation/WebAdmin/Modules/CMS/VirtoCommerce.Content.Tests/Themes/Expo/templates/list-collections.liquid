@@ -1,0 +1,22 @@
+<div id="collection" class="clearfix">
+  <h2>{{ 'collections.list_collections.title' | t }}</h2>
+  <div id="content-table" class="clearfix">
+    {% for collection in collections %}
+    {% unless collection.all_products_count == 0 %}
+    <div class="product{% cycle 'all-featured': '', '', '', ' last' %}">
+      <div class="image">
+        <a href="{{ collection.url }}">
+          <img src="{{ collection.products.first.featured_image | product_img_url: 'medium' }}" alt="{{ product.title | escape  }}" />
+        </a>
+      </div>
+      <div class="details">
+        <a href="{{ collection.url }}">
+          <span class="title">{{ collection.title }}</span>
+        </a>
+      </div>
+    </div>
+    {% cycle 'clear-table': '', '', '', '<div style="clear:both;"></div>' %}
+    {% endunless %}
+    {% endfor %}
+  </div>
+</div>
