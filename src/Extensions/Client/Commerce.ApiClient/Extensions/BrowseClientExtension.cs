@@ -14,13 +14,10 @@
     {
         #region Public Methods and Operators
 
-        public static BrowseClient CreateBrowseClient(this CommerceClients source)
+        public static BrowseClient CreateBrowseClient(this CommerceClients source, string storeId, string language = "")
         {
-            return source.CreateBrowseClient("samplestore", Thread.CurrentThread.CurrentUICulture.ToString());
-        }
+            if (String.IsNullOrEmpty(language)) language = Thread.CurrentThread.CurrentUICulture.ToString();
 
-        public static BrowseClient CreateBrowseClient(this CommerceClients source, string storeId, string language)
-        {
             // http://localhost/admin/api/mp/{0}/{1}/
             var connectionString = String.Format(
                 "{0}{1}/{2}/{3}/",
