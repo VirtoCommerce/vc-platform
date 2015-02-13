@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
-VisualStudioVersion = 12.0.30723.0
+VisualStudioVersion = 12.0.31101.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{0E0CB22C-4501-4E16-B9B7-744B51076524}"
 	ProjectSection(SolutionItems) = preProject
@@ -149,6 +149,16 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.InventoryModule.Web", "src\Presentation\WebAdmin\Modules\Inventory\VirtoCommerce.InventoryModule.Web\VirtoCommerce.InventoryModule.Web.csproj", "{5C430217-8AF2-4B38-A6DA-DB4BC726CDF3}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.InventoryModule.Test", "src\Presentation\WebAdmin\Modules\Inventory\VirtoCommerce.InventoryModule.Test\VirtoCommerce.InventoryModule.Test.csproj", "{455526E4-3725-4E85-A5EC-FEAF56045508}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CMS", "CMS", "{D1556CC7-62A5-4D89-BD35-FC5B5AE17AE8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.PagesModule.Web", "src\Presentation\WebAdmin\Modules\CMS\VirtoCommerce.PagesModule.Web\VirtoCommerce.PagesModule.Web.csproj", "{11FF29EB-5D91-46E4-B593-0DEB2F67B094}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.ThemeModule.Web", "src\Presentation\WebAdmin\Modules\CMS\VirtoCommerce.ThemeModule.Web\VirtoCommerce.ThemeModule.Web.csproj", "{639FA8E1-99BE-4386-9808-FC1AEC35FD61}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.Content.Data", "src\Presentation\WebAdmin\Modules\CMS\VirtoCommerce.Content.Data\VirtoCommerce.Content.Data.csproj", "{E55E08B5-3AF9-467D-8F90-4BEF27BAFA28}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.Content.Tests", "src\Presentation\WebAdmin\Modules\CMS\VirtoCommerce.Content.Tests\VirtoCommerce.Content.Tests.csproj", "{8CD7D981-DFAB-4DA6-80C9-9C661FA831B1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -324,6 +334,22 @@ Global
 		{455526E4-3725-4E85-A5EC-FEAF56045508}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{455526E4-3725-4E85-A5EC-FEAF56045508}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{455526E4-3725-4E85-A5EC-FEAF56045508}.Release|Any CPU.Build.0 = Release|Any CPU
+		{11FF29EB-5D91-46E4-B593-0DEB2F67B094}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{11FF29EB-5D91-46E4-B593-0DEB2F67B094}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{11FF29EB-5D91-46E4-B593-0DEB2F67B094}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{11FF29EB-5D91-46E4-B593-0DEB2F67B094}.Release|Any CPU.Build.0 = Release|Any CPU
+		{639FA8E1-99BE-4386-9808-FC1AEC35FD61}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{639FA8E1-99BE-4386-9808-FC1AEC35FD61}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{639FA8E1-99BE-4386-9808-FC1AEC35FD61}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{639FA8E1-99BE-4386-9808-FC1AEC35FD61}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E55E08B5-3AF9-467D-8F90-4BEF27BAFA28}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E55E08B5-3AF9-467D-8F90-4BEF27BAFA28}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E55E08B5-3AF9-467D-8F90-4BEF27BAFA28}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E55E08B5-3AF9-467D-8F90-4BEF27BAFA28}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8CD7D981-DFAB-4DA6-80C9-9C661FA831B1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8CD7D981-DFAB-4DA6-80C9-9C661FA831B1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8CD7D981-DFAB-4DA6-80C9-9C661FA831B1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8CD7D981-DFAB-4DA6-80C9-9C661FA831B1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -386,5 +412,10 @@ Global
 		{0B9A7D78-988E-40CC-BD09-C02A3006F564} = {87A3EC5D-85C6-41F1-A13B-40593930FB8D}
 		{5C430217-8AF2-4B38-A6DA-DB4BC726CDF3} = {87A3EC5D-85C6-41F1-A13B-40593930FB8D}
 		{455526E4-3725-4E85-A5EC-FEAF56045508} = {87A3EC5D-85C6-41F1-A13B-40593930FB8D}
+		{D1556CC7-62A5-4D89-BD35-FC5B5AE17AE8} = {A4C0D164-BF77-4B57-8970-B5459B100AC3}
+		{11FF29EB-5D91-46E4-B593-0DEB2F67B094} = {D1556CC7-62A5-4D89-BD35-FC5B5AE17AE8}
+		{639FA8E1-99BE-4386-9808-FC1AEC35FD61} = {D1556CC7-62A5-4D89-BD35-FC5B5AE17AE8}
+		{E55E08B5-3AF9-467D-8F90-4BEF27BAFA28} = {D1556CC7-62A5-4D89-BD35-FC5B5AE17AE8}
+		{8CD7D981-DFAB-4DA6-80C9-9C661FA831B1} = {D1556CC7-62A5-4D89-BD35-FC5B5AE17AE8}
 	EndGlobalSection
 EndGlobal

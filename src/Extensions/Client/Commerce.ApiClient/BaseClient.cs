@@ -1,59 +1,115 @@
-﻿using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.Net;
-using System.Net.Http;
-using System.Net.Http.Formatting;
-using System.Threading.Tasks;
-using System.Web;
-using VirtoCommerce.Web.Core.DataContracts;
-
-namespace VirtoCommerce.ApiClient
+﻿namespace VirtoCommerce.ApiClient
 {
+    #region
+
+    using System;
+    using System.Collections.Generic;
+    using System.Net;
+    using System.Net.Http;
+    using System.Net.Http.Formatting;
+    using System.Threading.Tasks;
+    using System.Web;
+
+    using Newtonsoft.Json;
+
     using VirtoCommerce.ApiClient.Caching;
+    using VirtoCommerce.Web.Core.DataContracts;
+
+    #endregion
 
     public class BaseClient
     {
+        #region Constants
+
         private const string UnknownErrorCode = "UnknownError";
 
+        #endregion
+
+        #region Fields
+
         private readonly HttpClient httpClient;
+
+        private CacheHelper _cacheHelper;
+
+        private ICacheRepository _cacheRepository = new HttpCacheRepository();
+
         private bool disposed;
 
+        #endregion
+
+        #region Constructors and Destructors
+
         /// <summary>
-        /// Initializes a new instance of the <see cref="ManagementClientBase"/> class.
+        ///     Initializes a new instance of the <see cref="ManagementClientBase" /> class.
         /// </summary>
         /// <param name="baseEndpoint">The base endpoint.</param>
         /// <param name="handler">Message processing handler</param>
         public BaseClient(Uri baseEndpoint, HttpMessageHandler handler = null)
         {
-            BaseAddress = baseEndpoint;
-            httpClient = new HttpClient(handler);
-            disposed = false;
+            this.BaseAddress = baseEndpoint;
+            this.httpClient = new HttpClient(handler);
+            this.disposed = false;
         }
 
+        #endregion
+
+        #region Properties
+
         /// <summary>
-        /// Gets or sets the base address.
+        ///     Gets or sets the base address.
         /// </summary>
         /// <value>
-        /// The base address.
+        ///     The base address.
         /// </value>
         protected Uri BaseAddress { get; set; }
 
+        protected virtual ICacheRepository CacheRepository
+        {
+            get
+            {
+                return this._cacheRepository ?? (this._cacheRepository = new HttpCacheRepository());
+            }
+        }
+
+        private CacheHelper Helper
+        {
+            get
+            {
+                return this._cacheHelper ?? (this._cacheHelper = new CacheHelper(this._cacheRepository));
+            }
+        }
+
+        #endregion
+
+        #region Public Methods and Operators
+
         /// <summary>
-        /// Creates the request URI.
+        ///     http://msdn.microsoft.com/en-us/library/system.idisposable.aspx
+        /// </summary>
+        public void Dispose()
+        {
+            this.Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        #endregion
+
+        #region Methods
+
+        /// <summary>
+        ///     Creates the request URI.
         /// </summary>
         /// <param name="relativePath">The relative path.</param>
         /// <param name="queryStringParameters">The query string parameters.</param>
         /// <returns>Request URI</returns>
         protected Uri CreateRequestUri(string relativePath, params KeyValuePair<string, string>[] queryStringParameters)
         {
-            string queryString = string.Empty;
+            var queryString = string.Empty;
 
             if (queryStringParameters != null && queryStringParameters.Length > 0)
             {
-                NameValueCollection queryStringProperties = HttpUtility.ParseQueryString(BaseAddress.Query);
-                foreach (KeyValuePair<string, string> queryStringParameter in queryStringParameters)
+                var queryStringProperties = HttpUtility.ParseQueryString(this.BaseAddress.Query);
+                foreach (var queryStringParameter in queryStringParameters)
                 {
                     queryStringProperties[queryStringParameter.Key] = queryStringParameter.Value;
                 }
@@ -65,26 +121,54 @@ namespace VirtoCommerce.ApiClient
         }
 
         /// <summary>
-        /// Creates the request URI.
+        ///     Creates the request URI.
         /// </summary>
         /// <param name="relativePath">The relative path.</param>
         /// <param name="queryString">The query string.</param>
         /// <returns>Request URI</returns>
         protected Uri CreateRequestUri(string relativePath, string queryString)
         {
-            var endpoint = new Uri(BaseAddress, relativePath);
+            var endpoint = new Uri(this.BaseAddress, relativePath);
             var uriBuilder = new UriBuilder(endpoint) { Query = queryString };
             return uriBuilder.Uri;
         }
 
         /// <summary>
-        /// Sends a GET request.
+        ///     http://msdn.microsoft.com/en-us/library/system.idisposable.aspx
+        /// </summary>
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                if (!this.disposed)
+                {
+                    this.httpClient.Dispose();
+                }
+            }
+
+            this.disposed = true;
+        }
+
+        protected virtual async Task<T> GetAsync<T>(Uri requestUri, string userId = null, bool useCache = true)
+            where T : class
+        {
+            return
+                await
+                    this.Helper.GetAsync(
+                        requestUri.ToString(),
+                        () => this.GetAsyncInternal<T>(requestUri, userId),
+                        this.GetCacheTimeOut(requestUri.ToString()),
+                        ClientContext.Configuration.IsCacheEnabled && useCache);
+        }
+
+        /// <summary>
+        ///     Sends a GET request.
         /// </summary>
         /// <typeparam name="T">Result type.</typeparam>
         /// <param name="requestUri">The request URI.</param>
         /// <param name="userId">The user id. Only required by the tenant API.</param>
         /// <returns>Response object.</returns>
-        protected virtual async Task<T> GetAsyncInternal<T>(Uri requestUri, string userId = null) where T : class 
+        protected virtual async Task<T> GetAsyncInternal<T>(Uri requestUri, string userId = null) where T : class
         {
             var message = new HttpRequestMessage(HttpMethod.Get, requestUri);
 
@@ -93,24 +177,21 @@ namespace VirtoCommerce.ApiClient
                 message.Headers.Add(Constants.Headers.PrincipalId, HttpUtility.UrlEncode(userId));
             }
 
-            using (HttpResponseMessage response = await httpClient.SendAsync(message))
+            using (var response = await this.httpClient.SendAsync(message))
             {
-                await ThrowIfResponseNotSuccessfulAsync(response);
+                await this.ThrowIfResponseNotSuccessfulAsync(response);
 
                 return await response.Content.ReadAsAsync<T>();
             }
         }
 
-        protected virtual async Task<T> GetAsync<T>(Uri requestUri, string userId = null, bool useCache = true) where T:class
+        protected virtual TimeSpan GetCacheTimeOut(string requestUrl)
         {
-            return await Helper.GetAsync(requestUri.ToString(),
-                () => GetAsyncInternal<T>(requestUri, userId),
-                this.GetCacheTimeOut(requestUri.ToString()),
-                ClientContext.Configuration.IsCacheEnabled && useCache);
+            return new TimeSpan(0, 0, 0, 30);
         }
 
         /// <summary>
-        /// Sends an http request.
+        ///     Sends an http request.
         /// </summary>
         /// <param name="requestUri">The request URI.</param>
         /// <param name="httpMethod">The HTTP method.</param>
@@ -121,7 +202,7 @@ namespace VirtoCommerce.ApiClient
         }
 
         /// <summary>
-        /// Sends an http request.
+        ///     Sends an http request.
         /// </summary>
         /// <typeparam name="TOutput">The type of the output.</typeparam>
         /// <param name="requestUri">The request URI.</param>
@@ -130,11 +211,11 @@ namespace VirtoCommerce.ApiClient
         protected Task<TOutput> SendAsync<TOutput>(Uri requestUri, HttpMethod httpMethod, string userId = null)
         {
             var message = new HttpRequestMessage(httpMethod, requestUri);
-            return SendAsync<TOutput>(message, true, userId);
+            return this.SendAsync<TOutput>(message, true, userId);
         }
 
         /// <summary>
-        /// Sends an http request.
+        ///     Sends an http request.
         /// </summary>
         /// <typeparam name="TInput">The type of the input.</typeparam>
         /// <param name="requestUri">The request URI.</param>
@@ -143,11 +224,11 @@ namespace VirtoCommerce.ApiClient
         /// <param name="userId">The user id. Only required by the tenant API.</param>
         protected Task SendAsync<TInput>(Uri requestUri, HttpMethod httpMethod, TInput body, string userId = null)
         {
-            return SendAsync<TInput, object>(requestUri, httpMethod, body, userId);
+            return this.SendAsync<TInput, object>(requestUri, httpMethod, body, userId);
         }
 
         /// <summary>
-        /// Sends an http request.
+        ///     Sends an http request.
         /// </summary>
         /// <typeparam name="TInput">Input type.</typeparam>
         /// <typeparam name="TOutput">Output type.</typeparam>
@@ -155,14 +236,38 @@ namespace VirtoCommerce.ApiClient
         /// <param name="httpMethod">The HTTP method.</param>
         /// <param name="body">The body.</param>
         /// <param name="userId">The user id. Only required by the tenant API.</param>
-        protected Task<TOutput> SendAsync<TInput, TOutput>(Uri requestUri, HttpMethod httpMethod, TInput body, string userId = null)
+        protected Task<TOutput> SendAsync<TInput, TOutput>(
+            Uri requestUri,
+            HttpMethod httpMethod,
+            TInput body,
+            string userId = null)
         {
             var message = new HttpRequestMessage(httpMethod, requestUri)
-            {
-                Content = new ObjectContent<TInput>(body, CreateMediaTypeFormatter())
-            };
+                          {
+                              Content =
+                                  new ObjectContent<TInput>(
+                                  body,
+                                  this.CreateMediaTypeFormatter())
+                          };
 
-            return SendAsync<TOutput>(message, true, userId);
+            return this.SendAsync<TOutput>(message, true, userId);
+        }
+
+        private MediaTypeFormatter CreateMediaTypeFormatter()
+        {
+            //MediaTypeFormatter formatter;
+            var formatter = new JsonMediaTypeFormatter
+                            {
+                                SerializerSettings =
+                                {
+                                    DefaultValueHandling =
+                                        DefaultValueHandling.Ignore,
+                                    NullValueHandling =
+                                        NullValueHandling.Ignore
+                                }
+                            };
+
+            return formatter;
         }
 
         private async Task<TOutput> SendAsync<TOutput>(HttpRequestMessage message, bool hasResult, string userId = null)
@@ -172,9 +277,9 @@ namespace VirtoCommerce.ApiClient
                 message.Headers.Add(Constants.Headers.PrincipalId, userId);
             }
 
-            using (HttpResponseMessage response = await httpClient.SendAsync(message))
+            using (var response = await this.httpClient.SendAsync(message))
             {
-                await ThrowIfResponseNotSuccessfulAsync(response);
+                await this.ThrowIfResponseNotSuccessfulAsync(response);
 
                 if (!hasResult)
                 {
@@ -200,7 +305,6 @@ namespace VirtoCommerce.ApiClient
                     throw new UnauthorizedAccessException();
                 }
 
-
                 ManagementServiceError managementServiceError = null;
 
                 try
@@ -213,8 +317,8 @@ namespace VirtoCommerce.ApiClient
                     // We will treat these cases as an unknown error
                 }
 
-                string errorCode = UnknownErrorCode;
-                string errorMessage = "An unknown error has occurred during this operation";
+                var errorCode = UnknownErrorCode;
+                var errorMessage = "An unknown error has occurred during this operation";
                 List<ErrorDetail> errorDetails = null;
 
                 if (managementServiceError != null)
@@ -232,63 +336,6 @@ namespace VirtoCommerce.ApiClient
             }
         }
 
-        private MediaTypeFormatter CreateMediaTypeFormatter()
-        {
-            //MediaTypeFormatter formatter;
-            var formatter = new JsonMediaTypeFormatter
-            {
-                SerializerSettings =
-                {
-                    DefaultValueHandling = DefaultValueHandling.Ignore,
-                    NullValueHandling = NullValueHandling.Ignore
-                }
-            };
-
-            return formatter;
-        }
-
-        /// <summary>
-        /// http://msdn.microsoft.com/en-us/library/system.idisposable.aspx
-        /// </summary>
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-
-        /// <summary>
-        /// http://msdn.microsoft.com/en-us/library/system.idisposable.aspx
-        /// </summary>
-        protected virtual void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                if (!disposed)
-                {
-                    httpClient.Dispose();
-                }
-            }
-
-            disposed = true;
-        }
-
-        #region Cache Implementation
-        CacheHelper _cacheHelper;
-        private CacheHelper Helper
-        {
-            get { return _cacheHelper ?? (_cacheHelper = new CacheHelper(_cacheRepository)); }
-        }
-
-        private ICacheRepository _cacheRepository = new HttpCacheRepository();
-        protected virtual ICacheRepository CacheRepository
-        {
-            get { return _cacheRepository ?? (_cacheRepository = new HttpCacheRepository()); }
-        }
-
-        protected virtual TimeSpan GetCacheTimeOut(string requestUrl)
-        {
-            return new TimeSpan(0,0,0,30);
-        }
         #endregion
     }
 }

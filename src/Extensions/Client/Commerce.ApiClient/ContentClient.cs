@@ -1,22 +1,24 @@
-﻿using System;
-using System.Net.Http;
-using System.Threading.Tasks;
-using VirtoCommerce.ApiClient.DataContracts.Contents;
-using VirtoCommerce.ApiClient.Extensions;
-using VirtoCommerce.ApiClient.Utilities;
-using VirtoCommerce.Web.Core.DataContracts;
-
-namespace VirtoCommerce.ApiClient
+﻿namespace VirtoCommerce.ApiClient
 {
+    #region
+
+    using System;
+    using System.Net.Http;
+    using System.Threading.Tasks;
+
+    using VirtoCommerce.ApiClient.DataContracts.Contents;
+    using VirtoCommerce.ApiClient.Extensions;
+    using VirtoCommerce.ApiClient.Utilities;
+    using VirtoCommerce.Web.Core.DataContracts;
+
+    #endregion
+
     public class ContentClient : BaseClient
     {
-        protected class RelativePaths
-        {
-            public const string Contents = "contents/{0}";
-        }
+        #region Constructors and Destructors
 
         /// <summary>
-        /// Initializes a new instance of the AdminManagementClient class.
+        ///     Initializes a new instance of the AdminManagementClient class.
         /// </summary>
         /// <param name="adminBaseEndpoint">Admin endpoint</param>
         /// <param name="token">Access token</param>
@@ -26,22 +28,42 @@ namespace VirtoCommerce.ApiClient
         }
 
         /// <summary>
-        /// Initializes a new instance of the AdminManagementClient class.
+        ///     Initializes a new instance of the AdminManagementClient class.
         /// </summary>
         /// <param name="adminBaseEndpoint">Admin endpoint</param>
         /// <param name="handler"></param>
         public ContentClient(Uri adminBaseEndpoint, MessageProcessingHandler handler)
             : base(adminBaseEndpoint, handler)
         {
-
         }
 
+        #endregion
+
+        #region Public Methods and Operators
+
         /// <summary>
-        /// List items matching the given query
+        ///     List items matching the given query
         /// </summary>
-        public Task<ResponseCollection<DynamicContentItemGroup>> GetDynamicContentAsync(string[] placeHolder, TagQuery query)
+        public Task<ResponseCollection<DynamicContentItemGroup>> GetDynamicContentAsync(
+            string[] placeHolder,
+            TagQuery query)
         {
-            return GetAsync<ResponseCollection<DynamicContentItemGroup>>(CreateRequestUri(String.Format(RelativePaths.Contents, string.Join(",", placeHolder)), query.GetQueryString()));
+            return
+                this.GetAsync<ResponseCollection<DynamicContentItemGroup>>(
+                    CreateRequestUri(
+                        String.Format(RelativePaths.Contents, string.Join(",", placeHolder)),
+                        query.GetQueryString()));
+        }
+
+        #endregion
+
+        protected class RelativePaths
+        {
+            #region Constants
+
+            public const string Contents = "contents/{0}";
+
+            #endregion
         }
     }
 }

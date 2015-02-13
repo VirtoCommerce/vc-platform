@@ -1,0 +1,38 @@
+﻿<div style="width: 460px">
+    <style>
+        .fixed-td {
+            width: 15px;
+        }
+    </style>
+    <table class="table hovered" ng-if="blade.currentEntities.length > 0">
+        <thead>
+            <tr>
+                <th class="text-left fixed-td">
+                    <input type="checkbox" ng-model="selectedAll" ng-change="checkAll(selectedAll)" />
+                </th>                
+                <th class="text-left">ID</th>
+                <th class="text-left fixed-td">Last Modified</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="data in blade.currentEntities" ng-class="{'selected': data.id === selectedEntityId}">
+                <td>
+                    <div data-role="input-control" class="input-control checkbox">
+                        <label>
+                            <input type="checkbox" ng-model="data.selected">
+                            <span class="check"></span>
+                        </label>
+                    </div>
+                </td>                
+                <td style="max-width: 230px;" ng-click='selectItem(data)'>
+                    <span title="{{data.id}}">{{data.id}}</span>
+                    <span title="{{data.status}}" class="blade-sw-title" style="overflow: hidden; text-overflow: ellipsis;">{{data.status}}</span>
+                </td>
+                <td ng-click='selectItem(data)'>
+                    <span>{{data.lastUpdated}}</span>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <div ng-if="blade.currentEntities.length == 0" class="spacer">Content items yet</div>
+</div>

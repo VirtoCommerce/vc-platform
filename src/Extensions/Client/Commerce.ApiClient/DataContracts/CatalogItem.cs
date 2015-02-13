@@ -1,71 +1,88 @@
-﻿using System;
-using System.Collections.Generic;
-using Newtonsoft.Json;
-using VirtoCommerce.ApiClient.DataContracts;
-
-namespace VirtoCommerce.Web.Core.DataContracts
+﻿namespace VirtoCommerce.Web.Core.DataContracts
 {
+    #region
+
+    using System;
+    using System.Collections.Generic;
+
+    using Newtonsoft.Json;
+
+    using VirtoCommerce.ApiClient.DataContracts;
+
+    #endregion
+
     public class CatalogItem : Resource
     {
-        public string Id { get; set; }
+        #region Fields
 
-        public string CatalogId { get; set; }
+        private IDictionary<string, object> _properties = new Dictionary<string, object>();
 
-        public string Code { get; set; }
+        #endregion
 
-        public string Name { get; set; }
-
-        public ItemImage[] Images { get; set; }
-
-        public EditorialReview[] EditorialReviews { get; set; }
+        #region Public Properties
 
         public Association[] Associations { get; set; }
 
-        public int ReviewsTotal { get; set; }
-
-        public double Rating { get; set; }
+        public string CatalogId { get; set; }
 
         public string[] Categories { get; set; }
 
-        public string Outline { get; set; }
+        public string Code { get; set; }
 
-        public SeoKeyword[] SeoKeywords { get; set; }
+        public EditorialReview[] EditorialReviews { get; set; }
 
-        public DateTime StartDate { get; set; }
+        public string Id { get; set; }
+
+        public ItemImage[] Images { get; set; }
 
         public string MainProductId { get; set; }
 
-        #region Properties
+        public string Name { get; set; }
 
-        private IDictionary<string, object> _properties = new Dictionary<string, object>();
-        
-        [JsonIgnore]
-        public object this[string name]
-        {
-            get
-            {
-                return _properties[name];
-            }
-            set
-            {
-                if (_properties.ContainsKey(name))
-                {
-                    _properties[name] = value;
-                }
-                else
-                {
-                    _properties.Add(name, value);
-                }
-            }
-        }
+        public string Outline { get; set; }
 
         public IDictionary<string, object> Properties
         {
             get
             {
-                return _properties;
+                return this._properties;
             }
-            set { _properties = value; }
+            set
+            {
+                this._properties = value;
+            }
+        }
+
+        public double Rating { get; set; }
+
+        public int ReviewsTotal { get; set; }
+
+        public SeoKeyword[] SeoKeywords { get; set; }
+
+        public DateTime StartDate { get; set; }
+
+        #endregion
+
+        #region Public Indexers
+
+        [JsonIgnore]
+        public object this[string name]
+        {
+            get
+            {
+                return this._properties[name];
+            }
+            set
+            {
+                if (this._properties.ContainsKey(name))
+                {
+                    this._properties[name] = value;
+                }
+                else
+                {
+                    this._properties.Add(name, value);
+                }
+            }
         }
 
         #endregion

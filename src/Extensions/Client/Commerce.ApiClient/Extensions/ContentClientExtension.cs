@@ -1,32 +1,41 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using VirtoCommerce.ApiClient.Utilities;
-using VirtoCommerce.Web.Core.Configuration.DynamicContent;
-
-namespace VirtoCommerce.ApiClient.Extensions
+﻿namespace VirtoCommerce.ApiClient.Extensions
 {
+    #region
+
+    using System;
     using System.Configuration;
+    using System.Threading;
+
+    using VirtoCommerce.ApiClient.Utilities;
+
+    #endregion
 
     public static class ContentClientExtension
     {
-        public static ContentClient CreateDefaultContentClient(this CommerceClients source, string language = "")
-        {
-            var session = ClientContext.Session;
-            language = String.IsNullOrEmpty(language) ? session.Language : language;
-
-            var connectionString = String.Format("{0}{1}/{2}/", ClientContext.Configuration.ConnectionString, "mp", language);
-            return CreateContentClient(source, connectionString);
-        }
+        #region Public Methods and Operators
 
         public static ContentClient CreateContentClient(this CommerceClients source, string serviceUrl)
         {
             var connectionString = serviceUrl;
             var subscriptionKey = ConfigurationManager.AppSettings["vc-public-apikey"];
-            var client = new ContentClient(new Uri(connectionString), new AzureSubscriptionMessageProcessingHandler(subscriptionKey, "secret"));
+            var client = new ContentClient(
+                new Uri(connectionString),
+                new AzureSubscriptionMessageProcessingHandler(subscriptionKey, "secret"));
             return client;
         }
+
+        public static ContentClient CreateDefaultContentClient(this CommerceClients source)
+        {
+            var language = Thread.CurrentThread.CurrentUICulture.ToString();
+
+            var connectionString = String.Format(
+                "{0}{1}/{2}/",
+                ClientContext.Configuration.ConnectionString,
+                "mp",
+                language);
+            return CreateContentClient(source, connectionString);
+        }
+
+        #endregion
     }
 }

@@ -1,12 +1,24 @@
-﻿using System;
-using System.Configuration;
-using System.Threading;
-
-namespace VirtoCommerce.Web.Core.Configuration.Security
+﻿namespace VirtoCommerce.Web.Core.Configuration.Security
 {
+    #region
+
+    using System;
+    using System.Configuration;
+    using System.Threading;
+
+    #endregion
+
     public class SecurityConfiguration : ConfigurationSection
     {
-        private static Lazy<SecurityConfiguration> _instance = new Lazy<SecurityConfiguration>(CreateInstance, LazyThreadSafetyMode.ExecutionAndPublication);
+        #region Static Fields
+
+        private static readonly Lazy<SecurityConfiguration> _instance = new Lazy<SecurityConfiguration>(
+            CreateInstance,
+            LazyThreadSafetyMode.ExecutionAndPublication);
+
+        #endregion
+
+        #region Public Properties
 
         public static SecurityConfiguration Instance
         {
@@ -14,11 +26,6 @@ namespace VirtoCommerce.Web.Core.Configuration.Security
             {
                 return _instance.Value;
             }
-        }
-
-        private static SecurityConfiguration CreateInstance()
-        {
-            return (SecurityConfiguration)ConfigurationManager.GetSection("VirtoCommerce/Security");
         }
 
         [ConfigurationProperty("Connection", IsRequired = true)]
@@ -29,6 +36,17 @@ namespace VirtoCommerce.Web.Core.Configuration.Security
                 return (SecurityConnection)this["Connection"];
             }
         }
+
+        #endregion
+
+        #region Methods
+
+        private static SecurityConfiguration CreateInstance()
+        {
+            return (SecurityConfiguration)ConfigurationManager.GetSection("VirtoCommerce/Security");
+        }
+
+        #endregion
 
         //[ConfigurationProperty("Authentication", IsRequired = true)]
         //public AuthenticationConnection Authentication
@@ -48,9 +66,15 @@ namespace VirtoCommerce.Web.Core.Configuration.Security
 
     public class SecurityConnection : ConfigurationElement
     {
-        public SecurityConnection() { }
+        #region Constructors and Destructors
 
-      
+        public SecurityConnection()
+        {
+        }
+
+        #endregion
+
+        #region Public Properties
 
         [ConfigurationProperty("dataServiceUri", IsRequired = false)]
         public string DataServiceUri
@@ -65,34 +89,35 @@ namespace VirtoCommerce.Web.Core.Configuration.Security
             }
         }
 
+        #endregion
+
+        #region Public Methods and Operators
+
         /// <summary>
-        /// Gets a value indicating whether the <see cref="T:System.Configuration.ConfigurationElement"/> object is read-only.
+        ///     Gets a value indicating whether the <see cref="T:System.Configuration.ConfigurationElement" /> object is read-only.
         /// </summary>
         /// <returns>
-        /// true if the <see cref="T:System.Configuration.ConfigurationElement"/> object is read-only; otherwise, false.
+        ///     true if the <see cref="T:System.Configuration.ConfigurationElement" /> object is read-only; otherwise, false.
         /// </returns>
         public override bool IsReadOnly()
         {
             return false;
         }
+
+        #endregion
     }
 
     public class AuthenticationConnection : ConfigurationElement
     {
-        public AuthenticationConnection() { }
+        #region Constructors and Destructors
 
-        [ConfigurationProperty("wsEndPointName", IsRequired = false)]
-        public string WSEndPointName
+        public AuthenticationConnection()
         {
-            get
-            {
-                return (string)this["wsEndPointName"];
-            }
-            set
-            {
-                this["wsEndPointName"] = value;
-            }
         }
+
+        #endregion
+
+        #region Public Properties
 
         [ConfigurationProperty("serviceBaseUriName", IsRequired = false)]
         public string ServiceBaseUriName
@@ -120,64 +145,131 @@ namespace VirtoCommerce.Web.Core.Configuration.Security
             }
         }
 
+        [ConfigurationProperty("wsEndPointName", IsRequired = false)]
+        public string WSEndPointName
+        {
+            get
+            {
+                return (string)this["wsEndPointName"];
+            }
+            set
+            {
+                this["wsEndPointName"] = value;
+            }
+        }
+
+        #endregion
+
+        #region Public Methods and Operators
+
         /// <summary>
-        /// Gets a value indicating whether the <see cref="T:System.Configuration.ConfigurationElement"/> object is read-only.
+        ///     Gets a value indicating whether the <see cref="T:System.Configuration.ConfigurationElement" /> object is read-only.
         /// </summary>
         /// <returns>
-        /// true if the <see cref="T:System.Configuration.ConfigurationElement"/> object is read-only; otherwise, false.
+        ///     true if the <see cref="T:System.Configuration.ConfigurationElement" /> object is read-only; otherwise, false.
         /// </returns>
         public override bool IsReadOnly()
         {
             return false;
         }
+
+        #endregion
     }
 
     public class TokenIssuerConfigurationElement : ConfigurationElement
     {
-        private const string _uri = "uri";
+        #region Constants
+
         private const string _lifetime = "lifetime";
+
         private const string _signatureKey = "signatureKey";
 
-        [ConfigurationProperty(_uri)]
-        public Uri Uri
-        {
-            get { return (Uri)this[_uri]; }
-            set { this[_uri] = value; }
-        }
+        private const string _uri = "uri";
+
+        #endregion
+
+        #region Public Properties
 
         [ConfigurationProperty(_lifetime, DefaultValue = "1:0:0")]
         public TimeSpan Lifetime
         {
-            get { return (TimeSpan)this[_lifetime]; }
-            set { this[_lifetime] = value; }
+            get
+            {
+                return (TimeSpan)this[_lifetime];
+            }
+            set
+            {
+                this[_lifetime] = value;
+            }
         }
 
         [ConfigurationProperty(_signatureKey, IsRequired = true)]
         public string SignatureKey
         {
-            get { return (string)this[_signatureKey]; }
-            set { this[_signatureKey] = value; }
+            get
+            {
+                return (string)this[_signatureKey];
+            }
+            set
+            {
+                this[_signatureKey] = value;
+            }
         }
+
+        [ConfigurationProperty(_uri)]
+        public Uri Uri
+        {
+            get
+            {
+                return (Uri)this[_uri];
+            }
+            set
+            {
+                this[_uri] = value;
+            }
+        }
+
+        #endregion
     }
 
     public class TokenValidatorConfigurationElement : ConfigurationElement
     {
-        private const string _trustedIssuerUri = "trustedIssuerUri";
+        #region Constants
+
         private const string _signatureKey = "signatureKey";
 
-        [ConfigurationProperty(_trustedIssuerUri)]
-        public Uri TrustedIssuerUri
-        {
-            get { return (Uri)this[_trustedIssuerUri]; }
-            set { this[_trustedIssuerUri] = value; }
-        }
+        private const string _trustedIssuerUri = "trustedIssuerUri";
+
+        #endregion
+
+        #region Public Properties
 
         [ConfigurationProperty(_signatureKey, IsRequired = true)]
         public string SignatureKey
         {
-            get { return (string)this[_signatureKey]; }
-            set { this[_signatureKey] = value; }
+            get
+            {
+                return (string)this[_signatureKey];
+            }
+            set
+            {
+                this[_signatureKey] = value;
+            }
         }
-    }
 
+        [ConfigurationProperty(_trustedIssuerUri)]
+        public Uri TrustedIssuerUri
+        {
+            get
+            {
+                return (Uri)this[_trustedIssuerUri];
+            }
+            set
+            {
+                this[_trustedIssuerUri] = value;
+            }
+        }
+
+        #endregion
+    }
 }

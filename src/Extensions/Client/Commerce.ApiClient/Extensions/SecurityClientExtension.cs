@@ -1,17 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using VirtoCommerce.ApiClient.Utilities;
-using VirtoCommerce.Web.Core.Configuration.Security;
-
-namespace VirtoCommerce.ApiClient.Extensions
+﻿namespace VirtoCommerce.ApiClient.Extensions
 {
+    #region
+
+    using System;
     using System.Configuration;
+
+    using VirtoCommerce.ApiClient.Utilities;
+
+    #endregion
 
     public static class SecurityClientExtension
     {
+        #region Public Methods and Operators
+
         public static SecurityClient CreateSecurityClient(this CommerceClients source)
         {
             var connectionString = ClientContext.Configuration.ConnectionString + "security/";
@@ -22,8 +23,12 @@ namespace VirtoCommerce.ApiClient.Extensions
         {
             var connectionString = serviceUrl;
             var subscriptionKey = ConfigurationManager.AppSettings["vc-public-apikey"];
-            var client = new SecurityClient(new Uri(connectionString), new AzureSubscriptionMessageProcessingHandler(subscriptionKey, "secret"));
+            var client = new SecurityClient(
+                new Uri(connectionString),
+                new AzureSubscriptionMessageProcessingHandler(subscriptionKey, "secret"));
             return client;
         }
+
+        #endregion
     }
 }
