@@ -1,0 +1,185 @@
+<!-- /templates/index.liquid -->
+{% comment %}
+
+  This is the homepage of your site.
+
+  More info on global variables (available on all templates):
+    - http://docs.shopify.com/themes/liquid-variables/global
+{% endcomment %}
+
+<h2>{{ 'home_page.sections.frontpage_title' | t }}</h2>
+
+{% comment %}
+  Use class grid-uniform to have evenly sized columns clear
+  each other properly at each breakpoint.
+{% endcomment %}
+<div class="grid-uniform">
+
+  {% comment %}
+    Loop through products in your Frontpage collection.
+    This collection is created by default, but you must add products to it.
+  {% endcomment %}
+  {% for product in collections.frontpage.products limit:4 %}
+
+    {% comment %}
+      Change the grid item width by using classes from the grid in
+      the grid_item_width variable.
+
+      Example:
+        - {% assign grid_item_width = 'large--one-third medium--one-half' %}
+    {% endcomment %}
+    {% assign grid_item_width = 'large--one-quarter medium--one-half' %}
+    {% include 'product-grid-item' %}
+
+  {% else %}
+
+    {% unless emptyState %}
+      {{ 'theme-onboarding.css' | global_asset_url | stylesheet_tag }}
+      {% assign emptyState = true %}
+    {% endunless %}
+
+    <div class="grid__item">
+      <div class="helper-section">
+        <div class="helper-note">
+          <span class="helper-icon"></span>
+          <h3>{{ 'home_page.onboarding.modal_title' | t }}</h3>
+          <p>{{ 'home_page.onboarding.no_products_html' | t }}</p>
+          <p><a class="admin-btn-primary" href="/admin/collections?tutorial=Frontpage">{{ 'home_page.onboarding.add_product' | t }}</a></p>
+        </div>
+
+        <div class="grid-uniform helper-content">
+          {% for i in (1..4) %}
+            <div class="grid__item one-half large--one-quarter">
+              <a href="/admin/products" class="grid__image">
+                {% capture imageUrl %}http://cdn.shopify.com/s/images/themes/product-{{ i }}.png{% endcapture %}
+                {{ imageUrl | img_tag }}
+              </a>
+              <p class="h6"><a href="/admin/products">{{ 'home_page.onboarding.product_title' | t }}</a></p>
+              <p>$19.99</p>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+
+  {% endfor %}
+
+</div>
+
+<hr>
+
+<h2>{{ 'home_page.sections.featured_title' | t }}</h2>
+
+<div class="grid-uniform">
+
+  {% comment %}
+    Show five collections, unless it's 'frontpage'.
+
+    Use an index variable in combination to the limit filter
+    to account for the frontpage collection being in top six returned.
+
+    Use variable isEmpty to check if no collections will be shown.
+    For empty store demo only.
+  {% endcomment %}
+  {% assign index = 1 %}
+  {% assign isEmpty = true %}
+
+  {% for collection in collections limit:6 %}
+    {% unless index > 5 %}
+
+      {% unless collection.handle == 'frontpage' %}
+        {% assign isEmpty = false %}
+        {% assign collection_item_width = 'large--one-fifth medium--one-third' %}
+        {% include 'collection-grid-item' %}
+        {% assign index = index | plus: 1 %}
+      {% endunless %}
+
+    {% endunless %}
+  {% endfor %}
+
+  {% if isEmpty %}
+    {% unless emptyState %}
+      {{ 'theme-onboarding.css' | global_asset_url | stylesheet_tag }}
+      {% assign emptyState = true %}
+    {% endunless %}
+
+    <div class="grid__item">
+      <div class="helper-section">
+        <div class="helper-note">
+          <span class="helper-icon"></span>
+          <h3>{{ 'home_page.onboarding.modal_title' | t }}</h3>
+          <p>{{ 'home_page.onboarding.no_collections_html' | t }}</p>
+          <p><a class="admin-btn-primary" href="/admin/custom_collections">{{ 'home_page.onboarding.add_collection' | t }}</a></p>
+        </div>
+
+        <div class="grid-uniform text-center helper-content">
+          {% for i in (1..5) %}
+            <div class="grid__item large--one-fifth medium--one-half">
+              <a href="#" class="grid__image">
+                {% capture imageUrl %}http://cdn.shopify.com/s/images/themes/product-{{ i }}.png{% endcapture %}
+                {{ imageUrl | img_tag }}
+              </a>
+              <p>
+                <a href="#">{{ 'home_page.onboarding.collection_title' | t }}</a><br>
+                {{ 'collections.general.items_with_count' | t: count: i }}
+              </p>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  {% endif %}
+
+</div>
+
+<hr>
+
+{% comment %}
+  Loop through three recent blog articles with the following code.
+
+  Since we're not on the blog template, we need to define the blog
+  handle we want to focus on. For this example we'll use the default 'news',
+  but you can create a blog page-specific content if you want.
+{% endcomment %}
+<h2>{{ 'home_page.sections.news_title' | t }}</h2>
+
+<div class="grid">
+  {% for article in blogs['news'].articles limit:3 %}
+
+    <div class="grid__item large--one-third">
+
+      <time datetime="{{ article.published_at | date: '%Y-%m-%d' }}">{{ article.published_at | date: format: 'month_day_year' }}</time>
+      <h3><a href="{{ article.url }}">{{ article.title }}</a></h3>
+
+      {% comment %}
+        Add a surrounding div with class 'rte' to anything that will come from the rich text editor.
+        Since this is just a listing page, you can either use the excerpt or truncate the full article.
+      {% endcomment %}
+      <div class="rte">
+        {% if article.excerpt.size > 0 %}
+          {{ article.excerpt }}
+        {% else %}
+          <p>{{ article.content | strip_html | truncatewords: 20 }}</p>
+        {% endif %}
+      </div>
+
+      {% comment %}
+        Show off meta information like number of comments and tags.
+      {% endcomment %}
+      <ul>
+        {% if blog.comments_enabled? %}
+        <li>
+          <a href="{{ article.url }}#comments">
+            {{ article.comments_count }}
+            {{ 'blogs.comments.comments_with_count' | t: count: article.comments_count }}
+          </a>
+        </li>
+        {% endif %}
+      </ul>
+
+      <p><a href="{{ article.url }}">{{ 'blogs.article.read_more' | t }} &rarr;</a></p>
+
+    </div>
+
+  {% endfor %}
+</div>
