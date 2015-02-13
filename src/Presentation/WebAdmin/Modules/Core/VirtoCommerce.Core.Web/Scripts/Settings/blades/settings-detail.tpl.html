@@ -1,26 +1,34 @@
 ﻿<div class="blade-content blade-medium">
     <div class="blade-inner">
         <div class="inner-block">
-            <form name="objectsForm">
+            <form name="objectsForm" class="form">
                 <fieldset ng-repeat="groupName in blade.groupNames" ng-init="setForm(objectsForm)">
                     <legend>{{groupName==='undefined'?'General':groupName}}</legend>
-                    <div ng-repeat="data in blade.objects[groupName]">
-                        <div class="control-group" title="{{data.description}}">
-                            <label>{{data.title}}</label>
-                            <!--<va-property2 ng-model="prop" get-prop-values="getPropValues" />-->
-                            <div data-role="input-control" class="input-control" ng-class="data.valueType==='boolean' ? 'switch' : 'text'" ng-if="!(data.allowedValues.length>0)">
-                                <input required class="form-control" ng-model="data.value" ng-if="data.valueType==='string'" />
-                                <input required class="form-control" ng-model="data.value" type="password" ng-if="data.valueType==='secureString'">
-                                <input required class="form-control" ng-model="data.value" type="number" step="1" ng-if="data.valueType==='integer'">
-                                <input required class="form-control" ng-model="data.value" type="number" step="any" ng-if="data.valueType==='decimal'">
-                                <label ng-if="data.valueType==='boolean'">
+                    <div class="form-group" ng-repeat="data in blade.objects[groupName]" title="{{data.description}}">
+                        <label class="form-label">{{data.title}}</label>
+                        <!--<va-property2 ng-model="prop" get-prop-values="getPropValues" />-->
+                        <div class="form-input" data-step="1" ng-class="data.valueType==='boolean' ? 'switch' : '__number js-number-input-plugin'" ng-if="!(data.allowedValues.length>0)">
+                            <input required ng-model="data.value" ng-if="data.valueType==='string'" />
+                            <input required ng-model="data.value" type="password" ng-if="data.valueType==='secureString'">
+                            <div ng-if="data.valueType==='integer'">
+                                <input required class="js-val" ng-model="data.value" type="text">
+                                <a class="up js-up"></a>
+                                <a class="down js-down"></a>
+                            </div>
+                            <div ng-if="data.valueType==='decimal'">
+                                <input required class="js-val" ng-model="data.value" type="text">
+                                <a class="up js-up"></a>
+                                <a class="down js-down"></a>
+                            </div>
+                            <div class="form-control __switch">
+                                <label class="form-label" ng-if="data.valueType==='boolean'">
                                     <input type="checkbox" ng-model="data.value" />
-                                    <span class="check"></span>
+                                    <span class="switch"></span>
                                 </label>
                             </div>
-                            <div data-role="input-control" class="input-control select" ng-if="data.allowedValues.length>0">
-                                <select class="chosen-select" ng-model="data.value" ng-options="x for x in data.allowedValues"></select>
-                            </div>
+                        </div>
+                        <div class="form-input" ng-if="data.allowedValues.length>0">
+                            <select ng-model="data.value" ng-options="x for x in data.allowedValues"></select>
                         </div>
                     </div>
                 </fieldset>
@@ -30,15 +38,6 @@
 </div>
 <script>
     $(function () {
-        var timer = setInterval(countDown, 1000);
-
-        function countDown() {
-            if($('.chosen-select').is(':visible')) {
-                $('.chosen-select').chosen();
-            }
-            else {
-                clearInterval(timer);
-            }
-        }
+        $('.js-number-input-plugin').numberInputPlugin();
     });
 </script>

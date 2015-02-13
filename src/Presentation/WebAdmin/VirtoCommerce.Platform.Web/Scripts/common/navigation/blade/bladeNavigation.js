@@ -29,7 +29,7 @@ angular.module('platformWebApp.bladeNavigation', [
 
             $timeout(function ()
             {
-                var mainContent = $('.main-content');
+                var mainContent = $('.cnt');
                 var blade = $(element).parent('.blade');
                 var offset = parseInt(blade.offset().left + mainContent.scrollLeft() + blade.width() - 85 - mainContent[0].clientWidth);
                 if (offset > mainContent.scrollLeft()) {
@@ -51,20 +51,33 @@ angular.module('platformWebApp.bladeNavigation', [
                     bladeH = bladeI.height(),
                     bladeIh = blade.find('.inner-block').height();
 
-                if(blade.length) {
-                    if(bladeH <= bladeIh) {
+                if (blade.length) {
+                    if (bladeH <= bladeIh) {
                         horizontalScroll('off');
                     }
                     else {
                         horizontalScroll('on');
                     }
                 }
-                else {
-                    horizontalScroll('on');
+            });
+
+            $('*').on('mouseenter', function (event) {
+                var dashboard = $(this).parents('.dashboard'),
+                    dashboardA = dashboard.find('.dashboard-area'),
+                    dashboardH = dashboardA.height(),
+                    dashboardIh = dashboard.find('.dashboard-inner').height();
+
+                if (dashboard.length) {
+                    if (dashboardH <= dashboardIh) {
+                        horizontalScroll('off');
+                    }
+                    else {
+                        horizontalScroll('on');
+                    }
                 }
             });
 
-            $('.blade-head, .blade-head *, .static, .static *').on('mouseenter', function (event) {
+            $('.dashboard-head, .dashboard-head *, .blade-head, .blade-head *, .static, .static *').on('mouseenter', function (event) {
                 horizontalScroll('on');
             });
 
@@ -72,7 +85,7 @@ angular.module('platformWebApp.bladeNavigation', [
             {
                 if (flag != 'off')
                 {
-                    $('.main-content').off('mousewheel').on('mousewheel', function (event, delta)
+                    $('.cnt').off('mousewheel').on('mousewheel', function (event, delta)
                     {
                         this.scrollLeft -= (delta * speed);
                         event.preventDefault();
@@ -80,7 +93,7 @@ angular.module('platformWebApp.bladeNavigation', [
                 }
                 else
                 {
-                    $('.main-content').unmousewheel();
+                    $('.cnt').unmousewheel();
                 }
             }
 
@@ -90,11 +103,12 @@ angular.module('platformWebApp.bladeNavigation', [
 
                 var blade = $(element);
                 blade.attr('data-width', blade.width());
-                var leftMenu = $('.left-menu');
-                var offset = parseInt(blade.offset().left + $('.main-content').scrollLeft() - leftMenu.width());
+                var leftMenu = $('.nav-bar');
+                var offset = parseInt((blade.offset().left + $('.cnt').scrollLeft()) - leftMenu.width());
                 var contentblock = blade.find(".blade-content");
                 $(contentblock).animate({ width: (parseInt(window.innerWidth - leftMenu.width()) + 'px') }, 100);
-                $('.main-content').animate({ scrollLeft: offset + 'px' }, 250);
+                $(contentblock).find('.inner-block').animate({width: parseInt(window.innerWidth - leftMenu.width() - 40) + 'px'}, 100);
+                $('.cnt').animate({ scrollLeft: offset + 'px' }, 250);
             };
 
             scope.bladeRestore = function ()
@@ -103,13 +117,13 @@ angular.module('platformWebApp.bladeNavigation', [
 
                 var blade = $(element);
                 var blockWidth = blade.data('width');
-                var leftMenu = $('.left-menu');
+                var leftMenu = $('.nav-bar');
                 blade.removeAttr('data-width');
-
-                var offset = parseInt(blade.offset().left + $('.main-content').scrollLeft() - leftMenu.width());
+                var offset = parseInt(blade.offset().left + $('.cnt').scrollLeft() - leftMenu.width());
                 var contentblock = blade.find(".blade-content");
                 $(contentblock).animate({ width: blockWidth }, 100);
-                $('.main-content').animate({ scrollLeft: offset + 'px' }, 250);
+                $(contentblock).find('.inner-block').animate({ width: blockWidth - 40 }, 100);
+                $('.cnt').animate({ scrollLeft: offset + 'px' }, 250);
             };
 
             scope.bladeClose = function ()

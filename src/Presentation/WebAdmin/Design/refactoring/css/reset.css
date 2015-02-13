@@ -1,15 +1,21 @@
+*
+{
+	margin: 0;
+	outline: none;
+	padding: 0;
+}
+
+html,
 body
 {
-	font-family: "Segoe UI_","Open Sans",Verdana,Arial,Helvetica,sans-serif;
+	height: 100%;
+	width: 100%;
 }
 
-/* Clearfix */
-.clear
+body
 {
-	margin: 0 0 5px;
-}
-
-.clear a
-{
-	font-size: 8pt;
+	background: #eef5f7;
+	color: #333;
+	font-size: 100%;
+	line-height: 1.4;
 }

@@ -1,18 +1,14 @@
 ﻿<div class="blade-content">
     <div class="blade-inner">
         <div class="inner-block">
-            <div class="block">
-                <p class="subheader">Select import target</p>
-                <ul class="list-checkboxes">
-                    <li ng-repeat="data in importers">
-                        <label>
-                            <input type="checkbox" name="isDefault" ng-checked="data === selectedImporter" ng-click="setImporter(data)">
-                            <span class="switch"></span>
-                            {{data}}
-                        </label>
-                    </li>
-                </ul>
-            </div>
+            <div class="sub-t">Select import target</div>
+            <ul class="list __items">
+                <label class="list-item" ng-repeat="data in importers">
+                    <input type="checkbox" name="isDefault" ng-checked="data === selectedImporter" ng-click="setImporter(data)">
+                    <span class="switch"></span>
+                    <span class="list-name">{{data}}</span>
+                </label>
+            </ul>
         </div>
     </div>
 </div>

@@ -1,20 +1,28 @@
-﻿
-<article class="main" role="main">
-
-    <va-main-menu></va-main-menu>
-    <div class="main-content">
-        <div class="inner">
-            <div class="dashboard">
-                <div class="tile-area">
-                    <h1 class="tile-area-title">Virto Commerce</h1>
-                    <va-login-toolbar></va-login-toolbar>
-
+﻿<va-main-menu></va-main-menu>
+<article class="cnt" role="main">
+    <div class="cnt-inner">
+        <div class="dashboard">
+            <header class="dashboard-head">
+                <h1 class="dashboard-title">Virto Commerce</h1>
+                <va-login-toolbar></va-login-toolbar>
+            </header>
+            <div class="dashboard-area">
+                <div class="dashboard-inner">
                     <va-main-tiles-list></va-main-tiles-list>
                 </div>
             </div>
-
-            <ui-view />
         </div>
+
+        <ui-view />
     </div>
 </article>
 
+<script id="template/pagination/pagination.html" type="text/ng-template">
+    <ul class="menu __inline">
+        <li class="menu-item" ng-if="boundaryLinks" ng-class="{__disabled: noprevious()}"><a class="menu-link" href ng-click="selectPage(1)">{{getText('first')}}</a></li>
+        <li class="menu-item" ng-if="directionLinks" ng-class="{__disabled: noprevious()}"><a class="menu-link" href ng-click="selectPage(page - 1)">&larr;</a></li>
+        <li class="menu-item" ng-repeat="page in pages track by $index" ng-class="{__selected: page.active}"><a class="menu-link" href ng-click="selectPage(page.number)">{{page.text}}</a></li>
+        <li class="menu-item" ng-if="directionLinks" ng-class="{__disabled: nonext()}"><a class="menu-link" href ng-click="selectPage(page + 1)">&rarr;</a></li>
+        <li class="menu-item" ng-if="boundaryLinks" ng-class="{__disabled: nonext()}"><a class="menu-link" href ng-click="selectPage(totalPages)">{{getText('last')}}</a></li>
+    </ul>
+</script>

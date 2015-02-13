@@ -2,33 +2,25 @@
     <div class="blade-inner">
         <div class="inner-block">
             <div ng-if="currentBlade.manageDefaultLanguage == true">
-                <div class="block">
-                    <p class="subheader-secondary">Select default language</p>
+                <div class="sub-t">Select default language</div>
+                <div class="list __items">
+                    <label class="list-item" ng-repeat="data in currentBlade.availableLanguages | filter: {catalogId: '!!'}">
+                        <input type="checkbox" name="isDefault" ng-checked="data.isDefault" ng-click="setAsDefault(data)">
+                        <span class="switch"></span>
+                        <span class="list-name">{{data.displayName}}</span>
+                    </label>
                 </div>
-                <ul class="list-checkboxes">
-                    <li ng-repeat="data in currentBlade.availableLanguages | filter: {catalogId: '!!'}">
-                        <label>
-                            <input type="checkbox" name="isDefault" ng-checked="data.isDefault" ng-click="setAsDefault(data)">
-                            <span class="switch"></span>
-                            {{data.displayName}}
-                        </label>
-                    </li>
-                </ul>
             </div>
 
             <div ng-if="currentBlade.manageDefaultLanguage == false">
-                <div class="block">
-                    <p class="subheader-secondary">Select languages</p>
+                <div class="sub-t">Select languages</div>
+                <div class="list __items">
+                    <label class="list-item" ng-repeat="data in currentBlade.availableLanguages" ng-class="{'__disabled': data.isDefault}">
+                        <input type="checkbox" name="available" ng-disabled="data.isDefault" ng-checked="data.catalogId != undefined" ng-click="selectLanguage(data)">
+                        <span class="switch"></span>
+                        <span class="list-name">{{data.displayName}}</span>
+                    </label>
                 </div>
-                <ul class="list-checkboxes">
-                    <li ng-repeat="data in currentBlade.availableLanguages" ng-class="{disabled:data.isDefault}">
-                        <label>
-                            <input type="checkbox" name="available" ng-checked="data.catalogId != undefined" ng-click="selectLanguage(data)">
-                            <span class="switch"></span>
-                            {{data.displayName}}
-                        </label>
-                    </li>
-                </ul>
             </div>
         </div>
     </div>

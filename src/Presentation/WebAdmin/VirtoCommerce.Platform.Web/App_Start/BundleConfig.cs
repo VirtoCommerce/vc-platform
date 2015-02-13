@@ -88,11 +88,11 @@ namespace VirtoCommerce.Platform.Web
             ));
 
             //Metro UI
-            bundles.Add(new StyleBundle("~/Content/themes/metro/css").Include(
-                "~/Content/themes/metro/css/metro-bootstrap.css",
-                "~/Content/themes/metro/css/metro-bootstrap-responsive.css",
-                "~/Content/themes/metro/css/iconFont.css",
-                "~/Content/themes/metro/css/custom.css"
+            bundles.Add(new StyleBundle("~/Content/themes/main/css").Include(
+                "~/Content/themes/main/css/reset.css",
+				"~/Content/themes/main/css/base-modules.css",
+				"~/Content/themes/main/css/project-modules.css",
+				"~/Content/themes/main/css/cosmetic.css"
             ));
 
             //Chosen
@@ -103,6 +103,12 @@ namespace VirtoCommerce.Platform.Web
             bundles.Add(new ScriptBundle("~/Scripts/chosen").Include(
                 "~/Scripts/chosen/chosen.jquery.js"
             ));
+
+
+			// Input number
+			bundles.Add(new ScriptBundle("~/Scripts/input-number").Include(
+				"~/Scripts/input-number/input-number.js"
+			));
 
 
             //Angular App

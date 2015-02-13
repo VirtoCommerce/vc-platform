@@ -3,28 +3,33 @@
     <div id='valuePlaceHolder'></div>
 
     <script type="text/ng-template" id="shortText.html">
-
-        <div class="input-control text">
-          <input ng-disabled="currentEntity.isReadOnly"
-                 ng-required="currentEntity.required && !currentEntity.isReadOnly"
-                 class="form-control"
-                 ng-model="context.currentPropValues[0].value"
-                 type="text" name="{{currentEntity.valueType}}" />
+        <div class="form-input">
+            <input ng-disabled="currentEntity.isReadOnly" 
+            class="form-control" 
+            ng-required="currentEntity.required && !currentEntity.isReadOnly" 
+            ng-model="context.currentPropValues[0].value" 
+            type="text" name="{{currentEntity.valueType}}" />
         </div>
     </script>
     <script type="text/ng-template" id="longText.html">
-        <textarea ng-disabled="currentEntity.isReadOnly"
-                  ng-required="currentEntity.required && !currentEntity.isReadOnly"
-                  class="form-control"
-                  ng-model="context.currentPropValues[0].value"
-                  name="{{currentEntity.valueType}}" />
+        <div class="form-input">
+            <textarea ng-disabled="currentEntity.isReadOnly"
+            ng-required="currentEntity.required && !currentEntity.isReadOnly"
+            class="form-control"
+            ng-model="context.currentPropValues[0].value"
+            name="{{currentEntity.valueType}}" />
+        </div>
     </script>
     <script type="text/ng-template" id="number.html">
         <!--<a href="#" editable-number="val.value">{{val.value || "N/A" }}</a>-->
-        <input ng-disabled="currentEntity.isReadOnly"
-               ng-required="currentEntity.required && !currentEntity.isReadOnly"
-               ng-model="context.currentPropValues[0].value"
-               type="number" step="any" name="{{currentEntity.valueType}}" />
+        <div class="form-input __number js-number-input-plugin" data-step="1">
+            <input class="js-val" ng-disabled="currentEntity.isReadOnly"
+                   ng-required="currentEntity.required && !currentEntity.isReadOnly"
+                   ng-model="context.currentPropValues[0].value"
+                   type="text" name="{{currentEntity.valueType}}" />
+            <a class="up js-up"></a>
+            <a class="down js-down"></a>
+        </div>
     </script>
 
     <script type="text/ng-template" id="shortText-multivalue.html">
@@ -38,7 +43,7 @@
         </tags-input>
     </script>
     <script type="text/ng-template" id="longText-multivalue.html">
-        <div ng-repeat="val in context.currentPropValues track by $index">
+        <div class="form-input" ng-repeat="val in context.currentPropValues track by $index">
             <textarea ng-disabled="currentEntity.isReadOnly"
                       ng-required="currentEntity.required && !currentEntity.isReadOnly"
                       class="form-control"
@@ -62,13 +67,13 @@
     </script>
 
     <script type="text/ng-template" id="shortText-dictionary.html">
-        <div data-role="input-control" class="form-control input-control select">
+        <div class="form-input">
             <select ng-model="context.currentPropValues[0]" ng-options="propValue.value for propValue in context.allDictionaryValues"
                     ng-disabled="currentEntity.isReadOnly" ng-required="currentEntity.required && !currentEntity.isReadOnly"></select>
         </div>
     </script>
     <script type="text/ng-template" id="number-dictionary.html">
-        <div data-role="input-control" class="form-control input-control select">
+        <div class="form-input">
             <select ng-model="context.currentPropValues[0]" ng-options="propValue.value for propValue in context.allDictionaryValues"
                     ng-disabled="currentEntity.isReadOnly" ng-required="currentEntity.required && !currentEntity.isReadOnly"></select>
         </div>
@@ -104,16 +109,16 @@
 
 
     <script type="text/ng-template" id="shortText-multilang.html">
-        <div ng-repeat="(language, langValuesGroup) in context.langValuesMap">
+        <div class="form-input __langs" ng-repeat="(language, langValuesGroup) in context.langValuesMap">
+            <span class="flag flag-{{language.substr(3)}}"></span>
             <input ng-disabled="currentEntity.isReadOnly"
                    ng-required="currentEntity.required && !currentEntity.isReadOnly"
                    ng-model="langValuesGroup.currentPropValues[0].value"
                    type="text" name="{{currentEntity.valueType}}" />
-            <div class="title">{{language}}</div>
         </div>
     </script>
     <script type="text/ng-template" id="longText-multilang.html">
-        <div ng-repeat="(language, langValuesGroup) in context.langValuesMap">
+        <div class="form-input" ng-repeat="(language, langValuesGroup) in context.langValuesMap">
             <textarea ng-disabled="currentEntity.isReadOnly"
                       ng-required="currentEntity.required && !currentEntity.isReadOnly"
                       class="form-control"
@@ -123,12 +128,13 @@
         </div>
     </script>
     <script type="text/ng-template" id="number-multilang.html">
-        <div ng-repeat="(language, langValuesGroup) in context.langValuesMap">
-            <input ng-disabled="currentEntity.isReadOnly"
+        <div class="form-input __number js-number-input-plugin" data-step="1" ng-repeat="(language, langValuesGroup) in context.langValuesMap">
+            <input class="js-val" ng-disabled="currentEntity.isReadOnly"
                    ng-required="currentEntity.required && !currentEntity.isReadOnly"
                    ng-model="langValuesGroup.currentPropValues[0].value"
-                   type="number" step="any" name="{{currentEntity.valueType}}" />
-            <div class="title">{{language}}</div>
+                   type="text" name="{{currentEntity.valueType}}" />
+            <a class="up js-up"></a>
+            <a class="down js-down"></a>
         </div>
     </script>
 
@@ -143,12 +149,12 @@
                         display-property="value"
                         placeholder="Add value">
             </tags-input>
-            <div class="title">{{language}}</div>
         </div>
     </script>
     <script type="text/ng-template" id="longText-multivalue-multilang.html">
         <div ng-repeat="(language, langValuesGroup) in context.langValuesMap">
-            <div ng-repeat="val in langValuesGroup.currentPropValues track by $index">
+            <div class="form-input __langs" ng-repeat="val in langValuesGroup.currentPropValues track by $index">
+                <span class="flag flag-{{language.substr(3)}}"></span>
                 <textarea ng-disabled="currentEntity.isReadOnly"
                           ng-required="currentEntity.required && !currentEntity.isReadOnly"
                           class="form-control"
@@ -156,7 +162,6 @@
                 <a ng-if="!currentEntity.isReadOnly" ng-click="langValuesGroup.currentPropValues.splice(langValuesGroup.currentPropValues.indexOf(val),1)">remove</a>
             </div>
             <a ng-if="!currentEntity.isReadOnly" ng-click="langValuesGroup.currentPropValues.push({value:'', languageCode:language})" style="cursor:pointer;">add value</a>
-            <div class="title">{{language}}</div>
         </div>
     </script>
     <script type="text/ng-template" id="number-multivalue-multilang.html">
@@ -178,20 +183,20 @@
 
     <script type="text/ng-template" id="shortText-dictionary-multilang.html">
         <div ng-repeat="(language, langValuesGroup) in context.langValuesMap">
-            <div data-role="input-control" class="form-control input-control select">
+            <div class="form-input __langs" data-role="input-control" class="form-control input-control select">
+                <span class="flag flag-{{language.substr(3)}}"></span>
                 <select ng-model="langValuesGroup.currentPropValues[0]" ng-options="propValue.value for propValue in langValuesGroup.allValues"
                         ng-disabled="currentEntity.isReadOnly" ng-required="currentEntity.required && !currentEntity.isReadOnly"></select>
             </div>
-            <div class="title">{{language}}</div>
         </div>
     </script>
     <script type="text/ng-template" id="number-dictionary-multilang.html">
         <div ng-repeat="(language, langValuesGroup) in context.langValuesMap">
-            <div data-role="input-control" class="form-control input-control select">
+            <div class="form-input __langs" data-role="input-control" class="form-control input-control select">
+                <span class="flag flag-{{language.substr(3)}}"></span>
                 <select ng-model="langValuesGroup.currentPropValues[0]" ng-options="propValue.value for propValue in langValuesGroup.allValues"
                         ng-disabled="currentEntity.isReadOnly" ng-required="currentEntity.required && !currentEntity.isReadOnly"></select>
             </div>
-            <div class="title">{{language}}</div>
         </div>
     </script>
 
@@ -228,7 +233,11 @@
             <div class="title">{{language}}</div>
         </div>
     </script>
-
+    <script>
+        $(function (){
+            $('select').chosen();
+        })
+    </script>
 
     <!--<script type="text/ng-template" id="numberPropType.html">
         <input ng-if="!currentEntity.multivalue"

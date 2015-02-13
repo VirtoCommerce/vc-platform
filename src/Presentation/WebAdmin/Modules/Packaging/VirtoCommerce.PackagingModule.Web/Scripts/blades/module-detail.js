@@ -20,7 +20,7 @@
 
     $scope.bladeToolbarCommands = [
         {
-            name: "Update", icon: 'icon-arrow-up',
+            name: "Update", icon: 'fa fa-upload',
             executeMethod: function () {
                 openUpdateEntityBlade();
             },
@@ -29,7 +29,7 @@
             }
         },
         {
-            name: "Uninstall", icon: 'icon-remove',
+            name: "Uninstall", icon: 'fa fa-trash-o',
             executeMethod: function () {
                 openDeleteEntityBlade();
             },
