@@ -1,147 +1,167 @@
 ﻿namespace VirtoCommerce.Content.Tests
 {
-    #region
+	#region
 
-    using System;
-    using System.Web.Http.Results;
+	using System;
+	using System.Web.Http.Results;
+	using System.Linq;
 
-    using Moq;
+	using Moq;
 
-    using VirtoCommerce.Content.Data.Models;
-    using VirtoCommerce.Content.Data.Repositories;
-    using VirtoCommerce.Framework.Web.Settings;
-    using VirtoCommerce.ThemeModule.Web.Controllers.Api;
+	using VirtoCommerce.Content.Data.Models;
+	using VirtoCommerce.Content.Data.Repositories;
+	using VirtoCommerce.Framework.Web.Settings;
+	using VirtoCommerce.ThemeModule.Web.Controllers.Api;
 
-    using Xunit;
+	using Xunit;
 
-    #endregion
+	#endregion
 
-    public class GitHubRepositoryTest
-    {
-        #region Public Methods and Operators
+	public class GitHubRepositoryTest
+	{
+		private string _githubMainPath = "Themes/";
 
-        [Fact]
-        public void GetCollectionControllerTest()
-        {
-            var controller = this.GetController();
+		#region Public Methods and Operators
 
-            var result = controller.GetItems("/");
+		//[Fact]
+		//public void GetCollectionControllerTest()
+		//{
+		//	var controller = this.GetController();
 
-            Assert.IsType<OkNegotiatedContentResult<ThemeModule.Web.Models.ContentItem[]>>(result);
+		//	var result = controller.GetItems("/");
 
-            var items = result as OkNegotiatedContentResult<ThemeModule.Web.Models.ContentItem[]>;
+		//	Assert.IsType<OkNegotiatedContentResult<ThemeModule.Web.Models.ContentItem[]>>(result);
 
-            Assert.Equal(items.Content.Length, 5);
-        }
+		//	var items = result as OkNegotiatedContentResult<ThemeModule.Web.Models.ContentItem[]>;
 
-        [Fact]
-        public void GetCollectionRepositoryTest()
-        {
-            var repository = new GitHubFileRepositoryImpl(
-                "EugeneOkhriemnko",
-                "MfZUbM2wSDCdDADBEGpo",
-                "Site-Theme",
-                "EugeneOkhriemnko",
-                "Site_Themes");
+		//	Assert.Equal(items.Content.Length, 5);
+		//}
 
-            var items = repository.GetContentItems("/");
+		[Fact]
+		public void GetCollectionRepositoryTest()
+		{
+			var repository = new GitHubFileRepositoryImpl(
+				"EugeneOkhriemnko",
+				"MfZUbM2wSDCdDADBEGpo",
+				"Site-Theme",
+				"EugeneOkhriemnko",
+				"Site_Themes",
+				_githubMainPath);
 
-            Assert.Equal(items.Length, 5);
-        }
+			var items = repository.GetContentItems("");
 
-        [Fact]
-        public void GetItemControllerTest()
-        {
-            var controller = this.GetController();
+			Assert.Equal(items.Length, 6);
+		}
 
-            var result = controller.GetItem("/docs/new1.txt");
+		//[Fact]
+		//public void GetItemControllerTest()
+		//{
+		//	var controller = this.GetController();
 
-            Assert.IsType<OkNegotiatedContentResult<ThemeModule.Web.Models.ContentItem>>(result);
+		//	var result = controller.GetItem("/docs/new1.txt");
 
-            var item = result as OkNegotiatedContentResult<ThemeModule.Web.Models.ContentItem>;
+		//	Assert.IsType<OkNegotiatedContentResult<ThemeModule.Web.Models.ContentItem>>(result);
 
-            Assert.True(item.Content.Content.Contains("!!!\n"));
-        }
+		//	var item = result as OkNegotiatedContentResult<ThemeModule.Web.Models.ContentItem>;
 
-        [Fact]
-        public void GetItemRepositoryTest()
-        {
-            var repository = new GitHubFileRepositoryImpl(
-                "EugeneOkhriemnko",
-                "MfZUbM2wSDCdDADBEGpo",
-                "Site-Theme",
-                "EugeneOkhriemnko",
-                "Site_Themes");
+		//	Assert.True(item.Content.Content.Contains("!!!\n"));
+		//}
 
-            var item = repository.GetContentItem("/docs/new1.txt");
+		[Fact]
+		public void GetItemRepositoryTest()
+		{
+			var repository = new GitHubFileRepositoryImpl(
+				"EugeneOkhriemnko",
+				"MfZUbM2wSDCdDADBEGpo",
+				"Site-Theme",
+				"EugeneOkhriemnko",
+				"Site_Themes",
+				_githubMainPath);
 
-            Assert.Equal(item.Path, "docs/new1.txt");
-            Assert.True(item.Content.Contains("!!!\n"));
-        }
+            var item = repository.GetContentItem("Simple/layout/theme.liquid");
 
-        [Fact]
-        public void SaveAndDeleteItemRepositoryTest()
-        {
-            var repository = new GitHubFileRepositoryImpl(
-                "EugeneOkhriemnko",
-                "MfZUbM2wSDCdDADBEGpo",
-                "Site-Theme",
-                "EugeneOkhriemnko",
-                "Site_Themes");
+            Assert.Equal(item.Path, "Themes/Simple/layout/theme.liquid");
+			Assert.True(item.Content.Contains("<!DO"));
+		}
 
-            var items = repository.GetContentItems("/docs/");
+		[Fact]
+		public void SaveAndDeleteItemRepositoryTest()
+		{
+			var repository = new GitHubFileRepositoryImpl(
+				"EugeneOkhriemnko",
+				"MfZUbM2wSDCdDADBEGpo",
+				"Site-Theme",
+				"EugeneOkhriemnko",
+				"Site_Themes",
+				_githubMainPath);
 
-            Assert.Equal(items.Length, 1);
+			var content = new ContentItem();
+			content.Content = "Some new stuff";
+			content.Path = "Simple/new/new123.liquid";
 
-            var content = new ContentItem();
-            content.Content = "Some new stuff";
-            content.Path = "docs/some.txt";
+			repository.SaveContentItem(content);
 
-            repository.SaveContentItem(content);
+            var items = repository.GetContentItems("Simple/new");
 
-            items = repository.GetContentItems("/docs/");
+			Assert.Equal(items.Length, 1);
 
-            Assert.Equal(items.Length, 2);
+            var item = repository.GetContentItem("Simple/new/new123.liquid");
 
-            var item = repository.GetContentItem("/docs/some.txt");
+			Assert.True(item.Content.Contains("Some"));
 
-            Assert.Equal(item.Content, "Some new stuff");
+			content = new ContentItem();
+			content.Content = "Some new stuff. Changes";
+            content.Path = "Simple/new/new123.liquid";
 
-            repository.DeleteContentItem(content);
+			repository.SaveContentItem(content);
 
-            items = repository.GetContentItems("/docs/");
+            items = repository.GetContentItems("Simple/new");
 
-            Assert.Equal(items.Length, 1);
-        }
+			Assert.Equal(items.Length, 1);
 
-        #endregion
+            item = repository.GetContentItem("Simple/new/new123.liquid");
 
-        #region Methods
+			Assert.True(item.Content.Contains("Some") && item.Content.Contains("Changes"));
 
-        private ThemeController GetController()
-        {
-            Func<string, IFileRepository> factory = (x) =>
-            {
-                switch (x)
-                {
-                    default:
-                        return new GitHubFileRepositoryImpl(
-                            "EugeneOkhriemnko",
-                            "MfZUbM2wSDCdDADBEGpo",
-                            "Site-Theme",
-                            "EugeneOkhriemnko",
-                            "Site_Themes");
-                }
-            };
+			content = new ContentItem();
+            content.Path = "Simple/new/new123.liquid";
 
-            var mock = new Mock<ISettingsManager>();
-            mock.Setup(x => x.GetValue(It.IsAny<string>(), It.IsAny<string>())).Returns("Github");
+			repository.DeleteContentItem(content);
 
-            var controller = new ThemeController(factory, mock.Object);
+            items = repository.GetContentItems("Simple");
 
-            return controller;
-        }
+			Assert.Equal(items.Where(i => i.Path.Contains("new")).Count(), 0);
+		}
 
-        #endregion
-    }
+		#endregion
+
+		#region Methods
+
+		//private ThemeController GetController()
+		//{
+		//	Func<string, IFileRepository> factory = (x) =>
+		//	{
+		//		switch (x)
+		//		{
+		//			default:
+		//				return new GitHubFileRepositoryImpl(
+		//					"EugeneOkhriemnko",
+		//					"MfZUbM2wSDCdDADBEGpo",
+		//					"Site-Theme",
+		//					"EugeneOkhriemnko",
+		//					"Site_Themes",
+		//					_githubMainPath);
+		//		}
+		//	};
+
+		//	var mock = new Mock<ISettingsManager>();
+		//	mock.Setup(x => x.GetValue(It.IsAny<string>(), It.IsAny<string>())).Returns("Github");
+
+		//	var controller = new ThemeController(factory, mock.Object);
+
+		//	return controller;
+		//}
+
+		#endregion
+	}
 }

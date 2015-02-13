@@ -1,0 +1,30 @@
+<div class="sort-by-wrapper">
+  <label>{{ 'collections.collection_sorting.collection_sorting_label' | t }}</label> 
+  <select class="sort-by">
+    <option value="manual">{{ 'collections.collection_sorting.featured' | t }}</option>
+    <option value="price-ascending">{{ 'collections.collection_sorting.price_ascending' | t }}</option>
+    <option value="price-descending">{{ 'collections.collection_sorting.price_decending' | t }}</option>
+    <option value="title-ascending">{{ 'collections.collection_sorting.alphabetical_ascending' | t }}</option>
+    <option value="title-descending">{{ 'collections.collection_sorting.alphabetical_decending' | t }}</option>
+    <option value="created-ascending">{{ 'collections.collection_sorting.date_ascending' | t }}</option>
+    <option value="created-descending">{{ 'collections.collection_sorting.date_decending' | t }}</option>
+    <option value="best-selling">{{ 'collections.collection_sorting.best_selling' | t }}</option>
+  </select>
+</div>
+<script>
+Shopify.queryParams = {};
+if (location.search.length) {
+  for (var aKeyValue, i = 0, aCouples = location.search.substr(1).split('&'); i < aCouples.length; i++) {
+    aKeyValue = aCouples[i].split('=');
+    if (aKeyValue.length > 1) {
+      Shopify.queryParams[decodeURIComponent(aKeyValue[0])] = decodeURIComponent(aKeyValue[1]);
+    }
+  }
+}
+jQuery('.sort-by')
+  .val('{{ collection.sort_by | default: collection.default_sort_by  }}')
+  .on('change', function() {
+    Shopify.queryParams.sort_by = jQuery(this).val();
+    location.search = jQuery.param(Shopify.queryParams).replace(/\+/g, '%20');
+  });
+</script>

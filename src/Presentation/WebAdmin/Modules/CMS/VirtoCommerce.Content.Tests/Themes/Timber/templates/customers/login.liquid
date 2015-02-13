@@ -1,0 +1,138 @@
+<!-- /templates/customers/login.liquid -->
+{% comment %}
+
+  This template will be automatically generated for you if the file doesn't exist,
+  but where's the fun in having no control? Define your layout below.
+
+  The 'layout settings.customer_layout' line is inserted at the top of every customer account template.
+  Your theme's settings determine to use the 'default' or 'theme' customer templates.
+  More info:
+    - http://www.tetchi.ca/shopify-theme-from-scratch-part-11/
+
+  Template note:
+    - All IDs on this template are required to make the forms submit properly
+    - There are two instances of inline JS below. Best practices advise separating this
+      into an external JS file.
+
+{% endcomment %}
+
+{% layout settings.customer_layout %}
+
+<div class="grid">
+
+  <div class="grid__item large--one-third push--large--one-third text-center">
+
+    {% comment %}
+      If a user has successfully requested a new password, the form.posted_successfully? variable
+      is set to true within the 'recover_customer_password' form only. Within that form you'll see
+      us assign a variable 'reset_success' to true, which is used in JS to show our success message.
+    {% endcomment %}
+    <div class="note form-success" id="resetSuccess" style="display:none;">
+      {{ 'customer.recover_password.success' | t }}
+    </div>
+
+    {% comment %}
+      This form must use 'customer_login'
+    {% endcomment %}
+    {% form 'customer_login' %}
+
+      <h1>{{ 'customer.login.title' | t }}</h1>
+
+      {{ form.errors | default_errors }}
+
+      <label for="CustomerEmail" class="label--hidden">{{ 'customer.login.email' | t }}</label>
+      <input type="email" name="customer[email]" id="CustomerEmail" placeholder="{{ 'customer.login.email' | t }}"{% if form.errors contains "email" %} class="error"{% endif %} autocorrect="off" autocapitalize="off" autofocus>
+
+      {% if form.password_needed %}
+
+        <label for="CustomerPassword" class="label--hidden">{{ 'customer.login.password' | t }}</label>
+        <input type="password" value="" name="customer[password]" id="CustomerPassword" placeholder="{{ 'customer.login.password' | t }}" {% if form.errors contains "password" %} class="error"{% endif %}>
+
+        <p>
+          <a href="#" onclick="showRecoverPasswordForm();return false;">{{ 'customer.login.forgot_password' | t }}</a>
+        </p>
+
+      {% endif %}
+
+      <p>
+        <input type="submit" class="btn" value="{{ 'customer.login.sign_in' | t }}">
+      </p>
+      <a href="{{ shop.url }}">{{ 'customer.login.cancel' | t }}</a>
+
+    {% endform %}
+
+    {% comment %}
+      This page uses JavaScript to show/hide the recover password form
+    {% endcomment %}
+    <div id="recover_password" style="display: none;">
+
+      <h2>{{ 'customer.recover_password.title' | t }}</h2>
+      <p>{{ 'customer.recover_password.subtext' | t }}</p>
+
+      {% comment %}
+        This form must use 'recover_customer_password'
+      {% endcomment %}
+      {% form 'recover_customer_password' %}
+
+        {{ form.errors | default_errors }}
+
+        {% comment %}
+          form.posted_successfully? is true only inside this form, but we want
+          to show a success message outside of it. To do so, set the variable
+          reset_success to true, then use JS to show our success message above.
+        {% endcomment %}
+        {% if form.posted_successfully? %}
+          {% assign reset_success = true %}
+        {% endif %}
+
+        <label for="RecoverEmail" class="label--hidden">{{ 'customer.recover_password.email' | t }}</label>
+        <input type="email" value="" name="email" id="RecoverEmail" placeholder="{{ 'customer.recover_password.email' | t }}" autocorrect="off" autocapitalize="off">
+
+        <p>
+          <input type="submit" class="btn" value="{{ 'customer.recover_password.submit' | t }}">
+        </p>
+        <a href="#" onclick="hideRecoverPasswordForm();return false;">{{ 'customer.recover_password.cancel' | t }}</a>
+      {% endform %}
+
+    </div>
+
+    {% comment %}
+      If accounts are set as optional, the following will be shown as an option
+      during checkout, not on the default /login page.
+    {% endcomment %}
+    {% if shop.checkout.guest_login %}
+      <hr>
+
+      <h2>{{ 'customer.login.guest_title' | t }}</h2>
+
+      {% form 'guest_login' %}
+        <input type="submit" class="btn" value="{{ 'customer.login.guest_continue' | t }}">
+      {% endform %}
+    {% endif %}
+
+  </div>
+
+</div>
+
+<script>
+  /*
+    Show/hide the recover password form when requested.
+  */
+  function showRecoverPasswordForm() {
+    document.getElementById('recover_password').style.display = 'block';
+    document.getElementById('customer_login').style.display='none';
+  }
+
+  function hideRecoverPasswordForm() {
+    document.getElementById('recover_password').style.display = 'none';
+    document.getElementById('customer_login').style.display = 'block';
+  }
+
+  // Allow deep linking to the recover password form
+  if (window.location.hash == '#recover') { showRecoverPasswordForm() }
+
+  // reset_success is only true when the reset form is
+  {% if reset_success %}
+    document.getElementById('resetSuccess').style.display = 'block';
+  {% endif %}
+</script>

@@ -1,48 +1,124 @@
 ﻿namespace VirtoCommerce.Content.Data.Repositories
 {
-    #region
+	#region
 
-    using System;
+	using System;
+	using System.Collections.Generic;
+	using System.IO;
+	using VirtoCommerce.Content.Data.Models;
 
-    using VirtoCommerce.Content.Data.Models;
+	#endregion
 
-    #endregion
+	public class FileSystemFileRepositoryImpl : IFileRepository
+	{
+		private string _mainPath;
 
-    public class FileSystemFileRepositoryImpl : IFileRepository
-    {
-        #region Fields
+		public FileSystemFileRepositoryImpl(string mainPath)
+		{
+			_mainPath = mainPath;
+		}
 
-        #endregion
+		#region Public Methods and Operators
 
-        #region Public Methods and Operators
-
-        public void DeleteContentItem(ContentItem item)
+		public ContentItem GetContentItem(string path)
         {
-            throw new NotImplementedException();
+			var retVal = new ContentItem();
+
+			var fullPath = GetFullPath(path);
+
+			using (var sr = File.OpenText(fullPath))
+			{
+				var itemName = Path.GetFileName(fullPath);
+
+				var content = sr.ReadToEnd();
+
+				retVal.Content = content;
+				retVal.ContentType = ContentType.File;
+				retVal.Name = itemName;
+				retVal.Path = path;
+			}
+
+			return retVal;
         }
 
-        //public FileSystemFileRepositoryImpl(string mainPath)
-        //{
-        //	_mainPath = mainPath;
-        //}
+		public ContentItem[] GetContentItems(string path)
+		{
+			var fullPath = GetFullPath(path);
 
-        public ContentItem GetContentItem(string path)
-        {
-            throw new NotImplementedException();
-        }
+			List<ContentItem> items = new List<ContentItem>();
 
-        public ContentItem[] GetContentItems(string path)
-        {
-            throw new NotImplementedException();
-        }
+			var files = Directory.GetFiles(fullPath);
+			var directories = Directory.GetDirectories(fullPath);
 
-        public void SaveContentItem(ContentItem item)
-        {
-            throw new NotImplementedException();
-        }
+			foreach (var directory in directories)
+			{
+				var contentItem = new ContentItem();
+				contentItem.ContentType = ContentType.Directory;
+				contentItem.Name = FixName(directory, fullPath);
+				contentItem.Path = FixPath(directory);
 
-        #endregion
+				items.Add(contentItem);
+			}
 
-        //private string 
-    }
+			foreach (var file in files)
+			{
+				var contentItem = new ContentItem();
+				contentItem.ContentType = ContentType.Directory;
+				contentItem.Name = Path.GetFileName(file);
+				contentItem.Path = FixPath(file);
+
+				items.Add(contentItem);
+			}
+
+			return items.ToArray();
+		}
+
+		public void SaveContentItem(ContentItem item)
+		{
+			var fullPath = GetFullPath(item.Path);
+
+			var directoryPath = Path.GetDirectoryName(fullPath);
+			if (!Directory.Exists(directoryPath))
+			{
+				Directory.CreateDirectory(directoryPath);
+			}
+
+			using(var fs = new FileStream(fullPath, FileMode.OpenOrCreate, FileAccess.Write))
+			{
+				using (var sw = new StreamWriter(fs))
+				{
+					sw.Write(item.Content);
+					sw.Close();
+				}
+				fs.Close();
+			}
+		}
+
+		public void DeleteContentItem(ContentItem item)
+		{
+			var fullPath = GetFullPath(item.Path);
+
+			if (File.Exists(fullPath))
+				File.Delete(fullPath);
+		}
+
+		#endregion
+
+		private string GetFullPath(string path)
+		{
+			path = path.Replace("/", "\\");
+
+			return string.Join(string.Empty, _mainPath, path);
+		}
+
+		private string FixPath(string path)
+		{
+			return path.Replace(_mainPath, string.Empty).Replace("\\", "/");
+		}
+
+		private string FixName(string path, string fullPath)
+		{
+			return path.Replace(fullPath, string.Empty).Trim('\\');
+		}
+	}
 }

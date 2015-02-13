@@ -2,15 +2,15 @@
 {
     #region
 
-    using System;
-    using System.Linq;
-    using System.Web.Http;
-    using System.Web.Http.Description;
-
-    using VirtoCommerce.Content.Data.Repositories;
-    using VirtoCommerce.Framework.Web.Settings;
-    using VirtoCommerce.ThemeModule.Web.Converters;
-    using VirtoCommerce.ThemeModule.Web.Models;
+	using System;
+	using System.Linq;
+	using System.Web.Http;
+	using System.Web.Http.Description;
+	using VirtoCommerce.Content.Data.Repositories;
+	using VirtoCommerce.Content.Data.Services;
+	using VirtoCommerce.Framework.Web.Settings;
+	using VirtoCommerce.ThemeModule.Web.Converters;
+	using VirtoCommerce.ThemeModule.Web.Models;
 
     #endregion
 
@@ -19,13 +19,13 @@
     {
         #region Fields
 
-        private readonly IFileRepository _fileRepository;
+		private readonly IThemeService _themeService;
 
         #endregion
 
         #region Constructors and Destructors
 
-        public ThemeController(Func<string, IFileRepository> factory, ISettingsManager manager)
+        public ThemeController(Func<string, IThemeService> factory, ISettingsManager manager)
         {
             if (factory == null)
             {
@@ -41,8 +41,8 @@
                 "VirtoCommerce.ThemeModule.MainProperties.ThemesRepositoryType",
                 string.Empty);
 
-            var fileRepository = factory.Invoke(choosenRepository);
-            this._fileRepository = fileRepository;
+            var themeService = factory.Invoke(choosenRepository);
+			this._themeService = themeService;
         }
 
         #endregion
@@ -54,7 +54,7 @@
         public IHttpActionResult DeleteItem(ContentItem item)
         {
             var domainItem = item.ToDomainModel();
-            this._fileRepository.DeleteContentItem(domainItem);
+			this._themeService.DeleteContentItem(domainItem);
             return this.Ok();
         }
 
@@ -63,7 +63,7 @@
         [Route("item")]
         public IHttpActionResult GetItem(string path)
         {
-            var item = this._fileRepository.GetContentItem(path);
+			var item = this._themeService.GetContentItem(path);
             return this.Ok(item.ToWebModel());
         }
 
@@ -72,7 +72,7 @@
         [Route("items")]
         public IHttpActionResult GetItems(string path)
         {
-            var items = this._fileRepository.GetContentItems(path);
+			var items = this._themeService.GetContentItems(path);
 
             var retValItems = items.Select(i => i.ToWebModel());
 
@@ -84,7 +84,7 @@
         public IHttpActionResult SaveItem(ContentItem item)
         {
             var domainItem = item.ToDomainModel();
-            this._fileRepository.SaveContentItem(domainItem);
+			this._themeService.SaveContentItem(domainItem);
             return this.Ok();
         }
 

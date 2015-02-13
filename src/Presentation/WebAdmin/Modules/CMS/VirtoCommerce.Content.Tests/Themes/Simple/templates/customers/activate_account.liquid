@@ -1,0 +1,27 @@
+{% layout settings.customer_layout %}
+<!--START BREADCRUMB-->
+<div id="breadcrumb" class="desktop">
+	<a href="/">{{ 'general.breadcrumbs.home' | t }}</a> &mdash; <a href="#" class="active">{{ 'general.breadcrumbs.activate_account' | t }}</a>
+</div>
+<div class="six columns alpha omega">
+	<div id="create-account">
+		<h1 class="accounts-title">{{ 'customer.activate_account.title' | t }}</h1>
+		{% form 'activate_customer_password' %}
+		    {{ form.errors | default_errors }}
+		    <div id="password" class="clearfix large_form">
+		      <label class="large" for="password">{{ 'customer.activate_account.password' | t }}</label>
+		      <input type="password" value="" name="customer[password]" id="customer_password" class="long" />
+		    </div>
+		    <div id="password_confirm" class="clearfix large_form">
+		      <label class="large" for="password_confirmation">{{ 'customer.activate_account.password_confirm' | t }}</label>
+		      <input type="password" value="" name="customer[password_confirmation]" id="customer_password_confirmation" class="long"  />
+		    </div>
+			  <p>{{ 'customer.activate_account.subtext' | t }}</p>
+		    <div class="action_bottom">
+		      <input type="submit" class="button primary" value="{{ 'customer.activate_account.submit' | t }}" />
+		      <span> {{ 'customer.general.or' | t }} </span>
+		      <input type="submit" class=" button cancel" name="decline" id="customer_decline" value="{{ 'customer.activate_account.cancel' | t }}" />
+		    </div>
+		  {% endform %}
+	</div>
+</div>

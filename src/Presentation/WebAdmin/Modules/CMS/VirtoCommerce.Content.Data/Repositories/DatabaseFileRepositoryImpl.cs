@@ -9,10 +9,21 @@
     #endregion
 
     public class DatabaseFileRepositoryImpl : IFileRepository
-    {
-        #region Public Methods and Operators
+	{
+		private string _mainPath;
 
-        public void DeleteContentItem(ContentItem item)
+		#region
+
+		public DatabaseFileRepositoryImpl(string mainPath)
+		{
+			_mainPath = mainPath;
+		}
+
+		#endregion
+
+		#region Public Methods and Operators
+
+		public void DeleteContentItem(ContentItem item)
         {
             throw new NotImplementedException();
         }

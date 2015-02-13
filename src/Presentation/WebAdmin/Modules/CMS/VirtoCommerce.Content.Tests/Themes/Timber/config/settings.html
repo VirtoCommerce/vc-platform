@@ -1,0 +1,256 @@
+<!--
+  If you're using our theme_gem to upload your files, make sure you close your
+  input and br tags as if it were XHTML.
+    - eg. <br /> and <input type="text" />
+
+    More info on settings:
+      - http://docs.shopify.com/themes/theme-templates/settings
+-->
+<div class="section-info">
+  <h3 class="heading">Timber Theme Framework by <a href="http://www.shopify.com">Shopify</a></h3>
+  <br />
+  <p>Theme settings allow designers to provide an easy way for any user to customize the look and feel of their shop without having to delve into HTML or CSS code. Please see our <a title="Open theme setting documentation" href="http://docs.shopify.com/themes/theme-templates/settings">help page on theme settings</a> to learn more about how you can make the theme customizable.</p>
+  <p>If you require any support for Timber, please review the <a href="http://shopify.github.io/Timber/">documentation</a> or contact us at <a href="mailto:timber@shopify.com">timber@shopify.com</a></p>
+  <br />
+</div>
+
+<!-- Colors -->
+<fieldset>
+  <legend>Colors</legend>
+  <table>
+    <tr>
+      <td colspan="3">
+        Use <em>class="color"</em> on a an <em>input</em> tag to bring up the color picker.<br />
+        Only a few colors have been included here as an example.
+      </td>
+    </tr>
+    <tr>
+      <td colspan="3">
+        <h3 class="heading">General Colors</h3>
+      </td>
+    </tr>
+    <tr>
+      <th>
+        <label for="color_primary">Primary Color</label>
+      </th>
+      <td><input id="color_primary" name="color_primary" class="color" type="text" value="#204a80" /></td>
+      <td><small>Used for text links, and primary buttons</small></td>
+    </tr>
+    <tr>
+      <th>
+        <label for="color_secondary">Secondary Color</label></th>
+      <td><input id="color_secondary" name="color_secondary" class="color" type="text" value="#dcdcdc" /></td>
+      <td><small>Used for secondary buttons</small></td>
+    </tr>
+    <tr>
+      <th>
+        <label for="color_body_bg">Body Background</label>
+      </th>
+      <td colspan="2"><input id="color_body_bg" name="color_body_bg" class="color" type="text" value="#fffff" /></td>
+    </tr>
+    <tr>
+      <th>
+        <label for="color_borders">Border Colors</label>
+      </th>
+      <td colspan="2"><input id="color_borders" name="color_borders" class="color" type="text" value="#e5e5e5" /></td>
+    </tr>
+    <tr>
+      <td colspan="3">
+        <h3 class="heading">Body Text</h3>
+      </td>
+    </tr>
+    <tr>
+      <th>
+        <label for="color_body_text">Body Text</label>
+      </th>
+      <td colspan="2"><input id="color_body_text" name="color_body_text" class="color" type="text" value="#333333" /></td>
+    </tr>
+    <tr>
+      <td colspan="3">
+        <h3 class="heading">Footer</h3>
+      </td>
+    </tr>
+    <tr>
+      <th><label for="color_footer_bg">Footer Background</label></th>
+      <td colspan="2"><input id="color_footer_bg" name="color_footer_bg" class="color" type="text" value="#f2f2f2" /></td>
+    </tr>
+    <tr>
+      <th><label for="color_footer_text">Footer Text</label></th>
+      <td colspan="2"><input id="color_footer_text" name="color_footer_text" class="color" type="text" value="#636363" /></td>
+    </tr>
+    <tr>
+      <th><label for="color_footer_social_link">Social Icons</label></th>
+      <td colspan="2"><input id="color_footer_social_link" name="color_footer_social_link" class="color" type="text" value="#bbbbbb" /></td>
+    </tr>
+  </table>
+</fieldset>
+
+<!-- Typography -->
+<fieldset>
+  <legend>Typography</legend>
+  <p>No typography is predefined in Timber. View the intro to theme settings for <a href="http://docs.shopify.com/themes/theme-templates/settings#introduction">documentation</a>.</p>
+</fieldset>
+
+<!-- Header -->
+<fieldset>
+  <legend>Header</legend>
+  <table>
+    <tr>
+      <td colspan="3">
+        <h3 class="heading">Logo</h3>
+      </td>
+    </tr>
+    <tr>
+      <th>
+        <label for="logo_use_image">Use Custom Logo</label>
+      </th>
+      <td colspan="2"><input type="checkbox" id="logo_use_image" name="logo_use_image" /></td>
+    </tr>
+    <tr>
+      <th>
+        <label for="logo_image">Custom Logo</label>
+      </th>
+      <td><input type="file" name="logo.png" id="logo_image" data-max-width="450" data-max-height="200" /></td>
+      <td><small>Maximum logo dimensions are 450px wide by 200px high. The uploaded file will be resized to fit within those constraints.</small></td>
+    </tr>
+    <tr>
+      <th>
+        <label for="logo_max_width">Max Logo Width</label>
+      </th>
+      <td>
+        <input type="text" id="logo_max_width" name="logo_max_width" size="2" value="450" class="inline" />
+        <span>px</span>
+      </td>
+      <td><small>Defines the CSS max-width.</small></td>
+    </tr>
+    <tr>
+      <td colspan="3">
+        <h3 class="heading">Favicon</h3>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <label for="favicon_enable">
+          <input type="checkbox" id="favicon_enable" name="favicon_enable" value="1" selected="selected" />Use custom icon?
+        </label>
+      </td>
+      <td><input type="file" id="favicon" name="favicon.png" data-max-width="16" data-max-height="16" /></td>
+      <td><small>16px x 16px png</small></td>
+    </tr>
+  </table>
+</fieldset>
+
+<!-- Footer -->
+<fieldset>
+  <legend>Footer</legend>
+  <table>
+    <tr>
+      <th><label for="footer_quicklinks_enable">Show quick links</label></th>
+      <td colspan="2"><input type="checkbox" id="footer_quicklinks_enable" name="footer_quicklinks_enable" value="1" /></td>
+    </tr>
+    <tr>
+      <th><label for="footer_quicklinks_linklist">Quick links link list</label></th>
+      <td colspan="2"><select class="linklist" name="footer_quicklinks_linklist" id="footer_quicklinks_linklist" /></td>
+    </tr>
+    <tr>
+      <td colspan="3">
+        <hr />
+      </td>
+    </tr>
+    <tr>
+      <th><label for="footer_social_enable">Show social media links</label></th>
+      <td colspan="2"><input type="checkbox" id="footer_social_enable" name="footer_social_enable" value="1" /></td>
+    </tr>
+    <tr>
+      <td><label for="social_twitter_link">Twitter link</label></td>
+      <td colspan="2"><input type="url" id="social_twitter_link" name="social_twitter_link" size="50" /></td>
+    </tr>
+    <tr>
+      <td><label for="social_facebook_link">Facebook link</label></td>
+      <td colspan="2"><input type="url" id="social_facebook_link" name="social_facebook_link" size="50" /></td>
+    </tr>
+    <tr>
+      <td colspan="3">
+        <hr />
+      </td>
+    </tr>
+    <tr>
+      <th><label for="footer_newsletter_enable">Show Newsletter Field</label></th>
+      <td colspan="2"><input type="checkbox" id="footer_newsletter_enable" name="footer_newsletter_enable" value="1" /></td>
+    </tr>
+    <tr>
+      <th><label for="newsletter_form_action">MailChimp Form Action URL</label></th>
+      <td><input type="text" id="newsletter_form_action" name="newsletter_form_action" value="" /></td>
+      <td><a href="http://docs.shopify.com/support/configuration/store-customization/where-do-i-get-my-mailchimp-form-action" target="_blank">Where do I find my MailChimp form action URL?</a></td>
+    </tr>
+  </table>
+</fieldset>
+
+<!-- Home Page -->
+<fieldset>
+  <legend>Home Page</legend>
+  <p>No home page settings are predefined in Timber.</p>
+</fieldset>
+
+<!-- Product Pages -->
+<fieldset>
+  <legend>Product Pages</legend>
+  <p>No product page settings are predefined in Timber.</p>
+</fieldset>
+
+<!-- Collection Pages -->
+<fieldset>
+  <legend>Collection Pages</legend>
+  <p>Add any custom settings for the collection listing pages here.</p>
+</fieldset>
+
+<!-- Blog Pages -->
+<fieldset>
+  <legend>Blog Pages</legend>
+  <p>Add any custom settings for the blog and article pages here.</p>
+</fieldset>
+
+<!-- Cart Pages -->
+<fieldset>
+  <legend>Cart Page</legend>
+  <table>
+    <tr>
+      <th><label for="cart_notes_enable">Allow notes with orders</label></th>
+      <td><input type="checkbox" id="cart_notes_enable" name="cart_notes_enable" value="1" /></td>
+    </tr>
+    <tr>
+      <th><label for="cart_vendor_enable">Show product vendor</label></th>
+      <td><input type="checkbox" id="cart_vendor_enable" name="cart_vendor_enable" value="1" /></td>
+    </tr>
+    <tr>
+      <th><label for="ajax_cart_enable">Enable Ajaxify Cart</label></th>
+      <td>
+        <input type="checkbox" id="ajax_cart_enable" name="ajax_cart_enable" />
+        <small><a href="http://shopify.com/timber#ajax-cart" title="Ajax Cart Documentation">View Documentation</a></small>
+      </td>
+    </tr>
+    <tr>
+      <th><label for="ajax_cart_method">Ajax Cart Type</label></th>
+      <td>
+        <select name="ajax_cart_method" id="ajax_cart_method">
+          <option value="drawer">Drawer</option>
+          <option value="flip">Flip</option>
+          <option value="modal">Modal</option>
+        </select>
+      </td>
+    </tr>
+  </table>
+</fieldset>
+
+<!-- Social Sharing -->
+<fieldset>
+  <legend>Social Sharing</legend>
+  <table>
+    <tr>
+      <th>
+        <label for="twittercard_handle">Twitter Handle</label>
+      </th>
+      <td><input type="text" id="twittercard_handle" name="twittercard_handle" value="@" /></td>
+    </tr>
+  </table>
+</fieldset>

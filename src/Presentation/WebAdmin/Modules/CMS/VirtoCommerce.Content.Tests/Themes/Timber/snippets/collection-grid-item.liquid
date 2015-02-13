@@ -1,0 +1,36 @@
+<!-- /snippets/collection-grid-item.liquid -->
+{% comment %}
+
+  This snippet is used to showcase each collection during the loop,
+  'for product in collection.products' in list-collections.liquid.
+
+{% endcomment %}
+
+{% comment %}
+  Set the default collection_item_width if no variable is set
+{% endcomment %}
+{% unless collection_item_width %}
+  {% assign collection_item_width = 'medium--one-half large--one-third' %}
+{% endunless %}
+
+<div class="grid__item {{collection_item_width}} text-center">
+
+  {% comment %}
+    Use capture to put the collection title in a variable that is used in liquid filters
+  {% endcomment %}
+  {% capture collection_title %}{{ collection.title | escape }}{% endcapture %}
+
+  <a href="{{ collection.url }}" title="{{ 'collections.general.link_title' | t: title: collection_title }}" class="grid__image">
+    {% if collection.image %}
+      {{ collection.image.src | img_url: 'large' | img_tag: collection_title }}
+    {% else %}
+      {{ collection.products.first.featured_image | img_url: 'large' | img_tag: collection_title }}
+    {% endif %}
+  </a>
+
+  <p>
+    <a href="{{ collection.url }}" title="{{ 'collections.general.link_title' | t: title: collection_title }}">{{ collection.title }}</a><br>
+    {{ 'collections.general.items_with_count' | t: count: collection.all_products_count }}
+  </p>
+
+</div>

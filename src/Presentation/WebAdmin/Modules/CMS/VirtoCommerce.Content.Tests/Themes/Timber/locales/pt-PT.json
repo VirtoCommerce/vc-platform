@@ -1,0 +1,285 @@
+{
+  "general": {
+    "meta": {
+      "tags": "Etiquetado como \"{{ tags }}\"",
+      "page": "Página {{ page }}"
+    },
+    "404": {
+      "title": "404 Página Não Encontrada",
+      "subtext_html": "A página que solicitou não existe. Clique <a href=\"/collections/all\">aqui</a> para continuar as suas compras."
+    },
+    "breadcrumbs": {
+      "home": "Início",
+      "home_link_title": "Regressar à Frontpage"
+    },
+    "newsletter_form": {
+      "newsletter_email": "o-seu-email@exemplo.com",
+      "submit": "Subscrever"
+    },
+    "search": {
+      "no_results_html": "A sua pesquisa por \"{{ terms }}\" não produziu resultados.",
+      "results_for_html": "A sua pesquisa por \"{{ terms }}\" revelou o seguinte:",
+      "title": "Pesquisar produtos no nosso site",
+      "placeholder": "Pesquisar a nossa loja",
+      "submit": "Pesquisar"
+    }
+  },
+  "blogs": {
+    "article": {
+      "author_on_date_html": "Publicado por {{ author }} em {{ date }}",
+      "older_post": "Publicação Mais Antiga",
+      "newer_post": "Publicação Mais Recente",
+      "tags": "Etiquetas",
+      "comment_meta_html": "{{ author }} em {{ date }}",
+      "read_more": "Ler mais"
+    },
+    "comments": {
+      "title": "Deixe um comentário",
+      "name": "Nome",
+      "email": "Email",
+      "message": "Mensagem",
+      "post": "Publicar comentário",
+      "moderated": "Tenha em atenção que os comentários precisam de ser aprovados antes de serem exibidos",
+      "success_moderated": "O seu comentário foi publicado com sucesso! Obrigado!",
+      "success": "Seu comentário foi postado! Obrigado!",
+      "comments_with_count": {
+        "one": "{{ count }} comentário",
+        "other": "{{ count }} comentários"
+      }
+    },
+    "sidebar": {
+      "recent_articles": "Artigos Recentes",
+      "categories": "Categorias"
+    }
+  },
+  "cart": {
+    "general": {
+      "title": "Carrinho de Compras",
+      "remove": "Eliminar",
+      "note": "Instruções especiais para o vendedor",
+      "subtotal": "Subtotal",
+      "shipping_at_checkout": "Envios e descontos calculados no checkout",
+      "update": "Atualizar Carrinho de Compras",
+      "checkout": "Check-Out",
+      "empty": "O seu carrinho de compras está neste momento vazio.",
+      "continue_browsing_html": "Continue a ver <a href=\"/collections/all\">aqui</a>."
+    },
+    "label": {
+      "product": "Produto",
+      "price": "Preço",
+      "quantity": "Quantidade",
+      "total": "Total"
+    }
+  },
+  "collections": {
+    "general": {
+      "no_matches": "Lamentamos, mas nenhum produto corresponde à sua pesquisa.",
+      "link_title": "Explorar a nossa coleção {{ title }}",
+      "grid_view": "Grelha",
+      "list_view": "Lista",
+      "items_count": {
+        "one": "item",
+        "other": "itens"
+      },
+      "items_with_count": {
+        "one": "{{ count }} item",
+        "other": "{{ count }} itens"
+      }
+    },
+    "sidebar": {
+      "types": "Tipos de Produtos",
+      "vendors": "Fornecedores",
+      "tags": "Etiquetas"
+    },
+    "sorting": {
+      "title": "Ordenar por",
+      "featured": "Em Destaque",
+      "best_selling": "Mais Vendidos",
+      "az": "Alfabeticamente, A-Z",
+      "za": "Alfabeticamente, Z-A",
+      "price_ascending": "Preço, mais baratos",
+      "price_descending": "Preço, mais caros",
+      "date_descending": "Data, mais recentes",
+      "date_ascending": "Data, mais antigos"
+    }
+  },
+  "contact": {
+    "form": {
+      "name": "Nome",
+      "email": "Email",
+      "phone": "Número de Telefone",
+      "message": "Mensagem",
+      "send": "Enviar",
+      "post_success": "Obrigado por entrar em contacto connosco. Responder-lhe-emos logo que possível."
+    }
+  },
+  "customer": {
+    "account": {
+      "title": "A Minha Conta",
+      "details": "Detalhes da Conta",
+      "view_addresses": "Ver Endereços",
+      "return": "Regressar aos Detalhes da Conta"
+    },
+    "activate_account": {
+      "title": "Ativar Conta",
+      "subtext": "Crie a sua senha para ativar a sua conta.",
+      "password": "Senha",
+      "password_confirm": "Confirmar Senha",
+      "submit": "Ativar Conta",
+      "cancel": "Recusar Convite"
+    },
+    "addresses": {
+      "title": "Os Seus Endereços",
+      "default": "Predefinição",
+      "add_new": "Adicionar um Novo Endereço",
+      "edit_address": "Editar Endereço",
+      "first_name": "Nome Próprio",
+      "last_name": "Sobrenome",
+      "company": "Empresa",
+      "address1": "Endereço1",
+      "address2": "Endereço2",
+      "city": "Localidade",
+      "country": "País",
+      "province": "Província",
+      "zip": "Código Postal",
+      "phone": "Telefone",
+      "set_default": "Selecionar como endereço predefinido",
+      "add": "Adicionar Endereço",
+      "update": "Atualizar Endereço",
+      "cancel": "Cancelar",
+      "edit": "Editar",
+      "delete": "Eliminar"
+    },
+    "login": {
+      "title": "Login",
+      "email": "Email",
+      "password": "Senha",
+      "forgot_password": "Esqueceu-se da sua senha?",
+      "sign_in": "Iniciar Sessão",
+      "cancel": "Regressar à Loja",
+      "guest_title": "Continuar como visitante",
+      "guest_continue": "Continuar"
+    },
+    "orders": {
+      "title": "Histórico de Pedidos",
+      "order_number": "Pedido",
+      "date": "Data",
+      "payment_status": "Estado de Pagamento",
+      "fulfillment_status": "Estado de Atendimento",
+      "total": "Total",
+      "none": "Ainda não efetuou nenhum pedido."
+    },
+    "order": {
+      "title": "Pedido {{ name }}",
+      "date": "Efetuado em{{ date }}",
+      "cancelled": "Pedido Cancelado em {{ date }}",
+      "cancelled_reason": "Motivo: {{ reason }}",
+      "billing_address": "Endereço de Faturação",
+      "payment_status": "Estado de Pagamento",
+      "shipping_address": "Endereço de Envio",
+      "fulfillment_status": "Estado de Atendimento",
+      "discount": "Desconto",
+      "shipping": "Envio",
+      "tax": "Taxa",
+      "product": "Produto",
+      "sku": "SKU",
+      "price": "Preço",
+      "quantity": "Quantidade",
+      "total": "Total",
+      "fulfilled_at": "Concluído em {{ date }}",
+      "subtotal": "Subtotal"
+    },
+    "recover_password": {
+      "title": "Repor a sua senha",
+      "email": "Email",
+      "submit": "Enviar",
+      "cancel": "Cancelar",
+      "subtext": "Vamos enviar-lhe um email para repor a sua senha.",
+      "success": "Enviámos-lhe um email com um link para atualizar a sua senha."
+    },
+    "reset_password": {
+      "title": "Repor senha de conta",
+      "subtext": "Insira uma nova senha para {{ email }}",
+      "password": "Senha",
+      "password_confirm": "Confirmar Senha",
+      "submit": "Repor Senha"
+    },
+    "register": {
+      "title": "Criar Conta",
+      "first_name": "Nome Próprio",
+      "last_name": "Sobrenome",
+      "email": "Email",
+      "password": "Senha",
+      "submit": "Criar",
+      "cancel": "Regressar à Loja"
+    }
+  },
+  "home_page": {
+    "sections": {
+      "frontpage_title": "Coleção Frontpage",
+      "featured_title": "Coleções em Destaque",
+      "news_title": "Notícias mais recentes"
+    },
+    "onboarding": {
+      "modal_title": "Quase lá...",
+      "no_products_html": "Não tem produtos na sua Coleção Frontpage. Esta imagem de preenchimento será exibida até <a href=\"/admin/collections?tutorial=Frontpage\">adicionar um produto a esta coleção</a>.",
+      "add_product": "Adicionar um produto",
+      "product_title": "Título do Produto Exemplo",
+      "no_collections_html": "Ainda não tem coleções para exibir aqui. <a href=\"/admin/custom_collections\">Adicione algumas coleções</a> para continuar com a Frontpage predefinida.",
+      "add_collection": "Adicionar uma coleção",
+      "collection_title": "Título da Coleção Exemplo"
+    }
+  },
+  "layout": {
+    "cart": {
+      "title": "Carrinho de Compras",
+      "items_count": {
+        "one": "item",
+        "other": "itens"
+      }
+    },
+    "customer": {
+      "account": "Conta",
+      "logged_in_as_html": "Sessão iniciada como {{ first_name }}",
+      "log_out": "Terminar sessão",
+      "log_in": "Iniciar sessão",
+      "create_account": "Criar conta"
+    },
+    "footer": {
+      "linklist_title": "Links Rápidos",
+      "social_title": "Fique Ligado",
+      "newsletter_title": "Newsletter",
+      "accepted_payments": "Formas de Pagamento Aceites"
+    }
+  },
+  "products": {
+    "general": {
+      "previous_product_html": "&larr; Produto Anterior",
+      "next_product_html": "Produto Seguinte &rarr;",
+      "from": "Desde"
+    },
+    "product": {
+      "sold_out": "Esgotado",
+      "on_sale_from_html": "<strong>Em Promoção</strong> desde {{ price }}",
+      "unavailable": "Indisponível",
+      "compare_at": "Comparar em",
+      "quantity": "Quantidade",
+      "add_to_cart": "Adicionar ao Carrinho de Compras"
+    }
+  },
+  "gift_cards": {
+    "issued": {
+      "title": "Aqui está o seu cartão-presente de {{ value }} para {{ shop }}!",
+      "subtext": "Aqui está o seu cartão-presente!",
+      "disabled": "Inválido",
+      "expired": "Expirou em {{ expiry }}",
+      "active": "Expira em {{ expiry }}",
+      "redeem": "Use este código ao fazer o check-out para redimir o seu cartão-presente",
+      "shop_link": "Começar a fazer compras",
+      "print": "Imprimir"
+    }
+  },
+  "date_formats":{
+    "month_day_year": "%d de %B de %Y"
+  }
+}

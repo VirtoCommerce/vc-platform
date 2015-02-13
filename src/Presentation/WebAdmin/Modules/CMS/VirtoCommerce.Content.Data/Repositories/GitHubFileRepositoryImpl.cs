@@ -1,156 +1,174 @@
 ﻿namespace VirtoCommerce.Content.Data.Repositories
 {
-    #region
+	#region
 
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Threading.Tasks;
+	using System;
+	using System.Collections.Generic;
+	using System.Linq;
+	using System.Threading.Tasks;
 
-    using Octokit;
+	using Octokit;
 
-    using VirtoCommerce.Content.Data.Converters;
-    using VirtoCommerce.Content.Data.Models;
+	using VirtoCommerce.Content.Data.Converters;
+	using VirtoCommerce.Content.Data.Models;
 
-    using ContentType = Octokit.ContentType;
+	using ContentType = Octokit.ContentType;
 
-    #endregion
+	#endregion
 
-    public class GitHubFileRepositoryImpl : IFileRepository
-    {
-        #region Fields
+	public class GitHubFileRepositoryImpl : IFileRepository
+	{
+		#region Fields
 
-        private readonly GitHubClient _client;
+		private readonly GitHubClient _client;
 
-        private readonly string _ownerName;
+		private readonly string _ownerName;
 
-        private readonly string _repositoryName;
+		private readonly string _repositoryName;
 
-        #endregion
+		private readonly string _mainPath;
 
-        #region Constructors and Destructors
+		#endregion
 
-        public GitHubFileRepositoryImpl(
-            string login,
-            string password,
-            string productHeaderValue,
-            string ownerName,
-            string repositoryName)
-        {
-            this._client = new GitHubClient(new ProductHeaderValue(productHeaderValue), new Uri("https://github.com/"))
-                           {
-                               Credentials
-                                   =
-                                   new Credentials
-                                   (
-                                   login,
-                                   password)
-                           };
+		#region Constructors and Destructors
 
-            this._repositoryName = repositoryName;
-            this._ownerName = ownerName;
-        }
+		public GitHubFileRepositoryImpl(
+			string login,
+			string password,
+			string productHeaderValue,
+			string ownerName,
+			string repositoryName,
+			string mainPath)
+		{
+			this._client = new GitHubClient(new ProductHeaderValue(productHeaderValue), new Uri("https://github.com/"))
+						   {
+							   Credentials
+								   =
+								   new Credentials
+								   (
+								   login,
+								   password)
+						   };
 
-        #endregion
+			this._repositoryName = repositoryName;
+			this._ownerName = ownerName;
+			this._mainPath = mainPath;
 
-        #region Public Methods and Operators
+		}
 
-        public void DeleteContentItem(ContentItem item)
-        {
-            var existingItem = this.GetItem(item.Path).Result;
-            if (existingItem != null)
-            {
-                this._client.Repository.Content.DeleteFile(
-                    this._ownerName,
-                    this._repositoryName,
-                    item.Path,
-                    new DeleteFileRequest("Updating file from admin", existingItem.Sha)).ConfigureAwait(true);
-            }
-        }
+		#endregion
 
-        public ContentItem GetContentItem(string path)
-        {
-            var retVal = new ContentItem();
-            var result = this._client.Repository.Content.GetContents(this._ownerName, this._repositoryName, path).Result;
+		#region Public Methods and Operators
 
-            var item = result.SingleOrDefault();
-            if (item != null)
-            {
-                retVal = ContentItemConverter.RepositoryContent2ContentItem(item);
-            }
+		public void DeleteContentItem(ContentItem item)
+		{
+			var fullPath = GetFullPath(item.Path);
 
-            return retVal;
-        }
+			var existingItem = this.GetItem(fullPath).Result;
+			if (existingItem != null)
+			{
+				this._client.Repository.Content.DeleteFile(
+					this._ownerName,
+					this._repositoryName,
+					fullPath,
+					new DeleteFileRequest("Updating file from admin", existingItem.Sha)).Wait();
+			}
+		}
 
-        public ContentItem[] GetContentItems(string path)
-        {
-            var items = new List<ContentItem>();
-            var result =
-                this._client.Repository.Content.GetContents(this._ownerName, this._repositoryName, path)
-                    .Result.Where(s => s.Type == ContentType.Dir || s.Type == ContentType.File);
-            foreach (var item in result)
-            {
-                var addedItem = ContentItemConverter.RepositoryContent2ContentItem(item);
-                if (addedItem != null)
-                {
-                    items.Add(addedItem);
-                }
-            }
+		public ContentItem GetContentItem(string path)
+		{
+			var fullPath = GetFullPath(path);
 
-            return items.ToArray();
-        }
+			var retVal = new ContentItem();
+			var result = this._client.Repository.Content.GetContents(this._ownerName, this._repositoryName, fullPath).Result;
 
-        public void SaveContentItem(ContentItem item)
-        {
-            var existingItem = this.GetItem(item.Path).Result;
+			var item = result.SingleOrDefault();
+			if (item != null)
+			{
+				retVal = ContentItemConverter.RepositoryContent2ContentItem(item);
+			}
 
-            //var contentUTF8Bytes = Encoding.UTF8.GetBytes(item.Content);
-            var sha = String.Empty;
+			return retVal;
+		}
 
-            if (existingItem == null) // create new
-            {
-                var response =
-                    this._client.Repository.Content.CreateFile(
-                        this._ownerName,
-                        this._repositoryName,
-                        item.Path,
-                        new CreateFileRequest("Updating file from admin", item.Content)).Result;
-            }
-            else // update existing
-            {
-                var response =
-                    this._client.Repository.Content.UpdateFile(
-                        this._ownerName,
-                        this._repositoryName,
-                        item.Path,
-                        new UpdateFileRequest("Updating file from admin", item.Content, existingItem.Sha)).Result;
-            }
-            ;
-        }
+		public ContentItem[] GetContentItems(string path)
+		{
+			var fullPath = GetFullPath(path);
 
-        #endregion
+			var items = new List<ContentItem>();
+			var result =
+				this._client.Repository.Content.GetContents(this._ownerName, this._repositoryName, fullPath)
+					.Result.Where(s => s.Type == ContentType.Dir || s.Type == ContentType.File);
+			foreach (var item in result)
+			{
+				var addedItem = ContentItemConverter.RepositoryContent2ContentItem(item);
+				if (addedItem != null)
+				{
+					items.Add(addedItem);
+				}
+			}
 
-        #region Methods
+			return items.ToArray();
+		}
 
-        private async Task<RepositoryContent> GetItem(string path)
-        {
-            try
-            {
-                var existingItems =
-                    await this._client.Repository.Content.GetContents(this._ownerName, this._repositoryName, path);
-                if (existingItems.Count == 0)
-                {
-                    return null;
-                }
+		public void SaveContentItem(ContentItem item)
+		{
+			var fullPath = GetFullPath(item.Path);
 
-                return existingItems.SingleOrDefault();
-            }
-            catch (NotFoundException)
-            {
-                return null;
-            }
-        }
+			var existingItem = this.GetItem(fullPath).Result;
 
-        #endregion
-    }
+			//var contentUTF8Bytes = Encoding.UTF8.GetBytes(item.Content);
+			var sha = String.Empty;
+
+			if (existingItem == null) // create new
+			{
+				var response =
+					this._client.Repository.Content.CreateFile(
+						this._ownerName,
+						this._repositoryName,
+						fullPath,
+						new CreateFileRequest("Updating file from admin", item.Content)).Result;
+			}
+			else // update existing
+			{
+				var response =
+					this._client.Repository.Content.UpdateFile(
+						this._ownerName,
+						this._repositoryName,
+						fullPath,
+						new UpdateFileRequest("Updating file from admin", item.Content, existingItem.Sha)).Result;
+			}
+			;
+		}
+
+		#endregion
+
+		#region Methods
+
+		private async Task<RepositoryContent> GetItem(string path)
+		{
+			try
+			{
+				var existingItems =
+					await this._client.Repository.Content.GetContents(this._ownerName, this._repositoryName, path);
+				if (existingItems.Count == 0)
+				{
+					return null;
+				}
+
+				return existingItems.SingleOrDefault();
+			}
+			catch (NotFoundException)
+			{
+				return null;
+			}
+		}
+
+		private string GetFullPath(string path)
+		{
+			return string.Format("{0}{1}", _mainPath, path);
+		}
+
+		#endregion
+	}
 }

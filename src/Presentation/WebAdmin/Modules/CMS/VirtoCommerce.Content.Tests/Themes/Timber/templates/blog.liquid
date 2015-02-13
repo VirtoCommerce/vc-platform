@@ -1,0 +1,90 @@
+<!-- /templates/blog.liquid -->
+{% comment %}
+
+  Loop through a defined number of articles with the 'paginate' tag.
+  Don't forget to close the tag after your loop.
+
+{% endcomment %}
+
+{% paginate blog.articles by 5 %}
+
+{% include 'breadcrumb' %}
+
+{% comment %}
+  This template is also used for listing out articles of a specific tag.
+  You can change layouts or styles by checking if current_tags is true.
+{% endcomment %}
+<div class="grid--rev">
+
+  <div class="grid__item large--three-quarters">
+
+    {% if current_tags %}
+      <h1>{{ blog.title | link_to: blog.url }} &mdash; {{ current_tags.first }}</h1>
+    {% else %}
+      <h1>{{ blog.title }}</h1>
+    {% endif %}
+
+    {% comment %}
+      Loop through each article in your blog. This is limited to what you set for pagination above.
+
+      For more info on article liquid tags:
+        - http://docs.shopify.com/themes/liquid-variables/article
+    {% endcomment %}
+
+    {% for article in blog.articles %}
+      <h3><a href="{{ article.url }}">{{ article.title }}</a></h3>
+      {% capture author %}<strong>{{ article.author }}</strong>{% endcapture %}
+      {% capture date %}<time datetime="{{ article.published_at | date: '%Y-%m-%d' }}">{{ article.published_at | date: format: 'month_day_year' }}</time>{% endcapture %}
+      <p>{{ 'blogs.article.author_on_date_html' | t: author: author, date: date }}</p>
+
+      {% comment %}
+        Add a surrounding div with class 'rte' to anything that will come from the rich text editor.
+        Since this is just a listing page, you can either use the excerpt or truncate the full article.
+      {% endcomment %}
+      <div class="rte">
+        {% if article.excerpt.size > 0 %}
+          {{ article.excerpt }}
+        {% else %}
+          <p>{{ article.content | strip_html | truncatewords: 100 }}</p>
+        {% endif %}
+      </div>
+
+      {% comment %}
+        Show off meta information like number of comments and tags.
+      {% endcomment %}
+      <ul>
+        {% comment %}
+          comments_enabled? and moderated? are the only instances of punctuation in liquid tags.
+        {% endcomment %}
+        {% if blog.comments_enabled? %}
+        <li>
+          <a href="{{ article.url }}#Comments">
+            {{ 'blogs.comments.comments_with_count' | t: count: article.comments_count }}
+          </a>
+        </li>
+        {% endif %}
+
+        {% include 'tags-article' %}
+      </ul>
+
+      <p><a href="{{ article.url }}">{{ 'blogs.article.read_more' | t }} &rarr;</a></p>
+
+      {% unless forloop.last %}<hr>{% endunless %}
+
+    {% endfor %}
+
+    {% if paginate.pages > 1 %}
+      <div class="text-center">
+        {% include 'pagination-custom' %}
+      </div>
+    {% endif %}
+
+  </div>
+
+  <div class="grid__item large--one-quarter">
+    {% include 'blog-sidebar' %}
+  </div>
+
+</div>
+
+{% endpaginate %}

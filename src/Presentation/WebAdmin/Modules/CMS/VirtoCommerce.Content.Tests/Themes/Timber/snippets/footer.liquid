@@ -1,0 +1,104 @@
+<!-- /snippets/footer.liquid -->
+<footer class="site-footer small--text-center" role="contentinfo">
+
+  <div class="wrapper">
+
+    <div class="grid-uniform">
+
+      {% comment %}
+        Calculate the number of footer columns shown
+      {% endcomment %}
+      {% assign num_footer_columns = 0 %}
+      {% if settings.footer_quicklinks_enable %}
+        {% assign num_footer_columns = num_footer_columns | plus: 1 %}
+      {% endif %}
+      {% if settings.footer_social_enable %}
+        {% assign num_footer_columns = num_footer_columns | plus: 1 %}
+      {% endif %}
+      {% if settings.footer_newsletter_enable %}
+        {% assign num_footer_columns = num_footer_columns | plus: 1 %}
+      {% endif %}
+
+      {% case num_footer_columns %}
+        {% when 0 %}
+        {% when 1 %}
+          {% assign footer_column_width = '' %}
+        {% when 2 %}
+          {% assign footer_column_width = 'large--one-half' %}
+        {% when 3 %}
+          {% assign footer_column_width = 'large--one-third' %}
+      {% endcase %}
+
+      {% if settings.footer_quicklinks_enable %}
+        <div class="grid__item {{ footer_column_width }}">
+          <h3>{{ 'layout.footer.linklist_title' | t }}</h3>
+          <ul>
+            {% for link in linklists[settings.footer_quicklinks_linklist].links %}
+              <li><a href="{{ link.url }}">{{ link.title }}</a></li>
+            {% endfor %}
+          </ul>
+        </div>
+      {% endif %}
+
+      {% if settings.footer_social_enable %}
+        <div class="grid__item {{ footer_column_width }}">
+          <h3>{{ 'layout.footer.social_title' | t }}</h3>
+            {% comment %}
+              Loop through the social network links
+            {% endcomment %}
+            <ul class="inline-list social-icons">
+              {% if settings.social_twitter_link != blank %}
+                <li>
+                  <a class="icon-fallback-text" href="{{ settings.social_twitter_link }}" title="{{ shop.name }} on Twitter">
+                    <span class="icon icon-twitter" aria-hidden="true"></span>
+                    <span class="fallback-text">Twitter</span>
+                  </a>
+                </li>
+              {% endif %}
+              {% if settings.social_facebook_link != blank %}
+                <li>
+                  <a class="icon-fallback-text" href="{{ settings.social_facebook_link }}" title="{{ shop.name }} on Facebook">
+                    <span class="icon icon-facebook" aria-hidden="true"></span>
+                    <span class="fallback-text">Facebook</span>
+                  </a>
+                </li>
+              {% endif %}
+            </ul>
+        </div>
+      {% endif %}
+
+      {% if settings.footer_newsletter_enable %}
+        <div class="grid__item {{ footer_column_width }}">
+          <h3>{{ 'layout.footer.newsletter_title' | t }}</h3>
+          {% include 'newsletter-form' %}
+        </div>
+      {% endif %}
+    </div>
+
+    <hr>
+
+    {% comment %}
+      Loop through available payment methods and show their icons.
+    {% endcomment %}
+    {% unless shop.enabled_payment_types == empty %}
+    <h4 class="text-center">{{ 'layout.footer.accepted_payments' | t }}</h4>
+    <ul class="inline-list payment-icons text-center">
+      {% for type in shop.enabled_payment_types %}
+        <li>
+          <span class="icon-fallback-text">
+            <span class="icon icon-{{type}}" aria-hidden="true"></span>
+            <span class="fallback-text">{{type | replace: '_',' '}}</span>
+          </span>
+        </li>
+      {% endfor %}
+    </ul>
+    {% endunless %}
+
+    <p class="text-center">
+      <a href="http://shopify.com/timber">Timber Theme Framework</a> by <a href="http://www.shopify.com?ref=Timber" title="Shopify.com">Shopify</a><br>
+      <small>{{ powered_by_link }}</small>
+    </p>
+
+  </div>
+
+</footer>
