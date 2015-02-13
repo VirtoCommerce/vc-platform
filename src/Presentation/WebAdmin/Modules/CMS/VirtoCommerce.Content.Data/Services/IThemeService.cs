@@ -10,12 +10,12 @@ namespace VirtoCommerce.Content.Data.Services
 	public interface IThemeService
 	{
 		ThemeItem[] GetThemes(string storeId);
-		void SetThemeAsActive(string storeId, string themeName);
+		//void SetThemeAsActive(string storeId, string themeName);
 
-		ContentItem[] GetContentItems(string path);
-		ContentItem GetContentItem(string path);
+		ContentItem[] GetContentItems(string storeId, string themeName, string path);
+		ContentItem GetContentItem(string storeId, string themeName, string path);
 
-		void SaveContentItem(ContentItem item);
-		void DeleteContentItem(ContentItem item);
+		void SaveContentItem(string storeId, string themeName, ContentItem item);
+		void DeleteContentItem(string storeId, string themeName, ContentItem item);
 	}
 }

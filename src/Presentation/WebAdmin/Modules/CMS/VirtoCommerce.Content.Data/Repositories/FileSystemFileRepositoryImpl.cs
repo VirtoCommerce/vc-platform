@@ -20,11 +20,11 @@
 
 		#region Public Methods and Operators
 
-		public ContentItem GetContentItem(string path)
+		public ContentItem GetContentItem(string themePath, string path)
         {
 			var retVal = new ContentItem();
 
-			var fullPath = GetFullPath(path);
+			var fullPath = GetFullPath(themePath, path);
 
 			using (var sr = File.OpenText(fullPath))
 			{
@@ -41,9 +41,9 @@
 			return retVal;
         }
 
-		public ContentItem[] GetContentItems(string path)
+		public ContentItem[] GetContentItems(string themePath, string path)
 		{
-			var fullPath = GetFullPath(path);
+			var fullPath = GetFullPath(themePath, path);
 
 			List<ContentItem> items = new List<ContentItem>();
 
@@ -55,7 +55,7 @@
 				var contentItem = new ContentItem();
 				contentItem.ContentType = ContentType.Directory;
 				contentItem.Name = FixName(directory, fullPath);
-				contentItem.Path = FixPath(directory);
+				contentItem.Path = FixPath(themePath, directory);
 
 				items.Add(contentItem);
 			}
@@ -65,7 +65,7 @@
 				var contentItem = new ContentItem();
 				contentItem.ContentType = ContentType.Directory;
 				contentItem.Name = Path.GetFileName(file);
-				contentItem.Path = FixPath(file);
+				contentItem.Path = FixPath(themePath, file);
 
 				items.Add(contentItem);
 			}
@@ -73,9 +73,9 @@
 			return items.ToArray();
 		}
 
-		public void SaveContentItem(ContentItem item)
+		public void SaveContentItem(string themePath, ContentItem item)
 		{
-			var fullPath = GetFullPath(item.Path);
+			var fullPath = GetFullPath(themePath, item.Path);
 
 			var directoryPath = Path.GetDirectoryName(fullPath);
 			if (!Directory.Exists(directoryPath))
@@ -94,9 +94,9 @@
 			}
 		}
 
-		public void DeleteContentItem(ContentItem item)
+		public void DeleteContentItem(string themePath, ContentItem item)
 		{
-			var fullPath = GetFullPath(item.Path);
+			var fullPath = GetFullPath(themePath, item.Path);
 
 			if (File.Exists(fullPath))
 				File.Delete(fullPath);
@@ -104,16 +104,14 @@
 
 		#endregion
 
-		private string GetFullPath(string path)
+		private string GetFullPath(string themePath, string path)
 		{
-			path = path.Replace("/", "\\");
-
-			return string.Join(string.Empty, _mainPath, path);
+			return string.Format("{0}{1}{2}", _mainPath, themePath, path).Replace("/", "\\");
 		}
 
-		private string FixPath(string path)
+		private string FixPath(string themePath, string path)
 		{
-			return path.Replace(_mainPath, string.Empty).Replace("\\", "/");
+			return path.Replace(_mainPath, string.Empty).Replace("\\", "/").Replace(themePath, string.Empty).TrimStart('/');
 		}
 
 		private string FixName(string path, string fullPath)

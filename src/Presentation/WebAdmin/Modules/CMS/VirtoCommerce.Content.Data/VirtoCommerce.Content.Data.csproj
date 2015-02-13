@@ -59,14 +59,11 @@
     <Compile Include="Models\ContentItem.cs" />
     <Compile Include="Models\ContentType.cs" />
     <Compile Include="Models\ThemeItem.cs" />
-    <Compile Include="Models\ThemeStoreRelation.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\DatabaseFileRepositoryImpl.cs" />
     <Compile Include="Repositories\FileSystemFileRepositoryImpl.cs" />
     <Compile Include="Repositories\GitHubFileRepositoryImpl.cs" />
     <Compile Include="Repositories\IFileRepository.cs" />
-    <Compile Include="Repositories\IThemeRepository.cs" />
-    <Compile Include="Repositories\ThemeRepositoryImpl.cs" />
     <Compile Include="Services\IThemeService.cs" />
     <Compile Include="Services\ThemeServiceImpl.cs" />
   </ItemGroup>

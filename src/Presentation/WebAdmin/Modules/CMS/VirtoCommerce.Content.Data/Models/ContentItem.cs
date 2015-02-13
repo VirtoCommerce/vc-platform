@@ -3,18 +3,23 @@
     #region
 
     using System;
-    using System.ComponentModel.DataAnnotations;
-    using System.ComponentModel.DataAnnotations.Schema;
-
-    using VirtoCommerce.Foundation.Frameworks;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using VirtoCommerce.Foundation.Frameworks;
 
     #endregion
 
-    public class ContentItem : Entity
+    public class ContentItem : Entity, IAuditable
     {
+		public ContentItem()
+		{
+			ChildContentItems = new NullCollection<ContentItem>();
+		}
+
         #region Public Properties
 
-        [Required]
+        //[Required]
         public string Content { get; set; }
 
         [NotMapped]
@@ -30,30 +35,32 @@
             }
         }
 
-        [Required]
-        [StringLength(64)]
-        public string CreatedBy { get; set; }
+		//[Required]
+		//[StringLength(64)]
+		public string CreatedBy { get; set; }
 
-        [Required]
-        public DateTime CreatedDate { get; set; }
+		//[Required]
+		public DateTime CreatedDate { get; set; }
 
-        [StringLength(64)]
-        public string ModifiedBy { get; set; }
+		//[StringLength(64)]
+		public string ModifiedBy { get; set; }
 
-        public DateTime? ModifiedDate { get; set; }
+		public DateTime? ModifiedDate { get; set; }
 
-        [Required]
+        //[Required]
         public string Name { get; set; }
 
         public virtual ContentItem ParentContentItem { get; set; }
 
-        [StringLength(128)]
+        //[StringLength(128)]
         public string ParentContentItemId { get; set; }
 
-        [Required]
+		public virtual ICollection<ContentItem> ChildContentItems { get; set; }
+
+        //[Required]
         public string Path { get; set; }
 
-        [Required]
+        //[Required]
         public string Type { get; set; }
 
         #endregion

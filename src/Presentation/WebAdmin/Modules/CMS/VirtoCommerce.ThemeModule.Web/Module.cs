@@ -1,95 +1,98 @@
 ﻿namespace VirtoCommerce.ThemeModule.Web
 {
-    #region
+	#region
 
-    using System;
+	using System;
 
-    using Microsoft.Practices.Unity;
+	using Microsoft.Practices.Unity;
 
-    using VirtoCommerce.Content.Data.Repositories;
-    using VirtoCommerce.Framework.Web.Modularity;
-    using VirtoCommerce.Framework.Web.Settings;
-    using VirtoCommerce.ThemeModule.Web.Controllers.Api;
+	using VirtoCommerce.Content.Data.Repositories;
+	using VirtoCommerce.Framework.Web.Modularity;
+	using VirtoCommerce.Framework.Web.Settings;
+	using VirtoCommerce.ThemeModule.Web.Controllers.Api;
 	using VirtoCommerce.Content.Data.Services;
+	using VirtoCommerce.Foundation.Data.Infrastructure.Interceptors;
 
-    #endregion
+	#endregion
 
-    public class Module : IModule //, IDatabaseModule
-    {
-        #region Fields
+	public class Module : IModule//, IDatabaseModule
+	{
+		#region Fields
 
-        private readonly IUnityContainer _container;
+		private readonly IUnityContainer _container;
 
-        #endregion
+		#endregion
 
-        #region Constructors and Destructors
+		#region Constructors and Destructors
 
-        public Module(IUnityContainer container)
-        {
-            this._container = container;
-        }
+		public Module(IUnityContainer container)
+		{
+			this._container = container;
+		}
 
-        #endregion
+		#endregion
 
-        #region Public Methods and Operators
+		#region Public Methods and Operators
 
-        public void Initialize()
-        {
-            var settingsManager = this._container.Resolve<ISettingsManager>();
+		public void Initialize()
+		{
+			var settingsManager = this._container.Resolve<ISettingsManager>();
 
-            var githubLogin = settingsManager.GetValue("VirtoCommerce.ThemeModule.GitHub.Login", string.Empty);
-            var githubPassword = settingsManager.GetValue("VirtoCommerce.ThemeModule.GitHub.Password", string.Empty);
-            var githubProductHeaderValue =
-                settingsManager.GetValue("VirtoCommerce.ThemeModule.GitHub.ProductHeaderValue", string.Empty);
-            var githubOwnerName = settingsManager.GetValue("VirtoCommerce.ThemeModule.GitHub.OwnerName", string.Empty);
-            var githubRepositoryName = settingsManager.GetValue(
-                "VirtoCommerce.ThemeModule.GitHub.RepositoryName",
-                string.Empty);
+			var githubLogin = settingsManager.GetValue("VirtoCommerce.ThemeModule.GitHub.Login", string.Empty);
+			var githubPassword = settingsManager.GetValue("VirtoCommerce.ThemeModule.GitHub.Password", string.Empty);
+			var githubProductHeaderValue =
+				settingsManager.GetValue("VirtoCommerce.ThemeModule.GitHub.ProductHeaderValue", string.Empty);
+			var githubOwnerName = settingsManager.GetValue("VirtoCommerce.ThemeModule.GitHub.OwnerName", string.Empty);
+			var githubRepositoryName = settingsManager.GetValue(
+				"VirtoCommerce.ThemeModule.GitHub.RepositoryName",
+				string.Empty);
 
 			var githubMainPath = "/Themes/";
 			var fileSystemMainPath = "~/Themes/";
 			var databaseMainPath = "Themes/";
 
-            Func<string, IThemeService> factory = (x) =>
-            {
-                switch (x)
-                {
-                    case "GitHub":
-                        return new ThemeServiceImpl(new GitHubFileRepositoryImpl(
-                            githubLogin,
-                            githubPassword,
-                            githubProductHeaderValue,
-                            githubOwnerName,
+			Func<IFileRepository> databaseFileRepository = () =>
+			{
+				return new DatabaseFileRepositoryImpl("VirtoCommerce", githubMainPath, new AuditableInterceptor(),
+															   new EntityPrimaryKeyGeneratorInterceptor());
+			};
+
+			Func<string, IThemeService> factory = (x) =>
+			{
+				switch (x)
+				{
+					case "GitHub":
+						return new ThemeServiceImpl(new GitHubFileRepositoryImpl(
+							githubLogin,
+							githubPassword,
+							githubProductHeaderValue,
+							githubOwnerName,
 							githubRepositoryName,
-							githubMainPath),
-							new ThemeRepositoryImpl());
+							githubMainPath));
 
-                    case "Database":
-                        return new ThemeServiceImpl(new DatabaseFileRepositoryImpl(databaseMainPath),
-							new ThemeRepositoryImpl());
+					case "Database":
+						return new ThemeServiceImpl(new DatabaseFileRepositoryImpl(databaseMainPath));
 
-                    case "File System":
-						return new ThemeServiceImpl(new FileSystemFileRepositoryImpl(fileSystemMainPath),
-							new ThemeRepositoryImpl());
+					case "File System":
+						return new ThemeServiceImpl(new FileSystemFileRepositoryImpl(fileSystemMainPath));
 
-                    default:
-						return new ThemeServiceImpl(new FileSystemFileRepositoryImpl(fileSystemMainPath),
-							new ThemeRepositoryImpl());
-                }
-            };
+					default:
+						return new ThemeServiceImpl(new FileSystemFileRepositoryImpl(fileSystemMainPath));
+				}
+			};
 
-            //if(!Directory.Exists(HostingEnvironment.MapPath("~/Themes/")))
-            //{
-            //	Directory.CreateDirectory(HostingEnvironment.MapPath("~/Themes/"));
-            //}
+			//if(!Directory.Exists(HostingEnvironment.MapPath("~/Themes/")))
+			//{
+			//	Directory.CreateDirectory(HostingEnvironment.MapPath("~/Themes/"));
+			//}
 
-            this._container.RegisterType<ThemeController>(new InjectionConstructor(factory, settingsManager));
-        }
+			this._container.RegisterType<ThemeController>(new InjectionConstructor(factory, settingsManager));
+		}
 
-        public void SetupDatabase(SampleDataLevel sampleDataLevel)
-        {
-        }
+		public void SetupDatabase(SampleDataLevel sampleDataLevel)
+		{
+		}
 
-        #endregion
-    }
+		#endregion
+	}
 }

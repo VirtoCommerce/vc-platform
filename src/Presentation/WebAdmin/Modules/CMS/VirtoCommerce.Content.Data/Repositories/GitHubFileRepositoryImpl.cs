@@ -60,24 +60,9 @@
 
 		#region Public Methods and Operators
 
-		public void DeleteContentItem(ContentItem item)
+		public ContentItem GetContentItem(string themePath, string path)
 		{
-			var fullPath = GetFullPath(item.Path);
-
-			var existingItem = this.GetItem(fullPath).Result;
-			if (existingItem != null)
-			{
-				this._client.Repository.Content.DeleteFile(
-					this._ownerName,
-					this._repositoryName,
-					fullPath,
-					new DeleteFileRequest("Updating file from admin", existingItem.Sha)).Wait();
-			}
-		}
-
-		public ContentItem GetContentItem(string path)
-		{
-			var fullPath = GetFullPath(path);
+			var fullPath = GetFullPath(themePath, path);
 
 			var retVal = new ContentItem();
 			var result = this._client.Repository.Content.GetContents(this._ownerName, this._repositoryName, fullPath).Result;
@@ -86,14 +71,15 @@
 			if (item != null)
 			{
 				retVal = ContentItemConverter.RepositoryContent2ContentItem(item);
+				retVal.Path = FixPath(themePath, retVal.Path);
 			}
 
 			return retVal;
 		}
 
-		public ContentItem[] GetContentItems(string path)
+		public ContentItem[] GetContentItems(string themePath, string path)
 		{
-			var fullPath = GetFullPath(path);
+			var fullPath = GetFullPath(themePath, path);
 
 			var items = new List<ContentItem>();
 			var result =
@@ -105,15 +91,16 @@
 				if (addedItem != null)
 				{
 					items.Add(addedItem);
+					addedItem.Path = FixPath(themePath, addedItem.Path);
 				}
 			}
 
 			return items.ToArray();
 		}
 
-		public void SaveContentItem(ContentItem item)
+		public void SaveContentItem(string themePath, ContentItem item)
 		{
-			var fullPath = GetFullPath(item.Path);
+			var fullPath = GetFullPath(themePath, item.Path);
 
 			var existingItem = this.GetItem(fullPath).Result;
 
@@ -141,6 +128,21 @@
 			;
 		}
 
+		public void DeleteContentItem(string themePath, ContentItem item)
+		{
+			var fullPath = GetFullPath(themePath, item.Path);
+
+			var existingItem = this.GetItem(fullPath).Result;
+			if (existingItem != null)
+			{
+				this._client.Repository.Content.DeleteFile(
+					this._ownerName,
+					this._repositoryName,
+					fullPath,
+					new DeleteFileRequest("Updating file from admin", existingItem.Sha)).Wait();
+			}
+		}
+
 		#endregion
 
 		#region Methods
@@ -164,9 +166,14 @@
 			}
 		}
 
-		private string GetFullPath(string path)
+		private string GetFullPath(string themePath, string path)
 		{
-			return string.Format("{0}{1}", _mainPath, path);
+			return string.Format("{0}{1}{2}", _mainPath, themePath, path);
+		}
+
+		private string FixPath(string themePath, string path)
+		{
+			return path.Replace(_mainPath, string.Empty).Replace(themePath, string.Empty).TrimStart('/');
 		}
 
 		#endregion

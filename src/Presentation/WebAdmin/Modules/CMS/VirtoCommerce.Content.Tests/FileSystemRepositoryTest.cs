@@ -22,45 +22,31 @@
 
         #region Public Methods and Operators
 
-		//[Fact]
-		//public void GetCollectionControllerTest()
-		//{
-		//	var controller = this.GetController();
-
-		//	var result = controller.GetItems("/");
-
-		//	Assert.IsType<OkNegotiatedContentResult<ThemeModule.Web.Models.ContentItem[]>>(result);
-
-		//	var items = result as OkNegotiatedContentResult<ThemeModule.Web.Models.ContentItem[]>;
-
-		//	Assert.Equal(items.Content.Length, 5);
-		//}
-
         [Fact]
-        public void GetCollectionRepositoryTest()
+        public void GetRootCollectionRepositoryTest()
         {
 			var fullPath = string.Format("{0}\\Themes\\", _path);
 
 			var repository = new FileSystemFileRepositoryImpl(fullPath);
 
-            var items = repository.GetContentItems("Expo");
+            var items = repository.GetContentItems("Apple/", "");
 
-            Assert.Equal(items.Length, 6);
+            Assert.Equal(items.Length, 2);
+			Assert.Equal(items[0].Path, "Simple");
         }
 
-		//[Fact]
-		//public void GetItemControllerTest()
-		//{
-		//	var controller = this.GetController();
+		[Fact]
+		public void GetCollectionRepositoryTest()
+		{
+			var fullPath = string.Format("{0}\\Themes\\", _path);
 
-		//	var result = controller.GetItem("/docs/new1.txt");
+			var repository = new FileSystemFileRepositoryImpl(fullPath);
 
-		//	Assert.IsType<OkNegotiatedContentResult<ThemeModule.Web.Models.ContentItem>>(result);
+			var items = repository.GetContentItems("Apple/Simple/", "templates");
 
-		//	var item = result as OkNegotiatedContentResult<ThemeModule.Web.Models.ContentItem>;
-
-		//	Assert.True(item.Content.Content.Contains("!!!\n"));
-		//}
+			Assert.Equal(items.Length, 13);
+			Assert.Equal(items[0].Path, "templates/customers");
+		}
 
 		[Fact]
 		public void GetItemRepositoryTest()
@@ -69,9 +55,9 @@
 
 			var repository = new FileSystemFileRepositoryImpl(fullPath);
 
-			var item = repository.GetContentItem("Expo/layout/theme.liquid");
+			var item = repository.GetContentItem("Apple/Simple/", "layout/theme.liquid");
 
-			Assert.Equal(item.Path, "Expo/layout/theme.liquid");
+			Assert.Equal(item.Path, "layout/theme.liquid");
 			Assert.True(item.Content.Contains("<!DO"));
 		}
 
@@ -84,38 +70,38 @@
 
 			var content = new ContentItem();
 			content.Content = "Some new stuff";
-			content.Path = "Expo/new/new123.liquid";
+			content.Path = "new/new123.liquid";
 
-			repository.SaveContentItem(content);
+			repository.SaveContentItem("Apple/Simple/", content);
 
-			var items = repository.GetContentItems("Expo/new");
+			var items = repository.GetContentItems("Apple/Simple/", "new");
 
 			Assert.Equal(items.Length, 1);
 
-			var item = repository.GetContentItem("Expo/new/new123.liquid");
+			var item = repository.GetContentItem("Apple/Simple/", "new/new123.liquid");
 
 			Assert.True(item.Content.Contains("Some"));
 
 			content = new ContentItem();
 			content.Content = "Some new stuff. Changes";
-			content.Path = "Expo/new/new123.liquid";
+			content.Path = "new/new123.liquid";
 
-			repository.SaveContentItem(content);
+			repository.SaveContentItem("Apple/Simple/", content);
 
-			items = repository.GetContentItems("Expo/new");
+			items = repository.GetContentItems("Apple/Simple/", "new");
 
 			Assert.Equal(items.Length, 1);
 
-			item = repository.GetContentItem("Expo/new/new123.liquid");
+			item = repository.GetContentItem("Apple/Simple/", "new/new123.liquid");
 
 			Assert.True(item.Content.Contains("Some") && item.Content.Contains("Changes"));
 
 			content = new ContentItem();
-			content.Path = "Expo/new/new123.liquid";
+			content.Path = "new/new123.liquid";
 
-			repository.DeleteContentItem(content);
+			repository.DeleteContentItem("Apple/Simple/", content);
 
-			items = repository.GetContentItems("Expo/new");
+			items = repository.GetContentItems("Apple/Simple/", "new");
 
 			Assert.Equal(items.Length, 0);
 		}

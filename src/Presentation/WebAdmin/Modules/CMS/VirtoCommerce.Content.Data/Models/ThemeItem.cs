@@ -11,7 +11,5 @@ namespace VirtoCommerce.Content.Data.Models
 		public string ThemeName { get; set; }
 
 		public string ThemePath { get; set; }
-
-		public bool IsActive { get; set; }
 	}
 }

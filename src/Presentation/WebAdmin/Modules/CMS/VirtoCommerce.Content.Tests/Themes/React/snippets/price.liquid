@@ -1,7 +1,0 @@
-{% if shop.money_format == '${{amount}}' %}
-  {{ price | money | replace: '.00','' }}
-{% elsif shop.money_format == '${{amount_with_comma_separator}}' %}
-  {{ price | money | replace: ',00','' }}
-{% else %}
-  {{ price | money }}
-{% endif %}

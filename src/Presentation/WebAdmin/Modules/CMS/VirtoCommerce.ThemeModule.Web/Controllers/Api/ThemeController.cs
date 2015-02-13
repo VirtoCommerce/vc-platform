@@ -1,6 +1,6 @@
 ﻿namespace VirtoCommerce.ThemeModule.Web.Controllers.Api
 {
-    #region
+	#region
 
 	using System;
 	using System.Linq;
@@ -12,82 +12,82 @@
 	using VirtoCommerce.ThemeModule.Web.Converters;
 	using VirtoCommerce.ThemeModule.Web.Models;
 
-    #endregion
+	#endregion
 
-    [RoutePrefix("api/cms/theme")]
-    public class ThemeController : ApiController
-    {
-        #region Fields
+	[RoutePrefix("api/cms/theme")]
+	public class ThemeController : ApiController
+	{
+		#region Fields
 
 		private readonly IThemeService _themeService;
 
-        #endregion
+		#endregion
 
-        #region Constructors and Destructors
+		#region Constructors and Destructors
 
-        public ThemeController(Func<string, IThemeService> factory, ISettingsManager manager)
-        {
-            if (factory == null)
-            {
-                throw new ArgumentNullException("factory");
-            }
+		public ThemeController(Func<string, IThemeService> factory, ISettingsManager manager)
+		{
+			if (factory == null)
+			{
+				throw new ArgumentNullException("factory");
+			}
 
-            if (manager == null)
-            {
-                throw new ArgumentNullException("manager");
-            }
+			if (manager == null)
+			{
+				throw new ArgumentNullException("manager");
+			}
 
-            var choosenRepository = manager.GetValue(
-                "VirtoCommerce.ThemeModule.MainProperties.ThemesRepositoryType",
-                string.Empty);
+			var choosenRepository = manager.GetValue(
+				"VirtoCommerce.ThemeModule.MainProperties.ThemesRepositoryType",
+				string.Empty);
 
-            var themeService = factory.Invoke(choosenRepository);
+			var themeService = factory.Invoke(choosenRepository);
 			this._themeService = themeService;
-        }
+		}
 
-        #endregion
+		#endregion
 
-        #region Public Methods and Operators
+		#region Public Methods and Operators
 
-        [HttpDelete]
-        [Route("delete")]
-        public IHttpActionResult DeleteItem(ContentItem item)
-        {
-            var domainItem = item.ToDomainModel();
-			this._themeService.DeleteContentItem(domainItem);
-            return this.Ok();
-        }
+		[HttpDelete]
+		[Route("delete")]
+		public IHttpActionResult DeleteItem(ContentItem item, string storeId, string themeName)
+		{
+			var domainItem = item.ToDomainModel();
+			this._themeService.DeleteContentItem(storeId, themeName, domainItem);
+			return this.Ok();
+		}
 
-        [HttpGet]
-        [ResponseType(typeof(ContentItem))]
-        [Route("item")]
-        public IHttpActionResult GetItem(string path)
-        {
-			var item = this._themeService.GetContentItem(path);
-            return this.Ok(item.ToWebModel());
-        }
+		[HttpGet]
+		[ResponseType(typeof(ContentItem))]
+		[Route("item")]
+		public IHttpActionResult GetItem(string path, string storeId, string themeName)
+		{
+			var item = this._themeService.GetContentItem(storeId, themeName, path);
+			return this.Ok(item.ToWebModel());
+		}
 
-        [HttpGet]
-        [ResponseType(typeof(ContentItem[]))]
-        [Route("items")]
-        public IHttpActionResult GetItems(string path)
-        {
-			var items = this._themeService.GetContentItems(path);
+		[HttpGet]
+		[ResponseType(typeof(ContentItem[]))]
+		[Route("items")]
+		public IHttpActionResult GetItems(string path, string storeId, string themeName)
+		{
+			var items = this._themeService.GetContentItems(storeId, themeName, path);
 
-            var retValItems = items.Select(i => i.ToWebModel());
+			var retValItems = items.Select(i => i.ToWebModel());
 
-            return this.Ok(retValItems.ToArray());
-        }
+			return this.Ok(retValItems.ToArray());
+		}
 
-        [HttpPost]
-        [Route("save")]
-        public IHttpActionResult SaveItem(ContentItem item)
-        {
-            var domainItem = item.ToDomainModel();
-			this._themeService.SaveContentItem(domainItem);
-            return this.Ok();
-        }
+		[HttpPost]
+		[Route("save")]
+		public IHttpActionResult SaveItem(ContentItem item, string storeId, string themeName)
+		{
+			var domainItem = item.ToDomainModel();
+			this._themeService.SaveContentItem(storeId, themeName, domainItem);
+			return this.Ok();
+		}
 
-        #endregion
-    }
+		#endregion
+	}
 }
