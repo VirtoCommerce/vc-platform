@@ -10,7 +10,7 @@ using VirtoCommerce.Foundation.Money;
 
 namespace VirtoCommerce.PricingModule.Web.Model
 {
-	public class PriceList : Entity, IAuditable
+	public class Pricelist : Entity, IAuditable
 	{
 		#region IAuditable Members
 

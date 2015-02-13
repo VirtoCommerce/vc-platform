@@ -118,14 +118,16 @@ namespace VirtoCommerce.Foundation.Frameworks.Extensions
 				{
 					foreach (var newItem in args.NewItems)
 					{
-						addAction((T)newItem);
+						if(addAction != null)
+							addAction((T)newItem);
 					}
 				}
 				else if (args.Action == NotifyCollectionChangedAction.Remove)
 				{
 					foreach (var removeItem in args.OldItems)
 					{
-						removeAction((T)removeItem);
+						if(removeAction != null)
+							removeAction((T)removeItem);
 					}
 				}
 			};

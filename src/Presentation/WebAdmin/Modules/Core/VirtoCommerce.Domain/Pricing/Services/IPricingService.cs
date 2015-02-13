@@ -10,14 +10,14 @@ namespace VirtoCommerce.Domain.Pricing.Services
 	public interface IPricingService
 	{
 		Price GetPriceById(string id);
-		PriceList GetPriceListById(string id);
+		Pricelist GetPricelistById(string id);
 		Price CreatePrice(Price price);
-		PriceList CreatePriceList(PriceList priceList);
+		Pricelist CreatePricelist(Pricelist priceList);
 
 		void UpdatePrices(Price[] prices);
-		void UpdatePriceLists(PriceList[] priceLists);
+		void UpdatePricelists(Pricelist[] priceLists);
 
-		void DeletePriceLists(string[] ids);
+		void DeletePricelists(string[] ids);
 		void DeletePrices(string[] ids);
 
 		IEnumerable<Price> EvaluateProductPrices(PriceEvaluationContext evalContext);

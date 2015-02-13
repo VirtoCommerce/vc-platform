@@ -8,7 +8,7 @@ using VirtoCommerce.Foundation.Money;
 
 namespace VirtoCommerce.Domain.Pricing.Model
 {
-	public class PriceList : Entity, IAuditable
+	public class Pricelist : Entity, IAuditable
 	{
 		#region IAuditable Members
 

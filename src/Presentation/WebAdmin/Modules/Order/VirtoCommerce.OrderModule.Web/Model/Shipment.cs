@@ -12,8 +12,8 @@ namespace VirtoCommerce.OrderModule.Web.Model
 	{
 		public string Organization { get; set; }
 		public string OrganizationId { get; set; }
-		public string FulfilmentCenter { get; set; }
-		public string FulfilmentCenterId { get; set; }
+		public string FulfillmentCenter { get; set; }
+		public string FulfillmentCenterId { get; set; }
 		public string Employee { get; set; }
 		public string EmployeeId { get; set; }
 

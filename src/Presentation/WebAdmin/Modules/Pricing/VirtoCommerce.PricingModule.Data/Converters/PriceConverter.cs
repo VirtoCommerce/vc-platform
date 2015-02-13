@@ -30,7 +30,7 @@ namespace VirtoCommerce.PricingModule.Data.Converters
 			retVal.InjectFrom(dbEntity);
 			retVal.Id = dbEntity.PriceId;
 			retVal.Currency = (CurrencyCodes)Enum.Parse(typeof(CurrencyCodes), dbEntity.Pricelist.Currency);
-
+			retVal.ProductId = dbEntity.ItemId;
 			retVal.CreatedDate = dbEntity.Created.Value;
 			retVal.ModifiedDate = dbEntity.LastModified;
 
@@ -47,7 +47,7 @@ namespace VirtoCommerce.PricingModule.Data.Converters
 			var retVal = new foundationModel.Price();
 
 			retVal.InjectFrom(price);
-
+			retVal.ItemId = price.ProductId;
 			if (price.Id != null)
 			{
 				retVal.PriceId = price.Id;

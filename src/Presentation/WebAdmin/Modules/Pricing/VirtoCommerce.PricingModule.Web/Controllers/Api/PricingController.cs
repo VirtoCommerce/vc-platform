@@ -37,7 +37,7 @@ namespace VirtoCommerce.PricingModule.Web.Controllers.Api
 			{
 				return NotFound();
 			}
-			return Ok(retVal.Select(x => x.ToWebModel()));
+			return Ok(retVal.Select(x => x.ToWebModel()).ToArray());
 		}
 
 		// PUT: api/catalog/products/123/price
@@ -46,6 +46,7 @@ namespace VirtoCommerce.PricingModule.Web.Controllers.Api
 		[Route("api/catalog/products/{productId}/price")]
 		public IHttpActionResult UpdateProductPrice(webModel.Price price)
 		{
+			price.Id = null;
 			_pricingService.CreatePrice(price.ToCoreModel());
 
 			return StatusCode(HttpStatusCode.NoContent);
