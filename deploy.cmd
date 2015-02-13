@@ -114,7 +114,7 @@ IF /I "%IN_PLACE_DEPLOYMENT%" NEQ "1" (
 :: Initialize database for first deployment
 :: If PREVIOUS_MANIFEST_PATH ends with firstDeploymentManifest then initialize database
 
-echo(!PREVIOUS_MANIFEST_PATH!|findstr /r /i /c:"firstDeploymentManifest$" >nul && (
+echo(!PREVIOUS_MANIFEST_PATH!|findstr /r /i /c:"firstDeploymentManifest$" >nul && %SQLAZURECONNSTR_DefaultConnection% >null && (
 	echo First deployment. Need to initialize database. InsertSampleData = %APPSETTING_insertSampleData%
 
 	IF EXIST "%VCPS%\VirtoCommerce.PowerShell.csproj" (
@@ -136,7 +136,7 @@ echo(!PREVIOUS_MANIFEST_PATH!|findstr /r /i /c:"firstDeploymentManifest$" >nul &
 	:: Clear build output
 	call :ExecuteCmd "%MSBUILD_PATH%" "%DEPLOYMENT_SOURCE%\VirtoCommerce.sln" /nologo /verbosity:m /t:Clean /p:Configuration=Release;SolutionDir="%DEPLOYMENT_SOURCE%\.\\" %SCM_BUILD_ARGS%
 ) || (
-	echo Not first deployment
+	echo Not first deployment or database connection string is null
 )
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
