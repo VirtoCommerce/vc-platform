@@ -114,7 +114,7 @@ IF /I "%IN_PLACE_DEPLOYMENT%" NEQ "1" (
 :: Initialize database for first deployment
 :: If PREVIOUS_MANIFEST_PATH ends with firstDeploymentManifest then initialize database
 
-echo(!PREVIOUS_MANIFEST_PATH!|findstr /r /i /c:"firstDeploymentManifest$" >nul && %SQLAZURECONNSTR_DefaultConnection% >null && (
+echo(!PREVIOUS_MANIFEST_PATH!|findstr /r /i /c:"firstDeploymentManifest$" >nul && (
 	echo First deployment. Need to initialize database. InsertSampleData = %APPSETTING_insertSampleData%
 
 	IF /I "%SQLAZURECONNSTR_DefaultConnection%" EQU "" (
