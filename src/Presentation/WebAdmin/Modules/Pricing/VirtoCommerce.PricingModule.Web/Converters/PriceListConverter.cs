@@ -12,9 +12,9 @@ namespace VirtoCommerce.PricingModule.Web.Converters
 {
 	public static class PriceListConverter
 	{
-		public static webModel.PriceList ToWebModel(this coreModel.PriceList priceList)
+		public static webModel.Pricelist ToWebModel(this coreModel.Pricelist priceList)
 		{
-			var retVal = new webModel.PriceList();
+			var retVal = new webModel.Pricelist();
 			retVal.InjectFrom(priceList);
 			retVal.Currency = priceList.Currency;
 			if (priceList.Prices != null)
@@ -24,9 +24,9 @@ namespace VirtoCommerce.PricingModule.Web.Converters
 			return retVal;
 		}
 
-		public static coreModel.PriceList ToCoreModel(this webModel.PriceList priceList)
+		public static coreModel.Pricelist ToCoreModel(this webModel.Pricelist priceList)
 		{
-			var retVal = new coreModel.PriceList();
+			var retVal = new coreModel.Pricelist();
 			retVal.InjectFrom(priceList);
 			retVal.Currency = priceList.Currency;
 			if (priceList.Prices != null)

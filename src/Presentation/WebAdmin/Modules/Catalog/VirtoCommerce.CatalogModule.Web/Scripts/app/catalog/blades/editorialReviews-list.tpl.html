@@ -1,17 +1,16 @@
 ﻿<div class="blade-content">
 	<div class="blade-inner">
 		<div class="inner-block">
-			<ul class="list-extended" ng-if="blade.currentEntities.length">
-			    <li ng-click="openBlade(data)" ng-repeat="data in blade.currentEntities | orderBy:languageCode">
-			        <!--<p ng-bind-html="data.content"></p>-->
-			        <i class="ico fa fa-comment-o"></i>
-			        <span class="title">{{data.content | limitTo:150}}</span>
-			        <span class="sub-title">{{data.languageCode}}</span>
+			<ul class="list __items" ng-if="blade.currentEntities.length">
+			    <li class="list-item" ng-click="openBlade(data)" ng-repeat="data in blade.currentEntities | orderBy:languageCode">
+			        <i class="list-ico fa fa-comment"></i>
+			        <span class="list-t">
+			        	<span class="flag flag-{{data.languageCode.substr(3)}}"></span>
+			        </span>
+			        <span class="list-descr">{{data.content | limitTo:150}}</span>
 			    </li>
 			</ul>
-			<div class="notice marker-on-left fg-white" ng-if="!blade.currentEntities.length">
-			    <p>No Editorial Reviews yet</p>
-			</div>
+			<p class="text" ng-if="!blade.currentEntities.length">No Editorial Reviews yet</p>
 		</div>
 	</div>
 </div>

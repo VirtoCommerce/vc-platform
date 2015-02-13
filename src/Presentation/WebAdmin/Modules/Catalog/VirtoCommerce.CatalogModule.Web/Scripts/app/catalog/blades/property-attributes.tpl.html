@@ -1,81 +1,80 @@
 ﻿<div class="blade-content">
     <div class="blade-inner">
         <div class="inner-block">
-            <form ng-submit="add()" name="contextEntityDetailForm" novalidate autocomplete="off">
+            <form class="form" ng-submit="add()" name="contextEntityDetailForm" novalidate autocomplete="off">
                 <fieldset>
                     <legend>New attribute</legend>
-                    <label>Name</label>
-                    <div class="input-control text" data-role="input-control" ng-init="setForm(contextEntityDetailForm);">
-                        <input type="text" placeholder="input text" required ng-model="newValue.name" ui-validate=" 'attributeNameValidator($value)' " name="attrName" focus-on="">
-                        <!--<button type="button" tabindex="-1" class="btn-clear"></button>-->
-
-                        <!--<div ng-messages="contextEntityDetailForm.attrName.$error" ng-if="contextEntityDetailForm.$submitted">
-                                <label class="fg-red" ng-message="required">Required</label>
-                                <label class="fg-red" ng-message="validator">Duplicate name found</label>
-                            </div>-->
-                        <div ng-if="contextEntityDetailForm.attrName.$dirty">
-                            <label class="fg-red" ng-if="contextEntityDetailForm.attrName.$error.required">Required</label>
-                            <label class="fg-red" ng-if="contextEntityDetailForm.attrName.$error.validator">Duplicate name found</label>
+                    <div class="form-group">
+                        <label class="form-label">Name</label>
+                        <div class="form-input" ng-init="setForm(contextEntityDetailForm);">
+                            <input type="text" placeholder="input text" required ng-model="newValue.name" ui-validate=" 'attributeNameValidator($value)' " name="attrName" focus-on="">
+                        </div>
+                        <div class="form-error" ng-if="contextEntityDetailForm.attrName.$dirty">
+                            <span ng-if="contextEntityDetailForm.attrName.$error.required">Required</span>
+                            <span ng-if="contextEntityDetailForm.attrName.$error.validator">Duplicate name found</span>
                         </div>
                     </div>
-                    <label>Value</label>
-                    <div class="input-control text" data-role="input-control">
-                        <input type="text" placeholder="input text" required ng-model="newValue.value" name="attrValue">
-                        <!--<button type="button" tabindex="-1" class="btn-clear"></button>-->
-                        <!--<div ng-messages="contextEntityDetailForm.attrValue.$error" ng-if="contextEntityDetailForm.$submitted">
-                                <label class="fg-red" ng-message="required">Required</label>
-                            </div>-->
-                        <div ng-if="contextEntityDetailForm.attrValue.$dirty">
-                            <label class="fg-red" ng-if="contextEntityDetailForm.attrValue.$error.required">Required</label>
+                    <div class="form-group">
+                        <label class="form-label">Value</label>
+                        <div class="form-input">
+                            <input type="text" placeholder="input text" required ng-model="newValue.value" name="attrValue">
+                        </div>
+                        <div class="form-error" ng-if="contextEntityDetailForm.attrValue.$dirty">
+                            <span ng-if="contextEntityDetailForm.attrValue.$error.required">Required</span>
                         </div>
                     </div>
-                    <div class="input-control text block" data-role="input-control">
-                        <button class="button" type="submit">
-                            <i class="fa fa-plus on-left"></i>
-                            Add
+                    <div class="form-group">
+                        <button class="btn" type="submit">
+                            <span>Add</span>
                         </button>
                     </div>
                 </fieldset>
             </form>
             <fieldset>
                 <legend>Current attributes</legend>
-                <table class="table hovered">
-                    <thead>
-                        <tr>
-                            <th class="text-left fixed-td">
-                                <input type="checkbox" ng-model="selectedAll" ng-change="checkAll(selectedAll)" /></th>
-                            <th class="text-left">Name</th>
-                            <th class="text-left">Value</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr ng-repeat="data in pb.currentEntity.attributes" ng-class="{'selected': data === selectedItem}" context-menu data-target="pa_menu_{{$index}}" ng-click='selectItem(data)'>
-                            <td>
-                                <div data-role="input-control" class="input-control checkbox">
-                                    <label>
-                                        <input type="checkbox" ng-model="data.selected">
+                <div class="table-wrapper">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th class="table-col">
+                                    <label class="form-control __checkbox">
+                                        <input type="checkbox" ng-model="selectedAll" ng-change="checkAll(selectedAll)" />
                                         <span class="check"></span>
                                     </label>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="input-control text" data-role="input-control">
-                                    <input type="text" placeholder="input text" required ng-model="data.name">
-                                </div>
-                                <ul role="menu" class="dropdown-menu context-menu" id="pa_menu_{{$index}}">
-                                    <li ng-click='delete($index)'>
-                                        <i class="ico fa fa-trash-o"></i>Delete
-                                    </li>
-                                </ul>
-                            </td>
-                            <td>
-                                <div class="input-control text" data-role="input-control">
-                                    <input type="text" placeholder="input text" required ng-model="data.value">
-                                </div>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+                                </th>
+                                <th class="table-col">Name</th>
+                                <th class="table-col">Value</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="table-item" ng-repeat="data in pb.currentEntity.attributes" ng-class="{'selected': data === selectedItem}" context-menu data-target="pa_menu_{{$index}}" ng-click='selectItem(data)'>
+                                <td class="table-col">
+                                    <div data-role="input-control" class="input-control checkbox">
+                                        <label class="form-control __checkbox">
+                                            <input type="checkbox" ng-model="data.selected">
+                                            <span class="check"></span>
+                                        </label>
+                                    </div>
+                                </td>
+                                <td class="table-col">
+                                    <div class="form-input">
+                                        <input type="text" placeholder="input text" required ng-model="data.name">
+                                    </div>
+                                    <ul role="menu" class="menu __context" id="pa_menu_{{$index}}">
+                                        <li class="menu-item" ng-click='delete($index)'>
+                                            <i class="menu-ico fa fa-trash-o"></i>Delete
+                                        </li>
+                                    </ul>
+                                </td>
+                                <td class="table-col">
+                                    <div class="form-input">
+                                        <input type="text" placeholder="input text" required ng-model="data.value">
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </fieldset>
         </div>
     </div>

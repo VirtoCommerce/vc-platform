@@ -1,62 +1,76 @@
 ﻿<div class="blade-content">
     <div class="blade-inner">
         <div class="inner-block">
-            <form ng-submit="add()" name="pdForm" novalidate autocomplete="off">
+            <form class="form" ng-submit="add()" name="pdForm" novalidate autocomplete="off">
                 <fieldset>
                     <legend>New value</legend>
-                    <label ng-if="pb.currentEntity.multilanguage">Language</label>
-                    <div ng-if="pb.currentEntity.multilanguage" data-role="input-control" class="input-control select">
-                        <select ng-model="newValue.languageCode" ng-options="lang.languageCode as lang.displayName for lang in pb.currentEntity.catalog.languages"></select>
-                    </div>
-                    <label>New value</label>
-                    <div class="input-control text" data-role="input-control" ng-init="setForm(pdForm);">
-                        <input required ng-model="newValue.value" ng-if="pb.currentEntity.valueType !== 2" ui-validate=" 'dictValueValidator($value)' " name="dictValue" focus-on="" type="text" placeholder="input text" />
-                        <input required ng-model="newValue.value" ng-if="pb.currentEntity.valueType === 2" ui-validate=" 'dictValueValidator($value)' " name="dictValue" focus-on="" type="number" placeholder="input number" step="any" />
-                        <!--<button type="button" tabindex="-1" class="btn-clear"></button>-->
-                        <div ng-if="pdForm.dictValue.$dirty">
-                            <label class="fg-red" ng-if="pdForm.dictValue.$error.required">Required</label>
-                            <label class="fg-red" ng-if="pdForm.dictValue.$error.validator">Duplicate key found</label>
+                    <div class="form-group">
+                        <label class="form-label" ng-if="pb.currentEntity.multilanguage">Language</label>
+                        <div ng-if="pb.currentEntity.multilanguage" data-role="input-control" class="input-control select">
+                            <select ng-model="newValue.languageCode" ng-options="lang.languageCode as lang.displayName for lang in pb.currentEntity.catalog.languages"></select>
                         </div>
                     </div>
-                    <div class="input-control text block" data-role="input-control">
-                        <button class="button" type="submit">
-                            <i class="fa fa-plus on-left"></i>
-                            Add
-                        </button>
+                    <div class="form-group">
+                        <label class="form-label">New value</label>
+                        <div class="form-input" ng-init="setForm(pdForm);" ng-if="pb.currentEntity.valueType !== 2">
+                            <input required ng-model="newValue.value" ui-validate=" 'dictValueValidator($value)' " name="dictValue" focus-on="" type="text" placeholder="input text" />
+                        </div>
+                        <div class="form-input __number js-number-input-plugin" ng-if="pb.currentEntity.valueType === 2" data-step="1">
+                            <input class="js-val" required ng-model="newValue.value" ui-validate=" 'dictValueValidator($value)' " name="dictValue" focus-on="" type="text" placeholder="input number" />
+                            <a class="up js-up"></a>
+                            <a class="down js-down"></a>
+                        </div>
+                        <!--<button type="button" tabindex="-1" class="btn-clear"></button>-->
+                        <div class="form-error" ng-if="pdForm.dictValue.$dirty">
+                            <span ng-if="pdForm.dictValue.$error.required">Required</span>
+                            <span ng-if="pdForm.dictValue.$error.validator">Duplicate key found</span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <button class="btn" type="submit">Add</button>
                     </div>
                 </fieldset>
             </form>
             <fieldset>
                 <legend>Current values</legend>
-                <table class="table hovered">
+                <table class="table">
                     <thead>
                         <tr>
-                            <th class="text-left fixed-td"><input type="checkbox" ng-model="selectedAll" ng-change="checkAll(selectedAll)" /></th>
-                            <th class="text-left fixed-td">Language</th>
-                            <th class="text-left">Value</th>
+                            <th class="table-col">
+                                <label class="form-control __checkbox">
+                                    <input type="checkbox" ng-model="selectedAll" ng-change="checkAll(selectedAll)" />
+                                    <span class="check"></span>
+                                </label>
+                            </th>
+                            <th class="table-col">Language</th>
+                            <th class="table-col">Value</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr ng-repeat="data in pb.currentEntity.dictionaryValues" ng-class="{'selected': data === selectedItem}" context-menu data-target="pd_menu_{{$index}}" ng-click='selectItem(data)'>
-                            <td>
-                                <div data-role="input-control" class="input-control checkbox">
-                                    <label>
-                                        <input type="checkbox" ng-model="data.selected">
-                                        <span class="check"></span>
-                                    </label>
+                        <tr class="table-item" ng-repeat="data in pb.currentEntity.dictionaryValues" ng-class="{'__selected': data === selectedItem}" context-menu data-target="pd_menu_{{$index}}" ng-click='selectItem(data)'>
+                            <td class="table-col">
+                                <label class="form-control __checkbox">
+                                    <input type="checkbox" ng-model="data.selected">
+                                    <span class="check"></span>
+                                </label>
+                            </td>
+                            <td class="table-col">
+                                <div class="form-input">
+                                    <select ng-model="data.languageCode" ng-options="lang.languageCode as lang.displayName for lang in pb.currentEntity.catalog.languages" ng-if="pb.currentEntity.multilanguage"></select>
                                 </div>
                             </td>
-                            <td>
-                                <select ng-model="data.languageCode" ng-options="lang.languageCode as lang.displayName for lang in pb.currentEntity.catalog.languages" ng-if="pb.currentEntity.multilanguage"></select>
-                            </td>
-                            <td>
-                                <div class="input-control text" data-role="input-control">
-                                    <input required ng-model="data.value" ng-if="pb.currentEntity.valueType !== 2" type="text" placeholder="input text" />
-                                    <input required ng-model="data.value" ng-if="pb.currentEntity.valueType === 2" type="number" step="any" placeholder="input number" />
+                            <td class="table-col">
+                                <div class="form-input" ng-if="pb.currentEntity.valueType !== 2">
+                                    <input required ng-model="data.value" type="text" placeholder="input text" />
                                 </div>
-                                <ul role="menu" class="dropdown-menu context-menu" id="pd_menu_{{$index}}">
-                                    <li ng-click='delete($index)'>
-                                        <i class="ico icon-remove"></i> Delete
+                                <div class="form-input __number js-number-input-plugin" data-step="1" ng-if="pb.currentEntity.valueType === 2">
+                                    <input class="js-val" required ng-model="data.value" type="text" placeholder="input number" />
+                                    <a class="up js-up"></a>
+                                    <a class="down js-down"></a>
+                                </div>
+                                <ul role="menu" class="menu __context" id="pd_menu_{{$index}}">
+                                    <li class="menu-item" ng-click='delete($index)'>
+                                        <i class="menu-ico fa fa-trash-o"></i> Delete
                                     </li>
                                 </ul>
                             </td>
@@ -67,3 +81,9 @@
         </div>
     </div>
 </div>
+
+<script>
+    $(function () {
+        $('.js-number-input-plugin').numberInputPlugin();
+    });
+</script>

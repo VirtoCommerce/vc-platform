@@ -78,7 +78,7 @@
 
     $scope.bladeToolbarCommands = [
         {
-            name: "Save", icon: 'icon-floppy',
+            name: "Save", icon: 'fa fa-save',
             executeMethod: function () {
                 saveChanges($scope.currentEntity);
             },
@@ -87,7 +87,7 @@
             }
         },
         {
-            name: "Reset", icon: 'icon-undo',
+            name: "Reset", icon: 'fa fa-undo',
             executeMethod: function () {
                 angular.copy($scope.blade.origEntity, $scope.currentEntity);
             },
@@ -96,7 +96,7 @@
             }
         },
         {
-            name: "Delete", icon: 'icon-remove',
+            name: "Delete", icon: 'fa fa-trash-o',
             executeMethod: function () {
                 deleteEntry();
             },

@@ -127,7 +127,7 @@
     $scope.bladeToolbarCommands = [
 
         {
-            name: "Save", icon: 'icon-floppy',
+            name: "Save", icon: 'fa fa-save',
         	executeMethod: function ()
         	{
         	    $scope.saveChanges();
@@ -138,7 +138,7 @@
         	}
         },
 		{
-		    name: "Remove", icon: 'icon-remove', executeMethod: function () { $scope.removeAction(); },
+		    name: "Remove", icon: 'fa fa-trash-o', executeMethod: function () { $scope.removeAction(); },
 			canExecuteMethod: function () {
 				var retVal = false;
 				if (angular.isDefined($scope.item.images)) {

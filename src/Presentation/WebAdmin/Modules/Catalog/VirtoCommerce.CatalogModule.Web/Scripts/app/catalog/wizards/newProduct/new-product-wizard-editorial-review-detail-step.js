@@ -27,7 +27,7 @@
 
     $scope.bladeToolbarCommands = [
         {
-            name: "Delete", icon: 'icon-remove',
+            name: "Delete", icon: 'fa fa-trash-o',
             executeMethod: function () {
                 if (angular.isDefined($scope.blade.parentBlade.currentEntities))
                 {

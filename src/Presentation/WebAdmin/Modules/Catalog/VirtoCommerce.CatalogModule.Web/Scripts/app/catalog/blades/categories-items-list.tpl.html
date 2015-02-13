@@ -1,71 +1,63 @@
-﻿<div class="static top expanded">
+﻿<div class="blade-static __expanded">
     <va-breadcrumb ng-model="blade.breadcrumbs"></va-breadcrumb>
-    <div data-role="input-control" class="input-control text input-search">
-        <input type="text" placeholder="Search keyword..." ng-model="filter.searchKeyword" ui-keyup="{'enter':'blade.refresh()'}">
-        <button tabindex="-1" class="btn-clear" type="button" ng-click="filter.searchKeyword = null;blade.refresh()"></button>
+    <div class="form-group">
+        <div class="form-input __search">
+            <input type="text" placeholder="Search keyword..." ng-model="filter.searchKeyword" ui-keyup="{'enter':'blade.refresh()'}">
+        </div>
+        <p class="form-count">Count: <span class="count">{{pageSettings.totalItems}}</span></p>
     </div>
-    <span class="search-count">Count: {{pageSettings.totalItems}}</span>
 </div>
-<div class="blade-content blade-medium">
+<div class="blade-static __bottom" ng-if="pageSettings.itemsPerPageCount < pageSettings.totalItems">
+    <div class="pagination" ng-include="'pagerTemplate.html'"></div>
+</div>
+<div class="blade-content __medium-wide">
     <div class="blade-inner">
         <div class="inner-block">
             <div class="table-wrapper">
-                <table class="table hovered">
+                <table class="table">
                     <thead>
                         <tr>
-                            <th class="text-left fixed-td">
-                                <div data-role="input-control" class="input-control checkbox">
-                                    <label>
-                                        <input type="checkbox" ng-model="selectedAll" ng-change="checkAll(selectedAll)" />
-                                        <span class="check"></span>
-                                    </label>
-                                </div>
+                            <th class="table-col">
+                                <label class="form-control __checkbox">
+                                    <input type="checkbox" ng-model="selectedAll" ng-change="checkAll(selectedAll)" />
+                                    <span class="check"></span>
+                                </label>
                             </th>
-                            <th class="text-left fixed-td">Pic</th>
-                            <th class="text-left">Name</th>
-                            <th class="text-left fixed-td">Code</th>
+                            <th class="table-col">Pic</th>
+                            <th class="table-col">Name</th>
+                            <th class="table-col">Code</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr ng-repeat="data in items" ng-class="{'selected': data.id === selectedItem.id}" context-menu data-target="cil_menu_{{data.id+blade.level}}">
-                            <td>
-                                <div data-role="input-control" class="input-control checkbox" ng-if="showCheck(data)">
-                                    <label>
-                                        <input type="checkbox" ng-model="data.selected" ng-change="checkOne(data)">
-                                        <span class="check"></span>
-                                    </label>
-                                </div>
+                        <tr class="table-item" ng-repeat="data in items" ng-class="{'__selected': data.id === selectedItem.id}" context-menu data-target="cil_menu_{{data.id+blade.level}}">
+                            <td class="table-col __product-control">
+                                <label class="form-control __checkbox" ng-if="showCheck(data)">
+                                    <input type="checkbox" ng-model="data.selected" ng-change="checkOne(data)">
+                                    <span class="check"></span>
+                                </label>
                             </td>
-                            <td ng-click='selectItem($event, data)'>
+                            <td class="table-col __product-img" ng-click='selectItem($event, data)'>
                                 <div class="product-img">
                                     <div class="image" style="background-image: url({{data.imageUrl}})" ng-if="data.type!=='category' && data.imageUrl"></div>
-                                    <i class="fa fa-ban" ng-if="data.type!=='category' && !data.imageUrl" />
+                                    <i class="table-ico fa fa-image" ng-if="!data.imageUrl" />
                                 </div>
-                                <!-- <img ng-src="{{data.imageUrl}}" height="42" width="42" ng-if="data.type!=='category' && data.imageUrl" /> -->
                             </td>
-                            <td ng-click='selectItem($event, data)' class="product-name">
-                                <span ng-if="hasLinks(data)"><i class="icon-link" style="font-size: 18px" />&nbsp;</span>
-                                <i ng-class="{'fa fa-folder-open-o': data.type==='category', 'fa fa-shopping-cart': data.type==='product', 'fa fa-barcode': data.type==='variation'}" />&nbsp;
-                                <span title="{{data.name}}">{{data.name}}</span>
-                                <ul role="menu" class="dropdown-menu context-menu" id="cil_menu_{{data.id+blade.level}}">
-                                    <li ng-click='edit(data)'>
-                                        <i class="ico fa fa-edit"></i>&nbsp;Manage
+                            <td class="table-col __product-name" ng-click='selectItem($event, data)' class="product-name">
+                                {{data.name}}
+                                <ul class="menu __context" role="menu" id="cil_menu_{{data.id+blade.level}}">
+                                    <li class="menu-item" ng-click='edit(data)'>
+                                        <i class="menu-ico fa fa-edit"></i> Manage
                                     </li>
-                                    <li ng-click='delete()'>
-                                        <i class="ico fa fa-trash-o"></i>&nbsp;Delete
+                                    <li class="menu-item" ng-click='delete()'>
+                                        <i class="menu-ico fa fa-trash-o"></i> Delete
                                     </li>
                                 </ul>
                             </td>
-                            <td ng-click='selectItem($event, data)'>
-                                <span title="{{data.code}}">{{data.code}}</span>
+                            <td class="table-col __product-code" ng-click='selectItem($event, data)'>
+                                {{data.code}}
                             </td>
                         </tr>
                     </tbody>
-                    <tfoot ng-if="pageSettings.itemsPerPageCount < pageSettings.totalItems">
-                        <tr>
-                            <td colspan="4" ng-include="'pagerTemplate.html'"></td>
-                        </tr>
-                    </tfoot>
                 </table>
             </div>
             <script type="text/ng-template" id="pagerTemplate.html">

@@ -21,7 +21,7 @@ namespace VirtoCommerce.PricingModule.Web.Model
 
 		#endregion
 
-		public string PriceListId { get; set; }
+		public string PricelistId { get; set; }
 		[JsonConverter(typeof(StringEnumConverter))]
 		public CurrencyCodes Currency { get; set; }
 		public string ProductId { get; set; }

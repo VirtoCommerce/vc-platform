@@ -1,10 +1,15 @@
-﻿<form name="contextEntityDetailForm">
-    <fieldset ng-init="setForm(contextEntityDetailForm)">
-        <label>Name</label>
-        <div class="input-control text" data-role="input-control">
-            <input type="text" ng-model="blade.name" required>
-        </div>
-    </fieldset>
-</form>
-<div class="static bottom" ng-include="'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/wizards/common/wizard-ok-action.tpl.html'">
+﻿<div class="blade-static __bottom" ng-include="'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/wizards/common/wizard-ok-action.tpl.html'"></div>
+<div class="blade-content">
+	<div class="blade-inner">
+		<div class="inner-block">
+			<form name="contextEntityDetailForm" class="form" ng-init="setForm(contextEntityDetailForm)">
+			    <div class="form-group">
+			    	<label class="form-label">Name</label>
+				    <div class="form-input">
+				        <input type="text" ng-model="blade.name" required>
+				    </div>
+			    </div>
+			</form>
+		</div>
+	</div>
 </div>

@@ -55,7 +55,7 @@
 
     $scope.bladeToolbarCommands = [
 	    {
-	        name: "Save", icon: 'icon-floppy',
+	        name: "Save", icon: 'fa fa-save',
 	        executeMethod: function () {
 	            saveChanges();
 	        },
@@ -64,7 +64,7 @@
 	        }
 	    },
         {
-            name: "Reset", icon: 'icon-undo',
+            name: "Reset", icon: 'fa fa-undo',
             executeMethod: function () {
                 angular.copy($scope.currentBlade.origEntity, $scope.currentBlade.currentEntity);
             },

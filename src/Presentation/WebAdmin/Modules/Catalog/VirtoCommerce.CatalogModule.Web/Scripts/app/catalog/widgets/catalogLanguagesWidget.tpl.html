@@ -1,13 +1,13 @@
-﻿<ul class="list-extended">
-    <li ng-click="openBlade(true)">
-        <i class="ico fa fa-language"></i>
-        <span class="title">Default language</span>
-        <span class="sub-title">{{currentBlade.currentEntity.defaultLanguage.displayName}} ({{currentBlade.currentEntity.defaultLanguage.languageCode}})</span>
+﻿<ul class="list __items">
+    <li class="list-item" ng-click="openBlade(true)">
+        <i class="list-ico fa fa-language"></i>
+        <span class="list-t">Default language</span>
+        <span class="list-descr">{{currentBlade.currentEntity.defaultLanguage.displayName}} ({{currentBlade.currentEntity.defaultLanguage.languageCode}})</span>
     </li>
-    <li ng-click="openBlade(false)">
-        <i class="ico fa fa-language"></i>
-        <span class="title">Catalog languages</span>
-        <span class="sub-title">
+    <li class="list-item" ng-click="openBlade(false)">
+        <i class="list-ico fa fa-language"></i>
+        <span class="list-t">Catalog languages</span>
+        <span class="list-descr">
             <a ng-repeat="lang in currentBlade.currentEntity.languages | limitTo:2">
                 {{lang.displayName}} ({{lang.languageCode}}),
             </a>

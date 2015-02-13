@@ -35,7 +35,7 @@ angular.module(moduleName, [
       //Register module in main menu
       var menuItem = {
           path: 'browse/settings',
-          icon: 'fa fa-cogs',
+          icon: 'fa fa-wrench',
           title: 'Settings',
           priority: 190,
           action: function () { $state.go('workspace.coreModulesettings'); },
