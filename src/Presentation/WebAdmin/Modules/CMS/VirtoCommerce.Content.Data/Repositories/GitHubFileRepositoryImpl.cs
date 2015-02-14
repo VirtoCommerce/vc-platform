@@ -104,7 +104,6 @@
 
 			var existingItem = this.GetItem(fullPath).Result;
 
-			//var contentUTF8Bytes = Encoding.UTF8.GetBytes(item.Content);
 			var sha = String.Empty;
 
 			if (existingItem == null) // create new
@@ -168,7 +167,7 @@
 
 		private string GetFullPath(string path)
 		{
-			return string.Format("{0}{1}{2}", _mainPath, path);
+			return string.Format("{0}{1}", _mainPath, path);
 		}
 
 		private string FixPath(string path)

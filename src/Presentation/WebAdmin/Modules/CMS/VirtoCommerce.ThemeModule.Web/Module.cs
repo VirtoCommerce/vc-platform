@@ -12,10 +12,13 @@
 	using VirtoCommerce.ThemeModule.Web.Controllers.Api;
 	using VirtoCommerce.Content.Data.Services;
 	using VirtoCommerce.Foundation.Data.Infrastructure.Interceptors;
+	using VirtoCommerce.Foundation.Data.Infrastructure;
+	using System.IO;
+	using System.Web.Hosting;
 
 	#endregion
 
-	public class Module : IModule//, IDatabaseModule
+	public class Module : IModule, IDatabaseModule
 	{
 		#region Fields
 
@@ -49,11 +52,10 @@
 
 			var githubMainPath = "/Themes/";
 			var fileSystemMainPath = "~/Themes/";
-			var databaseMainPath = "Themes/";
 
 			Func<IFileRepository> databaseFileRepository = () =>
 			{
-				return new DatabaseFileRepositoryImpl("VirtoCommerce", githubMainPath, new AuditableInterceptor(),
+				return new DatabaseFileRepositoryImpl("VirtoCommerce", new AuditableInterceptor(),
 															   new EntityPrimaryKeyGeneratorInterceptor());
 			};
 
@@ -81,16 +83,21 @@
 				}
 			};
 
-			//if(!Directory.Exists(HostingEnvironment.MapPath("~/Themes/")))
-			//{
-			//	Directory.CreateDirectory(HostingEnvironment.MapPath("~/Themes/"));
-			//}
+			if (!Directory.Exists(HostingEnvironment.MapPath("~/Themes/")))
+			{
+				Directory.CreateDirectory(HostingEnvironment.MapPath("~/Themes/"));
+			}
 
 			this._container.RegisterType<ThemeController>(new InjectionConstructor(factory, settingsManager));
 		}
 
 		public void SetupDatabase(SampleDataLevel sampleDataLevel)
 		{
+			using (var context = new DatabaseFileRepositoryImpl())
+			{
+				var initializer = new SetupDatabaseInitializer<DatabaseFileRepositoryImpl, VirtoCommerce.Content.Data.Migrations.Configuration>();
+				initializer.InitializeDatabase(context);
+			}
 		}
 
 		#endregion

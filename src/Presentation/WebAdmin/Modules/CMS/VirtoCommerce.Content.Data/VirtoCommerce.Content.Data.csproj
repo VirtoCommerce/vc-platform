@@ -56,6 +56,11 @@
   <ItemGroup>
     <Compile Include="Converters\ContentItemConverter.cs" />
     <Compile Include="Converters\ThemeItemConverter.cs" />
+    <Compile Include="Migrations\201502141328216_Initial.cs" />
+    <Compile Include="Migrations\201502141328216_Initial.Designer.cs">
+      <DependentUpon>201502141328216_Initial.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\ContentItem.cs" />
     <Compile Include="Models\ContentType.cs" />
     <Compile Include="Models\Theme.cs" />
@@ -81,6 +86,11 @@
       <Project>{e7fc9a51-1b39-4bdc-983a-8a059c5fc58b}</Project>
       <Name>CommerceFoundation</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\201502141328216_Initial.resx">
+      <DependentUpon>201502141328216_Initial.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
