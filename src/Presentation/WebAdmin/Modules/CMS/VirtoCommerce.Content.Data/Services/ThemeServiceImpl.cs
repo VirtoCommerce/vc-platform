@@ -11,9 +11,8 @@ namespace VirtoCommerce.Content.Data.Services
 {
 	public class ThemeServiceImpl : IThemeService
 	{
-		private object _lockObject = new object();
-
-		private IFileRepository _repository;
+		private readonly object _lockObject = new object();
+		private readonly IFileRepository _repository;
 
 		public ThemeServiceImpl(IFileRepository repository)
 		{
@@ -23,46 +22,49 @@ namespace VirtoCommerce.Content.Data.Services
 			_repository = repository;
 		}
 
-		public Models.ThemeItem[] GetThemes(string storeId)
+		public Theme[] GetThemes(string storeId)
 		{
 			var themePath = GetThemePath(storeId, string.Empty);
 
-			var items = _repository.GetContentItems(themePath, string.Empty);
-			var themes = items.Where(i => i.ContentType == Models.ContentType.Directory).Select(i => ThemeItemConverter.ContentItem2ThemeItem(i));
-
+			var items = _repository.GetContentItems(themePath);
+			var themes = items.Where(i => i.ContentType == ContentType.Directory).Select(x=>x.AsTheme()); 
 			return themes.ToArray();
 		}
 
-		public Models.ContentItem[] GetContentItems(string storeId, string themeName, string path)
+		public ThemeAsset[] GetThemeAssets(string storeId, string themeName)
 		{
 			var themePath = GetThemePath(storeId, themeName);
-			return _repository.GetContentItems(themePath, path);
+			return _repository.GetContentItems(themeName).Select(c=>c.AsThemeAsset()).ToArray();
 		}
 
-		public Models.ContentItem GetContentItem(string storeId, string themeName, string path)
+		public ThemeAsset GetThemeAsset(string storeId, string themeName, string path)
 		{
 			lock (_lockObject)
 			{
 				var themePath = GetThemePath(storeId, themeName);
-				return _repository.GetContentItem(themePath, path);
+				return _repository.GetContentItem(path).AsThemeAsset();
 			}
 		}
 
-		public void SaveContentItem(string storeId, string themeName, Models.ContentItem item)
+		public void SaveThemeAsset(string storeId, string themeName, Models.ThemeAsset asset)
 		{
 			lock (_lockObject)
 			{
 				var themePath = GetThemePath(storeId, themeName);
-				_repository.SaveContentItem(themePath, item);
+				_repository.SaveContentItem(asset.AsContentItem());
 			}
 		}
 
-		public void DeleteContentItem(string storeId, string themeName, Models.ContentItem item)
+        public void DeleteThemeAssets(string storeId, string themeName, string[] assetIds)
 		{
 			lock (_lockObject)
 			{
 				var themePath = GetThemePath(storeId, themeName);
-				_repository.DeleteContentItem(themePath, item);
+			    foreach (var assetId in assetIds)
+			    {
+                    _repository.DeleteContentItem(new ContentItem() { Id = assetId });    
+			    }
+				
 			}
 		}
 
@@ -84,5 +86,5 @@ namespace VirtoCommerce.Content.Data.Services
 		{
 			return string.Format("{0}/{1}/{2}", storeId, themeName, path);
 		}
-	}
+    }
 }

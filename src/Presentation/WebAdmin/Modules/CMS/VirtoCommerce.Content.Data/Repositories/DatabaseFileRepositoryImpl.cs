@@ -15,16 +15,12 @@
 
     public class DatabaseFileRepositoryImpl : EFRepositoryBase, IFileRepository
 	{
-		private string _mainPath;
-
 		#region
 
-		public DatabaseFileRepositoryImpl(string mainPath)
+		public DatabaseFileRepositoryImpl()
 		{
 			Database.SetInitializer<DatabaseFileRepositoryImpl>(null);
 			Configuration.LazyLoadingEnabled = false;
-
-			_mainPath = mainPath;
 		}
 
 		public DatabaseFileRepositoryImpl(string nameOrConnectionString, string mainPath, params IInterceptor[] interceptors)
@@ -32,15 +28,13 @@
 		{
 			Database.SetInitializer<DatabaseFileRepositoryImpl>(null);
 			Configuration.LazyLoadingEnabled = false;
-
-			_mainPath = mainPath;
 		}
 
 		protected override void OnModelCreating(DbModelBuilder modelBuilder)
 		{
 			modelBuilder.Conventions.Remove<PluralizingTableNameConvention>();
 
-			#region ShoppingCart
+			#region Content Items
 			modelBuilder.Entity<ContentItem>().HasKey(x => x.Id)
 					.Property(x => x.Id);
 
@@ -48,7 +42,7 @@
 									   .WithMany(x => x.ChildContentItems)
 									   .HasForeignKey(x => x.ParentContentItemId);
 
-			modelBuilder.Entity<ContentItem>().ToTable("content_ContentItem");
+			modelBuilder.Entity<ContentItem>().ToTable("ContentItem");
 			#endregion
 		}
 
@@ -56,18 +50,18 @@
 
 		#region Public Methods and Operators
 
-		public System.Linq.IQueryable<ContentItem> ContentItems
+		public IQueryable<ContentItem> ContentItems
 		{
 			get { return GetAsQueryable<ContentItem>(); }
 		}
 
         #endregion
 
-		public ContentItem GetContentItem(string themePath, string path)
+		public ContentItem GetContentItem(string path)
 		{
 			ContentItem retVal = null;
 
-			path = GetFullPath(themePath, path);
+			path = path;
 			var existingItem = ContentItems.FirstOrDefault(p => p.Path == path);
 
 			if(existingItem != null)
@@ -78,11 +72,11 @@
 			return retVal;
 		}
 
-		public ContentItem[] GetContentItems(string themePath, string path)
+		public ContentItem[] GetContentItems(string path)
 		{
 			var items = new List<ContentItem>();
 
-			path = GetFullPath(themePath, path);
+			path = path;
 			var existingItem = ContentItems.Include(p => p.ChildContentItems).FirstOrDefault(p => p.Path == path);
 			if(existingItem != null)
 			{
@@ -92,9 +86,9 @@
 			return items.ToArray();
 		}
 
-		public void SaveContentItem(string themePath, ContentItem item)
+		public void SaveContentItem(ContentItem item)
 		{
-			var path = GetFullPath(themePath, item.Path);
+			var path = item.Path;
 			var existingItem = ContentItems.FirstOrDefault(p => p.Path == path);
 			if (existingItem != null)
 			{
@@ -102,19 +96,14 @@
 			}
 		}
 
-		public void DeleteContentItem(string themePath, ContentItem item)
+		public void DeleteContentItem(ContentItem item)
 		{
-			var path = GetFullPath(themePath, item.Path);
+			var path = item.Path;
 			var existingItem = ContentItems.FirstOrDefault(p => p.Path == path);
 			if (existingItem != null)
 			{
 				Remove(existingItem);
 			}
-		}
-
-		private string GetFullPath(string themePath, string path)
-		{
-			return string.Format("{0}{1}{2}", _mainPath, themePath, path);
 		}
 	}
 }

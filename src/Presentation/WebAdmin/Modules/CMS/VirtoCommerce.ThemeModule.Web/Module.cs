@@ -71,7 +71,7 @@
 							githubMainPath));
 
 					case "Database":
-						return new ThemeServiceImpl(new DatabaseFileRepositoryImpl(databaseMainPath));
+						return new ThemeServiceImpl(new DatabaseFileRepositoryImpl());
 
 					case "File System":
 						return new ThemeServiceImpl(new FileSystemFileRepositoryImpl(fileSystemMainPath));

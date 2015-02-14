@@ -1,4 +1,6 @@
-﻿namespace VirtoCommerce.Content.Data.Repositories
+﻿using System.Linq;
+
+namespace VirtoCommerce.Content.Data.Repositories
 {
 	#region
 
@@ -11,20 +13,26 @@
 
 	public class FileSystemFileRepositoryImpl : IFileRepository
 	{
-		private string _mainPath;
+		private readonly string _baseDirectoryPath;
 
-		public FileSystemFileRepositoryImpl(string mainPath)
+		public FileSystemFileRepositoryImpl(string baseDirectoryPath)
 		{
-			_mainPath = mainPath;
+			this._baseDirectoryPath = baseDirectoryPath;
 		}
 
 		#region Public Methods and Operators
 
-		public ContentItem GetContentItem(string themePath, string path)
+
+        /// <summary>
+        /// Gets content item.
+        /// </summary>
+        /// <param name="path"></param>
+        /// <returns></returns>
+		public ContentItem GetContentItem(string path)
         {
 			var retVal = new ContentItem();
 
-			var fullPath = GetFullPath(themePath, path);
+            var fullPath = GetFullPath(path);
 
 			using (var sr = File.OpenText(fullPath))
 			{
@@ -41,41 +49,23 @@
 			return retVal;
         }
 
-		public ContentItem[] GetContentItems(string themePath, string path)
+		public ContentItem[] GetContentItems(string path)
 		{
-			var fullPath = GetFullPath(themePath, path);
+            var fullPath = GetFullPath(path);
 
-			List<ContentItem> items = new List<ContentItem>();
-
-			var files = Directory.GetFiles(fullPath);
+		    var files = Directory.GetFiles(fullPath);
 			var directories = Directory.GetDirectories(fullPath);
 
-			foreach (var directory in directories)
-			{
-				var contentItem = new ContentItem();
-				contentItem.ContentType = ContentType.Directory;
-				contentItem.Name = FixName(directory, fullPath);
-				contentItem.Path = FixPath(themePath, directory);
+		    var items = directories.Select(directory => new ContentItem { ContentType = ContentType.Directory, Name = this.FixName(directory, fullPath), Path = this.RemoveBaseDirectory(directory) }).ToList();
+		    
+            items.AddRange(files.Select(file => new ContentItem { ContentType = ContentType.Directory, Name = Path.GetFileName(file), Path = this.RemoveBaseDirectory(file) }));
 
-				items.Add(contentItem);
-			}
-
-			foreach (var file in files)
-			{
-				var contentItem = new ContentItem();
-				contentItem.ContentType = ContentType.Directory;
-				contentItem.Name = Path.GetFileName(file);
-				contentItem.Path = FixPath(themePath, file);
-
-				items.Add(contentItem);
-			}
-
-			return items.ToArray();
+		    return items.ToArray();
 		}
 
-		public void SaveContentItem(string themePath, ContentItem item)
+		public void SaveContentItem(ContentItem item)
 		{
-			var fullPath = GetFullPath(themePath, item.Path);
+            var fullPath = GetFullPath(item.Path);
 
 			var directoryPath = Path.GetDirectoryName(fullPath);
 			if (!Directory.Exists(directoryPath))
@@ -94,9 +84,9 @@
 			}
 		}
 
-		public void DeleteContentItem(string themePath, ContentItem item)
+		public void DeleteContentItem(ContentItem item)
 		{
-			var fullPath = GetFullPath(themePath, item.Path);
+			var fullPath = GetFullPath(item.Path);
 
 			if (File.Exists(fullPath))
 				File.Delete(fullPath);
@@ -104,14 +94,15 @@
 
 		#endregion
 
-		private string GetFullPath(string themePath, string path)
+		private string GetFullPath(string path)
 		{
-			return string.Format("{0}{1}{2}", _mainPath, themePath, path).Replace("/", "\\");
+			//return string.Format("{0}{2}", this._baseDirectoryPath, path).Replace("/", "\\");
+            return Path.Combine(this._baseDirectoryPath, path).Replace("/", "\\");
 		}
 
-		private string FixPath(string themePath, string path)
+		private string RemoveBaseDirectory(string path)
 		{
-			return path.Replace(_mainPath, string.Empty).Replace("\\", "/").Replace(themePath, string.Empty).TrimStart('/');
+			return path.Replace(this._baseDirectoryPath, string.Empty).Replace("\\", "/").TrimStart('/');
 		}
 
 		private string FixName(string path, string fullPath)

@@ -60,9 +60,9 @@
 
 		#region Public Methods and Operators
 
-		public ContentItem GetContentItem(string themePath, string path)
+		public ContentItem GetContentItem(string path)
 		{
-			var fullPath = GetFullPath(themePath, path);
+			var fullPath = GetFullPath(path);
 
 			var retVal = new ContentItem();
 			var result = this._client.Repository.Content.GetContents(this._ownerName, this._repositoryName, fullPath).Result;
@@ -71,15 +71,15 @@
 			if (item != null)
 			{
 				retVal = ContentItemConverter.RepositoryContent2ContentItem(item);
-				retVal.Path = FixPath(themePath, retVal.Path);
+				retVal.Path = FixPath(retVal.Path);
 			}
 
 			return retVal;
 		}
 
-		public ContentItem[] GetContentItems(string themePath, string path)
+		public ContentItem[] GetContentItems(string path)
 		{
-			var fullPath = GetFullPath(themePath, path);
+			var fullPath = GetFullPath(path);
 
 			var items = new List<ContentItem>();
 			var result =
@@ -91,16 +91,16 @@
 				if (addedItem != null)
 				{
 					items.Add(addedItem);
-					addedItem.Path = FixPath(themePath, addedItem.Path);
+					addedItem.Path = FixPath(addedItem.Path);
 				}
 			}
 
 			return items.ToArray();
 		}
 
-		public void SaveContentItem(string themePath, ContentItem item)
+		public void SaveContentItem(ContentItem item)
 		{
-			var fullPath = GetFullPath(themePath, item.Path);
+			var fullPath = GetFullPath(item.Path);
 
 			var existingItem = this.GetItem(fullPath).Result;
 
@@ -128,9 +128,9 @@
 			;
 		}
 
-		public void DeleteContentItem(string themePath, ContentItem item)
+		public void DeleteContentItem(ContentItem item)
 		{
-			var fullPath = GetFullPath(themePath, item.Path);
+			var fullPath = GetFullPath(item.Path);
 
 			var existingItem = this.GetItem(fullPath).Result;
 			if (existingItem != null)
@@ -166,14 +166,14 @@
 			}
 		}
 
-		private string GetFullPath(string themePath, string path)
+		private string GetFullPath(string path)
 		{
-			return string.Format("{0}{1}{2}", _mainPath, themePath, path);
+			return string.Format("{0}{1}{2}", _mainPath, path);
 		}
 
-		private string FixPath(string themePath, string path)
+		private string FixPath(string path)
 		{
-			return path.Replace(_mainPath, string.Empty).Replace(themePath, string.Empty).TrimStart('/');
+			return path.Replace(_mainPath, string.Empty).TrimStart('/');
 		}
 
 		#endregion

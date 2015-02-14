@@ -1,4 +1,6 @@
-﻿namespace VirtoCommerce.ThemeModule.Web.Controllers.Api
+﻿using VirtoCommerce.Content.Data.Models;
+
+namespace VirtoCommerce.ThemeModule.Web.Controllers.Api
 {
 	#region
 
@@ -14,7 +16,7 @@
 
 	#endregion
 
-	[RoutePrefix("api/cms/theme")]
+	[RoutePrefix("api/cms/{storeId}/themes/{themeId}")]
 	public class ThemeController : ApiController
 	{
 		#region Fields
@@ -37,11 +39,11 @@
 				throw new ArgumentNullException("manager");
 			}
 
-			var choosenRepository = manager.GetValue(
+			var chosenRepository = manager.GetValue(
 				"VirtoCommerce.ThemeModule.MainProperties.ThemesRepositoryType",
 				string.Empty);
 
-			var themeService = factory.Invoke(choosenRepository);
+			var themeService = factory.Invoke(chosenRepository);
 			this._themeService = themeService;
 		}
 
@@ -50,42 +52,46 @@
 		#region Public Methods and Operators
 
 		[HttpDelete]
-		[Route("delete")]
-		public IHttpActionResult DeleteItem(ContentItem item, string storeId, string themeName)
+		[Route("assets")]
+		public IHttpActionResult DeleteAssets(string storeId, string themeId, string[] assetIds)
 		{
-			var domainItem = item.ToDomainModel();
-			this._themeService.DeleteContentItem(storeId, themeName, domainItem);
-			return this.Ok();
+			//var domainItem = item.ToDomainModel();
+			//this._themeService.DeleteContentItem(storeId, themeName, domainItem);
+			//return this.Ok();
+            throw new NotImplementedException();
 		}
 
 		[HttpGet]
-		[ResponseType(typeof(ContentItem))]
-		[Route("item")]
-		public IHttpActionResult GetItem(string path, string storeId, string themeName)
+		[ResponseType(typeof(ThemeAsset))]
+		[Route("assets/{*assetId}")]
+		public IHttpActionResult GetThemeAsset(string assetId, string storeId, string themeId)
 		{
-			var item = this._themeService.GetContentItem(storeId, themeName, path);
-			return this.Ok(item.ToWebModel());
+			//var item = this._themeService.GetContentItem(storeId, themeName, path);
+			//return this.Ok(item.ToWebModel());
+            throw new NotImplementedException();
 		}
 
 		[HttpGet]
 		[ResponseType(typeof(ContentItem[]))]
-		[Route("items")]
-		public IHttpActionResult GetItems(string path, string storeId, string themeName)
+		[Route("assets")]
+		public IHttpActionResult GetThemeAssets(string storeId, string themeName)
 		{
-			var items = this._themeService.GetContentItems(storeId, themeName, path);
+            //var items = this._themeService.GetContentItems(storeId, themeName, path);
 
-			var retValItems = items.Select(i => i.ToWebModel());
+            //var retValItems = items.Select(i => i.ToWebModel());
 
-			return this.Ok(retValItems.ToArray());
+            //return this.Ok(retValItems.ToArray());
+            throw new NotImplementedException();
 		}
 
 		[HttpPost]
-		[Route("save")]
+		[Route("assets")]
 		public IHttpActionResult SaveItem(ContentItem item, string storeId, string themeName)
 		{
-			var domainItem = item.ToDomainModel();
-			this._themeService.SaveContentItem(storeId, themeName, domainItem);
-			return this.Ok();
+			//var domainItem = item.ToDomainModel();
+			//this._themeService.SaveContentItem(storeId, themeName, domainItem);
+			//return this.Ok();
+            throw new NotImplementedException();
 		}
 
 		#endregion

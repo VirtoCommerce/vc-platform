@@ -11,13 +11,13 @@
 	{
 		#region Public Methods and Operators
 
-		ContentItem GetContentItem(string themePath, string path);
+		ContentItem GetContentItem(string path);
 
-		ContentItem[] GetContentItems(string themePath, string path);
+		ContentItem[] GetContentItems(string path);
 
-		void SaveContentItem(string themePath, ContentItem item);
+		void SaveContentItem(ContentItem item);
 
-		void DeleteContentItem(string themePath, ContentItem item);
+		void DeleteContentItem(ContentItem item);
 
 		#endregion
 	}

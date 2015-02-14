@@ -6,10 +6,11 @@ using System.Threading.Tasks;
 
 namespace VirtoCommerce.Content.Data.Models
 {
-	public class ThemeItem
-	{
-		public string ThemeName { get; set; }
+    public class ThemeAsset
+    {
+        public string Id { get; set; }
 
-		public string ThemePath { get; set; }
-	}
+        public string ContentType { get; set; }
+
+    }
 }
