@@ -55,10 +55,17 @@ namespace VirtoCommerce.ThemeModule.Web.Controllers.Api
 		[Route("assets")]
 		public IHttpActionResult DeleteAssets(string storeId, string themeId, string[] assetIds)
 		{
-			//var domainItem = item.ToDomainModel();
-			//this._themeService.DeleteContentItem(storeId, themeName, domainItem);
-			//return this.Ok();
-            throw new NotImplementedException();
+			_themeService.DeleteThemeAssets(assetIds);
+			return Ok();
+		}
+
+		[HttpGet]
+		[ResponseType(typeof(Theme[]))]
+		[Route("themes")]
+		public IHttpActionResult GetThemes(string storeId)
+		{
+			var items = _themeService.GetThemes(storeId);
+			return Ok(items.Select(s => s.ToWebModel()));
 		}
 
 		[HttpGet]
@@ -66,32 +73,25 @@ namespace VirtoCommerce.ThemeModule.Web.Controllers.Api
 		[Route("assets/{*assetId}")]
 		public IHttpActionResult GetThemeAsset(string assetId, string storeId, string themeId)
 		{
-			//var item = this._themeService.GetContentItem(storeId, themeName, path);
-			//return this.Ok(item.ToWebModel());
-            throw new NotImplementedException();
+			var item = _themeService.GetThemeAsset(assetId);
+			return Ok(item.ToWebModel());
 		}
 
 		[HttpGet]
-		[ResponseType(typeof(ContentItem[]))]
+		[ResponseType(typeof(ThemeAsset[]))]
 		[Route("assets")]
-		public IHttpActionResult GetThemeAssets(string storeId, string themeName)
+		public IHttpActionResult GetThemeAssets(string storeId, string themeId)
 		{
-            //var items = this._themeService.GetContentItems(storeId, themeName, path);
-
-            //var retValItems = items.Select(i => i.ToWebModel());
-
-            //return this.Ok(retValItems.ToArray());
-            throw new NotImplementedException();
+			var items = _themeService.GetThemeAssets(storeId, themeId);
+			return Ok(items.Select(s => s.ToWebModel()).ToArray());
 		}
 
 		[HttpPost]
 		[Route("assets")]
-		public IHttpActionResult SaveItem(ContentItem item, string storeId, string themeName)
+		public IHttpActionResult SaveItem(ThemeAsset item, string storeId, string themeName)
 		{
-			//var domainItem = item.ToDomainModel();
-			//this._themeService.SaveContentItem(storeId, themeName, domainItem);
-			//return this.Ok();
-            throw new NotImplementedException();
+			_themeService.SaveThemeAsset(item.ToDomainModel());
+			return Ok();
 		}
 
 		#endregion
