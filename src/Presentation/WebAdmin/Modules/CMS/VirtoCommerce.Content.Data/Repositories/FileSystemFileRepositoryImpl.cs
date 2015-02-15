@@ -7,6 +7,7 @@ namespace VirtoCommerce.Content.Data.Repositories
 	using System;
 	using System.Collections.Generic;
 	using System.IO;
+	using System.Threading.Tasks;
 	using VirtoCommerce.Content.Data.Models;
 
 	#endregion
@@ -58,7 +59,7 @@ namespace VirtoCommerce.Content.Data.Repositories
 			return directories.Select(dir => new Theme { Name = FixName(dir, fullPath), ThemePath = RemoveBaseDirectory(dir) }).ToArray();
 		}
 
-		public ContentItem[] GetContentItems(string path)
+		public ContentItem[] GetContentItems(string path, bool loadContent = false)
 		{
 			var fullPath = GetFullPath(path);
 
@@ -84,6 +85,15 @@ namespace VirtoCommerce.Content.Data.Repositories
 				{
 					directoriesQueue.Enqueue(newDirectory);
 				}
+			}
+
+			if (loadContent)
+			{
+				Parallel.ForEach(items, file =>
+				{
+					var fullFile = GetContentItem(file.Path);
+					file.Content = fullFile.Content;
+				});
 			}
 
 			return items.ToArray();

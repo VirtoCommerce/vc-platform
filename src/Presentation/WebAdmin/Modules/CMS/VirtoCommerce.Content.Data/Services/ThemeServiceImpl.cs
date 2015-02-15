@@ -30,10 +30,10 @@ namespace VirtoCommerce.Content.Data.Services
 			return items.ToArray();
 		}
 
-		public ThemeAsset[] GetThemeAssets(string storeId, string themeName)
+		public ThemeAsset[] GetThemeAssets(string storeId, string themeName, bool loadContent = false)
 		{
 			var themePath = GetThemePath(storeId, themeName);
-			return _repository.GetContentItems(themePath).Select(c => c.AsThemeAsset()).ToArray();
+			return _repository.GetContentItems(themePath, loadContent).Select(c => c.AsThemeAsset()).ToArray();
 		}
 
 		public ThemeAsset GetThemeAsset(string path)
@@ -82,5 +82,6 @@ namespace VirtoCommerce.Content.Data.Services
 		{
 			return string.Format("{0}/{1}/{2}", storeId, themeName, path);
 		}
+
 	}
 }

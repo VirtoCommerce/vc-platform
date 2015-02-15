@@ -52,6 +52,17 @@ namespace VirtoCommerce.Content.Tests
 		}
 
 		[Fact]
+		public void GitHubRepositoryThemeServiceGetContentItemsWithFullContentTest()
+		{
+			var service = GetServiceWithGitHubRepository();
+
+			var items = service.GetThemeAssets("Apple", "Simple", true);
+
+			Assert.Equal(items.Count(i => string.IsNullOrEmpty(i.Content)), 0);
+			Assert.Equal(items.Length, 69);
+		}
+
+		[Fact]
 		public void GitHubRepositoryThemeServiceGetItemTest()
 		{
 			var service = GetServiceWithGitHubRepository();

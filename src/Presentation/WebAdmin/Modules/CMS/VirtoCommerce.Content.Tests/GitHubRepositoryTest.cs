@@ -61,6 +61,19 @@
 		}
 
 		[Fact]
+		public void GetContentItemsWithFullContentRepositoryTest()
+		{
+			var repository = GetRepository();
+
+			var items = repository.GetContentItems("Apple/Simple", true);
+
+			Assert.Equal(items.Length, 69);
+			Assert.Equal(items[0].Path, "Apple/Simple/assets/apple-touch-icon-114x114.png");
+			Assert.Equal(items[0].Name, "apple-touch-icon-114x114.png");
+			Assert.Equal(items.Count(i => string.IsNullOrEmpty(i.Content)), 0);
+		}
+
+		[Fact]
 		public void GetItemRepositoryTest()
 		{
 			var repository = GetRepository();

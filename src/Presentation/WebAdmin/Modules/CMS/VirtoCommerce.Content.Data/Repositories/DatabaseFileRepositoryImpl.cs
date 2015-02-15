@@ -78,7 +78,7 @@
 				.ToArray();
 		}
 
-		public ContentItem[] GetContentItems(string path)
+		public ContentItem[] GetContentItems(string path, bool loadContent = false)
 		{
 			return ContentItems.Where(i => i.Path.Contains(path)).ToArray();
 		}

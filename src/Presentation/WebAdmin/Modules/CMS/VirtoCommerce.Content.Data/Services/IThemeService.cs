@@ -6,7 +6,7 @@ namespace VirtoCommerce.Content.Data.Services
 	{
 		Theme[] GetThemes(string storeId);
 
-		ThemeAsset[] GetThemeAssets(string storeId, string themeId);
+		ThemeAsset[] GetThemeAssets(string storeId, string themeId, bool loadContent = false);
 		ThemeAsset GetThemeAsset(string assetKey);
 
 		void SaveThemeAsset(ThemeAsset asset);

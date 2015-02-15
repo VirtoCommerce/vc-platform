@@ -13,7 +13,7 @@
 
 		ContentItem GetContentItem(string path);
 
-		ContentItem[] GetContentItems(string path);
+		ContentItem[] GetContentItems(string path, bool loadContent = false);
 
 		Theme[] GetThemes(string storePath);
 

@@ -87,7 +87,7 @@
 			return themes.Select(theme => new Theme { Name = theme.Name, ThemePath = FixPath(theme.Path) }).ToArray();
 		}
 
-		public ContentItem[] GetContentItems(string path)
+		public ContentItem[] GetContentItems(string path, bool loadContent = false)
 		{
 			var fullPath = GetFullPath(path);
 
@@ -126,6 +126,15 @@
 			foreach(var file in files)
 			{
 				file.Path = FixPath(file.Path);
+			}
+
+			if (loadContent)
+			{
+				Parallel.ForEach(files, file =>
+				{
+					var fullFile = GetContentItem(file.Path);
+					file.Content = fullFile.Content;
+				});
 			}
 
 			return files.ToArray();

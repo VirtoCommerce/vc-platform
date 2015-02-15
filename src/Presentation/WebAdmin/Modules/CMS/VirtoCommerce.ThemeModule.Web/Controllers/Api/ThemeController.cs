@@ -94,6 +94,15 @@ namespace VirtoCommerce.ThemeModule.Web.Controllers.Api
 			return Ok();
 		}
 
+		[HttpGet]
+		[Route("fulltheme")]
+		[Route ]
+		public IHttpActionResult GetFullTheme(string storeId, string themeId)
+		{
+			_themeService.GetThemeAssets(storeId, themeId, true);
+			return Ok();
+		}
+
 		#endregion
 	}
 }
