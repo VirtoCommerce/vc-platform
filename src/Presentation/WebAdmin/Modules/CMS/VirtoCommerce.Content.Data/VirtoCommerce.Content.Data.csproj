@@ -56,13 +56,12 @@
   <ItemGroup>
     <Compile Include="Converters\ContentItemConverter.cs" />
     <Compile Include="Converters\ThemeItemConverter.cs" />
-    <Compile Include="Migrations\201502141328216_Initial.cs" />
-    <Compile Include="Migrations\201502141328216_Initial.Designer.cs">
-      <DependentUpon>201502141328216_Initial.cs</DependentUpon>
+    <Compile Include="Migrations\201502151704128_Initial.cs" />
+    <Compile Include="Migrations\201502151704128_Initial.Designer.cs">
+      <DependentUpon>201502151704128_Initial.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\ContentItem.cs" />
-    <Compile Include="Models\ContentType.cs" />
     <Compile Include="Models\Theme.cs" />
     <Compile Include="Models\ThemeAsset.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -88,8 +87,8 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201502141328216_Initial.resx">
-      <DependentUpon>201502141328216_Initial.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201502151704128_Initial.resx">
+      <DependentUpon>201502151704128_Initial.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

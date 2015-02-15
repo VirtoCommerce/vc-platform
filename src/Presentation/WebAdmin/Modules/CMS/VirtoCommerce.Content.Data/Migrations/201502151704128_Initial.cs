@@ -18,20 +18,14 @@ namespace VirtoCommerce.Content.Data.Migrations
                         ModifiedBy = c.String(),
                         ModifiedDate = c.DateTime(),
                         Name = c.String(),
-                        ParentContentItemId = c.String(maxLength: 128),
                         Path = c.String(),
-                        Type = c.String(),
                     })
-                .PrimaryKey(t => t.Id)
-                .ForeignKey("dbo.ContentItem", t => t.ParentContentItemId)
-                .Index(t => t.ParentContentItemId);
+                .PrimaryKey(t => t.Id);
             
         }
         
         public override void Down()
         {
-            DropForeignKey("dbo.ContentItem", "ParentContentItemId", "dbo.ContentItem");
-            DropIndex("dbo.ContentItem", new[] { "ParentContentItemId" });
             DropTable("dbo.ContentItem");
         }
     }

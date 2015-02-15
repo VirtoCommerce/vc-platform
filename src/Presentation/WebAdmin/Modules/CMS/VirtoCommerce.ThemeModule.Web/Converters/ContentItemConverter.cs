@@ -18,11 +18,9 @@
 
             retVal.Content = item.Content;
             retVal.CreatedDate = DateTime.UtcNow;
-            retVal.ContentType = item.Type == Models.ContentType.Directory ? ContentType.Directory : ContentType.File;
             retVal.Name = item.Name;
             retVal.Path = item.Path;
-            retVal.ParentContentItemId = item.ParentContentItemId;
-
+            
             return retVal;
         }
 
@@ -33,10 +31,6 @@
             retVal.Content = item.Content;
             retVal.Name = item.Name;
             retVal.Path = item.Path;
-            retVal.ParentContentItemId = item.ParentContentItemId;
-            retVal.Type = item.ContentType == ContentType.Directory
-                ? Models.ContentType.Directory
-                : Models.ContentType.File;
 
             return retVal;
         }

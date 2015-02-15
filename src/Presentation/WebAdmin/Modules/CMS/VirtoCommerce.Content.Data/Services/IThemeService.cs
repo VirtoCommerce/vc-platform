@@ -5,12 +5,11 @@ namespace VirtoCommerce.Content.Data.Services
 	public interface IThemeService
 	{
 		Theme[] GetThemes(string storeId);
-		//void SetThemeAsActive(string storeId, string themeName);
 
 		ThemeAsset[] GetThemeAssets(string storeId, string themeId);
-        ThemeAsset GetThemeAsset(string storeId, string themeId, string assetKey);
+		ThemeAsset GetThemeAsset(string assetKey);
 
-		void SaveThemeAsset(string storeId, string themeName, ThemeAsset asset);
-		void DeleteThemeAssets(string storeId, string themeName, string[] assetKey);
+		void SaveThemeAsset(ThemeAsset asset);
+		void DeleteThemeAssets(string[] assetKey);
 	}
 }

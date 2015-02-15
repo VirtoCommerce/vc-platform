@@ -23,16 +23,16 @@ namespace VirtoCommerce.Content.Data.Repositories
 		#region Public Methods and Operators
 
 
-        /// <summary>
-        /// Gets content item.
-        /// </summary>
-        /// <param name="path"></param>
-        /// <returns></returns>
+		/// <summary>
+		/// Gets content item.
+		/// </summary>
+		/// <param name="path"></param>
+		/// <returns></returns>
 		public ContentItem GetContentItem(string path)
-        {
+		{
 			var retVal = new ContentItem();
 
-            var fullPath = GetFullPath(path);
+			var fullPath = GetFullPath(path);
 
 			using (var sr = File.OpenText(fullPath))
 			{
@@ -41,31 +41,57 @@ namespace VirtoCommerce.Content.Data.Repositories
 				var content = sr.ReadToEnd();
 
 				retVal.Content = content;
-				retVal.ContentType = ContentType.File;
 				retVal.Name = itemName;
 				retVal.Path = path;
 			}
 
 			return retVal;
-        }
+		}
+
+
+		public Theme[] GetThemes(string storePath)
+		{
+			var fullPath = GetFullPath(storePath);
+
+			var directories = Directory.GetDirectories(fullPath);
+
+			return directories.Select(dir => new Theme { Name = FixName(dir, fullPath), ThemePath = RemoveBaseDirectory(dir) }).ToArray();
+		}
 
 		public ContentItem[] GetContentItems(string path)
 		{
-            var fullPath = GetFullPath(path);
+			var fullPath = GetFullPath(path);
 
-		    var files = Directory.GetFiles(fullPath);
+			var directoriesQueue = new Queue<string>();
+
+			var files = Directory.GetFiles(fullPath);
 			var directories = Directory.GetDirectories(fullPath);
 
-		    var items = directories.Select(directory => new ContentItem { ContentType = ContentType.Directory, Name = this.FixName(directory, fullPath), Path = this.RemoveBaseDirectory(directory) }).ToList();
-		    
-            items.AddRange(files.Select(file => new ContentItem { ContentType = ContentType.Directory, Name = Path.GetFileName(file), Path = this.RemoveBaseDirectory(file) }));
+			foreach (var directory in directories)
+			{
+				directoriesQueue.Enqueue(directory);
+			}
 
-		    return items.ToArray();
+			var items = files.Select(file => new ContentItem { Name = Path.GetFileName(file), Path = this.RemoveBaseDirectory(file) }).ToList();
+
+			while (directoriesQueue.Count > 0)
+			{
+				var directory = directoriesQueue.Dequeue();
+				var newDirectories = Directory.GetDirectories(directory);
+				var newFiles = Directory.GetFiles(directory);
+				items.AddRange(newFiles.Select(file => new ContentItem { Name = Path.GetFileName(file), Path = this.RemoveBaseDirectory(file) }));
+				foreach (var newDirectory in newDirectories)
+				{
+					directoriesQueue.Enqueue(newDirectory);
+				}
+			}
+
+			return items.ToArray();
 		}
 
 		public void SaveContentItem(ContentItem item)
 		{
-            var fullPath = GetFullPath(item.Path);
+			var fullPath = GetFullPath(item.Path);
 
 			var directoryPath = Path.GetDirectoryName(fullPath);
 			if (!Directory.Exists(directoryPath))
@@ -73,7 +99,7 @@ namespace VirtoCommerce.Content.Data.Repositories
 				Directory.CreateDirectory(directoryPath);
 			}
 
-			using(var fs = new FileStream(fullPath, FileMode.OpenOrCreate, FileAccess.Write))
+			using (var fs = new FileStream(fullPath, FileMode.OpenOrCreate, FileAccess.Write))
 			{
 				using (var sw = new StreamWriter(fs))
 				{
@@ -97,7 +123,7 @@ namespace VirtoCommerce.Content.Data.Repositories
 		private string GetFullPath(string path)
 		{
 			//return string.Format("{0}{2}", this._baseDirectoryPath, path).Replace("/", "\\");
-            return Path.Combine(this._baseDirectoryPath, path).Replace("/", "\\");
+			return Path.Combine(this._baseDirectoryPath, path).Replace("/", "\\");
 		}
 
 		private string RemoveBaseDirectory(string path)

@@ -31,123 +31,61 @@ namespace VirtoCommerce.Content.Tests
 
 		//	var repository = GetRepository();
 
-		//	var contentItem = new ContentItem
+		//	var file1 = new ContentItem
 		//	{
 		//		Id = Guid.NewGuid().ToString(),
-		//		ContentType = ContentType.Directory,
-		//		Path = "Apple",
-		//		Name = "Apple",
-		//		CreatedDate = DateTime.UtcNow
-		//	};
-
-		//	repository.Add(contentItem);
-		//	repository.UnitOfWork.Commit();
-
-		//	var themeOne = new ContentItem
-		//	{
-		//		Id = Guid.NewGuid().ToString(),
-		//		ContentType = ContentType.Directory,
-		//		Path = "Apple/Simple",
-		//		Name = "Simple",
-		//		CreatedDate = DateTime.UtcNow
-		//	};
-
-		//	var themeTwo = new ContentItem
-		//	{
-		//		Id = Guid.NewGuid().ToString(),
-		//		ContentType = ContentType.Directory,
-		//		Path = "Apple/Timber",
-		//		Name = "Timber",
-		//		CreatedDate = DateTime.UtcNow
-		//	};
-
-		//	contentItem.ChildContentItems.Add(themeOne);
-		//	contentItem.ChildContentItems.Add(themeTwo);
-		//	repository.Update(contentItem);
-		//	repository.UnitOfWork.Commit();
-
-		//	var themeOneInnerFolder1 = new ContentItem
-		//	{
-		//		Id = Guid.NewGuid().ToString(),
-		//		ContentType = ContentType.Directory,
-		//		Path = "Apple/Simple/layout",
-		//		Name = "layout",
-		//		CreatedDate = DateTime.UtcNow
-		//	};
-
-		//	var themeOneInnerFolder2 = new ContentItem
-		//	{
-		//		Id = Guid.NewGuid().ToString(),
-		//		ContentType = ContentType.Directory,
-		//		Path = "Apple/Simple/templates",
-		//		Name = "templates",
-		//		CreatedDate = DateTime.UtcNow
-		//	};
-
-		//	themeOne.ChildContentItems.Add(themeOneInnerFolder1);
-		//	themeOne.ChildContentItems.Add(themeOneInnerFolder2);
-		//	repository.Update(themeOne);
-		//	repository.UnitOfWork.Commit();
-
-		//	var themeOneInnerFolder1InnerFile = new ContentItem
-		//	{
-		//		Id = Guid.NewGuid().ToString(),
-		//		ContentType = ContentType.File,
 		//		Path = "Apple/Simple/layout/theme.liquid",
 		//		Name = "theme.liquid",
 		//		CreatedDate = DateTime.UtcNow,
 		//		Content = item.Content
 		//	};
 
-		//	themeOneInnerFolder1.ChildContentItems.Add(themeOneInnerFolder1InnerFile);
-		//	repository.Update(themeOneInnerFolder1);
-		//	repository.UnitOfWork.Commit();
+		//	repository.Add(file1);
 
-		//	var themeOneInnerFolder2InnerFolder = new ContentItem
+		//	var file2 = new ContentItem
 		//	{
 		//		Id = Guid.NewGuid().ToString(),
-		//		ContentType = ContentType.Directory,
-		//		Path = "Apple/Simple/templates/customer",
-		//		Name = "customer",
-		//		CreatedDate = DateTime.UtcNow
-		//	};
-
-		//	var themeOneInnerFolder2InnerFile = new ContentItem
-		//	{
-		//		Id = Guid.NewGuid().ToString(),
-		//		ContentType = ContentType.File,
 		//		Path = "Apple/Simple/templates/404.liquid",
 		//		Name = "404.liquid",
 		//		CreatedDate = DateTime.UtcNow,
 		//		Content = item.Content
 		//	};
 
-		//	themeOneInnerFolder2.ChildContentItems.Add(themeOneInnerFolder2InnerFolder);
-		//	themeOneInnerFolder2.ChildContentItems.Add(themeOneInnerFolder2InnerFile);
-		//	repository.Update(themeOneInnerFolder2);
+		//	repository.Add(file2);
+
+		//	var file3 = new ContentItem
+		//	{
+		//		Id = Guid.NewGuid().ToString(),
+		//		Path = "Apple/Timber/templates/404.liquid",
+		//		Name = "404.liquid",
+		//		CreatedDate = DateTime.UtcNow,
+		//		Content = item.Content
+		//	};
+
+		//	repository.Add(file3);
 		//	repository.UnitOfWork.Commit();
 		//}
 
 		[Fact]
-		public void GetRootCollectionRepositoryTest()
+		public void GetThemesRepositoryTest()
 		{
 			var repository = GetRepository();
 
-			var items = repository.GetContentItems("Apple");
+			var items = repository.GetThemes("Apple");
 
 			Assert.Equal(items.Length, 2);
-			Assert.Equal(items.Count(i => i.Path == "Apple/Simple"), 1);
+			Assert.Equal(items.Count(i => i.ThemePath == "Apple/Simple"), 1);
 		}
 
 		[Fact]
-		public void GetCollectionRepositoryTest()
+		public void GetContentItemsRepositoryTest()
 		{
 			var repository = GetRepository();
 
-			var items = repository.GetContentItems("Apple/Simple/templates");
+			var items = repository.GetContentItems("Apple/Simple");
 
 			Assert.Equal(items.Length, 2);
-			Assert.Equal(items.Count(i => i.Path == "Apple/Simple/templates/customer"), 1);
+			Assert.Equal(items.Count(i => i.Path == "Apple/Simple/templates/404.liquid"), 1);
 		}
 
 		[Fact]
@@ -175,9 +113,9 @@ namespace VirtoCommerce.Content.Tests
 
 			repository.SaveContentItem(content);
 
-			var items = repository.GetContentItems("Apple/Simple/new");
+			var items = repository.GetContentItems("Apple/Simple");
 
-			Assert.Equal(items.Length, 1);
+			Assert.Equal(items.Length, 3);
 
 			var item = repository.GetContentItem("Apple/Simple/new/new123.liquid");
 
@@ -189,9 +127,9 @@ namespace VirtoCommerce.Content.Tests
 
 			repository.SaveContentItem(content);
 
-			items = repository.GetContentItems("Apple/Simple/new");
+			items = repository.GetContentItems("Apple/Simple");
 
-			Assert.Equal(items.Length, 1);
+			Assert.Equal(items.Length, 3);
 
 			item = repository.GetContentItem("Apple/Simple/new/new123.liquid");
 
@@ -202,9 +140,9 @@ namespace VirtoCommerce.Content.Tests
 
 			repository.DeleteContentItem(content);
 
-			items = repository.GetContentItems("Apple/Simple/new");
+			items = repository.GetContentItems("Apple/Simple");
 
-			Assert.Equal(items.Length, 0);
+			Assert.Equal(items.Length, 2);
 		}
 	}
 }

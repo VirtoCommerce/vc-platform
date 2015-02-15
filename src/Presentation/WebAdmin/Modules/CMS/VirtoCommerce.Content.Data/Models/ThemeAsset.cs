@@ -12,5 +12,6 @@ namespace VirtoCommerce.Content.Data.Models
 
         public string ContentType { get; set; }
 
+		public string Content { get; set; }
     }
 }

@@ -14,26 +14,12 @@ using VirtoCommerce.Foundation.Frameworks;
     {
 		public ContentItem()
 		{
-			ChildContentItems = new NullCollection<ContentItem>();
 		}
 
         #region Public Properties
 
         //[Required]
         public string Content { get; set; }
-
-        [NotMapped]
-        public ContentType ContentType
-        {
-            get
-            {
-                return (ContentType)Enum.Parse(typeof(ContentType), this.Type);
-            }
-            set
-            {
-                this.Type = value.ToString();
-            }
-        }
 
 		//[Required]
 		//[StringLength(64)]
@@ -50,18 +36,8 @@ using VirtoCommerce.Foundation.Frameworks;
         //[Required]
         public string Name { get; set; }
 
-        public virtual ContentItem ParentContentItem { get; set; }
-
-        //[StringLength(128)]
-        public string ParentContentItemId { get; set; }
-
-		public virtual ICollection<ContentItem> ChildContentItems { get; set; }
-
         //[Required]
         public string Path { get; set; }
-
-        //[Required]
-        public string Type { get; set; }
 
         #endregion
     }

@@ -37,25 +37,27 @@
 		#region Public Methods and Operators
 
 		[Fact]
-		public void GetRootCollectionRepositoryTest()
+		public void GetThemesRepositoryTest()
 		{
 			var repository = GetRepository();
 
-			var items = repository.GetContentItems("Apple");
+			var items = repository.GetThemes("Apple");
 
 			Assert.Equal(items.Length, 2);
-			Assert.Equal(items[0].Path, "Apple/Simple");
+			Assert.Equal(items[0].ThemePath, "Apple/Simple");
+			Assert.Equal(items[0].Name, "Simple");
 		}
 
 		[Fact]
-		public void GetCollectionRepositoryTest()
+		public void GetContentItemsRepositoryTest()
 		{
 			var repository = GetRepository();
 
-			var items = repository.GetContentItems("Apple/Simple/templates");
+			var items = repository.GetContentItems("Apple/Simple");
 
-			Assert.Equal(items.Length, 13);
-			Assert.Equal(items[0].Path, "Apple/Simple/templates/404.liquid");
+			Assert.Equal(items.Length, 69);
+			Assert.Equal(items[0].Path, "Apple/Simple/assets/apple-touch-icon-114x114.png");
+			Assert.Equal(items[0].Name, "apple-touch-icon-114x114.png");
 		}
 
 		[Fact]
@@ -80,9 +82,9 @@
 
 			repository.SaveContentItem(content);
 
-			var items = repository.GetContentItems("Apple/Simple/new");
+			var items = repository.GetContentItems("Apple/Simple");
 
-			Assert.Equal(items.Length, 1);
+			Assert.Equal(items.Length, 70);
 
 			var item = repository.GetContentItem("Apple/Simple/new/new123.liquid");
 
@@ -94,9 +96,9 @@
 
 			repository.SaveContentItem(content);
 
-			items = repository.GetContentItems("Apple/Simple/new");
+			items = repository.GetContentItems("Apple/Simple");
 
-			Assert.Equal(items.Length, 1);
+			Assert.Equal(items.Length, 70);
 
 			item = repository.GetContentItem("Apple/Simple/new/new123.liquid");
 
@@ -107,9 +109,9 @@
 
 			repository.DeleteContentItem(content);
 
-			items = repository.GetContentItems("Apple/Simple/");
+			items = repository.GetContentItems("Apple/Simple");
 
-			Assert.Equal(items.Where(i => i.Path.Contains("new")).Count(), 0);
+			Assert.Equal(items.Length, 69);
 		}
 
 		#endregion

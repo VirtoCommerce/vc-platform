@@ -15,6 +15,8 @@
 
 		ContentItem[] GetContentItems(string path);
 
+		Theme[] GetThemes(string storePath);
+
 		void SaveContentItem(ContentItem item);
 
 		void DeleteContentItem(ContentItem item);

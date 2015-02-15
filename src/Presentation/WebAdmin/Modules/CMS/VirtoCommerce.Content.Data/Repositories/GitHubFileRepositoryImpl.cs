@@ -70,32 +70,65 @@
 			var item = result.SingleOrDefault();
 			if (item != null)
 			{
-				retVal = ContentItemConverter.RepositoryContent2ContentItem(item);
+				retVal = item.ToContentItem();
 				retVal.Path = FixPath(retVal.Path);
 			}
 
 			return retVal;
 		}
 
+		public Theme[] GetThemes(string storePath)
+		{
+			var fullPath = GetFullPath(storePath);
+
+			var themes = this._client.Repository.Content.GetContents(this._ownerName, this._repositoryName, fullPath)
+					.Result.Where(s => s.Type == ContentType.Dir);
+
+			return themes.Select(theme => new Theme { Name = theme.Name, ThemePath = FixPath(theme.Path) }).ToArray();
+		}
+
 		public ContentItem[] GetContentItems(string path)
 		{
 			var fullPath = GetFullPath(path);
 
-			var items = new List<ContentItem>();
 			var result =
 				this._client.Repository.Content.GetContents(this._ownerName, this._repositoryName, fullPath)
 					.Result.Where(s => s.Type == ContentType.Dir || s.Type == ContentType.File);
-			foreach (var item in result)
+
+			var directories = result.Where(s => s.Type == ContentType.Dir).Select(s => s.Path);
+			var files = result.Where(s => s.Type == ContentType.File).Select(file => file.ToContentItem()).ToList();
+
+			var directoriesQueue = new Queue<string>();
+
+			foreach(var directory in directories)
 			{
-				var addedItem = ContentItemConverter.RepositoryContent2ContentItem(item);
-				if (addedItem != null)
-				{
-					items.Add(addedItem);
-					addedItem.Path = FixPath(addedItem.Path);
-				}
+				directoriesQueue.Enqueue(directory);
 			}
 
-			return items.ToArray();
+			while (directoriesQueue.Count > 0)
+			{
+				var directory = directoriesQueue.Dequeue();
+				result =
+					this._client.Repository.Content.GetContents(this._ownerName, this._repositoryName, directory)
+						.Result.Where(s => s.Type == ContentType.Dir || s.Type == ContentType.File);
+
+				var newDirectories = result.Where(s => s.Type == ContentType.Dir).Select(s => s.Path);
+				var newFiles = result.Where(s => s.Type == ContentType.File).Select(file => file.ToContentItem());
+
+				foreach (var newDirectory in newDirectories)
+				{
+					directoriesQueue.Enqueue(newDirectory);
+				}
+
+				files.AddRange(newFiles);
+			}
+
+			foreach(var file in files)
+			{
+				file.Path = FixPath(file.Path);
+			}
+
+			return files.ToArray();
 		}
 
 		public void SaveContentItem(ContentItem item)

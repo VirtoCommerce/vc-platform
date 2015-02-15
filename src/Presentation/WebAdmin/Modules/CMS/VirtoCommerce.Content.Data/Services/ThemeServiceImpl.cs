@@ -26,45 +26,41 @@ namespace VirtoCommerce.Content.Data.Services
 		{
 			var themePath = GetThemePath(storeId, string.Empty);
 
-			var items = _repository.GetContentItems(themePath);
-			var themes = items.Where(i => i.ContentType == ContentType.Directory).Select(x=>x.AsTheme()); 
-			return themes.ToArray();
+			var items = _repository.GetThemes(themePath);
+			return items.ToArray();
 		}
 
 		public ThemeAsset[] GetThemeAssets(string storeId, string themeName)
 		{
 			var themePath = GetThemePath(storeId, themeName);
-			return _repository.GetContentItems(themeName).Select(c=>c.AsThemeAsset()).ToArray();
+			return _repository.GetContentItems(themePath).Select(c => c.AsThemeAsset()).ToArray();
 		}
 
-		public ThemeAsset GetThemeAsset(string storeId, string themeName, string path)
+		public ThemeAsset GetThemeAsset(string path)
 		{
 			lock (_lockObject)
 			{
-				var themePath = GetThemePath(storeId, themeName);
 				return _repository.GetContentItem(path).AsThemeAsset();
 			}
 		}
 
-		public void SaveThemeAsset(string storeId, string themeName, Models.ThemeAsset asset)
+		public void SaveThemeAsset(Models.ThemeAsset asset)
 		{
 			lock (_lockObject)
 			{
-				var themePath = GetThemePath(storeId, themeName);
 				_repository.SaveContentItem(asset.AsContentItem());
 			}
 		}
 
-        public void DeleteThemeAssets(string storeId, string themeName, string[] assetIds)
+		public void DeleteThemeAssets(params string[] assetIds)
 		{
 			lock (_lockObject)
 			{
-				var themePath = GetThemePath(storeId, themeName);
-			    foreach (var assetId in assetIds)
-			    {
-                    _repository.DeleteContentItem(new ContentItem() { Id = assetId });    
-			    }
-				
+				foreach (var assetId in assetIds)
+				{
+					_repository.DeleteContentItem(new ContentItem() { Path = assetId });
+				}
+
 			}
 		}
 
@@ -75,16 +71,16 @@ namespace VirtoCommerce.Content.Data.Services
 
 		private string GetThemePath(string storeId, string themeName)
 		{
-			if(string.IsNullOrEmpty(themeName))
+			if (string.IsNullOrEmpty(themeName))
 			{
-				return string.Format("{0}/", storeId);
+				return string.Format("{0}", storeId);
 			}
-			return string.Format("{0}/{1}/", storeId, themeName);
+			return string.Format("{0}/{1}", storeId, themeName);
 		}
 
 		private string GetFullPath(string storeId, string themeName, string path)
 		{
 			return string.Format("{0}/{1}/{2}", storeId, themeName, path);
 		}
-    }
+	}
 }
