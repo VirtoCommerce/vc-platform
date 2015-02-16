@@ -2525,6 +2525,7 @@ fieldset + fieldset
     .form-input.__number
     {
         height: 34px;
+        position: relative;
     }
 
     .form-group .form-t
@@ -3371,11 +3372,12 @@ fieldset + fieldset
 /* Blade lists */
 .list.__items
 {
-	margin: 0 -20px;
+	margin: 0 -20px 15px;
 }
 
 	.__items .list-item
 	{
+        background: #fff;
 		border-bottom: 1px solid #dee9f0;
 		cursor: pointer;
         display: block;
@@ -4560,7 +4562,7 @@ fieldset + fieldset
 
 	.blade .blade-content.__gray
 	{
-		background-color: #eee;
+		background-color: #f3f3f3;
 	}
 
 	.blade .blade-content.__medium-wide
