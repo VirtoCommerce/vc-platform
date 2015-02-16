@@ -26,6 +26,7 @@ namespace VirtoCommerce.CatalogModule.Web.Converters
 				foreach (var property in properties)
 				{
 					var webModelProperty = property.ToWebModel();
+					webModelProperty.Catalog = null;
 					webModelProperty.Values = new List<webModel.PropertyValue>();
 					webModelProperty.IsManageable = true;
 					webModelProperty.IsReadOnly = property.Type != moduleModel.PropertyType.Catalog;
