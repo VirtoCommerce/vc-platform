@@ -22,6 +22,9 @@ using VirtoCommerce.Foundation.Frameworks;
         public string Content { get; set; }
 
 		//[Required]
+		public string ContentType { get; set; }
+
+		//[Required]
 		//[StringLength(64)]
 		public string CreatedBy { get; set; }
 

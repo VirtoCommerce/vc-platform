@@ -39,7 +39,15 @@
 					.Property(x => x.Id);
 
 			modelBuilder.Entity<ContentItem>().ToTable("ContentItem");
+
 			#endregion
+			#region Themes
+			modelBuilder.Entity<Theme>().HasKey(x => x.Id)
+					.Property(x => x.Id);
+
+			modelBuilder.Entity<Theme>().ToTable("ContentTheme");
+			#endregion
+
 		}
 
 		#endregion
@@ -49,6 +57,11 @@
 		public IQueryable<ContentItem> ContentItems
 		{
 			get { return GetAsQueryable<ContentItem>(); }
+		}
+
+		public IQueryable<Theme> Themes
+		{
+			get { return GetAsQueryable<Theme>(); }
 		}
 
 		#endregion
@@ -70,12 +83,9 @@
 		{
 			var path = string.Format("{0}/", storePath);
 
-			var items = ContentItems.Where(c => c.Path.StartsWith(storePath)).ToArray();
+			var items = Themes.Where(c => c.ThemePath.StartsWith(storePath)).ToArray();
 
-			return items.Select(c => c.Path.Split('/')[1])
-				.Distinct()
-				.Select(c => new Theme { Name = c, ThemePath = string.Format("{0}/{1}", storePath, c) })
-				.ToArray();
+			return items;
 		}
 
 		public ContentItem[] GetContentItems(string path, bool loadContent = false)
@@ -83,9 +93,8 @@
 			return ContentItems.Where(i => i.Path.Contains(path)).ToArray();
 		}
 
-		public void SaveContentItem(ContentItem item)
+		public void SaveContentItem(string path, ContentItem item)
 		{
-			var path = item.Path;
 			var existingItem = ContentItems.FirstOrDefault(p => p.Path == path);
 			if (existingItem != null)
 			{
@@ -94,15 +103,15 @@
 			}
 			else
 			{
+				item.Path = path;
 				Add(item);
 			}
 
 			UnitOfWork.Commit();
 		}
 
-		public void DeleteContentItem(ContentItem item)
+		public void DeleteContentItem(string path)
 		{
-			var path = item.Path;
 			var existingItem = ContentItems.FirstOrDefault(p => p.Path == path);
 			if (existingItem != null)
 			{

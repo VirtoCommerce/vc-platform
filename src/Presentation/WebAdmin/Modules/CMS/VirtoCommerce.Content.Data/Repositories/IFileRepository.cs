@@ -17,9 +17,9 @@
 
 		Theme[] GetThemes(string storePath);
 
-		void SaveContentItem(ContentItem item);
+		void SaveContentItem(string path, ContentItem item);
 
-		void DeleteContentItem(ContentItem item);
+		void DeleteContentItem(string path);
 
 		#endregion
 	}

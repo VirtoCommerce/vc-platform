@@ -71,7 +71,7 @@
 			if (item != null)
 			{
 				retVal = item.ToContentItem();
-				retVal.Path = FixPath(retVal.Path);
+				retVal.Path = path;
 			}
 
 			return retVal;
@@ -140,9 +140,9 @@
 			return files.ToArray();
 		}
 
-		public void SaveContentItem(ContentItem item)
+		public void SaveContentItem(string path, ContentItem item)
 		{
-			var fullPath = GetFullPath(item.Path);
+			var fullPath = GetFullPath(path);
 
 			var existingItem = this.GetItem(fullPath).Result;
 
@@ -169,9 +169,9 @@
 			;
 		}
 
-		public void DeleteContentItem(ContentItem item)
+		public void DeleteContentItem(string path)
 		{
-			var fullPath = GetFullPath(item.Path);
+			var fullPath = GetFullPath(path);
 
 			var existingItem = this.GetItem(fullPath).Result;
 			if (existingItem != null)

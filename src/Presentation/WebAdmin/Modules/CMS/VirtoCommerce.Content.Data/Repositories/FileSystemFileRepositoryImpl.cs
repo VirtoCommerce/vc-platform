@@ -99,9 +99,9 @@ namespace VirtoCommerce.Content.Data.Repositories
 			return items.ToArray();
 		}
 
-		public void SaveContentItem(ContentItem item)
+		public void SaveContentItem(string path, ContentItem item)
 		{
-			var fullPath = GetFullPath(item.Path);
+			var fullPath = GetFullPath(path);
 
 			var directoryPath = Path.GetDirectoryName(fullPath);
 			if (!Directory.Exists(directoryPath))
@@ -120,9 +120,9 @@ namespace VirtoCommerce.Content.Data.Repositories
 			}
 		}
 
-		public void DeleteContentItem(ContentItem item)
+		public void DeleteContentItem(string path)
 		{
-			var fullPath = GetFullPath(item.Path);
+			var fullPath = GetFullPath(path);
 
 			if (File.Exists(fullPath))
 				File.Delete(fullPath);

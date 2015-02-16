@@ -33,32 +33,48 @@ namespace VirtoCommerce.Content.Data.Services
 		public ThemeAsset[] GetThemeAssets(string storeId, string themeName, bool loadContent = false)
 		{
 			var themePath = GetThemePath(storeId, themeName);
-			return _repository.GetContentItems(themePath, loadContent).Select(c => c.AsThemeAsset()).ToArray();
+			var items = _repository.GetContentItems(themePath, loadContent);
+
+			foreach(var item in items)
+			{
+				item.Path = FixPath(themePath, item.Path);
+			}
+
+			return items.Select(c => c.AsThemeAsset()).ToArray();
 		}
 
-		public ThemeAsset GetThemeAsset(string path)
+		public ThemeAsset GetThemeAsset(string storeId, string themeId, string path)
 		{
 			lock (_lockObject)
 			{
-				return _repository.GetContentItem(path).AsThemeAsset();
+				var fullPath = GetFullPath(storeId, themeId, path);
+				var item = _repository.GetContentItem(fullPath);
+
+				item.Path = FixPath(GetThemePath(storeId, themeId), item.Path);
+
+				return item.AsThemeAsset();
 			}
 		}
 
-		public void SaveThemeAsset(Models.ThemeAsset asset)
+		public void SaveThemeAsset(string storeId, string themeId, Models.ThemeAsset asset)
 		{
 			lock (_lockObject)
 			{
-				_repository.SaveContentItem(asset.AsContentItem());
+				var fullPath = GetFullPath(storeId, themeId, asset.Id);
+
+				_repository.SaveContentItem(fullPath, asset.AsContentItem());
 			}
 		}
 
-		public void DeleteThemeAssets(params string[] assetIds)
+		public void DeleteThemeAssets(string storeId, string themeId, params string[] assetIds)
 		{
 			lock (_lockObject)
 			{
 				foreach (var assetId in assetIds)
 				{
-					_repository.DeleteContentItem(new ContentItem() { Path = assetId });
+					var fullPath = GetFullPath(storeId, themeId, assetId);
+
+					_repository.DeleteContentItem(fullPath);
 				}
 
 			}
@@ -81,6 +97,11 @@ namespace VirtoCommerce.Content.Data.Services
 		private string GetFullPath(string storeId, string themeName, string path)
 		{
 			return string.Format("{0}/{1}/{2}", storeId, themeName, path);
+		}
+
+		private string FixPath(string themePath, string path)
+		{
+			return path.Replace(themePath, string.Empty).Trim('/');
 		}
 
 	}
