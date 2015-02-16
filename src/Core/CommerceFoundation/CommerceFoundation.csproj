@@ -400,6 +400,7 @@
     <Compile Include="Search\SearchConnection.cs" />
     <Compile Include="Search\SearchProviders.cs" />
     <Compile Include="Security\Model\AccountState.cs" />
+    <Compile Include="Security\Model\ApiAccount.cs" />
     <Compile Include="Security\Model\RegisterType.cs" />
     <Compile Include="Frameworks\BaseEvaluationContext.cs" />
     <Compile Include="Catalogs\Services\IEvaluationPolicy.cs" />

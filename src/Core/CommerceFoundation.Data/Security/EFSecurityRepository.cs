@@ -12,8 +12,6 @@ namespace VirtoCommerce.Foundation.Data.Security
 {
 	public class EFSecurityRepository : EFRepositoryBase, ISecurityRepository
 	{
-		private readonly ISecurityEntityFactory _entityFactory;
-
 		public EFSecurityRepository()
 		{
 		}
@@ -21,26 +19,24 @@ namespace VirtoCommerce.Foundation.Data.Security
 		public EFSecurityRepository(string nameOrConnectionString)
 			: base(nameOrConnectionString)
 		{
-			this.Configuration.AutoDetectChangesEnabled = true;
-			this.Configuration.ProxyCreationEnabled = false;
+			Configuration.AutoDetectChangesEnabled = true;
+			Configuration.ProxyCreationEnabled = false;
 		}
 
 		[InjectionConstructor]
-        public EFSecurityRepository(ISecurityEntityFactory entityFactory, IInterceptor[] interceptors = null)
-            : this(SecurityConfiguration.Instance.Connection.SqlConnectionStringName, entityFactory, interceptors)
+		public EFSecurityRepository(ISecurityEntityFactory entityFactory, IInterceptor[] interceptors = null)
+			: this(SecurityConfiguration.Instance.Connection.SqlConnectionStringName, entityFactory, interceptors)
 		{
 		}
 
-        public EFSecurityRepository(string nameOrConnectionString, ISecurityEntityFactory entityFactory, IInterceptor[] interceptors = null)
-            : base(nameOrConnectionString, entityFactory, interceptors: interceptors)
-        {
-            _entityFactory = entityFactory;
+		public EFSecurityRepository(string nameOrConnectionString, ISecurityEntityFactory entityFactory, IInterceptor[] interceptors = null)
+			: base(nameOrConnectionString, entityFactory, interceptors: interceptors)
+		{
+			Database.SetInitializer(new ValidateDatabaseInitializer<EFSecurityRepository>());
 
-            Database.SetInitializer(new ValidateDatabaseInitializer<EFSecurityRepository>());
-
-            this.Configuration.AutoDetectChangesEnabled = true;
-            this.Configuration.ProxyCreationEnabled = false;
-        }
+			Configuration.AutoDetectChangesEnabled = true;
+			Configuration.ProxyCreationEnabled = false;
+		}
 
 		protected override void OnModelCreating(DbModelBuilder modelBuilder)
 		{
@@ -49,6 +45,7 @@ namespace VirtoCommerce.Foundation.Data.Security
 			MapEntity<RoleAssignment>(modelBuilder, toTable: "RoleAssignment");
 			MapEntity<RolePermission>(modelBuilder, toTable: "RolePermission");
 			MapEntity<Account>(modelBuilder, toTable: "Account");
+			MapEntity<ApiAccount>(modelBuilder, toTable: "ApiAccount");
 
 			modelBuilder.Entity<RolePermission>()
 				.HasRequired(o => o.Permission)
@@ -87,9 +84,12 @@ namespace VirtoCommerce.Foundation.Data.Security
 		{
 			get { return GetAsQueryable<Account>(); }
 		}
+
+		public IQueryable<ApiAccount> ApiAccounts
+		{
+			get { return GetAsQueryable<ApiAccount>(); }
+		}
+
 		#endregion
-
-
-	   
 	}
 }
