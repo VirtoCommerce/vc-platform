@@ -91,9 +91,9 @@
 
 			var content = new ContentItem();
 			content.Content = "Some new stuff";
-			content.Path = "Apple/Simple/new/new123.liquid";
+			var path = "Apple/Simple/new/new123.liquid";
 
-			repository.SaveContentItem(content);
+			repository.SaveContentItem(path, content);
 
 			var items = repository.GetContentItems("Apple/Simple");
 
@@ -105,9 +105,9 @@
 
 			content = new ContentItem();
 			content.Content = "Some new stuff. Changes";
-			content.Path = "Apple/Simple/new/new123.liquid";
+			path = "Apple/Simple/new/new123.liquid";
 
-			repository.SaveContentItem(content);
+			repository.SaveContentItem(path, content);
 
 			items = repository.GetContentItems("Apple/Simple");
 
@@ -117,10 +117,9 @@
 
 			Assert.True(item.Content.Contains("Some") && item.Content.Contains("Changes"));
 
-			content = new ContentItem();
-			content.Path = "Apple/Simple/new/new123.liquid";
+			path = "Apple/Simple/new/new123.liquid";
 
-			repository.DeleteContentItem(content);
+			repository.DeleteContentItem(path);
 
 			items = repository.GetContentItems("Apple/Simple");
 

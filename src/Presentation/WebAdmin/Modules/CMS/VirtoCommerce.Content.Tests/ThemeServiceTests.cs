@@ -67,9 +67,9 @@ namespace VirtoCommerce.Content.Tests
 		{
 			var service = GetServiceWithGitHubRepository();
 
-			var item = service.GetThemeAsset("Apple/Simple/layout/theme.liquid");
+			var item = service.GetThemeAsset("Apple", "Simple", "layout/theme.liquid");
 
-			Assert.Equal(item.Id, "Apple/Simple/layout/theme.liquid");
+			Assert.Equal(item.Id, "layout/theme.liquid");
 			Assert.True(item.Content.Contains("<!DO"));
 		}
 
@@ -80,36 +80,36 @@ namespace VirtoCommerce.Content.Tests
 
 			var asset = new ThemeAsset();
 			asset.Content = "Some new stuff";
-			asset.Id = "Apple/Simple/new/new123.liquid";
+			asset.Id = "new/new123.liquid";
 
-			service.SaveThemeAsset(asset);
+			service.SaveThemeAsset("Apple", "Simple", asset);
 
 			var items = service.GetThemeAssets("Apple", "Simple");
 
 			Assert.Equal(items.Length, 70);
 
-			var item = service.GetThemeAsset("Apple/Simple/new/new123.liquid");
+			var item = service.GetThemeAsset("Apple", "Simple", "new/new123.liquid");
 
 			Assert.True(item.Content.Contains("Some"));
 
 			asset = new ThemeAsset();
 			asset.Content = "Some new stuff. Changes";
-			asset.Id = "Apple/Simple/new/new123.liquid";
+			asset.Id = "new/new123.liquid";
 
-			service.SaveThemeAsset(asset);
+			service.SaveThemeAsset("Apple", "Simple", asset);
 
 			items = service.GetThemeAssets("Apple", "Simple");
 
 			Assert.Equal(items.Length, 70);
 
-			item = service.GetThemeAsset("Apple/Simple/new/new123.liquid");
+			item = service.GetThemeAsset("Apple", "Simple", "new/new123.liquid");
 
 			Assert.True(item.Content.Contains("Some") && item.Content.Contains("Changes"));
 
 			asset = new ThemeAsset();
-			asset.Id = "Apple/Simple/new/new123.liquid";
+			asset.Id = "new/new123.liquid";
 
-			service.DeleteThemeAssets(asset.Id);
+			service.DeleteThemeAssets("Apple", "Simple", asset.Id);
 
 			items = service.GetThemeAssets("Apple", "Simple");
 
