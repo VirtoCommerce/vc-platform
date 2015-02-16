@@ -80,7 +80,7 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
                 {
                     property.Values = new List<webModel.PropertyValue>();
                     property.IsManageable = true;
-                    property.IsReadOnly = property.Type == webModel.PropertyType.Category;
+					property.IsReadOnly = property.Type != webModel.PropertyType.Product && property.Type != webModel.PropertyType.Variation;
                 }
 			}
 			return Ok(retVal);
@@ -131,7 +131,7 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
                 }
 
                 property.IsManageable = true;
-                property.IsReadOnly = property.Type == webModel.PropertyType.Category;
+				property.IsReadOnly =  property.Type != webModel.PropertyType.Product && property.Type != webModel.PropertyType.Variation;
             }
 
          

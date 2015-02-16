@@ -4,6 +4,7 @@
 	{
 		Product,
 		Variation,
-		Category
+		Category,
+		Catalog
 	}
 }

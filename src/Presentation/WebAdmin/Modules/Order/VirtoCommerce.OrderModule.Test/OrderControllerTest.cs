@@ -45,7 +45,7 @@ namespace VirtoCommerce.OrderModule.Test
 		[TestMethod]
 		public void CreateNewManualOrder()
 		{
-			var testOrder = GetTestOrder("order1");
+			var testOrder = GetTestOrder("order");
 			var result = _controller.CreateOrder(testOrder) as OkNegotiatedContentResult<webModel.CustomerOrder>;
 			Assert.IsNotNull(result.Content);
 		}

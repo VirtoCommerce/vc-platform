@@ -22,10 +22,15 @@
                     b.parentBlade.refresh(data);
                 }
             });
-        } else {
-            properties.newProperty({ categoryId: b.parentBlade.currentEntityId }, function (data) {
+        } else if(b.categoryId) {
+        	properties.newCategoryProperty({ categoryId: b.categoryId }, function (data) {
                 initializeBlade(data);
             });
+        }
+        else if (b.catalogId) {
+        	properties.newCatalogProperty({ catalogId: b.catalogId }, function (data) {
+        		initializeBlade(data);
+        	});
         }
     };
 
@@ -50,6 +55,7 @@
                 newBlade.subtitle = 'Change to what it applies';
                 newBlade.controller = 'propertyTypeController';
                 newBlade.template = 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/blades/property-type.tpl.html';
+                newBlade.availablePropertyTypes = b.catalogId ? ['Catalog', 'Category', 'Product', 'Variation'] : ['Category', 'Product', 'Variation'];
                 break;
             case 'dict':
                 newBlade.title = b.origEntity.name ? b.origEntity.name : b.currentEntity.name + ' dictionary';

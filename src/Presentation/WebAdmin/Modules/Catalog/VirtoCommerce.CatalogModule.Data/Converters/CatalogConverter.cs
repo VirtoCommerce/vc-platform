@@ -19,7 +19,7 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 		/// </summary>
 		/// <param name="catalogBase"></param>
 		/// <returns></returns>
-		public static module.Catalog ToModuleModel(this foundation.CatalogBase catalogBase)
+		public static module.Catalog ToModuleModel(this foundation.CatalogBase catalogBase, module.Property[] properties = null)
 		{
 			if (catalogBase == null)
 				throw new ArgumentNullException("catalogBase");
@@ -42,7 +42,15 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 					catalogLanguage.IsDefault = catalogBase.DefaultLanguage == catalogLanguage.LanguageCode;
 					retVal.Languages.Add(catalogLanguage);
 				}
+
+				if (properties != null)
+				{
+					retVal.PropertyValues = catalog.CatalogPropertyValues.Select(x => x.ToModuleModel(properties)).ToList();
+				}
+
 			}
+
+
 
 			return retVal;
 		}
@@ -70,6 +78,14 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 			{
 				dbCatalog = new foundation.Catalog();
 				dbCatalog.CatalogLanguages = new NullCollection<foundation.CatalogLanguage>();
+
+
+				dbCatalog.CatalogPropertyValues = new NullCollection<foundation.CatalogPropertyValue>();
+				if (catalog.PropertyValues != null)
+				{
+					dbCatalog.CatalogPropertyValues = new ObservableCollection<foundation.CatalogPropertyValue>();
+					dbCatalog.CatalogPropertyValues.AddRange(catalog.PropertyValues.Select(x => x.ToFoundation<foundation.CatalogPropertyValue>()).OfType<foundation.CatalogPropertyValue>());
+				}
 				retVal = dbCatalog;
 			}
 			
@@ -88,6 +104,8 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 				}
 				retVal.DefaultLanguage = catalog.Languages.Where(x => x.IsDefault).Select(x => x.LanguageCode).FirstOrDefault();
 			}
+
+		
 
 			if (retVal.DefaultLanguage == null)
 				retVal.DefaultLanguage = "undefined";
@@ -123,6 +141,14 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 				sourceCatalog.CatalogLanguages.Patch(targetCatalog.CatalogLanguages, new CatalogLanguageComparer(),
 													 (sourceLang, targetlang) => sourceLang.Patch(targetlang));
 			}
+
+			//Property values
+			if (!sourceCatalog.CatalogPropertyValues.IsNullCollection())
+			{
+				sourceCatalog.CatalogPropertyValues.Patch(targetCatalog.CatalogPropertyValues, new PropertyValueComparer(),
+					(sourcePropValue, targetPropValue) => sourcePropValue.Patch(targetPropValue));
+			}
+
 
 		}
 

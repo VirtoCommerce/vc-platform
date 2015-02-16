@@ -117,15 +117,16 @@
 		  {
 		      name: "Add property", icon: 'fa fa-plus',
 		      executeMethod: function () {
-		          var newBlade = {
-		              id: 'editCategoryProperty',
-		              title: 'New category property',
-		              subtitle: 'enter property information',
-		              controller: 'propertyDetailController',
-		              template: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/blades/property-detail.tpl.html'
-		          };
+		      	var newBlade = {
+		      		id: 'editCategoryProperty',
+		      		categoryId: $scope.blade.currentEntity.id,
+		      		title: 'New category property',
+		      		subtitle: 'enter property information',
+		      		controller: 'propertyDetailController',
+		      		template: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/blades/property-detail.tpl.html'
+		      	};
 
-		          bladeNavigationService.showBlade(newBlade, $scope.blade);
+		      	bladeNavigationService.showBlade(newBlade, $scope.blade);
 		      },
 		      canExecuteMethod: function () {
 		          return true;
