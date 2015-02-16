@@ -117,6 +117,9 @@ IF /I "%IN_PLACE_DEPLOYMENT%" NEQ "1" (
 echo(!PREVIOUS_MANIFEST_PATH!|findstr /r /i /c:"firstDeploymentManifest$" >nul && (
 	echo First deployment. Need to initialize database. InsertSampleData = %APPSETTING_insertSampleData%
 
+	IF /I "%SQLAZURECONNSTR_DefaultConnection%" EQU "" (
+		echo Connection string is empty. Skipping database initialization.
+	) ELSE (
 	IF EXIST "%VCPS%\VirtoCommerce.PowerShell.csproj" (
 		echo Building %VCPS%\VirtoCommerce.PowerShell.csproj
 		call :ExecuteCmd "%MSBUILD_PATH%" "%VCPS%\VirtoCommerce.PowerShell.csproj" /nologo /verbosity:m /t:Build /p:Configuration=Release;SolutionDir="%DEPLOYMENT_SOURCE%\.\\" %SCM_BUILD_ARGS%
@@ -135,6 +138,7 @@ echo(!PREVIOUS_MANIFEST_PATH!|findstr /r /i /c:"firstDeploymentManifest$" >nul &
 
 	:: Clear build output
 	call :ExecuteCmd "%MSBUILD_PATH%" "%DEPLOYMENT_SOURCE%\VirtoCommerce.sln" /nologo /verbosity:m /t:Clean /p:Configuration=Release;SolutionDir="%DEPLOYMENT_SOURCE%\.\\" %SCM_BUILD_ARGS%
+	)
 ) || (
 	echo Not first deployment
 )
