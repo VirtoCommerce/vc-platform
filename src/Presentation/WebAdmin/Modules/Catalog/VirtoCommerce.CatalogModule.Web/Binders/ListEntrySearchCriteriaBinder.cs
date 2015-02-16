@@ -25,7 +25,7 @@ namespace VirtoCommerce.CatalogModule.Web.Binders
 
 			var result = new ListEntrySearchCriteria();
 
-			result.ResponseGroup = ResponseGroup.Full;
+			result.ResponseGroup = ResponseGroup.WithCatalogs | ResponseGroup.WithCategories | ResponseGroup.WithProducts;
 
 			var respGroup = qs["respGroup"].EmptyToNull();
 			if(respGroup != null)

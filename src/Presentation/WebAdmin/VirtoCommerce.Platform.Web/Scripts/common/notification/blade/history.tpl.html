@@ -1,27 +1,23 @@
-<div class="blade-content blade-medium">
+<div class="blade-content __medium-wide">
     <div class="blade-inner">
         <div class="inner-block">
             <div class="table-wrapper">
-                <table class="list notify table sortable">
+                <table class="table">
                     <thead>
                         <tr>
-                            <th ng-repeat="column in columns" ng-click="setOrder(column)" ng-class="(column.checked)?'sorted':''" class="col th">
+                            <th class="table-col" ng-repeat="column in columns" ng-click="setOrder(column)" ng-class="(column.checked) ? '__sorted' : ''">
                                 {{column.title}}
-                            <i ng-class="column.checked ? (column.reverse ?'sort-up':'sort-down') : ''" class="icon"></i>
+                                <i ng-class="column.checked ? (column.reverse ?'sort-up':'sort-down') : ''" class="table-ico fa"></i>
                             </th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr ng-click="notification.action(notification)" ng-repeat="notification in notifications" class="item notif" ng-class="'notify_' + notification.notifyType" ng-include="notification.template"></tr>
+                        <tr class="table-item" ng-class="{' __error': notification.notifyType == 'error', ' __warning': notification.notifyType == 'warning', ' __info': notification.notifyType == 'info'}" ng-click="notification.action(notification)" ng-repeat="notification in notifications" ng-include="notification.template"></tr>
                     </tbody>
-                    <tfoot>
-                        <tr>
-                            <td colspan="{{columns.length}}">
-                                <pagination boundary-links="true" max-size="pageSettings.numPages" items-per-page="pageSettings.itemsPerPageCount" total-items="pageSettings.totalItems" ng-model="pageSettings.currentPage" class="pagination-sm" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></pagination>
-                            </td>
-                        </tr>
-                    </tfoot>
                 </table>
+            </div>
+            <div class="pagination">
+                <pagination boundary-links="true" max-size="pageSettings.numPages" items-per-page="pageSettings.itemsPerPageCount" total-items="pageSettings.totalItems" ng-model="pageSettings.currentPage" class="pagination-sm" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></pagination>
             </div>
         </div>
     </div>

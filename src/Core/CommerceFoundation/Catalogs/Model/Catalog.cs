@@ -6,6 +6,8 @@ using System.Runtime.Serialization;
 using VirtoCommerce.Foundation.Frameworks;
 using System.Data.Services.Common;
 using System.Collections.ObjectModel;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace VirtoCommerce.Foundation.Catalogs.Model
 {
@@ -56,6 +58,40 @@ namespace VirtoCommerce.Foundation.Catalogs.Model
             }
 			set { _Properties = value; }
         }
+
+		private string _PropertySetId;
+		[DataMember]
+		[StringLength(128)]
+		[ForeignKey("PropertySet")]
+		public string PropertySetId
+		{
+			get
+			{
+				return _PropertySetId;
+			}
+			set
+			{
+				SetValue(ref _PropertySetId, () => this.PropertySetId, value);
+			}
+		}
+
+		[DataMember]
+		public virtual PropertySet PropertySet { get; set; }
+
+
+		ObservableCollection<CatalogPropertyValue> _PropertyValues = null;
+		[DataMember]
+		public virtual ObservableCollection<CatalogPropertyValue> CatalogPropertyValues
+		{
+			get
+			{
+				if (_PropertyValues == null)
+					_PropertyValues = new ObservableCollection<CatalogPropertyValue>();
+
+				return _PropertyValues;
+			}
+			set { _PropertyValues = value; }
+		}
 
 	    #endregion
     }

@@ -2,16 +2,17 @@
 {
     #region
 
-    using System;
-    using System.Collections.Generic;
-    using System.Net.Http;
-    using System.Threading.Tasks;
+using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Net.Http;
+using System.Threading.Tasks;
 
-    using VirtoCommerce.ApiClient.DataContracts.Search;
-    using VirtoCommerce.ApiClient.Extensions;
-    using VirtoCommerce.ApiClient.Utilities;
+using VirtoCommerce.ApiClient.DataContracts.Search;
+using VirtoCommerce.ApiClient.Extensions;
+using VirtoCommerce.ApiClient.Utilities;
     using VirtoCommerce.Web.Core.Configuration.Catalog;
-    using VirtoCommerce.Web.Core.DataContracts;
+using VirtoCommerce.Web.Core.DataContracts;
 
     #endregion
 
@@ -20,17 +21,18 @@
         #region Constructors and Destructors
 
         /// <summary>
-        ///     Initializes a new instance of the AdminManagementClient class.
+		/// Initializes a new instance of the BrowseClient class.
         /// </summary>
         /// <param name="adminBaseEndpoint">Admin endpoint</param>
-        /// <param name="token">Access token</param>
-        public BrowseClient(Uri adminBaseEndpoint, string token)
-            : base(adminBaseEndpoint, new TokenMessageProcessingHandler(token))
+		/// <param name="appId">The API application ID.</param>
+		/// <param name="secretKey">The API secret key.</param>
+		public BrowseClient(Uri adminBaseEndpoint, string appId, string secretKey)
+			: base(adminBaseEndpoint, new HmacMessageProcessingHandler(appId, secretKey))
         {
         }
 
         /// <summary>
-        ///     Initializes a new instance of the AdminManagementClient class.
+		/// Initializes a new instance of the BrowseClient class.
         /// </summary>
         /// <param name="adminBaseEndpoint">Admin endpoint</param>
         /// <param name="handler"></param>
@@ -63,12 +65,10 @@
         public virtual Task<Product> GetProductAsync(string productId, ItemResponseGroups responseGroup)
         {
             var query = new List<KeyValuePair<string, string>>
-                        {
-                            new KeyValuePair<string, string>(
-                                "responseGroup",
-                                responseGroup.GetHashCode().ToString()),
-                        };
-
+            {
+                 new KeyValuePair<string, string>("responseGroup", responseGroup.GetHashCode().ToString(CultureInfo.InvariantCulture)),
+            };
+            
             return
                 this.GetAsync<Product>(
                     CreateRequestUri(String.Format(RelativePaths.Product, productId), query.ToArray()));
@@ -77,12 +77,10 @@
         public virtual Task<Product> GetProductByCodeAsync(string code, ItemResponseGroups responseGroup)
         {
             var query = new List<KeyValuePair<string, string>>
-                        {
-                            new KeyValuePair<string, string>("code", code),
-                            new KeyValuePair<string, string>(
-                                "responseGroup",
-                                responseGroup.GetHashCode().ToString()),
-                        };
+            {
+                new KeyValuePair<string, string>("code", code),
+                 new KeyValuePair<string, string>("responseGroup", responseGroup.GetHashCode().ToString(CultureInfo.InvariantCulture)),
+            };
 
             return this.GetAsync<Product>((CreateRequestUri(RelativePaths.Products, query.ToArray())));
         }

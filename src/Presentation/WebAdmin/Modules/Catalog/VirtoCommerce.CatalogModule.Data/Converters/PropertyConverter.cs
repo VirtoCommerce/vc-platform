@@ -32,7 +32,7 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
                 ValueType = ((foundation.PropertyValueType)dbProperty.PropertyValueType).ToModuleModel(),
                 CatalogId = catalog.Id,
                 Catalog = catalog,
-                CategoryId = category.Id,
+                CategoryId = category == null ? null : category.Id,
                 Category = category,
             };
             module.PropertyType propertyType;

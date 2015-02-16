@@ -1,14 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using VirtoCommerce.Foundation.Security.Repositories;
-using VirtoCommerce.Foundation.Security.Factories;
-using VirtoCommerce.Foundation.Security;
 using Microsoft.Practices.Unity;
-using VirtoCommerce.Foundation.Security.Model;
-using VirtoCommerce.Foundation.Security.Services;
 using VirtoCommerce.Foundation.Frameworks;
+using VirtoCommerce.Foundation.Security;
+using VirtoCommerce.Foundation.Security.Factories;
+using VirtoCommerce.Foundation.Security.Model;
+using VirtoCommerce.Foundation.Security.Repositories;
+using VirtoCommerce.Foundation.Security.Services;
 
 namespace VirtoCommerce.Foundation.Data.Security
 {
@@ -20,7 +18,7 @@ namespace VirtoCommerce.Foundation.Data.Security
 		{
 		}
 
-        public DSSecurityClient(Uri serviceUri, ISecurityEntityFactory factory, ISecurityTokenInjector tokenInjector)
+		public DSSecurityClient(Uri serviceUri, ISecurityEntityFactory factory, ISecurityTokenInjector tokenInjector)
 			: base(serviceUri, factory, tokenInjector)
 		{
 		}
@@ -37,23 +35,26 @@ namespace VirtoCommerce.Foundation.Data.Security
 			get { return GetAsQueryable<Role>(); }
 		}
 
-        public IQueryable<RolePermission> RolePermissions
-        {
-            get { return GetAsQueryable<RolePermission>(); }
-        }
+		public IQueryable<RolePermission> RolePermissions
+		{
+			get { return GetAsQueryable<RolePermission>(); }
+		}
 
 		public IQueryable<RoleAssignment> RoleAssignments
 		{
 			get { return GetAsQueryable<RoleAssignment>(); }
 		}
 
-        public IQueryable<Account> Accounts
-        {
-            get { return GetAsQueryable<Account>(); }
-        }
+		public IQueryable<Account> Accounts
+		{
+			get { return GetAsQueryable<Account>(); }
+		}
+
+		public IQueryable<ApiAccount> ApiAccounts
+		{
+			get { return GetAsQueryable<ApiAccount>(); }
+		}
+
 		#endregion
-
-
-      
-    }
+	}
 }

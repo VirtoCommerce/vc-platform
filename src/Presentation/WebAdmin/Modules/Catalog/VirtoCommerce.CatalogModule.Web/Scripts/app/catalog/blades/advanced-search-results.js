@@ -19,7 +19,7 @@
                 catalog: $scope.blade.catalogId,
                 category: $scope.blade.categoryId,
                 // propertyValues: .... ,
-                respGroup: 'withItems',
+                respGroup: 'withProducts',
                 start: skip,
                 count: $scope.pageSettings.itemsPerPageCount
             },

@@ -5,9 +5,10 @@ namespace VirtoCommerce.Domain.Catalog.Model
     [Flags]
     public enum ResponseGroup
     {
-        WithItems = 1,
+        WithProducts = 1,
         WithCategories = 2,
         WithProperties = 4,
-        WithCatalogs = 8
+        WithCatalogs = 8,
+		WithVariations = 16
     }
 }

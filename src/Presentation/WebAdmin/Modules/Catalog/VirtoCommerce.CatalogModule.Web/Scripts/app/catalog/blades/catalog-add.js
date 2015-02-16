@@ -5,7 +5,7 @@
         catalogs.newCatalog({}, function (data) {
             showCatalogBlade(null, data, null);
             $scope.bladeClose();
-            $scope.blade.parentBlade.refresh();
+          
         });
     };
 
@@ -13,7 +13,7 @@
         catalogs.newVirtualCatalog({}, function (data) {
             showVirtualCatalogBlade(null, data, null);
             $scope.bladeClose();
-            $scope.blade.parentBlade.refresh();
+          
         });
     };
 

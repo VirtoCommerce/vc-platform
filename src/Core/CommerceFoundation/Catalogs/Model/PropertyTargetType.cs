@@ -13,6 +13,7 @@ namespace VirtoCommerce.Foundation.Catalogs.Model
         Bundle,
         Package,
         DynamicKit,
-        Category
+        Category,
+		Catalog
     }
 }

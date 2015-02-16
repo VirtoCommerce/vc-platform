@@ -29,9 +29,14 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
 		{
 			foundation.CatalogBase retVal = Catalogs.OfType<foundation.Catalog>()
 														 .Include(x => x.CatalogLanguages)
-                .FirstOrDefault(x => x.CatalogId == catalogId) ??
-				(foundation.CatalogBase)Catalogs.OfType<foundation.VirtualCatalog>()
-									  .FirstOrDefault(x => x.CatalogId == catalogId);
+														 .Include(x => x.CatalogPropertyValues)
+														 .Include(x => x.PropertySet.PropertySetProperties.Select(y => y.Property))
+														 .FirstOrDefault(x => x.CatalogId == catalogId);
+			if (retVal == null)
+			{
+				retVal = Catalogs.OfType<foundation.VirtualCatalog>()
+								 .FirstOrDefault(x => x.CatalogId == catalogId);
+			}
 			return retVal;
 		}
 
@@ -132,6 +137,23 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
 										.ToArray();
 			return retVal;
 		}
+		public foundation.Catalog GetPropertyCatalog(string propId)
+		{
+			foundation.Catalog retVal = null;
+			var propSet = PropertySets.FirstOrDefault(x => x.PropertySetProperties.Any(y => y.PropertyId == propId));
+			if (propSet != null)
+			{
+				var catalogId = Catalogs.OfType<foundation.Catalog>()
+								   .Where(x => x.PropertySetId == propSet.PropertySetId)
+								   .Select(x => x.CatalogId).FirstOrDefault();
+				if (catalogId != null)
+				{
+					retVal = GetCatalogById(catalogId) as foundation.Catalog;
+				}
+			}
+			return retVal;
+		}
+
 		public foundation.Category GetPropertyCategory(string propId)
 		{
 			foundation.Category retVal = null;
@@ -149,6 +171,20 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
 			return retVal;
 		}
 
+		public foundation.Property[] GetCatalogProperties(foundation.CatalogBase catalogBase)
+		{
+			var retVal = new List<foundation.Property>();
+			var catalog = catalogBase as foundation.Catalog;
+			if (catalog != null)
+			{
+				if (catalog.PropertySet != null)
+				{
+					retVal.AddRange(catalog.PropertySet.PropertySetProperties.Select(x => x.Property));
+				}
+			}
+			return retVal.ToArray();
+		}
+
 		public foundation.Property[] GetAllCategoryProperties(foundation.Category category)
 		{
 			var retVal = new List<foundation.Property>();
@@ -164,6 +200,14 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
 					retVal.AddRange(GetAllCategoryProperties(parentCategory));
 				}
 			}
+
+			//Add catalog properties
+			if(category.Catalog == null)
+			{
+				category.Catalog = GetCatalogById(category.CatalogId);
+			}
+			retVal.AddRange(GetCatalogProperties(category.Catalog));
+
 			return retVal.ToArray();
 		}
 
@@ -173,6 +217,28 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
 			var itemIds = ItemRelations.Where(x => x.ParentItemId == itemId).Select(x => x.ChildItemId).ToArray();
 			return GetItemByIds(itemIds.ToArray());
 			
+		}
+		public void SetCatalogProperty(foundation.Catalog catalog, foundation.Property property)
+		{
+			if (catalog.PropertySet == null)
+			{
+				var propertySet = new foundation.PropertySet
+				{
+					CatalogId = catalog.CatalogId,
+					Name = catalog.Name + " property set",
+					TargetType = foundation.PropertyTargetType.Catalog.ToString()
+				};
+				Add(propertySet);
+				catalog.PropertySetId = propertySet.PropertySetId;
+			}
+
+			var propertySetProperty = new foundation.PropertySetProperty
+			{
+				PropertySetId = catalog.PropertySetId,
+				PropertyId = property.PropertyId
+			};
+			Add(propertySetProperty);
+
 		}
 
 		public void SetCategoryProperty(foundation.Category category, foundation.Property property)

@@ -81,10 +81,10 @@ namespace VirtoCommerce.CatalogModule.Web
             _container.RegisterType<ProductsController>(new InjectionConstructor(itemService, propertyService, assetBaseUri));
 
             _container.RegisterType<ProductsController>(new InjectionConstructor(itemService, propertyService, assetBaseUri));
-            _container.RegisterType<PropertiesController>(new InjectionConstructor(propertyService, categoryService));
+            _container.RegisterType<PropertiesController>(new InjectionConstructor(propertyService, categoryService, catalogService));
             _container.RegisterType<ListEntryController>(new InjectionConstructor(catalogSearchService, categoryService, itemService, assetBaseUri));
             _container.RegisterType<CategoriesController>(new InjectionConstructor(catalogSearchService, categoryService, propertyService, catalogService));
-            _container.RegisterType<CatalogsController>(new InjectionConstructor(catalogService, catalogSearchService, appConfigRepFactory));
+            _container.RegisterType<CatalogsController>(new InjectionConstructor(catalogService, catalogSearchService, appConfigRepFactory, propertyService));
             #endregion
 
             #region Search dependencies

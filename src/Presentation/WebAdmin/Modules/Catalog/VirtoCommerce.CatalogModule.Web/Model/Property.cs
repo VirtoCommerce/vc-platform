@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
 using System;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 namespace VirtoCommerce.CatalogModule.Web.Model
 {
@@ -26,6 +28,7 @@ namespace VirtoCommerce.CatalogModule.Web.Model
         public bool Multivalue { get; set; }
         public bool Multilanguage { get; set; }
         public PropertyValueType ValueType { get; set; }
+		[JsonConverter(typeof(StringEnumConverter))]
         public PropertyType Type { get; set; }
 		public List<PropertyValue> Values { get; set; }
 		public List<PropertyDictionaryValue> DictionaryValues { get; set; }

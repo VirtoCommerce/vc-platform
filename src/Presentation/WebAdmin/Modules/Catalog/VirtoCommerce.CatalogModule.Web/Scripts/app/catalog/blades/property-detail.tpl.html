@@ -28,7 +28,7 @@
                 </li>
                 <li class="list-item" ng-class="{'__selected': currentChild === 'appliesto'}" ng-click='openChild("appliesto")'>
                     <span class="list-t">Applies to</span>
-                    <span class="list-descr">{{blade.currentEntity.type | propertytype}}</span>
+                    <span class="list-descr">{{blade.currentEntity.type}}</span>
                 </li>
                 <li class="list-item" ng-class="{'__selected': currentChild === 'dict', '__disabled': !blade.currentEntity.dictionary }" ng-click='openChild("dict")'>
                     <span class="list-t">Dictionary</span>

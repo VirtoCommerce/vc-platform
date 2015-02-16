@@ -18,6 +18,16 @@ namespace VirtoCommerce.Foundation.Data.Security.Identity
 				LockoutEnabled = true,
 			});
 
+			context.Users.Add(new ApplicationUser
+			{
+				Id = "9b605a3096ba4cc8bc0b8d80c397c59f",
+				UserName = "frontend",
+				PasswordHash = "AHQSmKnSLYrzj9vtdDWWnUXojjpmuDW2cHvWloGL9UL3TC9UCfBmbIuR2YCyg4BpNg==",
+				SecurityStamp = string.Empty,
+				EmailConfirmed = true,
+				LockoutEnabled = true,
+			});
+
 			context.SaveChanges();
 		}
 	}

@@ -180,6 +180,7 @@
     <Compile Include="Assets\Services\IAssetUrl.cs" />
     <Compile Include="Assets\Services\UploadStreamInfo.cs" />
     <Compile Include="Catalogs\CatalogConfiguration.cs" />
+    <Compile Include="Catalogs\Model\CatalogPropertyValue.cs" />
     <Compile Include="Catalogs\Search\CategoryFilter.cs" />
     <Compile Include="Catalogs\Search\CategoryFilterValue.cs" />
     <Compile Include="Catalogs\Services\ICatalogOutlineBuilder.cs" />
@@ -400,6 +401,7 @@
     <Compile Include="Search\SearchConnection.cs" />
     <Compile Include="Search\SearchProviders.cs" />
     <Compile Include="Security\Model\AccountState.cs" />
+    <Compile Include="Security\Model\ApiAccount.cs" />
     <Compile Include="Security\Model\RegisterType.cs" />
     <Compile Include="Frameworks\BaseEvaluationContext.cs" />
     <Compile Include="Catalogs\Services\IEvaluationPolicy.cs" />

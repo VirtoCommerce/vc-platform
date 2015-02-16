@@ -115,6 +115,7 @@
     <Compile Include="DataContracts\Store\StoreState.cs" />
     <Compile Include="DataContracts\TagQuery.cs" />
     <Compile Include="Extensions\CartClientExtension.cs" />
+    <Compile Include="Extensions\MessageProcessingExtensions.cs" />
     <Compile Include="Extensions\SeoClientExtensions.cs" />
     <Compile Include="Extensions\StoreClientExtensions.cs" />
     <Compile Include="CartClient.cs" />
@@ -134,7 +135,8 @@
     <Compile Include="SecurityClient.cs" />
     <Compile Include="Utilities\AzureSubscriptionMessageProcessingHandler.cs" />
     <Compile Include="Utilities\ConnectionHelper.cs" />
-    <Compile Include="Utilities\TokenMessageProcessingHandler.cs" />
+    <Compile Include="Utilities\HmacMessageProcessingHandler.cs" />
+    <Compile Include="Utilities\HmacUtility.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

@@ -2,6 +2,11 @@
 ])
 .controller('itemPropertyWidgetController', ['$scope', 'bladeNavigationService', function ($scope, bladeNavigationService) {
     $scope.currentBlade = $scope.widget.blade;
+    $scope.propertiesCount = 'calculating';
+
+    $scope.$watch('widget.blade.item', function (product) {
+    	$scope.propertiesCount = _.filter(product.properties, function (x) { return (x.type == 'Product' || x.type == 'Variation') }).length;
+    });
 
     $scope.openItemPropertyBlade = function () {
 

@@ -49,7 +49,7 @@ angular.module('platformWebApp.bladeNavigation', [
                 var blade = $(this).parents('.blade'),
                     bladeI = blade.find('.blade-inner'),
                     bladeH = bladeI.height(),
-                    bladeIh = blade.find('.inner-block').height();
+                    bladeIh = blade.find('.inner-block').height() + 5;
 
                 if (blade.length) {
                     if (bladeH <= bladeIh) {

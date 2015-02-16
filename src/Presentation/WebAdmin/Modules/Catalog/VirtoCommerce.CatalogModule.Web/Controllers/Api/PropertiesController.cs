@@ -17,12 +17,14 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
     {
         private readonly IPropertyService _propertyService;
 		private readonly ICategoryService _categoryService;
+		private readonly ICatalogService _catalogService;
 
 		public PropertiesController(IPropertyService propertyService,
-									ICategoryService categoryService)
+									ICategoryService categoryService, ICatalogService catalogService)
         {
             _propertyService = propertyService;
 			_categoryService = categoryService;
+			_catalogService = catalogService;
 		
         }
 
@@ -64,11 +66,34 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 			return Ok(retVal);
         }
 
+		// GET: api/catalog/apple/properties/getnew
+		[HttpGet]
+		[Route("~/api/catalog/{catalogId}/properties/getnew")]
+		[ResponseType(typeof(webModel.Property))]
+		public IHttpActionResult GetNewCatalogProperty(string catalogId)
+		{
+			var catalog = _catalogService.GetById(catalogId);
+			var retVal = new webModel.Property
+			{
+				Id = Guid.NewGuid().ToString(),
+				IsNew = true,
+				CatalogId = catalog.Id,
+				Catalog = catalog.ToWebModel(),
+				Name = "new property",
+				Type = webModel.PropertyType.Catalog,
+				ValueType = webModel.PropertyValueType.ShortText,
+				DictionaryValues = new List<webModel.PropertyDictionaryValue>(),
+				Attributes = new List<webModel.PropertyAttribute>()
+			};
+
+			return Ok(retVal);
+		}
+
 		// GET: api/catalog/categories/apple/properties/getnew
         [HttpGet]
 		[Route("~/api/catalog/categories/{categoryId}/properties/getnew")]
 		[ResponseType(typeof(webModel.Property))]
-        public IHttpActionResult GetNewProperty(string categoryId)
+        public IHttpActionResult GetNewCategoryProperty(string categoryId)
         {
 			var category = _categoryService.GetById(categoryId);
 			var retVal = new webModel.Property

@@ -115,13 +115,15 @@ namespace VirtoCommerce.CoreModule.Web
 
 		public void Initialize()
 		{
-			OwinConfig.Configure(_appBuilder);
+			Func<IFoundationSecurityRepository> securityRepositoryFactory = () =>
+				new FoundationSecurityRepositoryImpl(_connectionStringName);
+
+			OwinConfig.Configure(_appBuilder, securityRepositoryFactory);
 
 			#region Security
 
 			_container.RegisterType<Func<IFoundationSecurityRepository>>(
-				new InjectionFactory(x => new Func<IFoundationSecurityRepository>(() =>
-					new FoundationSecurityRepositoryImpl(_connectionStringName))));
+				new InjectionFactory(x => new Func<IFoundationSecurityRepository>(securityRepositoryFactory)));
 
 			#endregion
 

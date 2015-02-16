@@ -28,7 +28,7 @@
                 category: $scope.blade.categoryId,
                 q: $scope.filter.searchKeyword,
                 // propertyValues: ,
-                respGroup: 'withCategories, withItems',
+                respGroup: 'withCategories, withProducts',
                 start: ($scope.pageSettings.currentPage - 1) * $scope.pageSettings.itemsPerPageCount,
                 count: $scope.pageSettings.itemsPerPageCount
             },

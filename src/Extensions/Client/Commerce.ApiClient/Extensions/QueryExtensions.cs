@@ -1,94 +1,85 @@
-﻿namespace VirtoCommerce.ApiClient.Extensions
+﻿using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
+using System.Web;
+using VirtoCommerce.Web.Core.DataContracts;
+
+namespace VirtoCommerce.ApiClient.Extensions
 {
-    #region
+	internal static class QueryExtensions
+	{
+		/// <summary>
+		///     Gets an HTTP query string serialization of this query compatible with FromQueryString
+		/// </summary>
+		public static string GetQueryString(this BrowseQuery query, ItemResponseGroups? responseGroup)
+		{
+			var parts = new List<string>();
 
-    using System;
-    using System.Collections.Generic;
-    using System.Globalization;
-    using System.Linq;
-    using System.Web;
+			if (query.Skip != null)
+			{
+				parts.Add("skip=" + HttpUtility.UrlEncode(query.Skip.Value.ToString(CultureInfo.InvariantCulture)));
+			}
 
-    using VirtoCommerce.Web.Core.DataContracts;
+			if (query.Take != null)
+			{
+				parts.Add("take=" + HttpUtility.UrlEncode(query.Take.Value.ToString(CultureInfo.InvariantCulture)));
+			}
 
-    #endregion
+			if (!string.IsNullOrEmpty(query.SortProperty))
+			{
+				parts.Add("sort=" + HttpUtility.UrlEncode(query.SortProperty));
+			}
 
-    internal static class QueryExtensions
-    {
-        #region Public Methods and Operators
+			if (!string.IsNullOrEmpty(query.SortDirection))
+			{
+				parts.Add("sortorder=" + HttpUtility.UrlEncode(query.SortDirection));
+			}
 
-        /// <summary>
-        ///     Gets an HTTP query string serialization of this query compatible with FromQueryString
-        /// </summary>
-        public static string GetQueryString(this BrowseQuery query, ItemResponseGroups? responseGroup)
-        {
-            var parts = new List<string>();
+			if (!string.IsNullOrEmpty(query.Search))
+			{
+				parts.Add("q=" + HttpUtility.UrlEncode(query.Search));
+			}
 
-            if (query.Skip != null)
-            {
-                parts.Add("skip=" + HttpUtility.UrlEncode(query.Skip.Value.ToString()));
-            }
+			if (!string.IsNullOrEmpty(query.Outline))
+			{
+				parts.Add("outline=" + HttpUtility.UrlEncode(query.Outline));
+			}
 
-            if (query.Take != null)
-            {
-                parts.Add("take=" + HttpUtility.UrlEncode(query.Take.Value.ToString()));
-            }
+			if (query.StartDateFrom.HasValue)
+			{
+				parts.Add(
+					"startdatefrom="
+					+ HttpUtility.UrlEncode(query.StartDateFrom.Value.ToString(CultureInfo.InvariantCulture)));
+			}
 
-            if (!string.IsNullOrEmpty(query.SortProperty))
-            {
-                parts.Add("sort=" + HttpUtility.UrlEncode(query.SortProperty));
-            }
+			if (query.Filters != null && query.Filters.Count > 0)
+			{
+				parts.AddRange(
+					query.Filters.Select(
+						filter => String.Format("t_{0}={1}", filter.Key, String.Join(",", filter.Value))));
+			}
 
-            if (!string.IsNullOrEmpty(query.SortDirection))
-            {
-                parts.Add("sortorder=" + HttpUtility.UrlEncode(query.SortDirection));
-            }
+			if (responseGroup.HasValue)
+			{
+				parts.Add("responseGroup=" + responseGroup.Value.GetHashCode());
+			}
+			return string.Join("&", parts);
+		}
 
-            if (!string.IsNullOrEmpty(query.Search))
-            {
-                parts.Add("q=" + HttpUtility.UrlEncode(query.Search));
-            }
+		public static string GetQueryString(this TagQuery query)
+		{
+			var parts = new List<string>();
 
-            if (!string.IsNullOrEmpty(query.Outline))
-            {
-                parts.Add("outline=" + HttpUtility.UrlEncode(query.Outline));
-            }
+			if (query.Names != null)
+			{
+				parts.AddRange(
+					from name in query.Names
+					let value = query[name]
+					select "tags=" + HttpUtility.UrlEncode(name) + ":" + HttpUtility.UrlEncode(value.ToString()));
+			}
 
-            if (query.StartDateFrom.HasValue)
-            {
-                parts.Add(
-                    "startdatefrom="
-                    + HttpUtility.UrlEncode(query.StartDateFrom.Value.ToString(CultureInfo.InvariantCulture)));
-            }
-
-            if (query.Filters != null && query.Filters.Count > 0)
-            {
-                parts.AddRange(
-                    query.Filters.Select(
-                        filter => String.Format("t_{0}={1}", filter.Key, String.Join(",", filter.Value))));
-            }
-
-            if (responseGroup.HasValue)
-            {
-                parts.Add("responseGroup=" + responseGroup.Value.GetHashCode());
-            }
-            return string.Join("&", parts);
-        }
-
-        public static string GetQueryString(this TagQuery query)
-        {
-            var parts = new List<string>();
-
-            if (query.Names != null)
-            {
-                parts.AddRange(
-                    from name in query.Names
-                    let value = query[name]
-                    select "tags=" + HttpUtility.UrlEncode(name) + ":" + HttpUtility.UrlEncode(value.ToString()));
-            }
-
-            return string.Join("&", parts);
-        }
-
-        #endregion
-    }
+			return string.Join("&", parts);
+		}
+	}
 }

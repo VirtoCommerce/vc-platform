@@ -120,24 +120,24 @@ echo(!PREVIOUS_MANIFEST_PATH!|findstr /r /i /c:"firstDeploymentManifest$" >nul &
 	IF /I "%SQLAZURECONNSTR_DefaultConnection%" EQU "" (
 		echo Connection string is empty. Skipping database initialization.
 	) ELSE (
-		IF EXIST "%VCPS%\VirtoCommerce.PowerShell.csproj" (
-			echo Building %VCPS%\VirtoCommerce.PowerShell.csproj
-			call :ExecuteCmd "%MSBUILD_PATH%" "%VCPS%\VirtoCommerce.PowerShell.csproj" /nologo /verbosity:m /t:Build /p:Configuration=Release;SolutionDir="%DEPLOYMENT_SOURCE%\.\\" %SCM_BUILD_ARGS%
-			IF !ERRORLEVEL! NEQ 0 goto error
-		) ELSE (
-			echo %VCPS%\VirtoCommerce.PowerShell.csproj does not exist.
-		)
-	
-		IF EXIST "%VCPS%\setup-database.ps1" (
-			echo Executing %VCPS%\setup-database.ps1
-			call :ExecuteCmd PowerShell -ExecutionPolicy Bypass -Command "%VCPS%\setup-database.ps1" -dbconnection '%SQLAZURECONNSTR_DefaultConnection%' -datafolder "%VCPS%" -moduleFile "%VCPS%\bin\Release\VirtoCommerce.PowerShell.dll" -useSample %INSERT_SAMPLE_DATA% -reducedSample $false
-			IF !ERRORLEVEL! NEQ 0 goto error
-		) ELSE (
-			echo %VCPS%\setup-database.ps1 does not exist.
-		)
-	
-		:: Clear build output
-		call :ExecuteCmd "%MSBUILD_PATH%" "%DEPLOYMENT_SOURCE%\VirtoCommerce.sln" /nologo /verbosity:m /t:Clean /p:Configuration=Release;SolutionDir="%DEPLOYMENT_SOURCE%\.\\" %SCM_BUILD_ARGS%
+	IF EXIST "%VCPS%\VirtoCommerce.PowerShell.csproj" (
+		echo Building %VCPS%\VirtoCommerce.PowerShell.csproj
+		call :ExecuteCmd "%MSBUILD_PATH%" "%VCPS%\VirtoCommerce.PowerShell.csproj" /nologo /verbosity:m /t:Build /p:Configuration=Release;SolutionDir="%DEPLOYMENT_SOURCE%\.\\" %SCM_BUILD_ARGS%
+		IF !ERRORLEVEL! NEQ 0 goto error
+	) ELSE (
+		echo %VCPS%\VirtoCommerce.PowerShell.csproj does not exist.
+	)
+
+	IF EXIST "%VCPS%\setup-database.ps1" (
+		echo Executing %VCPS%\setup-database.ps1
+		call :ExecuteCmd PowerShell -ExecutionPolicy Bypass -Command "%VCPS%\setup-database.ps1" -dbconnection '%SQLAZURECONNSTR_DefaultConnection%' -datafolder "%VCPS%" -moduleFile "%VCPS%\bin\Release\VirtoCommerce.PowerShell.dll" -useSample %INSERT_SAMPLE_DATA% -reducedSample $false
+		IF !ERRORLEVEL! NEQ 0 goto error
+	) ELSE (
+		echo %VCPS%\setup-database.ps1 does not exist.
+	)
+
+	:: Clear build output
+	call :ExecuteCmd "%MSBUILD_PATH%" "%DEPLOYMENT_SOURCE%\VirtoCommerce.sln" /nologo /verbosity:m /t:Clean /p:Configuration=Release;SolutionDir="%DEPLOYMENT_SOURCE%\.\\" %SCM_BUILD_ARGS%
 	)
 ) || (
 	echo Not first deployment
