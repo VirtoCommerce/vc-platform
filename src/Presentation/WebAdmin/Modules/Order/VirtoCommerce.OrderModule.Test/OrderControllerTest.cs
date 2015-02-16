@@ -38,7 +38,7 @@ namespace VirtoCommerce.OrderModule.Test
 		[TestMethod]
 		public void CreateNewOrderByShoppingCart()
 		{
-			var result = _controller.CreateOrderFromCart("dafe9502-973a-4c9b-9bf0-b5e9c754386d") as OkNegotiatedContentResult<webModel.CustomerOrder>;
+            var result = _controller.CreateOrderFromCart("6e50286c-b4f5-4e6f-b75d-3d486f8b96a0") as OkNegotiatedContentResult<webModel.CustomerOrder>;
 			Assert.IsNotNull(result.Content);
 		}
 
