@@ -1,26 +1,26 @@
 ﻿<div class="blade-content">
     <div class="blade-inner">
         <div class="inner-block">
-            <ul class="list-extended">
-                <li ng-mouseup="addCategory()">
-                    <i class="ico fa fa-folder-open-o"></i>
-                    <span class="title">Category</span>
-                    <span class="sub-title">A container for other Categories and Products or Variations.</span>
+            <ul class="list __items">
+                <li class="list-item" ng-mouseup="addCategory()">
+                    <i class="list-ico fa fa-folder"></i>
+                    <span class="list-t">Category</span>
+                    <span class="list-descr">A container for other Categories and Products or Variations.</span>
                 </li>
-                <li ng-mouseup="addLinkedCategory()" ng-if="blade.parentBlade.catalog.virtual">
-                    <i class="ico icon-link"></i>
-                    <span class="title">Link</span>
-                    <span class="sub-title">A link to real Category or Product.</span>
+                <li class="list-item" ng-mouseup="addLinkedCategory()" ng-if="blade.parentBlade.catalog.virtual">
+                    <i class="list-ico fa fa-link"></i>
+                    <span class="list-t">Link</span>
+                    <span class="list-descr">A link to real Category or Product.</span>
                 </li>
-                <li ng-mouseup="addProduct()" ng-if="!blade.parentBlade.catalog.virtual">
-                    <i class="ico fa fa-shopping-cart"></i>
-                    <span class="title">Product</span>
-                    <span class="sub-title">The main Variation. Can be used for targeted promotions.</span>
+                <li class="list-item" ng-mouseup="addProduct()" ng-if="!blade.parentBlade.catalog.virtual">
+                    <i class="list-ico fa fa-shopping-cart"></i>
+                    <span class="list-t">Product</span>
+                    <span class="list-descr">The main Variation. Can be used for targeted promotions.</span>
                 </li>
-                <li ng-mouseup="addVariation()" ng-if="!blade.parentBlade.catalog.virtual" ng-class="{'disabled':!blade.parentBlade.currentItemId}">
-                    <i class="ico fa fa-barcode"></i>
-                    <span class="title">Variation</span>
-                    <span class="sub-title">Represents orderable item of merchandise for sale. Contains details, such as names, description, images, prices and inventory information.</span>
+                <li class="list-item" ng-mouseup="addVariation()" ng-if="!blade.parentBlade.catalog.virtual" ng-class="{'__disabled':!blade.parentBlade.currentItemId}">
+                    <i class="list-ico fa fa-barcode"></i>
+                    <span class="list-t">Variation</span>
+                    <span class="list-descr">Represents orderable item of merchandise for sale. Contains details, such as names, description, images, prices and inventory information.</span>
                 </li>
             </ul>
         </div>

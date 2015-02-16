@@ -1,17 +1,20 @@
-﻿<div class="blade-content">
+﻿<div class="blade-static __bottom" ng-include="'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/wizards/newCategory/category-wizard-actions.tpl.html'"></div>
+<div class="blade-content">
     <div class="blade-inner">
         <div class="inner-block">
-            <form class="form" name="contextEntityDetailForm">
-                <fieldset ng-init="setForm(contextEntityDetailForm);">
-                    <label>Name:</label>
-                    <div data-role="input-control" class="input-control text">
+            <form class="form" name="contextEntityDetailForm" ng-init="setForm(contextEntityDetailForm);">
+                <div class="form-group">
+                    <label class="form-label">Name:</label>
+                    <div class="form-input">
                         <input focus-on="" required class="form-control" ng-model="blade.currentEntity.name" placeholder="Enter category name" />
                     </div>
-                    <label>Code:</label>
-                    <div data-role="input-control" class="input-control text">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Code:</label>
+                    <div class="form-input">
                         <input required class="form-control" ng-model="blade.currentEntity.code" placeholder="Enter category code" />
                     </div>
-                </fieldset>
+                </div>
             </form>
 
             <!--<ul class="list-extended">
@@ -27,6 +30,4 @@
             </ul>-->
         </div>
     </div>
-</div>
-<div class="static bottom" ng-include="'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/wizards/newCategory/category-wizard-actions.tpl.html'">
 </div>

@@ -1,18 +1,25 @@
-﻿<div class="blade-content blade-medium">
+﻿<div class="blade-static __bottom" ng-include="'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/wizards/common/wizard-ok-action.tpl.html'"></div>
+<div class="blade-content">
     <div class="blade-inner">
         <div class="inner-block">
-            <label>Type</label>
-            <div data-role="input-control" class="input-control select">
-                <select ng-model="currentEntity.reviewType" ng-options="x for x in types"></select>
-            </div>
-            <label>Language</label>
-            <div data-role="input-control" class="input-control select">
-                <select ng-model="currentEntity.languageCode" ng-options="lang.languageCode as lang.displayName for lang in blade.languages" required></select>
-            </div>
-            <label>Editorial Review content</label>
-            <div class="editable" text-angular ng-model="currentEntity.content" text-angular-name="myEditor"></div>
+            <form class="form">
+                <div class="form-group">
+                    <label class="form-label">Type</label>
+                    <div class="form-input">
+                        <select ng-model="currentEntity.reviewType" ng-options="x for x in types"></select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Language</label>
+                    <div class="form-input">
+                        <select ng-model="currentEntity.languageCode" ng-options="lang.languageCode as lang.displayName for lang in blade.languages" required></select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Editorial Review content</label>
+                    <div class="editable" text-angular ng-model="currentEntity.content" text-angular-name="myEditor"></div>
+                </div>
+            </form>
         </div>
     </div>
-</div>
-<div class="static bottom" ng-include="'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/wizards/common/wizard-ok-action.tpl.html'">
 </div>

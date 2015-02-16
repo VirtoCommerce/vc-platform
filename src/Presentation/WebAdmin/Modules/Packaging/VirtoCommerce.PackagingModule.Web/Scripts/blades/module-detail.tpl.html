@@ -1,76 +1,75 @@
-﻿<div class="blade-content blade-medium">
+﻿<div class="blade-static __bottom __expanded" ng-if="blade.mode">
+    <div class="form-input" ng-if="currentEntity.requireLicenseAcceptance">
+        <div class="form-control __checkbox">
+            <label class="form-label">
+                <!--currentEntity.validationErrors.length>0 ||-->
+                <input type="checkbox" ng-model="currentEntity.licenseAccepted" ng-disabled="!currentEntity || isInstalling">
+                <span class="check"></span>
+                <span class="name">I accept the <a ng-href="{{currentEntity.licenseUrl}}" ng-if="currentEntity.licenseUrl" target="_blank">License</a> agreement</span>
+            </label>
+        </div>
+    </div>
+    <button class="btn" ng-click="submit()" ng-disabled="!currentEntity || isInstalling || (currentEntity.requireLicenseAcceptance && !currentEntity.licenseAccepted)">
+        <span>{{actionButtonTitle}}</span>
+    </button>
+</div>
+<div class="blade-content">
     <div class="blade-inner">
         <div class="inner-block">
-            <div class="block">
-                <fieldset ng-if="!currentEntity">
-                    <label>Select module file:</label>
-                    <div data-role="input-control" class="input-control file">
-                        <input type="file" uploader="uploader" nv-file-select style="z-index: 0;" tabindex="-1">
-                        <input type="text" style="z-index: 1; cursor: default;" readonly="">
-                        <button class="btn-file" type="button" onclick="$('input[type=file]').trigger('click')"></button>
+            <div class="form">
+                <div class="form-group" ng-if="!currentEntity">
+                    <label class="form-label">Select module file:</label>
+                    <div class="form-input">
+                        <input type="file" uploader="uploader" nv-file-select>
+                        <input type="text" readonly="">
+                        <button class="btn __file" type="button" onclick="$('input[type=file]').trigger('click')">
+                            <i class="btn-ico fa fa-image"></i>
+                        </button>
                     </div>
-                </fieldset>
-
+                </div>
                 <div ng-if="currentEntity">
-                    <div class="block">
-                        <p class="title">Title</p>
-                        <p>{{currentEntity.title}}</p>
+                    <div class="form-group">
+                        <p class="sub-t">Title</p>
+                        <p class="text">{{currentEntity.title}}</p>
                     </div>
-                    <div class="block">
-                        <p class="title">Author</p>
-                        <p ng-repeat="x in currentEntity.authors">{{x}} </p>
+                    <div class="form-group">
+                        <p class="sub-t">Author</p>
+                        <p class="text" ng-repeat="x in currentEntity.authors">{{x}} </p>
                     </div>
-                    <div class="block">
-                        <p class="title">ID</p>
-                        <p>{{currentEntity.id}}</p>
+                    <div class="form-group">
+                        <p class="sub-t">ID</p>
+                        <p class="text">{{currentEntity.id}}</p>
                     </div>
-                    <div class="block">
-                        <p class="title">Version</p>
-                        <p>{{currentEntity.version}}</p>
+                    <div class="form-group">
+                        <p class="sub-t">Version</p>
+                        <p class="text">{{currentEntity.version}}</p>
                     </div>
-                    <div class="block">
-                        <p ng-if="currentEntity.licenseUrl"><a ng-href="{{currentEntity.licenseUrl}}" target="_blank">License</a></p>
-                        <p ng-if="currentEntity.projectUrl"><a ng-href="{{currentEntity.projectUrl}}" target="_blank">Project Information</a></p>
+                    <div class="form-group">
+                        <p ng-if="currentEntity.licenseUrl">
+                            <a ng-href="{{currentEntity.licenseUrl}}" target="_blank">License</a>
+                        </p>
+                        <p class="text" ng-if="currentEntity.projectUrl">
+                            <a ng-href="{{currentEntity.projectUrl}}" target="_blank">Project Information</a>
+                        </p>
                     </div>
-                    <div class="block">
-                        <p class="title">Description</p>
-                        <p>{{currentEntity.description}}</p>
+                    <div class="form-group">
+                        <p class="sub-t">Description</p>
+                        <p class="text">{{currentEntity.description}}</p>
                     </div>
-                    <div class="block">
-                        <p class="title">Dependencies</p>
-                        <p><span ng-repeat="x in currentEntity.dependencies">{{x}}</span> </p>
+                    <div class="form-group">
+                        <p class="sub-t">Dependencies</p>
+                        <p class="text"><span ng-repeat="x in currentEntity.dependencies">{{x}}</span> </p>
                     </div>
-                    <div class="block">
-                        <p class="title">Tags</p>
-                        <p>{{currentEntity.tags}}</p>
+                    <div class="form-group">
+                        <p class="sub-t">Tags</p>
+                        <p class="text">{{currentEntity.tags}}</p>
                     </div>
-                    <div class="block">
-                        <p class="title" ng-if="currentEntity.validationErrors.length>0">Errors</p>
-                        <p><span class="fg-red" ng-repeat="x in currentEntity.validationErrors">{{x}}<br></span></p>
+                    <div class="form-group">
+                        <p class="sub-t" ng-if="currentEntity.validationErrors.length>0">Errors</p>
+                        <p class="text"><span ng-repeat="x in currentEntity.validationErrors">{{x}}<br></span></p>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
-<div class="static bottom" ng-if="blade.mode">
-    <fieldset>
-        <div class="input-control" data-role="input-control" ng-if="currentEntity.requireLicenseAcceptance">
-            <a ng-href="{{currentEntity.licenseUrl}}" ng-if="currentEntity.licenseUrl" target="_blank">License</a>
-
-            <div class="input-control checkbox" data-role="input-control">
-                <label>
-                    <!--currentEntity.validationErrors.length>0 ||-->
-                    <input type="checkbox" ng-model="currentEntity.licenseAccepted" ng-disabled="!currentEntity || isInstalling">
-                    <span class="check"></span>
-                    I accept the license agreement
-                </label>
-            </div>
-        </div>
-
-        <!--currentEntity.validationErrors.length>0 ||-->
-        <button ng-click="submit()" ng-disabled="!currentEntity || isInstalling || (currentEntity.requireLicenseAcceptance && !currentEntity.licenseAccepted)">
-            <span>{{actionButtonTitle}}</span>
-        </button>
-    </fieldset>
 </div>

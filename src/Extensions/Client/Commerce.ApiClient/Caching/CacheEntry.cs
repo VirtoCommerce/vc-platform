@@ -2,21 +2,35 @@
 {
     internal class CacheEntry
     {
+        #region Fields
+
         private readonly object _Lock;
 
+        #endregion
+
+        #region Constructors and Destructors
+
+        internal CacheEntry()
+        {
+            this._Lock = new object();
+        }
+
+        #endregion
+
+        #region Public Properties
+
         /// <summary>
-        /// Gets the lock.
+        ///     Gets the lock.
         /// </summary>
         /// <value>The lock.</value>
         public object Lock
         {
-            get { return _Lock; }
+            get
+            {
+                return this._Lock;
+            }
         }
 
-        internal CacheEntry()
-        {
-            _Lock = new object();
-        }
+        #endregion
     }
-
 }

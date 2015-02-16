@@ -1,29 +1,22 @@
-﻿<div class="blade-content">
+﻿<div class="blade-static __bottom" ng-if="blade.isNew" ng-include="'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/wizards/common/wizard-ok-action.tpl.html'"></div>
+<div class="blade-content">
     <div class="blade-inner">
         <div class="inner-block">
-            <form name="itemProperties">
+            <form name="itemProperties" class="form">
                 <fieldset ng-repeat="propGroup in propGroups" ng-init="setForm(itemProperties)">
                     <legend>
-                        {{propGroup.title}} ({{properties.length}})
+                        {{propGroup.title}}: <span class="count">{{properties.length}}</span>
                     </legend>
-
-                    <div ng-repeat="prop in properties = (blade.item.properties | filter: {type:propGroup.type})">
-
-                        <div class="control-group">
-                            <label for="">
-                                <a ng-show="prop.isManageable" href="" ng-click="editProperty(prop)">{{prop.name}}</a>
-                                <span ng-show="!prop.isManageable">{{prop.name}}</span>
-                            </label>
-                            <va-property2 ng-model="prop" get-prop-values="getPropValues" />
-                        </div>
-
+                    <div class="form-group" ng-repeat="prop in properties = (blade.item.properties | filter: {type:propGroup.type})">
+                        <label class="form-label">
+                            <a ng-show="prop.isManageable" href="" ng-click="editProperty(prop)">{{prop.name}}</a>
+                            <span ng-show="!prop.isManageable">{{prop.name}}</span>
+                        </label>
+                        <va-property2 ng-model="prop" get-prop-values="getPropValues" />
                     </div>
                     <div ng-if="properties.length == 0">None</div>
                 </fieldset>
-
             </form>
         </div>
     </div>
-</div>
-<div class="static bottom" ng-if="blade.isNew" ng-include="'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/wizards/common/wizard-ok-action.tpl.html'">
 </div>

@@ -1,0 +1,32 @@
+{% paginate collection.products by 48 %}
+{% include 'breadcrumb' %}
+{% if settings.show_sort_by and collection.products_count > 1 %}
+  {% include 'collection-sort' %}
+{% endif %}
+{% if current_tags.size > 0 %}
+<h1>{{ current_tags.first }}</h1>
+{% else %}
+<h1>{{ collection.title }}</h1>
+{% endif %}
+{% if collection.description.size > 0 %}
+<!--START HERO-->
+<div class="twelve columns alpha omega">
+  <div id="collection-description" class="animated fadeInUpBig wysiwyg">
+  {{ collection.description }}
+  </div>
+</div>
+<!--END HERO-->
+{% endif %}
+<!--START PRODUCT GRID-->
+<section class="product-grid twelve columns alpha omega">
+  {% if collection.products.size > 0 %}
+    {% for product in collection.products %}
+      {% include 'product-grid-item' %}
+    {% endfor %}
+  {% else %}
+    <p id="no-products" class="animated fadeInUpBig">{{ 'collections.general.empty_collection_message' | t }}</p>
+  {% endif %}
+</section>
+<!--END PRODUCT GRID-->
+{% include 'paging' %}
+{% endpaginate %}

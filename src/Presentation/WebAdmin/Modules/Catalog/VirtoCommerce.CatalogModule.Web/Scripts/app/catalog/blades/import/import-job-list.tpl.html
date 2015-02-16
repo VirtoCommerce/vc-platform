@@ -1,56 +1,53 @@
 ﻿<div class="blade-content">
     <div class="blade-inner">
         <div class="inner-block">
-            <div class="table-wrapper">
-                <table ng-if="items.length" class="table hovered">
+            <div class="form">
+                <p class="text" ng-if="items.length == 0">No Import jobs found. Click Add to create one.</p>
+            </div>
+            <div class="table-wrapper" ng-if="items.length">
+                <table class="table">
                     <thead>
                         <tr>
-                            <th class="text-left fixed-td">
+                            <th class="table-col">
                                 <input type="checkbox" ng-model="selectedAll" ng-change="checkAll(selectedAll)" />
                             </th>
-                            <th class="text-left">Name</th>
-                            <th class="text-left fixed-td">Target</th>
-                            <th class="text-left fixed-td" ng-if="!blade.catalogId">Catalog</th>
+                            <th class="table-col">Name</th>
+                            <th class="table-col">Target</th>
+                            <th class="table-col" ng-if="!blade.catalogId">Catalog</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr ng-repeat="data in items" ng-class="{'selected': data.id === selectedItem.id}" context-menu data-target="ijl_menu_{{data.id}}">
-                            <td>
-                                <div data-role="input-control" class="input-control checkbox">
-                                    <label>
-                                        <input type="checkbox" ng-model="data.selected">
-                                        <span class="check"></span>
-                                    </label>
-                                </div>
-                                <ul role="menu" class="dropdown-menu context-menu" id="ijl_menu_{{data.id}}">
-                                    <li ng-click='edit(data)'>
-                                        <i class="ico fa fa-edit"></i> Manage
+                        <tr class="table-item" ng-repeat="data in items" ng-class="{'selected': data.id === selectedItem.id}" context-menu data-target="ijl_menu_{{data.id}}">
+                            <td class="table-col">
+                                <label class="form-control __checkbox">
+                                    <input type="checkbox" ng-model="data.selected">
+                                    <span class="check"></span>
+                                </label>
+                                <ul role="menu" class="menu __context" id="ijl_menu_{{data.id}}">
+                                    <li class="menu-item" ng-click='edit(data)'>
+                                        <i class="menu-ico fa fa-edit"></i> Manage
                                     </li>
-                                    <li ng-click='run(data)'>
-                                        <i class="ico fa fa-sign-in"></i> Run
+                                    <li class="menu-item" ng-click='run(data)'>
+                                        <i class="menu-ico fa fa-sign-in"></i> Run
                                     </li>
-                                    <li ng-click='delete()'>
-                                        <i class="ico fa fa-trash-o"></i> Delete
+                                    <li class="menu-item" ng-click='delete()'>
+                                        <i class="menu-ico fa fa-trash-o"></i> Delete
                                     </li>
                                 </ul>
                             </td>
-                            <td ng-click='setSelectedItem(data)' style="max-width: 250px; overflow: hidden; text-overflow: ellipsis;">
-                                <i style="font-size: 18px" class="fa fa-sign-in"></i>
+                            <td class="table-col" ng-click='setSelectedItem(data)'>
+                                <i class="table-ico fa fa-sign-in"></i>
                                 <span title="{{data.name}}">{{data.name}}</span>
                             </td>
-                            <td ng-click='setSelectedItem(data)'>
+                            <td class="table-col" ng-click='setSelectedItem(data)'>
                                 <span title="{{data.entityImporter}}">{{data.entityImporter}}</span>
                             </td>
-                            <td ng-click='setSelectedItem(data)' ng-if="!blade.catalogId">
+                            <td class="table-col" ng-click='setSelectedItem(data)' ng-if="!blade.catalogId">
                                 <span title="{{data.catalogName}}">{{data.catalogId}}</span>
                             </td>
                         </tr>
                     </tbody>
                 </table>
-            </div>
-            
-            <div class="block">
-                <label ng-if="items.length == 0" class="spacer">No Import jobs found. Click Add to create one.</label>
             </div>
         </div>
     </div>

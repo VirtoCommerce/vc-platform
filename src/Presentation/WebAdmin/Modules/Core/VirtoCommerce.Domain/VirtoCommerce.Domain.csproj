@@ -100,6 +100,7 @@
     <Compile Include="Customer\Services\IContactSearchService.cs" />
     <Compile Include="Customer\Services\IContactService.cs" />
     <Compile Include="Inventory\Model\InventoryInfo.cs" />
+    <Compile Include="Inventory\Model\InventoryStatus.cs" />
     <Compile Include="Inventory\Services\IInventoryService.cs" />
     <Compile Include="Order\Model\Address.cs" />
     <Compile Include="Order\Model\AddressType.cs" />
@@ -130,6 +131,10 @@
     <Compile Include="Payment\Model\PaymentInfo.cs" />
     <Compile Include="Payment\Services\IPaymentGateway.cs" />
     <Compile Include="Payment\Services\IPaymentGatewayManager.cs" />
+    <Compile Include="Pricing\Model\Price.cs" />
+    <Compile Include="Pricing\Model\PriceEvaluationContext.cs" />
+    <Compile Include="Pricing\Model\Pricelist.cs" />
+    <Compile Include="Pricing\Services\IPricingService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Store\Model\FulfillmentCenter.cs" />
     <Compile Include="Store\Model\SettingValueType.cs" />

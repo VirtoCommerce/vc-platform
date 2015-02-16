@@ -1,118 +1,112 @@
-﻿using System;
-using System.Collections;
-using System.Web;
-using System.Web.Caching;
-
-namespace VirtoCommerce.ApiClient.Caching
+﻿namespace VirtoCommerce.ApiClient.Caching
 {
-	public class HttpCacheRepository : ICacheRepository
-	{
+    #region
+
+    using System;
+    using System.Collections;
+    using System.Web;
+    using System.Web.Caching;
+
+    #endregion
+
+    public class HttpCacheRepository : ICacheRepository
+    {
+        #region Fields
+
         private readonly object _lock = new object();
-		private object _cache;
 
-		private Cache GetCache()
-		{            
-			if (_cache != null) return _cache as Cache;
+        private object _cache;
 
-            lock (_lock)
+        #endregion
+
+        #region Public Indexers
+
+        public object this[string key]
+        {
+            get
             {
-                if (_cache != null) return _cache as Cache;
+                return this.Get(key);
+            }
+            set
+            {
+                this.Add(key, value);
+            }
+        }
 
-                var context = HttpContext.Current;
+        #endregion
 
-                _cache = context != null ? context.Cache : HttpRuntime.Cache;
+        #region Public Methods and Operators
+
+        public void Add(string key, object value)
+        {
+            var cache = this.GetCache();
+            cache.Insert(key, value);
+        }
+
+        public void Add(string key, object value, TimeSpan timeout)
+        {
+            CacheItemRemovedCallback callback = null;
+
+            // only need call back if item is in the locking states
+            if (CacheEntries.ContainsKey(key))
+            {
+                callback = ItemRemovedCallback;
             }
 
-			return _cache as Cache;
-		}
+            this.Insert(key, value, null, timeout, CacheItemPriority.Normal, callback);
+        }
 
-		public void Add(string key, object value)
-		{
-			var cache = GetCache();
-			cache.Insert(key,value);
-		}
+        public void Clear()
+        {
+            var cache = this.GetCache();
+            var cacheEnum = cache.GetEnumerator();
+            while (cacheEnum.MoveNext())
+            {
+                cache.Remove(cacheEnum.Key.ToString());
+            }
+        }
 
-		
-		public void Add(string key, object value, TimeSpan timeout)
-		{
-			CacheItemRemovedCallback callback = null;
+        public object Get(string key)
+        {
+            var cache = this.GetCache();
+            return cache.Get(key);
+        }
 
-			// only need call back if item is in the locking states
-			if (CacheEntries.ContainsKey(key))
-			{
-				callback = ItemRemovedCallback;
-			}
+        public object GetAndLock(string key, TimeSpan timespan, out object lockHandle)
+        {
+            lockHandle = CacheEntries.GetLock(key);
+            return this.Get(key);
+        }
 
-			Insert(key, value, null, timeout, CacheItemPriority.Normal, callback);
-		}
+        public IDictionaryEnumerator GetEnumerator()
+        {
+            var cache = this.GetCache();
+            return cache.GetEnumerator();
+        }
 
-		public object Get(string key)
-		{
-			var cache = GetCache();
-			return cache.Get(key);
-		}
+        public object PutAndUnlock(string key, object value, object lockHandle)
+        {
+            //var cache = GetCache();
+            //return cache.PutAndUnlock(key, Serialize(value), (DataCacheLockHandle)lockHandle);
+            return null;
+        }
 
-		public object this[string key]
-		{
-			get { return Get(key); }
-			set
-			{
-				Add(key, value);
-			}
-		}
+        public bool Remove(string key)
+        {
+            var cache = this.GetCache();
+            cache.Remove(key);
+            return true;
+        }
 
-		public bool Remove(string key)
-		{
-			var cache = GetCache();
-			cache.Remove(key);
-			return true;
-		}
+        public void Unlock(string key, object lockHandle)
+        {
+            //var cache = GetCache();
+            //cache.Unlock(key, (DataCacheLockHandle)lockHandle);
+        }
 
-	    public IDictionaryEnumerator GetEnumerator()
-	    {
-            var cache = GetCache();
-            return cache.GetEnumerator();     
-	    }
+        #endregion
 
-		public void Clear()
-		{
-			var cache = GetCache();
-			var cacheEnum = cache.GetEnumerator();
-			while (cacheEnum.MoveNext())
-			{
-				cache.Remove(cacheEnum.Key.ToString());
-			}
-		}
-
-		public object GetAndLock(string key, TimeSpan timespan, out object lockHandle)
-		{
-			lockHandle = CacheEntries.GetLock(key);
-			return Get(key);
-		}
-
-		public object PutAndUnlock(string key, object value, object lockHandle)
-		{
-			//var cache = GetCache();
-			//return cache.PutAndUnlock(key, Serialize(value), (DataCacheLockHandle)lockHandle);
-			return null;
-		}
-
-		public void Unlock(string key, object lockHandle)
-		{
-			//var cache = GetCache();
-			//cache.Unlock(key, (DataCacheLockHandle)lockHandle);
-		}
-
-		private void Insert(string key, object obj, CacheDependency dep, TimeSpan timeframe, CacheItemPriority priority, CacheItemRemovedCallback callback)
-		{
-			if (obj != null)
-			{
-				var cache = GetCache();
-				cache.Insert(key, obj, dep, DateTime.UtcNow.Add(timeframe), Cache.NoSlidingExpiration, priority, callback);
-			}
-		}
-
-/*
+        /*
 		private void Insert(string key, object obj, CacheDependency dep, DateTimeOffset timeframeOffset, CacheItemPriority priority, CacheItemRemovedCallback callback)
 		{
 			if (obj != null)
@@ -123,26 +117,74 @@ namespace VirtoCommerce.ApiClient.Caching
 		}
 */
 
-		/// <summary>
-		/// Items the removed callback.
-		/// </summary>
-		/// <param name="key">The key.</param>
-		/// <param name="value">The value.</param>
-		/// <param name="reason">The reason.</param>
-		internal static void ItemRemovedCallback(string key, object value, CacheItemRemovedReason reason)
-		{
-			if (reason == CacheItemRemovedReason.Expired)
-			{
-				var cacheEntry = CacheEntries.Get(key);
+        #region Methods
 
-				if (cacheEntry != null)
-				{
-					lock (cacheEntry.Lock)
-					{
-						CacheEntries.Remove(key);
-					}
-				}
-			}
-		}
-	}
+        /// <summary>
+        ///     Items the removed callback.
+        /// </summary>
+        /// <param name="key">The key.</param>
+        /// <param name="value">The value.</param>
+        /// <param name="reason">The reason.</param>
+        internal static void ItemRemovedCallback(string key, object value, CacheItemRemovedReason reason)
+        {
+            if (reason == CacheItemRemovedReason.Expired)
+            {
+                var cacheEntry = CacheEntries.Get(key);
+
+                if (cacheEntry != null)
+                {
+                    lock (cacheEntry.Lock)
+                    {
+                        CacheEntries.Remove(key);
+                    }
+                }
+            }
+        }
+
+        private Cache GetCache()
+        {
+            if (this._cache != null)
+            {
+                return this._cache as Cache;
+            }
+
+            lock (this._lock)
+            {
+                if (this._cache != null)
+                {
+                    return this._cache as Cache;
+                }
+
+                var context = HttpContext.Current;
+
+                this._cache = context != null ? context.Cache : HttpRuntime.Cache;
+            }
+
+            return this._cache as Cache;
+        }
+
+        private void Insert(
+            string key,
+            object obj,
+            CacheDependency dep,
+            TimeSpan timeframe,
+            CacheItemPriority priority,
+            CacheItemRemovedCallback callback)
+        {
+            if (obj != null)
+            {
+                var cache = this.GetCache();
+                cache.Insert(
+                    key,
+                    obj,
+                    dep,
+                    DateTime.UtcNow.Add(timeframe),
+                    Cache.NoSlidingExpiration,
+                    priority,
+                    callback);
+            }
+        }
+
+        #endregion
+    }
 }

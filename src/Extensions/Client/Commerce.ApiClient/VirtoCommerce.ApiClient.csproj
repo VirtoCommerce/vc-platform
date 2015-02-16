@@ -120,10 +120,6 @@
     <Compile Include="Extensions\StoreClientExtensions.cs" />
     <Compile Include="CartClient.cs" />
     <Compile Include="SeoClient.cs" />
-    <Compile Include="Session\CustomerSession.cs" />
-    <Compile Include="Session\CustomerSessionService.cs" />
-    <Compile Include="Session\ICustomerSession.cs" />
-    <Compile Include="Session\ICustomerSessionService.cs" />
     <Compile Include="StoreClient.cs" />
     <Compile Include="ContentClient.cs" />
     <Compile Include="Extensions\BrowseClientExtension.cs" />

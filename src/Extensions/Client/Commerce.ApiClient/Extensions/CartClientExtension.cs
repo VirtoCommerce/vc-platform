@@ -12,8 +12,7 @@ namespace VirtoCommerce.ApiClient.Extensions
 
 		public static CartClient CreateCartClient(this CommerceClients source, string serviceUrl)
 		{
-			var connectionString = serviceUrl;
-			var client = new CartClient(new Uri(connectionString), source.CreateAzureSubscriptionMessageProcessingHandler());
+			var client = new CartClient(new Uri(serviceUrl), source.CreateAzureSubscriptionMessageProcessingHandler());
 			return client;
 		}
 	}

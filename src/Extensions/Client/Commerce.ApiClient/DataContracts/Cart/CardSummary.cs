@@ -1,6 +1,6 @@
 ﻿namespace VirtoCommerce.ApiClient.DataContracts.Cart
 {
-	public class CardSummary
-	{
-	}
+    public class CardSummary
+    {
+    }
 }

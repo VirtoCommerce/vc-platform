@@ -1,25 +1,28 @@
 ﻿using System;
+using System.Threading;
 
 namespace VirtoCommerce.ApiClient.Extensions
 {
 	public static class BrowseClientExtension
 	{
-		public static BrowseClient CreateBrowseClient(this CommerceClients source)
+		public static BrowseClient CreateBrowseClient(this CommerceClients source, string storeId, string language = "")
 		{
-			return source.CreateBrowseClient(ClientContext.Session.StoreId, ClientContext.Session.Language);
-		}
+			if (String.IsNullOrEmpty(language))
+				language = Thread.CurrentThread.CurrentUICulture.ToString();
 
-		public static BrowseClient CreateBrowseClient(this CommerceClients source, string storeId, string language)
-		{
 			// http://localhost/admin/api/mp/{0}/{1}/
-			var connectionString = String.Format("{0}{1}/{2}/{3}/", ClientContext.Configuration.ConnectionString, "mp", storeId, language);
+			var connectionString = String.Format(
+				"{0}{1}/{2}/{3}/",
+				ClientContext.Configuration.ConnectionString,
+				"mp",
+				storeId,
+				language);
 			return CreateBrowseClientWithUri(source, connectionString);
 		}
 
 		public static BrowseClient CreateBrowseClientWithUri(this CommerceClients source, string serviceUrl)
 		{
-			var connectionString = serviceUrl;
-			var client = new BrowseClient(new Uri(connectionString), source.CreateAzureSubscriptionMessageProcessingHandler());
+			var client = new BrowseClient(new Uri(serviceUrl), source.CreateAzureSubscriptionMessageProcessingHandler());
 			return client;
 		}
 	}

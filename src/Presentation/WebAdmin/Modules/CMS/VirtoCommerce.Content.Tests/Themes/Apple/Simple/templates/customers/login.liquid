@@ -1,0 +1,79 @@
+{% layout settings.customer_layout %}
+<!--START BREADCRUMB-->
+<div id="breadcrumb" class="desktop">
+	<a href="/">{{ 'general.breadcrumbs.home' | t }}</a> &mdash; <a href="/account/login" class="active">{{ 'general.breadcrumbs.log_in' | t }}</a>
+</div>
+<!--END BREADCRUMB-->
+<div class="twelve columns alpha omega">
+	<div class="six columns alpha" id="create-account">
+		<div id="customer">
+			<h1 class="accounts-title">{{ 'customer.login.title' | t }}</h1>
+			{% form 'customer_login' %}
+		      {{ form.errors | default_errors }}
+		      <div id="login_email" class="clearfix large_form">
+		        <label for="customer_email" class="login">{{ 'customer.login.email' | t }}</label>
+		        <input type="email" value="" name="customer[email]" id="customer_email" class="long" />
+		      </div>
+				{% if form.password_needed %}
+		        {% comment %}
+		          Customer Account Login
+		        {% endcomment %}
+		        <div id="login_password" class="clearfix large_form">
+		          <label for="customer_password" class="login">{{ 'customer.login.password' | t }}</label>
+		          <input type="password" value="" name="customer[password]" id="customer_password" class="long password" />
+
+		        </div>
+		        <div><p>
+		          <a href="#" onclick="showRecoverPasswordForm();return false;" >{{ 'customer.login.forgot_password' | t }}</a>
+		        </p></div>
+		       
+		      {% endif %}
+		      <div class="action_bottom">
+		        <input type="submit" class="button" value="{{ 'customer.login.sign_in' | t }}" />		       
+		      </div>
+		    {% endform %}
+		</div>
+		<div id="recover-password" style='display:none'>
+		    <div class="template_header">
+		      <h1 class="accounts-title border bottom">{{ 'customer.recover_password.title' | t }}</h1>
+		    </div>
+		    {% form 'recover_customer_password' %}
+		      {{ form.errors | default_errors }}
+		      <div id="recover_email" class="clearfix">
+		        <label for="email" class="large">{{ 'customer.recover_password.email' | t }}</label>
+		        <input type="email" value="" size="30" name="email" id="recover-email" class="long" />
+		      </div>
+				  <p>{{ 'customer.recover_password.subtext' | t }}</p>
+		      <div class="action_bottom">
+		        <input type="submit" class="button" value="{{ 'customer.login.forgot_password_submit_button' | t }}" />
+		        <span> {{ 'customer.general.or' | t }} <a href="#" onclick="hideRecoverPasswordForm();return false;">{{ 'customer.recover_password.cancel' | t }}</a></span>
+		      </div>
+		    {% endform %}
+		  </div>
+	</div>
+	{% if shop.checkout.guest_login %}
+	<div class="five columns alpha omega offset-by-one">
+	  <div id="guest">
+	    <div class="template_header">
+	      <h1 class="accounts-title border bottom">{{ 'customer.login.guest_title' | t }}</h1>
+	    </div>
+	    {% form 'guest_login' %}
+	      <input  type="submit" class="guest-login button" value="{{ 'customer.login.guest_submit' | t }}" />
+	    {% endform %}
+	  </div>
+		</div>
+	  {% endif %}
+</div>
+<script type="text/javascript">
+  function showRecoverPasswordForm() {
+    document.getElementById('recover-password').style.display = 'block';
+    document.getElementById('customer').style.display='none';
+  }
+
+  function hideRecoverPasswordForm() {
+    document.getElementById('recover-password').style.display = 'none';
+    document.getElementById('customer').style.display = 'block';
+  }
+
+  if (window.location.hash == '#recover') { showRecoverPasswordForm() }
+</script>

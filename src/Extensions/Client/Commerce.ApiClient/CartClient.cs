@@ -1,52 +1,76 @@
-﻿using System;
+﻿namespace VirtoCommerce.ApiClient
+{
+    #region
+
+using System;
 using System.Net.Http;
 using System.Threading.Tasks;
+
 using VirtoCommerce.ApiClient.DataContracts.Cart;
 using VirtoCommerce.ApiClient.Utilities;
 
-namespace VirtoCommerce.ApiClient
-{
-	public class CartClient : BaseClient
-	{
-		protected class RelativePaths
-		{
-			public const string CurrentCart = "cart/{0}/carts/current";
-			public const string UpdateCart = "cart/carts";
-		}
+    #endregion
 
-		/// <summary>
-		/// Initializes a new instance of the CartClient class.
-		/// </summary>
-		/// <param name="adminBaseEndpoint">Admin endpoint</param>
+    public class CartClient : BaseClient
+    {
+        #region Constructors and Destructors
+
+        /// <summary>
+        ///     Initializes a new instance of the CartClient class.
+        /// </summary>
+        /// <param name="adminBaseEndpoint">Admin endpoint</param>
 		/// <param name="appId">The API application ID.</param>
 		/// <param name="secretKey">The API secret key.</param>
 		public CartClient(Uri adminBaseEndpoint, string appId, string secretKey)
 			: base(adminBaseEndpoint, new HmacMessageProcessingHandler(appId, secretKey))
-		{
-		}
+        {
+        }
 
-		/// <summary>
-		/// Initializes a new instance of the CartClient class.
-		/// </summary>
-		/// <param name="adminBaseEndpoint">Admin endpoint</param>
-		/// <param name="handler"></param>
-		public CartClient(Uri adminBaseEndpoint, MessageProcessingHandler handler)
-			: base(adminBaseEndpoint, handler)
-		{
+        /// <summary>
+        ///     Initializes a new instance of the CartClient class.
+        /// </summary>
+        /// <param name="adminBaseEndpoint">Admin endpoint</param>
+        /// <param name="handler"></param>
+        public CartClient(Uri adminBaseEndpoint, MessageProcessingHandler handler)
+            : base(adminBaseEndpoint, handler)
+        {
+        }
 
-		}
+        #endregion
 
-		/// <summary>
-		/// Gets the current cart
-		/// </summary>
-		public Task<ShoppingCart> GetCurrentCartAsync(string storeId)
-		{
-			return GetAsync<ShoppingCart>(CreateRequestUri(string.Format(RelativePaths.CurrentCart, storeId)), useCache: false);
-		}
+        #region Public Methods and Operators
 
-		public Task<ShoppingCart> UpdateCurrentCartAsync(ShoppingCart cart)
-		{
-			return SendAsync<ShoppingCart, ShoppingCart>(CreateRequestUri(RelativePaths.UpdateCart), HttpMethod.Put, cart);
-		}
-	}
+        /// <summary>
+        ///     Gets the current cart
+        /// </summary>
+        public Task<ShoppingCart> GetCurrentCartAsync()
+        {
+            return this.GetAsync<ShoppingCart>(
+                this.CreateRequestUri(string.Format(RelativePaths.CurrentCart, "samplestore")),
+                useCache: false); // service should already know the cart
+
+            // TODO: remove storeid from the API's
+        }
+
+        public Task<ShoppingCart> UpdateCurrentCartAsync(ShoppingCart cart)
+        {
+            return this.SendAsync<ShoppingCart, ShoppingCart>(
+                this.CreateRequestUri(RelativePaths.UpdateCart),
+                HttpMethod.Put,
+                cart);
+        }
+
+        #endregion
+
+        protected class RelativePaths
+        {
+            #region Constants
+
+            public const string CurrentCart = "cart/{0}/carts/current";
+
+            public const string UpdateCart = "cart/carts";
+
+            #endregion
+        }
+    }
 }

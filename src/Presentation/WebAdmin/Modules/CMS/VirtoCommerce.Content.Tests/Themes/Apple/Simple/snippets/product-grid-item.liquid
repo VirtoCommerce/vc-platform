@@ -1,0 +1,12 @@
+{% assign on_sale = false %}
+{% if product.compare_at_price > product.price %}{% assign on_sale = true %}{% endif %}
+<div class="four columns {% cycle 'alpha','','omega' %}">
+	<a href="{{ product.url | within: collection }}" id="product-{{ forloop.index }}" {% unless template == "product" %}class="animated fadeInUpBig"{% endunless %}>
+		{% if on_sale  %}<div class="sale">{{ 'collections.products.sale' | t }}</div>{% endif %}
+		{% unless product.available %}<div class="sold-out">{{ 'collections.products.sold_out' | t }}</div>{% endunless %}
+		<img src="{{ product.featured_image.src | product_img_url: 'large' }}" alt="{{ product.featured_image.alt | escape }}" class="product" />
+		<h3>{{ product.title }}</h3>
+		<h4>{% if product.price_varies %}<small>{{ 'collections.products.from' | t }}</small> {% endif %}{{ product.price | money }} {% if on_sale == true %}<del>{{ product.compare_at_price | money }}</del>{% endif %}</h4>
+	</a>
+</div>
+{% cycle '', '', '<br class="clear">' %}

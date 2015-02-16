@@ -12,8 +12,7 @@ namespace VirtoCommerce.ApiClient.Extensions
 
 		public static SeoClient CreateSeoClient(this CommerceClients source, string serviceUrl)
 		{
-			var connectionString = serviceUrl;
-			var client = new SeoClient(new Uri(connectionString), source.CreateAzureSubscriptionMessageProcessingHandler());
+			var client = new SeoClient(new Uri(serviceUrl), source.CreateAzureSubscriptionMessageProcessingHandler());
 			return client;
 		}
 	}

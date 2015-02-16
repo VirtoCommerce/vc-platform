@@ -1,0 +1,13 @@
+<!--START BREADCRUMB-->
+<div id="breadcrumb" class="desktop">
+	<a href="/">{{ 'general.breadcrumbs.home' | t }}</a> &mdash; <a href="/collections" class="active">{{ 'general.breadcrumbs.collections_list' | t }}</a>
+</div>
+<!--END BREADCRUMB-->
+<h1>{{ 'collections.collection_list.collection_list_title' | t }}</h1>
+<!--START COLLECTION GRID-->
+<section class="product-grid twelve columns alpha omega">
+	{% for collection in collections %}
+	  {% include 'collection-grid-item' %}
+	{% endfor %}
+</section>
+<!--END COLLECTION GRID-->

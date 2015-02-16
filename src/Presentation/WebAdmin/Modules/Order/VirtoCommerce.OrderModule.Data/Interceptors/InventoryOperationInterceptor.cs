@@ -33,7 +33,7 @@ namespace VirtoCommerce.OrderModule.Data.Interceptors
 				var stockOutOperation = changedEntry.Entity as IStockOutOperation;
 				if (stockOutOperation != null && stockOutOperation.IsApproved)
 				{
-					var inventoryInfos = _inventoryService.GetProductInventoryInfos(stockOutOperation.Positions.Select(x => x.ProductId))
+					var inventoryInfos = _inventoryService.GetProductsInventoryInfos(stockOutOperation.Positions.Select(x => x.ProductId))
 														  .ToArray();
 					var changedInventoryInfos = new List<InventoryInfo>();
 					foreach (var lineItem in stockOutOperation.Positions)
@@ -44,17 +44,17 @@ namespace VirtoCommerce.OrderModule.Data.Interceptors
 							changedInventoryInfos.Add(inventoryInfo);
 							if(changedEntry.State == EntityState.Deleted)
 							{
-								inventoryInfo.Stock += lineItem.Quantity; 
+								inventoryInfo.InStockQuantity += lineItem.Quantity; 
 							}
 							else if(changedEntry.State == EntityState.Added)
 							{
-								inventoryInfo.Stock -= lineItem.Quantity; 
+								inventoryInfo.InStockQuantity -= lineItem.Quantity; 
 							}
 							else
 							{
 								var quantityProperty = changedEntry.Property("Quantity");
 								var delta = (int)quantityProperty.CurrentValue - (int)quantityProperty.OriginalValue;
-								inventoryInfo.Stock -= lineItem.Quantity; 
+								inventoryInfo.InStockQuantity -= lineItem.Quantity; 
 							}
 						}
 					}

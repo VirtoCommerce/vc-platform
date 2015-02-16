@@ -1,0 +1,82 @@
+{% include 'breadcrumb' %}
+<h1>{{ 'cart.general.title' | t }}</h1>
+<section id="cart">
+	{% if cart.item_count > 0 %}
+	<form action="/cart" method="post">
+		<!--START CART CONTENTS-->
+		<div class="twelve columns alpha omega">
+			<!-- START HEADERS-->
+			<div class="headers clearfix">
+				<div class="six columns alpha description">
+					{{ 'cart.labels.description' | t }}
+				</div>
+				<div class="two columns price desktop">
+					{{ 'cart.labels.price' | t }}
+				</div>
+				<div class="one columns quantity desktop">
+					{{ 'cart.labels.quantity' | t }}
+				</div>
+				<div class="two columns total desktop">
+					<span>{{ 'cart.labels.total' | t }}</span>
+				</div>
+			</div>
+			<!-- END HEADERS-->
+			 {% for item in cart.items %}
+			<!-- START ROW-->
+			<div class="row">
+				<div class="six columns alpha description">
+					<img src="{{ item | img_url: 'compact' }}" alt="{{ item.title | escape }}" />
+					<div class="info">
+						<h3><a href="{{ item.url | within: collections.all }}">{{ item.title }}</a></h3>
+						<h4>{{ item.vendor }}</h4>
+						<p>{{ item.product.description | strip_html | truncatewords: 20 }}</p>
+
+					</div>
+				</div>
+				<div class="two columns price desktop">
+					{{ item.price | money }}
+				</div>
+				<div class="one columns quantity tr">
+					<input type="text" name="updates[]" id="updates_{{ item.id }}" value="{{ item.quantity }}" /> <p class="mobile">x {{ item.price | money }}</p>
+				</div>
+				<div class="two columns total desktop">
+					<span>{{ item.line_price | money }} </span>
+				</div>
+				<div class="one column remove omega desktop">
+					<a href="/cart/change?line={{ forloop.index }}&quantity=0">x</a>
+				</div>
+			</div>
+			<!-- END ROW-->
+			{% endfor %}
+		</div>
+		<!--END CART CONTENTS-->
+		<br class="clear">
+		<!--START TOTAL-->
+		<div class="twelve columns alpha omega row">
+			<div class="six columns alpha continue-shopping"><a href="/collections/all">{{ 'cart.general.continue_link' | t }}</a></div>
+			{% assign cart_price = cart.total_price | money %}
+			<div class="six columns omega cart total"><h2>{{ 'cart.general.cart_total_html' | t: price: cart_price }}</h2></div>
+		</div>
+		<!--END TOTAL-->
+		<br class="clear">
+		<!-- START ACTIONS -->
+		<div class="twelve columns alpha omega">
+			<div class="six columns alpha">
+				<textarea id="note" name="note" placeholder="{{ 'cart.general.cart_note_placeholder' | t }}">{{ cart.note }}</textarea>
+			</div>
+			<div class="six columns omega actions">
+		 		<input type="submit" id="update" name="update" value="{{ 'cart.general.update' | t }}" />
+				<input type="submit" id="checkout" name="checkout" value="{{ 'cart.general.check_out' | t }}" />
+				{% if additional_checkout_buttons %}
+				<div style="clear:both">
+				{{ content_for_additional_checkout_buttons }}
+				</div>
+				{% endif %}
+			</div>
+		</div>
+		<!-- END ACTIONS -->
+	</form>
+	{% else %}
+	 <p>{{ 'cart.general.empty_cart_message_html' | t }}</p>
+	{% endif %}
+</section>

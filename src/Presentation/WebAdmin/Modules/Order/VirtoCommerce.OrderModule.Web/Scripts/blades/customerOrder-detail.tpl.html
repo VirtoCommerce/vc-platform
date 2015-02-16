@@ -2,49 +2,49 @@
     <div class="blade-inner">
         <div class="inner-block">
             <div class="block">
-                <div class="column col-50">
-                    <div class="block">
-                        <label>Customer order number</label>
-                        <div class="input-control text">
+                <div class="column">
+                    <div class="form-group">
+                        <label class="form-label">Customer order number</label>
+                        <div class="form-input">
                             <input required type="text" ng-model="blade.currentEntity.number">
                         </div>
                     </div>
-                    <div class="block">
+                    <div class="form-group">
                         <label>Status</label>
-                        <div class="input-control select">
+                        <div class="form-input">
                             <!--ng-options="x for x in types"-->
                             <select ng-model="blade.currentEntity.statusId" class="chosen-select">
                                 <option value="new">New</option>
                             </select>
                         </div>
                     </div>
-                    <div class="block">
-                        <label>Fulfillment center</label>
-                        <div class="input-control select">
+                    <div class="form-group">
+                        <label class="form-label">Fulfillment center</label>
+                        <div class="form-input">
                             <select ng-model="blade.currentEntity.fulfillmentId" class="chosen-select">
                                 <option value="bejieng">Beijing</option>
                             </select>
                         </div>
                     </div>
                 </div>
-                <div class="column col-50">
-                    <div class="block">
-                        <label>from</label>
-                        <div class="input-control text">
+                <div class="column">
+                    <div class="form-group">
+                        <label class="form-label">from</label>
+                        <div class="form-input">
                             {{blade.currentEntity.createdDate | date:'short'}}
                         </div>
                     </div>
-                    <div class="block">
-                        <label>Site</label>
-                        <div class="input-control select">
+                    <div class="form-group">
+                        <label class="form-label">Site</label>
+                        <div class="form-input">
                             <select ng-model="blade.currentEntity.siteId" class="chosen-select">
                                 <option value="test">Test site</option>
                             </select>
                         </div>
                     </div>
-                    <div class="block">
-                        <label>Customer</label>
-                        <div class="input-control select">
+                    <div class="form-group">
+                        <label class="form-label">Customer</label>
+                        <div class="form-input">
                             <select ng-model="blade.currentEntity.customerId" class="chosen-select">
                                 <option value="Evant">Evant Moriss</option>
                             </select>
@@ -52,37 +52,31 @@
                     </div>
                 </div>
             </div>
-            <div class="block">
-                <p class="title">Custom attributes</p>
-            </div>
-            <div class="block">
-                <div class="column col-50">
-                    <div class="block">
-                        <label>Custom string field</label>
-                        <div class="input-control text">
-                            <input type="text">
-                        </div>
-                        <div class="input-control checkbox default-style block" data-role="input-control">
-                            <label>
-                                <input type="checkbox" name="r1">
-                                <span class="check"></span>
-                                Custom flag field
-                            </label>
-                        </div>
+            <div class="sub-t">Custom attributes</div>
+            <div class="column">
+                <div class="form-group">
+                    <label class="form-label">Custom string field</label>
+                    <div class="form-input">
+                        <input type="text">
                     </div>
-                </div>
-                <div class="column col-50">
-                    <div class="block">
-                        <label>Custom text field</label>
-                        <div class="input-control textarea">
-                            <textarea></textarea>
-                        </div>
+                    <div class="form-control __checkbox">
+                        <label class="form-label">
+                            <input type="checkbox" name="r1">
+                            <span class="check"></span>
+                            <span class="name">Custom flag field</span>
+                        </label>
                     </div>
                 </div>
             </div>
-            <div class="block">
-                <p class="title">Documents</p>
+            <div class="column">
+                <div class="form-group">
+                    <label class="form-label">Custom text field</label>
+                    <div class="form-input">
+                        <textarea></textarea>
+                    </div>
+                </div>
             </div>
+            <div class="sub-t">Documents</div>
             <div class="tree-view">
                 <div class="tree-scroll">
                     <ul class="tree">

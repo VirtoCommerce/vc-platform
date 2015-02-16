@@ -1,0 +1,20 @@
+<!-- /snippets/tags-article.liquid -->
+{% comment %}
+
+  This snippet renders a list item with all tags listed out.
+  It is used in article.liquid and blog.liquid.
+
+  More information:
+   - index#article-tags
+   - http://docs.shopify.com/themes/liquid-variables/article
+
+{% endcomment %}
+
+{% if article.tags.size > 0 %}
+  <li>
+    <span>{{ 'blogs.article.tags' | t }}:</span>
+    {% for tag in article.tags %}
+      <a href="{{ blog.url }}/tagged/{{ tag | handle }}">{{ tag }}</a>{% unless forloop.last %}, {% endunless %}
+    {% endfor %}
+  </li>
+{% endif %}

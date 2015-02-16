@@ -1,0 +1,48 @@
+<!--START BREADCRUMB-->
+<div id="breadcrumb" class="desktop">
+  <span itemscope itemtype="http://data-vocabulary.org/Breadcrumb">
+    <a href="/" {% if template == 'index' %}class="active"{% endif %} itemprop="url">
+      <span itemprop="title">{{ 'general.breadcrumbs.home' | t }}</span>
+    </a>
+  </span>
+  {% unless template == 'index' %}&mdash;{% endunless %}
+	{% if template contains 'collection' %}
+		{% if current_tags %}
+		<a href="{{collection.url }}">{{ collection.title }}</a> &mdash; {{ current_tags | join: ', ' }}
+		{% else %}
+		<a href="{{ collection.url }}" class="active">{{ collection.title }}</a>
+		{% endif %}
+	{% endif %}
+	{% if template contains 'product' %}
+      <span itemscope itemtype="http://data-vocabulary.org/Breadcrumb">
+		{% if collection.url contains 'collections' %}
+        <a href="{{ collection.url }}" itemprop="url"><span itemprop="title">{{ collection.title }}</span></a> &mdash; <a href="{{ product.url }}" class="active">{{ product.title }}</a>
+		{% else %}
+			<a href="{{ product.url }}" class="active">{{ product.title }}</a>
+		{% endif %}
+	  </span>
+	{% endif %}
+	{% if template contains 'page' %}
+		<a href="{{ page.url }}" class="active">{{ page.title }}</a>
+	{% endif %}
+	{% if template contains 'cart' %}
+		<a href="/cart" class="active">{{ 'general.breadcrumbs.cart' | t }}</a>
+	{% endif %}
+	{% if template contains '404' %}
+		<a href="/" class="active">{{ 'general.breadcrumbs.404' | t }}</a>
+	{% endif %}
+	{% if template contains 'search' %}
+		<a href="/search" class="active">{{ 'general.breadcrumbs.search' | t }}</a>
+	{% endif %}
+	{% if template == 'blog' %}
+		{% if current_tags %}
+		<a href="{{ blog.url }}">{{ blog.title }}</a>  &mdash;  <a href="{{ blog.url }}/tagged/{{ current_tags.first | handle }}" class="active">{{ current_tags.first }}</a>
+		{% else %}
+		<a href="{{ blog.url }}" class="active">{{ blog.title }}</a>
+		{% endif %}
+	{% endif %}
+	{% if template == 'article' %}
+		<a href="{{ blog.url }}">{{ blog.title }}</a> &mdash; <a href="{{ article.url }}" class="active">{{ article.title }}</a>
+	{% endif %}
+</div>
+<!--END BREADCRUMB-->

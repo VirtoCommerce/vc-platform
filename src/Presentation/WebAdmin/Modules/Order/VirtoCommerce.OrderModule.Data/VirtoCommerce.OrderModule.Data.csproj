@@ -66,6 +66,10 @@
     <Compile Include="Migrations\201502050914047_Initial.Designer.cs">
       <DependentUpon>201502050914047_Initial.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201502121401413_FulfillmentMisspeling.cs" />
+    <Compile Include="Migrations\201502121401413_FulfillmentMisspeling.Designer.cs">
+      <DependentUpon>201502121401413_FulfillmentMisspeling.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Model\AddressEntity.cs" />
     <Compile Include="Model\CustomerOrderEntity.cs" />
@@ -104,6 +108,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201502050914047_Initial.resx">
       <DependentUpon>201502050914047_Initial.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201502121401413_FulfillmentMisspeling.resx">
+      <DependentUpon>201502121401413_FulfillmentMisspeling.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

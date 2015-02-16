@@ -1,0 +1,88 @@
+{% if settings.show_frontpage_hero %}
+<!--START BANNER-->
+<div class="twelve columns alpha omega">
+  <section id="hero" class="alpha omega animated fadeInUpBig no-text">
+    <a href="{{ settings.banner_url }}"><img src="{{ 'hero.jpg' | asset_url }}" alt="{{ settings.frontpage_hero_alt }}"></a>
+  </section>
+</div>
+<!--END BANNER-->
+{% endif %}
+
+{% comment %}
+  If the setting for frontpage collection is set to None, 
+  we won't show anything. That way, a merchant can have
+  a banner on his homepage with no featured products below.
+{% endcomment %}
+
+{% unless settings.frontpage_collection == blank %}
+
+  {% assign collection = collections[settings.frontpage_collection] %}
+  {% comment %}
+    If the collection is hidden or empty.
+  {% endcomment %}
+
+  {% if collection.empty? or collection.products_count == 0 %}
+
+  <br />
+
+  <div class="helper-section clearfix">
+
+    <div class="note helper-note">
+      <h3>{{ 'home_page.onboarding.no_products_title' | t }}</h3>
+      <p>{{ 'home_page.onboarding.no_products_html' | t }}</p>
+      <p class="p0">{{ 'home_page.onboarding.pick_collection_subtext_html' | t }}</p>
+    </div>
+
+    <div class="helper-content">
+
+      <section class="product-grid twelve columns alpha omega">
+
+        <div class="four columns alpha">
+          <a href="#" id="product-1" class="animated fadeInUpBig">
+            <div class="sample-product-wrapper">
+              <div class="sample-product">{{ 'home_page.onboarding.image_placeholder' | t }}</div>
+            </div>
+            <h3>{{ 'home_page.onboarding.test_product_title' | t }}</h3>
+            <h4><small>{{ 'collections.products.from' | t }}</small> {{ 2000 | money }} </h4>
+          </a>
+        </div>
+
+        <div class="four columns">
+          <a href="#" id="product-1" class="animated fadeInUpBig">
+            <div class="sample-product-wrapper">
+              <div class="sample-product">{{ 'home_page.onboarding.image_placeholder' | t }}</div>
+            </div>
+            <h3>{{ 'home_page.onboarding.test_product_title' | t }}</h3>
+            <h4><small>{{ 'collections.products.from' | t }}</small> {{ 2000 | money }} </h4>
+          </a>
+        </div>
+
+        <div class="four columns omega">
+          <a href="#" id="product-1" class="animated fadeInUpBig">
+            <div class="sample-product-wrapper">
+              <div class="sample-product">{{ 'home_page.onboarding.image_placeholder' | t }}</div>
+            </div>
+            <h3>{{ 'home_page.onboarding.test_product_title' | t }}</h3>
+            <h4><small>{{ 'collections.products.from' | t }}</small> {{ 2000 | money }} </h4>
+          </a>
+        </div>
+
+      </section>
+
+    </div><!-- helper content -->
+    
+  </div><!-- helper section -->
+
+  {% else %}
+
+  <br />
+
+  <section class="product-grid twelve columns alpha omega">
+    {% for product in collection.products %}
+      {% include 'product-grid-item' %}
+    {% endfor %}
+  </section>
+
+  {% endif %}
+
+{% endunless %}

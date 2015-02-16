@@ -29,6 +29,16 @@ namespace VirtoCommerce.Foundation.Data.Inventories
             Database.SetInitializer<EFInventoryRepository>(null);
         }
 
+		public EFInventoryRepository(string connectionStringName, IInventoryEntityFactory entityFactory, IInterceptor[] interceptors = null)
+            : base(connectionStringName, entityFactory, interceptors: interceptors)
+		{
+			_entityFactory = entityFactory;
+			Database.SetInitializer(new ValidateDatabaseInitializer<EFInventoryRepository>());
+
+			this.Configuration.AutoDetectChangesEnabled = true;
+			this.Configuration.ProxyCreationEnabled = false;
+		}
+
         [InjectionConstructor]
         public EFInventoryRepository(IInventoryEntityFactory entityFactory, IInterceptor[] interceptors = null)
             : base(InventoryConfiguration.Instance.Connection.SqlConnectionStringName, factory: entityFactory, interceptors: interceptors)

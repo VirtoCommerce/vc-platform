@@ -21,8 +21,6 @@ namespace VirtoCommerce.StoreModule.Test
 			var result = controller.GetStores() as OkNegotiatedContentResult<Store[]>;
 			Assert.IsNotNull(result.Content);
 		}
-
-
 		
 		[TestMethod]
 		public void CreateNewStore()

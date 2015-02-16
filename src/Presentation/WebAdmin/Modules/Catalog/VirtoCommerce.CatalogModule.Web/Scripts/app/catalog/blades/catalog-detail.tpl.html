@@ -1,16 +1,15 @@
 ﻿<div class="blade-content">
 	<div class="blade-inner">
 		<div class="inner-block">
-			<form class="normal">
-			    <fieldset>
-			        <label>Catalog name</label>
-			        <div class="input-control text" data-role="input-control">
-			            <input ng-model="currentBlade.currentEntity.name" type="text" value="" placeholder="input text" focus-on="" required>
-			            <button type="button" tabindex="-1" class="btn-clear"></button>
+			<form class="form">
+			    <div class="form-group">
+			    	<label class="form-label">Catalog name</label>
+			        <div class="form-input">
+			            <input ng-model="currentBlade.currentEntity.name" type="text" value="" placeholder="currentBlade.currentEntity.name" focus-on="" required>
 			        </div>
-			        <va-widget-container group="catalogLanguages" blade="blade"></va-widget-container>
-			    </fieldset>
+			    </div>
 			</form>
+			<va-widget-container group="catalogLanguages" blade="blade"></va-widget-container>
 		</div>
 	</div>
 </div>

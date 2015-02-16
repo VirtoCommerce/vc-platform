@@ -1,27 +1,100 @@
-﻿using System;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace VirtoCommerce.ApiClient.Caching
+﻿namespace VirtoCommerce.ApiClient.Caching
 {
+    #region
+
+    using System;
+    using System.Text;
+    using System.Threading.Tasks;
+
+    #endregion
+
     public class CacheHelper
     {
-        private readonly ICacheRepository _cacheRepository;
+        #region Constants
+
         public const string GlobalCachePrefix = "_vcc@che";
+
+        #endregion
+
+        #region Fields
+
+        private readonly ICacheRepository _cacheRepository;
+
+        #endregion
+
+        #region Constructors and Destructors
 
         public CacheHelper(ICacheRepository repository)
         {
-            _cacheRepository = repository;
+            this._cacheRepository = repository;
         }
 
-        public T Get<T>(string cacheKey, Func<T> fallbackFunction, TimeSpan timeSpan, bool useCache = true) where T : class
+        #endregion
+
+        #region Public Methods and Operators
+
+        /// <summary>
+        ///     Creates the cache key.
+        /// </summary>
+        /// <param name="prefix">The prefix.</param>
+        /// <param name="keys">The keys.</param>
+        /// <returns></returns>
+        public static string CreateCacheKey(string prefix, params string[] keys)
         {
-            if (_cacheRepository == null || !useCache)
+            var returnKey = new StringBuilder(string.Concat(GlobalCachePrefix, prefix));
+
+            if (keys != null)
+            {
+                foreach (var key in keys)
+                {
+                    returnKey.Append("-");
+                    returnKey.Append(key);
+                }
+            }
+
+            return returnKey.ToString();
+        }
+
+        public static string CreateCacheKey(params string[] keys)
+        {
+            var returnKey = new StringBuilder();
+
+            if (keys != null)
+            {
+                foreach (var key in keys)
+                {
+                    returnKey.Append("-");
+                    returnKey.Append(key);
+                }
+            }
+
+            return returnKey.ToString();
+        }
+
+        public void Add(string key, object value)
+        {
+            this._cacheRepository.Add(key, value);
+        }
+
+        public void Add(string key, object value, TimeSpan timeout)
+        {
+            this._cacheRepository.Add(key, value, timeout);
+        }
+
+        public void Clear()
+        {
+            this._cacheRepository.Clear();
+        }
+
+        public T Get<T>(string cacheKey, Func<T> fallbackFunction, TimeSpan timeSpan, bool useCache = true)
+            where T : class
+        {
+            if (this._cacheRepository == null || !useCache)
             {
                 return fallbackFunction();
             }
 
-            var data = _cacheRepository.Get(cacheKey);
+            var data = this._cacheRepository.Get(cacheKey);
 
             if (data != null)
             {
@@ -33,19 +106,28 @@ namespace VirtoCommerce.ApiClient.Caching
             }
 
             var data2 = fallbackFunction();
-            _cacheRepository.Add(cacheKey, data2 ?? (object)DBNull.Value, timeSpan);
+            this._cacheRepository.Add(cacheKey, data2 ?? (object)DBNull.Value, timeSpan);
 
             return data2;
         }
 
-        public async Task<T> GetAsync<T>(string cacheKey, Func<Task<T>> fallbackFunction, TimeSpan timeSpan, bool useCache = true) where T : class
+        public object Get(string key)
         {
-            if (_cacheRepository == null || !useCache)
+            return this._cacheRepository[key];
+        }
+
+        public async Task<T> GetAsync<T>(
+            string cacheKey,
+            Func<Task<T>> fallbackFunction,
+            TimeSpan timeSpan,
+            bool useCache = true) where T : class
+        {
+            if (this._cacheRepository == null || !useCache)
             {
                 return await fallbackFunction();
             }
 
-            var data = _cacheRepository.Get(cacheKey);
+            var data = this._cacheRepository.Get(cacheKey);
 
             if (data != null)
             {
@@ -57,68 +139,16 @@ namespace VirtoCommerce.ApiClient.Caching
             }
 
             var data2 = await fallbackFunction();
-            _cacheRepository.Add(cacheKey, data2 ?? (object)DBNull.Value, timeSpan);
+            this._cacheRepository.Add(cacheKey, data2 ?? (object)DBNull.Value, timeSpan);
 
             return data2;
         }
 
-        public void Add(string key, object value)
-        {
-            _cacheRepository.Add(key, value);
-        }
-
-        public void Add(string key, object value, TimeSpan timeout)
-        {
-            _cacheRepository.Add(key, value, timeout);
-        }
-
-        public object Get(string key)
-        {
-            return _cacheRepository[key];
-        }
-
         public bool Remove(string key)
         {
-            return _cacheRepository.Remove(key);
+            return this._cacheRepository.Remove(key);
         }
 
-        public void Clear()
-        {
-            _cacheRepository.Clear();
-        }
-
-        /// <summary>
-        /// Creates the cache key.
-        /// </summary>
-        /// <param name="prefix">The prefix.</param>
-        /// <param name="keys">The keys.</param>
-        /// <returns></returns>
-        public static string CreateCacheKey(string prefix, params string[] keys)
-        {
-            var returnKey = new StringBuilder(string.Concat(GlobalCachePrefix, prefix));
-
-            if (keys != null)
-                foreach (var key in keys)
-                {
-                    returnKey.Append("-");
-                    returnKey.Append(key);
-                }
-
-            return returnKey.ToString();
-        }
-
-        public static string CreateCacheKey(params string[] keys)
-        {
-            var returnKey = new StringBuilder();
-
-            if (keys != null)
-                foreach (var key in keys)
-                {
-                    returnKey.Append("-");
-                    returnKey.Append(key);
-                }
-
-            return returnKey.ToString();
-        }
+        #endregion
     }
 }

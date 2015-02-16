@@ -1,29 +1,30 @@
-﻿<div class="blade-content">
+﻿<div class="blade-static __bottom" ng-include="'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/wizards/newProduct/new-product-wizard-actions.tpl.html'"></div>
+<div class="blade-content">
     <div class="blade-inner">
         <div class="inner-block">
             <form class="form" name="newProductForm">
-                <fieldset ng-init="setForm(newProductForm);">
-                    <label>SKU:</label>
-                    <div data-role="input-control" class="input-control text">
-                        <input required class="form-control" ng-model="blade.item.code" placeholder="Enter item sku" />
+                <div ng-init="setForm(newProductForm);">
+                    <div class="form-group">
+                        <label class="form-label">SKU:</label>
+                        <div class="form-input">
+                            <input required class="form-control" ng-model="blade.item.code" placeholder="Enter item sku" />
+                        </div>
                     </div>
-                </fieldset>
+                </div>
             </form>
 
-            <ul class="list-extended">
-                <li ng-click="openBlade('properties')" ng-if="blade.item.properties.length > 0">
-                    <i class="ico fa fa-plus"></i>
-                    <span class="title">Add properties</span>
-                    <span class="sub-title">{{ getUnfilledProperties().length }} of {{blade.item.properties.length}} properties filled</span>
+            <ul class="list __items">
+                <li class="list-item" ng-click="openBlade('properties')" ng-if="blade.item.properties.length > 0">
+                    <i class="list-ico fa fa-cogs"></i>
+                    <span class="list-t">Add properties</span>
+                    <span class="list-descr">{{ getUnfilledProperties().length }} of {{blade.item.properties.length}} properties filled</span>
                 </li>
-                <li ng-click="openBlade('images')">
-                    <i class="ico fa fa-image"></i>
-                    <span class="title">Upload images</span>
-                    <span class="sub-title">{{blade.item.images.length >= 0 ? blade.item.images.length : 0}} image(s) uploaded</span>
+                <li class="list-item" ng-click="openBlade('images')">
+                    <i class="list-ico fa fa-image"></i>
+                    <span class="list-t">Upload images</span>
+                    <span class="list-descr">{{blade.item.images.length >= 0 ? blade.item.images.length : 0}} image(s) uploaded</span>
                 </li>
             </ul>
         </div>
     </div>
-</div>
-<div class="static bottom" ng-include="'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/wizards/newProduct/new-product-wizard-actions.tpl.html'">
 </div>

@@ -1,18 +1,29 @@
-﻿using System.Collections.Generic;
-using System.Threading;
-
-namespace VirtoCommerce.ApiClient.Caching
+﻿namespace VirtoCommerce.ApiClient.Caching
 {
+    #region
+
+    using System.Collections.Generic;
+    using System.Threading;
+
+    #endregion
+
     /// <summary>
-    /// Thread safe class to manipulate cache locks.
+    ///     Thread safe class to manipulate cache locks.
     /// </summary>
     internal class CacheEntries
     {
+        #region Static Fields
+
         private static readonly Dictionary<string, CacheEntry> _Entries;
+
         private static readonly ReaderWriterLockSlim _Lock;
 
+        #endregion
+
+        #region Constructors and Destructors
+
         /// <summary>
-        /// Initializes the <see cref="CacheEntries"/> class.
+        ///     Initializes the <see cref="CacheEntries" /> class.
         /// </summary>
         static CacheEntries()
         {
@@ -20,12 +31,16 @@ namespace VirtoCommerce.ApiClient.Caching
             _Entries = new Dictionary<string, CacheEntry>();
         }
 
+        #endregion
+
+        #region Public Methods and Operators
+
         /// <summary>
-        /// Determines whether the specified key contains key.
+        ///     Determines whether the specified key contains key.
         /// </summary>
         /// <param name="key">The key.</param>
         /// <returns>
-        /// 	<c>true</c> if the specified key contains key; otherwise, <c>false</c>.
+        ///     <c>true</c> if the specified key contains key; otherwise, <c>false</c>.
         /// </returns>
         public static bool ContainsKey(string key)
         {
@@ -33,7 +48,7 @@ namespace VirtoCommerce.ApiClient.Caching
         }
 
         /// <summary>
-        /// Gets the specified key.
+        ///     Gets the specified key.
         /// </summary>
         /// <param name="key">The key.</param>
         /// <returns></returns>
@@ -56,7 +71,7 @@ namespace VirtoCommerce.ApiClient.Caching
         }
 
         /// <summary>
-        /// Gets the lock.
+        ///     Gets the lock.
         /// </summary>
         /// <param name="key">The key.</param>
         /// <returns></returns>
@@ -94,7 +109,7 @@ namespace VirtoCommerce.ApiClient.Caching
         }
 
         /// <summary>
-        /// Removes the specified key.
+        ///     Removes the specified key.
         /// </summary>
         /// <param name="key">The key.</param>
         public static void Remove(string key)
@@ -120,6 +135,7 @@ namespace VirtoCommerce.ApiClient.Caching
                 _Lock.ExitUpgradeableReadLock();
             }
         }
-    }
 
+        #endregion
+    }
 }

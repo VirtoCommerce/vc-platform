@@ -15,14 +15,19 @@ namespace VirtoCommerce.Foundation.Frameworks.ConventionInjections
 		{
 			if (propertyNames != null)
 			{
-				foreach (var property in propertyNames)
+				foreach (var lambda in propertyNames.Select(x=> (LambdaExpression)x))
 				{
-					var expression = property.Body as MemberExpression;
-					if (expression != null)
+					MemberExpression memberExpression;
+					if (lambda.Body is UnaryExpression)
 					{
-						var memberName = expression.Member.Name;
-						_propertyNames.Add(memberName);
+						var unaryExpression = (UnaryExpression)lambda.Body;
+						memberExpression = (MemberExpression)unaryExpression.Operand;
 					}
+					else
+					{
+						memberExpression = (MemberExpression)lambda.Body;
+					}
+					_propertyNames.Add(memberExpression.Member.Name);
 				}
 			}
 		}

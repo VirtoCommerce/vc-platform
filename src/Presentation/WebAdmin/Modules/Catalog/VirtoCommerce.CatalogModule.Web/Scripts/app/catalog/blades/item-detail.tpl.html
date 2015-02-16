@@ -1,20 +1,22 @@
-﻿<div class="blade-content">
+﻿<div class="blade-content __medium-wide __gray">
     <div class="blade-inner">
         <div class="inner-block">
-            <form name="itemDetailForm">
-                <fieldset ng-init="setForm(itemDetailForm);">
-                    <label>SKU:</label>
-                    <div data-role="input-control" class="input-control text">
+            <form name="itemDetailForm" class="form" ng-init="setForm(itemDetailForm);">
+                <div class="form-group">
+                    <label class="form-label">SKU:</label>
+                    <div class="form-input">
                         <input required class="form-control" ng-model="currentBlade.item.code" placeholder="Enter item sku" />
                     </div>
-                    <label>Name:</label>
-                    <div data-role="input-control" class="input-control textarea">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Name:</label>
+                    <div class="form-input">
                         <textarea class="form-control" cols="30" rows="3" ng-model="currentBlade.item.name" placeholder="Enter item name"></textarea>
                     </div>
-                </fieldset>
+                </div>
             </form>
             
-            <div class="tiles clearfix">
+            <div class="tile-group four">
                 <va-widget-container group="itemDetail" blade="blade"></va-widget-container>
             </div>
         </div>

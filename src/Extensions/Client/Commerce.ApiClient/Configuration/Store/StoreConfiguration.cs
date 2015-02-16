@@ -1,12 +1,24 @@
-﻿using System;
-using System.Configuration;
-using System.Threading;
-
-namespace VirtoCommerce.Web.Core.Configuration.Store
+﻿namespace VirtoCommerce.Web.Core.Configuration.Store
 {
+    #region
+
+    using System;
+    using System.Configuration;
+    using System.Threading;
+
+    #endregion
+
     public class StoreConfiguration : ConfigurationSection
     {
-        private static Lazy<StoreConfiguration> _instance = new Lazy<StoreConfiguration>(CreateInstance, LazyThreadSafetyMode.ExecutionAndPublication);
+        #region Static Fields
+
+        private static readonly Lazy<StoreConfiguration> _instance = new Lazy<StoreConfiguration>(
+            CreateInstance,
+            LazyThreadSafetyMode.ExecutionAndPublication);
+
+        #endregion
+
+        #region Public Properties
 
         public static StoreConfiguration Instance
         {
@@ -16,9 +28,17 @@ namespace VirtoCommerce.Web.Core.Configuration.Store
             }
         }
 
-        private static StoreConfiguration CreateInstance()
+        /// <summary>
+        ///     Config settings which define where caching is enabled and timeouts related to it.
+        /// </summary>
+        /// <value>The cache.</value>
+        [ConfigurationProperty("Cache", IsRequired = true)]
+        public CacheConfiguration Cache
         {
-            return (StoreConfiguration)ConfigurationManager.GetSection("VirtoCommerce/Store");
+            get
+            {
+                return (CacheConfiguration)this["Cache"];
+            }
         }
 
         [ConfigurationProperty("Connection", IsRequired = true)]
@@ -30,23 +50,29 @@ namespace VirtoCommerce.Web.Core.Configuration.Store
             }
         }
 
-        /// <summary>
-        /// Config settings which define where caching is enabled and timeouts related to it.
-        /// </summary>
-        /// <value>The cache.</value>
-        [ConfigurationProperty("Cache", IsRequired = true)]
-        public CacheConfiguration Cache
+        #endregion
+
+        #region Methods
+
+        private static StoreConfiguration CreateInstance()
         {
-            get
-            {
-                return (CacheConfiguration)this["Cache"];
-            }
+            return (StoreConfiguration)ConfigurationManager.GetSection("VirtoCommerce/Store");
         }
+
+        #endregion
     }
 
     public class StoreConnection : ConfigurationElement
     {
-        public StoreConnection() { }
+        #region Constructors and Destructors
+
+        public StoreConnection()
+        {
+        }
+
+        #endregion
+
+        #region Public Properties
 
         [ConfigurationProperty("dataServiceUri", IsRequired = false)]
         public string DataServiceUri
@@ -61,33 +87,47 @@ namespace VirtoCommerce.Web.Core.Configuration.Store
             }
         }
 
+        #endregion
+
+        #region Public Methods and Operators
+
         /// <summary>
-        /// Gets a value indicating whether the <see cref="T:System.Configuration.ConfigurationElement"/> object is read-only.
+        ///     Gets a value indicating whether the <see cref="T:System.Configuration.ConfigurationElement" /> object is read-only.
         /// </summary>
         /// <returns>
-        /// true if the <see cref="T:System.Configuration.ConfigurationElement"/> object is read-only; otherwise, false.
+        ///     true if the <see cref="T:System.Configuration.ConfigurationElement" /> object is read-only; otherwise, false.
         /// </returns>
         public override bool IsReadOnly()
         {
             return false;
         }
+
+        #endregion
     }
 
     /// <summary>
-    /// Config settings which define where caching is enabled and timeouts related to it.
+    ///     Config settings which define where caching is enabled and timeouts related to it.
     /// </summary>
     public class CacheConfiguration : ConfigurationElement
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="CacheConfiguration"/> class.
-        /// </summary>
-        public CacheConfiguration() { }
+        #region Constructors and Destructors
 
         /// <summary>
-        /// Attribute determines whether in-memory caching is enabled or not.
+        ///     Initializes a new instance of the <see cref="CacheConfiguration" /> class.
+        /// </summary>
+        public CacheConfiguration()
+        {
+        }
+
+        #endregion
+
+        #region Public Properties
+
+        /// <summary>
+        ///     Attribute determines whether in-memory caching is enabled or not.
         /// </summary>
         /// <value>
-        /// 	<c>true</c> if this instance is enabled; otherwise, <c>false</c>.
+        ///     <c>true</c> if this instance is enabled; otherwise, <c>false</c>.
         /// </value>
         [ConfigurationProperty("enabled", IsRequired = true, DefaultValue = true)]
         public bool IsEnabled
@@ -103,11 +143,11 @@ namespace VirtoCommerce.Web.Core.Configuration.Store
         }
 
         /// <summary>
-        /// Configuration attribute which determines when the Catalog values are
-        /// automatically refreshed in memory (in seconds).
+        ///     Configuration attribute which determines when the Catalog values are
+        ///     automatically refreshed in memory (in seconds).
         /// </summary>
         /// <value>
-        /// The catalog collection timeout.
+        ///     The catalog collection timeout.
         /// </value>
         [ConfigurationProperty("storeTimeout", IsRequired = true)]
         public TimeSpan StoreTimeout
@@ -122,15 +162,21 @@ namespace VirtoCommerce.Web.Core.Configuration.Store
             }
         }
 
+        #endregion
+
+        #region Public Methods and Operators
+
         /// <summary>
-        /// Gets a value indicating whether the <see cref="T:System.Configuration.ConfigurationElement"/> object is read-only.
+        ///     Gets a value indicating whether the <see cref="T:System.Configuration.ConfigurationElement" /> object is read-only.
         /// </summary>
         /// <returns>
-        /// true if the <see cref="T:System.Configuration.ConfigurationElement"/> object is read-only; otherwise, false.
+        ///     true if the <see cref="T:System.Configuration.ConfigurationElement" /> object is read-only; otherwise, false.
         /// </returns>
         public override bool IsReadOnly()
         {
             return false;
         }
+
+        #endregion
     }
 }
