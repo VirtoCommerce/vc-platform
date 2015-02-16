@@ -9,10 +9,11 @@ namespace VirtoCommerce.CatalogModule.Web.Model
 	[Flags]
 	public enum ResponseGroup
 	{
-		WithItems = 1,
+		WithProducts = 1,
 		WithCategories = 2,
 		WithProperties = 4,
 		WithCatalogs = 8,
-		Full = WithCatalogs | WithCategories | WithProperties | WithItems
+		WithVariations = 16,
+		Full = WithCatalogs | WithCategories | WithProperties | WithProducts | WithVariations
 	}
 }

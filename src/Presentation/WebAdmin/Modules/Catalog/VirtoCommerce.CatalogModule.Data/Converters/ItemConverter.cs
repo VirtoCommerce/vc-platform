@@ -123,7 +123,8 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 			retVal.IsBuyable = true;
 			retVal.MinQuantity = 1;
 			retVal.MaxQuantity = 0;
-
+			//If it variation need make active false (workaround)
+			retVal.IsActive = product.MainProductId == null;
 
 			//Changed fields
 			retVal.Name = product.Name;
