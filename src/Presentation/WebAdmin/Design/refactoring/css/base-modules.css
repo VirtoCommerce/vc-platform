@@ -2466,7 +2466,7 @@ fieldset + fieldset
 
 .form
 {
-	margin: 15px 0;
+	padding: 15px 0;
 }
 
 .form-group + .form-group
@@ -2524,7 +2524,7 @@ fieldset + fieldset
 
     .form-input.__number
     {
-        position: relative;
+        height: 34px;
     }
 
     .form-group .form-t
@@ -2747,6 +2747,7 @@ fieldset + fieldset
         display: inline-block;
         height: 12px;
         position: relative;
+        top: -2px;
     }
 
     .form-control
