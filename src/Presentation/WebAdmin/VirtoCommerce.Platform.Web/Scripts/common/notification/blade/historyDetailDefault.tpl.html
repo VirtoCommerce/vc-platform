@@ -1,6 +1,12 @@
-﻿<span ng-init="blade.isLoading = false">
-    <div ng-repeat="(key, val) in blade.notify.extendedData">
-        <span class="subheader-secondary">{{key}}</span>
-        <p>{{val}}</p>
-    </div>
-</span>
+﻿<div class="blade-content">
+	<div class="blade-inner">
+		<div class="inner-block">
+			<div ng-init="blade.isLoading = false">
+			    <div ng-repeat="(key, val) in blade.notify.extendedData">
+			        <div class="sub-t">{{key}}</div>
+			        <p class="text">{{val}}</p>
+			    </div>
+			</div>
+		</div>
+	</div>
+</div>

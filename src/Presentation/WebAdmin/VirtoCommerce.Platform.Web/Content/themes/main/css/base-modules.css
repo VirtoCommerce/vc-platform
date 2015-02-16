@@ -2302,16 +2302,30 @@ h3
 
 		.table-col .table-t
 		{
-			font-weight: 500;
+            font-size: 14px;
+			font-weight: 600;
 			margin: 0 0 5px;
 		}
 
-	.table .table-col.__date
+	.table .table-col.__date,
+    .table .table-col.__author,
+    .table .table-col.__version
 	{
 		font-size: 12px;
 		vertical-align: top;
 		width: 20%;
 	}
+
+    .table .table-col.__author
+    {
+        color: #999;
+    }
+
+    .table .table-col.__version
+    {
+        color: #43b0e6;
+        width: 10%;
+    }
 
 	.table .table-col.__product-control
 	{
@@ -2720,12 +2734,27 @@ fieldset + fieldset
 		display: inline-block;
 		font-size: 11px;
 		font-weight: 500;
+        position: relative;
 	}
 
 	.form-control .form-label + .form-label
 	{
 		margin: 0 0 0 10px;
 	}
+
+    label.form-control
+    {
+        display: inline-block;
+        height: 12px;
+        position: relative;
+    }
+
+    .form-control
+    {
+        display: inline-block;
+        min-height: 12px;
+        position: relative;
+    }
 
 		.form-control input
 		{
@@ -2737,9 +2766,10 @@ fieldset + fieldset
 		{
 			background: #fff;
 			border: 1px solid #a1c0d4;
-			display: inline-block;
 			height: 12px;
-			position: relative;
+            left: 0;
+			position: absolute;
+            top: 2px;
 			width: 12px;
 
 			-webkit-box-sizing: border-box;
@@ -2748,11 +2778,16 @@ fieldset + fieldset
 
         .form-control.__radio .check
         {
+            top: 3px;
+        }
+
+        .form-control.__radio .check
+        {
             -webkit-border-radius: 50%;
                     border-radius: 50%;
         }
 
-		.form-control .form-label:hover .check
+		.form-control .form-label .check:hover
 		{
 			border-color: #80a0b5;
 		}
@@ -2772,7 +2807,6 @@ fieldset + fieldset
 			font-size: 8px;
 			font-weight: normal;
 			left: 1px;
-            line-height: 1.25;
 			position: absolute;
 			top: 0;
 		}
@@ -2792,7 +2826,7 @@ fieldset + fieldset
 		.form-control .name
 		{
 			display: inline-block;
-			margin: 0 0 0 5px;
+			margin: 0 0 0 18px;
 			vertical-align: 2px;
 		}
 
@@ -4139,7 +4173,7 @@ fieldset + fieldset
 	.blade .blade-head
 	{
 		background: #333;
-		height: 155px;
+		height: 130px;
 		min-width: 300px;
 		padding: 25px 0 5px;
 		position: relative;
@@ -4267,7 +4301,7 @@ fieldset + fieldset
 		{
 			color: #fff;
 			left: 0;
-			margin: 22px 20px;
+			margin: 10px 20px;
 			padding: 0 0 0 50px;
 			position: absolute;
 			right: 8px;
@@ -4403,7 +4437,7 @@ fieldset + fieldset
 
 	.blade .blade-container
 	{
-		height: calc(100% - 155px);
+		height: calc(100% - 130px);
 		position: relative;
 	}
 
