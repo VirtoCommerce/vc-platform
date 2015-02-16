@@ -1,148 +1,128 @@
 ﻿namespace VirtoCommerce.Content.Tests
 {
-    #region
+	#region
 
-    using System;
-    using System.Web.Http.Results;
+	using System;
+	using System.Linq;
+	using System.Web.Http.Results;
 
-    using Moq;
+	using Moq;
 
-    using VirtoCommerce.Content.Data.Models;
-    using VirtoCommerce.Content.Data.Repositories;
-    using VirtoCommerce.Framework.Web.Settings;
-    using VirtoCommerce.ThemeModule.Web.Controllers.Api;
+	using VirtoCommerce.Content.Data.Models;
+	using VirtoCommerce.Content.Data.Repositories;
+	using VirtoCommerce.Framework.Web.Settings;
+	using VirtoCommerce.ThemeModule.Web.Controllers.Api;
 
-    using Xunit;
+	using Xunit;
 
-    #endregion
+	#endregion
 
 	public class FileSystemRepositoryTest
-    {
+	{
 		private string _path = Environment.CurrentDirectory.Replace("\\bin\\Debug", string.Empty);
 
-        #region Public Methods and Operators
-
-		//[Fact]
-		//public void GetCollectionControllerTest()
-		//{
-		//	var controller = this.GetController();
-
-		//	var result = controller.GetItems("/");
-
-		//	Assert.IsType<OkNegotiatedContentResult<ThemeModule.Web.Models.ContentItem[]>>(result);
-
-		//	var items = result as OkNegotiatedContentResult<ThemeModule.Web.Models.ContentItem[]>;
-
-		//	Assert.Equal(items.Content.Length, 5);
-		//}
-
-        [Fact]
-        public void GetCollectionRepositoryTest()
-        {
-			var fullPath = string.Format("{0}\\Themes\\", _path);
-
-			var repository = new FileSystemFileRepositoryImpl(fullPath);
-
-            var items = repository.GetContentItems("Expo");
-
-            Assert.Equal(items.Length, 6);
-        }
-
-		//[Fact]
-		//public void GetItemControllerTest()
-		//{
-		//	var controller = this.GetController();
-
-		//	var result = controller.GetItem("/docs/new1.txt");
-
-		//	Assert.IsType<OkNegotiatedContentResult<ThemeModule.Web.Models.ContentItem>>(result);
-
-		//	var item = result as OkNegotiatedContentResult<ThemeModule.Web.Models.ContentItem>;
-
-		//	Assert.True(item.Content.Content.Contains("!!!\n"));
-		//}
-
-		[Fact]
-		public void GetItemRepositoryTest()
+		private FileSystemFileRepositoryImpl GetRepository()
 		{
 			var fullPath = string.Format("{0}\\Themes\\", _path);
 
 			var repository = new FileSystemFileRepositoryImpl(fullPath);
 
-			var item = repository.GetContentItem("Expo/layout/theme.liquid");
+			return repository;
+		}
 
-			Assert.Equal(item.Path, "Expo/layout/theme.liquid");
+		#region Public Methods and Operators
+
+		[Fact]
+		public void GetThemesRepositoryTest()
+		{
+			var repository = GetRepository();
+
+			var items = repository.GetThemes("Apple");
+
+			Assert.Equal(items.Length, 2);
+			Assert.Equal(items[0].ThemePath, "Apple/Simple");
+			Assert.Equal(items[0].Name, "Simple");
+		}
+
+		[Fact]
+		public void GetContentItemsRepositoryTest()
+		{
+			var repository = GetRepository();
+
+			var items = repository.GetContentItems("Apple/Simple");
+
+			Assert.Equal(items.Length, 69);
+			Assert.Equal(items[0].Path, "Apple/Simple/assets/apple-touch-icon-114x114.png");
+			Assert.Equal(items[0].Name, "apple-touch-icon-114x114.png");
+		}
+
+		[Fact]
+		public void GetContentItemsWithFullContentRepositoryTest()
+		{
+			var repository = GetRepository();
+
+			var items = repository.GetContentItems("Apple/Simple", true);
+
+			Assert.Equal(items.Length, 69);
+			Assert.Equal(items[0].Path, "Apple/Simple/assets/apple-touch-icon-114x114.png");
+			Assert.Equal(items[0].Name, "apple-touch-icon-114x114.png");
+			Assert.Equal(items.Count(i => string.IsNullOrEmpty(i.Content)), 0);
+		}
+
+		[Fact]
+		public void GetItemRepositoryTest()
+		{
+			var repository = GetRepository();
+
+			var item = repository.GetContentItem("Apple/Simple/layout/theme.liquid");
+
+			Assert.Equal(item.Path, "Apple/Simple/layout/theme.liquid");
 			Assert.True(item.Content.Contains("<!DO"));
 		}
 
 		[Fact]
 		public void SaveAndDeleteItemRepositoryTest()
 		{
-			var fullPath = string.Format("{0}\\Themes\\", _path);
-
-			var repository = new FileSystemFileRepositoryImpl(fullPath);
+			var repository = GetRepository();
 
 			var content = new ContentItem();
 			content.Content = "Some new stuff";
-			content.Path = "Expo/new/new123.liquid";
+			content.Path = "Apple/Simple/new/new123.liquid";
 
 			repository.SaveContentItem(content);
 
-			var items = repository.GetContentItems("Expo/new");
+			var items = repository.GetContentItems("Apple/Simple");
 
-			Assert.Equal(items.Length, 1);
+			Assert.Equal(items.Length, 70);
 
-			var item = repository.GetContentItem("Expo/new/new123.liquid");
+			var item = repository.GetContentItem("Apple/Simple/new/new123.liquid");
 
 			Assert.True(item.Content.Contains("Some"));
 
 			content = new ContentItem();
 			content.Content = "Some new stuff. Changes";
-			content.Path = "Expo/new/new123.liquid";
+			content.Path = "Apple/Simple/new/new123.liquid";
 
 			repository.SaveContentItem(content);
 
-			items = repository.GetContentItems("Expo/new");
+			items = repository.GetContentItems("Apple/Simple");
 
-			Assert.Equal(items.Length, 1);
+			Assert.Equal(items.Length, 70);
 
-			item = repository.GetContentItem("Expo/new/new123.liquid");
+			item = repository.GetContentItem("Apple/Simple/new/new123.liquid");
 
 			Assert.True(item.Content.Contains("Some") && item.Content.Contains("Changes"));
 
 			content = new ContentItem();
-			content.Path = "Expo/new/new123.liquid";
+			content.Path = "Apple/Simple/new/new123.liquid";
 
 			repository.DeleteContentItem(content);
 
-			items = repository.GetContentItems("Expo/new");
+			items = repository.GetContentItems("Apple/Simple");
 
-			Assert.Equal(items.Length, 0);
+			Assert.Equal(items.Length, 69);
 		}
 
-        #endregion
-
-        #region Methods
-
-		//private ThemeController GetController()
-		//{
-		//	Func<string, IFileRepository> factory = (x) =>
-		//	{
-		//		switch (x)
-		//		{
-		//			default:
-		//				return new FileSystemFileRepositoryImpl(_path);
-		//		}
-		//	};
-
-		//	var mock = new Mock<ISettingsManager>();
-		//	mock.Setup(x => x.GetValue(It.IsAny<string>(), It.IsAny<string>())).Returns("FileSystem");
-
-		//	var controller = new ThemeController(factory, mock.Object);
-
-		//	return controller;
-		//}
-
-        #endregion
-    }
+		#endregion
+	}
 }

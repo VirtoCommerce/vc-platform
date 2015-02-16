@@ -120,8 +120,11 @@
   <ItemGroup>
     <Compile Include="Controllers\Api\ThemeController.cs" />
     <Compile Include="Converters\ContentItemConverter.cs" />
+    <Compile Include="Converters\ThemeAssetConverter.cs" />
+    <Compile Include="Converters\ThemeConverter.cs" />
     <Compile Include="Models\ContentItem.cs" />
-    <Compile Include="Models\ContentType.cs" />
+    <Compile Include="Models\Theme.cs" />
+    <Compile Include="Models\ThemeAsset.cs" />
     <Compile Include="Module.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

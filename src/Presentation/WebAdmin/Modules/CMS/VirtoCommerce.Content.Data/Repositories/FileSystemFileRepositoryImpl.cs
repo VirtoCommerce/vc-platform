@@ -1,27 +1,36 @@
-﻿namespace VirtoCommerce.Content.Data.Repositories
+﻿using System.Linq;
+
+namespace VirtoCommerce.Content.Data.Repositories
 {
 	#region
 
 	using System;
 	using System.Collections.Generic;
 	using System.IO;
+	using System.Threading.Tasks;
 	using VirtoCommerce.Content.Data.Models;
 
 	#endregion
 
 	public class FileSystemFileRepositoryImpl : IFileRepository
 	{
-		private string _mainPath;
+		private readonly string _baseDirectoryPath;
 
-		public FileSystemFileRepositoryImpl(string mainPath)
+		public FileSystemFileRepositoryImpl(string baseDirectoryPath)
 		{
-			_mainPath = mainPath;
+			this._baseDirectoryPath = baseDirectoryPath;
 		}
 
 		#region Public Methods and Operators
 
+
+		/// <summary>
+		/// Gets content item.
+		/// </summary>
+		/// <param name="path"></param>
+		/// <returns></returns>
 		public ContentItem GetContentItem(string path)
-        {
+		{
 			var retVal = new ContentItem();
 
 			var fullPath = GetFullPath(path);
@@ -33,41 +42,58 @@
 				var content = sr.ReadToEnd();
 
 				retVal.Content = content;
-				retVal.ContentType = ContentType.File;
 				retVal.Name = itemName;
 				retVal.Path = path;
 			}
 
 			return retVal;
-        }
+		}
 
-		public ContentItem[] GetContentItems(string path)
+
+		public Theme[] GetThemes(string storePath)
+		{
+			var fullPath = GetFullPath(storePath);
+
+			var directories = Directory.GetDirectories(fullPath);
+
+			return directories.Select(dir => new Theme { Name = FixName(dir, fullPath), ThemePath = RemoveBaseDirectory(dir) }).ToArray();
+		}
+
+		public ContentItem[] GetContentItems(string path, bool loadContent = false)
 		{
 			var fullPath = GetFullPath(path);
 
-			List<ContentItem> items = new List<ContentItem>();
+			var directoriesQueue = new Queue<string>();
 
 			var files = Directory.GetFiles(fullPath);
 			var directories = Directory.GetDirectories(fullPath);
 
 			foreach (var directory in directories)
 			{
-				var contentItem = new ContentItem();
-				contentItem.ContentType = ContentType.Directory;
-				contentItem.Name = FixName(directory, fullPath);
-				contentItem.Path = FixPath(directory);
-
-				items.Add(contentItem);
+				directoriesQueue.Enqueue(directory);
 			}
 
-			foreach (var file in files)
-			{
-				var contentItem = new ContentItem();
-				contentItem.ContentType = ContentType.Directory;
-				contentItem.Name = Path.GetFileName(file);
-				contentItem.Path = FixPath(file);
+			var items = files.Select(file => new ContentItem { Name = Path.GetFileName(file), Path = this.RemoveBaseDirectory(file) }).ToList();
 
-				items.Add(contentItem);
+			while (directoriesQueue.Count > 0)
+			{
+				var directory = directoriesQueue.Dequeue();
+				var newDirectories = Directory.GetDirectories(directory);
+				var newFiles = Directory.GetFiles(directory);
+				items.AddRange(newFiles.Select(file => new ContentItem { Name = Path.GetFileName(file), Path = this.RemoveBaseDirectory(file) }));
+				foreach (var newDirectory in newDirectories)
+				{
+					directoriesQueue.Enqueue(newDirectory);
+				}
+			}
+
+			if (loadContent)
+			{
+				Parallel.ForEach(items, file =>
+				{
+					var fullFile = GetContentItem(file.Path);
+					file.Content = fullFile.Content;
+				});
 			}
 
 			return items.ToArray();
@@ -83,7 +109,7 @@
 				Directory.CreateDirectory(directoryPath);
 			}
 
-			using(var fs = new FileStream(fullPath, FileMode.OpenOrCreate, FileAccess.Write))
+			using (var fs = new FileStream(fullPath, FileMode.OpenOrCreate, FileAccess.Write))
 			{
 				using (var sw = new StreamWriter(fs))
 				{
@@ -106,14 +132,13 @@
 
 		private string GetFullPath(string path)
 		{
-			path = path.Replace("/", "\\");
-
-			return string.Join(string.Empty, _mainPath, path);
+			//return string.Format("{0}{2}", this._baseDirectoryPath, path).Replace("/", "\\");
+			return Path.Combine(this._baseDirectoryPath, path).Replace("/", "\\");
 		}
 
-		private string FixPath(string path)
+		private string RemoveBaseDirectory(string path)
 		{
-			return path.Replace(_mainPath, string.Empty).Replace("\\", "/");
+			return path.Replace(this._baseDirectoryPath, string.Empty).Replace("\\", "/").TrimStart('/');
 		}
 
 		private string FixName(string path, string fullPath)

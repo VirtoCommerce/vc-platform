@@ -20,8 +20,6 @@
 
         public string Path { get; set; }
 
-        public ContentType Type { get; set; }
-
         #endregion
     }
 }

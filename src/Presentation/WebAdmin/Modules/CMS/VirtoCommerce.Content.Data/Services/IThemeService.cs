@@ -1,21 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using VirtoCommerce.Content.Data.Models;
+﻿using VirtoCommerce.Content.Data.Models;
 
 namespace VirtoCommerce.Content.Data.Services
 {
 	public interface IThemeService
 	{
-		ThemeItem[] GetThemes(string storeId);
-		void SetThemeAsActive(string storeId, string themeName);
+		Theme[] GetThemes(string storeId);
 
-		ContentItem[] GetContentItems(string path);
-		ContentItem GetContentItem(string path);
+		ThemeAsset[] GetThemeAssets(string storeId, string themeId, bool loadContent = false);
+		ThemeAsset GetThemeAsset(string assetKey);
 
-		void SaveContentItem(ContentItem item);
-		void DeleteContentItem(ContentItem item);
+		void SaveThemeAsset(ThemeAsset asset);
+		void DeleteThemeAssets(string[] assetKey);
 	}
 }

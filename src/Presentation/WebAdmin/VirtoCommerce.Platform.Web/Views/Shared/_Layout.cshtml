@@ -9,11 +9,8 @@
     <!-- Google fonts -->
     <link href='http://fonts.googleapis.com/css?family=Exo+2:300,400,500,600,400italic,700,800,500italic,600italic' rel='stylesheet' type='text/css'>
 
-    @Styles.Render("~/Content/css")
-    @Styles.Render("~/Content/chosen")
-    @Styles.Render("~/Content/themes/base/css")
-    @Styles.Render("~/Content/themes/main/css")
-    @Styles.Render("~/Content/modules")
+    @Styles.Render("~/css/core")
+    @Styles.Render("~/css/modules")
     @*<script src="//cdnjs.cloudflare.com/ajax/libs/es5-shim/3.4.0/es5-shim.min.js"></script>*@
 
     <meta name="viewport" content="width=device-width" />
@@ -22,17 +19,9 @@
 <body class="metro" ng-controller="appCtrl">
     @RenderBody()
 
-    @Scripts.Render("~/bundles/jquery")
-    @Scripts.Render("~/bundles/jqueryui")
-    @Scripts.Render("~/scripts/angular")
-    @Scripts.Render("~/scripts/chosen")
-    @Scripts.Render("~/scripts/input-number")
-    @Scripts.Render("~/bundles/angularui")
-    @Scripts.Render("~/bundles/underscore")
-    @Scripts.Render("~/bundles/moment")
-    @Scripts.Render("~/bundles/app")
-    @Scripts.Render("~/bundles/angularmisc")
-    @Scripts.Render("~/bundles/modules")
+    @Scripts.Render("~/scripts/jquery")
+    @Scripts.Render("~/scripts/angular")  
+    @Scripts.Render("~/scripts/modules")
     @RenderSection("scripts", required: false)
 </body>
 </html>

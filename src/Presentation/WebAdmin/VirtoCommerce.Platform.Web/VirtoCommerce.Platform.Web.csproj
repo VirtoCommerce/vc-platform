@@ -89,8 +89,9 @@
     <Reference Include="Microsoft.Owin.Security.OAuth">
       <HintPath>..\..\..\..\packages\Microsoft.Owin.Security.OAuth.3.0.0\lib\net45\Microsoft.Owin.Security.OAuth.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Practices.ServiceLocation">
-      <HintPath>..\..\..\..\packages\CommonServiceLocator.1.3\lib\portable-net4+sl5+netcore45+wpa81+wp8\Microsoft.Practices.ServiceLocation.dll</HintPath>
+    <Reference Include="Microsoft.Practices.ServiceLocation, Version=1.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\packages\CommonServiceLocator.1.2\lib\portable-windows8+net40+sl5+windowsphone8\Microsoft.Practices.ServiceLocation.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Practices.Unity, Version=3.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -294,6 +295,17 @@
     <Content Include="Content\themes\base\minified\jquery.ui.theme.min.css" />
     <Content Include="Content\themes\base\minified\jquery.ui.tooltip.min.css" />
     <Content Include="Content\themes\base\xeditable.css" />
+    <Content Include="Content\themes\main\css\base-modules.css" />
+    <Content Include="Content\themes\main\css\cosmetic.css" />
+    <Content Include="Content\themes\main\css\project-modules.css" />
+    <Content Include="Content\themes\main\css\reset.css" />
+    <Content Include="Content\themes\main\fonts\fontawesome-webfont.svg" />
+    <Content Include="Content\themes\main\fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="Content\themes\main\fonts\iconFont.dev.svg" />
+    <Content Include="Content\themes\main\fonts\iconFont.svg" />
+    <Content Include="Content\themes\main\fonts\metroSysIcons.svg" />
+    <Content Include="Content\themes\main\images\flags.png" />
+    <Content Include="Content\themes\main\images\logo.png" />
     <Content Include="Content\themes\metro\css\custom.css" />
     <Content Include="Content\themes\metro\css\iconFont.css" />
     <Content Include="Content\themes\metro\css\iconFont.min.css" />
@@ -426,6 +438,23 @@
     <Content Include="Content\themes\metro\fonts\fontawesome-webfont.ttf" />
     <Content Include="Content\themes\metro\fonts\fontawesome-webfont.woff" />
     <Content Include="Content\themes\metro\fonts\FontAwesome.otf" />
+    <Content Include="Content\themes\main\fonts\fontawesome-webfont.eot" />
+    <Content Include="Content\themes\main\fonts\fontawesome-webfont.ttf" />
+    <Content Include="Content\themes\main\fonts\fontawesome-webfont.woff" />
+    <Content Include="Content\themes\main\fonts\FontAwesome.otf" />
+    <Content Include="Content\themes\main\fonts\glyphicons-halflings-regular.eot" />
+    <Content Include="Content\themes\main\fonts\glyphicons-halflings-regular.ttf" />
+    <Content Include="Content\themes\main\fonts\glyphicons-halflings-regular.woff" />
+    <Content Include="Content\themes\main\fonts\iconFont.eot" />
+    <Content Include="Content\themes\main\fonts\iconFont.json" />
+    <Content Include="Content\themes\main\fonts\iconFont.ttf" />
+    <Content Include="Content\themes\main\fonts\iconFont.woff" />
+    <Content Include="Content\themes\main\fonts\metroSysIcons.ttf" />
+    <Content Include="Content\themes\main\fonts\metroSysIcons.woff" />
+    <Content Include="Content\themes\main\fonts\OpenSans-Bold.woff" />
+    <Content Include="Content\themes\main\fonts\OpenSans-Light.woff" />
+    <Content Include="Content\themes\main\fonts\OpenSans.woff" />
+    <Content Include="Content\themes\main\fonts\PTSerif-Caption.woff" />
     <None Include="Scripts\jquery-1.11.1.intellisense.js" />
     <Content Include="Scripts\i18n\angular-locale_aa-dj.js" />
     <Content Include="Scripts\i18n\angular-locale_aa-er.js" />

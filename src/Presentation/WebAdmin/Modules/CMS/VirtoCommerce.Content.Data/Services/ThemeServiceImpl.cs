@@ -11,78 +11,77 @@ namespace VirtoCommerce.Content.Data.Services
 {
 	public class ThemeServiceImpl : IThemeService
 	{
-		private object _lockObject = new object();
+		private readonly object _lockObject = new object();
+		private readonly IFileRepository _repository;
 
-		private IFileRepository _repository;
-		private IThemeRepository _themeRepository;
-
-		public ThemeServiceImpl(IFileRepository repository, IThemeRepository themeRepository)
+		public ThemeServiceImpl(IFileRepository repository)
 		{
 			if (repository == null)
 				throw new ArgumentNullException("repository");
 
 			_repository = repository;
-			_themeRepository = themeRepository;
 		}
 
-		public Models.ThemeItem[] GetThemes(string storeId)
+		public Theme[] GetThemes(string storeId)
 		{
-			var storeRelation = GetStoreRelation(storeId);
+			var themePath = GetThemePath(storeId, string.Empty);
 
-			var items = _repository.GetContentItems(string.Empty);
-			var themes = items.Where(i => i.ContentType == Models.ContentType.Directory).Select(i => ThemeItemConverter.ContentItem2ThemeItem(i));
-
-			if (storeRelation != null)
-			{
-				var activeTheme = themes.FirstOrDefault(t => t.ThemeName == storeRelation.ThemeName);
-				if (activeTheme != null)
-					activeTheme.IsActive = true;
-			}
-
-			return themes.ToArray();
+			var items = _repository.GetThemes(themePath);
+			return items.ToArray();
 		}
 
-		public void SetThemeAsActive(string storeId, string themeName)
+		public ThemeAsset[] GetThemeAssets(string storeId, string themeName, bool loadContent = false)
 		{
-			var storeRelation = GetStoreRelation(storeId);
+			var themePath = GetThemePath(storeId, themeName);
+			return _repository.GetContentItems(themePath, loadContent).Select(c => c.AsThemeAsset()).ToArray();
+		}
 
-			if(storeRelation != null)
+		public ThemeAsset GetThemeAsset(string path)
+		{
+			lock (_lockObject)
 			{
-				storeRelation.ThemeName = themeName;
-				_themeRepository.Update(storeRelation);
-			}
-			else
-			{
-				storeRelation = new ThemeStoreRelation();
-
-				storeRelation.ThemeName = themeName;
-				storeRelation.StoreId = storeId;
+				return _repository.GetContentItem(path).AsThemeAsset();
 			}
 		}
 
-		public Models.ContentItem[] GetContentItems(string path)
+		public void SaveThemeAsset(Models.ThemeAsset asset)
 		{
-			return _repository.GetContentItems(path);
+			lock (_lockObject)
+			{
+				_repository.SaveContentItem(asset.AsContentItem());
+			}
 		}
 
-		public Models.ContentItem GetContentItem(string path)
+		public void DeleteThemeAssets(params string[] assetIds)
 		{
-			return _repository.GetContentItem(path);
+			lock (_lockObject)
+			{
+				foreach (var assetId in assetIds)
+				{
+					_repository.DeleteContentItem(new ContentItem() { Path = assetId });
+				}
+
+			}
 		}
 
-		public void SaveContentItem(Models.ContentItem item)
+		private string GetStorePath(string storeId)
 		{
-			_repository.SaveContentItem(item);
+			return string.Format("{0}/", storeId);
 		}
 
-		public void DeleteContentItem(Models.ContentItem item)
+		private string GetThemePath(string storeId, string themeName)
 		{
-			_repository.DeleteContentItem(item);
+			if (string.IsNullOrEmpty(themeName))
+			{
+				return string.Format("{0}", storeId);
+			}
+			return string.Format("{0}/{1}", storeId, themeName);
 		}
 
-		private ThemeStoreRelation GetStoreRelation(string storeId)
+		private string GetFullPath(string storeId, string themeName, string path)
 		{
-			return _themeRepository.ThemeStoreRelations.FirstOrDefault(r => r.StoreId == storeId);
+			return string.Format("{0}/{1}/{2}", storeId, themeName, path);
 		}
+
 	}
 }

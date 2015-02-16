@@ -21,24 +21,7 @@
 	{
 		private string _githubMainPath = "Themes/";
 
-		#region Public Methods and Operators
-
-		//[Fact]
-		//public void GetCollectionControllerTest()
-		//{
-		//	var controller = this.GetController();
-
-		//	var result = controller.GetItems("/");
-
-		//	Assert.IsType<OkNegotiatedContentResult<ThemeModule.Web.Models.ContentItem[]>>(result);
-
-		//	var items = result as OkNegotiatedContentResult<ThemeModule.Web.Models.ContentItem[]>;
-
-		//	Assert.Equal(items.Content.Length, 5);
-		//}
-
-		[Fact]
-		public void GetCollectionRepositoryTest()
+		private GitHubFileRepositoryImpl GetRepository()
 		{
 			var repository = new GitHubFileRepositoryImpl(
 				"EugeneOkhriemnko",
@@ -48,119 +31,101 @@
 				"Site_Themes",
 				_githubMainPath);
 
-			var items = repository.GetContentItems("");
-
-			Assert.Equal(items.Length, 6);
+			return repository;
 		}
 
-		//[Fact]
-		//public void GetItemControllerTest()
-		//{
-		//	var controller = this.GetController();
+		#region Public Methods and Operators
 
-		//	var result = controller.GetItem("/docs/new1.txt");
+		[Fact]
+		public void GetThemesRepositoryTest()
+		{
+			var repository = GetRepository();
 
-		//	Assert.IsType<OkNegotiatedContentResult<ThemeModule.Web.Models.ContentItem>>(result);
+			var items = repository.GetThemes("Apple");
 
-		//	var item = result as OkNegotiatedContentResult<ThemeModule.Web.Models.ContentItem>;
+			Assert.Equal(items.Length, 2);
+			Assert.Equal(items[0].ThemePath, "Apple/Simple");
+			Assert.Equal(items[0].Name, "Simple");
+		}
 
-		//	Assert.True(item.Content.Content.Contains("!!!\n"));
-		//}
+		[Fact]
+		public void GetContentItemsRepositoryTest()
+		{
+			var repository = GetRepository();
+
+			var items = repository.GetContentItems("Apple/Simple");
+
+			Assert.Equal(items.Length, 69);
+			Assert.Equal(items[0].Path, "Apple/Simple/assets/apple-touch-icon-114x114.png");
+			Assert.Equal(items[0].Name, "apple-touch-icon-114x114.png");
+		}
+
+		[Fact]
+		public void GetContentItemsWithFullContentRepositoryTest()
+		{
+			var repository = GetRepository();
+
+			var items = repository.GetContentItems("Apple/Simple", true);
+
+			Assert.Equal(items.Length, 69);
+			Assert.Equal(items[0].Path, "Apple/Simple/assets/apple-touch-icon-114x114.png");
+			Assert.Equal(items[0].Name, "apple-touch-icon-114x114.png");
+			Assert.Equal(items.Count(i => string.IsNullOrEmpty(i.Content)), 0);
+		}
 
 		[Fact]
 		public void GetItemRepositoryTest()
 		{
-			var repository = new GitHubFileRepositoryImpl(
-				"EugeneOkhriemnko",
-				"MfZUbM2wSDCdDADBEGpo",
-				"Site-Theme",
-				"EugeneOkhriemnko",
-				"Site_Themes",
-				_githubMainPath);
+			var repository = GetRepository();
 
-            var item = repository.GetContentItem("Simple/layout/theme.liquid");
+			var item = repository.GetContentItem("Apple/Simple/layout/theme.liquid");
 
-            Assert.Equal(item.Path, "Themes/Simple/layout/theme.liquid");
+			Assert.Equal(item.Path, "Apple/Simple/layout/theme.liquid");
 			Assert.True(item.Content.Contains("<!DO"));
 		}
 
 		[Fact]
 		public void SaveAndDeleteItemRepositoryTest()
 		{
-			var repository = new GitHubFileRepositoryImpl(
-				"EugeneOkhriemnko",
-				"MfZUbM2wSDCdDADBEGpo",
-				"Site-Theme",
-				"EugeneOkhriemnko",
-				"Site_Themes",
-				_githubMainPath);
+			var repository = GetRepository();
 
 			var content = new ContentItem();
 			content.Content = "Some new stuff";
-			content.Path = "Simple/new/new123.liquid";
+			content.Path = "Apple/Simple/new/new123.liquid";
 
 			repository.SaveContentItem(content);
 
-            var items = repository.GetContentItems("Simple/new");
+			var items = repository.GetContentItems("Apple/Simple");
 
-			Assert.Equal(items.Length, 1);
+			Assert.Equal(items.Length, 70);
 
-            var item = repository.GetContentItem("Simple/new/new123.liquid");
+			var item = repository.GetContentItem("Apple/Simple/new/new123.liquid");
 
 			Assert.True(item.Content.Contains("Some"));
 
 			content = new ContentItem();
 			content.Content = "Some new stuff. Changes";
-            content.Path = "Simple/new/new123.liquid";
+			content.Path = "Apple/Simple/new/new123.liquid";
 
 			repository.SaveContentItem(content);
 
-            items = repository.GetContentItems("Simple/new");
+			items = repository.GetContentItems("Apple/Simple");
 
-			Assert.Equal(items.Length, 1);
+			Assert.Equal(items.Length, 70);
 
-            item = repository.GetContentItem("Simple/new/new123.liquid");
+			item = repository.GetContentItem("Apple/Simple/new/new123.liquid");
 
 			Assert.True(item.Content.Contains("Some") && item.Content.Contains("Changes"));
 
 			content = new ContentItem();
-            content.Path = "Simple/new/new123.liquid";
+			content.Path = "Apple/Simple/new/new123.liquid";
 
 			repository.DeleteContentItem(content);
 
-            items = repository.GetContentItems("Simple");
+			items = repository.GetContentItems("Apple/Simple");
 
-			Assert.Equal(items.Where(i => i.Path.Contains("new")).Count(), 0);
+			Assert.Equal(items.Length, 69);
 		}
-
-		#endregion
-
-		#region Methods
-
-		//private ThemeController GetController()
-		//{
-		//	Func<string, IFileRepository> factory = (x) =>
-		//	{
-		//		switch (x)
-		//		{
-		//			default:
-		//				return new GitHubFileRepositoryImpl(
-		//					"EugeneOkhriemnko",
-		//					"MfZUbM2wSDCdDADBEGpo",
-		//					"Site-Theme",
-		//					"EugeneOkhriemnko",
-		//					"Site_Themes",
-		//					_githubMainPath);
-		//		}
-		//	};
-
-		//	var mock = new Mock<ISettingsManager>();
-		//	mock.Setup(x => x.GetValue(It.IsAny<string>(), It.IsAny<string>())).Returns("Github");
-
-		//	var controller = new ThemeController(factory, mock.Object);
-
-		//	return controller;
-		//}
 
 		#endregion
 	}

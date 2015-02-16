@@ -290,6 +290,10 @@
     <Compile Include="Security\Migrations\201411061448001_AccountIdToString.Designer.cs">
       <DependentUpon>201411061448001_AccountIdToString.cs</DependentUpon>
     </Compile>
+    <Compile Include="Security\Migrations\201502131605531_AddApiAcount.cs" />
+    <Compile Include="Security\Migrations\201502131605531_AddApiAcount.Designer.cs">
+      <DependentUpon>201502131605531_AddApiAcount.cs</DependentUpon>
+    </Compile>
     <Compile Include="Security\SqlSecurityDatabaseInitializer.cs" />
     <Compile Include="Security\SqlSecuritySampleDatabaseInitializer.cs" />
     <Compile Include="Stores\Migrations\201402141710203_Initial.cs" />
@@ -440,6 +444,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Security\Migrations\201411061448001_AccountIdToString.resx">
       <DependentUpon>201411061448001_AccountIdToString.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Security\Migrations\201502131605531_AddApiAcount.resx">
+      <DependentUpon>201502131605531_AddApiAcount.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Stores\Migrations\201402141710203_Initial.resx">
       <DependentUpon>201402141710203_Initial.cs</DependentUpon>

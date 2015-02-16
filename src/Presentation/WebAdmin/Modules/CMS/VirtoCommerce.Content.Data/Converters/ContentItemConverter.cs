@@ -14,18 +14,15 @@
     {
         #region Public Methods and Operators
 
-        public static ContentItem RepositoryContent2ContentItem(RepositoryContent repositoryContent)
+        public static ContentItem ToContentItem(this RepositoryContent repositoryContent)
         {
             ContentItem retVal = null;
 
-            if (repositoryContent.Type == ContentType.Dir || repositoryContent.Type == ContentType.File)
+            if (repositoryContent.Type == ContentType.File)
             {
                 retVal = new ContentItem();
 
                 retVal.Content = repositoryContent.Content;
-                retVal.ContentType = repositoryContent.Type == ContentType.Dir
-                    ? Models.ContentType.Directory
-                    : Models.ContentType.File;
 
                 retVal.Name = repositoryContent.Name;
                 retVal.Path = repositoryContent.Path;

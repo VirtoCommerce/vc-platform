@@ -60,21 +60,6 @@
 
 		#region Public Methods and Operators
 
-		public void DeleteContentItem(ContentItem item)
-		{
-			var fullPath = GetFullPath(item.Path);
-
-			var existingItem = this.GetItem(fullPath).Result;
-			if (existingItem != null)
-			{
-				this._client.Repository.Content.DeleteFile(
-					this._ownerName,
-					this._repositoryName,
-					fullPath,
-					new DeleteFileRequest("Updating file from admin", existingItem.Sha)).Wait();
-			}
-		}
-
 		public ContentItem GetContentItem(string path)
 		{
 			var fullPath = GetFullPath(path);
@@ -85,30 +70,74 @@
 			var item = result.SingleOrDefault();
 			if (item != null)
 			{
-				retVal = ContentItemConverter.RepositoryContent2ContentItem(item);
+				retVal = item.ToContentItem();
+				retVal.Path = FixPath(retVal.Path);
 			}
 
 			return retVal;
 		}
 
-		public ContentItem[] GetContentItems(string path)
+		public Theme[] GetThemes(string storePath)
+		{
+			var fullPath = GetFullPath(storePath);
+
+			var themes = this._client.Repository.Content.GetContents(this._ownerName, this._repositoryName, fullPath)
+					.Result.Where(s => s.Type == ContentType.Dir);
+
+			return themes.Select(theme => new Theme { Name = theme.Name, ThemePath = FixPath(theme.Path) }).ToArray();
+		}
+
+		public ContentItem[] GetContentItems(string path, bool loadContent = false)
 		{
 			var fullPath = GetFullPath(path);
 
-			var items = new List<ContentItem>();
 			var result =
 				this._client.Repository.Content.GetContents(this._ownerName, this._repositoryName, fullPath)
 					.Result.Where(s => s.Type == ContentType.Dir || s.Type == ContentType.File);
-			foreach (var item in result)
+
+			var directories = result.Where(s => s.Type == ContentType.Dir).Select(s => s.Path);
+			var files = result.Where(s => s.Type == ContentType.File).Select(file => file.ToContentItem()).ToList();
+
+			var directoriesQueue = new Queue<string>();
+
+			foreach(var directory in directories)
 			{
-				var addedItem = ContentItemConverter.RepositoryContent2ContentItem(item);
-				if (addedItem != null)
-				{
-					items.Add(addedItem);
-				}
+				directoriesQueue.Enqueue(directory);
 			}
 
-			return items.ToArray();
+			while (directoriesQueue.Count > 0)
+			{
+				var directory = directoriesQueue.Dequeue();
+				result =
+					this._client.Repository.Content.GetContents(this._ownerName, this._repositoryName, directory)
+						.Result.Where(s => s.Type == ContentType.Dir || s.Type == ContentType.File);
+
+				var newDirectories = result.Where(s => s.Type == ContentType.Dir).Select(s => s.Path);
+				var newFiles = result.Where(s => s.Type == ContentType.File).Select(file => file.ToContentItem());
+
+				foreach (var newDirectory in newDirectories)
+				{
+					directoriesQueue.Enqueue(newDirectory);
+				}
+
+				files.AddRange(newFiles);
+			}
+
+			foreach(var file in files)
+			{
+				file.Path = FixPath(file.Path);
+			}
+
+			if (loadContent)
+			{
+				Parallel.ForEach(files, file =>
+				{
+					var fullFile = GetContentItem(file.Path);
+					file.Content = fullFile.Content;
+				});
+			}
+
+			return files.ToArray();
 		}
 
 		public void SaveContentItem(ContentItem item)
@@ -117,7 +146,6 @@
 
 			var existingItem = this.GetItem(fullPath).Result;
 
-			//var contentUTF8Bytes = Encoding.UTF8.GetBytes(item.Content);
 			var sha = String.Empty;
 
 			if (existingItem == null) // create new
@@ -139,6 +167,21 @@
 						new UpdateFileRequest("Updating file from admin", item.Content, existingItem.Sha)).Result;
 			}
 			;
+		}
+
+		public void DeleteContentItem(ContentItem item)
+		{
+			var fullPath = GetFullPath(item.Path);
+
+			var existingItem = this.GetItem(fullPath).Result;
+			if (existingItem != null)
+			{
+				this._client.Repository.Content.DeleteFile(
+					this._ownerName,
+					this._repositoryName,
+					fullPath,
+					new DeleteFileRequest("Updating file from admin", existingItem.Sha)).Wait();
+			}
 		}
 
 		#endregion
@@ -167,6 +210,11 @@
 		private string GetFullPath(string path)
 		{
 			return string.Format("{0}{1}", _mainPath, path);
+		}
+
+		private string FixPath(string path)
+		{
+			return path.Replace(_mainPath, string.Empty).TrimStart('/');
 		}
 
 		#endregion

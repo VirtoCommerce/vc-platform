@@ -2,12 +2,12 @@
 {
     #region
 
-    using System;
-    using System.Net.Http;
-    using System.Threading.Tasks;
+using System;
+using System.Net.Http;
+using System.Threading.Tasks;
 
-    using VirtoCommerce.ApiClient.DataContracts.Cart;
-    using VirtoCommerce.ApiClient.Utilities;
+using VirtoCommerce.ApiClient.DataContracts.Cart;
+using VirtoCommerce.ApiClient.Utilities;
 
     #endregion
 
@@ -19,9 +19,10 @@
         ///     Initializes a new instance of the CartClient class.
         /// </summary>
         /// <param name="adminBaseEndpoint">Admin endpoint</param>
-        /// <param name="token">Access token</param>
-        public CartClient(Uri adminBaseEndpoint, string token)
-            : base(adminBaseEndpoint, new TokenMessageProcessingHandler(token))
+		/// <param name="appId">The API application ID.</param>
+		/// <param name="secretKey">The API secret key.</param>
+		public CartClient(Uri adminBaseEndpoint, string appId, string secretKey)
+			: base(adminBaseEndpoint, new HmacMessageProcessingHandler(appId, secretKey))
         {
         }
 

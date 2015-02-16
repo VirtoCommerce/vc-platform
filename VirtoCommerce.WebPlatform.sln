@@ -12,8 +12,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{5E27776F
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Modules", "Modules", "{A4C0D164-BF77-4B57-8970-B5459B100AC3}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Module1", "Module1", "{3874AF7E-4491-48BB-BF11-5F7D7A23EFED}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.Framework.Web", "src\Presentation\WebAdmin\VirtoCommerce.Framework.Web\VirtoCommerce.Framework.Web.csproj", "{F7C9313B-522E-4619-ABC9-8C7D4600D6B5}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Catalog", "Catalog", "{7C7428C3-DDE2-4783-87EB-13E9A7C405C5}"
@@ -22,41 +20,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.CatalogModule
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.CatalogModule.Web", "src\Presentation\WebAdmin\Modules\Catalog\VirtoCommerce.CatalogModule.Web\VirtoCommerce.CatalogModule.Web.csproj", "{988CB3E9-2594-499C-90B4-9399EB481C79}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.Module1.Web", "src\Presentation\WebAdmin\Modules\Module1\VirtoCommerce.Module1.Web\VirtoCommerce.Module1.Web.csproj", "{C0E969B6-946A-4E53-BA27-1CFEBCF65CFC}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Merchandising", "Merchandising", "{AAAC68D3-2CC4-40A6-9E4E-5DDC944817D3}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.MerchandisingModule.Web", "src\Presentation\WebAdmin\Modules\Merchandising\VirtoCommerce.MerchandisingModule.Web\VirtoCommerce.MerchandisingModule.Web.csproj", "{EE42FBD1-5DE8-4DA3-868C-92B910170B9F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.Platform.Web", "src\Presentation\WebAdmin\VirtoCommerce.Platform.Web\VirtoCommerce.Platform.Web.csproj", "{B53BA685-B324-42E6-80AD-7B641DD414E7}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UnmanagedModule.Web", "UnmanagedModule.Web", "{CCA3D245-FF8A-4931-9654-731F0F4D618D}"
-	ProjectSection(SolutionItems) = preProject
-		src\Presentation\WebAdmin\Modules\UnmanagedModule.Web\module.manifest = src\Presentation\WebAdmin\Modules\UnmanagedModule.Web\module.manifest
-	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Content", "Content", "{5E02FCFA-C9C5-40ED-830E-1BA3EFE28B08}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "css", "css", "{585A7CD8-E35C-4AAC-A82B-637B1A0C43F8}"
-	ProjectSection(SolutionItems) = preProject
-		src\Presentation\WebAdmin\Modules\UnmanagedModule.Web\Content\css\UnmanagedModule.css = src\Presentation\WebAdmin\Modules\UnmanagedModule.Web\Content\css\UnmanagedModule.css
-	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Scripts", "Scripts", "{65655FE6-FA29-47C0-AF03-F3F26AAC149B}"
-	ProjectSection(SolutionItems) = preProject
-		src\Presentation\WebAdmin\Modules\UnmanagedModule.Web\Scripts\UnmanagedModule.js = src\Presentation\WebAdmin\Modules\UnmanagedModule.Web\Scripts\UnmanagedModule.js
-	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "blades", "blades", "{BC2B5A11-2EB0-40BA-981F-FAE8859F351C}"
-	ProjectSection(SolutionItems) = preProject
-		src\Presentation\WebAdmin\Modules\UnmanagedModule.Web\Scripts\blades\blade1.js = src\Presentation\WebAdmin\Modules\UnmanagedModule.Web\Scripts\blades\blade1.js
-		src\Presentation\WebAdmin\Modules\UnmanagedModule.Web\Scripts\blades\blade1.tpl.html = src\Presentation\WebAdmin\Modules\UnmanagedModule.Web\Scripts\blades\blade1.tpl.html
-	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "home", "home", "{21A52801-B21E-4399-B328-6CD835559229}"
-	ProjectSection(SolutionItems) = preProject
-		src\Presentation\WebAdmin\Modules\UnmanagedModule.Web\Scripts\home\home.tpl.html = src\Presentation\WebAdmin\Modules\UnmanagedModule.Web\Scripts\home\home.tpl.html
-	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.CatalogModule.Test", "src\Presentation\WebAdmin\Modules\Catalog\VirtoCommerce.CatalogModule.Test\VirtoCommerce.CatalogModule.Test.csproj", "{613E443D-8FB2-435A-AA8A-5B141E444824}"
 EndProject
@@ -178,10 +146,6 @@ Global
 		{988CB3E9-2594-499C-90B4-9399EB481C79}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{988CB3E9-2594-499C-90B4-9399EB481C79}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{988CB3E9-2594-499C-90B4-9399EB481C79}.Release|Any CPU.Build.0 = Release|Any CPU
-		{C0E969B6-946A-4E53-BA27-1CFEBCF65CFC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C0E969B6-946A-4E53-BA27-1CFEBCF65CFC}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C0E969B6-946A-4E53-BA27-1CFEBCF65CFC}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C0E969B6-946A-4E53-BA27-1CFEBCF65CFC}.Release|Any CPU.Build.0 = Release|Any CPU
 		{EE42FBD1-5DE8-4DA3-868C-92B910170B9F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{EE42FBD1-5DE8-4DA3-868C-92B910170B9F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EE42FBD1-5DE8-4DA3-868C-92B910170B9F}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -355,19 +319,11 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{3874AF7E-4491-48BB-BF11-5F7D7A23EFED} = {A4C0D164-BF77-4B57-8970-B5459B100AC3}
 		{7C7428C3-DDE2-4783-87EB-13E9A7C405C5} = {A4C0D164-BF77-4B57-8970-B5459B100AC3}
 		{B8C758D7-822F-40D8-B28C-EF21C873AF49} = {7C7428C3-DDE2-4783-87EB-13E9A7C405C5}
 		{988CB3E9-2594-499C-90B4-9399EB481C79} = {7C7428C3-DDE2-4783-87EB-13E9A7C405C5}
-		{C0E969B6-946A-4E53-BA27-1CFEBCF65CFC} = {3874AF7E-4491-48BB-BF11-5F7D7A23EFED}
 		{AAAC68D3-2CC4-40A6-9E4E-5DDC944817D3} = {A4C0D164-BF77-4B57-8970-B5459B100AC3}
 		{EE42FBD1-5DE8-4DA3-868C-92B910170B9F} = {AAAC68D3-2CC4-40A6-9E4E-5DDC944817D3}
-		{CCA3D245-FF8A-4931-9654-731F0F4D618D} = {A4C0D164-BF77-4B57-8970-B5459B100AC3}
-		{5E02FCFA-C9C5-40ED-830E-1BA3EFE28B08} = {CCA3D245-FF8A-4931-9654-731F0F4D618D}
-		{585A7CD8-E35C-4AAC-A82B-637B1A0C43F8} = {5E02FCFA-C9C5-40ED-830E-1BA3EFE28B08}
-		{65655FE6-FA29-47C0-AF03-F3F26AAC149B} = {CCA3D245-FF8A-4931-9654-731F0F4D618D}
-		{BC2B5A11-2EB0-40BA-981F-FAE8859F351C} = {65655FE6-FA29-47C0-AF03-F3F26AAC149B}
-		{21A52801-B21E-4399-B328-6CD835559229} = {65655FE6-FA29-47C0-AF03-F3F26AAC149B}
 		{613E443D-8FB2-435A-AA8A-5B141E444824} = {7C7428C3-DDE2-4783-87EB-13E9A7C405C5}
 		{E7FC9A51-1B39-4BDC-983A-8A059C5FC58B} = {EAE05907-1BEE-47FA-890A-40C84B879B1C}
 		{BB168A74-0F1E-43BE-A616-134902238B80} = {EAE05907-1BEE-47FA-890A-40C84B879B1C}

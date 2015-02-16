@@ -1,23 +1,26 @@
 ﻿namespace VirtoCommerce.Content.Data.Repositories
 {
-    #region
+	#region
 
-    using VirtoCommerce.Content.Data.Models;
+	using System.Linq;
+	using VirtoCommerce.Content.Data.Models;
 
-    #endregion
+	#endregion
 
-    public interface IFileRepository
-    {
-        #region Public Methods and Operators
+	public interface IFileRepository
+	{
+		#region Public Methods and Operators
 
-        void DeleteContentItem(ContentItem item);
+		ContentItem GetContentItem(string path);
 
-        ContentItem GetContentItem(string path);
+		ContentItem[] GetContentItems(string path, bool loadContent = false);
 
-        ContentItem[] GetContentItems(string path);
+		Theme[] GetThemes(string storePath);
 
-        void SaveContentItem(ContentItem item);
+		void SaveContentItem(ContentItem item);
 
-        #endregion
-    }
+		void DeleteContentItem(ContentItem item);
+
+		#endregion
+	}
 }
