@@ -17,7 +17,10 @@ namespace VirtoCommerce.CatalogModule.Web.Converters
 
 			retVal.InjectFrom(property);
 			retVal.Catalog = property.Catalog.ToWebModel();
-			retVal.Category = property.Category.ToWebModel();
+			if (property.Category != null)
+			{
+				retVal.Category = property.Category.ToWebModel();
+			}
 			retVal.ValueType = (webModel.PropertyValueType)(int)property.ValueType;
 			retVal.Type = (webModel.PropertyType)(int)property.Type;
 

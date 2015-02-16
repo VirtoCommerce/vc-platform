@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using VirtoCommerce.CatalogModule.Data.Converters;
 using VirtoCommerce.CatalogModule.Data.Repositories;
 using VirtoCommerce.Domain.Catalog.Services;
+using VirtoCommerce.Foundation.Data.Infrastructure;
 using VirtoCommerce.Foundation.Frameworks;
 using VirtoCommerce.Foundation.Frameworks.Caching;
 using foundation = VirtoCommerce.Foundation.Catalogs.Model;
@@ -13,7 +14,7 @@ using module = VirtoCommerce.Domain.Catalog.Model;
 
 namespace VirtoCommerce.CatalogModule.Data.Services
 {
-	public class CatalogServiceImpl : ModuleServiceBase,  ICatalogService
+	public class CatalogServiceImpl : ServiceBase, ICatalogService
 	{
 		private readonly Func<IFoundationCatalogRepository> _catalogRepositoryFactory;
 		private readonly CacheManager _cacheManager;
@@ -31,7 +32,10 @@ namespace VirtoCommerce.CatalogModule.Data.Services
 			using (var repository = _catalogRepositoryFactory())
 			{
 				var dbCatalogBase = repository.GetCatalogById(catalogId);
-				retVal = dbCatalogBase.ToModuleModel();
+
+				var dbProperties = repository.GetCatalogProperties(dbCatalogBase);
+				var properties = dbProperties.Select(x => x.ToModuleModel(dbCatalogBase.ToModuleModel(), null)).ToArray();
+				retVal = dbCatalogBase.ToModuleModel(properties);
 			}
 			return retVal;
 		}

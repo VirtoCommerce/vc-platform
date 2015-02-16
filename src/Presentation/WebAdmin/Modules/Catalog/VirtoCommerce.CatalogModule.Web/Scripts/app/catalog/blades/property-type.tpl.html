@@ -2,20 +2,10 @@
     <div class="blade-inner">
         <div class="inner-block">
             <ul class="list __items">
-                <label class="list-item" ng-mouseup="selectOption(0)">
-                    <input type="checkbox" ng-checked="0 === blade.parentBlade.currentEntity.type">
+                <label ng-repeat="propertyType in blade.availablePropertyTypes" class="list-item" ng-mouseup="selectOption(propertyType)">
+                    <input type="checkbox" ng-checked="propertyType === blade.parentBlade.currentEntity.type">
                     <span class="switch"></span>
-                    <span class="list-name">{{0 | propertytype}}</span>
-                </label>
-                <label class="list-item" ng-mouseup="selectOption(1)">
-                    <input type="checkbox" ng-checked="1 === blade.parentBlade.currentEntity.type">
-                    <span class="switch"></span>
-                    <span class="list-name">{{1 | propertytype}}</span>
-                </label>
-                <label class="list-item" ng-mouseup="selectOption(2)">
-                    <input type="checkbox" ng-checked="2 === blade.parentBlade.currentEntity.type">
-                    <span class="switch"></span>
-                    <span class="list-name">{{2 | propertytype}}</span>
+                    <span class="list-name">{{propertyType}}</span>
                 </label>
             </ul>
         </div>

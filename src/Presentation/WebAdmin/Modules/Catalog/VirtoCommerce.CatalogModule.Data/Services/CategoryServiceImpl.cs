@@ -5,6 +5,7 @@ using System.Linq;
 using VirtoCommerce.CatalogModule.Data.Converters;
 using VirtoCommerce.CatalogModule.Data.Repositories;
 using VirtoCommerce.Domain.Catalog.Services;
+using VirtoCommerce.Foundation.Data.Infrastructure;
 using VirtoCommerce.Foundation.Frameworks.Caching;
 using VirtoCommerce.Foundation.Frameworks.Extensions;
 using foundation = VirtoCommerce.Foundation.Catalogs.Model;
@@ -13,7 +14,7 @@ using module = VirtoCommerce.Domain.Catalog.Model;
 
 namespace VirtoCommerce.CatalogModule.Data.Services
 {
-    public class CategoryServiceImpl : ModuleServiceBase, ICategoryService
+	public class CategoryServiceImpl : ServiceBase, ICategoryService
     {
         private readonly Func<IFoundationCatalogRepository> _catalogRepositoryFactory;
 		private readonly Func<IFoundationAppConfigRepository> _appConfigRepositoryFactory;

@@ -168,6 +168,8 @@
     <Content Include="Scripts\app\catalog\blades\advanced-search.js" />
     <Content Include="Scripts\app\catalog\blades\advanced-search-results.tpl.html" />
     <Content Include="Scripts\app\catalog\blades\advanced-search.tpl.html" />
+    <Content Include="Scripts\app\catalog\blades\catalog-property-detail.js" />
+    <Content Include="Scripts\app\catalog\blades\catalog-property-detail.tpl.html" />
     <Content Include="Scripts\app\catalog\blades\item-associations-list.js" />
     <Content Include="Scripts\app\catalog\blades\editorialReviews-list.js" />
     <Content Include="Scripts\app\catalog\blades\item-associations-list.tpl.html" />
@@ -236,6 +238,8 @@
     <Content Include="Scripts\app\catalog\resources\listEntries.js" />
     <Content Include="Scripts\app\catalog\resources\properties.js" />
     <Content Include="Scripts\app\catalog\widgets\catalogLanguagesWidget.js" />
+    <Content Include="Scripts\app\catalog\widgets\catalogPropertyWidget.js" />
+    <Content Include="Scripts\app\catalog\widgets\catalogPropertyWidget.tpl.html" />
     <Content Include="Scripts\app\catalog\widgets\editorialReviewWidget.js" />
     <Content Include="Scripts\app\catalog\widgets\editorialReviewWidget.tpl.html" />
     <Content Include="Scripts\app\catalog\widgets\itemAssociationsWidget.js" />

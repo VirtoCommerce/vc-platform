@@ -150,6 +150,11 @@ namespace VirtoCommerce.Foundation.Data.Catalogs
 			#endregion
 
 			#region PropertyValueBase TPC
+			modelBuilder.Entity<CatalogPropertyValue>().Map(entity =>
+			{
+				entity.MapInheritedProperties();
+				entity.ToTable("CatalogPropertyValue");
+			});
 			modelBuilder.Entity<CategoryPropertyValue>().Map(entity =>
 			{
 				entity.MapInheritedProperties();

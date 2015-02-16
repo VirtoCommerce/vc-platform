@@ -10,10 +10,11 @@ using VirtoCommerce.Foundation.Frameworks.Extensions;
 using System.Collections.Generic;
 using VirtoCommerce.Domain.Catalog.Services;
 using VirtoCommerce.CatalogModule.Data.Repositories;
+using VirtoCommerce.Foundation.Data.Infrastructure;
 
 namespace VirtoCommerce.CatalogModule.Data.Services
 {
-	public class ItemServiceImpl : ModuleServiceBase, IItemService
+	public class ItemServiceImpl : ServiceBase, IItemService
 	{
 		private readonly Func<IFoundationCatalogRepository> _catalogRepositoryFactory;
 		private readonly Func<IFoundationAppConfigRepository> _appConfigRepositoryFactory;

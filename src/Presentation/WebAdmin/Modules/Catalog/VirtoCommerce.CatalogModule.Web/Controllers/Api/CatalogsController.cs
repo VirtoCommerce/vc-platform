@@ -20,15 +20,18 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
     {
         private readonly ICatalogService _catalogService;
         private readonly ICatalogSearchService _searchService;
+		private readonly IPropertyService _propertyService;
 		private readonly Func<IAppConfigRepository> _appConfigRepositoryFactory;
 
         public CatalogsController(ICatalogService catalogService,
 								  ICatalogSearchService itemSearchService,
-								  Func<IFoundationAppConfigRepository> appConfigRepositoryFactory)
+								  Func<IFoundationAppConfigRepository> appConfigRepositoryFactory,
+								  IPropertyService propertyService)
         {
             _catalogService = catalogService;
             _searchService = itemSearchService;
 			_appConfigRepositoryFactory = appConfigRepositoryFactory;
+			_propertyService = propertyService;
         }
 
 		// GET: api/catalog/catalogs
@@ -57,7 +60,8 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
             {
                 return NotFound();
             }
-            return Ok(catalog.ToWebModel());
+			var allCatalogProperties = _propertyService.GetCatalogProperties(id);
+			return Ok(catalog.ToWebModel(allCatalogProperties));
         }
 
 		// GET:  api/catalog/catalogs/4/languages
@@ -125,7 +129,7 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
                 }
             };
 
-            retVal = _catalogService.Create(retVal.ToModuleModel()).ToWebModel();
+            //retVal = _catalogService.Create(retVal.ToModuleModel()).ToWebModel();
             return Ok(retVal);
         }
         // GET: api/catalogs/getnewvirtualcatalog
@@ -147,17 +151,27 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
                     }
                 }
             };
-            retVal = _catalogService.Create(retVal.ToModuleModel()).ToWebModel();
+            //retVal = _catalogService.Create(retVal.ToModuleModel()).ToWebModel();
             return Ok(retVal);
         }
 
 		// POST: api/catalog/catalogs
 		[HttpPost]
+		[ResponseType(typeof(webModel.Catalog))]
+		[Route("")]
+		public IHttpActionResult Create(webModel.Catalog catalog)
+		{
+			var retVal = _catalogService.Create(catalog.ToModuleModel());
+			return Ok(retVal.ToWebModel());
+		}
+
+		// PUT: api/catalog/catalogs
+		[HttpPut]
         [ResponseType(typeof(void))]
 		[Route("")]
         public IHttpActionResult Update(webModel.Catalog catalog)
         {
-            UpdateCatalog(catalog);
+			UpdateCatalog(catalog);
             return StatusCode(HttpStatusCode.NoContent);
         }
       
