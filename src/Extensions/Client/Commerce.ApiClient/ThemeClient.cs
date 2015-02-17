@@ -1,6 +1,8 @@
 ﻿#region
 using System;
 using System.Net.Http;
+using System.Threading.Tasks;
+using VirtoCommerce.ApiClient.DataContracts.Themes;
 using VirtoCommerce.ApiClient.Utilities;
 
 #endregion
@@ -36,26 +38,27 @@ namespace VirtoCommerce.ApiClient
         }
         #endregion
 
-        /*
-        /// <summary>
-        ///     List items matching the given query
-        /// </summary>
-        public Task<Theme[]> GetDynamicContentAsync(
-            string[] placeHolder,
-            TagQuery query)
+        public Task<Theme[]> GetThemesAsync(string storeId)
         {
             return
-                this.GetAsync<ResponseCollection<DynamicContentItemGroup>>(
+                this.GetAsync<Theme[]>(
                     CreateRequestUri(
-                        String.Format(RelativePaths.Contents, string.Join(",", placeHolder)),
-                        query.GetQueryString()));
+                        String.Format(RelativePaths.Themes, storeId)));
         }
-         * */
+
+        public Task<ThemeAsset[]> GetThemeAssetsAsync(string storeId, string themeId)
+        {
+            return
+                this.GetAsync<ThemeAsset[]>(
+                    CreateRequestUri(
+                        String.Format(RelativePaths.ThemeAssets, storeId, themeId)));
+        }
 
         protected class RelativePaths
         {
             #region Constants
-            public const string Themes = "cms/{0}/themes";
+            public const string Themes = "{0}/themes";
+            public const string ThemeAssets = "{0}/themes/{1}/assets";
             #endregion
         }
     }
