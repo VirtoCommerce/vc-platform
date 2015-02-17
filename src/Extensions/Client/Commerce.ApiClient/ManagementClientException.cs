@@ -1,4 +1,5 @@
 ﻿#region
+
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -11,8 +12,9 @@ using VirtoCommerce.Web.Core.DataContracts;
 
 namespace VirtoCommerce.ApiClient
 {
+
     #region
-    
+
     #endregion
 
     /// <summary>
@@ -24,14 +26,17 @@ namespace VirtoCommerce.ApiClient
         // Names used in serialization.
 
         #region Constants
+
         private const string ClientErrorCodeName = "ErrorCode";
 
         private const string ClientStatusCodeName = "StatusCode";
 
         private const string ErrorDetailsName = "Details";
+
         #endregion
 
         #region Constructors and Destructors
+
         /// <summary>
         ///     Initializes a new instance of the ManagementClientException class.
         /// </summary>
@@ -75,9 +80,9 @@ namespace VirtoCommerce.ApiClient
             Exception innerException)
             : base(message, innerException)
         {
-            this.StatusCode = statusCode;
-            this.ErrorCode = errorCode;
-            this.Details = details;
+            StatusCode = statusCode;
+            ErrorCode = errorCode;
+            Details = details;
         }
 
         /// <summary>
@@ -90,15 +95,17 @@ namespace VirtoCommerce.ApiClient
         {
             if (serializationInfo != null)
             {
-                this.StatusCode = (HttpStatusCode)serializationInfo.GetInt32(ClientStatusCodeName);
-                this.ErrorCode = serializationInfo.GetString(ClientErrorCodeName);
-                this.Details =
+                StatusCode = (HttpStatusCode)serializationInfo.GetInt32(ClientStatusCodeName);
+                ErrorCode = serializationInfo.GetString(ClientErrorCodeName);
+                Details =
                     (List<ErrorDetail>)serializationInfo.GetValue(ErrorDetailsName, typeof(List<ErrorDetail>));
             }
         }
+
         #endregion
 
         #region Public Properties
+
         /// <summary>
         ///     Gets the error details property
         /// </summary>
@@ -113,9 +120,11 @@ namespace VirtoCommerce.ApiClient
         ///     Gets the status code property
         /// </summary>
         public HttpStatusCode StatusCode { get; private set; }
+
         #endregion
 
         #region Public Methods and Operators
+
         /// <summary>
         ///     Required override to add in the serialized parameters
         /// </summary>
@@ -123,9 +132,9 @@ namespace VirtoCommerce.ApiClient
         /// <param name="context">streaming context</param>
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {
-            info.AddValue(ClientStatusCodeName, (int)this.StatusCode);
-            info.AddValue(ClientErrorCodeName, this.ErrorCode);
-            info.AddValue(ErrorDetailsName, this.Details);
+            info.AddValue(ClientStatusCodeName, (int)StatusCode);
+            info.AddValue(ClientErrorCodeName, ErrorCode);
+            info.AddValue(ErrorDetailsName, Details);
 
             base.GetObjectData(info, context);
         }
@@ -141,13 +150,13 @@ namespace VirtoCommerce.ApiClient
                 string.Format(
                     CultureInfo.InvariantCulture,
                     "HttpStatusCode: {0}, ErrorCode: {1}, {2}",
-                    this.StatusCode.ToString(),
-                    this.ErrorCode,
+                    StatusCode.ToString(),
+                    ErrorCode,
                     base.ToString()));
 
-            if (this.Details != null && this.Details.Count > 0)
+            if (Details != null && Details.Count > 0)
             {
-                foreach (var detail in this.Details)
+                foreach (var detail in Details)
                 {
                     builder.Append(Environment.NewLine);
                     builder.Append(string.Format(CultureInfo.InvariantCulture, "Detail: '{0}'", detail));
@@ -156,6 +165,7 @@ namespace VirtoCommerce.ApiClient
 
             return builder.ToString();
         }
+
         #endregion
     }
 }

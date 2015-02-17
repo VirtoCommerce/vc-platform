@@ -1,4 +1,5 @@
 ﻿#region
+
 using System.Configuration;
 using VirtoCommerce.ApiClient.Utilities;
 
@@ -9,6 +10,7 @@ namespace VirtoCommerce.ApiClient.Extensions
     public static class MessageProcessingExtensions
     {
         #region Public Methods and Operators
+
         public static AzureSubscriptionMessageProcessingHandler CreateAzureSubscriptionMessageProcessingHandler(
             this CommerceClients source)
         {
@@ -19,6 +21,7 @@ namespace VirtoCommerce.ApiClient.Extensions
             var handler = new AzureSubscriptionMessageProcessingHandler(subscriptionKey, appId, secretKey);
             return handler;
         }
+
         #endregion
     }
 }

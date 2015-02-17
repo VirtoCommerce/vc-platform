@@ -1,4 +1,5 @@
 ﻿#region
+
 using System;
 using System.Collections;
 
@@ -6,17 +7,21 @@ using System.Collections;
 
 namespace VirtoCommerce.ApiClient.Caching
 {
+
     #region
-    
+
     #endregion
 
     public interface ICacheRepository
     {
         #region Public Indexers
+
         object this[string key] { get; set; }
+
         #endregion
 
         #region Public Methods and Operators
+
         void Add(string key, object value);
 
         void Add(string key, object value, TimeSpan timeSpan);
@@ -34,6 +39,7 @@ namespace VirtoCommerce.ApiClient.Caching
         bool Remove(string key);
 
         void Unlock(string key, object lockHandle);
+
         #endregion
     }
 }

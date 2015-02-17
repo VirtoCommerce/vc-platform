@@ -7,7 +7,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
         <!-- Google fonts -->
-        <link href='http://fonts.googleapis.com/css?family=Exo+2:300,400,500,600,400italic,700,800,500italic,600italic' rel='stylesheet' type='text/css'>
+        <link href='http://fonts.googleapis.com/css?family=Exo+2:400,300,500,600,400italic&amp;subset=latin,cyrillic' rel='stylesheet' type='text/css'>
 
         <link rel="stylesheet" href="css/reset.css">
         <link rel="stylesheet" href="css/base-modules.css">
@@ -2250,6 +2250,485 @@
                                         </div>
                                     </div>
                                 </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="blade">
+                        <header class="blade-head">
+                            <div class="blade-status"></div>
+                            <div class="blade-nav">
+                                <ul class="menu __inline">
+                                    <li class="menu-item __minimize">
+                                        Minimize
+                                    </li>
+                                    <li class="menu-item __maximize">
+                                        Maximize
+                                    </li>
+                                    <li class="menu-item __close">
+                                        Close
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="blade-t __secondary">
+                                <i class="blade-t_ico fa fa-sitemap"></i>
+                                <p class="blade-t_head">Tree</p>
+                                <p class="blade-t_subhead">Tree sub title</p>
+                            </div>
+                            <div class="blade-toolbar">
+                                <ul class="menu __inline">
+                                    <li class="menu-item">
+                                        <a class="menu-btn">
+                                            <i class="menu-ico fa fa-file"></i>
+                                            New document
+                                        </a>
+                                    </li>
+                                    <li class="menu-item __disabled">
+                                        <a class="menu-btn">
+                                            <i class="menu-ico fa fa-save"></i>
+                                            Save
+                                        </a>
+                                    </li>
+                                    <li class="menu-item __disabled">
+                                        <a class="menu-btn">
+                                            <i class="menu-ico fa fa-undo"></i>
+                                            Reset
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="blade-switch">
+                                <span class="switch-t">Approved</span>
+                                <div class="form-control __switch">
+                                    <label class="form-label">
+                                        <input type="checkbox">
+                                        <span class="switch"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </header>
+                        <div class="blade-container">
+                            <div class="blade-content __medium-wide">
+                                <div class="blade-inner">
+                                    <div class="inner-block">
+                                        <div class="form columns clearfix">
+                                            <div class="column">
+                                                <div class="form-group">
+                                                    <label class="form-label">Customer order number</label>
+                                                    <div class="form-input">
+                                                        <input type="text">
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="form-label">Status</label>
+                                                    <div class="form-input">
+                                                        <select name="" id="" class="chosen-select">
+                                                            <option value="new">New</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="form-label">Fulfilment centre</label>
+                                                    <div class="form-input">
+                                                        <select name="" id="" class="chosen-select">
+                                                            <option value="new">New</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="column">
+                                                <div class="form-group">
+                                                    <label class="form-label">from</label>
+                                                    <div class="form-input">
+                                                        <p class="form-text">2014-02-23 22:21</p>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="form-label">Site</label>
+                                                    <div class="form-input">
+                                                        <select name="" id="" class="chosen-select">
+                                                            <option value="test">Test site</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="form-label">Customer</label>
+                                                        <div class="form-input">
+                                                        <select name="" id="" class="chosen-select">
+                                                            <option value="Evant">Evant Moriss</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="sub-t">Custom attributes</div>
+                                        <div class="form columns clearfix">
+                                            <div class="column">
+                                                <div class="form-group">
+                                                    <label class="form-label">Custom string field</label>
+                                                    <div class="form-input">
+                                                        <input type="text">
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <div class="form-control __checkbox">
+                                                        <label class="form-label">
+                                                            <input type="checkbox" name="r1">
+                                                            <span class="check"></span>
+                                                            <span class="name">Custom flag field</span>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="column">
+                                                <div class="form-group">
+                                                    <label class="form-label">Custom text field</label>
+                                                    <div class="form-input">
+                                                        <textarea></textarea>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="sub-t">Documents</div>
+                                        <div class="tree-view">
+                                            <div class="tree-scroll">
+                                                <ul class="tree">
+                                                    <li class="tree-item first">
+                                                        <div class="tree-block">
+                                                            <div class="inner">
+                                                                <div class="tree-el __title">
+                                                                    <i class="tree-ico fa fa-info-circle"></i>
+                                                                    Order #CU04829
+                                                                </div>
+                                                                <div class="tree-el __date">
+                                                                    <i class="tree-ico fa fa-calendar"></i>
+                                                                    Feb 17, 2015
+                                                                </div>
+                                                                <div class="tree-el __price">
+                                                                    <i class="tree-ico fa fa-money"></i>
+                                                                    218 USD
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <ul class="tree-node">
+                                                            <li class="tree-item">
+                                                                <div class="tree-block">
+                                                                    <div class="inner">
+                                                                        <div class="tree-el __title">
+                                                                            <i class="tree-ico fa fa-info-circle"></i>
+                                                                            PaymentIn #PA04829
+                                                                        </div>
+                                                                        <div class="tree-el __date">
+                                                                            <i class="tree-ico fa fa-calendar"></i>
+                                                                            Feb 17, 2015
+                                                                        </div>
+                                                                        <div class="tree-el __price">
+                                                                            <i class="tree-ico fa fa-money"></i>
+                                                                            10 USD
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </li>
+                                                            <li class="tree-item">
+                                                                <div class="tree-block">
+                                                                    <div class="inner">
+                                                                        <div class="tree-el __title">
+                                                                            <i class="tree-ico fa fa-info-circle"></i>
+                                                                            Shipment #SH04829
+                                                                        </div>
+                                                                        <div class="tree-el __date">
+                                                                            <i class="tree-ico fa fa-calendar"></i>
+                                                                            Feb 17, 2015
+                                                                        </div>
+                                                                        <div class="tree-el __price">
+                                                                            <i class="tree-ico fa fa-money"></i>
+                                                                            0 USD
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </li>
+                                                        </ul>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="blade">
+                        <header class="blade-head">
+                            <div class="blade-status"></div>
+                            <div class="blade-nav">
+                                <ul class="menu __inline">
+                                    <li class="menu-item __minimize">
+                                        <button>
+                                            Minimize
+                                        </button>
+                                    </li>
+                                    <li class="menu-item __maximize">
+                                        <button>
+                                            Maximize
+                                        </button>
+                                    </li>
+                                    <li class="menu-item __close __disabled">
+                                        <button disabled="disabled">
+                                            Close
+                                        </button>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="blade-t __secondary">
+                                <i class="blade-t_ico fa fa-folder"></i>
+                                <p class="blade-t_head">vasja customer's Customer Order items</p>
+                                <p class="blade-t_subhead">Edit order items</p>
+                            </div>
+                            <div class="blade-toolbar">
+                                <ul class="menu __inline">
+                                    <li class="menu-item ng-scope">
+                                        <button class="menu-btn">
+                                            <i class="menu-ico fa fa-plus"></i>
+                                            Add item
+                                        </button>
+                                    </li>
+                                    <li class="menu-item __disabled">
+                                        <button class="menu-btn ng-binding" disabled="disabled">
+                                            <i class="menu-ico fa fa-trash-o"></i>
+                                            Remove
+                                        </button>
+                                    </li>
+                                </ul>
+                            </div>
+                        </header>
+                        <div class="blade-container">
+                            <div class="blade-static">
+                                <div class="form-group">
+                                    <p class="form-count">Count: <span class="count ng-binding">2</span></p>
+                                </div>
+                            </div>
+                            <div class="blade-content __large-wide">
+                                <div class="blade-inner">
+                                    <div class="inner-block">
+                                        <div class="table-wrapper">
+                                            <table class="table">
+                                                <thead>
+                                                    <tr>
+                                                        <th class="table-col">
+                                                            <label class="form-control __checkbox">
+                                                                <input type="checkbox">
+                                                                <span class="check"></span>
+                                                            </label>
+                                                        </th>
+                                                        <th class="table-col">Item</th>
+                                                        <th class="table-col">Qty</th>
+                                                        <th class="table-col">Avail</th>
+                                                        <th class="table-col">Await</th>
+                                                        <th class="table-col">Price</th>
+                                                        <th class="table-col">Discount</th>
+                                                        <th class="table-col">Tax</th>
+                                                        <th class="table-col">Total</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr class="table-item">
+                                                        <td class="table-col __product-control">
+                                                            <label class="form-control __checkbox">
+                                                                <input type="checkbox">
+                                                                <span class="check"></span>
+                                                            </label>
+                                                        </td>
+                                                        <td class="table-col __proudct-img">
+                                                            <div class="product-img">
+                                                                <i class="table-ico fa fa-image"></i>
+                                                            </div>
+                                                            <span class="table-t" title="shoes">shoes</span>
+                                                        </td>
+                                                        <td class="table-col">
+                                                            <div data-step="1" class="form-input __number js-number-input-plugin">
+                                                                <input type="text" ng-model="data.quantity" required="" class="js-val">
+                                                                <a class="up js-up"></a>
+                                                                <a class="down js-down"></a>
+                                                            </div>
+                                                        </td>
+                                                        <td class="table-col">
+                                                            <span>0</span>
+                                                        </td>
+                                                        <td class="table-col">
+                                                            <span>0</span>
+                                                        </td>
+                                                        <td class="table-col">
+                                                            <div data-step="1" class="form-input __number js-number-input-plugin">
+                                                                <input type="text" ng-model="data.price" required="" class="js-val">
+                                                                <a class="up js-up"></a>
+                                                                <a class="down js-down"></a>
+                                                            </div>
+                                                        </td>
+                                                        <td class="table-col">
+                                                            <div data-step="1" class="form-input __number js-number-input-plugin">
+                                                                <input type="text" ng-model="data.staticDiscount" required="" class="js-val">
+                                                                <a class="up js-up"></a>
+                                                                <a class="down js-down"></a>
+                                                            </div>
+                                                        </td>
+                                                        <td class="table-col">
+                                                            <div data-step="1" class="form-input __number js-number-input-plugin">
+                                                                <input type="text" ng-model="data.tax" required="" class="js-val">
+                                                                <a class="up js-up"></a>
+                                                                <a class="down js-down"></a>
+                                                            </div>
+                                                        </td>
+                                                        <td class="table-col">
+                                                            <span>180</span>
+                                                        </td>
+                                                    </tr>
+                                                    <tr class="table-item">
+                                                        <td class="table-col __product-control">
+                                                            <label class="form-control __checkbox">
+                                                                <input type="checkbox">
+                                                                <span class="check"></span>
+                                                            </label>
+                                                        </td>
+                                                        <td class="table-col __proudct-img">
+                                                            <div class="product-img">
+                                                                <i class="table-ico fa fa-image"></i>
+                                                            </div>
+                                                            <span class="table-t" title="t-shirt">t-shirt</span>
+                                                        </td>
+                                                        <td class="table-col">
+                                                            <div data-step="1" class="form-input __number js-number-input-plugin">
+                                                                <input type="text" ng-model="data.quantity" required="" class="js-val">
+                                                                <a class="up js-up"></a>
+                                                                <a class="down js-down"></a>
+                                                            </div>
+                                                        </td>
+                                                        <td class="table-col">
+                                                            <span>0</span>
+                                                        </td>
+                                                        <td class="table-col">
+                                                            <span>0</span>
+                                                        </td>
+                                                        <td class="table-col">
+                                                            <div data-step="1" class="form-input __number js-number-input-plugin">
+                                                                <input type="text" ng-model="data.price" required="" class="js-val">
+                                                                <a class="up js-up"></a>
+                                                                <a class="down js-down"></a>
+                                                            </div>
+                                                        </td>
+                                                        <td class="table-col">
+                                                            <div data-step="1" class="form-input __number js-number-input-plugin">
+                                                                <input type="text" ng-model="data.staticDiscount" required="" class="js-val">
+                                                                <a class="up js-up"></a>
+                                                                <a class="down js-down"></a>
+                                                            </div>
+                                                        </td>
+                                                        <td class="table-col">
+                                                            <div data-step="1" class="form-input __number js-number-input-plugin">
+                                                                <input type="text" ng-model="data.tax" required="" class="js-val">
+                                                                <a class="up js-up"></a>
+                                                                <a class="down js-down"></a>
+                                                            </div>
+                                                        </td>
+                                                        <td class="table-col">
+                                                            <span>2000</span>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+
+                                        <div class="columns clearfix">
+                                            <div class="column">
+                                                <div class="form-group">
+                                                    <label class="form-label">Comment</label>
+                                                    <div class="form-input">
+                                                        <textarea></textarea>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="column">
+                                                <div class="table-wrapper">
+                                                    <table class="table">
+                                                        <tbody><tr class="table-item">
+                                                            <td class="table-col">Total:</td>
+                                                            <td class="table-col ng-binding">218</td>
+                                                        </tr>
+                                                        <tr class="table-item">
+                                                            <td class="table-col">Sub Total</td>
+                                                            <td class="table-col">678.23</td>
+                                                        </tr>
+                                                        <tr class="table-item">
+                                                            <td class="table-col">Discount Total</td>
+                                                            <td class="table-col">36.00</td>
+                                                        </tr>
+                                                        <tr class="table-item">
+                                                            <td class="table-col">Tax Total</td>
+                                                            <td class="table-col ng-binding">0</td>
+                                                        </tr>
+                                                    </tbody></table>
+                                                </div>
+                                                <div class="form-group __order-currency">
+                                                    <label class="form-label">Currency:</label>
+                                                    <div class="form-input">
+                                                        <select class="chosen-select">
+                                                            <option value="EUR">EUR</option>
+                                                            <option value="USD">USD</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="blade">
+                        <header class="blade-head">
+                            <div class="blade-status"></div>
+                            <div class="blade-nav">
+                                <ul class="menu __inline">
+                                    <li class="menu-item __minimize">
+                                        <button>
+                                            Minimize
+                                        </button>
+                                    </li>
+                                    <li class="menu-item __maximize">
+                                        <button>
+                                            Maximize
+                                        </button>
+                                    </li>
+                                    <li class="menu-item __close __disabled">
+                                        <button disabled="disabled">
+                                            Close
+                                        </button>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="blade-t __secondary">
+                                <i class="blade-t_ico fa fa-folder"></i>
+                                <p class="blade-t_head">vasja customer's Customer Order items</p>
+                                <p class="blade-t_subhead">Edit order items</p>
+                            </div>
+                            <div class="blade-toolbar">
+                                <ul class="menu __inline">
+                                    <li class="menu-item ng-scope">
+                                        <button class="menu-btn">
+                                            <i class="menu-ico fa fa-plus"></i>
+                                            Add item
+                                        </button>
+                                    </li>
+                                    <li class="menu-item __disabled">
+                                        <button class="menu-btn ng-binding" disabled="disabled">
+                                            <i class="menu-ico fa fa-trash-o"></i>
+                                            Remove
+                                        </button>
+                                    </li>
+                                </ul>
+                            </div>
+                        </header>
+                        <div class="blade-container">
+                            <div class="blade-loader">
+                                <div class="loading" data-title="Loading">Loading</div>
                             </div>
                         </div>
                     </div>

@@ -6,9 +6,6 @@
         <p class="form-count">Count: <span class="count">{{pageSettings.totalItems}}</span></p>
     </div>
 </div>
-<div class="blade-static __bottom">
-    <div class="pagination" ng-if="pageSettings.itemsPerPageCount < pageSettings.totalItems" ng-include="'pagerTemplate.html'"></div>
-</div>
 <div class="blade-content __medium-wide">
     <div class="blade-inner">
         <div class="inner-block">
@@ -38,10 +35,10 @@
                                 </label>
                             </td>
                             <td class="table-col">
-                                <span>{{data.number + ' by ' + data.customer}}</span>
-                                <span class="sub-title">{{data.statusId}}</span>
+                                <span class="table-t">{{data.number + ' by ' + data.customer}}</span>
+                                <span class="table-descr" ng-if="data.statusId">{{data.statusId}}</span>
                             </td>
-                            <td class="table-col">
+                            <td class="table-col __blue">
                                 <span>{{data.isApproved}}</span>
                                 <ul role="menu" class="menu __context" id="col_menu_{{data.id}}">
                                     <li class="menu-item" ng-click='edit(data)'>
@@ -65,6 +62,7 @@
                     </tbody>
                 </table>
             </div>
+            <div class="pagination" ng-if="pageSettings.itemsPerPageCount < pageSettings.totalItems" ng-include="'pagerTemplate.html'"></div>
             <script type="text/ng-template" id="pagerTemplate.html">
                 <pagination ng-if="pageSettings.itemsPerPageCount < pageSettings.totalItems" boundary-links="true" max-size="pageSettings.numPages" items-per-page="pageSettings.itemsPerPageCount" total-items="pageSettings.totalItems" ng-model="pageSettings.currentPage" class="pagination-sm" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></pagination>
             </script>

@@ -226,3 +226,39 @@ a:hover,
 		background-position: -30px 0;
 	}
 }
+
+@-webkit-keyframes loading
+{
+	0%
+	{
+		width: 0;
+	}
+
+	75%
+	{
+		width: 100%;
+	}
+
+	100%
+	{
+		width: 100%;
+	}
+}
+
+@keyframes loading
+{
+	0%
+	{
+		width: 0;
+	}
+
+	75%
+	{
+		width: 100%;
+	}
+
+	100%
+	{
+		width: 100%;
+	}
+}

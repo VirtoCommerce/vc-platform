@@ -1,4 +1,5 @@
 ﻿#region
+
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -13,6 +14,7 @@ namespace VirtoCommerce.ApiClient.Extensions
     internal static class QueryExtensions
     {
         #region Public Methods and Operators
+
         /// <summary>
         ///     Gets an HTTP query string serialization of this query compatible with FromQueryString
         /// </summary>
@@ -54,7 +56,7 @@ namespace VirtoCommerce.ApiClient.Extensions
             {
                 parts.Add(
                     "startdatefrom="
-                    + HttpUtility.UrlEncode(query.StartDateFrom.Value.ToString(CultureInfo.InvariantCulture)));
+                        + HttpUtility.UrlEncode(query.StartDateFrom.Value.ToString(CultureInfo.InvariantCulture)));
             }
 
             if (query.Filters != null && query.Filters.Count > 0)
@@ -85,6 +87,7 @@ namespace VirtoCommerce.ApiClient.Extensions
 
             return string.Join("&", parts);
         }
+
         #endregion
     }
 }

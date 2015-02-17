@@ -1,4 +1,5 @@
 ﻿#region
+
 using System;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -9,13 +10,15 @@ using VirtoCommerce.Web.Core.DataContracts.Store;
 
 namespace VirtoCommerce.ApiClient
 {
+
     #region
-    
+
     #endregion
 
     public class StoreClient : BaseClient
     {
         #region Constructors and Destructors
+
         /// <summary>
         ///     Initializes a new instance of the StoreClient class.
         /// </summary>
@@ -36,22 +39,27 @@ namespace VirtoCommerce.ApiClient
             : base(adminBaseEndpoint, handler)
         {
         }
+
         #endregion
 
         #region Public Methods and Operators
+
         /// <summary>
         ///     List items matching the given query
         /// </summary>
         public Task<Store[]> GetStoresAsync()
         {
-            return this.GetAsync<Store[]>(this.CreateRequestUri(RelativePaths.Stores));
+            return GetAsync<Store[]>(CreateRequestUri(RelativePaths.Stores));
         }
+
         #endregion
 
         protected class RelativePaths
         {
             #region Constants
+
             public const string Stores = "stores";
+
             #endregion
         }
     }

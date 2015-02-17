@@ -1,4 +1,5 @@
 ﻿#region
+
 using System;
 using System.Net.Http;
 using System.Threading;
@@ -13,10 +14,13 @@ namespace VirtoCommerce.ApiClient.Utilities
     public class AzureSubscriptionMessageProcessingHandler : HmacMessageProcessingHandler
     {
         #region Fields
+
         private readonly string _subscriptionKey;
+
         #endregion
 
         #region Constructors and Destructors
+
         /// <summary>
         ///     Initializes a new instance of the <see cref="HmacMessageProcessingHandler" /> class.
         /// </summary>
@@ -32,11 +36,13 @@ namespace VirtoCommerce.ApiClient.Utilities
                 throw new ArgumentException("subscriptionKey");
             }
 
-            this._subscriptionKey = subscriptionKey;
+            _subscriptionKey = subscriptionKey;
         }
+
         #endregion
 
         #region Methods
+
         /// <summary>
         ///     Processes an HTTP request message.
         /// </summary>
@@ -52,10 +58,11 @@ namespace VirtoCommerce.ApiClient.Utilities
             HttpRequestMessage request,
             CancellationToken cancellationToken)
         {
-            request.Headers.Add("ocp-apim-subscription-key", this._subscriptionKey);
+            request.Headers.Add("ocp-apim-subscription-key", _subscriptionKey);
             base.ProcessRequest(request, cancellationToken);
             return request;
         }
+
         #endregion
     }
 }

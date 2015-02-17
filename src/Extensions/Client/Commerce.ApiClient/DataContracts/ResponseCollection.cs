@@ -1,4 +1,5 @@
 ﻿#region
+
 using System.Collections.ObjectModel;
 using Newtonsoft.Json;
 
@@ -6,28 +7,33 @@ using Newtonsoft.Json;
 
 namespace VirtoCommerce.Web.Core.DataContracts
 {
+
     #region
-    
+
     #endregion
 
     public class ResponseCollection<T>
     {
         #region Fields
+
         private Collection<T> _items;
+
         #endregion
 
         #region Public Properties
+
         [JsonProperty("items")]
         public Collection<T> Items
         {
             get
             {
-                return this._items ?? (this._items = new Collection<T>());
+                return _items ?? (_items = new Collection<T>());
             }
         }
 
         [JsonProperty("total")]
         public int TotalCount { get; set; }
+
         #endregion
     }
 }

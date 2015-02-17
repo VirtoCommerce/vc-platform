@@ -1,4 +1,5 @@
 ﻿#region
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,13 +9,15 @@ using System.Text;
 
 namespace VirtoCommerce.Web.Core.DataContracts
 {
+
     #region
-    
+
     #endregion
 
     public class TagQuery : Dictionary<string, object>
     {
         #region Public Properties
+
         /// <summary>
         ///     Gets the names.
         /// </summary>
@@ -25,12 +28,14 @@ namespace VirtoCommerce.Web.Core.DataContracts
         {
             get
             {
-                return this.Keys.ToArray();
+                return Keys.ToArray();
             }
         }
+
         #endregion
 
         #region Public Methods and Operators
+
         /// <summary>
         ///     Adds the specified name.
         /// </summary>
@@ -38,9 +43,9 @@ namespace VirtoCommerce.Web.Core.DataContracts
         /// <param name="tag">The tag.</param>
         public new void Add(string name, object tag)
         {
-            if (this.ContainsKey(name))
+            if (ContainsKey(name))
             {
-                this.Remove(name);
+                Remove(name);
             }
             base.Add(name, tag);
         }
@@ -52,7 +57,7 @@ namespace VirtoCommerce.Web.Core.DataContracts
         public string GetCacheKey()
         {
             var builder = new StringBuilder();
-            foreach (var name in this.Names)
+            foreach (var name in Names)
             {
                 var value = this[name];
                 builder.Append(String.Format("{0}-{1};", name, value != null ? value.ToString() : String.Empty));
@@ -60,6 +65,7 @@ namespace VirtoCommerce.Web.Core.DataContracts
 
             return builder.ToString();
         }
+
         #endregion
     }
 }

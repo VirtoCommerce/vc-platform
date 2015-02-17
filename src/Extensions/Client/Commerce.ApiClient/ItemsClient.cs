@@ -1,4 +1,5 @@
 ﻿#region
+
 using System;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -9,13 +10,15 @@ using VirtoCommerce.Web.Core.DataContracts;
 
 namespace VirtoCommerce.ApiClient
 {
+
     #region
-    
+
     #endregion
 
     public class ItemsClient : BaseClient
     {
         #region Constructors and Destructors
+
         /// <summary>
         ///     Initializes a new instance of the ItemsClient class.
         /// </summary>
@@ -36,39 +39,44 @@ namespace VirtoCommerce.ApiClient
             : base(adminBaseEndpoint, handler)
         {
         }
+
         #endregion
 
         #region Public Methods and Operators
+
         /// <summary>
         ///     List items matching the given query
         /// </summary>
         public Task AddAsync(string categoryId, Product product)
         {
-            var requestUri = this.CreateRequestUri(String.Format(RelativePaths.AddProduct, categoryId));
+            var requestUri = CreateRequestUri(String.Format(RelativePaths.AddProduct, categoryId));
             return SendAsync(requestUri, HttpMethod.Post, product);
         }
 
         public Task DeleteAsync(string productId)
         {
-            var requestUri = this.CreateRequestUri(String.Format(RelativePaths.DeleteProduct, productId));
-            return this.SendAsync(requestUri, HttpMethod.Delete);
+            var requestUri = CreateRequestUri(String.Format(RelativePaths.DeleteProduct, productId));
+            return SendAsync(requestUri, HttpMethod.Delete);
         }
 
         public Task UpdateAsync(string categoryId, Product product)
         {
-            var requestUri = this.CreateRequestUri(String.Format(RelativePaths.UpdateProduct, categoryId));
+            var requestUri = CreateRequestUri(String.Format(RelativePaths.UpdateProduct, categoryId));
             return SendAsync(requestUri, new HttpMethod("PATCH"), product);
         }
+
         #endregion
 
         protected class RelativePaths
         {
             #region Constants
+
             public const string AddProduct = "products/{0}";
 
             public const string DeleteProduct = "products/{0}";
 
             public const string UpdateProduct = "products/{0}";
+
             #endregion
         }
     }
