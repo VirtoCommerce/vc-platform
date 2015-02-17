@@ -1,4 +1,5 @@
 ﻿#region
+
 using System;
 using System.Configuration;
 using System.Threading;
@@ -7,18 +8,22 @@ using System.Threading;
 
 namespace VirtoCommerce.Web.Core.Configuration.DynamicContent
 {
+
     #region
-    
+
     #endregion
 
     public class DynamicContentConfiguration : ConfigurationSection
     {
         #region Static Fields
+
         private static readonly Lazy<DynamicContentConfiguration> _instance =
             new Lazy<DynamicContentConfiguration>(CreateInstance, LazyThreadSafetyMode.ExecutionAndPublication);
+
         #endregion
 
         #region Public Properties
+
         public static DynamicContentConfiguration Instance
         {
             get
@@ -52,9 +57,11 @@ namespace VirtoCommerce.Web.Core.Configuration.DynamicContent
                 this["Connection"] = value;
             }
         }
+
         #endregion
 
         #region Methods
+
         private static DynamicContentConfiguration CreateInstance()
         {
             var config = (DynamicContentConfiguration)ConfigurationManager.GetSection("VirtoCommerce/DynamicContent");
@@ -66,18 +73,22 @@ namespace VirtoCommerce.Web.Core.Configuration.DynamicContent
 
             return config;
         }
+
         #endregion
     } //DynamicContentConfiguration
 
     public class DynamicContentConnection : ConfigurationElement
     {
         #region Constructors and Destructors
+
         public DynamicContentConnection()
         {
         }
+
         #endregion
 
         #region Public Properties
+
         [ConfigurationProperty("dataServiceUri", IsRequired = false)]
         public string DataServiceUri
         {
@@ -90,9 +101,11 @@ namespace VirtoCommerce.Web.Core.Configuration.DynamicContent
                 this["dataServiceUri"] = value;
             }
         }
+
         #endregion
 
         #region Public Methods and Operators
+
         /// <summary>
         ///     Gets a value indicating whether the <see cref="T:System.Configuration.ConfigurationElement" /> object is read-only.
         /// </summary>
@@ -103,6 +116,7 @@ namespace VirtoCommerce.Web.Core.Configuration.DynamicContent
         {
             return false;
         }
+
         #endregion
     } //DynamicContentConnection
 
@@ -112,15 +126,18 @@ namespace VirtoCommerce.Web.Core.Configuration.DynamicContent
     public class CacheConfiguration : ConfigurationElement
     {
         #region Constructors and Destructors
+
         /// <summary>
         ///     Initializes a new instance of the <see cref="CacheConfiguration" /> class.
         /// </summary>
         public CacheConfiguration()
         {
         }
+
         #endregion
 
         #region Public Properties
+
         [ConfigurationProperty("dynamicContentTimeout", IsRequired = true)]
         public TimeSpan DynamicContentTimeout
         {
@@ -152,9 +169,11 @@ namespace VirtoCommerce.Web.Core.Configuration.DynamicContent
                 this["enabled"] = value;
             }
         }
+
         #endregion
 
         #region Public Methods and Operators
+
         /// <summary>
         ///     Gets a value indicating whether the <see cref="T:System.Configuration.ConfigurationElement" /> object is read-only.
         /// </summary>
@@ -165,6 +184,7 @@ namespace VirtoCommerce.Web.Core.Configuration.DynamicContent
         {
             return false;
         }
+
         #endregion
     } //CacheConfiguration
 } //namespace

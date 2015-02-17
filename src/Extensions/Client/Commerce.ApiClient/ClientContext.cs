@@ -3,14 +3,17 @@
     public static class ClientContext
     {
         #region Constructors and Destructors
+
         static ClientContext()
         {
             Clients = new CommerceClients();
             Configuration = new CommerceConfiguration();
         }
+
         #endregion
 
         #region Public Properties
+
         /// <summary>
         ///     Gets an object providing a common location for service client
         ///     discovery.  The VirtoCommerce namespace should be imported
@@ -26,6 +29,7 @@
         ///     a variety of platform appropriate sources.
         /// </summary>
         public static CommerceConfiguration Configuration { get; private set; }
+
         #endregion
     }
 }

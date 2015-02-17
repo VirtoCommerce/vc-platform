@@ -1,4 +1,5 @@
 ﻿#region
+
 using System;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -9,13 +10,15 @@ using VirtoCommerce.Web.Core.DataContracts;
 
 namespace VirtoCommerce.ApiClient
 {
+
     #region
-    
+
     #endregion
 
     public class ReviewsClient : BaseClient
     {
         #region Constructors and Destructors
+
         /// <summary>
         ///     Initializes a new instance of the ReviewsClient class.
         /// </summary>
@@ -36,24 +39,29 @@ namespace VirtoCommerce.ApiClient
             : base(adminBaseEndpoint, handler)
         {
         }
+
         #endregion
 
         #region Public Methods and Operators
+
         /// <summary>
         ///     List items matching the given query
         /// </summary>
         public Task<ResponseCollection<Review>> GetReviewsAsync(string productId)
         {
             return
-                this.GetAsync<ResponseCollection<Review>>(
-                    this.CreateRequestUri(string.Format(RelativePaths.Reviews, productId)));
+                GetAsync<ResponseCollection<Review>>(
+                    CreateRequestUri(string.Format(RelativePaths.Reviews, productId)));
         }
+
         #endregion
 
         protected class RelativePaths
         {
             #region Constants
+
             public const string Reviews = "products/{0}/reviews";
+
             #endregion
         }
     }

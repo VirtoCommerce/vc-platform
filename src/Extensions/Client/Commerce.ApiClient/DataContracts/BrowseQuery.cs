@@ -1,4 +1,5 @@
 ﻿#region
+
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -9,8 +10,9 @@ using System.Text;
 
 namespace VirtoCommerce.Web.Core.DataContracts
 {
+
     #region
-    
+
     #endregion
 
     /// <summary>
@@ -20,13 +22,16 @@ namespace VirtoCommerce.Web.Core.DataContracts
     public class BrowseQuery
     {
         #region Constants
+
         /// <summary>
         ///     The default page size
         /// </summary>
         public const int DefaultPageSize = 8;
+
         #endregion
 
         #region Public Properties
+
         [DataMember]
         public Dictionary<string, string[]> Filters { get; set; }
 
@@ -72,25 +77,28 @@ namespace VirtoCommerce.Web.Core.DataContracts
         /// </summary>
         [DataMember]
         public int? Take { get; set; }
+
         #endregion
 
         #region Public Methods and Operators
+
         public override string ToString()
         {
             var builder = new StringBuilder();
-            builder.Append(this.Search);
-            builder.Append(this.Skip);
-            builder.Append(this.Take);
-            builder.Append(this.Outline);
-            builder.Append(this.SortProperty);
+            builder.Append(Search);
+            builder.Append(Skip);
+            builder.Append(Take);
+            builder.Append(Outline);
+            builder.Append(SortProperty);
 
-            foreach (var facet in this.Filters)
+            foreach (var facet in Filters)
             {
                 builder.Append(facet);
             }
 
             return builder.ToString();
         }
+
         #endregion
     }
 }

@@ -1,4 +1,5 @@
 ﻿#region
+
 using System;
 
 #endregion
@@ -8,6 +9,7 @@ namespace VirtoCommerce.ApiClient.Extensions
     public static class CartClientExtension
     {
         #region Public Methods and Operators
+
         public static CartClient CreateCartClient(this CommerceClients source)
         {
             var connectionString = ClientContext.Configuration.ConnectionString;
@@ -19,6 +21,7 @@ namespace VirtoCommerce.ApiClient.Extensions
             var client = new CartClient(new Uri(serviceUrl), source.CreateAzureSubscriptionMessageProcessingHandler());
             return client;
         }
+
         #endregion
     }
 }

@@ -1,4 +1,5 @@
 ﻿#region
+
 using System;
 using System.Globalization;
 using System.Linq;
@@ -12,12 +13,15 @@ namespace VirtoCommerce.ApiClient.Utilities
     public static class HmacUtility
     {
         #region Constants
+
         public const string NameValueSeparator = "=";
 
         public const string ParameterSeparator = "&";
+
         #endregion
 
         #region Public Methods and Operators
+
         public static string ComputeHash(Func<byte[], HMAC> hmacFactory, string secretKey, string data)
         {
             var dataBytes = Encoding.UTF8.GetBytes(data);
@@ -44,9 +48,11 @@ namespace VirtoCommerce.ApiClient.Utilities
             var data = BuildDataString(parameters);
             return ComputeHash(hmacFactory, secretKey, data);
         }
+
         #endregion
 
         #region Methods
+
         private static string BuildDataString(NameValuePair[] parameters)
         {
             if (parameters == null)
@@ -103,50 +109,60 @@ namespace VirtoCommerce.ApiClient.Utilities
                     .Select(i => Convert.ToByte(hexString.Substring(i, 2), 16))
                     .ToArray();
         }
+
         #endregion
     }
 
     public class NameValuePair
     {
         #region Constructors and Destructors
+
         public NameValuePair(string name, string value)
         {
-            this.Name = name;
-            this.Value = value;
+            Name = name;
+            Value = value;
         }
+
         #endregion
 
         #region Public Properties
+
         public string Name { get; private set; }
 
         public string Value { get; private set; }
+
         #endregion
 
         #region Public Methods and Operators
+
         public override string ToString()
         {
             var builder = new StringBuilder();
             builder.Append("[");
-            builder.Append(this.Name);
+            builder.Append(Name);
             builder.Append(", ");
-            builder.Append(this.Value);
+            builder.Append(Value);
             builder.Append("]");
             return builder.ToString();
         }
+
         #endregion
     }
 
     public class ApiRequestSignature
     {
         #region Constructors and Destructors
+
         public ApiRequestSignature()
         {
-            this.Timestamp = DateTime.UtcNow;
-            this.TimestampString = this.Timestamp.ToString("o", CultureInfo.InvariantCulture);
+            Timestamp = DateTime.UtcNow;
+            TimestampString = Timestamp.ToString("o", CultureInfo.InvariantCulture);
         }
+
         #endregion
 
         #region Public Properties
+
         public string AppId { get; set; }
 
         public string Hash { get; set; }
@@ -154,9 +170,11 @@ namespace VirtoCommerce.ApiClient.Utilities
         public DateTime Timestamp { get; private set; }
 
         public string TimestampString { get; private set; }
+
         #endregion
 
         #region Public Methods and Operators
+
         public static bool TryParse(string input, out ApiRequestSignature parsedValue)
         {
             parsedValue = null;
@@ -178,12 +196,12 @@ namespace VirtoCommerce.ApiClient.Utilities
                             out timestamp))
                         {
                             parsedValue = new ApiRequestSignature
-                                          {
-                                              AppId = parts[0],
-                                              TimestampString = parts[1],
-                                              Hash = parts[2],
-                                              Timestamp = timestamp,
-                                          };
+                            {
+                                AppId = parts[0],
+                                TimestampString = parts[1],
+                                Hash = parts[2],
+                                Timestamp = timestamp,
+                            };
                             success = true;
                         }
                     }
@@ -195,8 +213,9 @@ namespace VirtoCommerce.ApiClient.Utilities
 
         public override string ToString()
         {
-            return string.Join(";", this.AppId, this.TimestampString, this.Hash);
+            return string.Join(";", AppId, TimestampString, Hash);
         }
+
         #endregion
     }
 }

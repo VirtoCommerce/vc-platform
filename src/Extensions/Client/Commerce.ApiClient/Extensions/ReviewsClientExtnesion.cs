@@ -1,4 +1,5 @@
 ﻿#region
+
 using System;
 using System.Threading;
 
@@ -9,6 +10,7 @@ namespace VirtoCommerce.ApiClient.Extensions
     public static class ReviewsClientExtnesion
     {
         #region Public Methods and Operators
+
         public static ReviewsClient CreateReviewClientWithUri(this CommerceClients source, string serviceUrl)
         {
             var client = new ReviewsClient(
@@ -32,6 +34,7 @@ namespace VirtoCommerce.ApiClient.Extensions
                 language);
             return CreateReviewClientWithUri(source, connectionString);
         }
+
         #endregion
     }
 }

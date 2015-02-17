@@ -1,17 +1,20 @@
 ﻿#region
+
 using System.Collections.Generic;
 
 #endregion
 
 namespace VirtoCommerce.ApiClient.DataContracts.Security
 {
+
     #region
-    
+
     #endregion
 
     public class AuthInfo
     {
         #region Public Properties
+
         public string AccountId { get; set; }
 
         public int AccountState { get; set; }
@@ -31,12 +34,14 @@ namespace VirtoCommerce.ApiClient.DataContracts.Security
         public Dictionary<string, string> Properties { get; set; }
 
         public RegisterType UserType { get; set; }
+
         #endregion
     }
 
     public class Address
     {
         #region Public Properties
+
         public string AddressId { get; set; }
 
         public string City { get; set; }
@@ -74,6 +79,7 @@ namespace VirtoCommerce.ApiClient.DataContracts.Security
         public string StateProvince { get; set; }
 
         public string Type { get; set; }
+
         #endregion
     }
 

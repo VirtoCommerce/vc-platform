@@ -1,17 +1,20 @@
 ﻿#region
+
 using System;
 
 #endregion
 
 namespace VirtoCommerce.ApiClient.DataContracts.Security
 {
+
     #region
-    
+
     #endregion
 
     public class ApplicationUser
     {
         #region Public Properties
+
         /// <summary>
         ///     Used to record failures for the purposes of lockout
         /// </summary>
@@ -93,6 +96,7 @@ namespace VirtoCommerce.ApiClient.DataContracts.Security
         ///     User name
         /// </summary>
         public string UserName { get; set; }
+
         #endregion
     }
 }

@@ -1,4 +1,5 @@
 ﻿#region
+
 using System;
 using System.Configuration;
 using System.Threading;
@@ -7,19 +8,23 @@ using System.Threading;
 
 namespace VirtoCommerce.Web.Core.Configuration.Catalog
 {
+
     #region
-    
+
     #endregion
 
     public sealed class CatalogConfiguration : ConfigurationSection
     {
         #region Static Fields
+
         private static readonly Lazy<CatalogConfiguration> _instance = new Lazy<CatalogConfiguration>(
             CreateInstance,
             LazyThreadSafetyMode.ExecutionAndPublication);
+
         #endregion
 
         #region Public Properties
+
         public static CatalogConfiguration Instance
         {
             get
@@ -53,9 +58,11 @@ namespace VirtoCommerce.Web.Core.Configuration.Catalog
                 this["Connection"] = value;
             }
         }
+
         #endregion
 
         #region Methods
+
         private static CatalogConfiguration CreateInstance()
         {
             var config = (CatalogConfiguration)ConfigurationManager.GetSection("VirtoCommerce/Catalog");
@@ -67,18 +74,22 @@ namespace VirtoCommerce.Web.Core.Configuration.Catalog
 
             return config;
         }
+
         #endregion
     }
 
     public class CatalogConnection : ConfigurationElement
     {
         #region Constructors and Destructors
+
         public CatalogConnection()
         {
         }
+
         #endregion
 
         #region Public Properties
+
         [ConfigurationProperty("dataServiceUri", IsRequired = false)]
         public string DataServiceUri
         {
@@ -91,9 +102,11 @@ namespace VirtoCommerce.Web.Core.Configuration.Catalog
                 this["dataServiceUri"] = value;
             }
         }
+
         #endregion
 
         #region Public Methods and Operators
+
         /// <summary>
         ///     Gets a value indicating whether the <see cref="T:System.Configuration.ConfigurationElement" /> object is read-only.
         /// </summary>
@@ -104,6 +117,7 @@ namespace VirtoCommerce.Web.Core.Configuration.Catalog
         {
             return false;
         }
+
         #endregion
     }
 
@@ -113,15 +127,18 @@ namespace VirtoCommerce.Web.Core.Configuration.Catalog
     public class CacheConfiguration : ConfigurationElement
     {
         #region Constructors and Destructors
+
         /// <summary>
         ///     Initializes a new instance of the <see cref="CacheConfiguration" /> class.
         /// </summary>
         public CacheConfiguration()
         {
         }
+
         #endregion
 
         #region Public Properties
+
         /// <summary>
         ///     Configuration attribute which determines when the CategoryCollections values are
         ///     automatically refreshed in memory (in seconds).
@@ -212,9 +229,11 @@ namespace VirtoCommerce.Web.Core.Configuration.Catalog
                 this["itemTimeout"] = value.ToString();
             }
         }
+
         #endregion
 
         #region Public Methods and Operators
+
         /// <summary>
         ///     Gets a value indicating whether the <see cref="T:System.Configuration.ConfigurationElement" /> object is read-only.
         /// </summary>
@@ -225,6 +244,7 @@ namespace VirtoCommerce.Web.Core.Configuration.Catalog
         {
             return false;
         }
+
         #endregion
     }
 }

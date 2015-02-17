@@ -1,4 +1,5 @@
 ﻿#region
+
 using System;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -9,13 +10,15 @@ using VirtoCommerce.Web.Core.DataContracts;
 
 namespace VirtoCommerce.ApiClient
 {
+
     #region
-    
+
     #endregion
 
     public class SeoClient : BaseClient
     {
         #region Constructors and Destructors
+
         /// <summary>
         ///     Initializes a new instance of the SeoClient class.
         /// </summary>
@@ -36,22 +39,27 @@ namespace VirtoCommerce.ApiClient
             : base(adminBaseEndpoint, handler)
         {
         }
+
         #endregion
 
         #region Public Methods and Operators
+
         /// <summary>
         ///     List items matching the given query
         /// </summary>
         public Task<SeoKeyword[]> GetKeywordsAsync()
         {
-            return this.GetAsync<SeoKeyword[]>(this.CreateRequestUri(RelativePaths.Keywords));
+            return GetAsync<SeoKeyword[]>(CreateRequestUri(RelativePaths.Keywords));
         }
+
         #endregion
 
         protected class RelativePaths
         {
             #region Constants
+
             public const string Keywords = "keywords";
+
             #endregion
         }
     }

@@ -1,4 +1,5 @@
 ﻿#region
+
 using System;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -9,13 +10,15 @@ using VirtoCommerce.ApiClient.Utilities;
 
 namespace VirtoCommerce.ApiClient
 {
+
     #region
-    
+
     #endregion
 
     public class CartClient : BaseClient
     {
         #region Constructors and Destructors
+
         /// <summary>
         ///     Initializes a new instance of the CartClient class.
         /// </summary>
@@ -36,17 +39,19 @@ namespace VirtoCommerce.ApiClient
             : base(adminBaseEndpoint, handler)
         {
         }
+
         #endregion
 
         #region Public Methods and Operators
+
         /// <summary>
         ///     Gets the current cart
         /// </summary>
         public Task<ShoppingCart> GetCurrentCartAsync()
         {
             return
-                this.GetAsync<ShoppingCart>(
-                    this.CreateRequestUri(string.Format(RelativePaths.CurrentCart, "samplestore")),
+                GetAsync<ShoppingCart>(
+                    CreateRequestUri(string.Format(RelativePaths.CurrentCart, "samplestore")),
                     useCache: false); // service should already know the cart
 
             // TODO: remove storeid from the API's
@@ -54,19 +59,22 @@ namespace VirtoCommerce.ApiClient
 
         public Task<ShoppingCart> UpdateCurrentCartAsync(ShoppingCart cart)
         {
-            return this.SendAsync<ShoppingCart, ShoppingCart>(
-                this.CreateRequestUri(RelativePaths.UpdateCart),
+            return SendAsync<ShoppingCart, ShoppingCart>(
+                CreateRequestUri(RelativePaths.UpdateCart),
                 HttpMethod.Put,
                 cart);
         }
+
         #endregion
 
         protected class RelativePaths
         {
             #region Constants
+
             public const string CurrentCart = "cart/{0}/carts/current";
 
             public const string UpdateCart = "cart/carts";
+
             #endregion
         }
     }

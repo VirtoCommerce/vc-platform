@@ -1,4 +1,5 @@
 ﻿#region
+
 using System;
 using System.Threading;
 
@@ -9,6 +10,7 @@ namespace VirtoCommerce.ApiClient.Extensions
     public static class BrowseClientExtension
     {
         #region Public Methods and Operators
+
         public static BrowseClient CreateBrowseClient(this CommerceClients source, string storeId, string language = "")
         {
             if (String.IsNullOrEmpty(language))
@@ -31,6 +33,7 @@ namespace VirtoCommerce.ApiClient.Extensions
             var client = new BrowseClient(new Uri(serviceUrl), source.CreateAzureSubscriptionMessageProcessingHandler());
             return client;
         }
+
         #endregion
     }
 }

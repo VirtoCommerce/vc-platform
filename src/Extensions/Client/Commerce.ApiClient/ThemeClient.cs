@@ -1,4 +1,5 @@
 ﻿#region
+
 using System;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -9,13 +10,15 @@ using VirtoCommerce.ApiClient.Utilities;
 
 namespace VirtoCommerce.ApiClient
 {
+
     #region
-    
+
     #endregion
 
     public class ThemeClient : BaseClient
     {
         #region Constructors and Destructors
+
         /// <summary>
         ///     Initializes a new instance of the ThemeClient class.
         /// </summary>
@@ -36,29 +39,36 @@ namespace VirtoCommerce.ApiClient
             : base(adminBaseEndpoint, handler)
         {
         }
+
         #endregion
 
-        public Task<Theme[]> GetThemesAsync(string storeId)
-        {
-            return
-                this.GetAsync<Theme[]>(
-                    CreateRequestUri(
-                        String.Format(RelativePaths.Themes, storeId)));
-        }
+        #region Public Methods and Operators
 
         public Task<ThemeAsset[]> GetThemeAssetsAsync(string storeId, string themeId)
         {
             return
-                this.GetAsync<ThemeAsset[]>(
+                GetAsync<ThemeAsset[]>(
                     CreateRequestUri(
                         String.Format(RelativePaths.ThemeAssets, storeId, themeId)));
         }
 
+        public Task<Theme[]> GetThemesAsync(string storeId)
+        {
+            return
+                GetAsync<Theme[]>(
+                    CreateRequestUri(
+                        String.Format(RelativePaths.Themes, storeId)));
+        }
+
+        #endregion
+
         protected class RelativePaths
         {
             #region Constants
-            public const string Themes = "{0}/themes";
+
             public const string ThemeAssets = "{0}/themes/{1}/assets";
+            public const string Themes = "{0}/themes";
+
             #endregion
         }
     }

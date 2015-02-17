@@ -1,4 +1,5 @@
 ﻿#region
+
 using System;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -11,13 +12,15 @@ using VirtoCommerce.Web.Core.DataContracts;
 
 namespace VirtoCommerce.ApiClient
 {
+
     #region
-    
+
     #endregion
 
     public class ContentClient : BaseClient
     {
         #region Constructors and Destructors
+
         /// <summary>
         ///     Initializes a new instance of the ContentClient class.
         /// </summary>
@@ -38,9 +41,11 @@ namespace VirtoCommerce.ApiClient
             : base(adminBaseEndpoint, handler)
         {
         }
+
         #endregion
 
         #region Public Methods and Operators
+
         /// <summary>
         ///     List items matching the given query
         /// </summary>
@@ -49,17 +54,20 @@ namespace VirtoCommerce.ApiClient
             TagQuery query)
         {
             return
-                this.GetAsync<ResponseCollection<DynamicContentItemGroup>>(
+                GetAsync<ResponseCollection<DynamicContentItemGroup>>(
                     CreateRequestUri(
                         String.Format(RelativePaths.Contents, string.Join(",", placeHolder)),
                         query.GetQueryString()));
         }
+
         #endregion
 
         protected class RelativePaths
         {
             #region Constants
+
             public const string Contents = "contents/{0}";
+
             #endregion
         }
     }

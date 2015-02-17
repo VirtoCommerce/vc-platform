@@ -1,4 +1,5 @@
 ﻿#region
+
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -14,13 +15,15 @@ using VirtoCommerce.Web.Core.DataContracts;
 
 namespace VirtoCommerce.ApiClient
 {
+
     #region
-    
+
     #endregion
 
     public class BrowseClient : BaseClient
     {
         #region Constructors and Destructors
+
         /// <summary>
         ///     Initializes a new instance of the BrowseClient class.
         /// </summary>
@@ -41,53 +44,55 @@ namespace VirtoCommerce.ApiClient
             : base(adminBaseEndpoint, handler)
         {
         }
+
         #endregion
 
         #region Public Methods and Operators
+
         public virtual Task<ResponseCollection<Category>> GetCategoriesAsync(string parentId = null)
         {
             return
-                this.GetAsync<ResponseCollection<Category>>(
+                GetAsync<ResponseCollection<Category>>(
                     CreateRequestUri(RelativePaths.Categories, string.Format("parentId={0}", parentId)));
         }
 
         public virtual Task<Category> GetCategoryAsync(string categoryId)
         {
-            return this.GetAsync<Category>(this.CreateRequestUri(String.Format(RelativePaths.Category, categoryId)));
+            return GetAsync<Category>(CreateRequestUri(String.Format(RelativePaths.Category, categoryId)));
         }
 
         public virtual Task<Category> GetCategoryByCodeAsync(string code)
         {
-            return this.GetAsync<Category>(this.CreateRequestUri(RelativePaths.Categories, "code=" + code));
+            return GetAsync<Category>(CreateRequestUri(RelativePaths.Categories, "code=" + code));
         }
 
         public virtual Task<Product> GetProductAsync(string productId, ItemResponseGroups responseGroup)
         {
             var query = new List<KeyValuePair<string, string>>
-                        {
-                            new KeyValuePair<string, string>(
-                                "responseGroup",
-                                responseGroup.GetHashCode()
-                                .ToString(CultureInfo.InvariantCulture)),
-                        };
+            {
+                new KeyValuePair<string, string>(
+                    "responseGroup",
+                    responseGroup.GetHashCode()
+                        .ToString(CultureInfo.InvariantCulture)),
+            };
 
             return
-                this.GetAsync<Product>(
+                GetAsync<Product>(
                     CreateRequestUri(String.Format(RelativePaths.Product, productId), query.ToArray()));
         }
 
         public virtual Task<Product> GetProductByCodeAsync(string code, ItemResponseGroups responseGroup)
         {
             var query = new List<KeyValuePair<string, string>>
-                        {
-                            new KeyValuePair<string, string>("code", code),
-                            new KeyValuePair<string, string>(
-                                "responseGroup",
-                                responseGroup.GetHashCode()
-                                .ToString(CultureInfo.InvariantCulture)),
-                        };
+            {
+                new KeyValuePair<string, string>("code", code),
+                new KeyValuePair<string, string>(
+                    "responseGroup",
+                    responseGroup.GetHashCode()
+                        .ToString(CultureInfo.InvariantCulture)),
+            };
 
-            return this.GetAsync<Product>((CreateRequestUri(RelativePaths.Products, query.ToArray())));
+            return GetAsync<Product>((CreateRequestUri(RelativePaths.Products, query.ToArray())));
         }
 
         /// <summary>
@@ -98,12 +103,14 @@ namespace VirtoCommerce.ApiClient
             ItemResponseGroups? responseGroup = null)
         {
             return
-                this.GetAsync<ProductSearchResult>(
+                GetAsync<ProductSearchResult>(
                     CreateRequestUri(RelativePaths.Products, query.GetQueryString(responseGroup)));
         }
+
         #endregion
 
         #region Methods
+
         protected override TimeSpan GetCacheTimeOut(string requestUrl)
         {
             if (requestUrl.Contains(RelativePaths.Categories))
@@ -113,11 +120,13 @@ namespace VirtoCommerce.ApiClient
 
             return base.GetCacheTimeOut(requestUrl);
         }
+
         #endregion
 
         protected class RelativePaths
         {
             #region Constants
+
             public const string Categories = "categories";
 
             public const string Category = "categories/{0}";
@@ -125,6 +134,7 @@ namespace VirtoCommerce.ApiClient
             public const string Product = "products/{0}";
 
             public const string Products = "products";
+
             #endregion
         }
     }
