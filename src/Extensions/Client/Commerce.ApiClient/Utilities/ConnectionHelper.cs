@@ -1,26 +1,26 @@
-﻿namespace VirtoCommerce.ApiClient.Utilities
+﻿    #region
+    using System;
+    using System.Collections.Concurrent;
+    using System.Configuration;
+	using System.Threading;
+    using System.Web.Configuration;
+
+    #endregion
+
+namespace VirtoCommerce.ApiClient.Utilities
 {
     #region
-
-	using System;
-	using System.Collections.Concurrent;
-	using System.Configuration;
-	using System.Threading;
-	using System.Web.Configuration;
-
+    
     #endregion
 
     public class ConnectionHelper
     {
         #region Static Fields
-
         private static readonly ConcurrentDictionary<string, string> Dictionary =
             new ConcurrentDictionary<string, string>();
-
         #endregion
 
         #region Public Methods and Operators
-
         /// <summary>
         ///     Gets the connection string.
         /// </summary>
@@ -76,7 +76,6 @@
             section.ConnectionStrings[name].ConnectionString = connectionString;
             configFile.Save(ConfigurationSaveMode.Modified);
         }
-
         #endregion
     }
 }

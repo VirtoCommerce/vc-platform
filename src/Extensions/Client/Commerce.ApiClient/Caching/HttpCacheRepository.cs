@@ -1,26 +1,26 @@
-﻿namespace VirtoCommerce.ApiClient.Caching
+﻿#region
+using System;
+using System.Collections;
+using System.Web;
+using System.Web.Caching;
+
+#endregion
+
+namespace VirtoCommerce.ApiClient.Caching
 {
     #region
-
-    using System;
-    using System.Collections;
-    using System.Web;
-    using System.Web.Caching;
-
+    
     #endregion
 
     public class HttpCacheRepository : ICacheRepository
     {
         #region Fields
-
         private readonly object _lock = new object();
 
         private object _cache;
-
         #endregion
 
         #region Public Indexers
-
         public object this[string key]
         {
             get
@@ -32,11 +32,9 @@
                 this.Add(key, value);
             }
         }
-
         #endregion
 
         #region Public Methods and Operators
-
         public void Add(string key, object value)
         {
             var cache = this.GetCache();
@@ -103,7 +101,6 @@
             //var cache = GetCache();
             //cache.Unlock(key, (DataCacheLockHandle)lockHandle);
         }
-
         #endregion
 
         /*
@@ -118,7 +115,6 @@
 */
 
         #region Methods
-
         /// <summary>
         ///     Items the removed callback.
         /// </summary>
@@ -184,7 +180,6 @@
                     callback);
             }
         }
-
         #endregion
     }
 }

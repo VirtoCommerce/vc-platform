@@ -1,22 +1,22 @@
-﻿namespace VirtoCommerce.ApiClient.Caching
+﻿#region
+using System;
+using System.Collections;
+
+#endregion
+
+namespace VirtoCommerce.ApiClient.Caching
 {
     #region
-
-    using System;
-    using System.Collections;
-
+    
     #endregion
 
     public interface ICacheRepository
     {
         #region Public Indexers
-
         object this[string key] { get; set; }
-
         #endregion
 
         #region Public Methods and Operators
-
         void Add(string key, object value);
 
         void Add(string key, object value, TimeSpan timeSpan);
@@ -34,7 +34,6 @@
         bool Remove(string key);
 
         void Unlock(string key, object lockHandle);
-
         #endregion
     }
 }

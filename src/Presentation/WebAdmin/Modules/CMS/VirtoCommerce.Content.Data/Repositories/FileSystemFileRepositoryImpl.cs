@@ -50,16 +50,18 @@ namespace VirtoCommerce.Content.Data.Repositories
 		}
 
 
-		public Theme[] GetThemes(string storePath)
+		public IEnumerable<Theme> GetThemes(string storePath)
 		{
 			var fullPath = GetFullPath(storePath);
 
+            if (!Directory.Exists(fullPath)) return Enumerable.Empty<Theme>();
+
 			var directories = Directory.GetDirectories(fullPath);
 
-			return directories.Select(dir => new Theme { Name = FixName(dir, fullPath), ThemePath = RemoveBaseDirectory(dir) }).ToArray();
+			return directories.Select(dir => new Theme { Name = FixName(dir, fullPath), ThemePath = RemoveBaseDirectory(dir) });
 		}
 
-		public ContentItem[] GetContentItems(string path, bool loadContent = false)
+		public IEnumerable<ContentItem> GetContentItems(string path, bool loadContent = false)
 		{
 			var fullPath = GetFullPath(path);
 
@@ -96,7 +98,7 @@ namespace VirtoCommerce.Content.Data.Repositories
 				});
 			}
 
-			return items.ToArray();
+			return items;
 		}
 
 		public void SaveContentItem(string path, ContentItem item)

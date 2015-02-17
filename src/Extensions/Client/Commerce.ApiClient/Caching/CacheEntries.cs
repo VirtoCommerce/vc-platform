@@ -1,10 +1,13 @@
-﻿namespace VirtoCommerce.ApiClient.Caching
+﻿#region
+using System.Collections.Generic;
+using System.Threading;
+
+#endregion
+
+namespace VirtoCommerce.ApiClient.Caching
 {
     #region
-
-    using System.Collections.Generic;
-    using System.Threading;
-
+    
     #endregion
 
     /// <summary>
@@ -13,15 +16,12 @@
     internal class CacheEntries
     {
         #region Static Fields
-
         private static readonly Dictionary<string, CacheEntry> _Entries;
 
         private static readonly ReaderWriterLockSlim _Lock;
-
         #endregion
 
         #region Constructors and Destructors
-
         /// <summary>
         ///     Initializes the <see cref="CacheEntries" /> class.
         /// </summary>
@@ -30,11 +30,9 @@
             _Lock = new ReaderWriterLockSlim();
             _Entries = new Dictionary<string, CacheEntry>();
         }
-
         #endregion
 
         #region Public Methods and Operators
-
         /// <summary>
         ///     Determines whether the specified key contains key.
         /// </summary>
@@ -135,7 +133,6 @@
                 _Lock.ExitUpgradeableReadLock();
             }
         }
-
         #endregion
     }
 }

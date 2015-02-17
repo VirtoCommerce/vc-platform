@@ -1,24 +1,24 @@
-﻿namespace VirtoCommerce.Web.Core.Configuration.DynamicContent
+﻿#region
+using System;
+using System.Configuration;
+using System.Threading;
+
+#endregion
+
+namespace VirtoCommerce.Web.Core.Configuration.DynamicContent
 {
     #region
-
-    using System;
-    using System.Configuration;
-    using System.Threading;
-
+    
     #endregion
 
     public class DynamicContentConfiguration : ConfigurationSection
     {
         #region Static Fields
-
         private static readonly Lazy<DynamicContentConfiguration> _instance =
             new Lazy<DynamicContentConfiguration>(CreateInstance, LazyThreadSafetyMode.ExecutionAndPublication);
-
         #endregion
 
         #region Public Properties
-
         public static DynamicContentConfiguration Instance
         {
             get
@@ -52,11 +52,9 @@
                 this["Connection"] = value;
             }
         }
-
         #endregion
 
         #region Methods
-
         private static DynamicContentConfiguration CreateInstance()
         {
             var config = (DynamicContentConfiguration)ConfigurationManager.GetSection("VirtoCommerce/DynamicContent");
@@ -68,22 +66,18 @@
 
             return config;
         }
-
         #endregion
     } //DynamicContentConfiguration
 
     public class DynamicContentConnection : ConfigurationElement
     {
         #region Constructors and Destructors
-
         public DynamicContentConnection()
         {
         }
-
         #endregion
 
         #region Public Properties
-
         [ConfigurationProperty("dataServiceUri", IsRequired = false)]
         public string DataServiceUri
         {
@@ -96,11 +90,9 @@
                 this["dataServiceUri"] = value;
             }
         }
-
         #endregion
 
         #region Public Methods and Operators
-
         /// <summary>
         ///     Gets a value indicating whether the <see cref="T:System.Configuration.ConfigurationElement" /> object is read-only.
         /// </summary>
@@ -111,7 +103,6 @@
         {
             return false;
         }
-
         #endregion
     } //DynamicContentConnection
 
@@ -121,18 +112,15 @@
     public class CacheConfiguration : ConfigurationElement
     {
         #region Constructors and Destructors
-
         /// <summary>
         ///     Initializes a new instance of the <see cref="CacheConfiguration" /> class.
         /// </summary>
         public CacheConfiguration()
         {
         }
-
         #endregion
 
         #region Public Properties
-
         [ConfigurationProperty("dynamicContentTimeout", IsRequired = true)]
         public TimeSpan DynamicContentTimeout
         {
@@ -164,11 +152,9 @@
                 this["enabled"] = value;
             }
         }
-
         #endregion
 
         #region Public Methods and Operators
-
         /// <summary>
         ///     Gets a value indicating whether the <see cref="T:System.Configuration.ConfigurationElement" /> object is read-only.
         /// </summary>
@@ -179,7 +165,6 @@
         {
             return false;
         }
-
         #endregion
     } //CacheConfiguration
 } //namespace

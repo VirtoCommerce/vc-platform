@@ -43,9 +43,9 @@
 
 			var items = repository.GetThemes("Apple");
 
-			Assert.Equal(items.Length, 2);
-			Assert.Equal(items[0].ThemePath, "Apple/Simple");
-			Assert.Equal(items[0].Name, "Simple");
+			Assert.Equal(items.Count(), 2);
+			Assert.Equal(items.ElementAt(0).ThemePath, "Apple/Simple");
+            Assert.Equal(items.ElementAt(0).Name, "Simple");
 		}
 
 		[Fact]
@@ -55,9 +55,9 @@
 
 			var items = repository.GetContentItems("Apple/Simple");
 
-			Assert.Equal(items.Length, 69);
-			Assert.Equal(items[0].Path, "Apple/Simple/assets/apple-touch-icon-114x114.png");
-			Assert.Equal(items[0].Name, "apple-touch-icon-114x114.png");
+			Assert.Equal(items.Count(), 69);
+            Assert.Equal(items.ElementAt(0).Path, "Apple/Simple/assets/apple-touch-icon-114x114.png");
+            Assert.Equal(items.ElementAt(0).Name, "apple-touch-icon-114x114.png");
 		}
 
 		[Fact]
@@ -67,9 +67,9 @@
 
 			var items = repository.GetContentItems("Apple/Simple", true);
 
-			Assert.Equal(items.Length, 69);
-			Assert.Equal(items[0].Path, "Apple/Simple/assets/apple-touch-icon-114x114.png");
-			Assert.Equal(items[0].Name, "apple-touch-icon-114x114.png");
+			Assert.Equal(items.Count(), 69);
+            Assert.Equal(items.ElementAt(0).Path, "Apple/Simple/assets/apple-touch-icon-114x114.png");
+            Assert.Equal(items.ElementAt(0).Name, "apple-touch-icon-114x114.png");
 			Assert.Equal(items.Count(i => string.IsNullOrEmpty(i.Content)), 0);
 		}
 
@@ -97,7 +97,7 @@
 
 			var items = repository.GetContentItems("Apple/Simple");
 
-			Assert.Equal(items.Length, 70);
+			Assert.Equal(items.Count(), 70);
 
 			var item = repository.GetContentItem("Apple/Simple/new/new123.liquid");
 
@@ -111,7 +111,7 @@
 
 			items = repository.GetContentItems("Apple/Simple");
 
-			Assert.Equal(items.Length, 70);
+			Assert.Equal(items.Count(), 70);
 
 			item = repository.GetContentItem("Apple/Simple/new/new123.liquid");
 
@@ -123,7 +123,7 @@
 
 			items = repository.GetContentItems("Apple/Simple");
 
-			Assert.Equal(items.Length, 69);
+			Assert.Equal(items.Count(), 69);
 		}
 
 		#endregion

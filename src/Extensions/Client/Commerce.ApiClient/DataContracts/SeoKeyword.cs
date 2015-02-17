@@ -3,7 +3,6 @@
     public class SeoKeyword
     {
         #region Public Properties
-
         public string Id { get; set; }
 
         public string ImageAltDescription { get; set; }
@@ -21,7 +20,6 @@
         public string MetaKeywords { get; set; }
 
         public string Title { get; set; }
-
         #endregion
     }
 }

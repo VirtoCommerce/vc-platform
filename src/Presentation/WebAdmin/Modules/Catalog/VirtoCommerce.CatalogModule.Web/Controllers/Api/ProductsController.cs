@@ -45,10 +45,7 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 				properties = _propertyService.GetCategoryProperties(item.CategoryId);
 			}
 			var retVal = item.ToWebModel(_assetBaseUri, properties);
-
-            //Remove variation properties from Product
-		    retVal.Properties.RemoveAll(x => x.Type == webModel.PropertyType.Variation && string.IsNullOrWhiteSpace(retVal.TitularItemId));
-         
+          
             return Ok(retVal);
         }
 

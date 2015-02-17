@@ -51,7 +51,7 @@
 				string.Empty);
 
 			var githubMainPath = "/Themes/";
-			var fileSystemMainPath = "~/Themes/";
+			var fileSystemMainPath = HostingEnvironment.MapPath("~/App_Data/Themes/");
 
 			Func<IFileRepository> databaseFileRepository = () =>
 			{
@@ -83,9 +83,9 @@
 				}
 			};
 
-			if (!Directory.Exists(HostingEnvironment.MapPath("~/Themes/")))
+            if (!Directory.Exists(fileSystemMainPath))
 			{
-				Directory.CreateDirectory(HostingEnvironment.MapPath("~/Themes/"));
+                Directory.CreateDirectory(fileSystemMainPath);
 			}
 
 			this._container.RegisterType<ThemeController>(new InjectionConstructor(factory, settingsManager));

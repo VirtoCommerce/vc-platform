@@ -97,7 +97,7 @@ namespace VirtoCommerce.Content.Tests
 
 			var items = repository.GetThemes("Apple");
 
-			Assert.Equal(items.Length, 2);
+			Assert.Equal(items.Count(), 2);
 			Assert.Equal(items.Count(i => i.ThemePath == "Apple/Simple"), 1);
 		}
 
@@ -108,7 +108,7 @@ namespace VirtoCommerce.Content.Tests
 
 			var items = repository.GetContentItems("Apple/Simple");
 
-			Assert.Equal(items.Length, 2);
+			Assert.Equal(items.Count(), 2);
 			Assert.Equal(items.Count(i => i.Path == "Apple/Simple/templates/404.liquid"), 1);
 		}
 
@@ -141,7 +141,7 @@ namespace VirtoCommerce.Content.Tests
 
 			var items = repository.GetContentItems("Apple/Simple");
 
-			Assert.Equal(items.Length, 3);
+			Assert.Equal(items.Count(), 3);
 
 			var item = repository.GetContentItem("Apple/Simple/new/new123.liquid");
 
@@ -155,7 +155,7 @@ namespace VirtoCommerce.Content.Tests
 
 			items = repository.GetContentItems("Apple/Simple");
 
-			Assert.Equal(items.Length, 3);
+			Assert.Equal(items.Count(), 3);
 
 			item = repository.GetContentItem("Apple/Simple/new/new123.liquid");
 
@@ -167,7 +167,7 @@ namespace VirtoCommerce.Content.Tests
 
 			items = repository.GetContentItems("Apple/Simple");
 
-			Assert.Equal(items.Length, 2);
+			Assert.Equal(items.Count(), 2);
 		}
 	}
 }

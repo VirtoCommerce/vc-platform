@@ -1,18 +1,20 @@
-﻿namespace VirtoCommerce.Web.Core.DataContracts
+﻿#region
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+
+#endregion
+
+namespace VirtoCommerce.Web.Core.DataContracts
 {
     #region
-
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-
+    
     #endregion
 
     public class TagQuery : Dictionary<string, object>
     {
         #region Public Properties
-
         /// <summary>
         ///     Gets the names.
         /// </summary>
@@ -26,11 +28,9 @@
                 return this.Keys.ToArray();
             }
         }
-
         #endregion
 
         #region Public Methods and Operators
-
         /// <summary>
         ///     Adds the specified name.
         /// </summary>
@@ -60,7 +60,6 @@
 
             return builder.ToString();
         }
-
         #endregion
     }
 }

@@ -1,10 +1,13 @@
-﻿namespace VirtoCommerce.Web.Core.DataContracts
+﻿#region
+using System.Globalization;
+using System.Runtime.Serialization;
+
+#endregion
+
+namespace VirtoCommerce.Web.Core.DataContracts
 {
     #region
-
-    using System.Globalization;
-    using System.Runtime.Serialization;
-
+    
     #endregion
 
     /// <summary>
@@ -14,7 +17,6 @@
     public class ErrorDetail
     {
         #region Public Properties
-
         /// <summary>
         ///     Gets the error code.
         /// </summary>
@@ -32,11 +34,9 @@
         /// </summary>
         [DataMember(Order = 1)]
         public string Source { get; set; }
-
         #endregion
 
         #region Public Methods and Operators
-
         /// <summary>
         ///     Required override to properly display the error detail
         /// </summary>
@@ -50,7 +50,6 @@
                 this.Source,
                 this.Message);
         }
-
         #endregion
     }
 }

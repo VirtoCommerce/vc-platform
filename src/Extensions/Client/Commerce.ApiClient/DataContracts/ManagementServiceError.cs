@@ -1,10 +1,13 @@
-﻿namespace VirtoCommerce.Web.Core.DataContracts
+﻿#region
+using System.Collections.Generic;
+using System.Runtime.Serialization;
+
+#endregion
+
+namespace VirtoCommerce.Web.Core.DataContracts
 {
     #region
-
-    using System.Collections.Generic;
-    using System.Runtime.Serialization;
-
+    
     #endregion
 
     /// <summary>
@@ -14,7 +17,6 @@
     public class ManagementServiceError
     {
         #region Public Properties
-
         /// <summary>
         ///     Gets or sets the error code.
         /// </summary>
@@ -35,7 +37,6 @@
         /// </summary>
         [DataMember(Order = 1)]
         public string Message { get; set; }
-
         #endregion
     }
 }

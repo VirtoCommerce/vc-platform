@@ -3,7 +3,6 @@
     public class Store
     {
         #region Public Properties
-
         public string Catalog { get; set; }
 
         public string Country { get; set; }
@@ -37,7 +36,6 @@
         public string TimeZone { get; set; }
 
         public string Url { get; set; }
-
         #endregion
     }
 }
