@@ -229,8 +229,20 @@ a:hover,
 
 @-webkit-keyframes loading
 {
-	from {  }
-	to {  }
+	0%
+	{
+		width: 0;
+	}
+
+	75%
+	{
+		width: 100%;
+	}
+
+	100%
+	{
+		width: 100%;
+	}
 }
 
 @keyframes loading

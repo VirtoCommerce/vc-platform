@@ -12,9 +12,9 @@
                                 <span class="flag flag-{{data.languageCode.substr(3).toLowerCase()}}"></span>
                                 <input ng-model="data.semanticUrl" name="semanticUrl{{$index}}" required ui-validate=" 'semanticUrlValidator($value)' " />
                             </div>
-                            <div data-ng-show="form.semanticUrl{{$index}}.$dirty">
-                                <label class="fg-red" data-ng-show="form.semanticUrl{{$index}}.$error.required">Required</label>
-                                <label class="fg-red" data-ng-show="form.semanticUrl{{$index}}.$error.validator">Invalid characters in URL found</label>
+                            <div class="form-error" data-ng-show="form.semanticUrl{{$index}}.$dirty">
+                                <span data-ng-show="form.semanticUrl{{$index}}.$error.required">Required</span>
+                                <span data-ng-show="form.semanticUrl{{$index}}.$error.validator">Invalid characters in URL found</span>
                             </div>
                         </ng-form>
                     </div>

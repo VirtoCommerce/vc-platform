@@ -2449,6 +2449,21 @@ h3
 
 
 /* Forms */
+:-moz-ui-invalid:not(output)
+{
+    -webkit-box-shadow: none;
+            box-shadow: none;
+}
+
+.form-input input.ng-invalid,
+.form-input textarea.ng-invalid,
+.form-input input:focus.ng-invalid,
+.form-input textarea:focus.ng-invalid
+{
+    background: #faf1f1;
+    border-color: #e51400;
+}
+
 fieldset
 {
 	border: none;
@@ -2700,6 +2715,7 @@ fieldset + fieldset
             left: 11px;
             position: absolute;
             top: 11px;
+            z-index: 50;
         }
 
         .form-label
