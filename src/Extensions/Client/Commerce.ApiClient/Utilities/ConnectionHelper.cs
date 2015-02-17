@@ -2,10 +2,11 @@
 {
     #region
 
-    using System;
-    using System.Collections.Concurrent;
-    using System.Configuration;
-    using System.Web.Configuration;
+	using System;
+	using System.Collections.Concurrent;
+	using System.Configuration;
+	using System.Threading;
+	using System.Web.Configuration;
 
     #endregion
 
@@ -57,6 +58,16 @@
 
             return settingValue;
         }
+
+		public static string ApiConnectionString(string nameOrConnectionString)
+		{
+			return ApiConnectionString(nameOrConnectionString, ConfigurationManager.AppSettings["DefaultCatalog"]).ToLower();
+		}
+
+		public static string ApiConnectionString(string nameOrConnectionString, string catalog, string language = null)
+		{
+			return string.Format(GetConnectionString(nameOrConnectionString), catalog ?? "", language ?? Thread.CurrentThread.CurrentUICulture.Name).ToLower();
+		}
 
         public static void SetConnectionString(string name, string connectionString)
         {

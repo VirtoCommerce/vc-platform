@@ -12,5 +12,7 @@ namespace VirtoCommerce.Content.Data.Models
 		public string Name { get; set; }
 
 		public string ThemePath { get; set; }
+
+		public DateTime Modified { get; set; }
 	}
 }

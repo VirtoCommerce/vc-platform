@@ -62,6 +62,11 @@ using VirtoCommerce.Web.Core.DataContracts;
             return this.GetAsync<Category>(this.CreateRequestUri(RelativePaths.Categories, "code=" + code));
         }
 
+		public Task<Product> GetProductAsync(string productId)
+		{
+			return GetAsync<Product>(CreateRequestUri(String.Format(RelativePaths.Product, productId)));
+		}
+
         public virtual Task<Product> GetProductAsync(string productId, ItemResponseGroups responseGroup)
         {
             var query = new List<KeyValuePair<string, string>>
@@ -73,6 +78,11 @@ using VirtoCommerce.Web.Core.DataContracts;
                 this.GetAsync<Product>(
                     CreateRequestUri(String.Format(RelativePaths.Product, productId), query.ToArray()));
         }
+
+		public Task<Product> GetProductByCodeAsync(string code)
+		{
+			return GetAsync<Product>((CreateRequestUri(RelativePaths.Products, string.Format("code={0}", code))));
+		}
 
         public virtual Task<Product> GetProductByCodeAsync(string code, ItemResponseGroups responseGroup)
         {

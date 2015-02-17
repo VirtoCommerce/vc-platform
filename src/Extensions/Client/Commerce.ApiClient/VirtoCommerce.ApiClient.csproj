@@ -115,10 +115,15 @@
     <Compile Include="DataContracts\Store\StoreState.cs" />
     <Compile Include="DataContracts\TagQuery.cs" />
     <Compile Include="Extensions\CartClientExtension.cs" />
+    <Compile Include="Extensions\EnumerableExtension.cs" />
+    <Compile Include="Extensions\ExceptionExtension.cs" />
+    <Compile Include="Extensions\KeyValuePairExtension.cs" />
     <Compile Include="Extensions\MessageProcessingExtensions.cs" />
+    <Compile Include="Extensions\ObjectExtension.cs" />
     <Compile Include="Extensions\SeoClientExtensions.cs" />
     <Compile Include="Extensions\StoreClientExtensions.cs" />
     <Compile Include="CartClient.cs" />
+    <Compile Include="Extensions\StringExtension.cs" />
     <Compile Include="SeoClient.cs" />
     <Compile Include="StoreClient.cs" />
     <Compile Include="ContentClient.cs" />
