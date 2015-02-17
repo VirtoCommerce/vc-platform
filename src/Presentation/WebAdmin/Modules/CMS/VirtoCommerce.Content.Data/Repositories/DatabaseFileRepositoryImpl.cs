@@ -79,18 +79,18 @@
 			return retVal;
 		}
 
-		public Theme[] GetThemes(string storePath)
+		public IEnumerable<Theme> GetThemes(string storePath)
 		{
 			var path = string.Format("{0}/", storePath);
 
-			var items = Themes.Where(c => c.ThemePath.StartsWith(storePath)).ToArray();
+			var items = Themes.Where(c => c.ThemePath.StartsWith(storePath));
 
 			return items;
 		}
 
-		public ContentItem[] GetContentItems(string path, bool loadContent = false)
+		public IEnumerable<ContentItem> GetContentItems(string path, bool loadContent = false)
 		{
-			return ContentItems.Where(i => i.Path.Contains(path)).ToArray();
+			return ContentItems.Where(i => i.Path.Contains(path));
 		}
 
 		public void SaveContentItem(string path, ContentItem item)

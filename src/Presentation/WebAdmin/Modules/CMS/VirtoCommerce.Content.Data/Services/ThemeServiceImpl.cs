@@ -22,15 +22,15 @@ namespace VirtoCommerce.Content.Data.Services
 			_repository = repository;
 		}
 
-		public Theme[] GetThemes(string storeId)
+		public IEnumerable<Theme> GetThemes(string storeId)
 		{
 			var themePath = GetThemePath(storeId, string.Empty);
 
 			var items = _repository.GetThemes(themePath);
-			return items.ToArray();
+			return items;
 		}
 
-		public ThemeAsset[] GetThemeAssets(string storeId, string themeName, bool loadContent = false)
+		public IEnumerable<ThemeAsset> GetThemeAssets(string storeId, string themeName, bool loadContent = false)
 		{
 			var themePath = GetThemePath(storeId, themeName);
 			var items = _repository.GetContentItems(themePath, loadContent);
@@ -40,7 +40,7 @@ namespace VirtoCommerce.Content.Data.Services
 				item.Path = FixPath(themePath, item.Path);
 			}
 
-			return items.Select(c => c.AsThemeAsset()).ToArray();
+			return items.Select(c => c.AsThemeAsset());
 		}
 
 		public ThemeAsset GetThemeAsset(string storeId, string themeId, string path)

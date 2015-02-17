@@ -77,17 +77,17 @@
 			return retVal;
 		}
 
-		public Theme[] GetThemes(string storePath)
+		public IEnumerable<Theme> GetThemes(string storePath)
 		{
 			var fullPath = GetFullPath(storePath);
 
 			var themes = this._client.Repository.Content.GetContents(this._ownerName, this._repositoryName, fullPath)
 					.Result.Where(s => s.Type == ContentType.Dir);
 
-			return themes.Select(theme => new Theme { Name = theme.Name, ThemePath = FixPath(theme.Path) }).ToArray();
+			return themes.Select(theme => new Theme { Name = theme.Name, ThemePath = FixPath(theme.Path) });
 		}
 
-		public ContentItem[] GetContentItems(string path, bool loadContent = false)
+		public IEnumerable<ContentItem> GetContentItems(string path, bool loadContent = false)
 		{
 			var fullPath = GetFullPath(path);
 
@@ -137,7 +137,7 @@
 				});
 			}
 
-			return files.ToArray();
+			return files;
 		}
 
 		public void SaveContentItem(string path, ContentItem item)

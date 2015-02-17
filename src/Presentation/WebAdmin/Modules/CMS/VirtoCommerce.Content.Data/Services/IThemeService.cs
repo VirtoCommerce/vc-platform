@@ -1,12 +1,13 @@
-﻿using VirtoCommerce.Content.Data.Models;
+﻿using System.Collections.Generic;
+using VirtoCommerce.Content.Data.Models;
 
 namespace VirtoCommerce.Content.Data.Services
 {
 	public interface IThemeService
 	{
-		Theme[] GetThemes(string storeId);
+		IEnumerable<Theme> GetThemes(string storeId);
 
-		ThemeAsset[] GetThemeAssets(string storeId, string themeId, bool loadContent = false);
+		IEnumerable<ThemeAsset> GetThemeAssets(string storeId, string themeId, bool loadContent = false);
 		ThemeAsset GetThemeAsset(string storeId, string themeId, string assetKey);
 
 		void SaveThemeAsset(string storeId, string themeId, ThemeAsset asset);

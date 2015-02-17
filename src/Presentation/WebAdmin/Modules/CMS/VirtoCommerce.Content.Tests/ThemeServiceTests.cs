@@ -38,7 +38,7 @@ namespace VirtoCommerce.Content.Tests
 
 			var items = service.GetThemes("Apple");
 
-			Assert.Equal(items.Length, 2);
+			Assert.Equal(items.Count(), 2);
 		}
 
 		[Fact]
@@ -48,7 +48,7 @@ namespace VirtoCommerce.Content.Tests
 
 			var items = service.GetThemeAssets("Apple", "Simple");
 
-			Assert.Equal(items.Length, 69);
+			Assert.Equal(items.Count(), 69);
 		}
 
 		[Fact]
@@ -59,7 +59,7 @@ namespace VirtoCommerce.Content.Tests
 			var items = service.GetThemeAssets("Apple", "Simple", true);
 
 			Assert.Equal(items.Count(i => string.IsNullOrEmpty(i.Content)), 0);
-			Assert.Equal(items.Length, 69);
+			Assert.Equal(items.Count(), 69);
 		}
 
 		[Fact]
@@ -86,7 +86,7 @@ namespace VirtoCommerce.Content.Tests
 
 			var items = service.GetThemeAssets("Apple", "Simple");
 
-			Assert.Equal(items.Length, 70);
+			Assert.Equal(items.Count(), 70);
 
 			var item = service.GetThemeAsset("Apple", "Simple", "new/new123.liquid");
 
@@ -100,7 +100,7 @@ namespace VirtoCommerce.Content.Tests
 
 			items = service.GetThemeAssets("Apple", "Simple");
 
-			Assert.Equal(items.Length, 70);
+			Assert.Equal(items.Count(), 70);
 
 			item = service.GetThemeAsset("Apple", "Simple", "new/new123.liquid");
 
@@ -113,7 +113,7 @@ namespace VirtoCommerce.Content.Tests
 
 			items = service.GetThemeAssets("Apple", "Simple");
 
-			Assert.Equal(items.Length, 69);
+			Assert.Equal(items.Count(), 69);
 		}
 
 		#endregion
