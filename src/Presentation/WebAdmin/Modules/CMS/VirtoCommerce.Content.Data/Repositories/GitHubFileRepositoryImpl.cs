@@ -84,7 +84,27 @@
 			var themes = this._client.Repository.Content.GetContents(this._ownerName, this._repositoryName, fullPath)
 					.Result.Where(s => s.Type == ContentType.Dir);
 
-			return themes.Select(theme => new Theme { Name = theme.Name, ThemePath = FixPath(theme.Path) });
+			List<Theme> list = new List<Theme>();
+
+			foreach(var theme in themes)
+			{
+				var commits = this._client.
+					Repository.
+					Commits.
+					GetAll(this._ownerName, this._repositoryName, new CommitRequest { Path = theme.Path }).Result;
+
+				var commit = commits.First();
+				var date = commit.Commit.Committer.Date;
+
+				list.Add(new Theme
+				{
+					Name = theme.Name,
+					ThemePath = FixPath(theme.Path),
+					ModifiedDate = date.DateTime
+				});
+			}
+
+			return list;
 		}
 
 		public IEnumerable<ContentItem> GetContentItems(string path, bool loadContent = false)

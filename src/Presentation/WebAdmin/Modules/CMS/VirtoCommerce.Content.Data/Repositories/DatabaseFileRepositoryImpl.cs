@@ -107,6 +107,27 @@
 				Add(item);
 			}
 
+			var steps = path.Split('/');
+			if(steps.Length > 2)
+			{
+				var themePath = string.Join("/", steps[0], steps[1]);
+				var theme = Themes.FirstOrDefault(t => t.Id == themePath);
+				if(theme != null)
+				{
+					theme.ModifiedDate = DateTime.UtcNow;
+					Update(theme);
+				}
+				else
+				{
+					theme = new Theme();
+					theme.Id = themePath;
+					theme.ThemePath = themePath;
+					theme.Name = steps[1];
+					theme.CreatedDate = DateTime.UtcNow;
+					Add(theme);
+				}
+			}
+
 			UnitOfWork.Commit();
 		}
 
@@ -116,6 +137,18 @@
 			if (existingItem != null)
 			{
 				Remove(existingItem);
+			}
+
+			var steps = path.Split('/');
+			if (steps.Length > 2)
+			{
+				var themePath = string.Join("/", steps[0], steps[1]);
+				var theme = Themes.FirstOrDefault(t => t.Id == themePath);
+				if (theme != null)
+				{
+					theme.ModifiedDate = DateTime.UtcNow;
+					Update(theme);
+				}
 			}
 
 			UnitOfWork.Commit();

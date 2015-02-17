@@ -68,6 +68,10 @@
     <Compile Include="Migrations\201502161344479_AddThemes.Designer.cs">
       <DependentUpon>201502161344479_AddThemes.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201502171619353_AddThemesAuditable.cs" />
+    <Compile Include="Migrations\201502171619353_AddThemesAuditable.Designer.cs">
+      <DependentUpon>201502171619353_AddThemesAuditable.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\ContentItem.cs" />
     <Compile Include="Models\Theme.cs" />
@@ -103,6 +107,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201502161344479_AddThemes.resx">
       <DependentUpon>201502161344479_AddThemes.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201502171619353_AddThemesAuditable.resx">
+      <DependentUpon>201502171619353_AddThemesAuditable.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

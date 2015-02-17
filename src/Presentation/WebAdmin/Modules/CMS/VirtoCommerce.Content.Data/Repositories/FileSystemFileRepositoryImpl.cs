@@ -54,11 +54,36 @@ namespace VirtoCommerce.Content.Data.Repositories
 		{
 			var fullPath = GetFullPath(storePath);
 
-            if (!Directory.Exists(fullPath)) return Enumerable.Empty<Theme>();
+			if (!Directory.Exists(fullPath)) return Enumerable.Empty<Theme>();
 
 			var directories = Directory.GetDirectories(fullPath);
 
-			return directories.Select(dir => new Theme { Name = FixName(dir, fullPath), ThemePath = RemoveBaseDirectory(dir) });
+			List<Theme> themes = new List<Theme>();
+
+			foreach (var directory in directories)
+			{
+				var maxModified = Directory.GetLastWriteTimeUtc(directory);
+				var directoriesQueue = new Queue<string>();
+
+				var subDirectories = Directory.GetDirectories(directory);
+
+				foreach (var subDirectory in subDirectories)
+				{
+					directoriesQueue.Enqueue(subDirectory);
+					maxModified = Directory.GetLastWriteTimeUtc(subDirectory) < maxModified
+						? maxModified
+						: Directory.GetLastWriteTimeUtc(subDirectory);
+				}
+
+				themes.Add(new Theme
+				{
+					Name = FixName(directory, fullPath),
+					ThemePath = RemoveBaseDirectory(directory),
+					ModifiedDate = maxModified 
+				});
+			}
+
+			return themes;
 		}
 
 		public IEnumerable<ContentItem> GetContentItems(string path, bool loadContent = false)
@@ -128,6 +153,14 @@ namespace VirtoCommerce.Content.Data.Repositories
 
 			if (File.Exists(fullPath))
 				File.Delete(fullPath);
+
+			var directoryPath = Path.GetDirectoryName(fullPath);
+			while (Directory.GetFiles(directoryPath).Length == 0 && Directory.GetDirectories(directoryPath).Length == 0 && directoryPath.Contains(this._baseDirectoryPath))
+			{
+				var newDirectoryPath = Directory.GetParent(directoryPath).FullName;
+				Directory.Delete(directoryPath, false);
+				directoryPath = newDirectoryPath;
+			}
 		}
 
 		#endregion
