@@ -1,26 +1,24 @@
-﻿namespace VirtoCommerce.Web.Core.DataContracts
+﻿#region
+using System;
+using System.Collections.Generic;
+using Newtonsoft.Json;
+using VirtoCommerce.ApiClient.DataContracts;
+
+#endregion
+
+namespace VirtoCommerce.Web.Core.DataContracts
 {
     #region
-
-    using System;
-    using System.Collections.Generic;
-
-    using Newtonsoft.Json;
-
-    using VirtoCommerce.ApiClient.DataContracts;
-
+    
     #endregion
 
     public class CatalogItem : Resource
     {
         #region Fields
-
         private IDictionary<string, object> _properties = new Dictionary<string, object>();
-
         #endregion
 
         #region Public Properties
-
         public Association[] Associations { get; set; }
 
         public string CatalogId { get; set; }
@@ -60,11 +58,9 @@
         public SeoKeyword[] SeoKeywords { get; set; }
 
         public DateTime StartDate { get; set; }
-
         #endregion
 
         #region Public Indexers
-
         [JsonIgnore]
         public object this[string name]
         {
@@ -84,7 +80,6 @@
                 }
             }
         }
-
         #endregion
     }
 }

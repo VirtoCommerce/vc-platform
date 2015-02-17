@@ -1,33 +1,34 @@
-﻿namespace VirtoCommerce.ApiClient
-{
-    #region
-
+﻿#region
 using System;
 using System.Net.Http;
 using System.Threading.Tasks;
-
 using VirtoCommerce.ApiClient.DataContracts.Security;
 using VirtoCommerce.ApiClient.Utilities;
 
+#endregion
+
+namespace VirtoCommerce.ApiClient
+{
+    #region
+    
     #endregion
 
     public class SecurityClient : BaseClient
     {
         #region Constructors and Destructors
-
         /// <summary>
-		/// Initializes a new instance of the SecurityClient class.
+        ///     Initializes a new instance of the SecurityClient class.
         /// </summary>
         /// <param name="adminBaseEndpoint">Admin endpoint</param>
-		/// <param name="appId">The API application ID.</param>
-		/// <param name="secretKey">The API secret key.</param>
-		public SecurityClient(Uri adminBaseEndpoint, string appId, string secretKey)
-			: base(adminBaseEndpoint, new HmacMessageProcessingHandler(appId, secretKey))
+        /// <param name="appId">The API application ID.</param>
+        /// <param name="secretKey">The API secret key.</param>
+        public SecurityClient(Uri adminBaseEndpoint, string appId, string secretKey)
+            : base(adminBaseEndpoint, new HmacMessageProcessingHandler(appId, secretKey))
         {
         }
 
         /// <summary>
-		/// Initializes a new instance of the SecurityClient class.
+        ///     Initializes a new instance of the SecurityClient class.
         /// </summary>
         /// <param name="adminBaseEndpoint">Admin endpoint</param>
         /// <param name="handler"></param>
@@ -35,11 +36,9 @@ using VirtoCommerce.ApiClient.Utilities;
             : base(adminBaseEndpoint, handler)
         {
         }
-
         #endregion
 
         #region Public Methods and Operators
-
         public Task CreateAsync(ApplicationUser user)
         {
             var requestUri = this.CreateRequestUri(RelativePaths.Create);
@@ -81,13 +80,11 @@ using VirtoCommerce.ApiClient.Utilities;
             var requestUri = this.CreateRequestUri(RelativePaths.Update);
             return SendAsync(requestUri, HttpMethod.Post, user);
         }
-
         #endregion
 
         protected class RelativePaths
         {
             #region Constants
-
             public const string Create = "users/create";
 
             public const string Delete = "users/delete";
@@ -101,7 +98,6 @@ using VirtoCommerce.ApiClient.Utilities;
             public const string Update = "users/update";
 
             public const string UserInfo = "usersession/{0}";
-
             #endregion
         }
     }

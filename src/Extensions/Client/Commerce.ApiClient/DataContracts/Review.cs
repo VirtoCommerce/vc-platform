@@ -1,15 +1,17 @@
-﻿namespace VirtoCommerce.Web.Core.DataContracts
+﻿#region
+using System;
+
+#endregion
+
+namespace VirtoCommerce.Web.Core.DataContracts
 {
     #region
-
-    using System;
-
+    
     #endregion
 
     public class Review
     {
         #region Public Properties
-
         public int AbuseCount { get; set; }
 
         public string AuthorId { get; set; }
@@ -35,7 +37,6 @@
         public string ReviewText { get; set; }
 
         public int TotalComments { get; set; }
-
         #endregion
     }
 }

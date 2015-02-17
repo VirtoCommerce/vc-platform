@@ -1,13 +1,16 @@
-﻿namespace VirtoCommerce.Web.Core.DataContracts
+﻿#region
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Runtime.Serialization;
+using System.Text;
+
+#endregion
+
+namespace VirtoCommerce.Web.Core.DataContracts
 {
     #region
-
-    using System;
-    using System.Collections.Generic;
-    using System.ComponentModel;
-    using System.Runtime.Serialization;
-    using System.Text;
-
+    
     #endregion
 
     /// <summary>
@@ -17,16 +20,13 @@
     public class BrowseQuery
     {
         #region Constants
-
         /// <summary>
         ///     The default page size
         /// </summary>
         public const int DefaultPageSize = 8;
-
         #endregion
 
         #region Public Properties
-
         [DataMember]
         public Dictionary<string, string[]> Filters { get; set; }
 
@@ -72,11 +72,9 @@
         /// </summary>
         [DataMember]
         public int? Take { get; set; }
-
         #endregion
 
         #region Public Methods and Operators
-
         public override string ToString()
         {
             var builder = new StringBuilder();
@@ -93,7 +91,6 @@
 
             return builder.ToString();
         }
-
         #endregion
     }
 }

@@ -1,28 +1,29 @@
-﻿namespace VirtoCommerce.ApiClient
-{
-    #region
-
+﻿#region
 using System;
 using System.Net.Http;
 using System.Threading.Tasks;
-
 using VirtoCommerce.ApiClient.DataContracts.Cart;
 using VirtoCommerce.ApiClient.Utilities;
 
+#endregion
+
+namespace VirtoCommerce.ApiClient
+{
+    #region
+    
     #endregion
 
     public class CartClient : BaseClient
     {
         #region Constructors and Destructors
-
         /// <summary>
         ///     Initializes a new instance of the CartClient class.
         /// </summary>
         /// <param name="adminBaseEndpoint">Admin endpoint</param>
-		/// <param name="appId">The API application ID.</param>
-		/// <param name="secretKey">The API secret key.</param>
-		public CartClient(Uri adminBaseEndpoint, string appId, string secretKey)
-			: base(adminBaseEndpoint, new HmacMessageProcessingHandler(appId, secretKey))
+        /// <param name="appId">The API application ID.</param>
+        /// <param name="secretKey">The API secret key.</param>
+        public CartClient(Uri adminBaseEndpoint, string appId, string secretKey)
+            : base(adminBaseEndpoint, new HmacMessageProcessingHandler(appId, secretKey))
         {
         }
 
@@ -35,19 +36,18 @@ using VirtoCommerce.ApiClient.Utilities;
             : base(adminBaseEndpoint, handler)
         {
         }
-
         #endregion
 
         #region Public Methods and Operators
-
         /// <summary>
         ///     Gets the current cart
         /// </summary>
         public Task<ShoppingCart> GetCurrentCartAsync()
         {
-            return this.GetAsync<ShoppingCart>(
-                this.CreateRequestUri(string.Format(RelativePaths.CurrentCart, "samplestore")),
-                useCache: false); // service should already know the cart
+            return
+                this.GetAsync<ShoppingCart>(
+                    this.CreateRequestUri(string.Format(RelativePaths.CurrentCart, "samplestore")),
+                    useCache: false); // service should already know the cart
 
             // TODO: remove storeid from the API's
         }
@@ -59,17 +59,14 @@ using VirtoCommerce.ApiClient.Utilities;
                 HttpMethod.Put,
                 cart);
         }
-
         #endregion
 
         protected class RelativePaths
         {
             #region Constants
-
             public const string CurrentCart = "cart/{0}/carts/current";
 
             public const string UpdateCart = "cart/carts";
-
             #endregion
         }
     }

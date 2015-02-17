@@ -1,15 +1,17 @@
-﻿namespace VirtoCommerce.ApiClient.DataContracts.Cart
+﻿#region
+using System.Collections.Generic;
+
+#endregion
+
+namespace VirtoCommerce.ApiClient.DataContracts.Cart
 {
     #region
-
-    using System.Collections.Generic;
-
+    
     #endregion
 
     public class Shipment
     {
         #region Public Properties
-
         public string Currency { get; set; }
 
         public Dimension Dimension { get; set; }
@@ -41,7 +43,6 @@
         public string WarehouseLocation { get; set; }
 
         public Weight Weight { get; set; }
-
         #endregion
     }
 }

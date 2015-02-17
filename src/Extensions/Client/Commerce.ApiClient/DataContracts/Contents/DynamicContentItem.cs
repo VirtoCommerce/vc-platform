@@ -1,23 +1,22 @@
-﻿namespace VirtoCommerce.ApiClient.DataContracts.Contents
+﻿#region
+using System.Collections.Generic;
+using Newtonsoft.Json;
+
+#endregion
+
+namespace VirtoCommerce.ApiClient.DataContracts.Contents
 {
     #region
-
-    using System.Collections.Generic;
-
-    using Newtonsoft.Json;
-
+    
     #endregion
 
     public class DynamicContentItem
     {
         #region Fields
-
         private IDictionary<string, string> _properties = new Dictionary<string, string>();
-
         #endregion
 
         #region Public Properties
-
         public string ContentType { get; set; }
 
         public string Description { get; set; }
@@ -39,11 +38,9 @@
                 this._properties = value;
             }
         }
-
         #endregion
 
         #region Public Indexers
-
         [JsonIgnore]
         public string this[string name]
         {
@@ -63,7 +60,6 @@
                 }
             }
         }
-
         #endregion
     }
 }

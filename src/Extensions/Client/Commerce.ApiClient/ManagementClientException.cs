@@ -1,16 +1,18 @@
-﻿namespace VirtoCommerce.ApiClient
+﻿#region
+using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Net;
+using System.Runtime.Serialization;
+using System.Text;
+using VirtoCommerce.Web.Core.DataContracts;
+
+#endregion
+
+namespace VirtoCommerce.ApiClient
 {
     #region
-
-    using System;
-    using System.Collections.Generic;
-    using System.Globalization;
-    using System.Net;
-    using System.Runtime.Serialization;
-    using System.Text;
-
-    using VirtoCommerce.Web.Core.DataContracts;
-
+    
     #endregion
 
     /// <summary>
@@ -22,17 +24,14 @@
         // Names used in serialization.
 
         #region Constants
-
         private const string ClientErrorCodeName = "ErrorCode";
 
         private const string ClientStatusCodeName = "StatusCode";
 
         private const string ErrorDetailsName = "Details";
-
         #endregion
 
         #region Constructors and Destructors
-
         /// <summary>
         ///     Initializes a new instance of the ManagementClientException class.
         /// </summary>
@@ -97,11 +96,9 @@
                     (List<ErrorDetail>)serializationInfo.GetValue(ErrorDetailsName, typeof(List<ErrorDetail>));
             }
         }
-
         #endregion
 
         #region Public Properties
-
         /// <summary>
         ///     Gets the error details property
         /// </summary>
@@ -116,11 +113,9 @@
         ///     Gets the status code property
         /// </summary>
         public HttpStatusCode StatusCode { get; private set; }
-
         #endregion
 
         #region Public Methods and Operators
-
         /// <summary>
         ///     Required override to add in the serialized parameters
         /// </summary>
@@ -161,7 +156,6 @@
 
             return builder.ToString();
         }
-
         #endregion
     }
 }

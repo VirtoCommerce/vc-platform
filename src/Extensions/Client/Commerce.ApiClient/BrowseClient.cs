@@ -1,38 +1,39 @@
-﻿namespace VirtoCommerce.ApiClient
-{
-    #region
-
+﻿#region
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Net.Http;
 using System.Threading.Tasks;
-
 using VirtoCommerce.ApiClient.DataContracts.Search;
 using VirtoCommerce.ApiClient.Extensions;
 using VirtoCommerce.ApiClient.Utilities;
-    using VirtoCommerce.Web.Core.Configuration.Catalog;
+using VirtoCommerce.Web.Core.Configuration.Catalog;
 using VirtoCommerce.Web.Core.DataContracts;
 
+#endregion
+
+namespace VirtoCommerce.ApiClient
+{
+    #region
+    
     #endregion
 
     public class BrowseClient : BaseClient
     {
         #region Constructors and Destructors
-
         /// <summary>
-		/// Initializes a new instance of the BrowseClient class.
+        ///     Initializes a new instance of the BrowseClient class.
         /// </summary>
         /// <param name="adminBaseEndpoint">Admin endpoint</param>
-		/// <param name="appId">The API application ID.</param>
-		/// <param name="secretKey">The API secret key.</param>
-		public BrowseClient(Uri adminBaseEndpoint, string appId, string secretKey)
-			: base(adminBaseEndpoint, new HmacMessageProcessingHandler(appId, secretKey))
+        /// <param name="appId">The API application ID.</param>
+        /// <param name="secretKey">The API secret key.</param>
+        public BrowseClient(Uri adminBaseEndpoint, string appId, string secretKey)
+            : base(adminBaseEndpoint, new HmacMessageProcessingHandler(appId, secretKey))
         {
         }
 
         /// <summary>
-		/// Initializes a new instance of the BrowseClient class.
+        ///     Initializes a new instance of the BrowseClient class.
         /// </summary>
         /// <param name="adminBaseEndpoint">Admin endpoint</param>
         /// <param name="handler"></param>
@@ -40,11 +41,9 @@ using VirtoCommerce.Web.Core.DataContracts;
             : base(adminBaseEndpoint, handler)
         {
         }
-
         #endregion
 
         #region Public Methods and Operators
-
         public virtual Task<ResponseCollection<Category>> GetCategoriesAsync(string parentId = null)
         {
             return
@@ -65,10 +64,13 @@ using VirtoCommerce.Web.Core.DataContracts;
         public virtual Task<Product> GetProductAsync(string productId, ItemResponseGroups responseGroup)
         {
             var query = new List<KeyValuePair<string, string>>
-            {
-                 new KeyValuePair<string, string>("responseGroup", responseGroup.GetHashCode().ToString(CultureInfo.InvariantCulture)),
-            };
-            
+                        {
+                            new KeyValuePair<string, string>(
+                                "responseGroup",
+                                responseGroup.GetHashCode()
+                                .ToString(CultureInfo.InvariantCulture)),
+                        };
+
             return
                 this.GetAsync<Product>(
                     CreateRequestUri(String.Format(RelativePaths.Product, productId), query.ToArray()));
@@ -77,10 +79,13 @@ using VirtoCommerce.Web.Core.DataContracts;
         public virtual Task<Product> GetProductByCodeAsync(string code, ItemResponseGroups responseGroup)
         {
             var query = new List<KeyValuePair<string, string>>
-            {
-                new KeyValuePair<string, string>("code", code),
-                 new KeyValuePair<string, string>("responseGroup", responseGroup.GetHashCode().ToString(CultureInfo.InvariantCulture)),
-            };
+                        {
+                            new KeyValuePair<string, string>("code", code),
+                            new KeyValuePair<string, string>(
+                                "responseGroup",
+                                responseGroup.GetHashCode()
+                                .ToString(CultureInfo.InvariantCulture)),
+                        };
 
             return this.GetAsync<Product>((CreateRequestUri(RelativePaths.Products, query.ToArray())));
         }
@@ -96,11 +101,9 @@ using VirtoCommerce.Web.Core.DataContracts;
                 this.GetAsync<ProductSearchResult>(
                     CreateRequestUri(RelativePaths.Products, query.GetQueryString(responseGroup)));
         }
-
         #endregion
 
         #region Methods
-
         protected override TimeSpan GetCacheTimeOut(string requestUrl)
         {
             if (requestUrl.Contains(RelativePaths.Categories))
@@ -110,13 +113,11 @@ using VirtoCommerce.Web.Core.DataContracts;
 
             return base.GetCacheTimeOut(requestUrl);
         }
-
         #endregion
 
         protected class RelativePaths
         {
             #region Constants
-
             public const string Categories = "categories";
 
             public const string Category = "categories/{0}";
@@ -124,7 +125,6 @@ using VirtoCommerce.Web.Core.DataContracts;
             public const string Product = "products/{0}";
 
             public const string Products = "products";
-
             #endregion
         }
     }

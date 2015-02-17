@@ -1,25 +1,25 @@
-﻿namespace VirtoCommerce.Web.Core.Configuration.Security
+﻿#region
+using System;
+using System.Configuration;
+using System.Threading;
+
+#endregion
+
+namespace VirtoCommerce.Web.Core.Configuration.Security
 {
     #region
-
-    using System;
-    using System.Configuration;
-    using System.Threading;
-
+    
     #endregion
 
     public class SecurityConfiguration : ConfigurationSection
     {
         #region Static Fields
-
         private static readonly Lazy<SecurityConfiguration> _instance = new Lazy<SecurityConfiguration>(
             CreateInstance,
             LazyThreadSafetyMode.ExecutionAndPublication);
-
         #endregion
 
         #region Public Properties
-
         public static SecurityConfiguration Instance
         {
             get
@@ -36,16 +36,13 @@
                 return (SecurityConnection)this["Connection"];
             }
         }
-
         #endregion
 
         #region Methods
-
         private static SecurityConfiguration CreateInstance()
         {
             return (SecurityConfiguration)ConfigurationManager.GetSection("VirtoCommerce/Security");
         }
-
         #endregion
 
         //[ConfigurationProperty("Authentication", IsRequired = true)]
@@ -67,15 +64,12 @@
     public class SecurityConnection : ConfigurationElement
     {
         #region Constructors and Destructors
-
         public SecurityConnection()
         {
         }
-
         #endregion
 
         #region Public Properties
-
         [ConfigurationProperty("dataServiceUri", IsRequired = false)]
         public string DataServiceUri
         {
@@ -88,11 +82,9 @@
                 this["dataServiceUri"] = value;
             }
         }
-
         #endregion
 
         #region Public Methods and Operators
-
         /// <summary>
         ///     Gets a value indicating whether the <see cref="T:System.Configuration.ConfigurationElement" /> object is read-only.
         /// </summary>
@@ -103,22 +95,18 @@
         {
             return false;
         }
-
         #endregion
     }
 
     public class AuthenticationConnection : ConfigurationElement
     {
         #region Constructors and Destructors
-
         public AuthenticationConnection()
         {
         }
-
         #endregion
 
         #region Public Properties
-
         [ConfigurationProperty("serviceBaseUriName", IsRequired = false)]
         public string ServiceBaseUriName
         {
@@ -157,11 +145,9 @@
                 this["wsEndPointName"] = value;
             }
         }
-
         #endregion
 
         #region Public Methods and Operators
-
         /// <summary>
         ///     Gets a value indicating whether the <see cref="T:System.Configuration.ConfigurationElement" /> object is read-only.
         /// </summary>
@@ -172,24 +158,20 @@
         {
             return false;
         }
-
         #endregion
     }
 
     public class TokenIssuerConfigurationElement : ConfigurationElement
     {
         #region Constants
-
         private const string _lifetime = "lifetime";
 
         private const string _signatureKey = "signatureKey";
 
         private const string _uri = "uri";
-
         #endregion
 
         #region Public Properties
-
         [ConfigurationProperty(_lifetime, DefaultValue = "1:0:0")]
         public TimeSpan Lifetime
         {
@@ -228,22 +210,18 @@
                 this[_uri] = value;
             }
         }
-
         #endregion
     }
 
     public class TokenValidatorConfigurationElement : ConfigurationElement
     {
         #region Constants
-
         private const string _signatureKey = "signatureKey";
 
         private const string _trustedIssuerUri = "trustedIssuerUri";
-
         #endregion
 
         #region Public Properties
-
         [ConfigurationProperty(_signatureKey, IsRequired = true)]
         public string SignatureKey
         {
@@ -269,7 +247,6 @@
                 this[_trustedIssuerUri] = value;
             }
         }
-
         #endregion
     }
 }

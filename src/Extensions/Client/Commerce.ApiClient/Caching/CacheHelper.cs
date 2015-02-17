@@ -1,38 +1,34 @@
-﻿namespace VirtoCommerce.ApiClient.Caching
+﻿#region
+using System;
+using System.Text;
+using System.Threading.Tasks;
+
+#endregion
+
+namespace VirtoCommerce.ApiClient.Caching
 {
     #region
-
-    using System;
-    using System.Text;
-    using System.Threading.Tasks;
-
+    
     #endregion
 
     public class CacheHelper
     {
         #region Constants
-
         public const string GlobalCachePrefix = "_vcc@che";
-
         #endregion
 
         #region Fields
-
         private readonly ICacheRepository _cacheRepository;
-
         #endregion
 
         #region Constructors and Destructors
-
         public CacheHelper(ICacheRepository repository)
         {
             this._cacheRepository = repository;
         }
-
         #endregion
 
         #region Public Methods and Operators
-
         /// <summary>
         ///     Creates the cache key.
         /// </summary>
@@ -148,7 +144,6 @@
         {
             return this._cacheRepository.Remove(key);
         }
-
         #endregion
     }
 }

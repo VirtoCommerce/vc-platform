@@ -1,32 +1,30 @@
-﻿namespace VirtoCommerce.ApiClient
+﻿#region
+using System;
+using System.Collections.Generic;
+using System.Net;
+using System.Net.Http;
+using System.Net.Http.Formatting;
+using System.Threading.Tasks;
+using System.Web;
+using Newtonsoft.Json;
+using VirtoCommerce.ApiClient.Caching;
+using VirtoCommerce.Web.Core.DataContracts;
+
+#endregion
+
+namespace VirtoCommerce.ApiClient
 {
     #region
-
-    using System;
-    using System.Collections.Generic;
-    using System.Net;
-    using System.Net.Http;
-    using System.Net.Http.Formatting;
-    using System.Threading.Tasks;
-    using System.Web;
-
-    using Newtonsoft.Json;
-
-    using VirtoCommerce.ApiClient.Caching;
-    using VirtoCommerce.Web.Core.DataContracts;
-
+    
     #endregion
 
     public class BaseClient
     {
         #region Constants
-
         private const string UnknownErrorCode = "UnknownError";
-
         #endregion
 
         #region Fields
-
         private readonly HttpClient httpClient;
 
         private CacheHelper _cacheHelper;
@@ -34,11 +32,9 @@
         private ICacheRepository _cacheRepository = new HttpCacheRepository();
 
         private bool disposed;
-
         #endregion
 
         #region Constructors and Destructors
-
         /// <summary>
         ///     Initializes a new instance of the <see cref="ManagementClientBase" /> class.
         /// </summary>
@@ -50,11 +46,9 @@
             this.httpClient = new HttpClient(handler);
             this.disposed = false;
         }
-
         #endregion
 
         #region Properties
-
         /// <summary>
         ///     Gets or sets the base address.
         /// </summary>
@@ -78,11 +72,9 @@
                 return this._cacheHelper ?? (this._cacheHelper = new CacheHelper(this._cacheRepository));
             }
         }
-
         #endregion
 
         #region Public Methods and Operators
-
         /// <summary>
         ///     http://msdn.microsoft.com/en-us/library/system.idisposable.aspx
         /// </summary>
@@ -91,11 +83,9 @@
             this.Dispose(true);
             GC.SuppressFinalize(this);
         }
-
         #endregion
 
         #region Methods
-
         /// <summary>
         ///     Creates the request URI.
         /// </summary>
@@ -335,7 +325,6 @@
                 throw new ManagementClientException(response.StatusCode, errorCode, errorMessage, errorDetails);
             }
         }
-
         #endregion
     }
 }

@@ -1,25 +1,24 @@
-﻿namespace VirtoCommerce.ApiClient
+﻿#region
+using System;
+using VirtoCommerce.ApiClient.Utilities;
+
+#endregion
+
+namespace VirtoCommerce.ApiClient
 {
     #region
-
-    using System;
-
-    using VirtoCommerce.ApiClient.Utilities;
-
+    
     #endregion
 
     public class CommerceConfiguration
     {
         #region Fields
-
         private string _ConnectionString = String.Empty;
 
         private bool _IsCacheEnabled = true;
-
         #endregion
 
         #region Public Properties
-
         public string ConnectionString
         {
             get
@@ -53,7 +52,6 @@
                 this._IsCacheEnabled = false;
             }
         }
-
         #endregion
     }
 }

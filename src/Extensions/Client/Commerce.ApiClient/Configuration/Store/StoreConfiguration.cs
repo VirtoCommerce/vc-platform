@@ -1,25 +1,25 @@
-﻿namespace VirtoCommerce.Web.Core.Configuration.Store
+﻿#region
+using System;
+using System.Configuration;
+using System.Threading;
+
+#endregion
+
+namespace VirtoCommerce.Web.Core.Configuration.Store
 {
     #region
-
-    using System;
-    using System.Configuration;
-    using System.Threading;
-
+    
     #endregion
 
     public class StoreConfiguration : ConfigurationSection
     {
         #region Static Fields
-
         private static readonly Lazy<StoreConfiguration> _instance = new Lazy<StoreConfiguration>(
             CreateInstance,
             LazyThreadSafetyMode.ExecutionAndPublication);
-
         #endregion
 
         #region Public Properties
-
         public static StoreConfiguration Instance
         {
             get
@@ -49,31 +49,25 @@
                 return (StoreConnection)this["Connection"];
             }
         }
-
         #endregion
 
         #region Methods
-
         private static StoreConfiguration CreateInstance()
         {
             return (StoreConfiguration)ConfigurationManager.GetSection("VirtoCommerce/Store");
         }
-
         #endregion
     }
 
     public class StoreConnection : ConfigurationElement
     {
         #region Constructors and Destructors
-
         public StoreConnection()
         {
         }
-
         #endregion
 
         #region Public Properties
-
         [ConfigurationProperty("dataServiceUri", IsRequired = false)]
         public string DataServiceUri
         {
@@ -86,11 +80,9 @@
                 this["dataServiceUri"] = value;
             }
         }
-
         #endregion
 
         #region Public Methods and Operators
-
         /// <summary>
         ///     Gets a value indicating whether the <see cref="T:System.Configuration.ConfigurationElement" /> object is read-only.
         /// </summary>
@@ -101,7 +93,6 @@
         {
             return false;
         }
-
         #endregion
     }
 
@@ -111,18 +102,15 @@
     public class CacheConfiguration : ConfigurationElement
     {
         #region Constructors and Destructors
-
         /// <summary>
         ///     Initializes a new instance of the <see cref="CacheConfiguration" /> class.
         /// </summary>
         public CacheConfiguration()
         {
         }
-
         #endregion
 
         #region Public Properties
-
         /// <summary>
         ///     Attribute determines whether in-memory caching is enabled or not.
         /// </summary>
@@ -161,11 +149,9 @@
                 this["storeTimeout"] = value.ToString();
             }
         }
-
         #endregion
 
         #region Public Methods and Operators
-
         /// <summary>
         ///     Gets a value indicating whether the <see cref="T:System.Configuration.ConfigurationElement" /> object is read-only.
         /// </summary>
@@ -176,7 +162,6 @@
         {
             return false;
         }
-
         #endregion
     }
 }
