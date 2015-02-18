@@ -3285,6 +3285,50 @@ fieldset + fieldset
     text-shadow: 1px 1px rgba(0, 0, 0, .1);
 }
 
+.btn.__loading
+{
+    font-size: 0;
+    min-width: 132px;
+    pointer-events: none;
+    position: relative;
+    vertical-align: top;
+}
+
+.btn.__loading:after
+{
+    background-image: 
+        -webkit-linear-gradient(45deg, 
+        rgba(255, 255, 255, .15) 25%, 
+        rgba(0, 0, 0, 0) 25%, 
+        rgba(0, 0, 0, 0) 50%, 
+        rgba(255, 255, 255, .15) 50%, 
+        rgba(255, 255, 255, .15) 75%, 
+        rgba(0, 0, 0, 0) 75%, 
+        rgba(0, 0, 0, 0));
+    background-image: 
+        linear-gradient(45deg, 
+        rgba(255, 255, 255, .15) 25%, 
+        rgba(0, 0, 0, 0) 25%, 
+        rgba(0, 0, 0, 0) 50%, 
+        rgba(255, 255, 255, .15) 50%, 
+        rgba(255, 255, 255, .15) 75%, 
+        rgba(0, 0, 0, 0) 75%, 
+        rgba(0, 0, 0, 0));
+    background-size: 30px 30px;
+    bottom: 0;
+    content: '';
+    left: 0;
+    opacity: .8;
+    position: absolute;
+    right: 0;
+    top: 0;
+
+    filter: alpha(opacity=80);
+
+    -webkit-animation: linear 2s infinite progress;
+            animation: linear 2s infinite progress;
+}
+
 .btn:hover
 {
 	background-color: #40a8db;
@@ -4994,6 +5038,48 @@ fieldset + fieldset
 					margin: 7px 0;
 				}
 
+                .blade-toolbar .menu-item.__loading
+                {
+                    pointer-events: none;
+                    position: relative;
+                }
+
+                .blade-toolbar .menu-item.__loading:after
+                {
+                    background-color: #333;
+                    background-image: 
+                        -webkit-linear-gradient(45deg, 
+                        rgba(255, 255, 255, .15) 25%, 
+                        rgba(0, 0, 0, 0) 25%, 
+                        rgba(0, 0, 0, 0) 50%, 
+                        rgba(255, 255, 255, .15) 50%, 
+                        rgba(255, 255, 255, .15) 75%, 
+                        rgba(0, 0, 0, 0) 75%, 
+                        rgba(0, 0, 0, 0));
+                    background-image: 
+                        linear-gradient(45deg, 
+                        rgba(255, 255, 255, .15) 25%, 
+                        rgba(0, 0, 0, 0) 25%, 
+                        rgba(0, 0, 0, 0) 50%, 
+                        rgba(255, 255, 255, .15) 50%, 
+                        rgba(255, 255, 255, .15) 75%, 
+                        rgba(0, 0, 0, 0) 75%, 
+                        rgba(0, 0, 0, 0));
+                    background-size: 30px 30px;
+                    bottom: 0;
+                    content: '';
+                    left: 0;
+                    opacity: .8;
+                    position: absolute;
+                    right: 0;
+                    top: 0;
+
+                    filter: alpha(opacity=80);
+
+                    -webkit-animation: linear 2s infinite progress;
+                            animation: linear 2s infinite progress;
+                }
+
 					.blade-toolbar .menu-btn
 					{
                         background: none;
@@ -5004,6 +5090,7 @@ fieldset + fieldset
 						font-weight: 300;
 						display: block;
 						padding: 0 10px;
+                        position: relative;
 						text-align: center;
 					}
 
