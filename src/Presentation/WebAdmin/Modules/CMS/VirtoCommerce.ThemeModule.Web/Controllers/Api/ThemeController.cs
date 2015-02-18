@@ -74,7 +74,7 @@ namespace VirtoCommerce.ThemeModule.Web.Controllers.Api
         public IHttpActionResult GetThemes(string storeId)
         {
             var items = this._themeService.GetThemes(storeId);
-            return this.Ok(items.Select(s => s.ToWebModel()));
+            return this.Ok(items.Select(s => s.ToWebModel()).ToArray());
         }
 
         [HttpPost]

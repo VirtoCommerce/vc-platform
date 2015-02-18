@@ -90,7 +90,7 @@
 
 		public IEnumerable<ContentItem> GetContentItems(string path, bool loadContent = false)
 		{
-			return ContentItems.Where(i => i.Path.Contains(path));
+			return ContentItems.Where(i => i.Path.Contains(path)).ToArray();
 		}
 
 		public void SaveContentItem(string path, ContentItem item)
