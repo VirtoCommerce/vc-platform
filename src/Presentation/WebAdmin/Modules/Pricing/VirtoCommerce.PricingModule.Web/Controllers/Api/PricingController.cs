@@ -21,9 +21,11 @@ namespace VirtoCommerce.PricingModule.Web.Controllers.Api
 	public class PricingController : ApiController
 	{
 		private readonly IPricingService _pricingService;
-		public PricingController(IPricingService pricingService)
+		private readonly IItemService _itemService;
+		public PricingController(IPricingService pricingService, IItemService itemService)
 		{
 			_pricingService = pricingService;
+			_itemService = itemService;
 		}
 
 		// GET: api/catalog/products/{productId}/prices
@@ -32,12 +34,17 @@ namespace VirtoCommerce.PricingModule.Web.Controllers.Api
 		[Route("api/products/{productId}/prices")]
 		public IHttpActionResult GetProductPrices(string productId)
 		{
-			var retVal = _pricingService.EvaluateProductPrices(new coreModel.PriceEvaluationContext { ProductId = productId });
-			if (retVal == null)
+			IHttpActionResult retVal = NotFound();
+			var product = _itemService.GetById(productId, Domain.Catalog.Model.ItemResponseGroup.ItemInfo);
+			if (product != null)
 			{
-				return NotFound();
+				var prices = _pricingService.EvaluateProductPrices(new coreModel.PriceEvaluationContext { ProductId = productId, CatalogId = product.CatalogId });
+				if (prices != null)
+				{
+					retVal = Ok(prices.Select(x => x.ToWebModel()).ToArray());
+				}
 			}
-			return Ok(retVal.Select(x => x.ToWebModel()).ToArray());
+			return retVal;
 		}
 
 	

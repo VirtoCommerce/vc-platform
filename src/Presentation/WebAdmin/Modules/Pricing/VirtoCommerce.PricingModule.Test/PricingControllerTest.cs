@@ -2,6 +2,8 @@
 using System.Linq;
 using System.Web.Http.Results;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using VirtoCommerce.Domain.Catalog.Services;
+using VirtoCommerce.Domain.Store.Services;
 using VirtoCommerce.Foundation.Data.Infrastructure.Interceptors;
 using VirtoCommerce.Foundation.Money;
 using VirtoCommerce.PricingModule.Data.Repositories;
@@ -58,9 +60,13 @@ namespace VirtoCommerce.PricingModule.Test
 			{
 				return new FoundationPricingRepositoryImpl("VirtoCommerce", new AuditChangeInterceptor());
 			};
-			
-			var pricingService = new PricingServiceImpl(repositoryFactory);
-			var controller = new PricingController(pricingService);
+
+			var mockStoreService = new Moq.Mock<IStoreService>();
+			var mockItemService = new Moq.Mock<IItemService>();
+		
+
+			var pricingService = new PricingServiceImpl(repositoryFactory, mockStoreService.Object);
+			var controller = new PricingController(pricingService, mockItemService.Object);
 			return controller;
 		}
 	}

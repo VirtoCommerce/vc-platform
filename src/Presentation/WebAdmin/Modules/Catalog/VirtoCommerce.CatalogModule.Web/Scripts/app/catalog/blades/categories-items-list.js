@@ -13,7 +13,7 @@
     $scope.pageSettings.currentPage = 1;
     $scope.pageSettings.numPages = 5;
     $scope.pageSettings.itemsPerPageCount = 20;
-
+ 
     $scope.filter = { searchKeyword: undefined };
 
     $scope.selectedAll = false;
@@ -21,7 +21,7 @@
     var preventCategoryListingOnce; // prevent from unwanted additional actions after command was activated from context menu
 
     $scope.blade.refresh = function () {
-        $scope.blade.isLoading = true;
+    	$scope.blade.isLoading = true;
         listEntries.listitemssearch(
             {
                 catalog: $scope.blade.catalogId,

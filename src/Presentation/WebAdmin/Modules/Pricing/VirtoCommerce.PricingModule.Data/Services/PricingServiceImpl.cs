@@ -20,9 +20,11 @@ namespace VirtoCommerce.PricingModule.Data.Services
 	public class PricingServiceImpl : ServiceBase, IPricingService
 	{
 		private readonly Func<IFoundationPricingRepository> _repositoryFactory;
-		public PricingServiceImpl(Func<IFoundationPricingRepository> repositoryFactory)
+		private readonly IStoreService _storeService;
+		public PricingServiceImpl(Func<IFoundationPricingRepository> repositoryFactory, IStoreService storeService)
 		{
 			_repositoryFactory = repositoryFactory;
+			_storeService = storeService;
 		}
 
 		#region IPricingService Members
@@ -37,7 +39,11 @@ namespace VirtoCommerce.PricingModule.Data.Services
 			{
 				throw new MissingFieldException("ProductId");
 			}
-		
+			if (evalContext.CatalogId == null)
+			{
+				throw new MissingFieldException("CatalogId");
+			}
+
 			var retVal = new List<coreModel.Price>();
 			using (var repository = _repositoryFactory())
 			{
@@ -49,6 +55,26 @@ namespace VirtoCommerce.PricingModule.Data.Services
 				{
 					var activePice = groupItem.OrderByDescending(x => x.CreatedDate).FirstOrDefault();
 					retVal.Add(activePice);
+				}
+			}
+
+
+			//Need a get all stores currencies where catalog belongs 
+			var allStoreCurrencies = _storeService.GetStoreList().Where(x => x.Catalog == evalContext.CatalogId)
+														 .SelectMany(x => x.Currencies).Distinct()
+														 .ToArray();
+			//Need a create empty prices for currency if this price is not 
+			foreach(var currency in allStoreCurrencies)
+			{
+				var existPrice = retVal.FirstOrDefault(x => x.Currency == currency);
+				if(existPrice == null)
+				{
+					var zeroPrice = new coreModel.Price
+					{
+						Currency = currency,
+						ProductId = evalContext.ProductId,
+					};
+					retVal.Add(zeroPrice);
 				}
 			}
 

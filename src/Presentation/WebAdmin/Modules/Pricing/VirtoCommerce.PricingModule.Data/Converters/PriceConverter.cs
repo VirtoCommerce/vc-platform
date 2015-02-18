@@ -33,7 +33,7 @@ namespace VirtoCommerce.PricingModule.Data.Converters
 			retVal.ProductId = dbEntity.ItemId;
 			retVal.CreatedDate = dbEntity.Created.Value;
 			retVal.ModifiedDate = dbEntity.LastModified;
-
+			retVal.MinQuantity = (int)dbEntity.MinQuantity;
 			return retVal;
 
 		}
@@ -52,7 +52,7 @@ namespace VirtoCommerce.PricingModule.Data.Converters
 			{
 				retVal.PriceId = price.Id;
 			}
-
+			retVal.MinQuantity = price.MinQuantity;
 			return retVal;
 		}
 

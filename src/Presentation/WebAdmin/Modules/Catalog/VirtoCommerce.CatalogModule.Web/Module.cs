@@ -14,6 +14,7 @@ using VirtoCommerce.Foundation.Importing.Repositories;
 using VirtoCommerce.Foundation.Importing.Services;
 using VirtoCommerce.Framework.Web.Modularity;
 using VirtoCommerce.Framework.Web.Notification;
+using VirtoCommerce.Domain.Catalog.Services;
 
 namespace VirtoCommerce.CatalogModule.Web
 {
@@ -77,6 +78,12 @@ namespace VirtoCommerce.CatalogModule.Web
             var azureBlobStorageProvider = new AzureBlobAssetRepository("DefaultEndpointsProtocol=https;AccountName=virtotest;AccountKey=Qvy1huF8b0OE6upFh91/IMZPnETwhxe7BlRNZoZeJL59b921LeBb7zZZt03CiOVf7wVfPseUMKSXD8yz/rXVuQ==", null);
             var assetBaseUri = new Uri(@"http://virtotest.blob.core.windows.net/");
 
+			_container.RegisterInstance<IItemService>(itemService);
+			_container.RegisterInstance<ICategoryService>(categoryService);
+			_container.RegisterInstance<ICatalogService>(catalogService);
+			_container.RegisterInstance<IPropertyService>(propertyService);
+			_container.RegisterInstance<ICatalogSearchService>(catalogSearchService);
+			
             _container.RegisterType<AssetsController>(new InjectionConstructor(azureBlobStorageProvider));
             _container.RegisterType<ProductsController>(new InjectionConstructor(itemService, propertyService, assetBaseUri));
 
