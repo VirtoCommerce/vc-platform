@@ -9,9 +9,9 @@
 
         public Link(string relation, string href, string title = null)
         {
-            this.Rel = relation;
-            this.Href = href;
-            this.Title = title;
+            Rel = relation;
+            Href = href;
+            Title = title;
         }
 
         #endregion

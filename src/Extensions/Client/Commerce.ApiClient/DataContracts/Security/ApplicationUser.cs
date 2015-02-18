@@ -1,8 +1,13 @@
-﻿namespace VirtoCommerce.ApiClient.DataContracts.Security
-{
-    #region
+﻿#region
 
-    using System;
+using System;
+
+#endregion
+
+namespace VirtoCommerce.ApiClient.DataContracts.Security
+{
+
+    #region
 
     #endregion
 

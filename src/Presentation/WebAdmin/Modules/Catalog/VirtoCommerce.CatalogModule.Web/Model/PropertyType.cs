@@ -10,6 +10,7 @@ namespace VirtoCommerce.CatalogModule.Web.Model
 	{
 		Product,
 		Variation,
-		Category
+		Category,
+		Catalog
 	}
 }

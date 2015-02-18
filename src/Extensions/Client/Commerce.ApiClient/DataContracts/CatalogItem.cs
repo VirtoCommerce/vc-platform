@@ -1,13 +1,16 @@
-﻿namespace VirtoCommerce.Web.Core.DataContracts
+﻿#region
+
+using System;
+using System.Collections.Generic;
+using Newtonsoft.Json;
+using VirtoCommerce.ApiClient.DataContracts;
+
+#endregion
+
+namespace VirtoCommerce.Web.Core.DataContracts
 {
+
     #region
-
-    using System;
-    using System.Collections.Generic;
-
-    using Newtonsoft.Json;
-
-    using VirtoCommerce.ApiClient.DataContracts;
 
     #endregion
 
@@ -45,11 +48,11 @@
         {
             get
             {
-                return this._properties;
+                return _properties;
             }
             set
             {
-                this._properties = value;
+                _properties = value;
             }
         }
 
@@ -70,17 +73,17 @@
         {
             get
             {
-                return this._properties[name];
+                return _properties[name];
             }
             set
             {
-                if (this._properties.ContainsKey(name))
+                if (_properties.ContainsKey(name))
                 {
-                    this._properties[name] = value;
+                    _properties[name] = value;
                 }
                 else
                 {
-                    this._properties.Add(name, value);
+                    _properties.Add(name, value);
                 }
             }
         }

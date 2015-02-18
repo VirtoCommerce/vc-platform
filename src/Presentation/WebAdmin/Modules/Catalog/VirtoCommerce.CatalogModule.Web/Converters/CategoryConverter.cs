@@ -20,9 +20,12 @@ namespace VirtoCommerce.CatalogModule.Web.Converters
 			//Need add property for each meta info
 			if(properties != null)
 			{
+				retVal.Properties = new List<webModel.Property>();
 				foreach(var property in properties)
 				{
 					var webModelProperty = property.ToWebModel();
+					webModelProperty.Catalog = null;
+					webModelProperty.Category = null;
 					webModelProperty.Values = new List<webModel.PropertyValue>();
 					webModelProperty.IsManageable = true;
 					webModelProperty.IsReadOnly = property.Type != moduleModel.PropertyType.Category;

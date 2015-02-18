@@ -1,9 +1,14 @@
-﻿namespace VirtoCommerce.Web.Core.DataContracts
-{
-    #region
+﻿#region
 
-    using System.Globalization;
-    using System.Runtime.Serialization;
+using System.Globalization;
+using System.Runtime.Serialization;
+
+#endregion
+
+namespace VirtoCommerce.Web.Core.DataContracts
+{
+
+    #region
 
     #endregion
 
@@ -46,9 +51,9 @@
             return string.Format(
                 CultureInfo.InvariantCulture,
                 "Code: {0}, Source: {1}, Message: {2}",
-                this.Code,
-                this.Source,
-                this.Message);
+                Code,
+                Source,
+                Message);
         }
 
         #endregion

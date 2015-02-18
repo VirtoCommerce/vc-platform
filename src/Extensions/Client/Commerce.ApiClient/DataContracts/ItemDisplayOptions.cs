@@ -1,8 +1,13 @@
-﻿namespace VirtoCommerce.Web.Core.DataContracts
-{
-    #region
+﻿#region
 
-    using System;
+using System;
+
+#endregion
+
+namespace VirtoCommerce.Web.Core.DataContracts
+{
+
+    #region
 
     #endregion
 

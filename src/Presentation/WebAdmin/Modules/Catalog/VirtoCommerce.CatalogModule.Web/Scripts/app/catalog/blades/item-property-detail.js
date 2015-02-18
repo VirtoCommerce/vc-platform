@@ -18,11 +18,11 @@
                     });
                 });
             }
-            if (data.titularItemId != null) {
-                $scope.propGroups = [{ title: 'Variation properties', type: 1 }];
-            } else {
-                $scope.propGroups = [{ title: 'Product properties', type: 0 }];
-            }
+            //if (data.titularItemId != null) {
+            //    $scope.propGroups = [{ title: 'Variation properties', type: 1 }];
+            //} else {
+            //    $scope.propGroups = [{ title: 'Product properties', type: 0 }];
+            //}
 
             $scope.blade.item = angular.copy(data);
             $scope.blade.origItem = data;

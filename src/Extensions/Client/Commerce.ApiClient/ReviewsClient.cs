@@ -1,13 +1,17 @@
-﻿namespace VirtoCommerce.ApiClient
-{
-    #region
+﻿#region
 
 using System;
 using System.Net.Http;
 using System.Threading.Tasks;
-
 using VirtoCommerce.ApiClient.Utilities;
 using VirtoCommerce.Web.Core.DataContracts;
+
+#endregion
+
+namespace VirtoCommerce.ApiClient
+{
+
+    #region
 
     #endregion
 
@@ -16,18 +20,18 @@ using VirtoCommerce.Web.Core.DataContracts;
         #region Constructors and Destructors
 
         /// <summary>
-		/// Initializes a new instance of the ReviewsClient class.
+        ///     Initializes a new instance of the ReviewsClient class.
         /// </summary>
         /// <param name="adminBaseEndpoint">Admin endpoint</param>
-		/// <param name="appId">The API application ID.</param>
-		/// <param name="secretKey">The API secret key.</param>
-		public ReviewsClient(Uri adminBaseEndpoint, string appId, string secretKey)
-			: base(adminBaseEndpoint, new HmacMessageProcessingHandler(appId, secretKey))
+        /// <param name="appId">The API application ID.</param>
+        /// <param name="secretKey">The API secret key.</param>
+        public ReviewsClient(Uri adminBaseEndpoint, string appId, string secretKey)
+            : base(adminBaseEndpoint, new HmacMessageProcessingHandler(appId, secretKey))
         {
         }
 
         /// <summary>
-		/// Initializes a new instance of the ReviewsClient class.
+        ///     Initializes a new instance of the ReviewsClient class.
         /// </summary>
         /// <param name="adminBaseEndpoint">Admin endpoint</param>
         /// <param name="handler"></param>
@@ -46,8 +50,8 @@ using VirtoCommerce.Web.Core.DataContracts;
         public Task<ResponseCollection<Review>> GetReviewsAsync(string productId)
         {
             return
-                this.GetAsync<ResponseCollection<Review>>(
-                    this.CreateRequestUri(string.Format(RelativePaths.Reviews, productId)));
+                GetAsync<ResponseCollection<Review>>(
+                    CreateRequestUri(string.Format(RelativePaths.Reviews, productId)));
         }
 
         #endregion

@@ -1,19 +1,22 @@
-﻿namespace VirtoCommerce.ApiClient
+﻿#region
+
+using System;
+using System.Collections.Generic;
+using System.Net;
+using System.Net.Http;
+using System.Net.Http.Formatting;
+using System.Threading.Tasks;
+using System.Web;
+using Newtonsoft.Json;
+using VirtoCommerce.ApiClient.Caching;
+using VirtoCommerce.Web.Core.DataContracts;
+
+#endregion
+
+namespace VirtoCommerce.ApiClient
 {
+
     #region
-
-    using System;
-    using System.Collections.Generic;
-    using System.Net;
-    using System.Net.Http;
-    using System.Net.Http.Formatting;
-    using System.Threading.Tasks;
-    using System.Web;
-
-    using Newtonsoft.Json;
-
-    using VirtoCommerce.ApiClient.Caching;
-    using VirtoCommerce.Web.Core.DataContracts;
 
     #endregion
 
@@ -46,9 +49,9 @@
         /// <param name="handler">Message processing handler</param>
         public BaseClient(Uri baseEndpoint, HttpMessageHandler handler = null)
         {
-            this.BaseAddress = baseEndpoint;
-            this.httpClient = new HttpClient(handler);
-            this.disposed = false;
+            BaseAddress = baseEndpoint;
+            httpClient = new HttpClient(handler);
+            disposed = false;
         }
 
         #endregion
@@ -67,7 +70,7 @@
         {
             get
             {
-                return this._cacheRepository ?? (this._cacheRepository = new HttpCacheRepository());
+                return _cacheRepository ?? (_cacheRepository = new HttpCacheRepository());
             }
         }
 
@@ -75,7 +78,7 @@
         {
             get
             {
-                return this._cacheHelper ?? (this._cacheHelper = new CacheHelper(this._cacheRepository));
+                return _cacheHelper ?? (_cacheHelper = new CacheHelper(_cacheRepository));
             }
         }
 
@@ -88,7 +91,7 @@
         /// </summary>
         public void Dispose()
         {
-            this.Dispose(true);
+            Dispose(true);
             GC.SuppressFinalize(this);
         }
 
@@ -108,7 +111,7 @@
 
             if (queryStringParameters != null && queryStringParameters.Length > 0)
             {
-                var queryStringProperties = HttpUtility.ParseQueryString(this.BaseAddress.Query);
+                var queryStringProperties = HttpUtility.ParseQueryString(BaseAddress.Query);
                 foreach (var queryStringParameter in queryStringParameters)
                 {
                     queryStringProperties[queryStringParameter.Key] = queryStringParameter.Value;
@@ -128,7 +131,7 @@
         /// <returns>Request URI</returns>
         protected Uri CreateRequestUri(string relativePath, string queryString)
         {
-            var endpoint = new Uri(this.BaseAddress, relativePath);
+            var endpoint = new Uri(BaseAddress, relativePath);
             var uriBuilder = new UriBuilder(endpoint) { Query = queryString };
             return uriBuilder.Uri;
         }
@@ -140,13 +143,13 @@
         {
             if (disposing)
             {
-                if (!this.disposed)
+                if (!disposed)
                 {
-                    this.httpClient.Dispose();
+                    httpClient.Dispose();
                 }
             }
 
-            this.disposed = true;
+            disposed = true;
         }
 
         protected virtual async Task<T> GetAsync<T>(Uri requestUri, string userId = null, bool useCache = true)
@@ -154,10 +157,10 @@
         {
             return
                 await
-                    this.Helper.GetAsync(
+                    Helper.GetAsync(
                         requestUri.ToString(),
-                        () => this.GetAsyncInternal<T>(requestUri, userId),
-                        this.GetCacheTimeOut(requestUri.ToString()),
+                        () => GetAsyncInternal<T>(requestUri, userId),
+                        GetCacheTimeOut(requestUri.ToString()),
                         ClientContext.Configuration.IsCacheEnabled && useCache);
         }
 
@@ -177,9 +180,9 @@
                 message.Headers.Add(Constants.Headers.PrincipalId, HttpUtility.UrlEncode(userId));
             }
 
-            using (var response = await this.httpClient.SendAsync(message))
+            using (var response = await httpClient.SendAsync(message))
             {
-                await this.ThrowIfResponseNotSuccessfulAsync(response);
+                await ThrowIfResponseNotSuccessfulAsync(response);
 
                 return await response.Content.ReadAsAsync<T>();
             }
@@ -211,7 +214,7 @@
         protected Task<TOutput> SendAsync<TOutput>(Uri requestUri, HttpMethod httpMethod, string userId = null)
         {
             var message = new HttpRequestMessage(httpMethod, requestUri);
-            return this.SendAsync<TOutput>(message, true, userId);
+            return SendAsync<TOutput>(message, true, userId);
         }
 
         /// <summary>
@@ -224,7 +227,7 @@
         /// <param name="userId">The user id. Only required by the tenant API.</param>
         protected Task SendAsync<TInput>(Uri requestUri, HttpMethod httpMethod, TInput body, string userId = null)
         {
-            return this.SendAsync<TInput, object>(requestUri, httpMethod, body, userId);
+            return SendAsync<TInput, object>(requestUri, httpMethod, body, userId);
         }
 
         /// <summary>
@@ -243,29 +246,29 @@
             string userId = null)
         {
             var message = new HttpRequestMessage(httpMethod, requestUri)
-                          {
-                              Content =
-                                  new ObjectContent<TInput>(
-                                  body,
-                                  this.CreateMediaTypeFormatter())
-                          };
+            {
+                Content =
+                    new ObjectContent<TInput>(
+                        body,
+                        CreateMediaTypeFormatter())
+            };
 
-            return this.SendAsync<TOutput>(message, true, userId);
+            return SendAsync<TOutput>(message, true, userId);
         }
 
         private MediaTypeFormatter CreateMediaTypeFormatter()
         {
             //MediaTypeFormatter formatter;
             var formatter = new JsonMediaTypeFormatter
-                            {
-                                SerializerSettings =
-                                {
-                                    DefaultValueHandling =
-                                        DefaultValueHandling.Ignore,
-                                    NullValueHandling =
-                                        NullValueHandling.Ignore
-                                }
-                            };
+            {
+                SerializerSettings =
+                {
+                    DefaultValueHandling =
+                        DefaultValueHandling.Ignore,
+                    NullValueHandling =
+                        NullValueHandling.Ignore
+                }
+            };
 
             return formatter;
         }
@@ -277,9 +280,9 @@
                 message.Headers.Add(Constants.Headers.PrincipalId, userId);
             }
 
-            using (var response = await this.httpClient.SendAsync(message))
+            using (var response = await httpClient.SendAsync(message))
             {
-                await this.ThrowIfResponseNotSuccessfulAsync(response);
+                await ThrowIfResponseNotSuccessfulAsync(response);
 
                 if (!hasResult)
                 {

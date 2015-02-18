@@ -25,6 +25,7 @@ namespace VirtoCommerce.ThemeModule.Web.Converters
 
 			retVal.Name = item.Name;
 			retVal.Path = item.ThemePath;
+			retVal.Modified = item.ModifiedDate ?? item.CreatedDate;
 
 			return retVal;
 		}

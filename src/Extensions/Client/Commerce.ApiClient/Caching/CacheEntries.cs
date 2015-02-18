@@ -1,9 +1,14 @@
-﻿namespace VirtoCommerce.ApiClient.Caching
-{
-    #region
+﻿#region
 
-    using System.Collections.Generic;
-    using System.Threading;
+using System.Collections.Generic;
+using System.Threading;
+
+#endregion
+
+namespace VirtoCommerce.ApiClient.Caching
+{
+
+    #region
 
     #endregion
 

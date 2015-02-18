@@ -52,9 +52,9 @@
     <Reference Include="Microsoft.Data.Services.Client, Version=5.6.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\..\..\..\..\..\packages\Microsoft.Data.Services.Client.5.6.0\lib\net40\Microsoft.Data.Services.Client.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Practices.ServiceLocation">
-      <HintPath>..\..\..\..\..\..\packages\CommonServiceLocator.1.3\lib\portable-net4+sl5+netcore45+wpa81+wp8\Microsoft.Practices.ServiceLocation.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Microsoft.Practices.ServiceLocation, Version=1.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\packages\CommonServiceLocator.1.2\lib\portable-windows8+net40+sl5+windowsphone8\Microsoft.Practices.ServiceLocation.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Practices.Unity">
       <HintPath>..\..\..\..\..\..\packages\Unity.3.5.1404.0\lib\net45\Microsoft.Practices.Unity.dll</HintPath>
@@ -168,6 +168,8 @@
     <Content Include="Scripts\app\catalog\blades\advanced-search.js" />
     <Content Include="Scripts\app\catalog\blades\advanced-search-results.tpl.html" />
     <Content Include="Scripts\app\catalog\blades\advanced-search.tpl.html" />
+    <Content Include="Scripts\app\catalog\blades\catalog-property-detail.js" />
+    <Content Include="Scripts\app\catalog\blades\catalog-property-detail.tpl.html" />
     <Content Include="Scripts\app\catalog\blades\item-associations-list.js" />
     <Content Include="Scripts\app\catalog\blades\editorialReviews-list.js" />
     <Content Include="Scripts\app\catalog\blades\item-associations-list.tpl.html" />
@@ -236,6 +238,8 @@
     <Content Include="Scripts\app\catalog\resources\listEntries.js" />
     <Content Include="Scripts\app\catalog\resources\properties.js" />
     <Content Include="Scripts\app\catalog\widgets\catalogLanguagesWidget.js" />
+    <Content Include="Scripts\app\catalog\widgets\catalogPropertyWidget.js" />
+    <Content Include="Scripts\app\catalog\widgets\catalogPropertyWidget.tpl.html" />
     <Content Include="Scripts\app\catalog\widgets\editorialReviewWidget.js" />
     <Content Include="Scripts\app\catalog\widgets\editorialReviewWidget.tpl.html" />
     <Content Include="Scripts\app\catalog\widgets\itemAssociationsWidget.js" />

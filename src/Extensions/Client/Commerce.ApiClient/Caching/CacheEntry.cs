@@ -12,7 +12,7 @@
 
         internal CacheEntry()
         {
-            this._Lock = new object();
+            _Lock = new object();
         }
 
         #endregion
@@ -27,7 +27,7 @@
         {
             get
             {
-                return this._Lock;
+                return _Lock;
             }
         }
 

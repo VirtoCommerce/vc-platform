@@ -69,6 +69,10 @@
     <Compile Include="Configuration\Security\SecurityConfiguration.cs" />
     <Compile Include="Configuration\Store\StoreConfiguration.cs" />
     <Compile Include="Constants.cs" />
+    <Compile Include="DataContracts\Themes\Theme.cs" />
+    <Compile Include="DataContracts\Themes\ThemeAsset.cs" />
+    <Compile Include="Extensions\ThemeClientExtensions.cs" />
+    <Compile Include="ThemeClient.cs" />
     <Compile Include="DataContracts\Association.cs" />
     <Compile Include="DataContracts\BrowseQuery.cs" />
     <Compile Include="DataContracts\Cart\Address.cs" />
@@ -123,6 +127,9 @@
     <Compile Include="DataContracts\Store\StoreState.cs" />
     <Compile Include="DataContracts\TagQuery.cs" />
     <Compile Include="Extensions\CartClientExtension.cs" />
+    <Compile Include="Extensions\EnumerableExtension.cs" />
+    <Compile Include="Extensions\ExceptionExtension.cs" />
+    <Compile Include="Extensions\KeyValuePairExtension.cs" />
     <Compile Include="Extensions\MessageProcessingExtensions.cs" />
     <Compile Include="Extensions\OrderClientExtension.cs" />
     <Compile Include="Extensions\SeoClientExtensions.cs" />

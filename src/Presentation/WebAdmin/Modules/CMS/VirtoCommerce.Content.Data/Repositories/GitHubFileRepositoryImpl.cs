@@ -71,23 +71,43 @@
 			if (item != null)
 			{
 				retVal = item.ToContentItem();
-				retVal.Path = FixPath(retVal.Path);
+				retVal.Path = path;
 			}
 
 			return retVal;
 		}
 
-		public Theme[] GetThemes(string storePath)
+		public IEnumerable<Theme> GetThemes(string storePath)
 		{
 			var fullPath = GetFullPath(storePath);
 
 			var themes = this._client.Repository.Content.GetContents(this._ownerName, this._repositoryName, fullPath)
 					.Result.Where(s => s.Type == ContentType.Dir);
 
-			return themes.Select(theme => new Theme { Name = theme.Name, ThemePath = FixPath(theme.Path) }).ToArray();
+			List<Theme> list = new List<Theme>();
+
+			foreach(var theme in themes)
+			{
+				var commits = this._client.
+					Repository.
+					Commits.
+					GetAll(this._ownerName, this._repositoryName, new CommitRequest { Path = theme.Path }).Result;
+
+				var commit = commits.First();
+				var date = commit.Commit.Committer.Date;
+
+				list.Add(new Theme
+				{
+					Name = theme.Name,
+					ThemePath = FixPath(theme.Path),
+					ModifiedDate = date.DateTime
+				});
+			}
+
+			return list;
 		}
 
-		public ContentItem[] GetContentItems(string path, bool loadContent = false)
+		public IEnumerable<ContentItem> GetContentItems(string path, bool loadContent = false)
 		{
 			var fullPath = GetFullPath(path);
 
@@ -137,12 +157,12 @@
 				});
 			}
 
-			return files.ToArray();
+			return files;
 		}
 
-		public void SaveContentItem(ContentItem item)
+		public void SaveContentItem(string path, ContentItem item)
 		{
-			var fullPath = GetFullPath(item.Path);
+			var fullPath = GetFullPath(path);
 
 			var existingItem = this.GetItem(fullPath).Result;
 
@@ -169,9 +189,9 @@
 			;
 		}
 
-		public void DeleteContentItem(ContentItem item)
+		public void DeleteContentItem(string path)
 		{
-			var fullPath = GetFullPath(item.Path);
+			var fullPath = GetFullPath(path);
 
 			var existingItem = this.GetItem(fullPath).Result;
 			if (existingItem != null)

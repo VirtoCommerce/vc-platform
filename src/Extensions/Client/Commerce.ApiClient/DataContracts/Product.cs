@@ -1,8 +1,13 @@
-﻿namespace VirtoCommerce.Web.Core.DataContracts
-{
-    #region
+﻿#region
 
-    using Newtonsoft.Json;
+using Newtonsoft.Json;
+
+#endregion
+
+namespace VirtoCommerce.Web.Core.DataContracts
+{
+
+    #region
 
     #endregion
 

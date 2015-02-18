@@ -11,6 +11,7 @@ angular.module(catalogsModuleName, [
   'catalogModule.blades.catalogDetail',
   'catalogModule.blades.catalogsSelect',
   'catalogModule.blades.virtualCatalogDetail',
+  'catalogModule.blades.catalogPropertyDetail',
   'catalogModule.blades.categoryPropertyDetail',
   'catalogModule.blades.categoryDetail',
   'catalogModule.blades.categoriesItemsList',
@@ -19,6 +20,7 @@ angular.module(catalogsModuleName, [
   'catalogModule.blades.seoDetail',
   'catalogModule.blades.propertyDetail',
   'catalogModule.widget.catalogLanguagesWidget',
+   'catalogModule.widget.catalogPropertyWidget',
   'catalogModule.blades.catalogLanguages',
   'catalogModule.widget.seoWidget',
   'catalogModule.directives',
@@ -169,6 +171,8 @@ angular.module(catalogsModuleName, [
 
       widgetService.registerWidget(categoryPropertyWidget);
 
+  
+
       //Register category seo widget
       var categorySeoWidget = {
           group: 'categoryDetail',
@@ -178,13 +182,21 @@ angular.module(catalogsModuleName, [
 
       widgetService.registerWidget(categorySeoWidget);
 
-      //Register asset widget
+    
       var catalogLanguagesWidget = {
-          group: 'catalogLanguages',
+      	group: 'catalogDetail',
           controller: 'catalogLanguagesWidgetController',
           template: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/widgets/catalogLanguagesWidget.tpl.html',
       };
       widgetService.registerWidget(catalogLanguagesWidget);
+
+	 var catalogPropertyWidget = {
+      	group: 'catalogDetail',
+      	controller: 'catalogPropertyWidgetController',
+      	template: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/widgets/catalogPropertyWidget.tpl.html',
+	 };
+	 widgetService.registerWidget(catalogPropertyWidget);
+
   }])
 .filter('propertydatatype', function () {
     return function (input) {
@@ -202,25 +214,6 @@ angular.module(catalogsModuleName, [
                 //case 3:
                 //    result = "Date";
                 //    break;
-            default:
-                result = input;
-        }
-        return result;
-    };
-})
-.filter('propertytype', function () {
-    return function (input) {
-        var result;
-        switch (input) {
-            case 0:
-                result = "Product";
-                break;
-            case 1:
-                result = "Variation";
-                break;
-            case 2:
-                result = "Category";
-                break;
             default:
                 result = input;
         }

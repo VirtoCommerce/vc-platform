@@ -1,12 +1,17 @@
-﻿namespace VirtoCommerce.Web.Core.DataContracts
-{
-    #region
+﻿#region
 
-    using System;
-    using System.Collections.Generic;
-    using System.ComponentModel;
-    using System.Runtime.Serialization;
-    using System.Text;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Runtime.Serialization;
+using System.Text;
+
+#endregion
+
+namespace VirtoCommerce.Web.Core.DataContracts
+{
+
+    #region
 
     #endregion
 
@@ -80,13 +85,13 @@
         public override string ToString()
         {
             var builder = new StringBuilder();
-            builder.Append(this.Search);
-            builder.Append(this.Skip);
-            builder.Append(this.Take);
-            builder.Append(this.Outline);
-            builder.Append(this.SortProperty);
+            builder.Append(Search);
+            builder.Append(Skip);
+            builder.Append(Take);
+            builder.Append(Outline);
+            builder.Append(SortProperty);
 
-            foreach (var facet in this.Filters)
+            foreach (var facet in Filters)
             {
                 builder.Append(facet);
             }

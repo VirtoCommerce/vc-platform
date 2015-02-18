@@ -64,9 +64,11 @@ namespace VirtoCommerce.CatalogModule.Web.Converters
                 foreach (var property in properties)
                 {
                     var webModelProperty = property.ToWebModel();
+					webModelProperty.Catalog = null;
+					webModelProperty.Category = null;
                     webModelProperty.Values = new List<webModel.PropertyValue>();
                     webModelProperty.IsManageable = true;
-                    webModelProperty.IsReadOnly = property.Type == moduleModel.PropertyType.Category;
+					webModelProperty.IsReadOnly = property.Type != moduleModel.PropertyType.Product && property.Type != moduleModel.PropertyType.Variation;
                     retVal.Properties.Add(webModelProperty);
                 }
             }
@@ -113,6 +115,7 @@ namespace VirtoCommerce.CatalogModule.Web.Converters
             var retVal = new moduleModel.CatalogProduct();
             retVal.InjectFrom(product);
 
+			retVal.StartDate = DateTime.UtcNow;
             if (product.Images != null)
             {
                 retVal.Assets = new List<moduleModel.ItemAsset>();

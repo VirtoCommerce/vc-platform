@@ -1,10 +1,15 @@
-﻿namespace VirtoCommerce.Web.Core.Configuration.Catalog
-{
-    #region
+﻿#region
 
-    using System;
-    using System.Configuration;
-    using System.Threading;
+using System;
+using System.Configuration;
+using System.Threading;
+
+#endregion
+
+namespace VirtoCommerce.Web.Core.Configuration.Catalog
+{
+
+    #region
 
     #endregion
 

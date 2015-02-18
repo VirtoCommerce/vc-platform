@@ -22,6 +22,30 @@ namespace VirtoCommerce.Content.Tests
 
 		//Uncomment this test and run it first and 1 time
 		//[Fact]
+		//public void FirstTimeThemeTestsInitialize()
+		//{
+		//	var repository = GetRepository();
+
+		//	var theme1 = new Theme
+		//	{
+		//		ThemePath = "Apple/Simple",
+		//		Name = "Simple",
+		//		Id = "Apple/Simple"
+		//	};
+
+		//	var theme2 = new Theme
+		//	{
+		//		ThemePath = "Apple/Timber",
+		//		Name = "Timber",
+		//		Id = "Apple/Timber"
+		//	};
+
+		//	repository.Add(theme1);
+		//	repository.Add(theme2);
+		//	repository.UnitOfWork.Commit();
+		//}
+
+		//[Fact]
 		//public void FirstTimeTestsInitialize()
 		//{
 		//	var fullPath = string.Format("{0}\\Themes\\", Environment.CurrentDirectory.Replace("\\bin\\Debug", string.Empty));
@@ -73,7 +97,7 @@ namespace VirtoCommerce.Content.Tests
 
 			var items = repository.GetThemes("Apple");
 
-			Assert.Equal(items.Length, 2);
+			Assert.Equal(items.Count(), 2);
 			Assert.Equal(items.Count(i => i.ThemePath == "Apple/Simple"), 1);
 		}
 
@@ -84,7 +108,7 @@ namespace VirtoCommerce.Content.Tests
 
 			var items = repository.GetContentItems("Apple/Simple");
 
-			Assert.Equal(items.Length, 2);
+			Assert.Equal(items.Count(), 2);
 			Assert.Equal(items.Count(i => i.Path == "Apple/Simple/templates/404.liquid"), 1);
 		}
 
@@ -106,16 +130,18 @@ namespace VirtoCommerce.Content.Tests
 
 			var content = new ContentItem();
 			content.Content = "Some new stuff";
-			content.Path = "Apple/Simple/new/new123.liquid";
+			content.Path = "new/new123.liquid";
 			content.CreatedDate = DateTime.UtcNow;
 			content.Id = Guid.NewGuid().ToString();
 			content.Name = "new123.liquid";
 
-			repository.SaveContentItem(content);
+			var path = "Apple/Simple/new/new123.liquid";
+
+			repository.SaveContentItem(path, content);
 
 			var items = repository.GetContentItems("Apple/Simple");
 
-			Assert.Equal(items.Length, 3);
+			Assert.Equal(items.Count(), 3);
 
 			var item = repository.GetContentItem("Apple/Simple/new/new123.liquid");
 
@@ -123,26 +149,25 @@ namespace VirtoCommerce.Content.Tests
 
 			content = new ContentItem();
 			content.Content = "Some new stuff. Changes";
-			content.Path = "Apple/Simple/new/new123.liquid";
+			path = "Apple/Simple/new/new123.liquid";
 
-			repository.SaveContentItem(content);
+			repository.SaveContentItem(path, content);
 
 			items = repository.GetContentItems("Apple/Simple");
 
-			Assert.Equal(items.Length, 3);
+			Assert.Equal(items.Count(), 3);
 
 			item = repository.GetContentItem("Apple/Simple/new/new123.liquid");
 
 			Assert.True(item.Content.Contains("Some") && item.Content.Contains("Changes"));
 
-			content = new ContentItem();
-			content.Path = "Apple/Simple/new/new123.liquid";
+			path = "Apple/Simple/new/new123.liquid";
 
-			repository.DeleteContentItem(content);
+			repository.DeleteContentItem(path);
 
 			items = repository.GetContentItems("Apple/Simple");
 
-			Assert.Equal(items.Length, 2);
+			Assert.Equal(items.Count(), 2);
 		}
 	}
 }

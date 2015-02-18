@@ -1,10 +1,14 @@
-﻿namespace VirtoCommerce.Web.Core.DataContracts
+﻿#region
+
+using System.Collections.Generic;
+using Newtonsoft.Json;
+
+#endregion
+
+namespace VirtoCommerce.Web.Core.DataContracts
 {
+
     #region
-
-    using System.Collections.Generic;
-
-    using Newtonsoft.Json;
 
     #endregion
 
@@ -23,7 +27,7 @@
         {
             get
             {
-                return this._links;
+                return _links;
             }
         }
 
@@ -33,19 +37,19 @@
 
         public void AddLink(Link link)
         {
-            if (this._links == null)
+            if (_links == null)
             {
-                this._links = new List<Link>();
+                _links = new List<Link>();
             }
 
-            this._links.Add(link);
+            _links.Add(link);
         }
 
         public void AddLinks(params Link[] links)
         {
             foreach (var link in links)
             {
-                this.AddLink(link);
+                AddLink(link);
             }
         }
 

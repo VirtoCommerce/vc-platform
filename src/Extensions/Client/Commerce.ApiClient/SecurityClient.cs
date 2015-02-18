@@ -1,13 +1,17 @@
-﻿namespace VirtoCommerce.ApiClient
-{
-    #region
+﻿#region
 
 using System;
 using System.Net.Http;
 using System.Threading.Tasks;
-
 using VirtoCommerce.ApiClient.DataContracts.Security;
 using VirtoCommerce.ApiClient.Utilities;
+
+#endregion
+
+namespace VirtoCommerce.ApiClient
+{
+
+    #region
 
     #endregion
 
@@ -16,18 +20,18 @@ using VirtoCommerce.ApiClient.Utilities;
         #region Constructors and Destructors
 
         /// <summary>
-		/// Initializes a new instance of the SecurityClient class.
+        ///     Initializes a new instance of the SecurityClient class.
         /// </summary>
         /// <param name="adminBaseEndpoint">Admin endpoint</param>
-		/// <param name="appId">The API application ID.</param>
-		/// <param name="secretKey">The API secret key.</param>
-		public SecurityClient(Uri adminBaseEndpoint, string appId, string secretKey)
-			: base(adminBaseEndpoint, new HmacMessageProcessingHandler(appId, secretKey))
+        /// <param name="appId">The API application ID.</param>
+        /// <param name="secretKey">The API secret key.</param>
+        public SecurityClient(Uri adminBaseEndpoint, string appId, string secretKey)
+            : base(adminBaseEndpoint, new HmacMessageProcessingHandler(appId, secretKey))
         {
         }
 
         /// <summary>
-		/// Initializes a new instance of the SecurityClient class.
+        ///     Initializes a new instance of the SecurityClient class.
         /// </summary>
         /// <param name="adminBaseEndpoint">Admin endpoint</param>
         /// <param name="handler"></param>
@@ -42,43 +46,43 @@ using VirtoCommerce.ApiClient.Utilities;
 
         public Task CreateAsync(ApplicationUser user)
         {
-            var requestUri = this.CreateRequestUri(RelativePaths.Create);
+            var requestUri = CreateRequestUri(RelativePaths.Create);
             return SendAsync(requestUri, HttpMethod.Post, user);
         }
 
         public Task DeleteAsync(string userId)
         {
-            var requestUri = this.CreateRequestUri(RelativePaths.Delete);
-            return this.SendAsync(requestUri, HttpMethod.Post, userId);
+            var requestUri = CreateRequestUri(RelativePaths.Delete);
+            return SendAsync(requestUri, HttpMethod.Post, userId);
         }
 
         public Task<ApplicationUser> FindByEmailAsync(string email)
         {
-            var requestUri = this.CreateRequestUri(string.Format(RelativePaths.FindByEmail, email));
-            return this.GetAsync<ApplicationUser>(requestUri, useCache: false);
+            var requestUri = CreateRequestUri(string.Format(RelativePaths.FindByEmail, email));
+            return GetAsync<ApplicationUser>(requestUri, useCache: false);
         }
 
         public Task<ApplicationUser> FindByIdAsync(string userId)
         {
-            var requestUri = this.CreateRequestUri(string.Format(RelativePaths.FindById, userId));
-            return this.GetAsync<ApplicationUser>(requestUri, useCache: false);
+            var requestUri = CreateRequestUri(string.Format(RelativePaths.FindById, userId));
+            return GetAsync<ApplicationUser>(requestUri, useCache: false);
         }
 
         public Task<ApplicationUser> FindByNameAsync(string userName)
         {
-            var requestUri = this.CreateRequestUri(string.Format(RelativePaths.FindByName, userName));
-            return this.GetAsync<ApplicationUser>(requestUri, useCache: false);
+            var requestUri = CreateRequestUri(string.Format(RelativePaths.FindByName, userName));
+            return GetAsync<ApplicationUser>(requestUri, useCache: false);
         }
 
         public Task<AuthInfo> GetUserInfo(string userName)
         {
-            var requestUri = this.CreateRequestUri(string.Format(RelativePaths.UserInfo, userName));
-            return this.GetAsync<AuthInfo>(requestUri);
+            var requestUri = CreateRequestUri(string.Format(RelativePaths.UserInfo, userName));
+            return GetAsync<AuthInfo>(requestUri);
         }
 
         public Task UpdateAsync(ApplicationUser user)
         {
-            var requestUri = this.CreateRequestUri(RelativePaths.Update);
+            var requestUri = CreateRequestUri(RelativePaths.Update);
             return SendAsync(requestUri, HttpMethod.Post, user);
         }
 

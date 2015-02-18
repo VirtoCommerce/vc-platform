@@ -1,13 +1,17 @@
-﻿namespace VirtoCommerce.ApiClient
-{
-    #region
+﻿#region
 
 using System;
 using System.Net.Http;
 using System.Threading.Tasks;
-
 using VirtoCommerce.ApiClient.DataContracts.Cart;
 using VirtoCommerce.ApiClient.Utilities;
+
+#endregion
+
+namespace VirtoCommerce.ApiClient
+{
+
+    #region
 
     #endregion
 
@@ -19,10 +23,10 @@ using VirtoCommerce.ApiClient.Utilities;
         ///     Initializes a new instance of the CartClient class.
         /// </summary>
         /// <param name="adminBaseEndpoint">Admin endpoint</param>
-		/// <param name="appId">The API application ID.</param>
-		/// <param name="secretKey">The API secret key.</param>
-		public CartClient(Uri adminBaseEndpoint, string appId, string secretKey)
-			: base(adminBaseEndpoint, new HmacMessageProcessingHandler(appId, secretKey))
+        /// <param name="appId">The API application ID.</param>
+        /// <param name="secretKey">The API secret key.</param>
+        public CartClient(Uri adminBaseEndpoint, string appId, string secretKey)
+            : base(adminBaseEndpoint, new HmacMessageProcessingHandler(appId, secretKey))
         {
         }
 
@@ -45,17 +49,18 @@ using VirtoCommerce.ApiClient.Utilities;
         /// </summary>
         public Task<ShoppingCart> GetCurrentCartAsync()
         {
-            return this.GetAsync<ShoppingCart>(
-                this.CreateRequestUri(string.Format(RelativePaths.CurrentCart, "samplestore")),
-                useCache: false); // service should already know the cart
+            return
+                GetAsync<ShoppingCart>(
+                    CreateRequestUri(string.Format(RelativePaths.CurrentCart, "samplestore")),
+                    useCache: false); // service should already know the cart
 
             // TODO: remove storeid from the API's
         }
 
         public Task<ShoppingCart> UpdateCurrentCartAsync(ShoppingCart cart)
         {
-            return this.SendAsync<ShoppingCart, ShoppingCart>(
-                this.CreateRequestUri(RelativePaths.UpdateCart),
+            return SendAsync<ShoppingCart, ShoppingCart>(
+                CreateRequestUri(RelativePaths.UpdateCart),
                 HttpMethod.Put,
                 cart);
         }

@@ -26,7 +26,7 @@
 @font-face {
   font-family: 'FontAwesome';
   src: url('../fonts/fontawesome-webfont.eot?v=4.3.0');
-  src: url('../fonts/fontawesome-webfont.eot?#iefix&v=4.3.0') format('embedded-opentype'), url('../fonts/fontawesome-webfont.woff2?v=4.3.0') format('woff2'), url('../fonts/fontawesome-webfont.woff?v=4.3.0') format('woff'), url('../fonts/fontawesome-webfont.ttf?v=4.3.0') format('truetype'), url('../fonts/fontawesome-webfont.svg?v=4.3.0#fontawesomeregular') format('svg');
+  src: url('../fonts/fontawesome-webfont.eot?#iefix&v=4.3.0') format('embedded-opentype'), url('../fonts/fontawesome-webfont.woff?v=4.3.0') format('woff'), url('../fonts/fontawesome-webfont.ttf?v=4.3.0') format('truetype'), url('../fonts/fontawesome-webfont.svg?v=4.3.0#fontawesomeregular') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -2110,14 +2110,16 @@ ol
 	}
 
 	.list .list-item,
-	.menu .menu-item
+    .menu .menu-item,
+	.tree .tree-item
 	{
 		padding-left: 0;
 		text-indent: 0;
 	}
 
 	.list .list-item:before,
-	.menu .menu-item:before
+	.menu .menu-item:before,
+    .tree .tree-item:before
 	{
 		content: '';
 	}
@@ -2268,7 +2270,7 @@ h3
 /* Tables */
 .table-wrapper
 {
-	margin: 0 -20px;
+	margin: 0 -20px 15px;
 }
 
 .table
@@ -2302,16 +2304,34 @@ h3
 
 		.table-col .table-t
 		{
+            font-size: 14px;
 			font-weight: 500;
 			margin: 0 0 5px;
 		}
 
-	.table .table-col.__date
+	.table .table-col.__date,
+    .table .table-col.__author,
+    .table .table-col.__version
 	{
 		font-size: 12px;
 		vertical-align: top;
 		width: 20%;
 	}
+
+    .table .table-col.__author
+    {
+        color: #999;
+    }
+
+    .table .table-col.__version
+    {
+        width: 10%;
+    }
+
+    .table .table-col.__blue
+    {
+        color: #43b0e6;
+    }
 
 	.table .table-col.__product-control
 	{
@@ -2429,6 +2449,21 @@ h3
 
 
 /* Forms */
+:-moz-ui-invalid:not(output)
+{
+    -webkit-box-shadow: none;
+            box-shadow: none;
+}
+
+.form-input input.ng-invalid,
+.form-input textarea.ng-invalid,
+.form-input input:focus.ng-invalid,
+.form-input textarea:focus.ng-invalid
+{
+    background: #faf1f1;
+    border-color: #e51400;
+}
+
 fieldset
 {
 	border: none;
@@ -2452,7 +2487,7 @@ fieldset + fieldset
 
 .form
 {
-	margin: 15px 0;
+	padding: 15px 0;
 }
 
 .form-group + .form-group
@@ -2510,6 +2545,7 @@ fieldset + fieldset
 
     .form-input.__number
     {
+        height: 34px;
         position: relative;
     }
 
@@ -2557,8 +2593,16 @@ fieldset + fieldset
 					box-sizing: border-box;
 		}
 
+        .form-input.__mini input,
+        .form-input.__mini textarea,
+        .form-input.__mini select
+        {
+            width: 80px;
+        }
+
         .form-input input,
-		.form-input select
+        .form-input select,
+		.form-input .form-text
 		{
 			height: 34px;
 		}
@@ -2671,6 +2715,7 @@ fieldset + fieldset
             left: 11px;
             position: absolute;
             top: 11px;
+            z-index: 50;
         }
 
         .form-label
@@ -2707,6 +2752,12 @@ fieldset + fieldset
 			background: none;
 		}
 
+        .form-input .form-text
+        {
+            font-size: 14px;
+            line-height: 34px;
+        }
+
 			.form-input .btn-ico
 			{
 				color: #43b0e6;
@@ -2720,12 +2771,27 @@ fieldset + fieldset
 		display: inline-block;
 		font-size: 11px;
 		font-weight: 500;
+        position: relative;
 	}
 
 	.form-control .form-label + .form-label
 	{
 		margin: 0 0 0 10px;
 	}
+
+    label.form-control
+    {
+        display: inline-block;
+        height: 12px;
+        position: relative;
+        top: -2px;
+    }
+
+    .form-control
+    {
+        min-height: 12px;
+        position: relative;
+    }
 
 		.form-control input
 		{
@@ -2737,9 +2803,10 @@ fieldset + fieldset
 		{
 			background: #fff;
 			border: 1px solid #a1c0d4;
-			display: inline-block;
 			height: 12px;
-			position: relative;
+            left: 0;
+			position: absolute;
+            top: 2px;
 			width: 12px;
 
 			-webkit-box-sizing: border-box;
@@ -2748,11 +2815,16 @@ fieldset + fieldset
 
         .form-control.__radio .check
         {
+            top: 3px;
+        }
+
+        .form-control.__radio .check
+        {
             -webkit-border-radius: 50%;
                     border-radius: 50%;
         }
 
-		.form-control .form-label:hover .check
+		.form-control .form-label .check:hover
 		{
 			border-color: #80a0b5;
 		}
@@ -2772,7 +2844,6 @@ fieldset + fieldset
 			font-size: 8px;
 			font-weight: normal;
 			left: 1px;
-            line-height: 1.25;
 			position: absolute;
 			top: 0;
 		}
@@ -2792,7 +2863,7 @@ fieldset + fieldset
 		.form-control .name
 		{
 			display: inline-block;
-			margin: 0 0 0 5px;
+			margin: 0 0 0 18px;
 			vertical-align: 2px;
 		}
 
@@ -3336,11 +3407,12 @@ fieldset + fieldset
 /* Blade lists */
 .list.__items
 {
-	margin: 0 -20px;
+	margin: 0 -20px 15px;
 }
 
 	.__items .list-item
 	{
+        background: #fff;
 		border-bottom: 1px solid #dee9f0;
 		cursor: pointer;
         display: block;
@@ -3743,6 +3815,242 @@ fieldset + fieldset
 		}
 
 
+/* Tree */
+.tree-view
+{
+    overflow-x: auto;
+}
+
+.tree-scroll
+{
+    padding: 20px 0;
+    text-align: center;
+}
+
+.tree,
+.tree-item
+{
+    display: inline-block;
+    position: relative;
+    vertical-align: top;
+}
+
+.tree-view ul
+{
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.tree-item:first-child:before
+{
+    background: #fff;
+    content: '';
+    height: 2px;
+    left: -1px;
+    position: absolute;
+    top: 0;
+    width: 50%;
+    z-index: 5;
+}
+
+.tree-item:last-child:before
+{
+    background: #fff;
+    content: '';
+    height: 2px;
+    right: -1px;
+    position: absolute;
+    top: 0;
+    width: 50%;
+    z-index: 5;
+}
+
+.tree-block
+{
+    border: 2px solid #a1c0d4;
+    display: inline-block;
+    margin: 10px 5px;
+    padding: 5px 0;
+    position: relative;
+    vertical-align: top;
+    width: 160px;
+    
+    -webkit-box-sizing: border-box;
+            box-sizing: border-box;
+}
+
+.tree-block.__selected
+{
+    background: #d9effa;
+    border-color: #a1c0d4;
+}
+
+.tree-block .inner
+{
+    height: 100%;
+    margin: 0 10px;
+    text-align: left;
+}
+
+.tree-item.last .tree-block .inner:after
+{
+    background: #fff;
+    content: '';
+    height: 2px;
+    left: -1px;
+    position: absolute;
+    top: -12px;
+    width: 50%;
+    z-index: 5;
+}
+
+.tree-item.last .tree-block .inner:before
+{
+    background: #fff;
+    content: '';
+    height: 2px;
+    position: absolute;
+    right: -1px;
+    top: -12px;
+    width: 50%;
+    z-index: 10;
+}
+
+.first > :first-child:before
+{
+    display: none;
+}
+
+.first > :first-child,
+.first > :first-child.__selected
+{
+    background: #ecf7fc;
+    border-color: #a1c0d4;
+}
+
+.tree-block:before
+{
+    background: #a1c0d4;
+    content: '';
+    height: 10px;
+    left: 50%;
+    position: absolute;
+    top: -10px;
+    width: 2px;
+    
+    -webkit-transform: translateX(-50%);
+            transform: translateX(-50%);
+}
+
+.tree-node
+{
+    position: relative;
+}
+
+.tree-node:after
+{
+    background: #a1c0d4;
+    content: '';
+    height: 2px;
+    left: 0;
+    position: absolute;
+    right: 1px;
+    top: 0;
+}
+
+.tree-node:before
+{
+    background: #a1c0d4;
+    content: '';
+    height: 10px;
+    left: 50%;
+    position: absolute;
+    top: -10px;
+    width: 2px;
+    
+    -webkit-transform: translateX(-50%);
+            transform: translateX(-50%);
+}
+
+.tree-el
+{
+    color: #4c4c4c;
+    display: block;
+    font-size: 12px;
+    line-height: 1;
+    margin: 0;
+    padding: 5px 0 5px 20px;
+    position: relative;
+}
+
+.tree-el.__title
+{
+    color: #43b0e6;
+    height: 24px;
+}
+
+.tree-el .tree-ico
+{
+    color: #4c4c4c;
+    font-size: 14px;
+    left: 0;
+    position: absolute;
+    width: 20px;
+}
+
+
+/* Order */
+.form-group.__order-currency
+{
+    padding: 0 0 0 20px;
+}
+
+    .form-group.__order-currency .form-input
+    {
+        display: inline-block;
+        margin: 0 0 0 5px;
+        width: 100px;
+    }
+
+
+/* Columns */
+.columns
+{
+    padding: 15px 0;
+}
+
+.column:nth-last-child(3),
+.column:nth-last-child(3) ~ .column
+{
+    float: left;
+    width: 33.3333%;
+}
+
+.column:nth-last-child(2),
+.column:nth-last-child(2) ~ .column
+{
+    float: left;
+    width: 50%;
+}
+
+.column .form-group
+{
+    margin-right: 10px;
+}
+
+.column + .column .form-group
+{
+    margin-left: 10px;
+    margin-right: 0;
+}
+
+.column + .column .table-wrapper
+{
+    margin-left: 10px;
+}
+
+
 
 .nav-bar,
 .cnt
@@ -4125,6 +4433,7 @@ fieldset + fieldset
 {
 	background: #fff;
 	font-family: serif;
+    min-width: 444px;
 }
 
 	.blade .blade-head,
@@ -4139,7 +4448,7 @@ fieldset + fieldset
 	.blade .blade-head
 	{
 		background: #333;
-		height: 155px;
+		height: 130px;
 		min-width: 300px;
 		padding: 25px 0 5px;
 		position: relative;
@@ -4267,7 +4576,7 @@ fieldset + fieldset
 		{
 			color: #fff;
 			left: 0;
-			margin: 22px 20px;
+			margin: 10px 20px;
 			padding: 0 0 0 50px;
 			position: absolute;
 			right: 8px;
@@ -4403,7 +4712,7 @@ fieldset + fieldset
 
 	.blade .blade-container
 	{
-		height: calc(100% - 155px);
+		height: calc(100% - 130px);
 		position: relative;
 	}
 
@@ -4525,13 +4834,18 @@ fieldset + fieldset
 
 	.blade .blade-content.__gray
 	{
-		background-color: #eee;
+		background-color: #f3f3f3;
 	}
 
 	.blade .blade-content.__medium-wide
 	{
 		width: 566px;
 	}
+
+    .blade .blade-content.__large-wide
+    {
+        width: 696px;
+    }
 
 		.blade-content .form
 		{
@@ -4626,3 +4940,41 @@ fieldset + fieldset
 		{
 			width: 530px;
 		}
+
+        .blade-content.__large-wide .inner-block
+        {
+            width: 656px;
+        }
+
+    .blade .blade-loader
+    {
+        padding: 20px;
+        text-align: center;
+    }
+
+        .blade-loader .loading
+        {
+            color: #f3f3f3;
+            display: inline-block;
+            font-size: 60px;
+            font-weight: bold;
+            overflow: hidden;
+            position: relative;
+            text-transform: uppercase;
+        }
+
+        .blade-loader .loading:after
+        {
+            color: #43b0e6;
+            content: attr(data-title);
+            font-size: 60px;
+            left: 0;
+            overflow: hidden;
+            position: absolute;
+            text-transform: uppercase;
+            top: 0;
+            white-space: nowrap;
+
+            -webkit-animation: loading 2s ease-in-out 0s infinite;
+                    animation: loading 2s ease-in-out 0s infinite;
+        }

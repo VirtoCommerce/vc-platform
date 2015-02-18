@@ -1,4 +1,6 @@
-﻿namespace VirtoCommerce.Content.Data.Repositories
+﻿using System.Collections.Generic;
+
+namespace VirtoCommerce.Content.Data.Repositories
 {
 	#region
 
@@ -13,13 +15,13 @@
 
 		ContentItem GetContentItem(string path);
 
-		ContentItem[] GetContentItems(string path, bool loadContent = false);
+		IEnumerable<ContentItem> GetContentItems(string path, bool loadContent = false);
 
-		Theme[] GetThemes(string storePath);
+		IEnumerable<Theme> GetThemes(string storePath);
 
-		void SaveContentItem(ContentItem item);
+		void SaveContentItem(string path, ContentItem item);
 
-		void DeleteContentItem(ContentItem item);
+		void DeleteContentItem(string path);
 
 		#endregion
 	}

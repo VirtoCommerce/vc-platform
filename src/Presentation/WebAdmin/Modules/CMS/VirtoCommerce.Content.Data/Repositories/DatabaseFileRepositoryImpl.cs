@@ -39,7 +39,15 @@
 					.Property(x => x.Id);
 
 			modelBuilder.Entity<ContentItem>().ToTable("ContentItem");
+
 			#endregion
+			#region Themes
+			modelBuilder.Entity<Theme>().HasKey(x => x.Id)
+					.Property(x => x.Id);
+
+			modelBuilder.Entity<Theme>().ToTable("ContentTheme");
+			#endregion
+
 		}
 
 		#endregion
@@ -49,6 +57,11 @@
 		public IQueryable<ContentItem> ContentItems
 		{
 			get { return GetAsQueryable<ContentItem>(); }
+		}
+
+		public IQueryable<Theme> Themes
+		{
+			get { return GetAsQueryable<Theme>(); }
 		}
 
 		#endregion
@@ -66,26 +79,22 @@
 			return retVal;
 		}
 
-		public Theme[] GetThemes(string storePath)
+		public IEnumerable<Theme> GetThemes(string storePath)
 		{
 			var path = string.Format("{0}/", storePath);
 
-			var items = ContentItems.Where(c => c.Path.StartsWith(storePath)).ToArray();
+			var items = Themes.Where(c => c.ThemePath.StartsWith(storePath));
 
-			return items.Select(c => c.Path.Split('/')[1])
-				.Distinct()
-				.Select(c => new Theme { Name = c, ThemePath = string.Format("{0}/{1}", storePath, c) })
-				.ToArray();
+			return items;
 		}
 
-		public ContentItem[] GetContentItems(string path, bool loadContent = false)
+		public IEnumerable<ContentItem> GetContentItems(string path, bool loadContent = false)
 		{
-			return ContentItems.Where(i => i.Path.Contains(path)).ToArray();
+			return ContentItems.Where(i => i.Path.Contains(path));
 		}
 
-		public void SaveContentItem(ContentItem item)
+		public void SaveContentItem(string path, ContentItem item)
 		{
-			var path = item.Path;
 			var existingItem = ContentItems.FirstOrDefault(p => p.Path == path);
 			if (existingItem != null)
 			{
@@ -94,19 +103,52 @@
 			}
 			else
 			{
+				item.Path = path;
 				Add(item);
+			}
+
+			var steps = path.Split('/');
+			if(steps.Length > 2)
+			{
+				var themePath = string.Join("/", steps[0], steps[1]);
+				var theme = Themes.FirstOrDefault(t => t.Id == themePath);
+				if(theme != null)
+				{
+					theme.ModifiedDate = DateTime.UtcNow;
+					Update(theme);
+				}
+				else
+				{
+					theme = new Theme();
+					theme.Id = themePath;
+					theme.ThemePath = themePath;
+					theme.Name = steps[1];
+					theme.CreatedDate = DateTime.UtcNow;
+					Add(theme);
+				}
 			}
 
 			UnitOfWork.Commit();
 		}
 
-		public void DeleteContentItem(ContentItem item)
+		public void DeleteContentItem(string path)
 		{
-			var path = item.Path;
 			var existingItem = ContentItems.FirstOrDefault(p => p.Path == path);
 			if (existingItem != null)
 			{
 				Remove(existingItem);
+			}
+
+			var steps = path.Split('/');
+			if (steps.Length > 2)
+			{
+				var themePath = string.Join("/", steps[0], steps[1]);
+				var theme = Themes.FirstOrDefault(t => t.Id == themePath);
+				if (theme != null)
+				{
+					theme.ModifiedDate = DateTime.UtcNow;
+					Update(theme);
+				}
 			}
 
 			UnitOfWork.Commit();

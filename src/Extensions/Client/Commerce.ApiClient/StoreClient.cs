@@ -1,12 +1,17 @@
-﻿namespace VirtoCommerce.ApiClient
-{
-    #region
+﻿#region
 
 using System;
 using System.Net.Http;
 using System.Threading.Tasks;
 using VirtoCommerce.ApiClient.Utilities;
 using VirtoCommerce.Web.Core.DataContracts.Store;
+
+#endregion
+
+namespace VirtoCommerce.ApiClient
+{
+
+    #region
 
     #endregion
 
@@ -15,18 +20,18 @@ using VirtoCommerce.Web.Core.DataContracts.Store;
         #region Constructors and Destructors
 
         /// <summary>
-		/// Initializes a new instance of the StoreClient class.
+        ///     Initializes a new instance of the StoreClient class.
         /// </summary>
         /// <param name="adminBaseEndpoint">Admin endpoint</param>
-		/// <param name="appId">The API application ID.</param>
-		/// <param name="secretKey">The API secret key.</param>
-		public StoreClient(Uri adminBaseEndpoint, string appId, string secretKey)
-			: base(adminBaseEndpoint, new HmacMessageProcessingHandler(appId, secretKey))
+        /// <param name="appId">The API application ID.</param>
+        /// <param name="secretKey">The API secret key.</param>
+        public StoreClient(Uri adminBaseEndpoint, string appId, string secretKey)
+            : base(adminBaseEndpoint, new HmacMessageProcessingHandler(appId, secretKey))
         {
         }
 
         /// <summary>
-		/// Initializes a new instance of the StoreClient class.
+        ///     Initializes a new instance of the StoreClient class.
         /// </summary>
         /// <param name="adminBaseEndpoint">Admin endpoint</param>
         /// <param name="handler"></param>
@@ -44,7 +49,7 @@ using VirtoCommerce.Web.Core.DataContracts.Store;
         /// </summary>
         public Task<Store[]> GetStoresAsync()
         {
-            return this.GetAsync<Store[]>(this.CreateRequestUri(RelativePaths.Stores));
+            return GetAsync<Store[]>(CreateRequestUri(RelativePaths.Stores));
         }
 
         #endregion

@@ -1,11 +1,16 @@
-﻿namespace VirtoCommerce.Web.Core.Configuration.Application
-{
-    #region
+﻿#region
 
-    using System;
-    using System.Configuration;
-    using System.Threading;
-    using System.Web.Configuration;
+using System;
+using System.Configuration;
+using System.Threading;
+using System.Web.Configuration;
+
+#endregion
+
+namespace VirtoCommerce.Web.Core.Configuration.Application
+{
+
+    #region
 
     #endregion
 
@@ -349,7 +354,7 @@
                 {
                     base.BaseRemoveAt(index);
                 }
-                this.BaseAdd(index, value);
+                BaseAdd(index, value);
             }
         }
 

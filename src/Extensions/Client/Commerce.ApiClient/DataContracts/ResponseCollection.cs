@@ -1,10 +1,14 @@
-﻿namespace VirtoCommerce.Web.Core.DataContracts
+﻿#region
+
+using System.Collections.ObjectModel;
+using Newtonsoft.Json;
+
+#endregion
+
+namespace VirtoCommerce.Web.Core.DataContracts
 {
+
     #region
-
-    using System.Collections.ObjectModel;
-
-    using Newtonsoft.Json;
 
     #endregion
 
@@ -23,7 +27,7 @@
         {
             get
             {
-                return this._items ?? (this._items = new Collection<T>());
+                return _items ?? (_items = new Collection<T>());
             }
         }
 

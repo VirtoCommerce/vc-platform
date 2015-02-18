@@ -39,9 +39,9 @@
 
 			var items = repository.GetThemes("Apple");
 
-			Assert.Equal(items.Length, 2);
-			Assert.Equal(items[0].ThemePath, "Apple/Simple");
-			Assert.Equal(items[0].Name, "Simple");
+			Assert.Equal(items.Count(), 2);
+			Assert.Equal(items.ElementAt(0).ThemePath, "Apple/Simple");
+			Assert.Equal(items.ElementAt(0).Name, "Simple");
 		}
 
 		[Fact]
@@ -51,9 +51,9 @@
 
 			var items = repository.GetContentItems("Apple/Simple");
 
-			Assert.Equal(items.Length, 69);
-			Assert.Equal(items[0].Path, "Apple/Simple/assets/apple-touch-icon-114x114.png");
-			Assert.Equal(items[0].Name, "apple-touch-icon-114x114.png");
+			Assert.Equal(items.Count(), 69);
+            Assert.Equal(items.ElementAt(0).Path, "Apple/Simple/assets/apple-touch-icon-114x114.png");
+            Assert.Equal(items.ElementAt(0).Name, "apple-touch-icon-114x114.png");
 		}
 
 		[Fact]
@@ -63,9 +63,9 @@
 
 			var items = repository.GetContentItems("Apple/Simple", true);
 
-			Assert.Equal(items.Length, 69);
-			Assert.Equal(items[0].Path, "Apple/Simple/assets/apple-touch-icon-114x114.png");
-			Assert.Equal(items[0].Name, "apple-touch-icon-114x114.png");
+			Assert.Equal(items.Count(), 69);
+            Assert.Equal(items.ElementAt(0).Path, "Apple/Simple/assets/apple-touch-icon-114x114.png");
+            Assert.Equal(items.ElementAt(0).Name, "apple-touch-icon-114x114.png");
 			Assert.Equal(items.Count(i => string.IsNullOrEmpty(i.Content)), 0);
 		}
 
@@ -87,13 +87,13 @@
 
 			var content = new ContentItem();
 			content.Content = "Some new stuff";
-			content.Path = "Apple/Simple/new/new123.liquid";
+			var path = "Apple/Simple/new/new123.liquid";
 
-			repository.SaveContentItem(content);
+			repository.SaveContentItem(path, content);
 
 			var items = repository.GetContentItems("Apple/Simple");
 
-			Assert.Equal(items.Length, 70);
+			Assert.Equal(items.Count(), 70);
 
 			var item = repository.GetContentItem("Apple/Simple/new/new123.liquid");
 
@@ -101,26 +101,25 @@
 
 			content = new ContentItem();
 			content.Content = "Some new stuff. Changes";
-			content.Path = "Apple/Simple/new/new123.liquid";
+			path = "Apple/Simple/new/new123.liquid";
 
-			repository.SaveContentItem(content);
+			repository.SaveContentItem(path, content);
 
 			items = repository.GetContentItems("Apple/Simple");
 
-			Assert.Equal(items.Length, 70);
+			Assert.Equal(items.Count(), 70);
 
 			item = repository.GetContentItem("Apple/Simple/new/new123.liquid");
 
 			Assert.True(item.Content.Contains("Some") && item.Content.Contains("Changes"));
 
-			content = new ContentItem();
-			content.Path = "Apple/Simple/new/new123.liquid";
+			path = "Apple/Simple/new/new123.liquid";
 
-			repository.DeleteContentItem(content);
+			repository.DeleteContentItem(path);
 
 			items = repository.GetContentItems("Apple/Simple");
 
-			Assert.Equal(items.Length, 69);
+			Assert.Equal(items.Count(), 69);
 		}
 
 		#endregion

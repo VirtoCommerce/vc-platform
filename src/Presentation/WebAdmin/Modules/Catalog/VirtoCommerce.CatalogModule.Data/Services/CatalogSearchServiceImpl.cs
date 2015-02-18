@@ -30,7 +30,7 @@ namespace VirtoCommerce.CatalogModule.Data.Services
             var retVal = new module.SearchResult();
             var taskList = new List<Task>();
 
-            if ((criteria.ResponseGroup & module.ResponseGroup.WithItems) == module.ResponseGroup.WithItems)
+            if ((criteria.ResponseGroup & module.ResponseGroup.WithProducts) == module.ResponseGroup.WithProducts)
             {
                 taskList.Add(Task.Factory.StartNew(() => SearchItems(criteria, retVal)));
             }
@@ -140,6 +140,10 @@ namespace VirtoCommerce.CatalogModule.Data.Services
                 var dbCatalog = repository.GetCatalogById(criteria.CatalogId);
 
                 var query = repository.Items;
+				if ((criteria.ResponseGroup & module.ResponseGroup.WithVariations) != module.ResponseGroup.WithVariations)
+				{
+					query = query.Where(x => x.IsActive);
+				}
 
                 if (!String.IsNullOrEmpty(criteria.CategoryId))
                 {
@@ -150,6 +154,7 @@ namespace VirtoCommerce.CatalogModule.Data.Services
                     query = query.Where(x => x.CatalogId == criteria.CatalogId && !x.CategoryItemRelations.Any());
                 }
 
+				
 
                 result.TotalCount = query.Count();
 

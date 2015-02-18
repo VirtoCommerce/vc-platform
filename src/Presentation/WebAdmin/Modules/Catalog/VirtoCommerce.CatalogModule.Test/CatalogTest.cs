@@ -184,7 +184,7 @@ namespace VirtoCommerce.CatalogModule.Test
 			
 			result = searchService.Search(criteria);
 
-			criteria.ResponseGroup = ResponseGroup.WithItems;
+			criteria.ResponseGroup = ResponseGroup.WithProducts;
 			criteria.CategoryId = result.Categories[0].Id;
 
 			result = searchService.Search(criteria);
@@ -280,7 +280,7 @@ namespace VirtoCommerce.CatalogModule.Test
 			Assert.IsTrue(product.Links.Count() == 2);
 
 			//Check search 
-			var result = searchService.Search(new SearchCriteria { CatalogId = vCatalog.Id, CategoryId = vCategory.Id, ResponseGroup = ResponseGroup.WithItems });
+			var result = searchService.Search(new SearchCriteria { CatalogId = vCatalog.Id, CategoryId = vCategory.Id, ResponseGroup = ResponseGroup.WithProducts });
 			Assert.IsTrue(result.Products.Any(x => x.Id == product.Id));
 
 			//Remove link

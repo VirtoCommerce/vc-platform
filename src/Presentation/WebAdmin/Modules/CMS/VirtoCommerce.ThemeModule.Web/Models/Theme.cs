@@ -9,5 +9,6 @@ namespace VirtoCommerce.ThemeModule.Web.Models
 	{
 		public string Name { get; set; }
 		public string Path { get; set; }
+		public DateTime Modified { get; set; }
 	}
 }

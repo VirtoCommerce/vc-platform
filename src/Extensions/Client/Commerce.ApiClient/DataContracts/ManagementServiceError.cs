@@ -1,9 +1,14 @@
-﻿namespace VirtoCommerce.Web.Core.DataContracts
-{
-    #region
+﻿#region
 
-    using System.Collections.Generic;
-    using System.Runtime.Serialization;
+using System.Collections.Generic;
+using System.Runtime.Serialization;
+
+#endregion
+
+namespace VirtoCommerce.Web.Core.DataContracts
+{
+
+    #region
 
     #endregion
 

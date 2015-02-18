@@ -1,8 +1,13 @@
-﻿namespace VirtoCommerce.ApiClient.DataContracts.Contents
-{
-    #region
+﻿#region
 
-    using System.Collections.Generic;
+using System.Collections.Generic;
+
+#endregion
+
+namespace VirtoCommerce.ApiClient.DataContracts.Contents
+{
+
+    #region
 
     #endregion
 
@@ -12,8 +17,8 @@
 
         public DynamicContentItemGroup(string groupName)
         {
-            this.GroupName = groupName;
-            this.Items = new List<DynamicContentItem>();
+            GroupName = groupName;
+            Items = new List<DynamicContentItem>();
         }
 
         #endregion

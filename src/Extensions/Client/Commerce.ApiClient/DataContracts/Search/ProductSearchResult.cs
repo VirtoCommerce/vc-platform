@@ -1,8 +1,13 @@
-﻿namespace VirtoCommerce.ApiClient.DataContracts.Search
-{
-    #region
+﻿#region
 
-    using VirtoCommerce.Web.Core.DataContracts;
+using VirtoCommerce.Web.Core.DataContracts;
+
+#endregion
+
+namespace VirtoCommerce.ApiClient.DataContracts.Search
+{
+
+    #region
 
     #endregion
 

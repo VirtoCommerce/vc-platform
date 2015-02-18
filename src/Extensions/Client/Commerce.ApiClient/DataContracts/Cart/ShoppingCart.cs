@@ -1,9 +1,14 @@
-﻿namespace VirtoCommerce.ApiClient.DataContracts.Cart
-{
-    #region
+﻿#region
 
-    using System;
-    using System.Collections.Generic;
+using System;
+using System.Collections.Generic;
+
+#endregion
+
+namespace VirtoCommerce.ApiClient.DataContracts.Cart
+{
+
+    #region
 
     #endregion
 
