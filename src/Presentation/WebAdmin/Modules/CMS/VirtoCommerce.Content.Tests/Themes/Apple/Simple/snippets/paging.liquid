@@ -1,0 +1,6 @@
+{% if paginate.pages > 1 %}
+<br class="clear">
+<div id="paging" {% if template == "blog" %}class="blog"{% endif %}>
+  {{ paginate | default_pagination }}
+</div>
+{% endif %}

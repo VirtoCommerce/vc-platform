@@ -1,0 +1,104 @@
+{% include 'breadcrumb' %}
+<!--START BLOG-->
+<div class="twelve columns alpha omega">
+	<!--START POST-->
+	<article class="post {% if forloop.first %}first{% endif %} {% if forloop.last %}last{% endif %} clearfix">
+		<div class="two columns alpha date">
+			{{ article.published_at | date: '%d' }}
+			<span>{{ article.published_at | date: '%b' }} '{{ article.published_at | date: '%y' }}</span>
+		</div>
+		<div class="ten columns content  {% unless blog.comments_enabled? %}no-comments{% endunless %}   omega clearfix">
+			<h2>{{ article.title }}</h2>
+			<div class="info clearfix">
+				<div class="eight columns alpha">
+				{% capture tags %}{% if article.tags.size > 0 %}{% for tag in article.tags %}<a href="{{ blog.url }}/tagged/{{tag | handle }}">{{ tag }}</a>{% unless forloop.last %}, {% endunless %}{% endfor %}{% endif %}{% endcapture %}
+
+				{{ 'blogs.article.author_meta_html' | t: count: article.tags.size, author: article.author, tags: tags  }}
+
+				</div>
+				{% if blog.comments_enabled? %}
+				<div class="two columns omega comment-count">
+					<a href="{{ article.url }}#comments">{{ 'blogs.comments.comments_with_count' | t: count: article.comments_count }}</a>
+				</div>
+				{% endif %}
+			</div>
+			<div class="wysiwyg">
+			{{ article.content }}
+			</div>
+			<!--START ACTIONS-->
+			<div class="actions">
+				<div class="back">
+					<a href="{{ blog.url }}">{{ 'blogs.article.back_link' | t }}</a>
+				</div>
+				{% if settings.social_sharing_blog %}
+				<div class="social">
+					{% include 'social-sharing' %}
+				</div>
+				{% endif %}
+			</div>
+			<!--END ACTIONS-->
+		</div>
+	</article>
+	<!--END POST-->
+	<br class="break">
+	{% assign number_of_comments = article.comments_count %}
+	{% if comment and comment.created_at %}
+	  {% assign number_of_comments = article.comments_count | plus: 1 %}
+	{% endif %}
+	{% if blog.comments_enabled? %}
+	<!--START COMMENTS-->
+	<div class="ten columns offset-by-two alpha omega">
+		{% if number_of_comments > 0 %}
+		<section id="comments" class="clearfix">
+			<h2>{{ 'blogs.comments.comments_with_count' | t: count: article.comments_count }}</h2>
+			{% comment %}If a comment was just submitted with no blank field, let's show it.{% endcomment %}
+		    {% if comment and comment.created_at %}
+			<div class="comment">
+				<p> {{ comment.content }}</p>
+				{% assign comment_date = comment.created_at | date: "%B %d, %Y" %}
+				<p class="author">{{ 'blogs.comments.author_meta' | t: author: comment.author, date: comment_date }}</p>
+			</div>
+			{% endif %}
+			{% for comment in article.comments %}
+			<div class="comment">
+				<p> {{ comment.content }}</p>
+				{% assign comment_date = comment.created_at | date: "%B %d, %Y" %}
+				<p class="author">{{ 'blogs.comments.author_meta' | t: author: comment.author, date: comment_date }}</p>
+			</div>
+			{% endfor %}
+		</section>
+		{% endif %}
+		<section id="post-comment">
+			{% if comment and comment.created_at %}
+			<p class="success">
+		    	{% if blog.moderated? %}
+		    	{{ 'blogs.comments.success_moderated' | t }}
+		    	{% else %}
+		    	{{ 'blogs.comments.success' | t }}
+		    	{% endif %}
+		  	</p>
+			{% endif %}
+			<h2>{{ 'blogs.comments.title' | t }}</h2>
+			{% form "new_comment", article %}
+        {% if form.errors %}
+          {{ form.errors | default_errors }}
+        {% endif %}
+				<label for="comment-author">{{ 'blogs.comments.name_label' | t }}</label>
+				<input required class="long{% if form.errors contains "author" %} error{% endif %}" type="text" name="comment[author]" placeholder="{{ 'blogs.comments.name_label' | t }}" id="comment-author" value="{{ form.author }}" />
+				<label for="comment-email">{{ 'blogs.comments.email_label_html' | t }}</span></label>
+				<input required class="long {% if form.errors contains "email" %}error{% endif %}" type="email" name="comment[email]" placeholder="{{ 'blogs.comments.email_placeholder' | t }}" id="comment-email" value="{{ form.email }}" />
+				<label for="comment-body">{{ 'blogs.comments.comment_body_label' | t }}</label>
+				<textarea required class="long {% if form.errors contains "email" %}error{% endif %}" name="comment[body]" id="comment-body">{{ form.body }}</textarea>
+				<input type="submit" value="{{ 'blogs.comments.comment_submit' | t }}" />
+        {% if form.errors or form.posted_successfully? %}
+        <script>
+        window.location.hash = '#post-comment';
+        </script>
+        {% endif %}
+			{% endform %}
+		</section>
+	</div>
+	<!--END COMMENTS-->
+	{% endif %}
+</div>
+<!--END BLOG-->

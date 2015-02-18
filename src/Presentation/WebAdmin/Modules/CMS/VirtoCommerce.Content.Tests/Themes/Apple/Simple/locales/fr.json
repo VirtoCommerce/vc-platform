@@ -1,0 +1,274 @@
+{
+  "general": {
+    "meta": {
+      "tags": "Taggé \"{{ tags }}\"",
+      "page": "Page {{ page }}"
+    },
+    "404": {
+      "title": "Oups. Désolé, une erreur s'est produite.",
+      "hero": "404",
+      "subtext_html": "Nous ne trouvons pas la page que vous cherchez. Rendez-vous sur notre <a href=\"/\">page d'accueil</a>"
+    },
+    "breadcrumbs": {
+      "home": "Accueil",
+      "cart": "Panier",
+      "404": "Page introuvable",
+      "search": "Rechercher",
+      "collections_list": "Liste des collections",
+      "register": "Inscription",
+      "log_in": "Connexion",
+      "activate_account": "Activer le compte",
+      "account": "Mon compte",
+      "reset_password": "Réinitialiser le mot de passe"
+    },
+    "search": {
+      "title": "Résultats de recherche",
+      "no_results_html": "Aucun résultat trouvé pour <span>{{ terms }}</span>",
+      "results_html": "Résultats pour <span>{{ terms }}</span>",
+      "no_products": "Il n'y a aucun produit dans cette vue.",
+      "no_search_html": "Aucune recherche lancée. Si vous cherchez quelque chose, rendez-vous sur notre <a href=\"/\">page d'accueil</a>.",
+      "search_form_submit": "Rechercher"
+    }
+  },
+  "blogs": {
+    "article": {
+      "back_link": "Retour aux articles",
+      "author_meta_html": {
+        "zero": "Publié par <b>{{ author }}</b>",
+        "other": "Publié par <b>{{ author }}</b> dans {{ tags }}"
+      }
+    },
+    "comments": {
+      "title": "Publiez un commentaire!",
+      "author_meta": "Publié par {{ author }} sur {{ date }}",
+      "success": "Votre commentaire a bien été publié! Merci!",
+      "success_moderated": "Votre commentaire a bien été publié. Il sera publié dans quelques instants, suite à notre processus de modération.",
+      "name_label": "Votre nom",
+      "email_label_html": "Votre courriel <span>(nous ne le communiquons jamais)</span>",
+      "email_placeholder": "votreadresse@email.ca",
+      "comment_body_label": "Votre commentaire",
+      "comment_submit": "Publier un commentaire",
+      "comments_with_count": {
+        "one": "{{ count }} commentaire",
+        "other": "{{ count }} commentaires"
+      }
+    }
+  },
+  "layout": {
+    "general": {
+      "header_cart_title": "Mon panier",
+      "header_checkout_text": "Passer la commande",
+      "menu_title": "Menu"
+    },
+    "onboarding": {
+      "tagline_text": "Rendez-vous sur les paramètres de votre thème pour entrer votre phrase de présentation!"
+    },
+    "footer": {
+      "mailing_list_title": "Infolettre",
+      "mailing_list_label": "Votre adresse courriel",
+      "mailing_list_placeholder": "votreadresse@email.com",
+      "mailing_list_submit": "Inscription",
+      "mailing_list_success_message": "Merci pour votre inscription!",
+      "footer_menu_title": "Liens rapides"
+    },
+    "copyright": {
+      "copyright_html": "Tous droits réservés &copy; {{ year }}, {{ name }}"
+    }
+  },
+  "cart": {
+    "general": {
+      "title": "Mon panier",
+      "continue_link": "« Continuer vos achats",
+      "cart_total_html": "Total {{ price }}",
+      "remove": "Supprimer",
+      "update": "Actualiser",
+      "check_out": "Passer au paiement",
+      "cart_note_placeholder": "Ajouter un message à votre commande...",
+      "empty_cart_drawer_message": "Votre panier est vide.",
+      "empty_cart_message_html": "Votre panier est actuellement vide! <a href=\"/collections/all\">Continuer vos achats</a>."
+    },
+    "labels": {
+      "description": "Description",
+      "price": "Prix",
+      "quantity": "Qté",
+      "total": "Total"
+    }
+  },
+  "collections": {
+    "general": {
+      "empty_collection_message": "Il n'y a aucun produit dans cette collection!"
+    },
+    "collection_sorting": {
+      "collection_sorting_label": "Trier:",
+      "alphabetical_ascending": "A-Z",
+      "alphabetical_decending": "Z-A",
+      "date_decending": "Plus récent au plus ancien",
+      "date_ascending": "Plus ancien au plus récent",
+      "price_decending": "Prix : décroissant",
+      "price_ascending": "Prix : croissant",
+      "featured": "En vedette",
+      "best_selling": "Meilleurs vendeurs"
+    },
+    "products": {
+      "from": "À partir de",
+      "sale": "Promo",
+      "sold_out": "Épuisé"
+    },
+    "collection_list": {
+      "collection_list_title": "Collections de produits",
+      "items_with_count": {
+        "one": "{{ count }} produit",
+        "other": "{{ count }} produits"
+      }
+    }
+  },
+  "contact": {
+    "form": {
+      "name": "Nom :",
+      "email": "Courriel :",
+      "phone": "Téléphone :",
+      "message": "Message :",
+      "submit": "Envoyer",
+      "success": "Merci de nous avoir contacté. Nous vous répondrons dès que possible."
+    },
+    "errors": {
+      "message_html": "Le champ {{ field }} {{ error }}",
+      "errors_with_count": {
+        "one": "Oups, désolé, nous ne pouvons pas soumettre votre demande car elle contient une erreur. Veuillez la corriger avant de l'envoyer à nouveau.",
+        "other": "Oups, désolé, nous ne pouvons pas soumettre votre demande car elle contient quelques erreurs. Veuillez la corriger avant de l'envoyer à nouveau."
+      }
+    }
+  },
+  "products": {
+    "product": {
+      "on_sale": "Promotions",
+      "product_description_label": "Description du produit",
+      "second_tab_label": "Information de livraison",
+      "related_products_label": "Vous aimerez peut-être aussi...",
+      "add_to_cart": "Ajouter au panier",
+      "sold_out": "Épuisé",
+      "unavailable": "Indisponible"
+    }
+  },
+  "home_page": {
+    "onboarding": {
+      "no_products_title": "Ajouter un produit à la collection Frontpage. ",
+      "no_products_html": "Il vous faudra moins d'une minute pour <a href=\"/admin/products\">ajouter votre premier produit</a> à votre magasin. Assurez-vous de l'ajouter à la collection <strong>Frontpage</strong>.",
+      "pick_collection_subtext_html": "Vous pouvez également choisir quelle collection sera affichée dans cet espace et montrer une bannière en réglant les <a href=\"/admin/themes/current/settings\">paramètres de votre thème</a>.",
+      "image_placeholder": "Image de produit",
+      "test_product_title": "Example de produit"
+    }
+  },
+  "customer": {
+    "general": {
+      "return_to_account_link": "Revenir aux détails du compte",
+      "or": "ou"
+    },
+    "account": {
+      "your_account": "Votre compte",
+      "log_in": "Connexion",
+      "create_account": "Inscription",
+      "log_out": "Déconnexion",
+      "orders": "Votre commande",
+      "title": "Détails du compte et historique des commandes",
+      "view_addresses": "Adresses ({{ count }})"
+    },
+    "activate_account": {
+      "title": "Activer le compte",
+      "subtext": "Créer votre mot de passe pour activer votre compte.",
+      "password": "Mot de passe",
+      "password_confirm": "Confirmer le mot de passe ",
+      "submit": "Activer le compte",
+      "cancel": "Décliner l'invitation"
+    },
+    "addresses": {
+      "title": "Carnet d’adresses",
+      "default": "(Défaut)",
+      "add_new": "Ajouter une nouvelle adresse",
+      "first_name": "Prénom",
+      "last_name": "Nom",
+      "company": "Société",
+      "address1": "Adresse 1",
+      "address2": "Adresse 2",
+      "city": "Ville",
+      "country": "Pays",
+      "province": "Province",
+      "zip": "Code postal/ZIP ",
+      "phone": "Téléphone",
+      "set_default": "Définir comme adresse par défaut",
+      "add": "Ajouter une adresse",
+      "update": "Actualiser une adresse",
+      "cancel": "Annuler",
+      "edit": "Éditer",
+      "delete": "Supprimer"
+    },
+    "login": {
+      "title": "Connexion",
+      "email": "Courriel",
+      "password": "Mot de passe",
+      "forgot_password": "Mot de passe oublié?",
+      "forgot_password_submit_button": "Envoyer",
+      "sign_in": "Connexion",
+      "guest_title": "Connexion visiteur",
+      "guest_submit": "Continuer en tant que visiteur"
+    },
+    "orders": {
+      "order_number": "Commande",
+      "date": "Date",
+      "payment_status": "État du paiement",
+      "fulfillment_status": "État du traitement de la commande",
+      "total": "Total",
+      "none": "Vous n'avez pas encore passé de commande."
+    },
+    "order": {
+      "date": "Commandé le {{ date }}",
+      "order_details": "Détails de la commande",
+      "cancelled": "Commande annulée le {{ date }}",
+      "cancelled_reason": "Raison : {{ reason }}",
+      "billing_address": "Adresse de facturation",
+      "payment_status_html": "<strong>État du paiement:</strong> {{ status }}",
+      "shipping_address": "Adresse de livraison",
+      "fulfillment_status_html": "<strong>État du traitement de la commande :</strong> {{ status }}",
+      "fulfillment_date": "Commande expédiée {{ date }}",
+      "item": "Article",
+      "sku": "Articles en stock",
+      "price": "Prix",
+      "quantity": "Quantité",
+      "discount": "Code promo",
+      "total": "Total"
+    },
+    "recover_password": {
+      "title": "Réinitialiser votre mot de passe",
+      "email": "Courriel",
+      "cancel": "Annuler",
+      "subtext": "Nous vous enverrons un courriel pour réinitialiser votre mot de passe."
+    },
+    "reset_password": {
+      "title": "Réinitialiser le mot de passe de votre compte",
+      "subtext": "Entrer un nouveau mot de passe pour {{ email }}",
+      "password": "Mot de passe",
+      "password_confirm": "Confirmer le mot de passe",
+      "submit": "Réinitialiser le mot de passe"
+    },
+    "register": {
+      "title": "Créer un compte",
+      "first_name": "Prénom",
+      "last_name": "Nom",
+      "email": "Courriel",
+      "password": "Mot de passe",
+      "submit": "Créer"
+    }
+  },
+  "gift_cards": {
+    "issued": {
+      "title": "Voici une carte-cadeau de {{ value }} pour {{ shop }}!",
+      "subtext": "Voici votre carte-cadeau!",
+      "disabled": "Non valide",
+      "expired": "Expiré le {{ expiry }}",
+      "active": "Expire le {{ expiry }}",
+      "redeem": "Utilisez ce code pour utiliser votre carte-cadeau au moment d'effectuer le paiement",
+      "shop_link": "Magasiner",
+      "print": "Imprimer"
+    }
+  }
+}

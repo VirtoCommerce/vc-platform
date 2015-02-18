@@ -1,0 +1,110 @@
+<!-- /snippets/collection-sidebar.liquid -->
+{% comment %}
+
+  Side navigation for the product types, vendors, and tags.
+  These can be based on the current collection or all products. Details in comments below.
+
+  Note: Clicking on a tag will filter the products within the current collection.
+  Clicking on a type or vendor link will take you out of the current collection
+  to a standalone collection page. E.g. /collections/vendors?q=Pepsi
+
+{% endcomment %}
+
+{% comment %}
+  Product types in the current collection
+    - List all of the shop's types with collections.all.all_types
+    - List the current collection's types with collection.all_types
+{% endcomment %}
+{% if collection.all_types.size > 0 %}
+<h3>{{ 'collections.sidebar.types' | t }}</h3>
+  <ul>
+    {% for type in collection.all_types %}
+      {% if collection.current_type == type %}
+        <li class="filter--active">
+          {{ type }}
+        </li>
+      {% else %}
+        <li>
+          {{ type | link_to_type }}
+        </li>
+      {% endif %}
+    {% endfor %}
+  </ul>
+{% endif %}
+
+{% comment %}
+  Product vendors in the current collection
+    - List all of the shop's vendors with collections.all.all_vendors
+    - List the current collection's vendors with collection.all_vendors
+{% endcomment %}
+{% if collection.all_vendors.size > 1 %}
+  <h3>{{ 'collections.sidebar.vendors' | t }}</h3>
+  <ul>
+    {% for vendor in collection.all_vendors %}
+      {% if collection.current_vendor == vendor %}
+        <li class="filter--active">
+          {{ vendor }}
+        </li>
+      {% else %}
+        <li>
+          {{ vendor | link_to_vendor }}
+        </li>
+      {% endif %}
+    {% endfor %}
+  </ul>
+{% endif %}
+
+{% comment %}
+  Product tags in the current collection
+{% endcomment %}
+{% if collection.all_tags.size > 0 %}
+  <h3>{{ 'collections.sidebar.tags' | t }}</h3>
+
+  {% comment %}
+    To provide a 'catch-all' link at the top of the list,
+    check against the collection.handle, product type, and vendor.
+  {% endcomment %}
+  <ul>
+    <li{% unless current_tags %} class="filter--active"{% endunless %}>
+
+      {% comment %}
+        Good for /collections/all collection and regular collections
+      {% endcomment %}
+      {% if collection.handle %}
+        <a href="/collections/{{ collection.handle }}">All {{ collection.title }}</a>
+
+      {% comment %}
+        Good for automatic type collections
+      {% endcomment %}
+      {% elsif collection.current_type %}
+        <a href="{{ collection.current_type | url_for_type }}">All {{ collection.title }}</a>
+
+      {% comment %}
+        Good for automatic vendor collections
+      {% endcomment %}
+      {% elsif collection.current_vendor %}
+        <a href="{{ collection.current_vendor | url_for_vendor }}">All {{ collection.title }}</a>
+
+      {% endif %}
+    </li>
+
+    {% comment %}
+      And for the good stuff, loop through the tags themselves.
+    {% endcomment %}
+    {% for tag in collection.all_tags %}
+      {% if current_tags contains tag %}
+        <li class="filter--active">
+          {{ tag | link_to_remove_tag: tag }}
+        </li>
+      {% else %}
+        <li>
+          {% comment %}
+            Use link_to_add_tag if you want to allow filtering
+            by multiple tags
+          {% endcomment %}
+          {{ tag | link_to_tag: tag }}
+        </li>
+      {% endif %}
+    {% endfor %}
+  </ul>
+{% endif %}

@@ -5,6 +5,8 @@ namespace VirtoCommerce.ApiClient.DataContracts.Order
 {
     public class CustomerOrder : Operation
     {
+        public string Id { get; set; }
+
         public string CustomerId { get; set; }
 
         public string StoreId { get; set; }
@@ -15,11 +17,13 @@ namespace VirtoCommerce.ApiClient.DataContracts.Order
 
         public string EmployeeId { get; set; }
 
+        public Discount Discount { get; set; }
+
         public List<Address> Addresses { get; set; }
 
         public List<Shipment> Shipments { get; set; }
 
-        public List<LineItem> LineItems { get; set; }
+        public List<LineItem> Items { get; set; }
 
         public List<PaymentIn> InPayments { get; set; }
     }

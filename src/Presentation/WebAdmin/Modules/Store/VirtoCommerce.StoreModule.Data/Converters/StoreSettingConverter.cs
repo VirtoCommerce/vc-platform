@@ -53,10 +53,10 @@ namespace VirtoCommerce.StoreModule.Data.Converters
 			if (target == null)
 				throw new ArgumentNullException("target");
 
-			var patchInjection = new PatchInjection<foundationModel.StoreSetting>(x => x.BooleanValue, x => x.DateTimeValue,
+			var patchInjectionPolicy = new PatchInjection<foundationModel.StoreSetting>(x => x.BooleanValue, x => x.DateTimeValue,
 																					   x => x.DecimalValue, x => x.IntegerValue, 
 																					   x => x.Locale, x => x.LongTextValue, x=>x.ValueType);
-			target.InjectFrom(patchInjection, source);
+			target.InjectFrom(patchInjectionPolicy, source);
 
 		}
 

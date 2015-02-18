@@ -25,7 +25,7 @@ namespace VirtoCommerce.OrderModule.Data.Model
 		[StringLength(64)]
 		public string OrganizationId { get; set; }
 		[StringLength(64)]
-		public string FulfilmentCenterId { get; set; }
+		public string FulfillmentCenterId { get; set; }
 		[StringLength(64)]
 		public string EmployeeId { get; set; }
 		[StringLength(64)]

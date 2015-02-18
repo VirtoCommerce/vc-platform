@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<!--[if lt IE 7 ]><html class="ie ie6" lang="en"> <![endif]-->
+<!--[if IE 7 ]><html class="ie ie7" lang="en"> <![endif]-->
+<!--[if IE 8 ]><html class="ie ie8" lang="en"> <![endif]-->
+<!--[if (gte IE 9)|!(IE)]><!--><html lang="en"> <!--<![endif]-->
+<head>
+  <title>
+  {{ page_title }}{% if current_tags %}{% assign meta_tags = current_tags | join: ', ' %} &ndash; {{ 'general.meta.tags' | t: tags: meta_tags }}{% endif %}{% if current_page != 1 %} &ndash; {{ 'general.meta.page' | t: page: current_page }}{% endif %}{% unless page_title contains shop.name %} &ndash; {{ shop.name }}{% endunless %}
+  </title>
+  {% if page_description %}
+  <meta name="description" content="{{ page_description | escape }}" />
+  {% endif %}
+  <link rel="canonical" href="{{ canonical_url }}" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  {% include 'facebook-open-graph' %}
+  {% include 'twitter-cards' %}
+  {% if settings.header_font contains "PT Serif" or settings.body_font contains "PT Serif" %}
+  <link href='//fonts.googleapis.com/css?family=PT+Serif' rel='stylesheet' type='text/css'>
+  {% endif %}
+  {% if settings.header_font contains "Source Sans Pro" or settings.body_font contains "Source Sans Pro" %}
+  <link href='//fonts.googleapis.com/css?family=Source+Sans+Pro:600' rel='stylesheet' type='text/css'>
+  {% endif %}
+  {% if settings.header_font contains "Cabin" or settings.body_font contains "Cabin" %}
+  <link href='//fonts.googleapis.com/css?family=Cabin:400,700' rel='stylesheet' type='text/css'>
+  {% endif %}
+  {% if settings.header_font contains "Open Sans Condensed" or settings.body_font contains "Open Sans Condensed" %}
+  <link href='//fonts.googleapis.com/css?family=Open+Sans+Condensed:300' rel='stylesheet' type='text/css'>
+  {% endif %}
+  {{ 'theme.scss.css' | asset_url | stylesheet_tag }}
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js" type="text/javascript"></script>
+  {{ 'jquery.fancybox.js' | asset_url | script_tag }}
+  {% if template contains "product" %}
+  <script src="{{ 'jquery.zoom.min.js' | asset_url }}" type="text/javascript"></script>
+  {% endif %}
+  <!--[if lt IE 9]>
+    <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+  {% if template contains 'customers' %}
+    {{ 'shopify_common.js' | shopify_asset_url | script_tag }}
+    {{ 'customer_area.js'  | shopify_asset_url | script_tag }}
+  {% endif %}
+  <!--[if lt IE 8]>
+    {{ 'json2.js' | shopify_asset_url | script_tag }}
+  <![endif]-->
+  {{ 'option_selection.js' | shopify_asset_url | script_tag }}
+  <link rel="shortcut icon" href="{{ 'favicon.ico' | asset_url }}">
+  <link rel="apple-touch-icon" href="{{ 'apple-touch-icon.png' | asset_url }}">
+  <link rel="apple-touch-icon" sizes="72x72" href="{{ 'apple-touch-icon-72x72.png' | asset_url }}">
+  <link rel="apple-touch-icon" sizes="114x114" href="{{ 'apple-touch-icon-114x114.png' | asset_url }}">
+  <script> Shopify.money_format = "{{ shop.money_format }}";</script>
+  {{ 'jquery.theme.js' | asset_url | script_tag }}
+  {{ content_for_header }}
+</head>
+
+<body id="{{ page_title | handle }}" class="{% if customer %}customer-logged-in {% endif %}template-{{ template | replace: '.', ' ' | truncatewords: 1, '' | handle }}" >
+  <div id="cart-animation">1</div>
+  <div id="fb-root"></div>
+  <script>(function(d, s, id) {
+    var js, fjs = d.getElementsByTagName(s)[0];
+    if (d.getElementById(id)) return;
+    js = d.createElement(s); js.id = id;
+    js.src = "//connect.facebook.net/en_US/all.js#xfbml=1&appId=1743713679100277";
+    fjs.parentNode.insertBefore(js, fjs);
+  }(document, 'script', 'facebook-jssdk'));</script>
+  <!--START DRAWER-->
+  <div id="drawer">
+    <div class="container">
+      {% if cart.item_count > 0 %}
+      <form action="/cart" method="post">
+        {% for item in cart.items %}
+        <!-- START ROW-->
+        <div class="row {% if forloop.first %}first{% endif %}">
+          <div class="nine columns description">
+            <img src="{{ item | img_url: 'compact' }}" alt="{{ item.title | escape }}" />
+            <div class="info">
+              <h3>
+                <a href="{{ item.url | within: collections.all }}"> 
+                    {{ item.title }}
+                    {% if item.product.variants.size == 1 %}
+                    {% unless item.variant.title contains 'Default' %}
+                    - {{ item.variant.title }}
+                    {% endunless %}
+                    {% endif %}
+                </a>
+              </h3>
+              <h4>{{ item.vendor }}</h4>
+              <p>{{ item.product.description | strip_html | truncatewords: 20 }}</p>
+              <p class="mobile">{{ item.quantity }} x {{ item.price | money }}</p>
+            </div>
+          </div>
+          <div class="two columns price desktop">
+            {{ item.price | money }}
+          </div>
+          <div class="two columns quantity desktop">
+            <input type="text" name="updates[]" id="updates_{{ item.id }}" value="{{ item.quantity }}" />
+          </div>
+          <div class="two columns total desktop">
+            {{ item.line_price | money }}
+          </div>
+          <div class="one column remove desktop">
+            <a href="/cart/change?line={{ forloop.index }}&quantity=0" class="removeLine" rel="{{ item.variant.id }}">{{ 'cart.general.remove' | t }}</a>
+          </div>
+        </div>
+        <!-- END ROW-->
+        {% endfor %}
+        <!-- START ACTIONS -->
+        <div class="actions">
+          <input type="submit" value="{{ 'cart.general.check_out' | t }}" />
+        </div>
+        <!-- END ACTIONS -->
+      </form>
+      {% else %}
+      <div class="sixteen columns description">
+        <p class="empty">{{ 'cart.general.empty_cart_drawer_message' | t }}</p>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+  <!--END DRAWER-->
+   <!--START HEADER-->
+  <header>
+    <!--START CONTAINER-->
+    <div class="container upper">
+      <!--START SIDEBAR-->
+      <div class="three columns product-search-wrapper">
+        <div id="product-search">
+          <form action="/search" method="get" class="search-form" role="search">
+            <input type="hidden" name="type" value="product" />
+            <input type="submit" id="search-submit" class="icon {% if settings.light_search_icon %}light{% endif %}" />
+            <input class="search" placeholder="{{ 'general.search.search_form_submit' | t }}" name="q" type="text" id="search-field"  />
+          </form>
+          <br class="clear">
+        </div>
+      </div>
+      <!--END SIDEBAR-->
+      <!--START TOP NAV-->
+      <div class="seven columns offset-by-one desktop">
+        <nav>
+          {% for link in linklists[settings.secondary_menu].links %}
+          <a href="{{ link.url }}">{{ link.title }}</a>
+          {% endfor %}
+          {% if shop.customer_accounts_enabled %}
+            {% if customer %}
+              <a href="/account">{{ 'customer.account.your_account' | t }}</a> 
+              {{ 'customer.account.log_out' | t | customer_logout_link }}
+            {% else %}
+              {{ 'customer.account.log_in' | t | customer_login_link }} 
+              {% if shop.customer_accounts_optional %}
+                {{ 'customer.account.create_account' | t | customer_register_link }}
+              {% endif %}
+            {% endif %}
+          {% endif %}
+        </nav>
+      </div>
+      <!--END TOP NAV-->
+      <!--START MINICART-->
+      <div class="five columns minicart-wrapper">
+        <div id="minicart">
+          <a href="#" class="toggle-drawer cart desktop {% if settings.light_cart_icon %}light{% endif %}">{{ 'layout.general.header_cart_title' | t }}<span id="cart-target-desktop" class="count cart-target"> ({{ cart.item_count }})</span></a>
+          <a href="/cart" class="cart mobile {% if settings.light_cart_icon %}light{% endif %} cart-target">{{ 'layout.general.header_cart_title' | t }}<span id="cart-target-mobile" class="count cart-target"> ({{ cart.item_count }})</span></a>
+          <a href="/cart" class="checkout">{{ 'layout.general.header_checkout_text' | t }}</a>
+        </div>
+      </div>
+      <!--END MINI CART-->
+    </div>
+    <!--END CONTAINER-->
+
+    <!--START CONTAINER-->
+    <div class="container lower">
+      <div class="sixteen columns">
+        <div class="table logo-tagline">
+          <div class="table-cell">
+            <h1 id="logo">
+              <a href="/">
+                {% if settings.use_logo %}
+                {{ 'logo.png' | asset_url | img_tag: shop.name }}
+                {% else %}
+                <span class="no-logo">{{ shop.name }}</span>
+                {% endif %}
+              </a>
+            </h1>
+          </div>
+
+          <div class="table-cell">
+            <div id="tagline" class="desktop">
+              <h3>
+              {% if settings.show_tagline %}
+                {% if settings.tagline == blank %}
+                {{ 'layout.onboarding.tagline_text' | t }}
+                {% else %}
+                {{ settings.tagline }}
+                {% endif %}
+              {% endif %}
+              </h3>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </header>
+    <!--START HEADER-->
+  <!--START CONTAINER-->
+  <div class="container">
+    <!--START SIDEBAR-->
+    <div id="sidebar" class="three columns">
+      <nav>
+        <a href="#" id="toggle-menu" class="mobile"><span>{{ 'layout.general.menu_title' | t }}</span></a>
+        <ul id="main-menu" class="accordion">
+          {% for link in linklists.main-menu.links %}         
+            {% assign has_sub_menu = false %}
+            {% assign parent_link_active = false %}
+            {% assign child_list_handle = link.title | handle %}
+            {% if linklists[child_list_handle] and linklists[child_list_handle].links.size > 0 %}
+              {% assign has_sub_menu = true %}
+              {% for l in linklists[child_list_handle].links %}
+                {% if l.active %}
+                  {% assign parent_link_active = true %}
+                {% endif %}
+              {% endfor %}
+            {% endif %}              
+            {% if has_sub_menu %}               
+            <li>    
+              <a href="#" class="accordion-button">{{ link.title }}
+                <span>{% if link.active or parent_link_active  %}-{% else %}+{% endif %}</span>
+              </a>
+              <div class="accordion-content" {% unless parent_link_active %}style="display:none"{% endunless %} >
+                {% for l in linklists[child_list_handle].links %}
+                  <a href="{{ l.url }}" {% if l.active %}class="active"{% endif %}>{{ l.title }} </a>
+                {% endfor %}
+              </div>
+            </li>              
+            {% else %}             
+            <li><a href="{{ link.url }}">{{ link.title }}</a></li>
+            {% endif %}
+          {% endfor %}
+          {% if shop.customer_accounts_enabled %}
+            {% if customer %}
+            <li class="mobile"><a href="/account">{{ 'customer.account.your_account' | t }}</a></li>
+            <li class="mobile">{{ 'customer.account.log_out' | t | customer_logout_link }}</li>
+            {% else %}
+            <li class="mobile">{{ 'customer.account.log_in' | t | customer_login_link }}</li>
+            {% if shop.customer_accounts_optional %}
+            <li class="mobile">{{ 'customer.account.create_account' | t | customer_register_link }}</li>
+            {% endif %}
+            {% endif %}
+          {% endif %}
+        </ul>
+        <div id="social">
+          {% if settings.facebook_url != blank %}<a href="{{ settings.facebook_url }}" target="_blank" class="facebook {% if settings.light_social_icons %}light{% endif %}"></a>{% endif %}
+          {% if settings.twitter_url != blank  %}<a href="{{ settings.twitter_url }}" target="_blank" class="twitter {% if settings.light_social_icons %}light{% endif %}"></a>{% endif %}
+          {% if settings.instagram_url != blank  %}<a href="{{ settings.instagram_url }}" target="_blank" class="instagram {% if settings.light_social_icons %}light{% endif %}"></a>{% endif %}
+          {% if settings.pinterest_url != blank  %}<a href="{{ settings.pinterest_url }}" target="_blank" class="pinterest {% if settings.light_social_icons %}light{% endif %}"></a>{% endif %}
+          {% if settings.youtube_url != blank  %}<a href="{{ settings.youtube_url }}" target="_blank" class="youtube {% if settings.light_social_icons %}light{% endif %}"></a>{% endif %}
+          {% if settings.vimeo_url != blank  %}<a href="{{ settings.vimeo_url }}" target="_blank" class="vimeo {% if settings.light_social_icons %}light{% endif %}"></a>{% endif %}
+          {% if settings.flickr_url != blank  %}<a href="{{ settings.flickr_url }}" target="_blank" class="flickr {% if settings.light_social_icons %}light{% endif %}"></a>{% endif %}
+          {% if settings.show_rss == true %}<a href="/blogs/{{ settings.main_blog }}.atom" target="_blank" class="rss {% if settings.light_social_icons %}light{% endif %}"></a>{% endif %}
+        </div>
+      </nav>
+    </div>
+    <!--END SIDEBAR-->
+    <!--START MAIN-->
+    <div id="main" class="twelve columns offset-by-one">
+      <div id="page-content">  
+      {{ content_for_layout }}
+      <br class="clear">
+      </div>
+    </div>
+    <!--END MAIN-->
+    <br class="clear">
+    <!--START FOOTER-->
+    <footer>
+      <section class="upper">
+
+        <!--START NAV-->
+        <div class="three columns ">
+          <nav>
+            {% if settings.secondary_menu != blank %}
+	            <h2>{{ 'layout.footer.footer_menu_title' | t }}</h2>
+	            {% for link in linklists[settings.secondary_menu].links %}
+	              <a href="{{ link.url }}">{{ link.title }}</a> {% unless forloop.last %}<br>{% endunless %}
+	            {% endfor %}
+            {% endif %}
+          </nav>
+        </div>
+        <!--END NAV-->
+
+        <!--START PAGE CONTENT-->
+        <div class="eight offset-by-one columns">
+          <div id="footer-content">
+            {% if settings.footer_page == blank %}
+            {% else %}
+            <h2>{{ pages[settings.footer_page].title }}</h2>
+            <div>{{ pages[settings.footer_page].content }}</div>
+            {% endif %}
+            {% if settings.show_signup_form %}{% include 'credit-cards' %}{% endif %}
+          </div>
+        </div>
+        <!--END PAGE CONTENT-->
+
+        <!--START MAILING LIST / OR CREDIT CARDS-->
+        <div class="three columns offset-by-one">
+          {% if settings.show_signup_form %}
+          <div id="mailing-list">
+            <h2>{{ 'layout.footer.mailing_list_title' | t }}</h2>
+            {% if settings.mailchimp_form_action.size > 0 %}
+            <form action="{{ settings.mailchimp_form_action }}" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank">
+              <label>{{ 'layout.footer.mailing_list_label' | t }}</label>
+              <input type="email" placeholder="{{ 'layout.footer.mailing_list_placeholder' | t }}" name="EMAIL" id="email-input" />
+              <input type="submit" value="{{ 'layout.footer.mailing_list_submit' | t }}" id="email-submit" />
+            </form>
+            {% else %}
+              <form id="email-alerts-footer" class="mailing-list" action="/contact" method="post">
+                <input type="hidden" value="customer" name="form_type">  
+                <span class="success"><em>{{ 'layout.footer.mailing_list_success_message' | t }}</em></span>
+                <input type="hidden" id="contact_tags" name="contact[tags]" value="prospect,mailing-list" />
+                <input type="hidden" id="mailinglist-first-name" name="contact[first_name]" value="Subscriber" />
+                <input type="hidden" id="mailinglist-last-name" name="contact[last_name]" value="Mailing List" />
+                <label>{{ 'layout.footer.mailing_list_label' | t }}</label>
+                <input type="email" placeholder="{{ 'layout.footer.mailing_list_placeholder' | t }}" name="contact[email]" id="email-input" class="required email" />
+                <input type="submit" value="{{ 'layout.footer.mailing_list_submit' | t }}" class="button secondary" name="subscribe" id="email-submit" />
+              </form>
+            {% endif %}
+          </div>
+          {% else %}
+          {% include 'credit-cards' %}
+          {% endif %}
+        </div>
+        <!--END MAILING LIST / CREDIT CARDS-->
+
+        <br class="clear">
+      </section>
+      <section class="lower">
+        <div class="nine columns">
+          <div class="legals">
+          {% assign current_year = 'now' | date: "%Y" %}
+            {{ 'layout.copyright.copyright_html' | t: year: current_year, name: shop.name }}. {{ powered_by_link }}.
+          </div>
+        </div>
+        <div class="six columns offset-by-one">
+          {% if linklists.footer.links.size > 0 %}
+          <nav>
+            {% for link in linklists.footer.links %}
+                  <a href="{{ link.url }}" title="{{ link.title }}">{{ link.title }}</a>
+              {% endfor %}
+          </nav>
+          {% endif %}
+        </div>
+      </section>
+      <br class="clear">
+    </footer>
+    <!--END FOOTER-->
+  </div>
+  <!-- END CONTAINER-->
+</body>
+</html>

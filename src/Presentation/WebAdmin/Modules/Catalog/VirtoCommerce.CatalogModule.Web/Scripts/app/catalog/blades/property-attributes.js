@@ -32,7 +32,7 @@
 
     $scope.bladeToolbarCommands = [
      {
-         name: "Delete", icon: 'icon-remove',
+         name: "Delete", icon: 'fa fa-trash-o',
          executeMethod: function () {
              deleteChecked();
          },

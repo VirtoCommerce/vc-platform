@@ -1,0 +1,27 @@
+<!-- /templates/list-collections.liquid -->
+{% comment %}
+
+  This page represents the /collections and /products pages.
+  It is an optional, but highly recommended, template for your theme.
+
+  More info:
+    - http://docs.shopify.com/manual/configuration/store-customization/taking-control-of-collections-listing
+
+{% endcomment %}
+
+{% include 'breadcrumb' %}
+
+{% comment %}
+  Loop through each collection, except 'frontpage'
+{% endcomment %}
+{% for collection in collections %}
+
+  {% unless collection.handle == 'frontpage' %}
+
+    {% include 'collection-list-item' %}
+
+    {% unless forloop.last %}<hr>{% endunless %}
+
+  {% endunless %}
+
+{% endfor %}

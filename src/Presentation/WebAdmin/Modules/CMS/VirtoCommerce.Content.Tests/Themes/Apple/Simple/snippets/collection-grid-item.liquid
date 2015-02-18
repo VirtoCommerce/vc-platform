@@ -1,0 +1,10 @@
+<!-- START COLLECTION -->
+<div class="four columns {% cycle 'alpha','','omega' %}">
+  <a href="{{ collection.url }}" id="product-{{ forloop.index }}" class="animated fadeInUpBig">{% if collection.image %}
+    <img src="{{ collection.image.src | collection_img_url: 'large' }}" alt="{{ collection.title | escape }}" class="product" /><br>{% else %}
+    <img src="{{ collection.products.first.featured_image.src | product_img_url: 'large' }}" alt="{{ collection.title | escape }}" class="product" /><br>{% endif %}
+	  <h3>{{ collection.title }} {{ 'collections.collection_list.items_with_count' | t: count: collection.all_products_count }}</h3>
+  </a>
+</div>
+<!--END COLLECTION -->
+{% cycle '', '', '<br class="clear">' %}

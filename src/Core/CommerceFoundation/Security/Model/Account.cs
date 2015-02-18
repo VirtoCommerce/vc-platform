@@ -1,134 +1,138 @@
 ﻿using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.Data.Services.Common;
 using System.Runtime.Serialization;
 using VirtoCommerce.Foundation.Frameworks;
 
 namespace VirtoCommerce.Foundation.Security.Model
 {
-    [DataContract]
-    [EntitySet("Accounts")]
-    [DataServiceKey("AccountId")]
-    public class Account : StorageEntity
-    {
-        public Account()
+	[DataContract]
+	[EntitySet("Accounts")]
+	[DataServiceKey("AccountId")]
+	public class Account : StorageEntity
+	{
+		public Account()
 		{
-            _AccountId = GenerateNewKey();
+			_accountId = GenerateNewKey();
 		}
 
-        private string _AccountId;
+		private string _accountId;
 		[Key]
 		[DataMember]
-        public string AccountId
+		public string AccountId
 		{
 			get
 			{
-                return _AccountId;
+				return _accountId;
 			}
 			set
 			{
-                SetValue(ref _AccountId, () => this.AccountId, value);
+				SetValue(ref _accountId, () => AccountId, value);
 			}
 		}
 
-        private string _StoreId;
-        [DataMember]
-        [StringLength(128)]
-        public string StoreId
-        {
-            get
-            {
-                return _StoreId;
-            }
-            set
-            {
-                SetValue(ref _StoreId, () => this.StoreId, value);
-            }
-        }
+		private string _storeId;
+		[DataMember]
+		[StringLength(128)]
+		public string StoreId
+		{
+			get
+			{
+				return _storeId;
+			}
+			set
+			{
+				SetValue(ref _storeId, () => StoreId, value);
+			}
+		}
 
-        private string _MemberId;
-        [DataMember]
-        [StringLength(64)]
-        public string MemberId
-        {
-            get
-            {
-                return _MemberId;
-            }
-            set
-            {
-                SetValue(ref _MemberId, () => this.MemberId, value);
-            }
-        }
+		private string _memberId;
+		[DataMember]
+		[StringLength(64)]
+		public string MemberId
+		{
+			get
+			{
+				return _memberId;
+			}
+			set
+			{
+				SetValue(ref _memberId, () => MemberId, value);
+			}
+		}
 
-        private string _UserName;
-        [DataMember]
-        [Required]
-        [StringLength(128)]
-        public string UserName
-        {
-            get
-            {
-                return _UserName;
-            }
-            set
-            {
-                SetValue(ref _UserName, () => this.UserName, value);
-            }
-        }
+		private string _userName;
+		[DataMember]
+		[Required]
+		[StringLength(128)]
+		public string UserName
+		{
+			get
+			{
+				return _userName;
+			}
+			set
+			{
+				SetValue(ref _userName, () => UserName, value);
+			}
+		}
 
-        /// <summary>
-        /// registration type, can be 
-        /// R - Registered user
-        /// G - Guest User
-        /// A - Administrator
-        /// S - Site Administrator
-        /// </summary>
-        private int _RegisterType;
-        [DataMember]
-        public int RegisterType
-        {
-            get
-            {
-                return _RegisterType;
-            }
-            set
-            {
-                SetValue(ref _RegisterType, () => this.RegisterType, value);
-            }
-        }
+		/// <summary>
+		/// registration type, can be 
+		/// R - Registered user
+		/// G - Guest User
+		/// A - Administrator
+		/// S - Site Administrator
+		/// </summary>
+		private int _registerType;
+		[DataMember]
+		public int RegisterType
+		{
+			get
+			{
+				return _registerType;
+			}
+			set
+			{
+				SetValue(ref _registerType, () => RegisterType, value);
+			}
+		}
 
-        private int _AccountState;
-        [DataMember]
-        public int AccountState
-        {
-            get
-            {
-                return _AccountState;
-            }
-            set
-            {
-                SetValue(ref _AccountState, () => this.AccountState, value);
-            }
-        }
+		private int _accountState;
+		[DataMember]
+		public int AccountState
+		{
+			get
+			{
+				return _accountState;
+			}
+			set
+			{
+				SetValue(ref _accountState, () => AccountState, value);
+			}
+		}
 
-        #region Navigation Properties
+		#region Navigation Properties
 
-        private ObservableCollection<RoleAssignment> _roleAssignments = null;
-        [DataMember]
-        public ObservableCollection<RoleAssignment> RoleAssignments
-        {
-            get
-            {
-                if (_roleAssignments == null)
-                    _roleAssignments = new ObservableCollection<RoleAssignment>();
+		private ObservableCollection<RoleAssignment> _roleAssignments;
+		[DataMember]
+		public ObservableCollection<RoleAssignment> RoleAssignments
+		{
+			get
+			{
+				return _roleAssignments ?? (_roleAssignments = new ObservableCollection<RoleAssignment>());
+			}
+		}
 
-                return _roleAssignments;
-            }
-        }
+		private ObservableCollection<ApiAccount> _apiAccounts;
+		public ObservableCollection<ApiAccount> ApiAccounts
+		{
+			get
+			{
+				return _apiAccounts ?? (_apiAccounts = new ObservableCollection<ApiAccount>());
+			}
+		}
 
-        #endregion
-
-    }
+		#endregion
+	}
 }

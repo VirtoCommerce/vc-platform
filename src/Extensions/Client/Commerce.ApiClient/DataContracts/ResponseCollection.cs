@@ -1,18 +1,35 @@
-﻿using System.Collections.ObjectModel;
-using Newtonsoft.Json;
-
-namespace VirtoCommerce.Web.Core.DataContracts
+﻿namespace VirtoCommerce.Web.Core.DataContracts
 {
-    using System.Collections;
-    using System.Collections.Generic;
+    #region
+
+    using System.Collections.ObjectModel;
+
+    using Newtonsoft.Json;
+
+    #endregion
 
     public class ResponseCollection<T>
     {
+        #region Fields
+
+        private Collection<T> _items;
+
+        #endregion
+
+        #region Public Properties
+
+        [JsonProperty("items")]
+        public Collection<T> Items
+        {
+            get
+            {
+                return this._items ?? (this._items = new Collection<T>());
+            }
+        }
+
         [JsonProperty("total")]
         public int TotalCount { get; set; }
 
-        [JsonProperty("items")]
-        public Collection<T> Items { get { return _items ?? (_items = new Collection<T>()); } }
-        private Collection<T> _items;
+        #endregion
     }
 }

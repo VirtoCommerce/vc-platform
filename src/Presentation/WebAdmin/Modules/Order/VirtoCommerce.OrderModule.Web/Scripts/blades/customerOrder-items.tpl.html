@@ -1,47 +1,40 @@
-﻿<style>
-    .tight-input {
-        width: 50px;
-    }
-</style>
-<div class="static"> <!--top expanded-->
-    <span class="search-count">Count: {{pageSettings.totalItems}}</span>
+﻿<div class="blade-static">
+    <div class="form-group">
+        <p class="form-count">Count: <span class="count">{{pageSettings.totalItems}}</span></p>
+    </div>
 </div>
-<div class="blade-content blade-medium">
+<div class="blade-content __medium-wide">
     <div class="blade-inner">
         <div class="inner-block">
             <div class="table-wrapper">
-                <table class="table hovered">
+                <table class="table">
                     <thead>
                         <tr>
-                            <th class="text-left fixed-td">
-                                <div data-role="input-control" class="input-control checkbox">
-                                    <label>
-                                        <input type="checkbox" ng-model="blade.selectedAll" ng-change="checkAll(blade.selectedAll)" />
-                                        <span class="check"></span>
-                                    </label>
-                                </div>
+                            <th class="table-col">
+                                <label class="form-control __checkbox">
+                                    <input type="checkbox" ng-model="blade.selectedAll" ng-change="checkAll(blade.selectedAll)" />
+                                    <span class="check"></span>
+                                </label>
                             </th>
-                            <th class="text-left">Item</th>
-                            <th class="text-left fixed-td">Qty</th>
-                            <th class="text-left fixed-td">Avail</th>
-                            <th class="text-left fixed-td">Await</th>
-                            <th class="text-left fixed-td">Price</th>
-                            <th class="text-left fixed-td">Discount</th>
-                            <th class="text-left fixed-td">Tax</th>
-                            <th class="text-left fixed-td">Total</th>
+                            <th class="table-col">Item</th>
+                            <th class="table-col">Qty</th>
+                            <th class="table-col">Avail</th>
+                            <th class="table-col">Await</th>
+                            <th class="table-col">Price</th>
+                            <th class="table-col">Discount</th>
+                            <th class="table-col">Tax</th>
+                            <th class="table-col">Total</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr ng-repeat="data in blade.currentEntity.items" ng-class="{'selected': data.id === selectedNodeId}" context-menu data-target="col_menu_{{data.id}}">
-                            <td>
-                                <div data-role="input-control" class="input-control checkbox">
-                                    <label>
-                                        <input type="checkbox" ng-model="data.selected">
-                                        <span class="check"></span>
-                                    </label>
-                                </div>
+                        <tr class="table-item" ng-repeat="data in blade.currentEntity.items" ng-class="{'selected': data.id === selectedNodeId}" context-menu data-target="col_menu_{{data.id}}">
+                            <td class="table-col">
+                                <label class="form-control __checkbox">
+                                    <input type="checkbox" ng-model="data.selected">
+                                    <span class="check"></span>
+                                </label>
                             </td>
-                            <td ng-click='selectItem(data)' class="product-name">
+                            <td class="table-col" ng-click='selectItem(data)' class="product-name">
                                 <div class="product-img">
                                     <div class="image" style="background-image: url({{data.imageUrl}})" ng-if="data.imageUrl"></div>
                                     <i class="fa fa-ban" ng-if="!data.imageUrl" />
@@ -56,25 +49,37 @@
                                     </li>
                                 </ul>
                             </td>
-                            <td ng-click='selectItem(data)'>
+                            <td class="table-col" ng-click='selectItem(data)'>
                                 <input required class="form-control tight-input" ng-model="data.quantity" type="number" step="1" min="1">
                             </td>
-                            <td ng-click='selectItem(data)'>
+                            <td class="table-col" ng-click='selectItem(data)'>
                                 <span>{{data.avail?data.avail:0}}</span>
                             </td>
-                            <td ng-click='selectItem(data)'>
+                            <td class="table-col" ng-click='selectItem(data)'>
                                 <span>{{data.await?data.await:0}}</span>
                             </td>
-                            <td ng-click='selectItem(data)'>
-                                <input required class="form-control tight-input" ng-model="data.price" type="number" step="any">
+                            <td class="table-col" ng-click='selectItem(data)'>
+                                <div class="form-input __number js-number-input-plugin">
+                                    <input class="js-val" required ng-model="data.price" type="number">
+                                    <a class="up js-up"></a>
+                                    <a class="down js-down"></a>
+                                </div>
                             </td>
-                            <td ng-click='selectItem(data)'>
-                                <input required class="form-control tight-input" ng-model="data.staticDiscount" type="number" step="any">
+                            <td class="table-col" ng-click='selectItem(data)'>
+                                <div class="form-input __number js-number-input-plugin" data-step="1">
+                                    <input class="js-val" required ng-model="data.staticDiscount" type="number">
+                                    <a class="up js-up"></a>
+                                    <a class="down js-down"></a>
+                                </div>
                             </td>
-                            <td ng-click='selectItem(data)'>
-                                <input required class="form-control tight-input" ng-model="data.tax" type="number" step="any">
+                            <td class="table-col" ng-click='selectItem(data)'>
+                                <div class="form-input __number js-number-input-plugin" data-step="1">
+                                    <input class="js-val" required ng-model="data.tax" type="number">
+                                    <a class="up js-up"></a>
+                                    <a class="down js-down"></a>
+                                </div>
                             </td>
-                            <td ng-click='selectItem(data)'>
+                            <td class="table-col" ng-click='selectItem(data)'>
                                 <!--<span>{{data.total}}</span>-->
                                 <span>{{data.quantity*data.price-data.staticDiscount+data.tax}}</span>
                             </td>
@@ -130,3 +135,9 @@
         </div>
     </div>
 </div>
+
+<script>
+    $(function () {
+        $('.js-number-input-plugin').numberInputPlugin();
+    });
+</script>

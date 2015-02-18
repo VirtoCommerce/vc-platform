@@ -22,9 +22,9 @@
 
 	<assemblyFile>VirtoCommerce.CatalogModule.Web.dll</assemblyFile>
 	<moduleType>VirtoCommerce.CatalogModule.Web.Module, VirtoCommerce.CatalogModule.Web</moduleType>
-	<styles>
+	<!--<styles>
 		<directory virtualPath="$/Content/css" searchPattern="*.css" searchSubdirectories="true" />
-	</styles>
+	</styles>-->
 	<scripts>
 		<directory virtualPath="$/Scripts" searchPattern="*.js" searchSubdirectories="true" />
 	</scripts>

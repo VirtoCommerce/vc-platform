@@ -1,46 +1,61 @@
-﻿using System;
+﻿namespace VirtoCommerce.ApiClient
+{
+    #region
+
+using System;
 using System.Net.Http;
 using System.Threading.Tasks;
-using VirtoCommerce.ApiClient.Extensions;
 using VirtoCommerce.ApiClient.Utilities;
 using VirtoCommerce.Web.Core.DataContracts.Store;
 
-namespace VirtoCommerce.ApiClient
-{
+    #endregion
+
     public class StoreClient : BaseClient
     {
-        protected class RelativePaths
-        {
-            public const string Stores = "stores";
-        }
+        #region Constructors and Destructors
 
         /// <summary>
-        /// Initializes a new instance of the AdminManagementClient class.
+		/// Initializes a new instance of the StoreClient class.
         /// </summary>
         /// <param name="adminBaseEndpoint">Admin endpoint</param>
-        /// <param name="token">Access token</param>
-        public StoreClient(Uri adminBaseEndpoint, string token)
-            : base(adminBaseEndpoint, new TokenMessageProcessingHandler(token))
+		/// <param name="appId">The API application ID.</param>
+		/// <param name="secretKey">The API secret key.</param>
+		public StoreClient(Uri adminBaseEndpoint, string appId, string secretKey)
+			: base(adminBaseEndpoint, new HmacMessageProcessingHandler(appId, secretKey))
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the AdminManagementClient class.
+		/// Initializes a new instance of the StoreClient class.
         /// </summary>
         /// <param name="adminBaseEndpoint">Admin endpoint</param>
         /// <param name="handler"></param>
         public StoreClient(Uri adminBaseEndpoint, MessageProcessingHandler handler)
             : base(adminBaseEndpoint, handler)
         {
-
         }
 
+        #endregion
+
+        #region Public Methods and Operators
+
         /// <summary>
-        /// List items matching the given query
+        ///     List items matching the given query
         /// </summary>
         public Task<Store[]> GetStoresAsync()
         {
-            return GetAsync<Store[]>(CreateRequestUri(RelativePaths.Stores));
+            return this.GetAsync<Store[]>(this.CreateRequestUri(RelativePaths.Stores));
+        }
+
+        #endregion
+
+        protected class RelativePaths
+        {
+            #region Constants
+
+            public const string Stores = "stores";
+
+            #endregion
         }
     }
 }

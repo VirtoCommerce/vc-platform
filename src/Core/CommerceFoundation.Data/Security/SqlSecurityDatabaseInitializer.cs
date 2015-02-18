@@ -11,15 +11,42 @@ namespace VirtoCommerce.Foundation.Data.Security
 		protected override void Seed(EFSecurityRepository context)
 		{
 			base.Seed(context);
-			CreateAspNetSecurity(context);
 
+			CreateAccounts(context);
 			CreatePermissions(context);
 			CreateRoles(context);
 		}
 
-		private void CreateAspNetSecurity(EFSecurityRepository context)
+		private static void CreateAccounts(EFSecurityRepository context)
 		{
-			ExecuteSqlScriptFile(context, "AspNetIdentity.sql", "Security");
+			context.Add(new Account
+			{
+				AccountId = "1",
+				MemberId = "1",
+				UserName = "admin",
+				RegisterType = (int)RegisterType.Administrator,
+				AccountState = (int)AccountState.Approved,
+			});
+
+			context.Add(new Account
+			{
+				AccountId = "9b605a3096ba4cc8bc0b8d80c397c59f",
+				MemberId = "060C4620-F84C-45AB-A3AE-8E3133FFDAEF",
+				UserName = "frontend",
+				RegisterType = (int)RegisterType.SiteAdministrator,
+				AccountState = (int)AccountState.Approved,
+			});
+
+			context.Add(new ApiAccount
+			{
+				ApiAccountId = "eaa4c211288b49238e7cdf59c32e0661",
+				AccountId = "9b605a3096ba4cc8bc0b8d80c397c59f",
+				AppId = "27e0d789f12641049bd0e939185b4fd2",
+				SecretKey = "34f0a3c12c9dbb59b63b5fece955b7b2b9a3b20f84370cba1524dd5c53503a2e2cb733536ecf7ea1e77319a47084a3a2c9d94d36069a432ecc73b72aeba6ea78",
+				IsActive = true,
+			});
+
+			context.UnitOfWork.Commit();
 		}
 
 		private void CreatePermissions(EFSecurityRepository client)

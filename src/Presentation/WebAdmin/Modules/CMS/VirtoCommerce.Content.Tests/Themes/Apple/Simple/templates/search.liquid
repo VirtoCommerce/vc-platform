@@ -1,0 +1,32 @@
+{% include 'breadcrumb' %}
+{% paginate search.results by 50 %}
+<h1>{{ 'general.search.title' | t }}</h1>
+{% if search.performed %}
+{% assign terms = search.terms | escape %}
+  {% if search.results_count == 0 %}
+  <div id="keyword">
+    {{ 'general.search.no_results_html' | t: terms: terms }}
+  </div>
+  {% else %}
+  <div id="keyword">
+    {{ 'general.search.results_html' | t: terms: terms }}
+  </div>
+  <!--START PRODUCT GRID-->
+  <section class="product-grid">
+    {% for item in search.results %}
+      {% comment %} If we have a product {% endcomment %}
+      {% if item.type != '' %}
+      {% assign product = item %}
+      {% include 'product-grid-item' %}
+      {% endif %}
+    {% else %}
+      <p>{{ 'general.search.no_products' | t }}</p>
+    {% endfor %}
+  </section>
+  <!--END PRODUCT GRID-->
+  {% endif %}
+{% else %}
+<p>{{ 'general.search.no_search_html' | t }}</p>
+{% endif %}
+{% include 'paging' %}
+{% endpaginate %}

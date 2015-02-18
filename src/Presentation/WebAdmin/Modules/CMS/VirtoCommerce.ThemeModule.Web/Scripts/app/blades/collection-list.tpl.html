@@ -1,0 +1,7 @@
+﻿<div style="width: 350px;">
+    <ul class="list-extended">
+        <li ng-repeat="data in blade.currentEntities" ng-class="{'active': data.id === selectedEntityId}" ng-click='selectItem(data)' data-target="cl_menu{{$index}}">
+            <i class="ico" ng-class="icon-layers"></i>{{data.id}}
+        </li>
+    </ul>
+</div>

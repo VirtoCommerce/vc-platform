@@ -131,6 +131,10 @@
       <Project>{67c58a78-ddea-4fa3-a969-1cab582918e4}</Project>
       <Name>VirtoCommerce.Domain</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\Customer\VirtoCommerce.CustomerModule.Data\VirtoCommerce.CustomerModule.Data.csproj">
+      <Project>{1e7cb134-7d2c-45ff-8eb7-3c6d474d9536}</Project>
+      <Name>VirtoCommerce.CustomerModule.Data</Name>
+    </ProjectReference>
     <ProjectReference Include="..\VirtoCommerce.StoreModule.Data\VirtoCommerce.StoreModule.Data.csproj">
       <Project>{6db023e9-e32f-4537-8448-074f88aa55d6}</Project>
       <Name>VirtoCommerce.StoreModule.Data</Name>

@@ -9,14 +9,8 @@ namespace VirtoCommerce.ApiClient
 {
     public class OrderClient : BaseClient
     {
-        protected class RelativePaths
-        {
-            public const string SingleOrder = "order/customerOrders/{0}";
-            public const string MultipleOrders = "order/customerOrders?q={0}&site={1}&customer={2}&start={3}&count={4}";
-        }
-
-        public OrderClient(Uri adminBaseEndpoint, string token)
-            : base(adminBaseEndpoint, new TokenMessageProcessingHandler(token))
+        public OrderClient(Uri adminBaseEndpoint, string appId, string secretKey)
+            : base(adminBaseEndpoint, new HmacMessageProcessingHandler(appId, secretKey))
         {
         }
 
@@ -27,25 +21,31 @@ namespace VirtoCommerce.ApiClient
 
         public Task<CustomerOrder> GetCustomerOrderAsync(string customerId, string orderId)
         {
-            var requestUrl = CreateRequestUri(string.Format(RelativePaths.SingleOrder, orderId));
-
-            return GetAsync<CustomerOrder>(requestUrl, userId: customerId, useCache: false);
+            return GetAsync<CustomerOrder>(
+                this.CreateRequestUri(string.Format(RelativePaths.GetSingleOrder, orderId)),
+                userId: customerId,
+                useCache: false);
         }
 
-        public Task<OrderSearchResult> GetCustomerOrdersAsync(string query, string site, string customerId, int skip, int take)
+        public Task<OrderSearchResult> GetCustomerOrdersAsync(string storeId, string customerId, string query, int skip, int take)
         {
-            var parameters = new List<KeyValuePair<string, string>>();
-            parameters.Add(new KeyValuePair<string, string>("q", query));
-            parameters.Add(new KeyValuePair<string, string>("site", site));
-            parameters.Add(new KeyValuePair<string, string>("customer", customerId));
-            parameters.Add(new KeyValuePair<string, string>("start", skip.ToString()));
-            parameters.Add(new KeyValuePair<string, string>("count", take.ToString()));
+            var queryStringParameters = new List<KeyValuePair<string, string>>();
+            queryStringParameters.Add(new KeyValuePair<string, string>("q", query));
+            queryStringParameters.Add(new KeyValuePair<string, string>("site", storeId));
+            queryStringParameters.Add(new KeyValuePair<string, string>("customer", customerId));
+            queryStringParameters.Add(new KeyValuePair<string, string>("start", skip.ToString()));
+            queryStringParameters.Add(new KeyValuePair<string, string>("count", take.ToString()));
 
-            var requestUrl = CreateRequestUri(string.Format(RelativePaths.MultipleOrders, query, site, customerId, skip, take), parameters.ToArray());
+            return GetAsync<OrderSearchResult>(
+                this.CreateRequestUri(RelativePaths.GetMultipleOrders, queryStringParameters.ToArray()),
+                userId: customerId,
+                useCache: false);
+        }
 
-            var response = GetAsync<OrderSearchResult>(requestUrl, userId: customerId, useCache: false);
-
-            return response;
+        protected class RelativePaths
+        {
+            public const string GetSingleOrder = "order/customerOrders/{0}";
+            public const string GetMultipleOrders = "order/customerOrders";
         }
     }
 }

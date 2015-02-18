@@ -1,20 +1,18 @@
 ﻿<div class="blade-content">
     <div class="blade-inner">
         <div class="inner-block">
-            <ul class="grid-list">
-                <li ng-click="openBladeNewGroup()" ng-class="{'active': blade.isNewGroup}">
+            <ul class="list __items">
+                <li class="list-item" ng-click="openBladeNewGroup()" ng-class="{'__selected': blade.isNewGroup}">
                     Create a new Association group
                 </li>
             </ul>
-            <p class="list-title">Use an existing Association group</p>
-            <ul class="list-checkboxes">
-                <li ng-repeat="data in blade.groupNames">
-                    <label>
-                        <input type="checkbox" name="isDefault" ng-checked="data === selectedId" ng-click="blade.setSelected(data)">
-                        <span class="switch"></span>
-                        {{data}}
-                    </label>
-                </li>
+            <div class="sub-t">Use an existing Association group</div>
+            <ul class="list __items">
+                <label class="list-item" ng-repeat="data in blade.groupNames">
+                    <input type="checkbox" name="isDefault" ng-checked="data === selectedId" ng-click="blade.setSelected(data)">
+                    <span class="switch"></span>
+                    <span class="list-name">{{data}}</span>
+                </label>
             </ul>
         </div>
     </div>

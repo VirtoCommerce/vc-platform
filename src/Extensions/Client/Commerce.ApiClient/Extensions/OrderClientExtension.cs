@@ -8,22 +8,13 @@ namespace VirtoCommerce.ApiClient.Extensions
     {
         public static OrderClient CreateOrderClient(this CommerceClients source)
         {
-            return source.CreateOrderClient(ClientContext.Session.StoreId);
+            var connectionString = ClientContext.Configuration.ConnectionString;
+            return CreateOrderClient(source, connectionString);
         }
 
-        public static OrderClient CreateOrderClient(this CommerceClients source, string storeId)
+        public static OrderClient CreateOrderClient(this CommerceClients source, string serviceUrl)
         {
-            var connectionString = String.Format("{0}{1}/{2}/", ClientContext.Configuration.ConnectionString, "mp", storeId);
-
-            return CreateOrderClientWithUri(source, connectionString);
-        }
-
-        public static OrderClient CreateOrderClientWithUri(this CommerceClients source, string serviceUrl)
-        {
-            var connectionString = serviceUrl;
-            var subscriptionKey = ConfigurationManager.AppSettings["vc-public-apikey"];
-            var client = new OrderClient(new Uri(connectionString), new AzureSubscriptionMessageProcessingHandler(subscriptionKey, "secret"));
-
+            var client = new OrderClient(new Uri(serviceUrl), source.CreateAzureSubscriptionMessageProcessingHandler());
             return client;
         }
     }

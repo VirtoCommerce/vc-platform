@@ -1,21 +1,14 @@
-﻿<a href="" ng-init="
+﻿<a class="list-link" href="" ng-init="
     notifyStatusArr = [
         'running',
         'aborted',
         'finished',
         'error'
     ];
-    classNames = ['item', 'notif', menuItem.notify.notifyType, notifyStatusArr[menuItem.notify.status]];
+    classNames = [menuItem.notify.notifyType, notifyStatusArr[menuItem.notify.status]];
 " ng-class="classNames">
-    <span class="head">
-        <span class="title" ng-bind="menuItem.title+((menuItem.notify.repeatCount)?' ('+(menuItem.notify.repeatCount+1) + ')':'')"></span>
-        <span class="date" am-time-ago="menuItem.notify.created"></span>
-    </span>
-    <span class="desc_outer">
-        <span class="pic">
-            <i ng-class="(menuItem.notify.notifyType=='info')?'icon-comments':'icon-warning'" class="icon"></i>
-        </span>
-        <span class="desc" ng-bind="menuItem.notify.description"></span>
-    </span>
-   
+    <i class="list-ico fa" ng-class="(menuItem.notify.notifyType=='info') ? 'fa-comments':'fa-warning'"></i>
+    <span class="list-t" ng-bind="menuItem.title+((menuItem.notify.repeatCount)?' ('+(menuItem.notify.repeatCount+1) + ')':'')"></span>
+    <span class="list-descr" ng-bind="menuItem.notify.description"></span>
+    <span class="list-date" am-time-ago="menuItem.notify.created"></span>
 </a>

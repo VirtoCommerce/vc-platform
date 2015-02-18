@@ -1,15 +1,31 @@
-﻿using System;
-using System.Configuration;
-using System.Threading;
-using System.Web.Configuration;
-
-namespace VirtoCommerce.Web.Core.Configuration.Application
+﻿namespace VirtoCommerce.Web.Core.Configuration.Application
 {
+    #region
+
+    using System;
+    using System.Configuration;
+    using System.Threading;
+    using System.Web.Configuration;
+
+    #endregion
+
     public class AppConfigConfiguration : ConfigurationSection
     {
-        private static readonly Lazy<AppConfigConfiguration> _instance = new Lazy<AppConfigConfiguration>(CreateInstance, LazyThreadSafetyMode.ExecutionAndPublication);
+        #region Constants
 
         public const string SectionName = "VirtoCommerce/AppConfig";
+
+        #endregion
+
+        #region Static Fields
+
+        private static readonly Lazy<AppConfigConfiguration> _instance = new Lazy<AppConfigConfiguration>(
+            CreateInstance,
+            LazyThreadSafetyMode.ExecutionAndPublication);
+
+        #endregion
+
+        #region Public Properties
 
         public static AppConfigConfiguration Instance
         {
@@ -19,10 +35,26 @@ namespace VirtoCommerce.Web.Core.Configuration.Application
             }
         }
 
-        private static AppConfigConfiguration CreateInstance()
+        [ConfigurationProperty("availableModules")]
+        public ModulesCollection AvailableModules
         {
+            get
+            {
+                return (ModulesCollection)this["availableModules"] ?? new ModulesCollection();
+            }
+        }
 
-            return (AppConfigConfiguration)ConfigurationManager.GetSection(SectionName);
+        /// <summary>
+        ///     Config settings which define where caching is enabled and timeouts related to it.
+        /// </summary>
+        /// <value>The cache.</value>
+        [ConfigurationProperty("Cache", IsRequired = true)]
+        public CacheConfiguration Cache
+        {
+            get
+            {
+                return (CacheConfiguration)this["Cache"];
+            }
         }
 
         [ConfigurationProperty("Connection", IsRequired = true)]
@@ -43,33 +75,21 @@ namespace VirtoCommerce.Web.Core.Configuration.Application
             }
         }
 
-        [ConfigurationProperty("availableModules")]
-        public ModulesCollection AvailableModules
+        #endregion
+
+        #region Methods
+
+        private static AppConfigConfiguration CreateInstance()
         {
-            get
-            {
-                return (ModulesCollection)this["availableModules"] ?? new ModulesCollection();
-            }
+            return (AppConfigConfiguration)ConfigurationManager.GetSection(SectionName);
         }
 
-
-        /// <summary>
-        /// Config settings which define where caching is enabled and timeouts related to it.
-        /// </summary>
-        /// <value>The cache.</value>
-        [ConfigurationProperty("Cache", IsRequired = true)]
-        public CacheConfiguration Cache
-        {
-            get
-            {
-                return (CacheConfiguration)this["Cache"];
-            }
-        }
+        #endregion
     }
 
     public class AppConfigConnection : ConfigurationElement
     {
-      
+        #region Public Properties
 
         [ConfigurationProperty("dataServiceUri", IsRequired = false)]
         public string DataServiceUri
@@ -84,109 +104,41 @@ namespace VirtoCommerce.Web.Core.Configuration.Application
             }
         }
 
+        #endregion
+
+        #region Public Methods and Operators
+
         /// <summary>
-        /// Gets a value indicating whether the <see cref="T:System.Configuration.ConfigurationElement"/> object is read-only.
+        ///     Gets a value indicating whether the <see cref="T:System.Configuration.ConfigurationElement" /> object is read-only.
         /// </summary>
         /// <returns>
-        /// true if the <see cref="T:System.Configuration.ConfigurationElement"/> object is read-only; otherwise, false.
+        ///     true if the <see cref="T:System.Configuration.ConfigurationElement" /> object is read-only; otherwise, false.
         /// </returns>
         public override bool IsReadOnly()
         {
             return false;
         }
+
+        #endregion
     }
 
-
     /// <summary>
-    /// Config settings which define where caching is enabled and timeouts related to it.
+    ///     Config settings which define where caching is enabled and timeouts related to it.
     /// </summary>
     public class CacheConfiguration : ConfigurationElement
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Commerce.ApiWebClient.Configuration.CacheConfiguration"/> class.
-        /// </summary>
-        public CacheConfiguration() { }
+        #region Constructors and Destructors
 
         /// <summary>
-        /// Attribute determines whether in-memory caching is enabled or not.
+        ///     Initializes a new instance of the <see cref="Commerce.ApiWebClient.Configuration.CacheConfiguration" /> class.
         /// </summary>
-        /// <value>
-        /// 	<c>true</c> if this instance is enabled; otherwise, <c>false</c>.
-        /// </value>
-        [ConfigurationProperty("enabled", IsRequired = true, DefaultValue = true)]
-        public bool IsEnabled
+        public CacheConfiguration()
         {
-            get
-            {
-                return (bool)this["enabled"];
-            }
-            set
-            {
-                this["enabled"] = value;
-            }
         }
 
-        /// <summary>
-        /// Configuration attribute which determines when the Settings values are
-        /// automatically refreshed in memory (in seconds).
-        /// </summary>
-        /// <value>
-        /// The settings collection timeout.
-        /// </value>
-        [ConfigurationProperty("settingsTimeout", IsRequired = true, DefaultValue = "0:1:0")]
-        public TimeSpan SettingsTimeout
-        {
-            get
-            {
-                return (TimeSpan)this["settingsTimeout"];
-            }
-            set
-            {
-                this["settingsTimeout"] = value.ToString();
-            }
-        }
+        #endregion
 
-        /// <summary>
-        /// Configuration attribute which determines when the Localization values are
-        /// automatically refreshed in memory (in seconds).
-        /// </summary>
-        /// <value>
-        /// The localization collection timeout.
-        /// </value>
-        [ConfigurationProperty("localizationTimeout", IsRequired = true, DefaultValue = "0:1:0")]
-        public TimeSpan LocalizationTimeout
-        {
-            get
-            {
-                return (TimeSpan)this["localizationTimeout"];
-            }
-            set
-            {
-                this["localizationTimeout"] = value.ToString();
-            }
-        }
-
-
-        /// <summary>
-        /// Configuration attribute which determines when the seo keywords values are
-        /// automatically refreshed in memory (in seconds).
-        /// </summary>
-        /// <value>
-        /// The seo keywords timeout.
-        /// </value>
-        [ConfigurationProperty("seoKeywordsTimeout", IsRequired = false, DefaultValue = "0:1:0")]
-        public TimeSpan SeoKeywordsTimeout
-        {
-            get
-            {
-                return (TimeSpan)this["seoKeywordsTimeout"];
-            }
-            set
-            {
-                this["seoKeywordsTimeout"] = value.ToString();
-            }
-        }
-
+        #region Public Properties
 
         [ConfigurationProperty("displayTemplatesTimeout", IsRequired = false, DefaultValue = "0:2:0")]
         public TimeSpan DisplayTemplateMappingsTimeout
@@ -202,35 +154,105 @@ namespace VirtoCommerce.Web.Core.Configuration.Application
         }
 
         /// <summary>
-        /// Gets a value indicating whether the <see cref="T:System.Configuration.ConfigurationElement"/> object is read-only.
+        ///     Attribute determines whether in-memory caching is enabled or not.
+        /// </summary>
+        /// <value>
+        ///     <c>true</c> if this instance is enabled; otherwise, <c>false</c>.
+        /// </value>
+        [ConfigurationProperty("enabled", IsRequired = true, DefaultValue = true)]
+        public bool IsEnabled
+        {
+            get
+            {
+                return (bool)this["enabled"];
+            }
+            set
+            {
+                this["enabled"] = value;
+            }
+        }
+
+        /// <summary>
+        ///     Configuration attribute which determines when the Localization values are
+        ///     automatically refreshed in memory (in seconds).
+        /// </summary>
+        /// <value>
+        ///     The localization collection timeout.
+        /// </value>
+        [ConfigurationProperty("localizationTimeout", IsRequired = true, DefaultValue = "0:1:0")]
+        public TimeSpan LocalizationTimeout
+        {
+            get
+            {
+                return (TimeSpan)this["localizationTimeout"];
+            }
+            set
+            {
+                this["localizationTimeout"] = value.ToString();
+            }
+        }
+
+        /// <summary>
+        ///     Configuration attribute which determines when the seo keywords values are
+        ///     automatically refreshed in memory (in seconds).
+        /// </summary>
+        /// <value>
+        ///     The seo keywords timeout.
+        /// </value>
+        [ConfigurationProperty("seoKeywordsTimeout", IsRequired = false, DefaultValue = "0:1:0")]
+        public TimeSpan SeoKeywordsTimeout
+        {
+            get
+            {
+                return (TimeSpan)this["seoKeywordsTimeout"];
+            }
+            set
+            {
+                this["seoKeywordsTimeout"] = value.ToString();
+            }
+        }
+
+        /// <summary>
+        ///     Configuration attribute which determines when the Settings values are
+        ///     automatically refreshed in memory (in seconds).
+        /// </summary>
+        /// <value>
+        ///     The settings collection timeout.
+        /// </value>
+        [ConfigurationProperty("settingsTimeout", IsRequired = true, DefaultValue = "0:1:0")]
+        public TimeSpan SettingsTimeout
+        {
+            get
+            {
+                return (TimeSpan)this["settingsTimeout"];
+            }
+            set
+            {
+                this["settingsTimeout"] = value.ToString();
+            }
+        }
+
+        #endregion
+
+        #region Public Methods and Operators
+
+        /// <summary>
+        ///     Gets a value indicating whether the <see cref="T:System.Configuration.ConfigurationElement" /> object is read-only.
         /// </summary>
         /// <returns>
-        /// true if the <see cref="T:System.Configuration.ConfigurationElement"/> object is read-only; otherwise, false.
+        ///     true if the <see cref="T:System.Configuration.ConfigurationElement" /> object is read-only; otherwise, false.
         /// </returns>
         public override bool IsReadOnly()
         {
             return false;
         }
+
+        #endregion
     }
 
     public class SetupConfiguration : ConfigurationElement
     {
-        [ConfigurationProperty("completed", IsRequired = true, DefaultValue = true)]
-        public bool IsCompleted
-        {
-            get
-            {
-                return (bool)this["completed"];
-            }
-            set
-            {
-                this["completed"] = value.ToString();
-                var configFile = WebConfigurationManager.OpenWebConfiguration("~");
-                var section = (AppConfigConfiguration)configFile.GetSection(AppConfigConfiguration.SectionName);
-                section.Setup["completed"] = value;
-                configFile.Save(ConfigurationSaveMode.Modified);
-            }
-        }
+        #region Public Properties
 
         [ConfigurationProperty("adminUrl", IsRequired = false, DefaultValue = "")]
         public string AdminUrl
@@ -249,14 +271,38 @@ namespace VirtoCommerce.Web.Core.Configuration.Application
             }
         }
 
+        [ConfigurationProperty("completed", IsRequired = true, DefaultValue = true)]
+        public bool IsCompleted
+        {
+            get
+            {
+                return (bool)this["completed"];
+            }
+            set
+            {
+                this["completed"] = value.ToString();
+                var configFile = WebConfigurationManager.OpenWebConfiguration("~");
+                var section = (AppConfigConfiguration)configFile.GetSection(AppConfigConfiguration.SectionName);
+                section.Setup["completed"] = value;
+                configFile.Save(ConfigurationSaveMode.Modified);
+            }
+        }
+
+        #endregion
+
+        #region Public Methods and Operators
+
         public override bool IsReadOnly()
         {
             return false;
         }
+
+        #endregion
     }
 
     public class ModuleConfigurationElement : ConfigurationElement
     {
+        #region Public Properties
 
         [ConfigurationProperty("name", IsRequired = true)]
         public string Name
@@ -284,11 +330,13 @@ namespace VirtoCommerce.Web.Core.Configuration.Application
             }
         }
 
-
+        #endregion
     }
 
     public class ModulesCollection : ConfigurationElementCollection
     {
+        #region Public Indexers
+
         public ModuleConfigurationElement this[int index]
         {
             get
@@ -305,6 +353,10 @@ namespace VirtoCommerce.Web.Core.Configuration.Application
             }
         }
 
+        #endregion
+
+        #region Methods
+
         protected override ConfigurationElement CreateNewElement()
         {
             return new ModuleConfigurationElement();
@@ -314,5 +366,7 @@ namespace VirtoCommerce.Web.Core.Configuration.Application
         {
             return ((ModuleConfigurationElement)element).Name;
         }
+
+        #endregion
     }
 }

@@ -10,6 +10,7 @@ using VirtoCommerce.Foundation.AppConfig.Repositories;
 using VirtoCommerce.Foundation.Data.AppConfig;
 using VirtoCommerce.Foundation.Data.Customers;
 using VirtoCommerce.Foundation.Data.Security;
+using VirtoCommerce.Foundation.Data.Security.Identity;
 using VirtoCommerce.Framework.Web.Modularity;
 using VirtoCommerce.Framework.Web.Notification;
 using VirtoCommerce.Framework.Web.Settings;
@@ -33,6 +34,24 @@ namespace VirtoCommerce.CoreModule.Web
 
 		public void SetupDatabase(SampleDataLevel sampleDataLevel)
 		{
+			using (var db = new SecurityDbContext(_connectionStringName))
+			{
+				IdentityDatabaseInitializer initializer;
+
+				switch (sampleDataLevel)
+				{
+					case SampleDataLevel.Full:
+					case SampleDataLevel.Reduced:
+						initializer = new IdentitySampleDatabaseInitializer();
+						break;
+					default:
+						initializer = new IdentityDatabaseInitializer();
+						break;
+				}
+
+				initializer.InitializeDatabase(db);
+			}
+
 			using (var db = new EFSecurityRepository(_connectionStringName))
 			{
 				SqlSecurityDatabaseInitializer initializer;
@@ -96,13 +115,15 @@ namespace VirtoCommerce.CoreModule.Web
 
 		public void Initialize()
 		{
-			OwinConfig.Configure(_appBuilder);
+			Func<IFoundationSecurityRepository> securityRepositoryFactory = () =>
+				new FoundationSecurityRepositoryImpl(_connectionStringName);
+
+			OwinConfig.Configure(_appBuilder, securityRepositoryFactory);
 
 			#region Security
 
 			_container.RegisterType<Func<IFoundationSecurityRepository>>(
-				new InjectionFactory(x => new Func<IFoundationSecurityRepository>(() =>
-					new FoundationSecurityRepositoryImpl(_connectionStringName))));
+				new InjectionFactory(x => new Func<IFoundationSecurityRepository>(securityRepositoryFactory)));
 
 			#endregion
 

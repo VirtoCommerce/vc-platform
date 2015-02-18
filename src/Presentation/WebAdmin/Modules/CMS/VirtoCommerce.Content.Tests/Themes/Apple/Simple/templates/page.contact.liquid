@@ -1,0 +1,55 @@
+{% include 'breadcrumb' %}
+
+<h1>{{ page.title }}</h1>
+<div class="wysiwyg">
+  {{ page.content }}	
+</div>
+
+<div class="twelve columns alpha omega">
+  <div class="six columns alpha">
+  {% form 'contact' %}
+
+  {% if form.posted_successfully? %}
+    <div class="successForm feedback">
+      <p>{{ 'contact.form.success' | t }}</p>
+    </div>
+  {% endif %}
+
+  {% if form.errors %}
+    <div class="errorForm feedback">
+      <p>{{ 'contact.errors.errors_with_count' | t: count: form.errors.count }}</p>
+
+      {% for field in form.errors %}
+      <p>{{ 'contact.errors.message_html' | t: field: field, error: form.errors.messages[field] }}</p>
+      {% endfor %}
+    </div>
+  {% endif %}
+
+    <div class="clearfix large_form">
+      <label for="contact_name" class="contact">{{ 'contact.form.name' | t }}</label>
+      <input type="text" value="" name="contact[name]" id="contact_name" class="long" />
+    </div>
+  
+    <div class="clearfix large_form">
+      <label for="contact_email" class="contact">{{ 'contact.form.email' | t }}</label>
+      <input  type="email" value="" name="contact[email]" id="contact_email" class="long" />
+    </div>
+  
+    <div class="clearfix large_form">
+      <label for="contact_phone" class="contact">{{ 'contact.form.phone' | t }}</label>
+      <input  type="text" value="" name="contact[phone]" id="contact_phone" class="long" />
+    </div>
+  
+    <div class="clearfix large_form">
+      <label for="contact_body" class="contact">{{ 'contact.form.message' | t }}</label>
+      <textarea  name="contact[body]" id="contact_body" class="long"></textarea>
+    </div>
+  
+    <div class="action_bottom">
+      <input type="submit" class="button" value="{{ 'contact.form.submit' | t }}" />
+    </div>
+
+  {% endform %}
+		
+  </div>
+</div>

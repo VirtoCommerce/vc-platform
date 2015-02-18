@@ -1,20 +1,9 @@
-﻿<style>
-    .metro .input-control.switch input[type="checkbox"]:disabled ~ .check {
-        background: none repeat scroll 0 0 #008287;
-    }
-    .metro .input-control.switch input[type="checkbox"]:disabled ~ .check:after {
-        background: #fff;
-        border-color: #fff;
-        outline-color: #fff;
-    }
-</style>
-<div class="blade-switch">
-    <span class="blade-sw-title uppercase">Primary</span>
-    <div class="input-control switch">
-        <label>
+﻿<div class="blade-switch">
+    <span class="switch-t">Primary</span>
+    <div class="form-control __switch">
+        <label class="form-label">
             <input type="checkbox" ng-model="isTitular" ng-change="onTitularChange()" ng-disabled="isTitularConfirmed" />
-            <span class="check"></span>
+            <span class="switch"></span>
         </label>
     </div>
 </div>
-

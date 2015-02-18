@@ -123,16 +123,13 @@
     <Compile Include="DataContracts\Store\StoreState.cs" />
     <Compile Include="DataContracts\TagQuery.cs" />
     <Compile Include="Extensions\CartClientExtension.cs" />
+    <Compile Include="Extensions\MessageProcessingExtensions.cs" />
     <Compile Include="Extensions\OrderClientExtension.cs" />
     <Compile Include="Extensions\SeoClientExtensions.cs" />
     <Compile Include="Extensions\StoreClientExtensions.cs" />
     <Compile Include="CartClient.cs" />
     <Compile Include="OrderClient.cs" />
     <Compile Include="SeoClient.cs" />
-    <Compile Include="Session\CustomerSession.cs" />
-    <Compile Include="Session\CustomerSessionService.cs" />
-    <Compile Include="Session\ICustomerSession.cs" />
-    <Compile Include="Session\ICustomerSessionService.cs" />
     <Compile Include="StoreClient.cs" />
     <Compile Include="ContentClient.cs" />
     <Compile Include="Extensions\BrowseClientExtension.cs" />
@@ -148,7 +145,8 @@
     <Compile Include="SecurityClient.cs" />
     <Compile Include="Utilities\AzureSubscriptionMessageProcessingHandler.cs" />
     <Compile Include="Utilities\ConnectionHelper.cs" />
-    <Compile Include="Utilities\TokenMessageProcessingHandler.cs" />
+    <Compile Include="Utilities\HmacMessageProcessingHandler.cs" />
+    <Compile Include="Utilities\HmacUtility.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
