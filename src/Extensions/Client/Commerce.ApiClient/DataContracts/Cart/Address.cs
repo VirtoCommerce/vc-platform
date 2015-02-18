@@ -3,6 +3,7 @@
     public class Address
     {
         #region Public Properties
+
         public string City { get; set; }
 
         public string CountryCode { get; set; }
@@ -28,6 +29,7 @@
         public string PostalCode { get; set; }
 
         public string Zip { get; set; }
+
         #endregion
     }
 }

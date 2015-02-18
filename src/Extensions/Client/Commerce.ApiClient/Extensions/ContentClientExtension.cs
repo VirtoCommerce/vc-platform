@@ -1,4 +1,5 @@
 ﻿#region
+
 using System;
 using System.Threading;
 
@@ -9,6 +10,7 @@ namespace VirtoCommerce.ApiClient.Extensions
     public static class ContentClientExtension
     {
         #region Public Methods and Operators
+
         public static ContentClient CreateContentClient(this CommerceClients source, string serviceUrl)
         {
             var client = new ContentClient(
@@ -28,6 +30,7 @@ namespace VirtoCommerce.ApiClient.Extensions
                 language);
             return CreateContentClient(source, connectionString);
         }
+
         #endregion
     }
 }

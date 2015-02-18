@@ -1,4 +1,5 @@
 ﻿#region
+
 using System;
 using System.Collections;
 using System.Web;
@@ -8,36 +9,42 @@ using System.Web.Caching;
 
 namespace VirtoCommerce.ApiClient.Caching
 {
+
     #region
-    
+
     #endregion
 
     public class HttpCacheRepository : ICacheRepository
     {
         #region Fields
+
         private readonly object _lock = new object();
 
         private object _cache;
+
         #endregion
 
         #region Public Indexers
+
         public object this[string key]
         {
             get
             {
-                return this.Get(key);
+                return Get(key);
             }
             set
             {
-                this.Add(key, value);
+                Add(key, value);
             }
         }
+
         #endregion
 
         #region Public Methods and Operators
+
         public void Add(string key, object value)
         {
-            var cache = this.GetCache();
+            var cache = GetCache();
             cache.Insert(key, value);
         }
 
@@ -51,12 +58,12 @@ namespace VirtoCommerce.ApiClient.Caching
                 callback = ItemRemovedCallback;
             }
 
-            this.Insert(key, value, null, timeout, CacheItemPriority.Normal, callback);
+            Insert(key, value, null, timeout, CacheItemPriority.Normal, callback);
         }
 
         public void Clear()
         {
-            var cache = this.GetCache();
+            var cache = GetCache();
             var cacheEnum = cache.GetEnumerator();
             while (cacheEnum.MoveNext())
             {
@@ -66,19 +73,19 @@ namespace VirtoCommerce.ApiClient.Caching
 
         public object Get(string key)
         {
-            var cache = this.GetCache();
+            var cache = GetCache();
             return cache.Get(key);
         }
 
         public object GetAndLock(string key, TimeSpan timespan, out object lockHandle)
         {
             lockHandle = CacheEntries.GetLock(key);
-            return this.Get(key);
+            return Get(key);
         }
 
         public IDictionaryEnumerator GetEnumerator()
         {
-            var cache = this.GetCache();
+            var cache = GetCache();
             return cache.GetEnumerator();
         }
 
@@ -91,7 +98,7 @@ namespace VirtoCommerce.ApiClient.Caching
 
         public bool Remove(string key)
         {
-            var cache = this.GetCache();
+            var cache = GetCache();
             cache.Remove(key);
             return true;
         }
@@ -101,6 +108,7 @@ namespace VirtoCommerce.ApiClient.Caching
             //var cache = GetCache();
             //cache.Unlock(key, (DataCacheLockHandle)lockHandle);
         }
+
         #endregion
 
         /*
@@ -115,6 +123,7 @@ namespace VirtoCommerce.ApiClient.Caching
 */
 
         #region Methods
+
         /// <summary>
         ///     Items the removed callback.
         /// </summary>
@@ -139,24 +148,24 @@ namespace VirtoCommerce.ApiClient.Caching
 
         private Cache GetCache()
         {
-            if (this._cache != null)
+            if (_cache != null)
             {
-                return this._cache as Cache;
+                return _cache as Cache;
             }
 
-            lock (this._lock)
+            lock (_lock)
             {
-                if (this._cache != null)
+                if (_cache != null)
                 {
-                    return this._cache as Cache;
+                    return _cache as Cache;
                 }
 
                 var context = HttpContext.Current;
 
-                this._cache = context != null ? context.Cache : HttpRuntime.Cache;
+                _cache = context != null ? context.Cache : HttpRuntime.Cache;
             }
 
-            return this._cache as Cache;
+            return _cache as Cache;
         }
 
         private void Insert(
@@ -169,7 +178,7 @@ namespace VirtoCommerce.ApiClient.Caching
         {
             if (obj != null)
             {
-                var cache = this.GetCache();
+                var cache = GetCache();
                 cache.Insert(
                     key,
                     obj,
@@ -180,6 +189,7 @@ namespace VirtoCommerce.ApiClient.Caching
                     callback);
             }
         }
+
         #endregion
     }
 }

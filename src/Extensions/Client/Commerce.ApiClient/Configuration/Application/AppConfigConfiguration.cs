@@ -1,4 +1,5 @@
 ﻿#region
+
 using System;
 using System.Configuration;
 using System.Threading;
@@ -8,23 +9,29 @@ using System.Web.Configuration;
 
 namespace VirtoCommerce.Web.Core.Configuration.Application
 {
+
     #region
-    
+
     #endregion
 
     public class AppConfigConfiguration : ConfigurationSection
     {
         #region Constants
+
         public const string SectionName = "VirtoCommerce/AppConfig";
+
         #endregion
 
         #region Static Fields
+
         private static readonly Lazy<AppConfigConfiguration> _instance = new Lazy<AppConfigConfiguration>(
             CreateInstance,
             LazyThreadSafetyMode.ExecutionAndPublication);
+
         #endregion
 
         #region Public Properties
+
         public static AppConfigConfiguration Instance
         {
             get
@@ -72,19 +79,23 @@ namespace VirtoCommerce.Web.Core.Configuration.Application
                 return (SetupConfiguration)this["Setup"];
             }
         }
+
         #endregion
 
         #region Methods
+
         private static AppConfigConfiguration CreateInstance()
         {
             return (AppConfigConfiguration)ConfigurationManager.GetSection(SectionName);
         }
+
         #endregion
     }
 
     public class AppConfigConnection : ConfigurationElement
     {
         #region Public Properties
+
         [ConfigurationProperty("dataServiceUri", IsRequired = false)]
         public string DataServiceUri
         {
@@ -97,9 +108,11 @@ namespace VirtoCommerce.Web.Core.Configuration.Application
                 this["dataServiceUri"] = value;
             }
         }
+
         #endregion
 
         #region Public Methods and Operators
+
         /// <summary>
         ///     Gets a value indicating whether the <see cref="T:System.Configuration.ConfigurationElement" /> object is read-only.
         /// </summary>
@@ -110,6 +123,7 @@ namespace VirtoCommerce.Web.Core.Configuration.Application
         {
             return false;
         }
+
         #endregion
     }
 
@@ -119,15 +133,18 @@ namespace VirtoCommerce.Web.Core.Configuration.Application
     public class CacheConfiguration : ConfigurationElement
     {
         #region Constructors and Destructors
+
         /// <summary>
         ///     Initializes a new instance of the <see cref="Commerce.ApiWebClient.Configuration.CacheConfiguration" /> class.
         /// </summary>
         public CacheConfiguration()
         {
         }
+
         #endregion
 
         #region Public Properties
+
         [ConfigurationProperty("displayTemplatesTimeout", IsRequired = false, DefaultValue = "0:2:0")]
         public TimeSpan DisplayTemplateMappingsTimeout
         {
@@ -219,9 +236,11 @@ namespace VirtoCommerce.Web.Core.Configuration.Application
                 this["settingsTimeout"] = value.ToString();
             }
         }
+
         #endregion
 
         #region Public Methods and Operators
+
         /// <summary>
         ///     Gets a value indicating whether the <see cref="T:System.Configuration.ConfigurationElement" /> object is read-only.
         /// </summary>
@@ -232,12 +251,14 @@ namespace VirtoCommerce.Web.Core.Configuration.Application
         {
             return false;
         }
+
         #endregion
     }
 
     public class SetupConfiguration : ConfigurationElement
     {
         #region Public Properties
+
         [ConfigurationProperty("adminUrl", IsRequired = false, DefaultValue = "")]
         public string AdminUrl
         {
@@ -271,19 +292,23 @@ namespace VirtoCommerce.Web.Core.Configuration.Application
                 configFile.Save(ConfigurationSaveMode.Modified);
             }
         }
+
         #endregion
 
         #region Public Methods and Operators
+
         public override bool IsReadOnly()
         {
             return false;
         }
+
         #endregion
     }
 
     public class ModuleConfigurationElement : ConfigurationElement
     {
         #region Public Properties
+
         [ConfigurationProperty("name", IsRequired = true)]
         public string Name
         {
@@ -309,12 +334,14 @@ namespace VirtoCommerce.Web.Core.Configuration.Application
                 base["type"] = value;
             }
         }
+
         #endregion
     }
 
     public class ModulesCollection : ConfigurationElementCollection
     {
         #region Public Indexers
+
         public ModuleConfigurationElement this[int index]
         {
             get
@@ -327,12 +354,14 @@ namespace VirtoCommerce.Web.Core.Configuration.Application
                 {
                     base.BaseRemoveAt(index);
                 }
-                this.BaseAdd(index, value);
+                BaseAdd(index, value);
             }
         }
+
         #endregion
 
         #region Methods
+
         protected override ConfigurationElement CreateNewElement()
         {
             return new ModuleConfigurationElement();
@@ -342,6 +371,7 @@ namespace VirtoCommerce.Web.Core.Configuration.Application
         {
             return ((ModuleConfigurationElement)element).Name;
         }
+
         #endregion
     }
 }

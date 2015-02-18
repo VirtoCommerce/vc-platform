@@ -1,4 +1,5 @@
 ﻿#region
+
 using System.Globalization;
 using System.Runtime.Serialization;
 
@@ -6,8 +7,9 @@ using System.Runtime.Serialization;
 
 namespace VirtoCommerce.Web.Core.DataContracts
 {
+
     #region
-    
+
     #endregion
 
     /// <summary>
@@ -17,6 +19,7 @@ namespace VirtoCommerce.Web.Core.DataContracts
     public class ErrorDetail
     {
         #region Public Properties
+
         /// <summary>
         ///     Gets the error code.
         /// </summary>
@@ -34,9 +37,11 @@ namespace VirtoCommerce.Web.Core.DataContracts
         /// </summary>
         [DataMember(Order = 1)]
         public string Source { get; set; }
+
         #endregion
 
         #region Public Methods and Operators
+
         /// <summary>
         ///     Required override to properly display the error detail
         /// </summary>
@@ -46,10 +51,11 @@ namespace VirtoCommerce.Web.Core.DataContracts
             return string.Format(
                 CultureInfo.InvariantCulture,
                 "Code: {0}, Source: {1}, Message: {2}",
-                this.Code,
-                this.Source,
-                this.Message);
+                Code,
+                Source,
+                Message);
         }
+
         #endregion
     }
 }

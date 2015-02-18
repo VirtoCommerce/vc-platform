@@ -1,17 +1,20 @@
 ﻿#region
+
 using System.Collections.Generic;
 
 #endregion
 
 namespace VirtoCommerce.ApiClient.DataContracts.Cart
 {
+
     #region
-    
+
     #endregion
 
     public class ShipmentMethod
     {
         #region Public Properties
+
         public string Currency { get; set; }
 
         public ICollection<Discount> Discounts { get; set; }
@@ -23,6 +26,7 @@ namespace VirtoCommerce.ApiClient.DataContracts.Cart
         public decimal Price { get; set; }
 
         public string ShipmentMethodCode { get; set; }
+
         #endregion
     }
 }

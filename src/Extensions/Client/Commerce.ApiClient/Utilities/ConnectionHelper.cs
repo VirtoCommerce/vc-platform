@@ -1,13 +1,16 @@
 ﻿#region
+
 using System;
 using System.Collections.Concurrent;
 using System.Configuration;
+	using System.Threading;
 using System.Web.Configuration;
 
 #endregion
 
 namespace VirtoCommerce.ApiClient.Utilities
 {
+
     #region
     
     #endregion
@@ -15,11 +18,14 @@ namespace VirtoCommerce.ApiClient.Utilities
     public class ConnectionHelper
     {
         #region Static Fields
+
         private static readonly ConcurrentDictionary<string, string> Dictionary =
             new ConcurrentDictionary<string, string>();
+
         #endregion
 
         #region Public Methods and Operators
+
         /// <summary>
         ///     Gets the connection string.
         /// </summary>
@@ -58,6 +64,16 @@ namespace VirtoCommerce.ApiClient.Utilities
             return settingValue;
         }
 
+		public static string ApiConnectionString(string nameOrConnectionString)
+		{
+			return ApiConnectionString(nameOrConnectionString, ConfigurationManager.AppSettings["DefaultCatalog"]).ToLower();
+		}
+
+		public static string ApiConnectionString(string nameOrConnectionString, string catalog, string language = null)
+		{
+			return string.Format(GetConnectionString(nameOrConnectionString), catalog ?? "", language ?? Thread.CurrentThread.CurrentUICulture.Name).ToLower();
+		}
+
         public static void SetConnectionString(string name, string connectionString)
         {
             var configFile = WebConfigurationManager.OpenWebConfiguration("~");
@@ -65,6 +81,7 @@ namespace VirtoCommerce.ApiClient.Utilities
             section.ConnectionStrings[name].ConnectionString = connectionString;
             configFile.Save(ConfigurationSaveMode.Modified);
         }
+
         #endregion
     }
 }

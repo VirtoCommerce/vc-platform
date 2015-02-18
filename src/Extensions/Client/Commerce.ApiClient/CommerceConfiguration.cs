@@ -1,4 +1,5 @@
 ﻿#region
+
 using System;
 using VirtoCommerce.ApiClient.Utilities;
 
@@ -6,38 +7,42 @@ using VirtoCommerce.ApiClient.Utilities;
 
 namespace VirtoCommerce.ApiClient
 {
+
     #region
-    
+
     #endregion
 
     public class CommerceConfiguration
     {
         #region Fields
+
         private string _ConnectionString = String.Empty;
 
         private bool _IsCacheEnabled = true;
+
         #endregion
 
         #region Public Properties
+
         public string ConnectionString
         {
             get
             {
-                if (String.IsNullOrEmpty(this._ConnectionString))
+                if (String.IsNullOrEmpty(_ConnectionString))
                 {
-                    this._ConnectionString = ConnectionHelper.GetConnectionString("VirtoCommerce");
+                    _ConnectionString = ConnectionHelper.GetConnectionString("VirtoCommerce");
                 }
 
-                if (!this._ConnectionString.EndsWith("/"))
+                if (!_ConnectionString.EndsWith("/"))
                 {
-                    this._ConnectionString += "/";
+                    _ConnectionString += "/";
                 }
 
-                return this._ConnectionString;
+                return _ConnectionString;
             }
             set
             {
-                this._ConnectionString = value;
+                _ConnectionString = value;
             }
         }
 
@@ -45,13 +50,14 @@ namespace VirtoCommerce.ApiClient
         {
             get
             {
-                return this._IsCacheEnabled;
+                return _IsCacheEnabled;
             }
             set
             {
-                this._IsCacheEnabled = false;
+                _IsCacheEnabled = false;
             }
         }
+
         #endregion
     }
 }

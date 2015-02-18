@@ -1,17 +1,20 @@
 ﻿#region
+
 using System.Collections.Generic;
 
 #endregion
 
 namespace VirtoCommerce.ApiClient.DataContracts.Cart
 {
+
     #region
-    
+
     #endregion
 
     public class CartItem
     {
         #region Public Properties
+
         public string CatalogId { get; set; }
 
         public string CategoryId { get; set; }
@@ -67,6 +70,7 @@ namespace VirtoCommerce.ApiClient.DataContracts.Cart
         public string WarehouseLocation { get; set; }
 
         public Weight Weight { get; set; }
+
         #endregion
     }
 }

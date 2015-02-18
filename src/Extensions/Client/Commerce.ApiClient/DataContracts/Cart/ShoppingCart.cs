@@ -1,4 +1,5 @@
 ﻿#region
+
 using System;
 using System.Collections.Generic;
 
@@ -6,13 +7,15 @@ using System.Collections.Generic;
 
 namespace VirtoCommerce.ApiClient.DataContracts.Cart
 {
+
     #region
-    
+
     #endregion
 
     public class ShoppingCart
     {
         #region Public Properties
+
         public ICollection<Address> BillingAddresses { get; set; }
 
         public string CreatedBy { get; set; }
@@ -74,6 +77,7 @@ namespace VirtoCommerce.ApiClient.DataContracts.Cart
         public decimal? VolumetricWeight { get; set; }
 
         public Weight Weight { get; set; }
+
         #endregion
     }
 }

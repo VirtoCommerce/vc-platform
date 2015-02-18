@@ -1,4 +1,5 @@
 ﻿#region
+
 using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
@@ -8,17 +9,21 @@ using VirtoCommerce.ApiClient.DataContracts;
 
 namespace VirtoCommerce.Web.Core.DataContracts
 {
+
     #region
-    
+
     #endregion
 
     public class CatalogItem : Resource
     {
         #region Fields
+
         private IDictionary<string, object> _properties = new Dictionary<string, object>();
+
         #endregion
 
         #region Public Properties
+
         public Association[] Associations { get; set; }
 
         public string CatalogId { get; set; }
@@ -43,11 +48,11 @@ namespace VirtoCommerce.Web.Core.DataContracts
         {
             get
             {
-                return this._properties;
+                return _properties;
             }
             set
             {
-                this._properties = value;
+                _properties = value;
             }
         }
 
@@ -58,28 +63,31 @@ namespace VirtoCommerce.Web.Core.DataContracts
         public SeoKeyword[] SeoKeywords { get; set; }
 
         public DateTime StartDate { get; set; }
+
         #endregion
 
         #region Public Indexers
+
         [JsonIgnore]
         public object this[string name]
         {
             get
             {
-                return this._properties[name];
+                return _properties[name];
             }
             set
             {
-                if (this._properties.ContainsKey(name))
+                if (_properties.ContainsKey(name))
                 {
-                    this._properties[name] = value;
+                    _properties[name] = value;
                 }
                 else
                 {
-                    this._properties.Add(name, value);
+                    _properties.Add(name, value);
                 }
             }
         }
+
         #endregion
     }
 }

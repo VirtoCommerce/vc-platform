@@ -19,3 +19,11 @@ body
 	font-size: 100%;
 	line-height: 1.4;
 }
+
+.clearfix:after
+{
+	clear: both;
+	content: '';
+	display: block;
+	font-size: 0;
+}

@@ -1,4 +1,5 @@
 ﻿#region
+
 using System;
 
 #endregion
@@ -8,6 +9,7 @@ namespace VirtoCommerce.ApiClient.Extensions
     public static class SecurityClientExtension
     {
         #region Public Methods and Operators
+
         public static SecurityClient CreateSecurityClient(this CommerceClients source)
         {
             var connectionString = ClientContext.Configuration.ConnectionString + "security/";
@@ -21,6 +23,7 @@ namespace VirtoCommerce.ApiClient.Extensions
                 source.CreateAzureSubscriptionMessageProcessingHandler());
             return client;
         }
+
         #endregion
     }
 }
