@@ -89,7 +89,7 @@ namespace VirtoCommerce.StoreModule.Data.Services
 			var retVal = new List<coreModel.Store>();
 			using (var repository = _repositoryFactory())
 			{
-				foreach (var storeId in repository.Stores.Select(x => x.StoreId))
+				foreach (var storeId in repository.Stores.Select(x => x.StoreId).ToArray())
 				{
 					var entity = repository.GetStoreById(storeId);
 					retVal.Add(entity.ToCoreModel());

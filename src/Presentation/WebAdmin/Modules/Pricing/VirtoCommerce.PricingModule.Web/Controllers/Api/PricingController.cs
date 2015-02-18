@@ -40,14 +40,18 @@ namespace VirtoCommerce.PricingModule.Web.Controllers.Api
 			return Ok(retVal.Select(x => x.ToWebModel()).ToArray());
 		}
 
+	
 		// PUT: api/catalog/products/123/price
 		[HttpPut]
 		[ResponseType(typeof(void))]
 		[Route("api/catalog/products/{productId}/price")]
-		public IHttpActionResult UpdateProductPrice(webModel.Price price)
+		public IHttpActionResult UpdateProductPrices(webModel.Price[] prices)
 		{
-			price.Id = null;
-			_pricingService.CreatePrice(price.ToCoreModel());
+			foreach (var price in prices)
+			{
+				price.Id = null;
+				_pricingService.CreatePrice(price.ToCoreModel());
+			}
 
 			return StatusCode(HttpStatusCode.NoContent);
 		}

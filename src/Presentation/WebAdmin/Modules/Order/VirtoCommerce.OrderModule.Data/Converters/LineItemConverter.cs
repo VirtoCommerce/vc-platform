@@ -9,6 +9,7 @@ using VirtoCommerce.Foundation.Frameworks.Extensions;
 using Omu.ValueInjecter;
 using VirtoCommerce.OrderModule.Data.Model;
 using VirtoCommerce.Foundation.Money;
+using VirtoCommerce.Foundation.Frameworks.ConventionInjections;
 
 namespace VirtoCommerce.OrderModule.Data.Converters
 {
@@ -56,11 +57,11 @@ namespace VirtoCommerce.OrderModule.Data.Converters
 			if (target == null)
 				throw new ArgumentNullException("target");
 
-			target.BasePrice = source.BasePrice;
-			target.Price = source.Price;
-			target.Quantity = source.Quantity;
-			target.DiscountAmount = source.DiscountAmount;
-			target.Tax = source.Tax;
+
+			var patchInjectionPolicy = new PatchInjection<LineItemEntity>(x => x.BasePrice, x => x.Price,
+																		  x => x.Quantity, x => x.DiscountAmount, x => x.Tax);
+			target.InjectFrom(patchInjectionPolicy, source);
+
 
 			if (!source.Discounts.IsNullCollection())
 			{

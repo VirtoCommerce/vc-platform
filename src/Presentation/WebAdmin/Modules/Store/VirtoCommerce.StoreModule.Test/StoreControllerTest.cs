@@ -28,7 +28,7 @@ namespace VirtoCommerce.StoreModule.Test
 			var controller = GetStoreController();
 			var store = new Store
 			{
-				Id = "testStore1",
+				Id = "testStore",
 				Name = "testStore",
 				Catalog = "catalog",
 				Currencies = new CurrencyCodes[] { CurrencyCodes.USD, CurrencyCodes.RUB },
@@ -51,7 +51,7 @@ namespace VirtoCommerce.StoreModule.Test
 				Settings = new StoreSetting[] { new StoreSetting { Name = "test", Value = "sss", ValueType = Domain.Store.Model.SettingValueType.ShortText, Locale = "en-us" } }
 
 			};
-			var result = controller.Create(store) as OkNegotiatedContentResult<Store[]>;
+			var result = controller.Create(store) as OkNegotiatedContentResult<Store>;
 			Assert.IsNotNull(result.Content);
 		}
 

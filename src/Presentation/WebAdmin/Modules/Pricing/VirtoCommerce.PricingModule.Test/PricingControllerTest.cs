@@ -25,7 +25,7 @@ namespace VirtoCommerce.PricingModule.Test
 			//Change product price
 			price.Sale += 10;
 			var newVal = price.Sale;
-			controller.UpdateProductPrice(price);
+			controller.UpdateProductPrices(new Price[] { price });
 			result = controller.GetProductPrices("v-b005gs3cfg") as OkNegotiatedContentResult<Price[]>;
 			price = result.Content.First();
 
@@ -47,7 +47,7 @@ namespace VirtoCommerce.PricingModule.Test
 				 Currency = CurrencyCodes.USD
  				 
 			};
-			controller.UpdateProductPrice(price);
+			controller.UpdateProductPrices(new Price[] { price });
 			result = controller.GetProductPrices("v-b001fa1nuk") as OkNegotiatedContentResult<Price[]>;
 			price = result.Content.First();
 

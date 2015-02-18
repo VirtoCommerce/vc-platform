@@ -33,6 +33,10 @@ namespace VirtoCommerce.OrderModule.Web.Model
 		public decimal Sum { get; set; }
 		public decimal Tax { get; set; }
 
+		public bool IsCancelled { get; set; }
+		public DateTime? CancelledDate { get; set; }
+		public string CancelReason { get; set; }
+
 		public string ParentOperationId { get; set; }
 
 		public IEnumerable<Operation> ChildrenOperations { get; set; }

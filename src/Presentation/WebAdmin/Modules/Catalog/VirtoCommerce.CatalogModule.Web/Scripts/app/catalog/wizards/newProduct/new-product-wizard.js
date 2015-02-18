@@ -38,7 +38,7 @@
                         item: $scope.blade.item,
                         title: $scope.blade.item.name,
                         subtitle: 'item properties',
-                        isNew: true,
+                        bottomTemplate: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/wizards/common/wizard-ok-action.tpl.html',
                         controller: 'newProductWizardPropertiesController',
                         template: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/blades/item-property-detail.tpl.html'
                     };
@@ -49,6 +49,7 @@
                         item: $scope.blade.item,
                         title: $scope.blade.item.name,
                         subtitle: 'item images',
+                        bottomTemplate: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/wizards/common/wizard-ok-action.tpl.html',
                         controller: 'newProductWizardImagesController',
                         template: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/blades/item-image-detail.tpl.html'
                     };
@@ -59,6 +60,7 @@
                         seoInfos: $scope.blade.item.seoInfos,
                         title: $scope.blade.item.name,
                         subtitle: 'Seo details',
+                        bottomTemplate: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/wizards/common/wizard-ok-action.tpl.html',
                         controller: 'newProductSeoDetailController',
                         template: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/blades/seo-detail.tpl.html'
                     };
@@ -80,6 +82,7 @@
                             languages: $scope.blade.parentBlade.catalog.languages,
                             title: 'Review',
                             subtitle: 'Product Review',
+                            bottomTemplate: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/wizards/common/wizard-ok-action.tpl.html',
                             controller: 'editorialReviewDetailWizardStepController',
                             template: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/blades/editorialReview-detail.tpl.html'
                         };
