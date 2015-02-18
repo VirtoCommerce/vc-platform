@@ -18,7 +18,7 @@ namespace VirtoCommerce.ApiClient.Extensions
 
         public static ThemeClient CreateThemeClient(this CommerceClients source, string serviceUrl)
         {
-            var client = new ThemeClient(new Uri(serviceUrl), source.CreateAzureSubscriptionMessageProcessingHandler());
+            var client = new ThemeClient(new Uri(serviceUrl), source.CreateMessageProcessingHandler());
             return client;
         }
 

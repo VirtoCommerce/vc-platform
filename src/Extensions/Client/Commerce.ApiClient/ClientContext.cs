@@ -1,4 +1,6 @@
-﻿namespace VirtoCommerce.ApiClient
+﻿using VirtoCommerce.ApiClient.Utilities;
+
+namespace VirtoCommerce.ApiClient
 {
     public static class ClientContext
     {
@@ -6,8 +8,11 @@
 
         static ClientContext()
         {
-            Clients = new CommerceClients();
             Configuration = new CommerceConfiguration();
+            Clients = new CommerceClients
+            {
+                CreateMessageProcessingHandler = () => new HmacMessageProcessingHandler(Configuration.ApiAppId, Configuration.ApiSecretKey)
+            };
         }
 
         #endregion
@@ -21,8 +26,6 @@
         ///     extension methods by each service client library.
         /// </summary>
         public static CommerceClients Clients { get; private set; }
-
-        //public static ICustomerSessionService SessionService { get; private set; }
 
         /// <summary>
         ///     Gets utilities for easily retrieving configuration settings across

@@ -1,4 +1,7 @@
-﻿namespace VirtoCommerce.ApiClient
+﻿using System;
+using System.Net.Http;
+
+namespace VirtoCommerce.ApiClient
 {
     public sealed class CommerceClients
     {
@@ -10,6 +13,12 @@
         internal CommerceClients()
         {
         }
+
+        #endregion
+
+        #region Public Properties
+
+        public Func<MessageProcessingHandler> CreateMessageProcessingHandler { get; set; }
 
         #endregion
     }

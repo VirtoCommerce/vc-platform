@@ -1,61 +1,47 @@
 ﻿#region
 
-using System;
+using System.Configuration;
 using VirtoCommerce.ApiClient.Utilities;
 
 #endregion
 
 namespace VirtoCommerce.ApiClient
 {
-
-    #region
-
-    #endregion
-
     public class CommerceConfiguration
     {
-        #region Fields
+        #region Constructors and Destructors
 
-        private string _ConnectionString = String.Empty;
-
-        private bool _IsCacheEnabled = true;
+        public CommerceConfiguration()
+        {
+            ConnectionString = GetConnectionString("VirtoCommerce");
+            ApiAppId = ConfigurationManager.AppSettings["vc-public-ApiAppId"];
+            ApiSecretKey = ConfigurationManager.AppSettings["vc-public-ApiSecretKey"];
+            IsCacheEnabled = true;
+        }
 
         #endregion
 
         #region Public Properties
 
-        public string ConnectionString
+        public string ApiAppId { get; set; }
+        public string ApiSecretKey { get; set; }
+        public string ConnectionString { get; set; }
+        public bool IsCacheEnabled { get; set; }
+
+        #endregion
+
+        #region Methods
+
+        private static string GetConnectionString(string name)
         {
-            get
-            {
-                if (String.IsNullOrEmpty(_ConnectionString))
-                {
-                    _ConnectionString = ConnectionHelper.GetConnectionString("VirtoCommerce");
-                }
+            var connectionString = ConnectionHelper.GetConnectionString(name);
 
-                if (!_ConnectionString.EndsWith("/"))
-                {
-                    _ConnectionString += "/";
-                }
+            if (!connectionString.EndsWith("/"))
+            {
+                connectionString += "/";
+            }
 
-                return _ConnectionString;
-            }
-            set
-            {
-                _ConnectionString = value;
-            }
-        }
-
-        public bool IsCacheEnabled
-        {
-            get
-            {
-                return _IsCacheEnabled;
-            }
-            set
-            {
-                _IsCacheEnabled = false;
-            }
+            return connectionString;
         }
 
         #endregion

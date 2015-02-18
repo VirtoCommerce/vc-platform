@@ -15,7 +15,7 @@ namespace VirtoCommerce.ApiClient.Extensions
         {
             var client = new ContentClient(
                 new Uri(serviceUrl),
-                source.CreateAzureSubscriptionMessageProcessingHandler());
+                source.CreateMessageProcessingHandler());
             return client;
         }
 

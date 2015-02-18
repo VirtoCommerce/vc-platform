@@ -18,7 +18,7 @@ namespace VirtoCommerce.ApiClient.Extensions
 
         public static ItemsClient CreateItemsClient(this CommerceClients source, string serviceUrl)
         {
-            var client = new ItemsClient(new Uri(serviceUrl), source.CreateAzureSubscriptionMessageProcessingHandler());
+            var client = new ItemsClient(new Uri(serviceUrl), source.CreateMessageProcessingHandler());
             return client;
         }
 
