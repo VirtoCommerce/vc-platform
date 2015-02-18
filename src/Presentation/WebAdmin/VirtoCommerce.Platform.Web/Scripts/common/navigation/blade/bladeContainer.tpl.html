@@ -41,9 +41,9 @@
             <ng-include src="toolbarTemplate" />            
         </header>
         <div class="blade-container">
-            <div class="blade-loader" ng-show="blade.isLoading">
+            <!-- <div class="blade-loader" ng-show="blade.isLoading">
                 <div class="loading" data-title="Loading">Loading</div>
-            </div>
+            </div> -->
             <ng-include src='blade.template' ng-show="!blade.isLoading"> </ng-include>
         </div>
     </div>

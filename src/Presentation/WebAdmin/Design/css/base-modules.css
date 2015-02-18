@@ -2174,6 +2174,327 @@ ol
                 color: #f0a30a;
             }
 
+.list.__preloaders
+{
+
+}
+
+    .list.__preloaders .list-item
+    {
+        margin: 25px 0 0;
+        text-align: center;
+    }
+
+    .preloader
+    {
+        display: inline-block;
+        height: 50px;
+        position: relative;
+    }
+
+    .preloader span
+    {
+        background: #dee9f0;
+        bottom: 0;
+        left: 0;
+        position: absolute;
+        vertical-align: middle;
+        width: 20px;
+    }
+    
+    /* Preloader 1 */
+    .preloader-1
+    {
+        width: 180px;
+    }
+
+    .preloader-1 span
+    {
+        -webkit-animation: preloader_1 2.2s infinite linear;
+                animation: preloader_1 2.2s infinite linear;
+    }
+
+    .preloader-1 span:nth-child(2)
+    {
+        left: 20px;
+
+        -webkit-animation-delay: .1s;
+                animation-delay: .1s;
+    }
+
+    .preloader-1 span:nth-child(3)
+    {
+        left: 40px;
+
+        -webkit-animation-delay: .2s;
+                animation-delay: .2s;
+    }
+
+    .preloader-1 span:nth-child(4)
+    {
+        left: 60px;
+
+        -webkit-animation-delay: .3s;
+                animation-delay: .3s;
+    }
+
+    .preloader-1 span:nth-child(5)
+    {
+        left: 80px;
+
+        -webkit-animation-delay: .4s;
+                animation-delay: .4s;
+    }
+
+    .preloader-1 span:nth-child(6)
+    {
+        left: 100px;
+
+        -webkit-animation-delay: .5s;
+                animation-delay: .5s;
+    }
+
+    .preloader-1 span:nth-child(7)
+    {
+        left: 120px;
+
+        -webkit-animation-delay: .6s;
+                animation-delay: .6s;
+    }
+
+    .preloader-1 span:nth-child(8)
+    {
+        left: 140px;
+
+        -webkit-animation-delay: .7s;
+                animation-delay: .7s;
+    }
+
+    .preloader-1 span:nth-child(9)
+    {
+        left: 160px;
+
+        -webkit-animation-delay: .8s;
+                animation-delay: .8s;
+    }
+
+    /* Preloader 2 */
+    .preloader-2
+    {
+        width: 66px;
+    }
+
+    .preloader-2 span
+    {
+        -webkit-animation: preloader_2 1.5s infinite ease;
+                animation: preloader_2 1.5s infinite ease;
+    }
+
+    .preloader-2 span:nth-child(2)
+    {
+        left: 22px;
+
+        -webkit-animation-delay: .2s;
+                animation-delay: .2s;
+    }
+
+    .preloader-2 span:nth-child(3)
+    {
+        left: 44px;
+        
+        -webkit-animation-delay: .4s;
+                animation-delay: .4s;
+    }
+
+    /* Preloader 3 */
+    .preloader-3
+    {
+        width: 132px;
+    }
+
+    .preloader-3 span
+    {
+        bottom: auto;
+        height: 20px;
+        left: 0;
+        top: 25px;
+        width: 20px;
+
+        -webkit-border-radius: 50%;
+                border-radius: 50%;
+
+        -webkit-animation: preloader_3 .6s infinite linear;
+                animation: preloader_3 .6s infinite linear;
+    }
+
+    .preloader-3 span:nth-child(2)
+    {
+        left: 22px;
+
+        -webkit-animation-delay: .1s;
+                animation-delay: .1s;
+    }
+
+    .preloader-3 span:nth-child(3)
+    {
+        left: 44px;
+
+        -webkit-animation-delay: .2s;
+                animation-delay: .2s;
+    }
+
+    .preloader-3 span:nth-child(4)
+    {
+        left: 66px;
+
+        -webkit-animation-delay: .3s;
+                animation-delay: .3s;
+    }
+
+    .preloader-3 span:nth-child(5)
+    {
+        left: 88px;
+
+        -webkit-animation-delay: .4s;
+                animation-delay: .4s;
+    }
+
+    .preloader-3 span:nth-child(6)
+    {
+        left: 110px;
+
+        -webkit-animation-delay: .5s;
+                animation-delay: .5s;
+    }
+
+    .preloader-3 span:nth-child(7)
+    {
+        left: 132px;
+
+        -webkit-animation-delay: .6s;
+                animation-delay: .6s;
+    }
+
+    /* Preloader 4 */
+    .preloader-4
+    {
+        width: 100%;
+    }
+
+    .preloader-4 span
+    {
+        bottom: auto;
+        height: 20px;
+        top: 25px;
+        width: 20px;
+
+        -webkit-animation: preloader_4 5s infinite ease;
+                animation: preloader_4 5s infinite ease;
+    }
+
+    .preloader-4 span:nth-child(1)
+    {
+        -webkit-animation-delay: .8s;
+                animation-delay: .8s;
+    }
+
+    .preloader-4 span:nth-child(2)
+    {
+        left: 30px;
+
+        -webkit-animation-delay: .6s;
+                animation-delay: .6s;
+    }
+
+    .preloader-4 span:nth-child(3)
+    {
+        left: 60px;
+
+        -webkit-animation-delay: .4s;
+                animation-delay: .4s;
+    }
+
+    .preloader-4 span:nth-child(4)
+    {
+        left: 90px;
+
+        -webkit-animation-delay: .2s;
+                animation-delay: .2s;
+    }
+
+    .preloader-4 span:nth-child(5)
+    {
+        left: 120px;
+    }
+
+    /* Preloader 4 */
+    .preloader-5
+    {
+        width: 300px;
+    }
+
+    .preloader-5 span
+    {
+        bottom: 0;
+        color: #fff;
+        font-size: 20px;
+        line-height: 50px;
+        overflow: hidden;
+        text-transform: uppercase;
+        width: 40px;
+
+        -webkit-animation: preloader_5 2.4s infinite ease-in-out;
+                animation: preloader_5 2.4s infinite ease-in-out;
+    }
+
+    .preloader-5 span:nth-child(2)
+    {
+        left: 42px;
+
+        -webkit-animation-delay: .2s;
+                animation-delay: .2s;
+    }
+
+    .preloader-5 span:nth-child(3)
+    {
+        left: 84px;
+        
+        -webkit-animation-delay: .4s;
+                animation-delay: .4s;
+    }
+
+    .preloader-5 span:nth-child(4)
+    {
+        left: 126px;
+        
+        -webkit-animation-delay: .6s;
+                animation-delay: .6s;
+    }
+
+    .preloader-5 span:nth-child(5)
+    {
+        left: 168px;
+        
+        -webkit-animation-delay: .8s;
+                animation-delay: .8s;
+    }
+
+    .preloader-5 span:nth-child(6)
+    {
+        left: 210px;
+        
+        -webkit-animation-delay: 1s;
+                animation-delay: 1s;
+    }
+
+    .preloader-5 span:nth-child(7)
+    {
+        left: 252px;
+        
+        -webkit-animation-delay: 1.2s;
+                animation-delay: 1.2s;
+    }
+
 
 .menu.__context
 {
@@ -2241,6 +2562,13 @@ h3
 {
 	font-size: 14px;
 	margin: 5px 0;
+}
+
+.text.__debug
+{
+    color: #a6a6a6;
+    font-size: 11px;
+    word-wrap: break-word;
 }
 
 .sub-text
@@ -4976,6 +5304,6 @@ fieldset + fieldset
             top: 0;
             white-space: nowrap;
 
-            -webkit-animation: loading 2s ease-in-out 0s infinite;
-                    animation: loading 2s ease-in-out 0s infinite;
+            -webkit-animation: loading 2s infinite ease-in-out;
+                    animation: loading 2s infinite ease-in-out;
         }
