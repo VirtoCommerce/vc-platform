@@ -11,7 +11,7 @@ Documentation: http://docs.virtocommerce.com
 
 Online Demo: http://virtocommerce.com/sandbox
 
-Web Admin Demo: http://virtoadmin.azurewebsites.net
+Web Admin Demo: http://virtoadmin.azurewebsites.net 
 
 Contributing
 -----------
