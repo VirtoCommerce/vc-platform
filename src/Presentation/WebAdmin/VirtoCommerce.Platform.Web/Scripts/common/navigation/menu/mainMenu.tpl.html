@@ -15,7 +15,7 @@
     <div class="dropdown" ng-class="{'__opened': showSubMenu}">
         <a class="dropdown-close" ng-click="showSubMenu = false">×</a>
         <div class="dropdown-head" ng-if="!currentMenuItem.headerTemplate">
-            <ul class="menu __inline">
+            <!-- <ul class="menu __inline">
                 <li class="menu-item">
                     <a class="menu-link">
                         <i class="menu-ico fa fa-clock-o"></i>
@@ -28,7 +28,7 @@
                         <span class="menu-name">Clear all recent</span>
                     </a>
                 </li>
-            </ul>
+            </ul> -->
         </div>
         <ng-include src='currentMenuItem.headerTemplate'> </ng-include>
         <div class="dropdown-content">
