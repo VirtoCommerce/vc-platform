@@ -9,6 +9,7 @@ using VirtoCommerce.CoreModule.Web.Settings;
 using VirtoCommerce.Foundation.AppConfig.Repositories;
 using VirtoCommerce.Foundation.Data.AppConfig;
 using VirtoCommerce.Foundation.Data.Customers;
+using VirtoCommerce.Foundation.Data.Search;
 using VirtoCommerce.Foundation.Data.Security;
 using VirtoCommerce.Foundation.Data.Security.Identity;
 using VirtoCommerce.Framework.Web.Modularity;
@@ -17,139 +18,144 @@ using VirtoCommerce.Framework.Web.Settings;
 
 namespace VirtoCommerce.CoreModule.Web
 {
-	[Module(ModuleName = "CoreModule", OnDemand = true)]
-	public class Module : IModule, IDatabaseModule
-	{
-		private const string _connectionStringName = "VirtoCommerce";
-		private readonly IUnityContainer _container;
-		private readonly IAppBuilder _appBuilder;
+    [Module(ModuleName = "CoreModule", OnDemand = true)]
+    public class Module : IModule, IDatabaseModule
+    {
+        private const string _connectionStringName = "VirtoCommerce";
+        private readonly IUnityContainer _container;
+        private readonly IAppBuilder _appBuilder;
 
-		public Module(IUnityContainer container, IAppBuilder appBuilder)
-		{
-			_container = container;
-			_appBuilder = appBuilder;
-		}
+        public Module(IUnityContainer container, IAppBuilder appBuilder)
+        {
+            _container = container;
+            _appBuilder = appBuilder;
+        }
 
-		#region IDatabaseModule Members
+        #region IDatabaseModule Members
 
-		public void SetupDatabase(SampleDataLevel sampleDataLevel)
-		{
-			using (var db = new SecurityDbContext(_connectionStringName))
-			{
-				IdentityDatabaseInitializer initializer;
+        public void SetupDatabase(SampleDataLevel sampleDataLevel)
+        {
+            using (var db = new SecurityDbContext(_connectionStringName))
+            {
+                IdentityDatabaseInitializer initializer;
 
-				switch (sampleDataLevel)
-				{
-					case SampleDataLevel.Full:
-					case SampleDataLevel.Reduced:
-						initializer = new IdentitySampleDatabaseInitializer();
-						break;
-					default:
-						initializer = new IdentityDatabaseInitializer();
-						break;
-				}
+                switch (sampleDataLevel)
+                {
+                    case SampleDataLevel.Full:
+                    case SampleDataLevel.Reduced:
+                        initializer = new IdentitySampleDatabaseInitializer();
+                        break;
+                    default:
+                        initializer = new IdentityDatabaseInitializer();
+                        break;
+                }
 
-				initializer.InitializeDatabase(db);
-			}
+                initializer.InitializeDatabase(db);
+            }
 
-			using (var db = new EFSecurityRepository(_connectionStringName))
-			{
-				SqlSecurityDatabaseInitializer initializer;
+            using (var db = new EFSecurityRepository(_connectionStringName))
+            {
+                SqlSecurityDatabaseInitializer initializer;
 
-				switch (sampleDataLevel)
-				{
-					case SampleDataLevel.Full:
-					case SampleDataLevel.Reduced:
-						initializer = new SqlSecuritySampleDatabaseInitializer();
-						break;
-					default:
-						initializer = new SqlSecurityDatabaseInitializer();
-						break;
-				}
+                switch (sampleDataLevel)
+                {
+                    case SampleDataLevel.Full:
+                    case SampleDataLevel.Reduced:
+                        initializer = new SqlSecuritySampleDatabaseInitializer();
+                        break;
+                    default:
+                        initializer = new SqlSecurityDatabaseInitializer();
+                        break;
+                }
 
-				initializer.InitializeDatabase(db);
-			}
+                initializer.InitializeDatabase(db);
+            }
 
-			using (var db = new EFCustomerRepository(_connectionStringName))
-			{
-				SqlCustomerDatabaseInitializer initializer;
+            using (var db = new EFCustomerRepository(_connectionStringName))
+            {
+                SqlCustomerDatabaseInitializer initializer;
 
-				switch (sampleDataLevel)
-				{
-					case SampleDataLevel.Full:
-					case SampleDataLevel.Reduced:
-						initializer = new SqlCustomerSampleDatabaseInitializer();
-						break;
-					default:
-						initializer = new SqlCustomerDatabaseInitializer();
-						break;
-				}
+                switch (sampleDataLevel)
+                {
+                    case SampleDataLevel.Full:
+                    case SampleDataLevel.Reduced:
+                        initializer = new SqlCustomerSampleDatabaseInitializer();
+                        break;
+                    default:
+                        initializer = new SqlCustomerDatabaseInitializer();
+                        break;
+                }
 
-				initializer.InitializeDatabase(db);
-			}
+                initializer.InitializeDatabase(db);
+            }
 
-			using (var db = new EFAppConfigRepository(_connectionStringName))
-			{
-				SqlAppConfigDatabaseInitializer initializer;
+            using (var db = new EFAppConfigRepository(_connectionStringName))
+            {
+                SqlAppConfigDatabaseInitializer initializer;
 
-				switch (sampleDataLevel)
-				{
-					case SampleDataLevel.Full:
-						initializer = new SqlAppConfigSampleDatabaseInitializer();
-						break;
-					case SampleDataLevel.Reduced:
-						initializer = new SqlAppConfigReducedSampleDatabaseInitializer();
-						break;
-					default:
-						initializer = new SqlAppConfigDatabaseInitializer();
-						break;
-				}
+                switch (sampleDataLevel)
+                {
+                    case SampleDataLevel.Full:
+                        initializer = new SqlAppConfigSampleDatabaseInitializer();
+                        break;
+                    case SampleDataLevel.Reduced:
+                        initializer = new SqlAppConfigReducedSampleDatabaseInitializer();
+                        break;
+                    default:
+                        initializer = new SqlAppConfigDatabaseInitializer();
+                        break;
+                }
 
-				initializer.InitializeDatabase(db);
-			}
-		}
+                initializer.InitializeDatabase(db);
+            }
 
-		#endregion
+            using (var db = new EFSearchRepository(_connectionStringName))
+            {
+                new SearchDatabaseInitializer().InitializeDatabase(db);
+            }
+        }
 
-		#region IModule Members
+        #endregion
 
-		public void Initialize()
-		{
-			Func<IFoundationSecurityRepository> securityRepositoryFactory = () =>
-				new FoundationSecurityRepositoryImpl(_connectionStringName);
+        #region IModule Members
 
-			OwinConfig.Configure(_appBuilder, securityRepositoryFactory);
+        public void Initialize()
+        {
+            Func<IFoundationSecurityRepository> securityRepositoryFactory = () =>
+                new FoundationSecurityRepositoryImpl(_connectionStringName);
 
-			#region Security
+            OwinConfig.Configure(_appBuilder, securityRepositoryFactory);
 
-			_container.RegisterType<Func<IFoundationSecurityRepository>>(
-				new InjectionFactory(x => new Func<IFoundationSecurityRepository>(securityRepositoryFactory)));
+            #region Security
 
-			#endregion
+            _container.RegisterType<Func<IFoundationSecurityRepository>>(
+                new InjectionFactory(x => new Func<IFoundationSecurityRepository>(securityRepositoryFactory)));
 
-			#region Customer
+            #endregion
 
-			_container.RegisterType<Func<IFoundationCustomerRepository>>(
-				new InjectionFactory(x => new Func<IFoundationCustomerRepository>(() =>
-					new FoundationCustomerRepositoryImpl(_connectionStringName))));
+            #region Customer
 
-			#endregion
+            _container.RegisterType<Func<IFoundationCustomerRepository>>(
+                new InjectionFactory(x => new Func<IFoundationCustomerRepository>(() =>
+                    new FoundationCustomerRepositoryImpl(_connectionStringName))));
 
-			#region Notification
-			_container.RegisterInstance<INotifier>(new InMemoryNotifierImpl());
-			#endregion
+            #endregion
 
-			#region Settings
-			var modulesPath = HostingEnvironment.MapPath("~/Modules");
-			Func<IAppConfigRepository> appConfigRepFactory = () => new EFAppConfigRepository(_connectionStringName);
+            #region Notification
+            _container.RegisterInstance<INotifier>(new InMemoryNotifierImpl());
+            #endregion
 
-			var settingsManager = new SettingsManager(modulesPath, appConfigRepFactory);
-			_container.RegisterInstance<ISettingsManager>(settingsManager);
+            #region Settings
+            var modulesPath = HostingEnvironment.MapPath("~/Modules");
+            Func<IAppConfigRepository> appConfigRepFactory = () => new EFAppConfigRepository(_connectionStringName);
 
-			_container.RegisterType<SettingController>(new InjectionConstructor(settingsManager));
-			#endregion
-		}
+            var settingsManager = new SettingsManager(modulesPath, appConfigRepFactory);
+            _container.RegisterInstance<ISettingsManager>(settingsManager);
 
-		#endregion
-	}
+            _container.RegisterType<SettingController>(new InjectionConstructor(settingsManager));
+            #endregion
+        }
+
+        #endregion
+    }
 }
