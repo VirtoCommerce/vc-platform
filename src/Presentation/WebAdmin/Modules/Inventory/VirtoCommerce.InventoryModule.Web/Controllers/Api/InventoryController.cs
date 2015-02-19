@@ -21,7 +21,7 @@ namespace VirtoCommerce.InventoryModule.Web.Controllers.Api
 		// GET: api/catalog/products/{productId}/inventory
 		[HttpGet]
 		[ResponseType(typeof(webModel.InventoryInfo))]
-		[Route("api/products/{productId}/inventory")]
+		[Route("~/api/catalog/products/{productId}/inventory")]
 		public IHttpActionResult GetProductInventory(string productId)
 		{
 			var retVal = _inventoryService.GetProductsInventoryInfos(new string[] { productId }).FirstOrDefault();
@@ -35,7 +35,7 @@ namespace VirtoCommerce.InventoryModule.Web.Controllers.Api
 		// PUT: api/catalog/products/123/inventory
 		[HttpPut]
 		[ResponseType(typeof(void))]
-		[Route("api/catalog/products/{productId}/inventory")]
+		[Route("~/api/catalog/products/{productId}/inventory")]
 		public IHttpActionResult UpdateProductInventory(webModel.InventoryInfo inventory)
 		{
 			_inventoryService.UpsertInventories(new coreModel.InventoryInfo[] { inventory.ToCoreModel() });

@@ -14,6 +14,7 @@ using System.Data.Entity;
 using VirtoCommerce.Domain.Pricing.Services;
 using VirtoCommerce.Foundation.Frameworks;
 using VirtoCommerce.Domain.Catalog.Services;
+using VirtoCommerce.Foundation.Money;
 
 namespace VirtoCommerce.PricingModule.Data.Services
 {
@@ -67,12 +68,15 @@ namespace VirtoCommerce.PricingModule.Data.Services
 			foreach(var currency in allStoreCurrencies)
 			{
 				var existPrice = retVal.FirstOrDefault(x => x.Currency == currency);
-				if(existPrice == null)
+				if (existPrice == null)
 				{
 					var zeroPrice = new coreModel.Price
 					{
 						Currency = currency,
 						ProductId = evalContext.ProductId,
+						Sale = 0,
+						List = 0,
+						PricelistId = GetDefaultPriceListName(currency)
 					};
 					retVal.Add(zeroPrice);
 				}
@@ -117,7 +121,7 @@ namespace VirtoCommerce.PricingModule.Data.Services
 			{
 				if (price.PricelistId == null)
 				{
-					var defaultPriceListId = "Default" + price.Currency.ToString();
+					var defaultPriceListId = GetDefaultPriceListName(price.Currency);
 					var foundationDefaultPriceList = repository.GetPricelistById(defaultPriceListId);
 					if (foundationDefaultPriceList == null)
 					{
@@ -204,7 +208,11 @@ namespace VirtoCommerce.PricingModule.Data.Services
 		}
 		#endregion
 
-
+		private static string GetDefaultPriceListName(CurrencyCodes currency)
+		{
+			var retVal = "Default" + currency.ToString();
+			return retVal;
+		}
 		private void GenericDelete(string[] ids, Func<IFoundationPricingRepository, string, StorageEntity> getter)
 		{
 			using (var repository = _repositoryFactory())

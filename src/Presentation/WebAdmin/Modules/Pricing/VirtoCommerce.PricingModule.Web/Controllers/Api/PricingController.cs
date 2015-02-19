@@ -31,7 +31,7 @@ namespace VirtoCommerce.PricingModule.Web.Controllers.Api
 		// GET: api/catalog/products/{productId}/prices
 		[HttpGet]
 		[ResponseType(typeof(webModel.Price[]))]
-		[Route("api/products/{productId}/prices")]
+		[Route("api/catalog/products/{productId}/prices")]
 		public IHttpActionResult GetProductPrices(string productId)
 		{
 			IHttpActionResult retVal = NotFound();
@@ -51,7 +51,7 @@ namespace VirtoCommerce.PricingModule.Web.Controllers.Api
 		// PUT: api/catalog/products/123/price
 		[HttpPut]
 		[ResponseType(typeof(void))]
-		[Route("api/catalog/products/{productId}/price")]
+		[Route("api/catalog/products/{productId}/prices")]
 		public IHttpActionResult UpdateProductPrices(webModel.Price[] prices)
 		{
 			foreach (var price in prices)

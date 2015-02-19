@@ -33,7 +33,7 @@ namespace VirtoCommerce.StoreModule.Web.Controllers.Api
 			return Ok(retVal);
 		}
 
-		// GET: api/store/{id}
+		// GET: api/stores/{id}
 		[HttpGet]
 		[ResponseType(typeof(webModel.Store))]
 		[Route("{id}")]
