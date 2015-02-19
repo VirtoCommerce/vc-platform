@@ -69,8 +69,14 @@
     <Compile Include="Configuration\Security\SecurityConfiguration.cs" />
     <Compile Include="Configuration\Store\StoreConfiguration.cs" />
     <Compile Include="Constants.cs" />
+    <Compile Include="CustomerServiceClient.cs" />
+    <Compile Include="DataContracts\CustomerService\ContactProperty.cs" />
+    <Compile Include="DataContracts\CustomerService\Contract.cs" />
     <Compile Include="DataContracts\Themes\Theme.cs" />
     <Compile Include="DataContracts\Themes\ThemeAsset.cs" />
+    <Compile Include="Extensions\CustomerServiceClientExtension.cs" />
+    <Compile Include="Extensions\ObjectExtension.cs" />
+    <Compile Include="Extensions\StringExtension.cs" />
     <Compile Include="Extensions\ThemeClientExtensions.cs" />
     <Compile Include="ThemeClient.cs" />
     <Compile Include="DataContracts\Association.cs" />
