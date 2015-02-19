@@ -47,7 +47,7 @@ namespace VirtoCommerce.StoreModule.Data.Converters
 				retVal.ReturnsFulfillmentCenter = dbStore.ReturnsFulfillmentCenter.ToCoreModel();
 			}
 			retVal.Settings = dbStore.Settings.Select(x => x.ToCoreModel()).ToList();
-			retVal.Languages = dbStore.Languages.Select(x => x.StoreId).ToList();
+			retVal.Languages = dbStore.Languages.Select(x => x.LanguageCode).ToList();
 			retVal.Currencies = dbStore.Currencies.Select(x => (CurrencyCodes)Enum.Parse(typeof(CurrencyCodes), x.CurrencyCode, true)).ToList();
 			retVal.PaymentGateways = dbStore.PaymentGateways.Select(x => x.PaymentGateway).ToList();
 

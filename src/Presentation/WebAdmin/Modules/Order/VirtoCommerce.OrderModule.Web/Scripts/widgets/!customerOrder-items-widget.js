@@ -2,10 +2,12 @@
 ])
 .controller('customerOrderItemsWidgetController', ['$scope', 'bladeNavigationService', function ($scope, bladeNavigationService) {
 	$scope.currentBlade = $scope.widget.blade;
-	$scope.itemsCount = 'calculating';
+	$scope.customerOrder = {};
 
 	$scope.$watch('widget.blade.currentEntity', function (customerOrder) {
-		$scope.itemsCount = customerOrder.items.length;
+		if (customerOrder) {
+			$scope.customerOrder = customerOrder;
+		}
 	});
 
 	$scope.openItemsBlade = function () {

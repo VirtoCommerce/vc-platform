@@ -1,7 +1,7 @@
 ﻿<div class="tile quadro wide" ng-click="">
     <div class="tree-view">
         <div class="tree-scroll">
-            <ul class="tree" ng-init="operation = currentBlade.currentEntity">
+            <ul class="tree" ng-init="operation = currentOperation">
                 <li class="tree-item first" ng-include="'document.html'">
                     <!-- <ul class="tree-node" ng-init="operation = currentBlade.currentEntity">
                         <li class="tree-item" ng-include="'document.html'"></li>
@@ -14,7 +14,7 @@
 
 
 <script type="text/ng-template" id="document.html">
-    <div class="tree-block">
+    <div class="tree-block" ng-click="selectOperation(operation)" ng-class="{'__selected': currentOperation.id == operation.id}">
         <div class="inner">
             <div class="tree-el __title">
                 <i class="tree-ico fa fa-info-circle"></i>
@@ -30,7 +30,7 @@
             </div>
         </div>
     </div>
-    <ul class="tree-node">
-        <li class="tree-item" ng-class="{'__selected': currentBlade.currentEntity.id == operation.id}" ng-repeat="operation in operation.childrenOperations" ng-include="'document.html'"></li>
+    <ul class="tree-node" ng-if="operation.childrenOperations.length > 0">
+        <li class="tree-item"  ng-repeat="operation in operation.childrenOperations" ng-include="'document.html'"></li>
     </ul>
 </script>

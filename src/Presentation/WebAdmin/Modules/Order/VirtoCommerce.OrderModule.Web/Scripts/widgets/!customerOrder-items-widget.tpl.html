@@ -1,4 +1,5 @@
-﻿<div class="tile double wide" ng-click="openItemsBlade()">
-    <span class="tile-count">{{itemsCount}}</span>
+﻿<div class="tile __price double wide" ng-click="openItemsBlade()">
+    <span class="tile-count">{{customerOrder.items.length}}</span>
     <span class="tile-descr">Line items</span>
+    <span class="tile-price">{{customerOrder.subTotal}}&nbsp;{{customerOrder.currency}}</span>
 </div>
