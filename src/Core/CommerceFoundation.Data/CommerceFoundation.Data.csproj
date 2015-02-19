@@ -277,6 +277,7 @@
     <Compile Include="Orders\SqlOrderSampleDatabaseInitializer.cs" />
     <Compile Include="Reviews\SqlReviewDatabaseInitializer.cs" />
     <Compile Include="Reviews\SqlReviewSampleDatabaseInitializer.cs" />
+    <Compile Include="Search\SearchDatabaseInitializer.cs" />
     <Compile Include="Security\Identity\IdentityDatabaseInitializer.cs" />
     <Compile Include="Security\Identity\IdentitySampleDatabaseInitializer.cs" />
     <Compile Include="Security\Identity\Migrations\201411101625303_InitialCreate.cs" />

@@ -18,8 +18,8 @@ using Address = VirtoCommerce.CoreModule.Web.Security.Models.Address;
 namespace VirtoCommerce.SecurityModule.Web.Controllers
 {
     [RoutePrefix("api/security")]
-	public class SecurityController : ApiController
-	{
+    public class SecurityController : ApiController
+    {
         private readonly Func<IFoundationSecurityRepository> _securityRepository;
         private readonly Func<IFoundationCustomerRepository> _customerRepository;
 
@@ -59,33 +59,33 @@ namespace VirtoCommerce.SecurityModule.Web.Controllers
         #region Internal Web admin actions
 
         [HttpPost]
-		[Route("login")]
-       	public async Task<IHttpActionResult> Login(UserLogin model)
-		{
+        [Route("login")]
+        [AllowAnonymous]
+        public async Task<IHttpActionResult> Login(UserLogin model)
+        {
             if (await SignInManager.PasswordSignInAsync(model.UserName, model.Password, model.RememberMe, true) == SignInStatus.Success)
             {
                 return Ok(GetUserInfo(model.UserName));
             }
 
-             return StatusCode(HttpStatusCode.Unauthorized);
-		}
+            return StatusCode(HttpStatusCode.Unauthorized);
+        }
 
-		[Authorize]
-		[HttpGet]
-	    [Route("usersession")]
+        [HttpGet]
+        [Route("usersession")]
         [ResponseType(typeof(AuthInfo))]
-		public IHttpActionResult GetUserSession()
-		{
+        public IHttpActionResult GetUserSession()
+        {
             return Ok(GetUserInfo(User.Identity.Name));
-		}
+        }
 
-		[HttpPost]
-	    [Route("logout")]
-		public IHttpActionResult Logout()
-		{
+        [HttpPost]
+        [Route("logout")]
+        public IHttpActionResult Logout()
+        {
             AuthenticationManager.SignOut();
-			return Ok(new { status = true });
-		}
+            return Ok(new { status = true });
+        }
 
         #endregion
 
@@ -151,7 +151,7 @@ namespace VirtoCommerce.SecurityModule.Web.Controllers
         public async Task<IHttpActionResult> UpdateAsync(ApplicationUserExtended user)
         {
             var dbUser = await UserManager.FindByIdAsync(user.Id);
-   
+
             dbUser.AccessFailedCount = user.AccessFailedCount;
             dbUser.Email = user.Email;
             dbUser.EmailConfirmed = user.EmailConfirmed;
@@ -194,7 +194,7 @@ namespace VirtoCommerce.SecurityModule.Web.Controllers
 
             if (result.Succeeded)
             {
-                 var id = Guid.NewGuid().ToString();
+                var id = Guid.NewGuid().ToString();
 
                 using (var repository = _securityRepository())
                 {

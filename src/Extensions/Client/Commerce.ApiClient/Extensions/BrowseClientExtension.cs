@@ -30,7 +30,7 @@ namespace VirtoCommerce.ApiClient.Extensions
 
         public static BrowseClient CreateBrowseClientWithUri(this CommerceClients source, string serviceUrl)
         {
-            var client = new BrowseClient(new Uri(serviceUrl), source.CreateAzureSubscriptionMessageProcessingHandler());
+            var client = new BrowseClient(new Uri(serviceUrl), source.CreateMessageProcessingHandler());
             return client;
         }
 

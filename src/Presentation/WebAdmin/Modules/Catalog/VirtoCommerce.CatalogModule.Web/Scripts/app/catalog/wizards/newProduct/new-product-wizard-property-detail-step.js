@@ -5,12 +5,7 @@
 .controller('newProductWizardPropertiesController', ['$scope', 'properties', 'bladeNavigationService', function ($scope, properties, bladeNavigationService) {
     $scope.blade.isLoading = false;
     $scope.blade.item = angular.copy($scope.blade.item);
-    if ($scope.blade.item.titularItemId != null) {
-        $scope.propGroups = [{ title: 'Variation properties', type: 1 }];
-    } else {
-        $scope.propGroups = [{ title: 'Product properties', type: 0 }];
-    }
-
+   
     $scope.saveChanges = function () {
         $scope.blade.parentBlade.item.properties = $scope.blade.item.properties;
         $scope.bladeClose();

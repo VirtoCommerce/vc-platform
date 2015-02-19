@@ -9,6 +9,7 @@ using VirtoCommerce.Foundation.Frameworks.Extensions;
 using Omu.ValueInjecter;
 using VirtoCommerce.OrderModule.Data.Model;
 using VirtoCommerce.Foundation.Money;
+using VirtoCommerce.Foundation.Frameworks.ConventionInjections;
 
 namespace VirtoCommerce.OrderModule.Data.Converters
 {
@@ -76,12 +77,8 @@ namespace VirtoCommerce.OrderModule.Data.Converters
 
 			source.Patch((OperationEntity)target);
 
-			if (source.OrganizationId != null)
-				target.OrganizationId = source.OrganizationId;
-			if (source.FulfillmentCenterId != null)
-				target.FulfillmentCenterId = source.FulfillmentCenterId;
-			if (source.EmployeeId != null)
-				target.EmployeeId = source.EmployeeId;
+			var patchInjectionPolicy = new PatchInjection<ShipmentEntity>(x => x.FulfillmentCenterId, x => x.OrganizationId, x => x.EmployeeId);
+			target.InjectFrom(patchInjectionPolicy, source);
 
 			if (!source.InPayments.IsNullCollection())
 			{

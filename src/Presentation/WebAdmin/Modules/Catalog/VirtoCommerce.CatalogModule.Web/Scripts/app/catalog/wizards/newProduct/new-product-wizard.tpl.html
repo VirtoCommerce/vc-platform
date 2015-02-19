@@ -2,8 +2,8 @@
 <div class="blade-content">
     <div class="blade-inner">
         <div class="inner-block">
-            <form class="form" name="newProductForm" ng-init="setForm(newProductForm);">
-                <div class="form-group">
+            <form class="form" name="newProductForm">
+                <div class="form-group" ng-init="setForm(newProductForm)">
                     <label class="form-label">SKU:</label>
                     <div class="form-input">
                         <input required class="form-control" ng-model="blade.item.code" placeholder="Enter item sku" />
@@ -20,7 +20,7 @@
             <ul class="list __items">
                 <li class="list-item" ng-click="openBlade('properties')" ng-if="blade.item.properties.length > 0">
                     <i class="list-ico fa fa-cogs"></i>
-                    <span class="list-t">Add properties</span>
+                    <span class="list-t">Fill properties</span>
                     <span class="list-descr">{{ getUnfilledProperties().length }} of {{blade.item.properties.length}} properties filled</span>
                 </li>
                 <li class="list-item" ng-click="openBlade('images')">

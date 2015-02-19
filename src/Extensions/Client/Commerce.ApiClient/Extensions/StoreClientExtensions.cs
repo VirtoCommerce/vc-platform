@@ -18,7 +18,7 @@ namespace VirtoCommerce.ApiClient.Extensions
 
         public static StoreClient CreateStoreClient(this CommerceClients source, string serviceUrl)
         {
-            var client = new StoreClient(new Uri(serviceUrl), source.CreateAzureSubscriptionMessageProcessingHandler());
+            var client = new StoreClient(new Uri(serviceUrl), source.CreateMessageProcessingHandler());
             return client;
         }
 

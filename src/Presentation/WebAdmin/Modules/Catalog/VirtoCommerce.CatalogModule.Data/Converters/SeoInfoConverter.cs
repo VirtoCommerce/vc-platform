@@ -36,6 +36,7 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 		public static foundationConfig.SeoUrlKeyword ToFoundation(this module.SeoInfo seoInfo, module.CatalogProduct product)
 		{
 			var retVal = seoInfo.ToFoundation();
+			retVal.IsActive = true;
 			retVal.KeywordValue = product.Id;
 			retVal.KeywordType = (int)foundationConfig.SeoUrlKeywordTypes.Item;
 			return retVal;

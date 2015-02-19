@@ -5,16 +5,19 @@ using Newtonsoft.Json.Serialization;
 
 namespace VirtoCommerce.Platform.Web
 {
-	public static class WebApiConfig
-	{
-		public static void Register(HttpConfiguration config)
-		{
-			// Web API routes
-			config.MapHttpAttributeRoutes();
+    public static class WebApiConfig
+    {
+        public static void Register(HttpConfiguration config)
+        {
+            // Anonymous requests are not allowed
+            config.Filters.Add(new AuthorizeAttribute());
+
+            // Web API routes
+            config.MapHttpAttributeRoutes();
             config.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
 
-			//config.Routes.MapHttpRoute("DefaultApiGet", "api/{controller}/{id}", new { id = RouteParameter.Optional }, new { id = @"^[0-9]+$" });
-			config.Routes.MapHttpRoute("DefaultApi", "api/{controller}/{action}/{id}", new { id = RouteParameter.Optional, action = RouteParameter.Optional });
+            //config.Routes.MapHttpRoute("DefaultApiGet", "api/{controller}/{id}", new { id = RouteParameter.Optional }, new { id = @"^[0-9]+$" });
+            config.Routes.MapHttpRoute("DefaultApi", "api/{controller}/{action}/{id}", new { id = RouteParameter.Optional, action = RouteParameter.Optional });
 
             var formatter = config.Formatters.JsonFormatter;
             formatter.SerializerSettings.ContractResolver = new DeltaContractResolver(formatter);
@@ -23,16 +26,16 @@ namespace VirtoCommerce.Platform.Web
             formatter.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
 
             //config.Formatters.JsonFormatter.SerializerSettings.
-			// Uncomment the following line of code to enable query support for actions with an IQueryable or IQueryable<T> return type.
-			// To avoid processing unexpected or malicious queries, use the validation settings on QueryableAttribute to validate incoming queries.
-			// For more information, visit http://go.microsoft.com/fwlink/?LinkId=279712.
-			//config.EnableQuerySupport();
-			config.AddODataQueryFilter();
+            // Uncomment the following line of code to enable query support for actions with an IQueryable or IQueryable<T> return type.
+            // To avoid processing unexpected or malicious queries, use the validation settings on QueryableAttribute to validate incoming queries.
+            // For more information, visit http://go.microsoft.com/fwlink/?LinkId=279712.
+            //config.EnableQuerySupport();
+            config.AddODataQueryFilter();
 
             var json = config.Formatters.JsonFormatter;
             json.SerializerSettings.PreserveReferencesHandling = PreserveReferencesHandling.None;
             json.SerializerSettings.Formatting = Formatting.Indented;
             config.Formatters.Remove(config.Formatters.XmlFormatter);
-		}
-	}
+        }
+    }
 }

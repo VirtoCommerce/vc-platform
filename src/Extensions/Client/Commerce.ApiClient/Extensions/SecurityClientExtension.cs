@@ -20,7 +20,7 @@ namespace VirtoCommerce.ApiClient.Extensions
         {
             var client = new SecurityClient(
                 new Uri(serviceUrl),
-                source.CreateAzureSubscriptionMessageProcessingHandler());
+                source.CreateMessageProcessingHandler());
             return client;
         }
 

@@ -48,7 +48,8 @@
     };
 
     function isDirty() {
-        return !angular.equals($scope.currentBlade.item, $scope.currentBlade.origItem);
+    	var retVal = !angular.equals($scope.currentBlade.item, $scope.currentBlade.origItem);
+      	return retVal;
     };
 
     function saveChanges() {

@@ -27,5 +27,11 @@ namespace VirtoCommerce.ApiClient.DataContracts.Order
         public decimal Sum { get; set; }
 
         public decimal Tax { get; set; }
+
+        public bool IsCancelled { get; set; }
+
+        public DateTime? CancelledDate { get; set; }
+
+        public string CancelReason { get; set; }
     }
 }

@@ -40,7 +40,10 @@ namespace VirtoCommerce.OrderModule.Data.Model
 		[Column(TypeName = "Money")]
 		public decimal Tax { get; set; }
 
-
+		public bool IsCancelled { get; set; }
+		public DateTime? CancelledDate { get; set; }
+		[StringLength(2048)]
+		public string CancelReason { get; set; }
 
 		#region IOperation Members
 

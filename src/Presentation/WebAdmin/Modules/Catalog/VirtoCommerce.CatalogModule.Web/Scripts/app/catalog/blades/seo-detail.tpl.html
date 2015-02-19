@@ -1,4 +1,7 @@
-﻿<div class="blade-content">
+﻿<div class="blade-static __bottom" ng-if="blade.bottomTemplate">
+    <ng-include src='blade.bottomTemplate'> </ng-include>
+</div>
+<div class="blade-content">
     <div class="blade-inner">
         <div class="inner-block">
             <form name="contextEntityDetailForm" class="form" novalidate>
