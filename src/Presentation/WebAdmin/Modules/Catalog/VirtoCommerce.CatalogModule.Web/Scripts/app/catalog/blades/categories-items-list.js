@@ -384,24 +384,24 @@
                 canExecuteMethod: function () {
                     return isItemsChecked();
                 }
-            },
-            {
-                name: "Advanced search", icon: 'fa fa-search',
-                executeMethod: function () {
-                    var newBlade = {
-                        id: 'listItemChild',
-                        title: 'Advanced search',
-                        subtitle: 'Searching within...',
-                        controller: 'advancedSearchController',
-                        template: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/blades/advanced-search.tpl.html'
-                    };
-                    bladeNavigationService.showBlade(newBlade, $scope.blade.parentBlade);
-                    $scope.bladeClose();
-                },
-                canExecuteMethod: function () {
-                    return true;
-                }
             }
+            //{
+            //    name: "Advanced search", icon: 'fa fa-search',
+            //    executeMethod: function () {
+            //        var newBlade = {
+            //            id: 'listItemChild',
+            //            title: 'Advanced search',
+            //            subtitle: 'Searching within...',
+            //            controller: 'advancedSearchController',
+            //            template: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/blades/advanced-search.tpl.html'
+            //        };
+            //        bladeNavigationService.showBlade(newBlade, $scope.blade.parentBlade);
+            //        $scope.bladeClose();
+            //    },
+            //    canExecuteMethod: function () {
+            //        return true;
+            //    }
+            //}
     ];
 
     if (angular.isDefined($scope.blade.mode)) {

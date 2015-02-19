@@ -223,15 +223,15 @@ function ($injector, $rootScope, $scope, catalogs, bladeNavigationService, dialo
                 return true;
             }
         },
-        {
-            name: "Export", icon: 'fa fa-upload',
-            executeMethod: function () {
-                $scope.export(selectedNode);
-            },
-            canExecuteMethod: function () {
-                return true;
-            }
-        },
+        //{
+        //    name: "Export", icon: 'fa fa-upload',
+        //    executeMethod: function () {
+        //        $scope.export(selectedNode);
+        //    },
+        //    canExecuteMethod: function () {
+        //        return true;
+        //    }
+        //},
       {
           name: "Delete", icon: 'fa fa-trash-o',
           executeMethod: function () {
