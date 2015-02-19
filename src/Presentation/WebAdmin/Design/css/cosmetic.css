@@ -336,19 +336,19 @@ a:hover,
 		opacity: 0;
 	}
 
-	25%
+	30%
 	{
 		transform: translateX(120px);
 		opacity: 1;
 	}
 
-	50%
+	60%
 	{
 		transform: translateX(120px);
 		opacity: 1;
 	}
 
-	75%
+	90%
 	{
 		transform: translateX(500px);
 		opacity: 0;

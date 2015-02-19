@@ -2388,8 +2388,8 @@ ol
         top: 25px;
         width: 20px;
 
-        -webkit-animation: preloader_4 5s infinite ease;
-                animation: preloader_4 5s infinite ease;
+        -webkit-animation: preloader_4 2.5s infinite ease;
+                animation: preloader_4 2.5s infinite ease;
     }
 
     .preloader-4 span:nth-child(1)
@@ -2493,6 +2493,34 @@ ol
         
         -webkit-animation-delay: 1.2s;
                 animation-delay: 1.2s;
+    }
+
+.list.__prices
+{
+    background: #fbfdfe;
+    height: 100%;
+    padding: 0 20px;
+    text-align: left;
+}
+
+    .list.__prices .list-item
+    {
+        font-size: 14px;
+        padding: 4px 0;
+    }
+
+    .list.__prices .list-item.__total
+    {
+        border-top: 1px solid #dee9f0;
+        color: #43b0e6;
+        padding: 5px 0 0;
+    }
+
+    .list.__prices .list-price
+    {
+        float: right;
+        font-weight: 500;
+        margin: 0 0 0 10px;
     }
 
 
@@ -3425,6 +3453,30 @@ fieldset + fieldset
 			box-shadow: 0 0 0 2px rgba(0,0,0,0) inset;
 }
 
+.tile.__price
+{
+    line-height: 0;
+}
+
+.tile.__price *
+{
+    display: block;
+    line-height: 1;
+}
+
+.tile.__price .tile-count
+{
+    font-size: 30px;
+    margin: 10px 0 0;
+}
+
+.tile.__price .tile-price
+{
+    color: #43b0e6;
+    font-size: 14px;
+    margin: 20px 0 0;
+}
+
 .tile:hover,
 .tile.__selected
 {
@@ -3611,6 +3663,11 @@ fieldset + fieldset
 {
 	height: 510px;
 	width: 510px;
+}
+
+.tile.quadro.__tree:hover
+{
+    overflow-y: auto;
 }
 
 .tile.quadro.tall
