@@ -2,8 +2,9 @@
 .controller('operationTreeWidgetController', ['$scope', 'bladeNavigationService', function ($scope, bladeNavigationService) {
 	$scope.currentBlade = $scope.widget.blade;
 	$scope.currentOperation = {};
+	$scope.operation = {};
 	$scope.$watch('widget.blade.currentEntity', function (operation) {
-		$scope.currentOperation = operation;
+			$scope.operation = $scope.currentOperation = operation;
 	});
 
 	$scope.selectOperation = function (operation) {
