@@ -163,6 +163,10 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Scripts\resources\customerOrders.js" />
+    <Content Include="Scripts\widgets\!customerOrder-items-widget.tpl.html" />
+    <Content Include="Scripts\widgets\!customerOrder-items-widget.js" />
+    <Content Include="Scripts\widgets\operation-tree-widget.tpl.html" />
+    <Content Include="Scripts\widgets\operation-tree-widget.js" />
     <Content Include="web.config">
       <SubType>Designer</SubType>
     </Content>

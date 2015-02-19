@@ -6,7 +6,8 @@ if (AppDependencies != undefined) {
 }
 
 angular.module(moduleName, [
-    'virtoCommerce.orderModule.blades'
+    'virtoCommerce.orderModule.blades',
+	'virtoCommerce.orderModule.widgets'
 ])
 .config(
   ['$stateProvider', function ($stateProvider) {
@@ -42,5 +43,20 @@ angular.module(moduleName, [
   		permission: 'ordersMenuPermission'
   	};
   	mainMenuService.addMenuItem(menuItem);
-  }])
-;
+
+
+  	//Register widgets
+  	var customerOrderItemsWidget = {
+  		group: 'customerOrderDetailWidgets',
+  		controller: 'customerOrderItemsWidgetController',
+  		template: 'Modules/Order/VirtoCommerce.OrderModule.Web/Scripts/widgets/!customerOrder-items-widget.tpl.html',
+  	};
+  	widgetService.registerWidget(customerOrderItemsWidget);
+
+  	var operationsTreeWidget = {
+  		group: 'customerOrderDetailWidgets',
+  		controller: 'operationTreeWidgetController',
+  		template: 'Modules/Order/VirtoCommerce.OrderModule.Web/Scripts/widgets/operation-tree-widget.tpl.html',
+  	};
+  	widgetService.registerWidget(operationsTreeWidget);
+  }]);
