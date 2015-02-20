@@ -2378,7 +2378,10 @@ ol
     /* Preloader 4 */
     .preloader-4
     {
-        width: 100%;
+        display: block;
+        margin: 0 auto;
+        padding: 50px 0;
+        width: 350px;
     }
 
     .preloader-4 span
@@ -5147,6 +5150,7 @@ fieldset + fieldset
 	.blade .blade-container
 	{
 		height: calc(100% - 130px);
+        overflow: hidden;
 		position: relative;
 	}
 
