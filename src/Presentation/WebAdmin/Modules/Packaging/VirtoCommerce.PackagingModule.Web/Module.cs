@@ -8,36 +8,38 @@ using NuGet;
 
 namespace VirtoCommerce.PackagingModule.Web
 {
-	public class Module : IModule
-	{
-		private readonly IUnityContainer _container;
-		public Module(IUnityContainer container)
-		{
-			_container = container;
-		}
+    public class Module : IModule
+    {
+        private readonly IUnityContainer _container;
+        public Module(IUnityContainer container)
+        {
+            _container = container;
+        }
 
-		#region IModule Members
+        #region IModule Members
 
-		public void Initialize()
-		{
-			var sourcePath = HostingEnvironment.MapPath("~/App_Data/SourcePackages");
-			var modulesPath = HostingEnvironment.MapPath("~/Modules");
-			var packagesPath = HostingEnvironment.MapPath("~/App_Data/InstalledPackages");
+        public void Initialize()
+        {
+            var sourcePath = HostingEnvironment.MapPath("~/App_Data/SourcePackages");
+            var packagesPath = HostingEnvironment.MapPath("~/App_Data/InstalledPackages");
 
-			var projectSystem = new WebsiteProjectSystem(modulesPath);
+            var manifestProvider = _container.Resolve<IModuleManifestProvider>();
+            var modulesPath = manifestProvider.RootPath;
 
-			var nugetProjectManager = new ProjectManager(
-				new WebsiteLocalPackageRepository(sourcePath),
-				new DefaultPackagePathResolver(modulesPath),
-				projectSystem,
-				new ManifestPackageRepository(modulesPath, new WebsitePackageRepository(packagesPath, projectSystem))
-			);
+            var projectSystem = new WebsiteProjectSystem(modulesPath);
 
-			var packageService = new PackageService(nugetProjectManager);
+            var nugetProjectManager = new ProjectManager(
+                new WebsiteLocalPackageRepository(sourcePath),
+                new DefaultPackagePathResolver(modulesPath),
+                projectSystem,
+                new ManifestPackageRepository(manifestProvider, new WebsitePackageRepository(packagesPath, projectSystem))
+            );
 
-			_container.RegisterType<ModulesController>(new InjectionConstructor(packageService, sourcePath));
-		}
+            var packageService = new PackageService(nugetProjectManager);
 
-		#endregion
-	}
+            _container.RegisterType<ModulesController>(new InjectionConstructor(packageService, sourcePath));
+        }
+
+        #endregion
+    }
 }

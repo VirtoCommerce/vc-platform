@@ -1,8 +1,7 @@
-﻿using Microsoft.Owin;
-using Microsoft.Practices.ServiceLocation;
+﻿using System.Linq;
+using Microsoft.Owin;
 using Microsoft.Practices.Unity;
 using Owin;
-using System.Linq;
 using VirtoCommerce.Framework.Web.Modularity;
 using VirtoCommerce.Platform.Web;
 
@@ -19,8 +18,8 @@ namespace VirtoCommerce.Platform.Web
 
             bootstraper.Container.RegisterInstance(app);
 
-            var moduleManager = ServiceLocator.Current.GetInstance<IModuleManager>();
-            var moduleCatalog = ServiceLocator.Current.GetInstance<IModuleCatalog>();
+            var moduleManager = bootstraper.Container.Resolve<IModuleManager>();
+            var moduleCatalog = bootstraper.Container.Resolve<IModuleCatalog>();
 
             //Ensure all modules are loaded
             foreach (var module in moduleCatalog.Modules.Where(x => x.State == ModuleState.NotStarted))
