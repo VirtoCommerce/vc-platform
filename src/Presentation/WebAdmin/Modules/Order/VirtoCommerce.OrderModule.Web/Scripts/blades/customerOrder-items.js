@@ -5,7 +5,7 @@
     $scope.pageSettings.totalItems = $scope.blade.currentEntity.items.length;
     $scope.pageSettings.currentPage = 1;
     $scope.pageSettings.numPages = 5;
-    $scope.pageSettings.itemsPerPageCount = 10;
+    $scope.pageSettings.itemsPerPageCount = 1;
 
     var selectedNode = null;
 

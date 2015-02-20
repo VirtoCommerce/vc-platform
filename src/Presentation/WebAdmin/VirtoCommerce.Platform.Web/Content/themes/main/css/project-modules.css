@@ -208,3 +208,39 @@
         font-weight: 500;
         margin: 0 0 0 10px;
     }
+
+/* Order info */
+.table.__order-info
+{
+    float: right;
+    min-width: inherit;
+    width: 45%;
+}
+
+.table.__collapsed .table-col
+{
+    padding: 5px;
+}
+
+.table .table-col.__price
+{
+    text-align: right;
+    width: 40%;
+}
+
+.table .table-item.__total .table-col
+{
+    font-size: 20px;
+}
+
+.form-group.__order-currency
+{
+    
+}
+
+    .form-group.__order-currency .form-input
+    {
+        display: inline-block;
+        margin: 0 0 0 5px;
+        width: 100px;
+    }

@@ -100,7 +100,8 @@ a:hover,
 .btn,
 .form-control.__switch .switch,
 .list.__notice .list-link,
-.nav-bar .menu-link.__animated
+.nav-bar .menu-link.__animated,
+.tree-block
 {
 	-webkit-transition: background-color .35s ease-in-out 0s;
 			transition: background-color .35s ease-in-out 0s;
