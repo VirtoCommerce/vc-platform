@@ -29,8 +29,8 @@ namespace VirtoCommerce.PricingModule.Data.Converters
 			var retVal = new coreModel.Pricelist();
 			retVal.InjectFrom(dbEntity);
 			retVal.Id = dbEntity.PricelistId;
-
-			retVal.CreatedDate = dbEntity.Created.Value;
+			
+			retVal.CreatedDate = dbEntity.Created ?? DateTime.MinValue;
 			retVal.ModifiedDate = dbEntity.LastModified;
 			retVal.Currency = (CurrencyCodes)Enum.Parse(typeof(CurrencyCodes), dbEntity.Currency);
 			retVal.Prices = dbEntity.Prices.Select(x => x.ToCoreModel()).ToList();

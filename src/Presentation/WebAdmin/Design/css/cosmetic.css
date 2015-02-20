@@ -100,7 +100,8 @@ a:hover,
 .btn,
 .form-control.__switch .switch,
 .list.__notice .list-link,
-.nav-bar .menu-link.__animated
+.nav-bar .menu-link.__animated,
+.tree-block
 {
 	-webkit-transition: background-color .35s ease-in-out 0s;
 			transition: background-color .35s ease-in-out 0s;
@@ -336,19 +337,19 @@ a:hover,
 		opacity: 0;
 	}
 
-	25%
+	30%
 	{
 		transform: translateX(120px);
 		opacity: 1;
 	}
 
-	50%
+	60%
 	{
 		transform: translateX(120px);
 		opacity: 1;
 	}
 
-	75%
+	90%
 	{
 		transform: translateX(500px);
 		opacity: 0;

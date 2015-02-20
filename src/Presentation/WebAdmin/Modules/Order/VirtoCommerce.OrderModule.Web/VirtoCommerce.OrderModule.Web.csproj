@@ -163,11 +163,20 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Scripts\resources\customerOrders.js" />
+    <Content Include="Scripts\widgets\customerOrder-items-widget.tpl.html" />
+    <Content Include="Scripts\widgets\!customerOrder-items-widget.js" />
+    <Content Include="Scripts\widgets\operation-comment-widget.js" />
+    <Content Include="Scripts\widgets\customerOrder-totals-widget.js" />
+    <Content Include="Scripts\widgets\operation-comment-widget.tpl.html" />
+    <Content Include="Scripts\widgets\customerOrder-totals-widget.tpl.html" />
+    <Content Include="Scripts\widgets\operation-tree-widget.tpl.html" />
+    <Content Include="Scripts\widgets\operation-tree-widget.js" />
     <Content Include="web.config">
       <SubType>Designer</SubType>
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\css\orderModule.css" />
     <None Include="web.Debug.config">
       <DependentUpon>web.config</DependentUpon>
     </None>

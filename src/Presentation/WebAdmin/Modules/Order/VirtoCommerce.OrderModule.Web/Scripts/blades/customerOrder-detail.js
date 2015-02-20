@@ -1,5 +1,6 @@
 ﻿angular.module('virtoCommerce.orderModule.blades')
 .controller('customerOrderDetailController', ['$scope', 'dialogService', 'bladeNavigationService', 'customerOrders', function ($scope, dialogService, bladeNavigationService, customerOrders) {
+	$scope.blade.currentEntity = {};
 
     $scope.blade.refresh = function () {
         $scope.blade.isLoading = true;
@@ -9,16 +10,7 @@
             $scope.blade.origEntity = results;
             $scope.blade.isLoading = false;
 
-            var newBlade = {
-                id: 'customerOrderItems',
-                title: $scope.blade.title + ' items',
-                subtitle: 'Edit order items',
-                currentEntity: $scope.blade.currentEntity,
-                isClosingDisabled: true,
-                controller: 'customerOrderItemsController',
-                template: 'Modules/Order/VirtoCommerce.OrderModule.Web/Scripts/blades/customerOrder-items.tpl.html'
-            };
-            bladeNavigationService.showBlade(newBlade, $scope.blade);
+       
         },
         function (error) {
             $scope.blade.isLoading = false;

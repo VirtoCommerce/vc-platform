@@ -2,8 +2,6 @@
 using System.Linq;
 using System.Web.Http.Results;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using VirtoCommerce.Domain.Catalog.Services;
-using VirtoCommerce.Domain.Store.Services;
 using VirtoCommerce.Foundation.Data.Infrastructure.Interceptors;
 using VirtoCommerce.Foundation.Money;
 using VirtoCommerce.PricingModule.Data.Repositories;
@@ -17,43 +15,56 @@ namespace VirtoCommerce.PricingModule.Test
 	public class PricingControllerTest
 	{
 		[TestMethod]
-		public void ChangeProductPrice()
-		{
-			//Get product price
+		public void GetProductPriceInfo()
+		{	
+			//Get product price lists
 			var controller = GetController();
-			var result = controller.GetProductPrices("v-b005gs3cfg") as OkNegotiatedContentResult<Price[]>;
-			var price = result.Content.First();
+			var result = controller.GetProductPriceLists("v-b005gs3cfg") as OkNegotiatedContentResult<Pricelist[]>;
+			var pricelists = result.Content;
 
-			//Change product price
-			price.Sale += 10;
-			var newVal = price.Sale;
-			controller.UpdateProductPrices(new Price[] { price });
-			result = controller.GetProductPrices("v-b005gs3cfg") as OkNegotiatedContentResult<Price[]>;
-			price = result.Content.First();
+			var allPricesCurrencyGroup = pricelists.SelectMany(x=>x.Prices).GroupBy(x=>x.Currency);
+			var allPricesWithSpeciffiedCurrency = allPricesCurrencyGroup.Where(x=>x.Any()).FirstOrDefault();
+			var minPrice = allPricesWithSpeciffiedCurrency.Min(x => x.List);
+			var maxPrice = allPricesWithSpeciffiedCurrency.Max(x => x.List);
 
-			Assert.IsTrue(price.Sale == newVal);
+			var resultLabel = minPrice.ToString();
+			if(maxPrice > minPrice)
+			{
+				resultLabel += " - " + maxPrice;
+			}
+			resultLabel += allPricesWithSpeciffiedCurrency.Key;
 		}
 
 		[TestMethod]
-		public void ApplyPriceForNewProduct()
+		public void ChangeProductPrice()
 		{
+			//Get product price lists
 			var controller = GetController();
-			var result = controller.GetProductPrices("v-b001fa1nuk") as OkNegotiatedContentResult<Price[]>;
-			Assert.IsTrue(!result.Content.Any());
+			var result = controller.GetProductPriceLists("v-b005gs3cfg") as OkNegotiatedContentResult<Pricelist[]>;
+			var pricelists = result.Content;
 
-			var price = new Price
+			var priceList = pricelists.Where(x => x.Prices.Any()).FirstOrDefault();
+
+			var changePrice = priceList.Prices.FirstOrDefault();
+			changePrice.Sale += 22.44m;
+
+			var newPrice = new Price
 			{
-				 List = 100,
-				 Sale = 200,
-				 ProductId = "v-b001fa1nuk" ,
-				 Currency = CurrencyCodes.USD
- 				 
+				ProductId = "v-b005gs3cfg",
+				List = 12.22m,
+				Sale = 22.11m
 			};
-			controller.UpdateProductPrices(new Price[] { price });
-			result = controller.GetProductPrices("v-b001fa1nuk") as OkNegotiatedContentResult<Price[]>;
-			price = result.Content.First();
+			priceList.Prices.Add(newPrice);
 
+
+			controller.UpdateProductPriceLists("v-b005gs3cfg", priceList);
+
+			result = controller.GetProductPriceLists("v-b005gs3cfg") as OkNegotiatedContentResult<Pricelist[]>;
+			priceList = pricelists.FirstOrDefault(x => x.Id == priceList.Id);
+
+		
 		}
+
 		private static PricingController GetController()
 		{
 			Func<IFoundationPricingRepository> repositoryFactory = () =>
@@ -61,12 +72,8 @@ namespace VirtoCommerce.PricingModule.Test
 				return new FoundationPricingRepositoryImpl("VirtoCommerce", new AuditChangeInterceptor());
 			};
 
-			var mockStoreService = new Moq.Mock<IStoreService>();
-			var mockItemService = new Moq.Mock<IItemService>();
-		
-
-			var pricingService = new PricingServiceImpl(repositoryFactory, mockStoreService.Object);
-			var controller = new PricingController(pricingService, mockItemService.Object);
+			var pricingService = new PricingServiceImpl(repositoryFactory);
+			var controller = new PricingController(pricingService);
 			return controller;
 		}
 	}

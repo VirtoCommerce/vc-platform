@@ -21,11 +21,9 @@ namespace VirtoCommerce.PricingModule.Data.Services
 	public class PricingServiceImpl : ServiceBase, IPricingService
 	{
 		private readonly Func<IFoundationPricingRepository> _repositoryFactory;
-		private readonly IStoreService _storeService;
-		public PricingServiceImpl(Func<IFoundationPricingRepository> repositoryFactory, IStoreService storeService)
+		public PricingServiceImpl(Func<IFoundationPricingRepository> repositoryFactory)
 		{
 			_repositoryFactory = repositoryFactory;
-			_storeService = storeService;
 		}
 
 		#region IPricingService Members
@@ -39,10 +37,6 @@ namespace VirtoCommerce.PricingModule.Data.Services
 			if(evalContext.ProductId == null)
 			{
 				throw new MissingFieldException("ProductId");
-			}
-			if (evalContext.CatalogId == null)
-			{
-				throw new MissingFieldException("CatalogId");
 			}
 
 			var retVal = new List<coreModel.Price>();
@@ -58,30 +52,6 @@ namespace VirtoCommerce.PricingModule.Data.Services
 					retVal.Add(activePice);
 				}
 			}
-
-
-			//Need a get all stores currencies where catalog belongs 
-			var allStoreCurrencies = _storeService.GetStoreList().Where(x => x.Catalog == evalContext.CatalogId)
-														 .SelectMany(x => x.Currencies).Distinct()
-														 .ToArray();
-			//Need a create empty prices for currency if this price is not 
-			foreach(var currency in allStoreCurrencies)
-			{
-				var existPrice = retVal.FirstOrDefault(x => x.Currency == currency);
-				if (existPrice == null)
-				{
-					var zeroPrice = new coreModel.Price
-					{
-						Currency = currency,
-						ProductId = evalContext.ProductId,
-						Sale = 0,
-						List = 0,
-						PricelistId = GetDefaultPriceListName(currency)
-					};
-					retVal.Add(zeroPrice);
-				}
-			}
-
 			return retVal;
 		}
 
@@ -95,6 +65,17 @@ namespace VirtoCommerce.PricingModule.Data.Services
 				{
 					retVal = entity.ToCoreModel();
 				}
+			}
+			return retVal;
+		}
+
+
+		public IEnumerable<coreModel.Pricelist> GetPriceLists()
+		{
+			List<coreModel.Pricelist> retVal = null;
+			using (var repository = _repositoryFactory())
+			{
+				retVal = repository.Pricelists.ToArray().Select(x => x.ToCoreModel()).ToList();
 			}
 			return retVal;
 		}
@@ -225,6 +206,5 @@ namespace VirtoCommerce.PricingModule.Data.Services
 				CommitChanges(repository);
 			}
 		}
-
 	}
 }

@@ -22,9 +22,9 @@
 
   <assemblyFile>VirtoCommerce.OrderModule.Web.dll</assemblyFile>
   <moduleType>VirtoCommerce.OrderModule.Web.Module, VirtoCommerce.OrderModule.Web</moduleType>
-  <!--<styles>
+  <styles>
     <directory virtualPath="$/Content/css" searchPattern="*.css" searchSubdirectories="true" />
-  </styles>-->
+  </styles>
   <scripts>
     <directory virtualPath="$/Scripts" searchPattern="*.js" searchSubdirectories="true" />
   </scripts>

@@ -377,6 +377,7 @@
     <Content Include="Scripts\chosen\chosen.proto.min.js" />
     <Content Include="Scripts\common\confirmDialog\notifyDialog.tpl.html" />
     <Content Include="Scripts\common\directives\autofill.js" />
+    <Content Include="Scripts\common\directives\chosen.js" />
     <Content Include="Scripts\common\directives\htmlTooltip.js" />
     <Content Include="Scripts\common\confirmDialog\confirmDialog.tpl.html" />
     <Content Include="Scripts\common\confirmDialog\cofirmDialog.js" />

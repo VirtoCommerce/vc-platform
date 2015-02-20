@@ -1,4 +1,4 @@
-﻿<div class="blade-content __medium-wide">
+﻿<div class="blade-content __medium-wide __gray">
     <div class="blade-inner">
         <div class="inner-block">
             <div class="form columns clearfix">
@@ -52,83 +52,12 @@
                     </div>
                 </div>
             </div>
-            <div class="sub-t">Custom attributes</div>
-            <div class="form columns clearfix">
-                <div class="column">
-                    <div class="form-group">
-                        <label class="form-label">Custom string field</label>
-                        <div class="form-input">
-                            <input type="text">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <div class="form-control __checkbox">
-                            <label class="form-label">
-                                <input type="checkbox" name="r1">
-                                <span class="check"></span>
-                                <span class="name">Custom flag field</span>
-                            </label>
-                        </div>
-                    </div>
-                </div>
-                <div class="column">
-                    <div class="form-group">
-                        <label class="form-label">Custom text field</label>
-                        <div class="form-input">
-                            <textarea></textarea>
-                        </div>
-                    </div>
-                </div>
+            <div class="tile-group four">
+                <va-widget-container group="customerOrderDetailWidgets" blade="blade"></va-widget-container>
             </div>
-            <div class="sub-t">Documents</div>
-            <div class="tree-view">
-                <div class="tree-scroll">
-                    <ul class="tree">
-                        <li class="tree-item first">
-                            <div class="tree-block">
-                                <div class="inner">
-                                    <div class="tree-el __title">
-                                        <i class="tree-ico fa fa-info-circle"></i>
-                                        {{blade.currentEntity.operationType +' #'+blade.currentEntity.number}}
-                                    </div>
-                                    <div class="tree-el __date">
-                                        <i class="tree-ico fa fa-calendar"></i>
-                                        {{blade.currentEntity.createdDate | date}}
-                                    </div>
-                                    <div class="tree-el __price">
-                                        <i class="tree-ico fa fa-money"></i>
-                                        {{blade.currentEntity.sum +' '+blade.currentEntity.currency}}
-                                    </div>
-                                </div>
-                            </div>
-                            <ul class="tree-node" ng-if="(children = (blade.currentEntity.childrenOperations | filter: {parentOperationId: blade.currentEntity.id})).length>0">
-                                <li class="tree-item" ng-repeat="data in children" ng-include="'document.html'"></li>
-                            </ul>
-                        </li>
-                        <script type="text/ng-template" id="document.html">
-                            <div class="tree-block">
-                                <div class="inner">
-                                    <div class="tree-el __title">
-                                        <i class="tree-ico fa fa-info-circle"></i>
-                                        {{data.operationType +' #'+data.number}}
-                                    </div>
-                                    <div class="tree-el __date">
-                                        <i class="tree-ico fa fa-calendar"></i>
-                                        {{data.createdDate | date}}
-                                    </div>
-                                    <div class="tree-el __price">
-                                        <i class="tree-ico fa fa-money"></i>
-                                        {{data.sum +' '+data.currency}}
-                                    </div>
-                                </div>
-                            </div>
-                            <ul class="tree-node" ng-if="(children = (blade.currentEntity.childrenOperations | filter: {parentOperationId: data.id})).length>0">
-                                <li class="tree-item" ng-class="{'last':$last}" ng-repeat="data in children" ng-include="'document.html'"></li>
-                            </ul>
-                        </script>
-                    </ul>
-                </div>
-            </div>
+     
         </div>
     </div>
 </div>
+
+

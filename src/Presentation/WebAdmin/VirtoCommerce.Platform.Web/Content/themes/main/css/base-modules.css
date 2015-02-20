@@ -2388,8 +2388,8 @@ ol
         top: 25px;
         width: 20px;
 
-        -webkit-animation: preloader_4 5s infinite ease;
-                animation: preloader_4 5s infinite ease;
+        -webkit-animation: preloader_4 2.5s infinite ease;
+                animation: preloader_4 2.5s infinite ease;
     }
 
     .preloader-4 span:nth-child(1)
@@ -2783,6 +2783,11 @@ h3
             box-shadow: none;
 }
 
+.error
+{
+    color: #e51400;
+}
+
 .form-input input.ng-invalid,
 .form-input textarea.ng-invalid,
 .form-input input:focus.ng-invalid,
@@ -2922,11 +2927,9 @@ fieldset + fieldset
 					box-sizing: border-box;
 		}
 
-        .form-input.__mini input,
-        .form-input.__mini textarea,
-        .form-input.__mini select
+        .form-input.__mini
         {
-            width: 80px;
+            width: 60px;
         }
 
         .form-input input,
@@ -2963,7 +2966,7 @@ fieldset + fieldset
 
         .form-input.__number input
         {
-            padding-right: 36px;
+            padding-right: 20px;
         }
 
         .form-input select
@@ -2998,7 +3001,7 @@ fieldset + fieldset
             height: 14px;
             right: 2px;
             position: absolute;
-            width: 25px;
+            width: 16px;
 
             -webkit-box-sizing: border-box;
                     box-sizing: border-box;
@@ -3425,6 +3428,30 @@ fieldset + fieldset
 			box-shadow: 0 0 0 2px rgba(0,0,0,0) inset;
 }
 
+.tile.__price
+{
+    line-height: 0;
+}
+
+.tile.__price *
+{
+    display: block;
+    line-height: 1;
+}
+
+.tile.__price .tile-count
+{
+    font-size: 30px;
+    margin: 10px 0 0;
+}
+
+.tile.__price .tile-price
+{
+    color: #43b0e6;
+    font-size: 14px;
+    margin: 20px 0 0;
+}
+
 .tile:hover,
 .tile.__selected
 {
@@ -3484,7 +3511,9 @@ fieldset + fieldset
 {
 	display: block;
 	font-size: 14px;
-	margin: 10px 0;
+	margin: 10px;
+    max-height: 78px;
+    overflow: hidden;
 }
 
 .tile .tile-descr.__once
@@ -3495,7 +3524,7 @@ fieldset + fieldset
 
 .tile .tile-ico + .tile-descr
 {
-	margin: 0;
+	margin: 0 10px;
 }
 
 /* Half */
@@ -3611,6 +3640,11 @@ fieldset + fieldset
 {
 	height: 510px;
 	width: 510px;
+}
+
+.tile.quadro.__tree:hover
+{
+    overflow-y: auto;
 }
 
 .tile.quadro.tall
@@ -4253,6 +4287,11 @@ fieldset + fieldset
             box-sizing: border-box;
 }
 
+.tree-block:hover
+{
+    background: #ecf7fc;
+}
+
 .tree-block.__selected
 {
     background: #d9effa;
@@ -4293,13 +4332,6 @@ fieldset + fieldset
 .first > :first-child:before
 {
     display: none;
-}
-
-.first > :first-child,
-.first > :first-child.__selected
-{
-    background: #ecf7fc;
-    border-color: #a1c0d4;
 }
 
 .tree-block:before
@@ -4371,20 +4403,6 @@ fieldset + fieldset
     position: absolute;
     width: 20px;
 }
-
-
-/* Order */
-.form-group.__order-currency
-{
-    padding: 0 0 0 20px;
-}
-
-    .form-group.__order-currency .form-input
-    {
-        display: inline-block;
-        margin: 0 0 0 5px;
-        width: 100px;
-    }
 
 
 /* Columns */
