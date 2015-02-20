@@ -5,7 +5,7 @@ using Newtonsoft.Json;
 
 #endregion
 
-namespace VirtoCommerce.Web.Core.DataContracts
+namespace VirtoCommerce.ApiClient.DataContracts
 {
 
     #region
@@ -27,7 +27,7 @@ namespace VirtoCommerce.Web.Core.DataContracts
         {
             get
             {
-                return _items ?? (_items = new Collection<T>());
+                return this._items ?? (this._items = new Collection<T>());
             }
         }
 

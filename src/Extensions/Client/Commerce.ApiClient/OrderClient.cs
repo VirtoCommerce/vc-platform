@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
-using VirtoCommerce.ApiClient.DataContracts.Order;
+using VirtoCommerce.ApiClient.DataContracts.Orders;
 using VirtoCommerce.ApiClient.Utilities;
 
 namespace VirtoCommerce.ApiClient

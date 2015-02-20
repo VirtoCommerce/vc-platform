@@ -4,7 +4,7 @@ using Newtonsoft.Json;
 
 #endregion
 
-namespace VirtoCommerce.Web.Core.DataContracts
+namespace VirtoCommerce.ApiClient.DataContracts
 {
 
     #region

@@ -5,11 +5,11 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Net.Http;
 using System.Threading.Tasks;
+using VirtoCommerce.ApiClient.Configuration.Catalog;
+using VirtoCommerce.ApiClient.DataContracts;
 using VirtoCommerce.ApiClient.DataContracts.Search;
 using VirtoCommerce.ApiClient.Extensions;
 using VirtoCommerce.ApiClient.Utilities;
-using VirtoCommerce.Web.Core.Configuration.Catalog;
-using VirtoCommerce.Web.Core.DataContracts;
 
 #endregion
 

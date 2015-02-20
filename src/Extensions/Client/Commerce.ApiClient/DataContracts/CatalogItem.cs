@@ -3,11 +3,10 @@
 using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
-using VirtoCommerce.ApiClient.DataContracts;
 
 #endregion
 
-namespace VirtoCommerce.Web.Core.DataContracts
+namespace VirtoCommerce.ApiClient.DataContracts
 {
 
     #region
@@ -48,11 +47,11 @@ namespace VirtoCommerce.Web.Core.DataContracts
         {
             get
             {
-                return _properties;
+                return this._properties;
             }
             set
             {
-                _properties = value;
+                this._properties = value;
             }
         }
 
@@ -73,17 +72,17 @@ namespace VirtoCommerce.Web.Core.DataContracts
         {
             get
             {
-                return _properties[name];
+                return this._properties[name];
             }
             set
             {
-                if (_properties.ContainsKey(name))
+                if (this._properties.ContainsKey(name))
                 {
-                    _properties[name] = value;
+                    this._properties[name] = value;
                 }
                 else
                 {
-                    _properties.Add(name, value);
+                    this._properties.Add(name, value);
                 }
             }
         }

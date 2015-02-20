@@ -7,12 +7,8 @@ using System.Text;
 
 #endregion
 
-namespace VirtoCommerce.Web.Core.DataContracts
+namespace VirtoCommerce.ApiClient.DataContracts
 {
-
-    #region
-
-    #endregion
 
     public class TagQuery : Dictionary<string, object>
     {
@@ -28,7 +24,7 @@ namespace VirtoCommerce.Web.Core.DataContracts
         {
             get
             {
-                return Keys.ToArray();
+                return this.Keys.ToArray();
             }
         }
 
@@ -43,9 +39,9 @@ namespace VirtoCommerce.Web.Core.DataContracts
         /// <param name="tag">The tag.</param>
         public new void Add(string name, object tag)
         {
-            if (ContainsKey(name))
+            if (this.ContainsKey(name))
             {
-                Remove(name);
+                this.Remove(name);
             }
             base.Add(name, tag);
         }
@@ -57,7 +53,7 @@ namespace VirtoCommerce.Web.Core.DataContracts
         public string GetCacheKey()
         {
             var builder = new StringBuilder();
-            foreach (var name in Names)
+            foreach (var name in this.Names)
             {
                 var value = this[name];
                 builder.Append(String.Format("{0}-{1};", name, value != null ? value.ToString() : String.Empty));

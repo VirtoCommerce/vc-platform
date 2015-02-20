@@ -7,13 +7,8 @@ using System.Web.Configuration;
 
 #endregion
 
-namespace VirtoCommerce.Web.Core.Configuration.Application
+namespace VirtoCommerce.ApiClient.Configuration.Application
 {
-
-    #region
-
-    #endregion
-
     public class AppConfigConfiguration : ConfigurationSection
     {
         #region Constants
@@ -354,7 +349,7 @@ namespace VirtoCommerce.Web.Core.Configuration.Application
                 {
                     base.BaseRemoveAt(index);
                 }
-                BaseAdd(index, value);
+                this.BaseAdd(index, value);
             }
         }
 

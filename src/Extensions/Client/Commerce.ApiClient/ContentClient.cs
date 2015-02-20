@@ -3,10 +3,10 @@
 using System;
 using System.Net.Http;
 using System.Threading.Tasks;
+using VirtoCommerce.ApiClient.DataContracts;
 using VirtoCommerce.ApiClient.DataContracts.Contents;
 using VirtoCommerce.ApiClient.Extensions;
 using VirtoCommerce.ApiClient.Utilities;
-using VirtoCommerce.Web.Core.DataContracts;
 
 #endregion
 

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace VirtoCommerce.ApiClient.DataContracts.Order
+namespace VirtoCommerce.ApiClient.DataContracts.Orders
 {
     public class Shipment : Operation
     {

@@ -6,7 +6,7 @@ using System.Globalization;
 using System.Net;
 using System.Runtime.Serialization;
 using System.Text;
-using VirtoCommerce.Web.Core.DataContracts;
+using VirtoCommerce.ApiClient.DataContracts;
 
 #endregion
 

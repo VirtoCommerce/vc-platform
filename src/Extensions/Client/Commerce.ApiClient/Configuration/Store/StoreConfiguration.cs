@@ -6,13 +6,8 @@ using System.Threading;
 
 #endregion
 
-namespace VirtoCommerce.Web.Core.Configuration.Store
+namespace VirtoCommerce.ApiClient.Configuration.Store
 {
-
-    #region
-
-    #endregion
-
     public class StoreConfiguration : ConfigurationSection
     {
         #region Static Fields
