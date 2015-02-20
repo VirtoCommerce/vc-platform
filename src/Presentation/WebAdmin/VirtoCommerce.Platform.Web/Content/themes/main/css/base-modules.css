@@ -3511,7 +3511,9 @@ fieldset + fieldset
 {
 	display: block;
 	font-size: 14px;
-	margin: 10px 0;
+	margin: 10px;
+    max-height: 78px;
+    overflow: hidden;
 }
 
 .tile .tile-descr.__once
@@ -3522,7 +3524,7 @@ fieldset + fieldset
 
 .tile .tile-ico + .tile-descr
 {
-	margin: 0;
+	margin: 0 10px;
 }
 
 /* Half */
