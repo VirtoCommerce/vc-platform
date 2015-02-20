@@ -117,7 +117,7 @@ IF /I "%IN_PLACE_DEPLOYMENT%" NEQ "1" (
 echo(!PREVIOUS_MANIFEST_PATH!|findstr /r /i /c:"firstDeploymentManifest$" >nul && (
 	echo First deployment. Need to initialize database. InsertSampleData = %APPSETTING_insertSampleData%
 
-	IF /I "%SQLAZURECONNSTR_DefaultConnection%" EQU "" (
+	IF /I "%SQLAZURECONNSTR_VirtoCommerce%" EQU "" (
 		echo Connection string is empty. Skipping database initialization.
 	) ELSE (
 	IF EXIST "%VCPS%\VirtoCommerce.PowerShell.csproj" (
@@ -130,7 +130,7 @@ echo(!PREVIOUS_MANIFEST_PATH!|findstr /r /i /c:"firstDeploymentManifest$" >nul &
 
 	IF EXIST "%VCPS%\setup-database.ps1" (
 		echo Executing %VCPS%\setup-database.ps1
-		call :ExecuteCmd PowerShell -ExecutionPolicy Bypass -Command "%VCPS%\setup-database.ps1" -dbconnection '%SQLAZURECONNSTR_DefaultConnection%' -datafolder "%VCPS%" -moduleFile "%VCPS%\bin\Release\VirtoCommerce.PowerShell.dll" -useSample %INSERT_SAMPLE_DATA% -reducedSample $false
+		call :ExecuteCmd PowerShell -ExecutionPolicy Bypass -Command "%VCPS%\setup-database.ps1" -dbconnection '%SQLAZURECONNSTR_VirtoCommerce%' -datafolder "%VCPS%" -moduleFile "%VCPS%\bin\Release\VirtoCommerce.PowerShell.dll" -useSample %INSERT_SAMPLE_DATA% -reducedSample $false
 		IF !ERRORLEVEL! NEQ 0 goto error
 	) ELSE (
 		echo %VCPS%\setup-database.ps1 does not exist.
