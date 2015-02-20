@@ -1,6 +1,8 @@
 ﻿angular.module('virtoCommerce.storeModule.blades', [
     'virtoCommerce.storeModule.resources.stores',
+    'virtoCommerce.storeModule.wizards.newStore',
     // 'catalogModule.resources.catalogs'
+    'ngSanitize'
 ])
 .controller('storesListController', ['$scope', 'stores', 'bladeNavigationService', function ($scope, stores, bladeNavigationService) {
     $scope.selectedNodeId = null;
@@ -37,8 +39,8 @@
             currentEntity: {},
             title: 'New Store',
             subtitle: 'Create new Store',
-            controller: 'storeDetailController',
-            template: 'Modules/Store/VirtoCommerce.StoreModule.Web/Scripts/blades/store-new.tpl.html'
+            controller: 'newStoreWizardController',
+            template: 'Modules/Store/VirtoCommerce.StoreModule.Web/Scripts/wizards/newStore/new-store-wizard.tpl.html'
         };
         bladeNavigationService.showBlade(newBlade, $scope.blade);
     }

@@ -103,14 +103,25 @@
   <ItemGroup>
     <Content Include="Scripts\blades\!stores-list.js" />
     <Content Include="Scripts\blades\!stores-list.tpl.html" />
+    <Content Include="Scripts\blades\store-setting-detail.js" />
+    <Content Include="Scripts\blades\store-setting-detail.tpl.html" />
+    <Content Include="Scripts\blades\store-settings-list.js" />
+    <Content Include="Scripts\blades\store-settings-list.tpl.html" />
+    <Content Include="Scripts\blades\store-advanced.js" />
     <Content Include="Scripts\blades\store-detail.js" />
-    <Content Include="Scripts\blades\store-new.tpl.html" />
+    <Content Include="Scripts\blades\store-advanced.tpl.html" />
+    <Content Include="Scripts\widgets\storeSettingsWidget.js" />
+    <Content Include="Scripts\widgets\storeAdvancedWidget.js" />
+    <Content Include="Scripts\widgets\storeSettingsWidget.tpl.html" />
+    <Content Include="Scripts\widgets\storeAdvancedWidget.tpl.html" />
+    <Content Include="Scripts\wizards\newStore\new-store-wizard.tpl.html" />
     <Content Include="Scripts\blades\store-detail.tpl.html" />
     <Content Include="Scripts\home.tpl.html" />
     <Content Include="Scripts\store.js" />
     <Content Include="Scripts\resources\stores.js" />
     <Content Include="Scripts\widgets\storeLanguagesWidget.js" />
     <Content Include="Scripts\widgets\storeLanguagesWidget.tpl.html" />
+    <Content Include="Scripts\wizards\newStore\new-store-wizard.js" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
