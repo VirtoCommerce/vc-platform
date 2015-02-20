@@ -1,0 +1,100 @@
+﻿<div class="blade-content __medium-wide">
+    <div class="blade-inner">
+        <div class="inner-block">
+            <form class="form" name="detailForm">
+                <div class="form columns clearfix" ng-init="setForm(detailForm)">
+                    <div class="form-group">
+                        <label class="form-label">Description</label>
+                        <div class="form-input">
+                            <textarea class="form-control" cols="30" rows="2" ng-model="blade.currentEntity.description"></textarea>
+                        </div>
+                    </div>
+                    <div class="column">
+                        <div class="form-group">
+                            <label class="form-label">Store URL</label>
+                            <div class="form-input">
+                                <input ng-model="blade.currentEntity.url" type="url">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="column">
+                        <div class="form-group">
+                            <label class="form-label">Secure URL</label>
+                            <div class="form-input">
+                                <input ng-model="blade.currentEntity.secureUrl" type="url">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form columns clearfix">
+                    <div class="column">
+                        <div class="form-group">
+                            <label class="form-label">Store country</label>
+                            <div class="form-input">
+                                <select ng-model="blade.currentEntity.country" ng-options="x.id as x.name for x in countries" class="chosen-select"></select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="column">
+                        <div class="form-group">
+                            <label class="form-label">Store region</label>
+                            <div class="form-input">
+                                <select ng-model="blade.currentEntity.region" ng-options="x.id as x.name for x in regions" class="chosen-select"></select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form columns clearfix">
+                    <div class="column">
+                        <div class="form-group">
+                            <label class="form-label">Store email</label>
+                            <div class="form-input">
+                                <input ng-model="blade.currentEntity.email" type="email">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="column">
+                        <div class="form-group">
+                            <label class="form-label">Store admin email</label>
+                            <div class="form-input">
+                                <input ng-model="blade.currentEntity.adminEmail" type="email">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form columns clearfix">
+                    <div class="column">
+                        <div class="form-group">
+                            <label class="form-label">Fulfillment center</label>
+                            <div class="form-input">
+                                <select ng-model="blade.currentEntity.fulfillmentCenter" ng-options="x.name for x in fulfillmentCenters" class="chosen-select"></select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="column">
+                        <div class="form-group">
+                            <label class="form-label">Returns Fulfillment center</label>
+                            <div class="form-input">
+                                <select ng-model="blade.currentEntity.returnsFulfillmentCenter" ng-options="x.id as x.name for x in returnsFulfillmentCenters" class="chosen-select"></select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form columns clearfix">
+                    <div class="column">
+                        <div class="form-group">
+                            <label class="form-label">Operational timezone</label>
+                            <div class="form-input">
+                                <select ng-model="blade.currentEntity.timeZone" ng-options="x.name for x in timeZones" class="chosen-select"></select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="column">
+                    </div>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+<div class="blade-static __bottom" ng-include="'Modules/Core/VirtoCommerce.Core.Web/Scripts/common/ok-cancel.tpl.html'"></div>

@@ -1,11 +1,11 @@
-﻿angular.module('virtoCommerce.storeModule.widgets', [])
+﻿angular.module('virtoCommerce.storeModule.widgets')
 .controller('storeLanguagesWidgetController', ['$scope', 'bladeNavigationService', function ($scope, bladeNavigationService) {
     // var blade = $scope.widget.blade;
     
     $scope.openBlade = function () {
         //if ($scope.elementCount !== '...') {
         //    var newBlade = {
-        //        id: "storeLanguages",
+        //        id: "storeChildBlade",
         //        itemId: blade.itemId,
         //        title: blade.title,
         //        subtitle: 'Manage languages',
