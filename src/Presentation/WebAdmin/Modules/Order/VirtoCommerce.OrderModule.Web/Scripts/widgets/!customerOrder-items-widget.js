@@ -5,9 +5,7 @@
 	$scope.customerOrder = {};
 
 	$scope.$watch('widget.blade.currentEntity', function (customerOrder) {
-		if (customerOrder) {
-			$scope.customerOrder = customerOrder;
-		}
+		$scope.customerOrder = customerOrder;
 	});
 
 	$scope.openItemsBlade = function () {

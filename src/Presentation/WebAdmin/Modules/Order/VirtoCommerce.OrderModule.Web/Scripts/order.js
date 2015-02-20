@@ -49,9 +49,16 @@ angular.module(moduleName, [
   	var customerOrderItemsWidget = {
   		group: 'customerOrderDetailWidgets',
   		controller: 'customerOrderItemsWidgetController',
-  		template: 'Modules/Order/VirtoCommerce.OrderModule.Web/Scripts/widgets/!customerOrder-items-widget.tpl.html',
+  		template: 'Modules/Order/VirtoCommerce.OrderModule.Web/Scripts/widgets/customerOrder-items-widget.tpl.html',
   	};
   	widgetService.registerWidget(customerOrderItemsWidget);
+
+  	var operationCommentWidget = {
+  		group: 'customerOrderDetailWidgets',
+  		controller: 'operationCommentWidgetController',
+  		template: 'Modules/Order/VirtoCommerce.OrderModule.Web/Scripts/widgets/operation-comment-widget.tpl.html',
+  	};
+  	widgetService.registerWidget(operationCommentWidget);
 
   	var customerOrderTotalsWidget = {
   		group: 'customerOrderDetailWidgets',

@@ -11,6 +11,7 @@ namespace VirtoCommerce.Domain.Pricing.Services
 	{
 		Price GetPriceById(string id);
 		Pricelist GetPricelistById(string id);
+		IEnumerable<Pricelist> GetPriceLists();
 		Price CreatePrice(Price price);
 		Pricelist CreatePricelist(Pricelist priceList);
 
