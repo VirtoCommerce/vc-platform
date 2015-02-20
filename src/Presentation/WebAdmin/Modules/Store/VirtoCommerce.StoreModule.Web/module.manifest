@@ -4,6 +4,7 @@
   <version>1.0.0.0</version>
   <dependencies>
     <dependency>VirtoCommerce.Core</dependency>
+    <dependency>VirtoCommerce.Catalog</dependency>
   </dependencies>
 
   <title>Virto Commerce Store</title>
@@ -25,7 +26,7 @@
   <!--<styles>
     <directory virtualPath="$/Content/css" searchPattern="*.css" searchSubdirectories="true" />
   </styles>-->
-  <!--<scripts>
+  <scripts>
     <directory virtualPath="$/Scripts" searchPattern="*.js" searchSubdirectories="true" />
-  </scripts>-->
+  </scripts>
 </module>
