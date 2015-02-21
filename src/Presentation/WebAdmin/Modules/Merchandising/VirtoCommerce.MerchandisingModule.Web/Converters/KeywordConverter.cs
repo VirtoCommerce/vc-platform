@@ -14,20 +14,14 @@ namespace VirtoCommerce.MerchandisingModule.Web.Converters
     {
         public static webModel.SeoKeyword ToWebModel(this foundation.SeoUrlKeyword keyword)
         {
-            var retVal = new webModel.SeoKeyword
-            {
-                Id = keyword.SeoUrlKeywordId
-            };
-
+            var retVal = new webModel.SeoKeyword();
             retVal.InjectFrom(keyword);
-
             return retVal;
         }
         public static webModel.SeoKeyword ToWebModel(this SeoInfo keyword)
         {
             var retVal = new webModel.SeoKeyword
             {
-                Id = keyword.Id,
                 ImageAltDescription = keyword.ImageAltDescription,
                 Keyword = keyword.SemanticUrl,
                 Language = keyword.LanguageCode,
@@ -38,8 +32,5 @@ namespace VirtoCommerce.MerchandisingModule.Web.Converters
 
             return retVal;
         }
-
-
-
     }
 }

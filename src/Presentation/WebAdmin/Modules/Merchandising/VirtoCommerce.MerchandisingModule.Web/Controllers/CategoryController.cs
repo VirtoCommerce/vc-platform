@@ -70,8 +70,30 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
             return Ok(retVal);
         }
 
+        /// GET: api/mp/apple/en-us/categories?keyword=apple-mp3
+        [HttpGet]
+        [ResponseType(typeof(webModel.Category))]
+        [Route("")]
+        public IHttpActionResult GetByKeyword(string store, [FromUri]string keyword, string language = "en-us")
+        {
+            //var catalog = GetCatalogId(store);
+            using (var appConfigRepo = _foundationAppConfigRepFactory())
+            {
+                var keywordValue =
+                    appConfigRepo.SeoUrlKeywords.FirstOrDefault(
+                        x => x.KeywordType == (int)SeoUrlKeywordTypes.Category
+                            && x.Keyword.Equals(keyword, StringComparison.InvariantCultureIgnoreCase));
 
-        /// GET: api/mp/apple/en-us/categories?code='22'
+                if (keywordValue != null)
+                {
+                    var result = _categoryService.GetById(keywordValue.KeywordValue);
+                    return Ok(result.ToWebModel());
+                }
+            }
+            return StatusCode(HttpStatusCode.NotFound);
+        }
+
+        /// GET: api/mp/apple/en-us/categories?code=22
         [HttpGet]
         [ResponseType(typeof(webModel.Category))]
         [Route("")]
@@ -97,45 +119,10 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
             //var catalog = GetCatalogId(store);
             if (category != null)
             {
-
                 var result = _categoryService.GetById(category);
-                if (result == null)
-                {
-                    //Lets treat categoryId as slug
-                    using (var appConfigRepo = _foundationAppConfigRepFactory())
-                    {
-                        var keyword = appConfigRepo.SeoUrlKeywords.FirstOrDefault(x => x.KeywordType == (int)SeoUrlKeywordTypes.Category
-                            && x.Keyword.Equals(category, StringComparison.InvariantCultureIgnoreCase));
-
-                        if (keyword != null)
-                        {
-                            result = _categoryService.GetById(keyword.KeywordValue);
-                        }
-                    }
-                }
-
-
-                if (result != null)
-                {
-                    //need seo info for parents
-                    var keywords = new List<SeoUrlKeyword>();
-                    if (result.Parents != null)
-                    {
-                        using (var appConfigRepo = _foundationAppConfigRepFactory())
-                        {
-                            foreach (var parent in result.Parents)
-                            {
-                                keywords.AddRange(appConfigRepo.GetAllSeoInformation(parent.Id));
-                            }
-                        }
-                    }
-
-                    return Ok(result.ToWebModel(keywords.ToArray()));
-                }
+                return Ok(result.ToWebModel());
             }
             return StatusCode(HttpStatusCode.NotFound);
         }
-
-
     }
 }

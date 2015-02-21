@@ -15,11 +15,6 @@ using VirtoCommerce.ApiClient.Utilities;
 
 namespace VirtoCommerce.ApiClient
 {
-
-    #region
-
-    #endregion
-
     public class BrowseClient : BaseClient
     {
         #region Constructors and Destructors
@@ -64,6 +59,11 @@ namespace VirtoCommerce.ApiClient
         public virtual Task<Category> GetCategoryByCodeAsync(string code)
         {
             return GetAsync<Category>(CreateRequestUri(RelativePaths.Categories, "code=" + code));
+        }
+
+        public virtual Task<Category> GetCategoryByKeywordAsync(string keyword)
+        {
+            return GetAsync<Category>(CreateRequestUri(RelativePaths.Categories, "keyword=" + keyword));
         }
 
 		public Task<Product> GetProductAsync(string productId)

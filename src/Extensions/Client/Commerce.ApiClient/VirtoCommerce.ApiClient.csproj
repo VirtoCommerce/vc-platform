@@ -96,7 +96,6 @@
     <Compile Include="DataContracts\CatalogItem.cs" />
     <Compile Include="DataContracts\CatalogItemResponse.cs" />
     <Compile Include="DataContracts\Category.cs" />
-    <Compile Include="DataContracts\CategoryInfo.cs" />
     <Compile Include="DataContracts\Contents\DynamicContentItem.cs" />
     <Compile Include="DataContracts\Contents\DynamicContentItemGroup.cs" />
     <Compile Include="DataContracts\EditorialReview.cs" />
