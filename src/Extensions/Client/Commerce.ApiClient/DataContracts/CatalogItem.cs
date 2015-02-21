@@ -59,7 +59,7 @@ namespace VirtoCommerce.ApiClient.DataContracts
 
         public int ReviewsTotal { get; set; }
 
-        public SeoKeyword[] SeoKeywords { get; set; }
+        public SeoKeyword[] Seo { get; set; }
 
         public DateTime StartDate { get; set; }
 

@@ -91,6 +91,25 @@ namespace VirtoCommerce.ApiClient
 			return GetAsync<Product>((CreateRequestUri(RelativePaths.Products, string.Format("code={0}", code))));
 		}
 
+        public virtual Task<Product> GetProductByKeywordAsync(string keyword)
+        {
+            return GetAsync<Product>(CreateRequestUri(RelativePaths.Products, "keyword=" + keyword));
+        }
+
+        public virtual Task<Product> GetProductByKeywordAsync(string keyword, ItemResponseGroups responseGroup)
+        {
+            var query = new List<KeyValuePair<string, string>>
+            {
+                new KeyValuePair<string, string>("keyword", keyword),
+                new KeyValuePair<string, string>(
+                    "responseGroup",
+                    responseGroup.GetHashCode()
+                        .ToString(CultureInfo.InvariantCulture)),
+            };
+
+            return GetAsync<Product>((CreateRequestUri(RelativePaths.Products, query.ToArray())));
+        }
+
         public virtual Task<Product> GetProductByCodeAsync(string code, ItemResponseGroups responseGroup)
         {
             var query = new List<KeyValuePair<string, string>>

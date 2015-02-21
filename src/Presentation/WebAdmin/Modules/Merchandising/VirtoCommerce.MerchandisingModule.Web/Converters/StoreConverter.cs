@@ -1,19 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Linq;
 using Omu.ValueInjecter;
-using webModel = VirtoCommerce.MerchandisingModule.Web.Model.Store;
+using VirtoCommerce.MerchandisingModule.Web.Model.Stores;
 using foundation = VirtoCommerce.Foundation.Stores.Model;
 
 namespace VirtoCommerce.MerchandisingModule.Web.Converters
 {
     public static class StoreConverter
     {
-        public static webModel.Store ToWebModel(this foundation.Store store, Foundation.AppConfig.Model.SeoUrlKeyword[] keywords)
+        public static Store ToWebModel(this foundation.Store store, Foundation.AppConfig.Model.SeoUrlKeyword[] keywords)
         {
-            var retVal = new webModel.Store
+            var retVal = new Store
             {
                 Id = store.StoreId
             };
@@ -42,15 +38,15 @@ namespace VirtoCommerce.MerchandisingModule.Web.Converters
 
             if (keywords != null)
             {
-                retVal.SeoKeywords = keywords.Select(x => x.ToWebModel()).ToArray();
+                retVal.Seo = keywords.Select(x => x.ToWebModel()).ToArray();
             }
 
             return retVal;
         }
 
-        public static webModel.StoreSetting ToWebModel(this foundation.StoreSetting setting)
+        public static StoreSetting ToWebModel(this foundation.StoreSetting setting)
         {
-            var retVal = new webModel.StoreSetting();
+            var retVal = new StoreSetting();
             retVal.InjectFrom(setting);
             retVal.Value = setting.ToString();
             return retVal;

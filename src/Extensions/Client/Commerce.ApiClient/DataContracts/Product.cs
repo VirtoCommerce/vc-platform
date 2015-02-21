@@ -7,10 +7,6 @@ using Newtonsoft.Json;
 namespace VirtoCommerce.ApiClient.DataContracts
 {
 
-    #region
-
-    #endregion
-
     public class Product : CatalogItem
     {
         #region Public Properties

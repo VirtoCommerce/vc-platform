@@ -1,4 +1,4 @@
-﻿namespace VirtoCommerce.MerchandisingModule.Web.Model.Store
+﻿namespace VirtoCommerce.MerchandisingModule.Web.Model.Stores
 {
     public class StoreSetting
     {

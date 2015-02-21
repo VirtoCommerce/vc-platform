@@ -1,5 +1,5 @@
 ﻿
-namespace VirtoCommerce.MerchandisingModule.Web.Model.Store
+namespace VirtoCommerce.MerchandisingModule.Web.Model.Stores
 {
     public class Store
     {
@@ -35,7 +35,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Model.Store
 
         public string[] LinkedStores { get; set; }
 
-        public SeoKeyword[] SeoKeywords { get; set; }
+        public SeoKeyword[] Seo { get; set; }
 
     }
 }

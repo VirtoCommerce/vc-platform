@@ -28,7 +28,7 @@
 
         public string SecureUrl { get; set; }
 
-        public SeoKeyword[] SeoKeywords { get; set; }
+        public SeoKeyword[] Seo { get; set; }
 
         public StoreSetting[] Settings { get; set; }
 
