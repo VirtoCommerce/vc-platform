@@ -136,7 +136,7 @@
                         "connectionStrings": [
                             {
                                 "ConnectionString": "[concat('Data Source=tcp:', reference(concat('Microsoft.Sql/servers/', parameters('sqlServerName'))).fullyQualifiedDomainName, ',1433;Initial Catalog=', parameters('siteName'), ';User Id=', parameters('sqlAdministratorLogin'), '@', parameters('sqlServerName'), ';Password=', parameters('sqlAdministratorPassword'), ';')]",
-                                "Name": "DefaultConnection",
+                                "Name": "VirtoCommerce",
                                 "Type": 2
                             }
                         ],
