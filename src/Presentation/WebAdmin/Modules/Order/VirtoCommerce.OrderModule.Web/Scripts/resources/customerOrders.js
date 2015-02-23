@@ -3,6 +3,6 @@
     return $resource('api/cart/:id', { id: '@Id' }, {
         search: { url: 'api/order/customerOrders' },
         get: { url: 'api/order/customerOrders/:id' },
-        update: { method: 'POST', url: 'api/order/customerOrders' }
+        update: { method: 'PUT', url: 'api/order/customerOrders' }
     });
 }]);

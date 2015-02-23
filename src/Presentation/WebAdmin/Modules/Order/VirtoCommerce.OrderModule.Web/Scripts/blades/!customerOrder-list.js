@@ -1,7 +1,7 @@
 ﻿angular.module('virtoCommerce.orderModule.blades', [
    'virtoCommerce.orderModule.resources.customerOrders'
 ])
-.controller('customerOrderListController', ['$scope', 'customerOrders', 'bladeNavigationService', 'dialogService',
+.controller('customerOrderListController', ['$scope', 'customerOrders', 'bladeNavigationService', 'dialogService', 
 function ($scope, customerOrders, bladeNavigationService, dialogService) {
     //pagination settigs
     $scope.pageSettings = {};

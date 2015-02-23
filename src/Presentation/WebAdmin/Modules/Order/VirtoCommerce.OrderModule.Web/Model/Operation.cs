@@ -20,7 +20,7 @@ namespace VirtoCommerce.OrderModule.Web.Model
 
 		public string Number { get; set; }
 		public bool IsApproved { get; set; }
-		public string StatusId { get; set; }
+		public string Status { get; set; }
 	
 
 		public string Comment { get; set; }
@@ -32,7 +32,7 @@ namespace VirtoCommerce.OrderModule.Web.Model
 		public bool TaxIncluded { get; set; }
 		public decimal Sum { get; set; }
 		public decimal Tax { get; set; }
-
+		
 		public bool IsCancelled { get; set; }
 		public DateTime? CancelledDate { get; set; }
 		public string CancelReason { get; set; }

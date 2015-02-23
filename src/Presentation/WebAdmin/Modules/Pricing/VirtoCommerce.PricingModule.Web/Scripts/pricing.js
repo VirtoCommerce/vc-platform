@@ -46,10 +46,8 @@ angular.module(moduleName, [
 
       //Register item prices widget
       var itemPricesWidget = {
-          group: 'itemDetail',
           controller: 'itemPricesWidgetController',
           template: 'Modules/Pricing/VirtoCommerce.PricingModule.Web/Scripts/widgets/itemPricesWidget.tpl.html',
       };
-      widgetService.registerWidget(itemPricesWidget);
-  }])
-;
+      widgetService.registerWidget(itemPricesWidget, 'itemDetail');
+  }]);

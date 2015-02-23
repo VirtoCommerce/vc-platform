@@ -23,8 +23,11 @@ namespace VirtoCommerce.OrderModule.Web.Converters
 			retVal.OrganizationId = retVal.OrganizationId;
 			retVal.EmployeeId = retVal.EmployeeId;
 
-			if(customerOrder.Discount != null)
+			if (customerOrder.Discount != null)
+			{
 				retVal.Discount = customerOrder.Discount.ToWebModel();
+				retVal.DiscountAmount = customerOrder.Discount.DiscountAmount;
+			}
 		
 			if (customerOrder.Shipments != null)
 				retVal.Shipments = customerOrder.Shipments.Select(x => x.ToWebModel()).ToList();

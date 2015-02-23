@@ -26,7 +26,7 @@ namespace VirtoCommerce.OrderModule.Web.Model
 		/// </summary>
 		public decimal Price { get; set; }
 		/// <summary>
-		/// Static discount amount
+		/// discount amount
 		/// </summary>
 		public decimal DiscountAmount { get; set; }
 		/// <summary>

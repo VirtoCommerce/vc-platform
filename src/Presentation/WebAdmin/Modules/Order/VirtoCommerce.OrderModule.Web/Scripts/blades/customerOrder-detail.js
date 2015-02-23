@@ -1,25 +1,31 @@
 ﻿angular.module('virtoCommerce.orderModule.blades')
-.controller('customerOrderDetailController', ['$scope', 'dialogService', 'bladeNavigationService', 'customerOrders', function ($scope, dialogService, bladeNavigationService, customerOrders) {
+.controller('customerOrderDetailController', ['$scope', 'dialogService', 'bladeNavigationService', 'customerOrders', 'notificationService', function ($scope, dialogService, bladeNavigationService, customerOrders, notificationService) {
 	$scope.blade.currentEntity = {};
 
     $scope.blade.refresh = function () {
         $scope.blade.isLoading = true;
 
         customerOrders.get({ id: $scope.blade.currentEntityId }, function (results) {
-            $scope.blade.currentEntity = angular.copy(results);
-            $scope.blade.origEntity = results;
-            $scope.blade.isLoading = false;
+        	$scope.blade.origEntity = results;
 
-       
+        	var copy = angular.copy(results);
+        	$scope.blade.currentEntity = copy;
+        	$scope.blade.operation = copy;
+        	$scope.blade.customerOrder = copy;
+
+            $scope.blade.isLoading = false;
         },
         function (error) {
             $scope.blade.isLoading = false;
-            bladeNavigationService.setError('Error ' + error.status, $scope.blade);
+            notificationService.setError('Error ' + error.status, $scope.blade);
         });
     }
 
     function isDirty() {
-        return !angular.equals($scope.blade.currentEntity, $scope.blade.origEntity);
+
+    	var retVal = !angular.equals($scope.blade.currentEntity, $scope.blade.origEntity);
+    	console.log(retVal);
+    	return retVal;
     };
 
     function saveChanges() {

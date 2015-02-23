@@ -28,14 +28,14 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr class="table-item" ng-repeat="data in blade.currentEntity.items" ng-class="{'__selected': data.id === selectedNodeId}" context-menu data-target="col_menu_{{data.id}}">
+                        <tr class="table-item" ng-repeat="data in blade.currentEntity.items" ng-class="{'__selected': data.id === selectedNodeId}" context-menu data-target="col_menu_{{data.id}}" ng-click='selectItem(data)'>
                             <td class="table-col __product-control">
                                 <label class="form-control __checkbox">
                                     <input type="checkbox" ng-model="data.selected">
                                     <span class="check"></span>
                                 </label>
                             </td>
-                            <td class="table-col __proudct-img" ng-click='selectItem(data)'>
+                            <td class="table-col __proudct-img">
                                 <div class="product-img">
                                     <div class="image" style="background-image: url({{data.imageUrl}})" ng-if="data.imageUrl"></div>
                                     <i class="table-ico fa fa-image" ng-if="!data.imageUrl" />
@@ -49,7 +49,7 @@
                                     </li>
                                 </ul>
                             </td>
-                            <td class="table-col" ng-click='selectItem(data)'>
+                            <td class="table-col">
                                 <span title="{{data.name}}">{{data.name}}</span>
                             </td>
                             <td class="table-col" ng-click='selectItem(data)'>
@@ -59,7 +59,7 @@
                                     <a class="down js-down"></a>
                                 </div>
                             </td>
-                            <td class="table-col" ng-click='selectItem(data)'>
+                            <td class="table-col">
 
                                 <span ng-class="{'error': !data.avail}">{{data.avail?data.avail:0}}</span>
                             </td>
@@ -73,14 +73,14 @@
                                     <a class="down js-down"></a>
                                 </div>
                             </td>
-                            <td class="table-col" ng-click='selectItem(data)'>
+                            <td class="table-col">
                                 <div class="form-input __mini __number js-number-input-plugin" data-step="1">
-                                    <input class="js-val" required ng-model="data.staticDiscount" type="text">
+                                    <input class="js-val" required ng-model="data.discountAmount" type="text">
                                     <a class="up js-up"></a>
                                     <a class="down js-down"></a>
                                 </div>
                             </td>
-                            <td class="table-col" ng-click='selectItem(data)'>
+                            <td class="table-col">
                                 <div class="form-input __mini __number js-number-input-plugin" data-step="1">
                                     <input class="js-val" required ng-model="data.tax" type="text">
                                     <a class="up js-up"></a>
@@ -100,30 +100,24 @@
                 <table class="table __collapsed __order-info">
                     <tr class="table-item">
                         <td class="table-col">Sub Total</td>
-                        <td class="table-col __price">678.23 {{blade.currentEntity.currency}}</td>
+                        <td class="table-col __price">{{blade.currentEntity.subTotal}}&nbsp;{{blade.currentEntity.currency}}</td>
                     </tr>
                     <tr class="table-item">
                         <td class="table-col">Discount Total</td>
-                        <td class="table-col __price">36.00 {{blade.currentEntity.currency}}</td>
+                        <td class="table-col __price">{{blade.currentEntity.discountTotal}}&nbsp;{{blade.currentEntity.currency}}</td>
                     </tr>
                     <tr class="table-item">
                         <td class="table-col">Tax Total</td>
-                        <td class="table-col __price">{{blade.currentEntity.tax}} {{blade.currentEntity.currency}}</td>
+                        <td class="table-col __price">{{blade.currentEntity.taxTotal}}&nbsp;{{blade.currentEntity.currency}}</td>
                     </tr>
                     <tr class="table-item __total">
                         <td class="table-col">Total:</td>
-                        <td class="table-col __price">{{blade.currentEntity.sum}} {{blade.currentEntity.currency}}</td>
+                        <td class="table-col __price">{{blade.currentEntity.total}}&nbsp;{{blade.currentEntity.currency}}</td>
                     </tr>
                 </table>
             </div>
             <div class="form-group __order-currency">
-                <!-- <label class="form-label">Currency:</label>
-                <div class="form-input">
-                    <select ng-model="blade.currentEntity.currency" class="chosen-select">
-                        <option value="EUR">EUR</option>
-                        <option value="USD">USD</option>
-                    </select>
-                </div> -->
+             
             </div>
             <script type="text/ng-template" id="pagerTemplate.html">
                 <pagination ng-if="pageSettings.itemsPerPageCount < pageSettings.totalItems" boundary-links="true" max-size="pageSettings.numPages" items-per-page="pageSettings.itemsPerPageCount" total-items="pageSettings.totalItems" ng-model="pageSettings.currentPage" class="pagination-sm" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></pagination>

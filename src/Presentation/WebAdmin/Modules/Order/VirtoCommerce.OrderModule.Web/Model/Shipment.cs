@@ -16,7 +16,7 @@ namespace VirtoCommerce.OrderModule.Web.Model
 		public string FulfillmentCenterId { get; set; }
 		public string Employee { get; set; }
 		public string EmployeeId { get; set; }
-
+		public decimal DiscountAmount { get; set; }
 		public ICollection<LineItem> Items { get; set; }
 		public ICollection<PaymentIn> InPayments { get; set; }
 		public Address DeliveryAddress { get; set; }

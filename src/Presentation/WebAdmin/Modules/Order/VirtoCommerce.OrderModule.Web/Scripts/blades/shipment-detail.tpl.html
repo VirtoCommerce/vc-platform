@@ -1,0 +1,56 @@
+﻿<div class="blade-content __medium-wide __gray">
+    <div class="blade-inner">
+        <div class="inner-block">
+            <div class="form columns clearfix">
+                <div class="column">
+                    <div class="form-group">
+                        <label class="form-label">Shipment number</label>
+                        <div class="form-input">
+                            <input required type="text" ng-model="blade.operation.number">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Status</label>
+                        <div class="form-input">
+                            <select ng-model="blade.operation.status" class="chosen-select">
+                                <option value="new">New</option>
+                                <option value="new">PickPack</option>
+                                <option value="new">Completed</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Fulfillment</label>
+                        <div class="form-input">
+                            <select ng-model="blade.operation.fulfillmentCenterId" class="chosen-select">
+                                <option>{{blade.operation.fulfillmentCenterId}}</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="column">
+                    <div class="form-group">
+                        <label class="form-label">from</label>
+                        <div class="form-input">
+                            <div class="form-text">{{blade.operation.createdDate | date:'short'}}</div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Employee</label>
+                        <div class="form-input">
+                            <select ng-model="blade.operation.employeeId" class="chosen-select">
+                                <option>{{blade.operation.employeeId}}</option>
+                            </select>
+                        </div>
+                    </div>
+                 </div>
+            </div>
+            <div class="tile-group four">
+                <va-widget-container group="shipmentDetailWidgets" blade="blade"></va-widget-container>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+

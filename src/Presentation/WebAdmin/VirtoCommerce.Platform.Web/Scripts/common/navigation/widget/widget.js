@@ -3,10 +3,15 @@
 .factory('widgetService', function () {
 
 	var retVal = {
-		widgets: [],
-		registerWidget: function (widget) {
-			this.widgets.push(widget);
+		widgetsMap: [],
+		registerWidget: function (widget, containerName) {
+			if (!this.widgetsMap[containerName])
+			{
+				this.widgetsMap[containerName] = [];
+			}
+			this.widgetsMap[containerName].push(widget);
 		}
+
 	};
 	return retVal;
 })
@@ -20,7 +25,7 @@
             blade: '='
 		},
 		link: function (scope, element, attr) {
-		    scope.widgets = $filter('filter')(widgetService.widgets, { group: scope.group });
+			scope.widgets = widgetService.widgetsMap[scope.group];
 		    angular.forEach(scope.widgets, function(w) { w.blade = scope.blade; } );
 		}
 	}

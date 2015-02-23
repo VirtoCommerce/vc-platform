@@ -12,17 +12,18 @@
                     <div class="form-group">
                         <label class="form-label">Status</label>
                         <div class="form-input">
-                            <!--ng-options="x for x in types"-->
-                            <select ng-model="blade.currentEntity.statusId" class="chosen-select">
+                            <select ng-model="blade.currentEntity.status" class="chosen-select">
                                 <option value="new">New</option>
+                                <option value="new">NotPayed</option>
+                                <option value="new">Completed</option>
                             </select>
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="form-label">Fulfillment center</label>
+                        <label class="form-label">Store</label>
                         <div class="form-input">
-                            <select ng-model="blade.currentEntity.fulfillmentId" class="chosen-select">
-                                <option value="bejieng">Beijing</option>
+                            <select ng-model="blade.currentEntity.storeId" class="chosen-select">
+                                <option>{{blade.currentEntity.storeId}}</option>
                             </select>
                         </div>
                     </div>
@@ -35,10 +36,10 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="form-label">Site</label>
+                        <label class="form-label">Channel</label>
                         <div class="form-input">
-                            <select ng-model="blade.currentEntity.siteId" class="chosen-select">
-                                <option value="test">Test site</option>
+                            <select ng-model="blade.currentEntity.channelId" class="chosen-select">
+                                <option>{{blade.currentEntity.channelId}}</option>
                             </select>
                         </div>
                     </div>
@@ -46,7 +47,7 @@
                         <label class="form-label">Customer</label>
                         <div class="form-input">
                             <select ng-model="blade.currentEntity.customerId" class="chosen-select">
-                                <option value="Evant">Evant Moriss</option>
+                                <option>{{blade.currentEntity.customerId}}</option>
                             </select>
                         </div>
                     </div>

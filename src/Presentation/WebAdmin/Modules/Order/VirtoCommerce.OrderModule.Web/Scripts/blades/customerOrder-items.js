@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.orderModule.blades')
-.controller('customerOrderItemsController', ['$scope', 'bladeNavigationService', 'dialogService', 'items', function ($scope, bladeNavigationService, dialogService, items) {
+.controller('customerOrderItemsController', ['$scope', 'bladeNavigationService', 'dialogService', 'items', 'calculateTotalsService', function ($scope, bladeNavigationService, dialogService, items, calculateTotalsService) {
     //pagination settigs
     $scope.pageSettings = {};
     $scope.pageSettings.totalItems = $scope.blade.currentEntity.items.length;
@@ -9,19 +9,16 @@
 
     var selectedNode = null;
 
+    $scope.$watch("blade.currentEntity", function (operation) {
+    	calculateTotalsService.recalculateTotals(operation);
+    }, true);
+
     $scope.blade.refresh = function () {
-        $scope.blade.isLoading = true;
-        $scope.blade.parentBlade.refresh().$promise.then(function (data) {
-            initializeBlade(data.associations);
-        });
+    	$scope.blade.isLoading = false;
+    	$scope.blade.selectedAll = false;
     };
 
-    function initializeBlade() {
-        $scope.blade.selectedAll = false;
-        // $scope.blade.currentEntity = angular.copy(data);
-        $scope.blade.isLoading = false;
-    };
-
+   
     $scope.blade.onClose = function (closeCallback) {
         closeChildrenBlades();
         closeCallback();
@@ -95,5 +92,5 @@
         });
     };
 
-    initializeBlade();
+    $scope.blade.refresh();
 }]);

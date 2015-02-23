@@ -7,7 +7,8 @@ if (AppDependencies != undefined) {
 
 angular.module(moduleName, [
     'virtoCommerce.orderModule.blades',
-	'virtoCommerce.orderModule.widgets'
+	'virtoCommerce.orderModule.widgets',
+	'virtoCommerce.orderModule.services'
 ])
 .config(
   ['$stateProvider', function ($stateProvider) {
@@ -22,7 +23,7 @@ angular.module(moduleName, [
 						title: 'Customer orders',
 						//subtitle: 'Manage Orders',
 						controller: 'customerOrderListController',
-						template: 'Modules/Order/VirtoCommerce.OrderModule.Web/Scripts/blades/!customerOrder-list.tpl.html',
+						template: 'Modules/Order/VirtoCommerce.OrderModule.Web/Scripts/blades/customerOrder-list.tpl.html',
 						isClosingDisabled: true
 					};
 					bladeNavigationService.showBlade(blade);
@@ -47,32 +48,28 @@ angular.module(moduleName, [
 
   	//Register widgets
   	var customerOrderItemsWidget = {
-  		group: 'customerOrderDetailWidgets',
-  		controller: 'customerOrderItemsWidgetController',
+   		controller: 'customerOrderItemsWidgetController',
   		template: 'Modules/Order/VirtoCommerce.OrderModule.Web/Scripts/widgets/customerOrder-items-widget.tpl.html',
   	};
-  	widgetService.registerWidget(customerOrderItemsWidget);
+  	widgetService.registerWidget(customerOrderItemsWidget, 'customerOrderDetailWidgets');
 
   	var operationCommentWidget = {
-  		group: 'customerOrderDetailWidgets',
   		controller: 'operationCommentWidgetController',
   		template: 'Modules/Order/VirtoCommerce.OrderModule.Web/Scripts/widgets/operation-comment-widget.tpl.html',
   	};
-  	widgetService.registerWidget(operationCommentWidget);
+  	widgetService.registerWidget(operationCommentWidget, 'customerOrderDetailWidgets');
 
   	var customerOrderTotalsWidget = {
-  		group: 'customerOrderDetailWidgets',
   		controller: 'customerOrderTotalsWidgetController',
   		template: 'Modules/Order/VirtoCommerce.OrderModule.Web/Scripts/widgets/customerOrder-totals-widget.tpl.html',
   	};
-  	widgetService.registerWidget(customerOrderTotalsWidget);
+  	widgetService.registerWidget(customerOrderTotalsWidget, 'customerOrderDetailWidgets');
 
   	var operationsTreeWidget = {
-  		group: 'customerOrderDetailWidgets',
-  		controller: 'operationTreeWidgetController',
+   		controller: 'operationTreeWidgetController',
   		template: 'Modules/Order/VirtoCommerce.OrderModule.Web/Scripts/widgets/operation-tree-widget.tpl.html',
   	};
-  	widgetService.registerWidget(operationsTreeWidget);
-
+  	widgetService.registerWidget(operationsTreeWidget, 'customerOrderDetailWidgets');
+  	widgetService.registerWidget(operationsTreeWidget, 'shipmentDetailWidgets');
   
   }]);
