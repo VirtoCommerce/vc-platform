@@ -217,6 +217,26 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 		}
 
 
+        [HttpGet]
+        [ResponseType(typeof(Product))]
+        [Route("")]
+        public IHttpActionResult GetProductByKeyword(string store, [FromUri]string keyword, [FromUri]moduleModel.ItemResponseGroup responseGroup = moduleModel.ItemResponseGroup.ItemLarge, string language = "en-us")
+        {
+            using (var appConfigRepo = _foundationAppConfigRepFactory())
+            {
+                var keywordValue =
+                    appConfigRepo.SeoUrlKeywords.FirstOrDefault(
+                        x => x.KeywordType == (int)SeoUrlKeywordTypes.Item
+                            && x.Keyword.Equals(keyword, StringComparison.OrdinalIgnoreCase));
+
+                if (keywordValue != null)
+                {
+                    var result = _itemService.GetById(keywordValue.KeywordValue, responseGroup);
+                    return Ok(result.ToWebModel(_assetUri));
+                }
+            }
+            return StatusCode(HttpStatusCode.NotFound);
+        }
 
 		[HttpGet]
 		[ResponseType(typeof(Product))]
@@ -226,21 +246,6 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
             var catalog = GetCatalogId(store);
             var result = _itemService.GetById(product, responseGroup);
 
-            if (result == null)
-            {
-                //Lets treat product as slug
-                using (var appConfigRepo = _foundationAppConfigRepFactory())
-                {
-                    var keyword = appConfigRepo.SeoUrlKeywords.FirstOrDefault(x => x.KeywordType == (int)SeoUrlKeywordTypes.Item
-                        && x.Keyword.Equals(product, StringComparison.InvariantCultureIgnoreCase));
-
-                    if (keyword != null)
-                    {
-                        result = _itemService.GetById(keyword.KeywordValue, responseGroup);
-                    }
-                }
-            }
-
             if (result != null)
 		    {
                 var webModelProduct = result.ToWebModel(_assetUri);
@@ -249,6 +254,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
                 webModelProduct.Outline = webModelProduct.Outline.Replace(catalog + "/", "");
                 return Ok(webModelProduct);
 		    }
+
 		    return StatusCode(HttpStatusCode.NotFound);
 		}
 

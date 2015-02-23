@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Web;
-using VirtoCommerce.Web.Core.DataContracts;
+using VirtoCommerce.ApiClient.DataContracts;
 
 #endregion
 

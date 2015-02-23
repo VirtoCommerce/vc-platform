@@ -6,8 +6,7 @@ if (AppDependencies != undefined) {
 }
 
 angular.module(moduleName, [
-    'virtoCommerce.pricingModule.widget.itemPricesWidget',
-    'virtoCommerce.pricingModule.blades.itemPricesList'
+    'virtoCommerce.pricingModule.widget.itemPricesWidget'
 ])
 //.config(
 //  ['$stateProvider', function ($stateProvider) {

@@ -1,4 +1,4 @@
-﻿namespace VirtoCommerce.Web.Core.DataContracts
+﻿namespace VirtoCommerce.ApiClient.DataContracts
 {
     public class ItemCategory
     {

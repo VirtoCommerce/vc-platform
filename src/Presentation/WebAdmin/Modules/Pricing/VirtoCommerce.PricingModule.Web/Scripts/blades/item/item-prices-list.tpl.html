@@ -19,7 +19,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr class="table-item" ng-repeat="data in blade.entities" ng-class="{'__selected': data.id === selectedItem.id}" context-menu data-target="ipl_menu_{{data.id}}" ng-click='selectItem(data)'>
+                        <tr class="table-item" ng-repeat="data in blade.currentEntity.prices" ng-class="{'__selected': data.id === selectedItem.id}" context-menu data-target="ipl_menu_{{data.id}}" ng-click='selectItem(data)'>
                             <!--<td class="table-col">
                                 <label class="form-control __checkbox">
                                     <input type="checkbox" ng-model="data.selected">
@@ -27,12 +27,7 @@
                                 </label>
                             </td>-->
                             <td class="table-col">
-                                <div class="form-input">
-                                    <select ng-model="data.currency" class="chosen-select">
-                                        <option value="EUR">EUR</option>
-                                        <option value="USD">USD</option>
-                                    </select>
-                                </div>
+                                {{data.currency}}
                             </td>
                             <td class="table-col">
                                 <div data-step="any" class="form-input __number js-number-input-plugin">

@@ -87,6 +87,7 @@
     <Compile Include="Modularity\IModuleCatalogItem.cs" />
     <Compile Include="Modularity\IModuleInitializer.cs" />
     <Compile Include="Modularity\IModuleManager.cs" />
+    <Compile Include="Modularity\IModuleManifestProvider.cs" />
     <Compile Include="Modularity\IModuleTypeLoader.cs" />
     <Compile Include="Modularity\InitializationMode.cs" />
     <Compile Include="Modularity\LoadModuleCompletedEventArgs.cs" />
@@ -110,6 +111,8 @@
     <Compile Include="Modularity\ModuleManager.cs" />
     <Compile Include="Modularity\Exceptions\ModuleNotFoundException.cs" />
     <Compile Include="Modularity\ModuleManifest.cs" />
+    <Compile Include="Modularity\ModuleManifestProvider.cs" />
+    <Compile Include="Modularity\ModulePermission.cs" />
     <Compile Include="Modularity\ModuleSetting.cs" />
     <Compile Include="Modularity\ModuleSettingsGroup.cs" />
     <Compile Include="Modularity\ModuleState.cs" />
@@ -126,6 +129,9 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Security\CheckPermissionAttribute.cs" />
+    <Compile Include="Security\IPermissionService.cs" />
+    <Compile Include="Security\PermissionDescriptor.cs" />
     <Compile Include="Settings\ISettingsManager.cs" />
     <Compile Include="Settings\ModuleDescriptor.cs" />
     <Compile Include="Settings\SettingDescriptor.cs" />
@@ -138,6 +144,7 @@
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
@@ -148,9 +155,7 @@
       <SubType>Designer</SubType>
     </None>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Security\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="..\..\..\Core\CommerceFoundation\CommerceFoundation.csproj">
       <Project>{e7fc9a51-1b39-4bdc-983a-8a059c5fc58b}</Project>

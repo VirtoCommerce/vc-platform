@@ -5,7 +5,7 @@ using Newtonsoft.Json;
 
 #endregion
 
-namespace VirtoCommerce.Web.Core.DataContracts
+namespace VirtoCommerce.ApiClient.DataContracts
 {
 
     #region
@@ -27,7 +27,7 @@ namespace VirtoCommerce.Web.Core.DataContracts
         {
             get
             {
-                return _links;
+                return this._links;
             }
         }
 
@@ -37,19 +37,19 @@ namespace VirtoCommerce.Web.Core.DataContracts
 
         public void AddLink(Link link)
         {
-            if (_links == null)
+            if (this._links == null)
             {
-                _links = new List<Link>();
+                this._links = new List<Link>();
             }
 
-            _links.Add(link);
+            this._links.Add(link);
         }
 
         public void AddLinks(params Link[] links)
         {
             foreach (var link in links)
             {
-                AddLink(link);
+                this.AddLink(link);
             }
         }
 

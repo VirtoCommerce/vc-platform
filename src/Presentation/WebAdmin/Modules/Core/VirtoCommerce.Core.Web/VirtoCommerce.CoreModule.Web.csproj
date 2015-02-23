@@ -127,6 +127,7 @@
     <Compile Include="Security\Models\UserLogin.cs" />
     <Compile Include="Security\Models\ApplicationUserExtended.cs" />
     <Compile Include="Security\OwinConfig.cs" />
+    <Compile Include="Security\PermissionService.cs" />
     <Compile Include="Settings\SettingsManager.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -138,6 +139,7 @@
     <Content Include="Scripts\home.tpl.html" />
     <Content Include="Scripts\Settings\resources\setting.js" />
     <Content Include="Scripts\Settings\settings.js" />
+    <Content Include="Scripts\common\ok-cancel.tpl.html" />
     <None Include="app.config" />
     <None Include="packages.config">
       <SubType>Designer</SubType>
@@ -151,6 +153,10 @@
     <ProjectReference Include="..\..\..\..\..\Core\CommerceFoundation\CommerceFoundation.csproj">
       <Project>{e7fc9a51-1b39-4bdc-983a-8a059c5fc58b}</Project>
       <Name>CommerceFoundation</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\..\Extensions\Cache\VirtoCommerce.Caching.HttpCache\VirtoCommerce.Caching.HttpCache.csproj">
+      <Project>{3fe4eb14-557a-46bc-94ad-2e9874f85ace}</Project>
+      <Name>VirtoCommerce.Caching.HttpCache</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\..\VirtoCommerce.Framework.Web\VirtoCommerce.Framework.Web.csproj">
       <Project>{f7c9313b-522e-4619-abc9-8c7d4600d6b5}</Project>

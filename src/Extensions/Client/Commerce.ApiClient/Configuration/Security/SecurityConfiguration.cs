@@ -6,13 +6,8 @@ using System.Threading;
 
 #endregion
 
-namespace VirtoCommerce.Web.Core.Configuration.Security
+namespace VirtoCommerce.ApiClient.Configuration.Security
 {
-
-    #region
-
-    #endregion
-
     public class SecurityConfiguration : ConfigurationSection
     {
         #region Static Fields

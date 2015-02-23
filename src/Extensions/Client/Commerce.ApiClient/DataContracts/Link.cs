@@ -1,4 +1,4 @@
-﻿namespace VirtoCommerce.Web.Core.DataContracts
+﻿namespace VirtoCommerce.ApiClient.DataContracts
 {
     /// <summary>
     ///     A base class for relation links
@@ -9,9 +9,9 @@
 
         public Link(string relation, string href, string title = null)
         {
-            Rel = relation;
-            Href = href;
-            Title = title;
+            this.Rel = relation;
+            this.Href = href;
+            this.Title = title;
         }
 
         #endregion

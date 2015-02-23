@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using System.Web;
 using Newtonsoft.Json;
 using VirtoCommerce.ApiClient.Caching;
-using VirtoCommerce.Web.Core.DataContracts;
+using VirtoCommerce.ApiClient.DataContracts;
 
 #endregion
 

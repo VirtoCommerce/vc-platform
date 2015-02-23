@@ -21,7 +21,7 @@ namespace VirtoCommerce.PricingModule.Web.Controllers.Api
 			_pricingService = pricingService;
 		}
 
-		// GET: api/catalog/products/{productId}/prices
+		// GET: api/products/{productId}/prices
 		[HttpGet]
 		[ResponseType(typeof(webModel.Price[]))]
 		[Route("api/products/{productId}/prices")]

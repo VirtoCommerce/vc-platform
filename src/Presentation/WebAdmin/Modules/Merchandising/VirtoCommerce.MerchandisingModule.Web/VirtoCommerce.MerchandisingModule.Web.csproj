@@ -109,8 +109,8 @@
     <Compile Include="Model\ReviewComment.cs" />
     <Compile Include="Model\SearchParameters.cs" />
     <Compile Include="Model\SeoKeyword.cs" />
-    <Compile Include="Model\Store\Store.cs" />
-    <Compile Include="Model\Store\StoreSetting.cs" />
+    <Compile Include="Model\Stores\Store.cs" />
+    <Compile Include="Model\Stores\StoreSetting.cs" />
     <Compile Include="Module.cs" />
     <Compile Include="Model\CatalogItem.cs" />
     <Compile Include="Model\Category.cs" />

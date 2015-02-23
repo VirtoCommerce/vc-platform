@@ -7,18 +7,16 @@
                     <div class="form-group" ng-repeat="data in blade.objects[groupName]" title="{{data.description}}">
                         <label class="form-label">{{data.title}}</label>
                         <!--<va-property2 ng-model="prop" get-prop-values="getPropValues" />-->
-                        <div class="form-input" data-step="1" ng-class="data.valueType==='boolean' ? 'switch' : '__number js-number-input-plugin'" ng-if="!(data.allowedValues.length>0)">
+                        <div class="form-input" ng-class="data.valueType==='boolean' ? 'switch' : '__number'" ng-if="!(data.allowedValues.length>0)">
                             <input required ng-model="data.value" ng-if="data.valueType==='string'" />
                             <input required ng-model="data.value" type="password" ng-if="data.valueType==='secureString'">
                             <div ng-if="data.valueType==='integer'">
-                                <input required class="js-val" ng-model="data.value" type="text">
-                                <a class="up js-up"></a>
-                                <a class="down js-down"></a>
+                                <input required ng-model="data.value" type="number" min="1" step="1">
+                                
                             </div>
                             <div ng-if="data.valueType==='decimal'">
-                                <input required class="js-val" ng-model="data.value" type="text">
-                                <a class="up js-up"></a>
-                                <a class="down js-down"></a>
+                                <input required ng-model="data.value" type="number" min="1" step="1">
+                                
                             </div>
                             <div class="form-control __switch">
                                 <label class="form-label" ng-if="data.valueType==='boolean'">
@@ -28,7 +26,7 @@
                             </div>
                         </div>
                         <div class="form-input" ng-if="data.allowedValues.length>0">
-                            <select ng-model="data.value" ng-options="x for x in data.allowedValues"></select>
+                            <select chosen ng-model="data.value" ng-options="x for x in data.allowedValues" ng-data-model="data.allowedValues"></select>
                         </div>
                     </div>
                 </fieldset>
@@ -36,8 +34,3 @@
         </div>
     </div>
 </div>
-<script>
-    $(function () {
-        $('.js-number-input-plugin').numberInputPlugin();
-    });
-</script>

@@ -8,7 +8,7 @@ using System.Text;
 
 #endregion
 
-namespace VirtoCommerce.Web.Core.DataContracts
+namespace VirtoCommerce.ApiClient.DataContracts
 {
 
     #region
@@ -85,13 +85,13 @@ namespace VirtoCommerce.Web.Core.DataContracts
         public override string ToString()
         {
             var builder = new StringBuilder();
-            builder.Append(Search);
-            builder.Append(Skip);
-            builder.Append(Take);
-            builder.Append(Outline);
-            builder.Append(SortProperty);
+            builder.Append(this.Search);
+            builder.Append(this.Skip);
+            builder.Append(this.Take);
+            builder.Append(this.Outline);
+            builder.Append(this.SortProperty);
 
-            foreach (var facet in Filters)
+            foreach (var facet in this.Filters)
             {
                 builder.Append(facet);
             }

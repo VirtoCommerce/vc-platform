@@ -5,7 +5,7 @@ using System.Runtime.Serialization;
 
 #endregion
 
-namespace VirtoCommerce.Web.Core.DataContracts
+namespace VirtoCommerce.ApiClient.DataContracts
 {
 
     #region
@@ -51,9 +51,9 @@ namespace VirtoCommerce.Web.Core.DataContracts
             return string.Format(
                 CultureInfo.InvariantCulture,
                 "Code: {0}, Source: {1}, Message: {2}",
-                Code,
-                Source,
-                Message);
+                this.Code,
+                this.Source,
+                this.Message);
         }
 
         #endregion

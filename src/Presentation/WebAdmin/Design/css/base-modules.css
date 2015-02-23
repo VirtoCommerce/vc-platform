@@ -2378,7 +2378,10 @@ ol
     /* Preloader 4 */
     .preloader-4
     {
-        width: 100%;
+        display: block;
+        margin: 0 auto;
+        padding: 50px 0;
+        width: 350px;
     }
 
     .preloader-4 span
@@ -3511,7 +3514,9 @@ fieldset + fieldset
 {
 	display: block;
 	font-size: 14px;
-	margin: 10px 0;
+	margin: 10px;
+    max-height: 78px;
+    overflow: hidden;
 }
 
 .tile .tile-descr.__once
@@ -3522,7 +3527,7 @@ fieldset + fieldset
 
 .tile .tile-ico + .tile-descr
 {
-	margin: 0;
+	margin: 0 10px;
 }
 
 /* Half */
@@ -5145,6 +5150,7 @@ fieldset + fieldset
 	.blade .blade-container
 	{
 		height: calc(100% - 130px);
+        overflow: hidden;
 		position: relative;
 	}
 

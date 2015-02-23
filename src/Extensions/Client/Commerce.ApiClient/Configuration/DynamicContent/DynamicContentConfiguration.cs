@@ -6,13 +6,8 @@ using System.Threading;
 
 #endregion
 
-namespace VirtoCommerce.Web.Core.Configuration.DynamicContent
+namespace VirtoCommerce.ApiClient.Configuration.DynamicContent
 {
-
-    #region
-
-    #endregion
-
     public class DynamicContentConfiguration : ConfigurationSection
     {
         #region Static Fields

@@ -25,7 +25,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Converters
 				retVal.Images = product.Assets.Where(x => x.Type == moduleModel.ItemAssetType.Image).Select(x => x.ToWebModel(resolver)).ToArray();
 			}
 
-			if (product.Variations != null)
+			if (product.Variations != null && product.Variations.Any())
 			{
 				((webModel.Product)retVal).Variations = product.Variations.Select(x => x.ToWebModel(resolver, (webModel.Product)retVal)).OfType<webModel.ProductVariation>().ToArray();
 			}
@@ -42,10 +42,10 @@ namespace VirtoCommerce.MerchandisingModule.Web.Converters
 
 		    if (product.SeoInfos != null)
 		    {
-                retVal.SeoKeywords = product.SeoInfos.Select(x => x.ToWebModel()).ToArray();
+                retVal.Seo = product.SeoInfos.Select(x => x.ToWebModel()).ToArray();
 		    }
 
-		    if (product.Associations != null)
+		    if (product.Associations != null && product.Associations.Any())
 		    {
 		        retVal.Associations = product.Associations.Select(x => x.ToWebModel()).ToArray();
 		    }

@@ -1,25 +1,17 @@
 ﻿angular.module('virtoCommerce.storeModule.blades')
 .controller('storeDetailController', ['$scope', 'bladeNavigationService', 'stores', 'catalogs', 'dialogService', function ($scope, bladeNavigationService, stores, catalogs, dialogService) {
     $scope.blade.refresh = function (parentRefresh) {
-        //Refresh only when has id
-        if (angular.isDefined($scope.blade.currentEntityId)) {
-            stores.get({ id: $scope.blade.currentEntityId }, function (data) {
-                initializeBlade(data);
-                if (parentRefresh) {
-                    $scope.blade.parentBlade.refresh();
-                }
-            });
-        }
-        else {
-            initializeBlade($scope.blade.currentEntity);
-        }
+        stores.get({ id: $scope.blade.currentEntityId }, function (data) {
+            initializeBlade(data);
+            if (parentRefresh) {
+                $scope.blade.parentBlade.refresh();
+            }
+        });
     }
 
     function initializeBlade(data) {
         $scope.blade.currentEntityId = data.id;
-        if (angular.isDefined($scope.blade.currentEntityId)) {
-            $scope.blade.title = data.name;
-        }
+        $scope.blade.title = data.name;
 
         $scope.blade.currentEntity = angular.copy(data);
         $scope.blade.origEntity = data;
@@ -27,26 +19,15 @@
     };
 
     function isDirty() {
-        var retVal = angular.isDefined($scope.blade.currentEntityId);
-        if (retVal) {
-            retVal = angular.equals($scope.blade.currentEntity, $scope.blade.origEntity);
-        }
-        return !retVal;
+        return !angular.equals($scope.blade.currentEntity, $scope.blade.origEntity);
     };
 
     $scope.saveChanges = function () {
         $scope.blade.isLoading = true;
-        if (angular.isDefined($scope.blade.currentEntityId)) {
-            stores.update({}, $scope.blade.currentEntity, function (data) {
-                $scope.blade.refresh(true);
-            });
-        }
-        else {
-            stores.save({}, $scope.blade.currentEntity, function (data) {
-                $scope.blade.parentBlade.refresh();
-                $scope.blade.parentBlade.openBlade(data);
-            });
-        }
+
+        stores.update({}, $scope.blade.currentEntity, function (data) {
+            $scope.blade.refresh(true);
+        });
     };
 
     $scope.setForm = function (form) {
@@ -54,7 +35,8 @@
     }
 
     $scope.blade.onClose = function (closeCallback) {
-        if (isDirty() && angular.isDefined($scope.blade.currentEntityId)) {
+        closeChildrenBlades();
+        if (isDirty()) {
             var dialog = {
                 id: "confirmCurrentBladeClose",
                 title: "Save changes",
@@ -73,28 +55,35 @@
         }
     };
 
-    if (angular.isDefined($scope.blade.currentEntityId)) {
-        $scope.bladeToolbarCommands = [
-            {
-                name: "Save", icon: 'fa fa-save',
-                executeMethod: function () {
-                    $scope.saveChanges();
-                },
-                canExecuteMethod: function () {
-                    return isDirty() && $scope.formScope && $scope.formScope.$valid;
-                }
-            },
-            {
-                name: "Reset", icon: 'fa fa-undo',
-                executeMethod: function () {
-                    angular.copy($scope.blade.origEntity, $scope.blade.currentEntity);
-                },
-                canExecuteMethod: function () {
-                    return isDirty();
-                }
-            }
-        ];
+    function closeChildrenBlades() {
+        angular.forEach($scope.blade.childrenBlades.slice(), function (child) {
+            bladeNavigationService.closeBlade(child);
+        });
     }
+
+    $scope.bladeToolbarCommands = [
+        {
+            name: "Save",
+            icon: 'fa fa-save',
+            executeMethod: function () {
+                $scope.saveChanges();
+            },
+            canExecuteMethod: function () {
+                return isDirty() && $scope.formScope && $scope.formScope.$valid;
+            }
+        },
+        {
+            name: "Reset",
+            icon: 'fa fa-undo',
+            executeMethod: function () {
+                angular.copy($scope.blade.origEntity, $scope.blade.currentEntity);
+            },
+            canExecuteMethod: function () {
+                return isDirty();
+            }
+        }
+    ];
+
 
     $scope.blade.refresh(false);
     catalogs.getCatalogs({}, function (results) {

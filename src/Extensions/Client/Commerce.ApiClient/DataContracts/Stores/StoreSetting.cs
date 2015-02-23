@@ -1,4 +1,4 @@
-﻿namespace VirtoCommerce.Web.Core.DataContracts.Store
+﻿namespace VirtoCommerce.ApiClient.DataContracts.Stores
 {
     public class StoreSetting
     {

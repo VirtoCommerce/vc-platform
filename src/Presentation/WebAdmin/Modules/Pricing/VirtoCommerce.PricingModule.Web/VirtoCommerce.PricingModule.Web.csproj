@@ -101,8 +101,10 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Scripts\blades\item-prices-list.js" />
-    <Content Include="Scripts\blades\item-prices-list.tpl.html" />
+    <Content Include="Scripts\blades\item\item-prices-list.js" />
+    <Content Include="Scripts\blades\item\item-prices-list.tpl.html" />
+    <Content Include="Scripts\blades\item\item-pricelists-list.js" />
+    <Content Include="Scripts\blades\item\item-pricelists-list.tpl.html" />
     <Content Include="Scripts\home.tpl.html" />
     <Content Include="Scripts\pricing.js" />
     <Content Include="Scripts\resources\pricing.js" />

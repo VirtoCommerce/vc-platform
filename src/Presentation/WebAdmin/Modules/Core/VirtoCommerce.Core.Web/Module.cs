@@ -2,6 +2,7 @@
 using System.Web.Hosting;
 using Microsoft.Practices.Unity;
 using Owin;
+using VirtoCommerce.Caching.HttpCache;
 using VirtoCommerce.CoreModule.Web.Controllers.Api;
 using VirtoCommerce.CoreModule.Web.Notification;
 using VirtoCommerce.CoreModule.Web.Security;
@@ -14,6 +15,7 @@ using VirtoCommerce.Foundation.Data.Security;
 using VirtoCommerce.Foundation.Data.Security.Identity;
 using VirtoCommerce.Framework.Web.Modularity;
 using VirtoCommerce.Framework.Web.Notification;
+using VirtoCommerce.Framework.Web.Security;
 using VirtoCommerce.Framework.Web.Settings;
 
 namespace VirtoCommerce.CoreModule.Web
@@ -121,6 +123,8 @@ namespace VirtoCommerce.CoreModule.Web
 
         public void Initialize()
         {
+            var manifestProvider = _container.Resolve<IModuleManifestProvider>();
+
             Func<IFoundationSecurityRepository> securityRepositoryFactory = () =>
                 new FoundationSecurityRepositoryImpl(_connectionStringName);
 
@@ -130,6 +134,8 @@ namespace VirtoCommerce.CoreModule.Web
 
             _container.RegisterType<Func<IFoundationSecurityRepository>>(
                 new InjectionFactory(x => new Func<IFoundationSecurityRepository>(securityRepositoryFactory)));
+
+            _container.RegisterInstance<IPermissionService>(new PermissionService(securityRepositoryFactory, new HttpCacheRepository(), manifestProvider));
 
             #endregion
 
@@ -146,10 +152,9 @@ namespace VirtoCommerce.CoreModule.Web
             #endregion
 
             #region Settings
-            var modulesPath = HostingEnvironment.MapPath("~/Modules");
             Func<IAppConfigRepository> appConfigRepFactory = () => new EFAppConfigRepository(_connectionStringName);
 
-            var settingsManager = new SettingsManager(modulesPath, appConfigRepFactory);
+            var settingsManager = new SettingsManager(manifestProvider, appConfigRepFactory);
             _container.RegisterInstance<ISettingsManager>(settingsManager);
 
             _container.RegisterType<SettingController>(new InjectionConstructor(settingsManager));

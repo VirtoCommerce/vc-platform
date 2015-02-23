@@ -1,4 +1,4 @@
-﻿namespace VirtoCommerce.Web.Core.DataContracts.Store
+﻿namespace VirtoCommerce.ApiClient.DataContracts.Stores
 {
     public class Store
     {
@@ -28,7 +28,7 @@
 
         public string SecureUrl { get; set; }
 
-        public SeoKeyword[] SeoKeywords { get; set; }
+        public SeoKeyword[] Seo { get; set; }
 
         public StoreSetting[] Settings { get; set; }
 
