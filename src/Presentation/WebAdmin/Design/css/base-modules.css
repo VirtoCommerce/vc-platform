@@ -2316,53 +2316,6 @@ h3
 			margin: 0 0 5px;
 		}
 
-	.table .table-col.__date,
-    .table .table-col.__author,
-    .table .table-col.__version
-	{
-		font-size: 12px;
-		vertical-align: top;
-		width: 20%;
-	}
-
-    .table .table-col.__author
-    {
-        color: #999;
-    }
-
-    .table .table-col.__version
-    {
-        width: 10%;
-    }
-
-    .table .table-col.__blue
-    {
-        color: #43b0e6;
-    }
-
-	.table .table-col.__product-control
-	{
-		width: 20px;
-	}
-
-	.table .table-col.__product-img
-	{
-		width: 60px;
-	}
-
-	.table .table-col.__product-name
-	{
-		max-width: 250px;
-		overflow: hidden;
-		text-overflow: ellipsis;
-		white-space: nowrap;
-	}
-
-    .table .table-col.__product-code
-    {
-        white-space: nowrap;
-    }
-
 		.table-col .table-date
 		{
 			color: #999;
@@ -3971,6 +3924,11 @@ fieldset + fieldset
     background: #ecf7fc;
 }
 
+.tree-block.__canceled:hover
+{
+    background: #faf1f1;
+}
+
 .tree-block.__selected
 {
     background: #d9effa;
@@ -4066,6 +4024,15 @@ fieldset + fieldset
     margin: 0;
     padding: 5px 0 5px 20px;
     position: relative;
+}
+
+.tree-el.__canceled
+{
+    background: #43b0e6;
+    color: #fff;
+    margin: 5px -10px -5px;
+    padding: 5px 0;
+    text-align: center;
 }
 
 .tree-el.__title
@@ -4830,6 +4797,15 @@ fieldset + fieldset
 		position: relative;
 	}
 
+        .blade .blade-container .canceled
+        {
+            background: #43b0e6;
+            color: #fff;
+            font-size: 18px;
+            padding: 10px 0;
+            text-align: center;
+        }
+
 		.blade-container .blade-static
 		{
 			background: #fbfdfe;
@@ -4940,6 +4916,11 @@ fieldset + fieldset
 			height: calc(100% - 199px);
 		}
 
+        .blade-container .canceled + .blade-content
+        {
+            height: calc(100% - 45px);
+        }
+
 	.blade .blade-content
 	{
 		width: 436px;
@@ -4950,6 +4931,11 @@ fieldset + fieldset
 	{
 		background-color: #f3f3f3;
 	}
+
+    .__canceled
+    {
+        background-color: #faf1f1;
+    }
 
 	.blade .blade-content.__medium-wide
 	{

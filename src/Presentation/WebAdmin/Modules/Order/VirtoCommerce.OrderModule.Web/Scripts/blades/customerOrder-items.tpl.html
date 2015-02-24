@@ -87,7 +87,7 @@
                                     <a class="down js-down"></a>
                                 </div>
                             </td>
-                            <td class="table-col" ng-click='selectItem(data)'>
+                            <td class="table-col __total" ng-click='selectItem(data)'>
                                 <!--<span>{{data.total}}</span>-->
                                 <span>{{data.quantity*data.price-data.staticDiscount+data.tax}}</span>
                             </td>
@@ -125,9 +125,3 @@
         </div>
     </div>
 </div>
-
-<script>
-    $(function () {
-        $('.js-number-input-plugin').numberInputPlugin();
-    });
-</script>
