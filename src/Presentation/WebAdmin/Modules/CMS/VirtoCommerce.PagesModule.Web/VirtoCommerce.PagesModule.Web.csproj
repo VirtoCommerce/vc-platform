@@ -101,39 +101,42 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\css\bootstrap-markdown.min.css" />
-    <Content Include="Scripts\app\blades\collection-list.js" />
-    <Content Include="Scripts\app\blades\collection-list.tpl.html" />
-    <Content Include="Scripts\app\blades\item-detail.js" />
-    <Content Include="Scripts\app\blades\item-detail.tpl.html" />
-    <Content Include="Scripts\app\blades\item-list.js" />
-    <Content Include="Scripts\app\blades\item-list.tpl.html" />
-    <Content Include="Scripts\app\content.js" />
-    <Content Include="Scripts\app\directives\bootstrap-markdown.js" />
-    <Content Include="Scripts\app\directives\markdown-editpreview-ng.js" />
-    <Content Include="Scripts\app\directives\Markdown.Converter.js" />
-    <Content Include="Scripts\app\directives\Markdown.Sanitizer.js" />
-    <Content Include="Scripts\app\directives\PageDown-LICENSE.txt" />
+    <Content Include="Scripts\app\page.js" />
     <Content Include="Scripts\app\home.tpl.html" />
-    <Content Include="Scripts\app\resources\contents.js" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\Api\PagesController.cs" />
+    <Compile Include="Converters\PageConverter.cs" />
+    <Compile Include="Converters\ShortPageInfoConverter.cs" />
+    <Compile Include="Models\Page.cs" />
+    <Compile Include="Models\ShortPageInfo.cs" />
     <Compile Include="Module.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Scripts\app\blades\" />
+    <Folder Include="Scripts\app\directives\" />
+    <Folder Include="Scripts\app\resources\" />
     <Folder Include="Scripts\app\wizards\" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\..\..\Core\CommerceFoundation.Data\CommerceFoundation.Data.csproj">
+      <Project>{bb168a74-0f1e-43be-a616-134902238b80}</Project>
+      <Name>CommerceFoundation.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\..\Core\CommerceFoundation\CommerceFoundation.csproj">
+      <Project>{e7fc9a51-1b39-4bdc-983a-8a059c5fc58b}</Project>
+      <Name>CommerceFoundation</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\..\VirtoCommerce.Framework.Web\VirtoCommerce.Framework.Web.csproj">
       <Project>{f7c9313b-522e-4619-abc9-8c7d4600d6b5}</Project>
       <Name>VirtoCommerce.Framework.Web</Name>
     </ProjectReference>
-    <ProjectReference Include="..\VirtoCommerce.Content.Data\VirtoCommerce.Content.Data.csproj">
-      <Project>{e55e08b5-3af9-467d-8f90-4bef27bafa28}</Project>
-      <Name>VirtoCommerce.Content.Data</Name>
+    <ProjectReference Include="..\VirtoCommerce.Content.Pages.Data\VirtoCommerce.Content.Pages.Data.csproj">
+      <Project>{8f9f26fc-344e-4599-b2f3-cb560f1d5499}</Project>
+      <Name>VirtoCommerce.Content.Pages.Data</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup>

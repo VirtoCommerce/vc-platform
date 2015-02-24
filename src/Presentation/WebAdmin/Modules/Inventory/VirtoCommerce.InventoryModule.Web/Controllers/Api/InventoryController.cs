@@ -27,7 +27,11 @@ namespace VirtoCommerce.InventoryModule.Web.Controllers.Api
 			var retVal = _inventoryService.GetProductsInventoryInfos(new string[] { productId }).FirstOrDefault();
 			if (retVal == null)
 			{
-				return NotFound();
+				retVal = new coreModel.InventoryInfo
+				{
+					ProductId = productId,
+					Status = coreModel.InventoryStatus.Enabled,
+				};
 			}
 			return Ok(retVal.ToWebModel());
 		}

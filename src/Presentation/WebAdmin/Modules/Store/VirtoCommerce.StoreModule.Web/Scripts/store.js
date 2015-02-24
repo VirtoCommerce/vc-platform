@@ -45,20 +45,17 @@ angular.module(moduleName, [
 
       //Register widgets in store details
       widgetService.registerWidget({
-          group: 'storeDetail',
           controller: 'storeLanguagesWidgetController',
           template: 'Modules/Store/VirtoCommerce.StoreModule.Web/Scripts/widgets/storeLanguagesWidget.tpl.html'
-      });
+      }, 'storeDetail');
       widgetService.registerWidget({
-          group: 'storeDetail',
           controller: 'storeAdvancedWidgetController',
           template: 'Modules/Store/VirtoCommerce.StoreModule.Web/Scripts/widgets/storeAdvancedWidget.tpl.html'
-      });
+      }, 'storeDetail');
       widgetService.registerWidget({
-          group: 'storeDetail',
           controller: 'storeSettingsWidgetController',
           template: 'Modules/Store/VirtoCommerce.StoreModule.Web/Scripts/widgets/storeSettingsWidget.tpl.html'
-      });
+      }, 'storeDetail');
       widgetService.registerWidget({
           controller: 'storePaymentsWidgetController',
           template: 'Modules/Store/VirtoCommerce.StoreModule.Web/Scripts/widgets/storePaymentsWidget.tpl.html'

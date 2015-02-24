@@ -1,54 +1,85 @@
 ﻿namespace VirtoCommerce.PagesModule.Web.Controllers.Api
 {
-    #region
+	#region
 
-    using System.Web.Http;
+	using System;
+	using System.Linq;
+	using System.Web.Http;
+	using System.Web.Http.Description;
+	using VirtoCommerce.Content.Pages.Data.Services;
+	using VirtoCommerce.Framework.Web.Settings;
+	using VirtoCommerce.PagesModule.Web.Models;
+	using VirtoCommerce.PagesModule.Web.Converters;
+	using System.Collections.Generic;
 
-    using VirtoCommerce.Content.Data.Repositories;
+	#endregion
 
-    #endregion
+	[RoutePrefix("api/cms/{storeId}")]
+	public class PagesController : ApiController
+	{
+		#region Fields
 
-    [RoutePrefix("api/cms/pages")]
-    public class PagesController : ApiController
-    {
-        #region Fields
+		private IPagesService _pagesService;
 
-        private IFileRepository _fileRepository;
+		#endregion
 
-        #endregion
+		#region Constructors and Destructors
 
-        #region Constructors and Destructors
+		public PagesController(Func<string, IPagesService> serviceFactory, ISettingsManager settingsManager)
+		{
+			if (serviceFactory == null)
+			{
+				throw new ArgumentNullException("serviceFactory");
+			}
 
-        public PagesController(IFileRepository fileRepository)
-        {
-            this._fileRepository = fileRepository;
-        }
+			if (settingsManager == null)
+			{
+				throw new ArgumentNullException("settingsManager");
+			}
 
-        #endregion
+			var chosenRepository = settingsManager.GetValue(
+				"VirtoCommerce.PagesModule.MainProperties.PagesRepositoryType",
+				string.Empty);
 
-        //[HttpGet]
-        //[ResponseType(typeof(ContentItem[]))]
-        //[Route("items")]
-        //public IHttpActionResult GetItems(string path)
-        //{
-        //	var items = _fileRepository.GetContentItems(path);
-        //	return Ok(items);
-        //}
+			var pagesService = serviceFactory.Invoke(chosenRepository);
 
-        //[HttpPost]
-        //[Route("save")]
-        //public IHttpActionResult SaveItem(string message, string path)
-        //{
-        //	_fileRepository.SaveContentItem(message, path);
-        //	return Ok();
-        //}
+			_pagesService = pagesService;
+		}
 
-        //[HttpDelete]
-        //[Route("delete")]
-        //public IHttpActionResult SaveItem(string path)
-        //{
-        //	_fileRepository.DeleteContentItem(path);
-        //	return Ok();
-        //}
-    }
+		#endregion
+
+		[HttpGet]
+		[ResponseType(typeof(IEnumerable<ShortPageInfo>))]
+		[Route("pages")]
+		public IHttpActionResult GetPages(string storeId)
+		{
+			var items = _pagesService.GetPages(storeId).Select(s => s.ToWebModel());
+			return Ok(items);
+		}
+
+		[HttpGet]
+		[ResponseType(typeof(ShortPageInfo[]))]
+		[Route("pages/{pageName}")]
+		public IHttpActionResult GetPage(string storeId, string pageName)
+		{
+			var item = _pagesService.GetPage(storeId, pageName);
+			return Ok(item.ToWebModel());
+		}
+
+		[HttpPost]
+		[Route("pages")]
+		public IHttpActionResult SaveItem(string storeId, Page page)
+		{
+			_pagesService.SavePage(storeId, page.ToCoreModel());
+			return Ok();
+		}
+
+		[HttpDelete]
+		[Route("pages")]
+		public IHttpActionResult DeleteItem(string storeId, string[] pageNames)
+		{
+			_pagesService.DeletePage(storeId, pageNames);
+			return Ok();
+		}
+	}
 }

@@ -53,12 +53,6 @@
 			var githubMainPath = "/Themes/";
 			var fileSystemMainPath = HostingEnvironment.MapPath("~/App_Data/Themes/");
 
-			Func<IFileRepository> databaseFileRepository = () =>
-			{
-				return new DatabaseFileRepositoryImpl("VirtoCommerce", new AuditableInterceptor(),
-															   new EntityPrimaryKeyGeneratorInterceptor());
-			};
-
 			Func<string, IThemeService> factory = (x) =>
 			{
 				switch (x)
@@ -73,7 +67,8 @@
 							githubMainPath));
 
 					case "Database":
-						return new ThemeServiceImpl(new DatabaseFileRepositoryImpl());
+						return new ThemeServiceImpl(new DatabaseFileRepositoryImpl("VirtoCommerce", new AuditableInterceptor(),
+															   new EntityPrimaryKeyGeneratorInterceptor()));
 
 					case "File System":
 						return new ThemeServiceImpl(new FileSystemFileRepositoryImpl(fileSystemMainPath));

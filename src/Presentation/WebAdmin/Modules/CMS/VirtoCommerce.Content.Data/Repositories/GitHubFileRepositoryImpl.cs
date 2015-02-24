@@ -186,7 +186,6 @@
 						fullPath,
 						new UpdateFileRequest("Updating file from admin", item.Content, existingItem.Sha)).Result;
 			}
-			;
 		}
 
 		public void DeleteContentItem(string path)
