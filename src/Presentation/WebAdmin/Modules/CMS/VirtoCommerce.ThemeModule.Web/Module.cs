@@ -50,7 +50,7 @@
 				"VirtoCommerce.ThemeModule.GitHub.RepositoryName",
 				string.Empty);
 
-			var githubMainPath = "/Themes/";
+			var githubMainPath = "Themes/";
 			var fileSystemMainPath = HostingEnvironment.MapPath("~/App_Data/Themes/");
 
 			Func<string, IThemeService> factory = (x) =>

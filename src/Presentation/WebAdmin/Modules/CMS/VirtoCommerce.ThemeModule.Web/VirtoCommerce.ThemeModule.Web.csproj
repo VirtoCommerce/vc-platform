@@ -101,11 +101,17 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\css\bootstrap-markdown.min.css" />
-    <Content Include="Scripts\app\content.js" />
-    <Content Include="Scripts\app\home.tpl.html" />
-    <Content Include="Scripts\app\resources\themes.js" />
-    <Content Include="Scripts\app\widgets\themesWidget.js" />
-    <Content Include="Scripts\app\widgets\themesWidget.tpl.html" />
+    <Content Include="Scripts\blades\edit-asset.tpl.html" />
+    <Content Include="Scripts\blades\edit-asset.js" />
+    <Content Include="Scripts\blades\theme-asset-list.js" />
+    <Content Include="Scripts\blades\themes-list.js" />
+    <Content Include="Scripts\blades\theme-asset-list.tpl.html" />
+    <Content Include="Scripts\blades\themes-list.tpl.html" />
+    <Content Include="Scripts\content.js" />
+    <Content Include="Scripts\home.tpl.html" />
+    <Content Include="Scripts\resources\themes.js" />
+    <Content Include="Scripts\widgets\themesWidget.js" />
+    <Content Include="Scripts\widgets\themesWidget.tpl.html" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
@@ -120,9 +126,8 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Scripts\app\blades\" />
-    <Folder Include="Scripts\app\directives\" />
-    <Folder Include="Scripts\app\wizards\" />
+    <Folder Include="Scripts\directives\" />
+    <Folder Include="Scripts\wizards\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\..\Core\CommerceFoundation.Data\CommerceFoundation.Data.csproj">
