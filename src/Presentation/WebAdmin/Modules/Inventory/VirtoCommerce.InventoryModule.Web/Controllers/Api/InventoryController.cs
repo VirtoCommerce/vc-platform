@@ -7,6 +7,7 @@ using coreModel = VirtoCommerce.Domain.Inventory.Model;
 using webModel = VirtoCommerce.InventoryModule.Web.Model;
 using VirtoCommerce.InventoryModule.Web.Converters;
 using VirtoCommerce.Domain.Fulfillment.Services;
+using System.Collections.Generic;
 
 namespace VirtoCommerce.InventoryModule.Web.Controllers.Api
 {
@@ -27,23 +28,28 @@ namespace VirtoCommerce.InventoryModule.Web.Controllers.Api
 		[Route("~/api/catalog/products/{productId}/inventory")]
 		public IHttpActionResult GetProductInventories(string productId)
 		{
+			var retVal = new List<webModel.InventoryInfo>();
 			var allFulfillments = _fulfillmentService.GetAllFulfillmentCenters();
-			var retVal = _inventoryService.GetProductsInventoryInfos(new string[] { productId }).ToList();
+			var inventories = _inventoryService.GetProductsInventoryInfos(new string[] { productId }).ToList();
+
 			foreach (var fulfillment in allFulfillments)
 			{
-				var inventoryWithFulfillment = retVal.FirstOrDefault(x => x.FulfillmentCenterId == fulfillment.Id);
-				if (inventoryWithFulfillment == null)
+				var alreadyExistCoreInventory = inventories.FirstOrDefault(x => x.FulfillmentCenterId == fulfillment.Id);
+				if (alreadyExistCoreInventory == null)
 				{
-					inventoryWithFulfillment = new coreModel.InventoryInfo
+					alreadyExistCoreInventory = new coreModel.InventoryInfo
 					{
 						FulfillmentCenterId = fulfillment.Id,
 						ProductId = productId
 					};
-					retVal.Add(inventoryWithFulfillment);
 				}
+
+				var webModelInventory = alreadyExistCoreInventory.ToWebModel();
+				webModelInventory.FulfillmentCenter = fulfillment.ToWebModel();
+				retVal.Add(webModelInventory);
 			}
 		
-			return Ok(retVal.Select(x=>x.ToWebModel()).ToArray());
+			return Ok(retVal.ToArray());
 		}
 
 		// PUT: api/catalog/products/123/inventory

@@ -103,6 +103,8 @@
   <ItemGroup>
     <Content Include="Scripts\blades\inventory-detail.js" />
     <Content Include="Scripts\blades\inventory-detail.tpl.html" />
+    <Content Include="Scripts\blades\!inventory-fulfillmentcenters-list.js" />
+    <Content Include="Scripts\blades\!inventory-fulfillmentcenters-list.tpl.html" />
     <Content Include="Scripts\resources\inventory.js" />
     <Content Include="Scripts\inventory.js" />
     <Content Include="Scripts\widgets\inventoryWidget.js" />
@@ -111,7 +113,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\Api\InventoryController.cs" />
+    <Compile Include="Converters\FulfillmentCenterConverter.cs" />
     <Compile Include="Converters\InventoryConverter.cs" />
+    <Compile Include="Model\FulfillmentCenter.cs" />
     <Compile Include="Model\InventoryInfo.cs" />
     <Compile Include="Module.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -14,9 +14,9 @@ namespace VirtoCommerce.InventoryModule.Web.Model
 		public string ModifiedBy { get; set; }
 
 		#endregion
-
+		public FulfillmentCenter FulfillmentCenter { get; set; }
 		public string FulfillmentCenterId { get; set; }
-
+	
 		public string ProductId { get; set; }
 
 		public long InStockQuantity { get; set; }

@@ -1,7 +1,10 @@
 ﻿angular.module('virtoCommerce.storeModule.blades')
-.controller('storePaymentsListController', ['$scope', 'bladeNavigationService', function ($scope, bladeNavigationService) {
+.controller('storePaymentsListController', ['$scope', 'bladeNavigationService', 'paymentgateways', function ($scope, bladeNavigationService, paymentgateways) {
     function getAvailableGateways() {
-        return ['CreditCard', 'Klarna', 'Mes', 'Paypal'];
+        paymentgateways.query({}, function (data) {
+            $scope.blade.isLoading = false;
+            $scope.availableGateways = data;
+        });
     }
 
     $scope.optionChanged = function (data) {
@@ -12,11 +15,11 @@
             $scope.blade.currentEntities.push(data);
         }
     }
-    
+
     $scope.$watch('blade.parentBlade.currentEntity.paymentGateways', function (currentEntities) {
         $scope.blade.currentEntities = currentEntities;
     });
 
-    $scope.blade.isLoading = false;
-    $scope.availableGateways = getAvailableGateways();
+    
+    getAvailableGateways();
 }]);

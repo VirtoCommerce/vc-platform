@@ -1,7 +1,7 @@
 ﻿angular.module('virtoCommerce.inventoryModule.resources', [])
 .factory('inventories', ['$resource', function ($resource) {
     return $resource('api/catalog/products/:id/inventory', { id: '@Id' }, {
-        // get: { },
+        // query: { },
         update: { method: 'PUT' }
     });
 }]);
