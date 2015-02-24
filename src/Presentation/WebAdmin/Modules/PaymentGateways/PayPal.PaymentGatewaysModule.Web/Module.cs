@@ -8,6 +8,7 @@ using System.Linq;
 using System.Web;
 using VirtoCommerce.Framework.Web.Modularity;
 using VirtoCommerce.Framework.Web.Settings;
+using VirtoCommerce.Domain.Payment.Services;
 
 namespace PayPal.PaymentGatewaysModule.Web
 {
@@ -30,11 +31,9 @@ namespace PayPal.PaymentGatewaysModule.Web
 			var paypalDescription = settingsManager.GetValue("Paypal.PaymentGateway.GatewayDescription.Description", string.Empty);
 			var paypalLogoUrl = settingsManager.GetValue("Paypal.PaymentGateway.GatewayDescription.LogoUrl", string.Empty);
 
-			//var paymentGatewayManager = ServiceLocator.Current.GetInstance<IPaymentGatewayManager>();
-
 			var paypalPaymentGateway = new PayPalPaymentGatewayImpl(paypalAppId, paypalSecret, paypalGatewayCode, paypalDescription, paypalLogoUrl);
-
-			//paymentGatewayManager.RegisterGateway(mesPaymentGateway);
+			var paymentGatewayManager = _container.Resolve<IPaymentGatewayManager>();
+			paymentGatewayManager.RegisterGateway(paypalPaymentGateway);
 
 			_container.RegisterType<PayPalGatewayController>(new InjectionConstructor(paypalPaymentGateway, paypalAppId, paypalSecret));
 		}

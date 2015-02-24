@@ -32,12 +32,10 @@ namespace Klarna.PaymentGatewaysModule.Web
 			var klarnaLogoUrl = settingsManager.GetValue("Klarna.PaymentGateway.GatewayDescription.LogoUrl", string.Empty);
 
 
-			//var paymentGatewayManager = _container.Resolve<IPaymentGatewayManager>();
-
 			var klarnaPaymentGateway = new KlarnaPaymentGatewayImpl(klarnaEid, klarnaSecret, klarnaGatewayCode, klarnaDescription, klarnaLogoUrl);
-
-			//paymentGatewayManager.RegisterGateway(klarnaPaymentGateway);
-
+			var paymentGatewayManager = _container.Resolve<IPaymentGatewayManager>();
+			paymentGatewayManager.RegisterGateway(klarnaPaymentGateway);
+		
 			_container.RegisterType<KlarnaGatewayController>(new InjectionConstructor(klarnaPaymentGateway, klarnaEid, klarnaSecret));
 		}
 	}

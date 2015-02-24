@@ -49,11 +49,39 @@ namespace VirtoCommerce.InventoryModule.Data.Services
 
 				var targetCollection = new ObservableCollection<foundationModel.Inventory>(targetEntities);
 				targetCollection.ObserveCollection(x => repository.Add(x), null);
-				var inventoryComparer = AnonymousComparer.Create((foundationModel.Inventory x) => x.Sku);
+				var inventoryComparer = AnonymousComparer.Create((foundationModel.Inventory x) => x.FulfillmentCenterId + "-" + x.Sku);
 				sourceEntities.Patch(targetCollection, inventoryComparer, (source, target) => source.Patch(target));
 
 				CommitChanges(repository);
 			}
+		}
+
+	
+		public coreModel.InventoryInfo UpsertInventory(coreModel.InventoryInfo inventoryInfo)
+		{
+			if (inventoryInfo == null)
+				throw new ArgumentNullException("inventoryInfo");
+
+			coreModel.InventoryInfo retVal = null;
+			using (var repository = _repositoryFactory())
+			{
+				var sourceInventory = inventoryInfo.ToFoundation();
+
+				var alreadyExistInventories =  repository.GetProductsInventories(new string[]  { inventoryInfo.ProductId });
+				var targetInventory = alreadyExistInventories.FirstOrDefault(x => x.FulfillmentCenterId == sourceInventory.FulfillmentCenterId);
+				if (targetInventory == null)
+				{
+					targetInventory = sourceInventory;
+					repository.Add(targetInventory);
+				}
+				else
+				{
+					sourceInventory.Patch(targetInventory);
+				}
+				CommitChanges(repository);
+				retVal = targetInventory.ToCoreModel();
+			}
+			return retVal;
 		}
 
 		#endregion

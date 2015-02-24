@@ -10,6 +10,7 @@ namespace VirtoCommerce.Domain.Inventory.Services
 	public interface IInventoryService
 	{
 		IEnumerable<InventoryInfo> GetProductsInventoryInfos(IEnumerable<string> productIds);
+		InventoryInfo UpsertInventory(InventoryInfo inventoryInfo);
 		void UpsertInventories(IEnumerable<InventoryInfo> inventoryInfos);
 	}
 }

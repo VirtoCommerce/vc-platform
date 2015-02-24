@@ -5,8 +5,12 @@ using Owin;
 using VirtoCommerce.Caching.HttpCache;
 using VirtoCommerce.CoreModule.Web.Controllers.Api;
 using VirtoCommerce.CoreModule.Web.Notification;
+using VirtoCommerce.CoreModule.Web.Repositories;
 using VirtoCommerce.CoreModule.Web.Security;
+using VirtoCommerce.CoreModule.Web.Services;
 using VirtoCommerce.CoreModule.Web.Settings;
+using VirtoCommerce.Domain.Fulfillment.Services;
+using VirtoCommerce.Domain.Payment.Services;
 using VirtoCommerce.Foundation.AppConfig.Repositories;
 using VirtoCommerce.Foundation.Data.AppConfig;
 using VirtoCommerce.Foundation.Data.Customers;
@@ -147,6 +151,9 @@ namespace VirtoCommerce.CoreModule.Web
 
             #endregion
 
+			#region Payment gateways manager
+			_container.RegisterInstance<IPaymentGatewayManager>(new InMemoryPaymentGatewayManagerImpl());
+			#endregion
             #region Notification
             _container.RegisterInstance<INotifier>(new InMemoryNotifierImpl());
             #endregion
@@ -159,6 +166,13 @@ namespace VirtoCommerce.CoreModule.Web
 
             _container.RegisterType<SettingController>(new InjectionConstructor(settingsManager));
             #endregion
+
+			#region Fulfillment
+			_container.RegisterType<Func<IFoundationFulfillmentRepository>>(
+			  new InjectionFactory(x => new Func<IFoundationFulfillmentRepository>(() =>
+				  new FoundationFulfillmentRepositoryImpl(_connectionStringName))));
+			_container.RegisterType<IFulfillmentService, FulfillmentServiceImpl>();
+			#endregion
         }
 
         #endregion

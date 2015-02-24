@@ -99,6 +99,8 @@
     <Compile Include="Customer\Model\SearchResult.cs" />
     <Compile Include="Customer\Services\IContactSearchService.cs" />
     <Compile Include="Customer\Services\IContactService.cs" />
+    <Compile Include="Fulfillment\Model\FulfillmentCenter.cs" />
+    <Compile Include="Fulfillment\Services\IFulfillmentService.cs" />
     <Compile Include="Inventory\Model\InventoryInfo.cs" />
     <Compile Include="Inventory\Model\InventoryStatus.cs" />
     <Compile Include="Inventory\Services\IInventoryService.cs" />
@@ -129,6 +131,7 @@
     <Compile Include="Order\Services\IPaymentService.cs" />
     <Compile Include="Order\Services\IShipmentService.cs" />
     <Compile Include="Payment\Model\PaymentInfo.cs" />
+    <Compile Include="Payment\Services\InMemoryPaymentGatewayManagerImpl.cs" />
     <Compile Include="Payment\Services\IPaymentGateway.cs" />
     <Compile Include="Payment\Services\IPaymentGatewayManager.cs" />
     <Compile Include="Pricing\Model\Price.cs" />

@@ -8,6 +8,7 @@ using System.Linq;
 using System.Web;
 using VirtoCommerce.Framework.Web.Modularity;
 using VirtoCommerce.Framework.Web.Settings;
+using VirtoCommerce.Domain.Payment.Services;
 
 namespace MeS.PaymentGatewaysModule.Web
 {
@@ -29,12 +30,10 @@ namespace MeS.PaymentGatewaysModule.Web
 			var mesDescription = settingsManager.GetValue("Mes.PaymentGateway.GatewayDescription.Description", string.Empty);
 			var mesLogoUrl = settingsManager.GetValue("Mes.PaymentGateway.GatewayDescription.LogoUrl", string.Empty);
 
-			//var paymentGatewayManager = ServiceLocator.Current.GetInstance<IPaymentGatewayManager>();
-
 			var mesPaymentGateway = new MeSPaymentGatewayImpl(mesAccountId, mesGatewayCode, mesDescription, mesLogoUrl);
-
-			//paymentGatewayManager.RegisterGateway(mesPaymentGateway);
-
+			var paymentGatewayManager = _container.Resolve<IPaymentGatewayManager>();
+			paymentGatewayManager.RegisterGateway(mesPaymentGateway);
+		
 			_container.RegisterType<MeSGatewayController>(new InjectionConstructor(mesPaymentGateway, mesAccountId));
 		}
 	}

@@ -6,6 +6,7 @@ using VirtoCommerce.Domain.Inventory.Services;
 using coreModel = VirtoCommerce.Domain.Inventory.Model;
 using webModel = VirtoCommerce.InventoryModule.Web.Model;
 using VirtoCommerce.InventoryModule.Web.Converters;
+using VirtoCommerce.Domain.Fulfillment.Services;
 
 namespace VirtoCommerce.InventoryModule.Web.Controllers.Api
 {
@@ -13,38 +14,47 @@ namespace VirtoCommerce.InventoryModule.Web.Controllers.Api
 	public class InventoryController : ApiController
 	{
 		private readonly IInventoryService _inventoryService;
-		public InventoryController(IInventoryService inventoryService)
+		private readonly IFulfillmentService _fulfillmentService;
+		public InventoryController(IInventoryService inventoryService, IFulfillmentService fulfillmentService)
 		{
 			_inventoryService = inventoryService;
+			_fulfillmentService = fulfillmentService;
 		}
 
 		// GET: api/catalog/products/{productId}/inventory
 		[HttpGet]
-		[ResponseType(typeof(webModel.InventoryInfo))]
+		[ResponseType(typeof(webModel.InventoryInfo[]))]
 		[Route("~/api/catalog/products/{productId}/inventory")]
-		public IHttpActionResult GetProductInventory(string productId)
+		public IHttpActionResult GetProductInventories(string productId)
 		{
-			var retVal = _inventoryService.GetProductsInventoryInfos(new string[] { productId }).FirstOrDefault();
-			if (retVal == null)
+			var allFulfillments = _fulfillmentService.GetAllFulfillmentCenters();
+			var retVal = _inventoryService.GetProductsInventoryInfos(new string[] { productId }).ToList();
+			foreach (var fulfillment in allFulfillments)
 			{
-				retVal = new coreModel.InventoryInfo
+				var inventoryWithFulfillment = retVal.FirstOrDefault(x => x.FulfillmentCenterId == fulfillment.Id);
+				if (inventoryWithFulfillment == null)
 				{
-					ProductId = productId,
-					Status = coreModel.InventoryStatus.Enabled,
-				};
+					inventoryWithFulfillment = new coreModel.InventoryInfo
+					{
+						FulfillmentCenterId = fulfillment.Id,
+						ProductId = productId
+					};
+					retVal.Add(inventoryWithFulfillment);
+				}
 			}
-			return Ok(retVal.ToWebModel());
+		
+			return Ok(retVal.Select(x=>x.ToWebModel()).ToArray());
 		}
 
 		// PUT: api/catalog/products/123/inventory
 		[HttpPut]
-		[ResponseType(typeof(void))]
+		[ResponseType(typeof(webModel.InventoryInfo))]
 		[Route("~/api/catalog/products/{productId}/inventory")]
-		public IHttpActionResult UpdateProductInventory(webModel.InventoryInfo inventory)
+		public IHttpActionResult UpsertProductInventory(webModel.InventoryInfo inventory)
 		{
-			_inventoryService.UpsertInventories(new coreModel.InventoryInfo[] { inventory.ToCoreModel() });
+			var retVal = _inventoryService.UpsertInventory( inventory.ToCoreModel() );
 
-			return StatusCode(HttpStatusCode.NoContent);
+			return Ok(retVal);
 		}
 
 
