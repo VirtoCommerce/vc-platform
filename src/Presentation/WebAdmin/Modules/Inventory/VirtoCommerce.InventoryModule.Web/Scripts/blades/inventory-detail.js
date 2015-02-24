@@ -1,10 +1,11 @@
-﻿angular.module('virtoCommerce.inventoryModule.blades', [
-    'virtoCommerce.inventoryModule.resources'
-])
+﻿angular.module('virtoCommerce.inventoryModule.blades')
 .controller('inventoryDetailController', ['$scope', 'dialogService', 'inventories', function ($scope, dialogService, inventories) {
 
     $scope.blade.refresh = function () {
-        $scope.blade.parentWidget.refresh().$promise.then(function (data) {
+        $scope.blade.isLoading = true;
+        $scope.blade.parentBlade.refresh().then(function (results) {
+            var data = _.findWhere(results, { fulfillmentCenterId: $scope.blade.data.fulfillmentCenterId });
+            
             // parse date fields
             if (data.preorderAvailabilityDate) {
                 data.preorderAvailabilityDate = new Date(data.preorderAvailabilityDate);
@@ -46,7 +47,7 @@
                 message: "Inventory has been modified. Do you want to save changes?",
                 callback: function (needSave) {
                     if (needSave) {
-                        saveChanges();
+                        $scope.saveChanges();
                     }
                     closeCallback();
                 }
@@ -80,5 +81,5 @@
     ];
 
     // on load
-    $scope.blade.refresh();
+    initializeBlade($scope.blade.data);
 }]);

@@ -6,20 +6,20 @@
     
     $scope.widget.refresh = function () {
         $scope.currentInventory = '...';
-        return inventories.get({ id: blade.itemId }, function (data) {
-            $scope.currentInventory = data.inStockQuantity;
+        return inventories.query({ id: blade.itemId }, function (results) {
+            $scope.currentInventory = _.reduce(results, function (memo, x) { return memo + x.inStockQuantity; }, 0);
         });
     }
 
     $scope.openBlade = function () {
         var newBlade = {
-            id: "inventoryDetailBlade",
+            id: "inventoryFulfillmentcentersListBlade",
             itemId: blade.itemId,
             parentWidget: $scope.widget,
             title: blade.title,
-            subtitle: 'Edit Inventory',
-            controller: 'inventoryDetailController',
-            template: 'Modules/Inventory/VirtoCommerce.InventoryModule.Web/Scripts/blades/inventory-detail.tpl.html'
+            subtitle: 'Select Fulfillment center to edit inventory',
+            controller: 'inventoryFulfillmentcentersListController',
+            template: 'Modules/Inventory/VirtoCommerce.InventoryModule.Web/Scripts/blades/!inventory-fulfillmentcenters-list.tpl.html'
         };
         bladeNavigationService.showBlade(newBlade, blade);
     };

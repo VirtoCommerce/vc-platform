@@ -141,6 +141,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="module.manifest" />
+    <Content Include="Scripts\common\resources\fulfillments.js" />
+    <Content Include="Scripts\common\resources\paymentgateways.js" />
     <Content Include="Scripts\Settings\blades\settings-detail.js" />
     <Content Include="Scripts\Settings\blades\settings-detail.tpl.html" />
     <Content Include="Scripts\Settings\blades\%24settings-list.js" />
