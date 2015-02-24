@@ -56,6 +56,9 @@ angular.module(moduleName, [
           controller: 'storeSettingsWidgetController',
           template: 'Modules/Store/VirtoCommerce.StoreModule.Web/Scripts/widgets/storeSettingsWidget.tpl.html'
       }, 'storeDetail');
-
+      widgetService.registerWidget({
+          controller: 'storePaymentsWidgetController',
+          template: 'Modules/Store/VirtoCommerce.StoreModule.Web/Scripts/widgets/storePaymentsWidget.tpl.html'
+      }, 'storeDetail');
   }])
 ;

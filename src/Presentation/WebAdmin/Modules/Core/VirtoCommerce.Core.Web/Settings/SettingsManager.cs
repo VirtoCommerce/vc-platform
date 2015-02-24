@@ -129,8 +129,7 @@ namespace VirtoCommerce.CoreModule.Web.Settings
 
         private IEnumerable<ModuleManifest> GetModuleManifestsWithSettings()
         {
-            return _manifestProvider.GetModuleManifests()
-                .Values
+            return _manifestProvider.GetModuleManifests().Values
                 .Where(m => m.Settings != null && m.Settings.Any());
         }
 

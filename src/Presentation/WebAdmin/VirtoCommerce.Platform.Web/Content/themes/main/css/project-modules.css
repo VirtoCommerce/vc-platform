@@ -230,6 +230,7 @@
 
 .table .table-item.__total .table-col
 {
+    border-bottom: none;
     font-size: 20px;
 }
 
@@ -243,4 +244,116 @@
         display: inline-block;
         margin: 0 0 0 5px;
         width: 100px;
+    }
+
+
+.table .table-col.__total
+{
+    max-width: 58px;
+    min-width: 58px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.table .table-col.__date,
+.table .table-col.__author,
+.table .table-col.__version
+{
+    font-size: 12px;
+    vertical-align: top;
+    width: 20%;
+}
+
+.table .table-col.__author
+{
+    color: #999;
+}
+
+.table .table-col.__version
+{
+    width: 10%;
+}
+
+.table .table-col.__blue
+{
+    color: #43b0e6;
+}
+
+.table .table-col.__product-control
+{
+    width: 20px;
+}
+
+.table .table-col.__product-img
+{
+    width: 60px;
+}
+
+.table .table-col.__product-name
+{
+    max-width: 250px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.table .table-col.__product-code
+{
+    white-space: nowrap;
+}
+
+
+/* Loader */
+.loader
+{
+    display: block;
+    height: 75px;
+    margin: 0 auto;
+    width: 350px;
+}
+
+    .loader span
+    {
+        background: #dee9f0;
+        height: 20px;
+        top: 25px;
+        width: 20px;
+
+        -webkit-animation: loader 2.5s infinite ease;
+                animation: loader 2.5s infinite ease;
+    }
+
+    .loader span:nth-child(1)
+    {
+        -webkit-animation-delay: .8s;
+                animation-delay: .8s;
+    }
+
+    .loader span:nth-child(2)
+    {
+        left: 30px;
+
+        -webkit-animation-delay: .6s;
+                animation-delay: .6s;
+    }
+
+    .loader span:nth-child(3)
+    {
+        left: 60px;
+
+        -webkit-animation-delay: .4s;
+                animation-delay: .4s;
+    }
+
+    .loader span:nth-child(4)
+    {
+        left: 90px;
+
+        -webkit-animation-delay: .2s;
+                animation-delay: .2s;
+    }
+
+    .loader span:nth-child(5)
+    {
+        left: 120px;
     }
