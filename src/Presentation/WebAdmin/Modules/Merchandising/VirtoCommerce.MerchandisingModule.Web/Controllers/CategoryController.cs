@@ -107,7 +107,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
                     }
                      * */
 
-                    return Ok(result.ToWebModel(keywords));
+                    return Ok(result.ToWebModel());
                 }
             }
 
