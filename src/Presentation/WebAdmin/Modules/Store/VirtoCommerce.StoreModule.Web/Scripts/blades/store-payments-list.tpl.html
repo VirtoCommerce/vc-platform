@@ -1,0 +1,16 @@
+﻿<div class="blade-content">
+    <div class="blade-inner">
+        <div class="inner-block">
+            <div class="sub-t">Supported payment gateways</div>
+            <div class="list __items">
+                <label class="list-item" ng-repeat="data in availableGateways">
+                    <!--<i class="list-ico fa fa-wrench"></i>-->
+                    <input type="checkbox" ng-checked="blade.currentEntities.indexOf(data) > -1" ng-click="optionChanged(data)">
+                    <span class="switch"></span>
+                    <span class="list-name">{{data}}</span>
+                </label>
+            </div>
+            <p class="text" ng-if="!availableGateways.length">No Payment gateways found</p>
+        </div>
+    </div>
+</div>

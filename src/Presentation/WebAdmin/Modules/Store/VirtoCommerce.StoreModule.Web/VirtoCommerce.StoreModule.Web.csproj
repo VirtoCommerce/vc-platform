@@ -105,13 +105,17 @@
     <Content Include="Scripts\blades\!stores-list.tpl.html" />
     <Content Include="Scripts\blades\store-setting-detail.js" />
     <Content Include="Scripts\blades\store-setting-detail.tpl.html" />
+    <Content Include="Scripts\blades\store-payments-list.js" />
     <Content Include="Scripts\blades\store-settings-list.js" />
+    <Content Include="Scripts\blades\store-payments-list.tpl.html" />
     <Content Include="Scripts\blades\store-settings-list.tpl.html" />
     <Content Include="Scripts\blades\store-advanced.js" />
     <Content Include="Scripts\blades\store-detail.js" />
     <Content Include="Scripts\blades\store-advanced.tpl.html" />
+    <Content Include="Scripts\widgets\storePaymentsWidget.js" />
     <Content Include="Scripts\widgets\storeSettingsWidget.js" />
     <Content Include="Scripts\widgets\storeAdvancedWidget.js" />
+    <Content Include="Scripts\widgets\storePaymentsWidget.tpl.html" />
     <Content Include="Scripts\widgets\storeSettingsWidget.tpl.html" />
     <Content Include="Scripts\widgets\storeAdvancedWidget.tpl.html" />
     <Content Include="Scripts\wizards\newStore\new-store-wizard.tpl.html" />
