@@ -77,19 +77,40 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
         public IHttpActionResult GetByKeyword(string store, [FromUri]string keyword, string language = "en-us")
         {
             //var catalog = GetCatalogId(store);
+            SeoUrlKeyword urlKeyword = null;
             using (var appConfigRepo = _foundationAppConfigRepFactory())
             {
-                var keywordValue =
+                urlKeyword =
                     appConfigRepo.SeoUrlKeywords.FirstOrDefault(
                         x => x.KeywordType == (int)SeoUrlKeywordTypes.Category
                             && x.Keyword.Equals(keyword, StringComparison.OrdinalIgnoreCase));
+            }
 
-                if (keywordValue != null)
+            if (urlKeyword != null)
+            {
+                var result = _categoryService.GetById(urlKeyword.KeywordValue);
+
+                if (result != null)
                 {
-                    var result = _categoryService.GetById(keywordValue.KeywordValue);
+                    //need seo info for parents
+                    var keywords = new List<SeoUrlKeyword>();
+                    /*
+                    if (result.Parents != null)
+                    {
+                        using (var appConfigRepo = _foundationAppConfigRepFactory())
+                        {
+                            foreach (var parent in result.Parents)
+                            {
+                                keywords.AddRange(appConfigRepo.GetAllSeoInformation(parent.Id));
+                            }
+                        }
+                    }
+                     * */
+
                     return Ok(result.ToWebModel());
                 }
             }
+
             return StatusCode(HttpStatusCode.NotFound);
         }
 

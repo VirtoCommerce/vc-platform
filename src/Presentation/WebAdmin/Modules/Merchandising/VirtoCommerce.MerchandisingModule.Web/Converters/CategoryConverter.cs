@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using Omu.ValueInjecter;
 using VirtoCommerce.Foundation.AppConfig.Model;
 using moduleModel = VirtoCommerce.Domain.Catalog.Model;
@@ -8,15 +9,16 @@ namespace VirtoCommerce.MerchandisingModule.Web.Converters
 {
 	public static class CategoryConverter
 	{
-		public static webModel.Category ToWebModel(this moduleModel.Category category)
+        public static webModel.Category ToWebModel(this moduleModel.Category category)
 		{
 			var retVal = new webModel.Category();
 			retVal.InjectFrom(category);
 
 			if (category.Parents != null && category.Parents.Any())
 			{
-			    retVal.Parents = category.Parents.Select(x => x.ToWebModel());
-			}
+                //retVal.Parents = category.Parents.Select(x => x.ToWebModel(keywords != null ? keywords.Where(k => k.KeywordValue == x.Id) : null));
+                retVal.Parents = category.Parents.Select(x => x.ToWebModel());
+            }
 
 		    if (category.SeoInfos != null)
 		    {
