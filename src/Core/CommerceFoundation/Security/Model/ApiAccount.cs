@@ -5,25 +5,30 @@ using VirtoCommerce.Foundation.Frameworks.Attributes;
 
 namespace VirtoCommerce.Foundation.Security.Model
 {
-	public class ApiAccount : StorageEntity
-	{
-		[Key]
-		public string ApiAccountId { get; set; }
+    public class ApiAccount : StorageEntity
+    {
+        public ApiAccount()
+        {
+            ApiAccountId = GenerateNewKey();
+        }
 
-		[Required]
-		public string AccountId { get; set; }
+        [Key]
+        public string ApiAccountId { get; set; }
 
-		[Required]
-		[StringLength(128)]
-		[Index(IsUnique = true)]
-		public string AppId { get; set; }
+        [Required]
+        public string AccountId { get; set; }
 
-		public string SecretKey { get; set; }
+        [Required]
+        [StringLength(128)]
+        [Index(IsUnique = true)]
+        public string AppId { get; set; }
 
-		public bool IsActive { get; set; }
+        public string SecretKey { get; set; }
 
-		[Parent]
-		[ForeignKey("AccountId")]
-		public Account Account { get; set; }
-	}
+        public bool IsActive { get; set; }
+
+        [Parent]
+        [ForeignKey("AccountId")]
+        public Account Account { get; set; }
+    }
 }

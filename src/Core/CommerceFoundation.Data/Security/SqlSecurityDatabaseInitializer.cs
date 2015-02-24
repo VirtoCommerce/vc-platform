@@ -1,66 +1,70 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using VirtoCommerce.Foundation.Data.Infrastructure;
+using VirtoCommerce.Foundation.Frameworks;
 using VirtoCommerce.Foundation.Security.Model;
 using VirtoCommerce.Foundation.Security.Repositories;
 
 namespace VirtoCommerce.Foundation.Data.Security
 {
-	public class SqlSecurityDatabaseInitializer : SetupDatabaseInitializer<EFSecurityRepository, Migrations.Configuration>
-	{
-		protected override void Seed(EFSecurityRepository context)
-		{
-			base.Seed(context);
+    public class SqlSecurityDatabaseInitializer : SetupDatabaseInitializer<EFSecurityRepository, Migrations.Configuration>
+    {
+        protected override void Seed(EFSecurityRepository context)
+        {
+            base.Seed(context);
 
-			CreateAccounts(context);
-			CreatePermissions(context);
-			CreateRoles(context);
-		}
+            CreatePermissions(context);
+            CreateRoles(context);
+            CreateAccounts(context);
+        }
 
-		private static void CreateAccounts(EFSecurityRepository context)
-		{
-			context.Add(new Account
-			{
-				AccountId = "1",
-				MemberId = "1",
-				UserName = "admin",
-				RegisterType = (int)RegisterType.Administrator,
-				AccountState = (int)AccountState.Approved,
-			});
+        private static void CreateAccounts(EFSecurityRepository repository)
+        {
+            repository.Add(new Account
+            {
+                AccountId = "1",
+                MemberId = "1",
+                UserName = "admin",
+                RegisterType = (int)RegisterType.Administrator,
+                AccountState = (int)AccountState.Approved,
+            });
 
-			context.Add(new Account
-			{
-				AccountId = "9b605a3096ba4cc8bc0b8d80c397c59f",
-				MemberId = "060C4620-F84C-45AB-A3AE-8E3133FFDAEF",
-				UserName = "frontend",
-				RegisterType = (int)RegisterType.SiteAdministrator,
-				AccountState = (int)AccountState.Approved,
-			});
+            var frontendAccount = new Account
+            {
+                AccountId = "9b605a3096ba4cc8bc0b8d80c397c59f",
+                UserName = "frontend",
+                RegisterType = (int)RegisterType.SiteAdministrator,
+                AccountState = (int)AccountState.Approved,
+            };
+            frontendAccount.RoleAssignments.Add(new RoleAssignment
+            {
+                AccountId = frontendAccount.AccountId,
+                RoleId = repository.Roles.Where(r => r.Name == PredefinedPermissions.Role_ApiClient).Select(r => r.RoleId).FirstOrDefault(),
+            });
+            frontendAccount.ApiAccounts.Add(new ApiAccount
+            {
+                AccountId = frontendAccount.AccountId,
+                AppId = "27e0d789f12641049bd0e939185b4fd2",
+                SecretKey = "34f0a3c12c9dbb59b63b5fece955b7b2b9a3b20f84370cba1524dd5c53503a2e2cb733536ecf7ea1e77319a47084a3a2c9d94d36069a432ecc73b72aeba6ea78",
+                IsActive = true,
+            });
+            repository.Add(frontendAccount);
 
-			context.Add(new ApiAccount
-			{
-				ApiAccountId = "eaa4c211288b49238e7cdf59c32e0661",
-				AccountId = "9b605a3096ba4cc8bc0b8d80c397c59f",
-				AppId = "27e0d789f12641049bd0e939185b4fd2",
-				SecretKey = "34f0a3c12c9dbb59b63b5fece955b7b2b9a3b20f84370cba1524dd5c53503a2e2cb733536ecf7ea1e77319a47084a3a2c9d94d36069a432ecc73b72aeba6ea78",
-				IsActive = true,
-			});
+            repository.UnitOfWork.Commit();
+        }
 
-			context.UnitOfWork.Commit();
-		}
+        private static void CreatePermissions(EFSecurityRepository repository)
+        {
+            PredefinedPermissions.GetAllPermissions().ForEach(repository.Add);
+            repository.UnitOfWork.Commit();
+        }
 
-		private void CreatePermissions(EFSecurityRepository client)
-		{
-			PredefinedPermissions.GetAllPermissions().ForEach(client.Add);
-			client.UnitOfWork.Commit();
-		}
+        private static void CreateRoles(ISecurityRepository repository)
+        {
+            var allPermissions = repository.Permissions.ToArray();
 
-		private void CreateRoles(EFSecurityRepository client)
-		{
-			var allPermissions = client.Permissions.ToArray();
-
-			CreateRole(PredefinedPermissions.Role_SuperAdmin, allPermissions, new List<string>(allPermissions.Select(x => x.PermissionId)), client);
-			CreateRole(PredefinedPermissions.Role_CustomerService, allPermissions, new List<string> { 
+            CreateRole(repository, allPermissions, PredefinedPermissions.Role_SuperAdmin, allPermissions.Select(x => x.PermissionId).ToArray());
+            CreateRole(repository, allPermissions, PredefinedPermissions.Role_CustomerService, new[] { 
 	                PredefinedPermissions.CustomersViewAssignedCases,
 	                PredefinedPermissions.CustomersSearchCases,
 	                PredefinedPermissions.CustomersCreateNewCase,
@@ -79,8 +83,8 @@ namespace VirtoCommerce.Foundation.Data.Security
 					PredefinedPermissions.OrdersCancelOrderReturns,
 					PredefinedPermissions.OrdersIssueOrderReturns,
 					PredefinedPermissions.OrdersCreateOrderExchange
-			}, client);
-			CreateRole(PredefinedPermissions.Role_CatalogManagement, allPermissions, new List<string> {		
+			});
+            CreateRole(repository, allPermissions, PredefinedPermissions.Role_CatalogManagement, new[] {		
                     PredefinedPermissions.CatalogItemsManage,
                     PredefinedPermissions.CatalogCatalogsManage,
                     PredefinedPermissions.CatalogCategoriesManage,
@@ -97,21 +101,21 @@ namespace VirtoCommerce.Foundation.Data.Security
 					PredefinedPermissions.PricingPrice_ListsImport_Jobs,
 					PredefinedPermissions.PricingPrice_ListsImport_JobsRun,
 					PredefinedPermissions.PricingPrice_ListsManage
-			}, client);
-			CreateRole(PredefinedPermissions.Role_Marketing, allPermissions, new List<string> {		
+			});
+            CreateRole(repository, allPermissions, PredefinedPermissions.Role_Marketing, new[] {		
                     PredefinedPermissions.MarketingPromotionsManage,
                     PredefinedPermissions.MarketingDynamic_ContentManage,
                     PredefinedPermissions.MarketingContent_PublishingManage,
 					PredefinedPermissions.PricingPrice_List_AssignmentsManage,
-					PredefinedPermissions.SettingsStores,
-			}, client);
-			CreateRole(PredefinedPermissions.Role_Fulfillment, allPermissions, new List<string> {
+					PredefinedPermissions.SettingsStores
+            });
+            CreateRole(repository, allPermissions, PredefinedPermissions.Role_Fulfillment, new[] {
                     PredefinedPermissions.FulfillmentInventoryManage,
                     PredefinedPermissions.FulfillmentInventoryReceive,
                     PredefinedPermissions.FulfillmentPicklistsManage,
                     PredefinedPermissions.FulfillmentCompleteShipment,
-                    PredefinedPermissions.FulfillmentReturnsManage}, client);
-			CreateRole(PredefinedPermissions.Role_ConfigurationManagement, allPermissions, new List<string> { 		
+                    PredefinedPermissions.FulfillmentReturnsManage});
+            CreateRole(repository, allPermissions, PredefinedPermissions.Role_ConfigurationManagement, new[] { 		
                     PredefinedPermissions.SettingsCustomerRules,
                     PredefinedPermissions.SettingsContent_Places,
                     PredefinedPermissions.SettingsFulfillment,
@@ -131,20 +135,21 @@ namespace VirtoCommerce.Foundation.Data.Security
                     PredefinedPermissions.SettingsJurisdiction,
                     PredefinedPermissions.SettingsJurisdictionGroups,
                     PredefinedPermissions.SettingsTaxCategories,
-                    PredefinedPermissions.SettingsTaxImport}, client);
-			CreateRole(PredefinedPermissions.Role_PrivateShopper, allPermissions, new List<string> { 
-                    PredefinedPermissions.ShopperRestrictedAccess,}, client);
+                    PredefinedPermissions.SettingsTaxImport});
 
-			client.UnitOfWork.Commit();
-		}
+            CreateRole(repository, allPermissions, PredefinedPermissions.Role_PrivateShopper, new[] { PredefinedPermissions.ShopperRestrictedAccess });
+            CreateRole(repository, allPermissions, PredefinedPermissions.Role_ApiClient, new[] { PredefinedPermissions.SecurityCallApi });
 
-		private void CreateRole(string name, IEnumerable<Permission> allPermissions, ICollection<string> permissionList, ISecurityRepository client)
-		{
-			var item = new Role { Name = name };
+            repository.UnitOfWork.Commit();
+        }
 
-			var rolePermissions = allPermissions.Where(x => permissionList.Contains(x.PermissionId)).ToList();
-			rolePermissions.ForEach(x => item.RolePermissions.Add(new RolePermission { PermissionId = x.PermissionId, RoleId = item.RoleId }));
-			client.Add(item);
-		}
-	}
+        private static void CreateRole(IRepository repository, IEnumerable<Permission> allPermissions, string name, ICollection<string> permissionList)
+        {
+            var item = new Role { Name = name };
+
+            var rolePermissions = allPermissions.Where(x => permissionList.Contains(x.PermissionId)).ToList();
+            rolePermissions.ForEach(x => item.RolePermissions.Add(new RolePermission { PermissionId = x.PermissionId, RoleId = item.RoleId }));
+            repository.Add(item);
+        }
+    }
 }

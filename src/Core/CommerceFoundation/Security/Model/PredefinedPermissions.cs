@@ -66,6 +66,7 @@ namespace VirtoCommerce.Foundation.Security.Model
 
             SecurityAccounts = "security:accounts:manage",
             SecurityRoles = "security:roles:manage",
+            SecurityCallApi = "security:call_api",
 
             SettingsAppConfigSettings = "appconfig:settings:config",
             SettingsAppConfigSystemJobs = "appconfig:system_jobs:config",
@@ -155,6 +156,7 @@ namespace VirtoCommerce.Foundation.Security.Model
 
             Name_SecurityAccounts = "Manage Accounts",
             Name_SecurityRoles = "Manage Roles",
+            Name_SecurityCallApi = "Call API methods",
 
             Name_SettingsCustomer_SettingsAll = "Config Customer Settings",
             Name_SettingsContent_PlacesAll = "Config Content Places",
@@ -186,7 +188,8 @@ namespace VirtoCommerce.Foundation.Security.Model
             Role_Marketing = "Store marketing",
             Role_Fulfillment = "Shipping receiving",
             Role_ConfigurationManagement = "Configuration",
-            Role_PrivateShopper = "Private Shopper";
+            Role_PrivateShopper = "Private Shopper",
+            Role_ApiClient = "API Client";
 
         public static List<Permission> GetAllPermissions()
         {
@@ -232,11 +235,7 @@ namespace VirtoCommerce.Foundation.Security.Model
 					new Permission {PermissionId = PricingPrice_ItemPricingManage, Name = Name_PricingPrice_ItemPricingManage},
 					new Permission {PermissionId = PricingPrice_ListsImport_Jobs, Name = Name_PricingPrice_ListsImport_Jobs},
 					new Permission {PermissionId = PricingPrice_ListsImport_JobsRun, Name = Name_PricingPrice_ListsImport_JobsRun},
-					new Permission
-						{
-							PermissionId = PricingPrice_List_AssignmentsManage,
-							Name = Name_PricingPrice_List_AssignmentsManage
-						},
+					new Permission {PermissionId = PricingPrice_List_AssignmentsManage,Name = Name_PricingPrice_List_AssignmentsManage},
 
 					new Permission {PermissionId = MarketingPromotionsManage, Name = Name_MarketingPromotionsManage},
 					new Permission {PermissionId = MarketingDynamic_ContentManage, Name = Name_MarketingDynamic_ContentManage},
@@ -253,6 +252,7 @@ namespace VirtoCommerce.Foundation.Security.Model
 
 					new Permission {PermissionId = SecurityAccounts, Name = Name_SecurityAccounts},
 					new Permission {PermissionId = SecurityRoles, Name = Name_SecurityRoles},
+					new Permission {PermissionId = SecurityCallApi, Name = Name_SecurityCallApi},
 
 					new Permission {PermissionId = SettingsCustomerRules, Name = Name_SettingsCustomer_SettingsAll},
 					new Permission {PermissionId = SettingsContent_Places, Name = Name_SettingsContent_PlacesAll},

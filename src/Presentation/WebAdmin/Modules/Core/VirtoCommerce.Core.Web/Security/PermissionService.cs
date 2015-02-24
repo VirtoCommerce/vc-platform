@@ -56,18 +56,11 @@ namespace VirtoCommerce.CoreModule.Web.Security
         {
             var user = GetUserWithPermissions(userName);
 
-            var success = user.IsActive;
-            if (success)
-            {
-                success = (user.RegisterType == RegisterType.Administrator);
-
-                if (!success)
-                {
-                    success = user.RegisteredPermissionIds
-                        .Intersect(permissionIds, StringComparer.OrdinalIgnoreCase)
-                        .Any();
-                }
-            }
+            var success = user.IsActive && (
+                user.RegisterType == RegisterType.Administrator
+                    || user.RegisteredPermissionIds.Intersect(permissionIds, StringComparer.OrdinalIgnoreCase).Any()
+                    || user.RegisterType == RegisterType.SiteAdministrator && permissionIds.Contains(PredefinedPermissions.SecurityCallApi, StringComparer.OrdinalIgnoreCase) // Temporary workaround for frontend. Will be deleted later.
+                );
 
             return success;
         }

@@ -1,25 +1,29 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <module>
-  <id>VirtoCommerce.Core</id>
-  <version>1.0.0.0</version>
+    <id>VirtoCommerce.Core</id>
+    <version>1.0.0.0</version>
 
-  <title>Virto Commerce Core</title>
-  <description>Core functionality</description>
-  <authors>
-    <author>Virto Commerce</author>
-  </authors>
-  <owners>
-    <owner>Virto Commerce</owner>
-  </owners>
-  <projectUrl>http://virtocommerce.com/</projectUrl>
-  <iconUrl>http://nuget.org/Content/Images/packageDefaultIcon-50x50.png</iconUrl>
-  <releaseNotes>First version.</releaseNotes>
-  <copyright>Copyright © 2011-2015 Virto Commerce. All rights reserved</copyright>
-  <tags>security core</tags>
+    <title>Virto Commerce Core</title>
+    <description>Core functionality</description>
+    <authors>
+        <author>Virto Commerce</author>
+    </authors>
+    <owners>
+        <owner>Virto Commerce</owner>
+    </owners>
+    <projectUrl>http://virtocommerce.com/</projectUrl>
+    <iconUrl>http://nuget.org/Content/Images/packageDefaultIcon-50x50.png</iconUrl>
+    <releaseNotes>First version.</releaseNotes>
+    <copyright>Copyright © 2011-2015 Virto Commerce. All rights reserved</copyright>
+    <tags>security core</tags>
 
-  <assemblyFile>VirtoCommerce.CoreModule.Web.dll</assemblyFile>
-  <moduleType>VirtoCommerce.CoreModule.Web.Module, VirtoCommerce.CoreModule.Web</moduleType>
-  <scripts>
-    <directory virtualPath="$/Scripts" searchPattern="*.js" searchSubdirectories="true" />
-  </scripts>
+    <assemblyFile>VirtoCommerce.CoreModule.Web.dll</assemblyFile>
+    <moduleType>VirtoCommerce.CoreModule.Web.Module, VirtoCommerce.CoreModule.Web</moduleType>
+    <scripts>
+        <directory virtualPath="$/Scripts" searchPattern="*.js" searchSubdirectories="true" />
+    </scripts>
+
+    <permissions>
+        <permission id="security:call_api" name="Call API methods" />
+    </permissions>
 </module>

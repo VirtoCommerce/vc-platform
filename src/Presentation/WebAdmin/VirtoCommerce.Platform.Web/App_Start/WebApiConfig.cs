@@ -1,7 +1,8 @@
 ﻿using System.Web.Http;
 using System.Web.Http.OData.Extensions;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
+using VirtoCommerce.Foundation.Security.Model;
+using VirtoCommerce.Framework.Web.Security;
 
 namespace VirtoCommerce.Platform.Web
 {
@@ -9,8 +10,7 @@ namespace VirtoCommerce.Platform.Web
     {
         public static void Register(HttpConfiguration config)
         {
-            // Anonymous requests are not allowed
-            config.Filters.Add(new AuthorizeAttribute());
+            config.Filters.Add(new CheckPermissionAttribute { Permission = PredefinedPermissions.SecurityCallApi });
 
             // Web API routes
             config.MapHttpAttributeRoutes();
