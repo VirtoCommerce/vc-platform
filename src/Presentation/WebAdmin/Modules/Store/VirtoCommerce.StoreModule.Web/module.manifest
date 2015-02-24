@@ -4,6 +4,7 @@
   <version>1.0.0.0</version>
   <dependencies>
     <dependency>VirtoCommerce.Core</dependency>
+    <!--using catalog api, seo UI? -->
     <dependency>VirtoCommerce.Catalog</dependency>
   </dependencies>
 
