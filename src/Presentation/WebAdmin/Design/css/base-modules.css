@@ -4130,6 +4130,64 @@ fieldset + fieldset
 }
 
 
+/* Loader */
+.loader
+{
+    display: block;
+    height: 75px;
+    margin: 0 auto;
+    position: relative;
+    width: 350px;
+}
+
+    .loader span
+    {
+        background: #dee9f0;
+        height: 20px;
+        position: absolute;
+        top: 25px;
+        width: 20px;
+
+        -webkit-animation: loader 2.5s infinite ease;
+                animation: loader 2.5s infinite ease;
+    }
+
+    .loader span:nth-child(1)
+    {
+        -webkit-animation-delay: .8s;
+                animation-delay: .8s;
+    }
+
+    .loader span:nth-child(2)
+    {
+        left: 30px;
+
+        -webkit-animation-delay: .6s;
+                animation-delay: .6s;
+    }
+
+    .loader span:nth-child(3)
+    {
+        left: 60px;
+
+        -webkit-animation-delay: .4s;
+                animation-delay: .4s;
+    }
+
+    .loader span:nth-child(4)
+    {
+        left: 90px;
+
+        -webkit-animation-delay: .2s;
+                animation-delay: .2s;
+    }
+
+    .loader span:nth-child(5)
+    {
+        left: 120px;
+    }
+
+
 
 .nav-bar,
 .cnt
