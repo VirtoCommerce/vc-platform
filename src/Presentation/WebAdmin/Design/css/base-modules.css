@@ -3626,6 +3626,11 @@ fieldset + fieldset
             z-index: 25;
         }
 
+        .__items label.list-item.__selected .list-name
+        {
+            color: #a6a6a6;
+        }
+
 .list.__properties
 {
 	margin: 10px 0;
