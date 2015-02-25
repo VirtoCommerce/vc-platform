@@ -12,7 +12,7 @@
                     <div class="form-group">
                         <label class="form-label">Status</label>
                         <div class="form-input">
-                            <select chosen ng-model="blade.currentEntity.status" class="chosen-select">
+                            <select va-chosen ng-model="blade.currentEntity.status">
                                 <option value="new">New</option>
                                 <option value="NotPayed">NotPayed</option>
                                 <option value="Completed">Completed</option>
@@ -22,7 +22,7 @@
                     <div class="form-group">
                         <label class="form-label">Store</label>
                         <div class="form-input">
-                            <select chosen ng-model="blade.currentEntity.storeId" class="chosen-select" ng-options="store.id as store.name for store in stores">
+                            <select chosen ng-model="blade.currentEntity.storeId" va-chosen ng-options="store.id as store.name for store in stores">
                                 <option value="">{{blade.currentEntity.storeId}}</option>
                             </select>
                         </div>
@@ -39,7 +39,7 @@
                         <label class="form-label">Channel</label>
                         <div class="form-input">
 
-                            <select chosen ng-model="blade.currentEntity.channelId" class="chosen-select">
+                            <select chosen ng-model="blade.currentEntity.channelId" va-chosen>
                                 <option value="">{{blade.currentEntity.channelId}}</option>
                             </select>
                         </div>
