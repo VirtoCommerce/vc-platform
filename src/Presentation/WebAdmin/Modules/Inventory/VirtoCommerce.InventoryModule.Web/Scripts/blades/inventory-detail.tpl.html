@@ -36,7 +36,10 @@
                 <div class="form-group" ng-class="{'__disabled': !blade.currentEntity.allowPreorder}">
                     <label class="form-label">Preorder availability date</label>
                     <div class="form-input">
-                        <input ng-model="blade.currentEntity.preorderAvailabilityDate" type="date" ng-disabled="!blade.currentEntity.allowPreorder">
+                        <input type="text" class="form-control" ng-model="blade.currentEntity.preorderAvailabilityDate" datepicker-popup="{{format}}" name="pod" is-open="datepickers.pod" datepicker-options="dateOptions" close-text="Close" ng-disabled="!blade.currentEntity.allowPreorder" />
+                        <span class="input-group-btn">
+                            <button type="button" class="btn btn-default" ng-click="open($event,'pod')"><i class="ico fa fa-calendar"></i></button>
+                        </span>
                     </div>
                 </div>
                 <div class="form-control __checkbox">
@@ -55,7 +58,11 @@
                 <div class="form-group" ng-class="{'__disabled': !blade.currentEntity.allowBackorder}">
                     <label class="form-label">Backorder availability date</label>
                     <div class="form-input">
-                        <input ng-model="blade.currentEntity.backorderAvailabilityDate" type="date" ng-disabled="!blade.currentEntity.allowBackorder">
+                        <!--ng-required="true" -->
+                        <input type="text" class="form-control" ng-model="blade.currentEntity.backorderAvailabilityDate" datepicker-popup="{{format}}" name="bod" is-open="datepickers.bod" datepicker-options="dateOptions" close-text="Close" ng-disabled="!blade.currentEntity.allowBackorder" />
+                        <span class="input-group-btn">
+                            <button type="button" class="btn btn-default" ng-click="open($event,'bod')"><i class="ico fa fa-calendar"></i></button>
+                        </span>
                     </div>
                 </div>
             </form>
