@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.orderModule.blades', [
-   'virtoCommerce.orderModule.resources.customerOrders'
+   'virtoCommerce.orderModule.resources'
 ])
 .controller('customerOrderListController', ['$scope', 'customerOrders', 'bladeNavigationService', 'dialogService', 
 function ($scope, customerOrders, bladeNavigationService, dialogService) {
@@ -49,11 +49,11 @@ function ($scope, customerOrders, bladeNavigationService, dialogService) {
         $scope.selectedNodeId = selectedNode.id;
 
         var newBlade = {
-            id: 'customerOrderDetail',
+        	id: 'operationDetail',
             title: selectedNode.customer + '\'s Customer Order',
             subtitle: 'Edit order details and related documents',
-            currentEntityId: selectedNode.id,
-            controller: 'customerOrderDetailController',
+            customerOrder: selectedNode,
+            controller: 'operationDetailController',
             template: 'Modules/Order/VirtoCommerce.OrderModule.Web/Scripts/blades/customerOrder-detail.tpl.html'
         };
 

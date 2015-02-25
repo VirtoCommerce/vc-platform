@@ -60,7 +60,7 @@ namespace VirtoCommerce.OrderModule.Data.Converters
 
 			source.Patch((OperationEntity)target);
 
-			var patchInjectionPolicy = new PatchInjection<PaymentInEntity>(x => x.CustomerId, x => x.OrganizationId);
+			var patchInjectionPolicy = new PatchInjection<PaymentInEntity>(x => x.CustomerId, x => x.OrganizationId, x=>x.GatewayCode, x=>x.Purpose);
 			target.InjectFrom(patchInjectionPolicy, source);
 
 			if (!source.Addresses.IsNullCollection())

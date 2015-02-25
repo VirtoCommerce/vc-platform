@@ -4,7 +4,7 @@
             <div class="form columns clearfix">
                 <div class="column">
                     <div class="form-group">
-                        <label class="form-label">Shipment number</label>
+                        <label class="form-label">Payment number</label>
                         <div class="form-input">
                             <input required type="text" ng-model="blade.currentEntity.number">
                         </div>
@@ -12,7 +12,7 @@
                     <div class="form-group">
                         <label class="form-label">Status</label>
                         <div class="form-input">
-                            <select ng-model="blade.currentEntity.status" va-chosen>
+                            <select va-chosen ng-model="blade.currentEntity.status">
                                 <option>New</option>
                                 <option>PickPack</option>
                                 <option>Completed</option>
@@ -20,11 +20,10 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="form-label">Fulfillment</label>
-                        <div class="form-input">
-                            <select ng-model="blade.operation.fulfillmentCenterId" va-chosen>
-                                <option>{{blade.operation.fulfillmentCenterId}}</option>
-                            </select>
+                        <label class="form-label">Amount</label>
+                        <div class="form-input __currency">
+                            <span class="currency">{{blade.currentEntity.currency}}</span>
+                            <input required type="text" ng-model="blade.currentEntity.sum">
                         </div>
                     </div>
                 </div>
@@ -36,15 +35,23 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="form-label">Employee</label>
+                        <label class="form-label">Payment gateway</label>
                         <div class="form-input">
-                            <select ng-model="blade.currentEntity.employeeId" va-chosen></select>
+                            <select va-chosen ng-model="blade.currentEntity.gatewayCode" ng-options="gateway.gatewayCode as gateway.gatewayCode for gateway in paymentGateways">
+                                <option value="">{{blade.currentEntity.gatewayCode}}</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Payment purpose</label>
+                        <div class="form-input">
+                            <textarea ng-model="blade.currentEntity.purpose"></textarea>
                         </div>
                     </div>
                  </div>
             </div>
             <div class="tile-group four">
-                <va-widget-container group="shipmentDetailWidgets" blade="blade"></va-widget-container>
+                <va-widget-container group="paymentDetailWidgets" blade="blade"></va-widget-container>
             </div>
 
         </div>

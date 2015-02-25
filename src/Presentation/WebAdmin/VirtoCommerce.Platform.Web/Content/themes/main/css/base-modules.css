@@ -2591,9 +2591,17 @@ fieldset + fieldset
         }
 
         .form-input.__langs input,
-        .form-input.__langs textarea
+        .form-input.__langs textarea,
+        .form-input.__langs select
         {
             padding-left: 36px;
+        }
+
+        .form-input.__currency input,
+        .form-input.__currency textarea,
+        .form-input.__currency select
+        {
+            padding-right: 40px;
         }
 
         .form-input.__number input
@@ -2682,12 +2690,34 @@ fieldset + fieldset
             z-index: 50;
         }
 
+        .form-input.__currency .currency
+        {
+            color: #43b0e6;
+            font-size: 12px;
+            right: 10px;
+            position: absolute;
+            top: 10px;
+            z-index: 50;
+        }
+
         .form-label
         {
             display: inline-block;
             font-size: 14px;
             margin: 0 0 5px;
         }
+
+            .form-label .form-edit
+            {
+                display: inline-block;
+                margin: 0 0 0 5px;
+            }
+
+                .form-edit .form-ico
+                {
+                    font-size: 12px;
+                    vertical-align: 2px;
+                }
 
         .form-control .form-label
         {
@@ -2767,11 +2797,11 @@ fieldset + fieldset
 		{
 			background: #fff;
 			border: 1px solid #a1c0d4;
-			height: 12px;
+			height: 13px;
             left: 0;
 			position: absolute;
             top: 2px;
-			width: 12px;
+			width: 13px;
 
 			-webkit-box-sizing: border-box;
 					box-sizing: border-box;
@@ -2805,11 +2835,11 @@ fieldset + fieldset
 			color: #43b0e6;
 			content: '';
 			font-family: 'FontAwesome';
-			font-size: 8px;
+			font-size: 7px;
 			font-weight: normal;
-			left: 1px;
+			left: 2px;
 			position: absolute;
-			top: 0;
+			top: 1px;
 		}
 
         .form-control.__radio :checked ~ .check:after
@@ -4115,6 +4145,64 @@ fieldset + fieldset
 {
     margin-left: 10px;
 }
+
+
+/* Loader */
+.loader
+{
+    display: block;
+    height: 75px;
+    margin: 0 auto;
+    position: relative;
+    width: 350px;
+}
+
+    .loader span
+    {
+        background: #dee9f0;
+        height: 20px;
+        position: absolute;
+        top: 25px;
+        width: 20px;
+
+        -webkit-animation: loader 2.5s infinite ease;
+                animation: loader 2.5s infinite ease;
+    }
+
+    .loader span:nth-child(1)
+    {
+        -webkit-animation-delay: .8s;
+                animation-delay: .8s;
+    }
+
+    .loader span:nth-child(2)
+    {
+        left: 30px;
+
+        -webkit-animation-delay: .6s;
+                animation-delay: .6s;
+    }
+
+    .loader span:nth-child(3)
+    {
+        left: 60px;
+
+        -webkit-animation-delay: .4s;
+                animation-delay: .4s;
+    }
+
+    .loader span:nth-child(4)
+    {
+        left: 90px;
+
+        -webkit-animation-delay: .2s;
+                animation-delay: .2s;
+    }
+
+    .loader span:nth-child(5)
+    {
+        left: 120px;
+    }
 
 
 

@@ -59,7 +59,7 @@ namespace VirtoCommerce.OrderModule.Test
 			var payment = testOrder.InPayments.FirstOrDefault();
 
 			var mockPaymentManager = new Mock<IPaymentGatewayManager>();
-			var gateway = mockPaymentManager.Object.PaymentGateways.FirstOrDefault(x => x.GatewayCode == payment.PaymentGatewayCode);
+			var gateway = mockPaymentManager.Object.PaymentGateways.FirstOrDefault(x => x.GatewayCode == payment.GatewayCode);
 			var externalPaymentInfo = gateway.GetPaymentById(payment.OuterId);
 
 			payment.IsApproved = externalPaymentInfo.IsApproved;
@@ -303,7 +303,7 @@ namespace VirtoCommerce.OrderModule.Test
 
 			var payment = new webModel.PaymentIn
 			{
-				PaymentGatewayCode = "PayPal",
+				GatewayCode = "PayPal",
 				Currency = CurrencyCodes.USD,
 				Sum = 10,
 				CustomerId = "et"
