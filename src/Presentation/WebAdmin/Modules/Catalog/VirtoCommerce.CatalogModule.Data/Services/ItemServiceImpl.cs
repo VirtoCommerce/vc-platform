@@ -59,7 +59,7 @@ namespace VirtoCommerce.CatalogModule.Data.Services
                     if ((respGroup & module.ItemResponseGroup.Variations) == module.ItemResponseGroup.Variations)
                     {
                         dbVariations = repository.GetAllItemVariations(parentItemId ?? dbItem.ItemId);
-                        //When user load not main product need to include main product in variation list and exlude current
+                        //When user load not main product need to include main product in variation list and exclude current
                         if (parentItemId != null)
                         {
                             var dbMainItem = repository.GetItemByIds(new[] { parentItemId }, respGroup).FirstOrDefault();
