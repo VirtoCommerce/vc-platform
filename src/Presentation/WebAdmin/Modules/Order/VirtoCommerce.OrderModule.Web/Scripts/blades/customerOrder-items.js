@@ -1,7 +1,8 @@
 ﻿angular.module('virtoCommerce.orderModule.blades')
 .controller('customerOrderItemsController', ['$scope', 'bladeNavigationService', 'dialogService', 'items', 'calculateTotalsService', function ($scope, bladeNavigationService, dialogService, items, calculateTotalsService) {
     //pagination settigs
-    $scope.pageSettings = {};
+	$scope.pageSettings = {};
+	$scope.totals = {};
     $scope.pageSettings.totalItems = $scope.blade.currentEntity.items.length;
     $scope.pageSettings.currentPage = 1;
     $scope.pageSettings.numPages = 5;
@@ -10,7 +11,7 @@
     var selectedNode = null;
 
     $scope.$watch("blade.currentEntity", function (operation) {
-    	calculateTotalsService.recalculateTotals(operation);
+    	$scope.totals = calculateTotalsService.recalculateTotals(operation);
     }, true);
 
     $scope.blade.refresh = function () {

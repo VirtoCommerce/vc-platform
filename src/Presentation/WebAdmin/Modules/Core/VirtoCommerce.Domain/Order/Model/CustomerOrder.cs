@@ -24,6 +24,14 @@ namespace VirtoCommerce.Domain.Order.Model
 
 		public Discount Discount { get; set; }
 
+		public decimal DiscountAmount
+		{
+			get
+			{
+				return Discount != null ? Discount.DiscountAmount : 0;
+			}
+		}
+
 		public override IEnumerable<Operation> ChildrenOperations
 		{
 			get

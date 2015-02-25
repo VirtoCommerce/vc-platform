@@ -65,11 +65,20 @@ angular.module(moduleName, [
   	};
   	widgetService.registerWidget(customerOrderTotalsWidget, 'customerOrderDetailWidgets');
 
+  	var shipmentTotalWidget = {
+  		controller: 'shipmentTotalsWidgetController',
+  		template: 'Modules/Order/VirtoCommerce.OrderModule.Web/Scripts/widgets/shipment-totals-widget.tpl.html',
+  	};
+  	widgetService.registerWidget(shipmentTotalWidget, 'shipmentDetailWidgets');
+
+
   	var operationsTreeWidget = {
    		controller: 'operationTreeWidgetController',
   		template: 'Modules/Order/VirtoCommerce.OrderModule.Web/Scripts/widgets/operation-tree-widget.tpl.html',
   	};
   	widgetService.registerWidget(operationsTreeWidget, 'customerOrderDetailWidgets');
   	widgetService.registerWidget(operationsTreeWidget, 'shipmentDetailWidgets');
-  
+  	widgetService.registerWidget(operationsTreeWidget, 'paymentDetailWidgets');
+
+  	
   }]);

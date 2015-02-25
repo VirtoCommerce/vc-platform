@@ -1,11 +1,11 @@
 ﻿angular.module('virtoCommerce.orderModule.widgets')
 .controller('operationTreeWidgetController', ['$scope', 'bladeNavigationService', function ($scope, bladeNavigationService) {
-	$scope.currentBlade = $scope.widget.blade;
+	$scope.blade = $scope.widget.blade;
 	$scope.currentOperation = {};
 	$scope.operation = {};
-	$scope.$watch('widget.blade.customerOrder', function (operation) {
-		$scope.operation = operation;
-		$scope.currentOperation = $scope.currentBlade.operation;
+	$scope.$watch('widget.blade.currentEntity', function (operation) {
+		$scope.operation = $scope.blade.customerOrder;
+		$scope.currentOperation = operation;
 	});
 
 	$scope.selectOperation = function (operation) {
@@ -15,28 +15,38 @@
 			if (operation.operationType.toLowerCase() == 'shipment')
 			{
 				newBlade = {
-					id: 'customerOrderDetail',
+					id: 'operationDetail',
 					title: 'Shipment #' + operation.number,
 					subtitle: 'Edit shipment details',
 					customerOrder: $scope.widget.blade.customerOrder,
-					currentEntityId: operation.id,
+					currentEntity: operation,
 					isClosingDisabled: false,
-					controller: 'shpmentDetailController',
+					controller: 'operationDetailController',
 					template: 'Modules/Order/VirtoCommerce.OrderModule.Web/Scripts/blades/shipment-detail.tpl.html'
 				};
 			}
 			else if (operation.operationType.toLowerCase() == 'customerorder') {
 				newBlade = {
-					id: 'customerOrderDetail',
+					id: 'operationDetail',
 					title: operation.customer + '\'s Customer Order',
 					subtitle: 'Edit order details and related documents',
 					customerOrder: $scope.widget.blade.customerOrder,
-					currentEntityId: operation.id,
-					controller: 'customerOrderDetailController',
+					currentEntity: operation,
+					controller: 'operationDetailController',
 					template: 'Modules/Order/VirtoCommerce.OrderModule.Web/Scripts/blades/customerOrder-detail.tpl.html'
 				};
 			}
-
+			else if (operation.operationType.toLowerCase() == 'paymentin') {
+				newBlade = {
+					id: 'operationDetail',
+					title: 'Incoming payment #' + operation.number,
+					subtitle: 'Edit payment details and related documents',
+					customerOrder: $scope.widget.blade.customerOrder,
+					currentEntity: operation,
+					controller: 'operationDetailController',
+					template: 'Modules/Order/VirtoCommerce.OrderModule.Web/Scripts/blades/payment-detail.tpl.html'
+				};
+			}
 			if (newBlade) {
 				bladeNavigationService.showBlade(newBlade);
 			}

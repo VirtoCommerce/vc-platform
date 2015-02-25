@@ -15,9 +15,9 @@ namespace VirtoCommerce.OrderModule.Web.Model
 		public string Customer { get; set; }
 		public string CustomerId { get; set; }
 
-		public string PaymentPurpose { get; set; }
+		public string Purpose { get; set; }
 
-		public string PaymentGatewayCode { get; set; }
+		public string GatewayCode { get; set; }
 
 		public DateTime? IncomingDate { get; set; }
 		public string OuterId { get; set; }

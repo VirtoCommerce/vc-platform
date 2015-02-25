@@ -55,8 +55,6 @@
                             <td class="table-col" ng-click='selectItem(data)'>
                                 <div class="form-input __mini __number js-number-input-plugin" data-step="1">
                                     <input class="js-val" required class="form-control tight-input" ng-model="data.quantity" type="text">
-                                    <a class="up js-up"></a>
-                                    <a class="down js-down"></a>
                                 </div>
                             </td>
                             <td class="table-col">
@@ -69,27 +67,21 @@
                             <td class="table-col" ng-click='selectItem(data)'>
                                 <div class="form-input __mini __number js-number-input-plugin" data-step="1">
                                     <input class="js-val" required ng-model="data.price" type="text">
-                                    <a class="up js-up"></a>
-                                    <a class="down js-down"></a>
-                                </div>
+                                 </div>
                             </td>
                             <td class="table-col">
                                 <div class="form-input __mini __number js-number-input-plugin" data-step="1">
                                     <input class="js-val" required ng-model="data.discountAmount" type="text">
-                                    <a class="up js-up"></a>
-                                    <a class="down js-down"></a>
                                 </div>
                             </td>
                             <td class="table-col">
                                 <div class="form-input __mini __number js-number-input-plugin" data-step="1">
                                     <input class="js-val" required ng-model="data.tax" type="text">
-                                    <a class="up js-up"></a>
-                                    <a class="down js-down"></a>
                                 </div>
                             </td>
-                            <td class="table-col __total" ng-click='selectItem(data)'>
+                            <td class="table-col __total">
                                 <!--<span>{{data.total}}</span>-->
-                                <span>{{data.quantity*data.price-data.staticDiscount+data.tax}}</span>
+                                <span>{{data.quantity*data.price-data.discountAmount+data.tax}}</span>
                             </td>
                         </tr>
                     </tbody>
@@ -100,19 +92,19 @@
                 <table class="table __collapsed __order-info">
                     <tr class="table-item">
                         <td class="table-col">Sub Total</td>
-                        <td class="table-col __price">{{blade.currentEntity.subTotal}}&nbsp;{{blade.currentEntity.currency}}</td>
+                        <td class="table-col __price">{{totals.subTotal}}&nbsp;{{blade.currentEntity.currency}}</td>
                     </tr>
                     <tr class="table-item">
                         <td class="table-col">Discount Total</td>
-                        <td class="table-col __price">{{blade.currentEntity.discountTotal}}&nbsp;{{blade.currentEntity.currency}}</td>
+                        <td class="table-col __price">{{totals.discountTotal}}&nbsp;{{blade.currentEntity.currency}}</td>
                     </tr>
                     <tr class="table-item">
                         <td class="table-col">Tax Total</td>
-                        <td class="table-col __price">{{blade.currentEntity.taxTotal}}&nbsp;{{blade.currentEntity.currency}}</td>
+                        <td class="table-col __price">{{totals.taxTotal}}&nbsp;{{blade.currentEntity.currency}}</td>
                     </tr>
                     <tr class="table-item __total">
                         <td class="table-col">Total:</td>
-                        <td class="table-col __price">{{blade.currentEntity.total}}&nbsp;{{blade.currentEntity.currency}}</td>
+                        <td class="table-col __price">{{totals.total}}&nbsp;{{blade.currentEntity.currency}}</td>
                     </tr>
                 </table>
             </div>
