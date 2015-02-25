@@ -1,19 +1,38 @@
 ﻿angular.module('virtoCommerce.orderModule.blades')
-.controller('customerOrderDetailController', ['$scope', 'dialogService', 'bladeNavigationService', 'customerOrders', 'notificationService', function ($scope, dialogService, bladeNavigationService, customerOrders, notificationService) {
-	$scope.blade.currentEntity = {};
+.controller('operationDetailController', ['$scope', 'dialogService', 'bladeNavigationService', 'customerOrders', 'notificationService', 'fulfilmentCenters', 'stores', 'paymentGateways',
+			function ($scope, dialogService, bladeNavigationService, customerOrders, notificationService, fulfilmentCenters, stores, paymentGateways) {
 
     $scope.blade.refresh = function () {
-        $scope.blade.isLoading = true;
-
-        customerOrders.get({ id: $scope.blade.currentEntityId }, function (results) {
-        	$scope.blade.origEntity = results;
-
+    	$scope.blade.isLoading = true;
+    	$scope.fulfillmentCenters = {};
+    	$scope.stores = {};
+    	$scope.paymentGateways = {};
+        customerOrders.get({ id: $scope.blade.customerOrder.id }, function (results) {
+        	var operation = angular.isDefined($scope.blade.currentEntity) ? $scope.blade.currentEntity : results;
         	var copy = angular.copy(results);
-        	$scope.blade.currentEntity = copy;
-        	$scope.blade.operation = copy;
+
         	$scope.blade.customerOrder = copy;
 
-            $scope.blade.isLoading = false;
+        	if (operation.operationType.toLowerCase() == 'customerorder')
+        	{
+        		$scope.blade.currentEntity = copy;
+        		$scope.blade.origEntity = results;
+        		$scope.stores = stores.query();
+        	}
+        	else if (operation.operationType.toLowerCase() == 'shipment')
+        	{
+        		$scope.blade.currentEntity = _.find(copy.shipments, function (x) { return x.id == operation.id; });
+        		$scope.blade.origEntity = _.find(results.shipments, function (x) { return x.id == operation.id; });
+        		$scope.fulfillmentCenters = fulfilmentCenters.query();
+			}	
+        	else if (operation.operationType.toLowerCase() == 'paymentin')
+        	{
+        		$scope.paymentGateways = paymentGateways.query();
+        		$scope.blade.currentEntity = _.find(copy.inPayments, function (x) { return x.id == operation.id; });
+        		$scope.blade.origEntity = _.find(results.inPayments, function (x) { return x.id == operation.id; });
+		    }
+        	$scope.blade.isLoading = false;
+
         },
         function (error) {
             $scope.blade.isLoading = false;
@@ -22,15 +41,16 @@
     }
 
     function isDirty() {
-
-    	var retVal = !angular.equals($scope.blade.currentEntity, $scope.blade.origEntity);
-    	console.log(retVal);
-    	return retVal;
+    	var retVal = false;
+    	if ($scope.blade.origEntity) {
+    		retVal = !angular.equals($scope.blade.currentEntity, $scope.blade.origEntity);
+    	}
+      	return retVal;
     };
 
     function saveChanges() {
         $scope.blade.isLoading = true;
-        customerOrders.update({}, $scope.blade.currentEntity, function (data, headers) {
+        customerOrders.update({}, $scope.blade.customerOrder, function (data, headers) {
             $scope.blade.refresh();
         });
     };
@@ -70,7 +90,7 @@
             var dialog = {
                 id: "confirmItemChange",
                 title: "Save changes",
-                message: "The order has been modified. Do you want to save changes?",
+                message: "The document has been modified. Do you want to save changes?",
                 callback: function (needSave) {
                     if (needSave) {
                         saveChanges();
@@ -94,7 +114,7 @@
     }
 
     // actions on load
-    $scope.toolbarTemplate = 'Modules/Order/VirtoCommerce.OrderModule.Web/Scripts/blades/customerOrder-detail-toolbar.tpl.html';
+    $scope.toolbarTemplate = 'Modules/Order/VirtoCommerce.OrderModule.Web/Scripts/blades/operation-detail-toolbar.tpl.html';
     $scope.blade.refresh();
 
 }]);

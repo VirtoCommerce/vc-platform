@@ -14,16 +14,16 @@
                         <div class="form-input">
                             <select va-chosen ng-model="blade.currentEntity.status">
                                 <option value="new">New</option>
-                                <option value="new">NotPayed</option>
-                                <option value="new">Completed</option>
+                                <option value="NotPayed">NotPayed</option>
+                                <option value="Completed">Completed</option>
                             </select>
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="form-label">Store</label>
                         <div class="form-input">
-                            <select va-chosen ng-model="blade.currentEntity.storeId">
-                                <option>{{blade.currentEntity.storeId}}</option>
+                            <select chosen ng-model="blade.currentEntity.storeId" va-chosen ng-options="store.id as store.name for store in stores">
+                                <option value="">{{blade.currentEntity.storeId}}</option>
                             </select>
                         </div>
                     </div>
@@ -38,17 +38,16 @@
                     <div class="form-group">
                         <label class="form-label">Channel</label>
                         <div class="form-input">
-                            <select va-chosen ng-model="blade.currentEntity.channelId">
-                                <option>{{blade.currentEntity.channelId}}</option>
+
+                            <select chosen ng-model="blade.currentEntity.channelId" va-chosen>
+                                <option value="">{{blade.currentEntity.channelId}}</option>
                             </select>
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="form-label">Customer</label>
                         <div class="form-input">
-                            <select va-chosen ng-model="blade.currentEntity.customerId">
-                                <option>{{blade.currentEntity.customerId}}</option>
-                            </select>
+                            <input required type="text" ng-model="blade.currentEntity.customerId">
                         </div>
                     </div>
                 </div>

@@ -15,6 +15,13 @@ namespace VirtoCommerce.Domain.Order.Model
 		public ICollection<LineItem> Items { get; set; }
 		public ICollection<PaymentIn> InPayments { get; set; }
 		public Address DeliveryAddress { get; set; }
+		public decimal DiscountAmount
+		{
+			get
+			{
+				return Discount != null ? Discount.DiscountAmount : 0;
+			}
+		}
 		public Discount Discount { get; set; }
 
 		public override IEnumerable<Operation> ChildrenOperations

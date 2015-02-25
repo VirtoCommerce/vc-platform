@@ -79,9 +79,9 @@
                                     <input required ng-model="data.tax" type="text">
                                 </div>
                             </td>
-                            <td class="table-col __total" ng-click='selectItem(data)'>
+                            <td class="table-col __total">
                                 <!--<span>{{data.total}}</span>-->
-                                <span>{{data.quantity*data.price-data.staticDiscount+data.tax}}</span>
+                                <span>{{data.quantity*data.price-data.discountAmount+data.tax}}</span>
                             </td>
                         </tr>
                     </tbody>
@@ -92,19 +92,19 @@
                 <table class="table __collapsed __order-info">
                     <tr class="table-item">
                         <td class="table-col">Sub Total</td>
-                        <td class="table-col __price">{{blade.currentEntity.subTotal}}&nbsp;{{blade.currentEntity.currency}}</td>
+                        <td class="table-col __price">{{totals.subTotal}}&nbsp;{{blade.currentEntity.currency}}</td>
                     </tr>
                     <tr class="table-item">
                         <td class="table-col">Discount Total</td>
-                        <td class="table-col __price">{{blade.currentEntity.discountTotal}}&nbsp;{{blade.currentEntity.currency}}</td>
+                        <td class="table-col __price">{{totals.discountTotal}}&nbsp;{{blade.currentEntity.currency}}</td>
                     </tr>
                     <tr class="table-item">
                         <td class="table-col">Tax Total</td>
-                        <td class="table-col __price">{{blade.currentEntity.taxTotal}}&nbsp;{{blade.currentEntity.currency}}</td>
+                        <td class="table-col __price">{{totals.taxTotal}}&nbsp;{{blade.currentEntity.currency}}</td>
                     </tr>
                     <tr class="table-item __total">
                         <td class="table-col">Total:</td>
-                        <td class="table-col __price">{{blade.currentEntity.total}}&nbsp;{{blade.currentEntity.currency}}</td>
+                        <td class="table-col __price">{{totals.total}}&nbsp;{{blade.currentEntity.currency}}</td>
                     </tr>
                 </table>
             </div>

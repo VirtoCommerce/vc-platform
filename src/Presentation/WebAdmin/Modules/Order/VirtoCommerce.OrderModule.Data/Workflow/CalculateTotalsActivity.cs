@@ -40,43 +40,16 @@ namespace VirtoCommerce.OrderModule.Data.Workflow
 
 			foreach (var shipment in order.Shipments)
 			{
-				CalculateShipmentTotals(shipment);
+				order.Sum += shipment.Sum - shipment.DiscountAmount + shipment.Tax;
 			}
-
-			if(order.Discount != null)
-			{
-				order.Sum -= order.Discount.DiscountAmount;
-			}
-
+	
 			if (order.TaxIncluded)
 			{
 				order.Sum += order.Tax;
 			}
+			order.Sum -= order.DiscountAmount;
 		}
 
-		private static void CalculateShipmentTotals(Shipment shipment)
-		{
-			shipment.Sum = 0;
-			if (shipment.Items != null)
-			{
-				foreach (var item in shipment.Items)
-				{
-					shipment.Sum += item.Price * item.Quantity;
-					if (item.Discount != null)
-					{
-						shipment.Sum -= item.Discount.DiscountAmount;
-					}
-				}
-			}
-			if (shipment.Discount != null)
-			{
-				shipment.Sum -= shipment.Discount.DiscountAmount;
-			}
-
-			if (shipment.TaxIncluded)
-			{
-				shipment.Sum += shipment.Tax;
-			}
-		}
+		
 	}
 }
