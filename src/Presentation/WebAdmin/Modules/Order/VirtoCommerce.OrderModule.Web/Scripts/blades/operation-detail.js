@@ -1,6 +1,6 @@
 ﻿angular.module('virtoCommerce.orderModule.blades')
-.controller('operationDetailController', ['$scope', 'dialogService', 'bladeNavigationService', 'customerOrders', 'notificationService', 'fulfilmentCenters', 'stores', 'paymentGateways',
-			function ($scope, dialogService, bladeNavigationService, customerOrders, notificationService, fulfilmentCenters, stores, paymentGateways) {
+.controller('operationDetailController', ['$scope', 'dialogService', 'bladeNavigationService', 'customerOrders', 'notificationService', 'fulfilmentCenters', 'order_stores', 'paymentGateways',
+			function ($scope, dialogService, bladeNavigationService, customerOrders, notificationService, fulfilmentCenters, order_stores, paymentGateways) {
 
     $scope.blade.refresh = function () {
     	$scope.blade.isLoading = true;
@@ -17,7 +17,7 @@
         	{
         		$scope.blade.currentEntity = copy;
         		$scope.blade.origEntity = results;
-        		$scope.stores = stores.query();
+        		$scope.stores = order_stores.query();
         	}
         	else if (operation.operationType.toLowerCase() == 'shipment')
         	{
