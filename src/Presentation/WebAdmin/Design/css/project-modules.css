@@ -309,6 +309,7 @@
     display: block;
     height: 75px;
     margin: 0 auto;
+    position: relative;
     width: 350px;
 }
 
@@ -316,6 +317,7 @@
     {
         background: #dee9f0;
         height: 20px;
+        position: absolute;
         top: 25px;
         width: 20px;
 

@@ -3459,6 +3459,11 @@ fieldset + fieldset
 		position: relative;
 	}
 
+    .__items .list-item.__selected
+    {
+        pointer-events: none;
+    }
+
 	.__items .list-item:after
 	{
 		color: #a6a6a6;
@@ -3508,6 +3513,11 @@ fieldset + fieldset
 			top: 5px;
 		}
 
+        .__items .list-ico ~ .list-name
+        {
+            vertical-align: middle;
+        }
+
 		.__items .list-name
 		{
 			color: #4c4c4c;
@@ -3515,7 +3525,7 @@ fieldset + fieldset
 			font-size: 14px;
             position: relative;
 			text-shadow: 1px 1px #fff;
-			vertical-align: middle;
+			vertical-align: top;
             z-index: 25;
 		}
 
@@ -3568,7 +3578,8 @@ fieldset + fieldset
             top: 0;
         }
 
-        .__items label.list-item :checked ~ .switch
+        .__items label.list-item :checked ~ .switch,
+        .__items label.list-item.__selected .switch
         {
             background: #fbfdfe;
 
@@ -3576,7 +3587,14 @@ fieldset + fieldset
                     box-shadow: 0 0 0 1px #a1c0d4;
         }
 
-        .__items .list-item :checked ~ .switch:after
+        .__items label.list-item.__selected .switch
+        {
+            -webkit-box-shadow: 0 0 0 1px #dee9f0;
+                    box-shadow: 0 0 0 1px #dee9f0;
+        }
+
+        .__items .list-item :checked ~ .switch:after,
+        .__items .list-item.__selected .switch:after
         {
             border-color: #a1c0d4 #a1c0d4 transparent transparent;
             border-style: solid;
@@ -3589,7 +3607,13 @@ fieldset + fieldset
             top: 0;
         }
 
-        .__items .list-item :checked ~ .switch:before
+        .__items .list-item.__selected .switch:after
+        {
+            border-color: #dee9f0 #dee9f0 transparent transparent;
+        }
+
+        .__items .list-item :checked ~ .switch:before,
+        .__items .list-item.__selected .switch:before
         {
             color: #fff;
             content: "";
