@@ -6,6 +6,7 @@
 <div class="blade-content __large-wide">
     <div class="blade-inner">
         <div class="inner-block">
+            <form name="orderForm" novalidate></form>
             <div class="table-wrapper">
                 <table class="table">
                     <thead>
@@ -53,30 +54,29 @@
                                 <span title="{{data.name}}">{{data.name}}</span>
                             </td>
                             <td class="table-col" ng-click='selectItem(data)'>
-                                <div class="form-input __mini __number js-number-input-plugin" data-step="1">
-                                    <input class="js-val" required class="form-control tight-input" ng-model="data.quantity" type="text">
+                                <div class="form-input __mini __number">
+                                    <input va-number required class="form-control tight-input" ng-model="data.quantity" type="text" min="1" step="1">
                                 </div>
                             </td>
                             <td class="table-col">
-
                                 <span ng-class="{'error': !data.avail}">{{data.avail?data.avail:0}}</span>
                             </td>
                             <td class="table-col" ng-click='selectItem(data)'>
                                 <span ng-class="{'error': !data.await}">{{data.await?data.await:0}}</span>
                             </td>
                             <td class="table-col" ng-click='selectItem(data)'>
-                                <div class="form-input __mini __number js-number-input-plugin" data-step="1">
-                                    <input class="js-val" required ng-model="data.price" type="text">
-                                 </div>
-                            </td>
-                            <td class="table-col">
-                                <div class="form-input __mini __number js-number-input-plugin" data-step="1">
-                                    <input class="js-val" required ng-model="data.discountAmount" type="text">
+                                <div class="form-input __mini">
+                                    <input name="price" required ng-model="data.price" type="text">
                                 </div>
                             </td>
                             <td class="table-col">
-                                <div class="form-input __mini __number js-number-input-plugin" data-step="1">
-                                    <input class="js-val" required ng-model="data.tax" type="text">
+                                <div class="form-input __mini">
+                                    <input required ng-model="data.discountAmount" type="text">
+                                </div>
+                            </td>
+                            <td class="table-col">
+                                <div class="form-input __mini">
+                                    <input required ng-model="data.tax" type="text">
                                 </div>
                             </td>
                             <td class="table-col __total">

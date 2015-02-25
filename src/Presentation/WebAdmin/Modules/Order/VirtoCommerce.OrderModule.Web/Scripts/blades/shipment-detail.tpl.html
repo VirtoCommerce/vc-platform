@@ -12,18 +12,22 @@
                     <div class="form-group">
                         <label class="form-label">Status</label>
                         <div class="form-input">
-                            <select ng-model="blade.currentEntity.status" class="chosen-select">
-                                <option>New</option>
-                                <option>PickPack</option>
-                                <option>Completed</option>
-                            </select>
+                            <select va-chosen ng-model="blade.operation.status">
+                                <option value="new">New</option>
+                                <option value="new">PickPack</option>
+                                <option value="new">Completed</option>
+                                <select ng-model="blade.currentEntity.status" va-chosen>
+                                    <option>New</option>
+                                    <option>PickPack</option>
+                                    <option>Completed</option>
+                                </select>
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="form-label">Fulfillment</label>
                         <div class="form-input">
-                            <select ng-model="blade.currentEntity.fulfillmentCenterId" class="chosen-select" ng-options="center.id as center.name for center in fulfillmentCenters">
-                                <option value="">{{blade.currentEntity.fulfillmentCenterId}}</option>
+                            <select ng-model="blade.operation.fulfillmentCenterId" va-chosen>
+                                <option>{{blade.operation.fulfillmentCenterId}}</option>
                             </select>
                         </div>
                     </div>
@@ -38,11 +42,10 @@
                     <div class="form-group">
                         <label class="form-label">Employee</label>
                         <div class="form-input">
-                            <select ng-model="blade.currentEntity.employeeId" class="chosen-select">
-                            </select>
+                            <select ng-model="blade.currentEntity.employeeId" va-chosen></select>
                         </div>
                     </div>
-                </div>
+                 </div>
             </div>
             <div class="tile-group four">
                 <va-widget-container group="shipmentDetailWidgets" blade="blade"></va-widget-container>

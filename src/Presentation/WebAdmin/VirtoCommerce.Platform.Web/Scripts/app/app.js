@@ -16,7 +16,9 @@
   'platformWebApp.Filters',
   'platformWebApp.htmlTooltip',
   'platformWebApp.widget',
-  'platformWebApp.breadcrumbs'
+  'platformWebApp.breadcrumbs',
+  'platformWebApp.chosen',
+  'platformWebApp.inputNumber'
 ];
 
 angular.module('platformWebApp', AppDependencies).

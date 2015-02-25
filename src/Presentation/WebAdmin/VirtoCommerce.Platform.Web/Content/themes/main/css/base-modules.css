@@ -2591,7 +2591,8 @@ fieldset + fieldset
         }
 
         .form-input.__langs input,
-        .form-input.__langs textarea
+        .form-input.__langs textarea,
+        .form-input.__langs select
         {
             padding-left: 36px;
         }
@@ -2689,6 +2690,18 @@ fieldset + fieldset
             margin: 0 0 5px;
         }
 
+            .form-label .form-edit
+            {
+                display: inline-block;
+                margin: 0 0 0 5px;
+            }
+
+                .form-edit .form-ico
+                {
+                    font-size: 12px;
+                    vertical-align: 2px;
+                }
+
         .form-control .form-label
         {
             margin: 0 0 0 10px;
@@ -2767,11 +2780,11 @@ fieldset + fieldset
 		{
 			background: #fff;
 			border: 1px solid #a1c0d4;
-			height: 12px;
+			height: 13px;
             left: 0;
 			position: absolute;
             top: 2px;
-			width: 12px;
+			width: 13px;
 
 			-webkit-box-sizing: border-box;
 					box-sizing: border-box;
@@ -2805,11 +2818,11 @@ fieldset + fieldset
 			color: #43b0e6;
 			content: '';
 			font-family: 'FontAwesome';
-			font-size: 8px;
+			font-size: 7px;
 			font-weight: normal;
-			left: 1px;
+			left: 2px;
 			position: absolute;
-			top: 0;
+			top: 1px;
 		}
 
         .form-control.__radio :checked ~ .check:after
@@ -3459,6 +3472,11 @@ fieldset + fieldset
 		position: relative;
 	}
 
+    .__items .list-item.__selected
+    {
+        pointer-events: none;
+    }
+
 	.__items .list-item:after
 	{
 		color: #a6a6a6;
@@ -3508,6 +3526,11 @@ fieldset + fieldset
 			top: 5px;
 		}
 
+        .__items .list-ico ~ .list-name
+        {
+            vertical-align: middle;
+        }
+
 		.__items .list-name
 		{
 			color: #4c4c4c;
@@ -3515,7 +3538,7 @@ fieldset + fieldset
 			font-size: 14px;
             position: relative;
 			text-shadow: 1px 1px #fff;
-			vertical-align: middle;
+			vertical-align: top;
             z-index: 25;
 		}
 
@@ -3568,7 +3591,8 @@ fieldset + fieldset
             top: 0;
         }
 
-        .__items label.list-item :checked ~ .switch
+        .__items label.list-item :checked ~ .switch,
+        .__items label.list-item.__selected .switch
         {
             background: #fbfdfe;
 
@@ -3576,7 +3600,14 @@ fieldset + fieldset
                     box-shadow: 0 0 0 1px #a1c0d4;
         }
 
-        .__items .list-item :checked ~ .switch:after
+        .__items label.list-item.__selected .switch
+        {
+            -webkit-box-shadow: 0 0 0 1px #dee9f0;
+                    box-shadow: 0 0 0 1px #dee9f0;
+        }
+
+        .__items .list-item :checked ~ .switch:after,
+        .__items .list-item.__selected .switch:after
         {
             border-color: #a1c0d4 #a1c0d4 transparent transparent;
             border-style: solid;
@@ -3589,7 +3620,13 @@ fieldset + fieldset
             top: 0;
         }
 
-        .__items .list-item :checked ~ .switch:before
+        .__items .list-item.__selected .switch:after
+        {
+            border-color: #dee9f0 #dee9f0 transparent transparent;
+        }
+
+        .__items .list-item :checked ~ .switch:before,
+        .__items .list-item.__selected .switch:before
         {
             color: #fff;
             content: "";
@@ -3600,6 +3637,11 @@ fieldset + fieldset
             right: 4px;
             top: 9px;
             z-index: 25;
+        }
+
+        .__items label.list-item.__selected .list-name
+        {
+            color: #a6a6a6;
         }
 
 .list.__properties

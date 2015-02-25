@@ -14,6 +14,8 @@
         <link rel="stylesheet" href="css/project-modules.css">
         <link rel="stylesheet" href="css/cosmetic.css">
 
+        <link rel="stylesheet" href="chosen/chosen.css">
+
     </head>
     <body>
 
@@ -2074,7 +2076,7 @@
                                             <div class="form-group">
                                                 <label class="form-label">Birthday</label>
                                                 <div class="form-input">
-                                                    <select>
+                                                    <select multiple>
                                                         <option value="ru">Ru</option>
                                                         <option value="en">En</option>
                                                         <option value="de">De</option>
@@ -2125,7 +2127,7 @@
                                                 <span class="switch"></span>
                                                 <span class="list-name">Ease US</span>
                                             </label>
-                                            <label class="list-item">
+                                            <label class="list-item __selected">
                                                 <input type="checkbox">
                                                 <span class="switch"></span>
                                                 <span class="list-name">Ease US</span>
@@ -2880,5 +2882,11 @@
         <script src="js/jquery/jquery.mousewheel.js"></script>
         <script src="js/main.js"></script>
         <script src="js/input-number.js"></script>
+        <script src="chosen/chosen.jquery.min.js"></script>
+        <script>
+            $(function () {
+                $('select').chosen();
+            });
+        </script>
     </body>
 </html>
