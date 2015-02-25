@@ -45,11 +45,7 @@ namespace VirtoCommerce.CoreModule.Web.Security
         public string[] GetUserPermissionIds(string userName)
         {
             var user = GetUserWithPermissions(userName);
-
-            var result = (user.RegisterType == RegisterType.Administrator) ?
-                user.AllPermissionIds :
-                user.RegisteredPermissionIds;
-            return result;
+            return user.ActivePermissionIds;
         }
 
         public bool UserHasAnyPermission(string userName, params string[] permissionIds)
@@ -58,7 +54,7 @@ namespace VirtoCommerce.CoreModule.Web.Security
 
             var success = user.IsActive && (
                 user.RegisterType == RegisterType.Administrator
-                    || user.RegisteredPermissionIds.Intersect(permissionIds, StringComparer.OrdinalIgnoreCase).Any()
+                    || user.ActivePermissionIds.Intersect(permissionIds, StringComparer.OrdinalIgnoreCase).Any()
                     || user.RegisterType == RegisterType.SiteAdministrator && permissionIds.Contains(PredefinedPermissions.SecurityCallApi, StringComparer.OrdinalIgnoreCase) // Temporary workaround for frontend. Will be deleted later.
                 );
 
@@ -98,10 +94,8 @@ namespace VirtoCommerce.CoreModule.Web.Security
 
         private UserWithPermissions LoadUserWithPermissions(string userName)
         {
-            var user = new UserWithPermissions
-            {
-                AllPermissionIds = GetAllPermissions().Select(p => p.Id).ToArray()
-            };
+            var allPermissionIds = GetAllPermissions().Select(p => p.Id).ToArray();
+            var user = new UserWithPermissions();
 
             using (var repository = _securityRepository())
             {
@@ -122,7 +116,7 @@ namespace VirtoCommerce.CoreModule.Web.Security
                 }
             }
 
-            user.RegisteredPermissionIds = user.AllPermissionIds.Intersect(user.StoredPermissionIds).ToArray();
+            user.ActivePermissionIds = allPermissionIds.Intersect(user.StoredPermissionIds).ToArray();
 
             return user;
         }
@@ -141,9 +135,8 @@ namespace VirtoCommerce.CoreModule.Web.Security
 
             public UserWithPermissions()
             {
-                AllPermissionIds = _emptyPermissionIds;
                 StoredPermissionIds = _emptyPermissionIds;
-                RegisteredPermissionIds = _emptyPermissionIds;
+                ActivePermissionIds = _emptyPermissionIds;
             }
 
             #endregion
@@ -152,10 +145,8 @@ namespace VirtoCommerce.CoreModule.Web.Security
 
             public bool IsActive { get; set; }
             public RegisterType RegisterType { get; set; }
-
-            public string[] AllPermissionIds { get; set; }
             public string[] StoredPermissionIds { get; set; }
-            public string[] RegisteredPermissionIds { get; set; }
+            public string[] ActivePermissionIds { get; set; }
 
             #endregion
         }
