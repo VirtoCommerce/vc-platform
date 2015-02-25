@@ -12,7 +12,7 @@
                     <div class="form-group">
                         <label class="form-label">Status</label>
                         <div class="form-input">
-                            <select ng-model="blade.currentEntity.status" class="chosen-select">
+                            <select va-chosen ng-model="blade.currentEntity.status">
                                 <option>New</option>
                                 <option>PickPack</option>
                                 <option>Completed</option>
@@ -21,8 +21,9 @@
                     </div>
                     <div class="form-group">
                         <label class="form-label">Amount</label>
-                        <div class="form-input">
-                            <input required type="text" ng-model="blade.currentEntity.sum"> {{blade.currentEntity.currency}}
+                        <div class="form-input __currency">
+                            <span class="currency">{{blade.currentEntity.currency}}</span>
+                            <input required type="text" ng-model="blade.currentEntity.sum">
                         </div>
                     </div>
                 </div>
@@ -36,7 +37,7 @@
                     <div class="form-group">
                         <label class="form-label">Payment gateway</label>
                         <div class="form-input">
-                            <select ng-model="blade.currentEntity.gatewayCode" class="chosen-select" ng-options="gateway.gatewayCode as gateway.gatewayCode for gateway in paymentGateways">
+                            <select va-chosen ng-model="blade.currentEntity.gatewayCode" ng-options="gateway.gatewayCode as gateway.gatewayCode for gateway in paymentGateways">
                                 <option value="">{{blade.currentEntity.gatewayCode}}</option>
                             </select>
                         </div>

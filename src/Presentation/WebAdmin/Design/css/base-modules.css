@@ -2597,6 +2597,13 @@ fieldset + fieldset
             padding-left: 36px;
         }
 
+        .form-input.__currency input,
+        .form-input.__currency textarea,
+        .form-input.__currency select
+        {
+            padding-right: 40px;
+        }
+
         .form-input.__number input
         {
             padding-right: 20px;
@@ -2680,6 +2687,16 @@ fieldset + fieldset
             left: 11px;
             position: absolute;
             top: 11px;
+            z-index: 50;
+        }
+
+        .form-input.__currency .currency
+        {
+            color: #43b0e6;
+            font-size: 12px;
+            right: 10px;
+            position: absolute;
+            top: 10px;
             z-index: 50;
         }
 
