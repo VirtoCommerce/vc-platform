@@ -31,7 +31,7 @@
                         <div class="form-group">
                             <label class="form-label">Store country</label>
                             <div class="form-input">
-                                <select ng-model="blade.currentEntity.country" ng-options="x.id as x.name for x in countries" class="chosen-select"></select>
+                                <select va-chosen ng-model="blade.currentEntity.country" ng-options="x.id as x.name for x in countries" class="chosen-select"></select>
                             </div>
                         </div>
                     </div>
@@ -39,7 +39,7 @@
                         <div class="form-group">
                             <label class="form-label">Store region</label>
                             <div class="form-input">
-                                <select ng-model="blade.currentEntity.region" ng-options="x.id as x.name for x in regions" class="chosen-select"></select>
+                                <select va-chosen ng-model="blade.currentEntity.region" ng-options="x.id as x.name for x in regions" class="chosen-select"></select>
                             </div>
                         </div>
                     </div>
@@ -67,7 +67,7 @@
                         <div class="form-group">
                             <label class="form-label">Fulfillment center</label>
                             <div class="form-input">
-                                <select ng-model="blade.currentEntity.fulfillmentCenter" ng-options="x.name for x in fulfillmentCenters" class="chosen-select"></select>
+                                <select va-chosen ng-model="blade.currentEntity.fulfillmentCenter" ng-options="x.name for x in fulfillmentCenters"></select>
                             </div>
                         </div>
                     </div>
@@ -75,7 +75,7 @@
                         <div class="form-group">
                             <label class="form-label">Returns Fulfillment center</label>
                             <div class="form-input">
-                                <select ng-model="blade.currentEntity.returnsFulfillmentCenter" ng-options="x.id as x.name for x in returnsFulfillmentCenters" class="chosen-select"></select>
+                                <select va-chosen ng-model="blade.currentEntity.returnsFulfillmentCenter" ng-options="x.id as x.name for x in returnsFulfillmentCenters"></select>
                             </div>
                         </div>
                     </div>
@@ -85,7 +85,7 @@
                         <div class="form-group">
                             <label class="form-label">Operational timezone</label>
                             <div class="form-input">
-                                <select ng-model="blade.currentEntity.timeZone" ng-options="x.name for x in timeZones" class="chosen-select"></select>
+                                <select va-chosen ng-model="blade.currentEntity.timeZone" ng-options="x.name for x in timeZones"></select>
                             </div>
                         </div>
                     </div>

@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('platformWebApp.chosen', [])
-    .directive('chosen', function ($timeout) {
+    .directive('vaChosen', function ($timeout) {
         var linker = function(scope, element, attr) {
             scope.$watch(attr.ngModel, function() {
                 $timeout(function() {
@@ -16,7 +16,7 @@ angular.module('platformWebApp.chosen', [])
             }, true);
 
             $timeout(function() {
-                element.chosen();
+                element.chosen({width: '100%'});
             }, 0, false);
         };
 

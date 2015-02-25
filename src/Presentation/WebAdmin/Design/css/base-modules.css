@@ -2591,7 +2591,8 @@ fieldset + fieldset
         }
 
         .form-input.__langs input,
-        .form-input.__langs textarea
+        .form-input.__langs textarea,
+        .form-input.__langs select
         {
             padding-left: 36px;
         }
@@ -2689,6 +2690,18 @@ fieldset + fieldset
             margin: 0 0 5px;
         }
 
+            .form-label .form-edit
+            {
+                display: inline-block;
+                margin: 0 0 0 5px;
+            }
+
+                .form-edit .form-ico
+                {
+                    font-size: 12px;
+                    vertical-align: 2px;
+                }
+
         .form-control .form-label
         {
             margin: 0 0 0 10px;
@@ -2767,11 +2780,11 @@ fieldset + fieldset
 		{
 			background: #fff;
 			border: 1px solid #a1c0d4;
-			height: 12px;
+			height: 13px;
             left: 0;
 			position: absolute;
             top: 2px;
-			width: 12px;
+			width: 13px;
 
 			-webkit-box-sizing: border-box;
 					box-sizing: border-box;
@@ -2805,11 +2818,11 @@ fieldset + fieldset
 			color: #43b0e6;
 			content: '';
 			font-family: 'FontAwesome';
-			font-size: 8px;
+			font-size: 7px;
 			font-weight: normal;
-			left: 1px;
+			left: 2px;
 			position: absolute;
-			top: 0;
+			top: 1px;
 		}
 
         .form-control.__radio :checked ~ .check:after

@@ -12,7 +12,7 @@
                     <div class="form-group">
                         <label class="form-label">Status</label>
                         <div class="form-input">
-                            <select ng-model="blade.operation.status" class="chosen-select">
+                            <select va-chosen ng-model="blade.operation.status">
                                 <option value="new">New</option>
                                 <option value="new">PickPack</option>
                                 <option value="new">Completed</option>
@@ -22,7 +22,7 @@
                     <div class="form-group">
                         <label class="form-label">Fulfillment</label>
                         <div class="form-input">
-                            <select ng-model="blade.operation.fulfillmentCenterId" class="chosen-select">
+                            <select va-chosen ng-model="blade.operation.fulfillmentCenterId">
                                 <option>{{blade.operation.fulfillmentCenterId}}</option>
                             </select>
                         </div>
@@ -38,7 +38,7 @@
                     <div class="form-group">
                         <label class="form-label">Employee</label>
                         <div class="form-input">
-                            <select ng-model="blade.operation.employeeId" class="chosen-select">
+                            <select va-chosen ng-model="blade.operation.employeeId">
                                 <option>{{blade.operation.employeeId}}</option>
                             </select>
                         </div>

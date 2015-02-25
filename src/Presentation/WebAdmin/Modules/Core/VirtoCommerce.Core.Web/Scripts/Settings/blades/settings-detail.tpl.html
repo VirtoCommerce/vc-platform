@@ -11,12 +11,10 @@
                             <input required ng-model="data.value" ng-if="data.valueType==='string'" />
                             <input required ng-model="data.value" type="password" ng-if="data.valueType==='secureString'">
                             <div ng-if="data.valueType==='integer'">
-                                <input required ng-model="data.value" type="number" min="1" step="1">
-                                
+                                <input va-number required ng-model="data.value" type="text" min="1" step="1">
                             </div>
                             <div ng-if="data.valueType==='decimal'">
-                                <input required ng-model="data.value" type="number" min="1" step="1">
-                                
+                                <input va-number required ng-model="data.value" type="text" min="1" step="1">
                             </div>
                             <div class="form-control __switch">
                                 <label class="form-label" ng-if="data.valueType==='boolean'">
@@ -26,7 +24,7 @@
                             </div>
                         </div>
                         <div class="form-input" ng-if="data.allowedValues.length>0">
-                            <select chosen ng-model="data.value" ng-options="x for x in data.allowedValues" ng-data-model="data.allowedValues"></select>
+                            <select va-chosen ng-model="data.value" ng-options="x for x in data.allowedValues" ng-data-model="data.allowedValues"></select>
                         </div>
                     </div>
                 </fieldset>

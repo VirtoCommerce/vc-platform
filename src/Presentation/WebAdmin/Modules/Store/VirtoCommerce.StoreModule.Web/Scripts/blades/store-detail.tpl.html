@@ -17,13 +17,13 @@
                 <div class="form-group">
                     <label class="form-label">Catalog</label>
                     <div class="form-input">
-                        <select ng-model="blade.currentEntity.catalog" ng-options="x.id as x.name for x in catalogs" required class="chosen-select"></select>
+                        <select va-chosen ng-model="blade.currentEntity.catalog" ng-options="x.id as x.name for x in catalogs" required></select>
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="form-label">State</label>
                     <div class="form-input">
-                        <select ng-model="blade.currentEntity.storeState" ng-options="x.id as x.name for x in storeStates" required class="chosen-select"></select>
+                        <select va-chosen ng-model="blade.currentEntity.storeState" ng-options="x.id as x.name for x in storeStates" required></select>
                     </div>
                 </div>
             </form>

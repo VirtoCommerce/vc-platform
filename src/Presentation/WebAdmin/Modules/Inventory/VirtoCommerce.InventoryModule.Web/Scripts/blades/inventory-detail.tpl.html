@@ -5,32 +5,34 @@
                 <div class="form-group" ng-init="setForm(detailForm)">
                     <label class="form-label">In stock</label>
                     <div class="form-input">
-                        <input ng-model="blade.currentEntity.inStockQuantity" type="number" required>
+                        <input va-number ng-model="blade.currentEntity.inStockQuantity" type="text" required>
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="form-label">Reserved</label>
                     <div class="form-input">
-                        <input ng-model="blade.currentEntity.reservedQuantity" type="number" min="0">
+                        <input va-number ng-model="blade.currentEntity.reservedQuantity" type="text" min="0">
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="form-label">Reorder min. qty.</label>
                     <div class="form-input">
-                        <input ng-model="blade.currentEntity.reorderMinQuantity" type="number" min="0">
+                        <input va-number ng-model="blade.currentEntity.reorderMinQuantity" type="text" min="0">
                     </div>
                 </div>
-                <div class="form-control __checkbox">
-                    <label class="form-label">
-                        <input type="checkbox" ng-model="blade.currentEntity.allowPreorder">
-                        <span class="check"></span>
-                        <span class="name">Allow preorder</span>
-                    </label>
+                <div class="form-group">
+                    <div class="form-control __checkbox">
+                        <label class="form-label">
+                            <input type="checkbox" ng-model="blade.currentEntity.allowPreorder">
+                            <span class="check"></span>
+                            <span class="name">Allow preorder</span>
+                        </label>
+                    </div>
                 </div>
                 <div class="form-group" ng-class="{'__disabled': !blade.currentEntity.allowPreorder}">
                     <label class="form-label">Preorder qty.</label>
                     <div class="form-input">
-                        <input ng-model="blade.currentEntity.preorderQuantity" type="number" min="0" ng-disabled="!blade.currentEntity.allowPreorder">
+                        <input va-number ng-model="blade.currentEntity.preorderQuantity" type="text" min="0" ng-disabled="!blade.currentEntity.allowPreorder">
                     </div>
                 </div>
                 <div class="form-group" ng-class="{'__disabled': !blade.currentEntity.allowPreorder}">
@@ -39,17 +41,19 @@
                         <input ng-model="blade.currentEntity.preorderAvailabilityDate" type="date" ng-disabled="!blade.currentEntity.allowPreorder">
                     </div>
                 </div>
-                <div class="form-control __checkbox">
-                    <label class="form-label">
-                        <input type="checkbox" ng-model="blade.currentEntity.allowBackorder">
-                        <span class="check"></span>
-                        <span class="name">Allow backorder</span>
-                    </label>
+                <div class="form-group">
+                    <div class="form-control __checkbox">
+                        <label class="form-label">
+                            <input type="checkbox" ng-model="blade.currentEntity.allowBackorder">
+                            <span class="check"></span>
+                            <span class="name">Allow backorder</span>
+                        </label>
+                    </div>
                 </div>
                 <div class="form-group" ng-class="{'__disabled': !blade.currentEntity.allowBackorder}">
                     <label class="form-label">Backorder qty.</label>
                     <div class="form-input">
-                        <input ng-model="blade.currentEntity.backorderQuantity" type="number" min="0" ng-disabled="!blade.currentEntity.allowBackorder">
+                        <input va-number ng-model="blade.currentEntity.backorderQuantity" type="еуче" min="0" ng-disabled="!blade.currentEntity.allowBackorder">
                     </div>
                 </div>
                 <div class="form-group" ng-class="{'__disabled': !blade.currentEntity.allowBackorder}">

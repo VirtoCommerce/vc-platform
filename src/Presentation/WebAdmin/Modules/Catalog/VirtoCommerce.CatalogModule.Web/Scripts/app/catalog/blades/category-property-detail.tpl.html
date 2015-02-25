@@ -8,8 +8,10 @@
                     </legend>
                     <div class="form-group" ng-repeat="prop in properties = (blade.currentEntity.properties | filter: {type:propGroup.type})">
                         <label class="form-label" for="">
-                            <a ng-show="prop.isManageable" href="" ng-click="editProperty(prop)">{{prop.name}}</a>
-                            <span ng-show="!prop.isManageable">{{prop.name}}</span>
+                            {{prop.name}}
+                            <a class="form-edit" ng-show="prop.isManageable" href="" ng-click="editProperty(prop)">
+                                <i class="form-ico fa fa-pencil"></i>
+                            </a>
                         </label>
                         <va-property2 ng-model="prop" get-prop-values="getPropValues" />
                     </div>
