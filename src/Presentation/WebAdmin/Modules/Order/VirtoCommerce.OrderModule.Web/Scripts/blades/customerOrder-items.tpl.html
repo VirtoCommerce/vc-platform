@@ -53,18 +53,18 @@
                             <td class="table-col">
                                 <span title="{{data.name}}">{{data.name}}</span>
                             </td>
-                            <td class="table-col" ng-click='selectItem(data)'>
+                            <td class="table-col">
                                 <div class="form-input __mini __number">
                                     <input va-number required class="form-control tight-input" ng-model="data.quantity" type="text" min="1" step="1">
                                 </div>
                             </td>
                             <td class="table-col">
-                                <span ng-class="{'error': !data.avail}">{{data.avail?data.avail:0}}</span>
+                                <span ng-class="{'error': data.avail <= 0}">{{data.avail || 0}}</span>
                             </td>
-                            <td class="table-col" ng-click='selectItem(data)'>
-                                <span ng-class="{'error': !data.await}">{{data.await?data.await:0}}</span>
+                            <td class="table-col">
+                                <span ng-class="{'error': data.avail <= 0 }">{{data.await || 0}}</span>
                             </td>
-                            <td class="table-col" ng-click='selectItem(data)'>
+                            <td class="table-col">
                                 <div class="form-input __mini">
                                     <input name="price" required ng-model="data.price" type="text">
                                 </div>
@@ -80,8 +80,7 @@
                                 </div>
                             </td>
                             <td class="table-col __total">
-                                <!--<span>{{data.total}}</span>-->
-                                <span>{{data.quantity*data.price-data.discountAmount+data.tax}}</span>
+                                 <span>{{data.total}}</span>
                             </td>
                         </tr>
                     </tbody>
