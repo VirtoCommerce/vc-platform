@@ -7,7 +7,9 @@ namespace VirtoCommerce.Content.Data.Repositories
 	using System;
 	using System.Collections.Generic;
 	using System.IO;
+	using System.Text;
 	using System.Threading.Tasks;
+	using System.Web;
 	using VirtoCommerce.Content.Data.Models;
 
 	#endregion
@@ -39,7 +41,7 @@ namespace VirtoCommerce.Content.Data.Repositories
 			{
 				var itemName = Path.GetFileName(fullPath);
 
-				var content = sr.ReadToEnd();
+				var content = HttpUtility.HtmlDecode(sr.ReadToEnd());
 
 				retVal.Content = content;
 				retVal.Name = itemName;
@@ -136,7 +138,7 @@ namespace VirtoCommerce.Content.Data.Repositories
 				Directory.CreateDirectory(directoryPath);
 			}
 
-			using (var fs = new FileStream(fullPath, FileMode.OpenOrCreate, FileAccess.Write))
+			using (var fs = new FileStream(fullPath, FileMode.Create))
 			{
 				using (var sw = new StreamWriter(fs))
 				{

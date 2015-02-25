@@ -44,7 +44,7 @@ namespace VirtoCommerce.ThemeModule.Web.Controllers.Api
 		#region Public Methods and Operators
 		[HttpDelete]
 		[Route("themes/{themeId}/assets")]
-		public IHttpActionResult DeleteAssets(string storeId, string themeId, string[] assetIds)
+		public IHttpActionResult DeleteAssets(string storeId, string themeId, [FromUri]string[] assetIds)
 		{
 			this._themeService.DeleteThemeAssets(storeId, themeId, assetIds);
 			return this.Ok();
@@ -79,9 +79,9 @@ namespace VirtoCommerce.ThemeModule.Web.Controllers.Api
 
 		[HttpPost]
 		[Route("themes/{themeId}/assets")]
-		public IHttpActionResult SaveItem(ThemeAsset item, string storeId, string themeName)
+		public IHttpActionResult SaveItem(ThemeAsset asset, string storeId, string themeId)
 		{
-			this._themeService.SaveThemeAsset(storeId, themeName, item.ToDomainModel());
+			this._themeService.SaveThemeAsset(storeId, themeId, asset.ToDomainModel());
 			return this.Ok();
 		}
 		#endregion

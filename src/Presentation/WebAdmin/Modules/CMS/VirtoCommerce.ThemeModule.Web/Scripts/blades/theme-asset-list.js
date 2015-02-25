@@ -23,6 +23,7 @@
 			choosenStoreId: blade.choosenStoreId,
 			choosenThemeId: blade.choosenThemeId,
 			choosenAssetId: data.id,
+			newAsset: false,
 			title: data.id,
 			subtitle: 'Edit asset',
 			controller: 'editAssetController',
@@ -31,52 +32,54 @@
 		bladeNavigationService.showBlade(newBlade, blade);
 	}
 
-	//function openBladeNew() {
-	//	$scope.selectedNodeId = null;
+	function openBladeNew() {
+		$scope.selectedNodeId = null;
 
-	//	var newBlade = {
-	//		id: 'storeDetails',
-	//		// currentEntityId: data.id,
-	//		currentEntity: {},
-	//		title: 'New Store',
-	//		subtitle: 'Create new Store',
-	//		controller: 'newStoreWizardController',
-	//		template: 'Modules/Store/VirtoCommerce.StoreModule.Web/Scripts/wizards/newStore/new-store-wizard.tpl.html'
-	//	};
-	//	bladeNavigationService.showBlade(newBlade, $scope.blade);
-	//}
+		var newBlade = {
+			id: 'addAsset',
+			choosenStoreId: blade.choosenStoreId,
+			choosenThemeId: blade.choosenThemeId,
+			newAsset: true,
+			currentEntity: { id: null, content: null },
+			title: 'New Asset',
+			subtitle: 'Create new text asset',
+			controller: 'editAssetController',
+			template: 'Modules/CMS/VirtoCommerce.ThemeModule.Web/Scripts/blades/edit-asset.tpl.html'
+		};
+		bladeNavigationService.showBlade(newBlade, blade);
+	}
 
-	$scope.blade.onClose = function (closeCallback) {
+	blade.onClose = function (closeCallback) {
 		closeChildrenBlades();
 		closeCallback();
 	};
 
 	function closeChildrenBlades() {
-		angular.forEach($scope.blade.childrenBlades.slice(), function (child) {
+		angular.forEach(blade.childrenBlades.slice(), function (child) {
 			bladeNavigationService.closeBlade(child);
 		});
 	}
 
-	//$scope.bladeToolbarCommands = [
-    //    {
-    //    	name: "Refresh", icon: 'fa fa-refresh',
-    //    	executeMethod: function () {
-    //    		$scope.blade.refresh();
-    //    	},
-    //    	canExecuteMethod: function () {
-    //    		return true;
-    //    	}
-    //    },
-    //    {
-    //    	name: "Add", icon: 'fa fa-plus',
-    //    	executeMethod: function () {
-    //    		openBladeNew();
-    //    	},
-    //    	canExecuteMethod: function () {
-    //    		return true;
-    //    	}
-    //    }
-	//];
+	$scope.bladeToolbarCommands = [
+        {
+        	name: "Refresh", icon: 'fa fa-refresh',
+        	executeMethod: function () {
+        		$scope.blade.refresh();
+        	},
+        	canExecuteMethod: function () {
+        		return true;
+        	}
+        },
+        {
+        	name: "Add", icon: 'fa fa-plus',
+        	executeMethod: function () {
+        		openBladeNew();
+        	},
+        	canExecuteMethod: function () {
+        		return true;
+        	}
+        }
+	];
 
 	blade.refresh();
 }]);

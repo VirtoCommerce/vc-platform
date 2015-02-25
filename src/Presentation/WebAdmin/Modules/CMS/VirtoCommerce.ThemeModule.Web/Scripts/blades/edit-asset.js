@@ -5,33 +5,107 @@
 	var blade = $scope.blade;
 
 	function initializeBlade() {
-		themes.getAsset({ storeId: blade.choosenStoreId, themeId: blade.choosenThemeId, assetId: blade.choosenAssetId }, function (data) {
-			blade.isLoading = false;
-			blade.currentEntity = angular.copy(data);
-			blade.origEntity = data;
-		});
+		if (!blade.newAsset) {
+			themes.getAsset({ storeId: blade.choosenStoreId, themeId: blade.choosenThemeId, assetId: blade.choosenAssetId }, function (data) {
+				blade.isLoading = false;
+				blade.currentEntity = angular.copy(data);
+				blade.origEntity = data;
+			});
 
-        blade.isLoading = false;
+			$scope.bladeToolbarCommands = [
+			{
+				name: "Save", icon: 'fa fa-save',
+				executeMethod: function () {
+					saveChanges();
+				},
+				canExecuteMethod: function () {
+					return isDirty();
+				}
+			},
+			{
+				name: "Reset", icon: 'fa fa-undo',
+				executeMethod: function () {
+					angular.copy(blade.origEntity, blade.currentEntity);
+				},
+				canExecuteMethod: function () {
+					return isDirty();
+				}
+			},
+			{
+				name: "Delete", icon: 'fa fa-trash-o',
+				executeMethod: function () {
+					deleteEntry();
+				},
+				canExecuteMethod: function () {
+					return !isDirty();
+				}
+			}];
+		}
+		else {
+			$scope.bladeToolbarCommands = [
+			{
+				name: "Save", icon: 'fa fa-save',
+				executeMethod: function () {
+					saveChanges();
+				},
+				canExecuteMethod: function () {
+					return isCanSave();
+				}
+			}];
+
+			blade.isLoading = false;
+		}
     };
 
     function isDirty() {
     	return !angular.equals(blade.currentEntity, blade.origEntity);
     };
 
-    function saveChanges(data) {
+    function saveChanges() {
     	blade.isLoading = true;
 
     	themes.updateAsset({ storeId: blade.choosenStoreId, themeId: blade.choosenThemeId }, blade.currentEntity, function () {
-            $scope.blade.parentBlade.refresh(true);
+    		blade.parentBlade.refresh(true);
+    		blade.choosenAssetId = blade.currentEntity.id;
+    		blade.title = blade.currentEntity.id;
+    		blade.subtitle = 'Edit asset';
+    		blade.newAsset = false;
+    		initializeBlade();
         });
     };
 
-    $scope.blade.onClose = function (closeCallback) {
-        if (isDirty()) {
+    function deleteEntry() {
+    	var dialog = {
+    		id: "confirmDelete",
+    		title: "Delete confirmation",
+    		message: "Are you sure you want to delete this asset?",
+    		callback: function (remove) {
+    			if (remove) {
+    				$scope.blade.isLoading = true;
+
+    				themes.deleteAsset({ storeId: blade.choosenStoreId, themeId: blade.choosenThemeId, assetIds: blade.choosenAssetId }, function () {
+    					$scope.bladeClose();
+    					$scope.blade.parentBlade.refresh(true);
+    				});
+    			}
+    		}
+    	}
+    	dialogService.showConfirmationDialog(dialog);
+    }
+
+    function isCanSave() {
+    	return (!(angular.isUndefined(blade.currentEntity.id) || blade.currentEntity.id === null) &&
+			!(angular.isUndefined(blade.currentEntity.content) || blade.currentEntity.content === null));
+    }
+
+    //(isDirty() && !blade.newAsset) || (isCanSave() && blade.newAsset)
+
+    blade.onClose = function (closeCallback) {
+    	if (isDirty()) {
             var dialog = {
                 id: "confirmCurrentBladeClose",
                 title: "Save changes",
-                message: "The Review has been modified. Do you want to save changes?",
+                message: "The asset has been modified. Do you want to save changes?",
                 callback: function (needSave) {
                     if (needSave) {
                         saveChanges();
@@ -46,63 +120,5 @@
         }
     };
 
-    function deleteEntry() {
-        var dialog = {
-            id: "confirmDelete",
-            title: "Delete confirmation",
-            message: "Are you sure you want to delete this Editorial Review?",
-            callback: function (remove) {
-                if (remove) {
-                    $scope.blade.isLoading = true;
-
-                    themes.deleteAsset({ storeId: blade.choosenStoreId, themeId: blade.choosenThemeId, assetIds: blade.choosenAssetId }, function () {
-                        $scope.bladeClose();
-                        $scope.blade.parentBlade.refresh(true);
-                    });
-                }
-            }
-        }
-        dialogService.showConfirmationDialog(dialog);
-    }
-
-    $scope.bladeToolbarCommands = [
-        {
-            name: "Save", icon: 'fa fa-save',
-            executeMethod: function () {
-                saveChanges($scope.currentEntity);
-            },
-            canExecuteMethod: function () {
-                return isDirty();
-            }
-        },
-        {
-            name: "Reset", icon: 'fa fa-undo',
-            executeMethod: function () {
-                angular.copy($scope.blade.origEntity, $scope.currentEntity);
-            },
-            canExecuteMethod: function () {
-                return isDirty();
-            }
-        },
-        {
-            name: "Delete", icon: 'fa fa-trash-o',
-            executeMethod: function () {
-                deleteEntry();
-            },
-            canExecuteMethod: function () {
-                return $scope.blade.parentBlade.currentEntities.indexOf($scope.blade.origEntity) >= 0 && !isDirty();
-            }
-        }
-    ];
-
     initializeBlade();
-    //$scope.$watch('blade.parentBlade.currentEntities', function (newEntities, oldEntities) {
-    //    if (!angular.equals(newEntities, oldEntities)) {
-    //        var currentChild = angular.isDefined($scope.choosenAssetId)
-    //            ? _.find(newEntities, function (ent) { return ent.id === $scope.choosenAssetId; })
-    //            : _.find(newEntities, function (ent) { return ent.content === $scope.currentEntity.content; });
-
-    //        initializeBlade(currentChild);
-    //    }
-    //}, true);
 }]);
