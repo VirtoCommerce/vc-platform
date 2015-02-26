@@ -24,7 +24,14 @@
                             </div>
                         </div>
                         <div class="form-input" ng-if="data.allowedValues.length>0">
-                            <select va-chosen ng-model="data.value" ng-options="x for x in data.allowedValues" ng-data-model="data.allowedValues"></select>
+                            <ui-select ng-model="data.value">
+                                <ui-select-match placeholder="Select ...">{{$select.selected}}</ui-select-match>
+                                <ui-select-choices repeat="x as x in data.allowedValues | filter: $select.search">
+                                    <span ng-bind-html="x | highlight: $select.search"></span>
+                                </ui-select-choices>
+                            </ui-select>
+
+                         
                         </div>
                     </div>
                 </fieldset>

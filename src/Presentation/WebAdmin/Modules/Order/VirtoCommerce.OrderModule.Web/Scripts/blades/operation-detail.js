@@ -1,13 +1,13 @@
 ﻿angular.module('virtoCommerce.orderModule.blades')
-.controller('operationDetailController', ['$scope', 'dialogService', 'bladeNavigationService', 'customerOrders', 'notificationService', 'fulfilmentCenters', 'order_stores', 'paymentGateways',
-			function ($scope, dialogService, bladeNavigationService, customerOrders, notificationService, fulfilmentCenters, order_stores, paymentGateways) {
+.controller('operationDetailController', ['$scope', 'dialogService', 'bladeNavigationService', 'order_res_customerOrders', 'notificationService', 'order_res_fulfilmentCenters', 'order_res_stores', 'order_res_paymentGateways',
+			function ($scope, dialogService, bladeNavigationService, order_res_customerOrders, notificationService, order_res_fulfilmentCenters, order_res_stores, order_res_paymentGateways) {
 
     $scope.blade.refresh = function () {
     	$scope.blade.isLoading = true;
-    	$scope.fulfillmentCenters = {};
-    	$scope.stores = {};
-    	$scope.paymentGateways = {};
-        customerOrders.get({ id: $scope.blade.customerOrder.id }, function (results) {
+    	$scope.fulfillmentCenters = [];
+    	$scope.stores = [];
+    	$scope.paymentGateways = [];
+    	order_res_customerOrders.get({ id: $scope.blade.customerOrder.id }, function (results) {
         	var operation = angular.isDefined($scope.blade.currentEntity) ? $scope.blade.currentEntity : results;
         	var copy = angular.copy(results);
 
@@ -17,17 +17,17 @@
         	{
         		$scope.blade.currentEntity = copy;
         		$scope.blade.origEntity = results;
-        		$scope.stores = order_stores.query();
+        		$scope.stores = order_res_stores.query();
         	}
         	else if (operation.operationType.toLowerCase() == 'shipment')
         	{
         		$scope.blade.currentEntity = _.find(copy.shipments, function (x) { return x.id == operation.id; });
         		$scope.blade.origEntity = _.find(results.shipments, function (x) { return x.id == operation.id; });
-        		$scope.fulfillmentCenters = fulfilmentCenters.query();
+        		$scope.fulfillmentCenters = order_res_fulfilmentCenters.query();
 			}	
         	else if (operation.operationType.toLowerCase() == 'paymentin')
         	{
-        		$scope.paymentGateways = paymentGateways.query();
+        		$scope.paymentGateways = order_res_paymentGateways.query();
         		$scope.blade.currentEntity = _.find(copy.inPayments, function (x) { return x.id == operation.id; });
         		$scope.blade.origEntity = _.find(results.inPayments, function (x) { return x.id == operation.id; });
 		    }
@@ -50,7 +50,7 @@
 
     function saveChanges() {
         $scope.blade.isLoading = true;
-        customerOrders.update({}, $scope.blade.customerOrder, function (data, headers) {
+        order_res_customerOrders.update({}, $scope.blade.customerOrder, function (data, headers) {
             $scope.blade.refresh();
         });
     };

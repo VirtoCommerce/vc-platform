@@ -3,6 +3,7 @@
   'ui.bootstrap',
   'ui.utils',
   'ui.sortable',
+  'ui.select',
   'ngAnimate',
   'ngResource',
   'xeditable',
@@ -17,7 +18,6 @@
   'platformWebApp.htmlTooltip',
   'platformWebApp.widget',
   'platformWebApp.breadcrumbs',
-  'platformWebApp.chosen',
   'platformWebApp.inputNumber'
 ];
 
@@ -51,13 +51,15 @@ angular.module('platformWebApp', AppDependencies).
 	return httpErrorInterceptor;
 }])
 .config(
-  ['$stateProvider', '$httpProvider', function ($stateProvider, $httpProvider) {
+  ['$stateProvider', '$httpProvider', 'uiSelectConfig', function ($stateProvider, $httpProvider, uiSelectConfig) {
     $stateProvider.state('workspace', {
 						  abstract: true,
 						  templateUrl: 'Scripts/app/workspace.tpl.html'
     });
 	//Add interseptor
     $httpProvider.interceptors.push('httpErrorInterceptor');
+	//ui-select set selectize as default theme
+    uiSelectConfig.theme = 'selectize';
   }
   ]
 )
