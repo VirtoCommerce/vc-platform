@@ -1,15 +1,16 @@
-﻿using Omu.ValueInjecter;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Omu.ValueInjecter;
+using VirtoCommerce.Foundation.Assets.Services;
 using moduleModel = VirtoCommerce.Domain.Catalog.Model;
 using webModel = VirtoCommerce.CatalogModule.Web.Model;
-using System;
 
 namespace VirtoCommerce.CatalogModule.Web.Converters
 {
     public static class ProductConverter
     {
-        public static webModel.Product ToWebModel(this moduleModel.CatalogProduct product, Uri assetBaseUri, moduleModel.Property[] properties = null)
+        public static webModel.Product ToWebModel(this moduleModel.CatalogProduct product, IAssetUrl assetUrl, moduleModel.Property[] properties = null)
         {
             var retVal = new webModel.Product();
             retVal.InjectFrom(product);
@@ -26,14 +27,14 @@ namespace VirtoCommerce.CatalogModule.Web.Converters
 
             if (product.Assets != null)
             {
-				var assetBases = product.Assets.Select(x => x.ToWebModel(assetBaseUri)).ToList();
+                var assetBases = product.Assets.Select(x => x.ToWebModel(assetUrl)).ToList();
                 retVal.Images = assetBases.OfType<webModel.ProductImage>().ToList();
                 retVal.Assets = assetBases.OfType<webModel.ProductAsset>().ToList();
             }
 
             if (product.Variations != null)
             {
-				retVal.Variations = product.Variations.Select(x => x.ToWebModel(assetBaseUri)).ToList();
+                retVal.Variations = product.Variations.Select(x => x.ToWebModel(assetUrl)).ToList();
             }
 
             if (product.Links != null)
@@ -51,10 +52,10 @@ namespace VirtoCommerce.CatalogModule.Web.Converters
                 retVal.Reviews = product.Reviews.Select(x => x.ToWebModel()).ToList();
             }
 
-			if(product.Associations != null)
-			{
-				retVal.Associations = product.Associations.Select(x => x.ToWebModel(assetBaseUri)).ToList();
-			}
+            if (product.Associations != null)
+            {
+                retVal.Associations = product.Associations.Select(x => x.ToWebModel(assetUrl)).ToList();
+            }
             retVal.TitularItemId = product.MainProductId;
 
             retVal.Properties = new List<webModel.Property>();
@@ -64,10 +65,10 @@ namespace VirtoCommerce.CatalogModule.Web.Converters
                 foreach (var property in properties)
                 {
                     var webModelProperty = property.ToWebModel();
-					webModelProperty.Category = null;
+                    webModelProperty.Category = null;
                     webModelProperty.Values = new List<webModel.PropertyValue>();
                     webModelProperty.IsManageable = true;
-					webModelProperty.IsReadOnly = property.Type != moduleModel.PropertyType.Product && property.Type != moduleModel.PropertyType.Variation;
+                    webModelProperty.IsReadOnly = property.Type != moduleModel.PropertyType.Product && property.Type != moduleModel.PropertyType.Variation;
                     retVal.Properties.Add(webModelProperty);
                 }
             }
@@ -114,7 +115,7 @@ namespace VirtoCommerce.CatalogModule.Web.Converters
             var retVal = new moduleModel.CatalogProduct();
             retVal.InjectFrom(product);
 
-			retVal.StartDate = DateTime.UtcNow;
+            retVal.StartDate = DateTime.UtcNow;
             if (product.Images != null)
             {
                 retVal.Assets = new List<moduleModel.ItemAsset>();
@@ -179,15 +180,13 @@ namespace VirtoCommerce.CatalogModule.Web.Converters
                 retVal.Reviews = product.Reviews.Select(x => x.ToModuleModel()).ToList();
             }
 
-			if (product.Associations != null)
-			{
-				retVal.Associations = product.Associations.Select(x => x.ToModuleModel()).ToList();
-			}
+            if (product.Associations != null)
+            {
+                retVal.Associations = product.Associations.Select(x => x.ToModuleModel()).ToList();
+            }
             retVal.MainProductId = product.TitularItemId;
 
             return retVal;
         }
-
-
     }
 }
