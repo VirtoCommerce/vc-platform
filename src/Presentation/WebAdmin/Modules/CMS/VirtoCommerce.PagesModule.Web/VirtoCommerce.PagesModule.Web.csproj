@@ -101,8 +101,15 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\css\bootstrap-markdown.min.css" />
-    <Content Include="Scripts\app\page.js" />
-    <Content Include="Scripts\app\home.tpl.html" />
+    <Content Include="Scripts\blades\edit-page.js" />
+    <Content Include="Scripts\blades\edit-page.tpl.html" />
+    <Content Include="Scripts\blades\pages-list.js" />
+    <Content Include="Scripts\blades\pages-list.tpl.html" />
+    <Content Include="Scripts\page.js" />
+    <Content Include="Scripts\home.tpl.html" />
+    <Content Include="Scripts\resources\pages.js" />
+    <Content Include="Scripts\widgets\pagesWidget.js" />
+    <Content Include="Scripts\widgets\pagesWidget.tpl.html" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
@@ -116,10 +123,8 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Scripts\app\blades\" />
-    <Folder Include="Scripts\app\directives\" />
-    <Folder Include="Scripts\app\resources\" />
-    <Folder Include="Scripts\app\wizards\" />
+    <Folder Include="Scripts\directives\" />
+    <Folder Include="Scripts\wizards\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\..\Core\CommerceFoundation.Data\CommerceFoundation.Data.csproj">

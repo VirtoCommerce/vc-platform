@@ -39,7 +39,7 @@
 					<value>Database</value>
 					<value>File system</value>
 				</allowedValues>
-				<defaultValue>GitHub</defaultValue>
+				<defaultValue>File system</defaultValue>
 				<title>Pages repository type</title>
 				<description>Select one of the allowed themes repository type</description>
 			</setting>

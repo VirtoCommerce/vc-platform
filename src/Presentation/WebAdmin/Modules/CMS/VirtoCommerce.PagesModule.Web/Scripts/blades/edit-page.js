@@ -1,12 +1,12 @@
-﻿angular.module('virtoCommerce.content.themeModule.blades.editAsset', [
-	'virtoCommerce.content.themeModule.resources.themes'
+﻿angular.module('virtoCommerce.content.pagesModule.blades.editPage', [
+	'virtoCommerce.content.pagesModule.resources.pages'
 ])
-.controller('editAssetController', ['$scope', 'dialogService', 'themes', function ($scope, dialogService, themes) {
+.controller('editPageController', ['$scope', 'dialogService', 'pages', function ($scope, dialogService, pages) {
 	var blade = $scope.blade;
 
 	function initializeBlade() {
-		if (!blade.newAsset) {
-			themes.getAsset({ storeId: blade.choosenStoreId, themeId: blade.choosenThemeId, assetId: blade.choosenAssetId }, function (data) {
+		if (!blade.newPage) {
+			pages.getPage({ storeId: blade.choosenStoreId, pageName: blade.choosenPageName }, function (data) {
 				blade.isLoading = false;
 				blade.currentEntity = angular.copy(data);
 				blade.origEntity = data;
@@ -64,12 +64,12 @@
     function saveChanges() {
     	blade.isLoading = true;
 
-    	themes.updateAsset({ storeId: blade.choosenStoreId, themeId: blade.choosenThemeId }, blade.currentEntity, function () {
+    	themes.update({ storeId: blade.choosenStoreId }, blade.currentEntity, function () {
     		blade.parentBlade.refresh(true);
     		blade.choosenAssetId = blade.currentEntity.id;
     		blade.title = blade.currentEntity.id;
-    		blade.subtitle = 'Edit asset';
-    		blade.newAsset = false;
+    		blade.subtitle = 'Edit page';
+    		blade.newPage = false;
     		initializeBlade();
         });
     };
@@ -78,14 +78,14 @@
     	var dialog = {
     		id: "confirmDelete",
     		title: "Delete confirmation",
-    		message: "Are you sure you want to delete this asset?",
+    		message: "Are you sure you want to delete this page?",
     		callback: function (remove) {
     			if (remove) {
-    				$scope.blade.isLoading = true;
+    				blade.isLoading = true;
 
-    				themes.deleteAsset({ storeId: blade.choosenStoreId, themeId: blade.choosenThemeId, assetIds: blade.choosenAssetId }, function () {
+    				themes.deleteAsset({ storeId: blade.choosenStoreId, pageNames: blade.name }, function () {
     					$scope.bladeClose();
-    					$scope.blade.parentBlade.refresh(true);
+    					blade.parentBlade.refresh(true);
     				});
     			}
     		}
@@ -94,16 +94,16 @@
     }
 
     function isCanSave() {
-    	return (!(angular.isUndefined(blade.currentEntity.id) || blade.currentEntity.id === null) &&
+    	return (!(angular.isUndefined(blade.currentEntity.name) || blade.currentEntity.name === null) &&
 			!(angular.isUndefined(blade.currentEntity.content) || blade.currentEntity.content === null));
     }
 
     blade.onClose = function (closeCallback) {
-    	if ((isDirty() && !blade.newAsset) || (isCanSave() && blade.newAsset)) {
+    	if ((isDirty() && !blade.newPage) || (isCanSave() && blade.newPage)) {
             var dialog = {
                 id: "confirmCurrentBladeClose",
                 title: "Save changes",
-                message: "The asset has been modified. Do you want to save changes?",
+                message: "The page has been modified. Do you want to save changes?",
                 callback: function (needSave) {
                     if (needSave) {
                         saveChanges();

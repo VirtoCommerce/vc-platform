@@ -101,8 +101,10 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\css\bootstrap-markdown.min.css" />
+    <Content Include="Scripts\blades\edit-image-asset.tpl.html" />
     <Content Include="Scripts\blades\edit-asset.tpl.html" />
     <Content Include="Scripts\blades\edit-asset.js" />
+    <Content Include="Scripts\blades\edit-image-asset.js" />
     <Content Include="Scripts\blades\theme-asset-list.js" />
     <Content Include="Scripts\blades\themes-list.js" />
     <Content Include="Scripts\blades\theme-asset-list.tpl.html" />

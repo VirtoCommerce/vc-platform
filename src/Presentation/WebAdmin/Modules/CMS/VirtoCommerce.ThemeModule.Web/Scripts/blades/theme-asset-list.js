@@ -17,6 +17,7 @@
 
 	blade.openBlade = function (data) {
 		$scope.selectedNodeId = data.id;
+		closeChildrenBlades();
 
 		var newBlade = {
 			id: 'editAssetBlade',
@@ -34,6 +35,7 @@
 
 	function openBladeNew() {
 		$scope.selectedNodeId = null;
+		closeChildrenBlades();
 
 		var newBlade = {
 			id: 'addAsset',
@@ -58,6 +60,7 @@
 		angular.forEach(blade.childrenBlades.slice(), function (child) {
 			bladeNavigationService.closeBlade(child);
 		});
+		$scope.selectedNodeId = null;
 	}
 
 	$scope.bladeToolbarCommands = [

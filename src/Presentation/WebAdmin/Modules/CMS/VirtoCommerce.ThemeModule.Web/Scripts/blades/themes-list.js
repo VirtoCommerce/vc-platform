@@ -68,7 +68,7 @@
         		openBladeNew();
         	},
         	canExecuteMethod: function () {
-        		return true;
+        		return false;
         	}
         },
 		{
@@ -77,7 +77,7 @@
 				setThemeAsActive();
 			},
 			canExecuteMethod: function () {
-				return true;
+				return false;
 			}
 		}
 	];

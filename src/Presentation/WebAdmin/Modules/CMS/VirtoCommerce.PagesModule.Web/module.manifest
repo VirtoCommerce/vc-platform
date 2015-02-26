@@ -25,9 +25,9 @@
   <!--<styles>
     <directory virtualPath="$/Content/css" searchPattern="*.css" searchSubdirectories="true" />
   </styles>-->
-  <!--<scripts>
+  <scripts>
     <directory virtualPath="$/Scripts" searchPattern="*.js" searchSubdirectories="true" />
-  </scripts>-->
+  </scripts>
 
 	<settings>
 		<group name="Main Properties">
@@ -39,7 +39,7 @@
 					<value>Database</value>
 					<value>File system</value>
 				</allowedValues>
-				<defaultValue>GitHub</defaultValue>
+				<defaultValue>File system</defaultValue>
 				<title>Pages repository type</title>
 				<description>Select one of the allowed pages repository type</description>
 			</setting>

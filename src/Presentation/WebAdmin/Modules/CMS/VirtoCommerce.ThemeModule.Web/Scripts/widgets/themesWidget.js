@@ -6,7 +6,7 @@
 
 	$scope.widget.refresh = function () {
 		$scope.themesCount = '...';
-		return themes.get({ storeId: blade.currentEntityId }, function (data) {
+		return themes.query({ storeId: blade.currentEntityId }, function (data) {
 			$scope.themesCount = data.length;
 		});
 	}
