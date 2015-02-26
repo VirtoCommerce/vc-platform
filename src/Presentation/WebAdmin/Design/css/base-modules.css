@@ -2728,17 +2728,13 @@ fieldset + fieldset
 		{
 			bottom: 0;
 			color: #4c4c4c;
+            height: 34px;
+            line-height: 1;
+            padding: 0;
 			position: absolute;
 			right: 0;
 			top: 0;
 		}
-
-        .form-input .btn.__file
-        {
-            height: auto;
-            line-height: 1;
-            padding: 0;
-        }
 
 		.form-input .btn,
 		.form-input .btn:hover
@@ -4204,6 +4200,117 @@ fieldset + fieldset
         left: 120px;
     }
 
+
+/* Calendar */
+.form-input.__calendar .dropdown-menu
+{
+    background: #fff;
+    border: 1px solid #dee9f0;
+    margin: -1px 0 0;
+    position: absolute;
+    right: 0;
+    z-index: 50;
+}
+
+    .form-input.__calendar .dropdown-menu .btn
+    {
+        background: #fbfdfe;
+        font-size: 14px;
+        font-weight: 400;
+        position: static;
+        text-shadow: none;
+    }
+
+        .form-input.__calendar .dropdown-menu table .btn
+        {
+            width: 100%;
+        }
+
+        .form-input.__calendar .dropdown-menu .btn-group .btn,
+        .form-input.__calendar .dropdown-menu .btn-success
+        {
+            background: #43b0e6;
+            color: #fff;
+            display: inline-block;
+            padding: 0 10px;
+        }
+
+    .form-input.__calendar .dropdown-menu .btn-info,
+    .form-input.__calendar .dropdown-menu .btn.active
+    {
+        background: #43b0e6;
+        color: #fff;
+    }
+
+    .dropdown-menu li
+    {
+        padding: 0;
+        text-indent: 0;
+    }
+
+    .dropdown-menu li:last-child
+    {
+        background: #e8f5fb;
+        overflow: hidden;
+        padding: 5px !important;
+    }
+
+    .dropdown-menu li:before
+    {
+        content: '';
+    }
+
+    .dropdown-menu table
+    {
+        border-collapse: collapse;
+        border-spacing: 0;
+        padding: 0;
+        width: 100%;
+    }
+
+        .dropdown-menu table th,
+        .dropdown-menu table td
+        {
+            background: #dee9f0;
+            border-color: #fff;
+            border-style: solid;
+            border-width: 2px;
+            font-size: 14px;
+            padding: 1px;
+            text-align: center;
+            width: 12.5%;
+        }
+
+        .dropdown-menu table th
+        {
+            background: #dee9f0;
+            font-weight: 500;
+        }
+
+            .dropdown-menu table th small
+            {
+                display: block;
+                font-size: 13px;
+                line-height: 1.4;
+                margin: 5px 0;
+                vertical-align: top;
+            }
+
+        .dropdown-menu .glyphicon
+        {
+            font-family: 'FontAwesome';
+            font-style: normal;
+        }
+
+        .dropdown-menu .glyphicon.glyphicon-chevron-left:before
+        {
+            content: '';
+        }
+
+        .dropdown-menu .glyphicon.glyphicon-chevron-right:before
+        {
+            content: '';
+        }
 
 
 .nav-bar,

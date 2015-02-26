@@ -31,7 +31,12 @@
                         <div class="form-group">
                             <label class="form-label">Store country</label>
                             <div class="form-input">
-                                <select va-chosen ng-model="blade.currentEntity.country" ng-options="x.id as x.name for x in countries" class="chosen-select"></select>
+                                <ui-select ng-model="blade.currentEntity.country">
+                                    <ui-select-match placeholder="Select ...">{{$select.selected.name}}</ui-select-match>
+                                    <ui-select-choices repeat="x.id as x in countries | filter: { name: $select.search }">
+                                        <span ng-bind-html="x.name | highlight: $select.search"></span>
+                                    </ui-select-choices>
+                                </ui-select>
                             </div>
                         </div>
                     </div>
@@ -39,7 +44,12 @@
                         <div class="form-group">
                             <label class="form-label">Store region</label>
                             <div class="form-input">
-                                <select va-chosen ng-model="blade.currentEntity.region" ng-options="x.id as x.name for x in regions" class="chosen-select"></select>
+                                <ui-select ng-model="blade.currentEntity.region">
+                                    <ui-select-match placeholder="Select ...">{{$select.selected.name}}</ui-select-match>
+                                    <ui-select-choices repeat="x.id as x in regions | filter: { name: $select.search }">
+                                        <span ng-bind-html="x.name | highlight: $select.search"></span>
+                                    </ui-select-choices>
+                                </ui-select>
                             </div>
                         </div>
                     </div>
@@ -67,15 +77,25 @@
                         <div class="form-group">
                             <label class="form-label">Fulfillment center</label>
                             <div class="form-input">
-                                <select va-chosen ng-model="blade.currentEntity.fulfillmentCenter" ng-options="x.name for x in fulfillmentCenters"></select>
-                            </div>
+                                <ui-select ng-model="blade.currentEntity.fulfillmentCenter">
+                                    <ui-select-match placeholder="Select...">{{$select.selected.name}}</ui-select-match>
+                                    <ui-select-choices repeat="x.id as x in fulfillmentCenters | filter: { name: $select.search }">
+                                        <span ng-bind-html="x.name | highlight: $select.search"></span>
+                                    </ui-select-choices>
+                                </ui-select>
+                             </div>
                         </div>
                     </div>
                     <div class="column">
                         <div class="form-group">
                             <label class="form-label">Returns Fulfillment center</label>
                             <div class="form-input">
-                                <select va-chosen ng-model="blade.currentEntity.returnsFulfillmentCenter" ng-options="x.id as x.name for x in returnsFulfillmentCenters"></select>
+                                <ui-select ng-model="blade.currentEntity.returnsFulfillmentCenter">
+                                    <ui-select-match placeholder="Select...">{{$select.selected.name}}</ui-select-match>
+                                    <ui-select-choices repeat="x.id as x in fulfillmentCenters | filter: { name: $select.search }">
+                                        <span ng-bind-html="x.name | highlight: $select.search"></span>
+                                    </ui-select-choices>
+                                </ui-select>
                             </div>
                         </div>
                     </div>
@@ -85,7 +105,12 @@
                         <div class="form-group">
                             <label class="form-label">Operational timezone</label>
                             <div class="form-input">
-                                <select va-chosen ng-model="blade.currentEntity.timeZone" ng-options="x.name for x in timeZones"></select>
+                                <ui-select ng-model="blade.currentEntity.timeZone">
+                                    <ui-select-match placeholder="Select...">{{$select.selected.name}}</ui-select-match>
+                                    <ui-select-choices repeat="x.name as x in timeZones | filter: { name: $select.search }">
+                                        <span ng-bind-html="x.name | highlight: $select.search"></span>
+                                    </ui-select-choices>
+                                </ui-select>
                             </div>
                         </div>
                     </div>
