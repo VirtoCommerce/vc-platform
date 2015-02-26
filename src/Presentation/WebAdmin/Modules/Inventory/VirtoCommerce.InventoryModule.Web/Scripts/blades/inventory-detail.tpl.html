@@ -37,11 +37,11 @@
                 </div>
                 <div class="form-group" ng-class="{'__disabled': !blade.currentEntity.allowPreorder}">
                     <label class="form-label">Preorder availability date</label>
-                    <div class="form-input">
+                    <div class="form-input __calendar">
                         <input type="text" class="form-control" ng-model="blade.currentEntity.preorderAvailabilityDate" datepicker-popup="{{format}}" name="pod" is-open="datepickers.pod" datepicker-options="dateOptions" close-text="Close" ng-disabled="!blade.currentEntity.allowPreorder" />
-                        <span class="input-group-btn">
-                            <button type="button" class="btn btn-default" ng-click="open($event,'pod')"><i class="ico fa fa-calendar"></i></button>
-                        </span>
+                        <button class="btn" type="button" ng-click="open($event,'pod')">
+                            <i class="btn-ico fa fa-calendar"></i>
+                        </button>
                     </div>
                 </div>
                 <div class="form-group">
@@ -61,12 +61,12 @@
                 </div>
                 <div class="form-group" ng-class="{'__disabled': !blade.currentEntity.allowBackorder}">
                     <label class="form-label">Backorder availability date</label>
-                    <div class="form-input">
+                    <div class="form-input __calendar">
                         <!--ng-required="true" -->
                         <input type="text" class="form-control" ng-model="blade.currentEntity.backorderAvailabilityDate" datepicker-popup="{{format}}" name="bod" is-open="datepickers.bod" datepicker-options="dateOptions" close-text="Close" ng-disabled="!blade.currentEntity.allowBackorder" />
-                        <span class="input-group-btn">
-                            <button type="button" class="btn btn-default" ng-click="open($event,'bod')"><i class="ico fa fa-calendar"></i></button>
-                        </span>
+                        <button class="btn" type="button" ng-click="open($event,'pod')">
+                            <i class="btn-ico fa fa-calendar"></i>
+                        </button>
                     </div>
                 </div>
             </form>
