@@ -89,7 +89,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Services
 
                 var currentOutline = GetItemOutlineUsingContext(searchTags[criteria.OutlineField].ToString(), criteria.Catalog);
                 var catalogItem = item.ToWebModel(_assetUrl) as Product;
-                catalogItem.Outline = currentOutline;
+                catalogItem.Outline = StripCatalogFromOutline(currentOutline, criteria.Catalog);
 
                 int reviewTotal;
                 if (searchTags.ContainsKey(criteria.ReviewsTotalField)
@@ -107,6 +107,8 @@ namespace VirtoCommerce.MerchandisingModule.Web.Services
                 //catalogItem.AddLink(new Link("self", String.Format("{0}", StripCatalogFromOutline(currentOutline, criteria.Catalog)), "view"));
                 catalogItems.Add(catalogItem);
             }
+
+            // create seo based outline
 
             var response = new ProductSearchResult();
 
@@ -140,9 +142,6 @@ namespace VirtoCommerce.MerchandisingModule.Web.Services
             {
                 return String.Empty;
             }
-
-            //var session = UserHelper.CustomerSession;
-            //var prefixOutline = String.Format("{0}/{1}", session.CatalogId, session.CategoryId);
 
             var outline = itemOutline.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries)
                 .FirstOrDefault(x => x.StartsWith(prefixOutline, StringComparison.OrdinalIgnoreCase)) ?? string.Empty;
