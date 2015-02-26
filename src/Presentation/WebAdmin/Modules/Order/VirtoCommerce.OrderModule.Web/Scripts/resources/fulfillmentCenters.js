@@ -1,4 +1,4 @@
 ﻿angular.module('virtoCommerce.orderModule.resources')
-.factory('fulfilmentCenters', ['$resource', function ($resource) {
+.factory('order_res_fulfilmentCenters', ['$resource', function ($resource) {
 	return $resource('api/fulfillment/centers');
 }]);

@@ -12,11 +12,12 @@
                     <div class="form-group">
                         <label class="form-label">Status</label>
                         <div class="form-input">
-                            <select va-chosen ng-model="blade.currentEntity.status">
-                                <option>New</option>
-                                <option>PickPack</option>
-                                <option>Completed</option>
-                            </select>
+                            <ui-select ng-model="blade.currentEntity.status" ng-init="statuses = ['new','pickPack','completed']">
+                                <ui-select-match placeholder="Select ...">{{$select.selected}}</ui-select-match>
+                                <ui-select-choices repeat="x as x in statuses | filter: $select.search ">
+                                    <span ng-bind-html="x | highlight: $select.search"></span>
+                                </ui-select-choices>
+                            </ui-select>
                         </div>
                     </div>
                     <div class="form-group">
@@ -37,9 +38,13 @@
                     <div class="form-group">
                         <label class="form-label">Payment gateway</label>
                         <div class="form-input">
-                            <select va-chosen ng-model="blade.currentEntity.gatewayCode" ng-options="gateway.gatewayCode as gateway.gatewayCode for gateway in paymentGateways">
-                                <option value="">{{blade.currentEntity.gatewayCode}}</option>
-                            </select>
+                            <ui-select ng-model="blade.currentEntity.gatewayCode">
+                                <ui-select-match placeholder="Select ...">{{$select.selected.gatewayCode}}</ui-select-match>
+                                <ui-select-choices repeat="x.gatewayCode as x in paymentGateways | filter: { gatewayCode: $select.search }">
+                                    <span ng-bind-html="x.gatewayCode | highlight: $select.search"></span>
+                                </ui-select-choices>
+                            </ui-select>
+                       
                         </div>
                     </div>
                     <div class="form-group">
