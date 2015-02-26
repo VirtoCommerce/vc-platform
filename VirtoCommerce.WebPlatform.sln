@@ -130,6 +130,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.Content.Tests
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.Content.Pages.Data", "src\Presentation\WebAdmin\Modules\CMS\VirtoCommerce.Content.Pages.Data\VirtoCommerce.Content.Pages.Data.csproj", "{8F9F26FC-344E-4599-B2F3-CB560F1D5499}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.Content.Menu.Data", "src\Presentation\WebAdmin\Modules\CMS\VirtoCommerce.Content.Menu.Data\VirtoCommerce.Content.Menu.Data.csproj", "{4021578C-A4A9-4C1F-BFA3-D10532533C5F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -320,6 +322,10 @@ Global
 		{8F9F26FC-344E-4599-B2F3-CB560F1D5499}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8F9F26FC-344E-4599-B2F3-CB560F1D5499}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8F9F26FC-344E-4599-B2F3-CB560F1D5499}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4021578C-A4A9-4C1F-BFA3-D10532533C5F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4021578C-A4A9-4C1F-BFA3-D10532533C5F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4021578C-A4A9-4C1F-BFA3-D10532533C5F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4021578C-A4A9-4C1F-BFA3-D10532533C5F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -380,5 +386,6 @@ Global
 		{E55E08B5-3AF9-467D-8F90-4BEF27BAFA28} = {D1556CC7-62A5-4D89-BD35-FC5B5AE17AE8}
 		{8CD7D981-DFAB-4DA6-80C9-9C661FA831B1} = {D1556CC7-62A5-4D89-BD35-FC5B5AE17AE8}
 		{8F9F26FC-344E-4599-B2F3-CB560F1D5499} = {D1556CC7-62A5-4D89-BD35-FC5B5AE17AE8}
+		{4021578C-A4A9-4C1F-BFA3-D10532533C5F} = {D1556CC7-62A5-4D89-BD35-FC5B5AE17AE8}
 	EndGlobalSection
 EndGlobal
