@@ -61,7 +61,7 @@ namespace VirtoCommerce.Foundation.Catalogs.Services
 			query = query.OrderByDescending(x => x.Priority).ThenByDescending(x => x.Name);
 
             //filter by catalog
-            query = query.Where(x => (x.CatalogId == context.CatalogId));
+            query = query.Where(x => (x.CatalogId.Equals(context.CatalogId, StringComparison.OrdinalIgnoreCase)));
 
             //filter by currency
             query = query.Where(x => (x.Pricelist.Currency.Equals(context.Currency, StringComparison.OrdinalIgnoreCase)));

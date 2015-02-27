@@ -4,7 +4,10 @@ using VirtoCommerce.Caching.HttpCache;
 using VirtoCommerce.CatalogModule.Data.Repositories;
 using VirtoCommerce.CatalogModule.Data.Services;
 using VirtoCommerce.Foundation.Catalogs;
+using VirtoCommerce.Foundation.Catalogs.Factories;
+using VirtoCommerce.Foundation.Catalogs.Repositories;
 using VirtoCommerce.Foundation.Catalogs.Services;
+using VirtoCommerce.Foundation.Data.Catalogs;
 using VirtoCommerce.Foundation.Data.Infrastructure;
 using VirtoCommerce.Foundation.Data.Marketing;
 using VirtoCommerce.Foundation.Data.Reviews;
@@ -149,6 +152,11 @@ namespace VirtoCommerce.MerchandisingModule.Web
 
             #endregion
 
+            #region Pricelists
+            Func<IPricelistRepository> priceListRepositoryFactory = () => new EFCatalogRepository(_connectionStringName);
+            Func<IPriceListAssignmentEvaluator> priceListEvalFactory = () => new PriceListAssignmentEvaluator(priceListRepositoryFactory(), null, new HttpCacheRepository());
+            #endregion
+
             var assetsConnectionString = ConnectionHelper.GetConnectionString("AssetsConnectionString");
             var blobStorageProvider = new AzureBlobAssetRepository(assetsConnectionString, null);
 
@@ -163,10 +171,21 @@ namespace VirtoCommerce.MerchandisingModule.Web
             _container.RegisterType<CategoryController>(new InjectionConstructor(itemSearchService, categoryService, propertyService, catalogRepFactory, appConfigRepFactory, storeRepFactory));
             _container.RegisterType<StoreController>(new InjectionConstructor(storeRepFactory, appConfigRepFactory));
             _container.RegisterType<KeywordController>(new InjectionConstructor(appConfigRepFactory));
+            _container.RegisterType<PriceController>(new InjectionConstructor(storeRepFactory, priceListEvalFactory, new PriceListAssignmentEvaluationContext()));
             _container.RegisterType<IAssetUrl, AzureBlobAssetRepository>();
             _container.RegisterType<IAssetEntityFactory, AssetEntityFactory>();
             _container.RegisterType<IAssetService, AssetService>();
             _container.RegisterType<IItemBrowsingService, ItemBrowsingService>();
+
+
+            //Register prmotion evaluation policies
+            /*
+            _container.RegisterType<IEvaluationPolicy, GlobalExclusivityPolicy>("global");
+            _container.RegisterType<IEvaluationPolicy, GroupExclusivityPolicy>("group");
+            _container.RegisterType<IEvaluationPolicy, CartSubtotalRewardCombinePolicy>("cart");
+            _container.RegisterType<IEvaluationPolicy, ShipmentRewardCombinePolicy>("shipment");
+             * */
+
         }
 
         #endregion

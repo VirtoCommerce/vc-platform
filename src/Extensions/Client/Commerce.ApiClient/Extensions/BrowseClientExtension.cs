@@ -20,7 +20,7 @@ namespace VirtoCommerce.ApiClient.Extensions
 
             // http://localhost/admin/api/mp/{0}/{1}/
             var connectionString = String.Format(
-                "{0}{1}/{2}/{3}/",
+                "{0}{1}/stores/{2}/{3}/",
                 ClientContext.Configuration.ConnectionString,
                 "mp",
                 storeId,
