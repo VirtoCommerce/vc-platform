@@ -8,7 +8,8 @@ if (AppDependencies != undefined) {
 angular.module(moduleName, [
     'virtoCommerce.orderModule.blades',
 	'virtoCommerce.orderModule.widgets',
-	'virtoCommerce.orderModule.services'
+	'virtoCommerce.orderModule.services',
+	'virtoCommerce.orderModule.wizards'
 ])
 .config(
   ['$stateProvider', function ($stateProvider) {

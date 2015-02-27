@@ -59,7 +59,7 @@ angular.module('platformWebApp', AppDependencies).
 	//Add interseptor
     $httpProvider.interceptors.push('httpErrorInterceptor');
 	//ui-select set selectize as default theme
-    uiSelectConfig.theme = 'selectize';
+    uiSelectConfig.theme = 'select2';
   }
   ]
 )

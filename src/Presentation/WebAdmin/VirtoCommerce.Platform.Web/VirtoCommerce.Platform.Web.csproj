@@ -231,6 +231,7 @@
     <Content Include="Content\ng-tags-input.css" />
     <Content Include="Content\ng-tags-input.min.css" />
     <Content Include="Content\select.css" />
+    <Content Include="Content\select2.css" />
     <Content Include="Content\Selectize\css\selectize.bootstrap2.css" />
     <Content Include="Content\Selectize\css\selectize.bootstrap3.css" />
     <Content Include="Content\Selectize\css\selectize.css" />
