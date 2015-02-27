@@ -7,6 +7,7 @@
     	$scope.fulfillmentCenters = [];
     	$scope.stores = [];
     	$scope.paymentGateways = [];
+
     	if (!noRefresh) {
     		order_res_customerOrders.get({ id: $scope.blade.customerOrder.id }, function (results) {
     			initialize(results);
@@ -49,7 +50,7 @@
     function isDirty() {
     	var retVal = false;
     	if ($scope.blade.origEntity) {
-    		retVal = !angular.equals($scope.blade.currentEntity, $scope.blade.origEntity) || !$scope.blade.currentEntity.id;
+    		retVal = !angular.equals($scope.blade.currentEntity, $scope.blade.origEntity) || $scope.blade.isNew;
     	}
       	return retVal;
     };
@@ -112,13 +113,25 @@
 
 		   					if ($scope.blade.currentEntity.operationType.toLowerCase() != 'customerorder') {
 		   						order_res_customerOrders.deleteOperation({ id: $scope.blade.customerOrder.id, operationId: $scope.blade.currentEntity.id },
-								function () { $scope.blade.refresh(); },
+								function () {
+									$scope.blade.title = $scope.blade.customerOrder.customer + '\'s Customer Order';
+									$scope.blade.subtitle = 'Edit order details and related documents';
+									$scope.blade.template = 'Modules/Order/VirtoCommerce.OrderModule.Web/Scripts/blades/customerOrder-detail.tpl.html';
+									$scope.blade.currentEntity = $scope.blade.customerOrder;
+									$scope.blade.refresh();
+								},
 								function (error) { notificationService.setError('Error ' + error.status, $scope.blade); });
 		   					}
 		   					else {
-		   						order_res_customerOrders.delete({ id: $scope.blade.customerOrder.id });
-		   						navigationManager.closeBlade($scope.blade);
+		   						order_res_customerOrders.delete({ id: $scope.blade.customerOrder.id },
+								function () {
+									bladeNavigationService.closeBlade($scope.blade);
+								},
+								function (error) { notificationService.setError('Error ' +error.status, $scope.blade);
+							});
 		   					}
+
+		   					
 		   				}
 		   			}
 		   		};
@@ -160,6 +173,6 @@
 
     // actions on load
     $scope.toolbarTemplate = 'Modules/Order/VirtoCommerce.OrderModule.Web/Scripts/blades/operation-detail-toolbar.tpl.html';
-    $scope.blade.refresh($scope.blade.noRefresh);
+    $scope.blade.refresh($scope.blade.isNew);
 
 }]);

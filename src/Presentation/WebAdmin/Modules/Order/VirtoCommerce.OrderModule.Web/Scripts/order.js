@@ -67,6 +67,12 @@ angular.module(moduleName, [
   	};
   	widgetService.registerWidget(customerOrderTotalsWidget, 'customerOrderDetailWidgets');
 
+  	var addressWidget = {
+  		controller: 'addressWidgetController',
+  		template: 'Modules/Order/VirtoCommerce.OrderModule.Web/Scripts/widgets/address-widget.tpl.html',
+  	};
+  	widgetService.registerWidget(addressWidget, 'customerOrderDetailWidgets');
+
   	var shipmentTotalWidget = {
   		controller: 'shipmentTotalsWidgetController',
   		template: 'Modules/Order/VirtoCommerce.OrderModule.Web/Scripts/widgets/shipment-totals-widget.tpl.html',

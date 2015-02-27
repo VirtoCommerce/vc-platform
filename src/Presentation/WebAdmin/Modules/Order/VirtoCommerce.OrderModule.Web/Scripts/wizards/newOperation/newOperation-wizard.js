@@ -17,7 +17,7 @@
 						id: 'operationDetail',
 						title: 'Shipment #' + result.number,
 						subtitle: 'Edit shipment details',
-						noRefresh: true,
+						isNew: true,
 						customerOrder: $scope.blade.customerOrder,
 						currentEntity: result,
 						isClosingDisabled: false,
@@ -47,7 +47,7 @@
 					subtitle: 'Edit payment details and related documents',
 					customerOrder: $scope.blade.customerOrder,
 					currentEntity: result,
-					noRefresh: true,
+					isNew: true,
 					controller: 'operationDetailController',
 					template: 'Modules/Order/VirtoCommerce.OrderModule.Web/Scripts/blades/payment-detail.tpl.html'
 				};

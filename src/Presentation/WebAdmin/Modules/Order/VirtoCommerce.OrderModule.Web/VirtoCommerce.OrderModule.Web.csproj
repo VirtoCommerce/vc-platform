@@ -123,6 +123,8 @@
     <Content Include="Scripts\blades\!blades.js" />
     <Content Include="Scripts\resources\!resources.js" />
     <Content Include="Scripts\widgets\!widgets.js" />
+    <Content Include="Scripts\widgets\address-widget.js" />
+    <Content Include="Scripts\widgets\address-widget.tpl.html" />
     <Content Include="Scripts\wizards\!wizards.js" />
   </ItemGroup>
   <ItemGroup />
