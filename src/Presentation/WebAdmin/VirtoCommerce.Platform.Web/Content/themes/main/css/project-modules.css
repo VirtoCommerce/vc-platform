@@ -180,68 +180,107 @@
     }
 
 
-/* Prices */
-.list.__prices
+.table .table-col.__date,
+.table .table-col.__author,
+.table .table-col.__version
 {
-    background: #fbfdfe;
-    height: 100%;
-    padding: 0 20px;
-    text-align: left;
+    font-size: 12px;
+    vertical-align: top;
+    width: 20%;
 }
 
-    .list.__prices .list-item
+.table .table-col.__author
+{
+    color: #999;
+}
+
+.table .table-col.__version
+{
+    width: 10%;
+}
+
+.table .table-col.__blue
+{
+    color: #43b0e6;
+}
+
+.table .table-col.__product-control
+{
+    width: 20px;
+}
+
+.table .table-col.__product-img
+{
+    width: 60px;
+}
+
+.table .table-col.__product-name
+{
+    max-width: 250px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.table .table-col.__product-code
+{
+    white-space: nowrap;
+}
+
+
+/* Loader */
+.loader
+{
+    display: block;
+    height: 75px;
+    margin: 0 auto;
+    position: relative;
+    width: 350px;
+}
+
+    .loader span
     {
-        font-size: 14px;
-        padding: 4px 0;
+        background: #dee9f0;
+        height: 20px;
+        position: absolute;
+        top: 25px;
+        width: 20px;
+
+        -webkit-animation: loader 2.5s infinite ease;
+                animation: loader 2.5s infinite ease;
     }
 
-    .list.__prices .list-item.__total
+    .loader span:nth-child(1)
     {
-        border-top: 1px solid #dee9f0;
-        color: #43b0e6;
-        padding: 5px 0 0;
+        -webkit-animation-delay: .8s;
+                animation-delay: .8s;
     }
 
-    .list.__prices .list-price
+    .loader span:nth-child(2)
     {
-        float: right;
-        font-weight: 500;
-        margin: 0 0 0 10px;
+        left: 30px;
+
+        -webkit-animation-delay: .6s;
+                animation-delay: .6s;
     }
 
-/* Order info */
-.table.__order-info
-{
-    float: right;
-    min-width: inherit;
-    width: 45%;
-}
-
-.table.__collapsed .table-col
-{
-    padding: 5px;
-}
-
-.table .table-col.__price
-{
-    text-align: right;
-    width: 40%;
-}
-
-.table .table-item.__total .table-col
-{
-    border-bottom: none;
-    font-size: 20px;
-}
-
-.form-group.__order-currency
-{
-    
-}
-
-    .form-group.__order-currency .form-input
+    .loader span:nth-child(3)
     {
-        display: inline-block;
-        margin: 0 0 0 5px;
-        width: 100px;
+        left: 60px;
+
+        -webkit-animation-delay: .4s;
+                animation-delay: .4s;
+    }
+
+    .loader span:nth-child(4)
+    {
+        left: 90px;
+
+        -webkit-animation-delay: .2s;
+                animation-delay: .2s;
+    }
+
+    .loader span:nth-child(5)
+    {
+        left: 120px;
     }

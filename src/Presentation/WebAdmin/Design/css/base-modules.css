@@ -4314,78 +4314,207 @@ fieldset + fieldset
 
 
 /* Select */
-.selectize-control > .selectize-input > input
+.select2-container
+{
+    display: block;
+}
+
+.select2-container input
 {
     height: auto;
 }
 
-.selectize-input
+.select2-container .select2-choice,
+.select2-container-multi .select2-choices
 {
-    height: 34px;
+    background: #fff;
+    border-color: #dee9f0;
+    color: #4c4c4c;
+    font-size: 14px;
+    height: 32px !important;
     line-height: 32px;
-    padding: 0 35px 0 10px;
-    vertical-align: top;
+    padding: 0 10px;
 }
 
-.form-input.__langs .selectize-input
+.select2-container-multi .select2-choices
 {
-    padding-left: 36px;
+    padding: 0 4px;
 }
 
-.selectize-input > input
-{
-    text-overflow: ellipsis;
-}
-
-.selectize-input,
-.selectize-control.single .selectize-input,
-.selectize-input.focus
-{
-    -webkit-box-shadow: none;
-            box-shadow: none;
-}
-
-.selectize-input,
-.selectize-dropdown
+.select2-container .select2-choice,
+.select2-drop
 {
     -webkit-border-radius: 0;
             border-radius: 0;
 }
 
-.selectize-control.single .selectize-input,
-.selectize-dropdown.single,
-.selectize-dropdown
+.select2-container-active .select2-choice,
+.select2-container-active .select2-choices,
+.select2-drop-active,
+.select2-container-multi.select2-container-active .select2-choices
 {
-    border-color: #dee9f0;
-}
-
-.selectize-control.single .selectize-input
-{
-    background: #fff;
-}
-
-.selectize-dropdown
-{
-    text-shadow: none;
+    border-color: #a1c0d4;
 
     -webkit-box-shadow: none;
             box-shadow: none;
 }
 
-.selectize-input.selectize-focus
+.form-input.__langs .select2-choice,
+.form-input.__langs .select2-choices
 {
-    border-color: #a1c0d4 !important;
+    padding-left: 36px;
 }
 
-.selectize-control.single .selectize-input:after
+.select2-choice > .select2-chosen
 {
-    border-color: #43b0e6 transparent transparent;
+    margin: 0;
 }
 
-.selectize-dropdown .active
+.select2-container .select2-choice .select2-arrow
+{
+    background: none;
+    height: 0;
+    width: 0;
+}
+
+.select2-search input
+{
+    background: #fff;
+}
+
+.select2-results .select2-highlighted
 {
     background: #43b0e6;
+}
+
+.select2-container li
+{
+    padding: 0;
+    text-indent: 0;
+}
+
+.select2-container li:before
+{
+    content: '';
+}
+
+/* Multi selects */
+.select2-container-multi .select2-choices .select2-search-field
+{
+    left: 10px;
+    position: absolute;
+    right: 0;
+}
+
+.form-input.__langs .select2-search-field
+{
+    left: 36px;
+}
+
+.select2-container-multi .select2-choices .select2-search-choice
+{
+    background: #43b0e6;
+    border: none;
     color: #fff;
+    line-height: 1;
+    padding: 6px 30px 6px 5px;
+    z-index: 50;
+
+    -webkit-border-radius: 0;
+            border-radius: 0;
+
+    -webkit-box-shadow: none;
+            box-shadow: none;
+}
+
+.select2-search-choice-close
+{
+    left: auto !important;
+    top: 6px;
+}
+
+.select2-search-choice-close:after
+{
+    color: #fff;
+    content: '×';
+    font-family: caption;
+    font-size: 16px;
+    font-weight: bold;
+    text-shadow: none;
+}
+
+
+/* Tags input */
+tags-input .tags
+{
+    border-color: #dee9f0;
+    color: #4c4c4c;
+    padding: 0 10px;
+
+    -webkit-box-shadow: none;
+            box-shadow: none;
+}
+
+.form-input.__langs tags-input .tags
+{
+    padding: 0 0 0 36px;
+}
+
+tags-input .tags li
+{
+    padding: 0;
+    text-indent: 0;
+}
+
+tags-input .tags li:before
+{
+    content: '';
+}
+
+tags-input .tags.focused
+{
+    border-color: #a1c0d4;
+
+    -webkit-box-shadow: none;
+            box-shadow: none;
+}
+
+tags-input .tags .input
+{
+    height: 28px;
+    padding: 0;
+}
+
+tags-input .tags .tag-item
+{
+    background: #43b0e6;
+    border: none;
+    color: #fff;
+    font-family: 'Exo 2';
+    font-size: 13px;
+    height: 24px;
+    margin: 4px 4px 0 0;
+    padding: 0 30px 0 6px;
+    position: relative;
+
+    -webkit-border-radius: 0;
+            border-radius: 0;
+}
+
+tags-input .tags .tag-item.selected
+{
+    background: #e51400;
+}
+
+tags-input .tags .tag-item .remove-button
+{
+    font-family: caption;
+    font-size: 16px;
+    font-weight: bold;
+    line-height: 1;
+    position: absolute;
+    right: 6px;
+    top: 5px;
 }
 
 
@@ -4411,7 +4540,8 @@ fieldset + fieldset
 	{
 		background: #333;
 		height: 100%;
-		position: relative;
+        padding: 90px 0 0;
+        position: relative;
 		z-index: 50;
 
 		-webkit-box-shadow: -5px 0 5px -5px rgba(0, 0, 0, .2) inset;

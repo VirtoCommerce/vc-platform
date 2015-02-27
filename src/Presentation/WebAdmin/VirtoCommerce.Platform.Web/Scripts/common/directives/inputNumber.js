@@ -41,4 +41,5 @@ angular.module('platformWebApp.inputNumber', [])
                 }
             }
         };
-    });
+    })
+;

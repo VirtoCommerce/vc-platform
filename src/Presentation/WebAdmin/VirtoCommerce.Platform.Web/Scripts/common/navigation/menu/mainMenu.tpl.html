@@ -1,9 +1,9 @@
 ﻿<nav class="nav-bar">
     <ul class="menu bar">
-        <li class="menu-item __logo">
+        <!-- <li class="menu-item __logo">
             <span class="logo-img">Virto Commerce</span>
             <span class="logo-version">2.0.0</span>
-        </li>
+        </li> -->
         <li class="menu-item" ng-class="{'__selected': currentMenuItem === menuItem && showSubMenu}" ng-repeat="menuItem in menuItems | filter: {parent: null}" ng-click="selectMenuItem(menuItem)">
             <a class="menu-link" ng-if="!menuItem.template" href="">
                 <span class="menu-ico" ng-class="menuItem.icon"></span>
