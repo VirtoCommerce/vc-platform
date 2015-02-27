@@ -120,13 +120,15 @@
     <Compile Include="Model\Operation.cs" />
     <Compile Include="Module.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Content Include="Scripts\blades\!blades.js" />
+    <Content Include="Scripts\resources\!resources.js" />
     <Content Include="Scripts\widgets\!widgets.js" />
     <Content Include="Scripts\wizards\!wizards.js" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
     <Content Include="module.manifest" />
-    <Content Include="Scripts\blades\!customerOrder-list.js" />
+    <Content Include="Scripts\blades\customerOrder-list.js" />
     <Content Include="Scripts\blades\customerOrder-list.tpl.html" />
     <Content Include="Scripts\blades\operation-detail.js" />
     <Content Include="Scripts\blades\customerOrder-detail.tpl.html" />
@@ -166,7 +168,7 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Scripts\resources\!customerOrders.js" />
+    <Content Include="Scripts\resources\customerOrders.js" />
     <Content Include="Scripts\resources\paymentGateways.js" />
     <Content Include="Scripts\resources\stores.js" />
     <Content Include="Scripts\resources\fulfillmentCenters.js" />

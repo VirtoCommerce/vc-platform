@@ -181,7 +181,7 @@ namespace VirtoCommerce.OrderModule.Data.Services
 	
 		}
 
-		public void Delete(string[] cartIds)
+		public void Delete(string[] oderIds)
 		{
 			throw new NotImplementedException();
 		}

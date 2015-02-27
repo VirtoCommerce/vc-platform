@@ -3,9 +3,9 @@
 	$scope.blade = $scope.widget.blade;
 	$scope.currentOperation = {};
 	$scope.operation = {};
-	$scope.$watch('widget.blade.currentEntity', function (operation) {
+	$scope.$watch('widget.blade.customerOrder', function (operation) {
 		$scope.operation = $scope.blade.customerOrder;
-		$scope.currentOperation = operation;
+		$scope.currentOperation = $scope.blade.currentEntity;
 	});
 
 	$scope.selectOperation = function (operation) {

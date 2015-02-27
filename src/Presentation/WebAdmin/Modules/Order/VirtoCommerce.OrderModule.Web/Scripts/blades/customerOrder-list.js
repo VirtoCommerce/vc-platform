@@ -1,6 +1,4 @@
-﻿angular.module('virtoCommerce.orderModule.blades', [
-   'virtoCommerce.orderModule.resources'
-])
+﻿angular.module('virtoCommerce.orderModule.blades')
 .controller('customerOrderListController', ['$scope', 'order_res_customerOrders', 'bladeNavigationService', 'dialogService', 
 function ($scope, order_res_customerOrders, bladeNavigationService, dialogService) {
     //pagination settigs

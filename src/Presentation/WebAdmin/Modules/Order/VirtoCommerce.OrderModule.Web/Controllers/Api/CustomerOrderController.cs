@@ -82,6 +82,28 @@ namespace VirtoCommerce.OrderModule.Web.Controllers.Api
 			return StatusCode(HttpStatusCode.NoContent);
 		}
 
+		// GET:  api/order/customerOrders/{id}/shipments/new
+		[HttpGet]
+		[ResponseType(typeof(webModel.Shipment))]
+		[Route("{id}/shipments/new")]
+		public IHttpActionResult GetNewShipment(string id)
+		{
+			coreModel.Shipment retVal = null;
+			var order = _customerOrderService.GetById(id, coreModel.CustomerOrderResponseGroup.Full);
+			if(order != null)
+			{
+				retVal = new coreModel.Shipment
+				{
+					 Currency = order.Currency
+				};
+				return Ok(retVal.ToWebModel());
+			}
+		
+			return NotFound();
+		}
+
+
+
 		// DELETE: /api/order/customerOrders?ids=21
 		[HttpDelete]
 		[ResponseType(typeof(void))]

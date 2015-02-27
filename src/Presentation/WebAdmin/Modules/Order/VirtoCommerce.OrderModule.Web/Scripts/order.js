@@ -6,6 +6,7 @@ if (AppDependencies != undefined) {
 }
 
 angular.module(moduleName, [
+	'virtoCommerce.orderModule.resources',
     'virtoCommerce.orderModule.blades',
 	'virtoCommerce.orderModule.widgets',
 	'virtoCommerce.orderModule.services',
