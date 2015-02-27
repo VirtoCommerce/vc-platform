@@ -8,7 +8,7 @@ using VirtoCommerce.Foundation.Stores.Repositories;
 
 namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 {
-    [RoutePrefix("api/mp/stores/{store}/pricelists/{currency}")]
+    [RoutePrefix("api/mp/stores/{store}/pricelists")]
     public class PriceController : BaseController
     {
         private readonly IPriceListAssignmentEvaluationContext _priceListEvalContext;
@@ -23,7 +23,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 
         [HttpGet]
         [ResponseType(typeof(string[]))]
-        [Route("")]
+        [Route("{currency}")]
         public IHttpActionResult GetPriceListStack(
             string store,
             string currency,
@@ -52,6 +52,18 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
             var lists = evaluator.Evaluate(evaluateContext);    
 
             return Ok(lists == null ? null : lists.Select(y => y.PricelistId).ToArray());
+        }
+
+        [HttpGet]
+        [ResponseType(typeof(string[]))]
+        [Route("prices")]
+        public IHttpActionResult GetProductPrices(
+            string store,
+            [FromUri] string[] itemIds
+            )
+        {
+            //_priceListRepository.FindLowestPrices(priceLists, itemIds, quantity)
+            return null;
         }
     }
 }
