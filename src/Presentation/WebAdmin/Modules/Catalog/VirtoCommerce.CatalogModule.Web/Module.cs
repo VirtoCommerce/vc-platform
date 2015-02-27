@@ -9,6 +9,7 @@ using VirtoCommerce.Foundation.Data.Asset;
 using VirtoCommerce.Foundation.Data.Azure.Asset;
 using VirtoCommerce.Foundation.Data.Catalogs;
 using VirtoCommerce.Foundation.Data.Importing;
+using VirtoCommerce.Foundation.Data.Infrastructure;
 using VirtoCommerce.Foundation.Frameworks.Caching;
 using VirtoCommerce.Foundation.Importing.Repositories;
 using VirtoCommerce.Foundation.Importing.Services;
@@ -75,21 +76,19 @@ namespace VirtoCommerce.CatalogModule.Web
             var itemService = new ItemServiceImpl(catalogRepFactory, appConfigRepFactory, cacheManager);
             var catalogSearchService = new CatalogSearchServiceImpl(catalogRepFactory, itemService, catalogService, categoryService);
 
-            var azureBlobStorageProvider = new AzureBlobAssetRepository("DefaultEndpointsProtocol=https;AccountName=virtotest;AccountKey=Qvy1huF8b0OE6upFh91/IMZPnETwhxe7BlRNZoZeJL59b921LeBb7zZZt03CiOVf7wVfPseUMKSXD8yz/rXVuQ==", null);
-            var assetBaseUri = new Uri(@"http://virtotest.blob.core.windows.net/");
+            var assetsConnectionString = ConnectionHelper.GetConnectionString("AssetsConnectionString");
+            var blobStorageProvider = new AzureBlobAssetRepository(assetsConnectionString, null);
 
-			_container.RegisterInstance<IItemService>(itemService);
-			_container.RegisterInstance<ICategoryService>(categoryService);
-			_container.RegisterInstance<ICatalogService>(catalogService);
-			_container.RegisterInstance<IPropertyService>(propertyService);
-			_container.RegisterInstance<ICatalogSearchService>(catalogSearchService);
-			
-            _container.RegisterType<AssetsController>(new InjectionConstructor(azureBlobStorageProvider));
-            _container.RegisterType<ProductsController>(new InjectionConstructor(itemService, propertyService, assetBaseUri));
+            _container.RegisterInstance<IItemService>(itemService);
+            _container.RegisterInstance<ICategoryService>(categoryService);
+            _container.RegisterInstance<ICatalogService>(catalogService);
+            _container.RegisterInstance<IPropertyService>(propertyService);
+            _container.RegisterInstance<ICatalogSearchService>(catalogSearchService);
 
-            _container.RegisterType<ProductsController>(new InjectionConstructor(itemService, propertyService, assetBaseUri));
+            _container.RegisterType<AssetsController>(new InjectionConstructor(blobStorageProvider));
+            _container.RegisterType<ProductsController>(new InjectionConstructor(itemService, propertyService, blobStorageProvider));
             _container.RegisterType<PropertiesController>(new InjectionConstructor(propertyService, categoryService, catalogService));
-            _container.RegisterType<ListEntryController>(new InjectionConstructor(catalogSearchService, categoryService, itemService, assetBaseUri));
+            _container.RegisterType<ListEntryController>(new InjectionConstructor(catalogSearchService, categoryService, itemService, blobStorageProvider));
             _container.RegisterType<CategoriesController>(new InjectionConstructor(catalogSearchService, categoryService, propertyService, catalogService));
             _container.RegisterType<CatalogsController>(new InjectionConstructor(catalogService, catalogSearchService, appConfigRepFactory, propertyService));
             #endregion

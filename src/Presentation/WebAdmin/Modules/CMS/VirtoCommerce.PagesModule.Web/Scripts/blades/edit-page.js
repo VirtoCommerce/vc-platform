@@ -64,10 +64,10 @@
     function saveChanges() {
     	blade.isLoading = true;
 
-    	themes.update({ storeId: blade.choosenStoreId }, blade.currentEntity, function () {
+    	pages.update({ storeId: blade.choosenStoreId }, blade.currentEntity, function () {
     		blade.parentBlade.refresh(true);
-    		blade.choosenAssetId = blade.currentEntity.id;
-    		blade.title = blade.currentEntity.id;
+    		blade.choosenPageName = blade.currentEntity.name;
+    		blade.title = blade.currentEntity.name;
     		blade.subtitle = 'Edit page';
     		blade.newPage = false;
     		initializeBlade();

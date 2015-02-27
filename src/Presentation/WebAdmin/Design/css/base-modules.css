@@ -4313,6 +4313,82 @@ fieldset + fieldset
         }
 
 
+/* Select */
+.selectize-control > .selectize-input > input
+{
+    height: auto;
+}
+
+.selectize-input
+{
+    height: 34px;
+    line-height: 32px;
+    padding: 0 35px 0 10px;
+    vertical-align: top;
+}
+
+.form-input.__langs .selectize-input
+{
+    padding-left: 36px;
+}
+
+.selectize-input > input
+{
+    text-overflow: ellipsis;
+}
+
+.selectize-input,
+.selectize-control.single .selectize-input,
+.selectize-input.focus
+{
+    -webkit-box-shadow: none;
+            box-shadow: none;
+}
+
+.selectize-input,
+.selectize-dropdown
+{
+    -webkit-border-radius: 0;
+            border-radius: 0;
+}
+
+.selectize-control.single .selectize-input,
+.selectize-dropdown.single,
+.selectize-dropdown
+{
+    border-color: #dee9f0;
+}
+
+.selectize-control.single .selectize-input
+{
+    background: #fff;
+}
+
+.selectize-dropdown
+{
+    text-shadow: none;
+
+    -webkit-box-shadow: none;
+            box-shadow: none;
+}
+
+.selectize-input.selectize-focus
+{
+    border-color: #a1c0d4 !important;
+}
+
+.selectize-control.single .selectize-input:after
+{
+    border-color: #43b0e6 transparent transparent;
+}
+
+.selectize-dropdown .active
+{
+    background: #43b0e6;
+    color: #fff;
+}
+
+
 .nav-bar,
 .cnt
 {

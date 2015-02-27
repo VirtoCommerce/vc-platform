@@ -68,14 +68,22 @@
 
     <script type="text/ng-template" id="shortText-dictionary.html">
         <div class="form-input">
-            <select ng-model="context.currentPropValues[0]" ng-options="propValue.value for propValue in context.allDictionaryValues"
-                    ng-disabled="currentEntity.isReadOnly" ng-required="currentEntity.required && !currentEntity.isReadOnly"></select>
+            <ui-select ng-model="context.currentPropValues[0]" ng-disabled="disabled">
+                <ui-select-match placeholder="Select language">{{$select.selected.value}}</ui-select-match>
+                <ui-select-choices repeat="propValue.value as propValue in context.allDictionaryValues | filter: {value: $select.search}">
+                    <span ng-bind-html="propValue.value | highlight: $select.search"></span>
+                </ui-select-choices>
+            </ui-select>
         </div>
     </script>
     <script type="text/ng-template" id="number-dictionary.html">
         <div class="form-input">
-            <select ng-model="context.currentPropValues[0]" ng-options="propValue.value for propValue in context.allDictionaryValues"
-                    ng-disabled="currentEntity.isReadOnly" ng-required="currentEntity.required && !currentEntity.isReadOnly"></select>
+            <ui-select ng-model="context.currentPropValues[0]" ng-disabled="disabled">
+                <ui-select-match placeholder="Select language">{{$select.selected.value}}</ui-select-match>
+                <ui-select-choices repeat="propValue.value as propValue in context.allDictionaryValues | filter: {value: $select.search}">
+                    <span ng-bind-html="propValue.value | highlight: $select.search"></span>
+                </ui-select-choices>
+            </ui-select>
         </div>
     </script>
 
@@ -110,7 +118,7 @@
 
     <script type="text/ng-template" id="shortText-multilang.html">
         <div class="form-input __langs" ng-repeat="(language, langValuesGroup) in context.langValuesMap">
-            <span class="flag flag-{{language.substr(3)}}"></span>
+            <span class="flag flag-{{language.substr(3).toLowerCase()}}"></span>
             <input ng-disabled="currentEntity.isReadOnly"
                    ng-required="currentEntity.required && !currentEntity.isReadOnly"
                    ng-model="langValuesGroup.currentPropValues[0].value"
@@ -154,7 +162,7 @@
     <script type="text/ng-template" id="longText-multivalue-multilang.html">
         <div ng-repeat="(language, langValuesGroup) in context.langValuesMap">
             <div class="form-input __langs" ng-repeat="val in langValuesGroup.currentPropValues track by $index">
-                <span class="flag flag-{{language.substr(3)}}"></span>
+                <span class="flag flag-{{language.substr(3).toLowerCase()}}"></span>
                 <textarea ng-disabled="currentEntity.isReadOnly"
                           ng-required="currentEntity.required && !currentEntity.isReadOnly"
                           class="form-control"
@@ -182,20 +190,28 @@
 
 
     <script type="text/ng-template" id="shortText-dictionary-multilang.html">
-        <div ng-repeat="(language, langValuesGroup) in context.langValuesMap">
+        <div class="form-group" ng-repeat="(language, langValuesGroup) in context.langValuesMap">
             <div class="form-input __langs" data-role="input-control" class="form-control input-control select">
-                <span class="flag flag-{{language.substr(3)}}"></span>
-                <select ng-model="langValuesGroup.currentPropValues[0]" ng-options="propValue.value for propValue in langValuesGroup.allValues"
-                        ng-disabled="currentEntity.isReadOnly" ng-required="currentEntity.required && !currentEntity.isReadOnly"></select>
+                <span class="flag flag-{{language.substr(3).toLowerCase()}}"></span>
+                <ui-select ng-model="langValuesGroup.currentPropValues[0]" ng-disabled="disabled">
+                    <ui-select-match placeholder="Select language">{{$select.selected.value}}</ui-select-match>
+                    <ui-select-choices repeat="propValue.value as propValue in langValuesGroup.allValues | filter: {value: $select.search}">
+                        <span ng-bind-html="propValue.value | highlight: $select.search"></span>
+                    </ui-select-choices>
+                </ui-select>
             </div>
         </div>
     </script>
     <script type="text/ng-template" id="number-dictionary-multilang.html">
-        <div ng-repeat="(language, langValuesGroup) in context.langValuesMap">
+        <div class="form-group" ng-repeat="(language, langValuesGroup) in context.langValuesMap">
             <div class="form-input __langs" data-role="input-control" class="form-control input-control select">
-                <span class="flag flag-{{language.substr(3)}}"></span>
-                <select ng-model="langValuesGroup.currentPropValues[0]" ng-options="propValue.value for propValue in langValuesGroup.allValues"
-                        ng-disabled="currentEntity.isReadOnly" ng-required="currentEntity.required && !currentEntity.isReadOnly"></select>
+                <span class="flag flag-{{language.substr(3).toLowerCase()}}"></span>
+                <ui-select ng-model="langValuesGroup.currentPropValues[0]" ng-disabled="disabled">
+                    <ui-select-match placeholder="Select language">{{$select.selected.value}}</ui-select-match>
+                    <ui-select-choices repeat="propValue.value as propValue in langValuesGroup.allValues | filter: {value: $select.search}">
+                        <span ng-bind-html="propValue.value | highlight: $select.search"></span>
+                    </ui-select-choices>
+                </ui-select>
             </div>
         </div>
     </script>
@@ -232,11 +248,6 @@
             </div>
             <div class="title">{{language}}</div>
         </div>
-    </script>
-    <script>
-        $(function (){
-            $('select').chosen();
-        })
     </script>
 
     <!--<script type="text/ng-template" id="numberPropType.html">

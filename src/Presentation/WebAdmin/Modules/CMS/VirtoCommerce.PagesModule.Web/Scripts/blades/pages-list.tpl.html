@@ -2,7 +2,7 @@
 	<div class="blade-inner">
 		<div class="inner-block">
 			<ul class="list __items" ng-if="blade.currentEntities.length">
-				<li class="list-item" ng-click="blade.openBlade(data)" ng-repeat="data in blade.currentEntities | orderBy:name" ng-class="{'__selected': data.id === selectedNodeId}">
+				<li class="list-item" ng-click="blade.openBlade(data)" ng-repeat="data in blade.currentEntities | orderBy:name:reverse" ng-class="{'__selected': data.id === selectedNodeId}">
 					<span class="list-name">
 						{{data.name}}
 					</span>
@@ -12,3 +12,28 @@
 		</div>
 	</div>
 </div>
+
+<!--<div class="blade-content __medium-wide">
+	<div class="blade-inner">
+		<div class="inner-block">
+			<div class="table-wrapper">
+				<table class="table">
+					<thead>
+						<tr>
+							<th class="table-col" ng-repeat="column in columns | orderBy:name:reverse" ng-click="setOrder(column)" ng-class="(column.checked) ? '__sorted' : ''">
+								{{column.title}}
+								<i ng-class="column.checked ? (column.reverse ?'sort-up':'sort-down') : ''" class="table-ico fa"></i>
+							</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr class="table-item" ng-class="{' __error': notification.notifyType == 'error', ' __warning': notification.notifyType == 'warning', ' __info': notification.notifyType == 'info'}" ng-click="notification.action(notification)" ng-repeat="notification in notifications" ng-include="notification.template"></tr>
+					</tbody>
+				</table>
+			</div>
+			<div class="pagination">
+				<pagination boundary-links="true" max-size="pageSettings.numPages" items-per-page="pageSettings.itemsPerPageCount" total-items="pageSettings.totalItems" ng-model="pageSettings.currentPage" class="pagination-sm" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></pagination>
+			</div>
+		</div>
+	</div>
+</div>-->

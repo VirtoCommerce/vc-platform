@@ -12,6 +12,7 @@
 		pages.get({ storeId: blade.storeId }, function (data) {
 			blade.isLoading = false;
 			blade.currentEntities = data;
+			blade.parentWidget.refresh();
 		});
 	}
 

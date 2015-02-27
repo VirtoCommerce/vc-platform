@@ -19,8 +19,6 @@
                                     <span ng-bind-html="x | highlight: $select.search"></span>
                                 </ui-select-choices>
                             </ui-select>
-
-
                         </div>
                     </div>
                     <div class="form-group">
@@ -30,10 +28,8 @@
                                 <ui-select-match placeholder="Select or search a country in the list...">{{$select.selected.name}}</ui-select-match>
                                 <ui-select-choices repeat="store.id as store in stores | filter: { name: $select.search }">
                                     <span ng-bind-html="store.name | highlight: $select.search"></span>
-
                                 </ui-select-choices>
                             </ui-select>
-                       
                         </div>
                     </div>
                 </div>

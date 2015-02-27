@@ -18,8 +18,8 @@ angular.module('platformWebApp.inputNumber', [])
 
                 scope.sum = function (type) {
                     var sum = 0,
-                        value = parseInt(ctrl.$modelValue),
-                        step  = parseInt(scope.step);
+                        value = parseFloat(ctrl.$modelValue),
+                        step  = parseFloat(scope.step);
 
                     if(type == 'up') {
                         sum = value + step;

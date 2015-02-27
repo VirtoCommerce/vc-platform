@@ -10,7 +10,9 @@ namespace VirtoCommerce.Content.Menu.Data.Models
 {
 	public class MenuLink : Entity, IAuditable
 	{
+		[Required]
 		public string Name { get; set; }
+		[Required]
 		public string Link { get; set; }
 
 		[Required]
@@ -22,5 +24,8 @@ namespace VirtoCommerce.Content.Menu.Data.Models
 		public DateTime? ModifiedDate { get; set; }
 
 		public string ModifiedBy { get; set; }
+
+		public virtual MenuLinkList MenuLinkList { get; set; }
+		public string MenuLinkListId { get; set; }
 	}
 }
