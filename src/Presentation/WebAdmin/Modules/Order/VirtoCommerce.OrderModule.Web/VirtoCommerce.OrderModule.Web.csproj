@@ -120,6 +120,8 @@
     <Compile Include="Model\Operation.cs" />
     <Compile Include="Module.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Content Include="Scripts\widgets\!widgets.js" />
+    <Content Include="Scripts\wizards\!wizards.js" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
@@ -170,7 +172,7 @@
     <Content Include="Scripts\resources\fulfillmentCenters.js" />
     <Content Include="Scripts\services\!calculateTotals.js" />
     <Content Include="Scripts\widgets\customerOrder-items-widget.tpl.html" />
-    <Content Include="Scripts\widgets\!customerOrder-items-widget.js" />
+    <Content Include="Scripts\widgets\customerOrder-items-widget.js" />
     <Content Include="Scripts\widgets\shipment-totals-widget.js" />
     <Content Include="Scripts\widgets\shipment-totals-widget.tpl.html" />
     <Content Include="Scripts\widgets\operation-comment-widget.js" />
@@ -179,12 +181,14 @@
     <Content Include="Scripts\widgets\customerOrder-totals-widget.tpl.html" />
     <Content Include="Scripts\widgets\operation-tree-widget.tpl.html" />
     <Content Include="Scripts\widgets\operation-tree-widget.js" />
+    <Content Include="Scripts\wizards\newOperation\newOperation-wizard.js" />
     <Content Include="web.config">
       <SubType>Designer</SubType>
     </Content>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\css\orderModule.css" />
+    <Content Include="Scripts\wizards\newOperation\newOperation-wizard.tpl.html" />
     <None Include="web.Debug.config">
       <DependentUpon>web.config</DependentUpon>
     </None>

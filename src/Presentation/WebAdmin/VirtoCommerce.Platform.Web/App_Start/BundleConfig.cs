@@ -45,6 +45,8 @@
 					"~/Content/themes/base/jquery.ui.progressbar.css",
 					"~/Content/themes/base/jquery.ui.theme.css",
 					"~/Content/themes/base/xeditable.css",
+				//SELECT2
+					"~/Content/select2.css",
 				//Selectize
 					"~/Content/Selectize/css/selectize.default.css",
 				//Theme UI
