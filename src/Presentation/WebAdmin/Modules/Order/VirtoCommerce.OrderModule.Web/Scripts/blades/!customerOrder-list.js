@@ -1,8 +1,8 @@
 ﻿angular.module('virtoCommerce.orderModule.blades', [
    'virtoCommerce.orderModule.resources'
 ])
-.controller('customerOrderListController', ['$scope', 'customerOrders', 'bladeNavigationService', 'dialogService', 
-function ($scope, customerOrders, bladeNavigationService, dialogService) {
+.controller('customerOrderListController', ['$scope', 'order_res_customerOrders', 'bladeNavigationService', 'dialogService', 
+function ($scope, order_res_customerOrders, bladeNavigationService, dialogService) {
     //pagination settigs
     $scope.pageSettings = {};
     $scope.pageSettings.totalItems = 0;
@@ -18,7 +18,7 @@ function ($scope, customerOrders, bladeNavigationService, dialogService) {
     $scope.blade.refresh = function () {
         $scope.blade.isLoading = true;
 
-        customerOrders.search({
+        order_res_customerOrders.search({
             keyword: $scope.filter.searchKeyword,
             start: ($scope.pageSettings.currentPage - 1) * $scope.pageSettings.itemsPerPageCount,
             count: $scope.pageSettings.itemsPerPageCount
@@ -81,7 +81,7 @@ function ($scope, customerOrders, bladeNavigationService, dialogService) {
 
                     var selection = _.where($scope.objects, { selected: true });
                     var itemIds = _.pluck(selection, 'id');
-                    customerOrders.remove({ ids: itemIds }, function (data, headers) {
+                    order_res_customerOrders.remove({ ids: itemIds }, function (data, headers) {
                         $scope.blade.refresh();
                     });
                 }

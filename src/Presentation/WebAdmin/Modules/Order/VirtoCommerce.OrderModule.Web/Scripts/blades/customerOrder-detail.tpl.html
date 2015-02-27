@@ -11,20 +11,24 @@
                     </div>
                     <div class="form-group">
                         <label class="form-label">Status</label>
-                        <div class="form-input">
-                            <select va-chosen ng-model="blade.currentEntity.status">
-                                <option value="new">New</option>
-                                <option value="NotPayed">NotPayed</option>
-                                <option value="Completed">Completed</option>
-                            </select>
+                        <div class="form-input" ng-init="statuses = ['new','notPayed','completed']">
+                            <ui-select ng-model="blade.currentEntity.status">
+                                <ui-select-match placeholder="Select ...">{{$select.selected}}</ui-select-match>
+                                <ui-select-choices repeat="x as x in statuses | filter: $select.search ">
+                                    <span ng-bind-html="x | highlight: $select.search"></span>
+                                </ui-select-choices>
+                            </ui-select>
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="form-label">Store</label>
                         <div class="form-input">
-                            <select chosen ng-model="blade.currentEntity.storeId" va-chosen ng-options="store.id as store.name for store in stores">
-                                <option value="">{{blade.currentEntity.storeId}}</option>
-                            </select>
+                            <ui-select ng-model="blade.currentEntity.storeId" ng-disabled="disabled">
+                                <ui-select-match placeholder="Select or search a country in the list...">{{$select.selected.name}}</ui-select-match>
+                                <ui-select-choices repeat="store.id as store in stores | filter: { name: $select.search }">
+                                    <span ng-bind-html="store.name | highlight: $select.search"></span>
+                                </ui-select-choices>
+                            </ui-select>
                         </div>
                     </div>
                 </div>
@@ -39,8 +43,8 @@
                         <label class="form-label">Channel</label>
                         <div class="form-input">
 
-                            <select chosen ng-model="blade.currentEntity.channelId" va-chosen>
-                                <option value="">{{blade.currentEntity.channelId}}</option>
+                            <select ng-model="blade.currentEntity.channelId">
+                            
                             </select>
                         </div>
                     </div>

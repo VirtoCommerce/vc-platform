@@ -94,9 +94,10 @@
             }
         }
     ];
-
     if ($scope.currentBlade.currentEntity != null) {
-        initializeBlade($scope.currentBlade.currentEntity);
+    	initializeBlade($scope.currentBlade.currentEntity);
+    } else {
+    	$scope.currentBlade.refresh(false);
     }
 
     $scope.currentBlade.refresh(false);

@@ -22,7 +22,7 @@ using moduleModel = VirtoCommerce.Domain.Catalog.Model;
 
 namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 {
-    [RoutePrefix("api/mp/{store}/{language}/products")]
+    [RoutePrefix("api/mp/stores/{store}/{language}/products")]
 	public class ProductController : BaseController
 	{
 		private readonly IItemService _itemService;
@@ -35,7 +35,6 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 	    private readonly Func<ICatalogOutlineBuilder> _catalogOutlineBuilderFactory;
 
         private readonly IAssetUrl _assetUri;
-
 
 		public ProductController(IItemService itemService,
                                  IItemBrowsingService browseService,

@@ -4,12 +4,20 @@
     $scope.currentBlade = $scope.blade;
 
     $scope.currentBlade.refresh = function (parentRefresh) {
-        catalogs.get({ id: $scope.currentBlade.currentEntityId }, function (data) {
-            initializeBlade(data);
-            if (parentRefresh) {
-                $scope.currentBlade.parentBlade.refresh();
-            }
-        });
+    	//Refresh only when has id
+    	if (angular.isDefined($scope.currentBlade.currentEntityId)) {
+    		catalogs.get({ id: $scope.currentBlade.currentEntityId }, function (data) {
+    			initializeBlade(data);
+    			if (parentRefresh) {
+    				$scope.currentBlade.parentBlade.refresh();
+    			}
+    		});
+    	}
+    	else {
+    		initializeBlade($scope.currentBlade.currentEntity);
+
+    	}
+
     }
 
     function initializeBlade(data) {
@@ -26,10 +34,18 @@
     };
 
     function saveChanges() {
-        $scope.currentBlade.isLoading = true;
-        catalogs.update({}, $scope.currentBlade.currentEntity, function (data, headers) {
-            $scope.currentBlade.refresh(true);
-        });
+    	$scope.currentBlade.isLoading = true;
+    	if (angular.isDefined($scope.currentBlade.currentEntityId)) {
+    		catalogs.update({}, $scope.currentBlade.currentEntity, function (data, headers) {
+    			$scope.currentBlade.refresh(true);
+    		});
+    	}
+    	else {
+    		catalogs.create({}, $scope.currentBlade.currentEntity, function (data, headers) {
+    			$scope.currentBlade.currentEntityId = data.id;
+    			$scope.currentBlade.refresh(true);
+    		});
+    	}
     };
 
     function closeThisBlade(closeCallback) {

@@ -1,59 +1,61 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.Linq;
+﻿using System.Linq;
 using System.Web.Http.Results;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using VirtoCommerce.CatalogModule.Data.Repositories;
 using VirtoCommerce.CatalogModule.Data.Services;
 using VirtoCommerce.CatalogModule.Web.Controllers.Api;
-using webModel = VirtoCommerce.CatalogModule.Web.Model;
 using VirtoCommerce.Domain.Catalog.Services;
-using System;
+using VirtoCommerce.Foundation.Data.Azure.Asset;
+using VirtoCommerce.Foundation.Data.Infrastructure;
+using webModel = VirtoCommerce.CatalogModule.Web.Model;
 
 namespace VirtoCommerce.CatalogModule.Test
 {
     [TestClass]
     public class CatalogControllerTest
     {
-		[TestMethod]
-		public void WorkingWithCatalogPropertyTest()
-		{
-			var catalogController = new CatalogsController(GetCatalogService(), GetSearchService(), null, GetPropertyService());
-			var categoryController = new CategoriesController(GetSearchService(), GetCategoryService(), GetPropertyService(), GetCatalogService());
-			var propertyController = new PropertiesController(GetPropertyService(), GetCategoryService(), GetCatalogService());
-			var productController = new ProductsController(GetItemService(), GetPropertyService(), new Uri(@"http://virtotest.blob.core.windows.net/"));
-			var listEntryController = new ListEntryController(GetSearchService(), GetCategoryService(), GetItemService(), new Uri(@"http://virtotest.blob.core.windows.net/"));
+        [TestMethod]
+        public void WorkingWithCatalogPropertyTest()
+        {
+            var catalogController = new CatalogsController(GetCatalogService(), GetSearchService(), null, GetPropertyService());
+            var categoryController = new CategoriesController(GetSearchService(), GetCategoryService(), GetPropertyService(), GetCatalogService());
+            var propertyController = new PropertiesController(GetPropertyService(), GetCategoryService(), GetCatalogService());
+            var productController = new ProductsController(GetItemService(), GetPropertyService(), GetAssetUrlResolver());
+            var listEntryController = new ListEntryController(GetSearchService(), GetCategoryService(), GetItemService(), GetAssetUrlResolver());
 
-			//var propertyResult = propertyController.GetNewCatalogProperty("Apple") as OkNegotiatedContentResult<webModel.Property>;
-			//var property = propertyResult.Content;
+            //var propertyResult = propertyController.GetNewCatalogProperty("Apple") as OkNegotiatedContentResult<webModel.Property>;
+            //var property = propertyResult.Content;
 
-			//property.Name = "CLP_Test2";
-			//property.Type = webModel.PropertyType.Product;
+            //property.Name = "CLP_Test2";
+            //property.Type = webModel.PropertyType.Product;
 
-			//propertyController.Post(property);
+            //propertyController.Post(property);
 
-			var catalogResult = catalogController.Get("Apple") as OkNegotiatedContentResult<webModel.Catalog>;
-			var catalog = catalogResult.Content;
-			catalog.Properties[0].Values.Add(new webModel.PropertyValue { Value = "sssss", ValueType = webModel.PropertyValueType.ShortText });
-			catalogController.Update(catalog);
+            var catalogResult = catalogController.Get("Apple") as OkNegotiatedContentResult<webModel.Catalog>;
+            var catalog = catalogResult.Content;
+            catalog.Properties[0].Values.Add(new webModel.PropertyValue { Value = "sssss", ValueType = webModel.PropertyValueType.ShortText });
+            catalogController.Update(catalog);
 
-			var serachResult = listEntryController.ListItemsSearch(new webModel.ListEntrySearchCriteria
-			{
-				CatalogId = "Apple",
-				CategoryId ="186d61d8-d843-4675-9f77-ec5ef603fda3",
-				ResponseGroup = webModel.ResponseGroup.Full
-			})
-				as OkNegotiatedContentResult<webModel.ListEntrySearchResult>;
-			var listResult = serachResult.Content;
+            var serachResult = listEntryController.ListItemsSearch(new webModel.ListEntrySearchCriteria
+            {
+                CatalogId = "Apple",
+                CategoryId = "186d61d8-d843-4675-9f77-ec5ef603fda3",
+                ResponseGroup = webModel.ResponseGroup.Full
+            })
+                as OkNegotiatedContentResult<webModel.ListEntrySearchResult>;
+            var listResult = serachResult.Content;
 
-			var listEntryProduct = listResult.ListEntries.OfType<webModel.ListEntryProduct>().FirstOrDefault();
-			var product = (productController.Get(listEntryProduct.Id) as OkNegotiatedContentResult<webModel.Product>).Content;
-		
+            var listEntryProduct = listResult.ListEntries.OfType<webModel.ListEntryProduct>().FirstOrDefault();
+            var product = (productController.Get(listEntryProduct.Id) as OkNegotiatedContentResult<webModel.Product>).Content;
 
-		}
+
+        }
+
         [TestMethod]
         public void VirtualCatalogWorkingTest()
         {
 
-			var catalogController = new CatalogsController(GetCatalogService(), GetSearchService(), null, GetPropertyService());
+            var catalogController = new CatalogsController(GetCatalogService(), GetSearchService(), null, GetPropertyService());
             var categoryController = new CategoriesController(GetSearchService(), GetCategoryService(), GetPropertyService(), GetCatalogService());
             var listEntryController = new ListEntryController(GetSearchService(), GetCategoryService(), GetItemService(), null);
 
@@ -159,6 +161,13 @@ namespace VirtoCommerce.CatalogModule.Test
         {
             var retVal = new FoundationAppConfigRepositoryImpl("VirtoCommerce");
             return retVal;
+        }
+
+        private static AzureBlobAssetRepository GetAssetUrlResolver()
+        {
+            var assetsConnectionString = ConnectionHelper.GetConnectionString("AssetsConnectionString");
+            var blobStorageProvider = new AzureBlobAssetRepository(assetsConnectionString, null);
+            return blobStorageProvider;
         }
     }
 }
