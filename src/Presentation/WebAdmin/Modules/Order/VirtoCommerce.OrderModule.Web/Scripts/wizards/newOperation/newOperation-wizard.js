@@ -34,12 +34,34 @@
 	{
 		name: 'Incoming payment',
 		descr: 'Add new incoming payment',
+		action: function () {
+
+			order_res_customerOrders.getNewPayment({ id: $scope.blade.customerOrder.id }, function (result) {
+
+				$scope.blade.customerOrder.inPayments.push(result);
+				$scope.blade.customerOrder.childrenOperations.push(result);
+
+				var newBlade = {
+					id: 'operationDetail',
+					title: 'Incoming payment #' + result.number,
+					subtitle: 'Edit payment details and related documents',
+					customerOrder: $scope.blade.customerOrder,
+					currentEntity: result,
+					noRefresh: true,
+					controller: 'operationDetailController',
+					template: 'Modules/Order/VirtoCommerce.OrderModule.Web/Scripts/blades/payment-detail.tpl.html'
+				};
+				bladeNavigationService.closeBlade($scope.blade);
+				bladeNavigationService.showBlade(newBlade);
+			});
+		}
 
 	};
 
+
 	$scope.availOperationsMap = {
 		'customerorder': [shipmentOperation, paymentOperation],
-		'shipment': [paymentOperation],
+		'shipment': [],
 		'payment': []
 	};
 

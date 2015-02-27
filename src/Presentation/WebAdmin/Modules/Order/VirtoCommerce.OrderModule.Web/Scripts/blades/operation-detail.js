@@ -49,7 +49,7 @@
     function isDirty() {
     	var retVal = false;
     	if ($scope.blade.origEntity) {
-    		retVal = !angular.equals($scope.blade.currentEntity, $scope.blade.origEntity);
+    		retVal = !angular.equals($scope.blade.currentEntity, $scope.blade.origEntity) || !$scope.blade.currentEntity.id;
     	}
       	return retVal;
     };
@@ -99,9 +99,37 @@
             canExecuteMethod: function () {
                 return isDirty();
             }
-        }
-    ];
+        },
+		   {
+		   	name: "Delete", icon: 'fa fa-trash-o',
+		   	executeMethod: function () {
+		   		var dialog = {
+		   			id: "confirmDeleteItem",
+		   			title: "Delete confirmation",
+		   			message: "Are you sure you want to delete current operation?",
+		   			callback: function (remove) {
+		   				if (remove) {
 
+		   					if ($scope.blade.currentEntity.operationType.toLowerCase() != 'customerorder') {
+		   						order_res_customerOrders.deleteOperation({ id: $scope.blade.customerOrder.id, operationId: $scope.blade.currentEntity.id },
+								function () { $scope.blade.refresh(); },
+								function (error) { notificationService.setError('Error ' + error.status, $scope.blade); });
+		   					}
+		   					else {
+		   						order_res_customerOrders.delete({ id: $scope.blade.customerOrder.id });
+		   						navigationManager.closeBlade($scope.blade);
+		   					}
+		   				}
+		   			}
+		   		};
+		   		dialogService.showConfirmationDialog(dialog);
+		   	},
+		   	canExecuteMethod: function () {
+		   		return true;
+		   	}
+		   }
+    ];
+  
     $scope.blade.onClose = function (closeCallback) {
         if (isDirty()) {
             var dialog = {

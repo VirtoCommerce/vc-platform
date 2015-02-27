@@ -12,6 +12,7 @@ using VirtoCommerce.OrderModule.Web.Converters;
 using VirtoCommerce.Domain.Cart.Services;
 using System.Web.Http.ModelBinding;
 using VirtoCommerce.OrderModule.Web.Binders;
+using VirtoCommerce.Foundation.Frameworks.Extensions;
 
 namespace VirtoCommerce.OrderModule.Web.Controllers.Api
 {
@@ -20,11 +21,13 @@ namespace VirtoCommerce.OrderModule.Web.Controllers.Api
     {
 		private readonly ICustomerOrderService _customerOrderService;
 		private readonly ICustomerOrderSearchService _searchService;
+		private readonly IOperationNumberGenerator _operationNumberGenerator;
 	
-		public CustomerOrderController(ICustomerOrderService customerOrderService, ICustomerOrderSearchService searchService)
+		public CustomerOrderController(ICustomerOrderService customerOrderService, ICustomerOrderSearchService searchService, IOperationNumberGenerator numberGenerator)
 		{
 			_customerOrderService = customerOrderService;
 			_searchService = searchService;
+			_operationNumberGenerator = numberGenerator;
 		}
 
 		// GET: api/order/customerOrders?q=ddd&site=site1&customer=user1&start=0&count=20
@@ -94,11 +97,36 @@ namespace VirtoCommerce.OrderModule.Web.Controllers.Api
 			{
 				retVal = new coreModel.Shipment
 				{
-					 Currency = order.Currency
+					Id = Guid.NewGuid().ToString(),
+					Currency = order.Currency
 				};
+				retVal.Number = _operationNumberGenerator.GenerateNumber(retVal);
 				return Ok(retVal.ToWebModel());
 			}
 		
+			return NotFound();
+		}
+
+		// GET:  api/order/customerOrders/{id}/payments/new
+		[HttpGet]
+		[ResponseType(typeof(webModel.Shipment))]
+		[Route("{id}/payments/new")]
+		public IHttpActionResult GetNewPayment(string id)
+		{
+			coreModel.PaymentIn retVal = null;
+			var order = _customerOrderService.GetById(id, coreModel.CustomerOrderResponseGroup.Full);
+			if (order != null)
+			{
+				retVal = new coreModel.PaymentIn
+				{
+					Id = Guid.NewGuid().ToString(),
+					Currency = order.Currency,
+					CustomerId = order.CustomerId
+				};
+				retVal.Number = _operationNumberGenerator.GenerateNumber(retVal);
+				return Ok(retVal.ToWebModel());
+			}
+
 			return NotFound();
 		}
 
@@ -113,5 +141,41 @@ namespace VirtoCommerce.OrderModule.Web.Controllers.Api
 			_customerOrderService.Delete(ids);
 			return StatusCode(HttpStatusCode.NoContent);
 		}
+
+		// DELETE: /api/order/customerOrders/id/operations/id
+		[HttpDelete]
+		[ResponseType(typeof(void))]
+		[Route("~/api/order/customerOrders/{id}/operations/{operationId}")]
+		public IHttpActionResult Delete(string id, string operationId)
+		{
+			var order = _customerOrderService.GetById(id, coreModel.CustomerOrderResponseGroup.Full);
+			if (order != null)
+			{
+				var operation = ((coreModel.Operation)order).Traverse(x => x.ChildrenOperations).FirstOrDefault(x => x.Id == operationId);
+				if(operation != null)
+				{
+					var shipment = operation as coreModel.Shipment;
+					var payment = operation as coreModel.PaymentIn;
+					if (shipment != null)
+					{
+						order.Shipments.Remove(shipment);
+					}
+					else if (payment != null)
+					{
+						//If payment not belong to order need remove paymnet in shipment
+						if (!order.InPayments.Remove(payment))
+						{
+							var paymentContainsShipment = order.Shipments.FirstOrDefault(x => x.InPayments.Contains(payment));
+							paymentContainsShipment.InPayments.Remove(payment);
+						}
+					}
+				}
+				_customerOrderService.Update(new coreModel.CustomerOrder[] { order });
+			}
+
+			return StatusCode(HttpStatusCode.NoContent);
+		}
+
+
     }
 }
