@@ -25,12 +25,12 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
         [ResponseType(typeof(string[]))]
         [Route("")]
         public IHttpActionResult GetPriceListStack(
-            string storeId,
+            string store,
             string currency,
             [FromUri] string[] tags
             )
         {
-            var catalogId = GetCatalogId(storeId);
+            var catalogId = GetCatalogId(store);
             var tagSet = new TagSet();
 
             if (tags != null)
