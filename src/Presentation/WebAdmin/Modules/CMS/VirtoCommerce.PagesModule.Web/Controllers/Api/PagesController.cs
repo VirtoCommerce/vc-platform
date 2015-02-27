@@ -76,7 +76,7 @@
 
 		[HttpDelete]
 		[Route("pages")]
-		public IHttpActionResult DeleteItem(string storeId, string[] pageNames)
+		public IHttpActionResult DeleteItem(string storeId, [FromUri]string[] pageNames)
 		{
 			_pagesService.DeletePage(storeId, pageNames);
 			return Ok();

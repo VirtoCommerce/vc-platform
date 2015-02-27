@@ -10,6 +10,11 @@ namespace VirtoCommerce.Content.Menu.Data.Models
 {
 	public class MenuLink : Entity, IAuditable
 	{
+		public MenuLink()
+		{
+			CreatedDate = DateTime.UtcNow;
+		}
+
 		[Required]
 		public string Name { get; set; }
 		[Required]

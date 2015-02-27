@@ -83,7 +83,7 @@
     			if (remove) {
     				blade.isLoading = true;
 
-    				themes.deleteAsset({ storeId: blade.choosenStoreId, pageNames: blade.name }, function () {
+    				pages.delete({ storeId: blade.choosenStoreId, pageNames: blade.choosenPageName }, function () {
     					$scope.bladeClose();
     					blade.parentBlade.refresh(true);
     				});

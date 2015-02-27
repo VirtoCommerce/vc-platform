@@ -52,6 +52,10 @@
     <Compile Include="Migrations\201502261622360_Initial.Designer.cs">
       <DependentUpon>201502261622360_Initial.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201502271929017_CascadeDelete.cs" />
+    <Compile Include="Migrations\201502271929017_CascadeDelete.Designer.cs">
+      <DependentUpon>201502271929017_CascadeDelete.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\MenuLink.cs" />
     <Compile Include="Models\MenuLinkList.cs" />
@@ -68,6 +72,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201502261622360_Initial.resx">
       <DependentUpon>201502261622360_Initial.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201502271929017_CascadeDelete.resx">
+      <DependentUpon>201502271929017_CascadeDelete.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

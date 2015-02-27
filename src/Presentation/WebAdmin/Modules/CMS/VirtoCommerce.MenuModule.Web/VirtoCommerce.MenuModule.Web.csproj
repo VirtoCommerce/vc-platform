@@ -90,6 +90,7 @@
   <ItemGroup>
     <Content Include="packages.config" />
     <Content Include="module.manifest" />
+    <Content Include="Scripts\blades\menu-link-list.tpl.html" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -98,6 +99,15 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Scripts\blades\menu-link-list.js" />
+    <Content Include="Scripts\blades\link-lists.js" />
+    <Content Include="Scripts\blades\link-lists.tpl.html" />
+    <Content Include="Scripts\home.tpl.html" />
+    <Content Include="Scripts\menu.js" />
+    <Content Include="Scripts\resources\menus.js" />
+    <Content Include="Scripts\uuid.js" />
+    <Content Include="Scripts\widgets\menuWidget.js" />
+    <Content Include="Scripts\widgets\menuWidget.tpl.html" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>

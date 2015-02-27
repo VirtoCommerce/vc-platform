@@ -12,8 +12,8 @@ using VirtoCommerce.MenuModule.Web.Models;
 namespace VirtoCommerce.MenuModule.Web.Controllers.Api
 {
 	[RoutePrefix("api/cms/{storeId}")]
-    public class MenuController : ApiController
-    {
+	public class MenuController : ApiController
+	{
 		private readonly IMenuService _menuService;
 
 		public MenuController(IMenuService menuService)
@@ -34,8 +34,8 @@ namespace VirtoCommerce.MenuModule.Web.Controllers.Api
 		}
 
 		[HttpGet]
-		[ResponseType(typeof(IEnumerable<MenuLinkList>))]
-		[Route("menu/{id}")]
+		[ResponseType(typeof(MenuLinkList))]
+		[Route("menu/{listId}")]
 		public IHttpActionResult GetList(string listId)
 		{
 			var item = _menuService.GetListById(listId).ToWebModel();
@@ -45,7 +45,7 @@ namespace VirtoCommerce.MenuModule.Web.Controllers.Api
 		[HttpPost]
 		[ResponseType(typeof(void))]
 		[Route("menu")]
-		public IHttpActionResult Update(MenuLinkList list)
+		public IHttpActionResult Update(string storeId, MenuLinkList list)
 		{
 			_menuService.UpdateList(list.ToCoreModel());
 			return Ok();
@@ -60,5 +60,5 @@ namespace VirtoCommerce.MenuModule.Web.Controllers.Api
 			return Ok();
 		}
 
-    }
+	}
 }
