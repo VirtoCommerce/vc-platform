@@ -25,7 +25,7 @@
                 <i class="tree-ico fa fa-money"></i>
                 {{operation.sum +' '+operation.currency}}
             </div>
-            <div class="tree-el __canceled">
+            <div class="tree-el __canceled" ng-if="operation.status">
                 {{operation.status}}
             </div>
         </div>
