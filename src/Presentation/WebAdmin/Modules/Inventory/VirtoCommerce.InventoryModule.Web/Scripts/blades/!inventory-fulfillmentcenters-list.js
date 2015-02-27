@@ -4,16 +4,22 @@
 ])
 .controller('inventoryFulfillmentcentersListController', ['$scope', 'bladeNavigationService', function ($scope, bladeNavigationService) {
     $scope.selectedItem = null;
+    var openFirstEntityDetailsOnce = _.once(function () {
+        if ($scope.blade.currentEntities && $scope.blade.currentEntities.length > 0)
+            $scope.openBlade($scope.blade.currentEntities[0]);
+    });
 
     $scope.blade.refresh = function () {
         $scope.blade.isLoading = true;
         return $scope.blade.parentWidget.refresh().$promise.then(function (results) {
             $scope.blade.isLoading = false;
             $scope.blade.currentEntities = results;
+
+            openFirstEntityDetailsOnce();
             return results;
         });
     }
-
+    
     $scope.openBlade = function (data) {
         $scope.selectedItem = data;
 
@@ -51,6 +57,6 @@
             }
         }
     ];
-
+    
     $scope.blade.refresh();
 }]);

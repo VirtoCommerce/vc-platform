@@ -1,0 +1,29 @@
+﻿<div class="blade-content __gray">
+    <div class="blade-inner">
+        <div class="inner-block">
+            <form class="form" name="detailForm">
+                <div class="form-group" ng-init="setForm(detailForm)">
+                    <label class="form-label">Full name</label>
+                    <div class="form-input">
+                        <input ng-model="blade.currentEntity.fullName" focus-on="" required />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="form-input">
+                        <va-widget-container group="customerDetail1" blade="blade"></va-widget-container>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Birthday</label>
+                    <div class="form-input __calendar">
+                        <input type="text" class="form-control" ng-model="blade.currentEntity.birthDate" datepicker-popup="{{format}}" name="bd" is-open="datepickers.bd" datepicker-options="dateOptions" close-text="Close" />
+                        <button class="btn" type="button" ng-click="open($event,'bd')">
+                            <i class="btn-ico fa fa-calendar"></i>
+                        </button>
+                    </div>
+                </div>
+            </form>
+            <va-widget-container group="customerDetail2" blade="blade"></va-widget-container>
+        </div>
+    </div>
+</div>
