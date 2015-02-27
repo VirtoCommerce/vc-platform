@@ -17,6 +17,8 @@ using VirtoCommerce.Foundation.Data.Customers;
 using VirtoCommerce.Foundation.Data.Search;
 using VirtoCommerce.Foundation.Data.Security;
 using VirtoCommerce.Foundation.Data.Security.Identity;
+using VirtoCommerce.Foundation.Frameworks;
+using VirtoCommerce.Foundation.Security.Repositories;
 using VirtoCommerce.Framework.Web.Modularity;
 using VirtoCommerce.Framework.Web.Notification;
 using VirtoCommerce.Framework.Web.Security;
@@ -127,8 +129,6 @@ namespace VirtoCommerce.CoreModule.Web
 
         public void Initialize()
         {
-            var manifestProvider = _container.Resolve<IModuleManifestProvider>();
-
             Func<IFoundationSecurityRepository> securityRepositoryFactory = () =>
                 new FoundationSecurityRepositoryImpl(_connectionStringName);
 
@@ -139,7 +139,11 @@ namespace VirtoCommerce.CoreModule.Web
             _container.RegisterType<Func<IFoundationSecurityRepository>>(
                 new InjectionFactory(x => new Func<IFoundationSecurityRepository>(securityRepositoryFactory)));
 
-            _container.RegisterInstance<IPermissionService>(new PermissionService(securityRepositoryFactory, new HttpCacheRepository(), manifestProvider));
+            _container.RegisterType<Func<ISecurityRepository>>(
+                new InjectionFactory(x => new Func<ISecurityRepository>(() => new EFSecurityRepository(_connectionStringName))));
+
+            _container.RegisterType<ICacheRepository, HttpCacheRepository>();
+            _container.RegisterType<IPermissionService, PermissionService>(new ContainerControlledLifetimeManager());
 
             #endregion
 
@@ -151,28 +155,25 @@ namespace VirtoCommerce.CoreModule.Web
 
             #endregion
 
-			#region Payment gateways manager
-			_container.RegisterInstance<IPaymentGatewayManager>(new InMemoryPaymentGatewayManagerImpl());
-			#endregion
+            #region Payment gateways manager
+            _container.RegisterInstance<IPaymentGatewayManager>(new InMemoryPaymentGatewayManagerImpl());
+            #endregion
             #region Notification
             _container.RegisterInstance<INotifier>(new InMemoryNotifierImpl());
             #endregion
 
             #region Settings
-            Func<IAppConfigRepository> appConfigRepFactory = () => new EFAppConfigRepository(_connectionStringName);
-
-            var settingsManager = new SettingsManager(manifestProvider, appConfigRepFactory);
-            _container.RegisterInstance<ISettingsManager>(settingsManager);
-
-            _container.RegisterType<SettingController>(new InjectionConstructor(settingsManager));
+            _container.RegisterType<Func<IAppConfigRepository>>(
+                new InjectionFactory(x => new Func<IAppConfigRepository>(() => new EFAppConfigRepository(_connectionStringName))));
+            _container.RegisterType<ISettingsManager, SettingsManager>();
             #endregion
 
-			#region Fulfillment
-			_container.RegisterType<Func<IFoundationFulfillmentRepository>>(
-			  new InjectionFactory(x => new Func<IFoundationFulfillmentRepository>(() =>
-				  new FoundationFulfillmentRepositoryImpl(_connectionStringName))));
-			_container.RegisterType<IFulfillmentService, FulfillmentServiceImpl>();
-			#endregion
+            #region Fulfillment
+            _container.RegisterType<Func<IFoundationFulfillmentRepository>>(
+              new InjectionFactory(x => new Func<IFoundationFulfillmentRepository>(() =>
+                  new FoundationFulfillmentRepositoryImpl(_connectionStringName))));
+            _container.RegisterType<IFulfillmentService, FulfillmentServiceImpl>();
+            #endregion
         }
 
         #endregion
