@@ -14,7 +14,7 @@ using VirtoCommerce.MerchandisingModule.Web.Model;
 
 namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 {
-    [RoutePrefix("api/mp/stores/{store}/pricelists")]
+    [RoutePrefix("api/mp/stores/{store}")]
     public class PriceController : BaseController
     {
         private readonly IPriceListAssignmentEvaluationContext _priceListEvalContext;
@@ -31,7 +31,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 
         [HttpGet]
         [ResponseType(typeof(string[]))]
-        [Route("{currency}")]
+        [Route("pricelists")]
         public IHttpActionResult GetPriceListStack(
             string store,
             string currency,
@@ -44,16 +44,12 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 
         [HttpGet]
         [ResponseType(typeof(Price[]))]
-        [Route("{currency}/prices")]
+        [Route("~/api/mp/prices")]
         public IHttpActionResult GetProductPrices(
-            string store,
-            string currency,
-            [FromUri] string[] tags,
+            [FromUri] string[] priceLists,
             [FromUri] string[] itemIds
             )
         {
-            var priceLists = this.GetPriceListStackInternal(store, currency, tags);
-
             using (var plRepository = _priceListRepository())
             {
                 var prices = plRepository.FindLowestPrices(priceLists, itemIds, 1);
