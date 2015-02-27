@@ -3934,6 +3934,7 @@ fieldset + fieldset
     list-style: none;
     margin: 0;
     padding: 0;
+    white-space: nowrap;
 }
 
 .tree-item:first-child:before
@@ -4079,6 +4080,7 @@ fieldset + fieldset
     margin: 0;
     padding: 5px 0 5px 20px;
     position: relative;
+    white-space: normal;
 }
 
 .tree-el.__canceled
@@ -4316,6 +4318,7 @@ fieldset + fieldset
 /* Select */
 .select2-container
 {
+    cursor: pointer;
     display: block;
 }
 
@@ -4332,8 +4335,13 @@ fieldset + fieldset
     color: #4c4c4c;
     font-size: 14px;
     height: 32px !important;
-    line-height: 32px;
+    line-height: 30px;
     padding: 0 10px;
+}
+
+.select2-container-multi .select2-choices
+{
+    line-height: 32px;
 }
 
 .select2-container-multi .select2-choices
@@ -4373,8 +4381,26 @@ fieldset + fieldset
 .select2-container .select2-choice .select2-arrow
 {
     background: none;
-    height: 0;
-    width: 0;
+    border: none;
+    width: 30px;
+}
+
+.select2-container .select2-choice .select2-arrow:after
+{
+    border-color: #43b0e6 transparent transparent;
+    border-style: solid;
+    border-width: 5px 4px;
+    content: '';
+    margin: -4px 0 0;
+    position: absolute;
+    right: 10px;
+    top: 50%;
+}
+
+.select2-dropdown-open .select2-choice .select2-arrow:after
+{
+    border-color: transparent transparent #43b0e6;
+    margin: -10px 0 0;
 }
 
 .select2-search input
@@ -4389,6 +4415,7 @@ fieldset + fieldset
 
 .select2-container li
 {
+    color: #4c4c4c;
     padding: 0;
     text-indent: 0;
 }
@@ -4499,6 +4526,11 @@ tags-input .tags .tag-item
 
     -webkit-border-radius: 0;
             border-radius: 0;
+}
+
+tags-input .tags .tag-item.selected
+{
+    background: #e51400;
 }
 
 tags-input .tags .tag-item .remove-button
