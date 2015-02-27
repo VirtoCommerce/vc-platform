@@ -171,7 +171,7 @@ namespace VirtoCommerce.MerchandisingModule.Web
             _container.RegisterType<CategoryController>(new InjectionConstructor(itemSearchService, categoryService, propertyService, catalogRepFactory, appConfigRepFactory, storeRepFactory));
             _container.RegisterType<StoreController>(new InjectionConstructor(storeRepFactory, appConfigRepFactory));
             _container.RegisterType<KeywordController>(new InjectionConstructor(appConfigRepFactory));
-            _container.RegisterType<PriceController>(new InjectionConstructor(storeRepFactory, priceListEvalFactory, new PriceListAssignmentEvaluationContext()));
+            _container.RegisterType<PriceController>(new InjectionConstructor(storeRepFactory, priceListRepositoryFactory, priceListEvalFactory, new PriceListAssignmentEvaluationContext()));
             _container.RegisterType<IAssetUrl, AzureBlobAssetRepository>();
             _container.RegisterType<IAssetEntityFactory, AssetEntityFactory>();
             _container.RegisterType<IAssetService, AssetService>();

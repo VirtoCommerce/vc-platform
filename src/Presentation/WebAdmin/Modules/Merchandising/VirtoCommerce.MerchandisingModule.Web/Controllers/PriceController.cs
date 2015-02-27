@@ -1,10 +1,16 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Web.Http;
 using System.Web.Http.Description;
+using VirtoCommerce.Foundation.Catalogs.Repositories;
 using VirtoCommerce.Foundation.Catalogs.Services;
+using VirtoCommerce.Foundation.Frameworks.Extensions;
 using VirtoCommerce.Foundation.Frameworks.Tagging;
 using VirtoCommerce.Foundation.Stores.Repositories;
+using VirtoCommerce.MerchandisingModule.Web.Converters;
+using VirtoCommerce.MerchandisingModule.Web.Model;
 
 namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 {
@@ -13,11 +19,13 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
     {
         private readonly IPriceListAssignmentEvaluationContext _priceListEvalContext;
         private readonly Func<IPriceListAssignmentEvaluator> _priceListEvaluator;
+        private readonly Func<IPricelistRepository> _priceListRepository;
 
-        public PriceController(Func<IStoreRepository> storeRepository, Func<IPriceListAssignmentEvaluator> priceListEvaluator, IPriceListAssignmentEvaluationContext priceListEvalContext)
+        public PriceController(Func<IStoreRepository> storeRepository, Func<IPricelistRepository> priceListRepository, Func<IPriceListAssignmentEvaluator> priceListEvaluator, IPriceListAssignmentEvaluationContext priceListEvalContext)
             : base(storeRepository)
         {
             this._priceListEvalContext = priceListEvalContext;
+            this._priceListRepository = priceListRepository;
             this._priceListEvaluator = priceListEvaluator;
         }
 
@@ -28,6 +36,40 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
             string store,
             string currency,
             [FromUri] string[] tags
+            )
+        {
+            var pricelists = this.GetPriceListStackInternal(store, currency, tags);
+            return Ok(pricelists);
+        }
+
+        [HttpGet]
+        [ResponseType(typeof(Price[]))]
+        [Route("{currency}/prices")]
+        public IHttpActionResult GetProductPrices(
+            string store,
+            string currency,
+            [FromUri] string[] tags,
+            [FromUri] string[] itemIds
+            )
+        {
+            var priceLists = this.GetPriceListStackInternal(store, currency, tags);
+
+            using (var plRepository = _priceListRepository())
+            {
+                var prices = plRepository.FindLowestPrices(priceLists, itemIds, 1);
+                if (prices != null && prices.Any())
+                {
+                    return this.Ok(prices.Select(p => p.ToWebModel()));
+                }
+            }
+
+            return StatusCode(HttpStatusCode.NoContent);
+        }
+
+        private string[] GetPriceListStackInternal(
+            string store,
+            string currency,
+            IEnumerable<string> tags
             )
         {
             var catalogId = GetCatalogId(store);
@@ -49,21 +91,9 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
             evaluateContext.CurrentDate = DateTime.Now;
 
             var evaluator = _priceListEvaluator();
-            var lists = evaluator.Evaluate(evaluateContext);    
+            var lists = evaluator.Evaluate(evaluateContext);
 
-            return Ok(lists == null ? null : lists.Select(y => y.PricelistId).ToArray());
-        }
-
-        [HttpGet]
-        [ResponseType(typeof(string[]))]
-        [Route("prices")]
-        public IHttpActionResult GetProductPrices(
-            string store,
-            [FromUri] string[] itemIds
-            )
-        {
-            //_priceListRepository.FindLowestPrices(priceLists, itemIds, quantity)
-            return null;
+            return lists == null ? null : lists.Select(y => y.PricelistId).ToArray();
         }
     }
 }

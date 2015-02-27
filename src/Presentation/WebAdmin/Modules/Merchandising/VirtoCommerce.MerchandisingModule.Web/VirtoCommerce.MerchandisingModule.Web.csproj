@@ -91,12 +91,14 @@
     <Compile Include="Converters\CategoryConverter.cs" />
     <Compile Include="Converters\DynamicContentItemConverter.cs" />
     <Compile Include="Converters\FacetConverters.cs" />
+    <Compile Include="Converters\PriceConverter.cs" />
     <Compile Include="Converters\ProductConverter.cs" />
     <Compile Include="Converters\ResponseGroupConverter.cs" />
     <Compile Include="Converters\ReviewCommentConverter.cs" />
     <Compile Include="Converters\ReviewConverter.cs" />
     <Compile Include="Converters\KeywordConverter.cs" />
     <Compile Include="Converters\StoreConverter.cs" />
+    <Compile Include="Model\Price.cs" />
     <Compile Include="Services\BrowseFilterServiceExtensions.cs" />
     <Compile Include="Services\FilterService.cs" />
     <Compile Include="Model\Association.cs" />
