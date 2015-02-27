@@ -5,9 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 using VirtoCommerce.Content.Menu.Data.Models;
 
-namespace VirtoCommerce.Content.Menu.Data.Repositories
+namespace VirtoCommerce.Content.Menu.Data.Services
 {
-	public interface IMenuRepository
+	public interface IMenuService
 	{
 		IEnumerable<MenuLinkList> GetListsByStoreId(string storeId);
 		MenuLinkList GetListById(string listId);

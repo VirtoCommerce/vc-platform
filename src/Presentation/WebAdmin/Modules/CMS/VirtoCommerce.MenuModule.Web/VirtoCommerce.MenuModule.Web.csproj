@@ -7,12 +7,12 @@
     <ProductVersion>
     </ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{639FA8E1-99BE-4386-9808-FC1AEC35FD61}</ProjectGuid>
+    <ProjectGuid>{80A936A0-D611-4296-A22C-78183E8A1B4D}</ProjectGuid>
     <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>VirtoCommerce.ThemeModule.Web</RootNamespace>
-    <AssemblyName>VirtoCommerce.ThemeModule.Web</AssemblyName>
+    <RootNamespace>VirtoCommerce.MenuModule.Web</RootNamespace>
+    <AssemblyName>VirtoCommerce.MenuModule.Web</AssemblyName>
     <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
     <UseIISExpress>true</UseIISExpress>
     <IISExpressSSLPort />
@@ -40,12 +40,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="EntityFramework">
       <HintPath>..\..\..\..\..\..\packages\EntityFramework.6.1.1\lib\net45\EntityFramework.dll</HintPath>
     </Reference>
-    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="EntityFramework.SqlServer">
       <HintPath>..\..\..\..\..\..\packages\EntityFramework.6.1.1\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
@@ -61,7 +59,7 @@
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\..\packages\Newtonsoft.Json.6.0.5\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\packages\Newtonsoft.Json.6.0.4\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Net.Http.Formatting, Version=5.2.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -100,36 +98,16 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Content\css\themes.css" />
-    <Content Include="Scripts\blades\edit-image-asset.tpl.html" />
-    <Content Include="Scripts\blades\edit-asset.tpl.html" />
-    <Content Include="Scripts\blades\edit-asset.js" />
-    <Content Include="Scripts\blades\edit-image-asset.js" />
-    <Content Include="Scripts\blades\theme-asset-list.js" />
-    <Content Include="Scripts\blades\themes-list.js" />
-    <Content Include="Scripts\blades\theme-asset-list.tpl.html" />
-    <Content Include="Scripts\blades\themes-list.tpl.html" />
-    <Content Include="Scripts\content.js" />
-    <Content Include="Scripts\home.tpl.html" />
-    <Content Include="Scripts\resources\themes.js" />
-    <Content Include="Scripts\widgets\themesWidget.js" />
-    <Content Include="Scripts\widgets\themesWidget.tpl.html" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Controllers\Api\ThemeController.cs" />
-    <Compile Include="Converters\ContentItemConverter.cs" />
-    <Compile Include="Converters\ThemeAssetConverter.cs" />
-    <Compile Include="Converters\ThemeConverter.cs" />
-    <Compile Include="Models\ContentItem.cs" />
-    <Compile Include="Models\Theme.cs" />
-    <Compile Include="Models\ThemeAsset.cs" />
+    <Compile Include="Controllers\Api\MenuController.cs" />
+    <Compile Include="Converters\MenuLinkConverter.cs" />
+    <Compile Include="Converters\MenuLinkListConverter.cs" />
+    <Compile Include="Models\MenuLink.cs" />
+    <Compile Include="Models\MenuLinkList.cs" />
     <Compile Include="Module.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Scripts\directives\" />
-    <Folder Include="Scripts\wizards\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\..\Core\CommerceFoundation.Data\CommerceFoundation.Data.csproj">
@@ -144,11 +122,12 @@
       <Project>{f7c9313b-522e-4619-abc9-8c7d4600d6b5}</Project>
       <Name>VirtoCommerce.Framework.Web</Name>
     </ProjectReference>
-    <ProjectReference Include="..\VirtoCommerce.Content.Data\VirtoCommerce.Content.Data.csproj">
-      <Project>{e55e08b5-3af9-467d-8f90-4bef27bafa28}</Project>
-      <Name>VirtoCommerce.Content.Data</Name>
+    <ProjectReference Include="..\VirtoCommerce.Content.Menu.Data\VirtoCommerce.Content.Menu.Data.csproj">
+      <Project>{4021578c-a4a9-4c1f-bfa3-d10532533c5f}</Project>
+      <Name>VirtoCommerce.Content.Menu.Data</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
@@ -162,9 +141,9 @@
         <WebProjectProperties>
           <UseIIS>True</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
-          <DevelopmentServerPort>52814</DevelopmentServerPort>
+          <DevelopmentServerPort>50818</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:52814/</IISUrl>
+          <IISUrl>http://localhost:50818/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

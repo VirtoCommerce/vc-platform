@@ -21,7 +21,8 @@ namespace VirtoCommerce.Content.Pages.Data.Services
 
 		public IEnumerable<Models.ShortPageInfo> GetPages(string storeId)
 		{
-			return _pagesRepository.GetPages(storeId);
+			var path = string.Format("{0}/", storeId);
+			return _pagesRepository.GetPages(path);
 		}
 
 		public Models.Page GetPage(string storeId, string pageName)
@@ -34,6 +35,8 @@ namespace VirtoCommerce.Content.Pages.Data.Services
 		public void SavePage(string storeId, Models.Page page)
 		{
 			var fullPath = GetFullName(storeId, page.Name);
+
+			page.Path = fullPath;
 
 			_pagesRepository.SavePage(fullPath, page);
 		}

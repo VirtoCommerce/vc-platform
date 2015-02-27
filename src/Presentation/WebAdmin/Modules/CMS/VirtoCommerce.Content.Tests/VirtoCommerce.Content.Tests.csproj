@@ -85,6 +85,7 @@
     <Compile Include="DatabaseRepositoryTest.cs" />
     <Compile Include="FileSystemRepositoryTest.cs" />
     <Compile Include="GitHubRepositoryTest.cs" />
+    <Compile Include="MenuTests\RepositoryTests.cs" />
     <Compile Include="PagesTests\DatabasePagesRepositoryTests.cs" />
     <Compile Include="PagesTests\FileSystemPagesRepositoryTests.cs" />
     <Compile Include="PagesTests\GitHubPagesRepositoryTests.cs" />
@@ -110,6 +111,10 @@
     <ProjectReference Include="..\VirtoCommerce.Content.Data\VirtoCommerce.Content.Data.csproj">
       <Project>{e55e08b5-3af9-467d-8f90-4bef27bafa28}</Project>
       <Name>VirtoCommerce.Content.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\VirtoCommerce.Content.Menu.Data\VirtoCommerce.Content.Menu.Data.csproj">
+      <Project>{4021578c-a4a9-4c1f-bfa3-d10532533c5f}</Project>
+      <Name>VirtoCommerce.Content.Menu.Data</Name>
     </ProjectReference>
     <ProjectReference Include="..\VirtoCommerce.Content.Pages.Data\VirtoCommerce.Content.Pages.Data.csproj">
       <Project>{8f9f26fc-344e-4599-b2f3-cb560f1d5499}</Project>
