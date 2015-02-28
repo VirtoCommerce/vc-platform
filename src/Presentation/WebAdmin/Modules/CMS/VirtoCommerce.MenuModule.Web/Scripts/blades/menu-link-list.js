@@ -40,7 +40,6 @@
 				blade.isLoading = false;
 
 				$scope.bladeToolbarCommands = [{
-
 					name: "Add", icon: 'fa fa-plus',
 					executeMethod: function () {
 						var newEntity = { id: uuid2.newguid(), link: null, name: null, menuLinkListId: blade.choosenListId };
@@ -50,6 +49,7 @@
 						return true;
 					}
 				},
+
 				{
 					name: "Save", icon: 'fa fa-save',
 					executeMethod: function () {
@@ -59,16 +59,17 @@
 						return canSave();
 					}
 				},
+
 				{
 					name: "Reset", icon: 'fa fa-undo',
 					executeMethod: function () {
 						angular.copy(blade.origEntity, blade.currentEntity);
-						blade.selectedAll = false;
 					},
 					canExecuteMethod: function () {
-						return true;
+						return !angular.equals(blade.origEntity, blade.currentEntity);
 					}
 				},
+
 				{
 					name: "Delete", icon: 'fa fa-trash-o',
 					executeMethod: function () {
@@ -102,7 +103,7 @@
 					return !(!(angular.isUndefined(link.name) || link.name === null) &&
 						!(angular.isUndefined(link.link) || link.link === null));
 				}).length;
-		return listNameIsRight && linksIsRight;
+		return listNameIsRight && linksIsRight && blade.currentEntity.menuLinks.length > 0;
 	}
 
 	function deleteList() {
