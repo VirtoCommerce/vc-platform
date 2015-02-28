@@ -61,6 +61,24 @@
 		});
 	}
 
+	function deletePage(page) {
+		var dialog = {
+			id: "confirmDelete",
+			title: "Delete confirmation",
+			message: "Are you sure you want to delete this page?",
+			callback: function (remove) {
+				if (remove) {
+					blade.isLoading = true;
+
+					pages.delete({ storeId: blade.choosenStoreId, pageNames: blade.page.name }, function () {
+						blade.refresh();
+					});
+				}
+			}
+		}
+		dialogService.showConfirmationDialog(dialog);
+	}
+
 	$scope.bladeToolbarCommands = [
         {
         	name: "Add", icon: 'fa fa-plus',
@@ -69,7 +87,7 @@
         	},
         	canExecuteMethod: function () {
         		return true;
-        	}
+        	},
         }
 	];
 

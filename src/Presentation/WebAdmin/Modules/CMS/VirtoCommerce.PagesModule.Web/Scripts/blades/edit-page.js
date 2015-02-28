@@ -85,7 +85,7 @@
 
     				pages.delete({ storeId: blade.choosenStoreId, pageNames: blade.choosenPageName }, function () {
     					$scope.bladeClose();
-    					blade.parentBlade.refresh(true);
+    					blade.parentBlade.refresh();
     				});
     			}
     		}

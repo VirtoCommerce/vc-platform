@@ -26,7 +26,7 @@
 			choosenStoreId: blade.storeId,
 			choosenListId: data.id,
 			newList: false,
-			title: 'Edit ' + data.name + 'list',
+			title: 'Edit ' + data.name + ' list',
 			subtitle: 'Link list edit',
 			controller: 'menuLinkListController',
 			template: 'Modules/CMS/VirtoCommerce.MenuModule.Web/Scripts/blades/menu-link-list.tpl.html'
