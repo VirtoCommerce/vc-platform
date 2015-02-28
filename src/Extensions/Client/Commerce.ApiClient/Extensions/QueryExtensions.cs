@@ -18,7 +18,7 @@ namespace VirtoCommerce.ApiClient.Extensions
         /// <summary>
         ///     Gets an HTTP query string serialization of this query compatible with FromQueryString
         /// </summary>
-        public static string GetQueryString(this BrowseQuery query, object additionalParamters)
+        public static string GetQueryString(this BrowseQuery query, object additionalParameters = null)
         {
             var parts = new List<string>();
 
@@ -66,16 +66,16 @@ namespace VirtoCommerce.ApiClient.Extensions
                         filter => String.Format("t_{0}={1}", filter.Key, String.Join(",", filter.Value))));
             }
 
-            if (additionalParamters != null)
+            if (additionalParameters != null)
             {
-                var parameters = additionalParamters.ToPropertyDictionary();
+                var parameters = additionalParameters.ToPropertyDictionary();
                 parts.AddRange(parameters.Select(parameter => String.Format("{0}={1}", parameter.Key, parameter.Value)));
             }
 
             return string.Join("&", parts);
         }
 
-        public static string GetQueryString(this TagQuery query)
+        public static string GetQueryString(this TagQuery query, object additionalParameters = null)
         {
             var parts = new List<string>();
 
@@ -85,6 +85,12 @@ namespace VirtoCommerce.ApiClient.Extensions
                     from name in query.Names
                     let value = query[name]
                     select "tags=" + HttpUtility.UrlEncode(name) + ":" + HttpUtility.UrlEncode(value.ToString()));
+            }
+
+            if (additionalParameters != null)
+            {
+                var parameters = additionalParameters.ToPropertyDictionary();
+                parts.AddRange(parameters.Select(parameter => String.Format("{0}={1}", parameter.Key, parameter.Value)));
             }
 
             return string.Join("&", parts);

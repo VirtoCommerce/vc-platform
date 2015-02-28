@@ -46,16 +46,16 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
         [HttpGet]
         [ResponseType(typeof(Price[]))]
         [ArrayInput("priceLists", Separator = ",")]
-        [ArrayInput("itemIds", Separator = ",")]
+        [ArrayInput("products", Separator = ",")]
         [Route("prices")]
         public IHttpActionResult GetProductPrices(
             [FromUri] string[] priceLists,
-            [FromUri] string[] itemIds
+            [FromUri] string[] products
             )
         {
             using (var plRepository = _priceListRepository())
             {
-                var prices = plRepository.FindLowestPrices(priceLists, itemIds, 0, returnAll: true);
+                var prices = plRepository.FindLowestPrices(priceLists, products, 0, returnAll: true);
                 if (prices != null && prices.Any())
                 {
                     return this.Ok(prices.Select(p => p.ToWebModel()));
