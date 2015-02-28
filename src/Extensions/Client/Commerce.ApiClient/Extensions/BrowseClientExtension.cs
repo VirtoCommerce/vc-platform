@@ -11,13 +11,15 @@ namespace VirtoCommerce.ApiClient.Extensions
     {
         #region Public Methods and Operators
 
-        public static BrowseClient CreateBrowseClient(this CommerceClients source, string storeId, string language = "")
+        public static BrowseClient CreateBrowseClient(this CommerceClients source)
         {
+            /*
             if (String.IsNullOrEmpty(language))
             {
                 language = Thread.CurrentThread.CurrentUICulture.ToString();
             }
 
+            
             // http://localhost/admin/api/mp/{0}/{1}/
             var connectionString = String.Format(
                 "{0}{1}/stores/{2}/{3}/",
@@ -25,6 +27,8 @@ namespace VirtoCommerce.ApiClient.Extensions
                 "mp",
                 storeId,
                 language);
+            */
+            var connectionString = ClientContext.Configuration.ConnectionString;
             return CreateBrowseClientWithUri(source, connectionString);
         }
 

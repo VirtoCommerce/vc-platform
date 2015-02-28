@@ -9,12 +9,13 @@ using VirtoCommerce.Foundation.Catalogs.Services;
 using VirtoCommerce.Foundation.Frameworks.Extensions;
 using VirtoCommerce.Foundation.Frameworks.Tagging;
 using VirtoCommerce.Foundation.Stores.Repositories;
+using VirtoCommerce.Framework.Web.Common;
 using VirtoCommerce.MerchandisingModule.Web.Converters;
 using VirtoCommerce.MerchandisingModule.Web.Model;
 
 namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 {
-    [RoutePrefix("api/mp/stores/{store}")]
+    [RoutePrefix("api/mp")]
     public class PriceController : BaseController
     {
         private readonly IPriceListAssignmentEvaluationContext _priceListEvalContext;
@@ -33,18 +34,20 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
         [ResponseType(typeof(string[]))]
         [Route("pricelists")]
         public IHttpActionResult GetPriceListStack(
-            string store,
+            string catalog,
             string currency,
             [FromUri] string[] tags
             )
         {
-            var pricelists = this.GetPriceListStackInternal(store, currency, tags);
+            var pricelists = this.GetPriceListStackInternal(catalog, currency, tags);
             return Ok(pricelists);
         }
 
         [HttpGet]
         [ResponseType(typeof(Price[]))]
-        [Route("~/api/mp/prices")]
+        [ArrayInput("priceLists", Separator = ",")]
+        [ArrayInput("itemIds", Separator = ",")]
+        [Route("prices")]
         public IHttpActionResult GetProductPrices(
             [FromUri] string[] priceLists,
             [FromUri] string[] itemIds
@@ -52,7 +55,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
         {
             using (var plRepository = _priceListRepository())
             {
-                var prices = plRepository.FindLowestPrices(priceLists, itemIds, 1);
+                var prices = plRepository.FindLowestPrices(priceLists, itemIds, 0, returnAll: true);
                 if (prices != null && prices.Any())
                 {
                     return this.Ok(prices.Select(p => p.ToWebModel()));
@@ -63,12 +66,12 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
         }
 
         private string[] GetPriceListStackInternal(
-            string store,
+            string catalog,
             string currency,
             IEnumerable<string> tags
             )
         {
-            var catalogId = GetCatalogId(store);
+            //            var catalogId = GetCatalogId(store);
             var tagSet = new TagSet();
 
             if (tags != null)
@@ -82,7 +85,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
             var evaluateContext = _priceListEvalContext;
 
             evaluateContext.Currency = currency;
-            evaluateContext.CatalogId = catalogId;
+            evaluateContext.CatalogId = catalog;
             evaluateContext.ContextObject = tags;
             evaluateContext.CurrentDate = DateTime.Now;
 

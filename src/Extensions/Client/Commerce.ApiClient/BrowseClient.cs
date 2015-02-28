@@ -44,96 +44,104 @@ namespace VirtoCommerce.ApiClient
 
         #region Public Methods and Operators
 
-        public virtual Task<ResponseCollection<Category>> GetCategoriesAsync(string parentId = null)
+        public virtual Task<ResponseCollection<Category>> GetCategoriesAsync(string store, string language, string parentId = null)
         {
+            var parameters = new { store, language, parentId };
             return
                 GetAsync<ResponseCollection<Category>>(
-                    CreateRequestUri(RelativePaths.Categories, string.Format("parentId={0}", parentId)));
+                    CreateRequestUri(RelativePaths.Categories, parameters));
         }
 
-        public virtual Task<Category> GetCategoryAsync(string categoryId)
+        public virtual Task<Category> GetCategoryAsync(string store, string language, string categoryId)
         {
-            return GetAsync<Category>(CreateRequestUri(String.Format(RelativePaths.Category, categoryId)));
+            var parameters = new { store, language};
+            return GetAsync<Category>(CreateRequestUri(String.Format(RelativePaths.Category, categoryId), parameters));
         }
 
-        public virtual Task<Category> GetCategoryByCodeAsync(string code)
+        public virtual Task<Category> GetCategoryByCodeAsync(string store, string language, string code)
         {
-            return GetAsync<Category>(CreateRequestUri(RelativePaths.Categories, "code=" + code));
+            var parameters = new { store, language, code };
+            return GetAsync<Category>(CreateRequestUri(RelativePaths.Categories, parameters));
         }
 
-        public virtual Task<Category> GetCategoryByKeywordAsync(string keyword)
+        public virtual Task<Category> GetCategoryByKeywordAsync(string store, string language, string keyword)
         {
-            return GetAsync<Category>(CreateRequestUri(RelativePaths.Categories, "keyword=" + keyword));
+            var parameters = new { store, language, keyword };
+            return GetAsync<Category>(CreateRequestUri(RelativePaths.Categories, parameters));
         }
 
-		public Task<Product> GetProductAsync(string productId)
+        public Task<Product> GetProductAsync(string store, string language, string productId)
 		{
-			return GetAsync<Product>(CreateRequestUri(String.Format(RelativePaths.Product, productId)));
+            var parameters = new { store, language};
+			return GetAsync<Product>(CreateRequestUri(String.Format(RelativePaths.Product, productId), parameters));
 		}
 
-        public virtual Task<Product> GetProductAsync(string productId, ItemResponseGroups responseGroup)
+        public virtual Task<Product> GetProductAsync(string store, string language, string productId, ItemResponseGroups responseGroup)
         {
-            var query = new List<KeyValuePair<string, string>>
-            {
-                new KeyValuePair<string, string>(
-                    "responseGroup",
-                    responseGroup.GetHashCode()
-                        .ToString(CultureInfo.InvariantCulture)),
-            };
+            var parameters = new { store, language, responseGroup = responseGroup.GetHashCode().ToString(CultureInfo.InvariantCulture) };
 
             return
                 GetAsync<Product>(
-                    CreateRequestUri(String.Format(RelativePaths.Product, productId), query.ToArray()));
+                    CreateRequestUri(String.Format(RelativePaths.Product, productId), parameters));
         }
 
-		public Task<Product> GetProductByCodeAsync(string code)
+        public Task<Product> GetProductByCodeAsync(string store, string language, string code)
 		{
-			return GetAsync<Product>((CreateRequestUri(RelativePaths.Products, string.Format("code={0}", code))));
+            var parameters = new { store, language, code };
+			return GetAsync<Product>((CreateRequestUri(RelativePaths.Products, parameters)));
 		}
 
-        public virtual Task<Product> GetProductByKeywordAsync(string keyword)
+        public virtual Task<Product> GetProductByKeywordAsync(string store, string language, string keyword)
         {
-            return GetAsync<Product>(CreateRequestUri(RelativePaths.Products, "keyword=" + keyword));
+            var parameters = new { store, language, keyword };
+            return GetAsync<Product>(CreateRequestUri(RelativePaths.Products, parameters));
         }
 
-        public virtual Task<Product> GetProductByKeywordAsync(string keyword, ItemResponseGroups responseGroup)
+        public virtual Task<Product> GetProductByKeywordAsync(string store, string language, string keyword, ItemResponseGroups responseGroup)
         {
-            var query = new List<KeyValuePair<string, string>>
+            var parameters = new
             {
-                new KeyValuePair<string, string>("keyword", keyword),
-                new KeyValuePair<string, string>(
-                    "responseGroup",
-                    responseGroup.GetHashCode()
-                        .ToString(CultureInfo.InvariantCulture)),
+                store,
+                language,
+                keyword,
+                responseGroup = responseGroup.GetHashCode()
+                    .ToString(CultureInfo.InvariantCulture)
             };
 
-            return GetAsync<Product>((CreateRequestUri(RelativePaths.Products, query.ToArray())));
+            return GetAsync<Product>((CreateRequestUri(RelativePaths.Products, parameters)));
         }
 
-        public virtual Task<Product> GetProductByCodeAsync(string code, ItemResponseGroups responseGroup)
+        public virtual Task<Product> GetProductByCodeAsync(string store, string language, string code, ItemResponseGroups responseGroup)
         {
-            var query = new List<KeyValuePair<string, string>>
+            var parameters = new
             {
-                new KeyValuePair<string, string>("code", code),
-                new KeyValuePair<string, string>(
-                    "responseGroup",
-                    responseGroup.GetHashCode()
-                        .ToString(CultureInfo.InvariantCulture)),
+                store,
+                language,
+                code,
+                responseGroup = responseGroup.GetHashCode()
+                    .ToString(CultureInfo.InvariantCulture)
             };
 
-            return GetAsync<Product>((CreateRequestUri(RelativePaths.Products, query.ToArray())));
+            return GetAsync<Product>((CreateRequestUri(RelativePaths.Products, parameters)));
         }
 
         /// <summary>
         ///     List items matching the given query
         /// </summary>
-        public virtual Task<ProductSearchResult> GetProductsAsync(
+        public virtual Task<ProductSearchResult> GetProductsAsync(string store, string language, 
             BrowseQuery query,
             ItemResponseGroups? responseGroup = null)
         {
+            var parameters = new
+            {
+                store,
+                language,
+                responseGroup = responseGroup.GetHashCode()
+                    .ToString(CultureInfo.InvariantCulture)
+            };
             return
                 GetAsync<ProductSearchResult>(
-                    CreateRequestUri(RelativePaths.Products, query.GetQueryString(responseGroup)));
+                    CreateRequestUri(RelativePaths.Products, query.GetQueryString(parameters)));
         }
 
         #endregion
@@ -156,13 +164,13 @@ namespace VirtoCommerce.ApiClient
         {
             #region Constants
 
-            public const string Categories = "categories";
+            public const string Categories = "mp/categories";
 
-            public const string Category = "categories/{0}";
+            public const string Category = "mp/categories/{0}";
 
-            public const string Product = "products/{0}";
+            public const string Product = "mp/products/{0}";
 
-            public const string Products = "products";
+            public const string Products = "mp/products";
 
             #endregion
         }

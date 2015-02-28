@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Formatting;
@@ -10,6 +11,7 @@ using System.Web;
 using Newtonsoft.Json;
 using VirtoCommerce.ApiClient.Caching;
 using VirtoCommerce.ApiClient.DataContracts;
+using VirtoCommerce.ApiClient.Extensions;
 
 #endregion
 
@@ -121,6 +123,14 @@ namespace VirtoCommerce.ApiClient
             }
 
             return CreateRequestUri(relativePath, queryString);
+        }
+
+        protected Uri CreateRequestUri(
+            string relativePath,
+            object queryStringParameters)
+        {
+            var parameters = queryStringParameters.ToPropertyDictionary().Select(x=>new KeyValuePair<string, string>(x.Key, x.Value.ToNullOrString())).ToArray();
+            return this.CreateRequestUri(relativePath, parameters);
         }
 
         /// <summary>

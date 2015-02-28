@@ -18,7 +18,7 @@ namespace VirtoCommerce.ApiClient.Extensions
         /// <summary>
         ///     Gets an HTTP query string serialization of this query compatible with FromQueryString
         /// </summary>
-        public static string GetQueryString(this BrowseQuery query, ItemResponseGroups? responseGroup)
+        public static string GetQueryString(this BrowseQuery query, object additionalParamters)
         {
             var parts = new List<string>();
 
@@ -66,10 +66,12 @@ namespace VirtoCommerce.ApiClient.Extensions
                         filter => String.Format("t_{0}={1}", filter.Key, String.Join(",", filter.Value))));
             }
 
-            if (responseGroup.HasValue)
+            if (additionalParamters != null)
             {
-                parts.Add("responseGroup=" + responseGroup.Value.GetHashCode());
+                var parameters = additionalParamters.ToPropertyDictionary();
+                parts.AddRange(parameters.Select(parameter => String.Format("{0}={1}", parameter.Key, parameter.Value)));
             }
+
             return string.Join("&", parts);
         }
 

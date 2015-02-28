@@ -13,7 +13,7 @@ using moduleModel = VirtoCommerce.Domain.Catalog.Model;
 using webModel = VirtoCommerce.MerchandisingModule.Web.Model;
 namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 {
-    [RoutePrefix("api/mp/stores/{store}/{language}/categories")]
+    [RoutePrefix("api/mp/categories")]
     public class CategoryController : BaseController
     {
         private readonly ICatalogSearchService _searchService;
