@@ -53,6 +53,10 @@ angular.module(moduleName, [
           controller: 'customerEmailsWidgetController',
           template: 'Modules/Customer/VirtoCommerce.CustomerModule.Web/Scripts/widgets/customerEmailsWidget.tpl.html'
       }, 'customerDetail1');
+      widgetService.registerWidget({
+          controller: 'customerPhonesWidgetController',
+          template: 'Modules/Customer/VirtoCommerce.CustomerModule.Web/Scripts/widgets/customerPhonesWidget.tpl.html'
+      }, 'customerDetail1');
       
 
       widgetService.registerWidget({
