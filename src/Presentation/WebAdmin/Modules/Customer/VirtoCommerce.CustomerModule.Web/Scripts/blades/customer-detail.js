@@ -1,6 +1,8 @@
 ﻿angular.module('virtoCommerce.customerModule.blades')
 .controller('customerDetailController', ['$scope', 'bladeNavigationService', 'customers', 'dialogService', function ($scope, bladeNavigationService, customers, dialogService) {
     $scope.blade.refresh = function (parentRefresh) {
+        $scope.blade.isLoading = true;
+
         customers.get({ id: $scope.blade.currentEntityId }, function (data) {
             initializeBlade(data);
             if (parentRefresh) {
