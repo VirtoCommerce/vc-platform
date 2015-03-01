@@ -63,7 +63,7 @@
 
 	$scope.bladeToolbarCommands = [
         {
-        	name: "Add", icon: 'fa fa-plus',
+        	name: "Add list", icon: 'fa fa-plus',
         	executeMethod: function () {
         		openBladeNew();
         	},
