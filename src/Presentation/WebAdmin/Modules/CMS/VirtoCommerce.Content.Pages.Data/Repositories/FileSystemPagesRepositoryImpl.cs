@@ -42,6 +42,11 @@ namespace VirtoCommerce.Content.Pages.Data.Repositories
 		{
 			var fullPath = GetFullPath(path);
 
+			if (!Directory.Exists(fullPath))
+			{
+				Directory.CreateDirectory(fullPath);
+			}
+
 			var files = Directory.GetFiles(fullPath);
 
 			return files.Select(f => new Models.ShortPageInfo { Name = Path.GetFileNameWithoutExtension(f), LastModified = Directory.GetLastWriteTimeUtc(f) });
