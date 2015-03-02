@@ -66,7 +66,7 @@
                             </td>
                             <td class="table-col">
                                 <div class="form-input __mini">
-                                    <input name="price" required ng-model="data.price" type="text">
+                                    <input name="price" money  required ng-model="data.price" type="text">
                                 </div>
                             </td>
                             <td class="table-col">
@@ -80,7 +80,7 @@
                                 </div>
                             </td>
                             <td class="table-col __total">
-                                 <span>{{data.total}}</span>
+                                <span>{{data.total | number:2 }}</span>
                             </td>
                         </tr>
                     </tbody>

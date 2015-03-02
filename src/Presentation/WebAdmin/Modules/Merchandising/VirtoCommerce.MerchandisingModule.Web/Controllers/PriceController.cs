@@ -25,9 +25,9 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
         public PriceController(Func<IStoreRepository> storeRepository, Func<IPricelistRepository> priceListRepository, Func<IPriceListAssignmentEvaluator> priceListEvaluator, IPriceListAssignmentEvaluationContext priceListEvalContext)
             : base(storeRepository)
         {
-            this._priceListEvalContext = priceListEvalContext;
-            this._priceListRepository = priceListRepository;
-            this._priceListEvaluator = priceListEvaluator;
+            _priceListEvalContext = priceListEvalContext;
+            _priceListRepository = priceListRepository;
+            _priceListEvaluator = priceListEvaluator;
         }
 
         [HttpGet]
@@ -39,14 +39,14 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
             [FromUri] string[] tags
             )
         {
-            var pricelists = this.GetPriceListStackInternal(catalog, currency, tags);
+            var pricelists = GetPriceListStackInternal(catalog, currency, tags);
             return Ok(pricelists);
         }
 
         [HttpGet]
         [ResponseType(typeof(Price[]))]
-        [ArrayInput("priceLists", Separator = ",")]
-        [ArrayInput("products", Separator = ",")]
+        [ArrayInput(ParameterName = "priceLists")]
+        [ArrayInput(ParameterName = "products")]
         [Route("prices")]
         public IHttpActionResult GetProductPrices(
             [FromUri] string[] priceLists,
@@ -58,7 +58,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
                 var prices = plRepository.FindLowestPrices(priceLists, products, 0, returnAll: true);
                 if (prices != null && prices.Any())
                 {
-                    return this.Ok(prices.Select(p => p.ToWebModel()));
+                    return Ok(prices.Select(p => p.ToWebModel()));
                 }
             }
 
