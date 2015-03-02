@@ -9,21 +9,21 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <va-widget-container group="customerDetail1" blade="blade"></va-widget-container>
-                </div>
-                <!--<div class="form-group">
-                    <div class="form-input">
-                        <label class="form-label">Birthday</label>
-                    </div>
+                    <label class="form-label">Birthday</label>
                     <div class="form-input __calendar">
                         <input type="text" class="form-control" ng-model="blade.currentEntity.birthDate" datepicker-popup="{{format}}" name="bd" is-open="datepickers.bd" datepicker-options="dateOptions" close-text="Close" />
                         <button class="btn" type="button" ng-click="open($event,'bd')">
                             <i class="btn-ico fa fa-calendar"></i>
                         </button>
                     </div>
-                </div>-->
+                </div>
+                <div class="tile-group clearfix">
+                    <va-widget-container group="customerDetail1" blade="blade"></va-widget-container>
+                </div>
+                <div class="tile-group clearfix">
+                    <va-widget-container group="customerDetail2" blade="blade"></va-widget-container>
+                </div>
             </form>
-            <va-widget-container group="customerDetail2" blade="blade"></va-widget-container>
         </div>
     </div>
 </div>

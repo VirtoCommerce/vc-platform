@@ -309,7 +309,6 @@
     text-decoration: none;
 
     border: 0;
-    background: url('select2.png') right top no-repeat;
     cursor: pointer;
     outline: 0;
 }
@@ -814,16 +813,4 @@ disabled look for disabled choices in the results dropdown
     width: 100px;
     height: 100px;
     overflow: scroll;
-}
-/* Retina-ize icons */
-
-@media only screen and (-webkit-min-device-pixel-ratio: 1.5), only screen and (min-resolution: 144dpi)  {
-  .select2-search input, .select2-search-choice-close, .select2-container .select2-choice abbr, .select2-container .select2-choice .select2-arrow b {
-      background-image: url('select2x2.png') !important;
-      background-repeat: no-repeat !important;
-      background-size: 60px 40px !important;
-  }
-  .select2-search input {
-      background-position: 100% -21px !important;
-  }
 }
