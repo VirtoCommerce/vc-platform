@@ -83,6 +83,34 @@
         }
     ];
 
+     // datepicker
+    $scope.datepickers = {
+        bd: false
+    }
+    
+    $scope.showWeeks = true;
+    $scope.toggleWeeks = function () {
+        $scope.showWeeks = !$scope.showWeeks;
+    };
+
+    $scope.clear = function () {
+        $scope.blade.currentEntity.birthDate = null;
+    };
+   
+    $scope.open = function ($event, which) {
+        $event.preventDefault();
+        $event.stopPropagation();
+
+        $scope.datepickers[which] = true;
+    };
+
+    $scope.dateOptions = {
+        'year-format': "'yyyy'",
+        'starting-day': 1
+    };
+
+    $scope.formats = ['shortDate', 'dd-MMMM-yyyy', 'yyyy/MM/dd'];
+    $scope.format = $scope.formats[0];
 
     $scope.blade.refresh(false);
 }]);

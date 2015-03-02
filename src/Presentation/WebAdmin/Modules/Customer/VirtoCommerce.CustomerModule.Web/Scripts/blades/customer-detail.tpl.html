@@ -1,4 +1,4 @@
-﻿<div class="blade-content __gray">
+﻿<div class="blade-content __medium-wide __gray">
     <div class="blade-inner">
         <div class="inner-block">
             <form class="form" name="detailForm">
@@ -8,6 +8,9 @@
                         <input ng-model="blade.currentEntity.fullName" focus-on="" required />
                     </div>
                 </div>
+                <div class="tile-group clearfix">
+                    <va-widget-container group="customerDetail1" blade="blade"></va-widget-container>
+                </div>
                 <div class="form-group">
                     <label class="form-label">Birthday</label>
                     <div class="form-input __calendar">
@@ -16,9 +19,6 @@
                             <i class="btn-ico fa fa-calendar"></i>
                         </button>
                     </div>
-                </div>
-                <div class="tile-group clearfix">
-                    <va-widget-container group="customerDetail1" blade="blade"></va-widget-container>
                 </div>
                 <div class="tile-group clearfix">
                     <va-widget-container group="customerDetail2" blade="blade"></va-widget-container>
