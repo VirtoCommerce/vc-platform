@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace VirtoCommerce.ApiClient.DataContracts.CustomerService
 {
-	public class Contract
+	public class Contact
 	{
 		//private IDictionary<string, object> _properties = new Dictionary<string, object>();
 
@@ -26,6 +26,8 @@ namespace VirtoCommerce.ApiClient.DataContracts.CustomerService
 		public string PreferredDelivery { get; set; }
 		public string PreferredCommunication { get; set; }
 		public string Salutation { get; set; }
+
+        public ICollection<Address> Addresses { get; set; }
 
 		public ContactProperty[] Properties { get; set; }
 
