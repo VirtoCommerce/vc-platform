@@ -10,24 +10,51 @@ namespace VirtoCommerce.Framework.Web.Common
 {
     public class ArrayInputAttribute : ActionFilterAttribute
     {
-        private readonly string[] _parameterNames;
-        /// <summary>
-        /// 
-        /// </summary>
-        public string Separator { get; set; }
-        /// <summary>
-        /// cons
-        /// </summary>
-        /// <param name="parameterName"></param>
-        public ArrayInputAttribute(params string[] parameterName)
+        #region Static Fields
+
+        private static readonly string[] _emptyArray = new string[0];
+
+        #endregion
+
+        #region Fields
+
+        private string _parameterName;
+        private string[] _parameterNames = _emptyArray;
+
+        #endregion
+
+        #region Constructors and Destructors
+
+        public ArrayInputAttribute()
         {
-            this._parameterNames = parameterName;
-            Separator = ",";
+            ValueSeparator = ",";
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
+        #endregion
+
+        #region Public Properties
+
+        public string ParameterName
+        {
+            get { return _parameterName ?? string.Empty; }
+            set
+            {
+                _parameterName = value;
+                _parameterNames = this.SplitString(value, ',');
+            }
+        }
+
+        public string ValueSeparator { get; set; }
+
+        #endregion
+
+        #region Public Methods and Operators
+
+        public override void OnActionExecuting(HttpActionContext actionContext)
+        {
+            _parameterNames.ForEach(parameterName => ProcessArrayInput(actionContext, parameterName));
+        }
+
         public void ProcessArrayInput(HttpActionContext actionContext, string parameterName)
         {
             if (actionContext.ActionArguments.ContainsKey(parameterName))
@@ -50,7 +77,7 @@ namespace VirtoCommerce.Framework.Web.Common
                         }
                     }
 
-                    var values = parameters.Split(new[] { Separator }, StringSplitOptions.RemoveEmptyEntries)
+                    var values = parameters.Split(new[] { ValueSeparator }, StringSplitOptions.RemoveEmptyEntries)
                         .Select(TypeDescriptor.GetConverter(type).ConvertFromString).ToArray();
                     var typedValues = Array.CreateInstance(type, values.Length);
                     values.CopyTo(typedValues, 0);
@@ -59,9 +86,6 @@ namespace VirtoCommerce.Framework.Web.Common
             }
         }
 
-        public override void OnActionExecuting(HttpActionContext actionContext)
-        {
-            this._parameterNames.ForEach(parameterName => ProcessArrayInput(actionContext, parameterName));
-        }
+        #endregion
     }
 }

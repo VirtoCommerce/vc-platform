@@ -1,7 +1,7 @@
 ﻿using System;
-using System.Linq;
 using System.Web.Http;
 using System.Web.Http.Controllers;
+using VirtoCommerce.Framework.Web.Common;
 
 namespace VirtoCommerce.Framework.Web.Security
 {
@@ -28,7 +28,7 @@ namespace VirtoCommerce.Framework.Web.Security
             set
             {
                 _permission = value;
-                _permissions = SplitString(value);
+                _permissions = this.SplitString(value, ',');
             }
         }
 
@@ -74,21 +74,6 @@ namespace VirtoCommerce.Framework.Web.Security
             }
 
             return isAuthorized;
-        }
-
-        private static string[] SplitString(string original)
-        {
-            var result = _emptyArray;
-
-            if (!string.IsNullOrEmpty(original))
-            {
-                result = original.Split(',')
-                    .Select(part => part.Trim())
-                    .Where(part => !string.IsNullOrEmpty(part))
-                    .ToArray();
-            }
-
-            return result;
         }
 
         #endregion
