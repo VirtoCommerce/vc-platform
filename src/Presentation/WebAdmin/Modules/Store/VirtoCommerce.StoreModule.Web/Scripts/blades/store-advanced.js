@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.storeModule.blades')
-.controller('storeAdvancedController', ['$scope', 'bladeNavigationService', 'stores', 'catalogs', 'dialogService', function ($scope, bladeNavigationService, stores, catalogs, dialogService) {
+.controller('storeAdvancedController', ['$scope', 'bladeNavigationService', 'stores', 'fulfillments', 'countries', function ($scope, bladeNavigationService, stores, fulfillments, countries) {
     $scope.saveChanges = function () {
         angular.copy($scope.blade.currentEntity, $scope.blade.origEntity);
         $scope.bladeClose();
@@ -20,7 +20,7 @@
     $scope.blade.isLoading = false;
     $scope.blade.currentEntity = angular.copy($scope.blade.entity);
     $scope.blade.origEntity = $scope.blade.entity;
-    catalogs.getCatalogs({}, function (results) {
-        $scope.catalogs = results;
-    });
+    $scope.fulfillmentCenters = fulfillments.query();
+    $scope.countries = countries.query();
+    $scope.timeZones = countries.getTimeZones();
 }]);

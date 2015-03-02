@@ -30,24 +30,24 @@
                                 {{data.currency}}
                             </td>
                             <td class="table-col">
-                                <div data-step="any" class="form-input __number">
-                                    <input va-number type="text" ng-model="data.list" required="" step="1">
+                                <div class="form-input __mini">
+                                    <input money required ng-model="data.list" />
                                 </div>
                             </td>
                             <td class="table-col">
-                                <div class="form-input __number">
-                                    <input va-number type="text" ng-model="data.sale" step="1">
+                                <div class="form-input __mini">
+                                    <input money ng-model="data.sale">
                                 </div>
                             </td>
                             <td class="table-col">
                                 <div data-step="1" class="form-input __number">
-                                    <input va-number type="text" ng-model="data.minQuantity" required="" step="1">
+                                    <input type="text" ng-model="data.minQuantity" required />
                                 </div>
                             </td>
                             <td class="table-col">
                                 {{data.modifiedDate | date : 'short'}}
                                 <ul class="menu __context" role="menu" id="ipl_menu_{{data.id}}">
-                                    <li class="menu-item" ng-click='delete()'>
+                                    <li class="menu-item" ng-click='delete(data)'>
                                         <i class="menu-ico fa fa-trash-o"></i> Delete
                                     </li>
                                 </ul>

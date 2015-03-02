@@ -7,12 +7,10 @@
 
     $scope.blade.refresh = function () {
         $scope.blade.isLoading = true;
-        return prices.query({ id: $scope.blade.itemId }, function (data) {
+        return $scope.blade.parentWidget.refresh().$promise.then(function (results) {
             $scope.blade.isLoading = false;
-            $scope.blade.currentEntities = data;
-        }, function (error) {
-            $scope.blade.isLoading = false;
-            bladeNavigationService.setError('Error ' + error.status, $scope.blade);
+            $scope.blade.currentEntities = results;
+            return results;
         });
     }
 
