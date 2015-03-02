@@ -7,6 +7,7 @@
   'ngAnimate',
   'ngResource',
   'xeditable',
+  'fiestah.money',
   'platformWebApp.dashboard',
   'platformWebApp.security',
   'platformWebApp.notification',
