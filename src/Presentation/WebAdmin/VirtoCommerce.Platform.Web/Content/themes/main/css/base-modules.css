@@ -2300,6 +2300,7 @@ h3
 		padding: 10px;
 		text-align: left;
 		text-shadow: 1px 1px #fff;
+        vertical-align: top;
 	}
 
 		.table-col .table-t,
@@ -2688,6 +2689,11 @@ fieldset + fieldset
             position: absolute;
             top: 11px;
             z-index: 50;
+        }
+
+        .form-input.__currency
+        {
+            position: relative;
         }
 
         .form-input.__currency .currency

@@ -105,6 +105,6 @@
 
 
     // on load
-    $scope.countries = countries.getCountries();
+    $scope.countries = countries.query();
     initializeBlade($scope.blade.origEntity);
 }]);
