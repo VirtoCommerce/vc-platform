@@ -35,7 +35,10 @@ function ($scope, order_res_customerOrders, bladeNavigationService, dialogServic
                     }
                 });
             }
-        });
+        },
+		 function (error) {
+		 	bladeNavigationService.setError('Error ' + error.status, $scope.blade);
+		 });
     };
 
     $scope.$watch('pageSettings.currentPage', function (newPage) {

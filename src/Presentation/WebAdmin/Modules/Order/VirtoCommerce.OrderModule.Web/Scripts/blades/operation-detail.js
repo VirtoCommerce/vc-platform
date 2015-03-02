@@ -1,6 +1,6 @@
 ﻿angular.module('virtoCommerce.orderModule.blades')
-.controller('operationDetailController', ['$scope', 'dialogService', 'bladeNavigationService', 'order_res_customerOrders', 'notificationService', 'order_res_fulfilmentCenters', 'order_res_stores', 'order_res_paymentGateways',
-			function ($scope, dialogService, bladeNavigationService, order_res_customerOrders, notificationService, order_res_fulfilmentCenters, order_res_stores, order_res_paymentGateways) {
+.controller('operationDetailController', ['$scope', 'dialogService', 'bladeNavigationService', 'order_res_customerOrders', 'order_res_fulfilmentCenters', 'order_res_stores', 'order_res_paymentGateways',
+			function ($scope, dialogService, bladeNavigationService, order_res_customerOrders, order_res_fulfilmentCenters, order_res_stores, order_res_paymentGateways) {
 
 		$scope.blade.refresh = function (noRefresh) {
     	$scope.blade.isLoading = true;
@@ -13,7 +13,7 @@
     			initialize(results);
     		},
 			function (error) {
-				notificationService.setError('Error ' + error.status, $scope.blade);
+				bladeNavigationService.setError('Error ' + error.status, $scope.blade);
 			});
     	}
     	else
@@ -120,14 +120,15 @@
 									$scope.blade.currentEntity = $scope.blade.customerOrder;
 									$scope.blade.refresh();
 								},
-								function (error) { notificationService.setError('Error ' + error.status, $scope.blade); });
+								function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
 		   					}
 		   					else {
 		   						order_res_customerOrders.delete({ id: $scope.blade.customerOrder.id },
 								function () {
 									bladeNavigationService.closeBlade($scope.blade);
 								},
-								function (error) { notificationService.setError('Error ' +error.status, $scope.blade);
+								function (error) {
+									bladeNavigationService.setError('Error ' + error.status, $scope.blade);
 							});
 		   					}
 

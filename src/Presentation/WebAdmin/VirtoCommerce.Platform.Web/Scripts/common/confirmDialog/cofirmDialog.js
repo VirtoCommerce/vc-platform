@@ -52,10 +52,11 @@
                 }
             });
 
-            dlg.instance.result.then(function () //success
+            dlg.instance.result.then(function (result) //success
             {
                 var idx = dialogService.dialogs.indexOf(dlg);
                 dialogService.dialogs.splice(idx, 1);
+                dlg.callback(result);
             }, function (reason) //dismiss
             {
                 var idx = dialogService.dialogs.indexOf(dlg);
@@ -64,12 +65,6 @@
 
             dialogService.dialogs.push(dlg);
         }
-        //else
-        //{
-        //    angular.extend(dlg, dialog);
-        //}
-
-        dlg.instance.result.then(dialog.callback);
     };
 
     dialogService.showConfirmationDialog = function (dialog) {
