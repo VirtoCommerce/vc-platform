@@ -6,11 +6,11 @@
         var blade = {
             id: "customerPropertyDetail",
             currentEntityId: $scope.blade.currentEntityId,
-            currentEntity: $scope.blade.currentEntity,
+            //currentEntities: $scope.blade.currentEntity.properties,
             title: $scope.blade.title,
-            subtitle: 'Properties',
-            controller: 'customerPropertyController',
-            template: 'Modules/customer/VirtoCommerce.customerModule.Web/Scripts/blades/customer-property-detail.tpl.html'
+            subtitle: 'Properties management',
+            controller: 'customerPropertyListController',
+            template: 'Modules/Customer/VirtoCommerce.CustomerModule.Web/Scripts/blades/customer-property-list.tpl.html'
         };
 
         bladeNavigationService.showBlade(blade, $scope.blade);

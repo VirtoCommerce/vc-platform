@@ -36,7 +36,7 @@ angular.module(moduleName, [
       //Register module in main menu
       var menuItem = {
           path: 'browse/customer',
-          icon: 'fa fa-shopping-cart',
+          icon: 'fa fa-users',
           title: 'customers',
           priority: 180,
           action: function () { $state.go('workspace.customerModule'); },
@@ -52,6 +52,10 @@ angular.module(moduleName, [
       widgetService.registerWidget({
           controller: 'customerEmailsWidgetController',
           template: 'Modules/Customer/VirtoCommerce.CustomerModule.Web/Scripts/widgets/customerEmailsWidget.tpl.html'
+      }, 'customerDetail1');
+      widgetService.registerWidget({
+          controller: 'customerPhonesWidgetController',
+          template: 'Modules/Customer/VirtoCommerce.CustomerModule.Web/Scripts/widgets/customerPhonesWidget.tpl.html'
       }, 'customerDetail1');
       
 

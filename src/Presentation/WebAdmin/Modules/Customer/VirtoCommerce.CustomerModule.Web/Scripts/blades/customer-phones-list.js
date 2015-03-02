@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.customerModule.blades')
-.controller('customerEmailsListController', ['$scope', 'bladeNavigationService', 'dialogService', function ($scope, bladeNavigationService, dialogService) {
+.controller('customerPhonesListController', ['$scope', 'bladeNavigationService', 'dialogService', function ($scope, bladeNavigationService, dialogService) {
     $scope.selectedItem = null;
 
     function transformDataElement(data) {
@@ -24,7 +24,7 @@
             var dialog = {
                 id: "confirmItemChange",
                 title: "Save changes",
-                message: "The Email has been modified. Do you want to save changes?"
+                message: "The Phone number has been modified. Do you want to save changes?"
             };
             dialog.callback = function (needSave) {
                 if (needSave) {
@@ -87,11 +87,11 @@
         }
     ];
 
-    $scope.$watch('blade.parentBlade.currentEntity.emails', function (currentEntities) {
+    $scope.$watch('blade.parentBlade.currentEntity.phones', function (currentEntities) {
         $scope.blade.data = currentEntities;
         initializeBlade($scope.blade.data);
     });
 
     // on load: 
-    // $scope.$watch('blade.parentBlade.currentEntity.emails' gets fired
+    // $scope.$watch('blade.parentBlade.currentEntity.phones' gets fired
 }]);
