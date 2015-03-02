@@ -22,7 +22,7 @@ using moduleModel = VirtoCommerce.Domain.Catalog.Model;
 
 namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 {
-    [RoutePrefix("api/mp/stores/{store}/{language}/products")]
+    [RoutePrefix("api/mp/products")]
 	public class ProductController : BaseController
 	{
 		private readonly IItemService _itemService;

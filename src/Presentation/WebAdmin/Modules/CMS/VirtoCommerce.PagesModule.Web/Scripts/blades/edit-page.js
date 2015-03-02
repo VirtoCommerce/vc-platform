@@ -14,7 +14,7 @@
 
 			$scope.bladeToolbarCommands = [
 			{
-				name: "Save", icon: 'fa fa-save',
+				name: "Save page", icon: 'fa fa-save',
 				executeMethod: function () {
 					saveChanges();
 				},
@@ -23,7 +23,7 @@
 				}
 			},
 			{
-				name: "Reset", icon: 'fa fa-undo',
+				name: "Reset page", icon: 'fa fa-undo',
 				executeMethod: function () {
 					angular.copy(blade.origEntity, blade.currentEntity);
 				},
@@ -32,7 +32,7 @@
 				}
 			},
 			{
-				name: "Delete", icon: 'fa fa-trash-o',
+				name: "Delete page", icon: 'fa fa-trash-o',
 				executeMethod: function () {
 					deleteEntry();
 				},
@@ -44,7 +44,7 @@
 		else {
 			$scope.bladeToolbarCommands = [
 			{
-				name: "Save", icon: 'fa fa-save',
+				name: "Save page", icon: 'fa fa-save',
 				executeMethod: function () {
 					saveChanges();
 				},
@@ -83,9 +83,9 @@
     			if (remove) {
     				blade.isLoading = true;
 
-    				themes.deleteAsset({ storeId: blade.choosenStoreId, pageNames: blade.name }, function () {
+    				pages.delete({ storeId: blade.choosenStoreId, pageNames: blade.choosenPageName }, function () {
     					$scope.bladeClose();
-    					blade.parentBlade.refresh(true);
+    					blade.parentBlade.refresh();
     				});
     			}
     		}

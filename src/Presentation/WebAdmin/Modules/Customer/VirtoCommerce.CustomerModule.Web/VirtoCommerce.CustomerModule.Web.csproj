@@ -92,7 +92,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
-    <Content Include="module.manifest" />
+    <Content Include="module.manifest">
+      <SubType>Designer</SubType>
+    </Content>
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -101,6 +103,34 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Scripts\blades\!customer-list.js" />
+    <Content Include="Scripts\blades\!customer-list.tpl.html" />
+    <Content Include="Scripts\blades\customer-property-list.js" />
+    <Content Include="Scripts\blades\customer-property-list.tpl.html" />
+    <Content Include="Scripts\blades\customer-detail.js" />
+    <Content Include="Scripts\blades\customer-detail.tpl.html" />
+    <Content Include="Scripts\blades\customer-phones-list.js" />
+    <Content Include="Scripts\blades\customer-emails-list.js" />
+    <Content Include="Scripts\blades\customer-phones-list.tpl.html" />
+    <Content Include="Scripts\blades\customer-emails-list.tpl.html" />
+    <Content Include="Scripts\blades\customer-address-detail.js" />
+    <Content Include="Scripts\blades\customer-address-detail.tpl.html" />
+    <Content Include="Scripts\blades\customer-address-list.js" />
+    <Content Include="Scripts\blades\customer-address-list.tpl.html" />
+    <Content Include="Scripts\blades\customer-property-detail.js" />
+    <Content Include="Scripts\blades\customer-property-detail.tpl.html" />
+    <Content Include="Scripts\blades\customer-property-valueType.js" />
+    <Content Include="Scripts\blades\customer-property-valueType.tpl.html" />
+    <Content Include="Scripts\resources\customers.js" />
+    <Content Include="Scripts\customer.js" />
+    <Content Include="Scripts\widgets\customerPhonesWidget.js" />
+    <Content Include="Scripts\widgets\customerEmailsWidget.js" />
+    <Content Include="Scripts\widgets\!customerAddressesWidget.js" />
+    <Content Include="Scripts\widgets\customerPhonesWidget.tpl.html" />
+    <Content Include="Scripts\widgets\customerEmailsWidget.tpl.html" />
+    <Content Include="Scripts\widgets\!customerAddressesWidget.tpl.html" />
+    <Content Include="Scripts\widgets\customerPropertyWidget.js" />
+    <Content Include="Scripts\widgets\customerPropertyWidget.tpl.html" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
@@ -121,9 +151,7 @@
     <Compile Include="Module.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Scripts\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\..\Core\CommerceFoundation.Data\CommerceFoundation.Data.csproj">
       <Project>{bb168a74-0f1e-43be-a616-134902238b80}</Project>

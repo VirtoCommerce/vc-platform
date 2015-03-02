@@ -12,6 +12,7 @@ namespace VirtoCommerce.Content.Menu.Data.Models
 	{
 		public MenuLinkList()
 		{
+			CreatedDate = DateTime.UtcNow;
 			MenuLinks = new NullCollection<MenuLink>();
 		}
 
@@ -31,5 +32,24 @@ namespace VirtoCommerce.Content.Menu.Data.Models
 		public string ModifiedBy { get; set; }
 
 		public virtual ICollection<MenuLink> MenuLinks { get; set; }
+
+		public void Attach(MenuLinkList list)
+		{
+			this.Name = list.Name;
+
+			foreach (var link in list.MenuLinks)
+			{
+				if (!this.MenuLinks.Any(l => l.Id == link.Id))
+				{
+					this.MenuLinks.Add(link);
+				}
+				else
+				{
+					var existingLink = this.MenuLinks.First(l => l.Id == link.Id);
+					existingLink.Link = link.Link;
+					existingLink.Name = link.Name;
+				}
+			}
+		}
 	}
 }

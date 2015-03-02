@@ -10,7 +10,7 @@ using Xunit;
 
 namespace VirtoCommerce.Content.Tests.MenuTests
 {
-	public class RepositoryTests
+	public class MenuRepositoryTests
 	{
 		private DatabaseMenuRepositoryImpl GetRepository()
 		{
