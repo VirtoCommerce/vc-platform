@@ -4223,6 +4223,11 @@ fieldset + fieldset
         text-shadow: none;
     }
 
+    .form-input.__calendar .dropdown-menu .btn:hover
+    {
+        background-color: #ecf7fc;
+    }
+
         .form-input.__calendar .dropdown-menu table .btn
         {
             width: 100%;
