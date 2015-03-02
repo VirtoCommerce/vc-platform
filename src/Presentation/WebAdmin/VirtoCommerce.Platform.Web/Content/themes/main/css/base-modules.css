@@ -2121,7 +2121,7 @@ ol
 	.menu .menu-item:before,
     .tree .tree-item:before
 	{
-		content: '';
+		content: ' ';
 	}
 
 	.__inline .list-item,
@@ -2300,8 +2300,12 @@ h3
 		padding: 10px;
 		text-align: left;
 		text-shadow: 1px 1px #fff;
-        vertical-align: top;
 	}
+
+    .table.__data .table-col
+    {
+        vertical-align: top;
+    }
 
 		.table-col .table-t,
 		.table-col .table-descr
@@ -3016,6 +3020,7 @@ fieldset + fieldset
 /* Tiles */
 .tile-group
 {
+    margin: 0 -10px 0 0;
 	min-width: 130px;
 	overflow: hidden;
 	position: relative;
@@ -3105,15 +3110,25 @@ fieldset + fieldset
 
 .tile.__price .tile-count
 {
-    font-size: 30px;
+    color: #43b0e6;
+    font-size: 24px;
     margin: 10px 0 0;
 }
 
 .tile.__price .tile-price
 {
     color: #43b0e6;
-    font-size: 14px;
+    font-size: 30px;
+    height: 49px;
+    line-height: 40px;
     margin: 20px 0 0;
+}
+
+.tile.__price .tile-descr + .tile-price
+{
+    font-size: 14px;
+    height: auto;
+    line-height: 1;
 }
 
 .tile:hover,
@@ -3490,11 +3505,6 @@ fieldset + fieldset
 		padding: 10px 50px 10px 20px;
 		position: relative;
 	}
-
-    .__items .list-item.__selected
-    {
-        pointer-events: none;
-    }
 
 	.__items .list-item:after
 	{
@@ -4075,6 +4085,11 @@ fieldset + fieldset
     
     -webkit-transform: translateX(-50%);
             transform: translateX(-50%);
+}
+
+.tree-node .tree-item
+{
+    width: 170px;
 }
 
 .tree-el
