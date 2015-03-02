@@ -2814,7 +2814,7 @@ fieldset + fieldset
                     border-radius: 50%;
         }
 
-		.form-control .form-label .check:hover
+		.form-control .check:hover
 		{
 			border-color: #80a0b5;
 		}
@@ -3072,7 +3072,7 @@ fieldset + fieldset
 	float: left;
 	font-size: 48px;
 	height: 120px;
-	margin: 0 10px 10px 0;
+	margin: 10px 10px 0 0;
 	padding: 2px;
 	position: relative;
 	text-align: center;
