@@ -4597,6 +4597,9 @@ tags-input .tags .tag-item .remove-button
         position: relative;
 		z-index: 50;
 
+        -webkit-box-sizing: border-box;
+                box-sizing: border-box;
+
 		-webkit-box-shadow: -5px 0 5px -5px rgba(0, 0, 0, .2) inset;
 				box-shadow: -5px 0 5px -5px rgba(0, 0, 0, .2) inset;
 	}
@@ -4608,7 +4611,11 @@ tags-input .tags .tag-item .remove-button
 
 		.nav-bar .menu-item.__logo
 		{
-			font-size: 0;
+            bottom: 0;
+            font-size: 0;
+            left: 0;
+            position: absolute;
+            right: 0;
 		}
 
 			.nav-bar .logo-img

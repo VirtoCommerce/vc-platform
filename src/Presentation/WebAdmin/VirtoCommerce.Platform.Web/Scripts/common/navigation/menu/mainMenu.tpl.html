@@ -1,15 +1,15 @@
 ﻿<nav class="nav-bar">
     <ul class="menu bar">
-        <!-- <li class="menu-item __logo">
-            <span class="logo-img">Virto Commerce</span>
-            <span class="logo-version">2.0.0</span>
-        </li> -->
         <li class="menu-item" ng-class="{'__selected': currentMenuItem === menuItem && showSubMenu}" ng-repeat="menuItem in menuItems | filter: {parent: null}" ng-click="selectMenuItem(menuItem)">
             <a class="menu-link" ng-if="!menuItem.template" href="">
                 <span class="menu-ico" ng-class="menuItem.icon"></span>
                 <span class="name">{{menuItem.title}}</span>
             </a>
             <ng-include src='menuItem.template'> </ng-include>
+        </li>
+        <li class="menu-item __logo">
+            <span class="logo-img">Virto Commerce</span>
+            <span class="logo-version">2.0.0</span>
         </li>
     </ul>
     <div class="dropdown" ng-class="{'__opened': showSubMenu}">

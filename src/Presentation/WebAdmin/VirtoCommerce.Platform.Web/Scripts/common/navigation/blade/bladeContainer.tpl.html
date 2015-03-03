@@ -24,7 +24,7 @@
                 </ul>
             </div>
             <div class="blade-t" ng-class="{'__secondary': blade.subtitle}">
-                <i class="blade-t_ico fa fa-folder"></i>
+                <i class="blade-t_ico fa" ng-class="bladeHeadIco ? bladeHeadIco : 'fa-folder'"></i>
                 <p class="blade-t_head" ng-if="blade.title" ng-bind="blade.title"></p>
                 <p class="blade-t_subhead" ng-if="blade.subtitle" ng-bind="blade.subtitle"></p>
             </div>

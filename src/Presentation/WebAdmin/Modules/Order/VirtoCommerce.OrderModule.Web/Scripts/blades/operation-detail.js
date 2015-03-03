@@ -62,6 +62,8 @@
         });
     };
 
+    $scope.bladeHeadIco = 'fa-shopping-cart';
+
     $scope.bladeToolbarCommands = [
         {
             name: "New document", icon: 'fa fa-plus',
