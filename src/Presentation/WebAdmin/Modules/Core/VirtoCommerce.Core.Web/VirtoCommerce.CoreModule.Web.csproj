@@ -142,6 +142,7 @@
   <ItemGroup>
     <Content Include="module.manifest" />
     <Content Include="Scripts\common\ok-cancel2.tpl.html" />
+    <Content Include="Scripts\common\resources\countries.js" />
     <Content Include="Scripts\common\resources\fulfillments.js" />
     <Content Include="Scripts\common\resources\paymentgateways.js" />
     <Content Include="Scripts\Settings\blades\settings-detail.js" />

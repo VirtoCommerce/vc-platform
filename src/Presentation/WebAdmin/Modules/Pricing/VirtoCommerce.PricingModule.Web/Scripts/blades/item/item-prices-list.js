@@ -6,7 +6,7 @@
     $scope.blade.refresh = function (parentRefresh) {
         if (parentRefresh) {
             $scope.blade.isLoading = true;
-            $scope.blade.parentBlade.refresh().$promise.then(function (results) {
+            $scope.blade.parentBlade.refresh().then(function (results) {
                 var data = _.find(results, function (x) { return x.id === $scope.blade.data.id; });
                 initializeBlade(data);
             });
@@ -21,62 +21,48 @@
         $scope.blade.isLoading = false;
     };
 
-    $scope.delete = function () {
-        if (isItemsChecked()) {
+    $scope.delete = function (listItem) {
+        if (listItem) {
+            $scope.selectItem(listItem);
             deleteChecked();
         } else {
             var dialog = {
                 id: "notifyNoTargetCategory",
                 title: "Message",
-                message: "Nothing selected. Check some Prices first."
+                message: "Nothing selected. Select Price first."
             };
             dialogService.showNotificationDialog(dialog);
         }
     };
 
-    //function isItemsChecked() {
-    //    return $scope.blade.currentEntity && _.any($scope.blade.currentEntity.prices, function (x) { return x.selected; });
-    //}
-
     function deleteChecked() {
-        // var selection = _.where($scope.blade.currentEntity.prices, { selected: true });
-        var selection = [$scope.selectedItem];
-        _.each(selection, function (item) {
-            $scope.blade.currentEntity.prices.splice($scope.blade.currentEntity.prices.indexOf(item), 1);
-        });
+        $scope.blade.currentEntity.prices.splice($scope.blade.currentEntity.prices.indexOf($scope.selectedItem), 1);
+        $scope.selectItem(null);
     }
 
     $scope.selectItem = function (listItem) {
         $scope.selectedItem = listItem;
     };
 
-    $scope.blade.onClose = function (closeCallback) {
-        closeChildrenBlades();
-
-        if (isDirty()) {
-            var dialog = {
-                id: "confirmItemChange",
-                title: "Save changes",
-                message: "The Prices information has been modified. Do you want to save changes?"
-            };
-            dialog.callback = function (needSave) {
-                if (needSave) {
-                    saveChanges();
-                }
-                closeCallback();
-            };
-            dialogService.showConfirmationDialog(dialog);
-        }
-        else {
-            closeCallback();
-        }
-    };
-
-    function closeChildrenBlades() {
-        angular.forEach($scope.blade.childrenBlades.slice(), function (child) {
-            bladeNavigationService.closeBlade(child);
-        });
-    }
+    //$scope.blade.onClose = function (closeCallback) {
+    //    if (isDirty()) {
+    //        var dialog = {
+    //            id: "confirmItemChange",
+    //            title: "Save changes",
+    //            message: "The Prices information has been modified. Do you want to save changes?"
+    //        };
+    //        dialog.callback = function (needSave) {
+    //            if (needSave) {
+    //                saveChanges();
+    //            }
+    //            closeCallback();
+    //        };
+    //        dialogService.showConfirmationDialog(dialog);
+    //    }
+    //    else {
+    //        closeCallback();
+    //    }
+    //};
 
     function isDirty() {
         return !angular.equals($scope.blade.currentEntity, $scope.blade.origEntity);

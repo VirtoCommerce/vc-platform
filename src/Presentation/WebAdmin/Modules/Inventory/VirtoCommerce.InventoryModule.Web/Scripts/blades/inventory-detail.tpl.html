@@ -5,19 +5,19 @@
                 <div class="form-group" ng-init="setForm(detailForm)">
                     <label class="form-label">In stock</label>
                     <div class="form-input">
-                        <input va-number ng-model="blade.currentEntity.inStockQuantity" type="text" required>
+                        <input ng-model="blade.currentEntity.inStockQuantity" type="text" required>
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="form-label">Reserved</label>
                     <div class="form-input">
-                        <input va-number ng-model="blade.currentEntity.reservedQuantity" type="text" min="0">
+                        <input ng-model="blade.currentEntity.reservedQuantity" type="text" min="0">
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="form-label">Reorder min. qty.</label>
                     <div class="form-input">
-                        <input va-number ng-model="blade.currentEntity.reorderMinQuantity" type="text" min="0">
+                        <input ng-model="blade.currentEntity.reorderMinQuantity" type="text" min="0">
                     </div>
                 </div>
                 <div class="form-group">
@@ -64,7 +64,7 @@
                     <div class="form-input __calendar">
                         <!--ng-required="true" -->
                         <input type="text" class="form-control" ng-model="blade.currentEntity.backorderAvailabilityDate" datepicker-popup="{{format}}" name="bod" is-open="datepickers.bod" datepicker-options="dateOptions" close-text="Close" ng-disabled="!blade.currentEntity.allowBackorder" />
-                        <button class="btn" type="button" ng-click="open($event,'pod')">
+                        <button class="btn" type="button" ng-click="open($event,'bod')">
                             <i class="btn-ico fa fa-calendar"></i>
                         </button>
                     </div>

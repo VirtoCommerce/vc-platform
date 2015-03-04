@@ -43,6 +43,8 @@
         //bladeNavigationService.showBlade(newBlade, $scope.blade);
     }
 
+    $scope.bladeHeadIco = 'fa-shopping-cart';
+
     $scope.bladeToolbarCommands = [
         {
             name: "Add item", icon: 'fa fa-plus',

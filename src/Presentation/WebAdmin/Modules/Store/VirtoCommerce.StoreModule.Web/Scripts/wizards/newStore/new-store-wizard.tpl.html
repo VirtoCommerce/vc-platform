@@ -1,4 +1,4 @@
-﻿<div class="blade-content __gray">
+﻿<div class="blade-content">
     <div class="blade-inner">
         <div class="inner-block">
             <form class="form" name="detailForm">
@@ -17,13 +17,23 @@
                 <div class="form-group">
                     <label class="form-label">Catalog</label>
                     <div class="form-input">
-                        <select ng-model="blade.currentEntity.catalog" ng-options="x.id as x.name for x in catalogs" required class="chosen-select"></select>
+                        <ui-select ng-model="blade.currentEntity.catalog">
+                            <ui-select-match placeholder="Select...">{{$select.selected.name}}</ui-select-match>
+                            <ui-select-choices repeat="x.id as x in catalogs | filter: { name: $select.search }">
+                                <span ng-bind-html="x.name | highlight: $select.search"></span>
+                            </ui-select-choices>
+                        </ui-select>
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="form-label">State</label>
                     <div class="form-input">
-                        <select ng-model="blade.currentEntity.storeState" ng-options="x.id as x.name for x in storeStates" required class="chosen-select"></select>
+                        <ui-select ng-model="blade.currentEntity.storeState">
+                            <ui-select-match placeholder="Select...">{{$select.selected.name}}</ui-select-match>
+                            <ui-select-choices repeat="x.id as x in storeStates | filter: { name: $select.search }">
+                                <span ng-bind-html="x.name | highlight: $select.search"></span>
+                            </ui-select-choices>
+                        </ui-select>
                     </div>
                 </div>
             </form>
