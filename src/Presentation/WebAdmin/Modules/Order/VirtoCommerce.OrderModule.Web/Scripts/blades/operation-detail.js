@@ -64,42 +64,42 @@
 
     $scope.bladeToolbarCommands = [
         {
-            name: "New document", icon: 'fa fa-plus',
-            executeMethod: function () {
-               
-            	var newBlade = {
-            		id: "newOperationWizard",
-            		customerOrder: $scope.blade.customerOrder,
-            		currentEntity: $scope.blade.currentEntity,
-            		title: "New operation",
-            		subtitle: 'Select operation type',
-            		controller: 'newOperationWizardController',
-            		template: 'Modules/Order/VirtoCommerce.OrderModule.Web/Scripts/wizards/newOperation/newOperation-wizard.tpl.html'
-            	};
-            	bladeNavigationService.showBlade(newBlade, $scope.blade);
+        	name: "New document", icon: 'fa fa-plus',
+        	executeMethod: function () {
 
-            },
-            canExecuteMethod: function () {
-                return true;
-            }
+        		var newBlade = {
+        			id: "newOperationWizard",
+        			customerOrder: $scope.blade.customerOrder,
+        			currentEntity: $scope.blade.currentEntity,
+        			title: "New operation",
+        			subtitle: 'Select operation type',
+        			controller: 'newOperationWizardController',
+        			template: 'Modules/Order/VirtoCommerce.OrderModule.Web/Scripts/wizards/newOperation/newOperation-wizard.tpl.html'
+        		};
+        		bladeNavigationService.showBlade(newBlade, $scope.blade);
+
+        	},
+        	canExecuteMethod: function () {
+        		return true;
+        	}
         },
         {
-            name: "Save", icon: 'fa fa-save',
-            executeMethod: function () {
-                saveChanges();
-            },
-            canExecuteMethod: function () {
-                return isDirty();
-            }
+        	name: "Save", icon: 'fa fa-save',
+        	executeMethod: function () {
+        		saveChanges();
+        	},
+        	canExecuteMethod: function () {
+        		return isDirty();
+        	}
         },
         {
-            name: "Reset", icon: 'fa fa-undo',
-            executeMethod: function () {
-                angular.copy($scope.blade.origEntity, $scope.blade.currentEntity);
-            },
-            canExecuteMethod: function () {
-                return isDirty();
-            }
+        	name: "Reset", icon: 'fa fa-undo',
+        	executeMethod: function () {
+        		angular.copy($scope.blade.origEntity, $scope.blade.currentEntity);
+        	},
+        	canExecuteMethod: function () {
+        		return isDirty();
+        	}
         },
 		   {
 		   	name: "Delete", icon: 'fa fa-trash-o',
@@ -127,12 +127,10 @@
 								function () {
 									bladeNavigationService.closeBlade($scope.blade);
 								},
-								function (error) {
-									bladeNavigationService.setError('Error ' + error.status, $scope.blade);
-							});
+								function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
 		   					}
 
-		   					
+
 		   				}
 		   			}
 		   		};
@@ -141,15 +139,33 @@
 		   	canExecuteMethod: function () {
 		   		return true;
 		   	}
-		   }
+
+		   },
+		     {
+		     	name: "Cancel document", icon: 'fa fa-undo',
+		     	executeMethod: function () {
+		     		var dialog = {
+		     			id: "confirmCancelOperation",
+		     			callback: function (reason) {
+		     				if (reason) {
+		     					$scope.blade.currentEntity.cancelReason = reason;
+		     					$scope.blade.currentEntity.isCancelled = true;
+		     					saveChanges();
+		     				}
+		     			}
+		     		};
+		     		dialogService.showDialog(dialog, 'Modules/Order/VirtoCommerce.OrderModule.Web/Scripts/dialogs/cancelOperation-dialog.tpl.html', 'confirmCancelDialogController');
+		     	},
+		     	canExecuteMethod: function () {
+		     		return true;
+		     	}
+		     },
     ];
   
     $scope.blade.onClose = function (closeCallback) {
         if (isDirty()) {
             var dialog = {
                 id: "confirmItemChange",
-                title: "Save changes",
-                message: "The document has been modified. Do you want to save changes?",
                 callback: function (needSave) {
                     if (needSave) {
                         saveChanges();
@@ -172,8 +188,25 @@
         });
     }
 
+    $scope.cancelOperationResolution = function (resolution) {
+    	$modalInstance.close(resolution);
+    };
+
+   
+
     // actions on load
     $scope.toolbarTemplate = 'Modules/Order/VirtoCommerce.OrderModule.Web/Scripts/blades/operation-detail-toolbar.tpl.html';
     $scope.blade.refresh($scope.blade.isNew);
 
+}])
+.controller('confirmCancelDialogController', ['$scope', '$modalInstance', function ($scope, $modalInstance, dialog) {
+	
+	$scope.cancelReason = undefined;
+	$scope.yes = function () {
+		$modalInstance.close($scope.cancelReason);
+	};
+
+	$scope.cancel = function () {
+		$modalInstance.dismiss('cancel');
+	};
 }]);

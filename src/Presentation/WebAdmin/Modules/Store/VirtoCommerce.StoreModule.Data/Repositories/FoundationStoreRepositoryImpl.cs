@@ -29,6 +29,7 @@ namespace VirtoCommerce.StoreModule.Data.Repositories
 														 .Include(x => x.ReturnsFulfillmentCenter)
 														 .Include(x => x.Languages)
 														 .Include(x => x.Currencies)
+														 .Include(x=> x.PaymentGateways)
 														 .Include(x => x.FulfillmentCenter);
 			return retVal.FirstOrDefault();
 		}

@@ -100,7 +100,7 @@ namespace VirtoCommerce.CustomerModule.Data.Services
 					TotalCount = query.Count(),
 					Contacts = new List<coreModel.Contact>()
 				};
-				foreach(var contactId in query.Skip(criteria.Start).Take(criteria.Count))
+				foreach(var contactId in query.Skip(criteria.Start).Take(criteria.Count).ToArray())
 				{
 					var contact = repository.GetContactById(contactId);
 					if(contact != null)

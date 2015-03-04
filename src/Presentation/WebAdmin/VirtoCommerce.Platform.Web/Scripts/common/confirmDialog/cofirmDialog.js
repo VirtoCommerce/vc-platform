@@ -1,8 +1,8 @@
 ﻿angular.module('platformWebApp.common.confirmDialog', [
 ])
-.controller('confirmDialogController', ['$scope', '$modalInstance', 'message', 'title', function ($scope, $modalInstance, message, title) {
-    $scope.message = message;
-    $scope.title = title;
+.controller('confirmDialogController', ['$scope', '$modalInstance', 'dialog', function ($scope, $modalInstance, dialog) {
+	$scope.message = dialog.message;
+	$scope.title = dialog.title;
 
     $scope.yes = function () {
         $modalInstance.close(true);
@@ -33,7 +33,7 @@
         return found;
     }
 
-    function showDialog(dialog, templateUrl) {
+    dialogService.showDialog = function(dialog, templateUrl, controller) {
         var dlg = findDialog(dialog.id);
 
         if (angular.isUndefined(dlg)) {
@@ -41,13 +41,10 @@
 
             dlg.instance = $modal.open({
                 templateUrl: templateUrl,
-                controller: 'confirmDialogController',
+                controller:  controller, 
                 resolve: {
-                    message: function () {
-                        return dialog.message;
-                    },
-                    title: function () {
-                        return dialog.title;
+                    dialog: function () {
+                        return dialog;
                     }
                 }
             });
@@ -68,11 +65,11 @@
     };
 
     dialogService.showConfirmationDialog = function (dialog) {
-        showDialog(dialog, 'Scripts/common/confirmDialog/confirmDialog.tpl.html');
+    	dialogService.showDialog(dialog, 'Scripts/common/confirmDialog/confirmDialog.tpl.html', 'confirmDialogController');
     };
 
     dialogService.showNotificationDialog = function (dialog) {
-        showDialog(dialog, 'Scripts/common/confirmDialog/notifyDialog.tpl.html');
+    	dialogService.showDialog(dialog, 'Scripts/common/confirmDialog/notifyDialog.tpl.html', 'confirmDialogController');
     };
 
     return dialogService;
