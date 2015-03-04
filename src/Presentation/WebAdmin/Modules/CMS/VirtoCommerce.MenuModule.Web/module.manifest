@@ -6,7 +6,7 @@
     <dependency>VirtoCommerce.Core</dependency>
   </dependencies>
 
-  <title>Virto Commerce CMS Menu Module</title>
+  <title>Virto Commerce CMS Menu</title>
   <description>APIs and UI for CMS (Menu) of public site</description>
   <authors>
     <author>Virto Commerce</author>
