@@ -6,7 +6,7 @@
 		<dependency>VirtoCommerce.Core</dependency>
 	</dependencies>
 
-	<title>MeS PaymentGateway Web</title>
+	<title>MeS Payment Gateway</title>
 	<description>APIs and UI for merchant e-solutions payment gateway</description>
 	<authors>
 		<author>Virto Commerce</author>

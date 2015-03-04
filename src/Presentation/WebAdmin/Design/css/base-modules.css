@@ -3491,12 +3491,13 @@ fieldset + fieldset
 
 
 /* Blade lists */
-.list.__items
+.list.__items,
+.list.__files
 {
 	margin: 0 -20px 15px;
 }
 
-	.__items .list-item
+    .__items .list-item
 	{
         background: #fff;
 		border-bottom: 1px solid #dee9f0;
@@ -3538,7 +3539,8 @@ fieldset + fieldset
 		border-top: 1px solid #dee9f0;
 	}
 
-		.__items .list-ico
+        .__items .list-ico,
+		.__files .list-ico
 		{
 			font-size: 28px;
 			height: 30px;
@@ -3555,12 +3557,14 @@ fieldset + fieldset
 			top: 5px;
 		}
 
-        .__items .list-ico ~ .list-name
+        .__items .list-ico ~ .list-name,
+        .__files .list-ico ~ .list-name
         {
             vertical-align: middle;
         }
 
-		.__items .list-name
+        .__items .list-name,
+		.__files .list-name
 		{
 			color: #4c4c4c;
 			display: inline-block;
@@ -3591,7 +3595,7 @@ fieldset + fieldset
 
     .__items .list-ico ~ .list-descr
     {
-      margin: 0 0 0 50px;
+        margin: 0 0 0 50px;
     }
 
 		.__items .list-t,
@@ -3705,6 +3709,24 @@ fieldset + fieldset
 		    line-height: 1;
 		    margin: 1px 0 0 4px;
 		}
+
+.__files .list-item
+{
+    border: none;
+    position: relative;
+}
+
+.__files .list-block
+{
+    cursor: pointer;
+    display: block;
+    padding: 10px 20px;
+}
+
+.__files .list.__sub .list-block
+{
+    padding-left: 50px;
+}
 
 
 /* Pagination */
@@ -4630,10 +4652,10 @@ tags-input .tags .tag-item .remove-button
 
 			.nav-bar .logo-version
 			{
-				color: #fff;
+				color: #c2c2c2;
 				display: block;
 				font-size: 12px;
-				padding: 10px 0 15px;
+				padding: 10px 0;
 			}
 
 			.nav-bar .menu-link
