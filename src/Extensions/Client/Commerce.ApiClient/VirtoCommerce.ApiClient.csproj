@@ -71,6 +71,8 @@
     <Compile Include="Constants.cs" />
     <Compile Include="DataContracts\CustomerService\Address.cs" />
     <Compile Include="DataContracts\CustomerService\CustomerSearchResult.cs" />
+    <Compile Include="DataContracts\Lists\MenuLink.cs" />
+    <Compile Include="DataContracts\Lists\MenuLinkList.cs" />
     <Compile Include="DataContracts\Price.cs" />
     <Compile Include="PriceClient.cs" />
     <Compile Include="CustomerServiceClient.cs" />
@@ -83,6 +85,7 @@
     <Compile Include="Extensions\ObjectExtension.cs" />
     <Compile Include="Extensions\StringExtension.cs" />
     <Compile Include="Extensions\ThemeClientExtensions.cs" />
+    <Compile Include="ListClient.cs" />
     <Compile Include="ThemeClient.cs" />
     <Compile Include="DataContracts\Association.cs" />
     <Compile Include="DataContracts\BrowseQuery.cs" />
