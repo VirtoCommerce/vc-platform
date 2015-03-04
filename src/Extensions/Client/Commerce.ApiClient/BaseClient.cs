@@ -171,7 +171,7 @@ namespace VirtoCommerce.ApiClient
                         requestUri.ToString(),
                         () => GetAsyncInternal<T>(requestUri, userId),
                         GetCacheTimeOut(requestUri.ToString()),
-                        ClientContext.Configuration.IsCacheEnabled && useCache);
+                        ClientContext.Configuration.IsCacheEnabled && useCache).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -190,11 +190,11 @@ namespace VirtoCommerce.ApiClient
                 message.Headers.Add(Constants.Headers.PrincipalId, HttpUtility.UrlEncode(userId));
             }
 
-            using (var response = await httpClient.SendAsync(message))
+            using (var response = await httpClient.SendAsync(message).ConfigureAwait(false))
             {
                 await ThrowIfResponseNotSuccessfulAsync(response);
 
-                return await response.Content.ReadAsAsync<T>();
+                return await response.Content.ReadAsAsync<T>().ConfigureAwait(false);
             }
         }
 
@@ -290,7 +290,7 @@ namespace VirtoCommerce.ApiClient
                 message.Headers.Add(Constants.Headers.PrincipalId, userId);
             }
 
-            using (var response = await httpClient.SendAsync(message))
+            using (var response = await httpClient.SendAsync(message).ConfigureAwait(false))
             {
                 await ThrowIfResponseNotSuccessfulAsync(response);
 
@@ -299,7 +299,7 @@ namespace VirtoCommerce.ApiClient
                     return default(TOutput);
                 }
 
-                return await response.Content.ReadAsAsync<TOutput>();
+                return await response.Content.ReadAsAsync<TOutput>().ConfigureAwait(false);
             }
         }
 

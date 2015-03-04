@@ -129,7 +129,7 @@ namespace VirtoCommerce.ApiClient.Caching
         {
             if (_cacheRepository == null || !useCache)
             {
-                return await fallbackFunction();
+                return await fallbackFunction().ConfigureAwait(false);
             }
 
             var data = _cacheRepository.Get(cacheKey);
