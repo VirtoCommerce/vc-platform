@@ -167,7 +167,9 @@
     $scope.blade.onClose = function (closeCallback) {
         if (isDirty()) {
             var dialog = {
-                id: "confirmItemChange",
+            	id: "confirmItemChange",
+            	title: "Save changes",
+            	message: "The operation has been modified. Do you want to save changes?",
                 callback: function (needSave) {
                     if (needSave) {
                         saveChanges();
