@@ -1,7 +1,7 @@
 ﻿<div class="blade-content">
     <div class="blade-inner">
         <div class="inner-block">
-            <form class="form" ng-submit="add()" name="pdForm" novalidate autocomplete="off">
+            <form class="form" ng-submit="add(pdForm)" name="pdForm" novalidate autocomplete="off">
                 <fieldset>
                     <legend>New value</legend>
                     <div class="form-group" ng-if="pb.currentEntity.multilanguage">
@@ -17,7 +17,7 @@
                     </div>
                     <div class="form-group">
                         <label class="form-label">New value</label>
-                        <div class="form-input" ng-init="setForm(pdForm);" ng-if="pb.currentEntity.valueType !== 2">
+                        <div class="form-input" ng-if="pb.currentEntity.valueType !== 2">
                             <input required ng-model="newValue.value" ui-validate=" 'dictValueValidator($value)' " name="dictValue" focus-on="" type="text" placeholder="input text" />
                         </div>
                         <div class="form-input __number" ng-if="pb.currentEntity.valueType === 2">

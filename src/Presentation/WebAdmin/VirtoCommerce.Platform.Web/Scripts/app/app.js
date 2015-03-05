@@ -75,7 +75,8 @@ angular.module('platformWebApp', AppDependencies).
         	path: 'home',
         	title: 'Home',
         	icon: 'fa fa-home',
-        	action: function () { $state.go('workspace.catalog') },
+        	//action: function () { $state.go('workspace.catalog') },
+        	action: function () {  },
            	priority: 0
         };
         mainMenuService.addMenuItem(homeMenuItem);

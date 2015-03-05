@@ -75,6 +75,7 @@
 		var newBlade = {
 			id: 'editCatalogProperty',
 			currentEntityId: prop.id,
+			catalogId: $scope.blade.currentEntity.id,
 			title: 'Edit catalog property',
 			subtitle: 'enter property information',
 			controller: 'propertyDetailController',
