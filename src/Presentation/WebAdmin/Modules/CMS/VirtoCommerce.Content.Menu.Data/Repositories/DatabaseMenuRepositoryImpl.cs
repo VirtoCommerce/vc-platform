@@ -68,7 +68,7 @@ namespace VirtoCommerce.Content.Menu.Data.Repositories
 
 		public IEnumerable<Models.MenuLinkList> GetListsByStoreId(string storeId)
 		{
-			return MenuLinkLists.Where(s => s.StoreId == storeId);
+            return MenuLinkLists.Include(s => s.MenuLinks).Where(s => s.StoreId == storeId);
 		}
 
 		public Models.MenuLinkList GetListById(string listId)
