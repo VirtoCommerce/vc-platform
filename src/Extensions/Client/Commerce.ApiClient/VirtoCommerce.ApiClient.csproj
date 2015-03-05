@@ -74,6 +74,7 @@
     <Compile Include="DataContracts\Lists\MenuLink.cs" />
     <Compile Include="DataContracts\Lists\MenuLinkList.cs" />
     <Compile Include="DataContracts\Price.cs" />
+    <Compile Include="Extensions\ListClientExtensions.cs" />
     <Compile Include="PriceClient.cs" />
     <Compile Include="CustomerServiceClient.cs" />
     <Compile Include="DataContracts\CustomerService\ContactProperty.cs" />

@@ -52,7 +52,7 @@ namespace VirtoCommerce.ApiClient
         {
             #region Constants
 
-            public const string ListLinks = "{0}/menu";
+            public const string ListLinks = "cms/{0}/menu";
 
             #endregion
         }
