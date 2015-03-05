@@ -38,7 +38,7 @@
                 <div class="form-group" ng-class="{'__disabled': !blade.currentEntity.allowPreorder}">
                     <label class="form-label">Preorder availability date</label>
                     <div class="form-input __calendar">
-                        <input type="text" class="form-control" ng-model="blade.currentEntity.preorderAvailabilityDate" datepicker-popup="{{format}}" name="pod" is-open="datepickers.pod" datepicker-options="dateOptions" close-text="Close" ng-disabled="!blade.currentEntity.allowPreorder" />
+                        <input type="text" class="form-control" ng-model="blade.currentEntity.preorderAvailabilityDate" datepicker-popup="{{format}}" name="pod" is-open="datepickers.pod" min-date="today" datepicker-options="dateOptions" close-text="Close" ng-disabled="!blade.currentEntity.allowPreorder" />
                         <button class="btn" type="button" ng-click="open($event,'pod')">
                             <i class="btn-ico fa fa-calendar"></i>
                         </button>
@@ -63,7 +63,7 @@
                     <label class="form-label">Backorder availability date</label>
                     <div class="form-input __calendar">
                         <!--ng-required="true" -->
-                        <input type="text" class="form-control" ng-model="blade.currentEntity.backorderAvailabilityDate" datepicker-popup="{{format}}" name="bod" is-open="datepickers.bod" datepicker-options="dateOptions" close-text="Close" ng-disabled="!blade.currentEntity.allowBackorder" />
+                        <input type="text" class="form-control" ng-model="blade.currentEntity.backorderAvailabilityDate" datepicker-popup="{{format}}" name="bod" is-open="datepickers.bod" min-date="minDate" datepicker-options="dateOptions" close-text="Close" ng-disabled="!blade.currentEntity.allowBackorder" />
                         <button class="btn" type="button" ng-click="open($event,'bod')">
                             <i class="btn-ico fa fa-calendar"></i>
                         </button>
