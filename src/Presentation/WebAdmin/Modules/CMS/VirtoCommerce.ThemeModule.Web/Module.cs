@@ -15,6 +15,7 @@
 	using VirtoCommerce.Foundation.Data.Infrastructure;
 	using System.IO;
 	using System.Web.Hosting;
+	using VirtoCommerce.Foundation.Data.Azure.Asset;
 
 	#endregion
 
@@ -83,7 +84,10 @@
                 Directory.CreateDirectory(fileSystemMainPath);
 			}
 
-			this._container.RegisterType<ThemeController>(new InjectionConstructor(factory, settingsManager));
+			var assetsConnectionString = ConnectionHelper.GetConnectionString("AssetsConnectionString");
+			var blobStorageProvider = new AzureBlobAssetRepository(assetsConnectionString, null);
+
+			this._container.RegisterType<ThemeController>(new InjectionConstructor(factory, settingsManager, blobStorageProvider));
 		}
 
 		public void SetupDatabase(SampleDataLevel sampleDataLevel)

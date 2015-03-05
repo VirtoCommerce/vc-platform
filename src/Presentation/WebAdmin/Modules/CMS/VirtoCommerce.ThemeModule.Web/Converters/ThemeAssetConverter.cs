@@ -4,6 +4,9 @@ using System.Linq;
 using System.Web;
 using webModels = VirtoCommerce.ThemeModule.Web.Models;
 using domainModels = VirtoCommerce.Content.Data.Models;
+using VirtoCommerce.Framework.Web.Common;
+using System.IO;
+using System.Text;
 
 namespace VirtoCommerce.ThemeModule.Web.Converters
 {
@@ -13,7 +16,7 @@ namespace VirtoCommerce.ThemeModule.Web.Converters
 		{
 			var retVal = new domainModels.ThemeAsset();
 
-			retVal.Content = item.Content;
+			retVal.ByteContent = Encoding.UTF8.GetBytes(item.Content);
 			retVal.Id = item.Id;
 			retVal.ContentType = item.ContentType;
 
@@ -24,11 +27,33 @@ namespace VirtoCommerce.ThemeModule.Web.Converters
 		{
 			var retVal = new webModels.ThemeAsset();
 
-			retVal.Content = item.Content;
+			retVal.Content = Encoding.UTF8.GetString(item.ByteContent);
 			retVal.Id = item.Id;
 			retVal.ContentType = item.ContentType;
+			retVal.Name = Path.GetFileName(item.Id);
 
 			return retVal;
+		}
+
+		public static webModels.ThemeAssetFolder[] ToWebModel(this IEnumerable<domainModels.ThemeAsset> items)
+		{
+			var retVal = new List<Models.ThemeAssetFolder>();
+
+			var folders = items.Select(i => i.Id.Split('/')[0]).Distinct();
+
+			foreach (var folder in folders)
+			{
+				var themeAssetFolder = new Models.ThemeAssetFolder
+				{
+					FolderName = folder
+				};
+
+				themeAssetFolder.Assets.AddRange(items.Select(i => i.ToWebModel()).Where(i => i.Id.StartsWith(string.Format("{0}/", folder))));
+
+				retVal.Add(themeAssetFolder);
+			}
+
+			return retVal.ToArray();
 		}
 	}
 }

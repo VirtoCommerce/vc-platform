@@ -11,6 +11,7 @@ namespace VirtoCommerce.Content.Data.Repositories
 	using System.Threading.Tasks;
 	using System.Web;
 	using VirtoCommerce.Content.Data.Models;
+	using VirtoCommerce.Content.Data.Utility;
 
 	#endregion
 
@@ -37,16 +38,10 @@ namespace VirtoCommerce.Content.Data.Repositories
 
 			var fullPath = GetFullPath(path);
 
-			using (var sr = File.OpenText(fullPath))
-			{
-				var itemName = Path.GetFileName(fullPath);
-
-				var content = HttpUtility.HtmlDecode(sr.ReadToEnd());
-
-				retVal.Content = content;
-				retVal.Name = itemName;
-				retVal.Path = path;
-			}
+			var itemName = Path.GetFileName(fullPath);
+			retVal.ByteContent = File.ReadAllBytes(fullPath);
+			retVal.Name = itemName;
+			retVal.Path = path;
 
 			return retVal;
 		}
@@ -81,7 +76,7 @@ namespace VirtoCommerce.Content.Data.Repositories
 				{
 					Name = FixName(directory, fullPath),
 					ThemePath = RemoveBaseDirectory(directory),
-					ModifiedDate = maxModified 
+					ModifiedDate = maxModified
 				});
 			}
 
@@ -109,7 +104,13 @@ namespace VirtoCommerce.Content.Data.Repositories
 				var directory = directoriesQueue.Dequeue();
 				var newDirectories = Directory.GetDirectories(directory);
 				var newFiles = Directory.GetFiles(directory);
-				items.AddRange(newFiles.Select(file => new ContentItem { Name = Path.GetFileName(file), Path = this.RemoveBaseDirectory(file) }));
+
+				items.AddRange(newFiles.Select(file => new ContentItem
+				{
+					Name = Path.GetFileName(file),
+					Path = this.RemoveBaseDirectory(file)
+				}));
+
 				foreach (var newDirectory in newDirectories)
 				{
 					directoriesQueue.Enqueue(newDirectory);
@@ -122,6 +123,7 @@ namespace VirtoCommerce.Content.Data.Repositories
 				{
 					var fullFile = GetContentItem(file.Path);
 					file.Content = fullFile.Content;
+					file.ContentType = fullFile.ContentType;
 				});
 			}
 

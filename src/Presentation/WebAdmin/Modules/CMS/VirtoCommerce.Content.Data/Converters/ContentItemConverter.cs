@@ -1,36 +1,37 @@
 ﻿namespace VirtoCommerce.Content.Data.Converters
 {
-    #region
+	#region
 
-    using Octokit;
+	using Octokit;
+	using System.Text;
+	using VirtoCommerce.Content.Data.Models;
+	using ContentType = Octokit.ContentType;
 
-    using VirtoCommerce.Content.Data.Models;
+	#endregion
 
-    using ContentType = Octokit.ContentType;
+	public static class ContentItemConverter
+	{
+		#region Public Methods and Operators
 
-    #endregion
+		public static ContentItem ToContentItem(this RepositoryContent repositoryContent)
+		{
+			ContentItem retVal = null;
 
-    public static class ContentItemConverter
-    {
-        #region Public Methods and Operators
+			if (repositoryContent.Type == ContentType.File)
+			{
+				retVal = new ContentItem();
 
-        public static ContentItem ToContentItem(this RepositoryContent repositoryContent)
-        {
-            ContentItem retVal = null;
+				if (!string.IsNullOrEmpty(repositoryContent.Content))
+				{
+					retVal.ByteContent = Encoding.UTF8.GetBytes(repositoryContent.Content);
+				}
+				retVal.Name = repositoryContent.Name;
+				retVal.Path = repositoryContent.Path;
+			}
 
-            if (repositoryContent.Type == ContentType.File)
-            {
-                retVal = new ContentItem();
+			return retVal;
+		}
 
-                retVal.Content = repositoryContent.Content;
-
-                retVal.Name = repositoryContent.Name;
-                retVal.Path = repositoryContent.Path;
-            }
-
-            return retVal;
-        }
-
-        #endregion
-    }
+		#endregion
+	}
 }

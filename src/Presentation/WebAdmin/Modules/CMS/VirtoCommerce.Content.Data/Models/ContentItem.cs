@@ -42,6 +42,10 @@ using VirtoCommerce.Foundation.Frameworks;
         //[Required]
         public string Path { get; set; }
 
+		public byte[] ByteContent { get; set; }
+
+		public string FileUrl { get; set; }
+
         #endregion
     }
 }
