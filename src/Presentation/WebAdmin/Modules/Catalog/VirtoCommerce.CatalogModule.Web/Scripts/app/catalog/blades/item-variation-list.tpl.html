@@ -1,17 +1,16 @@
-﻿<div class="blade-content blade-medium">
+﻿<div class="blade-content __medium-wide">
     <div class="blade-inner">
         <div class="inner-block">
             <div class="table-wrapper">
                 <table class="table">
                     <thead>
                         <tr>
-                            <th class="table-col">
+                            <th class="table-col __product-control">
                                 <label class="form-control __checkbox">
                                     <input type="checkbox" ng-model="selectedAll" ng-change="checkAll(selectedAll)" />
                                     <span class="check"></span>
                                 </label>
                             </th>
-                            <th class="table-col">Id</th>
                             <th class="table-col">Pic</th>
                             <th class="table-col">Name</th>
                             <th class="table-col">Code</th>
@@ -20,7 +19,7 @@
                     <tbody>
                         <tr class="table-item" ng-repeat="data in blade.item.variations" ng-class="{'selected': data === selectedItem}">
                             <td class="table-col">
-                                <label class="input-control checkbox">
+                                <label class="form-control __checkbox">
                                     <input type="checkbox" ng-model="data.selected">
                                     <span class="check"></span>
                                 </label>
@@ -31,8 +30,11 @@
                                     <i class="table-ico fa fa-image" ng-if="!data.imgSrc" />
                                 </div>
                             </td>
-                            <td class="table-col" ng-class="{'__product-code': $index === 1, '__product-name': $index === 2}" ng-repeat="col in [data.id, data.code, data.name] track by $index" ng-click='selectVariation(data)'>
-                                <span title="{{col}}">{{col}}</span>
+                            <td class="table-col __product-name" ng-click='selectVariation(data)'>
+                                {{data.name}}
+                            </td>
+                            <td class="table-col __product-code" ng-click='selectVariation(data)'>
+                                {{data.code}}
                             </td>
                         </tr>
                     </tbody>

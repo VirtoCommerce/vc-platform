@@ -19,7 +19,8 @@
   'platformWebApp.htmlTooltip',
   'platformWebApp.widget',
   'platformWebApp.breadcrumbs',
-  'platformWebApp.inputNumber'
+  'platformWebApp.inputNumber',
+  'platformWebApp.common.confirmDialog'
 ];
 
 angular.module('platformWebApp', AppDependencies).
@@ -54,9 +55,9 @@ angular.module('platformWebApp', AppDependencies).
 .config(
   ['$stateProvider', '$httpProvider', 'uiSelectConfig', function ($stateProvider, $httpProvider, uiSelectConfig) {
     $stateProvider.state('workspace', {
-						  abstract: true,
 						  templateUrl: 'Scripts/app/workspace.tpl.html'
     });
+
 	//Add interseptor
     $httpProvider.interceptors.push('httpErrorInterceptor');
 	//ui-select set selectize as default theme
@@ -75,7 +76,7 @@ angular.module('platformWebApp', AppDependencies).
         	path: 'home',
         	title: 'Home',
         	icon: 'fa fa-home',
-        	action: function () { $state.go('workspace.catalog') },
+        	action: function () { $state.go('workspace') },
            	priority: 0
         };
         mainMenuService.addMenuItem(homeMenuItem);

@@ -23,11 +23,10 @@ namespace VirtoCommerce.OrderModule.Data.Services
 		private readonly IOperationNumberGenerator _operationNumberGenerator;
 		private readonly IShoppingCartService _shoppingCartService;
 		private readonly IWorkflowService _workflowService;
-		public CustomerOrderServiceImpl(Func<IOrderRepository> orderRepositoryFactory, IShoppingCartService shoppingCartService, 
-										IOperationNumberGenerator operationNumberGenerator, IWorkflowService workflowService)
+		public CustomerOrderServiceImpl(Func<IOrderRepository> orderRepositoryFactory, IOperationNumberGenerator operationNumberGenerator, IWorkflowService workflowService)
 		{
 			_repositoryFactory = orderRepositoryFactory;
-			_shoppingCartService = shoppingCartService;
+			//_shoppingCartService = shoppingCartService;
 			_operationNumberGenerator = operationNumberGenerator;
 			_workflowService = workflowService;
 		}

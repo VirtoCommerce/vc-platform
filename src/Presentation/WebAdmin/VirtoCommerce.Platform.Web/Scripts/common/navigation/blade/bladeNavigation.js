@@ -35,20 +35,20 @@ angular.module('platformWebApp.bladeNavigation', [
                 if (offset > mainContent.scrollLeft()) {
                     mainContent.animate({ scrollLeft: offset + 'px' }, 500);
                 }
-            }, 500);
+            }, 0, false);
 
 
             //Somehow vertical scrollbar does not work initially so need to turn it on
-            $(element).find('.blade-content').off('mousewheel').on('mousewheel', function (event, delta)
-            {
-                this.scrollTop -= (delta * speed);
-                event.preventDefault();
-            });
+            // $(element).find('.blade-content').off('mousewheel').on('mousewheel', function (event, delta)
+            // {
+            //     this.scrollTop -= (delta * speed);
+            //     event.preventDefault();
+            // });
 
-            $(element).off('mouseenter').on('mouseenter', function (e) {
-                var blade = $(this).parents('.blade'),
-                    bladeI = blade.find('.blade-inner'),
-                    bladeH = bladeI.height(),
+            $(element).find('.blade-container').on('mouseenter', function (e) {
+                var blade   = $(this),
+                    bladeI  = blade.find('.blade-inner'),
+                    bladeH  = bladeI.height(),
                     bladeIh = blade.find('.inner-block').height() + 5;
 
                 if (blade.length) {
@@ -59,15 +59,16 @@ angular.module('platformWebApp.bladeNavigation', [
                         horizontalScroll('on');
                     }
                 }
+            }).on('mouseleave', function () {
+                horizontalScroll('on');
             });
 
-            $('*').on('mouseenter', function (event) {
-                var dashboard = $(this).parents('.dashboard'),
-                    dashboardA = dashboard.find('.dashboard-area'),
-                    dashboardH = dashboardA.height(),
-                    dashboardIh = dashboard.find('.dashboard-inner').height();
+            $('.dashboard-area').on('mouseenter', function (event) {
+                var dashboardA  = $(this),
+                    dashboardH  = dashboardA.height(),
+                    dashboardIh = dashboardA.find('.dashboard-inner').height();
 
-                if (dashboard.length) {
+                if (dashboardA.length) {
                     if (dashboardH <= dashboardIh) {
                         horizontalScroll('off');
                     }
@@ -75,12 +76,10 @@ angular.module('platformWebApp.bladeNavigation', [
                         horizontalScroll('on');
                     }
                 }
-            });
-
-            $('.dashboard-head, .dashboard-head *, .blade-head, .blade-head *, .static, .static *').on('mouseenter', function (event) {
+            }).on('mouseleave', function () {
                 horizontalScroll('on');
             });
-
+            
             function horizontalScroll(flag)
             {
                 if (flag != 'off')

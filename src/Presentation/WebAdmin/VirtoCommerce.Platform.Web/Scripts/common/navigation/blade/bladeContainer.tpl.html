@@ -2,7 +2,7 @@
     <div class="blade-wrapper" va-blade='blade'>
         <header class="blade-head">
             <div class="blade-status">
-                <div class="progress-bar" ng-show="blade.isLoading"></div>
+                <div class="progress-bar" ng-class="{'__loaded': !blade.isLoading}" ng-show="blade.isLoading"></div>
             </div>
             <div class="blade-nav">
                 <ul class="menu __inline">
@@ -24,7 +24,9 @@
                 </ul>
             </div>
             <div class="blade-t" ng-class="{'__secondary': blade.subtitle}">
-                <i class="blade-t_ico fa" ng-class="bladeHeadIco ? bladeHeadIco : 'fa-folder'"></i>
+                <i class="blade-t_ico fa {{bladeHeadIco == 'fa fa-user' ? '__customers' : ''}}" ng-class="bladeHeadIco ? bladeHeadIco : 'fa-folder'">
+                    <i ng-if="bladeHeadIco == 'fa fa-user'"></i>
+                </i>
                 <p class="blade-t_head" ng-if="blade.title" ng-bind="blade.title"></p>
                 <p class="blade-t_subhead" ng-if="blade.subtitle" ng-bind="blade.subtitle"></p>
             </div>
@@ -41,7 +43,7 @@
             <ng-include src="toolbarTemplate" />            
         </header>
         <div class="blade-container">
-            <div class="loader" ng-show="blade.isLoading">
+            <div class="loader" ng-if="blade.isLoading">
                 <span></span>
                 <span></span>
                 <span></span>

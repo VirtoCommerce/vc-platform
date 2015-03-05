@@ -27,7 +27,7 @@ namespace VirtoCommerce.MenuModule.Web.Converters
 
 			retVal.Id = link.Id;
 			retVal.Name = link.Name;
-			retVal.Link = link.Link;
+            retVal.Link = link.Link;
 			retVal.MenuLinkListId = link.MenuLinkListId;
 
 			return retVal;

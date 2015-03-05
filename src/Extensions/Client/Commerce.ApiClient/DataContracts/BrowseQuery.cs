@@ -35,6 +35,9 @@ namespace VirtoCommerce.ApiClient.DataContracts
         [DataMember]
         public Dictionary<string, string[]> Filters { get; set; }
 
+        [DataMember]
+        public string[] PriceLists { get; set; }
+
         /// <summary>
         ///     Gets or sets the outline to filter products. Its category path.
         /// </summary>
@@ -90,6 +93,9 @@ namespace VirtoCommerce.ApiClient.DataContracts
             builder.Append(this.Take);
             builder.Append(this.Outline);
             builder.Append(this.SortProperty);
+
+            if (PriceLists != null)
+                builder.Append(string.Join(",", PriceLists));
 
             foreach (var facet in this.Filters)
             {

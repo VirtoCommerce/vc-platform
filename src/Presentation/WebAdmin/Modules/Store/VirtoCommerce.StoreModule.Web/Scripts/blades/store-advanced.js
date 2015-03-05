@@ -17,6 +17,8 @@
         $scope.bladeClose();
     }
 
+    $scope.bladeHeadIco = 'fa fa-archive';
+
     $scope.blade.isLoading = false;
     $scope.blade.currentEntity = angular.copy($scope.blade.entity);
     $scope.blade.origEntity = $scope.blade.entity;

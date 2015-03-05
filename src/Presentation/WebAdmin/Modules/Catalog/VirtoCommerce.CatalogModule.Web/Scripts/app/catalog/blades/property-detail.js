@@ -10,6 +10,7 @@
     var b = $scope.blade;
     var formScope;
     b.origEntity = {};
+
     // b.currentEntity = {};
 
     $scope.currentChild = undefined;
@@ -35,7 +36,8 @@
     };
 
     $scope.openChild = function (childType) {
-        var newBlade = { id: "propertyChild" };
+    	var newBlade = { id: "propertyChild" };
+    	newBlade.property = b.currentEntity
 
         switch (childType) {
             case 'attr':
@@ -49,7 +51,7 @@
                 newBlade.subtitle = 'Change value type';
                 newBlade.controller = 'propertyValueTypeController';
                 newBlade.template = 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/blades/property-valueType.tpl.html';
-                break;
+               break;
             case 'appliesto':
                 newBlade.title = b.origEntity.name ? b.origEntity.name : b.currentEntity.name + ' applies to';
                 newBlade.subtitle = 'Change to what it applies';
@@ -69,7 +71,7 @@
     }
 
     function initializeBlade(data) {
-        if (data.valueType === 2 && data.dictionaryValues) {
+        if (data.valueType === 'Number' && data.dictionaryValues) {
             _.forEach(data.dictionaryValues, function (entry) {
                 entry.value = parseFloat(entry.value);
             });

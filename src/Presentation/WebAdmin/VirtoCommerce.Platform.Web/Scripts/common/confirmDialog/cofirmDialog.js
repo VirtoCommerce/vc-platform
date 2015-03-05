@@ -44,7 +44,7 @@
                 controller:  controller, 
                 resolve: {
                     dialog: function () {
-                        return dialog;
+                    	return dialog;
                     }
                 }
             });

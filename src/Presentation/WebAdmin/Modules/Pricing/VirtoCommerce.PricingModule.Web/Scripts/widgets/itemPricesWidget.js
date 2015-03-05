@@ -18,7 +18,8 @@
                 var minprice = _.min(allPrices);
                 var maxprice = _.max(allPrices);
                 var currency = prices.length ? ' ' + prices[0].currency : '';
-                $scope.priceRange = (minprice == maxprice ? minprice : minprice + '-' + maxprice) + currency;
+                $scope.priceRange = (minprice == maxprice ? minprice : minprice + '-' + maxprice);
+                $scope.currency = currency;
             } else {
                 $scope.priceRange = 'NO';
             }

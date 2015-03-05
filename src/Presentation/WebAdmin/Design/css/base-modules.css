@@ -1,3 +1,10 @@
+/* Fix by angular ng-animate */
+.ng-hide,
+.ng-hide-animate
+{
+    display: none;
+}
+
 /* Scroll bar */
 *::-webkit-scrollbar
 {
@@ -2425,13 +2432,13 @@ h3
     color: #e51400;
 }
 
-.form-input input.ng-invalid,
+.form-input input.error,
 .form-input textarea.ng-invalid,
-.form-input input:focus.ng-invalid,
-.form-input textarea:focus.ng-invalid
+.form-input input.error:focus,
+.form-input textarea.ng-invalid:focus
 {
-    background: #faf1f1;
-    border-color: #e51400;
+    background: #fef8f7;
+    border-color: #fce7e6;
     color: #e51400;
 }
 
@@ -2474,12 +2481,10 @@ fieldset + fieldset
 
     .form-group .form-error
     {
-        background: #fef8f7;
-        border: 1px solid #fce7e6;
         color: #e51400;
         font-size: 12px;
         line-height: 1.4;
-        padding: 10px;
+        padding: 5px 0;
     }
 
         .form-group .form-error *
@@ -2566,7 +2571,7 @@ fieldset + fieldset
 
         .form-input.__mini
         {
-            width: 60px;
+            width: 68px;
         }
 
         .form-input input,
@@ -3899,6 +3904,11 @@ fieldset + fieldset
         padding: 20px;
     }
 
+        .modal-content .modal-body .form-input
+        {
+            margin: 15px 0 0;
+        }
+
     .modal-content .modal-footer
     {
         text-align: right;
@@ -4264,6 +4274,11 @@ fieldset + fieldset
         font-weight: 400;
         position: static;
         text-shadow: none;
+    }
+
+    .form-input.__calendar .dropdown-menu .btn:disabled:hover
+    {
+        background: #fbfdfe;
     }
 
     .form-input.__calendar .dropdown-menu .btn:hover
@@ -5026,6 +5041,7 @@ tags-input .tags .tag-item .remove-button
                 position: absolute;
                 right: 0;
                 top: 0;
+                z-index: 100;
             }
 
 		.blade-head .blade-nav

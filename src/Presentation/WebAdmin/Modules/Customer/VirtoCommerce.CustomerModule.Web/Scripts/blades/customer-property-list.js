@@ -80,6 +80,8 @@
         formScope = form;
     }
 
+    $scope.bladeHeadIco = 'fa fa-user';
+
     $scope.bladeToolbarCommands = [
         {
             name: "Add property", icon: 'fa fa-plus',

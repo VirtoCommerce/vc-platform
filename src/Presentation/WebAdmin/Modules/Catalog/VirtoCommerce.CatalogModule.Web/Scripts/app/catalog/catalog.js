@@ -71,7 +71,7 @@ angular.module(catalogsModuleName, [
       //Register module in main menu
       var menuItem = {
           path: 'browse/catalog',
-          icon: 'fa fa-tag',
+          icon: 'fa fa-folder',
           title: 'Catalog',
           priority: 90,
           action: function () { $state.go('workspace.catalog') },
@@ -186,26 +186,4 @@ angular.module(catalogsModuleName, [
 	 };
 	 widgetService.registerWidget(catalogPropertyWidget, 'catalogDetail');
 
-  }])
-.filter('propertydatatype', function () {
-    return function (input) {
-        var result;
-        switch (input) {
-            case 0:
-                result = "Short text";
-                break;
-            case 1:
-                result = "Long text";
-                break;
-            case 2:
-                result = "Numeric";
-                break;
-                //case 3:
-                //    result = "Date";
-                //    break;
-            default:
-                result = input;
-        }
-        return result;
-    };
-});
+  }]);

@@ -62,7 +62,7 @@
         });
     };
 
-    $scope.bladeHeadIco = 'fa-shopping-cart';
+    $scope.bladeHeadIco = 'fa-file-text';
 
     $scope.bladeToolbarCommands = [
         {
@@ -144,7 +144,7 @@
 
 		   },
 		     {
-		     	name: "Cancel document", icon: 'fa fa-undo',
+		     	name: "Cancel document", icon: 'fa fa-remove',
 		     	executeMethod: function () {
 		     		var dialog = {
 		     			id: "confirmCancelOperation",
@@ -152,6 +152,7 @@
 		     				if (reason) {
 		     					$scope.blade.currentEntity.cancelReason = reason;
 		     					$scope.blade.currentEntity.isCancelled = true;
+		     					$scope.blade.currentEntity.status = 'cancelled';
 		     					saveChanges();
 		     				}
 		     			}
@@ -167,7 +168,9 @@
     $scope.blade.onClose = function (closeCallback) {
         if (isDirty()) {
             var dialog = {
-                id: "confirmItemChange",
+            	id: "confirmItemChange",
+            	title: "Save changes",
+            	message: "The operation has been modified. Do you want to save changes?",
                 callback: function (needSave) {
                     if (needSave) {
                         saveChanges();
