@@ -43,7 +43,7 @@
         //bladeNavigationService.showBlade(newBlade, $scope.blade);
     }
 
-    $scope.bladeHeadIco = 'fa-shopping-cart';
+    $scope.bladeHeadIco = 'fa-file-text';
 
     $scope.bladeToolbarCommands = [
         {

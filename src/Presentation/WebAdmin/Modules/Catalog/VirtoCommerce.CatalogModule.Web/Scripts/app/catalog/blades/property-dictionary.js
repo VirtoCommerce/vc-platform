@@ -3,21 +3,16 @@
     var pb = $scope.blade.parentBlade;
     $scope.pb = pb;
 
-    var formScope;
-
     $scope.dictValueValidator = function (value) {
     	return _.all(pb.currentEntity.dictionaryValues, function (item) { return item.value !== value; });
     }
 
-    $scope.setForm = function (form) {
-        formScope = form;
-    }
 
-    $scope.add = function () {
-        if (formScope.$valid) {
+    $scope.add = function (form) {
+    	if (form.$valid) {
         	pb.currentEntity.dictionaryValues.push($scope.newValue);
             resetNewValue($scope.newValue.languageCode);
-            formScope.$setPristine();
+            form.$setPristine();
         }
     };
 

@@ -57,6 +57,8 @@
         });
     }
 
+    $scope.bladeHeadIco = 'fa fa-archive';
+
     $scope.bladeToolbarCommands = [
         {
             name: "Refresh", icon: 'fa fa-refresh',

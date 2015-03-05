@@ -35,7 +35,7 @@ angular.module(moduleName, [
       //Register module in main menu
       var menuItem = {
           path: 'browse/store',
-          icon: 'fa fa-shopping-cart',
+          icon: 'fa fa-archive',
           title: 'Stores',
           priority: 110,
           action: function () { $state.go('workspace.storeModule'); },

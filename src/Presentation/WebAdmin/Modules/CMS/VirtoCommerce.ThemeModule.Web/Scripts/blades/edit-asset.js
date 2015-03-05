@@ -122,5 +122,7 @@
         }
     };
 
+    $scope.bladeHeadIco = 'fa fa-archive';
+
     initializeBlade();
 }]);

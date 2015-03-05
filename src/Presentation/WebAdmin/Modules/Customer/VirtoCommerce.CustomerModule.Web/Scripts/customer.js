@@ -36,7 +36,7 @@ angular.module(moduleName, [
       //Register module in main menu
       var menuItem = {
           path: 'browse/customer',
-          icon: 'fa fa-users',
+          icon: 'fa fa-user',
           title: 'customers',
           priority: 180,
           action: function () { $state.go('workspace.customerModule'); },

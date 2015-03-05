@@ -80,6 +80,8 @@
         dialogService.showConfirmationDialog(dialog);
     }
 
+    $scope.bladeHeadIco = 'fa fa-cubes';
+
     // on load
     initializeBlade($scope.blade.currentEntity);
 }]);

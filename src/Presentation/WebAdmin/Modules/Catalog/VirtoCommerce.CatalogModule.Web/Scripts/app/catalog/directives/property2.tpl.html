@@ -8,8 +8,9 @@
             ng-disabled="currentEntity.isReadOnly"  
             ng-required="currentEntity.required && !currentEntity.isReadOnly" 
             ng-model="context.currentPropValues[0].value" 
-            type="text" 
-            name="{{currentEntity.valueType}}" />
+            name="{{currentEntity.valueType}}" 
+            placeholder="Please enter short text" 
+            type="text">
         </div>
     </script>
     <script type="text/ng-template" id="longText.html">
@@ -18,20 +19,20 @@
             ng-disabled="currentEntity.isReadOnly"
             ng-required="currentEntity.required && !currentEntity.isReadOnly"
             ng-model="context.currentPropValues[0].value"
-            name="{{currentEntity.valueType}}" />
+            name="{{currentEntity.valueType}}" 
+            placeholder="Please enter long text">
         </div>
     </script>
     <script type="text/ng-template" id="number.html">
         <!--<a href="#" editable-number="val.value">{{val.value || "N/A" }}</a>-->
-        <div class="form-input __number">
+        <div class="form-input">
             <input 
-            va-number
-            step="1"
             ng-disabled="currentEntity.isReadOnly"
             ng-required="currentEntity.required && !currentEntity.isReadOnly"
             ng-model="context.currentPropValues[0].value"
-            type="text" 
-            name="{{currentEntity.valueType}}" />
+            name="{{currentEntity.valueType}}" 
+            placeholder="Please enter number" 
+            type="text">
         </div>
     </script>
 
@@ -76,8 +77,8 @@
     <script type="text/ng-template" id="shortText-dictionary.html">
         <div class="form-input">
             <ui-select ng-model="context.currentPropValues[0]" ng-disabled="disabled">
-                <ui-select-match placeholder="Select language">{{$select.selected.value}}</ui-select-match>
-                <ui-select-choices repeat="propValue.value as propValue in context.allDictionaryValues | filter: {value: $select.search}">
+                <ui-select-match placeholder="Select value">{{$select.selected.value}}</ui-select-match>
+                <ui-select-choices repeat="propValue in context.allDictionaryValues | filter: {value: $select.search}">
                     <span ng-bind-html="propValue.value | highlight: $select.search"></span>
                 </ui-select-choices>
             </ui-select>
@@ -86,8 +87,8 @@
     <script type="text/ng-template" id="number-dictionary.html">
         <div class="form-input">
             <ui-select ng-model="context.currentPropValues[0]" ng-disabled="disabled">
-                <ui-select-match placeholder="Select language">{{$select.selected.value}}</ui-select-match>
-                <ui-select-choices repeat="propValue.value as propValue in context.allDictionaryValues | filter: {value: $select.search}">
+                <ui-select-match placeholder="Select value">{{$select.selected.value}}</ui-select-match>
+                <ui-select-choices repeat="propValue in context.allDictionaryValues | filter: {value: $select.search}">
                     <span ng-bind-html="propValue.value | highlight: $select.search"></span>
                 </ui-select-choices>
             </ui-select>
@@ -97,9 +98,9 @@
 
     <script type="text/ng-template" id="shortText-dictionary-multivalue.html">
         <div class="form-input">
-            <ui-select multiple ng-model="context.currentPropValues" ng-disabled="disabled">
-                <ui-select-match placeholder="Select language">{{$item.value}}</ui-select-match>
-                <ui-select-choices repeat="propValue.value as propValue in context.allDictionaryValues | filter: {value: $select.search}">
+            <ui-select multiple ng-model="context.currentPropValues[0]" ng-disabled="disabled">
+                <ui-select-match placeholder="Select value">{{$item.value}}</ui-select-match>
+                <ui-select-choices repeat="propValue in context.allDictionaryValues | filter: {value: $select.search}">
                     <span ng-bind-html="propValue.value | highlight: $select.search"></span>
                 </ui-select-choices>
             </ui-select>
@@ -107,9 +108,9 @@
     </script>
     <script type="text/ng-template" id="number-dictionary-multivalue.html">
         <div class="form-input">
-            <ui-select multiple ng-model="context.currentPropValues" ng-disabled="disabled">
-                <ui-select-match placeholder="Select language">{{$item.value}}</ui-select-match>
-                <ui-select-choices repeat="propValue.value as propValue in context.allDictionaryValues | filter: {value: $select.search}">
+            <ui-select multiple ng-model="context.currentPropValues[0]" ng-disabled="disabled">
+                <ui-select-match placeholder="Select value">{{$item.value}}</ui-select-match>
+                <ui-select-choices repeat="propValue in context.allDictionaryValues | filter: {value: $select.search}">
                     <span ng-bind-html="propValue.value | highlight: $select.search"></span>
                 </ui-select-choices>
             </ui-select>
@@ -125,8 +126,9 @@
                 ng-disabled="currentEntity.isReadOnly"
                 ng-required="currentEntity.required && !currentEntity.isReadOnly"
                 ng-model="langValuesGroup.currentPropValues[0].value"
-                type="text" 
-                name="{{currentEntity.valueType}}" />
+                name="{{currentEntity.valueType}}" 
+                placeholder="Please enter value" 
+                type="text">
             </div>
         </div>
     </script>
@@ -146,13 +148,12 @@
         <div class="form-group" ng-repeat="(language, langValuesGroup) in context.langValuesMap">
             <div class="form-input __number">
                 <input 
-                va-number 
                 ng-disabled="currentEntity.isReadOnly" 
-                step="1" 
                 ng-required="currentEntity.required && !currentEntity.isReadOnly" 
                 ng-model="langValuesGroup.currentPropValues[0].value" 
-                type="text" 
-                name="{{currentEntity.valueType}}" />
+                name="{{currentEntity.valueType}}" 
+                placeholder="Please enter number value" 
+                type="text"> 
             </div>
         </div>
     </script>
@@ -213,7 +214,7 @@
                 <span class="flag flag-{{language.substr(3).toLowerCase()}}"></span>
                 <ui-select ng-model="langValuesGroup.currentPropValues[0]" ng-disabled="disabled">
                     <ui-select-match placeholder="Select language">{{$select.selected.value}}</ui-select-match>
-                    <ui-select-choices repeat="propValue.value as propValue in langValuesGroup.allValues | filter: {value: $select.search}">
+                    <ui-select-choices repeat="propValue in langValuesGroup.allValues | filter: {value: $select.search}">
                         <span ng-bind-html="propValue.value | highlight: $select.search"></span>
                     </ui-select-choices>
                 </ui-select>
@@ -226,7 +227,7 @@
                 <span class="flag flag-{{language.substr(3).toLowerCase()}}"></span>
                 <ui-select ng-model="langValuesGroup.currentPropValues[0]" ng-disabled="disabled">
                     <ui-select-match placeholder="Select language">{{$select.selected.value}}</ui-select-match>
-                    <ui-select-choices repeat="propValue.value as propValue in langValuesGroup.allValues | filter: {value: $select.search}">
+                    <ui-select-choices repeat="propValue in langValuesGroup.allValues | filter: {value: $select.search}">
                         <span ng-bind-html="propValue.value | highlight: $select.search"></span>
                     </ui-select-choices>
                 </ui-select>
@@ -241,7 +242,7 @@
                 <span class="flag flag-{{language.substr(3).toLowerCase()}}"></span>
                 <ui-select multiple ng-model="langValuesGroup.currentPropValues" ng-disabled="disabled">
                     <ui-select-match placeholder="Select language">{{$item.value}}</ui-select-match>
-                    <ui-select-choices repeat="langValuesGroup.languageCode as langValuesGroup in langValuesGroup.allValues | filter: {value: $select.search}">
+                    <ui-select-choices repeat="langValuesGroup in langValuesGroup.allValues | filter: {value: $select.search}">
                         <span ng-bind-html="langValuesGroup.value | highlight: $select.search"></span>
                     </ui-select-choices>
                 </ui-select>
@@ -254,7 +255,7 @@
                 <span class="flag flag-{{language.substr(3).toLowerCase()}}"></span>
                 <ui-select multiple ng-model="langValuesGroup.currentPropValues" ng-disabled="disabled">
                     <ui-select-match placeholder="Select language">{{$item.value}}</ui-select-match>
-                    <ui-select-choices repeat="langValuesGroup.languageCode as langValuesGroup in langValuesGroup.allValues | filter: {value: $select.search}">
+                    <ui-select-choices repeat="langValuesGroup in langValuesGroup.allValues | filter: {value: $select.search}">
                         <span ng-bind-html="langValuesGroup.value | highlight: $select.search"></span>
                     </ui-select-choices>
                 </ui-select>

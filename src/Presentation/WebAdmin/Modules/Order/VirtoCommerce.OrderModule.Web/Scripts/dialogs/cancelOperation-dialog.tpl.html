@@ -2,10 +2,12 @@
     <h3 class="modal-title">Cancel operation</h3>
 </div>
 <div class="modal-body">
-    The document has been modified. Do you want to save changes?
+    <p>The document has been modified. Do you want to save changes?</p>
+    <div class="form-input">
+        <textarea ng-model="cancelReason"></textarea>
+    </div>
 </div>
-<textarea ng-model="cancelReason"></textarea>
 <div class="modal-footer">
-    <button class="btn btn-primary" ng-click="yes()">Confirm</button>
-    <button class="btn btn-default" ng-click="cancel()">Cancel</button>
+    <button class="btn" ng-click="yes()">Confirm</button>
+    <button class="btn" ng-click="cancel()">Cancel</button>
 </div>

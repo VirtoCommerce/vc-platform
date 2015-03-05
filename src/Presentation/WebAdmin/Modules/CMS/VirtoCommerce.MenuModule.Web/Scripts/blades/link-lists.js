@@ -61,6 +61,8 @@
 		});
 	}
 
+	$scope.bladeHeadIco = 'fa fa-archive';
+
 	$scope.bladeToolbarCommands = [
         {
         	name: "Add list", icon: 'fa fa-plus',

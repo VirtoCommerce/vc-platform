@@ -110,7 +110,7 @@
 		if (!angular.isDefined(notifyMenu)) {
 			notifyMenu = {
 				path: 'notification',
-				icon: 'fa fa-comment',
+				icon: 'fa fa-comments',
 				title: 'Notifications',
 				priority: 2,
 				permission: '',

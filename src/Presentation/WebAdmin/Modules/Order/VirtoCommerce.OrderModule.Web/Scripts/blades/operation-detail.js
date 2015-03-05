@@ -62,7 +62,7 @@
         });
     };
 
-    $scope.bladeHeadIco = 'fa-shopping-cart';
+    $scope.bladeHeadIco = 'fa-file-text';
 
     $scope.bladeToolbarCommands = [
         {
@@ -144,7 +144,7 @@
 
 		   },
 		     {
-		     	name: "Cancel document", icon: 'fa fa-undo',
+		     	name: "Cancel document", icon: 'fa fa-remove',
 		     	executeMethod: function () {
 		     		var dialog = {
 		     			id: "confirmCancelOperation",

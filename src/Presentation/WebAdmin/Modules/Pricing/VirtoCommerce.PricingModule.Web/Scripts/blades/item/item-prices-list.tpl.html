@@ -40,12 +40,12 @@
                                 </div>
                             </td>
                             <td class="table-col">
-                                <div data-step="1" class="form-input __number">
+                                <div data-step="1" class="form-input __mini">
                                     <input type="text" ng-model="data.minQuantity" required />
                                 </div>
                             </td>
                             <td class="table-col">
-                                {{data.modifiedDate | date : 'short'}}
+                                <span class="table-date" am-time-ago="data.modifiedDate"></span>
                                 <ul class="menu __context" role="menu" id="ipl_menu_{{data.id}}">
                                     <li class="menu-item" ng-click='delete(data)'>
                                         <i class="menu-ico fa fa-trash-o"></i> Delete

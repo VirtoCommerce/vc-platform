@@ -26,6 +26,8 @@
         });
     };
 
+    $scope.bladeHeadIco = 'fa-shopping-cart';
+
     $scope.bladeToolbarCommands = [
         {
             name: "Save", icon: 'fa fa-save',

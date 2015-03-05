@@ -89,6 +89,8 @@
         $scope.formScope = form;
     }
 
+    $scope.bladeHeadIco = 'fa fa-user';
+
     $scope.bladeToolbarCommands = [
         {
             name: "Reset", icon: 'fa fa-undo',

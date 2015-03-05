@@ -16,6 +16,8 @@
         }
     }
 
+    $scope.bladeHeadIco = 'fa fa-archive';
+
     $scope.$watch('blade.parentBlade.currentEntity.paymentGateways', function (currentEntities) {
         $scope.blade.currentEntities = currentEntities;
     });
