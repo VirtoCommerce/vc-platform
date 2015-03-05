@@ -3,8 +3,7 @@
     'catalogModule.blades.advancedSearch',
     'catalogModule.resources.categories',
     'catalogModule.resources.items',
-    'catalogModule.resources.listEntries',
-    'platformWebApp.common.confirmDialog'
+    'catalogModule.resources.listEntries'   
 ])
 .controller('categoriesItemsListController', ['$rootScope', '$scope', '$filter', 'categories', 'items', 'listEntries', 'bladeNavigationService', 'dialogService', function ($rootScope, $scope, $filter, categories, items, listEntries, bladeNavigationService, dialogService) {
     //pagination settigs
