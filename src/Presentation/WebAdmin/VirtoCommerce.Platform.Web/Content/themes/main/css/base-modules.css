@@ -3904,6 +3904,11 @@ fieldset + fieldset
         padding: 20px;
     }
 
+        .modal-content .modal-body .form-input
+        {
+            margin: 15px 0 0;
+        }
+
     .modal-content .modal-footer
     {
         text-align: right;
@@ -4269,6 +4274,11 @@ fieldset + fieldset
         font-weight: 400;
         position: static;
         text-shadow: none;
+    }
+
+    .form-input.__calendar .dropdown-menu .btn:disabled:hover
+    {
+        background: #fbfdfe;
     }
 
     .form-input.__calendar .dropdown-menu .btn:hover
