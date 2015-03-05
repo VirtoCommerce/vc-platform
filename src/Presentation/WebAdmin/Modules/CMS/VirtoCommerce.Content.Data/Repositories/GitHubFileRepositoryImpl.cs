@@ -13,6 +13,7 @@
 	using VirtoCommerce.Content.Data.Models;
 
 	using ContentType = Octokit.ContentType;
+	using System.Text;
 
 	#endregion
 
@@ -86,7 +87,7 @@
 
 			List<Theme> list = new List<Theme>();
 
-			foreach(var theme in themes)
+			foreach (var theme in themes)
 			{
 				var commits = this._client.
 					Repository.
@@ -120,7 +121,7 @@
 
 			var directoriesQueue = new Queue<string>();
 
-			foreach(var directory in directories)
+			foreach (var directory in directories)
 			{
 				directoriesQueue.Enqueue(directory);
 			}
@@ -143,7 +144,7 @@
 				files.AddRange(newFiles);
 			}
 
-			foreach(var file in files)
+			foreach (var file in files)
 			{
 				file.Path = FixPath(file.Path);
 			}
@@ -184,7 +185,7 @@
 						this._ownerName,
 						this._repositoryName,
 						fullPath,
-						new UpdateFileRequest("Updating file from admin", item.Content, existingItem.Sha)).Result;
+						new UpdateFileRequest("Updating file from admin", Encoding.UTF8.GetString(item.ByteContent), existingItem.Sha)).Result;
 			}
 		}
 

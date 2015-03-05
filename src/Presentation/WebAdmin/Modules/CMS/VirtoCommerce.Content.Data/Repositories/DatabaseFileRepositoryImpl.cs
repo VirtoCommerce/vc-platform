@@ -98,7 +98,7 @@
 			var existingItem = ContentItems.FirstOrDefault(p => p.Path == path);
 			if (existingItem != null)
 			{
-				existingItem.Content = item.Content;
+				existingItem.ByteContent = item.ByteContent;
 				Update(existingItem);
 			}
 			else
@@ -108,11 +108,11 @@
 			}
 
 			var steps = path.Split('/');
-			if(steps.Length > 2)
+			if (steps.Length > 2)
 			{
 				var themePath = string.Join("/", steps[0], steps[1]);
 				var theme = Themes.FirstOrDefault(t => t.Id == themePath);
-				if(theme != null)
+				if (theme != null)
 				{
 					theme.ModifiedDate = DateTime.UtcNow;
 					Update(theme);

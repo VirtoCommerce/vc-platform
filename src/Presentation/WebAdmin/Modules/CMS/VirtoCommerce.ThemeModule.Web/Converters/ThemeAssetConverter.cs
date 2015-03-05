@@ -23,14 +23,28 @@ namespace VirtoCommerce.ThemeModule.Web.Converters
 			return retVal;
 		}
 
+		public static domainModels.ThemeAsset DomainModel(string id, string contentType, byte[] content)
+		{
+			var retVal = new domainModels.ThemeAsset();
+
+			retVal.ByteContent = content;
+			retVal.Id = id;
+			retVal.ContentType = contentType;
+
+			return retVal;
+		}
+
 		public static webModels.ThemeAsset ToWebModel(this domainModels.ThemeAsset item)
 		{
 			var retVal = new webModels.ThemeAsset();
 
-			retVal.Content = Encoding.UTF8.GetString(item.ByteContent);
+			if (item.ByteContent != null)
+			{
+				retVal.Content = Encoding.UTF8.GetString(item.ByteContent);
+			}
 			retVal.Id = item.Id;
 			retVal.ContentType = item.ContentType;
-			retVal.Name = Path.GetFileName(item.Id);
+			retVal.Name = string.Join("/", item.Id.Split('/').AsEnumerable().Skip(1));
 
 			return retVal;
 		}

@@ -94,8 +94,12 @@
     }
 
     function isCanSave() {
-    	return (!(angular.isUndefined(blade.currentEntity.id) || blade.currentEntity.id === null) &&
-			!(angular.isUndefined(blade.currentEntity.content) || blade.currentEntity.content === null));
+    	if (!angular.isUndefined(blade.currentEntity)) {
+    		return true;
+    	}
+    	else {
+    		return (!angular.isUndefined(blade.currentEntity.id) && !angular.isUndefined(blade.currentEntity.content));
+    	}
     }
 
     blade.onClose = function (closeCallback) {

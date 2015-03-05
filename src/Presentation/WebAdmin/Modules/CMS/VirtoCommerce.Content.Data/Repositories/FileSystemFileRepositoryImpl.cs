@@ -142,11 +142,7 @@ namespace VirtoCommerce.Content.Data.Repositories
 
 			using (var fs = new FileStream(fullPath, FileMode.Create))
 			{
-				using (var sw = new StreamWriter(fs))
-				{
-					sw.Write(item.Content);
-					sw.Close();
-				}
+				fs.Write(item.ByteContent, 0, item.ByteContent.Length);
 				fs.Close();
 			}
 		}

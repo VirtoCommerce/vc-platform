@@ -37,7 +37,7 @@ namespace VirtoCommerce.Content.Tests
 			var mock = new Mock<ISettingsManager>();
 			mock.Setup(x => x.GetValue(It.IsAny<string>(), It.IsAny<string>())).Returns("Github");
 
-			var controller = new ThemeController(factory, mock.Object, null);
+			var controller = new ThemeController(factory, mock.Object);
 
 			return controller;
 		}

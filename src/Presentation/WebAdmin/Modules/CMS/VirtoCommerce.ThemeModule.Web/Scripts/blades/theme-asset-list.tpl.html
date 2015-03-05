@@ -7,8 +7,8 @@
 						<i class="list-ico fa" ng-class="{'fa-folder-open': blade.checkFolder(data), 'fa-folder': !blade.checkFolder(data) }"></i>
 						<span class="list-name">{{data.folderName}}</span>
 					</a>
-					<ul class="list __sub" ng-show="blade.checkFolder(data)" ng-repeat="asset in data.assets | orderBy:'name':reverse" ng-class="{'__selected': asset.id === blade.selectedAssetId}">
-						<li class="list-item">
+					<ul class="list __sub" ng-show="blade.checkFolder(data)" ng-repeat="asset in data.assets | orderBy:'name':reverse" ng-class="{'__selected': blade.checkAsset(asset) }">
+						<li class="list-item" ng-click="blade.openBlade(asset)">
 							<a class="list-block">
 								<i class="list-ico fa" ng-class="blade.assetClass(asset)"></i>
 								<span class="list-name">{{asset.name}}</span>

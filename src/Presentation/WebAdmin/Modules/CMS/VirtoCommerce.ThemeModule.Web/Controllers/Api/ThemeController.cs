@@ -27,7 +27,7 @@ namespace VirtoCommerce.ThemeModule.Web.Controllers.Api
 		#endregion
 
 		#region Constructors and Destructors
-		public ThemeController(Func<string, IThemeService> factory, ISettingsManager manager, IBlobStorageProvider blobProvider)
+		public ThemeController(Func<string, IThemeService> factory, ISettingsManager manager)
 		{
 			if (factory == null)
 			{
@@ -39,20 +39,12 @@ namespace VirtoCommerce.ThemeModule.Web.Controllers.Api
 				throw new ArgumentNullException("manager");
 			}
 
-			if (blobProvider == null)
-			{
-				throw new ArgumentNullException("blobProvider");
-			}
-
 			var chosenRepository = manager.GetValue(
 				"VirtoCommerce.ThemeModule.MainProperties.ThemesRepositoryType",
 				string.Empty);
 
 			var themeService = factory.Invoke(chosenRepository);
 			this._themeService = themeService;
-
-			_blobProvider = blobProvider;
-			_tempPath = HostingEnvironment.MapPath("~/App_Data/Uploads/");
 		}
 		#endregion
 
@@ -105,31 +97,21 @@ namespace VirtoCommerce.ThemeModule.Web.Controllers.Api
 			return this.Ok();
 		}
 
-		//[HttpPost]
-		//[Route("themes/{themeId}/assets/image")]
-		//public IHttpActionResult SaveImageItem()
-		//{
-		//	if (!Request.Content.IsMimeMultipartContent())
-		//	{
-		//		throw new HttpResponseException(HttpStatusCode.UnsupportedMediaType);
-		//	}
+		[HttpPost]
+		[Route("themes/{themeId}/assets/image")]
+		public IHttpActionResult SaveImageItem(string storeId, string themeId)
+		{
+			if (!Request.Content.IsMimeMultipartContent())
+			{
+				throw new HttpResponseException(HttpStatusCode.UnsupportedMediaType);
+			}
 
-		//	var blobMultipartProvider = new BlobStorageMultipartProvider(_blobProvider, _tempPath, "theme");
-		//	Request.Content.ReadAsMultipartAsync(blobMultipartProvider).Wait();
+			var content = Request.Content.ReadAsByteArrayAsync().Result;
+			var asset = ThemeAssetConverter.DomainModel("", "", content);
 
-		//	var retVal = new List<webModel.BlobInfo>();
-
-		//	foreach (var blobInfo in blobMultipartProvider.BlobInfos)
-		//	{
-		//		retVal.Add(new webModel.BlobInfo
-		//		{
-		//			Name = blobInfo.Name,
-		//			Size = blobInfo.Size.ToHumanReadableSize(),
-		//			MimeType = blobInfo.ContentType,
-		//			Url = blobInfo.Location
-		//		});
-		//	}
-		//}
+			this._themeService.SaveThemeAsset(storeId, themeId, asset);
+			return this.Ok();
+		}
 		#endregion
 	}
 }
