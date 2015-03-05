@@ -60,6 +60,8 @@
         });
     }
 
+    $scope.bladeHeadIco = 'fa fa-user';
+
     $scope.bladeToolbarCommands = [
         {
             name: "Save",
@@ -96,7 +98,8 @@
     $scope.clear = function () {
         $scope.blade.currentEntity.birthDate = null;
     };
-   
+    $scope.today = new Date();
+
     $scope.open = function ($event, which) {
         $event.preventDefault();
         $event.stopPropagation();

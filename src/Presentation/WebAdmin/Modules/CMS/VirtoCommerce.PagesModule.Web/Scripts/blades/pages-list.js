@@ -79,6 +79,8 @@
 		dialogService.showConfirmationDialog(dialog);
 	}
 
+	$scope.bladeHeadIco = 'fa fa-archive';
+
 	$scope.bladeToolbarCommands = [
         {
         	name: "Add page", icon: 'fa fa-plus',

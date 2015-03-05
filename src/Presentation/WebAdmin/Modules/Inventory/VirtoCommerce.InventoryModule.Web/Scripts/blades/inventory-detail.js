@@ -125,10 +125,11 @@
         return (mode === 'day' && (date.getDay() === 0 || date.getDay() === 6));
     };
 
-    $scope.toggleMin = function () {
-        $scope.minDate = ($scope.minDate) ? null : new Date();
-    };
-    $scope.toggleMin();
+    //$scope.toggleMin = function () {
+    //    $scope.minDate = ($scope.minDate) ? null : new Date();
+    //};
+    //$scope.toggleMin();
+    $scope.today = new Date();
 
     $scope.open = function ($event, which) {
         $event.preventDefault();

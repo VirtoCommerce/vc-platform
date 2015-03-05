@@ -7,5 +7,7 @@
         $scope.bladeClose();
     };
 
+    $scope.bladeHeadIco = 'fa fa-user';
+
     $scope.blade.isLoading = false;
 }]);

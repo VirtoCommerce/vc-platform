@@ -132,4 +132,6 @@
 					return link.id == data.id;
 				});
 	};
+
+	$scope.bladeHeadIco = 'fa fa-archive';
 }]);

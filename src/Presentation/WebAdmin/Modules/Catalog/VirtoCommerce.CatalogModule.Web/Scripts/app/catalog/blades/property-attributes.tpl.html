@@ -7,9 +7,9 @@
                     <div class="form-group">
                         <label class="form-label">Name</label>
                         <div class="form-input" ng-init="setForm(contextEntityDetailForm);">
-                            <input type="text" placeholder="input text" required ng-model="newValue.name" ui-validate=" 'attributeNameValidator($value)' " name="attrName" focus-on="">
+                            <input ng-class="{'error': contextEntityDetailForm.attrName.$invalid && !contextEntityDetailForm.attrName.$pristine}" type="text" placeholder="Please enter name" required ng-model="newValue.name" ui-validate=" 'attributeNameValidator($value)' " name="attrName" focus-on="">
                         </div>
-                        <div class="form-error" ng-if="contextEntityDetailForm.attrName.$dirty">
+                        <div class="form-error" ng-if="contextEntityDetailForm.attrName.$dirty && contextEntityDetailForm.attrName.$invalid">
                             <span ng-if="contextEntityDetailForm.attrName.$error.required">Required</span>
                             <span ng-if="contextEntityDetailForm.attrName.$error.validator">Duplicate name found</span>
                         </div>
@@ -17,14 +17,14 @@
                     <div class="form-group">
                         <label class="form-label">Value</label>
                         <div class="form-input">
-                            <input type="text" placeholder="input text" required ng-model="newValue.value" name="attrValue">
+                            <input ng-class="{'error': contextEntityDetailForm.attrValue.$invalid && !contextEntityDetailForm.attrValue.$pristine}" type="text" placeholder="Please enter value" required ng-model="newValue.value" name="attrValue">
                         </div>
                         <div class="form-error" ng-if="contextEntityDetailForm.attrValue.$dirty">
                             <span ng-if="contextEntityDetailForm.attrValue.$error.required">Required</span>
                         </div>
                     </div>
                     <div class="form-group">
-                        <button class="btn" type="submit">
+                        <button class="btn" ng-disabled="contextEntityDetailForm.$invalid" type="submit">
                             <span>Add</span>
                         </button>
                     </div>
@@ -58,7 +58,7 @@
                                 </td>
                                 <td class="table-col">
                                     <div class="form-input">
-                                        <input type="text" placeholder="input text" required ng-model="data.name">
+                                        <input type="text" required ng-model="data.name">
                                     </div>
                                     <ul role="menu" class="menu __context" id="pa_menu_{{$index}}">
                                         <li class="menu-item" ng-click='delete($index)'>
@@ -68,7 +68,7 @@
                                 </td>
                                 <td class="table-col">
                                     <div class="form-input">
-                                        <input type="text" placeholder="input text" required ng-model="data.value">
+                                        <input type="text" required ng-model="data.value">
                                     </div>
                                 </td>
                             </tr>

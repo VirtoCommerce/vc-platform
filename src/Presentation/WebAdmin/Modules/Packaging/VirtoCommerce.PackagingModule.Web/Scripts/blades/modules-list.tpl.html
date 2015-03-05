@@ -13,7 +13,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr class="table-item" ng-repeat="data in blade.currentEntities" ng-class="{'selected': data.id === selectedEntityId}" ng-click='selectItem(data)'>
+                        <tr class="table-item" ng-repeat="data in blade.currentEntities" ng-class="{'__selected': data.id === selectedEntityId}" ng-click='selectItem(data)'>
                             <td class="table-col __product-img">
                                 <div class="product-img">
                                     <!-- <div class="image" style="background-image: url({{data.iconUrl}})" ng-if="data.iconUrl"></div> -->

@@ -5,13 +5,13 @@
                 <div class="form-group" ng-init="setForm(itemDetailForm)">
                     <label class="form-label">SKU:</label>
                     <div class="form-input">
-                        <input required class="form-control" ng-model="currentBlade.item.code" placeholder="Enter item sku" />
+                        <input ng-class="{'error': itemDetailForm.itemCode.$invalid && !itemDetailForm.itemCode.$pristine}" required class="form-control" ng-model="currentBlade.item.code" name="itemCode" placeholder="Enter item sku" />
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="form-label">Name:</label>
                     <div class="form-input">
-                        <textarea class="form-control" cols="30" rows="3" ng-model="currentBlade.item.name" placeholder="Enter item name"></textarea>
+                        <textarea ng-class="{'error': itemDetailForm.itemName.$invalid && !itemDetailForm.itemName.$pristine}" cols="30" rows="3" ng-model="currentBlade.item.name" name="itemName" placeholder="Enter item name"></textarea>
                     </div>
                 </div>
             </form>

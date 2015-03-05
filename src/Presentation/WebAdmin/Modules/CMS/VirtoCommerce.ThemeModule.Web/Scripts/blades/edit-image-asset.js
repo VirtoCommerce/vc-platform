@@ -23,6 +23,8 @@
 			}
 		});
 
+		$scope.bladeHeadIco = 'fa fa-archive';
+
 
 		uploader.onSuccessItem = function (fileItem, images, status, headers) {
 			angular.forEach(images, function (image) {

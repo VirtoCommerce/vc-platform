@@ -39,7 +39,7 @@ angular.module(moduleName, [
   	//Register module in main menu
   	var menuItem = {
   		path: 'browse/orders',
-  		icon: 'fa fa-shopping-cart',
+  		icon: 'fa fa-file-text',
   		title: 'Orders',
   		priority: 99,
   		action: function () { $state.go('workspace.orderModule'); },

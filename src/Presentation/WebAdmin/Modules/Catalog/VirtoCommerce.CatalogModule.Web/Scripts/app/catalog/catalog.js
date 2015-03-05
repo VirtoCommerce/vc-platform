@@ -71,7 +71,7 @@ angular.module(catalogsModuleName, [
       //Register module in main menu
       var menuItem = {
           path: 'browse/catalog',
-          icon: 'fa fa-tag',
+          icon: 'fa fa-folder',
           title: 'Catalog',
           priority: 90,
           action: function () { $state.go('workspace.catalog') },
