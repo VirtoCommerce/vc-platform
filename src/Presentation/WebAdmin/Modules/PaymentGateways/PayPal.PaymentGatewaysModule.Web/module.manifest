@@ -6,7 +6,7 @@
 		<dependency>VirtoCommerce.Core</dependency>
 	</dependencies>
 
-	<title>Paypal PaymentGateway Web</title>
+	<title>Paypal Payment Gateway</title>
 	<description>APIs and UI for paypal payment gateway</description>
 	<authors>
 		<author>Virto Commerce</author>

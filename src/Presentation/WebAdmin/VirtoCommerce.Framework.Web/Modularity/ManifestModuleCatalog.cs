@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.IO;
 using System.Linq;
 using VirtoCommerce.Framework.Web.Properties;
@@ -35,9 +34,6 @@ namespace VirtoCommerce.Framework.Web.Modularity
                 throw new InvalidOperationException(Resources.ContentPathCannotBeNullOrEmpty);
             if (string.IsNullOrEmpty(contentPhysicalPath))
                 throw new InvalidOperationException(Resources.ContentPathCannotBeNullOrEmpty);
-
-            if (!Directory.Exists(contentPhysicalPath))
-                throw new InvalidOperationException(string.Format(CultureInfo.CurrentCulture, Resources.DirectoryNotFound, contentPhysicalPath));
 
             if (!Directory.Exists(_assembliesPath))
                 Directory.CreateDirectory(_assembliesPath);

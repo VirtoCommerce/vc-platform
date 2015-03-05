@@ -6,7 +6,7 @@
 		<dependency>VirtoCommerce.Core</dependency>
 	</dependencies>
 
-	<title>Klarna PaymentGateway Web</title>
+	<title>Klarna Payment Gateway</title>
 	<description>APIs and UI for klarna payment gateway</description>
 	<authors>
 		<author>Virto Commerce</author>

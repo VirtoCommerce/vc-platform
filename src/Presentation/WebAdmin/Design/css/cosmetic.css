@@ -16,13 +16,15 @@
 }
 
 .table .table-item:hover,
-.__items .list-item:hover
+.__items .list-item:hover,
+.__files .list-block:hover
 {
 	background: #ecf7fc;
 }
 
 .table .table-item.__selected,
-.__items .list-item.__selected
+.__items .list-item.__selected,
+.__files .list-item.__selected > .list-block
 {
 	background: #d9effa;
 }
@@ -34,14 +36,17 @@
 
 /* Icons */
 .tile-ico,
-.__items .list-ico
+.__items .list-ico,
+.__files .list-ico
 {
 	color: #a6a6a6;
 }
 
 .tile:hover .tile-ico,
 .__items .list-item:hover .list-ico,
-.__items .list-item.__selected .list-ico
+.__items .list-item.__selected .list-ico,
+.__files .list-block:hover .list-ico,
+.__files .list-item.__selected > .list-block .list-ico
 {
 	color: #a1c0d4;
 }

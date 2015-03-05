@@ -1,12 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <module>
-  <id>VirtoCommerce.Order</id>
+  <id>VirtoCommerce.Orders</id>
   <version>1.0.0.0</version>
   <dependencies>
     <dependency>VirtoCommerce.Core</dependency>
   </dependencies>
 
-  <title>Virto Commerce Order</title>
+  <title>Virto Commerce Orders</title>
   <description>APIs and UI for managing orders</description>
   <authors>
     <author>Virto Commerce</author>

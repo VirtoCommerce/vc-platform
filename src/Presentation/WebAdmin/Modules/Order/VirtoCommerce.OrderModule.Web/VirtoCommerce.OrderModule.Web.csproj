@@ -121,6 +121,7 @@
     <Compile Include="Module.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Content Include="Scripts\blades\!blades.js" />
+    <Content Include="Scripts\dialogs\cancelOperation-dialog.tpl.html" />
     <Content Include="Scripts\resources\!resources.js" />
     <Content Include="Scripts\widgets\!widgets.js" />
     <Content Include="Scripts\widgets\address-widget.js" />
