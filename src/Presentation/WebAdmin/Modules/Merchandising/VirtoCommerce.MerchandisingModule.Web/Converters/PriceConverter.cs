@@ -10,6 +10,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Converters
         {
             var retVal = new webModel.Price();
             retVal.InjectFrom(price);
+            retVal.ProductId = price.ItemId;
             return retVal;
         }
     }

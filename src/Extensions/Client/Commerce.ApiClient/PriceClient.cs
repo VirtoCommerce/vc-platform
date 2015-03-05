@@ -44,14 +44,15 @@ namespace VirtoCommerce.ApiClient
 
         public Task<Price[]> GetPrices(
             string[] priceLists,
-            string[] products)
+            string[] products,
+            bool useCache = true)
         {
             var parameters = new { priceLists = string.Join(",", priceLists), products = string.Join(",", products) };
             return
                 GetAsync<Price[]>(
                     CreateRequestUri(
                         String.Format(RelativePaths.Prices),
-                        parameters));
+                        parameters), useCache: useCache);
         }
 
         #endregion

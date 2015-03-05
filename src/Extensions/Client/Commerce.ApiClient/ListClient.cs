@@ -3,34 +3,34 @@
 using System;
 using System.Net.Http;
 using System.Threading.Tasks;
-using VirtoCommerce.ApiClient.DataContracts.Themes;
+using VirtoCommerce.ApiClient.DataContracts.Lists;
 using VirtoCommerce.ApiClient.Utilities;
 
 #endregion
 
 namespace VirtoCommerce.ApiClient
 {
-    public class ThemeClient : BaseClient
+    public class ListClient : BaseClient
     {
         #region Constructors and Destructors
 
         /// <summary>
-        ///     Initializes a new instance of the ThemeClient class.
+        ///     Initializes a new instance of the MenuClient class.
         /// </summary>
         /// <param name="adminBaseEndpoint">Admin endpoint</param>
         /// <param name="appId">The API application ID.</param>
         /// <param name="secretKey">The API secret key.</param>
-        public ThemeClient(Uri adminBaseEndpoint, string appId, string secretKey)
+        public ListClient(Uri adminBaseEndpoint, string appId, string secretKey)
             : base(adminBaseEndpoint, new HmacMessageProcessingHandler(appId, secretKey))
         {
         }
 
         /// <summary>
-        ///     Initializes a new instance of the ThemeClient class.
+        ///     Initializes a new instance of the MenuClient class.
         /// </summary>
         /// <param name="adminBaseEndpoint">Admin endpoint</param>
         /// <param name="handler"></param>
-        public ThemeClient(Uri adminBaseEndpoint, MessageProcessingHandler handler)
+        public ListClient(Uri adminBaseEndpoint, MessageProcessingHandler handler)
             : base(adminBaseEndpoint, handler)
         {
         }
@@ -39,30 +39,20 @@ namespace VirtoCommerce.ApiClient
 
         #region Public Methods and Operators
 
-        public Task<ThemeAsset[]> GetThemeAssetsAsync(string storeId, string themeId)
+        public Task<MenuLinkList[]> GetLinkListsAsync(string storeId)
         {
             return
-                GetAsync<ThemeAsset[]>(
+                GetAsync<MenuLinkList[]>(
                     CreateRequestUri(
-                        String.Format(RelativePaths.ThemeAssets, storeId, themeId)));
+                        String.Format(RelativePaths.ListLinks, storeId)));
         }
-
-        public Task<Theme[]> GetThemesAsync(string storeId)
-        {
-            return
-                GetAsync<Theme[]>(
-                    CreateRequestUri(
-                        String.Format(RelativePaths.Themes, storeId)));
-        }
-
         #endregion
 
         protected class RelativePaths
         {
             #region Constants
 
-            public const string ThemeAssets = "{0}/themes/{1}/assets";
-            public const string Themes = "{0}/themes";
+            public const string ListLinks = "cms/{0}/menu";
 
             #endregion
         }

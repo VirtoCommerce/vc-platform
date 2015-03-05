@@ -14,6 +14,7 @@ using VirtoCommerce.Foundation.Catalogs.Services;
 using VirtoCommerce.Foundation.Search;
 using VirtoCommerce.Foundation.Search.Schemas;
 using VirtoCommerce.Foundation.Stores.Repositories;
+using VirtoCommerce.Framework.Web.Common;
 using VirtoCommerce.MerchandisingModule.Web.Binders;
 using VirtoCommerce.MerchandisingModule.Web.Converters;
 using VirtoCommerce.MerchandisingModule.Web.Model;
@@ -64,11 +65,13 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
         /// <param name="outline">The outline.</param>
         /// <param name="language">The language.</param>
         /// <param name="currency"></param>
+        /// <param name="priceLists"></param>
         /// <returns></returns>
         [HttpGet]
+        [ArrayInput(ParameterName = "priceLists")]
         [Route("")]
 		[ResponseType(typeof(ProductSearchResult))]
-		public IHttpActionResult Search(string store, [ModelBinder(typeof(SearchParametersBinder))] SearchParameters parameters, [FromUri]moduleModel.ItemResponseGroup responseGroup = moduleModel.ItemResponseGroup.ItemMedium, [FromUri]string outline="", string language = "en-us", string currency = "USD")
+		public IHttpActionResult Search(string store, string[] priceLists, [ModelBinder(typeof(SearchParametersBinder))] SearchParameters parameters, [FromUri]moduleModel.ItemResponseGroup responseGroup = moduleModel.ItemResponseGroup.ItemMedium, [FromUri]string outline="", string language = "en-us", string currency = "USD")
         {
             var context = new Dictionary<string, object>
             {
@@ -128,7 +131,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
             //criteria.ClassTypes.Add("Product");
             criteria.RecordsToRetrieve = parameters.PageSize == 0 ? 10 : parameters.PageSize;
             criteria.StartingRecord = parameters.StartingRecord;
-            criteria.Pricelists = null;//UserHelper.CustomerSession.Pricelists;
+            criteria.Pricelists = priceLists;
             criteria.Currency = currency;
             criteria.StartDateFrom = parameters.StartDateFrom;
             criteria.SearchPhrase = parameters.FreeSearch;
