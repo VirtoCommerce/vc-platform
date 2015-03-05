@@ -73,6 +73,10 @@
     <Compile Include="Migrations\201502171619353_AddThemesAuditable.Designer.cs">
       <DependentUpon>201502171619353_AddThemesAuditable.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201503041636021_AddByteContent.cs" />
+    <Compile Include="Migrations\201503041636021_AddByteContent.Designer.cs">
+      <DependentUpon>201503041636021_AddByteContent.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\ContentItem.cs" />
     <Compile Include="Models\Theme.cs" />
@@ -84,6 +88,7 @@
     <Compile Include="Repositories\IFileRepository.cs" />
     <Compile Include="Services\IThemeService.cs" />
     <Compile Include="Services\ThemeServiceImpl.cs" />
+    <Compile Include="Utility\ContentTypeUtility.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -111,6 +116,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201502171619353_AddThemesAuditable.resx">
       <DependentUpon>201502171619353_AddThemesAuditable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201503041636021_AddByteContent.resx">
+      <DependentUpon>201503041636021_AddByteContent.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

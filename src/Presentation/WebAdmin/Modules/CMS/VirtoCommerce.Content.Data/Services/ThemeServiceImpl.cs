@@ -3,9 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web.Hosting;
 using VirtoCommerce.Content.Data.Converters;
 using VirtoCommerce.Content.Data.Models;
 using VirtoCommerce.Content.Data.Repositories;
+using VirtoCommerce.Content.Data.Utility;
+using VirtoCommerce.Foundation.Assets.Repositories;
 
 namespace VirtoCommerce.Content.Data.Services
 {
@@ -13,6 +16,8 @@ namespace VirtoCommerce.Content.Data.Services
 	{
 		private readonly object _lockObject = new object();
 		private readonly IFileRepository _repository;
+		private readonly IBlobStorageProvider _blobProvider;
+		private readonly string _tempPath;
 
 		public ThemeServiceImpl(IFileRepository repository)
 		{
@@ -20,6 +25,19 @@ namespace VirtoCommerce.Content.Data.Services
 				throw new ArgumentNullException("repository");
 
 			_repository = repository;
+		}
+
+		public ThemeServiceImpl(IFileRepository repository, IBlobStorageProvider blobProvider, string tempPath)
+		{
+			if (repository == null)
+				throw new ArgumentNullException("repository");
+
+			if (blobProvider == null)
+				throw new ArgumentNullException("blobProvider");
+
+			_repository = repository;
+			_blobProvider = blobProvider;
+			_tempPath = HostingEnvironment.MapPath("~/App_Data/Uploads/");
 		}
 
 		public IEnumerable<Theme> GetThemes(string storeId)
@@ -35,9 +53,10 @@ namespace VirtoCommerce.Content.Data.Services
 			var themePath = GetThemePath(storeId, themeName);
 			var items = _repository.GetContentItems(themePath, loadContent);
 
-			foreach(var item in items)
+			foreach (var item in items)
 			{
 				item.Path = FixPath(themePath, item.Path);
+				item.ContentType = ContentTypeUtility.GetContentType(item.Name, item.ByteContent);
 			}
 
 			return items.Select(c => c.AsThemeAsset());
@@ -51,6 +70,9 @@ namespace VirtoCommerce.Content.Data.Services
 				var item = _repository.GetContentItem(fullPath);
 
 				item.Path = FixPath(GetThemePath(storeId, themeId), item.Path);
+				item.ContentType = ContentTypeUtility.GetContentType(item.Name, item.ByteContent);
+
+				var retVal = item.AsThemeAsset();
 
 				return item.AsThemeAsset();
 			}
