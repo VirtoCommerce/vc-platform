@@ -39,6 +39,8 @@ function ($injector, $scope, settings, bladeNavigationService) {
         bladeNavigationService.showBlade(newBlade, $scope.blade);
     };
 
+    $scope.bladeHeadIco = 'fa fa-wrench';
+
 
     // actions on load
     $scope.blade.refresh();

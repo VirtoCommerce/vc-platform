@@ -60,6 +60,8 @@
         });
     }
 
+    $scope.bladeHeadIco = 'fa fa-user';
+
     $scope.bladeToolbarCommands = [
         {
             name: "Save",

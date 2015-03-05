@@ -166,8 +166,8 @@ a:hover,
 	height: 20px;
 	margin: 10px 0;
 
-	-webkit-animation: 2s linear 0s infinite running progress;
-			animation: 2s linear 0s infinite running progress;
+	-webkit-animation: progress 5s infinite  linear;
+			animation: progress 5s infinite  linear;
 }
 
 .progress-bar.__auqa

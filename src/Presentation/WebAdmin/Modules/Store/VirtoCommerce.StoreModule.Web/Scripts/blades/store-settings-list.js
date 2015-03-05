@@ -30,6 +30,8 @@
         $scope.openBlade(data);
     }
 
+    $scope.bladeHeadIco = 'fa fa-archive';
+
     $scope.bladeToolbarCommands = [
         {
             name: "Add", icon: 'fa fa-plus',

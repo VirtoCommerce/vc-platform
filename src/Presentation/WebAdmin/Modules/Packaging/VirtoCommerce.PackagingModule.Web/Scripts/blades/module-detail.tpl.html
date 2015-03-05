@@ -58,7 +58,11 @@
                     </div>
                     <div class="form-group">
                         <p class="sub-t">Dependencies</p>
-                        <p class="text"><span ng-repeat="x in currentEntity.dependencies">{{x}}</span> </p>
+                        <ul class="list">
+                            <li class="list-item" ng-repeat="x in currentEntity.dependencies">
+                                <a class="list-link text">{{x}}</a>
+                            </li>
+                        </ul>
                     </div>
                     <div class="form-group">
                         <p class="sub-t">Tags</p>

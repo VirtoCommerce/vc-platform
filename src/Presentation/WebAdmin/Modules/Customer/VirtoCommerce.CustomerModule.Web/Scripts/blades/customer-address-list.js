@@ -34,6 +34,8 @@
         $scope.openBlade(data);
     }
 
+    $scope.bladeHeadIco = 'fa fa-user';
+
     $scope.bladeToolbarCommands = [
         {
             name: "Add", icon: 'fa fa-plus',

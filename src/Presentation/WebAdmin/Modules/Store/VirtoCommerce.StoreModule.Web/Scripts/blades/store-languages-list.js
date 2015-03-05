@@ -75,6 +75,8 @@
         $scope.bladeClose();
     };
 
+    $scope.bladeHeadIco = 'fa fa-archive';
+
     $scope.bladeToolbarCommands = [
         {
             name: "Set default", icon: 'fa fa-edit',

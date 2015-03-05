@@ -60,6 +60,8 @@
         });
     };
 
+    $scope.bladeHeadIco = 'fa fa-wrench';
+
     $scope.bladeToolbarCommands = [
         {
             name: "Save", icon: 'fa fa-save',
