@@ -19,7 +19,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr class="table-item" ng-repeat="data in blade.currentEntity.prices" ng-class="{'__selected': data.id === selectedItem.id}" context-menu data-target="ipl_menu_{{data.id}}" ng-click='selectItem(data)'>
+                        <tr class="table-item" ng-repeat="data in blade.currentEntity.prices track by data.id" ng-class="{'__selected': data.id === selectedItem.id}" context-menu data-target="ipl_menu_{{data.id}}" ng-click='selectItem(data)'>
                             <!--<td class="table-col">
                                 <label class="form-control __checkbox">
                                     <input type="checkbox" ng-model="data.selected">
