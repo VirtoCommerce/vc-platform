@@ -140,7 +140,6 @@
 
     $scope.dateOptions = {
         'year-format': "'yyyy'",
-        'starting-day': 1
     };
 
     $scope.formats = ['shortDate', 'dd-MMMM-yyyy', 'yyyy/MM/dd'];
