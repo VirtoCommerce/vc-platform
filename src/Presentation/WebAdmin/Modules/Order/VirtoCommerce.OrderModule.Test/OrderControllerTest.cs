@@ -333,7 +333,7 @@ namespace VirtoCommerce.OrderModule.Test
 			var orderWorkflowService = new ObservableWorkflowService<coreModel.CustomerOrder>();
 			//Subscribe to order changes. Calculate totals  
 			orderWorkflowService.Subscribe(new CalculateTotalsActivity());
-			var orderService = new CustomerOrderServiceImpl(orderRepositoryFactory, cartService, new TimeBasedNumberGeneratorImpl(), orderWorkflowService);
+			var orderService = new CustomerOrderServiceImpl(orderRepositoryFactory, new TimeBasedNumberGeneratorImpl(), orderWorkflowService);
 
 			var controller = new CustomerOrderController(orderService, null, new TimeBasedNumberGeneratorImpl());
 			return controller;

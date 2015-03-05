@@ -2,7 +2,8 @@
 ])
 .controller('itemVariationListController', ['$scope', 'bladeNavigationService', 'dialogService', 'items', function ($scope, bladeNavigationService, dialogService, items) {
 
-    $scope.blade.refresh = function (parentRefresh) {
+	$scope.blade.refresh = function (parentRefresh) {
+		$scope.blade.isLoading = true;
         items.get({ id: $scope.blade.itemId }, function (data) {
             $scope.blade.item = data;
             $scope.blade.isLoading = false;

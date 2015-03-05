@@ -27,6 +27,7 @@ namespace VirtoCommerce.CatalogModule.Web.Model
         public bool Dictionary { get; set; }
         public bool Multivalue { get; set; }
         public bool Multilanguage { get; set; }
+		[JsonConverter(typeof(StringEnumConverter))]
         public PropertyValueType ValueType { get; set; }
 		[JsonConverter(typeof(StringEnumConverter))]
         public PropertyType Type { get; set; }
