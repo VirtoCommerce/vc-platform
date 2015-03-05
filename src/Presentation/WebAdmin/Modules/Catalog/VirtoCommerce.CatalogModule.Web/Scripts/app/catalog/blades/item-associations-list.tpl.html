@@ -14,7 +14,7 @@
     </thead>
     <tbody ui-sortable="sortableOptions" ng-model="blade.currentEntities">
         <!--| orderBy:priority-->
-        <tr ng-repeat="data in blade.currentEntities" ng-class="{'selected': data === selectedItem}">
+        <tr ng-repeat="data in blade.currentEntities track by data.id" ng-class="{'selected': data === selectedItem}">
             <td>
                 <div data-role="input-control" class="input-control checkbox">
                     <label>

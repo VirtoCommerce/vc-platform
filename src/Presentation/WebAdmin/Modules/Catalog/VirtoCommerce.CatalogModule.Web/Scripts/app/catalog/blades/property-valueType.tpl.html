@@ -3,19 +3,19 @@
         <div class="inner-block">
             <ul class="list __items">
                 <label class="list-item" ng-mouseup="selectOption('ShortText')">
-                    <input type="checkbox" ng-checked="'shortText' === $scope.blade.property.valueType">
+                    <input type="checkbox" ng-checked="'ShortText' === blade.property.valueType">
                     <span class="switch"></span>
                     <span class="list-t">Short Text</span>
                     <span class="list-descr">Text values less than 1024 chars.</span>
                 </label>
                 <label class="list-item" ng-mouseup="selectOption('LongText')">
-                    <input type="checkbox" ng-checked="'longText' ===  $scope.blade.property.valueType">
+                    <input type="checkbox" ng-checked="'LongText' ===  blade.property.valueType">
                     <span class="switch"></span>
                     <span class="list-t">Long Text</span>
                     <span class="list-descr">Huge amount text without size limit.</span>
                 </label>
                 <label class="list-item" ng-mouseup="selectOption('Number')">
-                    <input type="checkbox" ng-checked="'number' ===  $scope.blade.property.valueType">
+                    <input type="checkbox" ng-checked="'Number' ===  blade.property.valueType">
                     <span class="switch"></span>
                     <span class="list-t">Number</span>
                     <span class="list-descr">Digital input with float point.</span>
