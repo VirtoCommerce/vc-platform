@@ -206,6 +206,7 @@
 
 .table .table-col.__product-control
 {
+    vertical-align: middle;
     width: 20px;
 }
 
