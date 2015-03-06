@@ -92,6 +92,9 @@ namespace VirtoCommerce.CoreModule.Web.Settings
 
                     repository.UnitOfWork.Commit();
                 }
+
+                _cacheHelper.Remove(
+                    CacheHelper.CreateCacheKey(Constants.SettingsCachePrefix, string.Format(SettingsCacheKey, "all")));
             }
         }
 
