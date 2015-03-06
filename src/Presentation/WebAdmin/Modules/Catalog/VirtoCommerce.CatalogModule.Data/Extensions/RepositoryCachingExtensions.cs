@@ -20,7 +20,7 @@ namespace VirtoCommerce.CatalogModule.Data.Extensions
         public static IEnumerable<Item> GetItemsCached(this IFoundationCatalogRepository repository, ICacheRepository cache, ISettingsManager settingsManager, string[] itemIds, ItemResponseGroup respGroup)
         {
             var cacheHelper = new CacheHelper(cache);
-            var itemTimeout = 30;//settingsManager.GetValue("Catalogs.Caching.ItemTimeout", 30);
+            var itemTimeout = settingsManager.GetValue("Catalogs.Caching.ItemTimeout", 30);
             return cacheHelper.Get(
                 CacheHelper.CreateCacheKey(Constants.CatalogCachePrefix, string.Format(ItemsCacheKey, CacheHelper.CreateCacheKey(itemIds), respGroup.GetHashCode())),
                 () => repository.GetItemByIds(itemIds, respGroup).ToArray(),
@@ -30,7 +30,7 @@ namespace VirtoCommerce.CatalogModule.Data.Extensions
         public static CatalogBase GetCatalogCached(this IFoundationCatalogRepository repository, ICacheRepository cache, ISettingsManager settingsManager, string catalogId)
         {
             var cacheHelper = new CacheHelper(cache);
-            var catalogTimeout = 30;//settingsManager.GetValue("Catalogs.Caching.CatalogTimeout", 60);
+            var catalogTimeout = settingsManager.GetValue("Catalogs.Caching.CatalogTimeout", 60);
             return cacheHelper.Get(
                 CacheHelper.CreateCacheKey(Constants.CatalogCachePrefix, string.Format(CatalogCacheKey, catalogId)),
                 () => repository.GetCatalogById(catalogId),
