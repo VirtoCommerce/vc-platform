@@ -134,6 +134,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.Content.Menu.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.MenuModule.Web", "src\Presentation\WebAdmin\Modules\CMS\VirtoCommerce.MenuModule.Web\VirtoCommerce.MenuModule.Web.csproj", "{80A936A0-D611-4296-A22C-78183E8A1B4D}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{F0856E07-0EEE-4C8B-9B83-6E7F70F49D9C}"
+	ProjectSection(SolutionItems) = preProject
+		Performance1.psess = Performance1.psess
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -394,5 +399,8 @@ Global
 		{8F9F26FC-344E-4599-B2F3-CB560F1D5499} = {D1556CC7-62A5-4D89-BD35-FC5B5AE17AE8}
 		{4021578C-A4A9-4C1F-BFA3-D10532533C5F} = {D1556CC7-62A5-4D89-BD35-FC5B5AE17AE8}
 		{80A936A0-D611-4296-A22C-78183E8A1B4D} = {D1556CC7-62A5-4D89-BD35-FC5B5AE17AE8}
+	EndGlobalSection
+	GlobalSection(Performance) = preSolution
+		HasPerformanceSessions = true
 	EndGlobalSection
 EndGlobal
