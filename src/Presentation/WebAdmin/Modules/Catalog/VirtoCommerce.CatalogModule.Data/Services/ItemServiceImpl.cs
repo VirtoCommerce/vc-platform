@@ -2,7 +2,6 @@
 using System.Collections.ObjectModel;
 using System.Linq;
 using VirtoCommerce.CatalogModule.Data.Converters;
-using VirtoCommerce.CatalogModule.Data.Extensions;
 using VirtoCommerce.Foundation;
 using VirtoCommerce.Foundation.Frameworks;
 using VirtoCommerce.Framework.Web.Settings;
@@ -66,10 +65,10 @@ namespace VirtoCommerce.CatalogModule.Data.Services
             using (var repository = _catalogRepositoryFactory())
             using (var appConfigRepository = _appConfigRepositoryFactory())
             {
-                var dbItems = repository.GetItemsCached(_cache, _settingsManager, itemIds, respGroup);
+                var dbItems = repository.GetItemByIds(itemIds, respGroup);
                 foreach (var dbItem in dbItems)
                 {
-                    var dbCatalog = repository.GetCatalogCached(_cache, _settingsManager, dbItem.CatalogId);
+                    var dbCatalog = repository.GetCatalogById(dbItem.CatalogId);
 
                     // Sasha: products passed here are only products and not variation, espcially in the list
                     //var parentItemRelation = repository.ItemRelations.FirstOrDefault(x => x.ChildItemId == dbItem.ItemId);
