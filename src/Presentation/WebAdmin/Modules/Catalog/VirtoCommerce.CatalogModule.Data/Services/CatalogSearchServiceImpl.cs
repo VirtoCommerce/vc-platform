@@ -3,6 +3,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using VirtoCommerce.CatalogModule.Data.Extensions;
 using VirtoCommerce.CatalogModule.Data.Repositories;
 using VirtoCommerce.Domain.Catalog.Services;
 using VirtoCommerce.Foundation.Frameworks;
@@ -66,7 +67,7 @@ namespace VirtoCommerce.CatalogModule.Data.Services
                 {
                     var query = repository.Categories.Where(x => x.CatalogId == criteria.CatalogId);
 
-                    var dbCatalog = repository.GetCatalogById(criteria.CatalogId);
+                    var dbCatalog = repository.GetCatalogCached(_cache, _settingsManager, criteria.CatalogId);
 
                     var isVirtual = dbCatalog is foundation.VirtualCatalog;
                     if (!String.IsNullOrEmpty(criteria.CategoryId))
@@ -178,6 +179,7 @@ namespace VirtoCommerce.CatalogModule.Data.Services
 				{
 					productResponseGroup |= module.ItemResponseGroup.Variations;
 				}
+
 				var products = _itemService.GetByIds(itemIds, productResponseGroup);
                 result.Products = products.OrderByDescending(x => x.Name).ToList();
             }

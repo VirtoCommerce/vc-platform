@@ -308,19 +308,24 @@ namespace VirtoCommerce.CoreModule.Web.Settings
 
         private List<Setting> LoadSettings(params string[] settingNames)
         {
-            return _cacheHelper.Get(
-                CacheHelper.CreateCacheKey(Constants.SettingsCachePrefix, string.Format(SettingsCacheKey, CacheHelper.CreateCacheKey(settingNames))),
-                () => LoadSettingsFromDatabase(settingNames),
-                new TimeSpan(0, 0, 30));   // TODO: have a setting
+            var settings = LoadAllSettings();
+            return settings == null ? null : settings.Where(s => settingNames.Contains(s.Name)).ToList();
         }
 
-        private List<Setting> LoadSettingsFromDatabase(params string[] settingNames)
+        private List<Setting> LoadAllSettings()
+        {
+            return _cacheHelper.Get(
+                CacheHelper.CreateCacheKey(Constants.SettingsCachePrefix, string.Format(SettingsCacheKey, "all")),
+                this.LoadAllSettingsFromDatabase,
+                TimeSpan.FromSeconds(120));   // TODO: have a setting
+        }
+
+        private List<Setting> LoadAllSettingsFromDatabase()
         {
             using (var repository = _repositoryFactory())
             {
                 return repository.Settings
                     .Expand(s => s.SettingValues)
-                    .Where(s => settingNames.Contains(s.Name))
                     .ToList();
             }
         }
