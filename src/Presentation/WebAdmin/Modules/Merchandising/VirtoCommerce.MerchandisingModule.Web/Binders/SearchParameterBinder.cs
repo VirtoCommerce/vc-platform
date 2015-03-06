@@ -4,11 +4,13 @@ using VirtoCommerce.MerchandisingModule.Web.Model;
 
 namespace VirtoCommerce.MerchandisingModule.Web.Binders
 {
-	/// <summary>
-	/// Class SearchCriteriaBinder.
-	/// </summary>
+    /// <summary>
+    ///     Class SearchCriteriaBinder.
+    /// </summary>
     public class SearchParametersBinder : IModelBinder
     {
+        #region Public Methods and Operators
+
         public bool BindModel(HttpActionContext actionContext, ModelBindingContext bindingContext)
         {
             if (bindingContext.ModelType != typeof(SearchParameters))
@@ -26,8 +28,11 @@ namespace VirtoCommerce.MerchandisingModule.Web.Binders
             }
 
             bindingContext.ModelState.AddModelError(
-            bindingContext.ModelName, "Cannot convert value to SearchParameters");
+                bindingContext.ModelName,
+                "Cannot convert value to SearchParameters");
             return false;
         }
+
+        #endregion
     }
 }

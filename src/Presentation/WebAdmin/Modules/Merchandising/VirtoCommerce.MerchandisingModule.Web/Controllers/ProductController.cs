@@ -11,10 +11,12 @@ using VirtoCommerce.Foundation.AppConfig.Model;
 using VirtoCommerce.Foundation.Assets.Services;
 using VirtoCommerce.Foundation.Catalogs.Search;
 using VirtoCommerce.Foundation.Catalogs.Services;
+using VirtoCommerce.Foundation.Frameworks;
 using VirtoCommerce.Foundation.Search;
 using VirtoCommerce.Foundation.Search.Schemas;
 using VirtoCommerce.Foundation.Stores.Repositories;
 using VirtoCommerce.Framework.Web.Common;
+using VirtoCommerce.Framework.Web.Settings;
 using VirtoCommerce.MerchandisingModule.Web.Binders;
 using VirtoCommerce.MerchandisingModule.Web.Converters;
 using VirtoCommerce.MerchandisingModule.Web.Model;
@@ -24,40 +26,128 @@ using moduleModel = VirtoCommerce.Domain.Catalog.Model;
 namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 {
     [RoutePrefix("api/mp/products")]
-	public class ProductController : BaseController
-	{
-		private readonly IItemService _itemService;
-
-        private readonly IItemBrowsingService _browseService;
-        private readonly IBrowseFilterService _browseFilterService;
-
-        private readonly Func<IFoundationCatalogRepository> _foundationCatalogRepositoryFactory;
-	    private readonly Func<IFoundationAppConfigRepository> _foundationAppConfigRepFactory;
-	    private readonly Func<ICatalogOutlineBuilder> _catalogOutlineBuilderFactory;
+    public class ProductController : BaseController
+    {
+        #region Fields
 
         private readonly IAssetUrl _assetUri;
+        private readonly IBrowseFilterService _browseFilterService;
+        private readonly IItemBrowsingService _browseService;
 
-		public ProductController(IItemService itemService,
-                                 IItemBrowsingService browseService,
-                                 IBrowseFilterService browseFilterService,
-								 Func<IFoundationCatalogRepository> foundationCatalogRepositoryFactory,
-                                 Func<IFoundationAppConfigRepository> foundationAppConfigRepFactory,
-                                 Func<ICatalogOutlineBuilder> catalogOutlineBuilderFactory,
-                                 Func<IStoreRepository> storeRepository,
-								 IAssetUrl assetUri) 
-            : base(storeRepository)
-		{
-		    _itemService = itemService;
-			_foundationCatalogRepositoryFactory = foundationCatalogRepositoryFactory;
-		    _foundationAppConfigRepFactory = foundationAppConfigRepFactory;
-		    _catalogOutlineBuilderFactory = catalogOutlineBuilderFactory;
-            _assetUri = assetUri;
-		    _browseService = browseService;
-		    _browseFilterService = browseFilterService;
-		}
+        private readonly Func<ICatalogOutlineBuilder> _catalogOutlineBuilderFactory;
+        private readonly Func<IFoundationAppConfigRepository> _foundationAppConfigRepFactory;
+        private readonly Func<IFoundationCatalogRepository> _foundationCatalogRepositoryFactory;
+        private readonly IItemService _itemService;
+
+        #endregion
+
+        #region Constructors and Destructors
+
+        public ProductController(
+            IItemService itemService,
+            IItemBrowsingService browseService,
+            IBrowseFilterService browseFilterService,
+            Func<IFoundationCatalogRepository> foundationCatalogRepositoryFactory,
+            Func<IFoundationAppConfigRepository> foundationAppConfigRepFactory,
+            Func<ICatalogOutlineBuilder> catalogOutlineBuilderFactory,
+            Func<IStoreRepository> storeRepository,
+            IAssetUrl assetUri,
+            ISettingsManager settingsManager,
+            ICacheRepository cache)
+            : base(storeRepository, settingsManager, cache)
+        {
+            this._itemService = itemService;
+            this._foundationCatalogRepositoryFactory = foundationCatalogRepositoryFactory;
+            this._foundationAppConfigRepFactory = foundationAppConfigRepFactory;
+            this._catalogOutlineBuilderFactory = catalogOutlineBuilderFactory;
+            this._assetUri = assetUri;
+            this._browseService = browseService;
+            this._browseFilterService = browseFilterService;
+        }
+
+        #endregion
+
+        #region Public Methods and Operators
+
+        [HttpGet]
+        [ResponseType(typeof(Product))]
+        [Route("{product}")]
+        public IHttpActionResult GetProduct(
+            string store,
+            string product,
+            [FromUri] moduleModel.ItemResponseGroup responseGroup = moduleModel.ItemResponseGroup.ItemLarge,
+            string language = "en-us")
+        {
+            var catalog = this.GetCatalogId(store);
+            var result = this._itemService.GetById(product, responseGroup);
+
+            if (result != null)
+            {
+                var webModelProduct = result.ToWebModel(this._assetUri);
+                //Build category path outline for requested catalog, can be virtual catalog as well
+                webModelProduct.Outline =
+                    this._catalogOutlineBuilderFactory()
+                        .BuildCategoryOutline(catalog, result.Id)
+                        .ToString("/")
+                        .ToLowerInvariant();
+                webModelProduct.Outline = webModelProduct.Outline.Replace(catalog + "/", "");
+                return this.Ok(webModelProduct);
+            }
+
+            return this.StatusCode(HttpStatusCode.NotFound);
+        }
+
+        /// GET: api/mp/apple/en-us/products?code='22'
+        [HttpGet]
+        [ResponseType(typeof(Product))]
+        [Route("")]
+        public IHttpActionResult GetProductByCode(
+            string store,
+            [FromUri] string code,
+            [FromUri] moduleModel.ItemResponseGroup responseGroup = moduleModel.ItemResponseGroup.ItemLarge,
+            string language = "en-us")
+        {
+            //var catalog = GetCatalogId(store);
+
+            using (var repository = this._foundationCatalogRepositoryFactory())
+            {
+                //Cannot filter by catalogId here because it fails when catalog is virtual
+                var itemId = repository.Items.Where(x => x.Code == code).Select(x => x.ItemId).FirstOrDefault();
+                if (itemId != null)
+                {
+                    return this.GetProduct(store, itemId, responseGroup);
+                }
+            }
+            return this.StatusCode(HttpStatusCode.NotFound);
+        }
+
+        [HttpGet]
+        [ResponseType(typeof(Product))]
+        [Route("")]
+        public IHttpActionResult GetProductByKeyword(
+            string store,
+            [FromUri] string keyword,
+            [FromUri] moduleModel.ItemResponseGroup responseGroup = moduleModel.ItemResponseGroup.ItemLarge,
+            string language = "en-us")
+        {
+            using (var appConfigRepo = this._foundationAppConfigRepFactory())
+            {
+                var keywordValue =
+                    appConfigRepo.SeoUrlKeywords.FirstOrDefault(
+                        x => x.KeywordType == (int)SeoUrlKeywordTypes.Item
+                            && x.Keyword.Equals(keyword, StringComparison.OrdinalIgnoreCase));
+
+                if (keywordValue != null)
+                {
+                    var result = this._itemService.GetById(keywordValue.KeywordValue, responseGroup);
+                    return this.Ok(result.ToWebModel(this._assetUri));
+                }
+            }
+            return this.StatusCode(HttpStatusCode.NotFound);
+        }
 
         /// <summary>
-        /// Searches the specified catalog.
+        ///     Searches the specified catalog.
         /// </summary>
         /// <param name="store">The store.</param>
         /// <param name="parameters"></param>
@@ -70,15 +160,22 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
         [HttpGet]
         [ArrayInput(ParameterName = "priceLists")]
         [Route("")]
-		[ResponseType(typeof(ProductSearchResult))]
-		public IHttpActionResult Search(string store, string[] priceLists, [ModelBinder(typeof(SearchParametersBinder))] SearchParameters parameters, [FromUri]moduleModel.ItemResponseGroup responseGroup = moduleModel.ItemResponseGroup.ItemMedium, [FromUri]string outline="", string language = "en-us", string currency = "USD")
+        [ResponseType(typeof(ProductSearchResult))]
+        public IHttpActionResult Search(
+            string store,
+            string[] priceLists,
+            [ModelBinder(typeof(SearchParametersBinder))] SearchParameters parameters,
+            [FromUri] moduleModel.ItemResponseGroup responseGroup = moduleModel.ItemResponseGroup.ItemMedium,
+            [FromUri] string outline = "",
+            string language = "en-us",
+            string currency = "USD")
         {
             var context = new Dictionary<string, object>
-            {
-                {"StoreId", store},
-            };
+                          {
+                              { "StoreId", store },
+                          };
 
-            var catalog = GetCatalogId(store);
+            var catalog = this.GetCatalogId(store);
             string categoryId = null;
 
             var criteria = new CatalogItemSearchCriteria { Locale = language, Catalog = catalog.ToLowerInvariant() };
@@ -88,10 +185,10 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
                 criteria.Outlines.Add(String.Format("{0}/{1}*", catalog, outline));
                 categoryId = outline.Split(new[] { '/' }).Last();
                 context.Add("CategoryId", categoryId);
-            }           
+            }
 
             // Now fill in filters
-            var filters = _browseFilterService.GetFilters(context);
+            var filters = this._browseFilterService.GetFilters(context);
 
             // Add all filters
             foreach (var filter in filters)
@@ -105,10 +202,17 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
                 foreach (var term in parameters.Terms)
                 {
                     var termFilter = new AttributeFilter
-                    {
-                        Key = term.Key,
-                        Values = term.Value.Select(x => new AttributeFilterValue { Id = x.ToLowerInvariant(), Value = x.ToLowerInvariant() }).ToArray()
-                    };
+                                     {
+                                         Key = term.Key,
+                                         Values =
+                                             term.Value.Select(
+                                                 x =>
+                                             new AttributeFilterValue
+                                             {
+                                                 Id = x.ToLowerInvariant(),
+                                                 Value = x.ToLowerInvariant()
+                                             }).ToArray()
+                                     };
 
                     criteria.Apply(termFilter);
                 }
@@ -120,10 +224,12 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
             {
                 foreach (var key in facets.Keys)
                 {
-                    var filter = filters.SingleOrDefault(x => x.Key.Equals(key, StringComparison.OrdinalIgnoreCase)
-                        && (!(x is PriceRangeFilter) || ((PriceRangeFilter)x).Currency.Equals(currency, StringComparison.OrdinalIgnoreCase)));
+                    var filter = filters.SingleOrDefault(
+                        x => x.Key.Equals(key, StringComparison.OrdinalIgnoreCase)
+                            && (!(x is PriceRangeFilter)
+                                || ((PriceRangeFilter)x).Currency.Equals(currency, StringComparison.OrdinalIgnoreCase)));
 
-                    var appliedFilter = _browseFilterService.Convert(filter, facets[key]);
+                    var appliedFilter = this._browseFilterService.Convert(filter, facets[key]);
                     criteria.Apply(appliedFilter);
                 }
             }
@@ -140,7 +246,6 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 
             if (!string.IsNullOrEmpty(parameters.Sort))
             {
-
                 var isDescending = "desc".Equals(parameters.SortOrder, StringComparison.OrdinalIgnoreCase);
 
                 SearchSort sortObject = null;
@@ -150,17 +255,20 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
                     case "price":
                         if (criteria.Pricelists != null)
                         {
-                            sortObject = new SearchSort(criteria.Pricelists.Select(priceList =>
-                                new SearchSortField(
-                                    String.Format("price_{0}_{1}",
-                                        criteria.Currency.ToLower(),
-                                        priceList.ToLower()))
-                                {
-                                    IgnoredUnmapped = true,
-                                    IsDescending = isDescending,
-                                    DataType = SearchSortField.DOUBLE
-                                })
-                                .ToArray());
+                            sortObject = new SearchSort(
+                                criteria.Pricelists.Select(
+                                    priceList =>
+                                        new SearchSortField(
+                                            String.Format(
+                                                "price_{0}_{1}",
+                                                criteria.Currency.ToLower(),
+                                                priceList.ToLower()))
+                                        {
+                                            IgnoredUnmapped = true,
+                                            IsDescending = isDescending,
+                                            DataType = SearchSortField.DOUBLE
+                                        })
+                                    .ToArray());
                         }
                         break;
                     case "position":
@@ -184,7 +292,6 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
                     default:
                         sortObject = CatalogItemSearchCriteria.DefaultSortOrder;
                         break;
-
                 }
 
                 criteria.Sort = sortObject;
@@ -193,72 +300,12 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
             #endregion
 
             //Load ALL products 
-            var searchResults = _browseService.SearchItems(criteria, responseGroup);
+            var searchResults = this._browseService.SearchItems(criteria, responseGroup);
 
-            return Ok(searchResults);
-		}
-
-		/// GET: api/mp/apple/en-us/products?code='22'
-		[HttpGet]
-		[ResponseType(typeof(Product))]
-		[Route("")]
-        public IHttpActionResult GetProductByCode(string store, [FromUri]string code, [FromUri]moduleModel.ItemResponseGroup responseGroup = moduleModel.ItemResponseGroup.ItemLarge, string language = "en-us")
-		{
-            //var catalog = GetCatalogId(store);
-
-			using(var repository = _foundationCatalogRepositoryFactory())
-			{
-                //Cannot filter by catalogId here because it fails when catalog is virtual
-				var itemId = repository.Items.Where(x => x.Code == code).Select(x => x.ItemId).FirstOrDefault();
-				if(itemId != null)
-				{
-					return GetProduct(store, itemId,responseGroup);
-				}
-			}
-			return StatusCode(HttpStatusCode.NotFound);
-		}
-
-
-        [HttpGet]
-        [ResponseType(typeof(Product))]
-        [Route("")]
-        public IHttpActionResult GetProductByKeyword(string store, [FromUri]string keyword, [FromUri]moduleModel.ItemResponseGroup responseGroup = moduleModel.ItemResponseGroup.ItemLarge, string language = "en-us")
-        {
-            using (var appConfigRepo = _foundationAppConfigRepFactory())
-            {
-                var keywordValue =
-                    appConfigRepo.SeoUrlKeywords.FirstOrDefault(
-                        x => x.KeywordType == (int)SeoUrlKeywordTypes.Item
-                            && x.Keyword.Equals(keyword, StringComparison.OrdinalIgnoreCase));
-
-                if (keywordValue != null)
-                {
-                    var result = _itemService.GetById(keywordValue.KeywordValue, responseGroup);
-                    return Ok(result.ToWebModel(_assetUri));
-                }
-            }
-            return StatusCode(HttpStatusCode.NotFound);
+            return this.Ok(searchResults);
         }
 
-		[HttpGet]
-		[ResponseType(typeof(Product))]
-		[Route("{product}")]
-        public IHttpActionResult GetProduct(string store, string product, [FromUri]moduleModel.ItemResponseGroup responseGroup = moduleModel.ItemResponseGroup.ItemLarge, string language = "en-us")
-		{
-            var catalog = GetCatalogId(store);
-            var result = _itemService.GetById(product, responseGroup);
-
-            if (result != null)
-		    {
-                var webModelProduct = result.ToWebModel(_assetUri);
-                //Build category path outline for requested catalog, can be virtual catalog as well
-                webModelProduct.Outline = _catalogOutlineBuilderFactory().BuildCategoryOutline(catalog, result.Id).ToString("/").ToLowerInvariant();
-                webModelProduct.Outline = webModelProduct.Outline.Replace(catalog + "/", "");
-                return Ok(webModelProduct);
-		    }
-
-		    return StatusCode(HttpStatusCode.NotFound);
-		}
+        #endregion
 
         /*
         [HttpPost]
@@ -299,5 +346,5 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
             return StatusCode(HttpStatusCode.NotFound);
         }
          * */
-	}
+    }
 }

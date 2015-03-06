@@ -1,16 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace VirtoCommerce.MerchandisingModule.Web.Model
 {
-	public class PropertyDictionary : Dictionary<string, object>
-	{
-		public void Add(KeyValuePair<string, object> pair)
-		{
-			this.Add(pair.Key, pair.Value);
-		}
-	}
+    public class PropertyDictionary : Dictionary<string, object>
+    {
+        #region Public Methods and Operators
+
+        public void Add(KeyValuePair<string, object> pair)
+        {
+            this.Add(pair.Key, pair.Value);
+        }
+
+        #endregion
+    }
 }

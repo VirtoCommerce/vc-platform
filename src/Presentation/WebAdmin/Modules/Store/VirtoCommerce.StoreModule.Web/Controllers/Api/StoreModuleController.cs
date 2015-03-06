@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Net;
 using System.Web.Http;
 using System.Web.Http.Description;
-using System.Web.Http.ModelBinding;
-using VirtoCommerce.Domain.Cart.Services;
 using VirtoCommerce.Domain.Store.Services;
-using VirtoCommerce.Foundation.Money;
 using VirtoCommerce.StoreModule.Web.Converters;
 using coreModel = VirtoCommerce.Domain.Store.Model;
 using webModel = VirtoCommerce.StoreModule.Web.Model;
