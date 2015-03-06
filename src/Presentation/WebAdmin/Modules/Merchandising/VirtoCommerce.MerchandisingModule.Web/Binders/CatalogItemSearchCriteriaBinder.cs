@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
-using System.Net.Http;
 using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.Http.Controllers;
@@ -11,127 +10,147 @@ using VirtoCommerce.Foundation.Catalogs.Search;
 using VirtoCommerce.Foundation.Frameworks.Extensions;
 using VirtoCommerce.Foundation.Search;
 using VirtoCommerce.Foundation.Search.Schemas;
-using VirtoCommerce.MerchandisingModule.Web.Model;
 
 namespace VirtoCommerce.MerchandisingModule.Web.Binders
 {
-	/// <summary>
-	/// Class SearchCriteriaBinder.
-	/// </summary>
-	public class CatalogItemSearchCriteriaBinder : IModelBinder
-	{
+    /// <summary>
+    ///     Class SearchCriteriaBinder.
+    /// </summary>
+    public class CatalogItemSearchCriteriaBinder : IModelBinder
+    {
+        #region Static Fields
 
-        /// <summary>
-        /// The facet regex
-        /// </summary>
-        private static readonly Regex TermRegex = new Regex("^t_", RegexOptions.Compiled | RegexOptions.IgnoreCase);
         private static readonly Regex FacetRegex = new Regex("^f_", RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
-		public bool BindModel(HttpActionContext actionContext, ModelBindingContext bindingContext)
-		{
-			if (bindingContext.ModelType != typeof(CatalogItemSearchCriteria))
-			{
-				return false;
-			}
+        /// <summary>
+        ///     The facet regex
+        /// </summary>
+        private static readonly Regex TermRegex = new Regex("^t_", RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
-			var key = actionContext.Request.RequestUri.Query;
-			var qs = HttpUtility.ParseQueryString(key);
-            var qsDict = NvToDict(qs);
+        #endregion
 
-			// parse facets
-            var facets = qsDict.Where(k => FacetRegex.IsMatch(k.Key)).Select(k => k.WithKey(FacetRegex.Replace(k.Key, ""))).ToDictionary(x => x.Key, y => y.Value.Split(','));
+        #region Public Methods and Operators
 
-			// parse facets
-			var terms = qsDict.Where(k => TermRegex.IsMatch(k.Key)).Select(k => k.WithKey(TermRegex.Replace(k.Key, ""))).ToDictionary(x => x.Key, y => y.Value.Split(','));
+        public bool BindModel(HttpActionContext actionContext, ModelBindingContext bindingContext)
+        {
+            if (bindingContext.ModelType != typeof(CatalogItemSearchCriteria))
+            {
+                return false;
+            }
 
-			var result = new CatalogItemSearchCriteria
-			{
-			    SearchPhrase = qs["q"].EmptyToNull(),
-			    RecordsToRetrieve = qs["take"].TryParse(20),
-			    StartingRecord = qs["skip"].TryParse(0),
-			};
+            var key = actionContext.Request.RequestUri.Query;
+            var qs = HttpUtility.ParseQueryString(key);
+            var qsDict = this.NvToDict(qs);
 
+            // parse facets
+            var facets =
+                qsDict.Where(k => FacetRegex.IsMatch(k.Key))
+                    .Select(k => k.WithKey(FacetRegex.Replace(k.Key, "")))
+                    .ToDictionary(x => x.Key, y => y.Value.Split(','));
 
-			// apply filters if one specified
+            // parse facets
+            var terms =
+                qsDict.Where(k => TermRegex.IsMatch(k.Key))
+                    .Select(k => k.WithKey(TermRegex.Replace(k.Key, "")))
+                    .ToDictionary(x => x.Key, y => y.Value.Split(','));
+
+            var result = new CatalogItemSearchCriteria
+                         {
+                             SearchPhrase = qs["q"].EmptyToNull(),
+                             RecordsToRetrieve = qs["take"].TryParse(20),
+                             StartingRecord = qs["skip"].TryParse(0),
+                         };
+
+            // apply filters if one specified
             if (terms.Count > 0)
-			{
+            {
                 foreach (var term in terms)
-				{
-					var termFilter = new AttributeFilter
-					{
-						Key = term.Key.ToLowerInvariant(),
-						Values = term.Value.Select(x => new AttributeFilterValue() { Id = x.ToLowerInvariant(), Value = x.ToLowerInvariant() }).ToArray()
-					};
+                {
+                    var termFilter = new AttributeFilter
+                                     {
+                                         Key = term.Key.ToLowerInvariant(),
+                                         Values =
+                                             term.Value.Select(
+                                                 x =>
+                                             new AttributeFilterValue()
+                                             {
+                                                 Id = x.ToLowerInvariant(),
+                                                 Value = x.ToLowerInvariant()
+                                             }).ToArray()
+                                     };
 
                     result.Apply(termFilter);
-				}
-			}
+                }
+            }
 
+            //result.ClassTypes.Add("Product");
 
-		    //result.ClassTypes.Add("Product");
-
-		    var startDateFromStr = qs["startdatefrom"].EmptyToNull();
+            var startDateFromStr = qs["startdatefrom"].EmptyToNull();
 
             if (!string.IsNullOrWhiteSpace(startDateFromStr))
-		    {
+            {
                 DateTime startDateFrom;
 
                 if (DateTime.TryParse(startDateFromStr, out startDateFrom))
-		        {
+                {
                     result.StartDateFrom = startDateFrom;
-		        }
-		    }
+                }
+            }
 
             //TODO load pricelists
-			result.Pricelists = null;
+            result.Pricelists = null;
             result.Currency = qs["curreny"].EmptyToNull();
 
-		    var sortQuery = qs["sort"].EmptyToNull();
+            var sortQuery = qs["sort"].EmptyToNull();
             var sort = string.IsNullOrEmpty(sortQuery) ? "name" : sortQuery;
-		    var sortOrder = qs["sortorder"].EmptyToNull();
+            var sortOrder = qs["sortorder"].EmptyToNull();
 
             var outline = qs["outline"].EmptyToNull();
 
             var isDescending = "desc".Equals(sortOrder, StringComparison.OrdinalIgnoreCase);
 
-
             var catalogId = actionContext.ActionArguments.ContainsKey("catalog")
-               ? actionContext.ActionArguments["catalog"]
-               : null;
+                ? actionContext.ActionArguments["catalog"]
+                : null;
 
-		    string categoryId = null;
+            string categoryId = null;
 
-		    if (!string.IsNullOrWhiteSpace(outline))
-		    {
+            if (!string.IsNullOrWhiteSpace(outline))
+            {
                 categoryId = outline.Split(new[] { '/' }).Last();
-		    }
+            }
 
             SearchSort sortObject = null;
 
             switch (sort.ToLowerInvariant())
             {
                 case "price":
-                     if (result.Pricelists != null)
+                    if (result.Pricelists != null)
                     {
-                        sortObject = new SearchSort(result.Pricelists.Select(priceList =>
-                            new SearchSortField(
-                                String.Format("price_{0}_{1}",
-                                    result.Currency.ToLower(),
-                                    priceList.ToLower()))
-                            {
-                                IgnoredUnmapped = true,
-                                IsDescending = isDescending,
-                                DataType = SearchSortField.DOUBLE
-                            })
-                            .ToArray());
+                        sortObject = new SearchSort(
+                            result.Pricelists.Select(
+                                priceList =>
+                                    new SearchSortField(
+                                        String.Format(
+                                            "price_{0}_{1}",
+                                            result.Currency.ToLower(),
+                                            priceList.ToLower()))
+                                    {
+                                        IgnoredUnmapped = true,
+                                        IsDescending = isDescending,
+                                        DataType = SearchSortField.DOUBLE
+                                    })
+                                .ToArray());
                     }
                     break;
                 case "position":
-                    sortObject = new SearchSort(new SearchSortField(string.Format("sort{0}{1}", catalogId, categoryId).ToLower())
-                    {
-                        IgnoredUnmapped = true,
-                        IsDescending = isDescending
-                    });
+                    sortObject =
+                        new SearchSort(
+                            new SearchSortField(string.Format("sort{0}{1}", catalogId, categoryId).ToLower())
+                            {
+                                IgnoredUnmapped = true,
+                                IsDescending = isDescending
+                            });
                     break;
                 case "name":
                     sortObject = new SearchSort("name", isDescending);
@@ -145,25 +164,27 @@ namespace VirtoCommerce.MerchandisingModule.Web.Binders
                 default:
                     sortObject = CatalogItemSearchCriteria.DefaultSortOrder;
                     break;
-
             }
 
             result.Sort = sortObject;
 
             //Use fuzzy search to allow spelling error tolerance
-		    result.IsFuzzySearch = true;
+            result.IsFuzzySearch = true;
 
-
-			bindingContext.Model = result;
-			return true;
-		}
+            bindingContext.Model = result;
+            return true;
+        }
 
         public IDictionary<string, string> NvToDict(NameValueCollection nv)
         {
             var d = new Dictionary<string, string>(StringComparer.InvariantCultureIgnoreCase);
             foreach (var k in nv.AllKeys)
+            {
                 d[k] = nv[k];
+            }
             return d;
         }
-	}
+
+        #endregion
+    }
 }

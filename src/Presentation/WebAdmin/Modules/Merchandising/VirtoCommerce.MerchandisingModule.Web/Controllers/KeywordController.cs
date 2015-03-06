@@ -11,24 +11,36 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
     [RoutePrefix("api/mp/{language}/keywords")]
     public class KeywordController : ApiController
     {
+        #region Fields
+
         private readonly Func<IFoundationAppConfigRepository> _appConfigRepFactory;
+
+        #endregion
+
+        #region Constructors and Destructors
 
         public KeywordController(Func<IFoundationAppConfigRepository> appConfigRepFactory)
         {
-            _appConfigRepFactory = appConfigRepFactory;
+            this._appConfigRepFactory = appConfigRepFactory;
         }
+
+        #endregion
+
+        #region Public Methods and Operators
 
         [HttpGet]
         [ResponseType(typeof(SeoKeyword[]))]
         [Route("")]
         public IHttpActionResult GetAlKeywords()
         {
-            using (var repository = _appConfigRepFactory())
+            using (var repository = this._appConfigRepFactory())
             {
                 var keywords = repository.GetAllSeoInformation(null).ToArray();
                 var retVal = keywords.Select(x => x.ToWebModel());
-                return Ok(retVal);
+                return this.Ok(retVal);
             }
         }
+
+        #endregion
     }
 }

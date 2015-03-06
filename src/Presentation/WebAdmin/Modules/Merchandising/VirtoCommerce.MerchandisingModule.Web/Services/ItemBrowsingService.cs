@@ -1,62 +1,65 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using VirtoCommerce.Foundation.Search.Schemas;
+using VirtoCommerce.CatalogModule.Data.Repositories;
+using VirtoCommerce.Domain.Catalog.Services;
+using VirtoCommerce.Foundation;
+using VirtoCommerce.Foundation.Assets.Services;
+using VirtoCommerce.Foundation.Catalogs;
+using VirtoCommerce.Foundation.Catalogs.Search;
+using VirtoCommerce.Foundation.Frameworks;
+using VirtoCommerce.Foundation.Frameworks.Extensions;
+using VirtoCommerce.Foundation.Search;
+using VirtoCommerce.MerchandisingModule.Web.Converters;
+using VirtoCommerce.MerchandisingModule.Web.Model;
 
 namespace VirtoCommerce.MerchandisingModule.Web.Services
 {
-	using VirtoCommerce.CatalogModule.Data.Repositories;
-	using VirtoCommerce.Domain.Catalog.Services;
-	using VirtoCommerce.Foundation;
-	using VirtoCommerce.Foundation.Assets.Services;
-	using VirtoCommerce.Foundation.Catalogs;
-	using VirtoCommerce.Foundation.Catalogs.Repositories;
-	using VirtoCommerce.Foundation.Catalogs.Search;
-	using VirtoCommerce.Foundation.Frameworks;
-	using VirtoCommerce.Foundation.Frameworks.Extensions;
-	using VirtoCommerce.Foundation.Search;
-	using VirtoCommerce.MerchandisingModule.Web.Converters;
-	using VirtoCommerce.MerchandisingModule.Web.Model;
-	using foundation = VirtoCommerce.Foundation.Catalogs.Model;
-	using moduleModel = VirtoCommerce.Domain.Catalog.Model;
+    using foundation = VirtoCommerce.Foundation.Catalogs.Model;
+    using moduleModel = VirtoCommerce.Domain.Catalog.Model;
 
     public class ItemBrowsingService : IItemBrowsingService
     {
-        #region Cache Constants
-        public const string SearchCacheKey = "S:{0}:{1}";
+        #region Constants
+
         public const string CatalogCacheKey = "C:C:{0}";
         public const string CategoryCacheKey = "C:CT:{0}:{1}";
-        public const string CategoryItemRelationCacheKey = "C:CTIREL:{0}";
         public const string CategoryIdCacheKey = "C:CTID:{0}:{1}";
+        public const string CategoryItemRelationCacheKey = "C:CTIREL:{0}";
         public const string ChildCategoriesCacheKey = "C:CT:{0}:p:{1}";
+        public const string ItemInvetoriesCacheKey = "C:INV:{0}:{1}";
+        public const string ItemPricesCacheKey = "C:P:{0}:{1}";
+        public const string ItemVariationParentsCacheKey = "C:VP:{0}";
+        public const string ItemVariationsCacheKey = "C:V:{0}";
         //public const string ItemCacheKey = "C:I:{0}:g:{1}";
         public const string ItemsCacheKey = "C:Is:{0}:g:{1}";
         public const string ItemsCodeCacheKey = "C:Isc:{0}:g:{1}";
-        public const string ItemsSearchCacheKey = "C:Is:{0}:{1}";
         public const string ItemsQueryCacheKey = "C:Is:{0}";
+        public const string ItemsSearchCacheKey = "C:Is:{0}:{1}";
         public const string PriceListCacheKey = "C:PL:{0}";
-        public const string ItemVariationsCacheKey = "C:V:{0}";
-        public const string ItemVariationParentsCacheKey = "C:VP:{0}";
-        public const string ItemInvetoriesCacheKey = "C:INV:{0}:{1}";
-
-        public const string PricesCacheKey = "C:P:{0}";
-        public const string ItemPricesCacheKey = "C:P:{0}:{1}";
         public const string PricelistAssignmentCacheKey = "C:PLA:{0}";
+        public const string PricesCacheKey = "C:P:{0}";
 
         public const string PropertiesCacheKey = "C:PR:{0}";
         public const string PropertyValueCacheKey = "C:PRV:{0}:{1}:{2}:{3}";
+        public const string SearchCacheKey = "S:{0}:{1}";
+
         #endregion
 
-        #region Private Variables
-        private readonly bool _isEnabled;
-        private readonly ICacheRepository _cacheRepository;
-        private readonly ISearchProvider _searchService;
-        private readonly ISearchConnection _searchConnection;
+        #region Fields
+
         private readonly IAssetUrl _assetUrl;
-        private readonly IItemService _itemService;
+        private readonly ICacheRepository _cacheRepository;
         private readonly Func<IFoundationCatalogRepository> _catalogRepositoryFactory;
+        private readonly bool _isEnabled;
+        private readonly IItemService _itemService;
+        private readonly ISearchConnection _searchConnection;
+        private readonly ISearchProvider _searchService;
+        private CacheHelper _cacheHelper;
 
         #endregion
+
+        #region Constructors and Destructors
 
         public ItemBrowsingService(
             IItemService itemService,
@@ -66,20 +69,34 @@ namespace VirtoCommerce.MerchandisingModule.Web.Services
             IAssetUrl assetUrl = null,
             ISearchConnection searchConnection = null)
         {
-            _searchService = searchService;
-            _catalogRepositoryFactory = catalogRepositoryFactory;
-            _cacheRepository = cacheRepository;
-            _searchConnection = searchConnection;
-            _itemService = itemService;
-            _assetUrl = assetUrl;
-            _isEnabled = CatalogConfiguration.Instance.Cache.IsEnabled;
+            this._searchService = searchService;
+            this._catalogRepositoryFactory = catalogRepositoryFactory;
+            this._cacheRepository = cacheRepository;
+            this._searchConnection = searchConnection;
+            this._itemService = itemService;
+            this._assetUrl = assetUrl;
+            this._isEnabled = CatalogConfiguration.Instance.Cache.IsEnabled;
         }
 
-        public ProductSearchResult SearchItems(CatalogItemSearchCriteria criteria,
+        #endregion
+
+        #region Public Properties
+
+        public CacheHelper Helper
+        {
+            get { return this._cacheHelper ?? (this._cacheHelper = new CacheHelper(this._cacheRepository)); }
+        }
+
+        #endregion
+
+        #region Public Methods and Operators
+
+        public ProductSearchResult SearchItems(
+            CatalogItemSearchCriteria criteria,
             moduleModel.ItemResponseGroup responseGroup = moduleModel.ItemResponseGroup.ItemSmall)
         {
             CatalogItemSearchResults results;
-            var items = Search<moduleModel.CatalogProduct>(criteria, true, out results, responseGroup);
+            var items = this.Search<moduleModel.CatalogProduct>(criteria, true, out results, responseGroup);
             var catalogItems = new List<Product>();
 
             // go through items
@@ -87,9 +104,11 @@ namespace VirtoCommerce.MerchandisingModule.Web.Services
             {
                 var searchTags = results.Items[item.Id.ToLower()];
 
-                var currentOutline = GetItemOutlineUsingContext(searchTags[criteria.OutlineField].ToString(), criteria.Catalog);
-                var catalogItem = item.ToWebModel(_assetUrl) as Product;
-                catalogItem.Outline = StripCatalogFromOutline(currentOutline, criteria.Catalog);
+                var currentOutline = this.GetItemOutlineUsingContext(
+                    searchTags[criteria.OutlineField].ToString(),
+                    criteria.Catalog);
+                var catalogItem = item.ToWebModel(this._assetUrl) as Product;
+                catalogItem.Outline = this.StripCatalogFromOutline(currentOutline, criteria.Catalog);
 
                 int reviewTotal;
                 if (searchTags.ContainsKey(criteria.ReviewsTotalField)
@@ -116,10 +135,21 @@ namespace VirtoCommerce.MerchandisingModule.Web.Services
             response.TotalCount = results.TotalCount;
 
             //TODO need better way to find applied filter values
-            var appliedFilters = criteria.CurrentFilters.SelectMany(x => x.GetValues()).Select(x=>x.Id).ToArray();
+            var appliedFilters = criteria.CurrentFilters.SelectMany(x => x.GetValues()).Select(x => x.Id).ToArray();
             response.Facets = results.FacetGroups.Select(g => g.ToWebModel(appliedFilters)).ToArray();
             return response;
         }
+
+        public CatalogItemSearchResults SearchItems(string scope, CatalogItemSearchCriteria criteria)
+        {
+            var results = this._searchService.Search(scope, criteria) as SearchResults;
+            var items = results.GetKeyAndOutlineFieldValueMap<string>();
+
+            var r = new CatalogItemSearchResults(criteria, items, results);
+            return r;
+        }
+
+        #endregion
 
         /*
 
@@ -130,9 +160,10 @@ namespace VirtoCommerce.MerchandisingModule.Web.Services
         }
          * */
 
+        #region Methods
 
         /// <summary>
-        /// Gets the context item outline based on what customer is browsing
+        ///     Gets the context item outline based on what customer is browsing
         /// </summary>
         /// <param name="itemOutline"></param>
         /// <returns></returns>
@@ -149,23 +180,26 @@ namespace VirtoCommerce.MerchandisingModule.Web.Services
             return outline;
         }
 
-        private string StripCatalogFromOutline(string outline, string catalog)
+        private moduleModel.CatalogProduct[] GetItems(
+            string[] ids,
+            bool useCache = true,
+            moduleModel.ItemResponseGroup responseGroup = moduleModel.ItemResponseGroup.ItemSmall)
         {
-            if (String.IsNullOrEmpty(outline))
-            {
-                return null;
-            }
-
-
-            if (outline.Length > catalog.Length + 1)
-                return outline.Substring(catalog.Length + 1);
-
-            return String.Empty;
+            return this.Helper.Get(
+                CacheHelper.CreateCacheKey(
+                    Constants.CatalogCachePrefix,
+                    string.Format(ItemsCacheKey, CacheHelper.CreateCacheKey(ids), responseGroup)),
+                () => (this._itemService.GetByIds(ids, responseGroup)).ToArray(),
+                CatalogConfiguration.Instance.Cache.ItemTimeout,
+                this._isEnabled && useCache);
         }
 
-        private IEnumerable<T> Search<T>(CatalogItemSearchCriteria criteria,
-            bool cacheResults, out CatalogItemSearchResults results,
-            moduleModel.ItemResponseGroup responseGroup = moduleModel.ItemResponseGroup.ItemSmall) where T : moduleModel.CatalogProduct
+        private IEnumerable<T> Search<T>(
+            CatalogItemSearchCriteria criteria,
+            bool cacheResults,
+            out CatalogItemSearchResults results,
+            moduleModel.ItemResponseGroup responseGroup = moduleModel.ItemResponseGroup.ItemSmall)
+            where T : moduleModel.CatalogProduct
         {
             var items = new List<T>();
             var itemsOrderedList = new List<string>();
@@ -186,12 +220,15 @@ namespace VirtoCommerce.MerchandisingModule.Web.Services
                 var uniqueKeys = results.Items.Keys.Except(itemsOrderedList).ToArray();
                 foundItemCount = uniqueKeys.Length;
 
-                if (!results.Items.Any()) continue;
+                if (!results.Items.Any())
+                {
+                    continue;
+                }
 
                 itemsOrderedList.AddRange(uniqueKeys);
 
                 // Now load items from repository
-                var currentItems = GetItems(uniqueKeys.ToArray(), cacheResults, responseGroup);
+                var currentItems = this.GetItems(uniqueKeys.ToArray(), cacheResults, responseGroup);
 
                 var orderedList = currentItems.OrderBy(i => itemsOrderedList.IndexOf(i.Id));
                 items.AddRange((IEnumerable<T>)orderedList);
@@ -203,7 +240,8 @@ namespace VirtoCommerce.MerchandisingModule.Web.Services
                     //Retrieve more items to fill missing gap
                     myCriteria.RecordsToRetrieve += (foundItemCount - dbItemCount);
                 }
-            } while (foundItemCount > dbItemCount && results.Items.Any() && searchRetry <= 3 &&
+            }
+            while (foundItemCount > dbItemCount && results.Items.Any() && searchRetry <= 3 &&
                 (myCriteria.RecordsToRetrieve + myCriteria.StartingRecord) < results.TotalCount);
 
             return items;
@@ -211,74 +249,33 @@ namespace VirtoCommerce.MerchandisingModule.Web.Services
 
         private CatalogItemSearchResults SearchItems(CatalogItemSearchCriteria criteria, bool useCache)
         {
-            var scope = _searchConnection.Scope;
+            var scope = this._searchConnection.Scope;
 
-            return Helper.Get(
-                CacheHelper.CreateCacheKey(Constants.CatalogCachePrefix, string.Format(SearchCacheKey, scope, criteria.CacheKey)),
+            return this.Helper.Get(
+                CacheHelper.CreateCacheKey(
+                    Constants.CatalogCachePrefix,
+                    string.Format(SearchCacheKey, scope, criteria.CacheKey)),
                 () => SearchItems(scope, criteria),
                 SearchConfiguration.Instance.Cache.FiltersTimeout,
-                _isEnabled);
+                this._isEnabled);
         }
 
-        public CatalogItemSearchResults SearchItems(string scope, CatalogItemSearchCriteria criteria)
+        private string StripCatalogFromOutline(string outline, string catalog)
         {
-            var results = _searchService.Search(scope, criteria) as SearchResults;
-            var items = results.GetKeyAndOutlineFieldValueMap<string>();
+            if (String.IsNullOrEmpty(outline))
+            {
+                return null;
+            }
 
-            var r = new CatalogItemSearchResults(criteria, items, results);
-            return r;
+            if (outline.Length > catalog.Length + 1)
+            {
+                return outline.Substring(catalog.Length + 1);
+            }
+
+            return String.Empty;
         }
 
-        #region Item Methods
-
-        /*
-        /// <summary>
-        /// Gets the item. Additionally filters by catalog
-        /// </summary>
-        /// <param name="id">The id of item.</param>
-        /// <param name="responseGroup">The response group.</param>
-        /// <param name="useCache">if set to <c>true</c> uses cache.</param>
-        /// <returns></returns>
-        public T GetItem<T>(string id, ItemResponseGroups responseGroup, bool useCode = false, bool useCache = true) where T : foundation.Item
-        {
-            var items = useCode ? this.GetItemsByCode<T>(new[] { id }, useCache, responseGroup) : this.GetItems<T>(new[] { id }, useCache, responseGroup);
-
-            if (items == null || !items.Any()) return null;
-
-            return items[0];
-        }
-         * */
-
-        private moduleModel.CatalogProduct[] GetItems(string[] ids, bool useCache = true,
-    moduleModel.ItemResponseGroup responseGroup = moduleModel.ItemResponseGroup.ItemSmall)
-        {
-            return Helper.Get(
-                CacheHelper.CreateCacheKey(Constants.CatalogCachePrefix, string.Format(ItemsCacheKey, CacheHelper.CreateCacheKey(ids), responseGroup)),
-                () => (_itemService.GetByIds(ids, responseGroup)).ToArray(),
-                CatalogConfiguration.Instance.Cache.ItemTimeout,
-                _isEnabled && useCache);
-        }
-
-        /*
-        private T[] GetItemsByCode<T>(string[] codes, bool useCache = true,
-moduleModel.ItemResponseGroup responseGroup = moduleModel.ItemResponseGroup.ItemSmall) where T : foundation.Item
-        {
-            return Helper.Get(
-                CacheHelper.CreateCacheKey(Constants.CatalogCachePrefix, string.Format(ItemsCacheKey, CacheHelper.CreateCacheKey(codes), responseGroup)),
-                () => (ItemHelper.GetItemsByCode<T>(_catalogRepository, codes, responseGroup)).ToArray(),
-                CatalogConfiguration.Instance.Cache.ItemTimeout,
-                _isEnabled && useCache);
-        }
-         * */
         #endregion
-
-        CacheHelper _cacheHelper;
-
-        public CacheHelper Helper
-        {
-            get { return _cacheHelper ?? (_cacheHelper = new CacheHelper(_cacheRepository)); }
-        }
-
 
         /*
         public ResponseCollection<Category> GetCategories(string outline, string language)

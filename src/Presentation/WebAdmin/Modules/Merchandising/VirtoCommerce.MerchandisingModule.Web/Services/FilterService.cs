@@ -13,48 +13,40 @@ using VirtoCommerce.Foundation.Stores.Repositories;
 
 namespace VirtoCommerce.MerchandisingModule.Web.Services
 {
-
     public class FilterService : IBrowseFilterService
     {
-        private readonly Func<IStoreRepository> _storeRepository;
+        #region Fields
+
         private readonly ICacheRepository _cacheRepository;
 
         private readonly Func<ICatalogRepository> _catalogRepository;
+        private readonly Func<IStoreRepository> _storeRepository;
         private ISearchFilter[] _filters;
 
-        public FilterService(Func<IStoreRepository> storeRepository, Func<ICatalogRepository> catalogRepository, ICacheRepository cacheRepository)
-        {
-            _storeRepository = storeRepository;
-            _cacheRepository = cacheRepository;
-            _catalogRepository = catalogRepository;
-        }
+        #endregion
 
-        #region Private Helpers
-        /// <summary>
-        /// Gets the store browse filters.
-        /// </summary>
-        /// <param name="store">The store.</param>
-        /// <returns>Filtered browsing</returns>
-        private FilteredBrowsing GetStoreBrowseFilters(Store store)
-        {
-            var filter = (from s in store.Settings where s.Name == "FilteredBrowsing" select s.LongTextValue).FirstOrDefault();
-            if (!string.IsNullOrEmpty(filter))
-            {
-                var filterString = filter;
-                var serializer = new XmlSerializer(typeof(FilteredBrowsing));
-                var reader = new StringReader(filterString);
-                var browsing = serializer.Deserialize(reader) as FilteredBrowsing;
-                return browsing;
-            }
+        #region Constructors and Destructors
 
-            return null;
+        public FilterService(
+            Func<IStoreRepository> storeRepository,
+            Func<ICatalogRepository> catalogRepository,
+            ICacheRepository cacheRepository)
+        {
+            this._storeRepository = storeRepository;
+            this._cacheRepository = cacheRepository;
+            this._catalogRepository = catalogRepository;
         }
 
         #endregion
 
+        #region Public Methods and Operators
+
         public ISearchFilter[] GetFilters(IDictionary<string, object> context)
         {
-            if (_filters != null) return _filters;
+            if (this._filters != null)
+            {
+                return this._filters;
+            }
 
             var filters = new List<ISearchFilter>();
             if (context.ContainsKey("CategoryId")) // include sub categories
@@ -95,12 +87,12 @@ namespace VirtoCommerce.MerchandisingModule.Web.Services
 
             if (context.ContainsKey("StoreId")) // include store filters
             {
-                using (var repository = _storeRepository())
+                using (var repository = this._storeRepository())
                 {
                     var storeId = context["StoreId"].ToString();
                     var store = repository.Stores.ExpandAll().SingleOrDefault(s => s.StoreId == storeId);
 
-                    var browsing = GetStoreBrowseFilters(store);
+                    var browsing = this.GetStoreBrowseFilters(store);
                     if (browsing != null)
                     {
                         if (browsing.Attributes != null)
@@ -119,8 +111,35 @@ namespace VirtoCommerce.MerchandisingModule.Web.Services
                 }
             }
 
-            _filters = filters.ToArray();
-            return _filters;
+            this._filters = filters.ToArray();
+            return this._filters;
         }
+
+        #endregion
+
+        #region Methods
+
+        /// <summary>
+        ///     Gets the store browse filters.
+        /// </summary>
+        /// <param name="store">The store.</param>
+        /// <returns>Filtered browsing</returns>
+        private FilteredBrowsing GetStoreBrowseFilters(Store store)
+        {
+            var filter =
+                (from s in store.Settings where s.Name == "FilteredBrowsing" select s.LongTextValue).FirstOrDefault();
+            if (!string.IsNullOrEmpty(filter))
+            {
+                var filterString = filter;
+                var serializer = new XmlSerializer(typeof(FilteredBrowsing));
+                var reader = new StringReader(filterString);
+                var browsing = serializer.Deserialize(reader) as FilteredBrowsing;
+                return browsing;
+            }
+
+            return null;
+        }
+
+        #endregion
     }
 }

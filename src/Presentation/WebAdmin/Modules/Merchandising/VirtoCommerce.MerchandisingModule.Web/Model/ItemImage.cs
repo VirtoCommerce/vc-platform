@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Newtonsoft.Json;
-
-namespace VirtoCommerce.MerchandisingModule.Web.Model
+﻿namespace VirtoCommerce.MerchandisingModule.Web.Model
 {
     public class ItemImage
     {
+        #region Public Properties
+
+        public byte[] Attachement { get; set; }
         public string Id { get; set; }
 
         public string Name { get; set; }
@@ -17,6 +13,6 @@ namespace VirtoCommerce.MerchandisingModule.Web.Model
 
         public string ThumbSrc { get; set; }
 
-        public byte[] Attachement { get; set; }
+        #endregion
     }
 }

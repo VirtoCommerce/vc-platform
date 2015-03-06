@@ -1,42 +1,40 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace VirtoCommerce.MerchandisingModule.Web.Model
 {
     public class DynamicContentItem
     {
+        #region Public Properties
+
+        public string ContentType { get; set; }
+        public string Description { get; set; }
         public string Id { get; set; }
 
+        public bool IsMultilingual { get; set; }
         public string Name { get; set; }
 
-        public string Description { get; set; }
-
-        public string ContentType
-        {
-            get; set; 
-        }
-
-        public bool IsMultilingual
-        {
-            get; set; 
-        }
-
         public PropertyDictionary Properties { get; set; }
+
+        #endregion
     }
 
     public class DynamicContentItemGroup
     {
+        #region Constructors and Destructors
+
         public DynamicContentItemGroup(string groupName)
         {
-            GroupName = groupName;
-            Items = new List<DynamicContentItem>();
+            this.GroupName = groupName;
+            this.Items = new List<DynamicContentItem>();
         }
 
-        public List<DynamicContentItem> Items { get; private set; } 
+        #endregion
+
+        #region Public Properties
 
         public string GroupName { get; set; }
+        public List<DynamicContentItem> Items { get; private set; }
+
+        #endregion
     }
 }

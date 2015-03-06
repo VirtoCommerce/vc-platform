@@ -1,18 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Linq;
+using Omu.ValueInjecter;
+using VirtoCommerce.Foundation.Catalogs.Search;
+using VirtoCommerce.Foundation.Search;
+using VirtoCommerce.Foundation.Search.Schemas;
 
 namespace VirtoCommerce.MerchandisingModule.Web.Services
 {
-    using Omu.ValueInjecter;
-
-    using VirtoCommerce.Foundation.Catalogs.Search;
-    using VirtoCommerce.Foundation.Search;
-    using VirtoCommerce.MerchandisingModule.Web.Model;
-    using VirtoCommerce.Foundation.Search.Schemas;
-
     public static class BrowseFilterServiceExtensions
     {
         /*
@@ -172,6 +165,8 @@ namespace VirtoCommerce.MerchandisingModule.Web.Services
         }
          * */
 
+        #region Public Methods and Operators
+
         public static ISearchFilter Convert(this IBrowseFilterService helper, ISearchFilter filter, string[] keys)
         {
             // get values that we have filters set for
@@ -247,8 +242,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Services
             return null;
         }
 
-
-        #region Private Helpers
+        #endregion
 
         /*
         /// <summary>
@@ -300,8 +294,5 @@ namespace VirtoCommerce.MerchandisingModule.Web.Services
             return name;
         }
          * */
-
-
-        #endregion
     }
 }

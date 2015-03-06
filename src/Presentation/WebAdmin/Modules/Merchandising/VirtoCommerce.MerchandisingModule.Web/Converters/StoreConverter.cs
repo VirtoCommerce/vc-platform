@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using Omu.ValueInjecter;
+using VirtoCommerce.Foundation.AppConfig.Model;
 using VirtoCommerce.MerchandisingModule.Web.Model.Stores;
 using foundation = VirtoCommerce.Foundation.Stores.Model;
 
@@ -7,12 +8,14 @@ namespace VirtoCommerce.MerchandisingModule.Web.Converters
 {
     public static class StoreConverter
     {
-        public static Store ToWebModel(this foundation.Store store, Foundation.AppConfig.Model.SeoUrlKeyword[] keywords)
+        #region Public Methods and Operators
+
+        public static Store ToWebModel(this foundation.Store store, SeoUrlKeyword[] keywords)
         {
             var retVal = new Store
-            {
-                Id = store.StoreId
-            };
+                         {
+                             Id = store.StoreId
+                         };
 
             retVal.InjectFrom(store);
 
@@ -52,5 +55,6 @@ namespace VirtoCommerce.MerchandisingModule.Web.Converters
             return retVal;
         }
 
+        #endregion
     }
 }
