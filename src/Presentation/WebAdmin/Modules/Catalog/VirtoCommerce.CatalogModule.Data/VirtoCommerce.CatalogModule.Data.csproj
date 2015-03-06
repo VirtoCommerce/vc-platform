@@ -68,6 +68,7 @@
     <Compile Include="Converters\PropertyValueConverter.cs" />
     <Compile Include="Converters\PropertyValueTypeConverter.cs" />
     <Compile Include="Converters\SeoInfoConverter.cs" />
+    <Compile Include="Extensions\RepositoryCachingExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\FoundationAppConfigRepositoryImpl.cs" />
     <Compile Include="Repositories\FoundationCatalogRepositoryImpl.cs" />
@@ -103,9 +104,7 @@
       <Name>VirtoCommerce.Domain</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Extensions\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

@@ -7,7 +7,6 @@ using VirtoCommerce.Foundation.Frameworks.Extensions;
 using foundationConfig = VirtoCommerce.Foundation.AppConfig.Model;
 using foundation = VirtoCommerce.Foundation.Catalogs.Model;
 using moduleModel = VirtoCommerce.Domain.Catalog.Model;
-using VirtoCommerce.Foundation.AppConfig.Repositories;
 
 namespace VirtoCommerce.CatalogModule.Data.Repositories
 {
@@ -104,9 +103,12 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
 
 		public foundation.Item[] GetItemByIds(string[] itemIds, moduleModel.ItemResponseGroup respGroup = moduleModel.ItemResponseGroup.ItemLarge)
 		{
-			var query = base.Items.Include(x => x.Catalog)
-								   .Include(x => x.CategoryItemRelations)
-								  .Where(x => itemIds.Contains(x.ItemId));
+			var query = Items.Include(x => x.Catalog).Where(x => itemIds.Contains(x.ItemId));
+
+            if ((respGroup & moduleModel.ItemResponseGroup.Categories) == moduleModel.ItemResponseGroup.Categories)
+            {
+                query = query.Include(x => x.CategoryItemRelations);
+            }
 			if ((respGroup & moduleModel.ItemResponseGroup.ItemProperties) == moduleModel.ItemResponseGroup.ItemProperties)
 			{
 				query = query.Include(x => x.ItemPropertyValues);

@@ -2,7 +2,7 @@
 using System.Collections.ObjectModel;
 using System.Linq;
 using VirtoCommerce.CatalogModule.Data.Converters;
-using VirtoCommerce.Foundation;
+using VirtoCommerce.CatalogModule.Data.Extensions;
 using VirtoCommerce.Foundation.Frameworks;
 using VirtoCommerce.Framework.Web.Settings;
 using foundation = VirtoCommerce.Foundation.Catalogs.Model;
@@ -68,22 +68,28 @@ namespace VirtoCommerce.CatalogModule.Data.Services
                 var dbItems = repository.GetItemByIds(itemIds, respGroup);
                 foreach (var dbItem in dbItems)
                 {
-                    var dbCatalog = repository.GetCatalogById(dbItem.CatalogId);
-
-					var parentItemRelation = repository.ItemRelations.FirstOrDefault(x => x.ChildItemId == dbItem.ItemId);
-					var parentItemId = parentItemRelation == null ? null : parentItemRelation.ParentItemId;
+                    var dbCatalog = repository.GetCatalogCached(_cache, _settingsManager, dbItem.CatalogId);
+                    
+                    // Sasha: we don't need to return variations for the variation even if it is a product
+					//var parentItemRelation = repository.ItemRelations.FirstOrDefault(x => x.ChildItemId == dbItem.ItemId);
+					//var parentItemId = parentItemRelation == null ? null : parentItemRelation.ParentItemId;
+                    string parentItemId = null;
 
 
 					foundation.Item[] dbVariations = null;
 					if ((respGroup & module.ItemResponseGroup.Variations) == module.ItemResponseGroup.Variations)
 					{
-						dbVariations = repository.GetAllItemVariations(parentItemId ?? dbItem.ItemId);
-						//When user load not main product need to include main product in variation list and exclude current
+						//dbVariations = repository.GetAllItemVariations(parentItemId ?? dbItem.ItemId);
+                        dbVariations = repository.GetAllItemVariations(dbItem.ItemId);
+						// Sasha: we don't need to return variations for a variation
+                        //When user load not main product need to include main product in variation list and exclude current
+                        /*
 						if (parentItemId != null)
 						{
 							var dbMainItem = repository.GetItemByIds(new[] { parentItemId }, respGroup).FirstOrDefault();
 							dbVariations = dbVariations.Concat(new[] { dbMainItem }).Where(x => x.ItemId != dbItem.ItemId).ToArray();
 						}
+                         * */
 
 						//Need this for add main product to variations list except current  
 						dbVariations = dbVariations.Concat(new[] { dbItem }).Where(x => x.ItemId != dbItem.ItemId).ToArray();
@@ -111,7 +117,7 @@ namespace VirtoCommerce.CatalogModule.Data.Services
 
                     var catalog = dbCatalog.ToModuleModel();
 
-
+                    /* Sasha: this doesn't serve any purpose, since properties are only used to populate propertyId field which can be done much more efficiently */
 					if (dbItem.CategoryItemRelations.Any())
 					{
 						var dbCategory = repository.GetCategoryById(dbItem.CategoryItemRelations.OrderBy(x => x.Priority).First().CategoryId);
