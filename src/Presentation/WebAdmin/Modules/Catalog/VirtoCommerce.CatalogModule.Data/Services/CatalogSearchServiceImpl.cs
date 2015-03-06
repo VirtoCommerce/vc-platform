@@ -5,6 +5,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using VirtoCommerce.CatalogModule.Data.Repositories;
 using VirtoCommerce.Domain.Catalog.Services;
+using VirtoCommerce.Foundation.Frameworks;
+using VirtoCommerce.Framework.Web.Settings;
 using foundation = VirtoCommerce.Foundation.Catalogs.Model;
 using module = VirtoCommerce.Domain.Catalog.Model;
 
@@ -16,13 +18,19 @@ namespace VirtoCommerce.CatalogModule.Data.Services
         private readonly IItemService _itemService;
         private readonly ICatalogService _catalogService;
         private readonly ICategoryService _categoryService;
+        private readonly ISettingsManager _settingsManager;
+        private readonly ICacheRepository _cache;
+
         public CatalogSearchServiceImpl(Func<IFoundationCatalogRepository> catalogRepositoryFactory, IItemService itemService,
-                                        ICatalogService catalogService, ICategoryService categoryService)
+                                        ICatalogService catalogService, ICategoryService categoryService,
+            ISettingsManager settingsManager, ICacheRepository cache)
         {
             _catalogRepositoryFactory = catalogRepositoryFactory;
             _itemService = itemService;
             _catalogService = catalogService;
             _categoryService = categoryService;
+            _settingsManager = settingsManager;
+            this._cache = cache;
         }
 
         public module.SearchResult Search(module.SearchCriteria criteria)
@@ -59,6 +67,7 @@ namespace VirtoCommerce.CatalogModule.Data.Services
                     var query = repository.Categories.Where(x => x.CatalogId == criteria.CatalogId);
 
                     var dbCatalog = repository.GetCatalogById(criteria.CatalogId);
+
                     var isVirtual = dbCatalog is foundation.VirtualCatalog;
                     if (!String.IsNullOrEmpty(criteria.CategoryId))
                     {
@@ -137,8 +146,6 @@ namespace VirtoCommerce.CatalogModule.Data.Services
         {
             using (var repository = _catalogRepositoryFactory())
             {
-                var dbCatalog = repository.GetCatalogById(criteria.CatalogId);
-
                 var query = repository.Items;
 				if ((criteria.ResponseGroup & module.ResponseGroup.WithVariations) != module.ResponseGroup.WithVariations)
 				{
@@ -153,9 +160,7 @@ namespace VirtoCommerce.CatalogModule.Data.Services
                 {
                     query = query.Where(x => x.CatalogId == criteria.CatalogId && !x.CategoryItemRelations.Any());
                 }
-
 				
-
                 result.TotalCount = query.Count();
 
                 var itemIds = query.OrderByDescending(x => x.Name)
@@ -164,22 +169,9 @@ namespace VirtoCommerce.CatalogModule.Data.Services
                                    .Select(x => x.ItemId)
                                    .ToArray();
 
-
-                var parallelOptions = new ParallelOptions
-                {
-                    MaxDegreeOfParallelism = 10
-                };
-                var products = new ConcurrentBag<module.CatalogProduct>();
-                Parallel.ForEach(itemIds, parallelOptions, (x) =>
-                {
-                    var product = _itemService.GetById(x, module.ItemResponseGroup.ItemLarge);
-                    products.Add(product);
-                });
+                var products = _itemService.GetByIds(itemIds, module.ItemResponseGroup.ItemInfo | module.ItemResponseGroup.ItemAssets); // this is only used in the listing, so load bare minimum
                 result.Products = products.OrderByDescending(x => x.Name).ToList();
-
             }
         }
-
-
     }
 }

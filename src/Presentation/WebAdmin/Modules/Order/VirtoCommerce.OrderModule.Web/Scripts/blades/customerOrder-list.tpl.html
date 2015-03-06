@@ -10,10 +10,10 @@
     <div class="blade-inner">
         <div class="inner-block">
             <div class="table-wrapper">
-                <table class="table __data">
+                <table class="table">
                     <thead>
                         <tr>
-                            <th class="table-col __product-control">
+                            <th class="table-col">
                                 <label class="form-control __checkbox">
                                     <input type="checkbox" ng-model="selectedAll" ng-change="checkAll(selectedAll)" />
                                     <span class="check"></span>
@@ -53,7 +53,7 @@
                                 <span>{{data.sum +' '+ data.currency}}</span>
                             </td>
                             <td class="table-col">
-                                <span class="table-date" title="{{data.createdDate}}" am-time-ago="data.createdDate"></span>
+                                <span title="{{data.createdDate}}">{{data.createdDate | date }}</span>
                             </td>
                             <td class="table-col">
                                 <span title="{{data.site}}">{{data.site}}</span>

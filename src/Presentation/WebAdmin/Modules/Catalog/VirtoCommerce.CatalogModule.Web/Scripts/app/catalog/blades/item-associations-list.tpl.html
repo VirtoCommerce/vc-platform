@@ -1,49 +1,39 @@
-﻿<div class="blade-content __medium-wide">
-    <div class="blade-inner">
-        <div class="inner-block">
-            <div class="table-wrapper">
-                <table class="table __data" ng-if="blade.currentEntities.length > 0">
-                    <thead>
-                        <tr>
-                            <th class="table-col">
-                                <label class="form-control __checkbox">
-                                    <input type="checkbox" ng-model="selectedAll" ng-change="checkAll(selectedAll)" />
-                                    <span class="check"></span>
-                                </label>
-                            </th>
-                            <th class="table-col">Img</th>
-                            <th class="table-col">Product</th>
-                            <th class="table-col">Group</th>
-                        </tr>
-                    </thead>
-                    <tbody ui-sortable="sortableOptions" ng-model="blade.currentEntities">
-                        <!--| orderBy:priority-->
-                        <tr class="table-item" ng-repeat="data in blade.currentEntities" ng-class="{'__selected': data === selectedItem}">
-                            <td class="table-col __product-control">
-                                <label class="form-control __checkbox">
-                                    <input type="checkbox" ng-model="data.selected">
-                                    <span class="check"></span>
-                                </label>
-                            </td>
-                            <td class="table-col">
-                                <div class="product-img">
-                                    <div class="image" style="background-image: url({{data.productImg}})" ng-if="data.type!=='category' && data.productImg"></div>
-                                    <i class="table-ico fa" ng-class="data.type == 'category' ? ' fa-folder' : ' fa-image'" ng-if="!data.productImg" />
-                                </div>
-                                <!-- <img ng-src="{{data.productImg}}" height="42" width="42" ng-if="data.productImg" /><i class="icon-none" ng-if="!data.productImg" style="font-size:26px" /> -->
-                            </td>
-                            <td class="table-col __product-name">
-                                <span class="table-t">{{data.productName}}</span>
-                                <span class="table-descr">{{data.productCode}}</span>
-                            </td>
-                            <td class="table-col">
-                                <span title="Association group name">{{data.name}}</span>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-            <div ng-if="blade.currentEntities.length == 0" class="spacer">No Associations yet</div>
-        </div>
-    </div>
-</div>
+﻿<style>
+    .fixed-td {
+        width: 15px;
+    }
+</style>
+<table class="table hovered" ng-if="blade.currentEntities.length > 0">
+    <thead>
+        <tr>
+            <th class="text-left fixed-td"><input type="checkbox" ng-model="selectedAll" ng-change="checkAll(selectedAll)" /></th>
+            <th class="text-left fixed-td">Img</th>
+            <th class="text-left">Product</th>
+            <th class="text-left fixed-td">Group</th>
+        </tr>
+    </thead>
+    <tbody ui-sortable="sortableOptions" ng-model="blade.currentEntities">
+        <!--| orderBy:priority-->
+        <tr ng-repeat="data in blade.currentEntities track by data.id" ng-class="{'selected': data === selectedItem}">
+            <td>
+                <div data-role="input-control" class="input-control checkbox">
+                    <label>
+                        <input type="checkbox" ng-model="data.selected">
+                        <span class="check"></span>
+                    </label>
+                </div>
+            </td>
+            <td>
+                <img ng-src="{{data.productImg}}" height="42" width="42" ng-if="data.productImg" /><i class="icon-none" ng-if="!data.productImg" style="font-size:26px" />
+            </td>
+            <td style="max-width: 250px; overflow: hidden; text-overflow: ellipsis;">
+                <span title="{{data.productName}}">{{data.productName}}</span>
+                <span title="Code: {{data.productCode}}" class="blade-sw-title">{{data.productCode}}</span>
+            </td>
+            <td>
+                <span title="Association group name">{{data.name}}</span>
+            </td>
+        </tr>
+    </tbody>
+</table>
+<div ng-if="blade.currentEntities.length == 0" class="spacer">No Associations yet</div>

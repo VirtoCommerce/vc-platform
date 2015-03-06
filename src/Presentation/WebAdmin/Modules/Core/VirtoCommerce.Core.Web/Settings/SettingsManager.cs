@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -86,11 +87,7 @@ namespace VirtoCommerce.CoreModule.Web.Settings
                 {
                     foreach (var settingDescriptor in settings)
                     {
-                        var name = settingDescriptor.Name;
-                        var type = settingDescriptor.ValueType;
-                        var value = settingDescriptor.RawValue();
-
-                        SaveSettingValue(repository, name, type, value, existingSettings);
+                        SaveSetting(repository, settingDescriptor, existingSettings);
                     }
 
                     repository.UnitOfWork.Commit();
@@ -98,22 +95,46 @@ namespace VirtoCommerce.CoreModule.Web.Settings
             }
         }
 
+        public T[] GetArray<T>(string name, T[] defaultValue)
+        {
+            var result = defaultValue;
+
+            var repositorySetting = LoadSetting(name);
+            if (repositorySetting != null)
+            {
+                result = repositorySetting.SettingValues
+                    .Select(v => (T)v.RawValue())
+                    .ToArray();
+            }
+            else
+            {
+                var manifestSetting = GetSettingFromManifest(name);
+                if (manifestSetting != null)
+                {
+                    if (manifestSetting.ArrayValues != null)
+                    {
+                        result = manifestSetting.ArrayValues
+                            .Select(v => (T)manifestSetting.RawValue(v))
+                            .ToArray();
+                    }
+                    else if (manifestSetting.DefaultValue != null)
+                    {
+                        result = new[] { (T)manifestSetting.RawDefaultValue() };
+                    }
+                }
+            }
+
+            return result;
+        }
+
         public T GetValue<T>(string name, T defaultValue)
         {
             var result = defaultValue;
 
-            var repositoryValue = GetValueFromRepository(name);
-            if (repositoryValue != null)
+            var values = GetArray(name, new[] { defaultValue });
+            if (values.Any())
             {
-                result = (T)repositoryValue.RawValue();
-            }
-            else
-            {
-                var manifestValue = GetSettingFromManifest(name);
-                if (manifestValue != null)
-                {
-                    result = (T)manifestValue.RawDefaultValue();
-                }
+                result = values.First();
             }
 
             return result;
@@ -121,12 +142,28 @@ namespace VirtoCommerce.CoreModule.Web.Settings
 
         public void SetValue<T>(string name, T value)
         {
-            var descriptor = new SettingDescriptor
+            var type = typeof(T);
+            var objectValue = (object)value;
+            var descriptor = new SettingDescriptor { Name = name };
+
+            if (type.IsArray)
             {
-                Name = name,
-                Value = ((object)value) == null ? null : string.Format(CultureInfo.InvariantCulture, "{0}", value),
-                ValueType = ConvertToModuleSettingType(typeof(T))
-            };
+                descriptor.IsArray = true;
+                descriptor.ValueType = ConvertToModuleSettingType(type.GetElementType());
+
+                if (objectValue != null)
+                {
+                    descriptor.ArrayValues =
+                        ((IEnumerable)value).OfType<object>()
+                        .Select(v => v == null ? null : string.Format(CultureInfo.InvariantCulture, "{0}", v))
+                        .ToArray();
+                }
+            }
+            else
+            {
+                descriptor.ValueType = ConvertToModuleSettingType(type);
+                descriptor.Value = objectValue == null ? null : string.Format(CultureInfo.InvariantCulture, "{0}", value);
+            }
 
             SaveSettings(new[] { descriptor });
         }
@@ -152,20 +189,10 @@ namespace VirtoCommerce.CoreModule.Web.Settings
             return GetAllManifestSettings().FirstOrDefault(s => s.Name == name);
         }
 
-        SettingValue GetValueFromRepository(string name)
+        private static void SaveSetting(IRepository repository, SettingDescriptor descriptor, ICollection<Setting> existingSettings)
         {
-            using (var repository = _repositoryFactory())
-            {
-                return repository.Settings
-                    .Expand(s => s.SettingValues)
-                    .Where(s => s.Name == name)
-                    .SelectMany(s => s.SettingValues)
-                    .FirstOrDefault();
-            }
-        }
+            var name = descriptor.Name;
 
-        private static void SaveSettingValue(IRepository repository, string name, string valueType, object value, ICollection<Setting> existingSettings)
-        {
             // Create new setting or attach existing
             var setting = existingSettings.FirstOrDefault(s => s.Name == name);
             if (setting == null)
@@ -179,31 +206,58 @@ namespace VirtoCommerce.CoreModule.Web.Settings
                 repository.Attach(setting);
             }
 
-            setting.SettingValueType = ConvertToSettingValueType(valueType);
+            setting.SettingValueType = ConvertToSettingValueType(descriptor.ValueType);
+            setting.IsEnum = descriptor.IsArray;
 
-            // Create new value or use existing
-            var settingValue = setting.SettingValues.FirstOrDefault();
-            if (settingValue == null)
+            var values = new List<string>();
+
+            if (descriptor.IsArray)
             {
-                settingValue = new SettingValue();
-                setting.SettingValues.Add(settingValue);
+                if (descriptor.ArrayValues != null)
+                {
+                    values.AddRange(descriptor.ArrayValues);
+                }
+            }
+            else
+            {
+                values.Add(descriptor.Value);
             }
 
-            settingValue.ValueType = setting.SettingValueType;
-
-            switch (valueType)
+            // Add new values
+            for (var i = setting.SettingValues.Count; i < values.Count; i++)
             {
-                case ModuleSetting.TypeBoolean:
+                setting.SettingValues.Add(new SettingValue());
+            }
+
+            // Remove old values
+            while (setting.SettingValues.Count > values.Count)
+            {
+                setting.SettingValues.RemoveAt(values.Count);
+            }
+
+            // Set values
+            for (var i = 0; i < values.Count; i++)
+            {
+                var settingValue = setting.SettingValues[i];
+                settingValue.ValueType = setting.SettingValueType;
+                SetSettingValue(settingValue, ModuleSetting.RawValue(descriptor.ValueType, values[i]));
+            }
+        }
+
+        private static void SetSettingValue(SettingValue settingValue, object value)
+        {
+            switch (settingValue.ValueType)
+            {
+                case SettingValue.TypeBoolean:
                     settingValue.BooleanValue = (bool)value;
                     break;
-                case ModuleSetting.TypeInteger:
+                case SettingValue.TypeInteger:
                     settingValue.IntegerValue = (int)value;
                     break;
-                case ModuleSetting.TypeDecimal:
+                case SettingValue.TypeDecimal:
                     settingValue.DecimalValue = (decimal)value;
                     break;
-                case ModuleSetting.TypeString:
-                case ModuleSetting.TypeSecureString:
+                case SettingValue.TypeShortText:
                     settingValue.ShortTextValue = (string)value;
                     break;
             }
@@ -247,7 +301,12 @@ namespace VirtoCommerce.CoreModule.Web.Settings
             };
         }
 
-        private List<Setting> LoadSettings(IEnumerable<string> settingNames)
+        Setting LoadSetting(string name)
+        {
+            return LoadSettings(name).FirstOrDefault();
+        }
+
+        private List<Setting> LoadSettings(params string[] settingNames)
         {
             return _cacheHelper.Get(
                 CacheHelper.CreateCacheKey(Constants.SettingsCachePrefix, string.Format(SettingsCacheKey, CacheHelper.CreateCacheKey(settingNames))),
@@ -276,18 +335,32 @@ namespace VirtoCommerce.CoreModule.Web.Settings
                 ValueType = setting.ValueType,
                 AllowedValues = setting.AllowedValues,
                 DefaultValue = setting.DefaultValue,
+                IsArray = setting.IsArray,
+                ArrayValues = setting.ArrayValues,
                 Title = setting.Title,
                 Description = setting.Description,
             };
 
-            var existingValue = existingSettings
-                .Where(s => s.Name == setting.Name)
-                .SelectMany(s => s.SettingValues)
-                .FirstOrDefault();
+            var existingSetting = existingSettings
+                .FirstOrDefault(s => s.Name == setting.Name);
 
-            if (existingValue != null)
+            if (existingSetting != null)
             {
-                result.Value = existingValue.ToString(CultureInfo.InvariantCulture);
+                var existingValues = existingSetting.SettingValues
+                    .Select(v => v.ToString(CultureInfo.InvariantCulture))
+                    .ToArray();
+
+                if (setting.IsArray)
+                {
+                    result.ArrayValues = existingValues;
+                }
+                else
+                {
+                    if (existingValues.Any())
+                    {
+                        result.Value = existingValues.First();
+                    }
+                }
             }
 
             return result;
