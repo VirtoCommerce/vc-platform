@@ -169,7 +169,16 @@ namespace VirtoCommerce.CatalogModule.Data.Services
                                    .Select(x => x.ItemId)
                                    .ToArray();
 
-                var products = _itemService.GetByIds(itemIds, module.ItemResponseGroup.ItemInfo | module.ItemResponseGroup.ItemAssets); // this is only used in the listing, so load bare minimum
+				var productResponseGroup = module.ItemResponseGroup.ItemInfo | module.ItemResponseGroup.ItemAssets;
+				if ((criteria.ResponseGroup & module.ResponseGroup.WithProperties) ==module.ResponseGroup.WithProperties)
+				{
+					productResponseGroup |= module.ItemResponseGroup.ItemProperties;
+				}
+				if ((criteria.ResponseGroup & module.ResponseGroup.WithVariations) == module.ResponseGroup.WithVariations)
+				{
+					productResponseGroup |= module.ItemResponseGroup.Variations;
+				}
+				var products = _itemService.GetByIds(itemIds, productResponseGroup);
                 result.Products = products.OrderByDescending(x => x.Name).ToList();
             }
         }

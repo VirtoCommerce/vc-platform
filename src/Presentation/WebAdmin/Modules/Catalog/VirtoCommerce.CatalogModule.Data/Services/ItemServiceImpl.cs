@@ -70,27 +70,24 @@ namespace VirtoCommerce.CatalogModule.Data.Services
                 {
                     var dbCatalog = repository.GetCatalogById(dbItem.CatalogId);
 
-                    // Sasha: products passed here are only products and not variation, espcially in the list
-                    //var parentItemRelation = repository.ItemRelations.FirstOrDefault(x => x.ChildItemId == dbItem.ItemId);
-                    //var parentItemId = parentItemRelation == null ? null : parentItemRelation.ParentItemId;
+					var parentItemRelation = repository.ItemRelations.FirstOrDefault(x => x.ChildItemId == dbItem.ItemId);
+					var parentItemId = parentItemRelation == null ? null : parentItemRelation.ParentItemId;
 
-                    foundation.Item[] dbVariations = null;
-                    if ((respGroup & module.ItemResponseGroup.Variations) == module.ItemResponseGroup.Variations)
-                    {
-                        // 
-                        /* dbVariations = repository.GetAllItemVariations(parentItemId ?? dbItem.ItemId); * */
 
-                        dbVariations = repository.GetAllItemVariations(dbItem.ItemId);
-                        //When user load not main product need to include main product in variation list and exclude current
-                        //if (parentItemId != null)
-                        //{
-                        //    var dbMainItem = repository.GetItemByIds(new[] { parentItemId }, respGroup).FirstOrDefault();
-                        //    dbVariations = dbVariations.Concat(new[] { dbMainItem }).Where(x => x.ItemId != dbItem.ItemId).ToArray();
-                        //}
+					foundation.Item[] dbVariations = null;
+					if ((respGroup & module.ItemResponseGroup.Variations) == module.ItemResponseGroup.Variations)
+					{
+						dbVariations = repository.GetAllItemVariations(parentItemId ?? dbItem.ItemId);
+						//When user load not main product need to include main product in variation list and exclude current
+						if (parentItemId != null)
+						{
+							var dbMainItem = repository.GetItemByIds(new[] { parentItemId }, respGroup).FirstOrDefault();
+							dbVariations = dbVariations.Concat(new[] { dbMainItem }).Where(x => x.ItemId != dbItem.ItemId).ToArray();
+						}
 
-                        //Need this for add main product to variations list except current  
-                        //dbVariations = dbVariations.Concat(new[] { dbItem }).Where(x => x.ItemId != dbItem.ItemId).ToArray();
-                    }
+						//Need this for add main product to variations list except current  
+						dbVariations = dbVariations.Concat(new[] { dbItem }).Where(x => x.ItemId != dbItem.ItemId).ToArray();
+					}
 
                     foundationConfig.SeoUrlKeyword[] seoInfos = null;
                     if ((respGroup & module.ItemResponseGroup.Seo) == module.ItemResponseGroup.Seo)
@@ -114,23 +111,20 @@ namespace VirtoCommerce.CatalogModule.Data.Services
 
                     var catalog = dbCatalog.ToModuleModel();
 
-                    /*
-                    if (dbItem.CategoryItemRelations.Any())
-                    {
-                        var dbCategory = repository.GetCategoryById(dbItem.CategoryItemRelations.OrderBy(x => x.Priority).First().CategoryId);
-                        var dpProperties = repository.GetAllCategoryProperties(dbCategory);
-                        var properties = dpProperties.Select(x => x.ToModuleModel(catalog, dbCategory.ToModuleModel(catalog))).ToArray();
-                        var category = dbCategory.ToModuleModel(catalog, properties);
 
-                        retVal.Add(dbItem.ToModuleModel(catalog, category, properties, dbVariations, seoInfos, parentItemId, associatedProducts.ToArray()));
-                    }
-                    else
-                    {
-                        retVal.Add(dbItem.ToModuleModel(catalog, null, null, dbVariations, seoInfos, parentItemId, associatedProducts.ToArray()));
-                    }
-                     * */
+					if (dbItem.CategoryItemRelations.Any())
+					{
+						var dbCategory = repository.GetCategoryById(dbItem.CategoryItemRelations.OrderBy(x => x.Priority).First().CategoryId);
+						var dpProperties = repository.GetAllCategoryProperties(dbCategory);
+						var properties = dpProperties.Select(x => x.ToModuleModel(catalog, dbCategory.ToModuleModel(catalog))).ToArray();
+						var category = dbCategory.ToModuleModel(catalog, properties);
 
-                    retVal.Add(dbItem.ToModuleModel(catalog, null, null, dbVariations, seoInfos, null, associatedProducts.ToArray()));
+						retVal.Add(dbItem.ToModuleModel(catalog, category, properties, dbVariations, seoInfos, parentItemId, associatedProducts.ToArray()));
+					}
+					else
+					{
+						retVal.Add(dbItem.ToModuleModel(catalog, null, null, dbVariations, seoInfos, parentItemId, associatedProducts.ToArray()));
+					}
                 }
             }
 
