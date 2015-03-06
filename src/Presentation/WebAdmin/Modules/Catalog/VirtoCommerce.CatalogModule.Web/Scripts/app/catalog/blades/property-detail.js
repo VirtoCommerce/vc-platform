@@ -71,7 +71,7 @@
     }
 
     function initializeBlade(data) {
-        if (data.valueType === 2 && data.dictionaryValues) {
+        if (data.valueType === 'Number' && data.dictionaryValues) {
             _.forEach(data.dictionaryValues, function (entry) {
                 entry.value = parseFloat(entry.value);
             });

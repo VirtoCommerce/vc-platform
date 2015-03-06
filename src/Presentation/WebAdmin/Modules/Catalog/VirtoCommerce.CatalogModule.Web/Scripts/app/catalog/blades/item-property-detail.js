@@ -11,7 +11,7 @@
     $scope.blade.refresh = function (parentRefresh) {
         items.get({ id: $scope.blade.itemId }, function (data) {
             if (data.properties) {
-                var numberProps = _.where(data.properties, { valueType: 2, multivalue: false, dictionary: false });
+                var numberProps = _.where(data.properties, { valueType: 'Number', multivalue: false, dictionary: false });
                 _.forEach(numberProps, function (prop) {
                     _.forEach(prop.values, function (value) {
                         value.value = parseFloat(value.value);

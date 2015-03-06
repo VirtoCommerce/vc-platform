@@ -5,15 +5,7 @@
     'ngTagsInput'
 ])
 .directive('vaProperty2', ['$compile', '$filter', '$parse', '$templateCache', '$http', function ($compile, $filter, $parse, $templateCache, $http) {
-    var propertyValueTypeEnum =
-    {
-        shortText: 0,
-        longText: 1,
-        number: 2
-    };
-    if (Object.freeze) Object.freeze(propertyValueTypeEnum);
-
-
+   
     return {
         restrict: 'E',
         require: 'ngModel',
@@ -138,19 +130,8 @@
             };
 
             function getTemplateName(property) {
-                var result = '';
-                switch (property.valueType) {
-                    case propertyValueTypeEnum.shortText:
-                        result += 'shortText';
-                        break;
-                    case propertyValueTypeEnum.longText:
-                        result += 'longText';
-                        break;
-                    case propertyValueTypeEnum.number:
-                        result += 'number';
-                        break;
-                }
-
+            	var result = property.valueType;
+              
                 if (property.dictionary) {
                     result += '-dictionary';
                 }

@@ -17,10 +17,10 @@
                     </div>
                     <div class="form-group">
                         <label class="form-label">New value</label>
-                        <div class="form-input" ng-if="pb.currentEntity.valueType !== 2">
+                        <div class="form-input" ng-if="pb.currentEntity.valueType !== 'Number'">
                             <input ng-class="{'error' : pdForm.dictValue.$invalid && !pdForm.dictValue.$pristine}" required ng-model="newValue.value" ui-validate=" 'dictValueValidator($value)' " name="dictValue" focus-on="" type="text" placeholder="Please enter value" />
                         </div>
-                        <div class="form-input" ng-if="pb.currentEntity.valueType === 2">
+                        <div class="form-input" ng-if="pb.currentEntity.valueType === 'Number'">
                             <input ng-class="{'error' : pdForm.dictValue.$invalid && !pdForm.dictValue.$pristine}" required ng-model="newValue.value" ui-validate=" 'dictValueValidator($value)' " name="dictValue" focus-on="" type="text" placeholder="Please enter value" />
                         </div>
                         <!--<button type="button" tabindex="-1" class="btn-clear"></button>-->
@@ -69,10 +69,10 @@
                                     </div>
                                 </td>
                                 <td class="table-col">
-                                    <div class="form-input" ng-if="pb.currentEntity.valueType !== 2">
+                                    <div class="form-input" ng-if="pb.currentEntity.valueType !== 'Number'">
                                         <input required ng-model="data.value" type="text" />
                                     </div>
-                                    <div class="form-input __number js-number-input-plugin" ng-if="pb.currentEntity.valueType === 2">
+                                    <div class="form-input __number js-number-input-plugin" ng-if="pb.currentEntity.valueType === 'Number'">
                                         <input required ng-model="data.value" type="text" />
                                     </div>
                                     <ul role="menu" class="menu __context" id="pd_menu_{{$index}}">

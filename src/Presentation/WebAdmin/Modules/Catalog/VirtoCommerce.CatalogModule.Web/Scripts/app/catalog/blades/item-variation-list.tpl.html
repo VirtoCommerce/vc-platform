@@ -17,7 +17,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr class="table-item" ng-repeat="data in blade.item.variations" ng-class="{'selected': data === selectedItem}">
+                        <tr class="table-item" ng-repeat="data in blade.item.variations track by data.id" ng-class="{'selected': data === selectedItem}">
                             <td class="table-col">
                                 <label class="form-control __checkbox">
                                     <input type="checkbox" ng-model="data.selected">
