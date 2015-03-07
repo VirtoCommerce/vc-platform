@@ -52,9 +52,13 @@ namespace VirtoCommerce.ApiClient
         {
             
             BaseAddress = baseEndpoint;
-            var caheHandler = new HttpCacheHandler(_store);
-            httpClient = HttpClientFactory.Create(handler, caheHandler);
-            //httpClient = new HttpClient(handler);
+            var caheHandler = new HttpCacheHandler(_store)
+                              {
+                                  InnerHandler = handler ?? new HttpClientHandler()
+                              };
+
+            //httpClient = HttpClientFactory.Create(caheHandler);
+            httpClient = new HttpClient(caheHandler);
             disposed = false;
         }
 
