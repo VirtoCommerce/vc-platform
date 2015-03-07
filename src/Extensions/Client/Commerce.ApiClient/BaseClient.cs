@@ -8,8 +8,6 @@ using System.Net.Http;
 using System.Net.Http.Formatting;
 using System.Threading.Tasks;
 using System.Web;
-using Marvin.HttpCache;
-using Marvin.HttpCache.Store;
 using Newtonsoft.Json;
 using VirtoCommerce.ApiClient.Caching;
 using VirtoCommerce.ApiClient.DataContracts;
@@ -27,16 +25,15 @@ namespace VirtoCommerce.ApiClient
 
         #endregion
 
+        #region Static Fields
+
+        private static readonly IContentStore _store = new InMemoryContentStore();
+
+        #endregion
+
         #region Fields
 
         private readonly HttpClient httpClient;
-
-        static ICacheStore _store = new ImmutableInMemoryCacheStore();
-
-        private CacheHelper _cacheHelper;
-
-        private ICacheRepository _cacheRepository = new HttpCacheRepository();
-
         private bool disposed;
 
         #endregion
@@ -50,16 +47,13 @@ namespace VirtoCommerce.ApiClient
         /// <param name="handler">Message processing handler</param>
         public BaseClient(Uri baseEndpoint, HttpMessageHandler handler = null)
         {
-            
-            BaseAddress = baseEndpoint;
-            var caheHandler = new HttpCacheHandler(_store)
-                              {
-                                  InnerHandler = handler ?? new HttpClientHandler()
-                              };
+            this.BaseAddress = baseEndpoint;
+            var httpCache = new HttpCache(_store);
+            var cachingHandler = new PrivateCacheHandler(handler ?? new HttpClientHandler(), httpCache);
 
             //httpClient = HttpClientFactory.Create(caheHandler);
-            httpClient = new HttpClient(caheHandler);
-            disposed = false;
+            this.httpClient = new HttpClient(cachingHandler);
+            this.disposed = false;
         }
 
         #endregion
@@ -74,22 +68,6 @@ namespace VirtoCommerce.ApiClient
         /// </value>
         protected Uri BaseAddress { get; set; }
 
-        protected virtual ICacheRepository CacheRepository
-        {
-            get
-            {
-                return _cacheRepository ?? (_cacheRepository = new HttpCacheRepository());
-            }
-        }
-
-        private CacheHelper Helper
-        {
-            get
-            {
-                return _cacheHelper ?? (_cacheHelper = new CacheHelper(_cacheRepository));
-            }
-        }
-
         #endregion
 
         #region Public Methods and Operators
@@ -99,7 +77,7 @@ namespace VirtoCommerce.ApiClient
         /// </summary>
         public void Dispose()
         {
-            Dispose(true);
+            this.Dispose(true);
             GC.SuppressFinalize(this);
         }
 
@@ -119,7 +97,7 @@ namespace VirtoCommerce.ApiClient
 
             if (queryStringParameters != null && queryStringParameters.Length > 0)
             {
-                var queryStringProperties = HttpUtility.ParseQueryString(BaseAddress.Query);
+                var queryStringProperties = HttpUtility.ParseQueryString(this.BaseAddress.Query);
                 foreach (var queryStringParameter in queryStringParameters)
                 {
                     queryStringProperties[queryStringParameter.Key] = queryStringParameter.Value;
@@ -135,7 +113,10 @@ namespace VirtoCommerce.ApiClient
             string relativePath,
             object queryStringParameters)
         {
-            var parameters = queryStringParameters.ToPropertyDictionary().Select(x=>new KeyValuePair<string, string>(x.Key, x.Value.ToNullOrString())).ToArray();
+            var parameters =
+                queryStringParameters.ToPropertyDictionary()
+                    .Select(x => new KeyValuePair<string, string>(x.Key, x.Value.ToNullOrString()))
+                    .ToArray();
             return this.CreateRequestUri(relativePath, parameters);
         }
 
@@ -147,7 +128,7 @@ namespace VirtoCommerce.ApiClient
         /// <returns>Request URI</returns>
         protected Uri CreateRequestUri(string relativePath, string queryString)
         {
-            var endpoint = new Uri(BaseAddress, relativePath);
+            var endpoint = new Uri(this.BaseAddress, relativePath);
             var uriBuilder = new UriBuilder(endpoint) { Query = queryString };
             return uriBuilder.Uri;
         }
@@ -159,15 +140,16 @@ namespace VirtoCommerce.ApiClient
         {
             if (disposing)
             {
-                if (!disposed)
+                if (!this.disposed)
                 {
-                    httpClient.Dispose();
+                    this.httpClient.Dispose();
                 }
             }
 
-            disposed = true;
+            this.disposed = true;
         }
 
+        /*
         protected virtual async Task<T> GetAsync<T>(Uri requestUri, string userId = null, bool useCache = true)
             where T : class
         {
@@ -179,6 +161,7 @@ namespace VirtoCommerce.ApiClient
                         GetCacheTimeOut(requestUri.ToString()),
                         ClientContext.Configuration.IsCacheEnabled && useCache).ConfigureAwait(false);
         }
+         * */
 
         /// <summary>
         ///     Sends a GET request.
@@ -187,7 +170,8 @@ namespace VirtoCommerce.ApiClient
         /// <param name="requestUri">The request URI.</param>
         /// <param name="userId">The user id. Only required by the tenant API.</param>
         /// <returns>Response object.</returns>
-        protected virtual async Task<T> GetAsyncInternal<T>(Uri requestUri, string userId = null) where T : class
+        protected virtual async Task<T> GetAsync<T>(Uri requestUri, string userId = null, bool useCache = true)
+            where T : class
         {
             var message = new HttpRequestMessage(HttpMethod.Get, requestUri);
 
@@ -196,11 +180,11 @@ namespace VirtoCommerce.ApiClient
                 message.Headers.Add(Constants.Headers.PrincipalId, HttpUtility.UrlEncode(userId));
             }
 
-            using (var response = await httpClient.SendAsync(message).ConfigureAwait(false))
+            using (var response = await this.httpClient.SendAsync(message))
             {
-                await ThrowIfResponseNotSuccessfulAsync(response);
+                await this.ThrowIfResponseNotSuccessfulAsync(response);
 
-                return await response.Content.ReadAsAsync<T>().ConfigureAwait(false);
+                return await response.Content.ReadAsAsync<T>();
             }
         }
 
@@ -230,7 +214,7 @@ namespace VirtoCommerce.ApiClient
         protected Task<TOutput> SendAsync<TOutput>(Uri requestUri, HttpMethod httpMethod, string userId = null)
         {
             var message = new HttpRequestMessage(httpMethod, requestUri);
-            return SendAsync<TOutput>(message, true, userId);
+            return this.SendAsync<TOutput>(message, true, userId);
         }
 
         /// <summary>
@@ -243,7 +227,7 @@ namespace VirtoCommerce.ApiClient
         /// <param name="userId">The user id. Only required by the tenant API.</param>
         protected Task SendAsync<TInput>(Uri requestUri, HttpMethod httpMethod, TInput body, string userId = null)
         {
-            return SendAsync<TInput, object>(requestUri, httpMethod, body, userId);
+            return this.SendAsync<TInput, object>(requestUri, httpMethod, body, userId);
         }
 
         /// <summary>
@@ -262,29 +246,29 @@ namespace VirtoCommerce.ApiClient
             string userId = null)
         {
             var message = new HttpRequestMessage(httpMethod, requestUri)
-            {
-                Content =
-                    new ObjectContent<TInput>(
-                        body,
-                        CreateMediaTypeFormatter())
-            };
+                          {
+                              Content =
+                                  new ObjectContent<TInput>(
+                                  body,
+                                  this.CreateMediaTypeFormatter())
+                          };
 
-            return SendAsync<TOutput>(message, true, userId);
+            return this.SendAsync<TOutput>(message, true, userId);
         }
 
         private MediaTypeFormatter CreateMediaTypeFormatter()
         {
             //MediaTypeFormatter formatter;
             var formatter = new JsonMediaTypeFormatter
-            {
-                SerializerSettings =
-                {
-                    DefaultValueHandling =
-                        DefaultValueHandling.Ignore,
-                    NullValueHandling =
-                        NullValueHandling.Ignore
-                }
-            };
+                            {
+                                SerializerSettings =
+                                {
+                                    DefaultValueHandling =
+                                        DefaultValueHandling.Ignore,
+                                    NullValueHandling =
+                                        NullValueHandling.Ignore
+                                }
+                            };
 
             return formatter;
         }
@@ -296,9 +280,9 @@ namespace VirtoCommerce.ApiClient
                 message.Headers.Add(Constants.Headers.PrincipalId, userId);
             }
 
-            using (var response = await httpClient.SendAsync(message).ConfigureAwait(false))
+            using (var response = await this.httpClient.SendAsync(message).ConfigureAwait(false))
             {
-                await ThrowIfResponseNotSuccessfulAsync(response);
+                await this.ThrowIfResponseNotSuccessfulAsync(response);
 
                 if (!hasResult)
                 {

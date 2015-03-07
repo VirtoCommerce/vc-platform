@@ -13,7 +13,7 @@ namespace ApiClientTests
         {
             get
             {
-                return new PriceClient(new Uri("http://greenmachine/admin/api/"), "27e0d789f12641049bd0e939185b4fd2", "34f0a3c12c9dbb59b63b5fece955b7b2b9a3b20f84370cba1524dd5c53503a2e2cb733536ecf7ea1e77319a47084a3a2c9d94d36069a432ecc73b72aeba6ea78");
+                return new PriceClient(new Uri("http://localhost/admin/api/"), "27e0d789f12641049bd0e939185b4fd2", "34f0a3c12c9dbb59b63b5fece955b7b2b9a3b20f84370cba1524dd5c53503a2e2cb733536ecf7ea1e77319a47084a3a2c9d94d36069a432ecc73b72aeba6ea78");
             }
         }
 

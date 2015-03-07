@@ -1,7 +1,6 @@
 ﻿#region
 
 using System;
-using System.Collections.Generic;
 using System.Globalization;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -44,103 +43,147 @@ namespace VirtoCommerce.ApiClient
 
         #region Public Methods and Operators
 
-        public virtual async Task<ResponseCollection<Category>> GetCategoriesAsync(string store, string language, string parentId = null)
+        public virtual async Task<ResponseCollection<Category>> GetCategoriesAsync(
+            string store,
+            string language,
+            string parentId = null)
         {
             var parameters = new { store, language, parentId };
             return
-                await GetAsync<ResponseCollection<Category>>(
+                await this.GetAsync<ResponseCollection<Category>>(
                     CreateRequestUri(RelativePaths.Categories, parameters)).ConfigureAwait(false);
         }
 
         public virtual async Task<Category> GetCategoryAsync(string store, string language, string categoryId)
         {
-            var parameters = new { store, language};
-            return await GetAsync<Category>(CreateRequestUri(String.Format(RelativePaths.Category, categoryId), parameters)).ConfigureAwait(false);
+            var parameters = new { store, language };
+            return
+                await
+                    this.GetAsync<Category>(
+                        CreateRequestUri(String.Format(RelativePaths.Category, categoryId), parameters))
+                        .ConfigureAwait(false);
         }
 
         public virtual async Task<Category> GetCategoryByCodeAsync(string store, string language, string code)
         {
             var parameters = new { store, language, code };
-            return await GetAsync<Category>(CreateRequestUri(RelativePaths.Categories, parameters)).ConfigureAwait(false);
+            return
+                await
+                    this.GetAsync<Category>(CreateRequestUri(RelativePaths.Categories, parameters))
+                        .ConfigureAwait(false);
         }
 
         public virtual async Task<Category> GetCategoryByKeywordAsync(string store, string language, string keyword)
         {
             var parameters = new { store, language, keyword };
-            return await GetAsync<Category>(CreateRequestUri(RelativePaths.Categories, parameters)).ConfigureAwait(false);
+            return
+                await
+                    this.GetAsync<Category>(CreateRequestUri(RelativePaths.Categories, parameters))
+                        .ConfigureAwait(false);
         }
 
         public virtual async Task<Product> GetProductAsync(string store, string language, string productId)
-		{
-            var parameters = new { store, language};
-            return await GetAsync<Product>(CreateRequestUri(String.Format(RelativePaths.Product, productId), parameters)).ConfigureAwait(false);
-		}
-
-        public virtual async Task<Product> GetProductAsync(string store, string language, string productId, ItemResponseGroups responseGroup)
         {
-            var parameters = new { store, language, responseGroup = responseGroup.GetHashCode().ToString(CultureInfo.InvariantCulture) };
+            var parameters = new { store, language };
+            return
+                await
+                    this.GetAsync<Product>(
+                        CreateRequestUri(String.Format(RelativePaths.Product, productId), parameters))
+                        .ConfigureAwait(false);
+        }
+
+        public virtual async Task<Product> GetProductAsync(
+            string store,
+            string language,
+            string productId,
+            ItemResponseGroups responseGroup)
+        {
+            var parameters =
+                new
+                {
+                    store,
+                    language,
+                    responseGroup = responseGroup.GetHashCode().ToString(CultureInfo.InvariantCulture)
+                };
 
             return await
-                GetAsync<Product>(
+                this.GetAsync<Product>(
                     CreateRequestUri(String.Format(RelativePaths.Product, productId), parameters)).ConfigureAwait(false);
         }
 
         public virtual async Task<Product> GetProductByCodeAsync(string store, string language, string code)
-		{
+        {
             var parameters = new { store, language, code };
-            return await GetAsync<Product>((CreateRequestUri(RelativePaths.Products, parameters))).ConfigureAwait(false);
-		}
+            return
+                await
+                    this.GetAsync<Product>((CreateRequestUri(RelativePaths.Products, parameters))).ConfigureAwait(false);
+        }
+
+        public virtual async Task<Product> GetProductByCodeAsync(
+            string store,
+            string language,
+            string code,
+            ItemResponseGroups responseGroup)
+        {
+            var parameters = new
+                             {
+                                 store,
+                                 language,
+                                 code,
+                                 responseGroup = responseGroup.GetHashCode()
+                                     .ToString(CultureInfo.InvariantCulture)
+                             };
+
+            return
+                await
+                    this.GetAsync<Product>((CreateRequestUri(RelativePaths.Products, parameters))).ConfigureAwait(false);
+        }
 
         public virtual async Task<Product> GetProductByKeywordAsync(string store, string language, string keyword)
         {
             var parameters = new { store, language, keyword };
-            return await GetAsync<Product>(CreateRequestUri(RelativePaths.Products, parameters)).ConfigureAwait(false);
+            return
+                await this.GetAsync<Product>(CreateRequestUri(RelativePaths.Products, parameters)).ConfigureAwait(false);
         }
 
-        public virtual async Task<Product> GetProductByKeywordAsync(string store, string language, string keyword, ItemResponseGroups responseGroup)
+        public virtual async Task<Product> GetProductByKeywordAsync(
+            string store,
+            string language,
+            string keyword,
+            ItemResponseGroups responseGroup)
         {
             var parameters = new
-            {
-                store,
-                language,
-                keyword,
-                responseGroup = responseGroup.GetHashCode()
-                    .ToString(CultureInfo.InvariantCulture)
-            };
+                             {
+                                 store,
+                                 language,
+                                 keyword,
+                                 responseGroup = responseGroup.GetHashCode()
+                                     .ToString(CultureInfo.InvariantCulture)
+                             };
 
-            return await GetAsync<Product>((CreateRequestUri(RelativePaths.Products, parameters))).ConfigureAwait(false);
-        }
-
-        public virtual async Task<Product> GetProductByCodeAsync(string store, string language, string code, ItemResponseGroups responseGroup)
-        {
-            var parameters = new
-            {
-                store,
-                language,
-                code,
-                responseGroup = responseGroup.GetHashCode()
-                    .ToString(CultureInfo.InvariantCulture)
-            };
-
-            return await GetAsync<Product>((CreateRequestUri(RelativePaths.Products, parameters))).ConfigureAwait(false);
+            return
+                await
+                    this.GetAsync<Product>((CreateRequestUri(RelativePaths.Products, parameters))).ConfigureAwait(false);
         }
 
         /// <summary>
         ///     List items matching the given query
         /// </summary>
-        public virtual async Task<ProductSearchResult> GetProductsAsync(string store, string language, 
+        public virtual async Task<ProductSearchResult> GetProductsAsync(
+            string store,
+            string language,
             BrowseQuery query,
             ItemResponseGroups? responseGroup = null)
         {
             var parameters = new
-            {
-                store,
-                language,
-                responseGroup = responseGroup.GetHashCode()
-                    .ToString(CultureInfo.InvariantCulture)
-            };
+                             {
+                                 store,
+                                 language,
+                                 responseGroup = responseGroup.GetHashCode()
+                                     .ToString(CultureInfo.InvariantCulture)
+                             };
             return
-                await GetAsync<ProductSearchResult>(
+                await this.GetAsync<ProductSearchResult>(
                     CreateRequestUri(RelativePaths.Products, query.GetQueryString(parameters))).ConfigureAwait(false);
         }
 

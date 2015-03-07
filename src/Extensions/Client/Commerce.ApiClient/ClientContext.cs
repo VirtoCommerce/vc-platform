@@ -10,9 +10,10 @@ namespace VirtoCommerce.ApiClient
         {
             Configuration = new CommerceConfiguration();
             Clients = new CommerceClients
-            {
-                CreateMessageProcessingHandler = () => new HmacMessageProcessingHandler(Configuration.ApiAppId, Configuration.ApiSecretKey)
-            };
+                      {
+                          CreateMessageProcessingHandler =
+                              () => new HmacMessageProcessingHandler(Configuration.ApiAppId, Configuration.ApiSecretKey)
+                      };
         }
 
         #endregion

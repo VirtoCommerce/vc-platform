@@ -80,9 +80,9 @@ namespace VirtoCommerce.ApiClient
             Exception innerException)
             : base(message, innerException)
         {
-            StatusCode = statusCode;
-            ErrorCode = errorCode;
-            Details = details;
+            this.StatusCode = statusCode;
+            this.ErrorCode = errorCode;
+            this.Details = details;
         }
 
         /// <summary>
@@ -95,9 +95,9 @@ namespace VirtoCommerce.ApiClient
         {
             if (serializationInfo != null)
             {
-                StatusCode = (HttpStatusCode)serializationInfo.GetInt32(ClientStatusCodeName);
-                ErrorCode = serializationInfo.GetString(ClientErrorCodeName);
-                Details =
+                this.StatusCode = (HttpStatusCode)serializationInfo.GetInt32(ClientStatusCodeName);
+                this.ErrorCode = serializationInfo.GetString(ClientErrorCodeName);
+                this.Details =
                     (List<ErrorDetail>)serializationInfo.GetValue(ErrorDetailsName, typeof(List<ErrorDetail>));
             }
         }
@@ -132,9 +132,9 @@ namespace VirtoCommerce.ApiClient
         /// <param name="context">streaming context</param>
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {
-            info.AddValue(ClientStatusCodeName, (int)StatusCode);
-            info.AddValue(ClientErrorCodeName, ErrorCode);
-            info.AddValue(ErrorDetailsName, Details);
+            info.AddValue(ClientStatusCodeName, (int)this.StatusCode);
+            info.AddValue(ClientErrorCodeName, this.ErrorCode);
+            info.AddValue(ErrorDetailsName, this.Details);
 
             base.GetObjectData(info, context);
         }
@@ -150,13 +150,13 @@ namespace VirtoCommerce.ApiClient
                 string.Format(
                     CultureInfo.InvariantCulture,
                     "HttpStatusCode: {0}, ErrorCode: {1}, {2}",
-                    StatusCode.ToString(),
-                    ErrorCode,
+                    this.StatusCode.ToString(),
+                    this.ErrorCode,
                     base.ToString()));
 
-            if (Details != null && Details.Count > 0)
+            if (this.Details != null && this.Details.Count > 0)
             {
-                foreach (var detail in Details)
+                foreach (var detail in this.Details)
                 {
                     builder.Append(Environment.NewLine);
                     builder.Append(string.Format(CultureInfo.InvariantCulture, "Detail: '{0}'", detail));

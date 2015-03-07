@@ -54,7 +54,7 @@ namespace VirtoCommerce.ApiClient
             TagQuery query)
         {
             return
-                GetAsync<ResponseCollection<DynamicContentItemGroup>>(
+                this.GetAsync<ResponseCollection<DynamicContentItemGroup>>(
                     CreateRequestUri(
                         String.Format(RelativePaths.Contents, string.Join(",", placeHolder)),
                         query.GetQueryString()));

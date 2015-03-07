@@ -2,8 +2,10 @@
 
 namespace VirtoCommerce.ApiClient.Extensions
 {
-	public static class CustomerServiceClientExtension
-	{
+    public static class CustomerServiceClientExtension
+    {
+        #region Public Methods and Operators
+
         public static CustomerServiceClient CreateCustomerServiceClient(this CommerceClients source)
         {
             var connectionString = ClientContext.Configuration.ConnectionString;
@@ -15,5 +17,7 @@ namespace VirtoCommerce.ApiClient.Extensions
             var client = new CustomerServiceClient(new Uri(serviceUrl), source.CreateMessageProcessingHandler());
             return client;
         }
+
+        #endregion
     }
 }

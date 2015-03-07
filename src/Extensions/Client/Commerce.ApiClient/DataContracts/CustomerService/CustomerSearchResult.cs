@@ -4,8 +4,11 @@ namespace VirtoCommerce.ApiClient.DataContracts.CustomerService
 {
     public class CustomerSearchResult
     {
-        public int TotalCount { get; set; }
+        #region Public Properties
 
         public List<Contact> Contacts { get; set; }
+        public int TotalCount { get; set; }
+
+        #endregion
     }
 }

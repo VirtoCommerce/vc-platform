@@ -46,43 +46,43 @@ namespace VirtoCommerce.ApiClient
 
         public Task CreateAsync(ApplicationUser user)
         {
-            var requestUri = CreateRequestUri(RelativePaths.Create);
+            var requestUri = this.CreateRequestUri(RelativePaths.Create);
             return SendAsync(requestUri, HttpMethod.Post, user);
         }
 
         public Task DeleteAsync(string userId)
         {
-            var requestUri = CreateRequestUri(RelativePaths.Delete);
-            return SendAsync(requestUri, HttpMethod.Post, userId);
+            var requestUri = this.CreateRequestUri(RelativePaths.Delete);
+            return this.SendAsync(requestUri, HttpMethod.Post, userId);
         }
 
         public Task<ApplicationUser> FindByEmailAsync(string email)
         {
-            var requestUri = CreateRequestUri(string.Format(RelativePaths.FindByEmail, email));
-            return GetAsync<ApplicationUser>(requestUri, useCache: false);
+            var requestUri = this.CreateRequestUri(string.Format(RelativePaths.FindByEmail, email));
+            return this.GetAsync<ApplicationUser>(requestUri, useCache: false);
         }
 
         public Task<ApplicationUser> FindByIdAsync(string userId)
         {
-            var requestUri = CreateRequestUri(string.Format(RelativePaths.FindById, userId));
-            return GetAsync<ApplicationUser>(requestUri, useCache: false);
+            var requestUri = this.CreateRequestUri(string.Format(RelativePaths.FindById, userId));
+            return this.GetAsync<ApplicationUser>(requestUri, useCache: false);
         }
 
         public Task<ApplicationUser> FindByNameAsync(string userName)
         {
-            var requestUri = CreateRequestUri(string.Format(RelativePaths.FindByName, userName));
-            return GetAsync<ApplicationUser>(requestUri, useCache: false);
+            var requestUri = this.CreateRequestUri(string.Format(RelativePaths.FindByName, userName));
+            return this.GetAsync<ApplicationUser>(requestUri, useCache: false);
         }
 
         public Task<AuthInfo> GetUserInfo(string userName)
         {
-            var requestUri = CreateRequestUri(string.Format(RelativePaths.UserInfo, userName));
-            return GetAsync<AuthInfo>(requestUri);
+            var requestUri = this.CreateRequestUri(string.Format(RelativePaths.UserInfo, userName));
+            return this.GetAsync<AuthInfo>(requestUri);
         }
 
         public Task UpdateAsync(ApplicationUser user)
         {
-            var requestUri = CreateRequestUri(RelativePaths.Update);
+            var requestUri = this.CreateRequestUri(RelativePaths.Update);
             return SendAsync(requestUri, HttpMethod.Post, user);
         }
 
