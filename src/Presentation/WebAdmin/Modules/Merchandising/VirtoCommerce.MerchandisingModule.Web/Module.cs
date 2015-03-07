@@ -71,12 +71,18 @@ namespace VirtoCommerce.MerchandisingModule.Web
             var catalogService = new CatalogServiceImpl(catalogRepFactory, cacheManager);
             var propertyService = new PropertyServiceImpl(catalogRepFactory, cacheManager);
             var categoryService = new CategoryServiceImpl(catalogRepFactory, appConfigRepFactory, cacheManager);
-            var itemService = new ItemServiceImpl(catalogRepFactory, appConfigRepFactory, settingsManager, cacheRepository);
+            var itemService = new ItemServiceImpl(
+                catalogRepFactory,
+                appConfigRepFactory,
+                settingsManager,
+                cacheRepository);
             var itemSearchService = new CatalogSearchServiceImpl(
                 catalogRepFactory,
                 itemService,
                 catalogService,
-                categoryService, settingsManager, cacheRepository);
+                categoryService,
+                settingsManager,
+                cacheRepository);
 
             #region VCF dependencies
 

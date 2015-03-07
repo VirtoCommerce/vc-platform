@@ -5,9 +5,16 @@ namespace VirtoCommerce.MerchandisingModule.Web.Extensions
 {
     public static class ItemServiceExtensions
     {
-        public static module.CatalogProduct GetByIdsOptimized(this IItemService service, string[] itemIds, module.ItemResponseGroup respGroup)
+        #region Public Methods and Operators
+
+        public static module.CatalogProduct GetByIdsOptimized(
+            this IItemService service,
+            string[] itemIds,
+            module.ItemResponseGroup respGroup)
         {
             return null;
         }
+
+        #endregion
     }
 }

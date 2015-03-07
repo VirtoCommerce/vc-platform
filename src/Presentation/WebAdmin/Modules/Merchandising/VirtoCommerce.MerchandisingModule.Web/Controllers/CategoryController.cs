@@ -9,6 +9,7 @@ using VirtoCommerce.Domain.Catalog.Services;
 using VirtoCommerce.Foundation.AppConfig.Model;
 using VirtoCommerce.Foundation.Frameworks;
 using VirtoCommerce.Foundation.Stores.Repositories;
+using VirtoCommerce.Framework.Web.Common;
 using VirtoCommerce.Framework.Web.Settings;
 using VirtoCommerce.MerchandisingModule.Web.Converters;
 using moduleModel = VirtoCommerce.Domain.Catalog.Model;
@@ -55,6 +56,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 
         [HttpGet]
         [ResponseType(typeof(webModel.Category))]
+        [ClientCache(Duration = 30)]
         [Route("{category}")]
         public IHttpActionResult Get(string category, string store, string language = "en-us")
         {
@@ -70,6 +72,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
         /// GET: api/mp/apple/en-us/categories?code=22
         [HttpGet]
         [ResponseType(typeof(webModel.Category))]
+        [ClientCache(Duration = 30)]
         [Route("")]
         public IHttpActionResult GetByCode(string store, [FromUri] string code, string language = "en-us")
         {
@@ -91,6 +94,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
         /// GET: api/mp/apple/en-us/categories?keyword=apple-mp3
         [HttpGet]
         [ResponseType(typeof(webModel.Category))]
+        [ClientCache(Duration = 30)]
         [Route("")]
         public IHttpActionResult GetByKeyword(string store, [FromUri] string keyword, string language = "en-us")
         {
@@ -141,6 +145,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
         /// <returns></returns>
         [HttpGet]
         [ResponseType(typeof(webModel.ResponseCollection<webModel.Category>))]
+        [ClientCache(Duration = 30)]
         [Route("")]
         public IHttpActionResult Search(string store, string language = "en-us", [FromUri] string parentId = null)
         {

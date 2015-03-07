@@ -7,6 +7,7 @@ using VirtoCommerce.CatalogModule.Data.Repositories;
 using VirtoCommerce.Foundation.Frameworks;
 using VirtoCommerce.Foundation.Frameworks.Extensions;
 using VirtoCommerce.Foundation.Stores.Repositories;
+using VirtoCommerce.Framework.Web.Common;
 using VirtoCommerce.Framework.Web.Settings;
 using VirtoCommerce.MerchandisingModule.Web.Converters;
 using VirtoCommerce.MerchandisingModule.Web.Model.Stores;
@@ -43,6 +44,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 
         [HttpGet]
         [ResponseType(typeof(Store[]))]
+        [ClientCache(Duration = 60)]
         [Route("")]
         public IHttpActionResult GetStores()
         {
@@ -62,7 +64,6 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
                         stores.Select(store => store.ToWebModel(appConfig.GetAllSeoInformation(store.StoreId))));
                 }
             }
-
 
             return this.Ok(retVal.ToArray());
         }
