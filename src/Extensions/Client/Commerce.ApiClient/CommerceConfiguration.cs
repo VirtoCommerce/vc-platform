@@ -16,7 +16,7 @@ namespace VirtoCommerce.ApiClient
             ConnectionString = GetConnectionString("VirtoCommerce");
             ApiAppId = ConfigurationManager.AppSettings["vc-public-ApiAppId"];
             ApiSecretKey = ConfigurationManager.AppSettings["vc-public-ApiSecretKey"];
-            IsCacheEnabled = true;
+            IsCacheEnabled = false;
         }
 
         #endregion

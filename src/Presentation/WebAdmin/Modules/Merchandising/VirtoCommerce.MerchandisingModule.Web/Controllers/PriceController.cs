@@ -49,6 +49,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
         #region Public Methods and Operators
 
         [HttpGet]
+        [ClientCacheAttribute(Duration = 60)]
         [ResponseType(typeof(string[]))]
         [Route("pricelists")]
         public IHttpActionResult GetPriceListStack(

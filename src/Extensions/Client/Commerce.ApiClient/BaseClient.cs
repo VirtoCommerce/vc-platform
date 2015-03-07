@@ -8,6 +8,8 @@ using System.Net.Http;
 using System.Net.Http.Formatting;
 using System.Threading.Tasks;
 using System.Web;
+using Marvin.HttpCache;
+using Marvin.HttpCache.Store;
 using Newtonsoft.Json;
 using VirtoCommerce.ApiClient.Caching;
 using VirtoCommerce.ApiClient.DataContracts;
@@ -17,11 +19,6 @@ using VirtoCommerce.ApiClient.Extensions;
 
 namespace VirtoCommerce.ApiClient
 {
-
-    #region
-
-    #endregion
-
     public class BaseClient
     {
         #region Constants
@@ -34,6 +31,8 @@ namespace VirtoCommerce.ApiClient
 
         private readonly HttpClient httpClient;
 
+        static ICacheStore _store = new ImmutableInMemoryCacheStore();
+
         private CacheHelper _cacheHelper;
 
         private ICacheRepository _cacheRepository = new HttpCacheRepository();
@@ -45,14 +44,17 @@ namespace VirtoCommerce.ApiClient
         #region Constructors and Destructors
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="ManagementClientBase" /> class.
+        ///     Initializes a new instance of the <see cref="BaseClient" /> class.
         /// </summary>
         /// <param name="baseEndpoint">The base endpoint.</param>
         /// <param name="handler">Message processing handler</param>
         public BaseClient(Uri baseEndpoint, HttpMessageHandler handler = null)
         {
+            
             BaseAddress = baseEndpoint;
-            httpClient = new HttpClient(handler);
+            var caheHandler = new HttpCacheHandler(_store);
+            httpClient = HttpClientFactory.Create(handler, caheHandler);
+            //httpClient = new HttpClient(handler);
             disposed = false;
         }
 

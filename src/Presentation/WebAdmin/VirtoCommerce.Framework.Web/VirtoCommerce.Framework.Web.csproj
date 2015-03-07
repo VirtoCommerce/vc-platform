@@ -73,6 +73,7 @@
     <Compile Include="Bootstrapper.cs" />
     <Compile Include="Common\ArrayInputAttribute.cs" />
     <Compile Include="Common\AttributeExtensions.cs" />
+    <Compile Include="Common\ClientCacheAttribute.cs" />
     <Compile Include="Common\FormatingExtensions.cs" />
     <Compile Include="Common\KeyValuePairExtensions.cs" />
     <Compile Include="Common\ListDictionary.cs" />
