@@ -102,6 +102,7 @@
     <Compile Include="Converters\ReviewConverter.cs" />
     <Compile Include="Converters\KeywordConverter.cs" />
     <Compile Include="Converters\StoreConverter.cs" />
+    <Compile Include="Extensions\ItemServiceExtensions.cs" />
     <Compile Include="Model\Price.cs" />
     <Compile Include="Services\BrowseFilterServiceExtensions.cs" />
     <Compile Include="Services\FilterService.cs" />

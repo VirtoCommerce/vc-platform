@@ -66,6 +66,7 @@ namespace VirtoCommerce.CatalogModule.Data.Services
             using (var appConfigRepository = _appConfigRepositoryFactory())
             {
                 var dbItems = repository.GetItemByIds(itemIds, respGroup);
+                var dbAllVariations = repository.GetAllItemsVariations(itemIds);
                 foreach (var dbItem in dbItems)
                 {
                     var dbCatalog = repository.GetCatalogCached(_cache, _settingsManager, dbItem.CatalogId);
@@ -75,7 +76,7 @@ namespace VirtoCommerce.CatalogModule.Data.Services
 					//var parentItemId = parentItemRelation == null ? null : parentItemRelation.ParentItemId;
                     string parentItemId = null;
 
-
+                    /*
 					foundation.Item[] dbVariations = null;
 					if ((respGroup & module.ItemResponseGroup.Variations) == module.ItemResponseGroup.Variations)
 					{
@@ -83,17 +84,23 @@ namespace VirtoCommerce.CatalogModule.Data.Services
                         dbVariations = repository.GetAllItemVariations(dbItem.ItemId);
 						// Sasha: we don't need to return variations for a variation
                         //When user load not main product need to include main product in variation list and exclude current
-                        /*
+
 						if (parentItemId != null)
 						{
 							var dbMainItem = repository.GetItemByIds(new[] { parentItemId }, respGroup).FirstOrDefault();
 							dbVariations = dbVariations.Concat(new[] { dbMainItem }).Where(x => x.ItemId != dbItem.ItemId).ToArray();
 						}
-                         * */
 
 						//Need this for add main product to variations list except current  
 						dbVariations = dbVariations.Concat(new[] { dbItem }).Where(x => x.ItemId != dbItem.ItemId).ToArray();
 					}
+                    */
+
+                    foundation.Item[] dbVariations = null;
+
+                    if (dbAllVariations.ContainsKey(dbItem.ItemId))
+                        dbVariations = dbAllVariations[dbItem.ItemId].ToArray();
+
 
                     foundationConfig.SeoUrlKeyword[] seoInfos = null;
                     if ((respGroup & module.ItemResponseGroup.Seo) == module.ItemResponseGroup.Seo)
