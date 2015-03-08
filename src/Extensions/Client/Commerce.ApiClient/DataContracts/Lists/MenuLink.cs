@@ -2,8 +2,11 @@
 {
     public class MenuLink
     {
-        public string Name { get; set; }
+        #region Public Properties
 
         public string Link { get; set; }
+        public string Name { get; set; }
+
+        #endregion
     }
 }

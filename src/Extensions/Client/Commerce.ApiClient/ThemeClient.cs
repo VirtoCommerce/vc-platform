@@ -42,16 +42,16 @@ namespace VirtoCommerce.ApiClient
         public Task<ThemeAsset[]> GetThemeAssetsAsync(string storeId, string themeId)
         {
             return
-                GetAsync<ThemeAsset[]>(
-                    CreateRequestUri(
+                this.GetAsync<ThemeAsset[]>(
+                    this.CreateRequestUri(
                         String.Format(RelativePaths.ThemeAssets, storeId, themeId)));
         }
 
         public Task<Theme[]> GetThemesAsync(string storeId)
         {
             return
-                GetAsync<Theme[]>(
-                    CreateRequestUri(
+                this.GetAsync<Theme[]>(
+                    this.CreateRequestUri(
                         String.Format(RelativePaths.Themes, storeId)));
         }
 

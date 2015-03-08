@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace VirtoCommerce.MerchandisingModule.Web.Model
 {
@@ -17,6 +13,6 @@ namespace VirtoCommerce.MerchandisingModule.Web.Model
         ItemEditorialReviews = 1 << 5,
         ItemSmall = ItemInfo | ItemAssets | ItemProperties,
         ItemMedium = ItemInfo | ItemAssets | ItemProperties | ItemAssociations | ItemEditorialReviews,
-        ItemLarge = ItemInfo | ItemAssets | ItemProperties | ItemAssociations | ItemEditorialReviews | ItemCategories 
+        ItemLarge = ItemInfo | ItemAssets | ItemProperties | ItemAssociations | ItemEditorialReviews | ItemCategories
     }
 }

@@ -22,10 +22,7 @@ namespace VirtoCommerce.ApiClient.Configuration.Catalog
 
         public static CatalogConfiguration Instance
         {
-            get
-            {
-                return _instance.Value;
-            }
+            get { return _instance.Value; }
         }
 
         /// <summary>
@@ -35,23 +32,14 @@ namespace VirtoCommerce.ApiClient.Configuration.Catalog
         [ConfigurationProperty("Cache", IsRequired = true)]
         public CacheConfiguration Cache
         {
-            get
-            {
-                return (CacheConfiguration)this["Cache"];
-            }
+            get { return (CacheConfiguration)this["Cache"]; }
         }
 
         [ConfigurationProperty("Connection", IsRequired = true)]
         public CatalogConnection Connection
         {
-            get
-            {
-                return (CatalogConnection)this["Connection"];
-            }
-            private set
-            {
-                this["Connection"] = value;
-            }
+            get { return (CatalogConnection)this["Connection"]; }
+            private set { this["Connection"] = value; }
         }
 
         #endregion
@@ -88,14 +76,8 @@ namespace VirtoCommerce.ApiClient.Configuration.Catalog
         [ConfigurationProperty("dataServiceUri", IsRequired = false)]
         public string DataServiceUri
         {
-            get
-            {
-                return (string)this["dataServiceUri"];
-            }
-            set
-            {
-                this["dataServiceUri"] = value;
-            }
+            get { return (string)this["dataServiceUri"]; }
+            set { this["dataServiceUri"] = value; }
         }
 
         #endregion
@@ -142,14 +124,8 @@ namespace VirtoCommerce.ApiClient.Configuration.Catalog
         [ConfigurationProperty("categoryCollectionTimeout", IsRequired = false, DefaultValue = "00:00:30")]
         public TimeSpan CategoryCollectionTimeout
         {
-            get
-            {
-                return (TimeSpan)this["categoryCollectionTimeout"];
-            }
-            set
-            {
-                this["categoryCollectionTimeout"] = value.ToString();
-            }
+            get { return (TimeSpan)this["categoryCollectionTimeout"]; }
+            set { this["categoryCollectionTimeout"] = value.ToString(); }
         }
 
         /// <summary>
@@ -160,14 +136,8 @@ namespace VirtoCommerce.ApiClient.Configuration.Catalog
         [ConfigurationProperty("categoryTimeout", IsRequired = false, DefaultValue = "00:00:30")]
         public TimeSpan CategoryTimeout
         {
-            get
-            {
-                return (TimeSpan)this["categoryTimeout"];
-            }
-            set
-            {
-                this["categoryTimeout"] = value.ToString();
-            }
+            get { return (TimeSpan)this["categoryTimeout"]; }
+            set { this["categoryTimeout"] = value.ToString(); }
         }
 
         /// <summary>
@@ -179,14 +149,8 @@ namespace VirtoCommerce.ApiClient.Configuration.Catalog
         [ConfigurationProperty("enabled", IsRequired = false, DefaultValue = true)]
         public bool IsEnabled
         {
-            get
-            {
-                return (bool)this["enabled"];
-            }
-            set
-            {
-                this["enabled"] = value;
-            }
+            get { return (bool)this["enabled"]; }
+            set { this["enabled"] = value; }
         }
 
         /// <summary>
@@ -197,14 +161,8 @@ namespace VirtoCommerce.ApiClient.Configuration.Catalog
         [ConfigurationProperty("itemCollectionTimeout", IsRequired = false, DefaultValue = "00:00:30")]
         public TimeSpan ItemCollectionTimeout
         {
-            get
-            {
-                return (TimeSpan)this["itemCollectionTimeout"];
-            }
-            set
-            {
-                this["itemCollectionTimeout"] = value.ToString();
-            }
+            get { return (TimeSpan)this["itemCollectionTimeout"]; }
+            set { this["itemCollectionTimeout"] = value.ToString(); }
         }
 
         /// <summary>
@@ -215,14 +173,8 @@ namespace VirtoCommerce.ApiClient.Configuration.Catalog
         [ConfigurationProperty("itemTimeout", IsRequired = false, DefaultValue = "00:00:30")]
         public TimeSpan ItemTimeout
         {
-            get
-            {
-                return (TimeSpan)this["itemTimeout"];
-            }
-            set
-            {
-                this["itemTimeout"] = value.ToString();
-            }
+            get { return (TimeSpan)this["itemTimeout"]; }
+            set { this["itemTimeout"] = value.ToString(); }
         }
 
         #endregion

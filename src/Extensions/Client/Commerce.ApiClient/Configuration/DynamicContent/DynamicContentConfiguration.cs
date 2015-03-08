@@ -21,10 +21,7 @@ namespace VirtoCommerce.ApiClient.Configuration.DynamicContent
 
         public static DynamicContentConfiguration Instance
         {
-            get
-            {
-                return _instance.Value;
-            }
+            get { return _instance.Value; }
         }
 
         /// <summary>
@@ -34,23 +31,14 @@ namespace VirtoCommerce.ApiClient.Configuration.DynamicContent
         [ConfigurationProperty("Cache", IsRequired = true)]
         public CacheConfiguration Cache
         {
-            get
-            {
-                return (CacheConfiguration)this["Cache"];
-            }
+            get { return (CacheConfiguration)this["Cache"]; }
         }
 
         [ConfigurationProperty("Connection", IsRequired = true)]
         public DynamicContentConnection Connection
         {
-            get
-            {
-                return (DynamicContentConnection)this["Connection"];
-            }
-            private set
-            {
-                this["Connection"] = value;
-            }
+            get { return (DynamicContentConnection)this["Connection"]; }
+            private set { this["Connection"] = value; }
         }
 
         #endregion
@@ -87,14 +75,8 @@ namespace VirtoCommerce.ApiClient.Configuration.DynamicContent
         [ConfigurationProperty("dataServiceUri", IsRequired = false)]
         public string DataServiceUri
         {
-            get
-            {
-                return (string)this["dataServiceUri"];
-            }
-            set
-            {
-                this["dataServiceUri"] = value;
-            }
+            get { return (string)this["dataServiceUri"]; }
+            set { this["dataServiceUri"] = value; }
         }
 
         #endregion
@@ -136,14 +118,8 @@ namespace VirtoCommerce.ApiClient.Configuration.DynamicContent
         [ConfigurationProperty("dynamicContentTimeout", IsRequired = true)]
         public TimeSpan DynamicContentTimeout
         {
-            get
-            {
-                return (TimeSpan)this["dynamicContentTimeout"];
-            }
-            set
-            {
-                this["dynamicContentTimeout"] = value.ToString();
-            }
+            get { return (TimeSpan)this["dynamicContentTimeout"]; }
+            set { this["dynamicContentTimeout"] = value.ToString(); }
         }
 
         /// <summary>
@@ -155,14 +131,8 @@ namespace VirtoCommerce.ApiClient.Configuration.DynamicContent
         [ConfigurationProperty("enabled", IsRequired = true, DefaultValue = true)]
         public bool IsEnabled
         {
-            get
-            {
-                return (bool)this["enabled"];
-            }
-            set
-            {
-                this["enabled"] = value;
-            }
+            get { return (bool)this["enabled"]; }
+            set { this["enabled"] = value; }
         }
 
         #endregion

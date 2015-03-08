@@ -14,16 +14,30 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
     [RoutePrefix("api/mp/{language}/contents")]
     public class ContentController : ApiController
     {
+        #region Fields
+
         private readonly Func<IDynamicContentService> _dynamicContentService;
+
+        #endregion
+
+        #region Constructors and Destructors
+
         public ContentController(Func<IDynamicContentService> dynamicContentService)
         {
-            _dynamicContentService = dynamicContentService;
+            this._dynamicContentService = dynamicContentService;
         }
+
+        #endregion
+
+        #region Public Methods and Operators
 
         [HttpGet]
         [ResponseType(typeof(webModel.ResponseCollection<webModel.DynamicContentItemGroup>))]
         [Route("{placeHolder}")]
-        public IHttpActionResult GetDynamicContent(string placeHolder, [FromUri] string[] tags, string language = "en-us")
+        public IHttpActionResult GetDynamicContent(
+            string placeHolder,
+            [FromUri] string[] tags,
+            string language = "en-us")
         {
             var tagSet = new TagSet();
 
@@ -39,14 +53,14 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
             // TODO: add caching
 
             //Mutiple placeholders can be requested
-            var placeHolders = placeHolder.Split(new[] {','}, StringSplitOptions.RemoveEmptyEntries);
+            var placeHolders = placeHolder.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
             var groups = new List<webModel.DynamicContentItemGroup>();
 
             foreach (var holder in placeHolders)
             {
                 var group = new webModel.DynamicContentItemGroup(holder);
 
-                var results = _dynamicContentService().GetItems(holder, DateTime.Now, tagSet);
+                var results = this._dynamicContentService().GetItems(holder, DateTime.Now, tagSet);
 
                 if (results != null && results.Any())
                 {
@@ -58,17 +72,17 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
             if (groups.Any())
             {
                 var retVal = new webModel.ResponseCollection<webModel.DynamicContentItemGroup>
-                {
-                    Items = groups,
-                    TotalCount = groups.Count()
-                };
+                             {
+                                 Items = groups,
+                                 TotalCount = groups.Count()
+                             };
 
-                return Ok(retVal);
+                return this.Ok(retVal);
             }
 
-            return StatusCode(HttpStatusCode.NoContent);
-
+            return this.StatusCode(HttpStatusCode.NoContent);
         }
+
+        #endregion
     }
 }
-

@@ -17,8 +17,8 @@ namespace VirtoCommerce.ApiClient.DataContracts.Contents
 
         public DynamicContentItemGroup(string groupName)
         {
-            GroupName = groupName;
-            Items = new List<DynamicContentItem>();
+            this.GroupName = groupName;
+            this.Items = new List<DynamicContentItem>();
         }
 
         #endregion

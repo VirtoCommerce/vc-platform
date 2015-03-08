@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using VirtoCommerce.Foundation;
 using VirtoCommerce.Foundation.AppConfig.Model;
 using VirtoCommerce.Foundation.AppConfig.Repositories;
 using VirtoCommerce.Foundation.Frameworks;
@@ -14,13 +15,19 @@ namespace VirtoCommerce.CoreModule.Web.Settings
 {
     public class SettingsManager : ISettingsManager
     {
+        #region Constants
+        public const string SettingsCacheKey = "S:{0}";
+        #endregion
+
         private readonly IModuleManifestProvider _manifestProvider;
         private readonly Func<IAppConfigRepository> _repositoryFactory;
+        private readonly CacheHelper _cacheHelper;
 
-        public SettingsManager(IModuleManifestProvider manifestProvider, Func<IAppConfigRepository> repositoryFactory)
+        public SettingsManager(IModuleManifestProvider manifestProvider, Func<IAppConfigRepository> repositoryFactory, ICacheRepository cache)
         {
             _manifestProvider = manifestProvider;
             _repositoryFactory = repositoryFactory;
+            this._cacheHelper = new CacheHelper(cache);
         }
 
         #region ISettingsManager Members
@@ -85,6 +92,9 @@ namespace VirtoCommerce.CoreModule.Web.Settings
 
                     repository.UnitOfWork.Commit();
                 }
+
+                _cacheHelper.Remove(
+                    CacheHelper.CreateCacheKey(Constants.SettingsCachePrefix, string.Format(SettingsCacheKey, "all")));
             }
         }
 
@@ -301,11 +311,24 @@ namespace VirtoCommerce.CoreModule.Web.Settings
 
         private List<Setting> LoadSettings(params string[] settingNames)
         {
+            var settings = LoadAllSettings();
+            return settings == null ? null : settings.Where(s => settingNames.Contains(s.Name)).ToList();
+        }
+
+        private List<Setting> LoadAllSettings()
+        {
+            return _cacheHelper.Get(
+                CacheHelper.CreateCacheKey(Constants.SettingsCachePrefix, string.Format(SettingsCacheKey, "all")),
+                this.LoadAllSettingsFromDatabase,
+                TimeSpan.FromSeconds(120));   // TODO: have a setting
+        }
+
+        private List<Setting> LoadAllSettingsFromDatabase()
+        {
             using (var repository = _repositoryFactory())
             {
                 return repository.Settings
                     .Expand(s => s.SettingValues)
-                    .Where(s => settingNames.Contains(s.Name))
                     .ToList();
             }
         }

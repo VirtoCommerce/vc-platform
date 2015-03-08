@@ -22,19 +22,13 @@ namespace VirtoCommerce.ApiClient.Configuration.Security
 
         public static SecurityConfiguration Instance
         {
-            get
-            {
-                return _instance.Value;
-            }
+            get { return _instance.Value; }
         }
 
         [ConfigurationProperty("Connection", IsRequired = true)]
         public SecurityConnection Connection
         {
-            get
-            {
-                return (SecurityConnection)this["Connection"];
-            }
+            get { return (SecurityConnection)this["Connection"]; }
         }
 
         #endregion
@@ -79,14 +73,8 @@ namespace VirtoCommerce.ApiClient.Configuration.Security
         [ConfigurationProperty("dataServiceUri", IsRequired = false)]
         public string DataServiceUri
         {
-            get
-            {
-                return (string)this["dataServiceUri"];
-            }
-            set
-            {
-                this["dataServiceUri"] = value;
-            }
+            get { return (string)this["dataServiceUri"]; }
+            set { this["dataServiceUri"] = value; }
         }
 
         #endregion
@@ -122,40 +110,22 @@ namespace VirtoCommerce.ApiClient.Configuration.Security
         [ConfigurationProperty("serviceBaseUriName", IsRequired = false)]
         public string ServiceBaseUriName
         {
-            get
-            {
-                return (string)this["serviceBaseUriName"];
-            }
-            set
-            {
-                this["serviceBaseUriName"] = value;
-            }
+            get { return (string)this["serviceBaseUriName"]; }
+            set { this["serviceBaseUriName"] = value; }
         }
 
         [ConfigurationProperty("serviceUri", IsRequired = false)]
         public string ServiceUri
         {
-            get
-            {
-                return (string)this["serviceUri"];
-            }
-            set
-            {
-                this["serviceUri"] = value;
-            }
+            get { return (string)this["serviceUri"]; }
+            set { this["serviceUri"] = value; }
         }
 
         [ConfigurationProperty("wsEndPointName", IsRequired = false)]
         public string WSEndPointName
         {
-            get
-            {
-                return (string)this["wsEndPointName"];
-            }
-            set
-            {
-                this["wsEndPointName"] = value;
-            }
+            get { return (string)this["wsEndPointName"]; }
+            set { this["wsEndPointName"] = value; }
         }
 
         #endregion
@@ -193,40 +163,22 @@ namespace VirtoCommerce.ApiClient.Configuration.Security
         [ConfigurationProperty(_lifetime, DefaultValue = "1:0:0")]
         public TimeSpan Lifetime
         {
-            get
-            {
-                return (TimeSpan)this[_lifetime];
-            }
-            set
-            {
-                this[_lifetime] = value;
-            }
+            get { return (TimeSpan)this[_lifetime]; }
+            set { this[_lifetime] = value; }
         }
 
         [ConfigurationProperty(_signatureKey, IsRequired = true)]
         public string SignatureKey
         {
-            get
-            {
-                return (string)this[_signatureKey];
-            }
-            set
-            {
-                this[_signatureKey] = value;
-            }
+            get { return (string)this[_signatureKey]; }
+            set { this[_signatureKey] = value; }
         }
 
         [ConfigurationProperty(_uri)]
         public Uri Uri
         {
-            get
-            {
-                return (Uri)this[_uri];
-            }
-            set
-            {
-                this[_uri] = value;
-            }
+            get { return (Uri)this[_uri]; }
+            set { this[_uri] = value; }
         }
 
         #endregion
@@ -247,27 +199,15 @@ namespace VirtoCommerce.ApiClient.Configuration.Security
         [ConfigurationProperty(_signatureKey, IsRequired = true)]
         public string SignatureKey
         {
-            get
-            {
-                return (string)this[_signatureKey];
-            }
-            set
-            {
-                this[_signatureKey] = value;
-            }
+            get { return (string)this[_signatureKey]; }
+            set { this[_signatureKey] = value; }
         }
 
         [ConfigurationProperty(_trustedIssuerUri)]
         public Uri TrustedIssuerUri
         {
-            get
-            {
-                return (Uri)this[_trustedIssuerUri];
-            }
-            set
-            {
-                this[_trustedIssuerUri] = value;
-            }
+            get { return (Uri)this[_trustedIssuerUri]; }
+            set { this[_trustedIssuerUri] = value; }
         }
 
         #endregion

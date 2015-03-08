@@ -1,17 +1,21 @@
-﻿using Microsoft.Practices.Unity;
-using System;
+﻿using System;
+using Microsoft.Practices.ServiceLocation;
+using Microsoft.Practices.Unity;
 using VirtoCommerce.Caching.HttpCache;
 using VirtoCommerce.CatalogModule.Data.Repositories;
 using VirtoCommerce.CatalogModule.Data.Services;
+using VirtoCommerce.Foundation.Assets.Factories;
+using VirtoCommerce.Foundation.Assets.Services;
 using VirtoCommerce.Foundation.Catalogs;
-using VirtoCommerce.Foundation.Catalogs.Factories;
 using VirtoCommerce.Foundation.Catalogs.Repositories;
 using VirtoCommerce.Foundation.Catalogs.Services;
+using VirtoCommerce.Foundation.Data.Azure.Asset;
 using VirtoCommerce.Foundation.Data.Catalogs;
 using VirtoCommerce.Foundation.Data.Infrastructure;
 using VirtoCommerce.Foundation.Data.Marketing;
 using VirtoCommerce.Foundation.Data.Reviews;
 using VirtoCommerce.Foundation.Data.Stores;
+using VirtoCommerce.Foundation.Frameworks;
 using VirtoCommerce.Foundation.Frameworks.Caching;
 using VirtoCommerce.Foundation.Marketing.Model.DynamicContent;
 using VirtoCommerce.Foundation.Marketing.Repositories;
@@ -20,27 +24,158 @@ using VirtoCommerce.Foundation.Reviews.Repositories;
 using VirtoCommerce.Foundation.Search;
 using VirtoCommerce.Foundation.Stores.Repositories;
 using VirtoCommerce.Framework.Web.Modularity;
+using VirtoCommerce.Framework.Web.Settings;
 using VirtoCommerce.MerchandisingModule.Web.Controllers;
+using VirtoCommerce.MerchandisingModule.Web.Services;
 using VirtoCommerce.Search.Providers.Elastic;
 
 namespace VirtoCommerce.MerchandisingModule.Web
 {
-    using VirtoCommerce.Foundation.Assets.Factories;
-    using VirtoCommerce.Foundation.Assets.Services;
-    using VirtoCommerce.Foundation.Data.Azure.Asset;
-    using VirtoCommerce.MerchandisingModule.Web.Services;
-
     public class Module : IModule, IDatabaseModule
     {
+        #region Constants
+
         private const string _connectionStringName = "VirtoCommerce";
+
+        #endregion
+
+        #region Fields
+
         private readonly IUnityContainer _container;
+
+        #endregion
+
+        #region Constructors and Destructors
 
         public Module(IUnityContainer container)
         {
-            _container = container;
+            this._container = container;
         }
 
-        #region IDatabaseModule Members
+        #endregion
+
+        #region Public Methods and Operators
+
+        public void Initialize()
+        {
+            var cacheManager = new CacheManager(
+                x => new InMemoryCachingProvider(),
+                x => new CacheSettings("", TimeSpan.FromMinutes(1), "", true));
+            var settingsManager = ServiceLocator.Current.GetInstance<ISettingsManager>();
+            Func<IFoundationCatalogRepository> catalogRepFactory =
+                () => new FoundationCatalogRepositoryImpl(_connectionStringName);
+            Func<IFoundationAppConfigRepository> appConfigRepFactory =
+                () => new FoundationAppConfigRepositoryImpl(_connectionStringName);
+            ICacheRepository cacheRepository = new HttpCacheRepository();
+
+            var catalogService = new CatalogServiceImpl(catalogRepFactory, cacheManager);
+            var propertyService = new PropertyServiceImpl(catalogRepFactory, cacheManager);
+            var categoryService = new CategoryServiceImpl(catalogRepFactory, appConfigRepFactory, cacheManager);
+            var itemService = new ItemServiceImpl(
+                catalogRepFactory,
+                appConfigRepFactory,
+                settingsManager,
+                cacheRepository);
+            var itemSearchService = new CatalogSearchServiceImpl(
+                catalogRepFactory,
+                itemService,
+                catalogService,
+                categoryService,
+                settingsManager,
+                cacheRepository);
+
+            #region VCF dependencies
+
+            var searchConnection = new SearchConnection(ConnectionHelper.GetConnectionString("SearchConnectionString"));
+            var elasticSearchProvider = new ElasticSearchProvider(new ElasticSearchQueryBuilder(), searchConnection);
+
+            Func<IReviewRepository> reviewRepFactory = () => new EFReviewRepository(_connectionStringName);
+            Func<IStoreRepository> storeRepFactory = () => new EFStoreRepository(_connectionStringName);
+
+            #endregion
+
+            #region Dynamic content
+
+            Func<IDynamicContentRepository> dynamicRepositoryFactory =
+                () => new EFDynamicContentRepository(_connectionStringName);
+            Func<IDynamicContentEvaluator> dynamicContentEval =
+                () => new DynamicContentEvaluator(dynamicRepositoryFactory(), null, cacheRepository);
+            Func<IDynamicContentService> dynamicContentServiceFactory =
+                () => new DynamicContentService(dynamicRepositoryFactory(), dynamicContentEval());
+
+            #endregion
+
+            #region Pricelists
+
+            Func<IPricelistRepository> priceListRepositoryFactory = () => new EFCatalogRepository(_connectionStringName);
+            Func<IPriceListAssignmentEvaluator> priceListEvalFactory =
+                () => new PriceListAssignmentEvaluator(priceListRepositoryFactory(), null, cacheRepository);
+
+            #endregion
+
+            var assetsConnectionString = ConnectionHelper.GetConnectionString("AssetsConnectionString");
+            var blobStorageProvider = new AzureBlobAssetRepository(assetsConnectionString, null);
+
+            var itemBrowseService = new ItemBrowsingService(
+                itemService,
+                catalogRepFactory,
+                elasticSearchProvider,
+                cacheRepository,
+                blobStorageProvider,
+                searchConnection);
+            var filterService = new FilterService(storeRepFactory, catalogRepFactory, new HttpCacheRepository());
+
+            Func<ICatalogOutlineBuilder> catalogOutlineBuilderFactory =
+                () => new CatalogOutlineBuilder(catalogRepFactory(), cacheRepository);
+
+            this._container.RegisterType<ReviewController>(new InjectionConstructor(reviewRepFactory));
+            this._container.RegisterType<ProductController>(
+                new InjectionConstructor(
+                    itemService,
+                    itemBrowseService,
+                    filterService,
+                    catalogRepFactory,
+                    appConfigRepFactory,
+                    catalogOutlineBuilderFactory,
+                    storeRepFactory,
+                    blobStorageProvider,
+                    settingsManager,
+                    cacheRepository));
+            this._container.RegisterType<ContentController>(new InjectionConstructor(dynamicContentServiceFactory));
+            this._container.RegisterType<CategoryController>(
+                new InjectionConstructor(
+                    itemSearchService,
+                    categoryService,
+                    propertyService,
+                    catalogRepFactory,
+                    appConfigRepFactory,
+                    storeRepFactory,
+                    settingsManager,
+                    cacheRepository));
+            this._container.RegisterType<StoreController>(
+                new InjectionConstructor(storeRepFactory, appConfigRepFactory, settingsManager, cacheRepository));
+            this._container.RegisterType<KeywordController>(new InjectionConstructor(appConfigRepFactory));
+            this._container.RegisterType<PriceController>(
+                new InjectionConstructor(
+                    storeRepFactory,
+                    priceListRepositoryFactory,
+                    priceListEvalFactory,
+                    new PriceListAssignmentEvaluationContext(),
+                    settingsManager,
+                    cacheRepository));
+            this._container.RegisterType<IAssetUrl, AzureBlobAssetRepository>();
+            this._container.RegisterType<IAssetEntityFactory, AssetEntityFactory>();
+            this._container.RegisterType<IAssetService, AssetService>();
+            this._container.RegisterType<IItemBrowsingService, ItemBrowsingService>();
+
+            //Register prmotion evaluation policies
+            /*
+            _container.RegisterType<IEvaluationPolicy, GlobalExclusivityPolicy>("global");
+            _container.RegisterType<IEvaluationPolicy, GroupExclusivityPolicy>("group");
+            _container.RegisterType<IEvaluationPolicy, CartSubtotalRewardCombinePolicy>("cart");
+            _container.RegisterType<IEvaluationPolicy, ShipmentRewardCombinePolicy>("shipment");
+             * */
+        }
 
         public void SetupDatabase(SampleDataLevel sampleDataLevel)
         {
@@ -115,77 +250,6 @@ namespace VirtoCommerce.MerchandisingModule.Web
 
                 initializer.InitializeDatabase(db);
             }
-        }
-
-        #endregion
-
-        #region IModule Members
-
-        public void Initialize()
-        {
-            var cacheManager = new CacheManager(x => new InMemoryCachingProvider(), x => new CacheSettings("", TimeSpan.FromMinutes(1), "", true));
-            Func<IFoundationCatalogRepository> catalogRepFactory = () => new FoundationCatalogRepositoryImpl(_connectionStringName);
-            Func<IFoundationAppConfigRepository> appConfigRepFactory = () => new FoundationAppConfigRepositoryImpl(_connectionStringName);
-
-            var catalogService = new CatalogServiceImpl(catalogRepFactory, cacheManager);
-            var propertyService = new PropertyServiceImpl(catalogRepFactory, cacheManager);
-            var categoryService = new CategoryServiceImpl(catalogRepFactory, appConfigRepFactory, cacheManager);
-            var itemService = new ItemServiceImpl(catalogRepFactory, appConfigRepFactory, cacheManager);
-            var itemSearchService = new CatalogSearchServiceImpl(catalogRepFactory, itemService, catalogService, categoryService);
-
-            #region VCF dependencies
-
-            var searchConnection = new SearchConnection(ConnectionHelper.GetConnectionString("SearchConnectionString"));
-            var elasticSearchProvider = new ElasticSearchProvider(new ElasticSearchQueryBuilder(), searchConnection);
-
-            Func<IReviewRepository> reviewRepFactory = () => new EFReviewRepository(_connectionStringName);
-            Func<IStoreRepository> storeRepFactory = () => new EFStoreRepository(_connectionStringName);
-
-
-            #endregion
-
-            #region Dynamic content
-
-            Func<IDynamicContentRepository> dynamicRepositoryFactory = () => new EFDynamicContentRepository(_connectionStringName);
-            Func<IDynamicContentEvaluator> dynamicContentEval = () => new DynamicContentEvaluator(dynamicRepositoryFactory(), null, new HttpCacheRepository());
-            Func<IDynamicContentService> dynamicContentServiceFactory = () => new DynamicContentService(dynamicRepositoryFactory(), dynamicContentEval());
-
-            #endregion
-
-            #region Pricelists
-            Func<IPricelistRepository> priceListRepositoryFactory = () => new EFCatalogRepository(_connectionStringName);
-            Func<IPriceListAssignmentEvaluator> priceListEvalFactory = () => new PriceListAssignmentEvaluator(priceListRepositoryFactory(), null, new HttpCacheRepository());
-            #endregion
-
-            var assetsConnectionString = ConnectionHelper.GetConnectionString("AssetsConnectionString");
-            var blobStorageProvider = new AzureBlobAssetRepository(assetsConnectionString, null);
-
-            var itemBrowseService = new ItemBrowsingService(itemService, catalogRepFactory, elasticSearchProvider, new HttpCacheRepository(), blobStorageProvider, searchConnection);
-            var filterService = new FilterService(storeRepFactory, catalogRepFactory, new HttpCacheRepository());
-
-            Func<ICatalogOutlineBuilder> catalogOutlineBuilderFactory = () => new CatalogOutlineBuilder(catalogRepFactory(), new HttpCacheRepository());
-
-            _container.RegisterType<ReviewController>(new InjectionConstructor(reviewRepFactory));
-            _container.RegisterType<ProductController>(new InjectionConstructor(itemService, itemBrowseService, filterService, catalogRepFactory, appConfigRepFactory, catalogOutlineBuilderFactory, storeRepFactory, blobStorageProvider));
-            _container.RegisterType<ContentController>(new InjectionConstructor(dynamicContentServiceFactory));
-            _container.RegisterType<CategoryController>(new InjectionConstructor(itemSearchService, categoryService, propertyService, catalogRepFactory, appConfigRepFactory, storeRepFactory));
-            _container.RegisterType<StoreController>(new InjectionConstructor(storeRepFactory, appConfigRepFactory));
-            _container.RegisterType<KeywordController>(new InjectionConstructor(appConfigRepFactory));
-            _container.RegisterType<PriceController>(new InjectionConstructor(storeRepFactory, priceListRepositoryFactory, priceListEvalFactory, new PriceListAssignmentEvaluationContext()));
-            _container.RegisterType<IAssetUrl, AzureBlobAssetRepository>();
-            _container.RegisterType<IAssetEntityFactory, AssetEntityFactory>();
-            _container.RegisterType<IAssetService, AssetService>();
-            _container.RegisterType<IItemBrowsingService, ItemBrowsingService>();
-
-
-            //Register prmotion evaluation policies
-            /*
-            _container.RegisterType<IEvaluationPolicy, GlobalExclusivityPolicy>("global");
-            _container.RegisterType<IEvaluationPolicy, GroupExclusivityPolicy>("group");
-            _container.RegisterType<IEvaluationPolicy, CartSubtotalRewardCombinePolicy>("cart");
-            _container.RegisterType<IEvaluationPolicy, ShipmentRewardCombinePolicy>("shipment");
-             * */
-
         }
 
         #endregion

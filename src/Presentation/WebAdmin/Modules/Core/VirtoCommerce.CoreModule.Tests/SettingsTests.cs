@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using System.Linq;
+using VirtoCommerce.Caching.HttpCache;
 using VirtoCommerce.CoreModule.Web.Settings;
 using VirtoCommerce.Foundation.Data.AppConfig;
 using VirtoCommerce.Framework.Web.Modularity;
@@ -88,7 +89,7 @@ namespace VirtoCommerce.CoreModule.Tests
         {
             var modulesPath = Path.GetFullPath(".");
             var manifestProvider = new ModuleManifestProvider(modulesPath) { ManifestFileName = "manifest.xml" };
-            return new SettingsManager(manifestProvider, () => new EFAppConfigRepository("VirtoCommerce"));
+            return new SettingsManager(manifestProvider, () => new EFAppConfigRepository("VirtoCommerce"), new HttpCacheRepository());
         }
     }
 }

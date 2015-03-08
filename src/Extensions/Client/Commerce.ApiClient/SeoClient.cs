@@ -49,7 +49,7 @@ namespace VirtoCommerce.ApiClient
         /// </summary>
         public Task<SeoKeyword[]> GetKeywordsAsync()
         {
-            return GetAsync<SeoKeyword[]>(CreateRequestUri(RelativePaths.Keywords));
+            return this.GetAsync<SeoKeyword[]>(this.CreateRequestUri(RelativePaths.Keywords));
         }
 
         #endregion

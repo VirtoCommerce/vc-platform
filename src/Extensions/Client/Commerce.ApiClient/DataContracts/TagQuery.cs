@@ -9,7 +9,6 @@ using System.Text;
 
 namespace VirtoCommerce.ApiClient.DataContracts
 {
-
     public class TagQuery : Dictionary<string, object>
     {
         #region Public Properties
@@ -22,10 +21,7 @@ namespace VirtoCommerce.ApiClient.DataContracts
         /// </value>
         public string[] Names
         {
-            get
-            {
-                return this.Keys.ToArray();
-            }
+            get { return this.Keys.ToArray(); }
         }
 
         #endregion

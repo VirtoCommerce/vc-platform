@@ -42,10 +42,11 @@ namespace VirtoCommerce.ApiClient
         public Task<MenuLinkList[]> GetLinkListsAsync(string storeId)
         {
             return
-                GetAsync<MenuLinkList[]>(
-                    CreateRequestUri(
+                this.GetAsync<MenuLinkList[]>(
+                    this.CreateRequestUri(
                         String.Format(RelativePaths.ListLinks, storeId)));
         }
+
         #endregion
 
         protected class RelativePaths

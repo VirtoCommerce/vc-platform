@@ -36,7 +36,7 @@ namespace VirtoCommerce.ApiClient.Utilities
                 throw new ArgumentException("subscriptionKey");
             }
 
-            _subscriptionKey = subscriptionKey;
+            this._subscriptionKey = subscriptionKey;
         }
 
         #endregion
@@ -58,7 +58,7 @@ namespace VirtoCommerce.ApiClient.Utilities
             HttpRequestMessage request,
             CancellationToken cancellationToken)
         {
-            request.Headers.Add("ocp-apim-subscription-key", _subscriptionKey);
+            request.Headers.Add("ocp-apim-subscription-key", this._subscriptionKey);
             base.ProcessRequest(request, cancellationToken);
             return request;
         }

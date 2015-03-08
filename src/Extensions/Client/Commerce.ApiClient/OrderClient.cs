@@ -9,6 +9,8 @@ namespace VirtoCommerce.ApiClient
 {
     public class OrderClient : BaseClient
     {
+        #region Constructors and Destructors
+
         public OrderClient(Uri adminBaseEndpoint, string appId, string secretKey)
             : base(adminBaseEndpoint, new HmacMessageProcessingHandler(appId, secretKey))
         {
@@ -19,15 +21,24 @@ namespace VirtoCommerce.ApiClient
         {
         }
 
+        #endregion
+
+        #region Public Methods and Operators
+
         public Task<CustomerOrder> GetCustomerOrderAsync(string customerId, string orderId)
         {
-            return GetAsync<CustomerOrder>(
+            return this.GetAsync<CustomerOrder>(
                 this.CreateRequestUri(string.Format(RelativePaths.GetSingleOrder, orderId)),
                 userId: customerId,
                 useCache: false);
         }
 
-        public Task<OrderSearchResult> GetCustomerOrdersAsync(string storeId, string customerId, string query, int skip, int take)
+        public Task<OrderSearchResult> GetCustomerOrdersAsync(
+            string storeId,
+            string customerId,
+            string query,
+            int skip,
+            int take)
         {
             var queryStringParameters = new List<KeyValuePair<string, string>>();
             queryStringParameters.Add(new KeyValuePair<string, string>("q", query));
@@ -36,16 +47,22 @@ namespace VirtoCommerce.ApiClient
             queryStringParameters.Add(new KeyValuePair<string, string>("start", skip.ToString()));
             queryStringParameters.Add(new KeyValuePair<string, string>("count", take.ToString()));
 
-            return GetAsync<OrderSearchResult>(
+            return this.GetAsync<OrderSearchResult>(
                 this.CreateRequestUri(RelativePaths.GetMultipleOrders, queryStringParameters.ToArray()),
                 userId: customerId,
                 useCache: false);
         }
 
+        #endregion
+
         protected class RelativePaths
         {
-            public const string GetSingleOrder = "order/customerOrders/{0}";
+            #region Constants
+
             public const string GetMultipleOrders = "order/customerOrders";
+            public const string GetSingleOrder = "order/customerOrders/{0}";
+
+            #endregion
         }
     }
 }
