@@ -110,6 +110,4 @@
     } else {
         $scope.currentBlade.refresh(false);
     }
-
-    $scope.blade.style = 'gray';
 }]);

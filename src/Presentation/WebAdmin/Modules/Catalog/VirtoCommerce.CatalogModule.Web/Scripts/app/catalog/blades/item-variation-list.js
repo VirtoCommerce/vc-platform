@@ -24,7 +24,6 @@
             id: 'variationDetail',
             itemId: listItem.id,
             title: listItem.code,
-            style: 'gray',
             subtitle: 'Variation details',
             controller: 'itemDetailController',
             template: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/blades/item-detail.tpl.html'
