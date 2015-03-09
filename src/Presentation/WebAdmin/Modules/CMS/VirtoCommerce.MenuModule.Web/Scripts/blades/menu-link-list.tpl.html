@@ -2,10 +2,27 @@
 	<div class="blade-inner">
 		<div class="inner-block">
 			<form class="form">
-				<div class="form-group">
-					<label class="form-label">Name:</label>
-					<div class="form-input">
-						<input focus-on="" required class="form-control" ng-model="blade.currentEntity.name" placeholder="Enter page name" />
+				<div class="columns clearfix">
+					<div class="column">
+						<div class="form-group">
+							<label class="form-label">Name</label>
+							<div class="form-input">
+								<input focus-on="" required class="form-control" ng-model="blade.currentEntity.name" placeholder="Enter page name" />
+							</div>
+						</div>
+					</div>
+					<div class="column">
+						<div class="form-group">
+							<label class="form-label">Language</label>
+							<div class="form-input">
+								<ui-select ng-model="blade.currentEntity.language">
+									<ui-select-match placeholder="Select...">{{$select.selected}}</ui-select-match>
+									<ui-select-choices repeat="x in blade.languages">
+										<span ng-bind-html="x"></span>
+									</ui-select-choices>
+								</ui-select>
+							</div>
+						</div>
 					</div>
 				</div>
 			</form>
@@ -16,9 +33,6 @@
 							<th class="table-col">IsActive</th>
 							<th class="table-col">Link Title</th>
 							<th class="table-col">Links to...</th>
-							<th class="table-col">Type</th>
-							<th class="table-col">Priority</th>
-							<th class="table-col">Language</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -36,21 +50,6 @@
 							<td class="table-col">
 								<div class="form-input">
 									<input type="text" ng-model="data.url" required>
-								</div>
-							</td>
-							<td class="table-col">
-								<div class="form-input">
-									<input type="text" ng-model="data.type" required>
-								</div>
-							</td>
-							<td class="table-col">
-								<div class="form-input">
-									<input type="text" ng-model="data.priority" required>
-								</div>
-							</td>
-							<td class="table-col">
-								<div class="form-input">
-									<input type="text" ng-model="data.language" required>
 								</div>
 							</td>
 							<td class="table-col">

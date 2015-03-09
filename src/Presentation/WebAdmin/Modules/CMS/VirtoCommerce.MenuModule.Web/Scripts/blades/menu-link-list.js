@@ -1,12 +1,17 @@
 ﻿angular.module('virtoCommerce.content.menuModule.blades.menuLinkList', [
     'virtoCommerce.content.menuModule.resources.menus',
-	'angularUUID2'
+	'angularUUID2',
+	'virtoCommerce.content.menuModule.resources.menusStores'
 ])
-.controller('menuLinkListController', ['$scope', 'menus', 'bladeNavigationService', 'dialogService', 'uuid2', function ($scope, menus, bladeNavigationService, dialogService, uuid2) {
+.controller('menuLinkListController', ['$scope', 'menus', 'menusStores', 'bladeNavigationService', 'dialogService', 'uuid2', function ($scope, menus, menusStores, bladeNavigationService, dialogService, uuid2) {
 	blade = $scope.blade;
 	blade.selectedItemIds = [];
 
 	blade.refresh = function () {
+		menusStores.get({ id: blade.choosenStoreId }, function (data) {
+			blade.languages = data.languages;
+		});
+
 		if (blade.newList) {
 			blade.currentEntity = { id: uuid2.newguid(), title: undefined, storeId: blade.choosenStoreId, menuLinks: [] };
 			blade.choosenListId = blade.currentEntity.id;
@@ -43,7 +48,7 @@
 				$scope.bladeToolbarCommands = [{
 					name: "Add link", icon: 'fa fa-plus',
 					executeMethod: function () {
-						var newEntity = { id: uuid2.newguid(), link: null, name: null, menuLinkListId: blade.choosenListId };
+						var newEntity = { id: uuid2.newguid(), url: undefined, title: undefined, isActive: false, priority: 0, menuLinkListId: blade.choosenListId };
 						blade.currentEntity.menuLinks.push(newEntity);
 					},
 					canExecuteMethod: function () {

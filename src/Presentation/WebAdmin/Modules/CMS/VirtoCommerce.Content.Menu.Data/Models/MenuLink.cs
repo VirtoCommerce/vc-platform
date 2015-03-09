@@ -19,12 +19,10 @@ namespace VirtoCommerce.Content.Menu.Data.Models
 		public string Title { get; set; }
 		[Required]
 		public string Url { get; set; }
-		[Required]
+
 		public string Type { get; set; }
 		[Required]
 		public bool IsActive { get; set; }
-		[Required]
-		public string Language { get; set; }
 		[Required]
 		public int Priority { get; set; }
 

@@ -8,6 +8,7 @@ if (AppDependencies != undefined) {
 angular.module(moduleName, [
 	'virtoCommerce.content.menuModule.widgets.menuWidget',
 	'virtoCommerce.content.menuModule.resources.menus',
+	'virtoCommerce.content.menuModule.resources.menusStores',
 	'virtoCommerce.content.menuModule.blades.linkLists',
 	'virtoCommerce.content.menuModule.blades.menuLinkList'
 ])

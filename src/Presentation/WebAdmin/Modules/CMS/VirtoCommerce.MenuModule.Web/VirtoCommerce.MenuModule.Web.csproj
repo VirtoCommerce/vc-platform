@@ -105,6 +105,7 @@
     <Content Include="Scripts\home.tpl.html" />
     <Content Include="Scripts\menu.js" />
     <Content Include="Scripts\resources\menus.js" />
+    <Content Include="Scripts\resources\menus_stores.js" />
     <Content Include="Scripts\uuid.js" />
     <Content Include="Scripts\widgets\menuWidget.js" />
     <Content Include="Scripts\widgets\menuWidget.tpl.html" />

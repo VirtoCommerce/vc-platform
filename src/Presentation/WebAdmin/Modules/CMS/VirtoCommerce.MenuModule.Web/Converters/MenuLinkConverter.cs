@@ -19,7 +19,6 @@ namespace VirtoCommerce.MenuModule.Web.Converters
 			retVal.Type = link.Type;
 			retVal.Priority = link.Priority;
 			retVal.IsActive = link.IsActive;
-			retVal.Language = link.Language;
 			retVal.MenuLinkListId = link.MenuLinkListId;
 
 			return retVal;
@@ -35,7 +34,6 @@ namespace VirtoCommerce.MenuModule.Web.Converters
 			retVal.Type = link.Type;
 			retVal.Priority = link.Priority;
 			retVal.IsActive = link.IsActive;
-			retVal.Language = link.Language;
 			retVal.MenuLinkListId = link.MenuLinkListId;
 
 			return retVal;
