@@ -153,6 +153,8 @@
     <Content Include="Scripts\Settings\resources\setting.js" />
     <Content Include="Scripts\Settings\settings.js" />
     <Content Include="Scripts\common\ok-cancel.tpl.html" />
+    <Content Include="Scripts\Settings\widgets\settingsWidget.js" />
+    <Content Include="Scripts\Settings\widgets\settingsWidget.tpl.html" />
     <None Include="app.config" />
     <None Include="packages.config">
       <SubType>Designer</SubType>
