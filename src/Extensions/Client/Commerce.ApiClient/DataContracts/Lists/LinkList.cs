@@ -1,15 +1,20 @@
 ﻿using System.Collections.Generic;
+using Newtonsoft.Json;
 
 namespace VirtoCommerce.ApiClient.DataContracts.Lists
 {
-    public class MenuLinkList
+    public class LinkList
     {
         #region Public Properties
 
         public string Id { get; set; }
 
-        public IEnumerable<MenuLink> MenuLinks { get; set; }
+        [JsonProperty("menulinks")]
+        public IEnumerable<Link> Links { get; set; }
+
         public string Name { get; set; }
+
+        public string Language { get; set; }
 
         #endregion
     }
