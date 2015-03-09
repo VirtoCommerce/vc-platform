@@ -18,7 +18,6 @@
                 id: "listItemDetail",
                 itemId: dbItem.id,
                 title: dbItem.name,
-                style: 'gray',
                 subtitle: 'Item details',
                 controller: 'itemDetailController',
                 template: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/blades/item-detail.tpl.html'

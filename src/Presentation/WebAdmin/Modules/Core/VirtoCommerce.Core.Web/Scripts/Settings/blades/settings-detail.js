@@ -105,5 +105,4 @@
 
     // actions on load
     $scope.blade.refresh();
-    $scope.blade.style = 'gray';
 }]);
