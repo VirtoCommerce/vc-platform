@@ -12,6 +12,8 @@ namespace VirtoCommerce.Content.Data.Models
 
 		public string AssetName { get; set; }
 
+		public string AssetUrl { get; set; }
+
 		public byte[] ByteContent { get; set; }
 
 		public string ContentType { get; set; }

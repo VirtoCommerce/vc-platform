@@ -119,9 +119,12 @@
   <ItemGroup>
     <Compile Include="Controllers\Api\ThemeController.cs" />
     <Compile Include="Converters\ContentItemConverter.cs" />
+    <Compile Include="Converters\GetThemeAssetsCriteriaConverter.cs" />
     <Compile Include="Converters\ThemeAssetConverter.cs" />
     <Compile Include="Converters\ThemeConverter.cs" />
     <Compile Include="Models\ContentItem.cs" />
+    <Compile Include="Models\GetThemeAssetsCriteria.cs" />
+    <Compile Include="Models\LoadItemInfo.cs" />
     <Compile Include="Models\Theme.cs" />
     <Compile Include="Models\ThemeAsset.cs" />
     <Compile Include="Models\ThemeAssetFolder.cs" />

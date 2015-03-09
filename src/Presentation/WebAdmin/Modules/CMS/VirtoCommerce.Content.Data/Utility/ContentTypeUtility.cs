@@ -18,7 +18,7 @@ namespace VirtoCommerce.Content.Data.Utility
 
 			var types = TypeInfos.Where(t => t.IsThisContentType(path, content));
 
-			if (types.Count() == 1)
+			if (types.Count() > 0)
 			{
 				retVal = types.First().ContentType;
 			}
@@ -26,6 +26,33 @@ namespace VirtoCommerce.Content.Data.Utility
 			return retVal;
 		}
 
+		public static string ContertImageToBase64String(byte[] image, string contentType)
+		{
+			var retVal = string.Empty;
+
+			retVal = string.Format("{0}{1}",
+				string.Format(Base64StringPrefix, contentType),
+				Convert.ToBase64String(image));
+
+			return retVal;
+		}
+
+		public static bool IsImageContentType(string contentType)
+		{
+			return contentType.Equals("image/bmp") ||
+				contentType.Equals("image/png") ||
+				contentType.Equals("image/jpeg") ||
+				contentType.Equals("image/gif");
+		}
+
+		public static bool IsTextContentType(string contentType)
+		{
+			return contentType.Equals("text/html") ||
+				contentType.Equals("application/javascript") ||
+				contentType.Equals("application/json");
+		}
+
+		private static string Base64StringPrefix = "data:{0};base64,";
 		private static string DefaultContentType = "application/octet-stream";
 
 		private static ContentTypeInfo[] TypeInfos = new ContentTypeInfo[] 
@@ -67,7 +94,7 @@ namespace VirtoCommerce.Content.Data.Utility
 				else
 				{
 					var extension = Path.GetExtension(path);
-					if (this.Extension.Equals(extension))
+					if (this.Extension.ToLower().Equals(extension))
 					{
 						retVal = true;
 					}

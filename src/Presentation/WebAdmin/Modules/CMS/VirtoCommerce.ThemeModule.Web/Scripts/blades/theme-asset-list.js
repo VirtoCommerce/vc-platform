@@ -6,8 +6,8 @@
 .controller('themeAssetListController', ['$scope', 'themes', 'bladeNavigationService', function ($scope, themes, bladeNavigationService) {
 	var blade = $scope.blade;
 
-	$scope.selectedFolderId = null;
-	$scope.selectedAssetId = null;
+	$scope.selectedFolderId = undefined;
+	$scope.selectedAssetId = undefined;
 
 	blade.refresh = function () {
 		blade.isLoading = true;
@@ -21,7 +21,7 @@
 		//closeChildrenBlades();
 
 		if (blade.checkFolder(data)) {
-			$scope.selectedFolderId = null;
+			$scope.selectedFolderId = undefined;
 		}
 		else {
 			$scope.selectedFolderId = data.folderName;
@@ -89,35 +89,41 @@
 		}
 	}
 
-	function openBladeNew(data) {
-		$scope.selectedAssetId = data.id;
+	function openBladeNew() {
 		closeChildrenBlades();
 
-		var newBlade = {
-			id: 'addAsset',
-			choosenStoreId: blade.choosenStoreId,
-			choosenThemeId: blade.choosenThemeId,
-			newAsset: true,
-			currentEntity: { id: null, content: null },
-			title: 'New Asset',
-			subtitle: 'Create new text asset',
-			controller: 'editAssetController',
-			template: 'Modules/CMS/VirtoCommerce.ThemeModule.Web/Scripts/blades/edit-asset.tpl.html'
-		};
-		bladeNavigationService.showBlade(newBlade, blade);
+		var contentType = blade.getContentType();
 
-		//var newBlade = {
-		//	id: 'addImageAsset',
-		//	choosenStoreId: blade.choosenStoreId,
-		//	choosenThemeId: blade.choosenThemeId,
-		//	newAsset: true,
-		//	currentEntity: { id: null, content: null },
-		//	title: 'New Asset',
-		//	subtitle: 'Create new image asset',
-		//	controller: 'editImageAssetController',
-		//	template: 'Modules/CMS/VirtoCommerce.ThemeModule.Web/Scripts/blades/edit-image-asset.tpl.html'
-		//};
-		//bladeNavigationService.showBlade(newBlade, blade);
+		if (contentType === 'text/html') {
+			var newBlade = {
+				id: 'addAsset',
+				choosenStoreId: blade.choosenStoreId,
+				choosenThemeId: blade.choosenThemeId,
+				choosenFolder: $scope.selectedFolderId,
+				newAsset: true,
+				currentEntity: { id: undefined, content: undefined, contentType: undefined, assetUrl: undefined, name: undefined },
+				title: 'New Asset',
+				subtitle: 'Create new text asset',
+				controller: 'editAssetController',
+				template: 'Modules/CMS/VirtoCommerce.ThemeModule.Web/Scripts/blades/edit-asset.tpl.html'
+			};
+			bladeNavigationService.showBlade(newBlade, blade);
+		}
+		else {
+			var newBlade = {
+				id: 'addImageAsset',
+				choosenStoreId: blade.choosenStoreId,
+				choosenThemeId: blade.choosenThemeId,
+				choosenFolder: $scope.selectedFolderId,
+				newAsset: true,
+				currentEntity: { id: undefined, content: undefined, contentType: undefined, assetUrl: undefined, name: undefined },
+				title: 'New Asset',
+				subtitle: 'Create new image asset',
+				controller: 'editImageAssetController',
+				template: 'Modules/CMS/VirtoCommerce.ThemeModule.Web/Scripts/blades/edit-image-asset.tpl.html'
+			};
+			bladeNavigationService.showBlade(newBlade, blade);
+		}
 	}
 
 	blade.onClose = function (closeCallback) {
@@ -130,6 +136,21 @@
 			bladeNavigationService.closeBlade(child);
 		});
 		$scope.selectedNodeId = null;
+	}
+
+	blade.getContentType = function () {
+		switch ($scope.selectedFolderId)
+		{
+			case 'layout':
+			case 'templates':
+			case 'snippets':
+			case 'config':
+			case 'locales':
+				return 'text/html';
+
+			default:
+				return null;
+		}
 	}
 
     $scope.bladeHeadIco = 'fa fa-archive';
@@ -145,23 +166,14 @@
         	}
         },
         {
-        	name: "Add text asset", icon: 'fa fa-plus',
+        	name: "Add asset", icon: 'fa fa-plus',
         	executeMethod: function () {
         		openBladeNew();
         	},
         	canExecuteMethod: function () {
-        		return true;
+        		return !angular.isUndefined($scope.selectedFolderId);
         	}
-        },
-		{
-			name: "Add image asset", icon: 'fa fa-plus',
-			executeMethod: function () {
-				openBladeNew();
-			},
-			canExecuteMethod: function () {
-				return false;
-			}
-		}
+        }
 	];
 
 	blade.refresh();

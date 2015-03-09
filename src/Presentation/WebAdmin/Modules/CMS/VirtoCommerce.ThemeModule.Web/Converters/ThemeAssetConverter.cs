@@ -7,6 +7,7 @@ using domainModels = VirtoCommerce.Content.Data.Models;
 using VirtoCommerce.Framework.Web.Common;
 using System.IO;
 using System.Text;
+using VirtoCommerce.Content.Data.Utility;
 
 namespace VirtoCommerce.ThemeModule.Web.Converters
 {
@@ -16,20 +17,14 @@ namespace VirtoCommerce.ThemeModule.Web.Converters
 		{
 			var retVal = new domainModels.ThemeAsset();
 
-			retVal.ByteContent = Encoding.UTF8.GetBytes(item.Content);
+			if (item.ByteContent != null)
+				retVal.ByteContent = item.ByteContent;
+			else if (!string.IsNullOrEmpty(item.Content))
+				retVal.ByteContent = Encoding.UTF8.GetBytes(item.Content);
+
+			retVal.AssetUrl = item.AssetUrl;
 			retVal.Id = item.Id;
 			retVal.ContentType = item.ContentType;
-
-			return retVal;
-		}
-
-		public static domainModels.ThemeAsset DomainModel(string id, string contentType, byte[] content)
-		{
-			var retVal = new domainModels.ThemeAsset();
-
-			retVal.ByteContent = content;
-			retVal.Id = id;
-			retVal.ContentType = contentType;
 
 			return retVal;
 		}
@@ -38,9 +33,23 @@ namespace VirtoCommerce.ThemeModule.Web.Converters
 		{
 			var retVal = new webModels.ThemeAsset();
 
-			if (item.ByteContent != null)
+			if (ContentTypeUtility.IsImageContentType(item.ContentType))
 			{
-				retVal.Content = Encoding.UTF8.GetString(item.ByteContent);
+				if (item.ByteContent != null)
+				{
+					retVal.Content = ContentTypeUtility.ContertImageToBase64String(item.ByteContent, item.ContentType);
+				}
+				else
+				{
+					retVal.Content = retVal.AssetUrl = item.AssetUrl;
+				}
+			}
+			else if (ContentTypeUtility.IsTextContentType(item.ContentType))
+			{
+				if (item.ByteContent != null)
+				{
+					retVal.Content = Encoding.UTF8.GetString(item.ByteContent);
+				}
 			}
 			retVal.Id = item.Id;
 			retVal.ContentType = item.ContentType;

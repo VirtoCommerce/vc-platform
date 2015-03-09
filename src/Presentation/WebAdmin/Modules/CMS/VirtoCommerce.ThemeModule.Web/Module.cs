@@ -57,6 +57,7 @@
 			var assetsConnectionString = ConnectionHelper.GetConnectionString("AssetsConnectionString");
 			var blobStorageProvider = new AzureBlobAssetRepository(assetsConnectionString, null);
 			var uploadPath = HostingEnvironment.MapPath("~/App_Data/Uploads/");
+			var uploadPathFiles = HostingEnvironment.MapPath("~/App_Data/Uploads/Files/");
 
 			Func<string, IThemeService> factory = (x) =>
 			{
@@ -94,7 +95,17 @@
 				Directory.CreateDirectory(fileSystemMainPath);
 			}
 
-			this._container.RegisterType<ThemeController>(new InjectionConstructor(factory, settingsManager));
+			if (!Directory.Exists(uploadPath))
+			{
+				Directory.CreateDirectory(uploadPath);
+			}
+
+			if (!Directory.Exists(uploadPathFiles))
+			{
+				Directory.CreateDirectory(uploadPathFiles);
+			}
+
+			this._container.RegisterType<ThemeController>(new InjectionConstructor(factory, settingsManager, uploadPath, uploadPathFiles));
 		}
 
 		public void SetupDatabase(SampleDataLevel sampleDataLevel)

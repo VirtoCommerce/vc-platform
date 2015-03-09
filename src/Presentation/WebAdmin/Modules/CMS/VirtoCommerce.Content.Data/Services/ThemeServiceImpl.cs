@@ -40,7 +40,7 @@ namespace VirtoCommerce.Content.Data.Services
 			_tempPath = HostingEnvironment.MapPath("~/App_Data/Uploads/");
 		}
 
-		public IEnumerable<Theme> GetThemes(string storeId)
+		public Task<IEnumerable<Theme>> GetThemes(string storeId)
 		{
 			var themePath = GetThemePath(storeId, string.Empty);
 
@@ -48,10 +48,10 @@ namespace VirtoCommerce.Content.Data.Services
 			return items;
 		}
 
-		public IEnumerable<ThemeAsset> GetThemeAssets(string storeId, string themeName, bool loadContent = false)
+		public async Task<IEnumerable<ThemeAsset>> GetThemeAssets(string storeId, string themeName, GetThemeAssetsCriteria criteria)
 		{
 			var themePath = GetThemePath(storeId, themeName);
-			var items = _repository.GetContentItems(themePath, loadContent);
+			var items = await _repository.GetContentItems(themePath, criteria);
 
 			foreach (var item in items)
 			{
@@ -62,43 +62,35 @@ namespace VirtoCommerce.Content.Data.Services
 			return items.Select(c => c.AsThemeAsset());
 		}
 
-		public ThemeAsset GetThemeAsset(string storeId, string themeId, string path)
+		public async Task<ThemeAsset> GetThemeAsset(string storeId, string themeId, string path)
 		{
-			lock (_lockObject)
-			{
-				var fullPath = GetFullPath(storeId, themeId, path);
-				var item = _repository.GetContentItem(fullPath);
+			var fullPath = GetFullPath(storeId, themeId, path);
+			var item = await _repository.GetContentItem(fullPath);
 
-				item.Path = FixPath(GetThemePath(storeId, themeId), item.Path);
-				item.ContentType = ContentTypeUtility.GetContentType(item.Name, item.ByteContent);
+			item.Path = FixPath(GetThemePath(storeId, themeId), item.Path);
+			item.ContentType = ContentTypeUtility.GetContentType(item.Name, item.ByteContent);
 
-				var retVal = item.AsThemeAsset();
+			var retVal = item.AsThemeAsset();
 
-				return item.AsThemeAsset();
-			}
+			return item.AsThemeAsset();
 		}
 
-		public void SaveThemeAsset(string storeId, string themeId, Models.ThemeAsset asset)
+		public async Task SaveThemeAsset(string storeId, string themeId, Models.ThemeAsset asset)
 		{
-			lock (_lockObject)
-			{
-				var fullPath = GetFullPath(storeId, themeId, asset.Id);
+			var retVal = false;
 
-				_repository.SaveContentItem(fullPath, asset.AsContentItem());
-			}
+			var fullPath = GetFullPath(storeId, themeId, asset.Id);
+
+			retVal = await _repository.SaveContentItem(fullPath, asset.AsContentItem());
 		}
 
-		public void DeleteThemeAssets(string storeId, string themeId, params string[] assetIds)
+		public async Task DeleteThemeAssets(string storeId, string themeId, params string[] assetIds)
 		{
-			lock (_lockObject)
+			foreach (var assetId in assetIds)
 			{
-				foreach (var assetId in assetIds)
-				{
-					var fullPath = GetFullPath(storeId, themeId, assetId);
+				var fullPath = GetFullPath(storeId, themeId, assetId);
 
-					_repository.DeleteContentItem(fullPath);
-				}
-
+				await _repository.DeleteContentItem(fullPath);
 			}
 		}
 

@@ -105,8 +105,8 @@ namespace VirtoCommerce.Content.Tests.MenuTests
 			list.MenuLinks.Add(new MenuLink
 			{
 				Id = Guid.NewGuid().ToString(),
-				Link = "http://test.com/",
-				Name = "First_Added_Link"
+				Url = "http://test.com/",
+				Title = "First_Added_Link"
 			});
 
 			repository.UpdateList(list);
@@ -115,7 +115,7 @@ namespace VirtoCommerce.Content.Tests.MenuTests
 
 			Assert.Equal(1, list.MenuLinks.Count);
 			Assert.Equal("Added_List", list.Name);
-			Assert.Equal("First_Added_Link", list.MenuLinks.First().Name);
+			Assert.Equal("First_Added_Link", list.MenuLinks.First().Title);
 
 			var items = repository.GetListsByStoreId("Apple");
 
@@ -124,8 +124,8 @@ namespace VirtoCommerce.Content.Tests.MenuTests
 			list.MenuLinks.Add(new MenuLink
 			{
 				Id = Guid.NewGuid().ToString(),
-				Link = "http://test.com/",
-				Name = "Second_Added_Link"
+				Url = "http://test.com/",
+				Title = "Second_Added_Link"
 			});
 
 			repository.UpdateList(list);
@@ -134,7 +134,7 @@ namespace VirtoCommerce.Content.Tests.MenuTests
 
 			Assert.Equal(2, list.MenuLinks.Count);
 			Assert.Equal("Added_List", list.Name);
-			Assert.Equal(1, list.MenuLinks.Count(l => l.Name == "Second_Added_Link"));
+			Assert.Equal(1, list.MenuLinks.Count(l => l.Title == "Second_Added_Link"));
 
 			repository.DeleteList(list.Id);
 

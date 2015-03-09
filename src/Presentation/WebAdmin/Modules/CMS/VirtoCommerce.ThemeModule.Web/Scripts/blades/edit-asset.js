@@ -95,10 +95,13 @@
 
     function isCanSave() {
     	if (!angular.isUndefined(blade.currentEntity)) {
-    		return true;
+    		if (!angular.isUndefined(blade.currentEntity.name) && !angular.isUndefined(blade.currentEntity.content)) {
+    			return true;
+    		}
+    		return false;
     	}
     	else {
-    		return (!angular.isUndefined(blade.currentEntity.id) && !angular.isUndefined(blade.currentEntity.content));
+    		return false;
     	}
     }
 

@@ -7,6 +7,7 @@
 	using System.Data.Entity;
 	using System.Data.Entity.ModelConfiguration.Conventions;
 	using System.Linq;
+	using System.Threading.Tasks;
 	using VirtoCommerce.Content.Data.Models;
 	using VirtoCommerce.Foundation.Data;
 	using VirtoCommerce.Foundation.Data.Infrastructure.Interceptors;
@@ -66,10 +67,10 @@
 
 		#endregion
 
-		public ContentItem GetContentItem(string path)
+		public async Task<ContentItem> GetContentItem(string path)
 		{
 			ContentItem retVal = null;
-			var existingItem = ContentItems.FirstOrDefault(p => p.Path == path);
+			var existingItem = await ContentItems.FirstOrDefaultAsync(p => p.Path == path);
 
 			if (existingItem != null)
 			{
@@ -79,21 +80,28 @@
 			return retVal;
 		}
 
-		public IEnumerable<Theme> GetThemes(string storePath)
+		public Task<IEnumerable<Theme>> GetThemes(string storePath)
 		{
 			var path = string.Format("{0}/", storePath);
 
 			var items = Themes.Where(c => c.ThemePath.StartsWith(storePath));
 
-			return items;
+			return Task.FromResult(items.AsEnumerable());
 		}
 
-		public IEnumerable<ContentItem> GetContentItems(string path, bool loadContent = false)
+		public Task<IEnumerable<ContentItem>> GetContentItems(string path, GetThemeAssetsCriteria criteria)
 		{
-			return ContentItems.Where(i => i.Path.Contains(path)).ToArray();
+			if(criteria.LastUpdateDate.HasValue)
+			{
+				return Task.FromResult(ContentItems.Where(i => i.Path.Contains(path) && i.ModifiedDate.HasValue ? criteria.LastUpdateDate.Value < i.ModifiedDate.Value : criteria.LastUpdateDate.Value < i.CreatedDate).AsEnumerable());
+			}
+			else
+			{
+				return Task.FromResult(ContentItems.Where(i => i.Path.Contains(path)).AsEnumerable());
+			}
 		}
 
-		public void SaveContentItem(string path, ContentItem item)
+		public Task<bool> SaveContentItem(string path, ContentItem item)
 		{
 			var existingItem = ContentItems.FirstOrDefault(p => p.Path == path);
 			if (existingItem != null)
@@ -129,9 +137,11 @@
 			}
 
 			UnitOfWork.Commit();
+
+			return Task.FromResult(true);
 		}
 
-		public void DeleteContentItem(string path)
+		public Task<bool> DeleteContentItem(string path)
 		{
 			var existingItem = ContentItems.FirstOrDefault(p => p.Path == path);
 			if (existingItem != null)
@@ -152,6 +162,8 @@
 			}
 
 			UnitOfWork.Commit();
+
+			return Task.FromResult(true);
 		}
 	}
 }

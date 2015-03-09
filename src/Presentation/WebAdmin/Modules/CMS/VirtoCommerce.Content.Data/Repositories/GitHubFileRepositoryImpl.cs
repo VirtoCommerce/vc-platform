@@ -61,12 +61,12 @@
 
 		#region Public Methods and Operators
 
-		public ContentItem GetContentItem(string path)
+		public async Task<ContentItem> GetContentItem(string path)
 		{
 			var fullPath = GetFullPath(path);
 
 			var retVal = new ContentItem();
-			var result = this._client.Repository.Content.GetContents(this._ownerName, this._repositoryName, fullPath).Result;
+			var result = await this._client.Repository.Content.GetContents(this._ownerName, this._repositoryName, fullPath);
 
 			var item = result.SingleOrDefault();
 			if (item != null)
@@ -78,21 +78,22 @@
 			return retVal;
 		}
 
-		public IEnumerable<Theme> GetThemes(string storePath)
+		public async Task<IEnumerable<Theme>> GetThemes(string storePath)
 		{
 			var fullPath = GetFullPath(storePath);
 
-			var themes = this._client.Repository.Content.GetContents(this._ownerName, this._repositoryName, fullPath)
-					.Result.Where(s => s.Type == ContentType.Dir);
+			var result = await this._client.Repository.Content.GetContents(this._ownerName, this._repositoryName, fullPath);
+
+			var themes = result.Where(s => s.Type == ContentType.Dir);
 
 			List<Theme> list = new List<Theme>();
 
 			foreach (var theme in themes)
 			{
-				var commits = this._client.
+				var commits = await this._client.
 					Repository.
 					Commits.
-					GetAll(this._ownerName, this._repositoryName, new CommitRequest { Path = theme.Path }).Result;
+					GetAll(this._ownerName, this._repositoryName, new CommitRequest { Path = theme.Path });
 
 				var commit = commits.First();
 				var date = commit.Commit.Committer.Date;
@@ -108,16 +109,16 @@
 			return list;
 		}
 
-		public IEnumerable<ContentItem> GetContentItems(string path, bool loadContent = false)
+		public async Task<IEnumerable<ContentItem>> GetContentItems(string path, GetThemeAssetsCriteria criteria)
 		{
 			var fullPath = GetFullPath(path);
 
-			var result =
-				this._client.Repository.Content.GetContents(this._ownerName, this._repositoryName, fullPath)
-					.Result.Where(s => s.Type == ContentType.Dir || s.Type == ContentType.File);
+			var result = await this._client.Repository.Content.GetContents(this._ownerName, this._repositoryName, fullPath);
 
-			var directories = result.Where(s => s.Type == ContentType.Dir).Select(s => s.Path);
-			var files = result.Where(s => s.Type == ContentType.File).Select(file => file.ToContentItem()).ToList();
+			var items = result.Where(s => s.Type == ContentType.Dir || s.Type == ContentType.File);
+
+			var directories = items.Where(s => s.Type == ContentType.Dir).Select(s => s.Path);
+			var files = items.Where(s => s.Type == ContentType.File).Select(file => file.ToContentItem()).ToList();
 
 			var directoriesQueue = new Queue<string>();
 
@@ -129,12 +130,12 @@
 			while (directoriesQueue.Count > 0)
 			{
 				var directory = directoriesQueue.Dequeue();
-				result =
-					this._client.Repository.Content.GetContents(this._ownerName, this._repositoryName, directory)
-						.Result.Where(s => s.Type == ContentType.Dir || s.Type == ContentType.File);
+				result = await this._client.Repository.Content.GetContents(this._ownerName, this._repositoryName, directory);
 
-				var newDirectories = result.Where(s => s.Type == ContentType.Dir).Select(s => s.Path);
-				var newFiles = result.Where(s => s.Type == ContentType.File).Select(file => file.ToContentItem());
+				var results = result.Where(s => s.Type == ContentType.Dir || s.Type == ContentType.File);
+
+				var newDirectories = results.Where(s => s.Type == ContentType.Dir).Select(s => s.Path);
+				var newFiles = results.Where(s => s.Type == ContentType.File).Select(file => file.ToContentItem());
 
 				foreach (var newDirectory in newDirectories)
 				{
@@ -149,11 +150,11 @@
 				file.Path = FixPath(file.Path);
 			}
 
-			if (loadContent)
+			if (criteria.LoadContent)
 			{
-				Parallel.ForEach(files, file =>
+				Parallel.ForEach(files, async file =>
 				{
-					var fullFile = GetContentItem(file.Path);
+					var fullFile = await GetContentItem(file.Path);
 					file.Content = fullFile.Content;
 				});
 			}
@@ -161,7 +162,7 @@
 			return files;
 		}
 
-		public void SaveContentItem(string path, ContentItem item)
+		public async Task<bool> SaveContentItem(string path, ContentItem item)
 		{
 			var fullPath = GetFullPath(path);
 
@@ -171,37 +172,41 @@
 
 			if (existingItem == null) // create new
 			{
-				var response =
+				var response = await
 					this._client.Repository.Content.CreateFile(
 						this._ownerName,
 						this._repositoryName,
 						fullPath,
-						new CreateFileRequest("Updating file from admin", item.Content)).Result;
+						new CreateFileRequest("Updating file from admin", item.Content));
 			}
 			else // update existing
 			{
-				var response =
+				var response = await
 					this._client.Repository.Content.UpdateFile(
 						this._ownerName,
 						this._repositoryName,
 						fullPath,
-						new UpdateFileRequest("Updating file from admin", Encoding.UTF8.GetString(item.ByteContent), existingItem.Sha)).Result;
+						new UpdateFileRequest("Updating file from admin", Encoding.UTF8.GetString(item.ByteContent), existingItem.Sha));
 			}
+
+			return true;
 		}
 
-		public void DeleteContentItem(string path)
+		public async Task<bool> DeleteContentItem(string path)
 		{
 			var fullPath = GetFullPath(path);
 
 			var existingItem = this.GetItem(fullPath).Result;
 			if (existingItem != null)
 			{
-				this._client.Repository.Content.DeleteFile(
+				await this._client.Repository.Content.DeleteFile(
 					this._ownerName,
 					this._repositoryName,
 					fullPath,
-					new DeleteFileRequest("Updating file from admin", existingItem.Sha)).Wait();
+					new DeleteFileRequest("Updating file from admin", existingItem.Sha));
 			}
+
+			return true;
 		}
 
 		#endregion

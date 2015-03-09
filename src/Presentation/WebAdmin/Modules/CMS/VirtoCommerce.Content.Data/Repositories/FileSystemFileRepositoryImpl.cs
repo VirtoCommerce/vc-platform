@@ -32,7 +32,7 @@ namespace VirtoCommerce.Content.Data.Repositories
 		/// </summary>
 		/// <param name="path"></param>
 		/// <returns></returns>
-		public ContentItem GetContentItem(string path)
+		public Task<ContentItem> GetContentItem(string path)
 		{
 			var retVal = new ContentItem();
 
@@ -43,15 +43,16 @@ namespace VirtoCommerce.Content.Data.Repositories
 			retVal.Name = itemName;
 			retVal.Path = path;
 
-			return retVal;
+			return Task.FromResult(retVal);
 		}
 
 
-		public IEnumerable<Theme> GetThemes(string storePath)
+		public Task<IEnumerable<Theme>> GetThemes(string storePath)
 		{
 			var fullPath = GetFullPath(storePath);
 
-			if (!Directory.Exists(fullPath)) return Enumerable.Empty<Theme>();
+			if (!Directory.Exists(fullPath))
+				return Task.FromResult(Enumerable.Empty<Theme>());
 
 			var directories = Directory.GetDirectories(fullPath);
 
@@ -80,10 +81,10 @@ namespace VirtoCommerce.Content.Data.Repositories
 				});
 			}
 
-			return themes;
+			return Task.FromResult(themes.AsEnumerable());
 		}
 
-		public IEnumerable<ContentItem> GetContentItems(string path, bool loadContent = false)
+		public Task<IEnumerable<ContentItem>> GetContentItems(string path, GetThemeAssetsCriteria criteria)
 		{
 			var fullPath = GetFullPath(path);
 
@@ -95,6 +96,11 @@ namespace VirtoCommerce.Content.Data.Repositories
 			foreach (var directory in directories)
 			{
 				directoriesQueue.Enqueue(directory);
+			}
+
+			if (criteria.LastUpdateDate.HasValue)
+			{
+				files = files.Where(i => File.GetLastWriteTimeUtc(i) > criteria.LastUpdateDate.Value).ToArray();
 			}
 
 			var items = files.Select(file => new ContentItem { Name = Path.GetFileName(file), Path = this.RemoveBaseDirectory(file) }).ToList();
@@ -117,20 +123,20 @@ namespace VirtoCommerce.Content.Data.Repositories
 				}
 			}
 
-			if (loadContent)
+			if (criteria.LoadContent)
 			{
-				Parallel.ForEach(items, file =>
+				Parallel.ForEach(items, async file =>
 				{
-					var fullFile = GetContentItem(file.Path);
+					var fullFile = await GetContentItem(file.Path);
 					file.Content = fullFile.Content;
 					file.ContentType = fullFile.ContentType;
 				});
 			}
 
-			return items;
+			return Task.FromResult(items.AsEnumerable());
 		}
 
-		public void SaveContentItem(string path, ContentItem item)
+		public Task<bool> SaveContentItem(string path, ContentItem item)
 		{
 			var fullPath = GetFullPath(path);
 
@@ -145,9 +151,11 @@ namespace VirtoCommerce.Content.Data.Repositories
 				fs.Write(item.ByteContent, 0, item.ByteContent.Length);
 				fs.Close();
 			}
+
+			return Task.FromResult(true);
 		}
 
-		public void DeleteContentItem(string path)
+		public Task<bool> DeleteContentItem(string path)
 		{
 			var fullPath = GetFullPath(path);
 
@@ -161,6 +169,8 @@ namespace VirtoCommerce.Content.Data.Repositories
 				Directory.Delete(directoryPath, false);
 				directoryPath = newDirectoryPath;
 			}
+
+			return Task.FromResult(true);
 		}
 
 		#endregion

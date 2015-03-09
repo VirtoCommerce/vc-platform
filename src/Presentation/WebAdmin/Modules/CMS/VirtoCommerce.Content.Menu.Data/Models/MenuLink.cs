@@ -16,9 +16,17 @@ namespace VirtoCommerce.Content.Menu.Data.Models
 		}
 
 		[Required]
-		public string Name { get; set; }
+		public string Title { get; set; }
 		[Required]
-		public string Link { get; set; }
+		public string Url { get; set; }
+		[Required]
+		public string Type { get; set; }
+		[Required]
+		public bool IsActive { get; set; }
+		[Required]
+		public string Language { get; set; }
+		[Required]
+		public int Priority { get; set; }
 
 		[Required]
 		public DateTime CreatedDate { get; set; }

@@ -46,8 +46,12 @@ namespace VirtoCommerce.Content.Menu.Data.Models
 				else
 				{
 					var existingLink = this.MenuLinks.First(l => l.Id == link.Id);
-					existingLink.Link = link.Link;
-					existingLink.Name = link.Name;
+					existingLink.Url = link.Url;
+					existingLink.Title = link.Title;
+					existingLink.IsActive = link.IsActive;
+					existingLink.Language = link.Language;
+					existingLink.Priority = link.Priority;
+					existingLink.Type = link.Type;
 				}
 			}
 		}
