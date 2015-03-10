@@ -39,20 +39,21 @@ namespace VirtoCommerce.ApiClient
 
         #region Public Methods and Operators
 
-        public Task<ThemeAsset[]> GetThemeAssetsAsync(string storeId, string themeId)
+        public async Task<ThemeAsset[]> GetThemeAssetsAsync(string storeId, string themeId, DateTime since)
         {
-            return
+            var parameters = new { LastUpdateDate = since };
+            return await 
                 this.GetAsync<ThemeAsset[]>(
                     this.CreateRequestUri(
-                        String.Format(RelativePaths.ThemeAssets, storeId, themeId)));
+                        String.Format(RelativePaths.ThemeAssets, storeId, themeId), parameters));
         }
 
-        public Task<Theme[]> GetThemesAsync(string storeId)
+        public async Task<Theme[]> GetThemesAsync(string storeId)
         {
-            return
+            return await
                 this.GetAsync<Theme[]>(
                     this.CreateRequestUri(
-                        String.Format(RelativePaths.Themes, storeId)));
+                        String.Format(RelativePaths.Themes, storeId))).ConfigureAwait(false);
         }
 
         #endregion

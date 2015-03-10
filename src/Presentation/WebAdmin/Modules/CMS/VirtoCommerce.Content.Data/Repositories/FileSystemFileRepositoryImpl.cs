@@ -56,7 +56,7 @@ namespace VirtoCommerce.Content.Data.Repositories
 
 			var directories = Directory.GetDirectories(fullPath);
 
-			List<Theme> themes = new List<Theme>();
+			var themes = new List<Theme>();
 
 			foreach (var directory in directories)
 			{
@@ -88,15 +88,7 @@ namespace VirtoCommerce.Content.Data.Repositories
 		{
 			var fullPath = GetFullPath(path);
 
-			var directoriesQueue = new Queue<string>();
-
-			var files = Directory.GetFiles(fullPath);
-			var directories = Directory.GetDirectories(fullPath);
-
-			foreach (var directory in directories)
-			{
-				directoriesQueue.Enqueue(directory);
-			}
+			var files = Directory.GetFiles(fullPath, "*.*", SearchOption.AllDirectories);
 
 			if (criteria.LastUpdateDate.HasValue)
 			{
@@ -104,24 +96,6 @@ namespace VirtoCommerce.Content.Data.Repositories
 			}
 
 			var items = files.Select(file => new ContentItem { Name = Path.GetFileName(file), Path = this.RemoveBaseDirectory(file) }).ToList();
-
-			while (directoriesQueue.Count > 0)
-			{
-				var directory = directoriesQueue.Dequeue();
-				var newDirectories = Directory.GetDirectories(directory);
-				var newFiles = Directory.GetFiles(directory);
-
-				items.AddRange(newFiles.Select(file => new ContentItem
-				{
-					Name = Path.GetFileName(file),
-					Path = this.RemoveBaseDirectory(file)
-				}));
-
-				foreach (var newDirectory in newDirectories)
-				{
-					directoriesQueue.Enqueue(newDirectory);
-				}
-			}
 
 			if (criteria.LoadContent)
 			{
@@ -131,6 +105,7 @@ namespace VirtoCommerce.Content.Data.Repositories
 					file.Content = fullFile.Content;
 					file.ContentType = fullFile.ContentType;
 				});
+
 			}
 
 			return Task.FromResult(items.AsEnumerable());

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Web.Hosting;
 using VirtoCommerce.Content.Data.Converters;
@@ -70,9 +69,7 @@ namespace VirtoCommerce.Content.Data.Services
 			item.Path = FixPath(GetThemePath(storeId, themeId), item.Path);
 			item.ContentType = ContentTypeUtility.GetContentType(item.Name, item.ByteContent);
 
-			var retVal = item.AsThemeAsset();
-
-			return item.AsThemeAsset();
+            return item.AsThemeAsset();
 		}
 
 		public async Task SaveThemeAsset(string storeId, string themeId, Models.ThemeAsset asset)

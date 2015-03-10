@@ -1,12 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Web;
-using VirtoCommerce.Content.Data.Models;
 
 namespace VirtoCommerce.Content.Data.Utility
 {
@@ -18,7 +12,7 @@ namespace VirtoCommerce.Content.Data.Utility
 
 			var types = TypeInfos.Where(t => t.IsThisContentType(path, content));
 
-			if (types.Count() > 0)
+			if (types.Any())
 			{
 				retVal = types.First().ContentType;
 			}
@@ -28,16 +22,14 @@ namespace VirtoCommerce.Content.Data.Utility
 
 		public static string ContertImageToBase64String(byte[] image, string contentType)
 		{
-			var retVal = string.Empty;
+		    var retVal = string.Format("{0}{1}",
+		        string.Format(Base64StringPrefix, contentType),
+		        Convert.ToBase64String(image));
 
-			retVal = string.Format("{0}{1}",
-				string.Format(Base64StringPrefix, contentType),
-				Convert.ToBase64String(image));
-
-			return retVal;
+		    return retVal;
 		}
 
-		public static bool IsImageContentType(string contentType)
+	    public static bool IsImageContentType(string contentType)
 		{
 			return contentType.Equals("image/bmp") ||
 				contentType.Equals("image/png") ||
