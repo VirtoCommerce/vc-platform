@@ -5,6 +5,8 @@ namespace VirtoCommerce.Domain.Catalog.Model
     {
         ShortText,
         LongText,
-        Number
+        Number,
+		DateTime,
+		Boolean
     }
 }

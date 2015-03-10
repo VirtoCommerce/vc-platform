@@ -6,12 +6,6 @@ using VirtoCommerce.Content.Data.Models;
 
 namespace VirtoCommerce.Content.Data.Repositories
 {
-    #region
-
-    
-
-    #endregion
-
     public class FileSystemFileRepositoryImpl : IFileRepository
     {
         #region Fields
