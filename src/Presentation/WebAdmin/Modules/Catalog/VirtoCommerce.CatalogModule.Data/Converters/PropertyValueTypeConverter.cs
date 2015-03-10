@@ -27,7 +27,12 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
                 case foundation.PropertyValueType.ShortString:
 					retVal = module.PropertyValueType.ShortText;
                     break;
-
+				case foundation.PropertyValueType.DateTime:
+					retVal = module.PropertyValueType.DateTime;
+					break;
+				case foundation.PropertyValueType.Boolean:
+					retVal = module.PropertyValueType.Boolean;
+					break;
                 default:
 					retVal = module.PropertyValueType.ShortText;
                     break;
@@ -53,8 +58,14 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
                     retVal = foundation.PropertyValueType.LongString;
                     break;
 				case module.PropertyValueType.Number:
-                    retVal = foundation.PropertyValueType.Decimal; // ??
+                    retVal = foundation.PropertyValueType.Decimal; 
                     break;
+				case module.PropertyValueType.DateTime:
+					retVal = foundation.PropertyValueType.DateTime; 
+					break;
+				case module.PropertyValueType.Boolean:
+					retVal = foundation.PropertyValueType.Boolean; 
+					break;
             }
 
             return retVal;
