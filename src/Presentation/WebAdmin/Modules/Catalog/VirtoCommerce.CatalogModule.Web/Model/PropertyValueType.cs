@@ -12,6 +12,6 @@ namespace VirtoCommerce.CatalogModule.Web.Model
 		LongText,
 		Number,
 		DateTime,
-		Bool
+		Boolean
 	}
 }
