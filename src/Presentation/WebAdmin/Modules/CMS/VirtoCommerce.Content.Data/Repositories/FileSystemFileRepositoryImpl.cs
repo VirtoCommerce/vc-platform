@@ -1,111 +1,101 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
+using VirtoCommerce.Content.Data.Models;
 
 namespace VirtoCommerce.Content.Data.Repositories
 {
-	#region
+    #region
 
-	using System;
-	using System.Collections.Generic;
-	using System.IO;
-	using System.Text;
-	using System.Threading.Tasks;
-	using System.Web;
-	using VirtoCommerce.Content.Data.Models;
-	using VirtoCommerce.Content.Data.Utility;
+    
 
-	#endregion
+    #endregion
 
-	public class FileSystemFileRepositoryImpl : IFileRepository
-	{
-		private readonly string _baseDirectoryPath;
+    public class FileSystemFileRepositoryImpl : IFileRepository
+    {
+        #region Fields
 
-		public FileSystemFileRepositoryImpl(string baseDirectoryPath)
-		{
-			this._baseDirectoryPath = baseDirectoryPath;
-		}
+        private readonly string _baseDirectoryPath;
 
-		#region Public Methods and Operators
+        #endregion
 
+        #region Constructors and Destructors
 
-		/// <summary>
-		/// Gets content item.
-		/// </summary>
-		/// <param name="path"></param>
-		/// <returns></returns>
-		public Task<ContentItem> GetContentItem(string path)
-		{
-			var retVal = new ContentItem();
+        public FileSystemFileRepositoryImpl(string baseDirectoryPath)
+        {
+            this._baseDirectoryPath = baseDirectoryPath;
+        }
 
-			var fullPath = GetFullPath(path);
+        #endregion
 
-			var itemName = Path.GetFileName(fullPath);
-			retVal.ByteContent = File.ReadAllBytes(fullPath);
-			retVal.Name = itemName;
-			retVal.Path = path;
+        #region Public Methods and Operators
 
-			return Task.FromResult(retVal);
-		}
+        public Task<bool> DeleteContentItem(string path)
+        {
+            var fullPath = this.GetFullPath(path);
 
+            if (File.Exists(fullPath))
+            {
+                File.Delete(fullPath);
+            }
 
-		public Task<IEnumerable<Theme>> GetThemes(string storePath)
-		{
-			var fullPath = GetFullPath(storePath);
+            var directoryPath = Path.GetDirectoryName(fullPath);
+            while (Directory.GetFiles(directoryPath).Length == 0 && Directory.GetDirectories(directoryPath).Length == 0
+                && directoryPath.Contains(this._baseDirectoryPath))
+            {
+                var newDirectoryPath = Directory.GetParent(directoryPath).FullName;
+                Directory.Delete(directoryPath, false);
+                directoryPath = newDirectoryPath;
+            }
 
-			if (!Directory.Exists(fullPath))
-				return Task.FromResult(Enumerable.Empty<Theme>());
+            return Task.FromResult(true);
+        }
 
-			var directories = Directory.GetDirectories(fullPath);
+        /// <summary>
+        ///     Gets content item.
+        /// </summary>
+        /// <param name="path"></param>
+        /// <returns></returns>
+        public Task<ContentItem> GetContentItem(string path)
+        {
+            var retVal = new ContentItem();
 
-			var themes = new List<Theme>();
+            var fullPath = this.GetFullPath(path);
 
-			foreach (var directory in directories)
-			{
-				var maxModified = Directory.GetLastWriteTimeUtc(directory);
-				var directoriesQueue = new Queue<string>();
+            var itemName = Path.GetFileName(fullPath);
+            retVal.ByteContent = File.ReadAllBytes(fullPath);
+            retVal.Name = itemName;
+            retVal.Path = path;
 
-				var subDirectories = Directory.GetDirectories(directory);
+            return Task.FromResult(retVal);
+        }
 
-				foreach (var subDirectory in subDirectories)
-				{
-					directoriesQueue.Enqueue(subDirectory);
-					maxModified = Directory.GetLastWriteTimeUtc(subDirectory) < maxModified
-						? maxModified
-						: Directory.GetLastWriteTimeUtc(subDirectory);
-				}
+        public async Task<IEnumerable<ContentItem>> GetContentItems(string path, GetThemeAssetsCriteria criteria)
+        {
+            var fullPath = this.GetFullPath(path);
 
-				themes.Add(new Theme
-				{
-					Name = FixName(directory, fullPath),
-					ThemePath = RemoveBaseDirectory(directory),
-					ModifiedDate = maxModified
-				});
-			}
+            var files = Directory.GetFiles(fullPath, "*.*", SearchOption.AllDirectories);
 
-			return Task.FromResult(themes.AsEnumerable());
-		}
+            if (criteria.LastUpdateDate.HasValue)
+            {
+                files = files.Where(i => File.GetLastWriteTimeUtc(i) > criteria.LastUpdateDate.Value).ToArray();
+            }
 
-		public async Task<IEnumerable<ContentItem>> GetContentItems(string path, GetThemeAssetsCriteria criteria)
-		{
-			var fullPath = GetFullPath(path);
+            var items =
+                files.Select(
+                    file => new ContentItem { Name = Path.GetFileName(file), Path = this.RemoveBaseDirectory(file), ModifiedDate = File.GetLastWriteTimeUtc(file) })
+                    .ToList();
 
-			var files = Directory.GetFiles(fullPath, "*.*", SearchOption.AllDirectories);
-
-			if (criteria.LastUpdateDate.HasValue)
-			{
-				files = files.Where(i => File.GetLastWriteTimeUtc(i) > criteria.LastUpdateDate.Value).ToArray();
-			}
-
-			var items = files.Select(file => new ContentItem { Name = Path.GetFileName(file), Path = this.RemoveBaseDirectory(file) }).ToList();
-
-			if (criteria.LoadContent)
-			{
-			    foreach (var contentItem in items)
-			    {
-                    var fullFile = await GetContentItem(contentItem.Path);
+            if (criteria.LoadContent)
+            {
+                foreach (var contentItem in items)
+                {
+                    var fullFile = await this.GetContentItem(contentItem.Path);
                     contentItem.ByteContent = fullFile.ByteContent;
                     contentItem.Content = fullFile.Content;
                     contentItem.ContentType = fullFile.ContentType;
-			    }
+                }
 
                 /*
 				Parallel.ForEach(items, async file =>
@@ -115,64 +105,90 @@ namespace VirtoCommerce.Content.Data.Repositories
 					file.ContentType = fullFile.ContentType;
 				});
                  * */
-			}
+            }
 
-			return await Task.FromResult(items.AsEnumerable());
-		}
+            return await Task.FromResult(items.AsEnumerable());
+        }
 
-		public Task<bool> SaveContentItem(string path, ContentItem item)
-		{
-			var fullPath = GetFullPath(path);
+        public Task<IEnumerable<Theme>> GetThemes(string storePath)
+        {
+            var fullPath = this.GetFullPath(storePath);
 
-			var directoryPath = Path.GetDirectoryName(fullPath);
-			if (!Directory.Exists(directoryPath))
-			{
-				Directory.CreateDirectory(directoryPath);
-			}
+            if (!Directory.Exists(fullPath))
+            {
+                return Task.FromResult(Enumerable.Empty<Theme>());
+            }
 
-			using (var fs = new FileStream(fullPath, FileMode.Create))
-			{
-				fs.Write(item.ByteContent, 0, item.ByteContent.Length);
-				fs.Close();
-			}
+            var directories = Directory.GetDirectories(fullPath);
 
-			return Task.FromResult(true);
-		}
+            var themes = new List<Theme>();
 
-		public Task<bool> DeleteContentItem(string path)
-		{
-			var fullPath = GetFullPath(path);
+            foreach (var directory in directories)
+            {
+                var maxModified = Directory.GetLastWriteTimeUtc(directory);
+                var directoriesQueue = new Queue<string>();
 
-			if (File.Exists(fullPath))
-				File.Delete(fullPath);
+                var subDirectories = Directory.GetDirectories(directory);
 
-			var directoryPath = Path.GetDirectoryName(fullPath);
-			while (Directory.GetFiles(directoryPath).Length == 0 && Directory.GetDirectories(directoryPath).Length == 0 && directoryPath.Contains(this._baseDirectoryPath))
-			{
-				var newDirectoryPath = Directory.GetParent(directoryPath).FullName;
-				Directory.Delete(directoryPath, false);
-				directoryPath = newDirectoryPath;
-			}
+                foreach (var subDirectory in subDirectories)
+                {
+                    directoriesQueue.Enqueue(subDirectory);
+                    maxModified = Directory.GetLastWriteTimeUtc(subDirectory) < maxModified
+                        ? maxModified
+                        : Directory.GetLastWriteTimeUtc(subDirectory);
+                }
 
-			return Task.FromResult(true);
-		}
+                themes.Add(
+                    new Theme
+                    {
+                        Name = this.FixName(directory, fullPath),
+                        ThemePath = this.RemoveBaseDirectory(directory),
+                        ModifiedDate = maxModified
+                    });
+            }
 
-		#endregion
+            return Task.FromResult(themes.AsEnumerable());
+        }
 
-		private string GetFullPath(string path)
-		{
-			//return string.Format("{0}{2}", this._baseDirectoryPath, path).Replace("/", "\\");
-			return Path.Combine(this._baseDirectoryPath, path).Replace("/", "\\");
-		}
+        public Task<bool> SaveContentItem(string path, ContentItem item)
+        {
+            var fullPath = this.GetFullPath(path);
 
-		private string RemoveBaseDirectory(string path)
-		{
-			return path.Replace(this._baseDirectoryPath, string.Empty).Replace("\\", "/").TrimStart('/');
-		}
+            var directoryPath = Path.GetDirectoryName(fullPath);
+            if (!Directory.Exists(directoryPath))
+            {
+                Directory.CreateDirectory(directoryPath);
+            }
 
-		private string FixName(string path, string fullPath)
-		{
-			return path.Replace(fullPath, string.Empty).Trim('\\');
-		}
-	}
+            using (var fs = new FileStream(fullPath, FileMode.Create))
+            {
+                fs.Write(item.ByteContent, 0, item.ByteContent.Length);
+                fs.Close();
+            }
+
+            return Task.FromResult(true);
+        }
+
+        #endregion
+
+        #region Methods
+
+        private string FixName(string path, string fullPath)
+        {
+            return path.Replace(fullPath, string.Empty).Trim('\\');
+        }
+
+        private string GetFullPath(string path)
+        {
+            //return string.Format("{0}{2}", this._baseDirectoryPath, path).Replace("/", "\\");
+            return Path.Combine(this._baseDirectoryPath, path).Replace("/", "\\");
+        }
+
+        private string RemoveBaseDirectory(string path)
+        {
+            return path.Replace(this._baseDirectoryPath, string.Empty).Replace("\\", "/").TrimStart('/');
+        }
+
+        #endregion
+    }
 }

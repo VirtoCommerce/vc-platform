@@ -1,4 +1,6 @@
-﻿namespace VirtoCommerce.Content.Data.Models
+﻿using System;
+
+namespace VirtoCommerce.Content.Data.Models
 {
     public class ThemeAsset
     {
@@ -11,5 +13,6 @@
 		public byte[] ByteContent { get; set; }
 
 		public string ContentType { get; set; }
+        public DateTime Updated { get; set; }
     }
 }

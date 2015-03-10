@@ -1,5 +1,4 @@
 ﻿using VirtoCommerce.Content.Data.Models;
-using VirtoCommerce.Content.Data.Utility;
 
 namespace VirtoCommerce.Content.Data.Converters
 {
@@ -13,24 +12,16 @@ namespace VirtoCommerce.Content.Data.Converters
 
 		public static ThemeAsset AsThemeAsset(this ContentItem item)
 		{
-			var retVal = new ThemeAsset();
+            var retVal = new ThemeAsset { Id = item.Path, ByteContent = item.ByteContent, ContentType = item.ContentType, Updated = item.ModifiedDate.HasValue ? item.ModifiedDate.Value : item.CreatedDate };
 
-			retVal.Id = item.Path;
-			retVal.ByteContent = item.ByteContent;
-			retVal.ContentType = item.ContentType;
-
-			return retVal;
+		    return retVal;
 		}
 
 		public static ContentItem AsContentItem(this ThemeAsset asset)
 		{
-			var retVal = new ContentItem();
+			var retVal = new ContentItem { Path = asset.Id, ByteContent = asset.ByteContent, ContentType = asset.ContentType };
 
-			retVal.Path = asset.Id;
-			retVal.ByteContent = asset.ByteContent;
-			retVal.ContentType = asset.ContentType;
-
-			return retVal;
+		    return retVal;
 		}
 	}
 }

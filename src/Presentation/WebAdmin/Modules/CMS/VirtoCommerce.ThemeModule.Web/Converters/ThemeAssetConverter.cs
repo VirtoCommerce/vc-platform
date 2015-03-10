@@ -53,6 +53,7 @@ namespace VirtoCommerce.ThemeModule.Web.Converters
 			}
 			retVal.Id = item.Id;
 			retVal.ContentType = item.ContentType;
+            retVal.Updated = item.Updated;
 			retVal.Name = string.Join("/", item.Id.Split('/').AsEnumerable().Skip(1));
 
 			return retVal;

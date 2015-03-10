@@ -1,4 +1,6 @@
-﻿namespace VirtoCommerce.ThemeModule.Web.Models
+﻿using System;
+
+namespace VirtoCommerce.ThemeModule.Web.Models
 {
 	public class ThemeAsset
 	{
@@ -13,5 +15,7 @@
 		public string AssetUrl { get; set; }
 
 		public string ContentType { get; set; }
+
+	    public DateTime Updated { get; set; }
 	}
 }

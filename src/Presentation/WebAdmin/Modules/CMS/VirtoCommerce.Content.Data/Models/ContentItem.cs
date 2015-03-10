@@ -3,19 +3,12 @@
     #region
 
     using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using VirtoCommerce.Foundation.Frameworks;
+    using VirtoCommerce.Foundation.Frameworks;
 
     #endregion
 
     public class ContentItem : Entity, IAuditable
     {
-		public ContentItem()
-		{
-		}
-
         #region Public Properties
 
         //[Required]
