@@ -179,6 +179,10 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
 			var catalog = catalogBase as foundation.Catalog;
 			if (catalog != null)
 			{
+				if(catalog.PropertySet == null && catalog.PropertySetId != null)
+				{
+					catalog = GetCatalogById(catalogBase.CatalogId) as foundation.Catalog;
+				}
 				if (catalog.PropertySet != null)
 				{
 					retVal.AddRange(catalog.PropertySet.PropertySetProperties.Select(x => x.Property));
