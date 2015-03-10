@@ -1,8 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using VirtoCommerce.Content.Data.Models;
+using VirtoCommerce.Framework.Web.Common;
 
 namespace VirtoCommerce.Content.Data.Repositories
 {
@@ -73,12 +75,16 @@ namespace VirtoCommerce.Content.Data.Repositories
 
             if (criteria.LastUpdateDate.HasValue)
             {
-                files = files.Where(i => File.GetLastWriteTimeUtc(i) > criteria.LastUpdateDate.Value).ToArray();
+                var filterDate = criteria.LastUpdateDate.Value;
+                if (filterDate.Kind == DateTimeKind.Unspecified)
+                    filterDate = DateTime.SpecifyKind(filterDate, DateTimeKind.Utc);
+
+                files = files.Where(i => File.GetLastWriteTimeUtc(i).Truncate(TimeSpan.FromSeconds(1)) > filterDate.Truncate(TimeSpan.FromSeconds(1))).ToArray();
             }
 
             var items =
                 files.Select(
-                    file => new ContentItem { Name = Path.GetFileName(file), Path = this.RemoveBaseDirectory(file), ModifiedDate = File.GetLastWriteTimeUtc(file) })
+                    file => new ContentItem { Name = Path.GetFileName(file), Path = this.RemoveBaseDirectory(file), ModifiedDate = File.GetLastWriteTimeUtc(file).Truncate(TimeSpan.FromSeconds(1)) })
                     .ToList();
 
             if (criteria.LoadContent)

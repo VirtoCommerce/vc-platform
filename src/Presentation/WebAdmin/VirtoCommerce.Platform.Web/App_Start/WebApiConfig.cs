@@ -22,6 +22,7 @@ namespace VirtoCommerce.Platform.Web
             var formatter = config.Formatters.JsonFormatter;
             formatter.SerializerSettings.ContractResolver = new DeltaContractResolver(formatter);
             formatter.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+            formatter.SerializerSettings.DateTimeZoneHandling = DateTimeZoneHandling.Utc;
             //formatter.SerializerSettings.DefaultValueHandling = DefaultValueHandling.Ignore;
             formatter.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
 
