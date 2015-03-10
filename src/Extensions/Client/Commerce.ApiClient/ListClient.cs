@@ -42,8 +42,8 @@ namespace VirtoCommerce.ApiClient
         public Task<LinkList[]> GetLinkListsAsync(string storeId)
         {
             return
-                this.GetAsync<LinkList[]>(
-                    this.CreateRequestUri(
+                GetAsync<LinkList[]>(
+                    CreateRequestUri(
                         String.Format(RelativePaths.ListLinks, storeId)));
         }
 

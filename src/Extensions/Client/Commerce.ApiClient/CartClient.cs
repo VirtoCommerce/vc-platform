@@ -50,8 +50,8 @@ namespace VirtoCommerce.ApiClient
         public Task<ShoppingCart> GetCurrentCartAsync()
         {
             return
-                this.GetAsync<ShoppingCart>(
-                    this.CreateRequestUri(string.Format(RelativePaths.CurrentCart, "samplestore")),
+                GetAsync<ShoppingCart>(
+                    CreateRequestUri(string.Format(RelativePaths.CurrentCart, "samplestore")),
                     useCache: false); // service should already know the cart
 
             // TODO: remove storeid from the API's
@@ -59,8 +59,8 @@ namespace VirtoCommerce.ApiClient
 
         public Task<ShoppingCart> UpdateCurrentCartAsync(ShoppingCart cart)
         {
-            return this.SendAsync<ShoppingCart, ShoppingCart>(
-                this.CreateRequestUri(RelativePaths.UpdateCart),
+            return SendAsync<ShoppingCart, ShoppingCart>(
+                CreateRequestUri(RelativePaths.UpdateCart),
                 HttpMethod.Put,
                 cart);
         }

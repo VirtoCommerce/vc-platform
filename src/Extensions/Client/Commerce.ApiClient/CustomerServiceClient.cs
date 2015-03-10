@@ -26,15 +26,15 @@ namespace VirtoCommerce.ApiClient
 
         public Task<Contact> GetContactByIdAsync(string customerId)
         {
-            return this.GetAsync<Contact>(
-                this.CreateRequestUri(string.Format(RelativePaths.GetContactById, customerId)),
+            return GetAsync<Contact>(
+                CreateRequestUri(string.Format(RelativePaths.GetContactById, customerId)),
                 useCache: false);
         }
 
         public Task<Contact> UpdateContactAsync(Contact contact)
         {
-            return this.SendAsync<Contact>(
-                this.CreateRequestUri(RelativePaths.SendContant),
+            return SendAsync<Contact>(
+                CreateRequestUri(RelativePaths.SendContant),
                 HttpMethod.Put);
         }
 

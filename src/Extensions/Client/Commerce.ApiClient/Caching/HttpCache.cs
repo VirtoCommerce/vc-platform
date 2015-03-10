@@ -11,11 +11,11 @@ namespace VirtoCommerce.ApiClient.Caching
         #region Fields
 
         public Dictionary<HttpMethod, object> CacheableMethods = new Dictionary<HttpMethod, object>
-                                                                 {
-                                                                     { HttpMethod.Get, null },
-                                                                     { HttpMethod.Head, null },
-                                                                     { HttpMethod.Post, null }
-                                                                 };
+        {
+            { HttpMethod.Get, null },
+            { HttpMethod.Head, null },
+            { HttpMethod.Post, null }
+        };
 
         public Func<HttpResponseMessage, bool> StoreBasedOnHeuristics = (r) => false;
         private readonly IContentStore _contentStore;
@@ -26,7 +26,7 @@ namespace VirtoCommerce.ApiClient.Caching
 
         public HttpCache(IContentStore contentStore)
         {
-            this._contentStore = contentStore;
+            _contentStore = contentStore;
         }
 
         #endregion
@@ -72,7 +72,7 @@ namespace VirtoCommerce.ApiClient.Caching
         public bool CanStore(HttpResponseMessage response)
         {
             // Only cache responses from methods that allow their responses to be cached
-            if (!this.CacheableMethods.ContainsKey(response.RequestMessage.Method))
+            if (!CacheableMethods.ContainsKey(response.RequestMessage.Method))
             {
                 return false;
             }
@@ -115,7 +115,7 @@ namespace VirtoCommerce.ApiClient.Caching
                 sc == 404 || sc == 405 || sc == 410 ||
                 sc == 414 || sc == 501)
             {
-                return this.StoreBasedOnHeuristics(response);
+                return StoreBasedOnHeuristics(response);
             }
 
             return false;
@@ -125,7 +125,7 @@ namespace VirtoCommerce.ApiClient.Caching
         {
             // Do we have anything stored for this method and URI?
             var cacheEntry =
-                await this._contentStore.GetEntryAsync(new PrimaryCacheKey(request.RequestUri, request.Method));
+                await _contentStore.GetEntryAsync(new PrimaryCacheKey(request.RequestUri, request.Method));
             if (cacheEntry == null)
             {
                 return CacheQueryResult.CannotUseCache();
@@ -137,7 +137,7 @@ namespace VirtoCommerce.ApiClient.Caching
             {
                 return CacheQueryResult.CannotUseCache();
             }
-            var selectedResponse = await this._contentStore.GetContentAsync(cacheEntry, secondaryKey);
+            var selectedResponse = await _contentStore.GetContentAsync(cacheEntry, secondaryKey);
             if (selectedResponse == null)
             {
                 return CacheQueryResult.CannotUseCache();
@@ -198,11 +198,11 @@ namespace VirtoCommerce.ApiClient.Caching
                 response.RequestMessage.RequestUri,
                 response.RequestMessage.Method);
 
-            var cacheEntry = await this._contentStore.GetEntryAsync(primaryCacheKey)
+            var cacheEntry = await _contentStore.GetEntryAsync(primaryCacheKey)
                 ?? new CacheEntry(primaryCacheKey, response.Headers.Vary);
 
             var content = cacheEntry.CreateContent(response);
-            await this._contentStore.UpdateEntryAsync(content);
+            await _contentStore.UpdateEntryAsync(content);
         }
 
         public async Task UpdateContentAsync(HttpResponseMessage notModifiedResponse, CacheContent cacheContent)
@@ -214,7 +214,7 @@ namespace VirtoCommerce.ApiClient.Caching
             }
             //TODO Copy headers from notModifiedResponse to cacheContent
 
-            await this._contentStore.UpdateEntryAsync(cacheContent);
+            await _contentStore.UpdateEntryAsync(cacheContent);
         }
 
         #endregion

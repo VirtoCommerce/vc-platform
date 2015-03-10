@@ -47,13 +47,13 @@ namespace VirtoCommerce.ApiClient
         /// <param name="handler">Message processing handler</param>
         public BaseClient(Uri baseEndpoint, HttpMessageHandler handler = null)
         {
-            this.BaseAddress = baseEndpoint;
+            BaseAddress = baseEndpoint;
             var httpCache = new HttpCache(_store);
             var cachingHandler = new PrivateCacheHandler(handler ?? new HttpClientHandler(), httpCache);
 
             //httpClient = HttpClientFactory.Create(caheHandler);
-            this.httpClient = new HttpClient(cachingHandler);
-            this.disposed = false;
+            httpClient = new HttpClient(cachingHandler);
+            disposed = false;
         }
 
         #endregion
@@ -77,7 +77,7 @@ namespace VirtoCommerce.ApiClient
         /// </summary>
         public void Dispose()
         {
-            this.Dispose(true);
+            Dispose(true);
             GC.SuppressFinalize(this);
         }
 
@@ -97,7 +97,7 @@ namespace VirtoCommerce.ApiClient
 
             if (queryStringParameters != null && queryStringParameters.Length > 0)
             {
-                var queryStringProperties = HttpUtility.ParseQueryString(this.BaseAddress.Query);
+                var queryStringProperties = HttpUtility.ParseQueryString(BaseAddress.Query);
                 foreach (var queryStringParameter in queryStringParameters)
                 {
                     queryStringProperties[queryStringParameter.Key] = queryStringParameter.Value;
@@ -117,7 +117,7 @@ namespace VirtoCommerce.ApiClient
                 queryStringParameters.ToPropertyDictionary()
                     .Select(x => new KeyValuePair<string, string>(x.Key, x.Value.ToNullOrString()))
                     .ToArray();
-            return this.CreateRequestUri(relativePath, parameters);
+            return CreateRequestUri(relativePath, parameters);
         }
 
         /// <summary>
@@ -128,7 +128,7 @@ namespace VirtoCommerce.ApiClient
         /// <returns>Request URI</returns>
         protected Uri CreateRequestUri(string relativePath, string queryString)
         {
-            var endpoint = new Uri(this.BaseAddress, relativePath);
+            var endpoint = new Uri(BaseAddress, relativePath);
             var uriBuilder = new UriBuilder(endpoint) { Query = queryString };
             return uriBuilder.Uri;
         }
@@ -140,13 +140,13 @@ namespace VirtoCommerce.ApiClient
         {
             if (disposing)
             {
-                if (!this.disposed)
+                if (!disposed)
                 {
-                    this.httpClient.Dispose();
+                    httpClient.Dispose();
                 }
             }
 
-            this.disposed = true;
+            disposed = true;
         }
 
         /*
@@ -180,9 +180,9 @@ namespace VirtoCommerce.ApiClient
                 message.Headers.Add(Constants.Headers.PrincipalId, HttpUtility.UrlEncode(userId));
             }
 
-            using (var response = await this.httpClient.SendAsync(message))
+            using (var response = await httpClient.SendAsync(message))
             {
-                await this.ThrowIfResponseNotSuccessfulAsync(response);
+                await ThrowIfResponseNotSuccessfulAsync(response);
 
                 return await response.Content.ReadAsAsync<T>();
             }
@@ -214,7 +214,7 @@ namespace VirtoCommerce.ApiClient
         protected Task<TOutput> SendAsync<TOutput>(Uri requestUri, HttpMethod httpMethod, string userId = null)
         {
             var message = new HttpRequestMessage(httpMethod, requestUri);
-            return this.SendAsync<TOutput>(message, true, userId);
+            return SendAsync<TOutput>(message, true, userId);
         }
 
         /// <summary>
@@ -227,7 +227,7 @@ namespace VirtoCommerce.ApiClient
         /// <param name="userId">The user id. Only required by the tenant API.</param>
         protected Task SendAsync<TInput>(Uri requestUri, HttpMethod httpMethod, TInput body, string userId = null)
         {
-            return this.SendAsync<TInput, object>(requestUri, httpMethod, body, userId);
+            return SendAsync<TInput, object>(requestUri, httpMethod, body, userId);
         }
 
         /// <summary>
@@ -246,29 +246,29 @@ namespace VirtoCommerce.ApiClient
             string userId = null)
         {
             var message = new HttpRequestMessage(httpMethod, requestUri)
-                          {
-                              Content =
-                                  new ObjectContent<TInput>(
-                                  body,
-                                  this.CreateMediaTypeFormatter())
-                          };
+            {
+                Content =
+                    new ObjectContent<TInput>(
+                        body,
+                        CreateMediaTypeFormatter())
+            };
 
-            return this.SendAsync<TOutput>(message, true, userId);
+            return SendAsync<TOutput>(message, true, userId);
         }
 
         private MediaTypeFormatter CreateMediaTypeFormatter()
         {
             //MediaTypeFormatter formatter;
             var formatter = new JsonMediaTypeFormatter
-                            {
-                                SerializerSettings =
-                                {
-                                    DefaultValueHandling =
-                                        DefaultValueHandling.Ignore,
-                                    NullValueHandling =
-                                        NullValueHandling.Ignore
-                                }
-                            };
+            {
+                SerializerSettings =
+                {
+                    DefaultValueHandling =
+                        DefaultValueHandling.Ignore,
+                    NullValueHandling =
+                        NullValueHandling.Ignore
+                }
+            };
 
             return formatter;
         }
@@ -280,9 +280,9 @@ namespace VirtoCommerce.ApiClient
                 message.Headers.Add(Constants.Headers.PrincipalId, userId);
             }
 
-            using (var response = await this.httpClient.SendAsync(message).ConfigureAwait(false))
+            using (var response = await httpClient.SendAsync(message).ConfigureAwait(false))
             {
-                await this.ThrowIfResponseNotSuccessfulAsync(response);
+                await ThrowIfResponseNotSuccessfulAsync(response);
 
                 if (!hasResult)
                 {

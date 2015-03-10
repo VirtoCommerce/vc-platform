@@ -88,18 +88,18 @@ namespace VirtoCommerce.ApiClient.DataContracts
         public override string ToString()
         {
             var builder = new StringBuilder();
-            builder.Append(this.Search);
-            builder.Append(this.Skip);
-            builder.Append(this.Take);
-            builder.Append(this.Outline);
-            builder.Append(this.SortProperty);
+            builder.Append(Search);
+            builder.Append(Skip);
+            builder.Append(Take);
+            builder.Append(Outline);
+            builder.Append(SortProperty);
 
-            if (this.PriceLists != null)
+            if (PriceLists != null)
             {
-                builder.Append(string.Join(",", this.PriceLists));
+                builder.Append(string.Join(",", PriceLists));
             }
 
-            foreach (var facet in this.Filters)
+            foreach (var facet in Filters)
             {
                 builder.Append(facet);
             }

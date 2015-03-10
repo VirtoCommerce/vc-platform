@@ -20,10 +20,10 @@ namespace VirtoCommerce.ApiClient.Caching
 
         public async Task<CacheContent> GetContentAsync(CacheEntry cacheEntry, string secondaryKey)
         {
-            var inMemoryCacheEntry = this._responseCache[cacheEntry.Key];
+            var inMemoryCacheEntry = _responseCache[cacheEntry.Key];
             if (inMemoryCacheEntry.Responses.ContainsKey(secondaryKey))
             {
-                return await this.CloneAsync(inMemoryCacheEntry.Responses[secondaryKey]);
+                return await CloneAsync(inMemoryCacheEntry.Responses[secondaryKey]);
             }
 
             return null;
@@ -34,9 +34,9 @@ namespace VirtoCommerce.ApiClient.Caching
             // NB: Task.FromResult doesn't exist in MS.BCL.Async
             var ret = new TaskCompletionSource<CacheEntry>();
 
-            if (this._responseCache.ContainsKey(cacheKey))
+            if (_responseCache.ContainsKey(cacheKey))
             {
-                ret.SetResult(this._responseCache[cacheKey].CacheEntry);
+                ret.SetResult(_responseCache[cacheKey].CacheEntry);
             }
             else
             {
@@ -52,21 +52,21 @@ namespace VirtoCommerce.ApiClient.Caching
 
             InMemoryCacheEntry inMemoryCacheEntry = null;
 
-            if (!this._responseCache.ContainsKey(entry.Key))
+            if (!_responseCache.ContainsKey(entry.Key))
             {
                 inMemoryCacheEntry = new InMemoryCacheEntry(entry);
-                lock (this.syncRoot)
+                lock (syncRoot)
                 {
-                    this._responseCache[entry.Key] = inMemoryCacheEntry;
+                    _responseCache[entry.Key] = inMemoryCacheEntry;
                 }
             }
             else
             {
-                inMemoryCacheEntry = this._responseCache[entry.Key];
+                inMemoryCacheEntry = _responseCache[entry.Key];
             }
 
-            var newContent = await this.CloneAsync(content);
-            lock (this.syncRoot)
+            var newContent = await CloneAsync(content);
+            lock (syncRoot)
             {
                 inMemoryCacheEntry.Responses[content.Key] = newContent;
             }
@@ -98,14 +98,14 @@ namespace VirtoCommerce.ApiClient.Caching
             }
 
             var newContent = new CacheContent()
-                             {
-                                 CacheEntry = cacheContent.CacheEntry,
-                                 Key = cacheContent.Key,
-                                 Expires = cacheContent.Expires,
-                                 HasValidator = cacheContent.HasValidator,
-                                 CacheControl = cacheContent.CacheControl,
-                                 Response = newResponse
-                             };
+            {
+                CacheEntry = cacheContent.CacheEntry,
+                Key = cacheContent.Key,
+                Expires = cacheContent.Expires,
+                HasValidator = cacheContent.HasValidator,
+                CacheControl = cacheContent.CacheControl,
+                Response = newResponse
+            };
 
             return newContent;
         }
@@ -119,8 +119,8 @@ namespace VirtoCommerce.ApiClient.Caching
 
         public InMemoryCacheEntry(CacheEntry cacheEntry)
         {
-            this.CacheEntry = cacheEntry;
-            this.Responses = new Dictionary<string, CacheContent>();
+            CacheEntry = cacheEntry;
+            Responses = new Dictionary<string, CacheContent>();
         }
 
         #endregion

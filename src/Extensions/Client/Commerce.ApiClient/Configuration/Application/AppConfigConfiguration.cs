@@ -277,7 +277,7 @@ namespace VirtoCommerce.ApiClient.Configuration.Application
                 {
                     base.BaseRemoveAt(index);
                 }
-                this.BaseAdd(index, value);
+                BaseAdd(index, value);
             }
         }
 

@@ -16,11 +16,11 @@ namespace VirtoCommerce.ApiClient.Caching
 
         public PrimaryCacheKey(Uri uri, HttpMethod method)
         {
-            this._uri = uri;
-            this._method = method;
-            if (this._method == HttpMethod.Post) // A response to a POST can be returned to a GET method
+            _uri = uri;
+            _method = method;
+            if (_method == HttpMethod.Post) // A response to a POST can be returned to a GET method
             {
-                this._method = HttpMethod.Get;
+                _method = HttpMethod.Get;
             }
         }
 
@@ -31,14 +31,14 @@ namespace VirtoCommerce.ApiClient.Caching
         public override bool Equals(object obj)
         {
             var key2 = (PrimaryCacheKey)obj;
-            return key2._uri == this._uri && key2._method == this._method;
+            return key2._uri == _uri && key2._method == _method;
         }
 
         public override int GetHashCode()
         {
             var hash = 13;
-            hash = (hash * 7) + this._uri.GetHashCode();
-            hash = (hash * 7) + this._method.GetHashCode();
+            hash = (hash * 7) + _uri.GetHashCode();
+            hash = (hash * 7) + _method.GetHashCode();
             return hash;
         }
 

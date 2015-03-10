@@ -50,7 +50,7 @@ namespace VirtoCommerce.ApiClient
         {
             var parameters = new { store, language, parentId };
             return
-                await this.GetAsync<ResponseCollection<Category>>(
+                await GetAsync<ResponseCollection<Category>>(
                     CreateRequestUri(RelativePaths.Categories, parameters)).ConfigureAwait(false);
         }
 
@@ -59,7 +59,7 @@ namespace VirtoCommerce.ApiClient
             var parameters = new { store, language };
             return
                 await
-                    this.GetAsync<Category>(
+                    GetAsync<Category>(
                         CreateRequestUri(String.Format(RelativePaths.Category, categoryId), parameters))
                         .ConfigureAwait(false);
         }
@@ -69,7 +69,7 @@ namespace VirtoCommerce.ApiClient
             var parameters = new { store, language, code };
             return
                 await
-                    this.GetAsync<Category>(CreateRequestUri(RelativePaths.Categories, parameters))
+                    GetAsync<Category>(CreateRequestUri(RelativePaths.Categories, parameters))
                         .ConfigureAwait(false);
         }
 
@@ -78,7 +78,7 @@ namespace VirtoCommerce.ApiClient
             var parameters = new { store, language, keyword };
             return
                 await
-                    this.GetAsync<Category>(CreateRequestUri(RelativePaths.Categories, parameters))
+                    GetAsync<Category>(CreateRequestUri(RelativePaths.Categories, parameters))
                         .ConfigureAwait(false);
         }
 
@@ -87,7 +87,7 @@ namespace VirtoCommerce.ApiClient
             var parameters = new { store, language };
             return
                 await
-                    this.GetAsync<Product>(
+                    GetAsync<Product>(
                         CreateRequestUri(String.Format(RelativePaths.Product, productId), parameters))
                         .ConfigureAwait(false);
         }
@@ -107,7 +107,7 @@ namespace VirtoCommerce.ApiClient
                 };
 
             return await
-                this.GetAsync<Product>(
+                GetAsync<Product>(
                     CreateRequestUri(String.Format(RelativePaths.Product, productId), parameters)).ConfigureAwait(false);
         }
 
@@ -116,7 +116,7 @@ namespace VirtoCommerce.ApiClient
             var parameters = new { store, language, code };
             return
                 await
-                    this.GetAsync<Product>((CreateRequestUri(RelativePaths.Products, parameters))).ConfigureAwait(false);
+                    GetAsync<Product>((CreateRequestUri(RelativePaths.Products, parameters))).ConfigureAwait(false);
         }
 
         public virtual async Task<Product> GetProductByCodeAsync(
@@ -126,24 +126,24 @@ namespace VirtoCommerce.ApiClient
             ItemResponseGroups responseGroup)
         {
             var parameters = new
-                             {
-                                 store,
-                                 language,
-                                 code,
-                                 responseGroup = responseGroup.GetHashCode()
-                                     .ToString(CultureInfo.InvariantCulture)
-                             };
+            {
+                store,
+                language,
+                code,
+                responseGroup = responseGroup.GetHashCode()
+                    .ToString(CultureInfo.InvariantCulture)
+            };
 
             return
                 await
-                    this.GetAsync<Product>((CreateRequestUri(RelativePaths.Products, parameters))).ConfigureAwait(false);
+                    GetAsync<Product>((CreateRequestUri(RelativePaths.Products, parameters))).ConfigureAwait(false);
         }
 
         public virtual async Task<Product> GetProductByKeywordAsync(string store, string language, string keyword)
         {
             var parameters = new { store, language, keyword };
             return
-                await this.GetAsync<Product>(CreateRequestUri(RelativePaths.Products, parameters)).ConfigureAwait(false);
+                await GetAsync<Product>(CreateRequestUri(RelativePaths.Products, parameters)).ConfigureAwait(false);
         }
 
         public virtual async Task<Product> GetProductByKeywordAsync(
@@ -153,17 +153,17 @@ namespace VirtoCommerce.ApiClient
             ItemResponseGroups responseGroup)
         {
             var parameters = new
-                             {
-                                 store,
-                                 language,
-                                 keyword,
-                                 responseGroup = responseGroup.GetHashCode()
-                                     .ToString(CultureInfo.InvariantCulture)
-                             };
+            {
+                store,
+                language,
+                keyword,
+                responseGroup = responseGroup.GetHashCode()
+                    .ToString(CultureInfo.InvariantCulture)
+            };
 
             return
                 await
-                    this.GetAsync<Product>((CreateRequestUri(RelativePaths.Products, parameters))).ConfigureAwait(false);
+                    GetAsync<Product>((CreateRequestUri(RelativePaths.Products, parameters))).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -176,14 +176,14 @@ namespace VirtoCommerce.ApiClient
             ItemResponseGroups? responseGroup = null)
         {
             var parameters = new
-                             {
-                                 store,
-                                 language,
-                                 responseGroup = responseGroup.GetHashCode()
-                                     .ToString(CultureInfo.InvariantCulture)
-                             };
+            {
+                store,
+                language,
+                responseGroup = responseGroup.GetHashCode()
+                    .ToString(CultureInfo.InvariantCulture)
+            };
             return
-                await this.GetAsync<ProductSearchResult>(
+                await GetAsync<ProductSearchResult>(
                     CreateRequestUri(RelativePaths.Products, query.GetQueryString(parameters))).ConfigureAwait(false);
         }
 

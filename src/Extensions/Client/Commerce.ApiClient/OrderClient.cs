@@ -27,8 +27,8 @@ namespace VirtoCommerce.ApiClient
 
         public Task<CustomerOrder> GetCustomerOrderAsync(string customerId, string orderId)
         {
-            return this.GetAsync<CustomerOrder>(
-                this.CreateRequestUri(string.Format(RelativePaths.GetSingleOrder, orderId)),
+            return GetAsync<CustomerOrder>(
+                CreateRequestUri(string.Format(RelativePaths.GetSingleOrder, orderId)),
                 userId: customerId,
                 useCache: false);
         }
@@ -47,8 +47,8 @@ namespace VirtoCommerce.ApiClient
             queryStringParameters.Add(new KeyValuePair<string, string>("start", skip.ToString()));
             queryStringParameters.Add(new KeyValuePair<string, string>("count", take.ToString()));
 
-            return this.GetAsync<OrderSearchResult>(
-                this.CreateRequestUri(RelativePaths.GetMultipleOrders, queryStringParameters.ToArray()),
+            return GetAsync<OrderSearchResult>(
+                CreateRequestUri(RelativePaths.GetMultipleOrders, queryStringParameters.ToArray()),
                 userId: customerId,
                 useCache: false);
         }

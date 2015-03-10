@@ -12,8 +12,8 @@ namespace VirtoCommerce.ApiClient.Caching
 
         internal CacheEntry(PrimaryCacheKey key, HttpHeaderValueCollection<string> varyHeaders)
         {
-            this.Key = key;
-            this.VaryHeaders = varyHeaders;
+            Key = key;
+            VaryHeaders = varyHeaders;
         }
 
         #endregion
@@ -30,22 +30,22 @@ namespace VirtoCommerce.ApiClient.Caching
         public CacheContent CreateContent(HttpResponseMessage response)
         {
             return new CacheContent()
-                   {
-                       CacheEntry = this,
-                       Key = this.CreateSecondaryKey(response.RequestMessage),
-                       HasValidator =
-                           response.Headers.ETag != null
-                               || (response.Content != null && response.Content.Headers.LastModified != null),
-                       Expires = HttpCache.GetExpireDate(response),
-                       CacheControl = response.Headers.CacheControl ?? new CacheControlHeaderValue(),
-                       Response = response,
-                   };
+            {
+                CacheEntry = this,
+                Key = CreateSecondaryKey(response.RequestMessage),
+                HasValidator =
+                    response.Headers.ETag != null
+                        || (response.Content != null && response.Content.Headers.LastModified != null),
+                Expires = HttpCache.GetExpireDate(response),
+                CacheControl = response.Headers.CacheControl ?? new CacheControlHeaderValue(),
+                Response = response,
+            };
         }
 
         public string CreateSecondaryKey(HttpRequestMessage request)
         {
             var key = new StringBuilder();
-            foreach (var h in this.VaryHeaders.OrderBy(v => v))
+            foreach (var h in VaryHeaders.OrderBy(v => v))
                 // Sort the vary headers so that ordering doesn't generate different stored variants
             {
                 if (h != "*")

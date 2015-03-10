@@ -36,7 +36,7 @@ namespace VirtoCommerce.ApiClient
         {
             var parameters = new { catalog, currency };
             return
-                this.GetAsync<string[]>(
+                GetAsync<string[]>(
                     CreateRequestUri(
                         String.Format(RelativePaths.PriceLists),
                         query.GetQueryString(parameters)));
@@ -49,7 +49,7 @@ namespace VirtoCommerce.ApiClient
         {
             var parameters = new { priceLists = string.Join(",", priceLists), products = string.Join(",", products) };
             return
-                this.GetAsync<Price[]>(
+                GetAsync<Price[]>(
                     CreateRequestUri(
                         String.Format(RelativePaths.Prices),
                         parameters),
