@@ -84,7 +84,7 @@ namespace VirtoCommerce.Content.Data.Repositories
 			return Task.FromResult(themes.AsEnumerable());
 		}
 
-		public Task<IEnumerable<ContentItem>> GetContentItems(string path, GetThemeAssetsCriteria criteria)
+		public async Task<IEnumerable<ContentItem>> GetContentItems(string path, GetThemeAssetsCriteria criteria)
 		{
 			var fullPath = GetFullPath(path);
 
@@ -99,16 +99,25 @@ namespace VirtoCommerce.Content.Data.Repositories
 
 			if (criteria.LoadContent)
 			{
+			    foreach (var contentItem in items)
+			    {
+                    var fullFile = await GetContentItem(contentItem.Path);
+                    contentItem.ByteContent = fullFile.ByteContent;
+                    contentItem.Content = fullFile.Content;
+                    contentItem.ContentType = fullFile.ContentType;
+			    }
+
+                /*
 				Parallel.ForEach(items, async file =>
 				{
 					var fullFile = await GetContentItem(file.Path);
 					file.Content = fullFile.Content;
 					file.ContentType = fullFile.ContentType;
 				});
-
+                 * */
 			}
 
-			return Task.FromResult(items.AsEnumerable());
+			return await Task.FromResult(items.AsEnumerable());
 		}
 
 		public Task<bool> SaveContentItem(string path, ContentItem item)
