@@ -51,11 +51,10 @@ namespace VirtoCommerce.CustomerModule.Data.Services
 					query = query.Where(x => x.MemberRelations.Any(y=>y.AncestorId == criteria.OrganizationId));
 				}
 
-				var ids = query.Select(x => x.MemberId).ToArray();
-
 				result.Organizations = query.OrderByDescending(x => x.Name)
-															   .Select(x=>x.ToCoreModel())
-															   .ToList();
+										    .ToArray()
+											.Select(x=>x.ToCoreModel())
+											.ToList();
 			}
 		}
 
@@ -74,6 +73,7 @@ namespace VirtoCommerce.CustomerModule.Data.Services
 				result.Contacts = query.OrderBy(x => x.FullName)
 								   .Skip(criteria.Start)
 								   .Take(criteria.Count)
+								   .ToArray()
 								   .Select(x => x.ToCoreModel())
 								   .ToList();
 			}

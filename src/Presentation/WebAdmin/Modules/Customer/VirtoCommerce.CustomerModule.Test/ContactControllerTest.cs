@@ -22,16 +22,41 @@ namespace VirtoCommerce.CustomerModule.Test
 			var result = controller.Search(new SearchCriteria()) as OkNegotiatedContentResult<SearchResult>;
 			Assert.IsNotNull(result.Content);
 		}
-		
+
+		[TestMethod]
+		public void CreateNewOrganization()
+		{
+			var controller = GetContactController();
+			var org = new webModel.Organization
+			{
+				Id = "org2",
+				BusinessCategory = "cat2",
+				Name = "organization 2",
+				ParentId = "org1"
+
+
+			};
+			var result = controller.CreateOrganization(org) as OkNegotiatedContentResult<webModel.Organization>;
+			Assert.IsNotNull(result.Content);
+		}
+
+		[TestMethod]
+		public void SearchTest()
+		{
+			var controller = GetContactController();
+			var result = controller.Search(new webModel.SearchCriteria { OrganizationId = "org1" }) as OkNegotiatedContentResult<webModel.SearchResult>;
+		}
+
 		[TestMethod]
 		public void CreateNewContact()
 		{
 			var controller = GetContactController();
 			var contact = new webModel.Contact
 			{
-				 Id = "testContact",
-				 FullName = "Vasa",
+				 Id = "testContact1",
+				 FullName = "Vasa2",
 				 BirthDate = DateTime.UtcNow,
+				 Organizations = new webModel.Organization[] { new webModel.Organization { Id = "org1" } }, 
 				 Addresses = new webModel.Address[]
 				{
 					new webModel.Address {	
