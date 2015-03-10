@@ -57,6 +57,8 @@
         var changes = { id: $scope.currentBlade.item.id, name: $scope.currentBlade.item.name, titularItemId: $scope.currentBlade.item.titularItemId, code: $scope.currentBlade.item.code };
         items.updateitem({}, $scope.currentBlade.item, function (data, headers) {
             $scope.currentBlade.refresh(true);
+        }, function (error) {
+            bladeNavigationService.setError('Error ' + error.status, $scope.blade);
         });
     };
 

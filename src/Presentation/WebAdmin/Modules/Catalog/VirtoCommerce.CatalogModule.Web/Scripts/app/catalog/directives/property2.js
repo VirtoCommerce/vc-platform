@@ -168,6 +168,30 @@
                 });
             };
 
+            /* Datepicker */
+            scope.today = function() {
+                scope.currentEntity.valueType = new Date();
+            };
+            scope.today();
+            
+            scope.clear = function () {
+                scope.currentEntity.valueType = null;
+            };
+
+            scope.open = function($event) {
+                $event.preventDefault();
+                $event.stopPropagation();
+
+                scope.opened = true;
+            };
+
+            scope.dateOptions = {
+                formatYear: 'yy',
+            };
+
+            scope.formats = ['dd-MMMM-yyyy', 'yyyy/MM/dd', 'dd.MM.yyyy', 'shortDate'];
+            scope.format = scope.formats[0];
+
             linker(function (clone) {
                 element.append(clone);
             });
