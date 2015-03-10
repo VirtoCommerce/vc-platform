@@ -25,7 +25,7 @@ namespace VirtoCommerce.MenuModule.Web.Controllers.Api
 
 		[HttpGet]
 		[ResponseType(typeof(IEnumerable<MenuLinkList>))]
-        [ClientCache(Duration = 30)]
+		[ClientCache(Duration = 30)]
 		[Route("menu")]
 		public IHttpActionResult GetLists(string storeId)
 		{

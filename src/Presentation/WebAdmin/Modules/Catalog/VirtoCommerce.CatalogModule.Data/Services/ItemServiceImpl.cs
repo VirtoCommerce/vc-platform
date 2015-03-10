@@ -109,8 +109,7 @@ namespace VirtoCommerce.CatalogModule.Data.Services
                     }
 
                     var associatedProducts = new List<module.CatalogProduct>();
-                    if ((respGroup & module.ItemResponseGroup.ItemAssociations)
-                        == module.ItemResponseGroup.ItemAssociations)
+                    if ((respGroup & module.ItemResponseGroup.ItemAssociations) == module.ItemResponseGroup.ItemAssociations)
                     {
                         if (dbItem.AssociationGroups.Any())
                         {

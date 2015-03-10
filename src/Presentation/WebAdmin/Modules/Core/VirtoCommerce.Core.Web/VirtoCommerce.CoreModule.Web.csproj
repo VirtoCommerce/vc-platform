@@ -146,6 +146,13 @@
     <Content Include="Scripts\common\resources\countries.js" />
     <Content Include="Scripts\common\resources\fulfillments.js" />
     <Content Include="Scripts\common\resources\paymentgateways.js" />
+    <Content Include="Scripts\Fulfillment\blades\%24fulfillment-center-list.js" />
+    <Content Include="Scripts\Fulfillment\blades\%24fulfillment-center-list.tpl.html" />
+    <Content Include="Scripts\Fulfillment\blades\fulfillment-center-detail.js" />
+    <Content Include="Scripts\Fulfillment\blades\fulfillment-center-detail.tpl.html" />
+    <Content Include="Scripts\Fulfillment\fulfillment.js" />
+    <Content Include="Scripts\Fulfillment\widgets\fulfillmentWidget.js" />
+    <Content Include="Scripts\Fulfillment\widgets\fulfillmentWidget.tpl.html" />
     <Content Include="Scripts\Settings\blades\settings-detail.js" />
     <Content Include="Scripts\Settings\blades\settings-detail.tpl.html" />
     <Content Include="Scripts\Settings\blades\%24settings-list.js" />

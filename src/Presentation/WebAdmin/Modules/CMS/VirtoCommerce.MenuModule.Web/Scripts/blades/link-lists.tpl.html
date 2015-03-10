@@ -5,20 +5,19 @@
 				<table class="table">
 					<thead>
 						<tr>
-							<th class="table-col">Name</th>
 							<th class="table-col">Language</th>
+							<th class="table-col">Name</th>
 						</tr>
 					</thead>
 					<tbody>
 						<tr class="table-item" ng-repeat="data in blade.currentEntities" ng-click='blade.openBlade(data)'>
-							<td class="table-col">
-								<span>
-									{{data.name}}
-								</span>
+							<td class="table-col __date">
+								<span class="flag flag-{{blade.getFlag(data.language)}}"></span>
+								<span>{{data.language}}</span>
 							</td>
 							<td class="table-col">
 								<span>
-									{{data.language}}
+									{{data.name}}
 								</span>
 							</td>
 						</tr>

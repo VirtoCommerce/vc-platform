@@ -20,6 +20,7 @@
 				executeMethod: function () {
 					var newEntity = { id: uuid2.newguid(), url: undefined, title: undefined, type: undefined, priority: 0, isActive: false, language: undefined, menuLinkListId: blade.choosenListId };
 					blade.currentEntity.menuLinks.push(newEntity);
+					blade.recalculatePriority();
 				},
 				canExecuteMethod: function () {
 					return true;
@@ -41,6 +42,7 @@
 		else {
 			blade.isLoading = true;
 			menus.getList({ storeId: blade.choosenStoreId, listId: blade.choosenListId }, function (data) {
+				data.menuLinks = _.sortBy(data.menuLinks, 'priority').reverse();
 				blade.origEntity = data;
 				blade.currentEntity = angular.copy(data);
 				blade.isLoading = false;
@@ -50,6 +52,7 @@
 					executeMethod: function () {
 						var newEntity = { id: uuid2.newguid(), url: undefined, title: undefined, isActive: false, priority: 0, menuLinkListId: blade.choosenListId };
 						blade.currentEntity.menuLinks.push(newEntity);
+						blade.recalculatePriority();
 					},
 					canExecuteMethod: function () {
 						return true;
@@ -152,8 +155,14 @@
 		}
 	}
 
-	blade.selectItem = function(id) {
+	blade.selectItem = function (id) {
 		blade.selectedItemIds.push(id);
+	}
+
+	blade.recalculatePriority = function () {
+		for (var i = 0; i < blade.currentEntity.menuLinks.length; i++) {
+			blade.currentEntity.menuLinks[i].priority = (blade.currentEntity.menuLinks.length - 1 - i) * 10;
+		}
 	}
 
 	$scope.deleteLink = function (data) {
@@ -164,5 +173,38 @@
 				});
 	};
 
+	blade.getFlag = function (lang) {
+		switch (lang) {
+			case 'ru-RU':
+				return 'ru';
+
+			case 'en-US':
+				return 'us';
+
+			case 'fr-FR':
+				return 'fr';
+
+			case 'zh-CN':
+				return 'ch';
+
+			case 'ru-RU':
+				return 'ru';
+
+			case 'ja-JP':
+				return 'ja';
+		}
+	}
+
 	$scope.bladeHeadIco = 'fa fa-archive';
+
+
+
+	$scope.sortableOptions = {
+		update: function (e, ui) {
+
+		},
+		stop: function (e, ui) {
+			blade.recalculatePriority();
+		}
+	};
 }]);
