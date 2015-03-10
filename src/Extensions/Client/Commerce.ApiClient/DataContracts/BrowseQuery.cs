@@ -35,15 +35,15 @@ namespace VirtoCommerce.ApiClient.DataContracts
         [DataMember]
         public Dictionary<string, string[]> Filters { get; set; }
 
-        [DataMember]
-        public string[] PriceLists { get; set; }
-
         /// <summary>
         ///     Gets or sets the outline to filter products. Its category path.
         /// </summary>
         [DataMember]
         [DefaultValue("")]
         public string Outline { get; set; }
+
+        [DataMember]
+        public string[] PriceLists { get; set; }
 
         /// <summary>
         ///     Gets or sets the string on which to filter as part of this query
@@ -94,8 +94,10 @@ namespace VirtoCommerce.ApiClient.DataContracts
             builder.Append(this.Outline);
             builder.Append(this.SortProperty);
 
-            if (PriceLists != null)
-                builder.Append(string.Join(",", PriceLists));
+            if (this.PriceLists != null)
+            {
+                builder.Append(string.Join(",", this.PriceLists));
+            }
 
             foreach (var facet in this.Filters)
             {

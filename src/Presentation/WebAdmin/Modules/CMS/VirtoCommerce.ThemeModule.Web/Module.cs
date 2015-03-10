@@ -15,6 +15,7 @@
 	using VirtoCommerce.Foundation.Data.Infrastructure;
 	using System.IO;
 	using System.Web.Hosting;
+	using VirtoCommerce.Foundation.Data.Azure.Asset;
 
 	#endregion
 
@@ -53,6 +54,11 @@
 			var githubMainPath = "Themes/";
 			var fileSystemMainPath = HostingEnvironment.MapPath("~/App_Data/Themes/");
 
+			var assetsConnectionString = ConnectionHelper.GetConnectionString("AssetsConnectionString");
+			var blobStorageProvider = new AzureBlobAssetRepository(assetsConnectionString, null);
+			var uploadPath = HostingEnvironment.MapPath("~/App_Data/Uploads/");
+			var uploadPathFiles = HostingEnvironment.MapPath("~/App_Data/Uploads/Files/");
+
 			Func<string, IThemeService> factory = (x) =>
 			{
 				switch (x)
@@ -67,23 +73,39 @@
 							githubMainPath));
 
 					case "Database":
-						return new ThemeServiceImpl(new DatabaseFileRepositoryImpl("VirtoCommerce", new AuditableInterceptor(),
-															   new EntityPrimaryKeyGeneratorInterceptor()));
+						return new ThemeServiceImpl(new DatabaseFileRepositoryImpl("VirtoCommerce",
+							new AuditableInterceptor(),
+							new EntityPrimaryKeyGeneratorInterceptor()));
 
 					case "File System":
 						return new ThemeServiceImpl(new FileSystemFileRepositoryImpl(fileSystemMainPath));
+
+					case "Azure and Database":
+						return new ThemeServiceImpl(new DatabaseFileRepositoryImpl("VirtoCommerce",
+							new AuditableInterceptor(),
+							new EntityPrimaryKeyGeneratorInterceptor()), blobStorageProvider, uploadPath);
 
 					default:
 						return new ThemeServiceImpl(new FileSystemFileRepositoryImpl(fileSystemMainPath));
 				}
 			};
 
-            if (!Directory.Exists(fileSystemMainPath))
+			if (!Directory.Exists(fileSystemMainPath))
 			{
-                Directory.CreateDirectory(fileSystemMainPath);
+				Directory.CreateDirectory(fileSystemMainPath);
 			}
 
-			this._container.RegisterType<ThemeController>(new InjectionConstructor(factory, settingsManager));
+			if (!Directory.Exists(uploadPath))
+			{
+				Directory.CreateDirectory(uploadPath);
+			}
+
+			if (!Directory.Exists(uploadPathFiles))
+			{
+				Directory.CreateDirectory(uploadPathFiles);
+			}
+
+			this._container.RegisterType<ThemeController>(new InjectionConstructor(factory, settingsManager, uploadPath, uploadPathFiles));
 		}
 
 		public void SetupDatabase(SampleDataLevel sampleDataLevel)

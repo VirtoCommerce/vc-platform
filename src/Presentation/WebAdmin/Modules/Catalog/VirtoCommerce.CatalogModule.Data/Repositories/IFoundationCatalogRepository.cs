@@ -16,6 +16,7 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
 		foundation.Category GetCategoryById(string categoryId);
 		foundation.Item[] GetItemByIds(string[] itemIds, moduleModel.ItemResponseGroup respGroup);
 		foundation.Item[] GetAllItemVariations(string itemId);
+        Dictionary<string, IEnumerable<foundation.Item>> GetAllItemsVariations(string[] itemIds);
 		foundation.Property[] GetPropertiesByIds(string[] propIds);
 		foundation.Catalog GetPropertyCatalog(string propId);
 		foundation.Category GetPropertyCategory(string propId);

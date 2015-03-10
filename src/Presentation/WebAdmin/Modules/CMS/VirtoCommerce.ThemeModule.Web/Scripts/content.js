@@ -10,7 +10,8 @@ angular.module(moduleName, [
 	'virtoCommerce.content.themeModule.resources.themes',
 	'virtoCommerce.content.themeModule.blades.themeAssetList',
 	'virtoCommerce.content.themeModule.blades.themeList',
-	'virtoCommerce.content.themeModule.blades.editAsset'
+	'virtoCommerce.content.themeModule.blades.editAsset',
+	'virtoCommerce.content.themeModule.blades.editImageAsset'
 ])
 .run(['$rootScope', 'mainMenuService', 'widgetService', '$state', function ($rootScope, mainMenuService, widgetService, $state) {
 

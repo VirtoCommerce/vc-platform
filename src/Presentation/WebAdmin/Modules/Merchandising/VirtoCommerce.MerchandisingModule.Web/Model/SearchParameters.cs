@@ -26,12 +26,14 @@ namespace VirtoCommerce.MerchandisingModule.Web.Model
         ///     The facet regex
         /// </summary>
         private static readonly Regex FacetRegex = new Regex("^f_", RegexOptions.Compiled | RegexOptions.IgnoreCase);
-            // used to apply facet filtering
+
+        // used to apply facet filtering
 
         private static readonly Regex TermRegex = new Regex("^t_", RegexOptions.Compiled | RegexOptions.IgnoreCase);
-            // used to filter by any property
 
         #endregion
+
+        // used to filter by any property
 
         #region Constructors and Destructors
 

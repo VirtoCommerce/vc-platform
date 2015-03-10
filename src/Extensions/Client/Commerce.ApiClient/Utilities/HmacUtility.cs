@@ -119,8 +119,8 @@ namespace VirtoCommerce.ApiClient.Utilities
 
         public NameValuePair(string name, string value)
         {
-            Name = name;
-            Value = value;
+            this.Name = name;
+            this.Value = value;
         }
 
         #endregion
@@ -139,9 +139,9 @@ namespace VirtoCommerce.ApiClient.Utilities
         {
             var builder = new StringBuilder();
             builder.Append("[");
-            builder.Append(Name);
+            builder.Append(this.Name);
             builder.Append(", ");
-            builder.Append(Value);
+            builder.Append(this.Value);
             builder.Append("]");
             return builder.ToString();
         }
@@ -155,8 +155,8 @@ namespace VirtoCommerce.ApiClient.Utilities
 
         public ApiRequestSignature()
         {
-            Timestamp = DateTime.UtcNow;
-            TimestampString = Timestamp.ToString("o", CultureInfo.InvariantCulture);
+            this.Timestamp = DateTime.UtcNow;
+            this.TimestampString = this.Timestamp.ToString("o", CultureInfo.InvariantCulture);
         }
 
         #endregion
@@ -196,12 +196,12 @@ namespace VirtoCommerce.ApiClient.Utilities
                             out timestamp))
                         {
                             parsedValue = new ApiRequestSignature
-                            {
-                                AppId = parts[0],
-                                TimestampString = parts[1],
-                                Hash = parts[2],
-                                Timestamp = timestamp,
-                            };
+                                          {
+                                              AppId = parts[0],
+                                              TimestampString = parts[1],
+                                              Hash = parts[2],
+                                              Timestamp = timestamp,
+                                          };
                             success = true;
                         }
                     }
@@ -213,7 +213,7 @@ namespace VirtoCommerce.ApiClient.Utilities
 
         public override string ToString()
         {
-            return string.Join(";", AppId, TimestampString, Hash);
+            return string.Join(";", this.AppId, this.TimestampString, this.Hash);
         }
 
         #endregion

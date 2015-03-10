@@ -110,7 +110,6 @@
             currentEntityId: id,
             currentEntity: data,
             title: title,
-            style: 'gray',
             subtitle: 'Category details',
             controller: 'categoryDetailController',
             template: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/blades/category-detail.tpl.html',
@@ -123,7 +122,6 @@
             id: "listItemDetail",
             itemId: id,
             title: title,
-            style: 'gray',
             subtitle: 'Item details',
             controller: 'itemDetailController',
             template: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/blades/item-detail.tpl.html'

@@ -108,7 +108,6 @@
         }
     ];
 
-    $scope.blade.style = 'gray';
     $scope.blade.subtitle = 'SEO information';
     $scope.blade.refresh(false);
 }]);

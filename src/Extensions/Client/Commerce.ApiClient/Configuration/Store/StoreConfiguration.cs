@@ -22,10 +22,7 @@ namespace VirtoCommerce.ApiClient.Configuration.Store
 
         public static StoreConfiguration Instance
         {
-            get
-            {
-                return _instance.Value;
-            }
+            get { return _instance.Value; }
         }
 
         /// <summary>
@@ -35,19 +32,13 @@ namespace VirtoCommerce.ApiClient.Configuration.Store
         [ConfigurationProperty("Cache", IsRequired = true)]
         public CacheConfiguration Cache
         {
-            get
-            {
-                return (CacheConfiguration)this["Cache"];
-            }
+            get { return (CacheConfiguration)this["Cache"]; }
         }
 
         [ConfigurationProperty("Connection", IsRequired = true)]
         public StoreConnection Connection
         {
-            get
-            {
-                return (StoreConnection)this["Connection"];
-            }
+            get { return (StoreConnection)this["Connection"]; }
         }
 
         #endregion
@@ -77,14 +68,8 @@ namespace VirtoCommerce.ApiClient.Configuration.Store
         [ConfigurationProperty("dataServiceUri", IsRequired = false)]
         public string DataServiceUri
         {
-            get
-            {
-                return (string)this["dataServiceUri"];
-            }
-            set
-            {
-                this["dataServiceUri"] = value;
-            }
+            get { return (string)this["dataServiceUri"]; }
+            set { this["dataServiceUri"] = value; }
         }
 
         #endregion
@@ -132,14 +117,8 @@ namespace VirtoCommerce.ApiClient.Configuration.Store
         [ConfigurationProperty("enabled", IsRequired = true, DefaultValue = true)]
         public bool IsEnabled
         {
-            get
-            {
-                return (bool)this["enabled"];
-            }
-            set
-            {
-                this["enabled"] = value;
-            }
+            get { return (bool)this["enabled"]; }
+            set { this["enabled"] = value; }
         }
 
         /// <summary>
@@ -152,14 +131,8 @@ namespace VirtoCommerce.ApiClient.Configuration.Store
         [ConfigurationProperty("storeTimeout", IsRequired = true)]
         public TimeSpan StoreTimeout
         {
-            get
-            {
-                return (TimeSpan)this["storeTimeout"];
-            }
-            set
-            {
-                this["storeTimeout"] = value.ToString();
-            }
+            get { return (TimeSpan)this["storeTimeout"]; }
+            set { this["storeTimeout"] = value.ToString(); }
         }
 
         #endregion

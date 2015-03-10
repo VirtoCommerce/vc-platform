@@ -25,10 +25,7 @@ namespace VirtoCommerce.ApiClient.DataContracts
         [JsonProperty(Order = 100)]
         public IEnumerable<Link> Links
         {
-            get
-            {
-                return this._links;
-            }
+            get { return this._links; }
         }
 
         #endregion

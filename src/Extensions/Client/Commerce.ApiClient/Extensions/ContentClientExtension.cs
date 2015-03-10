@@ -1,8 +1,8 @@
 ﻿#region
 
 using System;
-using System.Threading;
 using System.Linq;
+using System.Threading;
 using VirtoCommerce.ApiClient.DataContracts.CustomerService;
 
 #endregion
@@ -33,17 +33,17 @@ namespace VirtoCommerce.ApiClient.Extensions
             return CreateContentClient(source, connectionString);
         }
 
-		public static string TryGetValue(this ContactProperty[] propeties, string name)
-		{
-			var retVal = string.Empty;
+        public static string TryGetValue(this ContactProperty[] propeties, string name)
+        {
+            var retVal = string.Empty;
 
-			if (propeties.Any(p => p.Name.Equals(name)))
-			{
-				retVal = propeties.First(p => p.Name.Equals(name)).Value;
-			}
+            if (propeties.Any(p => p.Name.Equals(name)))
+            {
+                retVal = propeties.First(p => p.Name.Equals(name)).Value;
+            }
 
-			return retVal;
-		}
+            return retVal;
+        }
 
         #endregion
     }

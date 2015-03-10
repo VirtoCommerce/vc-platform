@@ -45,14 +45,8 @@ namespace VirtoCommerce.ApiClient.DataContracts
 
         public IDictionary<string, object> Properties
         {
-            get
-            {
-                return this._properties;
-            }
-            set
-            {
-                this._properties = value;
-            }
+            get { return this._properties; }
+            set { this._properties = value; }
         }
 
         public double Rating { get; set; }
@@ -70,10 +64,7 @@ namespace VirtoCommerce.ApiClient.DataContracts
         [JsonIgnore]
         public object this[string name]
         {
-            get
-            {
-                return this._properties[name];
-            }
+            get { return this._properties[name]; }
             set
             {
                 if (this._properties.ContainsKey(name))

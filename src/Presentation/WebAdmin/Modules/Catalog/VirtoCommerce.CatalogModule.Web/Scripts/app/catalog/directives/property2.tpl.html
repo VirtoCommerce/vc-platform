@@ -13,6 +13,7 @@
             type="text">
         </div>
     </script>
+
     <script type="text/ng-template" id="LongText.html">
         <div class="form-input">
             <textarea 
@@ -23,16 +24,34 @@
             placeholder="Please enter long text">
         </div>
     </script>
+
     <script type="text/ng-template" id="Number.html">
         <!--<a href="#" editable-number="val.value">{{val.value || "N/A" }}</a>-->
         <div class="form-input">
             <input 
             ng-disabled="currentEntity.isReadOnly"
             ng-required="currentEntity.required && !currentEntity.isReadOnly"
-            ng-model="context.currentPropValues[0].value"
+            ng-model="context.currentPropValues[0].value" 
+            ng-pattern="/^\d+$/" 
+            ng-class="{'error': contextEntityDetailForm.currentEntity.valueType.$error.pattern}" 
             name="{{currentEntity.valueType}}" 
             placeholder="Please enter number" 
             type="text">
+        </div>
+    </script>
+
+    <script type="text/ng-template" id="DateTime.html">
+        <div class="form-input __calendar">
+            <input 
+            type="text" 
+            datepicker-popup="{{format}}"  
+            close-text="Close" 
+            datepicker-options="dateOptions" 
+            max-date="today" 
+            is-open="opened" 
+            name="{{currentEntity.valueType}}" 
+            datepicker-popup="shortDate" 
+            ng-model="context.currentPropValues[0].value">
         </div>
     </script>
 

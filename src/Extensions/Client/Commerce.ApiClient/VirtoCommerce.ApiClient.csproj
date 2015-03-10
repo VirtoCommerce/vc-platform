@@ -55,11 +55,14 @@
   <ItemGroup>
     <Compile Include="BaseClient.cs" />
     <Compile Include="BrowseClient.cs" />
-    <Compile Include="Caching\CacheEntries.cs" />
+    <Compile Include="Caching\CacheContent.cs" />
     <Compile Include="Caching\CacheEntry.cs" />
-    <Compile Include="Caching\CacheHelper.cs" />
-    <Compile Include="Caching\HttpCacheRepository.cs" />
-    <Compile Include="Caching\ICacheRepository.cs" />
+    <Compile Include="Caching\CacheQueryResult.cs" />
+    <Compile Include="Caching\HttpCache.cs" />
+    <Compile Include="Caching\IContentStore.cs" />
+    <Compile Include="Caching\InMemoryContentStore.cs" />
+    <Compile Include="Caching\PrimaryCacheKey.cs" />
+    <Compile Include="Caching\PrivateCacheHandler.cs" />
     <Compile Include="ClientContext.cs" />
     <Compile Include="CommerceClients.cs" />
     <Compile Include="CommerceConfiguration.cs" />
@@ -71,8 +74,8 @@
     <Compile Include="Constants.cs" />
     <Compile Include="DataContracts\CustomerService\Address.cs" />
     <Compile Include="DataContracts\CustomerService\CustomerSearchResult.cs" />
-    <Compile Include="DataContracts\Lists\MenuLink.cs" />
-    <Compile Include="DataContracts\Lists\MenuLinkList.cs" />
+    <Compile Include="DataContracts\Lists\Link.cs" />
+    <Compile Include="DataContracts\Lists\LinkList.cs" />
     <Compile Include="DataContracts\Price.cs" />
     <Compile Include="Extensions\ListClientExtensions.cs" />
     <Compile Include="PriceClient.cs" />
@@ -169,8 +172,10 @@
     <Compile Include="Utilities\HmacUtility.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

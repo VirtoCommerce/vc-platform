@@ -29,19 +29,13 @@ namespace VirtoCommerce.ApiClient.Configuration.Application
 
         public static AppConfigConfiguration Instance
         {
-            get
-            {
-                return _instance.Value;
-            }
+            get { return _instance.Value; }
         }
 
         [ConfigurationProperty("availableModules")]
         public ModulesCollection AvailableModules
         {
-            get
-            {
-                return (ModulesCollection)this["availableModules"] ?? new ModulesCollection();
-            }
+            get { return (ModulesCollection)this["availableModules"] ?? new ModulesCollection(); }
         }
 
         /// <summary>
@@ -51,28 +45,19 @@ namespace VirtoCommerce.ApiClient.Configuration.Application
         [ConfigurationProperty("Cache", IsRequired = true)]
         public CacheConfiguration Cache
         {
-            get
-            {
-                return (CacheConfiguration)this["Cache"];
-            }
+            get { return (CacheConfiguration)this["Cache"]; }
         }
 
         [ConfigurationProperty("Connection", IsRequired = true)]
         public AppConfigConnection Connection
         {
-            get
-            {
-                return (AppConfigConnection)this["Connection"];
-            }
+            get { return (AppConfigConnection)this["Connection"]; }
         }
 
         [ConfigurationProperty("Setup", IsRequired = true)]
         public SetupConfiguration Setup
         {
-            get
-            {
-                return (SetupConfiguration)this["Setup"];
-            }
+            get { return (SetupConfiguration)this["Setup"]; }
         }
 
         #endregion
@@ -94,14 +79,8 @@ namespace VirtoCommerce.ApiClient.Configuration.Application
         [ConfigurationProperty("dataServiceUri", IsRequired = false)]
         public string DataServiceUri
         {
-            get
-            {
-                return (string)this["dataServiceUri"];
-            }
-            set
-            {
-                this["dataServiceUri"] = value;
-            }
+            get { return (string)this["dataServiceUri"]; }
+            set { this["dataServiceUri"] = value; }
         }
 
         #endregion
@@ -143,14 +122,8 @@ namespace VirtoCommerce.ApiClient.Configuration.Application
         [ConfigurationProperty("displayTemplatesTimeout", IsRequired = false, DefaultValue = "0:2:0")]
         public TimeSpan DisplayTemplateMappingsTimeout
         {
-            get
-            {
-                return (TimeSpan)this["displayTemplatesTimeout"];
-            }
-            set
-            {
-                this["displayTemplatesTimeout"] = value.ToString();
-            }
+            get { return (TimeSpan)this["displayTemplatesTimeout"]; }
+            set { this["displayTemplatesTimeout"] = value.ToString(); }
         }
 
         /// <summary>
@@ -162,14 +135,8 @@ namespace VirtoCommerce.ApiClient.Configuration.Application
         [ConfigurationProperty("enabled", IsRequired = true, DefaultValue = true)]
         public bool IsEnabled
         {
-            get
-            {
-                return (bool)this["enabled"];
-            }
-            set
-            {
-                this["enabled"] = value;
-            }
+            get { return (bool)this["enabled"]; }
+            set { this["enabled"] = value; }
         }
 
         /// <summary>
@@ -182,14 +149,8 @@ namespace VirtoCommerce.ApiClient.Configuration.Application
         [ConfigurationProperty("localizationTimeout", IsRequired = true, DefaultValue = "0:1:0")]
         public TimeSpan LocalizationTimeout
         {
-            get
-            {
-                return (TimeSpan)this["localizationTimeout"];
-            }
-            set
-            {
-                this["localizationTimeout"] = value.ToString();
-            }
+            get { return (TimeSpan)this["localizationTimeout"]; }
+            set { this["localizationTimeout"] = value.ToString(); }
         }
 
         /// <summary>
@@ -202,14 +163,8 @@ namespace VirtoCommerce.ApiClient.Configuration.Application
         [ConfigurationProperty("seoKeywordsTimeout", IsRequired = false, DefaultValue = "0:1:0")]
         public TimeSpan SeoKeywordsTimeout
         {
-            get
-            {
-                return (TimeSpan)this["seoKeywordsTimeout"];
-            }
-            set
-            {
-                this["seoKeywordsTimeout"] = value.ToString();
-            }
+            get { return (TimeSpan)this["seoKeywordsTimeout"]; }
+            set { this["seoKeywordsTimeout"] = value.ToString(); }
         }
 
         /// <summary>
@@ -222,14 +177,8 @@ namespace VirtoCommerce.ApiClient.Configuration.Application
         [ConfigurationProperty("settingsTimeout", IsRequired = true, DefaultValue = "0:1:0")]
         public TimeSpan SettingsTimeout
         {
-            get
-            {
-                return (TimeSpan)this["settingsTimeout"];
-            }
-            set
-            {
-                this["settingsTimeout"] = value.ToString();
-            }
+            get { return (TimeSpan)this["settingsTimeout"]; }
+            set { this["settingsTimeout"] = value.ToString(); }
         }
 
         #endregion
@@ -257,10 +206,7 @@ namespace VirtoCommerce.ApiClient.Configuration.Application
         [ConfigurationProperty("adminUrl", IsRequired = false, DefaultValue = "")]
         public string AdminUrl
         {
-            get
-            {
-                return this["adminUrl"].ToString();
-            }
+            get { return this["adminUrl"].ToString(); }
             set
             {
                 this["adminUrl"] = value;
@@ -274,10 +220,7 @@ namespace VirtoCommerce.ApiClient.Configuration.Application
         [ConfigurationProperty("completed", IsRequired = true, DefaultValue = true)]
         public bool IsCompleted
         {
-            get
-            {
-                return (bool)this["completed"];
-            }
+            get { return (bool)this["completed"]; }
             set
             {
                 this["completed"] = value.ToString();
@@ -307,27 +250,15 @@ namespace VirtoCommerce.ApiClient.Configuration.Application
         [ConfigurationProperty("name", IsRequired = true)]
         public string Name
         {
-            get
-            {
-                return (string)base["name"];
-            }
-            set
-            {
-                this["name"] = value;
-            }
+            get { return (string)base["name"]; }
+            set { this["name"] = value; }
         }
 
         [ConfigurationProperty("type", IsRequired = true)]
         public string Type
         {
-            get
-            {
-                return (string)base["type"];
-            }
-            set
-            {
-                base["type"] = value;
-            }
+            get { return (string)base["type"]; }
+            set { base["type"] = value; }
         }
 
         #endregion
@@ -339,10 +270,7 @@ namespace VirtoCommerce.ApiClient.Configuration.Application
 
         public ModuleConfigurationElement this[int index]
         {
-            get
-            {
-                return base.BaseGet(index) as ModuleConfigurationElement;
-            }
+            get { return base.BaseGet(index) as ModuleConfigurationElement; }
             set
             {
                 if (base.BaseGet(index) != null)

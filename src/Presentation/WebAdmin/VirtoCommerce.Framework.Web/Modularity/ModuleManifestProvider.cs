@@ -6,7 +6,10 @@ namespace VirtoCommerce.Framework.Web.Modularity
 {
     public class ModuleManifestProvider : IModuleManifestProvider
     {
+        private IDictionary<string, ModuleManifest> _Modules;
+
         public string RootPath { get; private set; }
+
         public string ManifestFileName { get; set; }
 
         public ModuleManifestProvider(string rootPath)
@@ -17,13 +20,16 @@ namespace VirtoCommerce.Framework.Web.Modularity
 
         public IDictionary<string, ModuleManifest> GetModuleManifests()
         {
-            // TODO: Add caching
+            if (_Modules != null)
+                return _Modules;
+
             var result = new Dictionary<string, ModuleManifest>();
 
             if (Directory.Exists(RootPath))
                 result = Directory.EnumerateFiles(RootPath, ManifestFileName, SearchOption.AllDirectories).ToDictionary(path => path, ManifestReader.Read);
 
-            return result;
+            _Modules = result;
+            return _Modules;
         }
     }
 }

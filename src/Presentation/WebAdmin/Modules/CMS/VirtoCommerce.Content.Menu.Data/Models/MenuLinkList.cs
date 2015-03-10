@@ -22,6 +22,9 @@ namespace VirtoCommerce.Content.Menu.Data.Models
 		public string StoreId { get; set; }
 
 		[Required]
+		public string Language { get; set; }
+
+		[Required]
 		public DateTime CreatedDate { get; set; }
 
 		[Required]
@@ -46,8 +49,11 @@ namespace VirtoCommerce.Content.Menu.Data.Models
 				else
 				{
 					var existingLink = this.MenuLinks.First(l => l.Id == link.Id);
-					existingLink.Link = link.Link;
-					existingLink.Name = link.Name;
+					existingLink.Url = link.Url;
+					existingLink.Title = link.Title;
+					existingLink.IsActive = link.IsActive;
+					existingLink.Priority = link.Priority;
+					existingLink.Type = link.Type;
 				}
 			}
 		}

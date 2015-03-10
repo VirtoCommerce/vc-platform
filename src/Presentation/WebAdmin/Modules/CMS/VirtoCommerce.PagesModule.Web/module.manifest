@@ -61,6 +61,13 @@
 				<description>Github user password for connect to github repository</description>
 			</setting>
 			<setting>
+				<name>VirtoCommerce.PagesModule.GitHub.ProductHeaderValue</name>
+				<valueType>string</valueType>
+				<defaultValue>qwerty</defaultValue>
+				<title>Github Product Header Value</title>
+				<description>Github product header value</description>
+			</setting>
+			<setting>
 				<name>VirtoCommerce.PagesModule.GitHub.OwnerName</name>
 				<valueType>string</valueType>
 				<defaultValue>qwerty</defaultValue>

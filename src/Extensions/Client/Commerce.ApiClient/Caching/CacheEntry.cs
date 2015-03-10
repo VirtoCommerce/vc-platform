@@ -1,34 +1,79 @@
-﻿namespace VirtoCommerce.ApiClient.Caching
+using System.Collections.Generic;
+using System.Linq;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Text;
+
+namespace VirtoCommerce.ApiClient.Caching
 {
-    internal class CacheEntry
+    public class CacheEntry
     {
-        #region Fields
-
-        private readonly object _Lock;
-
-        #endregion
-
         #region Constructors and Destructors
 
-        internal CacheEntry()
+        internal CacheEntry(PrimaryCacheKey key, HttpHeaderValueCollection<string> varyHeaders)
         {
-            _Lock = new object();
+            this.Key = key;
+            this.VaryHeaders = varyHeaders;
         }
 
         #endregion
 
         #region Public Properties
 
-        /// <summary>
-        ///     Gets the lock.
-        /// </summary>
-        /// <value>The lock.</value>
-        public object Lock
+        public PrimaryCacheKey Key { get; private set; }
+        public HttpHeaderValueCollection<string> VaryHeaders { get; private set; }
+
+        #endregion
+
+        #region Public Methods and Operators
+
+        public CacheContent CreateContent(HttpResponseMessage response)
         {
-            get
+            return new CacheContent()
+                   {
+                       CacheEntry = this,
+                       Key = this.CreateSecondaryKey(response.RequestMessage),
+                       HasValidator =
+                           response.Headers.ETag != null
+                               || (response.Content != null && response.Content.Headers.LastModified != null),
+                       Expires = HttpCache.GetExpireDate(response),
+                       CacheControl = response.Headers.CacheControl ?? new CacheControlHeaderValue(),
+                       Response = response,
+                   };
+        }
+
+        public string CreateSecondaryKey(HttpRequestMessage request)
+        {
+            var key = new StringBuilder();
+            foreach (var h in this.VaryHeaders.OrderBy(v => v))
+                // Sort the vary headers so that ordering doesn't generate different stored variants
             {
-                return _Lock;
+                if (h != "*")
+                {
+                    key.Append(h).Append(':');
+                    var addedOne = false;
+
+                    IEnumerable<string> values;
+                    if (request.Headers.TryGetValues(h, out values))
+                    {
+                        foreach (var val in values)
+                        {
+                            key.Append(val).Append(',');
+                            addedOne = true;
+                        }
+                    }
+
+                    if (addedOne)
+                    {
+                        key.Length--; // truncate trailing comma.
+                    }
+                }
+                else
+                {
+                    key.Append('*');
+                }
             }
+            return key.ToString().ToLowerInvariant();
         }
 
         #endregion

@@ -16,8 +16,9 @@ namespace VirtoCommerce.Domain.Catalog.Model
 		ItemEditorialReviews = 1 << 4,
 		Variations = 1 << 5,
 		Seo = 1 << 6,
+        Categories = 1 << 7,
 		ItemSmall = ItemInfo | ItemAssets | ItemProperties,
         ItemMedium = ItemSmall | ItemAssociations | ItemEditorialReviews,
-        ItemLarge = ItemMedium | Variations | Seo
+        ItemLarge = ItemMedium | Variations | Seo | Categories
 	}
 }

@@ -49,7 +49,7 @@ namespace VirtoCommerce.ApiClient
         /// </summary>
         public Task<Store[]> GetStoresAsync()
         {
-            return GetAsync<Store[]>(CreateRequestUri(RelativePaths.Stores));
+            return this.GetAsync<Store[]>(this.CreateRequestUri(RelativePaths.Stores));
         }
 
         #endregion

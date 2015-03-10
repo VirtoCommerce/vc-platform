@@ -14,8 +14,11 @@ namespace VirtoCommerce.MenuModule.Web.Converters
 			var retVal = new coreModels.MenuLink();
 
 			retVal.Id = link.Id;
-			retVal.Name = link.Name;
-			retVal.Link = link.Link;
+			retVal.Title = link.Title;
+			retVal.Url = link.Url;
+			retVal.Type = link.Type;
+			retVal.Priority = link.Priority;
+			retVal.IsActive = link.IsActive;
 			retVal.MenuLinkListId = link.MenuLinkListId;
 
 			return retVal;
@@ -26,8 +29,11 @@ namespace VirtoCommerce.MenuModule.Web.Converters
 			var retVal = new webModels.MenuLink();
 
 			retVal.Id = link.Id;
-			retVal.Name = link.Name;
-            retVal.Link = link.Link;
+			retVal.Title = link.Title;
+			retVal.Url = link.Url;
+			retVal.Type = link.Type;
+			retVal.Priority = link.Priority;
+			retVal.IsActive = link.IsActive;
 			retVal.MenuLinkListId = link.MenuLinkListId;
 
 			return retVal;

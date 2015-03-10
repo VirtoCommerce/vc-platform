@@ -119,11 +119,15 @@
   <ItemGroup>
     <Compile Include="Controllers\Api\ThemeController.cs" />
     <Compile Include="Converters\ContentItemConverter.cs" />
+    <Compile Include="Converters\GetThemeAssetsCriteriaConverter.cs" />
     <Compile Include="Converters\ThemeAssetConverter.cs" />
     <Compile Include="Converters\ThemeConverter.cs" />
     <Compile Include="Models\ContentItem.cs" />
+    <Compile Include="Models\GetThemeAssetsCriteria.cs" />
+    <Compile Include="Models\LoadItemInfo.cs" />
     <Compile Include="Models\Theme.cs" />
     <Compile Include="Models\ThemeAsset.cs" />
+    <Compile Include="Models\ThemeAssetFolder.cs" />
     <Compile Include="Module.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -139,6 +143,10 @@
     <ProjectReference Include="..\..\..\..\..\Core\CommerceFoundation\CommerceFoundation.csproj">
       <Project>{e7fc9a51-1b39-4bdc-983a-8a059c5fc58b}</Project>
       <Name>CommerceFoundation</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\..\Extensions\Azure\CommerceFoundation.Data.Azure\CommerceFoundation.Data.Azure.csproj">
+      <Project>{e3769352-34c8-41a9-a6c8-da95d7dff903}</Project>
+      <Name>CommerceFoundation.Data.Azure</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\..\VirtoCommerce.Framework.Web\VirtoCommerce.Framework.Web.csproj">
       <Project>{f7c9313b-522e-4619-abc9-8c7d4600d6b5}</Project>

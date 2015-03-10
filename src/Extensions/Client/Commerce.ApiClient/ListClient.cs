@@ -39,13 +39,14 @@ namespace VirtoCommerce.ApiClient
 
         #region Public Methods and Operators
 
-        public Task<MenuLinkList[]> GetLinkListsAsync(string storeId)
+        public Task<LinkList[]> GetLinkListsAsync(string storeId)
         {
             return
-                GetAsync<MenuLinkList[]>(
-                    CreateRequestUri(
+                this.GetAsync<LinkList[]>(
+                    this.CreateRequestUri(
                         String.Format(RelativePaths.ListLinks, storeId)));
         }
+
         #endregion
 
         protected class RelativePaths

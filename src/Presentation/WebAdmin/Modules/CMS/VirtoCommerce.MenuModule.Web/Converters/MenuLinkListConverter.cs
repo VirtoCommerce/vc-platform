@@ -16,6 +16,7 @@ namespace VirtoCommerce.MenuModule.Web.Converters
 			retVal.Id = list.Id;
 			retVal.Name = list.Name;
 			retVal.StoreId = list.StoreId;
+			retVal.Language = list.Language;
 
 			retVal.MenuLinks = list.MenuLinks.Select(s => s.ToCoreModel()).ToList();
 
@@ -29,6 +30,7 @@ namespace VirtoCommerce.MenuModule.Web.Converters
 			retVal.Id = list.Id;
 			retVal.Name = list.Name;
 			retVal.StoreId = list.StoreId;
+			retVal.Language = list.Language;
 
 			retVal.MenuLinks = list.MenuLinks.Select(s => s.ToWebModel());
 

@@ -12,14 +12,16 @@ namespace VirtoCommerce.Content.Data.Converters
 
 		public static ThemeAsset AsThemeAsset(this ContentItem item)
 		{
-			var retVal = new ThemeAsset { Id = item.Path, Content = item.Content };
-			return retVal;
+            var retVal = new ThemeAsset { Id = item.Path, ByteContent = item.ByteContent, ContentType = item.ContentType, Updated = item.ModifiedDate.HasValue ? item.ModifiedDate.Value : item.CreatedDate };
+
+		    return retVal;
 		}
 
 		public static ContentItem AsContentItem(this ThemeAsset asset)
 		{
-			var retVal = new ContentItem { Path = asset.Id, Content = asset.Content };
-			return retVal;
+			var retVal = new ContentItem { Path = asset.Id, ByteContent = asset.ByteContent, ContentType = asset.ContentType };
+
+		    return retVal;
 		}
 	}
 }

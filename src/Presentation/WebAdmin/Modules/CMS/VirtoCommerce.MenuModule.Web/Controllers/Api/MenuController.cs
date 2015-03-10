@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web.Http;
 using System.Web.Http.Description;
 using VirtoCommerce.Content.Menu.Data.Services;
+using VirtoCommerce.Framework.Web.Common;
 using VirtoCommerce.MenuModule.Web.Converters;
 using VirtoCommerce.MenuModule.Web.Models;
 
@@ -24,6 +25,7 @@ namespace VirtoCommerce.MenuModule.Web.Controllers.Api
 
 		[HttpGet]
 		[ResponseType(typeof(IEnumerable<MenuLinkList>))]
+        [ClientCache(Duration = 30)]
 		[Route("menu")]
 		public IHttpActionResult GetLists(string storeId)
 		{

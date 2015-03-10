@@ -10,6 +10,8 @@ namespace VirtoCommerce.CatalogModule.Web.Model
 	{
 		ShortText,
 		LongText,
-		Number
+		Number,
+		DateTime,
+		Boolean
 	}
 }

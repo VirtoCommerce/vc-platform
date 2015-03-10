@@ -71,6 +71,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 
         [HttpGet]
         [ResponseType(typeof(Product))]
+        [ClientCache(Duration = 30)]
         [Route("{product}")]
         public IHttpActionResult GetProduct(
             string store,
@@ -100,6 +101,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
         /// GET: api/mp/apple/en-us/products?code='22'
         [HttpGet]
         [ResponseType(typeof(Product))]
+        [ClientCache(Duration = 30)]
         [Route("")]
         public IHttpActionResult GetProductByCode(
             string store,
@@ -123,6 +125,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 
         [HttpGet]
         [ResponseType(typeof(Product))]
+        [ClientCache(Duration = 30)]
         [Route("")]
         public IHttpActionResult GetProductByKeyword(
             string store,
@@ -159,6 +162,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
         /// <returns></returns>
         [HttpGet]
         [ArrayInput(ParameterName = "priceLists")]
+        [ClientCache(Duration = 30)]
         [Route("")]
         [ResponseType(typeof(ProductSearchResult))]
         public IHttpActionResult Search(

@@ -50,8 +50,8 @@ namespace VirtoCommerce.ApiClient
         public Task<ResponseCollection<Review>> GetReviewsAsync(string productId)
         {
             return
-                GetAsync<ResponseCollection<Review>>(
-                    CreateRequestUri(string.Format(RelativePaths.Reviews, productId)));
+                this.GetAsync<ResponseCollection<Review>>(
+                    this.CreateRequestUri(string.Format(RelativePaths.Reviews, productId)));
         }
 
         #endregion

@@ -13,7 +13,7 @@
         <span>{{actionButtonTitle}}</span>
     </button>
 </div>
-<div class="blade-content">
+<div class="blade-content __gray">
     <div class="blade-inner">
         <div class="inner-block">
             <div class="form">
@@ -71,6 +71,10 @@
                     <div class="form-group">
                         <p class="sub-t" ng-if="currentEntity.validationErrors.length>0">Errors</p>
                         <p class="text"><span ng-repeat="x in currentEntity.validationErrors">{{x}}<br></span></p>
+                    </div>
+
+                    <div class="tile-group clearfix">
+                        <va-widget-container group="moduleDetail" blade="blade"></va-widget-container>
                     </div>
                 </div>
             </div>

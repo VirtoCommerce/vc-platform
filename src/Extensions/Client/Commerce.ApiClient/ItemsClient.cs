@@ -49,19 +49,19 @@ namespace VirtoCommerce.ApiClient
         /// </summary>
         public Task AddAsync(string categoryId, Product product)
         {
-            var requestUri = CreateRequestUri(String.Format(RelativePaths.AddProduct, categoryId));
+            var requestUri = this.CreateRequestUri(String.Format(RelativePaths.AddProduct, categoryId));
             return SendAsync(requestUri, HttpMethod.Post, product);
         }
 
         public Task DeleteAsync(string productId)
         {
-            var requestUri = CreateRequestUri(String.Format(RelativePaths.DeleteProduct, productId));
-            return SendAsync(requestUri, HttpMethod.Delete);
+            var requestUri = this.CreateRequestUri(String.Format(RelativePaths.DeleteProduct, productId));
+            return this.SendAsync(requestUri, HttpMethod.Delete);
         }
 
         public Task UpdateAsync(string categoryId, Product product)
         {
-            var requestUri = CreateRequestUri(String.Format(RelativePaths.UpdateProduct, categoryId));
+            var requestUri = this.CreateRequestUri(String.Format(RelativePaths.UpdateProduct, categoryId));
             return SendAsync(requestUri, new HttpMethod("PATCH"), product);
         }
 

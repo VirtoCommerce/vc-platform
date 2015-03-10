@@ -94,8 +94,15 @@
     }
 
     function isCanSave() {
-    	return (!(angular.isUndefined(blade.currentEntity.id) || blade.currentEntity.id === null) &&
-			!(angular.isUndefined(blade.currentEntity.content) || blade.currentEntity.content === null));
+    	if (!angular.isUndefined(blade.currentEntity)) {
+    		if (!angular.isUndefined(blade.currentEntity.name) && !angular.isUndefined(blade.currentEntity.content)) {
+    			return true;
+    		}
+    		return false;
+    	}
+    	else {
+    		return false;
+    	}
     }
 
     blade.onClose = function (closeCallback) {

@@ -7,7 +7,6 @@ using VirtoCommerce.Foundation.Frameworks.Extensions;
 using foundationConfig = VirtoCommerce.Foundation.AppConfig.Model;
 using foundation = VirtoCommerce.Foundation.Catalogs.Model;
 using moduleModel = VirtoCommerce.Domain.Catalog.Model;
-using VirtoCommerce.Foundation.AppConfig.Repositories;
 
 namespace VirtoCommerce.CatalogModule.Data.Repositories
 {
@@ -104,9 +103,12 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
 
 		public foundation.Item[] GetItemByIds(string[] itemIds, moduleModel.ItemResponseGroup respGroup = moduleModel.ItemResponseGroup.ItemLarge)
 		{
-			var query = base.Items.Include(x => x.Catalog)
-								   .Include(x => x.CategoryItemRelations)
-								  .Where(x => itemIds.Contains(x.ItemId));
+			var query = Items.Include(x => x.Catalog).Where(x => itemIds.Contains(x.ItemId));
+
+            if ((respGroup & moduleModel.ItemResponseGroup.Categories) == moduleModel.ItemResponseGroup.Categories)
+            {
+                query = query.Include(x => x.CategoryItemRelations);
+            }
 			if ((respGroup & moduleModel.ItemResponseGroup.ItemProperties) == moduleModel.ItemResponseGroup.ItemProperties)
 			{
 				query = query.Include(x => x.ItemPropertyValues);
@@ -218,6 +220,34 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
 			return GetItemByIds(itemIds.ToArray());
 			
 		}
+
+        /// <summary>
+        /// Method loads all items variations using single database request and returns them grouped by the item id.
+        /// </summary>
+        /// <param name="itemIds"></param>
+        /// <returns></returns>
+        public Dictionary<string, IEnumerable<foundation.Item>> GetAllItemsVariations(string[] itemIds)
+        {
+            var singleRelations =
+                ItemRelations.Where(x => itemIds.Contains(x.ParentItemId))
+                    .Select(x => new { Parent = x.ParentItemId, Child = x.ChildItemId })
+                    .ToArray();
+
+            // group items
+            var groupedRelations = singleRelations.GroupBy(x => x.Parent, x => x.Child, (key, g) => new { Parent = key, Children = g.ToList()});
+
+            // now get items from database all at once
+            var relationItemIds = singleRelations.Select(x => x.Child).Distinct().ToArray();
+
+            var items = GetItemByIds(relationItemIds);
+
+            var groupedItems =
+                groupedRelations.Select(
+                    x => new { Parent = x.Parent, Children = items.Where(y => x.Children.Contains(y.ItemId)) }).ToDictionary(x=>x.Parent, y=>y.Children);
+
+            return groupedItems;
+        }
+
 		public void SetCatalogProperty(foundation.Catalog catalog, foundation.Property property)
 		{
 			if (catalog.PropertySet == null)

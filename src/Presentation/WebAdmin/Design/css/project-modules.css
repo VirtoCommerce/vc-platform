@@ -189,6 +189,11 @@
     width: 20%;
 }
 
+.table .table-col.__lang
+{
+    width: 25%;
+}
+
 .table .table-col.__author
 {
     color: #999;

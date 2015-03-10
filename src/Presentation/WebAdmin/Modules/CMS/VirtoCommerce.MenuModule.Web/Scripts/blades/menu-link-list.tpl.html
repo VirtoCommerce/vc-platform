@@ -1,11 +1,28 @@
-﻿<div class="blade-content __medium-wide">
+﻿<div class="blade-content __large-wide">
 	<div class="blade-inner">
 		<div class="inner-block">
 			<form class="form">
-				<div class="form-group">
-					<label class="form-label">Name:</label>
-					<div class="form-input">
-						<input focus-on="" required class="form-control" ng-model="blade.currentEntity.name" placeholder="Enter page name" />
+				<div class="columns clearfix">
+					<div class="column">
+						<div class="form-group">
+							<label class="form-label">Name</label>
+							<div class="form-input">
+								<input focus-on="" required class="form-control" ng-model="blade.currentEntity.name" placeholder="Enter page name" />
+							</div>
+						</div>
+					</div>
+					<div class="column">
+						<div class="form-group">
+							<label class="form-label">Language</label>
+							<div class="form-input">
+								<ui-select ng-model="blade.currentEntity.language">
+									<ui-select-match placeholder="Select...">{{$select.selected}}</ui-select-match>
+									<ui-select-choices repeat="x in blade.languages">
+										<span ng-bind-html="x"></span>
+									</ui-select-choices>
+								</ui-select>
+							</div>
+						</div>
 					</div>
 				</div>
 			</form>
@@ -13,20 +30,26 @@
 				<table class="table">
 					<thead>
 						<tr>
-							<th class="table-col">Link Name</th>
+							<th class="table-col">IsActive</th>
+							<th class="table-col">Link Title</th>
 							<th class="table-col">Links to...</th>
 						</tr>
 					</thead>
 					<tbody>
-						<tr class="table-item" ng-repeat="data in blade.currentEntity.menuLinks" ng-class="{'__selected': data.id === selectedItem.id}" context-menu data-target="ipl_menu_{{data.id}}" ng-click='selectItem(data)'>
+						<tr class="table-item" ng-repeat="data in blade.currentEntity.menuLinks" ng-class="{'__selected': _.lastIndexOf(blade.selectedItemIds, data.id) >= 0}" context-menu data-target="ipl_menu_{{data.id}}" ng-click='blade.selectItem(data.id)'>
+							<td class="table-col">
+								<div class="form-input">
+									<input type="checkbox" ng-model="data.isActive" required>
+								</div>
+							</td>
 							<td class="table-col">
 								<div data-step="any" class="form-input">
-									<input type="text" ng-model="data.name" required>
+									<input type="text" ng-model="data.title" required>
 								</div>
 							</td>
 							<td class="table-col">
 								<div class="form-input">
-									<input type="text" ng-model="data.link" required>
+									<input type="text" ng-model="data.url" required>
 								</div>
 							</td>
 							<td class="table-col">
