@@ -26,4 +26,16 @@
     <permissions>
         <permission id="security:call_api" name="Call API methods" />
     </permissions>
+
+    <settings>
+        <group name="Security">
+            <setting>
+                <name>VirtoCommerce.Core.Security.CacheTimeout</name>
+                <valueType>integer</valueType>
+                <defaultValue>60</defaultValue>
+                <title>Cache Timeout (in seconds)</title>
+                <description>Specify caching timeout in seconds for security entities</description>
+            </setting>
+        </group>
+    </settings>
 </module>

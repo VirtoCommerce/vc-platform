@@ -117,6 +117,7 @@
     <Compile Include="Repositories\FoundationFulfillmentRepositoryImpl.cs" />
     <Compile Include="Security\ApiAccountProvider.cs" />
     <Compile Include="Security\ApplicationClaimsIdentityProvider.cs" />
+    <Compile Include="Security\CachingSecurityService.cs" />
     <Compile Include="Security\Hmac\HmacAuthenticationExtensions.cs" />
     <Compile Include="Security\Hmac\HmacAuthenticationHandler.cs" />
     <Compile Include="Security\Hmac\HmacAuthenticationMiddleware.cs" />

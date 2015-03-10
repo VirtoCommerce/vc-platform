@@ -129,29 +129,29 @@ namespace VirtoCommerce.CoreModule.Web
 
         public void Initialize()
         {
-            Func<IFoundationSecurityRepository> securityRepositoryFactory = () =>
-                new FoundationSecurityRepositoryImpl(_connectionStringName);
-
-            OwinConfig.Configure(_appBuilder, securityRepositoryFactory);
-
             _container.RegisterType<ICacheRepository, HttpCacheRepository>(new ContainerControlledLifetimeManager());
 
             #region Settings
+
             _container.RegisterType<Func<IAppConfigRepository>>(
                 new InjectionFactory(x => new Func<IAppConfigRepository>(() => new EFAppConfigRepository(_connectionStringName))));
+
             _container.RegisterType<ISettingsManager, SettingsManager>();
+
             #endregion
 
             #region Security
 
             _container.RegisterType<Func<IFoundationSecurityRepository>>(
-                new InjectionFactory(x => new Func<IFoundationSecurityRepository>(securityRepositoryFactory)));
+                new InjectionFactory(x => new Func<IFoundationSecurityRepository>(() => new FoundationSecurityRepositoryImpl(_connectionStringName))));
 
             _container.RegisterType<Func<ISecurityRepository>>(
                 new InjectionFactory(x => new Func<ISecurityRepository>(() => new EFSecurityRepository(_connectionStringName))));
 
             _container.RegisterType<IPermissionService, PermissionService>(new ContainerControlledLifetimeManager());
 
+            _container.RegisterType<IApiAccountProvider, ApiAccountProvider>(new ContainerControlledLifetimeManager());
+            _container.RegisterType<IClaimsIdentityProvider, ApplicationClaimsIdentityProvider>(new ContainerControlledLifetimeManager());
             #endregion
 
             #region Customer
@@ -175,6 +175,8 @@ namespace VirtoCommerce.CoreModule.Web
                   new FoundationFulfillmentRepositoryImpl(_connectionStringName))));
             _container.RegisterType<IFulfillmentService, FulfillmentServiceImpl>();
             #endregion
+
+            OwinConfig.Configure(_appBuilder, _container);
         }
 
         #endregion

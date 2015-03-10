@@ -1,5 +1,4 @@
-﻿
-namespace VirtoCommerce.Foundation
+﻿namespace VirtoCommerce.Foundation
 {
     public static class Constants
     {
@@ -19,6 +18,7 @@ namespace VirtoCommerce.Foundation
         public const string ShippingCachePrefix = "_ShippingCache";
         public const string StoreCachePrefix = "_StoreCache";
         public const string UserCachePrefix = "_UserCache";
+        public const string SecurityCachePrefix = "_SecurityCache";
 
         // Cache Controller names
         public const string ControllerNameHome = "Home"

@@ -17,14 +17,14 @@ namespace VirtoCommerce.CoreModule.Web.Settings
     {
         private readonly IModuleManifestProvider _manifestProvider;
         private readonly Func<IAppConfigRepository> _repositoryFactory;
-        private readonly ICacheRepository _cacheRepository;
+        private readonly CacheHelper _cache;
         private readonly TimeSpan _cacheTimeout;
 
         public SettingsManager(IModuleManifestProvider manifestProvider, Func<IAppConfigRepository> repositoryFactory, ICacheRepository cacheRepository)
         {
             _manifestProvider = manifestProvider;
             _repositoryFactory = repositoryFactory;
-            _cacheRepository = cacheRepository;
+            _cache = new CacheHelper(cacheRepository, Constants.SettingsCachePrefix);
             _cacheTimeout = TimeSpan.FromHours(1); // TODO: have a setting
         }
 
@@ -303,7 +303,7 @@ namespace VirtoCommerce.CoreModule.Web.Settings
 
         private List<Setting> LoadSettings(params string[] settingNames)
         {
-            var dic = settingNames.ToDictionary(name => name, name => _cacheRepository.Get(CreateCacheKey(name)));
+            var dic = settingNames.ToDictionary(name => name, name => _cache.Get(_cache.CreateKey(name)));
             var cachedSettings = dic.Values.Where(s => s != null).ToList();
             var settings = cachedSettings.OfType<Setting>().ToList();
 
@@ -335,13 +335,8 @@ namespace VirtoCommerce.CoreModule.Web.Settings
             var dictionary = names.ToDictionary(name => name, name => values.FirstOrDefault(s => s.Name == name) ?? (object)DBNull.Value);
             foreach (var pair in dictionary)
             {
-                _cacheRepository.Add(CreateCacheKey(pair.Key), pair.Value, _cacheTimeout);
+                _cache.Add(_cache.CreateKey(pair.Key), pair.Value, _cacheTimeout);
             }
-        }
-
-        private static string CreateCacheKey(string settingName)
-        {
-            return CacheHelper.CreateCacheKey(Constants.SettingsCachePrefix, settingName);
         }
 
         private static SettingDescriptor ConvertToSettingsDescriptor(string groupName, ModuleSetting setting, IEnumerable<Setting> existingSettings)
