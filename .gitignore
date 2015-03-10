@@ -179,3 +179,4 @@ $RECYCLE.BIN/
 # VirtoCommerce.PaymentGateways.dll
 Shared/VirtoCommerce/VirtoCommerce.PaymentGateways.dll
 /src/Presentation/WebAdmin/packages
+/src/Presentation/WebAdmin/Modules/Core/VirtoCommerce.CoreModule.Tests/manifest.xml
