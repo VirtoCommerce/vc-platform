@@ -76,12 +76,12 @@ namespace VirtoCommerce.ThemeModule.Web.Controllers.Api
 		{
 			var items = await this._themeService.GetThemeAssets(storeId, themeId, criteria.ToCoreModel());
 
-			//if (!criteria.LoadContent)
+			if (!criteria.LoadContent)
 			{
 				return this.Ok(items.ToWebModel());
 			}
 
-			//return this.Ok(items.Select(s => s.ToWebModel()).ToArray());
+			return this.Ok(items.Select(s => s.ToWebModel()).ToArray());
 		}
 
 		[HttpGet]
