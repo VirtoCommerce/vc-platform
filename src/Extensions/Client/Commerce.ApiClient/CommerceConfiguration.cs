@@ -13,7 +13,7 @@ namespace VirtoCommerce.ApiClient
 
         public CommerceConfiguration()
         {
-            ConnectionString = GetConnectionString("VirtoCommerce");
+            ConnectionString = GetConnectionString("VirtoCommerceBaseUrl");
             ApiAppId = ConfigurationManager.AppSettings["vc-public-ApiAppId"];
             ApiSecretKey = ConfigurationManager.AppSettings["vc-public-ApiSecretKey"];
             IsCacheEnabled = false;
