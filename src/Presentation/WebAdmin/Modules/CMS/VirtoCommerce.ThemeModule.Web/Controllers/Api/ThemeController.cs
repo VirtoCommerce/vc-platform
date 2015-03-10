@@ -71,17 +71,23 @@ namespace VirtoCommerce.ThemeModule.Web.Controllers.Api
 		}
 
 		[HttpGet]
+		[ResponseType(typeof(ThemeAsset[]))]
 		[Route("themes/{themeId}/assets")]
 		public async Task<IHttpActionResult> GetThemeAssets(string storeId, string themeId, [FromUri]GetThemeAssetsCriteria criteria)
 		{
 			var items = await this._themeService.GetThemeAssets(storeId, themeId, criteria.ToCoreModel());
 
-			if (!criteria.LoadContent)
-			{
-				return this.Ok(items.ToWebModel());
-			}
-
 			return this.Ok(items.Select(s => s.ToWebModel()).ToArray());
+		}
+
+		[HttpGet]
+		[ResponseType(typeof(ThemeAssetFolder[]))]
+		[Route("themes/{themeId}/folders")]
+		public async Task<IHttpActionResult> GetThemeAssets(string storeId, string themeId)
+		{
+			var items = await this._themeService.GetThemeAssets(storeId, themeId, new VirtoCommerce.Content.Data.Models.GetThemeAssetsCriteria());
+
+			return this.Ok(items.ToWebModel());
 		}
 
 		[HttpGet]

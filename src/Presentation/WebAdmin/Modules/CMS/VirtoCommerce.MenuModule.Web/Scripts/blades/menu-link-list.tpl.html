@@ -39,9 +39,10 @@
 					<tbody ui-sortable="sortableOptions" ng-model="blade.currentEntity.menuLinks">
 						<tr class="table-item" ng-repeat="data in blade.currentEntity.menuLinks" ng-class="{'__selected': _.lastIndexOf(blade.selectedItemIds, data.id) >= 0}" context-menu data-target="ipl_menu_{{data.id}}" ng-click='blade.selectItem(data.id)'>
 							<td class="table-col">
-								<div class="form-input">
-									<input type="checkbox" ng-model="data.isActive" required>
-								</div>
+								<label class="form-control __checkbox" >
+									<input type="checkbox" ng-model="data.isActive">
+									<span class="check"></span>
+								</label>
 							</td>
 							<td class="table-col">
 								<div data-step="any" class="form-input">
