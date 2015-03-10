@@ -15,19 +15,17 @@ namespace VirtoCommerce.CoreModule.Web.Settings
 {
     public class SettingsManager : ISettingsManager
     {
-        #region Constants
-        public const string SettingsCacheKey = "S:{0}";
-        #endregion
-
         private readonly IModuleManifestProvider _manifestProvider;
         private readonly Func<IAppConfigRepository> _repositoryFactory;
-        private readonly CacheHelper _cacheHelper;
+        private readonly ICacheRepository _cacheRepository;
+        private readonly TimeSpan _cacheTimeout;
 
-        public SettingsManager(IModuleManifestProvider manifestProvider, Func<IAppConfigRepository> repositoryFactory, ICacheRepository cache)
+        public SettingsManager(IModuleManifestProvider manifestProvider, Func<IAppConfigRepository> repositoryFactory, ICacheRepository cacheRepository)
         {
             _manifestProvider = manifestProvider;
             _repositoryFactory = repositoryFactory;
-            this._cacheHelper = new CacheHelper(cache);
+            _cacheRepository = cacheRepository;
+            _cacheTimeout = TimeSpan.FromHours(1); // TODO: have a setting
         }
 
         #region ISettingsManager Members
@@ -92,6 +90,8 @@ namespace VirtoCommerce.CoreModule.Web.Settings
 
                     repository.UnitOfWork.Commit();
                 }
+
+                UpdateCache(settingNames, existingSettings);
             }
         }
 
@@ -99,7 +99,7 @@ namespace VirtoCommerce.CoreModule.Web.Settings
         {
             var result = defaultValue;
 
-            var repositorySetting = LoadSetting(name);
+            var repositorySetting = LoadSettings(name).FirstOrDefault();
             if (repositorySetting != null)
             {
                 result = repositorySetting.SettingValues
@@ -108,7 +108,7 @@ namespace VirtoCommerce.CoreModule.Web.Settings
             }
             else
             {
-                var manifestSetting = GetSettingFromManifest(name);
+                var manifestSetting = LoadSettingFromManifest(name);
                 if (manifestSetting != null)
                 {
                     if (manifestSetting.ArrayValues != null)
@@ -184,7 +184,7 @@ namespace VirtoCommerce.CoreModule.Web.Settings
                 .SelectMany(g => g.Settings);
         }
 
-        private ModuleSetting GetSettingFromManifest(string name)
+        private ModuleSetting LoadSettingFromManifest(string name)
         {
             return GetAllManifestSettings().FirstOrDefault(s => s.Name == name);
         }
@@ -301,20 +301,25 @@ namespace VirtoCommerce.CoreModule.Web.Settings
             };
         }
 
-        Setting LoadSetting(string name)
-        {
-            return LoadSettings(name).FirstOrDefault();
-        }
-
         private List<Setting> LoadSettings(params string[] settingNames)
         {
-            return _cacheHelper.Get(
-                CacheHelper.CreateCacheKey(Constants.SettingsCachePrefix, string.Format(SettingsCacheKey, CacheHelper.CreateCacheKey(settingNames))),
-                () => LoadSettingsFromDatabase(settingNames),
-                new TimeSpan(0, 0, 30));   // TODO: have a setting
+            var dic = settingNames.ToDictionary(name => name, name => _cacheRepository.Get(CreateCacheKey(name)));
+            var cachedSettings = dic.Values.Where(s => s != null).ToList();
+            var settings = cachedSettings.OfType<Setting>().ToList();
+
+            // Load settings which are not in cache and put them to cache
+            if (cachedSettings.Count != settingNames.Length)
+            {
+                var namesToLoad = dic.Where(pair => pair.Value == null).Select(pair => pair.Key).ToArray();
+                var settingsNotInCache = LoadSettingsFromRepository(namesToLoad);
+                UpdateCache(namesToLoad, settingsNotInCache);
+                settings.AddRange(settingsNotInCache);
+            }
+
+            return settings;
         }
 
-        private List<Setting> LoadSettingsFromDatabase(params string[] settingNames)
+        private List<Setting> LoadSettingsFromRepository(IEnumerable<string> settingNames)
         {
             using (var repository = _repositoryFactory())
             {
@@ -323,6 +328,20 @@ namespace VirtoCommerce.CoreModule.Web.Settings
                     .Where(s => settingNames.Contains(s.Name))
                     .ToList();
             }
+        }
+
+        private void UpdateCache(IEnumerable<string> names, IEnumerable<Setting> values)
+        {
+            var dictionary = names.ToDictionary(name => name, name => values.FirstOrDefault(s => s.Name == name) ?? (object)DBNull.Value);
+            foreach (var pair in dictionary)
+            {
+                _cacheRepository.Add(CreateCacheKey(pair.Key), pair.Value, _cacheTimeout);
+            }
+        }
+
+        private static string CreateCacheKey(string settingName)
+        {
+            return CacheHelper.CreateCacheKey(Constants.SettingsCachePrefix, settingName);
         }
 
         private static SettingDescriptor ConvertToSettingsDescriptor(string groupName, ModuleSetting setting, IEnumerable<Setting> existingSettings)

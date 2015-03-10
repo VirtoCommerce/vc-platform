@@ -134,6 +134,14 @@ namespace VirtoCommerce.CoreModule.Web
 
             OwinConfig.Configure(_appBuilder, securityRepositoryFactory);
 
+            _container.RegisterType<ICacheRepository, HttpCacheRepository>(new ContainerControlledLifetimeManager());
+
+            #region Settings
+            _container.RegisterType<Func<IAppConfigRepository>>(
+                new InjectionFactory(x => new Func<IAppConfigRepository>(() => new EFAppConfigRepository(_connectionStringName))));
+            _container.RegisterType<ISettingsManager, SettingsManager>();
+            #endregion
+
             #region Security
 
             _container.RegisterType<Func<IFoundationSecurityRepository>>(
@@ -142,7 +150,6 @@ namespace VirtoCommerce.CoreModule.Web
             _container.RegisterType<Func<ISecurityRepository>>(
                 new InjectionFactory(x => new Func<ISecurityRepository>(() => new EFSecurityRepository(_connectionStringName))));
 
-            _container.RegisterType<ICacheRepository, HttpCacheRepository>();
             _container.RegisterType<IPermissionService, PermissionService>(new ContainerControlledLifetimeManager());
 
             #endregion
@@ -160,12 +167,6 @@ namespace VirtoCommerce.CoreModule.Web
             #endregion
             #region Notification
             _container.RegisterInstance<INotifier>(new InMemoryNotifierImpl());
-            #endregion
-
-            #region Settings
-            _container.RegisterType<Func<IAppConfigRepository>>(
-                new InjectionFactory(x => new Func<IAppConfigRepository>(() => new EFAppConfigRepository(_connectionStringName))));
-            _container.RegisterType<ISettingsManager, SettingsManager>();
             #endregion
 
             #region Fulfillment
