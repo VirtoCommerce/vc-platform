@@ -7,7 +7,7 @@ using VirtoCommerce.Domain.Customer.Model;
 
 namespace VirtoCommerce.Domain.Customer.Services
 {
-	public interface IContactSearchService
+	public interface ICustomerSearchService
 	{
 		SearchResult Search(SearchCriteria criteria);
 	}

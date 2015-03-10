@@ -7,7 +7,7 @@ using VirtoCommerce.Foundation.Frameworks;
 
 namespace VirtoCommerce.Domain.Customer.Model
 {
-	public class Contact : Entity, IAuditable
+	public class Organization : Entity, IAuditable
 	{
 		#region IAuditable Members
 
@@ -17,22 +17,15 @@ namespace VirtoCommerce.Domain.Customer.Model
 		public string ModifiedBy { get; set; }
 		#endregion
 
-		public string FullName { get; set; }
-		public string TimeZone { get; set; }
-		public string DefaultLanguage { get; set; }
-		public DateTime? BirthDate { get; set; }
-		public string TaxpayerId { get; set; }
-		public string PreferredDelivery { get; set; }
-		public string PreferredCommunication { get; set; }
-		public string Salutation { get; set; }
+		public string Name { get; set; }
+		public string Description { get; set; }
+		public string BusinessCategory { get; set; }
+		public string OwnerId { get; set; }
+		public string ParentId { get; set; }
 
-		public ICollection<Organization> Organizations { get; set; }
-		public ICollection<Property> Properties { get; set; }
 		public ICollection<Address> Addresses { get; set; }
 		public ICollection<string> Phones { get; set; }
 		public ICollection<string> Emails { get; set; }
 		public ICollection<Note> Notes { get; set; }
-		
-
 	}
 }

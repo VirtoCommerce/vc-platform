@@ -7,16 +7,16 @@ using VirtoCommerce.Foundation.Frameworks;
 
 namespace VirtoCommerce.CustomerModule.Web.Model
 {
-	public class Contact : Entity, IAuditable
+	public class Contact : Member
 	{
-		#region IAuditable Members
-
-		public DateTime CreatedDate { get; set; }
-		public string CreatedBy { get; set; }
-		public DateTime? ModifiedDate { get; set; }
-		public string ModifiedBy { get; set; }
-		#endregion
-
+		public Contact()
+			:base("Contact")
+		{
+		}
+		public override string DisplayName
+		{
+			get { return FullName; }
+		}
 		public string FullName { get; set; }
 		public string TimeZone { get; set; }
 		public string DefaultLanguage { get; set; }
@@ -25,12 +25,10 @@ namespace VirtoCommerce.CustomerModule.Web.Model
 		public string PreferredDelivery { get; set; }
 		public string PreferredCommunication { get; set; }
 		public string Salutation { get; set; }
-	
+
+		public ICollection<Organization> Organizations { get; set; }
 		public ICollection<Property> Properties { get; set; }
-		public ICollection<Address> Addresses { get; set; }
-		public ICollection<string> Phones { get; set; }
-		public ICollection<string> Emails { get; set; }
-		public ICollection<Note> Notes { get; set; }
+	
 		
 
 	}

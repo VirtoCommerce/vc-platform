@@ -10,11 +10,11 @@ namespace VirtoCommerce.CustomerModule.Web.Model
 	{
 		public SearchResult()
 		{
-			Contacts = new List<Contact>();
+			Members = new List<Member>();
 		}
 		public int TotalCount { get; set; }
 
-		public List<Contact> Contacts { get; set; }
+		public List<Member> Members { get; set; }
 
 	}
 }

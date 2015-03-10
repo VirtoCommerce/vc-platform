@@ -54,15 +54,16 @@
     <Compile Include="Converters\AddressConverter.cs" />
     <Compile Include="Converters\ContactConverter.cs" />
     <Compile Include="Converters\NoteConverter.cs" />
+    <Compile Include="Converters\OrganizationConverter.cs" />
     <Compile Include="Converters\PropertyConverter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\CustomerRepositoryImpl.cs" />
     <Compile Include="Repositories\IFoundationCustomerRepository.cs" />
-    <Compile Include="ContactServiceImpl.cs" />
+    <Compile Include="Services\ContactServiceImpl.cs" />
+    <Compile Include="Services\CustomerSearchServiceImpl.cs" />
+    <Compile Include="Services\OrganizationServiceImpl.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Services\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\..\Core\CommerceFoundation.Data\CommerceFoundation.Data.csproj">
       <Project>{bb168a74-0f1e-43be-a616-134902238b80}</Project>

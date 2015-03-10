@@ -11,5 +11,6 @@ namespace VirtoCommerce.CustomerModule.Data.Repositories
 	public interface IFoundationCustomerRepository : ICustomerRepository
 	{
 		foundation.Contact GetContactById(string id);
+		foundation.Organization GetOrganizationById(string id);
 	}
 }

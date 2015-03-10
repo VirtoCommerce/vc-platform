@@ -55,7 +55,7 @@ namespace VirtoCommerce.CustomerModule.Test
 				 Properties = new webModel.Property[] { new webModel.Property { Name = "testProp", Value = "sss", ValueType = coreModel.PropertyValueType.ShortText } }.ToList(),
 				 DefaultLanguage = "ru"
 			};
-			var result = controller.Create(contact) as OkNegotiatedContentResult<webModel.Contact>;
+			var result = controller.CreateContact(contact) as OkNegotiatedContentResult<webModel.Contact>;
 			Assert.IsNotNull(result.Content);
 		}
 
@@ -70,7 +70,7 @@ namespace VirtoCommerce.CustomerModule.Test
 			contact.Emails.Remove(contact.Emails.FirstOrDefault());
 			contact.Properties.Add(new webModel.Property { Name = "setting2", Value = "1223", ValueType = coreModel.PropertyValueType.Integer });
 
-			controller.Update(contact);
+			controller.UpdateContact(contact);
 
 			result = controller.GetContactById("testContact") as OkNegotiatedContentResult<webModel.Contact>;
 
@@ -87,7 +87,7 @@ namespace VirtoCommerce.CustomerModule.Test
 				FullName = "ET"
 			};
 			
-			controller.Update(contact);
+			controller.UpdateContact(contact);
 
 			var result = controller.GetContactById("testContact") as OkNegotiatedContentResult<webModel.Contact>;
 
@@ -100,20 +100,22 @@ namespace VirtoCommerce.CustomerModule.Test
 		public void DeleteStore()
 		{
 			var controller = GetContactController();
-			controller.Delete(new string[] { "testContact" });
+			controller.DeleteContacts(new string[] { "testContact" });
 			var result = controller.GetContactById("testStore") as OkNegotiatedContentResult<webModel.Contact>;
 
 			Assert.IsNull(result);
 
 		}
-		private static ContactController GetContactController()
+		private static MemberController GetContactController()
 		{
 			Func<IFoundationCustomerRepository> customerRepositoryFactory = () =>
 			{
 				return new FoundationCustomerRepositoryImpl("VirtoCommerce", new AuditChangeInterceptor());
 			};
-			var service = new ContactServiceImpl(customerRepositoryFactory);
-			return new ContactController(service, service);
+			var contactService = new ContactServiceImpl(customerRepositoryFactory);
+			var orgService = new OrganizationServiceImpl(customerRepositoryFactory);
+			var searchService = new CustomerSearchServiceImpl(customerRepositoryFactory);
+			return new MemberController(contactService, orgService, searchService);
 		}
 	
 	}

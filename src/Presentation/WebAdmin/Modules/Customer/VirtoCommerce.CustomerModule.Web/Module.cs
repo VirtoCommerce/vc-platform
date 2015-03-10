@@ -32,8 +32,9 @@ namespace VirtoCommerce.CustomerModule.Web
 			};
 			_container.RegisterType<Func<IFoundationCustomerRepository>>(new InjectionFactory(x => customerRepositoryFactory));
 
+			_container.RegisterType<IOrganizationService, OrganizationServiceImpl>();
 			_container.RegisterType<IContactService, ContactServiceImpl>();
-			_container.RegisterType<IContactSearchService, ContactServiceImpl>();
+			_container.RegisterType<ICustomerSearchService, CustomerSearchServiceImpl>();
 		}
 
 		#endregion
