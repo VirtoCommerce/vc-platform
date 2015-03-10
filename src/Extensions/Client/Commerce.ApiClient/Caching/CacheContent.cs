@@ -22,7 +22,7 @@ namespace VirtoCommerce.ApiClient.Caching
 
         public bool IsFresh()
         {
-            return this.Expires > DateTime.UtcNow;
+            return Expires > DateTime.UtcNow;
         }
 
         #endregion

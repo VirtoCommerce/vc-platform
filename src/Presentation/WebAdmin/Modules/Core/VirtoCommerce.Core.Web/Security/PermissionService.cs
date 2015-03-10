@@ -6,15 +6,14 @@ using VirtoCommerce.Foundation.Security.Model;
 using VirtoCommerce.Foundation.Security.Repositories;
 using VirtoCommerce.Framework.Web.Modularity;
 using VirtoCommerce.Framework.Web.Security;
+using VirtoCommerce.Framework.Web.Settings;
 
 namespace VirtoCommerce.CoreModule.Web.Security
 {
-    public class PermissionService : IPermissionService
+    public class PermissionService : CachingSecurityService, IPermissionService
     {
         #region Fields
 
-        private readonly CacheHelper _cache;
-        private readonly TimeSpan _cacheTimeout;
         private readonly IModuleManifestProvider _manifestProvider;
         private readonly Func<ISecurityRepository> _securityRepository;
 
@@ -22,11 +21,10 @@ namespace VirtoCommerce.CoreModule.Web.Security
 
         #region Constructors and Destructors
 
-        public PermissionService(Func<ISecurityRepository> securityRepository, ICacheRepository cacheRepository, IModuleManifestProvider manifestProvider)
+        public PermissionService(Func<ISecurityRepository> securityRepository, ICacheRepository cacheRepository, IModuleManifestProvider manifestProvider, ISettingsManager settingsManager)
+            : base(cacheRepository, settingsManager)
         {
             _securityRepository = securityRepository;
-            _cache = new CacheHelper(cacheRepository);
-            _cacheTimeout = TimeSpan.FromMinutes(1);
             _manifestProvider = manifestProvider;
         }
 
@@ -36,10 +34,10 @@ namespace VirtoCommerce.CoreModule.Web.Security
 
         public PermissionDescriptor[] GetAllPermissions()
         {
-            return _cache.Get(
-                CacheHelper.CreateCacheKey("AllPermissionsCache"),
+            return Cache.Get(
+                Cache.CreateKey("AllPermissions"),
                 LoadAllPermissions,
-                _cacheTimeout);
+                GetCacheTimeout());
         }
 
         public string[] GetUserPermissionIds(string userName)
@@ -76,10 +74,10 @@ namespace VirtoCommerce.CoreModule.Web.Security
 
         private UserWithPermissions GetUserWithPermissions(string userName)
         {
-            return _cache.Get(
-                CacheHelper.CreateCacheKey("UserWithPermissionsCache", userName),
+            return Cache.Get(
+                Cache.CreateKey("UserWithPermissions", userName),
                 () => LoadUserWithPermissions(userName),
-                _cacheTimeout);
+                GetCacheTimeout());
         }
 
         private PermissionDescriptor[] LoadAllPermissions()
@@ -143,10 +141,11 @@ namespace VirtoCommerce.CoreModule.Web.Security
 
             #region Public Properties
 
+            public string[] ActivePermissionIds { get; set; }
+
             public bool IsActive { get; set; }
             public RegisterType RegisterType { get; set; }
             public string[] StoredPermissionIds { get; set; }
-            public string[] ActivePermissionIds { get; set; }
 
             #endregion
         }

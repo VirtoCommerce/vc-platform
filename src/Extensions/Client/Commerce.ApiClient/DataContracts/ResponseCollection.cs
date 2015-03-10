@@ -25,7 +25,7 @@ namespace VirtoCommerce.ApiClient.DataContracts
         [JsonProperty("items")]
         public Collection<T> Items
         {
-            get { return this._items ?? (this._items = new Collection<T>()); }
+            get { return _items ?? (_items = new Collection<T>()); }
         }
 
         [JsonProperty("total")]

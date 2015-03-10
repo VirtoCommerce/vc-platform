@@ -33,7 +33,7 @@
             ng-required="currentEntity.required && !currentEntity.isReadOnly"
             ng-model="context.currentPropValues[0].value" 
             ng-pattern="/^\d+$/" 
-            ng-class="{'error': contextEntityDetailForm.currentEntity.valueType.$error.pattern}" 
+            ng-class="{'error': context.currentEntity.valueType.$error.pattern}" 
             name="{{currentEntity.valueType}}" 
             placeholder="Please enter number" 
             type="text">
@@ -44,14 +44,25 @@
         <div class="form-input __calendar">
             <input 
             type="text" 
-            datepicker-popup="{{format}}"  
+            datepicker-popup="shortDate"  
             close-text="Close" 
             datepicker-options="dateOptions" 
-            max-date="today" 
-            is-open="opened" 
-            name="{{currentEntity.valueType}}" 
+            min-date="today" 
+            is-open="datepickers.DateTime" 
             datepicker-popup="shortDate" 
             ng-model="context.currentPropValues[0].value">
+            <button ng-click="open($event, 'DateTime')" type="button" class="btn">
+                <i class="btn-ico fa fa-calendar"></i>
+            </button>
+        </div>
+    </script>
+
+    <script type="text/ng-template" id="Boolean.html">
+        <div class="form-control __switch">
+            <label class="form-label">
+                <input type="checkbox" ng-model="context.currentPropValues[0].value">
+                <span class="switch"></span>
+            </label>
         </div>
     </script>
 

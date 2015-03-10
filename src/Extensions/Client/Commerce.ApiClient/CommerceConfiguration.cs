@@ -13,10 +13,10 @@ namespace VirtoCommerce.ApiClient
 
         public CommerceConfiguration()
         {
-            this.ConnectionString = GetConnectionString("VirtoCommerce");
-            this.ApiAppId = ConfigurationManager.AppSettings["vc-public-ApiAppId"];
-            this.ApiSecretKey = ConfigurationManager.AppSettings["vc-public-ApiSecretKey"];
-            this.IsCacheEnabled = false;
+            ConnectionString = GetConnectionString("VirtoCommerce");
+            ApiAppId = ConfigurationManager.AppSettings["vc-public-ApiAppId"];
+            ApiSecretKey = ConfigurationManager.AppSettings["vc-public-ApiSecretKey"];
+            IsCacheEnabled = false;
         }
 
         #endregion

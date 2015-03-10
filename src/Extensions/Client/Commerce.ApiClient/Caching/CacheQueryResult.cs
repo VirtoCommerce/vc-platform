@@ -29,27 +29,27 @@ namespace VirtoCommerce.ApiClient.Caching
         public static CacheQueryResult CannotUseCache()
         {
             return new CacheQueryResult()
-                   {
-                       Status = CacheStatus.CannotUseCache
-                   };
+            {
+                Status = CacheStatus.CannotUseCache
+            };
         }
 
         public static CacheQueryResult ReturnStored(CacheContent cacheContent)
         {
             return new CacheQueryResult()
-                   {
-                       Status = CacheStatus.ReturnStored,
-                       SelectedVariant = cacheContent
-                   };
+            {
+                Status = CacheStatus.ReturnStored,
+                SelectedVariant = cacheContent
+            };
         }
 
         public static CacheQueryResult Revalidate(CacheContent cacheContent)
         {
             return new CacheQueryResult()
-                   {
-                       Status = CacheStatus.Revalidate,
-                       SelectedVariant = cacheContent
-                   };
+            {
+                Status = CacheStatus.Revalidate,
+                SelectedVariant = cacheContent
+            };
         }
 
         #endregion
@@ -58,13 +58,13 @@ namespace VirtoCommerce.ApiClient.Caching
 
         internal void ApplyConditionalHeaders(HttpRequestMessage request)
         {
-            Debug.Assert(this.SelectedVariant != null);
-            if (this.SelectedVariant == null || !this.SelectedVariant.HasValidator)
+            Debug.Assert(SelectedVariant != null);
+            if (SelectedVariant == null || !SelectedVariant.HasValidator)
             {
                 return;
             }
 
-            var httpResponseMessage = this.SelectedVariant.Response;
+            var httpResponseMessage = SelectedVariant.Response;
 
             if (httpResponseMessage.Headers.ETag != null)
             {
@@ -81,7 +81,7 @@ namespace VirtoCommerce.ApiClient.Caching
 
         internal HttpResponseMessage GetHttpResponseMessage(HttpRequestMessage request)
         {
-            var response = this.SelectedVariant.Response;
+            var response = SelectedVariant.Response;
             response.RequestMessage = request;
             HttpCache.UpdateAgeHeader(response);
             return response;

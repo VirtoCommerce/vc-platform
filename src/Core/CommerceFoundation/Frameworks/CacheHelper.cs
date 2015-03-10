@@ -3,20 +3,22 @@ using System.Text;
 
 namespace VirtoCommerce.Foundation.Frameworks
 {
-
     public class CacheHelper
     {
         private readonly ICacheRepository _cacheRepository;
         public const string GlobalCachePrefix = "_vcc@che";
 
+        public string KeyPrefix { get; private set; }
+
         public CacheHelper(ICacheRepository repository)
+            : this(repository, null)
         {
-            _cacheRepository = repository;
         }
 
-        public CacheHelper(ICacheRepository repository, string regionName)
+        public CacheHelper(ICacheRepository repository, string keyPrefix)
         {
             _cacheRepository = repository;
+            KeyPrefix = keyPrefix ?? string.Empty;
         }
 
         public T Get<T>(string cacheKey, Func<T> fallbackFunction, TimeSpan timeSpan, bool useCache = true) where T : class
@@ -69,12 +71,10 @@ namespace VirtoCommerce.Foundation.Frameworks
             _cacheRepository.Clear();
         }
 
-        /*
-        public string CreateCacheKey(string prefix, params string[] keys)
+        public string CreateKey(params string[] keyParts)
         {
-            return CacheHelper.CreateCacheKey(prefix, keys);
+            return CreateCacheKey(KeyPrefix, keyParts);
         }
-         * */
 
         /// <summary>
         /// Creates the cache key.

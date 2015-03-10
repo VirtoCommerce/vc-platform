@@ -14,37 +14,47 @@ using webModel = VirtoCommerce.CoreModule.Web.Model;
 
 namespace VirtoCommerce.CoreModule.Web.Controllers.Api
 {
-	[RoutePrefix("api/fulfillment")]
-	public class FulfillmentController : ApiController
-	{
-		private readonly IFulfillmentService _fulfillmentService;
-		public FulfillmentController(IFulfillmentService fulfillmentService)
-		{
-			_fulfillmentService = fulfillmentService;
-		}
+    [RoutePrefix("api/fulfillment")]
+    public class FulfillmentController : ApiController
+    {
+        private readonly IFulfillmentService _fulfillmentService;
+        public FulfillmentController(IFulfillmentService fulfillmentService)
+        {
+            _fulfillmentService = fulfillmentService;
+        }
 
-		/// <summary>
-		/// GET: api/fulfillment/centers
-		/// </summary>
-		/// <returns></returns>
-		[HttpGet]
-		[ResponseType(typeof(webModel.FulfillmentCenter[]))]
-		[Route("centers")]
-		public IHttpActionResult GetFulfillmentCenters()
-		{
-			var retVal = _fulfillmentService.GetAllFulfillmentCenters().Select(x => x.ToWebModel()).ToArray();
-			return Ok(retVal);
-		}
+        /// <summary>
+        /// GET: api/fulfillment/centers
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        [ResponseType(typeof(webModel.FulfillmentCenter[]))]
+        [Route("centers")]
+        public IHttpActionResult GetFulfillmentCenters()
+        {
+            var retVal = _fulfillmentService.GetAllFulfillmentCenters().Select(x => x.ToWebModel()).ToArray();
+            return Ok(retVal);
+        }
 
-		// PUT: api/fulfillment/centers
-		[HttpPut]
-		[ResponseType(typeof(webModel.FulfillmentCenter))]
-		[Route("centers")]
-		public IHttpActionResult UpdateFulfillmentCenter(webModel.FulfillmentCenter center)
-		{
-			var retVal = _fulfillmentService.UpsertFulfillmentCenter(center.ToCoreModel());
-			return Ok(retVal);
-		}
+        // GET: api/fulfillment/centers/{id}
+        [HttpGet]
+        [ResponseType(typeof(webModel.FulfillmentCenter))]
+        [Route("centers/{id}")]
+        public IHttpActionResult GetFulfillmentCenter(string id)
+        {
+            var retVal = _fulfillmentService.GetAllFulfillmentCenters().First(x => x.Id == id);
+            return Ok(retVal.ToWebModel());
+        }
 
-	}
+        // PUT: api/fulfillment/centers
+        [HttpPut]
+        [ResponseType(typeof(webModel.FulfillmentCenter))]
+        [Route("centers")]
+        public IHttpActionResult UpdateFulfillmentCenter(webModel.FulfillmentCenter center)
+        {
+            var retVal = _fulfillmentService.UpsertFulfillmentCenter(center.ToCoreModel());
+            return Ok(retVal);
+        }
+
+    }
 }

@@ -169,27 +169,32 @@
             };
 
             /* Datepicker */
-            scope.today = function() {
-                scope.currentEntity.valueType = new Date();
+            scope.datepickers = {
+                DateTime: false
+            }
+
+            scope.showWeeks = true;
+            scope.toggleWeeks = function () {
+                scope.showWeeks = !scope.showWeeks;
             };
-            scope.today();
             
             scope.clear = function () {
                 scope.currentEntity.valueType = null;
             };
+            scope.today = new Date();
 
-            scope.open = function($event) {
+            scope.open = function($event, which) {
                 $event.preventDefault();
                 $event.stopPropagation();
 
-                scope.opened = true;
+                scope.datepickers[which] = true;
             };
 
             scope.dateOptions = {
-                formatYear: 'yy',
+                formatYear: 'yyyy',
             };
 
-            scope.formats = ['dd-MMMM-yyyy', 'yyyy/MM/dd', 'dd.MM.yyyy', 'shortDate'];
+            scope.formats = ['shortDate', 'dd-MMMM-yyyy', 'yyyy/MM/dd'];
             scope.format = scope.formats[0];
 
             linker(function (clone) {

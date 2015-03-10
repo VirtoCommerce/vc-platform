@@ -1,5 +1,7 @@
 ﻿angular.module('catalogModule.wizards.newProductWizard', [])
 .controller('newProductWizardController', ['$scope', 'bladeNavigationService', 'dialogService', 'items', function ($scope, bladeNavigationService, dialogService, items) {
+    
+    $scope.blade.isLoading = false;
     $scope.createItem = function () {
         $scope.blade.item.$updateitem(null,
         function (dbItem) {
@@ -25,6 +27,7 @@
 
             bladeNavigationService.showBlade(newBlade, categoryListBlade);
         });
+        $scope.blade.isLoading = true;
     }
 
     $scope.openBlade = function (type) {
@@ -122,8 +125,6 @@
             return p != undefined && p.values.length > 0 && p.values[0].value.length > 0;
         });
     }
-
-    $scope.blade.isLoading = false;
 }]);
 
 

@@ -34,8 +34,8 @@ namespace VirtoCommerce.ApiClient.DataContracts.Contents
 
         public IDictionary<string, string> Properties
         {
-            get { return this._properties; }
-            set { this._properties = value; }
+            get { return _properties; }
+            set { _properties = value; }
         }
 
         #endregion
@@ -45,16 +45,16 @@ namespace VirtoCommerce.ApiClient.DataContracts.Contents
         [JsonIgnore]
         public string this[string name]
         {
-            get { return this._properties[name]; }
+            get { return _properties[name]; }
             set
             {
-                if (this._properties.ContainsKey(name))
+                if (_properties.ContainsKey(name))
                 {
-                    this._properties[name] = value;
+                    _properties[name] = value;
                 }
                 else
                 {
-                    this._properties.Add(name, value);
+                    _properties.Add(name, value);
                 }
             }
         }

@@ -43,8 +43,8 @@ namespace VirtoCommerce.ApiClient.Utilities
                 throw new ArgumentException("secretKey must not be empty.");
             }
 
-            this._appId = appId;
-            this._secretKey = secretKey;
+            _appId = appId;
+            _secretKey = secretKey;
         }
 
         #endregion
@@ -66,15 +66,15 @@ namespace VirtoCommerce.ApiClient.Utilities
             HttpRequestMessage request,
             CancellationToken cancellationToken)
         {
-            var signature = new ApiRequestSignature { AppId = this._appId };
+            var signature = new ApiRequestSignature { AppId = _appId };
 
             var parameters = new[]
-                             {
-                                 new NameValuePair(null, this._appId),
-                                 new NameValuePair(null, signature.TimestampString)
-                             };
+            {
+                new NameValuePair(null, _appId),
+                new NameValuePair(null, signature.TimestampString)
+            };
 
-            signature.Hash = HmacUtility.GetHashString(key => new HMACSHA256(key), this._secretKey, parameters);
+            signature.Hash = HmacUtility.GetHashString(key => new HMACSHA256(key), _secretKey, parameters);
 
             request.Headers.Authorization = new AuthenticationHeaderValue("HMACSHA256", signature.ToString());
             return request;

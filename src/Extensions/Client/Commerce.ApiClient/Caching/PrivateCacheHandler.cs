@@ -17,8 +17,8 @@ namespace VirtoCommerce.ApiClient.Caching
 
         public PrivateCacheHandler(HttpMessageHandler innerHandler, HttpCache httpCache)
         {
-            this._httpCache = httpCache;
-            this.InnerHandler = innerHandler;
+            _httpCache = httpCache;
+            InnerHandler = innerHandler;
         }
 
         #endregion
@@ -31,7 +31,7 @@ namespace VirtoCommerce.ApiClient.Caching
             HttpRequestMessage request,
             CancellationToken cancellationToken)
         {
-            var queryResult = await this._httpCache.QueryCacheAsync(request);
+            var queryResult = await _httpCache.QueryCacheAsync(request);
 
             if (queryResult.Status == CacheStatus.ReturnStored)
             {
@@ -40,7 +40,7 @@ namespace VirtoCommerce.ApiClient.Caching
 
             if (request.Headers.CacheControl != null && request.Headers.CacheControl.OnlyIfCached)
             {
-                return this.CreateGatewayTimeoutResponse(request);
+                return CreateGatewayTimeoutResponse(request);
             }
 
             if (queryResult.Status == CacheStatus.Revalidate)
@@ -52,18 +52,18 @@ namespace VirtoCommerce.ApiClient.Caching
 
             if (response.StatusCode == HttpStatusCode.NotModified)
             {
-                await this._httpCache.UpdateContentAsync(response, queryResult.SelectedVariant);
+                await _httpCache.UpdateContentAsync(response, queryResult.SelectedVariant);
                 response.Dispose();
                 return queryResult.GetHttpResponseMessage(request);
             }
 
-            if (this._httpCache.CanStore(response))
+            if (_httpCache.CanStore(response))
             {
                 if (response.Content != null)
                 {
                     await response.Content.LoadIntoBufferAsync();
                 }
-                await this._httpCache.StoreResponseAsync(response);
+                await _httpCache.StoreResponseAsync(response);
             }
 
             return response;
@@ -72,9 +72,9 @@ namespace VirtoCommerce.ApiClient.Caching
         private HttpResponseMessage CreateGatewayTimeoutResponse(HttpRequestMessage request)
         {
             return new HttpResponseMessage(HttpStatusCode.GatewayTimeout)
-                   {
-                       RequestMessage = request
-                   };
+            {
+                RequestMessage = request
+            };
         }
 
         #endregion
