@@ -14,22 +14,22 @@ using coreModel = VirtoCommerce.Domain.Customer.Model;
 
 namespace VirtoCommerce.CustomerModule.Data.Converters
 {
-	public static class ContactConverter
+	public static class OrganizationConverter
 	{
 		/// <summary>
 		/// Converting to model type
 		/// </summary>
 		/// <param name="catalogBase"></param>
 		/// <returns></returns>
-		public static coreModel.Contact ToCoreModel(this foundationModel.Contact dbEntity)
+		public static coreModel.Organization ToCoreModel(this foundationModel.Organization dbEntity)
 		{
 			if (dbEntity == null)
 				throw new ArgumentNullException("dbEntity");
 
-			var retVal = new coreModel.Contact();
+			var retVal = new coreModel.Organization();
 			retVal.InjectFrom(dbEntity);
 			retVal.Id = dbEntity.MemberId;
-
+		
 			retVal.CreatedDate = dbEntity.Created.Value;
 			retVal.ModifiedDate = dbEntity.LastModified;
 
@@ -37,89 +37,82 @@ namespace VirtoCommerce.CustomerModule.Data.Converters
 			retVal.Emails = dbEntity.Emails.Select(x => x.Address).ToList();
 			retVal.Notes = dbEntity.Notes.Select(x => x.ToCoreModel()).ToList();
 			retVal.Phones = dbEntity.Phones.Select(x => x.Number).ToList();
-			retVal.Properties = dbEntity.ContactPropertyValues.Select(x => x.ToCoreModel()).ToList();
-			retVal.Organizations = dbEntity.MemberRelations.Select(x => x.Ancestor).OfType<foundationModel.Organization>().Select(x => x.ToCoreModel()).ToList();
+			if(dbEntity.MemberRelations.Any())
+			{
+				retVal.ParentId = dbEntity.MemberRelations.FirstOrDefault().AncestorId;
+			}
+		
 			return retVal;
 
 		}
 
 
-		public static foundationModel.Contact ToFoundation(this coreModel.Contact contact)
+		public static foundationModel.Organization ToFoundation(this coreModel.Organization organization)
 		{
-			if (contact == null)
-				throw new ArgumentNullException("contact");
+			if (organization == null)
+				throw new ArgumentNullException("organization");
 
-			var retVal = new foundationModel.Contact();
+			var retVal = new foundationModel.Organization();
 
-			retVal.InjectFrom(contact);
+			retVal.InjectFrom(organization);
 
-			if (contact.Id != null)
+			if (organization.Id != null)
 			{
-				retVal.MemberId = contact.Id;
+				retVal.MemberId = organization.Id;
 			}
 
 			retVal.Phones = new NullCollection<foundationModel.Phone>();
-			if(contact.Phones != null)
+			if (organization.Phones != null)
 			{
-				retVal.Phones = new ObservableCollection<foundationModel.Phone>(contact.Phones.Select(x => new foundationModel.Phone
+				retVal.Phones = new ObservableCollection<foundationModel.Phone>(organization.Phones.Select(x => new foundationModel.Phone
 				{
-					 Number = x,
-					 MemberId = contact.Id
+					Number = x,
+					MemberId = organization.Id
 				}));
 			}
 
 			retVal.Emails = new NullCollection<foundationModel.Email>();
-			if (contact.Emails != null)
+			if (organization.Emails != null)
 			{
-				retVal.Emails = new ObservableCollection<foundationModel.Email>(contact.Emails.Select(x => new foundationModel.Email
+				retVal.Emails = new ObservableCollection<foundationModel.Email>(organization.Emails.Select(x => new foundationModel.Email
 				{
 					Address = x,
-					MemberId = contact.Id
+					MemberId = organization.Id
 				}));
 			}
-			retVal.ContactPropertyValues = new NullCollection<foundationModel.ContactPropertyValue>();
-			if (contact.Properties != null)
-			{
-				retVal.ContactPropertyValues = new ObservableCollection<foundationModel.ContactPropertyValue>(contact.Properties.Select(x => x.ToFoundation()));
-				foreach (var property in retVal.ContactPropertyValues)
-				{
-					property.ContactId = contact.Id;
-				}
-			}
+		
 			retVal.Addresses = new NullCollection<foundationModel.Address>();
-			if (contact.Addresses != null)
+			if (organization.Addresses != null)
 			{
-				retVal.Addresses = new ObservableCollection<foundationModel.Address>(contact.Addresses.Select(x => x.ToFoundation()));
+				retVal.Addresses = new ObservableCollection<foundationModel.Address>(organization.Addresses.Select(x => x.ToFoundation()));
 				foreach (var address in retVal.Addresses)
 				{
-					address.MemberId = contact.Id;
+					address.MemberId = organization.Id;
 				}
 			}
 
 			retVal.Notes = new NullCollection<foundationModel.Note>();
-			if (contact.Notes != null)
+			if (organization.Notes != null)
 			{
-				retVal.Notes = new ObservableCollection<foundationModel.Note>(contact.Notes.Select(x => x.ToFoundation()));
+				retVal.Notes = new ObservableCollection<foundationModel.Note>(organization.Notes.Select(x => x.ToFoundation()));
 				foreach (var note in retVal.Notes)
 				{
-					note.MemberId = contact.Id;
+					note.MemberId = organization.Id;
 				}
 			}
 
 			retVal.MemberRelations = new NullCollection<foundationModel.MemberRelation>();
-			if (contact.Organizations != null)
+			if (organization.ParentId != null)
 			{
 				retVal.MemberRelations = new ObservableCollection<foundationModel.MemberRelation>();
-				foreach (var organization in contact.Organizations)
+				var memberRelation = new foundationModel.MemberRelation
 				{
-					var memberRelation = new foundationModel.MemberRelation()
-					{
-						AncestorId = organization.Id,
-						AncestorSequence = 1,
-						DescendantId = retVal.MemberId
-					};
-					retVal.MemberRelations.Add(memberRelation);
-				}
+					AncestorId = organization.ParentId,
+					DescendantId = organization.Id,
+					AncestorSequence = 1
+
+				};
+				retVal.MemberRelations.Add(memberRelation);
 			}
 			return retVal;
 		}
@@ -129,15 +122,15 @@ namespace VirtoCommerce.CustomerModule.Data.Converters
 		/// </summary>
 		/// <param name="source"></param>
 		/// <param name="target"></param>
-		public static void Patch(this foundationModel.Contact source, foundationModel.Contact target)
+		public static void Patch(this foundationModel.Organization source, foundationModel.Organization target)
 		{
 			if (target == null)
 				throw new ArgumentNullException("target");
-			var patchInjection = new PatchInjection<foundationModel.Contact>(x => x.BirthDate, x => x.DefaultLanguage,
-																		   x => x.FullName, x => x.Salutation,
-																		   x => x.TimeZone);
+			var patchInjection = new PatchInjection<foundationModel.Organization>(x => x.Name, x => x.Description,
+																		   x => x.OwnerId, x => x.OrgType,
+																		   x => x.BusinessCategory);
 			target.InjectFrom(patchInjection, source);
-		
+
 			if (!source.Phones.IsNullCollection())
 			{
 				var phoneComparer = AnonymousComparer.Create((foundationModel.Phone x) => x.Number);
@@ -152,22 +145,12 @@ namespace VirtoCommerce.CustomerModule.Data.Converters
 			{
 				source.Addresses.Patch(target.Addresses, new AddressComparer(), (sourceAddress, targetAddress) => sourceAddress.Patch(targetAddress));
 			}
-			if (!source.ContactPropertyValues.IsNullCollection())
-			{
-				var propertyComparer = AnonymousComparer.Create((foundationModel.ContactPropertyValue x) => x.PropertyValueId);
-				source.ContactPropertyValues.Patch(target.ContactPropertyValues, propertyComparer, (sourceProperty, targetProperty) => sourceProperty.Patch(targetProperty));
-			}
 			if (!source.Notes.IsNullCollection())
 			{
 				var noteComparer = AnonymousComparer.Create((foundationModel.Note x) => x.NoteId);
 				source.Notes.Patch(target.Notes, noteComparer, (sourceNote, targetNote) => sourceNote.Patch(targetNote));
 			}
-			if (!source.MemberRelations.IsNullCollection())
-			{
-				var relationComparer = AnonymousComparer.Create((foundationModel.MemberRelation x) => x.MemberRelationId);
-				source.MemberRelations.Patch(target.MemberRelations, relationComparer, (sourceRel, targetRel) => { /*Nothing todo*/ });
-			}
-		} 
+		}
 
 
 	}

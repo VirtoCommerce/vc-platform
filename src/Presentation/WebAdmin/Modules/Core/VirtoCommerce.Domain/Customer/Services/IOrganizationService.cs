@@ -7,12 +7,11 @@ using VirtoCommerce.Domain.Customer.Model;
 
 namespace VirtoCommerce.Domain.Customer.Services
 {
-	public interface IContactService
+	public interface IOrganizationService
 	{
-		Contact GetById(string id);
-		Contact Create(Contact contact);
-		void Update(Contact[] contacs);
+		Organization GetById(string id);
+		Organization Create(Organization organization);
+		void Update(Organization[] organizations);
 		void Delete(string[] ids);
 	}
 }
-

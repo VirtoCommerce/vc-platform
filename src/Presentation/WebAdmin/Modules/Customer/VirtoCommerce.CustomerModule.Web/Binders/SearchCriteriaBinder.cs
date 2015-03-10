@@ -26,7 +26,7 @@ namespace VirtoCommerce.CustomerModule.Web.Binders
 
 			result.Keyword = qs["q"].EmptyToNull();
 
-			result.StoreId = qs["site"].EmptyToNull();
+			result.OrganizationId = qs["organization"].EmptyToNull();
 			result.Count = qs["count"].TryParse(20);
 			result.Start = qs["start"].TryParse(0);
 			bindingContext.Model = result;

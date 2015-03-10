@@ -135,16 +135,18 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Binders\SearchCriteriaBinder.cs" />
-    <Compile Include="Controllers\Api\ContactController.cs" />
+    <Compile Include="Controllers\Api\MemberController.cs" />
     <Compile Include="Converters\AddressConverter.cs" />
     <Compile Include="Converters\ContactConverter.cs" />
     <Compile Include="Converters\NoteConverter.cs" />
+    <Compile Include="Converters\OrganizationConverter.cs" />
     <Compile Include="Converters\PropertyConverter.cs" />
     <Compile Include="Converters\SearchCriteriaConverter.cs" />
-    <Compile Include="Converters\SearchResultConverter.cs" />
     <Compile Include="Model\Address.cs" />
     <Compile Include="Model\Contact.cs" />
+    <Compile Include="Model\Member.cs" />
     <Compile Include="Model\Note.cs" />
+    <Compile Include="Model\Organization.cs" />
     <Compile Include="Model\Property.cs" />
     <Compile Include="Model\SearchCriteria.cs" />
     <Compile Include="Model\SearchResult.cs" />

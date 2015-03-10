@@ -27,6 +27,8 @@ namespace VirtoCommerce.CustomerModule.Web.Converters
 				retVal.Notes = contact.Notes.Select(x => x.ToWebModel()).ToList();
 			if (contact.Addresses != null)
 				retVal.Addresses = contact.Addresses.Select(x => x.ToWebModel()).ToList();
+			if (contact.Organizations != null)
+				retVal.Organizations = contact.Organizations.Select(x => x.ToWebModel()).ToList();
 
 			return retVal;
 		}
@@ -47,6 +49,9 @@ namespace VirtoCommerce.CustomerModule.Web.Converters
 				retVal.Notes = contact.Notes.Select(x => x.ToCoreModel()).ToList();
 			if (contact.Addresses != null)
 				retVal.Addresses = contact.Addresses.Select(x => x.ToCoreModel()).ToList();
+			if (contact.Organizations != null)
+				retVal.Organizations = contact.Organizations.Select(x => x.ToCoreModel()).ToList();
+
 
 			return retVal;
 		}
