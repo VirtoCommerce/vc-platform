@@ -1,12 +1,18 @@
-﻿namespace VirtoCommerce.ApiClient.DataContracts.Themes
+﻿using System;
+
+namespace VirtoCommerce.ApiClient.DataContracts.Themes
 {
     public class ThemeAsset
     {
         #region Public Properties
 
         public string Content { get; set; }
+
         public string ContentType { get; set; }
+
         public string Id { get; set; }
+
+        public DateTime Updated { get; set; }
 
         #endregion
     }
