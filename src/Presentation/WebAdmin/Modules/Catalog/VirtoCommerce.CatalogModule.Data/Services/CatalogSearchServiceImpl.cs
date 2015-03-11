@@ -3,10 +3,11 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using VirtoCommerce.CatalogModule.Data.Extensions;
 using VirtoCommerce.CatalogModule.Data.Repositories;
 using VirtoCommerce.Domain.Catalog.Services;
+using VirtoCommerce.Foundation;
 using VirtoCommerce.Foundation.Frameworks;
+using VirtoCommerce.Foundation.Frameworks.Caching;
 using VirtoCommerce.Framework.Web.Settings;
 using foundation = VirtoCommerce.Foundation.Catalogs.Model;
 using module = VirtoCommerce.Domain.Catalog.Model;
@@ -15,46 +16,48 @@ namespace VirtoCommerce.CatalogModule.Data.Services
 {
     public class CatalogSearchServiceImpl : ICatalogSearchService
     {
-        private readonly Func<IFoundationCatalogRepository> _catalogRepositoryFactory;
+	    private readonly Func<IFoundationCatalogRepository> _catalogRepositoryFactory;
         private readonly IItemService _itemService;
         private readonly ICatalogService _catalogService;
         private readonly ICategoryService _categoryService;
-        private readonly ISettingsManager _settingsManager;
-        private readonly ICacheRepository _cache;
+        private readonly CacheManager _cacheManager;
 
         public CatalogSearchServiceImpl(Func<IFoundationCatalogRepository> catalogRepositoryFactory, IItemService itemService,
-                                        ICatalogService catalogService, ICategoryService categoryService,
-            ISettingsManager settingsManager, ICacheRepository cache)
+                                        ICatalogService catalogService, ICategoryService categoryService, CacheManager cacheManager = null)
         {
             _catalogRepositoryFactory = catalogRepositoryFactory;
             _itemService = itemService;
             _catalogService = catalogService;
             _categoryService = categoryService;
-            _settingsManager = settingsManager;
-            this._cache = cache;
+			_cacheManager = cacheManager ?? CacheManager.NoCache;
         }
 
-        public module.SearchResult Search(module.SearchCriteria criteria)
-        {
-            var retVal = new module.SearchResult();
-            var taskList = new List<Task>();
+		public module.SearchResult Search(module.SearchCriteria criteria)
+		{
+			var cacheKey = CacheKey.Create(Constants.CatalogCachePrefix + ".Search", criteria.ToString());
+			var result = _cacheManager.Get(cacheKey, () =>
+				{
+					var retVal = new module.SearchResult();
+					var taskList = new List<Task>();
 
-            if ((criteria.ResponseGroup & module.ResponseGroup.WithProducts) == module.ResponseGroup.WithProducts)
-            {
-                taskList.Add(Task.Factory.StartNew(() => SearchItems(criteria, retVal)));
-            }
-            if ((criteria.ResponseGroup & module.ResponseGroup.WithCatalogs) == module.ResponseGroup.WithCatalogs)
-            {
-                taskList.Add(Task.Factory.StartNew(() => SearchCatalogs(criteria, retVal)));
-            }
-            if ((criteria.ResponseGroup & module.ResponseGroup.WithCategories) == module.ResponseGroup.WithCategories)
-            {
-                taskList.Add(Task.Factory.StartNew(() => SearchCategories(criteria, retVal)));
-            }
-            Task.WaitAll(taskList.ToArray());
+					if ((criteria.ResponseGroup & module.ResponseGroup.WithProducts) == module.ResponseGroup.WithProducts)
+					{
+						taskList.Add(Task.Factory.StartNew(() => SearchItems(criteria, retVal)));
+					}
+					if ((criteria.ResponseGroup & module.ResponseGroup.WithCatalogs) == module.ResponseGroup.WithCatalogs)
+					{
+						taskList.Add(Task.Factory.StartNew(() => SearchCatalogs(criteria, retVal)));
+					}
+					if ((criteria.ResponseGroup & module.ResponseGroup.WithCategories) == module.ResponseGroup.WithCategories)
+					{
+						taskList.Add(Task.Factory.StartNew(() => SearchCategories(criteria, retVal)));
+					}
+					Task.WaitAll(taskList.ToArray());
 
-            return retVal;
-        }
+					return retVal;
+				});
+			return result;
+		}
 
         private void SearchCategories(module.SearchCriteria criteria, module.SearchResult result)
         {
@@ -67,7 +70,8 @@ namespace VirtoCommerce.CatalogModule.Data.Services
                 {
                     var query = repository.Categories.Where(x => x.CatalogId == criteria.CatalogId);
 
-                    var dbCatalog = repository.GetCatalogCached(_cache, _settingsManager, criteria.CatalogId);
+					var cacheKey = CacheKey.Create(Constants.CatalogCachePrefix + ".GetCatalogById", criteria.CatalogId);
+					var dbCatalog = _cacheManager.Get(cacheKey, () => repository.GetCatalogById(criteria.CatalogId));
 
                     var isVirtual = dbCatalog is foundation.VirtualCatalog;
                     if (!String.IsNullOrEmpty(criteria.CategoryId))

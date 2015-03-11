@@ -18,10 +18,10 @@ namespace VirtoCommerce.CatalogModule.Data.Services
 	{
 		private readonly Func<IFoundationCatalogRepository> _catalogRepositoryFactory;
 		private readonly CacheManager _cacheManager;
-		public CatalogServiceImpl(Func<IFoundationCatalogRepository> catalogRepositoryFactory, CacheManager cacheManager)
+		public CatalogServiceImpl(Func<IFoundationCatalogRepository> catalogRepositoryFactory, CacheManager cacheManager = null)
 		{
 			_catalogRepositoryFactory = catalogRepositoryFactory;
-			_cacheManager = cacheManager;
+			_cacheManager = cacheManager ?? CacheManager.NoCache;
 		}
 
 		#region ICatalogService Members

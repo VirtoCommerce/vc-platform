@@ -313,7 +313,7 @@ namespace VirtoCommerce.CatalogModule.Test
 
 		private ICatalogSearchService GetSearchService()
 		{
-			return new CatalogSearchServiceImpl(GetRepository, GetItemService(), GetCatalogService(), GetCategoryService(), null, null);
+			return new CatalogSearchServiceImpl(GetRepository, GetItemService(), GetCatalogService(), GetCategoryService());
 		}
 
 		private IPropertyService GetPropertyService()
@@ -333,7 +333,7 @@ namespace VirtoCommerce.CatalogModule.Test
 
 		private IItemService GetItemService()
 		{
-			return new ItemServiceImpl(() => { return GetRepository(); }, () => { return GetAppConfigRepository(); }, null, null);
+			return new ItemServiceImpl(() => { return GetRepository(); }, () => { return GetAppConfigRepository(); });
 		}
 
 

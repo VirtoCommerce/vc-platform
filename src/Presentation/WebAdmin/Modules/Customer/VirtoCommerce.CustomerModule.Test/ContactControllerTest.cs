@@ -48,6 +48,13 @@ namespace VirtoCommerce.CustomerModule.Test
 		}
 
 		[TestMethod]
+		public void GetContact()
+		{
+			var controller = GetContactController();
+			var result = controller.GetContactById("testContact1") as OkNegotiatedContentResult<webModel.Contact>;
+		}
+
+		[TestMethod]
 		public void CreateNewContact()
 		{
 			var controller = GetContactController();

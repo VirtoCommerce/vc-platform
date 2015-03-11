@@ -1,6 +1,7 @@
 ﻿using Microsoft.Practices.ServiceLocation;
 using Microsoft.Practices.Unity;
 using System;
+using System.Linq;
 using VirtoCommerce.Caching.HttpCache;
 using VirtoCommerce.CatalogModule.Data.Repositories;
 using VirtoCommerce.CatalogModule.Data.Services;
@@ -20,6 +21,8 @@ using VirtoCommerce.Framework.Web.Modularity;
 using VirtoCommerce.Framework.Web.Notification;
 using VirtoCommerce.Domain.Catalog.Services;
 using VirtoCommerce.Framework.Web.Settings;
+using VirtoCommerce.Foundation;
+using System.Collections.Generic;
 
 namespace VirtoCommerce.CatalogModule.Web
 {
@@ -70,17 +73,17 @@ namespace VirtoCommerce.CatalogModule.Web
         public void Initialize()
         {
             #region Catalog dependencies
-            var cacheManager = new CacheManager(x => new InMemoryCachingProvider(), x => new CacheSettings("", TimeSpan.FromMinutes(1), "", true));
-            ICacheRepository cacheRepository = new HttpCacheRepository();
-            var settingsManager = ServiceLocator.Current.GetInstance<ISettingsManager>();
-            Func<IFoundationCatalogRepository> catalogRepFactory = () => new FoundationCatalogRepositoryImpl(_connectionStringName);
-            Func<IFoundationAppConfigRepository> appConfigRepFactory = () => new FoundationAppConfigRepositoryImpl(_connectionStringName);
 
-            var catalogService = new CatalogServiceImpl(catalogRepFactory, cacheManager);
-            var propertyService = new PropertyServiceImpl(catalogRepFactory, cacheManager);
-            var categoryService = new CategoryServiceImpl(catalogRepFactory, appConfigRepFactory, cacheManager);
-            var itemService = new ItemServiceImpl(catalogRepFactory, appConfigRepFactory, settingsManager, cacheRepository);
-            var catalogSearchService = new CatalogSearchServiceImpl(catalogRepFactory, itemService, catalogService, categoryService, settingsManager, cacheRepository);
+			 var settingsManager = _container.Resolve<ISettingsManager>();
+
+	        Func<IFoundationCatalogRepository> catalogRepFactory = () => new FoundationCatalogRepositoryImpl(_connectionStringName);
+            Func<IFoundationAppConfigRepository> appConfigRepFactory = () => new FoundationAppConfigRepositoryImpl(_connectionStringName);
+					
+			var catalogService = new CatalogServiceImpl(catalogRepFactory, CacheManager.NoCache);
+			var propertyService = new PropertyServiceImpl(catalogRepFactory, CacheManager.NoCache);
+			var categoryService = new CategoryServiceImpl(catalogRepFactory, appConfigRepFactory, CacheManager.NoCache);
+			var itemService = new ItemServiceImpl(catalogRepFactory, appConfigRepFactory, CacheManager.NoCache);
+			var catalogSearchService = new CatalogSearchServiceImpl(catalogRepFactory, itemService, catalogService, categoryService, CacheManager.NoCache);
 
             var assetsConnectionString = ConnectionHelper.GetConnectionString("AssetsConnectionString");
             var blobStorageProvider = new AzureBlobAssetRepository(assetsConnectionString, null);

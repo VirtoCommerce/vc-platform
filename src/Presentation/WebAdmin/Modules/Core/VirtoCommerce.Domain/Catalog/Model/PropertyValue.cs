@@ -9,5 +9,10 @@
 		public object Value { get; set; }
 		public PropertyValueType ValueType { get; set; }
 		public string LanguageCode { get; set; }
+
+		public override string ToString()
+		{
+			return PropertyId ?? "unknow" + ":" + ValueId ?? "undef";
+		}
 	}
 }

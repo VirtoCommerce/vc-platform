@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Linq;
 using Microsoft.Practices.ServiceLocation;
 using Microsoft.Practices.Unity;
 using VirtoCommerce.Caching.HttpCache;
 using VirtoCommerce.CatalogModule.Data.Repositories;
 using VirtoCommerce.CatalogModule.Data.Services;
+using VirtoCommerce.Foundation;
 using VirtoCommerce.Foundation.Assets.Factories;
 using VirtoCommerce.Foundation.Assets.Services;
 using VirtoCommerce.Foundation.Catalogs;
@@ -58,10 +60,16 @@ namespace VirtoCommerce.MerchandisingModule.Web
 
         public void Initialize()
         {
-            var cacheManager = new CacheManager(
-                x => new InMemoryCachingProvider(),
-                x => new CacheSettings("", TimeSpan.FromMinutes(1), "", true));
-            var settingsManager = ServiceLocator.Current.GetInstance<ISettingsManager>();
+			var settingsManager = _container.Resolve<ISettingsManager>();
+			var cacheSettings = new CacheSettings[] 
+			{
+				new CacheSettings(Constants.CatalogCachePrefix + ".GetByIds", TimeSpan.FromMinutes(settingsManager.GetValue("Catalogs.Caching.ItemTimeout", 30)), "", true),
+				new CacheSettings(Constants.CatalogCachePrefix + ".GetCatalogById", TimeSpan.FromMinutes(settingsManager.GetValue("Catalogs.Caching.CatalogTimeout", 60)), "", true),
+				new CacheSettings(Constants.CatalogCachePrefix + ".Search", TimeSpan.FromMinutes(settingsManager.GetValue("Catalogs.Caching.SearchTimeout", 30)), "", true)
+			};
+
+			var cacheManager = new CacheManager(x => new HttpCacheRepository(), x => cacheSettings.FirstOrDefault(y => y.Group == x));
+					
             Func<IFoundationCatalogRepository> catalogRepFactory =
                 () => new FoundationCatalogRepositoryImpl(_connectionStringName);
             Func<IFoundationAppConfigRepository> appConfigRepFactory =
@@ -74,15 +82,13 @@ namespace VirtoCommerce.MerchandisingModule.Web
             var itemService = new ItemServiceImpl(
                 catalogRepFactory,
                 appConfigRepFactory,
-                settingsManager,
-                cacheRepository);
+				cacheManager);
             var itemSearchService = new CatalogSearchServiceImpl(
                 catalogRepFactory,
                 itemService,
                 catalogService,
                 categoryService,
-                settingsManager,
-                cacheRepository);
+				cacheManager);
 
             #region VCF dependencies
 

@@ -8,27 +8,35 @@ namespace VirtoCommerce.Foundation.Frameworks.Caching
 	/// </summary>
 	public class CacheManager
 	{
-		private Func<string, ICacheProvider> CacheProviderFactory;
+		private Func<string, ICacheRepository> CacheRepositoryFactory;
 		private Func<string, CacheSettings> CacheSettingFactory;
+		private static CacheManager _noCacheManager= new CacheManager(x => null , x => null);
 
-		public CacheManager(Func<string, ICacheProvider> cacheProviderFactory, Func<string, CacheSettings> settingFactory)
+		public CacheManager(Func<string, ICacheRepository> cacheRepositoryFactory, Func<string, CacheSettings> settingFactory)
 		{
-			CacheProviderFactory = cacheProviderFactory;
+			CacheRepositoryFactory = cacheRepositoryFactory;
 			CacheSettingFactory = settingFactory;
 		}
 	
+		public static CacheManager NoCache
+		{
+			get
+			{
+				return _noCacheManager;
+			}
+		}
 
 		public void Put(CacheKey cacheKey, object cacheValue)
 		{
 			if (cacheKey == null)
 				throw new ArgumentNullException("cacheKey");
 
-			var repository = GetProvider(cacheKey.CacheGroup);
+			var repository = GetRepository(cacheKey.CacheGroup);
 			if (repository != null)
 			{
 				var expirationTimeout = GetExpirationTimeoutByCacheGroup(cacheKey.CacheGroup);
 				var cachedObj = new CachedObject(cacheValue);
-				repository.Put(cacheKey, cachedObj, expirationTimeout);
+				repository.Add(cacheKey.Key, cachedObj, expirationTimeout);
 			}
 		}
 
@@ -46,11 +54,11 @@ namespace VirtoCommerce.Foundation.Frameworks.Caching
 			}
 			T retVal = default(T);
 
-			var repository = GetProvider(cacheKey.CacheGroup);
+			var repository = GetRepository(cacheKey.CacheGroup);
 
 			if (repository != null)
 			{
-				var cachedObj = repository.Get(cacheKey);
+				var cachedObj = repository.Get(cacheKey.Key) as CachedObject;
 				if (cachedObj != null)
 				{
 					retVal = (T)cachedObj.Data;
@@ -79,7 +87,7 @@ namespace VirtoCommerce.Foundation.Frameworks.Caching
 
 			T retVal = default(T);
 
-			var repository = GetProvider(cacheKey.CacheGroup);
+			var repository = GetRepository(cacheKey.CacheGroup);
 
 			if (repository == null)
 			{
@@ -87,7 +95,7 @@ namespace VirtoCommerce.Foundation.Frameworks.Caching
 			}
 			else
 			{
-				var cachedObj = repository.Get(cacheKey);
+				var cachedObj = repository.Get(cacheKey.Key) as CachedObject;
 				if (cachedObj == null)
 				{
 					cachedObj = new CachedObject(getValueFunction());
@@ -95,7 +103,7 @@ namespace VirtoCommerce.Foundation.Frameworks.Caching
 					var expirationTimeout = GetExpirationTimeoutByCacheGroup(cacheKey.CacheGroup);
 					if (expirationTimeout != TimeSpan.Zero)
 					{
-						repository.Put(cacheKey, cachedObj, expirationTimeout);
+						repository.Add(cacheKey.Key, cachedObj, expirationTimeout);
 					}
 				}
 
@@ -105,15 +113,15 @@ namespace VirtoCommerce.Foundation.Frameworks.Caching
 			return retVal;
 		}
 
-		
-		private ICacheProvider GetProvider(string group)
+
+		private ICacheRepository GetRepository(string group)
 		{
-			ICacheProvider retVal = null;
+			ICacheRepository retVal = null;
 
 			var settings = GetSettings(group);
 			if (settings != null && settings.IsEnabled)
 			{
-				retVal = CacheProviderFactory(settings.ProviderName);
+				retVal = CacheRepositoryFactory(settings.ProviderName);
 			}
 			return retVal;
 		}
