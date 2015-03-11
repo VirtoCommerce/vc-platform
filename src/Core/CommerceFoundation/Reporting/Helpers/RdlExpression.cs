@@ -42,7 +42,7 @@ namespace VirtoCommerce.Foundation.Reporting.Helpers
             /// <returns></returns>
             public static DateTime DateAdd(string interval, decimal value, DateTime dateTime)
             {
-                return DateAdd(interval, (double) value, dateTime);
+                return DateAdd(interval, (double)value, dateTime);
             }
 
             /// <summary>
@@ -54,7 +54,7 @@ namespace VirtoCommerce.Foundation.Reporting.Helpers
             /// <returns></returns>
             public static DateTime DateAdd(string interval, int value, DateTime dateTime)
             {
-                return DateAdd(interval, (double) value, dateTime);
+                return DateAdd(interval, (double)value, dateTime);
             }
 
             /// <summary>
@@ -286,7 +286,7 @@ namespace VirtoCommerce.Foundation.Reporting.Helpers
         private Expression _definition;
         public Expression Compile()
         {
-            return _definition ?? (_definition=ParseExpression(_expression));
+            return _definition ?? (_definition = ParseExpression(_expression));
         }
 
         public object Evaluate()
@@ -311,7 +311,7 @@ namespace VirtoCommerce.Foundation.Reporting.Helpers
         private Expression ParseExpression(string expression)
         {
             Expression result = Expression.Empty();
-            
+
             expression = expression.Trim();
             if (expression.StartsWith("="))
             {
@@ -340,20 +340,20 @@ namespace VirtoCommerce.Foundation.Reporting.Helpers
                 return endingReason;
             }
 
-            if ( !( expr is DefaultExpression) && TokenIsOperator(ref exprText, ref token) )
+            if (!(expr is DefaultExpression) && TokenIsOperator(ref exprText, ref token))
             {
                 Expression secondExpression = Expression.Empty();
                 endingReason = Parse(ref secondExpression, ref exprText);
                 expr = GetOperatorExpression(expr, token, secondExpression);
                 return endingReason;
             }
-            
+
             if (TokenIsNumericConstant(ref exprText, ref token))
             {
                 CheckAndAssign(ref expr, Expression.Constant(Decimal.Parse(token)));
                 return Parse(ref expr, ref exprText);
             }
-            
+
             if (TokenIsTextConstant(ref exprText, ref token))
             {
                 CheckAndAssign(ref expr, Expression.Constant(token));
@@ -374,7 +374,7 @@ namespace VirtoCommerce.Foundation.Reporting.Helpers
 
             if (TokenIsFunction(ref exprText, ref token))
             {
-                CheckAndAssign(ref expr, GetFunctionExpression(ref exprText, token));  
+                CheckAndAssign(ref expr, GetFunctionExpression(ref exprText, token));
                 return Parse(ref expr, ref exprText);
             }
 
@@ -387,7 +387,7 @@ namespace VirtoCommerce.Foundation.Reporting.Helpers
                 (expr.NodeType == ExpressionType.Default && newExpr.NodeType == ExpressionType.Constant) ||
                 (expr.NodeType == ExpressionType.Default && newExpr.NodeType == ExpressionType.Lambda) ||
                 (expr.NodeType == ExpressionType.Default && newExpr.NodeType == ExpressionType.MemberAccess) ||
-                (expr.NodeType == ExpressionType.Default && newExpr.NodeType == ExpressionType.Call) 
+                (expr.NodeType == ExpressionType.Default && newExpr.NodeType == ExpressionType.Call)
                )
             {
                 expr = newExpr;
@@ -403,7 +403,7 @@ namespace VirtoCommerce.Foundation.Reporting.Helpers
         {
             var mm = Regex.Match(text, rxNumeric);
             var result = mm.Success && !string.IsNullOrWhiteSpace(mm.Groups["const"].Value);
-            
+
             if (result)
             {
                 token = mm.Groups["const"].Value;
@@ -545,9 +545,9 @@ namespace VirtoCommerce.Foundation.Reporting.Helpers
             {
                 return resExpr;
             }
-            
+
             var secExpr = (BinaryExpression)secondOperand;
-            
+
             var precOp1 = OperatorPrecedence[resExpr.NodeType];
             var precOp2 = OperatorPrecedence[secExpr.NodeType];
 
@@ -594,10 +594,8 @@ namespace VirtoCommerce.Foundation.Reporting.Helpers
 
     public class RdlExpressionSyntaxException : Exception
     {
-        private const string Message = "RDL expression syntax error.";
-
-        public RdlExpressionSyntaxException(string description = "", params object[] args) : 
-            base(Message + " " + string.Format(description, args))
+        public RdlExpressionSyntaxException(string description = "", params object[] args) :
+            base(string.Join(" ", "RDL expression syntax error.", string.Format(description, args)))
         {
         }
     }
