@@ -77,7 +77,7 @@ namespace VirtoCommerce.ThemeModule.Web.Controllers.Api
 		{
 			var items = await this._themeService.GetThemeAssets(storeId, themeId, criteria.ToCoreModel());
 
-			return this.Ok(items.Select(s => s.ToWebModel()).ToArray());
+			return this.Ok(items.OrderBy(x=>x.Updated).Select(s => s.ToWebModel()).ToArray());
 		}
 
 		[HttpGet]
@@ -154,32 +154,11 @@ namespace VirtoCommerce.ThemeModule.Web.Controllers.Api
 					if (ContentTypeUtility.IsImageContentType(loadItemInfo.ContentType))
 					{
 						loadItemInfo.Content = ContentTypeUtility.
-							ContertImageToBase64String(File.ReadAllBytes(filePath), file.Headers.ContentType.MediaType);
+							ConvertImageToBase64String(File.ReadAllBytes(filePath), file.Headers.ContentType.MediaType);
 					}
-
-					//var uploadStreamInfo = new UploadStreamInfo
-					//{
-					//	FileByteStream = stream,
-					//	FileName = _container + "/" + fileInfo.Name,
-					//	Length = fileInfo.Length
-					//};
-
-					//var link = _blobProvider.Upload(uploadStreamInfo);
-
-					//BlobInfos.Add(new BlobInfo
-					//{
-					//	ContentType = fileData.Headers.ContentType.MediaType,
-					//	Name = fileInfo.Name,
-					//	Size = fileInfo.Length,
-					//	Location = link
-					//});
-
 				}
 			}
 
-			//var asset = ThemeAssetConverter.DomainModel("", "", content);
-
-			//this._themeService.SaveThemeAsset(storeId, themeId, asset);
 			return this.Ok(loadItemInfo);
 		}
 		#endregion

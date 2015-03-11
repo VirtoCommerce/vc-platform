@@ -20,7 +20,7 @@ namespace VirtoCommerce.Content.Data.Utility
 			return retVal;
 		}
 
-		public static string ContertImageToBase64String(byte[] image, string contentType)
+		public static string ConvertImageToBase64String(byte[] image, string contentType)
 		{
 		    var retVal = string.Format("{0}{1}",
 		        string.Format(Base64StringPrefix, contentType),

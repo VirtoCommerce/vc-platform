@@ -25,24 +25,7 @@ namespace VirtoCommerce.ApiClient.Utilities
         #endregion
 
         #region Public Methods and Operators
-
-        public static string ApiConnectionString(string nameOrConnectionString)
-        {
-            return
-                ApiConnectionString(nameOrConnectionString, ConfigurationManager.AppSettings["DefaultCatalog"])
-                    .ToLower();
-        }
-
-        public static string ApiConnectionString(string nameOrConnectionString, string catalog, string language = null)
-        {
-            return
-                string.Format(
-                    GetConnectionString(nameOrConnectionString),
-                    catalog ?? "",
-                    language ?? Thread.CurrentThread.CurrentUICulture.Name).ToLower();
-        }
-
-        /// <summary>
+       /// <summary>
         ///     Gets the connection string.
         /// </summary>
         /// <param name="nameOrConnectionString">The name or connection string.</param>
