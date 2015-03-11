@@ -6,13 +6,19 @@
                 <div class="form-group" ng-init="setForm(newProductForm)">
                     <label class="form-label">SKU:</label>
                     <div class="form-input">
-                        <input required class="form-control" ng-model="blade.item.code" placeholder="Enter item sku" />
+                        <input required class="form-control" name="productCode" ng-model="blade.item.code" ng-class="{'error': newProductForm.productCode.$invalid && !newProductForm.productCode.$pristine}" placeholder="Enter item sku" />
+                    </div>
+                    <div class="form-error" ng-if="newProductForm.productCode.$dirty && newProductForm.productCode.$invalid">
+                        <span ng-if="newProductForm.productCode.$error.required">Required</span>
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="form-label">Name:</label>
                     <div class="form-input">
-                        <textarea required class="form-control" cols="30" rows="3" ng-model="blade.item.name" placeholder="Enter item name"></textarea>
+                        <textarea name="productName" required class="form-control" cols="30" rows="3" ng-model="blade.item.name" ng-class="{'error': newProductForm.productName.$invalid && !newProductForm.productName.$pristine}" placeholder="Enter item name"></textarea>
+                    </div>
+                    <div class="form-error" ng-if="newProductForm.productName.$dirty && newProductForm.productName.$invalid">
+                        <span ng-if="newProductForm.productName.$error.required">Required</span>
                     </div>
                 </div>
             </form>
