@@ -1,8 +1,8 @@
 ﻿<div class="blade" ng-repeat="blade in blades">
     <div class="blade-wrapper" va-blade='blade'>
         <header class="blade-head">
-            <div class="blade-status" ng-class="{'__error': blade.error.status}">
-                <div class="blade-status-bar" ng-if="blade.error.status" ng-bind="blade.error.title"></div>
+            <div class="blade-status" ng-class="{'__error': blade.error}">
+                <div class="blade-status-bar" ng-if="blade.error">{{blade.error}}</div>
                 <div class="progress-bar" ng-class="{'__loaded': !blade.isLoading}" ng-show="blade.isLoading"></div>
             </div>
             <div class="blade-nav">

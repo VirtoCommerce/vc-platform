@@ -256,12 +256,9 @@ angular.module('platformWebApp.bladeNavigation', [
             }
 
         },
-        setError: function (title, blade) {
+        setError: function (msg, blade) {
         	blade.isLoading = false;
-            blade.error = {
-                status: true,
-                title: title
-            };
+        	blade.error = msg;
         }
     };
 
