@@ -1,5 +1,5 @@
 ﻿angular.module('catalogModule.blades.seoDetail', [])
-.controller('seoDetailController', ['$scope', 'categories', 'items', 'dialogService', function ($scope, categories, items, dialogService) {
+.controller('seoDetailController', ['$scope', 'categories', 'items', 'dialogService', 'bladeNavigationService', function ($scope, categories, items, dialogService, bladeNavigationService) {
     $scope.blade.origItem = {};
 
     $scope.blade.refresh = function (parentRefresh) {
@@ -35,10 +35,14 @@
         if ($scope.blade.seoUrlKeywordType === 0) {
             categories.update({ id: $scope.blade.parentEntity.id, seoInfos: seoInfos }, function () {
                 $scope.blade.refresh(true);
+            }, function (error) {
+              	bladeNavigationService.setError('Error ' + error.status, $scope.blade);
             });
         } else if ($scope.blade.seoUrlKeywordType === 1) {
             items.updateitem({ id: $scope.blade.parentEntity.id, seoInfos: seoInfos }, function () {
                 $scope.blade.refresh(true);
+            }, function (error) {
+            	bladeNavigationService.setError('Error ' + error.status, $scope.blade);
             });
         }
     };

@@ -256,7 +256,8 @@ angular.module('platformWebApp.bladeNavigation', [
             }
 
         },
-        setError: function(title, blade) {
+        setError: function (title, blade) {
+        	blade.isLoading = false;
             blade.error = {
                 status: true,
                 title: title
