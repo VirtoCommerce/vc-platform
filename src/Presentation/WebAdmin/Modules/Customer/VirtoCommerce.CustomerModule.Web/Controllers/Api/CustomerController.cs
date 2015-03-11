@@ -29,6 +29,16 @@ namespace VirtoCommerce.CustomerModule.Web.Controllers.Api
 			_contactService = contactService;
 		}
 
+		// GET: api/organizations
+		[HttpGet]
+		[ResponseType(typeof(webModel.Organization[]))]
+		[Route("organizations")]
+		public IHttpActionResult ListOrganizations()
+		{
+			var retVal = _organizationService.List().ToArray();
+			return Ok(retVal);
+		}
+
 		// GET: api/members?q=ddd&organization=org1&start=0&count=20
 		[HttpGet]
 		[ResponseType(typeof(webModel.SearchResult))]

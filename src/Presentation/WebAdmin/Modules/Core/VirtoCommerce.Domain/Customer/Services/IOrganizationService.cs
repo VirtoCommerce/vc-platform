@@ -9,6 +9,7 @@ namespace VirtoCommerce.Domain.Customer.Services
 {
 	public interface IOrganizationService
 	{
+		IEnumerable<Organization> List();
 		Organization GetById(string id);
 		Organization Create(Organization organization);
 		void Update(Organization[] organizations);

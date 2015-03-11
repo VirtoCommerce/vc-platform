@@ -85,7 +85,17 @@ namespace VirtoCommerce.CustomerModule.Data.Services
 				CommitChanges(repository);
 			}
 		}
-		#endregion
 	
+		public IEnumerable<coreModel.Organization> List()
+		{
+			var retVal = new List<coreModel.Organization>();
+			using (var repository = _repositoryFactory())
+			{
+				retVal = repository.Organizations.ToArray().Select(x => x.ToCoreModel()).ToList();
+			}
+			return retVal;
+		}
+
+		#endregion
 	}
 }
