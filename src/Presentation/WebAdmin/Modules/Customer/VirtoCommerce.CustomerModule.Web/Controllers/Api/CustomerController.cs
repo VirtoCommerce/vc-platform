@@ -17,12 +17,12 @@ using webModel = VirtoCommerce.CustomerModule.Web.Model;
 namespace VirtoCommerce.CustomerModule.Web.Controllers.Api
 {
 	[RoutePrefix("api")]
-	public class MemberController : ApiController
+	public class CustomerController : ApiController
 	{
 		private readonly IContactService _contactService;
 		private readonly IOrganizationService _organizationService;
 		private readonly ICustomerSearchService _contactSearchService;
-		public MemberController(IContactService contactService, IOrganizationService organizationService, ICustomerSearchService contactSearchService)
+		public CustomerController(IContactService contactService, IOrganizationService organizationService, ICustomerSearchService contactSearchService)
 		{
 			_contactSearchService = contactSearchService;
 			_organizationService = organizationService;

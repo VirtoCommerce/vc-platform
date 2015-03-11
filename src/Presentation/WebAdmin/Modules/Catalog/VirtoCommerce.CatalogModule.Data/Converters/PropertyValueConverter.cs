@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using foundation = VirtoCommerce.Foundation.Catalogs.Model;
 using module = VirtoCommerce.Domain.Catalog.Model;
+using VirtoCommerce.Foundation.Frameworks.ConventionInjections;
+using Omu.ValueInjecter;
 
 namespace VirtoCommerce.CatalogModule.Data.Converters
 {
@@ -80,34 +82,39 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
                 throw new ArgumentNullException("target");
             }
 
-            SetPropertyValue(target, (foundation.PropertyValueType)target.ValueType, target.ToString());
 
-            if (!string.IsNullOrWhiteSpace(source.KeyValue))
-            {
-                target.KeyValue = source.KeyValue;
-            }
-
-
+			var patchInjectionPolicy = new PatchInjection<foundation.PropertyValueBase>(x => x.BooleanValue, x => x.DateTimeValue,
+																				  x => x.DecimalValue, x => x.IntegerValue,
+																				  x => x.KeyValue, x => x.LongTextValue, x => x.ShortTextValue);
+			target.InjectFrom(patchInjectionPolicy, source);
         }
 
-        private static void SetPropertyValue(foundation.PropertyValueBase retVal, foundation.PropertyValueType type, string value)
-        {
-            switch (type)
-            {
-                case foundation.PropertyValueType.LongString:
-                    retVal.LongTextValue = value;
-                    break;
-                case foundation.PropertyValueType.ShortString:
-                    retVal.ShortTextValue = value;
-                    break;
-                case foundation.PropertyValueType.Decimal:
-                    decimal parsedDecimal;
-                    Decimal.TryParse(value, out parsedDecimal);
-                    retVal.DecimalValue = parsedDecimal;
-                    break;
-            }
-        }
+		private static void SetPropertyValue(foundation.PropertyValueBase retVal, foundation.PropertyValueType type, string value)
+		{
+			switch (type)
+			{
+				case foundation.PropertyValueType.LongString:
+					retVal.LongTextValue = value;
+					break;
+				case foundation.PropertyValueType.ShortString:
+					retVal.ShortTextValue = value;
+					break;
+				case foundation.PropertyValueType.Decimal:
+					decimal parsedDecimal;
+					Decimal.TryParse(value, out parsedDecimal);
+					retVal.DecimalValue = parsedDecimal;
+					break;
+				case foundation.PropertyValueType.DateTime:
+					retVal.DateTimeValue = DateTime.Parse(value);
+					break;
+				case foundation.PropertyValueType.Boolean:
+					retVal.BooleanValue = Boolean.Parse(value);
+					break;
+			}
+		}
     }
+
+
 
     public class PropertyValueComparer : IEqualityComparer<foundation.PropertyValueBase>
     {

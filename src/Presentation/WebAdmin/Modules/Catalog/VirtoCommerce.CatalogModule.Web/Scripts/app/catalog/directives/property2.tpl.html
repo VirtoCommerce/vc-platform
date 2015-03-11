@@ -128,7 +128,7 @@
 
     <script type="text/ng-template" id="ShortText-dictionary-multivalue.html">
         <div class="form-input">
-            <ui-select multiple ng-model="context.currentPropValues[0]" ng-disabled="disabled">
+            <ui-select multiple ng-model="context.currentPropValues" ng-disabled="disabled">
                 <ui-select-match placeholder="Select value">{{$item.value}}</ui-select-match>
                 <ui-select-choices repeat="propValue in context.allDictionaryValues | filter: {value: $select.search}">
                     <span ng-bind-html="propValue.value | highlight: $select.search"></span>
