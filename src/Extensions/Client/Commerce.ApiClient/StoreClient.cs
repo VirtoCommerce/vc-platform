@@ -10,11 +10,6 @@ using VirtoCommerce.ApiClient.Utilities;
 
 namespace VirtoCommerce.ApiClient
 {
-
-    #region
-
-    #endregion
-
     public class StoreClient : BaseClient
     {
         #region Constructors and Destructors
@@ -58,7 +53,7 @@ namespace VirtoCommerce.ApiClient
         {
             #region Constants
 
-            public const string Stores = "stores";
+            public const string Stores = "mp/stores";
 
             #endregion
         }

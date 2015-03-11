@@ -12,8 +12,7 @@ namespace VirtoCommerce.ApiClient.Extensions
 
         public static StoreClient CreateStoreClient(this CommerceClients source)
         {
-            var connectionString = String.Format("{0}{1}/", ClientContext.Configuration.ConnectionString, "mp");
-            return CreateStoreClient(source, connectionString);
+            return CreateStoreClient(source, ClientContext.Configuration.ConnectionString);
         }
 
         public static StoreClient CreateStoreClient(this CommerceClients source, string serviceUrl)
