@@ -6,7 +6,8 @@
     $scope.currentBlade = $scope.widget.blade;
     
     $scope.widget.refresh = function () {
-        $scope.priceRange = '...';
+        $scope.priceRange = '';
+        $scope.priceNa = '';
 
         return prices.query({ id: $scope.currentBlade.itemId }, function (data) {
             // find the most popular currency and min/max prices in it.
@@ -21,7 +22,7 @@
                 $scope.priceRange = (minprice == maxprice ? minprice : minprice + '-' + maxprice);
                 $scope.currency = currency;
             } else {
-                $scope.priceRange = 'NO';
+                $scope.priceNa = 'N/A';
             }
         });
     }

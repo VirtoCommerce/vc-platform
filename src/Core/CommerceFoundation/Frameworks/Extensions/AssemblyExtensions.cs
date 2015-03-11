@@ -44,7 +44,7 @@ namespace VirtoCommerce.Foundation.Frameworks.Extensions
             {
                 return a.GetLoadableTypes();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return Enumerable.Empty<Type>();
             }
