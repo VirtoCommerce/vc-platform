@@ -5032,6 +5032,36 @@ tags-input .tags .tag-item .remove-button
 			z-index: 25;
 		}
 
+        .blade-head .blade-status.__error
+        {
+            background: rgba(229,20,0,.45);
+        }
+
+            .blade-status .status-message
+            {
+                bottom: 0;
+                color: #fff;
+                font-size: 14px;
+                left: 0;
+                line-height: 23px;
+                padding: 0 0 0 50px;
+                position: absolute;
+                right: 0;
+                top: 0;
+
+                filter: alpha(opacity=50);
+            }
+
+            .blade-status .status-message:after
+            {
+                color: #fff;
+                content: '';
+                font-family: 'FontAwesome';
+                left: 20px;
+                position: absolute;
+                top: 2px;
+            }
+
             .blade-status .progress-bar
             {
                 bottom: 0;
