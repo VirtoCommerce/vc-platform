@@ -1,4 +1,5 @@
 ﻿<div class="tile __price double wide" ng-click="openBlade()">
-    <span class="tile-price">{{priceRange | number: 2}} {{currency}}</span>
+    <span class="tile-price" ng-if="priceRange">{{priceRange | number: 2}} {{currency}}</span>
+    <span class="tile-price" ng-if="priceNa">{{priceNa}}</span>
     <span class="tile-descr">Price</span>
 </div>
