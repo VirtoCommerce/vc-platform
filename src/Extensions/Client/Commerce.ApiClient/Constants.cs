@@ -10,14 +10,5 @@
 
             #endregion
         }
-
-        internal static class Headers
-        {
-            #region Constants
-
-            public const string PrincipalId = "x-vc-principal-id";
-
-            #endregion
-        }
     }
 }

@@ -189,20 +189,6 @@ namespace VirtoCommerce.ApiClient
 
         #endregion
 
-        #region Methods
-
-        protected override TimeSpan GetCacheTimeOut(string requestUrl)
-        {
-            if (requestUrl.Contains(RelativePaths.Categories))
-            {
-                return CatalogConfiguration.Instance.Cache.CategoryCollectionTimeout;
-            }
-
-            return base.GetCacheTimeOut(requestUrl);
-        }
-
-        #endregion
-
         protected class RelativePaths
         {
             #region Constants

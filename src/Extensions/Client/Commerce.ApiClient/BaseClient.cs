@@ -148,21 +148,7 @@ namespace VirtoCommerce.ApiClient
 
             disposed = true;
         }
-
-        /*
-        protected virtual async Task<T> GetAsync<T>(Uri requestUri, string userId = null, bool useCache = true)
-            where T : class
-        {
-            return
-                await
-                    Helper.GetAsync(
-                        requestUri.ToString(),
-                        () => GetAsyncInternal<T>(requestUri, userId),
-                        GetCacheTimeOut(requestUri.ToString()),
-                        ClientContext.Configuration.IsCacheEnabled && useCache).ConfigureAwait(false);
-        }
-         * */
-
+        
         /// <summary>
         ///     Sends a GET request.
         /// </summary>
@@ -170,14 +156,14 @@ namespace VirtoCommerce.ApiClient
         /// <param name="requestUri">The request URI.</param>
         /// <param name="userId">The user id. Only required by the tenant API.</param>
         /// <returns>Response object.</returns>
-        protected virtual async Task<T> GetAsync<T>(Uri requestUri, string userId = null, bool useCache = true)
+        protected virtual async Task<T> GetAsync<T>(Uri requestUri, bool useCache = true)
             where T : class
         {
             var message = new HttpRequestMessage(HttpMethod.Get, requestUri);
 
-            if (!string.IsNullOrWhiteSpace(userId))
+            if (!useCache)
             {
-                message.Headers.Add(Constants.Headers.PrincipalId, HttpUtility.UrlEncode(userId));
+                message.Headers.Add("Cache-Control", "no-cache, no-store, must-revalidate"); 
             }
 
             using (var response = await httpClient.SendAsync(message))
@@ -188,20 +174,14 @@ namespace VirtoCommerce.ApiClient
             }
         }
 
-        protected virtual TimeSpan GetCacheTimeOut(string requestUrl)
-        {
-            return new TimeSpan(0, 0, 0, 30);
-        }
-
         /// <summary>
         ///     Sends an http request.
         /// </summary>
         /// <param name="requestUri">The request URI.</param>
         /// <param name="httpMethod">The HTTP method.</param>
-        /// <param name="userId">The user id. Only required by the tenant API.</param>
-        protected Task SendAsync(Uri requestUri, HttpMethod httpMethod, string userId = null)
+        protected Task SendAsync(Uri requestUri, HttpMethod httpMethod)
         {
-            return SendAsync<object>(requestUri, httpMethod, userId);
+            return SendAsync<object>(requestUri, httpMethod);
         }
 
         /// <summary>
@@ -210,11 +190,10 @@ namespace VirtoCommerce.ApiClient
         /// <typeparam name="TOutput">The type of the output.</typeparam>
         /// <param name="requestUri">The request URI.</param>
         /// <param name="httpMethod">The HTTP method.</param>
-        /// <param name="userId">The user id.</param>
-        protected Task<TOutput> SendAsync<TOutput>(Uri requestUri, HttpMethod httpMethod, string userId = null)
+        protected Task<TOutput> SendAsync<TOutput>(Uri requestUri, HttpMethod httpMethod)
         {
             var message = new HttpRequestMessage(httpMethod, requestUri);
-            return SendAsync<TOutput>(message, true, userId);
+            return SendAsync<TOutput>(message, true);
         }
 
         /// <summary>
@@ -224,10 +203,9 @@ namespace VirtoCommerce.ApiClient
         /// <param name="requestUri">The request URI.</param>
         /// <param name="httpMethod">The HTTP method.</param>
         /// <param name="body">The body.</param>
-        /// <param name="userId">The user id. Only required by the tenant API.</param>
-        protected Task SendAsync<TInput>(Uri requestUri, HttpMethod httpMethod, TInput body, string userId = null)
+        protected Task SendAsync<TInput>(Uri requestUri, HttpMethod httpMethod, TInput body)
         {
-            return SendAsync<TInput, object>(requestUri, httpMethod, body, userId);
+            return SendAsync<TInput, object>(requestUri, httpMethod, body);
         }
 
         /// <summary>
@@ -242,8 +220,7 @@ namespace VirtoCommerce.ApiClient
         protected Task<TOutput> SendAsync<TInput, TOutput>(
             Uri requestUri,
             HttpMethod httpMethod,
-            TInput body,
-            string userId = null)
+            TInput body)
         {
             var message = new HttpRequestMessage(httpMethod, requestUri)
             {
@@ -253,7 +230,7 @@ namespace VirtoCommerce.ApiClient
                         CreateMediaTypeFormatter())
             };
 
-            return SendAsync<TOutput>(message, true, userId);
+            return SendAsync<TOutput>(message, true);
         }
 
         private MediaTypeFormatter CreateMediaTypeFormatter()
@@ -273,13 +250,8 @@ namespace VirtoCommerce.ApiClient
             return formatter;
         }
 
-        private async Task<TOutput> SendAsync<TOutput>(HttpRequestMessage message, bool hasResult, string userId = null)
+        private async Task<TOutput> SendAsync<TOutput>(HttpRequestMessage message, bool hasResult)
         {
-            if (!string.IsNullOrWhiteSpace(userId))
-            {
-                message.Headers.Add(Constants.Headers.PrincipalId, userId);
-            }
-
             using (var response = await httpClient.SendAsync(message).ConfigureAwait(false))
             {
                 await ThrowIfResponseNotSuccessfulAsync(response);

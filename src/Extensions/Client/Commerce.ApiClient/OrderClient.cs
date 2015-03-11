@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
 using VirtoCommerce.ApiClient.DataContracts.Orders;
@@ -27,9 +26,12 @@ namespace VirtoCommerce.ApiClient
 
         public Task<CustomerOrder> GetCustomerOrderAsync(string customerId, string orderId)
         {
+            var parameters = new
+            {
+                customer = customerId
+            };
             return GetAsync<CustomerOrder>(
-                CreateRequestUri(string.Format(RelativePaths.GetSingleOrder, orderId)),
-                userId: customerId,
+                CreateRequestUri(string.Format(RelativePaths.GetSingleOrder, orderId), parameters),
                 useCache: false);
         }
 
@@ -40,16 +42,17 @@ namespace VirtoCommerce.ApiClient
             int skip,
             int take)
         {
-            var queryStringParameters = new List<KeyValuePair<string, string>>();
-            queryStringParameters.Add(new KeyValuePair<string, string>("q", query));
-            queryStringParameters.Add(new KeyValuePair<string, string>("site", storeId));
-            queryStringParameters.Add(new KeyValuePair<string, string>("customer", customerId));
-            queryStringParameters.Add(new KeyValuePair<string, string>("start", skip.ToString()));
-            queryStringParameters.Add(new KeyValuePair<string, string>("count", take.ToString()));
+            var parameters = new
+            {
+                q = query,
+                site = storeId,
+                customer = customerId,
+                start = skip.ToString(),
+                count = take.ToString()
+            };
 
             return GetAsync<OrderSearchResult>(
-                CreateRequestUri(RelativePaths.GetMultipleOrders, queryStringParameters.ToArray()),
-                userId: customerId,
+                CreateRequestUri(RelativePaths.GetMultipleOrders, parameters),               
                 useCache: false);
         }
 
