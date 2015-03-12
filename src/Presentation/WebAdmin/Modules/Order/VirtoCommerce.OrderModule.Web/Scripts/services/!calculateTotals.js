@@ -4,51 +4,50 @@
 
 	function recalculateTotals(operation)
 	{
-		var retVal = {};
 		if (angular.isDefined(operation.operationType)) {
 			if (operation.operationType.toLowerCase() == 'customerorder') {
 
-				retVal.subTotal = _.reduce(operation.items, function (memo, x) { return memo + x.price * x.quantity; }, 0);
-				retVal.shippingTotal = _.reduce(operation.shipments, function (memo, x) { return memo + x.sum; }, 0);
+				operation._subTotal = _.reduce(operation.items, function (memo, x) { return memo + x.price * x.quantity; }, 0);
+				operation._shippingTotal = _.reduce(operation.shipments, function (memo, x) { return memo + x.sum; }, 0);
 
-				retVal.discountTotal = operation.discountAmount ? parseFloat(operation.discountAmount) : 0;
-				retVal.discountTotal += _.reduce(operation.items, function (memo, x) { return memo + parseFloat(x.discountAmount) }, 0);
-				retVal.discountTotal += _.reduce(operation.shipments, function (memo, x) { return memo + parseFloat(x.discountAmount) }, 0);
+				operation._discountTotal = operation.discountAmount ? parseFloat(operation.discountAmount) : 0;
+				operation._discountTotal += _.reduce(operation.items, function (memo, x) { return memo + parseFloat(x.discountAmount) }, 0);
+				operation._discountTotal += _.reduce(operation.shipments, function (memo, x) { return memo + parseFloat(x.discountAmount) }, 0);
 
-				retVal.taxTotal = parseFloat(operation.tax);
-				retVal.taxTotal += _.reduce(operation.items, function (memo, x) { return memo + parseFloat(x.tax); }, 0);
-				retVal.taxTotal += _.reduce(operation.shipments, function (memo, x) { return memo + parseFloat(x.tax); }, 0);
+				operation._taxTotal = parseFloat(operation.tax);
+				operation._taxTotal += _.reduce(operation.items, function (memo, x) { return memo + parseFloat(x.tax); }, 0);
+				operation._taxTotal += _.reduce(operation.shipments, function (memo, x) { return memo + parseFloat(x.tax); }, 0);
 
 				_.each(operation.items, function (x) {
-					x.total = parseInt(x.quantity) * (parseFloat(x.price) || 0) - (parseFloat(x.discountAmount) || 0) + (parseFloat(x.tax) || 0);
-					x.total = Math.round(x.total * 100) / 100;
+					x._total = parseInt(x.quantity) * (parseFloat(x.price) || 0) - (parseFloat(x.discountAmount) || 0) + (parseFloat(x.tax) || 0);
+					x._total = Math.round(x._total * 100) / 100;
 				});
 
 				
-				retVal.subTotal = Math.round(retVal.subTotal * 100) / 100;
-				retVal.shippingTotal = Math.round(retVal.shippingTotal * 100) / 100;
-				retVal.discountTotal = Math.round(retVal.discountTotal * 100) / 100;
-				retVal.taxTotal = Math.round(retVal.taxTotal * 100) / 100;
-				retVal.total = retVal.subTotal + retVal.shippingTotal + retVal.taxTotal - retVal.discountTotal;
-				retVal.total = Math.round(retVal.total * 100) / 100;
+				operation._subTotal = Math.round(operation._subTotal * 100) / 100;
+				operation._shippingTotal = Math.round(operation._shippingTotal * 100) / 100;
+				operation._discountTotal = Math.round(operation._discountTotal * 100) / 100;
+				operation._taxTotal = Math.round(operation._taxTotal * 100) / 100;
+				operation._total = operation._subTotal + operation._shippingTotal + operation._taxTotal - operation._discountTotal;
+				operation._total = Math.round(operation._total * 100) / 100;
 				
 			}
 			else if (operation.operationType.toLowerCase() == 'shipment') {
 
-				retVal.discountTotal = parseFloat(operation.discountAmount);
-				retVal.taxTotal = parseFloat(operation.tax);
-				retVal.shippingTotal = parseFloat(operation.sum);
-				retVal.total = retVal.shippingTotal + retVal.taxTotal - retVal.discountTotal;
-				retVal.total = Math.round(retVal.total * 100) / 100;
+				operation._discountTotal = parseFloat(operation.discountAmount);
+				operation._taxTotal = parseFloat(operation.tax);
+				operation._shippingTotal = parseFloat(operation.sum);
+				operation._total = operation.shippingTotal + operation._taxTotal - operation._discountTotal;
+				operation._total = Math.round(operation._total * 100) / 100;
 			}
 		}
-		return retVal;
+		return operation;
 	};
 
-	var retVal = {
+	var operation = {
 		recalculateTotals: recalculateTotals
 	};
 
-	return retVal;
+	return operation;
 }]);
 

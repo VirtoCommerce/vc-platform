@@ -107,12 +107,13 @@
     <Content Include="Scripts\blades\!customer-list.tpl.html" />
     <Content Include="Scripts\blades\member-add.js" />
     <Content Include="Scripts\blades\member-add.tpl.html" />
+    <Content Include="Scripts\blades\organization-detail.tpl.html" />
     <Content Include="Scripts\blades\member-list.js" />
     <Content Include="Scripts\blades\member-list.tpl.html" />
     <Content Include="Scripts\blades\member-property-list.js" />
     <Content Include="Scripts\blades\member-property-list.tpl.html" />
     <Content Include="Scripts\blades\member-detail.js" />
-    <Content Include="Scripts\blades\member-contact-detail.tpl.html" />
+    <Content Include="Scripts\blades\customer-detail.tpl.html" />
     <Content Include="Scripts\blades\member-phones-list.js" />
     <Content Include="Scripts\blades\member-emails-list.js" />
     <Content Include="Scripts\blades\member-phones-list.tpl.html" />
@@ -191,16 +192,7 @@
     <VisualStudio>
       <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
         <WebProjectProperties>
-          <UseIIS>True</UseIIS>
-          <AutoAssignPort>True</AutoAssignPort>
-          <DevelopmentServerPort>52554</DevelopmentServerPort>
-          <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:52554/</IISUrl>
-          <NTLMAuthentication>False</NTLMAuthentication>
-          <UseCustomServer>False</UseCustomServer>
-          <CustomServerUrl>
-          </CustomServerUrl>
-          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+          <SaveServerSettingsInUserFile>True</SaveServerSettingsInUserFile>
         </WebProjectProperties>
       </FlavorProperties>
     </VisualStudio>

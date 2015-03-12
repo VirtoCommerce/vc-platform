@@ -1,10 +1,7 @@
-﻿angular.module('platformWebApp.security', [
-    'platformWebApp.security.auth',
-    'platformWebApp.security.login'
-]).config(['$stateProvider', '$httpProvider', function ($stateProvider, $httpProvider) {
+﻿angular.module('platformWebApp')
+	.config(['$stateProvider', '$httpProvider', function ($stateProvider, $httpProvider) {
 
-	$stateProvider
-		.state('loginDialog', {
+		$stateProvider.state('loginDialog', {
 			url: '/login',
 			templateUrl: 'Scripts/common/security/login/login.tpl.html',
 			controller: ['$scope', 'authService', function ($scope, authService) {

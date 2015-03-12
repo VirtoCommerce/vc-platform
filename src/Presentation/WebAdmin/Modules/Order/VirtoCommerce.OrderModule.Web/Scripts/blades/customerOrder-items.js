@@ -11,7 +11,7 @@
     var selectedNode = null;
 
     $scope.$watch("blade.currentEntity", function (operation) {
-    	$scope.totals = calculateTotalsService.recalculateTotals(operation);
+    	calculateTotalsService.recalculateTotals(operation);
     }, true);
 
     $scope.blade.refresh = function () {

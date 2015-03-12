@@ -5,7 +5,7 @@
 
 	$scope.$watch('widget.blade.currentEntity', function (shipment) {
 		if (shipment) {
-			$scope.blade.totals = calculateTotalsService.recalculateTotals(shipment);
+			calculateTotalsService.recalculateTotals(shipment);
 			$scope.shipment = shipment;
 		}
 	}, true);

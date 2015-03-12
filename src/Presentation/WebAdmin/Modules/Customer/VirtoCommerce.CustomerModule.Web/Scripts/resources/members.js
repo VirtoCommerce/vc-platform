@@ -5,7 +5,7 @@
     });
 }])
 .factory('organizations', ['$resource', function ($resource) {
-    return $resource('api/organizations', {}, {
+    return $resource('api/organizations/:_id', { _id: '@_id' }, {
         update: { method: 'PUT' }
     });
 }])

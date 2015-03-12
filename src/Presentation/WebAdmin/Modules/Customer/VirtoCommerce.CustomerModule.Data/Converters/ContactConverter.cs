@@ -38,7 +38,7 @@ namespace VirtoCommerce.CustomerModule.Data.Converters
 			retVal.Notes = dbEntity.Notes.Select(x => x.ToCoreModel()).ToList();
 			retVal.Phones = dbEntity.Phones.Select(x => x.Number).ToList();
 			retVal.Properties = dbEntity.ContactPropertyValues.Select(x => x.ToCoreModel()).ToList();
-			retVal.Organizations = dbEntity.MemberRelations.Select(x => x.Ancestor).OfType<foundationModel.Organization>().Select(x => x.ToCoreModel()).ToList();
+			retVal.Organizations = dbEntity.MemberRelations.Select(x => x.Ancestor).OfType<foundationModel.Organization>().Select(x => x.MemberId).ToList();
 			return retVal;
 
 		}
@@ -114,7 +114,7 @@ namespace VirtoCommerce.CustomerModule.Data.Converters
 				{
 					var memberRelation = new foundationModel.MemberRelation()
 					{
-						AncestorId = organization.Id,
+						AncestorId = organization,
 						AncestorSequence = 1,
 						DescendantId = retVal.MemberId
 					};

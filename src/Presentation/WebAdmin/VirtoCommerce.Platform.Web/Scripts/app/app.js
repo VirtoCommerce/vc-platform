@@ -1,5 +1,6 @@
 ﻿var AppDependencies = [
   'ui.router',
+  'googlechart',
   'ui.bootstrap',
   'ui.utils',
   'ui.sortable',
@@ -8,19 +9,8 @@
   'ngResource',
   'xeditable',
   'fiestah.money',
-  'platformWebApp.dashboard',
-  'platformWebApp.security',
-  'platformWebApp.notification',
-  'platformWebApp.mainMenu',
-  'platformWebApp.bladeNavigation',
-  'platformWebApp.overlay',
-  'platformWebApp.contextMenu',
-  'platformWebApp.Filters',
-  'platformWebApp.htmlTooltip',
-  'platformWebApp.widget',
-  'platformWebApp.breadcrumbs',
-  'platformWebApp.inputNumber',
-  'platformWebApp.common.confirmDialog'
+  'ngCookies',
+  'angularMoment'
 ];
 
 angular.module('platformWebApp', AppDependencies).

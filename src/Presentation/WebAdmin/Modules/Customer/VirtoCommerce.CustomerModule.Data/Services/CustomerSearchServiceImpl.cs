@@ -50,6 +50,10 @@ namespace VirtoCommerce.CustomerModule.Data.Services
 				{
 					query = query.Where(x => x.MemberRelations.Any(y=>y.AncestorId == criteria.OrganizationId));
 				}
+				else
+				{
+					query = query.Where(x => !x.MemberRelations.Any());
+				}
 
 				result.Organizations = query.OrderByDescending(x => x.Name)
 										    .ToArray()
@@ -66,6 +70,10 @@ namespace VirtoCommerce.CustomerModule.Data.Services
 				if(criteria.OrganizationId != null)
 				{
 					query = query.Where(x => x.MemberRelations.Any(y => y.AncestorId == criteria.OrganizationId));
+				}
+				else
+				{
+					query = query.Where(x => !x.MemberRelations.Any());
 				}
 
 				result.TotalCount = query.Count();

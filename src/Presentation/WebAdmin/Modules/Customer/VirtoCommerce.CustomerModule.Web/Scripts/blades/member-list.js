@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.customerModule.blades')
-.controller('memberListController', ['$scope', 'members', 'bladeNavigationService', 'dialogService', function ($scope, members, bladeNavigationService, dialogService) {
+.controller('memberListController', ['$scope', 'members', 'contacts', 'organizations', 'bladeNavigationService', 'dialogService', function ($scope, members, contacts, organizations, bladeNavigationService, dialogService) {
     //pagination settigs
     $scope.pageSettings = {};
     $scope.pageSettings.totalItems = 0;
@@ -18,10 +18,8 @@
         $scope.blade.isLoading = true;
         members.search(
             {
-                //catalog: $scope.blade.currentEntityId,
-                //category: $scope.blade.categoryId,
+                organization: $scope.blade.currentEntity.id,
                 keyword: $scope.filter.searchKeyword,
-                // respGroup: 'withOrganizations, withContacts',
                 start: ($scope.pageSettings.currentPage - 1) * $scope.pageSettings.listEntriesPerPageCount,
                 count: $scope.pageSettings.listEntriesPerPageCount
             },
@@ -41,7 +39,7 @@
 		    }
 
 		    //Set navigation breadcrumbs
-		    // setBreadcrumps();
+		    setBreadcrumps();
 		}, function (error) {
 		    $scope.blade.isLoading = false;
 		    bladeNavigationService.setError('Error ' + error.status, $scope.blade);
@@ -55,19 +53,11 @@
 
         //catalog breadcrump by default
         var breadCrumb = {
-            id: $scope.blade.currentEntityId,
-            // name: $scope.blade.catalog.displayName,
-            name: '???.displayName',
+            id: $scope.blade.currentEntity.id,
+            name: $scope.blade.currentEntity.displayName,
             blade: $scope.blade
         };
-
-        //if organization need change to organization breadcrumb
-        if (angular.isDefined($scope.blade.organization)) {
-
-            breadCrumb.id = $scope.blade.organizationId;
-            breadCrumb.name = $scope.blade.organization.displayName;
-        }
-
+        
         //prevent dublicate items
         if (!_.some($scope.blade.breadcrumbs, function (x) { return x.id == breadCrumb.id; })) {
             $scope.blade.breadcrumbs.push(breadCrumb);
@@ -113,7 +103,7 @@
     }
 
     $scope.edit = function (listItem) {
-        if (listItem.memberType === 'organization') {
+        if (listItem.memberType === 'Organization') {
             preventOrganizationListingOnce = true;
         }
         edit(listItem);
@@ -122,38 +112,31 @@
     function edit(listItem) {
         closeChildrenBlades();
 
-        $scope.selectedItem = listItem;
         if (listItem.memberType === 'Organization') {
-            $scope.blade.showOrganizationBlade(listItem.id, listItem.displayName);
+            $scope.blade.showDetailBlade(listItem, listItem.displayName);
         }
         // else do nothing as item is opened on selecting it.
     };
 
-    $scope.blade.showOrganizationBlade = function (id, title) {
-        var newBlade = {
-            id: "listMemberDetail",
-            currentEntityId: id,
-            currentEntity: $scope.selectedItem,
-            isOrganization: true,
-            title: title,
-            subtitle: 'Organization details',
-            controller: 'memberDetailController',
-            template: 'Modules/Customer/VirtoCommerce.CustomerModule.Web/Scripts/blades/organization-detail.tpl.html'
-        };
-        bladeNavigationService.showBlade(newBlade, $scope.blade);
-    };
+    $scope.blade.showDetailBlade = function (listItem, title) {
+        $scope.blade.setSelectedNode(listItem);
 
-    $scope.blade.showContactBlade = function (id, title) {
         var newBlade = {
             id: "listMemberDetail",
-            currentEntityId: id,
-            currentEntity: $scope.selectedItem,
+            currentEntityId: listItem.id,
             isOrganization: false,
             title: title,
             subtitle: 'Customer details',
             controller: 'memberDetailController',
-            template: 'Modules/Customer/VirtoCommerce.CustomerModule.Web/Scripts/blades/member-contact-detail.tpl.html'
+            template: 'Modules/Customer/VirtoCommerce.CustomerModule.Web/Scripts/blades/customer-detail.tpl.html'
         };
+
+        if (listItem.memberType === 'Organization') {
+            newBlade.isOrganization = true;
+            newBlade.subtitle = 'Organization details';
+            newBlade.template = 'Modules/Customer/VirtoCommerce.CustomerModule.Web/Scripts/blades/organization-detail.tpl.html';
+        }
+
         bladeNavigationService.showBlade(newBlade, $scope.blade);
     };
 
@@ -185,52 +168,21 @@
                 if (remove) {
                     closeChildrenBlades();
 
-                    //var selection = $filter('filter')($scope.listEntries, { selected: true }, true);
+                    var selection = _.where($scope.listEntries, { selected: true, memberType: 'Organization' });
+                    var organizationIds = _.pluck(selection, 'id');
+                    selection = _.where($scope.listEntries, { selected: true, memberType: 'Contact' });
+                    var customerIds = _.pluck(selection, 'id');
 
-                    //var listEntryLinks = [];
-                    //var categoryIds = [];
-                    //var itemIds = [];
-                    angular.forEach(selection, function (listItem) {
-                        var deletingLink = false;
-
-                        //if (listItem.memberType === 'category') {
-                        //    if ($scope.blade.catalog.virtual && _.some(listItem.links, function (x) { return x.categoryId === $scope.blade.categoryId; })) {
-                        //        deletingLink = true;
-                        //    } else {
-                        //        categoryIds.push(listItem.id);
-                        //    }
-                        //} else {
-                        //    if ($scope.blade.catalog.virtual) {
-                        //        deletingLink = true;
-                        //    } else {
-                        //        itemIds.push(listItem.id);
-                        //    }
-                        //}
-
-                        if (deletingLink)
-                            listEntryLinks.push({
-                                listEntryId: listItem.id,
-                                listEntryType: listItem.memberType,
-                                catalogId: $scope.blade.currentEntityId,
-                                categoryId: $scope.blade.categoryId,
-                            });
-                    });
-
-                    //if (listEntryLinks.length > 0) {
-                    //    customers.deletelinks(listEntryLinks, function (data, headers) {
-                    //        $scope.blade.refresh();
-                    //    });
-                    //}
-                    //if (categoryIds.length > 0) {
-                    //    categories.remove({ ids: categoryIds }, function (data, headers) {
-                    //        $scope.blade.refresh();
-                    //    });
-                    //}
-                    //if (itemIds.length > 0) {
-                    //    items.remove({ ids: itemIds }, function (data, headers) {
-                    //        $scope.blade.refresh();
-                    //    });
-                    //}
+                    if (organizationIds.length > 0) {
+                        organizations.remove({ ids: organizationIds }, function (data) {
+                            $scope.blade.refresh();
+                        });
+                    }
+                    if (customerIds.length > 0) {
+                        contacts.remove({ ids: customerIds }, function (data) {
+                            $scope.blade.refresh();
+                        });
+                    }
                 }
             }
         }
@@ -253,28 +205,18 @@
                     id: 'memberList',
                     breadcrumbs: $scope.blade.breadcrumbs,
                     subtitle: 'Browsing "' + listItem.displayName + '"',
-                    currentEntityId: $scope.blade.currentEntityId,
-                    catalog: $scope.blade.catalog,
-                    //categoryId: listItem.id,
-                    //category: listItem,
+                    currentEntity: listItem,
                     controller: 'memberListController',
                     template: $scope.blade.template
                 };
 
-                if (e.ctrlKey) {
-                    bladeNavigationService.showBlade(newBlade, $scope.blade);
-                }
-                else {
-                    bladeNavigationService.closeBlade($scope.blade, function () {
-                        bladeNavigationService.showBlade(newBlade, $scope.blade.parentBlade);
-                    });
-                }
+                bladeNavigationService.closeBlade($scope.blade, function () {
+                    bladeNavigationService.showBlade(newBlade, $scope.blade.parentBlade);
+                });
             }
         } else {
-            $scope.blade.showContactBlade(listItem.id, listItem.displayName);
+            $scope.blade.showDetailBlade(listItem, listItem.displayName);
         }
-
-        //$scope.blade.currentItemId = selectedNode.memberType === 'Contact' ? selectedNode.id : undefined;
     };
 
     $scope.blade.onClose = function (closeCallback) {

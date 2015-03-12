@@ -63,7 +63,7 @@ namespace VirtoCommerce.CustomerModule.Test
 				 Id = "testContact1",
 				 FullName = "Vasa2",
 				 BirthDate = DateTime.UtcNow,
-				 Organizations = new webModel.Organization[] { new webModel.Organization { Id = "org1" } }, 
+				 Organizations = new string[] { "org1" }, 
 				 Addresses = new webModel.Address[]
 				{
 					new webModel.Address {	

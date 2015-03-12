@@ -1,7 +1,4 @@
-﻿angular.module('platformWebApp.security.login', [
-    'platformWebApp.autofill',
-    'ngCookies'
-])
+﻿angular.module('platformWebApp')
 .directive('vaLoginToolbar', ['$document', '$timeout', 'authService', function ($document, $timeout, authService) {
     return {
         templateUrl: 'Scripts/common/security/login/loginToolbar.tpl.html',

@@ -1,5 +1,4 @@
-﻿angular.module('platformWebApp.htmlTooltip', [
-])
+﻿angular.module('platformWebApp')
 .directive('vaTooltip', ['$http', '$templateCache', '$compile', '$parse', '$timeout', function ($http, $templateCache, $compile, $parse, $timeout)
 {
     //va-tooltip = path to template or pure tooltip string

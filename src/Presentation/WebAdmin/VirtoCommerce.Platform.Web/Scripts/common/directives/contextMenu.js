@@ -1,5 +1,4 @@
-﻿angular.module('platformWebApp.contextMenu', [
-])
+﻿angular.module('platformWebApp')
 .directive('vaContextMenu', [function () {
 	return {
 		restrict: 'A',
