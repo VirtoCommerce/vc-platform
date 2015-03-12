@@ -10,6 +10,8 @@
 
 				order_res_customerOrders.getNewShipment({ id: $scope.blade.customerOrder.id }, function (result) {
 
+					bladeNavigationService.closeBlade($scope.blade);
+
 					$scope.blade.customerOrder.shipments.push(result);
 					$scope.blade.customerOrder.childrenOperations.push(result);
 
@@ -24,7 +26,7 @@
 						controller: 'operationDetailController',
 						template: 'Modules/Order/VirtoCommerce.OrderModule.Web/Scripts/blades/shipment-detail.tpl.html'
 					};
-					bladeNavigationService.closeBlade($scope.blade);
+				
 					bladeNavigationService.showBlade(newBlade);
 				});
 			}
@@ -37,6 +39,8 @@
 		action: function () {
 
 			order_res_customerOrders.getNewPayment({ id: $scope.blade.customerOrder.id }, function (result) {
+
+				bladeNavigationService.closeBlade($scope.blade);
 
 				$scope.blade.customerOrder.inPayments.push(result);
 				$scope.blade.customerOrder.childrenOperations.push(result);
@@ -51,7 +55,7 @@
 					controller: 'operationDetailController',
 					template: 'Modules/Order/VirtoCommerce.OrderModule.Web/Scripts/blades/payment-detail.tpl.html'
 				};
-				bladeNavigationService.closeBlade($scope.blade);
+			
 				bladeNavigationService.showBlade(newBlade);
 			});
 		}

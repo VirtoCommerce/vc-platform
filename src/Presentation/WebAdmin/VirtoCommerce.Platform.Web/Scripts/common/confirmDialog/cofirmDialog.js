@@ -1,5 +1,4 @@
-﻿angular.module('platformWebApp.common.confirmDialog', [
-])
+﻿angular.module('platformWebApp')
 .controller('confirmDialogController', ['$scope', '$modalInstance', 'dialog', function ($scope, $modalInstance, dialog) {
 	$scope.message = dialog.message;
 	$scope.title = dialog.title;

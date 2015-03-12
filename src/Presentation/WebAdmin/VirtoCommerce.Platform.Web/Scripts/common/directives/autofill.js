@@ -1,6 +1,6 @@
 ﻿'use strict';
 
-angular.module('platformWebApp.autofill', [])
+angular.module('platformWebApp')
     .directive('vaAutofill', function ($timeout) {
         return {
             require: 'ngModel',

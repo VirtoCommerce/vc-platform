@@ -1,6 +1,4 @@
-﻿angular.module('platformWebApp.security.auth', [
-    'ngCookies'
-])
+﻿angular.module('platformWebApp')
 .directive('vaPermission', ['authService', function (authService) {
     return {
         link: function (scope, element, attrs) {

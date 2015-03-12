@@ -1,5 +1,4 @@
-﻿angular.module('platformWebApp.overlay', [
-])
+﻿angular.module('platformWebApp')
 .config(['$httpProvider', function ($httpProvider) {
 	$httpProvider.interceptors.push('httpInterceptor');
 }])

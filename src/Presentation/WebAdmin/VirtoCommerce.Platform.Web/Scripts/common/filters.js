@@ -1,4 +1,4 @@
-﻿angular.module('platformWebApp.Filters', [])
+﻿angular.module('platformWebApp')
     .filter('boolToValue', function () {
         return function (input, trueValue, falseValue) {
             return input ? trueValue : falseValue;

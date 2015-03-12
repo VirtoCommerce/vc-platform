@@ -4,13 +4,13 @@
 
     $scope.addOrganization = function () {
         bladeNavigationService.closeBlade($scope.blade, function () {
-            pb.showOrganizationBlade(null, 'New Organization');
+            pb.showDetailBlade({memberType : 'Organization'}, 'New Organization');
         });
     };
 
     $scope.addCustomer = function () {
         bladeNavigationService.closeBlade($scope.blade, function () {
-            pb.showContactBlade(null, 'New Customer');
+            pb.showDetailBlade({}, 'New Customer');
         });
     };
 

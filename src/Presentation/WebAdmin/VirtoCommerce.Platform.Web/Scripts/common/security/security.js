@@ -1,7 +1,4 @@
-﻿angular.module('platformWebApp.security', [
-    'platformWebApp.security.auth',
-    'platformWebApp.security.login'
-]).config(['$stateProvider', '$httpProvider', function ($stateProvider, $httpProvider) {
+﻿angular.module('platformWebApp').config(['$stateProvider', '$httpProvider', function ($stateProvider, $httpProvider) {
 
 	$stateProvider
 		.state('loginDialog', {

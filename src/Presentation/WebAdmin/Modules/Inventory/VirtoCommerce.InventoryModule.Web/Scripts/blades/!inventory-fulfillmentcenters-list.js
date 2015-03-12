@@ -1,6 +1,5 @@
 ﻿angular.module('virtoCommerce.inventoryModule.blades', [
-    'virtoCommerce.inventoryModule.resources',
-    'platformWebApp.common.confirmDialog'
+    'virtoCommerce.inventoryModule.resources'
 ])
 .controller('inventoryFulfillmentcentersListController', ['$scope', 'bladeNavigationService', function ($scope, bladeNavigationService) {
     $scope.selectedItem = null;
