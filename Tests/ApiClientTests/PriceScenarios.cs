@@ -21,9 +21,12 @@ namespace ApiClientTests
         public void Can_get_pricelists()
         {
             var client = Client;
-            var pricelists = Task.Run(() => client.GetPriceListsAsync("vendorvirtual", "USD", new TagQuery())).Result;
-            Assert.NotNull(pricelists);
-            Assert.True(pricelists.Count() == 2);
+            for (int index = 1; index < 1000; index++)
+            {
+                var pricelists = Task.Run(() => client.GetPriceListsAsync("vendorvirtual", "USD", new TagQuery())).Result;
+                //Assert.NotNull(pricelists);
+                //Assert.True(pricelists.Count() == 2);
+            }
         }
 
         [Fact]

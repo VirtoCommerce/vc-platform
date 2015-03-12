@@ -87,6 +87,11 @@ namespace VirtoCommerce.ApiClient.Caching
             return response;
         }
 
+        public void SetContent(ObjectContent content)
+        {
+            SelectedVariant.Response.Content = content;
+        }
+
         #endregion
     }
 }

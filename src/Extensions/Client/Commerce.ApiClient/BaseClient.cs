@@ -34,6 +34,7 @@ namespace VirtoCommerce.ApiClient
         #region Fields
 
         private readonly HttpClient httpClient;
+        private readonly HttpCache httpCache;
         private bool disposed;
 
         #endregion
@@ -48,7 +49,7 @@ namespace VirtoCommerce.ApiClient
         public BaseClient(Uri baseEndpoint, HttpMessageHandler handler = null)
         {
             BaseAddress = baseEndpoint;
-            var httpCache = new HttpCache(_store);
+            httpCache = new HttpCache(_store);
             var cachingHandler = new PrivateCacheHandler(handler ?? new HttpClientHandler(), httpCache);
 
             //httpClient = HttpClientFactory.Create(caheHandler);
@@ -171,6 +172,18 @@ namespace VirtoCommerce.ApiClient
                 await ThrowIfResponseNotSuccessfulAsync(response);
 
                 return await response.Content.ReadAsAsync<T>();
+
+                /*
+                var taskObject = await response.Content.ReadAsAsync<T>();
+
+                var queryResult = await httpCache.QueryCacheAsync(message);
+                queryResult.SetContent(new ObjectContent(typeof(T), taskObject, new JsonMediaTypeFormatter()));
+
+                queryResult = await httpCache.QueryCacheAsync(message);
+                //response.Content = new ObjectContent(typeof(T), taskObject, new JsonMediaTypeFormatter());
+
+                return await Task.FromResult((T)taskObject);
+                 */
             }
         }
 
