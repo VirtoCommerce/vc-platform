@@ -71,16 +71,16 @@
                             </td>
                             <td class="table-col">
                                 <div class="form-input __mini">
-                                    <input required ng-model="data.discountAmount" type="text">
+                                    <input required money ng-model="data.discountAmount" type="text">
                                 </div>
                             </td>
                             <td class="table-col">
                                 <div class="form-input __mini">
-                                    <input required ng-model="data.tax" type="text">
+                                    <input required money ng-model="data.tax" type="text">
                                 </div>
                             </td>
                             <td class="table-col __total">
-                                <span>{{data.total | number:2 }}</span>
+                                <span>{{data._total | number:2 }}</span>
                             </td>
                         </tr>
                     </tbody>
@@ -91,19 +91,19 @@
                 <table class="table __collapsed __order-info">
                     <tr class="table-item">
                         <td class="table-col">Sub Total</td>
-                        <td class="table-col __price">{{totals.subTotal}}&nbsp;{{blade.currentEntity.currency}}</td>
+                        <td class="table-col __price">{{blade.currentEntity._subTotal | number:2}}&nbsp;{{blade.currentEntity.currency}}</td>
                     </tr>
                     <tr class="table-item">
                         <td class="table-col">Discount Total</td>
-                        <td class="table-col __price">{{totals.discountTotal}}&nbsp;{{blade.currentEntity.currency}}</td>
+                        <td class="table-col __price">{{blade.currentEntity._discountTotal | number:2}}&nbsp;{{blade.currentEntity.currency}}</td>
                     </tr>
                     <tr class="table-item">
                         <td class="table-col">Tax Total</td>
-                        <td class="table-col __price">{{totals.taxTotal}}&nbsp;{{blade.currentEntity.currency}}</td>
+                        <td class="table-col __price">{{blade.currentEntity._taxTotal | number:2}}&nbsp;{{blade.currentEntity.currency}}</td>
                     </tr>
                     <tr class="table-item __total">
                         <td class="table-col">Total:</td>
-                        <td class="table-col __price">{{totals.total}}&nbsp;{{blade.currentEntity.currency}}</td>
+                        <td class="table-col __price">{{blade.currentEntity._total | number:2}}&nbsp;{{blade.currentEntity.currency}}</td>
                     </tr>
                 </table>
             </div>

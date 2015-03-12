@@ -5,7 +5,7 @@
 
 	$scope.$watch('widget.blade.currentEntity', function (customerOrder) {
 		if (customerOrder) {
-			$scope.blade.totals = calculateTotalsService.recalculateTotals(customerOrder);
+			calculateTotalsService.recalculateTotals(customerOrder);
 			$scope.customerOrder = customerOrder;
 		}
 	}, true);

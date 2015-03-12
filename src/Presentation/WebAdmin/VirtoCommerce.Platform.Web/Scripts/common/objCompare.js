@@ -3,7 +3,7 @@
 
 	//https://stamat.wordpress.com/2013/06/22/javascript-object-comparison/
 
-
+	var specialChars = [ '$', '_' ];
 	//Returns the object's class, Array, Date, RegExp, Object are of interest to us
 	var getClass = function (val) {
 		return Object.prototype.toString.call(val)
@@ -37,9 +37,16 @@
 		if (a === b)
 			return true;
 
+		if (Object.keys(a).length < Object.keys(b).length)
+		{
+			var tmp = a;
+			a = b;
+			b = tmp;
+		}
+
 		for (var i in a) {
 			//ignore system properties and functions
-			if (i.charAt(0) !== '$' && whatis(a[i]) != 'function') {
+			if (!_.contains(specialChars, i.charAt(0)) && whatis(a[i]) != 'function') {
 				if (b.hasOwnProperty(i)) {
 					if (!equal(a[i], b[i]))
 						return false;
@@ -91,7 +98,7 @@
 			var atype = whatis(a), btype = whatis(b);
 			if (atype === btype)
 			{
-				retVal =  _equal.hasOwnProperty(atype) ? _equal[atype](a, b) : a == b;
+				retVal = _equal.hasOwnProperty(atype) ? _equal[atype](a, b) : a == b;
 			}
 		}
 

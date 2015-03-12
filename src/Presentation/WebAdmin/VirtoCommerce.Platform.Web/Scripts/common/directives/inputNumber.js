@@ -17,19 +17,18 @@ angular.module('platformWebApp')
                 el.prop('readonly', true);
 
                 scope.sum = function (type) {
-                    var sum = 0,
-                        value = parseFloat(ctrl.$modelValue),
+                    var sum = parseFloat(ctrl.$modelValue),
                         step  = parseFloat(scope.step);
 
                     if(type == 'up') {
-                        sum = value + step;
+                        sum += step;
 
                         if (sum > scope.max) {
                             sum = scope.max;
                         }
                     }
                     else {
-                        sum = value - step;
+                        sum -= step;
 
                         if (sum < scope.min) {
                             sum = scope.min || 0;
@@ -39,7 +38,12 @@ angular.module('platformWebApp')
                     ctrl.$setViewValue(sum);
                     ctrl.$render();
                 }
+
+			   //It need for support only numeric input
+                ctrl.$parsers.push(function (inputValue) {
+                	var floatValue = parseFloat(inputValue);
+                	return floatValue;
+                });
             }
         };
-    })
-;
+    });
