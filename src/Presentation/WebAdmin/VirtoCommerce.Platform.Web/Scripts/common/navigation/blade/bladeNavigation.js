@@ -1,5 +1,4 @@
-angular.module('platformWebApp.bladeNavigation', [
-])
+angular.module('platformWebApp')
 .directive('vaBladeContainer', ['$compile', 'bladeNavigationService', function ($compile, bladeNavigationService)
 {
     return {

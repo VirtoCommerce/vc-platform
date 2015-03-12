@@ -1,4 +1,4 @@
-﻿angular.module('platformWebApp.notification.resources', [])
+﻿angular.module('platformWebApp')
 .factory('notifications', ['$resource', function ($resource) {
 
 	return $resource('api/notifications/:id', { id: '@Id' }, {

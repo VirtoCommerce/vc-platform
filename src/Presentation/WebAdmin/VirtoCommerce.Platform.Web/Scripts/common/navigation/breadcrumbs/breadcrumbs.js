@@ -1,5 +1,4 @@
-﻿angular.module('platformWebApp.breadcrumbs', [
-])
+﻿angular.module('platformWebApp')
 .directive('vaBreadcrumb', ['$compile', function ($compile)
 {
     return {

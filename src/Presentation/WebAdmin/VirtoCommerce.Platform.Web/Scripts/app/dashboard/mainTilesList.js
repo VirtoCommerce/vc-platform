@@ -1,6 +1,5 @@
 ﻿angular.module('platformWebApp.dashboard', [
-    'googlechart',
-    'platformWebApp.security.auth'
+    'googlechart'
 ])
     .directive('vaMainTilesList', ['$document', 'authService', 'notificationService', function ($document, authService, notificationService) {
         return {

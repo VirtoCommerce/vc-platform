@@ -1,9 +1,4 @@
-﻿angular.module('platformWebApp.notification', [
-	'platformWebApp.mainMenu',
-	'platformWebApp.notifications.blades.history',
-	'platformWebApp.notification.resources',
-	'angularMoment'
-])
+﻿angular.module('platformWebApp')
 .config(
   ['$stateProvider', function ($stateProvider) {
   	$stateProvider

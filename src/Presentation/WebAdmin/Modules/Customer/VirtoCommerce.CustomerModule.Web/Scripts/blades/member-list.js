@@ -18,7 +18,7 @@
         $scope.blade.isLoading = true;
         members.search(
             {
-                organizationId: $scope.blade.currentEntity.id,
+                organization: $scope.blade.currentEntity.id,
                 keyword: $scope.filter.searchKeyword,
                 start: ($scope.pageSettings.currentPage - 1) * $scope.pageSettings.listEntriesPerPageCount,
                 count: $scope.pageSettings.listEntriesPerPageCount

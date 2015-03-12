@@ -1,5 +1,4 @@
-﻿angular.module('platformWebApp.widget', [
-])
+﻿angular.module('platformWebApp')
 .factory('widgetService', function () {
 
 	var retVal = {

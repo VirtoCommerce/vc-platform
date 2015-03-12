@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('platformWebApp.inputNumber', [])
+angular.module('platformWebApp')
     .directive('vaNumber', function ($compile, $timeout) {
         return {
             restrict: 'A',

@@ -1,5 +1,4 @@
-﻿angular.module('platformWebApp.mainMenu', [
-])
+﻿angular.module('platformWebApp')
 .factory('mainMenuService', ['$filter', function ($filter) {
 
 	var menuItems = [];
