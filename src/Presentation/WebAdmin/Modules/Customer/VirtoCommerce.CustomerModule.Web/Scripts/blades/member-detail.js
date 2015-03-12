@@ -22,8 +22,11 @@
             if ($scope.blade.isOrganization) {
                 newEntity.parentId = $scope.blade.parentBlade.currentEntity.id;
             } else {
-                newEntity.organizations = [$scope.blade.parentBlade.currentEntity.id];
                 newEntity.properties = [];
+                newEntity.organizations = [];
+                if ($scope.blade.parentBlade.currentEntity.id) {
+                    newEntity.organizations.push($scope.blade.parentBlade.currentEntity.id);
+                }
             }
 
             initializeBlade(newEntity);
@@ -49,6 +52,7 @@
             });
         } else {
             $scope.blade.currentResource.save({}, $scope.blade.currentEntity, function (data) {
+                $scope.blade.title = data.displayName;
                 $scope.blade.currentEntityId = data.id;
                 initializeBlade(data);
                 $scope.blade.parentBlade.refresh();

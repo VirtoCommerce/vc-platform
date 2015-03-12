@@ -73,7 +73,7 @@
                 message: "The property has been modified. Do you want to save changes?",
                 callback: function (needSave) {
                     if (needSave) {
-                        saveChanges();
+                        $scope.saveChanges();
                     }
                     closeCallback();
                 }

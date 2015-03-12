@@ -2,30 +2,34 @@
     <div class="blade-inner">
         <div class="inner-block clearfix">
             <form class="form" name="detailForm">
-                <div class="form-group" ng-init="setForm(detailForm)">
-                    <label class="form-label">Name</label>
-                    <div class="form-input">
-                        <input ng-model="blade.currentEntity.name" focus-on="" required />
+                <fieldset>
+                    <div class="form-group" ng-init="setForm(detailForm)">
+                        <label class="form-label">Name</label>
+                        <div class="form-input">
+                            <input ng-model="blade.currentEntity.name" focus-on="" required />
+                        </div>
                     </div>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Business category</label>
-                    <div class="form-input">
-                        <input ng-model="blade.currentEntity.businessCategory" />
+                    <div class="tile-group clearfix">
+                        <va-widget-container group="organizationDetail1" blade="blade"></va-widget-container>
                     </div>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Description</label>
-                    <div class="form-input">
-                        <textarea class="form-control" cols="30" rows="3" ng-model="blade.currentEntity.description"></textarea>
+                </fieldset>
+                <fieldset>
+                    <div class="form-group">
+                        <label class="form-label">Business category</label>
+                        <div class="form-input">
+                            <input ng-model="blade.currentEntity.businessCategory" />
+                        </div>
                     </div>
-                </div>
-                <div class="tile-group clearfix">
-                    <va-widget-container group="organizationDetail1" blade="blade"></va-widget-container>
-                </div>
-                <div class="tile-group clearfix">
-                    <va-widget-container group="organizationDetail2" blade="blade"></va-widget-container>
-                </div>
+                    <div class="form-group">
+                        <label class="form-label">Description</label>
+                        <div class="form-input">
+                            <textarea class="form-control" cols="30" rows="3" ng-model="blade.currentEntity.description"></textarea>
+                        </div>
+                    </div>
+                    <div class="tile-group clearfix">
+                        <va-widget-container group="organizationDetail2" blade="blade"></va-widget-container>
+                    </div>
+                </fieldset>
             </form>
         </div>
     </div>
