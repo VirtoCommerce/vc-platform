@@ -1,5 +1,6 @@
 ﻿var AppDependencies = [
   'ui.router',
+  'googlechart',
   'ui.bootstrap',
   'ui.utils',
   'ui.sortable',

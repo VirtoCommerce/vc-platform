@@ -1,6 +1,4 @@
-﻿angular.module('platformWebApp.dashboard', [
-    'googlechart'
-])
+﻿angular.module('platformWebApp')
     .directive('vaMainTilesList', ['$document', 'authService', 'notificationService', function ($document, authService, notificationService) {
         return {
             templateUrl: 'Scripts/app/dashboard/mainTilesList.tpl.html',

@@ -26,7 +26,7 @@ namespace VirtoCommerce.CustomerModule.Web.Model
 		public string PreferredCommunication { get; set; }
 		public string Salutation { get; set; }
 
-		public ICollection<Organization> Organizations { get; set; }
+		public ICollection<string> Organizations { get; set; }
 		public ICollection<Property> Properties { get; set; }
 	
 		
