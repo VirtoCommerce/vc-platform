@@ -39,7 +39,7 @@
 		    }
 
 		    //Set navigation breadcrumbs
-		    // setBreadcrumps();
+		    setBreadcrumps();
 		}, function (error) {
 		    $scope.blade.isLoading = false;
 		    bladeNavigationService.setError('Error ' + error.status, $scope.blade);
@@ -54,18 +54,10 @@
         //catalog breadcrump by default
         var breadCrumb = {
             id: $scope.blade.currentEntity.id,
-            // name: $scope.blade.catalog.displayName,
-            name: '???.displayName',
+            name: $scope.blade.currentEntity.displayName,
             blade: $scope.blade
         };
-
-        //if organization need change to organization breadcrumb
-        if (angular.isDefined($scope.blade.organization)) {
-
-            breadCrumb.id = $scope.blade.organizationId;
-            breadCrumb.name = $scope.blade.organization.displayName;
-        }
-
+        
         //prevent dublicate items
         if (!_.some($scope.blade.breadcrumbs, function (x) { return x.id == breadCrumb.id; })) {
             $scope.blade.breadcrumbs.push(breadCrumb);

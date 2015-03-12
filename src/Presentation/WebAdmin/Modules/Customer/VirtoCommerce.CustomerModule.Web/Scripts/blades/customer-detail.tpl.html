@@ -17,6 +17,15 @@
                         </button>
                     </div>
                 </div>
+                <div class="form-input">
+                    <label class="form-label">Organization(s)</label>
+                    <ui-select multiple ng-model="blade.currentEntity.organizations">
+                        <ui-select-match placeholder="Select organization(s)">{{$select.selected.name}}</ui-select-match>
+                        <ui-select-choices repeat="x in organizations | filter: {name: $select.search}">
+                            <span ng-bind-html="x.name | highlight: $select.search"></span>
+                        </ui-select-choices>
+                    </ui-select>
+                </div>
                 <div class="tile-group clearfix">
                     <va-widget-container group="customerDetail1" blade="blade"></va-widget-container>
                 </div>

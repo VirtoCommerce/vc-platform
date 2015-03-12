@@ -13,12 +13,20 @@
                 }
             });
         } else {
-            initializeBlade({
+            var newEntity = {
                 addresses: [],
                 phones: [],
-                emails: [],
-                properties: []
-            });
+                emails: []
+            };
+
+            if ($scope.blade.isOrganization) {
+                newEntity.parentId = $scope.blade.parentBlade.currentEntity.id;
+            } else {
+                newEntity.organizations = [$scope.blade.parentBlade.currentEntity.id];
+                newEntity.properties = [];
+            }
+
+            initializeBlade(newEntity);
         }
     }
 
@@ -133,6 +141,11 @@
 
     $scope.formats = ['shortDate', 'dd-MMMM-yyyy', 'yyyy/MM/dd'];
     $scope.format = $scope.formats[0];
+
+    // other on load
+    if (!$scope.blade.isOrganization) {
+        $scope.organizations = organizations.query();
+    }
 
     $scope.blade.refresh(false);
 }]);
