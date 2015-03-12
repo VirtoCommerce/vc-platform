@@ -48,7 +48,7 @@ namespace VirtoCommerce.CustomerModule.Data.Services
 				repository.Add(entity);
 				CommitChanges(repository);
 			}
-			retVal = GetById(organization.Id);
+            retVal = GetById(entity.MemberId);
 			return retVal;
 		}
 
