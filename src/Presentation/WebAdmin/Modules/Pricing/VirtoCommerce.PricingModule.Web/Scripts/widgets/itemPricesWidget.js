@@ -2,12 +2,11 @@
     'virtoCommerce.pricingModule.blades.item',
     'virtoCommerce.pricingModule.resources.pricing'
 ])
-.controller('itemPricesWidgetController', ['$scope', 'bladeNavigationService', 'prices', function ($scope, bladeNavigationService, prices) {
+.controller('itemPricesWidgetController', ['$scope', '$filter', 'bladeNavigationService', 'prices', function ($scope, $filter, bladeNavigationService, prices) {
     $scope.currentBlade = $scope.widget.blade;
     
     $scope.widget.refresh = function () {
         $scope.priceRange = '';
-        $scope.priceNa = '';
 
         return prices.query({ id: $scope.currentBlade.itemId }, function (data) {
             // find the most popular currency and min/max prices in it.
@@ -20,15 +19,15 @@
                 var maxprice = _.max(allPrices);
                 var currency = prices.length ? ' ' + prices[0].currency : '';
                 $scope.priceRange = (minprice == maxprice ? minprice : minprice + '-' + maxprice);
-                $scope.currency = currency;
+                $scope.priceRange = $filter('number')($scope.priceRange, 2) + currency;
             } else {
-                $scope.priceNa = 'N/A';
+                $scope.priceRange = 'N/A';
             }
         });
     }
 
     $scope.openBlade = function () {
-        if ($scope.priceRange !== '...') {
+        if ($scope.priceRange !== '') {
             var newBlade = {
                 id: "itemPricelists",
                 itemId: $scope.currentBlade.itemId,
