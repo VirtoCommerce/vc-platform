@@ -171,19 +171,18 @@ namespace VirtoCommerce.ApiClient
             {
                 await ThrowIfResponseNotSuccessfulAsync(response);
 
-                return await response.Content.ReadAsAsync<T>();
+                //return await response.Content.ReadAsAsync<T>();
 
-                /*
                 var taskObject = await response.Content.ReadAsAsync<T>();
 
-                var queryResult = await httpCache.QueryCacheAsync(message);
-                queryResult.SetContent(new ObjectContent(typeof(T), taskObject, new JsonMediaTypeFormatter()));
-
-                queryResult = await httpCache.QueryCacheAsync(message);
-                //response.Content = new ObjectContent(typeof(T), taskObject, new JsonMediaTypeFormatter());
+                // the following will reduce number of serializations
+                if (!(response.Content is ObjectContent) && taskObject != null)
+                {
+                    response.Content = new ObjectContent(typeof(T), taskObject, new JsonMediaTypeFormatter());
+                    await httpCache.StoreResponseAsync(response);
+                }
 
                 return await Task.FromResult((T)taskObject);
-                 */
             }
         }
 

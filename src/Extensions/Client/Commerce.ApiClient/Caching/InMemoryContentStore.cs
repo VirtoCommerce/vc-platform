@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
+using System.Net.Http.Formatting;
 using System.Threading.Tasks;
 
 namespace VirtoCommerce.ApiClient.Caching
@@ -88,12 +89,20 @@ namespace VirtoCommerce.ApiClient.Caching
 
             if (cacheContent.Response.Content != null)
             {
-                await cacheContent.Response.Content.CopyToAsync(ms).ConfigureAwait(false);
-                ms.Position = 0;
-                newResponse.Content = new StreamContent(ms);
-                foreach (var v in cacheContent.Response.Content.Headers)
+                var objectContent = cacheContent.Response.Content as ObjectContent;
+                if (objectContent != null && objectContent.Value != null)
                 {
-                    newResponse.Content.Headers.TryAddWithoutValidation(v.Key, v.Value);
+                    newResponse.Content = new ObjectContent(objectContent.Value.GetType(), objectContent.Value, new JsonMediaTypeFormatter());
+                }
+                else
+                {
+                    await cacheContent.Response.Content.CopyToAsync(ms).ConfigureAwait(false);
+                    ms.Position = 0;
+                    newResponse.Content = new StreamContent(ms);
+                    foreach (var v in cacheContent.Response.Content.Headers)
+                    {
+                        newResponse.Content.Headers.TryAddWithoutValidation(v.Key, v.Value);
+                    }
                 }
             }
 
