@@ -5,7 +5,10 @@
                 <fieldset ng-init="setForm(contextEntityDetailForm);">
                     <div class="form-group" ng-repeat="prop in blade.currentEntities as properties">
                         <label class="form-label" for="">
-                            <a href="" ng-click="editProperty(prop)">{{prop.name}}</a>
+                            {{prop.name}} 
+                            <a href="" ng-click="editProperty(prop)">
+                                <i class="form-ico fa fa-pencil"></i>
+                            </a>
                         </label>
                         <div class="form-input">
                             <input ng-model="prop.value" required class="form-control" />

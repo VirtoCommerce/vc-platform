@@ -288,6 +288,8 @@
         });
     }
 
+    $scope.bladeHeadIco = 'fa fa-user';
+
     $scope.bladeToolbarCommands = [
         {
             name: "Refresh", icon: 'fa fa-refresh',

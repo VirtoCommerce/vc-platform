@@ -2,27 +2,31 @@
     <div class="blade-inner">
         <div class="inner-block clearfix">
             <form class="form" name="detailForm">
-                <div class="form-group" ng-init="setForm(detailForm)">
-                    <label class="form-label">Full name</label>
-                    <div class="form-input">
-                        <input ng-model="blade.currentEntity.fullName" focus-on="" required />
+                <fieldset>
+                    <div class="form-group" ng-init="setForm(detailForm)">
+                        <label class="form-label">Full name</label>
+                        <div class="form-input">
+                            <input ng-model="blade.currentEntity.fullName" focus-on="" required />
+                        </div>
                     </div>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Birthday</label>
-                    <div class="form-input __calendar">
-                        <input type="text" class="form-control" ng-model="blade.currentEntity.birthDate" datepicker-popup="{{format}}" name="bd" is-open="datepickers.bd" max-date="today" datepicker-options="dateOptions" close-text="Close" />
-                        <button class="btn" type="button" ng-click="open($event,'bd')">
-                            <i class="btn-ico fa fa-calendar"></i>
-                        </button>
+                    <div class="tile-group clearfix">
+                        <va-widget-container group="customerDetail1" blade="blade"></va-widget-container>
                     </div>
-                </div>
-                <div class="tile-group clearfix">
-                    <va-widget-container group="customerDetail1" blade="blade"></va-widget-container>
-                </div>
-                <div class="tile-group clearfix">
-                    <va-widget-container group="customerDetail2" blade="blade"></va-widget-container>
-                </div>
+                </fieldset>
+                <fieldset>
+                    <div class="form-group">
+                        <label class="form-label">Birthday</label>
+                        <div class="form-input __calendar">
+                            <input type="text" class="form-control" ng-model="blade.currentEntity.birthDate" datepicker-popup="{{format}}" name="bd" is-open="datepickers.bd" max-date="today" datepicker-options="dateOptions" close-text="Close" />
+                            <button class="btn" type="button" ng-click="open($event,'bd')">
+                                <i class="btn-ico fa fa-calendar"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="tile-group clearfix">
+                        <va-widget-container group="customerDetail2" blade="blade"></va-widget-container>
+                    </div>
+                </fieldset>
             </form>
         </div>
     </div>

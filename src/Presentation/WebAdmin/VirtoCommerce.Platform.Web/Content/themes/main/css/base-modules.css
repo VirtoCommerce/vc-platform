@@ -2433,9 +2433,9 @@ h3
 }
 
 .form-input input.error,
-.form-input textarea.ng-invalid,
+.form-input textarea.error,
 .form-input input.error:focus,
-.form-input textarea.ng-invalid:focus
+.form-input textarea.error:focus
 {
     background: #fef8f7;
     border-color: #fce7e6;
@@ -5375,11 +5375,6 @@ tags-input .tags .tag-item .remove-button
 			-webkit-box-sizing: border-box;
 					box-sizing: border-box;
 		}
-
-			.blade-static .breadcrumbs
-			{
-				padding: 20px 0;
-			}
 
 			.blade-static.__expanded .breadcrumbs
 			{
