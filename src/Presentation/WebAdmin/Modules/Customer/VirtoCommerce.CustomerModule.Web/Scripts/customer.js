@@ -19,10 +19,10 @@ angular.module(moduleName, [
               controller: [
                   '$scope', 'bladeNavigationService', function ($scope, bladeNavigationService) {
                       var blade = {
-                          id: 'customer',
-                          title: 'Customers',
-                          controller: 'customerListController',
-                          template: 'Modules/Customer/VirtoCommerce.CustomerModule.Web/Scripts/blades/!customer-list.tpl.html',
+                          id: 'memberList',
+                          breadcrumbs: [],
+                          controller: 'memberListController',
+                          template: 'Modules/Customer/VirtoCommerce.CustomerModule.Web/Scripts/blades/member-list.tpl.html',
                           isClosingDisabled: true
                       };
                       bladeNavigationService.showBlade(blade);
@@ -35,7 +35,7 @@ angular.module(moduleName, [
   ['$rootScope', 'mainMenuService', 'widgetService', '$state', function ($rootScope, mainMenuService, widgetService, $state) {
       //Register module in main menu
       var menuItem = {
-          path: 'browse/customer',
+          path: 'browse/member',
           icon: 'fa fa-user',
           title: 'customers',
           priority: 180,
@@ -46,21 +46,21 @@ angular.module(moduleName, [
 
       //Register widgets in customer details
       widgetService.registerWidget({
-          controller: 'customerAddressesWidgetController',
-          template: 'Modules/Customer/VirtoCommerce.CustomerModule.Web/Scripts/widgets/!customerAddressesWidget.tpl.html'
+          controller: 'memberAddressesWidgetController',
+          template: 'Modules/Customer/VirtoCommerce.CustomerModule.Web/Scripts/widgets/!memberAddressesWidget.tpl.html'
       }, 'customerDetail1');
       widgetService.registerWidget({
-          controller: 'customerEmailsWidgetController',
-          template: 'Modules/Customer/VirtoCommerce.CustomerModule.Web/Scripts/widgets/customerEmailsWidget.tpl.html'
+          controller: 'memberEmailsWidgetController',
+          template: 'Modules/Customer/VirtoCommerce.CustomerModule.Web/Scripts/widgets/memberEmailsWidget.tpl.html'
       }, 'customerDetail1');
       widgetService.registerWidget({
-          controller: 'customerPhonesWidgetController',
-          template: 'Modules/Customer/VirtoCommerce.CustomerModule.Web/Scripts/widgets/customerPhonesWidget.tpl.html'
+          controller: 'memberPhonesWidgetController',
+          template: 'Modules/Customer/VirtoCommerce.CustomerModule.Web/Scripts/widgets/memberPhonesWidget.tpl.html'
       }, 'customerDetail1');
       
 
       widgetService.registerWidget({
-          controller: 'customerPropertyWidgetController',
-          template: 'Modules/Customer/VirtoCommerce.CustomerModule.Web/Scripts/widgets/customerPropertyWidget.tpl.html'
+          controller: 'memberPropertyWidgetController',
+          template: 'Modules/Customer/VirtoCommerce.CustomerModule.Web/Scripts/widgets/memberPropertyWidget.tpl.html'
       }, 'customerDetail2');
   }]);

@@ -1,8 +1,8 @@
 ﻿angular.module('virtoCommerce.customerModule.blades', [
    'virtoCommerce.customerModule.resources'
 ])
-.controller('customerListController', ['$scope', 'customers', 'bladeNavigationService', 'dialogService',
-function ($scope, customers, bladeNavigationService, dialogService) {
+.controller('customerListController', ['$scope', 'members', 'bladeNavigationService', 'dialogService',
+function ($scope, members, bladeNavigationService, dialogService) {
     //pagination settigs
     $scope.pageSettings = {};
     $scope.pageSettings.totalItems = 0;
@@ -18,7 +18,7 @@ function ($scope, customers, bladeNavigationService, dialogService) {
     $scope.blade.refresh = function () {
         $scope.blade.isLoading = true;
 
-        customers.search({
+        members.search({
             keyword: $scope.filter.searchKeyword,
             start: ($scope.pageSettings.currentPage - 1) * $scope.pageSettings.itemsPerPageCount,
             count: $scope.pageSettings.itemsPerPageCount
@@ -74,14 +74,14 @@ function ($scope, customers, bladeNavigationService, dialogService) {
     //    var dialog = {
     //        id: "confirmDeleteItem",
     //        title: "Delete confirmation",
-    //        message: "Are you sure you want to delete selected customers?",
+    //        message: "Are you sure you want to delete selected members?",
     //        callback: function (remove) {
     //            if (remove) {
     //                closeChildrenBlades();
 
     //                var selection = _.where($scope.objects, { selected: true });
     //                var itemIds = _.pluck(selection, 'id');
-    //                customers.remove({ ids: itemIds }, function (data, headers) {
+    //                members.remove({ ids: itemIds }, function (data, headers) {
     //                    $scope.blade.refresh();
     //                });
     //            }
@@ -154,4 +154,12 @@ function ($scope, customers, bladeNavigationService, dialogService) {
     // actions on load
     //No need to call this because page 'pageSettings.currentPage' is watched!!! It would trigger subsequent duplicated req...
     //$scope.blade.refresh();
+    var blade = {
+        id: 'memberList',
+        title: 'Organizations & Customers',
+        controller: 'memberListController',
+        template: 'Modules/Customer/VirtoCommerce.CustomerModule.Web/Scripts/blades/member-list.tpl.html',
+        isClosingDisabled: true
+    };
+    bladeNavigationService.showBlade(blade);
 }]);

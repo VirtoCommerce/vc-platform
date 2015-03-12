@@ -1,14 +1,25 @@
 ﻿angular.module('virtoCommerce.customerModule.blades')
-.controller('customerDetailController', ['$scope', 'bladeNavigationService', 'customers', 'dialogService', function ($scope, bladeNavigationService, customers, dialogService) {
-    $scope.blade.refresh = function (parentRefresh) {
-        $scope.blade.isLoading = true;
+.controller('memberDetailController', ['$scope', 'bladeNavigationService', 'contacts', 'organizations', 'dialogService', function ($scope, bladeNavigationService, contacts, organizations, dialogService) {
+    $scope.blade.currentResource = $scope.blade.isOrganization ? organizations : contacts;
 
-        customers.get({ id: $scope.blade.currentEntityId }, function (data) {
-            initializeBlade(data);
-            if (parentRefresh) {
-                $scope.blade.parentBlade.refresh();
-            }
-        });
+    $scope.blade.refresh = function (parentRefresh) {
+        if ($scope.blade.currentEntityId) {
+            $scope.blade.isLoading = true;
+
+            $scope.blade.currentResource.get({ _id: $scope.blade.currentEntityId }, function (data) {
+                initializeBlade(data);
+                if (parentRefresh) {
+                    $scope.blade.parentBlade.refresh();
+                }
+            });
+        } else {
+            initializeBlade({
+                addresses: [],
+                phones: [],
+                emails: [],
+                properties: []
+            });
+        }
     }
 
     function initializeBlade(data) {
@@ -24,9 +35,17 @@
     $scope.saveChanges = function () {
         $scope.blade.isLoading = true;
 
-        customers.update({}, $scope.blade.currentEntity, function (data) {
-            $scope.blade.refresh(true);
-        });
+        if ($scope.blade.currentEntityId) {
+            $scope.blade.currentResource.update({}, $scope.blade.currentEntity, function (data) {
+                $scope.blade.refresh(true);
+            });
+        } else {
+            $scope.blade.currentResource.save({}, $scope.blade.currentEntity, function (data) {
+                $scope.blade.currentEntityId = data.id;
+                initializeBlade(data);
+                $scope.blade.parentBlade.refresh();
+            });
+        }
     };
 
     $scope.setForm = function (form) {
@@ -85,11 +104,11 @@
         }
     ];
 
-     // datepicker
+    // datepicker
     $scope.datepickers = {
         bd: false
     }
-    
+
     $scope.showWeeks = true;
     $scope.toggleWeeks = function () {
         $scope.showWeeks = !$scope.showWeeks;

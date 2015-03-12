@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.customerModule.widgets')
-.controller('customerEmailsWidgetController', ['$scope', 'bladeNavigationService', function ($scope, bladeNavigationService) {
+.controller('memberEmailsWidgetController', ['$scope', 'bladeNavigationService', function ($scope, bladeNavigationService) {
     $scope.blade = $scope.widget.blade;
     
     $scope.openBlade = function () {
@@ -8,8 +8,8 @@
             //data: $scope.blade.currentEntity.emails,
             title: $scope.blade.title,
             subtitle: 'Manage customer emails',
-            controller: 'customerEmailsListController',
-            template: 'Modules/customer/VirtoCommerce.customerModule.Web/Scripts/blades/customer-emails-list.tpl.html'
+            controller: 'memberEmailsListController',
+            template: 'Modules/customer/VirtoCommerce.customerModule.Web/Scripts/blades/member-emails-list.tpl.html'
         };
         bladeNavigationService.showBlade(newBlade, $scope.blade);
     };

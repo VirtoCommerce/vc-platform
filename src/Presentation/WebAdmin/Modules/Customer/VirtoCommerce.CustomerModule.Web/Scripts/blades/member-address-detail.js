@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.customerModule.blades')
-.controller('customerAddressDetailController', ['$scope', 'countries', 'dialogService', function ($scope, countries, dialogService) {
+.controller('memberAddressDetailController', ['$scope', 'countries', 'dialogService', function ($scope, countries, dialogService) {
     $scope.addressTypes = ['Billing', 'Shipping'];
 
     function initializeBlade(data) {

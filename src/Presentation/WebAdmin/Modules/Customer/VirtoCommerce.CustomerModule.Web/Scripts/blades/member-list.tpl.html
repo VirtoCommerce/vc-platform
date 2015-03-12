@@ -1,0 +1,56 @@
+﻿<div class="blade-static __expanded">
+    <va-breadcrumb ng-model="blade.breadcrumbs"></va-breadcrumb>
+    <div class="form-group">
+        <div class="form-input __search">
+            <input type="text" placeholder="Search keyword..." ng-model="filter.searchKeyword" ui-keyup="{'enter':'blade.refresh()'}">
+        </div>
+        <p class="form-count">Count: <span class="count">{{pageSettings.totalItems}}</span></p>
+    </div>
+</div>
+<div class="blade-content __medium-wide">
+    <div class="blade-inner">
+        <div class="inner-block">
+            <div class="table-wrapper">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <!--<th class="table-col">
+                                <label class="form-control __checkbox">
+                                    <input type="checkbox" ng-model="selectedAll" ng-change="checkAll(selectedAll)" />
+                                    <span class="check"></span>
+                                </label>
+                            </th>-->
+                            <th class="table-col">Name</th>
+                            <th class="table-col">Address</th>
+                            <th class="table-col">Email</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="table-item" ng-repeat="data in listEntries track by data.id" ng-class="{'__selected': data.id === selectedNodeId}" context-menu data-target="col_menu_{{data.id}}" ng-click='selectNode(data)'>
+                            <!--<td class="table-col __product-control">
+                                <label class="form-control __checkbox">
+                                    <input type="checkbox" ng-model="data.selected">
+                                    <span class="check"></span>
+                                </label>
+                            </td>-->
+                            <td class="table-col">
+                                <span class="table-t">{{data.displayName}}</span>
+                                <!--<span class="table-descr" ng-if="data.statusId">{{data.statusId}}</span>-->
+                            </td>
+                            <td class="table-col">
+                                <span>{{getMainAddress(data)}}</span>
+                            </td>
+                            <td class="table-col">
+                                <span>{{getMainEmail(data)}}</span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="pagination" ng-if="pageSettings.listEntriesPerPageCount < pageSettings.totalItems" ng-include="'pagerTemplate.html'"></div>
+            <script type="text/ng-template" id="pagerTemplate.html">
+                <pagination ng-if="pageSettings.listEntriesPerPageCount < pageSettings.totalItems" boundary-links="true" max-size="pageSettings.numPages" items-per-page="pageSettings.listEntriesPerPageCount" total-items="pageSettings.totalItems" ng-model="pageSettings.currentPage" class="pagination-sm" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></pagination>
+            </script>
+        </div>
+    </div>
+</div>

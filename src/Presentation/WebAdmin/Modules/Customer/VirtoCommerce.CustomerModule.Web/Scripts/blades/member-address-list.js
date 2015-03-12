@@ -1,17 +1,17 @@
 ﻿angular.module('virtoCommerce.customerModule.blades')
-.controller('customerAddressListController', ['$scope', 'bladeNavigationService', function ($scope, bladeNavigationService) {
+.controller('memberAddressListController', ['$scope', 'bladeNavigationService', function ($scope, bladeNavigationService) {
     $scope.selectedItem = null;
 
     $scope.openBlade = function (data) {
         $scope.selectedItem = data;
 
         var newBlade = {
-            id: 'customerAddressDetail',
+            id: 'memberAddressDetail',
             origEntity: data,
             title: $scope.blade.title,
             subtitle: 'Edit address',
-            controller: 'customerAddressDetailController',
-            template: 'Modules/customer/VirtoCommerce.customerModule.Web/Scripts/blades/customer-address-detail.tpl.html'
+            controller: 'memberAddressDetailController',
+            template: 'Modules/customer/VirtoCommerce.customerModule.Web/Scripts/blades/member-address-detail.tpl.html'
         };
         bladeNavigationService.showBlade(newBlade, $scope.blade);
     }

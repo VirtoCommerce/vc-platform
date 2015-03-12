@@ -1,12 +1,12 @@
 ﻿angular.module('virtoCommerce.customerModule.blades')
-.controller('customerPropertyListController', ['$scope', 'customers', 'bladeNavigationService', 'dialogService', function ($scope, customers, bladeNavigationService, dialogService) {
+.controller('memberPropertyListController', ['$scope', 'bladeNavigationService', 'dialogService', function ($scope, bladeNavigationService, dialogService) {
     $scope.blade.origEntity = {};
 
     $scope.blade.refresh = function (parentRefresh) {
         if (parentRefresh) {
             $scope.blade.parentBlade.refresh();
             //} else {
-            //    customers.get({ id: $scope.blade.currentEntityId }, function (data) {
+            //    $scope.blade.currentResource.get({ id: $scope.blade.currentEntityId }, function (data) {
             //        initializeBlade(data.properties);
             //    });
         }
@@ -29,7 +29,7 @@
 
     function saveChanges() {
         $scope.blade.isLoading = true;
-        customers.update({}, { id: $scope.blade.currentEntityId, properties: $scope.blade.currentEntities }, function () {
+        $scope.blade.currentResource.update({}, { id: $scope.blade.currentEntityId, properties: $scope.blade.currentEntities }, function () {
             $scope.blade.refresh(true);
         });
     };
@@ -66,10 +66,10 @@
         var newBlade = {
             id: 'editCustomerProperty',
             origEntity: prop,
-            title: 'Edit customer property',
+            title: 'Edit property',
             subtitle: 'Enter property information',
-            controller: 'customerPropertyDetailController',
-            template: 'Modules/Customer/VirtoCommerce.CustomerModule.Web/Scripts/blades/customer-property-detail.tpl.html'
+            controller: 'memberPropertyDetailController',
+            template: 'Modules/Customer/VirtoCommerce.CustomerModule.Web/Scripts/blades/member-property-detail.tpl.html'
         };
 
         bladeNavigationService.showBlade(newBlade, $scope.blade);
@@ -92,8 +92,8 @@
                     origEntity: prop,
                     title: 'New property',
                     subtitle: 'Enter property information',
-                    controller: 'customerPropertyDetailController',
-                    template: 'Modules/Customer/VirtoCommerce.CustomerModule.Web/Scripts/blades/customer-property-detail.tpl.html'
+                    controller: 'memberPropertyDetailController',
+                    template: 'Modules/Customer/VirtoCommerce.CustomerModule.Web/Scripts/blades/member-property-detail.tpl.html'
                 };
 
                 bladeNavigationService.showBlade(newBlade, $scope.blade);
