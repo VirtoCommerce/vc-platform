@@ -1,6 +1,6 @@
 ﻿angular.module('virtoCommerce.orderModule.blades')
-.controller('operationDetailController', ['$scope', 'dialogService', 'bladeNavigationService', 'order_res_customerOrders', 'order_res_fulfilmentCenters', 'order_res_stores', 'order_res_paymentGateways',
-			function ($scope, dialogService, bladeNavigationService, order_res_customerOrders, order_res_fulfilmentCenters, order_res_stores, order_res_paymentGateways) {
+.controller('operationDetailController', ['$scope', 'dialogService', 'bladeNavigationService', 'order_res_customerOrders', 'order_res_fulfilmentCenters', 'order_res_stores', 'order_res_paymentGateways', 'objCompareService',
+			function ($scope, dialogService, bladeNavigationService, order_res_customerOrders, order_res_fulfilmentCenters, order_res_stores, order_res_paymentGateways, objCompareService) {
 
 		$scope.blade.refresh = function (noRefresh) {
     	$scope.blade.isLoading = true;
@@ -9,8 +9,8 @@
     	$scope.paymentGateways = [];
 
     	if (!noRefresh) {
-    		order_res_customerOrders.get({ id: $scope.blade.customerOrder.id }, function (results) {
-    			initialize(results);
+    		order_res_customerOrders.get({ id: $scope.blade.customerOrder.id }, function (result) {
+    			initialize(result);
     		},
 			function (error) {
 				bladeNavigationService.setError('Error ' + error.status, $scope.blade);
@@ -50,7 +50,7 @@
     function isDirty() {
     	var retVal = false;
     	if ($scope.blade.origEntity) {
-    		retVal = !angular.equals($scope.blade.currentEntity, $scope.blade.origEntity) || $scope.blade.isNew;
+    		retVal = !objCompareService.equal($scope.blade.origEntity, $scope.blade.currentEntity) || $scope.blade.isNew;
     	}
       	return retVal;
     };
