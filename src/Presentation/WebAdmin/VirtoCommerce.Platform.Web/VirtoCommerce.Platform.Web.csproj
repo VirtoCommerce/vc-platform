@@ -1252,9 +1252,9 @@
     <Folder Include="Filters\" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="packages.config">
+    <None Include="packages.config">
       <SubType>Designer</SubType>
-    </Content>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\Core\CommerceFoundation\CommerceFoundation.csproj">
