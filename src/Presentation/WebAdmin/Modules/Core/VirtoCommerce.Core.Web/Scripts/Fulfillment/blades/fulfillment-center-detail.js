@@ -1,12 +1,19 @@
 ﻿angular.module('virtoCommerce.coreModule.fulfillment.blades')
 .controller('fulfillmentCenterDetailController', ['$scope', 'dialogService', 'bladeNavigationService', 'fulfillments', function ($scope, dialogService, bladeNavigationService, fulfillments) {
 
-    $scope.blade.refresh = function () {
-        $scope.blade.isLoading = true;
+    $scope.blade.refresh = function (parentRefresh) {
+        if ($scope.blade.currentEntityId) {
+            $scope.blade.isLoading = true;
 
-        fulfillments.get({ _id: $scope.blade.currentEntityId }, function (data) {
-            initializeBlade(data);
-        });
+            fulfillments.get({ _id: $scope.blade.currentEntityId }, function (data) {
+                initializeBlade(data);
+                if (parentRefresh) {
+                    $scope.blade.parentBlade.refresh();
+                }
+            });
+        } else {
+            initializeBlade($scope.blade.currentEntity);
+        }
     }
 
     function initializeBlade(data) {
@@ -26,10 +33,19 @@
 
     function saveChanges() {
         $scope.blade.isLoading = true;
-        
-        fulfillments.update($scope.blade.currentEntity, function (data, headers) {
-            $scope.blade.refresh();
-        });
+                
+        if ($scope.blade.currentEntityId) {
+            fulfillments.update($scope.blade.currentEntity, function () {
+                $scope.blade.refresh(true);
+            });
+        } else {
+            fulfillments.save({}, $scope.blade.currentEntity, function (data) {
+                $scope.blade.title = data.displayName;
+                $scope.blade.currentEntityId = data.id;
+                initializeBlade(data);
+                $scope.blade.parentBlade.refresh();
+            });
+        }
     };
 
     $scope.bladeHeadIco = 'fa fa-wrench';
