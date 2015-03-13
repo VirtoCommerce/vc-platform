@@ -164,7 +164,7 @@ namespace VirtoCommerce.ApiClient
 
             if (!useCache)
             {
-                message.Headers.Add("Cache-Control", "no-cache, no-store, must-revalidate"); 
+                message.Headers.Add("Cache-Control", "no-cache, no-, must-revalidate"); 
             }
 
             using (var response = await httpClient.SendAsync(message))

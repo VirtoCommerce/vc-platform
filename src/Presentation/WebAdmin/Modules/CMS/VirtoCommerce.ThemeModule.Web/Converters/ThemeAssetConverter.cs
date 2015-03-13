@@ -34,7 +34,8 @@ namespace VirtoCommerce.ThemeModule.Web.Converters
 			{
 				if (item.ByteContent != null)
 				{
-					retVal.Content = ContentTypeUtility.ConvertImageToBase64String(item.ByteContent, item.ContentType);
+					//retVal.Content = ContentTypeUtility.ConvertImageToBase64String(item.ByteContent, item.ContentType);
+                    retVal.ByteContent = item.ByteContent;
 				}
 				else
 				{
@@ -48,11 +49,11 @@ namespace VirtoCommerce.ThemeModule.Web.Converters
 					retVal.Content = Encoding.UTF8.GetString(item.ByteContent);
 				}
 			}
-			else // treat as a text file for now
+			else // treat as a binary file for now
 			{
                 if (item.ByteContent != null)
                 {
-                    retVal.Content = Encoding.UTF8.GetString(item.ByteContent);
+                    retVal.ByteContent = item.ByteContent;
                 }
 			}
 			retVal.Id = item.Id;

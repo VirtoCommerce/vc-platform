@@ -8,6 +8,8 @@ namespace VirtoCommerce.ApiClient.DataContracts.Themes
 
         public string Content { get; set; }
 
+        public byte[] ByteContent { get; set; }
+
         public string ContentType { get; set; }
 
         public string Id { get; set; }

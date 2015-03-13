@@ -2,16 +2,6 @@
 .controller('memberPropertyListController', ['$scope', 'bladeNavigationService', 'dialogService', function ($scope, bladeNavigationService, dialogService) {
     $scope.blade.origEntity = {};
 
-    $scope.blade.refresh = function (parentRefresh) {
-        if (parentRefresh) {
-            $scope.blade.parentBlade.refresh();
-            //} else {
-            //    $scope.blade.currentResource.get({ id: $scope.blade.currentEntityId }, function (data) {
-            //        initializeBlade(data.properties);
-            //    });
-        }
-    };
-
     function initializeBlade(properties) {
         var numberProps = _.where(properties, { valueType: 'Decimal' });
         _.forEach(numberProps, function (prop) {
@@ -27,11 +17,14 @@
         return !angular.equals($scope.blade.currentEntities, $scope.blade.origEntity);
     };
 
-    function saveChanges() {
-        $scope.blade.isLoading = true;
-        $scope.blade.currentResource.update({}, { id: $scope.blade.currentEntityId, properties: $scope.blade.currentEntities }, function () {
-            $scope.blade.refresh(true);
-        });
+    $scope.cancelChanges = function () {
+        $scope.bladeClose();
+    }
+
+    $scope.saveChanges = function () {
+        angular.copy($scope.blade.currentEntities, $scope.blade.data);
+        angular.copy($scope.blade.currentEntities, $scope.blade.origEntity);
+        $scope.bladeClose();
     };
 
     $scope.blade.onClose = function (closeCallback) {
@@ -44,7 +37,7 @@
                 message: "The properties has been modified. Do you want to save changes?",
                 callback: function (needSave) {
                     if (needSave) {
-                        saveChanges();
+                        $scope.saveChanges();
                     }
                     closeCallback();
                 }
@@ -63,17 +56,20 @@
     }
 
     $scope.editProperty = function (prop) {
+        openBlade(prop, 'Edit property');
+    };
+
+    function openBlade(data, title) {
         var newBlade = {
             id: 'editCustomerProperty',
-            origEntity: prop,
-            title: 'Edit property',
+            origEntity: data,
+            title: title,
             subtitle: 'Enter property information',
             controller: 'memberPropertyDetailController',
             template: 'Modules/Customer/VirtoCommerce.CustomerModule.Web/Scripts/blades/member-property-detail.tpl.html'
         };
-
         bladeNavigationService.showBlade(newBlade, $scope.blade);
-    };
+    }
 
     var formScope;
     $scope.setForm = function (form) {
@@ -87,30 +83,12 @@
             name: "Add property", icon: 'fa fa-plus',
             executeMethod: function () {
                 var prop = { isNew: true, valueType: 'ShortText' }
-                var newBlade = {
-                    id: 'editCustomerProperty',
-                    origEntity: prop,
-                    title: 'New property',
-                    subtitle: 'Enter property information',
-                    controller: 'memberPropertyDetailController',
-                    template: 'Modules/Customer/VirtoCommerce.CustomerModule.Web/Scripts/blades/member-property-detail.tpl.html'
-                };
-
-                bladeNavigationService.showBlade(newBlade, $scope.blade);
+                openBlade(prop, 'New property');
             },
             canExecuteMethod: function () {
                 return true;
             }
         },
-		{
-		    name: "Save", icon: 'fa fa-save',
-		    executeMethod: function () {
-		        saveChanges();
-		    },
-		    canExecuteMethod: function () {
-		        return isDirty() && formScope && formScope.$valid;
-		    }
-		},
         {
             name: "Reset", icon: 'fa fa-undo',
             executeMethod: function () {
