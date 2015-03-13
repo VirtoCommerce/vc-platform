@@ -57,7 +57,7 @@
             name: $scope.blade.currentEntity.displayName,
             blade: $scope.blade
         };
-        
+
         //prevent dublicate items
         if (!_.some($scope.blade.breadcrumbs, function (x) { return x.id == breadCrumb.id; })) {
             $scope.blade.breadcrumbs.push(breadCrumb);
@@ -65,10 +65,10 @@
 
         breadCrumb.navigate = function (breadcrumb) {
             bladeNavigationService.closeBlade($scope.blade,
-						function () {
-						    bladeNavigationService.showBlade($scope.blade, $scope.blade.parentBlade);
-						    $scope.blade.refresh();
-						});
+                function () {
+                    bladeNavigationService.showBlade($scope.blade, $scope.blade.parentBlade);
+                    $scope.blade.refresh();
+                });
         };
     }
 
@@ -206,13 +206,12 @@
                     breadcrumbs: $scope.blade.breadcrumbs,
                     subtitle: 'Browsing "' + listItem.displayName + '"',
                     currentEntity: listItem,
-                    controller: 'memberListController',
-                    template: $scope.blade.template
+                    controller: $scope.blade.controller,
+                    template: $scope.blade.template,
+                    isClosingDisabled: true
                 };
-
-                bladeNavigationService.closeBlade($scope.blade, function () {
-                    bladeNavigationService.showBlade(newBlade, $scope.blade.parentBlade);
-                });
+               
+                bladeNavigationService.showBlade(newBlade, $scope.blade.parentBlade);
             }
         } else {
             $scope.blade.showDetailBlade(listItem, listItem.displayName);
