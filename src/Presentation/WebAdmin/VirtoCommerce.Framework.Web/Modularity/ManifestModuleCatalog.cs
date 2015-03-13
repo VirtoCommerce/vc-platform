@@ -43,13 +43,15 @@ namespace VirtoCommerce.Framework.Web.Modularity
 
             var rootUri = new Uri(contentPhysicalPath);
 
+            CopyAssemblies(ManifestProvider.RootPath, _assembliesPath);
+
             foreach (var pair in ManifestProvider.GetModuleManifests())
             {
                 var manifest = pair.Value;
                 var manifestPath = pair.Key;
 
                 var modulePath = Path.GetDirectoryName(manifestPath);
-                CopyAssemblies(Path.Combine(modulePath, "bin\\"), _assembliesPath);
+                CopyAssemblies(modulePath, _assembliesPath);
 
                 var moduleVirtualPath = GetModuleVirtualPath(rootUri, modulePath);
                 ConvertVirtualPath(manifest.Scripts, moduleVirtualPath);
@@ -68,19 +70,24 @@ namespace VirtoCommerce.Framework.Web.Modularity
         }
 
 
-        private static void CopyAssemblies(string sourceDirectoryPath, string targetDirectoryPath)
+        private static void CopyAssemblies(string sourceParentPath, string targetDirectoryPath)
         {
-            if (Directory.Exists(sourceDirectoryPath))
+            if (sourceParentPath != null)
             {
-                var sourceDirectoryUri = new Uri(sourceDirectoryPath);
+                var sourceDirectoryPath = Path.Combine(sourceParentPath, "bin\\");
 
-                foreach (var sourceFilePath in Directory.EnumerateFiles(sourceDirectoryPath))
+                if (Directory.Exists(sourceDirectoryPath))
                 {
-                    if (IsAssemblyFile(sourceFilePath))
+                    var sourceDirectoryUri = new Uri(sourceDirectoryPath);
+
+                    foreach (var sourceFilePath in Directory.EnumerateFiles(sourceDirectoryPath))
                     {
-                        var relativePath = MakeRelativePath(sourceDirectoryUri, sourceFilePath);
-                        var targetFilePath = Path.Combine(targetDirectoryPath, relativePath);
-                        CopyFile(sourceFilePath, targetFilePath);
+                        if (IsAssemblyFile(sourceFilePath))
+                        {
+                            var relativePath = MakeRelativePath(sourceDirectoryUri, sourceFilePath);
+                            var targetFilePath = Path.Combine(targetDirectoryPath, relativePath);
+                            CopyFile(sourceFilePath, targetFilePath);
+                        }
                     }
                 }
             }

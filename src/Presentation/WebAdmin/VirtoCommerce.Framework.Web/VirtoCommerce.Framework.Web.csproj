@@ -90,6 +90,7 @@
     <Compile Include="Modularity\IModuleCatalog.cs" />
     <Compile Include="Modularity\IModuleCatalogItem.cs" />
     <Compile Include="Modularity\IModuleInitializer.cs" />
+    <Compile Include="Modularity\IModuleInitializerOptions.cs" />
     <Compile Include="Modularity\IModuleManager.cs" />
     <Compile Include="Modularity\IModuleManifestProvider.cs" />
     <Compile Include="Modularity\IModuleTypeLoader.cs" />
@@ -112,6 +113,7 @@
     <Compile Include="Modularity\Exceptions\ModuleInfoGroupExtensions.cs" />
     <Compile Include="Modularity\Exceptions\ModuleInitializeException.cs" />
     <Compile Include="Modularity\ModuleInitializer.cs" />
+    <Compile Include="Modularity\ModuleInitializerOptions.cs" />
     <Compile Include="Modularity\ModuleManager.cs" />
     <Compile Include="Modularity\Exceptions\ModuleNotFoundException.cs" />
     <Compile Include="Modularity\ModuleManifest.cs" />
