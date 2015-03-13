@@ -30,12 +30,13 @@ Copyright (C) Microsoft Corporation. All rights reserved.
     <!--Only setup $(WebProjectOutputDir) iff user haven't set it up-->
     <PropertyGroup Condition="'$(WebProjectOutputDir)'==''">
         <WebProjectOutputDir>$(MSBuildProjectDirectory)</WebProjectOutputDir>
-        <WebProjectOutputDir Condition="!$(WebProjectOutputDirInsideProject)">$(OutDir)_PublishedWebsites\Modules\$(MSBuildProjectName)</WebProjectOutputDir>
+        <WebProjectOutputDir Condition="!$(WebProjectOutputDirInsideProject)">$(OutDir)_PublishedWebsites\$(MSBuildProjectName)</WebProjectOutputDir>
+        <WebProjectOutputDir Condition="!$(WebProjectOutputDirInsideProject) And '$(VCModulesOutputDir)' != ''">$(VCModulesOutputDir)\$(MSBuildProjectName)</WebProjectOutputDir>
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(WebProjectOutputBinDir)'==''">
         <WebProjectOutputBinDir>$(WebProjectOutputDir)\bin</WebProjectOutputBinDir>
-        <WebProjectOutputBinDir Condition="!$(WebProjectOutputDirInsideProject)">$(OutDir)_PublishedWebsites\Modules\bin</WebProjectOutputBinDir>
+        <WebProjectOutputBinDir Condition="!$(WebProjectOutputDirInsideProject) And '$(VCModulesOutputDir)' != ''">$(VCModulesOutputDir)\bin</WebProjectOutputBinDir>
     </PropertyGroup>
 
     <PropertyGroup>
