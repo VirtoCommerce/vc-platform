@@ -91,7 +91,7 @@
         });
     }
 
-    $scope.bladeHeadIco = 'fa fa-user';
+    $scope.bladeHeadIco = $scope.blade.isOrganization ? 'fa fa-university' : 'fa fa-user';
 
     $scope.bladeToolbarCommands = [
         {

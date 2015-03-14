@@ -1,4 +1,5 @@
-﻿using Microsoft.Practices.Unity;
+﻿using System.Configuration;
+using Microsoft.Practices.Unity;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -9,6 +10,7 @@ using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
 using Unity.WebApi;
+using VirtoCommerce.Framework.Core.Utils;
 using VirtoCommerce.Framework.Web;
 using VirtoCommerce.Framework.Web.Modularity;
 
@@ -25,6 +27,25 @@ namespace VirtoCommerce.Platform.Web
             var manifestProvider = new ModuleManifestProvider(contentPhysicalPath);
             return new ManifestModuleCatalog(manifestProvider, contentVirtualPath, assembliesPath);
         }
+
+        #region Overrides of UnityBootstrapper
+
+        /// <summary>
+        /// Configures the <see cref="IUnityContainer"/>. May be overwritten in a derived class to add specific
+        /// type mappings required by the application.
+        /// </summary>
+        protected override void ConfigureContainer()
+        {
+            base.ConfigureContainer();
+
+            var options = new ModuleInitializerOptions
+            {
+                SampleDataLevel = EnumUtility.SafeParse(ConfigurationManager.AppSettings["VirtoCommerce:SampleDataLevel"], SampleDataLevel.None)
+            };
+            Container.RegisterInstance<IModuleInitializerOptions>(options);
+        }
+
+        #endregion
 
         public override void Run(bool runWithDefaultConfiguration)
         {

@@ -311,10 +311,6 @@
     <Content Include="Content\themes\main\css\project-modules.css" />
     <Content Include="Content\themes\main\css\reset.css" />
     <Content Include="Content\themes\main\fonts\fontawesome-webfont.svg" />
-    <Content Include="Content\themes\main\fonts\glyphicons-halflings-regular.svg" />
-    <Content Include="Content\themes\main\fonts\iconFont.dev.svg" />
-    <Content Include="Content\themes\main\fonts\iconFont.svg" />
-    <Content Include="Content\themes\main\fonts\metroSysIcons.svg" />
     <Content Include="Content\themes\main\images\flags.png" />
     <Content Include="Content\themes\main\images\logo.png" />
     <Content Include="Content\themes\metro\css\custom.css" />
@@ -448,19 +444,6 @@
     <Content Include="Content\themes\main\fonts\fontawesome-webfont.ttf" />
     <Content Include="Content\themes\main\fonts\fontawesome-webfont.woff" />
     <Content Include="Content\themes\main\fonts\FontAwesome.otf" />
-    <Content Include="Content\themes\main\fonts\glyphicons-halflings-regular.eot" />
-    <Content Include="Content\themes\main\fonts\glyphicons-halflings-regular.ttf" />
-    <Content Include="Content\themes\main\fonts\glyphicons-halflings-regular.woff" />
-    <Content Include="Content\themes\main\fonts\iconFont.eot" />
-    <Content Include="Content\themes\main\fonts\iconFont.json" />
-    <Content Include="Content\themes\main\fonts\iconFont.ttf" />
-    <Content Include="Content\themes\main\fonts\iconFont.woff" />
-    <Content Include="Content\themes\main\fonts\metroSysIcons.ttf" />
-    <Content Include="Content\themes\main\fonts\metroSysIcons.woff" />
-    <Content Include="Content\themes\main\fonts\OpenSans-Bold.woff" />
-    <Content Include="Content\themes\main\fonts\OpenSans-Light.woff" />
-    <Content Include="Content\themes\main\fonts\OpenSans.woff" />
-    <Content Include="Content\themes\main\fonts\PTSerif-Caption.woff" />
     <Content Include="Content\Selectize\less\selectize.less" />
     <Content Include="Content\Selectize\less\selectize.legacy.less" />
     <Content Include="Content\Selectize\less\selectize.default.less" />
@@ -1269,9 +1252,9 @@
     <Folder Include="Filters\" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="packages.config">
+    <None Include="packages.config">
       <SubType>Designer</SubType>
-    </Content>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\Core\CommerceFoundation\CommerceFoundation.csproj">

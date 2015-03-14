@@ -23,7 +23,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr class="table-item" ng-repeat="data in items" ng-class="{'active': data.id === selecteddata.id}" context-menu data-target="asr_menu_{{data.id}}">
+                        <tr class="table-item" ng-repeat="data in items" ng-class="{'__selected': data.id === selecteddata.id}" context-menu data-target="asr_menu_{{data.id}}">
                             <td class="table-col __product-control">
                                 <label class="form-control __checkbox">
                                     <input type="checkbox" ng-model="data.selected">
