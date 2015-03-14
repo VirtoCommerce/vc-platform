@@ -10,7 +10,6 @@ namespace VirtoCommerce.MenuModule.Web.Models
 		public string StoreId { get; set; }
 		public string Language { get; set; }
 
-		private Collection<MenuLink> _menuLinks;
-		public Collection<MenuLink> MenuLinks { get { return _menuLinks ?? (_menuLinks = new Collection<MenuLink>()); } }
+		public ICollection<MenuLink> MenuLinks { get; set; }
 	}
 }

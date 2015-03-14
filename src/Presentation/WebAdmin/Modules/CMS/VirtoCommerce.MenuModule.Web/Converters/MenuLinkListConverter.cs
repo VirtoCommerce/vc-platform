@@ -31,7 +31,7 @@ namespace VirtoCommerce.MenuModule.Web.Converters
 			                 Name = list.Name,
 			                 StoreId = list.StoreId,
 			                 Language = list.Language,
-			                 MenuLinks = list.MenuLinks.OrderByDescending(l=>l.Priority).Select(s => s.ToWebModel())
+			                 MenuLinks = list.MenuLinks.OrderByDescending(l=>l.Priority).Select(s => s.ToWebModel()).ToArray()
 			             };
 
 			return retVal;
