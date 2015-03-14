@@ -115,10 +115,12 @@
     <Compile Include="Controllers\Api\MenuController.cs" />
     <Compile Include="Converters\MenuLinkConverter.cs" />
     <Compile Include="Converters\MenuLinkListConverter.cs" />
+    <Compile Include="Models\CheckNameResponse.cs" />
     <Compile Include="Models\MenuLink.cs" />
     <Compile Include="Models\MenuLinkList.cs" />
     <Compile Include="Module.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Utilities\MenuLinksUtility.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\..\Core\CommerceFoundation.Data\CommerceFoundation.Data.csproj">

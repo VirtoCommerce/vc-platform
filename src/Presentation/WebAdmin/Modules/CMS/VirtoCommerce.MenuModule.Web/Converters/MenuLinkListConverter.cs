@@ -32,7 +32,13 @@ namespace VirtoCommerce.MenuModule.Web.Converters
 			retVal.StoreId = list.StoreId;
 			retVal.Language = list.Language;
 
-			retVal.MenuLinks = list.MenuLinks.Select(s => s.ToWebModel());
+			if (list.MenuLinks.Any())
+			{
+				foreach (var menulink in list.MenuLinks.ToArray().Select(s => s.ToWebModel()))
+				{
+					retVal.MenuLinks.Add(menulink);
+				}
+			}
 
 			return retVal;
 		}

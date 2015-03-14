@@ -13,5 +13,6 @@ namespace VirtoCommerce.Content.Menu.Data.Services
 		MenuLinkList GetListById(string listId);
 		void UpdateList(MenuLinkList list);
 		void DeleteList(string listId);
+		bool CheckList(string storeId, string name, string language, string id);
 	}
 }

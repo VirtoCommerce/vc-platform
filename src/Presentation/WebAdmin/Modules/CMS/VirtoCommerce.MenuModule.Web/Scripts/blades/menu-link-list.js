@@ -30,7 +30,7 @@
 			{
 				name: "Save list", icon: 'fa fa-save',
 				executeMethod: function () {
-					saveChanges();
+					blade.saveChanges();
 				},
 				canExecuteMethod: function () {
 					return canSave();
@@ -62,7 +62,7 @@
 				{
 					name: "Save list", icon: 'fa fa-save',
 					executeMethod: function () {
-						saveChanges();
+						blade.saveChanges();
 					},
 					canExecuteMethod: function () {
 						return canSave();
@@ -94,13 +94,29 @@
 
 	blade.refresh();
 
-	function saveChanges() {
+	blade.saveChanges = function() {
 		//checkForNull();
 		blade.isLoading = true;
-		menus.update({ storeId: blade.choosenStoreId }, blade.currentEntity, function (data) {
-			blade.newList = false;
-			blade.refresh();
-			blade.parentBlade.refresh();
+		menus.checkList({ storeId: blade.choosenStoreId, id: blade.currentEntity.id, name: blade.currentEntity.name, language: blade.currentEntity.language }, function (data) {
+			if (Boolean(data.result)) {
+				menus.update({ storeId: blade.choosenStoreId }, blade.currentEntity, function (data) {
+					blade.newList = false;
+					blade.refresh();
+					blade.parentBlade.refresh();
+				});
+			}
+			else {
+				blade.isLoading = false;
+				var dialog = {
+					id: "errorInName",
+					title: "Name not unique",
+					message: "Name must be unique for this language!",
+					callback: function (remove) {
+
+					}
+				}
+				dialogService.showNotificationDialog(dialog);
+			}
 		});
 	};
 

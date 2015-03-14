@@ -38,5 +38,12 @@ namespace VirtoCommerce.Content.Menu.Data.Services
 		{
 			_menuRepository.DeleteList(listId);
 		}
+
+		public bool CheckList(string storeId, string name, string language, string id)
+		{
+			var lists = _menuRepository.GetListsByStoreId(storeId);
+
+			return !lists.Any(l => l.Name == name && l.Language == language && l.Id != id);
+		}
 	}
 }
