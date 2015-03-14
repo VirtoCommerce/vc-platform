@@ -11,30 +11,30 @@ namespace VirtoCommerce.MenuModule.Web.Converters
 	{
 		public static coreModels.MenuLinkList ToCoreModel(this webModels.MenuLinkList list)
 		{
-			var retVal = new coreModels.MenuLinkList();
+			var retVal = new coreModels.MenuLinkList
+			             {
+			                 Id = list.Id,
+			                 Name = list.Name,
+			                 StoreId = list.StoreId,
+			                 Language = list.Language,
+			                 MenuLinks = list.MenuLinks.Select(s => s.ToCoreModel()).ToList()
+			             };
 
-			retVal.Id = list.Id;
-			retVal.Name = list.Name;
-			retVal.StoreId = list.StoreId;
-			retVal.Language = list.Language;
-
-			retVal.MenuLinks = list.MenuLinks.Select(s => s.ToCoreModel()).ToList();
-
-			return retVal;
+		    return retVal;
 		}
 
 		public static webModels.MenuLinkList ToWebModel(this coreModels.MenuLinkList list)
 		{
-			var retVal = new webModels.MenuLinkList();
+			var retVal = new webModels.MenuLinkList
+			             {
+			                 Id = list.Id,
+			                 Name = list.Name,
+			                 StoreId = list.StoreId,
+			                 Language = list.Language,
+			                 MenuLinks = list.MenuLinks.OrderByDescending(l=>l.Priority).Select(s => s.ToWebModel())
+			             };
 
-			retVal.Id = list.Id;
-			retVal.Name = list.Name;
-			retVal.StoreId = list.StoreId;
-			retVal.Language = list.Language;
-
-			retVal.MenuLinks = list.MenuLinks.Select(s => s.ToWebModel());
-
-			return retVal;
+		    return retVal;
 		}
 	}
 }
