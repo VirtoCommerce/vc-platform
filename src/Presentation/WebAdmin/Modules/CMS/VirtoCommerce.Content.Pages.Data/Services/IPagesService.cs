@@ -13,5 +13,6 @@ namespace VirtoCommerce.Content.Pages.Data.Services
 		Page GetPage(string storeId, string pageName, string language);
 		void SavePage(string storeId, Page page);
 		void DeletePage(string storeId, ShortPageInfo[] pages);
+		bool CheckList(string storeId, string name, string language);
 	}
 }

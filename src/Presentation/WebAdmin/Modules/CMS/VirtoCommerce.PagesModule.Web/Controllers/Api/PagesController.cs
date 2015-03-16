@@ -74,13 +74,23 @@
 		{
 			var pages = PagesUtility.GetDefaultPages(storeId);
 
-			foreach(var page in pages)
+			foreach (var page in pages)
 			{
 				_pagesService.SavePage(storeId, page);
 			}
 
 			var items = _pagesService.GetPages(storeId).Select(s => s.ToWebModel());
 			return Ok(items);
+		}
+
+		[HttpGet]
+		[ResponseType(typeof(CheckNameResponse))]
+		[Route("pages/checkname")]
+		public IHttpActionResult CheckName(string storeId, [FromUri]string pageName, [FromUri]string language)
+		{
+			var result = _pagesService.CheckList(storeId, pageName, language);
+			var response = new CheckNameResponse { Result = result };
+			return Ok(response);
 		}
 
 		[HttpPost]

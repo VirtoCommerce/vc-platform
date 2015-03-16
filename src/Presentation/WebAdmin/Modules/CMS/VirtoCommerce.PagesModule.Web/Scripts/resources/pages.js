@@ -4,6 +4,7 @@
 		get: { url: 'api/cms/:storeId/pages/', method: 'GET', isArray: true },
 		getPage: { url: 'api/cms/:storeId/pages/:language/:pageName', method: 'GET' },
 		createDefaultPages: { url: 'api/cms/:storeId/pages/default', method: 'GET', isArray: true },
+		checkName: { url: 'api/cms/:storeId/pages/checkname', method: 'GET' },
 		update: { url: 'api/cms/:storeId/pages/', method: 'POST' },
 		delete: { url: 'api/cms/:storeId/pages/', method: 'DELETE' }
 	});

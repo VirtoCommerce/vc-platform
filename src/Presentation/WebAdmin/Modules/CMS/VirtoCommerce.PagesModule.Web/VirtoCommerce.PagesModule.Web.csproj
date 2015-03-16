@@ -117,6 +117,7 @@
     <Compile Include="Controllers\Api\PagesController.cs" />
     <Compile Include="Converters\PageConverter.cs" />
     <Compile Include="Converters\ShortPageInfoConverter.cs" />
+    <Compile Include="Models\CheckNameResponse.cs" />
     <Compile Include="Models\Page.cs" />
     <Compile Include="Models\ShortPageInfo.cs" />
     <Compile Include="Module.cs" />

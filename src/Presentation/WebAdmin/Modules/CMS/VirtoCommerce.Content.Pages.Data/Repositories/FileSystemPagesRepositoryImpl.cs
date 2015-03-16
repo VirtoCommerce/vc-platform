@@ -25,15 +25,22 @@ namespace VirtoCommerce.Content.Pages.Data.Repositories
 
 			var fullPath = GetFullPath(path);
 
-			using (var sr = File.OpenText(fullPath))
+			if (File.Exists(fullPath))
 			{
-				var itemName = Path.GetFileNameWithoutExtension(fullPath);
+				using (var sr = File.OpenText(fullPath))
+				{
+					var itemName = Path.GetFileNameWithoutExtension(fullPath);
 
-				var content = sr.ReadToEnd();
+					var content = sr.ReadToEnd();
 
-				retVal.Language = GetLanguageFromFullPath(fullPath);
-				retVal.Content = content;
-				retVal.Name = itemName;
+					retVal.Language = GetLanguageFromFullPath(fullPath);
+					retVal.Content = content;
+					retVal.Name = itemName;
+				}
+			}
+			else
+			{
+				retVal = null;
 			}
 
 			return retVal;
@@ -54,11 +61,11 @@ namespace VirtoCommerce.Content.Pages.Data.Repositories
 
 			var languages = Directory.GetDirectories(fullPath);
 
-			foreach(var language in languages)
+			foreach (var language in languages)
 			{
-				var files = Directory.GetFiles(language);;
+				var files = Directory.GetFiles(language); ;
 
-				list.AddRange(files.Select(f => new Models.ShortPageInfo 
+				list.AddRange(files.Select(f => new Models.ShortPageInfo
 								{
 									Name = Path.GetFileNameWithoutExtension(f),
 									LastModified = Directory.GetLastWriteTimeUtc(f),

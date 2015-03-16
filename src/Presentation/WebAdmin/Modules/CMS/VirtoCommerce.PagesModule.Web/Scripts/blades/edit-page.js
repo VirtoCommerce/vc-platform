@@ -72,15 +72,31 @@
     function saveChanges() {
     	blade.isLoading = true;
 
-    	pages.update({ storeId: blade.choosenStoreId }, blade.currentEntity, function () {
-    		blade.parentBlade.refresh(true);
-    		blade.choosenPageName = blade.currentEntity.name;
-    		blade.choosenPageLanguage = blade.currentEntity.language;
-    		blade.title = blade.currentEntity.name;
-    		blade.subtitle = 'Edit page';
-    		blade.newPage = false;
-    		blade.refresh();
-        });
+    	pages.checkName({ storeId: blade.choosenStoreId, pageName: blade.currentEntity.name, language: blade.currentEntity.language }, function (data) {
+    		if (Boolean(data.result)) {
+    			pages.update({ storeId: blade.choosenStoreId }, blade.currentEntity, function () {
+    				blade.parentBlade.refresh(true);
+    				blade.choosenPageName = blade.currentEntity.name;
+    				blade.choosenPageLanguage = blade.currentEntity.language;
+    				blade.title = blade.currentEntity.name;
+    				blade.subtitle = 'Edit page';
+    				blade.newPage = false;
+    				blade.refresh();
+    			});
+    		}
+    		else {
+    			blade.isLoading = false;
+    			var dialog = {
+    				id: "errorInName",
+    				title: "Name not unique",
+    				message: "Name must be unique for this language!",
+    				callback: function (remove) {
+
+    				}
+    			}
+    			dialogService.showNotificationDialog(dialog);
+    		}
+    	});
     };
 
     function deleteEntry() {

@@ -52,6 +52,17 @@ namespace VirtoCommerce.Content.Pages.Data.Services
 			}
 		}
 
+		public bool CheckList(string storeId, string name, string language)
+		{
+			var page = GetPage(storeId, name, language);
+			if (page != null)
+			{
+				return false;
+			}
+
+			return true;
+		}
+
 		private string GetFullName(string storeId, string pageName, string language)
 		{
 			return string.Format("{0}/{1}/{2}.liquid", storeId, language, pageName);
