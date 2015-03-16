@@ -145,26 +145,12 @@ namespace VirtoCommerce.StoreModule.Data.Converters
 
 			if (source.FulfillmentCenter != null)
 			{
-				if (target.FulfillmentCenter != null)
-				{
-					source.FulfillmentCenter.Patch(target.FulfillmentCenter);
-				}
-				else
-				{
-					target.FulfillmentCenter = source.FulfillmentCenter;
-				}
+				target.FulfillmentCenterId = source.FulfillmentCenter.FulfillmentCenterId;
 			}
 
 			if (source.ReturnsFulfillmentCenter != null)
 			{
-				if (target.ReturnsFulfillmentCenter != null)
-				{
-					source.ReturnsFulfillmentCenter.Patch(target.ReturnsFulfillmentCenter);
-				}
-				else
-				{
-					target.ReturnsFulfillmentCenter = source.FulfillmentCenter;
-				}
+				target.ReturnsFulfillmentCenterId = source.ReturnsFulfillmentCenter.FulfillmentCenterId;
 			}
 
 			if (!source.Settings.IsNullCollection())
