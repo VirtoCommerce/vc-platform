@@ -2181,6 +2181,40 @@ ol
                 color: #f0a30a;
             }
 
+.list.__car-info
+{
+    display: inline-block;
+}
+
+    .list.__car-info .list-item
+    {
+        font-size: 14px;
+        margin: 15px 0 0;
+        padding: 0 0 0 35px;
+        position: relative;
+        text-align: left;
+    }
+
+        .list.__car-info .tile-ico
+        {
+            font-size: 18px;
+            left: 0;
+            position: absolute;
+            top: 5px;
+            width: 25px;
+        }
+
+        .tile.double .list.__car-info .tile-ico
+        {
+            margin: 0;
+        }
+
+        .list.__car-info .list-name
+        {
+            color: #43b0e6;
+            display: block;
+        }
+
 
 .menu.__context
 {
@@ -2427,14 +2461,18 @@ h3
             box-shadow: none;
 }
 
-
-.form-input input.ng-invalid,
-.form-input textarea.ng-invalid,
-.form-input input:focus.ng-invalid,
-.form-input textarea:focus.ng-invalid
+.error
 {
-    background: #faf1f1;
-    border-color: #e51400;
+    color: #e51400;
+}
+
+.form-input input.error,
+.form-input textarea.error,
+.form-input input.error:focus,
+.form-input textarea.error:focus
+{
+    background: #fef8f7;
+    border-color: #fce7e6;
     color: #e51400;
 }
 
@@ -3343,6 +3381,13 @@ fieldset + fieldset
 {
 	font-size: 40px;
 	font-weight: 300;
+}
+
+.tile .tile-t
+{
+    font-size: 36px;
+    font-weight: 300;
+    margin: 10px 0 0;
 }
 
 .tile .tile-img
