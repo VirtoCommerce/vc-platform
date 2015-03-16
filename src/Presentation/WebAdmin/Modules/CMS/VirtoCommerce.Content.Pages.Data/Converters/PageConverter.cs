@@ -17,6 +17,7 @@ namespace VirtoCommerce.Content.Pages.Data.Converters
 
 			retVal.Name = Path.GetFileNameWithoutExtension(page.Path);
 			retVal.LastModified = page.ModifiedDate ?? page.CreatedDate;
+			retVal.Language = GetLanguageFromFullPath(page.Path);
 
 			return retVal;
 		}
@@ -27,6 +28,7 @@ namespace VirtoCommerce.Content.Pages.Data.Converters
 
 			retVal.Name = Path.GetFileNameWithoutExtension(repositoryContent.Name);
 			retVal.LastModified = modifiedDate;
+			retVal.Language = GetLanguageFromFullPath(repositoryContent.Path);
 
 			return retVal;
 		}
@@ -37,8 +39,17 @@ namespace VirtoCommerce.Content.Pages.Data.Converters
 
 			retVal.Name = Path.GetFileNameWithoutExtension(repositoryContent.Name);
 			retVal.Content = repositoryContent.Content;
+			retVal.Language = GetLanguageFromFullPath(repositoryContent.Path);
 
 			return retVal;
+		}
+
+		private static string GetLanguageFromFullPath(string fullPath)
+		{
+			var steps = fullPath.Split('/');
+			var language = steps[steps.Length - 2];
+
+			return language;
 		}
 	}
 }

@@ -58,6 +58,10 @@
     <Compile Include="Migrations\201502231500102_Initial.Designer.cs">
       <DependentUpon>201502231500102_Initial.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201503161710486_AddLanguage.cs" />
+    <Compile Include="Migrations\201503161710486_AddLanguage.Designer.cs">
+      <DependentUpon>201503161710486_AddLanguage.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Page.cs" />
     <Compile Include="Models\ShortPageInfo.cs" />
@@ -86,6 +90,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201502231500102_Initial.resx">
       <DependentUpon>201502231500102_Initial.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201503161710486_AddLanguage.resx">
+      <DependentUpon>201503161710486_AddLanguage.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

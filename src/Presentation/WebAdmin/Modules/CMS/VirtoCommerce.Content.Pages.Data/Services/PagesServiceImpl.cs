@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using VirtoCommerce.Content.Pages.Data.Models;
 using VirtoCommerce.Content.Pages.Data.Repositories;
 
 namespace VirtoCommerce.Content.Pages.Data.Services
@@ -25,35 +26,35 @@ namespace VirtoCommerce.Content.Pages.Data.Services
 			return _pagesRepository.GetPages(path);
 		}
 
-		public Models.Page GetPage(string storeId, string pageName)
+		public Models.Page GetPage(string storeId, string pageName, string language)
 		{
-			var fullPath = GetFullName(storeId, pageName);
+			var fullPath = GetFullName(storeId, pageName, language);
 
 			return _pagesRepository.GetPage(fullPath);
 		}
 
 		public void SavePage(string storeId, Models.Page page)
 		{
-			var fullPath = GetFullName(storeId, page.Name);
+			var fullPath = GetFullName(storeId, page.Name, page.Language);
 
 			page.Path = fullPath;
 
 			_pagesRepository.SavePage(fullPath, page);
 		}
 
-		public void DeletePage(string storeId, string[] pageNames)
+		public void DeletePage(string storeId, ShortPageInfo[] pages)
 		{
-			foreach(var pageName in pageNames)
+			foreach (var page in pages)
 			{
-				var fullPath = GetFullName(storeId, pageName);
+				var fullPath = GetFullName(storeId, page.Name, page.Language);
 
 				_pagesRepository.DeletePage(fullPath);
 			}
 		}
 
-		private string GetFullName(string storeId, string pageName)
+		private string GetFullName(string storeId, string pageName, string language)
 		{
-			return string.Format("{0}/{1}.liquid", storeId, pageName);
+			return string.Format("{0}/{1}/{2}.liquid", storeId, language, pageName);
 		}
 	}
 }

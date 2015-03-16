@@ -15,6 +15,7 @@ namespace VirtoCommerce.PagesModule.Web.Converters
 
 			retVal.Name = page.Name;
 			retVal.Content = page.Content;
+			retVal.Language = page.Language;
 
 			return retVal;
 		}
@@ -25,6 +26,7 @@ namespace VirtoCommerce.PagesModule.Web.Converters
 
 			retVal.Name = page.Name;
 			retVal.Content = page.Content;
+			retVal.Language = page.Language;
 
 			return retVal;
 		}

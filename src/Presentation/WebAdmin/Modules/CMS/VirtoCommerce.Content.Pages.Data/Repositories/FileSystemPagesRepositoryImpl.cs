@@ -31,6 +31,7 @@ namespace VirtoCommerce.Content.Pages.Data.Repositories
 
 				var content = sr.ReadToEnd();
 
+				retVal.Language = GetLanguageFromFullPath(fullPath);
 				retVal.Content = content;
 				retVal.Name = itemName;
 			}
@@ -40,6 +41,10 @@ namespace VirtoCommerce.Content.Pages.Data.Repositories
 
 		public IEnumerable<Models.ShortPageInfo> GetPages(string path)
 		{
+			var list = new List<Models.ShortPageInfo>();
+
+			var retVal = new List<Models.ShortPageInfo>();
+
 			var fullPath = GetFullPath(path);
 
 			if (!Directory.Exists(fullPath))
@@ -47,16 +52,33 @@ namespace VirtoCommerce.Content.Pages.Data.Repositories
 				Directory.CreateDirectory(fullPath);
 			}
 
-			var files = Directory.GetFiles(fullPath);
+			var languages = Directory.GetDirectories(fullPath);
 
-			return files.Select(f => new Models.ShortPageInfo { Name = Path.GetFileNameWithoutExtension(f), LastModified = Directory.GetLastWriteTimeUtc(f) });
+			foreach(var language in languages)
+			{
+				var files = Directory.GetFiles(language);;
+
+				list.AddRange(files.Select(f => new Models.ShortPageInfo 
+								{
+									Name = Path.GetFileNameWithoutExtension(f),
+									LastModified = Directory.GetLastWriteTimeUtc(f),
+									Language = GetLanguageFromFullPath(f)
+								}));
+			}
+
+			return list.ToArray();
 		}
 
 		public void SavePage(string path, Models.Page page)
 		{
 			var fullPath = GetFullPath(path);
 
-			using (var fs = new FileStream(fullPath, FileMode.OpenOrCreate, FileAccess.Write))
+			if (!Directory.Exists(Path.GetDirectoryName(fullPath)))
+			{
+				Directory.CreateDirectory(Path.GetDirectoryName(fullPath));
+			}
+
+			using (var fs = new FileStream(fullPath, FileMode.Create, FileAccess.Write))
 			{
 				using (var sw = new StreamWriter(fs))
 				{
@@ -80,6 +102,14 @@ namespace VirtoCommerce.Content.Pages.Data.Repositories
 		private string GetFullPath(string path)
 		{
 			return string.Format("{0}{1}", _baseDirectoryPath, path).Replace("/", "\\");
+		}
+
+		private string GetLanguageFromFullPath(string fullPath)
+		{
+			var steps = fullPath.Split('\\');
+			var language = steps[steps.Length - 2];
+
+			return language;
 		}
 	}
 }

@@ -11,6 +11,7 @@
 	using VirtoCommerce.PagesModule.Web.Models;
 	using VirtoCommerce.PagesModule.Web.Converters;
 	using System.Collections.Generic;
+	using VirtoCommerce.PagesModule.Web.Utilities;
 
 	#endregion
 
@@ -58,12 +59,28 @@
 		}
 
 		[HttpGet]
-		[ResponseType(typeof(ShortPageInfo[]))]
-		[Route("pages/{pageName}")]
-		public IHttpActionResult GetPage(string storeId, string pageName)
+		[ResponseType(typeof(Page))]
+		[Route("pages/{language}/{pageName}")]
+		public IHttpActionResult GetPage(string storeId, string language, string pageName)
 		{
-			var item = _pagesService.GetPage(storeId, pageName);
+			var item = _pagesService.GetPage(storeId, pageName, language);
 			return Ok(item.ToWebModel());
+		}
+
+		[HttpGet]
+		[ResponseType(typeof(IEnumerable<ShortPageInfo>))]
+		[Route("pages/default")]
+		public IHttpActionResult CreateDefault(string storeId)
+		{
+			var pages = PagesUtility.GetDefaultPages(storeId);
+
+			foreach(var page in pages)
+			{
+				_pagesService.SavePage(storeId, page);
+			}
+
+			var items = _pagesService.GetPages(storeId).Select(s => s.ToWebModel());
+			return Ok(items);
 		}
 
 		[HttpPost]
@@ -76,9 +93,9 @@
 
 		[HttpDelete]
 		[Route("pages")]
-		public IHttpActionResult DeleteItem(string storeId, [FromUri]string[] pageNames)
+		public IHttpActionResult DeleteItem(string storeId, [FromUri]string[] pageNamesAndLanguges)
 		{
-			_pagesService.DeletePage(storeId, pageNames);
+			_pagesService.DeletePage(storeId, PagesUtility.GetShortPageInfoFromString(pageNamesAndLanguges).ToArray());
 			return Ok();
 		}
 	}
