@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Web;
 using VirtoCommerce.MenuModule.Web.Models;
@@ -18,7 +19,9 @@ namespace VirtoCommerce.MenuModule.Web.Utilities
 				Language = "en-US",
 				Name = "Footer",
 				StoreId = storeId
-			};
+            };
+
+            footerList.MenuLinks = new Collection<MenuLink>();
 
 			footerList.MenuLinks.Add(new MenuLink
 									{
@@ -70,6 +73,7 @@ namespace VirtoCommerce.MenuModule.Web.Utilities
 				StoreId = storeId
 			};
 
+            headerList.MenuLinks = new Collection<MenuLink>();
 			headerList.MenuLinks.Add(new MenuLink
 									{
 										Id = Guid.NewGuid().ToString(),
@@ -120,6 +124,7 @@ namespace VirtoCommerce.MenuModule.Web.Utilities
 				StoreId = storeId
 			};
 
+            accountList.MenuLinks = new Collection<MenuLink>();
 			accountList.MenuLinks.Add(new MenuLink
 									{
 										Id = Guid.NewGuid().ToString(),

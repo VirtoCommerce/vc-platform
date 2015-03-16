@@ -78,6 +78,7 @@
     <Compile Include="DataContracts\Lists\LinkList.cs" />
     <Compile Include="DataContracts\Price.cs" />
     <Compile Include="Extensions\ListClientExtensions.cs" />
+    <Compile Include="Extensions\PageClientExtensions.cs" />
     <Compile Include="PriceClient.cs" />
     <Compile Include="CustomerServiceClient.cs" />
     <Compile Include="DataContracts\CustomerService\ContactProperty.cs" />
@@ -90,6 +91,7 @@
     <Compile Include="Extensions\StringExtension.cs" />
     <Compile Include="Extensions\ThemeClientExtensions.cs" />
     <Compile Include="ListClient.cs" />
+    <Compile Include="PageClient.cs" />
     <Compile Include="ThemeClient.cs" />
     <Compile Include="DataContracts\Association.cs" />
     <Compile Include="DataContracts\BrowseQuery.cs" />
