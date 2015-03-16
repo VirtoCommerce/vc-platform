@@ -39,6 +39,7 @@ namespace VirtoCommerce.Content.Menu.Data.Models
 		public void Attach(MenuLinkList list)
 		{
 			this.Name = list.Name;
+			this.Language = list.Language;
 
 			foreach (var link in list.MenuLinks)
 			{

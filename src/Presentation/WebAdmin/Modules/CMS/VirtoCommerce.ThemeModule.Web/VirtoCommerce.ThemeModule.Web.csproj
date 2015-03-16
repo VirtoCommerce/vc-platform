@@ -132,6 +132,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Default_Theme\" />
     <Folder Include="Scripts\directives\" />
     <Folder Include="Scripts\wizards\" />
   </ItemGroup>

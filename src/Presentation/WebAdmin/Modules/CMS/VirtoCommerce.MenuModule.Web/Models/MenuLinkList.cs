@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 namespace VirtoCommerce.MenuModule.Web.Models
 {
@@ -9,6 +10,6 @@ namespace VirtoCommerce.MenuModule.Web.Models
 		public string StoreId { get; set; }
 		public string Language { get; set; }
 
-		public IEnumerable<MenuLink> MenuLinks { get; set; }
+		public ICollection<MenuLink> MenuLinks { get; set; }
 	}
 }

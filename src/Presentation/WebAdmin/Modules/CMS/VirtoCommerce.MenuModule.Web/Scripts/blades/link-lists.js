@@ -1,9 +1,10 @@
 ﻿angular.module('virtoCommerce.content.menuModule.blades.linkLists', [
     'virtoCommerce.content.menuModule.resources.menus',
+	'virtoCommerce.content.menuModule.resources.menusStores',
 	'virtoCommerce.content.menuModule.blades.menuLinkList',
 	'angularUUID2'
 ])
-.controller('linkListsController', ['$scope', 'menus', 'bladeNavigationService', function ($scope, menus, bladeNavigationService) {
+.controller('linkListsController', ['$scope', 'menus', 'menusStores', 'bladeNavigationService', function ($scope, menus, menusStores, bladeNavigationService) {
 	$scope.selectedNodeId = null;
 
 	var blade = $scope.blade;
@@ -11,9 +12,31 @@
 	blade.refresh = function () {
 		blade.isLoading = true;
 		menus.get({ storeId: blade.storeId }, function (data) {
-			blade.isLoading = false;
 			blade.currentEntities = data;
 			blade.parentWidget.refresh();
+
+			if (blade.currentEntities.length === 0) {
+				menusStores.get({ id: blade.storeId }, function (data) {
+					blade.store = data;
+
+					if (_.where(blade.store.settings, { name: "DefaultLinkListsInstalled", value: true }).length === 0) {
+						menus.createDefaultLinks({ storeId: blade.storeId }, function (data) {
+							blade.currentEntities = data;
+							blade.parentWidget.refresh();
+
+							blade.store.settings.push({ name: "DefaultLinkListsInstalled", value: true, valueType: "Boolean" });
+
+							menusStores.update(blade.store, function (data) {
+								blade.isLoading = false
+							});
+						});
+					}
+				});
+
+			}
+			else {
+				blade.isLoading = false;
+			}
 		});
 	}
 

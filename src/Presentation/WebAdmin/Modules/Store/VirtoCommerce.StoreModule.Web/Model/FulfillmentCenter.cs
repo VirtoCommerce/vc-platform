@@ -7,7 +7,7 @@ using VirtoCommerce.Foundation.Frameworks;
 
 namespace VirtoCommerce.StoreModule.Web.Model
 {
-	public class FulfillmentCenter 
+	public class FulfillmentCenter  : Entity
 	{
 		public string Name { get; set; }
 		public string Description { get; set; }
