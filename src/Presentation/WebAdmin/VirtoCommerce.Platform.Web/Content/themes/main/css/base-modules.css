@@ -2427,18 +2427,14 @@ h3
             box-shadow: none;
 }
 
-.error
-{
-    color: #e51400;
-}
 
-.form-input input.error,
-.form-input textarea.error,
-.form-input input.error:focus,
-.form-input textarea.error:focus
+.form-input input.ng-invalid,
+.form-input textarea.ng-invalid,
+.form-input input:focus.ng-invalid,
+.form-input textarea:focus.ng-invalid
 {
-    background: #fef8f7;
-    border-color: #fce7e6;
+    background: #faf1f1;
+    border-color: #e51400;
     color: #e51400;
 }
 
