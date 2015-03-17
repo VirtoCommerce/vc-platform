@@ -13,7 +13,7 @@
                     title: $scope.currentBlade.title,
                     subtitle: 'Associations',
                     controller: 'itemAssociationsListController',
-                    template: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/blades/item-associations-list.tpl.html'
+                    template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/app/catalog/blades/item-associations-list.tpl.html'
                 };
             } else {
                 var newBlade = {
@@ -22,7 +22,7 @@
                     title: "New Associations",
                     //subtitle: '',
                     controller: 'associationWizardController',
-                    template: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/wizards/newAssociation/association-wizard.tpl.html'
+                    template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/app/catalog/wizards/newAssociation/association-wizard.tpl.html'
                 };
             }
 

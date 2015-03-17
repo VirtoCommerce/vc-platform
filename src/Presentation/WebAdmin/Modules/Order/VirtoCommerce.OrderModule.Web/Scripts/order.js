@@ -17,7 +17,7 @@ angular.module(moduleName, [
   	$stateProvider
 		.state('workspace.orderModule', {
 			url: '/orders',
-			templateUrl: 'Modules/Order/VirtoCommerce.OrderModule.Web/Scripts/home.tpl.html',
+			templateUrl: 'Modules/$(VirtoCommerce.Orders)/Scripts/home.tpl.html',
 			controller: [
 				'$scope', 'bladeNavigationService', function ($scope, bladeNavigationService) {
 					var blade = {
@@ -25,7 +25,7 @@ angular.module(moduleName, [
 						title: 'Customer orders',
 						//subtitle: 'Manage Orders',
 						controller: 'customerOrderListController',
-						template: 'Modules/Order/VirtoCommerce.OrderModule.Web/Scripts/blades/customerOrder-list.tpl.html',
+						template: 'Modules/$(VirtoCommerce.Orders)/Scripts/blades/customerOrder-list.tpl.html',
 						isClosingDisabled: true
 					};
 					bladeNavigationService.showBlade(blade);
@@ -51,38 +51,38 @@ angular.module(moduleName, [
   	//Register widgets
   	var customerOrderItemsWidget = {
    		controller: 'customerOrderItemsWidgetController',
-  		template: 'Modules/Order/VirtoCommerce.OrderModule.Web/Scripts/widgets/customerOrder-items-widget.tpl.html',
+  		template: 'Modules/$(VirtoCommerce.Orders)/Scripts/widgets/customerOrder-items-widget.tpl.html',
   	};
   	widgetService.registerWidget(customerOrderItemsWidget, 'customerOrderDetailWidgets');
 
   	var operationCommentWidget = {
   		controller: 'operationCommentWidgetController',
-  		template: 'Modules/Order/VirtoCommerce.OrderModule.Web/Scripts/widgets/operation-comment-widget.tpl.html',
+  		template: 'Modules/$(VirtoCommerce.Orders)/Scripts/widgets/operation-comment-widget.tpl.html',
   	};
   	widgetService.registerWidget(operationCommentWidget, 'customerOrderDetailWidgets');
 
   	var customerOrderTotalsWidget = {
   		controller: 'customerOrderTotalsWidgetController',
-  		template: 'Modules/Order/VirtoCommerce.OrderModule.Web/Scripts/widgets/customerOrder-totals-widget.tpl.html',
+  		template: 'Modules/$(VirtoCommerce.Orders)/Scripts/widgets/customerOrder-totals-widget.tpl.html',
   	};
   	widgetService.registerWidget(customerOrderTotalsWidget, 'customerOrderDetailWidgets');
 
   	var addressWidget = {
   		controller: 'addressWidgetController',
-  		template: 'Modules/Order/VirtoCommerce.OrderModule.Web/Scripts/widgets/address-widget.tpl.html',
+  		template: 'Modules/$(VirtoCommerce.Orders)/Scripts/widgets/address-widget.tpl.html',
   	};
   	widgetService.registerWidget(addressWidget, 'customerOrderDetailWidgets');
 
   	var shipmentTotalWidget = {
   		controller: 'shipmentTotalsWidgetController',
-  		template: 'Modules/Order/VirtoCommerce.OrderModule.Web/Scripts/widgets/shipment-totals-widget.tpl.html',
+  		template: 'Modules/$(VirtoCommerce.Orders)/Scripts/widgets/shipment-totals-widget.tpl.html',
   	};
   	widgetService.registerWidget(shipmentTotalWidget, 'shipmentDetailWidgets');
 
 
   	var operationsTreeWidget = {
    		controller: 'operationTreeWidgetController',
-  		template: 'Modules/Order/VirtoCommerce.OrderModule.Web/Scripts/widgets/operation-tree-widget.tpl.html',
+  		template: 'Modules/$(VirtoCommerce.Orders)/Scripts/widgets/operation-tree-widget.tpl.html',
   	};
   	widgetService.registerWidget(operationsTreeWidget, 'customerOrderDetailWidgets');
   	widgetService.registerWidget(operationsTreeWidget, 'shipmentDetailWidgets');

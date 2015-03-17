@@ -13,14 +13,14 @@ angular.module(moduleName, [
 //      $stateProvider
 //          .state('workspace.inventoryModule', {
 //              url: '/inventory',
-//              templateUrl: 'Modules/Inventory/VirtoCommerce.InventoryModule.Web/Scripts/home.tpl.html',
+//              templateUrl: 'Modules/$(VirtoCommerce.Inventory)/Scripts/home.tpl.html',
 //              controller: [
 //                  '$scope', 'bladeNavigationService', function ($scope, bladeNavigationService) {
 //                      var blade = {
 //                          id: 'inventory',
 //                          title: 'inventory',
 //                          controller: 'inventoryListController',
-//                          template: 'Modules/Inventory/VirtoCommerce.InventoryModule.Web/Scripts/blades/! -list.tpl.html',
+//                          template: 'Modules/$(VirtoCommerce.Inventory)/Scripts/blades/! -list.tpl.html',
 //                          isClosingDisabled: true
 //                      };
 //                      bladeNavigationService.showBlade(blade);
@@ -45,7 +45,7 @@ angular.module(moduleName, [
       //Register widgets in catalog item details
       widgetService.registerWidget({
           controller: 'inventoryWidgetController',
-          template: 'Modules/Inventory/VirtoCommerce.InventoryModule.Web/Scripts/widgets/inventoryWidget.tpl.html'
+          template: 'Modules/$(VirtoCommerce.Inventory)/Scripts/widgets/inventoryWidget.tpl.html'
       }, 'itemDetail');
   }])
 ;

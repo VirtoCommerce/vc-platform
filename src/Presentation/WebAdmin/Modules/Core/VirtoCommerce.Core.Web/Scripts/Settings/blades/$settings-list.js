@@ -33,7 +33,7 @@ function ($injector, $scope, settings, bladeNavigationService) {
             title: selectedNode.title + ' settings',
             moduleId: selectedNode.id,
             controller: 'settingsDetailController',
-            template: 'Modules/Core/VirtoCommerce.Core.Web/Scripts/Settings/blades/settings-detail.tpl.html'
+            template: 'Modules/$(VirtoCommerce.Core)/Scripts/Settings/blades/settings-detail.tpl.html'
         };
 
         bladeNavigationService.showBlade(newBlade, $scope.blade);

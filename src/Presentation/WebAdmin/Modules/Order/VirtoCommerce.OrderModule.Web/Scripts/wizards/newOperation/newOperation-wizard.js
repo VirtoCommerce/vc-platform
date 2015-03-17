@@ -24,7 +24,7 @@
 						currentEntity: result,
 						isClosingDisabled: false,
 						controller: 'operationDetailController',
-						template: 'Modules/Order/VirtoCommerce.OrderModule.Web/Scripts/blades/shipment-detail.tpl.html'
+						template: 'Modules/$(VirtoCommerce.Orders)/Scripts/blades/shipment-detail.tpl.html'
 					};
 				
 					bladeNavigationService.showBlade(newBlade);
@@ -53,7 +53,7 @@
 					currentEntity: result,
 					isNew: true,
 					controller: 'operationDetailController',
-					template: 'Modules/Order/VirtoCommerce.OrderModule.Web/Scripts/blades/payment-detail.tpl.html'
+					template: 'Modules/$(VirtoCommerce.Orders)/Scripts/blades/payment-detail.tpl.html'
 				};
 			
 				bladeNavigationService.showBlade(newBlade);

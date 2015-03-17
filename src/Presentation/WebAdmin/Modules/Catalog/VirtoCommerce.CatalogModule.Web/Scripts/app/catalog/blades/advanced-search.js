@@ -37,7 +37,7 @@
             subtitle: '',
             filter: $scope.filter,
             controller: 'advancedSearchResultsController',
-            template: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/blades/advanced-search-results.tpl.html'
+            template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/app/catalog/blades/advanced-search-results.tpl.html'
         };
         bladeNavigationService.showBlade(newBlade, $scope.blade);
     };

@@ -54,7 +54,7 @@
             title: title,
             subtitle: 'Item details',
             controller: 'itemDetailController',
-            template: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/blades/item-detail.tpl.html'
+            template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/app/catalog/blades/item-detail.tpl.html'
         };
         bladeNavigationService.showBlade(newBlade, $scope.blade);
     };

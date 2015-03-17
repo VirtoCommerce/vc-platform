@@ -10,7 +10,7 @@
             title: $scope.currentBlade.title,
             subtitle: 'Product Reviews',
             controller: 'editorialReviewsListController',
-            template: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/blades/editorialReviews-list.tpl.html'
+            template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/app/catalog/blades/editorialReviews-list.tpl.html'
         };
 
         bladeNavigationService.showBlade(blade, $scope.currentBlade);

@@ -23,7 +23,7 @@
             title: data.name,
             subtitle: 'Manage prices',
             controller: 'itemPricesListController',
-            template: 'Modules/Pricing/VirtoCommerce.PricingModule.Web/Scripts/blades/item/item-prices-list.tpl.html'
+            template: 'Modules/$(VirtoCommerce.Pricing)/Scripts/blades/item/item-prices-list.tpl.html'
         };
         bladeNavigationService.showBlade(newBlade, $scope.blade);
     }

@@ -11,7 +11,7 @@
             title: $scope.currentBlade.origItem.name,
             subtitle: 'item assets',
             controller: 'itemAssetController',
-            template: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/blades/item-asset-detail.tpl.html'
+            template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/app/catalog/blades/item-asset-detail.tpl.html'
         };
         bladeNavigationService.showBlade(blade, $scope.currentBlade);
     };

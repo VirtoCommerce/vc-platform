@@ -37,7 +37,7 @@
             title: "New Associations",
             //subtitle: '',
             controller: 'associationWizardController',
-            template: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/wizards/newAssociation/association-wizard.tpl.html'
+            template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/app/catalog/wizards/newAssociation/association-wizard.tpl.html'
         };
         bladeNavigationService.showBlade(newBlade, $scope.blade);
     }

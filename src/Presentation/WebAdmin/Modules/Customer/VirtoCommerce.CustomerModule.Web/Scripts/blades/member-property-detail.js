@@ -18,7 +18,7 @@
                 newBlade.title = b.origEntity.name ? b.origEntity.name : b.currentEntity.name + ' value type';
                 newBlade.subtitle = 'Change value type';
                 newBlade.controller = 'memberPropertyValueTypeController';
-                newBlade.template = 'Modules/Customer/VirtoCommerce.CustomerModule.Web/Scripts/blades/member-property-valueType.tpl.html';
+                newBlade.template = 'Modules/$(VirtoCommerce.Customer)/Scripts/blades/member-property-valueType.tpl.html';
                 break;
         }
         bladeNavigationService.showBlade(newBlade, $scope.blade);

@@ -13,21 +13,21 @@
                         subtitle: 'Select Catalog to export from',
                         controller: 'catalogsSelectController',
                         doShowAllCatalogs: true,
-                        template: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/blades/catalogs-select.tpl.html'
+                        template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/app/catalog/blades/catalogs-select.tpl.html'
                     };
                     break;
                 case 'types':
                     newBlade = {
                         subtitle: 'Select what to export',
                         controller: 'exportTypesController',
-                        template: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/wizards/export/export-wizard-types-step.tpl.html'
+                        template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/app/catalog/wizards/export/export-wizard-types-step.tpl.html'
                     };
                     break;
                 case 'format':
                     newBlade = {
                         subtitle: 'Select export data format',
                         controller: 'exportFormatController',
-                        template: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/wizards/export/export-wizard-format-step.tpl.html'
+                        template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/app/catalog/wizards/export/export-wizard-format-step.tpl.html'
                     };
                     break;
             }

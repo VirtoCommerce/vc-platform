@@ -14,14 +14,14 @@ angular.module(moduleName, [
       $stateProvider
           .state('workspace.storeModule', {
               url: '/store',
-              templateUrl: 'Modules/Store/VirtoCommerce.StoreModule.Web/Scripts/home.tpl.html',
+              templateUrl: 'Modules/$(VirtoCommerce.Store)/Scripts/home.tpl.html',
               controller: [
                   '$scope', 'bladeNavigationService', function ($scope, bladeNavigationService) {
                       var blade = {
                           id: 'store',
                           title: 'Stores',
                           controller: 'storesListController',
-                          template: 'Modules/Store/VirtoCommerce.StoreModule.Web/Scripts/blades/!stores-list.tpl.html',
+                          template: 'Modules/$(VirtoCommerce.Store)/Scripts/blades/!stores-list.tpl.html',
                           isClosingDisabled: true
                       };
                       bladeNavigationService.showBlade(blade);
@@ -46,23 +46,23 @@ angular.module(moduleName, [
       //Register widgets in store details
       widgetService.registerWidget({
           controller: 'storeLanguagesWidgetController',
-          template: 'Modules/Store/VirtoCommerce.StoreModule.Web/Scripts/widgets/storeLanguagesWidget.tpl.html'
+          template: 'Modules/$(VirtoCommerce.Store)/Scripts/widgets/storeLanguagesWidget.tpl.html'
       }, 'storeDetail');
       widgetService.registerWidget({
           controller: 'storeCurrenciesWidgetController',
-          template: 'Modules/Store/VirtoCommerce.StoreModule.Web/Scripts/widgets/storeCurrenciesWidget.tpl.html'
+          template: 'Modules/$(VirtoCommerce.Store)/Scripts/widgets/storeCurrenciesWidget.tpl.html'
       }, 'storeDetail');
       widgetService.registerWidget({
           controller: 'storeAdvancedWidgetController',
-          template: 'Modules/Store/VirtoCommerce.StoreModule.Web/Scripts/widgets/storeAdvancedWidget.tpl.html'
+          template: 'Modules/$(VirtoCommerce.Store)/Scripts/widgets/storeAdvancedWidget.tpl.html'
       }, 'storeDetail');
       widgetService.registerWidget({
           controller: 'storeSettingsWidgetController',
-          template: 'Modules/Store/VirtoCommerce.StoreModule.Web/Scripts/widgets/storeSettingsWidget.tpl.html'
+          template: 'Modules/$(VirtoCommerce.Store)/Scripts/widgets/storeSettingsWidget.tpl.html'
       }, 'storeDetail');
       widgetService.registerWidget({
           controller: 'storePaymentsWidgetController',
-          template: 'Modules/Store/VirtoCommerce.StoreModule.Web/Scripts/widgets/storePaymentsWidget.tpl.html'
+          template: 'Modules/$(VirtoCommerce.Store)/Scripts/widgets/storePaymentsWidget.tpl.html'
       }, 'storeDetail');
   }])
 ;

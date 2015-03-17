@@ -11,7 +11,7 @@
             title: variation.code,
             subtitle: 'Item variation',
             controller: 'itemDetailController',
-            template: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/blades/item-detail.tpl.html'
+            template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/app/catalog/blades/item-detail.tpl.html'
         };
         bladeNavigationService.showBlade(blade, $scope.currentBlade);
     };
@@ -24,7 +24,7 @@
             title: $scope.currentBlade.origItem.name,
             subtitle: 'Item variations',
             controller: 'itemVariationListController',
-            template: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/blades/item-variation-list.tpl.html',
+            template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/app/catalog/blades/item-variation-list.tpl.html',
         };
         bladeNavigationService.showBlade(blade, $scope.currentBlade);
     };

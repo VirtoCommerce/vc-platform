@@ -134,7 +134,7 @@
 	                     title: "New variation",
 	                     subtitle: 'Fill all variation information',
 	                     controller: 'newProductWizardController',
-	                     template: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/wizards/newProduct/new-variation-wizard.tpl.html'
+	                     template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/app/catalog/wizards/newProduct/new-variation-wizard.tpl.html'
 	                 };
 	                 bladeNavigationService.showBlade(blade, $scope.currentBlade);
 	             });
@@ -147,5 +147,5 @@
 
 
     $scope.currentBlade.refresh(false);
-    $scope.toolbarTemplate = "Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/blades/item-detail-toolbar.tpl.html";
+    $scope.toolbarTemplate = "Modules/$(VirtoCommerce.Catalog)/Scripts/app/catalog/blades/item-detail-toolbar.tpl.html";
 }]);

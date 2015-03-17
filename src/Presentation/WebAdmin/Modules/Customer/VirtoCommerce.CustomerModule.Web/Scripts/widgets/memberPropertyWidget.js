@@ -11,7 +11,7 @@
             title: $scope.blade.title,
             subtitle: 'Properties management',
             controller: 'memberPropertyListController',
-            template: 'Modules/Customer/VirtoCommerce.CustomerModule.Web/Scripts/blades/member-property-list.tpl.html'
+            template: 'Modules/$(VirtoCommerce.Customer)/Scripts/blades/member-property-list.tpl.html'
         };
 
         bladeNavigationService.showBlade(blade, $scope.blade);

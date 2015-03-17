@@ -33,7 +33,7 @@
                         title: 'Association Group',
                         controller: 'associationGroupSelectController',
                         groupNames: ['Accessories', 'Related Items'],
-                        template: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/wizards/newAssociation/association-wizard-group-step.tpl.html'
+                        template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/app/catalog/wizards/newAssociation/association-wizard-group-step.tpl.html'
                     };
 
                     if ($scope.blade.groupName && !_.contains(newBlade.groupNames, $scope.blade.groupName)) {
@@ -47,7 +47,7 @@
                         title: 'Select Catalog',
                         subtitle: 'Adding Associations to product',
                         controller: 'catalogsSelectController',
-                        template: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/blades/catalogs-select.tpl.html'
+                        template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/app/catalog/blades/catalogs-select.tpl.html'
                     };
 
                     break;
@@ -70,7 +70,7 @@
             catalogId: selectedNode.id,
             catalog: selectedNode,
             controller: 'categoriesItemsListController',
-            template: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/blades/categories-items-list.tpl.html'
+            template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/app/catalog/blades/categories-items-list.tpl.html'
         };
         bladeNavigationService.showBlade(newBlade, $scope.blade);
     };

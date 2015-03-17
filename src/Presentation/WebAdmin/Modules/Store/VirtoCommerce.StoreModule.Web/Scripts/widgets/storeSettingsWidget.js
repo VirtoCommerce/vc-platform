@@ -9,7 +9,7 @@
             title: blade.title,
             subtitle: 'Settings',
             controller: 'storeSettingsListController',
-            template: 'Modules/Store/VirtoCommerce.StoreModule.Web/Scripts/blades/store-settings-list.tpl.html'
+            template: 'Modules/$(VirtoCommerce.Store)/Scripts/blades/store-settings-list.tpl.html'
         };
         bladeNavigationService.showBlade(newBlade, blade);
     };

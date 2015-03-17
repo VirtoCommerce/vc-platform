@@ -55,7 +55,7 @@ function ($scope, order_res_customerOrders, bladeNavigationService, dialogServic
             subtitle: 'Edit order details and related documents',
             customerOrder: selectedNode,
             controller: 'operationDetailController',
-            template: 'Modules/Order/VirtoCommerce.OrderModule.Web/Scripts/blades/customerOrder-detail.tpl.html'
+            template: 'Modules/$(VirtoCommerce.Orders)/Scripts/blades/customerOrder-detail.tpl.html'
         };
 
         bladeNavigationService.showBlade(newBlade, $scope.blade);

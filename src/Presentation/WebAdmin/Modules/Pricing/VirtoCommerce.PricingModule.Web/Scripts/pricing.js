@@ -13,7 +13,7 @@ angular.module(moduleName, [
 //  	$stateProvider
 //		.state('workspace.pricingModule', {
 //			url: '/pricing',
-//			templateUrl: 'Modules/Pricing/VirtoCommerce.PricingModule.Web/Scripts/home.tpl.html',
+//			templateUrl: 'Modules/$(VirtoCommerce.Pricing)/Scripts/home.tpl.html',
 //			controller: [
 //				'$scope', 'bladeNavigationService', function ($scope, bladeNavigationService) {
 //					var blade = {
@@ -21,7 +21,7 @@ angular.module(moduleName, [
 //						title: 'Pricing',
 //						//subtitle: 'Manage prices',
 //						controller: 'pricesListController',
-//						template: 'Modules/Pricing/VirtoCommerce.PricingModule.Web/Scripts/blades/!pricing-list.tpl.html',
+//						template: 'Modules/$(VirtoCommerce.Pricing)/Scripts/blades/!pricing-list.tpl.html',
 //						isClosingDisabled: true
 //					};
 //					bladeNavigationService.showBlade(blade);
@@ -46,7 +46,7 @@ angular.module(moduleName, [
       //Register item prices widget
       var itemPricesWidget = {
           controller: 'itemPricesWidgetController',
-          template: 'Modules/Pricing/VirtoCommerce.PricingModule.Web/Scripts/widgets/itemPricesWidget.tpl.html',
+          template: 'Modules/$(VirtoCommerce.Pricing)/Scripts/widgets/itemPricesWidget.tpl.html',
       };
       widgetService.registerWidget(itemPricesWidget, 'itemDetail');
   }]);

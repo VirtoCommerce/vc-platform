@@ -26,7 +26,7 @@
 			title: 'Edit ' + data.path,
 			subtitle: 'Theme asset list',
 			controller: 'themeAssetListController',
-			template: 'Modules/CMS/VirtoCommerce.ThemeModule.Web/Scripts/blades/theme-asset-list.tpl.html'
+			template: 'Modules/$(VirtoCommerce.Theme)/Scripts/blades/theme-asset-list.tpl.html'
 		};
 		bladeNavigationService.showBlade(newBlade, blade);
 	}
@@ -41,7 +41,7 @@
 			title: 'New theme asset',
 			subtitle: 'Create new theme',
 			controller: 'newThemeWizardController',
-			template: 'Modules/CMS/VirtoCommerce.ThemeModule.Web/Scripts/wizards/newTheme/new-theme-wizard.tpl.html'
+			template: 'Modules/$(VirtoCommerce.Theme)/Scripts/wizards/newTheme/new-theme-wizard.tpl.html'
 		};
 		bladeNavigationService.showBlade(newBlade, $scope.blade);
 	}

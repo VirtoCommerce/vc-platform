@@ -19,7 +19,7 @@
             title: blade.title + ' settings',
             //subtitle: '',
             controller: 'settingsDetailController',
-            template: 'Modules/Core/VirtoCommerce.Core.Web/Scripts/Settings/blades/settings-detail.tpl.html'
+            template: 'Modules/$(VirtoCommerce.Core)/Scripts/Settings/blades/settings-detail.tpl.html'
         };
         bladeNavigationService.showBlade(newBlade, blade);
     };

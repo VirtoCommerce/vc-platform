@@ -19,7 +19,7 @@
             title: 'Review',
             subtitle: 'Product Review',
             controller: 'editorialReviewDetailWizardStepController',
-            template: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/blades/editorialReview-detail.tpl.html'
+            template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/app/catalog/blades/editorialReview-detail.tpl.html'
         };
         bladeNavigationService.showBlade(newBlade, $scope.blade);
     }

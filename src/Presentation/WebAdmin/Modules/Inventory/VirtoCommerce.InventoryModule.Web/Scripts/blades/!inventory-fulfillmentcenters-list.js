@@ -29,7 +29,7 @@
             title: data.fulfillmentCenter.name,
             subtitle: 'Edit Inventory',
             controller: 'inventoryDetailController',
-            template: 'Modules/Inventory/VirtoCommerce.InventoryModule.Web/Scripts/blades/inventory-detail.tpl.html'
+            template: 'Modules/$(VirtoCommerce.Inventory)/Scripts/blades/inventory-detail.tpl.html'
         };
         bladeNavigationService.showBlade(newBlade, $scope.blade);
     };

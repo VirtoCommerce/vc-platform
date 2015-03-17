@@ -14,7 +14,7 @@
             title: $scope.currentBlade.title,
             subtitle: 'Catalog properties',
             controller: 'catalogPropertyController',
-            template: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/blades/catalog-property-detail.tpl.html'
+            template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/app/catalog/blades/catalog-property-detail.tpl.html'
         };
 
 

@@ -20,7 +20,7 @@
 			title: blade.title,
 			subtitle: 'Link Lists',
 			controller: 'linkListsController',
-			template: 'Modules/CMS/VirtoCommerce.MenuModule.Web/Scripts/blades/link-lists.tpl.html'
+			template: 'Modules/$(VirtoCommerce.Menu)/Scripts/blades/link-lists.tpl.html'
 		};
 		bladeNavigationService.showBlade(newBlade, blade);
 	};
