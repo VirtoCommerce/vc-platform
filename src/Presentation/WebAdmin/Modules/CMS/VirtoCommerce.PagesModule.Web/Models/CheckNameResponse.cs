@@ -5,10 +5,8 @@ using System.Web;
 
 namespace VirtoCommerce.PagesModule.Web.Models
 {
-	public class Page
+	public class CheckNameResponse
 	{
-		public string Name { get; set; }
-		public string Content { get; set; }
-		public string Language { get; set; }
+		public bool Result { get; set; }
 	}
 }

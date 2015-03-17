@@ -1,8 +1,9 @@
 ﻿angular.module('virtoCommerce.content.pagesModule.blades.pagesList', [
     'virtoCommerce.content.pagesModule.resources.pages',
-	'virtoCommerce.content.pagesModule.blades.editPage'
+	'virtoCommerce.content.pagesModule.blades.editPage',
+	'virtoCommerce.content.pagesModule.resources.pagesStores'
 ])
-.controller('pagesListController', ['$scope', 'pages', 'bladeNavigationService', function ($scope, pages, bladeNavigationService) {
+.controller('pagesListController', ['$scope', 'pages', 'pagesStores', 'bladeNavigationService', function ($scope, pages, pagesStores, bladeNavigationService) {
 	$scope.selectedNodeId = null;
 
 	var blade = $scope.blade;
@@ -12,6 +13,30 @@
 		pages.get({ storeId: blade.storeId }, function (data) {
 			blade.isLoading = false;
 			blade.currentEntities = data;
+
+			if (blade.currentEntities.length === 0) {
+				pagesStores.get({ id: blade.storeId }, function (data) {
+					blade.store = data;
+
+					if (_.where(blade.store.settings, { name: "DefaultPagesInstalled", value: 'True' }).length === 0) {
+						pages.createDefaultPages({ storeId: blade.storeId }, function (data) {
+							blade.currentEntities = data;
+							blade.parentWidget.refresh();
+
+							blade.store.settings.push({ name: "DefaultPagesInstalled", value: 'True', valueType: "Boolean" });
+
+							pagesStores.update(blade.store, function (data) {
+								blade.isLoading = false
+							});
+						});
+					}
+				});
+
+			}
+			else {
+				blade.isLoading = false;
+			}
+
 			blade.parentWidget.refresh();
 		});
 	}
@@ -24,6 +49,7 @@
 			id: 'editPageBlade',
 			choosenStoreId: blade.storeId,
 			choosenPageName: data.name,
+			choosenPageLanguage: data.language,
 			newPage: false,
 			title: 'Edit ' + data.name,
 			subtitle: 'Page edit',
@@ -80,6 +106,28 @@
 	}
 
 	$scope.bladeHeadIco = 'fa fa-archive';
+
+	blade.getFlag = function (lang) {
+		switch (lang) {
+			case 'ru-RU':
+				return 'ru';
+
+			case 'en-US':
+				return 'us';
+
+			case 'fr-FR':
+				return 'fr';
+
+			case 'zh-CN':
+				return 'ch';
+
+			case 'ru-RU':
+				return 'ru';
+
+			case 'ja-JP':
+				return 'ja';
+		}
+	}
 
 	$scope.bladeToolbarCommands = [
         {
