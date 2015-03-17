@@ -28,13 +28,14 @@
         "sqlAdministratorPassword": {
             "type": "securestring"
         },
-        "insertSampleData": {
+        "sampleData": {
             "type": "string",
             "allowedValues": [
-                "True",
-                "False"
+                "Full",
+                "Reduced",
+                "None"
             ],
-            "defaultValue": "True"
+            "defaultValue": "Full"
         },
 
         "repoUrl": {
@@ -142,8 +143,8 @@
                         ],
                         "appSettings": [
                             {
-                                "name": "insertSampleData",
-                                "value": "[parameters('insertSampleData')]"
+                                "name": "VirtoCommerce:SampleDataLevel",
+                                "value": "[parameters('sampleData')]"
                             }
                         ]
                     }
