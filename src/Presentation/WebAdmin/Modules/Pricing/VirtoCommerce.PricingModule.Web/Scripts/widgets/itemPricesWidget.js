@@ -35,7 +35,7 @@
                 title: $scope.currentBlade.title,
                 subtitle: 'Select Price list to manage prices',
                 controller: 'itemPricelistsListController',
-                template: 'Modules/Pricing/VirtoCommerce.PricingModule.Web/Scripts/blades/item/item-pricelists-list.tpl.html'
+                template: 'Modules/$(VirtoCommerce.Pricing)/Scripts/blades/item/item-pricelists-list.tpl.html'
             };
             bladeNavigationService.showBlade(newBlade, $scope.currentBlade);
         }

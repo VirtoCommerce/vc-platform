@@ -25,7 +25,7 @@
             id: 'catalogEdit',
             subtitle: 'Catalog details',
             controller: 'catalogDetailController',
-            template: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/blades/catalog-detail.tpl.html'
+            template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/app/catalog/blades/catalog-detail.tpl.html'
         };
 
         bladeNavigationService.showBlade(newBlade, $scope.blade.parentBlade);
@@ -39,7 +39,7 @@
             subtitle: 'Virtual catalog details',
             id: 'catalogEdit',
             controller: 'virtualCatalogDetailController',
-            template: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/blades/virtual-catalog-detail.tpl.html'
+            template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/app/catalog/blades/virtual-catalog-detail.tpl.html'
         };
 
         bladeNavigationService.showBlade(newBlade, $scope.blade.parentBlade);

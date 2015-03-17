@@ -11,7 +11,7 @@
         require: 'ngModel',
         replace: true,
         transclude: true,
-        templateUrl: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/directives/property2.tpl.html',
+        templateUrl: 'Modules/$(VirtoCommerce.Catalog)/Scripts/app/catalog/directives/property2.tpl.html',
         scope: { getPropValues: "&" },
         link: function (scope, element, attr, ngModelController, linker) {
 

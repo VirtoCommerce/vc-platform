@@ -8,7 +8,7 @@
             title: $scope.blade.title,
             subtitle: 'Manage customer phones',
             controller: 'memberPhonesListController',
-            template: 'Modules/customer/VirtoCommerce.customerModule.Web/Scripts/blades/member-phones-list.tpl.html'
+            template: 'Modules/$(VirtoCommerce.Customer)/Scripts/blades/member-phones-list.tpl.html'
         };
         bladeNavigationService.showBlade(newBlade, $scope.blade);
     };

@@ -35,7 +35,7 @@ function ($scope, fulfillments, bladeNavigationService) {
             title: title,
             subtitle: 'Edit Fulfillment center',
             controller: 'fulfillmentCenterDetailController',
-            template: 'Modules/Core/VirtoCommerce.Core.Web/Scripts/fulfillment/blades/fulfillment-center-detail.tpl.html'
+            template: 'Modules/$(VirtoCommerce.Core)/Scripts/fulfillment/blades/fulfillment-center-detail.tpl.html'
         };
         bladeNavigationService.showBlade(newBlade, $scope.blade);
     };

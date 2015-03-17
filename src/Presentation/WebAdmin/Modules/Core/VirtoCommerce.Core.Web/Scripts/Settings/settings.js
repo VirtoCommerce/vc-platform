@@ -4,7 +4,7 @@
 //      $stateProvider
 //          .state('workspace.coreModulesettings', {
 //              url: '/settings',
-//              templateUrl: 'Modules/Core/VirtoCommerce.Core.Web/Scripts/home.tpl.html',
+//              templateUrl: 'Modules/$(VirtoCommerce.Core)/Scripts/home.tpl.html',
 //              controller: [
 //                  '$scope', 'bladeNavigationService', function ($scope, bladeNavigationService) {
 //                      var blade = {
@@ -12,7 +12,7 @@
 //                          title: 'Settings',
 //                          //subtitle: 'Manage settings',
 //                          controller: 'settingsListController',
-//                          template: 'Modules/Core/VirtoCommerce.Core.Web/Scripts/Settings/blades/settings-list.tpl.html',
+//                          template: 'Modules/$(VirtoCommerce.Core)/Scripts/Settings/blades/settings-list.tpl.html',
 //                          isClosingDisabled: true
 //                      };
 //                      bladeNavigationService.showBlade(blade);
@@ -37,7 +37,7 @@
       //Register item prices widget
       widgetService.registerWidget({
           controller: 'settingsWidgetController',
-          template: 'Modules/Core/VirtoCommerce.Core.Web/Scripts/Settings/widgets/settingsWidget.tpl.html'
+          template: 'Modules/$(VirtoCommerce.Core)/Scripts/Settings/widgets/settingsWidget.tpl.html'
       }, 'moduleDetail');
 
   }])

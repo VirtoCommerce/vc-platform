@@ -11,7 +11,7 @@
             title: $scope.currentBlade.title,
             subtitle: 'Seo details',
             controller: 'seoDetailController',
-            template: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/blades/seo-detail.tpl.html'
+            template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/app/catalog/blades/seo-detail.tpl.html'
         };
 
         bladeNavigationService.showBlade(blade, $scope.currentBlade);

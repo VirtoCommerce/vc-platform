@@ -4,7 +4,7 @@
       //Register module widget
       widgetService.registerWidget({
           controller: 'fulfillmentWidgetController',
-          template: 'Modules/Core/VirtoCommerce.Core.Web/Scripts/fulfillment/widgets/fulfillmentWidget.tpl.html'
+          template: 'Modules/$(VirtoCommerce.Core)/Scripts/fulfillment/widgets/fulfillmentWidget.tpl.html'
       }, 'moduleDetail');
   }])
 ;

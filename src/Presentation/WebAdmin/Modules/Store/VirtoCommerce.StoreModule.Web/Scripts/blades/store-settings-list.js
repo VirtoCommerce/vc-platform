@@ -7,7 +7,7 @@
             title: $scope.blade.title,
             subtitle: 'Edit store setting',
             controller: 'storeSettingDetailController',
-            template: 'Modules/Store/VirtoCommerce.StoreModule.Web/Scripts/blades/store-setting-detail.tpl.html'
+            template: 'Modules/$(VirtoCommerce.Store)/Scripts/blades/store-setting-detail.tpl.html'
         };
         bladeNavigationService.showBlade(newBlade, $scope.blade);
     }

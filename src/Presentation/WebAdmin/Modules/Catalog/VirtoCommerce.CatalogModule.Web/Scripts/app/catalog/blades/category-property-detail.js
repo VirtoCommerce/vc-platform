@@ -78,7 +78,7 @@
             title: 'Edit category property',
             subtitle: 'enter property information',
             controller: 'propertyDetailController',
-            template: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/blades/property-detail.tpl.html'
+            template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/app/catalog/blades/property-detail.tpl.html'
         };
 
         bladeNavigationService.showBlade(newBlade, $scope.blade);
@@ -123,7 +123,7 @@
 		      		title: 'New category property',
 		      		subtitle: 'enter property information',
 		      		controller: 'propertyDetailController',
-		      		template: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/blades/property-detail.tpl.html'
+		      		template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/app/catalog/blades/property-detail.tpl.html'
 		      	};
 
 		      	bladeNavigationService.showBlade(newBlade, $scope.blade);

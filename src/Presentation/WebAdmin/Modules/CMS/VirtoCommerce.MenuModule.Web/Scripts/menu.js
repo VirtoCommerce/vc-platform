@@ -17,7 +17,7 @@ angular.module(moduleName, [
 	//Register widgets in store details
 	widgetService.registerWidget({
 		controller: 'menuWidgetController',
-		template: 'Modules/CMS/VirtoCommerce.MenuModule.Web/Scripts/widgets/menuWidget.tpl.html'
+		template: 'Modules/$(VirtoCommerce.Menu)/Scripts/widgets/menuWidget.tpl.html'
 	}, 'storeDetail');
 
 }])

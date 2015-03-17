@@ -22,7 +22,7 @@
 					currentEntity: operation,
 					isClosingDisabled: false,
 					controller: 'operationDetailController',
-					template: 'Modules/Order/VirtoCommerce.OrderModule.Web/Scripts/blades/shipment-detail.tpl.html'
+					template: 'Modules/$(VirtoCommerce.Orders)/Scripts/blades/shipment-detail.tpl.html'
 				};
 			}
 			else if (operation.operationType.toLowerCase() == 'customerorder') {
@@ -33,7 +33,7 @@
 					customerOrder: $scope.widget.blade.customerOrder,
 					currentEntity: operation,
 					controller: 'operationDetailController',
-					template: 'Modules/Order/VirtoCommerce.OrderModule.Web/Scripts/blades/customerOrder-detail.tpl.html'
+					template: 'Modules/$(VirtoCommerce.Orders)/Scripts/blades/customerOrder-detail.tpl.html'
 				};
 			}
 			else if (operation.operationType.toLowerCase() == 'paymentin') {
@@ -44,7 +44,7 @@
 					customerOrder: $scope.widget.blade.customerOrder,
 					currentEntity: operation,
 					controller: 'operationDetailController',
-					template: 'Modules/Order/VirtoCommerce.OrderModule.Web/Scripts/blades/payment-detail.tpl.html'
+					template: 'Modules/$(VirtoCommerce.Orders)/Scripts/blades/payment-detail.tpl.html'
 				};
 			}
 			if (newBlade) {

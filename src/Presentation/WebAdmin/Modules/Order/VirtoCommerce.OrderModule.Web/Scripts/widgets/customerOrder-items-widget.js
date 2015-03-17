@@ -15,7 +15,7 @@
 			currentEntity: $scope.blade.currentEntity,
 			isClosingDisabled: false,
 			controller: 'customerOrderItemsController',
-			template: 'Modules/Order/VirtoCommerce.OrderModule.Web/Scripts/blades/customerOrder-items.tpl.html'
+			template: 'Modules/$(VirtoCommerce.Orders)/Scripts/blades/customerOrder-items.tpl.html'
 		};
 		bladeNavigationService.showBlade(newBlade, $scope.blade);
 	};

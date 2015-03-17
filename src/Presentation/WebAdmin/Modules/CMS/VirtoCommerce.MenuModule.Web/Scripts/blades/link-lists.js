@@ -52,7 +52,7 @@
 			title: 'Edit ' + data.name + ' list',
 			subtitle: 'Link list edit',
 			controller: 'menuLinkListController',
-			template: 'Modules/CMS/VirtoCommerce.MenuModule.Web/Scripts/blades/menu-link-list.tpl.html'
+			template: 'Modules/$(VirtoCommerce.Menu)/Scripts/blades/menu-link-list.tpl.html'
 		};
 		bladeNavigationService.showBlade(newBlade, blade);
 	}
@@ -68,7 +68,7 @@
 			title: 'Add new list',
 			subtitle: 'Create new list',
 			controller: 'menuLinkListController',
-			template: 'Modules/CMS/VirtoCommerce.MenuModule.Web/Scripts/blades/menu-link-list.tpl.html'
+			template: 'Modules/$(VirtoCommerce.Menu)/Scripts/blades/menu-link-list.tpl.html'
 		};
 		bladeNavigationService.showBlade(newBlade, $scope.blade);
 	}

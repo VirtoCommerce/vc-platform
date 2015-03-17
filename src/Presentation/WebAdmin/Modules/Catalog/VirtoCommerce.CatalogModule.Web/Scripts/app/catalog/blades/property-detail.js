@@ -44,26 +44,26 @@
                 newBlade.title = b.origEntity.name ? b.origEntity.name : b.currentEntity.name + ' attributes';
                 newBlade.subtitle = 'manage attributes';
                 newBlade.controller = 'propertyAttributesController';
-                newBlade.template = 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/blades/property-attributes.tpl.html';
+                newBlade.template = 'Modules/$(VirtoCommerce.Catalog)/Scripts/app/catalog/blades/property-attributes.tpl.html';
                 break;
             case 'valType':
                 newBlade.title = b.origEntity.name ? b.origEntity.name : b.currentEntity.name + ' value type';
                 newBlade.subtitle = 'Change value type';
                 newBlade.controller = 'propertyValueTypeController';
-                newBlade.template = 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/blades/property-valueType.tpl.html';
+                newBlade.template = 'Modules/$(VirtoCommerce.Catalog)/Scripts/app/catalog/blades/property-valueType.tpl.html';
                break;
             case 'appliesto':
                 newBlade.title = b.origEntity.name ? b.origEntity.name : b.currentEntity.name + ' applies to';
                 newBlade.subtitle = 'Change to what it applies';
                 newBlade.controller = 'propertyTypeController';
-                newBlade.template = 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/blades/property-type.tpl.html';
+                newBlade.template = 'Modules/$(VirtoCommerce.Catalog)/Scripts/app/catalog/blades/property-type.tpl.html';
                 newBlade.availablePropertyTypes = b.catalogId ? ['Catalog', 'Category', 'Product', 'Variation'] : ['Category', 'Product', 'Variation'];
                 break;
             case 'dict':
                 newBlade.title = b.origEntity.name ? b.origEntity.name : b.currentEntity.name + ' dictionary';
                 newBlade.subtitle = 'Manage dictionary';
                 newBlade.controller = 'propertyDictionaryController';
-                newBlade.template = 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/blades/property-dictionary.tpl.html';
+                newBlade.template = 'Modules/$(VirtoCommerce.Catalog)/Scripts/app/catalog/blades/property-dictionary.tpl.html';
                 break;
         }
         bladeNavigationService.showBlade(newBlade, $scope.blade);

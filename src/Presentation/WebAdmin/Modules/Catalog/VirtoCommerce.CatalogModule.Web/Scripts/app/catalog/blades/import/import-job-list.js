@@ -33,7 +33,7 @@
             title: 'Edit import job',
             subtitle: 'Manage import job',
             controller: 'importJobWizardController',
-            template: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/wizards/importWizard/import-job-wizard.tpl.html'
+            template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/app/catalog/wizards/importWizard/import-job-wizard.tpl.html'
         };
         bladeNavigationService.showBlade(newBlade, $scope.blade);
     };
@@ -48,7 +48,7 @@
             title: 'Run import job',
             subtitle: 'Run import job',
             controller: 'importJobRunController',
-            template: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/blades/import/import-job-run.tpl.html'
+            template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/app/catalog/blades/import/import-job-run.tpl.html'
         };
         bladeNavigationService.showBlade(newBlade, $scope.blade);
     };
@@ -123,7 +123,7 @@
                         title: 'New import job',
                         subtitle: 'Create an import job',
                         controller: 'importJobWizardController',
-                        template: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/wizards/importWizard/import-job-wizard.tpl.html'
+                        template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/app/catalog/wizards/importWizard/import-job-wizard.tpl.html'
                     };
                     closeChildrenBlades();
                     bladeNavigationService.showBlade(newBlade, $scope.blade);

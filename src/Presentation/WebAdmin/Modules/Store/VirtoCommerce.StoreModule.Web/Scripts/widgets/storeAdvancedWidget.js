@@ -9,7 +9,7 @@
             title: blade.title,
             subtitle: 'Advanced properties',
             controller: 'storeAdvancedController',
-            template: 'Modules/Store/VirtoCommerce.StoreModule.Web/Scripts/blades/store-advanced.tpl.html'
+            template: 'Modules/$(VirtoCommerce.Store)/Scripts/blades/store-advanced.tpl.html'
         };
         bladeNavigationService.showBlade(newBlade, blade);
     };

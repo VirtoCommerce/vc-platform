@@ -66,7 +66,7 @@
             title: title,
             subtitle: 'Enter property information',
             controller: 'memberPropertyDetailController',
-            template: 'Modules/Customer/VirtoCommerce.CustomerModule.Web/Scripts/blades/member-property-detail.tpl.html'
+            template: 'Modules/$(VirtoCommerce.Customer)/Scripts/blades/member-property-detail.tpl.html'
         };
         bladeNavigationService.showBlade(newBlade, $scope.blade);
     }

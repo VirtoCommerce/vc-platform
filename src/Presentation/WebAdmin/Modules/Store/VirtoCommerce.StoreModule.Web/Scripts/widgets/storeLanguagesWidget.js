@@ -9,7 +9,7 @@
             title: blade.title,
             subtitle: 'Manage languages',
             controller: 'storeLanguagesListController',
-            template: 'Modules/Store/VirtoCommerce.StoreModule.Web/Scripts/blades/store-languages-list.tpl.html'
+            template: 'Modules/$(VirtoCommerce.Store)/Scripts/blades/store-languages-list.tpl.html'
         };
         bladeNavigationService.showBlade(newBlade, blade);
     };

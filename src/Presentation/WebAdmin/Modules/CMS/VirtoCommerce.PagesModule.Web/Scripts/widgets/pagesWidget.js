@@ -19,7 +19,7 @@
 			title: blade.title,
 			subtitle: 'Pages List',
 			controller: 'pagesListController',
-			template: 'Modules/CMS/VirtoCommerce.PagesModule.Web/Scripts/blades/pages-list.tpl.html'
+			template: 'Modules/$(VirtoCommerce.Pages)/Scripts/blades/pages-list.tpl.html'
 		};
 		bladeNavigationService.showBlade(newBlade, blade);
 	};

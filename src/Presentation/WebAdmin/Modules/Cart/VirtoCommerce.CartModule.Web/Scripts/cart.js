@@ -13,7 +13,7 @@ angular.module(moduleName, [
       $stateProvider
           .state('workspace.cartModule', {
               url: '/carts',
-              templateUrl: 'Modules/Cart/VirtoCommerce.CartModule.Web/Scripts/home.tpl.html',
+              templateUrl: 'Modules/$(VirtoCommerce.Cart)/Scripts/home.tpl.html',
               controller: [
                   '$scope', 'bladeNavigationService', function ($scope, bladeNavigationService) {
                       var blade = {
@@ -21,7 +21,7 @@ angular.module(moduleName, [
                           title: 'Shopping carts',
                           //subtitle: 'Manage Shopping carts',
                           controller: 'cartListController',
-                          template: 'Modules/Cart/VirtoCommerce.CartModule.Web/Scripts/blades/!carts-list.tpl.html',
+                          template: 'Modules/$(VirtoCommerce.Cart)/Scripts/blades/!carts-list.tpl.html',
                           isClosingDisabled: true
                       };
                       bladeNavigationService.showBlade(blade);

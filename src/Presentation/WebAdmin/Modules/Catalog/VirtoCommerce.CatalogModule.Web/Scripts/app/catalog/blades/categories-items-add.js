@@ -11,7 +11,7 @@
                     title: "New category",
                     subtitle: 'Fill category information',
                     controller: 'newCategoryWizardController',
-                    template: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/wizards/newCategory/category-wizard.tpl.html'
+                    template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/app/catalog/wizards/newCategory/category-wizard.tpl.html'
                 };
                 bladeNavigationService.showBlade(newBlade, pb);
 
@@ -27,7 +27,7 @@
             title: 'Select Catalog',
             subtitle: 'Creating a Link inside virtual catalog',
             controller: 'catalogsSelectController',
-            template: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/blades/catalogs-select.tpl.html'
+            template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/app/catalog/blades/catalogs-select.tpl.html'
         };
         bladeNavigationService.showBlade(newBlade, $scope.blade.parentBlade);
     };

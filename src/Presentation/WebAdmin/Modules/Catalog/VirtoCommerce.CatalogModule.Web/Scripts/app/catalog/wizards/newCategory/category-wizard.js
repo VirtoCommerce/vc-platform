@@ -25,7 +25,7 @@
                         controller: 'categoryPropertyController',
                         //controller: 'newProductWizardPropertiesController',
                         //isNew: true,
-                        template: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/blades/category-property-detail.tpl.html'
+                        template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/app/catalog/blades/category-property-detail.tpl.html'
                     };
                     break;
                 case 'seo':
@@ -37,7 +37,7 @@
                         controller: 'seoDetailController',
                         //controller: 'newProductSeoDetailController',
                         //seoInfos: $scope.blade.item.seoInfos,
-                        template: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/blades/seo-detail.tpl.html'
+                        template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/app/catalog/blades/seo-detail.tpl.html'
                     };
                     break;
             }

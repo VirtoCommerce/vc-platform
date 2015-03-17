@@ -54,7 +54,7 @@
 			title: 'Edit ' + data.name,
 			subtitle: 'Page edit',
 			controller: 'editPageController',
-			template: 'Modules/CMS/VirtoCommerce.PagesModule.Web/Scripts/blades/edit-page.tpl.html'
+			template: 'Modules/$(VirtoCommerce.Pages)/Scripts/blades/edit-page.tpl.html'
 		};
 		bladeNavigationService.showBlade(newBlade, blade);
 	}
@@ -71,7 +71,7 @@
 			title: 'Add new page',
 			subtitle: 'Create new theme',
 			controller: 'editPageController',
-			template: 'Modules/CMS/VirtoCommerce.PagesModule.Web/Scripts/blades/edit-page.tpl.html'
+			template: 'Modules/$(VirtoCommerce.Pages)/Scripts/blades/edit-page.tpl.html'
 		};
 		bladeNavigationService.showBlade(newBlade, $scope.blade);
 	}

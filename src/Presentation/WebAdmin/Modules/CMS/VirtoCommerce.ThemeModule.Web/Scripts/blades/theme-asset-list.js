@@ -69,7 +69,7 @@
 				title: asset.id,
 				subtitle: 'Edit text asset',
 				controller: 'editAssetController',
-				template: 'Modules/CMS/VirtoCommerce.ThemeModule.Web/Scripts/blades/edit-asset.tpl.html'
+				template: 'Modules/$(VirtoCommerce.Theme)/Scripts/blades/edit-asset.tpl.html'
 			};
 			bladeNavigationService.showBlade(newBlade, blade);
 		}
@@ -83,7 +83,7 @@
 				title: asset.id,
 				subtitle: 'Edit image asset',
 				controller: 'editImageAssetController',
-				template: 'Modules/CMS/VirtoCommerce.ThemeModule.Web/Scripts/blades/edit-image-asset.tpl.html'
+				template: 'Modules/$(VirtoCommerce.Theme)/Scripts/blades/edit-image-asset.tpl.html'
 			};
 			bladeNavigationService.showBlade(newBlade, blade);
 		}
@@ -105,7 +105,7 @@
 				title: 'New Asset',
 				subtitle: 'Create new text asset',
 				controller: 'editAssetController',
-				template: 'Modules/CMS/VirtoCommerce.ThemeModule.Web/Scripts/blades/edit-asset.tpl.html'
+				template: 'Modules/$(VirtoCommerce.Theme)/Scripts/blades/edit-asset.tpl.html'
 			};
 			bladeNavigationService.showBlade(newBlade, blade);
 		}
@@ -120,7 +120,7 @@
 				title: 'New Asset',
 				subtitle: 'Create new image asset',
 				controller: 'editImageAssetController',
-				template: 'Modules/CMS/VirtoCommerce.ThemeModule.Web/Scripts/blades/edit-image-asset.tpl.html'
+				template: 'Modules/$(VirtoCommerce.Theme)/Scripts/blades/edit-image-asset.tpl.html'
 			};
 			bladeNavigationService.showBlade(newBlade, blade);
 		}

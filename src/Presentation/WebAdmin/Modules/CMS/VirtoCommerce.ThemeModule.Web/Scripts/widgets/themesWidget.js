@@ -19,7 +19,7 @@
 			title: blade.title,
 			subtitle: 'Themes List',
 			controller: 'themesListController',
-			template: 'Modules/CMS/VirtoCommerce.ThemeModule.Web/Scripts/blades/themes-list.tpl.html'
+			template: 'Modules/$(VirtoCommerce.Theme)/Scripts/blades/themes-list.tpl.html'
 		};
 		bladeNavigationService.showBlade(newBlade, blade);
 	};

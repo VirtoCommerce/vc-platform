@@ -13,7 +13,7 @@ angular.module(moduleName, [
       $stateProvider
           .state('workspace.packaging', {
               url: '/modules',
-              templateUrl: 'Modules/Packaging/VirtoCommerce.PackagingModule.Web/Scripts/home.tpl.html',
+              templateUrl: 'Modules/$(VirtoCommerce.Packaging)/Scripts/home.tpl.html',
               controller: [
                   '$scope', 'bladeNavigationService', function ($scope, bladeNavigationService) {
                       var blade = {
@@ -21,7 +21,7 @@ angular.module(moduleName, [
                           title: 'Modules',
                           subtitle: 'Manage installed modules',
                           controller: 'modulesListController',
-                          template: 'Modules/Packaging/VirtoCommerce.PackagingModule.Web/Scripts/blades/modules-list.tpl.html',
+                          template: 'Modules/$(VirtoCommerce.Packaging)/Scripts/blades/modules-list.tpl.html',
                           isClosingDisabled: true
                       };
                       bladeNavigationService.showBlade(blade);
