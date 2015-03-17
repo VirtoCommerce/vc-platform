@@ -1,14 +1,4 @@
-﻿//Call this to register our module to main application
-var moduleName = "virtoCommerce.coreModule.settings";
-
-if (AppDependencies != undefined) {
-    AppDependencies.push(moduleName);
-}
-
-angular.module(moduleName, [
-    'virtoCommerce.coreModule.settings.widgets'
-    // 'virtoCommerce.coreModule.settings.blades'
-])
+﻿angular.module("virtoCommerce.coreModule.settings", [])
 //.config(
 //  ['$stateProvider', function ($stateProvider) {
 //      $stateProvider
@@ -22,7 +12,7 @@ angular.module(moduleName, [
 //                          title: 'Settings',
 //                          //subtitle: 'Manage settings',
 //                          controller: 'settingsListController',
-//                          template: 'Modules/$(VirtoCommerce.Core)/Scripts/Settings/blades/$settings-list.tpl.html',
+//                          template: 'Modules/$(VirtoCommerce.Core)/Scripts/Settings/blades/settings-list.tpl.html',
 //                          isClosingDisabled: true
 //                      };
 //                      bladeNavigationService.showBlade(blade);

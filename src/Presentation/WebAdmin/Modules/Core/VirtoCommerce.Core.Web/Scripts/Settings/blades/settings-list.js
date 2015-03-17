@@ -1,6 +1,4 @@
-﻿angular.module('virtoCommerce.coreModule.settings.blades', [
-   'virtoCommerce.coreModule.settings.resources.setting'
-])
+﻿angular.module('virtoCommerce.coreModule.settings')
 .controller('settingsListController', ['$injector', '$scope', 'settings', 'bladeNavigationService',
 function ($injector, $scope, settings, bladeNavigationService) {
     var selectedNode = null;

@@ -1,6 +1,4 @@
-﻿angular.module('virtoCommerce.coreModule.fulfillment.blades', [
-   'virtoCommerce.coreModule.common.resources'
-])
+﻿angular.module('virtoCommerce.coreModule.fulfillment')
 .controller('fulfillmentListController', ['$scope', 'fulfillments', 'bladeNavigationService',
 function ($scope, fulfillments, bladeNavigationService) {
     var selectedNode = null;
