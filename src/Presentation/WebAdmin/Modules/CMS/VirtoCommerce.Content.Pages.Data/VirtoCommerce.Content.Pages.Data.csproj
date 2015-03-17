@@ -72,6 +72,7 @@
     <Compile Include="Repositories\IPagesRepository.cs" />
     <Compile Include="Services\IPagesService.cs" />
     <Compile Include="Services\PagesServiceImpl.cs" />
+    <Compile Include="SqlPagesDatabaseInitializer.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

@@ -14,29 +14,7 @@
 		menus.get({ storeId: blade.storeId }, function (data) {
 			blade.currentEntities = data;
 			blade.parentWidget.refresh();
-
-			if (blade.currentEntities.length === 0) {
-				menusStores.get({ id: blade.storeId }, function (data) {
-					blade.store = data;
-
-					if (_.where(blade.store.settings, { name: "DefaultLinkListsInstalled", value: true }).length === 0) {
-						menus.createDefaultLinks({ storeId: blade.storeId }, function (data) {
-							blade.currentEntities = data;
-							blade.parentWidget.refresh();
-
-							blade.store.settings.push({ name: "DefaultLinkListsInstalled", value: true, valueType: "Boolean" });
-
-							menusStores.update(blade.store, function (data) {
-								blade.isLoading = false
-							});
-						});
-					}
-				});
-
-			}
-			else {
-				blade.isLoading = false;
-			}
+			blade.isLoading = false;
 		});
 	}
 

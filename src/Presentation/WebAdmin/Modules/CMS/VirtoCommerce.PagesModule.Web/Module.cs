@@ -6,6 +6,7 @@
 	using System;
 	using System.IO;
 	using System.Web.Hosting;
+	using VirtoCommerce.Content.Pages.Data;
 	using VirtoCommerce.Content.Pages.Data.Repositories;
 	using VirtoCommerce.Content.Pages.Data.Services;
 	using VirtoCommerce.Foundation.Data.Infrastructure;
@@ -91,7 +92,7 @@
 		{
 			using (var context = new DatabasePagesRepositoryImpl())
 			{
-				var initializer = new SetupDatabaseInitializer<DatabasePagesRepositoryImpl, VirtoCommerce.Content.Pages.Data.Migrations.Configuration>();
+				SqlPagesDatabaseInitializer initializer = new SqlPagesDatabaseInitializer();
 				initializer.InitializeDatabase(context);
 			}
 		}

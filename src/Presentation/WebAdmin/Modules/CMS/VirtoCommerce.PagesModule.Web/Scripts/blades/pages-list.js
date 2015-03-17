@@ -13,30 +13,6 @@
 		pages.get({ storeId: blade.storeId }, function (data) {
 			blade.isLoading = false;
 			blade.currentEntities = data;
-
-			if (blade.currentEntities.length === 0) {
-				pagesStores.get({ id: blade.storeId }, function (data) {
-					blade.store = data;
-
-					if (_.where(blade.store.settings, { name: "DefaultPagesInstalled", value: 'True' }).length === 0) {
-						pages.createDefaultPages({ storeId: blade.storeId }, function (data) {
-							blade.currentEntities = data;
-							blade.parentWidget.refresh();
-
-							blade.store.settings.push({ name: "DefaultPagesInstalled", value: 'True', valueType: "Boolean" });
-
-							pagesStores.update(blade.store, function (data) {
-								blade.isLoading = false
-							});
-						});
-					}
-				});
-
-			}
-			else {
-				blade.isLoading = false;
-			}
-
 			blade.parentWidget.refresh();
 		});
 	}
