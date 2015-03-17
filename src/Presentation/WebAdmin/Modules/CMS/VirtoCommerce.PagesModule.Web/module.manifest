@@ -39,7 +39,7 @@
 					<value>Database</value>
 					<value>File system</value>
 				</allowedValues>
-				<defaultValue>File system</defaultValue>
+				<defaultValue>Database</defaultValue>
 				<title>Pages repository type</title>
 				<description>Select one of the allowed pages repository type</description>
 			</setting>
