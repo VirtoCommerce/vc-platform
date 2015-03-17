@@ -1,13 +1,4 @@
-﻿//Call this to register our module to main application
-var moduleName = "virtoCommerce.coreModule.fulfillment";
-
-if (AppDependencies != undefined) {
-    AppDependencies.push(moduleName);
-}
-
-angular.module(moduleName, [
-    'virtoCommerce.coreModule.fulfillment.widgets'
-])
+﻿angular.module("virtoCommerce.coreModule.fulfillment", [])
 .run(
   ['$rootScope', 'mainMenuService', 'widgetService', '$state', function ($rootScope, mainMenuService, widgetService, $state) {
       //Register module widget

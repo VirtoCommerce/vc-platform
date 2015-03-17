@@ -1,6 +1,4 @@
-﻿angular.module('virtoCommerce.coreModule.settings.widgets', [
-    'virtoCommerce.coreModule.settings.blades'
-])
+﻿angular.module('virtoCommerce.coreModule.settings')
 .controller('settingsWidgetController', ['$scope', 'bladeNavigationService', 'settings', function ($scope, bladeNavigationService, settings) {
     var blade = $scope.widget.blade;
     

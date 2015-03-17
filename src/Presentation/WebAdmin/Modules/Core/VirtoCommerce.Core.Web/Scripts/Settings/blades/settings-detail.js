@@ -1,4 +1,4 @@
-﻿angular.module('virtoCommerce.coreModule.settings.blades')
+﻿angular.module('virtoCommerce.coreModule.settings')
 .controller('settingsDetailController', ['$scope', 'dialogService', 'bladeNavigationService', 'settings', function ($scope, dialogService, bladeNavigationService, settings) {
 
     $scope.blade.refresh = function () {

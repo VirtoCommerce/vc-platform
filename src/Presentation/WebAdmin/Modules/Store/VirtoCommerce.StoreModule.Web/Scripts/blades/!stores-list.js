@@ -2,7 +2,6 @@
     'virtoCommerce.storeModule.resources.stores',
     'virtoCommerce.storeModule.wizards.newStore',
     // 'catalogModule.resources.catalogs'
-    'virtoCommerce.coreModule.common.resources',
     'ngSanitize'
 ])
 .controller('storesListController', ['$scope', 'stores', 'bladeNavigationService', function ($scope, stores, bladeNavigationService) {

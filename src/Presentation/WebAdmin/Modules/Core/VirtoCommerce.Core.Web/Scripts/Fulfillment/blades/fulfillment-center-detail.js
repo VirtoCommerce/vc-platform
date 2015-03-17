@@ -1,4 +1,4 @@
-﻿angular.module('virtoCommerce.coreModule.fulfillment.blades')
+﻿angular.module('virtoCommerce.coreModule.fulfillment')
 .controller('fulfillmentCenterDetailController', ['$scope', 'dialogService', 'bladeNavigationService', 'fulfillments', function ($scope, dialogService, bladeNavigationService, fulfillments) {
 
     $scope.blade.refresh = function (parentRefresh) {
