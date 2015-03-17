@@ -53,7 +53,7 @@ function ($scope, carts, bladeNavigationService, dialogService) {
             title: selectedNode.customerName + '\'s Shopping cart',
             currentEntityId: selectedNode.id,
             controller: 'cartDetailController',
-            template: 'Modules/Cart/VirtoCommerce.CartModule.Web/Scripts/blades/cart-detail.tpl.html'
+            template: 'Modules/$(VirtoCommerce.Cart)/Scripts/blades/cart-detail.tpl.html'
         };
 
         bladeNavigationService.showBlade(newBlade, $scope.blade);

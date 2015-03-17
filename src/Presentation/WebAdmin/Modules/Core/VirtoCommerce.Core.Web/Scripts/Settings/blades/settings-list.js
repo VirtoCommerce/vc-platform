@@ -1,6 +1,4 @@
-﻿angular.module('virtoCommerce.coreModule.settings.blades', [
-   'virtoCommerce.coreModule.settings.resources.setting'
-])
+﻿angular.module('virtoCommerce.coreModule.settings')
 .controller('settingsListController', ['$injector', '$scope', 'settings', 'bladeNavigationService',
 function ($injector, $scope, settings, bladeNavigationService) {
     var selectedNode = null;
@@ -33,7 +31,7 @@ function ($injector, $scope, settings, bladeNavigationService) {
             title: selectedNode.title + ' settings',
             moduleId: selectedNode.id,
             controller: 'settingsDetailController',
-            template: 'Modules/Core/VirtoCommerce.Core.Web/Scripts/Settings/blades/settings-detail.tpl.html'
+            template: 'Modules/$(VirtoCommerce.Core)/Scripts/Settings/blades/settings-detail.tpl.html'
         };
 
         bladeNavigationService.showBlade(newBlade, $scope.blade);

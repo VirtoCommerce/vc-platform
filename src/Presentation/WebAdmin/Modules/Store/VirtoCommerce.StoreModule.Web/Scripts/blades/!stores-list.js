@@ -2,7 +2,6 @@
     'virtoCommerce.storeModule.resources.stores',
     'virtoCommerce.storeModule.wizards.newStore',
     // 'catalogModule.resources.catalogs'
-    'virtoCommerce.coreModule.common.resources',
     'ngSanitize'
 ])
 .controller('storesListController', ['$scope', 'stores', 'bladeNavigationService', function ($scope, stores, bladeNavigationService) {
@@ -26,7 +25,7 @@
             title: data.name,
             subtitle: 'Store details',
             controller: 'storeDetailController',
-            template: 'Modules/Store/VirtoCommerce.StoreModule.Web/Scripts/blades/store-detail.tpl.html'
+            template: 'Modules/$(VirtoCommerce.Store)/Scripts/blades/store-detail.tpl.html'
         };
         bladeNavigationService.showBlade(newBlade, $scope.blade);
     }
@@ -41,7 +40,7 @@
             title: 'New Store',
             subtitle: 'Create new Store',
             controller: 'newStoreWizardController',
-            template: 'Modules/Store/VirtoCommerce.StoreModule.Web/Scripts/wizards/newStore/new-store-wizard.tpl.html'
+            template: 'Modules/$(VirtoCommerce.Store)/Scripts/wizards/newStore/new-store-wizard.tpl.html'
         };
         bladeNavigationService.showBlade(newBlade, $scope.blade);
     }

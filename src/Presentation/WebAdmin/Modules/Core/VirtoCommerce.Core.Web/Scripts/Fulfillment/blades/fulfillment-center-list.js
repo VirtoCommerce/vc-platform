@@ -1,6 +1,4 @@
-﻿angular.module('virtoCommerce.coreModule.fulfillment.blades', [
-   'virtoCommerce.coreModule.common.resources'
-])
+﻿angular.module('virtoCommerce.coreModule.fulfillment')
 .controller('fulfillmentListController', ['$scope', 'fulfillments', 'bladeNavigationService',
 function ($scope, fulfillments, bladeNavigationService) {
     var selectedNode = null;
@@ -37,7 +35,7 @@ function ($scope, fulfillments, bladeNavigationService) {
             title: title,
             subtitle: 'Edit Fulfillment center',
             controller: 'fulfillmentCenterDetailController',
-            template: 'Modules/Core/VirtoCommerce.Core.Web/Scripts/fulfillment/blades/fulfillment-center-detail.tpl.html'
+            template: 'Modules/$(VirtoCommerce.Core)/Scripts/fulfillment/blades/fulfillment-center-detail.tpl.html'
         };
         bladeNavigationService.showBlade(newBlade, $scope.blade);
     };

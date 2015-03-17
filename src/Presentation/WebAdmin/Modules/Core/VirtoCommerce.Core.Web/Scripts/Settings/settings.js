@@ -1,20 +1,10 @@
-﻿//Call this to register our module to main application
-var moduleName = "virtoCommerce.coreModule.settings";
-
-if (AppDependencies != undefined) {
-    AppDependencies.push(moduleName);
-}
-
-angular.module(moduleName, [
-    'virtoCommerce.coreModule.settings.widgets'
-    // 'virtoCommerce.coreModule.settings.blades'
-])
+﻿angular.module("virtoCommerce.coreModule.settings", [])
 //.config(
 //  ['$stateProvider', function ($stateProvider) {
 //      $stateProvider
 //          .state('workspace.coreModulesettings', {
 //              url: '/settings',
-//              templateUrl: 'Modules/Core/VirtoCommerce.Core.Web/Scripts/home.tpl.html',
+//              templateUrl: 'Modules/$(VirtoCommerce.Core)/Scripts/home.tpl.html',
 //              controller: [
 //                  '$scope', 'bladeNavigationService', function ($scope, bladeNavigationService) {
 //                      var blade = {
@@ -22,7 +12,7 @@ angular.module(moduleName, [
 //                          title: 'Settings',
 //                          //subtitle: 'Manage settings',
 //                          controller: 'settingsListController',
-//                          template: 'Modules/Core/VirtoCommerce.Core.Web/Scripts/Settings/blades/$settings-list.tpl.html',
+//                          template: 'Modules/$(VirtoCommerce.Core)/Scripts/Settings/blades/settings-list.tpl.html',
 //                          isClosingDisabled: true
 //                      };
 //                      bladeNavigationService.showBlade(blade);
@@ -47,7 +37,7 @@ angular.module(moduleName, [
       //Register item prices widget
       widgetService.registerWidget({
           controller: 'settingsWidgetController',
-          template: 'Modules/Core/VirtoCommerce.Core.Web/Scripts/Settings/widgets/settingsWidget.tpl.html'
+          template: 'Modules/$(VirtoCommerce.Core)/Scripts/Settings/widgets/settingsWidget.tpl.html'
       }, 'moduleDetail');
 
   }])

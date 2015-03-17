@@ -85,7 +85,7 @@
                         title: $scope.blade.item.name,
                         subtitle: 'Import types',
                         controller: 'importJobImportersController',
-                        template: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/wizards/importWizard/import-job-wizard-importers-step.tpl.html'
+                        template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/app/catalog/wizards/importWizard/import-job-wizard-importers-step.tpl.html'
                     };
                     break;
                 case 'catalogs':
@@ -95,7 +95,7 @@
                         title: $scope.blade.item.name,
                         subtitle: 'Catalogs',
                         controller: 'importJobCatalogsController',
-                        template: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/wizards/importWizard/import-job-wizard-catalogs-step.tpl.html'
+                        template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/app/catalog/wizards/importWizard/import-job-wizard-catalogs-step.tpl.html'
                     };
                     break;
                 case 'settings':
@@ -105,7 +105,7 @@
                         title: $scope.blade.item.name,
                         subtitle: 'Import settings',
                         controller: 'importJobSettingsController',
-                        template: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/wizards/importWizard/import-job-wizard-settings-step.tpl.html'
+                        template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/app/catalog/wizards/importWizard/import-job-wizard-settings-step.tpl.html'
                     };
                     break;
                 case 'mapping':
@@ -116,7 +116,7 @@
                         title: $scope.blade.item.name,
                         subtitle: 'Column mapping',
                         controller: 'importJobMappingController',
-                        template: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/wizards/importWizard/import-job-wizard-mapping-step.tpl.html'
+                        template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/app/catalog/wizards/importWizard/import-job-wizard-mapping-step.tpl.html'
                     };
                     break;
             }

@@ -14,7 +14,7 @@
             id: "associationGroupNew",
             title: 'Create Association Group',
             controller: 'associationGroupNewController',
-            template: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/wizards/newAssociation/association-wizard-group-new.tpl.html'
+            template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/app/catalog/wizards/newAssociation/association-wizard-group-new.tpl.html'
         };
         bladeNavigationService.showBlade(newBlade, $scope.blade);
     }

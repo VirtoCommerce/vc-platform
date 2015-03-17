@@ -50,7 +50,7 @@
             title: column.entityColumnName,
             subtitle: 'Edit column mapping',
             controller: 'importJobMappingEditController',
-            template: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/wizards/importWizard/import-job-wizard-mapping-step-edit.tpl.html'
+            template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/app/catalog/wizards/importWizard/import-job-wizard-mapping-step-edit.tpl.html'
         };
         bladeNavigationService.showBlade(newBlade, $scope.blade);
     }

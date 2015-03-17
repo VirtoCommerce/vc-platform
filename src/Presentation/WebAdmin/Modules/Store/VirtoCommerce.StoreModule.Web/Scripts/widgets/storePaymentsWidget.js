@@ -9,7 +9,7 @@
             title: blade.title,
             subtitle: 'Manage store payments',
             controller: 'storePaymentsListController',
-            template: 'Modules/Store/VirtoCommerce.StoreModule.Web/Scripts/blades/store-payments-list.tpl.html'
+            template: 'Modules/$(VirtoCommerce.Store)/Scripts/blades/store-payments-list.tpl.html'
         };
         bladeNavigationService.showBlade(newBlade, blade);
     };

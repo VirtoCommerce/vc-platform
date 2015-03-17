@@ -54,7 +54,7 @@ function ($scope, members, bladeNavigationService, dialogService) {
             subtitle: 'Customer details',
             currentEntityId: selectedNode.id,
             controller: 'customerDetailController',
-            template: 'Modules/Customer/VirtoCommerce.CustomerModule.Web/Scripts/blades/customer-detail.tpl.html'
+            template: 'Modules/$(VirtoCommerce.Customer)/Scripts/blades/customer-detail.tpl.html'
         };
 
         bladeNavigationService.showBlade(newBlade, $scope.blade);
@@ -158,7 +158,7 @@ function ($scope, members, bladeNavigationService, dialogService) {
         id: 'memberList',
         title: 'Organizations & Customers',
         controller: 'memberListController',
-        template: 'Modules/Customer/VirtoCommerce.CustomerModule.Web/Scripts/blades/member-list.tpl.html',
+        template: 'Modules/$(VirtoCommerce.Customer)/Scripts/blades/member-list.tpl.html',
         isClosingDisabled: true
     };
     bladeNavigationService.showBlade(blade);

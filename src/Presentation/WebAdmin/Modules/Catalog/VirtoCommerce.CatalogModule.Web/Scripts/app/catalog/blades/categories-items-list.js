@@ -112,7 +112,7 @@
             title: title,
             subtitle: 'Category details',
             controller: 'categoryDetailController',
-            template: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/blades/category-detail.tpl.html',
+            template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/app/catalog/blades/category-detail.tpl.html',
         };
         bladeNavigationService.showBlade(newBlade, $scope.blade);
     };
@@ -124,7 +124,7 @@
             title: title,
             subtitle: 'Item details',
             controller: 'itemDetailController',
-            template: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/blades/item-detail.tpl.html'
+            template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/app/catalog/blades/item-detail.tpl.html'
         };
         bladeNavigationService.showBlade(newBlade, $scope.blade);
     };
@@ -136,7 +136,7 @@
             title: "New product",
             subtitle: 'Fill all product information',
             controller: 'newProductWizardController',
-            template: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/wizards/newProduct/new-product-wizard.tpl.html'
+            template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/app/catalog/wizards/newProduct/new-product-wizard.tpl.html'
         };
         bladeNavigationService.showBlade(newBlade, $scope.blade);
     };
@@ -148,7 +148,7 @@
             title: "New variation",
             subtitle: 'Fill all variation information',
             controller: 'newProductWizardController',
-            template: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/wizards/newProduct/new-variation-wizard.tpl.html'
+            template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/app/catalog/wizards/newProduct/new-variation-wizard.tpl.html'
         };
         bladeNavigationService.showBlade(newBlade, $scope.blade);
     };
@@ -289,7 +289,7 @@
                     categoryId: listItem.id,
                     category: listItem,
                     controller: 'categoriesItemsListController',
-                    template: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/blades/categories-items-list.tpl.html'
+                    template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/app/catalog/blades/categories-items-list.tpl.html'
                 };
 
                 if (e.ctrlKey) {
@@ -355,7 +355,7 @@
                       title: 'New category item',
                       subtitle: 'choose new item type',
                       controller: 'categoriesItemsAddController',
-                      template: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/blades/categories-items-add.tpl.html'
+                      template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/app/catalog/blades/categories-items-add.tpl.html'
                   };
                   bladeNavigationService.showBlade(newBlade, $scope.blade);
               },
@@ -390,7 +390,7 @@
             //            title: 'Advanced search',
             //            subtitle: 'Searching within...',
             //            controller: 'advancedSearchController',
-            //            template: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/blades/advanced-search.tpl.html'
+            //            template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/app/catalog/blades/advanced-search.tpl.html'
             //        };
             //        bladeNavigationService.showBlade(newBlade, $scope.blade.parentBlade);
             //        $scope.bladeClose();
@@ -431,7 +431,7 @@
             catalogId: selectedNode.id,
             catalog: selectedNode,
             controller: 'categoriesItemsListController',
-            template: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/blades/categories-items-list.tpl.html'
+            template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/app/catalog/blades/categories-items-list.tpl.html'
         };
         bladeNavigationService.showBlade(newBlade, $scope.blade);
     };

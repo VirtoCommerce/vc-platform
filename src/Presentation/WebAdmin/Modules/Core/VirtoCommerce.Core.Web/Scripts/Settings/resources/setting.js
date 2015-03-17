@@ -1,4 +1,4 @@
-﻿angular.module('virtoCommerce.coreModule.settings.resources.setting', [])
+﻿angular.module('virtoCommerce.coreModule.settings')
 .factory('settings', ['$resource', function ($resource) {
     return $resource('api/settings/:id', { id: '@Id' }, {
         getModules: { url: 'api/settings/modules', isArray: true },
