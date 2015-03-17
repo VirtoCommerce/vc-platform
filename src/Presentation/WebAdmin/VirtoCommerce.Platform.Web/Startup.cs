@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Web.Hosting;
 using Microsoft.Owin;
@@ -29,22 +30,25 @@ namespace VirtoCommerce.Platform.Web
             var moduleCatalog = bootstraper.Container.Resolve<IModuleCatalog>();
 
             // Register URL rewriter before modules initialization
-            var applicationBase = AppDomain.CurrentDomain.SetupInformation.ApplicationBase.EnsureEndSeparator();
-            var modulesRelativePath = MakeRelativePath(applicationBase, modulesPhysicalPath);
-            var urlRewriterOptions = new UrlRewriterOptions();
-
-            foreach (var module in moduleCatalog.Modules.OfType<ManifestModuleInfo>())
+            if (Directory.Exists(modulesPhysicalPath))
             {
-                var urlRewriteKey = string.Format(CultureInfo.InvariantCulture, "/Modules/$({0})", module.ModuleName);
-                var urlRewriteValue = MakeRelativePath(modulesPhysicalPath, module.FullPhysicalPath);
-                urlRewriterOptions.Items.Add(PathString.FromUriComponent(urlRewriteKey), "/" + urlRewriteValue);
+                var applicationBase = AppDomain.CurrentDomain.SetupInformation.ApplicationBase.EnsureEndSeparator();
+                var modulesRelativePath = MakeRelativePath(applicationBase, modulesPhysicalPath);
+                var urlRewriterOptions = new UrlRewriterOptions();
+
+                foreach (var module in moduleCatalog.Modules.OfType<ManifestModuleInfo>())
+                {
+                    var urlRewriteKey = string.Format(CultureInfo.InvariantCulture, "/Modules/$({0})", module.ModuleName);
+                    var urlRewriteValue = MakeRelativePath(modulesPhysicalPath, module.FullPhysicalPath);
+                    urlRewriterOptions.Items.Add(PathString.FromUriComponent(urlRewriteKey), "/" + urlRewriteValue);
+                }
+
+                app.Use<UrlRewriterOwinMiddleware>(urlRewriterOptions);
+                app.UseStaticFiles(new StaticFileOptions
+                {
+                    FileSystem = new PhysicalFileSystem(modulesRelativePath)
+                });
             }
-
-            app.Use<UrlRewriterOwinMiddleware>(urlRewriterOptions);
-            app.UseStaticFiles(new StaticFileOptions
-            {
-                FileSystem = new PhysicalFileSystem(modulesRelativePath)
-            });
 
             // Ensure all modules are loaded
             var moduleManager = bootstraper.Container.Resolve<IModuleManager>();
