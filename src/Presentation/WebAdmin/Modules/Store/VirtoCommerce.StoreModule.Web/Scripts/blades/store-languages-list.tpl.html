@@ -7,7 +7,7 @@
                 <label class="list-item" ng-repeat="data in blade.currentEntities" ng-class="{'__selected': data.isDefault}">
                     <input type="checkbox" ng-disabled="data.isDefault" ng-model="data.isChecked" ng-click="selectItem(data)">
                     <span class="switch"></span>
-                    <span class="list-name">{{data.displayName}}</span>
+                    <span class="list-name">{{data.code}}</span>
                 </label>
             </div>
         </div>
