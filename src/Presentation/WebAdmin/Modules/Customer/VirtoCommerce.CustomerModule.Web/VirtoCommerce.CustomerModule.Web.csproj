@@ -103,8 +103,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Scripts\blades\!customer-list.js" />
-    <Content Include="Scripts\blades\!customer-list.tpl.html" />
+    <Content Include="Scripts\blades\!blades.js" />
     <Content Include="Scripts\blades\member-add.js" />
     <Content Include="Scripts\blades\member-add.tpl.html" />
     <Content Include="Scripts\blades\organization-detail.tpl.html" />

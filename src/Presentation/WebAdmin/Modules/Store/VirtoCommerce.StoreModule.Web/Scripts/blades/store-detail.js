@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.storeModule.blades')
-.controller('storeDetailController', ['$scope', 'bladeNavigationService', 'stores', 'catalogs', 'dialogService', function ($scope, bladeNavigationService, stores, catalogs, dialogService) {
+.controller('storeDetailController', ['$scope', 'bladeNavigationService', 'stores', 'catalogs', 'settings', 'dialogService', function ($scope, bladeNavigationService, stores, catalogs, settings, dialogService) {
     $scope.blade.refresh = function (parentRefresh) {
         stores.get({ id: $scope.blade.currentEntityId }, function (data) {
             initializeBlade(data);
@@ -27,8 +27,31 @@
 
         stores.update({}, $scope.blade.currentEntity, function (data) {
             $scope.blade.refresh(true);
+        }, function (error) {
+            bladeNavigationService.setError('Error ' + error.status, $scope.blade);
         });
     };
+
+    function deleteEntry() {
+        var dialog = {
+            id: "confirmDelete",
+            title: "Delete confirmation",
+            message: "Are you sure you want to delete this Store?",
+            callback: function (remove) {
+                if (remove) {
+                    $scope.blade.isLoading = true;
+
+                    stores.remove({ id: $scope.blade.currentEntityId }, function () {
+                        $scope.bladeClose();
+                        $scope.blade.parentBlade.refresh();
+                    }, function (error) {
+                        bladeNavigationService.setError('Error ' + error.status, $scope.blade);
+                    });
+                }
+            }
+        }
+        dialogService.showConfirmationDialog(dialog);
+    }
 
     $scope.setForm = function (form) {
         $scope.formScope = form;
@@ -83,11 +106,21 @@
             canExecuteMethod: function () {
                 return isDirty();
             }
+        },
+        {
+            name: "Delete", icon: 'fa fa-trash-o',
+            executeMethod: function () {
+                deleteEntry();
+            },
+            canExecuteMethod: function () {
+                return !isDirty();
+            }
         }
     ];
 
 
     $scope.blade.refresh(false);
     $scope.catalogs = catalogs.getCatalogs();
-    $scope.storeStates = [{ id: 'Open', name: 'Open' }, { id: 'Closed', name: 'Closed' }, { id: 'RestrictedAccess', name: 'Restricted Access' }];
+    // $scope.storeStates = [{ id: 'Open', name: 'Open' }, { id: 'Closed', name: 'Closed' }, { id: 'RestrictedAccess', name: 'Restricted Access' }];
+    $scope.storeStates = settings.getValues({ id: 'Stores.States' });
 }]);
