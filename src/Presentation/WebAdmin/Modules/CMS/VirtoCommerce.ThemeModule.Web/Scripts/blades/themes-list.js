@@ -14,6 +14,9 @@
 			blade.currentEntities = data;
 			themesStores.get({ id: blade.storeId }, function (data) {
 				blade.store = data;
+				if (_.where(blade.store.settings, { name: "DefaultThemeName" }).length > 0) {
+					blade.currentNodeName = _.where(blade.store.settings, { name: "DefaultThemeName" }).value;
+				}
 				blade.isLoading = false;
 			});
 		});
@@ -37,6 +40,12 @@
 
 	blade.checkTheme = function (data) {
 		blade.currentNode = data;
+	}
+
+	blade.selectedTheme = function (data) {
+		if (blade.currentNodeName === data.name) {
+			return true;
+		}
 	}
 
 	function openBladeNew() {
@@ -74,7 +83,7 @@
 			});
 		}
 		else {
-			blade.store.settings.push({ name: "DefaultThemeName", value: blade.currentNode.name, })
+			blade.store.settings.push({ name: "DefaultThemeName", value: blade.currentNode.name, valueType: "ShortText" })
 		}
 
 		themesStores.update({ storeId: blade.choosenStoreId }, blade.store, function (data) {
