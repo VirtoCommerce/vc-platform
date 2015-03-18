@@ -4341,6 +4341,10 @@ fieldset + fieldset
             padding: 0 10px;
         }
 
+.text-muted {
+    color: #999999;
+}
+
     .form-input.__calendar .dropdown-menu .btn-info,
     .form-input.__calendar .dropdown-menu .btn.active
     {

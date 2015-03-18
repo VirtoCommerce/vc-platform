@@ -30,6 +30,13 @@
                 }
             });
 
+            selectedSettings = _.where(results, { isArray: true });
+            _.forEach(selectedSettings, function (setting) {
+                if (setting.arrayValues) {
+                    setting.arrayValues = _.map(setting.arrayValues, function (value) { return { value: value }; });
+                }
+            });
+
             results = _.groupBy(results, 'groupName');
             $scope.blade.groupNames = _.keys(results);
             $scope.blade.objects = angular.copy(results);
@@ -54,6 +61,14 @@
     function saveChanges() {
         $scope.blade.isLoading = true;
         var objects = _.flatten(_.map($scope.blade.objects, _.values));
+
+        var selectedSettings = _.where(objects, { isArray: true });
+        _.forEach(selectedSettings, function (setting) {
+            if (setting.arrayValues) {
+                setting.arrayValues = _.pluck(setting.arrayValues, 'value');
+            }
+        });
+
         //console.log('saveChanges3: ' + angular.toJson(objects, true));
         settings.update({}, objects, function (data, headers) {
             $scope.blade.refresh();

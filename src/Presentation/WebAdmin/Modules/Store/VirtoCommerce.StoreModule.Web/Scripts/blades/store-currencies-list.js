@@ -1,27 +1,35 @@
 ﻿angular.module('virtoCommerce.storeModule.blades')
-.controller('storeCurrenciesListController', ['$scope', 'bladeNavigationService', 'dialogService', function ($scope, bladeNavigationService, dialogService) {
+.controller('storeCurrenciesListController', ['$q', '$scope', 'settings', 'bladeNavigationService', 'dialogService', function ($q, $scope, settings, bladeNavigationService, dialogService) {
     $scope.selectedItem = null;
-    $scope.blade.currentEntities = [
-        { code: 'EUR', displayName: 'Euro' },
-        { code: 'USD', displayName: 'US Dollar' },
-        { code: 'GBP', displayName: 'British Pound' },
-        { code: 'JPY', displayName: 'Japanese yen' }
-    ];
+
+    //function asyncQueryWithCustomCode() {
+    //    var d = $q.defer();
+    //    settings.getValues({ id: 'VirtoCommerce.Core.General.Currencies' }, function (data) {
+    //        // custom code goes here
+    //        d.resolve(data);
+    //    });
+    //    return d.promise;
+    //}
+    var promise = settings.getValues({ id: 'VirtoCommerce.Core.General.Currencies' }).$promise;
 
     function initializeBlade(data) {
-        _.each($scope.blade.currentEntities, function (x) {
-            x.isChecked = _.some(data.currencies, function (curr) { return curr === x.code; });
-        });
-        if (data.defaultCurrency) {
-            var defaultEntity = _.findWhere($scope.blade.currentEntities, { code: data.defaultCurrency });
-            if (defaultEntity) {
-                defaultEntity.isDefault = true;
+        promise.then(function (promiseData) {
+            promiseData = _.map(promiseData, function (x) { return { code: x }; });
+            $scope.blade.currentEntities = promiseData;
+            _.each($scope.blade.currentEntities, function (x) {
+                x.isChecked = _.some(data.currencies, function (curr) { return curr === x.code; });
+            });
+            if (data.defaultCurrency) {
+                var defaultEntity = _.findWhere($scope.blade.currentEntities, { code: data.defaultCurrency });
+                if (defaultEntity) {
+                    defaultEntity.isDefault = true;
+                }
             }
-        }
 
-        $scope.blade.origEntity = $scope.blade.currentEntities;
-        $scope.blade.currentEntities = angular.copy($scope.blade.currentEntities);
-        $scope.blade.isLoading = false;
+            $scope.blade.origEntity = $scope.blade.currentEntities;
+            $scope.blade.currentEntities = angular.copy($scope.blade.currentEntities);
+            $scope.blade.isLoading = false;
+        });
     };
 
     $scope.selectItem = function (listItem) {

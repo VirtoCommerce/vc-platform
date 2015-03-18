@@ -13,7 +13,7 @@
                     <label class="form-label">Address type</label>
                     <div class="form-input">
                         <ui-select ng-model="blade.currentEntity.addressType">
-                            <ui-select-match>{{$select.selected}}</ui-select-match>
+                            <ui-select-match placeholder="Select ...">{{$select.selected}}</ui-select-match>
                             <ui-select-choices repeat="x as x in addressTypes | filter: $select.search ">
                                 <span ng-bind-html="x | highlight: $select.search"></span>
                             </ui-select-choices>
@@ -23,13 +23,13 @@
                 <div class="form-group">
                     <label class="form-label">First name</label>
                     <div class="form-input">
-                        <input ng-model="blade.currentEntity.firstName" />
+                        <input ng-model="blade.currentEntity.firstName" placeholder="Enter value" />
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="form-label">Last name</label>
                     <div class="form-input">
-                        <input ng-model="blade.currentEntity.lastName" />
+                        <input ng-model="blade.currentEntity.lastName" placeholder="Enter value" />
                     </div>
                 </div>
                 <div class="form-group">
@@ -44,14 +44,14 @@
                 <div class="form-group">
                     <label class="form-label">City</label>
                     <div class="form-input">
-                        <input ng-model="blade.currentEntity.city" required />
+                        <input ng-model="blade.currentEntity.city" required placeholder="Enter city" />
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="form-label">Country</label>
                     <div class="form-input">
                         <ui-select ng-model="blade.currentEntity.countryCode">
-                            <ui-select-match>{{$select.selected.name}}</ui-select-match>
+                            <ui-select-match placeholder="Select ...">{{$select.selected.name}}</ui-select-match>
                             <ui-select-choices repeat="x.code as x in countries | filter: $select.search ">
                                 <span ng-bind-html="x.name | highlight: $select.search"></span>
                             </ui-select-choices>
@@ -61,19 +61,19 @@
                 <div class="form-group">
                     <label class="form-label">Zip code</label>
                     <div class="form-input">
-                        <input ng-model="blade.currentEntity.postalCode" required />
+                        <input ng-model="blade.currentEntity.postalCode" required placeholder="Enter postal code" />
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="form-label">Email</label>
                     <div class="form-input">
-                        <input ng-model="blade.currentEntity.email" type="email" />
+                        <input ng-model="blade.currentEntity.email" type="email" placeholder="Enter value" />
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="form-label">Phone</label>
                     <div class="form-input">
-                        <input ng-model="blade.currentEntity.phone" />
+                        <input ng-model="blade.currentEntity.phone" placeholder="Enter phone number" />
                     </div>
                 </div>
             </form>

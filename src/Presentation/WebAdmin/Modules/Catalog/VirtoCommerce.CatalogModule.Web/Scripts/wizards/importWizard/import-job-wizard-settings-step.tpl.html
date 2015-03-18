@@ -1,0 +1,54 @@
+﻿<div class="blade-static __bottom" ng-include="'Modules/$(VirtoCommerce.Catalog)/Scripts/wizards/common/wizard-ok-action.tpl.html'"></div>
+<div class="blade-content">
+    <div class="blade-inner">
+        <div class="inner-block">
+            <form name="settingsForm" class="form">
+                <fieldset ng-init="setForm(settingsForm)">
+                    <div class="form-group">
+                        <label class="form-label">Errors allowed during import:</label>
+                        <div class="form-input __number js-number-input-plugin" data-step="1">
+                            <input class="js-val" required class="form-control" ng-model="item.maxErrorsCount" type="text" />
+                            <a class="up js-up"></a>
+                            <a class="down js-down"></a>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Import step (import every {{item.importStep}} entry):</label>
+                        <div class="form-input __number js-number-input-plugin" data-step="1">
+                            <input class="js-val" required class="form-control" ng-model="item.importStep" type="text" />
+                            <a class="up js-up"></a>
+                            <a class="down js-down"></a>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Start index:</label>
+                        <div class="form-input __number js-number-input-plugin" data-step="1">
+                            <input class="js-val" required class="form-control" ng-model="item.startIndex" type="text" />
+                            <a class="up js-up"></a>
+                            <a class="down js-down"></a>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Import count (import all by default):</label>
+                        <div class="form-input __number js-number-input-plugin" data-step="1">
+                            <input class="js-val" required class="form-control" ng-model="item.importCount" type="text" />
+                            <a class="up js-up"></a>
+                            <a class="down js-down"></a>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Column delimiter:</label>
+                        <div class="form-input">
+                            <select ng-model="item.columnDelimiter" ng-options="obj.value as obj.name for obj in columnDelimiters">
+                                <option value="">Other</option>
+                            </select>
+                        </div>
+                        <div class="form-input">
+                            <input required class="form-control" ng-model="item.columnDelimiter" type="text" />
+                        </div>
+                    </div>
+                </fieldset>
+            </form>
+        </div>
+    </div>
+</div>

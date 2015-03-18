@@ -1,4 +1,4 @@
-﻿angular.module('virtoCommerce.orderModule.wizards')
+﻿angular.module('virtoCommerce.orderModule')
 .controller('newOperationWizardController', ['$scope', 'bladeNavigationService', 'dialogService', 'order_res_customerOrders', function ($scope, bladeNavigationService, dialogService, order_res_customerOrders) {
 
 	$scope.blade.isLoading = false;

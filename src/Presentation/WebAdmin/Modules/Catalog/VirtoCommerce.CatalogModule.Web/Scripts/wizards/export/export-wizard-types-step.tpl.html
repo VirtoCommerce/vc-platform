@@ -1,0 +1,15 @@
+﻿<div class="blade-static __bottom" ng-include="'Modules/$(VirtoCommerce.Catalog)/Scripts/wizards/common/wizard-ok-action2.tpl.html'"></div>
+<div class="blade-content">
+    <div class="blade-inner">
+        <div class="inner-block">
+            <div class="sub-t">Select entity types to export</div>
+            <ul class="list __items">
+                <label class="list-item" ng-repeat="data in list">
+                    <input type="checkbox" ng-checked="data.selected" ng-click="data.selected=!data.selected">
+                    <span class="switch"></span>
+                    <span class="list-name">{{data.name}}</span>
+                </label>
+            </ul>
+        </div>
+    </div>
+</div>

@@ -32,6 +32,21 @@
   </scripts>
 
   <settings>
+    <group>
+      <setting>
+        <name>Stores.States</name>
+        <valueType>string</valueType>
+        <defaultValue>Open</defaultValue>
+        <title>States</title>
+        <description>States that a store can be in</description>
+        <isArray>true</isArray>
+        <arrayValues>
+          <value>Open</value>
+          <value>Closed</value>
+          <value>RestrictedAccess</value>
+        </arrayValues>
+      </setting>
+    </group>
     <group name="Caching">
       <setting>
         <name>Stores.Caching.Enabled</name>

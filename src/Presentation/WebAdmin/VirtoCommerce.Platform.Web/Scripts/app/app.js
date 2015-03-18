@@ -10,7 +10,10 @@
   'xeditable',
   'fiestah.money',
   'ngCookies',
-  'angularMoment'
+  'angularMoment',
+  'angularFileUpload',
+  'ngSanitize',
+  'ng-context-menu'
 ];
 
 angular.module('platformWebApp', AppDependencies).
