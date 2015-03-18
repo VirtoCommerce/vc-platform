@@ -61,7 +61,9 @@ IF NOT DEFINED MSBUILD_PATH (
 	SET MSBUILD_PATH=%WINDIR%\Microsoft.NET\Framework\v4.0.30319\msbuild.exe
 )
 
-SET COMMON_BUILD_PROPERTIES=Configuration=Release;DebugType=none;AllowedReferenceRelatedFileExtensions=":";SolutionDir="%DEPLOYMENT_SOURCE%\.\\"
+SET PUBLISHED_WEBSITES=%DEPLOYMENT_TEMP%\_PublishedWebsites
+SET PUBLISHED_MODULES=%PUBLISHED_WEBSITES%\Modules
+SET PUBLISHED_WEBADMIN=%PUBLISHED_WEBSITES%\VirtoCommerce.Platform.Web
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 :: Deployment
@@ -76,22 +78,14 @@ IF /I "VirtoCommerce.WebPlatform.sln" NEQ "" (
 )
 
 :: 2. Build to the temporary path
-IF /I "%IN_PLACE_DEPLOYMENT%" NEQ "1" (
-	echo Building VirtoCommerce.WebPlatform.sln
-	call :ExecuteCmd "%MSBUILD_PATH%" "%DEPLOYMENT_SOURCE%\VirtoCommerce.WebPlatform.sln" /nologo /verbosity:m /t:Build /p:%COMMON_BUILD_PROPERTIES% %SCM_BUILD_ARGS%
-	IF !ERRORLEVEL! NEQ 0 goto error
+echo Building VirtoCommerce.WebPlatform.sln
+call :ExecuteCmd "%MSBUILD_PATH%" "%DEPLOYMENT_SOURCE%\VirtoCommerce.WebPlatform.sln" /nologo /verbosity:m /t:Build /p:Configuration=Release;DebugType=none;AllowedReferenceRelatedFileExtensions=":";SolutionDir="%DEPLOYMENT_SOURCE%\.\\";OutputPath="%DEPLOYMENT_TEMP%";VCModulesOutputDir="%PUBLISHED_MODULES%" %SCM_BUILD_ARGS%
+IF !ERRORLEVEL! NEQ 0 goto error
 
-	echo Building VirtoCommerce.Platform.Web.csproj
-	call :ExecuteCmd "%MSBUILD_PATH%" "%DEPLOYMENT_SOURCE%\src\Presentation\WebAdmin\VirtoCommerce.Platform.Web\VirtoCommerce.Platform.Web.csproj" /nologo /verbosity:m /t:Build /t:pipelinePreDeployCopyAllFilesToOneFolder /p:AutoParameterizationWebConfigConnectionStrings=false;_PackageTempDir="%DEPLOYMENT_TEMP%" /p:%COMMON_BUILD_PROPERTIES% %SCM_BUILD_ARGS%
-	IF !ERRORLEVEL! NEQ 0 goto error
-) ELSE (
-	echo Building VirtoCommerce.WebPlatform.sln
-	call :ExecuteCmd "%MSBUILD_PATH%" "%DEPLOYMENT_SOURCE%\VirtoCommerce.WebPlatform.sln" /nologo /verbosity:m /t:Build /p:%COMMON_BUILD_PROPERTIES% %SCM_BUILD_ARGS%
-	IF !ERRORLEVEL! NEQ 0 goto error
-
-	echo Building VirtoCommerce.Platform.Web.csproj
-	call :ExecuteCmd "%MSBUILD_PATH%" "%DEPLOYMENT_SOURCE%\src\Presentation\WebAdmin\VirtoCommerce.Platform.Web\VirtoCommerce.Platform.Web.csproj" /nologo /verbosity:m /t:Build /p:AutoParameterizationWebConfigConnectionStrings=false /p:%COMMON_BUILD_PROPERTIES% %SCM_BUILD_ARGS%
-	IF !ERRORLEVEL! NEQ 0 goto error
+:: Move modules inside WebAdmin
+IF EXIST "%PUBLISHED_MODULES%" (
+    call :ExecuteCmd move /Y "%PUBLISHED_MODULES%" "%PUBLISHED_WEBADMIN%\Modules"
+    IF !ERRORLEVEL! NEQ 0 goto error
 )
 
 :: Clear build output
@@ -99,7 +93,7 @@ call :ExecuteCmd "%MSBUILD_PATH%" "%DEPLOYMENT_SOURCE%\VirtoCommerce.WebPlatform
 
 :: 3. KuduSync
 IF /I "%IN_PLACE_DEPLOYMENT%" NEQ "1" (
-	call :ExecuteCmd "%KUDU_SYNC_CMD%" -v 50 -f "%DEPLOYMENT_TEMP%" -t "%DEPLOYMENT_TARGET%" -n "%NEXT_MANIFEST_PATH%" -p "%PREVIOUS_MANIFEST_PATH%" -i ".git;.hg;.deployment;deploy.cmd"
+	call :ExecuteCmd "%KUDU_SYNC_CMD%" -v 50 -f "%PUBLISHED_WEBADMIN%" -t "%DEPLOYMENT_TARGET%" -n "%NEXT_MANIFEST_PATH%" -p "%PREVIOUS_MANIFEST_PATH%" -i ".git;.hg;.deployment;deploy.cmd"
 	IF !ERRORLEVEL! NEQ 0 goto error
 )
 

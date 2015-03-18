@@ -6,6 +6,7 @@
 	using System;
 	using System.IO;
 	using System.Web.Hosting;
+	using VirtoCommerce.Content.Menu.Data;
 	using VirtoCommerce.Content.Menu.Data.Repositories;
 	using VirtoCommerce.Content.Menu.Data.Services;
 	using VirtoCommerce.Foundation.Data.Infrastructure;
@@ -50,7 +51,7 @@
 		{
 			using (var context = new DatabaseMenuRepositoryImpl())
 			{
-				var initializer = new SetupDatabaseInitializer<DatabaseMenuRepositoryImpl, VirtoCommerce.Content.Menu.Data.Migrations.Configuration>();
+				SqlMenuDatabaseInitializer initializer = new SqlMenuDatabaseInitializer();
 				initializer.InitializeDatabase(context);
 			}
 		}

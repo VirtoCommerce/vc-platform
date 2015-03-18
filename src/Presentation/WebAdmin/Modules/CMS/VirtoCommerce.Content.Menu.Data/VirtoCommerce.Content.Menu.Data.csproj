@@ -72,6 +72,7 @@
     <Compile Include="Repositories\IMenuRepository.cs" />
     <Compile Include="Services\IMenuService.cs" />
     <Compile Include="Services\MenuServiceImpl.cs" />
+    <Compile Include="SqlMenuDatabaseInitializer.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

@@ -68,22 +68,6 @@
 		}
 
 		[HttpGet]
-		[ResponseType(typeof(IEnumerable<ShortPageInfo>))]
-		[Route("pages/default")]
-		public IHttpActionResult CreateDefault(string storeId)
-		{
-			var pages = PagesUtility.GetDefaultPages(storeId);
-
-			foreach (var page in pages)
-			{
-				_pagesService.SavePage(storeId, page);
-			}
-
-			var items = _pagesService.GetPages(storeId).Select(s => s.ToWebModel());
-			return Ok(items);
-		}
-
-		[HttpGet]
 		[ResponseType(typeof(CheckNameResponse))]
 		[Route("pages/checkname")]
 		public IHttpActionResult CheckName(string storeId, [FromUri]string pageName, [FromUri]string language)

@@ -6,6 +6,7 @@ if (AppDependencies != undefined) {
 }
 
 angular.module(moduleName, [
+    'virtoCommerce.customerModule.resources',
     'virtoCommerce.customerModule.blades',
     'virtoCommerce.customerModule.widgets'
 ])

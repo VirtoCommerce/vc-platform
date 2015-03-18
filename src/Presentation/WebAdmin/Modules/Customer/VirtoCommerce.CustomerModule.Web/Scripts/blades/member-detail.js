@@ -34,6 +34,11 @@
     }
 
     function initializeBlade(data) {
+        // temporal workaround
+        if (!$scope.blade.isOrganization && data.organizations.length > 0) {
+            data.organization = data.organizations[0];
+        }
+
         $scope.blade.currentEntity = angular.copy(data);
         $scope.blade.origEntity = data;
         $scope.blade.isLoading = false;
@@ -46,9 +51,16 @@
     $scope.saveChanges = function () {
         $scope.blade.isLoading = true;
 
+        // temporal workaround
+        if (!$scope.blade.isOrganization) {
+            $scope.blade.currentEntity.organizations = $scope.blade.currentEntity.organization? [$scope.blade.currentEntity.organization] : [];
+        }
+
         if ($scope.blade.currentEntityId) {
             $scope.blade.currentResource.update({}, $scope.blade.currentEntity, function (data) {
                 $scope.blade.refresh(true);
+            }, function (error) {
+                bladeNavigationService.setError('Error ' + error.status, $scope.blade);
             });
         } else {
             $scope.blade.currentResource.save({}, $scope.blade.currentEntity, function (data) {
@@ -56,6 +68,8 @@
                 $scope.blade.currentEntityId = data.id;
                 initializeBlade(data);
                 $scope.blade.parentBlade.refresh();
+            }, function (error) {
+                bladeNavigationService.setError('Error ' + error.status, $scope.blade);
             });
         }
     };

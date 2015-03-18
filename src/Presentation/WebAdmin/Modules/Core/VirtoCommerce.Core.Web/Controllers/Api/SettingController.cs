@@ -54,15 +54,28 @@ namespace VirtoCommerce.CoreModule.Web.Controllers.Api
         }
 
         /// <summary>
+        /// api/settings/value/name
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        [ResponseType(typeof(object))]
+        [Route("value/{name}")]
+        public IHttpActionResult GetValue(string name)
+        {
+            var value = _settingManager.GetValue<object>(name, null);
+            return Ok(value);
+        }
+
+        /// <summary>
         /// api/settings/values/name
         /// </summary>
         /// <returns></returns>
         [HttpGet]
         [ResponseType(typeof(object))]
         [Route("values/{name}")]
-        public IHttpActionResult GetValue(string name)
+        public IHttpActionResult GetArray(string name)
         {
-            var value = _settingManager.GetValue<object>(name, null);
+            var value = _settingManager.GetArray<object>(name, null);
             return Ok(value);
         }
     }

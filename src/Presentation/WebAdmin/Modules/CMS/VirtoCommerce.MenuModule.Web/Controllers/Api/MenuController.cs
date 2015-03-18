@@ -7,7 +7,6 @@ using VirtoCommerce.Content.Menu.Data.Services;
 using VirtoCommerce.Framework.Web.Common;
 using VirtoCommerce.MenuModule.Web.Converters;
 using VirtoCommerce.MenuModule.Web.Models;
-using VirtoCommerce.MenuModule.Web.Utilities;
 
 namespace VirtoCommerce.MenuModule.Web.Controllers.Api
 {
@@ -41,20 +40,6 @@ namespace VirtoCommerce.MenuModule.Web.Controllers.Api
 		{
 			var item = _menuService.GetListById(listId).ToWebModel();
 			return Ok(item);
-		}
-
-		[HttpGet]
-		[ResponseType(typeof(IEnumerable<MenuLinkList>))]
-		[Route("menu/default")]
-		public IHttpActionResult CreateDefault(string storeId)
-		{
-			var defaultLists = MenuLinksUtility.GetDefaultLists(storeId);
-			foreach (var list in defaultLists)
-			{
-				_menuService.UpdateList(list.ToCoreModel());
-			}
-			var items = _menuService.GetListsByStoreId(storeId).Select(s => s.ToWebModel());
-			return Ok(items);
 		}
 
 		[HttpGet]
