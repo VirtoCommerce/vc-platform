@@ -1253,6 +1253,7 @@
     </Content>
     <Content Include="Scripts\underscore.min.map" />
     <Content Include="Scripts\version.json" />
+    <Content Include="Views\Shared\_GoogleAnalyticsPartial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\Modules\" />

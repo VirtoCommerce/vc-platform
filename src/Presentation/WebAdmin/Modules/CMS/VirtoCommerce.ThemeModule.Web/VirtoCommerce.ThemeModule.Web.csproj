@@ -112,6 +112,7 @@
     <Content Include="Scripts\content.js" />
     <Content Include="Scripts\home.tpl.html" />
     <Content Include="Scripts\resources\themes.js" />
+    <Content Include="Scripts\resources\themesStores.js" />
     <Content Include="Scripts\widgets\themesWidget.js" />
     <Content Include="Scripts\widgets\themesWidget.tpl.html" />
     <Content Include="Web.config" />

@@ -89,6 +89,7 @@
     <Compile Include="Repositories\IFileRepository.cs" />
     <Compile Include="Services\IThemeService.cs" />
     <Compile Include="Services\ThemeServiceImpl.cs" />
+    <Compile Include="SqlThemeDatabaseInitializer.cs" />
     <Compile Include="Utility\ContentTypeUtility.cs" />
   </ItemGroup>
   <ItemGroup>

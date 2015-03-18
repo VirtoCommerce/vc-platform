@@ -16,6 +16,7 @@
 	using System.IO;
 	using System.Web.Hosting;
 	using VirtoCommerce.Foundation.Data.Azure.Asset;
+	using VirtoCommerce.Content.Data;
 
 	#endregion
 
@@ -24,6 +25,7 @@
 		#region Fields
 
 		private readonly IUnityContainer _container;
+		private readonly string _modulePath;
 
 		#endregion
 
@@ -32,6 +34,7 @@
 		public Module(IUnityContainer container)
 		{
 			this._container = container;
+			_modulePath = HostingEnvironment.MapPath("~/Modules/CMS/VirtoCommerce.ThemeModule.Web/Default_Theme");
 		}
 
 		#endregion
@@ -112,7 +115,7 @@
 		{
 			using (var context = new DatabaseFileRepositoryImpl())
 			{
-				var initializer = new SetupDatabaseInitializer<DatabaseFileRepositoryImpl, VirtoCommerce.Content.Data.Migrations.Configuration>();
+				SqlThemeDatabaseInitializer initializer = new SqlThemeDatabaseInitializer(_modulePath);
 				initializer.InitializeDatabase(context);
 			}
 		}

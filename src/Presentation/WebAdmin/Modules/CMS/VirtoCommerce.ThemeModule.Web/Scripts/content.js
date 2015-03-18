@@ -8,6 +8,7 @@ if (AppDependencies != undefined) {
 angular.module(moduleName, [
 	'virtoCommerce.content.themeModule.widgets.themesWidget',
 	'virtoCommerce.content.themeModule.resources.themes',
+	'virtoCommerce.content.themeModule.resources.themesStores',
 	'virtoCommerce.content.themeModule.blades.themeAssetList',
 	'virtoCommerce.content.themeModule.blades.themeList',
 	'virtoCommerce.content.themeModule.blades.editAsset',
