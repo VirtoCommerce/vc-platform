@@ -1,4 +1,4 @@
-﻿angular.module('virtoCommerce.orderModule.resources')
+﻿angular.module('virtoCommerce.orderModule')
 .factory('order_res_paymentGateways', ['$resource', function ($resource) {
 	return $resource('api/paymentgateways');
 }]);

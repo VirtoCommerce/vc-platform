@@ -1,4 +1,4 @@
-﻿angular.module('virtoCommerce.orderModule.blades')
+﻿angular.module('virtoCommerce.orderModule')
 .controller('operationDetailController', ['$scope', 'dialogService', 'bladeNavigationService', 'order_res_customerOrders', 'order_res_fulfilmentCenters', 'order_res_stores', 'order_res_paymentGateways', 'objCompareService',
 			function ($scope, dialogService, bladeNavigationService, order_res_customerOrders, order_res_fulfilmentCenters, order_res_stores, order_res_paymentGateways, objCompareService) {
 

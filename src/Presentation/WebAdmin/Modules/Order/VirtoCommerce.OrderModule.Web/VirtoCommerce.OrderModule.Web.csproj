@@ -120,13 +120,9 @@
     <Compile Include="Model\Operation.cs" />
     <Compile Include="Module.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Content Include="Scripts\blades\!blades.js" />
     <Content Include="Scripts\dialogs\cancelOperation-dialog.tpl.html" />
-    <Content Include="Scripts\resources\!resources.js" />
-    <Content Include="Scripts\widgets\!widgets.js" />
     <Content Include="Scripts\widgets\address-widget.js" />
     <Content Include="Scripts\widgets\address-widget.tpl.html" />
-    <Content Include="Scripts\wizards\!wizards.js" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
@@ -175,7 +171,7 @@
     <Content Include="Scripts\resources\paymentGateways.js" />
     <Content Include="Scripts\resources\stores.js" />
     <Content Include="Scripts\resources\fulfillmentCenters.js" />
-    <Content Include="Scripts\services\!calculateTotals.js" />
+    <Content Include="Scripts\services\calculateTotals.js" />
     <Content Include="Scripts\widgets\customerOrder-items-widget.tpl.html" />
     <Content Include="Scripts\widgets\customerOrder-items-widget.js" />
     <Content Include="Scripts\widgets\shipment-totals-widget.js" />
