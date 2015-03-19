@@ -56,7 +56,7 @@ namespace VirtoCommerce.PricingModule.Web.Controllers.Api
 			var result = _pricingService.GetPricelistById(id);
 			if (result != null)
 			{
-				retVal = Ok(result);
+				retVal = Ok(result.ToWebModel());
 			}
 			return retVal;
 		}
@@ -91,8 +91,8 @@ namespace VirtoCommerce.PricingModule.Web.Controllers.Api
 			return Ok(retVal);
 		}
 
-		// POST: api/pricing/pricelists
-		[HttpPost]
+		// PUT: api/pricing/pricelists
+		[HttpPut]
 		[ResponseType(typeof(webModel.Pricelist))]
 		[Route("api/pricing/pricelists")]
 		public IHttpActionResult UpdatePriceList(webModel.Pricelist priceList)
