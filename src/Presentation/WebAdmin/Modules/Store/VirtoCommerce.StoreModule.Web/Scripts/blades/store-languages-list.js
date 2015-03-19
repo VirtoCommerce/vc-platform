@@ -1,29 +1,27 @@
 ﻿angular.module('virtoCommerce.storeModule.blades')
-.controller('storeLanguagesListController', ['$scope', 'bladeNavigationService', 'dialogService', function ($scope, bladeNavigationService, dialogService) {
+.controller('storeLanguagesListController', ['$scope', 'settings', 'bladeNavigationService', 'dialogService', function ($scope, settings, bladeNavigationService, dialogService) {
     $scope.selectedItem = null;
-    $scope.blade.currentEntities = [
-        { code: 'en-US', displayName: 'English (US)' },
-        { code: 'de-DE', displayName: 'German (Germany)' },
-        { code: 'fr-FR', displayName: 'French' },
-        { code: 'zh-CN', displayName: 'Chinese' },
-        { code: 'ja-JP', displayName: 'Japanese' },
-        { code: 'ru-RU', displayName: 'Russian' }
-    ];
+    var promise = settings.getValues({ id: 'VirtoCommerce.Core.General.Languages' }).$promise;
 
     function initializeBlade(data) {
-        _.each($scope.blade.currentEntities, function (x) {
-            x.isChecked = _.some(data.languages, function (curr) { return curr === x.code; });
-        });
-        if (data.defaultLanguage) {
-            var defaultLang = _.findWhere($scope.blade.currentEntities, { code: data.defaultLanguage });
-            if (defaultLang) {
-                defaultLang.isDefault = true;
-            }
-        }
+        promise.then(function (promiseData) {
+            promiseData = _.map(promiseData, function (x) { return { code: x }; });
+            $scope.blade.currentEntities = promiseData;
 
-        $scope.blade.origEntity = $scope.blade.currentEntities;
-        $scope.blade.currentEntities = angular.copy($scope.blade.currentEntities);
-        $scope.blade.isLoading = false;
+            _.each($scope.blade.currentEntities, function (x) {
+                x.isChecked = _.some(data.languages, function (curr) { return curr === x.code; });
+            });
+            if (data.defaultLanguage) {
+                var defaultLang = _.findWhere($scope.blade.currentEntities, { code: data.defaultLanguage });
+                if (defaultLang) {
+                    defaultLang.isDefault = true;
+                }
+            }
+
+            $scope.blade.origEntity = $scope.blade.currentEntities;
+            $scope.blade.currentEntities = angular.copy($scope.blade.currentEntities);
+            $scope.blade.isLoading = false;
+        });
     };
 
     $scope.selectItem = function (listItem) {

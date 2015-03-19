@@ -25,14 +25,22 @@ namespace VirtoCommerce.Content.Pages.Data.Repositories
 
 			var fullPath = GetFullPath(path);
 
-			using (var sr = File.OpenText(fullPath))
+			if (File.Exists(fullPath))
 			{
-				var itemName = Path.GetFileNameWithoutExtension(fullPath);
+				using (var sr = File.OpenText(fullPath))
+				{
+					var itemName = Path.GetFileNameWithoutExtension(fullPath);
 
-				var content = sr.ReadToEnd();
+					var content = sr.ReadToEnd();
 
-				retVal.Content = content;
-				retVal.Name = itemName;
+					retVal.Language = GetLanguageFromFullPath(fullPath);
+					retVal.Content = content;
+					retVal.Name = itemName;
+				}
+			}
+			else
+			{
+				retVal = null;
 			}
 
 			return retVal;
@@ -40,6 +48,10 @@ namespace VirtoCommerce.Content.Pages.Data.Repositories
 
 		public IEnumerable<Models.ShortPageInfo> GetPages(string path)
 		{
+			var list = new List<Models.ShortPageInfo>();
+
+			var retVal = new List<Models.ShortPageInfo>();
+
 			var fullPath = GetFullPath(path);
 
 			if (!Directory.Exists(fullPath))
@@ -47,16 +59,33 @@ namespace VirtoCommerce.Content.Pages.Data.Repositories
 				Directory.CreateDirectory(fullPath);
 			}
 
-			var files = Directory.GetFiles(fullPath);
+			var languages = Directory.GetDirectories(fullPath);
 
-			return files.Select(f => new Models.ShortPageInfo { Name = Path.GetFileNameWithoutExtension(f), LastModified = Directory.GetLastWriteTimeUtc(f) });
+			foreach (var language in languages)
+			{
+				var files = Directory.GetFiles(language); ;
+
+				list.AddRange(files.Select(f => new Models.ShortPageInfo
+								{
+									Name = Path.GetFileNameWithoutExtension(f),
+									LastModified = Directory.GetLastWriteTimeUtc(f),
+									Language = GetLanguageFromFullPath(f)
+								}));
+			}
+
+			return list.ToArray();
 		}
 
 		public void SavePage(string path, Models.Page page)
 		{
 			var fullPath = GetFullPath(path);
 
-			using (var fs = new FileStream(fullPath, FileMode.OpenOrCreate, FileAccess.Write))
+			if (!Directory.Exists(Path.GetDirectoryName(fullPath)))
+			{
+				Directory.CreateDirectory(Path.GetDirectoryName(fullPath));
+			}
+
+			using (var fs = new FileStream(fullPath, FileMode.Create, FileAccess.Write))
 			{
 				using (var sw = new StreamWriter(fs))
 				{
@@ -80,6 +109,14 @@ namespace VirtoCommerce.Content.Pages.Data.Repositories
 		private string GetFullPath(string path)
 		{
 			return string.Format("{0}{1}", _baseDirectoryPath, path).Replace("/", "\\");
+		}
+
+		private string GetLanguageFromFullPath(string fullPath)
+		{
+			var steps = fullPath.Split('\\');
+			var language = steps[steps.Length - 2];
+
+			return language;
 		}
 	}
 }

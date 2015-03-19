@@ -9,7 +9,7 @@
             title: blade.title,
             subtitle: 'Manage addresses',
             controller: 'memberAddressListController',
-            template: 'Modules/customer/VirtoCommerce.customerModule.Web/Scripts/blades/member-address-list.tpl.html'
+            template: 'Modules/$(VirtoCommerce.Customer)/Scripts/blades/member-address-list.tpl.html'
         };
         bladeNavigationService.showBlade(newBlade, blade);
     };

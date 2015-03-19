@@ -9,7 +9,7 @@
             title: $scope.blade.title,
             subtitle: 'Manage customer emails',
             controller: 'memberEmailsListController',
-            template: 'Modules/customer/VirtoCommerce.customerModule.Web/Scripts/blades/member-emails-list.tpl.html'
+            template: 'Modules/$(VirtoCommerce.Customer)/Scripts/blades/member-emails-list.tpl.html'
         };
         bladeNavigationService.showBlade(newBlade, $scope.blade);
     };

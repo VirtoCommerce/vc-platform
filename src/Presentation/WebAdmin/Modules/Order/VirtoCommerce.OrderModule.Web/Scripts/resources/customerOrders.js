@@ -1,4 +1,4 @@
-﻿angular.module('virtoCommerce.orderModule.resources', [])
+﻿angular.module('virtoCommerce.orderModule')
 .factory('order_res_customerOrders', ['$resource', function ($resource) {
     return $resource('api/cart/:id', { id: '@Id' }, {
         search: { url: 'api/order/customerOrders' },

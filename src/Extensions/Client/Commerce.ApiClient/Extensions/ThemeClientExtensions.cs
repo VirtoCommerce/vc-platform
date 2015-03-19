@@ -12,8 +12,7 @@ namespace VirtoCommerce.ApiClient.Extensions
 
         public static ThemeClient CreateThemeClient(this CommerceClients source)
         {
-            var connectionString = String.Format("{0}{1}/", ClientContext.Configuration.ConnectionString, "cms");
-            return CreateThemeClient(source, connectionString);
+            return CreateThemeClient(source, ClientContext.Configuration.ConnectionString);
         }
 
         public static ThemeClient CreateThemeClient(this CommerceClients source, string serviceUrl)

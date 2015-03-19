@@ -70,6 +70,7 @@ namespace VirtoCommerce.Content.Pages.Data.Repositories
 			var existingItem = Pages.FirstOrDefault(p => p.Path == path);
 			if (existingItem != null)
 			{
+				existingItem.Language = page.Language;
 				existingItem.Content = page.Content;
 				existingItem.ModifiedDate = DateTime.UtcNow;
 			}

@@ -79,9 +79,9 @@
             <Private>True</Private>
             <HintPath>..\..\..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
         </Reference>
-        <Reference Include="Newtonsoft.Json">
-            <HintPath>..\..\..\..\..\..\packages\Newtonsoft.Json.6.0.5\lib\net45\Newtonsoft.Json.dll</HintPath>
-            <Private>True</Private>
+    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\packages\Newtonsoft.Json.6.0.8\lib\net45\Newtonsoft.Json.dll</HintPath>
         </Reference>
         <Reference Include="Omu.ValueInjecter, Version=2.3.3.0, Culture=neutral, PublicKeyToken=c7694541b0ac80e4, processorArchitecture=MSIL">
             <SpecificVersion>False</SpecificVersion>
@@ -91,17 +91,17 @@
         <Reference Include="System.ComponentModel.DataAnnotations" />
         <Reference Include="System.Core" />
         <Reference Include="System.Net.Http" />
-        <Reference Include="System.Net.Http.Formatting, Version=5.2.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+    <Reference Include="System.Net.Http.Formatting, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
             <SpecificVersion>False</SpecificVersion>
-            <HintPath>..\..\..\..\..\..\packages\Microsoft.AspNet.WebApi.Client.5.2.2\lib\net45\System.Net.Http.Formatting.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\packages\Microsoft.AspNet.WebApi.Client.5.2.3\lib\net45\System.Net.Http.Formatting.dll</HintPath>
         </Reference>
         <Reference Include="System.Spatial, Version=5.6.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
             <HintPath>..\..\..\..\..\..\packages\System.Spatial.5.6.0\lib\net40\System.Spatial.dll</HintPath>
         </Reference>
         <Reference Include="System.Web" />
-        <Reference Include="System.Web.Http, Version=5.2.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+    <Reference Include="System.Web.Http, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
             <SpecificVersion>False</SpecificVersion>
-            <HintPath>..\..\..\..\..\..\packages\Microsoft.AspNet.WebApi.Core.5.2.2\lib\net45\System.Web.Http.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\packages\Microsoft.AspNet.WebApi.Core.5.2.3\lib\net45\System.Web.Http.dll</HintPath>
         </Reference>
         <Reference Include="System.Xml.Linq" />
         <Reference Include="System.Data.DataSetExtensions" />
@@ -171,136 +171,138 @@
     </ItemGroup>
     <ItemGroup>
         <!-- <Content Include="Content\css\catalog.css" /> -->
-        <Content Include="Scripts\app\catalog\blades\advanced-search-results.js" />
-        <Content Include="Scripts\app\catalog\blades\advanced-search.js" />
-        <Content Include="Scripts\app\catalog\blades\advanced-search-results.tpl.html" />
-        <Content Include="Scripts\app\catalog\blades\advanced-search.tpl.html" />
-        <Content Include="Scripts\app\catalog\blades\catalog-property-detail.js" />
-        <Content Include="Scripts\app\catalog\blades\catalog-property-detail.tpl.html" />
-        <Content Include="Scripts\app\catalog\blades\item-associations-list.js" />
-        <Content Include="Scripts\app\catalog\blades\editorialReviews-list.js" />
-        <Content Include="Scripts\app\catalog\blades\item-associations-list.tpl.html" />
-        <Content Include="Scripts\app\catalog\blades\editorialReviews-list.tpl.html" />
-        <Content Include="Scripts\app\catalog\blades\catalogs-select.js" />
-        <Content Include="Scripts\app\catalog\blades\catalogs-select.tpl.html" />
-        <Content Include="Scripts\app\catalog\blades\category-detail.js" />
-        <Content Include="Scripts\app\catalog\blades\category-detail.tpl.html" />
-        <Content Include="Scripts\app\catalog\blades\editorialReview-detail.js" />
-        <Content Include="Scripts\app\catalog\blades\editorialReview-detail.tpl.html" />
-        <Content Include="Scripts\app\catalog\blades\import\import-job-run.js" />
-        <Content Include="Scripts\app\catalog\blades\import\import-job-list.js" />
-        <Content Include="Scripts\app\catalog\blades\import\import-job-run.tpl.html" />
-        <Content Include="Scripts\app\catalog\blades\import\import-job-list.tpl.html" />
-        <Content Include="Scripts\app\catalog\blades\seo-detail.js" />
-        <Content Include="Scripts\app\catalog\blades\seo-detail.tpl.html" />
-        <Content Include="Scripts\app\catalog\blades\property-attributes.js" />
-        <Content Include="Scripts\app\catalog\blades\property-dictionary.js" />
-        <Content Include="Scripts\app\catalog\blades\property-attributes.tpl.html" />
-        <Content Include="Scripts\app\catalog\blades\property-dictionary.tpl.html" />
-        <Content Include="Scripts\app\catalog\blades\property-valueType.js" />
-        <Content Include="Scripts\app\catalog\blades\property-type.js" />
-        <Content Include="Scripts\app\catalog\blades\property-valueType.tpl.html" />
-        <Content Include="Scripts\app\catalog\blades\property-type.tpl.html" />
-        <Content Include="Scripts\app\catalog\blades\catalog-languages.tpl.html" />
-        <Content Include="Scripts\app\catalog\blades\catalog-languages-detail.js" />
-        <Content Include="Scripts\app\catalog\blades\categories-items-add.js" />
-        <Content Include="Scripts\app\catalog\blades\catalog-add.js" />
-        <Content Include="Scripts\app\catalog\blades\categories-items-add.tpl.html" />
-        <Content Include="Scripts\app\catalog\blades\catalog-detail.js" />
-        <Content Include="Scripts\app\catalog\blades\catalog-add.tpl.html" />
-        <Content Include="Scripts\app\catalog\blades\catalog-detail.tpl.html" />
-        <Content Include="Scripts\app\catalog\blades\catalogs-list.js" />
-        <Content Include="Scripts\app\catalog\blades\categories-items-list.js" />
-        <Content Include="Scripts\app\catalog\blades\categories-items-list.tpl.html" />
-        <Content Include="Scripts\app\catalog\blades\category-property-detail.js" />
-        <Content Include="Scripts\app\catalog\blades\category-property-detail.tpl.html" />
-        <Content Include="Scripts\app\catalog\blades\item-detail-toolbar.tpl.html" />
-        <Content Include="Scripts\app\catalog\blades\item-detail.js" />
-        <Content Include="Scripts\app\catalog\blades\item-detail.tpl.html" />
-        <Content Include="Scripts\app\catalog\blades\item-asset-detail.js" />
-        <Content Include="Scripts\app\catalog\blades\item-image-detail.js" />
-        <Content Include="Scripts\app\catalog\blades\item-asset-detail.tpl.html" />
-        <Content Include="Scripts\app\catalog\blades\item-image-detail.tpl.html" />
-        <Content Include="Scripts\app\catalog\blades\item-property-detail.js" />
-        <Content Include="Scripts\app\catalog\blades\item-property-detail.tpl.html" />
-        <Content Include="Scripts\app\catalog\blades\item-variation-list.js" />
-        <Content Include="Scripts\app\catalog\blades\item-variation-list.tpl.html" />
-        <Content Include="Scripts\app\catalog\blades\catalogs-list.tpl.html" />
-        <Content Include="Scripts\app\catalog\blades\property-detail.js" />
-        <Content Include="Scripts\app\catalog\blades\property-detail.tpl.html" />
-        <Content Include="Scripts\app\catalog\blades\virtual-catalog-detail.js" />
-        <Content Include="Scripts\app\catalog\blades\virtual-catalog-detail.tpl.html" />
-        <Content Include="Scripts\app\catalog\catalog.js" />
-        <Content Include="Scripts\app\catalog\directives\property2.js" />
-        <Content Include="Scripts\app\catalog\directives\property2.tpl.html" />
-        <Content Include="Scripts\app\catalog\home\home.tpl.html" />
-        <Content Include="Scripts\app\catalog\notifications\historyImport.tpl.html" />
-        <Content Include="Scripts\app\catalog\notifications\menuImport.tpl.html" />
-        <Content Include="Scripts\app\catalog\blades\import\import-job-progress.js" />
-        <Content Include="Scripts\app\catalog\blades\import\import-job-progress.tpl.html" />
-        <Content Include="Scripts\app\catalog\resources\catalogs.js" />
-        <Content Include="Scripts\app\catalog\resources\categories.js" />
-        <Content Include="Scripts\app\catalog\resources\import.js" />
-        <Content Include="Scripts\app\catalog\resources\items.js" />
-        <Content Include="Scripts\app\catalog\resources\listEntries.js" />
-        <Content Include="Scripts\app\catalog\resources\properties.js" />
-        <Content Include="Scripts\app\catalog\widgets\catalogLanguagesWidget.js" />
-        <Content Include="Scripts\app\catalog\widgets\catalogPropertyWidget.js" />
-        <Content Include="Scripts\app\catalog\widgets\catalogPropertyWidget.tpl.html" />
-        <Content Include="Scripts\app\catalog\widgets\editorialReviewWidget.js" />
-        <Content Include="Scripts\app\catalog\widgets\editorialReviewWidget.tpl.html" />
-        <Content Include="Scripts\app\catalog\widgets\itemAssociationsWidget.js" />
-        <Content Include="Scripts\app\catalog\widgets\seoWidget.js" />
-        <Content Include="Scripts\app\catalog\widgets\itemAssociationsWidget.tpl.html" />
-        <Content Include="Scripts\app\catalog\widgets\seoWidget.tpl.html" />
-        <Content Include="Scripts\app\catalog\widgets\itemAssetWidget.js" />
-        <Content Include="Scripts\app\catalog\widgets\itemImageWidget.js" />
-        <Content Include="Scripts\app\catalog\widgets\itemAssetWidget.tpl.html" />
-        <Content Include="Scripts\app\catalog\widgets\itemImageWidget.tpl.html" />
-        <Content Include="Scripts\app\catalog\widgets\categoryPropertyWidget.js" />
-        <Content Include="Scripts\app\catalog\widgets\itemPropertyWidget.js" />
-        <Content Include="Scripts\app\catalog\widgets\categoryPropertyWidget.tpl.html" />
-        <Content Include="Scripts\app\catalog\widgets\itemPropertyWidget.tpl.html" />
-        <Content Include="Scripts\app\catalog\widgets\itemVariationWidget.js" />
-        <Content Include="Scripts\app\catalog\widgets\itemVariationWidget.tpl.html" />
-        <Content Include="Scripts\app\catalog\wizards\common\wizard-ok-action2.tpl.html" />
-        <Content Include="Scripts\app\catalog\wizards\export\export-wizard-format-step.js" />
-        <Content Include="Scripts\app\catalog\wizards\export\export-wizard-format-step.tpl.html" />
-        <Content Include="Scripts\app\catalog\wizards\export\export-wizard-types-step.js" />
-        <Content Include="Scripts\app\catalog\wizards\export\export-wizard-types-step.tpl.html" />
-        <Content Include="Scripts\app\catalog\wizards\export\%24export-wizard.js" />
-        <Content Include="Scripts\app\catalog\wizards\export\%24export-wizard.tpl.html" />
-        <Content Include="Scripts\app\catalog\wizards\importWizard\import-job-wizard-mapping-step-edit.js" />
-        <Content Include="Scripts\app\catalog\wizards\importWizard\import-job-wizard-mapping-step.js" />
-        <Content Include="Scripts\app\catalog\wizards\importWizard\import-job-wizard-mapping-step-edit.tpl.html" />
-        <Content Include="Scripts\app\catalog\wizards\importWizard\import-job-wizard-settings-step.js" />
-        <Content Include="Scripts\app\catalog\wizards\importWizard\import-job-wizard-importers-step.js" />
-        <Content Include="Scripts\app\catalog\wizards\importWizard\import-job-wizard-mapping-step.tpl.html" />
-        <Content Include="Scripts\app\catalog\wizards\importWizard\import-job-wizard-settings-step.tpl.html" />
-        <Content Include="Scripts\app\catalog\wizards\importWizard\import-job-wizard-importers-step.tpl.html" />
-        <Content Include="Scripts\app\catalog\wizards\importWizard\import-job-wizard-catalogs-step.tpl.html" />
-        <Content Include="Scripts\app\catalog\wizards\importWizard\import-job-wizard-catalogs-step.js" />
-        <Content Include="Scripts\app\catalog\wizards\importWizard\import-job-wizard.js" />
-        <Content Include="Scripts\app\catalog\wizards\importWizard\import-job-wizard.tpl.html" />
-        <Content Include="Scripts\app\catalog\wizards\newAssociation\association-wizard-group-new.js" />
-        <Content Include="Scripts\app\catalog\wizards\newAssociation\association-wizard-group-new.tpl.html" />
-        <Content Include="Scripts\app\catalog\wizards\newAssociation\association-wizard.js" />
-        <Content Include="Scripts\app\catalog\wizards\newAssociation\association-wizard.tpl.html" />
-        <Content Include="Scripts\app\catalog\wizards\newAssociation\association-wizard-group-step.js" />
-        <Content Include="Scripts\app\catalog\wizards\newAssociation\association-wizard-group-step.tpl.html" />
-        <Content Include="Scripts\app\catalog\wizards\newCategory\category-wizard-actions.tpl.html" />
-        <Content Include="Scripts\app\catalog\wizards\newCategory\category-wizard.js" />
-        <Content Include="Scripts\app\catalog\wizards\newCategory\category-wizard.tpl.html" />
-        <Content Include="Scripts\app\catalog\wizards\newProduct\new-product-wizard-editorial-review-detail-step.js" />
-        <Content Include="Scripts\app\catalog\wizards\newProduct\new-product-wizard-editorial-reviews.js" />
-        <Content Include="Scripts\app\catalog\wizards\newProduct\new-product-wizard-property-detail-step.js" />
-        <Content Include="Scripts\app\catalog\wizards\common\wizard-ok-action.tpl.html" />
-        <Content Include="Scripts\app\catalog\wizards\newProduct\new-product-wizard-images-step.js" />
-        <Content Include="Scripts\app\catalog\wizards\newProduct\new-product-wizard-actions.tpl.html" />
-        <Content Include="Scripts\app\catalog\wizards\newProduct\new-product-wizard.js" />
-        <Content Include="Scripts\app\catalog\wizards\newProduct\new-product-wizard.tpl.html" />
-        <Content Include="Scripts\app\catalog\wizards\newProduct\new-variation-wizard.tpl.html" />
-        <Content Include="Scripts\app\catalog\wizards\newProduct\new-product-wizard-seo-detail-step.js" />
+    <Content Include="Scripts\blades\advanced-search-results.js" />
+    <Content Include="Scripts\blades\advanced-search.js" />
+    <Content Include="Scripts\blades\advanced-search-results.tpl.html" />
+    <Content Include="Scripts\blades\advanced-search.tpl.html" />
+    <Content Include="Scripts\blades\catalog-property-detail.js" />
+    <Content Include="Scripts\blades\catalog-property-detail.tpl.html" />
+    <Content Include="Scripts\blades\common\catalog-items-select.js" />
+    <Content Include="Scripts\blades\common\catalog-items-select.tpl.html" />
+    <Content Include="Scripts\blades\item-associations-list.js" />
+    <Content Include="Scripts\blades\editorialReviews-list.js" />
+    <Content Include="Scripts\blades\item-associations-list.tpl.html" />
+    <Content Include="Scripts\blades\editorialReviews-list.tpl.html" />
+    <Content Include="Scripts\blades\catalogs-select.js" />
+    <Content Include="Scripts\blades\catalogs-select.tpl.html" />
+    <Content Include="Scripts\blades\category-detail.js" />
+    <Content Include="Scripts\blades\category-detail.tpl.html" />
+    <Content Include="Scripts\blades\editorialReview-detail.js" />
+    <Content Include="Scripts\blades\editorialReview-detail.tpl.html" />
+    <Content Include="Scripts\blades\import\import-job-run.js" />
+    <Content Include="Scripts\blades\import\import-job-list.js" />
+    <Content Include="Scripts\blades\import\import-job-run.tpl.html" />
+    <Content Include="Scripts\blades\import\import-job-list.tpl.html" />
+    <Content Include="Scripts\blades\seo-detail.js" />
+    <Content Include="Scripts\blades\seo-detail.tpl.html" />
+    <Content Include="Scripts\blades\property-attributes.js" />
+    <Content Include="Scripts\blades\property-dictionary.js" />
+    <Content Include="Scripts\blades\property-attributes.tpl.html" />
+    <Content Include="Scripts\blades\property-dictionary.tpl.html" />
+    <Content Include="Scripts\blades\property-valueType.js" />
+    <Content Include="Scripts\blades\property-type.js" />
+    <Content Include="Scripts\blades\property-valueType.tpl.html" />
+    <Content Include="Scripts\blades\property-type.tpl.html" />
+    <Content Include="Scripts\blades\catalog-languages.tpl.html" />
+    <Content Include="Scripts\blades\catalog-languages-detail.js" />
+    <Content Include="Scripts\blades\categories-items-add.js" />
+    <Content Include="Scripts\blades\catalog-add.js" />
+    <Content Include="Scripts\blades\categories-items-add.tpl.html" />
+    <Content Include="Scripts\blades\catalog-detail.js" />
+    <Content Include="Scripts\blades\catalog-add.tpl.html" />
+    <Content Include="Scripts\blades\catalog-detail.tpl.html" />
+    <Content Include="Scripts\blades\catalogs-list.js" />
+    <Content Include="Scripts\blades\categories-items-list.js" />
+    <Content Include="Scripts\blades\categories-items-list.tpl.html" />
+    <Content Include="Scripts\blades\category-property-detail.js" />
+    <Content Include="Scripts\blades\category-property-detail.tpl.html" />
+    <Content Include="Scripts\blades\item-detail-toolbar.tpl.html" />
+    <Content Include="Scripts\blades\item-detail.js" />
+    <Content Include="Scripts\blades\item-detail.tpl.html" />
+    <Content Include="Scripts\blades\item-asset-detail.js" />
+    <Content Include="Scripts\blades\item-image-detail.js" />
+    <Content Include="Scripts\blades\item-asset-detail.tpl.html" />
+    <Content Include="Scripts\blades\item-image-detail.tpl.html" />
+    <Content Include="Scripts\blades\item-property-detail.js" />
+    <Content Include="Scripts\blades\item-property-detail.tpl.html" />
+    <Content Include="Scripts\blades\item-variation-list.js" />
+    <Content Include="Scripts\blades\item-variation-list.tpl.html" />
+    <Content Include="Scripts\blades\catalogs-list.tpl.html" />
+    <Content Include="Scripts\blades\property-detail.js" />
+    <Content Include="Scripts\blades\property-detail.tpl.html" />
+    <Content Include="Scripts\blades\virtual-catalog-detail.js" />
+    <Content Include="Scripts\blades\virtual-catalog-detail.tpl.html" />
+    <Content Include="Scripts\catalog.js" />
+    <Content Include="Scripts\directives\property2.js" />
+    <Content Include="Scripts\directives\property2.tpl.html" />
+    <Content Include="Scripts\home\home.tpl.html" />
+    <Content Include="Scripts\notifications\historyImport.tpl.html" />
+    <Content Include="Scripts\notifications\menuImport.tpl.html" />
+    <Content Include="Scripts\blades\import\import-job-progress.js" />
+    <Content Include="Scripts\blades\import\import-job-progress.tpl.html" />
+    <Content Include="Scripts\resources\catalogs.js" />
+    <Content Include="Scripts\resources\categories.js" />
+    <Content Include="Scripts\resources\import.js" />
+    <Content Include="Scripts\resources\items.js" />
+    <Content Include="Scripts\resources\listEntries.js" />
+    <Content Include="Scripts\resources\properties.js" />
+    <Content Include="Scripts\widgets\catalogLanguagesWidget.js" />
+    <Content Include="Scripts\widgets\catalogPropertyWidget.js" />
+    <Content Include="Scripts\widgets\catalogPropertyWidget.tpl.html" />
+    <Content Include="Scripts\widgets\editorialReviewWidget.js" />
+    <Content Include="Scripts\widgets\editorialReviewWidget.tpl.html" />
+    <Content Include="Scripts\widgets\itemAssociationsWidget.js" />
+    <Content Include="Scripts\widgets\seoWidget.js" />
+    <Content Include="Scripts\widgets\itemAssociationsWidget.tpl.html" />
+    <Content Include="Scripts\widgets\seoWidget.tpl.html" />
+    <Content Include="Scripts\widgets\itemAssetWidget.js" />
+    <Content Include="Scripts\widgets\itemImageWidget.js" />
+    <Content Include="Scripts\widgets\itemAssetWidget.tpl.html" />
+    <Content Include="Scripts\widgets\itemImageWidget.tpl.html" />
+    <Content Include="Scripts\widgets\categoryPropertyWidget.js" />
+    <Content Include="Scripts\widgets\itemPropertyWidget.js" />
+    <Content Include="Scripts\widgets\categoryPropertyWidget.tpl.html" />
+    <Content Include="Scripts\widgets\itemPropertyWidget.tpl.html" />
+    <Content Include="Scripts\widgets\itemVariationWidget.js" />
+    <Content Include="Scripts\widgets\itemVariationWidget.tpl.html" />
+    <Content Include="Scripts\wizards\common\wizard-ok-action2.tpl.html" />
+    <Content Include="Scripts\wizards\export\export-wizard-format-step.js" />
+    <Content Include="Scripts\wizards\export\export-wizard-format-step.tpl.html" />
+    <Content Include="Scripts\wizards\export\export-wizard-types-step.js" />
+    <Content Include="Scripts\wizards\export\export-wizard-types-step.tpl.html" />
+    <Content Include="Scripts\wizards\export\export-wizard.js" />
+    <Content Include="Scripts\wizards\export\export-wizard.tpl.html" />
+    <Content Include="Scripts\wizards\importWizard\import-job-wizard-mapping-step-edit.js" />
+    <Content Include="Scripts\wizards\importWizard\import-job-wizard-mapping-step.js" />
+    <Content Include="Scripts\wizards\importWizard\import-job-wizard-mapping-step-edit.tpl.html" />
+    <Content Include="Scripts\wizards\importWizard\import-job-wizard-settings-step.js" />
+    <Content Include="Scripts\wizards\importWizard\import-job-wizard-importers-step.js" />
+    <Content Include="Scripts\wizards\importWizard\import-job-wizard-mapping-step.tpl.html" />
+    <Content Include="Scripts\wizards\importWizard\import-job-wizard-settings-step.tpl.html" />
+    <Content Include="Scripts\wizards\importWizard\import-job-wizard-importers-step.tpl.html" />
+    <Content Include="Scripts\wizards\importWizard\import-job-wizard-catalogs-step.tpl.html" />
+    <Content Include="Scripts\wizards\importWizard\import-job-wizard-catalogs-step.js" />
+    <Content Include="Scripts\wizards\importWizard\import-job-wizard.js" />
+    <Content Include="Scripts\wizards\importWizard\import-job-wizard.tpl.html" />
+    <Content Include="Scripts\wizards\newAssociation\association-wizard-group-new.js" />
+    <Content Include="Scripts\wizards\newAssociation\association-wizard-group-new.tpl.html" />
+    <Content Include="Scripts\wizards\newAssociation\association-wizard.js" />
+    <Content Include="Scripts\wizards\newAssociation\association-wizard.tpl.html" />
+    <Content Include="Scripts\wizards\newAssociation\association-wizard-group-step.js" />
+    <Content Include="Scripts\wizards\newAssociation\association-wizard-group-step.tpl.html" />
+    <Content Include="Scripts\wizards\newCategory\category-wizard-actions.tpl.html" />
+    <Content Include="Scripts\wizards\newCategory\category-wizard.js" />
+    <Content Include="Scripts\wizards\newCategory\category-wizard.tpl.html" />
+    <Content Include="Scripts\wizards\newProduct\new-product-wizard-editorial-review-detail-step.js" />
+    <Content Include="Scripts\wizards\newProduct\new-product-wizard-editorial-reviews.js" />
+    <Content Include="Scripts\wizards\newProduct\new-product-wizard-property-detail-step.js" />
+    <Content Include="Scripts\wizards\common\wizard-ok-action.tpl.html" />
+    <Content Include="Scripts\wizards\newProduct\new-product-wizard-images-step.js" />
+    <Content Include="Scripts\wizards\newProduct\new-product-wizard-actions.tpl.html" />
+    <Content Include="Scripts\wizards\newProduct\new-product-wizard.js" />
+    <Content Include="Scripts\wizards\newProduct\new-product-wizard.tpl.html" />
+    <Content Include="Scripts\wizards\newProduct\new-variation-wizard.tpl.html" />
+    <Content Include="Scripts\wizards\newProduct\new-product-wizard-seo-detail-step.js" />
     </ItemGroup>
     <ItemGroup>
         <Content Include="App_Data\priceRuCategoryTest.yml" />
@@ -313,7 +315,14 @@
         <None Include="packages.config">
             <SubType>Designer</SubType>
         </None>
-        <Content Include="Scripts\app\catalog\widgets\catalogLanguagesWidget.tpl.html" />
+		  <Content Include="web.config" />
+    <None Include="web.Debug.config">
+      <DependentUpon>web.config</DependentUpon>
+    </None>
+    <None Include="web.Release.config">
+      <DependentUpon>web.config</DependentUpon>
+    </None>
+    <Content Include="Scripts\widgets\catalogLanguagesWidget.tpl.html" />
     </ItemGroup>
     <ItemGroup>
         <ProjectReference Include="..\..\..\..\..\Core\CommerceFoundation.Data\CommerceFoundation.Data.csproj">
@@ -349,7 +358,9 @@
             <Name>VirtoCommerce.CatalogModule.Data</Name>
         </ProjectReference>
     </ItemGroup>
-    <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Scripts\app\catalog\" />
+  </ItemGroup>
     <PropertyGroup>
         <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
         <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

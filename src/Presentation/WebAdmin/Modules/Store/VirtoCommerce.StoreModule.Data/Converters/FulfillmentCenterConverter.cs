@@ -24,6 +24,7 @@ namespace VirtoCommerce.StoreModule.Data.Converters
 
 			var retVal = new coreModel.FulfillmentCenter();
 			retVal.InjectFrom(dbEntity);
+			retVal.Id = dbEntity.FulfillmentCenterId;
 		
 			return retVal;
 
@@ -37,24 +38,13 @@ namespace VirtoCommerce.StoreModule.Data.Converters
 
 			var retVal = new foundationModel.FulfillmentCenter();
 			retVal.InjectFrom(fulfillCenter);
+
+			if (fulfillCenter.Id != null)
+			{
+				retVal.FulfillmentCenterId = fulfillCenter.Id;
+			}
+
 			return retVal;
-		}
-
-		/// <summary>
-		/// Patch changes
-		/// </summary>
-		/// <param name="source"></param>
-		/// <param name="target"></param>
-		public static void Patch(this foundationModel.FulfillmentCenter source, foundationModel.FulfillmentCenter target)
-		{
-			if (target == null)
-				throw new ArgumentNullException("target");
-
-			var patchInjectionPolicy = new PatchInjection<foundationModel.FulfillmentCenter>(x => x.City, x => x.CountryCode, x => x.CountryName, x => x.DaytimePhoneNumber,
-																							x => x.Description, x => x.Line2, x => x.Line1, x => x.MaxReleasesPerPickBatch, x => x.Name,
-																							x => x.PickDelay, x => x.PostalCode);
-			target.InjectFrom(patchInjectionPolicy, source);
-
 		}
 	}
 }

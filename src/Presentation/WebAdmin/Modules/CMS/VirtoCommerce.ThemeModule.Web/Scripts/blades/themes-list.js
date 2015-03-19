@@ -1,8 +1,9 @@
 ﻿angular.module('virtoCommerce.content.themeModule.blades.themeList', [
     'virtoCommerce.content.themeModule.resources.themes',
+	'virtoCommerce.content.themeModule.resources.themesStores',
 	'virtoCommerce.content.themeModule.blades.themeAssetList'
 ])
-.controller('themesListController', ['$scope', 'themes', 'bladeNavigationService', function ($scope, themes, bladeNavigationService) {
+.controller('themesListController', ['$scope', 'themes', 'themesStores', 'bladeNavigationService', function ($scope, themes, themesStores, bladeNavigationService) {
 	$scope.selectedNodeId = null;
 
 	var blade = $scope.blade;
@@ -10,8 +11,11 @@
 	blade.refresh = function () {
 		blade.isLoading = true;
 		themes.get({ storeId: blade.storeId }, function (data) {
-			blade.isLoading = false;
 			blade.currentEntities = data;
+			themesStores.get({ id: blade.storeId }, function (data) {
+				blade.store = data;
+				blade.isLoading = false;
+			});
 		});
 	}
 
@@ -26,9 +30,13 @@
 			title: 'Edit ' + data.path,
 			subtitle: 'Theme asset list',
 			controller: 'themeAssetListController',
-			template: 'Modules/CMS/VirtoCommerce.ThemeModule.Web/Scripts/blades/theme-asset-list.tpl.html'
+			template: 'Modules/$(VirtoCommerce.Theme)/Scripts/blades/theme-asset-list.tpl.html'
 		};
 		bladeNavigationService.showBlade(newBlade, blade);
+	}
+
+	blade.checkTheme = function (data) {
+		blade.currentNode = data;
 	}
 
 	function openBladeNew() {
@@ -36,12 +44,11 @@
 
 		var newBlade = {
 			id: 'storeDetails',
-			// currentEntityId: data.id,
 			currentEntity: {},
 			title: 'New theme asset',
 			subtitle: 'Create new theme',
 			controller: 'newThemeWizardController',
-			template: 'Modules/CMS/VirtoCommerce.ThemeModule.Web/Scripts/wizards/newTheme/new-theme-wizard.tpl.html'
+			template: 'Modules/$(VirtoCommerce.Theme)/Scripts/wizards/newTheme/new-theme-wizard.tpl.html'
 		};
 		bladeNavigationService.showBlade(newBlade, $scope.blade);
 	}
@@ -57,8 +64,22 @@
 		});
 	}
 
-	function setThemeAsActive() {
+	blade.setThemeAsActive = function () {
+		blade.isLoading = true;
+		if (_.where(blade.store.settings, { name: "DefaultThemeName" }).length > 0) {
+			angular.forEach(blade.store.settings, function (value, key) {
+				if (value.name === "DefaultThemeName") {
+					value.value = blade.currentNode.name;
+				}
+			});
+		}
+		else {
+			blade.store.settings.push({ name: "DefaultThemeName", value: blade.currentNode.name, })
+		}
 
+		themesStores.update({ storeId: blade.choosenStoreId }, blade.store, function (data) {
+			blade.isLoading = false;
+		});
 	}
 
 	$scope.bladeHeadIco = 'fa fa-archive';
@@ -76,10 +97,19 @@
 		{
 			name: "Set Active", icon: 'fa fa-plus',
 			executeMethod: function () {
-				setThemeAsActive();
+				blade.setThemeAsActive();
 			},
 			canExecuteMethod: function () {
-				return false;
+				return !angular.isUndefined(blade.currentNode);
+			}
+		},
+		{
+			name: "Edit Theme", icon: 'fa fa-pencil-square-o',
+			executeMethod: function () {
+				blade.openBlade(blade.currentNode);
+			},
+			canExecuteMethod: function () {
+				return !angular.isUndefined(blade.currentNode);
 			}
 		}
 	];

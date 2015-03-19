@@ -10,7 +10,10 @@
   'xeditable',
   'fiestah.money',
   'ngCookies',
-  'angularMoment'
+  'angularMoment',
+  'angularFileUpload',
+  'ngSanitize',
+  'ng-context-menu'
 ];
 
 angular.module('platformWebApp', AppDependencies).
@@ -52,13 +55,16 @@ angular.module('platformWebApp', AppDependencies).
     $httpProvider.interceptors.push('httpErrorInterceptor');
 	//ui-select set selectize as default theme
     uiSelectConfig.theme = 'select2';
+  	
   }
   ]
 )
 .run(
-  ['$rootScope', '$state', '$stateParams', 'authService', 'mainMenuService', 'editableOptions', 'notificationService',
-    function ($rootScope, $state, $stateParams, authService, mainMenuService, editableOptions, notificationService) {
-        editableOptions.theme = 'bs3'; // bootstrap3 theme. Can be also 'bs2', 'default'
+  ['$rootScope', '$state', '$stateParams', 'authService', 'mainMenuService', 'editableOptions', 'notificationService', '$animate',
+    function ($rootScope, $state, $stateParams, authService, mainMenuService, editableOptions, notificationService, $animate) {
+    	//Disable animation
+    	$animate.enabled(false);
+       	editableOptions.theme = 'bs3'; // bootstrap3 theme. Can be also 'bs2', 'default'
 
         $rootScope.$state = $state;
         $rootScope.$stateParams = $stateParams;

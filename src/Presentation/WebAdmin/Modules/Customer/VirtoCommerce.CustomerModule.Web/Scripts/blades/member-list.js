@@ -128,13 +128,13 @@
             title: title,
             subtitle: 'Customer details',
             controller: 'memberDetailController',
-            template: 'Modules/Customer/VirtoCommerce.CustomerModule.Web/Scripts/blades/customer-detail.tpl.html'
+            template: 'Modules/$(VirtoCommerce.Customer)/Scripts/blades/customer-detail.tpl.html'
         };
 
         if (listItem.memberType === 'Organization') {
             newBlade.isOrganization = true;
             newBlade.subtitle = 'Organization details';
-            newBlade.template = 'Modules/Customer/VirtoCommerce.CustomerModule.Web/Scripts/blades/organization-detail.tpl.html';
+            newBlade.template = 'Modules/$(VirtoCommerce.Customer)/Scripts/blades/organization-detail.tpl.html';
         }
 
         bladeNavigationService.showBlade(newBlade, $scope.blade);
@@ -251,7 +251,7 @@
                       title: 'New member',
                       subtitle: 'Choose new member type',
                       controller: 'memberAddController',
-                      template: 'Modules/Customer/VirtoCommerce.CustomerModule.Web/Scripts/blades/member-add.tpl.html'
+                      template: 'Modules/$(VirtoCommerce.Customer)/Scripts/blades/member-add.tpl.html'
                   };
                   bladeNavigationService.showBlade(newBlade, $scope.blade);
               },

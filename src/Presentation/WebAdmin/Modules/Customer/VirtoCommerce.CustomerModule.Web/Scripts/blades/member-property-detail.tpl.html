@@ -1,4 +1,4 @@
-﻿<div class="blade-static __bottom" ng-include="'Modules/Core/VirtoCommerce.Core.Web/Scripts/common/ok-cancel2.tpl.html'"></div>
+﻿<div class="blade-static __bottom" ng-include="'Modules/$(VirtoCommerce.Core)/Scripts/common/ok-cancel2.tpl.html'"></div>
 <div class="blade-content">
     <div class="blade-inner">
         <div class="inner-block">
@@ -6,7 +6,7 @@
                 <div class="form-group">
                     <label class="form-label" for="">Property name</label>
                     <div class="form-input" ng-init="setForm(formScope);">
-                        <input focus-on="" required class="form-control" ng-model="blade.currentEntity.name" />
+                        <input focus-on="" required class="form-control" ng-model="blade.currentEntity.name" placeholder="Enter name" />
                     </div>
                 </div>
                 <!--<div class="form-group">

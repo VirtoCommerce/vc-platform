@@ -15,8 +15,10 @@
 
     <meta name="viewport" content="width=device-width" />
     <base href="~/" />
+	<script src="https://apis.google.com/js/platform.js" async defer></script>
 </head>
 <body class="metro" ng-controller="appCtrl">
+	@Html.Partial("_GoogleAnalyticsPartial")
     @RenderBody()
 
     @Scripts.Render("~/scripts/jquery")

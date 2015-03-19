@@ -132,7 +132,7 @@ angular.module('platformWebApp')
             scope.executeCommand = function (toolbarCommand)
             {
                 if (toolbarCommand.canExecuteMethod())
-                    toolbarCommand.executeMethod();
+                	toolbarCommand.executeMethod(scope.blade);
             };
         }
     };

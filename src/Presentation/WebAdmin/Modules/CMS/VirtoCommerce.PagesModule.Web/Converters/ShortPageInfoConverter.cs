@@ -15,6 +15,7 @@ namespace VirtoCommerce.PagesModule.Web.Converters
 
 			retVal.Name = item.Name;
 			retVal.ModifiedDate = item.LastModified;
+			retVal.Language = item.Language;
 
 			return retVal;
 		}

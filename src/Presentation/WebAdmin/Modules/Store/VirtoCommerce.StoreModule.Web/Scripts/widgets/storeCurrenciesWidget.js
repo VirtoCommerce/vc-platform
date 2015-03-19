@@ -9,7 +9,7 @@
             title: blade.title,
             subtitle: 'Manage currencies',
             controller: 'storeCurrenciesListController',
-            template: 'Modules/Store/VirtoCommerce.StoreModule.Web/Scripts/blades/store-currencies-list.tpl.html'
+            template: 'Modules/$(VirtoCommerce.Store)/Scripts/blades/store-currencies-list.tpl.html'
         };
         bladeNavigationService.showBlade(newBlade, blade);
     };

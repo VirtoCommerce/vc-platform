@@ -21,6 +21,8 @@ namespace VirtoCommerce.Content.Pages.Data.Models
 		public string Content { get; set; }
 		[Required]
 		public string Path { get; set; }
+		[Required]
+		public string Language { get; set; }
 
 		#region IAuditable Methods
 

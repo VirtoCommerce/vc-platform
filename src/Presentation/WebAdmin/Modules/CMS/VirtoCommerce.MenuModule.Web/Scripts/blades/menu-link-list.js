@@ -10,53 +10,21 @@
 	blade.refresh = function () {
 		menusStores.get({ id: blade.choosenStoreId }, function (data) {
 			blade.languages = data.languages;
-		});
+			blade.defaultStoreLanguage = data.defaultLanguage;
 
-		if (blade.newList) {
-			blade.currentEntity = { id: uuid2.newguid(), title: undefined, storeId: blade.choosenStoreId, menuLinks: [] };
-			blade.choosenListId = blade.currentEntity.id;
-			$scope.bladeToolbarCommands = [{
-				name: "Add link", icon: 'fa fa-plus',
-				executeMethod: function () {
-					var newEntity = { id: uuid2.newguid(), url: undefined, title: undefined, type: undefined, priority: 0, isActive: false, language: undefined, menuLinkListId: blade.choosenListId };
-					blade.currentEntity.menuLinks.push(newEntity);
-					blade.recalculatePriority();
-				},
-				canExecuteMethod: function () {
-					return true;
-				},
-			},
-
-			{
-				name: "Save list", icon: 'fa fa-save',
-				executeMethod: function () {
-					blade.saveChanges();
-				},
-				canExecuteMethod: function () {
-					return canSave();
-				}
-			}];
-
-			blade.isLoading = false;
-		}
-		else {
-			blade.isLoading = true;
-			menus.getList({ storeId: blade.choosenStoreId, listId: blade.choosenListId }, function (data) {
-				data.menuLinks = _.sortBy(data.menuLinks, 'priority').reverse();
-				blade.origEntity = data;
-				blade.currentEntity = angular.copy(data);
-				blade.isLoading = false;
-
+			if (blade.newList) {
+				blade.currentEntity = { id: uuid2.newguid(), title: undefined, language: blade.defaultStoreLanguage, storeId: blade.choosenStoreId, menuLinks: [] };
+				blade.choosenListId = blade.currentEntity.id;
 				$scope.bladeToolbarCommands = [{
 					name: "Add link", icon: 'fa fa-plus',
 					executeMethod: function () {
-						var newEntity = { id: uuid2.newguid(), url: undefined, title: undefined, isActive: false, priority: 0, menuLinkListId: blade.choosenListId };
+						var newEntity = { id: uuid2.newguid(), url: undefined, title: undefined, type: undefined, priority: 0, isActive: false, language: undefined, menuLinkListId: blade.choosenListId };
 						blade.currentEntity.menuLinks.push(newEntity);
 						blade.recalculatePriority();
 					},
 					canExecuteMethod: function () {
 						return true;
-					}
+					},
 				},
 
 				{
@@ -67,29 +35,62 @@
 					canExecuteMethod: function () {
 						return canSave();
 					}
-				},
-
-				{
-					name: "Reset list", icon: 'fa fa-undo',
-					executeMethod: function () {
-						angular.copy(blade.origEntity, blade.currentEntity);
-					},
-					canExecuteMethod: function () {
-						return !angular.equals(blade.origEntity, blade.currentEntity);
-					}
-				},
-
-				{
-					name: "Delete", icon: 'fa fa-trash-o',
-					executeMethod: function () {
-						deleteList() || blade.selectedItemIds.length > 0;
-					},
-					canExecuteMethod: function () {
-						return true;
-					}
 				}];
-			});
-		}
+
+				blade.isLoading = false;
+			}
+			else {
+				blade.isLoading = true;
+				menus.getList({ storeId: blade.choosenStoreId, listId: blade.choosenListId }, function (data) {
+					data.menuLinks = _.sortBy(data.menuLinks, 'priority').reverse();
+					blade.origEntity = data;
+					blade.currentEntity = angular.copy(data);
+					blade.isLoading = false;
+
+					$scope.bladeToolbarCommands = [{
+						name: "Add link", icon: 'fa fa-plus',
+						executeMethod: function () {
+							var newEntity = { id: uuid2.newguid(), url: undefined, title: undefined, isActive: false, priority: 0, menuLinkListId: blade.choosenListId };
+							blade.currentEntity.menuLinks.push(newEntity);
+							blade.recalculatePriority();
+						},
+						canExecuteMethod: function () {
+							return true;
+						}
+					},
+
+					{
+						name: "Save list", icon: 'fa fa-save',
+						executeMethod: function () {
+							blade.saveChanges();
+						},
+						canExecuteMethod: function () {
+							return canSave();
+						}
+					},
+
+					{
+						name: "Reset list", icon: 'fa fa-undo',
+						executeMethod: function () {
+							angular.copy(blade.origEntity, blade.currentEntity);
+						},
+						canExecuteMethod: function () {
+							return !angular.equals(blade.origEntity, blade.currentEntity);
+						}
+					},
+
+					{
+						name: "Delete", icon: 'fa fa-trash-o',
+						executeMethod: function () {
+							deleteList() || blade.selectedItemIds.length > 0;
+						},
+						canExecuteMethod: function () {
+							return true;
+						}
+					}];
+				});
+			}
+		});
 	}
 
 	blade.refresh();

@@ -9,6 +9,9 @@
 		if (!blade.newAsset) {
 			themes.getAsset({ storeId: blade.choosenStoreId, themeId: blade.choosenThemeId, assetId: blade.choosenAssetId }, function (data) {
 				blade.isLoading = false;
+
+				data.content = "data:" + data.contentType + ";base64," + data.byteContent;
+
 				blade.currentEntity = angular.copy(data);
 				blade.origEntity = data;
 			});

@@ -57,7 +57,7 @@ namespace VirtoCommerce.Framework.Web.Modularity
                 ConvertVirtualPath(manifest.Scripts, moduleVirtualPath);
                 ConvertVirtualPath(manifest.Styles, moduleVirtualPath);
 
-                var moduleInfo = new ManifestModuleInfo(manifest);
+                var moduleInfo = new ManifestModuleInfo(manifest, modulePath);
 
                 // Modules without assembly file don't need initialization
                 if (string.IsNullOrEmpty(manifest.AssemblyFile))

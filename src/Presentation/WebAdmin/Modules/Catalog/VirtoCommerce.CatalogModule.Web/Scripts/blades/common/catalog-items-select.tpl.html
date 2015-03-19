@@ -1,0 +1,72 @@
+﻿<div class="blade-static __expanded" ng-if="!isCatalogSelectMode()">
+    <va-breadcrumb ng-model="blade.breadcrumbs"></va-breadcrumb>
+    <div class="form-group">
+        <div class="form-input __search">
+            <input type="text" placeholder="Search keyword..." ng-model="filter.searchKeyword" ui-keyup="{'enter':'blade.refresh()'}">
+        </div>
+        <p class="form-count">Count: <span class="count">{{pageSettings.totalItems}}</span></p>
+    </div>
+</div>
+<div class="blade-content __medium-wide" ng-if="!isCatalogSelectMode()">
+    <div class="blade-inner">
+        <div class="inner-block" ng-if="blade.catalogId">
+            <div class="table-wrapper">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th class="table-col">
+                                <label class="form-control __checkbox">
+                                    <input type="checkbox" ng-model="selectedAll" ng-change="checkAll(selectedAll)" />
+                                    <span class="check"></span>
+                                </label>
+                            </th>
+                            <th class="table-col">Pic</th>
+                            <th class="table-col">Name</th>
+                            <th class="table-col">Code</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="table-item" ng-repeat="data in items track by data.id" ng-class="{'__selected': data.id === selectedItem.id}" context-menu data-target="cil_menu_{{data.id+blade.level}}">
+                            <td class="table-col __product-control">
+                                <label class="form-control __checkbox" ng-if="options.allowMultiple">
+                                    <input type="checkbox" ng-model="data.selected" ng-change="checkItem(data)">
+                                    <span class="check"></span>
+                                </label>
+                            </td>
+                            <td class="table-col __product-img" ng-click='selectItem($event, data)'>
+                                <div class="product-img">
+                                    <div class="image" style="background-image: url({{data.imageUrl}})" ng-if="data.type!=='category' && data.imageUrl"></div>
+                                    <i class="table-ico fa" ng-class="data.type == 'category' ? ' fa-folder' : ' fa-image'" ng-if="!data.imageUrl"></i>
+                                </div>
+                            </td>
+                            <td class="table-col __product-name" ng-click='selectItem($event, data)' class="product-name">
+                                {{data.name}}
+
+                            </td>
+                            <td class="table-col __product-code" ng-click='selectItem($event, data)'>
+                                {{data.code}}
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="pagination" ng-if="pageSettings.itemsPerPageCount < pageSettings.totalItems" ng-include="'pagerTemplate.html'"></div>
+            <script type="text/ng-template" id="pagerTemplate.html">
+                <pagination ng-if="pageSettings.itemsPerPageCount < pageSettings.totalItems" boundary-links="true" max-size="pageSettings.numPages" items-per-page="pageSettings.itemsPerPageCount" total-items="pageSettings.totalItems" ng-model="pageSettings.currentPage" class="pagination-sm" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></pagination>
+            </script>
+        </div>
+    </div>
+</div>
+
+<div class="blade-content" ng-if="isCatalogSelectMode()">
+    <div class="blade-inner">
+        <div class="inner-block clearfix">
+            <ul class="list __items">
+                <li class="list-item" ng-repeat="data in items track by data.id" ng-class="{'__selected': data.id === selectedItem.id}" ng-click='selectItem($event, data)'>
+                    <i class="list-ico fa" ng-class="data.virtual ? 'fa-cloud' : 'fa-folder'"></i>
+                    <span class="list-name">{{data.name + (data.virtual ? ' (virtual)' : '')}}</span>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>

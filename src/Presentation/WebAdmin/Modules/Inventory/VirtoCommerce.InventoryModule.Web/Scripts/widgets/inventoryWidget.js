@@ -19,7 +19,7 @@
             title: blade.title,
             subtitle: 'Select Fulfillment center to edit inventory',
             controller: 'inventoryFulfillmentcentersListController',
-            template: 'Modules/Inventory/VirtoCommerce.InventoryModule.Web/Scripts/blades/!inventory-fulfillmentcenters-list.tpl.html'
+            template: 'Modules/$(VirtoCommerce.Inventory)/Scripts/blades/!inventory-fulfillmentcenters-list.tpl.html'
         };
         bladeNavigationService.showBlade(newBlade, blade);
     };

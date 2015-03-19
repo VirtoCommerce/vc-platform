@@ -11,7 +11,7 @@
             title: $scope.blade.title,
             subtitle: 'Edit address',
             controller: 'memberAddressDetailController',
-            template: 'Modules/customer/VirtoCommerce.customerModule.Web/Scripts/blades/member-address-detail.tpl.html'
+            template: 'Modules/$(VirtoCommerce.Customer)/Scripts/blades/member-address-detail.tpl.html'
         };
         bladeNavigationService.showBlade(newBlade, $scope.blade);
     }

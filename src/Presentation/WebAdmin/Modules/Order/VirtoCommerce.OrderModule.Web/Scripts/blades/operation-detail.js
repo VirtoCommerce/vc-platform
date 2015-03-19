@@ -1,4 +1,4 @@
-﻿angular.module('virtoCommerce.orderModule.blades')
+﻿angular.module('virtoCommerce.orderModule')
 .controller('operationDetailController', ['$scope', 'dialogService', 'bladeNavigationService', 'order_res_customerOrders', 'order_res_fulfilmentCenters', 'order_res_stores', 'order_res_paymentGateways', 'objCompareService',
 			function ($scope, dialogService, bladeNavigationService, order_res_customerOrders, order_res_fulfilmentCenters, order_res_stores, order_res_paymentGateways, objCompareService) {
 
@@ -66,7 +66,7 @@
 			            id: 'fulfillmentCenterList',
 			            parentWidget: $scope.blade,
 			            controller: 'fulfillmentListController',
-			            template: 'Modules/Core/VirtoCommerce.Core.Web/Scripts/fulfillment/blades/$fulfillment-center-list.tpl.html'
+			            template: 'Modules/$(VirtoCommerce.Core)/Scripts/fulfillment/blades/$fulfillment-center-list.tpl.html'
 			        };
 			        bladeNavigationService.showBlade(newBlade, $scope.blade);
 			    }
@@ -85,7 +85,7 @@
         			title: "New operation",
         			subtitle: 'Select operation type',
         			controller: 'newOperationWizardController',
-        			template: 'Modules/Order/VirtoCommerce.OrderModule.Web/Scripts/wizards/newOperation/newOperation-wizard.tpl.html'
+        			template: 'Modules/$(VirtoCommerce.Orders)/Scripts/wizards/newOperation/newOperation-wizard.tpl.html'
         		};
         		bladeNavigationService.showBlade(newBlade, $scope.blade);
 
@@ -127,7 +127,7 @@
 								function () {
 									$scope.blade.title = $scope.blade.customerOrder.customer + '\'s Customer Order';
 									$scope.blade.subtitle = 'Edit order details and related documents';
-									$scope.blade.template = 'Modules/Order/VirtoCommerce.OrderModule.Web/Scripts/blades/customerOrder-detail.tpl.html';
+									$scope.blade.template = 'Modules/$(VirtoCommerce.Orders)/Scripts/blades/customerOrder-detail.tpl.html';
 									$scope.blade.currentEntity = $scope.blade.customerOrder;
 									$scope.blade.refresh();
 								},
@@ -166,7 +166,7 @@
 		     				}
 		     			}
 		     		};
-		     		dialogService.showDialog(dialog, 'Modules/Order/VirtoCommerce.OrderModule.Web/Scripts/dialogs/cancelOperation-dialog.tpl.html', 'confirmCancelDialogController');
+		     		dialogService.showDialog(dialog, 'Modules/$(VirtoCommerce.Orders)/Scripts/dialogs/cancelOperation-dialog.tpl.html', 'confirmCancelDialogController');
 		     	},
 		     	canExecuteMethod: function () {
 		     		return true;
@@ -209,7 +209,7 @@
    
 
     // actions on load
-    $scope.toolbarTemplate = 'Modules/Order/VirtoCommerce.OrderModule.Web/Scripts/blades/operation-detail-toolbar.tpl.html';
+    $scope.toolbarTemplate = 'Modules/$(VirtoCommerce.Orders)/Scripts/blades/operation-detail-toolbar.tpl.html';
     $scope.blade.refresh($scope.blade.isNew);
 
 }])

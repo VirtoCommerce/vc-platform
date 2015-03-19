@@ -1,4 +1,4 @@
-﻿<div class="blade-static __bottom" ng-include="'Modules/Core/VirtoCommerce.Core.Web/Scripts/common/ok-cancel.tpl.html'"></div>
+﻿<div class="blade-static __bottom" ng-include="'Modules/$(VirtoCommerce.Core)/Scripts/common/ok-cancel.tpl.html'"></div>
 <div class="blade-content">
     <div class="blade-inner">
         <div class="inner-block">
@@ -7,7 +7,7 @@
                 <label class="list-item" ng-repeat="data in blade.currentEntities" ng-class="{'__selected': data.isDefault}">
                     <input type="checkbox" ng-disabled="data.isDefault" ng-model="data.isChecked" ng-click="selectItem(data)">
                     <span class="switch"></span>
-                    <span class="list-name">{{data.displayName}}</span>
+                    <span class="list-name">{{data.code}}</span>
                 </label>
             </div>
         </div>

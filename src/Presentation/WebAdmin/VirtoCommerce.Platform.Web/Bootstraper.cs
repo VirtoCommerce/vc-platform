@@ -18,17 +18,22 @@ namespace VirtoCommerce.Platform.Web
 {
     public class VirtoCommercePlatformWebBootstraper : UnityBootstrapper
     {
+        private readonly string _modulesVirtualPath;
+        private readonly string _modulesPhysicalPath;
+
+        public VirtoCommercePlatformWebBootstraper(string modulesVirtualPath, string modulesPhysicalPath)
+        {
+            _modulesVirtualPath = modulesVirtualPath;
+            _modulesPhysicalPath = modulesPhysicalPath;
+        }
+
         protected override IModuleCatalog CreateModuleCatalog()
         {
             var assembliesPath = HostingEnvironment.MapPath("~/App_data/Modules");
-            var contentVirtualPath = "~/Modules";
-            var contentPhysicalPath = HostingEnvironment.MapPath(contentVirtualPath);
 
-            var manifestProvider = new ModuleManifestProvider(contentPhysicalPath);
-            return new ManifestModuleCatalog(manifestProvider, contentVirtualPath, assembliesPath);
+            var manifestProvider = new ModuleManifestProvider(_modulesPhysicalPath);
+            return new ManifestModuleCatalog(manifestProvider, _modulesVirtualPath, assembliesPath);
         }
-
-        #region Overrides of UnityBootstrapper
 
         /// <summary>
         /// Configures the <see cref="IUnityContainer"/>. May be overwritten in a derived class to add specific
@@ -44,8 +49,6 @@ namespace VirtoCommerce.Platform.Web
             };
             Container.RegisterInstance<IModuleInitializerOptions>(options);
         }
-
-        #endregion
 
         public override void Run(bool runWithDefaultConfiguration)
         {

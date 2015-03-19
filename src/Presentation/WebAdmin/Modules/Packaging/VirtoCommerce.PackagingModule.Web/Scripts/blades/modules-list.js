@@ -23,7 +23,7 @@
             title: 'Module information',
             currentEntity: listItem,
             controller: 'moduleDetailController',
-            template: 'Modules/Packaging/VirtoCommerce.PackagingModule.Web/Scripts/blades/module-detail.tpl.html'
+            template: 'Modules/$(VirtoCommerce.Packaging)/Scripts/blades/module-detail.tpl.html'
         };
 
         bladeNavigationService.showBlade(newBlade, $scope.blade);
@@ -72,7 +72,7 @@
             // subtitle: '',
             mode: 'install',
             controller: 'installWizardController',
-            template: 'Modules/Packaging/VirtoCommerce.PackagingModule.Web/Scripts/blades/module-detail.tpl.html'
+            template: 'Modules/$(VirtoCommerce.Packaging)/Scripts/blades/module-detail.tpl.html'
         };
         bladeNavigationService.showBlade(newBlade, $scope.blade);
     }

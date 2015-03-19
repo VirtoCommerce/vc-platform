@@ -5,12 +5,17 @@
 				<table class="table">
 					<thead>
 						<tr>
+							<th class="table-col">Language</th>
 							<th class="table-col">Page name</th>
 							<th class="table-col">Modified</th>
 						</tr>
 					</thead>
 					<tbody>
 						<tr class="table-item" ng-repeat="data in blade.currentEntities" ng-class="{'__selected': data.name === selectedItem.name}" context-menu data-target="ipl_menu_{{data.name}}" ng-click='blade.openBlade(data)' >
+							<td class="table-col __date">
+								<span class="flag flag-{{blade.getFlag(data.language)}}"></span>
+								<span>{{data.language}}</span>
+							</td>
 							<td class="table-col">
 								{{data.name}}
 							</td>

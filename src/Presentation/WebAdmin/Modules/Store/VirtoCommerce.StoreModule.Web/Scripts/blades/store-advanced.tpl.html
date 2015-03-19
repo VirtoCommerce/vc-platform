@@ -6,14 +6,14 @@
                     <div class="form-group">
                         <label class="form-label">Description</label>
                         <div class="form-input">
-                            <textarea class="form-control" cols="30" rows="2" ng-model="blade.currentEntity.description"></textarea>
+                            <textarea class="form-control" cols="30" rows="2" ng-model="blade.currentEntity.description" placeholder="Enter description"></textarea>
                         </div>
                     </div>
                     <div class="column">
                         <div class="form-group">
                             <label class="form-label">Store URL</label>
                             <div class="form-input">
-                                <input ng-model="blade.currentEntity.url" type="url">
+                                <input ng-model="blade.currentEntity.url" type="url" placeholder="Enter URL">
                             </div>
                         </div>
                     </div>
@@ -21,7 +21,7 @@
                         <div class="form-group">
                             <label class="form-label">Secure URL</label>
                             <div class="form-input">
-                                <input ng-model="blade.currentEntity.secureUrl" type="url">
+                                <input ng-model="blade.currentEntity.secureUrl" type="url" placeholder="Enter secure URL">
                             </div>
                         </div>
                     </div>
@@ -59,7 +59,7 @@
                         <div class="form-group">
                             <label class="form-label">Store email</label>
                             <div class="form-input">
-                                <input ng-model="blade.currentEntity.email" type="email">
+                                <input ng-model="blade.currentEntity.email" type="email" placeholder="Enter value">
                             </div>
                         </div>
                     </div>
@@ -67,7 +67,7 @@
                         <div class="form-group">
                             <label class="form-label">Store admin email</label>
                             <div class="form-input">
-                                <input ng-model="blade.currentEntity.adminEmail" type="email">
+                                <input ng-model="blade.currentEntity.adminEmail" type="email" placeholder="Enter value">
                             </div>
                         </div>
                     </div>
@@ -118,4 +118,4 @@
         </div>
     </div>
 </div>
-<div class="blade-static __bottom" ng-include="'Modules/Core/VirtoCommerce.Core.Web/Scripts/common/ok-cancel.tpl.html'"></div>
+<div class="blade-static __bottom" ng-include="'Modules/$(VirtoCommerce.Core)/Scripts/common/ok-cancel.tpl.html'"></div>

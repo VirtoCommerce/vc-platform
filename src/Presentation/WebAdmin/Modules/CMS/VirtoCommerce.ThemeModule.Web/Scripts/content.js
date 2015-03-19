@@ -8,6 +8,7 @@ if (AppDependencies != undefined) {
 angular.module(moduleName, [
 	'virtoCommerce.content.themeModule.widgets.themesWidget',
 	'virtoCommerce.content.themeModule.resources.themes',
+	'virtoCommerce.content.themeModule.resources.themesStores',
 	'virtoCommerce.content.themeModule.blades.themeAssetList',
 	'virtoCommerce.content.themeModule.blades.themeList',
 	'virtoCommerce.content.themeModule.blades.editAsset',
@@ -18,7 +19,7 @@ angular.module(moduleName, [
 	//Register widgets in store details
 	widgetService.registerWidget({
 		controller: 'themesWidgetController',
-		template: 'Modules/CMS/VirtoCommerce.ThemeModule.Web/Scripts/widgets/themesWidget.tpl.html'
+		template: 'Modules/$(VirtoCommerce.Theme)/Scripts/widgets/themesWidget.tpl.html'
 	}, 'storeDetail');
 
 	}])

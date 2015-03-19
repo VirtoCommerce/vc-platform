@@ -1,8 +1,9 @@
 ﻿angular.module('virtoCommerce.content.pagesModule.blades.pagesList', [
     'virtoCommerce.content.pagesModule.resources.pages',
-	'virtoCommerce.content.pagesModule.blades.editPage'
+	'virtoCommerce.content.pagesModule.blades.editPage',
+	'virtoCommerce.content.pagesModule.resources.pagesStores'
 ])
-.controller('pagesListController', ['$scope', 'pages', 'bladeNavigationService', function ($scope, pages, bladeNavigationService) {
+.controller('pagesListController', ['$scope', 'pages', 'pagesStores', 'bladeNavigationService', function ($scope, pages, pagesStores, bladeNavigationService) {
 	$scope.selectedNodeId = null;
 
 	var blade = $scope.blade;
@@ -24,11 +25,12 @@
 			id: 'editPageBlade',
 			choosenStoreId: blade.storeId,
 			choosenPageName: data.name,
+			choosenPageLanguage: data.language,
 			newPage: false,
 			title: 'Edit ' + data.name,
 			subtitle: 'Page edit',
 			controller: 'editPageController',
-			template: 'Modules/CMS/VirtoCommerce.PagesModule.Web/Scripts/blades/edit-page.tpl.html'
+			template: 'Modules/$(VirtoCommerce.Pages)/Scripts/blades/edit-page.tpl.html'
 		};
 		bladeNavigationService.showBlade(newBlade, blade);
 	}
@@ -45,7 +47,7 @@
 			title: 'Add new page',
 			subtitle: 'Create new theme',
 			controller: 'editPageController',
-			template: 'Modules/CMS/VirtoCommerce.PagesModule.Web/Scripts/blades/edit-page.tpl.html'
+			template: 'Modules/$(VirtoCommerce.Pages)/Scripts/blades/edit-page.tpl.html'
 		};
 		bladeNavigationService.showBlade(newBlade, $scope.blade);
 	}
@@ -80,6 +82,28 @@
 	}
 
 	$scope.bladeHeadIco = 'fa fa-archive';
+
+	blade.getFlag = function (lang) {
+		switch (lang) {
+			case 'ru-RU':
+				return 'ru';
+
+			case 'en-US':
+				return 'us';
+
+			case 'fr-FR':
+				return 'fr';
+
+			case 'zh-CN':
+				return 'ch';
+
+			case 'ru-RU':
+				return 'ru';
+
+			case 'ja-JP':
+				return 'ja';
+		}
+	}
 
 	$scope.bladeToolbarCommands = [
         {

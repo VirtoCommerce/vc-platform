@@ -62,8 +62,8 @@ namespace VirtoCommerce.ApiClient
         {
             #region Constants
 
-            public const string ThemeAssets = "{0}/themes/{1}/assets";
-            public const string Themes = "{0}/themes";
+            public const string ThemeAssets = "cms/{0}/themes/{1}/assets";
+            public const string Themes = "cms/{0}/themes";
 
             #endregion
         }

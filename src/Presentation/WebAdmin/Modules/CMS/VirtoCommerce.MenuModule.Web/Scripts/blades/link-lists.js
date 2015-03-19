@@ -14,29 +14,7 @@
 		menus.get({ storeId: blade.storeId }, function (data) {
 			blade.currentEntities = data;
 			blade.parentWidget.refresh();
-
-			if (blade.currentEntities.length === 0) {
-				menusStores.get({ id: blade.storeId }, function (data) {
-					blade.store = data;
-
-					if (_.where(blade.store.settings, { name: "DefaultLinkListsInstalled", value: true }).length === 0) {
-						menus.createDefaultLinks({ storeId: blade.storeId }, function (data) {
-							blade.currentEntities = data;
-							blade.parentWidget.refresh();
-
-							blade.store.settings.push({ name: "DefaultLinkListsInstalled", value: true, valueType: "Boolean" });
-
-							menusStores.update(blade.store, function (data) {
-								blade.isLoading = false
-							});
-						});
-					}
-				});
-
-			}
-			else {
-				blade.isLoading = false;
-			}
+			blade.isLoading = false;
 		});
 	}
 
@@ -52,7 +30,7 @@
 			title: 'Edit ' + data.name + ' list',
 			subtitle: 'Link list edit',
 			controller: 'menuLinkListController',
-			template: 'Modules/CMS/VirtoCommerce.MenuModule.Web/Scripts/blades/menu-link-list.tpl.html'
+			template: 'Modules/$(VirtoCommerce.Menu)/Scripts/blades/menu-link-list.tpl.html'
 		};
 		bladeNavigationService.showBlade(newBlade, blade);
 	}
@@ -68,7 +46,7 @@
 			title: 'Add new list',
 			subtitle: 'Create new list',
 			controller: 'menuLinkListController',
-			template: 'Modules/CMS/VirtoCommerce.MenuModule.Web/Scripts/blades/menu-link-list.tpl.html'
+			template: 'Modules/$(VirtoCommerce.Menu)/Scripts/blades/menu-link-list.tpl.html'
 		};
 		bladeNavigationService.showBlade(newBlade, $scope.blade);
 	}
