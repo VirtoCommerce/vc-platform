@@ -54,8 +54,9 @@ namespace VirtoCommerce.StoreModule.Data.Converters
 				throw new ArgumentNullException("target");
 
 			var patchInjectionPolicy = new PatchInjection<foundationModel.StoreSetting>(x => x.BooleanValue, x => x.DateTimeValue,
-																					   x => x.DecimalValue, x => x.IntegerValue, 
-																					   x => x.Locale, x => x.LongTextValue, x=>x.ValueType);
+																					   x => x.DecimalValue, x => x.IntegerValue,
+																					   x => x.Locale, x => x.LongTextValue, x => x.ShortTextValue,
+																					   x => x.ValueType);
 			target.InjectFrom(patchInjectionPolicy, source);
 
 		}

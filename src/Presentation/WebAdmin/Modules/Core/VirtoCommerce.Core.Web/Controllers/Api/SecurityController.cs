@@ -126,6 +126,7 @@ namespace VirtoCommerce.SecurityModule.Web.Controllers
 
         #endregion
 
+
         [HttpPost]
         [Route("users/delete")]
         public async Task<IHttpActionResult> DeleteAsync(string userId)
