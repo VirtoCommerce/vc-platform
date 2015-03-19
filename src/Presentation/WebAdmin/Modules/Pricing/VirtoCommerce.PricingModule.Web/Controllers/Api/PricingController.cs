@@ -35,6 +35,32 @@ namespace VirtoCommerce.PricingModule.Web.Controllers.Api
 			return retVal;
 		}
 
+		// GET: api/pricing/pricelists
+		[HttpGet]
+		[ResponseType(typeof(webModel.Pricelist[]))]
+		[Route("api/pricing/pricelists")]
+		public IHttpActionResult GetPriceLists()
+		{
+			var priceLists = _pricingService.GetPriceLists();
+			var retVal = Ok(priceLists.Select(x=>x.ToWebModel()).ToArray());
+			return retVal;
+		}
+
+		// GET: api/pricing/pricelists/id
+		[HttpGet]
+		[ResponseType(typeof(webModel.Pricelist))]
+		[Route("api/pricing/pricelists/{id}")]
+		public IHttpActionResult GetPriceListById(string id)
+		{
+			IHttpActionResult retVal = NotFound();
+			var result = _pricingService.GetPricelistById(id);
+			if (result != null)
+			{
+				retVal = Ok(result);
+			}
+			return retVal;
+		}
+
 		// GET: api/catalog/products/{productId}/pricelists
 		[HttpGet]
 		[ResponseType(typeof(webModel.Pricelist[]))]
@@ -54,6 +80,26 @@ namespace VirtoCommerce.PricingModule.Web.Controllers.Api
 			return retVal;
 		}
 
+
+		// POST: api/pricing/pricelists
+		[HttpPost]
+		[ResponseType(typeof(webModel.Pricelist))]
+		[Route("api/pricing/pricelists")]
+		public IHttpActionResult CreatePriceList(webModel.Pricelist priceList)
+		{
+			var retVal = _pricingService.CreatePricelist(priceList.ToCoreModel());
+			return Ok(retVal);
+		}
+
+		// POST: api/pricing/pricelists
+		[HttpPost]
+		[ResponseType(typeof(webModel.Pricelist))]
+		[Route("api/pricing/pricelists")]
+		public IHttpActionResult UpdatePriceList(webModel.Pricelist priceList)
+		{
+			_pricingService.UpdatePricelists(new coreModel.Pricelist[] {  priceList.ToCoreModel() });
+			return StatusCode(HttpStatusCode.NoContent);
+		}
 
 		// PUT: api/catalog/products/123/pricelists
 		[HttpPut]
@@ -78,6 +124,15 @@ namespace VirtoCommerce.PricingModule.Web.Controllers.Api
 			return StatusCode(HttpStatusCode.NoContent);
 		}
 
-
+		
+		// DELETE: /api/pricing/pricelists?ids=21
+		[HttpDelete]
+		[ResponseType(typeof(void))]
+		[Route("")]
+		public IHttpActionResult Delete([FromUri] string[] ids)
+		{
+			_pricingService.DeletePricelists(ids);
+			return StatusCode(HttpStatusCode.NoContent);
+		}
 	}
 }
