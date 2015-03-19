@@ -15,7 +15,7 @@ namespace VirtoCommerce.CartModule.Web.Converters
 		{
 			var retVal = new webModel.Address();
 			retVal.InjectFrom(address);
-
+			retVal.Type = address.AddressType;
 			return retVal;
 		}
 
@@ -23,6 +23,7 @@ namespace VirtoCommerce.CartModule.Web.Converters
 		{
 			var retVal = new coreModel.Address();
 			retVal.InjectFrom(address);
+			retVal.AddressType = address.Type;
 			return retVal;
 		}
 
