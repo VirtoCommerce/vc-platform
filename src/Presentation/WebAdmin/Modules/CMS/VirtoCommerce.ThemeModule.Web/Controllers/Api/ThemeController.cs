@@ -1,6 +1,7 @@
 ﻿#region
 using System;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -12,6 +13,7 @@ using VirtoCommerce.Content.Data.Services;
 using VirtoCommerce.Content.Data.Utility;
 using VirtoCommerce.Foundation.Assets.Repositories;
 using VirtoCommerce.Framework.Web.Asset;
+using VirtoCommerce.Framework.Web.Common;
 using VirtoCommerce.Framework.Web.Settings;
 using VirtoCommerce.ThemeModule.Web.Converters;
 using VirtoCommerce.ThemeModule.Web.Models;
@@ -77,7 +79,7 @@ namespace VirtoCommerce.ThemeModule.Web.Controllers.Api
 		{
 			var items = await this._themeService.GetThemeAssets(storeId, themeId, criteria.ToCoreModel());
 
-			return this.Ok(items.OrderBy(x=>x.Updated).Select(s => s.ToWebModel()).ToArray());
+			return this.Ok(items.OrderBy(x => x.Updated).Select(s => s.ToWebModel()).ToArray());
 		}
 
 		[HttpGet]
@@ -92,6 +94,7 @@ namespace VirtoCommerce.ThemeModule.Web.Controllers.Api
 
 		[HttpGet]
 		[ResponseType(typeof(Theme[]))]
+        [ClientCache(Duration = 30)]
 		[Route("themes")]
 		public async Task<IHttpActionResult> GetThemes(string storeId)
 		{
@@ -119,6 +122,31 @@ namespace VirtoCommerce.ThemeModule.Web.Controllers.Api
 		{
 			await this._themeService.DeleteThemeAssets(storeId, themeId, assetIds);
 			return this.Ok();
+		}
+
+		[HttpPost]
+		[Route("themes/file")]
+		public async Task<IHttpActionResult> UploadThemeFile(string storeId)
+		{
+			if (!Request.Content.IsMimeMultipartContent())
+			{
+				throw new HttpResponseException(HttpStatusCode.UnsupportedMediaType);
+			}
+
+			var provider = new MultipartFileStreamProvider(_pathForMultipart);
+
+			await Request.Content.ReadAsMultipartAsync(provider);
+
+			foreach (var file in provider.FileData)
+			{
+				using (ZipArchive archive = ZipFile.OpenRead(file.LocalFileName))
+				{
+					var fileName = Path.GetFileNameWithoutExtension(file.Headers.ContentDisposition.FileName.Replace("\"", string.Empty));
+					await _themeService.UploadTheme(storeId, fileName, archive);
+				}
+			}
+
+			return Ok();
 		}
 
 		[HttpPost]

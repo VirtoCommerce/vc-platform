@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.IO.Compression;
 using System.Threading.Tasks;
 using VirtoCommerce.Content.Data.Models;
 
@@ -13,5 +14,7 @@ namespace VirtoCommerce.Content.Data.Services
 
 		Task SaveThemeAsset(string storeId, string themeId, ThemeAsset asset);
 		Task DeleteThemeAssets(string storeId, string themeId, params string[] assetKey);
+
+		Task UploadTheme(string storeId, string themeName, ZipArchive archive);
 	}
 }

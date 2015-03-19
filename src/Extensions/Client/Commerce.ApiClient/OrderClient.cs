@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Net.Http;
 using System.Threading.Tasks;
+using VirtoCommerce.ApiClient.DataContracts.Cart;
 using VirtoCommerce.ApiClient.DataContracts.Orders;
 using VirtoCommerce.ApiClient.Utilities;
 
@@ -52,8 +53,17 @@ namespace VirtoCommerce.ApiClient
             };
 
             return GetAsync<OrderSearchResult>(
-                CreateRequestUri(RelativePaths.GetMultipleOrders, parameters),               
+                CreateRequestUri(RelativePaths.GetMultipleOrders, parameters),
                 useCache: false);
+        }
+
+        public Task<CustomerOrder> CreateOrderAsync(string cartId)
+        {
+            var order = new CustomerOrder();
+
+            return SendAsync<CustomerOrder>(
+                CreateRequestUri(string.Format(RelativePaths.PostOrder, cartId)),
+                HttpMethod.Post);
         }
 
         #endregion
@@ -64,6 +74,7 @@ namespace VirtoCommerce.ApiClient
 
             public const string GetMultipleOrders = "order/customerOrders";
             public const string GetSingleOrder = "order/customerOrders/{0}";
+            public const string PostOrder = "order/customerOrders/{0}";
 
             #endregion
         }
