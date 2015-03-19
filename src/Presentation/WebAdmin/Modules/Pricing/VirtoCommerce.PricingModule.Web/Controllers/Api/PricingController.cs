@@ -128,8 +128,8 @@ namespace VirtoCommerce.PricingModule.Web.Controllers.Api
 		// DELETE: /api/pricing/pricelists?ids=21
 		[HttpDelete]
 		[ResponseType(typeof(void))]
-		[Route("")]
-		public IHttpActionResult Delete([FromUri] string[] ids)
+		[Route("api/pricing/pricelists")]
+		public IHttpActionResult DeletePriceLists([FromUri] string[] ids)
 		{
 			_pricingService.DeletePricelists(ids);
 			return StatusCode(HttpStatusCode.NoContent);
