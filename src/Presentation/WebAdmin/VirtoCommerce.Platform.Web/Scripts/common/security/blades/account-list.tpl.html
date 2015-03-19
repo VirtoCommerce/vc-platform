@@ -1,0 +1,50 @@
+﻿<div class="blade-static">
+    <div class="form-group">
+        <div class="form-input __search">
+            <input type="text" placeholder="Quick search" ng-model="filter.searchKeyword" ui-keyup="{'enter':'doQuickSearch()'}">
+        </div>
+        <p class="form-count">Count: <span class="count">{{totalItems}}</span></p>
+    </div>
+</div>
+<div class="blade-content __medium-wide">
+    <div class="blade-inner">
+        <div class="inner-block">
+            <div class="table-wrapper">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th class="table-col">
+                                <label class="form-control __checkbox">
+                                    <input type="checkbox" ng-model="blade.selectedAll" ng-change="checkAll(selectedAll)" />
+                                    <span class="check"></span>
+                                </label>
+                            </th>
+                            <th class="table-col">Name</th>
+                            <th class="table-col">Role</th>
+                            <th class="table-col">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="table-item" ng-repeat="data in blade.currentEntities track by data.id" ng-class="{'__selected': data.id === selectedNodeId}" ng-click='selectNode(data)'>
+                            <td class="table-col __product-control">
+                                <label class="form-control __checkbox">
+                                    <input type="checkbox" ng-model="data.selected">
+                                    <span class="check"></span>
+                                </label>
+                            </td>
+                            <td class="table-col">
+                                <span class="table-t">{{data.name}}</span>
+                            </td>
+                            <td class="table-col __product-code">
+                                <span>{{data.role}}</span>
+                            </td>
+                            <td class="table-col __product-code">
+                                <span>{{data.status}}</span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

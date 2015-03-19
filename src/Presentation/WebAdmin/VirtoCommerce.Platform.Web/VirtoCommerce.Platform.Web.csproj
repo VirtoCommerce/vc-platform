@@ -444,6 +444,11 @@
     <Content Include="Scripts\angular.min.js.map" />
     <Content Include="Scripts\angular-animate.min.js.map" />
     <Content Include="Scripts\angular-route.min.js.map" />
+    <Content Include="Scripts\common\security\blades\account-detail.js" />
+    <Content Include="Scripts\common\security\blades\account-detail.tpl.html" />
+    <Content Include="Scripts\common\security\blades\account-list.js" />
+    <Content Include="Scripts\common\security\blades\account-list.tpl.html" />
+    <Content Include="Scripts\common\security\resources\account.js" />
     <Content Include="Scripts\errors.json" />
     <Content Include="Scripts\angular-touch.min.js.map" />
     <Content Include="Scripts\angular-messages.min.js.map" />

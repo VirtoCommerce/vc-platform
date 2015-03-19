@@ -34,7 +34,7 @@ angular.module(moduleName, [
   ['$rootScope', 'mainMenuService', 'widgetService', '$state', function ($rootScope, mainMenuService, widgetService, $state) {
       //Register module in main menu
       var menuItem = {
-          path: 'browse/catalog',
+          path: 'browse/packaging',
           icon: 'fa fa-cubes',
           title: 'Modules',
           priority: 200,
