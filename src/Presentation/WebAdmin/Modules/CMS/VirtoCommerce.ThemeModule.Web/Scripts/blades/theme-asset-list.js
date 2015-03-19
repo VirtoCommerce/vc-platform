@@ -1,9 +1,10 @@
 ﻿angular.module('virtoCommerce.content.themeModule.blades.themeAssetList', [
     'virtoCommerce.content.themeModule.resources.themes',
+	'virtoCommerce.content.themeModule.resources.themesStores',
 	'virtoCommerce.content.themeModule.blades.editAsset',
 	'virtoCommerce.content.themeModule.blades.editImageAsset'
 ])
-.controller('themeAssetListController', ['$scope', 'themes', 'bladeNavigationService', function ($scope, themes, bladeNavigationService) {
+.controller('themeAssetListController', ['$scope', 'themes', 'themesStores', 'bladeNavigationService', function ($scope, themes, themesStores, bladeNavigationService) {
 	var blade = $scope.blade;
 
 	$scope.selectedFolderId = undefined;
@@ -12,8 +13,11 @@
 	blade.refresh = function () {
 		blade.isLoading = true;
 		themes.getAssets({ storeId: blade.choosenStoreId, themeId: blade.choosenThemeId }, function (data) {
-			blade.isLoading = false;
 			blade.currentEntities = data;
+			themesStores.get({ id: blade.choosenStoreId }, function (data) {
+				blade.store = data;
+				blade.isLoading = false;
+			});
 		});
 	}
 
@@ -53,6 +57,24 @@
 			default:
 				return 'fa-file';
 		}
+	}
+
+	blade.setThemeAsActive = function () {
+		blade.isLoading = true;
+		if (_.where(blade.store.settings, { name: "DefaultThemeName" }).length > 0) {
+			angular.forEach(blade.store.settings, function (value, key) {
+				if (value.name === "DefaultThemeName") {
+					value.value = blade.choosenThemeId;
+				}
+			});
+		}
+		else {
+			blade.store.settings.push({ name: "DefaultThemeName", value: blade.choosenThemeId, valueType: "ShortText" })
+		}
+
+		themesStores.update({ storeId: blade.choosenStoreId }, blade.store, function (data) {
+			blade.isLoading = false;
+		});
 	}
 
 	blade.openBlade = function (asset) {
@@ -155,7 +177,16 @@
 
     $scope.bladeHeadIco = 'fa fa-archive';
 
-	$scope.bladeToolbarCommands = [
+    $scope.bladeToolbarCommands = [
+		{
+			name: "Set Active", icon: 'fa fa-pencil-square-o',
+			executeMethod: function () {
+				blade.setThemeAsActive();
+			},
+			canExecuteMethod: function () {
+				return !angular.isUndefined(blade.choosenThemeId);
+			}
+		},
         {
         	name: "Refresh", icon: 'fa fa-refresh',
         	executeMethod: function () {

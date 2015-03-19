@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Hosting;
@@ -69,7 +71,7 @@ namespace VirtoCommerce.Content.Data.Services
 			item.Path = FixPath(GetThemePath(storeId, themeId), item.Path);
 			item.ContentType = ContentTypeUtility.GetContentType(item.Name, item.ByteContent);
 
-            return item.AsThemeAsset();
+			return item.AsThemeAsset();
 		}
 
 		public async Task SaveThemeAsset(string storeId, string themeId, Models.ThemeAsset asset)
@@ -115,5 +117,47 @@ namespace VirtoCommerce.Content.Data.Services
 			return path.Replace(themePath, string.Empty).Trim('/');
 		}
 
+		private static byte[] ReadFully(Stream input)
+		{
+			byte[] buffer = new byte[16 * 1024];
+			using (MemoryStream ms = new MemoryStream())
+			{
+				int read;
+				while ((read = input.Read(buffer, 0, buffer.Length)) > 0)
+				{
+					ms.Write(buffer, 0, read);
+				}
+				return ms.ToArray();
+			}
+		}
+
+		private bool IsFolder(ZipArchiveEntry entry)
+		{
+			return entry.FullName.EndsWith("/");
+		}
+
+		public async Task UploadTheme(string storeId, string themeName, System.IO.Compression.ZipArchive archive)
+		{
+			foreach (ZipArchiveEntry entry in archive.Entries)
+			{
+				if (!IsFolder(entry))
+				{
+					using (var stream = entry.Open())
+					{
+						var asset = new ThemeAsset
+						{
+							AssetName = entry.FullName,
+							Id = entry.FullName
+						};
+
+						var arr = ReadFully(stream);
+						asset.ByteContent = arr;
+						asset.ContentType = ContentTypeUtility.GetContentType(entry.FullName, arr);
+
+						await SaveThemeAsset(storeId, themeName, asset);
+					}
+				}
+			}
+		}
 	}
 }

@@ -1,6 +1,6 @@
 ﻿angular.module('virtoCommerce.content.themeModule.blades.editImageAsset', [
 	'virtoCommerce.content.themeModule.resources.themes',
-	'angularFileUpload',
+	'angularFileUpload'
 ]).controller('editImageAssetController', ['$scope', 'dialogService', 'themes', 'FileUploader', function ($scope, dialogService, themes, FileUploader) {
 	var blade = $scope.blade;
 
@@ -128,7 +128,7 @@
 		var uploader = $scope.uploader = new FileUploader({
 			scope: $scope,
 			headers: { Accept: 'application/json' },
-			url: 'api/cms/Apple/themes/Simple/assets/file/assets',
+			url: 'api/cms/Apple/themes/' + blade.choosenStoreId + '/assets/file/assets',
 			autoUpload: true,
 			removeAfterUpload: true
 		});

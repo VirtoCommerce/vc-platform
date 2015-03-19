@@ -1,4 +1,5 @@
-﻿using VirtoCommerce.Content.Data.Models;
+﻿using System.IO;
+using VirtoCommerce.Content.Data.Models;
 
 namespace VirtoCommerce.Content.Data.Converters
 {
@@ -19,7 +20,7 @@ namespace VirtoCommerce.Content.Data.Converters
 
 		public static ContentItem AsContentItem(this ThemeAsset asset)
 		{
-			var retVal = new ContentItem { Path = asset.Id, ByteContent = asset.ByteContent, ContentType = asset.ContentType };
+			var retVal = new ContentItem { Path = asset.Id, ByteContent = asset.ByteContent, ContentType = asset.ContentType, Name = Path.GetFileName(asset.AssetName) };
 
 		    return retVal;
 		}
