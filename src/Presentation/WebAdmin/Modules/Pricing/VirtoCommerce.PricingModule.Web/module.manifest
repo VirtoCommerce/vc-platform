@@ -18,7 +18,7 @@
   <iconUrl>http://nuget.org/Content/Images/packageDefaultIcon-50x50.png</iconUrl>
   <releaseNotes>First version.</releaseNotes>
   <copyright>Copyright © 2011-2015 Virto Commerce. All rights reserved</copyright>
-  <tags>order system</tags>
+  <tags>price pricelist merchandise</tags>
 
   <assemblyFile>VirtoCommerce.PricingModule.Web.dll</assemblyFile>
   <moduleType>VirtoCommerce.PricingModule.Web.Module, VirtoCommerce.PricingModule.Web</moduleType>

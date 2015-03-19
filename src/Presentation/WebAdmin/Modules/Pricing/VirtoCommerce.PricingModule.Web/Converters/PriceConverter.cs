@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Omu.ValueInjecter;
-using VirtoCommerce.Foundation.Money;
+﻿using Omu.ValueInjecter;
 using coreModel = VirtoCommerce.Domain.Pricing.Model;
 using webModel = VirtoCommerce.PricingModule.Web.Model;
 

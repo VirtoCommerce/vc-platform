@@ -3,7 +3,6 @@ using System.Linq;
 using System.Net;
 using System.Web.Http;
 using System.Web.Http.Description;
-using VirtoCommerce.Domain.Catalog.Services;
 using VirtoCommerce.Domain.Pricing.Services;
 using VirtoCommerce.PricingModule.Web.Converters;
 using webModel = VirtoCommerce.PricingModule.Web.Model;

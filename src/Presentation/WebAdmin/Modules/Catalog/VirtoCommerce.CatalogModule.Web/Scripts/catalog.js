@@ -39,7 +39,7 @@ angular.module(catalogsModuleName, [
           path: 'browse/catalog',
           icon: 'fa fa-folder',
           title: 'Catalog',
-          priority: 90,
+          priority: 20,
           action: function () { $state.go('workspace.catalog') },
           permission: 'catalogMenuPermission'
       };
