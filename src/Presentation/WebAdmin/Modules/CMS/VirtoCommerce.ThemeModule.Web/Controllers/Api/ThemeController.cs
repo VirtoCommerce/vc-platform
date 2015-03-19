@@ -13,6 +13,7 @@ using VirtoCommerce.Content.Data.Services;
 using VirtoCommerce.Content.Data.Utility;
 using VirtoCommerce.Foundation.Assets.Repositories;
 using VirtoCommerce.Framework.Web.Asset;
+using VirtoCommerce.Framework.Web.Common;
 using VirtoCommerce.Framework.Web.Settings;
 using VirtoCommerce.ThemeModule.Web.Converters;
 using VirtoCommerce.ThemeModule.Web.Models;
@@ -93,6 +94,7 @@ namespace VirtoCommerce.ThemeModule.Web.Controllers.Api
 
 		[HttpGet]
 		[ResponseType(typeof(Theme[]))]
+        [ClientCache(Duration = 30)]
 		[Route("themes")]
 		public async Task<IHttpActionResult> GetThemes(string storeId)
 		{

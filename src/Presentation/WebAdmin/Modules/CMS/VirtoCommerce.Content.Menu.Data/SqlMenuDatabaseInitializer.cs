@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using VirtoCommerce.Content.Menu.Data.Models;
 using VirtoCommerce.Content.Menu.Data.Repositories;
 using VirtoCommerce.Foundation.Data.Infrastructure;
@@ -27,7 +23,7 @@ namespace VirtoCommerce.Content.Menu.Data
 			{
 				Id = Guid.NewGuid().ToString(),
 				Language = "en-US",
-				Name = "Footer",
+				Name = "footer",
 				StoreId = storeId,
 				CreatedDate = DateTime.UtcNow,
 				CreatedBy = "initialize"
@@ -53,8 +49,8 @@ namespace VirtoCommerce.Content.Menu.Data
 				IsActive = true,
 				MenuLinkListId = footerList.Id,
 				Priority = 20,
-				Title = "Delivery & Returns",
-				Url = "http://demo.virtocommerce.com/#",
+				Title = "Search",
+				Url = "~/search",
 				CreatedDate = DateTime.UtcNow,
 				CreatedBy = "initialize"
 			});
@@ -66,7 +62,7 @@ namespace VirtoCommerce.Content.Menu.Data
 				MenuLinkListId = footerList.Id,
 				Priority = 10,
 				Title = "Terms & Conditions",
-				Url = "http://virtocommerce.com/enterprise-edition",
+				Url = "#",
 				CreatedDate = DateTime.UtcNow,
 				CreatedBy = "initialize"
 			});
@@ -78,158 +74,121 @@ namespace VirtoCommerce.Content.Menu.Data
 				MenuLinkListId = footerList.Id,
 				Priority = 0,
 				Title = "Contact Us",
-				Url = "http://virtocommerce.com/contact-us",
+				Url = "#",
 				CreatedDate = DateTime.UtcNow,
 				CreatedBy = "initialize"
 			});
 
 			repository.Add(footerList);
 
-			var headerList = new MenuLinkList
+			var mainMenuList = new MenuLinkList
 			{
 				Id = Guid.NewGuid().ToString(),
 				Language = "en-US",
-				Name = "Header",
+				Name = "main-menu",
 				StoreId = storeId,
 				CreatedDate = DateTime.UtcNow,
 				CreatedBy = "initialize"
 			};
 
-			headerList.MenuLinks = new Collection<MenuLink>();
-			headerList.MenuLinks.Add(new MenuLink
+			mainMenuList.MenuLinks = new Collection<MenuLink>();
+			mainMenuList.MenuLinks.Add(new MenuLink
 			{
 				Id = Guid.NewGuid().ToString(),
 				IsActive = true,
-				MenuLinkListId = headerList.Id,
+				MenuLinkListId = mainMenuList.Id,
 				Priority = 30,
-				Title = "My Account",
-				Url = "http://demo.virtocommerce.com/en-us/account",
+				Title = "Audio & MP3",
+				Url = "~/collections/audio-mp3",
 				CreatedDate = DateTime.UtcNow,
 				CreatedBy = "initialize"
 			});
 
-			headerList.MenuLinks.Add(new MenuLink
+			mainMenuList.MenuLinks.Add(new MenuLink
 			{
 				Id = Guid.NewGuid().ToString(),
 				IsActive = true,
-				MenuLinkListId = headerList.Id,
+				MenuLinkListId = mainMenuList.Id,
 				Priority = 20,
-				Title = "My Wishlist",
-				Url = "http://demo.virtocommerce.com/en-us/account/wishlist",
+				Title = "TV & Video",
+				Url = "~/collections/tv-video",
 				CreatedDate = DateTime.UtcNow,
 				CreatedBy = "initialize"
 			});
 
-			headerList.MenuLinks.Add(new MenuLink
+			mainMenuList.MenuLinks.Add(new MenuLink
 			{
 				Id = Guid.NewGuid().ToString(),
 				IsActive = true,
-				MenuLinkListId = headerList.Id,
+				MenuLinkListId = mainMenuList.Id,
 				Priority = 10,
-				Title = "My Cart",
-				Url = "http://demo.virtocommerce.com/en-us/cart",
+				Title = "Cameras",
+				Url = "~/collections/cameras",
 				CreatedDate = DateTime.UtcNow,
 				CreatedBy = "initialize"
 			});
 
-			headerList.MenuLinks.Add(new MenuLink
+			mainMenuList.MenuLinks.Add(new MenuLink
 			{
 				Id = Guid.NewGuid().ToString(),
 				IsActive = true,
-				MenuLinkListId = headerList.Id,
+				MenuLinkListId = mainMenuList.Id,
 				Priority = 0,
-				Title = "Checkout",
-				Url = "http://demo.virtocommerce.com/en-us/checkout",
+				Title = "Computers & Tablets",
+				Url = "~/collections/computers-tablets",
 				CreatedDate = DateTime.UtcNow,
 				CreatedBy = "initialize"
 			});
 
-			repository.Add(headerList);
+            mainMenuList.MenuLinks.Add(new MenuLink
+            {
+                Id = Guid.NewGuid().ToString(),
+                IsActive = true,
+                MenuLinkListId = mainMenuList.Id,
+                Priority = 0,
+                Title = "Accessories",
+                Url = "~/collections/accessories",
+                CreatedDate = DateTime.UtcNow,
+                CreatedBy = "initialize"
+            });
 
-			var accountList = new MenuLinkList
-			{
-				Id = Guid.NewGuid().ToString(),
-				Language = "en-US",
-				Name = "My Account",
-				StoreId = storeId,
-				CreatedDate = DateTime.UtcNow,
-				CreatedBy = "initialize"
-			};
+			repository.Add(mainMenuList);
 
-			accountList.MenuLinks = new Collection<MenuLink>();
-			accountList.MenuLinks.Add(new MenuLink
-			{
-				Id = Guid.NewGuid().ToString(),
-				IsActive = true,
-				MenuLinkListId = accountList.Id,
-				Priority = 50,
-				Title = "Account Dashboard",
-				Url = "http://demo.virtocommerce.com/en-us/account",
-				CreatedDate = DateTime.UtcNow,
-				CreatedBy = "initialize"
-			});
+            var audioMP3List = new MenuLinkList
+            {
+                Id = Guid.NewGuid().ToString(),
+                Language = "en-US",
+                Name = "Audio & MP3",
+                StoreId = storeId,
+                CreatedDate = DateTime.UtcNow,
+                CreatedBy = "initialize"
+            };
 
-			accountList.MenuLinks.Add(new MenuLink
-			{
-				Id = Guid.NewGuid().ToString(),
-				IsActive = true,
-				MenuLinkListId = accountList.Id,
-				Priority = 40,
-				Title = "Account Information",
-				Url = "http://demo.virtocommerce.com/en-us/account/edit",
-				CreatedDate = DateTime.UtcNow,
-				CreatedBy = "initialize"
-			});
+            audioMP3List.MenuLinks.Add(new MenuLink
+            {
+                Id = Guid.NewGuid().ToString(),
+                IsActive = true,
+                MenuLinkListId = audioMP3List.Id,
+                Priority = 0,
+                Title = "Apple iPod",
+                Url = "~/collections/audio-mp3/brand_Apple",
+                CreatedDate = DateTime.UtcNow,
+                CreatedBy = "initialize"
+            });
 
-			accountList.MenuLinks.Add(new MenuLink
-			{
-				Id = Guid.NewGuid().ToString(),
-				IsActive = true,
-				MenuLinkListId = accountList.Id,
-				Priority = 30,
-				Title = "Address Book",
-				Url = "http://demo.virtocommerce.com/en-us/account/addressbook",
-				CreatedDate = DateTime.UtcNow,
-				CreatedBy = "initialize"
-			});
+            audioMP3List.MenuLinks.Add(new MenuLink
+            {
+                Id = Guid.NewGuid().ToString(),
+                IsActive = true,
+                MenuLinkListId = audioMP3List.Id,
+                Priority = 0,
+                Title = "Sony Walkman",
+                Url = "~/collections/audio-mp3/brand_Sony",
+                CreatedDate = DateTime.UtcNow,
+                CreatedBy = "initialize"
+            });
 
-			accountList.MenuLinks.Add(new MenuLink
-			{
-				Id = Guid.NewGuid().ToString(),
-				IsActive = true,
-				MenuLinkListId = accountList.Id,
-				Priority = 20,
-				Title = "My Orders",
-				Url = "http://demo.virtocommerce.com/en-us/account/orders",
-				CreatedDate = DateTime.UtcNow,
-				CreatedBy = "initialize"
-			});
-
-			accountList.MenuLinks.Add(new MenuLink
-			{
-				Id = Guid.NewGuid().ToString(),
-				IsActive = true,
-				MenuLinkListId = accountList.Id,
-				Priority = 10,
-				Title = "My Wishlist",
-				Url = "http://demo.virtocommerce.com/en-us/account/wishlist",
-				CreatedDate = DateTime.UtcNow,
-				CreatedBy = "initialize"
-			});
-
-			accountList.MenuLinks.Add(new MenuLink
-			{
-				Id = Guid.NewGuid().ToString(),
-				IsActive = true,
-				MenuLinkListId = accountList.Id,
-				Priority = 0,
-				Title = "My Returns",
-				Url = "http://demo.virtocommerce.com/en-us/account/rmareturns",
-				CreatedDate = DateTime.UtcNow,
-				CreatedBy = "initialize"
-			});
-
-			repository.Add(accountList);
+            repository.Add(audioMP3List);
 
 			repository.UnitOfWork.Commit();
 		}
