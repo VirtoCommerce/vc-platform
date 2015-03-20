@@ -10,7 +10,6 @@ namespace VirtoCommerce.CoreModule.Web.Security
 {
     public interface IFoundationSecurityRepository : ISecurityRepository
     {
-        Account[] GetAccounts();
-        Account GetAccount(string userName);
+         Account GetAccountByName(string userName);
     }
 }

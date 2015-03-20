@@ -27,14 +27,12 @@ namespace VirtoCommerce.CoreModule.Web.Security
 		{
 		}
 
-        public Account[] GetAccounts()
-        {
-            return Accounts.Include("RoleAssignments.Role.RolePermissions.Permission").ToArray();
-        }
 
-        public Account GetAccount(string userName)
+	   public Account GetAccountByName(string userName)
         {
-            return Accounts.Include("RoleAssignments.Role.RolePermissions.Permission").FirstOrDefault(x => x.UserName == userName);
+            return Accounts.Include(x=>x.RoleAssignments.Select(y=>y.Role.RolePermissions.Select(z=>z.Permission)))
+						   .Include(x=>x.ApiAccounts)
+						   .FirstOrDefault(x => x.UserName == userName);
         }
     }
 }

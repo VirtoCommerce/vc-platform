@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Web;
 using System.Web.Hosting;
 using Microsoft.Practices.Unity;
 using Owin;
+using Microsoft.AspNet.Identity.Owin;
 using VirtoCommerce.Caching.HttpCache;
 using VirtoCommerce.CoreModule.Web.Controllers.Api;
 using VirtoCommerce.CoreModule.Web.Notification;
@@ -23,6 +25,8 @@ using VirtoCommerce.Framework.Web.Modularity;
 using VirtoCommerce.Framework.Web.Notification;
 using VirtoCommerce.Framework.Web.Security;
 using VirtoCommerce.Framework.Web.Settings;
+using VirtoCommerce.SecurityModule.Web.Controllers;
+using Microsoft.Owin.Security;
 
 namespace VirtoCommerce.CoreModule.Web
 {
@@ -141,27 +145,26 @@ namespace VirtoCommerce.CoreModule.Web
             #endregion
 
             #region Security
+			var foundationSecurityRepositoryFactory = new Func<IFoundationSecurityRepository>(() => new FoundationSecurityRepositoryImpl(_connectionStringName));
+			_container.RegisterType<Func<IFoundationSecurityRepository>>(
+				new InjectionFactory(x => foundationSecurityRepositoryFactory));
 
-            _container.RegisterType<Func<IFoundationSecurityRepository>>(
-                new InjectionFactory(x => new Func<IFoundationSecurityRepository>(() => new FoundationSecurityRepositoryImpl(_connectionStringName))));
+			var securityRepositoryFactory = new Func<ISecurityRepository>(() => new EFSecurityRepository(_connectionStringName));
+			_container.RegisterType<Func<ISecurityRepository>>(new InjectionFactory(x => securityRepositoryFactory));
 
-            _container.RegisterType<Func<ISecurityRepository>>(
-                new InjectionFactory(x => new Func<ISecurityRepository>(() => new EFSecurityRepository(_connectionStringName))));
+			_container.RegisterType<IPermissionService, PermissionService>(new ContainerControlledLifetimeManager());
 
-            _container.RegisterType<IPermissionService, PermissionService>(new ContainerControlledLifetimeManager());
+			_container.RegisterType<IApiAccountProvider, ApiAccountProvider>(new ContainerControlledLifetimeManager());
+			_container.RegisterType<IClaimsIdentityProvider, ApplicationClaimsIdentityProvider>(new ContainerControlledLifetimeManager());
 
-            _container.RegisterType<IApiAccountProvider, ApiAccountProvider>(new ContainerControlledLifetimeManager());
-            _container.RegisterType<IClaimsIdentityProvider, ApplicationClaimsIdentityProvider>(new ContainerControlledLifetimeManager());
-            #endregion
+			Func<ApplicationSignInManager> signInApplication = () => HttpContext.Current.GetOwinContext().Get<ApplicationSignInManager>();
+			Func<ApplicationUserManager> userManager = () => HttpContext.Current.GetOwinContext().GetUserManager<ApplicationUserManager>();
+			Func<IAuthenticationManager> auth = () => HttpContext.Current.GetOwinContext().Authentication;
+			_container.RegisterType<SecurityController>(new InjectionConstructor(foundationSecurityRepositoryFactory, signInApplication, userManager, auth));
 
-            #region Customer
+			#endregion
 
-            _container.RegisterType<Func<IFoundationCustomerRepository>>(
-                new InjectionFactory(x => new Func<IFoundationCustomerRepository>(() =>
-                    new FoundationCustomerRepositoryImpl(_connectionStringName))));
-
-            #endregion
-
+         
             #region Payment gateways manager
             _container.RegisterInstance<IPaymentGatewayManager>(new InMemoryPaymentGatewayManagerImpl());
             #endregion

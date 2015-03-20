@@ -1,6 +1,4 @@
-﻿angular.module('catalogModule.wizards.associationWizard.associationGroup', [
-    'catalogModule.wizards.associationWizard.associationGroupNew'
-])
+﻿angular.module('virtoCommerce.catalogModule')
 .controller('associationGroupSelectController', ['$scope', 'bladeNavigationService', function ($scope, bladeNavigationService) {
     $scope.blade.refresh = function () {
         $scope.selectedId = $scope.blade.parentBlade.groupName;

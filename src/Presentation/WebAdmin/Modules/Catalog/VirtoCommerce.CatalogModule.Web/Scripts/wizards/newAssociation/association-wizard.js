@@ -1,6 +1,4 @@
-﻿angular.module('catalogModule.wizards.associationWizard', [
-'catalogModule.wizards.associationWizard.associationGroup'
-])
+﻿angular.module('virtoCommerce.catalogModule')
 .controller('associationWizardController', ['$scope', 'bladeNavigationService', 'dialogService', 'items', function ($scope, bladeNavigationService, dialogService, items) {
 
     $scope.create = function () {

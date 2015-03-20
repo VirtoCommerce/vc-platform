@@ -120,11 +120,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Binders\UserSearchCriteriaBinder.cs" />
     <Compile Include="Controllers\Api\FulfillmentController.cs" />
     <Compile Include="Controllers\Api\NotificationController.cs" />
     <Compile Include="Controllers\Api\PaymentGatewayController.cs" />
     <Compile Include="Controllers\Api\SecurityController.cs" />
     <Compile Include="Controllers\Api\SettingController.cs" />
+    <Compile Include="Converters\ApiAccountConverter.cs" />
     <Compile Include="Converters\FulfillmentCenterConverter.cs" />
     <Compile Include="Converters\PaymentGatewayConverter.cs" />
     <Compile Include="Model\FulfillmentCenter.cs" />
@@ -151,9 +153,11 @@
     <Compile Include="Security\Hmac\HmacUtility.cs" />
     <Compile Include="Security\IApiAccountProvider.cs" />
     <Compile Include="Security\IClaimsIdentityProvider.cs" />
-    <Compile Include="Security\Models\AuthInfo.cs" />
-    <Compile Include="Security\Models\UserLogin.cs" />
+    <Compile Include="Security\Models\ApiAccount.cs" />
     <Compile Include="Security\Models\ApplicationUserExtended.cs" />
+    <Compile Include="Security\Models\UserLogin.cs" />
+    <Compile Include="Security\Models\UserSearchCriteria.cs" />
+    <Compile Include="Security\Models\UserSearchResult.cs" />
     <Compile Include="Security\OwinConfig.cs" />
     <Compile Include="Security\PermissionService.cs" />
     <Compile Include="Services\FulfillmentServiceImpl.cs" />

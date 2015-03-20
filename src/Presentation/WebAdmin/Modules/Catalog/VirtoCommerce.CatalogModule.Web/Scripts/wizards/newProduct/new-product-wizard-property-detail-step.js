@@ -1,7 +1,4 @@
-﻿angular.module('catalogModule.wizards.newProductWizard.properties', [
-    'ui.bootstrap.typeahead',
-    'catalogModule.resources.properties'
-])
+﻿angular.module('virtoCommerce.catalogModule')
 .controller('newProductWizardPropertiesController', ['$scope', 'properties', 'bladeNavigationService', function ($scope, properties, bladeNavigationService) {
     $scope.blade.isLoading = false;
     $scope.blade.item = angular.copy($scope.blade.item);

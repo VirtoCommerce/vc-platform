@@ -1,4 +1,4 @@
-﻿angular.module('catalogModule.wizards.newProductWizard.reviews', [])
+﻿angular.module('virtoCommerce.catalogModule')
 .controller('newProductWizardReviewsController', ['$scope', 'bladeNavigationService', function ($scope, bladeNavigationService)
 {
     $scope.blade.isLoading = false;
