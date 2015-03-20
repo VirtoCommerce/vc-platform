@@ -1,0 +1,56 @@
+﻿<div class="blade-static __bottom" ng-include="'Modules/$(VirtoCommerce.Core)/Scripts/common/ok-cancel2.tpl.html'"></div>
+<div class="blade-content">
+    <div class="blade-inner">
+        <div class="inner-block">
+            <form class="form" name="formScope">
+                <div class="form-group" ng-init="setForm(formScope)">
+                    <label class="form-label">Assignment name</label>
+                    <div class="form-input">
+                        <input ng-model="blade.currentEntity.name" required placeholder="Enter name" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Catalog</label>
+                    <div class="form-input">
+                        <ui-select ng-model="blade.currentEntity.catalogId" required>
+                            <ui-select-match placeholder="Select...">{{$select.selected.name}}</ui-select-match>
+                            <ui-select-choices repeat="x.id as x in catalogs | filter: { name: $select.search }">
+                                <span ng-bind-html="x.name | highlight: $select.search"></span>
+                            </ui-select-choices>
+                        </ui-select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Priority</label>
+                    <div class="form-input __number">
+                        <input va-number required class="form-control" ng-model="blade.currentEntity.priority" type="text" min="1" step="1">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Description</label>
+                    <div class="form-input">
+                        <textarea class="form-control" cols="30" rows="3" ng-model="blade.currentEntity.description" placeholder="Enter description"></textarea>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Enable date (leave blank if always available)</label>
+                    <div class="form-input __calendar">
+                        <input type="text" class="form-control" ng-model="blade.currentEntity.startDate" datepicker-popup="{{format}}" is-open="datepickers.str" datepicker-options="dateOptions" close-text="Close" />
+                        <button class="btn" type="button" ng-click="open($event,'str')">
+                            <i class="btn-ico fa fa-calendar"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Expiration date (leave blank if always available)</label>
+                    <div class="form-input __calendar">
+                        <input type="text" class="form-control" ng-model="blade.currentEntity.endDate" datepicker-popup="{{format}}" is-open="datepickers.end" datepicker-options="dateOptions" close-text="Close" />
+                        <button class="btn" type="button" ng-click="open($event,'end')">
+                            <i class="btn-ico fa fa-calendar"></i>
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

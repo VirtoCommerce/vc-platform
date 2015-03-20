@@ -9,8 +9,8 @@
             currentEntity: $scope.currentBlade.currentEntity,
             title: $scope.currentBlade.title,
             subtitle: 'Manage assigned catalogs',
-            controller: 'pricelistAssignementListController',
-            template: 'Modules/$(VirtoCommerce.Pricing)/Scripts/blades/pricelist-assignement-list.tpl.html'
+            controller: 'pricelistAssignmentListController',
+            template: 'Modules/$(VirtoCommerce.Pricing)/Scripts/blades/pricelist-assignment-list.tpl.html'
         };
 
         bladeNavigationService.showBlade(blade, $scope.currentBlade);

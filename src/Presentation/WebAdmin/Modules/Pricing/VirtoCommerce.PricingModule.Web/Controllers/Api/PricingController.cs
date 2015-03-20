@@ -47,17 +47,17 @@ namespace VirtoCommerce.PricingModule.Web.Controllers.Api
 
 		// POST: api/pricing/assignments
 		[HttpPost]
-		[ResponseType(typeof(webModel.Pricelist))]
+        [ResponseType(typeof(webModel.PricelistAssignment))]
 		[Route("api/pricing/assignments")]
 		public IHttpActionResult CreatePriceList(webModel.PricelistAssignment assignment)
 		{
 			var retVal = _pricingService.CreatePriceListAssignment(assignment.ToCoreModel());
-			return Ok(retVal);
+			return Ok(retVal.ToWebModel());
 		}
 
 		// PUT: api/pricing/assignments
 		[HttpPut]
-		[ResponseType(typeof(webModel.Pricelist))]
+		[ResponseType(typeof(void))]
 		[Route("api/pricing/assignments")]
 		public IHttpActionResult UpdatePriceList(webModel.PricelistAssignment assignment)
 		{

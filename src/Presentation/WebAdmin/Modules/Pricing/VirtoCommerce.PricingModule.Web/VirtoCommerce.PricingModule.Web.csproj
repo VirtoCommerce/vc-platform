@@ -101,6 +101,10 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Scripts\blades\pricelist-assignment-detail.js" />
+    <Content Include="Scripts\blades\pricelist-assignment-detail.tpl.html" />
+    <Content Include="Scripts\blades\pricelist-assignment-list.js" />
+    <Content Include="Scripts\blades\pricelist-assignment-list.tpl.html" />
     <Content Include="Scripts\blades\pricelist-prices-list.js" />
     <Content Include="Scripts\blades\pricelist-prices-list.tpl.html" />
     <Content Include="Scripts\blades\pricelist-item-list.js" />
