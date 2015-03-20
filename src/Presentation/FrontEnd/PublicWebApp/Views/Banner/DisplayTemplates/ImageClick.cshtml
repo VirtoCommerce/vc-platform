@@ -1,9 +1,0 @@
-﻿@{
-    Layout = null;
-	var currentModel = ViewData["Model"] as ImageClickableModel;
-}
-
-@if (currentModel !=null && currentModel.TargetUrl != null) 
-{
-<a href="@Url.Content(currentModel.TargetUrl)"><img src="@Url.Content(currentModel.ImageUrl)" /></a>
-}

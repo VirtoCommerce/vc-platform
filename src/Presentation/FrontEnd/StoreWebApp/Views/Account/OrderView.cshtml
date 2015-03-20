@@ -1,6 +1,0 @@
-﻿@model VirtoCommerce.Foundation.Orders.Model.Order
-@{
-    ViewBag.PageTitle = String.Format("Order #{0} - {1}", Model.TrackingNumber, Model.Status);
-    ViewBag.Title = Html.Title(ViewBag.PageTitle as string);
-    @Html.DisplayForModel(new { View = "Default"})
-}

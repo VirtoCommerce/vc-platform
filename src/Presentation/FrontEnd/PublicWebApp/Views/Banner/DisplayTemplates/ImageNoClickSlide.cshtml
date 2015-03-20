@@ -1,8 +1,0 @@
-﻿@{
-    Layout = null;
-    var currentModel = ViewData["Model"] as ImageNonClickableModel;
-}
-@if (currentModel != null)
-{
-    <div data-src="@Url.Content(currentModel.ImageUrl)"></div>
-}

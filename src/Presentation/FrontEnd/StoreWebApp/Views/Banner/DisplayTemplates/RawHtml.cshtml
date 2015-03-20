@@ -1,8 +1,0 @@
-﻿@{
-    Layout = null;
-	var currentModel = ViewData["Model"] as RawHtmlModel;
-}
-@if (currentModel != null)
-{
-    @Html.Raw(currentModel.Html)
-}

@@ -1,9 +1,0 @@
-﻿@using System.Globalization
-@using VirtoCommerce.Web.Virto.Helpers
-
-@{
-    var currentCulture = CultureInfo.CreateSpecificCulture(UICulture);
-    var countryCode = currentCulture.Name.Substring(currentCulture.Name.IndexOf('-') + 1).ToLowerInvariant();
-}
-    <img src="~/Content/themes/default/images/blank.gif" class="flag flag-@countryCode" alt="@currentCulture.NativeName" title="@currentCulture.NativeName">
-    @UserHelper.CustomerSession.StoreName, @UserHelper.CustomerSession.Currency

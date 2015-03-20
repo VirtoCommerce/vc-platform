@@ -1,9 +1,0 @@
-﻿@model MenuHelperModel
-@using System.Web.Mvc.Html
-
-<ol>
-    @for (var i = 0; i < Model.Nodes.Count(); i++)
-    {
- @Html.DisplayFor(m => Model.Nodes[i], "SideMenuNode", new { index = i, total = Model.Nodes.Count() })
-    }
-</ol>
