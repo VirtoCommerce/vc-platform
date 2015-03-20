@@ -423,7 +423,7 @@ Function Build
         }
 
 		# set the msbuild path, vs.net 2012 is needed
-		$global:buildexe_path = (Get-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\MSBuild\ToolsVersions\4.0" -Name MSBuildToolsPath).MSBuildToolsPath
+		$global:buildexe_path = (Get-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\MSBuild\ToolsVersions\12.0" -Name MSBuildToolsPath).MSBuildToolsPath
 		Write-Host "MSBUILD 4.0 Path = $buildexe_path"
 
         write-progress -id 1 -activity "Solution Build" -status "In progress"
