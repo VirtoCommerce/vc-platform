@@ -114,10 +114,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\Api\PricingController.cs" />
+    <Compile Include="Converters\PricelistAssignmentConverter.cs" />
     <Compile Include="Converters\PriceListConverter.cs" />
     <Compile Include="Converters\PriceConverter.cs" />
     <Compile Include="Model\Price.cs" />
     <Compile Include="Model\Pricelist.cs" />
+    <Compile Include="Model\PricelistAssignment.cs" />
     <Compile Include="Module.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

@@ -139,6 +139,7 @@
     <Compile Include="Pricing\Model\Price.cs" />
     <Compile Include="Pricing\Model\PriceEvaluationContext.cs" />
     <Compile Include="Pricing\Model\Pricelist.cs" />
+    <Compile Include="Pricing\Model\PricelistAssignment.cs" />
     <Compile Include="Pricing\Services\IPricingService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Store\Model\FulfillmentCenter.cs" />

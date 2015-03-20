@@ -11,5 +11,7 @@ namespace VirtoCommerce.PricingModule.Data.Repositories
 	{
 		foundation.Price GetPriceById(string priceId);
 		foundation.Pricelist GetPricelistById(string priceListId);
+		foundation.PricelistAssignment GetPricelistAssignmentById(string assignmentId);
+		foundation.PricelistAssignment[] GetAllPricelistAssignments(string pricelistId);
 	}
 }

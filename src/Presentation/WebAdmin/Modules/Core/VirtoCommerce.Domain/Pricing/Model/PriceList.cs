@@ -23,6 +23,6 @@ namespace VirtoCommerce.Domain.Pricing.Model
 		public string Description { get; set; }
 		public CurrencyCodes Currency { get; set; }
 		public ICollection<Price> Prices { get; set; }
-
+		public ICollection<PricelistAssignment> Assignments { get; set; }
 	}
 }
