@@ -20,6 +20,61 @@ namespace VirtoCommerce.PricingModule.Web.Controllers.Api
 			_pricingService = pricingService;
 		}
 
+		// GET: api/pricing/assignments/id
+		[HttpGet]
+		[ResponseType(typeof(webModel.PricelistAssignment))]
+		[Route("api/pricing/assignments/{id}")]
+		public IHttpActionResult GetPricelistAssignmentById(string id)
+		{
+			var assignment = _pricingService.GetPricelistAssignmentById(id);
+			if(assignment == null)
+			{
+				return NotFound();
+			}
+			return Ok(assignment.ToWebModel());
+		}
+
+		// GET: api/pricing/assignments
+		[HttpGet]
+		[ResponseType(typeof(webModel.PricelistAssignment[]))]
+		[Route("api/pricing/assignments")]
+		public IHttpActionResult GetPricelistAssignments()
+		{
+			var assignments = _pricingService.GetPriceListAssignments();
+			var retVal = Ok(assignments.Select(x => x.ToWebModel()).ToArray());
+			return retVal;
+		}
+
+		// POST: api/pricing/assignments
+		[HttpPost]
+		[ResponseType(typeof(webModel.Pricelist))]
+		[Route("api/pricing/assignments")]
+		public IHttpActionResult CreatePriceList(webModel.PricelistAssignment assignment)
+		{
+			var retVal = _pricingService.CreatePriceListAssignment(assignment.ToCoreModel());
+			return Ok(retVal);
+		}
+
+		// PUT: api/pricing/assignments
+		[HttpPut]
+		[ResponseType(typeof(webModel.Pricelist))]
+		[Route("api/pricing/assignments")]
+		public IHttpActionResult UpdatePriceList(webModel.PricelistAssignment assignment)
+		{
+			_pricingService.UpdatePricelistAssignments(new coreModel.PricelistAssignment[] { assignment.ToCoreModel() });
+			return StatusCode(HttpStatusCode.NoContent);
+		}
+
+		// DELETE: /api/pricing/assignments?ids=21
+		[HttpDelete]
+		[ResponseType(typeof(void))]
+		[Route("api/pricing/assignments")]
+		public IHttpActionResult DeleteAssignments([FromUri] string[] ids)
+		{
+			_pricingService.DeletePricelistsAssignments(ids);
+			return StatusCode(HttpStatusCode.NoContent);
+		}
+
 		// GET: api/products/{productId}/prices
 		[HttpGet]
 		[ResponseType(typeof(webModel.Price[]))]

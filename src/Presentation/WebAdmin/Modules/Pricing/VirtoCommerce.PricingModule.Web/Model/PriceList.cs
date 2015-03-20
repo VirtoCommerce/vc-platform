@@ -23,6 +23,7 @@ namespace VirtoCommerce.PricingModule.Web.Model
 		[JsonConverter(typeof(StringEnumConverter))]
 		public CurrencyCodes Currency { get; set; }
 		public ICollection<Price> Prices { get; set; }
+		public ICollection<PricelistAssignment> Assignments { get; set; }
 
 	}
 }

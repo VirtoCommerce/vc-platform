@@ -16,6 +16,10 @@ namespace VirtoCommerce.PricingModule.Web.Converters
 			{
 				retVal.Prices = priceList.Prices.Select(x => x.ToWebModel()).ToList();
 			}
+			if(priceList.Assignments != null)
+			{
+				retVal.Assignments = priceList.Assignments.Select(x => x.ToWebModel()).ToList();
+			}
 			return retVal;
 		}
 
@@ -27,6 +31,10 @@ namespace VirtoCommerce.PricingModule.Web.Converters
 			if (priceList.Prices != null)
 			{
 				retVal.Prices = priceList.Prices.Select(x => x.ToCoreModel()).ToList();
+			}
+			if (priceList.Assignments != null)
+			{
+				retVal.Assignments = priceList.Assignments.Select(x => x.ToCoreModel()).ToList();
 			}
 			return retVal;
 		}

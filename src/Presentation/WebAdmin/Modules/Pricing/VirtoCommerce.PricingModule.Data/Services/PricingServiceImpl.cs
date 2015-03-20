@@ -30,11 +30,11 @@ namespace VirtoCommerce.PricingModule.Data.Services
 
 		public IEnumerable<coreModel.Price> EvaluateProductPrices(coreModel.PriceEvaluationContext evalContext)
 		{
-			if(evalContext == null)
+			if (evalContext == null)
 			{
 				throw new ArgumentNullException("evalContext");
 			}
-			if(evalContext.ProductId == null)
+			if (evalContext.ProductId == null)
 			{
 				throw new MissingFieldException("ProductId");
 			}
@@ -45,8 +45,8 @@ namespace VirtoCommerce.PricingModule.Data.Services
 				var prices = repository.Prices.Include(x => x.Pricelist).Where(x => x.ItemId == evalContext.ProductId)
 											  .ToArray()
 											  .Select(x => x.ToCoreModel());
-											
-				foreach (var groupItem in prices.GroupBy(x=>x.Currency))
+
+				foreach (var groupItem in prices.GroupBy(x => x.Currency))
 				{
 					var activePice = groupItem.OrderByDescending(x => x.CreatedDate).FirstOrDefault();
 					retVal.Add(activePice);
@@ -90,6 +90,8 @@ namespace VirtoCommerce.PricingModule.Data.Services
 				{
 					retVal = entity.ToCoreModel();
 				}
+				var assignments = repository.GetAllPricelistAssignments(id);
+				retVal.Assignments = assignments.Select(x => x.ToCoreModel()).ToList();
 			}
 			return retVal;
 		}
@@ -185,7 +187,7 @@ namespace VirtoCommerce.PricingModule.Data.Services
 		{
 			GenericDelete(ids, (repository, id) => repository.GetPricelistById(id));
 		}
-		#endregion
+	
 
 		private static string GetDefaultPriceListName(CurrencyCodes currency)
 		{
@@ -204,5 +206,63 @@ namespace VirtoCommerce.PricingModule.Data.Services
 				CommitChanges(repository);
 			}
 		}
+
+
+		public coreModel.PricelistAssignment GetPricelistAssignmentById(string id)
+		{
+			throw new NotImplementedException();
+		}
+
+		public IEnumerable<coreModel.PricelistAssignment> GetPriceListAssignments()
+		{
+			List<coreModel.PricelistAssignment> retVal = null;
+			using (var repository = _repositoryFactory())
+			{
+				retVal = repository.PricelistAssignments.ToArray().Select(x => x.ToCoreModel()).ToList();
+			}
+			return retVal;
+		}
+
+		public coreModel.PricelistAssignment CreatePriceListAssignment(coreModel.PricelistAssignment assignment)
+		{
+			var entity = assignment.ToFoundation();
+			coreModel.PricelistAssignment retVal = null;
+			using (var repository = _repositoryFactory())
+			{
+				repository.Add(entity);
+				CommitChanges(repository);
+			}
+			retVal = GetPricelistAssignmentById(entity.PricelistAssignmentId);
+			return retVal;
+		}
+
+		public void UpdatePricelistAssignments(coreModel.PricelistAssignment[] assignments)
+		{
+			using (var repository = _repositoryFactory())
+			using (var changeTracker = base.GetChangeTracker(repository))
+			{
+				foreach (var assignment in assignments)
+				{
+					var sourceEntity = assignment.ToFoundation();
+					var targetEntity = repository.GetPricelistAssignmentById(assignment.Id);
+					if (targetEntity == null)
+					{
+						throw new NullReferenceException("targetEntity");
+					}
+
+					changeTracker.Attach(targetEntity);
+					sourceEntity.Patch(targetEntity);
+				}
+				CommitChanges(repository);
+			}
+		}
+
+		public void DeletePricelistsAssignments(string[] ids)
+		{
+			GenericDelete(ids, (repository, id) => repository.GetPricelistAssignmentById(id));
+		}
+		#endregion
+
+
 	}
 }

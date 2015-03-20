@@ -1,4 +1,4 @@
-﻿angular.module('catalogModule.wizards.newProductWizard.review.detail', [])
+﻿angular.module('virtoCommerce.catalogModule')
 .controller('editorialReviewDetailWizardStepController', ['$scope', function ($scope)
 {
     function initializeBlade(data)

@@ -37,6 +37,19 @@ namespace VirtoCommerce.PricingModule.Data.Repositories
 			return retVal;
 		}
 
+		public PricelistAssignment GetPricelistAssignmentById(string assignmentId)
+		{
+			var retVal = PricelistAssignments.FirstOrDefault(x => x.PricelistAssignmentId == assignmentId);
+			return retVal;
+		}
+
+	
+		public PricelistAssignment[] GetAllPricelistAssignments(string pricelistId)
+		{
+			var retVal = PricelistAssignments.Where(x => x.PricelistId == pricelistId);
+			return retVal.ToArray();
+		}
+
 		#endregion
 	}
 

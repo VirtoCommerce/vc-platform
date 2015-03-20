@@ -1,4 +1,4 @@
-﻿angular.module('catalogModule.wizards.newProductWizard.images', ['angularFileUpload'])
+﻿angular.module('virtoCommerce.catalogModule')
 .controller('newProductWizardImagesController', ['$scope', '$filter', 'FileUploader', function ($scope, $filter, FileUploader)
 {
     $scope.blade.isLoading = false;

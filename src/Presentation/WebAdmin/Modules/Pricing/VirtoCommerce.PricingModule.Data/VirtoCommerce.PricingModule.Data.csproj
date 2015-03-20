@@ -52,6 +52,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Converters\PriceConverter.cs" />
+    <Compile Include="Converters\PriceListAssignmentConverter.cs" />
     <Compile Include="Converters\PricelistConverter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\PricingRepositoryImpl.cs" />

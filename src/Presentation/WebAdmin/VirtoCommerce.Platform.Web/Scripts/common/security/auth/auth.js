@@ -83,9 +83,9 @@
 
     function changeAuth(results) {
         authContext.permissions = results.permissions;
-        authContext.userLogin = results.login;
+        authContext.userLogin = results.userName;
         authContext.fullName = results.fullName;
-        authContext.isAuthenticated = results.login != null;
+        authContext.isAuthenticated = results.userName != null;
         authContext.userType = results.userType;
         $rootScope.$broadcast('loginStatusChanged', authContext);
     }

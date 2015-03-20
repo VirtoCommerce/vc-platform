@@ -1,4 +1,4 @@
-﻿angular.module('catalogModule.wizards.categoryWizard', [])
+﻿angular.module('virtoCommerce.catalogModule')
 .controller('newCategoryWizardController', ['$scope', 'bladeNavigationService', 'dialogService', 'categories', function ($scope, bladeNavigationService, dialogService, categories) {
     $scope.create = function () {
         $scope.blade.currentEntity.$update(null, function (data) {

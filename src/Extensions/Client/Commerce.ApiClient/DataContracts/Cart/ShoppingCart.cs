@@ -16,7 +16,7 @@ namespace VirtoCommerce.ApiClient.DataContracts.Cart
     {
         #region Public Properties
 
-        public ICollection<Address> BillingAddresses { get; set; }
+        public ICollection<Address> Addresses { get; set; }
 
         public string CreatedBy { get; set; }
 
@@ -59,8 +59,6 @@ namespace VirtoCommerce.ApiClient.DataContracts.Cart
         public ICollection<Payment> Payments { get; set; }
 
         public ICollection<Shipment> Shipments { get; set; }
-
-        public ICollection<Address> ShippingAddresses { get; set; }
 
         public decimal ShippingTotal { get; set; }
 
