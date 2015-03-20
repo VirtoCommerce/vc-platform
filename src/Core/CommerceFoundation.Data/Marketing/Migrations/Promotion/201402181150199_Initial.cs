@@ -1,45 +1,11 @@
+using System.Data.Entity.Migrations;
+
 namespace VirtoCommerce.Foundation.Data.Marketing.Migrations.Promotion
-{
-    using System;
-    using System.Data.Entity.Migrations;
-    
+{   
     public partial class Initial : DbMigration
     {
         public override void Up()
         {
-            CreateTable(
-                "dbo.Promotion",
-                c => new
-                    {
-                        PromotionId = c.String(nullable: false, maxLength: 128),
-                        Name = c.String(nullable: false, maxLength: 128),
-                        Description = c.String(maxLength: 256),
-                        Status = c.String(maxLength: 32),
-                        StartDate = c.DateTime(nullable: false),
-                        EndDate = c.DateTime(),
-                        Priority = c.Int(nullable: false),
-                        PredicateSerialized = c.String(),
-                        PredicateVisualTreeSerialized = c.String(),
-                        PerCustomerLimit = c.Int(nullable: false),
-                        TotalLimit = c.Int(nullable: false),
-                        ExclusionTypeId = c.Int(nullable: false),
-                        SegmentSetId = c.String(maxLength: 128),
-                        CouponId = c.String(maxLength: 128),
-                        CouponSetId = c.String(maxLength: 128),
-                        LastModified = c.DateTime(),
-                        Created = c.DateTime(),
-                        StoreId = c.String(maxLength: 128),
-                        CatalogId = c.String(maxLength: 128),
-                        Discriminator = c.String(maxLength: 128),
-                    })
-                .PrimaryKey(t => t.PromotionId)
-                .ForeignKey("dbo.Coupon", t => t.CouponId)
-                .ForeignKey("dbo.CouponSet", t => t.CouponSetId)
-                .ForeignKey("dbo.SegmentSet", t => t.SegmentSetId)
-                .Index(t => t.SegmentSetId)
-                .Index(t => t.CouponId)
-                .Index(t => t.CouponSetId);
-            
             CreateTable(
                 "dbo.Coupon",
                 c => new
@@ -120,6 +86,39 @@ namespace VirtoCommerce.Foundation.Data.Marketing.Migrations.Promotion
                 .Index(t => t.SegmentSetId);
             
             CreateTable(
+                "dbo.Promotion",
+                c => new
+                    {
+                        PromotionId = c.String(nullable: false, maxLength: 128),
+                        Name = c.String(nullable: false, maxLength: 128),
+                        Description = c.String(maxLength: 256),
+                        Status = c.String(maxLength: 32),
+                        StartDate = c.DateTime(nullable: false),
+                        EndDate = c.DateTime(),
+                        Priority = c.Int(nullable: false),
+                        PredicateSerialized = c.String(),
+                        PredicateVisualTreeSerialized = c.String(),
+                        PerCustomerLimit = c.Int(nullable: false),
+                        TotalLimit = c.Int(nullable: false),
+                        ExclusionTypeId = c.Int(nullable: false),
+                        SegmentSetId = c.String(maxLength: 128),
+                        CouponId = c.String(maxLength: 128),
+                        CouponSetId = c.String(maxLength: 128),
+                        LastModified = c.DateTime(),
+                        Created = c.DateTime(),
+                        CatalogId = c.String(maxLength: 128),
+                        StoreId = c.String(maxLength: 128),
+                        Discriminator = c.String(maxLength: 128),
+                    })
+                .PrimaryKey(t => t.PromotionId)
+                .ForeignKey("dbo.Coupon", t => t.CouponId)
+                .ForeignKey("dbo.CouponSet", t => t.CouponSetId)
+                .ForeignKey("dbo.SegmentSet", t => t.SegmentSetId)
+                .Index(t => t.CouponId)
+                .Index(t => t.CouponSetId)
+                .Index(t => t.SegmentSetId);
+            
+            CreateTable(
                 "dbo.PromotionUsage",
                 c => new
                     {
@@ -127,7 +126,7 @@ namespace VirtoCommerce.Foundation.Data.Marketing.Migrations.Promotion
                         MemberId = c.String(maxLength: 128),
                         OrderGroupId = c.String(maxLength: 128),
                         CouponCode = c.String(maxLength: 64),
-                        Status = c.Int(nullable: false),
+                        Status = c.Int(nullable: false, defaultValue:0),
                         UsageDate = c.DateTime(),
                         PromotionId = c.String(maxLength: 128),
                         LastModified = c.DateTime(),
@@ -150,19 +149,19 @@ namespace VirtoCommerce.Foundation.Data.Marketing.Migrations.Promotion
             DropForeignKey("dbo.Promotion", "CouponId", "dbo.Coupon");
             DropForeignKey("dbo.Coupon", "CouponSetId", "dbo.CouponSet");
             DropIndex("dbo.PromotionUsage", new[] { "PromotionId" });
+            DropIndex("dbo.Promotion", new[] { "SegmentSetId" });
             DropIndex("dbo.Segment", new[] { "SegmentSetId" });
             DropIndex("dbo.PromotionReward", new[] { "PromotionId" });
-            DropIndex("dbo.Coupon", new[] { "CouponSetId" });
             DropIndex("dbo.Promotion", new[] { "CouponSetId" });
             DropIndex("dbo.Promotion", new[] { "CouponId" });
-            DropIndex("dbo.Promotion", new[] { "SegmentSetId" });
+            DropIndex("dbo.Coupon", new[] { "CouponSetId" });
             DropTable("dbo.PromotionUsage");
+            DropTable("dbo.Promotion");
             DropTable("dbo.Segment");
             DropTable("dbo.SegmentSet");
             DropTable("dbo.PromotionReward");
             DropTable("dbo.CouponSet");
             DropTable("dbo.Coupon");
-            DropTable("dbo.Promotion");
         }
     }
 }

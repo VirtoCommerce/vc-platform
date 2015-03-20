@@ -86,10 +86,12 @@ namespace VirtoCommerce.Foundation.Importing.Model
 					case ImportAction.InsertAndReplace:
 						var qtyR = systemValues.FirstOrDefault(y => y.Name == "MinQuantity");
 						var listIdR = systemValues.FirstOrDefault(y => y.Name == "PricelistId");
+						
 						if (qtyR != null && listIdR != null)
 						{
+							var pricelist = _repository.Pricelists.Where(x => x.Name == listIdR.Value || x.PricelistId == listIdR.Value).FirstOrDefault();
 							var qtyVal = int.Parse(qtyR.Value);
-							var origItem = _repository.Prices.ToList().Where(x => x.ItemId == originalItem.ItemId && x.MinQuantity == qtyVal && x.PricelistId == listIdR.Value).SingleOrDefault();
+							var origItem = _repository.Prices.ToList().Where(x => x.ItemId == originalItem.ItemId && x.MinQuantity == qtyVal && x.PricelistId == pricelist.PricelistId).SingleOrDefault();
 							if (origItem != null)
 							{
 								InitializeItem(origItem, systemValues);
@@ -111,8 +113,9 @@ namespace VirtoCommerce.Foundation.Importing.Model
 						var listId = systemValues.FirstOrDefault(y => y.Name == "PricelistId");
 						if (qty != null && listId != null)
 						{
+							var pricelist = _repository.Pricelists.Where(x => x.Name == listId.Value || x.PricelistId == listId.Value).FirstOrDefault();
 							var qtyVal = int.Parse(qty.Value);
-							var origItem = _repository.Prices.ToList().Where(x => x.ItemId == originalItem.ItemId && x.MinQuantity == qtyVal && x.PricelistId == listId.Value).SingleOrDefault();
+							var origItem = _repository.Prices.ToList().Where(x => x.ItemId == originalItem.ItemId && x.MinQuantity == qtyVal && x.PricelistId == pricelist.PricelistId).SingleOrDefault();
 							if (origItem != null)
 							{
 								InitializeItem(origItem, systemValues);

@@ -8,6 +8,40 @@
 
 		<MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." Schedule="afterInstallInitialize"/>
 
+    <!--
+    <Condition Message="64-bit Operating System was detected, please use the 64-bit VirtoCommerce Search Installer.">
+      <?if $(var.Platform) = x64 ?>
+        VersionNT64
+      <?else?>
+        NOT VersionNT64
+      <?endif?>
+    </Condition>
+    -->
+     
+    
+        <Property Id="JAVAHOME_VERSION64">
+          <RegistrySearch Id="JavaHome_version64" Root="HKLM" Key="SOFTWARE\JavaSoft\Java Runtime Environment" Name="CurrentVersion" Type="raw" Win64="yes"/>
+        </Property>
+        <Property Id="JAVAHOME64">
+          <RegistrySearch Id="JavaHome64" Root="HKLM" Key="SOFTWARE\JavaSoft\Java Runtime Environment\[JAVAHOME_VERSION64]" Name="JavaHome" Type="raw" Win64="yes"/>
+        </Property>
+        <Property Id="JAVAHOME_VERSION">    
+          <RegistrySearch Id="JavaHome_version" Root="HKLM" Key="SOFTWARE\JavaSoft\Java Runtime Environment" Name="CurrentVersion" Type="raw" Win64="no"/>
+        </Property>
+        <Property Id="JAVAHOME32">
+          <RegistrySearch Id="JavaHome" Root="HKLM" Key="SOFTWARE\JavaSoft\Java Runtime Environment\[JAVAHOME_VERSION]" Name="JavaHome" Type="raw" Win64="no"/>
+        </Property>    
+
+        <SetProperty Id="JAVAHOME" After="AppSearch" Value="[JAVAHOME32]" Action="SetJAVAHOME1">
+          <![CDATA[JAVAHOME32 <> ""]]>
+        </SetProperty>    
+    
+        <SetProperty Id="JAVAHOME" After="AppSearch" Value="[JAVAHOME64]" Action="SetJAVAHOME0">
+          <![CDATA[JAVAHOME64 <> ""]]>
+        </SetProperty>
+       
+    <Condition Message="Java Runtime Environment is not installed or outdated. Please install Oracle JRE 1.7 or later."><![CDATA[Installed OR (JAVAHOME_VERSION >= "1.7") OR (JAVAHOME_VERSION64 >= "1.7")]]></Condition>
+
     <!-- 
       http://msdn.microsoft.com/en-us/library/aa372380%28v=vs.85%29.aspx
       http://code.dblock.org/msi-property-patterns-upgrading-firstinstall-and-maintenance
@@ -45,8 +79,8 @@
       -->
     </Feature>
 
-    <CustomAction Id="BatchCmd" ExeCommand="[bin]esi_service.bat" Directory="lib" Execute="deferred" Return="check" Impersonate="no"/>
-    <CustomAction Id="BatchCmdU" ExeCommand="[bin]esi_service_uninstall.bat" Directory="lib" Execute="deferred" Return="ignore" Impersonate="no"/>
+    <CustomAction Id="BatchCmd" ExeCommand="&quot;[bin]esi_service.bat&quot; &quot;[JAVAHOME]&quot;" Directory="lib" Execute="deferred" Return="check" Impersonate="no"/>
+    <CustomAction Id="BatchCmdU" ExeCommand="&quot;[bin]esi_service_uninstall.bat&quot; &quot;[JAVAHOME]&quot;" Directory="lib" Execute="deferred" Return="ignore" Impersonate="no"/>
 
     <InstallExecuteSequence>
       <Custom Action="BatchCmd" After="InstallFiles">FirstInstall</Custom>
