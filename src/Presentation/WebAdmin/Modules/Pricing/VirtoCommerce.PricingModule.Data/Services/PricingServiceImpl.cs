@@ -127,14 +127,12 @@ namespace VirtoCommerce.PricingModule.Data.Services
 		public virtual coreModel.Pricelist CreatePricelist(coreModel.Pricelist priceList)
 		{
 			var entity = priceList.ToFoundation();
-			coreModel.Pricelist retVal = null;
 			using (var repository = _repositoryFactory())
 			{
 				repository.Add(entity);
 				CommitChanges(repository);
 			}
-			retVal = GetPricelistById(priceList.Id);
-			return retVal;
+			return GetPricelistById(entity.PricelistId);
 		}
 
 		public virtual void UpdatePrices(coreModel.Price[] prices)

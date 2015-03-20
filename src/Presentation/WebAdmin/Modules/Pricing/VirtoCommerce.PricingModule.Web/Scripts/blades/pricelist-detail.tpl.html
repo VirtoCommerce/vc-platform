@@ -1,8 +1,9 @@
-﻿<div class="blade-content __gray">
+﻿<div class="blade-static __bottom" ng-include="'Modules/$(VirtoCommerce.Core)/Scripts/common/ok-cancel2.tpl.html'" ng-if="blade.isNew"></div>
+<div class="blade-content __gray">
     <div class="blade-inner">
         <div class="inner-block clearfix">
-            <form class="form" name="detailForm">
-                <div class="form-group" ng-init="setForm(detailForm)">
+            <form class="form" name="formScope">
+                <div class="form-group" ng-init="setForm(formScope)">
                     <label class="form-label">Name</label>
                     <div class="form-input">
                         <input ng-model="blade.currentEntity.name" focus-on="" required placeholder="Enter name">

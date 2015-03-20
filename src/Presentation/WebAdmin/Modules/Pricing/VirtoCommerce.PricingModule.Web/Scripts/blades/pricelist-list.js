@@ -1,13 +1,13 @@
 ﻿angular.module('virtoCommerce.pricingModule')
-.controller('pricelistListController', ['$scope', 'prices', 'bladeNavigationService', 'dialogService',
-function ($scope, prices, bladeNavigationService, dialogService) {
+.controller('pricelistListController', ['$scope', 'pricelists', 'bladeNavigationService', 'dialogService',
+function ($scope, pricelists, bladeNavigationService, dialogService) {
     var selectedNode = null;
 
     $scope.blade.refresh = function () {
         $scope.blade.isLoading = true;
         $scope.blade.selectedAll = false;
 
-        prices.query({}, function (data) {
+        pricelists.query({}, function (data) {
             $scope.blade.isLoading = false;
             $scope.blade.currentEntities = data;
         }, function (error) {
@@ -20,8 +20,8 @@ function ($scope, prices, bladeNavigationService, dialogService) {
         $scope.selectedNodeId = selectedNode.id;
 
         var newBlade = {
-            id: 'pricelistDetail',
-            data: selectedNode,
+            id: 'listItemChild',
+            currentEntityId: selectedNode.id,
             title: selectedNode.name,
             subtitle: $scope.blade.subtitle,
             controller: 'pricelistDetailController',
@@ -31,14 +31,14 @@ function ($scope, prices, bladeNavigationService, dialogService) {
         bladeNavigationService.showBlade(newBlade, $scope.blade);
     };
 
-    $scope.checkAll = function (selected) {
-        angular.forEach($scope.objects, function (item) {
-            item.selected = selected;
+    $scope.toggleAll = function () {
+        angular.forEach($scope.blade.currentEntities, function (item) {
+            item.selected = $scope.blade.selectedAll;
         });
     };
 
     function isItemsChecked() {
-        return $scope.objects && _.any($scope.objects, function (x) { return x.selected; });
+        return $scope.blade.currentEntities && _.any($scope.blade.currentEntities, function (x) { return x.selected; });
     }
 
     function deleteChecked() {
@@ -50,9 +50,9 @@ function ($scope, prices, bladeNavigationService, dialogService) {
                 if (remove) {
                     closeChildrenBlades();
 
-                    var selection = _.where($scope.objects, { selected: true });
+                    var selection = _.where($scope.blade.currentEntities, { selected: true });
                     var itemIds = _.pluck(selection, 'id');
-                    prices.remove({ ids: itemIds }, function (data, headers) {
+                    pricelists.remove({ ids: itemIds }, function (data, headers) {
                         $scope.blade.refresh();
                     }, function (error) {
                         bladeNavigationService.setError('Error ' + error.status, $scope.blade);
@@ -103,11 +103,9 @@ function ($scope, prices, bladeNavigationService, dialogService) {
         {
             name: "Clone", icon: 'fa fa-files-o',
             executeMethod: function () {
-                // selected OR the first checked listItem
-                edit($scope.selectedItem || _.find($scope.items, function (x) { return x.selected; }));
             },
             canExecuteMethod: function () {
-                return $scope.selectedItem || isItemsChecked();
+                return false;
             }
         },
         {

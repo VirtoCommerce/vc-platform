@@ -88,12 +88,12 @@ namespace VirtoCommerce.PricingModule.Web.Controllers.Api
 		public IHttpActionResult CreatePriceList(webModel.Pricelist priceList)
 		{
 			var retVal = _pricingService.CreatePricelist(priceList.ToCoreModel());
-			return Ok(retVal);
+			return Ok(retVal.ToWebModel());
 		}
 
 		// PUT: api/pricing/pricelists
 		[HttpPut]
-		[ResponseType(typeof(webModel.Pricelist))]
+        [ResponseType(typeof(void))]
 		[Route("api/pricing/pricelists")]
 		public IHttpActionResult UpdatePriceList(webModel.Pricelist priceList)
 		{

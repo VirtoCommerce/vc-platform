@@ -101,7 +101,11 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Scripts\blades\pricelist-prices-list.js" />
+    <Content Include="Scripts\blades\pricelist-prices-list.tpl.html" />
+    <Content Include="Scripts\blades\pricelist-item-list.js" />
     <Content Include="Scripts\blades\pricelist-list.js" />
+    <Content Include="Scripts\blades\pricelist-item-list.tpl.html" />
     <Content Include="Scripts\blades\pricelist-list.tpl.html" />
     <Content Include="Scripts\blades\item\item-prices-list.js" />
     <Content Include="Scripts\blades\item\item-prices-list.tpl.html" />
@@ -112,7 +116,9 @@
     <Content Include="Scripts\home.tpl.html" />
     <Content Include="Scripts\pricing.js" />
     <Content Include="Scripts\resources\pricing.js" />
+    <Content Include="Scripts\widgets\assignmentsWidget.js" />
     <Content Include="Scripts\widgets\pricesWidget.js" />
+    <Content Include="Scripts\widgets\assignmentsWidget.tpl.html" />
     <Content Include="Scripts\widgets\pricesWidget.tpl.html" />
     <Content Include="Scripts\widgets\itemPricesWidget.js" />
     <Content Include="Scripts\widgets\itemPricesWidget.tpl.html" />

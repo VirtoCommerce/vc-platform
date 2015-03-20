@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.pricingModule')
-.controller('pricesWidgetController', ['$scope', 'bladeNavigationService', function ($scope, bladeNavigationService) {
+.controller('assignmentsWidgetController', ['$scope', 'bladeNavigationService', function ($scope, bladeNavigationService) {
     $scope.currentBlade = $scope.widget.blade;
 
     $scope.openBlade = function () {
@@ -8,9 +8,9 @@
             // currentEntityId: $scope.currentBlade.currentEntityId,
             currentEntity: $scope.currentBlade.currentEntity,
             title: $scope.currentBlade.title,
-            subtitle: 'Manage prices',
-            controller: 'pricelistItemListController',
-            template: 'Modules/$(VirtoCommerce.Pricing)/Scripts/blades/pricelist-item-list.tpl.html'
+            subtitle: 'Manage assigned catalogs',
+            controller: 'pricelistAssignementListController',
+            template: 'Modules/$(VirtoCommerce.Pricing)/Scripts/blades/pricelist-assignement-list.tpl.html'
         };
 
         bladeNavigationService.showBlade(blade, $scope.currentBlade);

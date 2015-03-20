@@ -49,4 +49,14 @@ angular.module(moduleName, [
           template: 'Modules/$(VirtoCommerce.Pricing)/Scripts/widgets/itemPricesWidget.tpl.html',
       };
       widgetService.registerWidget(itemPricesWidget, 'itemDetail');
+
+      //Register pricelist widgets
+      widgetService.registerWidget({
+          controller: 'pricesWidgetController',
+          template: 'Modules/$(VirtoCommerce.Pricing)/Scripts/widgets/pricesWidget.tpl.html',
+      }, 'pricelistDetail');
+      widgetService.registerWidget({
+          controller: 'assignmentsWidgetController',
+          template: 'Modules/$(VirtoCommerce.Pricing)/Scripts/widgets/assignmentsWidget.tpl.html',
+      }, 'pricelistDetail');
   }]);
