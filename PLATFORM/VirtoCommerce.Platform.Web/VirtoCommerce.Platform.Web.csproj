@@ -1276,7 +1276,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Core\CommerceFoundation\CommerceFoundation.csproj">
+    <ProjectReference Include="..\Core\CommerceFoundation\CommerceFoundation.csproj">
       <Project>{E7FC9A51-1B39-4BDC-983A-8A059C5FC58B}</Project>
       <Name>CommerceFoundation</Name>
     </ProjectReference>
@@ -1335,4 +1335,3 @@
   <Target Name="AfterBuild">
   </Target> -->
 </Project>
-

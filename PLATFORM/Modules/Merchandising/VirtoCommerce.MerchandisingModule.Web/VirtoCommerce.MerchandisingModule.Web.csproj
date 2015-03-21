@@ -155,23 +155,23 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\..\Core\CommerceFoundation.Data\CommerceFoundation.Data.csproj">
+    <ProjectReference Include="..\..\..\Core\CommerceFoundation.Data\CommerceFoundation.Data.csproj">
       <Project>{bb168a74-0f1e-43be-a616-134902238b80}</Project>
       <Name>CommerceFoundation.Data</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\..\..\Core\CommerceFoundation\CommerceFoundation.csproj">
+    <ProjectReference Include="..\..\..\Core\CommerceFoundation\CommerceFoundation.csproj">
       <Project>{e7fc9a51-1b39-4bdc-983a-8a059c5fc58b}</Project>
       <Name>CommerceFoundation</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\..\..\Extensions\Azure\CommerceFoundation.Data.Azure\CommerceFoundation.Data.Azure.csproj">
+    <ProjectReference Include="..\..\..\Extensions\Azure\CommerceFoundation.Data.Azure\CommerceFoundation.Data.Azure.csproj">
       <Project>{E3769352-34C8-41A9-A6C8-DA95D7DFF903}</Project>
       <Name>CommerceFoundation.Data.Azure</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\..\..\Extensions\Cache\VirtoCommerce.Caching.HttpCache\VirtoCommerce.Caching.HttpCache.csproj">
+    <ProjectReference Include="..\..\..\Extensions\Cache\VirtoCommerce.Caching.HttpCache\VirtoCommerce.Caching.HttpCache.csproj">
       <Project>{3fe4eb14-557a-46bc-94ad-2e9874f85ace}</Project>
       <Name>VirtoCommerce.Caching.HttpCache</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\..\..\Extensions\Search\ElasticSearchProvider\ElasticSearchProvider.csproj">
+    <ProjectReference Include="..\..\..\Extensions\Search\ElasticSearchProvider\ElasticSearchProvider.csproj">
       <Project>{039e7914-2925-44c4-acad-6bccfa2a370e}</Project>
       <Name>ElasticSearchProvider</Name>
     </ProjectReference>
@@ -214,4 +214,3 @@
   </Target>
   -->
 </Project>
-

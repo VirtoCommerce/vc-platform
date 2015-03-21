@@ -12,127 +12,127 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{5E27776F
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Modules", "Modules", "{A4C0D164-BF77-4B57-8970-B5459B100AC3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.Framework.Web", "src\Presentation\WebAdmin\VirtoCommerce.Framework.Web\VirtoCommerce.Framework.Web.csproj", "{F7C9313B-522E-4619-ABC9-8C7D4600D6B5}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.Framework.Web", "VirtoCommerce.Framework.Web\VirtoCommerce.Framework.Web.csproj", "{F7C9313B-522E-4619-ABC9-8C7D4600D6B5}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Catalog", "Catalog", "{7C7428C3-DDE2-4783-87EB-13E9A7C405C5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.CatalogModule.Data", "src\Presentation\WebAdmin\Modules\Catalog\VirtoCommerce.CatalogModule.Data\VirtoCommerce.CatalogModule.Data.csproj", "{B8C758D7-822F-40D8-B28C-EF21C873AF49}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.CatalogModule.Data", "Modules\Catalog\VirtoCommerce.CatalogModule.Data\VirtoCommerce.CatalogModule.Data.csproj", "{B8C758D7-822F-40D8-B28C-EF21C873AF49}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.CatalogModule.Web", "src\Presentation\WebAdmin\Modules\Catalog\VirtoCommerce.CatalogModule.Web\VirtoCommerce.CatalogModule.Web.csproj", "{988CB3E9-2594-499C-90B4-9399EB481C79}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.CatalogModule.Web", "Modules\Catalog\VirtoCommerce.CatalogModule.Web\VirtoCommerce.CatalogModule.Web.csproj", "{988CB3E9-2594-499C-90B4-9399EB481C79}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Merchandising", "Merchandising", "{AAAC68D3-2CC4-40A6-9E4E-5DDC944817D3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.MerchandisingModule.Web", "src\Presentation\WebAdmin\Modules\Merchandising\VirtoCommerce.MerchandisingModule.Web\VirtoCommerce.MerchandisingModule.Web.csproj", "{EE42FBD1-5DE8-4DA3-868C-92B910170B9F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.MerchandisingModule.Web", "Modules\Merchandising\VirtoCommerce.MerchandisingModule.Web\VirtoCommerce.MerchandisingModule.Web.csproj", "{EE42FBD1-5DE8-4DA3-868C-92B910170B9F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.Platform.Web", "src\Presentation\WebAdmin\VirtoCommerce.Platform.Web\VirtoCommerce.Platform.Web.csproj", "{B53BA685-B324-42E6-80AD-7B641DD414E7}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.Platform.Web", "VirtoCommerce.Platform.Web\VirtoCommerce.Platform.Web.csproj", "{B53BA685-B324-42E6-80AD-7B641DD414E7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.CatalogModule.Test", "src\Presentation\WebAdmin\Modules\Catalog\VirtoCommerce.CatalogModule.Test\VirtoCommerce.CatalogModule.Test.csproj", "{613E443D-8FB2-435A-AA8A-5B141E444824}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.CatalogModule.Test", "Modules\Catalog\VirtoCommerce.CatalogModule.Test\VirtoCommerce.CatalogModule.Test.csproj", "{613E443D-8FB2-435A-AA8A-5B141E444824}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Referenced projects", "Referenced projects", "{EAE05907-1BEE-47FA-890A-40C84B879B1C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommerceFoundation", "src\Core\CommerceFoundation\CommerceFoundation.csproj", "{E7FC9A51-1B39-4BDC-983A-8A059C5FC58B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommerceFoundation", "Core\CommerceFoundation\CommerceFoundation.csproj", "{E7FC9A51-1B39-4BDC-983A-8A059C5FC58B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommerceFoundation.Data", "src\Core\CommerceFoundation.Data\CommerceFoundation.Data.csproj", "{BB168A74-0F1E-43BE-A616-134902238B80}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommerceFoundation.Data", "Core\CommerceFoundation.Data\CommerceFoundation.Data.csproj", "{BB168A74-0F1E-43BE-A616-134902238B80}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ElasticSearchProvider", "src\Extensions\Search\ElasticSearchProvider\ElasticSearchProvider.csproj", "{039E7914-2925-44C4-ACAD-6BCCFA2A370E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ElasticSearchProvider", "Extensions\Search\ElasticSearchProvider\ElasticSearchProvider.csproj", "{039E7914-2925-44C4-ACAD-6BCCFA2A370E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommerceFoundation.Data.Azure", "src\Extensions\Azure\CommerceFoundation.Data.Azure\CommerceFoundation.Data.Azure.csproj", "{E3769352-34C8-41A9-A6C8-DA95D7DFF903}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommerceFoundation.Data.Azure", "Extensions\Azure\CommerceFoundation.Data.Azure\CommerceFoundation.Data.Azure.csproj", "{E3769352-34C8-41A9-A6C8-DA95D7DFF903}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.Caching.HttpCache", "src\Extensions\Cache\VirtoCommerce.Caching.HttpCache\VirtoCommerce.Caching.HttpCache.csproj", "{3FE4EB14-557A-46BC-94AD-2E9874F85ACE}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.Caching.HttpCache", "Extensions\Cache\VirtoCommerce.Caching.HttpCache\VirtoCommerce.Caching.HttpCache.csproj", "{3FE4EB14-557A-46BC-94AD-2E9874F85ACE}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{0310F318-D932-4ADA-9D9F-2D62927B2328}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.CoreModule.Web", "src\Presentation\WebAdmin\Modules\Core\VirtoCommerce.Core.Web\VirtoCommerce.CoreModule.Web.csproj", "{47D7C89C-62A8-44EC-B544-F24E874192AC}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.CoreModule.Web", "Modules\Core\VirtoCommerce.Core.Web\VirtoCommerce.CoreModule.Web.csproj", "{47D7C89C-62A8-44EC-B544-F24E874192AC}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Packaging", "Packaging", "{36033FE9-89FC-47CA-8F3C-6133BA23F53F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.PackagingModule", "src\Presentation\WebAdmin\Modules\Packaging\VirtoCommerce.PackagingModule\VirtoCommerce.PackagingModule.csproj", "{569F3D73-80DD-4E8A-93A4-4CCA2751D495}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.PackagingModule", "Modules\Packaging\VirtoCommerce.PackagingModule\VirtoCommerce.PackagingModule.csproj", "{569F3D73-80DD-4E8A-93A4-4CCA2751D495}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.PackagingModule.Data", "src\Presentation\WebAdmin\Modules\Packaging\VirtoCommerce.PackagingModule.Data\VirtoCommerce.PackagingModule.Data.csproj", "{9C4C5AAD-C950-476E-AB74-DF053EB72F50}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.PackagingModule.Data", "Modules\Packaging\VirtoCommerce.PackagingModule.Data\VirtoCommerce.PackagingModule.Data.csproj", "{9C4C5AAD-C950-476E-AB74-DF053EB72F50}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.PackagingModule.Tests", "src\Presentation\WebAdmin\Modules\Packaging\VirtoCommerce.PackagingModule.Tests\VirtoCommerce.PackagingModule.Tests.csproj", "{A3B5EC9F-A1C9-43FE-8FC9-E11BBACF31BD}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.PackagingModule.Tests", "Modules\Packaging\VirtoCommerce.PackagingModule.Tests\VirtoCommerce.PackagingModule.Tests.csproj", "{A3B5EC9F-A1C9-43FE-8FC9-E11BBACF31BD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.PackagingModule.Web", "src\Presentation\WebAdmin\Modules\Packaging\VirtoCommerce.PackagingModule.Web\VirtoCommerce.PackagingModule.Web.csproj", "{52F0A23D-D8A5-42AE-9C1B-6F1114CF2C77}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.PackagingModule.Web", "Modules\Packaging\VirtoCommerce.PackagingModule.Web\VirtoCommerce.PackagingModule.Web.csproj", "{52F0A23D-D8A5-42AE-9C1B-6F1114CF2C77}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Cart", "Cart", "{8B27E533-BA11-47BD-8392-05CEB5DB0ED5}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Order", "Order", "{0A7E7D8E-9573-4C10-9C37-A3E80798A6B0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.OrderModule.Test", "src\Presentation\WebAdmin\Modules\Order\VirtoCommerce.OrderModule.Test\VirtoCommerce.OrderModule.Test.csproj", "{1D6D1378-2CBE-4DA8-80EF-2B6106F614A7}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.OrderModule.Test", "Modules\Order\VirtoCommerce.OrderModule.Test\VirtoCommerce.OrderModule.Test.csproj", "{1D6D1378-2CBE-4DA8-80EF-2B6106F614A7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.OrderModule.Data", "src\Presentation\WebAdmin\Modules\Order\VirtoCommerce.OrderModule.Data\VirtoCommerce.OrderModule.Data.csproj", "{061C4A3E-4D94-4807-9209-07D9F6392830}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.OrderModule.Data", "Modules\Order\VirtoCommerce.OrderModule.Data\VirtoCommerce.OrderModule.Data.csproj", "{061C4A3E-4D94-4807-9209-07D9F6392830}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.Domain", "src\Presentation\WebAdmin\Modules\Core\VirtoCommerce.Domain\VirtoCommerce.Domain.csproj", "{67C58A78-DDEA-4FA3-A969-1CAB582918E4}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.Domain", "Modules\Core\VirtoCommerce.Domain\VirtoCommerce.Domain.csproj", "{67C58A78-DDEA-4FA3-A969-1CAB582918E4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.CartModule.Web", "src\Presentation\WebAdmin\Modules\Cart\VirtoCommerce.CartModule.Web\VirtoCommerce.CartModule.Web.csproj", "{5DE51B36-F366-4FE6-A4DB-5FED18CEBC7A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.CartModule.Web", "Modules\Cart\VirtoCommerce.CartModule.Web\VirtoCommerce.CartModule.Web.csproj", "{5DE51B36-F366-4FE6-A4DB-5FED18CEBC7A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.CoreModule.Tests", "src\Presentation\WebAdmin\Modules\Core\VirtoCommerce.CoreModule.Tests\VirtoCommerce.CoreModule.Tests.csproj", "{521E57F8-E304-44A6-8EC3-CA41663AE65E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.CoreModule.Tests", "Modules\Core\VirtoCommerce.CoreModule.Tests\VirtoCommerce.CoreModule.Tests.csproj", "{521E57F8-E304-44A6-8EC3-CA41663AE65E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.CartModule.Data", "src\Presentation\WebAdmin\Modules\Cart\VirtoCommerce.CartModule.Data\VirtoCommerce.CartModule.Data.csproj", "{79F334BD-425E-409C-AF6A-5ED95320D228}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.CartModule.Data", "Modules\Cart\VirtoCommerce.CartModule.Data\VirtoCommerce.CartModule.Data.csproj", "{79F334BD-425E-409C-AF6A-5ED95320D228}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.CartModule.Test", "src\Presentation\WebAdmin\Modules\Cart\VirtoCommerce.CartModule.Test\VirtoCommerce.CartModule.Test.csproj", "{C6AD60D0-25C3-4049-B0BC-970C10D8B862}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.CartModule.Test", "Modules\Cart\VirtoCommerce.CartModule.Test\VirtoCommerce.CartModule.Test.csproj", "{C6AD60D0-25C3-4049-B0BC-970C10D8B862}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.OrderModule.Web", "src\Presentation\WebAdmin\Modules\Order\VirtoCommerce.OrderModule.Web\VirtoCommerce.OrderModule.Web.csproj", "{FB17571F-ED1B-4521-A120-58023AB1C6BF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.OrderModule.Web", "Modules\Order\VirtoCommerce.OrderModule.Web\VirtoCommerce.OrderModule.Web.csproj", "{FB17571F-ED1B-4521-A120-58023AB1C6BF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.ApiClient", "src\Extensions\Client\Commerce.ApiClient\VirtoCommerce.ApiClient.csproj", "{84B945B7-85E4-4057-B0DF-1F8A03B8D53C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.ApiClient", "Extensions\Client\Commerce.ApiClient\VirtoCommerce.ApiClient.csproj", "{84B945B7-85E4-4057-B0DF-1F8A03B8D53C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApiClientTests", "tests\ApiClientTests\ApiClientTests.csproj", "{02D4C049-C185-4F59-A10E-03AF76451844}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "PaymentGateways", "PaymentGateways", "{4E79CE95-D200-41C9-B191-324B741494BE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Klarna.PaymentGatewaysModule.Web", "src\Presentation\WebAdmin\Modules\PaymentGateways\Klarna.PaymentGatewaysModule.Web\Klarna.PaymentGatewaysModule.Web.csproj", "{F212ED2F-6E93-4931-A8DF-7A128D5DD96B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Klarna.PaymentGatewaysModule.Web", "Modules\PaymentGateways\Klarna.PaymentGatewaysModule.Web\Klarna.PaymentGatewaysModule.Web.csproj", "{F212ED2F-6E93-4931-A8DF-7A128D5DD96B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MeS.PaymentGatewaysModule.Web", "src\Presentation\WebAdmin\Modules\PaymentGateways\MeS.PaymentGatewaysModule.Web\MeS.PaymentGatewaysModule.Web.csproj", "{E8E2B720-4C70-4714-B1F8-591EB4DA4BA9}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MeS.PaymentGatewaysModule.Web", "Modules\PaymentGateways\MeS.PaymentGatewaysModule.Web\MeS.PaymentGatewaysModule.Web.csproj", "{E8E2B720-4C70-4714-B1F8-591EB4DA4BA9}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Store", "Store", "{D318205B-C729-469C-A00B-01BDC28CC708}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.StoreModule.Data", "src\Presentation\WebAdmin\Modules\Store\VirtoCommerce.StoreModule.Data\VirtoCommerce.StoreModule.Data.csproj", "{6DB023E9-E32F-4537-8448-074F88AA55D6}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.StoreModule.Data", "Modules\Store\VirtoCommerce.StoreModule.Data\VirtoCommerce.StoreModule.Data.csproj", "{6DB023E9-E32F-4537-8448-074F88AA55D6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.StoreModule.Web", "src\Presentation\WebAdmin\Modules\Store\VirtoCommerce.StoreModule.Web\VirtoCommerce.StoreModule.Web.csproj", "{683AE5A9-C093-45C3-AB86-F916153AAC28}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.StoreModule.Web", "Modules\Store\VirtoCommerce.StoreModule.Web\VirtoCommerce.StoreModule.Web.csproj", "{683AE5A9-C093-45C3-AB86-F916153AAC28}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.StoreModule.Test", "src\Presentation\WebAdmin\Modules\Store\VirtoCommerce.StoreModule.Test\VirtoCommerce.StoreModule.Test.csproj", "{23DA9761-7004-4E88-AE4D-3D5B5017FF49}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.StoreModule.Test", "Modules\Store\VirtoCommerce.StoreModule.Test\VirtoCommerce.StoreModule.Test.csproj", "{23DA9761-7004-4E88-AE4D-3D5B5017FF49}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PayPal.PaymentGatewaysModule.Web", "src\Presentation\WebAdmin\Modules\PaymentGateways\PayPal.PaymentGatewaysModule.Web\PayPal.PaymentGatewaysModule.Web.csproj", "{DE5181F4-3191-4882-8138-1537A9A1684C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PayPal.PaymentGatewaysModule.Web", "Modules\PaymentGateways\PayPal.PaymentGatewaysModule.Web\PayPal.PaymentGatewaysModule.Web.csproj", "{DE5181F4-3191-4882-8138-1537A9A1684C}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Customer", "Customer", "{8D027C0D-830D-4ED2-B468-3DA404FC0FB4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.CustomerModule.Data", "src\Presentation\WebAdmin\Modules\Customer\VirtoCommerce.CustomerModule.Data\VirtoCommerce.CustomerModule.Data.csproj", "{1E7CB134-7D2C-45FF-8EB7-3C6D474D9536}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.CustomerModule.Data", "Modules\Customer\VirtoCommerce.CustomerModule.Data\VirtoCommerce.CustomerModule.Data.csproj", "{1E7CB134-7D2C-45FF-8EB7-3C6D474D9536}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.CustomerModule.Web", "src\Presentation\WebAdmin\Modules\Customer\VirtoCommerce.CustomerModule.Web\VirtoCommerce.CustomerModule.Web.csproj", "{037CFE60-6A94-4B7E-8608-59602A059640}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.CustomerModule.Web", "Modules\Customer\VirtoCommerce.CustomerModule.Web\VirtoCommerce.CustomerModule.Web.csproj", "{037CFE60-6A94-4B7E-8608-59602A059640}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.CustomerModule.Test", "src\Presentation\WebAdmin\Modules\Customer\VirtoCommerce.CustomerModule.Test\VirtoCommerce.CustomerModule.Test.csproj", "{7BE9ACD8-B740-45A6-B6D5-9FE231E6F764}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.CustomerModule.Test", "Modules\Customer\VirtoCommerce.CustomerModule.Test\VirtoCommerce.CustomerModule.Test.csproj", "{7BE9ACD8-B740-45A6-B6D5-9FE231E6F764}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Pricing", "Pricing", "{F5088C89-A522-4E7D-9751-83B1813C0CCF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.PricingModule.Data", "src\Presentation\WebAdmin\Modules\Pricing\VirtoCommerce.PricingModule.Data\VirtoCommerce.PricingModule.Data.csproj", "{EADF6315-2743-49D4-AABE-1FC10BEAA461}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.PricingModule.Data", "Modules\Pricing\VirtoCommerce.PricingModule.Data\VirtoCommerce.PricingModule.Data.csproj", "{EADF6315-2743-49D4-AABE-1FC10BEAA461}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.PricingModule.Web", "src\Presentation\WebAdmin\Modules\Pricing\VirtoCommerce.PricingModule.Web\VirtoCommerce.PricingModule.Web.csproj", "{2CD16215-39F4-4979-BBEC-0524921F2DDC}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.PricingModule.Web", "Modules\Pricing\VirtoCommerce.PricingModule.Web\VirtoCommerce.PricingModule.Web.csproj", "{2CD16215-39F4-4979-BBEC-0524921F2DDC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.PricingModule.Test", "src\Presentation\WebAdmin\Modules\Pricing\VirtoCommerce.PricingModule.Test\VirtoCommerce.PricingModule.Test.csproj", "{D877A796-EE13-4ADD-91A9-152E0574BA7D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.PricingModule.Test", "Modules\Pricing\VirtoCommerce.PricingModule.Test\VirtoCommerce.PricingModule.Test.csproj", "{D877A796-EE13-4ADD-91A9-152E0574BA7D}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Inventory", "Inventory", "{87A3EC5D-85C6-41F1-A13B-40593930FB8D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.InventoryModule.Data", "src\Presentation\WebAdmin\Modules\Inventory\VirtoCommerce.InventoryModule.Data\VirtoCommerce.InventoryModule.Data.csproj", "{0B9A7D78-988E-40CC-BD09-C02A3006F564}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.InventoryModule.Data", "Modules\Inventory\VirtoCommerce.InventoryModule.Data\VirtoCommerce.InventoryModule.Data.csproj", "{0B9A7D78-988E-40CC-BD09-C02A3006F564}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.InventoryModule.Web", "src\Presentation\WebAdmin\Modules\Inventory\VirtoCommerce.InventoryModule.Web\VirtoCommerce.InventoryModule.Web.csproj", "{5C430217-8AF2-4B38-A6DA-DB4BC726CDF3}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.InventoryModule.Web", "Modules\Inventory\VirtoCommerce.InventoryModule.Web\VirtoCommerce.InventoryModule.Web.csproj", "{5C430217-8AF2-4B38-A6DA-DB4BC726CDF3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.InventoryModule.Test", "src\Presentation\WebAdmin\Modules\Inventory\VirtoCommerce.InventoryModule.Test\VirtoCommerce.InventoryModule.Test.csproj", "{455526E4-3725-4E85-A5EC-FEAF56045508}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.InventoryModule.Test", "Modules\Inventory\VirtoCommerce.InventoryModule.Test\VirtoCommerce.InventoryModule.Test.csproj", "{455526E4-3725-4E85-A5EC-FEAF56045508}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CMS", "CMS", "{D1556CC7-62A5-4D89-BD35-FC5B5AE17AE8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.PagesModule.Web", "src\Presentation\WebAdmin\Modules\CMS\VirtoCommerce.PagesModule.Web\VirtoCommerce.PagesModule.Web.csproj", "{11FF29EB-5D91-46E4-B593-0DEB2F67B094}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.PagesModule.Web", "Modules\CMS\VirtoCommerce.PagesModule.Web\VirtoCommerce.PagesModule.Web.csproj", "{11FF29EB-5D91-46E4-B593-0DEB2F67B094}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.ThemeModule.Web", "src\Presentation\WebAdmin\Modules\CMS\VirtoCommerce.ThemeModule.Web\VirtoCommerce.ThemeModule.Web.csproj", "{639FA8E1-99BE-4386-9808-FC1AEC35FD61}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.ThemeModule.Web", "Modules\CMS\VirtoCommerce.ThemeModule.Web\VirtoCommerce.ThemeModule.Web.csproj", "{639FA8E1-99BE-4386-9808-FC1AEC35FD61}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.Content.Data", "src\Presentation\WebAdmin\Modules\CMS\VirtoCommerce.Content.Data\VirtoCommerce.Content.Data.csproj", "{E55E08B5-3AF9-467D-8F90-4BEF27BAFA28}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.Content.Data", "Modules\CMS\VirtoCommerce.Content.Data\VirtoCommerce.Content.Data.csproj", "{E55E08B5-3AF9-467D-8F90-4BEF27BAFA28}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.Content.Tests", "src\Presentation\WebAdmin\Modules\CMS\VirtoCommerce.Content.Tests\VirtoCommerce.Content.Tests.csproj", "{8CD7D981-DFAB-4DA6-80C9-9C661FA831B1}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.Content.Tests", "Modules\CMS\VirtoCommerce.Content.Tests\VirtoCommerce.Content.Tests.csproj", "{8CD7D981-DFAB-4DA6-80C9-9C661FA831B1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.Content.Pages.Data", "src\Presentation\WebAdmin\Modules\CMS\VirtoCommerce.Content.Pages.Data\VirtoCommerce.Content.Pages.Data.csproj", "{8F9F26FC-344E-4599-B2F3-CB560F1D5499}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.Content.Pages.Data", "Modules\CMS\VirtoCommerce.Content.Pages.Data\VirtoCommerce.Content.Pages.Data.csproj", "{8F9F26FC-344E-4599-B2F3-CB560F1D5499}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.Content.Menu.Data", "src\Presentation\WebAdmin\Modules\CMS\VirtoCommerce.Content.Menu.Data\VirtoCommerce.Content.Menu.Data.csproj", "{4021578C-A4A9-4C1F-BFA3-D10532533C5F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.Content.Menu.Data", "Modules\CMS\VirtoCommerce.Content.Menu.Data\VirtoCommerce.Content.Menu.Data.csproj", "{4021578C-A4A9-4C1F-BFA3-D10532533C5F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.MenuModule.Web", "src\Presentation\WebAdmin\Modules\CMS\VirtoCommerce.MenuModule.Web\VirtoCommerce.MenuModule.Web.csproj", "{80A936A0-D611-4296-A22C-78183E8A1B4D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.MenuModule.Web", "Modules\CMS\VirtoCommerce.MenuModule.Web\VirtoCommerce.MenuModule.Web.csproj", "{80A936A0-D611-4296-A22C-78183E8A1B4D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
