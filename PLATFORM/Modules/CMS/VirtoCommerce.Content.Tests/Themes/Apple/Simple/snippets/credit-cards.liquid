@@ -1,0 +1,7 @@
+{% if settings.show_payment_types %}
+<div id="payment-methods">
+  {% for type in shop.enabled_payment_types %}
+  <img width="50" src="{{ type | payment_type_img_url }}" />
+  {% endfor %}
+</div>
+{% endif %}

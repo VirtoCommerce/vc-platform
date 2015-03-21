@@ -1,0 +1,27 @@
+﻿<div class="blade-static __bottom" ng-if="blade.bottomTemplate">
+    <ng-include src='blade.bottomTemplate'> </ng-include>
+</div>
+<div class="blade-content">
+    <div class="blade-inner">
+        <div class="inner-block">
+            <form name="itemProperties" class="form" ng-init="propGroups = [{title:'Product properties', type:'product'}, {title:'Variation properties', type:'variation'}]">
+                <fieldset ng-repeat="propGroup in propGroups" ng-init="setForm(itemProperties)">
+                    <legend>
+                        {{propGroup.title}}: <span class="count">{{properties.length}}</span>
+                    </legend>
+                    <div class="form-group" ng-repeat="prop in properties = (blade.item.properties | filter: {type:propGroup.type})">
+                        <label class="form-label">
+                            {{prop.name}}
+                            <a ng-show="prop.isManageable" href="" ng-click="editProperty(prop)">
+                                <i class="form-ico fa fa-pencil"></i>
+                            </a>
+                            <span ng-show="!prop.isManageable">{{prop.name}}</span>
+                        </label>
+                        <va-property2 ng-model="prop" get-prop-values="getPropValues" />
+                    </div>
+                    <div ng-if="properties.length == 0">None</div>
+                </fieldset>
+            </form>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,47 @@
+﻿<div class="blade-content">
+	<div class="blade-inner">
+		<div class="inner-block">
+			<div class="table-wrapper" ng-if="blade.currentEntities.length">
+				<table class="table">
+					<thead>
+						<tr>
+							<th class="table-col">Language</th>
+							<th class="table-col">Name</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr class="table-item" ng-repeat="data in blade.currentEntities" ng-click='blade.openBlade(data)'>
+							<td class="table-col __date">
+								<span class="flag flag-{{blade.getFlag(data.language)}}"></span>
+								<span>{{data.language}}</span>
+							</td>
+							<td class="table-col">
+								<span>
+									{{data.name}}
+								</span>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<p class="text" ng-if="!blade.currentEntities.length">No Link Lists Yet</p>
+		</div>
+	</div>
+</div>
+
+<!--<td class="table-col">
+	<ul class="menu __context" role="menu" id="ipl_menu_{{data.id}}">
+		<li class="menu-item" ng-click='deleteLink(data)'>
+			<i class="menu-ico fa fa-trash-o"></i> Delete
+		</li>
+	</ul>
+</td>-->
+
+
+<!--<ul class="list __items" ng-if="blade.currentEntities.length">
+				<li class="list-item" ng-click="blade.openBlade(data)" ng-repeat="data in blade.currentEntities | orderBy:name:reverse" ng-class="{'__selected': data.id === selectedNodeId}">
+					<span class="list-name">
+						{{data.name}}
+					</span>
+				</li>
+			</ul>-->

@@ -1,0 +1,25 @@
+﻿<Activity mc:Ignorable="sap" x:Class="VirtoCommerce.OrderWorkflow.ShoppingCartPrepareWorkflow" xmlns:vo="clr-namespace:VirtoCommerce.OrderWorkflow;assembly=VirtoCommerce.OrderWorkflowActivities" xmlns="http://schemas.microsoft.com/netfx/2009/xaml/activities" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:mv="clr-namespace:Microsoft.VisualBasic;assembly=System" xmlns:mva="clr-namespace:Microsoft.VisualBasic.Activities;assembly=System.Activities" xmlns:s="clr-namespace:System;assembly=mscorlib" xmlns:s1="clr-namespace:System;assembly=System" xmlns:s2="clr-namespace:System;assembly=System.Xml" xmlns:s3="clr-namespace:System;assembly=System.Core" xmlns:sap="http://schemas.microsoft.com/netfx/2009/xaml/activities/presentation" xmlns:scg="clr-namespace:System.Collections.Generic;assembly=System" xmlns:scg1="clr-namespace:System.Collections.Generic;assembly=System.ServiceModel" xmlns:scg2="clr-namespace:System.Collections.Generic;assembly=System.Core" xmlns:scg3="clr-namespace:System.Collections.Generic;assembly=mscorlib" xmlns:sd="clr-namespace:System.Data;assembly=System.Data" xmlns:sl="clr-namespace:System.Linq;assembly=System.Core" xmlns:st="clr-namespace:System.Text;assembly=mscorlib" xmlns:vcom="clr-namespace:VirtoCommerce.Foundation.Orders.Model;assembly=VirtoCommerce.Foundation" xmlns:vcwm="clr-namespace:VirtoCommerce.Foundation.Frameworks.Workflow;assembly=VirtoCommerce.Foundation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:local2="clr-namespace:VirtoCommerce.OrderWorkflow" xmlns:sad="clr-namespace:System.Activities.Debugger;assembly=System.Activities">
+  <x:Members>
+    <x:Property Name="OrderGroupArgument" Type="InArgument(vcom:OrderGroup)" />
+    <x:Property Name="ResultArgument" Type="InOutArgument(vcwm:WorkflowResult)" />
+  </x:Members>
+  <sap:VirtualizedContainerService.HintSize>240,240</sap:VirtualizedContainerService.HintSize>
+  <mva:VisualBasic.Settings>Assembly references and imported namespaces for internal implementation</mva:VisualBasic.Settings>
+  <Sequence sad:XamlDebuggerXmlReader.FileName="D:\projects\VCF\src\Core\WorkFlow\WFWorkflows\ShoppingCartPrepareWorkflow.xaml" sap:VirtualizedContainerService.HintSize="222.4,646.4">
+    <sap:WorkflowViewStateService.ViewState>
+      <scg3:Dictionary x:TypeArguments="x:String, x:Object">
+        <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+      </scg3:Dictionary>
+    </sap:WorkflowViewStateService.ViewState>
+    <vo:ValidateLineItemsActivity sap:VirtualizedContainerService.HintSize="200,22.4" OrderGroupArgument="[OrderGroupArgument]" ResultArgument="[ResultArgument]"/>
+    <vo:CheckInventoryActivity sap:VirtualizedContainerService.HintSize="200,22.4" OrderGroupArgument="[OrderGroupArgument]" ResultArgument="[ResultArgument]"/>
+    <vo:RemoveDiscountActivity sap:VirtualizedContainerService.HintSize="200,22.4" OrderGroupArgument="[OrderGroupArgument]" ResultArgument="[ResultArgument]"/>
+    <vo:CalculateTotalsActivity sap:VirtualizedContainerService.HintSize="200,22.4" OrderGroupArgument="[OrderGroupArgument]" ResultArgument="[ResultArgument]"/>
+    <vo:ShipmentSplitActivity sap:VirtualizedContainerService.HintSize="200,22.4" OrderGroupArgument="[OrderGroupArgument]" ResultArgument="[ResultArgument]"/>
+    <vo:ProcessShipmentActivity sap:VirtualizedContainerService.HintSize="200,22.4" OrderGroupArgument="[OrderGroupArgument]" ResultArgument="[ResultArgument]"/>
+    <vo:CalculateDiscountsActivity sap:VirtualizedContainerService.HintSize="200,22.4" OrderGroupArgument="[OrderGroupArgument]" ResultArgument="[ResultArgument]"/>
+    <vo:CalculateTotalsActivity sap:VirtualizedContainerService.HintSize="200,22.4" OrderGroupArgument="[OrderGroupArgument]" ResultArgument="[ResultArgument]"/>
+    <vo:CalculateTaxActivity sap:VirtualizedContainerService.HintSize="200,22.4" OrderGroupArgument="[OrderGroupArgument]" ResultArgument="[ResultArgument]"/>
+    <vo:CalculateTotalsActivity sap:VirtualizedContainerService.HintSize="200,22.4" OrderGroupArgument="[OrderGroupArgument]" ResultArgument="[ResultArgument]"/>
+  </Sequence>
+</Activity>

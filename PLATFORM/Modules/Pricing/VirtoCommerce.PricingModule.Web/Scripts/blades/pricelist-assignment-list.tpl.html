@@ -1,0 +1,30 @@
+﻿<div class="blade-content __medium-wide">
+    <div class="blade-inner">
+        <div class="inner-block">
+            <div class="table-wrapper">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th class="table-col">Assignment name</th>
+                            <th class="table-col">Catalog</th>
+                            <th class="table-col">Priority</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="table-item" ng-repeat="data in blade.currentEntities track by data.id" ng-class="{'__selected': data.id === selectedNodeId}" ng-click='selectNode(data)'>
+                            <td class="table-col">
+                                <span class="table-t">{{data.name}}</span>
+                            </td>
+                            <td class="table-col">
+                                <span class="table-t">{{data.catalogId}}</span>
+                            </td>
+                            <td class="table-col __product-code">
+                                <span>{{data.priority}}</span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

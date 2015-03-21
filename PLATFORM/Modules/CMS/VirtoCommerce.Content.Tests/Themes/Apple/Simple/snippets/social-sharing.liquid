@@ -1,0 +1,68 @@
+{% if template contains 'article' or template contains 'blog' %}
+  {% capture permalinkURL %}{{ shop.url }}{{ article.url }}{% endcapture %}
+  {% capture shareTitle %}{{ article.title }}{% endcapture %}
+
+{% elsif template contains 'product' %}
+  {% capture permalinkURL %}{{ shop.url }}{{ product.url }}{% endcapture %}
+  {% capture shareTitle %}{{ product.title }}{% endcapture %}
+
+{% endif %}
+
+{% assign shareButtonStyle = settings.social_sharing_style %}
+
+<div class="social-sharing {{ shareButtonStyle }}" data-permalink="{{ permalinkURL }}">
+
+  {% if settings.share_facebook %}
+    <a target="_blank" href="//www.facebook.com/sharer.php?u={{ permalinkURL }}" class="share-facebook">
+      <span class="icon icon-facebook"></span>
+      <span class="share-title">Share</span>
+      {% if settings.social_sharing_count %}
+        <span class="share-count">0</span>
+      {% endif %}
+    </a>
+  {% endif %}
+
+  {% if settings.share_twitter %}
+    <a target="_blank" href="//twitter.com/share?url={{ permalinkURL }}&amp;text={{ shareTitle }}" class="share-twitter">
+      <span class="icon icon-twitter"></span>
+      <span class="share-title">Tweet</span>
+      {% if settings.social_sharing_count %}
+        <span class="share-count">0</span>
+      {% endif %}
+    </a>
+  {% endif %}
+
+  {% if template contains 'product' %}
+
+    {% if settings.share_pinterest %}
+      <a target="_blank" href="//pinterest.com/pin/create/button/?url={{ permalinkURL }}&amp;media={{ product.featured_image | product_img_url: 'original' }}&amp;description={{ product.title | escape }}" class="share-pinterest">
+        <span class="icon icon-pinterest"></span>
+        <span class="share-title">Pin it</span>
+        {% if settings.social_sharing_count %}
+          <span class="share-count">0</span>
+        {% endif %}
+      </a>
+    {% endif %}
+
+    {% if settings.share_fancy %}
+      <a target="_blank" href="http://www.thefancy.com/fancyit?ItemURL={{ permalinkURL }}&amp;Title={{ product.title }}&amp;Category=Other&amp;ImageURL={{ product.featured_image | product_img_url: 'original' }}" class="share-fancy">
+        <span class="icon icon-fancy"></span>
+        <span class="share-title">Fancy</span>
+      </a>
+    {% endif %}
+
+  {% endif %}
+
+  {% if settings.share_google %}
+    <a target="_blank" href="//plus.google.com/share?url={{ permalinkURL }}" class="share-google">
+      <!-- Cannot get Google+ share count with JS yet -->
+      <span class="icon icon-google"></span>
+      {% if settings.social_sharing_count %}
+        <span class="share-count">+1</span>
+      {% else %}
+        <span class="share-title">+1</span>
+      {% endif %}
+    </a>
+  {% endif %}
+
+</div>

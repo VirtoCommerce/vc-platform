@@ -1,0 +1,70 @@
+﻿<div class="blade-static __expanded">
+    <va-breadcrumb ng-model="blade.breadcrumbs"></va-breadcrumb>
+    <div class="form-group">
+        <div class="form-input __search">
+            <input type="text" placeholder="Search keyword..." ng-model="filter.searchKeyword" ui-keyup="{'enter':'blade.refresh()'}">
+        </div>
+        <p class="form-count">Count: <span class="count">{{pageSettings.totalItems}}</span></p>
+    </div>
+</div>
+<div class="blade-content __medium-wide">
+    <div class="blade-inner">
+        <div class="inner-block">
+            <div class="table-wrapper">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th class="table-col">
+                                <label class="form-control __checkbox">
+                                    <input type="checkbox" ng-model="selectedAll" ng-change="checkAll(selectedAll)" />
+                                    <span class="check"></span>
+                                </label>
+                            </th>
+                            <th class="table-col" title="Organization or individual Customer">Type</th>
+                            <th class="table-col">Name</th>
+                            <th class="table-col">Address</th>
+                            <th class="table-col">Email</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="table-item" ng-repeat="data in listEntries track by data.id" ng-class="{'__selected': data.id === selectedNodeId}" context-menu data-target="cml_menu_{{data.id}}">
+                            <td class="table-col __product-control">
+                                <label class="form-control __checkbox">
+                                    <input type="checkbox" ng-model="data.selected">
+                                    <span class="check"></span>
+                                </label>
+                            </td>
+                            <td class="table-col __product-img" ng-attr-title="{{data.memberType}}" ng-click='selectNode(data)'>
+                                <div class="product-img">
+                                    <i class="table-ico fa" ng-class="data.memberType === 'Organization' ? 'fa-university' : 'fa-user'"></i>
+                                </div>
+                            </td>
+                            <td class="table-col" ng-click='selectNode(data)'>
+                                <span class="table-t">{{data.displayName}}</span>
+                                <!--<span class="table-descr" ng-if="data.statusId">{{data.statusId}}</span>-->
+                            </td>
+                            <td class="table-col" ng-click='selectNode(data)'>
+                                <span>{{getMainAddress(data)}}</span>
+                            </td>
+                            <td class="table-col" ng-click='selectNode(data)'>
+                                <span>{{getMainEmail(data)}}</span>
+                                <ul class="menu __context" role="menu" id="cml_menu_{{data.id}}">
+                                    <li class="menu-item" ng-click='edit(data)'>
+                                        <i class="menu-ico fa fa-edit"></i> Manage
+                                    </li>
+                                    <li class="menu-item" ng-click='delete()'>
+                                        <i class="menu-ico fa fa-trash-o"></i> Delete
+                                    </li>
+                                </ul>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="pagination" ng-if="pageSettings.listEntriesPerPageCount < pageSettings.totalItems" ng-include="'pagerTemplate.html'"></div>
+            <script type="text/ng-template" id="pagerTemplate.html">
+                <pagination ng-if="pageSettings.listEntriesPerPageCount < pageSettings.totalItems" boundary-links="true" max-size="pageSettings.numPages" items-per-page="pageSettings.listEntriesPerPageCount" total-items="pageSettings.totalItems" ng-model="pageSettings.currentPage" class="pagination-sm" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></pagination>
+            </script>
+        </div>
+    </div>
+</div>

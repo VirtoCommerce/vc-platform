@@ -1,0 +1,48 @@
+﻿<div class="blade-content __medium-wide">
+    <div class="blade-inner">
+        <div class="inner-block">
+            <div class="table-wrapper">
+                <table class="table" ng-if="blade.currentEntities.length > 0">
+                    <thead>
+                        <tr class="table-item">
+                            <th class="table-col __product-control">
+                                <label class="form-control __checkbox">
+                                    <input type="checkbox" ng-model="selectedAll" ng-change="checkAll(selectedAll)">
+                                    <span class="check"></span>
+                                </label>
+                            </th>
+                            <th class="table-col">Img</th>
+                            <th class="table-col">Product</th>
+                            <th class="table-col">Group</th>
+                        </tr>
+                    </thead>
+                    <tbody ui-sortable="sortableOptions" ng-model="blade.currentEntities">
+                        <!--| orderBy:priority-->
+                        <tr class="table-item" ng-repeat="data in blade.currentEntities track by $index" ng-class="{'__selected': data === selectedItem}">
+                            <td class="table-col __product-control">
+                                <label class="form-control __checkbox">
+                                    <input type="checkbox" ng-model="data.selected">
+                                    <span class="check"></span>
+                                </label>
+                            </td>
+                            <td class="table-col __product-img">
+                                <div class="product-img">
+                                    <div class="image" style="background-image: url({{data.productImg}})" ng-if="data.type!=='category' && data.productImg"></div>
+                                    <i class="table-ico fa" ng-class="data.type == 'category' ? ' fa-folder' : ' fa-image'" ng-if="!data.productImg"></i>
+                                </div>
+                            </td>
+                            <td class="table-col __product-name">
+                                <span title="{{data.productName}}">{{data.productName}}</span>
+                                <span title="Code: {{data.productCode}}" class="blade-sw-title">{{data.productCode}}</span>
+                            </td>
+                            <td class="table-col">
+                                <span title="Association group name">{{data.name}}</span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div ng-if="blade.currentEntities.length == 0" class="spacer">No Associations yet</div>
+        </div>
+    </div>
+</div>

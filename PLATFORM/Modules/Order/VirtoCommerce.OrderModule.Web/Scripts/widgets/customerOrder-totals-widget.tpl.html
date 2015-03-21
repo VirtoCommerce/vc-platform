@@ -1,0 +1,9 @@
+﻿<div class="tile double wide">
+    <ul class="list __prices">
+        <li class="list-item">Sub total <span class="list-price">{{customerOrder._subTotal | number:2}}&nbsp;{{customerOrder.currency}}</span></li>
+        <li class="list-item">Shipping total <span class="list-price">{{customerOrder._shippingTotal | number:2}}&nbsp;{{customerOrder.currency}}</span></li>
+        <!--<li class="list-item">Tax total <span class="list-price">{{customerOrder._taxTotal | number:2}}&nbsp;{{customerOrder.currency}}</span></li>-->
+        <li class="list-item">Discount Total <span class="list-price">{{customerOrder._discountTotal | number:2}}&nbsp;{{customerOrder.currency}}</span></li>
+        <li class="list-item __total">Total <span class="list-price">{{customerOrder._total | number:2}}&nbsp;{{customerOrder.currency}}</span></li>
+    </ul>
+</div>

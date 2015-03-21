@@ -1,0 +1,10 @@
+<td class="table-col">
+    <i ng-class="(notification.notifyType=='info') ? 'fa-comments' : 'fa-warning'" class="table-ico fa"></i>
+</td>
+<td class="table-col">
+    <span class="table-t" ng-bind="notification.title+((notification.repeatCount)?' ('+(notification.repeatCount+1) + ')':'')"></span>
+    <span class="table-descr" ng-bind="notification.description"></span>
+</td>
+<td class="table-col __date">
+    <span class="table-date" am-time-ago="notification.created"></span>
+</td>

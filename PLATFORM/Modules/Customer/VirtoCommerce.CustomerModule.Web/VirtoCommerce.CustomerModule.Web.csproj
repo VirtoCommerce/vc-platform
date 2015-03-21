@@ -1,0 +1,208 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>
+    </ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{037CFE60-6A94-4B7E-8608-59602A059640}</ProjectGuid>
+    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>VirtoCommerce.CustomerModule.Web</RootNamespace>
+    <AssemblyName>VirtoCommerce.CustomerModule.Web</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <UseIISExpress>true</UseIISExpress>
+    <IISExpressSSLPort />
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\..\..\..\..\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="EntityFramework">
+      <HintPath>..\..\..\..\..\..\packages\EntityFramework.6.1.1\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer">
+      <HintPath>..\..\..\..\..\..\packages\EntityFramework.6.1.1\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.Practices.Unity, Version=3.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\packages\Unity.3.5.1404.0\lib\net45\Microsoft.Practices.Unity.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Practices.Unity.Configuration">
+      <HintPath>..\..\..\..\..\..\packages\Unity.3.5.1404.0\lib\net45\Microsoft.Practices.Unity.Configuration.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Practices.Unity.RegistrationByConvention">
+      <HintPath>..\..\..\..\..\..\packages\Unity.3.5.1404.0\lib\net45\Microsoft.Practices.Unity.RegistrationByConvention.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\packages\Newtonsoft.Json.6.0.8\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="Omu.ValueInjecter">
+      <HintPath>..\..\..\..\..\..\packages\valueinjecter.2.3.3\lib\net35\Omu.ValueInjecter.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Net.Http.Formatting, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\packages\Microsoft.AspNet.WebApi.Client.5.2.3\lib\net45\System.Net.Http.Formatting.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.DynamicData" />
+    <Reference Include="System.Web.Entity" />
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Web.Http, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\packages\Microsoft.AspNet.WebApi.Core.5.2.3\lib\net45\System.Web.Http.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.EnterpriseServices" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+    <Content Include="module.manifest">
+      <SubType>Designer</SubType>
+    </Content>
+    <None Include="Web.Debug.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </None>
+    <None Include="Web.Release.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Scripts\blades\!blades.js" />
+    <Content Include="Scripts\blades\member-add.js" />
+    <Content Include="Scripts\blades\member-add.tpl.html" />
+    <Content Include="Scripts\blades\organization-detail.tpl.html" />
+    <Content Include="Scripts\blades\member-list.js" />
+    <Content Include="Scripts\blades\member-list.tpl.html" />
+    <Content Include="Scripts\blades\member-property-list.js" />
+    <Content Include="Scripts\blades\member-property-list.tpl.html" />
+    <Content Include="Scripts\blades\member-detail.js" />
+    <Content Include="Scripts\blades\customer-detail.tpl.html" />
+    <Content Include="Scripts\blades\member-phones-list.js" />
+    <Content Include="Scripts\blades\member-emails-list.js" />
+    <Content Include="Scripts\blades\member-phones-list.tpl.html" />
+    <Content Include="Scripts\blades\member-emails-list.tpl.html" />
+    <Content Include="Scripts\blades\member-address-detail.js" />
+    <Content Include="Scripts\blades\member-address-detail.tpl.html" />
+    <Content Include="Scripts\blades\member-address-list.js" />
+    <Content Include="Scripts\blades\member-address-list.tpl.html" />
+    <Content Include="Scripts\blades\member-property-detail.js" />
+    <Content Include="Scripts\blades\member-property-detail.tpl.html" />
+    <Content Include="Scripts\blades\member-property-valueType.js" />
+    <Content Include="Scripts\blades\member-property-valueType.tpl.html" />
+    <Content Include="Scripts\resources\members.js" />
+    <Content Include="Scripts\customer.js" />
+    <Content Include="Scripts\widgets\memberPhonesWidget.js" />
+    <Content Include="Scripts\widgets\memberEmailsWidget.js" />
+    <Content Include="Scripts\widgets\!memberAddressesWidget.js" />
+    <Content Include="Scripts\widgets\memberPhonesWidget.tpl.html" />
+    <Content Include="Scripts\widgets\memberEmailsWidget.tpl.html" />
+    <Content Include="Scripts\widgets\!memberAddressesWidget.tpl.html" />
+    <Content Include="Scripts\widgets\memberPropertyWidget.js" />
+    <Content Include="Scripts\widgets\memberPropertyWidget.tpl.html" />
+    <Content Include="Web.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Binders\SearchCriteriaBinder.cs" />
+    <Compile Include="Controllers\Api\CustomerController.cs" />
+    <Compile Include="Converters\AddressConverter.cs" />
+    <Compile Include="Converters\ContactConverter.cs" />
+    <Compile Include="Converters\NoteConverter.cs" />
+    <Compile Include="Converters\OrganizationConverter.cs" />
+    <Compile Include="Converters\PropertyConverter.cs" />
+    <Compile Include="Converters\SearchCriteriaConverter.cs" />
+    <Compile Include="Model\Address.cs" />
+    <Compile Include="Model\Contact.cs" />
+    <Compile Include="Model\Member.cs" />
+    <Compile Include="Model\Note.cs" />
+    <Compile Include="Model\Organization.cs" />
+    <Compile Include="Model\Property.cs" />
+    <Compile Include="Model\SearchCriteria.cs" />
+    <Compile Include="Model\SearchResult.cs" />
+    <Compile Include="Module.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\..\Core\CommerceFoundation.Data\CommerceFoundation.Data.csproj">
+      <Project>{bb168a74-0f1e-43be-a616-134902238b80}</Project>
+      <Name>CommerceFoundation.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\..\Core\CommerceFoundation\CommerceFoundation.csproj">
+      <Project>{e7fc9a51-1b39-4bdc-983a-8a059c5fc58b}</Project>
+      <Name>CommerceFoundation</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\VirtoCommerce.Framework.Web\VirtoCommerce.Framework.Web.csproj">
+      <Project>{f7c9313b-522e-4619-abc9-8c7d4600d6b5}</Project>
+      <Name>VirtoCommerce.Framework.Web</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Core\VirtoCommerce.Domain\VirtoCommerce.Domain.csproj">
+      <Project>{67c58a78-ddea-4fa3-a969-1cab582918e4}</Project>
+      <Name>VirtoCommerce.Domain</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\VirtoCommerce.CustomerModule.Data\VirtoCommerce.CustomerModule.Data.csproj">
+      <Project>{1e7cb134-7d2c-45ff-8eb7-3c6d474d9536}</Project>
+      <Name>VirtoCommerce.CustomerModule.Data</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != '' And '$(VCModulesOutputDir)' == ''" />
+  <Import Project="$(SolutionDir)\targets\VirtoCommerce.Module.targets" Condition="'$(VCModulesOutputDir)' != ''" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <SaveServerSettingsInUserFile>True</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
+

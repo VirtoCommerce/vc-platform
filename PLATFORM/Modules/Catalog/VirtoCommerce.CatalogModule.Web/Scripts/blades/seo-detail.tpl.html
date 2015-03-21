@@ -1,0 +1,61 @@
+﻿<div class="blade-static __bottom" ng-if="blade.bottomTemplate">
+    <ng-include src='blade.bottomTemplate'> </ng-include>
+</div>
+<div class="blade-content">
+    <div class="blade-inner">
+        <div class="inner-block">
+            <form name="contextEntityDetailForm" class="form" novalidate>
+                <fieldset ng-init="setForm(contextEntityDetailForm);">
+                    <legend>
+                        URL keyword
+                    </legend>
+                    <div class="form-group" ng-repeat="data in seoInfos | orderBy:languageCode">
+                        <ng-form name="form">
+                           <div class="form-input __langs">
+                                <span class="flag flag-{{data.languageCode.substr(3).toLowerCase()}}"></span>
+                                <input ng-model="data.semanticUrl" name="semanticUrl{{$index}}" required ui-validate=" 'semanticUrlValidator($value)' " />
+                            </div>
+                            <div class="form-error" data-ng-show="form.semanticUrl{{$index}}.$dirty">
+                                <span data-ng-show="form.semanticUrl{{$index}}.$error.required">Required</span>
+                                <span data-ng-show="form.semanticUrl{{$index}}.$error.validator">Invalid characters in URL found</span>
+                            </div>
+                        </ng-form>
+                    </div>
+                </fieldset>
+                <fieldset>
+                    <legend>
+                        Page title
+                    </legend>
+                    <div class="form-group" ng-repeat="data in seoInfos | orderBy:languageCode">
+                        <div class="form-input __langs">
+                            <span class="flag flag-{{data.languageCode.substr(3).toLowerCase()}}"></span>
+                            <input ng-model="data.pageTitle" class="form-control" />
+                        </div>
+                    </div>
+                </fieldset>
+                <fieldset>
+                    <legend>
+                        Meta description
+                    </legend>
+                    <div class="form-group" ng-repeat="data in seoInfos | orderBy:languageCode">
+                        <div class="form-input __langs">
+                            <span class="flag flag-{{data.languageCode.substr(3).toLowerCase()}}"></span>
+                            <textarea ng-model="data.metaDescription" class="form-control" cols="30" rows="3"></textarea>
+                        </div>
+                    </div>
+                </fieldset>
+                <fieldset>
+                    <legend>
+                        Image alternative text
+                    </legend>
+                    <div class="form-group" ng-repeat="data in seoInfos | orderBy:languageCode">
+                        <div class="form-input __langs">
+                            <span class="flag flag-{{data.languageCode.substr(3).toLowerCase()}}"></span>
+                            <input ng-model="data.imageAltDescription" class="form-control" />
+                        </div>
+                    </div>
+                </fieldset>
+            </form>
+        </div>
+    </div>
+</div>

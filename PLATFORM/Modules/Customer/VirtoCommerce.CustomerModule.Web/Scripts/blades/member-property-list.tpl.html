@@ -1,0 +1,24 @@
+﻿<div class="blade-static __bottom" ng-include="'Modules/$(VirtoCommerce.Core)/Scripts/common/ok-cancel2.tpl.html'"></div>
+<div class="blade-content">
+    <div class="blade-inner">
+        <div class="inner-block">
+            <form name="formScope" class="form">
+                <fieldset ng-init="setForm(formScope);">
+                    <div class="form-group" ng-repeat="prop in blade.currentEntities as properties">
+                        <label class="form-label" for="">
+                            {{prop.name}} 
+                            <a href="" ng-click="editProperty(prop)">
+                                <i class="form-ico fa fa-pencil"></i>
+                            </a>
+                        </label>
+                        <div class="form-input">
+                            <input ng-model="prop.value" required class="form-control" placeholder="Enter value" />
+                        </div>
+                    </div>
+
+                    <div class="text" ng-if="properties.length == 0">None</div>
+                </fieldset>
+            </form>
+        </div>
+    </div>
+</div>

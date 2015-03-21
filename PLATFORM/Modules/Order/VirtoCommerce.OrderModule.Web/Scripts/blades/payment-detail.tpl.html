@@ -1,0 +1,67 @@
+﻿<div class="blade-content __medium-wide __gray">
+    <div class="canceled" ng-if="blade.currentEntity.status">{{blade.currentEntity.status}}</div>
+    <div class="blade-inner">
+        <div class="inner-block">
+            <div class="form columns clearfix">
+                <div class="column">
+                    <div class="form-group">
+                        <label class="form-label">Payment number</label>
+                        <div class="form-input">
+                            <input required type="text" ng-model="blade.currentEntity.number">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Status</label>
+                        <div class="form-input">
+                            <ui-select ng-model="blade.currentEntity.status" ng-init="statuses = ['new','pickPack','completed']">
+                                <ui-select-match placeholder="Select ...">{{$select.selected}}</ui-select-match>
+                                <ui-select-choices repeat="x as x in statuses | filter: $select.search ">
+                                    <span ng-bind-html="x | highlight: $select.search"></span>
+                                </ui-select-choices>
+                            </ui-select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Amount</label>
+                        <div class="form-input __currency">
+                            <span class="currency">{{blade.currentEntity.currency}}</span>
+                            <input required type="text" ng-model="blade.currentEntity.sum">
+                        </div>
+                    </div>
+                </div>
+                <div class="column">
+                    <div class="form-group">
+                        <label class="form-label">from</label>
+                        <div class="form-input">
+                            <div class="form-text">{{blade.currentEntity.createdDate | date:'short'}}</div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Payment gateway</label>
+                        <div class="form-input">
+                            <ui-select ng-model="blade.currentEntity.gatewayCode">
+                                <ui-select-match placeholder="Select ...">{{$select.selected.gatewayCode}}</ui-select-match>
+                                <ui-select-choices repeat="x.gatewayCode as x in paymentGateways | filter: { gatewayCode: $select.search }">
+                                    <span ng-bind-html="x.gatewayCode | highlight: $select.search"></span>
+                                </ui-select-choices>
+                            </ui-select>
+                       
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Payment purpose</label>
+                        <div class="form-input">
+                            <textarea ng-model="blade.currentEntity.purpose"></textarea>
+                        </div>
+                    </div>
+                 </div>
+            </div>
+            <div class="tile-group four">
+                <va-widget-container group="paymentDetailWidgets" blade="blade"></va-widget-container>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+

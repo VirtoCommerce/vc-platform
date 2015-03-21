@@ -1,0 +1,317 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\..\..\..\..\..\packages\xunit.runner.visualstudio.2.0.0-rc1-build1030\build\net20\xunit.runner.visualstudio.props" Condition="Exists('..\..\..\..\..\..\packages\xunit.runner.visualstudio.2.0.0-rc1-build1030\build\net20\xunit.runner.visualstudio.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{8CD7D981-DFAB-4DA6-80C9-9C661FA831B1}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>VirtoCommerce.Content.Tests</RootNamespace>
+    <AssemblyName>VirtoCommerce.Content.Tests</AssemblyName>
+    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+    <ReferencePath>$(ProgramFiles)\Common Files\microsoft shared\VSTT\$(VisualStudioVersion)\UITestExtensionPackages</ReferencePath>
+    <IsCodedUITest>False</IsCodedUITest>
+    <TestProjectType>UnitTest</TestProjectType>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\..\..\..\..\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
+    <NuGetPackageImportStamp>20bde05a</NuGetPackageImportStamp>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\packages\EntityFramework.6.1.1\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\packages\EntityFramework.6.1.1\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="Moq">
+      <HintPath>..\..\..\..\..\..\packages\Moq.4.2.1409.1722\lib\net40\Moq.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\packages\Newtonsoft.Json.6.0.8\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="Octokit, Version=0.6.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\packages\Octokit.0.6.2\lib\net45\Octokit.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Net.Http.Formatting, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\packages\Microsoft.AspNet.WebApi.Client.5.2.3\lib\net45\System.Net.Http.Formatting.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Http, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\packages\Microsoft.AspNet.WebApi.Core.5.2.3\lib\net45\System.Web.Http.dll</HintPath>
+    </Reference>
+    <Reference Include="xunit">
+      <HintPath>..\..\..\..\..\..\packages\xunit.1.9.2\lib\net20\xunit.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <Choose>
+    <When Condition="('$(VisualStudioVersion)' == '10.0' or '$(VisualStudioVersion)' == '') and '$(TargetFrameworkVersion)' == 'v3.5'">
+      <ItemGroup>
+        <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+      </ItemGroup>
+    </When>
+    <Otherwise />
+  </Choose>
+  <ItemGroup>
+    <Compile Include="DatabaseRepositoryTest.cs" />
+    <Compile Include="FileSystemRepositoryTest.cs" />
+    <Compile Include="GitHubRepositoryTest.cs" />
+    <Compile Include="MenuTests\MenuRepositoryTests.cs" />
+    <Compile Include="MenuTests\MenuServiceTests.cs" />
+    <Compile Include="PagesTests\DatabasePagesRepositoryTests.cs" />
+    <Compile Include="PagesTests\FileSystemPagesRepositoryTests.cs" />
+    <Compile Include="PagesTests\GitHubPagesRepositoryTests.cs" />
+    <Compile Include="PagesTests\PagesControllerTests.cs" />
+    <Compile Include="PagesTests\PagesServiceTests.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ThemeControllerTests.cs" />
+    <Compile Include="ThemeServiceTests.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\..\Core\CommerceFoundation.Data\CommerceFoundation.Data.csproj">
+      <Project>{bb168a74-0f1e-43be-a616-134902238b80}</Project>
+      <Name>CommerceFoundation.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\..\Core\CommerceFoundation\CommerceFoundation.csproj">
+      <Project>{e7fc9a51-1b39-4bdc-983a-8a059c5fc58b}</Project>
+      <Name>CommerceFoundation</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\VirtoCommerce.Framework.Web\VirtoCommerce.Framework.Web.csproj">
+      <Project>{f7c9313b-522e-4619-abc9-8c7d4600d6b5}</Project>
+      <Name>VirtoCommerce.Framework.Web</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\VirtoCommerce.Content.Data\VirtoCommerce.Content.Data.csproj">
+      <Project>{e55e08b5-3af9-467d-8f90-4bef27bafa28}</Project>
+      <Name>VirtoCommerce.Content.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\VirtoCommerce.Content.Menu.Data\VirtoCommerce.Content.Menu.Data.csproj">
+      <Project>{4021578c-a4a9-4c1f-bfa3-d10532533c5f}</Project>
+      <Name>VirtoCommerce.Content.Menu.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\VirtoCommerce.Content.Pages.Data\VirtoCommerce.Content.Pages.Data.csproj">
+      <Project>{8f9f26fc-344e-4599-b2f3-cb560f1d5499}</Project>
+      <Name>VirtoCommerce.Content.Pages.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\VirtoCommerce.PagesModule.Web\VirtoCommerce.PagesModule.Web.csproj">
+      <Project>{11ff29eb-5d91-46e4-b593-0deb2f67b094}</Project>
+      <Name>VirtoCommerce.PagesModule.Web</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\VirtoCommerce.ThemeModule.Web\VirtoCommerce.ThemeModule.Web.csproj">
+      <Project>{639fa8e1-99be-4386-9808-fc1aec35fd61}</Project>
+      <Name>VirtoCommerce.ThemeModule.Web</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+    <None Include="packages.config" />
+    <None Include="Pages\Apple\about_us.liquid" />
+    <None Include="Pages\Apple\contact_us.liquid" />
+    <None Include="Themes\Apple\Simple\assets\checkout.css.liquid" />
+    <None Include="Themes\Apple\Simple\assets\jquery.theme.js.liquid" />
+    <None Include="Themes\Apple\Simple\assets\social-icons.eot" />
+    <None Include="Themes\Apple\Simple\assets\social-icons.json" />
+    <None Include="Themes\Apple\Simple\assets\social-icons.ttf" />
+    <None Include="Themes\Apple\Simple\assets\social-icons.woff" />
+    <None Include="Themes\Apple\Simple\assets\theme.scss.liquid" />
+    <None Include="Themes\Apple\Simple\config\settings_data.json" />
+    <None Include="Themes\Apple\Simple\layout\theme.liquid" />
+    <None Include="Themes\Apple\Simple\locales\de.json" />
+    <None Include="Themes\Apple\Simple\locales\en.default.json" />
+    <None Include="Themes\Apple\Simple\locales\es.json" />
+    <None Include="Themes\Apple\Simple\locales\fr.json" />
+    <None Include="Themes\Apple\Simple\locales\pt-BR.json" />
+    <None Include="Themes\Apple\Simple\locales\pt-PT.json" />
+    <None Include="Themes\Apple\Simple\snippets\breadcrumb.liquid" />
+    <None Include="Themes\Apple\Simple\snippets\collection-grid-item.liquid" />
+    <None Include="Themes\Apple\Simple\snippets\collection-sort.liquid" />
+    <None Include="Themes\Apple\Simple\snippets\credit-cards.liquid" />
+    <None Include="Themes\Apple\Simple\snippets\facebook-open-graph.liquid" />
+    <None Include="Themes\Apple\Simple\snippets\paging.liquid" />
+    <None Include="Themes\Apple\Simple\snippets\product-grid-item.liquid" />
+    <None Include="Themes\Apple\Simple\snippets\social-sharing.liquid" />
+    <None Include="Themes\Apple\Simple\snippets\twitter-cards.liquid" />
+    <None Include="Themes\Apple\Simple\templates\404.liquid" />
+    <None Include="Themes\Apple\Simple\templates\article.liquid" />
+    <None Include="Themes\Apple\Simple\templates\blog.liquid" />
+    <None Include="Themes\Apple\Simple\templates\cart.liquid" />
+    <None Include="Themes\Apple\Simple\templates\collection.liquid" />
+    <None Include="Themes\Apple\Simple\templates\customers\account.liquid" />
+    <None Include="Themes\Apple\Simple\templates\customers\activate_account.liquid" />
+    <None Include="Themes\Apple\Simple\templates\customers\addresses.liquid" />
+    <None Include="Themes\Apple\Simple\templates\customers\login.liquid" />
+    <None Include="Themes\Apple\Simple\templates\customers\order.liquid" />
+    <None Include="Themes\Apple\Simple\templates\customers\register.liquid" />
+    <None Include="Themes\Apple\Simple\templates\customers\reset_password.liquid" />
+    <None Include="Themes\Apple\Simple\templates\gift_card.liquid" />
+    <None Include="Themes\Apple\Simple\templates\index.liquid" />
+    <None Include="Themes\Apple\Simple\templates\list-collections.liquid" />
+    <None Include="Themes\Apple\Simple\templates\page.contact.liquid" />
+    <None Include="Themes\Apple\Simple\templates\page.liquid" />
+    <None Include="Themes\Apple\Simple\templates\product.liquid" />
+    <None Include="Themes\Apple\Simple\templates\search.liquid" />
+    <None Include="Themes\Apple\Timber\assets\ajaxify.js.liquid" />
+    <None Include="Themes\Apple\Timber\assets\ajaxify.scss.liquid" />
+    <None Include="Themes\Apple\Timber\assets\checkout.css.liquid" />
+    <None Include="Themes\Apple\Timber\assets\gift-card.scss.liquid" />
+    <None Include="Themes\Apple\Timber\assets\ico-select.svg.liquid" />
+    <None Include="Themes\Apple\Timber\assets\icons.eot" />
+    <None Include="Themes\Apple\Timber\assets\icons.json" />
+    <None Include="Themes\Apple\Timber\assets\icons.ttf" />
+    <None Include="Themes\Apple\Timber\assets\icons.woff" />
+    <None Include="Themes\Apple\Timber\assets\shop.js.liquid" />
+    <None Include="Themes\Apple\Timber\assets\timber.scss.liquid" />
+    <None Include="Themes\Apple\Timber\config\settings_data.json" />
+    <None Include="Themes\Apple\Timber\layout\theme.liquid" />
+    <None Include="Themes\Apple\Timber\locales\de.json" />
+    <None Include="Themes\Apple\Timber\locales\en.default.json" />
+    <None Include="Themes\Apple\Timber\locales\es.json" />
+    <None Include="Themes\Apple\Timber\locales\fr.json" />
+    <None Include="Themes\Apple\Timber\locales\pt-BR.json" />
+    <None Include="Themes\Apple\Timber\locales\pt-PT.json" />
+    <None Include="Themes\Apple\Timber\snippets\ajax-cart-template.liquid" />
+    <None Include="Themes\Apple\Timber\snippets\blog-sidebar.liquid" />
+    <None Include="Themes\Apple\Timber\snippets\breadcrumb.liquid" />
+    <None Include="Themes\Apple\Timber\snippets\collection-grid-item.liquid" />
+    <None Include="Themes\Apple\Timber\snippets\collection-list-item.liquid" />
+    <None Include="Themes\Apple\Timber\snippets\collection-sidebar.liquid" />
+    <None Include="Themes\Apple\Timber\snippets\collection-sorting.liquid" />
+    <None Include="Themes\Apple\Timber\snippets\collection-views.liquid" />
+    <None Include="Themes\Apple\Timber\snippets\comment.liquid" />
+    <None Include="Themes\Apple\Timber\snippets\footer.liquid" />
+    <None Include="Themes\Apple\Timber\snippets\newsletter-form.liquid" />
+    <None Include="Themes\Apple\Timber\snippets\oldIE-js.liquid" />
+    <None Include="Themes\Apple\Timber\snippets\open-graph-tags.liquid" />
+    <None Include="Themes\Apple\Timber\snippets\pagination-custom.liquid" />
+    <None Include="Themes\Apple\Timber\snippets\product-grid-item.liquid" />
+    <None Include="Themes\Apple\Timber\snippets\product-list-item.liquid" />
+    <None Include="Themes\Apple\Timber\snippets\respond.liquid" />
+    <None Include="Themes\Apple\Timber\snippets\search-bar.liquid" />
+    <None Include="Themes\Apple\Timber\snippets\search-result-grid.liquid" />
+    <None Include="Themes\Apple\Timber\snippets\search-result.liquid" />
+    <None Include="Themes\Apple\Timber\snippets\site-nav.liquid" />
+    <None Include="Themes\Apple\Timber\snippets\tags-article.liquid" />
+    <None Include="Themes\Apple\Timber\snippets\twitter-card.liquid" />
+    <None Include="Themes\Apple\Timber\templates\404.liquid" />
+    <None Include="Themes\Apple\Timber\templates\article.liquid" />
+    <None Include="Themes\Apple\Timber\templates\blog.liquid" />
+    <None Include="Themes\Apple\Timber\templates\cart.liquid" />
+    <None Include="Themes\Apple\Timber\templates\collection.liquid" />
+    <None Include="Themes\Apple\Timber\templates\collection.list.liquid" />
+    <None Include="Themes\Apple\Timber\templates\customers\account.liquid" />
+    <None Include="Themes\Apple\Timber\templates\customers\activate_account.liquid" />
+    <None Include="Themes\Apple\Timber\templates\customers\addresses.liquid" />
+    <None Include="Themes\Apple\Timber\templates\customers\login.liquid" />
+    <None Include="Themes\Apple\Timber\templates\customers\order.liquid" />
+    <None Include="Themes\Apple\Timber\templates\customers\register.liquid" />
+    <None Include="Themes\Apple\Timber\templates\customers\reset_password.liquid" />
+    <None Include="Themes\Apple\Timber\templates\gift_card.liquid" />
+    <None Include="Themes\Apple\Timber\templates\index.liquid" />
+    <None Include="Themes\Apple\Timber\templates\list-collections.liquid" />
+    <None Include="Themes\Apple\Timber\templates\page.contact.liquid" />
+    <None Include="Themes\Apple\Timber\templates\page.liquid" />
+    <None Include="Themes\Apple\Timber\templates\product.liquid" />
+    <None Include="Themes\Apple\Timber\templates\search.liquid" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Apple\Simple\assets\apple-touch-icon-114x114.png" />
+    <Content Include="Themes\Apple\Simple\assets\apple-touch-icon-72x72.png" />
+    <Content Include="Themes\Apple\Simple\assets\apple-touch-icon.png" />
+    <Content Include="Themes\Apple\Simple\assets\blank.gif" />
+    <Content Include="Themes\Apple\Simple\assets\blankslate-producticon.png" />
+    <Content Include="Themes\Apple\Simple\assets\cc-amex.png" />
+    <Content Include="Themes\Apple\Simple\assets\cc-bitcoin.png" />
+    <Content Include="Themes\Apple\Simple\assets\cc-cirrus.png" />
+    <Content Include="Themes\Apple\Simple\assets\cc-discover.png" />
+    <Content Include="Themes\Apple\Simple\assets\cc-google.png" />
+    <Content Include="Themes\Apple\Simple\assets\cc-maestro.png" />
+    <Content Include="Themes\Apple\Simple\assets\cc-mastercard.png" />
+    <Content Include="Themes\Apple\Simple\assets\cc-paypal.png" />
+    <Content Include="Themes\Apple\Simple\assets\cc-visa.png" />
+    <Content Include="Themes\Apple\Simple\assets\fancybox-sprite.png" />
+    <Content Include="Themes\Apple\Simple\assets\fancybox_loading.gif" />
+    <Content Include="Themes\Apple\Simple\assets\favicon.ico" />
+    <Content Include="Themes\Apple\Simple\assets\jquery.elevatezoom.js" />
+    <Content Include="Themes\Apple\Simple\assets\jquery.fancybox.js" />
+    <Content Include="Themes\Apple\Simple\assets\jquery.zoom.min.js" />
+    <Content Include="Themes\Apple\Simple\assets\json2.js" />
+    <Content Include="Themes\Apple\Simple\assets\loader.gif" />
+    <Content Include="Themes\Apple\Simple\assets\mobileview.jpg" />
+    <Content Include="Themes\Apple\Simple\assets\social-icons.svg" />
+    <Content Include="Themes\Apple\Simple\assets\sprite.png" />
+    <Content Include="Themes\Apple\Simple\config\settings.html" />
+    <Content Include="Themes\Apple\Timber\assets\001a_large.jpeg" />
+    <Content Include="Themes\Apple\Timber\assets\10260_natural_b_z_compact.jpeg" />
+    <Content Include="Themes\Apple\Timber\assets\10260_natural_l_z_compact.jpeg" />
+    <Content Include="Themes\Apple\Timber\assets\10260_natural_l_z_large.jpeg" />
+    <Content Include="Themes\Apple\Timber\assets\10260_natural_s_z_compact.jpeg" />
+    <Content Include="Themes\Apple\Timber\assets\10402_bbu_sunburst_s_z_large.jpeg" />
+    <Content Include="Themes\Apple\Timber\assets\10413_09_charcoal_l_z_large.jpeg" />
+    <Content Include="Themes\Apple\Timber\assets\10427_bjml_mystic_water_clean_l_z_large.jpeg" />
+    <Content Include="Themes\Apple\Timber\assets\10516_indigo_med_wash_l_z_large.jpeg" />
+    <Content Include="Themes\Apple\Timber\assets\handlebars.min.js" />
+    <Content Include="Themes\Apple\Timber\assets\icons.svg" />
+    <Content Include="Themes\Apple\Timber\assets\modernizr.min.js" />
+    <Content Include="Themes\Apple\Timber\assets\option_selection.js" />
+    <Content Include="Themes\Apple\Timber\assets\respond-proxy.html" />
+    <Content Include="Themes\Apple\Timber\assets\respond.min.js" />
+    <Content Include="Themes\Apple\Timber\assets\theme-onboarding.css" />
+    <Content Include="Themes\Apple\Timber\config\settings.html" />
+  </ItemGroup>
+  <Choose>
+    <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
+      <ItemGroup>
+        <Reference Include="Microsoft.VisualStudio.QualityTools.CodedUITestFramework, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="Microsoft.VisualStudio.TestTools.UITest.Common, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="Microsoft.VisualStudio.TestTools.UITest.Extension, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="Microsoft.VisualStudio.TestTools.UITesting, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+          <Private>False</Private>
+        </Reference>
+      </ItemGroup>
+    </When>
+  </Choose>
+  <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
+

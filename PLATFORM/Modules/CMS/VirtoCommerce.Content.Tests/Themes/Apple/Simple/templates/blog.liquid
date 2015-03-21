@@ -1,0 +1,43 @@
+{% paginate blog.articles by 5 %}
+{% include 'breadcrumb' %}
+<!--START BLOG-->
+<div class="twelve columns alpha omega">
+	{% for article in blog.articles %}
+	<!--START POST-->
+	<article class="post {% if forloop.first %}first{% endif %} {% if forloop.last %}last{% endif %} clearfix">
+		<div class="two columns alpha date">
+			{{ article.published_at | date: '%d' }}
+			<span>{{ article.published_at | date: '%b' }} '{{ article.published_at | date: '%y' }}</span>
+		</div>
+		<div class="ten columns content omega clearfix">
+			<h2><a href="{{ article.url }}">{{ article.title }}</a></h2>
+			<div class="info clearfix">
+				<div class="eight columns alpha">
+				{% capture tags %}{% if article.tags.size > 0 %}{% for tag in article.tags %}<a href="{{ blog.url }}/tagged/{{tag | handle }}">{{ tag }}</a>{% unless forloop.last %}, {% endunless %}{% endfor %}{% endif %}{% endcapture %}
+
+				{{ 'blogs.article.author_meta_html' | t: count: article.tags.size, author: article.author, tags: tags  }}
+
+				</div>
+				{% if blog.comments_enabled? %}
+				<div class="two columns omega comment-count">
+					<a href="{{ article.url }}#comments">{{ 'blogs.comments.comments_with_count' | t: count: article.comments_count }}</a>
+				</div>
+				{% endif %}
+			</div>
+			{% if article.excerpt.size > 0 %}
+		       <div class="wysisyg">
+					{{ article.excerpt }}
+				</div>
+		     {% else %}
+				<div class="wysiwyg">
+					{{ article.content }}
+			    </div>
+		     {% endif %}
+		</div>
+	</article>
+	<!--END POST-->
+	{% endfor %}
+	{% include 'paging' %}
+</div>
+<!--END BLOG-->
+{% endpaginate %}

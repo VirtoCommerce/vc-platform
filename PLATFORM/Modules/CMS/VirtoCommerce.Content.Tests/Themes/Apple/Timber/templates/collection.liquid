@@ -1,0 +1,85 @@
+<!-- /templates/collection.liquid -->
+{% comment %}
+
+  For more information on collection tags:
+    - http://docs.shopify.com/themes/liquid-variables/collection
+
+{% endcomment %}
+
+{% paginate collection.products by 12 %}
+
+{% include 'breadcrumb' %}
+
+{% comment %}
+  Use .grid--rev so that the collection tags appear below the products on mobile
+{% endcomment %}
+<div class="grid--rev">
+  <div class="grid__item large--three-quarters">
+
+    {% comment %}
+      Different markup if a collection description exists
+    {% endcomment %}
+    {% if collection.description != blank %}
+      <header class="section-header">
+        <h1 class="section-header__title">{{ collection.title }}</h1>
+        <div class="rte rte--header">
+          {{ collection.description }}
+        </div>
+      </header>
+      <hr>
+      <div class="section-header">
+        <div class="section-header__right">
+          {% include 'collection-sorting' %}
+          {% include 'collection-views' %}
+        </div>
+      </div>
+    {% else %}
+      <header class="section-header">
+        <h1 class="section-header__title section-header__left">{{ collection.title }}</h1>
+        <div class="section-header__right">
+          {% include 'collection-sorting' %}
+          {% include 'collection-views' %}
+        </div>
+      </header>
+    {% endif %}
+
+    {% comment %}
+      Use class grid-uniform to have evenly sized columns clear
+      each other properly at each breakpoint.
+    {% endcomment %}
+    <div class="grid-uniform">
+
+      {% comment %}
+        Loop through our products in the current collection.
+        See the snippet 'product-grid-item' for the layout.
+      {% endcomment %}
+      {% for product in collection.products %}
+
+        {% include 'product-grid-item' %}
+
+      {% else %}
+
+        <div class="grid__item">
+          <p>{{ 'collections.general.no_matches' | t }}</p>
+        </div>
+
+      {% endfor %}
+
+    </div>
+
+    {% if paginate.pages > 1 %}
+      <hr>
+
+      <div class="text-center">
+        {% include 'pagination-custom' %}
+      </div>
+    {% endif %}
+
+  </div>
+
+  <div class="grid__item large--one-quarter">
+    {% include 'collection-sidebar' %}
+  </div>
+</div>
+
+{% endpaginate %}

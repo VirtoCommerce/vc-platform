@@ -1,0 +1,75 @@
+﻿<div class="blade-content">
+    <div class="blade-inner">
+        <div class="inner-block">
+            <form class="form" name="detailForm">
+                <div class="form-group" ng-init="setForm(detailForm)">
+                    <label class="form-label">In stock</label>
+                    <div class="form-input">
+                        <input ng-model="blade.currentEntity.inStockQuantity" type="text" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Reserved</label>
+                    <div class="form-input">
+                        <input ng-model="blade.currentEntity.reservedQuantity" type="text" min="0">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Reorder min. qty.</label>
+                    <div class="form-input">
+                        <input ng-model="blade.currentEntity.reorderMinQuantity" type="text" min="0">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="form-control __checkbox">
+                        <label class="form-label">
+                            <input type="checkbox" ng-model="blade.currentEntity.allowPreorder">
+                            <span class="check"></span>
+                            <span class="name">Allow preorder</span>
+                        </label>
+                    </div>
+                </div>
+                <div class="form-group" ng-class="{'__disabled': !blade.currentEntity.allowPreorder}">
+                    <label class="form-label">Preorder qty.</label>
+                    <div class="form-input">
+                        <input va-number ng-model="blade.currentEntity.preorderQuantity" type="text" min="0" ng-disabled="!blade.currentEntity.allowPreorder">
+                    </div>
+                </div>
+                <div class="form-group" ng-class="{'__disabled': !blade.currentEntity.allowPreorder}">
+                    <label class="form-label">Preorder availability date</label>
+                    <div class="form-input __calendar">
+                        <input type="text" class="form-control" ng-model="blade.currentEntity.preorderAvailabilityDate" datepicker-popup="{{format}}" name="pod" is-open="datepickers.pod" min-date="today" datepicker-options="dateOptions" close-text="Close" ng-disabled="!blade.currentEntity.allowPreorder" />
+                        <button class="btn" type="button" ng-click="open($event,'pod')">
+                            <i class="btn-ico fa fa-calendar"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="form-control __checkbox">
+                        <label class="form-label">
+                            <input type="checkbox" ng-model="blade.currentEntity.allowBackorder">
+                            <span class="check"></span>
+                            <span class="name">Allow backorder</span>
+                        </label>
+                    </div>
+                </div>
+                <div class="form-group" ng-class="{'__disabled': !blade.currentEntity.allowBackorder}">
+                    <label class="form-label">Backorder qty.</label>
+                    <div class="form-input">
+                        <input va-number ng-model="blade.currentEntity.backorderQuantity" type="еуче" min="0" ng-disabled="!blade.currentEntity.allowBackorder">
+                    </div>
+                </div>
+                <div class="form-group" ng-class="{'__disabled': !blade.currentEntity.allowBackorder}">
+                    <label class="form-label">Backorder availability date</label>
+                    <div class="form-input __calendar">
+                        <!--ng-required="true" -->
+                        <input type="text" class="form-control" ng-model="blade.currentEntity.backorderAvailabilityDate" datepicker-popup="{{format}}" name="bod" is-open="datepickers.bod" min-date="minDate" datepicker-options="dateOptions" close-text="Close" ng-disabled="!blade.currentEntity.allowBackorder" />
+                        <button class="btn" type="button" ng-click="open($event,'bod')">
+                            <i class="btn-ico fa fa-calendar"></i>
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

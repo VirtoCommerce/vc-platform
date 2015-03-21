@@ -1,0 +1,55 @@
+﻿<div class="blade-content __gray">
+    <div class="blade-inner">
+        <div class="inner-block">
+            <div class="inner">
+                <div class="sub-t">Select files</div>
+                <form class="form">
+                    <div ng-show="uploader.isHTML5">
+                        <!-- 3. ng-file-over | ng-file-over="className" -->
+                        <div class="well my-drop-zone panel drag-area" uploader="uploader" nv-file-drop nv-file-over>
+                            <div class="drag-content">
+                                Drag and drop files here
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 2. ng-file-select | ng-file-select="options" -->
+                    <div class="form-input">
+                        <input type="file" multiple uploader="uploader" nv-file-select tabindex="-1">
+                        <input type="text" readonly="">
+                        <button class="btn __file" type="button" onclick="$('input[type=file]').trigger('click')">
+                            <i class="btn-ico fa fa-image"></i>
+                        </button>
+                    </div>
+                </form>
+
+                <div ng-show="uploader.isUploading">
+                    <div class="sub-t">Progress:</div>
+                    <div class="progress-bar __aqua" ng-style="{'width': uploader.progress + '%'}"></div>
+                </div>
+                
+                <div class="tile-group triple __images-list" ui-sortable="sortableOptions" ng-model="item.images">
+                    <div class="tile" ng-class="{'__selected': data.selected}" ng-repeat="data in item.assets track by data.id" ng-include="'assetTemplate.html'" ng-click="toggleAssetSelect($event, data)" context-menu="toggleAssetSelect($event, data)" data-target="itemAssetMenu{{$index}}"></div>
+                </div>
+            </div>
+
+            <script type="text/ng-template" id="assetTemplate.html">
+                <img class="tile-img" src="{{data.url}}" alt="">
+                <ul class="menu __context" id="itemAssetMenu{{$index}}" role="menu" aria-labelledby="dropdownMenu2">
+                    <li class="list-item">
+                        <a role="menuitem" tabindex="1" ng-click="removeAction([data])">
+                            <i class="list-ico fa fa-trash-o"></i>
+                            Remove
+                        </a>
+                    </li>
+                    <li class="list-item">
+                        <a role="menuitem" tabindex="1" ng-click="copyUrl(data)">
+                            <i class="list-ico fa fa-link"></i>
+                            Copy link
+                        </a>
+                    </li>
+                </ul>
+            </script>
+        </div>
+    </div>
+</div>

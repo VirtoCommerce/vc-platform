@@ -1,0 +1,57 @@
+﻿<div class="blade-static __bottom">
+    <button class="btn" ng-click="updateItem()" ng-disabled="!canMapColumns()" ng-if="!blade.isNew">
+        <span>Update</span>
+    </button>
+
+    <button class="btn" ng-click="createItem(false)" ng-disabled="!canMapColumns()" ng-if="blade.isNew">
+        <span>Create</span>
+    </button>
+    <button class="btn" ng-click="createItem(true)" ng-disabled="!canMapColumns()" ng-if="blade.isNew">
+        <span>Create and execute</span>
+    </button>
+</div>
+<div class="blade-content">
+    <div class="blade-inner">
+        <div class="inner-block">
+            <form name="importJobForm" class="form">
+                <fieldset ng-init="setForm(importJobForm)">
+                    <div class="form-group">
+                        <label class="form-label">Name:</label>
+                        <div class="form-input">
+                            <input required class="form-control" ng-model="blade.item.name" placeholder="Enter import job name" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Csv Template:</label>
+                        <div class="form-input">
+                            <input type="file" uploader="uploader" nv-file-select style="z-index: 0;" tabindex="-1">
+                            <input type="text" readonly="" ng-model="blade.item.templatePath">
+                            <button class="btn __file" type="button" onclick="$('input[type=file]').trigger('click')" >
+                                <i class="btn-ico fa fa-image"></i>
+                            </button>
+                        </div>
+                    </div>
+                </fieldset>
+            </form>
+
+            <ul class="list __items">
+                <li class="list-item" ng-click="openBlade('importer')" ng-class="{'__disabled': !blade.isNew}">
+                    <span class="list-t">Target type</span>
+                    <span class="list-descr">{{blade.item.entityImporter ? blade.item.entityImporter : 'Select entity importer type'}}</span>
+                </li>
+                <li class="list-item" ng-click="openBlade('catalogs')" ng-class="{'__disabled': !blade.isNew}">
+                    <span class="list-t">Catalog</span>
+                    <span class="list-descr">{{blade.item.catalogId ? blade.item.catalogName ? blade.item.catalogName : blade.item.catalogId  : 'Select catalog'}}</span>
+                </li>
+                <li class="list-item" ng-click="openBlade('settings')">
+                    <span class="list-t">Other settings</span>
+                    <span class="list-descr">Define other import settings</span>
+                </li>
+                <li class="list-item" ng-click="openBlade('mapping')" ng-class="{'__disabled': !canMapColumns()}">
+                    <span class="list-t">Map columns</span>
+                    <span class="list-descr">Define column mapping</span>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>

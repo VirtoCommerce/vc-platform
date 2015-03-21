@@ -1,0 +1,39 @@
+﻿<div class="blade-content __medium-wide">
+    <div class="blade-inner">
+        <div class="inner-block">
+            <div class="text" ng-if="blade.currentEntities.length == 0">No Modules yet</div>
+            <div class="table-wrapper" ng-if="blade.currentEntities.length > 0">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th class="table-col">Icon</th>
+                            <th class="table-col">Module</th>
+                            <th class="table-col">Version</th>
+                            <th class="table-col">Author</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="table-item" ng-repeat="data in blade.currentEntities track by data.id" ng-class="{'__selected': data.id === selectedEntityId}" ng-click='selectItem(data)'>
+                            <td class="table-col __product-img">
+                                <div class="product-img">
+                                    <!-- <div class="image" style="background-image: url({{data.iconUrl}})" ng-if="data.iconUrl"></div> -->
+                                    <i class="table-ico fa fa-cube"></i>
+                                </div>
+                            </td>
+                            <td class="table-col">
+                                <span class="table-t" title="{{data.title}}">{{data.title}}</span>
+                                <span class="table-descr" title="{{data.description}}" class="blade-sw-title" style="overflow: hidden; text-overflow: ellipsis;">{{data.description}}</span>
+                            </td>
+                            <td class="table-col __version">
+                                <span>{{data.version}}</span>
+                            </td>
+                            <td class="table-col __author">
+                                <span ng-repeat="x in data.authors">{{x}} </span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>  
+        </div>
+    </div>
+</div>

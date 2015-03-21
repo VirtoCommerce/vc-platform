@@ -1,0 +1,41 @@
+<div class="tile-group six" ng-show="auth.isAuthenticated">
+    <div class="tile quadro">
+        <div google-chart chart="chartObject" style="height:100%"></div>
+    </div>
+    <div class="tile">
+        <span class="tile-count">5</span>
+        <span class="tile-descr">Catalogs</span>
+    </div>
+    <div class="tile">
+        <span class="tile-count">456</span>
+        <span class="tile-descr">Products</span>
+    </div>
+    <div class="tile">
+        <ul class="list __notice">
+            <li class="list-item __info">
+                <a class="list-link" href="" ng-click="notification('info')">
+                    <i class="list-ico fa fa-comments"></i>
+                    Info
+                </a>
+            </li>
+            <li class="list-item __warning">
+                <a class="list-link" href="" ng-click="notification('warning')">
+                    <i class="list-ico fa fa-warning"></i>
+                    Warning
+                </a>
+            </li>
+            <li class="list-item __task">
+                <a class="list-link" href="" ng-click="notification('task')">
+                    <i class="list-ico fa fa-tasks"></i>
+                    Task
+                </a>
+            </li>
+            <li class="list-item __error">
+                <a class="list-link" href="" ng-click="notification('error')">
+                    <i class="list-ico fa fa-warning"></i>
+                    Error
+                </a>
+            </li>
+        </ul> 
+    </div>
+</div>

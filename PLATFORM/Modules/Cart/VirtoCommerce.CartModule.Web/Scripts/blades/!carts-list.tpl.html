@@ -1,0 +1,72 @@
+﻿<div class="blade-static">
+    <div class="form-group">
+        <div class="form-input __search">
+            <input type="text" placeholder="Search keyword..." ng-model="filter.searchKeyword" ui-keyup="{'enter':'blade.refresh()'}">
+        </div>
+        <p class="form-count">Count: <span class="count">{{pageSettings.totalItems}}</span></p>
+    </div>
+</div>
+<div class="blade-static __bottom">
+    <div class="pagination" ng-if="pageSettings.itemsPerPageCount < pageSettings.totalItems" ng-include="'pagerTemplate.html'"></div>
+</div>
+<div class="blade-content __medium-wide">
+    <div class="blade-inner">
+        <div class="inner-block">
+            <div class="table-wrapper">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th class="table-col">
+                                <label class="form-cojtrol __checkbox">
+                                    <input type="checkbox" ng-model="selectedAll" ng-change="checkAll(selectedAll)" />
+                                    <span class="check"></span>
+                                </label>
+                            </th>
+                            <th class="table-col">Customer</th>
+                            <th class="table-col">Items count</th>
+                            <th class="table-col">Total</th>
+                            <th class="table-col">Created</th>
+                            <th class="table-col">Modified</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="table-item" ng-repeat="data in objects" ng-class="{'selected': data.id === selectedNodeId}" context-menu data-target="cl_menu_{{data.id}}" ng-click='selectNode(data)'>
+                            <td class="table-col">
+                                <label class="form-control __checkbox">
+                                    <input type="checkbox" ng-model="data.selected">
+                                    <span class="check"></span>
+                                </label>
+                            </td>
+                            <td class="table-col">
+                                <span title="{{data.customerName}}">{{data.customerName}}</span>
+                            </td>
+                            <td class="table-col">
+                                <span>{{data.items?data.items.length:0}}</span>
+                                <ul role="menu" class="menu __context" id="cl_menu_{{data.id}}">
+                                    <li class="menu-item" ng-click='edit(data)'>
+                                        <i class="menu-ico fa fa-edit"></i> Manage
+                                    </li>
+                                    <li class="menu-item" ng-click='delete()'>
+                                        <i class="menu-ico fa fa-trash-o"></i> Delete
+                                    </li>
+                                </ul>
+                            </td>
+                            <td class="table-col">
+                                <span title="{{data.total}}">{{data.total}}</span>
+                            </td>
+                            <td class="table-col">
+                                <span title="{{data.createdDate}}">{{data.createdDate | date }}</span>
+                            </td>
+                            <td class="table-col">
+                                <span title="{{data.modifiedDate}}">{{data.modifiedDate | date}}</span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <script type="text/ng-template" id="pagerTemplate.html">
+                <pagination ng-if="pageSettings.itemsPerPageCount < pageSettings.totalItems" boundary-links="true" max-size="pageSettings.numPages" items-per-page="pageSettings.itemsPerPageCount" total-items="pageSettings.totalItems" ng-model="pageSettings.currentPage" class="pagination-sm" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></pagination>
+            </script>
+        </div>
+    </div>
+</div>

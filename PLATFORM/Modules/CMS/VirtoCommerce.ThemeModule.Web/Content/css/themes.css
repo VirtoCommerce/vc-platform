@@ -1,0 +1,5 @@
+.form-input.__expanded textarea
+{
+	max-height:500px;
+	min-height:500px;
+}

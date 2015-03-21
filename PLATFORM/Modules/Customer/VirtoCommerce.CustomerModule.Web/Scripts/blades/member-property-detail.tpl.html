@@ -1,0 +1,29 @@
+﻿<div class="blade-static __bottom" ng-include="'Modules/$(VirtoCommerce.Core)/Scripts/common/ok-cancel2.tpl.html'"></div>
+<div class="blade-content">
+    <div class="blade-inner">
+        <div class="inner-block">
+            <form name="formScope" class="form">
+                <div class="form-group">
+                    <label class="form-label" for="">Property name</label>
+                    <div class="form-input" ng-init="setForm(formScope);">
+                        <input focus-on="" required class="form-control" ng-model="blade.currentEntity.name" placeholder="Enter name" />
+                    </div>
+                </div>
+                <!--<div class="form-group">
+            <label class="form-label" for="">Display name</label>
+            <div class="form-input __langs" ng-repeat="data in blade.origEntity.catalog.languages">
+                <span class="flag flag-{{data.languageCode.substr(3).toLowerCase()}}"></span>
+                <input ng-model="nothing.to.bind" class="form-control" />
+            </div>
+        </div>-->
+            </form>
+            
+            <ul class="list __items">
+                <li class="list-item" ng-class="{'__selected': blade.currentChild === 'valType'}" ng-click='openChild("valType")'>
+                    <span class="list-t">Value Type</span>
+                    <span class="list-descr">{{blade.currentEntity.valueType}}</span>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>

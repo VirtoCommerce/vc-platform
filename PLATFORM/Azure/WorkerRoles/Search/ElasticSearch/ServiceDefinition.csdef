@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ServiceDefinition name="ESRole" xmlns="http://schemas.microsoft.com/ServiceHosting/2008/10/ServiceDefinition" schemaVersion="2014-06.2.4">
+  <WorkerRole name="ESWorkerRole" enableNativeCodeExecution="true" vmsize="ExtraSmall">
+    <ConfigurationSettings>
+      <Setting name="CloudDriveSize" />
+      <Setting name="DataConnectionString" />
+    </ConfigurationSettings>
+    <Endpoints>
+      <InternalEndpoint name="ElasticCloudServiceEndpoint" protocol="tcp">
+        <FixedPortRange max="9400" min="9300" />
+      </InternalEndpoint>
+      <InputEndpoint name="ElasticEndpoint" protocol="tcp" port="9200" />
+    </Endpoints>
+    <LocalResources>
+      <LocalStorage cleanOnRoleRecycle="false" name="ESLocation" sizeInMB="4096" />
+      <LocalStorage name="DiagnosticStore" sizeInMB="8192" cleanOnRoleRecycle="false" />
+    </LocalResources>
+    <Imports>
+      <Import moduleName="Diagnostics" />
+    </Imports>
+  </WorkerRole>
+</ServiceDefinition>

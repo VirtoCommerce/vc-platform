@@ -1,0 +1,29 @@
+﻿@section scripts
+{
+    <script>
+        $(function () {
+            $('.main-content').on("mousewheel DOMMouseScroll", function (e) {
+                var delta = parseInt(e.originalEvent.wheelDelta || -e.originalEvent.detail);
+                if (Math.abs(delta) >= 120) {
+                    delta = delta / 40;
+                }
+                this.scrollLeft -= (delta * 30);
+                e.preventDefault();
+            });
+        });
+
+    </script>
+}
+
+<script id="template/pagination/pagination.html" type="text/ng-template">
+    <ul class="menu __inline">
+        <li class="menu-item" ng-if="boundaryLinks" ng-class="{__disabled: noprevious()}"><a class="menu-link" href ng-click="selectPage(1)">{{getText('first')}}</a></li>
+        <li class="menu-item" ng-if="directionLinks" ng-class="{__disabled: noprevious()}"><a class="menu-link" href ng-click="selectPage(page - 1)">&larr;</a></li>
+        <li class="menu-item" ng-repeat="page in pages track by $index" ng-class="{__selected: page.active}"><a class="menu-link" href ng-click="selectPage(page.number)">{{page.text}}</a></li>
+        <li class="menu-item" ng-if="directionLinks" ng-class="{__disabled: nonext()}"><a class="menu-link" href ng-click="selectPage(page + 1)">&rarr;</a></li>
+        <li class="menu-item" ng-if="boundaryLinks" ng-class="{__disabled: nonext()}"><a class="menu-link" href ng-click="selectPage(totalPages)">{{getText('last')}}</a></li>
+    </ul>
+</script>
+
+<ui-view></ui-view>
+

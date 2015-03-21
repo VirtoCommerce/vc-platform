@@ -1,0 +1,12 @@
+﻿<div class="blade-content">
+    <div class="blade-inner">
+        <div class="inner-block clearfix">
+            <ul class="list __items">
+                <li class="list-item" ng-repeat="data in objects" ng-class="{'__selected': data.id === selectedNodeId}" ng-click='selectNode(data)'>
+                    <i class="list-ico fa fa-wrench"></i>
+                    <span class="name">{{data.title}}</span>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>

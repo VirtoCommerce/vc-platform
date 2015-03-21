@@ -1,0 +1,69 @@
+﻿<div class="blade-content __medium-wide">
+	<div class="blade-inner">
+		<div class="inner-block">
+			<div class="table-wrapper">
+				<table class="table">
+					<thead>
+						<tr>
+							<th class="table-col">Language</th>
+							<th class="table-col">Page name</th>
+							<th class="table-col">Modified</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr class="table-item" ng-repeat="data in blade.currentEntities" ng-class="{'__selected': data.name === selectedItem.name}" context-menu data-target="ipl_menu_{{data.name}}" ng-click='blade.openBlade(data)' >
+							<td class="table-col __date">
+								<span class="flag flag-{{blade.getFlag(data.language)}}"></span>
+								<span>{{data.language}}</span>
+							</td>
+							<td class="table-col">
+								{{data.name}}
+							</td>
+							<td class="table-col __datePage">
+								<span class="table-date" am-time-ago="data.modifiedDate"></span>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!--<div class="blade-content">
+	<div class="blade-inner">
+		<div class="inner-block">
+			<ul class="list __items" ng-if="blade.currentEntities.length">
+				<li class="list-item" ng-click="blade.openBlade(data)" ng-repeat="data in blade.currentEntities | orderBy:name:reverse" ng-class="{'__selected': data.id === selectedNodeId}">
+					<span class="list-name">
+						{{data.name}}
+					</span>
+				</li>
+			</ul>
+			<p class="text" ng-if="!blade.currentEntities.length">No Pages yet</p>
+		</div>
+	</div>
+</div>-->
+
+<!--<div class="blade-content __medium-wide">
+	<div class="blade-inner">
+		<div class="inner-block">
+			<div class="table-wrapper">
+				<table class="table">
+					<thead>
+						<tr>
+							<th class="table-col" ng-repeat="column in columns | orderBy:name:reverse" ng-click="setOrder(column)" ng-class="(column.checked) ? '__sorted' : ''">
+								{{column.title}}
+								<i ng-class="column.checked ? (column.reverse ?'sort-up':'sort-down') : ''" class="table-ico fa"></i>
+							</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr class="table-item" ng-click="notification.action(notification)" ng-repeat="page in blade.currentEntities" ng-include="notification.template"></tr>
+					</tbody>
+				</table>
+			</div>
+			<p class="text" ng-if="!blade.currentEntities.length">No Pages yet</p>
+		</div>
+	</div>
+</div>-->

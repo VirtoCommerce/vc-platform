@@ -1,0 +1,68 @@
+﻿<div class="blade-content __medium-wide">
+    <div class="blade-inner">
+        <div class="inner-block">
+            <div class="table-wrapper">
+                <table class="table">
+                    <thead>
+                        <tr class="table-item">
+                            <td class="table-col" colspan="5">
+                                <label>Count: {{pageSettings.totalItems}}</label>
+                            </td>
+                        </tr>
+                        <tr class="table-item">
+                            <th class="table-col __product-control">
+                                <label class="form-control __checkbox">
+                                    <input type="checkbox" ng-model="selectedAll" ng-change="checkAll(selectedAll)">
+                                    <span class="check"></span>
+                                </label>
+                            </th>
+                            <th class="table-col">Type</th>
+                            <th class="table-col">Image</th>
+                            <th class="table-col">Name</th>
+                            <th class="table-col">Code</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="table-item" ng-repeat="data in items" ng-class="{'__selected': data.id === selecteddata.id}" context-menu data-target="asr_menu_{{data.id}}">
+                            <td class="table-col __product-control">
+                                <label class="form-control __checkbox">
+                                    <input type="checkbox" ng-model="data.selected">
+                                    <span class="check"></span>
+                                </label>
+                            </td>
+                            <td class="table-col" ng-click='selectItem(data)' ng-attr-title="{{data.type}}">
+                                <div class="product-img">
+                                    <i class="table-ico fa" ng-class="data.type == 'category' ? ' fa-folder' : ' fa-image'" ng-if="!data.imageUrl"></i>
+                                </div>
+                                <!-- <i ng-class="{'icon-folder-2': data.type==='category', 'icon-basket': data.type==='product', 'icon-barcode': data.type==='variation'}" style="font-size:28px" /> -->
+                            </td>
+                            <td class="table-col" ng-click='selectItem(data)'>
+                                <div class="product-img">
+                                    <div class="image" style="background-image: url({{data.imageUrl}})" ng-if="data.type!=='category' && data.imageUrl"></div>
+                                </div>
+                            </td>
+                            <td class="table-col" ng-click='selectItem(data)' style="max-width: 150px; overflow: hidden;text-overflow: ellipsis;">
+                                <span title="{{data.name}}">{{data.name}}</span>
+                                <ul class="menu __context" id="asr_menu_{{data.id}}">
+                                    <li class="menu-item" ng-click='edit(data)'>
+                                        <i class="menu-item ico fa fa-edit"></i> Manage
+                                    </li>
+                                    <li class="menu-item" ng-click='delete()'>
+                                        <i class="menu-item ico fa fa-trash-o"></i> Delete
+                                    </li>
+                                </ul>
+                            </td>
+                            <td class="table-col" ng-click='selectItem(data)'>
+                                <span title="{{data.code}}">{{data.code}}</span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="pagination" ng-include="'pagerTemplate.html'"></div>
+            <script type="text/ng-template" id="pagerTemplate.html">
+                <pagination ng-if="pageSettings.itemsPerPageCount < pageSettings.totalItems" boundary-links="true" max-size="pageSettings.numPages" items-per-page="pageSettings.itemsPerPageCount" total-items="pageSettings.totalItems" ng-model="pageSettings.currentPage" class="pagination-sm" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></pagination>
+            </script>
+        </div>
+    </div>
+</div>

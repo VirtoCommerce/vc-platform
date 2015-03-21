@@ -1,0 +1,14 @@
+﻿<div class="blade-content">
+	<div class="blade-inner">
+		<div class="inner-block">
+			<div class="sub-t">Select data format</div>
+			<ul class="list __items">
+			    <label class="list-item" ng-repeat="data in list">
+		            <input type="checkbox" ng-checked="data.selected" ng-click="select(data);">
+		            <span class="switch"></span>
+		            <span class="list-name">{{data.name}}</span>
+		        </label>
+			</ul>
+		</div>
+	</div>
+</div>

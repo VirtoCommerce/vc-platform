@@ -1,0 +1,50 @@
+﻿<div class="blade-content __gray">
+	<div class="blade-inner">
+		<div class="inner-block clearfix">
+            <form class="form" name="detailForm">
+                <div class="form-group" ng-init="setForm(detailForm)">
+                    <label class="form-label">Code</label>
+                    <div class="form-input">
+                        <p class="form-text">{{blade.currentEntity.id}}</p>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Name</label>
+                    <div class="form-input">
+                        <input ng-model="blade.currentEntity.name" type="text" focus-on="" required placeholder="Enter name">
+                    </div>
+                </div>
+                <div class="columns clearfix">
+                    <div class="column">
+                        <div class="form-group">
+                            <label class="form-label">Catalog</label>
+                            <div class="form-input">
+                                <ui-select ng-model="blade.currentEntity.catalog" required>
+                                    <ui-select-match placeholder="Select...">{{$select.selected.name}}</ui-select-match>
+                                    <ui-select-choices repeat="x.id as x in catalogs | filter: { name: $select.search }">
+                                        <span ng-bind-html="x.name | highlight: $select.search"></span>
+                                    </ui-select-choices>
+                                </ui-select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="column">
+                        <div class="form-group">
+                            <label class="form-label">State</label>
+                            <div class="form-input">
+                                <ui-select ng-model="blade.currentEntity.storeState" required>
+                                    <ui-select-match placeholder="Select...">{{$select.selected}}</ui-select-match>
+                                    <ui-select-choices repeat="x in storeStates | filter: $select.search">
+                                        <span ng-bind-html="x | highlight: $select.search"></span>
+                                    </ui-select-choices>
+                                </ui-select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+
+            <va-widget-container group="storeDetail" blade="blade"></va-widget-container>
+		</div>
+	</div>
+</div>

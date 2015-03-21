@@ -1,0 +1,73 @@
+﻿<div class="blade-content">
+    <div class="blade-inner">
+        <div class="inner-block">
+            <form name="pdForm" class="form">
+                <div class="form-group" ng-init="setForm(pdForm);">
+                    <label class="form-label" for="">Property name</label>
+                    <div class="form-input">
+                        <input focus-on="" required class="form-control" ng-model="blade.currentEntity.name" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="">Display name</label>
+                    <div class="form-input __langs" ng-repeat="data in blade.origEntity.catalog.languages">
+                        <span class="flag flag-{{data.languageCode.substr(3).toLowerCase()}}"></span>
+                        <input ng-model="nothing.to.bind" class="form-control" />
+                    </div>
+                </div>
+            </form>
+
+            <ul class="list __items">
+                <li class="list-item" ng-class="{'__selected': currentChild === 'attr'}" ng-click='openChild("attr")'>
+                    <span class="list-t">Attributes</span>
+                    <span class="list-descr">Manage property attributes</span>
+                </li>
+                <li class="list-item" ng-class="{'__selected': currentChild === 'valType'}" ng-click='openChild("valType")'>
+                    <span class="list-t">Value Type</span>
+                    <span class="list-descr">{{blade.currentEntity.valueType}}</span>
+                </li>
+                <li class="list-item" ng-class="{'__selected': currentChild === 'appliesto'}" ng-click='openChild("appliesto")'>
+                    <span class="list-t">Applies to</span>
+                    <span class="list-descr">{{blade.currentEntity.type}}</span>
+                </li>
+                <li class="list-item" ng-class="{'__selected': currentChild === 'dict', '__disabled': !blade.currentEntity.dictionary }" ng-click='openChild("dict")'>
+                    <span class="list-t">Dictionary</span>
+                    <span class="list-descr">Manage dictionary</span>
+                </li>
+            </ul>
+
+            <div class="form">
+                <div class="form-group">
+                    <div class="form-control __checkbox">
+                        <label class="form-label">
+                            <input type="checkbox" ng-model="blade.currentEntity.required">
+                            <span class="check"></span>
+                            <span class="name">Required</span>
+                        </label>
+                    </div>
+                    <div class="form-control __checkbox">
+                        <label class="form-label">
+                            <input type="checkbox" ng-model="blade.currentEntity.dictionary">
+                            <span class="check"></span>
+                            <span class="name">Dictionary</span>
+                        </label>
+                    </div>
+                    <div class="form-control __checkbox">
+                        <label class="form-label">
+                            <input type="checkbox" ng-model="blade.currentEntity.multivalue">
+                            <span class="check"></span>
+                            <span class="name">Multivalue</span>
+                        </label>
+                    </div>
+                    <div class="form-control __checkbox">
+                        <label class="form-label">
+                            <input type="checkbox" ng-model="blade.currentEntity.multilanguage">
+                            <span class="check"></span>
+                            <span class="name">Multi language</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

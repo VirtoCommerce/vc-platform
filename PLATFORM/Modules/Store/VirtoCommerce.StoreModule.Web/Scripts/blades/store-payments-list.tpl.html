@@ -1,0 +1,21 @@
+﻿<div class="blade-content">
+    <div class="blade-inner">
+        <div class="inner-block">
+            <div class="sub-t">Supported payment gateways</div>
+            <div class="list __items">
+                <label class="list-item" ng-repeat="data in availableGateways">
+                    <!--<i class="list-ico fa fa-wrench"></i>-->
+                    <div class="product-img">
+                        <div class="image" style="background-image: url('{{data.logoUrl}}');"></div>
+                        <!--<div class="image" ng-style="{'background-image':'url('+data.logoUrl+')'}"></div>-->
+                    </div>
+                    <input type="checkbox" ng-checked="blade.currentEntities.indexOf(data.gatewayCode) > -1" ng-click="optionChanged(data.gatewayCode)">
+                    <span class="switch"></span>
+                    <span class="list-t">{{data.gatewayCode}}</span>
+                    <span class="list-descr">{{data.description}}</span>
+                </label>
+            </div>
+            <p class="text" ng-if="!availableGateways.length">No Payment gateways found</p>
+        </div>
+    </div>
+</div>

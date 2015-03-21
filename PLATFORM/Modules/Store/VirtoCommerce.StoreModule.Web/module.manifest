@@ -1,0 +1,67 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<module>
+  <id>VirtoCommerce.Store</id>
+  <version>1.0.0.0</version>
+  <dependencies>
+    <dependency>VirtoCommerce.Core</dependency>
+    <!--using catalog api, seo UI? -->
+    <dependency>VirtoCommerce.Catalog</dependency>
+  </dependencies>
+
+  <title>Virto Commerce Store</title>
+  <description>APIs and UI for managing stores</description>
+  <authors>
+    <author>Virto Commerce</author>
+  </authors>
+  <owners>
+    <owner>Virto Commerce</owner>
+  </owners>
+  <projectUrl>http://virtocommerce.com/</projectUrl>
+  <iconUrl>http://nuget.org/Content/Images/packageDefaultIcon-50x50.png</iconUrl>
+  <releaseNotes>First version.</releaseNotes>
+  <copyright>Copyright © 2011-2015 Virto Commerce. All rights reserved</copyright>
+  <tags>stores</tags>
+
+  <assemblyFile>VirtoCommerce.StoreModule.Web.dll</assemblyFile>
+  <moduleType>VirtoCommerce.StoreModule.Web.Module, VirtoCommerce.StoreModule.Web</moduleType>
+  <!--<styles>
+    <directory virtualPath="$/Content/css" searchPattern="*.css" searchSubdirectories="true" />
+  </styles>-->
+  <scripts>
+    <directory virtualPath="$/Scripts" searchPattern="*.js" searchSubdirectories="true" />
+  </scripts>
+
+  <settings>
+    <group>
+      <setting>
+        <name>Stores.States</name>
+        <valueType>string</valueType>
+        <defaultValue>Open</defaultValue>
+        <title>States</title>
+        <description>States that a store can be in</description>
+        <isArray>true</isArray>
+        <arrayValues>
+          <value>Open</value>
+          <value>Closed</value>
+          <value>RestrictedAccess</value>
+        </arrayValues>
+      </setting>
+    </group>
+    <group name="Caching">
+      <setting>
+        <name>Stores.Caching.Enabled</name>
+        <valueType>boolean</valueType>
+        <defaultValue>true</defaultValue>
+        <title>Caching Enabled</title>
+        <description>Specified if caching is enabled for Stores</description>
+      </setting>
+      <setting>
+        <name>Stores.Caching.StoreTimeout</name>
+        <valueType>integer</valueType>
+        <defaultValue>30</defaultValue>
+        <title>Store Timeout (in seconds)</title>
+        <description>Specify caching timeout in seconds for store entity</description>
+      </setting>
+    </group>
+  </settings>
+</module>
