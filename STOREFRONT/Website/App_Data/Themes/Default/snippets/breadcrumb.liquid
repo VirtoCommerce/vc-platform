@@ -1,0 +1,102 @@
+{% include 'advanced-tag-loop' %}
+
+{% unless template == 'index' or template == 'cart' %}
+<nav class="breadcrumb" role="navigation" aria-label="breadcrumbs">
+  <a href="/" title="{{ 'general.breadcrumbs.home_link_title' | t }}">{{ 'general.breadcrumbs.home' | t }}</a>
+
+  {% if template contains 'product' %}
+
+    {% if collection %}
+      <span class="divider" aria-hidden="true">&rsaquo;</span>
+      {% if collection.handle %}
+        {% capture url %}/collections/{{ collection.handle }}{% endcapture %}
+        {{ collection.title | link_to: url }}
+      {% endif %}
+    {% endif %}
+    <span class="divider" aria-hidden="true">&rsaquo;</span>
+    <span class="breadcrumb--truncate">{{ product.title }}</span>
+
+  {% elsif template contains 'collection' and collection.handle %}
+
+    <span class="divider" aria-hidden="true">&rsaquo;</span>
+    {% if current_tags %}
+      {% capture url %}/collections/{{ collection.handle }}{% endcapture %}
+      {{ collection.title | link_to: url }}
+      <span class="divider" aria-hidden="true">&rsaquo;</span>
+
+      {% comment %}
+        Loop through tags and our custom tag array to strip out prepended tag categories if they exist.
+        snippet/advanced-tag-loop.liquid is required for this to work.
+      {% endcomment %}
+      {% for tag in current_tags %}
+        {% assign is_advanced_tag = false %}
+        {% assign additional_tag = true %}
+        {% if forloop.first %}
+          {% assign additional_tag = false %}
+        {% endif %}
+
+        {% comment %}
+          Track whether the tag gets printed
+        {% endcomment %}
+        {% assign found_tag = false %}
+
+        {% for cat_item in cat_array %}
+          {% unless cat_item == '' %}
+
+            {% if tag contains cat_item %}
+              {% assign is_advanced_tag = true %}
+              {% if additional_tag %}
+                <span>+</span>
+              {% endif %}
+              {% assign found_tag = true %}
+              <span>
+                {{ tag | remove_first: cat_item | remove: '_' }}
+              </span>
+            {% endif %}
+          {% endunless %}
+        {% endfor %}
+
+        {% comment %}
+          We have a regular tag that wasn't printed, so print it now
+        {% endcomment %}
+        {% unless found_tag %}
+          <span>{{ tag }}</span>
+        {% endunless %}
+
+      {% endfor %}
+
+    {% else %}
+      <span>{{ collection.title }}</span>
+    {% endif %}
+
+  {% elsif template == 'blog' %}
+
+    <span class="divider" aria-hidden="true">&rsaquo;</span>
+    {% if current_tags %}
+      {{ blog.title | link_to: blog.url }}
+      <span class="divider" aria-hidden="true">&rsaquo;</span>
+      <span>{{ current_tags | join: " + " }}</span>
+    {% else %}
+    <span>{{ blog.title }}</span>
+    {% endif %}
+
+  {% elsif template == 'article' %}
+
+    <span class="divider" aria-hidden="true">&rsaquo;</span>
+    {{ blog.title | link_to: blog.url }}
+    <span class="divider" aria-hidden="true">&rsaquo;</span>
+    <span>{{ article.title }}</span>
+
+  {% elsif template contains 'page' %}
+
+    <span class="divider" aria-hidden="true">&rsaquo;</span>
+   <span>{{ page.title }}</span>
+
+  {% else %}
+
+    <span class="divider" aria-hidden="true">&rsaquo;</span>
+   <span>{{ page_title }}</span>
+
+  {% endif %}
+</nav>
+{% endunless %}

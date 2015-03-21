@@ -1,0 +1,188 @@
+﻿{% layout 'checkout' %}
+
+<div class="col-md-7">
+    <div class="box">
+        {% form 'edit_checkout_step_2', checkout %}
+            <div class="box-header">
+                <h3>Customer information</h3>
+            </div>
+            <div class="box-content">
+                <p>{{ checkout.email }}</p>
+                <p>
+                    {{ checkout.shipping_address.first_name }} {{ checkout.shipping_address.last_name }}<br />
+                    {{ checkout.shipping_address.company }}
+                    {{ checkout.shipping_address.street }}
+                    {{ checkout.shipping_address.city }}
+                    {{ checkout.shipping_address.province }}
+                    {{ checkout.shipping_address.zip }}
+                    {{ checkout.shipping_address.country }}
+                </p>
+                <div class="box-inner-header">
+                    <h3>Shipping method</h3>
+                </div>
+                <div class="row" id="shipping-methods">
+                    {% for shipping_method in checkout.shipping_methods %}
+                        <div class="col-md-6" style="cursor: pointer;">
+                            <div class="box inner-box">
+                                <div class="box-header">
+                                    <h3>{{ shipping_method.title }}</h3>
+                                </div>
+                                <div class="box-footer">
+                                    {% if checkout.shipping_method.handle == shipping_method.handle %}
+                                        <input id="checkout_shipping_method_{{ shipping_method.handle }}" name="checkout[shipping_method_id]" selected="selected" type="radio" value="{{ shipping_method.handle }}" />
+                                    {% else %}
+                                        <input id="checkout_shipping_method_{{ shipping_method.handle }}" name="checkout[shipping_method_id]" type="radio" value="{{ shipping_method.handle }}" />
+                                    {% endif %}
+                                    <div class="price" >
+                                        <strong>
+                                            {% if shipping_method.price == 0 %}
+                                                FREE!
+                                            {% else %}
+                                                {% include 'price' with shipping_method.price %}
+                                            {% endif %}
+                                        </strong>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+                <div class="box-inner-header">
+                    <h3>Billing & payment</h3>
+                </div>
+                <div class="row" id="payment-methods">
+                    {% for payment_method in checkout.payment_methods %}
+                        <div class="col-md-6" style="cursor: pointer;">
+                            <div class="box inner-box">
+                                <div class="box-header">
+                                    <h3>{{ payment_method.Handle }}</h3>
+                                </div>
+                                <div class="box-footer">
+                                    <input id="checkout_payment_method_{{ payment_method.handle }}" name="checkout[payment_method_id]" type="radio" value="{{ payment_method.handle }}" />
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+                <div class="box-inner-header">
+                    <h3>Billing address</h3>
+                </div>
+                <div class="checkbox">
+                    <label>
+                        <input checked="checked" id="billing-address-equals-shipping-address" type="checkbox"> Take billing address from shipping address
+                    </label>
+                </div>
+                <div id="billing-address" style="display: none;">
+                    <div class="fieldset">
+                        <div class="field">
+                            <label class="control-label" for="checkout_first_name">First name</label>
+                            <input id="checkout_first_name" name="checkout[first_name]" required="required" type="text" value="{{ checkout.billing_address.first_name }}" />
+                        </div>
+                    </div>
+                    <div class="fieldset">
+                        <div class="field">
+                            <label class="control-label" for="checkout_last_name">Last name</label>
+                            <input id="checkout_last_name" name="checkout[last_name]" required="required" type="text" value="{{ checkout.billing_address.last_name }}" />
+                        </div>
+                    </div>
+                    <div class="fieldset">
+                        <div class="field">
+                            <label class="control-label" for="checkout_company">Company</label>
+                            <input id="checkout_company" name="checkout[company]" type="text" value="{{ checkout.billing_address.company }}" />
+                        </div>
+                    </div>
+                    <div class="fieldset">
+                        <div class="field">
+                            <label class="control-label" for="checkout_address1">Address line 1</label>
+                            <input id="checkout_address1" name="checkout[address1]" required="required" type="text" value="{{ checkout.billing_address.address1 }}" />
+                        </div>
+                    </div>
+                    <div class="fieldset">
+                        <div class="field">
+                            <label class="control-label" for="checkout_address2">Address line 2</label>
+                            <input id="checkout_address2" name="checkout[address2]" type="text" value="{{ checkout.billing_address.address2 }}" />
+                        </div>
+                    </div>
+                    <div class="fieldset">
+                        <div class="field">
+                            <label class="control-label" for="checkout_city">City</label>
+                            <input id="checkout_city" name="checkout[city]" required="required" type="text" value="{{ checkout.billing_address.city }}" />
+                        </div>
+                    </div>
+                    <div class="fieldset">
+                        <div class="field">
+                            <label class="control-label" for="checkout_country">Country</label>
+                            <select id="checkout_country" name="checkout[country]">{{ country_option_tags }}</select>
+                        </div>
+                    </div>
+                    <div class="fieldset">
+                        <div class="field">
+                            <label class="control-label" for="checkout_province">Province</label>
+                            <select id="checkout_province" name="checkout[province]">{{ form.province }}</select>
+                        </div>
+                    </div>
+                    <div class="fieldset">
+                        <div class="field">
+                            <label class="control-label" for="checkout_zip">Postal code</label>
+                            <input id="checkout_zip" name="checkout[zip]" required="required" type="text" value="{{ checkout.billing_address.zip }}" />
+                        </div>
+                    </div>
+                    <div class="fieldset">
+                        <div class="field">
+                            <label class="control-label" for="checkout_phone">Phone</label>
+                            <input id="checkout_phone" name="checkout[phone]" type="text" value="{{ checkout.billing_address.phone }}" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="box-footer">
+                <div class="pull-left">
+                    <a class="btn btn-default" href="/checkout/step-1" type="button">Shipping address</a>
+                </div>
+                <div class="pull-right">
+                    <button class="btn btn-primary" type="submit">Create order</button>
+                </div>
+            </div>
+        {% endform %}
+    </div>
+</div>
+<div class="col-md-5">
+    <div class="box">
+        <div class="box-header">
+            <h3>Order summary</h3>
+        </div>
+        <div class="box-content">
+            <ul class="product-list">
+                {% for line_item in checkout.line_items %}
+                    <li>
+                        <div class="image">
+                            <img alt="{{ line_item.title }}" src="{{ line_item.image }}" />
+                        </div>
+                        <div class="info">
+                            <div class="price">
+                                {% include 'price' with line_item.line_price %}
+                            </div>
+                            <div class="name">
+                                <span class="title">{{ line_item.title }}</span>
+                            </div>
+                        </div>
+                    </li>
+                {% endfor %}
+            </ul>
+            <ul class="price-list">
+                <li>
+                    Subtotal: <strong>{% include 'price' with checkout.subtotal_price %}</strong>
+                </li>
+                <li>
+                    Shipping: <strong>{% include 'price' with checkout.shipping_price %}</strong>
+                </li>
+                <li>
+                    Tax: <strong>{% include 'price' with checkout.tax_price %}</strong>
+                </li>
+                <li class="important">
+                    Total: <strong>{% include 'price' with checkout.total_price %}</strong>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>

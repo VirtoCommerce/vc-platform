@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.31101.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.Website", "Website\VirtoCommerce.Website.csproj", "{1AECEEB1-A6DA-4CAF-B8B5-94A779F457A8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.WebViews", "WebViews\VirtoCommerce.WebViews.csproj", "{6695201C-2168-47FC-A4C0-FDD5AB5CB135}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Web.Tests", "Web.Tests\Web.Tests.csproj", "{B06C9B3A-7394-46F3-8556-5B8B2D30864F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{1AECEEB1-A6DA-4CAF-B8B5-94A779F457A8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1AECEEB1-A6DA-4CAF-B8B5-94A779F457A8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1AECEEB1-A6DA-4CAF-B8B5-94A779F457A8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1AECEEB1-A6DA-4CAF-B8B5-94A779F457A8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6695201C-2168-47FC-A4C0-FDD5AB5CB135}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6695201C-2168-47FC-A4C0-FDD5AB5CB135}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6695201C-2168-47FC-A4C0-FDD5AB5CB135}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6695201C-2168-47FC-A4C0-FDD5AB5CB135}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B06C9B3A-7394-46F3-8556-5B8B2D30864F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B06C9B3A-7394-46F3-8556-5B8B2D30864F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B06C9B3A-7394-46F3-8556-5B8B2D30864F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B06C9B3A-7394-46F3-8556-5B8B2D30864F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
