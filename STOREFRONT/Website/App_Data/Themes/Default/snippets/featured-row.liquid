@@ -1,0 +1,34 @@
+{% comment %}
+  This snippet is used for featured product rows on the homage page.
+
+  Required variables are:
+    - header_title, more_link,
+
+  If this snippet is used multiple times on a page, make sure to
+  reset or send empty variables so a previous definition isn't used.
+{% endcomment %}
+
+{% assign header_title = collections[featured_row].title %}
+{% assign more_link = collections[featured_row].url %}
+
+{% capture row_limit %}{{ row_limit_setting | times: 5 }}{% endcapture %}
+
+<div class="section-header">
+  {% if header_title %}
+    <p class="h1{% if more_link %} section-header--left{% endif %}">{{ header_title }}</p>
+  {% endif %}
+  {% if more_link %}
+    <div class="section-header--right">
+      {% assign header_title = header_title | downcase %}
+      <a href="{{ more_link }}">{{ 'homepage.featured_collection_rows.more_in_collection' | t: collection_title: header_title }} &rsaquo;</a>
+    </div>
+  {% endif %}
+</div>
+
+<div class="grid-uniform row-negative-bottom">
+  {% for product in collections[featured_row].products limit: row_limit %}
+    {% assign grid_item_width = 'large--one-fifth medium--one-third small--one-half' %}
+    {% assign current_collection = collections[featured_row] %}
+    {% include 'product-grid-item' %}
+  {% endfor %}
+</div>

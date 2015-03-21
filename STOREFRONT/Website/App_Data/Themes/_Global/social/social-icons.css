@@ -1,0 +1,205 @@
+@charset "UTF-8";
+
+@font-face {
+  font-family: "shopify-social";
+  src:url("shopify-social.eot");
+  src:url("shopify-social.eot?#iefix") format("embedded-opentype"),
+      url("shopify-social.woff") format("woff"),
+      url("shopify-social.ttf") format("truetype"),
+      url("shopify-social.svg#shopify-social") format("svg");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@media screen and (-webkit-min-device-pixel-ratio:0) {
+  @font-face {
+    font-family: "shopify-social";
+    src: url("shopify-social.svg#shopify-social") format("svg");
+  }
+}
+
+[class^="shopify-social-icon-"]:before, 
+[class*=" shopify-social-icon-"]:before {
+  font-family: "shopify-social";
+  font-style: normal;
+  font-weight: normal;
+  speak: none; 
+  display: inline-block;
+  text-decoration: inherit;
+  width: 1em;
+  text-align: center;
+  font-variant: normal;
+  text-transform: none;
+}
+
+.shopify-social-icon-facebook-square:before { content: '\e800'; }
+.shopify-social-icon-facebook-rounded:before { content: '\e801'; }
+.shopify-social-icon-facebook-circle:before { content: '\e802'; }
+.shopify-social-icon-facebook:before { content: '\e807';  }
+.shopify-social-icon-facebook-square-alt:before { content: '\e804'; }
+.shopify-social-icon-facebook-rounded-alt:before { content: '\e805'; }
+.shopify-social-icon-facebook-circle-alt:before { content: '\e806'; }
+.shopify-social-icon-facebook-alt:before { content: '\e803'; }
+.shopify-social-icon-twitter-square:before { content: '\e810'; }
+.shopify-social-icon-twitter-rounded:before { content: '\e811'; }
+.shopify-social-icon-twitter-circle:before { content: '\e812'; }
+.shopify-social-icon-twitter:before { content: '\e813'; }
+.shopify-social-icon-googleplus-square:before { content: '\e814'; }
+.shopify-social-icon-googleplus-rounded:before { content: '\e815'; }
+.shopify-social-icon-googleplus-circle:before { content: '\e816'; }
+.shopify-social-icon-googleplus:before { content: '\e817'; }
+.shopify-social-icon-feed-square:before { content: '\e820'; }
+.shopify-social-icon-feed-rounded:before { content: '\e821'; }
+.shopify-social-icon-feed-circle:before { content: '\e822'; }
+.shopify-social-icon-feed:before { content: '\e823'; }
+.shopify-social-icon-email-square:before { content: '\e824'; }
+.shopify-social-icon-email-rounded:before { content: '\e825'; }
+.shopify-social-icon-email-circle:before { content: '\e826'; }
+.shopify-social-icon-email:before { content: '\e827'; }
+.shopify-social-icon-flickr-square:before { content: '\e830'; }
+.shopify-social-icon-flickr-rounded:before { content: '\e831'; }
+.shopify-social-icon-flickr-circle:before { content: '\e832'; }
+.shopify-social-icon-flickr:before { content: '\e833'; }
+.shopify-social-icon-instagram-square:before { content: '\e834'; }
+.shopify-social-icon-instagram-rounded:before { content: '\e835'; }
+.shopify-social-icon-instagram-circle:before { content: '\e836'; }
+.shopify-social-icon-instagram:before { content: '\e837'; }
+.shopify-social-icon-linkedin-square:before { content: '\e840'; }
+.shopify-social-icon-linkedin-rounded:before { content: '\e841'; }
+.shopify-social-icon-linkedin-circle:before { content: '\e842'; }
+.shopify-social-icon-linkedin:before { content: '\e843'; }
+.shopify-social-icon-pinterest-square:before { content: '\e844'; }
+.shopify-social-icon-pinterest-rounded:before { content: '\e845'; }
+.shopify-social-icon-pinterest-circle:before { content: '\e846'; }
+.shopify-social-icon-pinterest:before { content: '\e847'; }
+.shopify-social-icon-pinterest-alt:before { content: '\e848'; }
+.shopify-social-icon-pinterest-alt2:before { content: '\e849'; }
+.shopify-social-icon-tumblr-square:before { content: '\e850'; }
+.shopify-social-icon-tumblr-rounded:before { content: '\e851'; }
+.shopify-social-icon-tumblr-circle:before { content: '\e852'; }
+.shopify-social-icon-tumblr:before { content: '\e853'; }
+.shopify-social-icon-vimeo-square:before { content: '\e854'; }
+.shopify-social-icon-vimeo-rounded:before { content: '\e855'; }
+.shopify-social-icon-vimeo-circle:before { content: '\e856'; }
+.shopify-social-icon-vimeo:before { content: '\e857'; }
+.shopify-social-icon-youtube-square:before { content: '\e860'; }
+.shopify-social-icon-youtube-rounded:before { content: '\e861'; }
+.shopify-social-icon-youtube-circle:before { content: '\e862'; }
+.shopify-social-icon-youtube:before { content: '\e863'; }
+.shopify-social-icon-youtube-square-alt:before { content: '\e864'; }
+.shopify-social-icon-youtube-rounded-alt:before { content: '\e865'; }
+.shopify-social-icon-youtube-circle-alt:before { content: '\e866'; }
+.shopify-social-icon-youtube-alt:before { content: '\e867'; }
+.shopify-social-icon-amazon-square:before { content: '\e870'; }
+.shopify-social-icon-amazon-rounded:before { content: '\e871'; }
+.shopify-social-icon-amazon-circle:before { content: '\e872'; }
+.shopify-social-icon-amazon:before { content: '\e873'; }
+.shopify-social-icon-wordpress-square:before { content: '\e874'; }
+.shopify-social-icon-wordpress-rounded:before { content: '\e875'; }
+.shopify-social-icon-wordpress-circle:before { content: '\e876'; }
+.shopify-social-icon-wordpress:before { content: '\e877'; }
+.shopify-social-icon-yelp-square:before { content: '\e880'; }
+.shopify-social-icon-yelp-rounded:before { content: '\e881'; }
+.shopify-social-icon-yelp-circle:before { content: '\e882'; }
+.shopify-social-icon-yelp:before { content: '\e883'; }
+
+/* Colors */
+
+.shopify-social-icon-facebook-square.color:before,
+.shopify-social-icon-facebook-rounded.color:before,
+.shopify-social-icon-facebook-circle.color:before,
+.shopify-social-icon-facebook.color:before,
+.shopify-social-icon-facebook-square-alt.color:before,
+.shopify-social-icon-facebook-rounded-alt.color:before,
+.shopify-social-icon-facebook-circle-alt.color:before,
+.shopify-social-icon-facebook-alt.color:before {
+  color: #3b5998;
+}
+.shopify-social-icon-twitter-square.color:before,
+.shopify-social-icon-twitter-rounded.color:before,
+.shopify-social-icon-twitter-circle.color:before,
+.shopify-social-icon-twitter.color:before {
+  color: #55acee;
+}
+.shopify-social-icon-googleplus-square.color:before,
+.shopify-social-icon-googleplus-rounded.color:before,
+.shopify-social-icon-googleplus-circle.color:before,
+.shopify-social-icon-googleplus.color:before {
+  color: #dd4b39;
+}
+.shopify-social-icon-feed-square.color:before,
+.shopify-social-icon-feed-rounded.color:before,
+.shopify-social-icon-feed-circle.color:before,
+.shopify-social-icon-feed.color:before {
+  color: #ee802f;
+}
+.shopify-social-icon-email-square.color:before,
+.shopify-social-icon-email-rounded.color:before,
+.shopify-social-icon-email-circle.color:before,
+.shopify-social-icon-email.color:before {
+  color: #555555;
+}
+.shopify-social-icon-flickr-square.color:before,
+.shopify-social-icon-flickr-rounded.color:before,
+.shopify-social-icon-flickr-circle.color:before,
+.shopify-social-icon-flickr.color:before {
+  color: #0063dc;
+}
+.shopify-social-icon-instagram-square.color:before,
+.shopify-social-icon-instagram-rounded.color:before,
+.shopify-social-icon-instagram-circle.color:before,
+.shopify-social-icon-instagram.color:before {
+  color: #3f729b;
+}
+.shopify-social-icon-linkedin-square.color:before,
+.shopify-social-icon-linkedin-rounded.color:before,
+.shopify-social-icon-linkedin-circle.color:before,
+.shopify-social-icon-linkedin.color:before {
+  color: #0e76a8;
+}
+.shopify-social-icon-pinterest-square.color:before,
+.shopify-social-icon-pinterest-rounded.color:before,
+.shopify-social-icon-pinterest-circle.color:before,
+.shopify-social-icon-pinterest.color:before {
+  color: #c8232c;
+}
+.shopify-social-icon-tumblr-square.color:before,
+.shopify-social-icon-tumblr-rounded.color:before,
+.shopify-social-icon-tumblr-circle.color:before,
+.shopify-social-icon-tumblr.color:before {
+  color: #34526f;
+}
+.shopify-social-icon-vimeo-square.color:before,
+.shopify-social-icon-vimeo-rounded.color:before,
+.shopify-social-icon-vimeo-circle.color:before,
+.shopify-social-icon-vimeo.color:before {
+  color: #44bbff;
+}
+.shopify-social-icon-youtube-square.color:before,
+.shopify-social-icon-youtube-rounded.color:before,
+.shopify-social-icon-youtube-circle.color:before,
+.shopify-social-icon-youtube.color:before,
+.shopify-social-icon-youtube-square-alt.color:before,
+.shopify-social-icon-youtube-rounded-alt.color:before,
+.shopify-social-icon-youtube-circle-alt.color:before,
+.shopify-social-icon-youtube-alt.color:before {
+  color: #c4302b;
+}
+.shopify-social-icon-amazon-square.color:before,
+.shopify-social-icon-amazon-rounded.color:before,
+.shopify-social-icon-amazon-circle.color:before,
+.shopify-social-icon-amazon.color:before {
+  color: #ff9900;
+}
+.shopify-social-icon-wordpress-square.color:before,
+.shopify-social-icon-wordpress-rounded.color:before,
+.shopify-social-icon-wordpress-circle.color:before,
+.shopify-social-icon-wordpress.color:before {
+  color: #1e8cbe;
+}
+.shopify-social-icon-yelp-square.color:before,
+.shopify-social-icon-yelp-rounded.color:before,
+.shopify-social-icon-yelp-circle.color:before,
+.shopify-social-icon-yelp.color:before {
+  color: #c41200;
+}
