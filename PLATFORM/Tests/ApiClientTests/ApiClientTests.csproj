@@ -58,7 +58,7 @@
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Extensions\Client\Commerce.ApiClient\VirtoCommerce.ApiClient.csproj">
+    <ProjectReference Include="..\..\Extensions\Client\Commerce.ApiClient\VirtoCommerce.ApiClient.csproj">
       <Project>{84b945b7-85e4-4057-b0df-1f8a03b8d53c}</Project>
       <Name>VirtoCommerce.ApiClient</Name>
     </ProjectReference>
@@ -72,4 +72,3 @@
   </Target>
   -->
 </Project>
-
