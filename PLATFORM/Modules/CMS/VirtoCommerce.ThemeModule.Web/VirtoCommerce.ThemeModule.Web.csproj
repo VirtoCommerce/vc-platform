@@ -142,15 +142,15 @@
     <Folder Include="Scripts\wizards\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\..\Core\CommerceFoundation.Data\CommerceFoundation.Data.csproj">
+    <ProjectReference Include="..\..\..\Core\CommerceFoundation.Data\CommerceFoundation.Data.csproj">
       <Project>{bb168a74-0f1e-43be-a616-134902238b80}</Project>
       <Name>CommerceFoundation.Data</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\..\..\Core\CommerceFoundation\CommerceFoundation.csproj">
+    <ProjectReference Include="..\..\..\Core\CommerceFoundation\CommerceFoundation.csproj">
       <Project>{e7fc9a51-1b39-4bdc-983a-8a059c5fc58b}</Project>
       <Name>CommerceFoundation</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\..\..\Extensions\Azure\CommerceFoundation.Data.Azure\CommerceFoundation.Data.Azure.csproj">
+    <ProjectReference Include="..\..\..\Extensions\Azure\CommerceFoundation.Data.Azure\CommerceFoundation.Data.Azure.csproj">
       <Project>{e3769352-34c8-41a9-a6c8-da95d7dff903}</Project>
       <Name>CommerceFoundation.Data.Azure</Name>
     </ProjectReference>
@@ -188,4 +188,3 @@
   </Target>
   -->
 </Project>
-

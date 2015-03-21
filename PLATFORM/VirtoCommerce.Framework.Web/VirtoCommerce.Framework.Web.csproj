@@ -163,7 +163,7 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Core\CommerceFoundation\CommerceFoundation.csproj">
+    <ProjectReference Include="..\Core\CommerceFoundation\CommerceFoundation.csproj">
       <Project>{e7fc9a51-1b39-4bdc-983a-8a059c5fc58b}</Project>
       <Name>CommerceFoundation</Name>
     </ProjectReference>
@@ -177,4 +177,3 @@
   </Target>
   -->
 </Project>
-
