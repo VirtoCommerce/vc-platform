@@ -35,14 +35,6 @@
         isAuthenticated: false
     };
 
-    var userTypeEnum =
-    {
-        GuestUser: 0,
-        RegisteredUser: 1,
-        Administrator: 2,
-        SiteAdministrator: 3
-    };
-
     authContext.fillAuthData = function () {
     	$http.get(serviceBase + 'usersession').then(
 			function (results) {
@@ -73,7 +65,7 @@
     authContext.checkPermission = function (permission) {
         //first check admin permission
     	// var hasPermission = $.inArray('admin', authContext.permissions) > -1;
-        var hasPermission = authContext.userType == userTypeEnum.Administrator;
+    	var hasPermission = authContext.userType == 'Administrator';
         if (!hasPermission) {
             permission = permission.trim();
             hasPermission = $.inArray(permission, authContext.permissions) > -1;

@@ -155,6 +155,7 @@
     <Compile Include="Security\IClaimsIdentityProvider.cs" />
     <Compile Include="Security\Models\ApiAccount.cs" />
     <Compile Include="Security\Models\ApplicationUserExtended.cs" />
+    <Compile Include="Security\Models\UserState.cs" />
     <Compile Include="Security\Models\UserLogin.cs" />
     <Compile Include="Security\Models\UserSearchCriteria.cs" />
     <Compile Include="Security\Models\UserSearchResult.cs" />
