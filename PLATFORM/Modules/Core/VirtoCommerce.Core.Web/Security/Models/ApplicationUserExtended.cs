@@ -16,7 +16,8 @@ namespace VirtoCommerce.CoreModule.Web.Security.Models
 
         public string Icon { get; set; }
 
-		public int AccountState { get; set; }
+		[JsonConverter(typeof(StringEnumConverter))]
+		public UserState UserState { get; set; }
 
         public string[] Permissions { get; set; }
 		[JsonConverter(typeof(StringEnumConverter))]

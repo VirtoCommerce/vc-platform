@@ -245,7 +245,7 @@ namespace VirtoCommerce.SecurityModule.Web.Controllers
 						return BadRequest("Acount not found");
 					}
 					acount.RegisterType = user.UserType.GetHashCode();
-					acount.AccountState = user.AccountState;
+					acount.AccountState = (int)user.UserState;
 					if (user.ApiAcounts != null)
 					{
 						var source = new ObservableCollection<foundationModel.ApiAccount>(user.ApiAcounts.Select(x=>x.ToFoundation()));
@@ -357,7 +357,7 @@ namespace VirtoCommerce.SecurityModule.Web.Controllers
 								.Select(x => x.Permission);
 
 						retVal.FullName = user.UserName;
-						retVal.AccountState = user.AccountState;
+						retVal.UserState = (UserState)user.AccountState;
 						retVal.UserType = (UserType)user.RegisterType;
 						retVal.Permissions = permissions.Select(x => x.PermissionId).Distinct().ToArray();
 						retVal.ApiAcounts = user.ApiAccounts.Select(x => x.ToWebModel()).ToList();
