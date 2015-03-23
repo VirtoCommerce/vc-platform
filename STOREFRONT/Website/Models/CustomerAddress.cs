@@ -52,5 +52,19 @@ namespace VirtoCommerce.Web.Models
         }
 
         public string Zip { get; set; }
+
+        public bool IsFilledCorrectly
+        {
+            get
+            {
+                return
+                    !string.IsNullOrEmpty(this.Address1) &&
+                    !string.IsNullOrEmpty(this.City) &&
+                    !string.IsNullOrEmpty(this.Country) &&
+                    !string.IsNullOrEmpty(this.FirstName) &&
+                    !string.IsNullOrEmpty(this.LastName) &&
+                    !string.IsNullOrEmpty(this.Zip);
+            }
+        }
     }
 }

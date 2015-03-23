@@ -14,7 +14,6 @@ namespace VirtoCommerce.CartModule.Data.Model
 		public string AddressType { get; set; }
 		[StringLength(64)]
 		public string Organization { get; set; }
-		[Required]
 		[StringLength(3)]
 		public string CountryCode { get; set; }
 		[Required]

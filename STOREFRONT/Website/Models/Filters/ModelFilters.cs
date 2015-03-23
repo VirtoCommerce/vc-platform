@@ -10,6 +10,7 @@ using System.Web.Routing;
 using DotLiquid;
 using VirtoCommerce.Web.Views.Engines.Liquid;
 using VirtoCommerce.Web.Views.Engines.Liquid.ViewEngine.Extensions;
+using System.Threading;
 
 #endregion
 
@@ -19,11 +20,41 @@ namespace VirtoCommerce.Web.Models.Filters
     {
         private static SiteContext _context = HttpContext.Current.Items["vc-sitecontext"] as SiteContext;
 
+        private static readonly Lazy<CultureInfo[]> _cultures = new Lazy<CultureInfo[]>(
+            CreateCultures,
+            LazyThreadSafetyMode.ExecutionAndPublication);
+
+        private static CultureInfo[] CreateCultures()
+        {
+            return CultureInfo.GetCultures(CultureTypes.SpecificCultures);
+        }
+
         public static Language Culture(string input)
         {
             var culture = CultureInfo.CreateSpecificCulture(input);
             var lang = new Language { Name = culture.Name, NativeName = culture.NativeName, DisplayName = culture.DisplayName, EnglishName = culture.EnglishName };
             return lang;
+        }
+
+        public static string CustomerLoginLink(string input)
+        {
+            var path = VirtualPathUtility.ToAbsolute("~/account/login");
+
+            return String.Format("<a href=\"{0}\" id=\"customer_login_link\">{1}</a>", path, input);
+        }
+
+        public static string CustomerLogoutLink(string input)
+        {
+            var path = VirtualPathUtility.ToAbsolute("~/account/logoff");
+
+            return String.Format("<a href=\"{0}\" id=\"customer_logout_link\">{1}</a>", path, input);
+        }
+
+        public static string CustomerRegisterLink(string input)
+        {
+            var path = VirtualPathUtility.ToAbsolute("~/account/register");
+
+            return String.Format("<a href=\"{0}\" id=\"customer_register_link\">{1}</a>", path, input);
         }
 
         public static string Money(object input)
@@ -36,8 +67,8 @@ namespace VirtoCommerce.Web.Models.Filters
             decimal val = (decimal)input;
 
             string currency = _context.Shop.Currency;
-            var culture = CultureInfo.GetCultureInfo(_context.Shop.DefaultLanguage);
 
+            var culture = _cultures.Value.FirstOrDefault(c => new RegionInfo(c.Name).ISOCurrencySymbol.Equals(currency, StringComparison.OrdinalIgnoreCase));
 
             return val.ToString("C", culture.NumberFormat);
         }
@@ -54,7 +85,7 @@ namespace VirtoCommerce.Web.Models.Filters
 
         public static string ShopifyAssetUrl(object input)
         {
-            return AssetUrl("~/global/assets/", input.ToString());
+            return string.Format("//cdn.shopify.com/s/shopify/{0}?{1}", input.ToString(), DateTime.Now.Ticks.ToString());
         }
 
         public static string GlobalAssetUrl(string input)
