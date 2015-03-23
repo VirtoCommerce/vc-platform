@@ -36,6 +36,27 @@ namespace VirtoCommerce.Web.Models.Filters
             return lang;
         }
 
+        public static string CustomerLoginLink(string input)
+        {
+            var path = VirtualPathUtility.ToAbsolute("~/account/login");
+
+            return String.Format("<a href=\"{0}\" id=\"customer_login_link\">{1}</a>", path, input);
+        }
+
+        public static string CustomerLogoutLink(string input)
+        {
+            var path = VirtualPathUtility.ToAbsolute("~/account/logoff");
+
+            return String.Format("<a href=\"{0}\" id=\"customer_logout_link\">{1}</a>", path, input);
+        }
+
+        public static string CustomerRegisterLink(string input)
+        {
+            var path = VirtualPathUtility.ToAbsolute("~/account/register");
+
+            return String.Format("<a href=\"{0}\" id=\"customer_register_link\">{1}</a>", path, input);
+        }
+
         public static string Money(object input)
         {
             if (input == null)
