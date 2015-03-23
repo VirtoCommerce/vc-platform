@@ -1,125 +1,121 @@
-﻿namespace VirtoCommerce.ThemeModule.Web
+﻿using System;
+using System.IO;
+using System.Web.Hosting;
+using Microsoft.Practices.Unity;
+using VirtoCommerce.Content.Data;
+using VirtoCommerce.Content.Data.Repositories;
+using VirtoCommerce.Content.Data.Services;
+using VirtoCommerce.Foundation.Data.Azure.Asset;
+using VirtoCommerce.Foundation.Data.Infrastructure;
+using VirtoCommerce.Foundation.Data.Infrastructure.Interceptors;
+using VirtoCommerce.Framework.Web.Modularity;
+using VirtoCommerce.Framework.Web.Settings;
+using VirtoCommerce.ThemeModule.Web.Controllers.Api;
+
+namespace VirtoCommerce.ThemeModule.Web
 {
-	#region
+    public class Module : IModule, IDatabaseModule
+    {
+        #region Fields
 
-	using System;
+        private readonly IUnityContainer _container;
 
-	using Microsoft.Practices.Unity;
+        #endregion
 
-	using VirtoCommerce.Content.Data.Repositories;
-	using VirtoCommerce.Framework.Web.Modularity;
-	using VirtoCommerce.Framework.Web.Settings;
-	using VirtoCommerce.ThemeModule.Web.Controllers.Api;
-	using VirtoCommerce.Content.Data.Services;
-	using VirtoCommerce.Foundation.Data.Infrastructure.Interceptors;
-	using VirtoCommerce.Foundation.Data.Infrastructure;
-	using System.IO;
-	using System.Web.Hosting;
-	using VirtoCommerce.Foundation.Data.Azure.Asset;
-	using VirtoCommerce.Content.Data;
+        #region Constructors and Destructors
 
-	#endregion
+        public Module(IUnityContainer container)
+        {
+            _container = container;
+        }
 
-	public class Module : IModule, IDatabaseModule
-	{
-		#region Fields
+        #endregion
 
-		private readonly IUnityContainer _container;
-		private readonly string _modulePath;
+        #region Public Methods and Operators
 
-		#endregion
+        public void Initialize()
+        {
+            var settingsManager = _container.Resolve<ISettingsManager>();
 
-		#region Constructors and Destructors
+            var githubLogin = settingsManager.GetValue("VirtoCommerce.ThemeModule.GitHub.Login", string.Empty);
+            var githubPassword = settingsManager.GetValue("VirtoCommerce.ThemeModule.GitHub.Password", string.Empty);
+            var githubProductHeaderValue =
+                settingsManager.GetValue("VirtoCommerce.ThemeModule.GitHub.ProductHeaderValue", string.Empty);
+            var githubOwnerName = settingsManager.GetValue("VirtoCommerce.ThemeModule.GitHub.OwnerName", string.Empty);
+            var githubRepositoryName = settingsManager.GetValue(
+                "VirtoCommerce.ThemeModule.GitHub.RepositoryName",
+                string.Empty);
 
-		public Module(IUnityContainer container)
-		{
-			this._container = container;
-			_modulePath = HostingEnvironment.MapPath("~/Modules/CMS/VirtoCommerce.ThemeModule.Web/Default_Theme");
-		}
+            var githubMainPath = "Themes/";
+            var fileSystemMainPath = HostingEnvironment.MapPath("~/App_Data/Themes/");
 
-		#endregion
+            var assetsConnectionString = ConnectionHelper.GetConnectionString("AssetsConnectionString");
+            var blobStorageProvider = new AzureBlobAssetRepository(assetsConnectionString, null);
+            var uploadPath = HostingEnvironment.MapPath("~/App_Data/Uploads/");
+            var uploadPathFiles = HostingEnvironment.MapPath("~/App_Data/Uploads/Files/");
 
-		#region Public Methods and Operators
+            Func<string, IThemeService> factory = x =>
+            {
+                switch (x)
+                {
+                    case "GitHub":
+                        return new ThemeServiceImpl(new GitHubFileRepositoryImpl(
+                            githubLogin,
+                            githubPassword,
+                            githubProductHeaderValue,
+                            githubOwnerName,
+                            githubRepositoryName,
+                            githubMainPath));
 
-		public void Initialize()
-		{
-			var settingsManager = this._container.Resolve<ISettingsManager>();
+                    case "Database":
+                        return new ThemeServiceImpl(new DatabaseFileRepositoryImpl("VirtoCommerce",
+                            new AuditableInterceptor(),
+                            new EntityPrimaryKeyGeneratorInterceptor()));
 
-			var githubLogin = settingsManager.GetValue("VirtoCommerce.ThemeModule.GitHub.Login", string.Empty);
-			var githubPassword = settingsManager.GetValue("VirtoCommerce.ThemeModule.GitHub.Password", string.Empty);
-			var githubProductHeaderValue =
-				settingsManager.GetValue("VirtoCommerce.ThemeModule.GitHub.ProductHeaderValue", string.Empty);
-			var githubOwnerName = settingsManager.GetValue("VirtoCommerce.ThemeModule.GitHub.OwnerName", string.Empty);
-			var githubRepositoryName = settingsManager.GetValue(
-				"VirtoCommerce.ThemeModule.GitHub.RepositoryName",
-				string.Empty);
+                    case "File System":
+                        return new ThemeServiceImpl(new FileSystemFileRepositoryImpl(fileSystemMainPath));
 
-			var githubMainPath = "Themes/";
-			var fileSystemMainPath = HostingEnvironment.MapPath("~/App_Data/Themes/");
+                    case "Azure and Database":
+                        return new ThemeServiceImpl(new DatabaseFileRepositoryImpl("VirtoCommerce",
+                            new AuditableInterceptor(),
+                            new EntityPrimaryKeyGeneratorInterceptor()), blobStorageProvider, uploadPath);
 
-			var assetsConnectionString = ConnectionHelper.GetConnectionString("AssetsConnectionString");
-			var blobStorageProvider = new AzureBlobAssetRepository(assetsConnectionString, null);
-			var uploadPath = HostingEnvironment.MapPath("~/App_Data/Uploads/");
-			var uploadPathFiles = HostingEnvironment.MapPath("~/App_Data/Uploads/Files/");
+                    default:
+                        return new ThemeServiceImpl(new FileSystemFileRepositoryImpl(fileSystemMainPath));
+                }
+            };
 
-			Func<string, IThemeService> factory = (x) =>
-			{
-				switch (x)
-				{
-					case "GitHub":
-						return new ThemeServiceImpl(new GitHubFileRepositoryImpl(
-							githubLogin,
-							githubPassword,
-							githubProductHeaderValue,
-							githubOwnerName,
-							githubRepositoryName,
-							githubMainPath));
+            if (!Directory.Exists(fileSystemMainPath))
+            {
+                Directory.CreateDirectory(fileSystemMainPath);
+            }
 
-					case "Database":
-						return new ThemeServiceImpl(new DatabaseFileRepositoryImpl("VirtoCommerce",
-							new AuditableInterceptor(),
-							new EntityPrimaryKeyGeneratorInterceptor()));
+            if (!Directory.Exists(uploadPath))
+            {
+                Directory.CreateDirectory(uploadPath);
+            }
 
-					case "File System":
-						return new ThemeServiceImpl(new FileSystemFileRepositoryImpl(fileSystemMainPath));
+            if (!Directory.Exists(uploadPathFiles))
+            {
+                Directory.CreateDirectory(uploadPathFiles);
+            }
 
-					case "Azure and Database":
-						return new ThemeServiceImpl(new DatabaseFileRepositoryImpl("VirtoCommerce",
-							new AuditableInterceptor(),
-							new EntityPrimaryKeyGeneratorInterceptor()), blobStorageProvider, uploadPath);
+            _container.RegisterType<ThemeController>(new InjectionConstructor(factory, settingsManager, uploadPath, uploadPathFiles));
+        }
 
-					default:
-						return new ThemeServiceImpl(new FileSystemFileRepositoryImpl(fileSystemMainPath));
-				}
-			};
+        public void SetupDatabase(SampleDataLevel sampleDataLevel)
+        {
+            var options = _container.Resolve<IModuleInitializerOptions>();
+            var modulePath = options.GetModuleDirectoryPath("VirtoCommerce.Theme");
+            var themePath = Path.Combine(modulePath, "Default_Theme");
 
-			if (!Directory.Exists(fileSystemMainPath))
-			{
-				Directory.CreateDirectory(fileSystemMainPath);
-			}
+            using (var context = new DatabaseFileRepositoryImpl())
+            {
+                var initializer = new SqlThemeDatabaseInitializer(themePath);
+                initializer.InitializeDatabase(context);
+            }
+        }
 
-			if (!Directory.Exists(uploadPath))
-			{
-				Directory.CreateDirectory(uploadPath);
-			}
-
-			if (!Directory.Exists(uploadPathFiles))
-			{
-				Directory.CreateDirectory(uploadPathFiles);
-			}
-
-			this._container.RegisterType<ThemeController>(new InjectionConstructor(factory, settingsManager, uploadPath, uploadPathFiles));
-		}
-
-		public void SetupDatabase(SampleDataLevel sampleDataLevel)
-		{
-			using (var context = new DatabaseFileRepositoryImpl())
-			{
-				SqlThemeDatabaseInitializer initializer = new SqlThemeDatabaseInitializer(_modulePath);
-				initializer.InitializeDatabase(context);
-			}
-		}
-
-		#endregion
-	}
+        #endregion
+    }
 }

@@ -13,11 +13,11 @@ namespace VirtoCommerce.Content.Data
 {
 	public class SqlThemeDatabaseInitializer : SetupDatabaseInitializer<DatabaseFileRepositoryImpl, Migrations.Configuration>
 	{
-		private readonly string _path;
+		private readonly string _themePath;
 
-		public SqlThemeDatabaseInitializer(string path)
+		public SqlThemeDatabaseInitializer(string themePath)
 		{
-			_path = path;
+			_themePath = themePath;
 		}
 
 		protected override void Seed(DatabaseFileRepositoryImpl repository)
@@ -43,7 +43,7 @@ namespace VirtoCommerce.Content.Data
 			repository.Add(theme);
 			repository.UnitOfWork.Commit();
 
-			var files = Directory.GetFiles(_path , "*.*", SearchOption.AllDirectories);
+			var files = Directory.GetFiles(_themePath , "*.*", SearchOption.AllDirectories);
 
 			var items =
 				files.Select(
@@ -84,12 +84,12 @@ namespace VirtoCommerce.Content.Data
 
 		private string GetFullPath(string path)
 		{
-			return Path.Combine(_path, path).Replace("/", "\\");
+			return Path.Combine(_themePath, path).Replace("/", "\\");
 		}
 
 		private string RemoveBaseDirectory(string path)
 		{
-			return path.Replace(_path, string.Empty).Replace("\\", "/").TrimStart('/');
+			return path.Replace(_themePath, string.Empty).Replace("\\", "/").TrimStart('/');
 		}
 	}
 }
