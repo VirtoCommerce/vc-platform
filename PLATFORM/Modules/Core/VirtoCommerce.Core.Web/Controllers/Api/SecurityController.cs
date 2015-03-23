@@ -242,7 +242,7 @@ namespace VirtoCommerce.SecurityModule.Web.Controllers
 		/// <param name="user"></param>
 		/// <returns></returns>
         [HttpPut]
-        [Route("users/update")]
+        [Route("users")]
         public async Task<IHttpActionResult> UpdateAsync(ApplicationUserExtended user)
         {
 			var dbUser = await UserManager.FindByIdAsync(user.Id);

@@ -416,6 +416,8 @@
     <Content Include="Scripts\common\notification\resources\notifications.js" />
     <Content Include="Scripts\common\objCompare.js" />
     <Content Include="Scripts\common\security\auth\auth.js" />
+    <Content Include="Scripts\common\security\blades\account-changePassword.js" />
+    <Content Include="Scripts\common\security\blades\account-changePassword.tpl.html" />
     <Content Include="Scripts\common\security\login\login.js" />
     <Content Include="Scripts\common\security\login\login.tpl.html" />
     <Content Include="Scripts\common\security\login\loginToolbar.tpl.html" />
