@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using VirtoCommerce.Domain.Customer.Model;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using VirtoCommerce.Foundation.Data.Security.Identity;
-using VirtoCommerce.Foundation.Security.Model;
 
 namespace VirtoCommerce.CoreModule.Web.Security.Models
 {
@@ -19,8 +19,8 @@ namespace VirtoCommerce.CoreModule.Web.Security.Models
 		public int AccountState { get; set; }
 
         public string[] Permissions { get; set; }
-
-		public RegisterType UserType { get; set; }
+		[JsonConverter(typeof(StringEnumConverter))]
+		public UserType UserType { get; set; }
 
 		public ICollection<ApiAccount> ApiAcounts { get; set; }
 	
