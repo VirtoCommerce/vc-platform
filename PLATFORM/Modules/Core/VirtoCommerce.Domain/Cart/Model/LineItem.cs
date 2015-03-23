@@ -18,7 +18,7 @@ namespace VirtoCommerce.Domain.Cart.Model
 		public string Name { get; set; }
 		public int Quantity { get; set; }
 
-		public string FulfilmentLocationCode { get; set; }
+		public string FulfillmentLocationCode { get; set; }
 		public string ShipmentMethodCode { get; set; }
 		public bool RequiredShipping { get; set; }
 		public string ThumbnailImageUrl { get; set; }

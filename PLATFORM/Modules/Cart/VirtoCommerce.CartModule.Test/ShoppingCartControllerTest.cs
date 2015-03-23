@@ -38,13 +38,13 @@ namespace VirtoCommerce.CartModule.Test
 
 			var item = new webModel.LineItem
 			{
-				CatalogId = "catalog",
-				CategoryId = "category",
-				ProductId = "product",
-				ListPrice = 10,
-				PlacedPrice = 20,
-				Quantity = 2,
-				Name = "shoes",
+				CatalogId = "Samsung",
+				CategoryId = "100df6d5-8210-4b72-b00a-5003f9dcb79d",
+				ProductId = "v-b000bkzs9w",
+				ListPrice = 10.44m,
+				PlacedPrice = 20.33m,
+				Quantity = 1,
+				Name = "Samsung YP-T7JX 512 MB Digital Audio Player with FM Tuner & Recorder",
 				Currency = cart.Currency
 			};
 			cart.Items.Add(item);
@@ -65,25 +65,31 @@ namespace VirtoCommerce.CartModule.Test
 			var result = controller.GetCurrentCart("testSite") as OkNegotiatedContentResult<webModel.ShoppingCart>;
 			var cart = result.Content;
 
-			//Enter delivery address
-			var deliveryAddress = new webModel.Address
+			var deliveryAddress = cart.Addresses.FirstOrDefault(x=>x.Type == AddressType.Shipping);
+			if(deliveryAddress == null)
 			{
-				Type = AddressType.Shipping,
-				City = "london",
-				Phone = "+68787687",
-				PostalCode = "2222",
-				CountryCode = "ENG",
-				CountryName = "England",
-				Email = "user@mail.com",
-				FirstName = "first name",
-				LastName = "last name",
-				Line1 = "line 1",
-				Organization = "org1"
-			};
-			cart.Addresses.Add(deliveryAddress);
+				//Enter delivery address
+				deliveryAddress = new webModel.Address
+				{
+					Type = AddressType.Shipping,
+					City = "london",
+					Phone = "+68787687",
+					PostalCode = "2222",
+					CountryCode = "ENG",
+					CountryName = "England",
+					Email = "user@mail.com",
+					FirstName = "first name",
+					LastName = "last name",
+					Organization = "org1"
+				};
+				cart.Addresses.Add(deliveryAddress);
 
+			}
+			deliveryAddress.Line1 = "Wishing Zephyr Limits, Coffee Creek";
+		
 			//Save changes
 			controller.Update(cart);
+
 			result = controller.GetCurrentCart("testSite") as OkNegotiatedContentResult<webModel.ShoppingCart>;
 			cart = result.Content;
 
