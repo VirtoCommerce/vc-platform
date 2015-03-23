@@ -162,14 +162,14 @@ namespace VirtoCommerce.SecurityModule.Web.Controllers
 		[HttpPost]
 		[ResponseType(typeof(IdentityResult))]
 		[Route("users/{name}/changepassword")]
-		public async Task<IHttpActionResult> ChangePassword(string name, string oldPassword, string newPassword)
+		public async Task<IHttpActionResult> ChangePassword(string name, [FromBody] ChangePasswordInfo changePassword)
 		{
 			var user = await GetUserExtended(name);
 			if(user == null)
 			{
 				return NotFound();
 			}
-			var retVal = await UserManager.ChangePasswordAsync(user.Id, oldPassword, newPassword);
+			var retVal = await UserManager.ChangePasswordAsync(user.Id, changePassword.OldPassword, changePassword.NewPassword);
 			return Ok(retVal);
 		}
 
@@ -286,6 +286,8 @@ namespace VirtoCommerce.SecurityModule.Web.Controllers
 
             return BadRequest(String.Join(" ", result.Errors));
         }
+
+
 		/// <summary>
 		/// POST: api/security/users/create
 		/// </summary>
@@ -294,7 +296,7 @@ namespace VirtoCommerce.SecurityModule.Web.Controllers
 		/// <returns></returns>
         [HttpPost]
         [Route("users/create")]
-        public async Task<IHttpActionResult> CreateAsync(ApplicationUserExtended user, string password)
+        public async Task<IHttpActionResult> CreateAsync(ApplicationUserExtended user)
         {
             var dbUser = new ApplicationUser
             {
@@ -308,9 +310,9 @@ namespace VirtoCommerce.SecurityModule.Web.Controllers
             };
 
 			IdentityResult result = null;
-			if (!string.IsNullOrEmpty(password))
+			if (!string.IsNullOrEmpty(user.Password))
 			{
-				result = await UserManager.CreateAsync(dbUser, password);
+				result = await UserManager.CreateAsync(dbUser, user.Password);
 			}
 			else
 			{
