@@ -10,6 +10,7 @@ using System.Web.Routing;
 using DotLiquid;
 using VirtoCommerce.Web.Views.Engines.Liquid;
 using VirtoCommerce.Web.Views.Engines.Liquid.ViewEngine.Extensions;
+using System.Threading;
 
 #endregion
 
@@ -18,6 +19,15 @@ namespace VirtoCommerce.Web.Models.Filters
     public class ModelFilters
     {
         private static SiteContext _context = HttpContext.Current.Items["vc-sitecontext"] as SiteContext;
+
+        private static readonly Lazy<CultureInfo[]> _cultures = new Lazy<CultureInfo[]>(
+            CreateCultures,
+            LazyThreadSafetyMode.ExecutionAndPublication);
+
+        private static CultureInfo[] CreateCultures()
+        {
+            return CultureInfo.GetCultures(CultureTypes.SpecificCultures);
+        }
 
         public static Language Culture(string input)
         {
@@ -36,8 +46,8 @@ namespace VirtoCommerce.Web.Models.Filters
             decimal val = (decimal)input;
 
             string currency = _context.Shop.Currency;
-            var culture = CultureInfo.GetCultureInfo(_context.Shop.DefaultLanguage);
 
+            var culture = _cultures.Value.FirstOrDefault(c => new RegionInfo(c.Name).ISOCurrencySymbol.Equals(currency, StringComparison.OrdinalIgnoreCase));
 
             return val.ToString("C", culture.NumberFormat);
         }
