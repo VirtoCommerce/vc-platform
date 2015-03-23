@@ -38,7 +38,7 @@ namespace VirtoCommerce.OrderModule.Test
 		[TestMethod]
 		public void CreateNewOrderByShoppingCart()
 		{
-			var result = _controller.CreateOrderFromCart("dafe9502-973a-4c9b-9bf0-b5e9c754386d") as OkNegotiatedContentResult<webModel.CustomerOrder>;
+			var result = _controller.CreateOrderFromCart("7291086e-6ede-4814-a70c-60482208c772") as OkNegotiatedContentResult<webModel.CustomerOrder>;
 			Assert.IsNotNull(result.Content);
 		}
 
@@ -333,7 +333,7 @@ namespace VirtoCommerce.OrderModule.Test
 			var orderWorkflowService = new ObservableWorkflowService<coreModel.CustomerOrder>();
 			//Subscribe to order changes. Calculate totals  
 			orderWorkflowService.Subscribe(new CalculateTotalsActivity());
-			var orderService = new CustomerOrderServiceImpl(orderRepositoryFactory, new TimeBasedNumberGeneratorImpl(), orderWorkflowService);
+			var orderService = new CustomerOrderServiceImpl(orderRepositoryFactory, new TimeBasedNumberGeneratorImpl(), orderWorkflowService, cartService);
 
 			var controller = new CustomerOrderController(orderService, null, new TimeBasedNumberGeneratorImpl());
 			return controller;

@@ -49,7 +49,8 @@
 						quantity: 1,
 						price: price ? price.sale : 0,
 						tax: 0,
-						discountAmount: 0
+						discountAmount: 0,
+						currency: $scope.blade.currentEntity.currency
 					};
 					$scope.blade.currentEntity.items.push(newLineItem);
 				});

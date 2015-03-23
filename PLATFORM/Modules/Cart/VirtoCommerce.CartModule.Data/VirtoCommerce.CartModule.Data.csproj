@@ -64,6 +64,10 @@
     <Compile Include="Migrations\201502041625363_Initial.Designer.cs">
       <DependentUpon>201502041625363_Initial.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201503231046091_ContryCodeNotRequired.cs" />
+    <Compile Include="Migrations\201503231046091_ContryCodeNotRequired.Designer.cs">
+      <DependentUpon>201503231046091_ContryCodeNotRequired.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Model\AddressEntity.cs" />
     <Compile Include="Model\LineItemEntity.cs" />
@@ -98,6 +102,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201502041625363_Initial.resx">
       <DependentUpon>201502041625363_Initial.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201503231046091_ContryCodeNotRequired.resx">
+      <DependentUpon>201503231046091_ContryCodeNotRequired.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
