@@ -15,31 +15,31 @@
                         <tr>
                             <th class="table-col">
                                 <label class="form-control __checkbox">
-                                    <input type="checkbox" ng-model="blade.selectedAll" ng-change="checkAll(selectedAll)" />
+                                    <input type="checkbox" ng-model="blade.selectedAll" ng-change="toggleAll()" />
                                     <span class="check"></span>
                                 </label>
                             </th>
                             <th class="table-col">Name</th>
                             <th class="table-col">Account type</th>
-                            <th class="table-col">Status</th>
+                            <th class="table-col">State</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr class="table-item" ng-repeat="data in blade.currentEntities track by data.id" ng-class="{'__selected': data.id === selectedNodeId}" ng-click='selectNode(data)'>
+                        <tr class="table-item" ng-repeat="data in blade.currentEntities track by data.id" ng-class="{'__selected': data.id === selectedNodeId}">
                             <td class="table-col __product-control">
                                 <label class="form-control __checkbox">
                                     <input type="checkbox" ng-model="data.selected">
                                     <span class="check"></span>
                                 </label>
                             </td>
-                            <td class="table-col">
+                            <td class="table-col" ng-click='blade.selectNode(data)'>
                                 <span class="table-t">{{data.fullName}}</span>
                             </td>
-                            <td class="table-col __product-code">
+                            <td class="table-col __product-code" ng-click='blade.selectNode(data)'>
                                 <!-- <span ng-repeat="x in data.roles">{{x}} </span>-->
                                 <span>{{data.userType}}</span>
                             </td>
-                            <td class="table-col __product-code">
+                            <td class="table-col __product-code" ng-click='blade.selectNode(data)'>
                                 <span>{{data.userState}}</span>
                             </td>
                         </tr>
