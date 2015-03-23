@@ -158,7 +158,8 @@ namespace VirtoCommerce.CoreModule.Web
             Func<ApplicationSignInManager> signInApplication = () => HttpContext.Current.GetOwinContext().Get<ApplicationSignInManager>();
             Func<ApplicationUserManager> userManager = () => HttpContext.Current.GetOwinContext().GetUserManager<ApplicationUserManager>();
             Func<IAuthenticationManager> auth = () => HttpContext.Current.GetOwinContext().Authentication;
-            _container.RegisterType<SecurityController>(new InjectionConstructor(foundationSecurityRepositoryFactory, signInApplication, userManager, auth));
+            var apiAccountProvider = _container.Resolve<IApiAccountProvider>();
+            _container.RegisterType<SecurityController>(new InjectionConstructor(foundationSecurityRepositoryFactory, signInApplication, userManager, auth, apiAccountProvider));
 
             #endregion
 
