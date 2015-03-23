@@ -30,7 +30,7 @@
             </div>
         </div>
     </div>
-    <ul class="tree-node" ng-if="operation.childrenOperations.length > 0">
+    <ul class="tree-node" ng-class="{'__empty': operation.childrenOperations.length == 1}" ng-if="operation.childrenOperations.length > 0">
         <li class="tree-item"  ng-repeat="operation in operation.childrenOperations" ng-include="'document.html'"></li>
     </ul>
 </script>

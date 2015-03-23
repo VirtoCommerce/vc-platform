@@ -1,9 +1,9 @@
 ﻿<div class="blade-static">
     <div class="form-group">
         <div class="form-input __search">
-            <input type="text" placeholder="Quick search" ng-model="filter.searchKeyword" ui-keyup="{'enter':'doQuickSearch()'}">
+            <input type="text" placeholder="Search keyword..." ng-model="filter.searchKeyword" ui-keyup="{'enter':'blade.refresh()'}">
         </div>
-        <p class="form-count">Count: <span class="count">{{totalItems}}</span></p>
+        <p class="form-count">Count: <span class="count">{{pageSettings.totalItems}}</span></p>
     </div>
 </div>
 <div class="blade-content __medium-wide">
@@ -20,7 +20,7 @@
                                 </label>
                             </th>
                             <th class="table-col">Name</th>
-                            <th class="table-col">Role</th>
+                            <th class="table-col">Account type</th>
                             <th class="table-col">Status</th>
                         </tr>
                     </thead>
@@ -33,13 +33,14 @@
                                 </label>
                             </td>
                             <td class="table-col">
-                                <span class="table-t">{{data.name}}</span>
+                                <span class="table-t">{{data.fullName}}</span>
                             </td>
                             <td class="table-col __product-code">
-                                <span>{{data.role}}</span>
+                                <!-- <span ng-repeat="x in data.roles">{{x}} </span>-->
+                                <span>{{data.userType}}</span>
                             </td>
                             <td class="table-col __product-code">
-                                <span>{{data.status}}</span>
+                                <span>{{data.userState}}</span>
                             </td>
                         </tr>
                     </tbody>

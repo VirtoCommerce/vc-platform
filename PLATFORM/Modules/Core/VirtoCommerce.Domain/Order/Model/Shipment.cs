@@ -14,6 +14,10 @@ namespace VirtoCommerce.Domain.Order.Model
 
 		public ICollection<LineItem> Items { get; set; }
 		public ICollection<PaymentIn> InPayments { get; set; }
+
+		public Weight Weight { get; set; }
+		public Dimension Dimension { get; set; }
+
 		public Address DeliveryAddress { get; set; }
 		public decimal DiscountAmount
 		{
