@@ -61,6 +61,8 @@ IF NOT DEFINED MSBUILD_PATH (
 	SET MSBUILD_PATH=%WINDIR%\Microsoft.NET\Framework\v4.0.30319\msbuild.exe
 )
 
+SET BUILD_SOLUTION_DIR=%DEPLOYMENT_SOURCE%\PLATFORM
+SET BUILD_SOLUTION_FILE=%BUILD_SOLUTION_DIR%\VirtoCommerce.WebPlatform.sln
 SET PUBLISHED_WEBSITES=%DEPLOYMENT_TEMP%\_PublishedWebsites
 SET PUBLISHED_MODULES=%PUBLISHED_WEBSITES%\Modules
 SET PUBLISHED_WEBADMIN=%PUBLISHED_WEBSITES%\VirtoCommerce.Platform.Web
@@ -73,13 +75,13 @@ echo Handling .NET Web Application deployment.
 
 :: 1. Restore NuGet packages
 IF /I "VirtoCommerce.WebPlatform.sln" NEQ "" (
-	call :ExecuteCmd nuget restore "%DEPLOYMENT_SOURCE%\VirtoCommerce.WebPlatform.sln"
+	call :ExecuteCmd nuget restore "%BUILD_SOLUTION_FILE%"
 	IF !ERRORLEVEL! NEQ 0 goto error
 )
 
 :: 2. Build to the temporary path
 echo Building VirtoCommerce.WebPlatform.sln
-call :ExecuteCmd "%MSBUILD_PATH%" "%DEPLOYMENT_SOURCE%\VirtoCommerce.WebPlatform.sln" /nologo /verbosity:m /t:Build /p:Configuration=Release;DebugType=none;AllowedReferenceRelatedFileExtensions=":";SolutionDir="%DEPLOYMENT_SOURCE%\.\\";OutputPath="%DEPLOYMENT_TEMP%";VCModulesOutputDir="%PUBLISHED_MODULES%" %SCM_BUILD_ARGS%
+call :ExecuteCmd "%MSBUILD_PATH%" "%BUILD_SOLUTION_FILE%" /nologo /verbosity:m /t:Build /p:Configuration=Release;DebugType=none;AllowedReferenceRelatedFileExtensions=":";SolutionDir="%BUILD_SOLUTION_DIR%\.\\";OutputPath="%DEPLOYMENT_TEMP%";VCModulesOutputDir="%PUBLISHED_MODULES%" %SCM_BUILD_ARGS%
 IF !ERRORLEVEL! NEQ 0 goto error
 
 :: Move modules inside WebAdmin
@@ -89,7 +91,7 @@ IF EXIST "%PUBLISHED_MODULES%" (
 )
 
 :: Clear build output
-call :ExecuteCmd "%MSBUILD_PATH%" "%DEPLOYMENT_SOURCE%\VirtoCommerce.WebPlatform.sln" /nologo /verbosity:m /t:Clean /p:Configuration=Release;SolutionDir="%DEPLOYMENT_SOURCE%\.\\" %SCM_BUILD_ARGS%
+call :ExecuteCmd "%MSBUILD_PATH%" "%BUILD_SOLUTION_FILE%" /nologo /verbosity:m /t:Clean /p:Configuration=Release;SolutionDir="%BUILD_SOLUTION_DIR%\.\\" %SCM_BUILD_ARGS%
 
 :: 3. KuduSync
 IF /I "%IN_PLACE_DEPLOYMENT%" NEQ "1" (

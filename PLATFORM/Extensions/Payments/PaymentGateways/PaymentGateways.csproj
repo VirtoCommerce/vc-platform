@@ -44,7 +44,7 @@
       <HintPath>..\..\..\..\packages\Newtonsoft.Json.6.0.5\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="nsoftware.InPayWeb">
-      <HintPath>..\..\..\..\Shared\nsoftware.InPayWeb.dll</HintPath>
+      <HintPath>..\..\..\Shared\nsoftware.InPayWeb.dll</HintPath>
     </Reference>
     <Reference Include="PayPalCoreSDK">
       <HintPath>..\..\..\..\packages\PayPalCoreSDK.1.4.1\lib\net45\PayPalCoreSDK.dll</HintPath>
