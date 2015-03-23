@@ -19,6 +19,11 @@ namespace VirtoCommerce.Web.Controllers
         [Route("checkout/step-1")]
         public async Task<ActionResult> Step1()
         {
+            if (this.Context.Cart.ItemCount == 0)
+            {
+                return View("cart");
+            }
+
             this.Context.Checkout = await this.Service.GetCheckoutAsync();
 
             if (this.Context.Checkout != null)
@@ -56,7 +61,7 @@ namespace VirtoCommerce.Web.Controllers
                     City = formModel.City,
                     Company = formModel.Company.Length > 0 ? formModel.Company : null,
                     Country = formModel.Country,
-                    CountryCode = "RUS",
+                    CountryCode = null,
                     FirstName = formModel.FirstName,
                     LastName = formModel.LastName,
                     Phone = formModel.Phone.Length > 0 ? formModel.Phone : null,
@@ -75,6 +80,11 @@ namespace VirtoCommerce.Web.Controllers
         public async Task<ActionResult> Step2()
         {
             this.Context.Checkout = await this.Service.GetCheckoutAsync();
+
+            if (!this.Context.Checkout.ShippingAddress.IsFilledCorrectly)
+            {
+                return View("checkout-step-1");
+            }
 
             return View("checkout-step-2");
         }
@@ -104,7 +114,7 @@ namespace VirtoCommerce.Web.Controllers
                     City = formModel.City,
                     Company = formModel.Company.Length > 0 ? formModel.Company : null,
                     Country = formModel.Country,
-                    CountryCode = "RUS",
+                    CountryCode = null,
                     FirstName = formModel.FirstName,
                     LastName = formModel.LastName,
                     Phone = formModel.Phone.Length > 0 ? formModel.Phone : null,
@@ -119,7 +129,12 @@ namespace VirtoCommerce.Web.Controllers
 
                 if (customer == null)
                 {
-                    await this.SecurityService.RegisterUser(this.Context.Checkout.Email, null, null, "12345", this.Context.Shop.StoreId);
+                    await this.SecurityService.RegisterUser(
+                        this.Context.Checkout.Email,
+                        this.Context.Checkout.ShippingAddress.FirstName,
+                        this.Context.Checkout.ShippingAddress.LastName,
+                        null,
+                        this.Context.Shop.StoreId);
                 }
 
                 this.Context.Customer = await this.CustomerService.GetCustomerAsync(this.Context.Checkout.Email, this.Context.Shop.StoreId);

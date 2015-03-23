@@ -124,7 +124,7 @@ namespace VirtoCommerce.Web.Models.Services
 
         public string GetCountryTags()
         {
-            return "<option value=\"United States\" data-provinces=\"[" + "\"California\"" + "]\">United States</option>";
+            return "<option value=\"United States\" data-provinces=\"[&quot;California&quot;,&quot;Ohio&quot;]\">United States</option>";
         }
 
         public async Task<Cart> GetCurrentCartAsync(string storeId)
