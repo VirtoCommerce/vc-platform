@@ -21,6 +21,7 @@ using foundationModel = VirtoCommerce.Foundation.Security.Model;
 using webModel = VirtoCommerce.CoreModule.Web.Security.Models;
 using VirtoCommerce.Foundation.Frameworks.Extensions;
 using VirtoCommerce.CoreModule.Web.Converters;
+using System.Collections.Generic;
 namespace VirtoCommerce.SecurityModule.Web.Controllers
 {
     [RoutePrefix("api/security")]
@@ -182,23 +183,25 @@ namespace VirtoCommerce.SecurityModule.Web.Controllers
 		[HttpGet]
 		[ResponseType(typeof(UserSearchResult))]
 		[Route("users")]
-		public IHttpActionResult SearchUsers([ModelBinder(typeof(UserSearchCriteriaBinder))] UserSearchCriteria criteria)
+		public async Task<IHttpActionResult> SearchUsersAsync([ModelBinder(typeof(UserSearchCriteriaBinder))] UserSearchCriteria criteria)
 		{
 			var query = UserManager.Users;
 			var retVal = new UserSearchResult
 			{
 				TotalCount = query.Count(),
-				Users = query.OrderBy(x => x.UserName)
+				Users = new List<ApplicationUserExtended>()
+			};
+
+			var result = query.OrderBy(x => x.UserName)
 							 .Skip(criteria.Start)
 							 .Take(criteria.Count)
-							 .Select(x => new webModel.ApplicationUserExtended
-							{
-								Id = x.Id,
-								FullName = x.UserName,
-								UserName = x.UserName
-							}).ToList()
-			};
-			
+							 .ToArray();
+
+			foreach (var user in result)
+			{
+				var userExt = await GetUserExtended(user.UserName);
+				retVal.Users.Add(userExt);
+			}
 
 			return Ok(retVal);
 		}
@@ -266,7 +269,7 @@ namespace VirtoCommerce.SecurityModule.Web.Controllers
 					{
 						return BadRequest("Acount not found");
 					}
-					acount.RegisterType = user.UserType.GetHashCode();
+					acount.RegisterType = (int)user.UserType;
 					acount.AccountState = (int)user.UserState;
 					if (user.ApiAcounts != null)
 					{
