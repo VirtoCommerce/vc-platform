@@ -358,7 +358,7 @@ namespace VirtoCommerce.SecurityModule.Web.Controllers
 
 						retVal.FullName = user.UserName;
 						retVal.AccountState = user.AccountState;
-						retVal.UserType = (RegisterType)user.RegisterType;
+						retVal.UserType = (UserType)user.RegisterType;
 						retVal.Permissions = permissions.Select(x => x.PermissionId).Distinct().ToArray();
 						retVal.ApiAcounts = user.ApiAccounts.Select(x => x.ToWebModel()).ToList();
 					}

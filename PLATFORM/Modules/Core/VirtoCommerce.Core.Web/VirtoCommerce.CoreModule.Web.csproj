@@ -158,6 +158,7 @@
     <Compile Include="Security\Models\UserLogin.cs" />
     <Compile Include="Security\Models\UserSearchCriteria.cs" />
     <Compile Include="Security\Models\UserSearchResult.cs" />
+    <Compile Include="Security\Models\UserType.cs" />
     <Compile Include="Security\OwinConfig.cs" />
     <Compile Include="Security\PermissionService.cs" />
     <Compile Include="Services\FulfillmentServiceImpl.cs" />
