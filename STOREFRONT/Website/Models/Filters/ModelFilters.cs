@@ -54,7 +54,7 @@ namespace VirtoCommerce.Web.Models.Filters
 
         public static string ShopifyAssetUrl(object input)
         {
-            return AssetUrl("~/global/assets/", input.ToString());
+            return string.Format("//cdn.shopify.com/s/shopify/{0}?{1}", input.ToString(), DateTime.Now.Ticks.ToString());
         }
 
         public static string GlobalAssetUrl(string input)
