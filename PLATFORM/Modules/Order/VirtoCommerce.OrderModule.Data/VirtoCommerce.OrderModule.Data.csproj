@@ -74,6 +74,10 @@
     <Compile Include="Migrations\201502181033544_AddCancelProperties.Designer.cs">
       <DependentUpon>201502181033544_AddCancelProperties.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201503231048099_ContryCodeNotRequired.cs" />
+    <Compile Include="Migrations\201503231048099_ContryCodeNotRequired.Designer.cs">
+      <DependentUpon>201503231048099_ContryCodeNotRequired.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Model\AddressEntity.cs" />
     <Compile Include="Model\CustomerOrderEntity.cs" />
@@ -118,6 +122,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201502181033544_AddCancelProperties.resx">
       <DependentUpon>201502181033544_AddCancelProperties.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201503231048099_ContryCodeNotRequired.resx">
+      <DependentUpon>201503231048099_ContryCodeNotRequired.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

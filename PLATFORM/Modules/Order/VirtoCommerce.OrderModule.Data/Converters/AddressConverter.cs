@@ -8,6 +8,7 @@ using VirtoCommerce.Domain.Order.Model;
 using VirtoCommerce.Foundation.Frameworks.Extensions;
 using Omu.ValueInjecter;
 using VirtoCommerce.OrderModule.Data.Model;
+using cart = VirtoCommerce.Domain.Cart.Model;
 
 namespace VirtoCommerce.OrderModule.Data.Converters
 {
@@ -21,6 +22,17 @@ namespace VirtoCommerce.OrderModule.Data.Converters
 			var retVal = new Address();
 			retVal.InjectFrom(entity);
 		
+			return retVal;
+		}
+
+		public static Address ToCoreModel(this cart.Address address)
+		{
+			if (address == null)
+				throw new ArgumentNullException("entity");
+
+			var retVal = new Address();
+			retVal.InjectFrom(address);
+
 			return retVal;
 		}
 

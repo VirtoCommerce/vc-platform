@@ -23,10 +23,10 @@ namespace VirtoCommerce.OrderModule.Data.Services
         private readonly IOperationNumberGenerator _operationNumberGenerator;
         private readonly IShoppingCartService _shoppingCartService;
         private readonly IWorkflowService _workflowService;
-        public CustomerOrderServiceImpl(Func<IOrderRepository> orderRepositoryFactory, IOperationNumberGenerator operationNumberGenerator, IWorkflowService workflowService)
+        public CustomerOrderServiceImpl(Func<IOrderRepository> orderRepositoryFactory, IOperationNumberGenerator operationNumberGenerator, IWorkflowService workflowService, IShoppingCartService shoppingCartService)
         {
             _repositoryFactory = orderRepositoryFactory;
-            //_shoppingCartService = shoppingCartService;
+            _shoppingCartService = shoppingCartService;
             _operationNumberGenerator = operationNumberGenerator;
             _workflowService = workflowService;
         }
@@ -70,66 +70,15 @@ namespace VirtoCommerce.OrderModule.Data.Services
         public virtual CustomerOrder CreateByShoppingCart(string cartId)
         {
             var shoppingCart = _shoppingCartService.GetById(cartId);
-            var retVal = new CustomerOrder
-            {
-                Currency = shoppingCart.Currency,
-                CustomerId = shoppingCart.CustomerId,
-                StoreId = shoppingCart.StoreId,
-                OrganizationId = shoppingCart.OrganizationId
-            };
 
-            retVal.Items = new List<LineItem>();
-            foreach (var cartItem in shoppingCart.Items)
-            {
-                var orderItem = new LineItem
-                {
-                    Name = cartItem.Name,
-                    BasePrice = cartItem.ListPrice,
-                    CatalogId = cartItem.CatalogId,
-                    CategoryId = cartItem.CategoryId,
-                    ProductId = cartItem.ProductId,
-                    Price = cartItem.PlacedPrice,
-                    ShippingMethodCode = cartItem.ShipmentMethodCode,
-                    Tax = cartItem.TaxTotal,
-                    IsGift = cartItem.IsGift,
-                    Quantity = cartItem.Quantity,
-                    FulfilmentLocationCode = cartItem.FulfilmentLocationCode
-                };
-                retVal.Items.Add(orderItem);
-            }
-            //TODO: split shipment if it not exist
-            retVal.Shipments = new List<Shipment>();
-            foreach (var cartShipment in shoppingCart.Shipments)
-            {
-                var shipment = new Shipment
-                {
-                    Currency = cartShipment.Currency,
-                    Sum = cartShipment.ShippingPrice,
+            if(shoppingCart == null)
+			{
+				throw new OperationCanceledException("cart not found");
+			}
+			var customerOrder = shoppingCart.ToCustomerOrder();
+			var retVal = Create(customerOrder);
 
-                    DeliveryAddress = new Address
-                    {
-                        AddressType = Domain.Order.Model.AddressType.Shipping,
-                        City = cartShipment.DeliveryAddress.City,
-                        Phone = cartShipment.DeliveryAddress.Phone,
-                        PostalCode = cartShipment.DeliveryAddress.PostalCode,
-                        CountryCode = cartShipment.DeliveryAddress.CountryCode,
-                        Email = cartShipment.DeliveryAddress.Email,
-                        FirstName = cartShipment.DeliveryAddress.FirstName,
-                        LastName = cartShipment.DeliveryAddress.LastName,
-                        Line1 = cartShipment.DeliveryAddress.Line1,
-                        Organization = cartShipment.DeliveryAddress.Organization
-                    }
-                };
-                retVal.Shipments.Add(shipment);
-            }
-
-            retVal = Create(retVal);
-
-            //Clear shopping cart
-            _shoppingCartService.Delete(new string[] { cartId });
-
-
-            return retVal;
+			return retVal;
         }
 
         public void Update(CustomerOrder[] orders)
