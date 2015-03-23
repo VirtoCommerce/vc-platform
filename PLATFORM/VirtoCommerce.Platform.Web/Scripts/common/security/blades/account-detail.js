@@ -1,7 +1,7 @@
 ﻿angular.module('platformWebApp')
 .controller('accountDetailController', ['$scope', 'bladeNavigationService', 'accounts', 'dialogService', function ($scope, bladeNavigationService, accounts, dialogService) {
     $scope.blade.refresh = function (parentRefresh) {
-        accounts.get({ id: $scope.blade.currentEntityId }, function (data) {
+        accounts.get({ id: $scope.blade.data.userName }, function (data) {
             initializeBlade(data);
             if (parentRefresh) {
                 $scope.blade.parentBlade.refresh();
@@ -10,8 +10,8 @@
     }
 
     function initializeBlade(data) {
-        $scope.blade.currentEntityId = data.id;
-        $scope.blade.title = data.name;
+        // $scope.blade.currentEntityId = data.id;
+        $scope.blade.title = data.fullName;
 
         $scope.blade.currentEntity = angular.copy(data);
         $scope.blade.origEntity = data;
@@ -31,7 +31,7 @@
             bladeNavigationService.setError('Error ' + error.status, $scope.blade);
         });
     };
-    
+
     $scope.setForm = function (form) {
         $scope.formScope = form;
     }
@@ -85,9 +85,44 @@
             canExecuteMethod: function () {
                 return isDirty();
             }
+        },
+        {
+            name: "Change password",
+            icon: 'fa fa-refresh',
+            executeMethod: function () {
+                var newBlade = {
+                    id: 'accountDetailChild',
+                    currentEntityId: $scope.blade.currentEntity.userName,
+                    title: $scope.blade.title,
+                    subtitle: "Change your password",
+                    controller: 'accountChangePasswordController',
+                    template: 'Scripts/common/security/blades/account-changePassword.tpl.html'
+                };
+                bladeNavigationService.showBlade(newBlade, $scope.blade);
+            },
+            canExecuteMethod: function () {
+                return true;
+            }
         }
     ];
-    
+
+
+    $scope.generateNewApiAccount = function () {
+        $scope.blade.isLoading = true;
+
+        accounts.generateNewApiAccount({}, function (apiAccount) {
+            $scope.blade.isLoading = false;
+            if ($scope.blade.currentEntity.apiAcounts && $scope.blade.currentEntity.apiAcounts.length > 0) {
+                $scope.blade.currentEntity.apiAcounts[0] = apiAccount;
+            }
+            else {
+                $scope.blade.currentEntity.apiAcounts = [apiAccount];
+            }
+        }, function (error) {
+            bladeNavigationService.setError('Error ' + error.status, $scope.blade);
+        });
+    };
+
+    // actions on load
     $scope.blade.refresh(false);
-    $scope.currencies = settings.getValues({ id: 'VirtoCommerce.Core.General.Currencies' });
 }]);

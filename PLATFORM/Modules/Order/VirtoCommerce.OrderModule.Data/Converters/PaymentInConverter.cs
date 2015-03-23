@@ -10,6 +10,7 @@ using Omu.ValueInjecter;
 using VirtoCommerce.Foundation.Money;
 using VirtoCommerce.Foundation.Frameworks.Extensions;
 using VirtoCommerce.Foundation.Frameworks.ConventionInjections;
+using cart = VirtoCommerce.Domain.Cart.Model;
 
 namespace VirtoCommerce.OrderModule.Data.Converters
 {
@@ -24,10 +25,29 @@ namespace VirtoCommerce.OrderModule.Data.Converters
 			retVal.InjectFrom(entity);
 			retVal.Currency = (CurrencyCodes)Enum.Parse(typeof(CurrencyCodes), entity.Currency);
 
-			if(entity.Addresses != null && entity.Addresses.Any())
+			if (entity.Addresses != null && entity.Addresses.Any())
 			{
 				retVal.BillingAddress = entity.Addresses.First().ToCoreModel();
 			}
+			return retVal;
+		}
+
+		public static PaymentIn ToCoreModel(this cart.Payment payment)
+		{
+			if (payment == null)
+				throw new ArgumentNullException("payment");
+
+			var retVal = new PaymentIn();
+			retVal.InjectFrom(payment);
+			retVal.Currency = payment.Currency;
+			retVal.GatewayCode = payment.PaymentGatewayCode;
+			retVal.Sum = payment.Amount;
+
+			if(payment.BillingAddress != null)
+			{
+				retVal.BillingAddress = payment.BillingAddress.ToCoreModel();
+			}
+
 			return retVal;
 		}
 
@@ -60,12 +80,12 @@ namespace VirtoCommerce.OrderModule.Data.Converters
 
 			source.Patch((OperationEntity)target);
 
-			var patchInjectionPolicy = new PatchInjection<PaymentInEntity>(x => x.CustomerId, x => x.OrganizationId, x=>x.GatewayCode, x=>x.Purpose);
+			var patchInjectionPolicy = new PatchInjection<PaymentInEntity>(x => x.CustomerId, x => x.OrganizationId, x => x.GatewayCode, x => x.Purpose);
 			target.InjectFrom(patchInjectionPolicy, source);
 
 			if (!source.Addresses.IsNullCollection())
 			{
-				source.Addresses.Patch(target.Addresses, new AddressComparer(),  (sourceAddress, targetAddress) => sourceAddress.Patch(targetAddress));
+				source.Addresses.Patch(target.Addresses, new AddressComparer(), (sourceAddress, targetAddress) => sourceAddress.Patch(targetAddress));
 			}
 		}
 	}

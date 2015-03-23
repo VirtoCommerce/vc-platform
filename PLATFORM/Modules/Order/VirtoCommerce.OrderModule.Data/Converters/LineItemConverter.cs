@@ -10,6 +10,7 @@ using Omu.ValueInjecter;
 using VirtoCommerce.OrderModule.Data.Model;
 using VirtoCommerce.Foundation.Money;
 using VirtoCommerce.Foundation.Frameworks.ConventionInjections;
+using cart = VirtoCommerce.Domain.Cart.Model;
 
 namespace VirtoCommerce.OrderModule.Data.Converters
 {
@@ -29,6 +30,27 @@ namespace VirtoCommerce.OrderModule.Data.Converters
 				retVal.Discount = entity.Discounts.First().ToCoreModel();
 			}
 		
+			return retVal;
+		}
+
+		public static LineItem ToCoreModel(this cart.LineItem lineItem)
+		{
+			if (lineItem == null)
+				throw new ArgumentNullException("lineItem");
+
+			var retVal = new LineItem();
+			retVal.InjectFrom(lineItem);
+
+			retVal.IsGift = lineItem.IsGift;
+            retVal.BasePrice = lineItem.ListPrice;
+			retVal.Price = lineItem.PlacedPrice;
+			retVal.Tax = lineItem.TaxTotal;
+			retVal.FulfillmentLocationCode = lineItem.FulfillmentLocationCode;
+
+			if(lineItem.Discounts != null)
+			{
+				retVal.Discount = lineItem.Discounts.Select(x => x.ToCoreModel()).FirstOrDefault();
+			}
 			return retVal;
 		}
 

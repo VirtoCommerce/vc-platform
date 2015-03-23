@@ -90,10 +90,10 @@ a:hover,
 			transition: color .25s ease-in-out 0s;
 }
 
-.nav-bar .dropdown
+.nav-bar .dropdown.__opened
 {
-	-webkit-transition: left .25s ease-in-out 0s;
-			transition: left .25s ease-in-out 0s;
+	-webkit-transition: transform .25s ease-in-out 0s;
+			transition: transform .25s ease-in-out 0s;
 }
 
 .dropdown-content .list-link,

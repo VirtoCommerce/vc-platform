@@ -6,7 +6,7 @@
 	$scope.pageSettings.totalItems = $scope.blade.currentEntity.items.length;
 	$scope.pageSettings.currentPage = 1;
 	$scope.pageSettings.numPages = 5;
-	$scope.pageSettings.itemsPerPageCount = 10;
+	$scope.pageSettings.itemsPerPageCount = 4;
 
 	var selectedNode = null;
 	var selectedProducts = [];
@@ -49,7 +49,8 @@
 						quantity: 1,
 						price: price ? price.sale : 0,
 						tax: 0,
-						discountAmount: 0
+						discountAmount: 0,
+						currency: $scope.blade.currentEntity.currency
 					};
 					$scope.blade.currentEntity.items.push(newLineItem);
 				});
