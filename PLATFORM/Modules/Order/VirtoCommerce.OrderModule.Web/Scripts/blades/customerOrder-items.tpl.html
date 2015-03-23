@@ -18,7 +18,6 @@
                                 </label>
                             </th>
                             <th class="table-col">Item</th>
-                            <th class="table-col">Description</th>
                             <th class="table-col">Qty</th>
                             <th class="table-col">Avail</th>
                             <th class="table-col">Await</th>
@@ -29,7 +28,12 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr class="table-item" ng-repeat="data in blade.currentEntity.items" ng-class="{'__selected': data.id === selectedNodeId}" context-menu data-target="col_menu_{{data.id}}" ng-click='selectItem(data)'>
+                        <tr class="table-item" ng-repeat-start="data in blade.currentEntity.items" ng-class="{'__selected': data.id === selectedNodeId}" context-menu data-target="col_menu_{{data.id}}" ng-click='selectItem(data)'></tr>
+                            <td class="table-head" colspan="9">
+                                {{data.name}}
+                            </td>
+                        </tr>
+                        <tr class="table-item" ng-repeat-end>
                             <td class="table-col __product-control">
                                 <label class="form-control __checkbox">
                                     <input type="checkbox" ng-model="data.selected">
@@ -49,9 +53,6 @@
                                         <i class="menu-ico fa fa-trash-o"></i> Delete
                                     </li>
                                 </ul>
-                            </td>
-                            <td class="table-col">
-                                <span title="{{data.name}}">{{data.name}}</span>
                             </td>
                             <td class="table-col">
                                 <div class="form-input __mini __number">

@@ -41,20 +41,20 @@ namespace VirtoCommerce.Web.Views.Engines.Liquid
             return new RegionInfo(cultureName).ISOCurrencySymbol;
         }
 
-        public static string CustomerLoginLink(string input)
-        {
-            return String.Format("<a href=\"/account/login\" id=\"customer_login_link\">{0}</a>", input);
-        }
+        //public static string CustomerLoginLink(string input)
+        //{
+        //    return String.Format("<a href=\"~/account/login\" id=\"customer_login_link\">{0}</a>", input);
+        //}
 
-        public static string CustomerLogoutLink(string input)
-        {
-            return String.Format("<a href=\"/account/logoff\" id=\"customer_logout_link\">{0}</a>", input);
-        }
+        //public static string CustomerLogoutLink(string input)
+        //{
+        //    return String.Format("<a href=\"~/account/logoff\" id=\"customer_logout_link\">{0}</a>", input);
+        //}
 
-        public static string CustomerRegisterLink(string input)
-        {
-            return String.Format("<a href=\"/account/register\" id=\"customer_register_link\">{0}</a>", input);
-        }
+        //public static string CustomerRegisterLink(string input)
+        //{
+        //    return String.Format("<a href=\"~/account/register\" id=\"customer_register_link\">{0}</a>", input);
+        //}
 
         /// <summary>
         ///     Return the object which represents the place and language which matches the currency code which
