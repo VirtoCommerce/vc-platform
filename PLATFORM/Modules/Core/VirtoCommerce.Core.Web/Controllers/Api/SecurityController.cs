@@ -151,6 +151,28 @@ namespace VirtoCommerce.SecurityModule.Web.Controllers
 			return Ok(retVal);
 		}
 
+		/// <summary>
+		/// POST: api/security/users/jo@domain.com/changepassword
+		/// </summary>
+		/// <param name="name"></param>
+		/// <param name="oldPassword"></param>
+		/// <param name="newPassword"></param>
+		/// <returns></returns>
+		[HttpPost]
+		[ResponseType(typeof(IdentityResult))]
+		[Route("users/{name}/changepassword")]
+		public async Task<IHttpActionResult> ChangePassword(string name, string oldPassword, string newPassword)
+		{
+			var user = await GetUserExtended(name);
+			if(user == null)
+			{
+				return NotFound();
+			}
+			var retVal = await UserManager.ChangePasswordAsync(user.Id, oldPassword, newPassword);
+			return Ok(retVal);
+		}
+
+
 
 		/// <summary>
 		///  GET: api/security/users?q=ddd&start=0&count=20
