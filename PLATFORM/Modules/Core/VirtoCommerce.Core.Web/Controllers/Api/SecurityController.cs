@@ -21,6 +21,7 @@ using foundationModel = VirtoCommerce.Foundation.Security.Model;
 using webModel = VirtoCommerce.CoreModule.Web.Security.Models;
 using VirtoCommerce.Foundation.Frameworks.Extensions;
 using VirtoCommerce.CoreModule.Web.Converters;
+using System.Collections.Generic;
 namespace VirtoCommerce.SecurityModule.Web.Controllers
 {
     [RoutePrefix("api/security")]
@@ -151,6 +152,28 @@ namespace VirtoCommerce.SecurityModule.Web.Controllers
 			return Ok(retVal);
 		}
 
+		/// <summary>
+		/// POST: api/security/users/jo@domain.com/changepassword
+		/// </summary>
+		/// <param name="name"></param>
+		/// <param name="oldPassword"></param>
+		/// <param name="newPassword"></param>
+		/// <returns></returns>
+		[HttpPost]
+		[ResponseType(typeof(IdentityResult))]
+		[Route("users/{name}/changepassword")]
+		public async Task<IHttpActionResult> ChangePassword(string name, string oldPassword, string newPassword)
+		{
+			var user = await GetUserExtended(name);
+			if(user == null)
+			{
+				return NotFound();
+			}
+			var retVal = await UserManager.ChangePasswordAsync(user.Id, oldPassword, newPassword);
+			return Ok(retVal);
+		}
+
+
 
 		/// <summary>
 		///  GET: api/security/users?q=ddd&start=0&count=20
@@ -160,23 +183,25 @@ namespace VirtoCommerce.SecurityModule.Web.Controllers
 		[HttpGet]
 		[ResponseType(typeof(UserSearchResult))]
 		[Route("users")]
-		public IHttpActionResult SearchUsers([ModelBinder(typeof(UserSearchCriteriaBinder))] UserSearchCriteria criteria)
+		public async Task<IHttpActionResult> SearchUsersAsync([ModelBinder(typeof(UserSearchCriteriaBinder))] UserSearchCriteria criteria)
 		{
 			var query = UserManager.Users;
 			var retVal = new UserSearchResult
 			{
 				TotalCount = query.Count(),
-				Users = query.OrderBy(x => x.UserName)
+				Users = new List<ApplicationUserExtended>()
+			};
+
+			var result = query.OrderBy(x => x.UserName)
 							 .Skip(criteria.Start)
 							 .Take(criteria.Count)
-							 .Select(x => new webModel.ApplicationUserExtended
-							{
-								Id = x.Id,
-								FullName = x.UserName,
-								UserName = x.UserName
-							}).ToList()
-			};
-			
+							 .ToArray();
+
+			foreach (var user in result)
+			{
+				var userExt = await GetUserExtended(user.UserName);
+				retVal.Users.Add(userExt);
+			}
 
 			return Ok(retVal);
 		}
@@ -244,8 +269,8 @@ namespace VirtoCommerce.SecurityModule.Web.Controllers
 					{
 						return BadRequest("Acount not found");
 					}
-					acount.RegisterType = user.UserType.GetHashCode();
-					acount.AccountState = user.AccountState;
+					acount.RegisterType = (int)user.UserType;
+					acount.AccountState = (int)user.UserState;
 					if (user.ApiAcounts != null)
 					{
 						var source = new ObservableCollection<foundationModel.ApiAccount>(user.ApiAcounts.Select(x=>x.ToFoundation()));
@@ -357,7 +382,7 @@ namespace VirtoCommerce.SecurityModule.Web.Controllers
 								.Select(x => x.Permission);
 
 						retVal.FullName = user.UserName;
-						retVal.AccountState = user.AccountState;
+						retVal.UserState = (UserState)user.AccountState;
 						retVal.UserType = (UserType)user.RegisterType;
 						retVal.Permissions = permissions.Select(x => x.PermissionId).Distinct().ToArray();
 						retVal.ApiAcounts = user.ApiAccounts.Select(x => x.ToWebModel()).ToList();
