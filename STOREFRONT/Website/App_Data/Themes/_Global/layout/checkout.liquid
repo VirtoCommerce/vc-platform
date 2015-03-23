@@ -13,12 +13,8 @@
     {{ content_for_header }}
     <script>
         $(function () {
-            $.validator.setDefaults({
-                ignore: [],
-                highlight: function (element, errorClass) {
-                    alert(1);
-                }
-            });
+            new Shopify.CountryProvinceSelector("checkout_country", "checkout_province", {});
+
             $("#checkout_first_name").val("{{ checkout.shipping_address.first_name }}");
             $("#checkout_last_name").val("{{ checkout.shipping_address.last_name }}");
             $("#checkout_company").val("{{ checkout.shipping_address.company }}");
