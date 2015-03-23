@@ -9,6 +9,7 @@ using VirtoCommerce.Foundation.Frameworks.Extensions;
 using Omu.ValueInjecter;
 using VirtoCommerce.OrderModule.Data.Model;
 using VirtoCommerce.Foundation.Money;
+using cart = VirtoCommerce.Domain.Cart.Model;
 
 namespace VirtoCommerce.OrderModule.Data.Converters
 {
@@ -35,6 +36,18 @@ namespace VirtoCommerce.OrderModule.Data.Converters
 					InvalidDescription = entity.CouponInvalidDescription,
 				};
 			}
+			return retVal;
+		}
+
+		public static Discount ToCoreModel(this cart.Discount discount)
+		{
+			if (discount == null)
+				throw new ArgumentNullException("discount");
+
+			var retVal = new Discount();
+			retVal.InjectFrom(discount);
+			retVal.Currency = discount.Currency;
+
 			return retVal;
 		}
 

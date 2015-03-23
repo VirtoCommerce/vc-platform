@@ -13,7 +13,7 @@
                     <div class="form-group">
                         <label class="form-label">Status</label>
                         <div class="form-input">
-                            <ui-select ng-model="blade.currentEntity.status" ng-init="statuses = ['new','pickPack','completed']">
+                            <ui-select ng-model="blade.currentEntity.status">
                                 <ui-select-match placeholder="Select ...">{{$select.selected}}</ui-select-match>
                                 <ui-select-choices repeat="x as x in statuses | filter: $select.search ">
                                     <span ng-bind-html="x | highlight: $select.search"></span>

@@ -28,4 +28,52 @@
   <scripts>
     <directory virtualPath="$/Scripts" searchPattern="*.js" searchSubdirectories="true" />
   </scripts>
+
+	<settings>
+		<group>
+			<setting>
+				<name>Order.Status</name>
+				<valueType>string</valueType>
+				<defaultValue>New</defaultValue>
+				<title>Status</title>
+				<description>Customer order statuses</description>
+				<isArray>true</isArray>
+				<arrayValues>
+					<value>New</value>
+					<value>Processing</value>
+					<value>Cancelled</value>
+					<value>Completed</value>
+				</arrayValues>
+			</setting>
+			<setting>
+				<name>Shipment.Status</name>
+				<valueType>string</valueType>
+				<defaultValue>New</defaultValue>
+				<title>Status</title>
+				<description>Shipment statuses</description>
+				<isArray>true</isArray>
+				<arrayValues>
+					<value>New</value>
+					<value>PickPack</value>
+					<value>Cancelled</value>
+					<value>ReadyToSend</value>
+					<value>Send</value>
+				</arrayValues>
+			</setting>
+			<setting>
+				<name>PaymentIn.Status</name>
+				<valueType>string</valueType>
+				<defaultValue>New</defaultValue>
+				<title>Status</title>
+				<description>Incoming payment statuses</description>
+				<isArray>true</isArray>
+				<arrayValues>
+					<value>New</value>
+					<value>WaitForPaid</value>
+					<value>Paid</value>
+					<value>PartiallyPaid</value>
+				</arrayValues>
+			</setting>
+		</group>
+	</settings>
 </module>
