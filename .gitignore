@@ -180,3 +180,4 @@ $RECYCLE.BIN/
 Shared/VirtoCommerce/VirtoCommerce.PaymentGateways.dll
 /src/Presentation/WebAdmin/packages
 /artifacts
+/PLATFORM/packages
