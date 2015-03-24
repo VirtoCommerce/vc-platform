@@ -7,7 +7,7 @@ using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.Description;
 using System.Web.Mvc;
-using VirtoCommerce.Domain.Mailing.Services;
+using VirtoCommerce.MailChimp.Mailing.Services;
 using VirtoCommerce.Framework.Web.Settings;
 
 namespace MailChimp.MailingModule.Web.Controllers
