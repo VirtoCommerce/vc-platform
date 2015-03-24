@@ -15,6 +15,13 @@ IF %ERRORLEVEL% NEQ 0 (
 	goto error
 )
 
+:: If nuget.exe does not exist in one of the PATH directories, use \Tools\NuGet\nuget.exe
+SET NUGET=nuget.exe
+where nuget.exe 2>nul >nul
+IF %ERRORLEVEL% NEQ 0 (
+    SET NUGET=%~dp0%Tools\NuGet\nuget.exe
+)
+
 :: Setup
 :: -----
 
@@ -61,11 +68,13 @@ IF NOT DEFINED MSBUILD_PATH (
 	SET MSBUILD_PATH=%WINDIR%\Microsoft.NET\Framework\v4.0.30319\msbuild.exe
 )
 
-SET BUILD_SOLUTION_DIR=%DEPLOYMENT_SOURCE%\PLATFORM
-SET BUILD_SOLUTION_FILE=%BUILD_SOLUTION_DIR%\VirtoCommerce.WebPlatform.sln
+SET ADMIN_SOLUTION_DIR=%DEPLOYMENT_SOURCE%\PLATFORM
+SET ADMIN_SOLUTION_FILE=%ADMIN_SOLUTION_DIR%\VirtoCommerce.WebPlatform.sln
+SET STORE_SOLUTION_DIR=%DEPLOYMENT_SOURCE%\STOREFRONT
+SET STORE_SOLUTION_FILE=%STORE_SOLUTION_DIR%\VirtoCommerce.Website.sln
 SET PUBLISHED_WEBSITES=%DEPLOYMENT_TEMP%\_PublishedWebsites
 SET PUBLISHED_MODULES=%PUBLISHED_WEBSITES%\Modules
-SET PUBLISHED_WEBADMIN=%PUBLISHED_WEBSITES%\VirtoCommerce.Platform.Web
+SET PUBLISHED_ROOT=%PUBLISHED_WEBSITES%\admin
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 :: Deployment
@@ -73,29 +82,48 @@ SET PUBLISHED_WEBADMIN=%PUBLISHED_WEBSITES%\VirtoCommerce.Platform.Web
 
 echo Handling .NET Web Application deployment.
 
-:: 1. Restore NuGet packages
-IF /I "VirtoCommerce.WebPlatform.sln" NEQ "" (
-	call :ExecuteCmd nuget restore "%BUILD_SOLUTION_FILE%"
-	IF !ERRORLEVEL! NEQ 0 goto error
+IF /I "%APPSETTING_VirtoCommerce_DeployApplications%" NEQ "Web Admin Only" (
+    :: Build storefront
+    echo Building %STORE_SOLUTION_FILE%
+
+    call :ExecuteCmd "%NUGET%" restore "%STORE_SOLUTION_FILE%"
+    IF !ERRORLEVEL! NEQ 0 goto error
+
+    call :ExecuteCmd "%MSBUILD_PATH%" "%STORE_SOLUTION_FILE%" /nologo /verbosity:m /t:Build /p:Configuration=Release;DebugType=none;AllowedReferenceRelatedFileExtensions=":";SolutionDir="%STORE_SOLUTION_DIR%\.\\";OutputPath="%DEPLOYMENT_TEMP%" %SCM_BUILD_ARGS%
+    IF !ERRORLEVEL! NEQ 0 goto error
+
+    call :ExecuteCmd rename "%PUBLISHED_WEBSITES%\VirtoCommerce.Website" store
+    IF !ERRORLEVEL! NEQ 0 goto error
+
+    SET PUBLISHED_ROOT=%PUBLISHED_WEBSITES%
 )
 
+:: Build platform
+echo Building %ADMIN_SOLUTION_FILE%
+
+:: 1. Restore NuGet packages
+call :ExecuteCmd "%NUGET%" restore "%ADMIN_SOLUTION_FILE%"
+IF !ERRORLEVEL! NEQ 0 goto error
+
 :: 2. Build to the temporary path
-echo Building VirtoCommerce.WebPlatform.sln
-call :ExecuteCmd "%MSBUILD_PATH%" "%BUILD_SOLUTION_FILE%" /nologo /verbosity:m /t:Build /p:Configuration=Release;DebugType=none;AllowedReferenceRelatedFileExtensions=":";SolutionDir="%BUILD_SOLUTION_DIR%\.\\";OutputPath="%DEPLOYMENT_TEMP%";VCModulesOutputDir="%PUBLISHED_MODULES%" %SCM_BUILD_ARGS%
+call :ExecuteCmd "%MSBUILD_PATH%" "%ADMIN_SOLUTION_FILE%" /nologo /verbosity:m /t:Build /p:Configuration=Release;DebugType=none;AllowedReferenceRelatedFileExtensions=":";SolutionDir="%ADMIN_SOLUTION_DIR%\.\\";OutputPath="%DEPLOYMENT_TEMP%";VCModulesOutputDir="%PUBLISHED_MODULES%" %SCM_BUILD_ARGS%
+IF !ERRORLEVEL! NEQ 0 goto error
+
+call :ExecuteCmd rename "%PUBLISHED_WEBSITES%\VirtoCommerce.Platform.Web" admin
 IF !ERRORLEVEL! NEQ 0 goto error
 
 :: Move modules inside WebAdmin
 IF EXIST "%PUBLISHED_MODULES%" (
-    call :ExecuteCmd move /Y "%PUBLISHED_MODULES%" "%PUBLISHED_WEBADMIN%\Modules"
+    call :ExecuteCmd move /Y "%PUBLISHED_MODULES%" "%PUBLISHED_WEBSITES%\admin\Modules"
     IF !ERRORLEVEL! NEQ 0 goto error
 )
 
 :: Clear build output
-call :ExecuteCmd "%MSBUILD_PATH%" "%BUILD_SOLUTION_FILE%" /nologo /verbosity:m /t:Clean /p:Configuration=Release;SolutionDir="%BUILD_SOLUTION_DIR%\.\\" %SCM_BUILD_ARGS%
+call :ExecuteCmd "%MSBUILD_PATH%" "%ADMIN_SOLUTION_FILE%" /nologo /verbosity:m /t:Clean /p:Configuration=Release;SolutionDir="%ADMIN_SOLUTION_DIR%\.\\" %SCM_BUILD_ARGS%
 
 :: 3. KuduSync
 IF /I "%IN_PLACE_DEPLOYMENT%" NEQ "1" (
-	call :ExecuteCmd "%KUDU_SYNC_CMD%" -v 50 -f "%PUBLISHED_WEBADMIN%" -t "%DEPLOYMENT_TARGET%" -n "%NEXT_MANIFEST_PATH%" -p "%PREVIOUS_MANIFEST_PATH%" -i ".git;.hg;.deployment;deploy.cmd"
+	call :ExecuteCmd "%KUDU_SYNC_CMD%" -v 50 -f "%PUBLISHED_ROOT%" -t "%DEPLOYMENT_TARGET%" -n "%NEXT_MANIFEST_PATH%" -p "%PREVIOUS_MANIFEST_PATH%" -i ".git;.hg;.deployment;deploy.cmd"
 	IF !ERRORLEVEL! NEQ 0 goto error
 )
 
