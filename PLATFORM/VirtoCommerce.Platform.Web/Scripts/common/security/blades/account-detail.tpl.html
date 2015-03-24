@@ -17,12 +17,17 @@
                 <div class="form-group">
                     <label class="form-label">
                         API secret key
-                        <a href="" ng-click="generateNewApiAccount()">
-                            <i class="form-ico fa fa-pencil"></i>
-                        </a>
                     </label>
+                    <div class="form-nav">
+                        <a href="" ng-click="generateNewApiAccount()">
+                            Generate
+                        </a>
+                        <a href="" ng-click="copyCode()">
+                            Copy
+                        </a>
+                    </div>
                     <div class="form-input">
-                        <textarea class="form-control" cols="30" rows="3" ng-model="blade.currentEntity.apiAcounts[0].secretKey" placeholder="Generate secret key" readonly></textarea>
+                        <textarea class="form-control" cols="30" rows="3" id="secretKey" ng-model="blade.currentEntity.apiAcounts[0].secretKey" placeholder="Generate secret key" readonly></textarea>
                     </div>
                 </div>
             </form>
