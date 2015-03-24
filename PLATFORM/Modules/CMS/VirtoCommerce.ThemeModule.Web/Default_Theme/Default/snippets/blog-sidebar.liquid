@@ -1,0 +1,23 @@
+<h4>{{ 'blogs.sidebar.recent_articles' | t }}</h4>
+{% for article in blog.articles limit:6 %}
+  <p>
+    <a href="{{ article.url }}">{{ article.title }}</a>
+    <br>
+    <time pubdate datetime="{{ article.published_at | date: '%Y-%m-%d' }}">
+      <em class="text-light">{{ article.published_at | date: format: 'month_day_year' }}</em>
+    </time>
+  </p>
+{% endfor %}
+
+{% if blog.all_tags.size > 0 %}
+  <h4>{{ 'blogs.sidebar.categories' | t }}</h4>
+  <ul>
+    {% for tag in blog.all_tags %}
+      {% if current_tags contains tag %}
+      <li>{{ tag }}</li>
+      {% else %}
+      <li>{{ tag | link_to_tag: tag }}</li>
+      {% endif %}
+    {% endfor %}
+  </ul>
+{% endif %}

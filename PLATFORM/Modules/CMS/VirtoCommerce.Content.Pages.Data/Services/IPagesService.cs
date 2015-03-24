@@ -9,7 +9,7 @@ namespace VirtoCommerce.Content.Pages.Data.Services
 {
 	public interface IPagesService
 	{
-		IEnumerable<ShortPageInfo> GetPages(string storeId);
+		IEnumerable<ShortPageInfo> GetPages(string storeId, GetPagesCriteria criteria);
 		Page GetPage(string storeId, string pageName, string language);
 		void SavePage(string storeId, Page page);
 		void DeletePage(string storeId, ShortPageInfo[] pages);

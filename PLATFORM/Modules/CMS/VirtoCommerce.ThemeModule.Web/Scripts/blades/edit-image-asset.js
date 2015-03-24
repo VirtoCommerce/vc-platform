@@ -77,6 +77,7 @@
 
 	blade.saveChanges = function() {
 		blade.isLoading = true;
+		blade.currentEntity.id = blade.choosenFolder + '/' + blade.currentEntity.name;
 
 		themes.updateAsset({ storeId: blade.choosenStoreId, themeId: blade.choosenThemeId }, blade.currentEntity, function () {
 			blade.parentBlade.refresh(true);

@@ -20,10 +20,15 @@ namespace VirtoCommerce.Content.Pages.Data.Services
 			_pagesRepository = pagesRepository;
 		}
 
-		public IEnumerable<Models.ShortPageInfo> GetPages(string storeId)
+		public IEnumerable<Models.ShortPageInfo> GetPages(string storeId, GetPagesCriteria criteria)
 		{
 			var path = string.Format("{0}/", storeId);
-			return _pagesRepository.GetPages(path);
+			var pages = _pagesRepository.GetPages(path);
+			if(criteria.LastUpdateDate.HasValue)
+			{
+				return pages.Where(p => p.LastModified > criteria.LastUpdateDate.Value);
+			}
+			return pages;
 		}
 
 		public Models.Page GetPage(string storeId, string pageName, string language)
