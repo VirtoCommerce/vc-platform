@@ -21,7 +21,7 @@
             return;
         }
 
-        if ($scope.blade.currentEntity.oldPassword == $scope.blade.currentEntity.newPassword2) {
+        if ($scope.blade.currentEntity.oldPassword == $scope.blade.currentEntity.newPassword) {
             $scope.blade.error = 'Error: old and new passwords are the same!';
             return;
         }
@@ -35,10 +35,15 @@
         };
         
         accounts.changepassword({ id: $scope.blade.currentEntityId }, postData, function (data) {
-            $scope.bladeClose();
+            if (data.succeeded) {
+                $scope.bladeClose();
+            }
+            else {
+                bladeNavigationService.setError('Error: ' + data.errors[0], $scope.blade);
+            }
 
         }, function (error) {
-            bladeNavigationService.setError('Error ' + error.status, $scope.blade);
+            bladeNavigationService.setError('Error: ' + error.status, $scope.blade);
         });
     };
 
@@ -47,19 +52,6 @@
     }
 
     $scope.bladeHeadIco = 'fa-lock';
-
-    $scope.bladeToolbarCommands = [
-        {
-            name: "Change password",
-            icon: 'fa fa-save',
-            executeMethod: function () {
-                $scope.saveChanges();
-            },
-            canExecuteMethod: function () {
-                return isDirty() && $scope.formScope && $scope.formScope.$valid;
-            }
-        }
-    ];
 
     // actions on load
     initializeBlade();
