@@ -117,10 +117,6 @@
     <Content Include="Scripts\blades\member-emails-list.js" />
     <Content Include="Scripts\blades\member-phones-list.tpl.html" />
     <Content Include="Scripts\blades\member-emails-list.tpl.html" />
-    <Content Include="Scripts\blades\member-address-detail.js" />
-    <Content Include="Scripts\blades\member-address-detail.tpl.html" />
-    <Content Include="Scripts\blades\member-address-list.js" />
-    <Content Include="Scripts\blades\member-address-list.tpl.html" />
     <Content Include="Scripts\blades\member-property-detail.js" />
     <Content Include="Scripts\blades\member-property-detail.tpl.html" />
     <Content Include="Scripts\blades\member-property-valueType.js" />
