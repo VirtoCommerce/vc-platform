@@ -27,6 +27,7 @@ using VirtoCommerce.Framework.Web.Security;
 using VirtoCommerce.Framework.Web.Settings;
 using VirtoCommerce.SecurityModule.Web.Controllers;
 using Microsoft.Owin.Security;
+using VirtoCommerce.Domain.Mailing.Services;
 
 namespace VirtoCommerce.CoreModule.Web
 {
@@ -168,6 +169,11 @@ namespace VirtoCommerce.CoreModule.Web
             #region Payment gateways manager
             _container.RegisterInstance<IPaymentGatewayManager>(new InMemoryPaymentGatewayManagerImpl());
             #endregion
+
+            #region Mailing manager
+            _container.RegisterInstance<IMailingManager>(new InMemoryMailingManagerImpl());
+            #endregion
+
             #region Notification
             _container.RegisterInstance<INotifier>(new InMemoryNotifierImpl());
             #endregion
