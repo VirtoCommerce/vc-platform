@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
-namespace VirtoCommerce.MailChimp.Mailing.Services
+namespace MailChimp.MailingModule.Web.Services
 {
     public interface IMailingManager
     {

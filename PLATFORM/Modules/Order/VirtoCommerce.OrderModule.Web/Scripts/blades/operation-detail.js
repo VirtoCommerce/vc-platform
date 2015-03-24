@@ -173,7 +173,7 @@
 		     		dialogService.showDialog(dialog, 'Modules/$(VirtoCommerce.Orders)/Scripts/dialogs/cancelOperation-dialog.tpl.html', 'confirmCancelDialogController');
 		     	},
 		     	canExecuteMethod: function () {
-		     		return true;
+                    return $scope.blade.currentEntity && !$scope.blade.currentEntity.isCancelled;
 		     	}
 		     },
     ];
