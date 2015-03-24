@@ -37,7 +37,7 @@ namespace VirtoCommerce.PowerShell.SearchSetup.Cmdlet
     using VirtoCommerce.Search.Providers.Lucene;
 
     [CLSCompliant(false)]
-    [Cmdlet(VerbsData.Update, "Virto-Search-Index", SupportsShouldProcess = true)]
+    [Cmdlet(VerbsData.Update, "VirtoSearchIndex", SupportsShouldProcess = true)]
     public class UpdateSearchIndex : DomainCommand
     {
         #region Public Properties
@@ -64,7 +64,8 @@ namespace VirtoCommerce.PowerShell.SearchSetup.Cmdlet
             try
             {
                 // backup existing LocatorProvider
-                if (ServiceLocator.IsLocationProviderSet) serviceLocatorBackup = ServiceLocator.Current;
+                if (ServiceLocator.IsLocationProviderSet)
+                    serviceLocatorBackup = ServiceLocator.Current;
 
                 var controller = GetLocalSearchController(searchConnection, dbConnectionString);
 

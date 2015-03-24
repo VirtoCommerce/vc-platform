@@ -20,8 +20,8 @@ Import-Module $moduleFile
 ##################################
 
 #initialize configs
-echo "Initialize-Virto-FrontEnd-Configs ***** ***** ***** ***** ***** ***** "
-Initialize-Virto-FrontEnd-Configs -location $location -dbconnection $dbconnection -indexes localhost:9200
+echo "Initialize-VirtoFrontEndConfigs ***** ***** ***** ***** ***** ***** "
+Initialize-VirtoFrontEndConfigs -location $location -dbconnection $dbconnection -indexes localhost:9200
 
 #set ok
 
