@@ -134,6 +134,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.Content.Menu.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.MenuModule.Web", "Modules\CMS\VirtoCommerce.MenuModule.Web\VirtoCommerce.MenuModule.Web.csproj", "{80A936A0-D611-4296-A22C-78183E8A1B4D}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Mailing", "Mailing", "{0A6CC5D3-FD1D-4244-9C8A-EA1F9593C5FF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MailChimp.MailingModule.Web", "Modules\Mailing\MailChimp.MailingModule.Web\MailChimp.MailingModule.Web.csproj", "{3FADADA7-3DAE-4F57-905C-7E92CDA9F0B3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -332,6 +336,10 @@ Global
 		{80A936A0-D611-4296-A22C-78183E8A1B4D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{80A936A0-D611-4296-A22C-78183E8A1B4D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{80A936A0-D611-4296-A22C-78183E8A1B4D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3FADADA7-3DAE-4F57-905C-7E92CDA9F0B3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3FADADA7-3DAE-4F57-905C-7E92CDA9F0B3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3FADADA7-3DAE-4F57-905C-7E92CDA9F0B3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3FADADA7-3DAE-4F57-905C-7E92CDA9F0B3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -394,5 +402,7 @@ Global
 		{8F9F26FC-344E-4599-B2F3-CB560F1D5499} = {D1556CC7-62A5-4D89-BD35-FC5B5AE17AE8}
 		{4021578C-A4A9-4C1F-BFA3-D10532533C5F} = {D1556CC7-62A5-4D89-BD35-FC5B5AE17AE8}
 		{80A936A0-D611-4296-A22C-78183E8A1B4D} = {D1556CC7-62A5-4D89-BD35-FC5B5AE17AE8}
+		{0A6CC5D3-FD1D-4244-9C8A-EA1F9593C5FF} = {A4C0D164-BF77-4B57-8970-B5459B100AC3}
+		{3FADADA7-3DAE-4F57-905C-7E92CDA9F0B3} = {0A6CC5D3-FD1D-4244-9C8A-EA1F9593C5FF}
 	EndGlobalSection
 EndGlobal
