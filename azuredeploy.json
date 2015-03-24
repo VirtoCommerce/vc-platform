@@ -163,6 +163,16 @@
                                 "name": "VirtoCommerce_DeployApplications",
                                 "value": "[parameters('deployApplications')]"
                             }
+                        ],
+                        "virtualApplications": [
+                            { 
+                                "virtualPath":  "/",
+                                "physicalPath":  "site\\wwwroot\\store"
+                            },
+                            { 
+                                "virtualPath":  "/admin",
+                                "physicalPath":  "site\\wwwroot\\admin"
+                            }
                         ]
                     }
                 },
