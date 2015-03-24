@@ -1,0 +1,7 @@
+﻿<div class="tile double wide" ng-click="openAddressesBlade()">
+
+    <span class="tile-count" ng-if="!operation.deliveryAddress">N/A</span>
+    <span class="tile-descr" ng-if="operation.deliveryAddress">{{ getAddressName(operation.deliveryAddress) | limitTo :40 }}</span>
+    <span class="tile-descr">Delivery address</span>
+
+</div>
