@@ -29,6 +29,10 @@ namespace VirtoCommerce.OrderModule.Data.Model
 		public string Line1 { get; set; }
 		[StringLength(2048)]
 		public string Line2 { get; set; }
+		[StringLength(128)]
+		public string RegionId { get; set; }
+		[StringLength(128)]
+		public string RegionName { get; set; }
 		[Required]
 		[StringLength(64)]
 		public string FirstName { get; set; }

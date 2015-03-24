@@ -73,7 +73,7 @@ namespace VirtoCommerce.OrderModule.Data.Converters
 		public int GetHashCode(AddressEntity obj)
 		{
 			var result = String.Join(":", obj.Organization, obj.City, obj.CountryCode, obj.CountryName, 
-										  obj.Email, obj.FirstName, obj.LastName, obj.Line1, obj.Line2, obj.Phone, obj.PostalCode);
+										  obj.Email, obj.FirstName, obj.LastName, obj.Line1, obj.Line2, obj.Phone, obj.PostalCode, obj.RegionId, obj.RegionName);
 			return result.GetHashCode();
 		}
 
