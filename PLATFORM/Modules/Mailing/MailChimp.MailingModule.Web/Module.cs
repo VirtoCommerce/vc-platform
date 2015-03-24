@@ -6,7 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
-using VirtoCommerce.Domain.Mailing.Services;
+using VirtoCommerce.MailChimp.Mailing.Services;
 using VirtoCommerce.Framework.Web.Modularity;
 using VirtoCommerce.Framework.Web.Settings;
 
@@ -32,6 +32,11 @@ namespace MailChimp.MailingModule.Web
 
 
             var mailChimpMailing = new MailChimpMailingImpl(mailChimpApiKey, mailChimpCode, mailChimpDescription, mailChimpLogoUrl);
+
+            #region Mailing manager
+            _container.RegisterInstance<IMailingManager>(new InMemoryMailingManagerImpl());
+            #endregion
+
 			var mailingManager = _container.Resolve<IMailingManager>();
             mailingManager.RegisterMailing(mailChimpMailing);
 
