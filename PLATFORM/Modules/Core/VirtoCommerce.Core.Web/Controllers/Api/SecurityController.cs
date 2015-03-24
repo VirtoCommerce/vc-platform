@@ -274,16 +274,10 @@ namespace VirtoCommerce.CoreModule.Web.Controllers.Api
                         var source = new ObservableCollection<ApiAccount>(user.ApiAcounts.Select(x => x.ToFoundation()));
                         var inventoryComparer = AnonymousComparer.Create((ApiAccount x) => x.ApiAccountId);
                         acount.ApiAccounts.ObserveCollection(x => repository.Add(x), x => repository.Remove(x));
-						source.Patch(acount.ApiAccounts, inventoryComparer, (sourceAccount, targetAccount) => sourceAccount.Patch(targetAccount));
+                        source.Patch(acount.ApiAccounts, inventoryComparer, (sourceAccount, targetAccount) => sourceAccount.Patch(targetAccount));
                     }
-					try
-					{
-						repository.UnitOfWork.Commit();
-					}
-					catch(Exception ex)
-					{
-						throw;
-					}
+
+                    repository.UnitOfWork.Commit();
                 }
 
                 return Ok();
@@ -330,7 +324,7 @@ namespace VirtoCommerce.CoreModule.Web.Controllers.Api
                 {
                     var account = new Account
                     {
-						UserName = user.UserName,
+                        UserName = user.UserName,
                         AccountId = user.Id,
                         AccountState = AccountState.Approved.GetHashCode(),
                         MemberId = id,
