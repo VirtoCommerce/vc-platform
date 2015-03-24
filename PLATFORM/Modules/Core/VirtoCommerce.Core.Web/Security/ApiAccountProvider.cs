@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Globalization;
 using System.Linq;
+using System.Security.Cryptography;
+using System.Text;
 using VirtoCommerce.Foundation.Frameworks;
 using VirtoCommerce.Foundation.Security.Model;
 using VirtoCommerce.Foundation.Security.Repositories;
@@ -27,7 +30,19 @@ namespace VirtoCommerce.CoreModule.Web.Security
                 GetCacheTimeout());
         }
 
-        public ApiAccount LoadApiAccount(string appId)
+        public ApiAccount GenerateApiCredentials()
+        {
+            return new ApiAccount
+            {
+                AppId = new Guid().ToString("N"),
+                SecretKey = ConvertBytesToHexString(GetRandomBytes(64))
+            };
+        }
+
+        #endregion
+
+
+        private ApiAccount LoadApiAccount(string appId)
         {
             using (var repository = _securityRepository())
             {
@@ -36,6 +51,26 @@ namespace VirtoCommerce.CoreModule.Web.Security
             }
         }
 
-        #endregion
+        private static byte[] GetRandomBytes(int count)
+        {
+            var bytes = new byte[count];
+
+            using (var rng = new RNGCryptoServiceProvider())
+            {
+                rng.GetBytes(bytes);
+            }
+
+            return bytes;
+        }
+
+        private static string ConvertBytesToHexString(byte[] bytes)
+        {
+            var builder = new StringBuilder();
+
+            foreach (var b in bytes)
+                builder.Append(b.ToString("x2", CultureInfo.InvariantCulture));
+
+            return builder.ToString();
+        }
     }
 }

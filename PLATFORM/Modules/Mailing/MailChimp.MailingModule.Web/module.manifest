@@ -1,0 +1,67 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<module>
+	<id>MailChimp.Mailing</id>
+	<version>1.0.0.0</version>
+	<dependencies>
+		<dependency>VirtoCommerce.Core</dependency>
+    <dependency>VirtoCommerce.Customer</dependency>
+	</dependencies>
+
+	<title>MailChimp Mailing</title>
+	<description>APIs and UI for MailChimp mailing</description>
+	<authors>
+		<author>Virto Commerce</author>
+	</authors>
+	<owners>
+		<owner>Virto Commerce</owner>
+	</owners>
+	<projectUrl>http://virtocommerce.com/</projectUrl>
+	<iconUrl>http://nuget.org/Content/Images/packageDefaultIcon-50x50.png</iconUrl>
+	<releaseNotes>First version.</releaseNotes>
+	<copyright>Copyright © 2011-2015 Virto Commerce. All rights reserved</copyright>
+	<tags>mailchimp mailing</tags>
+
+	<assemblyFile>MailChimp.MailingModule.Web.dll</assemblyFile>
+	<moduleType>MailChimp.MailingModule.Web.Module, MailChimp.MailingModule.Web</moduleType>
+	<!--<styles>
+		<directory virtualPath="$/Content/css" searchPattern="*.css" searchSubdirectories="true" />
+	</styles>-->
+	<!--<scripts>
+		<directory virtualPath="$/Scripts" searchPattern="*.js" searchSubdirectories="true" />
+	</scripts>-->
+
+	<settings>
+		<group name="Credentials">
+			<setting>
+				<name>MailChimp.Mailing.Credentials.ApiKey</name>
+				<valueType>string</valueType>
+				<defaultValue>5a1d5bd4ebeef2032527df6cc044998d-us10</defaultValue>
+				<title>API key</title>
+				<description>MailChimp API key</description>
+			</setting>			
+		</group>
+		<group name="Mailing Description">
+			<setting>
+				<name>MailChimp.Mailing.Code</name>
+				<valueType>string</valueType>
+				<defaultValue>MailChimp</defaultValue>
+				<title>Mailing code</title>
+				<description>Code that indentificates mailchimp mailing provider</description>
+			</setting>
+			<setting>
+				<name>MailChimp.Mailing.Description</name>
+				<valueType>string</valueType>
+				<defaultValue>MailChimp public site description</defaultValue>
+				<title>Description</title>
+				<description>Description of mailchimp for public site</description>
+			</setting>
+			<setting>
+				<name>MailChimp.Mailing.LogoUrl</name>
+				<valueType>string</valueType>
+				<defaultValue>http://static.mailchimp.com/web/brand-assets/logo-dark.png</defaultValue>
+				<title>Logo url</title>
+				<description>MailChimp logo url</description>
+			</setting>
+		</group>
+	</settings>
+</module>

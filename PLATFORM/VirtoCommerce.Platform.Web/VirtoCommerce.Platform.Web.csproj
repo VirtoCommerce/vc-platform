@@ -451,6 +451,8 @@
     <Content Include="Scripts\common\security\blades\account-list.js" />
     <Content Include="Scripts\common\security\blades\account-list.tpl.html" />
     <Content Include="Scripts\common\security\resources\account.js" />
+    <Content Include="Scripts\common\security\wizards\newAccount\new-account-wizard.js" />
+    <Content Include="Scripts\common\security\wizards\newAccount\new-account-wizard.tpl.html" />
     <Content Include="Scripts\errors.json" />
     <Content Include="Scripts\angular-touch.min.js.map" />
     <Content Include="Scripts\angular-messages.min.js.map" />
