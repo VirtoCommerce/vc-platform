@@ -70,7 +70,7 @@
 			            id: 'fulfillmentCenterList',
 			            parentWidget: $scope.blade,
 			            controller: 'fulfillmentListController',
-			            template: 'Modules/$(VirtoCommerce.Core)/Scripts/fulfillment/blades/$fulfillment-center-list.tpl.html'
+			            template: 'Modules/$(VirtoCommerce.Core)/Scripts/fulfillment/blades/fulfillment-center-list.tpl.html'
 			        };
 			        bladeNavigationService.showBlade(newBlade, $scope.blade);
 			    }
