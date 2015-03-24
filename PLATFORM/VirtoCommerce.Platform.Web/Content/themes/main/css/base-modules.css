@@ -2473,10 +2473,8 @@ h3
     color: #e51400;
 }
 
-.form-input input.ng-invalid,
-.form-input textarea.ng-invalid,
-.form-input input.ng-invalid:focus,
-.form-input textarea.ng-invalid:focus
+.ng-invalid,
+.ng-invalid:focus
 {
     background: #fef8f7;
     border-color: #fce7e6;
