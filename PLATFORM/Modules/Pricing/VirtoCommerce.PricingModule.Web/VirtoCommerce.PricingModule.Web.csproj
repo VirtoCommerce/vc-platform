@@ -133,6 +133,7 @@
     <Compile Include="Converters\PricelistAssignmentConverter.cs" />
     <Compile Include="Converters\PriceListConverter.cs" />
     <Compile Include="Converters\PriceConverter.cs" />
+    <Compile Include="Model\ProductPrice.cs" />
     <Compile Include="Model\Price.cs" />
     <Compile Include="Model\Pricelist.cs" />
     <Compile Include="Model\PricelistAssignment.cs" />
