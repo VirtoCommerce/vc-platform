@@ -36,7 +36,7 @@
 				operation._discountTotal = parseFloat(operation.discountAmount);
 				operation._taxTotal = parseFloat(operation.tax);
 				operation._shippingTotal = parseFloat(operation.sum);
-				operation._total = operation.shippingTotal + operation._taxTotal - operation._discountTotal;
+				operation._total = operation._shippingTotal + operation._taxTotal - operation._discountTotal;
 				operation._total = Math.round(operation._total * 100) / 100;
 			}
 		}
