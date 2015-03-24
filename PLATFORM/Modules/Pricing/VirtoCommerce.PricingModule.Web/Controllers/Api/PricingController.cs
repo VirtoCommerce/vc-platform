@@ -8,6 +8,7 @@ using VirtoCommerce.PricingModule.Web.Converters;
 using webModel = VirtoCommerce.PricingModule.Web.Model;
 using coreModel = VirtoCommerce.Domain.Pricing.Model;
 using VirtoCommerce.Foundation.Frameworks.Extensions;
+using VirtoCommerce.Domain.Catalog.Services;
 
 namespace VirtoCommerce.PricingModule.Web.Controllers.Api
 {
@@ -15,9 +16,11 @@ namespace VirtoCommerce.PricingModule.Web.Controllers.Api
 	public class PricingController : ApiController
 	{
 		private readonly IPricingService _pricingService;
-		public PricingController(IPricingService pricingService)
+		private readonly IItemService _itemService;
+		public PricingController(IPricingService pricingService, IItemService itemService)
 		{
 			_pricingService = pricingService;
+			_itemService = itemService;
 		}
 
 		// GET: api/pricing/assignments/id
@@ -77,7 +80,7 @@ namespace VirtoCommerce.PricingModule.Web.Controllers.Api
 
 		// GET: api/products/{productId}/prices
 		[HttpGet]
-		[ResponseType(typeof(webModel.Price[]))]
+		[ResponseType(typeof(webModel.ProductPrice))]
 		[Route("api/products/{productId}/prices")]
 		public IHttpActionResult GetProductPrices(string productId)
 		{
@@ -85,7 +88,7 @@ namespace VirtoCommerce.PricingModule.Web.Controllers.Api
 			var prices = _pricingService.EvaluateProductPrices(new coreModel.PriceEvaluationContext { ProductId = productId });
 			if (prices != null)
 			{
-				retVal = Ok(prices.Select(x => x.ToWebModel()).ToArray());
+				retVal = Ok(new webModel.ProductPrice(productId, prices.Select(x => x.ToWebModel())));
 			}
 			return retVal;
 		}
@@ -97,7 +100,7 @@ namespace VirtoCommerce.PricingModule.Web.Controllers.Api
 		public IHttpActionResult GetPriceLists()
 		{
 			var priceLists = _pricingService.GetPriceLists();
-			var retVal = Ok(priceLists.Select(x=>x.ToWebModel()).ToArray());
+			var retVal = Ok(priceLists.Select(x => x.ToWebModel()).ToArray());
 			return retVal;
 		}
 
@@ -109,9 +112,11 @@ namespace VirtoCommerce.PricingModule.Web.Controllers.Api
 		{
 			IHttpActionResult retVal = NotFound();
 			var result = _pricingService.GetPricelistById(id);
+			var productIds = result.Prices.Select(x => x.ProductId).Distinct().ToArray();
+			var products = _itemService.GetByIds(productIds, Domain.Catalog.Model.ItemResponseGroup.ItemInfo);
 			if (result != null)
 			{
-				retVal = Ok(result.ToWebModel());
+				retVal = Ok(result.ToWebModel(products));
 			}
 			return retVal;
 		}
@@ -171,8 +176,9 @@ namespace VirtoCommerce.PricingModule.Web.Controllers.Api
 				{
 					originalPriceList.Prices.Remove(productPrice);
 				}
+
 				//Add changed prices to original pricelist
-				originalPriceList.Prices.AddRange(priceList.Prices.Select(x=>x.ToCoreModel()));
+				originalPriceList.Prices.AddRange(priceList.ToCoreModel().Prices);
 				_pricingService.UpdatePricelists(new coreModel.Pricelist[] { originalPriceList });
 			}
 

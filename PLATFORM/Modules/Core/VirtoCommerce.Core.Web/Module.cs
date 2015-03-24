@@ -25,7 +25,6 @@ using VirtoCommerce.Framework.Web.Modularity;
 using VirtoCommerce.Framework.Web.Notification;
 using VirtoCommerce.Framework.Web.Security;
 using VirtoCommerce.Framework.Web.Settings;
-using VirtoCommerce.Domain.Mailing.Services;
 
 namespace VirtoCommerce.CoreModule.Web
 {
@@ -166,10 +165,6 @@ namespace VirtoCommerce.CoreModule.Web
 
             #region Payment gateways manager
             _container.RegisterInstance<IPaymentGatewayManager>(new InMemoryPaymentGatewayManagerImpl());
-            #endregion
-
-            #region Mailing manager
-            _container.RegisterInstance<IMailingManager>(new InMemoryMailingManagerImpl());
             #endregion
 
             #region Notification
