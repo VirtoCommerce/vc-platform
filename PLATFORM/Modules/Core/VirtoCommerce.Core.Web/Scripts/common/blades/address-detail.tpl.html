@@ -4,12 +4,6 @@
         <div class="inner-block">
             <form class="form" name="detailForm">
                 <div class="form-group" ng-init="setForm(detailForm)">
-                    <label class="form-label">Address name</label>
-                    <div class="form-input">
-                        <input ng-model="blade.currentEntity.name" required placeholder="Enter name for the address. E.g. 'Main'" />
-                    </div>
-                </div>
-                <div class="form-group">
                     <label class="form-label">Address type</label>
                     <div class="form-input">
                         <ui-select ng-model="blade.currentEntity.addressType">
@@ -23,22 +17,30 @@
                 <div class="form-group">
                     <label class="form-label">First name</label>
                     <div class="form-input">
-                        <input ng-model="blade.currentEntity.firstName" placeholder="Enter value" />
+                        <input ng-model="blade.currentEntity.firstName" placeholder="Enter value" required />
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="form-label">Last name</label>
                     <div class="form-input">
-                        <input ng-model="blade.currentEntity.lastName" placeholder="Enter value" />
+                        <input ng-model="blade.currentEntity.lastName" placeholder="Enter value" required />
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="form-label">Address</label>
+                    <label class="form-label">Country</label>
                     <div class="form-input">
-                        <input ng-model="blade.currentEntity.line1" placeholder="Enter address line 1" required />
+                        <ui-select ng-model="blade.currentEntity.countryCode" required>
+                            <ui-select-match placeholder="Select ...">{{$select.selected.name}}</ui-select-match>
+                            <ui-select-choices repeat="x.code as x in countries | filter: $select.search ">
+                                <span ng-bind-html="x.name | highlight: $select.search"></span>
+                            </ui-select-choices>
+                        </ui-select>
                     </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Region</label>
                     <div class="form-input">
-                        <input ng-model="blade.currentEntity.line2" placeholder="Enter address line 2" />
+                        <input ng-model="blade.currentEntity.regionName" placeholder="Enter region" required />
                     </div>
                 </div>
                 <div class="form-group">
@@ -47,17 +49,16 @@
                         <input ng-model="blade.currentEntity.city" required placeholder="Enter city" />
                     </div>
                 </div>
-                <div class="form-group">
-                    <label class="form-label">Country</label>
+               <div class="form-group">
+                    <label class="form-label">Address</label>
                     <div class="form-input">
-                        <ui-select ng-model="blade.currentEntity.countryCode">
-                            <ui-select-match placeholder="Select ...">{{$select.selected.name}}</ui-select-match>
-                            <ui-select-choices repeat="x.code as x in countries | filter: $select.search ">
-                                <span ng-bind-html="x.name | highlight: $select.search"></span>
-                            </ui-select-choices>
-                        </ui-select>
+                        <input ng-model="blade.currentEntity.line1" placeholder="Enter address line 1" required />
+                    </div>
+                    <div class="form-input">
+                        <input ng-model="blade.currentEntity.line2" placeholder="Enter address line 2" />
                     </div>
                 </div>
+               
                 <div class="form-group">
                     <label class="form-label">Zip code</label>
                     <div class="form-input">
