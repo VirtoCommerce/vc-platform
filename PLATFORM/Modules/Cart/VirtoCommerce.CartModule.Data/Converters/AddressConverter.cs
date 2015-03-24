@@ -7,6 +7,7 @@ using VirtoCommerce.CartModule.Data.Model;
 using VirtoCommerce.Domain.Cart.Model;
 using VirtoCommerce.Foundation.Frameworks.Extensions;
 using Omu.ValueInjecter;
+using VirtoCommerce.Foundation.Frameworks.ConventionInjections;
 
 namespace VirtoCommerce.CartModule.Data.Converters
 {
@@ -46,32 +47,13 @@ namespace VirtoCommerce.CartModule.Data.Converters
 		{
 			if (target == null)
 				throw new ArgumentNullException("target");
-
-
-			//Simply properties patch
-			if (source.City != null)
-				target.City = source.City;
-
-			if (source.CountryCode != null)
-				target.CountryCode = source.CountryCode;
-			if (source.CountryName != null)
-				target.CountryName = source.CountryName;
-			if (source.Email != null)
-				target.Email = source.Email;
-			if (source.FirstName != null)
-				target.FirstName = source.FirstName;
-			if (source.LastName != null)
-				target.LastName = source.LastName;
-			if (source.Line1 != null)
-				target.Line1 = source.Line1;
-			if (source.Line2 != null)
-				target.Line2 = source.Line2;
-			if (source.Organization != null)
-				target.Organization = source.Organization;
-			if (source.Phone != null)
-				target.Phone = source.Phone;
-			if (source.PostalCode != null)
-				target.PostalCode = source.PostalCode;
+	
+			var patchInjectionPolicy = new PatchInjection<AddressEntity>(x => x.City, x => x.CountryCode,
+																							  x => x.CountryName, x => x.Phone,
+																							  x => x.Email, x => x.FirstName, x => x.LastName, x => x.Line1,
+																							  x => x.Line2, x => x.AddressType, x => x.Organization, x => x.PostalCode,
+																							  x => x.RegionName, x => x.RegionId, x => x.Email);
+			target.InjectFrom(patchInjectionPolicy, source);
 		}
 
 	}
@@ -87,7 +69,7 @@ namespace VirtoCommerce.CartModule.Data.Converters
 
 		public int GetHashCode(AddressEntity obj)
 		{
-			var result = String.Join(":", obj.Organization, obj.City, obj.CountryCode, obj.CountryName,
+			var result = String.Join(":", obj.Organization, obj.City, obj.CountryCode, obj.CountryName, obj.RegionId, obj.RegionName,
 										  obj.Email, obj.FirstName, obj.LastName, obj.Line1, obj.Line2, obj.Phone, obj.PostalCode);
 			return result.GetHashCode();
 		}
