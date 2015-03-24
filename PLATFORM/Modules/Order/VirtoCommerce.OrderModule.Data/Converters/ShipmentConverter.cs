@@ -10,6 +10,7 @@ using Omu.ValueInjecter;
 using VirtoCommerce.OrderModule.Data.Model;
 using VirtoCommerce.Foundation.Money;
 using VirtoCommerce.Foundation.Frameworks.ConventionInjections;
+using cart = VirtoCommerce.Domain.Cart.Model;
 
 namespace VirtoCommerce.OrderModule.Data.Converters
 {
@@ -39,6 +40,47 @@ namespace VirtoCommerce.OrderModule.Data.Converters
 			if (entity.InPayments != null)
 			{
 				retVal.InPayments = entity.InPayments.Select(x => x.ToCoreModel()).ToList();
+			}
+
+			return retVal;
+		}
+
+		public static Shipment ToCoreModel(this cart.Shipment shipment)
+		{
+
+			var retVal = new Shipment();
+			retVal.InjectFrom(shipment);
+			retVal.Currency = shipment.Currency;
+			retVal.Sum = shipment.ShippingPrice;
+			retVal.Tax = shipment.TaxTotal;
+
+			if (shipment.Weight != null)
+			{
+				retVal.Weight = new Weight
+				{
+					Unit = shipment.Weight.Unit,
+					Value = shipment.Weight.Value
+				};
+			}
+
+			if (shipment.Dimension != null)
+			{
+				retVal.Dimension = new Dimension
+				{
+					Height = shipment.Dimension.Height,
+					Length = shipment.Dimension.Length,
+					Unit = shipment.Dimension.Unit,
+					Width = shipment.Dimension.Width
+				};
+			}
+
+			if(shipment.DeliveryAddress != null)
+			{
+				retVal.DeliveryAddress = shipment.DeliveryAddress.ToCoreModel();
+			}
+			if(shipment.Items != null)
+			{
+				retVal.Items = shipment.Items.Select(x => x.ToCoreModel()).ToList();
 			}
 
 			return retVal;

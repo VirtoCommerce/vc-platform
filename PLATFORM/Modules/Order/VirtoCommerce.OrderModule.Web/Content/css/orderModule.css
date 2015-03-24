@@ -31,6 +31,7 @@
 .table.__order-info
 {
     float: right;
+    margin: 0 10px 0 0;
     min-width: inherit;
     width: 45%;
 }

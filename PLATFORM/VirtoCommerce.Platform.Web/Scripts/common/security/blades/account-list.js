@@ -1,28 +1,44 @@
 ﻿angular.module('platformWebApp')
 .controller('accountListController', ['$scope', 'accounts', 'bladeNavigationService', 'dialogService',
 function ($scope, accounts, bladeNavigationService, dialogService) {
-    var selectedNode = null;
+    //pagination settigs
+    $scope.pageSettings = {};
+    $scope.pageSettings.totalItems = 0;
+    $scope.pageSettings.currentPage = 1;
+    $scope.pageSettings.numPages = 5;
+    $scope.pageSettings.itemsPerPageCount = 20;
 
     $scope.filter = { searchKeyword: undefined };
-    $scope.totalItems = 0;
-
-    $scope.doQuickSearch = function () {
-        $scope.totalItems = 5;
-    };
+    var selectedNode = null;
 
     $scope.blade.refresh = function () {
         $scope.blade.isLoading = true;
         $scope.blade.selectedAll = false;
 
-        accounts.query({}, function (data) {
+        accounts.search({
+            keyword: $scope.filter.searchKeyword,
+            start: ($scope.pageSettings.currentPage - 1) * $scope.pageSettings.itemsPerPageCount,
+            count: $scope.pageSettings.itemsPerPageCount
+        }, function (data) {
             $scope.blade.isLoading = false;
-            $scope.blade.currentEntities = data;
+
+            $scope.pageSettings.totalItems = angular.isDefined(data.totalCount) ? data.totalCount : 0;
+            $scope.blade.currentEntities = data.users;
+
+            if (selectedNode != null) {
+                //select the node in the new list
+                angular.forEach(data.shopingCarts, function (node) {
+                    if (selectedNode.id === node.id) {
+                        selectedNode = node;
+                    }
+                });
+            }
         }, function (error) {
             bladeNavigationService.setError('Error ' + error.status, $scope.blade);
         });
     };
 
-    $scope.selectNode = function (node) {
+    $scope.blade.selectNode = function (node) {
         selectedNode = node;
         $scope.selectedNodeId = selectedNode.id;
 
@@ -38,14 +54,14 @@ function ($scope, accounts, bladeNavigationService, dialogService) {
         bladeNavigationService.showBlade(newBlade, $scope.blade);
     };
 
-    $scope.checkAll = function (selected) {
-        angular.forEach($scope.objects, function (item) {
-            item.selected = selected;
+    $scope.toggleAll = function () {
+        angular.forEach($scope.blade.currentEntities, function (item) {
+            item.selected = $scope.blade.selectedAll;
         });
     };
 
     function isItemsChecked() {
-        return $scope.objects && _.any($scope.objects, function (x) { return x.selected; });
+        return $scope.blade.currentEntities && _.any($scope.blade.currentEntities, function (x) { return x.selected; });
     }
 
     function deleteChecked() {
@@ -57,8 +73,8 @@ function ($scope, accounts, bladeNavigationService, dialogService) {
                 if (remove) {
                     closeChildrenBlades();
 
-                    var selection = _.where($scope.objects, { selected: true });
-                    var itemIds = _.pluck(selection, 'id');
+                    var selection = _.where($scope.blade.currentEntities, { selected: true });
+                    var itemIds = _.pluck(selection, 'userName');
                     accounts.remove({ ids: itemIds }, function (data, headers) {
                         $scope.blade.refresh();
                     }, function (error) {
@@ -95,11 +111,11 @@ function ($scope, accounts, bladeNavigationService, dialogService) {
 
                 var newBlade = {
                     id: 'listItemChild',
+                    currentEntity: {},
                     title: 'New Account',
                     subtitle: $scope.blade.subtitle,
-                    isNew: true,
-                    controller: 'accountDetailController',
-                    template: 'Scripts/common/security/blades/account-detail.tpl.html'
+                    controller: 'newAccountWizardController',
+                    template: 'Scripts/common/security/wizards/newAccount/new-account-wizard.tpl.html'
                 };
                 bladeNavigationService.showBlade(newBlade, $scope.blade);
             },

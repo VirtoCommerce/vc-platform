@@ -416,6 +416,8 @@
     <Content Include="Scripts\common\notification\resources\notifications.js" />
     <Content Include="Scripts\common\objCompare.js" />
     <Content Include="Scripts\common\security\auth\auth.js" />
+    <Content Include="Scripts\common\security\blades\account-changePassword.js" />
+    <Content Include="Scripts\common\security\blades\account-changePassword.tpl.html" />
     <Content Include="Scripts\common\security\login\login.js" />
     <Content Include="Scripts\common\security\login\login.tpl.html" />
     <Content Include="Scripts\common\security\login\loginToolbar.tpl.html" />
@@ -449,6 +451,8 @@
     <Content Include="Scripts\common\security\blades\account-list.js" />
     <Content Include="Scripts\common\security\blades\account-list.tpl.html" />
     <Content Include="Scripts\common\security\resources\account.js" />
+    <Content Include="Scripts\common\security\wizards\newAccount\new-account-wizard.js" />
+    <Content Include="Scripts\common\security\wizards\newAccount\new-account-wizard.tpl.html" />
     <Content Include="Scripts\errors.json" />
     <Content Include="Scripts\angular-touch.min.js.map" />
     <Content Include="Scripts\angular-messages.min.js.map" />

@@ -68,7 +68,7 @@ namespace VirtoCommerce.Framework.Web
             this.Logger.Debug(Resources.ConfiguringServiceLocatorSingleton);
             this.ConfigureServiceLocator();
 
-       
+
             this.Logger.Debug(Resources.RegisteringFrameworkExceptionTypes);
             this.RegisterFrameworkExceptionTypes();
 
@@ -90,25 +90,13 @@ namespace VirtoCommerce.Framework.Web
         }
 
         /// <summary>
-        /// Registers in the <see cref="IUnityContainer"/> the <see cref="Type"/> of the Exceptions
-        /// that are not considered root exceptions by the <see cref="ExceptionExtensions"/>.
-        /// </summary>
-        protected override void RegisterFrameworkExceptionTypes()
-        {
-            base.RegisterFrameworkExceptionTypes();
-
-			//ExceptionExtensions.RegisterFrameworkExceptionType(
-			//	typeof(Microsoft.Practices.Unity.ResolutionFailedException));
-        }
-
-        /// <summary>
         /// Configures the <see cref="IUnityContainer"/>. May be overwritten in a derived class to add specific
         /// type mappings required by the application.
         /// </summary>
         protected virtual void ConfigureContainer()
         {
             this.Logger.Debug(Resources.AddingUnityBootstrapperExtensionToContainer);
-        
+
             Container.RegisterInstance<ILog>(Logger);
 
             this.Container.RegisterInstance(this.ModuleCatalog);
