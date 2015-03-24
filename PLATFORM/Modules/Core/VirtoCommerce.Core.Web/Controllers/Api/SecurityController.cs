@@ -323,7 +323,7 @@ namespace VirtoCommerce.CoreModule.Web.Controllers.Api
                 {
                     var account = new Account
                     {
-                        UserName = user.Email,
+						UserName = user.UserName,
                         AccountId = user.Id,
                         AccountState = AccountState.Approved.GetHashCode(),
                         MemberId = id,
