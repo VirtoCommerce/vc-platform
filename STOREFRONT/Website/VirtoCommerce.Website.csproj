@@ -418,7 +418,7 @@
     <Content Include="App_Data\Themes\_Global\layout\checkout.liquid" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="App_Data\Themes\Default\templates\checkout-step-1.liquid" />
+    <Content Include="App_Data\Themes\_Global\templates\checkout-step-1.liquid" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="App_Data\Themes\Default\snippets\top-header-selector.liquid">
@@ -426,11 +426,9 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="App_Data\Themes\Default\templates\checkout-step-2.liquid" />
+    <Content Include="App_Data\Themes\_Global\templates\checkout-step-2.liquid" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="App_Data\Themes\_Global\templates\" />
-  </ItemGroup>
+  <ItemGroup />
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
