@@ -25,8 +25,6 @@ using VirtoCommerce.Framework.Web.Modularity;
 using VirtoCommerce.Framework.Web.Notification;
 using VirtoCommerce.Framework.Web.Security;
 using VirtoCommerce.Framework.Web.Settings;
-using VirtoCommerce.SecurityModule.Web.Controllers;
-using Microsoft.Owin.Security;
 using VirtoCommerce.Domain.Mailing.Services;
 
 namespace VirtoCommerce.CoreModule.Web
