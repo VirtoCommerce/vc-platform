@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Configuration;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -8,6 +9,7 @@ using Microsoft.Owin.FileSystems;
 using Microsoft.Owin.StaticFiles;
 using Microsoft.Practices.Unity;
 using Owin;
+using VirtoCommerce.Framework.Core.Utils;
 using VirtoCommerce.Framework.Web.Modularity;
 using VirtoCommerce.Platform.Web;
 using WebGrease.Extensions;
@@ -22,8 +24,9 @@ namespace VirtoCommerce.Platform.Web
         {
             const string modulesVirtualPath = "~/Modules";
             var modulesPhysicalPath = HostingEnvironment.MapPath(modulesVirtualPath).EnsureEndSeparator();
+            var assembliesPath = HostingEnvironment.MapPath("~/App_data/Modules");
 
-            var bootstraper = new VirtoCommercePlatformWebBootstraper(modulesVirtualPath, modulesPhysicalPath);
+            var bootstraper = new VirtoCommercePlatformWebBootstraper(modulesVirtualPath, modulesPhysicalPath, assembliesPath);
             bootstraper.Run();
             bootstraper.Container.RegisterInstance(app);
 
@@ -34,13 +37,18 @@ namespace VirtoCommerce.Platform.Web
             {
                 var applicationBase = AppDomain.CurrentDomain.SetupInformation.ApplicationBase.EnsureEndSeparator();
                 var modulesRelativePath = MakeRelativePath(applicationBase, modulesPhysicalPath);
+
                 var urlRewriterOptions = new UrlRewriterOptions();
+                var moduleInitializerOptions = (ModuleInitializerOptions)bootstraper.Container.Resolve<IModuleInitializerOptions>();
+                moduleInitializerOptions.SampleDataLevel = EnumUtility.SafeParse(ConfigurationManager.AppSettings["VirtoCommerce:SampleDataLevel"], SampleDataLevel.None);
 
                 foreach (var module in moduleCatalog.Modules.OfType<ManifestModuleInfo>())
                 {
                     var urlRewriteKey = string.Format(CultureInfo.InvariantCulture, "/Modules/$({0})", module.ModuleName);
                     var urlRewriteValue = MakeRelativePath(modulesPhysicalPath, module.FullPhysicalPath);
                     urlRewriterOptions.Items.Add(PathString.FromUriComponent(urlRewriteKey), "/" + urlRewriteValue);
+
+                    moduleInitializerOptions.ModuleDirectories.Add(module.ModuleName, module.FullPhysicalPath);
                 }
 
                 app.Use<UrlRewriterOwinMiddleware>(urlRewriterOptions);
@@ -58,6 +66,7 @@ namespace VirtoCommerce.Platform.Web
                 moduleManager.LoadModule(module.ModuleName);
             }
         }
+
 
         private static string MakeRelativePath(string rootPath, string fullPath)
         {

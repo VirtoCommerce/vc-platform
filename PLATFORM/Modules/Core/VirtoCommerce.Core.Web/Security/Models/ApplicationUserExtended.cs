@@ -24,6 +24,8 @@ namespace VirtoCommerce.CoreModule.Web.Security.Models
 		public UserType UserType { get; set; }
 
 		public ICollection<ApiAccount> ApiAcounts { get; set; }
+
+		public string Password { get; set; }
 	
     }
 }

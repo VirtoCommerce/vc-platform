@@ -10,6 +10,7 @@ using VirtoCommerce.OrderModule.Data.Model;
 using Omu.ValueInjecter;
 using VirtoCommerce.Foundation.Money;
 using VirtoCommerce.Foundation.Frameworks.ConventionInjections;
+using cart = VirtoCommerce.Domain.Cart.Model;
 
 namespace VirtoCommerce.OrderModule.Data.Converters
 {
@@ -46,6 +47,48 @@ namespace VirtoCommerce.OrderModule.Data.Converters
 				retVal.InPayments = entity.InPayments.Select(x => x.ToCoreModel()).ToList();
 			}
 
+			return retVal;
+		}
+
+		public static CustomerOrder ToCustomerOrder(this cart.ShoppingCart cart)
+		{
+			if (cart == null)
+				throw new ArgumentNullException("cart");
+
+			var retVal = new CustomerOrder()
+			{
+				Currency = cart.Currency,
+				CustomerId = cart.CustomerId,
+				StoreId = cart.StoreId,
+				OrganizationId = cart.OrganizationId
+			};
+
+			if(cart.Items != null)
+			{
+				retVal.Items = cart.Items.Select(x => x.ToCoreModel()).ToList();
+			}
+			if (cart.Discounts != null)
+			{
+				retVal.Discount = cart.Discounts.First().ToCoreModel();
+			}
+			if (cart.Addresses != null)
+			{
+				retVal.Addresses = cart.Addresses.Select(x => x.ToCoreModel()).ToList();
+			}
+			if (cart.Shipments != null)
+			{
+				retVal.Shipments = cart.Shipments.Select(x => x.ToCoreModel()).ToList();
+			}
+			if (cart.Payments != null)
+			{
+				retVal.InPayments = new List<PaymentIn>();
+				foreach(var payment in cart.Payments)
+				{
+					var paymentIn = payment.ToCoreModel();
+					paymentIn.CustomerId = cart.CustomerId;
+					retVal.InPayments.Add(paymentIn);
+				}
+			}
 			return retVal;
 		}
 

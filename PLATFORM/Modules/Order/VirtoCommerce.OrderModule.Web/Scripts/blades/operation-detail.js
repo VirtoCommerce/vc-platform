@@ -1,12 +1,13 @@
 ﻿angular.module('virtoCommerce.orderModule')
-.controller('operationDetailController', ['$scope', 'dialogService', 'bladeNavigationService', 'order_res_customerOrders', 'order_res_fulfilmentCenters', 'order_res_stores', 'order_res_paymentGateways', 'objCompareService',
-			function ($scope, dialogService, bladeNavigationService, order_res_customerOrders, order_res_fulfilmentCenters, order_res_stores, order_res_paymentGateways, objCompareService) {
+.controller('operationDetailController', ['$scope', 'dialogService', 'bladeNavigationService', 'order_res_customerOrders', 'order_res_fulfilmentCenters', 'order_res_stores', 'order_res_paymentGateways', 'objCompareService', "settings",
+			function ($scope, dialogService, bladeNavigationService, order_res_customerOrders, order_res_fulfilmentCenters, order_res_stores, order_res_paymentGateways, objCompareService, settings) {
 
 		$scope.blade.refresh = function (noRefresh) {
     	$scope.blade.isLoading = true;
     	$scope.fulfillmentCenters = [];
     	$scope.stores = [];
     	$scope.paymentGateways = [];
+    	$scope.statuses = [];
 
     	if (!noRefresh) {
     		order_res_customerOrders.get({ id: $scope.blade.customerOrder.id }, function (result) {
@@ -32,16 +33,19 @@
     		$scope.blade.currentEntity = copy;
     		$scope.blade.origEntity = customerOrder;
     		$scope.stores = order_res_stores.query();
+    		$scope.statuses = settings.getValues({ id: 'Order.Status' });
     	}
     	else if (operation.operationType.toLowerCase() == 'shipment') {
     		$scope.blade.currentEntity = _.find(copy.shipments, function (x) { return x.id == operation.id; });
     		$scope.blade.origEntity = _.find(customerOrder.shipments, function (x) { return x.id == operation.id; });
     		$scope.fulfillmentCenters = order_res_fulfilmentCenters.query();
+    		$scope.statuses = settings.getValues({ id: 'Shipment.Status' });
     	}
     	else if (operation.operationType.toLowerCase() == 'paymentin') {
     		$scope.paymentGateways = order_res_paymentGateways.query();
     		$scope.blade.currentEntity = _.find(copy.inPayments, function (x) { return x.id == operation.id; });
     		$scope.blade.origEntity = _.find(customerOrder.inPayments, function (x) { return x.id == operation.id; });
+    		$scope.statuses = settings.getValues({ id: 'PaymentIn.Status' });
     	}
     	$scope.blade.isLoading = false;
     };

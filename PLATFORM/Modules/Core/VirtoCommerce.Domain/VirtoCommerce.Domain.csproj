@@ -113,6 +113,7 @@
     <Compile Include="Order\Model\AddressType.cs" />
     <Compile Include="Order\Model\Coupon.cs" />
     <Compile Include="Order\Model\CustomerOrder.cs" />
+    <Compile Include="Order\Model\Dimension.cs" />
     <Compile Include="Order\Model\IFinanceInOperation.cs" />
     <Compile Include="Order\Model\IFinanceOperation.cs" />
     <Compile Include="Order\Model\IFinanceOutOperation.cs" />
@@ -122,6 +123,7 @@
     <Compile Include="Order\Model\IStockOperation.cs" />
     <Compile Include="Order\Model\IStockOutOperation.cs" />
     <Compile Include="Order\Model\LineItem.cs" />
+    <Compile Include="Order\Model\Weight.cs" />
     <Compile Include="Order\Services\IOperationNumberGenerator.cs" />
     <Compile Include="Order\Model\CustomerOrderResponseGroup.cs" />
     <Compile Include="Order\Model\Discount.cs" />
