@@ -208,6 +208,7 @@
     <Compile Include="Models\Extensions\CategoryExtensions.cs" />
     <Compile Include="Models\Language.cs" />
     <Compile Include="Models\PaymentMethod.cs" />
+    <Compile Include="Models\Review.cs" />
     <Compile Include="Models\Services\CommerceService.cs" />
     <Compile Include="Models\Services\CustomerService.cs" />
     <Compile Include="Models\Helpers\DownloadResult.cs" />
