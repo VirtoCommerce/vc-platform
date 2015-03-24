@@ -155,6 +155,20 @@ namespace VirtoCommerce.Web.Models.Convertors
             imageModel.InjectFrom(image);
             return imageModel;
         }
+
+        public static Review AsWebModel(this Data.Review review)
+        {
+            var webReview = new Review();
+
+            webReview.Author = review.AuthorName;
+            webReview.Created = review.Created;
+            webReview.Id = review.Id;
+            webReview.ProductRating = review.Rating;
+            webReview.Text = review.ReviewText;
+            webReview.Title = null;
+
+            return webReview;
+        }
         #endregion
 
         #region Methods
