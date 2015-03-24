@@ -264,6 +264,7 @@ namespace VirtoCommerce.Web.Models.Services
                 if (dtoShippingAddress != null)
                 {
                     checkout.ShippingAddress = dtoShippingAddress.AsCartWebModel();
+                    checkout.Email = dtoShippingAddress.Email;
                 }
 
                 var dtoShipment = dtoCart.Shipments != null ? dtoCart.Shipments.FirstOrDefault() : null;
@@ -327,9 +328,9 @@ namespace VirtoCommerce.Web.Models.Services
                 });
             }
 
+            dtoCart.Items = new List<ApiClient.DataContracts.Cart.CartItem>();
             foreach (var lineItem in checkout.LineItems)
             {
-                dtoCart.Items = new List<ApiClient.DataContracts.Cart.CartItem>();
                 dtoCart.Items.Add(lineItem.AsServiceModel());
             }
 
@@ -446,49 +447,55 @@ namespace VirtoCommerce.Web.Models.Services
 
         public SubmitForm[] GetForms()
         {
+            var path = VirtualPathUtility.ToAbsolute("~/account/");
+
             var allForms = new[]
                            {
                                new SubmitForm
                                {
                                    Id = "customer_login",
-                                   ActionLink = "/account/login",
+                                   ActionLink = VirtualPathUtility.ToAbsolute("~/account/login"),
                                    PasswordNeeded = true
                                },
                                new SubmitForm
                                {
                                    Id = "create_customer",
-                                   ActionLink = "/account/register",
+                                   ActionLink = VirtualPathUtility.ToAbsolute("~/account/register"),
                                    PasswordNeeded = true
                                },
                                new SubmitForm
                                {
                                    Id = "activate_customer_password",
-                                   ActionLink = "/account/activate",
+                                   ActionLink = VirtualPathUtility.ToAbsolute("~/account/activate"),
                                    PasswordNeeded = true
                                },
                                new SubmitForm
                                {
                                    Id = "recover_customer_password",
-                                   ActionLink = "/account/resetpassword",
+                                   ActionLink = VirtualPathUtility.ToAbsolute("~/account/resetpassword"),
                                    PasswordNeeded = true
                                },
                                new SubmitForm
                                {
                                    Id = "customer_address",
-                                   ActionLink = "/account/newaddress",
+                                   ActionLink = VirtualPathUtility.ToAbsolute("~/account/newaddress"),
                                    PasswordNeeded = true
                                },
                                new SubmitForm
                                {
                                    Id = "edit_checkout_step_1",
-                                   ActionLink = "/checkout/step1"
+                                   ActionLink = VirtualPathUtility.ToAbsolute("~/checkout/step1"),
                                },
                                new SubmitForm
                                {
                                    Id = "edit_checkout_step_2",
-                                   ActionLink = "/checkout/step2"
+                                   ActionLink = VirtualPathUtility.ToAbsolute("~/checkout/step2"),
                                },
-                               new SubmitForm { Id = "contact", ActionLink = "/account/contact" }
+                               new SubmitForm
+                               {
+                                   Id = "contact",
+                                   ActionLink = VirtualPathUtility.ToAbsolute("~/account/contact")
+                               }
                            };
 
             return allForms;
