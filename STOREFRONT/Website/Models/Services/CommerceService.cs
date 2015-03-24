@@ -41,6 +41,7 @@ namespace VirtoCommerce.Web.Models.Services
         private readonly ThemeClient _themeClient;
         private readonly IViewLocator _viewLocator;
         private readonly FileThemeService _ThemeClient;
+        private readonly ReviewsClient _reviewsClient;
 
         private static readonly object _LockObject = new object();
         #endregion
@@ -56,6 +57,7 @@ namespace VirtoCommerce.Web.Models.Services
             this._securityClient = ClientContext.Clients.CreateSecurityClient();
             this._priceClient = ClientContext.Clients.CreatePriceClient();
             this._themeClient = ClientContext.Clients.CreateThemeClient();
+            this._reviewsClient = ClientContext.Clients.CreateReviewsClient();
 
             var themesPath = ConfigurationManager.AppSettings["ThemeCacheFolder"];
             this._ThemeClient = new FileThemeService(HostingEnvironment.MapPath(themesPath));
@@ -76,6 +78,23 @@ namespace VirtoCommerce.Web.Models.Services
         #endregion
 
         #region Public Methods and Operators
+        public async Task<ICollection<Review>> GetReviewsAsync(string productId)
+        {
+            var webReviews = new List<Review>();
+
+            var response = await this._reviewsClient.GetReviewsAsync(productId);
+
+            if (response != null)
+            {
+                foreach (var review in response.Items)
+                {
+                    webReviews.Add(review.AsWebModel());
+                }
+            }
+
+            return webReviews;
+        }
+
         public async Task<Collection> GetAllCollectionAsync(string sort = "")
         {
             var collections = await this.GetCollectionsAsync(sort);
