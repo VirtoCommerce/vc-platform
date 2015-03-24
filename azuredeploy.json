@@ -37,6 +37,14 @@
             ],
             "defaultValue": "Full"
         },
+        "deployApplications": {
+            "type": "string",
+            "allowedValues": [
+                "Web Admin Only",
+                "Web Admin and Store"
+            ],
+            "defaultValue": "Web Admin Only"
+        },
 
         "repoUrl": {
             "type": "string"
@@ -145,6 +153,10 @@
                             {
                                 "name": "VirtoCommerce:SampleDataLevel",
                                 "value": "[parameters('sampleData')]"
+                            },
+                            {
+                                "name": "VirtoCommerce_DeployApplications",
+                                "value": "[parameters('deployApplications')]"
                             }
                         ]
                     }
