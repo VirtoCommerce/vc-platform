@@ -28,14 +28,6 @@ namespace VirtoCommerce.Web.Models.FormModels
         }
 
         [Required]
-        [EmailAddress]
-        public string Email
-        {
-            get { return GetValue("email"); }
-            set { SetValue("email", value); }
-        }
-
-        [Required]
         public string Address1
         {
             get { return GetValue("address1"); }

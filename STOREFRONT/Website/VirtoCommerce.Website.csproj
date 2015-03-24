@@ -315,6 +315,9 @@
     <Content Include="Global.asax" />
     <Content Include="index.html" />
     <Content Include="App_Data\configuration\connectionStrings.config" />
+    <Content Include="Scripts\customer_area.js" />
+    <Content Include="Scripts\option_selection.js" />
+    <Content Include="Scripts\shopify_common.js" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
