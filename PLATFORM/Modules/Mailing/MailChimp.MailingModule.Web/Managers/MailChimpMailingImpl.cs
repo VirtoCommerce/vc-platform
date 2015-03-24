@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
-using VirtoCommerce.Domain.Mailing.Services;
+using VirtoCommerce.MailChimp.Mailing.Services;
 
 namespace MailChimp.MailingModule.Web.Managers
 {

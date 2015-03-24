@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace VirtoCommerce.Domain.Mailing.Services
+namespace VirtoCommerce.MailChimp.Mailing.Services
 {
     public class InMemoryMailingManagerImpl : IMailingManager
     {
