@@ -123,6 +123,12 @@
         });
     };
 
+    $scope.copyCode = function () {
+        var secretKey = document.getElementById('secretKey');
+        secretKey.focus();
+        secretKey.select();
+    };
+
     // actions on load
     $scope.blade.refresh(false);
 }]);

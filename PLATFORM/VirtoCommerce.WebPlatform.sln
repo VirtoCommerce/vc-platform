@@ -138,6 +138,14 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Mailing", "Mailing", "{0A6C
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MailChimp.MailingModule.Web", "Modules\Mailing\MailChimp.MailingModule.Web\MailChimp.MailingModule.Web.csproj", "{3FADADA7-3DAE-4F57-905C-7E92CDA9F0B3}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.PowerShell", "Extensions\Setup\VirtoCommerce.PowerShell\VirtoCommerce.PowerShell.csproj", "{98748B0A-4C04-4E70-A4EF-7CBAE5959D18}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LuceneSearchProvider", "Extensions\Search\LuceneSearchProvider\LuceneSearchProvider.csproj", "{4882F43B-AE8D-489B-911B-7F9A1D526715}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AzureSearchProvider", "Extensions\Search\AzureSearchProvider\AzureSearchProvider.csproj", "{B7A061D8-6D0A-4996-B222-6611715F516B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.Search.Index", "Extensions\Search\IndexingProviders\VirtoCommerce.Search.Index.csproj", "{9F5493C4-0080-4BB5-9C12-25D0CDBEA2DD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -340,6 +348,22 @@ Global
 		{3FADADA7-3DAE-4F57-905C-7E92CDA9F0B3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3FADADA7-3DAE-4F57-905C-7E92CDA9F0B3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3FADADA7-3DAE-4F57-905C-7E92CDA9F0B3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{98748B0A-4C04-4E70-A4EF-7CBAE5959D18}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{98748B0A-4C04-4E70-A4EF-7CBAE5959D18}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{98748B0A-4C04-4E70-A4EF-7CBAE5959D18}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{98748B0A-4C04-4E70-A4EF-7CBAE5959D18}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4882F43B-AE8D-489B-911B-7F9A1D526715}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4882F43B-AE8D-489B-911B-7F9A1D526715}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4882F43B-AE8D-489B-911B-7F9A1D526715}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4882F43B-AE8D-489B-911B-7F9A1D526715}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B7A061D8-6D0A-4996-B222-6611715F516B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B7A061D8-6D0A-4996-B222-6611715F516B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B7A061D8-6D0A-4996-B222-6611715F516B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B7A061D8-6D0A-4996-B222-6611715F516B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9F5493C4-0080-4BB5-9C12-25D0CDBEA2DD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9F5493C4-0080-4BB5-9C12-25D0CDBEA2DD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9F5493C4-0080-4BB5-9C12-25D0CDBEA2DD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9F5493C4-0080-4BB5-9C12-25D0CDBEA2DD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -404,5 +428,9 @@ Global
 		{80A936A0-D611-4296-A22C-78183E8A1B4D} = {D1556CC7-62A5-4D89-BD35-FC5B5AE17AE8}
 		{0A6CC5D3-FD1D-4244-9C8A-EA1F9593C5FF} = {A4C0D164-BF77-4B57-8970-B5459B100AC3}
 		{3FADADA7-3DAE-4F57-905C-7E92CDA9F0B3} = {0A6CC5D3-FD1D-4244-9C8A-EA1F9593C5FF}
+		{98748B0A-4C04-4E70-A4EF-7CBAE5959D18} = {EAE05907-1BEE-47FA-890A-40C84B879B1C}
+		{4882F43B-AE8D-489B-911B-7F9A1D526715} = {EAE05907-1BEE-47FA-890A-40C84B879B1C}
+		{B7A061D8-6D0A-4996-B222-6611715F516B} = {EAE05907-1BEE-47FA-890A-40C84B879B1C}
+		{9F5493C4-0080-4BB5-9C12-25D0CDBEA2DD} = {EAE05907-1BEE-47FA-890A-40C84B879B1C}
 	EndGlobalSection
 EndGlobal

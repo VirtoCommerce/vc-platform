@@ -2775,6 +2775,18 @@ fieldset + fieldset
                     vertical-align: 2px;
                 }
 
+        .form-label + .form-nav
+        {
+            float: right;
+        }
+
+            .form-label + .form-nav *
+            {
+                display: inline-block;
+                font-size: 14px;
+                margin: 0 0 0 5px;
+            }
+
         .form-control .form-label
         {
             margin: 0 0 0 10px;
