@@ -1,13 +1,24 @@
-/**
- * Module to ajaxify all add to cart forms on the page.
- *
- * Copyright (c) 2014 Caroline Schnapp (11heavens.com)
- * Dual licensed under the MIT and GPL licenses:
- * http://www.opensource.org/licenses/mit-license.php
- * http://www.gnu.org/licenses/gpl.html
- *
- */
+/*============================================================================
+  (c) Copyright 2014 Shopify Inc. Author: Carson Shold (@cshold). All Rights Reserved.
 
+  Plugin Documentation - https://shopify.github.io/Timber/#ajax-cart
+
+  Ajaxify the add to cart experience and flip the button for inline confirmation,
+  show the cart in a modal, or a 3D drawer.
+
+  This file includes:
+    - Basic Shopify Ajax API calls
+    - Ajaxify plugin
+
+  This requires:
+    - jQuery 1.8+
+    - handlebars.min.js (for cart template)
+    - modernizer.min.js
+    - snippet/ajax-cart-template.liquid
+
+  JQUERY API (c) Copyright 2009-2014 Shopify Inc. Author: Caroline Schnapp. All Rights Reserved.
+  Includes slight modifications to addItemFromForm.
+==============================================================================*/
 if ((typeof Shopify) === 'undefined') { Shopify = {}; }
 
 /*============================================================================

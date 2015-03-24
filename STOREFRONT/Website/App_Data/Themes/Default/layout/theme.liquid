@@ -37,10 +37,10 @@
   {% endif %}
 
   <!-- CSS ================================================== -->
-  {{ 'default.scss.css' | asset_url | stylesheet_tag }}
+  {{ 'timber.scss.css' | asset_url | stylesheet_tag }}
   {% include 'google-fonts' %}
 
-    <!-- Header hook for plugins ================================================== -->
+  <!-- Header hook for plugins ================================================== -->
   {{ content_for_header }}
 
   {% include 'oldIE-js' %}
@@ -60,9 +60,100 @@
 
 <body id="{{ page_title | handle }}" class="{% if customer %}customer-logged-in {% endif %}template-{{ template | replace: '.', ' ' | truncatewords: 1, '' | handle }}" >
 
-  {% if settings.store_selector_enable %}{% include 'top-header-selector' %}{% endif %}
+	<div class="head-top">
+		<div class="wrapper">
+			<div class="head-switch">
+				<span>
+					Store:
+					<span class="current">
+						<img title="English (United States)" alt="English (United States)" class="flag flag-us" src="http://demo.virtocommerce.com/Content/themes/default/images/blank.gif">
+								Electronics Store, USD
+							</span>
+				</span>
+				<ul>
+					<li>
+						<div class="language">
+							<span>
+								Language:
+								<span class="current">English</span>
+							</span>
+							<ul>
+								<li class=" selected">
+									<img alt="English (United States)" class="flag flag-us" src="http://demo.virtocommerce.com/Content/themes/default/images/blank.gif">
+										<a title="English (United States)" href="/en-us/electronics">English</a>
+									</li>
+								<li class="">
+									<img alt="Deutsch (Deutschland)" class="flag flag-de" src="http://demo.virtocommerce.com/Content/themes/default/images/blank.gif">
+										<a title="Deutsch (Deutschland)" href="/de-de/electronics">Deutsch</a>
+									</li>
+								<li class="">
+									<img alt="русский (Россия)" class="flag flag-ru" src="http://demo.virtocommerce.com/Content/themes/default/images/blank.gif">
+										<a title="русский (Россия)" href="/ru-ru/электроника">русский</a>
+									</li>
+								<li class="">
+									<img alt="日本語 (日本)" class="flag flag-jp" src="http://demo.virtocommerce.com/Content/themes/default/images/blank.gif">
+										<a title="日本語 (日本)" href="/ja-jp/electronics">日本語</a>
+									</li>
+							</ul>
+						</div>
+					</li>
 
-  <header class="site-header" role="banner">
+					<li>
+						<div class="store">
+							<span>
+								Store: <span class="current">Electronics Store</span>
+							</span>
+							<ul>
+								<li class="">
+									<a href="http://localhost:2687/en-us/electronics">ForLink</a>
+								</li>
+								<li class="">
+									<a href="/education">Education</a>
+								</li>
+								<li class="">
+									<a href="/blaat">blaat</a>
+								</li>
+								<li class="">
+									<a href="/95bbf5b8-8d3c-46c4-a992-15d92f30a869">Test</a>
+								</li>
+								<li class="">
+									<a href="/en-us/apple">Apple Store</a>
+								</li>
+								<li class="">
+									<a href="/test-store">Test Store</a>
+								</li>
+								<li class="selected">
+									<a href="/en-us/electronics">Electronics Store</a>
+								</li>
+								<li class="">
+									<a href="/en-us/sony">Sony Store</a>
+								</li>
+							</ul>
+						</div>
+					</li>
+
+					<li>
+						<div class="currency">
+							<span>
+								Currency: <span class="current">USD</span>
+							</span>
+							<ul>
+								<li class="">
+									<a onclick="VirtoCommerce.changeCurrency('EUR'); return false;" href="">Euro - EUR</a>
+								</li>
+								<li class="selected">
+									<a onclick="VirtoCommerce.changeCurrency('USD'); return false;" href="">US Dollar - USD</a>
+								</li>
+							</ul>
+						</div>
+					</li>
+
+				</ul>
+			</div>
+		</div>
+	</div>
+	
+	<header class="site-header" role="banner">
     <div class="wrapper">
       <div class="grid--full">
         <div class="grid-item large--one-half">

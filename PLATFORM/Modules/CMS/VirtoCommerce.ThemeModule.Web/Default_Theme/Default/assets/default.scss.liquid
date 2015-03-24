@@ -1,15 +1,9 @@
 /*============================================================================
-  Shopify Timber v1.4.0
-  Copyright 2014 Shopify Inc.
-  Author Carson Shold @cshold
+  Virto Commerce Default Theme based on Timber v1.4.0
   Built with Sass - http://sass-lang.com/
 
-  Some things to know about this file:
-    - Sass is compiled on Shopify's server so you don't need to convert it to CSS yourself
-    - The output CSS is compressed and comments are removed
-    - You cannot use @imports in this file
-        * Use grunt or gulp tasks to enable @imports - https://github.com/Shopify/shopify-css-import
-    - Helpers variables, mixins, and starter classes are provided. Change as needed.
+  Some things to notice:
+	- added support for top dropdown menu (languages, currencies)
 ==============================================================================*/
 
 /*============================================================================
@@ -3360,8 +3354,7 @@ html[xmlns] .slides { display: block; }
 }
 
 /*============================================================================
-  #Product Reviews - Free Shopify App
-    - https://apps.shopify.com/product-reviews
+  #Product Reviews
 ==============================================================================*/
 #shopify-product-reviews {
   margin: 0;
@@ -3566,6 +3559,8 @@ html[xmlns] .slides { display: block; }
     padding: 0 10px;
     position: relative;
     z-index: 6;
+	-webkit-transition: all .3s ease-in-out 0s;
+			transition: all .3s ease-in-out 0s;
 }
 
 .head-switch .current
@@ -3593,6 +3588,8 @@ html[xmlns] .slides { display: block; }
     position: absolute;
     visibility: hidden;
     z-index: 5;
+	-webkit-transition: all .3s ease-in-out 0s;
+			transition: all .3s ease-in-out 0s;
 }
 
 .head-switch:hover > ul
@@ -3637,13 +3634,14 @@ html[xmlns] .slides { display: block; }
     color: #8c8c8c;
     display: block;
     padding: 0 9px;
+	-webkit-transition: all .3s ease-in-out 0s;
+			transition: all .3s ease-in-out 0s;
 }
 
 .head-switch ul li.selected a
 {
     color: $headerText;
 }
-
 
 
 
