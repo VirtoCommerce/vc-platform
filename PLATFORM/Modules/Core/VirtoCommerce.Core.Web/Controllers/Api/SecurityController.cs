@@ -272,11 +272,18 @@ namespace VirtoCommerce.CoreModule.Web.Controllers.Api
                     if (user.ApiAcounts != null)
                     {
                         var source = new ObservableCollection<ApiAccount>(user.ApiAcounts.Select(x => x.ToFoundation()));
-                        var inventoryComparer = AnonymousComparer.Create((ApiAccount x) => x.AccountId);
+                        var inventoryComparer = AnonymousComparer.Create((ApiAccount x) => x.ApiAccountId);
                         acount.ApiAccounts.ObserveCollection(x => repository.Add(x), x => repository.Remove(x));
-                        acount.ApiAccounts.Patch(source, inventoryComparer, (sourceAccount, targetAccount) => sourceAccount.Patch(targetAccount));
+						source.Patch(acount.ApiAccounts, inventoryComparer, (sourceAccount, targetAccount) => sourceAccount.Patch(targetAccount));
                     }
-                    repository.UnitOfWork.Commit();
+					try
+					{
+						repository.UnitOfWork.Commit();
+					}
+					catch(Exception ex)
+					{
+						throw;
+					}
                 }
 
                 return Ok();
@@ -379,7 +386,6 @@ namespace VirtoCommerce.CoreModule.Web.Controllers.Api
                                 .SelectMany(x => x.RolePermissions)
                                 .Select(x => x.Permission);
 
-                        retVal.FullName = user.UserName;
                         retVal.UserState = (UserState)user.AccountState;
                         retVal.UserType = (UserType)user.RegisterType;
                         retVal.Permissions = permissions.Select(x => x.PermissionId).Distinct().ToArray();
