@@ -26,8 +26,8 @@ $listener = new-object "system.diagnostics.consoletracelistener"
 [System.Diagnostics.Debug]::Listeners.Add($listener)
 
 #index catalog
-echo "Update-Virto-Search-Index ***** ***** ***** ***** ***** ***** "
-Update-Virto-Search-Index -connection $searchconnection -dbconnection $dbconnection -rebuild -verbose
+echo "Update-VirtoSearchIndex ***** ***** ***** ***** ***** ***** "
+Update-VirtoSearchIndex -connection $searchconnection -dbconnection $dbconnection -rebuild -verbose
 
 #set ok
 ##################################
