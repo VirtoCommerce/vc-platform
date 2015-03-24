@@ -73,3 +73,24 @@
     overflow: hidden;
     text-overflow: ellipsis;
 }
+
+/* Order status */
+.order-status
+{
+    background: #fff;
+    border-bottom: 1px solid #dedede;
+    margin: 0 -20px;
+    padding: 10px 20px;
+}
+
+    .order-status .status
+    {
+        font-size: 15px;
+        font-weight: 500;
+        margin: 0 0 5px;
+    }
+
+    .order-status .reason
+    {
+        font-size: 12px;
+    }

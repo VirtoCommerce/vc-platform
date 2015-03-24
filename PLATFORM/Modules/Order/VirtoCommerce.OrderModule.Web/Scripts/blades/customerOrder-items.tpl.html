@@ -28,12 +28,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr class="table-item" ng-repeat-start="data in blade.currentEntity.items" ng-class="{'__selected': data.id === selectedNodeId}" context-menu data-target="col_menu_{{data.id}}" ng-click='selectItem(data)'></tr>
-                            <td class="table-head" colspan="9">
-                                {{data.name}}
-                            </td>
-                        </tr>
-                        <tr class="table-item" ng-repeat-end>
+                        <tr class="table-item" ng-repeat-start="data in blade.currentEntity.items" ng-class="{'__selected': data.id === selectedNodeId}" context-menu data-target="col_menu_{{data.id}}" ng-click='selectItem(data)'>
                             <td class="table-col __product-control">
                                 <label class="form-control __checkbox">
                                     <input type="checkbox" ng-model="data.selected">
@@ -82,6 +77,19 @@
                             </td>
                             <td class="table-col __total">
                                 <span>{{data._total | number:2 }}</span>
+                            </td>
+                        </tr>
+                        <tr ng-repeat-end class="table-item" ng-class="{'__selected': data.id === selectedNodeId}" context-menu data-target="col_menu_{{data.id}}" ng-click='selectItem(data)'>
+                            <td class="table-head" colspan="9">
+                                {{data.name}}
+                                <ul role="menu" class="menu __context" id="col_menu_{{data.id}}">
+                                    <li class="menu-item" ng-click='edit(data)'>
+                                        <i class="menu-ico fa fa-edit"></i> Manage
+                                    </li>
+                                    <li class="menu-item" ng-click='delete()'>
+                                        <i class="menu-ico fa fa-trash-o"></i> Delete
+                                    </li>
+                                </ul>
                             </td>
                         </tr>
                     </tbody>
