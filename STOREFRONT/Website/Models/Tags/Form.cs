@@ -11,10 +11,6 @@ using VirtoCommerce.Web.Views.Engines.Liquid.Extensions;
 
 namespace VirtoCommerce.Web.Models.Tags
 {
-
-    #region
-    #endregion
-
     public class Form : Block
     {
         #region Static Fields
@@ -55,8 +51,8 @@ namespace VirtoCommerce.Web.Models.Tags
             var form = forms.SingleOrDefault(f => f.Id == template);
 
             result.WriteLine(
-                "<form accept-charset=\"UTF-8\" action=\"{0}\" method=\"post\">",
-                form != null ? form.ActionLink : "");
+                "<form accept-charset=\"UTF-8\" action=\"{0}\" method=\"post\" id=\"{1}\">",
+                form != null ? form.ActionLink : "", template);
             result.WriteLine("<input name=\"form_type\" type=\"hidden\" value=\"{0}\" />", template);
 
             context["form"] = form;

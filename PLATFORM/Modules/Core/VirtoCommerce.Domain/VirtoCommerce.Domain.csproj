@@ -106,6 +106,9 @@
     <Compile Include="Inventory\Model\InventoryInfo.cs" />
     <Compile Include="Inventory\Model\InventoryStatus.cs" />
     <Compile Include="Inventory\Services\IInventoryService.cs" />
+    <Compile Include="Mailing\Services\IMailing.cs" />
+    <Compile Include="Mailing\Services\IMailingManager.cs" />
+    <Compile Include="Mailing\Services\InMemoryMailingManagerImpl.cs" />
     <Compile Include="Order\Model\Address.cs" />
     <Compile Include="Order\Model\AddressType.cs" />
     <Compile Include="Order\Model\Coupon.cs" />
@@ -151,7 +154,9 @@
     <Compile Include="Store\Model\StoreState.cs" />
     <Compile Include="Store\Services\IStoreService.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Mailing\Model\" />
+  </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\Core\CommerceFoundation\CommerceFoundation.csproj">
       <Project>{e7fc9a51-1b39-4bdc-983a-8a059c5fc58b}</Project>

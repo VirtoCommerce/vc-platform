@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Web;
-using System.Web.Hosting;
+using Microsoft.AspNet.Identity.Owin;
+using Microsoft.Owin.Security;
 using Microsoft.Practices.Unity;
 using Owin;
-using Microsoft.AspNet.Identity.Owin;
 using VirtoCommerce.Caching.HttpCache;
 using VirtoCommerce.CoreModule.Web.Controllers.Api;
 using VirtoCommerce.CoreModule.Web.Notification;
@@ -25,8 +25,7 @@ using VirtoCommerce.Framework.Web.Modularity;
 using VirtoCommerce.Framework.Web.Notification;
 using VirtoCommerce.Framework.Web.Security;
 using VirtoCommerce.Framework.Web.Settings;
-using VirtoCommerce.SecurityModule.Web.Controllers;
-using Microsoft.Owin.Security;
+using VirtoCommerce.Domain.Mailing.Services;
 
 namespace VirtoCommerce.CoreModule.Web
 {
@@ -160,14 +159,19 @@ namespace VirtoCommerce.CoreModule.Web
 			Func<ApplicationSignInManager> signInApplication = () => HttpContext.Current.GetOwinContext().Get<ApplicationSignInManager>();
 			Func<ApplicationUserManager> userManager = () => HttpContext.Current.GetOwinContext().GetUserManager<ApplicationUserManager>();
 			Func<IAuthenticationManager> auth = () => HttpContext.Current.GetOwinContext().Authentication;
-			_container.RegisterType<SecurityController>(new InjectionConstructor(foundationSecurityRepositoryFactory, signInApplication, userManager, auth));
+            var apiAccountProvider = _container.Resolve<IApiAccountProvider>();
+            _container.RegisterType<SecurityController>(new InjectionConstructor(foundationSecurityRepositoryFactory, signInApplication, userManager, auth, apiAccountProvider));
 
 			#endregion
 
-         
             #region Payment gateways manager
             _container.RegisterInstance<IPaymentGatewayManager>(new InMemoryPaymentGatewayManagerImpl());
             #endregion
+
+            #region Mailing manager
+            _container.RegisterInstance<IMailingManager>(new InMemoryMailingManagerImpl());
+            #endregion
+
             #region Notification
             _container.RegisterInstance<INotifier>(new InMemoryNotifierImpl());
             #endregion

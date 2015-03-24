@@ -71,6 +71,9 @@ namespace VirtoCommerce.Content.Data.Repositories
         {
             var fullPath = this.GetFullPath(path);
 
+            if (!Directory.Exists(fullPath))
+                return Enumerable.Empty<ContentItem>();
+
             var files = Directory.GetFiles(fullPath, "*.*", SearchOption.AllDirectories);
 
             if (criteria.LastUpdateDate.HasValue)
@@ -96,15 +99,6 @@ namespace VirtoCommerce.Content.Data.Repositories
                     contentItem.Content = fullFile.Content;
                     contentItem.ContentType = fullFile.ContentType;
                 }
-
-                /*
-				Parallel.ForEach(items, async file =>
-				{
-					var fullFile = await GetContentItem(file.Path);
-					file.Content = fullFile.Content;
-					file.ContentType = fullFile.ContentType;
-				});
-                 * */
             }
 
             return await Task.FromResult(items.AsEnumerable());
