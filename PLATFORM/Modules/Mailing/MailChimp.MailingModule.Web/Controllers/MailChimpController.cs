@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Web.Http;
-using VirtoCommerce.Domain.Mailing.Services;
+using VirtoCommerce.MailChimp.Mailing.Services;
 
 namespace MailChimp.MailingModule.Web.Controllers
 {

@@ -146,6 +146,9 @@
     <Compile Include="Managers\MailChimpMailingImpl.cs" />
     <Compile Include="Module.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\IMailing.cs" />
+    <Compile Include="Services\IMailingManager.cs" />
+    <Compile Include="Services\InMemoryMailingManagerImpl.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="module.manifest" />
