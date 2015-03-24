@@ -2336,7 +2336,7 @@ h3
 
 	.table .table-col
 	{
-		border-bottom: 1px solid #dee9f0;
+        border-top: 1px solid #dee9f0;
 		font-size: 14px;
 		padding: 10px;
 		text-align: left;
@@ -2345,7 +2345,6 @@ h3
 
     .table .table-head
     {
-        background: #fbfdfe;
         border-bottom: 1px solid #dee9f0;
         font-size: 14px;
         padding: 5px 20px;
@@ -4943,7 +4942,7 @@ tags-input .tags .tag-item .remove-button
 
         				.dropdown-content .list-ico
         				{
-        					font-size: 24px;
+        					font-size: 28px;
         					height: 24px;
         					margin: 0 20px 0 0;
                             position: relative;
@@ -5241,7 +5240,7 @@ tags-input .tags .tag-item .remove-button
 
 			.blade-t .blade-t_ico
 			{
-				font-size: 30px;
+				font-size: 28px;
 				height: 30px;
 				left: 0;
 				position: absolute;
@@ -5416,15 +5415,6 @@ tags-input .tags .tag-item .remove-button
         overflow: hidden;
 		position: relative;
 	}
-
-        .blade .blade-container .canceled
-        {
-            background: #43b0e6;
-            color: #fff;
-            font-size: 18px;
-            padding: 10px 0;
-            text-align: center;
-        }
 
 		.blade-container .blade-static
 		{
