@@ -34,7 +34,7 @@ namespace VirtoCommerce.CoreModule.Web.Security
         {
             return new ApiAccount
             {
-                AppId = new Guid().ToString("N"),
+                AppId = Guid.NewGuid().ToString("N"),
                 SecretKey = ConvertBytesToHexString(GetRandomBytes(64))
             };
         }

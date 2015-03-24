@@ -75,7 +75,7 @@ function ($scope, accounts, bladeNavigationService, dialogService) {
 
                     var selection = _.where($scope.blade.currentEntities, { selected: true });
                     var itemIds = _.pluck(selection, 'userName');
-                    accounts.remove({ ids: itemIds }, function (data, headers) {
+                    accounts.remove({ names: itemIds }, function (data, headers) {
                         $scope.blade.refresh();
                     }, function (error) {
                         bladeNavigationService.setError('Error ' + error.status, $scope.blade);

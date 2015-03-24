@@ -80,7 +80,7 @@ namespace VirtoCommerce.PricingModule.Web.Controllers.Api
 
 		// GET: api/products/{productId}/prices
 		[HttpGet]
-		[ResponseType(typeof(webModel.ProductPrice))]
+		[ResponseType(typeof(webModel.Price[]))]
 		[Route("api/products/{productId}/prices")]
 		public IHttpActionResult GetProductPrices(string productId)
 		{
@@ -88,7 +88,7 @@ namespace VirtoCommerce.PricingModule.Web.Controllers.Api
 			var prices = _pricingService.EvaluateProductPrices(new coreModel.PriceEvaluationContext { ProductId = productId });
 			if (prices != null)
 			{
-				retVal = Ok(new webModel.ProductPrice(productId, prices.Select(x => x.ToWebModel())));
+				retVal = Ok(prices.Select(x => x.ToWebModel()).ToArray());
 			}
 			return retVal;
 		}

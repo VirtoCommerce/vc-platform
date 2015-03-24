@@ -78,6 +78,10 @@
     <Compile Include="Migrations\201503231048099_ContryCodeNotRequired.Designer.cs">
       <DependentUpon>201503231048099_ContryCodeNotRequired.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201503240946031_AddressRegion.cs" />
+    <Compile Include="Migrations\201503240946031_AddressRegion.Designer.cs">
+      <DependentUpon>201503240946031_AddressRegion.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Model\AddressEntity.cs" />
     <Compile Include="Model\CustomerOrderEntity.cs" />
@@ -125,6 +129,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201503231048099_ContryCodeNotRequired.resx">
       <DependentUpon>201503231048099_ContryCodeNotRequired.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201503240946031_AddressRegion.resx">
+      <DependentUpon>201503240946031_AddressRegion.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
