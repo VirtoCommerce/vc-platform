@@ -10,11 +10,11 @@ function ($scope, accounts, bladeNavigationService, dialogService) {
 
     $scope.filter = { searchKeyword: undefined };
     var selectedNode = null;
-    
+
     $scope.blade.refresh = function () {
         $scope.blade.isLoading = true;
         $scope.blade.selectedAll = false;
-        
+
         accounts.search({
             keyword: $scope.filter.searchKeyword,
             start: ($scope.pageSettings.currentPage - 1) * $scope.pageSettings.itemsPerPageCount,
@@ -38,7 +38,7 @@ function ($scope, accounts, bladeNavigationService, dialogService) {
         });
     };
 
-    $scope.selectNode = function (node) {
+    $scope.blade.selectNode = function (node) {
         selectedNode = node;
         $scope.selectedNodeId = selectedNode.id;
 
@@ -54,9 +54,9 @@ function ($scope, accounts, bladeNavigationService, dialogService) {
         bladeNavigationService.showBlade(newBlade, $scope.blade);
     };
 
-    $scope.checkAll = function (selected) {
+    $scope.toggleAll = function () {
         angular.forEach($scope.blade.currentEntities, function (item) {
-            item.selected = selected;
+            item.selected = $scope.blade.selectedAll;
         });
     };
 
@@ -74,7 +74,7 @@ function ($scope, accounts, bladeNavigationService, dialogService) {
                     closeChildrenBlades();
 
                     var selection = _.where($scope.blade.currentEntities, { selected: true });
-                    var itemIds = _.pluck(selection, 'id');
+                    var itemIds = _.pluck(selection, 'userName');
                     accounts.remove({ ids: itemIds }, function (data, headers) {
                         $scope.blade.refresh();
                     }, function (error) {
@@ -111,11 +111,11 @@ function ($scope, accounts, bladeNavigationService, dialogService) {
 
                 var newBlade = {
                     id: 'listItemChild',
+                    currentEntity: {},
                     title: 'New Account',
                     subtitle: $scope.blade.subtitle,
-                    isNew: true,
-                    controller: 'accountDetailController',
-                    template: 'Scripts/common/security/blades/account-detail.tpl.html'
+                    controller: 'newAccountWizardController',
+                    template: 'Scripts/common/security/wizards/newAccount/new-account-wizard.tpl.html'
                 };
                 bladeNavigationService.showBlade(newBlade, $scope.blade);
             },
