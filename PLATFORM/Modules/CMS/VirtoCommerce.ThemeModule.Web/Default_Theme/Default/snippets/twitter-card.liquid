@@ -1,0 +1,35 @@
+{% if settings.twittercard_handle != blank %}
+  {% assign twitter_handle = settings.twittercard_handle %}
+  {% unless settings.twittercard_handle contains '@' %}
+    {% assign twitter_handle = settings.twittercard_handle | prepend: '@' %}
+  {% endunless %}
+  <meta name="twitter:site" content="{{ twitter_handle }}">
+{% endif %}
+{% if template contains 'product' %}
+  <meta name="twitter:card" content="product">
+  <meta name="twitter:title" content="{{ product.title }}">
+  <meta name="twitter:description" content="{{ product.description | strip_html | truncatewords: 140, '' | escape }}">
+  <meta name="twitter:image" content="https:{{ product.featured_image.src | img_url: 'medium' }}">
+  <meta name="twitter:image:width" content="240">
+  <meta name="twitter:image:height" content="240">
+  <meta name="twitter:label1" content="Price">
+  <meta name="twitter:data1" content="{% if product.price_varies %}From {% endif %}{{ product.price | money_with_currency | strip_html | escape }}">
+  {% if product.vendor != blank %}
+  <meta name="twitter:label2" content="Brand">
+  <meta name="twitter:data2" content="{{ product.vendor | escape }}">
+  {% else %}
+  <meta name="twitter:label2" content="Availability">
+  <meta name="twitter:data2" content="In stock">
+  {% endif %}
+{% elsif template contains 'article' %}
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="{{ article.title }}">
+  <meta name="twitter:description" content="{{ article.excerpt_or_content | strip_html | truncatewords: 140, '' | escape }}">
+  {% if article.content contains "<img" %}
+    {% assign src = article.content | split: 'src="' %}
+    {% assign src = src[1] | split: '"' | first | replace: '//cdn', 'http://cdn' | replace: 'http:http://', 'http://' | remove: 'https:' %}
+    {% if src %}
+  <meta property="twitter:image" content="{{ src }}">
+    {% endif %}
+  {% endif %}
+{% endif %}

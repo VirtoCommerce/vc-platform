@@ -22,6 +22,7 @@ namespace VirtoCommerce.ThemeModule.Web.Converters
 			retVal.AssetUrl = item.AssetUrl;
 			retVal.Id = item.Id;
 			retVal.ContentType = item.ContentType;
+			retVal.AssetName = item.Name;
 
 			return retVal;
 		}
