@@ -6,7 +6,7 @@ using VirtoCommerce.Foundation.Frameworks;
 namespace VirtoCommerce.PowerShell.DatabaseSetup.Cmdlet
 {
     [CLSCompliant(false)]
-    [Cmdlet(VerbsData.Publish, "Virto-Search-Database", SupportsShouldProcess = true, DefaultParameterSetName = "DbConnection")]
+    [Cmdlet(VerbsData.Publish, "VirtoSearchDatabase", SupportsShouldProcess = true, DefaultParameterSetName = "DbConnection")]
     public class PublishSearchDatabase : DatabaseCommand
     {
         public override void Publish(string dbconnection, string data, bool sample, bool reduced, string strategy = SqlDbConfiguration.SqlAzureExecutionStrategy)

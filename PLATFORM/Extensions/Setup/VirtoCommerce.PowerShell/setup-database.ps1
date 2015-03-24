@@ -19,103 +19,103 @@ if (!$moduleFile) {
 echo $moduleFile
 
 #$datafolder = Split-Path -Parent $MyInvocation.MyCommand.Path
-Import-Module -DisableNameChecking $moduleFile
+Import-Module $moduleFile
 
 ##################################
 
 echo $dbconnection
 
 #create security
-Write-Output "$(Get-Date –f $timeStampFormat) - SQL Database Deployment: Publish-Virto-Security-Database"
-Publish-Virto-Security-Database -c $dbconnection -data $datafolder -sample:$useSample -reduced:$reducedSample -verbose
+Write-Output "$(Get-Date –f $timeStampFormat) - SQL Database Deployment: Publish-VirtoSecurityDatabase"
+Publish-VirtoSecurityDatabase -c $dbconnection -data $datafolder -sample:$useSample -reduced:$reducedSample -verbose
 if(! $?)
 {
 	throw "Deployment failed"
 }
 
 #create customer
-Write-Output "$(Get-Date –f $timeStampFormat) - SQL Database Deployment: Publish-Virto-Customer-Database"
-Publish-Virto-Customer-Database -c $dbconnection -sample:$useSample -reduced:$reducedSample -verbose
+Write-Output "$(Get-Date –f $timeStampFormat) - SQL Database Deployment: Publish-VirtoCustomerDatabase"
+Publish-VirtoCustomerDatabase -c $dbconnection -sample:$useSample -reduced:$reducedSample -verbose
 if(! $?)
 {
 	throw "Deployment failed"
 }
 
 #create global settings
-Write-Output "$(Get-Date –f $timeStampFormat) - SQL Database Deployment: Publish-Virto-AppConfig-Database"
-Publish-Virto-AppConfig-Database -c $dbconnection -data $datafolder -sample:$useSample -reduced:$reducedSample -verbose
+Write-Output "$(Get-Date –f $timeStampFormat) - SQL Database Deployment: Publish-VirtoAppConfigDatabase"
+Publish-VirtoAppConfigDatabase -c $dbconnection -data $datafolder -sample:$useSample -reduced:$reducedSample -verbose
 if(! $?)
 {
 	throw "Deployment failed"
 }
 
 #create catalog
-Write-Output "$(Get-Date –f $timeStampFormat) - SQL Database Deployment: Publish-Virto-Catalog-Database"
-Publish-Virto-Catalog-Database -c $dbconnection -data $datafolder -sample:$useSample -reduced:$reducedSample -verbose
+Write-Output "$(Get-Date –f $timeStampFormat) - SQL Database Deployment: Publish-VirtoCatalogDatabase"
+Publish-VirtoCatalogDatabase -c $dbconnection -data $datafolder -sample:$useSample -reduced:$reducedSample -verbose
 if(! $?)
 {
 	throw "Deployment failed"
 }
 
 #create importing
-Write-Output "$(Get-Date –f $timeStampFormat) - SQL Database Deployment: Publish-Virto-Import-Database"
-Publish-Virto-Import-Database -c $dbconnection -data $datafolder -sample:$useSample -reduced:$reducedSample -verbose
+Write-Output "$(Get-Date –f $timeStampFormat) - SQL Database Deployment: Publish-VirtoImportDatabase"
+Publish-VirtoImportDatabase -c $dbconnection -data $datafolder -sample:$useSample -reduced:$reducedSample -verbose
 if(! $?)
 {
 	throw "Deployment failed"
 }
 
 #create Review
-Write-Output "$(Get-Date –f $timeStampFormat) - SQL Database Deployment: Publish-Virto-Review-Database"
-Publish-Virto-Review-Database -c $dbconnection -sample:$useSample -reduced:$reducedSample -verbose
+Write-Output "$(Get-Date –f $timeStampFormat) - SQL Database Deployment: Publish-VirtoReviewDatabase"
+Publish-VirtoReviewDatabase -c $dbconnection -sample:$useSample -reduced:$reducedSample -verbose
 if(! $?)
 {
 	throw "Deployment failed"
 }
 
 #create store
-Write-Output "$(Get-Date –f $timeStampFormat) - SQL Database Deployment: Publish-Virto-Store-Database"
-Publish-Virto-Store-Database -c $dbconnection -sample:$useSample -reduced:$reducedSample -verbose
+Write-Output "$(Get-Date –f $timeStampFormat) - SQL Database Deployment: Publish-VirtoStoreDatabase"
+Publish-VirtoStoreDatabase -c $dbconnection -sample:$useSample -reduced:$reducedSample -verbose
 if(! $?)
 {
 	throw "Deployment failed"
 }
 
 #create marketing
-Write-Output "$(Get-Date –f $timeStampFormat) - SQL Database Deployment: Publish-Virto-Marketing-Database"
-Publish-Virto-Marketing-Database -c $dbconnection -sample:$useSample -reduced:$reducedSample -verbose
+Write-Output "$(Get-Date –f $timeStampFormat) - SQL Database Deployment: Publish-VirtoMarketingDatabase"
+Publish-VirtoMarketingDatabase -c $dbconnection -sample:$useSample -reduced:$reducedSample -verbose
 if(! $?)
 {
 	throw "Deployment failed"
 }
 
 #create inventory
-Write-Output "$(Get-Date –f $timeStampFormat) - SQL Database Deployment: Publish-Virto-Inventory-Database"
-Publish-Virto-Inventory-Database -c $dbconnection -sample:$useSample -reduced:$reducedSample -verbose
+Write-Output "$(Get-Date –f $timeStampFormat) - SQL Database Deployment: Publish-VirtoInventoryDatabase"
+Publish-VirtoInventoryDatabase -c $dbconnection -sample:$useSample -reduced:$reducedSample -verbose
 if(! $?)
 {
 	throw "Deployment failed"
 }
 
 #create log
-Write-Output "$(Get-Date –f $timeStampFormat) - SQL Database Deployment: Publish-Virto-Log-Database"
-Publish-Virto-Log-Database -c $dbconnection -sample:$useSample -reduced:$reducedSample -verbose
+Write-Output "$(Get-Date –f $timeStampFormat) - SQL Database Deployment: Publish-VirtoLogDatabase"
+Publish-VirtoLogDatabase -c $dbconnection -sample:$useSample -reduced:$reducedSample -verbose
 if(! $?)
 {
 	throw "Deployment failed"
 }
 
 #create orders
-Write-Output "$(Get-Date –f $timeStampFormat) - SQL Database Deployment: Publish-Virto-Order-Database"
-Publish-Virto-Order-Database -c $dbconnection -sample:$useSample -reduced:$reducedSample -verbose
+Write-Output "$(Get-Date –f $timeStampFormat) - SQL Database Deployment: Publish-VirtoOrderDatabase"
+Publish-VirtoOrderDatabase -c $dbconnection -sample:$useSample -reduced:$reducedSample -verbose
 if(! $?)
 {
 	throw "Deployment failed"
 }
 
 #create search
-Write-Output "$(Get-Date –f $timeStampFormat) - SQL Database Deployment: Publish-Virto-Search-Database"
-Publish-Virto-Search-Database -c $dbconnection -sample:$useSample -reduced:$reducedSample -verbose
+Write-Output "$(Get-Date –f $timeStampFormat) - SQL Database Deployment: Publish-VirtoSearchDatabase"
+Publish-VirtoSearchDatabase -c $dbconnection -sample:$useSample -reduced:$reducedSample -verbose
 if(! $?)
 {
 	throw "Deployment failed"

@@ -10,7 +10,7 @@ using VirtoCommerce.PowerShell.Cmdlet;
 namespace VirtoCommerce.PowerShell.FrontEndSetup
 {
     [CLSCompliant(false)]
-    [Cmdlet(VerbsData.Initialize, "Virto-FrontEnd-Configs", SupportsShouldProcess = true, DefaultParameterSetName = "DbConnection")]
+    [Cmdlet(VerbsData.Initialize, "VirtoFrontEndConfigs", SupportsShouldProcess = true, DefaultParameterSetName = "DbConnection")]
     public class InitializeFrontEndConfigs : DomainCommand
     {
         [Parameter(HelpMessage = "Front end project location.")]
