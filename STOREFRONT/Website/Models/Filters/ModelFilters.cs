@@ -85,9 +85,7 @@ namespace VirtoCommerce.Web.Models.Filters
 
         public static string ShopifyAssetUrl(object input)
         {
-            var path = VirtualPathUtility.ToAbsolute("~/Scripts/{0}?{1}");
-
-            return string.Format(path, input.ToString(), DateTime.Now.Ticks.ToString());
+            return AssetUrl("~/global/assets/", input.ToString());
         }
 
         public static string GlobalAssetUrl(string input)
