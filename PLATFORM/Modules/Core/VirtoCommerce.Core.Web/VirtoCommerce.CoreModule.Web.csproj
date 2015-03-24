@@ -168,6 +168,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="module.manifest" />
+    <Content Include="Scripts\common\blades\address-list.js" />
+    <Content Include="Scripts\common\blades\address-detail.js" />
+    <Content Include="Scripts\common\blades\address-detail.tpl.html" />
     <Content Include="Scripts\common\common.js" />
     <Content Include="Scripts\virtoCommerce-core.js" />
     <Content Include="Scripts\common\ok-cancel2.tpl.html" />
@@ -196,6 +199,7 @@
       <SubType>Designer</SubType>
     </None>
     <Content Include="web.config" />
+    <Content Include="Scripts\common\blades\address-list.tpl.html" />
     <None Include="web.Debug.config">
       <DependentUpon>web.config</DependentUpon>
     </None>

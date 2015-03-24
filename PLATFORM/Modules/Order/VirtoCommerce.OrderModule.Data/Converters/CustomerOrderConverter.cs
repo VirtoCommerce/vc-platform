@@ -141,6 +141,10 @@ namespace VirtoCommerce.OrderModule.Data.Converters
 																		       x => x.OrganizationId, x => x.EmployeeId);
 			target.InjectFrom(patchInjectionPolicy, source);
 
+			if (!source.Addresses.IsNullCollection())
+			{
+				source.Addresses.Patch(target.Addresses, (sourceItem, targetItem) => sourceItem.Patch(targetItem));
+			}
 
 			if (!source.Shipments.IsNullCollection())
 			{
