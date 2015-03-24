@@ -1,16 +1,13 @@
-﻿using System.Configuration;
-using Microsoft.Practices.Unity;
+﻿using Microsoft.Practices.Unity;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Web.Hosting;
 using System.Web.Http;
 using System.Web.Http.Dispatcher;
 using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
 using Unity.WebApi;
-using VirtoCommerce.Framework.Core.Utils;
 using VirtoCommerce.Framework.Web;
 using VirtoCommerce.Framework.Web.Modularity;
 
@@ -20,19 +17,19 @@ namespace VirtoCommerce.Platform.Web
     {
         private readonly string _modulesVirtualPath;
         private readonly string _modulesPhysicalPath;
+        private readonly string _assembliesPath;
 
-        public VirtoCommercePlatformWebBootstraper(string modulesVirtualPath, string modulesPhysicalPath)
+        public VirtoCommercePlatformWebBootstraper(string modulesVirtualPath, string modulesPhysicalPath, string assembliesPath)
         {
             _modulesVirtualPath = modulesVirtualPath;
             _modulesPhysicalPath = modulesPhysicalPath;
+            _assembliesPath = assembliesPath;
         }
 
         protected override IModuleCatalog CreateModuleCatalog()
         {
-            var assembliesPath = HostingEnvironment.MapPath("~/App_data/Modules");
-
             var manifestProvider = new ModuleManifestProvider(_modulesPhysicalPath);
-            return new ManifestModuleCatalog(manifestProvider, _modulesVirtualPath, assembliesPath);
+            return new ManifestModuleCatalog(manifestProvider, _modulesVirtualPath, _assembliesPath);
         }
 
         /// <summary>
@@ -43,10 +40,7 @@ namespace VirtoCommerce.Platform.Web
         {
             base.ConfigureContainer();
 
-            var options = new ModuleInitializerOptions
-            {
-                SampleDataLevel = EnumUtility.SafeParse(ConfigurationManager.AppSettings["VirtoCommerce:SampleDataLevel"], SampleDataLevel.None)
-            };
+            var options = new ModuleInitializerOptions();
             Container.RegisterInstance<IModuleInitializerOptions>(options);
         }
 
