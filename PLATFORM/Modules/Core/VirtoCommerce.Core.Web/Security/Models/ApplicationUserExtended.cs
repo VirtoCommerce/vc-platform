@@ -11,8 +11,7 @@ namespace VirtoCommerce.CoreModule.Web.Security.Models
 {
     public class ApplicationUserExtended : ApplicationUser
     {
-		public string FullName { get; set; }
-        public string StoreId { get; set; }
+	    public string StoreId { get; set; }
 
         public string Icon { get; set; }
 
