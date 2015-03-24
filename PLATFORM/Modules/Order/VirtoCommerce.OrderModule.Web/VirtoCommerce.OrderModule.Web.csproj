@@ -120,9 +120,11 @@
     <Compile Include="Model\Operation.cs" />
     <Compile Include="Module.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Content Include="Scripts\blades\operation-comment.js" />
+    <Content Include="Scripts\blades\operation-comment.tpl.html" />
     <Content Include="Scripts\dialogs\cancelOperation-dialog.tpl.html" />
-    <Content Include="Scripts\widgets\address-widget.js" />
-    <Content Include="Scripts\widgets\address-widget.tpl.html" />
+    <Content Include="Scripts\widgets\customerOrder-address-widget.js" />
+    <Content Include="Scripts\widgets\customerOrder-address-widget.tpl.html" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
@@ -174,6 +176,8 @@
     <Content Include="Scripts\services\calculateTotals.js" />
     <Content Include="Scripts\widgets\customerOrder-items-widget.tpl.html" />
     <Content Include="Scripts\widgets\customerOrder-items-widget.js" />
+    <Content Include="Scripts\widgets\shipment-address-widget.js" />
+    <Content Include="Scripts\widgets\shipment-address-widget.tpl.html" />
     <Content Include="Scripts\widgets\shipment-totals-widget.js" />
     <Content Include="Scripts\widgets\shipment-totals-widget.tpl.html" />
     <Content Include="Scripts\widgets\operation-comment-widget.js" />

@@ -44,7 +44,7 @@ angular.module(moduleName, ['virtoCommerce.catalogModule', 'virtoCommerce.pricin
 
   	//Register widgets
   	var customerOrderItemsWidget = {
-   		controller: 'customerOrderItemsWidgetController',
+  		controller: 'customerOrderItemsWidgetController',
   		template: 'Modules/$(VirtoCommerce.Orders)/Scripts/widgets/customerOrder-items-widget.tpl.html',
   	};
   	widgetService.registerWidget(customerOrderItemsWidget, 'customerOrderDetailWidgets');
@@ -61,11 +61,19 @@ angular.module(moduleName, ['virtoCommerce.catalogModule', 'virtoCommerce.pricin
   	};
   	widgetService.registerWidget(customerOrderTotalsWidget, 'customerOrderDetailWidgets');
 
-  	var addressWidget = {
-  		controller: 'addressWidgetController',
-  		template: 'Modules/$(VirtoCommerce.Orders)/Scripts/widgets/address-widget.tpl.html',
+  	var customerOrderAddressWidget = {
+  		controller: 'customerOrderAddressWidgetController',
+  		template: 'Modules/$(VirtoCommerce.Orders)/Scripts/widgets/customerOrder-address-widget.tpl.html',
   	};
-  	widgetService.registerWidget(addressWidget, 'customerOrderDetailWidgets');
+  	widgetService.registerWidget(customerOrderAddressWidget, 'customerOrderDetailWidgets');
+
+
+  	var shipmentAddressWidget = {
+  		controller: 'shipmentAddressWidgetController',
+  		template: 'Modules/$(VirtoCommerce.Orders)/Scripts/widgets/shipment-address-widget.tpl.html',
+  	};
+  	widgetService.registerWidget(shipmentAddressWidget, 'shipmentDetailWidgets');
+
 
   	var shipmentTotalWidget = {
   		controller: 'shipmentTotalsWidgetController',
@@ -75,12 +83,12 @@ angular.module(moduleName, ['virtoCommerce.catalogModule', 'virtoCommerce.pricin
 
 
   	var operationsTreeWidget = {
-   		controller: 'operationTreeWidgetController',
+  		controller: 'operationTreeWidgetController',
   		template: 'Modules/$(VirtoCommerce.Orders)/Scripts/widgets/operation-tree-widget.tpl.html',
   	};
   	widgetService.registerWidget(operationsTreeWidget, 'customerOrderDetailWidgets');
   	widgetService.registerWidget(operationsTreeWidget, 'shipmentDetailWidgets');
   	widgetService.registerWidget(operationsTreeWidget, 'paymentDetailWidgets');
 
-  	
+
   }]);
