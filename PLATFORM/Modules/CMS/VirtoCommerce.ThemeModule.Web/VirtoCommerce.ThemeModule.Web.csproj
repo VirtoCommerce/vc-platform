@@ -99,7 +99,6 @@
     <Content Include="Default_Theme\Default\assets\icons.ttf" />
     <Content Include="Default_Theme\Default\assets\icons.woff" />
     <Content Include="Default_Theme\Default\assets\shop.js.liquid" />
-    <Content Include="Default_Theme\Default\assets\timber.scss.liquid" />
     <Content Include="Default_Theme\Default\config\settings_data.json" />
     <Content Include="Default_Theme\Default\layout\theme.liquid" />
     <Content Include="Default_Theme\Default\locales\de.json" />
