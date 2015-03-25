@@ -142,7 +142,7 @@ namespace VirtoCommerce.ThemeModule.Web.Controllers.Api
 				using (ZipArchive archive = ZipFile.OpenRead(file.LocalFileName))
 				{
 					var fileName = Path.GetFileNameWithoutExtension(file.Headers.ContentDisposition.FileName.Replace("\"", string.Empty));
-					await _themeService.UploadTheme(storeId, fileName, archive);
+					await _themeService.UploadTheme(storeId, archive.Entries.First().FullName, archive);
 				}
 			}
 
