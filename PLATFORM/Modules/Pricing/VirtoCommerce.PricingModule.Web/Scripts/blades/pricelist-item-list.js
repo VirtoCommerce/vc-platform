@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.pricingModule')
-.controller('pricelistItemListController', ['$scope', 'bladeNavigationService', function ($scope, bladeNavigationService) {
+.controller('pricelistItemListController', ['$scope', '$filter', 'bladeNavigationService', function ($scope, $filter, bladeNavigationService) {
     var selectedNode = null;
 
     function initializeBlade(data) {
@@ -14,10 +14,11 @@
         var newBlade = {
             id: 'pricelistChildChild',
             data: selectedNode,
+            currency: $scope.blade.currency,
             title: 'Prices for ' + selectedNode.name,
             subtitle: 'Edit prices',
-            controller: 'pricelistPricesListController',
-            template: 'Modules/$(VirtoCommerce.Pricing)/Scripts/blades/pricelist-prices-list.tpl.html'
+            controller: 'pricesListController',
+            template: 'Modules/$(VirtoCommerce.Pricing)/Scripts/blades/prices-list.tpl.html'
         };
 
         bladeNavigationService.showBlade(newBlade, $scope.blade);
@@ -36,39 +37,46 @@
 
     function openAddEntityWizard() {
         var selectedProducts = [];
-        var options = {
-            allowMultiple: true,
-            checkItemFn: function (product, isSelected) {
-                if (isSelected)
-                    selectedProducts.push(product);
-                else {
-                    var toRemove = _.find(selectedProducts, function (x) { return x.id == product.id; });
-                    if (toRemove) {
-                        selectedProducts = _.without(selectedProducts, [toRemove]);
-                    }
-                }
-            }
-        };
         var newBlade = {
             id: "CatalogItemsSelect",
             currentEntities: $scope.blade.currentEntity,
             title: "Select items for pricing",
             controller: 'catalogItemSelectController',
             template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/common/catalog-items-select.tpl.html',
-            options: options,
             breadcrumbs: [],
             bladeToolbarCommands: [
-			  {
-			      name: "Add selected", icon: 'fa fa-plus',
-			      executeMethod: function (blade) {
-			          addProductsToPricelist(selectedProducts);
-			          bladeNavigationService.closeBlade(blade);
-			      },
-			      canExecuteMethod: function () {
-			          return selectedProducts.length > 0;
-			      }
-			  }]
+            {
+                name: "Add selected", icon: 'fa fa-plus',
+                executeMethod: function (blade) {
+                    addProductsToPricelist(selectedProducts);
+                    bladeNavigationService.closeBlade(blade);
+                },
+                canExecuteMethod: function () {
+                    return selectedProducts.length > 0;
+                }
+            }]
         };
+
+        newBlade.options = {
+            allowMultiple: true,
+            checkItemFn: function (listItem, isSelected) {
+                if (listItem.type == 'category') {
+                    newBlade.error = 'Categories are not supported';
+                    listItem.selected = undefined;
+                } else {
+                    if (isSelected) {
+                        if (_.all(selectedProducts, function (x) { return x.id != listItem.id; })) {
+                            selectedProducts.push(listItem);
+                        }
+                    }
+                    else {
+                        selectedProducts = _.reject(selectedProducts, function (x) { return x.id == listItem.id; });
+                    }
+                    newBlade.error = undefined;
+                }
+            }
+        };
+
         bladeNavigationService.showBlade(newBlade, $scope.blade);
     }
 
@@ -76,11 +84,11 @@
         angular.forEach(products, function (product) {
             if (_.all($scope.blade.currentEntities, function (x) { return x.productId != product.id; })) {
                 var newPricelistItem =
-					{
-					    productName: product.name,
-					    productId: product.id,
-					    prices: []
-					};
+                {
+                    productName: product.name,
+                    productId: product.id,
+                    prices: []
+                };
                 $scope.blade.currentEntities.push(newPricelistItem);
             }
         });
@@ -89,45 +97,28 @@
     $scope.bladeHeadIco = 'fa-usd';
 
     $scope.bladeToolbarCommands = [
-        {
-            name: "Add", icon: 'fa fa-plus',
-            executeMethod: function () {
-                closeChildrenBlades();
-                openAddEntityWizard();
-            },
-            canExecuteMethod: function () {
-                return true;
-            }
+    {
+        name: "Add", icon: 'fa fa-plus',
+        executeMethod: function () {
+            closeChildrenBlades();
+            openAddEntityWizard();
+        },
+        canExecuteMethod: function () {
+            return true;
         }
+    }
     ];
 
-    $scope.getPriceRange = function (node) {
+    $scope.getPriceRange = function (priceGroup) {
         var retVal;
-        var min = undefined;
-        var max = undefined;
-        if (node.minPrice) {
-            min = node.minPrice.list;
-            if (_.isNumber(node.minPrice.sale)) {
-                min = Math.min(min, node.minPrice.sale);
-            }
-        }
-        if (node.maxPrice) {
-            max = node.maxPrice.list;
-            if (_.isNumber(node.maxPrice.sale)) {
-                max = Math.max(max, node.maxPrice.sale);
-            }
-        }
+        var allPrices = _.union(_.pluck(priceGroup.prices, 'list'), _.pluck(priceGroup.prices, 'sale'));
+        var minprice = $filter('number')(_.min(allPrices), 2);
+        var maxprice = $filter('number')(_.max(allPrices), 2);
+        retVal = (minprice == maxprice ? minprice : minprice + '-' + maxprice);
 
-        if (_.isNumber(min) && _.isNumber(max) && min != max) {
-            retVal = min + ' - ' + max;
-        }
-        else if (_.isNumber(min)) {
-            retVal = min;
-        } else if (_.isNumber(max)) {
-            retVal = max;
-        } else {
-            retVal = 'NO PRICE';
-        }
+        //else {
+        //    retVal = 'NO PRICE';
+        //}
 
         return retVal;
     }
