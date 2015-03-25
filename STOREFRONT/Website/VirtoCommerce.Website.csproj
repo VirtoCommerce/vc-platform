@@ -148,9 +148,6 @@
       <Private>True</Private>
       <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.2\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
     </Reference>
-    <Reference Include="VirtoCommerce.ApiClient">
-      <HintPath>..\Shared\VirtoCommerce.ApiClient.dll</HintPath>
-    </Reference>
     <Reference Include="WebGrease">
       <Private>True</Private>
       <HintPath>..\packages\WebGrease.1.5.2\lib\WebGrease.dll</HintPath>
@@ -330,6 +327,10 @@
     <Content Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\PLATFORM\Extensions\Client\Commerce.ApiClient\VirtoCommerce.ApiClient.csproj">
+      <Project>{84b945b7-85e4-4057-b0df-1f8a03b8d53c}</Project>
+      <Name>VirtoCommerce.ApiClient</Name>
+    </ProjectReference>
     <ProjectReference Include="..\WebViews\VirtoCommerce.WebViews.csproj">
       <Project>{6695201C-2168-47FC-A4C0-FDD5AB5CB135}</Project>
       <Name>VirtoCommerce.WebViews</Name>
