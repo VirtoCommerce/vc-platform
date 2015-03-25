@@ -49,6 +49,13 @@ namespace VirtoCommerce.Content.Data.Services
 			return items;
 		}
 
+		public async Task DeleteTheme(string storeId, string themeId)
+		{
+			var themePath = GetThemePath(storeId, themeId);
+
+			await _repository.DeleteTheme(themePath);
+		}
+
 		public async Task<IEnumerable<ThemeAsset>> GetThemeAssets(string storeId, string themeName, GetThemeAssetsCriteria criteria)
 		{
 			var themePath = GetThemePath(storeId, themeName);

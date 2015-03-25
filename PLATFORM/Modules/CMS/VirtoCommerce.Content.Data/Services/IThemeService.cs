@@ -12,6 +12,8 @@ namespace VirtoCommerce.Content.Data.Services
 		Task<IEnumerable<ThemeAsset>> GetThemeAssets(string storeId, string themeId, GetThemeAssetsCriteria criteria);
 		Task<ThemeAsset> GetThemeAsset(string storeId, string themeId, string assetKey);
 
+		Task DeleteTheme(string storeId, string themeId);
+
 		Task SaveThemeAsset(string storeId, string themeId, ThemeAsset asset);
 		Task DeleteThemeAssets(string storeId, string themeId, params string[] assetKey);
 
