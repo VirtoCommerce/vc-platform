@@ -51,5 +51,11 @@
         }
     ];
 
+
+    $scope.getPriceCount = function (pricelist) {
+        var pricelistPrices = _.flatten(_.pluck(pricelist.productPrices, 'prices'), true);
+        return pricelistPrices.length;
+    }
+
     $scope.blade.refresh();
 }]);

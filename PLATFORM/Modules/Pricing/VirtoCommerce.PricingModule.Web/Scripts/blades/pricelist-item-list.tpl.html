@@ -20,17 +20,17 @@
                     </thead>
                     <tbody>
                         <tr class="table-item" ng-repeat="data in blade.currentEntities track by data.productId" ng-class="{'__selected': data.productId === selectedNodeId}" ng-click='selectNode(data)'>
+                            <td class="table-col __product-name">
+                                <span class="table-t" title="{{data.productName}}">{{data.productName}}</span>
+                            </td>
                             <td class="table-col">
-                                <span class="table-t">{{data.productId}}</span>
+                                <span>{{data.productId}}</span>
                             </td>
                             <td class="table-col __product-code">
-                                <span>{{data.productId | limitTo:12}}</span>
+                                <span>{{getPriceRange(data)}}</span>
                             </td>
-                            <td class="table-col __product-code">
-                                <span>{{data.sale + ' - ' + data.list}}</span>
-                            </td>
-                            <td class="table-col __product-code">
-                                {{data.minQuantity}}
+                            <td class="table-col __product-img">
+                                {{data.prices.length}}
                             </td>
                         </tr>
                     </tbody>

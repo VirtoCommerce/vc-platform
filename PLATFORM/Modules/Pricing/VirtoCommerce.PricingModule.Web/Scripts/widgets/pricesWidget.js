@@ -1,7 +1,16 @@
 ﻿angular.module('virtoCommerce.pricingModule')
 .controller('pricesWidgetController', ['$scope', 'bladeNavigationService', function ($scope, bladeNavigationService) {
     $scope.currentBlade = $scope.widget.blade;
+    $scope.priceCount = '';
 
+    $scope.widget.refresh = function () {
+        // all prices count
+        if ($scope.currentBlade.currentEntity) {
+            var pricelistPrices = _.flatten(_.pluck($scope.currentBlade.currentEntity.productPrices, 'prices'), true);
+            $scope.priceCount = pricelistPrices.length;
+        }
+    }
+    
     $scope.openBlade = function () {
         var blade = {
             id: "pricelistChild",
@@ -15,4 +24,8 @@
 
         bladeNavigationService.showBlade(blade, $scope.currentBlade);
     };
+
+    $scope.$watch('currentBlade.currentEntity', function (data) {
+        $scope.widget.refresh();
+    });
 }]);
