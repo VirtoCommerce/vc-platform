@@ -132,6 +132,7 @@ namespace VirtoCommerce.CoreModule.Web.Controllers.Api
         public IHttpActionResult GenerateNewApiAccount()
         {
             var apiAccount = _apiAccountProvider.GenerateApiCredentials();
+			apiAccount.IsActive = true;
             var result = apiAccount.ToWebModel();
             return Ok(result);
         }
@@ -261,6 +262,8 @@ namespace VirtoCommerce.CoreModule.Web.Controllers.Api
                     }
                     acount.RegisterType = (int)user.UserType;
                     acount.AccountState = (int)user.UserState;
+					acount.MemberId = user.MemberId;
+					acount.StoreId = user.StoreId;
                     if (user.ApiAcounts != null)
                     {
                         var source = new ObservableCollection<ApiAccount>(user.ApiAcounts.Select(x => x.ToFoundation()));
@@ -303,16 +306,14 @@ namespace VirtoCommerce.CoreModule.Web.Controllers.Api
 
             if (result.Succeeded)
             {
-                var id = Guid.NewGuid().ToString();
-
-                using (var repository = _securityRepository())
+                 using (var repository = _securityRepository())
                 {
                     var account = new Account
                     {
                         UserName = user.UserName,
                         AccountId = user.Id,
+						MemberId = user.MemberId,
                         AccountState = AccountState.Approved.GetHashCode(),
-                        MemberId = id,
                         RegisterType = user.UserType.GetHashCode(),
                         StoreId = user.StoreId
                     };
@@ -346,8 +347,9 @@ namespace VirtoCommerce.CoreModule.Web.Controllers.Api
 
                 using (var repository = _securityRepository())
                 {
+					
                     var user = repository.GetAccountByName(userName);
-
+					retVal.InjectFrom(user);
                     if (user != null)
                     {
                         var permissions =

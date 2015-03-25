@@ -113,10 +113,18 @@ namespace VirtoCommerce.OrderModule.Data.Converters
 			if(order.Shipments != null)
 			{
 				retVal.Shipments = new ObservableCollection<ShipmentEntity>(order.Shipments.Select(x=>x.ToEntity()));
+				foreach(var address in retVal.Shipments.SelectMany(x=>x.Addresses))
+				{
+					address.CustomerOrder = retVal;
+				}
 			}
 			if(order.InPayments != null)
 			{
 				retVal.InPayments = new ObservableCollection<PaymentInEntity>(order.InPayments.Select(x => x.ToEntity()));
+				foreach (var address in retVal.InPayments.SelectMany(x => x.Addresses))
+				{
+					address.CustomerOrder = retVal;
+				}
 			}
 			if(order.Discount != null)
 			{

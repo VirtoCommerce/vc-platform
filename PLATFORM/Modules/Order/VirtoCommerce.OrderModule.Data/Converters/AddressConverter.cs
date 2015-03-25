@@ -21,6 +21,7 @@ namespace VirtoCommerce.OrderModule.Data.Converters
 
 			var retVal = new Address();
 			retVal.InjectFrom(entity);
+			retVal.AddressType = (AddressType)Enum.Parse(typeof(AddressType), entity.AddressType);
 		
 			return retVal;
 		}
@@ -32,7 +33,7 @@ namespace VirtoCommerce.OrderModule.Data.Converters
 
 			var retVal = new Address();
 			retVal.InjectFrom(address);
-
+			retVal.AddressType = (AddressType)(int)address.AddressType;
 			return retVal;
 		}
 

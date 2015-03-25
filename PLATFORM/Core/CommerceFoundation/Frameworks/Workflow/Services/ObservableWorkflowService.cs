@@ -19,12 +19,12 @@ namespace VirtoCommerce.Foundation.Frameworks.Workflow.Services
 		public WorkflowResult RunWorkflow(string workflowName, Dictionary<string, object> parameters, object[] extensions)
 		{
 			WorkflowResult retVal = new WorkflowResult();
-			var customerOrder = parameters.Values.OfType<T>().FirstOrDefault();
-			if (customerOrder != null)
+			var evaluateContext = parameters.Values.OfType<T>().FirstOrDefault();
+			if (evaluateContext != null)
 			{
 				foreach (var observer in _observers)
 				{
-					observer.OnNext(customerOrder);
+					observer.OnNext(evaluateContext);
 				}
 
 				foreach (var observer in _observers)

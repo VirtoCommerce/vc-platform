@@ -15,7 +15,6 @@ using VirtoCommerce.OrderModule.Web.Controllers.Api;
 using coreModel = VirtoCommerce.Domain.Order.Model;
 using webModel = VirtoCommerce.OrderModule.Web.Model;
 using VirtoCommerce.Domain.Payment.Services;
-using VirtoCommerce.OrderModule.Data.Interceptors;
 using VirtoCommerce.Foundation.Data.Infrastructure.Interceptors;
 using VirtoCommerce.Foundation.Money;
 using VirtoCommerce.OrderModule.Data.Workflow;
@@ -38,7 +37,7 @@ namespace VirtoCommerce.OrderModule.Test
 		[TestMethod]
 		public void CreateNewOrderByShoppingCart()
 		{
-			var result = _controller.CreateOrderFromCart("7291086e-6ede-4814-a70c-60482208c772") as OkNegotiatedContentResult<webModel.CustomerOrder>;
+			var result = _controller.CreateOrderFromCart("b5cf3acd-216b-41c7-b998-61f96a1608f6") as OkNegotiatedContentResult<webModel.CustomerOrder>;
 			Assert.IsNotNull(result.Content);
 		}
 
@@ -326,11 +325,10 @@ namespace VirtoCommerce.OrderModule.Test
 			var cartService = new ShoppingCartServiceImpl(repositoryFactory, mockWorkflow.Object);
 
 			Func<IOrderRepository> orderRepositoryFactory = () => { return new OrderRepositoryImpl("VirtoCommerce", 
-																		   new InventoryOperationInterceptor(mockInventory.Object),
 																		   new AuditableInterceptor(),
 																		   new EntityPrimaryKeyGeneratorInterceptor());
 			};
-			var orderWorkflowService = new ObservableWorkflowService<coreModel.CustomerOrder>();
+			var orderWorkflowService = new ObservableWorkflowService<CustomerOrderStateBasedEvalContext>();
 			//Subscribe to order changes. Calculate totals  
 			orderWorkflowService.Subscribe(new CalculateTotalsActivity());
 			var orderService = new CustomerOrderServiceImpl(orderRepositoryFactory, new TimeBasedNumberGeneratorImpl(), orderWorkflowService, cartService);

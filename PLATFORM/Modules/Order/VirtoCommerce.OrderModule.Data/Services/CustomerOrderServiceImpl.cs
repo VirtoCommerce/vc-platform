@@ -13,6 +13,7 @@ using VirtoCommerce.Foundation.Frameworks.Extensions;
 using VirtoCommerce.Foundation.Frameworks;
 using VirtoCommerce.Foundation.Frameworks.Workflow.Services;
 using VirtoCommerce.Foundation.Data.Infrastructure;
+using VirtoCommerce.OrderModule.Data.Workflow;
 
 namespace VirtoCommerce.OrderModule.Data.Services
 {
@@ -49,7 +50,7 @@ namespace VirtoCommerce.OrderModule.Data.Services
 
         public virtual CustomerOrder Create(CustomerOrder order)
         {
-            RecalculateOrder(order);
+			RecalculateOrder(new CustomerOrderStateBasedEvalContext(EntryState.Added, null, order));
 
             EnsureThatAllOperationsHasNumber(order);
 
@@ -108,13 +109,13 @@ namespace VirtoCommerce.OrderModule.Data.Services
             {
                 foreach (var changedOrder in changedOrders)
                 {
+					EnsureThatAllOperationsHasNumber(changedOrder);
+					var origOrder = GetById(changedOrder.Id, CustomerOrderResponseGroup.Full);
+
                     //Do business logic on temporary  order object
-                    RecalculateOrder(changedOrder);
+					RecalculateOrder(new CustomerOrderStateBasedEvalContext(EntryState.Modified, origOrder, changedOrder));
 
-                    EnsureThatAllOperationsHasNumber(changedOrder);
-
-
-                    var sourceOrderEntity = changedOrder.ToEntity();
+					var sourceOrderEntity = changedOrder.ToEntity();
                     var targetOrderEntity = repository.GetCustomerOrderById(changedOrder.Id, CustomerOrderResponseGroup.Full);
                     if (targetOrderEntity == null)
                     {
@@ -136,10 +137,10 @@ namespace VirtoCommerce.OrderModule.Data.Services
         #endregion
 
 
-        private void RecalculateOrder(CustomerOrder order)
+        private void RecalculateOrder(CustomerOrderStateBasedEvalContext context)
         {
             var parameters = new Dictionary<string, object>();
-            parameters["order"] = order;
+			parameters["context"] = context;
             _workflowService.RunWorkflow(_workflowName, parameters, null);
         }
 

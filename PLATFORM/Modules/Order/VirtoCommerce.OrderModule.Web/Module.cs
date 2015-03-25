@@ -12,7 +12,6 @@ using Moq;
 using VirtoCommerce.Domain.Cart.Services;
 using VirtoCommerce.OrderModule.Web.Controllers.Api;
 using VirtoCommerce.Domain.Order.Services;
-using VirtoCommerce.OrderModule.Data.Interceptors;
 using VirtoCommerce.Foundation.Data.Infrastructure.Interceptors;
 using VirtoCommerce.Foundation.Frameworks.Workflow.Services;
 using VirtoCommerce.OrderModule.Data.Workflow;
@@ -36,16 +35,19 @@ namespace VirtoCommerce.OrderModule.Web
 
 			Func<IOrderRepository> orderRepositoryFactory = () => { 
 										return new OrderRepositoryImpl("VirtoCommerce", 
-										  							 new InventoryOperationInterceptor(mockInventory.Object),
 																	 new AuditableInterceptor(),
 																	 new EntityPrimaryKeyGeneratorInterceptor());
 			};
 
 			//Business logic for core model
-			var orderWorkflowService = new ObservableWorkflowService<CustomerOrder>();
+			var orderWorkflowService = new ObservableWorkflowService<CustomerOrderStateBasedEvalContext>();
+
 			//Subscribe to order changes. Calculate totals  
 			orderWorkflowService.Subscribe(new CalculateTotalsActivity());
-			_container.RegisterInstance<IObservable<CustomerOrder>>(orderWorkflowService);
+			//Adjust inventory activity
+			orderWorkflowService.Subscribe(new ObserverFactory<CustomerOrderStateBasedEvalContext>(()=> { return new AdjustInventoryActivity(_container.Resolve<IInventoryService>()); }));
+			_container.RegisterInstance<IObservable<CustomerOrderStateBasedEvalContext>>(orderWorkflowService);
+
 			_container.RegisterInstance<IWorkflowService>(orderWorkflowService);
 		
 			_container.RegisterType<Func<IOrderRepository>>(new InjectionFactory(x => orderRepositoryFactory));
