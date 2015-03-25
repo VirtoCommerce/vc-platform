@@ -2,7 +2,7 @@
     .controller('pricelistDetailController', ['$scope', 'bladeNavigationService', 'pricelists', 'settings', 'dialogService', function ($scope, bladeNavigationService, pricelists, settings, dialogService) {
         $scope.blade.refresh = function (parentRefresh) {
             if ($scope.blade.isNew) {
-                initializeBlade({});
+                initializeBlade({ productPrices: [], assignments: [] });
             } else {
                 pricelists.get({ id: $scope.blade.currentEntityId }, function (data) {
                     initializeBlade(data);
