@@ -24,9 +24,11 @@ namespace VirtoCommerce.Web.Models.Convertors
             address.LastName = customerAddress.LastName;
             address.Line1 = customerAddress.Address1;
             address.Line2 = customerAddress.Address2;
+            address.Name = string.Format("{0} {1}", customerAddress.FirstName, customerAddress.LastName);
             address.Organization = customerAddress.Company;
             address.Phone = customerAddress.Phone;
             address.PostalCode = customerAddress.Zip;
+            address.RegionName = customerAddress.Province;
             address.Zip = customerAddress.Zip;
 
             return address;
@@ -52,7 +54,7 @@ namespace VirtoCommerce.Web.Models.Convertors
             customer.DefaultAddress = customer.Addresses.FirstOrDefault();
 
             customer.AcceptsMarketing = true; // TODO
-            customer.Email = additionalInfo.Email;
+            customer.Email = contact.Emails.FirstOrDefault();
             customer.HasAccount = additionalInfo.UserType == RegisterType.RegisteredUser ? true : false;
             customer.Id = contact.Id;
 

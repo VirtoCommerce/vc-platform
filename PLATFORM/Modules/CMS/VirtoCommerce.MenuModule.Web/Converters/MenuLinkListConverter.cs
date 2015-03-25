@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿using System.Linq;
 using webModels = VirtoCommerce.MenuModule.Web.Models;
 using coreModels = VirtoCommerce.Content.Menu.Data.Models;
 
@@ -30,11 +27,15 @@ namespace VirtoCommerce.MenuModule.Web.Converters
 			                 Id = list.Id,
 			                 Name = list.Name,
 			                 StoreId = list.StoreId,
-			                 Language = list.Language,
-			                 MenuLinks = list.MenuLinks.OrderByDescending(l=>l.Priority).Select(s => s.ToWebModel()).ToArray()
+			                 Language = list.Language
 			             };
 
-			return retVal;
+		    if (list.MenuLinks.Any())
+		    {
+		        retVal.MenuLinks = list.MenuLinks.OrderByDescending(l => l.Priority).Select(s => s.ToWebModel()).ToArray();
+		    }
+
+		    return retVal;
 		}
 	}
 }

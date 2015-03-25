@@ -13,10 +13,6 @@ using VirtoCommerce.Web.Views.Engines.Liquid.Extensions;
 
 namespace VirtoCommerce.Web.Views.Contents
 {
-
-    #region
-    #endregion
-
     public class PublishingService
     {
         #region Static Fields
