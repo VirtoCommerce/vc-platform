@@ -36,7 +36,7 @@
     };
 
     function deleteChecked() {
-        $scope.blade.currentEntity.prices.splice($scope.blade.currentEntity.prices.indexOf($scope.selectedItem), 1);
+        $scope.blade.currentEntity.productPrices[0].prices.splice($scope.blade.currentEntity.productPrices[0].prices.indexOf($scope.selectedItem), 1);
         $scope.selectItem(null);
     }
 
@@ -79,8 +79,11 @@
         {
             name: "Add", icon: 'fa fa-plus',
             executeMethod: function () {
-                var newEntity = { productId: $scope.blade.itemId, list: 0, minQuantity: 1, currency: $scope.blade.data.currency };
-                $scope.blade.currentEntity.prices.push(newEntity);
+                if ($scope.blade.currentEntity.productPrices.length == 0) {
+                    $scope.blade.currentEntity.productPrices.push({ prices: [] });
+                }
+                var newEntity = { productId: $scope.blade.itemId, list: 1, minQuantity: 1, currency: $scope.blade.data.currency };
+                $scope.blade.currentEntity.productPrices[0].prices.push(newEntity);
             },
             canExecuteMethod: function () {
                 return true;
@@ -117,7 +120,7 @@
     ];
 
     $scope.checkAll = function (selected) {
-        angular.forEach($scope.blade.currentEntity.prices, function (item) {
+        angular.forEach($scope.blade.currentEntity.productPrices[0].prices, function (item) {
             item.selected = selected;
         });
     };
