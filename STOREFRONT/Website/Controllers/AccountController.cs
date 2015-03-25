@@ -97,7 +97,7 @@ namespace VirtoCommerce.Web.Controllers
                 await
                     this.CustomerService.GetOrdersAsync(
                         this.Context.Shop.StoreId,
-                        this.Context.Customer.Email,
+                        this.Context.Customer.Id,
                         null,
                         skip.Value,
                         take.Value);
@@ -218,6 +218,8 @@ namespace VirtoCommerce.Web.Controllers
 
                 return this.View("customers/register");
             }
+
+            var customer = await this.CustomerService.CreateCustomerAsync(formModel.Email, formModel.FirstName, formModel.LastName, null);
 
             await this.SecurityService.Login(formModel.Email, formModel.Password);
 

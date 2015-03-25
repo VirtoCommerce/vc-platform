@@ -7,6 +7,7 @@ using VirtoCommerce.ApiClient.DataContracts.CustomerService;
 using VirtoCommerce.ApiClient.DataContracts.Orders;
 using VirtoCommerce.ApiClient.Extensions;
 using VirtoCommerce.Web.Models.Convertors;
+using VirtoCommerce.Web.Models.Security;
 using Address = VirtoCommerce.ApiClient.DataContracts.CustomerService.Address;
 
 #endregion
@@ -87,6 +88,29 @@ namespace VirtoCommerce.Web.Models.Services
             }
 
             await this._customerClient.UpdateContactAsync(contact);
+        }
+
+        public async Task<Customer> CreateCustomerAsync(string email, string firstName, string lastName, ICollection<CustomerAddress> addresses)
+        {
+            var contact = new Contact { FullName = string.Format("{0} {1}", firstName, lastName) };
+
+            contact.Emails = new List<string> { email };
+
+            if (addresses != null)
+            {
+                foreach (var address in addresses)
+                {
+                    contact.Addresses.Add(address.AsServiceModel());
+                }
+            }
+
+            var authInfo = await this._securityClient.GetUserInfo(email);
+
+            contact.Id = authInfo.Id;
+
+            contact = await this._customerClient.CreateContactAsync(contact);
+
+            return contact.AsWebModel(authInfo);
         }
         #endregion
 
