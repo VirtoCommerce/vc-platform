@@ -49,23 +49,25 @@ angular.module(moduleName, ['virtoCommerce.catalogModule', 'virtoCommerce.pricin
   	};
   	widgetService.registerWidget(customerOrderItemsWidget, 'customerOrderDetailWidgets');
 
-  	var operationCommentWidget = {
-  		controller: 'operationCommentWidgetController',
-  		template: 'Modules/$(VirtoCommerce.Orders)/Scripts/widgets/operation-comment-widget.tpl.html',
-  	};
-  	widgetService.registerWidget(operationCommentWidget, 'customerOrderDetailWidgets');
-
-  	var customerOrderTotalsWidget = {
-  		controller: 'customerOrderTotalsWidgetController',
-  		template: 'Modules/$(VirtoCommerce.Orders)/Scripts/widgets/customerOrder-totals-widget.tpl.html',
-  	};
-  	widgetService.registerWidget(customerOrderTotalsWidget, 'customerOrderDetailWidgets');
 
   	var customerOrderAddressWidget = {
   		controller: 'customerOrderAddressWidgetController',
   		template: 'Modules/$(VirtoCommerce.Orders)/Scripts/widgets/customerOrder-address-widget.tpl.html',
   	};
   	widgetService.registerWidget(customerOrderAddressWidget, 'customerOrderDetailWidgets');
+  	
+  	var customerOrderTotalsWidget = {
+  		controller: 'customerOrderTotalsWidgetController',
+  		template: 'Modules/$(VirtoCommerce.Orders)/Scripts/widgets/customerOrder-totals-widget.tpl.html',
+  	};
+  	widgetService.registerWidget(customerOrderTotalsWidget, 'customerOrderDetailWidgets');
+
+
+  	var operationCommentWidget = {
+  		controller: 'operationCommentWidgetController',
+  		template: 'Modules/$(VirtoCommerce.Orders)/Scripts/widgets/operation-comment-widget.tpl.html',
+  	};
+  	widgetService.registerWidget(operationCommentWidget, 'customerOrderDetailWidgets');
 
 
   	var shipmentAddressWidget = {
