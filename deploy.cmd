@@ -74,7 +74,6 @@ SET STORE_SOLUTION_DIR=%DEPLOYMENT_SOURCE%\STOREFRONT
 SET STORE_SOLUTION_FILE=%STORE_SOLUTION_DIR%\VirtoCommerce.Website.sln
 SET PUBLISHED_WEBSITES=%DEPLOYMENT_TEMP%\_PublishedWebsites
 SET PUBLISHED_MODULES=%PUBLISHED_WEBSITES%\Modules
-SET PUBLISHED_ROOT=%PUBLISHED_WEBSITES%\admin
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 :: Deployment
@@ -94,8 +93,6 @@ IF /I "%APPSETTING_VirtoCommerce_DeployApplications%" NEQ "Web Admin Only" (
 
     call :ExecuteCmd rename "%PUBLISHED_WEBSITES%\VirtoCommerce.Website" store
     IF !ERRORLEVEL! NEQ 0 goto error
-
-    SET PUBLISHED_ROOT=%PUBLISHED_WEBSITES%
 )
 
 :: Build platform
@@ -123,7 +120,7 @@ call :ExecuteCmd "%MSBUILD_PATH%" "%ADMIN_SOLUTION_FILE%" /nologo /verbosity:m /
 
 :: 3. KuduSync
 IF /I "%IN_PLACE_DEPLOYMENT%" NEQ "1" (
-	call :ExecuteCmd "%KUDU_SYNC_CMD%" -v 50 -f "%PUBLISHED_ROOT%" -t "%DEPLOYMENT_TARGET%" -n "%NEXT_MANIFEST_PATH%" -p "%PREVIOUS_MANIFEST_PATH%" -i ".git;.hg;.deployment;deploy.cmd"
+	call :ExecuteCmd "%KUDU_SYNC_CMD%" -v 50 -f "%PUBLISHED_WEBSITES%" -t "%DEPLOYMENT_TARGET%" -n "%NEXT_MANIFEST_PATH%" -p "%PREVIOUS_MANIFEST_PATH%" -i ".git;.hg;.deployment;deploy.cmd"
 	IF !ERRORLEVEL! NEQ 0 goto error
 )
 
