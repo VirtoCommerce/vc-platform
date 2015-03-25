@@ -8,10 +8,6 @@ using DotLiquid.FileSystems;
 
 namespace VirtoCommerce.Web.Views.Engines.Liquid
 {
-
-    #region
-    #endregion
-
     public class LiquidTemplateEngine : ITemplateEngine
     {
         #region Fields

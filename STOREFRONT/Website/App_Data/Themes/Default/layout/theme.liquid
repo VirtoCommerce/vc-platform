@@ -69,9 +69,9 @@
         <div class="grid--full">
           <div class="grid-item large--one-half">
             {% if template == 'index' %}
-            <h1 class="header-logo" itemscope="" itemtype="http://schema.org/Organization">
+            <h1 class="header-logo" itemscope itemtype="http://schema.org/Organization">
               {% else %}
-              <div class="h1 header-logo" itemscope="" itemtype="http://schema.org/Organization">
+              <div class="h1 header-logo" itemscope itemtype="http://schema.org/Organization">
                 {% endif %}
                 {% if settings.logo_use_image %}
                 <a href="/" itemprop="url">
@@ -117,7 +117,7 @@
 
             <a href="/cart" class="header-cart-btn cart-toggle">
               <span class="icon icon-cart"></span>
-              {{ 'layout.cart.cart' | t }} <span id="cartCount" {% if="" cart.item_count =""= 0="" %}class="hidden-count"{% endif="" %}>{{ cart.item_count }}</span>
+              {{ 'layout.cart.cart' | t }} <span id="cartCount" {% if cart.item_count == 0 %}class="hidden-count"{% endif %}>{{ cart.item_count }}</span>
             </a>
           </div>
       </div>
