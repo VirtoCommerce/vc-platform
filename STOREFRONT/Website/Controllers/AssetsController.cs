@@ -60,7 +60,7 @@ namespace VirtoCommerce.Web.Controllers
         [Route("global/assets/{*assetId}")]
         public ActionResult Global(string assetId)
         {
-            var virtualPath = String.Format("~/App_Data/Global/{0}", assetId);
+            var virtualPath = String.Format("~/App_Data/Themes/_Global/{0}", assetId);
             return this.AssetResult(virtualPath, assetId);
         }
 
