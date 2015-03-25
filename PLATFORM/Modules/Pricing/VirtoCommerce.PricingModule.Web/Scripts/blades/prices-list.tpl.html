@@ -1,9 +1,9 @@
-﻿<div class="blade-static __bottom" ng-include="'Modules/$(VirtoCommerce.Core)/Scripts/common/ok-cancel2.tpl.html'"></div>
+﻿<div class="blade-static __bottom" ng-include="'Modules/$(VirtoCommerce.Core)/Scripts/common/ok-cancel.tpl.html'" ng-if="!blade.isApiSave"></div>
 <div class="blade-content __medium-wide">
     <div class="blade-inner">
         <div class="inner-block">
             <form name="formScope" class="form">
-                <div class="table-wrapper">
+                <div class="table-wrapper" ng-init="setForm(formScope);">
                     <table class="table">
                         <thead>
                             <tr>
@@ -13,6 +13,7 @@
                                         <span class="check"></span>
                                     </label>
                                 </th>
+                                <th class="table-col">Currency</th>
                                 <th class="table-col">List price</th>
                                 <th class="table-col">Sale price</th>
                                 <th class="table-col">Min. quantity</th>
@@ -20,16 +21,17 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr class="table-item" ng-repeat="data in blade.currentEntities track by $index" ng-class="{'__selected': data.id === selectedItem.id}" context-menu data-target="ipl_menu_{{data.id}}" ng-click='selectItem(data)'>
+                            <tr class="table-item" ng-repeat="data in blade.currentEntities track by $index" ng-class="{'__selected': data.id === selectedItem.id}" context-menu data-target="pril_menu_{{$index}}" ng-click='selectItem(data)'>
                                 <td class="table-col">
                                     <label class="form-control __checkbox">
-                                        <input type="checkbox" ng-model="data.selected">
+                                        <input type="checkbox" ng-model="data._selected">
                                         <span class="check"></span>
                                     </label>
                                 </td>
+                                <td class="table-col">{{data.currency}}</td>
                                 <td class="table-col">
                                     <div class="form-input __mini">
-                                        <input money required ng-model="data.list" />
+                                        <input money required ng-model="data.list" ng-class="{'error': !isListPriceValid(data)}" />
                                     </div>
                                 </td>
                                 <td class="table-col">
@@ -39,12 +41,12 @@
                                 </td>
                                 <td class="table-col">
                                     <div class="form-input __mini __number">
-                                        <input va-number required class="form-control tight-input" ng-model="data.minQuantity" type="text" min="1" step="1">
+                                        <input va-number required class="form-control tight-input" ng-model="data.minQuantity" min="1" step="1" ng-class="{'error': !isUniqueQty(data)}">
                                     </div>
                                 </td>
                                 <td class="table-col">
                                     <span class="table-date" am-time-ago="data.modifiedDate"></span>
-                                    <ul class="menu __context" role="menu" id="ipl_menu_{{data.id}}">
+                                    <ul class="menu __context" role="menu" id="pril_menu_{{$index}}">
                                         <li class="menu-item" ng-click='delete(data)'>
                                             <i class="menu-ico fa fa-trash-o"></i> Delete
                                         </li>
