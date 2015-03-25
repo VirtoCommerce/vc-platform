@@ -82,6 +82,16 @@ namespace VirtoCommerce.ThemeModule.Web.Controllers.Api
 			return this.Ok(items.OrderBy(x => x.Updated).Select(s => s.ToWebModel()).ToArray());
 		}
 
+		[HttpDelete]
+		[ResponseType(typeof(void))]
+		[Route("themes/{themeId}")]
+		public async Task<IHttpActionResult> DeleteTheme(string storeId, string themeId)
+		{
+			await this._themeService.DeleteTheme(storeId, themeId);
+
+			return this.Ok();
+		}
+
 		[HttpGet]
 		[ResponseType(typeof(ThemeAssetFolder[]))]
 		[Route("themes/{themeId}/folders")]
@@ -94,7 +104,7 @@ namespace VirtoCommerce.ThemeModule.Web.Controllers.Api
 
 		[HttpGet]
 		[ResponseType(typeof(Theme[]))]
-        [ClientCache(Duration = 30)]
+		[ClientCache(Duration = 30)]
 		[Route("themes")]
 		public async Task<IHttpActionResult> GetThemes(string storeId)
 		{
