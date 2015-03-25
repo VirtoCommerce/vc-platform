@@ -8,6 +8,7 @@ namespace VirtoCommerce.PricingModule.Web.Model
 {
 	public class PricelistAssignment : Entity
 	{
+		public string CatalogName { get; set; }
 		public string CatalogId { get; set; }
 		public string PriceListId { get; set; }
 		public string Name { get; set; }

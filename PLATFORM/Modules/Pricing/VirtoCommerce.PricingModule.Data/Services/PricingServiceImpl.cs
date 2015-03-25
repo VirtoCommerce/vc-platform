@@ -174,6 +174,10 @@ namespace VirtoCommerce.PricingModule.Data.Services
 
 					changeTracker.Attach(targetEntity);
 					sourceEntity.Patch(targetEntity);
+					if(priceList.Assignments != null)
+					{
+						UpdatePricelistAssignments(priceList.Assignments.ToArray());
+					}
 				}
 				CommitChanges(repository);
 			}
@@ -210,7 +214,12 @@ namespace VirtoCommerce.PricingModule.Data.Services
 
 		public coreModel.PricelistAssignment GetPricelistAssignmentById(string id)
 		{
-			throw new NotImplementedException();
+			foundationModel.PricelistAssignment retVal = null;
+			using (var repository = _repositoryFactory())
+			{
+				retVal = repository.GetPricelistAssignmentById(id);
+			}
+			return retVal != null ? retVal.ToCoreModel() : null;
 		}
 
 		public IEnumerable<coreModel.PricelistAssignment> GetPriceListAssignments()
