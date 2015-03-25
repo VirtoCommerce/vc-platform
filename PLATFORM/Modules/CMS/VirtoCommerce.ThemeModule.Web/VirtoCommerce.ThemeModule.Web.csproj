@@ -161,6 +161,7 @@
     <Content Include="Default_Theme\Default\templates\page.liquid" />
     <Content Include="Default_Theme\Default\templates\product.liquid" />
     <Content Include="Default_Theme\Default\templates\search.liquid" />
+    <Content Include="Default_Theme\Default\assets\default.scss.liquid" />
     <None Include="packages.config" />
     <Content Include="Default_Theme\Default\assets\arrow-left.svg" />
     <Content Include="Default_Theme\Default\assets\arrow-right.svg" />
