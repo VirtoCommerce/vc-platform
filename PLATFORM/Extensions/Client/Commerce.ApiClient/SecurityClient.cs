@@ -77,7 +77,7 @@ namespace VirtoCommerce.ApiClient
         public Task<AuthInfo> GetUserInfo(string userName)
         {
             var requestUri = CreateRequestUri(string.Format(RelativePaths.UserInfo, userName));
-            return GetAsync<AuthInfo>(requestUri);
+            return GetAsync<AuthInfo>(requestUri, useCache: false);
         }
 
         public Task UpdateAsync(ApplicationUser user)
