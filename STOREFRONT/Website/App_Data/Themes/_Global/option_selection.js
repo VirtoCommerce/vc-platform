@@ -469,7 +469,7 @@ Shopify.Image = {
 
   preload: function (images, size) {
     for (var i=0; i < images.length; i++) {
-      var image = images[i];
+      var image = images[i].src;
 
       this.loadImage(this.getSizedImageUrl(image, size));
     }
