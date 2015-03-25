@@ -148,7 +148,8 @@
       <Private>True</Private>
       <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.2\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
     </Reference>
-    <Reference Include="VirtoCommerce.ApiClient">
+    <Reference Include="VirtoCommerce.ApiClient, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Shared\VirtoCommerce.ApiClient.dll</HintPath>
     </Reference>
     <Reference Include="WebGrease">
