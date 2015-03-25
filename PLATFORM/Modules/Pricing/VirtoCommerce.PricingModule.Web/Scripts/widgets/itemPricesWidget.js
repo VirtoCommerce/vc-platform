@@ -4,13 +4,14 @@
 ])
 .controller('itemPricesWidgetController', ['$scope', '$filter', 'bladeNavigationService', 'prices', function ($scope, $filter, bladeNavigationService, prices) {
     $scope.currentBlade = $scope.widget.blade;
-    
+
     $scope.widget.refresh = function () {
         $scope.priceRange = '';
 
         return prices.query({ id: $scope.currentBlade.itemId }, function (data) {
             // find the most popular currency and min/max prices in it.
-            var prices = _.flatten(_.pluck(data, 'prices'), true);
+            var pricelists = _.flatten(_.pluck(data, 'productPrices'), true);
+            var prices = _.flatten(_.pluck(pricelists, 'prices'), true);
             if (prices.length) {
                 prices = _.groupBy(prices, 'currency');
                 prices = _.max(_.values(prices), function (x) { return x.length; });
@@ -18,8 +19,9 @@
                 var minprice = _.min(allPrices);
                 var maxprice = _.max(allPrices);
                 var currency = prices.length ? ' ' + prices[0].currency : '';
-                $scope.priceRange = (minprice == maxprice ? minprice : minprice + '-' + maxprice);
-                $scope.priceRange = $filter('number')($scope.priceRange, 2) + currency;
+                minprice = $filter('number')(minprice, 2);
+                maxprice = $filter('number')(maxprice, 2);
+                $scope.priceRange = (minprice == maxprice ? minprice : minprice + '-' + maxprice) + currency;
             } else {
                 $scope.priceRange = 'N/A';
             }

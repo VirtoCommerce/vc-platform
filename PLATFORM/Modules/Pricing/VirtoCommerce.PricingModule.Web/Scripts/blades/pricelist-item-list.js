@@ -5,29 +5,15 @@
     function initializeBlade(data) {
         $scope.blade.currentEntities = data;
         $scope.blade.isLoading = false;
-
-        // temporal workaround
-        selectedNode = data[0];
-        $scope.selectedNodeId = selectedNode.id;
-        var newBlade = {
-            id: 'pricelistChildChild',
-            currentEntityId: selectedNode.id,
-            title: 'Prices for ' + selectedNode.name,
-            subtitle: 'Edit prices',
-            controller: 'pricelistPricesListController',
-            template: 'Modules/$(VirtoCommerce.Pricing)/Scripts/blades/pricelist-prices-list.tpl.html'
-        };
-
-        bladeNavigationService.showBlade(newBlade, $scope.blade);
     };
 
     $scope.selectNode = function (node) {
         selectedNode = node;
-        $scope.selectedNodeId = selectedNode.id;
+        $scope.selectedNodeId = selectedNode.productId;
 
         var newBlade = {
             id: 'pricelistChildChild',
-            currentEntityId: selectedNode.id,
+            data: selectedNode,
             title: 'Prices for ' + selectedNode.name,
             subtitle: 'Edit prices',
             controller: 'pricelistPricesListController',
@@ -91,8 +77,9 @@
             if (_.all($scope.blade.currentEntities, function (x) { return x.productId != product.id; })) {
                 var newPricelistItem =
 					{
+					    productName: product.name,
 					    productId: product.id,
-					    name: product.name
+					    prices: []
 					};
                 $scope.blade.currentEntities.push(newPricelistItem);
             }
@@ -114,11 +101,42 @@
         }
     ];
 
-    $scope.$watch('blade.parentBlade.currentEntity.prices', function (currentEntities) {
+    $scope.getPriceRange = function (node) {
+        var retVal;
+        var min = undefined;
+        var max = undefined;
+        if (node.minPrice) {
+            min = node.minPrice.list;
+            if (_.isNumber(node.minPrice.sale)) {
+                min = Math.min(min, node.minPrice.sale);
+            }
+        }
+        if (node.maxPrice) {
+            max = node.maxPrice.list;
+            if (_.isNumber(node.maxPrice.sale)) {
+                max = Math.max(max, node.maxPrice.sale);
+            }
+        }
+
+        if (_.isNumber(min) && _.isNumber(max) && min != max) {
+            retVal = min + ' - ' + max;
+        }
+        else if (_.isNumber(min)) {
+            retVal = min;
+        } else if (_.isNumber(max)) {
+            retVal = max;
+        } else {
+            retVal = 'NO PRICE';
+        }
+
+        return retVal;
+    }
+
+    $scope.$watch('blade.parentBlade.currentEntity.productPrices', function (currentEntities) {
         // $scope.blade.data = currentEntities;
         initializeBlade(currentEntities);
     });
 
     // actions on load
-    // $scope.$watch('blade.parentBlade.currentEntity.prices' gets fired
+    // $scope.$watch('blade.parentBlade.currentEntity.productPrices' gets fired
 }]);
