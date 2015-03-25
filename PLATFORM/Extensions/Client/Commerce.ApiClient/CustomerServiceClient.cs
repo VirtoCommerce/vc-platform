@@ -33,9 +33,16 @@ namespace VirtoCommerce.ApiClient
 
         public Task<Contact> UpdateContactAsync(Contact contact)
         {
-            return SendAsync<Contact>(
+            return SendAsync<Contact, Contact>(
                 CreateRequestUri(RelativePaths.SendContant),
-                HttpMethod.Put);
+                HttpMethod.Put, contact);
+        }
+
+        public Task<Contact> CreateContactAsync(Contact contact)
+        {
+            return SendAsync<Contact, Contact>(
+                CreateRequestUri(RelativePaths.SendContant),
+                HttpMethod.Post, contact);
         }
 
         #endregion

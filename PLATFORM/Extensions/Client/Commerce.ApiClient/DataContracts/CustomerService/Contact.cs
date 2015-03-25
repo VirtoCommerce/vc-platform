@@ -10,6 +10,7 @@ namespace VirtoCommerce.ApiClient.DataContracts.CustomerService
         #region Public Properties
 
         public ICollection<Address> Addresses { get; set; }
+        public ICollection<string> Emails { get; set; }
         public DateTime? BirthDate { get; set; }
         public string CreatedBy { get; set; }
         public DateTime CreatedDate { get; set; }

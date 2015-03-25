@@ -18,6 +18,7 @@
         public string Organization { get; set; }
         public string Phone { get; set; }
         public string PostalCode { get; set; }
+        public string RegionName { get; set; }
         public string Zip { get; set; }
 
         #endregion
