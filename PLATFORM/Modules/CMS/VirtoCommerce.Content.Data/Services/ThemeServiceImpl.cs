@@ -146,8 +146,8 @@ namespace VirtoCommerce.Content.Data.Services
 					{
 						var asset = new ThemeAsset
 						{
-							AssetName = entry.FullName,
-							Id = entry.FullName
+							AssetName = entry.FullName.Replace(themeName, ""),
+							Id = entry.FullName.Replace(themeName, "")
 						};
 
 						var arr = ReadFully(stream);
