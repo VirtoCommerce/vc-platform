@@ -88,8 +88,21 @@ namespace VirtoCommerce.CatalogModule.Data.Services
 			}
 		}
 
+
+		public IEnumerable<module.Catalog> GetCatalogsList()
+		{
+			var retVal = new List<module.Catalog>();
+			using (var repository = _catalogRepositoryFactory())
+			{
+				foreach(var catalogBase in repository.Catalogs)
+				{
+					retVal.Add(catalogBase.ToModuleModel());
+				}
+			}
+			return retVal;
+		}
+
 		#endregion
-		
 	}
 	
 }
