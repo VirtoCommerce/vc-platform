@@ -443,14 +443,12 @@ Shopify.SingleOptionSelector = function(multiSelector, index, name, values) {
   this.index = index;
   this.name = name;
   this.element = document.createElement('select');
-  //if (values != null) {
-      for (var i = 0; i < values.length; i++) {
-          var opt = document.createElement('option');
-          opt.value = values[i];
-          opt.innerHTML = values[i];
-          this.element.appendChild(opt);
-      }
-  //}
+  for (var i = 0; i < values.length; i++) {
+    var opt = document.createElement('option');
+    opt.value = values[i];
+    opt.innerHTML = values[i];
+    this.element.appendChild(opt);
+  }
   this.element.setAttribute('class', this.multiSelector.selectorClass);
   this.element.setAttribute('data-option', 'option' + (index+1));
   this.element.id = multiSelector.domIdPrefix + '-option-' + index;
@@ -471,7 +469,7 @@ Shopify.Image = {
 
   preload: function (images, size) {
     for (var i=0; i < images.length; i++) {
-      var image = images[i].src;
+      var image = images[i];
 
       this.loadImage(this.getSizedImageUrl(image, size));
     }
