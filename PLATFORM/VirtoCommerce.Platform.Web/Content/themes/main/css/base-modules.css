@@ -2475,7 +2475,7 @@ h3
 
 .form-input input.ng-invalid,
 .form-input textarea.ng-invalid,
-.ui-select-container.ng-invalid,
+.ui-select-container.ng-invalid .select2-choice,
 .form-input input.ng-invalid:focus,
 .form-input textarea.ng-invalid:focus
 {
