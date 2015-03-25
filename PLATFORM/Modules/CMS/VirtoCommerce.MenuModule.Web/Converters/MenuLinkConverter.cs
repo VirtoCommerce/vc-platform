@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using webModels = VirtoCommerce.MenuModule.Web.Models;
+﻿using webModels = VirtoCommerce.MenuModule.Web.Models;
 using coreModels = VirtoCommerce.Content.Menu.Data.Models;
 
 namespace VirtoCommerce.MenuModule.Web.Converters
@@ -11,32 +7,16 @@ namespace VirtoCommerce.MenuModule.Web.Converters
 	{
 		public static coreModels.MenuLink ToCoreModel(this webModels.MenuLink link)
 		{
-			var retVal = new coreModels.MenuLink();
+			var retVal = new coreModels.MenuLink { Id = link.Id, Title = link.Title, Url = link.Url, Type = link.Type, Priority = link.Priority, IsActive = link.IsActive, MenuLinkListId = link.MenuLinkListId };
 
-			retVal.Id = link.Id;
-			retVal.Title = link.Title;
-			retVal.Url = link.Url;
-			retVal.Type = link.Type;
-			retVal.Priority = link.Priority;
-			retVal.IsActive = link.IsActive;
-			retVal.MenuLinkListId = link.MenuLinkListId;
-
-			return retVal;
+		    return retVal;
 		}
 
 		public static webModels.MenuLink ToWebModel(this coreModels.MenuLink link)
 		{
-			var retVal = new webModels.MenuLink();
+			var retVal = new webModels.MenuLink { Id = link.Id, Title = link.Title, Url = link.Url, Type = link.Type, Priority = link.Priority, IsActive = link.IsActive, MenuLinkListId = link.MenuLinkListId };
 
-			retVal.Id = link.Id;
-			retVal.Title = link.Title;
-			retVal.Url = link.Url;
-			retVal.Type = link.Type;
-			retVal.Priority = link.Priority;
-			retVal.IsActive = link.IsActive;
-			retVal.MenuLinkListId = link.MenuLinkListId;
-
-			return retVal;
+		    return retVal;
 		}
 	}
 }
