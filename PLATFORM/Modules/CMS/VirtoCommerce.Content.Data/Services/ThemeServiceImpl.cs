@@ -154,7 +154,7 @@ namespace VirtoCommerce.Content.Data.Services
 						asset.ByteContent = arr;
 						asset.ContentType = ContentTypeUtility.GetContentType(entry.FullName, arr);
 
-						await SaveThemeAsset(storeId, themeName, asset);
+						await SaveThemeAsset(storeId, themeName.Trim('/'), asset);
 					}
 				}
 			}
