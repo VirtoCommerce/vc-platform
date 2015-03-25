@@ -19,13 +19,13 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr class="table-item" ng-repeat="data in blade.currentEntity.prices track by data.id" ng-class="{'__selected': data.id === selectedItem.id}" context-menu data-target="ipl_menu_{{data.id}}" ng-click='selectItem(data)'>
+                        <tr class="table-item" ng-repeat="data in blade.currentEntity.productPrices[0].prices track by $index" ng-class="{'__selected': data.id === selectedItem.id}" context-menu data-target="ipl_menu_{{data.id}}" ng-click='selectItem(data)'>
                             <!--<td class="table-col">
-                                <label class="form-control __checkbox">
-                                    <input type="checkbox" ng-model="data.selected">
-                                    <span class="check"></span>
-                                </label>
-                            </td>-->
+            <label class="form-control __checkbox">
+                <input type="checkbox" ng-model="data.selected">
+                <span class="check"></span>
+            </label>
+        </td>-->
                             <td class="table-col">
                                 {{data.currency}}
                             </td>
@@ -40,8 +40,8 @@
                                 </div>
                             </td>
                             <td class="table-col">
-                                <div data-step="1" class="form-input __mini">
-                                    <input type="text" ng-model="data.minQuantity" required />
+                                <div class="form-input __mini __number">
+                                    <input va-number required class="form-control tight-input" ng-model="data.minQuantity" min="1" step="1">
                                 </div>
                             </td>
                             <td class="table-col">

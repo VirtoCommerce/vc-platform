@@ -54,7 +54,7 @@
             name: "Add", icon: 'fa fa-plus',
             executeMethod: function () {
                 // , currency: $scope.blade.data.currency
-                var newEntity = { productId: $scope.blade.itemId, list: 0, minQuantity: 1 };
+                var newEntity = { productId: $scope.blade.data.productId, list: 1, minQuantity: 1 };
                 $scope.blade.currentEntities.push(newEntity);
                 $scope.selectItem(newEntity);
             },
@@ -98,12 +98,7 @@
             item.selected = $scope.blade.selectedAll;
         });
     };
-
-    $scope.$watch('blade.parentBlade.currentEntities', function (currentEntities) {
-        // $scope.blade.data = currentEntities;
-        initializeBlade(currentEntities);
-    });
-
+    
     // actions on load
-    // $scope.$watch('blade.parentBlade.currentEntity.prices' gets fired
+    initializeBlade($scope.blade.data.prices);
 }]);
