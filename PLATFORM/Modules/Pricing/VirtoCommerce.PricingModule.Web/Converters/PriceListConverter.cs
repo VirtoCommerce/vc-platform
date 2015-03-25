@@ -9,7 +9,7 @@ namespace VirtoCommerce.PricingModule.Web.Converters
 {
 	public static class PriceListConverter
 	{
-		public static webModel.Pricelist ToWebModel(this coreModel.Pricelist priceList, coreCatalogModel.CatalogProduct[] products = null)
+		public static webModel.Pricelist ToWebModel(this coreModel.Pricelist priceList, coreCatalogModel.CatalogProduct[] products = null, coreCatalogModel.Catalog[] catalogs = null)
 		{
 			var retVal = new webModel.Pricelist();
 			retVal.InjectFrom(priceList);
@@ -35,7 +35,7 @@ namespace VirtoCommerce.PricingModule.Web.Converters
 			}
 			if(priceList.Assignments != null)
 			{
-				retVal.Assignments = priceList.Assignments.Select(x => x.ToWebModel()).ToList();
+				retVal.Assignments = priceList.Assignments.Select(x => x.ToWebModel(catalogs)).ToList();
 			}
 			return retVal;
 		}
