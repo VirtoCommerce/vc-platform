@@ -1,0 +1,53 @@
+﻿<div class="blade-content">
+    <div class="blade-inner">
+        <div class="inner-block">
+            <form class="form" name="detailForm">
+                <div class="form-group" ng-init="setForm(detailForm)">
+                    <label class="form-label">Country</label>
+                    <div class="form-input">
+                        <ui-select ng-model="blade.currentEntity.countryCode" required>
+                            <ui-select-match placeholder="Select ...">{{$select.selected.name}}</ui-select-match>
+                            <ui-select-choices repeat="x.code as x in countries | filter: $select.search ">
+                                <span ng-bind-html="x.name | highlight: $select.search"></span>
+                            </ui-select-choices>
+                        </ui-select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Region</label>
+                    <div class="form-input">
+                        <input ng-model="blade.currentEntity.stateProvince" placeholder="Enter region" required />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">City</label>
+                    <div class="form-input">
+                        <input ng-model="blade.currentEntity.city" required placeholder="Enter city" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Address</label>
+                    <div class="form-input">
+                        <input ng-model="blade.currentEntity.line1" placeholder="Enter address line 1" required />
+                    </div>
+                    <div class="form-input">
+                        <input ng-model="blade.currentEntity.line2" placeholder="Enter address line 2" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Zip code</label>
+                    <div class="form-input">
+                        <input ng-model="blade.currentEntity.postalCode" required placeholder="Enter postal code" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Phone</label>
+                    <div class="form-input">
+                        <input ng-model="blade.currentEntity.daytimePhoneNumber" required placeholder="Enter phone number" type="tel" />
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div class="blade-static __bottom" ng-include="'Modules/$(VirtoCommerce.Core)/Scripts/common/ok-cancel2.tpl.html'"></div>
