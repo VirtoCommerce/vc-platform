@@ -2510,6 +2510,11 @@ fieldset + fieldset
 	padding: 15px 0;
 }
 
+.form-group.__head
+{
+    border-bottom: 1px solid #dee9f0;
+}
+
 .form-group + .form-group
 {
 	margin: 15px 0 0;
