@@ -80,17 +80,31 @@
 					},
 
 					{
-						name: "Delete", icon: 'fa fa-trash-o',
+						name: "Delete list", icon: 'fa fa-trash-o',
 						executeMethod: function () {
-							deleteList() || blade.selectedItemIds.length > 0;
+							blade.deleteList();
 						},
 						canExecuteMethod: function () {
 							return true;
+						}
+					},
+
+					{
+						name: "Delete links", icon: 'fa fa-trash-o',
+						executeMethod: function () {
+							blade.deleteLinks();
+						},
+						canExecuteMethod: function () {
+							return blade.selectedItemIds.length > 0;
 						}
 					}];
 				});
 			}
 		});
+	}
+
+	$scope.selected = function (id) {
+		return _.contains(blade.selectedItemIds, id);
 	}
 
 	blade.refresh();
@@ -132,48 +146,54 @@
 		return listNameIsRight && linksIsRight && blade.currentEntity.menuLinks.length > 0;
 	}
 
-	function deleteList() {
-		if (blade.selectedItemIds.length == 0) {
-			var dialog = {
-				id: "confirmDelete",
-				title: "Delete confirmation",
-				message: "Are you sure you want to delete this link list?",
-				callback: function (remove) {
-					if (remove) {
-						blade.isLoading = true;
+	blade.deleteList = function() {
+		var dialog = {
+			id: "confirmDelete",
+			title: "Delete confirmation",
+			message: "Are you sure you want to delete this link list?",
+			callback: function (remove) {
+				if (remove) {
+					blade.isLoading = true;
 
-						menus.delete({ storeId: blade.choosenStoreId, listId: blade.choosenListId }, function () {
-							$scope.bladeClose();
-							blade.parentBlade.refresh();
-						});
+					menus.delete({ storeId: blade.choosenStoreId, listId: blade.choosenListId }, function () {
+						$scope.bladeClose();
+						blade.parentBlade.refresh();
+					});
+				}
+			}
+		}
+		dialogService.showConfirmationDialog(dialog);
+	}
+
+	blade.deleteLinks = function () {
+		var dialog = {
+			id: "confirmDelete",
+			title: "Delete confirmation",
+			message: "Are you sure you want to delete this links?",
+			callback: function (remove) {
+				if (remove) {
+					for (var i = 0; i < blade.selectedItemIds.length; i++) {
+						blade.currentEntity.menuLinks = _.reject(
+							blade.currentEntity.menuLinks,
+							function (link) {
+								return link.id == blade.selectedItemIds[i];
+							});
 					}
 				}
 			}
-			dialogService.showConfirmationDialog(dialog);
 		}
-		else {
-			var dialog = {
-				id: "confirmDelete",
-				title: "Delete confirmation",
-				message: "Are you sure you want to delete this links?",
-				callback: function (remove) {
-					if (remove) {
-						for (var i = 0; i < blade.selectedItemIds.length; i++) {
-							blade.currentEntity.menuLinks = _.reject(
-								blade.currentEntity.menuLinks,
-								function (link) {
-									return link.id == blade.selectedItemIds[i];
-								});
-						}
-					}
-				}
-			}
-			dialogService.showConfirmationDialog(dialog);
-		}
+		dialogService.showConfirmationDialog(dialog);
 	}
 
 	blade.selectItem = function (id) {
-		blade.selectedItemIds.push(id);
+		if (_.contains(blade.selectedItemIds, id)) {
+			blade.selectedItemIds = _.reject(blade.selectedItemIds, function (linkId) {
+				return linkId === id;
+			});
+		}
+		else {
+			blade.selectedItemIds.push(id);
+		}
 	}
 
 	blade.recalculatePriority = function () {
@@ -208,7 +228,10 @@
 				return 'ru';
 
 			case 'ja-JP':
-				return 'ja';
+				return 'jp';
+
+			case 'de-DE':
+				return 'de';
 		}
 	}
 

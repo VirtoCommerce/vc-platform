@@ -198,6 +198,7 @@
     <Compile Include="Models\FormModels\BaseCustomerFormModel.cs" />
     <Compile Include="Models\FormModels\CheckoutFirstStepFormModel.cs" />
     <Compile Include="Models\FormModels\CheckoutSecondStepFormModel.cs" />
+    <Compile Include="Models\FormModels\CustomerAddressFormModel.cs" />
     <Compile Include="Models\FormModels\LoginFormModel.cs" />
     <Compile Include="Models\FormModels\NewAddressFormModel.cs" />
     <Compile Include="Models\FormModels\ForgotPasswordFormModel.cs" />

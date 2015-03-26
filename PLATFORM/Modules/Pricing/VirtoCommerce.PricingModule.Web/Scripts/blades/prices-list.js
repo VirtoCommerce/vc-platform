@@ -8,12 +8,15 @@
             if (parentRefresh) {
                 $scope.blade.isLoading = true;
                 $scope.blade.parentBlade.refresh().then(function (results) {
-                    var data = _.find(results, function (x) { return x.id === $scope.blade.data.id; });
-                    initializeBlade(data);
+                    $scope.blade.data = _.find(results, function (x) { return x.id === $scope.blade.data.id; });
+                    if ($scope.blade.data.productPrices.length == 0) {
+                        $scope.blade.data.productPrices.push({ prices: [], productId: $scope.blade.itemId });
+                    }
+                    initializeBlade($scope.blade.data.productPrices[0].prices);
                 });
             } else {
                 if ($scope.blade.data.productPrices.length == 0) {
-                    $scope.blade.data.productPrices.push({ prices: [] });
+                    $scope.blade.data.productPrices.push({ prices: [], productId: $scope.blade.itemId });
                 }
                 initializeBlade($scope.blade.data.productPrices[0].prices);
             }
@@ -74,7 +77,8 @@
     $scope.saveChanges = function () {
         if ($scope.blade.isApiSave) {
             $scope.blade.isLoading = true;
-            angular.copy($scope.blade.currentEntities, $scope.blade.data.prices);
+
+            angular.copy($scope.blade.currentEntities, $scope.blade.data.productPrices[0].prices);
             prices.update({ id: $scope.blade.itemId }, $scope.blade.data, function (data) {
                 $scope.blade.refresh(true);
             });
@@ -103,7 +107,7 @@
         {
             name: "Add", icon: 'fa fa-plus',
             executeMethod: function () {
-                var newEntity = { productId: $scope.blade.data.productId, list: 0, minQuantity: 1, currency: $scope.blade.currency };
+                var newEntity = { productId: $scope.blade.itemId, list: 0, minQuantity: 1, currency: $scope.blade.currency };
                 $scope.blade.currentEntities.push(newEntity);
                 $scope.selectItem(newEntity);
             },
