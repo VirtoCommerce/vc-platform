@@ -2642,6 +2642,13 @@ fieldset + fieldset
             resize: none;
         }
 
+        .form-input textarea.__large
+        {
+            height: 200px;
+            max-height: 200px;
+            min-height: 200px;
+        }
+
         .form-input.__langs input,
         .form-input.__langs textarea,
         .form-input.__langs select
