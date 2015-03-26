@@ -2321,6 +2321,11 @@ h3
 	margin: 0 -20px 15px;
 }
 
+.form .table-wrapper
+{
+    margin: 0 -36px 15px -20px;
+}
+
 .table
 {
 	border-collapse: collapse;

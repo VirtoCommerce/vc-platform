@@ -3029,6 +3029,232 @@
                             </div>
                         </div>
                     </div>
+                    <div class="blade">
+                        <header class="blade-head">
+                            <div class="blade-status"></div>
+                            <div class="blade-nav">
+                                <ul class="menu __inline">
+                                    <li class="menu-item __minimize">
+                                        <button>
+                                            Minimize
+                                        </button>
+                                    </li>
+                                    <li class="menu-item __maximize">
+                                        <button>
+                                            Maximize
+                                        </button>
+                                    </li>
+                                    <li class="menu-item __close __disabled">
+                                        <button disabled="disabled">
+                                            Close
+                                        </button>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="blade-t __secondary">
+                                <i class="blade-t_ico fa fa-folder"></i>
+                                <p class="blade-t_head">Edit Apple/Timber</p>
+                                <p class="blade-t_subhead">Theme asset list</p>
+                            </div>
+                            <div class="blade-toolbar">
+                                <ul class="menu __inline">
+                                    <li class="menu-item">
+                                        <button class="menu-btn">
+                                            <i class="menu-ico fa fa-refresh"></i>
+                                            Refresh
+                                        </button>
+                                    </li>
+                                    <li class="menu-item">
+                                        <button class="menu-btn">
+                                            <i class="menu-ico fa fa-plus"></i>
+                                            Add
+                                        </button>
+                                    </li>
+                                </ul>
+                            </div>
+                        </header>
+                        <div class="blade-container">
+                            <div class="blade-content">
+                                <div class="blade-inner">
+                                    <div class="inner-block">
+                                        <form class="form">
+                                            <fieldset>
+                                                <legend>Group 1</legend>
+                                                <div class="form-group">
+                                                    <label class="form-label">
+                                                        Property <a href=""><i class="form-ico fa fa-pencil"></i></a>
+                                                    </label>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="form-label">
+                                                        Property 2 <a href=""><i class="form-ico fa fa-pencil"></i></a>
+                                                    </label>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="form-label">
+                                                        Property 3 <a href=""><i class="form-ico fa fa-pencil"></i></a>
+                                                    </label>
+                                                </div>
+                                            </fieldset>
+                                            <fieldset>
+                                                <legend>Group 2</legend>
+                                                <div class="form-group">
+                                                    <label class="form-label">
+                                                        Property
+                                                    </label>
+                                                    <div class="form-input">
+                                                        <input type="text">
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="form-label">
+                                                        Property 2
+                                                    </label>
+                                                    <div class="form-input">
+                                                        <input type="text">
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="form-label">
+                                                        Property 3
+                                                    </label>
+                                                    <div class="form-input">
+                                                        <input type="text">
+                                                    </div>
+                                                </div>
+                                            </fieldset>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="blade">
+                        <header class="blade-head">
+                            <div class="blade-status"></div>
+                            <div class="blade-nav">
+                                <ul class="menu __inline">
+                                    <li class="menu-item __minimize">
+                                        <button>
+                                            Minimize
+                                        </button>
+                                    </li>
+                                    <li class="menu-item __maximize">
+                                        <button>
+                                            Maximize
+                                        </button>
+                                    </li>
+                                    <li class="menu-item __close __disabled">
+                                        <button disabled="disabled">
+                                            Close
+                                        </button>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="blade-t __secondary">
+                                <i class="blade-t_ico fa fa-folder"></i>
+                                <p class="blade-t_head">Edit Apple/Timber</p>
+                                <p class="blade-t_subhead">Theme asset list</p>
+                            </div>
+                            <div class="blade-toolbar">
+                                <ul class="menu __inline">
+                                    <li class="menu-item">
+                                        <button class="menu-btn">
+                                            <i class="menu-ico fa fa-refresh"></i>
+                                            Refresh
+                                        </button>
+                                    </li>
+                                    <li class="menu-item">
+                                        <button class="menu-btn">
+                                            <i class="menu-ico fa fa-plus"></i>
+                                            Add
+                                        </button>
+                                    </li>
+                                </ul>
+                            </div>
+                        </header>
+                        <div class="blade-container">
+                            <div class="blade-content">
+                                <div class="blade-inner">
+                                    <div class="inner-block">
+                                        <form class="form">
+                                            <fieldset>
+                                                <legend>New value</legend>
+                                                <div class="form-group">
+                                                    <label class="form-label">New value</label>
+                                                    <div class="form-input">
+                                                        <input type="text" placeholder="Please enter value">
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <button type="submit" class="btn" disabled="disabled">Add</button>
+                                                </div>
+                                            </fieldset>
+                                            <fieldset>
+                                                <legend>Current values</legend>
+                                                <div class="table-wrapper">
+                                                    <table class="table">
+                                                        <thead>
+                                                            <tr>
+                                                                <th class="table-col">
+                                                                    <label class="form-control __checkbox">
+                                                                        <input type="checkbox" ng-change="checkAll(selectedAll)" ng-model="selectedAll" class="ng-pristine ng-untouched ng-valid">
+                                                                        <span class="check"></span>
+                                                                    </label>
+                                                                </th>
+                                                                <th class="table-col">Value</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr class="table-item">
+                                                                <td class="table-col">
+                                                                    <label class="form-control __checkbox">
+                                                                        <input type="checkbox">
+                                                                        <span class="check"></span>
+                                                                    </label>
+                                                                </td>
+                                                                <td class="table-col">
+                                                                    <div class="form-input">
+                                                                        <input type="text" value="Value 1">
+                                                                    </div>
+                                                                </td>
+                                                            </tr>
+                                                            <tr class="table-item">
+                                                                <td class="table-col">
+                                                                    <label class="form-control __checkbox">
+                                                                        <input type="checkbox">
+                                                                        <span class="check"></span>
+                                                                    </label>
+                                                                </td>
+                                                                <td class="table-col">
+                                                                    <div class="form-input">
+                                                                        <input type="text" value="Value 2">
+                                                                    </div>
+                                                                </td>
+                                                            </tr>
+                                                            <tr class="table-item">
+                                                                <td class="table-col">
+                                                                    <label class="form-control __checkbox">
+                                                                        <input type="checkbox">
+                                                                        <span class="check"></span>
+                                                                    </label>
+                                                                </td>
+                                                                <td class="table-col">
+                                                                    <div class="form-input">
+                                                                        <input type="text" value="Value 3">
+                                                                    </div>
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </fieldset>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </article>
         </div>
