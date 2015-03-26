@@ -32,5 +32,7 @@
 		closeCallback();
 	};
 
+	$scope.bladeHeadIco = 'fa-file-text';
+
 	initializeBlade();
 }]);
