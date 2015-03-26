@@ -167,6 +167,7 @@ namespace VirtoCommerce.OrderModule.Data.Repositories
 			if ((responseGroup & CustomerOrderResponseGroup.WithShipments) == CustomerOrderResponseGroup.WithShipments)
 			{
 				query = query.Include(x => x.Shipments.Select(y => y.Discounts))
+							 .Include(x => x.Shipments.Select(y => y.Items))
 							 .Include(x => x.Shipments.Select(y => y.Addresses));
 			}
 			return query.FirstOrDefault();

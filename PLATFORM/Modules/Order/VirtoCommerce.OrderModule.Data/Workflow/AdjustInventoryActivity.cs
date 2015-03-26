@@ -41,9 +41,8 @@ namespace VirtoCommerce.OrderModule.Data.Workflow
 
 			var inventoryInfos = _inventoryService.GetProductsInventoryInfos(originalPositions.Select(x => x.Key).Concat(modifiedPositions.Select(x => x.Key)).Distinct().ToArray());
 		
-			originalPositions.ObserveCollection(x => { AdjustInventory(inventoryInfos, changedInventoryInfos, EntryState.Added, x); }, x => { AdjustInventory(inventoryInfos, changedInventoryInfos,  EntryState.Deleted, x); });
 			var comparer = AnonymousComparer.Create((KeyValuePair<string, int> x) => x.Key);
-			modifiedPositions.Patch(originalPositions, comparer, (x, y) => { AdjustInventory(inventoryInfos, changedInventoryInfos, EntryState.Modified, x, y); });
+			modifiedPositions.CompareTo(originalPositions, comparer, (state, source, target) => { AdjustInventory(inventoryInfos, changedInventoryInfos, state, source, target); });
 
 			if (changedInventoryInfos.Any())
 			{
@@ -70,7 +69,7 @@ namespace VirtoCommerce.OrderModule.Data.Workflow
 				}
 				else
 				{
-					delta = pairSource.Value - pairTarget.Value.Value;
+					delta = pairTarget.Value.Value - pairSource.Value;
 				}
 				if (delta != 0)
 				{

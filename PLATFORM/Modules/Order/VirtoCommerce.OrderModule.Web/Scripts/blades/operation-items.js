@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.orderModule')
-.controller('customerOrderItemsController', ['$scope', 'bladeNavigationService', 'dialogService', 'calculateTotalsService', 'items', 'prices', function ($scope, bladeNavigationService, dialogService, calculateTotalsService, items, prices) {
+.controller('operationItemsController', ['$scope', 'bladeNavigationService', 'dialogService', 'calculateTotalsService', 'items', 'prices', function ($scope, bladeNavigationService, dialogService, calculateTotalsService, items, prices) {
 	//pagination settigs
 	$scope.pageSettings = {};
 	$scope.totals = {};
