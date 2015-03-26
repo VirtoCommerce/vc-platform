@@ -447,8 +447,6 @@ namespace VirtoCommerce.Web.Models.Services
 
         public SubmitForm[] GetForms()
         {
-            var path = VirtualPathUtility.ToAbsolute("~/account/");
-
             var allForms = new[]
                            {
                                new SubmitForm
@@ -478,9 +476,16 @@ namespace VirtoCommerce.Web.Models.Services
                                new SubmitForm
                                {
                                    Id = "customer_address",
+                                   Properties = new Dictionary<string, object> { { "formId", "address_form_new" } },
                                    ActionLink = VirtualPathUtility.ToAbsolute("~/account/newaddress"),
                                    PasswordNeeded = true
                                },
+                               //new SubmitForm
+                               //{
+                               //    Id = "customer_address",
+                               //    ActionLink = VirtualPathUtility.ToAbsolute("~/account/editaddress"),
+                               //    PasswordNeeded = true
+                               //},
                                new SubmitForm
                                {
                                    Id = "edit_checkout_step_1",
