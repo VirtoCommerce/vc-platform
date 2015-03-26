@@ -9,13 +9,13 @@ namespace VirtoCommerce.PagesModule.Web.Utilities
 {
 	public static class PagesUtility
 	{
-		public static IEnumerable<ShortPageInfo> GetShortPageInfoFromString(string[] pageNameAndLanguages)
+		public static IEnumerable<Page> GetShortPageInfoFromString(string[] pageNameAndLanguages)
 		{
-			var retVal = new List<ShortPageInfo>();
+			var retVal = new List<Page>();
 
 			foreach (var pageNameAndLanguage in pageNameAndLanguages)
 			{
-				var addedItem = new ShortPageInfo();
+				var addedItem = new Page();
 				addedItem.Name = pageNameAndLanguage.Split('^')[1];
 				addedItem.Language = pageNameAndLanguage.Split('^')[0];
 				retVal.Add(addedItem);

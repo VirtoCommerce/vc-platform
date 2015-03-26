@@ -75,18 +75,6 @@
             }
         }
 
-        public string Id
-        {
-            get
-            {
-                return this.GetValue("id");
-            }
-            set
-            {
-                this.SetValue("id", value);
-            }
-        }
-
         public string LastName
         {
             get

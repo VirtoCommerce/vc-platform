@@ -2321,6 +2321,11 @@ h3
 	margin: 0 -20px 15px;
 }
 
+.form .table-wrapper
+{
+    margin: 0 -36px 15px -20px;
+}
+
 .table
 {
 	border-collapse: collapse;
@@ -2510,6 +2515,11 @@ fieldset + fieldset
 	padding: 15px 0;
 }
 
+.form-group.__head
+{
+    border-bottom: 1px solid #dee9f0;
+}
+
 .form-group + .form-group
 {
 	margin: 15px 0 0;
@@ -2640,6 +2650,13 @@ fieldset + fieldset
             min-width: 100%;
             padding-top: 8px;
             resize: none;
+        }
+
+        .form-input textarea.__large
+        {
+            height: 200px;
+            max-height: 200px;
+            min-height: 200px;
         }
 
         .form-input.__langs input,
@@ -3198,6 +3215,15 @@ fieldset + fieldset
 			box-shadow: 0 0 0 2px #a1c0d4 inset;
 }
 
+.tile.__info:hover,
+.tile.__selected.__info
+{
+    cursor: default;
+
+    -webkit-box-shadow: none;
+            box-shadow: none;
+}
+
 .tile:after,
 .tile:before
 {
@@ -3418,12 +3444,6 @@ fieldset + fieldset
 	max-height: 100%;
 	max-width: 100%;
 	vertical-align: middle;
-}
-
-.tile.__gallery
-{
-	-webkit-box-shadow: none;
-			box-shadow: none;
 }
 
 .tile .tile-gallery

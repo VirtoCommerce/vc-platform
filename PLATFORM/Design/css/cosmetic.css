@@ -74,6 +74,11 @@ a:hover,
 	cursor: pointer;
 }
 
+.__blue
+{
+	color: #43b0e6;
+}
+
 /* Transitions */
 .nav-bar .menu-link,
 .dropdown .dropdown-close,
