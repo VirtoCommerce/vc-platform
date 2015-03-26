@@ -50,7 +50,7 @@
 		#endregion
 
 		[HttpGet]
-		[ResponseType(typeof(IEnumerable<ShortPageInfo>))]
+		[ResponseType(typeof(IEnumerable<Page>))]
 		[Route("pages")]
 		public IHttpActionResult GetPages(string storeId, [FromUri]GetPagesCriteria criteria)
 		{
