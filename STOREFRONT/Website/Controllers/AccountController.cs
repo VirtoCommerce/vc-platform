@@ -184,7 +184,7 @@ namespace VirtoCommerce.Web.Controllers
         public async Task<ActionResult> Order(string id)
         {
             this.Context.Order =
-                await this.Service.GetCustomerOrderAsync(this.Context.Shop.StoreId, this.Context.Customer.Email, id);
+                await this.CustomerService.GetOrderAsync(this.Context.Shop.StoreId, this.Context.Customer.Email, id);
 
             return this.View("customers/order");
         }
