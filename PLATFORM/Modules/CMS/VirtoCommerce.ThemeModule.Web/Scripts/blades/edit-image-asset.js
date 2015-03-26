@@ -4,8 +4,7 @@
 ]).controller('editImageAssetController', ['$scope', 'dialogService', 'themes', 'FileUploader', function ($scope, dialogService, themes, FileUploader) {
 	var blade = $scope.blade;
 
-
-	blade.initializeBlade = function() {
+	blade.initializeBlade = function () {
 		if (!blade.newAsset) {
 			themes.getAsset({ storeId: blade.choosenStoreId, themeId: blade.choosenThemeId, assetId: blade.choosenAssetId }, function (data) {
 				blade.isLoading = false;

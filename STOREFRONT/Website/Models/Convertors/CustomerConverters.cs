@@ -38,9 +38,12 @@ namespace VirtoCommerce.Web.Models.Convertors
         {
             var customer = new Customer();
 
+            int index = 1;
             foreach (var address in contact.Addresses)
             {
+                address.Id = index.ToString();
                 customer.Addresses.Add(address.AsWebModel());
+                index++;
             }
 
             if (!string.IsNullOrEmpty(contact.FullName))
@@ -70,7 +73,7 @@ namespace VirtoCommerce.Web.Models.Convertors
             customerAddress.City = address.City;
             customerAddress.Company = address.Organization;
             customerAddress.Country = address.CountryName;
-            customerAddress.CountryCode = address.CountryCode;
+            customerAddress.CountryCode = "RUS";
             customerAddress.FirstName = address.FirstName;
             customerAddress.Id = address.Id;
             customerAddress.LastName = address.LastName;
@@ -91,6 +94,26 @@ namespace VirtoCommerce.Web.Models.Convertors
             customerAddress.City = formModel.City;
             customerAddress.Company = formModel.Company;
             customerAddress.Country = formModel.Country;
+            customerAddress.CountryCode = "RUS";
+            customerAddress.FirstName = formModel.FirstName;
+            customerAddress.LastName = formModel.LastName;
+            customerAddress.Phone = formModel.Phone;
+            customerAddress.Province = formModel.Province;
+            customerAddress.Zip = formModel.Zip;
+
+            return customerAddress;
+        }
+
+        public static CustomerAddress AsWebModel(this CustomerAddressFormModel formModel)
+        {
+            var customerAddress = new CustomerAddress();
+
+            customerAddress.Address1 = formModel.Address1;
+            customerAddress.Address2 = formModel.Address2;
+            customerAddress.City = formModel.City;
+            customerAddress.Company = formModel.Company;
+            customerAddress.Country = formModel.Country;
+            customerAddress.CountryCode = "RUS";
             customerAddress.FirstName = formModel.FirstName;
             customerAddress.Id = formModel.Id;
             customerAddress.LastName = formModel.LastName;

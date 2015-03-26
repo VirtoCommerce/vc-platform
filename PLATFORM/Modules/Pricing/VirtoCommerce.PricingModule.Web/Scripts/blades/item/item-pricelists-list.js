@@ -18,12 +18,14 @@
 
         var newBlade = {
             id: "itemPrices",
+            isApiSave: true,
             itemId: $scope.blade.itemId,
             data: data,
+            currency: data.currency,
             title: data.name,
             subtitle: 'Manage prices',
-            controller: 'itemPricesListController',
-            template: 'Modules/$(VirtoCommerce.Pricing)/Scripts/blades/item/item-prices-list.tpl.html'
+            controller: 'pricesListController',
+            template: 'Modules/$(VirtoCommerce.Pricing)/Scripts/blades/prices-list.tpl.html'
         };
         bladeNavigationService.showBlade(newBlade, $scope.blade);
     }

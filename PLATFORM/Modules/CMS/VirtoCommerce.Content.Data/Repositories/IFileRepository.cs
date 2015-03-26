@@ -24,6 +24,8 @@ namespace VirtoCommerce.Content.Data.Repositories
 
 		Task<bool> DeleteContentItem(string path);
 
+		Task<bool> DeleteTheme(string path);
+
 		#endregion
 	}
 }

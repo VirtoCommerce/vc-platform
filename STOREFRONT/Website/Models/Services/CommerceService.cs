@@ -152,71 +152,6 @@ namespace VirtoCommerce.Web.Models.Services
             return cart.AsWebModel();
         }
 
-        public async Task<Customer> GetCustomer(IOwinContext context, string storeId)
-        {
-            Customer customer = null;
-
-            if (context.Authentication.User != null && context.Authentication.User.Identity.IsAuthenticated)
-            {
-                var userInfo = await this._securityClient.GetUserInfo(context.Authentication.User.Identity.Name);
-
-                if (userInfo != null)
-                {
-                    var splittedName = userInfo.FullName.Split(' ');
-
-                    customer = new Customer
-                               {
-                                   Email = userInfo.Email,
-                                   FirstName = splittedName[0],
-                                   Id = userInfo.Id,
-                                   LastName = splittedName[1],
-                                   Name = context.Authentication.User.Identity.Name,
-                                   HasAccount = true
-                               };
-
-                    if (userInfo.Addresses != null && userInfo.Addresses.Length > 0)
-                    {
-                        customer.Addresses = new List<CustomerAddress>();
-
-                        foreach (var address in userInfo.Addresses)
-                        {
-                            customer.Addresses.Add(address.AsWebModel());
-                        }
-
-                        customer.DefaultAddress = customer.Addresses.LastOrDefault();
-                    }
-                }
-            }
-
-            return customer;
-        }
-
-        public async Task<CustomerOrder> GetCustomerOrderAsync(string storeId, string customerId, string orderNumber)
-        {
-            CustomerOrder orderModel = null;
-
-            var order = await this._orderClient.GetCustomerOrderAsync(customerId, orderNumber);
-
-            if (order != null)
-            {
-                orderModel = order.AsWebModel();
-            }
-
-            return orderModel;
-        }
-
-        public async Task<OrderSearchResult> GetCustomerOrdersAsync(
-            string storeId,
-            string customerId,
-            string query,
-            int skip,
-            int take)
-        {
-            var response = await this._orderClient.GetCustomerOrdersAsync(storeId, customerId, query, skip, take);
-
-            return response;
-        }
-
         public async Task<Checkout> GetCheckoutAsync()
         {
             Checkout checkout = null;
@@ -447,8 +382,6 @@ namespace VirtoCommerce.Web.Models.Services
 
         public SubmitForm[] GetForms()
         {
-            var path = VirtualPathUtility.ToAbsolute("~/account/");
-
             var allForms = new[]
                            {
                                new SubmitForm
@@ -478,9 +411,16 @@ namespace VirtoCommerce.Web.Models.Services
                                new SubmitForm
                                {
                                    Id = "customer_address",
+                                   Properties = new Dictionary<string, object> { { "formId", "address_form_new" } },
                                    ActionLink = VirtualPathUtility.ToAbsolute("~/account/newaddress"),
                                    PasswordNeeded = true
                                },
+                               //new SubmitForm
+                               //{
+                               //    Id = "customer_address",
+                               //    ActionLink = VirtualPathUtility.ToAbsolute("~/account/editaddress"),
+                               //    PasswordNeeded = true
+                               //},
                                new SubmitForm
                                {
                                    Id = "edit_checkout_step_1",
