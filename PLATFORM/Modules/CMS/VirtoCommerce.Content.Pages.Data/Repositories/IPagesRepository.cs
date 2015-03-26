@@ -11,7 +11,7 @@ namespace VirtoCommerce.Content.Pages.Data.Repositories
 	{
 		Page GetPage(string path);
 
-		IEnumerable<ShortPageInfo> GetPages(string path);
+		IEnumerable<Page> GetPages(string path);
 
 		void SavePage(string path, Page page);
 
