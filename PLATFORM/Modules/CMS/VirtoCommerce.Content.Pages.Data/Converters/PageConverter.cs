@@ -11,23 +11,12 @@ namespace VirtoCommerce.Content.Pages.Data.Converters
 {
 	public static class PageConverter
 	{
-		public static ShortPageInfo ToShortModel(this Page page)
+		public static Page ToShortModel(this RepositoryContent repositoryContent, DateTime modifiedDate)
 		{
-			var retVal = new ShortPageInfo();
-
-			retVal.Name = Path.GetFileNameWithoutExtension(page.Path);
-			retVal.LastModified = page.ModifiedDate ?? page.CreatedDate;
-			retVal.Language = GetLanguageFromFullPath(page.Path);
-
-			return retVal;
-		}
-
-		public static ShortPageInfo ToShortModel(this RepositoryContent repositoryContent, DateTime modifiedDate)
-		{
-			var retVal = new ShortPageInfo();
+			var retVal = new Page();
 
 			retVal.Name = Path.GetFileNameWithoutExtension(repositoryContent.Name);
-			retVal.LastModified = modifiedDate;
+			retVal.ModifiedDate = modifiedDate;
 			retVal.Language = GetLanguageFromFullPath(repositoryContent.Path);
 
 			return retVal;
