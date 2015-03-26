@@ -41,7 +41,7 @@
                 if (remove) {
                     $scope.blade.isLoading = true;
 
-                    stores.remove({ id: $scope.blade.currentEntityId }, function () {
+                    stores.remove({ ids: $scope.blade.currentEntityId }, function () {
                         $scope.bladeClose();
                         $scope.blade.parentBlade.refresh();
                     }, function (error) {

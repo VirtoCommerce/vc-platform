@@ -37,9 +37,9 @@
 						</tr>
 					</thead>
 					<tbody ui-sortable="sortableOptions" ng-model="blade.currentEntity.menuLinks">
-						<tr class="table-item" ng-repeat="data in blade.currentEntity.menuLinks" ng-class="{'__selected': _.lastIndexOf(blade.selectedItemIds, data.id) >= 0}" context-menu data-target="ipl_menu_{{data.id}}" ng-click='blade.selectItem(data.id)'>
+						<tr class="table-item" ng-repeat="data in blade.currentEntity.menuLinks" ng-class="{'__selected': selected(data.id)}" context-menu data-target="ipl_menu_{{data.id}}" ng-click='blade.selectItem(data.id)'>
 							<td class="table-col">
-								<label class="form-control __checkbox" >
+								<label class="form-control __checkbox">
 									<input type="checkbox" ng-model="data.isActive">
 									<span class="check"></span>
 								</label>

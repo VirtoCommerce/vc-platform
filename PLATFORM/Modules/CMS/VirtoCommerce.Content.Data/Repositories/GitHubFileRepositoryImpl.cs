@@ -243,5 +243,11 @@
 		}
 
 		#endregion
+
+
+		public Task<bool> DeleteTheme(string path)
+		{
+			throw new NotImplementedException();
+		}
 	}
 }
