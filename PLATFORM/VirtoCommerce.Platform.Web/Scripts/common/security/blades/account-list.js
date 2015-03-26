@@ -43,7 +43,7 @@ function ($scope, accounts, bladeNavigationService, dialogService) {
         $scope.selectedNodeId = selectedNode.id;
 
         var newBlade = {
-            id: 'accountDetail',
+            id: 'listItemChild',
             data: selectedNode,
             title: selectedNode.name,
             subtitle: $scope.blade.subtitle,
