@@ -172,6 +172,8 @@
     <Content Include="Scripts\common\blades\address-detail.js" />
     <Content Include="Scripts\common\blades\address-detail.tpl.html" />
     <Content Include="Scripts\common\common.js" />
+    <Content Include="Scripts\Fulfillment\blades\store-advanced.js" />
+    <Content Include="Scripts\Fulfillment\blades\store-advanced.tpl.html" />
     <Content Include="Scripts\virtoCommerce-core.js" />
     <Content Include="Scripts\common\ok-cancel2.tpl.html" />
     <Content Include="Scripts\common\resources\countries.js" />
