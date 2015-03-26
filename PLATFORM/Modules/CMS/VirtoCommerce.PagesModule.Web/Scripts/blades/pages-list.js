@@ -101,7 +101,10 @@
 				return 'ru';
 
 			case 'ja-JP':
-				return 'ja';
+				return 'jp';
+
+			case 'de-DE':
+				return 'de';
 		}
 	}
 
