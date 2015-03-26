@@ -2,21 +2,22 @@
 using System.IO;
 using System.Linq;
 using System.Text;
+using VirtoCommerce.Web.Models.Storage;
 
 namespace VirtoCommerce.Web.Models.Services
 {
-    public class FileThemeService
+    public class FileStorageService
     {
-        private readonly string _themesFolder;
+        private readonly string _baseFolder;
 
-        public FileThemeService(string themesFolder)
+        public FileStorageService(string baseFolder)
         {
-            this._themesFolder = themesFolder;
+            this._baseFolder = baseFolder;
         }
 
         public DateTime GetLatestUpdate()
         {
-            var directory = new DirectoryInfo(this.ThemeDirectory);
+            var directory = new DirectoryInfo(this.BaseDirectory);
 
             if (!directory.Exists)
             {
@@ -33,7 +34,7 @@ namespace VirtoCommerce.Web.Models.Services
             return latest.LastWriteTimeUtc;
         }
 
-        public bool ApplyUpdates(ApiClient.DataContracts.Themes.ThemeAsset[] items)
+        public bool ApplyUpdates(FileAsset[] items)
         {
             var reloadCache = false;
 
@@ -46,7 +47,7 @@ namespace VirtoCommerce.Web.Models.Services
             return reloadCache;
         }
 
-        public bool ApplyUpdate(ApiClient.DataContracts.Themes.ThemeAsset item)
+        public bool ApplyUpdate(FileAsset item)
         {
             var fullPath = this.GetFullPath(item.Id);
 
@@ -78,14 +79,14 @@ namespace VirtoCommerce.Web.Models.Services
 
         private string GetFullPath(string path)
         {
-            return Path.Combine(this.ThemeDirectory, path).Replace("/", "\\");
+            return Path.Combine(this.BaseDirectory, path).Replace("/", "\\");
         }              
 
-        protected virtual string ThemeDirectory
+        protected virtual string BaseDirectory
         {
             get
             {
-                var fileSystemMainPath = String.Format("{0}\\{1}", _themesFolder, SiteContext.Current.Theme);
+                var fileSystemMainPath = String.Format("{0}\\{1}", _baseFolder, SiteContext.Current.Theme);
                 return fileSystemMainPath;
             }
         }

@@ -1,6 +1,7 @@
 ﻿#region
 using System.Linq;
 using Omu.ValueInjecter;
+using VirtoCommerce.Web.Models.Storage;
 using Data = VirtoCommerce.ApiClient.DataContracts.Themes;
 
 #endregion
@@ -17,12 +18,7 @@ namespace VirtoCommerce.Web.Models.Convertors
         #region Public Methods and Operators
         public static Theme AsWebModel(this Data.Theme theme)
         {
-            var themeModel = new Theme
-                       {
-                           Id = theme.Name,
-                           Name = theme.Name,
-                           Role = "main"
-                       };
+            var themeModel = new Theme { Id = theme.Name, Name = theme.Name, Role = "main" };
 
             return themeModel;
         }
@@ -32,6 +28,18 @@ namespace VirtoCommerce.Web.Models.Convertors
             var ret = new ThemeAsset();
             ret.InjectFrom(asset);
             return ret;
+        }
+
+        public static FileAsset AsFileModel(this Data.ThemeAsset asset)
+        {
+            var ret = new FileAsset();
+            ret.InjectFrom(asset);
+            return ret;
+        }
+
+        public static FileAsset[] AsFileModel(this Data.ThemeAsset[] assets)
+        {
+            return assets == null ? null : assets.Select(t => t.AsFileModel()).ToArray();
         }
         #endregion
     }
