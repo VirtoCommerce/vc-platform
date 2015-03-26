@@ -29,6 +29,7 @@ namespace VirtoCommerce.Web.Controllers
             if (this.Context.Checkout != null)
             {
                 this.Context.Checkout.Email = this.Context.Customer != null ? this.Context.Customer.Email : null;
+                this.Context.Checkout.ShippingAddress = this.Context.Customer.DefaultAddress;
                 this.Context.Checkout.Currency = this.Context.Shop.Currency;
             }
 
@@ -57,14 +58,7 @@ namespace VirtoCommerce.Web.Controllers
 
                 if (customer == null)
                 {
-                    var errors = await this.SecurityService.RegisterUser(
-                        this.Context.Checkout.Email,
-                        this.Context.Checkout.ShippingAddress.FirstName,
-                        this.Context.Checkout.ShippingAddress.LastName,
-                        null,
-                        this.Context.Shop.StoreId);
-
-                    customer = await this.CustomerService.GetCustomerAsync(formModel.Email, this.Context.Shop.StoreId);
+                    return RedirectToAction("Login", "Account");
                 }
 
                 this.Context.Customer = customer;
@@ -77,7 +71,7 @@ namespace VirtoCommerce.Web.Controllers
                     City = formModel.City,
                     Company = formModel.Company.Length > 0 ? formModel.Company : null,
                     Country = formModel.Country,
-                    CountryCode = null,
+                    CountryCode = "RUS",
                     FirstName = formModel.FirstName,
                     LastName = formModel.LastName,
                     Phone = formModel.Phone.Length > 0 ? formModel.Phone : null,
@@ -130,7 +124,7 @@ namespace VirtoCommerce.Web.Controllers
                     City = formModel.City,
                     Company = formModel.Company.Length > 0 ? formModel.Company : null,
                     Country = formModel.Country,
-                    CountryCode = null,
+                    CountryCode = "RUS",
                     FirstName = formModel.FirstName,
                     LastName = formModel.LastName,
                     Phone = formModel.Phone.Length > 0 ? formModel.Phone : null,
@@ -141,9 +135,10 @@ namespace VirtoCommerce.Web.Controllers
                 this.Context.Checkout.ShippingMethod = this.Context.Checkout.ShippingMethods.FirstOrDefault(sm => sm.Handle == formModel.ShippingMethodId);
                 this.Context.Checkout.PaymentMethod = this.Context.Checkout.PaymentMethods.FirstOrDefault(pm => pm.Handle == formModel.PaymentMethodId);
 
+                this.Context.Customer = await this.CustomerService.GetCustomerAsync(this.Context.Checkout.Email, this.Context.Shop.StoreId);
                 this.Context.Customer.Addresses.Add(this.Context.Checkout.ShippingAddress);
 
-                //await this.CustomerService.UpdateCustomerAsync(this.Context.Customer);
+                await this.CustomerService.UpdateCustomerAsync(this.Context.Customer);
 
                 this.Context.Checkout.CustomerId = this.Context.Customer.Id;
             }
