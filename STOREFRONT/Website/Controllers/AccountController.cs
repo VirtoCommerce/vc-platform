@@ -38,7 +38,7 @@ namespace VirtoCommerce.Web.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> EditAddress(NewAddressFormModel formModel)
+        public async Task<ActionResult> EditAddress(CustomerAddressFormModel formModel)
         {
             var form = this.Service.GetForm(formModel.form_type);
 
