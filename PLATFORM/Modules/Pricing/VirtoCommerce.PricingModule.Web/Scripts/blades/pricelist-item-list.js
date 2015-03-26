@@ -13,6 +13,7 @@
 
         var newBlade = {
             id: 'pricelistChildChild',
+            itemId: selectedNode.productId,
             data: selectedNode,
             currency: $scope.blade.currency,
             title: 'Prices for ' + selectedNode.name,
