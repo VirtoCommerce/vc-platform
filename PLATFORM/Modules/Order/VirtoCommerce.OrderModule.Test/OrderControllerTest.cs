@@ -154,14 +154,16 @@ namespace VirtoCommerce.OrderModule.Test
 		[TestMethod]
 		public void FulfilOrderWithMultipleShipment()
 		{
-			var result = _controller.GetById("order1") as OkNegotiatedContentResult<webModel.CustomerOrder>;
+			var result = _controller.GetById("d2a855c7-dc88-44b3-ab4e-4dba3fc89057") as OkNegotiatedContentResult<webModel.CustomerOrder>;
 			var testOrder = result.Content;
 
 			var newShipment = new webModel.Shipment
 			{
+				Id = Guid.NewGuid().ToString(),
 				Currency = testOrder.Currency,
 				DeliveryAddress = testOrder.Addresses.FirstOrDefault(),
-				IsApproved = true
+				IsApproved = true,
+				Items = testOrder.Items
 			};
 			testOrder.IsApproved = true;
 

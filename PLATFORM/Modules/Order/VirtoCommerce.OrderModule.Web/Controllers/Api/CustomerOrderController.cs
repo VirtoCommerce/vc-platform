@@ -97,10 +97,13 @@ namespace VirtoCommerce.OrderModule.Web.Controllers.Api
 			{
 				retVal = new coreModel.Shipment
 				{
-					Id = Guid.NewGuid().ToString(),
 					Currency = order.Currency
 				};
 				retVal.Number = _operationNumberGenerator.GenerateNumber(retVal);
+
+				//distribute not shipped items
+				var shippedItems = order.Shipments.SelectMany(x => x.Items).ToArray();
+				retVal.Items = order.Items.Where(x => !shippedItems.Any(y => y.Id == x.Id)).ToList();
 				return Ok(retVal.ToWebModel());
 			}
 		
