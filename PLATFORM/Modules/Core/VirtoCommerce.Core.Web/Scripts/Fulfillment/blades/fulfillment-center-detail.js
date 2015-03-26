@@ -33,13 +33,13 @@
 
     function saveChanges() {
         $scope.blade.isLoading = true;
-                
+
         if ($scope.blade.currentEntityId) {
             fulfillments.update($scope.blade.currentEntity, function () {
                 $scope.blade.refresh(true);
             });
         } else {
-            fulfillments.save({}, $scope.blade.currentEntity, function (data) {
+            fulfillments.update($scope.blade.currentEntity, function (data) {
                 $scope.blade.title = data.displayName;
                 $scope.blade.currentEntityId = data.id;
                 initializeBlade(data);
@@ -57,7 +57,7 @@
                 saveChanges();
             },
             canExecuteMethod: function () {
-                return isDirty() && formScope && formScope.$valid;
+                return isDirty() && isValid();
             }
         },
         {
@@ -68,8 +68,38 @@
             canExecuteMethod: function () {
                 return isDirty();
             }
+        },
+        {
+            name: "Delete", icon: 'fa fa-trash-o',
+            executeMethod: function () {
+                deleteEntry();
+            },
+            canExecuteMethod: function () {
+                return !isDirty();
+            }
         }
     ];
+
+    function deleteEntry() {
+        var dialog = {
+            id: "confirmDelete",
+            title: "Delete confirmation",
+            message: "Are you sure you want to delete this Fullfillment center?",
+            callback: function (remove) {
+                if (remove) {
+                    $scope.blade.isLoading = true;
+
+                    fulfillments.remove({ ids: $scope.blade.currentEntityId }, function () {
+                        $scope.bladeClose();
+                        $scope.blade.parentBlade.refresh();
+                    }, function (error) {
+                        bladeNavigationService.setError('Error ' + error.status, $scope.blade);
+                    });
+                }
+            }
+        }
+        dialogService.showConfirmationDialog(dialog);
+    }
 
     $scope.blade.onClose = function (closeCallback) {
         if (isDirty()) {
@@ -89,6 +119,17 @@
         else {
             closeCallback();
         }
+    };
+
+    function isValid() {
+        return formScope && formScope.$valid &&
+                $scope.blade.currentEntity.daytimePhoneNumber &&
+                $scope.blade.currentEntity.line1 &&
+                $scope.blade.currentEntity.city &&
+                $scope.blade.currentEntity.stateProvince &&
+                $scope.blade.currentEntity.countryCode &&
+                $scope.blade.currentEntity.countryName &&
+                $scope.blade.currentEntity.postalCode;
     };
 
     // actions on load
