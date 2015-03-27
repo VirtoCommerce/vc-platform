@@ -630,7 +630,14 @@ namespace VirtoCommerce.Web.Models.Services
             {
                 name = id.Split('/')[1];
             }
-            return new Theme { Id = id, Name = name, Role = "main" };
+
+            Theme currentTheme = null;
+            if (SiteContext.Current.Themes != null)
+            {
+                currentTheme = SiteContext.Current.Themes.SingleOrDefault(x => x.Id.Equals(themeName, StringComparison.OrdinalIgnoreCase));
+            }
+
+            return currentTheme ?? new Theme { Id = id, Name = name, Role = "main", Path = id };
         }
 
         public async Task<Theme[]> GetThemesAsync()

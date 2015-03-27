@@ -144,7 +144,6 @@
     <Compile Include="DataContracts\SeoKeyword.cs" />
     <Compile Include="DataContracts\SeoUrlKeywordTypes.cs" />
     <Compile Include="DataContracts\Stores\Store.cs" />
-    <Compile Include="DataContracts\Stores\StoreSetting.cs" />
     <Compile Include="DataContracts\Stores\StoreState.cs" />
     <Compile Include="DataContracts\TagQuery.cs" />
     <Compile Include="Extensions\CartClientExtension.cs" />
@@ -191,4 +190,3 @@
   </Target>
   -->
 </Project>
-

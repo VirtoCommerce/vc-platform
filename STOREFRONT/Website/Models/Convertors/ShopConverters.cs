@@ -43,6 +43,12 @@ namespace VirtoCommerce.Web.Models.Convertors
                 shop.Keywords = store.Seo.Select(k => k.AsWebModel());
             }
 
+            if (store.Settings != null && store.Settings.Any())
+            {
+                var fieldsCollection = new MetafieldsCollection("global", store.Settings);
+                shop.Metafields = new MetaFieldNamespacesCollection(new[] { fieldsCollection });
+            }
+
             return shop;
         }
 

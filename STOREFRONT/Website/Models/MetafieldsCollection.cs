@@ -6,10 +6,6 @@ using System.Linq;
 
 namespace VirtoCommerce.Web.Models
 {
-
-    #region
-    #endregion
-
     public class MetafieldsCollection : Dictionary<string, object>
     {
         #region Constructors and Destructors
@@ -46,5 +42,18 @@ namespace VirtoCommerce.Web.Models
             return result;
         }
         #endregion
+
+        #region Public Indexers
+        public MetafieldsCollection this[string name]
+        {
+            get
+            {
+                var result = this.Root.SingleOrDefault(x => x.Namespace == name);
+                return result;
+            }
+        }
+
+        #endregion
+
     }
 }

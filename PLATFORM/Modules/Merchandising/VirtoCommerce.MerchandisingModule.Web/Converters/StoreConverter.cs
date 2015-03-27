@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using Omu.ValueInjecter;
 using VirtoCommerce.Foundation.AppConfig.Model;
+using VirtoCommerce.MerchandisingModule.Web.Model;
 using VirtoCommerce.MerchandisingModule.Web.Model.Stores;
 using foundation = VirtoCommerce.Foundation.Stores.Model;
 
@@ -36,7 +37,16 @@ namespace VirtoCommerce.MerchandisingModule.Web.Converters
 
             if (store.Settings != null)
             {
-                retVal.Settings = store.Settings.Select(x => x.ToWebModel()).ToArray();
+                retVal.Settings = new PropertyDictionary();
+
+                foreach (var propValueGroup in store.Settings.GroupBy(x => x.Name))
+                {
+                    var val = propValueGroup.Select(g => g.RawValue());
+                    if (val.Any())
+                    {
+                        retVal.Settings.Add(propValueGroup.Key, val.Count() > 1 ? val : val.First());
+                    }
+                }
             }
 
             if (keywords != null)
@@ -46,15 +56,6 @@ namespace VirtoCommerce.MerchandisingModule.Web.Converters
 
             return retVal;
         }
-
-        public static StoreSetting ToWebModel(this foundation.StoreSetting setting)
-        {
-            var retVal = new StoreSetting();
-            retVal.InjectFrom(setting);
-            retVal.Value = setting.ToString();
-            return retVal;
-        }
-
         #endregion
     }
 }

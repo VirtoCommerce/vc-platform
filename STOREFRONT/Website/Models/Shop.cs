@@ -47,6 +47,7 @@ namespace VirtoCommerce.Web.Models
         public string Catalog { get; set; }
 
         public string[] Currencies { get; set; }
+        public MetaFieldNamespacesCollection Metafields { get; set; }
 
         #endregion
     }

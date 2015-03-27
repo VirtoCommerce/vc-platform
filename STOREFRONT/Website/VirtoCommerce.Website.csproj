@@ -148,10 +148,6 @@
       <Private>True</Private>
       <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.2\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
     </Reference>
-    <Reference Include="VirtoCommerce.ApiClient, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Shared\VirtoCommerce.ApiClient.dll</HintPath>
-    </Reference>
     <Reference Include="WebGrease">
       <Private>True</Private>
       <HintPath>..\packages\WebGrease.1.5.2\lib\WebGrease.dll</HintPath>
@@ -284,26 +280,26 @@
   <ItemGroup>
     <Content Include="App_Data\Themes\_Global\social\shopify-social.svg" />
     <Content Include="App_Data\Themes\_Global\social\social-icons.css" />
-    <Content Include="App_Data\Themes\Default\assets\arrow-left.svg" />
-    <Content Include="App_Data\Themes\Default\assets\arrow-right.svg" />
-    <Content Include="App_Data\Themes\Default\assets\arrow.svg" />
-    <Content Include="App_Data\Themes\Default\assets\cart.svg" />
-    <Content Include="App_Data\Themes\Default\assets\collection-view-grid.svg" />
-    <Content Include="App_Data\Themes\Default\assets\collection-view-list.svg" />
-    <Content Include="App_Data\Themes\Default\assets\favicon.png" />
-    <Content Include="App_Data\Themes\Default\assets\hamburger.svg" />
-    <Content Include="App_Data\Themes\Default\assets\handlebars.min.js" />
-    <Content Include="App_Data\Themes\Default\assets\icons.svg" />
-    <Content Include="App_Data\Themes\Default\assets\jquery.flexslider.min.js" />
-    <Content Include="App_Data\Themes\Default\assets\jquery.zoom.min.js" />
-    <Content Include="App_Data\Themes\Default\assets\logo.png" />
-    <Content Include="App_Data\Themes\Default\assets\modernizr.min.js" />
-    <Content Include="App_Data\Themes\Default\assets\remove.svg" />
-    <Content Include="App_Data\Themes\Default\assets\respond-proxy.html" />
-    <Content Include="App_Data\Themes\Default\assets\respond.min.js" />
-    <Content Include="App_Data\Themes\Default\assets\slide_1.jpg" />
-    <Content Include="App_Data\Themes\Default\assets\slide_2.jpg" />
-    <Content Include="App_Data\Themes\Default\config\settings.html" />
+    <Content Include="App_Data\Themes\_Default\assets\arrow-left.svg" />
+    <Content Include="App_Data\Themes\_Default\assets\arrow-right.svg" />
+    <Content Include="App_Data\Themes\_Default\assets\arrow.svg" />
+    <Content Include="App_Data\Themes\_Default\assets\cart.svg" />
+    <Content Include="App_Data\Themes\_Default\assets\collection-view-grid.svg" />
+    <Content Include="App_Data\Themes\_Default\assets\collection-view-list.svg" />
+    <Content Include="App_Data\Themes\_Default\assets\favicon.png" />
+    <Content Include="App_Data\Themes\_Default\assets\hamburger.svg" />
+    <Content Include="App_Data\Themes\_Default\assets\handlebars.min.js" />
+    <Content Include="App_Data\Themes\_Default\assets\icons.svg" />
+    <Content Include="App_Data\Themes\_Default\assets\jquery.flexslider.min.js" />
+    <Content Include="App_Data\Themes\_Default\assets\jquery.zoom.min.js" />
+    <Content Include="App_Data\Themes\_Default\assets\logo.png" />
+    <Content Include="App_Data\Themes\_Default\assets\modernizr.min.js" />
+    <Content Include="App_Data\Themes\_Default\assets\remove.svg" />
+    <Content Include="App_Data\Themes\_Default\assets\respond-proxy.html" />
+    <Content Include="App_Data\Themes\_Default\assets\respond.min.js" />
+    <Content Include="App_Data\Themes\_Default\assets\slide_1.jpg" />
+    <Content Include="App_Data\Themes\_Default\assets\slide_2.jpg" />
+    <Content Include="App_Data\Themes\_Default\config\settings.html" />
     <Content Include="Content\responsive\css\main.css" />
     <Content Include="Content\responsive\css\reset.css" />
     <Content Include="Content\responsive\images\imagedoc-darknoise.png" />
@@ -333,75 +329,79 @@
     <Content Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\ApiClient\VirtoCommerce.ApiClient.csproj">
+      <Project>{84b945b7-85e4-4057-b0df-1f8a03b8d53c}</Project>
+      <Name>VirtoCommerce.ApiClient</Name>
+    </ProjectReference>
     <ProjectReference Include="..\WebViews\VirtoCommerce.WebViews.csproj">
       <Project>{6695201C-2168-47FC-A4C0-FDD5AB5CB135}</Project>
       <Name>VirtoCommerce.WebViews</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="App_Data\Themes\Default\assets\ajaxify.js.liquid" />
-    <Content Include="App_Data\Themes\Default\assets\ajaxify.scss.liquid" />
-    <Content Include="App_Data\Themes\Default\assets\checkout.css.liquid" />
-    <Content Include="App_Data\Themes\Default\assets\icons.eot" />
-    <Content Include="App_Data\Themes\Default\assets\icons.ttf" />
-    <Content Include="App_Data\Themes\Default\assets\icons.woff" />
-    <Content Include="App_Data\Themes\Default\assets\shop.js.liquid" />
-    <Content Include="App_Data\Themes\Default\assets\default.scss.liquid" />
-    <Content Include="App_Data\Themes\Default\config\settings_data.json" />
-    <Content Include="App_Data\Themes\Default\layout\theme.liquid" />
-    <Content Include="App_Data\Themes\Default\locales\de.json" />
-    <Content Include="App_Data\Themes\Default\locales\en.default.json" />
-    <Content Include="App_Data\Themes\Default\locales\es.json" />
-    <Content Include="App_Data\Themes\Default\locales\fr.json" />
-    <Content Include="App_Data\Themes\Default\locales\pt-BR.json" />
-    <Content Include="App_Data\Themes\Default\locales\pt-PT.json" />
-    <Content Include="App_Data\Themes\Default\snippets\advanced-tag-loop.liquid" />
-    <Content Include="App_Data\Themes\Default\snippets\ajax-cart-template.liquid" />
-    <Content Include="App_Data\Themes\Default\snippets\blog-sidebar.liquid" />
-    <Content Include="App_Data\Themes\Default\snippets\breadcrumb.liquid" />
-    <Content Include="App_Data\Themes\Default\snippets\collection-grid-item.liquid" />
-    <Content Include="App_Data\Themes\Default\snippets\collection-list-item.liquid" />
-    <Content Include="App_Data\Themes\Default\snippets\collection-sidebar.liquid" />
-    <Content Include="App_Data\Themes\Default\snippets\collection-sorting.liquid" />
-    <Content Include="App_Data\Themes\Default\snippets\collection-views.liquid" />
-    <Content Include="App_Data\Themes\Default\snippets\comment.liquid" />
-    <Content Include="App_Data\Themes\Default\snippets\featured-collection.liquid" />
-    <Content Include="App_Data\Themes\Default\snippets\featured-row.liquid" />
-    <Content Include="App_Data\Themes\Default\snippets\footer.liquid" />
-    <Content Include="App_Data\Themes\Default\snippets\form-errors-custom.liquid" />
-    <Content Include="App_Data\Themes\Default\snippets\google-fonts.liquid" />
-    <Content Include="App_Data\Themes\Default\snippets\newsletter-form.liquid" />
-    <Content Include="App_Data\Themes\Default\snippets\oldIE-js.liquid" />
-    <Content Include="App_Data\Themes\Default\snippets\open-graph-tags.liquid" />
-    <Content Include="App_Data\Themes\Default\snippets\pagination-custom.liquid" />
-    <Content Include="App_Data\Themes\Default\snippets\price-sale.liquid" />
-    <Content Include="App_Data\Themes\Default\snippets\price.liquid" />
-    <Content Include="App_Data\Themes\Default\snippets\product-grid-item.liquid" />
-    <Content Include="App_Data\Themes\Default\snippets\product-list-item.liquid" />
-    <Content Include="App_Data\Themes\Default\snippets\related-products.liquid" />
-    <Content Include="App_Data\Themes\Default\snippets\respond.liquid" />
-    <Content Include="App_Data\Themes\Default\snippets\search-bar.liquid" />
-    <Content Include="App_Data\Themes\Default\snippets\search-result-grid.liquid" />
-    <Content Include="App_Data\Themes\Default\snippets\search-result.liquid" />
-    <Content Include="App_Data\Themes\Default\snippets\site-nav.liquid" />
-    <Content Include="App_Data\Themes\Default\snippets\slider.liquid" />
-    <Content Include="App_Data\Themes\Default\snippets\social-sharing.liquid" />
-    <Content Include="App_Data\Themes\Default\snippets\tags-article.liquid" />
-    <Content Include="App_Data\Themes\Default\snippets\toggle-filters.liquid" />
-    <Content Include="App_Data\Themes\Default\snippets\twitter-card.liquid" />
-    <Content Include="App_Data\Themes\Default\templates\404.liquid" />
-    <Content Include="App_Data\Themes\Default\templates\article.liquid" />
-    <Content Include="App_Data\Themes\Default\templates\blog.liquid" />
-    <Content Include="App_Data\Themes\Default\templates\cart.liquid" />
-    <Content Include="App_Data\Themes\Default\templates\collection.liquid" />
-    <Content Include="App_Data\Themes\Default\templates\collection.list.liquid" />
-    <Content Include="App_Data\Themes\Default\templates\gift_card.liquid" />
-    <Content Include="App_Data\Themes\Default\templates\index.liquid" />
-    <Content Include="App_Data\Themes\Default\templates\list-collections.liquid" />
-    <Content Include="App_Data\Themes\Default\templates\page.contact.liquid" />
-    <Content Include="App_Data\Themes\Default\templates\page.liquid" />
-    <Content Include="App_Data\Themes\Default\templates\product.liquid" />
-    <Content Include="App_Data\Themes\Default\templates\search.liquid" />
+    <Content Include="App_Data\Themes\_Default\assets\ajaxify.js.liquid" />
+    <Content Include="App_Data\Themes\_Default\assets\ajaxify.scss.liquid" />
+    <Content Include="App_Data\Themes\_Default\assets\checkout.css.liquid" />
+    <Content Include="App_Data\Themes\_Default\assets\icons.eot" />
+    <Content Include="App_Data\Themes\_Default\assets\icons.ttf" />
+    <Content Include="App_Data\Themes\_Default\assets\icons.woff" />
+    <Content Include="App_Data\Themes\_Default\assets\shop.js.liquid" />
+    <Content Include="App_Data\Themes\_Default\assets\default.scss.liquid" />
+    <Content Include="App_Data\Themes\_Default\config\settings_data.json" />
+    <Content Include="App_Data\Themes\_Default\layout\theme.liquid" />
+    <Content Include="App_Data\Themes\_Default\locales\de.json" />
+    <Content Include="App_Data\Themes\_Default\locales\en.default.json" />
+    <Content Include="App_Data\Themes\_Default\locales\es.json" />
+    <Content Include="App_Data\Themes\_Default\locales\fr.json" />
+    <Content Include="App_Data\Themes\_Default\locales\pt-BR.json" />
+    <Content Include="App_Data\Themes\_Default\locales\pt-PT.json" />
+    <Content Include="App_Data\Themes\_Default\snippets\advanced-tag-loop.liquid" />
+    <Content Include="App_Data\Themes\_Default\snippets\ajax-cart-template.liquid" />
+    <Content Include="App_Data\Themes\_Default\snippets\blog-sidebar.liquid" />
+    <Content Include="App_Data\Themes\_Default\snippets\breadcrumb.liquid" />
+    <Content Include="App_Data\Themes\_Default\snippets\collection-grid-item.liquid" />
+    <Content Include="App_Data\Themes\_Default\snippets\collection-list-item.liquid" />
+    <Content Include="App_Data\Themes\_Default\snippets\collection-sidebar.liquid" />
+    <Content Include="App_Data\Themes\_Default\snippets\collection-sorting.liquid" />
+    <Content Include="App_Data\Themes\_Default\snippets\collection-views.liquid" />
+    <Content Include="App_Data\Themes\_Default\snippets\comment.liquid" />
+    <Content Include="App_Data\Themes\_Default\snippets\featured-collection.liquid" />
+    <Content Include="App_Data\Themes\_Default\snippets\featured-row.liquid" />
+    <Content Include="App_Data\Themes\_Default\snippets\footer.liquid" />
+    <Content Include="App_Data\Themes\_Default\snippets\form-errors-custom.liquid" />
+    <Content Include="App_Data\Themes\_Default\snippets\google-fonts.liquid" />
+    <Content Include="App_Data\Themes\_Default\snippets\newsletter-form.liquid" />
+    <Content Include="App_Data\Themes\_Default\snippets\oldIE-js.liquid" />
+    <Content Include="App_Data\Themes\_Default\snippets\open-graph-tags.liquid" />
+    <Content Include="App_Data\Themes\_Default\snippets\pagination-custom.liquid" />
+    <Content Include="App_Data\Themes\_Default\snippets\price-sale.liquid" />
+    <Content Include="App_Data\Themes\_Default\snippets\price.liquid" />
+    <Content Include="App_Data\Themes\_Default\snippets\product-grid-item.liquid" />
+    <Content Include="App_Data\Themes\_Default\snippets\product-list-item.liquid" />
+    <Content Include="App_Data\Themes\_Default\snippets\related-products.liquid" />
+    <Content Include="App_Data\Themes\_Default\snippets\respond.liquid" />
+    <Content Include="App_Data\Themes\_Default\snippets\search-bar.liquid" />
+    <Content Include="App_Data\Themes\_Default\snippets\search-result-grid.liquid" />
+    <Content Include="App_Data\Themes\_Default\snippets\search-result.liquid" />
+    <Content Include="App_Data\Themes\_Default\snippets\site-nav.liquid" />
+    <Content Include="App_Data\Themes\_Default\snippets\slider.liquid" />
+    <Content Include="App_Data\Themes\_Default\snippets\social-sharing.liquid" />
+    <Content Include="App_Data\Themes\_Default\snippets\tags-article.liquid" />
+    <Content Include="App_Data\Themes\_Default\snippets\toggle-filters.liquid" />
+    <Content Include="App_Data\Themes\_Default\snippets\twitter-card.liquid" />
+    <Content Include="App_Data\Themes\_Default\templates\404.liquid" />
+    <Content Include="App_Data\Themes\_Default\templates\article.liquid" />
+    <Content Include="App_Data\Themes\_Default\templates\blog.liquid" />
+    <Content Include="App_Data\Themes\_Default\templates\cart.liquid" />
+    <Content Include="App_Data\Themes\_Default\templates\collection.liquid" />
+    <Content Include="App_Data\Themes\_Default\templates\collection.list.liquid" />
+    <Content Include="App_Data\Themes\_Default\templates\gift_card.liquid" />
+    <Content Include="App_Data\Themes\_Default\templates\index.liquid" />
+    <Content Include="App_Data\Themes\_Default\templates\list-collections.liquid" />
+    <Content Include="App_Data\Themes\_Default\templates\page.contact.liquid" />
+    <Content Include="App_Data\Themes\_Default\templates\page.liquid" />
+    <Content Include="App_Data\Themes\_Default\templates\product.liquid" />
+    <Content Include="App_Data\Themes\_Default\templates\search.liquid" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="App_Data\Themes\_Global\Snippets\content_header.liquid" />
@@ -413,13 +413,13 @@
     <Content Include="App_Data\Themes\_Global\social\shopify-social.woff" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="App_Data\Themes\Default\templates\customers\account.liquid" />
-    <Content Include="App_Data\Themes\Default\templates\customers\activate_account.liquid" />
-    <Content Include="App_Data\Themes\Default\templates\customers\addresses.liquid" />
-    <Content Include="App_Data\Themes\Default\templates\customers\login.liquid" />
-    <Content Include="App_Data\Themes\Default\templates\customers\order.liquid" />
-    <Content Include="App_Data\Themes\Default\templates\customers\register.liquid" />
-    <Content Include="App_Data\Themes\Default\templates\customers\reset_password.liquid" />
+    <Content Include="App_Data\Themes\_Default\templates\customers\account.liquid" />
+    <Content Include="App_Data\Themes\_Default\templates\customers\activate_account.liquid" />
+    <Content Include="App_Data\Themes\_Default\templates\customers\addresses.liquid" />
+    <Content Include="App_Data\Themes\_Default\templates\customers\login.liquid" />
+    <Content Include="App_Data\Themes\_Default\templates\customers\order.liquid" />
+    <Content Include="App_Data\Themes\_Default\templates\customers\register.liquid" />
+    <Content Include="App_Data\Themes\_Default\templates\customers\reset_password.liquid" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="App_Data\Themes\_Global\layout\checkout.liquid" />
@@ -428,7 +428,7 @@
     <Content Include="App_Data\Themes\_Global\templates\checkout-step-1.liquid" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="App_Data\Themes\Default\snippets\top-header-selector.liquid">
+    <Content Include="App_Data\Themes\_Default\snippets\top-header-selector.liquid">
       <SubType>Designer</SubType>
     </Content>
   </ItemGroup>

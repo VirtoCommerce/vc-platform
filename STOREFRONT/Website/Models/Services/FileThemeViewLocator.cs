@@ -181,7 +181,7 @@ namespace VirtoCommerce.Web.Models.Services
         {
             get
             {
-                var fileSystemMainPath = Path.Combine(_baseDirectoryPath, SiteContext.Current.Theme.ToString());
+                var fileSystemMainPath = Path.Combine(_baseDirectoryPath, SiteContext.Current.Theme.Path);
                 return fileSystemMainPath;
             }
         }

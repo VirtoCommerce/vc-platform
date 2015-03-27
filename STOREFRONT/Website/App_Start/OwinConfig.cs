@@ -76,6 +76,7 @@ namespace VirtoCommerce.Web
             }
 
             ctx.Shop = shop;
+            ctx.Themes = await commerceService.GetThemesAsync();
 
             // if language is not set, set it to default shop language
             if (String.IsNullOrEmpty(ctx.Language))
@@ -101,14 +102,14 @@ namespace VirtoCommerce.Web
                 ctx.Forms = commerceService.GetForms();
                 ctx.Cart = await commerceService.GetCurrentCartAsync(shop.StoreId);
                 ctx.PriceLists = await commerceService.GetPriceListsAsync(ctx.Shop.Catalog, ctx.Shop.Currency, new TagQuery());
-                ctx.Theme = commerceService.GetTheme(this.ResolveTheme(context));
+                ctx.Theme = commerceService.GetTheme(this.ResolveTheme(shop, context));
 
                 // update theme files
                 await commerceService.UpdateThemeCacheAsync();
             }
             else
             {
-                ctx.Theme = commerceService.GetTheme(this.ResolveTheme(context));
+                ctx.Theme = commerceService.GetTheme(this.ResolveTheme(shop, context));
             }
 
 
@@ -310,22 +311,17 @@ namespace VirtoCommerce.Web
             return null;
         }
 
-        private string ResolveTheme(IOwinContext context)
+        private string ResolveTheme(Shop shop, IOwinContext context)
         {
-            var theme = context.Request.Query["theme"];
-
-            if (theme != null)
+            var theme = ConfigurationManager.AppSettings["Theme"];
+            var shopMetaFields = shop.Metafields["global"];
+            if (shopMetaFields != null)
             {
-                context.Response.Cookies.Append("theme", theme);
-            }
-            else
-            {
-                theme = context.Request.Cookies["theme"];
-            }
-
-            if (string.IsNullOrEmpty(theme))
-            {
-                theme = ConfigurationManager.AppSettings["Theme"];
+                object themeObject;
+                if (shop.Metafields["global"].TryGetValue("defaultThemeName", out themeObject))
+                {
+                    return themeObject.ToString();
+                }
             }
 
             return theme;
