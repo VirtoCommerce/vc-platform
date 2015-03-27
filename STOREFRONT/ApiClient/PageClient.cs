@@ -46,7 +46,6 @@ namespace VirtoCommerce.ApiClient
         {
             return GetAsync<Store[]>(CreateRequestUri(String.Format(RelativePaths.Pages, storeId, language, page)));
         }
-
         #endregion
 
         protected class RelativePaths

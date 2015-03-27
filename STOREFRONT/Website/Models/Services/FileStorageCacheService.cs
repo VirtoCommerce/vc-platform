@@ -6,11 +6,11 @@ using VirtoCommerce.Web.Models.Storage;
 
 namespace VirtoCommerce.Web.Models.Services
 {
-    public class FileStorageService
+    public class FileStorageCacheService
     {
         private readonly string _baseFolder;
 
-        public FileStorageService(string baseFolder)
+        public FileStorageCacheService(string baseFolder)
         {
             this._baseFolder = baseFolder;
         }
@@ -43,7 +43,6 @@ namespace VirtoCommerce.Web.Models.Services
                 if (this.ApplyUpdate(themeAsset)) reloadCache = true;
             }
 
-            //if (reloadCache) LoadThemeFiles(true);
             return reloadCache;
         }
 
@@ -86,8 +85,7 @@ namespace VirtoCommerce.Web.Models.Services
         {
             get
             {
-                var fileSystemMainPath = String.Format("{0}\\{1}", _baseFolder, SiteContext.Current.Theme.Path);
-                return fileSystemMainPath;
+                return _baseFolder;
             }
         }
     }

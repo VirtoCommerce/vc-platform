@@ -39,10 +39,12 @@ namespace VirtoCommerce.Web.Models.Services
         private readonly PriceClient _priceClient;
         private readonly ListClient _listClient;
         private readonly ThemeClient _themeClient;
+        private readonly PageClient _pageClient;
         private readonly IViewLocator _viewLocator;
-        private readonly FileStorageService _themeStorageClient;
-        private readonly FileStorageService _pageStorageClient;
+        private readonly FileStorageCacheService _pageStorageClient;
         private readonly ReviewsClient _reviewsClient;
+        private readonly string _themesCacheStoragePath;
+        private readonly string _pagesCacheStoragePath;
 
         private static readonly object _LockObject = new object();
         #endregion
@@ -58,13 +60,13 @@ namespace VirtoCommerce.Web.Models.Services
             this._securityClient = ClientContext.Clients.CreateSecurityClient();
             this._priceClient = ClientContext.Clients.CreatePriceClient();
             this._themeClient = ClientContext.Clients.CreateThemeClient();
+            this._pageClient = ClientContext.Clients.CreatePageClient();
             this._reviewsClient = ClientContext.Clients.CreateReviewsClient();
 
-            var themesPath = ConfigurationManager.AppSettings["ThemeCacheFolder"];
-            var pagesPath = ConfigurationManager.AppSettings["PageCacheFolder"];
-            this._themeStorageClient = new FileStorageService(HostingEnvironment.MapPath(themesPath));
-            this._pageStorageClient = new FileStorageService(HostingEnvironment.MapPath(pagesPath));
-            this._viewLocator = new FileThemeViewLocator(HostingEnvironment.MapPath(themesPath));
+            _themesCacheStoragePath = ConfigurationManager.AppSettings["ThemeCacheFolder"];
+            _pagesCacheStoragePath = ConfigurationManager.AppSettings["PageCacheFolder"];
+            
+            this._viewLocator = new FileThemeViewLocator(HostingEnvironment.MapPath(_themesCacheStoragePath));
 
             this._cartHelper = new CartHelper(this);
         }
@@ -700,7 +702,9 @@ namespace VirtoCommerce.Web.Models.Services
         {
             var store = SiteContext.Current.StoreId;
             var theme = SiteContext.Current.Theme.Name;
-            var lastUpdate = this._themeStorageClient.GetLatestUpdate();
+            var themePath = String.Format("{0}\\{1}", _themesCacheStoragePath, SiteContext.Current.Theme.Path);
+            var storageClient = new FileStorageCacheService(HostingEnvironment.MapPath(themePath));
+            var lastUpdate = storageClient.GetLatestUpdate();
             var response = await this._themeClient.GetThemeAssetsAsync(store, theme, lastUpdate, true);
 
             if (response.Any())
@@ -708,10 +712,10 @@ namespace VirtoCommerce.Web.Models.Services
                 lock (_LockObject)
                 {
                     // check last update again, since going to the service is more expensive than checking local folders
-                    var newLastUpdate = this._themeStorageClient.GetLatestUpdate();
+                    var newLastUpdate = storageClient.GetLatestUpdate();
                     if (newLastUpdate == lastUpdate)
                     {
-                        var reload = this._themeStorageClient.ApplyUpdates(response.AsFileModel());
+                        var reload = storageClient.ApplyUpdates(response.AsFileModel());
                         if (reload)
                         {
                             this._viewLocator.UpdateCache();
@@ -724,9 +728,14 @@ namespace VirtoCommerce.Web.Models.Services
         public async Task UpdatePageCacheAsync()
         {
             var store = SiteContext.Current.StoreId;
-            var theme = SiteContext.Current.Theme.Name;
+
+            var pagesPath = String.Format("{0}\\{1}\\pages", _pagesCacheStoragePath, store);
+            var storageClient = new FileStorageCacheService(HostingEnvironment.MapPath(pagesPath));
+
+            // TODO: figure out what to do with deleted pages
             var lastUpdate = this._pageStorageClient.GetLatestUpdate();
-            var response = await this._themeClient.GetThemeAssetsAsync(store, theme, lastUpdate, true);
+            /*
+            var response = await this._pa.GetThemeAssetsAsync(store, theme, lastUpdate, true);
 
             if (response.Any())
             {
@@ -744,6 +753,7 @@ namespace VirtoCommerce.Web.Models.Services
                     }
                 }
             }
+             * */
         }
         #endregion
 
