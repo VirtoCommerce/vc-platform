@@ -86,7 +86,7 @@ namespace VirtoCommerce.Web.Models.Services
         {
             get
             {
-                var fileSystemMainPath = String.Format("{0}\\{1}", _baseFolder, SiteContext.Current.Theme);
+                var fileSystemMainPath = String.Format("{0}\\{1}", _baseFolder, SiteContext.Current.Theme.Path);
                 return fileSystemMainPath;
             }
         }

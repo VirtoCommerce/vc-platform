@@ -18,7 +18,7 @@ namespace VirtoCommerce.Web.Models.Convertors
         #region Public Methods and Operators
         public static Theme AsWebModel(this Data.Theme theme)
         {
-            var themeModel = new Theme { Id = theme.Name, Name = theme.Name, Role = "main" };
+            var themeModel = new Theme { Id = theme.Name, Name = theme.Name, Path = theme.Path, Role = "main" };
 
             return themeModel;
         }

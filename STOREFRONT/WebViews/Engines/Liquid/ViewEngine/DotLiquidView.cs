@@ -107,6 +107,7 @@ namespace VirtoCommerce.Web.Views.Engines.Liquid.ViewEngine
                 localVars.Add(Template.NamingConvention.GetMemberName(item.Key), item.Value);
             }
 
+            /* this is now done in base class
             // now set the template to the one specified by the view
             if (!localVars.ContainsKey("Template"))
             {
@@ -114,6 +115,8 @@ namespace VirtoCommerce.Web.Views.Engines.Liquid.ViewEngine
             }
 
             localVars["Template"] = this.ViewResult.Name;
+             * */
+            
             /*this.ViewPath.Substring(this.ViewPath.LastIndexOf("/", StringComparison.Ordinal) + 1)
                 .Replace(".liquid", "");*/
 

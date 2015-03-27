@@ -252,7 +252,7 @@
             "type_navigation_transform": true,
             "remove_dollar_symbol": true,
             "superscript_decimals": true,
-            "store_selector_enable": true
+            "store_selector_enable": false
         }
     }
 }

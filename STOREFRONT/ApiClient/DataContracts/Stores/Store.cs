@@ -1,7 +1,16 @@
-﻿namespace VirtoCommerce.ApiClient.DataContracts.Stores
+﻿using System.Collections.Generic;
+using Newtonsoft.Json;
+
+namespace VirtoCommerce.ApiClient.DataContracts.Stores
 {
     public class Store
     {
+        #region Fields
+
+        private IDictionary<string, object> _settings = new Dictionary<string, object>();
+
+        #endregion
+
         #region Public Properties
 
         public string Catalog { get; set; }
@@ -30,13 +39,38 @@
 
         public SeoKeyword[] Seo { get; set; }
 
-        public StoreSetting[] Settings { get; set; }
+        public IDictionary<string, object> Settings
+        {
+            get { return _settings; }
+            set { _settings = value; }
+        }
 
         public StoreState StoreState { get; set; }
 
         public string TimeZone { get; set; }
 
         public string Url { get; set; }
+
+        #endregion
+
+        #region Public Indexers
+
+        [JsonIgnore]
+        public object this[string name]
+        {
+            get { return _settings[name]; }
+            set
+            {
+                if (_settings.ContainsKey(name))
+                {
+                    _settings[name] = value;
+                }
+                else
+                {
+                    _settings.Add(name, value);
+                }
+            }
+        }
 
         #endregion
     }

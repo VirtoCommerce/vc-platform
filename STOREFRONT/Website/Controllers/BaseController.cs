@@ -62,6 +62,7 @@ namespace VirtoCommerce.Web.Controllers
 
         protected override ViewResult View(string viewName, string masterName, object model)
         {
+            this.Context.Template = viewName;
             return base.View(viewName, masterName, model ?? this.Context);
         }
         #endregion

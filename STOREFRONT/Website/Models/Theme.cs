@@ -18,12 +18,16 @@ namespace VirtoCommerce.Web.Models
 
         [DataMember]
         public string Role { get; set; }
+
+        [DataMember]
+        public string Path { get; set; }
+
         #endregion
 
         #region Public Methods and Operators
         public override string ToString()
         {
-            return this.Id;
+            return this.Name;
         }
         #endregion
     }

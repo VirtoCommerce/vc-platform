@@ -123,7 +123,7 @@ namespace VirtoCommerce.Web.Controllers
             var str = RenderPartialViewToString(this, id.Replace("scss.css", "scss"), this.Settings);
             var compiledContent = this._compiler.Compile(str, OutputStyle.Compressed, false);
 
-            var rootVirtual = String.Format("~/App_Data/Themes/{0}", this.Context.Theme);
+            var rootVirtual = String.Format("~/App_Data/Themes/{0}", this.Context.Theme.Path);
             var rootPath = this.Server.MapPath(rootVirtual);
             
             var allDirectories = Directory.GetDirectories(rootPath, "*", SearchOption.AllDirectories);

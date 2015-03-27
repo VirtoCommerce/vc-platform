@@ -91,14 +91,14 @@
 
 		public Task<IEnumerable<ContentItem>> GetContentItems(string path, GetThemeAssetsCriteria criteria)
 		{
+		    var query = ContentItems.Where(i => i.Path.StartsWith(path));
+
 			if (criteria.LastUpdateDate.HasValue)
 			{
-				return Task.FromResult(ContentItems.Where(i => i.Path.Contains(path) && i.ModifiedDate.HasValue ? criteria.LastUpdateDate.Value < i.ModifiedDate.Value : criteria.LastUpdateDate.Value < i.CreatedDate).AsEnumerable());
+			    query = query.Where(i => (i.ModifiedDate.HasValue && criteria.LastUpdateDate.Value < i.ModifiedDate.Value) || (criteria.LastUpdateDate.Value < i.CreatedDate));
 			}
-			else
-			{
-				return Task.FromResult(ContentItems.Where(i => i.Path.Contains(path)).AsEnumerable());
-			}
+
+		    return Task.FromResult(query.AsEnumerable());
 		}
 
 		public Task<bool> SaveContentItem(string path, ContentItem item)
