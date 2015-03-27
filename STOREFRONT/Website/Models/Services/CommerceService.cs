@@ -40,7 +40,8 @@ namespace VirtoCommerce.Web.Models.Services
         private readonly ListClient _listClient;
         private readonly ThemeClient _themeClient;
         private readonly IViewLocator _viewLocator;
-        private readonly FileThemeService _ThemeClient;
+        private readonly FileStorageService _themeStorageClient;
+        private readonly FileStorageService _pageStorageClient;
         private readonly ReviewsClient _reviewsClient;
 
         private static readonly object _LockObject = new object();
@@ -60,7 +61,9 @@ namespace VirtoCommerce.Web.Models.Services
             this._reviewsClient = ClientContext.Clients.CreateReviewsClient();
 
             var themesPath = ConfigurationManager.AppSettings["ThemeCacheFolder"];
-            this._ThemeClient = new FileThemeService(HostingEnvironment.MapPath(themesPath));
+            var pagesPath = ConfigurationManager.AppSettings["PageCacheFolder"];
+            this._themeStorageClient = new FileStorageService(HostingEnvironment.MapPath(themesPath));
+            this._pageStorageClient = new FileStorageService(HostingEnvironment.MapPath(pagesPath));
             this._viewLocator = new FileThemeViewLocator(HostingEnvironment.MapPath(themesPath));
 
             this._cartHelper = new CartHelper(this);
@@ -641,7 +644,7 @@ namespace VirtoCommerce.Web.Models.Services
         {
             var store = SiteContext.Current.StoreId;
             var theme = SiteContext.Current.Theme.Name;
-            var lastUpdate = _ThemeClient.GetLatestUpdate();
+            var lastUpdate = this._themeStorageClient.GetLatestUpdate();
             var response = await this._themeClient.GetThemeAssetsAsync(store, theme, lastUpdate, true);
 
             if (response.Any())
@@ -649,10 +652,35 @@ namespace VirtoCommerce.Web.Models.Services
                 lock (_LockObject)
                 {
                     // check last update again, since going to the service is more expensive than checking local folders
-                    var newLastUpdate = _ThemeClient.GetLatestUpdate();
+                    var newLastUpdate = this._themeStorageClient.GetLatestUpdate();
                     if (newLastUpdate == lastUpdate)
                     {
-                        var reload = _ThemeClient.ApplyUpdates(response);
+                        var reload = this._themeStorageClient.ApplyUpdates(response.AsFileModel());
+                        if (reload)
+                        {
+                            this._viewLocator.UpdateCache();
+                        }
+                    }
+                }
+            }
+        }
+
+        public async Task UpdatePageCacheAsync()
+        {
+            var store = SiteContext.Current.StoreId;
+            var theme = SiteContext.Current.Theme.Name;
+            var lastUpdate = this._pageStorageClient.GetLatestUpdate();
+            var response = await this._themeClient.GetThemeAssetsAsync(store, theme, lastUpdate, true);
+
+            if (response.Any())
+            {
+                lock (_LockObject)
+                {
+                    // check last update again, since going to the service is more expensive than checking local folders
+                    var newLastUpdate = this._themeStorageClient.GetLatestUpdate();
+                    if (newLastUpdate == lastUpdate)
+                    {
+                        var reload = this._themeStorageClient.ApplyUpdates(response.AsFileModel());
                         if (reload)
                         {
                             this._viewLocator.UpdateCache();

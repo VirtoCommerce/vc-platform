@@ -176,6 +176,8 @@
     <Content Include="Scripts\Fulfillment\blades\fulfillment-center-contact.tpl.html" />
     <Content Include="Scripts\Fulfillment\widgets\fulfillmentCenterContactWidget.js" />
     <Content Include="Scripts\Fulfillment\widgets\fulfillmentCenterContactWidget.tpl.html" />
+    <Content Include="Scripts\Settings\blades\setting-dictionary.js" />
+    <Content Include="Scripts\Settings\blades\setting-dictionary.tpl.html" />
     <Content Include="Scripts\virtoCommerce-core.js" />
     <Content Include="Scripts\common\ok-cancel2.tpl.html" />
     <Content Include="Scripts\common\resources\countries.js" />

@@ -29,8 +29,12 @@ namespace VirtoCommerce.MenuModule.Web.Controllers.Api
 		[Route("menu")]
 		public IHttpActionResult GetLists(string storeId)
 		{
-			var items = _menuService.GetListsByStoreId(storeId).Select(s => s.ToWebModel());
-			return Ok(items.ToArray());
+		    var lists = _menuService.GetListsByStoreId(storeId);
+		    if (lists.Any())
+		    {
+		        return this.Ok(lists.Select(s => s.ToWebModel()));
+		    }
+			return Ok();
 		}
 
 		[HttpGet]
