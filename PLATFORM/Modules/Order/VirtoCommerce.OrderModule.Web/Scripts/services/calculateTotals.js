@@ -34,9 +34,14 @@
 			else if (operation.operationType.toLowerCase() == 'shipment') {
 
 				operation._discountTotal = parseFloat(operation.discountAmount);
+				_.each(operation.items, function (x) {
+					x._total = parseInt(x.quantity) * (parseFloat(x.price) || 0) - (parseFloat(x.discountAmount) || 0) + (parseFloat(x.tax) || 0);
+					x._total = Math.round(x._total * 100) / 100;
+				});
+				operation._subTotal = _.reduce(operation.items, function (memo, x) { return memo + x.price * x.quantity; }, 0);
 				operation._taxTotal = parseFloat(operation.tax);
 				operation._shippingTotal = parseFloat(operation.sum);
-				operation._total = operation._shippingTotal + operation._taxTotal - operation._discountTotal;
+				operation._total = operation._subTotal + operation._shippingTotal + operation._taxTotal - operation._discountTotal;
 				operation._total = Math.round(operation._total * 100) / 100;
 			}
 		}

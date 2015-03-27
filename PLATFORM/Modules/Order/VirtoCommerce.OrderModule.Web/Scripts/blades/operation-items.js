@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.orderModule')
-.controller('customerOrderItemsController', ['$scope', 'bladeNavigationService', 'dialogService', 'calculateTotalsService', 'items', 'prices', function ($scope, bladeNavigationService, dialogService, calculateTotalsService, items, prices) {
+.controller('operationItemsController', ['$scope', 'bladeNavigationService', 'dialogService', 'calculateTotalsService', 'items', 'prices', function ($scope, bladeNavigationService, dialogService, calculateTotalsService, items, prices) {
 	//pagination settigs
 	$scope.pageSettings = {};
 	$scope.totals = {};
@@ -60,6 +60,18 @@
 		});
 	};
 
+	$scope.openItemDetail = function (item) {
+			var newBlade = {
+				id: "listItemDetail",
+				itemId: item.productId,
+				title: item.name,
+				subtitle: 'Item details',
+				controller: 'itemDetailController',
+				template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/item-detail.tpl.html'
+			};
+			bladeNavigationService.showBlade(newBlade, $scope.blade);
+	};
+
 	function openAddEntityWizard() {
 		var options = {
 			allowMultiple: true,
@@ -108,7 +120,7 @@
         		openAddEntityWizard();
         	},
         	canExecuteMethod: function () {
-        		return true;
+        		return $scope.blade.currentEntity.operationType.toLowerCase() == 'customerorder';
         	}
         },
         {
