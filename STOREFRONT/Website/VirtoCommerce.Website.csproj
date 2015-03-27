@@ -198,6 +198,7 @@
     <Compile Include="Models\FormModels\BaseCustomerFormModel.cs" />
     <Compile Include="Models\FormModels\CheckoutFirstStepFormModel.cs" />
     <Compile Include="Models\FormModels\CheckoutSecondStepFormModel.cs" />
+    <Compile Include="Models\FormModels\CustomerAddressFormModel.cs" />
     <Compile Include="Models\FormModels\LoginFormModel.cs" />
     <Compile Include="Models\FormModels\NewAddressFormModel.cs" />
     <Compile Include="Models\FormModels\ForgotPasswordFormModel.cs" />
@@ -216,7 +217,7 @@
     <Compile Include="Models\Helpers\ExtensionMapper.cs" />
     <Compile Include="Models\Helpers\ExtensionPartialView.cs" />
     <Compile Include="Models\Extensions\ModelExtensions.cs" />
-    <Compile Include="Models\Services\FileThemeService.cs" />
+    <Compile Include="Models\Services\FileStorageService.cs" />
     <Compile Include="Models\Services\FileThemeViewLocator.cs" />
     <Compile Include="Models\Services\PagesService.cs" />
     <Compile Include="Models\Article.cs" />
@@ -268,6 +269,7 @@
     <Compile Include="Models\Shop.cs" />
     <Compile Include="Models\SiteContext.cs" />
     <Compile Include="Models\ItemCollection.cs" />
+    <Compile Include="Models\Storage\FileAsset.cs" />
     <Compile Include="Models\SubmitForm.cs" />
     <Compile Include="Models\Tag.cs" />
     <Compile Include="Models\Tags\Form.cs" />
