@@ -135,6 +135,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Search\ISearchProviderManager.cs" />
     <Compile Include="Security\CheckPermissionAttribute.cs" />
     <Compile Include="Security\IPermissionService.cs" />
     <Compile Include="Security\PermissionDescriptor.cs" />

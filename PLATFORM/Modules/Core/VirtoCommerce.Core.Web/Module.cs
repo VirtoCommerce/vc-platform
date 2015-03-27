@@ -8,6 +8,7 @@ using VirtoCommerce.Caching.HttpCache;
 using VirtoCommerce.CoreModule.Web.Controllers.Api;
 using VirtoCommerce.CoreModule.Web.Notification;
 using VirtoCommerce.CoreModule.Web.Repositories;
+using VirtoCommerce.CoreModule.Web.Search;
 using VirtoCommerce.CoreModule.Web.Security;
 using VirtoCommerce.CoreModule.Web.Services;
 using VirtoCommerce.CoreModule.Web.Settings;
@@ -20,11 +21,16 @@ using VirtoCommerce.Foundation.Data.Search;
 using VirtoCommerce.Foundation.Data.Security;
 using VirtoCommerce.Foundation.Data.Security.Identity;
 using VirtoCommerce.Foundation.Frameworks;
+using VirtoCommerce.Foundation.Search;
 using VirtoCommerce.Foundation.Security.Repositories;
 using VirtoCommerce.Framework.Web.Modularity;
 using VirtoCommerce.Framework.Web.Notification;
+using VirtoCommerce.Framework.Web.Search;
 using VirtoCommerce.Framework.Web.Security;
 using VirtoCommerce.Framework.Web.Settings;
+using VirtoCommerce.Search.Providers.Azure;
+using VirtoCommerce.Search.Providers.Elastic;
+using VirtoCommerce.Search.Providers.Lucene;
 
 namespace VirtoCommerce.CoreModule.Web
 {
@@ -131,7 +137,11 @@ namespace VirtoCommerce.CoreModule.Web
 
         public void Initialize()
         {
+            #region Caching
+
             _container.RegisterType<ICacheRepository, HttpCacheRepository>(new ContainerControlledLifetimeManager());
+
+            #endregion
 
             #region Settings
 
@@ -143,28 +153,42 @@ namespace VirtoCommerce.CoreModule.Web
             #endregion
 
             #region Security
-			var foundationSecurityRepositoryFactory = new Func<IFoundationSecurityRepository>(() => new FoundationSecurityRepositoryImpl(_connectionStringName));
-			_container.RegisterType<Func<IFoundationSecurityRepository>>(
-				new InjectionFactory(x => foundationSecurityRepositoryFactory));
+            var foundationSecurityRepositoryFactory = new Func<IFoundationSecurityRepository>(() => new FoundationSecurityRepositoryImpl(_connectionStringName));
+            _container.RegisterType<Func<IFoundationSecurityRepository>>(
+                new InjectionFactory(x => foundationSecurityRepositoryFactory));
 
-			var securityRepositoryFactory = new Func<ISecurityRepository>(() => new EFSecurityRepository(_connectionStringName));
-			_container.RegisterType<Func<ISecurityRepository>>(new InjectionFactory(x => securityRepositoryFactory));
+            var securityRepositoryFactory = new Func<ISecurityRepository>(() => new EFSecurityRepository(_connectionStringName));
+            _container.RegisterType<Func<ISecurityRepository>>(new InjectionFactory(x => securityRepositoryFactory));
 
-			_container.RegisterType<IPermissionService, PermissionService>(new ContainerControlledLifetimeManager());
+            _container.RegisterType<IPermissionService, PermissionService>(new ContainerControlledLifetimeManager());
 
-			_container.RegisterType<IApiAccountProvider, ApiAccountProvider>(new ContainerControlledLifetimeManager());
-			_container.RegisterType<IClaimsIdentityProvider, ApplicationClaimsIdentityProvider>(new ContainerControlledLifetimeManager());
+            _container.RegisterType<IApiAccountProvider, ApiAccountProvider>(new ContainerControlledLifetimeManager());
+            _container.RegisterType<IClaimsIdentityProvider, ApplicationClaimsIdentityProvider>(new ContainerControlledLifetimeManager());
 
-			Func<ApplicationSignInManager> signInApplication = () => HttpContext.Current.GetOwinContext().Get<ApplicationSignInManager>();
-			Func<ApplicationUserManager> userManager = () => HttpContext.Current.GetOwinContext().GetUserManager<ApplicationUserManager>();
-			Func<IAuthenticationManager> auth = () => HttpContext.Current.GetOwinContext().Authentication;
+            Func<ApplicationSignInManager> signInApplication = () => HttpContext.Current.GetOwinContext().Get<ApplicationSignInManager>();
+            Func<ApplicationUserManager> userManager = () => HttpContext.Current.GetOwinContext().GetUserManager<ApplicationUserManager>();
+            Func<IAuthenticationManager> auth = () => HttpContext.Current.GetOwinContext().Authentication;
             var apiAccountProvider = _container.Resolve<IApiAccountProvider>();
             _container.RegisterType<SecurityController>(new InjectionConstructor(foundationSecurityRepositoryFactory, signInApplication, userManager, auth, apiAccountProvider));
 
-			#endregion
+            #endregion
+
+            #region Search providers
+
+            _container.RegisterType<ISearchProviderManager, SearchProviderManager>(new ContainerControlledLifetimeManager());
+            var searchProviderManager = _container.Resolve<ISearchProviderManager>();
+
+            searchProviderManager.RegisterSearchProvider(SearchProviders.Elasticsearch.ToString(), connection => new ElasticSearchProvider(new ElasticSearchQueryBuilder(), connection));
+            searchProviderManager.RegisterSearchProvider(SearchProviders.Lucene.ToString(), connection => new LuceneSearchProvider(new LuceneSearchQueryBuilder(), connection));
+            searchProviderManager.RegisterSearchProvider(SearchProviders.AzureSearch.ToString(), connection => new AzureSearchProvider(new AzureSearchQueryBuilder(), connection));
+
+            _container.RegisterInstance(searchProviderManager as ISearchProvider);
+            _container.RegisterInstance(searchProviderManager as ISearchConnection);
+
+            #endregion
 
             #region Payment gateways manager
-            _container.RegisterInstance<IPaymentGatewayManager>(new InMemoryPaymentGatewayManagerImpl());
+            _container.RegisterType<IPaymentGatewayManager, InMemoryPaymentGatewayManagerImpl>(new ContainerControlledLifetimeManager());
             #endregion
 
             #region Notification
