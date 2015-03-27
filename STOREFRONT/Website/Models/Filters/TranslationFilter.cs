@@ -7,6 +7,7 @@ using DotLiquid;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using VirtoCommerce.Web.Models.Extensions;
+using VirtoCommerce.Web.Models.Services;
 using VirtoCommerce.Web.Views.Engines.Liquid.Extensions;
 using VirtoCommerce.Web.Views.Engines.Liquid.ViewEngine.Util;
 
@@ -19,8 +20,9 @@ namespace VirtoCommerce.Web.Models.Filters
         #region Public Methods and Operators
         public static string t(string input, params object[] variables)
         {
-            var locs = LoadLocales();
-            var defaultLocs = LoadLocales(true);
+            var service = new CommerceService();
+            var locs = service.GetLocale();
+            var defaultLocs = service.GetLocale(true);
 
             if (locs == null && defaultLocs == null)
             {
@@ -82,112 +84,6 @@ namespace VirtoCommerce.Web.Models.Filters
             }
 
             return retVal;
-        }
-        #endregion
-
-        #region Methods
-        private static string GetCurrentLanguageLocaleFile(string theme, string language)
-        {
-            var locDir = String.Format("~/App_Data/Themes/{0}/locales/", theme);
-            var files = VirtualPathProviderHelper.ListFiles(locDir);
-            if (files == null || !files.Any())
-            {
-                return null;
-            }
-
-            var culture = language.TryGetCultureInfo();
-
-            // check specific culture file existance
-            var foundFiles = files.Where(f => f.Contains(String.Format("{0}.json", culture.Name)));
-
-            if (foundFiles.Any())
-            {
-                return foundFiles.First();
-            }
-
-            // check general culture file existance
-            foundFiles = files.Where(f => f.Contains(String.Format("{0}.json", culture.TwoLetterISOLanguageName)));
-
-            if (foundFiles.Any())
-            {
-                return foundFiles.First();
-            }
-
-            // didn't find any language
-            return null;
-        }
-
-        private static string GetDefaultLanguageLocaleFile(string theme)
-        {
-            var locDir = String.Format("~/App_Data/Themes/{0}/locales/", theme);
-            var files = VirtualPathProviderHelper.ListFiles(locDir);
-            if (files == null || !files.Any())
-            {
-                return null;
-            }
-
-            var foundFiles = files.Where(f => f.Contains(String.Format("default.json")));
-
-            if (foundFiles.Any())
-            {
-                return foundFiles.First();
-            }
-
-            // didn't find any language
-            return null;
-        }
-
-        private static JObject LoadLocales(bool loadDefault = false)
-        {
-            var contextKey = String.Format(
-                "vc-liquid-localizations-{0}-{1}-{2}",
-                SiteContext.Current.Theme,
-                SiteContext.Current.Language,
-                loadDefault);
-            var value = HttpRuntime.Cache.Get(contextKey);
-
-            if (value != null)
-            {
-                if (value is JObject)
-                {
-                    return value as JObject;
-                }
-
-                return null;
-            }
-
-            var fileName = GetCurrentLanguageLocaleFile(
-                SiteContext.Current.Theme.ToString(),
-                SiteContext.Current.Language);
-
-            if (loadDefault)
-            {
-                fileName = GetDefaultLanguageLocaleFile(SiteContext.Current.Theme.ToString());
-            }
-            else
-            {
-                fileName = GetCurrentLanguageLocaleFile(
-                    SiteContext.Current.Theme.ToString(),
-                    SiteContext.Current.Language);
-            }
-
-            var filePath = String.Format("~/App_Data/Themes/{0}/locales/{1}", SiteContext.Current.Theme, fileName);
-            if (String.IsNullOrEmpty(filePath))
-            {
-                return null;
-            }
-
-            var path = HttpContext.Current.Server.MapPath(filePath);
-            var fileContents = VirtualPathProviderHelper.Load(filePath);
-
-            if (fileContents != null)
-            {
-                var contents = JsonConvert.DeserializeObject<dynamic>(fileContents);
-                HttpRuntime.Cache.Insert(contextKey, contents, new CacheDependency(new[] { path }));
-                return contents;
-            }
-            HttpRuntime.Cache.Insert(contextKey, String.Empty, new CacheDependency(new[] { path }));
-            return null;
         }
         #endregion
     }
