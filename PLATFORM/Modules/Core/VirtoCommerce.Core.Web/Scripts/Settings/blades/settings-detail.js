@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.coreModule.settings')
-.controller('settingsDetailController', ['$scope', 'dialogService', 'bladeNavigationService', 'settings', function ($scope, dialogService, bladeNavigationService, settings) {
+.controller('settingsDetailController', ['$scope', 'dialogService', 'objCompareService', 'bladeNavigationService', 'settings', function ($scope, dialogService, objCompareService, bladeNavigationService, settings) {
 
     $scope.blade.refresh = function () {
         $scope.blade.isLoading = true;
@@ -49,6 +49,18 @@
         });
     }
 
+    $scope.editArray = function (node) {
+        var newBlade = {
+            id: "settingDetailChild",
+            currentEntityId: node.name,
+            title: $scope.blade.title,
+            subtitle: 'Manage dictionary values',
+            controller: 'settingDictionaryController',
+            template: 'Modules/$(VirtoCommerce.Core)/Scripts/Settings/blades/setting-dictionary.tpl.html'
+        };
+        bladeNavigationService.showBlade(newBlade, $scope.blade);
+    }
+
     var formScope;
     $scope.setForm = function (form) {
         formScope = form;
@@ -75,8 +87,18 @@
         });
     };
 
-    $scope.bladeHeadIco = 'fa fa-wrench';
+    $scope.blade.onClose = function (closeCallback) {
+        closeChildrenBlades();
+        closeCallback();
+    };
 
+    function closeChildrenBlades() {
+        angular.forEach($scope.blade.childrenBlades.slice(), function (child) {
+            bladeNavigationService.closeBlade(child);
+        });
+    }
+
+    $scope.bladeHeadIco = 'fa fa-wrench';
     $scope.bladeToolbarCommands = [
         {
             name: "Save", icon: 'fa fa-save',
@@ -90,7 +112,7 @@
         {
             name: "Reset", icon: 'fa fa-undo',
             executeMethod: function () {
-                angular.copy($scope.blade.origEntity, $scope.blade.objects);
+                $scope.blade.objects = angular.copy($scope.blade.origEntity);
             },
             canExecuteMethod: function () {
                 return isDirty();
