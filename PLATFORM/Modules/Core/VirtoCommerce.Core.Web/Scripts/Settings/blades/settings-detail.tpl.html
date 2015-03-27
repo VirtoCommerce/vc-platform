@@ -1,11 +1,11 @@
-﻿<div class="blade-content blade-medium">
+﻿<div class="blade-content">
     <div class="blade-inner">
         <div class="inner-block">
             <form name="objectsForm" class="form">
                 <fieldset ng-repeat="groupName in blade.groupNames" ng-init="setForm(objectsForm)">
                     <legend>{{groupName==='undefined'?'General':groupName}}</legend>
                     <div class="form-group" ng-repeat="data in blade.objects[groupName]" title="{{data.description}}">
-                        <label class="form-label">{{data.title}}<a ng-click="data.arrayValues.push({value:''});" ng-if="data.isArray"> + </a></label>
+                        <label class="form-label">{{data.title}} <a href="" ng-click="editArray(data);" ng-if="data.isArray"><i class="form-ico fa fa-pencil"></i></a></label>
                         <div class="form-input" ng-class="data.valueType==='boolean' ? 'switch' : '__number'" ng-if="!(data.allowedValues.length>0) && !data.isArray">
                             <input required ng-model="data.value" ng-if="data.valueType==='string'" />
                             <input required ng-model="data.value" type="password" ng-if="data.valueType==='secureString'">
@@ -18,21 +18,13 @@
                                 </label>
                             </div>
                         </div>
-                        <div class="form-input" ng-if="data.allowedValues.length>0">
+                        <div class="form-input" ng-if="data.allowedValues.length>0 && !data.isArray">
                             <ui-select ng-model="data.value">
                                 <ui-select-match placeholder="Select ...">{{$select.selected}}</ui-select-match>
                                 <ui-select-choices repeat="x as x in data.allowedValues | filter: $select.search">
                                     <span ng-bind-html="x | highlight: $select.search"></span>
                                 </ui-select-choices>
                             </ui-select>
-                        </div>
-                        <div ng-repeat="value in data.arrayValues" ng-if="data.isArray" class="form-group">
-                            <div class="form-input __number">
-                                <input required ng-model="value.value" ng-if="data.valueType==='string'" />
-                                <input va-number required ng-model="value.value" type="text" min="1" step="1" ng-if="data.valueType==='integer'">
-                                <input va-number required ng-model="value.value" type="text" min="1" step="1" ng-if="data.valueType==='decimal'">
-                                <a ng-click="data.arrayValues.splice($index,1);"> - </a>
-                            </div>
                         </div>
                     </div>
                 </fieldset>

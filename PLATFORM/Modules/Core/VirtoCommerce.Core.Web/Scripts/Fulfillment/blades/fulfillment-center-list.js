@@ -41,7 +41,7 @@ function ($scope, fulfillments, bladeNavigationService) {
     };
 
     $scope.selectNode = function (node) {
-        showDetailBlade(node, node.name)
+        showDetailBlade(node, node.name);
     };
 
     $scope.blade.onClose = function (closeCallback) {
