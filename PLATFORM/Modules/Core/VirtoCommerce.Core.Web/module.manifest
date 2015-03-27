@@ -64,6 +64,7 @@
             <setting>
                 <name>VirtoCommerce.Core.Search.ConnectionString</name>
                 <valueType>string</valueType>
+                <defaultValue>server=localhost:9200;scope=default;provider=elasticsearch</defaultValue>
                 <title>Connection String</title>
             </setting>
         </group>
