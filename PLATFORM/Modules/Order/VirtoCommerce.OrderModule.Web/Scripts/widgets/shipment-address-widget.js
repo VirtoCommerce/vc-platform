@@ -14,6 +14,10 @@
 			currentEntity: deliveryAddress,
 			controller: 'coreAddressDetailController',
 			template: 'Modules/$(VirtoCommerce.Core)/Scripts/common/blades/address-detail.tpl.html',
+			deleteFn : function(address)
+			{
+				$scope.operation.deliveryAddress = null
+			},
 			confirmChangesFn : function(address)
 			{
 				$scope.operation.deliveryAddress = address;

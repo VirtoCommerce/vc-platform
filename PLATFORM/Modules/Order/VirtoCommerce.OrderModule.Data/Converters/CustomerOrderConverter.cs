@@ -11,6 +11,7 @@ using Omu.ValueInjecter;
 using VirtoCommerce.Foundation.Money;
 using VirtoCommerce.Foundation.Frameworks.ConventionInjections;
 using cart = VirtoCommerce.Domain.Cart.Model;
+using VirtoCommerce.Foundation.Frameworks;
 
 namespace VirtoCommerce.OrderModule.Data.Converters
 {
@@ -113,18 +114,10 @@ namespace VirtoCommerce.OrderModule.Data.Converters
 			if(order.Shipments != null)
 			{
 				retVal.Shipments = new ObservableCollection<ShipmentEntity>(order.Shipments.Select(x=>x.ToEntity()));
-				foreach(var address in retVal.Shipments.SelectMany(x=>x.Addresses))
-				{
-					address.CustomerOrder = retVal;
-				}
 			}
 			if(order.InPayments != null)
 			{
 				retVal.InPayments = new ObservableCollection<PaymentInEntity>(order.InPayments.Select(x => x.ToEntity()));
-				foreach (var address in retVal.InPayments.SelectMany(x => x.Addresses))
-				{
-					address.CustomerOrder = retVal;
-				}
 			}
 			if(order.Discount != null)
 			{
@@ -151,7 +144,7 @@ namespace VirtoCommerce.OrderModule.Data.Converters
 
 			if (!source.Addresses.IsNullCollection())
 			{
-				source.Addresses.Patch(target.Addresses, (sourceItem, targetItem) => sourceItem.Patch(targetItem));
+				source.Addresses.Patch(target.Addresses, new AddressComparer(), (sourceItem, targetItem) => sourceItem.Patch(targetItem));
 			}
 
 			if (!source.Shipments.IsNullCollection())
