@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using Microsoft.Practices.ServiceLocation;
 using Microsoft.Practices.Unity;
 using VirtoCommerce.Caching.HttpCache;
 using VirtoCommerce.CatalogModule.Data.Repositories;
@@ -29,7 +28,6 @@ using VirtoCommerce.Framework.Web.Modularity;
 using VirtoCommerce.Framework.Web.Settings;
 using VirtoCommerce.MerchandisingModule.Web.Controllers;
 using VirtoCommerce.MerchandisingModule.Web.Services;
-using VirtoCommerce.Search.Providers.Elastic;
 
 namespace VirtoCommerce.MerchandisingModule.Web
 {
@@ -51,7 +49,7 @@ namespace VirtoCommerce.MerchandisingModule.Web
 
         public Module(IUnityContainer container)
         {
-            this._container = container;
+            _container = container;
         }
 
         #endregion
@@ -60,21 +58,22 @@ namespace VirtoCommerce.MerchandisingModule.Web
 
         public void Initialize()
         {
-			var settingsManager = _container.Resolve<ISettingsManager>();
-			var cacheSettings = new CacheSettings[] 
+            var settingsManager = _container.Resolve<ISettingsManager>();
+            var cacheRepository = _container.Resolve<ICacheRepository>();
+
+            var cacheSettings = new[] 
 			{
 				new CacheSettings(Constants.CatalogCachePrefix + ".GetByIds", TimeSpan.FromMinutes(settingsManager.GetValue("Catalogs.Caching.ItemTimeout", 30)), "", true),
 				new CacheSettings(Constants.CatalogCachePrefix + ".GetCatalogById", TimeSpan.FromMinutes(settingsManager.GetValue("Catalogs.Caching.CatalogTimeout", 60)), "", true),
 				new CacheSettings(Constants.CatalogCachePrefix + ".Search", TimeSpan.FromMinutes(settingsManager.GetValue("Catalogs.Caching.SearchTimeout", 30)), "", true)
 			};
 
-			var cacheManager = new CacheManager(x => new HttpCacheRepository(), x => cacheSettings.FirstOrDefault(y => y.Group == x));
-					
+            var cacheManager = new CacheManager(x => cacheRepository, x => cacheSettings.FirstOrDefault(y => y.Group == x));
+
             Func<IFoundationCatalogRepository> catalogRepFactory =
                 () => new FoundationCatalogRepositoryImpl(_connectionStringName);
             Func<IFoundationAppConfigRepository> appConfigRepFactory =
                 () => new FoundationAppConfigRepositoryImpl(_connectionStringName);
-            ICacheRepository cacheRepository = new HttpCacheRepository();
 
             var catalogService = new CatalogServiceImpl(catalogRepFactory, cacheManager);
             var propertyService = new PropertyServiceImpl(catalogRepFactory, cacheManager);
@@ -82,18 +81,18 @@ namespace VirtoCommerce.MerchandisingModule.Web
             var itemService = new ItemServiceImpl(
                 catalogRepFactory,
                 appConfigRepFactory,
-				cacheManager);
+                cacheManager);
             var itemSearchService = new CatalogSearchServiceImpl(
                 catalogRepFactory,
                 itemService,
                 catalogService,
                 categoryService,
-				cacheManager);
+                cacheManager);
 
             #region VCF dependencies
 
-            var searchConnection = new SearchConnection(ConnectionHelper.GetConnectionString("SearchConnectionString"));
-            var elasticSearchProvider = new ElasticSearchProvider(new ElasticSearchQueryBuilder(), searchConnection);
+            var searchConnection = _container.Resolve<ISearchConnection>();
+            var searchProvider = _container.Resolve<ISearchProvider>();
 
             Func<IReviewRepository> reviewRepFactory = () => new EFReviewRepository(_connectionStringName);
             Func<IStoreRepository> storeRepFactory = () => new EFStoreRepository(_connectionStringName);
@@ -125,7 +124,7 @@ namespace VirtoCommerce.MerchandisingModule.Web
             var itemBrowseService = new ItemBrowsingService(
                 itemService,
                 catalogRepFactory,
-                elasticSearchProvider,
+                searchProvider,
                 cacheRepository,
                 blobStorageProvider,
                 searchConnection);
@@ -134,8 +133,8 @@ namespace VirtoCommerce.MerchandisingModule.Web
             Func<ICatalogOutlineBuilder> catalogOutlineBuilderFactory =
                 () => new CatalogOutlineBuilder(catalogRepFactory(), cacheRepository);
 
-            this._container.RegisterType<ReviewController>(new InjectionConstructor(reviewRepFactory));
-            this._container.RegisterType<ProductController>(
+            _container.RegisterType<ReviewController>(new InjectionConstructor(reviewRepFactory));
+            _container.RegisterType<ProductController>(
                 new InjectionConstructor(
                     itemService,
                     itemBrowseService,
@@ -147,8 +146,8 @@ namespace VirtoCommerce.MerchandisingModule.Web
                     blobStorageProvider,
                     settingsManager,
                     cacheRepository));
-            this._container.RegisterType<ContentController>(new InjectionConstructor(dynamicContentServiceFactory));
-            this._container.RegisterType<CategoryController>(
+            _container.RegisterType<ContentController>(new InjectionConstructor(dynamicContentServiceFactory));
+            _container.RegisterType<CategoryController>(
                 new InjectionConstructor(
                     itemSearchService,
                     categoryService,
@@ -158,10 +157,10 @@ namespace VirtoCommerce.MerchandisingModule.Web
                     storeRepFactory,
                     settingsManager,
                     cacheRepository));
-            this._container.RegisterType<StoreController>(
+            _container.RegisterType<StoreController>(
                 new InjectionConstructor(storeRepFactory, appConfigRepFactory, settingsManager, cacheRepository));
-            this._container.RegisterType<KeywordController>(new InjectionConstructor(appConfigRepFactory));
-            this._container.RegisterType<PriceController>(
+            _container.RegisterType<KeywordController>(new InjectionConstructor(appConfigRepFactory));
+            _container.RegisterType<PriceController>(
                 new InjectionConstructor(
                     storeRepFactory,
                     priceListRepositoryFactory,
@@ -169,10 +168,10 @@ namespace VirtoCommerce.MerchandisingModule.Web
                     new PriceListAssignmentEvaluationContext(),
                     settingsManager,
                     cacheRepository));
-            this._container.RegisterType<IAssetUrl, AzureBlobAssetRepository>();
-            this._container.RegisterType<IAssetEntityFactory, AssetEntityFactory>();
-            this._container.RegisterType<IAssetService, AssetService>();
-            this._container.RegisterType<IItemBrowsingService, ItemBrowsingService>();
+            _container.RegisterType<IAssetUrl, AzureBlobAssetRepository>();
+            _container.RegisterType<IAssetEntityFactory, AssetEntityFactory>();
+            _container.RegisterType<IAssetService, AssetService>();
+            _container.RegisterType<IItemBrowsingService, ItemBrowsingService>();
 
             //Register prmotion evaluation policies
             /*
