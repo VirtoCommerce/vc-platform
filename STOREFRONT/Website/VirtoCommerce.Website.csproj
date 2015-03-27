@@ -213,7 +213,7 @@
     <Compile Include="Models\Helpers\ExtensionMapper.cs" />
     <Compile Include="Models\Helpers\ExtensionPartialView.cs" />
     <Compile Include="Models\Extensions\ModelExtensions.cs" />
-    <Compile Include="Models\Services\FileStorageService.cs" />
+    <Compile Include="Models\Services\FileStorageCacheService.cs" />
     <Compile Include="Models\Services\FileThemeViewLocator.cs" />
     <Compile Include="Models\Services\PagesService.cs" />
     <Compile Include="Models\Article.cs" />
