@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Hosting;
+using Omu.ValueInjecter;
 using VirtoCommerce.Web.Views.Engines.Liquid;
 
 namespace VirtoCommerce.Web.Models.Services
@@ -56,7 +58,28 @@ namespace VirtoCommerce.Web.Models.Services
                 checkedLocations.Add(Path.Combine(_baseDirectoryPath, fullPath));
             }
 
-            // now search in default and global locations
+            // use more flex method
+            if (!viewFound)
+            {
+                var tempViewName = string.Format(fileNameFormat, viewName);
+                if (tempViewName.StartsWith("*"))
+                {
+                    tempViewName = viewName.RemovePrefix("*");
+                    foreach (var location in locations)
+                    {
+                        var tempLocation = this.RemoveBaseDirectory(
+                            Path.Combine(this.ThemeDirectory, location));
+                        foundView = allFiles.SingleOrDefault(x => x.Name.EndsWith(tempViewName, StringComparison.OrdinalIgnoreCase) && x.Name.StartsWith(tempLocation));
+                        if (foundView != null)
+                        {
+                            viewFound = true;
+                            break;
+                        }                       
+                    }
+                }
+            }
+
+            // now search in global location
             // App_Data/Themes/_Global
             if (!viewFound)
             {
@@ -115,11 +138,17 @@ namespace VirtoCommerce.Web.Models.Services
 
             return null;
         }
-        #endregion
 
         public ViewLocationResult LocateResource(string resourceName)
         {
-            var foundView = this.FindView(new[] { "config", "locales", "assets" }, resourceName);
+            return LocateResource(resourceName, null);
+        }
+
+        #endregion
+
+        public ViewLocationResult LocateResource(string resourceName, IEnumerable<string> locations)
+        {
+            var foundView = this.FindView(locations ?? new[] { "config", "locales", "assets" }, resourceName);
             return foundView;
         }
 

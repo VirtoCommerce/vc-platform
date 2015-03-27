@@ -587,6 +587,55 @@ namespace VirtoCommerce.Web.Models.Services
             return new Settings(parameters, defaultValue);
         }
 
+        public JObject GetLocale(bool loadDefault = false)
+        {
+            var theme = SiteContext.Current.Theme;
+            var language = SiteContext.Current.Language;
+            var contextKey = String.Format("vc-localizations-{0}-{1}-{2}",theme,language,loadDefault);
+            var value = HttpRuntime.Cache.Get(contextKey);
+
+            if (value != null)
+            {
+                if (value is JObject)
+                {
+                    return value as JObject;
+                }
+
+                return null;
+            }
+
+            ViewLocationResult localeResource = null;
+
+            if (loadDefault)
+            {
+                localeResource = this._viewLocator.LocateResource("*default.json");
+            }
+            else
+            {
+                var culture = language.TryGetCultureInfo();
+
+                // check specific culture file existance
+                localeResource = this._viewLocator.LocateResource((String.Format("{0}.json", culture.Name)))
+                    ?? this._viewLocator.LocateResource((String.Format("{0}.json", culture.TwoLetterISOLanguageName)));
+            }
+
+            if (localeResource == null)
+            {
+                return null;
+            }
+            
+            var fileContents = localeResource.Contents.Invoke().ReadToEnd();
+
+            if (fileContents != null)
+            {
+                var contents = JsonConvert.DeserializeObject<dynamic>(fileContents);
+                HttpRuntime.Cache.Insert(contextKey, contents, new CacheDependency(new[] { localeResource.Location }));
+                return contents;
+            }
+            HttpRuntime.Cache.Insert(contextKey, String.Empty, new CacheDependency(new[] { localeResource.Location }));
+            return null;
+        }
+
         public async Task<IEnumerable<Shop>> GetShopsAsync()
         {
             var stores = await this._storeClient.GetStoresAsync();
