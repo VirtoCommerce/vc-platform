@@ -22,6 +22,9 @@ namespace VirtoCommerce.MenuModule.Web.Converters
 
 		public static webModels.MenuLinkList ToWebModel(this coreModels.MenuLinkList list)
 		{
+		    if (list == null)
+		        return null;
+
 			var retVal = new webModels.MenuLinkList
 			             {
 			                 Id = list.Id,

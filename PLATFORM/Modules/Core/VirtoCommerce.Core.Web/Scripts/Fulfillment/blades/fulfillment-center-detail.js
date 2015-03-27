@@ -37,6 +37,8 @@
         if ($scope.blade.currentEntityId) {
             fulfillments.update($scope.blade.currentEntity, function () {
                 $scope.blade.refresh(true);
+            }, function (error) {
+                bladeNavigationService.setError('Error: ' + error.status, $scope.blade);
             });
         } else {
             fulfillments.update($scope.blade.currentEntity, function (data) {
@@ -44,6 +46,8 @@
                 $scope.blade.currentEntityId = data.id;
                 initializeBlade(data);
                 $scope.blade.parentBlade.refresh();
+            }, function (error) {
+                bladeNavigationService.setError('Error: ' + error.status, $scope.blade);
             });
         }
     };

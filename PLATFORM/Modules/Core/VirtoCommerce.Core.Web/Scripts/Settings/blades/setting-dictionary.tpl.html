@@ -1,0 +1,68 @@
+﻿<div class="blade-content">
+    <div class="blade-inner">
+        <div class="inner-block">
+            <form class="form" ng-submit="add(pdForm)" name="pdForm" novalidate autocomplete="off">
+                <fieldset>
+                    <legend>New value</legend>
+                    <div class="form-group">
+                        <label class="form-label">New value</label>
+                        <div class="form-input" ng-if="blade.currentEntity.valueType !== 'Number'">
+                            <input ng-class="{'error' : pdForm.dictValue.$invalid && !pdForm.dictValue.$pristine}" required ng-model="newValue.value" ui-validate=" 'dictValueValidator($value)' " name="dictValue" focus-on="" type="text" placeholder="Please enter value" />
+                        </div>
+                        <div class="form-input" ng-if="blade.currentEntity.valueType === 'Number'">
+                            <input ng-class="{'error' : pdForm.dictValue.$invalid && !pdForm.dictValue.$pristine}" required ng-model="newValue.value" ui-validate=" 'dictValueValidator($value)' " name="dictValue" focus-on="" type="text" placeholder="Please enter value" />
+                        </div>
+                        <div class="form-error" ng-if="pdForm.dictValue.$dirty && pdForm.dictValue.$invalid">
+                            <span ng-if="pdForm.dictValue.$error.required">Required</span>
+                            <span ng-if="pdForm.dictValue.$error.validator">Duplicate value found</span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <button class="btn" ng-disabled="pdForm.$invalid" type="submit">Add</button>
+                    </div>
+                </fieldset>
+            </form>
+            <fieldset ng-if="blade.currentEntity.arrayValues.length > 0">
+                <legend>Current values</legend>
+                <div class="table-wrapper">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th class="table-col">
+                                    <label class="form-control __checkbox">
+                                        <input type="checkbox" ng-model="selectedAll" ng-change="checkAll(selectedAll)" />
+                                        <span class="check"></span>
+                                    </label>
+                                </th>
+                                <th class="table-col">Value</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="table-item" ng-repeat="data in blade.currentEntity.arrayValues" ng-class="{'__selected': data === selectedItem}" context-menu data-target="pd_menu_{{$index}}" ng-click='selectItem(data)'>
+                                <td class="table-col">
+                                    <label class="form-control __checkbox">
+                                        <input type="checkbox" ng-model="data._selected">
+                                        <span class="check"></span>
+                                    </label>
+                                </td>
+                                <td class="table-col">
+                                    <div class="form-input" ng-if="blade.currentEntity.valueType !== 'Number'">
+                                        <input required ng-model="data.value" type="text" />
+                                    </div>
+                                    <div class="form-input __number js-number-input-plugin" ng-if="blade.currentEntity.valueType === 'Number'">
+                                        <input required ng-model="data.value" type="text" />
+                                    </div>
+                                    <ul role="menu" class="menu __context" id="pd_menu_{{$index}}">
+                                        <li class="menu-item" ng-click='delete($index)'>
+                                            <i class="menu-ico fa fa-trash-o"></i> Delete
+                                        </li>
+                                    </ul>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </fieldset>
+        </div>
+    </div>
+</div>

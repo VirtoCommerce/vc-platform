@@ -121,7 +121,7 @@ namespace VirtoCommerce.Content.Data.Services
 
 		private string FixPath(string themePath, string path)
 		{
-			return path.Replace(themePath, string.Empty).Trim('/');
+			return path.ToLowerInvariant().Replace(themePath.ToLowerInvariant(), string.Empty).Trim('/');
 		}
 
 		private static byte[] ReadFully(Stream input)
