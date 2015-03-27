@@ -28,14 +28,10 @@ namespace VirtoCommerce.Web.Models.Convertors
                 }
             }
 
-            if (!string.IsNullOrEmpty(customerOrder.Status)
-                && customerOrder.Status.Equals("Cancelled", StringComparison.OrdinalIgnoreCase))
-            {
-                ret.Cancelled = true;
-                ret.CancelledAt = null; // TODO
-                ret.CancelReason = null; // TODO
-                ret.CancelReasonLabel = null; // TODO
-            }
+            ret.Cancelled = customerOrder.IsCancelled;
+            ret.CancelledAt = customerOrder.CancelledDate;
+            ret.CancelReason = customerOrder.CancelReason;
+            ret.CancelReasonLabel = customerOrder.CancelReason;
 
             ret.CreatedAt = customerOrder.CreatedDate;
             ret.CustomerUrl = new Uri(string.Format("account/order/{0}", customerOrder.Id), UriKind.Relative).ToString();
@@ -90,27 +86,6 @@ namespace VirtoCommerce.Web.Models.Convertors
 
             return ret;
         }
-
-        public static CustomerAddress AsWebModel(this Address address)
-        {
-            var ret = new CustomerAddress
-                      {
-                          Address1 = address.Line1,
-                          Address2 = address.Line2,
-                          City = address.City,
-                          Company = address.Organization,
-                          Country = address.CountryName,
-                          CountryCode = address.CountryCode,
-                          FirstName = address.FirstName,
-                          LastName = address.LastName,
-                          Phone = address.DaytimePhoneNumber,
-                          Province = address.StateProvince,
-                          Zip = address.PostalCode
-                      };
-
-            return ret;
-        }
-
         public static CustomerAddress AsWebModel(this ApiClient.DataContracts.Orders.Address address)
         {
             var ret = new CustomerAddress
@@ -124,8 +99,7 @@ namespace VirtoCommerce.Web.Models.Convertors
                           FirstName = address.FirstName,
                           LastName = address.LastName,
                           Phone = address.Phone,
-                          Province = null,
-                          ProvinceCode = null,
+                          Province = address.RegionName,
                           Zip = address.PostalCode
                       };
 

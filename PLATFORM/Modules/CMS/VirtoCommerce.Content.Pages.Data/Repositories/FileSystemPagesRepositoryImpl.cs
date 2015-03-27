@@ -46,11 +46,11 @@ namespace VirtoCommerce.Content.Pages.Data.Repositories
 			return retVal;
 		}
 
-		public IEnumerable<Models.ShortPageInfo> GetPages(string path)
+		public IEnumerable<Models.Page> GetPages(string path)
 		{
-			var list = new List<Models.ShortPageInfo>();
+			var list = new List<Models.Page>();
 
-			var retVal = new List<Models.ShortPageInfo>();
+			var retVal = new List<Models.Page>();
 
 			var fullPath = GetFullPath(path);
 
@@ -65,10 +65,10 @@ namespace VirtoCommerce.Content.Pages.Data.Repositories
 			{
 				var files = Directory.GetFiles(language); ;
 
-				list.AddRange(files.Select(f => new Models.ShortPageInfo
+				list.AddRange(files.Select(f => new Models.Page
 								{
 									Name = Path.GetFileNameWithoutExtension(f),
-									LastModified = Directory.GetLastWriteTimeUtc(f),
+									ModifiedDate = Directory.GetLastWriteTimeUtc(f),
 									Language = GetLanguageFromFullPath(f)
 								}));
 			}

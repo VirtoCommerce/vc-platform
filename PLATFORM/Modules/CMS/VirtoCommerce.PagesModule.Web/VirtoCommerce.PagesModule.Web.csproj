@@ -117,11 +117,9 @@
     <Compile Include="Controllers\Api\PagesController.cs" />
     <Compile Include="Converters\GetPagesCriteriaConverter.cs" />
     <Compile Include="Converters\PageConverter.cs" />
-    <Compile Include="Converters\ShortPageInfoConverter.cs" />
     <Compile Include="Models\CheckNameResponse.cs" />
     <Compile Include="Models\GetPagesCriteria.cs" />
     <Compile Include="Models\Page.cs" />
-    <Compile Include="Models\ShortPageInfo.cs" />
     <Compile Include="Module.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utilities\PagesUtility.cs" />

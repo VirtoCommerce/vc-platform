@@ -20,13 +20,15 @@ namespace VirtoCommerce.Content.Pages.Data.Services
 			_pagesRepository = pagesRepository;
 		}
 
-		public IEnumerable<Models.ShortPageInfo> GetPages(string storeId, GetPagesCriteria criteria)
+		public IEnumerable<Models.Page> GetPages(string storeId, GetPagesCriteria criteria)
 		{
 			var path = string.Format("{0}/", storeId);
 			var pages = _pagesRepository.GetPages(path);
 			if(criteria.LastUpdateDate.HasValue)
 			{
-				return pages.Where(p => p.LastModified > criteria.LastUpdateDate.Value);
+				return pages.Where(p => p.ModifiedDate.HasValue ?
+									p.ModifiedDate.Value > criteria.LastUpdateDate.Value :
+									p.CreatedDate > criteria.LastUpdateDate.Value);
 			}
 			return pages;
 		}
@@ -47,7 +49,7 @@ namespace VirtoCommerce.Content.Pages.Data.Services
 			_pagesRepository.SavePage(fullPath, page);
 		}
 
-		public void DeletePage(string storeId, ShortPageInfo[] pages)
+		public void DeletePage(string storeId, Page[] pages)
 		{
 			foreach (var page in pages)
 			{
