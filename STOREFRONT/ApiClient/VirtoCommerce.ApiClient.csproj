@@ -78,6 +78,7 @@
     <Compile Include="DataContracts\CustomerService\CustomerSearchResult.cs" />
     <Compile Include="DataContracts\Lists\Link.cs" />
     <Compile Include="DataContracts\Lists\LinkList.cs" />
+    <Compile Include="DataContracts\Pages\Page.cs" />
     <Compile Include="DataContracts\Price.cs" />
     <Compile Include="Extensions\ListClientExtensions.cs" />
     <Compile Include="Extensions\PageClientExtensions.cs" />
