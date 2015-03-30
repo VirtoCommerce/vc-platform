@@ -36,7 +36,10 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 			}
 			retVal.Code = dbItem.Code;
 			retVal.Name = dbItem.Name;
+            retVal.IsBuyable = dbItem.IsBuyable;
 			retVal.MainProductId = mainProductId;
+            retVal.IsActive = dbItem.IsActive;
+            retVal.TrackInventory = dbItem.TrackInventory;
 
 			#region Links
 			retVal.Links = dbItem.CategoryItemRelations.Select(x => x.ToModuleModel()).ToList();
@@ -117,14 +120,15 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 
 			//Constant fields
 			//Only for main product
-			retVal.IsActive = product.MainProductId == null;
 			retVal.AvailabilityRule = (int)foundation.AvailabilityRule.Always;
 			retVal.StartDate = product.StartDate;
-			retVal.IsBuyable = true;
+            retVal.IsBuyable = product.IsBuyable;
 			retVal.MinQuantity = 1;
 			retVal.MaxQuantity = 0;
 			//If it variation need make active false (workaround)
-			retVal.IsActive = product.MainProductId == null;
+			// retVal.IsActive = product.MainProductId == null;
+		    retVal.IsActive = product.IsActive;
+            retVal.TrackInventory = product.TrackInventory;
 
 			//Changed fields
 			retVal.Name = product.Name;
@@ -232,11 +236,16 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 			if (target == null)
 				throw new ArgumentNullException("target");
 
-			//Simply properties patch
+			//Simple properties patch
 			if (source.Name != null)
 				target.Name = source.Name;
 			if (source.Code != null)
+			{
 				target.Code = source.Code;
+                target.IsBuyable = source.IsBuyable;
+                target.IsActive = source.IsActive;
+                target.TrackInventory = source.TrackInventory;
+			}
 
 
 			#region ItemAssets
