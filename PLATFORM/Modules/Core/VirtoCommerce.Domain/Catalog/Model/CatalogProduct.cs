@@ -19,6 +19,9 @@ namespace VirtoCommerce.Domain.Catalog.Model
 
 		public string MainProductId { get; set; }
 		public CatalogProduct MainProduct { get; set; }
+        public bool IsBuyable { get; set; }
+        public bool IsActive { get; set; }
+        public bool TrackInventory { get; set; }
 	
 		public ICollection<PropertyValue> PropertyValues { get; set; }
 		public ICollection<ItemAsset> Assets { get; set; }
