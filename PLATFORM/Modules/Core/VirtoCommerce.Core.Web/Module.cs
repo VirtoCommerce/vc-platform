@@ -1,11 +1,9 @@
-﻿using System;
-using System.Web;
+﻿using System.Web;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using Microsoft.Practices.Unity;
 using Owin;
 using VirtoCommerce.Caching.HttpCache;
-using VirtoCommerce.CoreModule.Web.Controllers.Api;
 using VirtoCommerce.CoreModule.Web.Notification;
 using VirtoCommerce.CoreModule.Web.Repositories;
 using VirtoCommerce.CoreModule.Web.Search;
@@ -145,61 +143,58 @@ namespace VirtoCommerce.CoreModule.Web
 
             #region Settings
 
-            _container.RegisterType<Func<IAppConfigRepository>>(
-                new InjectionFactory(x => new Func<IAppConfigRepository>(() => new EFAppConfigRepository(_connectionStringName))));
-
+            _container.RegisterType<IAppConfigRepository>(new InjectionFactory(c => new EFAppConfigRepository(_connectionStringName)));
             _container.RegisterType<ISettingsManager, SettingsManager>();
 
             #endregion
 
             #region Security
-            var foundationSecurityRepositoryFactory = new Func<IFoundationSecurityRepository>(() => new FoundationSecurityRepositoryImpl(_connectionStringName));
-            _container.RegisterType<Func<IFoundationSecurityRepository>>(
-                new InjectionFactory(x => foundationSecurityRepositoryFactory));
 
-            var securityRepositoryFactory = new Func<ISecurityRepository>(() => new EFSecurityRepository(_connectionStringName));
-            _container.RegisterType<Func<ISecurityRepository>>(new InjectionFactory(x => securityRepositoryFactory));
+            _container.RegisterType<IFoundationSecurityRepository>(new InjectionFactory(c => new FoundationSecurityRepositoryImpl(_connectionStringName)));
+            _container.RegisterType<ISecurityRepository>(new InjectionFactory(c => new EFSecurityRepository(_connectionStringName)));
 
             _container.RegisterType<IPermissionService, PermissionService>(new ContainerControlledLifetimeManager());
 
             _container.RegisterType<IApiAccountProvider, ApiAccountProvider>(new ContainerControlledLifetimeManager());
             _container.RegisterType<IClaimsIdentityProvider, ApplicationClaimsIdentityProvider>(new ContainerControlledLifetimeManager());
 
-            Func<ApplicationSignInManager> signInApplication = () => HttpContext.Current.GetOwinContext().Get<ApplicationSignInManager>();
-            Func<ApplicationUserManager> userManager = () => HttpContext.Current.GetOwinContext().GetUserManager<ApplicationUserManager>();
-            Func<IAuthenticationManager> auth = () => HttpContext.Current.GetOwinContext().Authentication;
-            var apiAccountProvider = _container.Resolve<IApiAccountProvider>();
-            _container.RegisterType<SecurityController>(new InjectionConstructor(foundationSecurityRepositoryFactory, signInApplication, userManager, auth, apiAccountProvider));
+            _container.RegisterType<ApplicationSignInManager>(new InjectionFactory(c => HttpContext.Current.GetOwinContext().Get<ApplicationSignInManager>()));
+            _container.RegisterType<ApplicationUserManager>(new InjectionFactory(c => HttpContext.Current.GetOwinContext().GetUserManager<ApplicationUserManager>()));
+            _container.RegisterType<IAuthenticationManager>(new InjectionFactory(c => HttpContext.Current.GetOwinContext().Authentication));
 
             #endregion
 
             #region Search providers
 
             _container.RegisterType<ISearchProviderManager, SearchProviderManager>(new ContainerControlledLifetimeManager());
+            _container.RegisterType<ISearchProvider, SearchProviderManager>(new ContainerControlledLifetimeManager());
+            _container.RegisterType<ISearchConnection, SearchProviderManager>(new ContainerControlledLifetimeManager());
+
             var searchProviderManager = _container.Resolve<ISearchProviderManager>();
 
             searchProviderManager.RegisterSearchProvider(SearchProviders.Elasticsearch.ToString(), connection => new ElasticSearchProvider(new ElasticSearchQueryBuilder(), connection));
             searchProviderManager.RegisterSearchProvider(SearchProviders.Lucene.ToString(), connection => new LuceneSearchProvider(new LuceneSearchQueryBuilder(), connection));
             searchProviderManager.RegisterSearchProvider(SearchProviders.AzureSearch.ToString(), connection => new AzureSearchProvider(new AzureSearchQueryBuilder(), connection));
 
-            _container.RegisterInstance(searchProviderManager as ISearchProvider);
-            _container.RegisterInstance(searchProviderManager as ISearchConnection);
-
             #endregion
 
             #region Payment gateways manager
+
             _container.RegisterType<IPaymentGatewayManager, InMemoryPaymentGatewayManagerImpl>(new ContainerControlledLifetimeManager());
+
             #endregion
 
             #region Notification
-            _container.RegisterInstance<INotifier>(new InMemoryNotifierImpl());
+
+            _container.RegisterType<INotifier, InMemoryNotifierImpl>(new ContainerControlledLifetimeManager());
+
             #endregion
 
             #region Fulfillment
-            _container.RegisterType<Func<IFoundationFulfillmentRepository>>(
-              new InjectionFactory(x => new Func<IFoundationFulfillmentRepository>(() =>
-                  new FoundationFulfillmentRepositoryImpl(_connectionStringName))));
+
+            _container.RegisterType<IFoundationFulfillmentRepository>(new InjectionFactory(c => new FoundationFulfillmentRepositoryImpl(_connectionStringName)));
             _container.RegisterType<IFulfillmentService, FulfillmentServiceImpl>();
+
             #endregion
 
             OwinConfig.Configure(_appBuilder, _container);
