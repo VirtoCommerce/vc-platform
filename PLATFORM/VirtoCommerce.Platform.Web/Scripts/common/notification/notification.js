@@ -114,6 +114,7 @@
 				template: 'Scripts/common/notification/menu.tpl.html',
 				action: function () { markAllAsRead(); },
 				showHistory: function () { $state.go('notificationsHistory') },
+				clearRecent: function () { notifyMenu.children.splice(0, notifyMenu.children.length) },
 				children: [],
 				newCount : 0
 			};

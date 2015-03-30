@@ -77,8 +77,9 @@
 /* Order status */
 .order-status
 {
-    background: #fff;
+    background: #43b0e6;
     border-bottom: 1px solid #dedede;
+    color: #fff;
     margin: 0 -20px;
     padding: 10px 20px;
 }

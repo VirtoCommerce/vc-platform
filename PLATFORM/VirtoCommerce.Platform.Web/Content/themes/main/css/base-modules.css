@@ -3224,6 +3224,11 @@ fieldset + fieldset
             box-shadow: none;
 }
 
+.tile.__note
+{
+    background-color: #fffff5;
+}
+
 .tile:after,
 .tile:before
 {
@@ -4254,18 +4259,18 @@ fieldset + fieldset
     padding: 15px 0;
 }
 
-.column:nth-last-child(3),
-.column:nth-last-child(3) ~ .column
-{
-    float: left;
-    width: 33.3333%;
-}
-
 .column:nth-last-child(2),
 .column:nth-last-child(2) ~ .column
 {
     float: left;
     width: 50%;
+}
+
+.column:nth-last-child(3),
+.column:nth-last-child(3) ~ .column
+{
+    float: left;
+    width: 33.3333%;
 }
 
 .column .form-group
