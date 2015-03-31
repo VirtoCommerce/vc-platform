@@ -86,6 +86,10 @@ namespace MailChimp.MailingModule.Web.Controllers.Api
                 if (string.IsNullOrEmpty(results.EUId))
                     return BadRequest();
             }
+            else
+            {
+                return BadRequest();
+            }
             return Ok();
         }
     }
