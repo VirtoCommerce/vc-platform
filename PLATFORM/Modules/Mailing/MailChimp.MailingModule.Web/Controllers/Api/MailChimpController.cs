@@ -14,9 +14,9 @@ namespace MailChimp.MailingModule.Web.Controllers.Api
     public class MailChimpController : ApiController
     {
         Dictionary<string, string> _configuration = new Dictionary<string, string>(){
-        {"client_id", "285052451305"},
-        {"client_secret", "b4114b54d83aebd3ccb285c968ee06cc"},
-        {"redirect_uri", "http://127.0.0.1/platformweb/api/mailing/complete"},
+        {"client_id", "285052451305"}, //TODO replace with production clientId
+        {"client_secret", "b4114b54d83aebd3ccb285c968ee06cc"}, //TODO replace with production secret
+        {"redirect_uri", "http://127.0.0.1/platformweb/api/mailing/complete"}, //TODO replace 127.0.0.1 with correct auth complete link.
         {"authorize_uri", "https://login.mailchimp.com/oauth2/authorize"},
         {"access_token_uri", "https://login.mailchimp.com/oauth2/token"},
         {"base_uri", "https://login.mailchimp.com/oauth2/"}};
@@ -94,33 +94,5 @@ namespace MailChimp.MailingModule.Web.Controllers.Api
             }
             return Ok();
         }
-
-        [HttpGet]
-        [ResponseType(typeof(void))]
-        [Route("")]
-        public IHttpActionResult SubscribeBatch()
-        {
-            _mailChimpApiKey = _settingsManager.GetValue("MailChimp.Mailing.Credentials.ApiKey", string.Empty);
-            _mailChimpListId = _settingsManager.GetValue("MailChimp.Mailing.SubscribersListId", string.Empty);
-            if (!string.IsNullOrEmpty(_mailChimpApiKey))
-            {
-                var mc = new MailChimpManager(_mailChimpApiKey);
-
-                //  Create the batch email parameter list
-                var email = new List<BatchEmailParameter>
-                {
-                    new BatchEmailParameter
-                    {
-                        Email = new EmailParameter { Email = "aar@virtoway.com" }
-                    }
-                };
-
-                var results = mc.BatchSubscribe(_mailChimpListId, email);
-                if (results.ErrorCount > 0)
-                    return BadRequest();
-            }
-            return Ok();
-        }
-
     }
 }
