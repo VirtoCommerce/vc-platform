@@ -195,7 +195,6 @@ namespace VirtoCommerce.CoreModule.Web
             _container.RegisterType<IBlobStorageProvider, AssetsProviderManager>(new ContainerControlledLifetimeManager());
             _container.RegisterType<IAssetRepository, AssetsProviderManager>(new ContainerControlledLifetimeManager());
             _container.RegisterType<IAssetUrl, AssetsProviderManager>(new ContainerControlledLifetimeManager());
-            _container.RegisterType<IUnitOfWork, AssetsProviderManager>(new ContainerControlledLifetimeManager());
 
             var assetsProviderManager = _container.Resolve<IAssetsProviderManager>();
 
