@@ -4112,6 +4112,11 @@ fieldset + fieldset
     vertical-align: top;
 }
 
+.tree.__horizontal .tree-item
+{
+    display: block;
+}
+
 .tree-view ul
 {
     list-style: none;
@@ -4156,6 +4161,11 @@ fieldset + fieldset
     
     -webkit-box-sizing: border-box;
             box-sizing: border-box;
+}
+
+.tree.__horizontal .tree-block
+{
+    vertical-align: middle;
 }
 
 .tree-block:hover
@@ -4227,6 +4237,12 @@ fieldset + fieldset
 .tree-node
 {
     position: relative;
+}
+
+.tree.__horizontal .tree-node
+{
+    display: inline-block;
+    vertical-align: middle;
 }
 
 .tree-node:after
@@ -5040,7 +5056,7 @@ tags-input .tags .tag-item .remove-button
 
         				.dropdown-content .list-ico
         				{
-        					font-size: 28px;
+        					font-size: 25px;
         					height: 24px;
         					margin: 0 20px 0 0;
                             position: relative;
