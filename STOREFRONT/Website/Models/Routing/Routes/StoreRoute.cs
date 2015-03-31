@@ -180,7 +180,7 @@ namespace VirtoCommerce.Web.Models.Routing.Routes
                     {
                         startIndex = 0;
                     }
-                        //either lang or store found
+                    //either lang or store found
                     else if (languageFound ^ storeFound)
                     {
                         startIndex = 1;
@@ -392,7 +392,7 @@ namespace VirtoCommerce.Web.Models.Routing.Routes
             {
                 routeValue = routeValue.Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries).Last();
                 var keyword = routeValue;
-                    // this.GetKeyword(routeValue, type, language); Sasha: routevalue here is already a keyword
+                // this.GetKeyword(routeValue, type, language); Sasha: routevalue here is already a keyword
 
                 var client = ClientContext.Clients.CreateBrowseClient();
 
@@ -417,7 +417,6 @@ namespace VirtoCommerce.Web.Models.Routing.Routes
                              * */
 
                             return routeValue; // routevalue for category is outline
-                            break;
                     }
                 }
             }
