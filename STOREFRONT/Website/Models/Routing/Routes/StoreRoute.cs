@@ -85,11 +85,11 @@ namespace VirtoCommerce.Web.Models.Routing.Routes
                     var item =
                         Task.Run(
                             () => client.GetProductAsync(storeId, language, routeValue, ItemResponseGroups.ItemMedium))
-                            .Result.AsWebModel();
-                    if (item != null)
-                    {
-                        keyword = item.Keywords.SeoKeyword(language);
-                    }
+                            .Result;//.AsWebModel();
+                    //if (item != null)
+                    //{
+                    //    keyword = item.Keywords.SeoKeyword(language);
+                    //}
                     break;
             }
 

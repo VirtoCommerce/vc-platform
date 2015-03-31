@@ -37,6 +37,7 @@ namespace VirtoCommerce.Web.Models.Services
         private readonly SecurityClient _securityClient;
         private readonly StoreClient _storeClient;
         private readonly PriceClient _priceClient;
+        private readonly InventoryClient _inventoryClient;
         private readonly ListClient _listClient;
         private readonly ThemeClient _themeClient;
         private readonly PageClient _pageClient;
@@ -59,6 +60,7 @@ namespace VirtoCommerce.Web.Models.Services
             this._orderClient = ClientContext.Clients.CreateOrderClient();
             this._securityClient = ClientContext.Clients.CreateSecurityClient();
             this._priceClient = ClientContext.Clients.CreatePriceClient();
+            this._inventoryClient = ClientContext.Clients.CreateInventoryClient();
             this._themeClient = ClientContext.Clients.CreateThemeClient();
             this._pageClient = ClientContext.Clients.CreatePageClient();
             this._reviewsClient = ClientContext.Clients.CreateReviewsClient();
@@ -68,7 +70,7 @@ namespace VirtoCommerce.Web.Models.Services
             
             this._viewLocator = new FileThemeViewLocator(HostingEnvironment.MapPath(_themesCacheStoragePath));
 
-            this._cartHelper = new CartHelper(this);
+            //this._cartHelper = new CartHelper(this);
         }
         #endregion
 
@@ -466,7 +468,9 @@ namespace VirtoCommerce.Web.Models.Services
 
             var variationIds = product.GetAllVariationIds();
             var prices = await this.GetProductPricesAsync(SiteContext.Current.PriceLists, variationIds);
-            return product.AsWebModel(prices);
+            //var inventories = await this.GetItemInventoriesAsync(variationIds);
+
+            return product.AsWebModel(prices/*, inventories*/);
         }
 
         public async Task<Product> GetProductByKeywordAsync(string keyword)
@@ -481,8 +485,9 @@ namespace VirtoCommerce.Web.Models.Services
 
             var variationIds = product.Variations.Select(v => v.Id).ToArray();
             var prices = await this.GetProductPricesAsync(SiteContext.Current.PriceLists, variationIds);
+            //var inventories = await this.GetItemInventoriesAsync(variationIds);
 
-            return product.AsWebModel(prices);
+            return product.AsWebModel(prices/*, inventories*/);
         }
 
         public async Task<ProductSearchResult> GetProductsAsync(
@@ -537,16 +542,31 @@ namespace VirtoCommerce.Web.Models.Services
             return response;
         }
 
-        public async Task<IEnumerable<Price>> GetProductPricesAsync(string[] priceLists, string[] productIds)
+        public async Task<ItemInventory> GetItemInventoryAsync(string itemId)
+        {
+            return await this._inventoryClient.GetItemInventory(itemId);
+        }
+
+        public async Task<IEnumerable<ItemInventory>> GetItemInventoriesAsync(string[] itemIds)
+        {
+            var inventories = new List<ItemInventory>();
+
+            foreach (var itemId in itemIds)
+            {
+                inventories.Add(await this.GetItemInventoryAsync(itemId));
+            }
+
+            return inventories;
+        }
+
+        public async Task<IEnumerable<ApiClient.DataContracts.Price>> GetProductPricesAsync(string[] priceLists, string[] productIds)
         {
             if (priceLists == null || productIds == null) return null;
 
-            var response = await this._priceClient.GetPrices(priceLists, productIds).ConfigureAwait(false);
+            return await this._priceClient.GetPrices(priceLists, productIds).ConfigureAwait(false);
 
-            if (response != null)
-                return response.Select(p => p.AsWebModel());
-
-            return null;
+            //if (response != null)
+            //    return response.Select(p => p.AsWebModel());
         }
 
         public async Task<string[]> GetPriceListsAsync(string catalog, string currency, TagQuery tags)
@@ -666,9 +686,10 @@ namespace VirtoCommerce.Web.Models.Services
 
             var allIds = response.Items.ToArray().GetAllVariationIds();
             var prices = await GetProductPricesAsync(priceLists, allIds.ToArray());
+            //var inventories = await this.GetItemInventoriesAsync(allIds);
 
             result.ResultsCount = response.TotalCount;
-            result.Results = new List<object>(response.Items.Select(i => i.AsWebModel(prices)));
+            result.Results = new List<object>(response.Items.Select(i => i.AsWebModel(prices/*, inventories*/)));
 
             return result;
         }
