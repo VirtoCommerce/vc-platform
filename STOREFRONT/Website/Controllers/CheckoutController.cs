@@ -29,6 +29,7 @@ namespace VirtoCommerce.Web.Controllers
             if (this.Context.Checkout != null)
             {
                 this.Context.Checkout.Email = this.Context.Customer != null ? this.Context.Customer.Email : null;
+                this.Context.Checkout.ShippingAddress = this.Context.Customer.DefaultAddress;
                 this.Context.Checkout.Currency = this.Context.Shop.Currency;
             }
 
@@ -53,7 +54,16 @@ namespace VirtoCommerce.Web.Controllers
                     return this.View("checkout-step-1");
                 }
 
-                this.Context.Checkout.Email = formModel.Email;
+                var customer = await this.CustomerService.GetCustomerAsync(formModel.Email, this.Context.Shop.StoreId);
+
+                if (customer == null)
+                {
+                    return RedirectToAction("Login", "Account");
+                }
+
+                this.Context.Customer = customer;
+                this.Context.Checkout.Email = this.Context.Customer.Email;
+
                 this.Context.Checkout.ShippingAddress = new CustomerAddress
                 {
                     Address1 = formModel.Address1,
@@ -61,7 +71,7 @@ namespace VirtoCommerce.Web.Controllers
                     City = formModel.City,
                     Company = formModel.Company.Length > 0 ? formModel.Company : null,
                     Country = formModel.Country,
-                    CountryCode = null,
+                    CountryCode = "RUS",
                     FirstName = formModel.FirstName,
                     LastName = formModel.LastName,
                     Phone = formModel.Phone.Length > 0 ? formModel.Phone : null,
@@ -81,7 +91,7 @@ namespace VirtoCommerce.Web.Controllers
         {
             this.Context.Checkout = await this.Service.GetCheckoutAsync();
 
-            if (!this.Context.Checkout.ShippingAddress.IsFilledCorrectly)
+            if (this.Context.Checkout.ShippingAddress == null || !this.Context.Checkout.ShippingAddress.IsFilledCorrectly)
             {
                 return View("checkout-step-1");
             }
@@ -114,7 +124,7 @@ namespace VirtoCommerce.Web.Controllers
                     City = formModel.City,
                     Company = formModel.Company.Length > 0 ? formModel.Company : null,
                     Country = formModel.Country,
-                    CountryCode = null,
+                    CountryCode = "RUS",
                     FirstName = formModel.FirstName,
                     LastName = formModel.LastName,
                     Phone = formModel.Phone.Length > 0 ? formModel.Phone : null,
@@ -125,26 +135,17 @@ namespace VirtoCommerce.Web.Controllers
                 this.Context.Checkout.ShippingMethod = this.Context.Checkout.ShippingMethods.FirstOrDefault(sm => sm.Handle == formModel.ShippingMethodId);
                 this.Context.Checkout.PaymentMethod = this.Context.Checkout.PaymentMethods.FirstOrDefault(pm => pm.Handle == formModel.PaymentMethodId);
 
-                var customer = await this.CustomerService.GetCustomerAsync(this.Context.Checkout.Email, this.Context.Shop.StoreId);
-
-                if (customer == null)
-                {
-                    await this.SecurityService.RegisterUser(
-                        this.Context.Checkout.Email,
-                        this.Context.Checkout.ShippingAddress.FirstName,
-                        this.Context.Checkout.ShippingAddress.LastName,
-                        null,
-                        this.Context.Shop.StoreId);
-                }
-
                 this.Context.Customer = await this.CustomerService.GetCustomerAsync(this.Context.Checkout.Email, this.Context.Shop.StoreId);
+                this.Context.Customer.Addresses.Add(this.Context.Checkout.ShippingAddress);
+
+                await this.CustomerService.UpdateCustomerAsync(this.Context.Customer);
 
                 this.Context.Checkout.CustomerId = this.Context.Customer.Id;
-
-                await this.Service.CreateOrderAsync(this.Context.Checkout);
             }
 
-            return View("thanks-page");
+            var order = await this.Service.CreateOrderAsync(this.Context.Checkout);
+
+            return RedirectToAction("Order", "Account", new { Id = order.Id });
         }
     }
 }

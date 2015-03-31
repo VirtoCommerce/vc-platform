@@ -17,6 +17,7 @@ using VirtoCommerce.Foundation.Data.Security.Identity;
 using VirtoCommerce.Foundation.Frameworks.Extensions;
 using VirtoCommerce.Foundation.Security.Model;
 using ApiAccount = VirtoCommerce.Foundation.Security.Model.ApiAccount;
+using Omu.ValueInjecter;
 
 namespace VirtoCommerce.CoreModule.Web.Controllers.Api
 {
@@ -89,10 +90,9 @@ namespace VirtoCommerce.CoreModule.Web.Controllers.Api
 
         [HttpGet]
         [Route("usersession/{userName}")]
-        [ResponseType(typeof(ApplicationUserExtended))]
-        public IHttpActionResult GetUserSession(string userName)
+        public async Task<ApplicationUserExtended> GetUserSession(string userName)
         {
-            return Ok(GetUserExtended(userName));
+            return await GetUserExtended(userName);
         }
 
         #region Methods needed to integrate identity security with external user store that will call api methods
@@ -132,6 +132,7 @@ namespace VirtoCommerce.CoreModule.Web.Controllers.Api
         public IHttpActionResult GenerateNewApiAccount()
         {
             var apiAccount = _apiAccountProvider.GenerateApiCredentials();
+			apiAccount.IsActive = true;
             var result = apiAccount.ToWebModel();
             return Ok(result);
         }
@@ -245,16 +246,8 @@ namespace VirtoCommerce.CoreModule.Web.Controllers.Api
         {
             var dbUser = await UserManager.FindByIdAsync(user.Id);
 
-            dbUser.AccessFailedCount = user.AccessFailedCount;
-            dbUser.Email = user.Email;
-            dbUser.EmailConfirmed = user.EmailConfirmed;
-            dbUser.LockoutEnabled = user.LockoutEnabled;
-            dbUser.LockoutEndDateUtc = user.LockoutEndDateUtc;
-            dbUser.PasswordHash = user.PasswordHash;
-            dbUser.PhoneNumberConfirmed = user.PhoneNumberConfirmed;
-            dbUser.PhoneNumber = user.PhoneNumber;
-            dbUser.SecurityStamp = user.SecurityStamp;
-            dbUser.TwoFactorEnabled = user.TwoFactorEnabled;
+			dbUser.InjectFrom(user);
+          
 
             var result = await UserManager.UpdateAsync(dbUser);
 
@@ -269,6 +262,8 @@ namespace VirtoCommerce.CoreModule.Web.Controllers.Api
                     }
                     acount.RegisterType = (int)user.UserType;
                     acount.AccountState = (int)user.UserState;
+					acount.MemberId = user.MemberId;
+					acount.StoreId = user.StoreId;
                     if (user.ApiAcounts != null)
                     {
                         var source = new ObservableCollection<ApiAccount>(user.ApiAcounts.Select(x => x.ToFoundation()));
@@ -295,16 +290,9 @@ namespace VirtoCommerce.CoreModule.Web.Controllers.Api
         [Route("users/create")]
         public async Task<IHttpActionResult> CreateAsync(ApplicationUserExtended user)
         {
-            var dbUser = new ApplicationUser
-            {
-                Id = user.Id,
-                Email = user.Email,
-                PasswordHash = user.PasswordHash,
-                UserName = user.UserName,
-                LockoutEnabled = user.LockoutEnabled,
-                TwoFactorEnabled = user.TwoFactorEnabled,
-                PhoneNumber = user.PhoneNumber
-            };
+			var dbUser = new ApplicationUser();
+
+			dbUser.InjectFrom(user);
 
             IdentityResult result;
             if (!string.IsNullOrEmpty(user.Password))
@@ -318,16 +306,14 @@ namespace VirtoCommerce.CoreModule.Web.Controllers.Api
 
             if (result.Succeeded)
             {
-                var id = Guid.NewGuid().ToString();
-
-                using (var repository = _securityRepository())
+                 using (var repository = _securityRepository())
                 {
                     var account = new Account
                     {
                         UserName = user.UserName,
                         AccountId = user.Id,
+						MemberId = user.MemberId,
                         AccountState = AccountState.Approved.GetHashCode(),
-                        MemberId = id,
                         RegisterType = user.UserType.GetHashCode(),
                         StoreId = user.StoreId
                     };
@@ -356,23 +342,14 @@ namespace VirtoCommerce.CoreModule.Web.Controllers.Api
             var applicationUser = await UserManager.FindByNameAsync(userName);
             if (applicationUser != null)
             {
-                retVal = new ApplicationUserExtended
-                {
-                    Email = applicationUser.Email,
-                    EmailConfirmed = applicationUser.EmailConfirmed,
-                    Id = applicationUser.Id,
-                    LockoutEnabled = applicationUser.LockoutEnabled,
-                    PhoneNumber = applicationUser.PhoneNumber,
-                    LockoutEndDateUtc = applicationUser.LockoutEndDateUtc,
-                    PhoneNumberConfirmed = applicationUser.PhoneNumberConfirmed,
-                    SecurityStamp = applicationUser.SecurityStamp,
-                    UserName = applicationUser.UserName,
-                };
+				retVal = new ApplicationUserExtended();
+ 				retVal.InjectFrom(applicationUser);
 
                 using (var repository = _securityRepository())
                 {
+					
                     var user = repository.GetAccountByName(userName);
-
+					retVal.InjectFrom(user);
                     if (user != null)
                     {
                         var permissions =

@@ -1,0 +1,28 @@
+{% layout settings.customer_layout %}
+
+<div class="grid">
+  <div class="grid-item large--one-third push--large--one-third">
+
+    <h1>{{ 'customer.activate_account.title' | t }}</h1>
+    <p>{{ 'customer.activate_account.subtext' | t }}</p>
+
+    {% form 'activate_customer_password' %}
+
+      {% include 'form-errors-custom' %}
+
+      <label for="customer_password">{{ 'customer.activate_account.password' | t }}</label>
+      <input type="password" value="" name="customer[password]" id="customer_password">
+
+      <label for="customer_password_confirmation">{{ 'customer.activate_account.password_confirm' | t }}</label>
+      <input type="password" value="" name="customer[password_confirmation]" id="customer_password_confirmation">
+
+      <div class="text-center">
+        <p>
+          <input type="submit" class="btn" value="{{ 'customer.activate_account.submit' | t }}">
+        </p>
+        or <input type="submit" class="text-link" name="decline" id="customer_decline" value="{{ 'customer.activate_account.cancel' | t }}">
+      </div>
+    {% endform %}
+
+  </div>
+</div>

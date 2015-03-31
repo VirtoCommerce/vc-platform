@@ -49,6 +49,13 @@ namespace VirtoCommerce.Content.Data.Services
 			return items;
 		}
 
+		public async Task DeleteTheme(string storeId, string themeId)
+		{
+			var themePath = GetThemePath(storeId, themeId);
+
+			await _repository.DeleteTheme(themePath);
+		}
+
 		public async Task<IEnumerable<ThemeAsset>> GetThemeAssets(string storeId, string themeName, GetThemeAssetsCriteria criteria)
 		{
 			var themePath = GetThemePath(storeId, themeName);
@@ -114,7 +121,7 @@ namespace VirtoCommerce.Content.Data.Services
 
 		private string FixPath(string themePath, string path)
 		{
-			return path.Replace(themePath, string.Empty).Trim('/');
+			return path.ToLowerInvariant().Replace(themePath.ToLowerInvariant(), string.Empty).Trim('/');
 		}
 
 		private static byte[] ReadFully(Stream input)
@@ -146,15 +153,15 @@ namespace VirtoCommerce.Content.Data.Services
 					{
 						var asset = new ThemeAsset
 						{
-							AssetName = entry.FullName,
-							Id = entry.FullName
+							AssetName = entry.FullName.Replace(themeName, ""),
+							Id = entry.FullName.Replace(themeName, "")
 						};
 
 						var arr = ReadFully(stream);
 						asset.ByteContent = arr;
 						asset.ContentType = ContentTypeUtility.GetContentType(entry.FullName, arr);
 
-						await SaveThemeAsset(storeId, themeName, asset);
+						await SaveThemeAsset(storeId, themeName.Trim('/'), asset);
 					}
 				}
 			}

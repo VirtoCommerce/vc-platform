@@ -11,6 +11,7 @@ using Omu.ValueInjecter;
 using VirtoCommerce.Foundation.Money;
 using VirtoCommerce.Foundation.Frameworks.ConventionInjections;
 using cart = VirtoCommerce.Domain.Cart.Model;
+using VirtoCommerce.Foundation.Frameworks;
 
 namespace VirtoCommerce.OrderModule.Data.Converters
 {
@@ -141,6 +142,10 @@ namespace VirtoCommerce.OrderModule.Data.Converters
 																		       x => x.OrganizationId, x => x.EmployeeId);
 			target.InjectFrom(patchInjectionPolicy, source);
 
+			if (!source.Addresses.IsNullCollection())
+			{
+				source.Addresses.Patch(target.Addresses, new AddressComparer(), (sourceItem, targetItem) => sourceItem.Patch(targetItem));
+			}
 
 			if (!source.Shipments.IsNullCollection())
 			{

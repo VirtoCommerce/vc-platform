@@ -60,7 +60,7 @@ namespace VirtoCommerce.Web.Controllers
         [Route("global/assets/{*assetId}")]
         public ActionResult Global(string assetId)
         {
-            var virtualPath = String.Format("~/App_Data/Global/{0}", assetId);
+            var virtualPath = String.Format("~/App_Data/Themes/_Global/{0}", assetId);
             return this.AssetResult(virtualPath, assetId);
         }
 
@@ -76,7 +76,7 @@ namespace VirtoCommerce.Web.Controllers
         [Route("themes/assets/{asset}")]
         public ActionResult Themed(string theme, string asset)
         {
-            var virtualPath = String.Format("~/App_Data/Themes/{0}/assets/{1}", theme, asset);
+            var virtualPath = String.Format("~/App_Data/Themes/{0}/assets/{1}", this.Context.Theme.Path, asset);
             return this.AssetResult(virtualPath, asset);
         }
         #endregion
@@ -123,7 +123,7 @@ namespace VirtoCommerce.Web.Controllers
             var str = RenderPartialViewToString(this, id.Replace("scss.css", "scss"), this.Settings);
             var compiledContent = this._compiler.Compile(str, OutputStyle.Compressed, false);
 
-            var rootVirtual = String.Format("~/App_Data/Themes/{0}", this.Context.Theme);
+            var rootVirtual = String.Format("~/App_Data/Themes/{0}", this.Context.Theme.Path);
             var rootPath = this.Server.MapPath(rootVirtual);
             
             var allDirectories = Directory.GetDirectories(rootPath, "*", SearchOption.AllDirectories);

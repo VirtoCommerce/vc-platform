@@ -21,7 +21,9 @@
         public string SecureUrl { get; set; }
 
         public SeoKeyword[] Seo { get; set; }
-        public StoreSetting[] Settings { get; set; }
+
+        public PropertyDictionary Settings { get; set; }
+        //public StoreSetting[] Settings { get; set; }
         public int StoreState { get; set; }
 
         public string TimeZone { get; set; }

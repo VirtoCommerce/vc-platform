@@ -63,8 +63,8 @@
       <DependentUpon>201503161710486_AddLanguage.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Models\GetPagesCriteria.cs" />
     <Compile Include="Models\Page.cs" />
-    <Compile Include="Models\ShortPageInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\DatabasePagesRepositoryImpl.cs" />
     <Compile Include="Repositories\FileSystemPagesRepositoryImpl.cs" />

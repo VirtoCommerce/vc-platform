@@ -105,14 +105,12 @@
     <Content Include="Scripts\blades\pricelist-assignment-detail.tpl.html" />
     <Content Include="Scripts\blades\pricelist-assignment-list.js" />
     <Content Include="Scripts\blades\pricelist-assignment-list.tpl.html" />
-    <Content Include="Scripts\blades\pricelist-prices-list.js" />
-    <Content Include="Scripts\blades\pricelist-prices-list.tpl.html" />
     <Content Include="Scripts\blades\pricelist-item-list.js" />
     <Content Include="Scripts\blades\pricelist-list.js" />
     <Content Include="Scripts\blades\pricelist-item-list.tpl.html" />
     <Content Include="Scripts\blades\pricelist-list.tpl.html" />
-    <Content Include="Scripts\blades\item\item-prices-list.js" />
-    <Content Include="Scripts\blades\item\item-prices-list.tpl.html" />
+    <Content Include="Scripts\blades\prices-list.js" />
+    <Content Include="Scripts\blades\prices-list.tpl.html" />
     <Content Include="Scripts\blades\item\item-pricelists-list.js" />
     <Content Include="Scripts\blades\item\item-pricelists-list.tpl.html" />
     <Content Include="Scripts\blades\pricelist-detail.js" />

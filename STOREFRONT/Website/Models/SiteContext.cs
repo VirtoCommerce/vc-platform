@@ -320,6 +320,20 @@ namespace VirtoCommerce.Web.Models
                 this.Set("pricelists", value);
             }
         }
+
+        public Theme[] Themes
+        {
+            get
+            {
+                object retValue;
+                return this._Storage.TryGetValue("themes", out retValue) ? retValue as Theme[] : null;
+            }
+            set
+            {
+                this.Set("themes", value);
+            }
+        }
+
         #endregion
 
         #region Public Methods and Operators

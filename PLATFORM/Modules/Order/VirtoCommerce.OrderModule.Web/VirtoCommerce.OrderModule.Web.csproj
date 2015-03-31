@@ -120,9 +120,11 @@
     <Compile Include="Model\Operation.cs" />
     <Compile Include="Module.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Content Include="Scripts\blades\operation-comment.js" />
+    <Content Include="Scripts\blades\operation-comment.tpl.html" />
     <Content Include="Scripts\dialogs\cancelOperation-dialog.tpl.html" />
-    <Content Include="Scripts\widgets\address-widget.js" />
-    <Content Include="Scripts\widgets\address-widget.tpl.html" />
+    <Content Include="Scripts\widgets\customerOrder-address-widget.js" />
+    <Content Include="Scripts\widgets\customerOrder-address-widget.tpl.html" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
@@ -131,8 +133,8 @@
     <Content Include="Scripts\blades\customerOrder-list.tpl.html" />
     <Content Include="Scripts\blades\operation-detail.js" />
     <Content Include="Scripts\blades\customerOrder-detail.tpl.html" />
-    <Content Include="Scripts\blades\customerOrder-items.js" />
-    <Content Include="Scripts\blades\customerOrder-items.tpl.html" />
+    <Content Include="Scripts\blades\operation-items.js" />
+    <Content Include="Scripts\blades\operation-items.tpl.html" />
     <Content Include="Scripts\blades\operation-detail-toolbar.tpl.html" />
     <Content Include="Scripts\blades\payment-detail.tpl.html" />
     <Content Include="Scripts\blades\shipment-detail.tpl.html" />
@@ -172,8 +174,10 @@
     <Content Include="Scripts\resources\stores.js" />
     <Content Include="Scripts\resources\fulfillmentCenters.js" />
     <Content Include="Scripts\services\calculateTotals.js" />
-    <Content Include="Scripts\widgets\customerOrder-items-widget.tpl.html" />
-    <Content Include="Scripts\widgets\customerOrder-items-widget.js" />
+    <Content Include="Scripts\widgets\operation-items-widget.tpl.html" />
+    <Content Include="Scripts\widgets\operation-items-widget.js" />
+    <Content Include="Scripts\widgets\shipment-address-widget.js" />
+    <Content Include="Scripts\widgets\shipment-address-widget.tpl.html" />
     <Content Include="Scripts\widgets\shipment-totals-widget.js" />
     <Content Include="Scripts\widgets\shipment-totals-widget.tpl.html" />
     <Content Include="Scripts\widgets\operation-comment-widget.js" />

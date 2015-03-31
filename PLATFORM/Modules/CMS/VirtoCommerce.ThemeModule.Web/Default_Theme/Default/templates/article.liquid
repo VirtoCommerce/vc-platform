@@ -1,0 +1,180 @@
+{% assign number_of_comments = article.comments_count %}
+
+{% if comment and comment.created_at %}
+  {% assign number_of_comments = article.comments_count | plus: 1 %}
+{% endif %}
+
+{% include 'breadcrumb' %}
+
+<div class="grid grid-border">
+
+  <div class="grid-item large--four-fifths">
+    <div class="grid">
+      <div class="grid-item large--ten-twelfths">
+
+        <header class="section-header">
+          <div class="section-header--left">
+            <h1>{{ article.title }}</h1>
+            <p class="text-light">
+              {% capture date %}<strong><time pubdate datetime="{{ article.published_at | date: '%Y-%m-%d' }}">{{ article.published_at | date: format: 'month_day_year' }}</time></strong>{% endcapture %}
+              {% capture author %}<strong>{{ article.author }}</strong>{% endcapture %}
+              {{ 'blogs.article.author_on_date_html' | t: author: author, date: date }}
+            </p>
+          </div>
+        </header>
+
+        <div class="rte">
+          {{ article.content }}
+        </div>
+
+        {% if settings.social_sharing_blog %}
+          <hr class="hr--clear">
+          <h3>{{ 'blogs.article.share_this_post' | t }}</h3>
+          {% include 'social-sharing' %}
+          <hr>
+        {% endif %}
+
+        <ul>
+          {% if blog.comments_enabled? %}
+          <li>
+            <a href="#comments">
+              {{ 'blogs.comments.comments_with_count' | t: count: number_of_comments }}
+            </a>
+          </li>
+          {% endif %}
+
+          {% include 'tags-article' %}
+
+        </ul>
+
+        {% if blog.next_article or blog.previous_article %}
+        <hr>
+
+        <p class="clearfix">
+          {% if blog.previous_article %}
+            <span class="left">
+              {{ 'blogs.article.older_post' | t | prepend: '← ' | link_to: blog.previous_article }}
+            </span>
+          {% endif %}
+          {% if blog.next_article %}
+            <span class="right">
+              {{ 'blogs.article.newer_post' | t | append: ' →' | link_to: blog.next_article }}
+            </span>
+          {% endif %}
+        </p>
+        {% endif %}
+
+
+        {% if blog.comments_enabled? %}
+
+        <hr>
+
+        <div class="section-header">
+          <p class="h1 section-header--left">{{ 'blogs.comments.comments_with_count' | t: count: number_of_comments }}</p>
+          <div class="section-header--right">
+            <a href="#write-comment">{{ 'blogs.comments.title' | t }} &rsaquo;</a>
+          </div>
+        </div>
+
+          {% paginate article.comments by 5 %}
+
+          <div id="comments">
+
+            {% if comment and comment.created_at %}
+            <p class="note form-success">
+              {% if blog.moderated? %}
+                {{ 'blogs.comments.success_moderated' | t }}
+              {% else %}
+                {{ 'blogs.comments.success' | t }}
+              {% endif %}
+            </p>
+            {% endif %}
+
+            {% if number_of_comments > 0 %}
+              <ul>
+                {% if comment and comment.created_at %}
+                <li id="{{ comment.id }}" class="comment first{% if article.comments_count == 0 %} last{% endif %}">
+
+                  {% include 'comment' %}
+
+                </li>
+                {% endif %}
+
+                {% for comment in article.comments %}
+                <li id="{{ comment.id }}" class="comment{% unless number_of_comments > article.comments_count %}{% if forloop.first %} first{% endif %}{% endunless %}{% if forloop.last %} last {% endif %}">
+
+                  {% include 'comment' %}
+
+                </li>
+                {% endfor %}
+
+              </ul>
+
+              <hr>
+
+              {% if paginate.pages > 1 %}
+              <div class="text-center">
+                {% include 'pagination-custom' %}
+              </div>
+              {% endif %}
+
+            {% endif %}
+
+            <div id="write-comment">
+              {% form 'new_comment', article %}
+
+                <p class="h1" id="add-comment-title">{{ 'blogs.comments.title' | t }}</p>
+
+                {% include 'form-errors-custom' %}
+
+                <div class="grid">
+
+                  <div class="grid-item large--one-half">
+                    <label for="comment-author" class="hidden-label">{{ 'blogs.comments.name' | t }}</label>
+                    <input {% if form.errors contains "author" %} class="error"{% endif %} type="text" name="comment[author]" placeholder="{{ 'blogs.comments.name' | t }}" id="comment-author" value="{{ form.author }}" autocapitalize="words">
+
+                    <label for="comment-email" class="hidden-label">{{ 'blogs.comments.email' | t }}</label>
+                    <input {% if form.errors contains "email" %} class="error"{% endif %} type="email" name="comment[email]" placeholder="{{ 'blogs.comments.email' | t }}" id="comment-email" value="{{ form.email }}" autocorrect="off" autocapitalize="off">
+                  </div>
+
+                  <div class="grid-item">
+                    <label for="comment-body" class="hidden-label">{{ 'blogs.comments.message' | t }}</label>
+                    <textarea {% if form.errors contains "body" %} class="error"{% endif %} name="comment[body]" id="comment-body" placeholder="{{ 'blogs.comments.message' | t }}">{{ form.body }}</textarea>
+                  </div>
+
+                </div>
+
+                {% if blog.moderated? %}
+                  <p class="text-light"><em>{{ 'blogs.comments.moderated' | t }}</em></p>
+                {% endif %}
+
+                <input type="submit" class="btn" value="{{ 'blogs.comments.post' | t }}">
+
+                {% if form.errors %}
+                  <script>
+                    window.location.hash = '#add-comment-title';
+                  </script>
+                {% endif %}
+
+                {% if form.posted_successfully? %}
+                  <script>
+                    window.location.hash = '#comments';
+                  </script>
+                {% endif %}
+
+              {% endform %}
+            </div>
+
+          </div>
+
+          {% endpaginate %}
+
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+  <aside class="sidebar grid-item large--one-fifth grid-border--left">
+    {% include 'blog-sidebar' %}
+  </aside>
+</div>

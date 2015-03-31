@@ -39,8 +39,12 @@ namespace VirtoCommerce.Web.Models.Services
         private readonly PriceClient _priceClient;
         private readonly ListClient _listClient;
         private readonly ThemeClient _themeClient;
+        private readonly PageClient _pageClient;
         private readonly IViewLocator _viewLocator;
-        private readonly FileThemeService _ThemeClient;
+        private readonly FileStorageCacheService _pageStorageClient;
+        private readonly ReviewsClient _reviewsClient;
+        private readonly string _themesCacheStoragePath;
+        private readonly string _pagesCacheStoragePath;
 
         private static readonly object _LockObject = new object();
         #endregion
@@ -56,10 +60,13 @@ namespace VirtoCommerce.Web.Models.Services
             this._securityClient = ClientContext.Clients.CreateSecurityClient();
             this._priceClient = ClientContext.Clients.CreatePriceClient();
             this._themeClient = ClientContext.Clients.CreateThemeClient();
+            this._pageClient = ClientContext.Clients.CreatePageClient();
+            this._reviewsClient = ClientContext.Clients.CreateReviewsClient();
 
-            var themesPath = ConfigurationManager.AppSettings["ThemeCacheFolder"];
-            this._ThemeClient = new FileThemeService(HostingEnvironment.MapPath(themesPath));
-            this._viewLocator = new FileThemeViewLocator(HostingEnvironment.MapPath(themesPath));
+            _themesCacheStoragePath = ConfigurationManager.AppSettings["ThemeCacheFolder"];
+            _pagesCacheStoragePath = ConfigurationManager.AppSettings["PageCacheFolder"];
+            
+            this._viewLocator = new FileThemeViewLocator(HostingEnvironment.MapPath(_themesCacheStoragePath));
 
             this._cartHelper = new CartHelper(this);
         }
@@ -76,6 +83,23 @@ namespace VirtoCommerce.Web.Models.Services
         #endregion
 
         #region Public Methods and Operators
+        public async Task<ICollection<Review>> GetReviewsAsync(string productId)
+        {
+            var webReviews = new List<Review>();
+
+            var response = await this._reviewsClient.GetReviewsAsync(productId);
+
+            if (response != null)
+            {
+                foreach (var review in response.Items)
+                {
+                    webReviews.Add(review.AsWebModel());
+                }
+            }
+
+            return webReviews;
+        }
+
         public async Task<Collection> GetAllCollectionAsync(string sort = "")
         {
             var collections = await this.GetCollectionsAsync(sort);
@@ -133,71 +157,6 @@ namespace VirtoCommerce.Web.Models.Services
             return cart.AsWebModel();
         }
 
-        public async Task<Customer> GetCustomer(IOwinContext context, string storeId)
-        {
-            Customer customer = null;
-
-            if (context.Authentication.User != null && context.Authentication.User.Identity.IsAuthenticated)
-            {
-                var userInfo = await this._securityClient.GetUserInfo(context.Authentication.User.Identity.Name);
-
-                if (userInfo != null)
-                {
-                    var splittedName = userInfo.FullName.Split(' ');
-
-                    customer = new Customer
-                               {
-                                   Email = userInfo.Email,
-                                   FirstName = splittedName[0],
-                                   Id = userInfo.Id,
-                                   LastName = splittedName[1],
-                                   Name = context.Authentication.User.Identity.Name,
-                                   HasAccount = true
-                               };
-
-                    if (userInfo.Addresses != null && userInfo.Addresses.Length > 0)
-                    {
-                        customer.Addresses = new List<CustomerAddress>();
-
-                        foreach (var address in userInfo.Addresses)
-                        {
-                            customer.Addresses.Add(address.AsWebModel());
-                        }
-
-                        customer.DefaultAddress = customer.Addresses.LastOrDefault();
-                    }
-                }
-            }
-
-            return customer;
-        }
-
-        public async Task<CustomerOrder> GetCustomerOrderAsync(string storeId, string customerId, string orderNumber)
-        {
-            CustomerOrder orderModel = null;
-
-            var order = await this._orderClient.GetCustomerOrderAsync(customerId, orderNumber);
-
-            if (order != null)
-            {
-                orderModel = order.AsWebModel();
-            }
-
-            return orderModel;
-        }
-
-        public async Task<OrderSearchResult> GetCustomerOrdersAsync(
-            string storeId,
-            string customerId,
-            string query,
-            int skip,
-            int take)
-        {
-            var response = await this._orderClient.GetCustomerOrdersAsync(storeId, customerId, query, skip, take);
-
-            return response;
-        }
-
         public async Task<Checkout> GetCheckoutAsync()
         {
             Checkout checkout = null;
@@ -245,6 +204,7 @@ namespace VirtoCommerce.Web.Models.Services
                 if (dtoShippingAddress != null)
                 {
                     checkout.ShippingAddress = dtoShippingAddress.AsCartWebModel();
+                    checkout.Email = dtoShippingAddress.Email;
                 }
 
                 var dtoShipment = dtoCart.Shipments != null ? dtoCart.Shipments.FirstOrDefault() : null;
@@ -308,9 +268,9 @@ namespace VirtoCommerce.Web.Models.Services
                 });
             }
 
+            dtoCart.Items = new List<ApiClient.DataContracts.Cart.CartItem>();
             foreach (var lineItem in checkout.LineItems)
             {
-                dtoCart.Items = new List<ApiClient.DataContracts.Cart.CartItem>();
                 dtoCart.Items.Add(lineItem.AsServiceModel());
             }
 
@@ -432,44 +392,55 @@ namespace VirtoCommerce.Web.Models.Services
                                new SubmitForm
                                {
                                    Id = "customer_login",
-                                   ActionLink = "/account/login",
+                                   ActionLink = VirtualPathUtility.ToAbsolute("~/account/login"),
                                    PasswordNeeded = true
                                },
                                new SubmitForm
                                {
                                    Id = "create_customer",
-                                   ActionLink = "/account/register",
+                                   ActionLink = VirtualPathUtility.ToAbsolute("~/account/register"),
                                    PasswordNeeded = true
                                },
                                new SubmitForm
                                {
                                    Id = "activate_customer_password",
-                                   ActionLink = "/account/activate",
+                                   ActionLink = VirtualPathUtility.ToAbsolute("~/account/activate"),
                                    PasswordNeeded = true
                                },
                                new SubmitForm
                                {
                                    Id = "recover_customer_password",
-                                   ActionLink = "/account/resetpassword",
+                                   ActionLink = VirtualPathUtility.ToAbsolute("~/account/resetpassword"),
                                    PasswordNeeded = true
                                },
                                new SubmitForm
                                {
                                    Id = "customer_address",
-                                   ActionLink = "/account/newaddress",
+                                   Properties = new Dictionary<string, object> { { "formId", "address_form_new" } },
+                                   ActionLink = VirtualPathUtility.ToAbsolute("~/account/newaddress"),
                                    PasswordNeeded = true
                                },
+                               //new SubmitForm
+                               //{
+                               //    Id = "customer_address",
+                               //    ActionLink = VirtualPathUtility.ToAbsolute("~/account/editaddress"),
+                               //    PasswordNeeded = true
+                               //},
                                new SubmitForm
                                {
                                    Id = "edit_checkout_step_1",
-                                   ActionLink = "/checkout/step1"
+                                   ActionLink = VirtualPathUtility.ToAbsolute("~/checkout/step1"),
                                },
                                new SubmitForm
                                {
                                    Id = "edit_checkout_step_2",
-                                   ActionLink = "/checkout/step2"
+                                   ActionLink = VirtualPathUtility.ToAbsolute("~/checkout/step2"),
                                },
-                               new SubmitForm { Id = "contact", ActionLink = "/account/contact" }
+                               new SubmitForm
+                               {
+                                   Id = "contact",
+                                   ActionLink = VirtualPathUtility.ToAbsolute("~/account/contact")
+                               }
                            };
 
             return allForms;
@@ -618,6 +589,55 @@ namespace VirtoCommerce.Web.Models.Services
             return new Settings(parameters, defaultValue);
         }
 
+        public JObject GetLocale(bool loadDefault = false)
+        {
+            var theme = SiteContext.Current.Theme;
+            var language = SiteContext.Current.Language;
+            var contextKey = String.Format("vc-localizations-{0}-{1}-{2}",theme,language,loadDefault);
+            var value = HttpRuntime.Cache.Get(contextKey);
+
+            if (value != null)
+            {
+                if (value is JObject)
+                {
+                    return value as JObject;
+                }
+
+                return null;
+            }
+
+            ViewLocationResult localeResource = null;
+
+            if (loadDefault)
+            {
+                localeResource = this._viewLocator.LocateResource("*default.json");
+            }
+            else
+            {
+                var culture = language.TryGetCultureInfo();
+
+                // check specific culture file existance
+                localeResource = this._viewLocator.LocateResource((String.Format("{0}.json", culture.Name)))
+                    ?? this._viewLocator.LocateResource((String.Format("{0}.json", culture.TwoLetterISOLanguageName)));
+            }
+
+            if (localeResource == null)
+            {
+                return null;
+            }
+            
+            var fileContents = localeResource.Contents.Invoke().ReadToEnd();
+
+            if (fileContents != null)
+            {
+                var contents = JsonConvert.DeserializeObject<dynamic>(fileContents);
+                HttpRuntime.Cache.Insert(contextKey, contents, new CacheDependency(new[] { localeResource.Location }));
+                return contents;
+            }
+            HttpRuntime.Cache.Insert(contextKey, String.Empty, new CacheDependency(new[] { localeResource.Location }));
+            return null;
+        }
+
         public async Task<IEnumerable<Shop>> GetShopsAsync()
         {
             var stores = await this._storeClient.GetStoresAsync();
@@ -661,7 +681,14 @@ namespace VirtoCommerce.Web.Models.Services
             {
                 name = id.Split('/')[1];
             }
-            return new Theme { Id = id, Name = name, Role = "main" };
+
+            Theme currentTheme = null;
+            if (SiteContext.Current.Themes != null)
+            {
+                currentTheme = SiteContext.Current.Themes.SingleOrDefault(x => x.Id.Equals(themeName, StringComparison.OrdinalIgnoreCase));
+            }
+
+            return currentTheme ?? new Theme { Id = id, Name = name, Role = "main", Path = id };
         }
 
         public async Task<Theme[]> GetThemesAsync()
@@ -675,7 +702,9 @@ namespace VirtoCommerce.Web.Models.Services
         {
             var store = SiteContext.Current.StoreId;
             var theme = SiteContext.Current.Theme.Name;
-            var lastUpdate = _ThemeClient.GetLatestUpdate();
+            var themePath = String.Format("{0}\\{1}", _themesCacheStoragePath, SiteContext.Current.Theme.Path);
+            var storageClient = new FileStorageCacheService(HostingEnvironment.MapPath(themePath));
+            var lastUpdate = storageClient.GetLatestUpdate();
             var response = await this._themeClient.GetThemeAssetsAsync(store, theme, lastUpdate, true);
 
             if (response.Any())
@@ -683,10 +712,10 @@ namespace VirtoCommerce.Web.Models.Services
                 lock (_LockObject)
                 {
                     // check last update again, since going to the service is more expensive than checking local folders
-                    var newLastUpdate = _ThemeClient.GetLatestUpdate();
+                    var newLastUpdate = storageClient.GetLatestUpdate();
                     if (newLastUpdate == lastUpdate)
                     {
-                        var reload = _ThemeClient.ApplyUpdates(response);
+                        var reload = storageClient.ApplyUpdates(response.AsFileModel());
                         if (reload)
                         {
                             this._viewLocator.UpdateCache();
@@ -694,6 +723,37 @@ namespace VirtoCommerce.Web.Models.Services
                     }
                 }
             }
+        }
+
+        public async Task UpdatePageCacheAsync()
+        {
+            var store = SiteContext.Current.StoreId;
+
+            var pagesPath = String.Format("{0}\\{1}\\pages", _pagesCacheStoragePath, store);
+            var storageClient = new FileStorageCacheService(HostingEnvironment.MapPath(pagesPath));
+
+            // TODO: figure out what to do with deleted pages
+            var lastUpdate = this._pageStorageClient.GetLatestUpdate();
+            /*
+            var response = await this._pa.GetThemeAssetsAsync(store, theme, lastUpdate, true);
+
+            if (response.Any())
+            {
+                lock (_LockObject)
+                {
+                    // check last update again, since going to the service is more expensive than checking local folders
+                    var newLastUpdate = this._themeStorageClient.GetLatestUpdate();
+                    if (newLastUpdate == lastUpdate)
+                    {
+                        var reload = this._themeStorageClient.ApplyUpdates(response.AsFileModel());
+                        if (reload)
+                        {
+                            this._viewLocator.UpdateCache();
+                        }
+                    }
+                }
+            }
+             * */
         }
         #endregion
 

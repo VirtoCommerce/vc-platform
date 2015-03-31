@@ -2089,6 +2089,16 @@
 .flag.flag-zw {background-position: -176px -165px}
 
 
+.error
+{
+    color: #e51400;
+    display: block;
+    font-size: 12px;
+    line-height: 1.4;
+    padding: 5px 0;
+}
+
+
 
 /* Lists */
 ul,
@@ -2236,9 +2246,15 @@ ol
         color: #fff;
 		font-size: 13px;
 		padding: 5px 20px;
+        text-align: left;
         text-shadow: none;
         white-space: nowrap;
 	}
+
+    .menu.__context .menu-item.__right
+    {
+        padding: 5px 40px 5px 20px;
+    }
 
     .menu.__context .menu-item:hover
     {
@@ -2250,6 +2266,28 @@ ol
             font-size: 18px;
             width: 25px;
 		}
+
+        .menu.__context .menu-item.__right .menu-ico
+        {
+            position: absolute;
+            right: 20px;
+            width: 6px;
+        }
+
+        .menu.__context .menu.__sub
+        {
+            background: #333;
+            display: none;
+            left: 100%;
+            padding: 10px 0;
+            position: absolute;
+            top: 0;
+        }
+
+        .menu.__context .menu-item:hover .menu.__sub
+        {
+            display: block;
+        }
 
 
 /* Headings */
@@ -2301,6 +2339,14 @@ h3
 	font-size: 11px;
 }
 
+.note
+{
+    color: #e51400;
+    font-size: 12px;
+    font-style: italic;
+    margin: 0 0 15px;
+}
+
 .t,
 .sub-t
 {
@@ -2321,6 +2367,11 @@ h3
 	margin: 0 -20px 15px;
 }
 
+.form .table-wrapper
+{
+    margin: 0 -36px 15px -20px;
+}
+
 .table
 {
 	border-collapse: collapse;
@@ -2336,7 +2387,7 @@ h3
 
 	.table .table-col
 	{
-		border-bottom: 1px solid #dee9f0;
+        border-top: 1px solid #dee9f0;
 		font-size: 14px;
 		padding: 10px;
 		text-align: left;
@@ -2345,7 +2396,6 @@ h3
 
     .table .table-head
     {
-        background: #fbfdfe;
         border-bottom: 1px solid #dee9f0;
         font-size: 14px;
         padding: 5px 20px;
@@ -2474,10 +2524,11 @@ h3
     color: #e51400;
 }
 
-.form-input input.error,
-.form-input textarea.error,
-.form-input input.error:focus,
-.form-input textarea.error:focus
+.form-input input.ng-invalid,
+.form-input textarea.ng-invalid,
+.ui-select-container.ng-invalid .select2-choice,
+.form-input input.ng-invalid:focus,
+.form-input textarea.ng-invalid:focus
 {
     background: #fef8f7;
     border-color: #fce7e6;
@@ -2508,6 +2559,11 @@ fieldset + fieldset
 .form
 {
 	padding: 15px 0;
+}
+
+.form-group.__head
+{
+    border-bottom: 1px solid #dee9f0;
 }
 
 .form-group + .form-group
@@ -2605,6 +2661,7 @@ fieldset + fieldset
 			color: #4c4c4c;
 			font-family: inherit;
 			font-size: 13px;
+            vertical-align: top;
 			width: 100%;
 
 			-webkit-box-sizing: border-box;
@@ -2633,13 +2690,20 @@ fieldset + fieldset
 
         .form-input textarea
         {
-            height: 100px;
-            max-height: 100px;
+            height: 110px;
+            max-height: 110px;
             max-width: 100%;
-            min-height: 100px;
+            min-height: 110px;
             min-width: 100%;
             padding-top: 8px;
             resize: none;
+        }
+
+        .form-input textarea.__large
+        {
+            height: 220px;
+            max-height: 220px;
+            min-height: 220px;
         }
 
         .form-input.__langs input,
@@ -2776,9 +2840,21 @@ fieldset + fieldset
                     vertical-align: 2px;
                 }
 
+        .form-label + .form-nav
+        {
+            float: right;
+        }
+
+            .form-label + .form-nav *
+            {
+                display: inline-block;
+                font-size: 14px;
+                margin: 0 0 0 5px;
+            }
+
         .form-control .form-label
         {
-            margin: 0 0 0 10px;
+            
         }
 
 		.form-input .btn
@@ -2892,6 +2968,7 @@ fieldset + fieldset
 			font-size: 7px;
 			font-weight: normal;
 			left: 2px;
+            line-height: 1.3;
 			position: absolute;
 			top: 1px;
 		}
@@ -3186,6 +3263,20 @@ fieldset + fieldset
 			box-shadow: 0 0 0 2px #a1c0d4 inset;
 }
 
+.tile.__info:hover,
+.tile.__selected.__info
+{
+    cursor: default;
+
+    -webkit-box-shadow: none;
+            box-shadow: none;
+}
+
+.tile.__note
+{
+    background-color: #fffff5;
+}
+
 .tile:after,
 .tile:before
 {
@@ -3406,12 +3497,6 @@ fieldset + fieldset
 	max-height: 100%;
 	max-width: 100%;
 	vertical-align: middle;
-}
-
-.tile.__gallery
-{
-	-webkit-box-shadow: none;
-			box-shadow: none;
 }
 
 .tile .tile-gallery
@@ -4222,18 +4307,18 @@ fieldset + fieldset
     padding: 15px 0;
 }
 
-.column:nth-last-child(3),
-.column:nth-last-child(3) ~ .column
-{
-    float: left;
-    width: 33.3333%;
-}
-
 .column:nth-last-child(2),
 .column:nth-last-child(2) ~ .column
 {
     float: left;
     width: 50%;
+}
+
+.column:nth-last-child(3),
+.column:nth-last-child(3) ~ .column
+{
+    float: left;
+    width: 33.3333%;
 }
 
 .column .form-group
@@ -4242,6 +4327,18 @@ fieldset + fieldset
 }
 
 .column + .column .form-group
+{
+    margin-left: 10px;
+    margin-right: 0;
+}
+
+.column .column .form-group
+{
+    margin-left: 0;
+    margin-right: 0;
+}
+
+.column .column + .column .form-group
 {
     margin-left: 10px;
     margin-right: 0;
@@ -4943,7 +5040,7 @@ tags-input .tags .tag-item .remove-button
 
         				.dropdown-content .list-ico
         				{
-        					font-size: 24px;
+        					font-size: 28px;
         					height: 24px;
         					margin: 0 20px 0 0;
                             position: relative;
@@ -5241,7 +5338,7 @@ tags-input .tags .tag-item .remove-button
 
 			.blade-t .blade-t_ico
 			{
-				font-size: 30px;
+				font-size: 28px;
 				height: 30px;
 				left: 0;
 				position: absolute;
@@ -5416,15 +5513,6 @@ tags-input .tags .tag-item .remove-button
         overflow: hidden;
 		position: relative;
 	}
-
-        .blade .blade-container .canceled
-        {
-            background: #43b0e6;
-            color: #fff;
-            font-size: 18px;
-            padding: 10px 0;
-            text-align: center;
-        }
 
 		.blade-container .blade-static
 		{

@@ -50,11 +50,11 @@
 		#endregion
 
 		[HttpGet]
-		[ResponseType(typeof(IEnumerable<ShortPageInfo>))]
+		[ResponseType(typeof(IEnumerable<Page>))]
 		[Route("pages")]
-		public IHttpActionResult GetPages(string storeId)
+		public IHttpActionResult GetPages(string storeId, [FromUri]GetPagesCriteria criteria)
 		{
-			var items = _pagesService.GetPages(storeId).Select(s => s.ToWebModel());
+			var items = _pagesService.GetPages(storeId, criteria.ToCoreModel()).Select(s => s.ToWebModel());
 			return Ok(items);
 		}
 

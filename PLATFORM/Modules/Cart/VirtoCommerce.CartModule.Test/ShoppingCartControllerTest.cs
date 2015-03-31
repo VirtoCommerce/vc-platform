@@ -82,7 +82,7 @@ namespace VirtoCommerce.CartModule.Test
 					LastName = "last name",
 					Organization = "org1"
 				};
-				cart.Addresses.Add(deliveryAddress);
+				//cart.Addresses.Add(deliveryAddress);
 
 			}
 			deliveryAddress.Line1 = "Wishing Zephyr Limits, Coffee Creek";
@@ -118,7 +118,7 @@ namespace VirtoCommerce.CartModule.Test
 			//Enter billing address
 			var billingAddress = new webModel.Address
 			{
-				Type = AddressType.Shipping,
+				Type = AddressType.Billing,
 				City = "london",
 				Phone = "+68787687",
 				PostalCode = "2222",

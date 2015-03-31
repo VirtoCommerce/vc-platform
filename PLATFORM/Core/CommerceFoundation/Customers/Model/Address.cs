@@ -139,7 +139,7 @@ namespace VirtoCommerce.Foundation.Customers.Model
 
 
 		private string _CountryCode;
-		[Required(ErrorMessage = "Country name can't be empty")]
+		[Required(ErrorMessage = "Country code can't be empty")]
 		[DataMember]
 		[StringLength(64, ErrorMessage = "Only 64 characters allowed.")]
 		public string CountryCode

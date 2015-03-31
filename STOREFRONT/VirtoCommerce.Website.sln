@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.WebViews", "W
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Web.Tests", "Web.Tests\Web.Tests.csproj", "{B06C9B3A-7394-46F3-8556-5B8B2D30864F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.ApiClient", "ApiClient\VirtoCommerce.ApiClient.csproj", "{84B945B7-85E4-4057-B0DF-1F8A03B8D53C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{B06C9B3A-7394-46F3-8556-5B8B2D30864F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B06C9B3A-7394-46F3-8556-5B8B2D30864F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B06C9B3A-7394-46F3-8556-5B8B2D30864F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{84B945B7-85E4-4057-B0DF-1F8A03B8D53C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{84B945B7-85E4-4057-B0DF-1F8A03B8D53C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{84B945B7-85E4-4057-B0DF-1F8A03B8D53C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{84B945B7-85E4-4057-B0DF-1F8A03B8D53C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

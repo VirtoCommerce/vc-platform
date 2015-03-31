@@ -31,40 +31,43 @@ namespace VirtoCommerce.Content.Data
 
 		private void CreateDefaultTheme(DatabaseFileRepositoryImpl repository, string storeId)
 		{
-			var theme = new Theme
+			var id = string.Format("{0}/Default", storeId);
+			if (!repository.Themes.Any(s => s.Id.Equals(id)))
 			{
-				Id = Guid.NewGuid().ToString(),
-				Name = "Default",
-				ThemePath = string.Format("{0}/Default", storeId),
-				CreatedDate = DateTime.UtcNow,
-				CreatedBy = "initialize"
-			};
+				var theme = new Theme
+				{
+					Id = id,
+					Name = "Default",
+					ThemePath = id,
+					CreatedDate = DateTime.UtcNow,
+					CreatedBy = "initialize"
+				};
 
-			repository.Add(theme);
-			repository.UnitOfWork.Commit();
-
-			var files = Directory.GetFiles(_themePath , "*.*", SearchOption.AllDirectories);
-
-			var items =
-				files.Select(
-					file => new ContentItem { Name = Path.GetFileName(file), Path = RemoveBaseDirectory(file), ModifiedDate = File.GetLastWriteTimeUtc(file) })
-					.ToList();
-
-			foreach (var contentItem in items)
-			{
-				var fullFile = GetContentItem(contentItem.Path, storeId);
-				contentItem.Id = Guid.NewGuid().ToString();
-				contentItem.ByteContent = fullFile.ByteContent;
-				contentItem.Content = fullFile.Content;
-				contentItem.ContentType = fullFile.ContentType;
-				contentItem.Path = string.Format("{0}/{1}", storeId, contentItem.Path);
-				contentItem.CreatedDate = DateTime.UtcNow;
-				contentItem.ModifiedDate = DateTime.UtcNow;
-				contentItem.CreatedBy = "initialize";
-
-
-				repository.Add(contentItem);
+				repository.Add(theme);
 				repository.UnitOfWork.Commit();
+
+				var files = Directory.GetFiles(_themePath, "*.*", SearchOption.AllDirectories);
+
+				var items =
+					files.Select(
+						file => new ContentItem { Name = Path.GetFileName(file), Path = RemoveBaseDirectory(file), ModifiedDate = File.GetLastWriteTimeUtc(file) })
+						.ToList();
+
+				foreach (var contentItem in items)
+				{
+					var fullFile = GetContentItem(contentItem.Path, storeId);
+					contentItem.Id = Guid.NewGuid().ToString();
+					contentItem.ByteContent = fullFile.ByteContent;
+					contentItem.Content = fullFile.Content;
+					contentItem.ContentType = fullFile.ContentType;
+					contentItem.Path = string.Format("{0}/{1}", storeId, contentItem.Path);
+					contentItem.CreatedDate = DateTime.UtcNow;
+					contentItem.ModifiedDate = DateTime.UtcNow;
+					contentItem.CreatedBy = "initialize";
+
+					repository.Add(contentItem);
+					repository.UnitOfWork.Commit();
+				}
 			}
 		}
 

@@ -4,12 +4,12 @@
 
     $scope.openBlade = function () {
         var newBlade = {
-            id: "customerChildBlade",
+        	id: "orderOperationAddresses",
             currentEntities: blade.currentEntity.addresses,
             title: blade.title,
             subtitle: 'Manage addresses',
-            controller: 'memberAddressListController',
-            template: 'Modules/$(VirtoCommerce.Customer)/Scripts/blades/member-address-list.tpl.html'
+            controller: 'coreAddressListController',
+            template: 'Modules/$(VirtoCommerce.Core)/Scripts/common/blades/address-list.tpl.html'
         };
         bladeNavigationService.showBlade(newBlade, blade);
     };

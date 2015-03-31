@@ -57,9 +57,9 @@ namespace VirtoCommerce.Content.Pages.Data.Repositories
 			return retVal;
 		}
 
-		public IEnumerable<Models.ShortPageInfo> GetPages(string path)
+		public IEnumerable<Models.Page> GetPages(string path)
 		{
-			var retVal = new List<Models.ShortPageInfo>();
+			var retVal = new List<Models.Page>();
 
 			var fullPath = GetFullPath(path);
 

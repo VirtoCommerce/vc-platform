@@ -17,6 +17,9 @@ namespace VirtoCommerce.CatalogModule.Web.Model
 		public string Outline { get; set; }
 
         public string TitularItemId { get; set; }
+        public bool IsBuyable { get; set; }
+        public bool IsActive { get; set; }
+        public bool TrackInventory { get; set; }
 
 		private string _imgSrc;
         public string ImgSrc 

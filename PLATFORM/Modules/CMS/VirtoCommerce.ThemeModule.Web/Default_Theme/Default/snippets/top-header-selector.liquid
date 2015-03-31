@@ -1,0 +1,66 @@
+﻿{% assign language_culture = language | culture %}
+{% assign language_country_code = language | split: '-' | last | downcase %}
+<div class="head-top">
+		<div class="wrapper">
+			<div class="head-switch">
+				<span>
+          {{'Store' | t}}:
+          <span class="current">
+						<img title="{{language_culture.native_name}}" alt="{{language_culture.native_name}}" class="flag flag-{{language_country_code}}" src="http://demo.virtocommerce.com/Content/themes/default/images/blank.gif" />
+              {{shop.name}}, {{shop.currency}}
+          </span>
+				</span>
+				<ul>
+					<li>
+						<div class="language">
+							<span>
+								{{'Language' | t}}:
+								<span class="current">{{language_culture.native_name}}</span>
+							</span>
+              <ul>
+                {% for store_language in shop.languages %}
+                {% assign store_language_culture = store_language | culture %}
+                <li {% if language == store_language %} class="selected" {% endif %}>
+                  {% assign country_code = store_language | split: '-' | last | downcase %}
+                  <img alt="{{store_language_culture.native_name}}" class="flag flag-{{country_code}}" src="http://demo.virtocommerce.com/Content/themes/default/images/blank.gif" />
+                    <a title="{{store_language_culture.native_name}}" href="{{store_language | link_to_switch_language}}">{{store_language_culture.native_name}}</a>
+                  </li>
+                {% endfor %}
+              </ul>
+						</div>
+					</li>
+
+					<li>
+						<div class="store">
+							<span>
+                {{'Store' | t}}: <span class="current">{{shop.name}}</span>
+							</span>
+							<ul>
+                {% for shop_temp in Shops %}
+                <li {% if shop.name == shop_temp.name %} class="selected" {% endif %}>
+									<a href="{{shop_temp.url}}">{{shop_temp.name}}</a>
+								</li>
+                {% endfor %}
+              </ul>
+						</div>
+					</li>
+
+					<li>
+						<div class="currency">
+							<span>
+                {{'Currency' | t}}: <span class="current">{{shop.currency}}</span>
+							</span>
+							<ul>
+                {% for currency_temp in shop.currencies %}
+                <li {% if currency == currency_temp %} class="selected" {% endif %}>
+									<a onclick="VirtoCommerce.changeCurrency('{{currency_temp}}'); return false;" href="">{{currency_temp}}</a>
+								</li>
+                {% endfor %}
+              </ul>
+						</div>
+					</li>
+
+				</ul>
+			</div>
+		</div>
+	</div>

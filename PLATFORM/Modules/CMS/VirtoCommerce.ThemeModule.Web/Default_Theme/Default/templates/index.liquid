@@ -1,0 +1,224 @@
+{% include 'slider' %}
+
+{% unless settings.home_content == blank or pages[settings.home_content].empty? or pages[settings.home_content].content == blank %}
+  {% assign page = pages[settings.home_content] %}
+  <div class="rte">
+    {{ page.content }}
+  </div>
+  <hr>
+{% endunless %}
+
+{% if settings.home_featured_collections_enable %}
+  <div class="section-header">
+    <h2 class="h1 section-header--left">{{ 'homepage.featured_collections.heading' | t }}</h2>
+    <div class="section-header--right">
+      <a href="/collections">{{ 'homepage.featured_collections.more_categories' | t }} &rsaquo;</a>
+    </div>
+  </div>
+  <div class="grid-uniform text-center row-negative-bottom">
+
+    {% assign index = 0 %}
+
+    {% if settings.home_featured_collections_sort == 'manual' %}
+      {% if settings.collection_1 != blank %}{% assign index = index | plus: 1 %}{% endif %}
+      {% if settings.collection_2 != blank %}{% assign index = index | plus: 1 %}{% endif %}
+      {% if settings.collection_3 != blank %}{% assign index = index | plus: 1 %}{% endif %}
+      {% if settings.collection_4 != blank %}{% assign index = index | plus: 1 %}{% endif %}
+      {% if settings.collection_5 != blank %}{% assign index = index | plus: 1 %}{% endif %}
+      {% if settings.collection_6 != blank %}{% assign index = index | plus: 1 %}{% endif %}
+    {% else %}
+      {% for collection in collections limit:7 %}
+        {% unless index >= 6 %}
+          {% unless collection.handle == 'frontpage' %}
+            {% assign index = index | plus: 1 %}
+          {% endunless %}
+        {% endunless %}
+      {% endfor %}
+    {% endif %}
+
+    {% case index %}
+      {% when 1 %}
+        {% assign featured_collection_width = 'one-half' %}
+        {% assign featured_collection_size = 'large' %}
+      {% when 2 %}
+        {% assign featured_collection_width = 'one-half' %}
+        {% assign featured_collection_size = 'large' %}
+      {% when 3 %}
+        {% assign featured_collection_width = 'small--one-half one-third' %}
+      {% when 4 %}
+        {% assign featured_collection_width = 'small--one-half one-quarter' %}
+      {% when 5 %}
+        {% assign featured_collection_width = 'small--one-half medium--one-third large--one-fifth' %}
+      {% when 6 %}
+        {% assign featured_collection_width = 'small--one-half medium--one-third large--one-sixth' %}
+    {% endcase %}
+
+    {% if settings.home_featured_collections_sort == 'manual' %}
+      {% if settings.collection_1 != blank %}
+        {% assign featured = settings.collection_1 %}
+        {% include 'featured-collection' %}
+      {% endif %}
+      {% if settings.collection_2 != blank %}
+        {% assign featured = settings.collection_2 %}
+        {% include 'featured-collection'%}
+      {% endif %}
+      {% if settings.collection_3 != blank %}
+        {% assign featured = settings.collection_3 %}
+        {% include 'featured-collection' %}
+      {% endif %}
+      {% if settings.collection_4 != blank %}
+        {% assign featured = settings.collection_4 %}
+        {% include 'featured-collection' %}
+      {% endif %}
+      {% if settings.collection_5 != blank %}
+        {% assign featured = settings.collection_5 %}
+        {% include 'featured-collection' %}
+      {% endif %}
+      {% if settings.collection_6 != blank %}
+        {% assign featured = settings.collection_6 %}
+        {% include 'featured-collection' %}
+      {% endif %}
+    {% else %}
+      {% assign index = 0 %}
+      {% for collection in collections limit:7 %}
+        {% unless index >= 6 %}
+          {% unless collection.handle == 'frontpage' %}
+            {% assign featured = collection.handle %}
+            {% include 'featured-collection' %}
+            {% assign index = index | plus: 1 %}
+          {% endunless %}
+        {% endunless %}
+      {% endfor %}
+    {% endif %}
+
+    {% if index == 0 %}
+      <div class="grid-item text-center">
+        <p>{{ 'homepage.featured_collections.no_collections_html' | t }}</p>
+      </div>
+      <div class="grid-item">
+        <div class="grid-uniform">
+          <div class="grid-item small--one-half medium--one-third large--one-sixth text-center">
+            <div class="demo-image">
+              {{ 'homepage.featured_collections.collection_image' | t }}
+            </div>
+            <p><a href="/admin/custom_collections">{{ 'homepage.featured_collections.example_collection' | t }}</a></p>
+          </div>
+          <div class="grid-item small--one-half medium--one-third large--one-sixth text-center">
+            <div class="demo-image">
+              {{ 'homepage.featured_collections.collection_image' | t }}
+            </div>
+            <p><a href="/admin/custom_collections">{{ 'homepage.featured_collections.example_collection' | t }}</a></p>
+          </div>
+          <div class="grid-item small--one-half medium--one-third large--one-sixth text-center">
+            <div class="demo-image">
+              {{ 'homepage.featured_collections.collection_image' | t }}
+            </div>
+            <p><a href="/admin/custom_collections">{{ 'homepage.featured_collections.example_collection' | t }}</a></p>
+          </div>
+          <div class="grid-item small--one-half medium--one-third large--one-sixth text-center">
+            <div class="demo-image">
+              {{ 'homepage.featured_collections.collection_image' | t }}
+            </div>
+            <p><a href="/admin/custom_collections">{{ 'homepage.featured_collections.example_collection' | t }}</a></p>
+          </div>
+          <div class="grid-item small--one-half medium--one-third large--one-sixth text-center">
+            <div class="demo-image">
+              {{ 'homepage.featured_collections.collection_image' | t }}
+            </div>
+            <p><a href="/admin/custom_collections">{{ 'homepage.featured_collections.example_collection' | t }}</a></p>
+          </div>
+          <div class="grid-item small--one-half medium--one-third large--one-sixth text-center">
+            <div class="demo-image">
+              {{ 'homepage.featured_collections.collection_image' | t }}
+            </div>
+            <p><a href="/admin/custom_collections">{{ 'homepage.featured_collections.example_collection' | t }}</a></p>
+          </div>
+        </div>
+      </div>
+    {% endif %}
+  </div>
+
+{% endif %}
+
+{% unless settings.home_featured_row1_enable == false or settings.home_featured_row1 == blank or collections[settings.home_featured_row1].empty? %}
+  {% if settings.home_featured_collections_enable %}
+  <hr>
+  {% endif %}
+  {% assign featured_row = settings.home_featured_row1 %}
+  {% assign row_limit_setting = settings.home_featured_row1_number %}
+  {% if collections[featured_row].all_products_count == 0 %}
+    <div class="section-header">
+      <p class="h1">{{ 'homepage.featured_collection_rows.heading' | t }}</p>
+      <div class="section-header--right">
+        <a href="{{ collections[featured_row].url }}">{{ 'homepage.featured_collection_rows.more' | t }} &rsaquo;</a>
+      </div>
+    </div>
+
+    <div class="grid text-center row-negative-bottom">
+      <div class="grid-item">
+        {% capture collection_title %}<strong>{{ collections[featured_row].title }}</strong>{% endcapture %}
+        {% capture collection_admin_url %}/admin/collections/{{ collections[featured_row].id }}{% endcapture %}
+        <p>{{ 'homepage.featured_collection_rows.no_products_in_collection_html' | t: collection_title: collection_title }}</p>
+        <p>{{ 'homepage.featured_collection_rows.instructions_to_add_products_to_collection_html' | t: collection_admin_url: collection_admin_url }}</p>
+      </div>
+
+      <div class="grid-item">
+        <div class="grid-uniform">
+          <div class="grid-item large--one-fifth medium--one-third text-center">
+            <a href="/admin/products" class="demo-image">
+              {{ 'homepage.featured_collection_rows.add_a_product' | t }}
+            </a>
+            <p><a href="/admin/products">{{ 'homepage.featured_collection_rows.example_product_title' | t }}</a> $19.99</p>
+          </div>
+          <div class="grid-item large--one-fifth medium--one-third text-center">
+            <a href="/admin/products" class="demo-image">
+              {{ 'homepage.featured_collection_rows.add_a_product' | t }}
+            </a>
+            <p><a href="/admin/products">{{ 'homepage.featured_collection_rows.example_product_title' | t }}</a> $19.99</p>
+          </div>
+          <div class="grid-item large--one-fifth medium--one-third text-center">
+            <a href="/admin/products" class="demo-image">
+              {{ 'homepage.featured_collection_rows.add_a_product' | t }}
+            </a>
+            <p><a href="/admin/products">{{ 'homepage.featured_collection_rows.example_product_title' | t }}</a> $19.99</p>
+          </div>
+          <div class="grid-item large--one-fifth medium--one-third text-center">
+            <a href="/admin/products" class="demo-image">
+              {{ 'homepage.featured_collection_rows.add_a_product' | t }}
+            </a>
+            <p><a href="/admin/products">{{ 'homepage.featured_collection_rows.example_product_title' | t }}</a> $19.99</p>
+          </div>
+          <div class="grid-item large--one-fifth medium--one-third text-center">
+            <a href="/admin/products" class="demo-image">
+              {{ 'homepage.featured_collection_rows.add_a_product' | t }}
+            </a>
+            <p><a href="/admin/products">{{ 'homepage.featured_collection_rows.example_product_title' | t }}</a> $19.99</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  {% else %}
+    {% include 'featured-row' %}
+  {% endif %}
+{% endunless %}
+
+{% if settings.home_featured_row2_enable and settings.home_featured_row2 != blank %}
+  <hr>
+  {% assign featured_row = settings.home_featured_row2 %}
+  {% assign row_limit_setting = settings.home_featured_row2_number %}
+  {% include 'featured-row' %}
+{% endif %}
+
+{% if settings.home_featured_row3_enable and settings.home_featured_row3 != blank %}
+  <hr>
+  {% assign featured_row = settings.home_featured_row3 %}
+  {% assign row_limit_setting = settings.home_featured_row3_number %}
+  {% include 'featured-row' %}
+{% endif %}
+
+{% if settings.home_featured_row4_enable and settings.home_featured_row4 != blank %}
+  <hr>
+  {% assign featured_row = settings.home_featured_row4 %}
+  {% assign row_limit_setting = settings.home_featured_row4_number %}
+  {% include 'featured-row' %}
+{% endif %}

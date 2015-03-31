@@ -54,7 +54,7 @@ namespace VirtoCommerce.CoreModule.Web.Services
 				}
 
 				CommitChanges(repository);
-				retVal = repository.FulfillmentCenters.First(x => x.FulfillmentCenterId == center.Id).ToCoreModel();
+                retVal = repository.FulfillmentCenters.First(x => x.FulfillmentCenterId == sourceEntry.FulfillmentCenterId).ToCoreModel();
 			}
 			return retVal;
 		}
