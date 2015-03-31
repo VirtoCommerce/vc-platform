@@ -4,7 +4,7 @@
 	'virtoCommerce.content.themeModule.blades.editAsset',
 	'virtoCommerce.content.themeModule.blades.editImageAsset'
 ])
-.controller('themeAssetListController', ['$scope', 'themes', 'themesStores', 'bladeNavigationService', function ($scope, themes, themesStores, bladeNavigationService) {
+.controller('themeAssetListController', ['$scope', 'themes', 'themesStores', 'bladeNavigationService', 'dialogService', function ($scope, themes, themesStores, bladeNavigationService, dialogService) {
 	var blade = $scope.blade;
 
 	$scope.selectedFolderId = undefined;
@@ -87,6 +87,7 @@
 				choosenStoreId: blade.choosenStoreId,
 				choosenThemeId: blade.choosenThemeId,
 				choosenAssetId: asset.id,
+				choosenFolder: $scope.selectedFolderId,
 				newAsset: false,
 				title: asset.id,
 				subtitle: 'Edit text asset',
@@ -101,6 +102,7 @@
 				choosenStoreId: blade.choosenStoreId,
 				choosenThemeId: blade.choosenThemeId,
 				choosenAssetId: asset.id,
+				choosenFolder: $scope.selectedFolderId,
 				newAsset: false,
 				title: asset.id,
 				subtitle: 'Edit image asset',
@@ -109,6 +111,25 @@
 			};
 			bladeNavigationService.showBlade(newBlade, blade);
 		}
+	}
+
+	blade.deleteTheme = function () {
+		var dialog = {
+			id: "confirmDelete",
+			title: "Delete confirmation",
+			message: "Are you sure want to delete " + blade.choosenThemeId + "?",
+			callback: function (remove) {
+				if (remove) {
+					blade.isLoading = true;
+					themes.deleteTheme({ storeId: blade.choosenStoreId, themeId: blade.choosenThemeId }, function (data) {
+						$scope.blade.parentBlade.refresh(true);
+						$scope.bladeClose();
+						blade.isLoading = false;
+					});
+				}
+			}
+		}
+		dialogService.showConfirmationDialog(dialog);
 	}
 
 	function openBladeNew() {
@@ -204,7 +225,16 @@
         	canExecuteMethod: function () {
         		return !angular.isUndefined($scope.selectedFolderId);
         	}
-        }
+        },
+		{
+			name: "Delete theme", icon: 'fa fa-trash-o',
+			executeMethod: function () {
+				blade.deleteTheme();
+			},
+			canExecuteMethod: function () {
+				return !angular.isUndefined(blade.choosenThemeId);
+			}
+		}
 	];
 
 	blade.refresh();

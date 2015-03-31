@@ -60,9 +60,9 @@ namespace VirtoCommerce.Content.Pages.Data.Repositories
 			return Pages.FirstOrDefault(p => p.Path == path);
 		}
 
-		public IEnumerable<ShortPageInfo> GetPages(string path)
+		public IEnumerable<Page> GetPages(string path)
 		{
-			return Pages.Where(p => p.Path.StartsWith(path)).ToArray().Select(p => p.ToShortModel());
+			return Pages.Where(p => p.Path.StartsWith(path));
 		}
 
 		public void SavePage(string path, Page page)

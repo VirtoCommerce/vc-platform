@@ -17,21 +17,6 @@ namespace VirtoCommerce.PricingModule.Web.Model
 		public string ProductId { get; set; }
 		public string ProductName { get; set; }
 
-		public Price MaxPrice
-		{
-			get
-			{
-				return Prices.OrderBy(x => x.List).LastOrDefault();
-			}
-		}
-		public Price MinPrice
-		{
-			get
-			{
-				return Prices.OrderBy(x => x.List).FirstOrDefault();
-			}
-		}
-	
 		public ICollection<Price> Prices { get; set; }
 	}
 }

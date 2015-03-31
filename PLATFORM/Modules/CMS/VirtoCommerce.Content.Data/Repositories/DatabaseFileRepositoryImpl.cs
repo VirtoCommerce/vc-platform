@@ -91,14 +91,14 @@
 
 		public Task<IEnumerable<ContentItem>> GetContentItems(string path, GetThemeAssetsCriteria criteria)
 		{
-			if(criteria.LastUpdateDate.HasValue)
+		    var query = ContentItems.Where(i => i.Path.StartsWith(path));
+
+			if (criteria.LastUpdateDate.HasValue)
 			{
-				return Task.FromResult(ContentItems.Where(i => i.Path.Contains(path) && i.ModifiedDate.HasValue ? criteria.LastUpdateDate.Value < i.ModifiedDate.Value : criteria.LastUpdateDate.Value < i.CreatedDate).AsEnumerable());
+			    query = query.Where(i => (i.ModifiedDate.HasValue && criteria.LastUpdateDate.Value < i.ModifiedDate.Value) || (criteria.LastUpdateDate.Value < i.CreatedDate));
 			}
-			else
-			{
-				return Task.FromResult(ContentItems.Where(i => i.Path.Contains(path)).AsEnumerable());
-			}
+
+		    return Task.FromResult(query.AsEnumerable());
 		}
 
 		public Task<bool> SaveContentItem(string path, ContentItem item)
@@ -164,6 +164,25 @@
 			UnitOfWork.Commit();
 
 			return Task.FromResult(true);
+		}
+
+
+		public async Task<bool> DeleteTheme(string path)
+		{
+			var existingTheme = await Themes.FirstOrDefaultAsync(t => t.Id == path);
+			if (existingTheme != null)
+			{
+				Remove(existingTheme);
+				var contentItems = ContentItems.Where(c => c.Path.StartsWith(path));
+				foreach (var item in contentItems)
+				{
+					Remove(item);
+				}
+
+				UnitOfWork.Commit();
+			}
+
+			return true;
 		}
 	}
 }

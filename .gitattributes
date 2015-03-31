@@ -3,6 +3,10 @@
 ###############################################################################
 * text=auto
 
+*.bat    text eol=crlf
+*.cmd    text eol=crlf
+*.config text eol=crlf
+
 ###############################################################################
 # Set default behavior for command prompt diff.
 #

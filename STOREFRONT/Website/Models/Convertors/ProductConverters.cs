@@ -58,6 +58,8 @@ namespace VirtoCommerce.Web.Models.Convertors
         {
             if (product == null) return null;
 
+            var path = VirtualPathUtility.ToAbsolute("~/products/{0}");
+
             var productModel = new Product
                                {
                                    Id = product.Id,
@@ -65,7 +67,7 @@ namespace VirtoCommerce.Web.Models.Convertors
                                    Title = product.Name,
                                    Available = true,
                                    Options = new[] { "Size" },
-                                   Url = String.Format("/products/{0}", product.Id)
+                                   Url = String.Format(path, product.Id)
                                };
 
             // TODO: populate collections product belongs to
@@ -155,6 +157,20 @@ namespace VirtoCommerce.Web.Models.Convertors
             imageModel.InjectFrom(image);
             return imageModel;
         }
+
+        public static Review AsWebModel(this Data.Review review)
+        {
+            var webReview = new Review();
+
+            webReview.Author = review.AuthorName;
+            webReview.Created = review.Created;
+            webReview.Id = review.Id;
+            webReview.ProductRating = review.Rating;
+            webReview.Text = review.ReviewText;
+            webReview.Title = null;
+
+            return webReview;
+        }
         #endregion
 
         #region Methods
@@ -172,7 +188,9 @@ namespace VirtoCommerce.Web.Models.Convertors
             }
              * */
 
-            return String.Format("/products/{0}", product.Handle);
+            var path = VirtualPathUtility.ToAbsolute("~/products/{0}");
+
+            return String.Format(path, product.Handle);
         }
 
         private static UrlHelper GetUrlHelper()

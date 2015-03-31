@@ -7,7 +7,7 @@ using VirtoCommerce.Domain.Order.Model;
 
 namespace VirtoCommerce.OrderModule.Data.Workflow
 {
-	public class CalculateTotalsActivity : IObserver<CustomerOrder>
+	public class CalculateTotalsActivity : IObserver<CustomerOrderStateBasedEvalContext>
 	{
 		#region IObserver<CustomerOrder> Members
 
@@ -19,14 +19,16 @@ namespace VirtoCommerce.OrderModule.Data.Workflow
 		{
 		}
 
-		public void OnNext(CustomerOrder value)
+		public void OnNext(CustomerOrderStateBasedEvalContext value)
 		{
 			CalculateCustomerOrderTotals(value);
 		}
 
 		#endregion
-		private static void CalculateCustomerOrderTotals(CustomerOrder order)
+		private static void CalculateCustomerOrderTotals(CustomerOrderStateBasedEvalContext context)
 		{
+			var order = context.ModifiedOrder;
+
 			order.Sum = 0;
 
 			foreach (var item in order.Items)

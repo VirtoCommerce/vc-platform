@@ -259,6 +259,7 @@
     <Compile Include="Frameworks\Extensions\TreeExtension.cs" />
     <Compile Include="Frameworks\SqlDbConfiguration.cs" />
     <Compile Include="Frameworks\ValueObject.cs" />
+    <Compile Include="Frameworks\Workflow\Services\ObserverFactory.cs" />
     <Compile Include="Frameworks\Workflow\Services\ObservableWorkflowService.cs" />
     <Compile Include="Orders\Extensions\JurisdictionExtensions.cs" />
     <Compile Include="Orders\Extensions\PaymentMethodExtensions.cs" />
@@ -846,4 +847,3 @@
   </Target>
   -->
 </Project>
-

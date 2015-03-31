@@ -96,6 +96,8 @@ namespace VirtoCommerce.OrderModule.Data.Converters
 
 			retVal.Currency = shipment.Currency.ToString();
 
+			//Allow to empty address
+			retVal.Addresses = new ObservableCollection<AddressEntity>();
 			if (shipment.DeliveryAddress != null)
 			{
 				retVal.Addresses = new ObservableCollection<AddressEntity>(new AddressEntity[] { shipment.DeliveryAddress.ToEntity() });

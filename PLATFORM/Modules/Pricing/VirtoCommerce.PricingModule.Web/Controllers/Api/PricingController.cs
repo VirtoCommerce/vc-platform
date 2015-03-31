@@ -17,10 +17,12 @@ namespace VirtoCommerce.PricingModule.Web.Controllers.Api
 	{
 		private readonly IPricingService _pricingService;
 		private readonly IItemService _itemService;
-		public PricingController(IPricingService pricingService, IItemService itemService)
+		private readonly ICatalogService _catalogService;
+		public PricingController(IPricingService pricingService, IItemService itemService, ICatalogService catalogService)
 		{
 			_pricingService = pricingService;
 			_itemService = itemService;
+			_catalogService = catalogService;
 		}
 
 		// GET: api/pricing/assignments/id
@@ -62,7 +64,7 @@ namespace VirtoCommerce.PricingModule.Web.Controllers.Api
 		[HttpPut]
 		[ResponseType(typeof(void))]
 		[Route("api/pricing/assignments")]
-		public IHttpActionResult UpdatePriceList(webModel.PricelistAssignment assignment)
+		public IHttpActionResult UpdatePriceListAssignment(webModel.PricelistAssignment assignment)
 		{
 			_pricingService.UpdatePricelistAssignments(new coreModel.PricelistAssignment[] { assignment.ToCoreModel() });
 			return StatusCode(HttpStatusCode.NoContent);
@@ -114,9 +116,10 @@ namespace VirtoCommerce.PricingModule.Web.Controllers.Api
 			var result = _pricingService.GetPricelistById(id);
 			var productIds = result.Prices.Select(x => x.ProductId).Distinct().ToArray();
 			var products = _itemService.GetByIds(productIds, Domain.Catalog.Model.ItemResponseGroup.ItemInfo);
+			var catalogs = _catalogService.GetCatalogsList().ToArray();
 			if (result != null)
 			{
-				retVal = Ok(result.ToWebModel(products));
+				retVal = Ok(result.ToWebModel(products, catalogs));
 			}
 			return retVal;
 		}

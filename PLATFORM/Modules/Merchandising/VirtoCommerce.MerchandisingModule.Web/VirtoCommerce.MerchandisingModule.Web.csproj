@@ -125,7 +125,6 @@
     <Compile Include="Model\SearchParameters.cs" />
     <Compile Include="Model\SeoKeyword.cs" />
     <Compile Include="Model\Stores\Store.cs" />
-    <Compile Include="Model\Stores\StoreSetting.cs" />
     <Compile Include="Module.cs" />
     <Compile Include="Model\CatalogItem.cs" />
     <Compile Include="Model\Category.cs" />

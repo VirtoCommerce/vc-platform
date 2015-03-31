@@ -37,6 +37,14 @@
             ],
             "defaultValue": "Full"
         },
+        "deployApplications": {
+            "type": "string",
+            "allowedValues": [
+                "Web Admin Only",
+                "Web Admin and Store"
+            ],
+            "defaultValue": "Web Admin Only"
+        },
 
         "repoUrl": {
             "type": "string"
@@ -55,6 +63,14 @@
                 "2"
             ],
             "defaultValue": "0"
+        }
+    },
+    "variables": {
+        "Web Admin Only": {
+            "rootDir": "admin"
+        },
+        "Web Admin and Store": {
+            "rootDir": "store"
         }
     },
     "resources": [
@@ -136,15 +152,34 @@
                     "properties": {
                         "connectionStrings": [
                             {
-                                "ConnectionString": "[concat('Data Source=tcp:', reference(concat('Microsoft.Sql/servers/', parameters('sqlServerName'))).fullyQualifiedDomainName, ',1433;Initial Catalog=', parameters('siteName'), ';User Id=', parameters('sqlAdministratorLogin'), '@', parameters('sqlServerName'), ';Password=', parameters('sqlAdministratorPassword'), ';MultipleActiveResultSets=True;Connection Timeout=30;Trusted_Connection=False;Encrypt=True;')]",
                                 "Name": "VirtoCommerce",
+                                "ConnectionString": "[concat('Data Source=tcp:', reference(concat('Microsoft.Sql/servers/', parameters('sqlServerName'))).fullyQualifiedDomainName, ',1433;Initial Catalog=', parameters('siteName'), ';User Id=', parameters('sqlAdministratorLogin'), '@', parameters('sqlServerName'), ';Password=', parameters('sqlAdministratorPassword'), ';MultipleActiveResultSets=True;Connection Timeout=30;Trusted_Connection=False;Encrypt=True;')]",
                                 "Type": 2
+                            },
+                            {
+                                "Name": "VirtoCommerceBaseUrl",
+                                "ConnectionString": "[concat('http://', parameters('siteName'), '.azurewebsites.net/admin/api/')]",
+                                "Type": 3
                             }
                         ],
                         "appSettings": [
                             {
                                 "name": "VirtoCommerce:SampleDataLevel",
                                 "value": "[parameters('sampleData')]"
+                            },
+                            {
+                                "name": "VirtoCommerce_DeployApplications",
+                                "value": "[parameters('deployApplications')]"
+                            }
+                        ],
+                        "virtualApplications": [
+                            {
+                                "virtualPath": "/",
+                                "physicalPath": "[concat('site\\wwwroot\\', variables(parameters('deployApplications')).rootDir)]"
+                            },
+                            {
+                                "virtualPath": "/admin",
+                                "physicalPath": "site\\wwwroot\\admin"
                             }
                         ]
                     }

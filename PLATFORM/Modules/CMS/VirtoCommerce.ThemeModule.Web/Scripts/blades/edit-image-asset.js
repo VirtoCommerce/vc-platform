@@ -4,8 +4,7 @@
 ]).controller('editImageAssetController', ['$scope', 'dialogService', 'themes', 'FileUploader', function ($scope, dialogService, themes, FileUploader) {
 	var blade = $scope.blade;
 
-
-	blade.initializeBlade = function() {
+	blade.initializeBlade = function () {
 		if (!blade.newAsset) {
 			themes.getAsset({ storeId: blade.choosenStoreId, themeId: blade.choosenThemeId, assetId: blade.choosenAssetId }, function (data) {
 				blade.isLoading = false;
@@ -77,6 +76,7 @@
 
 	blade.saveChanges = function() {
 		blade.isLoading = true;
+		blade.currentEntity.id = blade.choosenFolder + '/' + blade.currentEntity.name;
 
 		themes.updateAsset({ storeId: blade.choosenStoreId, themeId: blade.choosenThemeId }, blade.currentEntity, function () {
 			blade.parentBlade.refresh(true);

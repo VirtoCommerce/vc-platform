@@ -24,9 +24,11 @@ namespace VirtoCommerce.Web.Models.Convertors
             address.LastName = customerAddress.LastName;
             address.Line1 = customerAddress.Address1;
             address.Line2 = customerAddress.Address2;
+            address.Name = string.Format("{0} {1}", customerAddress.FirstName, customerAddress.LastName);
             address.Organization = customerAddress.Company;
             address.Phone = customerAddress.Phone;
             address.PostalCode = customerAddress.Zip;
+            address.RegionName = customerAddress.Province;
             address.Zip = customerAddress.Zip;
 
             return address;
@@ -36,9 +38,12 @@ namespace VirtoCommerce.Web.Models.Convertors
         {
             var customer = new Customer();
 
+            int index = 1;
             foreach (var address in contact.Addresses)
             {
+                address.Id = index.ToString();
                 customer.Addresses.Add(address.AsWebModel());
+                index++;
             }
 
             if (!string.IsNullOrEmpty(contact.FullName))
@@ -52,7 +57,7 @@ namespace VirtoCommerce.Web.Models.Convertors
             customer.DefaultAddress = customer.Addresses.FirstOrDefault();
 
             customer.AcceptsMarketing = true; // TODO
-            customer.Email = additionalInfo.Email;
+            customer.Email = contact.Emails.FirstOrDefault();
             customer.HasAccount = additionalInfo.UserType == RegisterType.RegisteredUser ? true : false;
             customer.Id = contact.Id;
 
@@ -68,7 +73,7 @@ namespace VirtoCommerce.Web.Models.Convertors
             customerAddress.City = address.City;
             customerAddress.Company = address.Organization;
             customerAddress.Country = address.CountryName;
-            customerAddress.CountryCode = address.CountryCode;
+            customerAddress.CountryCode = "RUS";
             customerAddress.FirstName = address.FirstName;
             customerAddress.Id = address.Id;
             customerAddress.LastName = address.LastName;
@@ -89,6 +94,26 @@ namespace VirtoCommerce.Web.Models.Convertors
             customerAddress.City = formModel.City;
             customerAddress.Company = formModel.Company;
             customerAddress.Country = formModel.Country;
+            customerAddress.CountryCode = "RUS";
+            customerAddress.FirstName = formModel.FirstName;
+            customerAddress.LastName = formModel.LastName;
+            customerAddress.Phone = formModel.Phone;
+            customerAddress.Province = formModel.Province;
+            customerAddress.Zip = formModel.Zip;
+
+            return customerAddress;
+        }
+
+        public static CustomerAddress AsWebModel(this CustomerAddressFormModel formModel)
+        {
+            var customerAddress = new CustomerAddress();
+
+            customerAddress.Address1 = formModel.Address1;
+            customerAddress.Address2 = formModel.Address2;
+            customerAddress.City = formModel.City;
+            customerAddress.Company = formModel.Company;
+            customerAddress.Country = formModel.Country;
+            customerAddress.CountryCode = "RUS";
             customerAddress.FirstName = formModel.FirstName;
             customerAddress.Id = formModel.Id;
             customerAddress.LastName = formModel.LastName;

@@ -14,7 +14,7 @@
             id: 'moduleSettingsSection',
             moduleId: blade.currentEntity.id,
             // parentWidget: $scope.widget,
-            title: blade.title + ' settings',
+            title: 'Module settings',
             //subtitle: '',
             controller: 'settingsDetailController',
             template: 'Modules/$(VirtoCommerce.Core)/Scripts/Settings/blades/settings-detail.tpl.html'
