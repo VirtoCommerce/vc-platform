@@ -6,6 +6,8 @@ namespace VirtoCommerce.CoreModule.Web.Assets
 {
     public class AzureAssetsProvider : AzureBlobAssetRepository
     {
+        public const string ProviderName = "AzureBlobStorage";
+
         public AzureAssetsProvider(IAssetsConnection connection, IAssetEntityFactory entityFactory)
             : base(connection.ConnectionString, entityFactory)
         {
