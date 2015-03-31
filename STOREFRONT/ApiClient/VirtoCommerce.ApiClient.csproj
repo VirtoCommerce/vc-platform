@@ -76,12 +76,15 @@
     <Compile Include="DataContracts\Cart\AddressType.cs" />
     <Compile Include="DataContracts\CustomerService\Address.cs" />
     <Compile Include="DataContracts\CustomerService\CustomerSearchResult.cs" />
+    <Compile Include="DataContracts\ItemInventory.cs" />
     <Compile Include="DataContracts\Lists\Link.cs" />
     <Compile Include="DataContracts\Lists\LinkList.cs" />
     <Compile Include="DataContracts\Pages\Page.cs" />
     <Compile Include="DataContracts\Price.cs" />
+    <Compile Include="Extensions\InventoryClientExtension.cs" />
     <Compile Include="Extensions\ListClientExtensions.cs" />
     <Compile Include="Extensions\PageClientExtensions.cs" />
+    <Compile Include="InventoryClient.cs" />
     <Compile Include="PriceClient.cs" />
     <Compile Include="CustomerServiceClient.cs" />
     <Compile Include="DataContracts\CustomerService\ContactProperty.cs" />
