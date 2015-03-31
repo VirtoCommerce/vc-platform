@@ -32,12 +32,6 @@ namespace MailChimp.MailingModule.Web.Controllers.Api
             if (mailing == null)
                 throw new ArgumentNullException("mailing");
 
-            if (string.IsNullOrEmpty(mailChimpApiKey))
-                throw new ArgumentNullException("mailChimpApiKey");
-
-            if (string.IsNullOrEmpty(mailChimpListId))
-                throw new ArgumentNullException("mailChimpListId");
-
             _mailing = mailing;
             _mailChimpApiKey = mailChimpApiKey;
             _mailChimpListId = mailChimpListId;

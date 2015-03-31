@@ -13,12 +13,7 @@ namespace MailChimp.MailingModule.Web.Managers
 
         public MailChimpMailingImpl(string apiKey, string mailChimpSubscribeList, string code, string description, string logoUrl)
         {
-            if (string.IsNullOrEmpty(apiKey))
-                throw new ArgumentNullException("apiKey");
-
-            if (string.IsNullOrEmpty(mailChimpSubscribeList))
-                throw new ArgumentNullException("mailChimpSubscribeList");
-
+            
             _apiKey = apiKey;
 
             _code = code;
