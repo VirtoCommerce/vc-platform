@@ -1,4 +1,4 @@
-﻿using MailChimp.MailingModule.Web.Controllers;
+﻿using MailChimp.MailingModule.Web.Controllers.Api;
 using MailChimp.MailingModule.Web.Managers;
 using MailChimp.MailingModule.Web.Services;
 using Microsoft.Practices.Unity;
@@ -20,13 +20,14 @@ namespace MailChimp.MailingModule.Web
             var settingsManager = _container.Resolve<ISettingsManager>();
 
             var mailChimpApiKey = settingsManager.GetValue("MailChimp.Mailing.Credentials.ApiKey", string.Empty);
+            var mailChimpListId = settingsManager.GetValue("MailChimp.Mailing.SubscribersListId", string.Empty);
 
             var mailChimpCode = settingsManager.GetValue("MailChimp.Mailing.Code", string.Empty);
             var mailChimpDescription = settingsManager.GetValue("MailChimp.Mailing.Description", string.Empty);
             var mailChimpLogoUrl = settingsManager.GetValue("MailChimp.Mailing.LogoUrl", string.Empty);
 
 
-            var mailChimpMailing = new MailChimpMailingImpl(mailChimpApiKey, mailChimpCode, mailChimpDescription, mailChimpLogoUrl);
+            var mailChimpMailing = new MailChimpMailingImpl(mailChimpApiKey, mailChimpListId, mailChimpCode, mailChimpDescription, mailChimpLogoUrl);
 
             #region Mailing manager
             _container.RegisterInstance<IMailingManager>(new InMemoryMailingManagerImpl());
@@ -35,7 +36,12 @@ namespace MailChimp.MailingModule.Web
             var mailingManager = _container.Resolve<IMailingManager>();
             mailingManager.RegisterMailing(mailChimpMailing);
 
-            _container.RegisterType<MailChimpController>(new InjectionConstructor(mailChimpMailing, mailChimpApiKey));
+            _container.RegisterType<MailChimpController>
+                (new InjectionConstructor(
+                    settingsManager, 
+                    mailChimpMailing, 
+                    mailChimpApiKey, 
+                    mailChimpListId));
         }
     }
 }

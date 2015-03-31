@@ -76,7 +76,7 @@ namespace VirtoCommerce.Web.Controllers
         [Route("themes/assets/{asset}")]
         public ActionResult Themed(string theme, string asset)
         {
-            var virtualPath = String.Format("~/App_Data/Themes/{0}/assets/{1}", theme, asset);
+            var virtualPath = String.Format("~/App_Data/Themes/{0}/assets/{1}", this.Context.Theme.Path, asset);
             return this.AssetResult(virtualPath, asset);
         }
         #endregion

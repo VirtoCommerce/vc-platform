@@ -2089,6 +2089,16 @@
 .flag.flag-zw {background-position: -176px -165px}
 
 
+.error
+{
+    color: #e51400;
+    display: block;
+    font-size: 12px;
+    line-height: 1.4;
+    padding: 5px 0;
+}
+
+
 
 /* Lists */
 ul,
@@ -2236,9 +2246,15 @@ ol
         color: #fff;
 		font-size: 13px;
 		padding: 5px 20px;
+        text-align: left;
         text-shadow: none;
         white-space: nowrap;
 	}
+
+    .menu.__context .menu-item.__right
+    {
+        padding: 5px 40px 5px 20px;
+    }
 
     .menu.__context .menu-item:hover
     {
@@ -2250,6 +2266,28 @@ ol
             font-size: 18px;
             width: 25px;
 		}
+
+        .menu.__context .menu-item.__right .menu-ico
+        {
+            position: absolute;
+            right: 20px;
+            width: 6px;
+        }
+
+        .menu.__context .menu.__sub
+        {
+            background: #333;
+            display: none;
+            left: 100%;
+            padding: 10px 0;
+            position: absolute;
+            top: 0;
+        }
+
+        .menu.__context .menu-item:hover .menu.__sub
+        {
+            display: block;
+        }
 
 
 /* Headings */
@@ -2299,6 +2337,14 @@ h3
 .text-mini
 {
 	font-size: 11px;
+}
+
+.note
+{
+    color: #e51400;
+    font-size: 12px;
+    font-style: italic;
+    margin: 0 0 15px;
 }
 
 .t,
@@ -2615,6 +2661,7 @@ fieldset + fieldset
 			color: #4c4c4c;
 			font-family: inherit;
 			font-size: 13px;
+            vertical-align: top;
 			width: 100%;
 
 			-webkit-box-sizing: border-box;
@@ -2643,10 +2690,10 @@ fieldset + fieldset
 
         .form-input textarea
         {
-            height: 100px;
-            max-height: 100px;
+            height: 110px;
+            max-height: 110px;
             max-width: 100%;
-            min-height: 100px;
+            min-height: 110px;
             min-width: 100%;
             padding-top: 8px;
             resize: none;
@@ -2654,9 +2701,9 @@ fieldset + fieldset
 
         .form-input textarea.__large
         {
-            height: 200px;
-            max-height: 200px;
-            min-height: 200px;
+            height: 220px;
+            max-height: 220px;
+            min-height: 220px;
         }
 
         .form-input.__langs input,
@@ -2807,7 +2854,7 @@ fieldset + fieldset
 
         .form-control .form-label
         {
-            margin: 0 0 0 10px;
+            
         }
 
 		.form-input .btn
@@ -2921,6 +2968,7 @@ fieldset + fieldset
 			font-size: 7px;
 			font-weight: normal;
 			left: 2px;
+            line-height: 1.3;
 			position: absolute;
 			top: 1px;
 		}
@@ -3222,6 +3270,11 @@ fieldset + fieldset
 
     -webkit-box-shadow: none;
             box-shadow: none;
+}
+
+.tile.__note
+{
+    background-color: #fffff5;
 }
 
 .tile:after,
@@ -4059,6 +4112,11 @@ fieldset + fieldset
     vertical-align: top;
 }
 
+.tree.__horizontal .tree-item
+{
+    display: block;
+}
+
 .tree-view ul
 {
     list-style: none;
@@ -4079,6 +4137,18 @@ fieldset + fieldset
     z-index: 5;
 }
 
+.tree.__horizontal .tree-item:first-child:before
+{
+    background: #ffffff;
+    content: "";
+    height: 50%;
+    left: -7px;
+    position: absolute;
+    top: -1px;
+    width: 2px;
+    z-index: 5;
+}
+
 .tree-item:last-child:before
 {
     background: #fff;
@@ -4088,6 +4158,18 @@ fieldset + fieldset
     position: absolute;
     top: 0;
     width: 50%;
+    z-index: 5;
+}
+
+.tree.__horizontal .tree-item:last-child:after
+{
+    background: #ffffff;
+    content: "";
+    height: 50%;
+    left: -7px;
+    position: absolute;
+    top: 51%;
+    width: 2px;
     z-index: 5;
 }
 
@@ -4103,6 +4185,11 @@ fieldset + fieldset
     
     -webkit-box-sizing: border-box;
             box-sizing: border-box;
+}
+
+.tree.__horizontal .tree-block
+{
+    vertical-align: middle;
 }
 
 .tree-block:hover
@@ -4171,9 +4258,29 @@ fieldset + fieldset
             transform: translateX(-50%);
 }
 
+.tree.__horizontal .tree-block:before
+{
+    background: #a1c0d4;
+    content: "";
+    height: 2px;
+    left: -12px;
+    position: absolute;
+    top: 50%;
+    width: 10px;
+    
+    -webkit-transform: translateY(-50%);
+            transform: translateY(-50%);
+}
+
 .tree-node
 {
     position: relative;
+}
+
+.tree.__horizontal .tree-node
+{
+    display: inline-block;
+    vertical-align: middle;
 }
 
 .tree-node:after
@@ -4183,8 +4290,20 @@ fieldset + fieldset
     height: 2px;
     left: 0;
     position: absolute;
-    right: 1px;
+    right: 7px;
     top: 0;
+}
+
+.tree.__horizontal .tree-node:after
+{
+    background: #a1c0d4;
+    bottom: 0;
+    content: "";
+    height: auto;
+    left: -7px;
+    position: absolute;
+    top: 1px;
+    width: 2px;
 }
 
 .tree-node.__empty:after
@@ -4206,9 +4325,23 @@ fieldset + fieldset
             transform: translateX(-50%);
 }
 
-.tree-node .tree-item
+.tree.__horizontal .tree-node:before
 {
-    width: 170px;
+    background: #a1c0d4;
+    content: "";
+    height: 2px;
+    left: -18px;
+    position: absolute;
+    top: 50%;
+    width: 12px;
+    
+    -webkit-transform: translateY(-50%);
+            transform: translateY(-50%);
+}
+
+.tree.__horizontal .tree-node .tree-item
+{
+    text-align: left;
 }
 
 .tree-el
@@ -4254,18 +4387,18 @@ fieldset + fieldset
     padding: 15px 0;
 }
 
-.column:nth-last-child(3),
-.column:nth-last-child(3) ~ .column
-{
-    float: left;
-    width: 33.3333%;
-}
-
 .column:nth-last-child(2),
 .column:nth-last-child(2) ~ .column
 {
     float: left;
     width: 50%;
+}
+
+.column:nth-last-child(3),
+.column:nth-last-child(3) ~ .column
+{
+    float: left;
+    width: 33.3333%;
 }
 
 .column .form-group
@@ -4274,6 +4407,18 @@ fieldset + fieldset
 }
 
 .column + .column .form-group
+{
+    margin-left: 10px;
+    margin-right: 0;
+}
+
+.column .column .form-group
+{
+    margin-left: 0;
+    margin-right: 0;
+}
+
+.column .column + .column .form-group
 {
     margin-left: 10px;
     margin-right: 0;
@@ -4975,7 +5120,7 @@ tags-input .tags .tag-item .remove-button
 
         				.dropdown-content .list-ico
         				{
-        					font-size: 28px;
+        					font-size: 25px;
         					height: 24px;
         					margin: 0 20px 0 0;
                             position: relative;
