@@ -172,9 +172,11 @@ namespace VirtoCommerce.CoreModule.Web
 
             #region Search providers
 
+            var searchConnection = new SearchConnection(ConnectionHelper.GetConnectionString("SearchConnectionString"));
+            _container.RegisterInstance<ISearchConnection>(searchConnection);
+
             _container.RegisterType<ISearchProviderManager, SearchProviderManager>(new ContainerControlledLifetimeManager());
             _container.RegisterType<ISearchProvider, SearchProviderManager>(new ContainerControlledLifetimeManager());
-            _container.RegisterType<ISearchConnection, SearchProviderManager>(new ContainerControlledLifetimeManager());
 
             var searchProviderManager = _container.Resolve<ISearchProviderManager>();
 
@@ -198,7 +200,7 @@ namespace VirtoCommerce.CoreModule.Web
 
             var assetsProviderManager = _container.Resolve<IAssetsProviderManager>();
 
-            assetsProviderManager.RegisterProvider("AzureBlobStorage", connectionString => _container.Resolve<AzureAssetsProvider>());
+            assetsProviderManager.RegisterProvider(AzureAssetsProvider.ProviderName, connectionString => _container.Resolve<AzureAssetsProvider>());
 
             #endregion
 

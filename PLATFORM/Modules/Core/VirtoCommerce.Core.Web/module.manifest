@@ -60,14 +60,6 @@
                 </arrayValues>
             </setting>
         </group>
-        <group name="Search">
-            <setting>
-                <name>VirtoCommerce.Core.Search.ConnectionString</name>
-                <valueType>string</valueType>
-                <defaultValue>server=localhost:9200;scope=default;provider=elasticsearch</defaultValue>
-                <title>Connection String</title>
-            </setting>
-        </group>
         <group name="Security">
             <setting>
                 <name>VirtoCommerce.Core.Security.CacheTimeout</name>
