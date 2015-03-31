@@ -26,42 +26,40 @@
 	<!--<styles>
 		<directory virtualPath="$/Content/css" searchPattern="*.css" searchSubdirectories="true" />
 	</styles>-->
-	<!--<scripts>
+	<scripts>
 		<directory virtualPath="$/Scripts" searchPattern="*.js" searchSubdirectories="true" />
-	</scripts>-->
+	</scripts>
 
 	<settings>
 		<group name="Credentials">
 			<setting>
 				<name>MailChimp.Mailing.Credentials.ApiKey</name>
-				<valueType>string</valueType>
-				<defaultValue>5a1d5bd4ebeef2032527df6cc044998d-us10</defaultValue>
+				<valueType>secureString</valueType>
 				<title>API key</title>
 				<description>MailChimp API key</description>
-			</setting>			
-		</group>
-		<group name="Mailing Description">
-			<setting>
-				<name>MailChimp.Mailing.Code</name>
-				<valueType>string</valueType>
-				<defaultValue>MailChimp</defaultValue>
-				<title>Mailing code</title>
-				<description>Code that indentificates mailchimp mailing provider</description>
 			</setting>
-			<setting>
-				<name>MailChimp.Mailing.Description</name>
-				<valueType>string</valueType>
-				<defaultValue>MailChimp public site description</defaultValue>
-				<title>Description</title>
-				<description>Description of mailchimp for public site</description>
-			</setting>
-			<setting>
-				<name>MailChimp.Mailing.LogoUrl</name>
-				<valueType>string</valueType>
-				<defaultValue>http://static.mailchimp.com/web/brand-assets/logo-dark.png</defaultValue>
-				<title>Logo url</title>
-				<description>MailChimp logo url</description>
-			</setting>
-		</group>
+      <setting>
+        <name>MailChimp.Mailing.SubscribersListId</name>
+        <valueType>string</valueType>
+        <title>Subscriber's list</title>
+        <description>MailChimp subscribers list Id</description>
+      </setting>
+    </group>
+    <group name="MailChimp Description">
+      <setting>
+        <name>MailChimp.Mailing.Description</name>
+        <valueType>string</valueType>
+        <defaultValue>MailChimp public site description</defaultValue>
+        <title>Description</title>
+        <description>Description of mailchimp for public site</description>
+      </setting>
+      <setting>
+        <name>MailChimp.Mailing.LogoUrl</name>
+        <valueType>string</valueType>
+        <defaultValue>http://static.mailchimp.com/web/brand-assets/logo-dark.png</defaultValue>
+        <title>Logo url</title>
+        <description>MailChimp logo url</description>
+      </setting>
+    </group>
 	</settings>
 </module>

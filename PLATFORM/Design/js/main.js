@@ -32,7 +32,7 @@ $(function () {
         $(this).toggleClass('__selected');
     });
 
-    $('.list.__items').on('contextmenu', function () {
+    $('.list.__items, .dynamic-expression_b').on('contextmenu', function () {
         return false;
     });
 
@@ -40,9 +40,22 @@ $(function () {
         var leftPos = event.pageX,
             topPos = event.pageY;
 
+        $('.menu.__context').remove();
+
         if (event.button == 2) {
-            $('.menu.__context').remove();
-            $(this).find('.list-item').prepend('<ul class="menu __context" style="left: ' + leftPos + 'px; top: ' + topPos + 'px;"><li class="menu-item"><i class="menu-ico fa fa-edit"></i> Manage</li><li class="menu-item"><i class="menu-ico fa fa-trash-o"></i> Delete</li></ul>');
+            $(this).find('.list-item').prepend('<ul class="menu __context" style="display: block; left: ' + leftPos + 'px; top: ' + topPos + 'px;"><li class="menu-item"><i class="menu-ico fa fa-edit"></i> Manage</li><li class="menu-item"><i class="menu-ico fa fa-trash-o"></i> Delete</li></ul>');
+        }
+    });
+
+    $('.dynamic-expression_b .add').on('mousedown', function (event) {
+        var leftPos = event.pageX,
+            topPos = event.pageY,
+            self = $(this);
+
+        $('.menu.__context').remove();
+
+        if (event.button == 2) {
+            self.after('<ul class="menu __context" style="display: block; left: ' + leftPos + 'px; top: ' + topPos + 'px;"><li class="menu-item __right"><i class="menu-ico fa fa-caret-right"></i> Cart item discount<ul class="menu __sub"><li class="menu-item">Get []% of [] items</li><li class="menu-item">Get $[] of [] items</li></ul></li></ul>');
         }
     });
 
@@ -205,6 +218,6 @@ var WebAdmin = {
     TreeItemSelected: function(self) {
         $('.tree-block').removeClass('__selected');
         self.addClass('__selected');
-    }
+    },
 
 };

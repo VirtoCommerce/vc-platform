@@ -3,6 +3,7 @@
 using System;
 using System.Net.Http;
 using System.Threading.Tasks;
+using VirtoCommerce.ApiClient.DataContracts.Pages;
 using VirtoCommerce.ApiClient.DataContracts.Stores;
 using VirtoCommerce.ApiClient.Utilities;
 
@@ -42,9 +43,18 @@ namespace VirtoCommerce.ApiClient
         /// <summary>
         ///     Gets page
         /// </summary>
-        public Task<Store[]> GetPagesAsync(string storeId, string language, string page)
+        public Task<Page[]> GetPagesAsync(string storeId, string language, string page)
         {
-            return GetAsync<Store[]>(CreateRequestUri(String.Format(RelativePaths.Pages, storeId, language, page)));
+            return GetAsync<Page[]>(CreateRequestUri(String.Format(RelativePaths.Pages, storeId, language, page)));
+        }
+
+        public async Task<Page[]> GetPagesAsync(string storeId, DateTime since)
+        {
+            var parameters = new { LastUpdateDate = since };
+            return await
+                GetAsync<Page[]>(
+                    CreateRequestUri(
+                        String.Format(RelativePaths.PagesSince, storeId), parameters));
         }
         #endregion
 
@@ -53,6 +63,7 @@ namespace VirtoCommerce.ApiClient
             #region Constants
 
             public const string Pages = "cms/{0}/pages/{1}/{2}";
+            public const string PagesSince = "cms/{0}/pages";
 
             #endregion
         }

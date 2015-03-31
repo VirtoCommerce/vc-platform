@@ -89,6 +89,8 @@
     <Compile Include="Catalog\Services\ICategoryService.cs" />
     <Compile Include="Catalog\Services\IItemService.cs" />
     <Compile Include="Catalog\Services\IPropertyService.cs" />
+    <Compile Include="Common\Expressions\CompositeElement.cs" />
+    <Compile Include="Common\Expressions\ExpressionElement.cs" />
     <Compile Include="Customer\Model\Address.cs" />
     <Compile Include="Customer\Model\AddressType.cs" />
     <Compile Include="Customer\Model\Contact.cs" />
@@ -151,7 +153,10 @@
     <Compile Include="Store\Model\StoreState.cs" />
     <Compile Include="Store\Services\IStoreService.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Marketing\Model\" />
+    <Folder Include="Marketing\Services\" />
+  </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\Core\CommerceFoundation\CommerceFoundation.csproj">
       <Project>{e7fc9a51-1b39-4bdc-983a-8a059c5fc58b}</Project>
