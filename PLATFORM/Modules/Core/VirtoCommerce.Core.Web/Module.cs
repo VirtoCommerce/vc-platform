@@ -4,6 +4,7 @@ using Microsoft.Owin.Security;
 using Microsoft.Practices.Unity;
 using Owin;
 using VirtoCommerce.Caching.HttpCache;
+using VirtoCommerce.CoreModule.Web.Assets;
 using VirtoCommerce.CoreModule.Web.Notification;
 using VirtoCommerce.CoreModule.Web.Repositories;
 using VirtoCommerce.CoreModule.Web.Search;
@@ -13,14 +14,19 @@ using VirtoCommerce.CoreModule.Web.Settings;
 using VirtoCommerce.Domain.Fulfillment.Services;
 using VirtoCommerce.Domain.Payment.Services;
 using VirtoCommerce.Foundation.AppConfig.Repositories;
+using VirtoCommerce.Foundation.Assets.Factories;
+using VirtoCommerce.Foundation.Assets.Repositories;
+using VirtoCommerce.Foundation.Assets.Services;
 using VirtoCommerce.Foundation.Data.AppConfig;
 using VirtoCommerce.Foundation.Data.Customers;
+using VirtoCommerce.Foundation.Data.Infrastructure;
 using VirtoCommerce.Foundation.Data.Search;
 using VirtoCommerce.Foundation.Data.Security;
 using VirtoCommerce.Foundation.Data.Security.Identity;
 using VirtoCommerce.Foundation.Frameworks;
 using VirtoCommerce.Foundation.Search;
 using VirtoCommerce.Foundation.Security.Repositories;
+using VirtoCommerce.Framework.Web.Asset;
 using VirtoCommerce.Framework.Web.Modularity;
 using VirtoCommerce.Framework.Web.Notification;
 using VirtoCommerce.Framework.Web.Search;
@@ -175,6 +181,25 @@ namespace VirtoCommerce.CoreModule.Web
             searchProviderManager.RegisterSearchProvider(SearchProviders.Elasticsearch.ToString(), connection => new ElasticSearchProvider(new ElasticSearchQueryBuilder(), connection));
             searchProviderManager.RegisterSearchProvider(SearchProviders.Lucene.ToString(), connection => new LuceneSearchProvider(new LuceneSearchQueryBuilder(), connection));
             searchProviderManager.RegisterSearchProvider(SearchProviders.AzureSearch.ToString(), connection => new AzureSearchProvider(new AzureSearchQueryBuilder(), connection));
+
+            #endregion
+
+            #region Assets
+
+            var assetsConnection = new AssetsConnection(ConnectionHelper.GetConnectionString("AssetsConnectionString"));
+            _container.RegisterInstance<IAssetsConnection>(assetsConnection);
+
+            _container.RegisterType<IAssetEntityFactory, AssetEntityFactory>();
+
+            _container.RegisterType<IAssetsProviderManager, AssetsProviderManager>(new ContainerControlledLifetimeManager());
+            _container.RegisterType<IBlobStorageProvider, AssetsProviderManager>(new ContainerControlledLifetimeManager());
+            _container.RegisterType<IAssetRepository, AssetsProviderManager>(new ContainerControlledLifetimeManager());
+            _container.RegisterType<IAssetUrl, AssetsProviderManager>(new ContainerControlledLifetimeManager());
+            _container.RegisterType<IUnitOfWork, AssetsProviderManager>(new ContainerControlledLifetimeManager());
+
+            var assetsProviderManager = _container.Resolve<IAssetsProviderManager>();
+
+            assetsProviderManager.RegisterProvider("AzureBlobStorage", connectionString => _container.Resolve<AzureAssetsProvider>());
 
             #endregion
 

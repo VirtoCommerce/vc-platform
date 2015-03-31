@@ -120,6 +120,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\AssetsConnection.cs" />
+    <Compile Include="Assets\AssetsProviderManager.cs" />
+    <Compile Include="Assets\AzureAssetsProvider.cs" />
     <Compile Include="Binders\UserSearchCriteriaBinder.cs" />
     <Compile Include="Controllers\Api\FulfillmentController.cs" />
     <Compile Include="Controllers\Api\NotificationController.cs" />
@@ -222,6 +225,10 @@
     <ProjectReference Include="..\..\..\Core\CommerceFoundation\CommerceFoundation.csproj">
       <Project>{e7fc9a51-1b39-4bdc-983a-8a059c5fc58b}</Project>
       <Name>CommerceFoundation</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Extensions\Azure\CommerceFoundation.Data.Azure\CommerceFoundation.Data.Azure.csproj">
+      <Project>{E3769352-34C8-41A9-A6C8-DA95D7DFF903}</Project>
+      <Name>CommerceFoundation.Data.Azure</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\..\Extensions\Cache\VirtoCommerce.Caching.HttpCache\VirtoCommerce.Caching.HttpCache.csproj">
       <Project>{3fe4eb14-557a-46bc-94ad-2e9874f85ace}</Project>
