@@ -11,13 +11,9 @@ namespace VirtoCommerce.Web.Controllers
 {
     public class BaseController : Controller
     {
-        #region Fields
         private CustomerService _customerService;
-
         private SecurityService _securityService;
-
         private CommerceService _service;
-        #endregion
 
         #region Properties
         protected SiteContext Context
