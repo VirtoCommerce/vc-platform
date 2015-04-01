@@ -1,0 +1,13 @@
+﻿<div class="blade-content">
+    <div class="blade-inner">
+        <div class="inner-block">
+            <ul class="list __items">
+                <li class="list-item" ng-click="blade.openBlade(data)" ng-repeat="data in blade.currentEntities track by data.id" ng-class="{'__selected': data.id === selectedNodeId}">
+                    <span class="list-name">
+                        {{data.name}}
+                    </span>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>

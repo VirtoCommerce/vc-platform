@@ -57,13 +57,9 @@
     <Reference Include="System.Core" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Web.Extensions" />
-    <Reference Include="System.Web.Http, Version=5.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+    <Reference Include="System.Web.Http, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\packages\Microsoft.AspNet.WebApi.Core.5.2.0\lib\net45\System.Web.Http.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Web.Http.WebHost, Version=5.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\packages\Microsoft.AspNet.WebApi.WebHost.5.2.0\lib\net45\System.Web.Http.WebHost.dll</HintPath>
+      <HintPath>..\..\..\packages\Microsoft.AspNet.WebApi.Core.5.2.3\lib\net45\System.Web.Http.dll</HintPath>
     </Reference>
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Drawing" />
@@ -78,6 +74,14 @@
     <Content Include="module.manifest">
       <SubType>Designer</SubType>
     </Content>
+    <Content Include="Scripts\blades\marketing-main.js" />
+    <Content Include="Scripts\blades\marketing-main.tpl.html" />
+    <Content Include="Scripts\blades\promotion-list.js" />
+    <Content Include="Scripts\blades\promotion-list.tpl.html" />
+    <Content Include="Scripts\blades\promotion-detail.js" />
+    <Content Include="Scripts\blades\promotion-detail.tpl.html" />
+    <Content Include="Scripts\marketing.js" />
+    <Content Include="Scripts\resources\marketing.js" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Binders\SearchCriteriaBinder.cs" />
@@ -110,8 +114,6 @@
   <ItemGroup>
     <Folder Include="Converters\" />
     <Folder Include="Model\TypedExpression\Rewards\" />
-    <Folder Include="Scripts\blades\" />
-    <Folder Include="Scripts\resources\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="web.config" />

@@ -1,0 +1,214 @@
+﻿<div class="blade-static __bottom" ng-include="'Modules/$(VirtoCommerce.Core)/Scripts/common/ok-cancel2.tpl.html'" ng-if="blade.isNew"></div>
+<div class="blade-content __large-wide" ng-class="{'__gray': !blade.isNew}">
+    <div class="blade-inner">
+        <div class="inner-block">
+            <form class="form" name="formScope">
+                <fieldset ng-init="setForm(formScope)">
+                    <legend>General information</legend>
+                    <!--<div class="note">
+                        Fields marked as required must have values for the promotion to be created.
+                    </div>-->
+                    <div class="columns">
+                        <div class="column">
+                            <div class="form-group">
+                                <label class="form-label">Store</label>
+                                <div class="form-input">
+                                    <ui-select ng-model="blade.currentEntity.store" ng-disabled="!blade.isNew">
+                                        <ui-select-match placeholder="Select...">{{$select.selected.name}}</ui-select-match>
+                                        <ui-select-choices repeat="store.id as store in stores | filter: { name: $select.search }">
+                                            <span ng-bind-html="store.name | highlight: $select.search"></span>
+                                        </ui-select-choices>
+                                    </ui-select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Promotion name</label>
+                                <div class="form-input">
+                                    <input ng-model="blade.currentEntity.name" focus-on="" required placeholder="Enter name">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Enable date/time</label>
+                                <div class="form-input __calendar">
+                                    <input ng-model="blade.currentEntity.startDate" datepicker-popup="{{format}}" is-open="datepickers.str" datepicker-options="dateOptions" close-text="Close" />
+                                    <button class="btn" type="button" ng-click="open($event,'str')">
+                                        <i class="btn-ico fa fa-calendar"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Expiration date/time</label>
+                                <div class="form-input __calendar">
+                                    <input ng-model="blade.currentEntity.endDate" datepicker-popup="{{format}}" is-open="datepickers.end" datepicker-options="dateOptions" close-text="Close" />
+                                    <button class="btn" type="button" ng-click="open($event,'end')">
+                                        <i class="btn-ico fa fa-calendar"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="column">
+                            <div class="form-group">
+                                <label class="form-label">Description</label>
+                                <div class="form-input">
+                                    <textarea cols="30" rows="10" ng-model="blade.currentEntity.description" placeholder="Enter description"></textarea>
+                                </div>
+                            </div>
+                            <div class="form-group clearfix">
+                                <div class="column">
+                                    <div class="form-group">
+                                        <label class="form-label">Allowed limit</label>
+                                        <div class="form-input __number js-number-input-plugin" data-step="1">
+                                            <input type="text" class="js-val" required ng-model="blade.currentEntity.maxUsageCount">
+                                            <a class="up js-up"></a>
+                                            <a class="down js-down"></a>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Priority</label>
+                                        <div class="form-input __number js-number-input-plugin" data-step="1">
+                                            <input type="text" class="js-val" required="" ng-model="blade.currentEntity.priority">
+                                            <a class="up js-up"></a>
+                                            <a class="down js-down"></a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="column">
+                                    <div class="form-group">
+                                        <label class="form-label">Limit per customer</label>
+                                        <div class="form-input __number js-number-input-plugin" data-step="1">
+                                            <input type="text" class="js-val" required="" ng-model="blade.currentEntity.maxPersonalUsageCount">
+                                            <a class="up js-up"></a>
+                                            <a class="down js-down"></a>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Exclusivity</label>
+                                        <div class="form-input">
+                                            <ui-select ng-model="blade.currentEntity.exclusivity" required>
+                                                <ui-select-match placeholder="Select...">{{$select.selected}}</ui-select-match>
+                                                <ui-select-choices repeat="x in exclusivities | filter: $select.search">
+                                                    <span ng-bind-html="x | highlight: $select.search"></span>
+                                                </ui-select-choices>
+                                            </ui-select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="form-control __checkbox">
+                                    <label class="form-label">
+                                        <input type="checkbox" ng-model="blade.currentEntity.isActive">
+                                        <span class="check"></span>
+                                        <span class="name">Enable in store</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
+
+                <fieldset>
+                    <legend>Promotion conditions</legend>
+                    <div class="dynamic-expression">
+                        <div class="dynamic-expression_t">For visitor with <a class="__link">all</a> of these eligibilities:</div>
+                        <div class="dynamic-expression_b">
+                            <span class="error">Cart promotion requires at least one eligibility</span>
+                            <ul class="list">
+                                <li class="list-item">
+                                    <a class="list-link">
+                                        <i class="list-ico fa fa-times-circle"></i>
+                                        Everyone
+                                    </a>
+                                </li>
+                                <li class="list-item">
+                                    <a class="list-link">
+                                        <i class="list-ico fa fa-times-circle"></i>
+                                        First time buyers
+                                    </a>
+                                </li>
+                                <li class="list-item">
+                                    <a class="list-link">
+                                        <i class="list-ico fa fa-times-circle"></i>
+                                        Registered user
+                                    </a>
+                                </li>
+                            </ul>
+                            <a class="add __link __usergroup">Add usergroup</a>
+                        </div>
+                        <div class="dynamic-expression_t">if <a class="__link">all</a> of these are true</div>
+                        <div class="dynamic-expression_b">
+                            <ul class="list">
+                                <li class="list-item">
+                                    <i class="list-ico fa fa-times-circle"></i>
+                                    <a class="list-link">At least</a>
+                                    <div class="form-input __mini __number js-number-input-plugin" data-step="1">
+                                        <input type="text" class="js-val" required="" ng-model="blade.currentEntity.quantity">
+                                        <a class="up js-up"></a>
+                                        <a class="down js-down"></a>
+                                    </div>
+                                    <div class="list-descr">items in shopping cart excluding:</div>
+                                    <ul class="list __sub">
+                                        <li class="list-item">
+                                            <i class="list-ico fa fa-times-circle"></i>
+                                            <div class="list-descr">items of category</div>
+                                            <a class="__link">TVs</a>
+                                        </li>
+                                        <li class="list-item">
+                                            <i class="list-ico fa fa-times-circle"></i>
+                                            <div class="list-descr">items of category</div>
+                                            <a class="__link">select category</a>
+                                        </li>
+                                        <li class="list-item">
+                                            <a href="#" class="add">+ Excluding</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                            </ul>
+                            <a class="add __link __usergroup">Add condition</a>
+                        </div>
+                        <div class="dynamic-expression_t">They get:</div>
+                        <div class="dynamic-expression_b">
+                            <span class="error">Promotion requires at least one reward</span>
+                            <ul class="list">
+                                <li class="list-item">
+                                    <i class="list-ico fa fa-times-circle"></i>
+                                    <a class="list-link">Get</a>
+                                    <div class="form-input __mini __number js-number-input-plugin" data-step="1">
+                                        <input type="text" class="js-val" required="" ng-model="blade.currentEntity.quantity">
+                                        <a class="up js-up"></a>
+                                        <a class="down js-down"></a>
+                                    </div>
+                                    <div class="list-descr">% off</div>
+                                    <div class="form-input __mini __number js-number-input-plugin" data-step="1">
+                                        <input type="text" class="js-val" required="" ng-model="blade.currentEntity.quantity">
+                                        <a class="up js-up"></a>
+                                        <a class="down js-down"></a>
+                                    </div>
+                                    <div class="list-descr">items excluding:</div>
+                                    <ul class="list __sub">
+                                        <li class="list-item">
+                                            <i class="list-ico fa fa-times-circle"></i>
+                                            <div class="list-descr">items of category</div>
+                                            <a class="__link">TVs</a>
+                                        </li>
+                                        <li class="list-item">
+                                            <i class="list-ico fa fa-times-circle"></i>
+                                            <div class="list-descr">items of category</div>
+                                            <a class="__link">select category</a>
+                                        </li>
+                                        <li class="list-item">
+                                            <a href="#" class="add">+ Excluding</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                            </ul>
+                            <a class="add __link __usergroup">Add effect</a>
+                        </div>
+                    </div>
+                </fieldset>
+            </form>
+
+            <va-widget-container group="promotionDetail" blade="blade"></va-widget-container>
+        </div>
+    </div>
+</div>
