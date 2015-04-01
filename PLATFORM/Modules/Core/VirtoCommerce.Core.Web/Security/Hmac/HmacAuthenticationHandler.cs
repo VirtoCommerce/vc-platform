@@ -5,83 +5,94 @@ using System.Threading.Tasks;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using Microsoft.Owin.Security.Infrastructure;
+using VirtoCommerce.Foundation;
+using VirtoCommerce.Foundation.Frameworks.Caching;
 using VirtoCommerce.Foundation.Security.Model;
 
 namespace VirtoCommerce.CoreModule.Web.Security.Hmac
 {
-	public class HmacAuthenticationHandler : AuthenticationHandler<HmacAuthenticationOptions>
-	{
-		protected override async Task<AuthenticationTicket> AuthenticateCoreAsync()
-		{
-			ClaimsIdentity identity = null;
+    public class HmacAuthenticationHandler : AuthenticationHandler<HmacAuthenticationOptions>
+    {
+        public const string CacheGroup = Constants.SecurityCachePrefix + "_HmacAuthenticationHandler";
 
-			var userId = ExtractUserIdFromRequest();
-			if (!string.IsNullOrEmpty(userId))
-			{
-				identity = await CreateIdentityByUserId(userId);
-			}
+        protected override async Task<AuthenticationTicket> AuthenticateCoreAsync()
+        {
+            ClaimsIdentity identity = null;
 
-			var properties = new AuthenticationProperties();
-			var ticket = new AuthenticationTicket(identity, properties);
-			return ticket;
-		}
+            var userId = ExtractUserIdFromRequest();
+            if (!string.IsNullOrEmpty(userId))
+            {
+                identity = await CreateIdentityByUserId(userId);
+            }
+
+            var properties = new AuthenticationProperties();
+            var ticket = new AuthenticationTicket(identity, properties);
+            return ticket;
+        }
 
 
-		private string ExtractUserIdFromRequest()
-		{
-			string userId = null;
+        private string ExtractUserIdFromRequest()
+        {
+            string userId = null;
 
-			var headerValue = Request.Headers.Get("Authorization");
+            var headerValue = Request.Headers.Get("Authorization");
 
-			AuthenticationHeaderValue authorization;
-			if (AuthenticationHeaderValue.TryParse(headerValue, out authorization))
-			{
-				if (string.Equals(authorization.Scheme, Options.AuthenticationType, StringComparison.OrdinalIgnoreCase))
-				{
-					ApiRequestSignature signature;
-					if (ApiRequestSignature.TryParse(authorization.Parameter, out signature))
-					{
-						if ((DateTime.UtcNow - signature.Timestamp).Duration() < Options.SignatureValidityPeriod)
-						{
-							var credentials = Options.ApiCredentialsProvider.GetAccountByAppId(signature.AppId);
-							if (credentials != null && IsValidSignature(signature, credentials))
-							{
-								userId = credentials.AccountId;
-							}
-						}
-					}
-				}
-			}
+            AuthenticationHeaderValue authorization;
+            if (AuthenticationHeaderValue.TryParse(headerValue, out authorization))
+            {
+                if (string.Equals(authorization.Scheme, Options.AuthenticationType, StringComparison.OrdinalIgnoreCase))
+                {
+                    ApiRequestSignature signature;
+                    if (ApiRequestSignature.TryParse(authorization.Parameter, out signature))
+                    {
+                        if ((DateTime.UtcNow - signature.Timestamp).Duration() < Options.SignatureValidityPeriod)
+                        {
+                            var credentials = Options.ApiCredentialsProvider.GetAccountByAppId(signature.AppId);
+                            if (credentials != null && IsValidSignature(signature, credentials))
+                            {
+                                userId = credentials.AccountId;
+                            }
+                        }
+                    }
+                }
+            }
 
-			return userId;
-		}
+            return userId;
+        }
 
-		private bool IsValidSignature(ApiRequestSignature signature, ApiAccount credentials)
-		{
-			var parameters = new[]
-			{
-				new NameValuePair(null, signature.AppId),
-				new NameValuePair(null, signature.TimestampString)
-			};
+        private bool IsValidSignature(ApiRequestSignature signature, ApiAccount credentials)
+        {
+            var parameters = new[]
+            {
+                new NameValuePair(null, signature.AppId),
+                new NameValuePair(null, signature.TimestampString)
+            };
 
-			var validSignature = HmacUtility.GetHashString(Options.HmacFactory, credentials.SecretKey, parameters);
-			var isValid = string.Equals(signature.Hash, validSignature, StringComparison.OrdinalIgnoreCase);
-			return isValid;
-		}
+            var validSignature = HmacUtility.GetHashString(Options.HmacFactory, credentials.SecretKey, parameters);
+            var isValid = string.Equals(signature.Hash, validSignature, StringComparison.OrdinalIgnoreCase);
+            return isValid;
+        }
 
-		private async Task<ClaimsIdentity> CreateIdentityByUserId(string userId)
-		{
-			ClaimsIdentity identity = null;
+        private async Task<ClaimsIdentity> CreateIdentityByUserId(string userId)
+        {
+            var cacheKey = CacheKey.Create(CacheGroup, "CreateIdentityByUserId", userId);
+            var result = await Options.CacheManager.Get(cacheKey, () => CreateIdentityByUserIdInternal(userId));
+            return result;
+        }
 
-			var userManager = Context.GetUserManager<ApplicationUserManager>();
-			var user = await userManager.FindByIdAsync(userId);
+        private async Task<ClaimsIdentity> CreateIdentityByUserIdInternal(string userId)
+        {
+            ClaimsIdentity identity = null;
 
-			if (user != null)
-			{
-				identity = await userManager.CreateIdentityAsync(user, Options.AuthenticationType);
-			}
+            var userManager = Context.GetUserManager<ApplicationUserManager>();
+            var user = await userManager.FindByIdAsync(userId);
 
-			return identity;
-		}
-	}
+            if (user != null)
+            {
+                identity = await userManager.CreateIdentityAsync(user, Options.AuthenticationType);
+            }
+
+            return identity;
+        }
+    }
 }
