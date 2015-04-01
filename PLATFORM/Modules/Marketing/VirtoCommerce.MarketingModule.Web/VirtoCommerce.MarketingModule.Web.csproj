@@ -78,6 +78,14 @@
     <Content Include="module.manifest">
       <SubType>Designer</SubType>
     </Content>
+    <Content Include="Scripts\blades\marketing-main.js" />
+    <Content Include="Scripts\blades\marketing-main.tpl.html" />
+    <Content Include="Scripts\blades\promotion-list.js" />
+    <Content Include="Scripts\blades\promotion-list.tpl.html" />
+    <Content Include="Scripts\blades\promotion-detail.js" />
+    <Content Include="Scripts\blades\promotion-detail.tpl.html" />
+    <Content Include="Scripts\marketing.js" />
+    <Content Include="Scripts\resources\marketing.js" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Binders\SearchCriteriaBinder.cs" />
@@ -110,8 +118,6 @@
   <ItemGroup>
     <Folder Include="Converters\" />
     <Folder Include="Model\TypedExpression\Rewards\" />
-    <Folder Include="Scripts\blades\" />
-    <Folder Include="Scripts\resources\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

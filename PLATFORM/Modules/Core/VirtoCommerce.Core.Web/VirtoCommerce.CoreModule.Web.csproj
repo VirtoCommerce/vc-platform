@@ -168,6 +168,7 @@
     <Compile Include="Settings\SettingsManager.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\css\dynamic-expression.css" />
     <Content Include="module.manifest" />
     <Content Include="Scripts\common\blades\address-list.js" />
     <Content Include="Scripts\common\blades\address-detail.js" />
