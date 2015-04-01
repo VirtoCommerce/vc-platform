@@ -3,28 +3,37 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using VirtoCommerce.Domain.Common.Expressions;
+using VirtoCommerce.Domain.Marketing.Model;
 using VirtoCommerce.Foundation.Frameworks;
 using VirtoCommerce.Foundation.Frameworks.Extensions;
 
-namespace VirtoCommerce.MarketingModule.Web.Model.TypedExpression.Conditions
+namespace VirtoCommerce.MarketingModule.Web.Model.TypedExpression
 {
-	public abstract class ConditionAndOrBlock : CompositeElement, IConditionExpression
+	public class DynamicPromotionBlock : CompositeElement, IConditionExpression, IRewardExpression
 	{
-		public bool All { get; set; }
 		#region IConditionExpression Members
 
 		public System.Linq.Expressions.Expression<Func<IEvaluationContext, bool>> GetConditionExpression()
 		{
-			var retVal = All ? PredicateBuilder.True<IEvaluationContext>() : PredicateBuilder.False<IEvaluationContext>();
+			var retVal =  PredicateBuilder.True<IEvaluationContext>();
 			foreach (var expression in Children.OfType<IConditionExpression>().Select(x => x.GetConditionExpression()))
 			{
-				retVal = !All ? retVal.Or(expression) : retVal.And(expression);
+				retVal = retVal.And(expression);
 			}
 			return retVal;
 		}
 
 		#endregion
 
-		
+		#region IActionExpression Members
+
+		public PromotionReward[] GetRewards()
+		{
+			var retVal = Children.OfType<IRewardExpression>().SelectMany(x => x.GetRewards()).ToArray();
+
+			return retVal;
+		}
+
+		#endregion
 	}
 }

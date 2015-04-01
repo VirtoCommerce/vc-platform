@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
-VisualStudioVersion = 12.0.31101.0
+VisualStudioVersion = 12.0.30723.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{0E0CB22C-4501-4E16-B9B7-744B51076524}"
 	ProjectSection(SolutionItems) = preProject
@@ -145,6 +145,8 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Marketing", "Marketing", "{BDE02651-90AE-43E2-AFBC-F40E51064938}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.MarketingModule.Web", "Modules\Marketing\VirtoCommerce.MarketingModule.Web\VirtoCommerce.MarketingModule.Web.csproj", "{F64356D7-8A6A-44DF-95F6-C9638A91B4E2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.MarketingModule.Data", "Modules\Marketing\VirtoCommerce.MarketingModule.Data\VirtoCommerce.MarketingModule.Data.csproj", "{2CD7E474-2AC6-4CE8-A459-616F7E5ACD69}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -360,6 +362,10 @@ Global
 		{F64356D7-8A6A-44DF-95F6-C9638A91B4E2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F64356D7-8A6A-44DF-95F6-C9638A91B4E2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F64356D7-8A6A-44DF-95F6-C9638A91B4E2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2CD7E474-2AC6-4CE8-A459-616F7E5ACD69}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2CD7E474-2AC6-4CE8-A459-616F7E5ACD69}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2CD7E474-2AC6-4CE8-A459-616F7E5ACD69}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2CD7E474-2AC6-4CE8-A459-616F7E5ACD69}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -429,5 +435,6 @@ Global
 		{9F5493C4-0080-4BB5-9C12-25D0CDBEA2DD} = {EAE05907-1BEE-47FA-890A-40C84B879B1C}
 		{BDE02651-90AE-43E2-AFBC-F40E51064938} = {A4C0D164-BF77-4B57-8970-B5459B100AC3}
 		{F64356D7-8A6A-44DF-95F6-C9638A91B4E2} = {BDE02651-90AE-43E2-AFBC-F40E51064938}
+		{2CD7E474-2AC6-4CE8-A459-616F7E5ACD69} = {BDE02651-90AE-43E2-AFBC-F40E51064938}
 	EndGlobalSection
 EndGlobal
