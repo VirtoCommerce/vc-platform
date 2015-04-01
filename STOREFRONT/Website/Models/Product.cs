@@ -11,10 +11,10 @@ namespace VirtoCommerce.Web.Models
     [DataContract]
     public class Product : Drop
     {
-        #region Public Properties
         [DataMember]
         public bool Available { get; set; }
 
+        [DataMember]
         public Collections Collections { get; set; }
 
         [DataMember]
@@ -22,12 +22,7 @@ namespace VirtoCommerce.Web.Models
         {
             get
             {
-                if (Variants != null && Variants.Any())
-                {
-                    return Variants.Max(v => v.CompareAtPrice);
-                }
-
-                return decimal.Zero;
+                return this.Variants != null ? this.Variants.Max(v => v.CompareAtPrice) : this.Price;
             }
         }
 
@@ -36,12 +31,7 @@ namespace VirtoCommerce.Web.Models
         {
             get
             {
-                if (Variants != null && Variants.Any())
-                {
-                    return Variants.Min(v=>v.CompareAtPrice);
-                }
-
-                return decimal.Zero;
+                return this.Variants != null ? this.Variants.Min(v => v.CompareAtPrice) : this.Price;
             }
         }
 
@@ -50,12 +40,18 @@ namespace VirtoCommerce.Web.Models
         {
             get
             {
-                return CompareAtPriceMax != CompareAtPriceMin;
+                return this.CompareAtPriceMax != this.CompareAtPriceMin;
             }
         }
 
         [DataMember]
-        public string Content { get; set; }
+        public string Content
+        {
+            get
+            {
+                return this.Description;
+            }
+        }
 
         [DataMember]
         public string Description { get; set; }
@@ -64,30 +60,10 @@ namespace VirtoCommerce.Web.Models
         public string Excerpt { get; set; }
 
         [DataMember]
-        public Image FeaturedImage
-        {
-            get
-            {
-                if (Images != null && Images.Any())
-                {
-                    var primaryImage = Images.SingleOrDefault(i => i.Name.Equals("primaryimage"));
-                    if (primaryImage != null) return primaryImage;
-
-                    return Images.ElementAt(0);
-                }
-
-                return null;
-            }
-        }
+        public Image FeaturedImage { get; set; }
 
         [DataMember]
-        public Variant FirstAvailableVariant
-        {
-            get
-            {
-                return this.Variants != null && this.Variants.Any() ? this.Variants[0] : null;
-            }
-        }
+        public Variant FirstAvailableVariant { get; set; }
 
         [DataMember]
         public string Handle { get; set; }
@@ -108,30 +84,14 @@ namespace VirtoCommerce.Web.Models
         public ItemCollection<string> Options { get; set; }
 
         [DataMember]
-        public decimal Price
-        {
-            get
-            {
-                if (SelectedOrFirstAvailableVariant != null)
-                {
-                    return SelectedOrFirstAvailableVariant.Price;
-                }
-
-                return decimal.Zero;
-            }
-        }
+        public decimal Price { get; set; }
 
         [DataMember]
         public decimal PriceMax
         {
             get
             {
-                if (Variants != null && Variants.Any())
-                {
-                    return Variants.Max(v => v.Price);
-                }
-
-                return decimal.Zero;
+                return this.Variants != null ? this.Variants.Max(v => v.Price) : this.Price;
             }
         }
 
@@ -140,12 +100,7 @@ namespace VirtoCommerce.Web.Models
         {
             get
             {
-                if (Variants != null && Variants.Any())
-                {
-                    return Variants.Max(v => v.Price);
-                }
-
-                return decimal.Zero;
+                return this.Variants != null ? this.Variants.Min(v => v.Price) : this.Price;
             }
         }
 
@@ -154,20 +109,15 @@ namespace VirtoCommerce.Web.Models
         {
             get
             {
-                return PriceMin != PriceMax;
-            }
-        }
-
-        public Variant SelectedOrFirstAvailableVariant
-        {
-            get
-            {
-                return this.Variants != null && this.Variants.Any() ? this.Variants[0] : null;
+                return this.PriceMin != this.PriceMax;
             }
         }
 
         [DataMember]
-        public string SelectedVariant { get; set; }
+        public Variant SelectedOrFirstAvailableVariant { get; set; }
+
+        [DataMember]
+        public Variant SelectedVariant { get; set; }
 
         [DataMember]
         public ItemCollection<string> Tags { get; set; }
@@ -189,7 +139,6 @@ namespace VirtoCommerce.Web.Models
 
         [DataMember]
         public string Vendor { get; set; }
-        #endregion
 
         #region Public Methods and Operators
         public override string ToString()

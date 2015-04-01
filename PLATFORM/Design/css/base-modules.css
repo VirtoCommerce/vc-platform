@@ -4137,6 +4137,18 @@ fieldset + fieldset
     z-index: 5;
 }
 
+.tree.__horizontal .tree-item:first-child:before
+{
+    background: #ffffff;
+    content: "";
+    height: 50%;
+    left: -7px;
+    position: absolute;
+    top: -1px;
+    width: 2px;
+    z-index: 5;
+}
+
 .tree-item:last-child:before
 {
     background: #fff;
@@ -4146,6 +4158,18 @@ fieldset + fieldset
     position: absolute;
     top: 0;
     width: 50%;
+    z-index: 5;
+}
+
+.tree.__horizontal .tree-item:last-child:after
+{
+    background: #ffffff;
+    content: "";
+    height: 50%;
+    left: -7px;
+    position: absolute;
+    top: 51%;
+    width: 2px;
     z-index: 5;
 }
 
@@ -4234,6 +4258,20 @@ fieldset + fieldset
             transform: translateX(-50%);
 }
 
+.tree.__horizontal .tree-block:before
+{
+    background: #a1c0d4;
+    content: "";
+    height: 2px;
+    left: -12px;
+    position: absolute;
+    top: 50%;
+    width: 10px;
+    
+    -webkit-transform: translateY(-50%);
+            transform: translateY(-50%);
+}
+
 .tree-node
 {
     position: relative;
@@ -4252,8 +4290,20 @@ fieldset + fieldset
     height: 2px;
     left: 0;
     position: absolute;
-    right: 1px;
+    right: 7px;
     top: 0;
+}
+
+.tree.__horizontal .tree-node:after
+{
+    background: #a1c0d4;
+    bottom: 0;
+    content: "";
+    height: auto;
+    left: -7px;
+    position: absolute;
+    top: 1px;
+    width: 2px;
 }
 
 .tree-node.__empty:after
@@ -4275,9 +4325,23 @@ fieldset + fieldset
             transform: translateX(-50%);
 }
 
-.tree-node .tree-item
+.tree.__horizontal .tree-node:before
 {
-    width: 170px;
+    background: #a1c0d4;
+    content: "";
+    height: 2px;
+    left: -18px;
+    position: absolute;
+    top: 50%;
+    width: 12px;
+    
+    -webkit-transform: translateY(-50%);
+            transform: translateY(-50%);
+}
+
+.tree.__horizontal .tree-node .tree-item
+{
+    text-align: left;
 }
 
 .tree-el
