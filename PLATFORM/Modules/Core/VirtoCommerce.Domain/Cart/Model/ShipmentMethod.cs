@@ -14,7 +14,7 @@ namespace VirtoCommerce.Domain.Cart.Model
 		public string Name { get; set; }
 		public string LogoUrl { get; set; }
 		public CurrencyCodes Currency { get; set; }
-		public Money Price { get; set; }
+		public decimal Price { get; set; }
 		public ICollection<Discount> Discounts { get; set; }
 	}
 }
