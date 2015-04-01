@@ -83,9 +83,6 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="VirtoCommerce.ApiClient">
-      <HintPath>..\Shared\VirtoCommerce.ApiClient.dll</HintPath>
-    </Reference>
     <Reference Include="YamlDotNet.Core">
       <HintPath>..\packages\YamlDotNet.Core.2.2.0\lib\net35\YamlDotNet.Core.dll</HintPath>
     </Reference>
@@ -128,7 +125,12 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\ApiClient\VirtoCommerce.ApiClient.csproj">
+      <Project>{84b945b7-85e4-4057-b0df-1f8a03b8d53c}</Project>
+      <Name>VirtoCommerce.ApiClient</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

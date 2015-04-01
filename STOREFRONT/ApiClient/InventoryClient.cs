@@ -20,7 +20,9 @@ namespace VirtoCommerce.ApiClient
 
         public Task<ItemInventory> GetItemInventory(string itemId, bool useCache = false)
         {
-            return GetAsync<ItemInventory>(CreateRequestUri(string.Format(RelativePaths.GetItemInventory, itemId)), useCache);
+            var inventory = GetAsync<ItemInventory>(CreateRequestUri(string.Format(RelativePaths.GetItemInventory, itemId)), useCache);
+
+            return inventory;
         }
 
         protected class RelativePaths

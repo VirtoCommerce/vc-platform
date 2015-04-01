@@ -69,10 +69,6 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="VirtoCommerce.ApiClient, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Shared\VirtoCommerce.ApiClient.dll</HintPath>
-    </Reference>
     <Reference Include="xunit">
       <HintPath>..\packages\xunit.1.9.2\lib\net20\xunit.dll</HintPath>
     </Reference>
@@ -87,6 +83,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\ApiClient\VirtoCommerce.ApiClient.csproj">
+      <Project>{84b945b7-85e4-4057-b0df-1f8a03b8d53c}</Project>
+      <Name>VirtoCommerce.ApiClient</Name>
+    </ProjectReference>
     <ProjectReference Include="..\WebViews\VirtoCommerce.WebViews.csproj">
       <Project>{6695201C-2168-47FC-A4C0-FDD5AB5CB135}</Project>
       <Name>VirtoCommerce.WebViews</Name>
