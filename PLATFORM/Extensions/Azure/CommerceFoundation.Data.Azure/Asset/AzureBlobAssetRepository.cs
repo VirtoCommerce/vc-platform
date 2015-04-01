@@ -37,6 +37,7 @@ namespace VirtoCommerce.Foundation.Data.Azure.Asset
         private readonly List<Action> _delayedActions = new List<Action>();
         private readonly IAssetEntityFactory _entityFactory;
         private CloudBlobClient _cloudBlobClient;
+        private CloudStorageAccount _cloudStorageAccount;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AzureBlobAssetRepository"/> class.
@@ -48,7 +49,7 @@ namespace VirtoCommerce.Foundation.Data.Azure.Asset
         {
         }
 
-		
+
         /// <summary>
         /// Prevents a default instance of the <see cref="AzureBlobAssetRepository"/> class from being created.
         /// </summary>
@@ -321,7 +322,7 @@ namespace VirtoCommerce.Foundation.Data.Azure.Asset
                 string prefix = GetPrefix(path);
 
                 container = CurrentCloudBlobClient.GetContainerReference(containerName);
-                
+
                 if (!container.ListBlobs(prefix).Any())
                 {
                     container.GetBlockBlobReference(Combine(prefix, DirectoryPlaceHolder)).UploadText(string.Empty);
@@ -352,7 +353,7 @@ namespace VirtoCommerce.Foundation.Data.Azure.Asset
             var container = CurrentCloudBlobClient.GetContainerReference(GetContainer(id));
             var prefix = GetPrefix(id);
             int index = prefix.LastIndexOf(CurrentCloudBlobClient.DefaultDelimiter, 1, StringComparison.Ordinal);
-            var names = prefix.Split(new []{CurrentCloudBlobClient.DefaultDelimiter}, StringSplitOptions.RemoveEmptyEntries);
+            var names = prefix.Split(new[] { CurrentCloudBlobClient.DefaultDelimiter }, StringSplitOptions.RemoveEmptyEntries);
             names[names.Length - 1] = name;
             var newPrefix = names.JoinStrings(CurrentCloudBlobClient.DefaultDelimiter);
             if (prefix.EndsWith(CurrentCloudBlobClient.DefaultDelimiter))
@@ -885,19 +886,23 @@ namespace VirtoCommerce.Foundation.Data.Azure.Asset
         [CLSCompliant(false)]
         protected CloudBlobClient CurrentCloudBlobClient
         {
-            get
+            get { return _cloudBlobClient ?? (_cloudBlobClient = CurrentCloudStorageAccount.CreateCloudBlobClient()); }
+        }
+
+        [CLSCompliant(false)]
+        protected CloudStorageAccount CurrentCloudStorageAccount
+        {
+            get { return _cloudStorageAccount ?? (_cloudStorageAccount = ParseConnectionString()); }
+        }
+
+        private CloudStorageAccount ParseConnectionString()
+        {
+            CloudStorageAccount cloudStorageAcount;
+            if (!CloudStorageAccount.TryParse(_connectionString, out cloudStorageAcount))
             {
-                if (this._cloudBlobClient == null)
-                {
-                    CloudStorageAccount storageAcount;
-                    if (!CloudStorageAccount.TryParse(this._connectionString, out storageAcount))
-                    {
-                        throw new InvalidOperationException("Failed to get valid connection string");
-                    }
-                    this._cloudBlobClient = storageAcount.CreateCloudBlobClient();
-                }
-                return this._cloudBlobClient;
+                throw new InvalidOperationException("Failed to get valid connection string");
             }
+            return cloudStorageAcount;
         }
 
         /// <summary>
@@ -924,7 +929,7 @@ namespace VirtoCommerce.Foundation.Data.Azure.Asset
             {
                 assetId = assetId.Replace(".thumb", "");
             }
-            var root = AzureConfiguration.Instance.AzureStorageAccount.BlobEndpoint.AbsoluteUri;
+            var root = CurrentCloudStorageAccount.BlobEndpoint.AbsoluteUri;
 
             return String.Format("{0}{1}", root.EndsWith("/") ? root : root + "/", assetId);
         }

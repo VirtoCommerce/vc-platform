@@ -1,5 +1,6 @@
 ﻿#region
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 
@@ -18,7 +19,9 @@ namespace VirtoCommerce.Web.Controllers
             int page = 1,
             string sort_by = "manual")
         {
-            this.Context.Set("Collection", await this.Service.GetAllCollectionAsync(sort_by));
+            var collections = await this.Service.GetCollectionsAsync(sort_by);
+
+            this.Context.Set("Collection", collections.First());
             this.Context.Set("current_page", page);
             this.Context.Set("current_tags", this.ParseTags(tags));
 
@@ -39,7 +42,7 @@ namespace VirtoCommerce.Web.Controllers
             int page = 1,
             string sort_by = "manual")
         {
-            this.Context.Set("Collection", await this.Service.GetCollectionAsync(category, sort_by));
+            this.Context.Set("Collection", await this.Service.GetCollectionAsync(category));
             this.Context.Set("current_page", page);
             this.Context.Set("current_tags", this.ParseTags(tags));
 

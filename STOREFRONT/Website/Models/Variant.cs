@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
 using DotLiquid;
+using System;
 
 #endregion
 
@@ -11,51 +12,47 @@ namespace VirtoCommerce.Web.Models
     [DataContract]
     public class Variant : Drop
     {
-        #region Public Properties
         [DataMember]
-        public bool Available { get; set; }
+        public bool Available
+        {
+            get
+            {
+                bool isAvailable = false;
+
+                if (string.IsNullOrEmpty(this.InventoryManagement))
+                {
+                    isAvailable = true;
+                }
+                else
+                {
+                    if (this.InventoryPolicy.Equals("deny", StringComparison.OrdinalIgnoreCase))
+                    {
+                        if (this.InventoryQuantity > 0)
+                        {
+                            isAvailable = true;
+                        }
+                    }
+                    else if (this.InventoryPolicy.Equals("continue", StringComparison.OrdinalIgnoreCase))
+                    {
+                        isAvailable = true;
+                    }
+                }
+
+                return isAvailable;
+            }
+        }
 
         [DataMember]
         public string Barcode { get; set; }
 
         [DataMember]
-        public decimal CompareAtPrice
-        {
-            get
-            {
-                if (Prices != null && Prices.Any())
-                {
-                    var priceModels = Prices.Where(p => p.MinQuantity <= 1);
-                    if (priceModels.Any())
-                    {
-                        var priceModel = priceModels.First();
-                        if (priceModel != null) return priceModel.List;
-                    }
-                }
-
-                return 0;
-            }
-        }
+        public decimal CompareAtPrice { get; set; }
 
         [DataMember]
         public string Id { get; set; }
 
         [DataMember]
-        public Image Image
-        {
-            get
-            {
-                if (this.Images != null && this.Images.Any())
-                {
-                    var primaryImage = this.Images.SingleOrDefault(i => i.Name.Equals("primaryimage"));
-                    if (primaryImage != null) return primaryImage;
-
-                    return this.Images.ElementAt(0);
-                }
-
-                return null;
-            }
-        }
+        public Image Image { get; set; }
 
         [DataMember]
         public string InventoryManagement { get; set; }
@@ -64,7 +61,7 @@ namespace VirtoCommerce.Web.Models
         public string InventoryPolicy { get; set; }
 
         [DataMember]
-        public decimal InventoryQuantity { get; set; }
+        public long InventoryQuantity { get; set; }
 
         [DataMember]
         public string Option1 { get; set; }
@@ -76,23 +73,7 @@ namespace VirtoCommerce.Web.Models
         public string Option3 { get; set; }
 
         [DataMember]
-        public decimal Price
-        {
-            get
-            {
-                if (Prices != null && Prices.Any())
-                {
-                    var priceModels = Prices.Where(p => p.MinQuantity <= 1);
-                    if (priceModels.Any())
-                    {
-                        var priceModel = priceModels.First();
-                        return priceModel.Sale.HasValue ? priceModel.Sale.Value : priceModel.List;
-                    }
-                }
-
-                return 0;
-            }
-        }
+        public decimal Price { get; set; }
 
         [DataMember]
         public bool Selected { get; set; }
@@ -107,13 +88,12 @@ namespace VirtoCommerce.Web.Models
         public string Url { get; set; }
 
         [DataMember]
-        public string Weight { get; set; }
+        public int Weight { get; set; }
 
         [DataMember]
-        public Price[] Prices { get; set; }
+        public string WeightUnit { get; set; }
 
         [DataMember]
-        public IEnumerable<Image> Images { get; set; }
-        #endregion
+        public string WeightInUnit { get; set; }
     }
 }
