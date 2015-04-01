@@ -5,8 +5,7 @@ using Microsoft.Practices.Unity;
 using VirtoCommerce.Content.Data;
 using VirtoCommerce.Content.Data.Repositories;
 using VirtoCommerce.Content.Data.Services;
-using VirtoCommerce.Foundation.Data.Azure.Asset;
-using VirtoCommerce.Foundation.Data.Infrastructure;
+using VirtoCommerce.Foundation.Assets.Repositories;
 using VirtoCommerce.Foundation.Data.Infrastructure.Interceptors;
 using VirtoCommerce.Framework.Web.Modularity;
 using VirtoCommerce.Framework.Web.Settings;
@@ -49,8 +48,6 @@ namespace VirtoCommerce.ThemeModule.Web
             var githubMainPath = "Themes/";
             var fileSystemMainPath = HostingEnvironment.MapPath("~/App_Data/Themes/");
 
-            var assetsConnectionString = ConnectionHelper.GetConnectionString("AssetsConnectionString");
-            var blobStorageProvider = new AzureBlobAssetRepository(assetsConnectionString, null);
             var uploadPath = HostingEnvironment.MapPath("~/App_Data/Uploads/");
             var uploadPathFiles = HostingEnvironment.MapPath("~/App_Data/Uploads/Files/");
 
@@ -78,7 +75,7 @@ namespace VirtoCommerce.ThemeModule.Web
                     case "Azure and Database":
                         return new ThemeServiceImpl(new DatabaseFileRepositoryImpl("VirtoCommerce",
                             new AuditableInterceptor(),
-                            new EntityPrimaryKeyGeneratorInterceptor()), blobStorageProvider, uploadPath);
+                            new EntityPrimaryKeyGeneratorInterceptor()), _container.Resolve<IBlobStorageProvider>(), uploadPath); // TODO: It could be not the Azure provider.
 
                     default:
                         return new ThemeServiceImpl(new FileSystemFileRepositoryImpl(fileSystemMainPath));

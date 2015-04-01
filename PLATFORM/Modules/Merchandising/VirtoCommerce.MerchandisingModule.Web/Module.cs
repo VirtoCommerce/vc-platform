@@ -5,14 +5,12 @@ using VirtoCommerce.Caching.HttpCache;
 using VirtoCommerce.CatalogModule.Data.Repositories;
 using VirtoCommerce.CatalogModule.Data.Services;
 using VirtoCommerce.Foundation;
-using VirtoCommerce.Foundation.Assets.Factories;
+using VirtoCommerce.Foundation.Assets.Repositories;
 using VirtoCommerce.Foundation.Assets.Services;
 using VirtoCommerce.Foundation.Catalogs;
 using VirtoCommerce.Foundation.Catalogs.Repositories;
 using VirtoCommerce.Foundation.Catalogs.Services;
-using VirtoCommerce.Foundation.Data.Azure.Asset;
 using VirtoCommerce.Foundation.Data.Catalogs;
-using VirtoCommerce.Foundation.Data.Infrastructure;
 using VirtoCommerce.Foundation.Data.Marketing;
 using VirtoCommerce.Foundation.Data.Reviews;
 using VirtoCommerce.Foundation.Data.Stores;
@@ -118,15 +116,15 @@ namespace VirtoCommerce.MerchandisingModule.Web
 
             #endregion
 
-            var assetsConnectionString = ConnectionHelper.GetConnectionString("AssetsConnectionString");
-            var blobStorageProvider = new AzureBlobAssetRepository(assetsConnectionString, null);
+            var blobStorageProvider = _container.Resolve<IBlobStorageProvider>();
+            var assetUrl = _container.Resolve<IAssetUrl>();
 
             var itemBrowseService = new ItemBrowsingService(
                 itemService,
                 catalogRepFactory,
                 searchProvider,
                 cacheRepository,
-                blobStorageProvider,
+                assetUrl,
                 searchConnection);
             var filterService = new FilterService(storeRepFactory, catalogRepFactory, new HttpCacheRepository());
 
@@ -168,8 +166,6 @@ namespace VirtoCommerce.MerchandisingModule.Web
                     new PriceListAssignmentEvaluationContext(),
                     settingsManager,
                     cacheRepository));
-            _container.RegisterType<IAssetUrl, AzureBlobAssetRepository>();
-            _container.RegisterType<IAssetEntityFactory, AssetEntityFactory>();
             _container.RegisterType<IAssetService, AssetService>();
             _container.RegisterType<IItemBrowsingService, ItemBrowsingService>();
 
