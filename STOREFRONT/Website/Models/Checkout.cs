@@ -101,5 +101,8 @@ namespace VirtoCommerce.Web.Models
 
         [DataMember]
         public string Currency { get; set; }
+
+        [DataMember]
+        public bool GuestLogin { get; set; }
     }
 }

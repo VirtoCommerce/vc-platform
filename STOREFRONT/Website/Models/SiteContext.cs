@@ -8,10 +8,6 @@ using DotLiquid;
 
 namespace VirtoCommerce.Web.Models
 {
-
-    #region
-    #endregion
-
     public class SiteContext : Drop
     {
         #region Fields
