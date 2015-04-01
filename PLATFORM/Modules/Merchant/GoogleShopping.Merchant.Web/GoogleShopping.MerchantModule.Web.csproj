@@ -7,13 +7,13 @@
     <ProductVersion>
     </ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{F64356D7-8A6A-44DF-95F6-C9638A91B4E2}</ProjectGuid>
+    <ProjectGuid>{E2DF1E20-AF8F-4B63-9329-896403C3FAB5}</ProjectGuid>
     <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>VirtoCommerce.MarketingModule.Web</RootNamespace>
-    <AssemblyName>VirtoCommerce.MarketingModule.Web</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <RootNamespace>GoogleShopping.MerchantModule.Web</RootNamespace>
+    <AssemblyName>GoogleShopping.MerchantModule.Web</AssemblyName>
+    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
     <UseIISExpress>true</UseIISExpress>
     <IISExpressSSLPort />
     <IISExpressAnonymousAuthentication />
@@ -38,16 +38,54 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\packages\Newtonsoft.Json.6.0.8\lib\net45\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Google.Apis">
+      <HintPath>..\..\..\packages\Google.Apis.1.9.0\lib\net40\Google.Apis.dll</HintPath>
     </Reference>
+    <Reference Include="Google.Apis.Auth">
+      <HintPath>..\..\..\packages\Google.Apis.Auth.1.9.0\lib\net40\Google.Apis.Auth.dll</HintPath>
+    </Reference>
+    <Reference Include="Google.Apis.Auth.PlatformServices">
+      <HintPath>..\..\..\packages\Google.Apis.Auth.1.9.0\lib\net40\Google.Apis.Auth.PlatformServices.dll</HintPath>
+    </Reference>
+    <Reference Include="Google.Apis.Core">
+      <HintPath>..\..\..\packages\Google.Apis.Core.1.9.0\lib\portable-net40+sl50+win+wpa81+wp80\Google.Apis.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Google.Apis.PlatformServices">
+      <HintPath>..\..\..\packages\Google.Apis.1.9.0\lib\net40\Google.Apis.PlatformServices.dll</HintPath>
+    </Reference>
+    <Reference Include="Google.Apis.ShoppingContent.v2">
+      <HintPath>..\..\..\packages\Google.Apis.ShoppingContent.v2.1.9.0.400\lib\portable-net40+sl50+win+wpa81+wp80\Google.Apis.ShoppingContent.v2.dll</HintPath>
+    </Reference>
+    <Reference Include="log4net">
+      <HintPath>..\..\..\packages\log4net.2.0.3\lib\net40-full\log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.Threading.Tasks">
+      <HintPath>..\..\..\packages\Microsoft.Bcl.Async.1.0.168\lib\net40\Microsoft.Threading.Tasks.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Threading.Tasks.Extensions">
+      <HintPath>..\..\..\packages\Microsoft.Bcl.Async.1.0.168\lib\net40\Microsoft.Threading.Tasks.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Threading.Tasks.Extensions.Desktop">
+      <HintPath>..\..\..\packages\Microsoft.Bcl.Async.1.0.168\lib\net40\Microsoft.Threading.Tasks.Extensions.Desktop.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\..\..\packages\Newtonsoft.Json.6.0.8\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Net" />
     <Reference Include="System.Net.Http" />
+    <Reference Include="System.Net.Http.Extensions">
+      <HintPath>..\..\..\packages\Microsoft.Net.Http.2.2.22\lib\net45\System.Net.Http.Extensions.dll</HintPath>
+    </Reference>
     <Reference Include="System.Net.Http.Formatting, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\packages\Microsoft.AspNet.WebApi.Client.5.2.3\lib\net45\System.Net.Http.Formatting.dll</HintPath>
     </Reference>
+    <Reference Include="System.Net.Http.Primitives">
+      <HintPath>..\..\..\packages\Microsoft.Net.Http.2.2.22\lib\net45\System.Net.Http.Primitives.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http.WebRequest" />
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.ApplicationServices" />
@@ -68,57 +106,14 @@
     <Reference Include="System.Configuration" />
     <Reference Include="System.Web.Services" />
     <Reference Include="System.EnterpriseServices" />
+    <Reference Include="Zlib.Portable">
+      <HintPath>..\..\..\packages\Zlib.Portable.1.10.0\lib\portable-net4+sl5+wp8+win8+wpa81+MonoTouch+MonoAndroid\Zlib.Portable.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
-    <Content Include="module.manifest">
-      <SubType>Designer</SubType>
-    </Content>
-    <Content Include="Scripts\blades\marketing-main.js" />
-    <Content Include="Scripts\blades\marketing-main.tpl.html" />
-    <Content Include="Scripts\blades\promotion-list.js" />
-    <Content Include="Scripts\blades\promotion-list.tpl.html" />
-    <Content Include="Scripts\blades\promotion-detail.js" />
-    <Content Include="Scripts\blades\promotion-detail.tpl.html" />
-    <Content Include="Scripts\marketing.js" />
-    <Content Include="Scripts\resources\marketing.js" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Binders\SearchCriteriaBinder.cs" />
-    <Compile Include="Controllers\Api\MarketingManagmentController.cs" />
-    <Compile Include="Model\Promotion.cs" />
-    <Compile Include="Model\PromotionType.cs" />
-    <Compile Include="Model\SearchCriteria.cs" />
-    <Compile Include="Model\SearchResult.cs" />
-    <Compile Include="Model\TypedExpression\Conditions\ConditionAndOrBlock.cs" />
-    <Compile Include="Model\TypedExpression\Conditions\ConditionAtNumItemsInCart.cs" />
-    <Compile Include="Model\TypedExpression\IConditionExpression.cs" />
-    <Compile Include="Model\TypedExpression\IRewardExpression.cs" />
-    <Compile Include="Module.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\..\Core\CommerceFoundation\CommerceFoundation.csproj">
-      <Project>{e7fc9a51-1b39-4bdc-983a-8a059c5fc58b}</Project>
-      <Name>CommerceFoundation</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\VirtoCommerce.Framework.Web\VirtoCommerce.Framework.Web.csproj">
-      <Project>{f7c9313b-522e-4619-abc9-8c7d4600d6b5}</Project>
-      <Name>VirtoCommerce.Framework.Web</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Core\VirtoCommerce.Domain\VirtoCommerce.Domain.csproj">
-      <Project>{67c58a78-ddea-4fa3-a969-1cab582918e4}</Project>
-      <Name>VirtoCommerce.Domain</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Converters\" />
-    <Folder Include="Model\TypedExpression\Rewards\" />
-  </ItemGroup>
-  <ItemGroup>
+    <None Include="module.manifest" />
     <Content Include="web.config" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="web.Debug.config">
       <DependentUpon>web.config</DependentUpon>
     </None>
@@ -126,9 +121,22 @@
       <DependentUpon>web.config</DependentUpon>
     </None>
   </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Module.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\VirtoCommerce.Framework.Web\VirtoCommerce.Framework.Web.csproj">
+      <Project>{f7c9313b-522e-4619-abc9-8c7d4600d6b5}</Project>
+      <Name>VirtoCommerce.Framework.Web</Name>
+    </ProjectReference>
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationManifest>module.manifest</ApplicationManifest>
   </PropertyGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != '' And '$(VCModulesOutputDir)' == ''" />
@@ -140,9 +148,9 @@
         <WebProjectProperties>
           <UseIIS>True</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
-          <DevelopmentServerPort>14677</DevelopmentServerPort>
+          <DevelopmentServerPort>11960</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:14677/</IISUrl>
+          <IISUrl>http://localhost:11960/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>
@@ -152,6 +160,11 @@
       </FlavorProperties>
     </VisualStudio>
   </ProjectExtensions>
+  <Import Project="..\..\..\packages\Microsoft.Bcl.Build.1.0.14\tools\Microsoft.Bcl.Build.targets" Condition="Exists('..\..\..\packages\Microsoft.Bcl.Build.1.0.14\tools\Microsoft.Bcl.Build.targets')" />
+  <Target Name="EnsureBclBuildImported" BeforeTargets="BeforeBuild" Condition="'$(BclBuildImported)' == ''">
+    <Error Condition="!Exists('..\..\..\packages\Microsoft.Bcl.Build.1.0.14\tools\Microsoft.Bcl.Build.targets')" Text="This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=317567." HelpKeyword="BCLBUILD2001" />
+    <Error Condition="Exists('..\..\..\packages\Microsoft.Bcl.Build.1.0.14\tools\Microsoft.Bcl.Build.targets')" Text="The build restored NuGet packages. Build the project again to include these packages in the build. For more information, see http://go.microsoft.com/fwlink/?LinkID=317568." HelpKeyword="BCLBUILD2002" />
+  </Target>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
