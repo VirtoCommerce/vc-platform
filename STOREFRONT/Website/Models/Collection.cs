@@ -20,15 +20,10 @@ namespace VirtoCommerce.Web.Models
     [DataContract]
     public class Collection : Drop, ILoadSlice
     {
-        #region Fields
         private int _allProductsCount;
-
         private ItemCollection<Tag> _allTags;
-
         private ItemCollection<Product> _products;
-
         private bool _productsLoaded;
-        #endregion
 
         #region Public Properties
         public int AllProductsCount
@@ -76,11 +71,11 @@ namespace VirtoCommerce.Web.Models
 
         public IEnumerable<SeoKeyword> Keywords { get; set; }
 
-        public Product NextProduct { get; set; }
+        public string NextProduct { get; set; }
 
         public IEnumerable<Collection> Parents { get; set; }
 
-        public Product PreviousProduct { get; set; }
+        public string PreviousProduct { get; set; }
 
         public ItemCollection<Product> Products
         {
@@ -149,13 +144,21 @@ namespace VirtoCommerce.Web.Models
             var priceLists = SiteContext.Current.PriceLists;
 
             var response =
-                Task.Run(() => service.GetProductsAsync(storeId,language,priceLists,this.Id,String.IsNullOrEmpty(this.SortBy) ? this.DefaultSortBy : this.SortBy,from,pageSize.Value,filters)).Result;
+                Task.Run(() => service.GetProductsAsync(
+                    storeId,
+                    language,
+                    priceLists,
+                    this.Id,
+                    string.IsNullOrEmpty(this.SortBy) ? this.DefaultSortBy : this.SortBy, from, pageSize.Value, filters)).Result;
 
             this.AllProductsCount = response.TotalCount;
             var allIds = response.Items.ToArray().GetAllVariationIds();
             var prices =
                 Task.Run(() => service.GetProductPricesAsync(priceLists, allIds.ToArray())).Result;
-            var productCollection = new ItemCollection<Product>(response.Items.Select(i => i.AsWebModel(prices)).ToArray()) { TotalCount = response.TotalCount};
+            //var inventories =
+            //    Task.Run(() => service.GetItemInventoriesAsync(allIds.ToArray())).Result;
+
+            var productCollection = new ItemCollection<Product>(response.Items.Select(i => i.AsWebModel(prices/*, inventories*/))) { TotalCount = response.TotalCount};
 
             // populate tags with facets returned
             if (response.Facets != null && response.Facets.Any())

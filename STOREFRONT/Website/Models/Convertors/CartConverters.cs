@@ -60,14 +60,13 @@ namespace VirtoCommerce.Web.Models.Convertors
         {
             var product = new Product
                           {
-                              Available = true,
                               Title = item.Name,
                               Description = item.Name,
                               Excerpt = item.Name,
                               Handle = item.ProductId
                           };
 
-            var variant = new Variant { Available = true };
+            var variant = new Variant();
 
             var ret = new LineItem
                       {

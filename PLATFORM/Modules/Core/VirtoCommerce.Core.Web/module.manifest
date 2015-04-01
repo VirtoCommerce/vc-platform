@@ -19,6 +19,9 @@
 
     <assemblyFile>VirtoCommerce.CoreModule.Web.dll</assemblyFile>
     <moduleType>VirtoCommerce.CoreModule.Web.Module, VirtoCommerce.CoreModule.Web</moduleType>
+  <styles>
+    <directory virtualPath="$/Content/css" searchPattern="*.css" searchSubdirectories="true" />
+  </styles>
     <scripts>
         <directory virtualPath="$/Scripts" searchPattern="*.js" searchSubdirectories="true" />
     </scripts>
@@ -58,14 +61,6 @@
                     <value>ru-RU</value>
                     <value>zh-CN</value>
                 </arrayValues>
-            </setting>
-        </group>
-        <group name="Search">
-            <setting>
-                <name>VirtoCommerce.Core.Search.ConnectionString</name>
-                <valueType>string</valueType>
-                <defaultValue>server=localhost:9200;scope=default;provider=elasticsearch</defaultValue>
-                <title>Connection String</title>
             </setting>
         </group>
         <group name="Security">

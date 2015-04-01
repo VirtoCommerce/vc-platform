@@ -165,6 +165,7 @@ namespace VirtoCommerce.CatalogModule.Test
 
         private static AzureBlobAssetRepository GetAssetUrlResolver()
         {
+            // TODO: It could be not the Azure provider.
             var assetsConnectionString = ConnectionHelper.GetConnectionString("AssetsConnectionString");
             var blobStorageProvider = new AzureBlobAssetRepository(assetsConnectionString, null);
             return blobStorageProvider;

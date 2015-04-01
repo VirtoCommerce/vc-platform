@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
 using DotLiquid;
+using System;
 
 #endregion
 
@@ -11,10 +12,23 @@ namespace VirtoCommerce.Web.Models
     [DataContract]
     public class Product : Drop
     {
-        #region Public Properties
-        [DataMember]
-        public bool Available { get; set; }
+        public Product()
+        {
+            this.Images = new List<Image>();
+            this.Variants = new List<Variant>();
+        }
 
+        [DataMember]
+        public bool Available
+        {
+            get
+            {
+                return this.Variants.Any(v => v.Available);
+            }
+        }
+
+
+        [DataMember]
         public Collections Collections { get; set; }
 
         [DataMember]
@@ -22,12 +36,7 @@ namespace VirtoCommerce.Web.Models
         {
             get
             {
-                if (Variants != null && Variants.Any())
-                {
-                    return Variants.Max(v => v.CompareAtPrice);
-                }
-
-                return decimal.Zero;
+                return this.Variants.Max(v => v.CompareAtPrice);
             }
         }
 
@@ -36,12 +45,7 @@ namespace VirtoCommerce.Web.Models
         {
             get
             {
-                if (Variants != null && Variants.Any())
-                {
-                    return Variants.Min(v=>v.CompareAtPrice);
-                }
-
-                return decimal.Zero;
+                return this.Variants.Min(v => v.CompareAtPrice);
             }
         }
 
@@ -50,12 +54,18 @@ namespace VirtoCommerce.Web.Models
         {
             get
             {
-                return CompareAtPriceMax != CompareAtPriceMin;
+                return this.CompareAtPriceMax != this.CompareAtPriceMin;
             }
         }
 
         [DataMember]
-        public string Content { get; set; }
+        public string Content
+        {
+            get
+            {
+                return this.Description;
+            }
+        }
 
         [DataMember]
         public string Description { get; set; }
@@ -68,15 +78,9 @@ namespace VirtoCommerce.Web.Models
         {
             get
             {
-                if (Images != null && Images.Any())
-                {
-                    var primaryImage = Images.SingleOrDefault(i => i.Name.Equals("primaryimage"));
-                    if (primaryImage != null) return primaryImage;
-
-                    return Images.ElementAt(0);
-                }
-
-                return null;
+                return this.Images != null ?
+                    this.Images.FirstOrDefault(i => i.Name.Equals("primaryimage", StringComparison.OrdinalIgnoreCase)) :
+                    this.Images.FirstOrDefault();
             }
         }
 
@@ -85,7 +89,7 @@ namespace VirtoCommerce.Web.Models
         {
             get
             {
-                return this.Variants != null && this.Variants.Any() ? this.Variants[0] : null;
+                return this.Variants.FirstOrDefault(v => v.Available);
             }
         }
 
@@ -112,12 +116,7 @@ namespace VirtoCommerce.Web.Models
         {
             get
             {
-                if (SelectedOrFirstAvailableVariant != null)
-                {
-                    return SelectedOrFirstAvailableVariant.Price;
-                }
-
-                return decimal.Zero;
+                return this.SelectedOrFirstAvailableVariant.Price;
             }
         }
 
@@ -126,12 +125,7 @@ namespace VirtoCommerce.Web.Models
         {
             get
             {
-                if (Variants != null && Variants.Any())
-                {
-                    return Variants.Max(v => v.Price);
-                }
-
-                return decimal.Zero;
+                return this.Variants.Max(v => v.Price);
             }
         }
 
@@ -140,12 +134,7 @@ namespace VirtoCommerce.Web.Models
         {
             get
             {
-                if (Variants != null && Variants.Any())
-                {
-                    return Variants.Max(v => v.Price);
-                }
-
-                return decimal.Zero;
+                return this.Variants.Min(v => v.Price);
             }
         }
 
@@ -154,20 +143,31 @@ namespace VirtoCommerce.Web.Models
         {
             get
             {
-                return PriceMin != PriceMax;
-            }
-        }
-
-        public Variant SelectedOrFirstAvailableVariant
-        {
-            get
-            {
-                return this.Variants != null && this.Variants.Any() ? this.Variants[0] : null;
+                return this.PriceMin != this.PriceMax;
             }
         }
 
         [DataMember]
-        public string SelectedVariant { get; set; }
+        public Variant SelectedOrFirstAvailableVariant
+        {
+            get
+            {
+                return this.SelectedVariant != null ? this.SelectedVariant : this.FirstAvailableVariant;
+            }
+        }
+
+        [DataMember]
+        public Variant SelectedVariant
+        {
+            get
+            {
+                var queryString = System.Web.HttpContext.Current.Request.QueryString;
+
+                return queryString["variant"] != null ?
+                    this.Variants.FirstOrDefault(v => v.Id == queryString["variant"]) :
+                    this.Variants.FirstOrDefault();
+            }
+        }
 
         [DataMember]
         public ItemCollection<string> Tags { get; set; }
@@ -185,11 +185,10 @@ namespace VirtoCommerce.Web.Models
         public string Url { get; set; }
 
         [DataMember]
-        public List<Variant> Variants { get; set; }
+        public ICollection<Variant> Variants { get; set; }
 
         [DataMember]
         public string Vendor { get; set; }
-        #endregion
 
         #region Public Methods and Operators
         public override string ToString()
@@ -199,12 +198,7 @@ namespace VirtoCommerce.Web.Models
 
         public override object BeforeMethod(string method)
         {
-            if (SelectedOrFirstAvailableVariant != null)
-            {
-                return SelectedOrFirstAvailableVariant[method];
-            }
-
-            return null;
+            return this.SelectedOrFirstAvailableVariant[method];
         }
         #endregion
     }

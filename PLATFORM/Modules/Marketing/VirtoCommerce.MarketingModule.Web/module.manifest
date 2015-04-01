@@ -2,7 +2,10 @@
 <module>
 	<id>VirtoCommerce.Marketing</id>
 	<version>1.0.0.0</version>
-
+  <dependencies>
+    <dependency>VirtoCommerce.Core</dependency>
+  </dependencies>
+  
 	<title>Virto Commerce Marketing</title>
 	<description>UI and API for marketing</description>
 	<authors>
@@ -19,7 +22,25 @@
 
 	<assemblyFile>VirtoCommerce.MarketingModule.Web.dll</assemblyFile>
 	<moduleType>VirtoCommerce.MarketingModule.Web.Module, VirtoCommerce.MarketingModule.Web</moduleType>
-	<!--<scripts>
+	<scripts>
 		<directory virtualPath="$/Scripts" searchPattern="*.js" searchSubdirectories="true" />
-	</scripts>-->
+	</scripts>
+  
+  <settings>
+    <group>
+      <setting>
+        <name>VirtoCommerce.Marketing.Promotions.Exclusivities</name>
+        <valueType>string</valueType>
+        <defaultValue>None</defaultValue>
+        <title>Promotions exclusivity</title>
+        <description>Exclusivities available for promotion</description>
+        <isArray>true</isArray>
+        <arrayValues>
+          <value>None</value>
+          <value>Global</value>
+          <value>Group</value>
+        </arrayValues>
+      </setting>
+    </group>
+  </settings>
 </module>

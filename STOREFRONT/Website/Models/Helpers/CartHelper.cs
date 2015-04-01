@@ -1,4 +1,4 @@
-﻿#region
+﻿    #region
 using System.Linq;
 using System.Threading.Tasks;
 using VirtoCommerce.Web.Models.Convertors;
@@ -8,22 +8,14 @@ using VirtoCommerce.Web.Models.Services;
 
 namespace VirtoCommerce.Web.Models.Helpers
 {
-
-    #region
-    #endregion
-
     public class CartHelper
     {
-        #region Fields
         private readonly CommerceService _commerceService;
-        #endregion
 
-        #region Constructors and Destructors
         public CartHelper(CommerceService service)
         {
-            this._commerceService = service;
+            _commerceService = service;
         }
-        #endregion
 
         #region Properties
         private Cart ShoppingCart
@@ -38,7 +30,7 @@ namespace VirtoCommerce.Web.Models.Helpers
         #region Public Methods and Operators
         public async Task<LineItem> AddAsync(string variantId)
         {
-            var product = await this._commerceService.GetProductAsync(variantId);
+            var product = await _commerceService.GetProductAsync(variantId);
 
             var lineItem = product.AsLineItem();
 
