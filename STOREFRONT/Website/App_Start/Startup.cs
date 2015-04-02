@@ -49,8 +49,6 @@ namespace VirtoCommerce.Web
                         }
                 });
 
-            app.UseSiteContext();
-
             app.UseExternalSignInCookie(DefaultAuthenticationTypes.ExternalCookie);
 
             // Enables the application to temporarily store user information when they are verifying the second factor in the two-factor authentication process.
@@ -77,6 +75,8 @@ namespace VirtoCommerce.Web
             app.UseGoogleAuthentication(
                 ConfigurationManager.AppSettings["OAuth.Google.ClientId"],
                 ConfigurationManager.AppSettings["OAuth.Google.Secret"]);
+
+            app.UseSiteContext();
         }
         #endregion
 

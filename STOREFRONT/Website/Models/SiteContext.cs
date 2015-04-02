@@ -49,6 +49,19 @@ namespace VirtoCommerce.Web.Models
             }
         }
 
+        public LoginProvider[] LoginProviders
+        {
+            get
+            {
+                object retValue;
+                return _Storage.TryGetValue("login_providers", out retValue) ? retValue as LoginProvider[] : null;
+            }
+            set
+            {
+                this.Set("login_providers", value);
+            }
+        }
+
         public Cart Cart
         {
             get

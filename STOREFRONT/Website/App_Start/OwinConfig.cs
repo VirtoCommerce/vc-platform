@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Routing;
 using Microsoft.Owin;
+using Microsoft.Owin.Security;
 using Owin;
 using VirtoCommerce.ApiClient.DataContracts;
 using VirtoCommerce.ApiClient.DataContracts.Stores;
@@ -55,6 +56,8 @@ namespace VirtoCommerce.Web
             var customerService = new CustomerService();
             var commerceService = new CommerceService();
             var ctx = SiteContext.Current;
+
+            ctx.LoginProviders = GetExternalLoginProviders(context).ToArray();
 
             // Need to load language for all files, since translations are used within css and js
             // the order of execution is very important when initializing context
@@ -278,6 +281,25 @@ namespace VirtoCommerce.Web
             }
 
             return null;
+        }
+
+        private ICollection<LoginProvider> GetExternalLoginProviders(IOwinContext context)
+        {
+            var providersModel = new List<LoginProvider>();
+
+            var providers = context.Authentication.GetExternalAuthenticationTypes();
+
+            foreach (var provider in providers)
+            {
+                providersModel.Add(new LoginProvider
+                {
+                    AuthentificationType = provider.AuthenticationType,
+                    Caption = provider.Caption,
+                    Properties = provider.Properties
+                });
+            }
+
+            return providersModel;
         }
 
         private string GetStoreIdFromRoute(RouteValueDictionary values)

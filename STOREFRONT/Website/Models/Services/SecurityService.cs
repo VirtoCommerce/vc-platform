@@ -7,6 +7,8 @@ using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using VirtoCommerce.Web.Models.FormModels;
 using VirtoCommerce.Web.Models.Security;
+using System.Collections.Generic;
+using Microsoft.Owin;
 
 #endregion
 
