@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin;
@@ -8,6 +9,9 @@ using Microsoft.Practices.Unity;
 using Owin;
 using VirtoCommerce.CoreModule.Web.Security.Hmac;
 using VirtoCommerce.Foundation.Data.Security.Identity;
+using VirtoCommerce.Foundation.Frameworks;
+using VirtoCommerce.Foundation.Frameworks.Caching;
+using VirtoCommerce.Framework.Web.Settings;
 
 namespace VirtoCommerce.CoreModule.Web.Security
 {
@@ -17,9 +21,9 @@ namespace VirtoCommerce.CoreModule.Web.Security
 
         public static void Configure(IAppBuilder app, IUnityContainer container)
         {
-
             // Configure the db context, user manager and role manager to use a single instance per request
             app.CreatePerOwinContext(() => new SecurityDbContext("VirtoCommerce"));
+            app.CreatePerOwinContext<ApplicationUserStore>(ApplicationUserStore.Create);
             app.CreatePerOwinContext<ApplicationUserManager>(ApplicationUserManager.Create);
             app.CreatePerOwinContext<ApplicationSignInManager>(ApplicationSignInManager.Create);
 
@@ -58,10 +62,19 @@ namespace VirtoCommerce.CoreModule.Web.Security
                 AllowInsecureHttp = true
             });
 
+            var settingsManager = container.Resolve<ISettingsManager>();
+            var cacheRepository = container.Resolve<ICacheRepository>();
+            var cacheSettings = new[]
+            {
+                new CacheSettings(HmacAuthenticationHandler.CacheGroup, TimeSpan.FromSeconds(settingsManager.GetValue(CachingSecurityService.CacheTimeout, 60)), "", true)
+            };
+            var cacheManager = new CacheManager(provider => cacheRepository, group => cacheSettings.FirstOrDefault(settings => settings.Group == group));
+
             app.UseHmacAuthentication(new HmacAuthenticationOptions
             {
                 ApiCredentialsProvider = container.Resolve<IApiAccountProvider>(),
                 IdentityProvider = container.Resolve<IClaimsIdentityProvider>(),
+                CacheManager = cacheManager,
             });
         }
     }

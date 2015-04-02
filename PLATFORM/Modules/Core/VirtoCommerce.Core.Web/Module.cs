@@ -150,7 +150,7 @@ namespace VirtoCommerce.CoreModule.Web
             #region Settings
 
             _container.RegisterType<IAppConfigRepository>(new InjectionFactory(c => new EFAppConfigRepository(_connectionStringName)));
-            _container.RegisterType<ISettingsManager, SettingsManager>();
+            _container.RegisterType<ISettingsManager, SettingsManager>(new ContainerControlledLifetimeManager());
 
             #endregion
 

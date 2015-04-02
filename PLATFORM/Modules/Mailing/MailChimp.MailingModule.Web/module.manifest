@@ -33,11 +33,17 @@
 	<settings>
 		<group name="Credentials">
 			<setting>
-				<name>MailChimp.Mailing.Credentials.ApiKey</name>
+				<name>MailChimp.Mailing.Credentials.AccessToken</name>
 				<valueType>secureString</valueType>
-				<title>API key</title>
-				<description>MailChimp API key</description>
+				<title>MailChimp API access token</title>
+				<description>MailChimp API access token</description>
 			</setting>
+      <setting>
+        <name>MailChimp.Mailing.Credentials.DataCenter</name>
+        <valueType>secureString</valueType>
+        <title>data center</title>
+        <description>MailChimp API data center code</description>
+      </setting>
       <setting>
         <name>MailChimp.Mailing.SubscribersListId</name>
         <valueType>string</valueType>

@@ -22,7 +22,7 @@
         $scope.blade.origEntity = data;
         $scope.blade.isLoading = false;
 
-        initializeExpressions();
+        initializeExpressions($scope.blade.currentEntity.dynamicExpression);
     };
 
     function isDirty() {
@@ -137,124 +137,57 @@
     $scope.format = 'shortDate';
 
     // Dynamic ExpressionBlock
-    function initializeExpressions() {
-        $scope.expressionBlocks = [
-            {
-                headerElements: [
+    function initializeExpressions(data) {
+        //var expressionBlocks = getTestExpressionBlocks();
+        var expressionBlocks = [
+        {
+            children: [],
+            newChildLabel: '+ add',
+            availableChildren: data.availableChildren
+        }];
+
+
+        $scope.expressionBlocks = expressionBlocks;
+    }
+
+    $scope.addChild = function (availableElement, parent) {
+
+        parent.children.push(constrictElementBlock(availableElement));
+    };
+
+    function constrictElementBlock(availableElement) {
+        var retVal = { id: availableElement.id, children: [] };
+        switch (availableElement.id) {
+            case 'CustomerConditionBlock':
+                break;
+            case 'RewardBlock':
+                retVal.headerElements = [
                     {
                         type: 'label',
-                        text: 'For visitor with '
-                    },
-                    {
-                        type: 'dictionary',
-                        text: 'all'
-                    },
-                    {
-                        type: 'label',
-                        text: ' of these eligibilities'
-                    }],
-                children: [
-                    {
-                        headerElements: [
-                            {
-                                type: 'label',
-                                text: 'Everyone'
-                            }
-                        ]
-                    },
-                    {
-                        headerElements: [
-                            {
-                                type: 'label',
-                                text: 'First time buyer'
-                            }
-                        ]
-                    },
-                    {
-                        headerElements: [
-                            {
-                                type: 'label',
-                                text: 'Registered user'
-                            }
-                        ]
-                    }],
-                newChildLabel: '+ add usergroup',
-                getValidationError: function (data) {
-                    if (!data.children.length) {
-                        return 'Promotion requires at least one eligibility';
-                    } else {
-                        return undefined;
+                        text: 'They get: '
                     }
-                }
-            },
-            {
-                headerElements: [
-                    {
-                        type: 'label',
-                        text: 'if '
-                    },
-                    {
-                        type: 'dictionary',
-                        text: 'all'
-                    },
-                    {
-                        type: 'label',
-                        text: ' of these conditions are true'
-                    }],
-                children: [
-                    {
-                        headerElements: [
-                            {
-                                type: 'label',
-                                text: 'At least'
-                            },
-                            {
-                                type: 'numericInput',
-                                // text: 'qty'
-                                number: 0
-                            },
-                            {
-                                type: 'label',
-                                text: 'items in shopping cart excluding:'
-                            }
-                        ],
-                        children: [
-                            {
-                                headerElements: [
-                                    {
-                                        type: 'label',
-                                        text: 'items of category'
-                                    },
-                                    constructCategorySelector()
-                                ]
-                            }
-                        ],
-                        newChildLabel: '+ excluding'
-                    }
-                ],
-                newChildLabel: '+ add condition',
-                getValidationError: function (data) {
-                    return undefined;
-                }
-            },
-            {
-                headerElements: [
-                    {
-                        type: 'label',
-                        text: 'They get:'
-                    }],
-                children: [],
-                newChildLabel: '+ add effect',
-                getValidationError: function (data) {
+                ];
+
+                retVal.newChildLabel = '+ add effect';
+                retVal.getValidationError = function(data) {
                     if (!data.children.length) {
                         return 'Promotion requires at least one reward';
                     } else {
                         return undefined;
                     }
-                }
-            }
-        ];
-    }
+                };
+                break;
+            default:
+                retVal.headerElements = [
+                    {
+                        type: 'label',
+                        text: 'unknown element: ' + availableElement.id
+                    }
+                ];
+        }
+
+        return retVal;
+    };
 
     function openCategorySelectWizard(expressionElement) {
         var selectedListEntries = [];
@@ -299,7 +232,7 @@
 
         bladeNavigationService.showBlade(newBlade, $scope.blade);
     }
-    
+
     var constructCategorySelector = function (selectLabel) {
         selectLabel = selectLabel ? selectLabel : 'select category';
         var retVal = {
@@ -313,6 +246,125 @@
 
         retVal.action = function () { openCategorySelectWizard(retVal); };
         return retVal;
+    };
+
+    var getTestExpressionBlocks = function () {
+        return [
+        {
+            headerElements: [
+                {
+                    type: 'label',
+                    text: 'For visitor with '
+                },
+                {
+                    type: 'dictionary',
+                    text: 'all'
+                },
+                {
+                    type: 'label',
+                    text: ' of these eligibilities'
+                }],
+            children: [
+                {
+                    headerElements: [
+                        {
+                            type: 'label',
+                            text: 'Everyone'
+                        }
+                    ]
+                },
+                {
+                    headerElements: [
+                        {
+                            type: 'label',
+                            text: 'First time buyer'
+                        }
+                    ]
+                },
+                {
+                    headerElements: [
+                        {
+                            type: 'label',
+                            text: 'Registered user'
+                        }
+                    ]
+                }],
+            newChildLabel: '+ add usergroup',
+            getValidationError: function (data) {
+                if (!data.children.length) {
+                    return 'Promotion requires at least one eligibility';
+                } else {
+                    return undefined;
+                }
+            }
+        },
+        {
+            headerElements: [
+                {
+                    type: 'label',
+                    text: 'if '
+                },
+                {
+                    type: 'dictionary',
+                    text: 'all'
+                },
+                {
+                    type: 'label',
+                    text: ' of these conditions are true'
+                }],
+            children: [
+                {
+                    headerElements: [
+                        {
+                            type: 'label',
+                            text: 'At least'
+                        },
+                        {
+                            type: 'numericInput',
+                            // text: 'qty'
+                            number: 0
+                        },
+                        {
+                            type: 'label',
+                            text: 'items in shopping cart excluding:'
+                        }
+                    ],
+                    children: [
+                        {
+                            headerElements: [
+                                {
+                                    type: 'label',
+                                    text: 'items of category'
+                                },
+                                constructCategorySelector()
+                            ]
+                        }
+                    ],
+                    newChildLabel: '+ excluding'
+                }
+            ],
+            newChildLabel: '+ add condition',
+            getValidationError: function (data) {
+                return undefined;
+            }
+        },
+        {
+            headerElements: [
+                {
+                    type: 'label',
+                    text: 'They get:'
+                }],
+            children: [],
+            newChildLabel: '+ add effect',
+            getValidationError: function (data) {
+                if (!data.children.length) {
+                    return 'Promotion requires at least one reward';
+                } else {
+                    return undefined;
+                }
+            }
+        }
+        ];
     };
 
     initializeToolbar();
