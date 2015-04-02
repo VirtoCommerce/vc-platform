@@ -31,7 +31,7 @@ namespace VirtoCommerce.Domain.Marketing.Model
 		public decimal? CouponMinOrderAmount { get; set; }
 
 		//Promotion 
-		public Promotion Promotion { get; private set; }
+		public Promotion Promotion { get; set; }
 
 		public bool IsExclusive { get; set; }
 	}

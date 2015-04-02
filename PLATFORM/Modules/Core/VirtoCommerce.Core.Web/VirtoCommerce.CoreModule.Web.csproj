@@ -123,6 +123,7 @@
     <Compile Include="Assets\AssetsConnection.cs" />
     <Compile Include="Assets\AssetsProviderManager.cs" />
     <Compile Include="Assets\AzureAssetsProvider.cs" />
+    <Compile Include="Assets\LocalAssetsProvider.cs" />
     <Compile Include="Binders\UserSearchCriteriaBinder.cs" />
     <Compile Include="Controllers\Api\FulfillmentController.cs" />
     <Compile Include="Controllers\Api\NotificationController.cs" />

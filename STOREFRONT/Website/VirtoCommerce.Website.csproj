@@ -195,6 +195,8 @@
     <Compile Include="Models\FormModels\CheckoutFirstStepFormModel.cs" />
     <Compile Include="Models\FormModels\CheckoutSecondStepFormModel.cs" />
     <Compile Include="Models\FormModels\CustomerAddressFormModel.cs" />
+    <Compile Include="Models\FormModels\ExternalLoginConfirmationFormModel.cs" />
+    <Compile Include="Models\FormModels\ExternalLoginFormModel.cs" />
     <Compile Include="Models\FormModels\LoginFormModel.cs" />
     <Compile Include="Models\FormModels\NewAddressFormModel.cs" />
     <Compile Include="Models\FormModels\ForgotPasswordFormModel.cs" />
@@ -205,6 +207,7 @@
     <Compile Include="Models\Helpers\CartHelper.cs" />
     <Compile Include="Models\Extensions\CategoryExtensions.cs" />
     <Compile Include="Models\Language.cs" />
+    <Compile Include="Models\LoginProvider.cs" />
     <Compile Include="Models\PaymentMethod.cs" />
     <Compile Include="Models\Review.cs" />
     <Compile Include="Models\Services\CommerceService.cs" />
@@ -435,7 +438,12 @@
   <ItemGroup>
     <Content Include="App_Data\Themes\_Global\templates\checkout-step-2.liquid" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Content Include="App_Data\Themes\_Global\templates\external-login-confirmation.liquid" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="App_Data\Themes\_Global\templates\locked-out.liquid" />
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
