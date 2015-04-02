@@ -205,6 +205,7 @@
     <Compile Include="Models\Helpers\CartHelper.cs" />
     <Compile Include="Models\Extensions\CategoryExtensions.cs" />
     <Compile Include="Models\Language.cs" />
+    <Compile Include="Models\LoginProvider.cs" />
     <Compile Include="Models\PaymentMethod.cs" />
     <Compile Include="Models\Review.cs" />
     <Compile Include="Models\Services\CommerceService.cs" />
