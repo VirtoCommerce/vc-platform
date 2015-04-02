@@ -5,12 +5,13 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Web.Script.Serialization;
 using ExpressionSerialization;
+using Newtonsoft.Json;
 using Omu.ValueInjecter;
-using VirtoCommerce.Domain.Common.Expressions;
+using VirtoCommerce.Domain.Common;
 using VirtoCommerce.Foundation.Money;
 using VirtoCommerce.MarketingModule.Data.Common;
 using VirtoCommerce.MarketingModule.Data.Promotions;
-using VirtoCommerce.MarketingModule.Web.Model.TypedExpression;
+using VirtoCommerce.MarketingModule.Web.Model.TypeExpressions;
 using coreModel = VirtoCommerce.Domain.Marketing.Model;
 using webModel = VirtoCommerce.MarketingModule.Web.Model;
 
@@ -18,7 +19,7 @@ namespace VirtoCommerce.MarketingModule.Web.Converters
 {
 	public static class PromotionConverter
 	{
-		public static webModel.Promotion ToWebModel(this coreModel.Promotion promotion, CompositeElement dynamicExpression = null)
+		public static webModel.Promotion ToWebModel(this coreModel.Promotion promotion, DynamicPromotionExpression dynamicExpression = null)
 		{
 			var retVal = new webModel.Promotion();
 			retVal.InjectFrom(promotion);
@@ -28,7 +29,7 @@ namespace VirtoCommerce.MarketingModule.Web.Converters
 				retVal.DynamicExpression = dynamicExpression;
 				if (!String.IsNullOrEmpty(dynamicPromotion.PredicateVisualTreeSerialized))
 				{
-					retVal.DynamicExpression = SerializationUtil.Deserialize<CompositeElement>(dynamicPromotion.PredicateVisualTreeSerialized);
+					retVal.DynamicExpression = JsonConvert.DeserializeObject<DynamicPromotionExpression>(dynamicPromotion.PredicateVisualTreeSerialized);
 				}
 			}
 			return retVal;
@@ -41,15 +42,12 @@ namespace VirtoCommerce.MarketingModule.Web.Converters
 
 			if (promotion.DynamicExpression != null)
 			{
-				var dynamicPromotionBlock = promotion.DynamicExpression as DynamicPromotionBlock;
-				if (dynamicPromotionBlock != null)
-				{
-					var conditionExpression = dynamicPromotionBlock.GetConditionExpression();
-					retVal.PredicateSerialized = SerializationUtil.SerializeExpression(conditionExpression);
-					var rewards = dynamicPromotionBlock.GetRewards();
-					retVal.RewardSerialized = SerializationUtil.Serialize(rewards);
-					retVal.PredicateVisualTreeSerialized = SerializationUtil.Serialize(promotion.DynamicExpression);
-				}
+				var conditionExpression = promotion.DynamicExpression.GetConditionExpression();
+				retVal.PredicateSerialized = SerializationUtil.SerializeExpression(conditionExpression);
+				var rewards = promotion.DynamicExpression.GetRewards();
+				retVal.RewardsSerialized = JsonConvert.SerializeObject(rewards, new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All });
+				retVal.PredicateVisualTreeSerialized = JsonConvert.SerializeObject(promotion.DynamicExpression);
+
 			}
 			return retVal;
 		}
