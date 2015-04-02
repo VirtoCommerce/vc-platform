@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace VirtoCommerce.MarketingModule.Web.Model
+namespace VirtoCommerce.Domain.Marketing.Model
 {
 	public class SearchCriteria
 	{

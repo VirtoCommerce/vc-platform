@@ -8,15 +8,15 @@ using VirtoCommerce.Foundation.Frameworks.Extensions;
 
 namespace VirtoCommerce.MarketingModule.Web.Model.TypedExpression.Conditions
 {
-	public class ConditionAndOrBlock : CompositeElement, IConditionExpression, IRewardExpression
+	public abstract class ConditionAndOrBlock : CompositeElement, IConditionExpression
 	{
 		public bool All { get; set; }
 		#region IConditionExpression Members
 
-		public System.Linq.Expressions.Expression<Func<IEvaluationContext, bool>> GetExpression()
+		public System.Linq.Expressions.Expression<Func<IEvaluationContext, bool>> GetConditionExpression()
 		{
 			var retVal = All ? PredicateBuilder.True<IEvaluationContext>() : PredicateBuilder.False<IEvaluationContext>();
-			foreach (var expression in Children.OfType<IConditionExpression>().Select(x => x.GetExpression()))
+			foreach (var expression in Children.OfType<IConditionExpression>().Select(x => x.GetConditionExpression()))
 			{
 				retVal = !All ? retVal.Or(expression) : retVal.And(expression);
 			}
@@ -25,18 +25,6 @@ namespace VirtoCommerce.MarketingModule.Web.Model.TypedExpression.Conditions
 
 		#endregion
 
-		#region IRewardExpression Members
-
-		//public PromotionReward[] GetPromotionRewards()
-		//{
-		   //var retVal = new List<PromotionReward>();
-		   // foreach (var adaptor in Children.OfType<IExpressionMarketingAdaptor>())
-		   // {
-		   //	 retVal.AddRange(adaptor.GetPromotionRewards());
-		   // }
-		   // return retVal.ToArray();
-		//}
-
-		#endregion
+		
 	}
 }

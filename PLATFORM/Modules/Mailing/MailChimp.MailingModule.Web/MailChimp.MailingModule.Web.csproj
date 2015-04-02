@@ -137,6 +137,7 @@
     <Folder Include="Models\" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controllers\Api\MCAuthorizationController.cs" />
     <Compile Include="Controllers\Api\MailChimpController.cs" />
     <Compile Include="Managers\MailChimpMailingImpl.cs" />
     <Compile Include="Module.cs" />
@@ -151,11 +152,7 @@
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\Site.css" />
-    <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="module.manifest" />
-    <Content Include="fonts\glyphicons-halflings-regular.woff" />
-    <Content Include="fonts\glyphicons-halflings-regular.ttf" />
-    <Content Include="fonts\glyphicons-halflings-regular.eot" />
     <Content Include="Scripts\mailing.js" />
     <Content Include="Scripts\widgets\mailingWidget.js" />
     <Content Include="Scripts\widgets\mailingWidget.tpl.html" />
