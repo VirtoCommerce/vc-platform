@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
 using DotLiquid;
+using System;
 
 #endregion
 
@@ -11,8 +12,20 @@ namespace VirtoCommerce.Web.Models
     [DataContract]
     public class Product : Drop
     {
+        public Product()
+        {
+            this.Variants = new List<Variant>();
+        }
+
         [DataMember]
-        public bool Available { get; set; }
+        public bool Available
+        {
+            get
+            {
+                return this.Variants.Any(v => v.Available);
+            }
+        }
+
 
         [DataMember]
         public Collections Collections { get; set; }
@@ -22,7 +35,7 @@ namespace VirtoCommerce.Web.Models
         {
             get
             {
-                return this.Variants != null ? this.Variants.Max(v => v.CompareAtPrice) : this.Price;
+                return this.Variants.Max(v => v.CompareAtPrice);
             }
         }
 
@@ -31,7 +44,7 @@ namespace VirtoCommerce.Web.Models
         {
             get
             {
-                return this.Variants != null ? this.Variants.Min(v => v.CompareAtPrice) : this.Price;
+                return this.Variants.Min(v => v.CompareAtPrice);
             }
         }
 
@@ -60,10 +73,24 @@ namespace VirtoCommerce.Web.Models
         public string Excerpt { get; set; }
 
         [DataMember]
-        public Image FeaturedImage { get; set; }
+        public Image FeaturedImage
+        {
+            get
+            {
+                return this.Images != null ?
+                    this.Images.FirstOrDefault(i => i.Name.Equals("primaryimage", StringComparison.OrdinalIgnoreCase)) :
+                    this.Images.FirstOrDefault();
+            }
+        }
 
         [DataMember]
-        public Variant FirstAvailableVariant { get; set; }
+        public Variant FirstAvailableVariant
+        {
+            get
+            {
+                return this.Variants.FirstOrDefault(v => v.Available);
+            }
+        }
 
         [DataMember]
         public string Handle { get; set; }
@@ -72,7 +99,7 @@ namespace VirtoCommerce.Web.Models
         public string Id { get; set; }
 
         [DataMember]
-        public IEnumerable<Image> Images { get; set; }
+        public ItemCollection<Image> Images { get; set; }
 
         [DataMember]
         public IEnumerable<SeoKeyword> Keywords { get; set; }
@@ -84,14 +111,20 @@ namespace VirtoCommerce.Web.Models
         public ItemCollection<string> Options { get; set; }
 
         [DataMember]
-        public decimal Price { get; set; }
+        public decimal Price
+        {
+            get
+            {
+                return this.SelectedOrFirstAvailableVariant.Price;
+            }
+        }
 
         [DataMember]
         public decimal PriceMax
         {
             get
             {
-                return this.Variants != null ? this.Variants.Max(v => v.Price) : this.Price;
+                return this.Variants.Max(v => v.Price);
             }
         }
 
@@ -100,7 +133,7 @@ namespace VirtoCommerce.Web.Models
         {
             get
             {
-                return this.Variants != null ? this.Variants.Min(v => v.Price) : this.Price;
+                return this.Variants.Min(v => v.Price);
             }
         }
 
@@ -114,10 +147,26 @@ namespace VirtoCommerce.Web.Models
         }
 
         [DataMember]
-        public Variant SelectedOrFirstAvailableVariant { get; set; }
+        public Variant SelectedOrFirstAvailableVariant
+        {
+            get
+            {
+                return this.SelectedVariant != null ? this.SelectedVariant : this.FirstAvailableVariant;
+            }
+        }
 
         [DataMember]
-        public Variant SelectedVariant { get; set; }
+        public Variant SelectedVariant
+        {
+            get
+            {
+                var queryString = System.Web.HttpContext.Current.Request.QueryString;
+
+                return queryString["variant"] != null ?
+                    this.Variants.FirstOrDefault(v => v.Id == queryString["variant"]) :
+                    this.Variants.FirstOrDefault();
+            }
+        }
 
         [DataMember]
         public ItemCollection<string> Tags { get; set; }
@@ -135,7 +184,7 @@ namespace VirtoCommerce.Web.Models
         public string Url { get; set; }
 
         [DataMember]
-        public List<Variant> Variants { get; set; }
+        public ICollection<Variant> Variants { get; set; }
 
         [DataMember]
         public string Vendor { get; set; }
@@ -148,12 +197,7 @@ namespace VirtoCommerce.Web.Models
 
         public override object BeforeMethod(string method)
         {
-            if (SelectedOrFirstAvailableVariant != null)
-            {
-                return SelectedOrFirstAvailableVariant[method];
-            }
-
-            return null;
+            return this.SelectedOrFirstAvailableVariant[method];
         }
         #endregion
     }

@@ -52,6 +52,15 @@ namespace VirtoCommerce.Web.Models
         public string Id { get; set; }
 
         [DataMember]
+        public string FeaturedImage
+        {
+            get
+            {
+                return this.Image != null ? this.Image.Src : null;
+            }
+        }
+
+        [DataMember]
         public Image Image { get; set; }
 
         [DataMember]
