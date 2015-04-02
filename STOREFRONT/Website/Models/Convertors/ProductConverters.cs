@@ -45,7 +45,7 @@ namespace VirtoCommerce.Web.Models.Convertors
             productModel.Description = description != null ? description.Content : null;
             productModel.Handle = product.Code;
             productModel.Id = product.Id;
-            productModel.Images = product.Images.Select(i => i.AsWebModel(product.Name, product.Id));
+            productModel.Images = new ItemCollection<Image>(product.Images.Select(i => i.AsWebModel(product.Name, product.Id)));
             productModel.Keywords = product.Seo != null ? product.Seo.Select(k => k.AsWebModel()) : null;
             productModel.Metafields = new MetaFieldNamespacesCollection(new[] { fieldsCollection });
             productModel.Options = options;
