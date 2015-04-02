@@ -4,8 +4,9 @@ using System.Linq;
 using System.Web;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
-using VirtoCommerce.Domain.Common.Expressions;
 using VirtoCommerce.Foundation.Frameworks;
+using VirtoCommerce.MarketingModule.Web.Converters;
+using VirtoCommerce.MarketingModule.Web.Model.TypeExpressions;
 
 namespace VirtoCommerce.MarketingModule.Web.Model
 {
@@ -30,7 +31,6 @@ namespace VirtoCommerce.MarketingModule.Web.Model
 
 		public DateTime? StartDate { get; set; }
 		public DateTime? EndDate { get; set; }
-
-		public CompositeElement DynamicExpression { get; set; }
+		public DynamicPromotionExpression DynamicExpression { get; set; }
 	}
 }

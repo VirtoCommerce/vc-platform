@@ -1,243 +1,542 @@
-﻿#region
-using System.Collections.Generic;
+﻿using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.Owin;
+using Microsoft.Owin.Security;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
+using System.Web;
 using System.Web.Mvc;
-using VirtoCommerce.Web.Models;
-using VirtoCommerce.Web.Models.Convertors;
 using VirtoCommerce.Web.Models.FormModels;
-
-#endregion
+using VirtoCommerce.Web.Models.Security;
 
 namespace VirtoCommerce.Web.Controllers
 {
     [Authorize]
     public class AccountController : BaseController
     {
-        #region Public Methods and Operators
-        [HttpGet]
-        public ActionResult Addresses()
+        private const string XsrfKey = "XsrfId";
+
+        private ApplicationSignInManager _signInManager;
+        private ApplicationUserManager _userManager;
+        private IAuthenticationManager _authenticationManager
         {
-            return this.View("customers/addresses");
+            get
+            {
+                return HttpContext.GetOwinContext().Authentication;
+            }
         }
 
-        [HttpGet]
-        public async Task<ActionResult> DeleteAddress(string id)
+        public ApplicationSignInManager SignInManager
         {
-            var customer = this.Context.Customer;
-            var customerAddress = customer.Addresses.FirstOrDefault(a => a.Id == id);
-
-            if (customerAddress != null)
+            get
             {
-                customer.Addresses.Remove(customerAddress);
-
-                await this.CustomerService.UpdateCustomerAsync(customer);
+                return _signInManager ?? HttpContext.GetOwinContext().Get<ApplicationSignInManager>();
             }
-
-            return this.View("customers/addresses");
+            set
+            {
+                _signInManager = value;
+            }
         }
 
-        [HttpPost]
-        public async Task<ActionResult> EditAddress(CustomerAddressFormModel formModel)
+        public ApplicationUserManager UserManager
         {
-            var form = this.Service.GetForm(formModel.form_type);
-
-            if (!this.ModelState.IsValid)
+            get
             {
-                var errors = this.ModelState.Values.SelectMany(v => v.Errors);
-                form.Errors = new[] { errors.Select(e => e.ErrorMessage).FirstOrDefault() };
-
-                return this.View("customers/addresses");
+                return _userManager ?? HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
             }
-
-            var customer = this.Context.Customer;
-            var customerAddress = customer.Addresses.FirstOrDefault(a => a.Id == formModel.Id);
-
-            if (customerAddress != null)
+            set
             {
-                customerAddress = formModel.AsWebModel();
+                _userManager = value;
             }
-
-            await this.CustomerService.UpdateCustomerAsync(customer);
-
-            return this.View("customers/addresses");
         }
 
+        public AccountController()
+        {
+        }
+
+        public AccountController(ApplicationUserManager userManager, ApplicationSignInManager signInManager)
+        {
+            this.SignInManager = signInManager;
+            this.UserManager = userManager;
+        }
+
+        //
+        // GET: /Account/Login
         [HttpGet]
         [AllowAnonymous]
-        public ActionResult ForgotPassword()
+        public ActionResult Login(string returnUrl)
         {
-            return this.View();
-        }
-
-        [HttpPost]
-        [AllowAnonymous]
-        public ActionResult ForgotPassword(ForgotPasswordFormModel formModel)
-        {
-            var form = this.Service.GetForm(formModel.form_type);
-
-            if (!this.ModelState.IsValid)
-            {
-                var errors = this.ModelState.Values.SelectMany(v => v.Errors);
-                form.Errors = new[] { errors.Select(e => e.ErrorMessage).FirstOrDefault() };
-
-                return this.View("customers/login");
-            }
-
             return this.View("customers/login");
         }
 
-        [HttpGet]
-        public async Task<ActionResult> Index(int? skip, int? take)
+        //
+        // POST: /Account/ExternalLogin
+        [HttpPost]
+        [AllowAnonymous]
+        public ActionResult ExternalLogin(ExternalLoginFormModel formModel, string returnUrl)
         {
-            skip = skip ?? 0;
-            take = take ?? 20;
+            return new ChallengeResult(
+                formModel.AuthentificationType,
+                Url.Action("ExternalLoginCallback", "Account", new { ReturnUrl = returnUrl }));
+        }
 
-            var orderSearchResult =
-                await
-                    this.CustomerService.GetOrdersAsync(
-                        this.Context.Shop.StoreId,
-                        this.Context.Customer.Id,
-                        null,
-                        skip.Value,
-                        take.Value);
+        //
+        // GET: /Account/ExternalLoginCallback
+        [HttpGet]
+        [AllowAnonymous]
+        public async Task<ActionResult> ExternalLoginCallback(string returnUrl)
+        {
+            var loginInfo = await _authenticationManager.GetExternalLoginInfoAsync();
 
-            this.Context.Customer.OrdersCount = orderSearchResult.TotalCount;
-
-            if (orderSearchResult.TotalCount > 0)
+            if (loginInfo == null)
             {
-                this.Context.Customer.Orders = new List<CustomerOrder>();
+                return RedirectToAction("Login", "Account");
+            }
 
-                foreach (var order in orderSearchResult.CustomerOrders)
+            if (string.IsNullOrEmpty(loginInfo.Email))
+            {
+                return RedirectToAction("ExternalLoginConfirmation", "Account", new { ReturnUrl = returnUrl });
+            }
+
+            var result = await SignInManager.ExternalSignInAsync(loginInfo, isPersistent: false);
+
+            switch (result)
+            {
+                case SignInStatus.Success:
+                    return RedirectToLocal(returnUrl);
+                case SignInStatus.LockedOut:
+                    return View("locked-out");
+                case SignInStatus.RequiresVerification:
+                    return RedirectToAction("SendCode", new { ReturnUrl = returnUrl, RememberMe = false });
+                case SignInStatus.Failure:
+                default:
+                    return RedirectToAction("ExternalLoginConfirmation", "Account", new { ReturnUrl = returnUrl });
+            }
+        }
+
+        //
+        // GET: /Account/ExternalLoginConfirmation
+        [HttpGet]
+        [AllowAnonymous]
+        public ActionResult ExternalLoginConfirmation(string returnUrl)
+        {
+            return this.View("external-login-confirmation");
+        }
+
+        //
+        // POST: /Account/ExternalLoginConfirmation
+        [HttpPost]
+        [AllowAnonymous]
+        public async Task<ActionResult> ExternalLoginConfirmation(ExternalLoginConfirmationFormModel formModel, string returnUrl)
+        {
+            if (User.Identity.IsAuthenticated)
+            {
+                return RedirectToAction("Index", "Account");
+            }
+
+            var form = this.Service.GetForm(formModel.form_type);
+
+            if (!ModelState.IsValid)
+            {
+                var errors = this.ModelState.Values.SelectMany(v => v.Errors);
+                form.Errors = new[] { errors.Select(e => e.ErrorMessage).FirstOrDefault() };
+
+                return this.View("external-login-confirmation");
+            }
+
+            var loginInfo = await _authenticationManager.GetExternalLoginInfoAsync();
+
+            if (loginInfo == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
+            var user = new ApplicationUser { UserName = formModel.Email, Email = formModel.Email };
+
+            var result = await UserManager.CreateAsync(user);
+
+            if (result.Succeeded)
+            {
+                result = await UserManager.AddLoginAsync(user.Id, loginInfo.Login);
+
+                if (result.Succeeded)
                 {
-                    this.Context.Customer.Orders.Add(order.AsWebModel());
+                    await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
+
+                    return RedirectToAction("Index", "Account");
+                }
+                else
+                {
+                    form.Errors = result.Errors.ToArray();
+
+                    return this.View("external-login-confirmation");
                 }
             }
-
-            return this.View("customers/account");
-        }
-
-        [HttpGet]
-        [AllowAnonymous]
-        public ActionResult Login()
-        {
-            return this.View("customers/login");
-        }
-
-        [HttpPost]
-        [AllowAnonymous]
-        public async Task<ActionResult> Login(LoginFormModel formModel, string returnUrl)
-        {
-            var form = this.Service.GetForm(formModel.form_type);
-
-            if (!this.ModelState.IsValid)
+            else
             {
-                var errors = this.ModelState.Values.SelectMany(v => v.Errors);
-                form.Errors = new[] { errors.Select(e => e.ErrorMessage).FirstOrDefault() };
+                form.Errors = result.Errors.ToArray();
 
-                return this.View("customers/login");
+                return this.View("external-login-confirmation");
+            }
+        }
+
+        internal class ChallengeResult : HttpUnauthorizedResult
+        {
+            public string LoginProvider { get; set; }
+
+            public string RedirectUri { get; set; }
+
+            public string UserId { get; set; }
+
+            public ChallengeResult(string loginProvider, string redirectUri)
+                : this(loginProvider, redirectUri, null)
+            {
             }
 
-            var loginErrors = await this.SecurityService.Login(formModel.Email, formModel.Password);
-
-            if (loginErrors != null)
+            public ChallengeResult(string loginProvider, string redirectUri, string userId)
             {
-                form.Errors = loginErrors;
-
-                return this.View("customers/login");
+                this.LoginProvider = loginProvider;
+                this.RedirectUri = redirectUri;
+                this.UserId = userId;
             }
 
-            return this.RedirectToLocal(returnUrl);
-        }
-
-        [HttpGet]
-        public ActionResult Logoff()
-        {
-            this.SecurityService.Logout();
-
-            return this.RedirectToAction("Index", "Home");
-        }
-
-        [HttpPost]
-        public async Task<ActionResult> NewAddress(NewAddressFormModel formModel)
-        {
-            var form = this.Service.GetForm(formModel.form_type);
-
-            if (!this.ModelState.IsValid)
+            public override void ExecuteResult(ControllerContext context)
             {
-                var errors = this.ModelState.Values.SelectMany(v => v.Errors);
-                form.Errors = new[] { errors.Select(e => e.ErrorMessage).FirstOrDefault() };
+                var properties = new AuthenticationProperties { RedirectUri = this.RedirectUri };
 
-                return this.View("customers/addresses");
+                if (this.UserId != null)
+                {
+                    properties.Dictionary[XsrfKey] = this.UserId;
+                }
+
+                context.HttpContext.GetOwinContext().Authentication.Challenge(properties, this.LoginProvider);
             }
-
-            var customer = this.Context.Customer;
-            customer.Addresses.Add(formModel.AsWebModel());
-
-            await this.CustomerService.UpdateCustomerAsync(customer);
-
-            return this.View("customers/addresses");
         }
 
-        [HttpGet]
-        [Route("account/order/{id}")]
-        public async Task<ActionResult> Order(string id)
-        {
-            this.Context.Order =
-                await this.CustomerService.GetOrderAsync(this.Context.Shop.StoreId, this.Context.Customer.Email, id);
-
-            return this.View("customers/order");
-        }
-
-        [HttpGet]
-        [AllowAnonymous]
-        public ActionResult Register()
-        {
-            return this.View("customers/register");
-        }
-
-        [HttpPost]
-        [AllowAnonymous]
-        public async Task<ActionResult> Register(RegisterFormModel formModel)
-        {
-            var form = this.Service.GetForm(formModel.form_type);
-
-            if (!this.ModelState.IsValid)
-            {
-                var errors = this.ModelState.Values.SelectMany(v => v.Errors);
-                form.Errors = new[] { errors.Select(e => e.ErrorMessage).FirstOrDefault() };
-
-                return this.View("customers/register");
-            }
-
-            var registrationErrors = await this.SecurityService.RegisterUser(formModel.Email, formModel.FirstName, formModel.LastName, formModel.Password, this.Context.StoreId);
-
-            if (registrationErrors != null)
-            {
-                form.Errors = new[] { registrationErrors.FirstOrDefault() };
-
-                return this.View("customers/register");
-            }
-
-            var customer = await this.CustomerService.CreateCustomerAsync(formModel.Email, formModel.FirstName, formModel.LastName, null);
-
-            await this.SecurityService.Login(formModel.Email, formModel.Password);
-
-            return this.RedirectToAction("Index", "Account");
-        }
-        #endregion
-
-        #region Methods
         private ActionResult RedirectToLocal(string returnUrl)
         {
-            if (this.Url.IsLocalUrl(returnUrl))
+            if (Url.IsLocalUrl(returnUrl))
             {
-                return this.Redirect(returnUrl);
+                return Redirect(returnUrl);
             }
 
-            return this.RedirectToAction("Index", "Home");
+            return RedirectToAction("Index", "Home");
         }
-        #endregion
+    }
+
+    //[Authorize]
+    //public class AccountController : BaseController
+    //{
+    //    private ApplicationSignInManager _signInManager;
+    //    private ApplicationUserManager _userManager;
+
+    //    public  ApplicationSignInManager SignInManager
+    //    {
+    //        get { return _signInManager ?? HttpContext.Ge }
+    //    }
+
+    //    public AccountController(ApplicationUserManager userManager, ApplicationSignInManager signInManager)
+    //    {
+
+    //    }
+
+
+    //    [HttpGet]
+    //    public ActionResult Addresses()
+    //    {
+    //        return this.View("customers/addresses");
+    //    }
+
+    //    [HttpGet]
+    //    public async Task<ActionResult> DeleteAddress(string id)
+    //    {
+    //        var customer = this.Context.Customer;
+    //        var customerAddress = customer.Addresses.FirstOrDefault(a => a.Id == id);
+
+    //        if (customerAddress != null)
+    //        {
+    //            customer.Addresses.Remove(customerAddress);
+
+    //            await this.CustomerService.UpdateCustomerAsync(customer);
+    //        }
+
+    //        return this.View("customers/addresses");
+    //    }
+
+    //    [HttpPost]
+    //    public async Task<ActionResult> EditAddress(CustomerAddressFormModel formModel)
+    //    {
+    //        var form = this.Service.GetForm(formModel.form_type);
+
+    //        if (!this.ModelState.IsValid)
+    //        {
+    //            var errors = this.ModelState.Values.SelectMany(v => v.Errors);
+    //            form.Errors = new[] { errors.Select(e => e.ErrorMessage).FirstOrDefault() };
+
+    //            return this.View("customers/addresses");
+    //        }
+
+    //        var customer = this.Context.Customer;
+    //        var customerAddress = customer.Addresses.FirstOrDefault(a => a.Id == formModel.Id);
+
+    //        if (customerAddress != null)
+    //        {
+    //            customerAddress = formModel.AsWebModel();
+    //        }
+
+    //        await this.CustomerService.UpdateCustomerAsync(customer);
+
+    //        return this.View("customers/addresses");
+    //    }
+
+    //    [HttpGet]
+    //    [AllowAnonymous]
+    //    public ActionResult ForgotPassword()
+    //    {
+    //        return this.View();
+    //    }
+
+    //    [HttpPost]
+    //    [AllowAnonymous]
+    //    public ActionResult ForgotPassword(ForgotPasswordFormModel formModel)
+    //    {
+    //        var form = this.Service.GetForm(formModel.form_type);
+
+    //        if (!this.ModelState.IsValid)
+    //        {
+    //            var errors = this.ModelState.Values.SelectMany(v => v.Errors);
+    //            form.Errors = new[] { errors.Select(e => e.ErrorMessage).FirstOrDefault() };
+
+    //            return this.View("customers/login");
+    //        }
+
+    //        return this.View("customers/login");
+    //    }
+
+    //    [HttpGet]
+    //    public async Task<ActionResult> Index(int? skip, int? take)
+    //    {
+    //        skip = skip ?? 0;
+    //        take = take ?? 20;
+
+    //        var orderSearchResult =
+    //            await
+    //                this.CustomerService.GetOrdersAsync(
+    //                    this.Context.Shop.StoreId,
+    //                    this.Context.Customer.Id,
+    //                    null,
+    //                    skip.Value,
+    //                    take.Value);
+
+    //        this.Context.Customer.OrdersCount = orderSearchResult.TotalCount;
+
+    //        if (orderSearchResult.TotalCount > 0)
+    //        {
+    //            this.Context.Customer.Orders = new List<CustomerOrder>();
+
+    //            foreach (var order in orderSearchResult.CustomerOrders)
+    //            {
+    //                this.Context.Customer.Orders.Add(order.AsWebModel());
+    //            }
+    //        }
+
+    //        return this.View("customers/account");
+    //    }
+
+    //    [HttpGet]
+    //    [AllowAnonymous]
+    //    public ActionResult Login()
+    //    {
+    //        return this.View("customers/login");
+    //    }
+
+    //    [HttpPost]
+    //    [AllowAnonymous]
+    //    public async Task<ActionResult> Login(LoginFormModel formModel, string returnUrl)
+    //    {
+    //        var form = this.Service.GetForm(formModel.form_type);
+
+    //        if (!this.ModelState.IsValid)
+    //        {
+    //            var errors = this.ModelState.Values.SelectMany(v => v.Errors);
+    //            form.Errors = new[] { errors.Select(e => e.ErrorMessage).FirstOrDefault() };
+
+    //            return this.View("customers/login");
+    //        }
+
+    //        var loginErrors = await this.SecurityService.Login(formModel.Email, formModel.Password);
+
+    //        if (loginErrors != null)
+    //        {
+    //            form.Errors = loginErrors;
+
+    //            return this.View("customers/login");
+    //        }
+
+    //        return this.RedirectToLocal(returnUrl);
+    //    }
+
+    //    [HttpPost]
+    //    [AllowAnonymous]
+    //    [ValidateAntiForgeryToken]
+    //    public ActionResult ExternalLogin(ExternalLoginFormModel formModel, string returnUrl)
+    //    {
+    //        return new ChallengeResult(
+    //            this.SecurityService,
+    //            formModel.AuthentificationType,
+    //            Url.Action("ExternalLoginCallback", "Account", new { ReturnUrl = returnUrl }));
+    //    }
+
+    //    [HttpGet]
+    //    [AllowAnonymous]
+    //    public async Task<ActionResult> ExternalLoginCallback(string returnUrl)
+    //    {
+    //        var loginInfo = await AuthentificationManager
+    //    }
+
+    //    [HttpGet]
+    //    public ActionResult Logoff()
+    //    {
+    //        this.SecurityService.Logout();
+
+    //        return this.RedirectToAction("Index", "Home");
+    //    }
+
+    //    [HttpPost]
+    //    public async Task<ActionResult> NewAddress(NewAddressFormModel formModel)
+    //    {
+    //        var form = this.Service.GetForm(formModel.form_type);
+
+    //        if (!this.ModelState.IsValid)
+    //        {
+    //            var errors = this.ModelState.Values.SelectMany(v => v.Errors);
+    //            form.Errors = new[] { errors.Select(e => e.ErrorMessage).FirstOrDefault() };
+
+    //            return this.View("customers/addresses");
+    //        }
+
+    //        var customer = this.Context.Customer;
+    //        customer.Addresses.Add(formModel.AsWebModel());
+
+    //        await this.CustomerService.UpdateCustomerAsync(customer);
+
+    //        return this.View("customers/addresses");
+    //    }
+
+    //    [HttpGet]
+    //    [Route("account/order/{id}")]
+    //    public async Task<ActionResult> Order(string id)
+    //    {
+    //        this.Context.Order =
+    //            await this.CustomerService.GetOrderAsync(this.Context.Shop.StoreId, this.Context.Customer.Email, id);
+
+    //        return this.View("customers/order");
+    //    }
+
+    //    [HttpGet]
+    //    [AllowAnonymous]
+    //    public ActionResult Register()
+    //    {
+    //        return this.View("customers/register");
+    //    }
+
+    //    [HttpPost]
+    //    [AllowAnonymous]
+    //    public async Task<ActionResult> Register(RegisterFormModel formModel)
+    //    {
+    //        var form = this.Service.GetForm(formModel.form_type);
+
+    //        if (!this.ModelState.IsValid)
+    //        {
+    //            var errors = this.ModelState.Values.SelectMany(v => v.Errors);
+    //            form.Errors = new[] { errors.Select(e => e.ErrorMessage).FirstOrDefault() };
+
+    //            return this.View("customers/register");
+    //        }
+
+    //        var registrationErrors = await this.SecurityService.RegisterUser(formModel.Email, formModel.FirstName, formModel.LastName, formModel.Password, this.Context.StoreId);
+
+    //        if (registrationErrors != null)
+    //        {
+    //            form.Errors = new[] { registrationErrors.FirstOrDefault() };
+
+    //            return this.View("customers/register");
+    //        }
+
+    //        var customer = await this.CustomerService.CreateCustomerAsync(formModel.Email, formModel.FirstName, formModel.LastName, null);
+
+    //        await this.SecurityService.Login(formModel.Email, formModel.Password);
+
+    //        return this.RedirectToAction("Index", "Account");
+    //    }
+
+    //    private const string XsrfKey = "XsrfId";
+
+    //    internal class ChallengeResult : HttpUnauthorizedResult
+    //    {
+    //        private readonly SecurityService _securityService;
+
+    //        public string LoginProvider { get; set; }
+
+    //        public string RedirectUrl { get; set; }
+
+    //        public string UserId { get; set; }
+
+    //        public ChallengeResult(SecurityService securityService, string provider, string redirectUrl)
+    //            : this(securityService, provider, redirectUrl, null)
+    //        {
+    //        }
+
+    //        public ChallengeResult(SecurityService securityService, string provider, string redirectUrl, string uderId)
+    //        {
+    //            this._securityService = securityService;
+    //            this.LoginProvider = provider;
+    //            this.RedirectUrl = redirectUrl;
+    //            this.UserId = UserId;
+    //        }
+
+    //        public override void ExecuteResult(ControllerContext context)
+    //        {
+    //            _securityService.ExternalLogin(this.LoginProvider, this.RedirectUrl, this.UserId);
+    //        }
+    //    }
+    //    #endregion
+
+    //    #region Methods
+    //    private ActionResult RedirectToLocal(string returnUrl)
+    //    {
+    //        if (this.Url.IsLocalUrl(returnUrl))
+    //        {
+    //            return this.Redirect(returnUrl);
+    //        }
+
+    //        return this.RedirectToAction("Index", "Home");
+    //    }
+    //    #endregion
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
         //#region Constants
         //private const string XsrfKey = "XsrfId";
@@ -786,5 +1085,5 @@ namespace VirtoCommerce.Web.Controllers
         //    }
         //    #endregion
         //}
-    }
+    //}
 }

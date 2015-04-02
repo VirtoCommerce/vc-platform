@@ -22,7 +22,7 @@ namespace VirtoCommerce.MarketingModule.Data.Services
 			var now = DateTime.UtcNow;
 			var promotions = _marketingService.GetActivePromotions();
 
-			var promoContext = (DefaultPromotionEvaluationContext)context;
+			var promoContext = (PromotionEvaluationContext)context;
 
 			var retVal = new PromotionResult();
 

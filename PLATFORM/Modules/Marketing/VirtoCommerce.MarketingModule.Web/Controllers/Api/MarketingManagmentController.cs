@@ -8,22 +8,23 @@ using System.Web.Http.Description;
 using System.Web.Http.ModelBinding;
 using ExpressionSerialization;
 using VirtoCommerce.CustomerModule.Web.Binders;
-using VirtoCommerce.Domain.Common.Expressions;
 using VirtoCommerce.Domain.Marketing.Services;
 using coreModel = VirtoCommerce.Domain.Marketing.Model;
 using webModel = VirtoCommerce.MarketingModule.Web.Model;
 using VirtoCommerce.MarketingModule.Web.Converters;
+using Newtonsoft.Json;
+using VirtoCommerce.MarketingModule.Web.Model.TypeExpressions;
 
 namespace VirtoCommerce.MarketingModule.Web.Controllers.Api
 {
 	[RoutePrefix("api/marketing")]
     public class MarketingManagmentController : ApiController
     {
-		private readonly ICustomPromotionManager _promotionManager;
+		private readonly IPromotionExtensionManager _promotionManager;
 		private readonly IMarketingService _marketingService;
 		private readonly IMarketingSearchService _marketingSearchService;
 		public MarketingManagmentController(IMarketingService marketingService, IMarketingSearchService marketingSearchService,
-											ICustomPromotionManager promotionManager)
+											IPromotionExtensionManager promotionManager)
 		{
 			_promotionManager = promotionManager;
 			_marketingService = marketingService;
@@ -53,7 +54,7 @@ namespace VirtoCommerce.MarketingModule.Web.Controllers.Api
 			var retVal = _marketingService.GetPromotionById(id);
 			if(retVal != null)
 			{
-				return Ok(retVal.ToWebModel(_promotionManager.DynamicExpression)); 
+				return Ok(retVal.ToWebModel(_promotionManager.DynamicExpression as DynamicPromotionExpression)); 
 			}
 			return NotFound();
 		}
@@ -67,7 +68,7 @@ namespace VirtoCommerce.MarketingModule.Web.Controllers.Api
 			var retVal = new webModel.Promotion
 			{
 				Type = webModel.PromotionType.Dynamic,
-				DynamicExpression = _promotionManager.DynamicExpression
+				DynamicExpression = _promotionManager.DynamicExpression as DynamicPromotionExpression
 			};
 			return Ok(retVal);
 		}

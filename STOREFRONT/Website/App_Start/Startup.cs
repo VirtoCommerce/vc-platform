@@ -7,6 +7,9 @@ using Microsoft.Owin.Security.Cookies;
 using Owin;
 using VirtoCommerce.Web.Models.Security;
 using System.Configuration;
+using Microsoft.Owin.Security.Google;
+using Microsoft.Owin.Security.Facebook;
+using System.Security.Claims;
 
 #endregion
 
@@ -49,8 +52,6 @@ namespace VirtoCommerce.Web
                         }
                 });
 
-            app.UseSiteContext();
-
             app.UseExternalSignInCookie(DefaultAuthenticationTypes.ExternalCookie);
 
             // Enables the application to temporarily store user information when they are verifying the second factor in the two-factor authentication process.
@@ -70,13 +71,17 @@ namespace VirtoCommerce.Web
             //   consumerKey: "",
             //   consumerSecret: "");
 
-            app.UseFacebookAuthentication(
-                ConfigurationManager.AppSettings["OAuth.Facebook.AppId"],
-                ConfigurationManager.AppSettings["OAuth.Facebook.Secret"]);
+            var facebookOptions = new FacebookAuthenticationOptions();
+            facebookOptions.AppId = ConfigurationManager.AppSettings["OAuth2.Facebook.AppId"];
+            facebookOptions.AppSecret = ConfigurationManager.AppSettings["OAuth2.Facebook.Secret"];
+            app.UseFacebookAuthentication(facebookOptions);
 
-            app.UseGoogleAuthentication(
-                ConfigurationManager.AppSettings["OAuth.Google.ClientId"],
-                ConfigurationManager.AppSettings["OAuth.Google.Secret"]);
+            var googleOptions = new GoogleOAuth2AuthenticationOptions();
+            googleOptions.ClientId = ConfigurationManager.AppSettings["OAuth2.Google.ClientId"];
+            googleOptions.ClientSecret = ConfigurationManager.AppSettings["OAuth2.Google.Secret"];
+            app.UseGoogleAuthentication(googleOptions);
+
+            app.UseSiteContext();
         }
         #endregion
 

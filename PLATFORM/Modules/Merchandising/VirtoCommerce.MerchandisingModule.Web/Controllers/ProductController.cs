@@ -30,7 +30,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
     {
         #region Fields
 
-        private readonly IAssetUrl _assetUri;
+        private readonly IAssetUrlResolver _assetUrlResolver;
         private readonly IBrowseFilterService _browseFilterService;
         private readonly IItemBrowsingService _browseService;
 
@@ -51,7 +51,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
             Func<IFoundationAppConfigRepository> foundationAppConfigRepFactory,
             Func<ICatalogOutlineBuilder> catalogOutlineBuilderFactory,
             Func<IStoreRepository> storeRepository,
-            IAssetUrl assetUri,
+            IAssetUrlResolver assetUrlResolver,
             ISettingsManager settingsManager,
             ICacheRepository cache)
             : base(storeRepository, settingsManager, cache)
@@ -60,7 +60,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
             this._foundationCatalogRepositoryFactory = foundationCatalogRepositoryFactory;
             this._foundationAppConfigRepFactory = foundationAppConfigRepFactory;
             this._catalogOutlineBuilderFactory = catalogOutlineBuilderFactory;
-            this._assetUri = assetUri;
+            this._assetUrlResolver = assetUrlResolver;
             this._browseService = browseService;
             this._browseFilterService = browseFilterService;
         }
@@ -84,7 +84,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 
             if (result != null)
             {
-                var webModelProduct = result.ToWebModel(this._assetUri);
+                var webModelProduct = result.ToWebModel(this._assetUrlResolver);
                 //Build category path outline for requested catalog, can be virtual catalog as well
                 webModelProduct.Outline =
                     this._catalogOutlineBuilderFactory()
@@ -143,7 +143,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
                 if (keywordValue != null)
                 {
                     var result = this._itemService.GetById(keywordValue.KeywordValue, responseGroup);
-                    return this.Ok(result.ToWebModel(this._assetUri));
+                    return this.Ok(result.ToWebModel(this._assetUrlResolver));
                 }
             }
             return this.StatusCode(HttpStatusCode.NotFound);
