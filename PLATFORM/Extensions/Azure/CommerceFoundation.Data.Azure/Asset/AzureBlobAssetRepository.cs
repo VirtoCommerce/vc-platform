@@ -1,33 +1,29 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Drawing;
+using System.Drawing.Drawing2D;
+using System.Drawing.Imaging;
+using System.IO;
+using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using Microsoft.Practices.ObjectBuilder2;
+using Microsoft.WindowsAzure.Storage;
+using Microsoft.WindowsAzure.Storage.Blob;
+using VirtoCommerce.Foundation.Assets.Factories;
+using VirtoCommerce.Foundation.Assets.Model;
+using VirtoCommerce.Foundation.Assets.Model.Exceptions;
+using VirtoCommerce.Foundation.Assets.Repositories;
+using VirtoCommerce.Foundation.Assets.Services;
+using VirtoCommerce.Foundation.Data.Common;
+using VirtoCommerce.Foundation.Frameworks;
+using VirtoCommerce.Foundation.Frameworks.Extensions;
 
 namespace VirtoCommerce.Foundation.Data.Azure.Asset
 {
-    using Microsoft.Practices.Unity;
-    using Microsoft.WindowsAzure.Storage;
-    using Microsoft.WindowsAzure.Storage.Blob;
-    using System;
-    using System.Collections.Generic;
-    using System.Drawing;
-    using System.Drawing.Drawing2D;
-    using System.Drawing.Imaging;
-    using System.IO;
-    using System.Linq;
-    using System.Reflection;
 
-    using VirtoCommerce.Foundation.Assets;
-    using VirtoCommerce.Foundation.Assets.Factories;
-    using VirtoCommerce.Foundation.Assets.Model;
-    using VirtoCommerce.Foundation.Assets.Model.Exceptions;
-    using VirtoCommerce.Foundation.Assets.Repositories;
-    using VirtoCommerce.Foundation.Assets.Services;
-    using VirtoCommerce.Foundation.Data.Common;
-    using VirtoCommerce.Foundation.Data.Infrastructure;
-    using VirtoCommerce.Foundation.Frameworks;
-    using VirtoCommerce.Foundation.Frameworks.Extensions;
-
-    public class AzureBlobAssetRepository : IAssetRepository, IBlobStorageProvider, IAssetUrl, IUnitOfWork
+    public class AzureBlobAssetRepository : IAssetRepository, IBlobStorageProvider, IAssetUrlResolver, IUnitOfWork
     {
         public const string DefaultBlobContainerName = "default-container";
         private const string ThumbMetadataKey = "ThumbImage";
@@ -38,17 +34,6 @@ namespace VirtoCommerce.Foundation.Data.Azure.Asset
         private readonly IAssetEntityFactory _entityFactory;
         private CloudBlobClient _cloudBlobClient;
         private CloudStorageAccount _cloudStorageAccount;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="AzureBlobAssetRepository"/> class.
-        /// </summary>
-        /// <param name="assetEntityFactory">The asset entity factory.</param>
-        [InjectionConstructor]
-        public AzureBlobAssetRepository(IAssetEntityFactory assetEntityFactory)
-            : this(ConnectionHelper.GetConnectionString(AssetConfiguration.Instance.Connection.StorageConnectionStringName), assetEntityFactory)
-        {
-        }
-
 
         /// <summary>
         /// Prevents a default instance of the <see cref="AzureBlobAssetRepository"/> class from being created.
@@ -911,7 +896,7 @@ namespace VirtoCommerce.Foundation.Data.Azure.Asset
         /// <param name="assetId">The asset id.</param>
         /// <param name="thumb">is thumbnail</param>
         /// <returns>formatted string url including path to a storage server</returns>
-        public string ResolveUrl(string assetId, bool thumb)
+        public string GetAbsoluteUrl(string assetId, bool thumb)
         {
             if (thumb)
             {
@@ -932,6 +917,12 @@ namespace VirtoCommerce.Foundation.Data.Azure.Asset
             var root = CurrentCloudStorageAccount.BlobEndpoint.AbsoluteUri;
 
             return String.Format("{0}{1}", root.EndsWith("/") ? root : root + "/", assetId);
+        }
+
+        public string GetRelativeUrl(string absoluteUrl)
+        {
+            var result = CurrentCloudStorageAccount.BlobEndpoint.MakeRelativeUri(new Uri(absoluteUrl)).ToString();
+            return result;
         }
 
         public string Combine(string path1, string path2)

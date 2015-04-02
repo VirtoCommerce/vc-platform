@@ -48,7 +48,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Services
 
         #region Fields
 
-        private readonly IAssetUrl _assetUrl;
+        private readonly IAssetUrlResolver _assetUrlResolver;
         private readonly ICacheRepository _cacheRepository;
         private readonly Func<IFoundationCatalogRepository> _catalogRepositoryFactory;
         private readonly bool _isEnabled;
@@ -66,7 +66,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Services
             Func<IFoundationCatalogRepository> catalogRepositoryFactory,
             ISearchProvider searchService,
             ICacheRepository cacheRepository,
-            IAssetUrl assetUrl = null,
+            IAssetUrlResolver assetUrlResolver = null,
             ISearchConnection searchConnection = null)
         {
             this._searchService = searchService;
@@ -74,7 +74,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Services
             this._cacheRepository = cacheRepository;
             this._searchConnection = searchConnection;
             this._itemService = itemService;
-            this._assetUrl = assetUrl;
+            this._assetUrlResolver = assetUrlResolver;
             this._isEnabled = CatalogConfiguration.Instance.Cache.IsEnabled;
         }
 
@@ -107,7 +107,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Services
                 var currentOutline = this.GetItemOutlineUsingContext(
                     searchTags[criteria.OutlineField].ToString(),
                     criteria.Catalog);
-                var catalogItem = item.ToWebModel(this._assetUrl) as Product;
+                var catalogItem = item.ToWebModel(this._assetUrlResolver) as Product;
                 catalogItem.Outline = this.StripCatalogFromOutline(currentOutline, criteria.Catalog);
 
                 int reviewTotal;

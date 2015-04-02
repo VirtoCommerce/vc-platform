@@ -11,11 +11,9 @@ namespace VirtoCommerce.CoreModule.Web.Assets
         public AssetsConnection(string connectionString)
         {
             OriginalConnectionString = connectionString;
-
-            var parameters = StringToDictionary(connectionString, ";", "=");
-            Provider = parameters["provider"];
-            parameters.Remove("provider");
-            ConnectionString = DictionaryToString(parameters, ";", "=");
+            Parameters = StringToDictionary(connectionString, ";", "=");
+            Provider = Parameters["provider"];
+            ConnectionString = DictionaryToString(Parameters, ";", "=", "provider");
         }
 
         #region IAssetsConnection Members
@@ -23,6 +21,7 @@ namespace VirtoCommerce.CoreModule.Web.Assets
         public string OriginalConnectionString { get; private set; }
         public string Provider { get; private set; }
         public string ConnectionString { get; private set; }
+        public IReadOnlyDictionary<string, string> Parameters { get; private set; }
 
         #endregion
 
@@ -34,11 +33,11 @@ namespace VirtoCommerce.CoreModule.Web.Assets
                 .ToDictionary(parts => parts[0], parts => parts.Length == 2 ? parts[1] : string.Empty, StringComparer.OrdinalIgnoreCase);
         }
 
-        private static string DictionaryToString(Dictionary<string, string> dictionary, string pairSeparator, string valueSeparator)
+        private static string DictionaryToString(IEnumerable<KeyValuePair<string, string>> pairs, string pairSeparator, string valueSeparator, params string[] excludeNames)
         {
             var builder = new StringBuilder();
 
-            foreach (var pair in dictionary)
+            foreach (var pair in pairs.Where(pair => !excludeNames.Contains(pair.Key, StringComparer.OrdinalIgnoreCase)))
             {
                 if (builder.Length > 0)
                 {

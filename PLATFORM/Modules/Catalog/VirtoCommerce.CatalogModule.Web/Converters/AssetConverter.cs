@@ -8,23 +8,23 @@ namespace VirtoCommerce.CatalogModule.Web.Converters
 {
     public static class AssetConverter
     {
-        public static webModel.ProductAssetBase ToWebModel(this moduleModel.ItemAsset assset, IAssetUrl assetUrl)
+        public static webModel.ProductAssetBase ToWebModel(this moduleModel.ItemAsset asset, IAssetUrlResolver assetUrlResolver)
         {
             webModel.ProductAssetBase retVal = new webModel.ProductImage();
-            if (assset.Type == moduleModel.ItemAssetType.File)
+            if (asset.Type == moduleModel.ItemAssetType.File)
             {
                 retVal = new webModel.ProductAsset();
             }
-            retVal.InjectFrom(assset);
-            retVal.Url = assetUrl.ResolveUrl(assset.Url);
+            retVal.InjectFrom(asset);
+            retVal.Url = assetUrlResolver.GetAbsoluteUrl(asset.Url);
             return retVal;
         }
 
-        public static moduleModel.ItemAsset ToModuleModel(this webModel.ProductAssetBase assetBase)
+        public static moduleModel.ItemAsset ToModuleModel(this webModel.ProductAssetBase assetBase, IAssetUrlResolver assetUrlResolver)
         {
             var retVal = new moduleModel.ItemAsset();
             retVal.InjectFrom(assetBase);
-            retVal.Url = new Uri(assetBase.Url).AbsolutePath.TrimStart('/');
+            retVal.Url = assetUrlResolver.GetRelativeUrl(assetBase.Url).TrimStart('/');
             if (String.IsNullOrEmpty(retVal.Group))
             {
                 retVal.Group = "default";

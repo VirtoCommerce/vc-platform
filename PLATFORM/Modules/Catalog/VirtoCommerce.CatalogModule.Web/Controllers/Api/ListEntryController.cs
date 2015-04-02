@@ -21,16 +21,16 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
         private readonly ICatalogSearchService _searchService;
         private readonly ICategoryService _categoryService;
         private readonly IItemService _itemService;
-        private readonly IAssetUrl _assetUrl;
+        private readonly IAssetUrlResolver _assetUrlResolver;
 
         public ListEntryController(ICatalogSearchService searchService,
                                    ICategoryService categoryService,
-                                   IItemService itemService, IAssetUrl assetUrl)
+                                   IItemService itemService, IAssetUrlResolver assetUrlResolver)
         {
             _searchService = searchService;
             _categoryService = categoryService;
             _itemService = itemService;
-            _assetUrl = assetUrl;
+            _assetUrlResolver = assetUrlResolver;
         }
         // GET: api/catalog/listentries&q='some'&catalog=apple&category=cat1&respGroup=8&skip=0&take=20
         [HttpGet]
@@ -47,7 +47,7 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 
             // all categories
             var categories = serviceResult.Categories.Select(x => new webModel.ListEntryCategory(x.ToWebModel()));
-            var products = serviceResult.Products.Select(x => new webModel.ListEntryProduct(x.ToWebModel(_assetUrl)));
+            var products = serviceResult.Products.Select(x => new webModel.ListEntryProduct(x.ToWebModel(_assetUrlResolver)));
 
             retVal.TotalCount = categories.Count() + serviceResult.TotalCount;
             retVal.ListEntries.AddRange(categories.Skip(start).Take(count));

@@ -11,7 +11,7 @@ using VirtoCommerce.Framework.Web.Asset;
 
 namespace VirtoCommerce.CoreModule.Web.Assets
 {
-    public class AssetsProviderManager : IAssetsProviderManager, IBlobStorageProvider, IAssetRepository, IAssetUrl, IUnitOfWork
+    public class AssetsProviderManager : IAssetsProviderManager, IBlobStorageProvider, IAssetRepository, IAssetUrlResolver, IUnitOfWork
     {
         private readonly IAssetsConnection _connection;
         private readonly ConcurrentDictionary<string, Func<string, IBlobStorageProvider>> _factories;
@@ -163,9 +163,14 @@ namespace VirtoCommerce.CoreModule.Web.Assets
 
         #region IAssetUrl Members
 
-        public string ResolveUrl(string assetId, bool thumb = false)
+        public string GetAbsoluteUrl(string assetId, bool thumb = false)
         {
-            return CurrentAssetUrl.ResolveUrl(assetId, thumb);
+            return CurrentAssetUrlResolver.GetAbsoluteUrl(assetId, thumb);
+        }
+
+        public string GetRelativeUrl(string absoluteUrl)
+        {
+            return CurrentAssetUrlResolver.GetRelativeUrl(absoluteUrl);
         }
 
         #endregion
@@ -199,9 +204,9 @@ namespace VirtoCommerce.CoreModule.Web.Assets
             get { return CurrentBlobStorageProvider as IAssetRepository; }
         }
 
-        private IAssetUrl CurrentAssetUrl
+        private IAssetUrlResolver CurrentAssetUrlResolver
         {
-            get { return CurrentBlobStorageProvider as IAssetUrl; }
+            get { return CurrentBlobStorageProvider as IAssetUrlResolver; }
         }
 
         private IUnitOfWork CurrentUnitOfWork
