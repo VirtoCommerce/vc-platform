@@ -5,21 +5,36 @@ namespace MailChimp.MailingModule.Web.Managers
 {
     public class MailChimpMailingImpl : IMailing
     {
-        private readonly string _apiKey;
+        private readonly string _apiAccessToken;
+        private readonly string _apiDataCenter;
         private readonly string _mailChimpSubscribeList;
         private readonly string _code;
         private readonly string _description;
         private readonly string _logoUrl;
 
-        public MailChimpMailingImpl(string apiKey, string mailChimpSubscribeList, string code, string description, string logoUrl)
+        public MailChimpMailingImpl(string apiAccessToken, string apiDataCenter, string mailChimpSubscribeList, string code, string description, string logoUrl)
         {
-            
-            _apiKey = apiKey;
-
+            _apiAccessToken = apiAccessToken;
+            _apiDataCenter = apiDataCenter;
             _code = code;
             _description = description;
             _logoUrl = logoUrl;
             _mailChimpSubscribeList = mailChimpSubscribeList;
+        }
+
+        public string AccessToken
+        {
+            get { return _apiAccessToken; }
+        }
+
+        public string DataCenter
+        {
+            get { return _apiDataCenter; }
+        }
+
+        public string SubscribersListId
+        {
+            get { return _mailChimpSubscribeList; }
         }
 
         public string Code
