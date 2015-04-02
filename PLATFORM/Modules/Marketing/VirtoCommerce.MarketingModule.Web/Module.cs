@@ -1,14 +1,14 @@
 ﻿using ExpressionSerialization;
 using Microsoft.Practices.Unity;
-using VirtoCommerce.Domain.Common.Expressions;
+using VirtoCommerce.Domain.Common;
 using VirtoCommerce.Domain.Marketing.Services;
 using VirtoCommerce.Foundation.Data.Infrastructure.Interceptors;
 using VirtoCommerce.Framework.Web.Modularity;
 using VirtoCommerce.MarketingModule.Data.Repositories;
 using VirtoCommerce.MarketingModule.Data.Services;
-using VirtoCommerce.MarketingModule.Web.Model.TypedExpression;
-using VirtoCommerce.MarketingModule.Web.Model.TypedExpression.Actions;
-using VirtoCommerce.MarketingModule.Web.Model.TypedExpression.Conditions;
+using VirtoCommerce.MarketingModule.Web.Model.TypeExpressions;
+using VirtoCommerce.MarketingModule.Web.Model.TypeExpressions.Actions;
+using VirtoCommerce.MarketingModule.Web.Model.TypeExpressions.Conditions;
 
 namespace VirtoCommerce.MarketingModule.Web
 {
@@ -27,23 +27,45 @@ namespace VirtoCommerce.MarketingModule.Web
 		{
 			_container.RegisterType<IFoundationMarketingRepository>(new InjectionFactory(c => new FoundationMarketingRepositoryImpl("VirtoCommerce", new AuditChangeInterceptor())));
 
-			var memoryPromotionManager = new InMemoryCustomPromotionManagerImpl();
-			memoryPromotionManager.DynamicExpression = new DynamicPromotionBlock();
-			var customerConditionBlock = new CustomerConditionBlock();
-			var catalogConditionBlock = new CatalogConditionBlock();
-			var cartConditionBlock = new CartConditionBlock();
-			var rewardBlock = new RewardBlock();
+			
+			var promotionExtensionManager = new InMemoryPromotionExtensionManagerImpl();
+			promotionExtensionManager.DynamicExpression = GetDynamicExpression();
 
-			cartConditionBlock.AvailableChildren = new ExpressionElement[] { new ConditionAtNumItemsInCart() };
-			rewardBlock.AvailableChildren = new ExpressionElement[] { new  RewardCartGetOfAbsSubtotal() };
-			memoryPromotionManager.DynamicExpression.AvailableChildren = new ExpressionElement[] { customerConditionBlock, catalogConditionBlock, cartConditionBlock, rewardBlock };
-
-			_container.RegisterInstance<ICustomPromotionManager>(memoryPromotionManager);
+			_container.RegisterInstance<IPromotionExtensionManager>(promotionExtensionManager);
 			_container.RegisterType<IMarketingService, MarketingServiceImpl>();
 			_container.RegisterType<IMarketingSearchService, MarketingSearchServiceImpl>();
 
 		}
 
 		#endregion
+
+		private static DynamicPromotionExpression GetDynamicExpression()
+		{
+			var customerConditionBlock = new BlockCustomerCondition();
+			customerConditionBlock.AvailableChildren = new IDynamicExpression[] { new ConditionIsEveryone(), new ConditionIsFirstTimeBuyer(), 
+																				  new ConditionIsRegisteredUser() };
+
+			var catalogConditionBlock = new BlockCatalogCondition();
+			catalogConditionBlock.AvailableChildren = new IDynamicExpression[] { new ConditionEntryIs(), new ConditionCurrencyIs(), 
+																		       new  ConditionCodeContains(), new ConditionCategoryIs(), 
+																			    };
+
+			var cartConditionBlock = new BlockCartCondition();
+			cartConditionBlock.AvailableChildren = new IDynamicExpression[] { new ConditionCartSubtotalLeast(), new ConditionAtNumItemsInCart(), 
+																			 new ConditionAtNumItemsInCategoryAreInCart(), new ConditionAtNumItemsOfEntryAreInCart() };
+			var rewardBlock = new RewardBlock();
+			rewardBlock.AvailableChildren = new IDynamicExpression[] { new RewardCartGetOfAbsSubtotal(), new RewardCartGetOfRelSubtotal(), 
+																	   new RewardItemGetFreeNumItemOfProduct(),  new RewardItemGetOfAbs(),
+																	   new RewardItemGetOfAbsForNum(), new RewardItemGetOfRel(), new RewardItemGetOfRelForNum(),
+																	   new RewardItemGiftNumItem(), new RewardShippingGetOfAbsShippingMethod(), new RewardShippingGetOfRelShippingMethod ()};
+
+
+			var retVal = new DynamicPromotionExpression()
+			{
+				Children = new IDynamicExpression[] { customerConditionBlock, catalogConditionBlock, cartConditionBlock, rewardBlock }
+			};
+			return retVal;
+
+		}
     }
 }

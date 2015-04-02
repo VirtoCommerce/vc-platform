@@ -6,10 +6,8 @@ using System.Runtime.Serialization;
 
 namespace VirtoCommerce.Domain.Marketing.Model
 {
-	
-	public class CartSubtotalReward : PromotionReward
-	{
 
-		public decimal Amount { get; set; }
+	public class CartSubtotalReward : AmountBasedReward
+	{
 	}
 }
