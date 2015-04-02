@@ -8,7 +8,7 @@ namespace VirtoCommerce.MarketingModule.Web.Model.TypedExpression
 {
 	public interface IConditionExpression
 	{
-		System.Linq.Expressions.Expression<Func<IEvaluationContext, bool>> GetExpression();
+		System.Linq.Expressions.Expression<Func<IEvaluationContext, bool>> GetConditionExpression();
 	
 	}
 }

@@ -7,6 +7,8 @@ namespace VirtoCommerce.CoreModule.Web.Security
 {
     public class CachingSecurityService
     {
+        public const string CacheTimeout = "VirtoCommerce.Core.Security.CacheTimeout";
+
         protected CacheHelper Cache { get; private set; }
         protected ISettingsManager SettingsManager { get; private set; }
 
@@ -18,7 +20,7 @@ namespace VirtoCommerce.CoreModule.Web.Security
 
         protected TimeSpan GetCacheTimeout()
         {
-            var value = SettingsManager.GetValue("VirtoCommerce.Core.Security.CacheTimeout", 60);
+            var value = SettingsManager.GetValue(CacheTimeout, 60);
             return TimeSpan.FromSeconds(value);
         }
     }

@@ -19,6 +19,7 @@ namespace VirtoCommerce.MarketingModule.Web.Model
 		[JsonConverter(typeof(StringEnumConverter))]
 		public PromotionType Type { get; set; }
 
+		public string Name { get; set; }
 		public string Store { get; set; }
 		public string Catalog { get; set; }
 
@@ -30,6 +31,6 @@ namespace VirtoCommerce.MarketingModule.Web.Model
 		public DateTime? StartDate { get; set; }
 		public DateTime? EndDate { get; set; }
 
-		public IEnumerable<ExpressionElement> ExpressionElements { get; set; }
+		public CompositeElement DynamicExpression { get; set; }
 	}
 }

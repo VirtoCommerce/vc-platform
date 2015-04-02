@@ -25,7 +25,14 @@ namespace VirtoCommerce.Web.Models
         [DataMember]
         public string Src { get; set; }
 
+        public string Name { get; set; }
+
         [DataMember]
         public IEnumerable<Variant> Variants { get; set; }
+
+        public override string ToString()
+        {
+            return this.Src;
+        }
     }
 }

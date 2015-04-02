@@ -142,6 +142,7 @@
     <Compile Include="Search\SearchProviderManager.cs" />
     <Compile Include="Security\ApiAccountProvider.cs" />
     <Compile Include="Security\ApplicationClaimsIdentityProvider.cs" />
+    <Compile Include="Security\ApplicationUserStore.cs" />
     <Compile Include="Security\CachingSecurityService.cs" />
     <Compile Include="Security\Hmac\HmacAuthenticationExtensions.cs" />
     <Compile Include="Security\Hmac\HmacAuthenticationHandler.cs" />
@@ -171,6 +172,7 @@
     <Compile Include="Settings\SettingsManager.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\css\dynamic-expression.css" />
     <Content Include="module.manifest" />
     <Content Include="Scripts\common\blades\address-list.js" />
     <Content Include="Scripts\common\blades\address-detail.js" />

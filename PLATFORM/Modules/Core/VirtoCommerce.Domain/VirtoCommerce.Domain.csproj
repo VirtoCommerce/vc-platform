@@ -108,6 +108,30 @@
     <Compile Include="Inventory\Model\InventoryInfo.cs" />
     <Compile Include="Inventory\Model\InventoryStatus.cs" />
     <Compile Include="Inventory\Services\IInventoryService.cs" />
+    <Compile Include="Marketing\Model\CatalogPromotionResult.cs" />
+    <Compile Include="Marketing\Model\Coupon.cs" />
+    <Compile Include="Marketing\Model\MarketingEvent.cs" />
+    <Compile Include="Marketing\Model\IPromotionEvaluationContext.cs" />
+    <Compile Include="Marketing\Model\Promotion.cs" />
+    <Compile Include="Marketing\Model\PromotionResult.cs" />
+    <Compile Include="Marketing\Model\PromotionUsage.cs" />
+    <Compile Include="Marketing\Model\Rewards\AmountBasedReward.cs" />
+    <Compile Include="Marketing\Model\Rewards\CartSubtotalReward.cs" />
+    <Compile Include="Marketing\Model\Rewards\CatalogItemAmountReward.cs" />
+    <Compile Include="Marketing\Model\Rewards\CatalogItemQuantityReward.cs" />
+    <Compile Include="Marketing\Model\Rewards\GiftCatalogItemReward.cs" />
+    <Compile Include="Marketing\Model\Rewards\LineItemAmountReward.cs" />
+    <Compile Include="Marketing\Model\Rewards\PromotionReward.cs" />
+    <Compile Include="Marketing\Model\Rewards\RewardAmountType.cs" />
+    <Compile Include="Marketing\Model\Rewards\ShipmentReward.cs" />
+    <Compile Include="Marketing\Model\Rewards\SpecialOfferReward.cs" />
+    <Compile Include="Marketing\Model\SearchCriteria.cs" />
+    <Compile Include="Marketing\Model\SearchResult.cs" />
+    <Compile Include="Marketing\Services\IMarketingPromoEvaluator.cs" />
+    <Compile Include="Marketing\Services\IMarketingSearchService.cs" />
+    <Compile Include="Marketing\Services\IMarketingService.cs" />
+    <Compile Include="Marketing\Services\ICustomPromotionManager.cs" />
+    <Compile Include="Marketing\Services\InMemoryCustomPromotionManagerImpl.cs" />
     <Compile Include="Order\Model\Address.cs" />
     <Compile Include="Order\Model\AddressType.cs" />
     <Compile Include="Order\Model\Coupon.cs" />
@@ -153,10 +177,7 @@
     <Compile Include="Store\Model\StoreState.cs" />
     <Compile Include="Store\Services\IStoreService.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Marketing\Model\" />
-    <Folder Include="Marketing\Services\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="..\..\..\Core\CommerceFoundation\CommerceFoundation.csproj">
       <Project>{e7fc9a51-1b39-4bdc-983a-8a059c5fc58b}</Project>
