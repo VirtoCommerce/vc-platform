@@ -18,9 +18,9 @@ namespace VirtoCommerce.MarketingModule.Data.Services
 	public class MarketingSearchServiceImpl : IMarketingSearchService
 	{
 		private readonly Func<IFoundationMarketingRepository> _repositoryFactory;
-		private readonly ICustomPromotionManager _customPromotionManager;
+		private readonly IPromotionExtensionManager _customPromotionManager;
 
-		public MarketingSearchServiceImpl(Func<IFoundationMarketingRepository> repositoryFactory, ICustomPromotionManager customPromotionManager)
+		public MarketingSearchServiceImpl(Func<IFoundationMarketingRepository> repositoryFactory, IPromotionExtensionManager customPromotionManager)
 		{
 			_repositoryFactory = repositoryFactory;
 			_customPromotionManager = customPromotionManager;
