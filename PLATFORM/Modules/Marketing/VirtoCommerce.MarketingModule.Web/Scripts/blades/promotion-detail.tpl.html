@@ -110,7 +110,8 @@
                 <fieldset>
                     <legend>Promotion conditions</legend>
                     <div class="dynamic-expression">
-                        <div class="dynamic-expression_t">For visitor with <a class="__link">all</a> of these eligibilities:</div>
+                        <va-expression-block ng-repeat="data in expressionBlocks track by $index"></va-expression-block>
+                        <!--<div class="dynamic-expression_t">For visitor with <a class="__link">all</a> of these eligibilities:</div>
                         <div class="dynamic-expression_b">
                             <span class="error">Cart promotion requires at least one eligibility</span>
                             <ul class="list">
@@ -203,7 +204,7 @@
                                 </li>
                             </ul>
                             <a class="add __link __usergroup">Add effect</a>
-                        </div>
+                        </div>-->
                     </div>
                 </fieldset>
             </form>
