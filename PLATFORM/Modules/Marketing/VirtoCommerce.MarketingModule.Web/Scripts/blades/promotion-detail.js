@@ -21,6 +21,8 @@
         $scope.blade.currentEntity = angular.copy(data);
         $scope.blade.origEntity = data;
         $scope.blade.isLoading = false;
+
+        initializeExpressions();
     };
 
     function isDirty() {
@@ -134,6 +136,184 @@
     // $scope.formats = ['shortDate', 'dd-MMMM-yyyy', 'yyyy/MM/dd'];
     $scope.format = 'shortDate';
 
+    // Dynamic ExpressionBlock
+    function initializeExpressions() {
+        $scope.expressionBlocks = [
+            {
+                headerElements: [
+                    {
+                        type: 'label',
+                        text: 'For visitor with '
+                    },
+                    {
+                        type: 'dictionary',
+                        text: 'all'
+                    },
+                    {
+                        type: 'label',
+                        text: ' of these eligibilities'
+                    }],
+                children: [
+                    {
+                        headerElements: [
+                            {
+                                type: 'label',
+                                text: 'Everyone'
+                            }
+                        ]
+                    },
+                    {
+                        headerElements: [
+                            {
+                                type: 'label',
+                                text: 'First time buyer'
+                            }
+                        ]
+                    },
+                    {
+                        headerElements: [
+                            {
+                                type: 'label',
+                                text: 'Registered user'
+                            }
+                        ]
+                    }],
+                newChildLabel: '+ add usergroup',
+                getValidationError: function (data) {
+                    if (!data.children.length) {
+                        return 'Promotion requires at least one eligibility';
+                    } else {
+                        return undefined;
+                    }
+                }
+            },
+            {
+                headerElements: [
+                    {
+                        type: 'label',
+                        text: 'if '
+                    },
+                    {
+                        type: 'dictionary',
+                        text: 'all'
+                    },
+                    {
+                        type: 'label',
+                        text: ' of these conditions are true'
+                    }],
+                children: [
+                    {
+                        headerElements: [
+                            {
+                                type: 'label',
+                                text: 'At least'
+                            },
+                            {
+                                type: 'numericInput',
+                                // text: 'qty'
+                                number: 0
+                            },
+                            {
+                                type: 'label',
+                                text: 'items in shopping cart excluding:'
+                            }
+                        ],
+                        children: [
+                            {
+                                headerElements: [
+                                    {
+                                        type: 'label',
+                                        text: 'items of category'
+                                    },
+                                    constructCategorySelector()
+                                ]
+                            }
+                        ],
+                        newChildLabel: '+ excluding'
+                    }
+                ],
+                newChildLabel: '+ add condition',
+                getValidationError: function (data) {
+                    return undefined;
+                }
+            },
+            {
+                headerElements: [
+                    {
+                        type: 'label',
+                        text: 'They get:'
+                    }],
+                children: [],
+                newChildLabel: '+ add effect',
+                getValidationError: function (data) {
+                    if (!data.children.length) {
+                        return 'Promotion requires at least one reward';
+                    } else {
+                        return undefined;
+                    }
+                }
+            }
+        ];
+    }
+
+    function openCategorySelectWizard(expressionElement) {
+        var selectedListEntries = [];
+        var newBlade = {
+            id: "CatalogCategorySelect",
+            title: "Pick Category for promotion condition",
+            controller: 'catalogItemSelectController',
+            template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/common/catalog-items-select.tpl.html',
+            breadcrumbs: [],
+            bladeToolbarCommands: [
+            {
+                name: "Pick selected", icon: 'fa fa-plus',
+                executeMethod: function (blade) {
+                    expressionElement.selectedCategory = selectedListEntries[0];
+                    bladeNavigationService.closeBlade(blade);
+                },
+                canExecuteMethod: function () {
+                    return selectedListEntries.length == 1;
+                }
+            }]
+        };
+
+        newBlade.options = {
+            allowMultiple: true,
+            checkItemFn: function (listItem, isSelected) {
+                if (listItem.type != 'category') {
+                    newBlade.error = 'Must select Category';
+                    listItem.selected = undefined;
+                } else {
+                    if (isSelected) {
+                        if (_.all(selectedListEntries, function (x) { return x.id != listItem.id; })) {
+                            selectedListEntries.push(listItem);
+                        }
+                    }
+                    else {
+                        selectedListEntries = _.reject(selectedListEntries, function (x) { return x.id == listItem.id; });
+                    }
+                    newBlade.error = undefined;
+                }
+            }
+        };
+
+        bladeNavigationService.showBlade(newBlade, $scope.blade);
+    }
+    
+    var constructCategorySelector = function (selectLabel) {
+        selectLabel = selectLabel ? selectLabel : 'select category';
+        var retVal = {
+            type: 'customSelector',
+            selectedCategory: undefined
+        };
+
+        retVal.getDisplayText = function () {
+            return retVal.selectedCategory ? retVal.selectedCategory.name : selectLabel;
+        };
+
+        retVal.action = function () { openCategorySelectWizard(retVal); };
+        return retVal;
+    };
 
     initializeToolbar();
     $scope.blade.refresh(false);

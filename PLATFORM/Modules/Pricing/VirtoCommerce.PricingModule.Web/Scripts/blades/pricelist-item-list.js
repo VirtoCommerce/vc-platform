@@ -40,7 +40,6 @@
         var selectedProducts = [];
         var newBlade = {
             id: "CatalogItemsSelect",
-            currentEntities: $scope.blade.currentEntity,
             title: "Select items for pricing",
             controller: 'catalogItemSelectController',
             template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/common/catalog-items-select.tpl.html',

@@ -1,0 +1,41 @@
+﻿<script type="text/ng-template" id="expression-label.html">
+    {{element.text}}
+</script>
+<script type="text/ng-template" id="expression-dictionary.html">
+    <a class="__link">{{element.text}}</a>
+</script>
+<script type="text/ng-template" id="expression-customSelector.html">
+    <a class="__link" ng-click="element.action()">{{element.getDisplayText()}}</a>
+</script>
+<script type="text/ng-template" id="expression-numericInput.html">
+    <div class="form-input __mini __number js-number-input-plugin" data-step="1">
+        <input type="text" class="js-val" required ng-model="element.number">
+        <a class="up js-up"></a>
+        <a class="down js-down"></a>
+    </div>
+</script>
+
+<div class="dynamic-expression_t">
+    <va-expression-element ng-repeat="element in data.headerElements" element="element"></va-expression-element>
+</div>
+<div class="dynamic-expression_b">
+    <span class="error" ng-if="data.getValidationError(data)">{{data.getValidationError(data);}}</span>
+    <ul class="list">
+        <li class="list-item" ng-repeat="data in data.children">
+            <a class="list-link">
+                <i class="list-ico fa fa-times-circle"></i>
+                <va-expression-element ng-repeat="element in data.headerElements" element="element"></va-expression-element>
+                <ul class="list __sub" ng-if="data.newChildLabel">
+                    <li class="list-item" ng-repeat="data in data.children">
+                        <i class="list-ico fa fa-times-circle"></i>
+                        <va-expression-element ng-repeat="element in data.headerElements" element="element"></va-expression-element>
+                    </li>
+                    <li class="list-item">
+                        <a href="#" class="add">{{data.newChildLabel}}</a>
+                    </li>
+                </ul>
+            </a>
+        </li>
+    </ul>
+    <a class="add __link __usergroup">{{data.newChildLabel}}</a>
+</div>

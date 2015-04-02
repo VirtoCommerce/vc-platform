@@ -177,6 +177,8 @@
     <Content Include="Scripts\common\blades\address-detail.js" />
     <Content Include="Scripts\common\blades\address-detail.tpl.html" />
     <Content Include="Scripts\common\common.js" />
+    <Content Include="Scripts\common\dynamicExpression\expression-block.tpl.html" />
+    <Content Include="Scripts\common\dynamicExpression\expression-directives.js" />
     <Content Include="Scripts\Fulfillment\blades\fulfillment-center-contact.js" />
     <Content Include="Scripts\Fulfillment\blades\fulfillment-center-contact.tpl.html" />
     <Content Include="Scripts\Fulfillment\widgets\fulfillmentCenterContactWidget.js" />
