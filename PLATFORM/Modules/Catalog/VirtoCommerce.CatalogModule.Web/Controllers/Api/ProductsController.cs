@@ -17,13 +17,13 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
     {
         private readonly IItemService _itemsService;
         private readonly IPropertyService _propertyService;
-        private readonly IAssetUrl _assetUrl;
+        private readonly IAssetUrlResolver _assetUrlResolver;
 
-        public ProductsController(IItemService itemsService, IPropertyService propertyService, IAssetUrl assetUrl)
+        public ProductsController(IItemService itemsService, IPropertyService propertyService, IAssetUrlResolver assetUrlResolver)
         {
             _itemsService = itemsService;
             _propertyService = propertyService;
-            _assetUrl = assetUrl;
+            _assetUrlResolver = assetUrlResolver;
         }
 
         // GET: api/catalog/products/5
@@ -43,7 +43,7 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
             {
                 properties = _propertyService.GetCategoryProperties(item.CategoryId);
             }
-            var retVal = item.ToWebModel(_assetUrl, properties);
+            var retVal = item.ToWebModel(_assetUrlResolver, properties);
 
             return Ok(retVal);
         }
@@ -100,7 +100,7 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
                 allCategoryProperties = _propertyService.GetCategoryProperties(product.CategoryId);
             }
 
-            var mainWebProduct = product.ToWebModel(_assetUrl, allCategoryProperties);
+            var mainWebProduct = product.ToWebModel(_assetUrlResolver, allCategoryProperties);
 
             var newVariation = new webModel.Product
             {
@@ -161,7 +161,7 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 
         private moduleModel.CatalogProduct UpdateProduct(webModel.Product product)
         {
-            var moduleProduct = product.ToModuleModel();
+            var moduleProduct = product.ToModuleModel(_assetUrlResolver);
             if (moduleProduct.Id == null)
             {
                 return _itemsService.Create(moduleProduct);

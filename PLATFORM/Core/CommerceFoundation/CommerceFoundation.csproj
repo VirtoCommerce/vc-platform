@@ -177,7 +177,7 @@
     <Compile Include="Assets\Model\FolderItem.cs" />
     <Compile Include="Assets\Services\AssetService.cs" />
     <Compile Include="Assets\Services\IAssetService.cs" />
-    <Compile Include="Assets\Services\IAssetUrl.cs" />
+    <Compile Include="Assets\Services\IAssetUrlResolver.cs" />
     <Compile Include="Assets\Services\UploadStreamInfo.cs" />
     <Compile Include="Catalogs\CatalogConfiguration.cs" />
     <Compile Include="Catalogs\Model\CatalogPropertyValue.cs" />

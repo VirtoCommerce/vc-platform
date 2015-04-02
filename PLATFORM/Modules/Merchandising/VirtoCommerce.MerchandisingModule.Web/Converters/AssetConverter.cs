@@ -10,7 +10,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Converters
     {
         #region Public Methods and Operators
 
-        public static moduleModel.ItemAsset ToModuleModel(this webModel.ItemImage itemInage)
+        public static moduleModel.ItemAsset ToModuleModel(this webModel.ItemImage itemInage, IAssetUrlResolver assetUrlResolver)
         {
             var retVal = new moduleModel.ItemAsset();
             retVal.InjectFrom(itemInage);
@@ -21,13 +21,13 @@ namespace VirtoCommerce.MerchandisingModule.Web.Converters
             return retVal;
         }
 
-        public static webModel.ItemImage ToWebModel(this moduleModel.ItemAsset assset, IAssetUrl resolve)
+        public static webModel.ItemImage ToWebModel(this moduleModel.ItemAsset asset, IAssetUrlResolver assetUrlResolver)
         {
             var retVal = new webModel.ItemImage();
-            retVal.InjectFrom(assset);
-            retVal.Src = resolve.ResolveUrl(assset.Url);
-            retVal.ThumbSrc = resolve.ResolveUrl(assset.Url);
-            retVal.Name = assset.Group;
+            retVal.InjectFrom(asset);
+            retVal.Src = assetUrlResolver.GetAbsoluteUrl(asset.Url);
+            retVal.ThumbSrc = retVal.Src;
+            retVal.Name = asset.Group;
             return retVal;
         }
 

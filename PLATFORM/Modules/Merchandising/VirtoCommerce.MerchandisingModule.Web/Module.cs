@@ -117,14 +117,14 @@ namespace VirtoCommerce.MerchandisingModule.Web
             #endregion
 
             var blobStorageProvider = _container.Resolve<IBlobStorageProvider>();
-            var assetUrl = _container.Resolve<IAssetUrl>();
+            var assetUrlResolver = _container.Resolve<IAssetUrlResolver>();
 
             var itemBrowseService = new ItemBrowsingService(
                 itemService,
                 catalogRepFactory,
                 searchProvider,
                 cacheRepository,
-                assetUrl,
+                assetUrlResolver,
                 searchConnection);
             var filterService = new FilterService(storeRepFactory, catalogRepFactory, new HttpCacheRepository());
 
