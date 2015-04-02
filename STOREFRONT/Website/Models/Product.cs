@@ -14,7 +14,6 @@ namespace VirtoCommerce.Web.Models
     {
         public Product()
         {
-            this.Images = new List<Image>();
             this.Variants = new List<Variant>();
         }
 
@@ -100,7 +99,7 @@ namespace VirtoCommerce.Web.Models
         public string Id { get; set; }
 
         [DataMember]
-        public IEnumerable<Image> Images { get; set; }
+        public ItemCollection<Image> Images { get; set; }
 
         [DataMember]
         public IEnumerable<SeoKeyword> Keywords { get; set; }

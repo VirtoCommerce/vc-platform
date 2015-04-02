@@ -10,7 +10,7 @@ namespace VirtoCommerce.CatalogModule.Web.Converters
 {
     public static class ProductConverter
     {
-        public static webModel.Product ToWebModel(this moduleModel.CatalogProduct product, IAssetUrl assetUrl, moduleModel.Property[] properties = null)
+        public static webModel.Product ToWebModel(this moduleModel.CatalogProduct product, IAssetUrlResolver assetUrlResolver, moduleModel.Property[] properties = null)
         {
             var retVal = new webModel.Product();
             retVal.InjectFrom(product);
@@ -27,14 +27,14 @@ namespace VirtoCommerce.CatalogModule.Web.Converters
 
             if (product.Assets != null)
             {
-                var assetBases = product.Assets.Select(x => x.ToWebModel(assetUrl)).ToList();
+                var assetBases = product.Assets.Select(x => x.ToWebModel(assetUrlResolver)).ToList();
                 retVal.Images = assetBases.OfType<webModel.ProductImage>().ToList();
                 retVal.Assets = assetBases.OfType<webModel.ProductAsset>().ToList();
             }
 
             if (product.Variations != null)
             {
-                retVal.Variations = product.Variations.Select(x => x.ToWebModel(assetUrl)).ToList();
+                retVal.Variations = product.Variations.Select(x => x.ToWebModel(assetUrlResolver)).ToList();
             }
 
             if (product.Links != null)
@@ -54,7 +54,7 @@ namespace VirtoCommerce.CatalogModule.Web.Converters
 
             if (product.Associations != null)
             {
-                retVal.Associations = product.Associations.Select(x => x.ToWebModel(assetUrl)).ToList();
+                retVal.Associations = product.Associations.Select(x => x.ToWebModel(assetUrlResolver)).ToList();
             }
             retVal.TitularItemId = product.MainProductId;
 
@@ -110,7 +110,7 @@ namespace VirtoCommerce.CatalogModule.Web.Converters
             return retVal;
         }
 
-        public static moduleModel.CatalogProduct ToModuleModel(this webModel.Product product)
+        public static moduleModel.CatalogProduct ToModuleModel(this webModel.Product product, IAssetUrlResolver assetUrlResolver)
         {
             var retVal = new moduleModel.CatalogProduct();
             retVal.InjectFrom(product);
@@ -122,7 +122,7 @@ namespace VirtoCommerce.CatalogModule.Web.Converters
                 bool isMain = true;
                 foreach (var productImage in product.Images)
                 {
-                    var image = productImage.ToModuleModel();
+                    var image = productImage.ToModuleModel(assetUrlResolver);
                     image.Type = moduleModel.ItemAssetType.Image;
                     image.Group = isMain ? "primaryimage" : "images";
                     retVal.Assets.Add(image);
@@ -139,7 +139,7 @@ namespace VirtoCommerce.CatalogModule.Web.Converters
 
                 foreach (var productAsset in product.Assets)
                 {
-                    var asset = productAsset.ToModuleModel();
+                    var asset = productAsset.ToModuleModel(assetUrlResolver);
                     asset.Type = moduleModel.ItemAssetType.File;
                     retVal.Assets.Add(asset);
                 }
@@ -162,7 +162,7 @@ namespace VirtoCommerce.CatalogModule.Web.Converters
 
             if (product.Variations != null)
             {
-                retVal.Variations = product.Variations.Select(x => x.ToModuleModel()).ToList();
+                retVal.Variations = product.Variations.Select(x => x.ToModuleModel(assetUrlResolver)).ToList();
             }
 
             if (product.Links != null)
