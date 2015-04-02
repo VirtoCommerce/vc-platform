@@ -440,6 +440,16 @@ namespace VirtoCommerce.Web.Models.Services
                                },
                                new SubmitForm
                                {
+                                   Id = "external_login",
+                                   ActionLink = VirtualPathUtility.ToAbsolute("~/account/externallogin")
+                               },
+                               new SubmitForm
+                               {
+                                   Id = "external_login_confirmation",
+                                   ActionLink = VirtualPathUtility.ToAbsolute("~/account/externalloginconfirmation")
+                               },
+                               new SubmitForm
+                               {
                                    Id = "contact",
                                    ActionLink = VirtualPathUtility.ToAbsolute("~/account/contact")
                                }

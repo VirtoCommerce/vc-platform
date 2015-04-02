@@ -13,6 +13,7 @@
     using VirtoCommerce.ApiClient.Extensions;
     using VirtoCommerce.Web.Models.Convertors;
     using VirtoCommerce.Web.Models.Security;
+    using System.Collections.Generic;
 
     #endregion
 
@@ -21,7 +22,8 @@
         IUserLockoutStore<ApplicationUser, string>,
         IUserPasswordStore<ApplicationUser>,
         IUserTwoFactorStore<ApplicationUser, string>,
-        IUserEmailStore<ApplicationUser>
+        IUserEmailStore<ApplicationUser>,
+        IUserLoginStore<ApplicationUser>
     {
         #region Public Properties
         public SecurityClient SecurityClient
@@ -240,6 +242,54 @@
             await this.SecurityClient.UpdateAsync(user.ToServiceModel());
         }
         #endregion
+
+        public Task AddLoginAsync(ApplicationUser user, UserLoginInfo login)
+        {
+            if (user == null)
+            {
+                throw new ArgumentNullException("user");
+            }
+            if (login == null)
+            {
+                throw new ArgumentNullException("login");
+            }
+
+            throw new NotImplementedException();
+        }
+
+        public Task<ApplicationUser> FindAsync(UserLoginInfo login)
+        {
+            if (login == null)
+            {
+                throw new ArgumentNullException("login");
+            }
+
+            throw new NotImplementedException();
+        }
+
+        public Task<IList<UserLoginInfo>> GetLoginsAsync(ApplicationUser user)
+        {
+            if (user == null)
+            {
+                throw new ArgumentNullException("user");
+            }
+
+            throw new NotImplementedException();
+        }
+
+        public Task RemoveLoginAsync(ApplicationUser user, UserLoginInfo login)
+        {
+            if (user == null)
+            {
+                throw new ArgumentNullException("user");
+            }
+            if (login == null)
+            {
+                throw new ArgumentNullException("login");
+            }
+
+            throw new NotImplementedException();
+        }
     }
 
     public class ApplicationUserManager : UserManager<ApplicationUser>
