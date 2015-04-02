@@ -1,21 +1,19 @@
-﻿#region
-
+﻿using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.Owin;
+using Microsoft.Owin.Security;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
-using Microsoft.AspNet.Identity.Owin;
-using Microsoft.Owin.Security;
 using VirtoCommerce.Web.Models.FormModels;
 using VirtoCommerce.Web.Models.Security;
 using System.Collections.Generic;
-using Microsoft.Owin;
-
-#endregion
 
 namespace VirtoCommerce.Web.Models.Services
 {
     public class SecurityService
     {
+        private const string XsrfKey = "XsrfId";
+
         #region Fields
         private readonly IAuthenticationManager _authManager;
 
@@ -78,6 +76,18 @@ namespace VirtoCommerce.Web.Models.Services
             }
 
             return errors;
+        }
+
+        public void ExternalLogin(string loginProvider, string redirectUrl, string userId)
+        {
+            var properties = new AuthenticationProperties { RedirectUri = redirectUrl };
+
+            if (!string.IsNullOrEmpty(userId))
+            {
+                properties.Dictionary[XsrfKey] = userId;
+            }
+
+            _authManager.Challenge(properties, loginProvider);
         }
         #endregion
     }
