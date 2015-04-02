@@ -160,6 +160,20 @@ namespace VirtoCommerce.Foundation.Marketing.Model
             }
         }
 
+		private string _RewardsSerialized;
+		[DataMember]
+		public string RewardsSerialized
+		{
+			get
+			{
+				return _RewardsSerialized;
+			}
+			set
+			{
+				SetValue(ref _RewardsSerialized, () => this.RewardsSerialized, value);
+			}
+		}
+
         private int _PerCustomerLimit;
         [DataMember]
         public int PerCustomerLimit

@@ -34,7 +34,7 @@ namespace VirtoCommerce.CustomerModule.Data.Converters
 
 			retVal.TotalUsageLimit = dbEntity.TotalLimit;
 			retVal.PerCustomerUsageLimit = dbEntity.PerCustomerLimit;
-	
+
 			retVal.CreatedDate = dbEntity.Created.Value;
 			retVal.ModifiedDate = dbEntity.LastModified;
 
@@ -49,7 +49,7 @@ namespace VirtoCommerce.CustomerModule.Data.Converters
 
 			//TODO: Need rid for typized promotion in db. Temporary  save all promotion as catalogPromotion
 			var retVal = new foundationModel.CatalogPromotion();
-
+			retVal.StartDate = DateTime.UtcNow;
 			retVal.InjectFrom(promotion);
 
 			if (promotion.Id != null)
@@ -74,9 +74,10 @@ namespace VirtoCommerce.CustomerModule.Data.Converters
 
 			var patchInjection = new PatchInjection<foundationModel.Promotion>(x => x.Name, x => x.Description,
 																		   x => x.StartDate, x => x.EndDate,
-																		   x => x.Status, x=>x.TotalLimit, x=>x.PerCustomerLimit, x=>x.PredicateSerialized);
+																		   x => x.Status, x => x.TotalLimit, x => x.PerCustomerLimit, x => x.PredicateSerialized,
+																		   x => x.PredicateVisualTreeSerialized, x => x.RewardsSerialized);
 			target.InjectFrom(patchInjection, source);
-		} 
+		}
 
 
 	}
