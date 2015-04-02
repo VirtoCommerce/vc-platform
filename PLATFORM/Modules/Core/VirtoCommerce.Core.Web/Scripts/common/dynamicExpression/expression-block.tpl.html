@@ -21,17 +21,22 @@
 <div class="dynamic-expression_b">
     <span class="error" ng-if="data.getValidationError(data)">{{data.getValidationError(data);}}</span>
     <ul class="list">
-        <li class="list-item" ng-repeat="data in data.children">
+        <li class="list-item" ng-repeat="data1 in data.children">
             <a class="list-link">
-                <i class="list-ico fa fa-times-circle"></i>
-                <va-expression-element ng-repeat="element in data.headerElements" element="element"></va-expression-element>
-                <ul class="list __sub" ng-if="data.newChildLabel">
-                    <li class="list-item" ng-repeat="data in data.children">
-                        <i class="list-ico fa fa-times-circle"></i>
-                        <va-expression-element ng-repeat="element in data.headerElements" element="element"></va-expression-element>
+                <i class="list-ico fa fa-times-circle" ng-click='deleteChild(data1, data.children);'></i>
+                <va-expression-element ng-repeat="element in data1.headerElements" element="element"></va-expression-element>
+                <ul class="list __sub" ng-if="data1.newChildLabel">
+                    <li class="list-item" ng-repeat="data2 in data1.children">
+                        <i class="list-ico fa fa-times-circle" ng-click='deleteChild(data2, data1.children);'></i>
+                        <va-expression-element ng-repeat="element in data2.headerElements" element="element"></va-expression-element>
                     </li>
                     <li class="list-item">
-                        <a href="#" class="add">{{data.newChildLabel}}</a>
+                        <a href="#" class="add" context-menu data-target="deb_menu1_{{$index}}">{{data1.newChildLabel}}</a>
+                        <ul class="menu __context" role="menu" id="deb_menu1_{{$index}}">
+                            <li class="menu-item" ng-click='addChild(child, data1);' ng-repeat="child in data1.availableChildren">
+                                + {{child.id}}
+                            </li>
+                        </ul>
                     </li>
                 </ul>
             </a>

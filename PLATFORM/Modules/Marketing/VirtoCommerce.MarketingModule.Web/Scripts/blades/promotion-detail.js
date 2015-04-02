@@ -2,7 +2,9 @@
 .controller('promotionDetailController', ['$scope', 'bladeNavigationService', 'promotions', 'catalogs', 'stores', 'settings', 'dialogService', function ($scope, bladeNavigationService, promotions, catalogs, stores, settings, dialogService) {
     $scope.blade.refresh = function (parentRefresh) {
         if ($scope.blade.isNew) {
-            initializeBlade({ maxUsageCount: 0, maxPersonalUsageCount: 0, priority: 1 });
+            promotions.getNew({}, function (data) {
+                initializeBlade(data);
+            });
         } else {
             promotions.get({ id: $scope.blade.currentEntityId }, function (data) {
                 initializeBlade(data);
@@ -18,11 +20,11 @@
             $scope.blade.title = data.name;
         }
 
+        initializeExpressions(data.dynamicExpression);
+
         $scope.blade.currentEntity = angular.copy(data);
         $scope.blade.origEntity = data;
         $scope.blade.isLoading = false;
-
-        initializeExpressions($scope.blade.currentEntity.dynamicExpression);
     };
 
     function isDirty() {
@@ -41,9 +43,8 @@
             promotions.save({}, $scope.blade.currentEntity, function (data) {
                 $scope.blade.isNew = undefined;
                 $scope.blade.currentEntityId = data.id;
-                initializeBlade(data);
                 initializeToolbar();
-                $scope.blade.parentBlade.refresh();
+                $scope.blade.refresh(true);
             }, function (error) {
                 bladeNavigationService.setError('Error ' + error.status, $scope.blade);
             });
@@ -139,25 +140,34 @@
     // Dynamic ExpressionBlock
     function initializeExpressions(data) {
         //var expressionBlocks = getTestExpressionBlocks();
-        var expressionBlocks = [
-        {
-            children: [],
-            newChildLabel: '+ add',
-            availableChildren: data.availableChildren
-        }];
-
+        //var expressionBlocks = [
+        //{
+        //    children: [],
+        //    newChildLabel: '+ add',
+        //    availableChildren: data.availableChildren
+        //}];
+        var expressionBlocks = data.children;
+        _.each(expressionBlocks, function (expressionBlock) {
+            //angular.merge(expressionBlock, constructElementBlock(expressionBlock));
+            //angular.extend(expressionBlock, constructElementBlock(expressionBlock));
+            _.extend(expressionBlock, constructElementBlock(expressionBlock));
+        });
 
         $scope.expressionBlocks = expressionBlocks;
     }
 
     $scope.addChild = function (availableElement, parent) {
 
-        parent.children.push(constrictElementBlock(availableElement));
+        parent.children.push(constructElementBlock(availableElement));
     };
 
-    function constrictElementBlock(availableElement) {
-        var retVal = { id: availableElement.id, children: [] };
-        switch (availableElement.id) {
+    $scope.deleteChild = function (child, parentList) {
+        parentList.splice(parentList.indexOf(child), 1);
+    }
+
+    function constructElementBlock(expressionBlock) {
+        var retVal = { id: expressionBlock.id, children: [] };
+        switch (expressionBlock.id) {
             case 'CustomerConditionBlock':
                 break;
             case 'RewardBlock':
@@ -169,7 +179,7 @@
                 ];
 
                 retVal.newChildLabel = '+ add effect';
-                retVal.getValidationError = function(data) {
+                retVal.getValidationError = function (data) {
                     if (!data.children.length) {
                         return 'Promotion requires at least one reward';
                     } else {
@@ -177,11 +187,27 @@
                     }
                 };
                 break;
+            case 'RewardCartGetOfAbsSubtotal':
+                retVal.headerElements = [
+                    {
+                        type: 'label',
+                        text: 'Get $'
+                    },
+                    {
+                        type: 'numericInput',
+                        number: 0
+                    },
+                    {
+                        type: 'label',
+                        text: ' off cart subtotal'
+                    }
+                ];
+                break;
             default:
                 retVal.headerElements = [
                     {
                         type: 'label',
-                        text: 'unknown element: ' + availableElement.id
+                        text: 'unknown element: ' + expressionBlock.id
                     }
                 ];
         }
@@ -371,9 +397,9 @@
     $scope.blade.refresh(false);
     $scope.catalogs = catalogs.getCatalogs();
     $scope.stores = stores.query();
-    $scope.exclusivities = settings.getValues({ id: 'VirtoCommerce.Marketing.Promotions.Exclusivities' }, function (data) {
-        if ($scope.blade.isNew && data && data[0]) {
-            $scope.blade.currentEntity.exclusivity = data[0];
-        }
-    });
+    //$scope.exclusivities = settings.getValues({ id: 'VirtoCommerce.Marketing.Promotions.Exclusivities' }, function (data) {
+    //    if ($scope.blade.isNew && data && data[0]) {
+    //        $scope.blade.currentEntity.exclusivity = data[0];
+    //    }
+    //});
 }]);

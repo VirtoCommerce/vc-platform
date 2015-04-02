@@ -59,19 +59,19 @@ namespace VirtoCommerce.MarketingModule.Web.Controllers.Api
 			return NotFound();
 		}
 
-		// GET: api/marketing/promotions/new
-		[HttpPost]
-		[ResponseType(typeof(webModel.Promotion))]
-		[Route("promotions/new")]
-		public IHttpActionResult GetNewDynamicPromotion()
-		{
-			var retVal = new webModel.Promotion
-			{
-				Type = webModel.PromotionType.Dynamic,
-				DynamicExpression = _promotionManager.DynamicExpression as DynamicPromotionExpression
-			};
-			return Ok(retVal);
-		}
+        // GET: api/marketing/promotions/new
+        [HttpGet]
+        [ResponseType(typeof(webModel.Promotion))]
+        [Route("promotions/new")]
+        public IHttpActionResult GetNewDynamicPromotion()
+        {
+            var retVal = new webModel.Promotion
+            {
+                Type = webModel.PromotionType.Dynamic,
+                DynamicExpression = _promotionManager.DynamicExpression as DynamicPromotionExpression
+            };
+            return Ok(retVal);
+        }
 
 		// POST: api/marketing/promotions
 		[HttpPost]
