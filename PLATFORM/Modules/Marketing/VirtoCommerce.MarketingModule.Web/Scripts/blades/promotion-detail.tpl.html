@@ -10,7 +10,7 @@
                     </div>-->
                     <div class="columns">
                         <div class="column">
-                            <!--<div class="form-group">
+                            <div class="form-group">
                                 <label class="form-label">Store</label>
                                 <div class="form-input">
                                     <ui-select ng-model="blade.currentEntity.store" ng-disabled="!blade.isNew">
@@ -20,7 +20,7 @@
                                         </ui-select-choices>
                                     </ui-select>
                                 </div>
-                            </div>-->
+                            </div>
                             <div class="form-group">
                                 <label class="form-label">Promotion name</label>
                                 <div class="form-input">
@@ -110,7 +110,7 @@
                 <fieldset>
                     <legend>Promotion conditions</legend>
                     <div class="dynamic-expression">
-                        <va-expression-block ng-repeat="data in expressionBlocks track by $index"></va-expression-block>
+                        <va-expression-block ng-repeat="data in blade.currentEntity.dynamicExpression.children" data="data" expression-data="expressionData"></va-expression-block>
                         <!--<div class="dynamic-expression_t">For visitor with <a class="__link">all</a> of these eligibilities:</div>
                         <div class="dynamic-expression_b">
                             <span class="error">Cart promotion requires at least one eligibility</span>
