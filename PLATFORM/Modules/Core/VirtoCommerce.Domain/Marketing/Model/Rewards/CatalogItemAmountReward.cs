@@ -10,6 +10,7 @@ namespace VirtoCommerce.Domain.Marketing.Model
 	public class CatalogItemAmountReward : AmountBasedReward
 	{
 		public string ProductId { get; set; }
+		public string CategoryId { get; set; }
 
 	}
 }

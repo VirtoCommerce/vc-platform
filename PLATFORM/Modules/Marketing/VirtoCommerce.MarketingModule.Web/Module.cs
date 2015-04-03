@@ -39,7 +39,7 @@ namespace VirtoCommerce.MarketingModule.Web
 
 		#endregion
 
-		private static DynamicPromotionExpression GetDynamicExpression()
+		private static PromoDynamicPromotionExpression GetDynamicExpression()
 		{
 			var customerConditionBlock = new BlockCustomerCondition();
 			customerConditionBlock.AvailableChildren = new IDynamicExpression[] { new ConditionIsEveryone(), new ConditionIsFirstTimeBuyer(), 
@@ -60,9 +60,9 @@ namespace VirtoCommerce.MarketingModule.Web
 																	   new RewardItemGiftNumItem(), new RewardShippingGetOfAbsShippingMethod(), new RewardShippingGetOfRelShippingMethod ()};
 
 
-			var retVal = new DynamicPromotionExpression()
+			var retVal = new PromoDynamicPromotionExpression()
 			{
-				Children = new IDynamicExpression[] { customerConditionBlock, catalogConditionBlock, cartConditionBlock, rewardBlock }
+				AvailableChildren = new IDynamicExpression[] { customerConditionBlock, catalogConditionBlock, cartConditionBlock, rewardBlock }
 			};
 			return retVal;
 

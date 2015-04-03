@@ -7,7 +7,7 @@ using VirtoCommerce.Domain.Marketing.Model;
 namespace VirtoCommerce.MarketingModule.Web.Model.TypeExpressions.Actions
 {
 	//Gift [] of Product []
-	public class RewardItemGiftNumItem : DynamicExpressionBase, IRewardExpression
+	public class RewardItemGiftNumItem : PromoDynamicExpression, IRewardExpression
 	{
 		public string Name { get; set; }
 		public string CategoryId { get; set; }

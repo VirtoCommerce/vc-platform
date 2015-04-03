@@ -8,7 +8,7 @@ using VirtoCommerce.Foundation.Frameworks.Extensions;
 
 namespace VirtoCommerce.MarketingModule.Web.Model.TypeExpressions.Conditions
 {
-	public class RewardBlock : DynamicExpressionBase, IRewardExpression
+	public class RewardBlock : PromoDynamicBlockExpression, IRewardExpression
 	{
 		#region IRewardsExpression Members
 

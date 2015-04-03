@@ -7,17 +7,11 @@ using VirtoCommerce.Domain.Common;
 
 namespace VirtoCommerce.MarketingModule.Web.Model.TypeExpressions
 {
-	public abstract class DynamicExpressionBase : IDynamicExpression
+	public abstract class PromoDynamicBlockExpression : PromoDynamicExpression
 	{
-		public DynamicExpressionBase()
-		{
-			Id = this.GetType().Name;
-		}
-		public string Id { get; set; }
-	
-		[JsonProperty(ItemTypeNameHandling = TypeNameHandling.All)]
-		public IDynamicExpression[] Children { get; set; }
 		[JsonProperty(ItemTypeNameHandling = TypeNameHandling.All)]
 		public IDynamicExpression[] AvailableChildren { get; set; }
+		[JsonProperty(ItemTypeNameHandling = TypeNameHandling.All)]
+		public IDynamicExpression[] Children { get; set; }
 	}
 }
