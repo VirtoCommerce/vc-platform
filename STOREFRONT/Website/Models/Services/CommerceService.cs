@@ -70,7 +70,7 @@ namespace VirtoCommerce.Web.Models.Services
             
             this._viewLocator = new FileThemeViewLocator(HostingEnvironment.MapPath(_themesCacheStoragePath));
 
-            //this._cartHelper = new CartHelper(this);
+            this._cartHelper = new CartHelper(this);
         }
         #endregion
 
