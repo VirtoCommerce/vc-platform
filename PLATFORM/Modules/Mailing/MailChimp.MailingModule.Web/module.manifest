@@ -4,7 +4,6 @@
 	<version>1.0.0.0</version>
 	<dependencies>
 		<dependency>VirtoCommerce.Core</dependency>
-    <dependency>VirtoCommerce.Customer</dependency>
 	</dependencies>
 
 	<title>MailChimp Mailing</title>
