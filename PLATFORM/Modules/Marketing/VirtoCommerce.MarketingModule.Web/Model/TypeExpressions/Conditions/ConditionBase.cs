@@ -7,7 +7,7 @@ using Newtonsoft.Json;
 
 namespace VirtoCommerce.MarketingModule.Web.Model.TypeExpressions.Conditions
 {
-	public abstract class ConditionBase : PromoDynamicExpression
+	public abstract class ConditionBase : DynamicExpression
 	{
 		public ConditionBase()
 		{

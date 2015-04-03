@@ -4,20 +4,37 @@ using System.Linq;
 using System.Web;
 using Newtonsoft.Json;
 using VirtoCommerce.Domain.Common;
+using VirtoCommerce.Domain.Marketing.Model;
+using VirtoCommerce.Foundation.Frameworks;
+using VirtoCommerce.Foundation.Frameworks.Extensions;
 
 namespace VirtoCommerce.MarketingModule.Web.Model.TypeExpressions
 {
-	public abstract class PromoDynamicExpression : IDynamicExpression
+	public class PromoDynamicExpression : DynamicBlockExpression, IConditionExpression, IRewardExpression
 	{
-		public PromoDynamicExpression()
+		#region IConditionExpression Members
+
+		public System.Linq.Expressions.Expression<Func<IPromotionEvaluationContext, bool>> GetConditionExpression()
 		{
-			Id = this.GetType().Name;
+			var retVal = PredicateBuilder.True<IPromotionEvaluationContext>();
+			foreach (var expression in Children.OfType<IConditionExpression>().Select(x => x.GetConditionExpression()).Where(x=> x != null))
+			{
+				retVal = retVal.And(expression);
+			}
+			return retVal;
 		}
 
-		#region IDynamicExpression Members
+		#endregion
 
-		public string Id { get; set; }
-	
+		#region IActionExpression Members
+
+		public PromotionReward[] GetRewards()
+		{
+			var retVal = Children.OfType<IRewardExpression>().SelectMany(x => x.GetRewards()).OfType<PromotionReward>().ToArray();
+
+			return retVal;
+		}
+
 		#endregion
 	}
 }

@@ -7,7 +7,7 @@ using VirtoCommerce.Domain.Marketing.Model;
 namespace VirtoCommerce.MarketingModule.Web.Model.TypeExpressions.Actions
 {
 	//Get []% off 
-	public class RewardItemGetOfRel : PromoDynamicExpression, IRewardExpression
+	public class RewardItemGetOfRel : DynamicExpression, IRewardExpression
 	{
 		public decimal Amount { get; set; }
 		public string ProductId { get; set; }

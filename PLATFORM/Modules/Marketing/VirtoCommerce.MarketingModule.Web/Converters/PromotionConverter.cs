@@ -20,7 +20,7 @@ namespace VirtoCommerce.MarketingModule.Web.Converters
 {
 	public static class PromotionConverter
 	{
-		public static webModel.Promotion ToWebModel(this coreModel.Promotion promotion, PromoDynamicPromotionExpression dynamicExpression = null)
+		public static webModel.Promotion ToWebModel(this coreModel.Promotion promotion, PromoDynamicExpression dynamicExpression = null)
 		{
 			var retVal = new webModel.Promotion();
 			retVal.InjectFrom(promotion);
@@ -30,10 +30,10 @@ namespace VirtoCommerce.MarketingModule.Web.Converters
 				retVal.DynamicExpression = dynamicExpression;
 				if (!String.IsNullOrEmpty(dynamicPromotion.PredicateVisualTreeSerialized))
 				{
-					retVal.DynamicExpression = JsonConvert.DeserializeObject<PromoDynamicPromotionExpression>(dynamicPromotion.PredicateVisualTreeSerialized);
+					retVal.DynamicExpression = JsonConvert.DeserializeObject<PromoDynamicExpression>(dynamicPromotion.PredicateVisualTreeSerialized);
 					//Add fresh available elements because it may be changed since last modifying
-					var sourceBlocks = ((PromoDynamicBlockExpression)dynamicExpression).Traverse(x => x.AvailableChildren != null ? x.AvailableChildren.OfType<PromoDynamicBlockExpression>() : null);
-					var targetBlocks = ((PromoDynamicBlockExpression)retVal.DynamicExpression).Traverse(x => x.Children != null ? x.Children.OfType<PromoDynamicBlockExpression>() : null);
+					var sourceBlocks = ((DynamicBlockExpression)dynamicExpression).Traverse(x => x.AvailableChildren != null ? x.AvailableChildren.OfType<DynamicBlockExpression>() : null);
+					var targetBlocks = ((DynamicBlockExpression)retVal.DynamicExpression).Traverse(x => x.Children != null ? x.Children.OfType<DynamicBlockExpression>() : null);
 					foreach (var sourceBlock in sourceBlocks)
 					{
 						foreach(var targetBlock in  targetBlocks.Where(x => x.Id == sourceBlock.Id))
@@ -59,7 +59,7 @@ namespace VirtoCommerce.MarketingModule.Web.Converters
 				retVal.RewardsSerialized = JsonConvert.SerializeObject(rewards, new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All });
 			
 				//Clear availableElements in expression (for decrease size)
-				var allBlocks =	((PromoDynamicBlockExpression)promotion.DynamicExpression).Traverse(x => x.Children != null ? x.Children.OfType<PromoDynamicBlockExpression>() : null);
+				var allBlocks =	((DynamicBlockExpression)promotion.DynamicExpression).Traverse(x => x.Children != null ? x.Children.OfType<DynamicBlockExpression>() : null);
 				foreach(var block in allBlocks)
 				{
 					block.AvailableChildren = null;
