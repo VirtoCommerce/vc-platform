@@ -405,15 +405,33 @@ namespace VirtoCommerce.Web.Models.Services
                                },
                                new SubmitForm
                                {
-                                   Id = "activate_customer_password",
-                                   ActionLink = VirtualPathUtility.ToAbsolute("~/account/activate"),
-                                   PasswordNeeded = true
+                                   Id = "recover_customer_password",
+                                   ActionLink = VirtualPathUtility.ToAbsolute("~/account/forgotpassword")
                                },
                                new SubmitForm
                                {
-                                   Id = "recover_customer_password",
-                                   ActionLink = VirtualPathUtility.ToAbsolute("~/account/resetpassword"),
-                                   PasswordNeeded = true
+                                   Id = "reset-password",
+                                   ActionLink = VirtualPathUtility.ToAbsolute("~/account/resetpassword")
+                               },
+                               new SubmitForm
+                               {
+                                   Id = "external_login",
+                                   ActionLink = VirtualPathUtility.ToAbsolute("~/account/externallogin")
+                               },
+                               new SubmitForm
+                               {
+                                   Id = "send-code",
+                                   ActionLink = VirtualPathUtility.ToAbsolute("~/account/sendcode")
+                               },
+                               new SubmitForm
+                               {
+                                   Id = "verify_code",
+                                   ActionLink = VirtualPathUtility.ToAbsolute("~/account/verifycode")
+                               },
+                               new SubmitForm
+                               {
+                                   Id = "confirm-external-login",
+                                   ActionLink = VirtualPathUtility.ToAbsolute("~/account/externalloginconfirmation")
                                },
                                new SubmitForm
                                {
@@ -437,16 +455,6 @@ namespace VirtoCommerce.Web.Models.Services
                                {
                                    Id = "edit_checkout_step_2",
                                    ActionLink = VirtualPathUtility.ToAbsolute("~/checkout/step2"),
-                               },
-                               new SubmitForm
-                               {
-                                   Id = "external_login",
-                                   ActionLink = VirtualPathUtility.ToAbsolute("~/account/externallogin")
-                               },
-                               new SubmitForm
-                               {
-                                   Id = "external_login_confirmation",
-                                   ActionLink = VirtualPathUtility.ToAbsolute("~/account/externalloginconfirmation")
                                },
                                new SubmitForm
                                {

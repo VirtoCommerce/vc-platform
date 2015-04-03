@@ -293,7 +293,7 @@ namespace VirtoCommerce.Web
             {
                 providersModel.Add(new LoginProvider
                 {
-                    AuthentificationType = provider.AuthenticationType,
+                    AuthenticationType = provider.AuthenticationType,
                     Caption = provider.Caption,
                     Properties = provider.Properties
                 });

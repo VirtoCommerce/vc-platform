@@ -5,6 +5,7 @@
     using System.Security.Claims;
     using System.Threading.Tasks;
     using Microsoft.AspNet.Identity;
+    using System.Collections.Generic;
 
     #endregion
 
@@ -45,10 +46,10 @@
         ///// 
         ///// </summary>
         //public virtual ICollection<TClaim> Claims { get; }
-        ///// <summary>
-        ///// Navigation property for user logins
-        ///// 
-        ///// </summary>
+        
+        /// <summary>
+        /// Navigation property for user logins
+        /// </summary>
         //public virtual ICollection<TLogin> Logins { get; }
 
         /// <summary>

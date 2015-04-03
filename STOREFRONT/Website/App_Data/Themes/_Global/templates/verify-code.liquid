@@ -1,0 +1,14 @@
+﻿<div style="margin: 0 auto; width: 50%">
+    {% form 'verify_code' %}
+        <input id="provider" name="provider" type="hidden" value="{{ provider }}" />
+        <input id="return_url" name="return_url" type="hidden" value="{{ return_url }}" />
+        <input id="remember_me" name="remember_me" type="hidden" value="{{ remember_me }}" />
+        <h1>Enter verification code</h1>
+        {% include 'form-errors-custom' %}
+        <label class="hidden-label" for="code">Code</label>
+        <input id="code" name="code" placeholder="Enter verification code here" type="text" value="" />
+        <p>
+            <input class="btn" type="submit" value="Submit" />
+        </p>
+    {% endform %}
+</div>
