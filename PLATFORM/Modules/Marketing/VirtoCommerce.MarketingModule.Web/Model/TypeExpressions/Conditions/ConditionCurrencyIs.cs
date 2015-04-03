@@ -1,14 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
-using VirtoCommerce.Domain.Common;
 using VirtoCommerce.Domain.Marketing.Model;
 using VirtoCommerce.Foundation.Frameworks;
 using VirtoCommerce.Foundation.Money;
-using VirtoCommerce.MarketingModule.Data.Services;
+using VirtoCommerce.MarketingModule.Data;
 using linq = System.Linq.Expressions;
 
 namespace VirtoCommerce.MarketingModule.Web.Model.TypeExpressions.Conditions

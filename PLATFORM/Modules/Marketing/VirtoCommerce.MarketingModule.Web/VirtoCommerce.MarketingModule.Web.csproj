@@ -125,11 +125,12 @@
     <Compile Include="Model\TypeExpressions\Conditions\ConditionIsFirstTimeBuyer.cs" />
     <Compile Include="Model\TypeExpressions\Conditions\ConditionIsRegisteredUser.cs" />
     <Compile Include="Model\TypeExpressions\Conditions\ConditionLineItemTotal.cs" />
-    <Compile Include="Model\TypeExpressions\DynamicExpressionBase.cs" />
+    <Compile Include="Model\TypeExpressions\DynamicExpression.cs" />
     <Compile Include="Model\TypeExpressions\Conditions\BlockCartCondition.cs" />
     <Compile Include="Model\TypeExpressions\Conditions\BlockCatalogCondition.cs" />
     <Compile Include="Model\TypeExpressions\Conditions\BlockCustomerCondition.cs" />
-    <Compile Include="Model\TypeExpressions\DynamicPromotionExpression.cs" />
+    <Compile Include="Model\TypeExpressions\PromoDynamicExpression.cs" />
+    <Compile Include="Model\TypeExpressions\DynamicBlockExpression.cs" />
     <Compile Include="Model\TypeExpressions\Rewards\RewardItemGetOfAbs.cs" />
     <Compile Include="Model\TypeExpressions\Rewards\RewardItemGetOfRel.cs" />
     <Compile Include="Model\TypeExpressions\Rewards\RewardItemGetOfRelForNum.cs" />
