@@ -8,7 +8,7 @@ using VirtoCommerce.Domain.Catalog.Model;
 using VirtoCommerce.Domain.Marketing.Model;
 using VirtoCommerce.Foundation.Money;
 
-namespace VirtoCommerce.MarketingModule.Data.Services
+namespace VirtoCommerce.MarketingModule.Data
 {
 
 	public class PromotionEvaluationContext : IPromotionEvaluationContext

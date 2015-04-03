@@ -28,33 +28,5 @@ namespace VirtoCommerce.MarketingModule.Data.Common
 			var retVal = conditionExpression.Compile();
 			return retVal;
 		}
-
-		public static string Serialize(object instance)
-		{
-			string result;
-
-			using (var stream = new MemoryStream())
-			{
-				IFormatter formatter = new BinaryFormatter();
-				formatter.Serialize(stream, instance);
-				var buffer = stream.GetBuffer();
-				result = Convert.ToBase64String(buffer);
-			}
-
-			return result;
-		}
-
-		public static T Deserialize<T>(string serializedString) where T : class
-		{
-			T result;
-			using (var stream = new MemoryStream(Convert.FromBase64String(serializedString)))
-			{
-				IFormatter formatter = new BinaryFormatter();
-				result = formatter.Deserialize(stream) as T;
-			}
-
-			return result;
-		}
-
 	}
 }
