@@ -54,7 +54,7 @@ namespace VirtoCommerce.MarketingModule.Web.Controllers.Api
 			var retVal = _marketingService.GetPromotionById(id);
 			if(retVal != null)
 			{
-				return Ok(retVal.ToWebModel(_promotionManager.DynamicExpression as PromoDynamicPromotionExpression)); 
+				return Ok(retVal.ToWebModel(_promotionManager.DynamicExpression as PromoDynamicExpression)); 
 			}
 			return NotFound();
 		}
@@ -68,7 +68,7 @@ namespace VirtoCommerce.MarketingModule.Web.Controllers.Api
             var retVal = new webModel.Promotion
             {
                 Type = webModel.PromotionType.Dynamic,
-                DynamicExpression = _promotionManager.DynamicExpression as PromoDynamicPromotionExpression,
+                DynamicExpression = _promotionManager.DynamicExpression as PromoDynamicExpression,
 				IsActive = true
             };
             return Ok(retVal);

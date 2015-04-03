@@ -92,7 +92,7 @@ namespace VirtoCommerce.MarketingModule.Test
 			return retVal;
 		}
 
-		private static PromoDynamicPromotionExpression GetDynamicExpression()
+		private static PromoDynamicExpression GetDynamicExpression()
 		{
 			var customerConditionBlock = new BlockCustomerCondition();
 			customerConditionBlock.AvailableChildren = new IDynamicExpression[] { new ConditionIsEveryone(), new ConditionIsFirstTimeBuyer(), 
@@ -113,7 +113,7 @@ namespace VirtoCommerce.MarketingModule.Test
 																	   new RewardItemGiftNumItem(), new RewardShippingGetOfAbsShippingMethod(), new RewardShippingGetOfRelShippingMethod ()};
 
 
-			var retVal = new PromoDynamicPromotionExpression()
+			var retVal = new PromoDynamicExpression()
 			{
 				AvailableChildren = new IDynamicExpression[] { customerConditionBlock, catalogConditionBlock, cartConditionBlock, rewardBlock }
 			};

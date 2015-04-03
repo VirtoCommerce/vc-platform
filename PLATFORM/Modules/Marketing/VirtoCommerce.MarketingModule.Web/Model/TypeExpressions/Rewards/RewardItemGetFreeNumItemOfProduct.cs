@@ -7,7 +7,7 @@ using VirtoCommerce.Domain.Marketing.Model;
 namespace VirtoCommerce.MarketingModule.Web.Model.TypeExpressions.Actions
 {
 	//Get [] free items of Product []
-	public class RewardItemGetFreeNumItemOfProduct : PromoDynamicExpression, IRewardExpression
+	public class RewardItemGetFreeNumItemOfProduct : DynamicExpression, IRewardExpression
 	{
 		public string ProductId { get; set; }
 		public int NumItem { get; set; }

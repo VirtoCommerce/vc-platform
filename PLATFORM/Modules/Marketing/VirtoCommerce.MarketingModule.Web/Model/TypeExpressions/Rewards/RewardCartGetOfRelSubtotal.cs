@@ -7,7 +7,7 @@ using VirtoCommerce.Domain.Marketing.Model;
 namespace VirtoCommerce.MarketingModule.Web.Model.TypeExpressions.Actions
 {
 	//Get [] % off cart subtotal
-	public class RewardCartGetOfRelSubtotal : PromoDynamicExpression, IRewardExpression
+	public class RewardCartGetOfRelSubtotal : DynamicExpression, IRewardExpression
 	{
 		public decimal Amount { get; set; }
 
