@@ -1,15 +1,20 @@
-﻿#region
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-
-#endregion
 
 namespace VirtoCommerce.Web.Models.FormModels
 {
-    public class ResetPasswordFormModel : BaseCustomerFormModel
+    public class ResetPasswordFormModel
     {
-        #region Public Properties
-        [Required]
-        [EmailAddress]
+        public IDictionary<string, string> Customer { get; set; }
+
+        public string form_type { get; set; }
+
+        public ResetPasswordFormModel()
+        {
+            this.Customer = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+        }
+
         public string Email
         {
             get
@@ -19,6 +24,18 @@ namespace VirtoCommerce.Web.Models.FormModels
             set
             {
                 this.SetValue("email", value);
+            }
+        }
+
+        public string Code
+        {
+            get
+            {
+                return this.GetValue("code");
+            }
+            set
+            {
+                this.SetValue("code", value);
             }
         }
 
@@ -50,6 +67,22 @@ namespace VirtoCommerce.Web.Models.FormModels
                 this.SetValue("password_confirmation", value);
             }
         }
-        #endregion
+
+        public string GetValue(string key)
+        {
+            return this.Customer.ContainsKey(key) ? this.Customer[key] : null;
+        }
+
+        public void SetValue(string key, string value)
+        {
+            if (this.Customer.ContainsKey(key))
+            {
+                this.Customer[key] = value;
+            }
+            else
+            {
+                this.Customer.Add(key, value);
+            }
+        }
     }
 }

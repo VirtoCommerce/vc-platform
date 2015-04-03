@@ -1,0 +1,16 @@
+﻿<div style="margin: 0 auto; width: 50%;">
+    <h1>Associate your <strong>{{ login_provider }}</strong> account</h1>
+    {% form 'confirm-external-login' %}
+        <input id="return_url" name="return_url" type="hidden" value="{{ return_url }}" />
+        <p>
+            You've successfully authenticated with <strong>{{ login_provider }}</strong>.
+            Please enter a email address for this site below and click the Register button
+            to finish logging in.
+        </p>
+        <label for="email"></label>
+        <input id="email" name="email" type="email" value="{{ email }}" />
+        <p>
+            <input class="btn" type="submit" value="Register" />
+        </p>
+    {% endform %}
+</div>

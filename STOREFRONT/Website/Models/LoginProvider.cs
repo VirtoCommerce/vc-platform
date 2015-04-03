@@ -8,7 +8,7 @@ namespace VirtoCommerce.Web.Models
     public class LoginProvider : Drop
     {
         [DataMember]
-        public string AuthentificationType { get; set; }
+        public string AuthenticationType { get; set; }
 
         [DataMember]
         public string Caption { get; set; }

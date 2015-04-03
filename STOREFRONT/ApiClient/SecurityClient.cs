@@ -83,7 +83,7 @@ namespace VirtoCommerce.ApiClient
         public Task UpdateAsync(ApplicationUser user)
         {
             var requestUri = CreateRequestUri(RelativePaths.Update);
-            return SendAsync(requestUri, HttpMethod.Post, user);
+            return SendAsync(requestUri, HttpMethod.Put, user);
         }
 
         #endregion
