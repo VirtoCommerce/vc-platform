@@ -8,7 +8,7 @@ using VirtoCommerce.Foundation.Frameworks.Extensions;
 
 namespace VirtoCommerce.MarketingModule.Web.Model.TypeExpressions.Conditions
 {
-	public abstract class BlockConditionAndOr : DynamicExpressionBase, IConditionExpression
+	public abstract class BlockConditionAndOr : DynamicBlockExpression, IConditionExpression
 	{
 		public bool All { get; set; }
 		#region IConditionExpression Members

@@ -14,12 +14,13 @@ using VirtoCommerce.MarketingModule.Data.Promotions;
 using VirtoCommerce.MarketingModule.Web.Model.TypeExpressions;
 using coreModel = VirtoCommerce.Domain.Marketing.Model;
 using webModel = VirtoCommerce.MarketingModule.Web.Model;
+using VirtoCommerce.Foundation.Frameworks.Extensions;
 
 namespace VirtoCommerce.MarketingModule.Web.Converters
 {
 	public static class PromotionConverter
 	{
-		public static webModel.Promotion ToWebModel(this coreModel.Promotion promotion, DynamicPromotionExpression dynamicExpression = null)
+		public static webModel.Promotion ToWebModel(this coreModel.Promotion promotion, PromoDynamicExpression dynamicExpression = null)
 		{
 			var retVal = new webModel.Promotion();
 			retVal.InjectFrom(promotion);
@@ -29,7 +30,17 @@ namespace VirtoCommerce.MarketingModule.Web.Converters
 				retVal.DynamicExpression = dynamicExpression;
 				if (!String.IsNullOrEmpty(dynamicPromotion.PredicateVisualTreeSerialized))
 				{
-					retVal.DynamicExpression = JsonConvert.DeserializeObject<DynamicPromotionExpression>(dynamicPromotion.PredicateVisualTreeSerialized);
+					retVal.DynamicExpression = JsonConvert.DeserializeObject<PromoDynamicExpression>(dynamicPromotion.PredicateVisualTreeSerialized);
+					//Add fresh available elements because it may be changed since last modifying
+					var sourceBlocks = ((DynamicBlockExpression)dynamicExpression).Traverse(x => x.AvailableChildren != null ? x.AvailableChildren.OfType<DynamicBlockExpression>() : null);
+					var targetBlocks = ((DynamicBlockExpression)retVal.DynamicExpression).Traverse(x => x.Children != null ? x.Children.OfType<DynamicBlockExpression>() : null);
+					foreach (var sourceBlock in sourceBlocks)
+					{
+						foreach(var targetBlock in  targetBlocks.Where(x => x.Id == sourceBlock.Id))
+						{
+							targetBlock.AvailableChildren = sourceBlock.AvailableChildren;
+						}
+					}
 				}
 			}
 			return retVal;
@@ -40,12 +51,19 @@ namespace VirtoCommerce.MarketingModule.Web.Converters
 			var retVal = new DynamicPromotion();
 			retVal.InjectFrom(promotion);
 
-			if (promotion.DynamicExpression != null)
+			if (promotion.DynamicExpression != null && promotion.DynamicExpression.Children != null)
 			{
 				var conditionExpression = promotion.DynamicExpression.GetConditionExpression();
 				retVal.PredicateSerialized = SerializationUtil.SerializeExpression(conditionExpression);
 				var rewards = promotion.DynamicExpression.GetRewards();
 				retVal.RewardsSerialized = JsonConvert.SerializeObject(rewards, new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All });
+			
+				//Clear availableElements in expression (for decrease size)
+				var allBlocks =	((DynamicBlockExpression)promotion.DynamicExpression).Traverse(x => x.Children != null ? x.Children.OfType<DynamicBlockExpression>() : null);
+				foreach(var block in allBlocks)
+				{
+					block.AvailableChildren = null;
+				}
 				retVal.PredicateVisualTreeSerialized = JsonConvert.SerializeObject(promotion.DynamicExpression);
 
 			}
