@@ -161,9 +161,9 @@
       <Project>{1bbc47c6-db1d-4c85-b5cc-6d48f9aba146}</Project>
       <Name>AzureSchedulingLib</Name>
     </ProjectReference>
-    <ProjectReference Include="..\SchedulingLib\SchedulingLib.csproj">
+    <ProjectReference Include="..\VirtoCommerce.Scheduling\VirtoCommerce.Scheduling.csproj">
       <Project>{7BF794D6-39B2-4A69-9371-F35DF8D53E88}</Project>
-      <Name>SchedulingLib</Name>
+      <Name>VirtoCommerce.Scheduling</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

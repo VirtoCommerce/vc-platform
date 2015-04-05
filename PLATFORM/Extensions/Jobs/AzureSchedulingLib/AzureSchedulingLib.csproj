@@ -129,9 +129,9 @@
       <Project>{4882f43b-ae8d-489b-911b-7f9a1d526715}</Project>
       <Name>LuceneSearchProvider</Name>
     </ProjectReference>
-    <ProjectReference Include="..\SchedulingLib\SchedulingLib.csproj">
+    <ProjectReference Include="..\VirtoCommerce.Scheduling\VirtoCommerce.Scheduling.csproj">
       <Project>{7BF794D6-39B2-4A69-9371-F35DF8D53E88}</Project>
-      <Name>SchedulingLib</Name>
+      <Name>VirtoCommerce.Scheduling</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Search\ElasticSearchProvider\ElasticSearchProvider.csproj">
       <Project>{039E7914-2925-44C4-ACAD-6BCCFA2A370E}</Project>
@@ -141,9 +141,9 @@
       <Project>{9F5493C4-0080-4BB5-9C12-25D0CDBEA2DD}</Project>
       <Name>VirtoCommerce.Search.Index</Name>
     </ProjectReference>
-    <ProjectReference Include="..\VirtoCommerceJobs\ServerJobs.csproj">
+    <ProjectReference Include="..\VirtoCommerce.Scheduling.Jobs\VirtoCommerce.Scheduling.Jobs.csproj">
       <Project>{BFC7B47D-A7EE-4693-9334-5084C09C3D31}</Project>
-      <Name>ServerJobs</Name>
+      <Name>VirtoCommerce.Scheduling.Jobs</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

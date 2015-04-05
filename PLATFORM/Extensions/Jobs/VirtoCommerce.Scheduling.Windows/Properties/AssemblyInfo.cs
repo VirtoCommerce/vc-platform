@@ -1,7 +1,7 @@
 ﻿using System.Reflection;
 using System.Runtime.CompilerServices;
 
-[assembly: AssemblyTitle("WindowsServerSchedulingLib")]
+[assembly: AssemblyTitle("VirtoCommerce.Scheduling.Windows")]
 [assembly: AssemblyDescription("Scheduling Libraries")]
 
 [assembly: InternalsVisibleTo("VirtoCommerce.CommerceUnitTest")]
