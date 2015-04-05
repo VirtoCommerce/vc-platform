@@ -14,10 +14,16 @@ namespace VirtoCommerce.Web.Models.FormModels
             this.Context = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
         }
 
-        public string AuthentificationType
+        public string AuthenticationType
         {
-            get { return this.GetValue("authentification_type"); }
-            set { this.SetValue("authentification_type", value); }
+            get
+            {
+                return this.GetValue("authentication_type");
+            }
+            set
+            {
+                this.SetValue("authentication_type", value);
+            }
         }
 
         public string GetValue(string key)

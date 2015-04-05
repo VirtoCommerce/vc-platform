@@ -4,7 +4,6 @@
   <version>1.0.0.0</version>
   <dependencies>
     <dependency>VirtoCommerce.Core</dependency>
-    <dependency>VirtoCommerce.Catalog</dependency>
   </dependencies>
 
   <title>Google Shopping Merchant</title>
@@ -31,6 +30,14 @@
   </scripts>-->
 
   <settings>
+    <group name="Credentials">
+      <setting>
+        <name>GoogleShopping.Merchant.MerchantId</name>
+        <valueType>integer</valueType>
+        <title>Google Shopping MerchantId</title>
+        <description>Google Shopping MerchantId</description>
+      </setting>
+    </group>
     <group name="GoogleShopping Description">
       <setting>
         <name>GoogleShopping.MerchantModule.Description</name>

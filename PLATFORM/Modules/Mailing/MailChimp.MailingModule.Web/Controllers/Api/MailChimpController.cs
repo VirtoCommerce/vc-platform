@@ -5,7 +5,7 @@ using MailChimp.MailingModule.Web.Services;
 
 namespace MailChimp.MailingModule.Web.Controllers.Api
 {
-    [RoutePrefix("mc/api/mailing")]
+    [RoutePrefix("api/mc")]
     public class MailChimpController : ApiController
     {
         private readonly IMailing _mailingSettings;
@@ -20,6 +20,7 @@ namespace MailChimp.MailingModule.Web.Controllers.Api
         [Route("subscribe/{subscribeEmail}")]
         public IHttpActionResult Subscribe(string subscribeEmail)
         {
+            EmailParameter result;
             if (!string.IsNullOrEmpty(_mailingSettings.AccessToken) && !string.IsNullOrEmpty(_mailingSettings.AccessToken) && !string.IsNullOrEmpty(_mailingSettings.SubscribersListId) &&
                 subscribeEmail.Contains("@") && subscribeEmail.Contains("."))
             {
@@ -31,15 +32,15 @@ namespace MailChimp.MailingModule.Web.Controllers.Api
                     Email = subscribeEmail,
                 };
 
-                var results = mc.Subscribe(_mailingSettings.SubscribersListId, email);
-                if (string.IsNullOrEmpty(results.EUId))
+                result = mc.Subscribe(_mailingSettings.SubscribersListId, email);
+                if (string.IsNullOrEmpty(result.EUId))
                     return BadRequest();
             }
             else
             {
                 return BadRequest();
             }
-            return Ok();
+            return Ok(result);
         }
     }
 }

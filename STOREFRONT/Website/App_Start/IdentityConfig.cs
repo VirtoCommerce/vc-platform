@@ -344,7 +344,11 @@
             if (dataProtectionProvider != null)
             {
                 manager.UserTokenProvider =
-                    new DataProtectorTokenProvider<ApplicationUser>(dataProtectionProvider.Create("ASP.NET Identity"));
+                    new DataProtectorTokenProvider<ApplicationUser>
+                        (dataProtectionProvider.Create("ASP.NET Identity"))
+                        {
+                            TokenLifespan = TimeSpan.FromHours(3)
+                        };
             }
             return manager;
         }
@@ -356,10 +360,18 @@
         #region Public Methods and Operators
         public Task SendAsync(IdentityMessage message)
         {
-            var client = new SmtpClient();
-            var eMessage = new MailMessage { Body = message.Body, Subject = message.Subject, IsBodyHtml = true };
-            eMessage.To.Add(message.Destination);
-            return client.SendMailAsync(eMessage);
+            var emailMessage = new MailMessage();
+            emailMessage.From = new MailAddress("do-not-reply@samplestore.com");
+            emailMessage.To.Add(message.Destination);
+            emailMessage.Subject = message.Subject;
+            emailMessage.Body = message.Body;
+            emailMessage.IsBodyHtml = true;
+
+            var smtpClient = new SmtpClient("smtp-mail.outlook.com ", 587);
+            smtpClient.EnableSsl = true;
+            smtpClient.Credentials = new System.Net.NetworkCredential("andrew.orlov@outlook.com", "XpehBam123");
+
+            return smtpClient.SendMailAsync(emailMessage);
         }
         #endregion
     }

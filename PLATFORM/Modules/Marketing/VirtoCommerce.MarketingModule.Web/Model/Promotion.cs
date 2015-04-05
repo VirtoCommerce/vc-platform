@@ -31,6 +31,6 @@ namespace VirtoCommerce.MarketingModule.Web.Model
 
 		public DateTime? StartDate { get; set; }
 		public DateTime? EndDate { get; set; }
-		public DynamicPromotionExpression DynamicExpression { get; set; }
+		public PromoDynamicExpression DynamicExpression { get; set; }
 	}
 }

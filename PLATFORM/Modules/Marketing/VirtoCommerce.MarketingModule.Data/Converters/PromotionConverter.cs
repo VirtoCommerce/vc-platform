@@ -38,6 +38,9 @@ namespace VirtoCommerce.CustomerModule.Data.Converters
 			retVal.CreatedDate = dbEntity.Created.Value;
 			retVal.ModifiedDate = dbEntity.LastModified;
 
+			var status = (foundationModel.PromotionStatus)Enum.Parse(typeof(foundationModel.PromotionStatus), dbEntity.Status);
+			retVal.IsActive = status == foundationModel.PromotionStatus.Active;
+		
 			return retVal;
 		}
 
@@ -58,7 +61,7 @@ namespace VirtoCommerce.CustomerModule.Data.Converters
 			}
 			retVal.TotalLimit = promotion.TotalUsageLimit;
 			retVal.PerCustomerLimit = promotion.PerCustomerUsageLimit;
-
+			retVal.Status = promotion.IsActive ? foundationModel.PromotionStatus.Active.ToString() : foundationModel.PromotionStatus.Inactive.ToString();
 			return retVal;
 		}
 
