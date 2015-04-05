@@ -1,15 +1,12 @@
 ﻿using System;
-using System.Configuration;
 using System.Diagnostics;
 using System.Threading;
 using System.Web.Hosting;
 using Microsoft.Practices.Unity;
 using VirtoCommerce.Foundation.AppConfig.Repositories;
 using VirtoCommerce.Foundation.PlatformTools;
-using VirtoCommerce.Scheduling;
-using VirtoCommerce.Scheduling.Windows;
 
-namespace VirtoCommerce.Web
+namespace VirtoCommerce.Scheduling.Windows
 {
     // rp: by the Alex's idea the web app's background thread should be the general method to launch
     // the job's scheduler, when the  windows service is "advanced"
@@ -112,9 +109,8 @@ namespace VirtoCommerce.Web
             _traceSource.Info("SchedulerHost constructor finished");
         }
 
-        public static void CreateScheduler(IUnityContainer container)
+        public static void CreateScheduler(IUnityContainer container, string schedulerHostStartUpOptionText)
         {
-            var schedulerHostStartUpOptionText = ConfigurationManager.AppSettings["SchedulerHost"];
             if (string.IsNullOrEmpty(schedulerHostStartUpOptionText))
             {
                 Trace.TraceError("SchedulerHost parameter not found in Web.Config. Scheduler not started");

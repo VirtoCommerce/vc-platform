@@ -11,21 +11,34 @@ using VirtoCommerce.Foundation.Catalogs;
 using VirtoCommerce.Foundation.Catalogs.Repositories;
 using VirtoCommerce.Foundation.Catalogs.Services;
 using VirtoCommerce.Foundation.Data.Catalogs;
+using VirtoCommerce.Foundation.Data.Infrastructure;
 using VirtoCommerce.Foundation.Data.Marketing;
 using VirtoCommerce.Foundation.Data.Reviews;
+using VirtoCommerce.Foundation.Data.Search;
 using VirtoCommerce.Foundation.Data.Stores;
 using VirtoCommerce.Foundation.Frameworks;
 using VirtoCommerce.Foundation.Frameworks.Caching;
+using VirtoCommerce.Foundation.Frameworks.CQRS;
+using VirtoCommerce.Foundation.Frameworks.CQRS.Factories;
+using VirtoCommerce.Foundation.Frameworks.CQRS.Observers;
+using VirtoCommerce.Foundation.Frameworks.CQRS.Senders;
+using VirtoCommerce.Foundation.Frameworks.Logging;
+using VirtoCommerce.Foundation.Frameworks.Logging.Factories;
 using VirtoCommerce.Foundation.Marketing.Model.DynamicContent;
 using VirtoCommerce.Foundation.Marketing.Repositories;
 using VirtoCommerce.Foundation.Marketing.Services;
 using VirtoCommerce.Foundation.Reviews.Repositories;
 using VirtoCommerce.Foundation.Search;
+using VirtoCommerce.Foundation.Search.CQRS;
+using VirtoCommerce.Foundation.Search.Factories;
+using VirtoCommerce.Foundation.Search.Repositories;
 using VirtoCommerce.Foundation.Stores.Repositories;
 using VirtoCommerce.Framework.Web.Modularity;
 using VirtoCommerce.Framework.Web.Settings;
 using VirtoCommerce.MerchandisingModule.Web.Controllers;
 using VirtoCommerce.MerchandisingModule.Web.Services;
+using VirtoCommerce.Scheduling.Jobs;
+using VirtoCommerce.Search.Index;
 
 namespace VirtoCommerce.MerchandisingModule.Web
 {
@@ -92,7 +105,6 @@ namespace VirtoCommerce.MerchandisingModule.Web
             var searchConnection = _container.Resolve<ISearchConnection>();
             var searchProvider = _container.Resolve<ISearchProvider>();
 
-            Func<IReviewRepository> reviewRepFactory = () => new EFReviewRepository(_connectionStringName);
             Func<IStoreRepository> storeRepFactory = () => new EFStoreRepository(_connectionStringName);
 
             #endregion
@@ -131,7 +143,25 @@ namespace VirtoCommerce.MerchandisingModule.Web
             Func<ICatalogOutlineBuilder> catalogOutlineBuilderFactory =
                 () => new CatalogOutlineBuilder(catalogRepFactory(), cacheRepository);
 
-            _container.RegisterType<ReviewController>(new InjectionConstructor(reviewRepFactory));
+            _container.RegisterType<ICatalogRepository>(new InjectionFactory(c => new EFCatalogRepository(_connectionStringName)));
+            _container.RegisterType<IReviewRepository>(new InjectionFactory(c => new EFReviewRepository(_connectionStringName)));
+            _container.RegisterType<IPricelistRepository>(new InjectionFactory(c => new EFCatalogRepository(_connectionStringName)));
+
+            _container.RegisterType<IBuildSettingsRepository>(new InjectionFactory(c => new EFSearchRepository(_connectionStringName)));
+            _container.RegisterType<IOperationLogRepository>(new InjectionFactory(c => new OperationLogContext(_connectionStringName)));
+            _container.RegisterType<ILogOperationFactory, LogOperationFactory>();
+            _container.RegisterType<ICatalogOutlineBuilder, CatalogOutlineBuilder>();
+            _container.RegisterType<IMessageSender, DefaultMessageSender>(new ContainerControlledLifetimeManager());
+            _container.RegisterType<IConsumerFactory, DomainAssemblyScannerConsumerFactory>();
+            _container.RegisterType<ISystemObserver, NullSystemObserver>();
+            _container.RegisterType<IQueueWriter, InMemoryQueueWriter>();
+            _container.RegisterType<IQueueReader, InMemoryQueueReader>();
+            _container.RegisterType<ISearchEntityFactory, SearchEntityFactory>(new ContainerControlledLifetimeManager());
+            _container.RegisterType<ISearchIndexBuilder, CatalogItemIndexBuilder>("catalogitem");
+            _container.RegisterType<ISearchIndexController, SearchIndexController>();
+            _container.RegisterType<GenerateSearchIndexWork>();
+            _container.RegisterType<ProcessSearchIndexWork>();
+
             _container.RegisterType<ProductController>(
                 new InjectionConstructor(
                     itemService,
@@ -249,6 +279,12 @@ namespace VirtoCommerce.MerchandisingModule.Web
                         break;
                 }
 
+                initializer.InitializeDatabase(db);
+            }
+
+            using (var db = new OperationLogContext(_connectionStringName))
+            {
+                var initializer = new SetupDatabaseInitializer<OperationLogContext, VirtoCommerce.Foundation.Data.Infrastructure.LogMigrations.Configuration>();
                 initializer.InitializeDatabase(db);
             }
         }

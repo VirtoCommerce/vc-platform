@@ -170,9 +170,21 @@
       <Project>{3fe4eb14-557a-46bc-94ad-2e9874f85ace}</Project>
       <Name>VirtoCommerce.Caching.HttpCache</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\..\Extensions\Jobs\VirtoCommerce.Scheduling\VirtoCommerce.Scheduling.csproj">
+      <Project>{7BF794D6-39B2-4A69-9371-F35DF8D53E88}</Project>
+      <Name>VirtoCommerce.Scheduling</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Extensions\Jobs\VirtoCommerce.Scheduling.Jobs\VirtoCommerce.Scheduling.Jobs.csproj">
+      <Project>{bfc7b47d-a7ee-4693-9334-5084c09c3d31}</Project>
+      <Name>VirtoCommerce.Scheduling.Jobs</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\..\Extensions\Search\ElasticSearchProvider\ElasticSearchProvider.csproj">
       <Project>{039e7914-2925-44c4-acad-6bccfa2a370e}</Project>
       <Name>ElasticSearchProvider</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Extensions\Search\IndexingProviders\VirtoCommerce.Search.Index.csproj">
+      <Project>{9F5493C4-0080-4BB5-9C12-25D0CDBEA2DD}</Project>
+      <Name>VirtoCommerce.Search.Index</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\..\VirtoCommerce.Framework.Web\VirtoCommerce.Framework.Web.csproj">
       <Project>{f7c9313b-522e-4619-abc9-8c7d4600d6b5}</Project>
