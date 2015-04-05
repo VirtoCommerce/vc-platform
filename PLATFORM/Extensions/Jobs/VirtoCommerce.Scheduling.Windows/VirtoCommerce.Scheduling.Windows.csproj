@@ -62,7 +62,7 @@
       <Project>{E7FC9A51-1B39-4BDC-983A-8A059C5FC58B}</Project>
       <Name>CommerceFoundation</Name>
     </ProjectReference>
-    <ProjectReference Include="..\SchedulingLib\VirtoCommerce.Scheduling.csproj">
+    <ProjectReference Include="..\VirtoCommerce.Scheduling\VirtoCommerce.Scheduling.csproj">
       <Project>{7BF794D6-39B2-4A69-9371-F35DF8D53E88}</Project>
       <Name>VirtoCommerce.Scheduling</Name>
     </ProjectReference>
