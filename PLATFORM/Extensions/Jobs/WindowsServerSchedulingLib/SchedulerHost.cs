@@ -19,16 +19,16 @@ namespace VirtoCommerce.Web
     // 3) IIS tries to restart  AppDomain each 29 hours
     // 4) web.config modification restarts AppDomain 
     // 5) AppDomain can tear down after some period of inactivity
-    public class SchedulerHost: IRegisteredObject 
+    public class SchedulerHost : IRegisteredObject
     {
-		public enum StartUpOption { Primary, Secondary, None }
+        public enum StartUpOption { Primary, Secondary, None }
         // windows service platform scheduler is reused there
         private readonly JobScheduler _jobScheduler;
         private Thread _thread;
-		private readonly ILogger _traceSource;
-        private SchedulerHost(bool isPrimary, Func<Type,object> containerResolve, Func<IAppConfigRepository>  repositoryResolve)
+        private readonly ILogger _traceSource;
+        private SchedulerHost(bool isPrimary, Func<Type, object> containerResolve, Func<IAppConfigRepository> repositoryResolve)
         {
-			_traceSource = new VirtoCommerceTraceSource("VirtoCommerce.ScheduleService.Trace");
+            _traceSource = new VirtoCommerceTraceSource("VirtoCommerce.ScheduleService.Trace");
 
             Trace.TraceInformation("SchedulerHost constructor started");
             try
@@ -43,26 +43,26 @@ namespace VirtoCommerce.Web
                         }
                         catch (Exception ex)
                         {
-							_traceSource.Error(ex.ToString());
+                            _traceSource.Error(ex.ToString());
                             throw;
                         }
                         return (IJobActivity)o;
                     },
-                    repositoryResolve,_traceSource
+                    repositoryResolve, _traceSource
                     ); // reuse host container
             }
             catch (Exception ex)
             {
-				_traceSource.Error(ex.ToString());
+                _traceSource.Error(ex.ToString());
                 throw;
             }
 
-			_traceSource.Info("SchedulerHost constructor finished");
+            _traceSource.Info("SchedulerHost constructor finished");
         }
 
         public void Start()
         {
-			_traceSource.Info("SchedulerHost.Start started");
+            _traceSource.Info("SchedulerHost.Start started");
             try
             {
                 _thread = new Thread(_jobScheduler.Start);
@@ -72,85 +72,80 @@ namespace VirtoCommerce.Web
             {
                 Trace.TraceError(ex.ToString());
             }
-			_traceSource.Info("SchedulerHost.Start finished");
+            _traceSource.Info("SchedulerHost.Start finished");
         }
 
         public void Stop(bool immediate = false) //...may be it is better to ignore immediate calls
         {
-			_traceSource.Info("SchedulerHost constructor started");
-	        try
-	        {
-		        if (_thread != null && _thread.IsAlive)
-		        {
-			        if (!immediate)
-			        {
-				        _jobScheduler.Stop();
-			        }
-			        else
-			        {
-				        _thread.Abort();
-			        }
-		        }
-	        }
-	        catch (Exception ex)
-	        {
-		        _traceSource.Error(ex.ToString());
-	        }
-	        finally
-	        {
-		        try
-		        {
-					HostingEnvironment.UnregisterObject(this);
-					_traceSource.Info("SchedulerHost successfully unregistered!");
-		        }
-		        catch (Exception ex)
-		        {
-					_traceSource.Error("Error caught on unregistering SchedulerHost!/n"+ ex);
-		        }
-				
-	        }
-			_traceSource.Info("SchedulerHost constructor finished");
+            _traceSource.Info("SchedulerHost constructor started");
+            try
+            {
+                if (_thread != null && _thread.IsAlive)
+                {
+                    if (!immediate)
+                    {
+                        _jobScheduler.Stop();
+                    }
+                    else
+                    {
+                        _thread.Abort();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                _traceSource.Error(ex.ToString());
+            }
+            finally
+            {
+                try
+                {
+                    HostingEnvironment.UnregisterObject(this);
+                    _traceSource.Info("SchedulerHost successfully unregistered!");
+                }
+                catch (Exception ex)
+                {
+                    _traceSource.Error("Error caught on unregistering SchedulerHost!/n" + ex);
+                }
+
+            }
+            _traceSource.Info("SchedulerHost constructor finished");
         }
 
-		public static void CreateScheduler(IUnityContainer container = null)
-		{
-		    if (container == null)
-		    {
-		        container = Bootstrapper.Initialize();
-		    }
-
-		    var schedulerHostStartUpOptionText = ConfigurationManager.AppSettings["SchedulerHost"];
-			if (string.IsNullOrEmpty(schedulerHostStartUpOptionText))
-			{
-				Trace.TraceError("SchedulerHost parameter not found in Web.Config. Scheduler not started");
-			}
-			else
-			{
-				StartUpOption startUpOption;
-				try
-				{
-					startUpOption =
-						(StartUpOption)
-						Enum.Parse(typeof(StartUpOption), schedulerHostStartUpOptionText);
-				}
-				catch (Exception ex)
-				{
-					Trace.TraceError(
-						"Can't parse SchedulerHost parameter from web.config. Scheduler host not started. Expected values: Primary, Secondary, None." +
-						Environment.NewLine + ex);
-					startUpOption = StartUpOption.None;
-				}
-				if (startUpOption != StartUpOption.None)
-				{
-					var schedulerHost = new SchedulerHost(startUpOption == StartUpOption.Primary,
-														  t => container.Resolve(t, null),
-														  () =>
-														  (IAppConfigRepository)container.Resolve(typeof(IAppConfigRepository), null)
-						);
-					HostingEnvironment.RegisterObject(schedulerHost);
-					schedulerHost.Start();
-				}
-			}
-		}
+        public static void CreateScheduler(IUnityContainer container)
+        {
+            var schedulerHostStartUpOptionText = ConfigurationManager.AppSettings["SchedulerHost"];
+            if (string.IsNullOrEmpty(schedulerHostStartUpOptionText))
+            {
+                Trace.TraceError("SchedulerHost parameter not found in Web.Config. Scheduler not started");
+            }
+            else
+            {
+                StartUpOption startUpOption;
+                try
+                {
+                    startUpOption =
+                        (StartUpOption)
+                        Enum.Parse(typeof(StartUpOption), schedulerHostStartUpOptionText);
+                }
+                catch (Exception ex)
+                {
+                    Trace.TraceError(
+                        "Can't parse SchedulerHost parameter from web.config. Scheduler host not started. Expected values: Primary, Secondary, None." +
+                        Environment.NewLine + ex);
+                    startUpOption = StartUpOption.None;
+                }
+                if (startUpOption != StartUpOption.None)
+                {
+                    var schedulerHost = new SchedulerHost(startUpOption == StartUpOption.Primary,
+                                                          t => container.Resolve(t, null),
+                                                          () =>
+                                                          (IAppConfigRepository)container.Resolve(typeof(IAppConfigRepository), null)
+                        );
+                    HostingEnvironment.RegisterObject(schedulerHost);
+                    schedulerHost.Start();
+                }
+            }
+        }
     }
 }
