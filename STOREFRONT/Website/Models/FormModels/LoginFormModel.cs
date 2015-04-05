@@ -1,13 +1,20 @@
-﻿#region
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-
-#endregion
 
 namespace VirtoCommerce.Web.Models.FormModels
 {
-    public class LoginFormModel : BaseCustomerFormModel
+    public class LoginFormModel
     {
-        #region Public Properties
+        public IDictionary<string, string> Customer { get; set; }
+
+        public string form_type { get; set; }
+
+        public LoginFormModel()
+        {
+            this.Customer = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+        }
+
         [Required]
         [EmailAddress]
         public string Email
@@ -35,6 +42,37 @@ namespace VirtoCommerce.Web.Models.FormModels
                 this.SetValue("password", value);
             }
         }
-        #endregion
+
+        public bool RememberMe
+        {
+            get
+            {
+                bool retValue = false;
+                bool.TryParse(this.GetValue("remember_me"), out retValue);
+
+                return retValue;
+            }
+            set
+            {
+                this.SetValue("remember_me", value.ToString());
+            }
+        }
+
+        public string GetValue(string key)
+        {
+            return this.Customer.ContainsKey(key) ? this.Customer[key] : null;
+        }
+
+        public void SetValue(string key, string value)
+        {
+            if (this.Customer.ContainsKey(key))
+            {
+                this.Customer[key] = value;
+            }
+            else
+            {
+                this.Customer.Add(key, value);
+            }
+        }
     }
 }

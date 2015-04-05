@@ -8,5 +8,6 @@ namespace VirtoCommerce.Domain.Common
 {
 	public interface IDynamicExpression
 	{
+		string Id { get; }
 	}
 }

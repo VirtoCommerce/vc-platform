@@ -29,21 +29,33 @@ namespace VirtoCommerce.Web.Models.FormModels
             }
         }
 
-        public string UserFullName
+        public string LoginProvider
         {
             get
             {
-                return this.GetValue("user_full_name");
+                return this.GetValue("login_provider");
             }
             set
             {
-                this.SetValue("user_full_name", value);
+                this.SetValue("login_provider", value);
+            }
+        }
+
+        public string ReturnUrl
+        {
+            get
+            {
+                return this.GetValue("return_url");
+            }
+            set
+            {
+                this.SetValue("return_url", value);
             }
         }
 
         public string GetValue(string key)
         {
-            return this.Context.ContainsKey(key) ? this.Context["key"] as string : null;
+            return this.Context.ContainsKey(key) ? this.Context[key] : null;
         }
 
         public void SetValue(string key, string value)

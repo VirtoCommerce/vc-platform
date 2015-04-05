@@ -149,9 +149,6 @@
     <Compile Include="Services\OAuth2.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Content\bootstrap.css" />
-    <Content Include="Content\bootstrap.min.css" />
-    <Content Include="Content\Site.css" />
     <Content Include="module.manifest" />
     <Content Include="Scripts\mailing.js" />
     <Content Include="Scripts\widgets\mailingWidget.js" />

@@ -10,7 +10,7 @@ using VirtoCommerce.Foundation.Frameworks.Extensions;
 
 namespace VirtoCommerce.MarketingModule.Web.Model.TypeExpressions
 {
-	public class DynamicPromotionExpression : DynamicExpressionBase, IConditionExpression, IRewardExpression
+	public class PromoDynamicExpression : DynamicBlockExpression, IConditionExpression, IRewardExpression
 	{
 		#region IConditionExpression Members
 

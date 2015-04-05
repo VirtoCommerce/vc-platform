@@ -7,11 +7,11 @@ using VirtoCommerce.Domain.Marketing.Model;
 namespace VirtoCommerce.MarketingModule.Web.Model.TypeExpressions.Actions
 {
 	//Get $[] off 
-	public class RewardItemGetOfAbs : DynamicExpressionBase, IRewardExpression
+	public class RewardItemGetOfAbs : DynamicExpression, IRewardExpression
 	{
 		public decimal Amount { get; set; }
 		public string ProductId { get; set; }
-
+		public string CategoryId { get; set; }
 		#region IRewardExpression Members
 
 		public PromotionReward[] GetRewards()

@@ -191,7 +191,6 @@
     <Compile Include="Models\Extensions\UrlHelperExtensions.cs" />
     <Compile Include="Models\Filters\TranslationFilter.cs" />
     <Compile Include="Models\FormModels\BaseAddressFormModel.cs" />
-    <Compile Include="Models\FormModels\BaseCustomerFormModel.cs" />
     <Compile Include="Models\FormModels\CheckoutFirstStepFormModel.cs" />
     <Compile Include="Models\FormModels\CheckoutSecondStepFormModel.cs" />
     <Compile Include="Models\FormModels\CustomerAddressFormModel.cs" />
@@ -202,6 +201,8 @@
     <Compile Include="Models\FormModels\ForgotPasswordFormModel.cs" />
     <Compile Include="Models\FormModels\RegisterFormModel.cs" />
     <Compile Include="Models\FormModels\ResetPasswordFormModel.cs" />
+    <Compile Include="Models\FormModels\SendCodeFormModel.cs" />
+    <Compile Include="Models\FormModels\VerifyCodeFormModel.cs" />
     <Compile Include="Models\Fulfillment.cs" />
     <Compile Include="Models\GiftCard.cs" />
     <Compile Include="Models\Helpers\CartHelper.cs" />
@@ -303,6 +304,9 @@
     <Content Include="App_Data\Themes\_Default\assets\slide_1.jpg" />
     <Content Include="App_Data\Themes\_Default\assets\slide_2.jpg" />
     <Content Include="App_Data\Themes\_Default\config\settings.html" />
+    <Content Include="App_Data\Themes\_Global\templates\confirmation-reset-password.liquid" />
+    <Content Include="App_Data\Themes\_Global\templates\confirmation-external-login.liquid" />
+    <None Include="App_Data\Themes\_Global\templates\reset-password.liquid" />
     <Content Include="Content\responsive\css\main.css" />
     <Content Include="Content\responsive\css\reset.css" />
     <Content Include="Content\responsive\images\imagedoc-darknoise.png" />
@@ -439,11 +443,27 @@
     <Content Include="App_Data\Themes\_Global\templates\checkout-step-2.liquid" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="App_Data\Themes\_Global\templates\external-login-confirmation.liquid" />
+    <Content Include="App_Data\Themes\_Global\templates\lockout.liquid" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="App_Data\Themes\_Global\templates\locked-out.liquid" />
+    <Content Include="App_Data\Themes\_Global\templates\confirmation-done.liquid" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="App_Data\Themes\_Global\templates\send-code.liquid" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="App_Data\Themes\_Global\templates\error.liquid" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="App_Data\Themes\_Global\templates\verify-code.liquid" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="App_Data\Themes\_Global\templates\confirmation-sent.liquid" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="App_Data\Themes\_Global\templates\confirmation-forgot-password.liquid" />
+  </ItemGroup>
+  <ItemGroup />
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
