@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
-VisualStudioVersion = 12.0.30723.0
+VisualStudioVersion = 12.0.31101.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{0E0CB22C-4501-4E16-B9B7-744B51076524}"
 EndProject
@@ -151,12 +151,22 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoogleShopping.MerchantModu
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.MarketingModule.Test", "Modules\Marketing\VirtoCommerce.MarketingModule.Test\VirtoCommerce.MarketingModule.Test.csproj", "{A280BCFF-AFF6-4CB3-8688-C19C31ED0D05}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.Scheduling.Windows", "Extensions\Jobs\VirtoCommerce.Scheduling.Windows\VirtoCommerce.Scheduling.Windows.csproj", "{F4831210-2600-444F-8510-2BD825E3F13B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.Scheduling", "Extensions\Jobs\VirtoCommerce.Scheduling\VirtoCommerce.Scheduling.csproj", "{7BF794D6-39B2-4A69-9371-F35DF8D53E88}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.Scheduling.Jobs", "Extensions\Jobs\VirtoCommerce.Scheduling.Jobs\VirtoCommerce.Scheduling.Jobs.csproj", "{BFC7B47D-A7EE-4693-9334-5084C09C3D31}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B53BA685-B324-42E6-80AD-7B641DD414E7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B53BA685-B324-42E6-80AD-7B641DD414E7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B53BA685-B324-42E6-80AD-7B641DD414E7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B53BA685-B324-42E6-80AD-7B641DD414E7}.Release|Any CPU.Build.0 = Release|Any CPU
 		{F7C9313B-522E-4619-ABC9-8C7D4600D6B5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{F7C9313B-522E-4619-ABC9-8C7D4600D6B5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F7C9313B-522E-4619-ABC9-8C7D4600D6B5}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -173,10 +183,6 @@ Global
 		{EE42FBD1-5DE8-4DA3-868C-92B910170B9F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EE42FBD1-5DE8-4DA3-868C-92B910170B9F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EE42FBD1-5DE8-4DA3-868C-92B910170B9F}.Release|Any CPU.Build.0 = Release|Any CPU
-		{B53BA685-B324-42E6-80AD-7B641DD414E7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B53BA685-B324-42E6-80AD-7B641DD414E7}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B53BA685-B324-42E6-80AD-7B641DD414E7}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B53BA685-B324-42E6-80AD-7B641DD414E7}.Release|Any CPU.Build.0 = Release|Any CPU
 		{613E443D-8FB2-435A-AA8A-5B141E444824}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{613E443D-8FB2-435A-AA8A-5B141E444824}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{613E443D-8FB2-435A-AA8A-5B141E444824}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -377,6 +383,18 @@ Global
 		{A280BCFF-AFF6-4CB3-8688-C19C31ED0D05}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A280BCFF-AFF6-4CB3-8688-C19C31ED0D05}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A280BCFF-AFF6-4CB3-8688-C19C31ED0D05}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F4831210-2600-444F-8510-2BD825E3F13B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F4831210-2600-444F-8510-2BD825E3F13B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F4831210-2600-444F-8510-2BD825E3F13B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F4831210-2600-444F-8510-2BD825E3F13B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7BF794D6-39B2-4A69-9371-F35DF8D53E88}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7BF794D6-39B2-4A69-9371-F35DF8D53E88}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7BF794D6-39B2-4A69-9371-F35DF8D53E88}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7BF794D6-39B2-4A69-9371-F35DF8D53E88}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BFC7B47D-A7EE-4693-9334-5084C09C3D31}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BFC7B47D-A7EE-4693-9334-5084C09C3D31}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BFC7B47D-A7EE-4693-9334-5084C09C3D31}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BFC7B47D-A7EE-4693-9334-5084C09C3D31}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -450,5 +468,8 @@ Global
 		{7202A695-A43F-47D2-BFB9-8F1FCD9E1262} = {A4C0D164-BF77-4B57-8970-B5459B100AC3}
 		{E2DF1E20-AF8F-4B63-9329-896403C3FAB5} = {7202A695-A43F-47D2-BFB9-8F1FCD9E1262}
 		{A280BCFF-AFF6-4CB3-8688-C19C31ED0D05} = {BDE02651-90AE-43E2-AFBC-F40E51064938}
+		{F4831210-2600-444F-8510-2BD825E3F13B} = {EAE05907-1BEE-47FA-890A-40C84B879B1C}
+		{7BF794D6-39B2-4A69-9371-F35DF8D53E88} = {EAE05907-1BEE-47FA-890A-40C84B879B1C}
+		{BFC7B47D-A7EE-4693-9334-5084C09C3D31} = {EAE05907-1BEE-47FA-890A-40C84B879B1C}
 	EndGlobalSection
 EndGlobal
