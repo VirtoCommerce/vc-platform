@@ -31,17 +31,17 @@ namespace VirtoCommerce.Scheduling.Windows
         //System job synchronization interval 1min
         private const int Interval = 1 * 60 * 1000;
 
-		public JobScheduler(bool isPrimary, 
-            Func<Type, IJobActivity> getJob, 
-            Func<IAppConfigRepository> appConfigRepository, 
+        public JobScheduler(bool isPrimary,
+            Func<Type, IJobActivity> getJob,
+            Func<IAppConfigRepository> appConfigRepository,
             ILogger traceSource)
         {
             // get a quartzScheduler
             _quartzScheduler = SchedulerFactory.GetScheduler();
             _schedulerDbTools = new SchedulerDbContext(appConfigRepository);
-		    _traceSource = traceSource;
-		    _isPrimary = isPrimary;
-		    _getJob = getJob;
+            _traceSource = traceSource;
+            _isPrimary = isPrimary;
+            _getJob = getJob;
         }
 
         private static ISchedulerFactory SchedulerFactory
@@ -67,13 +67,13 @@ namespace VirtoCommerce.Scheduling.Windows
         public void Start()
         {
             //Immediately synchronize jobs
-            SyncJobs(DateTime.Now);
+            SyncJobs(DateTime.UtcNow);
 
             //Schedule a timer that will periodically synchronize jobs
             if (_timer == null)
             {
                 _timer = new Timer(Interval);
-                _timer.Elapsed += (sender, args) => SyncJobs(args.SignalTime);
+                _timer.Elapsed += (sender, args) => SyncJobs(args.SignalTime.ToUniversalTime());
             }
             _timer.Start();
 
@@ -99,8 +99,6 @@ namespace VirtoCommerce.Scheduling.Windows
         {
             try
             {
-                //Convert time to UTC
-                runTime = runTime.ToUniversalTime();
                 var systemJobs = _schedulerDbTools.GetSystemJobs();
 
                 var jobGroups = new List<string>();
@@ -132,7 +130,7 @@ namespace VirtoCommerce.Scheduling.Windows
                         continue;
                     }
                     //Get available system jobs
-                    var availableSysJobs = groupSysJobs.Where(j => j.IsEnabled && 
+                    var availableSysJobs = groupSysJobs.Where(j => j.IsEnabled &&
                         ((j.AllowMultipleInstances) || (!j.AllowMultipleInstances && _isPrimary))).ToArray();
 
                     //If there are some system jobs avaialble and no such quartz jobs, they all have to be added
@@ -163,7 +161,7 @@ namespace VirtoCommerce.Scheduling.Windows
                         {
                             //check if job was modified during current interval
                             if (job.LastModified.HasValue &&
-                                job.LastModified.Value.AddMilliseconds(Interval) >= runTime||
+                                job.LastModified.Value.AddMilliseconds(Interval) >= runTime ||
                                 job.JobParameters.Any(x => x.LastModified.HasValue &&
                                     x.LastModified.Value.AddMilliseconds(Interval) >= runTime))
                             {
@@ -222,7 +220,7 @@ namespace VirtoCommerce.Scheduling.Windows
 
             Func<DateTime, Action<string>> getAudit = startDateTime =>
                 message => _schedulerDbTools.CreateSystemJobLogEntry(
-                jobItem.SystemJobId, startDateTime, DateTime.Now, message,
+                jobItem.SystemJobId, startDateTime, DateTime.UtcNow, message,
                 Thread.CurrentThread.Name, null, jobItem.AllowMultipleInstances);
 
             var section = ConfigurationManager.GetSection("traceContextConfiguration") ?? new TraceContextConfigurationSection();
