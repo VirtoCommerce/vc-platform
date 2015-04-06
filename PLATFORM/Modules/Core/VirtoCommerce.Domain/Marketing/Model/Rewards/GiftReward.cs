@@ -9,30 +9,19 @@ namespace VirtoCommerce.Domain.Marketing.Model
 	/// <summary>
 	/// Gift
 	/// </summary>
-	public class GiftCatalogItemReward : PromotionReward
+	public class GiftReward : PromotionReward
 	{
-
 		public string Name { get; set; }
-
 
 		public string CategoryId { get; set; }
 
-		public string SellerId { get; set; }
-
-
 		public string ProductId { get; set; }
-
 
 		public int Quantity { get; set; }
 
-		public string Unit { get; set; }
-		
-		public string HtmlInformer { get; set; }
+		public string MeasureUnit { get; set; }
 
-		public string ThumbImageUrl { get; set; }
+		public string ImageUrl { get; set; }
 
-		public string OriginalImageUrl { get; set; }
-
-		public string Description { get; set; }
 	}
 }

@@ -25,7 +25,12 @@ namespace VirtoCommerce.MarketingModule.Test
 		{
 			var marketingController = GetMarketingController();
 
-			var promotion = (marketingController.GetPromotionById("CartFiveDiscount") as OkNegotiatedContentResult<webModel.Promotion>).Content;
+			webModel.Promotion promotion = null;
+			var promoResult = (marketingController.GetPromotionById("CartFiveDiscount") as OkNegotiatedContentResult<webModel.Promotion>);
+			if (promoResult != null)
+			{
+				promotion = promoResult.Content;
+			}
 			if (promotion == null)
 			{
 				promotion = (marketingController.GetNewDynamicPromotion() as OkNegotiatedContentResult<webModel.Promotion>).Content;
@@ -50,21 +55,17 @@ namespace VirtoCommerce.MarketingModule.Test
 			}
 
 			var context = new PromotionEvaluationContext();
-			context.ShoppingCart = new ShoppingCart
+			context.ProductPromoEntries = new ProductPromoEntry[]
 			{
-				Items = new LineItem[] {  
-					new LineItem
+					new ProductPromoEntry
 					{
-						Id = "1",
 						CatalogId = "Samsung",
 						CategoryId = "100df6d5-8210-4b72-b00a-5003f9dcb79d",
 						ProductId = "v-b000bkzs9w",
-						ListPrice = 160.44m,
-						PlacedPrice = 206.33m,
+						Price = 160.44m,
 						Quantity = 5,
-						Name = "Samsung YP-T7JX 512 MB Digital Audio Player with FM Tuner & Recorder",
+
 					}
-				}
 			};
 			var marketingEval = new DefaultMarketingPromoEvaluatorImpl(GetMarketingService());
 			var result = marketingEval.EvaluatePromotion(context);

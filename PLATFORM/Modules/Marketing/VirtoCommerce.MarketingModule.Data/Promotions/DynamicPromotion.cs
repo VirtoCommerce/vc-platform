@@ -45,82 +45,42 @@ namespace VirtoCommerce.MarketingModule.Data.Promotions
 				{
 					reward.Promotion = this;
 					reward.IsValid = isValid;
+
 					//Replace some reward types
-					retVal.AddRange(TryConvert2LineItemRewards(promoContext, reward));
+					var cartSubtotalReward = reward as CartSubtotalReward;
+					if (cartSubtotalReward != null && cartSubtotalReward.AmountType == RewardAmountType.Relative)
+					{
+						//Convert cart subtotal relative reward to line item relative rewards
+						foreach (var promoEntry in promoContext.ProductPromoEntries)
+						{
+							if (!(promoEntry.Discount > 0))
+							{
+								var newReward = new CatalogItemAmountReward()
+								{
+									Promotion = this,
+									Amount = cartSubtotalReward.Amount,
+									AmountType = RewardAmountType.Relative,
+									ProductId = promoEntry.ProductId,
+									CategoryId = promoEntry.CategoryId,
+									IsValid = isValid
+								};
+								retVal.Add(newReward);
+							}
+						}
+					}
+					else
+					{
+						retVal.Add(reward);
+					}
 				}
 			}
-
 			return retVal.ToArray();
 		}
 
-		public override PromotionReward[] ProcessEvent(MarketingEvent marketingEvent)
+		public override PromotionReward[] ProcessEvent(IMarketingEvent marketingEvent)
 		{
 			return null;
 		}
 
-		private PromotionReward[] TryConvert2LineItemRewards(PromotionEvaluationContext context, PromotionReward reward)
-		{
-			var retVal = new PromotionReward[] { reward };
-			//Is Shopping cart context
-			if (context.Product == null)
-			{
-				var catalogItemReward = reward as CatalogItemAmountReward;
-				var cartSubtotalReward = reward as CartSubtotalReward;
-				if (catalogItemReward != null)
-				{
-					//Convert CatalogItem reward to lineItem rewards
-					retVal = TryConvert2LineItemRewards(context, catalogItemReward);
-				}
-				else if (cartSubtotalReward != null)
-				{
-					//Convert cart subtotal relative reward to line item relative rewards
-					retVal = TryConvert2LineItemRewards(context, cartSubtotalReward);
-				}
-			}
-			return retVal;
-		}
-
-		private PromotionReward[] TryConvert2LineItemRewards(PromotionEvaluationContext context, CatalogItemAmountReward reward)
-		{
-			var retVal = new List<PromotionReward>();
-			foreach (var lineItem in context.ShoppingCart.Items)
-			{
-				if (!(lineItem.DiscountTotal > 0) && lineItem.ProductId == reward.ProductId)
-				{
-					var newReward = new LineItemAmountReward()
-					{
-						Promotion = this,
-						Amount = reward.Amount,
-						AmountType = reward.AmountType,
-						LineItemId = lineItem.Id,
-						IsValid = reward.IsValid
-					};
-					retVal.Add(newReward);
-				}
-			}
-			return retVal.ToArray();
-		}
-
-		private PromotionReward[] TryConvert2LineItemRewards(PromotionEvaluationContext context, CartSubtotalReward reward)
-		{
-			var retVal = new List<PromotionReward>();
-			foreach (var lineItem in context.ShoppingCart.Items)
-			{
-				if (!(lineItem.DiscountTotal > 0))
-				{
-					var newReward = new LineItemAmountReward()
-					{
-						Promotion = this,
-						Amount = reward.Amount,
-						AmountType = RewardAmountType.Relative,
-						LineItemId = lineItem.Id,
-						IsValid = reward.IsValid
-					};
-					retVal.Add(newReward);
-				}
-			}
-			return retVal.ToArray();
-		}
-		
 	}
 }

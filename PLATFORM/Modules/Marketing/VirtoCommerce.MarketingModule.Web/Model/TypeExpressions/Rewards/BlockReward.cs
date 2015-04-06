@@ -5,6 +5,7 @@ using System.Web;
 using VirtoCommerce.Domain.Marketing.Model;
 using VirtoCommerce.Foundation.Frameworks;
 using VirtoCommerce.Foundation.Frameworks.Extensions;
+using coreModel =  VirtoCommerce.Domain.Marketing.Model;
 
 namespace VirtoCommerce.MarketingModule.Web.Model.TypeExpressions.Conditions
 {
@@ -12,9 +13,9 @@ namespace VirtoCommerce.MarketingModule.Web.Model.TypeExpressions.Conditions
 	{
 		#region IRewardsExpression Members
 
-		public PromotionReward[] GetRewards()
+		public coreModel.PromotionReward[] GetRewards()
 		{
-			var retVal = new PromotionReward[] { };
+			var retVal = new coreModel.PromotionReward[] { };
 			if (Children != null)
 			{
 				 retVal = Children.OfType<IRewardExpression>().SelectMany(x => x.GetRewards()).ToArray();

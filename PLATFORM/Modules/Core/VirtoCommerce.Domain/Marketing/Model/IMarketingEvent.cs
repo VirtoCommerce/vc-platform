@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace VirtoCommerce.Domain.Marketing.Model
 {
-	public class LineItemAmountReward : AmountBasedReward
+	public interface IMarketingEvent
 	{
-		public string LineItemId { get; set; }
+		
 	}
 }

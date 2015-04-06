@@ -15,7 +15,7 @@ namespace VirtoCommerce.Domain.Marketing.Model
 		/// <summary>
 		/// Promo information. (user instructions, cuurent promo description)
 		/// </summary>
-		public string PromoInformation { get; set; }
+		public string Description { get; set; }
 		/// <summary>
 		/// Coupon amount
 		/// </summary>

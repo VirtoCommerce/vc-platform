@@ -7,6 +7,7 @@ using VirtoCommerce.Foundation.Frameworks;
 using VirtoCommerce.Foundation.Money;
 using VirtoCommerce.MarketingModule.Data;
 using linq = System.Linq.Expressions;
+using dataModel = VirtoCommerce.MarketingModule.Data;
 
 namespace VirtoCommerce.MarketingModule.Web.Model.TypeExpressions.Conditions
 {
@@ -17,12 +18,16 @@ namespace VirtoCommerce.MarketingModule.Web.Model.TypeExpressions.Conditions
 		public CurrencyCodes? Currency { get; set; }
 	
 		#region IConditionExpression Members
-
+		/// <summary>
+		/// ((PromotionEvaluationContext)x).Currency == Currency
+		/// </summary>
+		/// <returns></returns>
 		public linq.Expression<Func<IPromotionEvaluationContext, bool>> GetConditionExpression()
 		{
 			var paramX = linq.Expression.Parameter(typeof(IEvaluationContext), "x");
-			var castOp = linq.Expression.MakeUnary(linq.ExpressionType.Convert, paramX, typeof(PromotionEvaluationContext));
-			var memberInfo = typeof(PromotionEvaluationContext).GetMember("Currency").First();
+			var castOp = linq.Expression.MakeUnary(linq.ExpressionType.Convert, paramX, typeof(dataModel.PromotionEvaluationContext));
+			var memberInfo = typeof(dataModel.PromotionEvaluationContext).GetMember("Currency").First();
+
 			var currency = linq.Expression.MakeUnary(linq.ExpressionType.Convert, linq.Expression.MakeMemberAccess(castOp, memberInfo), typeof(CurrencyCodes));  
 			var selectedCurrency = linq.Expression.Constant(Currency);
 			var binaryOp = linq.Expression.Equal(selectedCurrency, currency);
