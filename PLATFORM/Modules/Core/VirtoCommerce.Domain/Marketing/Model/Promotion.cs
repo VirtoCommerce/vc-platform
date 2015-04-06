@@ -48,7 +48,7 @@ namespace VirtoCommerce.Domain.Marketing.Model
 			return null;
 		}
 
-		public virtual PromotionReward[] ProcessEvent(MarketingEvent marketingEvent)
+		public virtual PromotionReward[] ProcessEvent(IMarketingEvent marketingEvent)
 		{
 			return new PromotionReward[] { };
 		}

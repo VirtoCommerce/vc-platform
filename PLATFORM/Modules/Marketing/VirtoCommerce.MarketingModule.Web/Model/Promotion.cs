@@ -17,9 +17,7 @@ namespace VirtoCommerce.MarketingModule.Web.Model
 		public DateTime? ModifiedDate { get; set; }
 		public string ModifiedBy { get; set; }
 
-		[JsonConverter(typeof(StringEnumConverter))]
-		public PromotionType Type { get; set; }
-
+		public string Type { get; set; }
 		public string Name { get; set; }
 		public string Store { get; set; }
 		public string Catalog { get; set; }

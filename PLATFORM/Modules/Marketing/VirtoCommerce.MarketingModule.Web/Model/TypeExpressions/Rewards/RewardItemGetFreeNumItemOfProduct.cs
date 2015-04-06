@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using VirtoCommerce.Domain.Marketing.Model;
+using coreModel = VirtoCommerce.Domain.Marketing.Model;
 
 namespace VirtoCommerce.MarketingModule.Web.Model.TypeExpressions.Actions
 {
@@ -15,16 +16,16 @@ namespace VirtoCommerce.MarketingModule.Web.Model.TypeExpressions.Actions
 		
 		#region IRewardExpression Members
 
-		public PromotionReward[] GetRewards()
+		public coreModel.PromotionReward[] GetRewards()
 		{
 			var retVal = new CatalogItemAmountReward
 			{
 				Amount = 100,
 				AmountType = RewardAmountType.Relative,
-				QuantityLimit = NumItem,
+				Quantity = NumItem,
 				ProductId = ProductId
 			};
-			return new PromotionReward[] { retVal };
+			return new coreModel.PromotionReward[] { retVal };
 		}
 
 		#endregion

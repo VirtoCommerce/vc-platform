@@ -13,14 +13,14 @@ namespace VirtoCommerce.Domain.Marketing.Model
 
 		public decimal Amount { get; set; }
 
-		public int QuantityLimit { get; set; }
+		public int Quantity { get; set; }
 
 		public decimal CalculateDiscountAmount(decimal price, int quantity = 1)
 		{
 			var retVal = Amount;
 			if (AmountType == RewardAmountType.Relative)
 			{
-				retVal = Math.Floor(price * Amount) * Math.Min(quantity, QuantityLimit == 0 ? quantity : QuantityLimit);
+				retVal = Math.Floor(price * Amount) * Math.Min(quantity, Quantity == 0 ? quantity : Quantity);
 			}
 			return FinanceRound(retVal);
 		}

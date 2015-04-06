@@ -24,6 +24,7 @@ namespace VirtoCommerce.MarketingModule.Web.Converters
 		{
 			var retVal = new webModel.Promotion();
 			retVal.InjectFrom(promotion);
+			retVal.Type = promotion.GetType().Name;
 			var dynamicPromotion = promotion as DynamicPromotion;
 			if (dynamicPromotion != null && dynamicExpression != null)
 			{

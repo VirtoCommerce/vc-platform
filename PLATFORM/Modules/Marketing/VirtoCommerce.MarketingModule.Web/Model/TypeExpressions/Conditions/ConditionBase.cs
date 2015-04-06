@@ -4,6 +4,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Web;
 using Newtonsoft.Json;
+using dataModel = VirtoCommerce.MarketingModule.Data;
 
 namespace VirtoCommerce.MarketingModule.Web.Model.TypeExpressions.Conditions
 {

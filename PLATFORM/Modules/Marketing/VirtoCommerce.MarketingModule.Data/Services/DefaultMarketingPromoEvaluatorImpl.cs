@@ -29,27 +29,19 @@ namespace VirtoCommerce.MarketingModule.Data.Services
 			var rewards = promotions.SelectMany(x => x.EvaluatePromotion(context)).ToArray();
 
 			//best shipment promotion
-			var curShipmentAmount = promoContext.Shipment != null ? promoContext.Shipment.Price : 0m;
+			var curShipmentAmount = promoContext.ShipmentMethodCode != null ? promoContext.ShipmentMethodPrice : 0m;
 			var allShipmentRewards = rewards.OfType<ShipmentReward>().ToArray();
 			EvaluteBestAmountRewards(curShipmentAmount, allShipmentRewards).ToList().ForEach(x => retVal.Rewards.Add(x));
 
-			//best item promotion
-			if (promoContext.Product != null)
+			//best catalog item promotion
+			var allItemsRewards = rewards.OfType<CatalogItemAmountReward>().ToArray();
+			var groupRewards = allItemsRewards.GroupBy(x => x.ProductId);
+			foreach (var groupReward in groupRewards)
 			{
-				var allCatalogItemRewards = rewards.OfType<CatalogItemAmountReward>().ToArray();
-				EvaluteBestAmountRewards(promoContext.ProductPrice ?? 0, allCatalogItemRewards).ToList().ForEach(x => retVal.Rewards.Add(x));
+				var item = promoContext.ProductPromoEntries.First(x => x.ProductId == groupReward.Key);
+				EvaluteBestAmountRewards(item.Price, groupReward.ToArray()).ToList().ForEach(x => retVal.Rewards.Add(x));
 			}
-			else
-			{
-				var allLineItemRewards = rewards.OfType<LineItemAmountReward>().ToArray();
-				var groupRewards = allLineItemRewards.GroupBy(x => x.LineItemId);
-				foreach (var groupReward in groupRewards)
-				{
-					var lineItem = promoContext.ShoppingCart.Items.First(x => x.Id == groupReward.Key);
-					EvaluteBestAmountRewards(lineItem.PlacedPrice, groupReward.ToArray()).ToList().ForEach(x => retVal.Rewards.Add(x));
-				}
-			}
-
+		
 			//best order promotion 
 			var cartSubtotalRewards = rewards.OfType<CartSubtotalReward>().Where(x => x.IsValid).OrderByDescending(x => x.Amount);
 			var cartSubtotalReward = cartSubtotalRewards.FirstOrDefault(x => !string.IsNullOrEmpty(x.Coupon)) ?? cartSubtotalRewards.FirstOrDefault();
@@ -60,10 +52,10 @@ namespace VirtoCommerce.MarketingModule.Data.Services
 				//Exlusive offer
 				if (cartSubtotalReward.IsExclusive)
 				{
-					var lineItemRewards = retVal.Rewards.OfType<LineItemAmountReward>().ToList();
-					for (var i = lineItemRewards.Count - 1; i >= 0; i--)
+					var itemRewards = retVal.Rewards.OfType<CatalogItemAmountReward>().ToList();
+					for (var i = itemRewards.Count - 1; i >= 0; i--)
 					{
-						retVal.Rewards.Remove(lineItemRewards[i]);
+						retVal.Rewards.Remove(itemRewards[i]);
 					}
 				}
 			}
@@ -83,7 +75,7 @@ namespace VirtoCommerce.MarketingModule.Data.Services
 
 
 			//Gifts
-			rewards.OfType<GiftCatalogItemReward>().ToList().ForEach(x => retVal.Rewards.Add(x));
+			rewards.OfType<GiftReward>().ToList().ForEach(x => retVal.Rewards.Add(x));
 
 			//Special offer
 			rewards.OfType<SpecialOfferReward>().ToList().ForEach(x => retVal.Rewards.Add(x));
@@ -102,7 +94,7 @@ namespace VirtoCommerce.MarketingModule.Data.Services
 			return retVal.ToArray();
 		}
 
-		public PromotionResult ProcessEvent(MarketingEvent markertingEvent)
+		public PromotionResult ProcessEvent(IMarketingEvent markertingEvent)
 		{
 			var retVal = new PromotionResult();
 			var promotions = _marketingService.GetActivePromotions();

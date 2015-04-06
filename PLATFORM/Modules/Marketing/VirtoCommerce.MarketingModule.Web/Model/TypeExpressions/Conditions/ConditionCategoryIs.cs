@@ -3,6 +3,7 @@ using VirtoCommerce.Domain.Marketing.Model;
 using VirtoCommerce.Foundation.Frameworks;
 using VirtoCommerce.MarketingModule.Data;
 using linq = System.Linq.Expressions;
+using dataModel = VirtoCommerce.MarketingModule.Data;
 
 namespace VirtoCommerce.MarketingModule.Web.Model.TypeExpressions.Conditions
 {
@@ -12,13 +13,17 @@ namespace VirtoCommerce.MarketingModule.Web.Model.TypeExpressions.Conditions
 		public string SelectedCategoryId { get; set;}
 	
 		#region IConditionExpression Members
-
+		/// <summary>
+		/// ((PromotionEvaluationContext)x).IsItemInCategory(SelectedCategoryId, ExcludingCategoryIds, ExcludingProductIds)
+		/// </summary>
+		/// <returns></returns>
 		public linq.Expression<Func<IPromotionEvaluationContext, bool>> GetConditionExpression()
 		{
 			var paramX = linq.Expression.Parameter(typeof(IEvaluationContext), "x");
-			var castOp = linq.Expression.MakeUnary(linq.ExpressionType.Convert, paramX, typeof(PromotionEvaluationContext));
-			var methodInfo = typeof(PromotionEvaluationContext).GetMethod("IsItemInCategory");
-			var methodCall = linq.Expression.Call(castOp, methodInfo, linq.Expression.Constant(SelectedCategoryId), GetNewArrayExpression(ExcludingCategoryIds),
+			var castOp = linq.Expression.MakeUnary(linq.ExpressionType.Convert, paramX, typeof(dataModel.PromotionEvaluationContext));
+			var methodInfo = typeof(dataModel.PromotionEvaluationContextExtension).GetMethod("IsItemInCategory");
+
+			var methodCall = linq.Expression.Call(null, methodInfo, castOp, linq.Expression.Constant(SelectedCategoryId), GetNewArrayExpression(ExcludingCategoryIds),
 												  GetNewArrayExpression(ExcludingProductIds));
 			var retVal = linq.Expression.Lambda<Func<IPromotionEvaluationContext, bool>>(methodCall, paramX);
 

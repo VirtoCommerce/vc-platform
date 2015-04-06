@@ -14,6 +14,7 @@ using webModel = VirtoCommerce.MarketingModule.Web.Model;
 using VirtoCommerce.MarketingModule.Web.Converters;
 using Newtonsoft.Json;
 using VirtoCommerce.MarketingModule.Web.Model.TypeExpressions;
+using VirtoCommerce.MarketingModule.Data.Promotions;
 
 namespace VirtoCommerce.MarketingModule.Web.Controllers.Api
 {
@@ -67,7 +68,7 @@ namespace VirtoCommerce.MarketingModule.Web.Controllers.Api
         {
             var retVal = new webModel.Promotion
             {
-                Type = webModel.PromotionType.Dynamic,
+				Type = typeof(DynamicPromotion).Name,
                 DynamicExpression = _promotionManager.DynamicExpression as PromoDynamicExpression,
 				IsActive = true
             };

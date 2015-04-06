@@ -26,6 +26,6 @@ namespace VirtoCommerce.Domain.Marketing.Services
 		/// <summary>
 		/// External event handler
 		/// </summary>
-		PromotionResult ProcessEvent(MarketingEvent marketingEvent);
+		PromotionResult ProcessEvent(IMarketingEvent marketingEvent);
 	}
 }

@@ -109,10 +109,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Binders\SearchCriteriaBinder.cs" />
+    <Compile Include="Controllers\Api\MarketingController.cs" />
     <Compile Include="Controllers\Api\MarketingManagmentController.cs" />
+    <Compile Include="Converters\MarketingEventConverter.cs" />
     <Compile Include="Converters\PromotionConverter.cs" />
+    <Compile Include="Converters\PromotionRewardConverter.cs" />
+    <Compile Include="Model\MarketingEvent.cs" />
     <Compile Include="Model\Promotion.cs" />
-    <Compile Include="Model\PromotionType.cs" />
+    <Compile Include="Model\PromotionReward.cs" />
     <Compile Include="Model\SearchResult.cs" />
     <Compile Include="Model\TypeExpressions\Conditions\ConditionAtNumItemsOfCategoryAreInCart.cs" />
     <Compile Include="Model\TypeExpressions\Conditions\ConditionAtNumItemsOfEntryAreInCart.cs" />

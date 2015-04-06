@@ -6,9 +6,13 @@ using System.Threading.Tasks;
 
 namespace VirtoCommerce.Domain.Marketing.Model
 {
-	public class MarketingEvent : IMarketingEvent
+	public enum OrderEventType
 	{
-		public string EventType { get; set;}
-		public Dictionary<string, string> EventParams { get; set; }
+		OrderCancelEvent,
+		OrderCompleteEvent,
+		OrderPaidEvent, 
+		OrderPlacedEvent,
+		CustomerLoginEvent,
+		CustomerRegisterEvent
 	}
 }

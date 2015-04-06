@@ -5,9 +5,9 @@ using System.Web;
 
 namespace VirtoCommerce.MarketingModule.Web.Model
 {
-	public enum PromotionType
+	public class MarketingEvent
 	{
-		Dynamic,
-		CodeBased
+		public string EventType { get; set; }
+		public Dictionary<string, string> EventParams { get; set; }
 	}
 }
