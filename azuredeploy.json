@@ -28,7 +28,7 @@
         "sqlAdministratorPassword": {
             "type": "securestring"
         },
-        "sampleData": {
+        "sampleCatalog": {
             "type": "string",
             "allowedValues": [
                 "Full",
@@ -165,7 +165,7 @@
                         "appSettings": [
                             {
                                 "name": "VirtoCommerce:SampleDataLevel",
-                                "value": "[parameters('sampleData')]"
+                                "value": "[parameters('sampleCatalog')]"
                             },
                             {
                                 "name": "VirtoCommerce_DeployApplications",
