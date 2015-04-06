@@ -22,15 +22,15 @@ namespace VirtoCommerce.InventoryModule.Web.Controllers.Api
 			_fulfillmentService = fulfillmentService;
 		}
 
-		// GET: api/catalog/products/{productId}/inventory
+		// GET: api/inventory/products?ids=212&ids=333
 		[HttpGet]
 		[ResponseType(typeof(webModel.InventoryInfo[]))]
-		[Route("~/api/catalog/products/{productId}/inventory")]
-		public IHttpActionResult GetProductInventories(string productId)
+		[Route("~/api/inventory/products")]
+		public IHttpActionResult GetProductsInventories([FromUri] string[] ids)
 		{
 			var retVal = new List<webModel.InventoryInfo>();
 			var allFulfillments = _fulfillmentService.GetAllFulfillmentCenters();
-			var inventories = _inventoryService.GetProductsInventoryInfos(new string[] { productId }).ToList();
+			var inventories = _inventoryService.GetProductsInventoryInfos(ids).ToList();
 
 			foreach (var fulfillment in allFulfillments)
 			{
@@ -40,7 +40,6 @@ namespace VirtoCommerce.InventoryModule.Web.Controllers.Api
 					alreadyExistCoreInventory = new coreModel.InventoryInfo
 					{
 						FulfillmentCenterId = fulfillment.Id,
-						ProductId = productId
 					};
 				}
 
@@ -48,14 +47,23 @@ namespace VirtoCommerce.InventoryModule.Web.Controllers.Api
 				webModelInventory.FulfillmentCenter = fulfillment.ToWebModel();
 				retVal.Add(webModelInventory);
 			}
-		
+
 			return Ok(retVal.ToArray());
 		}
 
-		// PUT: api/catalog/products/123/inventory
+		// GET: api/inventory/products/{productId}
+		[HttpGet]
+		[ResponseType(typeof(webModel.InventoryInfo[]))]
+		[Route("~/api/inventory/products/{productId}")]
+		public IHttpActionResult GetProductInventories(string productId)
+		{
+			return GetProductsInventories(new string[] { productId });
+		}
+
+		// PUT: api/inventory/products/123/inventory
 		[HttpPut]
 		[ResponseType(typeof(webModel.InventoryInfo))]
-		[Route("~/api/catalog/products/{productId}/inventory")]
+		[Route("~/api/inventory/products/{productId}")]
 		public IHttpActionResult UpsertProductInventory(webModel.InventoryInfo inventory)
 		{
 			var retVal = _inventoryService.UpsertInventory( inventory.ToCoreModel() );
