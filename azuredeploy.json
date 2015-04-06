@@ -40,10 +40,10 @@
         "deployApplications": {
             "type": "string",
             "allowedValues": [
-                "Web Admin Only",
-                "Web Admin and Store"
+                "Web Admin and Store",
+                "Web Admin Only"
             ],
-            "defaultValue": "Web Admin Only"
+            "defaultValue": "Web Admin and Store"
         },
 
         "repoUrl": {
