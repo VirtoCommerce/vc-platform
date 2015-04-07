@@ -332,12 +332,15 @@
     <Content Include="Content\themes\metro\css\metro-bootstrap.css" />
     <Content Include="Content\themes\metro\css\metro-bootstrap.min.css" />
     <Content Include="Content\themes\metro\fonts\fontawesome-webfont.svg" />
+    <Content Include="Content\ui-grid-unstable.css" />
+    <Content Include="Content\ui-grid-unstable.min.css" />
     <Content Include="favicon.ico" />
     <Content Include="Content\themes\metro\fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Content\themes\metro\fonts\iconFont.dev.svg" />
     <Content Include="Content\themes\metro\fonts\iconFont.svg" />
     <Content Include="Content\themes\metro\fonts\metroSysIcons.svg" />
     <Content Include="fonts\fontawesome-webfont.svg" />
+    <Content Include="fonts\ui-grid.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\themes\metro\images\AvatarMenu_defaultAvatarSmall.png" />
     <Content Include="Content\themes\metro\images\logo.png" />
@@ -475,6 +478,9 @@
     <Content Include="Content\Selectize\less\plugins\optgroup_columns.less" />
     <Content Include="Content\Selectize\less\plugins\dropdown_header.less" />
     <Content Include="Content\Selectize\less\plugins\drag_drop.less" />
+    <Content Include="fonts\ui-grid.woff" />
+    <Content Include="fonts\ui-grid.ttf" />
+    <Content Include="fonts\ui-grid.eot" />
     <None Include="Scripts\jquery-1.11.1.intellisense.js" />
     <Content Include="Scripts\i18n\angular-locale_aa-dj.js" />
     <Content Include="Scripts\i18n\angular-locale_aa-er.js" />
@@ -1229,6 +1235,8 @@
     <Content Include="Scripts\sortable.js" />
     <Content Include="Scripts\textAngular-rangy.min.js" />
     <Content Include="Scripts\textAngular.min.js" />
+    <Content Include="Scripts\ui-grid-unstable.js" />
+    <Content Include="Scripts\ui-grid-unstable.min.js" />
     <Content Include="Scripts\underscore.js" />
     <Content Include="Scripts\underscore.min.js" />
     <Content Include="Scripts\xeditable.js" />
