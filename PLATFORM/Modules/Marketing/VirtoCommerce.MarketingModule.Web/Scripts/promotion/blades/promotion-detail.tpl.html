@@ -111,100 +111,22 @@
                     <legend>Promotion conditions</legend>
                     <div class="dynamic-expression">
                         <va-expression-block ng-repeat="data in blade.currentEntity.dynamicExpression.children" data="data"></va-expression-block>
-                        <!--<div class="dynamic-expression_t">For visitor with <a class="__link">all</a> of these eligibilities:</div>
-                        <div class="dynamic-expression_b">
-                            <span class="error">Cart promotion requires at least one eligibility</span>
-                            <ul class="list">
-                                <li class="list-item">
-                                    <a class="list-link">
-                                        <i class="list-ico fa fa-times-circle"></i>
-                                        Everyone
-                                    </a>
-                                </li>
-                                <li class="list-item">
-                                    <a class="list-link">
-                                        <i class="list-ico fa fa-times-circle"></i>
-                                        First time buyers
-                                    </a>
-                                </li>
-                                <li class="list-item">
-                                    <a class="list-link">
-                                        <i class="list-ico fa fa-times-circle"></i>
-                                        Registered user
-                                    </a>
-                                </li>
+                        <script type="text/ng-template" id="expression-shippingMethod.html">
+                            <a class="__link" context-menu data-target="shp_menu{{element.$parentElement.id}}">{{element.$parentElement.shippingMethod ? element.$parentElement.shippingMethod : 'select shipping'}}</a>
+                            <ul class="menu __context" role="menu" id="shp_menu{{element.$parentElement.id}}">
+                                <li class="menu-item" ng-click='element.$parentElement.shippingMethod=x.id;' ng-repeat="x in element.availableEntries">{{x.name}}</li>
                             </ul>
-                            <a class="add __link __usergroup">Add usergroup</a>
-                        </div>
-                        <div class="dynamic-expression_t">if <a class="__link">all</a> of these are true</div>
-                        <div class="dynamic-expression_b">
-                            <ul class="list">
-                                <li class="list-item">
-                                    <i class="list-ico fa fa-times-circle"></i>
-                                    <a class="list-link">At least</a>
-                                    <div class="form-input __mini __number js-number-input-plugin" data-step="1">
-                                        <input type="text" class="js-val" required="" ng-model="blade.currentEntity.quantity">
-                                        <a class="up js-up"></a>
-                                        <a class="down js-down"></a>
-                                    </div>
-                                    <div class="list-descr">items in shopping cart excluding:</div>
-                                    <ul class="list __sub">
-                                        <li class="list-item">
-                                            <i class="list-ico fa fa-times-circle"></i>
-                                            <div class="list-descr">items of category</div>
-                                            <a class="__link">TVs</a>
-                                        </li>
-                                        <li class="list-item">
-                                            <i class="list-ico fa fa-times-circle"></i>
-                                            <div class="list-descr">items of category</div>
-                                            <a class="__link">select category</a>
-                                        </li>
-                                        <li class="list-item">
-                                            <a href="#" class="add">+ Excluding</a>
-                                        </li>
-                                    </ul>
-                                </li>
+                        </script>
+                        <script type="text/ng-template" id="expression-currency.html">
+                            <a class="__link" context-menu data-target="pcrn_menu{{$index}}">{{element.$parentElement.currency ? element.$parentElement.currency : 'select currency'}}</a>
+                            <ul class="menu __context" role="menu" id="pcrn_menu{{$index}}">
+                                <li class="menu-item" ng-click='element.$parentElement.currency=x;' ng-repeat="x in element.availableEntries">{{x}}</li>
                             </ul>
-                            <a class="add __link __usergroup">Add condition</a>
-                        </div>
-                        <div class="dynamic-expression_t">They get:</div>
-                        <div class="dynamic-expression_b">
-                            <span class="error">Promotion requires at least one reward</span>
-                            <ul class="list">
-                                <li class="list-item">
-                                    <i class="list-ico fa fa-times-circle"></i>
-                                    <a class="list-link">Get</a>
-                                    <div class="form-input __mini __number js-number-input-plugin" data-step="1">
-                                        <input type="text" class="js-val" required="" ng-model="blade.currentEntity.quantity">
-                                        <a class="up js-up"></a>
-                                        <a class="down js-down"></a>
-                                    </div>
-                                    <div class="list-descr">% off</div>
-                                    <div class="form-input __mini __number js-number-input-plugin" data-step="1">
-                                        <input type="text" class="js-val" required="" ng-model="blade.currentEntity.quantity">
-                                        <a class="up js-up"></a>
-                                        <a class="down js-down"></a>
-                                    </div>
-                                    <div class="list-descr">items excluding:</div>
-                                    <ul class="list __sub">
-                                        <li class="list-item">
-                                            <i class="list-ico fa fa-times-circle"></i>
-                                            <div class="list-descr">items of category</div>
-                                            <a class="__link">TVs</a>
-                                        </li>
-                                        <li class="list-item">
-                                            <i class="list-ico fa fa-times-circle"></i>
-                                            <div class="list-descr">items of category</div>
-                                            <a class="__link">select category</a>
-                                        </li>
-                                        <li class="list-item">
-                                            <a href="#" class="add">+ Excluding</a>
-                                        </li>
-                                    </ul>
-                                </li>
-                            </ul>
-                            <a class="add __link __usergroup">Add effect</a>
-                        </div>-->
+                        </script>
+                        <script type="text/ng-template" id="expression-ConditionEntryIs.html">
+                            <a class="list-link">Product is </a>
+                            <a class="__link" ng-click="action(data)">{{data.productId?data.productId: 'select Product'}}</a>
+                        </script>
                     </div>
                 </fieldset>
             </form>
