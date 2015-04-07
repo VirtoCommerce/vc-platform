@@ -63,7 +63,7 @@ namespace VirtoCommerce.MarketingModule.Web
 
 			var retVal = new PromoDynamicExpression()
 			{
-				AvailableChildren = new IDynamicExpression[] { customerConditionBlock, catalogConditionBlock, cartConditionBlock, rewardBlock }
+				Children = new IDynamicExpression[] { customerConditionBlock, catalogConditionBlock, cartConditionBlock, rewardBlock }
 			};
 			return retVal;
 
