@@ -21,7 +21,7 @@
             title: data.name,
             subtitle: 'Marketing service',
             controller: data.entityName + 'ListController',
-            template: 'Modules/$(VirtoCommerce.Marketing)/Scripts/blades/' + data.entityName + '-list.tpl.html'
+            template: 'Modules/$(VirtoCommerce.Marketing)/Scripts/' + data.entityName + '/blades/' + data.entityName + '-list.tpl.html'
         };
         bladeNavigationService.showBlade(newBlade, $scope.blade);
     }
