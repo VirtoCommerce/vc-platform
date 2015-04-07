@@ -47,7 +47,7 @@
             title: selectedNode.name,
             subtitle: $scope.blade.subtitle,
             controller: 'promotionDetailController',
-            template: 'Modules/$(VirtoCommerce.Marketing)/Scripts/blades/promotion-detail.tpl.html'
+            template: 'Modules/$(VirtoCommerce.Marketing)/Scripts/promotion/blades/promotion-detail.tpl.html'
         };
 
         bladeNavigationService.showBlade(newBlade, $scope.blade);
@@ -114,7 +114,7 @@
                     subtitle: $scope.blade.subtitle,
                     isNew: true,
                     controller: 'promotionDetailController',
-                    template: 'Modules/$(VirtoCommerce.Marketing)/Scripts/blades/promotion-detail.tpl.html'
+                    template: 'Modules/$(VirtoCommerce.Marketing)/Scripts/promotion/blades/promotion-detail.tpl.html'
                 };
                 bladeNavigationService.showBlade(newBlade, $scope.blade);
             },

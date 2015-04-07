@@ -151,21 +151,11 @@
     // Dynamic ExpressionBlock
     function initializeExpressions(data) {
         //data.children = getTestExpressionBlocks();
+        data.children = data.availableChildren;
         _.each(data.children, extendElementBlock);
     }
 
-    $scope.expressionData = {
-        addChild: function (availableElement, parent) {
-            var newElement = angular.copy(availableElement);
-            if (!parent.children) {
-                parent.children = [];
-            }
-            parent.children.push(extendElementBlock(newElement));
-        }
-    };
-
-    function extendElementBlock(expressionBlock, justTitle) {
-        justTitle = justTitle === true;
+    function extendElementBlock(expressionBlock) {
         var retVal;
         switch (expressionBlock.id) {
             case 'BlockCustomerCondition':
@@ -175,17 +165,20 @@
                 }
                 break;
             case 'ConditionIsEveryone':
-                retVal = justTitle ? { displayName: 'Everyone' } : {
+                retVal = {
+                    displayName: 'Everyone',
                     headerElements: [constructLabelElement('Everyone')],
                 };
                 break;
             case 'ConditionIsFirstTimeBuyer':
-                retVal = justTitle ? { displayName: 'First time buyer' } : {
+                retVal = {
+                    displayName: 'First time buyer',
                     headerElements: [constructLabelElement('First time buyer')],
                 };
                 break;
             case 'ConditionIsRegisteredUser':
-                retVal = justTitle ? { displayName: 'Registered user' } : {
+                retVal = {
+                    displayName: 'Registered user',
                     headerElements: [constructLabelElement('Registered user')],
                 };
                 break;
@@ -215,51 +208,73 @@
                 };
                 break;
             case 'RewardCartGetOfAbsSubtotal':
-                retVal = justTitle ? { displayName: 'Get $ [] off cart subtotal' } : {
+                retVal = {
+                    displayName: 'Get $ [] off cart subtotal',
                     headerElements: constructAmountBlock(expressionBlock, 'Get $', 'off cart subtotal')
                 };
                 break;
             case 'RewardCartGetOfRelSubtotal':
-                retVal = justTitle ? { displayName: 'Get [] % off cart subtotal' } : {
+                retVal = {
+                    displayName: 'Get [] % off cart subtotal',
                     headerElements: constructAmountBlock(expressionBlock, 'Get ', ' % off cart subtotal')
                 };
                 break;
             case 'RewardItemGetFreeNumItemOfProduct':
-                retVal = justTitle ? { displayName: 'Get [] free items of Product' } : {
+                retVal = {
+                    displayName: 'Get [] free items of Product',
                     headerElements: constructTypedBlock(expressionBlock, 'Get ', ' free items of Product', 'numericInput')
                 };
-                if (!justTitle) {
-                    retVal.headerElements.push(constructItemSelector(expressionBlock));
-                }
+                retVal.headerElements.push(constructItemSelector(expressionBlock));
                 break;
             case 'RewardItemGetOfAbs':
-                retVal = justTitle ? { displayName: 'Get $[] off' } : {
+                retVal = {
+                    displayName: 'Get $[] off',
                     headerElements: constructAmountBlock(expressionBlock, 'Get $', ' off')
                 };
-                if (!justTitle) {
-                    retVal.headerElements.push(constructItemSelector(expressionBlock));
-                }
+                retVal.headerElements.push(constructItemSelector(expressionBlock));
                 break;
             case 'RewardItemGetOfRel':
-                retVal = justTitle ? { displayName: 'Get [] % off' } : {
+                retVal = {
+                    displayName: 'Get [] % off',
                     headerElements: constructAmountBlock(expressionBlock, 'Get ', ' % off')
                 };
-                if (!justTitle) {
-                    retVal.headerElements.push(constructItemSelector(expressionBlock));
-                }
+                retVal.headerElements.push(constructItemSelector(expressionBlock));
+                break;
+            case 'RewardItemGetOfAbsForNum':
+                retVal = {
+                    displayName: 'Get $[] off [] items',
+                    headerElements: constructAmountBlock(expressionBlock, 'Get $', ' off for')
+                };
+                retVal.headerElements.push({
+                    type: 'numericInput',
+                    $parentElement: expressionBlock
+                });
+                retVal.headerElements.push(constructLabelElement('  items'));
+                break;
+            case 'RewardItemGetOfRelForNum':
+                retVal = {
+                    displayName: 'Get [] % off [] items',
+                    headerElements: constructAmountBlock(expressionBlock, 'Get ', ' % off for')
+                };
+                retVal.headerElements.push({
+                    type: 'numericInput',
+                    $parentElement: expressionBlock
+                });
+                retVal.headerElements.push(constructLabelElement('  items'));
                 break;
             default:
-                retVal = justTitle ? { displayName: 'unknown element: ' + expressionBlock.id } : {
+                retVal = {
+                    displayName: 'unknown element: ' + expressionBlock.id,
                     headerElements: [constructLabelElement('unknown element: ' + expressionBlock.id)]
                 };
         }
-        
+
         //angular.merge(expressionBlock, retVal);
         //angular.extend(expressionBlock, retVal);
         _.extend(expressionBlock, retVal);
 
         _.each(expressionBlock.children, extendElementBlock);
-        _.each(expressionBlock.availableChildren, function (child) { extendElementBlock(child, true); });
+        _.each(expressionBlock.availableChildren, extendElementBlock);
         return expressionBlock;
     };
 
@@ -369,7 +384,7 @@
             constructLabelElement(' ' + postfix)];
     };
 
-    function constructAmountBlock(parentElement, prefix, postfix) {        
+    function constructAmountBlock(parentElement, prefix, postfix) {
         return constructTypedBlock(parentElement, prefix, postfix, 'amountInput');
     };
 
