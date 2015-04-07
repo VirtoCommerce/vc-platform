@@ -47,6 +47,8 @@
 					"~/Content/themes/base/xeditable.css",
 				//SELECT2
 					"~/Content/select2.css",
+				//Angular ui-grid
+					"~/Content/ui-grid-unstable.css",
 				//Selectize
 					"~/Content/Selectize/css/selectize.default.css",
 				//Theme UI
@@ -92,6 +94,8 @@
 					"~/Scripts/angular-ui/ui-utils-ieshiv.js",
 					"~/Scripts/angular-multi-select.js",
 					 "~/Scripts/angular-ui/select.js",
+				//Angular ui-grid
+					"~/Scripts/angular-ui/ui-grid-unstable.js",
 				// Angular Misc
 					"~/Scripts/ng-context-menu.js",
 					"~/Scripts/xeditable.js",
