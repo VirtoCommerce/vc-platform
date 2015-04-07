@@ -1,5 +1,5 @@
-﻿<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html>
+<html lang="en" ng-app="app">
     <head>
         <meta charset="UTF-8">
         <title>Metro Theme | Refactoring</title>
@@ -10,6 +10,7 @@
         <link href='http://fonts.googleapis.com/css?family=Exo+2:400,300,500,600,400italic&amp;subset=latin,cyrillic' rel='stylesheet' type='text/css'>
 
         <link rel="stylesheet" href="css/reset.css">
+        <link rel="stylesheet" href="ui-grid/ui-grid-unstable.css">
         <link rel="stylesheet" href="css/base-modules.css">
         <link rel="stylesheet" href="css/project-modules.css">
         <link rel="stylesheet" href="css/cosmetic.css">
@@ -17,6 +18,15 @@
         <link rel="stylesheet" href="css/modules/dynamic-expression.css">
 
         <link rel="stylesheet" href="chosen/chosen.css">
+
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.26/angular.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.26/angular-touch.js"></script>
+        <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.26/angular-animate.js"></script>
+        <script src="ui-grid/ui-grid-unstable.min.js"></script>
+        <script src="http://ui-grid.info/docs/grunt-scripts/csv.js"></script>
+        <script src="http://ui-grid.info/docs/grunt-scripts/pdfmake.js"></script>
+        <script src="http://ui-grid.info/docs/grunt-scripts/vfs_fonts.js"></script>
+        <script src="js/app.js"></script>
 
     </head>
     <body>
@@ -3688,6 +3698,72 @@
                             </div>
                         </div>
                     </div>
+                    <div class="blade">
+                        <header class="blade-head">
+                            <div class="blade-status"></div>
+                            <div class="blade-nav">
+                                <ul class="menu __inline">
+                                    <li class="menu-item __minimize">
+                                        <button>
+                                            Minimize
+                                        </button>
+                                    </li>
+                                    <li class="menu-item __maximize">
+                                        <button>
+                                            Maximize
+                                        </button>
+                                    </li>
+                                    <li class="menu-item __close __disabled">
+                                        <button disabled="disabled">
+                                            Close
+                                        </button>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="blade-t __secondary">
+                                <i class="blade-t_ico fa fa-folder"></i>
+                                <p class="blade-t_head">vasja customer's Customer Order items</p>
+                                <p class="blade-t_subhead">Edit order items</p>
+                            </div>
+                            <div class="blade-toolbar">
+                                <ul class="menu __inline">
+                                    <li class="menu-item ng-scope">
+                                        <button class="menu-btn">
+                                            <i class="menu-ico fa fa-plus"></i>
+                                            Add item
+                                        </button>
+                                    </li>
+                                    <li class="menu-item __disabled">
+                                        <button class="menu-btn">
+                                            <i class="menu-ico fa fa-trash-o"></i>
+                                            Remove
+                                        </button>
+                                    </li>
+                                </ul>
+                            </div>
+                        </header>
+                        <div class="blade-container">
+                            <div class="blade-content __medium-wide">
+                                <div class="blade-inner">
+                                    <div class="inner-block">
+                                        <div class="form" ng-controller="MainCtrl">
+                                            <div ui-grid="gridOptions2" ui-grid-pagination class="grid"></div>
+                                            <p>Current page: {{ gridApi2.pagination.getPage() }} of {{ gridApi2.pagination.getTotalPages() }}</p>
+                                            <button type="button" class="btn btn-success" ng-click="gridApi2.pagination.previousPage()">
+                                            previous page
+                                            </button>
+                                            <button type="button" class="btn btn-success" ng-click="gridApi2.pagination.nextPage()">
+                                            next page
+                                            </button>
+                                            <button type="button" class="btn btn-success" ng-click="gridApi2.pagination.seek(3)">
+                                            go to page 3
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </article>
         </div>
@@ -3697,6 +3773,7 @@
         <script src="js/main.js"></script>
         <script src="js/input-number.js"></script>
         <script src="chosen/chosen.jquery.min.js"></script>
+
         <script>
             $(function () {
                 $('select').chosen();
