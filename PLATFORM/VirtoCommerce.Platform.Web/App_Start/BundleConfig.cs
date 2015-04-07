@@ -95,7 +95,7 @@
 					"~/Scripts/angular-multi-select.js",
 					 "~/Scripts/angular-ui/select.js",
 				//Angular ui-grid
-					"~/Scripts/angular-ui/ui-grid-unstable.js",
+					"~/Scripts/ui-grid-unstable.js",
 				// Angular Misc
 					"~/Scripts/ng-context-menu.js",
 					"~/Scripts/xeditable.js",
