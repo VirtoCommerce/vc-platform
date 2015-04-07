@@ -203,7 +203,6 @@ var WebAdmin = {
         if($('.tree-item', node).length <= 1) {
         $(this).find('.tree-item').addClass('last');
         }
-        console.log($('.tree-node').text().length)
         });
         var inW = $('.blade-inner .inner-block').width(),
         trW = $('.tree').width();
