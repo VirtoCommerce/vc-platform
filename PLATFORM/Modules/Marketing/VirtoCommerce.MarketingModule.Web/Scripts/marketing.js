@@ -18,7 +18,7 @@ angular.module(moduleName, [])
                           id: 'marketing',
                           title: 'Marketing',
                           controller: 'marketingMainController',
-                          template: 'Modules/$(VirtoCommerce.Marketing)/Scripts/blades/marketing-main.tpl.html',
+                          template: 'Modules/$(VirtoCommerce.Marketing)/Scripts/common/marketing-main.tpl.html',
                           isClosingDisabled: true
                       };
                       bladeNavigationService.showBlade(blade);

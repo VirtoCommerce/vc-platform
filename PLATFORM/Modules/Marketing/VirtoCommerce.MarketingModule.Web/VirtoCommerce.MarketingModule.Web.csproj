@@ -177,14 +177,14 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Scripts\blades\marketing-main.js" />
-    <Content Include="Scripts\blades\marketing-main.tpl.html" />
-    <Content Include="Scripts\blades\promotion-detail.js" />
-    <Content Include="Scripts\blades\promotion-detail.tpl.html" />
-    <Content Include="Scripts\blades\promotion-list.js" />
-    <Content Include="Scripts\blades\promotion-list.tpl.html" />
+    <Content Include="Scripts\common\marketing-main.js" />
+    <Content Include="Scripts\common\marketing-main.tpl.html" />
+    <Content Include="Scripts\promotion\blades\promotion-detail.js" />
+    <Content Include="Scripts\promotion\blades\promotion-detail.tpl.html" />
+    <Content Include="Scripts\promotion\blades\promotion-list.js" />
+    <Content Include="Scripts\promotion\blades\promotion-list.tpl.html" />
     <Content Include="Scripts\marketing.js" />
-    <Content Include="Scripts\resources\marketing.js" />
+    <Content Include="Scripts\promotion\resources\marketing.js" />
     <Content Include="web.config" />
     <None Include="web.Debug.config">
       <DependentUpon>web.config</DependentUpon>
@@ -192,6 +192,9 @@
     <None Include="web.Release.config">
       <DependentUpon>web.config</DependentUpon>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Scripts\dynamicContent\blades\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

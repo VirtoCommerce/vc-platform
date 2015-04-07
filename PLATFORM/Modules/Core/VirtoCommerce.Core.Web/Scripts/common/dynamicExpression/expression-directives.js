@@ -4,12 +4,15 @@
         return {
             restrict: 'E',
             scope: {
-                data: '=',
-                expressionData: '='
+                data: '='
             },
             link: function ($scope) {
-                //function used on the ng-include to resolve the template
-                $scope.addChild = $scope.expressionData.addChild;
+                $scope.addChild = function (chosenMenuElement, parentList) {
+                    if (!parentList.children) {
+                        parentList.children = [];
+                    }
+                    parentList.children.push(angular.copy(chosenMenuElement));
+                };
                 $scope.deleteChild = function (child, parentList) {
                     parentList.splice(parentList.indexOf(child), 1);
                 }

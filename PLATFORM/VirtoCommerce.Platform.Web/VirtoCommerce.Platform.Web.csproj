@@ -430,8 +430,9 @@
     <Content Include="Content\themes\metro\fonts\glyphicons-halflings-regular.ttf" />
     <Content Include="Content\themes\metro\fonts\glyphicons-halflings-regular.eot" />
     <Content Include="Scripts\angular-file-upload.min.map" />
-    <Content Include="App_Data\Configuration\connectionStrings.local.config" />
-    <Content Include="App_Data\Configuration\connectionStrings.azure.config" />
+    <Content Include="App_Data\Configuration\connectionStrings.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Content\themes\metro\fonts\metroSysIcons.woff" />
     <Content Include="Content\themes\metro\fonts\metroSysIcons.ttf" />
     <Content Include="Content\themes\metro\fonts\iconFont.woff" />
@@ -1243,12 +1244,6 @@
     <Content Include="Scripts\xeditable.min.js" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
-    </Content>
-    <Content Include="Web.Debug.config">
-      <DependentUpon>Web.config</DependentUpon>
-    </Content>
-    <Content Include="Web.Release.config">
-      <DependentUpon>Web.config</DependentUpon>
     </Content>
     <Content Include="Scripts\_references.js" />
     <Content Include="Content\themes\metro\images\accent.png" />
