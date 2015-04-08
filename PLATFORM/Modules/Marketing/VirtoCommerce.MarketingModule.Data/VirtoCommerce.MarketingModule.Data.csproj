@@ -58,9 +58,6 @@
   <ItemGroup>
     <Compile Include="Common\SerializationUtil.cs" />
     <Compile Include="Converters\PromotionConverter.cs" />
-    <Compile Include="Model\ProductPromoEntry.cs" />
-    <Compile Include="Model\PromotionEvaluationContextExtension.cs" />
-    <Compile Include="Model\PromotionEvaluationContext.cs" />
     <Compile Include="Promotions\DynamicPromotion.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\IFoundationMarketingRepository.cs" />
