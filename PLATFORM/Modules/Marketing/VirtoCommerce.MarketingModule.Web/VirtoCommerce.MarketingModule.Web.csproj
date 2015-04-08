@@ -179,6 +179,7 @@
   <ItemGroup>
     <Content Include="Scripts\common\marketing-main.js" />
     <Content Include="Scripts\common\marketing-main.tpl.html" />
+    <Content Include="Scripts\promotion\blades\expr-ConditionEntryIs.js" />
     <Content Include="Scripts\dynamicContent\blades\dynamicContent-list.js" />
     <Content Include="Scripts\dynamicContent\blades\dynamicContent-list.tpl.html" />
     <Content Include="Scripts\dynamicContent\blades\placeholders\add.js" />
