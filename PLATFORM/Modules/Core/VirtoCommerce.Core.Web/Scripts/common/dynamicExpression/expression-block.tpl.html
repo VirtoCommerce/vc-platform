@@ -29,21 +29,15 @@
     </div>
 </script>
 
-<!--<div va-templated-expression ng-if="data.templateURL">
-    <ng-include src='data.templateURL'></ng-include>
-</div>-->
-<div class="dynamic-expression_t" ng-if="!data.templateURL">
+<div class="dynamic-expression_t">
     <va-expression-element ng-repeat="element0 in data.headerElements" element="element0"></va-expression-element>
 </div>
-<div class="dynamic-expression_b" ng-if="!data.templateURL">
+<div class="dynamic-expression_b">
     <span class="error" ng-if="data.getValidationError(data)">{{data.getValidationError(data);}}</span>
     <ul class="list">
         <li class="list-item" ng-repeat="data1 in data.children">
             <a class="list-link">
                 <i class="list-ico fa fa-times-circle" ng-click='deleteChild(data1, data.children);'></i>
-                <div va-templated-expression data="data1" ng-if="data.templateURL">
-                    <ng-include src='data.templateURL'></ng-include>
-                </div>
                 <va-expression-element ng-repeat="element1 in data1.headerElements" element="element1"></va-expression-element>
                 <ul class="list __sub" ng-if="data1.newChildLabel">
                     <li class="list-item" ng-repeat="data2 in data1.children">
