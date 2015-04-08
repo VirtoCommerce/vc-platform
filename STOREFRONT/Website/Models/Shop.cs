@@ -1,17 +1,17 @@
-﻿#region
+﻿using DotLiquid;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
-using DotLiquid;
 using VirtoCommerce.ApiClient.DataContracts.Stores;
-
-#endregion
 
 namespace VirtoCommerce.Web.Models
 {
-    [DataContract]
     public class Shop : Drop
     {
-        #region Public Properties
+        public Shop()
+        {
+            this.Checkout = new Checkout();
+        }
+
         public string Currency { get; set; }
 
         public bool CustomerAccountsEnabled { get; set; }
@@ -47,8 +47,9 @@ namespace VirtoCommerce.Web.Models
         public string Catalog { get; set; }
 
         public string[] Currencies { get; set; }
+
         public MetaFieldNamespacesCollection Metafields { get; set; }
 
-        #endregion
+        public Checkout Checkout { get; set; }
     }
 }

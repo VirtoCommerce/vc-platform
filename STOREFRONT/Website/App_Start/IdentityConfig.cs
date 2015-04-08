@@ -367,9 +367,9 @@
             emailMessage.Body = message.Body;
             emailMessage.IsBodyHtml = true;
 
-            var smtpClient = new SmtpClient("smtp-mail.outlook.com ", 587);
+            var smtpClient = new SmtpClient("", 587);
             smtpClient.EnableSsl = true;
-            smtpClient.Credentials = new System.Net.NetworkCredential("andrew.orlov@outlook.com", "XpehBam123");
+            smtpClient.Credentials = new System.Net.NetworkCredential("", "");
 
             return smtpClient.SendMailAsync(emailMessage);
         }

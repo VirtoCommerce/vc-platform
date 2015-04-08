@@ -14,11 +14,16 @@ angular.module('platformWebApp')
                 scope.html = '<a class="up" ng-click="sum(\'up\')" data-type="up"></a> <a class="down" ng-click="sum(\'down\')" data-type="down"></a>';
 
                 el.after($compile(scope.html)(scope));
-                //el.prop('readonly', true);
+
+                el.on('keyup', function() {
+                    var sum = ctrl.$modelValue;
+
+                    el.val(sum);
+                });
 
                 scope.sum = function (type) {
                     var sum = parseFloat(ctrl.$modelValue),
-                        step  = parseFloat(scope.step);
+                        step = parseFloat(scope.step);
 
                     if(type == 'up') {
                         sum += step;
@@ -39,11 +44,12 @@ angular.module('platformWebApp')
                     ctrl.$render();
                 }
 
-			   //It need for support only numeric input
+                //It need for support only numeric input
                 ctrl.$parsers.push(function (inputValue) {
                 	var floatValue = parseFloat(inputValue);
                 	return floatValue;
                 });
             }
         };
-    });
+    })
+;
