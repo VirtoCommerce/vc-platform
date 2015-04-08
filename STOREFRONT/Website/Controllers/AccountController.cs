@@ -19,48 +19,28 @@ namespace VirtoCommerce.Web.Controllers
     {
         private const string XsrfKey = "XsrfId";
 
-        private ApplicationSignInManager _signInManager;
-        private ApplicationUserManager _userManager;
+        private ApplicationSignInManager _signInManager
+        {
+            get
+            {
+                return HttpContext.GetOwinContext().Get<ApplicationSignInManager>();
+            }
+        }
+
+        private ApplicationUserManager _userManager
+        {
+            get
+            {
+                return HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
+            }
+        }
+
         private IAuthenticationManager _authenticationManager
         {
             get
             {
                 return HttpContext.GetOwinContext().Authentication;
             }
-        }
-
-        public ApplicationSignInManager SignInManager
-        {
-            get
-            {
-                return _signInManager ?? HttpContext.GetOwinContext().Get<ApplicationSignInManager>();
-            }
-            set
-            {
-                _signInManager = value;
-            }
-        }
-
-        public ApplicationUserManager UserManager
-        {
-            get
-            {
-                return _userManager ?? HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
-            }
-            set
-            {
-                _userManager = value;
-            }
-        }
-
-        public AccountController()
-        {
-        }
-
-        public AccountController(ApplicationUserManager userManager, ApplicationSignInManager signInManager)
-        {
-            this.SignInManager = signInManager;
-            this.UserManager = userManager;
         }
 
         //
@@ -88,7 +68,7 @@ namespace VirtoCommerce.Web.Controllers
                 return this.View("customers/login");
             }
 
-            var result = await SignInManager.PasswordSignInAsync(
+            var result = await _signInManager.PasswordSignInAsync(
                 formModel.Email, formModel.Password, isPersistent: false, shouldLockout: true);
 
             switch (result)
@@ -112,7 +92,7 @@ namespace VirtoCommerce.Web.Controllers
         [HttpGet]
         public async Task<ActionResult> VerifyCode(string provider, string returnUrl, bool rememberMe = false)
         {
-            if (!await SignInManager.HasBeenVerifiedAsync())
+            if (!await _signInManager.HasBeenVerifiedAsync())
             {
                 return this.View("error");
             }
@@ -142,7 +122,7 @@ namespace VirtoCommerce.Web.Controllers
                 return this.View("verify-code");
             }
 
-            var result = await SignInManager.TwoFactorSignInAsync(formModel.Provider, formModel.Code,
+            var result = await _signInManager.TwoFactorSignInAsync(formModel.Provider, formModel.Code,
                 isPersistent: formModel.RememberMe, rememberBrowser: false);
 
             switch (result)
@@ -191,26 +171,30 @@ namespace VirtoCommerce.Web.Controllers
                 UserName = formModel.Email
             };
 
-            var result = await UserManager.CreateAsync(user, formModel.Password);
+            var result = await _userManager.CreateAsync(user, formModel.Password);
 
             if (result.Succeeded)
             {
                 if (user.TwoFactorEnabled)
                 {
-                    user = await UserManager.FindByNameAsync(user.UserName);
+                    user = await _userManager.FindByNameAsync(user.UserName);
 
-                    string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
+                    string code = await _userManager.GenerateEmailConfirmationTokenAsync(user.Id);
                     string callbackUrl = Url.Action("ConfirmEmail", "Account",
                         new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
                     string messageBody =
                         string.Format("Please confirm your account by clicking this <strong><a href=\"{0}\">link</a></strong>", callbackUrl);
 
-                    await UserManager.SendEmailAsync(user.Id, "Confirm your account", messageBody);
+                    await _userManager.SendEmailAsync(user.Id, "Confirm your account", messageBody);
 
                     return this.View("confirmation-sent");
                 }
                 else
                 {
+                    this.Context.Customer = await this.CustomerService.CreateCustomerAsync(formModel.Email, formModel.FirstName, formModel.LastName, null);
+
+                    await _signInManager.PasswordSignInAsync(formModel.Email, formModel.Password, isPersistent: false, shouldLockout: false);
+
                     return RedirectToAction("Index", "Account");
                 }
             }
@@ -233,7 +217,7 @@ namespace VirtoCommerce.Web.Controllers
                 return this.View("error");
             }
 
-            var result = await UserManager.ConfirmEmailAsync(userId, code);
+            var result = await _userManager.ConfirmEmailAsync(userId, code);
 
             return View(result.Succeeded ? "confirmation-done" : "error");
         }
@@ -254,20 +238,20 @@ namespace VirtoCommerce.Web.Controllers
                 return this.View("customers/login");
             }
 
-            var user = await UserManager.FindByNameAsync(formModel.Email);
+            var user = await _userManager.FindByNameAsync(formModel.Email);
 
-            if (user == null || !(await UserManager.IsEmailConfirmedAsync(user.Id)))
+            if (user == null || !(await _userManager.IsEmailConfirmedAsync(user.Id)))
             {
                 return this.View("error");
             }
 
-            string code = await UserManager.GeneratePasswordResetTokenAsync(user.Id);
+            string code = await _userManager.GeneratePasswordResetTokenAsync(user.Id);
             string callbackUrl = Url.Action("ResetPassword", "Account",
                 new { UserId = user.Id, Code = code }, protocol: Request.Url.Scheme);
             string messageBody =
                 string.Format("Please reset your password by clicking <strong><a href=\"{0}\">here</a></strong>", callbackUrl);
 
-            await UserManager.SendEmailAsync(user.Id, "Reset password", messageBody);
+            await _userManager.SendEmailAsync(user.Id, "Reset password", messageBody);
 
             return this.View("confirmation-forgot-password");
         }
@@ -299,14 +283,14 @@ namespace VirtoCommerce.Web.Controllers
                 return this.View("customers/reset_password");
             }
 
-            var user = await UserManager.FindByNameAsync(formModel.Email);
+            var user = await _userManager.FindByNameAsync(formModel.Email);
 
             if (user == null)
             {
                 return this.View("error");
             }
 
-            var result = await UserManager.ResetPasswordAsync(user.Id, formModel.Code, formModel.Password);
+            var result = await _userManager.ResetPasswordAsync(user.Id, formModel.Code, formModel.Password);
 
             if (result.Succeeded)
             {
@@ -335,7 +319,7 @@ namespace VirtoCommerce.Web.Controllers
         [AllowAnonymous]
         public async Task<ActionResult> SendCode(string returnUrl, bool rememberMe = false)
         {
-            string userId = await SignInManager.GetVerifiedUserIdAsync();
+            string userId = await _signInManager.GetVerifiedUserIdAsync();
 
             if (userId == null)
             {
@@ -344,7 +328,7 @@ namespace VirtoCommerce.Web.Controllers
 
             var formModel = new SendCodeFormModel
             {
-                Providers = await UserManager.GetValidTwoFactorProvidersAsync(userId),
+                Providers = await _userManager.GetValidTwoFactorProvidersAsync(userId),
                 RememberMe = rememberMe,
                 ReturnUrl = returnUrl
             };
@@ -368,7 +352,7 @@ namespace VirtoCommerce.Web.Controllers
                 return this.View("send-code");
             }
 
-            if (!await SignInManager.SendTwoFactorCodeAsync(formModel.SelectedProvider))
+            if (!await _signInManager.SendTwoFactorCodeAsync(formModel.SelectedProvider))
             {
                 return this.View("error");
             }
@@ -397,7 +381,7 @@ namespace VirtoCommerce.Web.Controllers
                 return RedirectToAction("", "Account", new { ReturnUrl = returnUrl });
             }
 
-            var result = await SignInManager.ExternalSignInAsync(loginInfo, isPersistent: false);
+            var result = await _signInManager.ExternalSignInAsync(loginInfo, isPersistent: false);
 
             switch (result)
             {
@@ -443,15 +427,15 @@ namespace VirtoCommerce.Web.Controllers
 
             var user = new ApplicationUser { UserName = formModel.Email, Email = formModel.Email };
 
-            var result = await UserManager.CreateAsync(user);
+            var result = await _userManager.CreateAsync(user);
 
             if (result.Succeeded)
             {
-                result = await UserManager.AddLoginAsync(user.Id, loginInfo.Login);
+                result = await _userManager.AddLoginAsync(user.Id, loginInfo.Login);
 
                 if (result.Succeeded)
                 {
-                    await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
+                    await _signInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
 
                     return RedirectToAction("Index", "Account");
                 }
@@ -520,6 +504,30 @@ namespace VirtoCommerce.Web.Controllers
             return this.View("customers/addresses");
         }
 
+        //
+        // POST: /Account/NewAddress
+        [HttpPost]
+        public async Task<ActionResult> NewAddress(NewAddressFormModel formModel, string id)
+        {
+            var form = this.Service.GetForm(formModel.form_type);
+
+            if (!this.ModelState.IsValid)
+            {
+                var errors = this.ModelState.Values.SelectMany(v => v.Errors);
+                form.Errors = new[] { errors.Select(e => e.ErrorMessage).FirstOrDefault() };
+
+                return this.View("customers/addresses");
+            }
+
+            var customer = this.Context.Customer;
+            customer.Addresses.Add(formModel.AsWebModel());
+
+            await this.CustomerService.UpdateCustomerAsync(customer);
+
+            return this.View("customers/addresses");
+        }
+
+
         internal class ChallengeResult : HttpUnauthorizedResult
         {
             public string LoginProvider { get; set; }
@@ -565,12 +573,6 @@ namespace VirtoCommerce.Web.Controllers
     }
 
     //    [HttpGet]
-    //    public ActionResult Addresses()
-    //    {
-    //        return this.View("customers/addresses");
-    //    }
-
-    //    [HttpGet]
     //    public async Task<ActionResult> DeleteAddress(string id)
     //    {
     //        var customer = this.Context.Customer;
@@ -612,56 +614,6 @@ namespace VirtoCommerce.Web.Controllers
     //        return this.View("customers/addresses");
     //    }
 
-    //    [HttpGet]
-    //    public async Task<ActionResult> Index(int? skip, int? take)
-    //    {
-    //        skip = skip ?? 0;
-    //        take = take ?? 20;
-
-    //        var orderSearchResult =
-    //            await
-    //                this.CustomerService.GetOrdersAsync(
-    //                    this.Context.Shop.StoreId,
-    //                    this.Context.Customer.Id,
-    //                    null,
-    //                    skip.Value,
-    //                    take.Value);
-
-    //        this.Context.Customer.OrdersCount = orderSearchResult.TotalCount;
-
-    //        if (orderSearchResult.TotalCount > 0)
-    //        {
-    //            this.Context.Customer.Orders = new List<CustomerOrder>();
-
-    //            foreach (var order in orderSearchResult.CustomerOrders)
-    //            {
-    //                this.Context.Customer.Orders.Add(order.AsWebModel());
-    //            }
-    //        }
-
-    //        return this.View("customers/account");
-    //    }
-
-    //    [HttpPost]
-    //    public async Task<ActionResult> NewAddress(NewAddressFormModel formModel)
-    //    {
-    //        var form = this.Service.GetForm(formModel.form_type);
-
-    //        if (!this.ModelState.IsValid)
-    //        {
-    //            var errors = this.ModelState.Values.SelectMany(v => v.Errors);
-    //            form.Errors = new[] { errors.Select(e => e.ErrorMessage).FirstOrDefault() };
-
-    //            return this.View("customers/addresses");
-    //        }
-
-    //        var customer = this.Context.Customer;
-    //        customer.Addresses.Add(formModel.AsWebModel());
-
-    //        await this.CustomerService.UpdateCustomerAsync(customer);
-
-    //        return this.View("customers/addresses");
-    //    }
 
     //    [HttpGet]
     //    [Route("account/order/{id}")]

@@ -28,7 +28,7 @@ angular.module(moduleName, [])
   }]
 )
 .run(
-  ['$rootScope', 'mainMenuService', 'widgetService', '$state', function ($rootScope, mainMenuService, widgetService, $state) {
+  ['$rootScope', 'mainMenuService', 'widgetService', '$state', 'vaDynamicExpressionService', function ($rootScope, mainMenuService, widgetService, $state, vaDynamicExpressionService) {
       //Register module in main menu
       var menuItem = {
           path: 'browse/marketing',
@@ -40,5 +40,11 @@ angular.module(moduleName, [])
       };
       mainMenuService.addMenuItem(menuItem);
 
-      //Register widgets...
+      //Register expressions
+      vaDynamicExpressionService.registerExpression({
+          id: 'ConditionEntryIs',
+          // templateURL: 'expression-ConditionEntryIs.html',
+          // controller: 'conditionEntryIsController'
+          displayName: 'Product is []'
+      });
   }]);

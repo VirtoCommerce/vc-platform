@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.marketingModule')
-.controller('promotionDetailController', ['$scope', 'bladeNavigationService', 'promotions', 'catalogs', 'stores', 'settings', 'dialogService', function ($scope, bladeNavigationService, promotions, catalogs, stores, settings, dialogService) {
+.controller('promotionDetailController', ['$scope', 'bladeNavigationService', 'promotions', 'catalogs', 'stores', 'settings', 'dialogService', 'vaDynamicExpressionService', function ($scope, bladeNavigationService, promotions, catalogs, stores, settings, dialogService, vaDynamicExpressionService) {
     $scope.blade.refresh = function (parentRefresh) {
         if ($scope.blade.isNew) {
             promotions.getNew({}, function (data) {
@@ -151,12 +151,14 @@
     // Dynamic ExpressionBlock
     function initializeExpressions(data) {
         //data.children = getTestExpressionBlocks();
-        data.children = data.availableChildren;
         _.each(data.children, extendElementBlock);
     }
 
     function extendElementBlock(expressionBlock) {
         var retVal;
+        if (vaDynamicExpressionService.expressions[expressionBlock.id]) {
+            retVal = vaDynamicExpressionService.expressions[expressionBlock.id];
+        }
         switch (expressionBlock.id) {
             case 'BlockCustomerCondition':
                 retVal = {
@@ -182,12 +184,32 @@
                     headerElements: [constructLabelElement('Registered user')],
                 };
                 break;
+
             case 'BlockCatalogCondition':
                 retVal = {
                     headerElements: constructAllAnyBlock(expressionBlock, 'if', 'of these catalog conditions are true'),
                     newChildLabel: '+ add condition'
                 }
                 break;
+            //case 'ConditionEntryIs':
+            //    retVal = {
+            //        displayName: 'Product is []',
+            //        headerElements: [constructLabelElement('Product is '),
+            //                         constructItemSelector(expressionBlock)]
+            //    };
+            //    break;
+            case 'ConditionCurrencyIs':
+                retVal = {
+                    displayName: 'Currency is []',
+                    headerElements: [constructLabelElement('Currency is '),
+                                     {
+                                         type: 'currency',
+                                         $parentElement: expressionBlock,
+                                         availableEntries: settings.getValues({ id: 'VirtoCommerce.Core.General.Currencies' })
+                                     }]
+                };
+                break;
+
             case 'BlockCartCondition':
                 retVal = {
                     headerElements: constructAllAnyBlock(expressionBlock, 'if', 'of these cart conditions are true'),
@@ -261,6 +283,28 @@
                     $parentElement: expressionBlock
                 });
                 retVal.headerElements.push(constructLabelElement('  items'));
+                break;
+            case 'RewardShippingGetOfAbsShippingMethod':
+                retVal = {
+                    displayName: 'Get $[] off shipping',
+                    headerElements: constructAmountBlock(expressionBlock, 'Get $', ' off shipping')
+                };
+                retVal.headerElements.push({
+                    type: 'shippingMethod',
+                    $parentElement: expressionBlock,
+                    availableEntries: shippingMethods
+                });
+                break;
+            case 'RewardShippingGetOfRelShippingMethod':
+                retVal = {
+                    displayName: 'Get [] % off shipping',
+                    headerElements: constructAmountBlock(expressionBlock, 'Get ', ' % off shipping')
+                };
+                retVal.headerElements.push({
+                    type: 'shippingMethod',
+                    $parentElement: expressionBlock,
+                    availableEntries: shippingMethods
+                });
                 break;
             default:
                 retVal = {
@@ -555,4 +599,5 @@
     //        $scope.blade.currentEntity.exclusivity = data[0];
     //    }
     //});
+    var shippingMethods = [{ id: 1, name: 'method1' }, { id: 2, name: 'method 2' }];
 }]);
