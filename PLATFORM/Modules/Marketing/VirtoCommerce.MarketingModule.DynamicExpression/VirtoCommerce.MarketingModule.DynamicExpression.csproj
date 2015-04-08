@@ -1,0 +1,105 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{9E4301FC-541E-4880-A28C-4F617D272B69}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>VirtoCommerce.MarketingModule.DynamicExpression</RootNamespace>
+    <AssemblyName>VirtoCommerce.MarketingModule.DynamicExpression</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\packages\Newtonsoft.Json.6.0.8\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Promotion\Conditions\BlockCartCondition.cs" />
+    <Compile Include="Promotion\Conditions\BlockCatalogCondition.cs" />
+    <Compile Include="Promotion\Conditions\BlockConditionAndOr.cs" />
+    <Compile Include="Promotion\Conditions\BlockCustomerCondition.cs" />
+    <Compile Include="Promotion\Conditions\ConditionAtCartItemExtendedTotal.cs" />
+    <Compile Include="Promotion\Conditions\ConditionAtNumItemsInCart.cs" />
+    <Compile Include="Promotion\Conditions\ConditionAtNumItemsOfCategoryAreInCart.cs" />
+    <Compile Include="Promotion\Conditions\ConditionAtNumItemsOfEntryAreInCart.cs" />
+    <Compile Include="Promotion\Conditions\ConditionBase.cs" />
+    <Compile Include="Promotion\Conditions\ConditionCartSubtotalLeast.cs" />
+    <Compile Include="Promotion\Conditions\ConditionCategoryIs.cs" />
+    <Compile Include="Promotion\Conditions\ConditionCodeContains.cs" />
+    <Compile Include="Promotion\Conditions\ConditionCurrencyIs.cs" />
+    <Compile Include="Promotion\Conditions\ConditionEntryIs.cs" />
+    <Compile Include="Promotion\Conditions\ConditionIsEveryone.cs" />
+    <Compile Include="Promotion\Conditions\ConditionIsFirstTimeBuyer.cs" />
+    <Compile Include="Promotion\Conditions\ConditionIsRegisteredUser.cs" />
+    <Compile Include="DynamicExpressionBlock.cs" />
+    <Compile Include="DynamicExpression.cs" />
+    <Compile Include="Promotion\Helpers\PromotionEvaluationContextExtension.cs" />
+    <Compile Include="Promotion\IConditionExpression.cs" />
+    <Compile Include="Promotion\IRewardExpression.cs" />
+    <Compile Include="Promotion\PromoDynamicExpressionTree.cs" />
+    <Compile Include="Promotion\Rewards\BlockReward.cs" />
+    <Compile Include="Promotion\Rewards\RewardCartGetOfAbsSubtotal.cs" />
+    <Compile Include="Promotion\Rewards\RewardItemGetFreeNumItemOfProduct.cs" />
+    <Compile Include="Promotion\Rewards\RewardItemGetOfAbs.cs" />
+    <Compile Include="Promotion\Rewards\RewardItemGetOfAbsForNum.cs" />
+    <Compile Include="Promotion\Rewards\RewardItemGetOfRel.cs" />
+    <Compile Include="Promotion\Rewards\RewardItemGetOfRelForNum.cs" />
+    <Compile Include="Promotion\Rewards\RewardItemGiftNumItem.cs" />
+    <Compile Include="Promotion\Rewards\RewardShippingGetOfAbsShippingMethod.cs" />
+    <Compile Include="Promotion\Rewards\RewardShippingGetOfRelShippingMethod.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Core\CommerceFoundation\CommerceFoundation.csproj">
+      <Project>{e7fc9a51-1b39-4bdc-983a-8a059c5fc58b}</Project>
+      <Name>CommerceFoundation</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Core\VirtoCommerce.Domain\VirtoCommerce.Domain.csproj">
+      <Project>{67c58a78-ddea-4fa3-a969-1cab582918e4}</Project>
+      <Name>VirtoCommerce.Domain</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Content\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
