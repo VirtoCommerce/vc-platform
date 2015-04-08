@@ -394,72 +394,70 @@ namespace VirtoCommerce.Web.Models.Services
                                new SubmitForm
                                {
                                    Id = "customer_login",
+                                   FormType = "customer_login",
                                    ActionLink = VirtualPathUtility.ToAbsolute("~/account/login"),
                                    PasswordNeeded = true
                                },
                                new SubmitForm
                                {
+                                   Id = "external_login",
+                                   FormType = "external_login",
+                                   ActionLink = VirtualPathUtility.ToAbsolute("~/account/externallogin")
+                               },
+                               new SubmitForm
+                               {
+                                   Id = "guest_login",
+                                   FormType = "guest_login",
+                                   ActionLink = VirtualPathUtility.ToAbsolute("~/account/guestlogin")
+                               },
+                               new SubmitForm
+                               {
                                    Id = "create_customer",
+                                   FormType = "create_customer",
                                    ActionLink = VirtualPathUtility.ToAbsolute("~/account/register"),
                                    PasswordNeeded = true
                                },
                                new SubmitForm
                                {
                                    Id = "recover_customer_password",
+                                   FormType = "recover_customer_password",
                                    ActionLink = VirtualPathUtility.ToAbsolute("~/account/forgotpassword")
                                },
                                new SubmitForm
                                {
                                    Id = "reset-password",
+                                   FormType = "reset_password",
                                    ActionLink = VirtualPathUtility.ToAbsolute("~/account/resetpassword")
                                },
                                new SubmitForm
                                {
-                                   Id = "external_login",
-                                   ActionLink = VirtualPathUtility.ToAbsolute("~/account/externallogin")
-                               },
-                               new SubmitForm
-                               {
                                    Id = "send-code",
+                                   FormType = "send_code",
                                    ActionLink = VirtualPathUtility.ToAbsolute("~/account/sendcode")
                                },
                                new SubmitForm
                                {
                                    Id = "verify_code",
+                                   FormType = "verify_code",
                                    ActionLink = VirtualPathUtility.ToAbsolute("~/account/verifycode")
                                },
                                new SubmitForm
                                {
                                    Id = "confirm-external-login",
+                                   FormType = "confirm_external_login",
                                    ActionLink = VirtualPathUtility.ToAbsolute("~/account/externalloginconfirmation")
                                },
                                new SubmitForm
                                {
-                                   Id = "customer_address",
-                                   Properties = new Dictionary<string, object> { { "formId", "address_form_new" } },
-                                   ActionLink = VirtualPathUtility.ToAbsolute("~/account/newaddress"),
-                                   PasswordNeeded = true
-                               },
-                               //new SubmitForm
-                               //{
-                               //    Id = "customer_address",
-                               //    ActionLink = VirtualPathUtility.ToAbsolute("~/account/editaddress"),
-                               //    PasswordNeeded = true
-                               //},
-                               new SubmitForm
-                               {
                                    Id = "edit_checkout_step_1",
+                                   FormType = "edit_checkout_step_1",
                                    ActionLink = VirtualPathUtility.ToAbsolute("~/checkout/step1"),
                                },
                                new SubmitForm
                                {
                                    Id = "edit_checkout_step_2",
+                                   FormType = "edit_checkout_step_2",
                                    ActionLink = VirtualPathUtility.ToAbsolute("~/checkout/step2"),
-                               },
-                               new SubmitForm
-                               {
-                                   Id = "contact",
-                                   ActionLink = VirtualPathUtility.ToAbsolute("~/account/contact")
                                }
                            };
 
