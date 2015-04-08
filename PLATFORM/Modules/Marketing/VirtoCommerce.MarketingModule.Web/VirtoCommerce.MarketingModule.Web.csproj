@@ -179,6 +179,12 @@
   <ItemGroup>
     <Content Include="Scripts\common\marketing-main.js" />
     <Content Include="Scripts\common\marketing-main.tpl.html" />
+    <Content Include="Scripts\dynamicContent\blades\dynamicContent-list.js" />
+    <Content Include="Scripts\dynamicContent\blades\dynamicContent-list.tpl.html" />
+    <Content Include="Scripts\dynamicContent\blades\placeholders\add.js" />
+    <Content Include="Scripts\dynamicContent\blades\placeholders\add.tpl.html" />
+    <Content Include="Scripts\dynamicContent\blades\placeholders\list.js" />
+    <Content Include="Scripts\dynamicContent\blades\placeholders\list.tpl.html" />
     <Content Include="Scripts\promotion\blades\promotion-detail.js" />
     <Content Include="Scripts\promotion\blades\promotion-detail.tpl.html" />
     <Content Include="Scripts\promotion\blades\promotion-list.js" />
@@ -193,9 +199,7 @@
       <DependentUpon>web.config</DependentUpon>
     </None>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Scripts\dynamicContent\blades\" />
-  </ItemGroup>
+  <ItemGroup />
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
