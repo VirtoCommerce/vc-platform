@@ -501,13 +501,51 @@ namespace VirtoCommerce.Web.Controllers
         [HttpGet]
         public ActionResult Addresses()
         {
+            var forms = this.Context.Forms.ToList();
+
+            foreach (var address in this.Context.Customer.Addresses)
+            {
+                var addressForm = new SubmitForm();
+
+                addressForm.ActionLink = "/Account/EditAddress?id=" + address.Id;
+                addressForm.Id = address.Id;
+                addressForm.FormType = "customer_address";
+                addressForm.Properties["address1"] = address.Address1;
+                addressForm.Properties["address2"] = address.Address2;
+                addressForm.Properties["city"] = address.City;
+                addressForm.Properties["company"] = address.Company;
+                addressForm.Properties["country"] = address.Country;
+                addressForm.Properties["country_code"] = address.CountryCode;
+                addressForm.Properties["first_name"] = address.FirstName;
+                addressForm.Properties["id"] = "address_form_" + address.Id;
+                addressForm.Properties["last_name"] = address.LastName;
+                addressForm.Properties["phone"] = address.Phone;
+                addressForm.Properties["province"] = address.Province;
+                addressForm.Properties["province_code"] = address.ProvinceCode;
+                addressForm.Properties["zip"] = address.Zip;
+
+                forms.Add(addressForm);
+            }
+
+            var newAddress = new SubmitForm
+            {
+                ActionLink = "/Account/NewAddress",
+                Id = "new",
+                FormType = "customer_address"
+            };
+            newAddress.Properties.Add("id", "address_form_new");
+
+            forms.Add(newAddress);
+
+            this.Context.Forms = forms.ToArray();
+
             return this.View("customers/addresses");
         }
 
         //
         // POST: /Account/NewAddress
         [HttpPost]
-        public async Task<ActionResult> NewAddress(NewAddressFormModel formModel, string id)
+        public async Task<ActionResult> NewAddress(NewAddressFormModel formModel)
         {
             var form = this.Service.GetForm(formModel.form_type);
 
@@ -527,6 +565,52 @@ namespace VirtoCommerce.Web.Controllers
             return this.View("customers/addresses");
         }
 
+        //
+        // POST: /Account/EditAddress
+        [HttpPost]
+        public async Task<ActionResult> EditAddress(CustomerAddressFormModel formModel, string id)
+        {
+            var form = this.Service.GetForm(formModel.form_type);
+
+            if (!this.ModelState.IsValid)
+            {
+                var errors = this.ModelState.Values.SelectMany(v => v.Errors);
+                form.Errors = new[] { errors.Select(e => e.ErrorMessage).FirstOrDefault() };
+
+                return this.View("customers/addresses");
+            }
+
+            var customer = this.Context.Customer;
+            var customerAddress = customer.Addresses.FirstOrDefault(a => a.Id == id);
+
+            if (customerAddress != null)
+            {
+                customer.Addresses.Remove(customerAddress);
+                customer.Addresses.Add(formModel.AsWebModel());
+
+                await this.CustomerService.UpdateCustomerAsync(customer);
+            }
+
+            return RedirectToAction("Addresses", "Account");
+        }
+
+        //
+        // POST: /Account/Addresses
+        [HttpPost]
+        public async Task<ActionResult> Addresses(string id)
+        {
+            var customer = this.Context.Customer;
+            var customerAddress = customer.Addresses.FirstOrDefault(a => a.Id == id);
+
+            if (customerAddress != null)
+            {
+                customer.Addresses.Remove(customerAddress);
+
+                await this.CustomerService.UpdateCustomerAsync(customer);
+            }
+
+            return RedirectToAction("Addresses", "Account");
+        }
 
         internal class ChallengeResult : HttpUnauthorizedResult
         {
@@ -572,47 +656,7 @@ namespace VirtoCommerce.Web.Controllers
         }
     }
 
-    //    [HttpGet]
-    //    public async Task<ActionResult> DeleteAddress(string id)
-    //    {
-    //        var customer = this.Context.Customer;
-    //        var customerAddress = customer.Addresses.FirstOrDefault(a => a.Id == id);
 
-    //        if (customerAddress != null)
-    //        {
-    //            customer.Addresses.Remove(customerAddress);
-
-    //            await this.CustomerService.UpdateCustomerAsync(customer);
-    //        }
-
-    //        return this.View("customers/addresses");
-    //    }
-
-    //    [HttpPost]
-    //    public async Task<ActionResult> EditAddress(CustomerAddressFormModel formModel)
-    //    {
-    //        var form = this.Service.GetForm(formModel.form_type);
-
-    //        if (!this.ModelState.IsValid)
-    //        {
-    //            var errors = this.ModelState.Values.SelectMany(v => v.Errors);
-    //            form.Errors = new[] { errors.Select(e => e.ErrorMessage).FirstOrDefault() };
-
-    //            return this.View("customers/addresses");
-    //        }
-
-    //        var customer = this.Context.Customer;
-    //        var customerAddress = customer.Addresses.FirstOrDefault(a => a.Id == formModel.Id);
-
-    //        if (customerAddress != null)
-    //        {
-    //            customerAddress = formModel.AsWebModel();
-    //        }
-
-    //        await this.CustomerService.UpdateCustomerAsync(customer);
-
-    //        return this.View("customers/addresses");
-    //    }
 
 
     //    [HttpGet]
