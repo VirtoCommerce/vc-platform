@@ -13,7 +13,8 @@
   'angularMoment',
   'angularFileUpload',
   'ngSanitize',
-  'ng-context-menu'
+  'ng-context-menu',
+  'ui.grid'
 ];
 
 angular.module('platformWebApp', AppDependencies).

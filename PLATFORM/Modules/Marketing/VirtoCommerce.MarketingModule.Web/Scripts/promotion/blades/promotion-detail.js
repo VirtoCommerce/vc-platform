@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.marketingModule')
-.controller('promotionDetailController', ['$scope', 'bladeNavigationService', 'promotions', 'catalogs', 'stores', 'settings', 'dialogService', function ($scope, bladeNavigationService, promotions, catalogs, stores, settings, dialogService) {
+.controller('promotionDetailController', ['$scope', 'bladeNavigationService', 'promotions', 'catalogs', 'stores', 'settings', 'dialogService', 'vaDynamicExpressionService', function ($scope, bladeNavigationService, promotions, catalogs, stores, settings, dialogService, vaDynamicExpressionService) {
     $scope.blade.refresh = function (parentRefresh) {
         if ($scope.blade.isNew) {
             promotions.getNew({}, function (data) {
@@ -61,9 +61,10 @@
 
     function stripOffUiInformation(expressionElement) {
         expressionElement.availableChildren = undefined;
+        expressionElement.displayName = undefined;
         expressionElement.getValidationError = undefined;
-        expressionElement.headerElements = undefined;
         expressionElement.newChildLabel = undefined;
+        expressionElement.templateURL = undefined;
 
         _.each(expressionElement.children, stripOffUiInformation);
     };
@@ -151,122 +152,167 @@
     // Dynamic ExpressionBlock
     function initializeExpressions(data) {
         //data.children = getTestExpressionBlocks();
-        data.children = data.availableChildren;
         _.each(data.children, extendElementBlock);
     }
 
     function extendElementBlock(expressionBlock) {
         var retVal;
-        switch (expressionBlock.id) {
-            case 'BlockCustomerCondition':
-                retVal = {
-                    headerElements: constructAllAnyBlock(expressionBlock, 'For visitor with', 'of these eligibilities'),
-                    newChildLabel: '+ add usergroup'
-                }
-                break;
-            case 'ConditionIsEveryone':
-                retVal = {
-                    displayName: 'Everyone',
-                    headerElements: [constructLabelElement('Everyone')],
-                };
-                break;
-            case 'ConditionIsFirstTimeBuyer':
-                retVal = {
-                    displayName: 'First time buyer',
-                    headerElements: [constructLabelElement('First time buyer')],
-                };
-                break;
-            case 'ConditionIsRegisteredUser':
-                retVal = {
-                    displayName: 'Registered user',
-                    headerElements: [constructLabelElement('Registered user')],
-                };
-                break;
-            case 'BlockCatalogCondition':
-                retVal = {
-                    headerElements: constructAllAnyBlock(expressionBlock, 'if', 'of these catalog conditions are true'),
-                    newChildLabel: '+ add condition'
-                }
-                break;
-            case 'BlockCartCondition':
-                retVal = {
-                    headerElements: constructAllAnyBlock(expressionBlock, 'if', 'of these cart conditions are true'),
-                    newChildLabel: '+ add condition'
-                }
-                break;
-            case 'RewardBlock':
-                retVal = {
-                    headerElements: [constructLabelElement('They get: ')],
-                    newChildLabel: '+ add effect',
-                    getValidationError: function (data) {
-                        if (data.children && data.children.length) {
-                            return undefined;
-                        } else {
-                            return 'Promotion requires at least one reward';
-                        }
+        if (vaDynamicExpressionService.expressions[expressionBlock.id]) {
+            retVal = vaDynamicExpressionService.expressions[expressionBlock.id];
+        } else {
+            switch (expressionBlock.id) {
+                case 'BlockCustomerCondition':
+                    retVal = {
+                        headerElements: constructAllAnyBlock(expressionBlock, 'For visitor with', 'of these eligibilities'),
+                        newChildLabel: '+ add usergroup'
                     }
-                };
-                break;
-            case 'RewardCartGetOfAbsSubtotal':
-                retVal = {
-                    displayName: 'Get $ [] off cart subtotal',
-                    headerElements: constructAmountBlock(expressionBlock, 'Get $', 'off cart subtotal')
-                };
-                break;
-            case 'RewardCartGetOfRelSubtotal':
-                retVal = {
-                    displayName: 'Get [] % off cart subtotal',
-                    headerElements: constructAmountBlock(expressionBlock, 'Get ', ' % off cart subtotal')
-                };
-                break;
-            case 'RewardItemGetFreeNumItemOfProduct':
-                retVal = {
-                    displayName: 'Get [] free items of Product',
-                    headerElements: constructTypedBlock(expressionBlock, 'Get ', ' free items of Product', 'numericInput')
-                };
-                retVal.headerElements.push(constructItemSelector(expressionBlock));
-                break;
-            case 'RewardItemGetOfAbs':
-                retVal = {
-                    displayName: 'Get $[] off',
-                    headerElements: constructAmountBlock(expressionBlock, 'Get $', ' off')
-                };
-                retVal.headerElements.push(constructItemSelector(expressionBlock));
-                break;
-            case 'RewardItemGetOfRel':
-                retVal = {
-                    displayName: 'Get [] % off',
-                    headerElements: constructAmountBlock(expressionBlock, 'Get ', ' % off')
-                };
-                retVal.headerElements.push(constructItemSelector(expressionBlock));
-                break;
-            case 'RewardItemGetOfAbsForNum':
-                retVal = {
-                    displayName: 'Get $[] off [] items',
-                    headerElements: constructAmountBlock(expressionBlock, 'Get $', ' off for')
-                };
-                retVal.headerElements.push({
-                    type: 'numericInput',
-                    $parentElement: expressionBlock
-                });
-                retVal.headerElements.push(constructLabelElement('  items'));
-                break;
-            case 'RewardItemGetOfRelForNum':
-                retVal = {
-                    displayName: 'Get [] % off [] items',
-                    headerElements: constructAmountBlock(expressionBlock, 'Get ', ' % off for')
-                };
-                retVal.headerElements.push({
-                    type: 'numericInput',
-                    $parentElement: expressionBlock
-                });
-                retVal.headerElements.push(constructLabelElement('  items'));
-                break;
-            default:
-                retVal = {
-                    displayName: 'unknown element: ' + expressionBlock.id,
-                    headerElements: [constructLabelElement('unknown element: ' + expressionBlock.id)]
-                };
+                    break;
+                case 'ConditionIsEveryone':
+                    retVal = {
+                        displayName: 'Everyone',
+                        headerElements: [constructLabelElement('Everyone')],
+                    };
+                    break;
+                case 'ConditionIsFirstTimeBuyer':
+                    retVal = {
+                        displayName: 'First time buyer',
+                        headerElements: [constructLabelElement('First time buyer')],
+                    };
+                    break;
+                case 'ConditionIsRegisteredUser':
+                    retVal = {
+                        displayName: 'Registered user',
+                        headerElements: [constructLabelElement('Registered user')],
+                    };
+                    break;
+
+                case 'BlockCatalogCondition':
+                    retVal = {
+                        headerElements: constructAllAnyBlock(expressionBlock, 'if', 'of these catalog conditions are true'),
+                        newChildLabel: '+ add condition'
+                    }
+                    break;
+                    //case 'ConditionEntryIs':
+                    //    retVal = {
+                    //        displayName: 'Product is []',
+                    //        headerElements: [constructLabelElement('Product is '),
+                    //                         constructItemSelector(expressionBlock)]
+                    //    };
+                    //    break;
+                case 'ConditionCurrencyIs':
+                    retVal = {
+                        displayName: 'Currency is []',
+                        headerElements: [constructLabelElement('Currency is '),
+                                         {
+                                             type: 'currency',
+                                             $parentElement: expressionBlock,
+                                             availableEntries: settings.getValues({ id: 'VirtoCommerce.Core.General.Currencies' })
+                                         }]
+                    };
+                    break;
+
+                case 'BlockCartCondition':
+                    retVal = {
+                        headerElements: constructAllAnyBlock(expressionBlock, 'if', 'of these cart conditions are true'),
+                        newChildLabel: '+ add condition'
+                    }
+                    break;
+                case 'RewardBlock':
+                    retVal = {
+                        headerElements: [constructLabelElement('They get: ')],
+                        newChildLabel: '+ add effect',
+                        getValidationError: function (data) {
+                            if (data.children && data.children.length) {
+                                return undefined;
+                            } else {
+                                return 'Promotion requires at least one reward';
+                            }
+                        }
+                    };
+                    break;
+                case 'RewardCartGetOfAbsSubtotal':
+                    retVal = {
+                        displayName: 'Get $ [] off cart subtotal',
+                        headerElements: constructAmountBlock(expressionBlock, 'Get $', 'off cart subtotal')
+                    };
+                    break;
+                case 'RewardCartGetOfRelSubtotal':
+                    retVal = {
+                        displayName: 'Get [] % off cart subtotal',
+                        headerElements: constructAmountBlock(expressionBlock, 'Get ', ' % off cart subtotal')
+                    };
+                    break;
+                case 'RewardItemGetFreeNumItemOfProduct':
+                    retVal = {
+                        displayName: 'Get [] free items of Product',
+                        headerElements: constructTypedBlock(expressionBlock, 'Get ', ' free items of Product', 'numericInput')
+                    };
+                    retVal.headerElements.push(constructItemSelector(expressionBlock));
+                    break;
+                case 'RewardItemGetOfAbs':
+                    retVal = {
+                        displayName: 'Get $[] off',
+                        headerElements: constructAmountBlock(expressionBlock, 'Get $', ' off')
+                    };
+                    retVal.headerElements.push(constructItemSelector(expressionBlock));
+                    break;
+                case 'RewardItemGetOfRel':
+                    retVal = {
+                        displayName: 'Get [] % off',
+                        headerElements: constructAmountBlock(expressionBlock, 'Get ', ' % off')
+                    };
+                    retVal.headerElements.push(constructItemSelector(expressionBlock));
+                    break;
+                case 'RewardItemGetOfAbsForNum':
+                    retVal = {
+                        displayName: 'Get $[] off [] items',
+                        headerElements: constructAmountBlock(expressionBlock, 'Get $', ' off for')
+                    };
+                    retVal.headerElements.push({
+                        type: 'numericInput',
+                        $parentElement: expressionBlock
+                    });
+                    retVal.headerElements.push(constructLabelElement('  items'));
+                    break;
+                case 'RewardItemGetOfRelForNum':
+                    retVal = {
+                        displayName: 'Get [] % off [] items',
+                        headerElements: constructAmountBlock(expressionBlock, 'Get ', ' % off for')
+                    };
+                    retVal.headerElements.push({
+                        type: 'numericInput',
+                        $parentElement: expressionBlock
+                    });
+                    retVal.headerElements.push(constructLabelElement('  items'));
+                    break;
+                case 'RewardShippingGetOfAbsShippingMethod':
+                    retVal = {
+                        displayName: 'Get $[] off shipping',
+                        headerElements: constructAmountBlock(expressionBlock, 'Get $', ' off shipping')
+                    };
+                    retVal.headerElements.push({
+                        type: 'shippingMethod',
+                        $parentElement: expressionBlock,
+                        availableEntries: shippingMethods
+                    });
+                    break;
+                case 'RewardShippingGetOfRelShippingMethod':
+                    retVal = {
+                        displayName: 'Get [] % off shipping',
+                        headerElements: constructAmountBlock(expressionBlock, 'Get ', ' % off shipping')
+                    };
+                    retVal.headerElements.push({
+                        type: 'shippingMethod',
+                        $parentElement: expressionBlock,
+                        availableEntries: shippingMethods
+                    });
+                    break;
+                default:
+                    retVal = {
+                        displayName: 'unknown element: ' + expressionBlock.id,
+                        headerElements: [constructLabelElement('unknown element: ' + expressionBlock.id)]
+                    };
+            }
         }
 
         //angular.merge(expressionBlock, retVal);
@@ -430,44 +476,6 @@
     var getTestExpressionBlocks = function () {
         return [
         {
-            headerElements: [
-                {
-                    type: 'label',
-                    text: 'For visitor with '
-                },
-                {
-                    type: 'dictionary',
-                    text: 'all'
-                },
-                {
-                    type: 'label',
-                    text: ' of these eligibilities'
-                }],
-            children: [
-                {
-                    headerElements: [
-                        {
-                            type: 'label',
-                            text: 'Everyone'
-                        }
-                    ]
-                },
-                {
-                    headerElements: [
-                        {
-                            type: 'label',
-                            text: 'First time buyer'
-                        }
-                    ]
-                },
-                {
-                    headerElements: [
-                        {
-                            type: 'label',
-                            text: 'Registered user'
-                        }
-                    ]
-                }],
             newChildLabel: '+ add usergroup',
             getValidationError: function (data) {
                 if (data.children && data.children.length) {
@@ -478,46 +486,9 @@
             }
         },
         {
-            headerElements: [
-                {
-                    type: 'label',
-                    text: 'if '
-                },
-                {
-                    type: 'dictionary',
-                    text: 'all'
-                },
-                {
-                    type: 'label',
-                    text: ' of these conditions are true'
-                }],
             children: [
                 {
-                    headerElements: [
-                        {
-                            type: 'label',
-                            text: 'At least'
-                        },
-                        {
-                            type: 'numericInput',
-                            // text: 'qty'
-                            number: 0
-                        },
-                        {
-                            type: 'label',
-                            text: 'items in shopping cart excluding:'
-                        }
-                    ],
                     children: [
-                        {
-                            headerElements: [
-                                {
-                                    type: 'label',
-                                    text: 'items of category'
-                                },
-                                constructCategorySelector()
-                            ]
-                        }
                     ],
                     newChildLabel: '+ excluding'
                 }
@@ -528,13 +499,6 @@
             }
         },
         {
-            headerElements: [
-                {
-                    type: 'label',
-                    text: 'They get:'
-                }],
-            children: [],
-            newChildLabel: '+ add effect',
             getValidationError: function (data) {
                 if (data.children && data.children.length) {
                     return undefined;
@@ -555,4 +519,5 @@
     //        $scope.blade.currentEntity.exclusivity = data[0];
     //    }
     //});
+    var shippingMethods = [{ id: 1, name: 'method1' }, { id: 2, name: 'method 2' }];
 }]);

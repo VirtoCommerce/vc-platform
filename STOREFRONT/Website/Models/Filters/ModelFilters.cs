@@ -36,6 +36,18 @@ namespace VirtoCommerce.Web.Models.Filters
             return lang;
         }
 
+        public static string EditCustomerAddressLink(string input, string id)
+        {
+            return string.Format(
+                "<a href=\"#\" onclick=\"Shopify.CustomerAddress.toggleForm({0});return false\">{1}</a>", id, input);
+        }
+
+        public static string DeleteCustomerAddressLink(string input, string id)
+        {
+            return string.Format(
+                "<a href=\"#\" onclick=\"Shopify.CustomerAddress.destroy({0}, 'Are you sure you wish to delete this address?');return false\">{1}</a>", id, input);
+        }
+
         public static string CustomerLoginLink(string input)
         {
             var path = VirtualPathUtility.ToAbsolute("~/account/login");
