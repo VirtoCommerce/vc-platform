@@ -1,7 +1,9 @@
 ﻿angular.module('virtoCommerce.marketingModule')
-.controller('promotionExpressionsController', ['$scope', 'settings', 'bladeNavigationService', function ($scope, settings, bladeNavigationService) {
+.controller('promotionConditionCurrencyIsController', ['$scope', 'settings', function ($scope, settings) {
+    $scope.availableCurrencies = settings.getValues({ id: 'VirtoCommerce.Core.General.Currencies' });
+}])
+.controller('promotionExpressionsController', ['$scope', 'bladeNavigationService', function ($scope, bladeNavigationService) {
 
-    
     $scope.openItemSelectWizard = function (parentElement) {
         var selectedListEntries = [];
         var newBlade = {
@@ -90,6 +92,4 @@
 
         bladeNavigationService.showBlade(newBlade, $scope.blade);
     }
-
-    $scope.availableCurrencies = settings.getValues({ id: 'VirtoCommerce.Core.General.Currencies' });
 }]);

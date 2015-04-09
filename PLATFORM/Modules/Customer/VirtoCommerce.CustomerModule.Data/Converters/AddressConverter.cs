@@ -30,6 +30,7 @@ namespace VirtoCommerce.CustomerModule.Data.Converters
 
 			var retVal = new foundationModel.Address();
 			retVal.InjectFrom(address);
+			retVal.DaytimePhoneNumber = address.Phone;
 			return retVal;
 		}
 

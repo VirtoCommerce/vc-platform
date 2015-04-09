@@ -1,20 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
+﻿using System.Linq;
 using System.Web.Http;
 using System.Web.Http.Description;
-using System.Web.Http.ModelBinding;
-using ExpressionSerialization;
-using VirtoCommerce.CustomerModule.Web.Binders;
+using VirtoCommerce.Domain.Marketing.Model;
 using VirtoCommerce.Domain.Marketing.Services;
-using coreModel = VirtoCommerce.Domain.Marketing.Model;
-using webModel = VirtoCommerce.MarketingModule.Web.Model;
 using VirtoCommerce.MarketingModule.Web.Converters;
-using Newtonsoft.Json;
-using VirtoCommerce.MarketingModule.Web.Model.TypeExpressions;
-using VirtoCommerce.MarketingModule.Data;
+using webModel = VirtoCommerce.MarketingModule.Web.Model;
 
 namespace VirtoCommerce.MarketingModule.Web.Controllers.Api
 {

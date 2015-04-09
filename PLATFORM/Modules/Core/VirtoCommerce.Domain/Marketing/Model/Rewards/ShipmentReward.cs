@@ -11,10 +11,26 @@ namespace VirtoCommerce.Domain.Marketing.Model
 	/// </summary>
 	public class ShipmentReward : AmountBasedReward
 	{
-		public string ShippingMethod
+		public ShipmentReward()
 		{
-			get;
-			set;
+		}
+		//Copy constructor
+		protected ShipmentReward(ShipmentReward other)
+			:base(other)
+		{
+			ShippingMethod = other.ShippingMethod;
+		}
+		public string ShippingMethod { get; set; }
+
+		public override PromotionReward Clone()
+		{
+			return new ShipmentReward(this);
+		}
+
+
+		public override string ToString()
+		{
+			return String.Format("{0} {1}", base.ToString(), ShippingMethod);
 		}
 	}
 }

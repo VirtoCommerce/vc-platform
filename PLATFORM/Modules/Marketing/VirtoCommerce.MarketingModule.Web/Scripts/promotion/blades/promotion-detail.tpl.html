@@ -113,14 +113,14 @@
                         <va-dynamic-expression-tree ng-controller="promotionExpressionsController" source="blade.currentEntity.dynamicExpression"></va-dynamic-expression-tree>
                         <!--<va-expression-block ng-repeat="data in blade.currentEntity.dynamicExpression.children" data="data"></va-expression-block>
                             <script type="text/ng-template" id="expression-shippingMethod.html">
-                            <a class="__link" context-menu data-target="shp_menu{{element.$parentElement.id}}">{{element.$parentElement.shippingMethod ? element.$parentElement.shippingMethod : 'select shipping'}}</a>
+                            <a class="__link" left-click-menu data-target="shp_menu{{element.$parentElement.id}}">{{element.$parentElement.shippingMethod ? element.$parentElement.shippingMethod : 'select shipping'}}</a>
                             <ul class="menu __context" role="menu" id="shp_menu{{element.$parentElement.id}}">
                                 <li class="menu-item" ng-click='element.$parentElement.shippingMethod=x.id;' ng-repeat="x in element.availableEntries">{{x.name}}</li>
                             </ul>
                         </script>-->
                         <script type="text/ng-template" id="expression-BlockCustomerCondition.html">
                             For visitor with
-                            <a class="__link" context-menu data-target="allAny_menu{{element.id}}">{{element.all | boolToValue:'all':'any'}}</a> of these eligibilities
+                            <a class="__link" left-click-menu data-target="allAny_menu{{element.id}}">{{element.all | boolToValue:'all':'any'}}</a> of these eligibilities
                             <ul class="menu __context" role="menu" id="allAny_menu{{element.id}}">
                                 <li class="menu-item" ng-click='element.all=true;'>all</li>
                                 <li class="menu-item" ng-click='element.all=false;'>any</li>
@@ -138,7 +138,7 @@
 
                         <script type="text/ng-template" id="expression-BlockCatalogCondition.html">
                             if
-                            <a class="__link" context-menu data-target="allAny_menu{{element.id}}">{{element.all | boolToValue:'all':'any'}}</a> of these catalog conditions are true
+                            <a class="__link" left-click-menu data-target="allAny_menu{{element.id}}">{{element.all | boolToValue:'all':'any'}}</a> of these catalog conditions are true
                             <ul class="menu __context" role="menu" id="allAny_menu{{element.id}}">
                                 <li class="menu-item" ng-click='element.all=true;'>all</li>
                                 <li class="menu-item" ng-click='element.all=false;'>any</li>
@@ -149,11 +149,13 @@
                             <a class="__link" ng-click="openItemSelectWizard(element1)">{{element1.productId?element1.productId: 'select Product'}}</a>
                         </script>
                         <script type="text/ng-template" id="expression-ConditionCurrencyIs.html">
-                            Currency is
-                            <a class="__link" context-menu data-target="pcrn_menu{{$index}}">{{element1.currency ? element1.currency : 'select currency'}}</a>
-                            <ul class="menu __context" role="menu" id="pcrn_menu{{$index}}">
-                                <li class="menu-item" ng-click='element1.currency=x;' ng-repeat="x in availableCurrencies">{{x}}</li>
-                            </ul>
+                            <span ng-controller="promotionConditionCurrencyIsController">
+                                Currency is
+                                <a class="__link" left-click-menu data-target="pcrn_menu{{$index}}">{{element1.currency ? element1.currency : 'select currency'}}</a>
+                                <ul class="menu __context" role="menu" id="pcrn_menu{{$index}}">
+                                    <li class="menu-item" ng-click='element1.currency=x;' ng-repeat="x in availableCurrencies">{{x}}</li>
+                                </ul>
+                            </span>
                         </script>
                         <script type="text/ng-template" id="expression-ConditionCodeContains.html">
                             Product code contains
@@ -168,7 +170,7 @@
 
                         <script type="text/ng-template" id="expression-BlockCartCondition.html">
                             if
-                            <a class="__link" context-menu data-target="allAny_menu{{element.id}}">{{element.all | boolToValue:'all':'any'}}</a> of these cart conditions are true
+                            <a class="__link" left-click-menu data-target="allAny_menu{{element.id}}">{{element.all | boolToValue:'all':'any'}}</a> of these cart conditions are true
                             <ul class="menu __context" role="menu" id="allAny_menu{{element.id}}">
                                 <li class="menu-item" ng-click='element.all=true;'>all</li>
                                 <li class="menu-item" ng-click='element.all=false;'>any</li>

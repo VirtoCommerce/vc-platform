@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
-VisualStudioVersion = 12.0.31101.0
+VisualStudioVersion = 12.0.30723.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{0E0CB22C-4501-4E16-B9B7-744B51076524}"
 EndProject
@@ -156,6 +156,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.Scheduling", "Extensions\Jobs\VirtoCommerce.Scheduling\VirtoCommerce.Scheduling.csproj", "{7BF794D6-39B2-4A69-9371-F35DF8D53E88}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.Scheduling.Jobs", "Extensions\Jobs\VirtoCommerce.Scheduling.Jobs\VirtoCommerce.Scheduling.Jobs.csproj", "{BFC7B47D-A7EE-4693-9334-5084C09C3D31}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.MarketingModule.DynamicExpression", "Modules\Marketing\VirtoCommerce.MarketingModule.DynamicExpression\VirtoCommerce.MarketingModule.DynamicExpression.csproj", "{9E4301FC-541E-4880-A28C-4F617D272B69}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -395,6 +397,10 @@ Global
 		{BFC7B47D-A7EE-4693-9334-5084C09C3D31}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BFC7B47D-A7EE-4693-9334-5084C09C3D31}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BFC7B47D-A7EE-4693-9334-5084C09C3D31}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9E4301FC-541E-4880-A28C-4F617D272B69}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9E4301FC-541E-4880-A28C-4F617D272B69}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9E4301FC-541E-4880-A28C-4F617D272B69}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9E4301FC-541E-4880-A28C-4F617D272B69}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -471,5 +477,6 @@ Global
 		{F4831210-2600-444F-8510-2BD825E3F13B} = {EAE05907-1BEE-47FA-890A-40C84B879B1C}
 		{7BF794D6-39B2-4A69-9371-F35DF8D53E88} = {EAE05907-1BEE-47FA-890A-40C84B879B1C}
 		{BFC7B47D-A7EE-4693-9334-5084C09C3D31} = {EAE05907-1BEE-47FA-890A-40C84B879B1C}
+		{9E4301FC-541E-4880-A28C-4F617D272B69} = {BDE02651-90AE-43E2-AFBC-F40E51064938}
 	EndGlobalSection
 EndGlobal
