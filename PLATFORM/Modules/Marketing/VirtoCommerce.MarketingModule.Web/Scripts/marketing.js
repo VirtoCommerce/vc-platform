@@ -61,6 +61,23 @@ angular.module(moduleName, [])
           displayName: 'Registered user'
       });
 
+      var availableExcludings = [
+            {
+                id: 'ExcludingCategoryCondition'
+            },
+            {
+                id: 'ExcludingProductCondition'
+            }
+      ];
+      vaDynamicExpressionService.registerExpression({
+          id: 'ExcludingCategoryCondition',
+          displayName: 'Items of category'
+      });
+      vaDynamicExpressionService.registerExpression({
+          id: 'ExcludingProductCondition',
+          displayName: 'Items of entry'
+      });
+
       vaDynamicExpressionService.registerExpression({
           id: 'BlockCatalogCondition',
           newChildLabel: '+ add condition'
@@ -88,6 +105,28 @@ angular.module(moduleName, [])
           id: 'BlockCartCondition',
           newChildLabel: '+ add condition'
       });
+      vaDynamicExpressionService.registerExpression({
+          id: 'ConditionCartSubtotalLeast',
+          displayName: 'Cart subtotal is []',
+          availableChildren: availableExcludings,
+          newChildLabel: '+ excluding'
+      });
+      vaDynamicExpressionService.registerExpression({
+          id: 'ConditionAtNumItemsInCart',
+          displayName: '[] [] items are in shopping cart',
+          availableChildren: availableExcludings,
+          newChildLabel: '+ excluding'
+      });
+      vaDynamicExpressionService.registerExpression({
+          id: 'ConditionAtNumItemsInCategoryAreInCart',
+          displayName: '[] [] items of category are in shopping cart',
+          availableChildren: availableExcludings,
+          newChildLabel: '+ excluding'
+      });
+      vaDynamicExpressionService.registerExpression({
+          id: 'ConditionAtNumItemsOfEntryAreInCart',
+          displayName: '[] [] items of entry are in shopping cart'
+      });
 
       vaDynamicExpressionService.registerExpression({
           id: 'RewardBlock',
@@ -104,5 +143,26 @@ angular.module(moduleName, [])
           id: 'RewardCartGetOfRelSubtotal',
           displayName: 'Get [] % off cart subtotal'
       });
+      vaDynamicExpressionService.registerExpression({
+          id: 'RewardItemGetFreeNumItemOfProduct',
+          displayName: 'Get [] free items of product []'
+      });
+      //vaDynamicExpressionService.registerExpression({
+      //    id: 'RewardItemGetOfAbs',
+      //    displayName: 'Get $[] off'
+      //});
+      
+      //vaDynamicExpressionService.registerExpression({
+      //    id: 'RewardItemGetOfAbsForNum',
+      //    displayName: 'Get $[] off [] items',
+      //    availableChildren: availableExcludings,
+      //    newChildLabel: '+ excluding'
+      //});
+      //vaDynamicExpressionService.registerExpression({
+      //    id: 'RewardItemGetOfRelForNum',
+      //    displayName: 'Get []% off [] items',
+      //    availableChildren: availableExcludings,
+      //    newChildLabel: '+ excluding'
+      //});
 
   }]);
