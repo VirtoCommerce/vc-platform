@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.marketingModule')
-.controller('placeholdersDynamicContentListController', ['$scope', 'bladeNavigationService', function ($scope, bladeNavigationService) {
+.controller('itemsDynamicContentListController', ['$scope', 'bladeNavigationService', function ($scope, bladeNavigationService) {
 	var blade = $scope.blade;
 	blade.choosenFolder = undefined;
 	blade.currentEntity = undefined;
@@ -16,11 +16,11 @@
 
 		var newBlade = {
 			id: 'listItemChild',
-			title: 'New placeholders element',
-			subtitle: 'Add new placeholders element',
+			title: 'New content items element',
+			subtitle: 'Add new content items element',
 			choosenFolder: blade.choosenFolder,
-			controller: 'addPlaceholderElementController',
-			template: 'Modules/$(VirtoCommerce.Marketing)/Scripts/dynamicContent/blades/placeholders/add.tpl.html'
+			controller: 'addContentItemsElementController',
+			template: 'Modules/$(VirtoCommerce.Marketing)/Scripts/dynamicContent/blades/items/add.tpl.html'
 		};
 		bladeNavigationService.showBlade(newBlade, $scope.blade);
 	}
@@ -30,27 +30,27 @@
 
 		var newBlade = {
 			id: 'listItemChild',
-			title: 'New placeholders element',
-			subtitle: 'Add new placeholders element',
+			title: 'New content items folder element',
+			subtitle: 'Add new content items folder element',
 			entity: data,
 			isNew: true,
-			controller: 'addFolderPlaceholderController',
-			template: 'Modules/$(VirtoCommerce.Marketing)/Scripts/dynamicContent/blades/placeholders/folder-details.tpl.html'
+			controller: 'addFolderContentItemsController',
+			template: 'Modules/$(VirtoCommerce.Marketing)/Scripts/dynamicContent/blades/items/folder-details.tpl.html'
 		};
 		bladeNavigationService.showBlade(newBlade, $scope.blade);
 	}
 
-	blade.addNewPlaceholder = function (data) {
+	blade.addNewContentItem = function (data) {
 		blade.closeChildrenBlades();
 
 		var newBlade = {
 			id: 'listItemChild',
-			title: 'New placeholders element',
-			subtitle: 'Add new placeholders element',
+			title: 'New content item element',
+			subtitle: 'Add new content item element',
 			entity: data,
 			isNew: true,
-			controller: 'addPlaceholderController',
-			template: 'Modules/$(VirtoCommerce.Marketing)/Scripts/dynamicContent/blades/placeholders/placeholder-details.tpl.html'
+			controller: 'addContentItemsController',
+			template: 'Modules/$(VirtoCommerce.Marketing)/Scripts/dynamicContent/blades/items/content-item-details.tpl.html'
 		};
 		bladeNavigationService.showBlade(newBlade, $scope.blade);
 	}
