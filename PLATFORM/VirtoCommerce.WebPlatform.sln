@@ -157,7 +157,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.Scheduling", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.Scheduling.Jobs", "Extensions\Jobs\VirtoCommerce.Scheduling.Jobs\VirtoCommerce.Scheduling.Jobs.csproj", "{BFC7B47D-A7EE-4693-9334-5084C09C3D31}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.MarketingModule.DynamicExpression", "Modules\Marketing\VirtoCommerce.MarketingModule.DynamicExpression\VirtoCommerce.MarketingModule.DynamicExpression.csproj", "{9E4301FC-541E-4880-A28C-4F617D272B69}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.MarketingModule.Expressions", "Modules\Marketing\VirtoCommerce.MarketingModule.DynamicExpression\VirtoCommerce.MarketingModule.Expressions.csproj", "{9E4301FC-541E-4880-A28C-4F617D272B69}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

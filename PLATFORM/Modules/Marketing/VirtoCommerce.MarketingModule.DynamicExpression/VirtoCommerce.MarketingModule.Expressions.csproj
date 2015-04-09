@@ -7,8 +7,8 @@
     <ProjectGuid>{9E4301FC-541E-4880-A28C-4F617D272B69}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>VirtoCommerce.MarketingModule.DynamicExpression</RootNamespace>
-    <AssemblyName>VirtoCommerce.MarketingModule.DynamicExpression</AssemblyName>
+    <RootNamespace>VirtoCommerce.MarketingModule.Expressions</RootNamespace>
+    <AssemblyName>VirtoCommerce.MarketingModule.Expressions</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -60,7 +60,6 @@
     <Compile Include="Promotion\Conditions\ConditionIsEveryone.cs" />
     <Compile Include="Promotion\Conditions\ConditionIsFirstTimeBuyer.cs" />
     <Compile Include="Promotion\Conditions\ConditionIsRegisteredUser.cs" />
-    <Compile Include="DynamicExpressionBlock.cs" />
     <Compile Include="DynamicExpression.cs" />
     <Compile Include="Promotion\Helpers\PromotionEvaluationContextExtension.cs" />
     <Compile Include="Promotion\IConditionExpression.cs" />
