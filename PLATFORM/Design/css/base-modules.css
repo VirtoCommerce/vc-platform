@@ -2965,12 +2965,12 @@ fieldset + fieldset
 			color: #43b0e6;
 			content: '';
 			font-family: 'FontAwesome';
-			font-size: 7px;
+			font-size: 11px;
 			font-weight: normal;
-			left: 2px;
+			left: 0;
             line-height: 1.3;
 			position: absolute;
-			top: 1px;
+			top: -1px;
 		}
 
         .form-control.__radio :checked ~ .check:after
@@ -5885,7 +5885,7 @@ tags-input .tags .tag-item .remove-button
 .ui-grid-cell
 {
     border-style: solid;
-    border-width: 0 1px 1px 0;
+    border-width: 0 0 1px;
 }
 
 .ui-grid-header-cell,
@@ -5893,6 +5893,11 @@ tags-input .tags .tag-item .remove-button
 .ui-grid-header-cell:last-child .ui-grid-column-resizer.right
 {
     border-color: #dee9f0;
+}
+
+.ui-grid-row-selected > [ui-grid-row] > .ui-grid-cell
+{
+    background: #d9effa !important;
 }
 
 .ui-grid-canvas
@@ -5906,19 +5911,27 @@ tags-input .tags .tag-item .remove-button
 .ui-grid-render-container-body .ui-grid-header-canvas
 {
     height: auto !important;
+    line-height: 40px;
     overflow: hidden;
 }
 
 .ui-grid-row:last-child .ui-grid-cell
 {
     border-color: #dee9f0;
-    border-width: 0 1px 1px 0 !important;
+    border-width: 0 0 1px !important;
 }
 
 .ui-grid-cell-contents
 {
     font-size: 14px;
     padding: 10px;
+    text-shadow: 1px 1px #fff;
+}
+
+.ui-grid-row-header-cell .ui-grid-cell-contents,
+.ui-grid-header-cell:first-child .ui-grid-cell-contents
+{
+    padding: 10px 5px;
 }
 
 .ui-grid-row:nth-child(2n) .ui-grid-cell
@@ -5963,4 +5976,67 @@ input.ui-grid-filter-input[type="text"]
 .ui-grid-row:nth-child(2n):hover .ui-grid-cell
 {
     background: #ecf7fc;
+}
+
+.ui-grid-row-header-cell
+{
+    background: none !important;
+    border-bottom: 1px solid #d9effa;
+}
+
+.ui-grid-selection-row-header-buttons.ui-grid-row-selected
+{
+    color: #a1c0d4;
+}
+
+.ui-grid-pinned-container.ui-grid-pinned-container-left .ui-grid-header-cell:last-child,
+.ui-grid-pinned-container.ui-grid-pinned-container-left .ui-grid-cell:last-child
+{
+    border: none;
+}
+
+.ui-grid-header-cell:not(:last-child) .ui-grid-vertical-bar
+{
+    background: none;
+}
+
+.ui-grid-column-menu-button
+{
+    display: none;
+}
+
+.ui-grid-cell-contents .product-img
+{
+    height: 40px;
+    line-height: 40px;
+    width: 40px;
+}
+
+.ui-grid-cell .product-img .pr-ico
+{
+    color: #a6a6a6;
+    display: inline-block;
+    font-size: 28px;
+    margin: -4px 0 0;
+    text-shadow: 1px 1px #fff;
+    vertical-align: middle;
+}
+
+.ui-grid-row:hover .ui-grid-cell .pr-ico,
+.ui-grid-row-selected .ui-grid-cell .pr-ico
+{
+    color: #a1c0d4;
+}
+
+.ui-grid-row > :first-child
+{
+    height: 100%;
+    overflow: hidden;
+}
+
+.ui-grid-render-container-left .ui-grid-header-cell,
+.ui-grid-render-container-body .ui-grid-header-cell
+{
+    height: 40px;
+    line-height: 20px;
 }
