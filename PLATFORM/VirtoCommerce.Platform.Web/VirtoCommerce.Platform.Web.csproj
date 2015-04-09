@@ -396,9 +396,9 @@
     <Content Include="Scripts\common\directives\htmlTooltip.js" />
     <Content Include="Scripts\common\confirmDialog\confirmDialog.tpl.html" />
     <Content Include="Scripts\common\confirmDialog\cofirmDialog.js" />
-    <Content Include="Scripts\common\directives\contextMenu.js" />
     <Content Include="Scripts\common\directives\angular-moment.js" />
     <Content Include="Scripts\common\directives\inputNumber.js" />
+    <Content Include="Scripts\common\directives\left-click-menu.js" />
     <Content Include="Scripts\common\filters.js" />
     <Content Include="Scripts\common\navigation\breadcrumbs\breadcrumbs.js" />
     <Content Include="Scripts\common\navigation\breadcrumbs\breadcrumbs.tpl.html" />
