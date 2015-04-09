@@ -5,14 +5,14 @@ using System.Text;
 using System.Threading.Tasks;
 using VirtoCommerce.Domain.Marketing.Model;
 using VirtoCommerce.MarketingModule.Data;
-using VirtoCommerce.MarketingModule.DynamicExpression.Promotion;
-using VirtoCommerce.MarketingModule.DynamicExpression;
 using linq = System.Linq.Expressions;
+using VirtoCommerce.MarketingModule.Expressions;
+using VirtoCommerce.MarketingModule.Expressions.Promotion;
 
 namespace VirtoCommerce.MarketingModule.Test.CustomDynamicPromotionExpressions
 {
 	//items with [] tag
-	public class ConditionItemWithTag : VirtoCommerce.MarketingModule.DynamicExpression.DynamicExpression, IConditionExpression
+	public class ConditionItemWithTag : DynamicExpression, IConditionExpression
 	{
 		public string[] Tags { get; set; }
 

@@ -142,9 +142,9 @@
       <Project>{2cd7e474-2ac6-4ce8-a459-616f7e5acd69}</Project>
       <Name>VirtoCommerce.MarketingModule.Data</Name>
     </ProjectReference>
-    <ProjectReference Include="..\VirtoCommerce.MarketingModule.DynamicExpression\VirtoCommerce.MarketingModule.DynamicExpression.csproj">
+    <ProjectReference Include="..\VirtoCommerce.MarketingModule.DynamicExpression\VirtoCommerce.MarketingModule.Expressions.csproj">
       <Project>{9e4301fc-541e-4880-a28c-4f617d272b69}</Project>
-      <Name>VirtoCommerce.MarketingModule.DynamicExpression</Name>
+      <Name>VirtoCommerce.MarketingModule.Expressions</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

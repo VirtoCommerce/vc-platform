@@ -4,7 +4,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Web;
 
-namespace VirtoCommerce.MarketingModule.DynamicExpression.Promotion
+namespace VirtoCommerce.MarketingModule.Expressions.Promotion
 {
 	public abstract class ConditionBase : DynamicExpression
 	{

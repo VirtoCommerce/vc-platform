@@ -1,7 +1,7 @@
 ﻿using System;
 using VirtoCommerce.Domain.Marketing.Model;
 using linq = System.Linq.Expressions;
-namespace VirtoCommerce.MarketingModule.DynamicExpression.Promotion
+namespace VirtoCommerce.MarketingModule.Expressions.Promotion
 {
 	//Product is []
 	public class ConditionEntryIs : ConditionBase, IConditionExpression

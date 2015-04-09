@@ -3,7 +3,7 @@ using VirtoCommerce.Domain.Marketing.Model;
 using VirtoCommerce.Foundation.Frameworks;
 using linq = System.Linq.Expressions;
 
-namespace VirtoCommerce.MarketingModule.DynamicExpression.Promotion
+namespace VirtoCommerce.MarketingModule.Expressions.Promotion
 {
 	//Product code contains []
 	public class ConditionCodeContains : ConditionBase, IConditionExpression
@@ -17,7 +17,7 @@ namespace VirtoCommerce.MarketingModule.DynamicExpression.Promotion
 		/// <returns></returns>
 		public linq.Expression<Func<IPromotionEvaluationContext, bool>> GetConditionExpression()
 		{
-			var paramX = linq.Expression.Parameter(typeof(IEvaluationContext), "x");
+			var paramX = linq.Expression.Parameter(typeof(IPromotionEvaluationContext), "x");
 			var castOp = linq.Expression.MakeUnary(linq.ExpressionType.Convert, paramX, typeof(PromotionEvaluationContext));
 			var methodInfo = typeof(PromotionEvaluationContextExtension).GetMethod("IsItemCodeContains");
 

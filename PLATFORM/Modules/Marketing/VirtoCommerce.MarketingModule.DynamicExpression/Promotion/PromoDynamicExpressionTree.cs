@@ -8,9 +8,9 @@ using VirtoCommerce.Domain.Marketing.Model;
 using VirtoCommerce.Foundation.Frameworks;
 using VirtoCommerce.Foundation.Frameworks.Extensions;
 
-namespace VirtoCommerce.MarketingModule.DynamicExpression.Promotion
+namespace VirtoCommerce.MarketingModule.Expressions.Promotion
 {
-	public class PromoDynamicExpressionTree : DynamicExpressionBlock, IConditionExpression, IRewardExpression
+	public class PromoDynamicExpressionTree : DynamicExpression, IConditionExpression, IRewardExpression
 	{
 		#region IConditionExpression Members
 

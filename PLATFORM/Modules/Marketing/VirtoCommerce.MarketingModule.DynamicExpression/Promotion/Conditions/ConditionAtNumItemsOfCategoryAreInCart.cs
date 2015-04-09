@@ -2,7 +2,7 @@
 using VirtoCommerce.Domain.Marketing.Model;
 using linq = System.Linq.Expressions;
 
-namespace VirtoCommerce.MarketingModule.DynamicExpression.Promotion
+namespace VirtoCommerce.MarketingModule.Expressions.Promotion
 {
 	//[] [] items of category are in shopping cart
 	public class ConditionAtNumItemsInCategoryAreInCart : ConditionBase, IConditionExpression

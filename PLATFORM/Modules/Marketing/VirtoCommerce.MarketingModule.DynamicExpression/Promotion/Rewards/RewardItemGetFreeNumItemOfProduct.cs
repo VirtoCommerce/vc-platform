@@ -4,7 +4,7 @@ using System.Linq;
 using System.Web;
 using VirtoCommerce.Domain.Marketing.Model;
 
-namespace VirtoCommerce.MarketingModule.DynamicExpression.Promotion
+namespace VirtoCommerce.MarketingModule.Expressions.Promotion
 {
 	//Get [] free items of Product []
 	public class RewardItemGetFreeNumItemOfProduct : DynamicExpression, IRewardExpression

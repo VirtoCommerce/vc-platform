@@ -25,7 +25,7 @@ namespace VirtoCommerce.Domain.Marketing.Model
 
 		public string StoreId { get; set; }
 
-		public CurrencyCodes? Currency { get; set; }
+		public string Currency { get; set; }
 
 		/// <summary>
 		/// Customer id
