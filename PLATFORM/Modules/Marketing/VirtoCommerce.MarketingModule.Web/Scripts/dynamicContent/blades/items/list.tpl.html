@@ -8,16 +8,16 @@
 						<span class="list-name">{{data.name}}</span>
 					</a>
 					<ul class="list __sub" ng-show="blade.checkFolder(data)">
-						<li ng-repeat="placeholder in data.placeholders" class="list-item" ng-click="blade.openBlade(asset); $event.stopPropagation();" ng-class="{'__selected': blade.checkPlaceholder(placeholder) }">
+						<li ng-repeat="item in data.items" class="list-item" ng-click="blade.openBlade(item); $event.stopPropagation();" ng-class="{'__selected': blade.checkPlaceholder(item) }">
 							<a class="list-block">
-								<img src="{{placeholder.descriptionImageUrl}}" style="height: 30px; display: inline-block; line-height: 40px; vertical-align: middle; margin: 0 5px 0 0;">
-								<span class="list-name">{{placeholder.name}}</span>
+								<i class="list-ico fa fa-location-arrow"></i>
+								<span class="list-name">{{item.name}}</span>
 							</a>
 						</li>
 					</ul>
 				</li>
 			</ul>
-			<p class="text" ng-if="!blade.currentEntities.length">No Placeholders yet</p>
+			<p class="text" ng-if="!blade.currentEntities.length">No Items yet</p>
 		</div>
 	</div>
 </div>
