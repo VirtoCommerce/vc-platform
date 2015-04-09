@@ -1,20 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Net;
-using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.Description;
 using System.Web.Http.ModelBinding;
-using ExpressionSerialization;
 using VirtoCommerce.CustomerModule.Web.Binders;
 using VirtoCommerce.Domain.Marketing.Services;
+using VirtoCommerce.MarketingModule.Data.Promotions;
+using VirtoCommerce.MarketingModule.DynamicExpression.Promotion;
+using VirtoCommerce.MarketingModule.Web.Converters;
 using coreModel = VirtoCommerce.Domain.Marketing.Model;
 using webModel = VirtoCommerce.MarketingModule.Web.Model;
-using VirtoCommerce.MarketingModule.Web.Converters;
-using Newtonsoft.Json;
-using VirtoCommerce.MarketingModule.Web.Model.TypeExpressions;
-using VirtoCommerce.MarketingModule.Data.Promotions;
 
 namespace VirtoCommerce.MarketingModule.Web.Controllers.Api
 {
@@ -55,7 +50,7 @@ namespace VirtoCommerce.MarketingModule.Web.Controllers.Api
 			var retVal = _marketingService.GetPromotionById(id);
 			if(retVal != null)
 			{
-				return Ok(retVal.ToWebModel(_promotionManager.DynamicExpression as PromoDynamicExpression)); 
+				return Ok(retVal.ToWebModel(_promotionManager.DynamicExpression as PromoDynamicExpressionTree)); 
 			}
 			return NotFound();
 		}
@@ -69,7 +64,7 @@ namespace VirtoCommerce.MarketingModule.Web.Controllers.Api
             var retVal = new webModel.Promotion
             {
 				Type = typeof(DynamicPromotion).Name,
-                DynamicExpression = _promotionManager.DynamicExpression as PromoDynamicExpression,
+                DynamicExpression = _promotionManager.DynamicExpression as PromoDynamicExpressionTree,
 				IsActive = true
             };
             return Ok(retVal);

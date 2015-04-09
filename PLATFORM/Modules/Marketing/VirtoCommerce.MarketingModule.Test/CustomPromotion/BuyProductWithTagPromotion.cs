@@ -25,7 +25,7 @@ namespace VirtoCommerce.MarketingModule.Test.CustomPromotion
 			var promoContext = context as PromotionEvaluationContext;
 			if (promoContext != null)
 			{
-				foreach (var entry in promoContext.ProductPromoEntries)
+				foreach (var entry in promoContext.PromoEntries)
 				{
 					var tag = entry.Attributes != null ? entry.Attributes["tag"] : null;
 					var reward = new CatalogItemAmountReward
@@ -34,7 +34,6 @@ namespace VirtoCommerce.MarketingModule.Test.CustomPromotion
 						Amount = _discountAmount,
 						IsValid = !String.IsNullOrEmpty(tag) ? _tags.Contains(tag) : false,
 						ProductId = entry.ProductId,
-						CategoryId = entry.CategoryId,
 						Promotion = this
 					};
 				}

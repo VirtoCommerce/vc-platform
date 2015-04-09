@@ -20,7 +20,6 @@ namespace VirtoCommerce.Web.Models.Convertors
             address.CountryCode = customerAddress.CountryCode;
             address.CountryName = customerAddress.Country;
             address.FirstName = customerAddress.FirstName;
-            address.Id = customerAddress.Id;
             address.LastName = customerAddress.LastName;
             address.Line1 = customerAddress.Address1;
             address.Line2 = customerAddress.Address2;
@@ -41,8 +40,10 @@ namespace VirtoCommerce.Web.Models.Convertors
             int index = 1;
             foreach (var address in contact.Addresses)
             {
-                address.Id = index.ToString();
-                customer.Addresses.Add(address.AsWebModel());
+                var customerAddress = address.AsWebModel();
+                customerAddress.Id = index.ToString();
+
+                customer.Addresses.Add(customerAddress);
                 index++;
             }
 
@@ -75,11 +76,10 @@ namespace VirtoCommerce.Web.Models.Convertors
             customerAddress.Country = address.CountryName;
             customerAddress.CountryCode = "RUS";
             customerAddress.FirstName = address.FirstName;
-            customerAddress.Id = address.Id;
             customerAddress.LastName = address.LastName;
             customerAddress.Phone = address.Phone;
-            customerAddress.Province = null; // TODO: Service must return province
-            customerAddress.ProvinceCode = null; // TODO: Service must return province code
+            customerAddress.Province = address.RegionName;
+            customerAddress.ProvinceCode = address.RegionId;
             customerAddress.Zip = address.PostalCode ?? address.Zip;
 
             return customerAddress;
