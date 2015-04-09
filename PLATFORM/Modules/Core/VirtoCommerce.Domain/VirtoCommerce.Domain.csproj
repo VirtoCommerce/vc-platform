@@ -113,7 +113,9 @@
     <Compile Include="Marketing\Model\IPromotionEvaluationContext.cs" />
     <Compile Include="Marketing\Model\MarketingEvent.cs" />
     <Compile Include="Marketing\Model\DefaultOrderEventType.cs" />
+    <Compile Include="Marketing\Model\ProductPromoEntry.cs" />
     <Compile Include="Marketing\Model\Promotion.cs" />
+    <Compile Include="Marketing\Model\PromotionEvaluationContext.cs" />
     <Compile Include="Marketing\Model\PromotionResult.cs" />
     <Compile Include="Marketing\Model\PromotionUsage.cs" />
     <Compile Include="Marketing\Model\Rewards\AmountBasedReward.cs" />
