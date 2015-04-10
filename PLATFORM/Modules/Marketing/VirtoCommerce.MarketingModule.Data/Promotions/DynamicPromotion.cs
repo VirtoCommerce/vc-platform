@@ -44,7 +44,7 @@ namespace VirtoCommerce.MarketingModule.Data.Promotions
 					reward.Promotion = this;
 					reward.IsValid = couponValid && condition(promoContext);
 					var catalogItemReward = reward as CatalogItemAmountReward;
-					if (catalogItemReward != null)
+					if (catalogItemReward != null && catalogItemReward.ProductId != null)
 					{
 						catalogItemReward.ProductId = promoEntry.ProductId;
 					}

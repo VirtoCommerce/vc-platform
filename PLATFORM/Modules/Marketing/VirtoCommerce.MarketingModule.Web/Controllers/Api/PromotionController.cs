@@ -4,6 +4,7 @@ using System.Web.Http;
 using System.Web.Http.Description;
 using System.Web.Http.ModelBinding;
 using VirtoCommerce.CustomerModule.Web.Binders;
+using VirtoCommerce.Domain.Marketing.Model;
 using VirtoCommerce.Domain.Marketing.Services;
 using VirtoCommerce.MarketingModule.Data.Promotions;
 using VirtoCommerce.MarketingModule.Expressions.Promotion;
@@ -13,41 +14,47 @@ using webModel = VirtoCommerce.MarketingModule.Web.Model;
 
 namespace VirtoCommerce.MarketingModule.Web.Controllers.Api
 {
-	[RoutePrefix("api/marketing")]
-    public class MarketingManagmentController : ApiController
+	[RoutePrefix("api/marketing/promotions")]
+    public class PromotionController : ApiController
     {
 		private readonly IPromotionExtensionManager _promotionManager;
-		private readonly IMarketingService _marketingService;
-		private readonly IMarketingSearchService _marketingSearchService;
-		public MarketingManagmentController(IMarketingService marketingService, IMarketingSearchService marketingSearchService,
-											IPromotionExtensionManager promotionManager)
+		private readonly IPromotionService _promotionService;
+		private readonly IMarketingPromoEvaluator _promotionEvaluator;
+
+		public PromotionController(IPromotionService promotionService, 	IPromotionExtensionManager promotionManager, IMarketingPromoEvaluator promotionEvaluator)
 		{
 			_promotionManager = promotionManager;
-			_marketingService = marketingService;
-			_marketingSearchService = marketingSearchService;
-		
+			_promotionService = promotionService;
+			_promotionEvaluator = promotionEvaluator;
 		}
 
-		// GET: api/marketing/promotions?q=ddd&start=0&count=20
-		[HttpGet]
-		[ResponseType(typeof(coreModel.SearchResult))]
-		[Route("promotions")]
-		public IHttpActionResult Search([ModelBinder(typeof(SearchCriteriaBinder))] coreModel.SearchCriteria criteria)
+		// GET: api/marketing/promotions/evaluate
+		[HttpPost]
+		[ResponseType(typeof(webModel.PromotionReward[]))]
+		[Route("evaluate")]
+		public IHttpActionResult Evaluate(PromotionEvaluationContext context)
 		{
-			var retVal = new webModel.SearchResult();
-			var coreResult = _marketingSearchService.SearchPromotions(criteria);
-			retVal.Promotions = coreResult.Promotions.Select(x => x.ToWebModel()).ToList();
-			retVal.TotalCount = coreResult.TotalCount;
-			return Ok(retVal);
+			var retVal = _promotionEvaluator.EvaluatePromotion(context);
+			return Ok(retVal.Rewards.Select(x => x.ToWebModel()).ToArray());
+		}
+
+		// GET: api/marketing/promotions/processevent
+		[HttpPost]
+		[ResponseType(typeof(webModel.PromotionReward[]))]
+		[Route("processevent")]
+		public IHttpActionResult ProcessEvent(webModel.MarketingEvent marketingEvent)
+		{
+			var retVal = _promotionEvaluator.ProcessEvent(marketingEvent.ToCoreModel());
+			return Ok(retVal.Rewards.Select(x => x.ToWebModel()).ToArray());
 		}
 
 		// GET: api/marketing/promotions/{id}
 		[HttpGet]
 		[ResponseType(typeof(webModel.Promotion))]
-		[Route("promotions/{id}")]
+		[Route("{id}")]
 		public IHttpActionResult GetPromotionById(string id)
 		{
-			var retVal = _marketingService.GetPromotionById(id);
+			var retVal = _promotionService.GetPromotionById(id);
 			if(retVal != null)
 			{
 				return Ok(retVal.ToWebModel(_promotionManager.DynamicExpression as PromoDynamicExpressionTree)); 
@@ -58,7 +65,7 @@ namespace VirtoCommerce.MarketingModule.Web.Controllers.Api
         // GET: api/marketing/promotions/new
         [HttpGet]
         [ResponseType(typeof(webModel.Promotion))]
-        [Route("promotions/new")]
+        [Route("new")]
         public IHttpActionResult GetNewDynamicPromotion()
         {
             var retVal = new webModel.Promotion
@@ -73,10 +80,10 @@ namespace VirtoCommerce.MarketingModule.Web.Controllers.Api
 		// POST: api/marketing/promotions
 		[HttpPost]
 		[ResponseType(typeof(webModel.Promotion))]
-		[Route("promotions")]
+		[Route("")]
 		public IHttpActionResult CreatePromotion(webModel.Promotion promotion)
 		{
-			var retVal = _marketingService.CreatePromotion(promotion.ToCoreModel());
+			var retVal = _promotionService.CreatePromotion(promotion.ToCoreModel());
 			return GetPromotionById(retVal.Id);
 		}
 
@@ -84,20 +91,20 @@ namespace VirtoCommerce.MarketingModule.Web.Controllers.Api
 		// PUT: api/marketing/promotions
 		[HttpPut]
 		[ResponseType(typeof(void))]
-		[Route("promotions")]
+		[Route("")]
 		public IHttpActionResult UpdatePromotions(webModel.Promotion promotion)
 		{
-			_marketingService.UpdatePromotions(new coreModel.Promotion[] { promotion.ToCoreModel() });
+			_promotionService.UpdatePromotions(new coreModel.Promotion[] { promotion.ToCoreModel() });
 			return StatusCode(HttpStatusCode.NoContent);
 		}
 
 		// DELETE: api/marketing/promotions?ids=21
 		[HttpDelete]
 		[ResponseType(typeof(void))]
-		[Route("promotions")]
+		[Route("")]
 		public IHttpActionResult DeletePromotions([FromUri] string[] ids)
 		{
-			_marketingService.DeletePromotions(ids);
+			_promotionService.DeletePromotions(ids);
 			return StatusCode(HttpStatusCode.NoContent);
 		}
     }

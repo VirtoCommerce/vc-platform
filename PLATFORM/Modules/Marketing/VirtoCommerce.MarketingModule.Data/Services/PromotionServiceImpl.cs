@@ -15,12 +15,12 @@ using ExpressionSerialization;
 
 namespace VirtoCommerce.MarketingModule.Data.Services
 {
-	public class MarketingServiceImpl : ServiceBase, IMarketingService
+	public class PromotionServiceImpl : ServiceBase, IPromotionService
     {
-		private readonly Func<IFoundationMarketingRepository> _repositoryFactory;
+		private readonly Func<IFoundationPromotionRepository> _repositoryFactory;
 		private readonly IPromotionExtensionManager _customPromotionManager;
 
-		public MarketingServiceImpl(Func<IFoundationMarketingRepository> repositoryFactory, IPromotionExtensionManager customPromotionManager)
+		public PromotionServiceImpl(Func<IFoundationPromotionRepository> repositoryFactory, IPromotionExtensionManager customPromotionManager)
         {
 			_repositoryFactory = repositoryFactory;
 			_customPromotionManager = customPromotionManager;
