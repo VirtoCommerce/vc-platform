@@ -92,4 +92,6 @@
 
         bladeNavigationService.showBlade(newBlade, $scope.blade);
     }
+
+    $scope.shippingMethods = [{ id: '1a', name: 'method1' }, { id: 'ab2', name: 'method 2' }];
 }]);

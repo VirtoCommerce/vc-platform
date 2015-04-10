@@ -6,7 +6,7 @@ using VirtoCommerce.Domain.Marketing.Model;
 
 namespace VirtoCommerce.MarketingModule.Expressions.Promotion
 {
-	//Get $[] off [] items
+    //Get $[] off [] items of entry []
 	public class RewardItemGetOfAbsForNum : DynamicExpression, IRewardExpression
 	{
 		public decimal Amount { get; set; }

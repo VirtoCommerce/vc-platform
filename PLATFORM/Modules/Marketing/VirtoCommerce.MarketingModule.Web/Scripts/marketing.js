@@ -137,7 +137,7 @@ angular.module(moduleName, [])
       });
       vaDynamicExpressionService.registerExpression({
           id: 'RewardCartGetOfAbsSubtotal',
-          displayName: 'Get $ [] off cart subtotal'
+          displayName: 'Get $[] off cart subtotal'
       });
       vaDynamicExpressionService.registerExpression({
           id: 'RewardCartGetOfRelSubtotal',
@@ -147,22 +147,36 @@ angular.module(moduleName, [])
           id: 'RewardItemGetFreeNumItemOfProduct',
           displayName: 'Get [] free items of product []'
       });
-      //vaDynamicExpressionService.registerExpression({
-      //    id: 'RewardItemGetOfAbs',
-      //    displayName: 'Get $[] off'
-      //});
-      
-      //vaDynamicExpressionService.registerExpression({
-      //    id: 'RewardItemGetOfAbsForNum',
-      //    displayName: 'Get $[] off [] items',
-      //    availableChildren: availableExcludings,
-      //    newChildLabel: '+ excluding'
-      //});
-      //vaDynamicExpressionService.registerExpression({
-      //    id: 'RewardItemGetOfRelForNum',
-      //    displayName: 'Get []% off [] items',
-      //    availableChildren: availableExcludings,
-      //    newChildLabel: '+ excluding'
-      //});
-
+      vaDynamicExpressionService.registerExpression({
+          id: 'RewardItemGiftNumItem',
+          displayName: 'Gift [] of product []'
+      });
+      vaDynamicExpressionService.registerExpression({
+          id: 'RewardItemGetOfAbs',
+          displayName: 'Get $[] off'
+      });
+      vaDynamicExpressionService.registerExpression({
+          id: 'RewardItemGetOfRel',
+          displayName: 'Get [] % off'
+      });
+      vaDynamicExpressionService.registerExpression({
+          id: 'RewardItemGetOfAbsForNum',
+          displayName: 'Get $[] off [] items of entry []'
+          //availableChildren: availableExcludings,
+          //newChildLabel: '+ excluding'
+      });
+      vaDynamicExpressionService.registerExpression({
+          id: 'RewardItemGetOfRelForNum',
+          displayName: 'Get [] % off [] items of entry []'
+          //availableChildren: availableExcludings,
+          //newChildLabel: '+ excluding'
+      });
+      vaDynamicExpressionService.registerExpression({
+          id: 'RewardShippingGetOfAbsShippingMethod',
+          displayName: 'Get $[] off shipping []'
+      });
+      vaDynamicExpressionService.registerExpression({
+          id: 'RewardShippingGetOfRelShippingMethod',
+          displayName: 'Get [] % off shipping []'
+      });
   }]);
