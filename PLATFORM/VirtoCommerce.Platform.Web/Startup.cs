@@ -65,6 +65,17 @@ namespace VirtoCommerce.Platform.Web
             {
                 moduleManager.LoadModule(module.ModuleName);
             }
+
+            // Post-initialize
+            var postInitializeModules = moduleCatalog.CompleteListWithDependencies(moduleCatalog.Modules)
+                .Select(m => m.ModuleInstance)
+                .OfType<IPostInitialize>()
+                .ToArray();
+
+            foreach (var module in postInitializeModules)
+            {
+                module.PostInitialize();
+            }
         }
 
 

@@ -39,8 +39,7 @@ using VirtoCommerce.Search.Providers.Lucene;
 
 namespace VirtoCommerce.CoreModule.Web
 {
-    [Module(ModuleName = "CoreModule", OnDemand = true)]
-    public class Module : IModule, IDatabaseModule
+    public class Module : IModule, IDatabaseModule, IPostInitialize
     {
         private const string _connectionStringName = "VirtoCommerce";
         private readonly IUnityContainer _container;
@@ -182,12 +181,6 @@ namespace VirtoCommerce.CoreModule.Web
             _container.RegisterType<ISearchProviderManager, SearchProviderManager>(new ContainerControlledLifetimeManager());
             _container.RegisterType<ISearchProvider, SearchProviderManager>(new ContainerControlledLifetimeManager());
 
-            var searchProviderManager = _container.Resolve<ISearchProviderManager>();
-
-            searchProviderManager.RegisterSearchProvider(SearchProviders.Elasticsearch.ToString(), connection => new ElasticSearchProvider(new ElasticSearchQueryBuilder(), connection));
-            searchProviderManager.RegisterSearchProvider(SearchProviders.Lucene.ToString(), connection => new LuceneSearchProvider(new LuceneSearchQueryBuilder(), connection));
-            searchProviderManager.RegisterSearchProvider(SearchProviders.AzureSearch.ToString(), connection => new AzureSearchProvider(new AzureSearchQueryBuilder(), connection));
-
             #endregion
 
             #region Assets
@@ -201,11 +194,6 @@ namespace VirtoCommerce.CoreModule.Web
             _container.RegisterType<IBlobStorageProvider, AssetsProviderManager>(new ContainerControlledLifetimeManager());
             _container.RegisterType<IAssetRepository, AssetsProviderManager>(new ContainerControlledLifetimeManager());
             _container.RegisterType<IAssetUrlResolver, AssetsProviderManager>(new ContainerControlledLifetimeManager());
-
-            var assetsProviderManager = _container.Resolve<IAssetsProviderManager>();
-
-            assetsProviderManager.RegisterProvider(AzureAssetsProvider.ProviderName, connectionString => _container.Resolve<AzureAssetsProvider>());
-            assetsProviderManager.RegisterProvider(LocalAssetsProvider.ProviderName, connectionString => _container.Resolve<LocalAssetsProvider>());
 
             #endregion
 
@@ -229,6 +217,24 @@ namespace VirtoCommerce.CoreModule.Web
             #endregion
 
             OwinConfig.Configure(_appBuilder, _container, _connectionStringName);
+        }
+
+        #endregion
+
+        #region IPostInitialize Members
+
+        public void PostInitialize()
+        {
+            var searchProviderManager = _container.Resolve<ISearchProviderManager>();
+
+            searchProviderManager.RegisterSearchProvider(SearchProviders.Elasticsearch.ToString(), connection => new ElasticSearchProvider(new ElasticSearchQueryBuilder(), connection));
+            searchProviderManager.RegisterSearchProvider(SearchProviders.Lucene.ToString(), connection => new LuceneSearchProvider(new LuceneSearchQueryBuilder(), connection));
+            searchProviderManager.RegisterSearchProvider(SearchProviders.AzureSearch.ToString(), connection => new AzureSearchProvider(new AzureSearchQueryBuilder(), connection));
+
+            var assetsProviderManager = _container.Resolve<IAssetsProviderManager>();
+
+            assetsProviderManager.RegisterProvider(AzureAssetsProvider.ProviderName, connectionString => _container.Resolve<AzureAssetsProvider>());
+            assetsProviderManager.RegisterProvider(LocalAssetsProvider.ProviderName, connectionString => _container.Resolve<LocalAssetsProvider>());
         }
 
         #endregion
