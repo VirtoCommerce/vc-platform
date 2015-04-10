@@ -162,6 +162,9 @@
     <Compile Include="Security\Models\ApiAccount.cs" />
     <Compile Include="Security\Models\ApplicationUserExtended.cs" />
     <Compile Include="Security\Models\ChangePasswordInfo.cs" />
+    <Compile Include="Security\Models\SecurityMessage.cs" />
+    <Compile Include="Security\Models\MessageType.cs" />
+    <Compile Include="Security\Models\SendingMethod.cs" />
     <Compile Include="Security\Models\UserState.cs" />
     <Compile Include="Security\Models\UserLogin.cs" />
     <Compile Include="Security\Models\UserSearchCriteria.cs" />
