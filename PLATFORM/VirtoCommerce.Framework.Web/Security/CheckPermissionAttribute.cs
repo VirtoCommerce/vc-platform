@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Security.Principal;
 using System.Web.Http;
 using System.Web.Http.Controllers;
 using VirtoCommerce.Framework.Web.Common;
@@ -64,13 +65,21 @@ namespace VirtoCommerce.Framework.Web.Security
 
             if (isAuthorized && _permissions.Length > 0)
             {
-                isAuthorized = false;
-
                 var permissionService = actionContext.ControllerContext.Configuration.DependencyResolver.GetService(typeof(IPermissionService)) as IPermissionService;
-                if (permissionService != null)
-                {
-                    isAuthorized = permissionService.UserHasAnyPermission(actionContext.ControllerContext.RequestContext.Principal.Identity.Name, _permissions);
-                }
+                var principal = actionContext.ControllerContext.RequestContext.Principal;
+                isAuthorized = IsAuthorized(permissionService, principal);
+            }
+
+            return isAuthorized;
+        }
+
+        protected bool IsAuthorized(IPermissionService permissionService, IPrincipal principal)
+        {
+            var isAuthorized = false;
+
+            if (permissionService != null && principal != null)
+            {
+                isAuthorized = permissionService.UserHasAnyPermission(principal.Identity.Name, _permissions);
             }
 
             return isAuthorized;

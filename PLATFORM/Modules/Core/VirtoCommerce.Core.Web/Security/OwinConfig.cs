@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Linq;
+using Hangfire;
+using Hangfire.SqlServer;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin;
@@ -7,10 +9,13 @@ using Microsoft.Owin.Security.Cookies;
 using Microsoft.Owin.Security.OAuth;
 using Microsoft.Practices.Unity;
 using Owin;
+using VirtoCommerce.CoreModule.Web.Hangfire;
 using VirtoCommerce.CoreModule.Web.Security.Hmac;
 using VirtoCommerce.Foundation.Data.Security.Identity;
 using VirtoCommerce.Foundation.Frameworks;
 using VirtoCommerce.Foundation.Frameworks.Caching;
+using VirtoCommerce.Foundation.Security.Model;
+using VirtoCommerce.Framework.Web.Security;
 using VirtoCommerce.Framework.Web.Settings;
 
 namespace VirtoCommerce.CoreModule.Web.Security
@@ -19,10 +24,10 @@ namespace VirtoCommerce.CoreModule.Web.Security
     {
         public const string PublicClientId = "web";
 
-        public static void Configure(IAppBuilder app, IUnityContainer container)
+        public static void Configure(IAppBuilder app, IUnityContainer container, string databaseConnectionStringName)
         {
             // Configure the db context, user manager and role manager to use a single instance per request
-            app.CreatePerOwinContext(() => new SecurityDbContext("VirtoCommerce"));
+            app.CreatePerOwinContext(() => new SecurityDbContext(databaseConnectionStringName));
             app.CreatePerOwinContext<ApplicationUserStore>(ApplicationUserStore.Create);
             app.CreatePerOwinContext<ApplicationUserManager>(ApplicationUserManager.Create);
             app.CreatePerOwinContext<ApplicationSignInManager>(ApplicationSignInManager.Create);
@@ -75,6 +80,15 @@ namespace VirtoCommerce.CoreModule.Web.Security
                 ApiCredentialsProvider = container.Resolve<IApiAccountProvider>(),
                 IdentityProvider = container.Resolve<IClaimsIdentityProvider>(),
                 CacheManager = cacheManager,
+            });
+
+            var permissionService = container.Resolve<IPermissionService>();
+            app.UseHangfire(config =>
+            {
+                config.UseUnityActivator(container);
+                config.UseSqlServerStorage(databaseConnectionStringName, new SqlServerStorageOptions { PrepareSchemaIfNecessary = false });
+                config.UseAuthorizationFilters(new PermissionBasedAuthorizationFilter(permissionService) { Permission = PredefinedPermissions.BackgroundJobsManage });
+                config.UseServer();
             });
         }
     }
