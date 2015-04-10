@@ -1,5 +1,9 @@
 ﻿angular.module('virtoCommerce.marketingModule')
 .controller('addFolderPlaceholderController', ['$scope', 'bladeNavigationService', function ($scope, bladeNavigationService) {
+	$scope.setForm = function (form) {
+		$scope.formScope = form;
+	}
+
 	var blade = $scope.blade;
 	blade.originalEntity = angular.copy(blade.entity);
 
@@ -21,7 +25,7 @@
         				blade.saveChanges();
         			},
         			canExecuteMethod: function () {
-        				return !angular.equals(blade.originalEntity, blade.entity);
+        				return !angular.equals(blade.originalEntity, blade.entity) && !$scope.formScope.$invalid;
         			}
 				},
 				{
@@ -35,29 +39,24 @@
 				}
 			];
 		}
-		else
-		{
-			$scope.bladeToolbarCommands = [
-				{
-					name: "Save", icon: 'fa fa-save',
-					executeMethod: function () {
-						blade.saveChanges();
-					},
-					canExecuteMethod: function () {
-						return !angular.equals(blade.originalEntity, blade.entity);
-					}
-				}
-			];
-		}
 
 		blade.isLoading = false;
 	}
 
 	blade.saveChanges = function () {
-		blade.parentBlade.currentEntities.push(blade.entity);
-		blade.originalEntity = angular.copy(blade.entity);
-		blade.isNew = false;
-		blade.initialize();
+		if (blade.isNew) {
+			if (angular.isUndefined(blade.parentBlade.currentEntity)) {
+				blade.parentBlade.currentEntities.push(blade.entity);
+				blade.originalEntity = angular.copy(blade.entity);
+			}
+			else {
+				blade.parentBlade.currentEntity.childrenFolders.push(blade.entity);
+			}
+			bladeNavigationService.closeBlade(blade);
+		}
+		else {
+			blade.originalEntity = angular.copy(blade.entity);
+		}
 	}
 
 	blade.initialize();
