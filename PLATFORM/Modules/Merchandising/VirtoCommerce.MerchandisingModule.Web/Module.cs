@@ -35,9 +35,9 @@ using VirtoCommerce.Foundation.Search.Repositories;
 using VirtoCommerce.Foundation.Stores.Repositories;
 using VirtoCommerce.Framework.Web.Modularity;
 using VirtoCommerce.Framework.Web.Settings;
+using VirtoCommerce.MerchandisingModule.Web.BackgroundJobs;
 using VirtoCommerce.MerchandisingModule.Web.Controllers;
 using VirtoCommerce.MerchandisingModule.Web.Services;
-using VirtoCommerce.Scheduling.Jobs;
 using VirtoCommerce.Search.Index;
 
 namespace VirtoCommerce.MerchandisingModule.Web
@@ -159,8 +159,6 @@ namespace VirtoCommerce.MerchandisingModule.Web
             _container.RegisterType<ISearchEntityFactory, SearchEntityFactory>(new ContainerControlledLifetimeManager());
             _container.RegisterType<ISearchIndexBuilder, CatalogItemIndexBuilder>("catalogitem");
             _container.RegisterType<ISearchIndexController, SearchIndexController>();
-            _container.RegisterType<GenerateSearchIndexWork>();
-            _container.RegisterType<ProcessSearchIndexWork>();
 
             _container.RegisterType<ProductController>(
                 new InjectionConstructor(
@@ -206,6 +204,10 @@ namespace VirtoCommerce.MerchandisingModule.Web
             _container.RegisterType<IEvaluationPolicy, CartSubtotalRewardCombinePolicy>("cart");
             _container.RegisterType<IEvaluationPolicy, ShipmentRewardCombinePolicy>("shipment");
              * */
+
+            // TODO: Move to PostInitialize
+            var jobScheduler = _container.Resolve<SearchIndexJobsScheduler>();
+            jobScheduler.SheduleJobs();
         }
 
         public void SetupDatabase(SampleDataLevel sampleDataLevel)
