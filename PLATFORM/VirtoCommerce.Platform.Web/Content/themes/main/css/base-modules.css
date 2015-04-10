@@ -2965,12 +2965,12 @@ fieldset + fieldset
 			color: #43b0e6;
 			content: '';
 			font-family: 'FontAwesome';
-			font-size: 7px;
+			font-size: 11px;
 			font-weight: normal;
-			left: 2px;
+			left: 0;
             line-height: 1.3;
 			position: absolute;
-			top: 1px;
+			top: -1px;
 		}
 
         .form-control.__radio :checked ~ .check:after
@@ -3697,6 +3697,11 @@ fieldset + fieldset
 			top: 5px;
 		}
 
+        .__files .list-ico
+        {
+            width: 30px;
+        }
+
         .__items .list-ico ~ .list-name,
         .__files .list-ico ~ .list-name
         {
@@ -3709,11 +3714,25 @@ fieldset + fieldset
 			color: #4c4c4c;
 			display: inline-block;
 			font-size: 14px;
+            font-weight: 500;
             position: relative;
 			text-shadow: 1px 1px #fff;
 			vertical-align: top;
             z-index: 25;
 		}
+
+        .__files .list-name
+        {
+            vertical-align: middle;
+        }
+
+        .__files .list-descr
+        {
+            color: #4c4c4c;
+            display: block;
+            font-size: 12px;
+            margin: 0 0 0 40px;
+        }
 
 		.__items .list-t
 		{
@@ -3863,9 +3882,25 @@ fieldset + fieldset
     padding: 10px 20px;
 }
 
-.__files .list.__sub .list-block
+    .__files .list-img
+    {
+        display: inline-block;
+        height: 30px;
+        margin: 0 5px 0 0;
+        overflow: hidden;
+        vertical-align: middle;
+        width: 30px;
+    }
+
+        .__files .list-img *
+        {
+            display: block;
+            max-width: 100%;
+        }
+
+.__files .list.__sub .list-item
 {
-    padding-left: 50px;
+    margin: 0 0 0 40px;
 }
 
 
@@ -5885,7 +5920,7 @@ tags-input .tags .tag-item .remove-button
 .ui-grid-cell
 {
     border-style: solid;
-    border-width: 0 1px 1px 0;
+    border-width: 0 0 1px;
 }
 
 .ui-grid-header-cell,
@@ -5893,6 +5928,11 @@ tags-input .tags .tag-item .remove-button
 .ui-grid-header-cell:last-child .ui-grid-column-resizer.right
 {
     border-color: #dee9f0;
+}
+
+.ui-grid-row-selected > [ui-grid-row] > .ui-grid-cell
+{
+    background: #d9effa !important;
 }
 
 .ui-grid-canvas
@@ -5906,19 +5946,27 @@ tags-input .tags .tag-item .remove-button
 .ui-grid-render-container-body .ui-grid-header-canvas
 {
     height: auto !important;
+    line-height: 40px;
     overflow: hidden;
 }
 
 .ui-grid-row:last-child .ui-grid-cell
 {
     border-color: #dee9f0;
-    border-width: 0 1px 1px 0 !important;
+    border-width: 0 0 1px !important;
 }
 
 .ui-grid-cell-contents
 {
     font-size: 14px;
     padding: 10px;
+    text-shadow: 1px 1px #fff;
+}
+
+.ui-grid-row-header-cell .ui-grid-cell-contents,
+.ui-grid-header-cell:first-child .ui-grid-cell-contents
+{
+    padding: 10px 5px;
 }
 
 .ui-grid-row:nth-child(2n) .ui-grid-cell
@@ -5964,3 +6012,130 @@ input.ui-grid-filter-input[type="text"]
 {
     background: #ecf7fc;
 }
+
+.ui-grid-row-header-cell
+{
+    background: none !important;
+    border-bottom: 1px solid #d9effa;
+}
+
+.ui-grid-selection-row-header-buttons.ui-grid-row-selected
+{
+    color: #a1c0d4;
+}
+
+.ui-grid-pinned-container.ui-grid-pinned-container-left .ui-grid-header-cell:last-child,
+.ui-grid-pinned-container.ui-grid-pinned-container-left .ui-grid-cell:last-child
+{
+    border: none;
+}
+
+.ui-grid-header-cell:not(:last-child) .ui-grid-vertical-bar
+{
+    background: none;
+}
+
+.ui-grid-column-menu-button
+{
+    display: none;
+}
+
+.ui-grid-cell-contents .product-img
+{
+    height: 40px;
+    line-height: 40px;
+    width: 40px;
+}
+
+.ui-grid-cell .product-img .pr-ico
+{
+    color: #a6a6a6;
+    display: inline-block;
+    font-size: 28px;
+    margin: -4px 0 0;
+    text-shadow: 1px 1px #fff;
+    vertical-align: middle;
+}
+
+.ui-grid-row:hover .ui-grid-cell .pr-ico,
+.ui-grid-row-selected .ui-grid-cell .pr-ico
+{
+    color: #a1c0d4;
+}
+
+.ui-grid-row > :first-child
+{
+    height: 100%;
+    overflow: hidden;
+}
+
+.ui-grid-render-container-left .ui-grid-header-cell,
+.ui-grid-render-container-body .ui-grid-header-cell
+{
+    height: 40px;
+    line-height: 20px;
+}
+
+/* Popup */
+.overlay
+{
+    background: rgba(0,0,0,.7);
+    bottom: 0;
+    left: 0;
+    position: fixed;
+    right: 0;
+    text-align: center;
+    top: 0;
+    z-index: 9000;
+}
+
+    .overlay .overlay-cnt
+    {
+        bottom: 0;
+        left: 0;
+        position: absolute;
+        right: 0;
+        top: 0;
+    }
+
+    .overlay .overlay-cnt::after
+    {
+        content: '';
+        display: inline-block;
+        height: 100%;
+        vertical-align: middle;
+    }
+
+        .overlay .popup
+        {
+            background: #fff;
+            display: inline-block;
+            max-height: 600px;
+            max-width: 800px;
+            vertical-align: middle;
+        }
+
+            .popup .popup-cnt
+            {
+                height: 100%;
+                padding: 5px;
+                text-align: center;
+
+                -webkit-box-sizing: border-box;
+                        box-sizing: border-box;
+            }
+
+                .popup .image
+                {
+                    height: 590px;
+                    overflow: hidden;
+                    width: 100%;
+                }
+
+                    .popup .image img
+                    {
+                        display: inline-block;
+                        max-height: 100%;
+                        max-width: 100%;
+                        vertical-align: middle;
+                    }
