@@ -1,5 +1,6 @@
 ﻿<div class="blade-static __bottom" ng-include="'Modules/$(VirtoCommerce.Core)/Scripts/common/ok-cancel2.tpl.html'" ng-if="blade.isNew"></div>
-<div class="blade-content __large-wide" ng-class="{'__gray': !blade.isNew}">
+<!--ng-class="{'__gray': !blade.isNew}"-->
+<div class="blade-content __large-wide">
     <div class="blade-inner">
         <div class="inner-block">
             <form class="form" name="formScope">
@@ -106,18 +107,12 @@
                         </div>
                     </div>
                 </fieldset>
-
+                
+                <!--ui-validate=" 'promotionExpressionValidator(blade.isExpresionValid)' " ng-model="blade.isExpresionValid"-->
                 <fieldset>
                     <legend>Promotion conditions</legend>
                     <div class="dynamic-expression">
                         <va-dynamic-expression-tree ng-controller="promotionExpressionsController" source="blade.currentEntity.dynamicExpression"></va-dynamic-expression-tree>
-                        <!--<va-expression-block ng-repeat="data in blade.currentEntity.dynamicExpression.children" data="data"></va-expression-block>
-                            <script type="text/ng-template" id="expression-shippingMethod.html">
-                            <a class="__link" left-click-menu data-target="shp_menu{{element.$parentElement.id}}">{{element.$parentElement.shippingMethod ? element.$parentElement.shippingMethod : 'select shipping'}}</a>
-                            <ul class="menu __context" role="menu" id="shp_menu{{element.$parentElement.id}}">
-                                <li class="menu-item" ng-click='element.$parentElement.shippingMethod=x.id;' ng-repeat="x in element.availableEntries">{{x.name}}</li>
-                            </ul>
-                        </script>-->
                         <script type="text/ng-template" id="expression-BlockCustomerCondition.html">
                             For visitor with
                             <a class="__link" left-click-menu data-target="allAny_menu{{element.id}}">{{element.all | boolToValue:'all':'any'}}</a> of these eligibilities
@@ -258,36 +253,117 @@
                             </div>free items of product
                             <a class="__link" ng-click="openItemSelectWizard(element1)">{{element1.productId?element1.productId: 'select product'}}</a>
                         </script>
-                        <script type="text/ng-template" id="expression-RewardItemGetOfAbs.html">
-                            Get $
+                        <script type="text/ng-template" id="expression-RewardItemGiftNumItem.html">
+                            Gift
                             <div class="form-input __mini __number js-number-input-plugin" data-step="1">
-                                <input type="text" class="js-val" required ng-model="element1.amount">
+                                <input class="js-val" required ng-model="element1.quantity">
                                 <a class="up js-up"></a>
                                 <a class="down js-down"></a>
-                            </div> off cart subtotal
+                            </div>of product
+                            <a class="__link" ng-click="openItemSelectWizard(element1)">{{element1.productId?element1.productId: 'select product'}}</a> where:
+                            <table>
+                                <tr>
+                                    <td>category is</td>
+                                    <td><a class="__link" ng-click="openCategorySelectWizard(element1)">{{element1.selectedCategoryId?element1.selectedCategoryId: 'select category'}}</a></td>
+                                </tr>
+                                <tr>
+                                    <td>name is</td>
+                                    <td>
+                                        <div class="form-input">
+                                            <input ng-model="element1.name" placeholder="Enter name">
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>measure unit is</td>
+                                    <td>
+                                        <div class="form-input">
+                                            <input ng-model="element1.measureUnit" placeholder="Enter unit">
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>image Url is</td>
+                                    <td>
+                                        <div class="form-input">
+                                            <input ng-model="element1.imageUrl" placeholder="Enter URL" type="url">
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>description is</td>
+                                    <td>
+                                        <div class="form-input">
+                                            <textarea cols="30" rows="10" ng-model="element1.description" placeholder="Enter description"></textarea>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </table>
                         </script>
-                        <!--<script type="text/ng-template" id="expression-RewardItemGetOfAbsForNum.html">
+                        <script type="text/ng-template" id="expression-RewardItemGetOfAbs.html">
                             Get $
                             <div class="form-input __mini">
                                 <input money required ng-model="element1.amount">
                             </div>off for
+                            <a class="__link" ng-click="openItemSelectWizard(element1)">{{element1.productId?element1.productId: 'select product'}}</a>
+                        </script>
+                        <script type="text/ng-template" id="expression-RewardItemGetOfRel.html">
+                            Get
+                            <div class="form-input __mini __number js-number-input-plugin" data-step="1">
+                                <input type="text" class="js-val" required ng-model="element1.amount">
+                                <a class="up js-up"></a>
+                                <a class="down js-down"></a>
+                            </div>% off
+                            <a class="__link" ng-click="openItemSelectWizard(element1)">{{element1.productId?element1.productId: 'select product'}}</a>
+                        </script>
+                        <script type="text/ng-template" id="expression-RewardItemGetOfAbsForNum.html">
+                            Get $
+                            <div class="form-input __mini">
+                                <input money required ng-model="element1.amount">
+                            </div>off
                             <div class="form-input __mini __number js-number-input-plugin" data-step="1">
                                 <input class="js-val" required ng-model="element1.numItem">
                                 <a class="up js-up"></a>
                                 <a class="down js-down"></a>
-                            </div>items excluding
+                            </div>items of entry
+                            <a class="__link" ng-click="openItemSelectWizard(element1)">{{element1.productId?element1.productId: 'select entry'}}</a>
                         </script>
                         <script type="text/ng-template" id="expression-RewardItemGetOfRelForNum.html">
                             Get
-                            <div class="form-input __mini">
-                                <input money required ng-model="element1.amount">
-                            </div>% off for
+                            <div class="form-input __mini __number js-number-input-plugin" data-step="1">
+                                <input type="text" class="js-val" required ng-model="element1.amount">
+                                <a class="up js-up"></a>
+                                <a class="down js-down"></a>
+                            </div>% off
                             <div class="form-input __mini __number js-number-input-plugin" data-step="1">
                                 <input class="js-val" required ng-model="element1.numItem">
                                 <a class="up js-up"></a>
                                 <a class="down js-down"></a>
-                            </div>items excluding
-                        </script>-->
+                            </div>items of entry
+                            <a class="__link" ng-click="openItemSelectWizard(element1)">{{element1.productId?element1.productId: 'select entry'}}</a>
+                        </script>
+                        <script type="text/ng-template" id="expression-RewardShippingGetOfAbsShippingMethod.html">
+                            Get $
+                            <div class="form-input __mini">
+                                <input money required ng-model="element1.amount">
+                            </div>off shipping
+                            <a class="__link" left-click-menu data-target="pshp_menu{{$index}}">{{element1.shippingMethod ? element1.shippingMethod : 'select shipping'}}</a>
+                            <ul class="menu __context" role="menu" id="pshp_menu{{$index}}">
+                                <li class="menu-item" ng-click='element1.shippingMethod=x.id' ng-repeat="x in shippingMethods">{{x.name}}</li>
+                            </ul>
+                        </script>
+                        <script type="text/ng-template" id="expression-RewardShippingGetOfRelShippingMethod.html">
+                            Get
+                            <div class="form-input __mini __number js-number-input-plugin" data-step="1">
+                                <input type="text" class="js-val" required ng-model="element1.amount">
+                                <a class="up js-up"></a>
+                                <a class="down js-down"></a>
+                            </div>% off shipping
+                            <a class="__link" left-click-menu data-target="pshp_menu{{$index}}">{{element1.shippingMethod ? element1.shippingMethod : 'select shipping'}}</a>
+                            <ul class="menu __context" role="menu" id="pshp_menu{{$index}}">
+                                <li class="menu-item" ng-click='element1.shippingMethod=x.id' ng-repeat="x in shippingMethods">{{x.name}}</li>
+                            </ul>
+                        </script>
 
                         <script type="text/ng-template" id="expression-ExcludingCategoryCondition.html">
                             items of category
