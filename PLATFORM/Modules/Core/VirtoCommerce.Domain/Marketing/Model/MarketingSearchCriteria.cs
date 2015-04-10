@@ -6,13 +6,14 @@ using System.Threading.Tasks;
 
 namespace VirtoCommerce.Domain.Marketing.Model
 {
-	public class SearchCriteria
+	public class MarketingSearchCriteria
 	{
-		public SearchCriteria()
+		public MarketingSearchCriteria()
 		{
 			Count = 20;
 		}
 
+		public SearchResponseGroup ResponseGroup { get; set; }
 		public string Keyword { get; set; }
 
 		public int Start { get; set; }

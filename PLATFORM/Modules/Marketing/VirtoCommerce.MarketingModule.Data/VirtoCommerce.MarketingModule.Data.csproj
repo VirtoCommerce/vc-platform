@@ -57,14 +57,21 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Common\SerializationUtil.cs" />
+    <Compile Include="Converters\ContenPublicationConverter.cs" />
+    <Compile Include="Converters\ContentItemConverter.cs" />
+    <Compile Include="Converters\ContenPlaceConverter.cs" />
     <Compile Include="Converters\PromotionConverter.cs" />
+    <Compile Include="Converters\PropertyConverter.cs" />
     <Compile Include="Promotions\DynamicPromotion.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Repositories\IFoundationMarketingRepository.cs" />
-    <Compile Include="Repositories\MarketingRepositoryImpl.cs" />
-    <Compile Include="Services\DefaultMarketingPromoEvaluatorImpl.cs" />
+    <Compile Include="Repositories\DynamicContentRepositoryImpl.cs" />
+    <Compile Include="Repositories\IFoundationDynamicContentRepository.cs" />
+    <Compile Include="Repositories\PromotionRepositoryImpl.cs" />
+    <Compile Include="Repositories\IFoundationPromotionRepository.cs" />
+    <Compile Include="Services\DefaultPromotionEvaluatorImpl.cs" />
+    <Compile Include="Services\DynamicContentServiceImpl.cs" />
     <Compile Include="Services\MarketingSearchServiceImpl.cs" />
-    <Compile Include="Services\MarketingServiceImpl.cs" />
+    <Compile Include="Services\PromotionServiceImpl.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\Core\CommerceFoundation.Data\CommerceFoundation.Data.csproj">

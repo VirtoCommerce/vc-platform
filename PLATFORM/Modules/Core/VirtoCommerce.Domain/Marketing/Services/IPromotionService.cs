@@ -6,7 +6,7 @@ using VirtoCommerce.Domain.Marketing.Model;
 
 namespace VirtoCommerce.Domain.Marketing.Services
 {
-	public interface IMarketingService
+	public interface IPromotionService
 	{
 		Promotion[] GetActivePromotions();
 
