@@ -1,14 +1,14 @@
 ﻿using ExpressionSerialization;
 using Microsoft.Practices.Unity;
+using System.Linq;
 using VirtoCommerce.Domain.Common;
 using VirtoCommerce.Domain.Marketing.Services;
 using VirtoCommerce.Foundation.Data.Infrastructure.Interceptors;
 using VirtoCommerce.Framework.Web.Modularity;
 using VirtoCommerce.MarketingModule.Data.Repositories;
 using VirtoCommerce.MarketingModule.Data.Services;
-using VirtoCommerce.MarketingModule.Web.Model.TypeExpressions;
-using VirtoCommerce.MarketingModule.Web.Model.TypeExpressions.Actions;
-using VirtoCommerce.MarketingModule.Web.Model.TypeExpressions.Conditions;
+using VirtoCommerce.MarketingModule.Expressions.Promotion;
+using VirtoCommerce.MarketingModule.Expressions;
 
 namespace VirtoCommerce.MarketingModule.Web
 {
@@ -40,30 +40,30 @@ namespace VirtoCommerce.MarketingModule.Web
 
 		#endregion
 
-		private static PromoDynamicExpression GetDynamicExpression()
+		private static IDynamicExpression GetDynamicExpression()
 		{
 			var customerConditionBlock = new BlockCustomerCondition();
-			customerConditionBlock.AvailableChildren = new IDynamicExpression[] { new ConditionIsEveryone(), new ConditionIsFirstTimeBuyer(), 
-																				  new ConditionIsRegisteredUser() };
+			customerConditionBlock.AvailableChildren = new DynamicExpression[] { new ConditionIsEveryone(), new ConditionIsFirstTimeBuyer(), 
+																				  new ConditionIsRegisteredUser() }.ToList();
 
 			var catalogConditionBlock = new BlockCatalogCondition();
-			catalogConditionBlock.AvailableChildren = new IDynamicExpression[] { new ConditionEntryIs(), new ConditionCurrencyIs(), 
+			catalogConditionBlock.AvailableChildren = new DynamicExpression[] { new ConditionEntryIs(), new ConditionCurrencyIs(), 
 																		       new  ConditionCodeContains(), new ConditionCategoryIs(), 
-																			    };
+																			    }.ToList();
 
 			var cartConditionBlock = new BlockCartCondition();
-			cartConditionBlock.AvailableChildren = new IDynamicExpression[] { new ConditionCartSubtotalLeast(), new ConditionAtNumItemsInCart(), 
-																			 new ConditionAtNumItemsInCategoryAreInCart(), new ConditionAtNumItemsOfEntryAreInCart() };
+			cartConditionBlock.AvailableChildren = new DynamicExpression[] { new ConditionCartSubtotalLeast(), new ConditionAtNumItemsInCart(), 
+																			 new ConditionAtNumItemsInCategoryAreInCart(), new ConditionAtNumItemsOfEntryAreInCart() }.ToList();
 			var rewardBlock = new RewardBlock();
-			rewardBlock.AvailableChildren = new IDynamicExpression[] { new RewardCartGetOfAbsSubtotal(), new RewardCartGetOfRelSubtotal(), 
-																	   new RewardItemGetFreeNumItemOfProduct(),  new RewardItemGetOfAbs(),
+			rewardBlock.AvailableChildren = new DynamicExpression[] { new RewardCartGetOfAbsSubtotal(), new RewardItemGetFreeNumItemOfProduct(),  new RewardItemGetOfAbs(),
 																	   new RewardItemGetOfAbsForNum(), new RewardItemGetOfRel(), new RewardItemGetOfRelForNum(),
-																	   new RewardItemGiftNumItem(), new RewardShippingGetOfAbsShippingMethod(), new RewardShippingGetOfRelShippingMethod ()};
+																	   new RewardItemGiftNumItem(), new RewardShippingGetOfAbsShippingMethod(), new RewardShippingGetOfRelShippingMethod ()}.ToList();
 
-
-			var retVal = new PromoDynamicExpression()
+			var rootBlocks = new DynamicExpression[] { customerConditionBlock, catalogConditionBlock, cartConditionBlock, rewardBlock }.ToList();
+			var retVal = new PromoDynamicExpressionTree()
 			{
-				Children = new IDynamicExpression[] { customerConditionBlock, catalogConditionBlock, cartConditionBlock, rewardBlock }
+				Children = rootBlocks,
+				AvailableChildren = rootBlocks
 			};
 			return retVal;
 

@@ -9,6 +9,18 @@ namespace VirtoCommerce.Domain.Marketing.Model
 {
 	public abstract class AmountBasedReward : PromotionReward
 	{
+		public AmountBasedReward()
+		{
+		}
+
+		protected AmountBasedReward (AmountBasedReward other)
+			:base(other)
+		{
+			AmountType = other.AmountType;
+			Amount = other.Amount;
+			Quantity = other.Quantity;
+		}
+
 		public RewardAmountType AmountType { get; set; }
 
 		public decimal Amount { get; set; }
@@ -29,5 +41,11 @@ namespace VirtoCommerce.Domain.Marketing.Model
 		{
 			return Math.Round(value, 2, MidpointRounding.AwayFromZero);
 		}
+
+		public override string ToString()
+		{
+			return String.Format(" {0} {1}{2}{3}", base.ToString(),  Amount,  AmountType == RewardAmountType.Absolute ? "$"  : "%", Quantity > 0 ? "for "+ Quantity + " pcs" : String.Empty);
+		}
+	
 	}
 }

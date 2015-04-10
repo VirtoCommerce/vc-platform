@@ -118,39 +118,6 @@
     <Compile Include="Model\Promotion.cs" />
     <Compile Include="Model\PromotionReward.cs" />
     <Compile Include="Model\SearchResult.cs" />
-    <Compile Include="Model\TypeExpressions\Conditions\ConditionAtNumItemsOfCategoryAreInCart.cs" />
-    <Compile Include="Model\TypeExpressions\Conditions\ConditionAtNumItemsOfEntryAreInCart.cs" />
-    <Compile Include="Model\TypeExpressions\Conditions\ConditionCartSubtotalLeast.cs" />
-    <Compile Include="Model\TypeExpressions\Conditions\ConditionCategoryIs.cs" />
-    <Compile Include="Model\TypeExpressions\Conditions\ConditionCodeContains.cs" />
-    <Compile Include="Model\TypeExpressions\Conditions\ConditionCurrencyIs.cs" />
-    <Compile Include="Model\TypeExpressions\Conditions\ConditionEntryIs.cs" />
-    <Compile Include="Model\TypeExpressions\Conditions\ConditionIsEveryone.cs" />
-    <Compile Include="Model\TypeExpressions\Conditions\ConditionIsFirstTimeBuyer.cs" />
-    <Compile Include="Model\TypeExpressions\Conditions\ConditionIsRegisteredUser.cs" />
-    <Compile Include="Model\TypeExpressions\Conditions\ConditionLineItemTotal.cs" />
-    <Compile Include="Model\TypeExpressions\DynamicExpression.cs" />
-    <Compile Include="Model\TypeExpressions\Conditions\BlockCartCondition.cs" />
-    <Compile Include="Model\TypeExpressions\Conditions\BlockCatalogCondition.cs" />
-    <Compile Include="Model\TypeExpressions\Conditions\BlockCustomerCondition.cs" />
-    <Compile Include="Model\TypeExpressions\PromoDynamicExpression.cs" />
-    <Compile Include="Model\TypeExpressions\DynamicBlockExpression.cs" />
-    <Compile Include="Model\TypeExpressions\Rewards\RewardItemGetOfAbs.cs" />
-    <Compile Include="Model\TypeExpressions\Rewards\RewardItemGetOfRel.cs" />
-    <Compile Include="Model\TypeExpressions\Rewards\RewardItemGetOfRelForNum.cs" />
-    <Compile Include="Model\TypeExpressions\Rewards\RewardItemGetOfAbsForNum.cs" />
-    <Compile Include="Model\TypeExpressions\Rewards\RewardItemGetFreeNumItemOfProduct.cs" />
-    <Compile Include="Model\TypeExpressions\Rewards\RewardCartGetOfRelSubtotal.cs" />
-    <Compile Include="Model\TypeExpressions\Rewards\BlockReward.cs" />
-    <Compile Include="Model\TypeExpressions\Rewards\RewardCartGetOfAbsSubtotal.cs" />
-    <Compile Include="Model\TypeExpressions\Conditions\BlockConditionAndOr.cs" />
-    <Compile Include="Model\TypeExpressions\Conditions\ConditionAtNumItemsInCart.cs" />
-    <Compile Include="Model\TypeExpressions\Conditions\ConditionBase.cs" />
-    <Compile Include="Model\TypeExpressions\IConditionExpression.cs" />
-    <Compile Include="Model\TypeExpressions\IRewardExpression.cs" />
-    <Compile Include="Model\TypeExpressions\Rewards\RewardItemGiftNumItem.cs" />
-    <Compile Include="Model\TypeExpressions\Rewards\RewardShippingGetOfAbsShippingMethod.cs" />
-    <Compile Include="Model\TypeExpressions\Rewards\RewardShippingGetOfRelShippingMethod.cs" />
     <Compile Include="Module.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -175,11 +142,15 @@
       <Project>{2cd7e474-2ac6-4ce8-a459-616f7e5acd69}</Project>
       <Name>VirtoCommerce.MarketingModule.Data</Name>
     </ProjectReference>
+    <ProjectReference Include="..\VirtoCommerce.MarketingModule.DynamicExpression\VirtoCommerce.MarketingModule.Expressions.csproj">
+      <Project>{9e4301fc-541e-4880-a28c-4f617d272b69}</Project>
+      <Name>VirtoCommerce.MarketingModule.Expressions</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Scripts\common\marketing-main.js" />
     <Content Include="Scripts\common\marketing-main.tpl.html" />
-    <Content Include="Scripts\promotion\blades\expr-ConditionEntryIs.js" />
+    <Content Include="Scripts\promotion\blades\promotion-expressions.js" />
     <Content Include="Scripts\promotion\blades\promotion-detail.js" />
     <Content Include="Scripts\promotion\blades\promotion-detail.tpl.html" />
     <Content Include="Scripts\promotion\blades\promotion-list.js" />

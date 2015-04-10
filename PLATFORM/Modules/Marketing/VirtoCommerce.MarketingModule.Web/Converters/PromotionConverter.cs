@@ -11,30 +11,31 @@ using VirtoCommerce.Domain.Common;
 using VirtoCommerce.Foundation.Money;
 using VirtoCommerce.MarketingModule.Data.Common;
 using VirtoCommerce.MarketingModule.Data.Promotions;
-using VirtoCommerce.MarketingModule.Web.Model.TypeExpressions;
 using coreModel = VirtoCommerce.Domain.Marketing.Model;
 using webModel = VirtoCommerce.MarketingModule.Web.Model;
 using VirtoCommerce.Foundation.Frameworks.Extensions;
+using VirtoCommerce.MarketingModule.Expressions.Promotion;
+using VirtoCommerce.MarketingModule.Expressions;
 
 namespace VirtoCommerce.MarketingModule.Web.Converters
 {
 	public static class PromotionConverter
 	{
-		public static webModel.Promotion ToWebModel(this coreModel.Promotion promotion, PromoDynamicExpression dynamicExpression = null)
+		public static webModel.Promotion ToWebModel(this coreModel.Promotion promotion, PromoDynamicExpressionTree etalonEpressionTree = null)
 		{
 			var retVal = new webModel.Promotion();
 			retVal.InjectFrom(promotion);
 			retVal.Type = promotion.GetType().Name;
 			var dynamicPromotion = promotion as DynamicPromotion;
-			if (dynamicPromotion != null && dynamicExpression != null)
+			if (dynamicPromotion != null && etalonEpressionTree != null)
 			{
-				retVal.DynamicExpression = dynamicExpression;
+				retVal.DynamicExpression = etalonEpressionTree;
 				if (!String.IsNullOrEmpty(dynamicPromotion.PredicateVisualTreeSerialized))
 				{
-					retVal.DynamicExpression = JsonConvert.DeserializeObject<PromoDynamicExpression>(dynamicPromotion.PredicateVisualTreeSerialized);
-					//Add fresh available elements because it may be changed since last modifying
-					var sourceBlocks = ((DynamicBlockExpression)dynamicExpression).Traverse(x => x.AvailableChildren != null ? x.AvailableChildren.OfType<DynamicBlockExpression>() : null);
-					var targetBlocks = ((DynamicBlockExpression)retVal.DynamicExpression).Traverse(x => x.Children != null ? x.Children.OfType<DynamicBlockExpression>() : null);
+					retVal.DynamicExpression = JsonConvert.DeserializeObject<PromoDynamicExpressionTree>(dynamicPromotion.PredicateVisualTreeSerialized);
+					//Copy available elements from etalon because they not persisted
+					var sourceBlocks = ((DynamicExpression)etalonEpressionTree).Traverse(x => x.AvailableChildren);
+					var targetBlocks = ((DynamicExpression)retVal.DynamicExpression).Traverse(x => x.Children);
 					foreach (var sourceBlock in sourceBlocks)
 					{
 						foreach(var targetBlock in  targetBlocks.Where(x => x.Id == sourceBlock.Id))
@@ -42,6 +43,8 @@ namespace VirtoCommerce.MarketingModule.Web.Converters
 							targetBlock.AvailableChildren = sourceBlock.AvailableChildren;
 						}
 					}
+					//copy available elements from etalon
+					retVal.DynamicExpression.AvailableChildren = etalonEpressionTree.AvailableChildren;
 				}
 			}
 			return retVal;
@@ -60,7 +63,8 @@ namespace VirtoCommerce.MarketingModule.Web.Converters
 				retVal.RewardsSerialized = JsonConvert.SerializeObject(rewards, new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All });
 			
 				//Clear availableElements in expression (for decrease size)
-				var allBlocks =	((DynamicBlockExpression)promotion.DynamicExpression).Traverse(x => x.Children != null ? x.Children.OfType<DynamicBlockExpression>() : null);
+				promotion.DynamicExpression.AvailableChildren = null;
+				var allBlocks = ((DynamicExpression)promotion.DynamicExpression).Traverse(x => x.Children);
 				foreach(var block in allBlocks)
 				{
 					block.AvailableChildren = null;

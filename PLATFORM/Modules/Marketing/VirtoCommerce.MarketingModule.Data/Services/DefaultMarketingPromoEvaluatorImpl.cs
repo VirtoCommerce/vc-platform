@@ -38,7 +38,7 @@ namespace VirtoCommerce.MarketingModule.Data.Services
 			var groupRewards = allItemsRewards.GroupBy(x => x.ProductId);
 			foreach (var groupReward in groupRewards)
 			{
-				var item = promoContext.ProductPromoEntries.First(x => x.ProductId == groupReward.Key);
+				var item = promoContext.CartPromoEntries.First(x => x.ProductId == groupReward.Key);
 				EvaluteBestAmountRewards(item.Price, groupReward.ToArray()).ToList().ForEach(x => retVal.Rewards.Add(x));
 			}
 		

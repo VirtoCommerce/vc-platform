@@ -6,8 +6,23 @@ using System.Runtime.Serialization;
 
 namespace VirtoCommerce.Domain.Marketing.Model
 {
-	public abstract class PromotionReward
+	public abstract class PromotionReward 
 	{
+		public PromotionReward()
+		{
+		}
+		//Copy constructor
+		protected PromotionReward(PromotionReward other)
+		{
+			IsValid = other.IsValid;
+			Description = other.Description;
+			CouponAmount = other.CouponAmount;
+			Coupon = other.Coupon;
+			CouponMinOrderAmount = other.CouponMinOrderAmount;
+			Promotion = other.Promotion;
+			IsExclusive = other.IsExclusive;
+		}
+
 		/// <summary>
 		/// Flag for applicability
 		/// </summary>
@@ -34,5 +49,12 @@ namespace VirtoCommerce.Domain.Marketing.Model
 		public Promotion Promotion { get; set; }
 
 		public bool IsExclusive { get; set; }
+
+		public abstract PromotionReward Clone();
+
+		public override string ToString()
+		{
+			return String.Format("{0} of promotion {1} -  {2}", this.GetType().Name, Promotion != null ? Promotion.Id : "undef", IsValid ? "Valid" : "Invalid");
+		}
 	}
 }
