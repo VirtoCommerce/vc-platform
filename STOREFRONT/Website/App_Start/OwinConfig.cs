@@ -227,6 +227,9 @@ namespace VirtoCommerce.Web
                             s => s.StoreId.Equals(storeId, StringComparison.OrdinalIgnoreCase));
                 }
             }
+
+            store.Checkout.GuestLogin = true;
+
             return store;
         }
 

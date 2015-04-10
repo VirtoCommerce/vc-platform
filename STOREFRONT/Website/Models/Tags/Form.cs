@@ -1,34 +1,36 @@
-﻿#region
+﻿using DotLiquid;
+using DotLiquid.Exceptions;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
-using DotLiquid;
-using DotLiquid.Exceptions;
 using VirtoCommerce.Web.Views.Engines.Liquid.Extensions;
-
-#endregion
 
 namespace VirtoCommerce.Web.Models.Tags
 {
     public class Form : Block
     {
-        #region Static Fields
         private static readonly Regex Syntax = new Regex(string.Format(@"^({0})", Liquid.QuotedFragment));
-        #endregion
 
-        #region Fields
         private string _templateName;
-        #endregion
+        private string _formSuffix;
 
-        #region Public Methods and Operators
         public override void Initialize(string tagName, string markup, List<string> tokens)
         {
             var syntaxMatch = Syntax.Match(markup);
 
             if (syntaxMatch.Success)
             {
-                this._templateName = syntaxMatch.Groups[1].Value;
+                _templateName = syntaxMatch.Groups[1].Value;
+
+                if (markup.Trim() == "'customer_address', customer.new_address")
+                {
+                    _formSuffix = "new";
+                }
+                else if (markup.Trim() == "'customer_address', address")
+                {
+                    _formSuffix = "1";
+                }
             }
             else
             {
@@ -48,17 +50,25 @@ namespace VirtoCommerce.Web.Models.Tags
 
             var forms = context["Forms"] as SubmitForm[];
 
-            var form = forms.SingleOrDefault(f => f.Id == template);
+            var form = forms.FirstOrDefault(f => f.Id == template);
+
+            if (form == null)
+            {
+                string formId = "address_form_" + _formSuffix;
+
+                form = forms.Where(f => f.Properties.ContainsKey("id"))
+                    .SingleOrDefault(f => f.Properties["id"].ToString() == formId);
+            }
 
             result.WriteLine(
                 "<form accept-charset=\"UTF-8\" action=\"{0}\" method=\"post\" id=\"{1}\">",
-                form != null ? form.ActionLink : "", template);
-            result.WriteLine("<input name=\"form_type\" type=\"hidden\" value=\"{0}\" />", template);
+                form != null ? form.ActionLink : "",
+                form.Properties.ContainsKey("id") ? form.Properties["id"] : form.Id);
+            result.WriteLine("<input name=\"form_type\" type=\"hidden\" value=\"{0}\" />", form.FormType);
 
             context["form"] = form;
             this.RenderAll(this.NodeList, context, result);
             result.WriteLine("</form>");
         }
-        #endregion
     }
 }

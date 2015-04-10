@@ -28,50 +28,27 @@ namespace VirtoCommerce.MarketingModule.Data.Promotions
 			}
 
 			//Check coupon
-			var	isValid = !String.IsNullOrEmpty(Coupon) ? String.Equals(Coupon, promoContext.Coupon, StringComparison.InvariantCultureIgnoreCase) : true;
-			
-			//Check dynamic condition
-			if (isValid)
-			{
-				var condition = SerializationUtil.DeserializeExpression<Func<IPromotionEvaluationContext, bool>>(PredicateSerialized);
-				isValid = condition != null && condition(context);
-			}
+			var couponValid = !String.IsNullOrEmpty(Coupon) ? String.Equals(Coupon, promoContext.Coupon, StringComparison.InvariantCultureIgnoreCase) : true;
 
-			//rewards
-			if (!String.IsNullOrEmpty(RewardsSerialized))
+			//deserealize dynamic condition
+			var condition = SerializationUtil.DeserializeExpression<Func<IPromotionEvaluationContext, bool>>(PredicateSerialized);
+			//deserealize rewards
+			var rewards = JsonConvert.DeserializeObject<PromotionReward[]>(RewardsSerialized, new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All });
+			//Evaluate reward for all promoEntry in context
+			foreach (var promoEntry in promoContext.PromoEntries)
 			{
-				var rewards = JsonConvert.DeserializeObject<PromotionReward[]>(RewardsSerialized, new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All });
-				foreach (var reward in rewards)
+				//Set current context promo entry for evaluation
+				promoContext.PromoEntry = promoEntry;
+				foreach (var reward in rewards.Select(x=>x.Clone()))
 				{
 					reward.Promotion = this;
-					reward.IsValid = isValid;
-
-					//Replace some reward types
-					var cartSubtotalReward = reward as CartSubtotalReward;
-					if (cartSubtotalReward != null && cartSubtotalReward.AmountType == RewardAmountType.Relative)
+					reward.IsValid = couponValid && condition(promoContext);
+					var catalogItemReward = reward as CatalogItemAmountReward;
+					if (catalogItemReward != null)
 					{
-						//Convert cart subtotal relative reward to line item relative rewards
-						foreach (var promoEntry in promoContext.ProductPromoEntries)
-						{
-							if (!(promoEntry.Discount > 0))
-							{
-								var newReward = new CatalogItemAmountReward()
-								{
-									Promotion = this,
-									Amount = cartSubtotalReward.Amount,
-									AmountType = RewardAmountType.Relative,
-									ProductId = promoEntry.ProductId,
-									CategoryId = promoEntry.CategoryId,
-									IsValid = isValid
-								};
-								retVal.Add(newReward);
-							}
-						}
+						catalogItemReward.ProductId = promoEntry.ProductId;
 					}
-					else
-					{
-						retVal.Add(reward);
-					}
+					retVal.Add(reward);
 				}
 			}
 			return retVal.ToArray();
