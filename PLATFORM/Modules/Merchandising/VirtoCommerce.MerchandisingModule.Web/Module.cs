@@ -42,7 +42,7 @@ using VirtoCommerce.Search.Index;
 
 namespace VirtoCommerce.MerchandisingModule.Web
 {
-    public class Module : IModule, IDatabaseModule
+    public class Module : IModule, IDatabaseModule, IPostInitialize
     {
         #region Constants
 
@@ -204,8 +204,10 @@ namespace VirtoCommerce.MerchandisingModule.Web
             _container.RegisterType<IEvaluationPolicy, CartSubtotalRewardCombinePolicy>("cart");
             _container.RegisterType<IEvaluationPolicy, ShipmentRewardCombinePolicy>("shipment");
              * */
+        }
 
-            // TODO: Move to PostInitialize
+        public void PostInitialize()
+        {
             var jobScheduler = _container.Resolve<SearchIndexJobsScheduler>();
             jobScheduler.SheduleJobs();
         }
