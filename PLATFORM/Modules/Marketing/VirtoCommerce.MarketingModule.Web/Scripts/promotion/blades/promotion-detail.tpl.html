@@ -146,7 +146,7 @@
                         </script>
                         <script type="text/ng-template" id="expression-ConditionEntryIs.html">
                             Product is
-                            <a class="__link" ng-click="openItemSelectWizard(element1)">{{element1.productId?element1.productId: 'select Product'}}</a>
+                            <a class="__link" ng-click="openItemSelectWizard(element1)">{{element1.productId?element1.productId: 'select product'}}</a>
                         </script>
                         <script type="text/ng-template" id="expression-ConditionCurrencyIs.html">
                             <span ng-controller="promotionConditionCurrencyIsController">
@@ -165,7 +165,7 @@
                         </script>
                         <script type="text/ng-template" id="expression-ConditionCategoryIs.html">
                             Category is
-                            <a class="__link" ng-click="openCategorySelectWizard(element1)">{{element1.selectedCategoryId?element1.selectedCategoryId: 'select Category'}}</a>
+                            <a class="__link" ng-click="openCategorySelectWizard(element1)">{{element1.selectedCategoryId?element1.selectedCategoryId: 'select category'}}</a>
                         </script>
 
                         <script type="text/ng-template" id="expression-BlockCartCondition.html">
@@ -174,6 +174,59 @@
                             <ul class="menu __context" role="menu" id="allAny_menu{{element.id}}">
                                 <li class="menu-item" ng-click='element.all=true;'>all</li>
                                 <li class="menu-item" ng-click='element.all=false;'>any</li>
+                            </ul>
+                        </script>
+                        <script type="text/ng-template" id="expression-ConditionCartSubtotalLeast.html">
+                            Cart subtotal is
+                            <a class="__link" left-click-menu data-target="exactly_menu{{element1.id}}">{{element1.exactly | boolToValue:'exactly':'at least'}}</a>
+                            <div class="form-input __mini">
+                                <input money required ng-model="element1.subTotal">
+                            </div>excluding
+
+                            <ul class="menu __context" role="menu" id="exactly_menu{{element1.id}}">
+                                <li class="menu-item" ng-click='element1.exactly=true;'>exactly</li>
+                                <li class="menu-item" ng-click='element1.exactly=false;'>at least</li>
+                            </ul>
+                        </script>
+                        <script type="text/ng-template" id="expression-ConditionAtNumItemsInCart.html">
+                            <a class="__link" left-click-menu data-target="exactly_menu{{element1.id}}">{{element1.exactly | boolToValue:'exactly':'at least'}}</a>
+                            <div class="form-input __mini __number js-number-input-plugin" data-step="1">
+                                <input class="js-val" required ng-model="element1.numItem">
+                                <a class="up js-up"></a>
+                                <a class="down js-down"></a>
+                            </div>items are in shopping cart excluding
+
+                            <ul class="menu __context" role="menu" id="exactly_menu{{element1.id}}">
+                                <li class="menu-item" ng-click='element1.exactly=true;'>exactly</li>
+                                <li class="menu-item" ng-click='element1.exactly=false;'>at least</li>
+                            </ul>
+                        </script>
+                        <script type="text/ng-template" id="expression-ConditionAtNumItemsInCategoryAreInCart.html">
+                            <a class="__link" left-click-menu data-target="exactly_menu{{element1.id}}">{{element1.exactly | boolToValue:'exactly':'at least'}}</a>
+                            <div class="form-input __mini __number js-number-input-plugin" data-step="1">
+                                <input class="js-val" required ng-model="element1.numItem">
+                                <a class="up js-up"></a>
+                                <a class="down js-down"></a>
+                            </div>items of category
+                            <a class="__link" ng-click="openCategorySelectWizard(element)">{{element.selectedCategoryId?element.selectedCategoryId: 'select category'}}</a>
+                            are in shopping cart excluding
+                            <ul class="menu __context" role="menu" id="exactly_menu{{element1.id}}">
+                                <li class="menu-item" ng-click='element1.exactly=true;'>exactly</li>
+                                <li class="menu-item" ng-click='element1.exactly=false;'>at least</li>
+                            </ul>
+                        </script>
+                        <script type="text/ng-template" id="expression-ConditionAtNumItemsOfEntryAreInCart.html">
+                            <a class="__link" left-click-menu data-target="exactly_menu{{element1.id}}">{{element1.exactly | boolToValue:'exactly':'at least'}}</a>
+                            <div class="form-input __mini __number js-number-input-plugin" data-step="1">
+                                <input class="js-val" required ng-model="element1.numItem">
+                                <a class="up js-up"></a>
+                                <a class="down js-down"></a>
+                            </div>items of entry
+                            <a class="__link" ng-click="openItemSelectWizard(element)">{{element.productId?element.productId: 'select entry'}}</a>
+                            are in shopping cart
+                            <ul class="menu __context" role="menu" id="exactly_menu{{element1.id}}">
+                                <li class="menu-item" ng-click='element1.exactly=true;'>exactly</li>
+                                <li class="menu-item" ng-click='element1.exactly=false;'>at least</li>
                             </ul>
                         </script>
 
@@ -195,6 +248,54 @@
                                 <a class="up js-up"></a>
                                 <a class="down js-down"></a>
                             </div> % off cart subtotal
+                        </script>
+                        <script type="text/ng-template" id="expression-RewardItemGetFreeNumItemOfProduct.html">
+                            Get
+                            <div class="form-input __mini __number js-number-input-plugin" data-step="1">
+                                <input class="js-val" required ng-model="element1.numItem">
+                                <a class="up js-up"></a>
+                                <a class="down js-down"></a>
+                            </div>free items of product
+                            <a class="__link" ng-click="openItemSelectWizard(element1)">{{element1.productId?element1.productId: 'select product'}}</a>
+                        </script>
+                        <script type="text/ng-template" id="expression-RewardItemGetOfAbs.html">
+                            Get $
+                            <div class="form-input __mini __number js-number-input-plugin" data-step="1">
+                                <input type="text" class="js-val" required ng-model="element1.amount">
+                                <a class="up js-up"></a>
+                                <a class="down js-down"></a>
+                            </div> off cart subtotal
+                        </script>
+                        <!--<script type="text/ng-template" id="expression-RewardItemGetOfAbsForNum.html">
+                            Get $
+                            <div class="form-input __mini">
+                                <input money required ng-model="element1.amount">
+                            </div>off for
+                            <div class="form-input __mini __number js-number-input-plugin" data-step="1">
+                                <input class="js-val" required ng-model="element1.numItem">
+                                <a class="up js-up"></a>
+                                <a class="down js-down"></a>
+                            </div>items excluding
+                        </script>
+                        <script type="text/ng-template" id="expression-RewardItemGetOfRelForNum.html">
+                            Get
+                            <div class="form-input __mini">
+                                <input money required ng-model="element1.amount">
+                            </div>% off for
+                            <div class="form-input __mini __number js-number-input-plugin" data-step="1">
+                                <input class="js-val" required ng-model="element1.numItem">
+                                <a class="up js-up"></a>
+                                <a class="down js-down"></a>
+                            </div>items excluding
+                        </script>-->
+
+                        <script type="text/ng-template" id="expression-ExcludingCategoryCondition.html">
+                            items of category
+                            <a class="__link" ng-click="openCategorySelectWizard(element)">{{element.selectedCategoryId?element.selectedCategoryId: 'select category'}}</a>
+                        </script>
+                        <script type="text/ng-template" id="expression-ExcludingProductCondition.html">
+                            items of entry
+                            <a class="__link" ng-click="openItemSelectWizard(element)">{{element.productId?element.productId: 'select entry'}}</a>
                         </script>
                     </div>
                 </fieldset>

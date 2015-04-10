@@ -3,7 +3,7 @@ using System.Linq;
 using VirtoCommerce.Domain.Marketing.Model;
 using linq = System.Linq.Expressions;
 
-namespace VirtoCommerce.MarketingModule.DynamicExpression.Promotion
+namespace VirtoCommerce.MarketingModule.Expressions.Promotion
 {
 	//Registered user
 	public class ConditionIsRegisteredUser : ConditionBase, IConditionExpression

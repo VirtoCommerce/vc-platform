@@ -6,7 +6,7 @@ using System.Web.Http.ModelBinding;
 using VirtoCommerce.CustomerModule.Web.Binders;
 using VirtoCommerce.Domain.Marketing.Services;
 using VirtoCommerce.MarketingModule.Data.Promotions;
-using VirtoCommerce.MarketingModule.DynamicExpression.Promotion;
+using VirtoCommerce.MarketingModule.Expressions.Promotion;
 using VirtoCommerce.MarketingModule.Web.Converters;
 using coreModel = VirtoCommerce.Domain.Marketing.Model;
 using webModel = VirtoCommerce.MarketingModule.Web.Model;
@@ -97,6 +97,7 @@ namespace VirtoCommerce.MarketingModule.Web.Controllers.Api
 		[Route("promotions")]
 		public IHttpActionResult DeletePromotions([FromUri] string[] ids)
 		{
+			_marketingService.DeletePromotions(ids);
 			return StatusCode(HttpStatusCode.NoContent);
 		}
     }

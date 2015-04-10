@@ -5,9 +5,9 @@ using System.Web;
 using VirtoCommerce.Domain.Marketing.Model;
 using VirtoCommerce.Foundation.Frameworks.Extensions;
 
-namespace VirtoCommerce.MarketingModule.DynamicExpression.Promotion
+namespace VirtoCommerce.MarketingModule.Expressions.Promotion
 {
-	public class RewardBlock : DynamicExpressionBlock, IRewardExpression
+	public class RewardBlock : DynamicExpression, IRewardExpression
 	{
 		#region IRewardsExpression Members
 
