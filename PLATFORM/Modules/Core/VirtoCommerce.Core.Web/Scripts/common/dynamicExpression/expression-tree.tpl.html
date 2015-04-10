@@ -12,6 +12,18 @@
                         <ng-include src='element1.templateURL'></ng-include>
                     </div>-->
                     <ng-include src='element1.templateURL'></ng-include>
+                    <ul class="list __sub" ng-if="element1.newChildLabel">
+                        <li class="list-item" ng-repeat="element in element1.children">
+                            <i class="list-ico fa fa-times-circle" ng-click='deleteChild(element, element1.children);'></i>
+                            <ng-include src='element.templateURL'></ng-include>
+                        </li>
+                        <li class="list-item">
+                            <a href="#" class="add" left-click-menu data-target="deb_menu1_{{$index}}">{{element1.newChildLabel}}</a>
+                            <ul class="menu __context" role="menu" id="deb_menu1_{{$index}}">
+                                <li class="menu-item" ng-click='addChild(child, element1);' ng-repeat="child in element1.availableChildren">{{child.displayName}}</li>
+                            </ul>
+                        </li>
+                    </ul>
                 </a>
             </li>
         </ul>
