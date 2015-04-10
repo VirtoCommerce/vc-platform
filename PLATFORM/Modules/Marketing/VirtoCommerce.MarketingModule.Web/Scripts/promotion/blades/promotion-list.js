@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.marketingModule')
-.controller('promotionListController', ['$scope', 'promotions', 'bladeNavigationService', 'dialogService', function ($scope, promotions, bladeNavigationService, dialogService) {
+.controller('promotionListController', ['$scope', 'marketing_res_search', 'marketing_res_promotions', 'bladeNavigationService', 'dialogService', function ($scope, marketing_res_search, marketing_res_promotions, bladeNavigationService, dialogService) {
     var selectedNode = null;
     //pagination settigs
     $scope.pageSettings = {};
@@ -14,7 +14,8 @@
         $scope.blade.isLoading = true;
         $scope.blade.selectedAll = false;
 
-        promotions.get({
+        marketing_res_search.search({
+			respGroup: 'withPromotions',
             keyword: $scope.filter.searchKeyword,
             start: ($scope.pageSettings.currentPage - 1) * $scope.pageSettings.itemsPerPageCount,
             count: $scope.pageSettings.itemsPerPageCount
@@ -74,7 +75,7 @@
 
                     var selection = _.where($scope.blade.currentEntities, { selected: true });
                     var itemIds = _.pluck(selection, 'id');
-                    promotions.remove({ ids: itemIds }, function (data, headers) {
+                    marketing_res_promotions.remove({ ids: itemIds }, function (data, headers) {
                         $scope.blade.refresh();
                     }, function (error) {
                         bladeNavigationService.setError('Error ' + error.status, $scope.blade);

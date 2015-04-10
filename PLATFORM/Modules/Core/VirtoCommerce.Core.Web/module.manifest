@@ -28,6 +28,7 @@
 
     <permissions>
         <permission id="security:call_api" name="Call API methods" />
+        <permission id="background_jobs:manage" name="Manage background jobs" />
     </permissions>
 
     <settings>
