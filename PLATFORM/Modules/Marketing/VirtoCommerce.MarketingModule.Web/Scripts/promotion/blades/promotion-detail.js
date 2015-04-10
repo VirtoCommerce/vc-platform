@@ -1,12 +1,12 @@
 ﻿angular.module('virtoCommerce.marketingModule')
-.controller('promotionDetailController', ['$scope', 'bladeNavigationService', 'promotions', 'catalogs', 'stores', 'settings', 'dialogService', 'vaDynamicExpressionService', function ($scope, bladeNavigationService, promotions, catalogs, stores, settings, dialogService, vaDynamicExpressionService) {
+.controller('promotionDetailController', ['$scope', 'bladeNavigationService', 'marketing_res_promotions', 'catalogs', 'stores', 'settings', 'dialogService', 'vaDynamicExpressionService', function ($scope, bladeNavigationService, marketing_res_promotions, catalogs, stores, settings, dialogService, vaDynamicExpressionService) {
     $scope.blade.refresh = function (parentRefresh) {
         if ($scope.blade.isNew) {
-            promotions.getNew({}, function (data) {
+        	marketing_res_promotions.getNew({}, function (data) {
                 initializeBlade(data);
             });
         } else {
-            promotions.get({ id: $scope.blade.currentEntityId }, function (data) {
+        	marketing_res_promotions.get({ id: $scope.blade.currentEntityId }, function (data) {
                 initializeBlade(data);
                 if (parentRefresh) {
                     $scope.blade.parentBlade.refresh();
@@ -42,7 +42,7 @@
         _.each($scope.blade.currentEntity.dynamicExpression.children, stripOffUiInformation);
 
         if ($scope.blade.isNew) {
-            promotions.save({}, $scope.blade.currentEntity, function (data) {
+        	marketing_res_promotions.save({}, $scope.blade.currentEntity, function (data) {
                 $scope.blade.isNew = undefined;
                 $scope.blade.currentEntityId = data.id;
                 initializeToolbar();
@@ -51,7 +51,7 @@
                 bladeNavigationService.setError('Error ' + error.status, $scope.blade);
             });
         } else {
-            promotions.update({}, $scope.blade.currentEntity, function (data) {
+        	marketing_res_promotions.update({}, $scope.blade.currentEntity, function (data) {
                 $scope.blade.refresh(true);
             }, function (error) {
                 bladeNavigationService.setError('Error ' + error.status, $scope.blade);

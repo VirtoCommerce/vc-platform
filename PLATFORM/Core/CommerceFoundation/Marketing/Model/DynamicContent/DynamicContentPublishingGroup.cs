@@ -108,6 +108,10 @@ namespace VirtoCommerce.Foundation.Marketing.Model.DynamicContent
 
 				return _contentItems;
 			}
+			set
+			{
+				_contentItems = value;
+			}
 		}
 
 		ObservableCollection<PublishingGroupContentPlace> _contentPlaces = null;
@@ -120,6 +124,10 @@ namespace VirtoCommerce.Foundation.Marketing.Model.DynamicContent
 					_contentPlaces = new ObservableCollection<PublishingGroupContentPlace>();
 
 				return _contentPlaces;
+			}
+			set
+			{
+				_contentPlaces = value;
 			}
 		}
 		#endregion
