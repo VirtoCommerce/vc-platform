@@ -8,10 +8,10 @@ using VirtoCommerce.Domain.Marketing.Services;
 
 namespace VirtoCommerce.MarketingModule.Data.Services
 {
-	public class DefaultMarketingPromoEvaluatorImpl : IMarketingPromoEvaluator
+	public class DefaultPromotionEvaluatorImpl : IMarketingPromoEvaluator
 	{
-		private readonly IMarketingService _marketingService;
-		public DefaultMarketingPromoEvaluatorImpl(IMarketingService marketingService)
+		private readonly IPromotionService _marketingService;
+		public DefaultPromotionEvaluatorImpl(IPromotionService marketingService)
 		{
 			_marketingService = marketingService;
 		}
@@ -81,17 +81,6 @@ namespace VirtoCommerce.MarketingModule.Data.Services
 			rewards.OfType<SpecialOfferReward>().ToList().ForEach(x => retVal.Rewards.Add(x));
 
 			return retVal;
-		}
-
-		public CatalogPromotionResult[] EvaluateCatalogPromotions(IPromotionEvaluationContext context)
-		{
-			var retVal = new List<CatalogPromotionResult>();
-
-			var now = DateTime.UtcNow;
-			var promotions = _marketingService.GetActivePromotions();
-			retVal.AddRange(promotions.Select(x => x.EvaluateCatalogPromotion(context)).Where(x => x != null));
-
-			return retVal.ToArray();
 		}
 
 		public PromotionResult ProcessEvent(IMarketingEvent markertingEvent)

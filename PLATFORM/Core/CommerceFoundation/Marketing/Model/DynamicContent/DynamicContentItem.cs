@@ -80,6 +80,10 @@ namespace VirtoCommerce.Foundation.Marketing.Model.DynamicContent
 
 				return _propertyValues;
 			}
+			set
+			{
+				_propertyValues = value;
+			}
 		}
 
 		#endregion

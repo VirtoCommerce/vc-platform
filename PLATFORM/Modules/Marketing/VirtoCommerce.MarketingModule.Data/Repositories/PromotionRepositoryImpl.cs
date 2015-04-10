@@ -13,13 +13,13 @@ using VirtoCommerce.Domain.Marketing.Model;
 
 namespace VirtoCommerce.MarketingModule.Data.Repositories
 {
-	public class FoundationMarketingRepositoryImpl : EFMarketingRepository, IFoundationMarketingRepository
+	public class PromotionRepositoryImpl : EFMarketingRepository, IFoundationPromotionRepository
 	{
-		public FoundationMarketingRepositoryImpl(string nameOrConnectionString)
+		public PromotionRepositoryImpl(string nameOrConnectionString)
 			: this(nameOrConnectionString, null, null)
 		{
 		}
-		public FoundationMarketingRepositoryImpl(string nameOrConnectionString, params IInterceptor[] interceptors)
+		public PromotionRepositoryImpl(string nameOrConnectionString, params IInterceptor[] interceptors)
 			: base(nameOrConnectionString, null, interceptors)
 		{
 		}

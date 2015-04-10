@@ -57,7 +57,7 @@ namespace VirtoCommerce.MarketingModule.Test
 				promotion = (marketingController.CreatePromotion(promotion) as OkNegotiatedContentResult<webModel.Promotion>).Content;
 			}
 		
-			var marketingEval = new DefaultMarketingPromoEvaluatorImpl(GetMarketingService());
+			var marketingEval = new DefaultPromotionEvaluatorImpl(GetMarketingService());
 			var context = GetPromotionEvaluationContext();
 			var result = marketingEval.EvaluatePromotion(context);
 		
@@ -106,7 +106,7 @@ namespace VirtoCommerce.MarketingModule.Test
 				promotion = (marketingController.CreatePromotion(promotion) as OkNegotiatedContentResult<webModel.Promotion>).Content;
 			}
 
-			var marketingEval = new DefaultMarketingPromoEvaluatorImpl(GetMarketingService());
+			var marketingEval = new DefaultPromotionEvaluatorImpl(GetMarketingService());
 			var context = GetPromotionEvaluationContext();
 			context.PromoEntries.First().Attributes["tag"] = "#FOOTBAL";
 			var result = marketingEval.EvaluatePromotion(context);
@@ -160,18 +160,18 @@ namespace VirtoCommerce.MarketingModule.Test
 			return context;
 		}
 
-		private static IMarketingService GetMarketingService()
+		private static IPromotionService GetMarketingService()
 		{
-			Func<IFoundationMarketingRepository> foundationRepositoryFactory = () => new FoundationMarketingRepositoryImpl("VirtoCommerce", new AuditChangeInterceptor());
+			Func<IFoundationPromotionRepository> foundationRepositoryFactory = () => new PromotionRepositoryImpl("VirtoCommerce", new AuditChangeInterceptor());
 			var promotionExtensionManager = new InMemoryPromotionExtensionManagerImpl();
-			var retVal = new MarketingServiceImpl(foundationRepositoryFactory, promotionExtensionManager);
+			var retVal = new PromotionServiceImpl(foundationRepositoryFactory, promotionExtensionManager);
 			return retVal;
 		}
 
-		private static MarketingManagmentController GetMarketingController(IPromotionExtensionManager extensionManager)
+		private static PromotionController GetMarketingController(IPromotionExtensionManager extensionManager)
 		{
-			Func<IFoundationMarketingRepository> foundationRepositoryFactory = () => new FoundationMarketingRepositoryImpl("VirtoCommerce", new AuditChangeInterceptor());
-			var retVal = new MarketingManagmentController(new MarketingServiceImpl(foundationRepositoryFactory, extensionManager), null, extensionManager);
+			Func<IFoundationPromotionRepository> foundationRepositoryFactory = () => new PromotionRepositoryImpl("VirtoCommerce", new AuditChangeInterceptor());
+			var retVal = new PromotionController(new PromotionServiceImpl(foundationRepositoryFactory, extensionManager), extensionManager, null);
 			return retVal;
 		}
 

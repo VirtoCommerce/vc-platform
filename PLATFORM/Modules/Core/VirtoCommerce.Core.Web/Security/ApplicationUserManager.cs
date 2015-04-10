@@ -50,7 +50,7 @@ namespace VirtoCommerce.CoreModule.Web.Security
                 Subject = "SecurityCode",
                 BodyFormat = "Your security code is {0}"
             });
-            //manager.EmailService = new EmailService();
+            manager.EmailService = new EmailService();
             //manager.SmsService = new SmsService();
             var dataProtectionProvider = options.DataProtectionProvider;
             if (dataProtectionProvider != null)
@@ -67,8 +67,19 @@ namespace VirtoCommerce.CoreModule.Web.Security
 
         public Task SendAsync(IdentityMessage message)
         {
+            var emailMessage = new System.Net.Mail.MailMessage();
+            emailMessage.From = new System.Net.Mail.MailAddress("do-not-reply@samplestore.com");
+            emailMessage.To.Add(message.Destination);
+            emailMessage.Subject = message.Subject;
+            emailMessage.Body = message.Body;
+            emailMessage.IsBodyHtml = true;
+
+            var smtpClient = new System.Net.Mail.SmtpClient();
+
+            return smtpClient.SendMailAsync(emailMessage);
+
             // Plug in your enail service here to send a text message.
-            return Task.FromResult(0);
+            //return Task.FromResult(0);
         }
     }
 
