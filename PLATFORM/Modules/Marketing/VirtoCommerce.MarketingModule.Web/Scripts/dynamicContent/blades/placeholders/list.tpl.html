@@ -2,7 +2,7 @@
 	<div class="blade-inner">
 		<div class="inner-block">
 			<ul class="list __files" ng-if="blade.currentEntities.length">
-				<li class="list-item" ng-click="blade.folderClick(data)" ng-repeat="data in blade.currentEntities" ng-class="{'__selected': blade.checkFolder(data) }" ng-include="'Modules/$(VirtoCommerce.Marketing)/Scripts/dynamicContent/blades/placeholders/list-items.tpl.html'" context-menu data-target="ipl_menu_{{data.id}}">
+				<li class="list-item" ng-click="blade.folderClick(data)" ng-repeat="data in blade.currentEntities" ng-include="'Modules/$(VirtoCommerce.Marketing)/Scripts/dynamicContent/blades/placeholders/list-items.tpl.html'" context-menu data-target="ipl_menu_{{data.id}}">
 
 				</li>
 			</ul>
