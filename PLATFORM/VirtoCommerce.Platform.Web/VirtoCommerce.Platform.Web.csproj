@@ -396,9 +396,9 @@
     <Content Include="Scripts\common\directives\htmlTooltip.js" />
     <Content Include="Scripts\common\confirmDialog\confirmDialog.tpl.html" />
     <Content Include="Scripts\common\confirmDialog\cofirmDialog.js" />
-    <Content Include="Scripts\common\directives\contextMenu.js" />
     <Content Include="Scripts\common\directives\angular-moment.js" />
     <Content Include="Scripts\common\directives\inputNumber.js" />
+    <Content Include="Scripts\common\directives\left-click-menu.js" />
     <Content Include="Scripts\common\filters.js" />
     <Content Include="Scripts\common\navigation\breadcrumbs\breadcrumbs.js" />
     <Content Include="Scripts\common\navigation\breadcrumbs\breadcrumbs.tpl.html" />
@@ -1288,10 +1288,6 @@
     <ProjectReference Include="..\Core\CommerceFoundation\CommerceFoundation.csproj">
       <Project>{E7FC9A51-1B39-4BDC-983A-8A059C5FC58B}</Project>
       <Name>CommerceFoundation</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Extensions\Jobs\VirtoCommerce.Scheduling.Windows\VirtoCommerce.Scheduling.Windows.csproj">
-      <Project>{F4831210-2600-444F-8510-2BD825E3F13B}</Project>
-      <Name>VirtoCommerce.Scheduling.Windows</Name>
     </ProjectReference>
     <ProjectReference Include="..\VirtoCommerce.Framework.Web\VirtoCommerce.Framework.Web.csproj">
       <Project>{f7c9313b-522e-4619-abc9-8c7d4600d6b5}</Project>

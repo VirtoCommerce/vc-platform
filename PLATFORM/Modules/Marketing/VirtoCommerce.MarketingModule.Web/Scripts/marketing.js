@@ -42,9 +42,127 @@ angular.module(moduleName, [])
 
       //Register expressions
       vaDynamicExpressionService.registerExpression({
+          id: 'BlockCustomerCondition',
+          newChildLabel: '+ add user group',
+          getValidationError: function () {
+              return (this.children && this.children.length) ? undefined : 'Promotion requires at least one eligibility';
+          }
+      });
+      vaDynamicExpressionService.registerExpression({
+          id: 'ConditionIsEveryone',
+          displayName: 'Everyone'
+      });
+      vaDynamicExpressionService.registerExpression({
+          id: 'ConditionIsFirstTimeBuyer',
+          displayName: 'First time buyer'
+      });
+      vaDynamicExpressionService.registerExpression({
+          id: 'ConditionIsRegisteredUser',
+          displayName: 'Registered user'
+      });
+
+      var availableExcludings = [
+            {
+                id: 'ExcludingCategoryCondition'
+            },
+            {
+                id: 'ExcludingProductCondition'
+            }
+      ];
+      vaDynamicExpressionService.registerExpression({
+          id: 'ExcludingCategoryCondition',
+          displayName: 'Items of category'
+      });
+      vaDynamicExpressionService.registerExpression({
+          id: 'ExcludingProductCondition',
+          displayName: 'Items of entry'
+      });
+
+      vaDynamicExpressionService.registerExpression({
+          id: 'BlockCatalogCondition',
+          newChildLabel: '+ add condition'
+      });
+      vaDynamicExpressionService.registerExpression({
           id: 'ConditionEntryIs',
           // templateURL: 'expression-ConditionEntryIs.html',
           // controller: 'conditionEntryIsController'
           displayName: 'Product is []'
       });
+      vaDynamicExpressionService.registerExpression({
+          id: 'ConditionCurrencyIs',
+          displayName: 'Currency is []'
+      });
+      vaDynamicExpressionService.registerExpression({
+          id: 'ConditionCodeContains',
+          displayName: 'Product code contains []'
+      });
+      vaDynamicExpressionService.registerExpression({
+          id: 'ConditionCategoryIs',
+          displayName: 'Category is []'
+      });
+
+      vaDynamicExpressionService.registerExpression({
+          id: 'BlockCartCondition',
+          newChildLabel: '+ add condition'
+      });
+      vaDynamicExpressionService.registerExpression({
+          id: 'ConditionCartSubtotalLeast',
+          displayName: 'Cart subtotal is []',
+          availableChildren: availableExcludings,
+          newChildLabel: '+ excluding'
+      });
+      vaDynamicExpressionService.registerExpression({
+          id: 'ConditionAtNumItemsInCart',
+          displayName: '[] [] items are in shopping cart',
+          availableChildren: availableExcludings,
+          newChildLabel: '+ excluding'
+      });
+      vaDynamicExpressionService.registerExpression({
+          id: 'ConditionAtNumItemsInCategoryAreInCart',
+          displayName: '[] [] items of category are in shopping cart',
+          availableChildren: availableExcludings,
+          newChildLabel: '+ excluding'
+      });
+      vaDynamicExpressionService.registerExpression({
+          id: 'ConditionAtNumItemsOfEntryAreInCart',
+          displayName: '[] [] items of entry are in shopping cart'
+      });
+
+      vaDynamicExpressionService.registerExpression({
+          id: 'RewardBlock',
+          newChildLabel: '+ add effect',
+          getValidationError: function () {
+              return (this.children && this.children.length) ? undefined : 'Promotion requires at least one reward';
+          }
+      });
+      vaDynamicExpressionService.registerExpression({
+          id: 'RewardCartGetOfAbsSubtotal',
+          displayName: 'Get $ [] off cart subtotal'
+      });
+      vaDynamicExpressionService.registerExpression({
+          id: 'RewardCartGetOfRelSubtotal',
+          displayName: 'Get [] % off cart subtotal'
+      });
+      vaDynamicExpressionService.registerExpression({
+          id: 'RewardItemGetFreeNumItemOfProduct',
+          displayName: 'Get [] free items of product []'
+      });
+      //vaDynamicExpressionService.registerExpression({
+      //    id: 'RewardItemGetOfAbs',
+      //    displayName: 'Get $[] off'
+      //});
+      
+      //vaDynamicExpressionService.registerExpression({
+      //    id: 'RewardItemGetOfAbsForNum',
+      //    displayName: 'Get $[] off [] items',
+      //    availableChildren: availableExcludings,
+      //    newChildLabel: '+ excluding'
+      //});
+      //vaDynamicExpressionService.registerExpression({
+      //    id: 'RewardItemGetOfRelForNum',
+      //    displayName: 'Get []% off [] items',
+      //    availableChildren: availableExcludings,
+      //    newChildLabel: '+ excluding'
+      //});
+
   }]);

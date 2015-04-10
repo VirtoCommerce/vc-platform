@@ -98,7 +98,15 @@ namespace VirtoCommerce.MarketingModule.Data.Services
 
 		public void DeletePromotions(string[] ids)
 		{
-			throw new NotImplementedException();
+			using (var repository = _repositoryFactory())
+			{
+				foreach (var id in ids)
+				{
+					var entity = repository.GetPromotionById(id);
+					repository.Remove(entity);
+				}
+				CommitChanges(repository);
+			}
 		}
 
 		public Coupon GetCouponById(string id)
