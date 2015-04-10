@@ -175,7 +175,6 @@
     <Content Include="Scripts\dynamicContent\blades\placeholders\list-items.tpl.html" />
     <Content Include="Scripts\dynamicContent\blades\placeholders\placeholder-details.js" />
     <Content Include="Scripts\dynamicContent\blades\placeholders\placeholder-details.tpl.html" />
-    <Content Include="Scripts\promotion\blades\expr-ConditionEntryIs.js" />
     <Content Include="Scripts\dynamicContent\blades\dynamicContent-list.js" />
     <Content Include="Scripts\dynamicContent\blades\dynamicContent-list.tpl.html" />
     <Content Include="Scripts\dynamicContent\blades\placeholders\add.js" />
