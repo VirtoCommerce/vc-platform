@@ -1,4 +1,5 @@
 ﻿using System.Web;
+using Hangfire.SqlServer;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using Microsoft.Practices.Unity;
@@ -133,6 +134,9 @@ namespace VirtoCommerce.CoreModule.Web
             {
                 new SearchDatabaseInitializer().InitializeDatabase(db);
             }
+
+            // Create Hangfire tables
+            new SqlServerStorage(_connectionStringName);
         }
 
         #endregion
@@ -224,7 +228,7 @@ namespace VirtoCommerce.CoreModule.Web
 
             #endregion
 
-            OwinConfig.Configure(_appBuilder, _container);
+            OwinConfig.Configure(_appBuilder, _container, _connectionStringName);
         }
 
         #endregion

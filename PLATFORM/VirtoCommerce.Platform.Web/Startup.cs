@@ -12,7 +12,6 @@ using Owin;
 using VirtoCommerce.Framework.Core.Utils;
 using VirtoCommerce.Framework.Web.Modularity;
 using VirtoCommerce.Platform.Web;
-using VirtoCommerce.Scheduling.Windows;
 using WebGrease.Extensions;
 
 [assembly: OwinStartup(typeof(Startup))]
@@ -66,8 +65,6 @@ namespace VirtoCommerce.Platform.Web
             {
                 moduleManager.LoadModule(module.ModuleName);
             }
-
-            SchedulerHost.CreateScheduler(bootstraper.Container, ConfigurationManager.AppSettings["SchedulerHost"]);
         }
 
 
