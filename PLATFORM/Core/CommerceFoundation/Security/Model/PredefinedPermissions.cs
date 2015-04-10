@@ -91,7 +91,9 @@ namespace VirtoCommerce.Foundation.Security.Model
             ShopperRestrictedAccess = "stores:restricted:access",
             ShopperClosedAccess = "stores:closed:access",
 
-            SettingsSearch = "search:config";
+            SettingsSearch = "search:config",
+
+            BackgroundJobsManage = "background_jobs:manage";
 
         public const string
             Name_CustomersViewAllCasesAll = "View all cases",
@@ -179,7 +181,8 @@ namespace VirtoCommerce.Foundation.Security.Model
             Name_SettingsTaxCategories = "Config Tax Categories",
             Name_SettingsTaxImport = "Config Tax import",
             Name_ShopperRestrictedAccess = "Access Restricted Stores",
-            Name_ShopperClosedAccess = "Access Closed Stores";
+            Name_ShopperClosedAccess = "Access Closed Stores",
+            Name_BackgroundJobsManage = "Manage background jobs";
 
         public const string
             Role_SuperAdmin = "Super Admin",

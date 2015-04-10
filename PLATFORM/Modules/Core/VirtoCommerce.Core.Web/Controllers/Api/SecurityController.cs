@@ -172,7 +172,15 @@ namespace VirtoCommerce.CoreModule.Web.Controllers.Api
             return Ok(retVal);
         }
 
+        [HttpGet]
+        [ResponseType(typeof(IdentityResult))]
+        [Route("users")]
+        public async Task<IHttpActionResult> GetUserByLogin(string loginProvider, string providerKey)
+        {
+            var retVal = await GetUserExtended(loginProvider, providerKey);
 
+            return Ok(retVal);
+        }
 
         /// <summary>
         ///  GET: api/security/users?q=ddd&amp;start=0&amp;count=20
@@ -290,6 +298,9 @@ namespace VirtoCommerce.CoreModule.Web.Controllers.Api
         [Route("users/create")]
         public async Task<IHttpActionResult> CreateAsync(ApplicationUserExtended user)
         {
+            // AO
+            // TODO: AccountId = MemberId for now. Is it correct?
+
 			var dbUser = new ApplicationUser();
 
 			dbUser.InjectFrom(user);
@@ -312,7 +323,7 @@ namespace VirtoCommerce.CoreModule.Web.Controllers.Api
                     {
                         UserName = user.UserName,
                         AccountId = user.Id,
-						MemberId = user.MemberId,
+						MemberId = user.Id,
                         AccountState = AccountState.Approved.GetHashCode(),
                         RegisterType = user.UserType.GetHashCode(),
                         StoreId = user.StoreId
@@ -330,11 +341,86 @@ namespace VirtoCommerce.CoreModule.Web.Controllers.Api
             }
         }
 
+        /// <summary>
+        /// POST: api/security/notifications
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <param name="subject"></param>
+        /// <param name="message"></param>
+        /// <returns></returns>
+        [HttpPost]
+        [Route("users/notifications")]
+        public async Task<IHttpActionResult> CreateSendMessageJob(SecurityMessage securityMessage)
+        {
+            // AO
+            // TODO: Get actual store
+            // TODO: Localize subject and message to user's shop language
+            // TODO: Queue as job
+
+            SendingMethod sendingMethod;
+            if (Enum.TryParse(securityMessage.SendingMethod, out sendingMethod))
+            {
+                if (sendingMethod == SendingMethod.Email)
+                {
+                    string code = await UserManager.GeneratePasswordResetTokenAsync(securityMessage.UserId);
+
+                    var uriBuilder = new UriBuilder(securityMessage.CallbackUrl);
+                    var query = System.Web.HttpUtility.ParseQueryString(uriBuilder.Query);
+                    query["code"] = code;
+                    uriBuilder.Query = query.ToString();
+
+                    string message = string.Format(
+                        "Please reset your password by clicking <strong><a href=\"{0}\">here</a></strong>",
+                        uriBuilder.ToString());
+                    string subject = string.Format("{0} reset password link", securityMessage.StoreId);
+
+                    await UserManager.SendEmailAsync(securityMessage.UserId, subject, message);
+
+                    return Ok();
+                }
+            }
+
+            return BadRequest();
+        }
+
         #endregion
 
         #endregion
 
         #region Helpers
+
+        private async Task<ApplicationUserExtended> GetUserExtended(string loginProvider, string providerKey)
+        {
+            ApplicationUserExtended retVal = null;
+
+            var applicationUser = await UserManager.FindAsync(new UserLoginInfo(loginProvider, providerKey));
+
+            if (applicationUser != null)
+            {
+                retVal = new ApplicationUserExtended();
+                retVal.InjectFrom(applicationUser);
+
+                using (var repository = _securityRepository())
+                {
+                    var user = repository.GetAccountByName(applicationUser.Email);
+                    retVal.InjectFrom(user);
+                    if (user != null)
+                    {
+                        var permissions =
+                            user.RoleAssignments.Select(x => x.Role)
+                                .SelectMany(x => x.RolePermissions)
+                                .Select(x => x.Permission);
+
+                        retVal.UserState = (UserState)user.AccountState;
+                        retVal.UserType = (UserType)user.RegisterType;
+                        retVal.Permissions = permissions.Select(x => x.PermissionId).Distinct().ToArray();
+                        retVal.ApiAcounts = user.ApiAccounts.Select(x => x.ToWebModel()).ToList();
+                    }
+                }
+            }
+
+            return retVal;
+        }
 
         private async Task<ApplicationUserExtended> GetUserExtended(string userName)
         {

@@ -97,6 +97,7 @@
     <Compile Include="Modularity\IModuleManifestProvider.cs" />
     <Compile Include="Modularity\IModuleTypeLoader.cs" />
     <Compile Include="Modularity\InitializationMode.cs" />
+    <Compile Include="Modularity\IPostInitialize.cs" />
     <Compile Include="Modularity\LoadModuleCompletedEventArgs.cs" />
     <Compile Include="Modularity\Exceptions\ModularityException.cs" />
     <Compile Include="Modularity\ManifestBundleDirectory.cs" />
