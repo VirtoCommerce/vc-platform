@@ -1,5 +1,9 @@
 ﻿angular.module('virtoCommerce.marketingModule')
 .controller('addContentItemsController', ['$scope', 'bladeNavigationService', function ($scope, bladeNavigationService) {
+	$scope.setForm = function (form) {
+		$scope.formScope = form;
+	}
+
 	var blade = $scope.blade;
 	blade.originalEntity = angular.copy(blade.entity);
 
@@ -21,7 +25,7 @@
 						blade.saveChanges();
 					},
 					canExecuteMethod: function () {
-						return !angular.equals(blade.originalEntity, blade.entity);
+						return !angular.equals(blade.originalEntity, blade.entity) && !$scope.formScope.$invalid;
 					}
 				},
 				{
@@ -35,19 +39,6 @@
 				}
 			];
 		}
-		else {
-			$scope.bladeToolbarCommands = [
-				{
-					name: "Save", icon: 'fa fa-save',
-					executeMethod: function () {
-						blade.saveChanges();
-					},
-					canExecuteMethod: function () {
-						return !angular.equals(blade.originalEntity, blade.entity);
-					}
-				}
-			];
-		}
 
 		blade.isLoading = false;
 	}
@@ -55,8 +46,9 @@
 	blade.saveChanges = function () {
 		blade.parentBlade.currentEntity.items.push(blade.entity);
 		blade.originalEntity = angular.copy(blade.entity);
-		blade.isNew = false;
-		blade.initialize();
+		if (blade.isNew) {
+			bladeNavigationService.closeBlade(blade);
+		}
 	}
 
 	blade.contentTypes = [

@@ -154,12 +154,14 @@
     <Content Include="Scripts\dynamicContent\blades\items\add.tpl.html" />
     <Content Include="Scripts\dynamicContent\blades\items\folder-details.js" />
     <Content Include="Scripts\dynamicContent\blades\items\folder-details.tpl.html" />
+    <Content Include="Scripts\dynamicContent\blades\items\list-items.tpl.html" />
     <Content Include="Scripts\dynamicContent\blades\items\list.js" />
     <Content Include="Scripts\dynamicContent\blades\items\list.tpl.html" />
     <Content Include="Scripts\dynamicContent\blades\items\content-item-details.js" />
     <Content Include="Scripts\dynamicContent\blades\items\content-item-details.tpl.html" />
     <Content Include="Scripts\dynamicContent\blades\placeholders\folder-details.js" />
     <Content Include="Scripts\dynamicContent\blades\placeholders\folder-details.tpl.html" />
+    <Content Include="Scripts\dynamicContent\blades\placeholders\list-items.tpl.html" />
     <Content Include="Scripts\dynamicContent\blades\placeholders\placeholder-details.js" />
     <Content Include="Scripts\dynamicContent\blades\placeholders\placeholder-details.tpl.html" />
     <Content Include="Scripts\promotion\blades\expr-ConditionEntryIs.js" />
@@ -184,7 +186,9 @@
       <DependentUpon>web.config</DependentUpon>
     </None>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Scripts\dynamicContent\blades\publishing\" />
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

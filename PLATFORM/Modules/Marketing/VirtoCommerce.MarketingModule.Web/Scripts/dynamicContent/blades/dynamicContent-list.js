@@ -6,9 +6,9 @@
 
 	function initializeBlade() {
 		var entities = [
-            { id: 'DC_1', name: 'Content items', subname: 'Content items list', entityName: 'items' },
-            { id: 'DC_2', name: 'Content placeholders', subname: 'Content items list', entityName: 'placeholders' },
-            { id: 'DC_3', name: 'Content publishing', subname: 'Content items list', entityName: 'publishing' }];
+            { id: 'DC_1', name: 'Content items', subname: 'Content items list', description: 'Content items description', icon: 'fa-inbox', entityName: 'items' },
+            { id: 'DC_2', name: 'Content placeholders', subname: 'Content placeholders list', description: 'Placeholders description', icon: 'fa-location-arrow', entityName: 'placeholders' },
+            { id: 'DC_3', name: 'Content publishing', subname: 'Content publishing list', description: 'Publising description', icon: 'fa-paperclip', entityName: 'publishing' }];
 		blade.currentEntities = entities;
 		blade.isLoading = false;
 	};

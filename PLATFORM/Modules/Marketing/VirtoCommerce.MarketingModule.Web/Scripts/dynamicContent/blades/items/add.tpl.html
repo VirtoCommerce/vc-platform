@@ -2,12 +2,12 @@
 	<div class="blade-inner">
 		<div class="inner-block">
 			<ul class="list __items">
-				<li class="list-item" ng-click="blade.addFolder()" ng-show="blade.choosenFolder === undefined">
+				<li class="list-item" ng-click="blade.addFolder()">
 					<i class="list-ico fa fa-folder"></i>
 					<span class="list-t">Content items folder</span>
 					<span class="list-descr">A container for content items.</span>
 				</li>
-				<li class="list-item" ng-click="blade.addContentItem()" ng-show="blade.choosenFolder !== undefined">
+				<li class="list-item" ng-click="blade.addContentItem()" ng-if="blade.choosenFolder !== undefined">
 					<i class="list-ico fa fa-location-arrow"></i>
 					<span class="list-t">Content item</span>
 					<span class="list-descr">Content item.</span>
