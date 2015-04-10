@@ -6,9 +6,9 @@ using VirtoCommerce.Domain.Marketing.Model;
 using VirtoCommerce.Foundation.Frameworks;
 using VirtoCommerce.Foundation.Frameworks.Extensions;
 
-namespace VirtoCommerce.MarketingModule.DynamicExpression.Promotion
+namespace VirtoCommerce.MarketingModule.Expressions.Promotion
 {
-	public abstract class BlockConditionAndOr : DynamicExpressionBlock, IConditionExpression
+	public abstract class BlockConditionAndOr : DynamicExpression, IConditionExpression
 	{
 		public bool All { get; set; }
 		#region IConditionExpression Members

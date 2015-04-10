@@ -114,6 +114,11 @@ $(function () {
         WebAdmin.TreeItemSelected($(this));
     });
 
+    $('.__files .list-img').on('mouseenter', function () {
+        $('body').prepend('<div class="overlay"><div class="overlay-cnt"></div></div>');
+        $('.overlay-cnt').html('<div class="popup"><div class="popup-cnt"><div class="image"><img src="http://fakeimg.pl/1200x900/00CED1/FFF/"></div></div></div>');
+    });
+
     /* Close dropdown if click in other area window */
     $(document).on("click", function (event) {
         if (!$('.nav-bar').is(event.target) && !$('.nav-bar').has(event.target).length) {

@@ -66,6 +66,14 @@
         expressionElement.newChildLabel = undefined;
         expressionElement.templateURL = undefined;
 
+        var selectedCategories = _.where(expressionElement.children, { id: 'ExcludingCategoryCondition' });
+        expressionElement.excludingCategoryIds = _.pluck(selectedCategories, 'selectedCategoryId');
+        expressionElement.children = _.difference(expressionElement.children, selectedCategories);
+
+        var selectedProducts = _.where(expressionElement.children, { id: 'ExcludingProductCondition' });
+        expressionElement.excludingProductIds = _.pluck(selectedProducts, 'productId');
+        expressionElement.children = _.difference(expressionElement.children, selectedProducts);
+
         _.each(expressionElement.children, stripOffUiInformation);
     };
 
@@ -161,152 +169,83 @@
             retVal = vaDynamicExpressionService.expressions[expressionBlock.id];
         } else {
             switch (expressionBlock.id) {
-                case 'BlockCustomerCondition':
-                    retVal = {
-                        headerElements: constructAllAnyBlock(expressionBlock, 'For visitor with', 'of these eligibilities'),
-                        newChildLabel: '+ add usergroup'
-                    }
-                    break;
-                case 'ConditionIsEveryone':
-                    retVal = {
-                        displayName: 'Everyone',
-                        headerElements: [constructLabelElement('Everyone')],
-                    };
-                    break;
-                case 'ConditionIsFirstTimeBuyer':
-                    retVal = {
-                        displayName: 'First time buyer',
-                        headerElements: [constructLabelElement('First time buyer')],
-                    };
-                    break;
-                case 'ConditionIsRegisteredUser':
-                    retVal = {
-                        displayName: 'Registered user',
-                        headerElements: [constructLabelElement('Registered user')],
-                    };
-                    break;
-
-                case 'BlockCatalogCondition':
-                    retVal = {
-                        headerElements: constructAllAnyBlock(expressionBlock, 'if', 'of these catalog conditions are true'),
-                        newChildLabel: '+ add condition'
-                    }
-                    break;
-                    //case 'ConditionEntryIs':
-                    //    retVal = {
-                    //        displayName: 'Product is []',
-                    //        headerElements: [constructLabelElement('Product is '),
-                    //                         constructItemSelector(expressionBlock)]
-                    //    };
-                    //    break;
-                case 'ConditionCurrencyIs':
-                    retVal = {
-                        displayName: 'Currency is []',
-                        headerElements: [constructLabelElement('Currency is '),
-                                         {
-                                             type: 'currency',
-                                             $parentElement: expressionBlock,
-                                             availableEntries: settings.getValues({ id: 'VirtoCommerce.Core.General.Currencies' })
-                                         }]
-                    };
-                    break;
-
-                case 'BlockCartCondition':
-                    retVal = {
-                        headerElements: constructAllAnyBlock(expressionBlock, 'if', 'of these cart conditions are true'),
-                        newChildLabel: '+ add condition'
-                    }
-                    break;
-                case 'RewardBlock':
-                    retVal = {
-                        headerElements: [constructLabelElement('They get: ')],
-                        newChildLabel: '+ add effect',
-                        getValidationError: function (data) {
-                            if (data.children && data.children.length) {
-                                return undefined;
-                            } else {
-                                return 'Promotion requires at least one reward';
-                            }
-                        }
-                    };
-                    break;
-                case 'RewardCartGetOfAbsSubtotal':
-                    retVal = {
-                        displayName: 'Get $ [] off cart subtotal',
-                        headerElements: constructAmountBlock(expressionBlock, 'Get $', 'off cart subtotal')
-                    };
-                    break;
-                case 'RewardCartGetOfRelSubtotal':
-                    retVal = {
-                        displayName: 'Get [] % off cart subtotal',
-                        headerElements: constructAmountBlock(expressionBlock, 'Get ', ' % off cart subtotal')
-                    };
-                    break;
-                case 'RewardItemGetFreeNumItemOfProduct':
-                    retVal = {
-                        displayName: 'Get [] free items of Product',
-                        headerElements: constructTypedBlock(expressionBlock, 'Get ', ' free items of Product', 'numericInput')
-                    };
-                    retVal.headerElements.push(constructItemSelector(expressionBlock));
-                    break;
-                case 'RewardItemGetOfAbs':
-                    retVal = {
-                        displayName: 'Get $[] off',
-                        headerElements: constructAmountBlock(expressionBlock, 'Get $', ' off')
-                    };
-                    retVal.headerElements.push(constructItemSelector(expressionBlock));
-                    break;
-                case 'RewardItemGetOfRel':
-                    retVal = {
-                        displayName: 'Get [] % off',
-                        headerElements: constructAmountBlock(expressionBlock, 'Get ', ' % off')
-                    };
-                    retVal.headerElements.push(constructItemSelector(expressionBlock));
-                    break;
-                case 'RewardItemGetOfAbsForNum':
-                    retVal = {
-                        displayName: 'Get $[] off [] items',
-                        headerElements: constructAmountBlock(expressionBlock, 'Get $', ' off for')
-                    };
-                    retVal.headerElements.push({
-                        type: 'numericInput',
-                        $parentElement: expressionBlock
-                    });
-                    retVal.headerElements.push(constructLabelElement('  items'));
-                    break;
-                case 'RewardItemGetOfRelForNum':
-                    retVal = {
-                        displayName: 'Get [] % off [] items',
-                        headerElements: constructAmountBlock(expressionBlock, 'Get ', ' % off for')
-                    };
-                    retVal.headerElements.push({
-                        type: 'numericInput',
-                        $parentElement: expressionBlock
-                    });
-                    retVal.headerElements.push(constructLabelElement('  items'));
-                    break;
-                case 'RewardShippingGetOfAbsShippingMethod':
-                    retVal = {
-                        displayName: 'Get $[] off shipping',
-                        headerElements: constructAmountBlock(expressionBlock, 'Get $', ' off shipping')
-                    };
-                    retVal.headerElements.push({
-                        type: 'shippingMethod',
-                        $parentElement: expressionBlock,
-                        availableEntries: shippingMethods
-                    });
-                    break;
-                case 'RewardShippingGetOfRelShippingMethod':
-                    retVal = {
-                        displayName: 'Get [] % off shipping',
-                        headerElements: constructAmountBlock(expressionBlock, 'Get ', ' % off shipping')
-                    };
-                    retVal.headerElements.push({
-                        type: 'shippingMethod',
-                        $parentElement: expressionBlock,
-                        availableEntries: shippingMethods
-                    });
-                    break;
+                //case 'RewardCartGetOfAbsSubtotal':
+                //    retVal = {
+                //        displayName: 'Get $ [] off cart subtotal',
+                //        headerElements: constructAmountBlock(expressionBlock, 'Get $', 'off cart subtotal')
+                //    };
+                //    break;
+                //case 'RewardCartGetOfRelSubtotal':
+                //    retVal = {
+                //        displayName: 'Get [] % off cart subtotal',
+                //        headerElements: constructAmountBlock(expressionBlock, 'Get ', ' % off cart subtotal')
+                //    };
+                //    break;
+                //case 'RewardItemGetFreeNumItemOfProduct':
+                //    retVal = {
+                //        displayName: 'Get [] free items of Product',
+                //        headerElements: constructTypedBlock(expressionBlock, 'Get ', ' free items of Product', 'numericInput')
+                //    };
+                //    retVal.headerElements.push(constructItemSelector(expressionBlock));
+                //    break;
+                //case 'RewardItemGetOfAbs':
+                //    retVal = {
+                //        displayName: 'Get $[] off',
+                //        headerElements: constructAmountBlock(expressionBlock, 'Get $', ' off')
+                //    };
+                //    retVal.headerElements.push(constructItemSelector(expressionBlock));
+                //    break;
+                //case 'RewardItemGetOfRel':
+                //    retVal = {
+                //        displayName: 'Get [] % off',
+                //        headerElements: constructAmountBlock(expressionBlock, 'Get ', ' % off')
+                //    };
+                //    retVal.headerElements.push(constructItemSelector(expressionBlock));
+                //    break;
+                //case 'RewardItemGetOfAbsForNum':
+                //    retVal = {
+                //        displayName: 'Get $[] off [] items',
+                //        headerElements: constructAmountBlock(expressionBlock, 'Get $', ' off for')
+                //    };
+                //    retVal.headerElements.push({
+                //        type: 'numericInput',
+                //        $parentElement: expressionBlock
+                //    });
+                //    retVal.headerElements.push(constructLabelElement('  items'));
+                //    break;
+                //case 'RewardItemGetOfRelForNum':
+                //    retVal = {
+                //        displayName: 'Get [] % off [] items',
+                //        headerElements: constructAmountBlock(expressionBlock, 'Get ', ' % off for')
+                //    };
+                //    retVal.headerElements.push({
+                //        type: 'numericInput',
+                //        $parentElement: expressionBlock
+                //    });
+                //    retVal.headerElements.push(constructLabelElement('  items'));
+                //    break;
+                //case 'RewardShippingGetOfAbsShippingMethod':
+                //    retVal = {
+                //        displayName: 'Get $[] off shipping',
+                //        headerElements: constructAmountBlock(expressionBlock, 'Get $', ' off shipping')
+                //    };
+                //    retVal.headerElements.push({
+                //        type: 'shippingMethod',
+                //        $parentElement: expressionBlock,
+                //        availableEntries: shippingMethods
+                //    });
+                //    break;
+                //case 'RewardShippingGetOfRelShippingMethod':
+                //    retVal = {
+                //        displayName: 'Get [] % off shipping',
+                //        headerElements: constructAmountBlock(expressionBlock, 'Get ', ' % off shipping')
+                //    };
+                //    retVal.headerElements.push({
+                //        type: 'shippingMethod',
+                //        $parentElement: expressionBlock,
+                //        availableEntries: shippingMethods
+                //    });
+                //    break;
                 default:
                     retVal = {
                         displayName: 'unknown element: ' + expressionBlock.id,
@@ -314,11 +253,21 @@
                     };
             }
         }
-
+        
         //angular.merge(expressionBlock, retVal);
         //angular.extend(expressionBlock, retVal);
         _.extend(expressionBlock, retVal);
 
+        if (!expressionBlock.children) {
+            expressionBlock.children = [];
+        }
+        _.each(expressionBlock.excludingCategoryIds, function (id) {
+            expressionBlock.children.push({ id: 'ExcludingCategoryCondition', selectedCategoryId: id });
+        });
+        _.each(expressionBlock.excludingProductIds, function (id) {
+            expressionBlock.children.push({ id: 'ExcludingProductCondition', productId: id });
+        });
+        
         _.each(expressionBlock.children, extendElementBlock);
         _.each(expressionBlock.availableChildren, extendElementBlock);
         return expressionBlock;

@@ -7,13 +7,12 @@ using VirtoCommerce.Foundation.Frameworks;
 using VirtoCommerce.Foundation.Money;
 using linq = System.Linq.Expressions;
 
-namespace VirtoCommerce.MarketingModule.DynamicExpression.Promotion
+namespace VirtoCommerce.MarketingModule.Expressions.Promotion
 {
 	//Currency is []
 	public class ConditionCurrencyIs : ConditionBase, IConditionExpression
 	{
-		[JsonConverter(typeof(StringEnumConverter))]
-		public CurrencyCodes? Currency { get; set; }
+		public string Currency { get; set; }
 	
 		#region IConditionExpression Members
 		/// <summary>
@@ -22,13 +21,12 @@ namespace VirtoCommerce.MarketingModule.DynamicExpression.Promotion
 		/// <returns></returns>
 		public linq.Expression<Func<IPromotionEvaluationContext, bool>> GetConditionExpression()
 		{
-			var paramX = linq.Expression.Parameter(typeof(IEvaluationContext), "x");
+			var paramX = linq.Expression.Parameter(typeof(IPromotionEvaluationContext), "x");
 			var castOp = linq.Expression.Convert(paramX, typeof(PromotionEvaluationContext));
 			var memberInfo = typeof(PromotionEvaluationContext).GetMember("Currency").First();
-
-			var currency = linq.Expression.MakeUnary(linq.ExpressionType.Convert, linq.Expression.MakeMemberAccess(castOp, memberInfo), typeof(CurrencyCodes));  
+			var contextCurrency = linq.Expression.MakeMemberAccess(castOp, memberInfo);
 			var selectedCurrency = linq.Expression.Constant(Currency);
-			var binaryOp = linq.Expression.Equal(selectedCurrency, currency);
+			var binaryOp = linq.Expression.Equal(selectedCurrency, contextCurrency);
 
 			var retVal = linq.Expression.Lambda<Func<IPromotionEvaluationContext, bool>>(binaryOp, paramX);
 
