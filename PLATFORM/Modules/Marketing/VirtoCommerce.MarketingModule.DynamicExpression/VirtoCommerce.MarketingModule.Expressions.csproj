@@ -66,6 +66,7 @@
     <Compile Include="Promotion\IRewardExpression.cs" />
     <Compile Include="Promotion\PromoDynamicExpressionTree.cs" />
     <Compile Include="Promotion\Rewards\BlockReward.cs" />
+    <Compile Include="Promotion\Rewards\RewardCartGetOfRelSubtotal.cs" />
     <Compile Include="Promotion\Rewards\RewardCartGetOfAbsSubtotal.cs" />
     <Compile Include="Promotion\Rewards\RewardItemGetFreeNumItemOfProduct.cs" />
     <Compile Include="Promotion\Rewards\RewardItemGetOfAbs.cs" />

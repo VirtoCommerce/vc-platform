@@ -6,15 +6,15 @@ using System.Threading.Tasks;
 
 namespace VirtoCommerce.MarketingModule.Web.Model
 {
-	public class SearchResult
+	public class MarketingSearchResult
 	{
-		public SearchResult()
-		{
-			Promotions = new List<Promotion>();
-		}
+	
 		public int TotalCount { get; set; }
 
 		public List<Promotion> Promotions { get; set; }
+		public List<DynamicContentPlace> ContentPlaces { get; set; }
+		public List<DynamicContentItem> ContentItems { get; set; }
+		public List<DynamicContentPublication> ContentPublications { get; set; }
 
 	}
 }
