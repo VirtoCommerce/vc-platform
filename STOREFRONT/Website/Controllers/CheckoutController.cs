@@ -29,7 +29,7 @@ namespace VirtoCommerce.Web.Controllers
             if (this.Context.Checkout != null)
             {
                 this.Context.Checkout.Email = this.Context.Customer != null ? this.Context.Customer.Email : null;
-                this.Context.Checkout.ShippingAddress = this.Context.Customer.DefaultAddress;
+                this.Context.Checkout.ShippingAddress = this.Context.Customer != null ? this.Context.Customer.DefaultAddress : new CustomerAddress();
                 this.Context.Checkout.Currency = this.Context.Shop.Currency;
             }
 
