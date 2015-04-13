@@ -1,70 +1,62 @@
 ﻿angular.module('virtoCommerce.catalogModule')
-.controller('virtualCatalogDetailController', ['$rootScope', '$scope', 'bladeNavigationService', '$injector', 'catalogs', 'dialogService', function ($rootScope, $scope, bladeNavigationService, $injector, catalogs, dialogService) {
+.controller('virtualCatalogDetailController', ['$scope', 'bladeNavigationService', 'catalogs', 'dialogService', function ($scope, bladeNavigationService, catalogs, dialogService) {
 
-    $scope.currentBlade = $scope.blade;
-
-    $scope.currentBlade.refresh = function (parentRefresh) {
-    	//Refresh only when has id
-    	if (angular.isDefined($scope.currentBlade.currentEntityId)) {
-    		catalogs.get({ id: $scope.currentBlade.currentEntityId }, function (data) {
-    			initializeBlade(data);
-    			if (parentRefresh) {
-    				$scope.currentBlade.parentBlade.refresh();
-    			}
-    		});
-    	}
-    	else {
-    		initializeBlade($scope.currentBlade.currentEntity);
-
-    	}
-
+    $scope.blade.refresh = function (parentRefresh) {
+        if ($scope.blade.isNew) {
+            initializeBlade($scope.blade.currentEntity);
+        } else {
+            catalogs.get({ id: $scope.blade.currentEntityId }, function (data) {
+                initializeBlade(data);
+                if (parentRefresh) {
+                    $scope.blade.parentBlade.refresh();
+                }
+            });
+        }
     }
 
     function initializeBlade(data) {
-        $scope.currentBlade.currentEntityId = data.id;
-        $scope.currentBlade.title = data.name;
+        if (!$scope.blade.isNew) {
+            $scope.blade.title = data.name;
+        }
 
-        $scope.currentBlade.currentEntity = angular.copy(data);
-        $scope.currentBlade.origEntity = data;
-        $scope.currentBlade.isLoading = false;
+        $scope.blade.currentEntity = angular.copy(data);
+        $scope.blade.origEntity = data;
+        $scope.blade.isLoading = false;
     };
 
     function isDirty() {
-        return !angular.equals($scope.currentBlade.currentEntity, $scope.currentBlade.origEntity);
+        return !angular.equals($scope.blade.currentEntity, $scope.blade.origEntity);
     };
 
-    function saveChanges() {
-    	$scope.currentBlade.isLoading = true;
-    	if (angular.isDefined($scope.currentBlade.currentEntityId)) {
-    		catalogs.update({}, $scope.currentBlade.currentEntity, function (data, headers) {
-    			$scope.currentBlade.refresh(true);
-    		});
-    	}
-    	else {
-    		catalogs.create({}, $scope.currentBlade.currentEntity, function (data, headers) {
-    			$scope.currentBlade.currentEntityId = data.id;
-    			$scope.currentBlade.refresh(true);
-    		});
-    	}
+    $scope.cancelChanges = function () {
+        angular.copy($scope.blade.origEntity, $scope.blade.currentEntity);
+        $scope.bladeClose();
     };
+    $scope.saveChanges = function () {
+        $scope.blade.isLoading = true;
 
-    function closeThisBlade(closeCallback) {
-        if ($scope.currentBlade.childrenBlades.length > 0) {
-            var callback = function () {
-                if ($scope.currentBlade.childrenBlades.length == 0) {
-                    closeCallback();
-                };
-            };
-            angular.forEach($scope.currentBlade.childrenBlades, function (child) {
-                bladeNavigationService.closeBlade(child, callback);
+        if ($scope.blade.isNew) {
+            catalogs.save({}, $scope.blade.currentEntity, function (data) {
+                $scope.blade.isNew = undefined;
+                $scope.blade.currentEntityId = data.id;
+                initializeBlade(data);
+                initializeToolbar();
+                $scope.blade.refresh(true);
+            }, function (error) {
+                bladeNavigationService.setError('Error ' + error.status, $scope.blade);
             });
         }
         else {
-            closeCallback();
+            catalogs.update({}, $scope.blade.currentEntity, function (data) {
+                $scope.blade.refresh(true);
+            }, function (error) {
+                bladeNavigationService.setError('Error ' + error.status, $scope.blade);
+            });
         }
     };
 
-    $scope.currentBlade.onClose = function (closeCallback) {
+    $scope.blade.onClose = function (closeCallback) {
+        closeChildrenBlades();
         if (isDirty()) {
             var dialog = {
                 id: "confirmCurrentBladeClose",
@@ -73,41 +65,48 @@
             };
             dialog.callback = function (needSave) {
                 if (needSave) {
-                    saveChanges();
+                    $scope.saveChanges();
                 }
-                closeThisBlade(closeCallback);
+                closeCallback();
             };
             dialogService.showConfirmationDialog(dialog);
         }
         else {
-            closeThisBlade(closeCallback);
+            closeCallback();
         }
     };
 
-    $scope.bladeToolbarCommands = [
-	    {
-	        name: "Save", icon: 'fa fa-save',
-	        executeMethod: function () {
-	            saveChanges();
-	        },
-	        canExecuteMethod: function () {
-	            return isDirty();
-	        }
-	    },
-        {
-            name: "Reset", icon: 'fa fa-undo',
-            executeMethod: function () {
-                angular.copy($scope.currentBlade.origEntity, $scope.currentBlade.currentEntity);
-            },
-            canExecuteMethod: function () {
-                return isDirty();
-            }
-        }
-    ];
-
-    if ($scope.currentBlade.currentEntity != null) {
-        initializeBlade($scope.currentBlade.currentEntity);
-    } else {
-        $scope.currentBlade.refresh(false);
+    function closeChildrenBlades() {
+        angular.forEach($scope.blade.childrenBlades.slice(), function (child) {
+            bladeNavigationService.closeBlade(child);
+        });
     }
+
+    function initializeToolbar() {
+        if (!$scope.blade.isNew) {
+            $scope.bladeToolbarCommands = [
+                {
+                    name: "Save", icon: 'fa fa-save',
+                    executeMethod: function () {
+                        $scope.saveChanges();
+                    },
+                    canExecuteMethod: function () {
+                        return isDirty();
+                    }
+                },
+                {
+                    name: "Reset", icon: 'fa fa-undo',
+                    executeMethod: function () {
+                        angular.copy($scope.blade.origEntity, $scope.blade.currentEntity);
+                    },
+                    canExecuteMethod: function () {
+                        return isDirty();
+                    }
+                }
+            ];
+        }
+    }
+
+    initializeToolbar();
+    $scope.blade.refresh(false);
 }]);
