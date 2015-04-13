@@ -226,21 +226,13 @@ namespace VirtoCommerce.CatalogModule.Data.Services
 					var dbCatalog = _cacheManager.Get(cacheKey, () => repository.GetCatalogById(dbItem.CatalogId));
 
 					var catalog = dbCatalog.ToModuleModel();
-
-					/* Sasha: this doesn't serve any purpose, since properties are only used to populate propertyId field which can be done much more efficiently */
+					module.Category category = null;
 					if (dbItem.CategoryItemRelations.Any())
 					{
 						var dbCategory = repository.GetCategoryById(dbItem.CategoryItemRelations.OrderBy(x => x.Priority).First().CategoryId);
-						var dpProperties = repository.GetAllCategoryProperties(dbCategory);
-						var properties = dpProperties.Select(x => x.ToModuleModel(catalog, dbCategory.ToModuleModel(catalog))).ToArray();
-						var category = dbCategory.ToModuleModel(catalog, properties);
-
-						retVal.Add(dbItem.ToModuleModel(catalog, category, properties, dbVariations, seoInfos, parentItemId, associatedProducts.ToArray()));
+						category = dbCategory.ToModuleModel(catalog);
 					}
-					else
-					{
-						retVal.Add(dbItem.ToModuleModel(catalog, null, null, dbVariations, seoInfos, parentItemId, associatedProducts.ToArray()));
-					}
+					retVal.Add(dbItem.ToModuleModel(catalog, category, null, dbVariations, seoInfos, parentItemId, associatedProducts.ToArray()));
 				}
 			}
 
