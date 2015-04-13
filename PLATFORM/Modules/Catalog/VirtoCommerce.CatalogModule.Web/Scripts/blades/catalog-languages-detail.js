@@ -1,90 +1,97 @@
 ﻿angular.module('virtoCommerce.catalogModule')
-.controller('catalogLanguagesController', ['$rootScope', '$scope', 'bladeNavigationService', '$injector', 'catalogs', 'dialogService', '$filter',
-    function ($rootScope, $scope, bladeNavigationService, $injector, catalogs, dialogService, $filter)
-    {
-        $scope.currentBlade = $scope.blade;
+.controller('catalogLanguagesController', ['$scope', 'bladeNavigationService', 'settings', 'dialogService', function ($scope, bladeNavigationService, settings, dialogService) {
+    $scope.selectedItem = null;
+    var promise = settings.getValues({ id: 'VirtoCommerce.Core.General.Languages' }).$promise;
 
-        $scope.currentBlade.refresh = function (parentRefresh)
-        {
-            catalogs.getCatalogLanguages({ id: $scope.currentBlade.currentEntityId }, function (data)
-            {
-                initializeBlade(data);
-                if (parentRefresh)
-                {
-                    $scope.currentBlade.parentBlade.refresh();
-                }
+    function initializeBlade(data) {
+        promise.then(function (promiseData) {
+            promiseData = _.map(promiseData, function (x) { return { languageCode: x }; });
+
+            _.each(promiseData, function (x) {
+                x.isChecked = _.some(data.languages, function (curr) { return curr.languageCode.toLowerCase() === x.languageCode.toLowerCase(); });
             });
-        }
-
-        function initializeBlade(data)
-        {
-            $scope.currentBlade.availableLanguages = angular.copy(data);
-            $scope.currentBlade.isLoading = false;
-        };
-
-        $scope.selectLanguage = function (lang)
-        {
-            if (lang != undefined && lang.isDefault != true)
-            {
-                //language has to be removed if it belongs to catalog or added else
-                if (lang.catalogId != undefined) {
-                    $scope.removeLanguage([lang]);
-                } else {
-                    $scope.addLanguage(lang);
+            if (data.defaultLanguage) {
+                var defaultLang = _.find(promiseData, function (x) { return x.languageCode.toLowerCase() === data.defaultLanguage.languageCode.toLowerCase(); });
+                if (defaultLang) {
+                    defaultLang.isDefault = true;
                 }
             }
-        }
 
-        $scope.addLanguage = function (lang)
-        {
-            if (lang != undefined)
-            {
+            $scope.blade.currentEntities = angular.copy(promiseData);
+            $scope.blade.origEntity = promiseData;
+            $scope.blade.isLoading = false;
+        });
+    };
+    
+    $scope.selectItem = function (listItem) {
+        $scope.selectedItem = listItem;
+    };
 
-                lang.catalogId = $scope.currentBlade.currentEntityId;
-                //$scope.currentBlade.availableLanguages.push(lang);
-                $scope.saveChanges();
-            }
-        }
-
-
-        $scope.setAsDefault = function(defaultLang) {
-            angular.forEach($scope.currentBlade.availableLanguages, function (lang)
-            {
-                lang.isDefault = false;
-            });
-            defaultLang.isDefault = true;
-            $scope.saveChanges();
-        }
-
-        $scope.removeLanguage = function (selectedLanguages)
-        {
-
-            if (selectedLanguages == undefined)
-            {
-                selectedLanguages = $filter('filter')($scope.currentBlade.availableLanguages, { selected: true });
-            }
-
-            angular.forEach(selectedLanguages, function (lang)
-            {
-                var idx = $scope.currentBlade.availableLanguages.indexOf(lang);
-                if (idx >= 0)
-                {
-                    $scope.currentBlade.availableLanguages.splice(idx, 1);
+    $scope.blade.onClose = function (closeCallback) {
+        if (isDirty()) {
+            var dialog = {
+                id: "confirmItemChange",
+                title: "Save changes",
+                message: "The Languages has been modified. Do you want to save changes?"
+            };
+            dialog.callback = function (needSave) {
+                if (needSave) {
+                    $scope.saveChanges();
                 }
-            });
+                closeCallback();
+            };
+            dialogService.showConfirmationDialog(dialog);
+        }
+        else {
+            closeCallback();
+        }
+    };
 
-            $scope.saveChanges();
-        };
+    function isDirty() {
+        return !angular.equals($scope.blade.currentEntities, $scope.blade.origEntity);
+    };
 
-        $scope.saveChanges = function() {
-            $scope.currentBlade.isLoading = true;
-            catalogs.updateCatalogLanguages({ catalogId: $scope.currentBlade.currentEntityId }, $scope.currentBlade.availableLanguages, function (data, headers)
-            {
-                $scope.currentBlade.refresh(true);
-            });
+    $scope.cancelChanges = function () {
+        $scope.bladeClose();
+    }
+
+    $scope.isValid = function () {
+        return true;
+    }
+
+    $scope.saveChanges = function () {
+        $scope.blade.data.languages = _.where($scope.blade.currentEntities, { isChecked: true });
+
+        var defaultLang = _.findWhere($scope.blade.currentEntities, { isDefault: true });
+        if (defaultLang) {
+            $scope.blade.data.defaultLanguage = defaultLang;
         }
 
-        $scope.currentBlade.refresh(false);
-        
+        angular.copy($scope.blade.currentEntities, $scope.blade.origEntity);
+        $scope.bladeClose();
+    };
 
-    }]);
+    $scope.bladeHeadIco = 'fa fa-archive';
+
+    $scope.bladeToolbarCommands = [
+        {
+            name: "Set default", icon: 'fa fa-edit',
+            executeMethod: function () {
+                _.each($scope.blade.currentEntities, function (x) {
+                    x.isDefault = x.languageCode === $scope.selectedItem.languageCode;
+                });
+            },
+            canExecuteMethod: function () {
+                return $scope.selectedItem && $scope.selectedItem.isChecked;
+            }
+        }
+    ];
+
+    $scope.$watch('blade.parentBlade.currentEntity', function (currentEntity) {
+        $scope.blade.data = currentEntity;
+        initializeBlade($scope.blade.data);
+    });
+
+    // on load: 
+    // $scope.$watch('blade.parentBlade.currentEntity' gets fired
+}]);
