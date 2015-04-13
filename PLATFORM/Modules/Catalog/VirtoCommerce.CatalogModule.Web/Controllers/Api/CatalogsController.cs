@@ -64,51 +64,51 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 			return Ok(catalog.ToWebModel(allCatalogProperties));
         }
 
-		// GET:  api/catalog/catalogs/4/languages
-        [HttpGet]
-		[ResponseType(typeof(webModel.CatalogLanguage[]))]
-		[Route("{id}/languages")]
-        public IHttpActionResult GetCatalogLanguages(string id)
-        {
-            var catalog = _catalogService.GetById(id);
-            if (catalog == null)
-                return NotFound();
+        //// GET:  api/catalog/catalogs/4/languages
+        //[HttpGet]
+        //[ResponseType(typeof(webModel.CatalogLanguage[]))]
+        //[Route("{id}/languages")]
+        //public IHttpActionResult GetCatalogLanguages(string id)
+        //{
+        //    var catalog = _catalogService.GetById(id);
+        //    if (catalog == null)
+        //        return NotFound();
 
-            var retVal = catalog.ToWebModel().Languages;
+        //    var retVal = catalog.ToWebModel().Languages;
 
-            var systemLanguages = GetSystemLanguages();
-            foreach (var systemLanguage in systemLanguages)
-            {
-                var alreadyExistLanguage = retVal.FirstOrDefault(x => string.Equals(x.LanguageCode, systemLanguage.LanguageCode, StringComparison.CurrentCultureIgnoreCase));
-                if (alreadyExistLanguage == null)
-                {
-                    retVal.Add(systemLanguage);
-                }
-            }
-            return Ok(retVal.OrderBy(x => x.DisplayName));
-        }
+        //    var systemLanguages = GetSystemLanguages();
+        //    foreach (var systemLanguage in systemLanguages)
+        //    {
+        //        var alreadyExistLanguage = retVal.FirstOrDefault(x => string.Equals(x.LanguageCode, systemLanguage.LanguageCode, StringComparison.CurrentCultureIgnoreCase));
+        //        if (alreadyExistLanguage == null)
+        //        {
+        //            retVal.Add(systemLanguage);
+        //        }
+        //    }
+        //    return Ok(retVal.OrderBy(x => x.DisplayName));
+        //}
 
-		// POST: api/catalog/catalogs/4/languages
-		[HttpPost]
-        [ResponseType(typeof(void))]
-		[Route("{id}/languages")]
-        public IHttpActionResult UpdateCatalogLanguages(string id, [FromBody]webModel.CatalogLanguage[] languages)
-        {
-			var catalog = _catalogService.GetById(id);
+        //// POST: api/catalog/catalogs/4/languages
+        //[HttpPost]
+        //[ResponseType(typeof(void))]
+        //[Route("{id}/languages")]
+        //public IHttpActionResult UpdateCatalogLanguages(string id, [FromBody]webModel.CatalogLanguage[] languages)
+        //{
+        //    var catalog = _catalogService.GetById(id);
 
-            if (catalog == null)
-            {
-                return NotFound();
-            }
+        //    if (catalog == null)
+        //    {
+        //        return NotFound();
+        //    }
 
-            var catalogModel = catalog.ToWebModel();
-            var catalogLanguages = languages.Where(x => !string.IsNullOrEmpty(x.CatalogId));
-            catalogModel.Languages.SetItems(catalogLanguages);
+        //    var catalogModel = catalog.ToWebModel();
+        //    var catalogLanguages = languages.Where(x => !string.IsNullOrEmpty(x.CatalogId));
+        //    catalogModel.Languages.SetItems(catalogLanguages);
 
-            UpdateCatalog(catalogModel);
+        //    UpdateCatalog(catalogModel);
 
-            return Ok();
-        }
+        //    return Ok();
+        //}
 
 		// GET: api/catalog/catalogs/getnew
         [HttpGet]
