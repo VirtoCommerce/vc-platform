@@ -10,7 +10,7 @@ namespace VirtoCommerce.MarketingModule.Expressions.Promotion
 	public class RewardItemGiftNumItem : DynamicExpression, IRewardExpression
 	{
 		public string Name { get; set; }
-		public string CategoryId { get; set; }
+		public string SelectedCategoryId { get; set; }
 		public string ProductId { get; set; }
 		public int Quantity { get; set; }
 		public string MeasureUnit { get; set; }
@@ -24,7 +24,7 @@ namespace VirtoCommerce.MarketingModule.Expressions.Promotion
 			var retVal = new GiftReward
 			{
 				Name = Name,
-				CategoryId = CategoryId,
+				CategoryId = SelectedCategoryId,
 				ProductId = ProductId,
 				Quantity = Quantity,
 				MeasureUnit = MeasureUnit,
