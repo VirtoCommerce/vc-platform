@@ -6,7 +6,7 @@ using VirtoCommerce.Domain.Marketing.Model;
 
 namespace VirtoCommerce.MarketingModule.Expressions.Promotion
 {
-	//Get $[] off shipping
+	//Get $[] off shipping []
 	public class RewardShippingGetOfAbsShippingMethod : DynamicExpression, IRewardExpression
 	{
 		public decimal Amount { get; set; }
