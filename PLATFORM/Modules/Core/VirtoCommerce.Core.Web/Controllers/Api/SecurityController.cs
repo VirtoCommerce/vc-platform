@@ -10,14 +10,15 @@ using System.Web.Http.ModelBinding;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
+using Omu.ValueInjecter;
 using VirtoCommerce.CoreModule.Web.Converters;
 using VirtoCommerce.CoreModule.Web.Security;
 using VirtoCommerce.CoreModule.Web.Security.Models;
 using VirtoCommerce.Foundation.Data.Security.Identity;
 using VirtoCommerce.Foundation.Frameworks.Extensions;
 using VirtoCommerce.Foundation.Security.Model;
+using VirtoCommerce.Framework.Web.Security;
 using ApiAccount = VirtoCommerce.Foundation.Security.Model.ApiAccount;
-using Omu.ValueInjecter;
 
 namespace VirtoCommerce.CoreModule.Web.Controllers.Api
 {
@@ -29,16 +30,21 @@ namespace VirtoCommerce.CoreModule.Web.Controllers.Api
         private readonly Func<ApplicationSignInManager> _signInManagerFactory;
         private readonly Func<ApplicationUserManager> _userManagerFactory;
         private readonly IApiAccountProvider _apiAccountProvider;
+        private readonly IPermissionService _permissionService;
+        private readonly IRoleManagementService _roleService;
 
         public SecurityController(Func<IFoundationSecurityRepository> securityRepository, Func<ApplicationSignInManager> signInManagerFactory,
                                   Func<ApplicationUserManager> userManagerFactory, Func<IAuthenticationManager> authManagerFactory,
-                                  IApiAccountProvider apiAccountProvider)
+                                  IApiAccountProvider apiAccountProvider,
+            IPermissionService permissionService, IRoleManagementService roleService)
         {
             _securityRepository = securityRepository;
             _signInManagerFactory = signInManagerFactory;
             _userManagerFactory = userManagerFactory;
             _authenticationManagerFactory = authManagerFactory;
             _apiAccountProvider = apiAccountProvider;
+            _permissionService = permissionService;
+            _roleService = roleService;
         }
 
         private ApplicationUserManager _userManager;
@@ -53,6 +59,7 @@ namespace VirtoCommerce.CoreModule.Web.Controllers.Api
                 return _userManager;
             }
         }
+
         #region Internal Web admin actions
 
         [HttpPost]
@@ -82,6 +89,40 @@ namespace VirtoCommerce.CoreModule.Web.Controllers.Api
         {
             _authenticationManagerFactory().SignOut();
             return Ok(new { status = true });
+        }
+
+        [HttpGet]
+        [Route("permissions")]
+        [ResponseType(typeof(PermissionDescriptor[]))]
+        public IHttpActionResult GetPermissions()
+        {
+            var result = _permissionService.GetAllPermissions()
+                .OrderBy(p => p.Name)
+                .ToArray();
+
+            return Ok(result);
+        }
+
+        [HttpGet]
+        [Route("roles")]
+        [ResponseType(typeof(RoleDescriptor[]))]
+        public IHttpActionResult GetRoles()
+        {
+            var result = _roleService.GetAllRoles()
+                .OrderBy(r => r.Name)
+                .ToArray();
+
+            return Ok(result);
+        }
+
+        [HttpGet]
+        [Route("roles/{roleId}")]
+        [ResponseType(typeof(RoleDescriptor))]
+        public IHttpActionResult GetRole(string roleId)
+        {
+            var result = _roleService.GetRole(roleId);
+
+            return Ok(result);
         }
 
         #endregion
@@ -132,7 +173,7 @@ namespace VirtoCommerce.CoreModule.Web.Controllers.Api
         public IHttpActionResult GenerateNewApiAccount()
         {
             var apiAccount = _apiAccountProvider.GenerateApiCredentials();
-			apiAccount.IsActive = true;
+            apiAccount.IsActive = true;
             var result = apiAccount.ToWebModel();
             return Ok(result);
         }
@@ -254,8 +295,8 @@ namespace VirtoCommerce.CoreModule.Web.Controllers.Api
         {
             var dbUser = await UserManager.FindByIdAsync(user.Id);
 
-			dbUser.InjectFrom(user);
-          
+            dbUser.InjectFrom(user);
+
 
             var result = await UserManager.UpdateAsync(dbUser);
 
@@ -270,8 +311,8 @@ namespace VirtoCommerce.CoreModule.Web.Controllers.Api
                     }
                     acount.RegisterType = (int)user.UserType;
                     acount.AccountState = (int)user.UserState;
-					acount.MemberId = user.MemberId;
-					acount.StoreId = user.StoreId;
+                    acount.MemberId = user.MemberId;
+                    acount.StoreId = user.StoreId;
                     if (user.ApiAcounts != null)
                     {
                         var source = new ObservableCollection<ApiAccount>(user.ApiAcounts.Select(x => x.ToFoundation()));
@@ -301,9 +342,9 @@ namespace VirtoCommerce.CoreModule.Web.Controllers.Api
             // AO
             // TODO: AccountId = MemberId for now. Is it correct?
 
-			var dbUser = new ApplicationUser();
+            var dbUser = new ApplicationUser();
 
-			dbUser.InjectFrom(user);
+            dbUser.InjectFrom(user);
 
             IdentityResult result;
             if (!string.IsNullOrEmpty(user.Password))
@@ -317,13 +358,13 @@ namespace VirtoCommerce.CoreModule.Web.Controllers.Api
 
             if (result.Succeeded)
             {
-                 using (var repository = _securityRepository())
+                using (var repository = _securityRepository())
                 {
                     var account = new Account
                     {
                         UserName = user.UserName,
                         AccountId = user.Id,
-						MemberId = user.Id,
+                        MemberId = user.Id,
                         AccountState = AccountState.Approved.GetHashCode(),
                         RegisterType = user.UserType.GetHashCode(),
                         StoreId = user.StoreId
@@ -428,14 +469,14 @@ namespace VirtoCommerce.CoreModule.Web.Controllers.Api
             var applicationUser = await UserManager.FindByNameAsync(userName);
             if (applicationUser != null)
             {
-				retVal = new ApplicationUserExtended();
- 				retVal.InjectFrom(applicationUser);
+                retVal = new ApplicationUserExtended();
+                retVal.InjectFrom(applicationUser);
 
                 using (var repository = _securityRepository())
                 {
-					
+
                     var user = repository.GetAccountByName(userName);
-					retVal.InjectFrom(user);
+                    retVal.InjectFrom(user);
                     if (user != null)
                     {
                         var permissions =

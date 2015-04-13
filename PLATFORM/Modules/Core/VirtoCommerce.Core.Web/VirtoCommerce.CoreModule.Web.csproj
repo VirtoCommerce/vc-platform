@@ -183,6 +183,7 @@
     <Compile Include="Security\Models\UserType.cs" />
     <Compile Include="Security\OwinConfig.cs" />
     <Compile Include="Security\PermissionService.cs" />
+    <Compile Include="Security\RoleManagementService.cs" />
     <Compile Include="Services\FulfillmentServiceImpl.cs" />
     <Compile Include="Settings\SettingsManager.cs" />
   </ItemGroup>
