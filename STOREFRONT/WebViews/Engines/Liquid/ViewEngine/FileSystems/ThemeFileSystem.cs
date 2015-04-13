@@ -1,4 +1,6 @@
-﻿using System.Text.RegularExpressions;
+﻿using System;
+using System.Linq;
+using System.Text.RegularExpressions;
 using DotLiquid;
 using DotLiquid.Exceptions;
 using DotLiquid.FileSystems;
@@ -26,7 +28,9 @@ namespace VirtoCommerce.Web.Views.Engines.Liquid.ViewEngine.FileSystems
             }
 
             var foundView = this._locater.LocatePartialView(templatePath);
-            //var foundView = FindView(ViewLocations, templatePath, this.FileNameFormat, true);
+
+            if (foundView.Contents == null)
+                return String.Format("not found {0}", templateName);
 
             return foundView.Contents.Invoke().ReadToEnd();
         }
