@@ -161,6 +161,10 @@
     <Compile Include="Catalogs\Migrations\201502160901190_СatalogProperties.Designer.cs">
       <DependentUpon>201502160901190_СatalogProperties.cs</DependentUpon>
     </Compile>
+    <Compile Include="Catalogs\Migrations\201504130832539_RemovePropertyCatalogIndex.cs" />
+    <Compile Include="Catalogs\Migrations\201504130832539_RemovePropertyCatalogIndex.Designer.cs">
+      <DependentUpon>201504130832539_RemovePropertyCatalogIndex.cs</DependentUpon>
+    </Compile>
     <Compile Include="Catalogs\SqlCatalogDatabaseInitializer.cs" />
     <Compile Include="Catalogs\SqlCatalogReducedSampleDatabaseInitializer.cs" />
     <Compile Include="Catalogs\SqlCatalogSampleDatabaseInitializer.cs" />
@@ -412,6 +416,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Catalogs\Migrations\201502160901190_СatalogProperties.resx">
       <DependentUpon>201502160901190_СatalogProperties.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Catalogs\Migrations\201504130832539_RemovePropertyCatalogIndex.resx">
+      <DependentUpon>201504130832539_RemovePropertyCatalogIndex.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Customers\Migrations\201402141557167_Initial.resx">
       <DependentUpon>201402141557167_Initial.cs</DependentUpon>
