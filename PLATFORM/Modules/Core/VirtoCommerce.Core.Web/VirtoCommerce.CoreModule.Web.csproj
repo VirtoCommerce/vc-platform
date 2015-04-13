@@ -132,6 +132,7 @@
     <Compile Include="Assets\AssetsProviderManager.cs" />
     <Compile Include="Assets\AzureAssetsProvider.cs" />
     <Compile Include="Assets\LocalAssetsProvider.cs" />
+    <Compile Include="Hangfire\PermissionBasedAuthorizationFilter.cs" />
     <Compile Include="Hangfire\UnityBootstrapperConfigurationExtensions.cs" />
     <Compile Include="Hangfire\UnityJobActivator.cs" />
     <Compile Include="Binders\UserSearchCriteriaBinder.cs" />
@@ -172,6 +173,9 @@
     <Compile Include="Security\Models\ApiAccount.cs" />
     <Compile Include="Security\Models\ApplicationUserExtended.cs" />
     <Compile Include="Security\Models\ChangePasswordInfo.cs" />
+    <Compile Include="Security\Models\SecurityMessage.cs" />
+    <Compile Include="Security\Models\MessageType.cs" />
+    <Compile Include="Security\Models\SendingMethod.cs" />
     <Compile Include="Security\Models\UserState.cs" />
     <Compile Include="Security\Models\UserLogin.cs" />
     <Compile Include="Security\Models\UserSearchCriteria.cs" />
@@ -190,7 +194,6 @@
     <Content Include="Scripts\common\blades\address-detail.tpl.html" />
     <Content Include="Scripts\common\common.js" />
     <Content Include="Scripts\common\dynamicExpression\expression-tree.tpl.html" />
-    <Content Include="Scripts\common\dynamicExpression\expression-block.tpl.html" />
     <Content Include="Scripts\common\dynamicExpression\expression-directives.js" />
     <Content Include="Scripts\Fulfillment\blades\fulfillment-center-contact.js" />
     <Content Include="Scripts\Fulfillment\blades\fulfillment-center-contact.tpl.html" />

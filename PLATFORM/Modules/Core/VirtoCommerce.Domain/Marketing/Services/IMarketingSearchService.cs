@@ -9,7 +9,7 @@ namespace VirtoCommerce.Domain.Marketing.Services
 {
 	public interface IMarketingSearchService
 	{
-		SearchResult SearchPromotions(SearchCriteria criteria);
+		MarketingSearchResult SearchResources(MarketingSearchCriteria criteria);
 	}
 
 }

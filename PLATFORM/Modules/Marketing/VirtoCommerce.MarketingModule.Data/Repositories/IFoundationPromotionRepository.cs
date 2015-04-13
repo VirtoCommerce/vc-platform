@@ -4,7 +4,7 @@ using VirtoCommerce.Foundation.Marketing.Repositories;
 
 namespace VirtoCommerce.MarketingModule.Data.Repositories
 {
-	public interface IFoundationMarketingRepository : IMarketingRepository
+	public interface IFoundationPromotionRepository : IMarketingRepository
 	{
 		Promotion GetPromotionById(string id);
 		Promotion[] GetActivePromotions();
