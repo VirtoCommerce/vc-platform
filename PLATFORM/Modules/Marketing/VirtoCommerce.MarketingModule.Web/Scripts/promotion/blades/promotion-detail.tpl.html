@@ -57,10 +57,8 @@
                                 <div class="column">
                                     <div class="form-group">
                                         <label class="form-label">Allowed limit</label>
-                                        <div class="form-input __number js-number-input-plugin" data-step="1">
-                                            <input type="text" class="js-val" required ng-model="blade.currentEntity.maxUsageCount">
-                                            <a class="up js-up"></a>
-                                            <a class="down js-down"></a>
+                                        <div class="form-input __number">
+                                            <input va-number type="text" required ng-model="blade.currentEntity.maxUsageCount" min="1" step="1">
                                         </div>
                                     </div>
                                     <!--<div class="form-group">
@@ -75,10 +73,8 @@
                                 <div class="column">
                                     <div class="form-group">
                                         <label class="form-label">Limit per customer</label>
-                                        <div class="form-input __number js-number-input-plugin" data-step="1">
-                                            <input type="text" class="js-val" required="" ng-model="blade.currentEntity.maxPersonalUsageCount">
-                                            <a class="up js-up"></a>
-                                            <a class="down js-down"></a>
+                                        <div class="form-input __number">
+                                            <input va-number type="text" required="" ng-model="blade.currentEntity.maxPersonalUsageCount" min="1" step="1">
                                         </div>
                                     </div>
                                     <!--<div class="form-group">
@@ -190,10 +186,8 @@
                         </script>
                         <script type="text/ng-template" id="expression-ConditionAtNumItemsInCart.html">
                             <a class="__link" left-click-menu data-target="exactly_menu{{element1.id}}">{{element1.exactly | boolToValue:'exactly':'at least'}}</a>
-                            <div class="form-input __mini __number js-number-input-plugin" data-step="1">
-                                <input class="js-val" required ng-model="element1.numItem">
-                                <a class="up js-up"></a>
-                                <a class="down js-down"></a>
+                            <div class="form-input __mini __number">
+                                <input va-number required ng-model="element1.numItem" min="1" step="1">
                             </div>items are in shopping cart excluding
 
                             <ul class="menu __context" role="menu" id="exactly_menu{{element1.id}}">
@@ -203,10 +197,8 @@
                         </script>
                         <script type="text/ng-template" id="expression-ConditionAtNumItemsInCategoryAreInCart.html">
                             <a class="__link" left-click-menu data-target="exactly_menu{{element1.id}}">{{element1.exactly | boolToValue:'exactly':'at least'}}</a>
-                            <div class="form-input __mini __number js-number-input-plugin" data-step="1">
-                                <input class="js-val" required ng-model="element1.numItem">
-                                <a class="up js-up"></a>
-                                <a class="down js-down"></a>
+                            <div class="form-input __mini __number">
+                                <input va-number required ng-model="element1.numItem" min="1" step="1">
                             </div>items of category
                             <a class="__link" ng-click="openCategorySelectWizard(element)">{{element.selectedCategoryId?element.selectedCategoryId: 'select category'}}</a>
                             are in shopping cart excluding
@@ -217,10 +209,8 @@
                         </script>
                         <script type="text/ng-template" id="expression-ConditionAtNumItemsOfEntryAreInCart.html">
                             <a class="__link" left-click-menu data-target="exactly_menu{{element1.id}}">{{element1.exactly | boolToValue:'exactly':'at least'}}</a>
-                            <div class="form-input __mini __number js-number-input-plugin" data-step="1">
-                                <input class="js-val" required ng-model="element1.numItem">
-                                <a class="up js-up"></a>
-                                <a class="down js-down"></a>
+                            <div class="form-input __mini __number">
+                                <input va-number required ng-model="element1.numItem" min="1" step="1">
                             </div>items of entry
                             <a class="__link" ng-click="openItemSelectWizard(element)">{{element.productId?element.productId: 'select entry'}}</a>
                             are in shopping cart
@@ -235,35 +225,27 @@
                         </script>
                         <script type="text/ng-template" id="expression-RewardCartGetOfAbsSubtotal.html">
                             Get $
-                            <div class="form-input __mini __number js-number-input-plugin" data-step="1">
-                                <input type="text" class="js-val" required ng-model="element1.amount">
-                                <a class="up js-up"></a>
-                                <a class="down js-down"></a>
+                            <div class="form-input __mini __number">
+                                <input va-number type="text" required ng-model="element1.amount" min="1" step="1">
                             </div> off cart subtotal
                         </script>
                         <script type="text/ng-template" id="expression-RewardCartGetOfRelSubtotal.html">
                             Get
-                            <div class="form-input __mini __number js-number-input-plugin" data-step="1">
-                                <input type="text" class="js-val" required ng-model="element1.amount">
-                                <a class="up js-up"></a>
-                                <a class="down js-down"></a>
+                            <div class="form-input __mini __number">
+                                <input va-number type="text" required ng-model="element1.amount" min="1" step="1">
                             </div> % off cart subtotal
                         </script>
                         <script type="text/ng-template" id="expression-RewardItemGetFreeNumItemOfProduct.html">
                             Get
-                            <div class="form-input __mini __number js-number-input-plugin" data-step="1">
-                                <input class="js-val" required ng-model="element1.numItem">
-                                <a class="up js-up"></a>
-                                <a class="down js-down"></a>
+                            <div class="form-input __mini __number">
+                                <input va-number required ng-model="element1.numItem" min="1" step="1">
                             </div>free items of product
                             <a class="__link" ng-click="openItemSelectWizard(element1)">{{element1.productId?element1.productId: 'select product'}}</a>
                         </script>
                         <script type="text/ng-template" id="expression-RewardItemGetOfAbs.html">
                             Get $
-                            <div class="form-input __mini __number js-number-input-plugin" data-step="1">
-                                <input type="text" class="js-val" required ng-model="element1.amount">
-                                <a class="up js-up"></a>
-                                <a class="down js-down"></a>
+                            <div class="form-input __mini __number">
+                                <input va-number type="text" required ng-model="element1.amount" min="1" step="1">
                             </div> off cart subtotal
                         </script>
                         <!--<script type="text/ng-template" id="expression-RewardItemGetOfAbsForNum.html">
