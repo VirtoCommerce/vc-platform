@@ -38,11 +38,7 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
                 return NotFound();
             }
 
-            moduleModel.Property[] properties = null;
-            if (item.CategoryId != null)
-            {
-                properties = _propertyService.GetCategoryProperties(item.CategoryId);
-            }
+			var properties = GetAllCatalogProperies(item.CatalogId, item.CategoryId);
             var retVal = item.ToWebModel(_assetUrlResolver, properties);
 
             return Ok(retVal);
@@ -65,18 +61,21 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
             var retVal = new webModel.Product
             {
                 CategoryId = categoryId,
-                CatalogId = catalogId
+                CatalogId = catalogId,
+				IsActive = true
             };
 
-            if (categoryId != null)
+
+			if (catalogId != null)
             {
-                retVal.Properties = _propertyService.GetCategoryProperties(categoryId).Select(x => x.ToWebModel()).ToList();
+				var properites = GetAllCatalogProperies(catalogId, categoryId);
+				retVal.Properties = properites.Select(x => x.ToWebModel()).ToList();
 
                 foreach (var property in retVal.Properties)
                 {
                     property.Values = new List<webModel.PropertyValue>();
                     property.IsManageable = true;
-                    property.IsReadOnly = property.Type != webModel.PropertyType.Product && property.Type != webModel.PropertyType.Variation;
+					property.IsReadOnly = property.Type != moduleModel.PropertyType.Product && property.Type != moduleModel.PropertyType.Variation;
                 }
             }
             return Ok(retVal);
@@ -94,13 +93,8 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
                 return NotFound();
             }
 
-            moduleModel.Property[] allCategoryProperties = null;
-            if (product.CategoryId != null)
-            {
-                allCategoryProperties = _propertyService.GetCategoryProperties(product.CategoryId);
-            }
-
-            var mainWebProduct = product.ToWebModel(_assetUrlResolver, allCategoryProperties);
+			var properties = GetAllCatalogProperies(product.CatalogId, product.CategoryId);
+		    var mainWebProduct = product.ToWebModel(_assetUrlResolver, properties);
 
             var newVariation = new webModel.Product
             {
@@ -108,8 +102,8 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
                 CategoryId = product.CategoryId,
                 CatalogId = product.CatalogId,
                 TitularItemId = product.MainProductId ?? productId,
-                Properties = mainWebProduct.Properties.Where(x => x.Type == webModel.PropertyType.Product
-                    || x.Type == webModel.PropertyType.Variation).ToList(),
+				Properties = mainWebProduct.Properties.Where(x => x.Type == moduleModel.PropertyType.Product
+					|| x.Type == moduleModel.PropertyType.Variation).ToList(),
             };
 
             foreach (var property in newVariation.Properties)
@@ -121,13 +115,13 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
                 }
 
                 // Mark variation property as required
-                if (property.Type == webModel.PropertyType.Variation)
+				if (property.Type == moduleModel.PropertyType.Variation)
                 {
                     property.Required = true;
                 }
 
                 property.IsManageable = true;
-                property.IsReadOnly = property.Type != webModel.PropertyType.Product && property.Type != webModel.PropertyType.Variation;
+				property.IsReadOnly = property.Type != moduleModel.PropertyType.Product && property.Type != moduleModel.PropertyType.Variation;
             }
 
 
@@ -158,6 +152,23 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
             _itemsService.Delete(ids);
             return StatusCode(HttpStatusCode.NoContent);
         }
+
+		private moduleModel.Property[] GetAllCatalogProperies(string catalogId, string categoryId)
+		{
+			if (catalogId == null)
+				throw new ArgumentNullException("catalogId");
+
+			moduleModel.Property[] retVal = null;
+			if (!String.IsNullOrEmpty(categoryId))
+			{
+				retVal = _propertyService.GetCategoryProperties(categoryId);
+			}
+			else
+			{
+				retVal = _propertyService.GetCatalogProperties(catalogId);
+			}
+			return retVal;
+		}
 
         private moduleModel.CatalogProduct UpdateProduct(webModel.Product product)
         {

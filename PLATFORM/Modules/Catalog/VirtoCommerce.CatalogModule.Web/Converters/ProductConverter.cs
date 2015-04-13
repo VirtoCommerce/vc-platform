@@ -76,34 +76,16 @@ namespace VirtoCommerce.CatalogModule.Web.Converters
             //Populate property values
             if (product.PropertyValues != null)
             {
-                foreach (var propValue in product.PropertyValues)
+                foreach (var propValue in product.PropertyValues.Select(x=>x.ToWebModel()))
                 {
-                    var property = retVal.Properties.FirstOrDefault(x => x.Id == propValue.PropertyId);
+					var property = retVal.Properties.FirstOrDefault(x => x.IsSuitableForValue(propValue));
                     if (property == null)
-                    {
-                        //Need add dummy property for each value without property
-                        property = new webModel.Property
-                        {
-                            Id = propValue.Id,
-                            //Catalog = retVal.Category.Catalog,
-                            CatalogId = product.CatalogId,
-                            //Category = retVal.Category,
-                            //CategoryId = product.Id,
-                            IsManageable = false,
-                            Name = propValue.PropertyName,
-                            Type = webModel.PropertyType.Product,
-                            ValueType = (webModel.PropertyValueType)(int)propValue.ValueType,
-                            Values = new List<webModel.PropertyValue> { propValue.ToWebModel() },
-                        };
+					{  
+						//Need add dummy property for each value without property
+						property = new webModel.Property(propValue, product.CatalogId, product.CategoryId, moduleModel.PropertyType.Product);
                         retVal.Properties.Add(property);
                     }
-                    else
-                    {
-                        property.Values = product.PropertyValues
-                                                          .Where(x => x.PropertyId == property.Id)
-                                                          .Select(x => x.ToWebModel())
-                                                          .ToList();
-                    }
+					property.Values.Add(propValue);
                 }
             }
 
