@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
+using VirtoCommerce.Domain.Catalog.Model;
 namespace VirtoCommerce.CatalogModule.Web.Model
 {
     public class PropertyValue

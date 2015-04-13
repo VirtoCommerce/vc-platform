@@ -36,35 +36,19 @@ namespace VirtoCommerce.CatalogModule.Web.Converters
 			//Populate property values
 			if (catalog.PropertyValues != null)
 			{
-				foreach (var propValue in catalog.PropertyValues)
+				foreach (var propValue in catalog.PropertyValues.Select(x => x.ToWebModel()))
 				{
-					var property = retVal.Properties.FirstOrDefault(x => x.Id == propValue.PropertyId);
+					var property = retVal.Properties.FirstOrDefault(x => x.IsSuitableForValue(propValue));
 					if (property == null)
 					{
 						//Need add dummy property for each value without property
-						property = new webModel.Property
-						{
-							Catalog = retVal,
-							CatalogId = retVal.Id,
-							IsManageable = false,
-							Name = propValue.PropertyName,
-							Type = webModel.PropertyType.Category,
-							ValueType = (webModel.PropertyValueType)(int)propValue.ValueType,
-						};
-						property.Values = new List<webModel.PropertyValue>();
-						property.Values.Add(propValue.ToWebModel());
+						property = new webModel.Property(propValue, catalog.Id, null, moduleModel.PropertyType.Catalog);
 						retVal.Properties.Add(property);
 					}
-					else
-					{
-						property.Values = catalog.PropertyValues
-														  .Where(x => x.PropertyId == property.Id)
-														  .Select(x => x.ToWebModel())
-														  .ToList();
-					}
+					property.Values.Add(propValue);
 				}
-
 			}
+
 			return retVal;
 		}
 
@@ -84,6 +68,7 @@ namespace VirtoCommerce.CatalogModule.Web.Converters
 				{
 					foreach (var propValue in property.Values)
 					{
+						propValue.ValueType = property.ValueType;
 						//Need populate required fields
 						propValue.PropertyName = property.Name;
 						retVal.PropertyValues.Add(propValue.ToModuleModel());

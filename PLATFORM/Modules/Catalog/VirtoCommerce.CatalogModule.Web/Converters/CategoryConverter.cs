@@ -16,21 +16,7 @@ namespace VirtoCommerce.CatalogModule.Web.Converters
 			var retVal = new webModel.Category();
 			retVal.InjectFrom(category);
 			retVal.Catalog = category.Catalog.ToWebModel();
-			retVal.Properties = new List<webModel.Property>();
-			//Need add property for each meta info
-			if(properties != null)
-			{
-				retVal.Properties = new List<webModel.Property>();
-				foreach(var property in properties)
-				{
-					var webModelProperty = property.ToWebModel();
-					webModelProperty.Values = new List<webModel.PropertyValue>();
-					webModelProperty.IsManageable = true;
-					webModelProperty.IsReadOnly = property.Type != moduleModel.PropertyType.Category;
-					retVal.Properties.Add(webModelProperty);
-				}
-			}
-
+	
 			if(category.Parents != null)
 			{
 				retVal.Parents = category.Parents.ToDictionary(x => x.Id, x => x.Name);
@@ -46,39 +32,35 @@ namespace VirtoCommerce.CatalogModule.Web.Converters
 				retVal.SeoInfos = category.SeoInfos.Select(x => x.ToWebModel()).ToList();
 			}
 
+			retVal.Properties = new List<webModel.Property>();
+			//Need add property for each meta info
+			if (properties != null)
+			{
+				retVal.Properties = new List<webModel.Property>();
+				foreach (var property in properties)
+				{
+					var webModelProperty = property.ToWebModel();
+					webModelProperty.Values = new List<webModel.PropertyValue>();
+					webModelProperty.IsManageable = true;
+					webModelProperty.IsReadOnly = property.Type != moduleModel.PropertyType.Category;
+					retVal.Properties.Add(webModelProperty);
+				}
+			}
+
 			//Populate property values
 			if (category.PropertyValues != null)
 			{
-				foreach (var propValue in category.PropertyValues)
+				foreach (var propValue in category.PropertyValues.Select(x => x.ToWebModel()))
 				{
-					var property = retVal.Properties.FirstOrDefault(x => x.Id == propValue.PropertyId);
+					var property = retVal.Properties.FirstOrDefault(x => x.IsSuitableForValue(propValue));
 					if (property == null)
 					{
 						//Need add dummy property for each value without property
-						property = new webModel.Property
-						{
-							Catalog = retVal.Catalog,
-							CatalogId = category.CatalogId,
-							Category = retVal,
-							CategoryId = category.Id,
-							IsManageable = false,
-							Name = propValue.PropertyName,
-							Type = webModel.PropertyType.Category,
-							ValueType = (webModel.PropertyValueType)(int)propValue.ValueType,
-						};
-						property.Values = new List<webModel.PropertyValue>();
-						property.Values.Add(propValue.ToWebModel());
+						property = new webModel.Property(propValue, category.CatalogId, category.Id, moduleModel.PropertyType.Category);
 						retVal.Properties.Add(property);
 					}
-					else
-					{
-						property.Values = category.PropertyValues
-														  .Where(x => x.PropertyId == property.Id)
-														  .Select(x => x.ToWebModel())
-														  .ToList();
-					}
+					property.Values.Add(propValue);
 				}
-
 			}
 
 			return retVal;
@@ -106,6 +88,7 @@ namespace VirtoCommerce.CatalogModule.Web.Converters
 				{
 					foreach(var propValue in property.Values)
 					{
+						propValue.ValueType = property.ValueType;
 						//Need populate required fields
 						propValue.PropertyName = property.Name;
 						retVal.PropertyValues.Add(propValue.ToModuleModel());

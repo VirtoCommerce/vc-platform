@@ -21,8 +21,8 @@ namespace VirtoCommerce.CatalogModule.Web.Converters
 			{
 				retVal.Category = property.Category.ToWebModel();
 			}
-			retVal.ValueType = (webModel.PropertyValueType)(int)property.ValueType;
-			retVal.Type = (webModel.PropertyType)(int)property.Type;
+			retVal.ValueType = property.ValueType;
+			retVal.Type = property.Type;
 
 			if (property.DictionaryValues != null)
 			{

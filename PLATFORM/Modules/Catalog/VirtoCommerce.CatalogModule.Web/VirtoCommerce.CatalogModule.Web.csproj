@@ -145,9 +145,7 @@
     <Compile Include="Model\ProductImage.cs" />
     <Compile Include="Model\Property.cs" />
     <Compile Include="Model\PropertyAttribute.cs" />
-    <Compile Include="Model\PropertyType.cs" />
     <Compile Include="Model\PropertyValue.cs" />
-    <Compile Include="Model\PropertyValueType.cs" />
     <Compile Include="Model\ResponseGroup.cs" />
     <Compile Include="Model\ListEntrySearchCriteria.cs" />
     <Compile Include="Model\SeoInfo.cs" />

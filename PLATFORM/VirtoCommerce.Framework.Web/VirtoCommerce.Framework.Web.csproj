@@ -141,7 +141,9 @@
     <Compile Include="Search\ISearchProviderManager.cs" />
     <Compile Include="Security\CheckPermissionAttribute.cs" />
     <Compile Include="Security\IPermissionService.cs" />
+    <Compile Include="Security\IRoleManagementService.cs" />
     <Compile Include="Security\PermissionDescriptor.cs" />
+    <Compile Include="Security\RoleDescriptor.cs" />
     <Compile Include="Settings\ISettingsManager.cs" />
     <Compile Include="Settings\ModuleDescriptor.cs" />
     <Compile Include="Settings\SettingDescriptor.cs" />

@@ -80,8 +80,8 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 				CatalogId = catalog.Id,
 				Catalog = catalog.ToWebModel(),
 				Name = "new property",
-				Type = webModel.PropertyType.Catalog,
-				ValueType = webModel.PropertyValueType.ShortText,
+				Type = moduleModel.PropertyType.Catalog,
+				ValueType = moduleModel.PropertyValueType.ShortText,
 				DictionaryValues = new List<webModel.PropertyDictionaryValue>(),
 				Attributes = new List<webModel.PropertyAttribute>()
 			};
@@ -105,8 +105,8 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 				CatalogId = category.CatalogId,
 				Catalog = category.Catalog.ToWebModel(),
 				Name = "new property",
-				Type = webModel.PropertyType.Category,
-				ValueType = webModel.PropertyValueType.ShortText,
+				Type = moduleModel.PropertyType.Category,
+				ValueType = moduleModel.PropertyValueType.ShortText,
 				DictionaryValues = new List<webModel.PropertyDictionaryValue>(),
 				Attributes = new List<webModel.PropertyAttribute>()
 			};
