@@ -59,16 +59,18 @@ namespace VirtoCommerce.CoreModule.Web.Security
             return success;
         }
 
+
         #endregion
 
         #region Methods
 
-        private PermissionDescriptor ConvertToPermissionDescriptor(ModulePermission permission)
+        private static PermissionDescriptor ConvertToPermissionDescriptor(ModulePermission permission, string moduleId)
         {
             return new PermissionDescriptor
             {
                 Id = permission.Id,
-                Name = permission.Name
+                Name = permission.Name,
+                ModuleId = moduleId
             };
         }
 
@@ -84,8 +86,7 @@ namespace VirtoCommerce.CoreModule.Web.Security
         {
             var permissions = _manifestProvider.GetModuleManifests().Values
                 .Where(m => m.Permissions != null)
-                .SelectMany(m => m.Permissions)
-                .Select(ConvertToPermissionDescriptor)
+                .SelectMany(m => m.Permissions.Select(p => ConvertToPermissionDescriptor(p, m.Id)))
                 .ToArray();
             return permissions;
         }

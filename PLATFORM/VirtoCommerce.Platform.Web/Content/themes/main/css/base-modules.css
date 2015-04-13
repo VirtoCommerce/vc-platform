@@ -6076,6 +6076,24 @@ input.ui-grid-filter-input[type="text"]
     line-height: 20px;
 }
 
+/* Image preview */
+.image-preview
+{
+    height: 300px;
+    left: 55px;
+    overflow: hidden;
+    position: absolute;
+    top: 10px;
+    width: 300px;
+    z-index: 50;
+}
+
+    .image-preview *
+    {
+        display: block;
+        max-width: 100%;
+    }
+
 /* Popup */
 .overlay
 {

@@ -115,8 +115,13 @@ $(function () {
     });
 
     $('.__files .list-img').on('mouseenter', function () {
-        $('body').prepend('<div class="overlay"><div class="overlay-cnt"></div></div>');
-        $('.overlay-cnt').html('<div class="popup"><div class="popup-cnt"><div class="image"><img src="http://fakeimg.pl/1200x900/00CED1/FFF/"></div></div></div>');
+        var self = $(this);
+
+        self.after('<div class="image-preview"><img src="http://fakeimg.pl/350x350/00CED1/FFF"></div>');
+    }).on('mouseleave', function () {
+        var self = $(this);
+
+        self.next().remove();
     });
 
     /* Close dropdown if click in other area window */

@@ -213,8 +213,8 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
 				category.Catalog = GetCatalogById(category.CatalogId);
 			}
 			retVal.AddRange(GetCatalogProperties(category.Catalog));
-
-			return retVal.ToArray();
+			var propertyComparer = AnonymousComparer.Create((foundation.Property x) => x.PropertyId);
+			return retVal.Distinct(propertyComparer).ToArray();
 		}
 
 		public foundation.Item[] GetAllItemVariations(string itemId)

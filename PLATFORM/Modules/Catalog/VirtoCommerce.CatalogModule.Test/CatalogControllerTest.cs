@@ -4,6 +4,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using VirtoCommerce.CatalogModule.Data.Repositories;
 using VirtoCommerce.CatalogModule.Data.Services;
 using VirtoCommerce.CatalogModule.Web.Controllers.Api;
+using VirtoCommerce.Domain.Catalog.Model;
 using VirtoCommerce.Domain.Catalog.Services;
 using VirtoCommerce.Foundation.Data.Azure.Asset;
 using VirtoCommerce.Foundation.Data.Infrastructure;
@@ -33,7 +34,7 @@ namespace VirtoCommerce.CatalogModule.Test
 
             var catalogResult = catalogController.Get("Apple") as OkNegotiatedContentResult<webModel.Catalog>;
             var catalog = catalogResult.Content;
-            catalog.Properties[0].Values.Add(new webModel.PropertyValue { Value = "sssss", ValueType = webModel.PropertyValueType.ShortText });
+			catalog.Properties[0].Values.Add(new webModel.PropertyValue { Value = "sssss", ValueType = PropertyValueType.ShortText });
             catalogController.Update(catalog);
 
             var serachResult = listEntryController.ListItemsSearch(new webModel.ListEntrySearchCriteria
