@@ -163,6 +163,7 @@ namespace VirtoCommerce.CoreModule.Web
             _container.RegisterType<ISecurityRepository>(new InjectionFactory(c => new EFSecurityRepository(_connectionStringName)));
 
             _container.RegisterType<IPermissionService, PermissionService>(new ContainerControlledLifetimeManager());
+            _container.RegisterType<IRoleManagementService, RoleManagementService>(new ContainerControlledLifetimeManager());
 
             _container.RegisterType<IApiAccountProvider, ApiAccountProvider>(new ContainerControlledLifetimeManager());
             _container.RegisterType<IClaimsIdentityProvider, ApplicationClaimsIdentityProvider>(new ContainerControlledLifetimeManager());
