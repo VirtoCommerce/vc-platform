@@ -183,7 +183,6 @@
     <Content Include="Scripts\dynamicContent\blades\publishing\list.js" />
     <Content Include="Scripts\dynamicContent\blades\publishing\list.tpl.html" />
     <Content Include="Scripts\dynamicContent\directives\showBigImage.js" />
-    <Content Include="Scripts\promotion\blades\expr-ConditionEntryIs.js" />
     <Content Include="Scripts\dynamicContent\blades\dynamicContent-list.js" />
     <Content Include="Scripts\dynamicContent\blades\dynamicContent-list.tpl.html" />
     <Content Include="Scripts\dynamicContent\blades\placeholders\add.js" />
