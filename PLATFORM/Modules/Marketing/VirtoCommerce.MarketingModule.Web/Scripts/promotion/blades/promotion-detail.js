@@ -1,12 +1,12 @@
 ﻿angular.module('virtoCommerce.marketingModule')
-.controller('promotionDetailController', ['$scope', 'bladeNavigationService', 'promotions', 'catalogs', 'stores', 'settings', 'dialogService', 'vaDynamicExpressionService', function ($scope, bladeNavigationService, promotions, catalogs, stores, settings, dialogService, vaDynamicExpressionService) {
+.controller('promotionDetailController', ['$scope', 'bladeNavigationService', 'marketing_res_promotions', 'catalogs', 'stores', 'settings', 'dialogService', 'vaDynamicExpressionService', function ($scope, bladeNavigationService, marketing_res_promotions, catalogs, stores, settings, dialogService, vaDynamicExpressionService) {
     $scope.blade.refresh = function (parentRefresh) {
         if ($scope.blade.isNew) {
-            promotions.getNew({}, function (data) {
+        	marketing_res_promotions.getNew({}, function (data) {
                 initializeBlade(data);
             });
         } else {
-            promotions.get({ id: $scope.blade.currentEntityId }, function (data) {
+        	marketing_res_promotions.get({ id: $scope.blade.currentEntityId }, function (data) {
                 initializeBlade(data);
                 if (parentRefresh) {
                     $scope.blade.parentBlade.refresh();
@@ -42,7 +42,7 @@
         _.each($scope.blade.currentEntity.dynamicExpression.children, stripOffUiInformation);
 
         if ($scope.blade.isNew) {
-            promotions.save({}, $scope.blade.currentEntity, function (data) {
+        	marketing_res_promotions.save({}, $scope.blade.currentEntity, function (data) {
                 $scope.blade.isNew = undefined;
                 $scope.blade.currentEntityId = data.id;
                 initializeToolbar();
@@ -51,7 +51,7 @@
                 bladeNavigationService.setError('Error ' + error.status, $scope.blade);
             });
         } else {
-            promotions.update({}, $scope.blade.currentEntity, function (data) {
+        	marketing_res_promotions.update({}, $scope.blade.currentEntity, function (data) {
                 $scope.blade.refresh(true);
             }, function (error) {
                 bladeNavigationService.setError('Error ' + error.status, $scope.blade);
@@ -159,101 +159,15 @@
 
     // Dynamic ExpressionBlock
     function initializeExpressions(data) {
-        //data.children = getTestExpressionBlocks();
         _.each(data.children, extendElementBlock);
     }
-
+    
     function extendElementBlock(expressionBlock) {
-        var retVal;
-        if (vaDynamicExpressionService.expressions[expressionBlock.id]) {
-            retVal = vaDynamicExpressionService.expressions[expressionBlock.id];
-        } else {
-            switch (expressionBlock.id) {
-                //case 'RewardCartGetOfAbsSubtotal':
-                //    retVal = {
-                //        displayName: 'Get $ [] off cart subtotal',
-                //        headerElements: constructAmountBlock(expressionBlock, 'Get $', 'off cart subtotal')
-                //    };
-                //    break;
-                //case 'RewardCartGetOfRelSubtotal':
-                //    retVal = {
-                //        displayName: 'Get [] % off cart subtotal',
-                //        headerElements: constructAmountBlock(expressionBlock, 'Get ', ' % off cart subtotal')
-                //    };
-                //    break;
-                //case 'RewardItemGetFreeNumItemOfProduct':
-                //    retVal = {
-                //        displayName: 'Get [] free items of Product',
-                //        headerElements: constructTypedBlock(expressionBlock, 'Get ', ' free items of Product', 'numericInput')
-                //    };
-                //    retVal.headerElements.push(constructItemSelector(expressionBlock));
-                //    break;
-                //case 'RewardItemGetOfAbs':
-                //    retVal = {
-                //        displayName: 'Get $[] off',
-                //        headerElements: constructAmountBlock(expressionBlock, 'Get $', ' off')
-                //    };
-                //    retVal.headerElements.push(constructItemSelector(expressionBlock));
-                //    break;
-                //case 'RewardItemGetOfRel':
-                //    retVal = {
-                //        displayName: 'Get [] % off',
-                //        headerElements: constructAmountBlock(expressionBlock, 'Get ', ' % off')
-                //    };
-                //    retVal.headerElements.push(constructItemSelector(expressionBlock));
-                //    break;
-                //case 'RewardItemGetOfAbsForNum':
-                //    retVal = {
-                //        displayName: 'Get $[] off [] items',
-                //        headerElements: constructAmountBlock(expressionBlock, 'Get $', ' off for')
-                //    };
-                //    retVal.headerElements.push({
-                //        type: 'numericInput',
-                //        $parentElement: expressionBlock
-                //    });
-                //    retVal.headerElements.push(constructLabelElement('  items'));
-                //    break;
-                //case 'RewardItemGetOfRelForNum':
-                //    retVal = {
-                //        displayName: 'Get [] % off [] items',
-                //        headerElements: constructAmountBlock(expressionBlock, 'Get ', ' % off for')
-                //    };
-                //    retVal.headerElements.push({
-                //        type: 'numericInput',
-                //        $parentElement: expressionBlock
-                //    });
-                //    retVal.headerElements.push(constructLabelElement('  items'));
-                //    break;
-                //case 'RewardShippingGetOfAbsShippingMethod':
-                //    retVal = {
-                //        displayName: 'Get $[] off shipping',
-                //        headerElements: constructAmountBlock(expressionBlock, 'Get $', ' off shipping')
-                //    };
-                //    retVal.headerElements.push({
-                //        type: 'shippingMethod',
-                //        $parentElement: expressionBlock,
-                //        availableEntries: shippingMethods
-                //    });
-                //    break;
-                //case 'RewardShippingGetOfRelShippingMethod':
-                //    retVal = {
-                //        displayName: 'Get [] % off shipping',
-                //        headerElements: constructAmountBlock(expressionBlock, 'Get ', ' % off shipping')
-                //    };
-                //    retVal.headerElements.push({
-                //        type: 'shippingMethod',
-                //        $parentElement: expressionBlock,
-                //        availableEntries: shippingMethods
-                //    });
-                //    break;
-                default:
-                    retVal = {
-                        displayName: 'unknown element: ' + expressionBlock.id,
-                        headerElements: [constructLabelElement('unknown element: ' + expressionBlock.id)]
-                    };
-            }
+        var retVal = vaDynamicExpressionService.expressions[expressionBlock.id];
+        if (!retVal) {
+            retVal = { displayName: 'unknown element: ' + expressionBlock.id };
         }
-        
+
         //angular.merge(expressionBlock, retVal);
         //angular.extend(expressionBlock, retVal);
         _.extend(expressionBlock, retVal);
@@ -267,197 +181,25 @@
         _.each(expressionBlock.excludingProductIds, function (id) {
             expressionBlock.children.push({ id: 'ExcludingProductCondition', productId: id });
         });
-        
+
         _.each(expressionBlock.children, extendElementBlock);
         _.each(expressionBlock.availableChildren, extendElementBlock);
         return expressionBlock;
     };
 
-    function openCategorySelectWizard(expressionElement) {
-        var selectedListEntries = [];
-        var newBlade = {
-            id: "CatalogCategorySelect",
-            title: "Pick Category for promotion condition",
-            controller: 'catalogItemSelectController',
-            template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/common/catalog-items-select.tpl.html',
-            breadcrumbs: [],
-            bladeToolbarCommands: [
-            {
-                name: "Pick selected", icon: 'fa fa-plus',
-                executeMethod: function (blade) {
-                    expressionElement.selectedCategory = selectedListEntries[0];
-                    bladeNavigationService.closeBlade(blade);
-                },
-                canExecuteMethod: function () {
-                    return selectedListEntries.length == 1;
-                }
-            }]
-        };
+    //$scope.$watch('blade.currentEntity.dynamicExpression.children', function (children) {
+    //    $scope.blade.isExpresionValid = _.all(children, validateExpression);
+    //});
+    //function validateExpression(x) {
+    //    return !x.getValidationError || !x.getValidationError();
+    //}
+    //$scope.blade.isExpresionValid = false;
+    //$scope.promotionExpressionValidator = function (value) {
+    //    var retVal = true;
 
-        newBlade.options = {
-            allowMultiple: true,
-            checkItemFn: function (listItem, isSelected) {
-                if (listItem.type != 'category') {
-                    newBlade.error = 'Must select Category';
-                    listItem.selected = undefined;
-                } else {
-                    if (isSelected) {
-                        if (_.all(selectedListEntries, function (x) { return x.id != listItem.id; })) {
-                            selectedListEntries.push(listItem);
-                        }
-                    }
-                    else {
-                        selectedListEntries = _.reject(selectedListEntries, function (x) { return x.id == listItem.id; });
-                    }
-                    newBlade.error = undefined;
-                }
-            }
-        };
+    //    return retVal;
+    //}
 
-        bladeNavigationService.showBlade(newBlade, $scope.blade);
-    }
-
-    function openItemSelectWizard(expressionElement, parentElement) {
-        var selectedListEntries = [];
-        var newBlade = {
-            id: "CatalogEntrySelect",
-            title: "Pick Product for promotion condition",
-            controller: 'catalogItemSelectController',
-            template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/common/catalog-items-select.tpl.html',
-            breadcrumbs: [],
-            bladeToolbarCommands: [
-            {
-                name: "Pick selected", icon: 'fa fa-plus',
-                executeMethod: function (blade) {
-                    expressionElement.selectedListEntry = selectedListEntries[0];
-                    parentElement.productId = selectedListEntries[0].id;
-                    bladeNavigationService.closeBlade(blade);
-                },
-                canExecuteMethod: function () {
-                    return selectedListEntries.length == 1;
-                }
-            }]
-        };
-
-        newBlade.options = {
-            allowMultiple: true,
-            checkItemFn: function (listItem, isSelected) {
-                if (listItem.type == 'category') {
-                    newBlade.error = 'Must select Product';
-                    listItem.selected = undefined;
-                } else {
-                    if (isSelected) {
-                        if (_.all(selectedListEntries, function (x) { return x.id != listItem.id; })) {
-                            selectedListEntries.push(listItem);
-                        }
-                    }
-                    else {
-                        selectedListEntries = _.reject(selectedListEntries, function (x) { return x.id == listItem.id; });
-                    }
-                    newBlade.error = undefined;
-                }
-            }
-        };
-
-        bladeNavigationService.showBlade(newBlade, $scope.blade);
-    }
-
-    function constructLabelElement(text) {
-        return {
-            type: 'label',
-            text: text
-        };
-    };
-
-    function constructAllAnyBlock(parentElement, prefix, postfix) {
-        return [
-            constructLabelElement(prefix + ' '),
-            {
-                type: 'allAny',
-                $parentElement: parentElement // has .all
-            },
-            constructLabelElement(' ' + postfix)];
-    };
-
-    function constructAmountBlock(parentElement, prefix, postfix) {
-        return constructTypedBlock(parentElement, prefix, postfix, 'amountInput');
-    };
-
-    function constructTypedBlock(parentElement, prefix, postfix, type) {
-        return [
-            constructLabelElement(prefix),
-            {
-                type: type,
-                $parentElement: parentElement // has required property
-            },
-            constructLabelElement(' ' + postfix)];
-    };
-
-    var constructCategorySelector = function (selectLabel) {
-        selectLabel = selectLabel ? selectLabel : 'select Category';
-        var retVal = {
-            type: 'customSelector',
-            selectedCategory: undefined
-        };
-
-        retVal.getDisplayText = function () {
-            return retVal.selectedCategory ? retVal.selectedCategory.name : selectLabel;
-        };
-
-        retVal.action = function () { openCategorySelectWizard(retVal); };
-        return retVal;
-    };
-
-    function constructItemSelector(parentElement, selectLabel) {
-        selectLabel = selectLabel ? selectLabel : 'select Product';
-        var retVal = {
-            type: 'customSelector',
-            selectedListEntry: undefined
-        };
-        retVal.getDisplayText = function () {
-            return retVal.selectedListEntry ? retVal.selectedListEntry.name : selectLabel;
-        };
-
-        retVal.action = function () { openItemSelectWizard(retVal, parentElement); };
-        return retVal;
-    };
-
-    var getTestExpressionBlocks = function () {
-        return [
-        {
-            newChildLabel: '+ add usergroup',
-            getValidationError: function (data) {
-                if (data.children && data.children.length) {
-                    return undefined;
-                } else {
-                    return 'Promotion requires at least one eligibility';
-                }
-            }
-        },
-        {
-            children: [
-                {
-                    children: [
-                    ],
-                    newChildLabel: '+ excluding'
-                }
-            ],
-            newChildLabel: '+ add condition',
-            getValidationError: function (data) {
-                return undefined;
-            }
-        },
-        {
-            getValidationError: function (data) {
-                if (data.children && data.children.length) {
-                    return undefined;
-                } else {
-                    return 'Promotion requires at least one reward';
-                }
-            }
-        }
-        ];
-    };
 
     initializeToolbar();
     $scope.blade.refresh(false);
@@ -468,5 +210,4 @@
     //        $scope.blade.currentEntity.exclusivity = data[0];
     //    }
     //});
-    var shippingMethods = [{ id: 1, name: 'method1' }, { id: 2, name: 'method 2' }];
 }]);

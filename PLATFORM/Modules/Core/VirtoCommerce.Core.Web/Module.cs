@@ -215,8 +215,6 @@ namespace VirtoCommerce.CoreModule.Web
             _container.RegisterType<IFulfillmentService, FulfillmentServiceImpl>();
 
             #endregion
-
-            OwinConfig.Configure(_appBuilder, _container, _connectionStringName);
         }
 
         #endregion
@@ -235,6 +233,8 @@ namespace VirtoCommerce.CoreModule.Web
 
             assetsProviderManager.RegisterProvider(AzureAssetsProvider.ProviderName, connectionString => _container.Resolve<AzureAssetsProvider>());
             assetsProviderManager.RegisterProvider(LocalAssetsProvider.ProviderName, connectionString => _container.Resolve<LocalAssetsProvider>());
+
+            OwinConfig.Configure(_appBuilder, _container, _connectionStringName);
         }
 
         #endregion

@@ -14,6 +14,8 @@ using VirtoCommerce.CoreModule.Web.Security.Hmac;
 using VirtoCommerce.Foundation.Data.Security.Identity;
 using VirtoCommerce.Foundation.Frameworks;
 using VirtoCommerce.Foundation.Frameworks.Caching;
+using VirtoCommerce.Foundation.Security.Model;
+using VirtoCommerce.Framework.Web.Security;
 using VirtoCommerce.Framework.Web.Settings;
 
 namespace VirtoCommerce.CoreModule.Web.Security
@@ -80,10 +82,12 @@ namespace VirtoCommerce.CoreModule.Web.Security
                 CacheManager = cacheManager,
             });
 
+            var permissionService = container.Resolve<IPermissionService>();
             app.UseHangfire(config =>
             {
                 config.UseUnityActivator(container);
                 config.UseSqlServerStorage(databaseConnectionStringName, new SqlServerStorageOptions { PrepareSchemaIfNecessary = false });
+                config.UseAuthorizationFilters(new PermissionBasedAuthorizationFilter(permissionService) { Permission = PredefinedPermissions.BackgroundJobsManage });
                 config.UseServer();
             });
         }

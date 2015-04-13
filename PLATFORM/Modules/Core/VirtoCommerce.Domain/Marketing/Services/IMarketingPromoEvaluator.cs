@@ -17,13 +17,6 @@ namespace VirtoCommerce.Domain.Marketing.Services
 		PromotionResult EvaluatePromotion(IPromotionEvaluationContext context);
 
 		/// <summary>
-		/// Return list element for promotion catalog
-		/// </summary>
-		/// <param name="publicationPlaces"></param>
-		/// <returns></returns>
-		CatalogPromotionResult[] EvaluateCatalogPromotions(IPromotionEvaluationContext context);
-
-		/// <summary>
 		/// External event handler
 		/// </summary>
 		PromotionResult ProcessEvent(IMarketingEvent marketingEvent);
