@@ -1,26 +1,14 @@
-﻿<div class="blade-content">
+﻿<div class="blade-static __bottom" ng-include="'Modules/$(VirtoCommerce.Core)/Scripts/common/ok-cancel.tpl.html'"></div>
+<div class="blade-content">
     <div class="blade-inner">
         <div class="inner-block">
-            <div ng-if="currentBlade.manageDefaultLanguage == true">
-                <div class="sub-t">Select default language</div>
-                <div class="list __items">
-                    <label class="list-item" ng-repeat="data in currentBlade.availableLanguages track by $index | filter: {catalogId: '!!'}">
-                        <input type="checkbox" name="isDefault" ng-checked="data.isDefault" ng-click="setAsDefault(data)">
-                        <span class="switch"></span>
-                        <span class="list-name">{{data.displayName}}</span>
-                    </label>
-                </div>
-            </div>
-
-            <div ng-if="currentBlade.manageDefaultLanguage == false">
-                <div class="sub-t">Select languages</div>
-                <div class="list __items">
-                    <label class="list-item" ng-repeat="data in currentBlade.availableLanguages track by $index" ng-class="{'__disabled': data.isDefault}">
-                        <input type="checkbox" name="available" ng-disabled="data.isDefault" ng-checked="data.catalogId != undefined" ng-click="selectLanguage(data)">
-                        <span class="switch"></span>
-                        <span class="list-name">{{data.displayName}}</span>
-                    </label>
-                </div>
+            <div class="sub-t">Select languages</div>
+            <div class="list __items">
+                <label class="list-item" ng-repeat="data in blade.currentEntities" ng-class="{'__selected': data.isDefault}">
+                    <input type="checkbox" ng-disabled="data.isDefault" ng-model="data.isChecked" ng-click="selectItem(data)">
+                    <span class="switch"></span>
+                    <span class="list-name">{{data.languageCode}}</span>
+                </label>
             </div>
         </div>
     </div>

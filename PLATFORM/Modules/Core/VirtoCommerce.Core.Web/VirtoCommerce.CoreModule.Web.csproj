@@ -195,6 +195,7 @@
     <Content Include="Scripts\common\common.js" />
     <Content Include="Scripts\common\dynamicExpression\expression-tree.tpl.html" />
     <Content Include="Scripts\common\dynamicExpression\expression-directives.js" />
+    <Content Include="Scripts\common\create.tpl.html" />
     <Content Include="Scripts\Fulfillment\blades\fulfillment-center-contact.js" />
     <Content Include="Scripts\Fulfillment\blades\fulfillment-center-contact.tpl.html" />
     <Content Include="Scripts\Fulfillment\widgets\fulfillmentCenterContactWidget.js" />
