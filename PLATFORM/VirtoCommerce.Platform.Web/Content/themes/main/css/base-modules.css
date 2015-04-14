@@ -2355,6 +2355,13 @@ h3
 	margin: 20px 0 10px;
 }
 
+.sub-t.__border
+{
+    border-bottom: 1px solid #dee9f0;
+    margin: 20px 0 0;
+    padding: 0 0 10px;
+}
+
 .__right
 {
     text-align: right;
@@ -2566,9 +2573,19 @@ fieldset + fieldset
     border-bottom: 1px solid #dee9f0;
 }
 
+.__inline .form-group
+{
+    display: inline-block;
+}
+
 .form-group + .form-group
 {
 	margin: 15px 0 0;
+}
+
+.__inline .form-group + .form-group
+{
+    margin: 0 0 0 15px;
 }
 
     .form-group .form-hint
@@ -2723,6 +2740,11 @@ fieldset + fieldset
         .form-input.__number input
         {
             padding-right: 20px;
+        }
+
+        .form-input.__calendar input
+        {
+            padding-right: 45px;
         }
 
         .form-input select
@@ -3141,15 +3163,21 @@ fieldset + fieldset
 }
 
 
-/* Tiles  */
 /* Tiles */
 .tile-group
 {
     margin: 0 -10px 0 0;
 	min-width: 130px;
-	overflow: hidden;
+    overflow: hidden;
+    padding: 0 0 10px 10px;
 	position: relative;
 	width: auto;
+}
+
+.dashboard .tile-group
+{
+    background: rgba(0,0,0,.035);
+    overflow: visible;
 }
 
 .tile-group .tile-group,
@@ -3162,7 +3190,7 @@ fieldset + fieldset
 
 .tile-group + .tile-group
 {
-	padding: 0;
+    margin-top: 30px;
 }
 
 .tile-group.one
@@ -3533,6 +3561,7 @@ fieldset + fieldset
 {
 	height: 108px;
 	line-height: 108px;
+    overflow: hidden;
 	width: 108px;
 }
 
@@ -3731,6 +3760,10 @@ fieldset + fieldset
             color: #4c4c4c;
             display: block;
             font-size: 12px;
+        }
+
+        .__files .list-ico ~ .list-descr
+        {
             margin: 0 0 0 40px;
         }
 
@@ -3836,38 +3869,49 @@ fieldset + fieldset
             color: #a6a6a6;
         }
 
-.list.__properties
+.list.__choosen
 {
 	margin: 10px 0;
 }
 
-	.__properties .list-item
+	.__choosen .list-item
 	{
-		margin: 0 10px 0 0;
+		margin: 0 10px 10px 0;
 		position: relative;
 	}
 
-		.__properties .list-name
+		.__choosen .list-name
 		{
 			background: #43b0e6;
 			color: #fff;
-			float: left;
+			float: right;
 			font-size: 11px;
-			padding: 2px 5px;
+            max-width: 345px;
+            min-height: 15px;
+            min-width: 30px;
+            overflow: hidden;
+            padding: 2px 5px 3px;
+            text-overflow: ellipsis;
 			vertical-align: top;
+            white-space: nowrap;
 		}
 
-		.__properties .list-remove
+		.__choosen .list-remove
 		{
-			color: #4c4c4c;
+			color: #a1c0d4;
 		    cursor: pointer;
-		    float: right;
+		    float: left;
 		    font-family: caption;
 		    font-size: 17px;
 		    font-weight: bold;
 		    line-height: 1;
-		    margin: 1px 0 0 4px;
+		    margin: 3px 4px 0 0;
 		}
+
+        .__choosen .list-remove:hover
+        {
+            color: #43b0e6;
+        }
 
 .__files .list-item
 {
@@ -3908,7 +3952,7 @@ fieldset + fieldset
 .pagination
 {
 	background: #fbfdfe;
-	border-bottom: 1px solid #dee9f0;
+	border-top: 1px solid #dee9f0;
 	margin: 0 -20px;
 	padding: 10px 20px;
 	text-align: center;
@@ -4420,6 +4464,11 @@ fieldset + fieldset
 .columns
 {
     padding: 15px 0;
+}
+
+.form > .columns
+{
+    padding-top: 0;
 }
 
 .column:nth-last-child(2),
@@ -6079,12 +6128,12 @@ input.ui-grid-filter-input[type="text"]
 /* Image preview */
 .image-preview
 {
-    height: 300px;
+    height: 450px;
     left: 55px;
     overflow: hidden;
     position: absolute;
     top: 10px;
-    width: 300px;
+    width: 450px;
     z-index: 50;
 }
 

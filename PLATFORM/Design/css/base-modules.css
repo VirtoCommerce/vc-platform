@@ -2573,9 +2573,19 @@ fieldset + fieldset
     border-bottom: 1px solid #dee9f0;
 }
 
+.__inline .form-group
+{
+    display: inline-block;
+}
+
 .form-group + .form-group
 {
 	margin: 15px 0 0;
+}
+
+.__inline .form-group + .form-group
+{
+    margin: 0 0 0 15px;
 }
 
     .form-group .form-hint
@@ -2730,6 +2740,11 @@ fieldset + fieldset
         .form-input.__number input
         {
             padding-right: 20px;
+        }
+
+        .form-input.__calendar input
+        {
+            padding-right: 45px;
         }
 
         .form-input select
@@ -3151,12 +3166,18 @@ fieldset + fieldset
 /* Tiles */
 .tile-group
 {
-    background: rgba(0,0,0,.035);
     margin: 0 -10px 0 0;
 	min-width: 130px;
+    overflow: hidden;
     padding: 0 0 10px 10px;
 	position: relative;
 	width: auto;
+}
+
+.dashboard .tile-group
+{
+    background: rgba(0,0,0,.035);
+    overflow: visible;
 }
 
 .tile-group .tile-group,
@@ -3540,6 +3561,7 @@ fieldset + fieldset
 {
 	height: 108px;
 	line-height: 108px;
+    overflow: hidden;
 	width: 108px;
 }
 
@@ -3930,7 +3952,7 @@ fieldset + fieldset
 .pagination
 {
 	background: #fbfdfe;
-	border-bottom: 1px solid #dee9f0;
+	border-top: 1px solid #dee9f0;
 	margin: 0 -20px;
 	padding: 10px 20px;
 	text-align: center;
@@ -4442,6 +4464,11 @@ fieldset + fieldset
 .columns
 {
     padding: 15px 0;
+}
+
+.form > .columns
+{
+    padding-top: 0;
 }
 
 .column:nth-last-child(2),
