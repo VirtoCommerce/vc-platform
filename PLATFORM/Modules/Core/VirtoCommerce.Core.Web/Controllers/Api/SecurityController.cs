@@ -348,9 +348,6 @@ namespace VirtoCommerce.CoreModule.Web.Controllers.Api
         [Route("users/create")]
         public async Task<IHttpActionResult> CreateAsync(ApplicationUserExtended user)
         {
-            // AO
-            // TODO: AccountId = MemberId for now. Is it correct?
-
             var dbUser = new ApplicationUser();
 
             dbUser.InjectFrom(user);
@@ -373,7 +370,7 @@ namespace VirtoCommerce.CoreModule.Web.Controllers.Api
                     {
                         UserName = user.UserName,
                         AccountId = user.Id,
-                        MemberId = user.Id,
+                        MemberId = user.MemberId,
                         AccountState = AccountState.Approved.GetHashCode(),
                         RegisterType = user.UserType.GetHashCode(),
                         StoreId = user.StoreId
