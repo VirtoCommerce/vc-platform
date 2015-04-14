@@ -58,11 +58,36 @@ namespace VirtoCommerce.Web.Controllers
 
                 if (customer == null)
                 {
-                    return RedirectToAction("Login", "Account");
+                    var account = await this.SecurityService.GetUserByNameAsync(formModel.Email);
+
+                    if (account == null)
+                    {
+                        await this.SecurityService.RegisterUser(
+                            formModel.Email, formModel.FirstName, formModel.LastName, null, this.Context.StoreId);
+                    }
+
+                    var customerAddresses = new List<CustomerAddress>();
+                    customerAddresses.Add(new CustomerAddress
+                    {
+                        Address1 = formModel.Address1,
+                        Address2 = formModel.Address2,
+                        City = formModel.City,
+                        Company = formModel.Company,
+                        Country = formModel.Country,
+                        CountryCode = "RUS",
+                        FirstName = formModel.FirstName,
+                        LastName = formModel.LastName,
+                        Phone = formModel.Phone,
+                        Province = formModel.Province,
+                        Zip = formModel.Zip
+                    });
+
+                    customer = await this.CustomerService.CreateCustomerAsync(
+                        formModel.Email, formModel.FirstName, formModel.LastName, customerAddresses);
                 }
 
                 this.Context.Customer = customer;
-                this.Context.Checkout.Email = this.Context.Customer.Email;
+                this.Context.Checkout.Email = customer.Email;
 
                 this.Context.Checkout.ShippingAddress = new CustomerAddress
                 {
