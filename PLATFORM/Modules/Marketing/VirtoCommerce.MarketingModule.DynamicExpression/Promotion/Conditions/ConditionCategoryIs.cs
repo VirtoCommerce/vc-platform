@@ -17,7 +17,7 @@ namespace VirtoCommerce.MarketingModule.Expressions.Promotion
 		/// <returns></returns>
 		public linq.Expression<Func<IPromotionEvaluationContext, bool>> GetConditionExpression()
 		{
-			var paramX = linq.Expression.Parameter(typeof(IEvaluationContext), "x");
+			var paramX = linq.Expression.Parameter(typeof(IPromotionEvaluationContext), "x");
 			var castOp = linq.Expression.MakeUnary(linq.ExpressionType.Convert, paramX, typeof(PromotionEvaluationContext));
 			var methodInfo = typeof(PromotionEvaluationContextExtension).GetMethod("IsItemInCategory");
 
