@@ -1,17 +1,22 @@
-﻿<ul class="list __items">
-    <li class="list-item" ng-click="openBlade(true)">
-        <i class="list-ico fa fa-language"></i>
-        <span class="list-t">Default language</span>
-        <span class="list-descr">{{currentBlade.currentEntity.defaultLanguage.displayName}} ({{currentBlade.currentEntity.defaultLanguage.languageCode}})</span>
-    </li>
-    <li class="list-item" ng-click="openBlade(false)">
-        <i class="list-ico fa fa-language"></i>
-        <span class="list-t">Catalog languages</span>
-        <span class="list-descr">
-            <a ng-repeat="lang in currentBlade.currentEntity.languages | limitTo:2">
-                {{lang.displayName}} ({{lang.languageCode}}),
-            </a>
-            <a ng-if="currentBlade.currentEntity.languages.length > 2">{{currentBlade.currentEntity.languages.length - 2}} more ...</a>
-        </span>
-    </li>
-</ul>
+﻿<!--alternative widget-->
+<!--<ul class="list __items">
+        <li class="list-item" ng-click="openBlade(true)">
+            <i class="list-ico fa fa-language"></i>
+            <span class="list-t">Default language</span>
+            <span class="list-descr">{{currentBlade.currentEntity.defaultLanguage.displayName}} ({{currentBlade.currentEntity.defaultLanguage.languageCode}})</span>
+        </li>
+        <li class="list-item" ng-click="openBlade(false)">
+            <i class="list-ico fa fa-language"></i>
+            <span class="list-t">Catalog languages</span>
+            <span class="list-descr">
+                <a ng-repeat="lang in currentBlade.currentEntity.languages | limitTo:2">
+                    {{lang.displayName}} ({{lang.languageCode}}),
+                </a>
+                <a ng-if="currentBlade.currentEntity.languages.length > 2">{{currentBlade.currentEntity.languages.length - 2}} more ...</a>
+            </span>
+        </li>
+    </ul>-->
+<div class="tile" ng-click="openBlade()">
+    <span class="tile-count">{{blade.currentEntity.languages.length}}</span>
+    <span class="tile-descr">Languages</span>
+</div>
