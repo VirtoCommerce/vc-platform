@@ -125,6 +125,14 @@ namespace VirtoCommerce.CoreModule.Web.Controllers.Api
             return Ok(result);
         }
 
+        [HttpPut]
+        [Route("roles")]
+        public IHttpActionResult UpdateRole(RoleDescriptor role)
+        {
+            _roleService.AddOrUpdateRole(role);
+            return Ok();
+        }
+
         #endregion
 
         #region Public methods

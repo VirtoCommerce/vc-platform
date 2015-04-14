@@ -1,13 +1,15 @@
 ﻿using System;
 using System.Data.Entity;
 using System.Linq;
+using VirtoCommerce.CoreModule.Web.Converters;
+using VirtoCommerce.Foundation.Data.Infrastructure;
 using VirtoCommerce.Foundation.Security.Model;
 using VirtoCommerce.Foundation.Security.Repositories;
 using VirtoCommerce.Framework.Web.Security;
 
 namespace VirtoCommerce.CoreModule.Web.Security
 {
-    public class RoleManagementService : IRoleManagementService
+    public class RoleManagementService : ServiceBase, IRoleManagementService
     {
         private readonly Func<ISecurityRepository> _securityRepository;
 
@@ -52,8 +54,61 @@ namespace VirtoCommerce.CoreModule.Web.Security
             return result;
         }
 
+        public void AddOrUpdateRole(RoleDescriptor role)
+        {
+            if (role == null)
+            {
+                throw new ArgumentNullException("role");
+            }
+
+            using (var repository = _securityRepository())
+            {
+                AddOrUpdatePermissions(repository, role.Permissions);
+
+                var sourceEntry = role.ToFoundation();
+                var targetEntry = repository.Roles
+                    .Include(r => r.RolePermissions)
+                    .FirstOrDefault(r => r.RoleId == role.Id);
+
+                if (targetEntry == null)
+                {
+                    repository.Add(sourceEntry);
+                }
+                else
+                {
+                    sourceEntry.Patch(targetEntry);
+                }
+
+                CommitChanges(repository);
+            }
+        }
+
         #endregion
 
+
+        private static void AddOrUpdatePermissions(ISecurityRepository repository, PermissionDescriptor[] permissions)
+        {
+            if (permissions != null)
+            {
+                var permissionIds = permissions.Select(p => p.Id).ToArray();
+                var existingPermissions = repository.Permissions.Where(p => permissionIds.Contains(p.PermissionId)).ToArray();
+
+                foreach (var permission in permissions)
+                {
+                    var sourceEntry = permission.ToFoundation();
+                    var targetEntry = existingPermissions.FirstOrDefault(p => string.Equals(p.PermissionId, permission.Id, StringComparison.OrdinalIgnoreCase));
+
+                    if (targetEntry == null)
+                    {
+                        repository.Add(sourceEntry);
+                    }
+                    else
+                    {
+                        sourceEntry.Patch(targetEntry);
+                    }
+                }
+            }
+        }
 
         private static RoleDescriptor ConvertToRoleDescriptor(Role role, bool fillPermissions)
         {
