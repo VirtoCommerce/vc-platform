@@ -24,7 +24,11 @@ namespace VirtoCommerce.Foundation.Data.Marketing
 		}
 
 		#region IDynamicContentRepository Members
-		
+		public IQueryable<DynamicContentFolder> Folders
+		{
+			get { return GetAsQueryable<DynamicContentFolder>(); }
+		}
+
 		public IQueryable<DynamicContentItem> Items
 		{
 			get { return GetAsQueryable<DynamicContentItem>(); }

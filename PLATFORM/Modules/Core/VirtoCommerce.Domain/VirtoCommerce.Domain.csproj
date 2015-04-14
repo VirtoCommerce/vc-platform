@@ -107,6 +107,8 @@
     <Compile Include="Inventory\Model\InventoryInfo.cs" />
     <Compile Include="Inventory\Model\InventoryStatus.cs" />
     <Compile Include="Inventory\Services\IInventoryService.cs" />
+    <Compile Include="Marketing\Model\DynamicContent\DynamicContentFolder.cs" />
+    <Compile Include="Marketing\Model\DynamicContent\IsHasFolder.cs" />
     <Compile Include="Marketing\Model\Promotions\CatalogPromotionResult.cs" />
     <Compile Include="Marketing\Model\Promotions\Coupon.cs" />
     <Compile Include="Marketing\Model\DynamicContent\DynamicContentItem.cs" />

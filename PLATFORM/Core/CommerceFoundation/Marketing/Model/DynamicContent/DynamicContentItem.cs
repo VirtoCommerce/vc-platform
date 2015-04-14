@@ -69,6 +69,34 @@ namespace VirtoCommerce.Foundation.Marketing.Model.DynamicContent
 
 		#region Navigation Properties
 
+		private string _FolderId;
+		[StringLength(128)]
+		[DataMember]
+		[ForeignKey("Folder")]
+		public string FolderId
+		{
+			get
+			{
+				return _FolderId;
+			}
+			set
+			{
+				SetValue(ref _FolderId, () => this.FolderId, value);
+			}
+		}
+
+		private string _imageUrl;
+		[DataMember]
+		[StringLength(2048)]
+		public string ImageUrl
+		{
+			get { return _imageUrl; }
+			set { SetValue(ref _imageUrl, () => ImageUrl, value); }
+		}
+
+		[DataMember]
+		public virtual DynamicContentFolder Folder { get; set; }
+
 		ObservableCollection<DynamicContentItemProperty> _propertyValues = null;
 		[DataMember]
 		public virtual ObservableCollection<DynamicContentItemProperty> PropertyValues

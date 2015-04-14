@@ -13,6 +13,7 @@ namespace VirtoCommerce.Domain.Marketing.Model
 		WithContentItems = 2,
 		WithContentPlaces = 4,
 		WithContentPublications = 8,
-		Full = WithPromotions | WithContentItems | WithContentPlaces | WithContentPublications
+		WithFolders = 16,
+		Full = WithPromotions | WithContentItems | WithContentPlaces | WithContentPublications | WithFolders
 	}
 }

@@ -16,40 +16,40 @@ using ExpressionSerialization;
 
 namespace VirtoCommerce.CustomerModule.Data.Converters
 {
-	public static class ContentPlaceConverter
+	public static class ContentFolderConverter
 	{
 		/// <summary>
 		/// Converting to model type
 		/// </summary>
 		/// <param name="catalogBase"></param>
 		/// <returns></returns>
-		public static coreModel.DynamicContentPlace ToCoreModel(this foundationModel.DynamicContentPlace dbEntity)
+		public static coreModel.DynamicContentFolder ToCoreModel(this foundationModel.DynamicContentFolder dbEntity)
 		{
 			if (dbEntity == null)
 				throw new ArgumentNullException("dbEntity");
 
-			var retVal = new coreModel.DynamicContentPlace();
+			var retVal = new coreModel.DynamicContentFolder();
 			retVal.InjectFrom(dbEntity);
-			retVal.Id = dbEntity.DynamicContentPlaceId;
-
-			retVal.CreatedDate = dbEntity.Created.Value;
-			retVal.ModifiedDate = dbEntity.LastModified;
-
+			retVal.Id = dbEntity.DynamicContentFolderId;
+			if (dbEntity.ParentFolder != null)
+			{
+				retVal.ParentFolder = dbEntity.ParentFolder.ToCoreModel();
+			}
 			return retVal;
 		}
 
 
-		public static foundationModel.DynamicContentPlace ToFoundation(this coreModel.DynamicContentPlace contentPlace)
+		public static foundationModel.DynamicContentFolder ToFoundation(this coreModel.DynamicContentFolder contentFolder)
 		{
-			if (contentPlace == null)
-				throw new ArgumentNullException("contentPlace");
+			if (contentFolder == null)
+				throw new ArgumentNullException("contentFolder");
 
-			var retVal = new foundationModel.DynamicContentPlace();
-			retVal.InjectFrom(contentPlace);
+			var retVal = new foundationModel.DynamicContentFolder();
+			retVal.InjectFrom(contentFolder);
 
-			if (contentPlace.Id != null)
+			if (contentFolder.Id != null)
 			{
-				retVal.DynamicContentPlaceId = contentPlace.Id;
+				retVal.DynamicContentFolderId = contentFolder.Id;
 			}
 			return retVal;
 		}
@@ -59,13 +59,13 @@ namespace VirtoCommerce.CustomerModule.Data.Converters
 		/// </summary>
 		/// <param name="source"></param>
 		/// <param name="target"></param>
-		public static void Patch(this foundationModel.DynamicContentPlace source, foundationModel.DynamicContentPlace target)
+		public static void Patch(this foundationModel.DynamicContentFolder source, foundationModel.DynamicContentFolder target)
 		{
 			if (target == null)
 				throw new ArgumentNullException("target");
 
-			var patchInjection = new PatchInjection<foundationModel.DynamicContentPlace>(x => x.Name, x => x.Description);
-		
+			var patchInjection = new PatchInjection<foundationModel.DynamicContentFolder>(x => x.Name, x => x.Description, x => x.ImageUrl);
+
 			target.InjectFrom(patchInjection, source);
 		}
 

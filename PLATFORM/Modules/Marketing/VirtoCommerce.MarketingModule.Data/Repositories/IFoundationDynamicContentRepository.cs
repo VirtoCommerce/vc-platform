@@ -10,6 +10,7 @@ namespace VirtoCommerce.MarketingModule.Data.Repositories
 {
 	public interface IFoundationDynamicContentRepository : IDynamicContentRepository
 	{
+		DynamicContentFolder GetContentFolderById(string id);
 		DynamicContentItem GetContentItemById(string id);
 		DynamicContentPlace GetContentPlaceById(string id);
 		DynamicContentPublishingGroup GetContentPublicationById(string id);

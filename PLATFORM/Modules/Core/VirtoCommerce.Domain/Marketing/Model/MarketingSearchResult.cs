@@ -15,15 +15,17 @@ namespace VirtoCommerce.Domain.Marketing.Model
 			ContentPlaces = new List<DynamicContentPlace>();
 			ContentItems = new List<DynamicContentItem>();
 			ContentPublications = new List<DynamicContentPublication>();
+			ContentFolders = new List<DynamicContentFolder>();
 		}
 
 		public int TotalCount { get; set; }
 
-		public List<Promotion> Promotions { get; set; }
-		public List<Coupon> Coupons { get; set; }
-		public List<DynamicContentPlace> ContentPlaces { get; set; }
-		public List<DynamicContentItem> ContentItems { get; set; }
-		public List<DynamicContentPublication> ContentPublications { get; set; }
+		public ICollection<Promotion> Promotions { get; set; }
+		public ICollection<Coupon> Coupons { get; set; }
+		public ICollection<DynamicContentPlace> ContentPlaces { get; set; }
+		public ICollection<DynamicContentItem> ContentItems { get; set; }
+		public ICollection<DynamicContentPublication> ContentPublications { get; set; }
+		public ICollection<DynamicContentFolder> ContentFolders { get; set; }
 
 	}
 }
