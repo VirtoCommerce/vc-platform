@@ -98,17 +98,19 @@ namespace VirtoCommerce.Web.Models.Services
 
             if (addresses != null)
             {
+                contact.Addresses = new List<Address>();
+
                 foreach (var address in addresses)
                 {
                     contact.Addresses.Add(address.AsServiceModel());
                 }
             }
 
+            contact = await this._customerClient.CreateContactAsync(contact);
+
             var authInfo = await this._securityClient.GetUserInfo(email);
 
             contact.Id = authInfo.Id;
-
-            contact = await this._customerClient.CreateContactAsync(contact);
 
             return contact.AsWebModel(authInfo);
         }
