@@ -191,7 +191,7 @@ namespace VirtoCommerce.Web.Controllers
                 }
                 else
                 {
-                    this.Context.Customer = await this.CustomerService.CreateCustomerAsync(formModel.Email, formModel.FirstName, formModel.LastName, null);
+                    this.Context.Customer = await this.CustomerService.CreateCustomerAsync(formModel.Email, formModel.FirstName, formModel.LastName, user.Id, null);
 
                     await _signInManager.PasswordSignInAsync(formModel.Email, formModel.Password, isPersistent: false, shouldLockout: false);
 
@@ -612,6 +612,16 @@ namespace VirtoCommerce.Web.Controllers
             return RedirectToAction("Addresses", "Account");
         }
 
+        [HttpGet]
+        [Route("account/order/{id}")]
+        public async Task<ActionResult> Order(string id)
+        {
+            this.Context.Order =
+                await this.CustomerService.GetOrderAsync(this.Context.Shop.StoreId, this.Context.Customer.Email, id);
+
+            return this.View("customers/order");
+        }
+
         internal class ChallengeResult : HttpUnauthorizedResult
         {
             public string LoginProvider { get; set; }
@@ -655,17 +665,4 @@ namespace VirtoCommerce.Web.Controllers
             return RedirectToAction("Index", "Home");
         }
     }
-
-
-
-
-    //    [HttpGet]
-    //    [Route("account/order/{id}")]
-    //    public async Task<ActionResult> Order(string id)
-    //    {
-    //        this.Context.Order =
-    //            await this.CustomerService.GetOrderAsync(this.Context.Shop.StoreId, this.Context.Customer.Email, id);
-
-    //        return this.View("customers/order");
-    //    }
 }
