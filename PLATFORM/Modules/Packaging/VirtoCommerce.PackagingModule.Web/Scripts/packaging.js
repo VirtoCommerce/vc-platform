@@ -38,7 +38,7 @@ angular.module(moduleName, [
           icon: 'fa fa-cubes',
           title: 'Modules',
           priority: 200,
-          action: function () { $state.go('workspace.packaging') },
+          action: function () { $state.go('workspace.packaging'); },
           permission: 'modulesMenuPermission'
       };
       mainMenuService.addMenuItem(menuItem);
