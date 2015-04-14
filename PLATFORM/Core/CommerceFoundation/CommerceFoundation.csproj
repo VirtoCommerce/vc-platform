@@ -262,6 +262,7 @@
     <Compile Include="Frameworks\ValueObject.cs" />
     <Compile Include="Frameworks\Workflow\Services\ObserverFactory.cs" />
     <Compile Include="Frameworks\Workflow\Services\ObservableWorkflowService.cs" />
+    <Compile Include="Marketing\Model\DynamicContent\DynamicContentFolder.cs" />
     <Compile Include="Orders\Extensions\JurisdictionExtensions.cs" />
     <Compile Include="Orders\Extensions\PaymentMethodExtensions.cs" />
     <Compile Include="Orders\Model\ShipmentOption.cs" />

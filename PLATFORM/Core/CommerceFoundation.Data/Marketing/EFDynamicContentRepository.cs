@@ -54,6 +54,7 @@ namespace VirtoCommerce.Foundation.Data.Marketing
 			MapEntity<DynamicContentPublishingGroup>(modelBuilder, toTable: "DynamicContentPublishingGroup");
 			MapEntity<PublishingGroupContentItem>(modelBuilder, toTable: "PublishingGroupContentItem");
 			MapEntity<PublishingGroupContentPlace>(modelBuilder, toTable: "PublishingGroupContentPlace");
+			MapEntity<DynamicContentFolder>(modelBuilder, toTable: "DynamicContentFolder");
 
 			modelBuilder.Entity<PublishingGroupContentItem>().HasRequired(p => p.ContentItem).WithMany().WillCascadeOnDelete(false);
 			modelBuilder.Entity<PublishingGroupContentPlace>().HasRequired(p => p.ContentPlace).WithMany().WillCascadeOnDelete(false);
@@ -62,7 +63,12 @@ namespace VirtoCommerce.Foundation.Data.Marketing
 		}
 
 		#region IDynamicContentRepository Members
-		
+
+		public IQueryable<DynamicContentFolder> Folders
+		{
+			get { return GetAsQueryable<DynamicContentFolder>(); }
+
+		}
 		public IQueryable<DynamicContentItem> Items
 		{
 			get { return GetAsQueryable<DynamicContentItem>(); }

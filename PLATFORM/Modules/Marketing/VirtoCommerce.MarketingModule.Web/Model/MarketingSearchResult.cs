@@ -15,6 +15,7 @@ namespace VirtoCommerce.MarketingModule.Web.Model
 		public List<DynamicContentPlace> ContentPlaces { get; set; }
 		public List<DynamicContentItem> ContentItems { get; set; }
 		public List<DynamicContentPublication> ContentPublications { get; set; }
+		public List<DynamicContentFolder> ContentFolders { get; set; }
 
 	}
 }

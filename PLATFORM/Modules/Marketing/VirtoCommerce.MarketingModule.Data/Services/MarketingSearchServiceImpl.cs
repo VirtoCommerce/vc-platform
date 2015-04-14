@@ -34,6 +34,7 @@ namespace VirtoCommerce.MarketingModule.Data.Services
 		{
 			var retVal = new coreModel.MarketingSearchResult();
 			var count = criteria.Count;
+			
 			if ((criteria.ResponseGroup & coreModel.SearchResponseGroup.WithPromotions) == coreModel.SearchResponseGroup.WithPromotions)
 			{
 				SearchPromotions(criteria, retVal);
@@ -54,18 +55,53 @@ namespace VirtoCommerce.MarketingModule.Data.Services
 				SearchContentPublications(criteria, retVal);
 				criteria.Count -= retVal.ContentPublications.Count();
 			}
+			if ((criteria.ResponseGroup & coreModel.SearchResponseGroup.WithFolders) == coreModel.SearchResponseGroup.WithFolders)
+			{
+				SearchFolders(criteria, retVal);
+			}
+			
 			return retVal;
 		}
 
 		#endregion
+		private void SearchFolders(coreModel.MarketingSearchCriteria criteria, coreModel.MarketingSearchResult result)
+		{
+			using (var repository = _contentRepositoryFactory())
+			{
+				var query = repository.Folders.Where(x => x.ParentFolderId == criteria.FolderId);
+				var folderIds = query.Select(x => x.DynamicContentFolderId).ToArray();
+
+				result.ContentFolders = new List<coreModel.DynamicContentFolder>();
+				foreach(var folderId in folderIds)
+				{
+					var folder = repository.GetContentFolderById(folderId);
+					result.ContentFolders.Add(folder.ToCoreModel());
+				}
+
+				//Populate folder for all founded places and items
+				if (criteria.FolderId != null)
+				{
+					var searchedFolder = repository.GetContentFolderById(criteria.FolderId);
+					if(searchedFolder != null)
+					{
+						var coreModelFolder = searchedFolder.ToCoreModel();
+						var hasfolderItems = result.ContentPlaces.OfType<coreModel.IsHasFolder>().Concat(result.ContentItems);
+						foreach(var hasfolderItem in hasfolderItems)
+						{
+							hasfolderItem.Folder = coreModelFolder;
+						}
+					}
+				}
+
+			}
+		}
 
 		private void SearchContentItems(coreModel.MarketingSearchCriteria criteria, coreModel.MarketingSearchResult result)
 		{
-			var totalCount = 0;
 			using (var repository = _contentRepositoryFactory())
 			{
-				var query = repository.Items;
-				totalCount = query.Count();
+				var query = repository.Items.Where(x => x.FolderId == criteria.FolderId);
+				result.TotalCount += query.Count();
 
 				result.ContentItems = query.OrderBy(x => x.DynamicContentItemId)
 											  .Skip(criteria.Start)
@@ -79,11 +115,10 @@ namespace VirtoCommerce.MarketingModule.Data.Services
 
 		private void SearchContentPlaces(coreModel.MarketingSearchCriteria criteria, coreModel.MarketingSearchResult result)
 		{
-			var totalCount = 0;
 			using (var repository = _contentRepositoryFactory())
 			{
-				var query = repository.Places;
-				totalCount = query.Count();
+				var query = repository.Places.Where(x => x.FolderId == criteria.FolderId);
+				result.TotalCount += query.Count();
 
 				result.ContentPlaces = query.OrderBy(x => x.DynamicContentPlaceId)
 											  .Skip(criteria.Start)
@@ -97,11 +132,10 @@ namespace VirtoCommerce.MarketingModule.Data.Services
 
 		private void SearchContentPublications(coreModel.MarketingSearchCriteria criteria, coreModel.MarketingSearchResult result)
 		{
-			var totalCount = 0;
 			using (var repository = _contentRepositoryFactory())
 			{
 				var query = repository.PublishingGroups;
-				totalCount = query.Count();
+				result.TotalCount += query.Count();
 
 				result.ContentPublications = query.OrderBy(x => x.DynamicContentPublishingGroupId)
 											  .Skip(criteria.Start)
@@ -131,12 +165,6 @@ namespace VirtoCommerce.MarketingModule.Data.Services
 			promotions.AddRange(_customPromotionManager.Promotions.Skip(criteria.Start).Take(criteria.Count));
 			totalCount += _customPromotionManager.Promotions.Count();
 
-
-			var retVal = new coreModel.MarketingSearchResult
-			{
-				Promotions = promotions.OrderBy(x => x.Id).Take(criteria.Count).ToList(),
-				TotalCount = totalCount
-			};
 			result.Promotions = promotions;
 			result.TotalCount += totalCount;
 		}

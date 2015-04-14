@@ -32,6 +32,7 @@ namespace VirtoCommerce.MarketingModule.Web.Controllers.Api
 			retVal.ContentPlaces = coreResult.ContentPlaces.Select(x => x.ToWebModel()).ToList();
 			retVal.ContentItems = coreResult.ContentItems.Select(x => x.ToWebModel()).ToList();
 			retVal.ContentPublications = coreResult.ContentPublications.Select(x => x.ToWebModel()).ToList();
+			retVal.ContentFolders = coreResult.ContentFolders.Select(x => x.ToWebModel()).ToList();
 			retVal.TotalCount = coreResult.TotalCount;
 			return Ok(retVal);
 		}

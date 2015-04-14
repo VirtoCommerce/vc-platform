@@ -1,5 +1,6 @@
 ﻿using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Data.Services.Common;
 using System.Runtime.Serialization;
 using VirtoCommerce.Foundation.Frameworks;
@@ -44,5 +45,35 @@ namespace VirtoCommerce.Foundation.Marketing.Model.DynamicContent
 			get { return _description; }
 			set { SetValue(ref _description, () => Description, value); }
 		}
+
+		private string _imageUrl;
+		[DataMember]
+		[StringLength(2048)]
+		public string ImageUrl
+		{
+			get { return _imageUrl; }
+			set { SetValue(ref _imageUrl, () => ImageUrl, value); }
+		}
+
+		#region Navigation Properties
+		private string _FolderId;
+		[StringLength(128)]
+		[DataMember]
+		[ForeignKey("Folder")]
+		public string FolderId
+		{
+			get
+			{
+				return _FolderId;
+			}
+			set
+			{
+				SetValue(ref _FolderId, () => this.FolderId, value);
+			}
+		}
+
+		[DataMember]
+		public virtual DynamicContentFolder Folder { get; set; }
+		#endregion
 	}
 }

@@ -29,6 +29,7 @@ namespace VirtoCommerce.CustomerModule.Web.Binders
 			{
 				result.ResponseGroup = (SearchResponseGroup)Enum.Parse(typeof(SearchResponseGroup), respGroup, true);
 			}
+			result.FolderId = qs["folder"];
 			result.Keyword = qs["q"].EmptyToNull();
 
 			result.Count = qs["count"].TryParse(20);

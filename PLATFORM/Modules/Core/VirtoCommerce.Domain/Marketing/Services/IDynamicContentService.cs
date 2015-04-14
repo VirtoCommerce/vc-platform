@@ -9,6 +9,11 @@ namespace VirtoCommerce.Domain.Marketing.Services
 {
 	public interface IDynamicContentService
 	{
+		DynamicContentFolder GetFolderById(string id);
+		DynamicContentFolder CreateFolder(DynamicContentFolder place);
+		void UpdateFolder(DynamicContentFolder place);
+		void DeleteFolder(string[] ids);
+
 		DynamicContentItem GetContentItemById(string id);
 		DynamicContentItem CreateContent(DynamicContentItem content);
 		void UpdateContents(DynamicContentItem[] contents);

@@ -253,6 +253,10 @@
     <Compile Include="Inventories\Migrations\201402141608186_Initial.Designer.cs">
       <DependentUpon>201402141608186_Initial.cs</DependentUpon>
     </Compile>
+    <Compile Include="Marketing\Migrations\Content\201504141142289_DynamicContentFolders.cs" />
+    <Compile Include="Marketing\Migrations\Content\201504141142289_DynamicContentFolders.Designer.cs">
+      <DependentUpon>201504141142289_DynamicContentFolders.cs</DependentUpon>
+    </Compile>
     <Compile Include="Marketing\Migrations\Content\Configuration.cs" />
     <Compile Include="Marketing\Migrations\Content\201402141610395_Initial.cs" />
     <Compile Include="Marketing\Migrations\Content\201402141610395_Initial.Designer.cs">
@@ -440,6 +444,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Marketing\Migrations\Content\201402141610395_Initial.resx">
       <DependentUpon>201402141610395_Initial.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Marketing\Migrations\Content\201504141142289_DynamicContentFolders.resx">
+      <DependentUpon>201504141142289_DynamicContentFolders.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Marketing\Migrations\Promotion\201402181150199_Initial.resx">
       <DependentUpon>201402181150199_Initial.cs</DependentUpon>
