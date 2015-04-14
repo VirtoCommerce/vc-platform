@@ -32,20 +32,23 @@ namespace VirtoCommerce.InventoryModule.Web.Controllers.Api
 			var allFulfillments = _fulfillmentService.GetAllFulfillmentCenters();
 			var inventories = _inventoryService.GetProductsInventoryInfos(ids).ToList();
 
-			foreach (var fulfillment in allFulfillments)
+			foreach (var productId in ids)
 			{
-				var alreadyExistCoreInventory = inventories.FirstOrDefault(x => x.FulfillmentCenterId == fulfillment.Id);
-				if (alreadyExistCoreInventory == null)
+				foreach (var fulfillment in allFulfillments)
 				{
-					alreadyExistCoreInventory = new coreModel.InventoryInfo
+					var productInventory = inventories.FirstOrDefault(x => x.ProductId == productId && x.FulfillmentCenterId == fulfillment.Id);
+					if (productInventory == null)
 					{
-						FulfillmentCenterId = fulfillment.Id,
-					};
+						productInventory = new coreModel.InventoryInfo
+						{
+							FulfillmentCenterId = fulfillment.Id,
+							ProductId = productId
+						};
+					}
+					var webModelInventory = productInventory.ToWebModel();
+					webModelInventory.FulfillmentCenter = fulfillment.ToWebModel();
+					retVal.Add(webModelInventory);
 				}
-
-				var webModelInventory = alreadyExistCoreInventory.ToWebModel();
-				webModelInventory.FulfillmentCenter = fulfillment.ToWebModel();
-				retVal.Add(webModelInventory);
 			}
 
 			return Ok(retVal.ToArray());
