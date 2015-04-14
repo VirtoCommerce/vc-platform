@@ -144,6 +144,8 @@
     <Compile Include="Security\IRoleManagementService.cs" />
     <Compile Include="Security\PermissionDescriptor.cs" />
     <Compile Include="Security\RoleDescriptor.cs" />
+    <Compile Include="Security\RoleSearchRequest.cs" />
+    <Compile Include="Security\RoleSearchResponse.cs" />
     <Compile Include="Settings\ISettingsManager.cs" />
     <Compile Include="Settings\ModuleDescriptor.cs" />
     <Compile Include="Settings\SettingDescriptor.cs" />

@@ -20,19 +20,32 @@ namespace VirtoCommerce.CoreModule.Web.Security
 
         #region IRoleManagementService Members
 
-        public RoleDescriptor[] GetAllRoles()
+        public RoleSearchResponse SearchRoles(RoleSearchRequest request)
         {
+            request = request ?? new RoleSearchRequest();
+            var result = new RoleSearchResponse();
+
             using (var repository = _securityRepository())
             {
-                var roles = repository.Roles
+                var query = repository.Roles;
+
+                if (request.Keyword != null)
+                {
+                    query = query.Where(r => r.Name.Contains(request.Keyword));
+                }
+
+                result.TotalCount = query.Count();
+
+                var roles = query
                     .OrderBy(r => r.Name)
+                    .Skip(request.SkipCount)
+                    .Take(request.TakeCount)
                     .ToArray();
 
-                var result = roles.Select(r => ConvertToRoleDescriptor(r, false))
-                    .ToArray();
-
-                return result;
+                result.Roles = roles.Select(r => ConvertToRoleDescriptor(r, false)).ToArray();
             }
+
+            return result;
         }
 
         public RoleDescriptor GetRole(string roleId)
