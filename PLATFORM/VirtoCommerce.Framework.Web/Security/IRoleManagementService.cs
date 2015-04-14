@@ -2,7 +2,7 @@
 {
     public interface IRoleManagementService
     {
-        RoleDescriptor[] GetAllRoles();
+        RoleSearchResponse SearchRoles(RoleSearchRequest request);
         RoleDescriptor GetRole(string roleId);
         void AddOrUpdateRole(RoleDescriptor role);
     }

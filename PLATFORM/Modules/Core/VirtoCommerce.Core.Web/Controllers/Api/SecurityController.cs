@@ -106,13 +106,10 @@ namespace VirtoCommerce.CoreModule.Web.Controllers.Api
 
         [HttpGet]
         [Route("roles")]
-        [ResponseType(typeof(RoleDescriptor[]))]
-        public IHttpActionResult GetRoles()
+        [ResponseType(typeof(RoleSearchResponse))]
+        public IHttpActionResult SearchRoles([FromUri]RoleSearchRequest request)
         {
-            var result = _roleService.GetAllRoles()
-                .OrderBy(r => r.Name)
-                .ToArray();
-
+            var result = _roleService.SearchRoles(request);
             return Ok(result);
         }
 
@@ -122,7 +119,6 @@ namespace VirtoCommerce.CoreModule.Web.Controllers.Api
         public IHttpActionResult GetRole(string roleId)
         {
             var result = _roleService.GetRole(roleId);
-
             return Ok(result);
         }
 
