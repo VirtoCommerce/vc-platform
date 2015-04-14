@@ -37,6 +37,7 @@
     };
 
     $scope.saveChanges = function () {
+        bladeNavigationService.setError(null, $scope.blade);
         $scope.blade.isLoading = true;
 
         _.each($scope.blade.currentEntity.dynamicExpression.children, stripOffUiInformation);
