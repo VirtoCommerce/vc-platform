@@ -90,7 +90,7 @@ namespace VirtoCommerce.Web.Models.Services
             await this._customerClient.UpdateContactAsync(contact);
         }
 
-        public async Task<Customer> CreateCustomerAsync(string email, string firstName, string lastName, ICollection<CustomerAddress> addresses)
+        public async Task<Customer> CreateCustomerAsync(string email, string firstName, string lastName, string id, ICollection<CustomerAddress> addresses)
         {
             var contact = new Contact { FullName = string.Format("{0} {1}", firstName, lastName) };
 
@@ -106,6 +106,7 @@ namespace VirtoCommerce.Web.Models.Services
                 }
             }
 
+            contact.Id = id;
             contact = await this._customerClient.CreateContactAsync(contact);
 
             var authInfo = await this._securityClient.GetUserInfo(email);

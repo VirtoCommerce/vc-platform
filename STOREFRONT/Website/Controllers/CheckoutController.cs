@@ -66,6 +66,8 @@ namespace VirtoCommerce.Web.Controllers
                             formModel.Email, formModel.FirstName, formModel.LastName, null, this.Context.StoreId);
                     }
 
+                    var user = await this.SecurityService.GetUserByNameAsync(formModel.Email);
+
                     var customerAddresses = new List<CustomerAddress>();
                     customerAddresses.Add(new CustomerAddress
                     {
@@ -83,7 +85,7 @@ namespace VirtoCommerce.Web.Controllers
                     });
 
                     customer = await this.CustomerService.CreateCustomerAsync(
-                        formModel.Email, formModel.FirstName, formModel.LastName, customerAddresses);
+                        formModel.Email, formModel.FirstName, formModel.LastName, user.Id, customerAddresses);
                 }
 
                 this.Context.Customer = customer;
