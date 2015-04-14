@@ -1,4 +1,6 @@
-﻿namespace VirtoCommerce.PagesModule.Web.Controllers.Api
+﻿using VirtoCommerce.Framework.Web.Common;
+
+namespace VirtoCommerce.PagesModule.Web.Controllers.Api
 {
 	#region
 
@@ -60,6 +62,7 @@
 
 		[HttpGet]
 		[ResponseType(typeof(Page))]
+        [ClientCache(Duration = 30)]
 		[Route("pages/{language}/{pageName}")]
 		public IHttpActionResult GetPage(string storeId, string language, string pageName)
 		{

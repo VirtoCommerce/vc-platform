@@ -1,7 +1,10 @@
 ﻿#region
 
 using System;
+using System.Threading.Tasks;
 using System.Web.Hosting;
+using VirtoCommerce.ApiClient;
+using VirtoCommerce.ApiClient.Extensions;
 using VirtoCommerce.Web.Views.Contents;
 using VirtoCommerce.Web.Views.Engines.Liquid;
 
@@ -28,8 +31,22 @@ namespace VirtoCommerce.Web.Models.Services
         #endregion
 
         #region Public Methods and Operators
-        public Page GetPage(string handle)
+        public async Task<Page> GetPageAsync(SiteContext context, string handle)
         {
+            var client = ClientContext.Clients.CreatePageClient();
+            var page = await client.GetPageAsync(context.StoreId, context.Language, handle);
+
+            return new Page
+            {
+                Author = "",
+                Content = page.Content,
+                Handle = handle,
+                Id = handle,
+                Url = "/pages/"+handle,
+                PublishedAt = page.ModifiedDate,
+                Title = page.Name
+            };
+            /*
             var filesPath = HostingEnvironment.MapPath("~/App_Data/vc-contents");
             var service = new PublishingService(filesPath, new[] { new LiquidTemplateEngine(filesPath) });
 
@@ -51,6 +68,7 @@ namespace VirtoCommerce.Web.Models.Services
                        Title = item.Title,
                        Layout = item.Layout
                    };
+             * */
         }
         #endregion
     }
