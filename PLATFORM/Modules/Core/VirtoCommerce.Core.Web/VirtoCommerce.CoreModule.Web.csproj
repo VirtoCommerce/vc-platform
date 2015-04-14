@@ -132,6 +132,7 @@
     <Compile Include="Assets\AssetsProviderManager.cs" />
     <Compile Include="Assets\AzureAssetsProvider.cs" />
     <Compile Include="Assets\LocalAssetsProvider.cs" />
+    <Compile Include="Converters\SecurityConverters.cs" />
     <Compile Include="Hangfire\PermissionBasedAuthorizationFilter.cs" />
     <Compile Include="Hangfire\UnityBootstrapperConfigurationExtensions.cs" />
     <Compile Include="Hangfire\UnityJobActivator.cs" />
