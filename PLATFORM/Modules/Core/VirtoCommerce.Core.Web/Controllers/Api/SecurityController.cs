@@ -460,7 +460,7 @@ namespace VirtoCommerce.CoreModule.Web.Controllers.Api
 
                 using (var repository = _securityRepository())
                 {
-                    var user = repository.GetAccountByName(applicationUser.Email);
+                    var user = repository.GetAccountByName(applicationUser.UserName);
                     result.InjectFrom(user);
                     if (user != null)
                     {
