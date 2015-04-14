@@ -1,20 +1,15 @@
 ﻿angular.module('virtoCommerce.catalogModule')
-.controller('catalogLanguagesWidgetController', ['$scope', 'bladeNavigationService', function ($scope, bladeNavigationService)
-{
+.controller('catalogLanguagesWidgetController', ['$scope', 'bladeNavigationService', function ($scope, bladeNavigationService) {
+    var blade = $scope.blade;
 
-    $scope.currentBlade = $scope.widget.blade;
-
-    $scope.openBlade = function (manageDefaultLanguage) {
-        var blade = {
-            id: "catalogLanguages",
-            currentEntityId: $scope.currentBlade.currentEntityId,
-            manageDefaultLanguage: manageDefaultLanguage,
-            title: "Language management",
-            subtitle: 'Language selection',
+    $scope.openBlade = function () {
+        var newBlade = {
+            id: "catalogChildBlade",
+            title: blade.title,
+            subtitle: 'Manage languages',
             controller: 'catalogLanguagesController',
             template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/catalog-languages.tpl.html'
         };
-        bladeNavigationService.showBlade(blade, $scope.currentBlade);
+        bladeNavigationService.showBlade(newBlade, blade);
     };
-
 }]);
