@@ -1,16 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data.Entity;
+﻿using System.Data.Entity;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using VirtoCommerce.Foundation.Data.Infrastructure.Interceptors;
 using VirtoCommerce.Foundation.Data.Security;
-using VirtoCommerce.Foundation.Frameworks.Extensions;
 using VirtoCommerce.Foundation.Security.Model;
-using VirtoCommerce.Foundation.Security.Repositories;
 
-namespace VirtoCommerce.CoreModule.Web.Security
+namespace VirtoCommerce.CoreModule.Web.Security.Data
 {
     public class FoundationSecurityRepositoryImpl : EFSecurityRepository, IFoundationSecurityRepository
     {
@@ -18,21 +12,28 @@ namespace VirtoCommerce.CoreModule.Web.Security
             : this("VirtoCommerce")
         {
         }
-       public FoundationSecurityRepositoryImpl(string nameOrConnectionString)
+        public FoundationSecurityRepositoryImpl(string nameOrConnectionString)
             : this(nameOrConnectionString, null)
         {
         }
-       public FoundationSecurityRepositoryImpl(string nameOrConnectionString, IInterceptor[] interceptors = null)
+        public FoundationSecurityRepositoryImpl(string nameOrConnectionString, IInterceptor[] interceptors = null)
             : base(nameOrConnectionString, null, interceptors)
-		{
-		}
-
-
-	   public Account GetAccountByName(string userName)
         {
-            return Accounts.Include(x=>x.RoleAssignments.Select(y=>y.Role.RolePermissions.Select(z=>z.Permission)))
-						   .Include(x=>x.ApiAccounts)
-						   .FirstOrDefault(x => x.UserName == userName);
+        }
+
+
+        public Account GetAccountByName(string userName, UserDetails detailsLevel)
+        {
+            var query = Accounts;
+
+            if (detailsLevel == UserDetails.Full)
+            {
+                query = query
+                    .Include(a => a.RoleAssignments.Select(ra => ra.Role.RolePermissions.Select(rp => rp.Permission)))
+                    .Include(a => a.ApiAccounts);
+            }
+
+            return query.FirstOrDefault(a => a.UserName == userName);
         }
     }
 }

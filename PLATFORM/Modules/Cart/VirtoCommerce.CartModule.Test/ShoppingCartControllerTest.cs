@@ -25,7 +25,7 @@ namespace VirtoCommerce.CartModule.Test
 		public void GetCurrentCartTest()
 		{
 			var controller = GetCartController();
-			var result = controller.GetCurrentCart("testSite") as OkNegotiatedContentResult<webModel.ShoppingCart>;
+			var result = controller.GetCurrentCart("testSite", null) as OkNegotiatedContentResult<webModel.ShoppingCart>;
 			Assert.IsNotNull(result.Content);
 		}
 
@@ -33,7 +33,7 @@ namespace VirtoCommerce.CartModule.Test
 		public void AddItemToShoppingCart()
 		{
 			var controller = GetCartController();
-			var result = controller.GetCurrentCart("testSite") as OkNegotiatedContentResult<webModel.ShoppingCart>;
+			var result = controller.GetCurrentCart("testSite", null) as OkNegotiatedContentResult<webModel.ShoppingCart>;
 			var cart = result.Content;
 
 			var item = new webModel.LineItem
@@ -62,7 +62,7 @@ namespace VirtoCommerce.CartModule.Test
 		public void TestCheckout()
 		{
 			var controller = GetCartController();
-			var result = controller.GetCurrentCart("testSite") as OkNegotiatedContentResult<webModel.ShoppingCart>;
+			var result = controller.GetCurrentCart("testSite", null) as OkNegotiatedContentResult<webModel.ShoppingCart>;
 			var cart = result.Content;
 
 			var deliveryAddress = cart.Addresses.FirstOrDefault(x=>x.Type == AddressType.Shipping);
@@ -90,7 +90,7 @@ namespace VirtoCommerce.CartModule.Test
 			//Save changes
 			controller.Update(cart);
 
-			result = controller.GetCurrentCart("testSite") as OkNegotiatedContentResult<webModel.ShoppingCart>;
+			result = controller.GetCurrentCart("testSite", null) as OkNegotiatedContentResult<webModel.ShoppingCart>;
 			cart = result.Content;
 
 			//Select appropriate shipment method
@@ -107,7 +107,7 @@ namespace VirtoCommerce.CartModule.Test
 
 			//Save changes
 			controller.Update(cart);
-			result = controller.GetCurrentCart("testSite") as OkNegotiatedContentResult<webModel.ShoppingCart>;
+			result = controller.GetCurrentCart("testSite", null) as OkNegotiatedContentResult<webModel.ShoppingCart>;
 			cart = result.Content;
 
 			//Select payment method
@@ -141,7 +141,7 @@ namespace VirtoCommerce.CartModule.Test
 			cart.Payments.Add(payment);
 			//Save changes
 			controller.Update(cart);
-			result = controller.GetCurrentCart("testSite") as OkNegotiatedContentResult<webModel.ShoppingCart>;
+			result = controller.GetCurrentCart("testSite", null) as OkNegotiatedContentResult<webModel.ShoppingCart>;
 			cart = result.Content;
 
 			//Next it call customer order method create order form cart

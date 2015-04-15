@@ -9,9 +9,6 @@ namespace VirtoCommerce.Domain.Marketing.Model
 	
 	public class CatalogItemAmountReward : AmountBasedReward
 	{
-		public CatalogItemAmountReward()
-		{
-		}
 		//Copy constructor
 		protected CatalogItemAmountReward(CatalogItemAmountReward other)
 			: base(other)

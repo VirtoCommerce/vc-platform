@@ -29,10 +29,10 @@ namespace VirtoCommerce.MarketingModule.Web
 			_container.RegisterType<IFoundationPromotionRepository>(new InjectionFactory(c => new PromotionRepositoryImpl("VirtoCommerce", new AuditChangeInterceptor())));
 			_container.RegisterType<IFoundationDynamicContentRepository>(new InjectionFactory(c => new DynamicContentRepositoryImpl("VirtoCommerce", new AuditChangeInterceptor())));
 			
-			var promotionExtensionManager = new InMemoryPromotionExtensionManagerImpl();
-			promotionExtensionManager.DynamicExpression = GetDynamicExpression();
+			var promotionExtensionManager = new InMemoryExtensionManagerImpl();
+			promotionExtensionManager.PromotionDynamicExpressionTree = GetDynamicExpression();
 
-			_container.RegisterInstance<IPromotionExtensionManager>(promotionExtensionManager);
+			_container.RegisterInstance<IMarketingExtensionManager>(promotionExtensionManager);
 			_container.RegisterType<IPromotionService, PromotionServiceImpl>();
 			_container.RegisterType<IDynamicContentService, DynamicContentServiceImpl>();
 			_container.RegisterType<IMarketingSearchService, MarketingSearchServiceImpl>();
