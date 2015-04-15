@@ -145,10 +145,11 @@ namespace VirtoCommerce.CoreModule.Web.Controllers.Api
 
         [HttpPut]
         [Route("roles")]
+        [ResponseType(typeof(RoleDescriptor))]
         public IHttpActionResult UpdateRole(RoleDescriptor role)
         {
-            _roleService.AddOrUpdateRole(role);
-            return Ok();
+            var result = _roleService.AddOrUpdateRole(role);
+            return Ok(result);
         }
 
         #endregion
