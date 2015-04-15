@@ -20,6 +20,7 @@ using VirtoCommerce.Foundation.Frameworks.Extensions;
 using VirtoCommerce.Foundation.Security.Model;
 using VirtoCommerce.Framework.Web.Security;
 using ApiAccount = VirtoCommerce.Foundation.Security.Model.ApiAccount;
+using Hangfire;
 
 namespace VirtoCommerce.CoreModule.Web.Controllers.Api
 {
@@ -418,7 +419,6 @@ namespace VirtoCommerce.CoreModule.Web.Controllers.Api
             // AO
             // TODO: Get actual store
             // TODO: Localize subject and message to user's shop language
-            // TODO: Queue as job
 
             SendingMethod sendingMethod;
             if (Enum.TryParse(securityMessage.SendingMethod, out sendingMethod))
@@ -437,7 +437,7 @@ namespace VirtoCommerce.CoreModule.Web.Controllers.Api
                         HttpUtility.HtmlEncode(uriBuilder.ToString()));
                     string subject = string.Format("{0} reset password link", securityMessage.StoreId);
 
-                    await UserManager.SendEmailAsync(securityMessage.UserId, subject, message);
+                    BackgroundJob.Enqueue(() => SendEmail(securityMessage.UserId, subject, message));
 
                     return Ok();
                 }
@@ -451,6 +451,11 @@ namespace VirtoCommerce.CoreModule.Web.Controllers.Api
         #endregion
 
         #region Helpers
+
+        public void SendEmail(string userId, string subject, string message)
+        {
+            UserManager.SendEmail(userId, subject, message);
+        }
 
         private async Task<ApplicationUserExtended> GetUserExtended(string loginProvider, string providerKey)
         {
