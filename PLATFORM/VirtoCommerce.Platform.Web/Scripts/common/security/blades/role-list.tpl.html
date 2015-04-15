@@ -20,8 +20,6 @@
                                 </label>
                             </th>
                             <th class="table-col">Name</th>
-                            <th class="table-col">Account type</th>
-                            <th class="table-col">State</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -33,14 +31,7 @@
                                 </label>
                             </td>
                             <td class="table-col" ng-click='blade.selectNode(data)'>
-                                <span class="table-t">{{data.userName}}</span>
-                            </td>
-                            <td class="table-col __product-code" ng-click='blade.selectNode(data)'>
-                                <!-- <span ng-repeat="x in data.roles">{{x}} </span>-->
-                                <span>{{data.userType}}</span>
-                            </td>
-                            <td class="table-col __product-code" ng-click='blade.selectNode(data)'>
-                                <span>{{data.userState}}</span>
+                                <span class="table-t">{{data.name}}</span>
                             </td>
                         </tr>
                     </tbody>

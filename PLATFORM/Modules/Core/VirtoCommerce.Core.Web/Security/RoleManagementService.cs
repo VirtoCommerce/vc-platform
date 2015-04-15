@@ -38,8 +38,8 @@ namespace VirtoCommerce.CoreModule.Web.Security
 
                 var roles = query
                     .OrderBy(r => r.Name)
-                    .Skip(request.SkipCount)
-                    .Take(request.TakeCount)
+                    .Skip(request.Start)
+                    .Take(request.Count)
                     .ToArray();
 
                 result.Roles = roles.Select(r => ConvertToRoleDescriptor(r, false)).ToArray();

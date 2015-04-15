@@ -421,9 +421,16 @@
     <Content Include="Scripts\common\security\auth\auth.js" />
     <Content Include="Scripts\common\security\blades\account-changePassword.js" />
     <Content Include="Scripts\common\security\blades\account-changePassword.tpl.html" />
+    <Content Include="Scripts\common\security\blades\security-main.js" />
+    <Content Include="Scripts\common\security\blades\security-main.tpl.html" />
     <Content Include="Scripts\common\security\login\login.js" />
     <Content Include="Scripts\common\security\login\login.tpl.html" />
     <Content Include="Scripts\common\security\login\loginToolbar.tpl.html" />
+    <Content Include="Scripts\common\security\blades\role-detail.js" />
+    <Content Include="Scripts\common\security\blades\role-detail.tpl.html" />
+    <Content Include="Scripts\common\security\blades\role-list.js" />
+    <Content Include="Scripts\common\security\blades\role-list.tpl.html" />
+    <Content Include="Scripts\common\security\resources\roles.js" />
     <Content Include="Scripts\common\security\security.js" />
     <Content Include="Scripts\common\icons\icons.tpl.html" />
     <Content Include="Content\themes\metro\fonts\glyphicons-halflings-regular.woff" />
@@ -454,7 +461,7 @@
     <Content Include="Scripts\common\security\blades\account-detail.tpl.html" />
     <Content Include="Scripts\common\security\blades\account-list.js" />
     <Content Include="Scripts\common\security\blades\account-list.tpl.html" />
-    <Content Include="Scripts\common\security\resources\account.js" />
+    <Content Include="Scripts\common\security\resources\accounts.js" />
     <Content Include="Scripts\common\security\wizards\newAccount\new-account-wizard.js" />
     <Content Include="Scripts\common\security\wizards\newAccount\new-account-wizard.tpl.html" />
     <Content Include="Scripts\errors.json" />
@@ -1270,9 +1277,9 @@
     <Content Include="Views\Web.config">
       <SubType>Designer</SubType>
     </Content>
-    <Content Include="Scripts\underscore.min.map" />
     <Content Include="Scripts\version.json" />
     <Content Include="Views\Shared\_GoogleAnalyticsPartial.cshtml" />
+    <Content Include="Scripts\underscore.min.map" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\Modules\" />

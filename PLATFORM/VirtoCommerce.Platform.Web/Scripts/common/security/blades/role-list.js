@@ -1,12 +1,12 @@
 ﻿angular.module('platformWebApp')
-.controller('accountListController', ['$scope', 'accounts', 'bladeNavigationService', 'dialogService',
-function ($scope, accounts, bladeNavigationService, dialogService) {
+.controller('roleListController', ['$scope', 'platform_res_roles', 'bladeNavigationService', 'dialogService',
+function ($scope, roles, bladeNavigationService, dialogService) {
     //pagination settigs
     $scope.pageSettings = {};
     $scope.pageSettings.totalItems = 0;
     $scope.pageSettings.currentPage = 1;
-    $scope.pageSettings.numPages = 5;
-    $scope.pageSettings.itemsPerPageCount = 20;
+    $scope.pageSettings.numPages = 4;
+    $scope.pageSettings.itemsPerPageCount = 15;
 
     $scope.filter = { searchKeyword: undefined };
     var selectedNode = null;
@@ -15,7 +15,7 @@ function ($scope, accounts, bladeNavigationService, dialogService) {
         $scope.blade.isLoading = true;
         $scope.blade.selectedAll = false;
 
-        accounts.search({
+        roles.get({
             keyword: $scope.filter.searchKeyword,
             start: ($scope.pageSettings.currentPage - 1) * $scope.pageSettings.itemsPerPageCount,
             count: $scope.pageSettings.itemsPerPageCount
@@ -23,7 +23,7 @@ function ($scope, accounts, bladeNavigationService, dialogService) {
             $scope.blade.isLoading = false;
 
             $scope.pageSettings.totalItems = angular.isDefined(data.totalCount) ? data.totalCount : 0;
-            $scope.blade.currentEntities = data.users;
+            $scope.blade.currentEntities = data.roles;
 
             if (selectedNode != null) {
                 //select the node in the new list
@@ -47,8 +47,8 @@ function ($scope, accounts, bladeNavigationService, dialogService) {
             data: selectedNode,
             title: selectedNode.name,
             subtitle: $scope.blade.subtitle,
-            controller: 'accountDetailController',
-            template: 'Scripts/common/security/blades/account-detail.tpl.html'
+            controller: 'roleDetailController',
+            template: 'Scripts/common/security/blades/role-detail.tpl.html'
         };
 
         bladeNavigationService.showBlade(newBlade, $scope.blade);
@@ -68,14 +68,14 @@ function ($scope, accounts, bladeNavigationService, dialogService) {
         var dialog = {
             id: "confirmDeleteItem",
             title: "Delete confirmation",
-            message: "Are you sure you want to delete selected Accounts?",
+            message: "Are you sure you want to delete selected Roles?",
             callback: function (remove) {
                 if (remove) {
                     closeChildrenBlades();
 
                     var selection = _.where($scope.blade.currentEntities, { selected: true });
-                    var itemIds = _.pluck(selection, 'userName');
-                    accounts.remove({ names: itemIds }, function (data, headers) {
+                    var itemIds = _.pluck(selection, 'id');
+                    roles.remove({ ids: itemIds }, function () {
                         $scope.blade.refresh();
                     }, function (error) {
                         bladeNavigationService.setError('Error ' + error.status, $scope.blade);
@@ -111,11 +111,11 @@ function ($scope, accounts, bladeNavigationService, dialogService) {
 
                 var newBlade = {
                     id: 'listItemChild',
-                    currentEntity: {},
-                    title: 'New Account',
+                    isNew: true,
+                    title: 'New Role',
                     subtitle: $scope.blade.subtitle,
-                    controller: 'newAccountWizardController',
-                    template: 'Scripts/common/security/wizards/newAccount/new-account-wizard.tpl.html'
+                    controller: 'roleDetailController',
+                    template: 'Scripts/common/security/blades/role-detail.tpl.html'
                 };
                 bladeNavigationService.showBlade(newBlade, $scope.blade);
             },
