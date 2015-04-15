@@ -153,9 +153,9 @@ namespace VirtoCommerce.Web.Models.Services
             return "<option value=\"United States\" data-provinces=\"[&quot;California&quot;,&quot;Ohio&quot;]\">United States</option>";
         }
 
-        public async Task<Cart> GetCurrentCartAsync(string storeId)
+        public async Task<Cart> GetCurrentCartAsync()
         {
-            var cart = await this._cartClient.GetCurrentCartAsync();
+            var cart = await this._cartClient.GetCartAsync(SiteContext.Current.StoreId, SiteContext.Current.Customer.Id);
             return cart.AsWebModel();
         }
 
@@ -163,7 +163,7 @@ namespace VirtoCommerce.Web.Models.Services
         {
             Checkout checkout = null;
 
-            var dtoCart = await _cartClient.GetCurrentCartAsync();
+            var dtoCart = await _cartClient.GetCartAsync(SiteContext.Current.StoreId, SiteContext.Current.Customer.Id);
 
             if (dtoCart != null)
             {
@@ -246,7 +246,7 @@ namespace VirtoCommerce.Web.Models.Services
 
         public async Task<Checkout> UpdateCheckoutAsync(Checkout checkout)
         {
-            var dtoCart = await _cartClient.GetCurrentCartAsync();
+            var dtoCart = await _cartClient.GetCartAsync(SiteContext.Current.StoreId, SiteContext.Current.Customer.Id);
             dtoCart.Currency = checkout.Currency;
             dtoCart.Addresses = new List<ApiClient.DataContracts.Cart.Address>();
 
@@ -320,7 +320,7 @@ namespace VirtoCommerce.Web.Models.Services
 
         public async Task<CustomerOrder> CreateOrderAsync(Checkout checkout)
         {
-            var dtoCart = await _cartClient.GetCurrentCartAsync();
+            var dtoCart = await _cartClient.GetCartAsync(SiteContext.Current.StoreId, SiteContext.Current.Customer.Id);
             dtoCart.Currency = checkout.Currency;
             dtoCart.CustomerId = checkout.CustomerId;
 
@@ -768,37 +768,6 @@ namespace VirtoCommerce.Web.Models.Services
                     }
                 }
             }
-        }
-
-        public async Task UpdatePageCacheAsync()
-        {
-            var store = SiteContext.Current.StoreId;
-
-            var pagesPath = String.Format("{0}\\{1}\\pages", _pagesCacheStoragePath, store);
-            var storageClient = new FileStorageCacheService(HostingEnvironment.MapPath(pagesPath));
-
-            // TODO: figure out what to do with deleted pages
-            var lastUpdate = this._pageStorageClient.GetLatestUpdate();
-            /*
-            var response = await this._pa.GetThemeAssetsAsync(store, theme, lastUpdate, true);
-
-            if (response.Any())
-            {
-                lock (_LockObject)
-                {
-                    // check last update again, since going to the service is more expensive than checking local folders
-                    var newLastUpdate = this._themeStorageClient.GetLatestUpdate();
-                    if (newLastUpdate == lastUpdate)
-                    {
-                        var reload = this._themeStorageClient.ApplyUpdates(response.AsFileModel());
-                        if (reload)
-                        {
-                            this._viewLocator.UpdateCache();
-                        }
-                    }
-                }
-            }
-             * */
         }
         #endregion
 
