@@ -26,7 +26,7 @@
             // $interval whilst we wait for the grid to digest the data we just gave it
             $interval(function () {
                 _.each(data.permissions, selectRow);
-            }, 0, 1);
+            }, 50, 1);
         });
     };
 
@@ -110,6 +110,8 @@
             ];
         }
     }
+
+    // permissions management
 
     function selectRow(permission) {
         var row = _.findWhere($scope.gridOptions.data, { id: permission.id });
