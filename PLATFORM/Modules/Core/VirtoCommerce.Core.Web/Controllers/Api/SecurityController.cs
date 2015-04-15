@@ -122,6 +122,15 @@ namespace VirtoCommerce.CoreModule.Web.Controllers.Api
             return Ok(result);
         }
 
+        [HttpDelete]
+        [Route("roles/{roleId}")]
+        [ResponseType(typeof(RoleDescriptor))]
+        public IHttpActionResult DeleteRole(string roleId)
+        {
+            _roleService.DeleteRole(roleId);
+            return Ok();
+        }
+
         [HttpPut]
         [Route("roles")]
         public IHttpActionResult UpdateRole(RoleDescriptor role)

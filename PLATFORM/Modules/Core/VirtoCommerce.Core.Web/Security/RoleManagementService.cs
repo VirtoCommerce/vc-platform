@@ -67,6 +67,20 @@ namespace VirtoCommerce.CoreModule.Web.Security
             return result;
         }
 
+        public void DeleteRole(string roleId)
+        {
+            using (var repository = _securityRepository())
+            {
+                var role = repository.Roles.FirstOrDefault(r => r.RoleId == roleId);
+
+                if (role != null)
+                {
+                    repository.Remove(role);
+                    CommitChanges(repository);
+                }
+            }
+        }
+
         public void AddOrUpdateRole(RoleDescriptor role)
         {
             if (role == null)

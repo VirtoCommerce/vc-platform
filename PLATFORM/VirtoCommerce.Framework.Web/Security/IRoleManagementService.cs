@@ -4,6 +4,7 @@
     {
         RoleSearchResponse SearchRoles(RoleSearchRequest request);
         RoleDescriptor GetRole(string roleId);
+        void DeleteRole(string roleId);
         void AddOrUpdateRole(RoleDescriptor role);
     }
 }
