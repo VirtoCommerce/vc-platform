@@ -35,6 +35,35 @@ namespace VirtoCommerce.Foundation.Marketing.Model
             }
         }
 
+		private string _StoreId;
+		[StringLength(128)]
+		[DataMember]
+		public string StoreId
+		{
+			get
+			{
+				return _StoreId;
+			}
+			set
+			{
+				SetValue(ref _StoreId, () => this.StoreId, value);
+			}
+		}
+
+		private string _CouponCode;
+		[StringLength(128)]
+		[DataMember]
+		public string CouponCode
+		{
+			get
+			{
+				return _CouponCode;
+			}
+			set
+			{
+				SetValue(ref _CouponCode, () => this.CouponCode, value);
+			}
+		}
 
         private string _Name;
         [Required(ErrorMessage = "Field 'Promotion name' is required.")]

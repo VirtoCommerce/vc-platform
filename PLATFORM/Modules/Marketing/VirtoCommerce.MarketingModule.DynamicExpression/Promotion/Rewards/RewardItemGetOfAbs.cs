@@ -11,6 +11,7 @@ namespace VirtoCommerce.MarketingModule.Expressions.Promotion
 	{
 		public decimal Amount { get; set; }
 		public string ProductId { get; set; }
+		public string ProductName { get; set; }
 		#region IRewardExpression Members
 
 		public PromotionReward[] GetRewards()

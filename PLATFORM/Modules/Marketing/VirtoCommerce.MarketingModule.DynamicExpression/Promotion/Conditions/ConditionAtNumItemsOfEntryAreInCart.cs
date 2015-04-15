@@ -10,6 +10,7 @@ namespace VirtoCommerce.MarketingModule.Expressions.Promotion
 		public decimal NumItem { get; set; }
 		public bool Exactly { get; set; }
 		public string ProductId { get; set; }
+		public string ProductName { get; set; }
 
 		#region IConditionExpression Members
 		/// <summary>
