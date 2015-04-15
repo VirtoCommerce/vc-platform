@@ -8,6 +8,7 @@ namespace VirtoCommerce.MarketingModule.Expressions.Promotion
 	{
 
 		public string ProductId { get; set; }
+		public string ProductName { get; set; }
 	
 		#region IConditionExpression Members
 		/// <summary>

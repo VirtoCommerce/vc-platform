@@ -12,6 +12,7 @@ namespace VirtoCommerce.MarketingModule.Expressions.Promotion
 		public string Name { get; set; }
 		public string SelectedCategoryId { get; set; }
 		public string ProductId { get; set; }
+		public string ProductName { get; set; }
 		public int Quantity { get; set; }
 		public string MeasureUnit { get; set; }
 		public string ImageUrl { get; set; }

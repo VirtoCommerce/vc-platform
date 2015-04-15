@@ -44,7 +44,7 @@ namespace VirtoCommerce.Web.Models.Services
 
             if (contact != null)
             {
-                customer = contact.AsWebModel(userInfo);
+                customer = contact.AsWebModel();
             }
 
             return customer;
@@ -109,11 +109,11 @@ namespace VirtoCommerce.Web.Models.Services
             contact.Id = id;
             contact = await this._customerClient.CreateContactAsync(contact);
 
-            var authInfo = await this._securityClient.GetUserInfo(email);
+            //var authInfo = await this._securityClient.GetUserInfo(email);
 
-            contact.Id = authInfo.Id;
+            //contact.Id = authInfo.Id;
 
-            return contact.AsWebModel(authInfo);
+            return contact.AsWebModel();
         }
         #endregion
 

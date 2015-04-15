@@ -67,18 +67,33 @@ namespace VirtoCommerce.CoreModule.Web.Security
             return result;
         }
 
-        public void AddOrUpdateRole(RoleDescriptor role)
+        public void DeleteRole(string roleId)
+        {
+            using (var repository = _securityRepository())
+            {
+                var role = repository.Roles.FirstOrDefault(r => r.RoleId == roleId);
+
+                if (role != null)
+                {
+                    repository.Remove(role);
+                    CommitChanges(repository);
+                }
+            }
+        }
+
+        public RoleDescriptor AddOrUpdateRole(RoleDescriptor role)
         {
             if (role == null)
             {
                 throw new ArgumentNullException("role");
             }
 
+            var sourceEntry = role.ToFoundation();
+
             using (var repository = _securityRepository())
             {
                 AddOrUpdatePermissions(repository, role.Permissions);
 
-                var sourceEntry = role.ToFoundation();
                 var targetEntry = repository.Roles
                     .Include(r => r.RolePermissions)
                     .FirstOrDefault(r => r.RoleId == role.Id);
@@ -94,6 +109,9 @@ namespace VirtoCommerce.CoreModule.Web.Security
 
                 CommitChanges(repository);
             }
+
+            var result = GetRole(sourceEntry.RoleId);
+            return result;
         }
 
         #endregion

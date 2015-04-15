@@ -122,12 +122,34 @@ namespace VirtoCommerce.CoreModule.Web.Controllers.Api
             return Ok(result);
         }
 
+        /// <summary>
+        /// DELETE: api/security/roles?id=1&amp;id=2
+        /// </summary>
+        /// <param name="roleIds"></param>
+        /// <returns></returns>
+        [HttpDelete]
+        [Route("roles")]
+        [ResponseType(typeof(RoleDescriptor))]
+        public IHttpActionResult DeleteRoles([FromUri(Name = "ids")] string[] roleIds)
+        {
+            if (roleIds != null)
+            {
+                foreach (var roleId in roleIds)
+                {
+                    _roleService.DeleteRole(roleId);
+                }
+            }
+
+            return Ok();
+        }
+
         [HttpPut]
         [Route("roles")]
+        [ResponseType(typeof(RoleDescriptor))]
         public IHttpActionResult UpdateRole(RoleDescriptor role)
         {
-            _roleService.AddOrUpdateRole(role);
-            return Ok();
+            var result = _roleService.AddOrUpdateRole(role);
+            return Ok(result);
         }
 
         #endregion

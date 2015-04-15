@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
+using System.Threading.Tasks;
 using VirtoCommerce.Web.Models.Helpers;
 using VirtoCommerce.Web.Models.Services;
 
@@ -30,7 +31,9 @@ namespace VirtoCommerce.Web.Models
 
             if (result == null)
             {
-                return new PagesService().GetPage(method);
+                var context = SiteContext.Current;
+                var response = Task.Run(() => new PagesService().GetPageAsync(context, method)).Result;
+                return response;
             }
 
             return result;

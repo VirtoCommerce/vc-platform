@@ -10,6 +10,7 @@ namespace VirtoCommerce.MarketingModule.Expressions.Promotion
 	public class RewardItemGetFreeNumItemOfProduct : DynamicExpression, IRewardExpression
 	{
 		public string ProductId { get; set; }
+		public string ProductName { get; set; }
 		public int NumItem { get; set; }
 		
 		#region IRewardExpression Members

@@ -175,10 +175,10 @@ namespace VirtoCommerce.Web.Controllers
 
             if (result.Succeeded)
             {
+                user = await _userManager.FindByNameAsync(user.UserName);
+
                 if (user.TwoFactorEnabled)
                 {
-                    user = await _userManager.FindByNameAsync(user.UserName);
-
                     string code = await _userManager.GenerateEmailConfirmationTokenAsync(user.Id);
                     string callbackUrl = Url.Action("ConfirmEmail", "Account",
                         new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
@@ -469,31 +469,39 @@ namespace VirtoCommerce.Web.Controllers
         [HttpGet]
         public async Task<ActionResult> Index(int? skip, int? take)
         {
-            skip = skip ?? 0;
-            take = take ?? 10;
-
-            var orderSearchResult =
-                await
-                    this.CustomerService.GetOrdersAsync(
-                        this.Context.Shop.StoreId,
-                        this.Context.Customer.Id,
-                        null,
-                        skip.Value,
-                        take.Value);
-
-            this.Context.Customer.OrdersCount = orderSearchResult.TotalCount;
-
-            if (orderSearchResult.TotalCount > 0)
+            if (HttpContext.User.Identity.IsAuthenticated)
             {
-                this.Context.Customer.Orders = new List<CustomerOrder>();
+                skip = skip ?? 0;
+                take = take ?? 10;
 
-                foreach (var order in orderSearchResult.CustomerOrders)
+                this.Context.Customer = await CustomerService.GetCustomerAsync(
+                    HttpContext.User.Identity.Name, Context.StoreId);
+
+                var orderSearchResult =
+                    await
+                        this.CustomerService.GetOrdersAsync(
+                            this.Context.Shop.StoreId,
+                            this.Context.Customer.Id,
+                            null,
+                            skip.Value,
+                            take.Value);
+
+                this.Context.Customer.OrdersCount = orderSearchResult.TotalCount;
+
+                if (orderSearchResult.TotalCount > 0)
                 {
-                    this.Context.Customer.Orders.Add(order.AsWebModel());
+                    this.Context.Customer.Orders = new List<CustomerOrder>();
+
+                    foreach (var order in orderSearchResult.CustomerOrders)
+                    {
+                        this.Context.Customer.Orders.Add(order.AsWebModel());
+                    }
                 }
+
+                return this.View("customers/account");
             }
 
-            return this.View("customers/account");
+            return RedirectToAction("Login", "Account");
         }
 
         //

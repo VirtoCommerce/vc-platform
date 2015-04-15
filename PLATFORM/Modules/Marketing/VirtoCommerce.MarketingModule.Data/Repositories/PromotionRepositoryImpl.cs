@@ -28,7 +28,7 @@ namespace VirtoCommerce.MarketingModule.Data.Repositories
 
 		public Foundation.Marketing.Model.Promotion GetPromotionById(string id)
 		{
-			var retVal = Promotions.FirstOrDefault(x => x.PromotionId == id);
+			var retVal = Promotions.Include(x=>x.Coupon).FirstOrDefault(x => x.PromotionId == id);
 			return retVal;
 		}
 

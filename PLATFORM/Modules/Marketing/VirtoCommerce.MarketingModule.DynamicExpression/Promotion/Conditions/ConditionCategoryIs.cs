@@ -9,6 +9,7 @@ namespace VirtoCommerce.MarketingModule.Expressions.Promotion
 	public class ConditionCategoryIs : ConditionBase, IConditionExpression
 	{
 		public string SelectedCategoryId { get; set;}
+		public string CategoryName { get; set; }
 	
 		#region IConditionExpression Members
 		/// <summary>

@@ -266,6 +266,10 @@
     <Compile Include="Marketing\Migrations\Promotion\201504021220218_SerializedRewards.Designer.cs">
       <DependentUpon>201504021220218_SerializedRewards.cs</DependentUpon>
     </Compile>
+    <Compile Include="Marketing\Migrations\Promotion\201504150926058_PromotionStoreAndCoupon.cs" />
+    <Compile Include="Marketing\Migrations\Promotion\201504150926058_PromotionStoreAndCoupon.Designer.cs">
+      <DependentUpon>201504150926058_PromotionStoreAndCoupon.cs</DependentUpon>
+    </Compile>
     <Compile Include="Marketing\Migrations\Promotion\Configuration.cs" />
     <Compile Include="Marketing\Migrations\Promotion\201402181150199_Initial.cs" />
     <Compile Include="Marketing\Migrations\Promotion\201402181150199_Initial.Designer.cs">
@@ -453,6 +457,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Marketing\Migrations\Promotion\201504021220218_SerializedRewards.resx">
       <DependentUpon>201504021220218_SerializedRewards.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Marketing\Migrations\Promotion\201504150926058_PromotionStoreAndCoupon.resx">
+      <DependentUpon>201504150926058_PromotionStoreAndCoupon.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Orders\Migrations\201410151102008_LineItemWeightAndParent.resx">
       <DependentUpon>201410151102008_LineItemWeightAndParent.cs</DependentUpon>
