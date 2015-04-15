@@ -47,14 +47,12 @@ namespace VirtoCommerce.ApiClient
         /// <summary>
         ///     Gets the current cart
         /// </summary>
-        public Task<ShoppingCart> GetCurrentCartAsync()
+        public Task<ShoppingCart> GetCartAsync(string storeId, string customerId)
         {
             return
                 GetAsync<ShoppingCart>(
-                    CreateRequestUri(string.Format(RelativePaths.CurrentCart, "samplestore")),
-                    useCache: false); // service should already know the cart
-
-            // TODO: remove storeid from the API's
+                    CreateRequestUri(string.Format(RelativePaths.Cart, storeId, customerId)),
+                    useCache: false); 
         }
 
         public Task<ShipmentMethod[]> GetCartShippingMethods(string cartId)
@@ -78,7 +76,7 @@ namespace VirtoCommerce.ApiClient
         {
             #region Constants
 
-            public const string CurrentCart = "cart/{0}/carts/current";
+            public const string Cart = "cart/{0}/{1}/carts/current";
 
             public const string GetShippingMethods = "cart/carts/{0}/shipmentMethods";
 

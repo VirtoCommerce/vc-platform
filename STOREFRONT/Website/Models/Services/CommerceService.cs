@@ -153,9 +153,9 @@ namespace VirtoCommerce.Web.Models.Services
             return "<option value=\"United States\" data-provinces=\"[&quot;California&quot;,&quot;Ohio&quot;]\">United States</option>";
         }
 
-        public async Task<Cart> GetCurrentCartAsync(string storeId)
+        public async Task<Cart> GetCurrentCartAsync()
         {
-            var cart = await this._cartClient.GetCurrentCartAsync();
+            var cart = await this._cartClient.GetCartAsync(SiteContext.Current.StoreId, SiteContext.Current.Customer.Id);
             return cart.AsWebModel();
         }
 
@@ -163,7 +163,7 @@ namespace VirtoCommerce.Web.Models.Services
         {
             Checkout checkout = null;
 
-            var dtoCart = await _cartClient.GetCurrentCartAsync();
+            var dtoCart = await _cartClient.GetCartAsync(SiteContext.Current.StoreId, SiteContext.Current.Customer.Id);
 
             if (dtoCart != null)
             {
@@ -246,7 +246,7 @@ namespace VirtoCommerce.Web.Models.Services
 
         public async Task<Checkout> UpdateCheckoutAsync(Checkout checkout)
         {
-            var dtoCart = await _cartClient.GetCurrentCartAsync();
+            var dtoCart = await _cartClient.GetCartAsync(SiteContext.Current.StoreId, SiteContext.Current.Customer.Id);
             dtoCart.Currency = checkout.Currency;
             dtoCart.Addresses = new List<ApiClient.DataContracts.Cart.Address>();
 
@@ -320,7 +320,7 @@ namespace VirtoCommerce.Web.Models.Services
 
         public async Task<CustomerOrder> CreateOrderAsync(Checkout checkout)
         {
-            var dtoCart = await _cartClient.GetCurrentCartAsync();
+            var dtoCart = await _cartClient.GetCartAsync(SiteContext.Current.StoreId, SiteContext.Current.Customer.Id);
             dtoCart.Currency = checkout.Currency;
             dtoCart.CustomerId = checkout.CustomerId;
 
