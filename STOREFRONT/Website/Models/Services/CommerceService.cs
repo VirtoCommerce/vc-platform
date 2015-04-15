@@ -612,7 +612,15 @@ namespace VirtoCommerce.Web.Models.Services
             var obj = JsonConvert.DeserializeObject<dynamic>(fileContents);
 
             // now get settings for current theme and add it as a settings parameter
-            var settingsObject = obj.presets[obj.current.Value] as JObject;
+            JObject settingsObject;
+            if (obj.current is JObject)
+            {
+                settingsObject = obj.current as JObject;
+            }
+            else
+            {
+                settingsObject = obj.presets[obj.current.Value] as JObject;
+            }
 
             if (settingsObject != null)
             {

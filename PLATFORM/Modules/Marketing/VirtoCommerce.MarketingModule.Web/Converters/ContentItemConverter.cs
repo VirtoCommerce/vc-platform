@@ -11,6 +11,11 @@ namespace VirtoCommerce.MarketingModule.Web.Converters
 		{
 			var retVal = new webModel.DynamicContentItem();
 			retVal.InjectFrom(content);
+			if(content.Folder != null)
+			{
+				retVal.Outline = content.Folder.Outline;
+				retVal.Path = content.Folder.Path;
+			}
 			if(content.Properties != null)
 			{
 				retVal.Properties = content.Properties.Select(x => x.ToWebModel()).ToList();

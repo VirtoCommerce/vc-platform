@@ -51,7 +51,7 @@
                             </td>
                             <td class="table-col">
                                 <div class="form-input __mini __number">
-                                    <input va-number required class="form-control tight-input" ng-model="data.quantity" type="text" min="1" step="1">
+                                    <input va-number required ng-model="data.quantity" min="1" step="1">
                                 </div>
                             </td>
                             <td class="table-col">
@@ -94,7 +94,7 @@
                         </tr>
                     </tbody>
                 </table>
-                <div class="pagination" ng-if="pageSettings.itemsPerPageCount < pageSettings.totalItems" ng-include="'pagerTemplate.html'"></div>
+                <ng-include src="'pagerTemplate.html'"></ng-include>
             </div>
             <div class="table-wrapper">
                 <table class="table __collapsed __order-info">
@@ -119,9 +119,6 @@
             <div class="form-group __order-currency">
              
             </div>
-            <script type="text/ng-template" id="pagerTemplate.html">
-                <pagination ng-if="pageSettings.itemsPerPageCount < pageSettings.totalItems" boundary-links="true" max-size="pageSettings.numPages" items-per-page="pageSettings.itemsPerPageCount" total-items="pageSettings.totalItems" ng-model="pageSettings.currentPage" class="pagination-sm" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></pagination>
-            </script>
         </div>
     </div>
 </div>

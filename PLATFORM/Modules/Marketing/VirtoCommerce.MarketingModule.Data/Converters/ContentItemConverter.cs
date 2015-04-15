@@ -32,11 +32,16 @@ namespace VirtoCommerce.CustomerModule.Data.Converters
 			retVal.InjectFrom(dbEntity);
 			retVal.Id = dbEntity.DynamicContentItemId;
 
-
 			retVal.CreatedDate = dbEntity.Created.Value;
 			retVal.ModifiedDate = dbEntity.LastModified;
 
 			retVal.Properties = dbEntity.PropertyValues.Select(x => x.ToCoreModel()).ToList();
+
+			if (dbEntity.Folder != null)
+			{
+				retVal.Folder = dbEntity.Folder.ToCoreModel();
+			}
+
 			return retVal;
 		}
 
@@ -75,7 +80,7 @@ namespace VirtoCommerce.CustomerModule.Data.Converters
 			if (target == null)
 				throw new ArgumentNullException("target");
 
-			var patchInjection = new PatchInjection<foundationModel.DynamicContentItem>(x => x.Name, x => x.Description);
+			var patchInjection = new PatchInjection<foundationModel.DynamicContentItem>(x => x.Name, x => x.Description, x=>x.FolderId, x=>x.ImageUrl);
 			if (!source.PropertyValues.IsNullCollection())
 			{
 				var propertyComparer = AnonymousComparer.Create((foundationModel.DynamicContentItemProperty x) => x.PropertyValueId);

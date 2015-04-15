@@ -43,10 +43,10 @@
 				'$scope', 'bladeNavigationService', function ($scope, bladeNavigationService) {
 				    var blade = {
 				        id: 'security',
-				        title: 'Accounts',
+				        title: 'Security',
 				        subtitle: 'User management',
-				        controller: 'accountListController',
-				        template: 'Scripts/common/security/blades/account-list.tpl.html',
+				        controller: 'securityMainController',
+				        template: 'Scripts/common/security/blades/security-main.tpl.html',
 				        isClosingDisabled: true
 				    };
 				    bladeNavigationService.showBlade(blade);
@@ -59,8 +59,8 @@
         var menuItem = {
             path: 'browse/security',
             icon: 'fa fa-lock',
-            title: 'Accounts',
-            priority: 188,
+            title: 'Security',
+            priority: 190,
             action: function () { $state.go('workspace.securityModule'); },
             permission: 'securityMenuPermission'
         };

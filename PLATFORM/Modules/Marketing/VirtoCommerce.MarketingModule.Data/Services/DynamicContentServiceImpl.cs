@@ -208,8 +208,67 @@ namespace VirtoCommerce.MarketingModule.Data.Services
 			}
 		}
 
-		#endregion
 
-	
+		public coreModel.DynamicContentFolder GetFolderById(string id)
+		{
+			coreModel.DynamicContentFolder retVal = null;
+			using (var repository = _repositoryFactory())
+			{
+				var entity = repository.GetContentFolderById(id);
+				if (entity != null)
+				{
+					retVal = entity.ToCoreModel();
+				}
+			}
+			return retVal;
+		}
+
+		public coreModel.DynamicContentFolder CreateFolder(coreModel.DynamicContentFolder folder)
+		{
+			var entity = folder.ToFoundation();
+			coreModel.DynamicContentFolder retVal = null;
+			using (var repository = _repositoryFactory())
+			{
+				repository.Add(entity);
+				CommitChanges(repository);
+			}
+			retVal = GetFolderById(entity.DynamicContentFolderId);
+			return retVal;
+		}
+
+		public void UpdateFolder(coreModel.DynamicContentFolder folder)
+		{
+			using (var repository = _repositoryFactory())
+			using (var changeTracker = base.GetChangeTracker(repository))
+			{
+				var sourceEntity = folder.ToFoundation();
+				var targetEntity = repository.GetContentFolderById(folder.Id);
+				if (targetEntity == null)
+				{
+					repository.Add(sourceEntity);
+				}
+				else
+				{
+					changeTracker.Attach(targetEntity);
+					sourceEntity.Patch(targetEntity);
+				}
+				CommitChanges(repository);
+			}
+		}
+
+		public void DeleteFolder(string[] ids)
+		{
+			using (var repository = _repositoryFactory())
+			{
+				foreach (var id in ids)
+				{
+					var entity = repository.GetContentFolderById(id);
+					repository.Remove(entity);
+				}
+				CommitChanges(repository);
+			}
+		}
+
+		#endregion
 	}
 }

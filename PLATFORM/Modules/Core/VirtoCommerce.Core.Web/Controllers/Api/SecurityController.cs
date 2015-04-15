@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using System.Web;
 using System.Web.Http;
 using System.Web.Http.Description;
 using System.Web.Http.ModelBinding;
@@ -105,13 +106,10 @@ namespace VirtoCommerce.CoreModule.Web.Controllers.Api
 
         [HttpGet]
         [Route("roles")]
-        [ResponseType(typeof(RoleDescriptor[]))]
-        public IHttpActionResult GetRoles()
+        [ResponseType(typeof(RoleSearchResponse))]
+        public IHttpActionResult SearchRoles([FromUri]RoleSearchRequest request)
         {
-            var result = _roleService.GetAllRoles()
-                .OrderBy(r => r.Name)
-                .ToArray();
-
+            var result = _roleService.SearchRoles(request);
             return Ok(result);
         }
 
@@ -121,7 +119,36 @@ namespace VirtoCommerce.CoreModule.Web.Controllers.Api
         public IHttpActionResult GetRole(string roleId)
         {
             var result = _roleService.GetRole(roleId);
+            return Ok(result);
+        }
 
+        /// <summary>
+        /// DELETE: api/security/roles?id=1&amp;id=2
+        /// </summary>
+        /// <param name="roleIds"></param>
+        /// <returns></returns>
+        [HttpDelete]
+        [Route("roles")]
+        [ResponseType(typeof(RoleDescriptor))]
+        public IHttpActionResult DeleteRoles([FromUri(Name = "ids")] string[] roleIds)
+        {
+            if (roleIds != null)
+            {
+                foreach (var roleId in roleIds)
+                {
+                    _roleService.DeleteRole(roleId);
+                }
+            }
+
+            return Ok();
+        }
+
+        [HttpPut]
+        [Route("roles")]
+        [ResponseType(typeof(RoleDescriptor))]
+        public IHttpActionResult UpdateRole(RoleDescriptor role)
+        {
+            var result = _roleService.AddOrUpdateRole(role);
             return Ok(result);
         }
 
@@ -339,9 +366,6 @@ namespace VirtoCommerce.CoreModule.Web.Controllers.Api
         [Route("users/create")]
         public async Task<IHttpActionResult> CreateAsync(ApplicationUserExtended user)
         {
-            // AO
-            // TODO: AccountId = MemberId for now. Is it correct?
-
             var dbUser = new ApplicationUser();
 
             dbUser.InjectFrom(user);
@@ -364,7 +388,7 @@ namespace VirtoCommerce.CoreModule.Web.Controllers.Api
                     {
                         UserName = user.UserName,
                         AccountId = user.Id,
-                        MemberId = user.Id,
+                        MemberId = user.MemberId,
                         AccountState = AccountState.Approved.GetHashCode(),
                         RegisterType = user.UserType.GetHashCode(),
                         StoreId = user.StoreId
@@ -385,9 +409,7 @@ namespace VirtoCommerce.CoreModule.Web.Controllers.Api
         /// <summary>
         /// POST: api/security/notifications
         /// </summary>
-        /// <param name="userId"></param>
-        /// <param name="subject"></param>
-        /// <param name="message"></param>
+        /// <param name="securityMessage"></param>
         /// <returns></returns>
         [HttpPost]
         [Route("users/notifications")]
@@ -406,13 +428,13 @@ namespace VirtoCommerce.CoreModule.Web.Controllers.Api
                     string code = await UserManager.GeneratePasswordResetTokenAsync(securityMessage.UserId);
 
                     var uriBuilder = new UriBuilder(securityMessage.CallbackUrl);
-                    var query = System.Web.HttpUtility.ParseQueryString(uriBuilder.Query);
+                    var query = HttpUtility.ParseQueryString(uriBuilder.Query);
                     query["code"] = code;
                     uriBuilder.Query = query.ToString();
 
                     string message = string.Format(
                         "Please reset your password by clicking <strong><a href=\"{0}\">here</a></strong>",
-                        uriBuilder.ToString());
+                        HttpUtility.HtmlEncode(uriBuilder.ToString()));
                     string subject = string.Format("{0} reset password link", securityMessage.StoreId);
 
                     await UserManager.SendEmailAsync(securityMessage.UserId, subject, message);
@@ -432,51 +454,29 @@ namespace VirtoCommerce.CoreModule.Web.Controllers.Api
 
         private async Task<ApplicationUserExtended> GetUserExtended(string loginProvider, string providerKey)
         {
-            ApplicationUserExtended retVal = null;
-
             var applicationUser = await UserManager.FindAsync(new UserLoginInfo(loginProvider, providerKey));
-
-            if (applicationUser != null)
-            {
-                retVal = new ApplicationUserExtended();
-                retVal.InjectFrom(applicationUser);
-
-                using (var repository = _securityRepository())
-                {
-                    var user = repository.GetAccountByName(applicationUser.Email);
-                    retVal.InjectFrom(user);
-                    if (user != null)
-                    {
-                        var permissions =
-                            user.RoleAssignments.Select(x => x.Role)
-                                .SelectMany(x => x.RolePermissions)
-                                .Select(x => x.Permission);
-
-                        retVal.UserState = (UserState)user.AccountState;
-                        retVal.UserType = (UserType)user.RegisterType;
-                        retVal.Permissions = permissions.Select(x => x.PermissionId).Distinct().ToArray();
-                        retVal.ApiAcounts = user.ApiAccounts.Select(x => x.ToWebModel()).ToList();
-                    }
-                }
-            }
-
-            return retVal;
+            return GetUserExtended(applicationUser);
         }
 
         private async Task<ApplicationUserExtended> GetUserExtended(string userName)
         {
-            ApplicationUserExtended retVal = null;
             var applicationUser = await UserManager.FindByNameAsync(userName);
+            return GetUserExtended(applicationUser);
+        }
+
+        private ApplicationUserExtended GetUserExtended(ApplicationUser applicationUser)
+        {
+            ApplicationUserExtended result = null;
+
             if (applicationUser != null)
             {
-                retVal = new ApplicationUserExtended();
-                retVal.InjectFrom(applicationUser);
+                result = new ApplicationUserExtended();
+                result.InjectFrom(applicationUser);
 
                 using (var repository = _securityRepository())
                 {
-
-                    var user = repository.GetAccountByName(userName);
-                    retVal.InjectFrom(user);
+                    var user = repository.GetAccountByName(applicationUser.UserName);
+                    result.InjectFrom(user);
                     if (user != null)
                     {
                         var permissions =
@@ -484,15 +484,15 @@ namespace VirtoCommerce.CoreModule.Web.Controllers.Api
                                 .SelectMany(x => x.RolePermissions)
                                 .Select(x => x.Permission);
 
-                        retVal.UserState = (UserState)user.AccountState;
-                        retVal.UserType = (UserType)user.RegisterType;
-                        retVal.Permissions = permissions.Select(x => x.PermissionId).Distinct().ToArray();
-                        retVal.ApiAcounts = user.ApiAccounts.Select(x => x.ToWebModel()).ToList();
+                        result.UserState = (UserState)user.AccountState;
+                        result.UserType = (UserType)user.RegisterType;
+                        result.Permissions = permissions.Select(x => x.PermissionId).Distinct().ToArray();
+                        result.ApiAcounts = user.ApiAccounts.Select(x => x.ToWebModel()).ToList();
                     }
                 }
             }
 
-            return retVal;
+            return result;
         }
 
         #endregion

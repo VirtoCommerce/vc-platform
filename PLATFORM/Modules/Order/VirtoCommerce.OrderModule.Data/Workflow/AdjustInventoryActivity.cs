@@ -31,8 +31,16 @@ namespace VirtoCommerce.OrderModule.Data.Workflow
 
 		public void OnNext(CustomerOrderStateBasedEvalContext value)
 		{
-			var origStockOutOperations = value.OrigOrder.ChildrenOperations.OfType<IStockOutOperation>().ToArray();
-			var modifiedStockOutOperations = value.ModifiedOrder.ChildrenOperations.OfType<IStockOutOperation>().ToArray();
+			var origStockOutOperations = new IStockOutOperation[] { };
+			var modifiedStockOutOperations = new IStockOutOperation[] { };
+			if (value.OrigOrder != null)
+			{
+				origStockOutOperations = value.OrigOrder.ChildrenOperations.OfType<IStockOutOperation>().ToArray();
+			}
+			if (value.ModifiedOrder != null)
+			{
+				modifiedStockOutOperations = value.ModifiedOrder.ChildrenOperations.OfType<IStockOutOperation>().ToArray();
+			}
 
 			var originalPositions = new ObservableCollection<KeyValuePair<string, int>>(origStockOutOperations.SelectMany(x => x.Positions).GroupBy(x => x.ProductId).Select(x => new KeyValuePair<string, int>(x.Key, x.Sum(y => y.Quantity))));
 			var modifiedPositions = new ObservableCollection<KeyValuePair<string, int>>(modifiedStockOutOperations.SelectMany(x => x.Positions).GroupBy(x => x.ProductId).Select(x => new KeyValuePair<string, int>(x.Key, x.Sum(y => y.Quantity))));
@@ -40,7 +48,7 @@ namespace VirtoCommerce.OrderModule.Data.Workflow
 			var changedInventoryInfos = new List<InventoryInfo>();
 
 			var inventoryInfos = _inventoryService.GetProductsInventoryInfos(originalPositions.Select(x => x.Key).Concat(modifiedPositions.Select(x => x.Key)).Distinct().ToArray());
-		
+
 			var comparer = AnonymousComparer.Create((KeyValuePair<string, int> x) => x.Key);
 			modifiedPositions.CompareTo(originalPositions, comparer, (state, source, target) => { AdjustInventory(inventoryInfos, changedInventoryInfos, state, source, target); });
 

@@ -49,8 +49,8 @@
                                     <div class="form-input" ng-if="blade.currentEntity.valueType !== 'Number'">
                                         <input required ng-model="data.value" type="text" />
                                     </div>
-                                    <div class="form-input __number js-number-input-plugin" ng-if="blade.currentEntity.valueType === 'Number'">
-                                        <input required ng-model="data.value" type="text" />
+                                    <div class="form-input __number" ng-if="blade.currentEntity.valueType === 'Number'">
+                                        <input va-number required ng-model="data.value" step="1">
                                     </div>
                                     <ul role="menu" class="menu __context" id="pd_menu_{{$index}}">
                                         <li class="menu-item" ng-click='delete($index)'>

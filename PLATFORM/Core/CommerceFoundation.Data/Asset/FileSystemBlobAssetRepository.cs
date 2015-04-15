@@ -50,7 +50,11 @@ namespace VirtoCommerce.Foundation.Data.Asset
         public virtual string Upload(UploadStreamInfo info)
         {
             var filePath = Absolute(info.FileName);
-
+			var directoryPath = Path.GetDirectoryName(filePath);
+			if(!Directory.Exists(directoryPath))
+			{
+				Directory.CreateDirectory(directoryPath);
+			}
             using (var memoryStream = new MemoryStream())
             {
                 memoryStream.SetLength(info.Length);

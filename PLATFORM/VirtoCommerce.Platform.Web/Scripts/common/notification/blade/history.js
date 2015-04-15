@@ -53,12 +53,12 @@ function ($scope, bladeNavigationService, notificationTemplateResolver, notifica
 
     	$scope.blade.refresh();
     }
-
-    $scope.$watch(['pageSettings.currentPage'], function () {
+    
+    $scope.$watch('pageSettings.currentPage', function () {
         $scope.blade.refresh();
     });
 
-	
     // actions on load
-    $scope.blade.refresh();
+    //No need to call this because page 'pageSettings.currentPage' is watched!!! It would trigger subsequent duplicated req...
+    //$scope.blade.refresh();
 }]);

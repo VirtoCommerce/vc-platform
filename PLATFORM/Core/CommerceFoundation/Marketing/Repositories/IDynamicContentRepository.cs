@@ -6,6 +6,7 @@ namespace VirtoCommerce.Foundation.Marketing.Repositories
 {
 	public interface IDynamicContentRepository : IRepository
 	{
+		IQueryable<DynamicContentFolder> Folders { get; }
 		IQueryable<DynamicContentItem> Items { get; }
 		IQueryable<DynamicContentPlace> Places { get; }
 		IQueryable<DynamicContentPublishingGroup> PublishingGroups { get; }

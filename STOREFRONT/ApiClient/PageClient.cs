@@ -43,9 +43,9 @@ namespace VirtoCommerce.ApiClient
         /// <summary>
         ///     Gets page
         /// </summary>
-        public Task<Page[]> GetPagesAsync(string storeId, string language, string page)
+        public Task<Page> GetPageAsync(string storeId, string language, string page)
         {
-            return GetAsync<Page[]>(CreateRequestUri(String.Format(RelativePaths.Pages, storeId, language, page)));
+            return GetAsync<Page>(CreateRequestUri(String.Format(RelativePaths.Pages, storeId, language, page)));
         }
 
         public async Task<Page[]> GetPagesAsync(string storeId, DateTime since)

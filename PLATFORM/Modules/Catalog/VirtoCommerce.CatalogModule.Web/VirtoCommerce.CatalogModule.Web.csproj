@@ -96,7 +96,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Binders\ListEntrySearchCriteriaBinder.cs" />
-    <Compile Include="Controllers\Api\AssetsController.cs" />
     <Compile Include="Controllers\Api\CatalogsController.cs" />
     <Compile Include="Controllers\Api\CategoriesController.cs" />
     <Compile Include="Controllers\Api\ExportController.cs" />
@@ -120,7 +119,6 @@
     <Compile Include="Converters\PropertyValueConverter.cs" />
     <Compile Include="Converters\SearchConverter.cs" />
     <Compile Include="Converters\SeoInfoConverter.cs" />
-    <Compile Include="Model\BlobInfo.cs" />
     <Compile Include="Model\Catalog.cs" />
     <Compile Include="Model\CategoryLink.cs" />
     <Compile Include="Model\EditorialReview.cs" />

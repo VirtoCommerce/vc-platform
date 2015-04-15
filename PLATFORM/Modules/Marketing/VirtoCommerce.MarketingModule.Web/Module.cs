@@ -9,10 +9,11 @@ using VirtoCommerce.MarketingModule.Data.Repositories;
 using VirtoCommerce.MarketingModule.Data.Services;
 using VirtoCommerce.MarketingModule.Expressions.Promotion;
 using VirtoCommerce.MarketingModule.Expressions;
+using VirtoCommerce.MarketingModule.Web.Model;
 
 namespace VirtoCommerce.MarketingModule.Web
 {
-    public class Module : IModule
+    public class Module : IModule, IPostInitialize
     {
 		private readonly IUnityContainer _container;
 
@@ -36,11 +37,9 @@ namespace VirtoCommerce.MarketingModule.Web
 			_container.RegisterType<IDynamicContentService, DynamicContentServiceImpl>();
 			_container.RegisterType<IMarketingSearchService, MarketingSearchServiceImpl>();
 			_container.RegisterType<IMarketingPromoEvaluator, DefaultPromotionEvaluatorImpl>();
-
 		}
 
 		#endregion
-
 		private static IDynamicExpression GetDynamicExpression()
 		{
 			var customerConditionBlock = new BlockCustomerCondition();
@@ -67,7 +66,34 @@ namespace VirtoCommerce.MarketingModule.Web
 				AvailableChildren = rootBlocks
 			};
 			return retVal;
-
 		}
-    }
+
+		#region IPostInitialize Members
+
+		public void PostInitialize()
+		{
+			EnsureRootFoldersExist(new string[] { MarketingConstants.ContentPlacesRootFolderId, MarketingConstants.CotentItemRootFolderId });
+		}
+
+		#endregion
+
+		private void EnsureRootFoldersExist(string[] ids)
+		{
+			var dynamicContentService = _container.Resolve<IDynamicContentService>();
+			foreach(var id in ids)
+			{
+				var rootFolder = dynamicContentService.GetFolderById(id);
+				if (rootFolder == null)
+				{
+					rootFolder = new Domain.Marketing.Model.DynamicContentFolder
+					{
+						Id = id,
+						Name = id
+					};
+					dynamicContentService.CreateFolder(rootFolder);
+				}
+			}
+			
+		}
+	}
 }

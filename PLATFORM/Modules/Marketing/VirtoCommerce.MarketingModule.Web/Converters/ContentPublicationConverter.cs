@@ -5,19 +5,35 @@ using webModel = VirtoCommerce.MarketingModule.Web.Model;
 
 namespace VirtoCommerce.MarketingModule.Web.Converters
 {
-	public static class DynamicContentPlaceConverter
+	public static class DynamicContentPublicationConverter
 	{
-		public static webModel.DynamicContentPlace ToWebModel(this coreModel.DynamicContentPlace place)
+		public static webModel.DynamicContentPublication ToWebModel(this coreModel.DynamicContentPublication publication)
 		{
-			var retVal = new webModel.DynamicContentPlace();
-			retVal.InjectFrom(place);
+			var retVal = new webModel.DynamicContentPublication();
+			retVal.InjectFrom(publication);
+			if(publication.ContentItems != null)
+			{
+				retVal.ContentItems = publication.ContentItems.Select(x => x.ToWebModel()).ToList();
+			}
+			if (publication.ContentPlaces != null)
+			{
+				retVal.ContentPlaces = publication.ContentPlaces.Select(x => x.ToWebModel()).ToList();
+			}
 			return retVal;
 		}
 
-		public static coreModel.DynamicContentPlace ToCoreModel(this webModel.DynamicContentPlace place)
+		public static coreModel.DynamicContentPublication ToCoreModel(this webModel.DynamicContentPublication publication)
 		{
-			var retVal = new coreModel.DynamicContentPlace();
-			retVal.InjectFrom(place);
+			var retVal = new coreModel.DynamicContentPublication();
+			retVal.InjectFrom(publication);
+			if (publication.ContentItems != null)
+			{
+				retVal.ContentItems = publication.ContentItems.Select(x => x.ToCoreModel()).ToList();
+			}
+			if (publication.ContentPlaces != null)
+			{
+				retVal.ContentPlaces = publication.ContentPlaces.Select(x => x.ToCoreModel()).ToList();
+			}
 			return retVal;
 		}
 	

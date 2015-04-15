@@ -13,6 +13,7 @@ namespace VirtoCommerce.Domain.Marketing.Model
 			Count = 20;
 		}
 
+		public string FolderId { get; set; }
 		public SearchResponseGroup ResponseGroup { get; set; }
 		public string Keyword { get; set; }
 

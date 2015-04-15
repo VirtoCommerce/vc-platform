@@ -58,8 +58,9 @@
   <ItemGroup>
     <Compile Include="Common\SerializationUtil.cs" />
     <Compile Include="Converters\ContenPublicationConverter.cs" />
+    <Compile Include="Converters\ContentFolderConverter.cs" />
     <Compile Include="Converters\ContentItemConverter.cs" />
-    <Compile Include="Converters\ContenPlaceConverter.cs" />
+    <Compile Include="Converters\ContentPlaceConverter.cs" />
     <Compile Include="Converters\PromotionConverter.cs" />
     <Compile Include="Converters\PropertyConverter.cs" />
     <Compile Include="Promotions\DynamicPromotion.cs" />

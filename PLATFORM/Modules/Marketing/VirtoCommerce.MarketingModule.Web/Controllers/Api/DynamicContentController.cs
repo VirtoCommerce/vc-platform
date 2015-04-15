@@ -158,6 +158,52 @@ namespace VirtoCommerce.MarketingModule.Web.Controllers.Api
 			return StatusCode(HttpStatusCode.NoContent);
 		}
 
+		// GET: api/marketing/contentfolders/{id}
+		[HttpGet]
+		[ResponseType(typeof(webModel.DynamicContentPublication))]
+		[Route("contentfolders/{id}")]
+		public IHttpActionResult GetDynamicContentFolderById(string id)
+		{
+			var retVal = _dynamicContentService.GetFolderById(id);
+			if (retVal != null)
+			{
+				return Ok(retVal.ToWebModel());
+			}
+			return NotFound();
+		}
+
+
+		// POST: api/marketing/contentfolders
+		[HttpPost]
+		[ResponseType(typeof(webModel.DynamicContentFolder))]
+		[Route("contentfolders")]
+		public IHttpActionResult CreateDynamicContentFolder(webModel.DynamicContentFolder folder)
+		{
+			var retVal = _dynamicContentService.CreateFolder(folder.ToCoreModel());
+			return GetDynamicContentFolderById(retVal.Id);
+		}
+
+
+		// PUT: api/marketing/contentfolders
+		[HttpPut]
+		[ResponseType(typeof(void))]
+		[Route("contentfolders")]
+		public IHttpActionResult UpdateDynamicContentFolder(webModel.DynamicContentFolder folder)
+		{
+			_dynamicContentService.UpdateFolder(folder.ToCoreModel());
+			return StatusCode(HttpStatusCode.NoContent);
+		}
+
+		// DELETE: api/marketing/contentfolders?ids=21
+		[HttpDelete]
+		[ResponseType(typeof(void))]
+		[Route("contentfolders")]
+		public IHttpActionResult DeleteDynamicContentFolders([FromUri] string[] ids)
+		{
+			_dynamicContentService.DeleteFolder(ids);
+			return StatusCode(HttpStatusCode.NoContent);
+		}
+
 	
     }
 }

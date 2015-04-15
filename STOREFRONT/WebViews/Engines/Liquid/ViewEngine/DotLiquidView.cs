@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Web;
 using System.Web.Caching;
 using System.Web.Mvc;
@@ -56,6 +57,9 @@ namespace VirtoCommerce.Web.Views.Engines.Liquid.ViewEngine
             {
                 return value as Template;
             }
+
+            if (path.Contents == null)
+                return null;
 
             var contents = path.Contents.Invoke().ReadToEnd();
             var template = Template.Parse(contents);

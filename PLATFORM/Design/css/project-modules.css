@@ -47,7 +47,7 @@
 
 	.dashboard .dashboard-area:hover
 	{
-		overflow-y: auto;
+		overflow: auto;
 	}
 
 	.dashboard .dashboard-inner

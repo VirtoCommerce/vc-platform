@@ -68,7 +68,9 @@ namespace VirtoCommerce.Web.Models.Services
                            UserName = email
                        };
 
-            var registerResult = await this._userManager.CreateAsync(user, password);
+            var registerResult = string.IsNullOrEmpty(password) ?
+                await this._userManager.CreateAsync(user) :
+                await this._userManager.CreateAsync(user, password);
 
             if (!registerResult.Succeeded)
             {
@@ -76,6 +78,11 @@ namespace VirtoCommerce.Web.Models.Services
             }
 
             return errors;
+        }
+
+        public async Task<ApplicationUser> GetUserByNameAsync(string username)
+        {
+            return await _userManager.FindByNameAsync(username);
         }
 
         public void ExternalLogin(string loginProvider, string redirectUrl, string userId)

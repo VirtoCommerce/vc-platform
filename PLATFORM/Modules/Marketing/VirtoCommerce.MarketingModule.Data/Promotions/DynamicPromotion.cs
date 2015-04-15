@@ -16,7 +16,6 @@ namespace VirtoCommerce.MarketingModule.Data.Promotions
 		public string PredicateSerialized { get; set; }
 		public string PredicateVisualTreeSerialized { get; set; }
 		public string RewardsSerialized { get; set; }
-		public string Coupon { get; set; }
 
 		public override PromotionReward[] EvaluatePromotion(IPromotionEvaluationContext context)
 		{
