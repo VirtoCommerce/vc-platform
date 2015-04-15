@@ -102,5 +102,14 @@ namespace VirtoCommerce.CoreModule.Web.Converters
             var patchInjection = new PatchInjection<foundation.Permission>(x => x.Name);
             target.InjectFrom(patchInjection, source);
         }
+
+        public static void Patch(this foundation.RoleAssignment source, foundation.RoleAssignment target)
+        {
+            if (target == null)
+                throw new ArgumentNullException("target");
+
+            var patchInjection = new PatchInjection<foundation.RoleAssignment>(x => x.RoleId, x => x.AccountId);
+            target.InjectFrom(patchInjection, source);
+        }
     }
 }

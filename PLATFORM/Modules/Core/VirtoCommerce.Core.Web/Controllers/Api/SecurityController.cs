@@ -353,6 +353,14 @@ namespace VirtoCommerce.CoreModule.Web.Controllers.Api
                         source.Patch(acount.ApiAccounts, inventoryComparer, (sourceAccount, targetAccount) => sourceAccount.Patch(targetAccount));
                     }
 
+                    if (user.Roles != null)
+                    {
+                        var sourceCollection = new ObservableCollection<RoleAssignment>(user.Roles.Select(r => new RoleAssignment { RoleId = r.Id }));
+                        var comparer = AnonymousComparer.Create((RoleAssignment x) => x.RoleId);
+                        acount.RoleAssignments.ObserveCollection(ra => repository.Add(ra), ra => repository.Remove(ra));
+                        sourceCollection.Patch(acount.RoleAssignments, comparer, (source, target) => source.Patch(target));
+                    }
+
                     repository.UnitOfWork.Commit();
                 }
 
