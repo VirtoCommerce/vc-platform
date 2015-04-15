@@ -27,7 +27,7 @@ function ($scope, accounts, bladeNavigationService, dialogService) {
 
             if (selectedNode != null) {
                 //select the node in the new list
-                angular.forEach(data.shopingCarts, function (node) {
+                angular.forEach($scope.blade.currentEntities, function (node) {
                     if (selectedNode.id === node.id) {
                         selectedNode = node;
                     }
@@ -134,6 +134,11 @@ function ($scope, accounts, bladeNavigationService, dialogService) {
         }
     ];
 
+    $scope.$watch('pageSettings.currentPage', function () {
+        $scope.blade.refresh();
+    });
+
     // actions on load
-    $scope.blade.refresh();
+    //No need to call this because page 'pageSettings.currentPage' is watched!!! It would trigger subsequent duplicated req...
+    //$scope.blade.refresh();
 }]);

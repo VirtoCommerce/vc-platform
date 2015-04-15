@@ -7,7 +7,7 @@
 
     $scope.saveChanges = function () {
         if ($scope.blade.currentEntity.password != $scope.blade.currentEntity.newPassword2) {
-            $scope.blade.error = 'Error: passwords doesn\'t match!';
+            $scope.blade.error = 'Error: passwords don\'t match!';
             return;
         }
         

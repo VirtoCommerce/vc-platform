@@ -5,7 +5,7 @@
     $scope.pageSettings.totalItems = 0;
     $scope.pageSettings.currentPage = 1;
     $scope.pageSettings.numPages = 5;
-    $scope.pageSettings.listEntriesPerPageCount = 20;
+    $scope.pageSettings.itemsPerPageCount = 20;
 
     $scope.filter = { searchKeyword: undefined };
 
@@ -20,8 +20,8 @@
             {
                 organization: $scope.blade.currentEntity.id,
                 keyword: $scope.filter.searchKeyword,
-                start: ($scope.pageSettings.currentPage - 1) * $scope.pageSettings.listEntriesPerPageCount,
-                count: $scope.pageSettings.listEntriesPerPageCount
+                start: ($scope.pageSettings.currentPage - 1) * $scope.pageSettings.itemsPerPageCount,
+                count: $scope.pageSettings.itemsPerPageCount
             },
 		function (data) {
 		    $scope.blade.isLoading = false;

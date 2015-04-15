@@ -1,21 +1,21 @@
-﻿angular.module('virtoCommerce.marketingModule')
-.controller('promotionListController', ['$scope', 'marketing_res_search', 'marketing_res_promotions', 'bladeNavigationService', 'dialogService', function ($scope, marketing_res_search, marketing_res_promotions, bladeNavigationService, dialogService) {
-    var selectedNode = null;
+﻿angular.module('platformWebApp')
+.controller('roleListController', ['$scope', 'platform_res_roles', 'bladeNavigationService', 'dialogService',
+function ($scope, roles, bladeNavigationService, dialogService) {
     //pagination settigs
     $scope.pageSettings = {};
     $scope.pageSettings.totalItems = 0;
     $scope.pageSettings.currentPage = 1;
-    $scope.pageSettings.numPages = 5;
-    $scope.pageSettings.itemsPerPageCount = 20;
+    $scope.pageSettings.numPages = 4;
+    $scope.pageSettings.itemsPerPageCount = 15;
 
     $scope.filter = { searchKeyword: undefined };
+    var selectedNode = null;
 
     $scope.blade.refresh = function () {
         $scope.blade.isLoading = true;
         $scope.blade.selectedAll = false;
 
-        marketing_res_search.search({
-			respGroup: 'withPromotions',
+        roles.get({
             keyword: $scope.filter.searchKeyword,
             start: ($scope.pageSettings.currentPage - 1) * $scope.pageSettings.itemsPerPageCount,
             count: $scope.pageSettings.itemsPerPageCount
@@ -23,7 +23,7 @@
             $scope.blade.isLoading = false;
 
             $scope.pageSettings.totalItems = angular.isDefined(data.totalCount) ? data.totalCount : 0;
-            $scope.blade.currentEntities = data.promotions;
+            $scope.blade.currentEntities = data.roles;
 
             if (selectedNode != null) {
                 //select the node in the new list
@@ -38,17 +38,17 @@
         });
     };
 
-    $scope.selectNode = function (node) {
+    $scope.blade.selectNode = function (node) {
         selectedNode = node;
         $scope.selectedNodeId = selectedNode.id;
 
         var newBlade = {
             id: 'listItemChild',
-            currentEntityId: selectedNode.id,
+            data: selectedNode,
             title: selectedNode.name,
             subtitle: $scope.blade.subtitle,
-            controller: 'promotionDetailController',
-            template: 'Modules/$(VirtoCommerce.Marketing)/Scripts/promotion/blades/promotion-detail.tpl.html'
+            controller: 'roleDetailController',
+            template: 'Scripts/common/security/blades/role-detail.tpl.html'
         };
 
         bladeNavigationService.showBlade(newBlade, $scope.blade);
@@ -68,14 +68,14 @@
         var dialog = {
             id: "confirmDeleteItem",
             title: "Delete confirmation",
-            message: "Are you sure you want to delete selected Promitions?",
+            message: "Are you sure you want to delete selected Roles?",
             callback: function (remove) {
                 if (remove) {
                     closeChildrenBlades();
 
                     var selection = _.where($scope.blade.currentEntities, { selected: true });
                     var itemIds = _.pluck(selection, 'id');
-                    marketing_res_promotions.remove({ ids: itemIds }, function (data, headers) {
+                    roles.remove({ ids: itemIds }, function () {
                         $scope.blade.refresh();
                     }, function (error) {
                         bladeNavigationService.setError('Error ' + error.status, $scope.blade);
@@ -92,7 +92,7 @@
         });
     }
 
-    $scope.bladeHeadIco = 'fa-flag';
+    $scope.bladeHeadIco = 'fa-lock';
 
     $scope.bladeToolbarCommands = [
         {
@@ -111,11 +111,11 @@
 
                 var newBlade = {
                     id: 'listItemChild',
-                    title: 'New Promotion list',
-                    subtitle: $scope.blade.subtitle,
                     isNew: true,
-                    controller: 'promotionDetailController',
-                    template: 'Modules/$(VirtoCommerce.Marketing)/Scripts/promotion/blades/promotion-detail.tpl.html'
+                    title: 'New Role',
+                    subtitle: $scope.blade.subtitle,
+                    controller: 'roleDetailController',
+                    template: 'Scripts/common/security/blades/role-detail.tpl.html'
                 };
                 bladeNavigationService.showBlade(newBlade, $scope.blade);
             },
