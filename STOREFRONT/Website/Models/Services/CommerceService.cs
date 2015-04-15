@@ -769,37 +769,6 @@ namespace VirtoCommerce.Web.Models.Services
                 }
             }
         }
-
-        public async Task UpdatePageCacheAsync()
-        {
-            var store = SiteContext.Current.StoreId;
-
-            var pagesPath = String.Format("{0}\\{1}\\pages", _pagesCacheStoragePath, store);
-            var storageClient = new FileStorageCacheService(HostingEnvironment.MapPath(pagesPath));
-
-            // TODO: figure out what to do with deleted pages
-            var lastUpdate = this._pageStorageClient.GetLatestUpdate();
-            /*
-            var response = await this._pa.GetThemeAssetsAsync(store, theme, lastUpdate, true);
-
-            if (response.Any())
-            {
-                lock (_LockObject)
-                {
-                    // check last update again, since going to the service is more expensive than checking local folders
-                    var newLastUpdate = this._themeStorageClient.GetLatestUpdate();
-                    if (newLastUpdate == lastUpdate)
-                    {
-                        var reload = this._themeStorageClient.ApplyUpdates(response.AsFileModel());
-                        if (reload)
-                        {
-                            this._viewLocator.UpdateCache();
-                        }
-                    }
-                }
-            }
-             * */
-        }
         #endregion
 
         #region Methods
