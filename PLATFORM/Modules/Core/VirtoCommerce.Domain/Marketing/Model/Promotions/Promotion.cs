@@ -9,7 +9,7 @@ namespace VirtoCommerce.Domain.Marketing.Model
 		public Promotion()
 		{
 			IsActive = true;
-			Name = this.GetType().Name;
+			Id = Name = this.GetType().Name;
 		}
 
 		#region IAuditable Members

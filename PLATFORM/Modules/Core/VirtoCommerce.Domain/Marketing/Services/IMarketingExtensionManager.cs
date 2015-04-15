@@ -8,9 +8,11 @@ using VirtoCommerce.Domain.Marketing.Model;
 
 namespace VirtoCommerce.Domain.Marketing.Services
 {
-	public interface IPromotionExtensionManager
+	public interface IMarketingExtensionManager
 	{
-		IDynamicExpression DynamicExpression { get; set; }
+		IDynamicExpression PromotionDynamicExpressionTree { get; set; }
+		IDynamicExpression DynamicContentExpressionTree { get; set; }
+
 		void RegisterPromotion(Promotion promotion);
 		IEnumerable<Promotion> Promotions { get; }
 	}
