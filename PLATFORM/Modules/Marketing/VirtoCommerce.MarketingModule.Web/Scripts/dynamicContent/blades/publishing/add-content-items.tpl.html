@@ -1,0 +1,29 @@
+﻿<div class="blade-content __large-wide">
+	<div class="blade-inner">
+		<div class="inner-block">
+			<div class="columns clearfix">
+				<div class="column">
+					<div class="sub-t">Content items</div>
+					<ul class="list __files" ng-if="blade.currentEntities.length">
+						<li class="list-item" ng-click="blade.folderClick(data)" ng-repeat="data in blade.currentEntities" ng-include="'Modules/$(VirtoCommerce.Marketing)/Scripts/dynamicContent/blades/publishing/content-items.tpl.html'">
+
+						</li>
+					</ul>
+					<p class="text" ng-if="!blade.currentEntities.length">No content items yet</p>
+				</div>
+				<div class="column">
+					<div class="sub-t">Choosen content items</div>
+					<ul class="list __files">
+						<li ng-repeat="item in blade.entity.contentItems" class="list-item">
+							<a class="list-block">
+								<i class="list-ico fa fa-location-arrow"></i>
+								<span class="list-name">{{item.name}}</span>
+								<span class="list-descr">{{item.description}}.</span>
+							</a>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

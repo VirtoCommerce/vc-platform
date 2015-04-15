@@ -1,9 +1,5 @@
 ﻿angular.module('virtoCommerce.marketingModule')
-.controller('addPublishingSecondStepController', ['$scope', 'bladeNavigationService', function ($scope, bladeNavigationService) {
-	$scope.setForm = function (form) {
-		$scope.formScope = form;
-	}
-
+.controller('addPublishingPlaceholdersStepController', ['$scope', 'bladeNavigationService', function ($scope, bladeNavigationService) {
 	var blade = $scope.blade;
 
 	blade.choosenFolder = undefined;
@@ -49,6 +45,10 @@
 		}
 
 		return retVal;
+	}
+
+	blade.checkPlaceholder = function (data) {
+		return _.filter(blade.entity.contentPlaces, function (ci) { return angular.equals(ci, data); }).length == 0;
 	}
 
 	blade.testData = function () {

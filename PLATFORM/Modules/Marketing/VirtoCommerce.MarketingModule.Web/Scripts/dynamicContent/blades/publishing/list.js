@@ -14,12 +14,12 @@
 		blade.closeChildrenBlades();
 
 		var newBlade = {
-			id: 'listItemChild',
+			id: 'add_publishing_element',
 			title: 'New publising element',
-			subtitle: 'Step one publising element',
+			subtitle: 'New publising element',
 			isNew: true,
 			controller: 'addPublishingFirstStepController',
-			template: 'Modules/$(VirtoCommerce.Marketing)/Scripts/dynamicContent/blades/publishing/add-first-step.tpl.html'
+			template: 'Modules/$(VirtoCommerce.Marketing)/Scripts/dynamicContent/blades/publishing/publishing-main-step.tpl.html'
 		};
 		bladeNavigationService.showBlade(newBlade, $scope.blade);
 	}
@@ -28,13 +28,13 @@
 		blade.closeChildrenBlades();
 
 		var newBlade = {
-			id: 'listItemChild',
+			id: 'edit_publishing_element',
 			title: 'Edit publising element',
 			subtitle: 'Edit publising element',
 			entity: data,
 			isNew: false,
 			controller: 'addPublishingController',
-			template: 'Modules/$(VirtoCommerce.Marketing)/Scripts/dynamicContent/blades/placeholders/publishing-details.tpl.html'
+			template: 'Modules/$(VirtoCommerce.Marketing)/Scripts/dynamicContent/blades/placeholders/publishing-main-step.tpl.html'
 		};
 		bladeNavigationService.showBlade(newBlade, $scope.blade);
 	}
