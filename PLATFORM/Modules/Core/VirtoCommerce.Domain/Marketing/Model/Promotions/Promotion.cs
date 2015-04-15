@@ -21,12 +21,15 @@ namespace VirtoCommerce.Domain.Marketing.Model
 
 		#endregion
 
+		public string Store { get; set; }
 		public string Name { get; set; }
 	
 		public bool IsActive { get; set; }
 
 		public int Priority { get; set; }
-		
+
+		public string Coupon { get; set; }
+
 		public string Description { get; set; }
 
 		public int TotalUsageLimit { get; set; }
