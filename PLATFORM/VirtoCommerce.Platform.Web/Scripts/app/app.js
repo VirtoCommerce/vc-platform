@@ -14,7 +14,7 @@
   'angularFileUpload',
   'ngSanitize',
   'ng-context-menu',
-  'ui.grid'
+  'ui.grid', 'ui.grid.selection'
 ];
 
 angular.module('platformWebApp', AppDependencies).
@@ -61,8 +61,8 @@ angular.module('platformWebApp', AppDependencies).
   ]
 )
 .run(
-  ['$rootScope', '$state', '$stateParams', 'authService', 'mainMenuService', 'editableOptions', 'notificationService', '$animate',
-    function ($rootScope, $state, $stateParams, authService, mainMenuService, editableOptions, notificationService, $animate) {
+  ['$rootScope', '$state', '$stateParams', 'authService', 'mainMenuService', 'editableOptions', 'notificationService', '$animate', '$templateCache',
+    function ($rootScope, $state, $stateParams, authService, mainMenuService, editableOptions, notificationService, $animate, $templateCache) {
     	//Disable animation
     	$animate.enabled(false);
        	editableOptions.theme = 'bs3'; // bootstrap3 theme. Can be also 'bs2', 'default'
@@ -119,6 +119,9 @@ angular.module('platformWebApp', AppDependencies).
         });
 
         authService.fillAuthData();
+
+        // cache application level templates
+        $templateCache.put('pagerTemplate.html', '<div class="pagination"><pagination boundary-links="true" max-size="pageSettings.numPages" items-per-page="pageSettings.itemsPerPageCount" total-items="pageSettings.totalItems" ng-model="pageSettings.currentPage" class="pagination-sm" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></pagination></div>');
     }
   ]
 );

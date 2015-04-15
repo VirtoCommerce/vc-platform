@@ -20,8 +20,6 @@
                                 </label>
                             </th>
                             <th class="table-col">Name</th>
-                            <th class="table-col">Type</th>
-                            <th class="table-col">Last modified</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -32,14 +30,8 @@
                                     <span class="check"></span>
                                 </label>
                             </td>
-                            <td class="table-col" ng-click='selectNode(data)'>
+                            <td class="table-col" ng-click='blade.selectNode(data)'>
                                 <span class="table-t">{{data.name}}</span>
-                            </td>
-                            <td class="table-col __product-code" ng-click='selectNode(data)'>
-                                <span>{{data.priceCount}}</span>
-                            </td>
-                            <td class="table-col __date" ng-click='selectNode(data)'>
-                                <span class="table-date" am-time-ago="data.modifiedDate"></span>
                             </td>
                         </tr>
                     </tbody>
