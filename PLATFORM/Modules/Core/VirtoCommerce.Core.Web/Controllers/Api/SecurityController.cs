@@ -14,6 +14,7 @@ using Microsoft.Owin.Security;
 using Omu.ValueInjecter;
 using VirtoCommerce.CoreModule.Web.Converters;
 using VirtoCommerce.CoreModule.Web.Security;
+using VirtoCommerce.CoreModule.Web.Security.Data;
 using VirtoCommerce.CoreModule.Web.Security.Models;
 using VirtoCommerce.Foundation.Data.Security.Identity;
 using VirtoCommerce.Foundation.Frameworks.Extensions;
@@ -70,7 +71,7 @@ namespace VirtoCommerce.CoreModule.Web.Controllers.Api
         {
             if (await _signInManagerFactory().PasswordSignInAsync(model.UserName, model.Password, model.RememberMe, true) == SignInStatus.Success)
             {
-                return Ok(await GetUserExtended(model.UserName));
+                return Ok(await GetUserExtended(model.UserName, UserDetails.Full));
             }
 
             return StatusCode(HttpStatusCode.Unauthorized);
@@ -81,7 +82,7 @@ namespace VirtoCommerce.CoreModule.Web.Controllers.Api
         [ResponseType(typeof(ApplicationUserExtended))]
         public async Task<IHttpActionResult> GetCurrentUserSession()
         {
-            return Ok(await GetUserExtended(User.Identity.Name));
+            return Ok(await GetUserExtended(User.Identity.Name, UserDetails.Full));
         }
 
         [HttpPost]
@@ -160,7 +161,7 @@ namespace VirtoCommerce.CoreModule.Web.Controllers.Api
         [Route("usersession/{userName}")]
         public async Task<ApplicationUserExtended> GetUserSession(string userName)
         {
-            return await GetUserExtended(userName);
+            return await GetUserExtended(userName, UserDetails.Full);
         }
 
         #region Methods needed to integrate identity security with external user store that will call api methods
@@ -216,7 +217,7 @@ namespace VirtoCommerce.CoreModule.Web.Controllers.Api
         [Route("users/{name}")]
         public async Task<IHttpActionResult> GetUserByName(string name)
         {
-            var retVal = await GetUserExtended(name);
+            var retVal = await GetUserExtended(name, UserDetails.Full);
             return Ok(retVal);
         }
 
@@ -231,7 +232,7 @@ namespace VirtoCommerce.CoreModule.Web.Controllers.Api
         [Route("users/{name}/changepassword")]
         public async Task<IHttpActionResult> ChangePassword(string name, [FromBody] ChangePasswordInfo changePassword)
         {
-            var user = await GetUserExtended(name);
+            var user = await UserManager.FindByNameAsync(name);
             if (user == null)
             {
                 return NotFound();
@@ -245,7 +246,7 @@ namespace VirtoCommerce.CoreModule.Web.Controllers.Api
         [Route("users")]
         public async Task<IHttpActionResult> GetUserByLogin(string loginProvider, string providerKey)
         {
-            var retVal = await GetUserExtended(loginProvider, providerKey);
+            var retVal = await GetUserExtended(loginProvider, providerKey, UserDetails.Full);
 
             return Ok(retVal);
         }
@@ -274,7 +275,7 @@ namespace VirtoCommerce.CoreModule.Web.Controllers.Api
 
             foreach (var user in result)
             {
-                var userExt = await GetUserExtended(user.UserName);
+                var userExt = await GetUserExtended(user.UserName, UserDetails.Reduced);
                 retVal.Users.Add(userExt);
             }
 
@@ -297,10 +298,12 @@ namespace VirtoCommerce.CoreModule.Web.Controllers.Api
                 {
                     return NotFound();
                 }
+
                 await UserManager.DeleteAsync(dbUser);
+
                 using (var repository = _securityRepository())
                 {
-                    var account = repository.GetAccountByName(name);
+                    var account = repository.GetAccountByName(name, UserDetails.Reduced);
                     if (account != null)
                     {
                         repository.Remove(account);
@@ -308,6 +311,7 @@ namespace VirtoCommerce.CoreModule.Web.Controllers.Api
                     }
                 }
             }
+
             return Ok();
         }
 
@@ -331,7 +335,7 @@ namespace VirtoCommerce.CoreModule.Web.Controllers.Api
             {
                 using (var repository = _securityRepository())
                 {
-                    var acount = repository.GetAccountByName(user.UserName);
+                    var acount = repository.GetAccountByName(user.UserName, UserDetails.Full);
                     if (acount == null)
                     {
                         return BadRequest("Acount not found");
@@ -340,6 +344,7 @@ namespace VirtoCommerce.CoreModule.Web.Controllers.Api
                     acount.AccountState = (int)user.UserState;
                     acount.MemberId = user.MemberId;
                     acount.StoreId = user.StoreId;
+
                     if (user.ApiAcounts != null)
                     {
                         var source = new ObservableCollection<ApiAccount>(user.ApiAcounts.Select(x => x.ToFoundation()));
@@ -452,19 +457,19 @@ namespace VirtoCommerce.CoreModule.Web.Controllers.Api
 
         #region Helpers
 
-        private async Task<ApplicationUserExtended> GetUserExtended(string loginProvider, string providerKey)
+        private async Task<ApplicationUserExtended> GetUserExtended(string loginProvider, string providerKey, UserDetails detailsLevel)
         {
             var applicationUser = await UserManager.FindAsync(new UserLoginInfo(loginProvider, providerKey));
-            return GetUserExtended(applicationUser);
+            return GetUserExtended(applicationUser, detailsLevel);
         }
 
-        private async Task<ApplicationUserExtended> GetUserExtended(string userName)
+        private async Task<ApplicationUserExtended> GetUserExtended(string userName, UserDetails detailsLevel)
         {
             var applicationUser = await UserManager.FindByNameAsync(userName);
-            return GetUserExtended(applicationUser);
+            return GetUserExtended(applicationUser, detailsLevel);
         }
 
-        private ApplicationUserExtended GetUserExtended(ApplicationUser applicationUser)
+        private ApplicationUserExtended GetUserExtended(ApplicationUser applicationUser, UserDetails detailsLevel)
         {
             ApplicationUserExtended result = null;
 
@@ -475,19 +480,29 @@ namespace VirtoCommerce.CoreModule.Web.Controllers.Api
 
                 using (var repository = _securityRepository())
                 {
-                    var user = repository.GetAccountByName(applicationUser.UserName);
-                    result.InjectFrom(user);
+                    var user = repository.GetAccountByName(applicationUser.UserName, detailsLevel);
+
                     if (user != null)
                     {
-                        var permissions =
-                            user.RoleAssignments.Select(x => x.Role)
-                                .SelectMany(x => x.RolePermissions)
-                                .Select(x => x.Permission);
+                        result.InjectFrom(user);
 
                         result.UserState = (UserState)user.AccountState;
                         result.UserType = (UserType)user.RegisterType;
-                        result.Permissions = permissions.Select(x => x.PermissionId).Distinct().ToArray();
-                        result.ApiAcounts = user.ApiAccounts.Select(x => x.ToWebModel()).ToList();
+
+                        if (detailsLevel == UserDetails.Full)
+                        {
+                            var roles = user.RoleAssignments.Select(x => x.Role).ToArray();
+                            result.Roles = roles.Select(r => r.ToCoreModel(false)).ToArray();
+
+                            var permissionIds = roles
+                                    .SelectMany(x => x.RolePermissions)
+                                    .Select(x => x.PermissionId)
+                                    .Distinct()
+                                    .ToArray();
+
+                            result.Permissions = permissionIds;
+                            result.ApiAcounts = user.ApiAccounts.Select(x => x.ToWebModel()).ToList();
+                        }
                     }
                 }
             }

@@ -3,7 +3,6 @@ using System.Data.Entity;
 using System.Linq;
 using VirtoCommerce.CoreModule.Web.Converters;
 using VirtoCommerce.Foundation.Data.Infrastructure;
-using VirtoCommerce.Foundation.Security.Model;
 using VirtoCommerce.Foundation.Security.Repositories;
 using VirtoCommerce.Framework.Web.Security;
 
@@ -42,7 +41,7 @@ namespace VirtoCommerce.CoreModule.Web.Security
                     .Take(request.Count)
                     .ToArray();
 
-                result.Roles = roles.Select(r => ConvertToRoleDescriptor(r, false)).ToArray();
+                result.Roles = roles.Select(r => r.ToCoreModel(false)).ToArray();
             }
 
             return result;
@@ -60,7 +59,7 @@ namespace VirtoCommerce.CoreModule.Web.Security
 
                 if (role != null)
                 {
-                    result = ConvertToRoleDescriptor(role, true);
+                    result = role.ToCoreModel(true);
                 }
             }
 
@@ -139,31 +138,6 @@ namespace VirtoCommerce.CoreModule.Web.Security
                     }
                 }
             }
-        }
-
-        private static RoleDescriptor ConvertToRoleDescriptor(Role role, bool fillPermissions)
-        {
-            var result = new RoleDescriptor
-            {
-                Id = role.RoleId,
-                Name = role.Name,
-            };
-
-            if (fillPermissions && role.RolePermissions != null)
-            {
-                result.Permissions = role.RolePermissions.Select(rp => ConvertToPermissionDescriptor(rp.Permission)).ToArray();
-            }
-
-            return result;
-        }
-
-        private static PermissionDescriptor ConvertToPermissionDescriptor(Permission permission)
-        {
-            return new PermissionDescriptor
-            {
-                Id = permission.PermissionId,
-                Name = permission.Name
-            };
         }
     }
 }
