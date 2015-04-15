@@ -1,4 +1,6 @@
 ﻿using GoogleShopping.MerchantModule.Web.Controllers.Api;
+using GoogleShopping.MerchantModule.Web.Helpers.Implementations;
+using GoogleShopping.MerchantModule.Web.Helpers.Interfaces;
 using GoogleShopping.MerchantModule.Web.Managers;
 using GoogleShopping.MerchantModule.Web.Providers;
 using GoogleShopping.MerchantModule.Web.Services;
@@ -30,8 +32,10 @@ namespace GoogleShopping.MerchantModule.Web
 
             var googleShoppingManager = new ShoppingManagerImpl(googleMerchantId, googleShoppingCode, googleShoppingDescription, googleShoppingLogoUrl);
 
+            _container.RegisterInstance<IGoogleContentServiceProvider>(new ServiceGoogleContentServiceProvider());
+            _container.RegisterInstance<IDateTimeProvider>(new DefaultDateTimeProvider());
             _container.RegisterInstance<IShopping>(googleShoppingManager);
-            _container.RegisterType<IGoogleProductProvider, VCGoogleProductProvider>();
+            _container.RegisterType<IGoogleProductProvider, VCGoogleProductProvider>(new ContainerControlledLifetimeManager());
 
             _container.RegisterType<GoogleShoppingController>();
         }
