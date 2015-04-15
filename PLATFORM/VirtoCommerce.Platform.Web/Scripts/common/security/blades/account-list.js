@@ -27,7 +27,7 @@ function ($scope, accounts, bladeNavigationService, dialogService) {
 
             if (selectedNode != null) {
                 //select the node in the new list
-                angular.forEach(data.shopingCarts, function (node) {
+                angular.forEach($scope.blade.currentEntities, function (node) {
                     if (selectedNode.id === node.id) {
                         selectedNode = node;
                     }
@@ -40,12 +40,12 @@ function ($scope, accounts, bladeNavigationService, dialogService) {
 
     $scope.blade.selectNode = function (node) {
         selectedNode = node;
-        $scope.selectedNodeId = selectedNode.id;
+        $scope.selectedNodeId = selectedNode.userName;
 
         var newBlade = {
             id: 'listItemChild',
             data: selectedNode,
-            title: selectedNode.name,
+            title: selectedNode.userName,
             subtitle: $scope.blade.subtitle,
             controller: 'accountDetailController',
             template: 'Scripts/common/security/blades/account-detail.tpl.html'
@@ -111,7 +111,7 @@ function ($scope, accounts, bladeNavigationService, dialogService) {
 
                 var newBlade = {
                     id: 'listItemChild',
-                    currentEntity: {},
+                    currentEntity: { roles: [] },
                     title: 'New Account',
                     subtitle: $scope.blade.subtitle,
                     controller: 'newAccountWizardController',
@@ -134,6 +134,11 @@ function ($scope, accounts, bladeNavigationService, dialogService) {
         }
     ];
 
+    $scope.$watch('pageSettings.currentPage', function () {
+        $scope.blade.refresh();
+    });
+
     // actions on load
-    $scope.blade.refresh();
+    //No need to call this because page 'pageSettings.currentPage' is watched!!! It would trigger subsequent duplicated req...
+    //$scope.blade.refresh();
 }]);

@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
-VisualStudioVersion = 12.0.30723.0
+VisualStudioVersion = 12.0.31101.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{0E0CB22C-4501-4E16-B9B7-744B51076524}"
 EndProject
@@ -152,6 +152,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.MarketingModule.Test", "Modules\Marketing\VirtoCommerce.MarketingModule.Test\VirtoCommerce.MarketingModule.Test.csproj", "{A280BCFF-AFF6-4CB3-8688-C19C31ED0D05}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.MarketingModule.Expressions", "Modules\Marketing\VirtoCommerce.MarketingModule.DynamicExpression\VirtoCommerce.MarketingModule.Expressions.csproj", "{9E4301FC-541E-4880-A28C-4F617D272B69}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CustomExpression", "Modules\Marketing\CustomExpression\CustomExpression.csproj", "{D2F0BB53-716C-46C9-8B20-DDCD4042CEEF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -383,6 +385,10 @@ Global
 		{9E4301FC-541E-4880-A28C-4F617D272B69}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9E4301FC-541E-4880-A28C-4F617D272B69}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9E4301FC-541E-4880-A28C-4F617D272B69}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D2F0BB53-716C-46C9-8B20-DDCD4042CEEF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D2F0BB53-716C-46C9-8B20-DDCD4042CEEF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D2F0BB53-716C-46C9-8B20-DDCD4042CEEF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D2F0BB53-716C-46C9-8B20-DDCD4042CEEF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -457,5 +463,6 @@ Global
 		{E2DF1E20-AF8F-4B63-9329-896403C3FAB5} = {7202A695-A43F-47D2-BFB9-8F1FCD9E1262}
 		{A280BCFF-AFF6-4CB3-8688-C19C31ED0D05} = {BDE02651-90AE-43E2-AFBC-F40E51064938}
 		{9E4301FC-541E-4880-A28C-4F617D272B69} = {BDE02651-90AE-43E2-AFBC-F40E51064938}
+		{D2F0BB53-716C-46C9-8B20-DDCD4042CEEF} = {BDE02651-90AE-43E2-AFBC-F40E51064938}
 	EndGlobalSection
 EndGlobal

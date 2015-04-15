@@ -31,7 +31,8 @@ namespace VirtoCommerce.CustomerModule.Data.Converters
 			var retVal = new DynamicPromotion();
 			retVal.InjectFrom(dbEntity);
 			retVal.Id = dbEntity.PromotionId;
-
+			retVal.Coupon = dbEntity.CouponCode;
+			retVal.Store = dbEntity.StoreId;
 			retVal.TotalUsageLimit = dbEntity.TotalLimit;
 			retVal.PerCustomerUsageLimit = dbEntity.PerCustomerLimit;
 
@@ -59,6 +60,9 @@ namespace VirtoCommerce.CustomerModule.Data.Converters
 			{
 				retVal.PromotionId = promotion.Id;
 			}
+			retVal.StartDate = promotion.StartDate ?? DateTime.UtcNow;
+			retVal.StoreId = promotion.Store;
+			retVal.CouponCode = promotion.Coupon;
 			retVal.TotalLimit = promotion.TotalUsageLimit;
 			retVal.PerCustomerLimit = promotion.PerCustomerUsageLimit;
 			retVal.Status = promotion.IsActive ? foundationModel.PromotionStatus.Active.ToString() : foundationModel.PromotionStatus.Inactive.ToString();
@@ -75,10 +79,10 @@ namespace VirtoCommerce.CustomerModule.Data.Converters
 			if (target == null)
 				throw new ArgumentNullException("target");
 
-			var patchInjection = new PatchInjection<foundationModel.Promotion>(x => x.Name, x => x.Description,
-																		   x => x.StartDate, x => x.EndDate,
-																		   x => x.Status, x => x.TotalLimit, x => x.PerCustomerLimit, x => x.PredicateSerialized,
+			var patchInjection = new PatchInjection<foundationModel.Promotion>(x => x.Name, x => x.Description, x=>x.Priority, x=>x.CouponCode, x=>x.StoreId,
+																		   x => x.StartDate, x => x.EndDate, x => x.Status, x => x.TotalLimit, x => x.PerCustomerLimit, x => x.PredicateSerialized,
 																		   x => x.PredicateVisualTreeSerialized, x => x.RewardsSerialized);
+		
 			target.InjectFrom(patchInjection, source);
 		}
 

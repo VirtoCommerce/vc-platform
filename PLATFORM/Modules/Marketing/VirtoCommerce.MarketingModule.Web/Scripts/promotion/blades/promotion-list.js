@@ -3,7 +3,7 @@
     var selectedNode = null;
     //pagination settigs
     $scope.pageSettings = {};
-    $scope.pageSettings.totalCount = 0;
+    $scope.pageSettings.totalItems = 0;
     $scope.pageSettings.currentPage = 1;
     $scope.pageSettings.numPages = 5;
     $scope.pageSettings.itemsPerPageCount = 20;
@@ -22,7 +22,7 @@
         }, function (data) {
             $scope.blade.isLoading = false;
 
-            $scope.pageSettings.totalCount = angular.isDefined(data.totalCount) ? data.totalCount : 0;
+            $scope.pageSettings.totalItems = angular.isDefined(data.totalCount) ? data.totalCount : 0;
             $scope.blade.currentEntities = data.promotions;
 
             if (selectedNode != null) {
@@ -134,6 +134,11 @@
         }
     ];
 
+    $scope.$watch('pageSettings.currentPage', function () {
+        $scope.blade.refresh();
+    });
+
     // actions on load
-    $scope.blade.refresh();
+    //No need to call this because page 'pageSettings.currentPage' is watched!!! It would trigger subsequent duplicated req...
+    //$scope.blade.refresh();
 }]);

@@ -10,6 +10,7 @@ using VirtoCommerce.CoreModule.Web.Notification;
 using VirtoCommerce.CoreModule.Web.Repositories;
 using VirtoCommerce.CoreModule.Web.Search;
 using VirtoCommerce.CoreModule.Web.Security;
+using VirtoCommerce.CoreModule.Web.Security.Data;
 using VirtoCommerce.CoreModule.Web.Services;
 using VirtoCommerce.CoreModule.Web.Settings;
 using VirtoCommerce.Domain.Fulfillment.Services;

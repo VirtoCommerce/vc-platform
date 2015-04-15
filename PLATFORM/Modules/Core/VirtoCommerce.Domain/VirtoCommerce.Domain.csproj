@@ -140,8 +140,8 @@
     <Compile Include="Marketing\Services\IMarketingPromoEvaluator.cs" />
     <Compile Include="Marketing\Services\IMarketingSearchService.cs" />
     <Compile Include="Marketing\Services\IPromotionService.cs" />
-    <Compile Include="Marketing\Services\IPromotionExtensionManager.cs" />
-    <Compile Include="Marketing\Services\InMemoryPromotionExtensionManagerImpl.cs" />
+    <Compile Include="Marketing\Services\IMarketingExtensionManager.cs" />
+    <Compile Include="Marketing\Services\InMemoryExtensionManagerImpl.cs" />
     <Compile Include="Order\Model\Address.cs" />
     <Compile Include="Order\Model\AddressType.cs" />
     <Compile Include="Order\Model\Coupon.cs" />

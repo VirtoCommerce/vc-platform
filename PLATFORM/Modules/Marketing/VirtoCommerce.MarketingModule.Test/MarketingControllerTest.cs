@@ -69,7 +69,7 @@ namespace VirtoCommerce.MarketingModule.Test
 		{
 			var extensionManager = GetPromotionExtensionManager();
 			//Register custom dynamic expression in main expression tree now it should be availabe for ui in expression builder
-			var blockExpression = extensionManager.DynamicExpression as DynamicExpression;
+			var blockExpression = extensionManager.PromotionDynamicExpressionTree as DynamicExpression;
 		    var blockCatalogCondition = blockExpression.FindChildrenExpression<BlockCatalogCondition>();
 			blockCatalogCondition.AvailableChildren.Add(new ConditionItemWithTag());
 
@@ -163,22 +163,22 @@ namespace VirtoCommerce.MarketingModule.Test
 		private static IPromotionService GetMarketingService()
 		{
 			Func<IFoundationPromotionRepository> foundationRepositoryFactory = () => new PromotionRepositoryImpl("VirtoCommerce", new AuditChangeInterceptor());
-			var promotionExtensionManager = new InMemoryPromotionExtensionManagerImpl();
+			var promotionExtensionManager = new InMemoryExtensionManagerImpl();
 			var retVal = new PromotionServiceImpl(foundationRepositoryFactory, promotionExtensionManager);
 			return retVal;
 		}
 
-		private static PromotionController GetMarketingController(IPromotionExtensionManager extensionManager)
+		private static PromotionController GetMarketingController(IMarketingExtensionManager extensionManager)
 		{
 			Func<IFoundationPromotionRepository> foundationRepositoryFactory = () => new PromotionRepositoryImpl("VirtoCommerce", new AuditChangeInterceptor());
 			var retVal = new PromotionController(new PromotionServiceImpl(foundationRepositoryFactory, extensionManager), extensionManager, null);
 			return retVal;
 		}
 
-		private static IPromotionExtensionManager GetPromotionExtensionManager()
+		private static IMarketingExtensionManager GetPromotionExtensionManager()
 		{
-			var retVal = new InMemoryPromotionExtensionManagerImpl();
-			retVal.DynamicExpression = GetDynamicExpression();
+			var retVal = new InMemoryExtensionManagerImpl();
+			retVal.PromotionDynamicExpressionTree = GetDynamicExpression();
 			return retVal;
 		}
 

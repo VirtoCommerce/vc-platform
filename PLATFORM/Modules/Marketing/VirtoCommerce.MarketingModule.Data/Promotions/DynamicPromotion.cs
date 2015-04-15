@@ -16,7 +16,6 @@ namespace VirtoCommerce.MarketingModule.Data.Promotions
 		public string PredicateSerialized { get; set; }
 		public string PredicateVisualTreeSerialized { get; set; }
 		public string RewardsSerialized { get; set; }
-		public string Coupon { get; set; }
 
 		public override PromotionReward[] EvaluatePromotion(IPromotionEvaluationContext context)
 		{
@@ -44,7 +43,8 @@ namespace VirtoCommerce.MarketingModule.Data.Promotions
 					reward.Promotion = this;
 					reward.IsValid = couponValid && condition(promoContext);
 					var catalogItemReward = reward as CatalogItemAmountReward;
-					if (catalogItemReward != null && catalogItemReward.ProductId != null)
+					//Set productId for catalog item reward
+					if (catalogItemReward != null && catalogItemReward.ProductId == null)
 					{
 						catalogItemReward.ProductId = promoEntry.ProductId;
 					}

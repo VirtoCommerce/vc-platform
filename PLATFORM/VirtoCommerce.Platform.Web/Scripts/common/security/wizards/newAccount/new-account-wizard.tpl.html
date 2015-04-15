@@ -8,7 +8,7 @@
                         <input ng-model="blade.currentEntity.userName" type="text" placeholder="Enter code" required focus-on="">
                     </div>
                 </div>
-               <div class="form-group">
+                <div class="form-group">
                     <label class="form-label">Password</label>
                     <div class="form-input">
                         <input ng-model="blade.currentEntity.password" required placeholder="Enter new password" type="password">
@@ -20,12 +20,22 @@
                         <input ng-model="blade.currentEntity.newPassword2" required placeholder="Repeat new password" type="password">
                     </div>
                 </div>
+                <div class="sub-t __border">Assigned roles</div>
+                <div class="form">
+                    <div class="form-group">
+                        <a class="clear text-mini __link" ng-click="removeAll()">Clear all</a>
+                        <ul class="list __inline __choosen">
+                            <li class="list-item" ng-repeat="data in blade.currentEntity.roles">
+                                <a class="list-remove" ng-click="remove(data)">×</a>
+                                <span class="list-name">{{data.name}}</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="sub-t __border">Available roles</div>
+                <div ui-grid="gridOptions" ui-grid-selection></div>
             </form>
         </div>
     </div>
 </div>
-<div class="blade-static __bottom">
-    <button ng-click="saveChanges()" class="btn" ng-class="{'__disabled': formScope != undefined && formScope.$invalid}">
-        <span>Create</span>
-    </button>
-</div>
+<div class="blade-static __bottom" ng-include="'Modules/$(VirtoCommerce.Core)/Scripts/common/create.tpl.html'"></div>
