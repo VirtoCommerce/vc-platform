@@ -9,7 +9,7 @@
             <div class="box-content">
                 <div class="fieldset">
                     <div class="field">
-                        <label class="control-label" for="checkout_email">Email</label>
+                        <label class="control-label required" for="checkout_email">Email</label>
                         <input id="checkout_email" name="checkout[email]" required="required" type="email" value="{{ checkout.email }}" />
                     </div>
                 </div>
@@ -18,13 +18,13 @@
                 </div>
                 <div class="fieldset">
                     <div class="field">
-                        <label class="control-label" for="checkout_first_name">First name</label>
+                        <label class="control-label required" for="checkout_first_name">First name</label>
                         <input id="checkout_first_name" name="checkout[first_name]" required="required" type="text" value="{{ checkout.shipping_address.first_name }}" />
                     </div>
                 </div>
                 <div class="fieldset">
                     <div class="field">
-                        <label class="control-label" for="checkout_last_name">Last name</label>
+                        <label class="control-label required" for="checkout_last_name">Last name</label>
                         <input id="checkout_last_name" name="checkout[last_name]" required="required" type="text" value="{{ checkout.shipping_address.last_name }}" />
                     </div>
                 </div>
@@ -36,7 +36,7 @@
                 </div>
                 <div class="fieldset">
                     <div class="field">
-                        <label class="control-label" for="checkout_address1">Address line 1</label>
+                        <label class="control-label required" for="checkout_address1">Address line 1</label>
                         <input id="checkout_address1" name="checkout[address1]" required="required" type="text" value="{{ checkout.shipping_address.address1 }}" />
                     </div>
                 </div>
@@ -48,13 +48,13 @@
                 </div>
                 <div class="fieldset">
                     <div class="field">
-                        <label class="control-label" for="checkout_city">City</label>
+                        <label class="control-label required" for="checkout_city">City</label>
                         <input id="checkout_city" name="checkout[city]" required="required" type="text" value="{{ checkout.shipping_address.city }}" />
                     </div>
                 </div>
                 <div class="fieldset">
                     <div class="field">
-                        <label class="control-label" for="checkout_country">Country</label>
+                        <label class="control-label required" for="checkout_country">Country</label>
                         <select id="checkout_country" name="checkout[country]">{{ country_option_tags }}</select>
                     </div>
                 </div>
@@ -66,20 +66,20 @@
                 </div>
                 <div class="fieldset">
                     <div class="field">
-                        <label class="control-label" for="checkout_zip">Postal code</label>
+                        <label class="control-label required" for="checkout_zip">Postal code</label>
                         <input id="checkout_zip" name="checkout[zip]" required="required" type="text" value="{{ checkout.shipping_address.zip }}" />
                     </div>
                 </div>
                 <div class="fieldset">
                     <div class="field">
-                        <label class="control-label" for="checkout_phone">Phone</label>
+                        <label class="control-label required" for="checkout_phone">Phone</label>
                         <input id="checkout_phone" name="checkout[phone]" type="text" value="{{ checkout.shipping_address.phone }}" />
                     </div>
                 </div>
             </div>
             <div class="box-footer">
                 <div class="pull-right">
-                    <button class="btn btn-primary" type="submit">Continue</button>
+                    <button class="btn btn-primary themed" type="submit">Continue</button>
                 </div>
             </div>
         {% endform %}

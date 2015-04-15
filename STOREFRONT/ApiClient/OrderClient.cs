@@ -59,8 +59,6 @@ namespace VirtoCommerce.ApiClient
 
         public Task<CustomerOrder> CreateOrderAsync(string cartId)
         {
-            var order = new CustomerOrder();
-
             return SendAsync<CustomerOrder>(
                 CreateRequestUri(string.Format(RelativePaths.PostOrder, cartId)),
                 HttpMethod.Post);

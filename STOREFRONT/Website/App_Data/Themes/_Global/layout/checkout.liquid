@@ -225,8 +225,8 @@
             .fieldset .field {
                 vertical-align: middle;
             }
-                .fieldset .field input {
-                    border: 1px solid transparent;
+                .fieldset .field input,select {
+                    border: 1px solid #ccc;
                     float: left;
                     padding: 7px;
                     width: 65%;
@@ -241,7 +241,6 @@
                         box-shadow: 0px 0px 8px rgba(82,168,236,0.6) !important;
                     }
                 .fieldset .field select {
-                    border: none;
                     float: left;
                     margin-top: 1px;
                     width: 65%;
@@ -265,14 +264,21 @@
             -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 8px rgba(102, 175, 233, .6);
             box-shadow: inset 0px 1px 1px rgba(0,0,0,0.075), 0px 0px 8px rgba(102,175,233,0.6);
         }
+        .control-label.required:after {
+            color: red;
+            content: " *";
+        }
+        .btn.btn-primary.themed {
+            background-color: {{ settings.color_primary }};
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <nav class="navbar navbar-default navbar-fixed-top">
+        <nav class="navbar navbar-default navbar-fixed-top" style="background-color: {{ settings.color_primary }};">
             <div class="container">
                 <div class="navbar-header">
-                    <a class="navbar-brand" href="#">{{ shop.name }}</a>
+                    <a class="navbar-brand" href="#" style="color: {{ settings.color_header_text }}; font-size: 30px; font-weight: 600;">{{ shop.name }}</a>
                 </div>
             </div>
         </nav>
