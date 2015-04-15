@@ -26,6 +26,8 @@ namespace VirtoCommerce.MarketingModule.Web.Model
 		public bool IsActive { get; set; }
 		public int MaxUsageCount { get; set; }
 		public int MaxPersonalUsageCount { get; set; }
+		public string Coupon { get; set; }
+		public int Priority { get; set; }
 
 		public DateTime? StartDate { get; set; }
 		public DateTime? EndDate { get; set; }

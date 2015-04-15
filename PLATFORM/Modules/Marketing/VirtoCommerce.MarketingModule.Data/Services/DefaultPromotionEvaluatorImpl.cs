@@ -10,17 +10,17 @@ namespace VirtoCommerce.MarketingModule.Data.Services
 {
 	public class DefaultPromotionEvaluatorImpl : IMarketingPromoEvaluator
 	{
-		private readonly IPromotionService _marketingService;
-		public DefaultPromotionEvaluatorImpl(IPromotionService marketingService)
+		private readonly IPromotionService _promotionService;
+		public DefaultPromotionEvaluatorImpl(IPromotionService promotionService)
 		{
-			_marketingService = marketingService;
+			_promotionService = promotionService;
 		}
 
 		#region IMarketingEvaluator Members
 		public PromotionResult EvaluatePromotion(IPromotionEvaluationContext context)
 		{
 			var now = DateTime.UtcNow;
-			var promotions = _marketingService.GetActivePromotions();
+			var promotions = _promotionService.GetActivePromotions();
 
 			var promoContext = (PromotionEvaluationContext)context;
 
@@ -86,7 +86,7 @@ namespace VirtoCommerce.MarketingModule.Data.Services
 		public PromotionResult ProcessEvent(IMarketingEvent markertingEvent)
 		{
 			var retVal = new PromotionResult();
-			var promotions = _marketingService.GetActivePromotions();
+			var promotions = _promotionService.GetActivePromotions();
 			foreach (var promotion in promotions)
 			{
 				var rewards = promotion.ProcessEvent(markertingEvent).Where(x => x != null);
