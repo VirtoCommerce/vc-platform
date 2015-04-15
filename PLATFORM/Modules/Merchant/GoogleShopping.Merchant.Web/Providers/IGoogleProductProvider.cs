@@ -6,5 +6,7 @@ namespace GoogleShopping.MerchantModule.Web.Providers
     public interface IGoogleProductProvider
     {
         IEnumerable<Product> GetProductUpdates(IEnumerable<string> ids);
+        ProductsCustomBatchRequest GetProductsBatchRequest(IEnumerable<string> ids);
+        ProductsCustomBatchRequest GetCatalogProductsBatchRequest(string catalogId);
     }
 }

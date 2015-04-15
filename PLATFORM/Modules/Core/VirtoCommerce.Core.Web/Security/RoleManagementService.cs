@@ -3,7 +3,6 @@ using System.Data.Entity;
 using System.Linq;
 using VirtoCommerce.CoreModule.Web.Converters;
 using VirtoCommerce.Foundation.Data.Infrastructure;
-using VirtoCommerce.Foundation.Security.Model;
 using VirtoCommerce.Foundation.Security.Repositories;
 using VirtoCommerce.Framework.Web.Security;
 
@@ -38,11 +37,11 @@ namespace VirtoCommerce.CoreModule.Web.Security
 
                 var roles = query
                     .OrderBy(r => r.Name)
-                    .Skip(request.SkipCount)
-                    .Take(request.TakeCount)
+                    .Skip(request.Start)
+                    .Take(request.Count)
                     .ToArray();
 
-                result.Roles = roles.Select(r => ConvertToRoleDescriptor(r, false)).ToArray();
+                result.Roles = roles.Select(r => r.ToCoreModel(false)).ToArray();
             }
 
             return result;
@@ -60,25 +59,40 @@ namespace VirtoCommerce.CoreModule.Web.Security
 
                 if (role != null)
                 {
-                    result = ConvertToRoleDescriptor(role, true);
+                    result = role.ToCoreModel(true);
                 }
             }
 
             return result;
         }
 
-        public void AddOrUpdateRole(RoleDescriptor role)
+        public void DeleteRole(string roleId)
+        {
+            using (var repository = _securityRepository())
+            {
+                var role = repository.Roles.FirstOrDefault(r => r.RoleId == roleId);
+
+                if (role != null)
+                {
+                    repository.Remove(role);
+                    CommitChanges(repository);
+                }
+            }
+        }
+
+        public RoleDescriptor AddOrUpdateRole(RoleDescriptor role)
         {
             if (role == null)
             {
                 throw new ArgumentNullException("role");
             }
 
+            var sourceEntry = role.ToFoundation();
+
             using (var repository = _securityRepository())
             {
                 AddOrUpdatePermissions(repository, role.Permissions);
 
-                var sourceEntry = role.ToFoundation();
                 var targetEntry = repository.Roles
                     .Include(r => r.RolePermissions)
                     .FirstOrDefault(r => r.RoleId == role.Id);
@@ -94,6 +108,9 @@ namespace VirtoCommerce.CoreModule.Web.Security
 
                 CommitChanges(repository);
             }
+
+            var result = GetRole(sourceEntry.RoleId);
+            return result;
         }
 
         #endregion
@@ -121,31 +138,6 @@ namespace VirtoCommerce.CoreModule.Web.Security
                     }
                 }
             }
-        }
-
-        private static RoleDescriptor ConvertToRoleDescriptor(Role role, bool fillPermissions)
-        {
-            var result = new RoleDescriptor
-            {
-                Id = role.RoleId,
-                Name = role.Name,
-            };
-
-            if (fillPermissions && role.RolePermissions != null)
-            {
-                result.Permissions = role.RolePermissions.Select(rp => ConvertToPermissionDescriptor(rp.Permission)).ToArray();
-            }
-
-            return result;
-        }
-
-        private static PermissionDescriptor ConvertToPermissionDescriptor(Permission permission)
-        {
-            return new PermissionDescriptor
-            {
-                Id = permission.PermissionId,
-                Name = permission.Name
-            };
         }
     }
 }

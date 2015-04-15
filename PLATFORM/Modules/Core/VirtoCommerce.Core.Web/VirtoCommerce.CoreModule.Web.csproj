@@ -159,6 +159,7 @@
     <Compile Include="Security\ApplicationClaimsIdentityProvider.cs" />
     <Compile Include="Security\ApplicationUserStore.cs" />
     <Compile Include="Security\CachingSecurityService.cs" />
+    <Compile Include="Security\Data\UserDetails.cs" />
     <Compile Include="Security\Hmac\HmacAuthenticationExtensions.cs" />
     <Compile Include="Security\Hmac\HmacAuthenticationHandler.cs" />
     <Compile Include="Security\Hmac\HmacAuthenticationMiddleware.cs" />

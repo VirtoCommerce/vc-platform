@@ -8,7 +8,7 @@
                         <input ng-model="blade.currentEntity.userName" type="text" placeholder="Enter code" required focus-on="">
                     </div>
                 </div>
-               <div class="form-group">
+                <div class="form-group">
                     <label class="form-label">Password</label>
                     <div class="form-input">
                         <input ng-model="blade.currentEntity.password" required placeholder="Enter new password" type="password">
@@ -24,8 +24,4 @@
         </div>
     </div>
 </div>
-<div class="blade-static __bottom">
-    <button ng-click="saveChanges()" class="btn" ng-class="{'__disabled': formScope != undefined && formScope.$invalid}">
-        <span>Create</span>
-    </button>
-</div>
+<div class="blade-static __bottom" ng-include="'Modules/$(VirtoCommerce.Core)/Scripts/common/create.tpl.html'"></div>

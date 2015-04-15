@@ -94,7 +94,7 @@
                         </tr>
                     </tbody>
                 </table>
-                <div class="pagination" ng-if="pageSettings.itemsPerPageCount < pageSettings.totalItems" ng-include="'pagerTemplate.html'"></div>
+                <ng-include src="'pagerTemplate.html'"></ng-include>
             </div>
             <div class="table-wrapper">
                 <table class="table __collapsed __order-info">
@@ -119,9 +119,6 @@
             <div class="form-group __order-currency">
              
             </div>
-            <script type="text/ng-template" id="pagerTemplate.html">
-                <pagination ng-if="pageSettings.itemsPerPageCount < pageSettings.totalItems" boundary-links="true" max-size="pageSettings.numPages" items-per-page="pageSettings.itemsPerPageCount" total-items="pageSettings.totalItems" ng-model="pageSettings.currentPage" class="pagination-sm" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></pagination>
-            </script>
         </div>
     </div>
 </div>

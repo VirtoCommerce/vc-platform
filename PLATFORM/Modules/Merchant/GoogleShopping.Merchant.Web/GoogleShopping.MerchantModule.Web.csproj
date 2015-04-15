@@ -151,7 +151,18 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\Api\GoogleShoppingController.cs" />
+    <Compile Include="Converters\ProductBatchEntryConverter.cs" />
+    <Compile Include="Converters\ProductStatusConverter.cs" />
+    <Compile Include="Helpers\Implementations\ExpiredDateTimeProvider.cs" />
+    <Compile Include="Helpers\Implementations\DefaultDateTimeProvider.cs" />
+    <Compile Include="Helpers\Interfaces\IDateTimeProvider.cs" />
     <Compile Include="Managers\ShoppingManagerImpl.cs" />
+    <Compile Include="Model\Notifications\ProductSyncNotifyEvent.cs" />
+    <Compile Include="Model\ProductsSyncJob.cs" />
+    <Compile Include="Model\ProductStatus.cs" />
+    <Compile Include="Model\SyncResult.cs" />
+    <Compile Include="Providers\IGoogleContentServiceProvider.cs" />
+    <Compile Include="Providers\ServiceGoogleContentServiceProvider.cs" />
     <Compile Include="Providers\IGoogleProductProvider.cs" />
     <Compile Include="Converters\PriceConverter.cs" />
     <Compile Include="Converters\ProductConverter.cs" />

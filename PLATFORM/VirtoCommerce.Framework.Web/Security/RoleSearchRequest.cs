@@ -4,11 +4,11 @@
     {
         public RoleSearchRequest()
         {
-            TakeCount = 10;
+            Count = 10;
         }
 
         public string Keyword { get; set; }
-        public int SkipCount { get; set; }
-        public int TakeCount { get; set; }
+        public int Start { get; set; }
+        public int Count { get; set; }
     }
 }

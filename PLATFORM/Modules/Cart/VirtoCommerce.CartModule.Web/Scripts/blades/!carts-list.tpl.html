@@ -6,9 +6,7 @@
         <p class="form-count">Count: <span class="count">{{pageSettings.totalItems}}</span></p>
     </div>
 </div>
-<div class="blade-static __bottom">
-    <div class="pagination" ng-if="pageSettings.itemsPerPageCount < pageSettings.totalItems" ng-include="'pagerTemplate.html'"></div>
-</div>
+<div class="blade-static __bottom" ng-if="pageSettings.itemsPerPageCount < pageSettings.totalItems" ng-include="'pagerTemplate.html'"></div>
 <div class="blade-content __medium-wide">
     <div class="blade-inner">
         <div class="inner-block">
@@ -17,7 +15,7 @@
                     <thead>
                         <tr>
                             <th class="table-col">
-                                <label class="form-cojtrol __checkbox">
+                                <label class="form-control __checkbox">
                                     <input type="checkbox" ng-model="selectedAll" ng-change="checkAll(selectedAll)" />
                                     <span class="check"></span>
                                 </label>
@@ -64,9 +62,6 @@
                     </tbody>
                 </table>
             </div>
-            <script type="text/ng-template" id="pagerTemplate.html">
-                <pagination ng-if="pageSettings.itemsPerPageCount < pageSettings.totalItems" boundary-links="true" max-size="pageSettings.numPages" items-per-page="pageSettings.itemsPerPageCount" total-items="pageSettings.totalItems" ng-model="pageSettings.currentPage" class="pagination-sm" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></pagination>
-            </script>
         </div>
     </div>
 </div>
