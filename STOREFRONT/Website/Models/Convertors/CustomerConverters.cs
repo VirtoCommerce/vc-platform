@@ -33,7 +33,7 @@ namespace VirtoCommerce.Web.Models.Convertors
             return address;
         }
 
-        public static Customer AsWebModel(this Contact contact, AuthInfo additionalInfo)
+        public static Customer AsWebModel(this Contact contact)
         {
             var customer = new Customer();
 
@@ -59,7 +59,7 @@ namespace VirtoCommerce.Web.Models.Convertors
 
             customer.AcceptsMarketing = true; // TODO
             customer.Email = contact.Emails.FirstOrDefault();
-            customer.HasAccount = additionalInfo.UserType == RegisterType.RegisteredUser ? true : false;
+            customer.HasAccount = true; // TODO
             customer.Id = contact.Id;
 
             return customer;
