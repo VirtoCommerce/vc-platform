@@ -81,13 +81,13 @@ namespace VirtoCommerce.MarketingModule.Data.Services
 				//Populate folder for all founded places and items
 				if (criteria.FolderId != null)
 				{
-					var searchedFolder = result.ContentFolders.FirstOrDefault(x=>x.Id == criteria.FolderId);
+					var searchedFolder = repository.GetContentFolderById(criteria.FolderId);
 					if(searchedFolder != null)
 					{
 						var hasfolderItems = result.ContentPlaces.OfType<coreModel.IsHasFolder>().Concat(result.ContentItems);
 						foreach(var hasfolderItem in hasfolderItems)
 						{
-							hasfolderItem.Folder = searchedFolder;
+							hasfolderItem.Folder = searchedFolder.ToCoreModel();
 						}
 					}
 				}
