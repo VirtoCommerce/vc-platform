@@ -574,17 +574,6 @@
     <EmbeddedResource Include="Marketing\Data\Coupon.sql" />
     <EmbeddedResource Include="Customers\Data\FillRequiredCaseProperty.sql" />
   </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Orders\Data\Account.sql" />
-    <EmbeddedResource Include="Orders\Data\Address.sql" />
-    <EmbeddedResource Include="Orders\Data\AspNetUsers.sql" />
-    <EmbeddedResource Include="Orders\Data\Member.sql" />
-    <EmbeddedResource Include="Orders\Data\order_Address.sql" />
-    <EmbeddedResource Include="Orders\Data\order_CustomerOrder.sql" />
-    <EmbeddedResource Include="Orders\Data\order_LineItem.sql" />
-    <EmbeddedResource Include="Orders\Data\order_PaymentIn.sql" />
-    <EmbeddedResource Include="Orders\Data\order_Shipment.sql" />
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>
