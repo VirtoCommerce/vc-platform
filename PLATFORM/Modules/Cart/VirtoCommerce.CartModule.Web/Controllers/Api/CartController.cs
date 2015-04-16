@@ -42,22 +42,11 @@ namespace VirtoCommerce.CartModule.Web.Controllers.Api
 
 			var searchResult = this._searchService.Search(criteria);
 			var retVal = searchResult.ShopingCarts.FirstOrDefault(x=>x.Name == "default");
-			if (retVal == null)
+			if(retVal == null)
 			{
-				var newCart = new CatalogModule.Web.Model.ShoppingCart
-				{
-					Id = Guid.NewGuid().ToString(),
-					CustomerId = customerId,
-					IsAnonymous = this.User.Identity.IsAuthenticated,
-					StoreId = storeId,
-					//Temporary get as chanel client account
-					ChannelId = this.User.Identity.Name,
-					Name = "default",
-					Currency = CurrencyCodes.USD
-				};
-				retVal = this._shoppingCartService.Create(newCart.ToCoreModel());
+				return NotFound();
 			}
-			return this.Ok(retVal.ToWebModel());
+			return Ok(retVal.ToWebModel());
 		}
 
 		// GET: api/cart/carts/{id}
@@ -69,9 +58,9 @@ namespace VirtoCommerce.CartModule.Web.Controllers.Api
 			var retVal = this._shoppingCartService.GetById(id);
 			if(retVal == null)
 			{
-				return this.NotFound();
+				return NotFound();
 			}
-			return this.Ok(retVal.ToWebModel());
+			return Ok(retVal.ToWebModel());
 		}
 
 		// GET: api/cart/carts?q=ddd&site=site1&customer=user1&start=0&count=20
