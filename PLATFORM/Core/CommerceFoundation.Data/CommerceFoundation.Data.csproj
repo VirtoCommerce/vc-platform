@@ -297,7 +297,6 @@
     <Compile Include="Reviews\SqlReviewSampleDatabaseInitializer.cs" />
     <Compile Include="Search\SearchDatabaseInitializer.cs" />
     <Compile Include="Security\Identity\IdentityDatabaseInitializer.cs" />
-    <Compile Include="Security\Identity\IdentitySampleDatabaseInitializer.cs" />
     <Compile Include="Security\Identity\Migrations\201411101625303_InitialCreate.cs" />
     <Compile Include="Security\Identity\Migrations\201411101625303_InitialCreate.Designer.cs">
       <DependentUpon>201411101625303_InitialCreate.cs</DependentUpon>
@@ -314,7 +313,6 @@
       <DependentUpon>201502131605531_AddApiAcount.cs</DependentUpon>
     </Compile>
     <Compile Include="Security\SqlSecurityDatabaseInitializer.cs" />
-    <Compile Include="Security\SqlSecuritySampleDatabaseInitializer.cs" />
     <Compile Include="Stores\Migrations\201402141710203_Initial.cs" />
     <Compile Include="Stores\Migrations\201402141710203_Initial.Designer.cs">
       <DependentUpon>201402141710203_Initial.cs</DependentUpon>

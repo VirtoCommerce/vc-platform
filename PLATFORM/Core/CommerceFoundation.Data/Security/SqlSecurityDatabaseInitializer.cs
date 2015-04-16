@@ -22,8 +22,7 @@ namespace VirtoCommerce.Foundation.Data.Security
         {
             repository.Add(new Account
             {
-                AccountId = "1",
-                MemberId = "1",
+                AccountId = "1eb2fa8ac6574541afdb525833dadb46",
                 UserName = "admin",
                 RegisterType = (int)RegisterType.Administrator,
                 AccountState = (int)AccountState.Approved,
