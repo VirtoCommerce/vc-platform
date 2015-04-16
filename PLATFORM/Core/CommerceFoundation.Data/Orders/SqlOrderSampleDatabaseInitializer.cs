@@ -24,6 +24,7 @@ namespace VirtoCommerce.Foundation.Data.Orders
 			"Account.sql",
             "Member.sql",
             "AspNetUsers.sql",
+            "Contact.sql",
             "Address.sql",
             "order_CustomerOrder.sql",
             "order_PaymentIn.sql",

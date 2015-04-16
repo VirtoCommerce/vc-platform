@@ -585,6 +585,9 @@
     <EmbeddedResource Include="Orders\Data\order_PaymentIn.sql" />
     <EmbeddedResource Include="Orders\Data\order_Shipment.sql" />
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Orders\Data\Contact.sql" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>
