@@ -124,6 +124,20 @@ $(function () {
         self.next().remove();
     });
 
+    var localData = JSON.parse(localStorage.getItem('positions'));
+        
+    if(localData != null)
+    {
+        $.each(localData, function(i, value) {
+            var id_name;
+
+            id_name = "#";
+            id_name = id_name + value.id;
+
+            $(id_name).attr({ "data-col": value.col, "data-row": value.row, "data-sizex": value.size_x, "data-sizey": value.size_y });
+        });
+    }
+
     /* Close dropdown if click in other area window */
     $(document).on("click", function (event) {
         if (!$('.nav-bar').is(event.target) && !$('.nav-bar').has(event.target).length) {
