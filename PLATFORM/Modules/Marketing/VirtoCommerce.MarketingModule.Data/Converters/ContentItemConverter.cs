@@ -80,7 +80,7 @@ namespace VirtoCommerce.CustomerModule.Data.Converters
 			if (target == null)
 				throw new ArgumentNullException("target");
 
-			var patchInjection = new PatchInjection<foundationModel.DynamicContentItem>(x => x.Name, x => x.Description, x=>x.FolderId, x=>x.ImageUrl);
+			var patchInjection = new PatchInjection<foundationModel.DynamicContentItem>(x => x.Name, x => x.Description, x=>x.FolderId, x=>x.ImageUrl, x=>x.ContentTypeId);
 			if (!source.PropertyValues.IsNullCollection())
 			{
 				var propertyComparer = AnonymousComparer.Create((foundationModel.DynamicContentItemProperty x) => x.PropertyValueId);
