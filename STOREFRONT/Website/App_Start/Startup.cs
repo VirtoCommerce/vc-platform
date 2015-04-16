@@ -3,6 +3,7 @@ using System;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin;
+using Microsoft.Owin.Extensions;
 using Microsoft.Owin.Security.Cookies;
 using Owin;
 using VirtoCommerce.Web.Models.Security;
@@ -20,6 +21,9 @@ namespace VirtoCommerce.Web
         #region Public Methods and Operators
         public void ConfigureAuth(IAppBuilder app)
         {
+            app.UseSiteContext();
+            //app.UseStageMarker(PipelineStage.PreHandlerExecute);
+
             // Configure the db context, user manager and role manager to use a single instance per request
             app.CreatePerOwinContext(ApplicationUserStore.Create);
             app.CreatePerOwinContext<ApplicationUserManager>(ApplicationUserManager.Create);
@@ -80,8 +84,6 @@ namespace VirtoCommerce.Web
             googleOptions.ClientId = ConfigurationManager.AppSettings["OAuth2.Google.ClientId"];
             googleOptions.ClientSecret = ConfigurationManager.AppSettings["OAuth2.Google.Secret"];
             app.UseGoogleAuthentication(googleOptions);
-
-            app.UseSiteContext();
         }
         #endregion
 

@@ -499,7 +499,7 @@ namespace VirtoCommerce.Web.Models.Services
                         keyword,
                         ItemResponseGroups.ItemLarge);
 
-            var variationIds = product.Variations.Select(v => v.Id).ToArray();
+            var variationIds = product.GetAllVariationIds();
             var prices = await this.GetProductPricesAsync(SiteContext.Current.PriceLists, variationIds);
             //var inventories = await this.GetItemInventoriesAsync(variationIds);
 

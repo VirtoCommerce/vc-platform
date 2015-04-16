@@ -67,6 +67,8 @@ namespace VirtoCommerce.Web.Models
 
         public string Id { get; set; }
 
+        public string Outline { get; set; }
+
         public Image Image { get; set; }
 
         public IEnumerable<SeoKeyword> Keywords { get; set; }
@@ -158,7 +160,7 @@ namespace VirtoCommerce.Web.Models
             //var inventories =
             //    Task.Run(() => service.GetItemInventoriesAsync(allIds.ToArray())).Result;
 
-            var productCollection = new ItemCollection<Product>(response.Items.Select(i => i.AsWebModel(prices/*, inventories*/))) { TotalCount = response.TotalCount};
+            var productCollection = new ItemCollection<Product>(response.Items.Select(i => i.AsWebModel(prices, this/*, inventories*/))) { TotalCount = response.TotalCount};
 
             // populate tags with facets returned
             if (response.Facets != null && response.Facets.Any())

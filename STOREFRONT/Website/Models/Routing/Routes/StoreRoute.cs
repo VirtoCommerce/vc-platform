@@ -55,6 +55,7 @@ namespace VirtoCommerce.Web.Models.Routing.Routes
         #endregion
 
         #region Public Methods and Operators
+        /*
         public SeoKeyword GetKeyword(string routeValue, SeoUrlKeywordTypes type, string language = null)
         {
             routeValue = routeValue.Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries).Last();
@@ -95,6 +96,7 @@ namespace VirtoCommerce.Web.Models.Routing.Routes
 
             return keyword;
         }
+         * */
 
         public virtual string GetMainRouteKey()
         {
@@ -364,7 +366,9 @@ namespace VirtoCommerce.Web.Models.Routing.Routes
 
             if (dbStore != null)
             {
-                return string.IsNullOrEmpty(dbStore.Url) && string.IsNullOrEmpty(dbStore.SecureUrl);
+                return (string.IsNullOrEmpty(dbStore.Url) || 
+                    !(dbStore.Url.Contains("http://") || dbStore.Url.Contains("https://"))) 
+                    && string.IsNullOrEmpty(dbStore.SecureUrl);
             }
 
             return true;

@@ -28,6 +28,7 @@ namespace VirtoCommerce.Web.Models.Extensions
         {
             if (relative == null) return null;
             //var urlHelper = GetUrlHelper();
+            //var url = urlHelper.RouteUrl(new { relative });
             //urlHelper.RouteUrl()
 
             return relative.StartsWith("~") ? VirtualPathUtility.ToAbsolute(relative) : relative;
