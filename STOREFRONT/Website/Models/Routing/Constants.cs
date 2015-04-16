@@ -88,6 +88,7 @@
                 return string.Format("{{{0}}}/{{{1}}}", Language, Store);
             }
         }
+
         #endregion
     }
 }
