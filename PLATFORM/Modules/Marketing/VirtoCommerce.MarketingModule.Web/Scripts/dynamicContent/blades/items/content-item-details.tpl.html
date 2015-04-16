@@ -23,7 +23,7 @@
 				<div class="form-group">
 					<label class="form-label">Content type:</label>
 					<div class="form-input">
-						<ui-select ng-model="blade.entity.contentType">
+						<ui-select ng-model="blade.entity.contentType" ng-disabled="!blade.isNew">
 							<ui-select-match placeholder="Select...">{{$select.selected}}</ui-select-match>
 							<ui-select-choices repeat="x in blade.contentTypes">
 								<span ng-bind-html="x"></span>

@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.marketingModule')
-.controller('addFolderPlaceholderController', ['$scope', 'bladeNavigationService', function ($scope, bladeNavigationService) {
+.controller('addFolderPlaceholderController', ['$scope', 'marketing_dynamicContents_res_folders', 'bladeNavigationService', function ($scope, marketing_dynamicContents_res_folders, bladeNavigationService) {
 	$scope.setForm = function (form) {
 		$scope.formScope = form;
 	}
@@ -45,17 +45,14 @@
 
 	blade.saveChanges = function () {
 		if (blade.isNew) {
-			if (angular.isUndefined(blade.parentBlade.currentEntity)) {
-				blade.parentBlade.currentEntities.push(blade.entity);
-				blade.originalEntity = angular.copy(blade.entity);
-			}
-			else {
-				blade.parentBlade.currentEntity.childrenFolders.push(blade.entity);
-			}
-			bladeNavigationService.closeBlade(blade);
+			marketing_dynamicContents_res_folders.save({}, blade.entity, function (data) {
+				bladeNavigationService.closeBlade(blade);
+			});
 		}
 		else {
-			blade.originalEntity = angular.copy(blade.entity);
+			marketing_dynamicContents_res_folders.update({}, blade.entity, function (data) {
+				blade.originalEntity = angular.copy(blade.entity);
+			});
 		}
 	}
 

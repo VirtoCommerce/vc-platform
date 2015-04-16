@@ -7,13 +7,13 @@
 	var blade = $scope.blade;
 
 	blade.entity = {
-		id: 'First',
-		name: 'First',
-		description: 'First',
+		id: '',
+		name: '',
+		description: '',
 		priority: 0,
 		isActive: true,
-		startDate: new Date(),
-		endDate: new Date(),
+		startDate: '',
+		endDate: '',
 		contentItems: [],
 		contentPlaces: []
 	};
@@ -21,7 +21,19 @@
 	blade.initializeBlade = function () {
 		blade.isLoading = false;
 
-
+		if (blade.isNew) {
+			blade.entity = {
+				id: '',
+				name: '',
+				description: '',
+				priority: 0,
+				isActive: true,
+				startDate: '',
+				endDate: '',
+				contentItems: [],
+				contentPlaces: []
+			};
+		}
 	}
 
 	blade.addPlaceholders = function () {
