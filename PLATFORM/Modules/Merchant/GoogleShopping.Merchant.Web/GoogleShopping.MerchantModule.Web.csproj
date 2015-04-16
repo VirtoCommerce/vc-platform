@@ -139,6 +139,9 @@
       <SubType>Designer</SubType>
     </Content>
     <None Include="module.manifest" />
+    <Content Include="Scripts\gshopping.js" />
+    <Content Include="Scripts\widgets\gshoppingWidget.js" />
+    <Content Include="Scripts\widgets\gshoppingWidget.tpl.html" />
     <Content Include="web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -185,6 +188,7 @@
       <Name>VirtoCommerce.Domain</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

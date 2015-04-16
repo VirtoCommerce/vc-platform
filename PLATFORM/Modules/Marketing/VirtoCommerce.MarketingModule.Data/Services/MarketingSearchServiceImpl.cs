@@ -84,11 +84,10 @@ namespace VirtoCommerce.MarketingModule.Data.Services
 					var searchedFolder = repository.GetContentFolderById(criteria.FolderId);
 					if(searchedFolder != null)
 					{
-						var coreModelFolder = searchedFolder.ToCoreModel();
 						var hasfolderItems = result.ContentPlaces.OfType<coreModel.IsHasFolder>().Concat(result.ContentItems);
 						foreach(var hasfolderItem in hasfolderItems)
 						{
-							hasfolderItem.Folder = coreModelFolder;
+							hasfolderItem.Folder = searchedFolder.ToCoreModel();
 						}
 					}
 				}

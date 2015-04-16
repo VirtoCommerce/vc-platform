@@ -34,7 +34,7 @@ namespace VirtoCommerce.CustomerModule.Data.Converters
 
 			retVal.CreatedDate = dbEntity.Created.Value;
 			retVal.ModifiedDate = dbEntity.LastModified;
-
+			retVal.ContentType = dbEntity.ContentTypeId;
 			retVal.Properties = dbEntity.PropertyValues.Select(x => x.ToCoreModel()).ToList();
 
 			if (dbEntity.Folder != null)
@@ -53,7 +53,7 @@ namespace VirtoCommerce.CustomerModule.Data.Converters
 
 			var retVal = new foundationModel.DynamicContentItem();
 			retVal.InjectFrom(contentItem);
-
+			retVal.ContentTypeId = contentItem.ContentType;
 			if (contentItem.Id != null)
 			{
 				retVal.DynamicContentItemId = contentItem.Id;

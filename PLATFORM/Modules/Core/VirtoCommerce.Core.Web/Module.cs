@@ -58,38 +58,12 @@ namespace VirtoCommerce.CoreModule.Web
         {
             using (var db = new SecurityDbContext(_connectionStringName))
             {
-                IdentityDatabaseInitializer initializer;
-
-                switch (sampleDataLevel)
-                {
-                    case SampleDataLevel.Full:
-                    case SampleDataLevel.Reduced:
-                        initializer = new IdentitySampleDatabaseInitializer();
-                        break;
-                    default:
-                        initializer = new IdentityDatabaseInitializer();
-                        break;
-                }
-
-                initializer.InitializeDatabase(db);
+                new IdentityDatabaseInitializer().InitializeDatabase(db);
             }
 
             using (var db = new EFSecurityRepository(_connectionStringName))
             {
-                SqlSecurityDatabaseInitializer initializer;
-
-                switch (sampleDataLevel)
-                {
-                    case SampleDataLevel.Full:
-                    case SampleDataLevel.Reduced:
-                        initializer = new SqlSecuritySampleDatabaseInitializer();
-                        break;
-                    default:
-                        initializer = new SqlSecurityDatabaseInitializer();
-                        break;
-                }
-
-                initializer.InitializeDatabase(db);
+                new SqlSecurityDatabaseInitializer().InitializeDatabase(db);
             }
 
             using (var db = new EFCustomerRepository(_connectionStringName))

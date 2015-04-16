@@ -421,6 +421,10 @@
     <Content Include="Scripts\common\security\auth\auth.js" />
     <Content Include="Scripts\common\security\blades\account-changePassword.js" />
     <Content Include="Scripts\common\security\blades\account-changePassword.tpl.html" />
+    <Content Include="Scripts\common\security\blades\account-api.tpl.html" />
+    <Content Include="Scripts\common\security\blades\account-api.js" />
+    <Content Include="Scripts\common\security\blades\account-roles.tpl.html" />
+    <Content Include="Scripts\common\security\blades\account-roles.js" />
     <Content Include="Scripts\common\security\blades\security-main.js" />
     <Content Include="Scripts\common\security\blades\security-main.tpl.html" />
     <Content Include="Scripts\common\security\login\login.js" />
@@ -462,6 +466,10 @@
     <Content Include="Scripts\common\security\blades\account-list.js" />
     <Content Include="Scripts\common\security\blades\account-list.tpl.html" />
     <Content Include="Scripts\common\security\resources\accounts.js" />
+    <Content Include="Scripts\common\security\widgets\accountApiWidget.js" />
+    <Content Include="Scripts\common\security\widgets\accountRolesWidget.js" />
+    <Content Include="Scripts\common\security\widgets\accountApiWidget.tpl.html" />
+    <Content Include="Scripts\common\security\widgets\accountRolesWidget.tpl.html" />
     <Content Include="Scripts\common\security\wizards\newAccount\new-account-wizard.js" />
     <Content Include="Scripts\common\security\wizards\newAccount\new-account-wizard.tpl.html" />
     <Content Include="Scripts\errors.json" />

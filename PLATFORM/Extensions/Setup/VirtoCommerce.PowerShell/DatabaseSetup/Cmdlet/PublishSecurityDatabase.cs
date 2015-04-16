@@ -20,28 +20,12 @@ namespace VirtoCommerce.PowerShell.DatabaseSetup.Cmdlet
             {
                 using (var db = new SecurityDbContext(connection))
                 {
-                    if (sample)
-                    {
-                        new IdentitySampleDatabaseInitializer().InitializeDatabase(db);
-                    }
-                    else
-                    {
-                        new IdentityDatabaseInitializer().InitializeDatabase(db);
-                    }
+                    new IdentityDatabaseInitializer().InitializeDatabase(db);
                 }
 
                 using (var db = new EFSecurityRepository(connection))
                 {
-                    if (sample)
-                    {
-                        SafeWriteVerbose("Running sample scripts");
-                        new SqlSecuritySampleDatabaseInitializer().InitializeDatabase(db);
-                    }
-                    else
-                    {
-                        SafeWriteVerbose("Running minimum scripts");
-                        new SqlSecurityDatabaseInitializer().InitializeDatabase(db);
-                    }
+                    new SqlSecurityDatabaseInitializer().InitializeDatabase(db);
                 }
             }
             catch (Exception ex)

@@ -297,7 +297,6 @@
     <Compile Include="Reviews\SqlReviewSampleDatabaseInitializer.cs" />
     <Compile Include="Search\SearchDatabaseInitializer.cs" />
     <Compile Include="Security\Identity\IdentityDatabaseInitializer.cs" />
-    <Compile Include="Security\Identity\IdentitySampleDatabaseInitializer.cs" />
     <Compile Include="Security\Identity\Migrations\201411101625303_InitialCreate.cs" />
     <Compile Include="Security\Identity\Migrations\201411101625303_InitialCreate.Designer.cs">
       <DependentUpon>201411101625303_InitialCreate.cs</DependentUpon>
@@ -314,7 +313,6 @@
       <DependentUpon>201502131605531_AddApiAcount.cs</DependentUpon>
     </Compile>
     <Compile Include="Security\SqlSecurityDatabaseInitializer.cs" />
-    <Compile Include="Security\SqlSecuritySampleDatabaseInitializer.cs" />
     <Compile Include="Stores\Migrations\201402141710203_Initial.cs" />
     <Compile Include="Stores\Migrations\201402141710203_Initial.Designer.cs">
       <DependentUpon>201402141710203_Initial.cs</DependentUpon>
@@ -573,17 +571,6 @@
     <EmbeddedResource Include="Marketing\Data\DynamicContentItem.sql" />
     <EmbeddedResource Include="Marketing\Data\Coupon.sql" />
     <EmbeddedResource Include="Customers\Data\FillRequiredCaseProperty.sql" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Orders\Data\Account.sql" />
-    <EmbeddedResource Include="Orders\Data\Address.sql" />
-    <EmbeddedResource Include="Orders\Data\AspNetUsers.sql" />
-    <EmbeddedResource Include="Orders\Data\Member.sql" />
-    <EmbeddedResource Include="Orders\Data\order_Address.sql" />
-    <EmbeddedResource Include="Orders\Data\order_CustomerOrder.sql" />
-    <EmbeddedResource Include="Orders\Data\order_LineItem.sql" />
-    <EmbeddedResource Include="Orders\Data\order_PaymentIn.sql" />
-    <EmbeddedResource Include="Orders\Data\order_Shipment.sql" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

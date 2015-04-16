@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.marketingModule')
-.controller('publishingDynamicContentListController', ['$scope', 'bladeNavigationService', function ($scope, bladeNavigationService) {
+.controller('publishingDynamicContentListController', ['$scope', 'marketing_dynamicContents_res_search', 'bladeNavigationService', function ($scope, marketing_dynamicContents_res_search, bladeNavigationService) {
 	var blade = $scope.blade;
 	blade.currentEntity = undefined;
 	blade.currentEntities = [];
@@ -7,6 +7,10 @@
 	$scope.selectedNodeId = null;
 
 	blade.initialize = function () {
+		marketing_dynamicContents_res_search.search({ respGroup: 'WithContentPublications' }, function (data) {
+			blade.currentEntities = data.contentPublications;
+		});
+
 		blade.isLoading = false;
 	};
 
@@ -14,12 +18,12 @@
 		blade.closeChildrenBlades();
 
 		var newBlade = {
-			id: 'listItemChild',
+			id: 'add_publishing_element',
 			title: 'New publising element',
-			subtitle: 'Step one publising element',
+			subtitle: 'New publising element',
 			isNew: true,
 			controller: 'addPublishingFirstStepController',
-			template: 'Modules/$(VirtoCommerce.Marketing)/Scripts/dynamicContent/blades/publishing/add-first-step.tpl.html'
+			template: 'Modules/$(VirtoCommerce.Marketing)/Scripts/dynamicContent/blades/publishing/publishing-main-step.tpl.html'
 		};
 		bladeNavigationService.showBlade(newBlade, $scope.blade);
 	}
@@ -28,13 +32,13 @@
 		blade.closeChildrenBlades();
 
 		var newBlade = {
-			id: 'listItemChild',
+			id: 'edit_publishing_element',
 			title: 'Edit publising element',
 			subtitle: 'Edit publising element',
 			entity: data,
 			isNew: false,
 			controller: 'addPublishingController',
-			template: 'Modules/$(VirtoCommerce.Marketing)/Scripts/dynamicContent/blades/placeholders/publishing-details.tpl.html'
+			template: 'Modules/$(VirtoCommerce.Marketing)/Scripts/dynamicContent/blades/placeholders/publishing-main-step.tpl.html'
 		};
 		bladeNavigationService.showBlade(newBlade, $scope.blade);
 	}
@@ -51,10 +55,6 @@
 
 	blade.publishingCheck = function (data) {
 		return angular.equals(data, blade.currentEntity);
-	}
-
-	blade.deleteLink = function (data) {
-
 	}
 
 	$scope.bladeToolbarCommands = [
@@ -80,27 +80,5 @@
 
 	$scope.bladeHeadIco = 'fa fa-flag';
 
-	blade.testData = function () {
-		blade.currentEntities.push(
-			{
-				id: 'First',
-				name: 'First',
-				description: 'First',
-				priority: 0,
-				isActive: true,
-
-				startDate: null,
-				endDate: null,
-
-				contentItems: [
-					{ id: Math.floor((Math.random() * 1000000000) + 1).toString(), name: 'Slider', description: 'Slider', contentType: 'CategoryWithImages', categoryId: 'Slider', imageUrl: 'Slider', externalImageUrl: 'Slider', message: 'Slider', categoryCode: '', title: '', sortField: '', itemCount: 1, newItems: false, flashFilePath: '', link1Url: '', link2Url: '', link3Url: '', rawHtml: '', razorHtml: '', alternativeText: '', targetUrl: '', productCode: '', parentId: 'Main' }
-				],
-				contentPlaces: [
-					{ id: 'Main-Default-Slider', name: 'Main-Default-Slider', description: 'Main-Default-Slider', descriptionImageUrl: 'http://mini.s-shot.ru/1024x768/JPEG/1024/Z100/?kitmall.ru', parentId: blade.choosenFolder }
-				],
-			});
-	}
-
-	blade.testData();
 	blade.initialize();
 }]);
