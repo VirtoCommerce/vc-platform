@@ -133,9 +133,7 @@
       <HintPath>..\..\..\packages\WebGrease.1.6.0\lib\WebGrease.dll</HintPath>
     </Reference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Models\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Compile Include="Controllers\Api\MCAuthorizationController.cs" />
     <Compile Include="Controllers\Api\MailChimpController.cs" />
