@@ -91,19 +91,25 @@ namespace VirtoCommerce.Web
 
             if (!this.IsResourceFile()) // only load settings for resource files, no need for other contents
             {
-                if (context.Authentication.User != null)
+                if (context.Authentication.User != null && context.Authentication.User.Identity.IsAuthenticated)
                 {
                     ctx.Customer =
                         await customerService.GetCustomerAsync(context.Authentication.User.Identity.Name, shop.StoreId);
                 }
+                else
+                {
+                    ctx.Customer = new Customer() { Id = "anonymous" }; // TODO: remove hard coded value
+                }
+
                 // TODO: detect if shop exists, user has access
+                // TODO: store anonymous customer id in cookie and update and merge cart once customer is logged in
 
                 ctx.Linklists = await commerceService.GetListsAsync();
                 ctx.PageTitle = ctx.Shop.Name;
                 ctx.Collections = await commerceService.GetCollectionsAsync();
                 ctx.Pages = new PageCollection();
                 ctx.Forms = commerceService.GetForms();
-                ctx.Cart = await commerceService.GetCurrentCartAsync(shop.StoreId);
+                ctx.Cart = await commerceService.GetCurrentCartAsync(); 
                 ctx.PriceLists = await commerceService.GetPriceListsAsync(ctx.Shop.Catalog, ctx.Shop.Currency, new TagQuery());
                 ctx.Theme = commerceService.GetTheme(this.ResolveTheme(shop, context));
 

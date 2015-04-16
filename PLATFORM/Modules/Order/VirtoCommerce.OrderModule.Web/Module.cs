@@ -4,6 +4,7 @@ using VirtoCommerce.Domain.Inventory.Services;
 using VirtoCommerce.Domain.Order.Services;
 using VirtoCommerce.Foundation.Data.Infrastructure;
 using VirtoCommerce.Foundation.Data.Infrastructure.Interceptors;
+using VirtoCommerce.Foundation.Data.Orders;
 using VirtoCommerce.Foundation.Frameworks.Workflow.Services;
 using VirtoCommerce.Framework.Web.Modularity;
 using VirtoCommerce.OrderModule.Data.Repositories;
@@ -14,6 +15,7 @@ namespace VirtoCommerce.OrderModule.Web
 {
     public class Module : IModule, IDatabaseModule
     {
+        private const string _connectionStringName = "VirtoCommerce";
         private readonly IUnityContainer _container;
 
         public Module(IUnityContainer container)
@@ -52,8 +54,17 @@ namespace VirtoCommerce.OrderModule.Web
         {
             using (var context = new OrderRepositoryImpl())
             {
-                var initializer = new SetupDatabaseInitializer<OrderRepositoryImpl, VirtoCommerce.OrderModule.Data.Migrations.Configuration>();
+                var initializer = new SetupDatabaseInitializer<OrderRepositoryImpl, Data.Migrations.Configuration>();
                 initializer.InitializeDatabase(context);
+            }
+
+            if (sampleDataLevel == SampleDataLevel.Full)
+            {
+                using (var db = new EFOrderRepository(_connectionStringName))
+                {
+                    var initializer = new SqlOrderSampleDatabaseInitializer();
+                    initializer.InitializeDatabase(db);
+                }
             }
         }
 

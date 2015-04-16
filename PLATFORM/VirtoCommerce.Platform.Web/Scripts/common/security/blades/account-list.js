@@ -40,12 +40,12 @@ function ($scope, accounts, bladeNavigationService, dialogService) {
 
     $scope.blade.selectNode = function (node) {
         selectedNode = node;
-        $scope.selectedNodeId = selectedNode.id;
+        $scope.selectedNodeId = selectedNode.userName;
 
         var newBlade = {
             id: 'listItemChild',
             data: selectedNode,
-            title: selectedNode.name,
+            title: selectedNode.userName,
             subtitle: $scope.blade.subtitle,
             controller: 'accountDetailController',
             template: 'Scripts/common/security/blades/account-detail.tpl.html'
@@ -111,7 +111,7 @@ function ($scope, accounts, bladeNavigationService, dialogService) {
 
                 var newBlade = {
                     id: 'listItemChild',
-                    currentEntity: {},
+                    currentEntity: { roles: [] },
                     title: 'New Account',
                     subtitle: $scope.blade.subtitle,
                     controller: 'newAccountWizardController',
