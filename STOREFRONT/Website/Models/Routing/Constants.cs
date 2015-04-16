@@ -18,6 +18,8 @@
         /// </summary>
         public const string Language = "lang";
 
+        public const string Tags = "tags";
+
         /// <summary>
         ///     The language regex
         /// </summary>
@@ -41,6 +43,21 @@
             get
             {
                 return string.Format("{0}/{{{1}}}", StoreRoute, Category);
+            }
+        }
+
+        /// <summary>
+        ///     Gets the category route. {lang}/{store}/{category}
+        /// </summary>
+        /// <value>
+        ///     The category route.
+        /// </value>
+
+        public static string CategoryRouteWithTags
+        {
+            get
+            {
+                return string.Format("{0}/{{{1}}}/{{{2}}}", StoreRoute, Category, Tags);
             }
         }
 

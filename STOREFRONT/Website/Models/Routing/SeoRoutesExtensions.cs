@@ -21,7 +21,8 @@ namespace VirtoCommerce.Web.Models.Routing
                         {
                             { "controller", "Product" },
                             { "action", "ProductByKeywordAsync" },
-                            { Constants.Language, UrlParameter.Optional }
+                            //{ Constants.Language, UrlParameter.Optional }
+
                         },
                         new RouteValueDictionary
                         {
@@ -36,19 +37,20 @@ namespace VirtoCommerce.Web.Models.Routing
             var categoryRoute =
                 new NormalizeRoute(
                     new CategoryRoute(
-                        Constants.CategoryRoute,
+                        Constants.CategoryRouteWithTags,
                         new RouteValueDictionary
                         {
                             { "controller", "Collections" },
                             { "action", "GetCollectionByKeywordAsync" },
-                            { Constants.Language, UrlParameter.Optional }
+                            //{ Constants.Language, UrlParameter.Optional },
+                            { Constants.Tags, UrlParameter.Optional },
                         },
                         new RouteValueDictionary
                         {
                             { Constants.Language, new LanguageRouteConstraint() },
                             { Constants.Store, new StoreRouteConstraint() },
-                            { Constants.Category, new CategoryRouteConstraint() }
-                            //{ "tags", UrlParameter.Optional }
+                            { Constants.Category, new CategoryRouteConstraint() }//,
+                            //{ Constants.Tags, @"^$|[0-9][0-9]"}
                         },
                         new RouteValueDictionary { { "namespaces", new[] { "VirtoCommerce.Web.Controllers" } } },
                         new MvcRouteHandler()));
