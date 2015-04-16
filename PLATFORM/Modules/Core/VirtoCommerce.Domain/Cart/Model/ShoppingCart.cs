@@ -23,7 +23,7 @@ namespace VirtoCommerce.Domain.Cart.Model
 		public string Name { get; set; }
 		public string StoreId { get; set; }
 		public string ChannelId { get; set; }
-		public bool? IsAnonymous { get; set; }
+		public bool IsAnonymous { get; set; }
 		public string CustomerId { get; set; }
 		public string CustomerName { get; set; }
 		public string OrganizationId { get; set; }
