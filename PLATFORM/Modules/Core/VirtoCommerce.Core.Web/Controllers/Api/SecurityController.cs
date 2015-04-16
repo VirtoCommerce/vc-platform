@@ -407,6 +407,14 @@ namespace VirtoCommerce.CoreModule.Web.Controllers.Api
                         StoreId = user.StoreId
                     };
 
+                    if (user.Roles != null)
+                    {
+                        foreach (var role in user.Roles)
+                        {
+                            account.RoleAssignments.Add(new RoleAssignment { RoleId = role.Id, AccountId = account.AccountId });
+                        }
+                    }
+
                     repository.Add(account);
                     repository.UnitOfWork.Commit();
                 }
