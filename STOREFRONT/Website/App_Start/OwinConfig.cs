@@ -50,6 +50,8 @@ namespace VirtoCommerce.Web
         }
         #endregion
 
+        const string anonymousCookieName = "vc-anonymous-id";
+
         #region Public Methods and Operators
         public override async Task Invoke(IOwinContext context)
         {
@@ -93,12 +95,22 @@ namespace VirtoCommerce.Web
             {
                 if (context.Authentication.User != null && context.Authentication.User.Identity.IsAuthenticated)
                 {
-                    ctx.Customer =
-                        await customerService.GetCustomerAsync(context.Authentication.User.Identity.Name, shop.StoreId);
+                    ctx.Customer = await customerService.GetCustomerAsync(
+                        context.Authentication.User.Identity.Name, shop.StoreId);
+
+                    context.Response.Cookies.Delete(anonymousCookieName);
                 }
                 else
                 {
-                    ctx.Customer = new Customer() { Id = "anonymous" }; // TODO: remove hard coded value
+                    string cookie = context.Request.Cookies[anonymousCookieName];
+
+                    if (string.IsNullOrEmpty(cookie))
+                    {
+                        cookie = Guid.NewGuid().ToString();
+                        context.Response.Cookies.Append(anonymousCookieName, cookie);
+                    }
+
+                    ctx.Customer = new Customer() { Id = cookie };
                 }
 
                 // TODO: detect if shop exists, user has access
@@ -120,7 +132,6 @@ namespace VirtoCommerce.Web
             {
                 ctx.Theme = commerceService.GetTheme(this.ResolveTheme(shop, context));
             }
-
 
             ctx.Settings = commerceService.GetSettings(
                 ctx.Theme.ToString(),
