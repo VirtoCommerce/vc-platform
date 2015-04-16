@@ -23,14 +23,16 @@ namespace VirtoCommerce.CartModule.Web.Controllers.Api
 			this._searchService = searchService;
 		}
 
-		// GET: api/cart/store1/carts/current
+		// GET: api/cart/store1/customer2/carts/current
 		[HttpGet]
 		[ResponseType(typeof(CatalogModule.Web.Model.ShoppingCart))]
-		[Route("{storeId}/carts/current")]
-		public IHttpActionResult GetCurrentCart(string storeId)
+		[Route("{storeId}/{customerId}/carts/current")]
+		public IHttpActionResult GetCurrentCart(string storeId, string customerId)
 		{
-            var customerId = this.User.Identity.Name;
-            if (String.IsNullOrEmpty(customerId)) customerId = "anonymous";
+			if (String.IsNullOrEmpty(customerId))
+			{
+				customerId = "anonymous";
+			}
 
 			var criteria = new Domain.Cart.Model.SearchCriteria
 			{
@@ -48,6 +50,8 @@ namespace VirtoCommerce.CartModule.Web.Controllers.Api
 					CustomerId = customerId,
 					IsAnonymous = this.User.Identity.IsAuthenticated,
 					StoreId = storeId,
+					//Temporary get as chanel client account
+					ChannelId = this.User.Identity.Name,
 					Name = "default",
 					Currency = CurrencyCodes.USD
 				};

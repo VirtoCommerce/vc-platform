@@ -6,13 +6,13 @@ using VirtoCommerce.Foundation.Frameworks;
 using VirtoCommerce.Foundation.Frameworks.ConventionInjections;
 using VirtoCommerce.Foundation.Frameworks.Extensions;
 using foundation = VirtoCommerce.Foundation.Security.Model;
-using webModel = VirtoCommerce.Framework.Web.Security;
+using coreModel = VirtoCommerce.Framework.Web.Security;
 
 namespace VirtoCommerce.CoreModule.Web.Converters
 {
     public static class SecurityConverters
     {
-        public static foundation.Role ToFoundation(this webModel.RoleDescriptor source)
+        public static foundation.Role ToFoundation(this coreModel.RoleDescriptor source)
         {
             var result = new foundation.Role
             {
@@ -32,12 +32,39 @@ namespace VirtoCommerce.CoreModule.Web.Converters
             return result;
         }
 
-        public static foundation.Permission ToFoundation(this webModel.PermissionDescriptor source)
+        public static foundation.Permission ToFoundation(this coreModel.PermissionDescriptor source)
         {
             var result = new foundation.Permission
             {
                 PermissionId = source.Id,
                 Name = source.Name
+            };
+
+            return result;
+        }
+
+        public static coreModel.RoleDescriptor ToCoreModel(this foundation.Role source, bool fillPermissions)
+        {
+            var result = new coreModel.RoleDescriptor
+            {
+                Id = source.RoleId,
+                Name = source.Name,
+            };
+
+            if (fillPermissions && source.RolePermissions != null)
+            {
+                result.Permissions = source.RolePermissions.Select(rp => rp.Permission.ToCoreModel()).ToArray();
+            }
+
+            return result;
+        }
+
+        public static coreModel.PermissionDescriptor ToCoreModel(this foundation.Permission source)
+        {
+            var result = new coreModel.PermissionDescriptor
+            {
+                Id = source.PermissionId,
+                Name = source.Name,
             };
 
             return result;
@@ -73,6 +100,15 @@ namespace VirtoCommerce.CoreModule.Web.Converters
                 throw new ArgumentNullException("target");
 
             var patchInjection = new PatchInjection<foundation.Permission>(x => x.Name);
+            target.InjectFrom(patchInjection, source);
+        }
+
+        public static void Patch(this foundation.RoleAssignment source, foundation.RoleAssignment target)
+        {
+            if (target == null)
+                throw new ArgumentNullException("target");
+
+            var patchInjection = new PatchInjection<foundation.RoleAssignment>(x => x.RoleId, x => x.AccountId);
             target.InjectFrom(patchInjection, source);
         }
     }

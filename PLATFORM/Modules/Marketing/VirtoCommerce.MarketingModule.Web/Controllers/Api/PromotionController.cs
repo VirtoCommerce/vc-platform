@@ -17,18 +17,18 @@ namespace VirtoCommerce.MarketingModule.Web.Controllers.Api
 	[RoutePrefix("api/marketing/promotions")]
     public class PromotionController : ApiController
     {
-		private readonly IPromotionExtensionManager _promotionManager;
+		private readonly IMarketingExtensionManager _promotionManager;
 		private readonly IPromotionService _promotionService;
 		private readonly IMarketingPromoEvaluator _promotionEvaluator;
 
-		public PromotionController(IPromotionService promotionService, 	IPromotionExtensionManager promotionManager, IMarketingPromoEvaluator promotionEvaluator)
+		public PromotionController(IPromotionService promotionService, 	IMarketingExtensionManager promotionManager, IMarketingPromoEvaluator promotionEvaluator)
 		{
 			_promotionManager = promotionManager;
 			_promotionService = promotionService;
 			_promotionEvaluator = promotionEvaluator;
 		}
 
-		// GET: api/marketing/promotions/evaluate
+		// POST: api/marketing/promotions/evaluate
 		[HttpPost]
 		[ResponseType(typeof(webModel.PromotionReward[]))]
 		[Route("evaluate")]
@@ -38,7 +38,7 @@ namespace VirtoCommerce.MarketingModule.Web.Controllers.Api
 			return Ok(retVal.Rewards.Select(x => x.ToWebModel()).ToArray());
 		}
 
-		// GET: api/marketing/promotions/processevent
+		// POST: api/marketing/promotions/processevent
 		[HttpPost]
 		[ResponseType(typeof(webModel.PromotionReward[]))]
 		[Route("processevent")]
@@ -57,7 +57,7 @@ namespace VirtoCommerce.MarketingModule.Web.Controllers.Api
 			var retVal = _promotionService.GetPromotionById(id);
 			if(retVal != null)
 			{
-				return Ok(retVal.ToWebModel(_promotionManager.DynamicExpression as PromoDynamicExpressionTree)); 
+				return Ok(retVal.ToWebModel(_promotionManager.PromotionDynamicExpressionTree as PromoDynamicExpressionTree)); 
 			}
 			return NotFound();
 		}
@@ -71,7 +71,7 @@ namespace VirtoCommerce.MarketingModule.Web.Controllers.Api
             var retVal = new webModel.Promotion
             {
 				Type = typeof(DynamicPromotion).Name,
-                DynamicExpression = _promotionManager.DynamicExpression as PromoDynamicExpressionTree,
+				DynamicExpression = _promotionManager.PromotionDynamicExpressionTree as PromoDynamicExpressionTree,
 				IsActive = true
             };
             return Ok(retVal);
