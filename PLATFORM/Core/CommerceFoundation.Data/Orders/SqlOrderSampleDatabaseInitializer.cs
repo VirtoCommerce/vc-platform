@@ -19,6 +19,19 @@ namespace VirtoCommerce.Foundation.Data.Orders
 			"TaxValue.sql"
 		};
 
+        private readonly string[] _orderFiles =
+		{ 
+			"Account.sql",
+            "Member.sql",
+            "AspNetUsers.sql",
+            "Address.sql",
+            "order_CustomerOrder.sql",
+            "order_PaymentIn.sql",
+            "order_Shipment.sql",
+            "order_Address.sql",
+            "order_LineItem.sql"
+		};
+
 		private readonly string[] _customers =
 		{
 			"Bauermeister, Denise",
@@ -46,9 +59,10 @@ namespace VirtoCommerce.Foundation.Data.Orders
 
 		protected override void Seed(EFOrderRepository context)
 		{
-			base.Seed(context);
-			CreateOrders(context);
-			FillOrdersScripts(context);
+			//base.Seed(context);
+			//CreateOrders(context);
+			//FillOrdersScripts(context);
+            FillCustomerOrdersScripts(context);
 		}
 
 		private void CreateOrders(EFOrderRepository repository)
@@ -90,6 +104,14 @@ namespace VirtoCommerce.Foundation.Data.Orders
 				ExecuteSqlScriptFile(repository, file, "Orders");
 			}
 		}
+
+        private void FillCustomerOrdersScripts(EFOrderRepository repository)
+        {
+            foreach (string file in _orderFiles)
+            {
+                ExecuteSqlScriptFile(repository, file, "Orders");
+            }
+        }
 
 	}
 

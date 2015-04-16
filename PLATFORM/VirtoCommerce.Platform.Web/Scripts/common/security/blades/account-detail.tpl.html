@@ -1,16 +1,15 @@
 ﻿<div class="blade-content">
     <div class="blade-inner">
         <div class="inner-block clearfix">
+            <div class="sub-t __border">User information</div>
+            <div class="form-group">
+                <label class="form-label">Login</label>
+                <div class="form-input">
+                    <p class="form-text">{{blade.currentEntity.userName}}</p>
+                </div>
+            </div>
             <form class="form" name="detailForm">
-                <fieldset>
-                    <div class="form-group" ng-init="setForm(detailForm)">
-                        <label class="form-label">Login</label>
-                        <div class="form-input">
-                            <p class="form-text">{{blade.currentEntity.userName}}</p>
-                        </div>
-                    </div>
-                </fieldset>
-                <fieldset>
+                <fieldset ng-init="setForm(detailForm)">
                     <div class="form-group __head">
                         <label class="form-label">
                             API access
@@ -23,7 +22,6 @@
 
                     </div>
                     <div class="form-group">
-
                         <label class="form-label">
                             AppId
                         </label>
@@ -36,6 +34,20 @@
                         </div>
                     </div>
                 </fieldset>
+                <div class="sub-t __border">Assigned roles</div>
+                <div class="form">
+                    <div class="form-group">
+                        <a class="clear text-mini __link" ng-click="removeAll()">Clear all</a>
+                        <ul class="list __inline __choosen">
+                            <li class="list-item" ng-repeat="data in blade.currentEntity.roles">
+                                <a class="list-remove" ng-click="remove(data)">×</a>
+                                <span class="list-name">{{data.name}}</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="sub-t __border">Available roles</div>
+                <div ui-grid="gridOptions" ui-grid-selection></div>
             </form>
         </div>
     </div>

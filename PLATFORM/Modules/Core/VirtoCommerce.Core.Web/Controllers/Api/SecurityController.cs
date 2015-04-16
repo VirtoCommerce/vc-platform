@@ -354,6 +354,14 @@ namespace VirtoCommerce.CoreModule.Web.Controllers.Api
                         source.Patch(acount.ApiAccounts, inventoryComparer, (sourceAccount, targetAccount) => sourceAccount.Patch(targetAccount));
                     }
 
+                    if (user.Roles != null)
+                    {
+                        var sourceCollection = new ObservableCollection<RoleAssignment>(user.Roles.Select(r => new RoleAssignment { RoleId = r.Id }));
+                        var comparer = AnonymousComparer.Create((RoleAssignment x) => x.RoleId);
+                        acount.RoleAssignments.ObserveCollection(ra => repository.Add(ra), ra => repository.Remove(ra));
+                        sourceCollection.Patch(acount.RoleAssignments, comparer, (source, target) => source.Patch(target));
+                    }
+
                     repository.UnitOfWork.Commit();
                 }
 
@@ -399,6 +407,14 @@ namespace VirtoCommerce.CoreModule.Web.Controllers.Api
                         RegisterType = user.UserType.GetHashCode(),
                         StoreId = user.StoreId
                     };
+
+                    if (user.Roles != null)
+                    {
+                        foreach (var role in user.Roles)
+                        {
+                            account.RoleAssignments.Add(new RoleAssignment { RoleId = role.Id, AccountId = account.AccountId });
+                        }
+                    }
 
                     repository.Add(account);
                     repository.UnitOfWork.Commit();
