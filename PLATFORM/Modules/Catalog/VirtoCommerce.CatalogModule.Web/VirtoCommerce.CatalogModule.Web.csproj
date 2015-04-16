@@ -185,7 +185,7 @@
     <Content Include="Scripts\blades\property-valueType.tpl.html" />
     <Content Include="Scripts\blades\property-type.tpl.html" />
     <Content Include="Scripts\blades\catalog-languages.tpl.html" />
-    <Content Include="Scripts\blades\catalog-languages-detail.js" />
+    <Content Include="Scripts\blades\catalog-languages.js" />
     <Content Include="Scripts\blades\categories-items-add.js" />
     <Content Include="Scripts\blades\catalog-add.js" />
     <Content Include="Scripts\blades\categories-items-add.tpl.html" />
@@ -339,9 +339,7 @@
       <Name>VirtoCommerce.CatalogModule.Data</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Scripts\app\catalog\" />
-  </ItemGroup>
+  <ItemGroup />
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
