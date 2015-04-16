@@ -43,31 +43,31 @@ namespace VirtoCommerce.CartModule.Data.Converters
 			return retVal;
 		}
 
-		public static ShoppingCartEntity ToEntity(this ShoppingCart order)
+		public static ShoppingCartEntity ToEntity(this ShoppingCart cart)
 		{
-			if (order == null)
-				throw new ArgumentNullException("order");
+			if (cart == null)
+				throw new ArgumentNullException("cart");
 
 			var retVal = new ShoppingCartEntity();
-			retVal.InjectFrom(order);
+			retVal.InjectFrom(cart);
 
-			retVal.Currency = order.Currency.ToString();
-		
-			if (order.Addresses != null)
+			retVal.Currency = cart.Currency.ToString();
+
+			if (cart.Addresses != null)
 			{
-				retVal.Addresses = new ObservableCollection<AddressEntity>(order.Addresses.Select(x => x.ToEntity()));
+				retVal.Addresses = new ObservableCollection<AddressEntity>(cart.Addresses.Select(x => x.ToEntity()));
 			}
-			if (order.Items != null)
+			if (cart.Items != null)
 			{
-				retVal.Items = new ObservableCollection<LineItemEntity>(order.Items.Select(x => x.ToEntity()));
+				retVal.Items = new ObservableCollection<LineItemEntity>(cart.Items.Select(x => x.ToEntity()));
 			}
-			if (order.Shipments != null)
+			if (cart.Shipments != null)
 			{
-				retVal.Shipments = new ObservableCollection<ShipmentEntity>(order.Shipments.Select(x => x.ToEntity()));
+				retVal.Shipments = new ObservableCollection<ShipmentEntity>(cart.Shipments.Select(x => x.ToEntity()));
 			}
-			if (order.Payments != null)
+			if (cart.Payments != null)
 			{
-				retVal.Payments = new ObservableCollection<PaymentEntity>(order.Payments.Select(x => x.ToEntity()));
+				retVal.Payments = new ObservableCollection<PaymentEntity>(cart.Payments.Select(x => x.ToEntity()));
 			}
 
 			return retVal;
