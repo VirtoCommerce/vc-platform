@@ -3,12 +3,12 @@
 	var blade = $scope.blade;
 
 	blade.addFolder = function () {
-		var data = { id: Math.floor((Math.random() * 1000000000) + 1).toString(), name: '', description: '', parentId: blade.choosenFolder, placeholders: [], childrenFolders: [] };
+		var data = { outline: '', name: '', description: '', parentFolderId: blade.choosenFolder};
 		blade.parentBlade.addNewFolder(data);
 	};
 
 	blade.addPlaceholder = function () {
-		var data = { id: Math.floor((Math.random() * 1000000000) + 1).toString(), name: '', description: '', descriptionImageUrl: 'http://mini.s-shot.ru/1024x768/JPEG/1024/Z100/?kitmall.ru', parentId: blade.choosenFolder };
+		var data = { name: '', description: '', imageUrl: 'http://mini.s-shot.ru/1024x768/JPEG/1024/Z100/?kitmall.ru', folderId: blade.choosenFolder };
 		blade.parentBlade.addNewPlaceholder(data);
 	};
 

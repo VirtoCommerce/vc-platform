@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.marketingModule')
-.controller('addPlaceholderController', ['$scope', 'bladeNavigationService', function ($scope, bladeNavigationService) {
+.controller('addPlaceholderController', ['$scope', 'marketing_dynamicContents_res_contentPlaces', 'bladeNavigationService', function ($scope, marketing_dynamicContents_res_contentPlaces, bladeNavigationService) {
 	$scope.setForm = function (form) {
 		$scope.formScope = form;
 	}
@@ -44,10 +44,15 @@
 	}
 
 	blade.saveChanges = function () {
-		blade.parentBlade.currentEntity.placeholders.push(blade.entity);
-		blade.originalEntity = angular.copy(blade.entity);
 		if (blade.isNew) {
-			bladeNavigationService.closeBlade(blade);
+			marketing_dynamicContents_res_contentPlaces.save({}, blade.entity, function (data) {
+				bladeNavigationService.closeBlade(blade);
+			});
+		}
+		else {
+			marketing_dynamicContents_res_contentPlaces.update({}, blade.entity, function (data) {
+				blade.originalEntity = angular.copy(blade.entity);
+			});
 		}
 	}
 

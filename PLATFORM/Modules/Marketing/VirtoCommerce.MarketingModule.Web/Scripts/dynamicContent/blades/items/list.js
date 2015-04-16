@@ -1,13 +1,16 @@
 ﻿angular.module('virtoCommerce.marketingModule')
-.controller('itemsDynamicContentListController', ['$scope', 'bladeNavigationService', function ($scope, bladeNavigationService) {
+.controller('itemsDynamicContentListController', ['$scope', 'marketing_dynamicContents_res_search', 'bladeNavigationService', function ($scope, marketing_dynamicContents_res_search, bladeNavigationService) {
 	var blade = $scope.blade;
-	blade.choosenFolder = undefined;
+	blade.choosenFolder = 'ContentItem';
 	blade.currentEntity = undefined;
-	blade.currentEntities = [];
 
 	$scope.selectedNodeId = null;
 
-	blade.initializeBlade = function() {
+	blade.initializeBlade = function () {
+		marketing_dynamicContents_res_search.search({ folder: blade.choosenFolder, respGroup: 'WithFolders' }, function (data) {
+			blade.currentEntities = data.contentFolders;
+		});
+
 		blade.isLoading = false;
 	};
 
@@ -91,58 +94,86 @@
 		});
 	}
 
-	blade.folderClick = function (data) {
-		if (angular.isUndefined(blade.choosenFolder) || !angular.equals(blade.choosenFolder, data.id)) {
-			blade.choosenFolder = data.id;
-			blade.currentEntity = data;
+	blade.folderClick = function (contentItem) {
+		if (angular.isUndefined(blade.choosenFolder) || !angular.equals(blade.choosenFolder, contentItem.id)) {
+			blade.choosenFolder = contentItem.id;
+			blade.currentEntity = contentItem;
+			marketing_dynamicContents_res_search.search({ folder: contentItem.id, respGroup: 'WithFolders' }, function (data) {
+				contentItem.childrenFolders = data.contentFolders;
+			});
+
+			marketing_dynamicContents_res_search.search({ folder: contentItem.id, respGroup: 'WithContentItems' }, function (data) {
+				contentItem.items = data.contentItems;
+			});
 		}
 		else {
-			blade.choosenFolder = data.parentId;
+			blade.choosenFolder = contentItem.parentFolderId;
 			blade.currentEntity = undefined;
 		}
 	}
 
 	blade.checkFolder = function (data) {
 		var retVal = angular.equals(data.id, blade.choosenFolder);
-		var childFolders = data.childrenFolders;
-		var nextLevelChildFolders = [];
-		while (childFolders.length > 0 && !retVal) {
-			if (!angular.isUndefined(_.find(childFolders, function (folder) { return angular.equals(folder.id, blade.choosenFolder); }))) {
-				retVal = true;
-			}
-			else {
-				for (var i = 0; i < childFolders.length; i++) {
-					if (childFolders[i].childrenFolders.length > 0) {
-						nextLevelChildFolders = _.union(nextLevelChildFolders, childFolders[i].childrenFolders);
-					}
+		if (data.childrenFolders) {
+			var childFolders = data.childrenFolders;
+			var nextLevelChildFolders = [];
+			while (childFolders.length > 0 && !retVal) {
+				if (!angular.isUndefined(_.find(childFolders, function (folder) { return angular.equals(folder.id, blade.choosenFolder); }))) {
+					retVal = true;
 				}
-				childFolders = nextLevelChildFolders;
-				nextLevelChildFolders = [];
+				else {
+					for (var i = 0; i < childFolders.length; i++) {
+						if (childFolders[i].childrenFolders) {
+							if (childFolders[i].childrenFolders.length > 0) {
+								nextLevelChildFolders = _.union(nextLevelChildFolders, childFolders[i].childrenFolders);
+							}
+						}
+					}
+					childFolders = nextLevelChildFolders;
+					nextLevelChildFolders = [];
+				}
 			}
 		}
 
 		return retVal;
 	}
 
+	blade.updateChoosen = function () {
+		if (blade.choosenFolder === 'ContentItem') {
+			marketing_dynamicContents_res_search.search({ folder: blade.choosenFolder, respGroup: 'WithFolders' }, function (data) {
+				blade.currentEntities = data.contentFolders;
+			});
+		}
+		else {
+			marketing_dynamicContents_res_search.search({ folder: blade.choosenFolder, respGroup: 'WithFolders' }, function (data) {
+				blade.currentEntity.childrenFolders = data.contentFolders;
+			});
+
+			marketing_dynamicContents_res_search.search({ folder: blade.choosenFolder, respGroup: 'WithContentItems' }, function (data) {
+				blade.currentEntity.items = data.contentItems;
+			});
+		}
+	};
+
 	$scope.bladeToolbarCommands = [
-        {
-        	name: "Refresh", icon: 'fa fa-refresh',
-        	executeMethod: function () {
-        		$scope.blade.refresh();
-        	},
-        	canExecuteMethod: function () {
-        		return true;
-        	}
-        },
-        {
-        	name: "Add", icon: 'fa fa-plus',
-        	executeMethod: function () {
-        		blade.addNew();
-        	},
-        	canExecuteMethod: function () {
-        		return true;
-        	}
-        },
+		{
+			name: "Refresh", icon: 'fa fa-refresh',
+			executeMethod: function () {
+				$scope.blade.refresh();
+			},
+			canExecuteMethod: function () {
+				return true;
+			}
+		},
+		{
+			name: "Add", icon: 'fa fa-plus',
+			executeMethod: function () {
+				blade.addNew();
+			},
+			canExecuteMethod: function () {
+				return true;
+			}
+		},
 		{
 			name: "Edit folder", icon: 'fa fa-pencil-square-o',
 			executeMethod: function () {
@@ -156,55 +187,5 @@
 
 	$scope.bladeHeadIco = 'fa fa-flag';
 
-	blade.testData = function () {
-		blade.currentEntities.push(
-			{
-				id: 'Main',
-				name: 'Main',
-				description: 'Main',
-				childrenFolders: [
-					{
-						id: 'Simple',
-						name: 'Simple',
-						description: 'Simple',
-						childrenFolders: [
-							{
-								id: 'Footer',
-								name: 'Footer',
-								description: 'Footer',
-								childrenFolders: [],
-								placeholders: [],
-								parentId: 'Simple',
-							}
-						],
-						items: [],
-						parentId: 'Main',
-					},
-					{
-						id: 'Tinker',
-						name: 'Tinker',
-						description: 'Tinker',
-						childrenFolders: [
-							{
-								id: 'Footer1',
-								name: 'Footer1',
-								description: 'Footer1',
-								childrenFolders: [],
-								placeholders: [],
-								parentId: 'Tinker',
-							}
-						],
-						items: [],
-						parentId: 'Main',
-					},
-				],
-				items: [
-					{ id: Math.floor((Math.random() * 1000000000) + 1).toString(), name: 'Slider', description: 'Slider', contentType: 'CategoryWithImages', categoryId: 'Slider', imageUrl: 'Slider', externalImageUrl: 'Slider', message: 'Slider', categoryCode: '', title: '', sortField: '', itemCount: 1, newItems: false, flashFilePath: '', link1Url: '', link2Url: '', link3Url: '', rawHtml: '', razorHtml: '', alternativeText: '', targetUrl: '', productCode: '', parentId: 'Main' }
-				],
-				parentId: undefined
-			});
-	}
-
-	blade.testData();
 	blade.initializeBlade();
 }]);

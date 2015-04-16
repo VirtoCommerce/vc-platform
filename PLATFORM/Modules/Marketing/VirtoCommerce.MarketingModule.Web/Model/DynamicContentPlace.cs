@@ -24,5 +24,6 @@ namespace VirtoCommerce.MarketingModule.Web.Model
 		public string FolderId { get; set; }
 		public string Outline { get; set; }
 		public string Path { get; set; }
+		public string ImageUrl { get; set; }
 	}
 }

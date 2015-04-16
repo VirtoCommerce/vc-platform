@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.marketingModule')
-.controller('addContentItemsController', ['$scope', 'bladeNavigationService', function ($scope, bladeNavigationService) {
+.controller('addContentItemsController', ['$scope', 'marketing_dynamicContents_res_contentItems', 'bladeNavigationService', function ($scope, marketing_dynamicContents_res_contentItems, bladeNavigationService) {
 	$scope.setForm = function (form) {
 		$scope.formScope = form;
 	}
@@ -44,10 +44,27 @@
 	}
 
 	blade.saveChanges = function () {
-		blade.parentBlade.currentEntity.items.push(blade.entity);
-		blade.originalEntity = angular.copy(blade.entity);
+		blade.createContentItem();
 		if (blade.isNew) {
-			bladeNavigationService.closeBlade(blade);
+			marketing_dynamicContents_res_contentItems.save({}, blade.entity, function (data) {
+				blade.parentBlade.updateChoosen();
+				bladeNavigationService.closeBlade(blade);
+			});
+		}
+		else {
+			marketing_dynamicContents_res_contentItems.update({}, blade.entity, function (data) {
+				blade.originalEntity = angular.copy(blade.entity);
+			});
+		}
+	}
+
+	blade.createContentItem = function () {
+		var properties = blade.properties[blade.entity.contentType];
+
+		blade.entity.properties = [];
+
+		for (var i = 0; i < properties.length; i++){
+			blade.entity.properties.push({ name: properties[i].name, value: blade.entity[properties[i].name], valueType: properties[i].valueType });
 		}
 	}
 
@@ -63,20 +80,57 @@
 	];
 
 	blade.properties = {
-		CategoryWithImages: ['categoryId', 'imageUrl', 'externalImageUrl', 'message'],
-		CategoryUrl: ['categoryCode', 'title', 'sortField', 'itemCount', 'newItems'],
-		Flash: ['flashFilePath', 'link1Url', 'link2Url', 'link3Url'],
-		Html: ['rawHtml'],
-		Razor: ['razorHtml'],
-		ImageClickable: ['alternativeText', 'imageUrl', 'targetUrl', 'title'],
-		ImageNonClickable: ['alternativeText', 'imageUrl'],
-		ProductWithImageAndPrice: ['productCode']
+		CategoryWithImages: [
+			{ name: 'categoryId', valueType: 'ShortText' },
+			{ name: 'imageUrl', valueType: 'ShortText' },
+			{ name: 'externalImageUrl', valueType: 'ShortText' },
+			{ name: 'message', valueType: 'LongText' }
+		],
+		CategoryUrl: [
+			{ name: 'categoryCode', valueType: 'ShortText' },
+			{ name: 'title', valueType: 'ShortText' },
+			{ name: 'sortField', valueType: 'ShortText' },
+			{ name: 'itemCount', valueType: 'Integer' },
+			{ name: 'newItems', valueType: 'Boolean' }
+		],
+		Flash: [
+			{ name: 'flashFilePath', valueType: 'ShortText' },
+			{ name: 'link1Url', valueType: 'ShortText' },
+			{ name: 'link2Url', valueType: 'ShortText' },
+			{ name: 'link3Url', valueType: 'ShortText' }
+		],
+		Html: [
+			{ name: 'rawHtml', valueType: 'LongText' }
+		],
+		Razor: [
+			{ name: 'razorHtml', valueType: 'LongText' }
+		],
+		ImageClickable: [
+			{ name: 'alternativeText', valueType: 'LongText' },
+			{ name: 'imageUrl', valueType: 'ShortText' },
+			{ name: 'targetUrl', valueType: 'ShortText' },
+			{ name: 'title', valueType: 'ShortText' }
+		],
+		ImageNonClickable: [
+			{ name: 'alternativeText', valueType: 'LongText' },
+			{ name: 'imageUrl', valueType: 'ShortText' }
+		],
+		ProductWithImageAndPrice: [
+			{ name: 'productCode', valueType: 'ShortText' },
+		]
 	}
 
 	blade.isPropertyShows = function (propertyName) {
 		var properties = blade.properties[blade.entity.contentType];
 
-		return properties.indexOf(propertyName) !== -1;
+		var retVal = false;
+
+		for (var i = 0; i < properties.length; i++) {
+			if (properties[i].name === propertyName)
+				retVal = true;
+		}
+
+		return retVal;
 	}
 
 	blade.initialize();

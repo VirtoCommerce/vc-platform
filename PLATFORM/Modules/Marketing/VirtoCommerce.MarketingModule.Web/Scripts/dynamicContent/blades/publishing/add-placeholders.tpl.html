@@ -1,0 +1,29 @@
+﻿<div class="blade-content __medium-wide">
+	<div class="blade-inner">
+		<div class="inner-block">
+			<fieldset>
+				<legend class="ng-binding">Choosen placeholders</legend>
+				<div class="form-group">
+					<a class="clear text-mini __link" ng-click="blade.deleteAllPlaceholder()">Clear all</a>
+					<ul class="list __inline __choosen">
+						<li class="list-item" ng-repeat="place in blade.entity.contentPlaces">
+							<a class="list-remove" ng-click="blade.deletePlaceholder(place)">×</a>
+							<span class="list-name">{{place.path}}</span>
+						</li>
+					</ul>
+				</div>
+			</fieldset>
+			<fieldset>
+				<legend class="ng-binding">Placeholders</legend>
+				<ul class="list __files" ng-if="blade.currentEntities.length">
+					<li class="list-item" ng-click="blade.folderClick(data)" ng-repeat="data in blade.currentEntities" ng-include="'Modules/$(VirtoCommerce.Marketing)/Scripts/dynamicContent/blades/publishing/placeholders.tpl.html'">
+
+					</li>
+				</ul>
+				<p class="text" ng-if="!blade.currentEntities.length">No Placeholders yet</p>
+			</fieldset>
+		</div>
+	</div>
+</div>
+
+

@@ -1,13 +1,17 @@
 ﻿angular.module('virtoCommerce.marketingModule')
-.controller('placeholdersDynamicContentListController', ['$scope', 'bladeNavigationService', function ($scope, bladeNavigationService) {
+.controller('placeholdersDynamicContentListController', ['$scope', 'marketing_dynamicContents_res_search', 'bladeNavigationService', function ($scope, marketing_dynamicContents_res_search, bladeNavigationService) {
 	var blade = $scope.blade;
-	blade.choosenFolder = undefined;
+	blade.choosenFolder = 'ContentPlace';
 	blade.currentEntity = undefined;
 	blade.currentEntities = [];
 
 	$scope.selectedNodeId = null;
 
-	blade.initialize = function() {
+	blade.initialize = function () {
+		marketing_dynamicContents_res_search.search({ folder: 'ContentPlace', respGroup: 'WithFolders' }, function (data) {
+			blade.currentEntities = data.contentFolders;
+		});
+
 		blade.isLoading = false;
 	};
 
@@ -91,38 +95,66 @@
 		});
 	}
 
-	blade.folderClick = function (data) {
-		if (angular.isUndefined(blade.choosenFolder) || !angular.equals(blade.choosenFolder, data.id)) {
-			blade.choosenFolder = data.id;
-			blade.currentEntity = data;
+	blade.folderClick = function (placeholderFolder) {
+		if (angular.isUndefined(blade.choosenFolder) || !angular.equals(blade.choosenFolder, placeholderFolder.id)) {
+			blade.choosenFolder = placeholderFolder.id;
+			blade.currentEntity = placeholderFolder;
+			marketing_dynamicContents_res_search.search({ folder: placeholderFolder.id, respGroup: 'WithFolders' }, function (data) {
+				placeholderFolder.childrenFolders = data.contentFolders;
+			});
+
+			marketing_dynamicContents_res_search.search({ folder: placeholderFolder.id, respGroup: 'WithContentPlaces' }, function (data) {
+				placeholderFolder.placeholders = data.contentPlaces;
+			});
 		}
 		else {
-			blade.choosenFolder = data.parentId;
+			blade.choosenFolder = placeholderFolder.parentFolderId;
 			blade.currentEntity = undefined;
 		}
 	}
 
 	blade.checkFolder = function (data) {
 		var retVal = angular.equals(data.id, blade.choosenFolder);
-		var childFolders = data.childrenFolders;
-		var nextLevelChildFolders = [];
-		while (childFolders.length > 0 && !retVal) {
-			if (!angular.isUndefined(_.find(childFolders, function (folder) { return angular.equals(folder.id, blade.choosenFolder); }))) {
-				retVal = true;
-			}
-			else {
-				for (var i = 0; i < childFolders.length; i++) {
-					if (childFolders[i].childrenFolders.length > 0) {
-						nextLevelChildFolders = _.union(nextLevelChildFolders, childFolders[i].childrenFolders);
-					}
+		if (data.childrenFolders) {
+			var childFolders = data.childrenFolders;
+			var nextLevelChildFolders = [];
+			while (childFolders.length > 0 && !retVal) {
+				if (!angular.isUndefined(_.find(childFolders, function (folder) { return angular.equals(folder.id, blade.choosenFolder); }))) {
+					retVal = true;
 				}
-				childFolders = nextLevelChildFolders;
-				nextLevelChildFolders = [];
+				else {
+					for (var i = 0; i < childFolders.length; i++) {
+						if (childFolders[i].childrenFolders) {
+							if (childFolders[i].childrenFolders.length > 0) {
+								nextLevelChildFolders = _.union(nextLevelChildFolders, childFolders[i].childrenFolders);
+							}
+						}
+					}
+					childFolders = nextLevelChildFolders;
+					nextLevelChildFolders = [];
+				}
 			}
 		}
 
 		return retVal;
 	}
+
+	blade.updateChoosen = function () {
+		if (blade.choosenFolder === 'ContentPlace') {
+			marketing_dynamicContents_res_search.search({ folder: blade.choosenFolder, respGroup: 'WithFolders' }, function (data) {
+				blade.currentEntities = data.contentFolders;
+			});
+		}
+		else {
+			marketing_dynamicContents_res_search.search({ folder: blade.choosenFolder, respGroup: 'WithFolders' }, function (data) {
+				blade.currentEntity.childrenFolders = data.contentFolders;
+			});
+
+			marketing_dynamicContents_res_search.search({ folder: blade.choosenFolder, respGroup: 'WithContentPlaceholders' }, function (data) {
+				blade.currentEntity.placeholders = data.contentPlaces;
+			});
+		}
+	};
 
 	blade.deleteLink = function (data) {
 
@@ -160,55 +192,5 @@
 
 	$scope.bladeHeadIco = 'fa fa-flag';
 
-	blade.testData = function () {
-		blade.currentEntities.push(
-			{
-				id: 'Main',
-				name: 'Main',
-				description: 'Main',
-				childrenFolders: [
-					{
-						id: 'Simple',
-						name: 'Simple',
-						description: 'Simple',
-						childrenFolders: [
-							{
-								id: 'Footer',
-								name: 'Footer',
-								description: 'Footer',
-								childrenFolders: [],
-								placeholders: [],
-								parentId: 'Simple',
-							}
-						],
-						placeholders: [],
-						parentId: 'Main',
-					},
-					{
-						id: 'Tinker',
-						name: 'Tinker',
-						description: 'Tinker',
-						childrenFolders: [
-							{
-								id: 'Footer1',
-								name: 'Footer1',
-								description: 'Footer1',
-								childrenFolders: [],
-								placeholders: [],
-								parentId: 'Tinker',
-							}
-						],
-						placeholders: [],
-						parentId: 'Main',
-					},
-				],
-				placeholders: [
-					{ id: 'Main-Default-Slider', name: 'Main-Default-Slider', description: 'Main-Default-Slider', descriptionImageUrl: 'http://mini.s-shot.ru/1024x768/JPEG/1024/Z100/?kitmall.ru', parentId: blade.choosenFolder }
-				],
-				parentId: undefined
-			});
-	}
-
-	blade.testData();
 	blade.initialize();
 }]);

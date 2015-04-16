@@ -178,10 +178,13 @@
     <Content Include="Scripts\dynamicContent\blades\placeholders\list-items.tpl.html" />
     <Content Include="Scripts\dynamicContent\blades\placeholders\placeholder-details.js" />
     <Content Include="Scripts\dynamicContent\blades\placeholders\placeholder-details.tpl.html" />
-    <Content Include="Scripts\dynamicContent\blades\publishing\add-first-step.js" />
-    <Content Include="Scripts\dynamicContent\blades\publishing\add-first-step.tpl.html" />
-    <Content Include="Scripts\dynamicContent\blades\publishing\add-second-step.js" />
-    <Content Include="Scripts\dynamicContent\blades\publishing\add-second-step.tpl.html" />
+    <Content Include="Scripts\dynamicContent\blades\publishing\add-content-items.js" />
+    <Content Include="Scripts\dynamicContent\blades\publishing\add-content-items.tpl.html" />
+    <Content Include="Scripts\dynamicContent\blades\publishing\content-items.tpl.html" />
+    <Content Include="Scripts\dynamicContent\blades\publishing\publishing-main-step.js" />
+    <Content Include="Scripts\dynamicContent\blades\publishing\publishing-main-step.tpl.html" />
+    <Content Include="Scripts\dynamicContent\blades\publishing\add-placeholders.js" />
+    <Content Include="Scripts\dynamicContent\blades\publishing\add-placeholders.tpl.html" />
     <Content Include="Scripts\dynamicContent\blades\publishing\placeholders.tpl.html" />
     <Content Include="Scripts\dynamicContent\blades\publishing\list.js" />
     <Content Include="Scripts\dynamicContent\blades\publishing\list.tpl.html" />
@@ -192,6 +195,7 @@
     <Content Include="Scripts\dynamicContent\blades\placeholders\add.tpl.html" />
     <Content Include="Scripts\dynamicContent\blades\placeholders\list.js" />
     <Content Include="Scripts\dynamicContent\blades\placeholders\list.tpl.html" />
+    <Content Include="Scripts\dynamicContent\resources\dynamicContents.js" />
     <Content Include="Scripts\promotion\blades\promotion-expressions.js" />
     <Content Include="Scripts\promotion\blades\promotion-detail.js" />
     <Content Include="Scripts\promotion\blades\promotion-detail.tpl.html" />

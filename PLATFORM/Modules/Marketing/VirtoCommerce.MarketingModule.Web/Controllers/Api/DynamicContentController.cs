@@ -160,7 +160,7 @@ namespace VirtoCommerce.MarketingModule.Web.Controllers.Api
 
 		// GET: api/marketing/contentfolders/{id}
 		[HttpGet]
-		[ResponseType(typeof(webModel.DynamicContentPublication))]
+		[ResponseType(typeof(webModel.DynamicContentFolder))]
 		[Route("contentfolders/{id}")]
 		public IHttpActionResult GetDynamicContentFolderById(string id)
 		{
