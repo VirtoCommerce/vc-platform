@@ -40,7 +40,7 @@
         {
             get
             {
-                return string.Format("{0}/{{{1}}}/{{tags}}", StoreRoute, Category);
+                return string.Format("{0}/{{{1}}}", StoreRoute, Category);
             }
         }
 

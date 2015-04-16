@@ -48,6 +48,7 @@ namespace VirtoCommerce.Web.Models.Routing
                             { Constants.Language, new LanguageRouteConstraint() },
                             { Constants.Store, new StoreRouteConstraint() },
                             { Constants.Category, new CategoryRouteConstraint() }
+                            //{ "tags", UrlParameter.Optional }
                         },
                         new RouteValueDictionary { { "namespaces", new[] { "VirtoCommerce.Web.Controllers" } } },
                         new MvcRouteHandler()));
