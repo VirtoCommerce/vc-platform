@@ -12,6 +12,7 @@ using VirtoCommerce.Web.Models.Extensions;
 using VirtoCommerce.Web.Models.Helpers;
 using VirtoCommerce.Web.Models.Services;
 using VirtoCommerce.Web.Views.Engines.Liquid.Extensions;
+using VirtoCommerce.ApiClient.DataContracts.Marketing;
 
 #endregion
 
@@ -153,12 +154,37 @@ namespace VirtoCommerce.Web.Models
 
             this.AllProductsCount = response.TotalCount;
             var allIds = response.Items.ToArray().GetAllVariationIds();
+
             var prices =
                 Task.Run(() => service.GetProductPricesAsync(priceLists, allIds.ToArray())).Result;
+
+            var promoEntries = new List<ProductPromoEntry>();
+            foreach (var item in response.Items)
+            {
+                var price = prices.FirstOrDefault(p => p.ProductId == item.Id);
+                promoEntries.Add(new ProductPromoEntry
+                {
+                    CatalogId = item.CatalogId,
+                    Code = item.Code,
+                    Price = price != null ? price.List : 0M,
+                    ProductId = item.Id,
+                    Quantity = 1
+                });
+            }
+
+            var promoContext = new PromotionEvaluationContext
+            {
+                IsEveryone = true,
+                PromoEntries = promoEntries,
+                StoreId = SiteContext.Current.StoreId
+            };
+
+            var rewards = Task.Run(() => service.GetPromoRewardsAsync(promoContext)).Result;
+
             //var inventories =
             //    Task.Run(() => service.GetItemInventoriesAsync(allIds.ToArray())).Result;
 
-            var productCollection = new ItemCollection<Product>(response.Items.Select(i => i.AsWebModel(prices/*, inventories*/))) { TotalCount = response.TotalCount};
+            var productCollection = new ItemCollection<Product>(response.Items.Select(i => i.AsWebModel(prices, rewards/*, inventories*/))) { TotalCount = response.TotalCount};
 
             // populate tags with facets returned
             if (response.Facets != null && response.Facets.Any())

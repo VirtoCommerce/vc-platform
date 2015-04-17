@@ -22,6 +22,7 @@ using VirtoCommerce.Web.Models.Helpers;
 using VirtoCommerce.Web.Models.Lists;
 using VirtoCommerce.Web.Views.Engines.Liquid;
 using VirtoCommerce.ApiClient.DataContracts.Cart;
+using VirtoCommerce.ApiClient.DataContracts.Marketing;
 
 #endregion
 
@@ -46,6 +47,7 @@ namespace VirtoCommerce.Web.Models.Services
         private readonly ReviewsClient _reviewsClient;
         private readonly string _themesCacheStoragePath;
         private readonly string _pagesCacheStoragePath;
+        private readonly MarketingClient _marketingClient;
 
         private static readonly object _LockObject = new object();
         #endregion
@@ -60,6 +62,7 @@ namespace VirtoCommerce.Web.Models.Services
             this._orderClient = ClientContext.Clients.CreateOrderClient();
             this._securityClient = ClientContext.Clients.CreateSecurityClient();
             this._priceClient = ClientContext.Clients.CreatePriceClient();
+            this._marketingClient = ClientContext.Clients.CreateMarketingClient();
             this._inventoryClient = ClientContext.Clients.CreateInventoryClient();
             this._themeClient = ClientContext.Clients.CreateThemeClient();
             this._pageClient = ClientContext.Clients.CreatePageClient();
@@ -499,9 +502,40 @@ namespace VirtoCommerce.Web.Models.Services
 
             var variationIds = product.GetAllVariationIds();
             var prices = await this.GetProductPricesAsync(SiteContext.Current.PriceLists, variationIds);
+
+            var price = prices.FirstOrDefault(p => p.ProductId == product.Code);
+            if (product.Variations != null)
+            {
+                foreach (var variation in product.Variations)
+                {
+                    price = prices.FirstOrDefault(p => p.ProductId == variation.Code);
+                }
+            }
+
+            var promoContext = new PromotionEvaluationContext
+            {
+                CustomerId = SiteContext.Current.CustomerId,
+                CartTotal = SiteContext.Current.Cart.TotalPrice,
+                Currency = SiteContext.Current.Shop.Currency,
+                PromoEntries = new List<ProductPromoEntry>
+                {
+                    new ProductPromoEntry
+                    {
+                        CatalogId = product.CatalogId,
+                        Price = price.Sale.HasValue ? price.Sale.Value : price.List,
+                        ProductId = product.Id,
+                        Quantity = 1
+                    }
+                },
+                IsRegisteredUser = SiteContext.Current.Customer != null,
+                StoreId = SiteContext.Current.StoreId
+            };
+
+            var rewards = await _marketingClient.GetPromotionRewardsAsync(promoContext);
+
             //var inventories = await this.GetItemInventoriesAsync(variationIds);
 
-            return product.AsWebModel(prices/*, inventories*/);
+            return product.AsWebModel(prices, rewards/*, inventories*/);
         }
 
         public async Task<Product> GetProductByKeywordAsync(string keyword)
@@ -516,9 +550,40 @@ namespace VirtoCommerce.Web.Models.Services
 
             var variationIds = product.Variations.Select(v => v.Id).ToArray();
             var prices = await this.GetProductPricesAsync(SiteContext.Current.PriceLists, variationIds);
+
+            var price = prices.FirstOrDefault(p => p.ProductId == product.Code);
+            if (product.Variations != null)
+            {
+                foreach (var variation in product.Variations)
+                {
+                    price = prices.FirstOrDefault(p => p.ProductId == variation.Code);
+                }
+            }
+
+            var promoContext = new PromotionEvaluationContext
+            {
+                CustomerId = SiteContext.Current.CustomerId,
+                CartTotal = SiteContext.Current.Cart.TotalPrice,
+                Currency = SiteContext.Current.Shop.Currency,
+                PromoEntries = new List<ProductPromoEntry>
+                {
+                    new ProductPromoEntry
+                    {
+                        CatalogId = product.CatalogId,
+                        Price = price.Sale.HasValue ? price.Sale.Value : price.List,
+                        ProductId = product.Id,
+                        Quantity = 1
+                    }
+                },
+                IsRegisteredUser = SiteContext.Current.Customer != null,
+                StoreId = SiteContext.Current.StoreId
+            };
+
+            var rewards = await _marketingClient.GetPromotionRewardsAsync(promoContext);
+
             //var inventories = await this.GetItemInventoriesAsync(variationIds);
 
-            return product.AsWebModel(prices/*, inventories*/);
+            return product.AsWebModel(prices, rewards/*, inventories*/);
         }
 
         public async Task<ProductSearchResult> GetProductsAsync(
@@ -588,6 +653,12 @@ namespace VirtoCommerce.Web.Models.Services
             }
 
             return inventories;
+        }
+
+        public async Task<IEnumerable<ApiClient.DataContracts.Marketing.PromotionReward>>
+            GetPromoRewardsAsync(ApiClient.DataContracts.Marketing.PromotionEvaluationContext context)
+        {
+            return await _marketingClient.GetPromotionRewardsAsync(context);
         }
 
         public async Task<IEnumerable<ApiClient.DataContracts.Price>> GetProductPricesAsync(string[] priceLists, string[] productIds)
@@ -721,10 +792,44 @@ namespace VirtoCommerce.Web.Models.Services
 
             var allIds = response.Items.ToArray().GetAllVariationIds();
             var prices = await GetProductPricesAsync(priceLists, allIds.ToArray());
+
+            var promoContext = new PromotionEvaluationContext
+            {
+                CustomerId = SiteContext.Current.CustomerId,
+                CartTotal = SiteContext.Current.Cart.TotalPrice,
+                Currency = SiteContext.Current.Shop.Currency,
+                IsRegisteredUser = SiteContext.Current.Customer != null,
+                StoreId = SiteContext.Current.StoreId
+            };
+
+            var promoEntries = new List<ProductPromoEntry>();
+            foreach (var item in response.Items)
+            {
+                var price = prices.FirstOrDefault(p => p.ProductId == item.Code);
+                if (item.Variations != null)
+                {
+                    foreach (var variation in item.Variations)
+                    {
+                        price = prices.FirstOrDefault(p => p.ProductId == variation.Code);
+                    }
+                }
+
+                promoEntries.Add(new ProductPromoEntry
+                {
+                    CatalogId = item.CatalogId,
+                    Price = price != null && price.Sale.HasValue ? price.Sale.Value : price.List,
+                    ProductId = item.Id,
+                    Quantity = 1
+                });
+            }
+            promoContext.PromoEntries = promoEntries;
+
+            var rewards = await _marketingClient.GetPromotionRewardsAsync(promoContext);
+
             //var inventories = await this.GetItemInventoriesAsync(allIds);
 
             result.ResultsCount = response.TotalCount;
-            result.Results = new List<object>(response.Items.Select(i => i.AsWebModel(prices/*, inventories*/)));
+            result.Results = new List<object>(response.Items.Select(i => i.AsWebModel(prices, rewards/*, inventories*/)));
 
             return result;
         }
