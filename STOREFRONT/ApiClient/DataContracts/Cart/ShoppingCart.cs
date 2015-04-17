@@ -38,7 +38,7 @@ namespace VirtoCommerce.ApiClient.DataContracts.Cart
 
         public string Id { get; set; }
 
-        public bool? IsAnonymous { get; set; }
+        public bool IsAnonymous { get; set; }
 
         public bool? IsRecuring { get; set; }
 
@@ -62,7 +62,7 @@ namespace VirtoCommerce.ApiClient.DataContracts.Cart
 
         public decimal ShippingTotal { get; set; }
 
-        public string SiteId { get; set; }
+        public string StoreId { get; set; }
 
         public decimal SubTotal { get; set; }
 

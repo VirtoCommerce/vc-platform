@@ -74,6 +74,7 @@
     <Compile Include="Configuration\Store\StoreConfiguration.cs" />
     <Compile Include="Constants.cs" />
     <Compile Include="DataContracts\Cart\AddressType.cs" />
+    <Compile Include="DataContracts\Cart\CartItem.cs" />
     <Compile Include="DataContracts\CustomerService\Address.cs" />
     <Compile Include="DataContracts\CustomerService\CustomerSearchResult.cs" />
     <Compile Include="DataContracts\ItemInventory.cs" />
@@ -109,7 +110,6 @@
     <Compile Include="DataContracts\BrowseQuery.cs" />
     <Compile Include="DataContracts\Cart\Address.cs" />
     <Compile Include="DataContracts\Cart\CardSummary.cs" />
-    <Compile Include="DataContracts\Cart\CartItem.cs" />
     <Compile Include="DataContracts\Cart\Coupon.cs" />
     <Compile Include="DataContracts\Cart\Dimension.cs" />
     <Compile Include="DataContracts\Cart\Discount.cs" />
