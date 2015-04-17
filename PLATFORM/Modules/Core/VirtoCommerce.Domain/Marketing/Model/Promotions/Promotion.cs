@@ -32,8 +32,8 @@ namespace VirtoCommerce.Domain.Marketing.Model
 
 		public string Description { get; set; }
 
-		public int TotalUsageLimit { get; set; }
-		public int PerCustomerUsageLimit { get; set; }
+		public int MaxUsageCount { get; set; }
+		public int MaxPersonalUsageCount { get; set; }
 		
 		public DateTime? StartDate { get; set; }
 		

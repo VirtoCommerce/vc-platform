@@ -1,6 +1,7 @@
 ﻿#region
 
 using System;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
 using VirtoCommerce.ApiClient.DataContracts.Cart;
@@ -76,6 +77,20 @@ namespace VirtoCommerce.ApiClient
                 CreateRequestUri(RelativePaths.UpdateCart),
                 HttpMethod.Put,
                 cart);
+        }
+
+        public Task DeleteCartAsync(string[] cartIds)
+        {
+            var ids = new List<string>();
+            foreach (var cartId in cartIds)
+            {
+                ids.Add(string.Format("ids={0}", cartId));
+            }
+
+            var queryString = string.Join("&", ids);
+
+            return SendAsync<string[]>(CreateRequestUri(RelativePaths.UpdateCart, queryString),
+                HttpMethod.Delete);
         }
 
         #endregion

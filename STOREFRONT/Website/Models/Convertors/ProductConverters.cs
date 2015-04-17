@@ -32,7 +32,9 @@ namespace VirtoCommerce.Web.Models.Convertors
             return lineItem;
         }
 
-        public static Product AsWebModel(this Data.Product product, IEnumerable<Data.Price> prices)
+        public static Product AsWebModel(
+            this Data.Product product, IEnumerable<Data.Price> prices,
+            IEnumerable<Data.Marketing.PromotionReward> rewards)
         {
             var productModel = new Product();
 
@@ -56,13 +58,15 @@ namespace VirtoCommerce.Web.Models.Convertors
             productModel.Url = string.Format(pathTemplate, product.Code);
             productModel.Vendor = fieldsCollection.ContainsKey("brand") ? fieldsCollection["brand"] as string : null;
 
+            var productRewards = rewards.Where(r => r.RewardType == "CatalogItemAmountReward" && r.ProductId == product.Id);
+
             if (product.Variations == null)
             {
                 var price = prices.FirstOrDefault(p => p.ProductId == product.Id);
 
                 if (price != null)
                 {
-                    var variant = product.AsVariantWebModel(price, options);
+                    var variant = product.AsVariantWebModel(price, options, productRewards);
 
                     productModel.Variants.Add(variant);
                 }
@@ -75,7 +79,7 @@ namespace VirtoCommerce.Web.Models.Convertors
 
                     if (price != null)
                     {
-                        productModel.Variants.Add(variation.AsWebModel(price, options));
+                        productModel.Variants.Add(variation.AsWebModel(price, options, productRewards));
                     }
                 }
             }
@@ -83,7 +87,7 @@ namespace VirtoCommerce.Web.Models.Convertors
             return productModel;
         }
 
-        public static Variant AsWebModel(this Data.CatalogItem variation, Data.Price price, string[] options)
+        public static Variant AsWebModel(this Data.CatalogItem variation, Data.Price price, string[] options, IEnumerable<Data.Marketing.PromotionReward> rewards)
         {
             var variantModel = new Variant();
 
@@ -94,8 +98,10 @@ namespace VirtoCommerce.Web.Models.Convertors
             var variantlUrlParameter = HttpContext.Current.Request.QueryString["variant"];
             var pathTemplate = VirtualPathUtility.ToAbsolute("~/products/{0}?variant={1}");
 
+            var reward = rewards.FirstOrDefault();
+
             variantModel.Barcode = null; // TODO
-            variantModel.CompareAtPrice = price.List;
+            variantModel.CompareAtPrice = price.Sale.HasValue ? price.Sale.Value : price.List;
             variantModel.Id = variation.Id;
             variantModel.Image = variationImage != null ? variationImage.AsWebModel(variation.Name, variation.MainProductId) : null;
             variantModel.InventoryManagement = null; // TODO
@@ -104,7 +110,13 @@ namespace VirtoCommerce.Web.Models.Convertors
             variantModel.Option1 = options.Length >= 1 ? variation.Properties[options[0]] as string : null;
             variantModel.Option2 = options.Length >= 2 ? variation.Properties[options[1]] as string : null;
             variantModel.Option3 = options.Length >= 3 ? variation.Properties[options[2]] as string : null;
+
             variantModel.Price = price.Sale.HasValue ? price.Sale.Value : price.List;
+            if (reward != null)
+            {
+                variantModel.Price -= reward.Amount;
+            }
+
             variantModel.Selected = variantlUrlParameter != null;
             variantModel.Sku = variation.Properties.ContainsKey("sku") ? variation.Properties["sku"] as string : variation.Code;
             variantModel.Title = variation.Name;
@@ -116,7 +128,7 @@ namespace VirtoCommerce.Web.Models.Convertors
             return variantModel;
         }
 
-        public static Variant AsVariantWebModel(this Data.Product product, Data.Price price, string[] options)
+        public static Variant AsVariantWebModel(this Data.Product product, Data.Price price, string[] options, IEnumerable<Data.Marketing.PromotionReward> rewards)
         {
             var variantModel = new Variant();
 
@@ -126,8 +138,10 @@ namespace VirtoCommerce.Web.Models.Convertors
             var variantlUrlParameter = HttpContext.Current.Request.QueryString["variant"];
             var pathTemplate = VirtualPathUtility.ToAbsolute("~/products/{0}");
 
+            var reward = rewards.FirstOrDefault();
+
             variantModel.Barcode = null; // TODO
-            variantModel.CompareAtPrice = price.List;
+            variantModel.CompareAtPrice = price.Sale.HasValue ? price.Sale.Value : price.List;
             variantModel.Id = product.Id;
             variantModel.Image = variationImage != null ? variationImage.AsWebModel(product.Name, product.Id) : null;
             variantModel.InventoryManagement = null; // TODO
@@ -136,7 +150,13 @@ namespace VirtoCommerce.Web.Models.Convertors
             variantModel.Option1 = options.Length >= 1 ? product.Properties[options[0]] as string : null;
             variantModel.Option2 = options.Length >= 2 ? product.Properties[options[1]] as string : null;
             variantModel.Option3 = options.Length >= 3 ? product.Properties[options[2]] as string : null;
+
             variantModel.Price = price.Sale.HasValue ? price.Sale.Value : price.List;
+            if (reward != null)
+            {
+                variantModel.Price -= reward.Amount;
+            }
+
             variantModel.Selected = variantlUrlParameter != null;
             variantModel.Sku = product.Properties.ContainsKey("sku") ? product.Properties["sku"] as string : product.Code;
             variantModel.Title = product.Name;

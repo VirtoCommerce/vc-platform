@@ -6,7 +6,7 @@
         <p class="form-count">Count: <span class="count">{{pageSettings.totalItems}}</span></p>
     </div>
 </div>
-<div class="blade-content __large-wide">
+<div class="blade-content">
     <div class="blade-inner">
         <div class="inner-block">
             <div class="table-wrapper">
@@ -20,7 +20,6 @@
                                 </label>
                             </th>
                             <th class="table-col">Name</th>
-                            <th class="table-col">Type</th>
                             <th class="table-col">Last modified</th>
                         </tr>
                     </thead>
@@ -33,10 +32,7 @@
                                 </label>
                             </td>
                             <td class="table-col" ng-click='selectNode(data)'>
-                                <span class="table-t">{{data.name}}</span>
-                            </td>
-                            <td class="table-col __product-code" ng-click='selectNode(data)'>
-                                <span>{{data.type}}</span>
+                                <span class="table-t"><i class="table-ico fa" ng-class="data.type == 'DynamicPromotion' ? 'fa-asterisk' : ' fa-file-code-o'"></i>&nbsp;{{data.name}}</span>
                             </td>
                             <td class="table-col __date" ng-click='selectNode(data)'>
                                 <span class="table-date" am-time-ago="data.modifiedDate"></span>
