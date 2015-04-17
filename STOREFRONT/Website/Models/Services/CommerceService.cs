@@ -165,6 +165,11 @@ namespace VirtoCommerce.Web.Models.Services
             return dtoCart != null ? dtoCart.AsWebModel() : null;
         }
 
+        public async Task DeleteCartAsync(string cartId)
+        {
+            await _cartClient.DeleteCartAsync(new[] { cartId });
+        }
+
         public async Task<Cart> GetCurrentCartAsync()
         {
             var cart = await this._cartClient.GetCartAsync(SiteContext.Current.StoreId, SiteContext.Current.CustomerId);
@@ -392,7 +397,7 @@ namespace VirtoCommerce.Web.Models.Services
 
             var order = await _orderClient.CreateOrderAsync(dtoCart.Id);
 
-            // Delete shopping cart
+            await DeleteCartAsync(dtoCart.Id);
 
             return order.AsWebModel();
         }
