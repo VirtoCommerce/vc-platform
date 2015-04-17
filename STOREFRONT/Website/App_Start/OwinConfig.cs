@@ -50,6 +50,8 @@ namespace VirtoCommerce.Web
         }
         #endregion
 
+        const string anonymousCookieName = "vc-anonymous-id";
+
         #region Public Methods and Operators
         public override async Task Invoke(IOwinContext context)
         {
@@ -93,12 +95,24 @@ namespace VirtoCommerce.Web
             {
                 if (context.Authentication.User != null && context.Authentication.User.Identity.IsAuthenticated)
                 {
-                    ctx.Customer =
-                        await customerService.GetCustomerAsync(context.Authentication.User.Identity.Name, shop.StoreId);
+                    ctx.Customer = await customerService.GetCustomerAsync(
+                        context.Authentication.User.Identity.Name, shop.StoreId);
+
+                    context.Response.Cookies.Delete(anonymousCookieName);
+
+                    ctx.CustomerId = ctx.Customer.Id;
                 }
                 else
                 {
-                    ctx.Customer = new Customer() { Id = "anonymous" }; // TODO: remove hard coded value
+                    string cookie = context.Request.Cookies[anonymousCookieName];
+
+                    if (string.IsNullOrEmpty(cookie))
+                    {
+                        cookie = Guid.NewGuid().ToString();
+                        context.Response.Cookies.Append(anonymousCookieName, cookie);
+                    }
+
+                    ctx.CustomerId = cookie;
                 }
 
                 // TODO: detect if shop exists, user has access
@@ -109,7 +123,27 @@ namespace VirtoCommerce.Web
                 ctx.Collections = await commerceService.GetCollectionsAsync();
                 ctx.Pages = new PageCollection();
                 ctx.Forms = commerceService.GetForms();
-                ctx.Cart = await commerceService.GetCurrentCartAsync(); 
+
+                var cart = await commerceService.GetCurrentCartAsync();
+                if (cart == null)
+                {
+                    var dtoCart = new ApiClient.DataContracts.Cart.ShoppingCart
+                    {
+                        CreatedBy = ctx.CustomerId,
+                        CreatedDate = DateTime.UtcNow,
+                        Currency = shop.Currency,
+                        CustomerId = ctx.CustomerId,
+                        CustomerName = ctx.Customer != null ? ctx.Customer.Name : null,
+                        LanguageCode = ctx.Language,
+                        Name = "default",
+                        StoreId = shop.StoreId
+                    };
+
+                    await commerceService.CreateCartAsync(dtoCart);
+                    cart = await commerceService.GetCurrentCartAsync();
+                }
+
+                ctx.Cart = cart;
                 ctx.PriceLists = await commerceService.GetPriceListsAsync(ctx.Shop.Catalog, ctx.Shop.Currency, new TagQuery());
                 ctx.Theme = commerceService.GetTheme(this.ResolveTheme(shop, context));
 
@@ -120,7 +154,6 @@ namespace VirtoCommerce.Web
             {
                 ctx.Theme = commerceService.GetTheme(this.ResolveTheme(shop, context));
             }
-
 
             ctx.Settings = commerceService.GetSettings(
                 ctx.Theme.ToString(),
