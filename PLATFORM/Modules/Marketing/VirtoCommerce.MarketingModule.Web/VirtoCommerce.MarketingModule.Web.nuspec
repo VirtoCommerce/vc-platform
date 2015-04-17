@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>VirtoCommerce.Marketing</id>
+    <version>$version$</version>
+    <title>Virto Commerce Marketing</title>
+    <authors>Virto Commerce</authors>
+    <owners>Virto Commerce</owners>
+    <projectUrl>http://virtocommerce.com/</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>UI and API for marketing</description>
+    <releaseNotes>First version.</releaseNotes>
+    <copyright>Copyright © 2011-2015 Virto Commerce. All rights reserved</copyright>
+    <tags>marketing promotion</tags>
+  </metadata>
+</package>

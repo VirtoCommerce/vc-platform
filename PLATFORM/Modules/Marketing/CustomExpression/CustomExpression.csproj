@@ -91,6 +91,7 @@
     <Reference Include="System.EnterpriseServices" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="CustomExpression.nuspec" />
     <None Include="packages.config" />
     <Content Include="module.manifest" />
     <None Include="Web.Debug.config">
