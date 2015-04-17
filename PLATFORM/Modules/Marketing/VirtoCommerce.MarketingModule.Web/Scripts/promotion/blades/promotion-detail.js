@@ -111,7 +111,7 @@
         });
     }
 
-    $scope.bladeHeadIco = 'fa-flag';
+    $scope.bladeHeadIco = 'fa-area-chart';
 
     function initializeToolbar() {
     	if (!$scope.blade.isNew) {
