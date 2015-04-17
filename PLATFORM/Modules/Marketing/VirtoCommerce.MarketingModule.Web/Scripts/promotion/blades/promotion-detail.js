@@ -114,7 +114,8 @@
     $scope.bladeHeadIco = 'fa-flag';
 
     function initializeToolbar() {
-        if (!$scope.blade.isNew) {
+    	if (!$scope.blade.isNew) {
+    		$scope.toolbarTemplate = 'Modules/$(VirtoCommerce.Marketing)/Scripts/promotion/blades/promotion-detail-toolbar.tpl.html';
             $scope.bladeToolbarCommands = [
                 {
                     name: "Save",
@@ -168,8 +169,7 @@
             retVal = { displayName: 'unknown element: ' + expressionBlock.id };
         }
 
-        //angular.merge(expressionBlock, retVal);
-        //angular.extend(expressionBlock, retVal);
+
         _.extend(expressionBlock, retVal);
 
         if (!expressionBlock.children) {
@@ -187,27 +187,8 @@
         return expressionBlock;
     };
 
-    //$scope.$watch('blade.currentEntity.dynamicExpression.children', function (children) {
-    //    $scope.blade.isExpresionValid = _.all(children, validateExpression);
-    //});
-    //function validateExpression(x) {
-    //    return !x.getValidationError || !x.getValidationError();
-    //}
-    //$scope.blade.isExpresionValid = false;
-    //$scope.promotionExpressionValidator = function (value) {
-    //    var retVal = true;
-
-    //    return retVal;
-    //}
-
-
     initializeToolbar();
     $scope.blade.refresh(false);
-    //$scope.catalogs = catalogs.getCatalogs();
     $scope.stores = stores.query();
-    //$scope.exclusivities = settings.getValues({ id: 'VirtoCommerce.Marketing.Promotions.Exclusivities' }, function (data) {
-    //    if ($scope.blade.isNew && data && data[0]) {
-    //        $scope.blade.currentEntity.exclusivity = data[0];
-    //    }
-    //});
+   
 }]);
