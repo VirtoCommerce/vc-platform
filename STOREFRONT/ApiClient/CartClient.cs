@@ -44,6 +44,14 @@ namespace VirtoCommerce.ApiClient
 
         #region Public Methods and Operators
 
+        public Task CreateCartAsync(ShoppingCart cart)
+        {
+            return SendAsync<ShoppingCart, ShoppingCart>(
+                CreateRequestUri(RelativePaths.UpdateCart),
+                HttpMethod.Post,
+                cart);
+        }
+
         /// <summary>
         ///     Gets the current cart
         /// </summary>

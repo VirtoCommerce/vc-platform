@@ -62,12 +62,12 @@ namespace VirtoCommerce.CustomerModule.Data.Converters
 			retVal.ContentItems = new NullCollection<foundationModel.PublishingGroupContentItem>();
 			if (publication.ContentItems != null)
 			{
-				retVal.ContentItems = new ObservableCollection<foundationModel.PublishingGroupContentItem>(publication.ContentItems.Select(x => new foundationModel.PublishingGroupContentItem { ContentItem = x.ToFoundation(), PublishingGroup = retVal, DynamicContentPublishingGroupId = retVal.DynamicContentPublishingGroupId, DynamicContentItemId = x.Id }));
+				retVal.ContentItems = new ObservableCollection<foundationModel.PublishingGroupContentItem>(publication.ContentItems.Select(x => new foundationModel.PublishingGroupContentItem { PublishingGroup = retVal, DynamicContentPublishingGroupId = retVal.DynamicContentPublishingGroupId, DynamicContentItemId = x.Id }));
 			}
 			retVal.ContentPlaces = new NullCollection<foundationModel.PublishingGroupContentPlace>();
-			if (publication.ContentItems != null)
+			if (publication.ContentPlaces != null)
 			{
-				retVal.ContentPlaces = new ObservableCollection<foundationModel.PublishingGroupContentPlace>(publication.ContentPlaces.Select(x => new foundationModel.PublishingGroupContentPlace { ContentPlace = x.ToFoundation(), PublishingGroup = retVal, DynamicContentPublishingGroupId = retVal.DynamicContentPublishingGroupId, DynamicContentPlaceId = x.Id }));
+				retVal.ContentPlaces = new ObservableCollection<foundationModel.PublishingGroupContentPlace>(publication.ContentPlaces.Select(x => new foundationModel.PublishingGroupContentPlace { PublishingGroup = retVal, DynamicContentPublishingGroupId = retVal.DynamicContentPublishingGroupId, DynamicContentPlaceId = x.Id }));
 			}
 			return retVal;
 		}

@@ -75,14 +75,14 @@ namespace VirtoCommerce.Foundation.Marketing.Model.DynamicContent
 		[DataMember]
 		public virtual DynamicContentFolder ParentFolder { get; set; }
 
-		ObservableCollection<PublishingGroupContentItem> _contentItems = null;
+		ObservableCollection<DynamicContentItem> _contentItems = null;
 		[DataMember]
-		public virtual ObservableCollection<PublishingGroupContentItem> ContentItems
+		public virtual ObservableCollection<DynamicContentItem> ContentItems
 		{
 			get
 			{
 				if (_contentItems == null)
-					_contentItems = new ObservableCollection<PublishingGroupContentItem>();
+					_contentItems = new ObservableCollection<DynamicContentItem>();
 
 				return _contentItems;
 			}
@@ -92,14 +92,14 @@ namespace VirtoCommerce.Foundation.Marketing.Model.DynamicContent
 			}
 		}
 
-		ObservableCollection<PublishingGroupContentPlace> _contentPlaces = null;
+		ObservableCollection<DynamicContentFolder> _contentPlaces = null;
 		[DataMember]
-		public virtual ObservableCollection<PublishingGroupContentPlace> ContentPlaces
+		public virtual ObservableCollection<DynamicContentFolder> ContentPlaces
 		{
 			get
 			{
 				if (_contentPlaces == null)
-					_contentPlaces = new ObservableCollection<PublishingGroupContentPlace>();
+					_contentPlaces = new ObservableCollection<DynamicContentFolder>();
 
 				return _contentPlaces;
 			}
