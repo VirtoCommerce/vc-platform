@@ -1,18 +1,15 @@
 <?xml version="1.0"?>
 <package >
   <metadata>
-    <id>UnknowVendor.CustomMarketingExpression</id>
+    <id>UnknownVendor.CustomMarketingExpression</id>
     <version>$version$</version>
-    <title>$title$</title>
-    <authors>UnknowVendor</authors>
-    <owners>UnknowVendor</owners>
-    <licenseUrl>http://LICENSE_URL_HERE_OR_DELETE_THIS_LINE</licenseUrl>
-    <projectUrl>http://PROJECT_URL_HERE_OR_DELETE_THIS_LINE</projectUrl>
-    <iconUrl>http://ICON_URL_HERE_OR_DELETE_THIS_LINE</iconUrl>
+    <title>Custom marketing expression</title>
+    <authors>UnknownVendor</authors>
+    <owners>UnknownVendor</owners>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>No description.</description>
-    <releaseNotes>Summary of changes made in this release of the package.</releaseNotes>
-    <copyright>Copyright 2015</copyright>
-    <tags>Tag1 Tag2</tags>
+    <releaseNotes>First version.</releaseNotes>
+    <copyright>Copyright 2015 Unknown Vendor</copyright>
+    <tags>marketing expressions</tags>
   </metadata>
 </package>
