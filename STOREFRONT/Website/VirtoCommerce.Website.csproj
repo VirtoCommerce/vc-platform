@@ -345,6 +345,7 @@
     <Content Include="Web.Release.config">
       <DependentUpon>Web.config</DependentUpon>
     </Content>
+    <Content Include="App_Data\Themes\_Global\templates\thanks_page.liquid" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />

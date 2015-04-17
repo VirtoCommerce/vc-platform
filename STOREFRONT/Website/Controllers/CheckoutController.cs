@@ -9,123 +9,104 @@ namespace VirtoCommerce.Web.Controllers
 {
     public class CheckoutController : BaseController
     {
+        //
+        // GET: /Checkout
         [HttpGet]
         public ActionResult Index()
         {
-            return RedirectToAction("Step1");
+            return RedirectToAction("Step1", "Checkout");
         }
 
+        //
+        // GET: /Checkout/Step1
         [HttpGet]
         [Route("checkout/step-1")]
         public async Task<ActionResult> Step1()
         {
-            if (this.Context.Cart.ItemCount == 0)
+            if (Context.Cart.ItemCount == 0)
             {
-                return View("cart");
+                return RedirectToAction("Index", "Cart");
             }
 
-            this.Context.Checkout = await this.Service.GetCheckoutAsync();
-
-            if (this.Context.Checkout != null)
-            {
-                this.Context.Checkout.Email = this.Context.Customer != null ? this.Context.Customer.Email : null;
-                this.Context.Checkout.ShippingAddress = this.Context.Customer != null ? this.Context.Customer.DefaultAddress : new CustomerAddress();
-                this.Context.Checkout.Currency = this.Context.Shop.Currency;
-            }
+            var checkout = await Service.GetCheckoutAsync();
+            Context.Checkout = checkout;
 
             return View("checkout-step-1");
         }
 
+        //
+        // POST: /Checkout/Step1
         [HttpPost]
         public async Task<ActionResult> Step1(CheckoutFirstStepFormModel formModel)
         {
-            this.Context.Checkout = await this.Service.GetCheckoutAsync();
-            this.Context.Checkout.Currency = this.Context.Shop.Currency;
+            var form = Service.GetForm(formModel.form_type);
 
-            var form = this.Service.GetForm(formModel.form_type);
+            var checkout = await Service.GetCheckoutAsync();
 
             if (form != null)
             {
                 if (!ModelState.IsValid)
                 {
-                    var errors = this.ModelState.Values.SelectMany(v => v.Errors);
+                    var errors = ModelState.Values.SelectMany(v => v.Errors);
                     form.Errors = new[] { errors.Select(e => e.ErrorMessage).FirstOrDefault() };
 
-                    return this.View("checkout-step-1");
+                    return RedirectToAction("Step1", "Checkout");
                 }
 
-                var customer = await this.CustomerService.GetCustomerAsync(formModel.Email, this.Context.Shop.StoreId);
-
-                if (customer == null)
-                {
-                    var account = await this.SecurityService.GetUserByNameAsync(formModel.Email);
-
-                    if (account == null)
-                    {
-                        await this.SecurityService.RegisterUser(
-                            formModel.Email, formModel.FirstName, formModel.LastName, null, this.Context.StoreId);
-                    }
-
-                    var user = await this.SecurityService.GetUserByNameAsync(formModel.Email);
-
-                    var customerAddresses = new List<CustomerAddress>();
-                    customerAddresses.Add(new CustomerAddress
-                    {
-                        Address1 = formModel.Address1,
-                        Address2 = formModel.Address2,
-                        City = formModel.City,
-                        Company = formModel.Company,
-                        Country = formModel.Country,
-                        CountryCode = "RUS",
-                        FirstName = formModel.FirstName,
-                        LastName = formModel.LastName,
-                        Phone = formModel.Phone,
-                        Province = formModel.Province,
-                        Zip = formModel.Zip
-                    });
-
-                    customer = await this.CustomerService.CreateCustomerAsync(
-                        formModel.Email, formModel.FirstName, formModel.LastName, user.Id, customerAddresses);
-                }
-
-                this.Context.Customer = customer;
-                this.Context.Checkout.Email = customer.Email;
-
-                this.Context.Checkout.ShippingAddress = new CustomerAddress
+                var shippingAddress = new CustomerAddress
                 {
                     Address1 = formModel.Address1,
-                    Address2 = formModel.Address2.Length > 0 ? formModel.Address2 : null,
+                    Address2 = !string.IsNullOrEmpty(formModel.Address2) ? formModel.Address2 : null,
                     City = formModel.City,
-                    Company = formModel.Company.Length > 0 ? formModel.Company : null,
+                    Company = !string.IsNullOrEmpty(formModel.Company) ? formModel.Company : null,
                     Country = formModel.Country,
                     CountryCode = "RUS",
                     FirstName = formModel.FirstName,
                     LastName = formModel.LastName,
-                    Phone = formModel.Phone.Length > 0 ? formModel.Phone : null,
+                    Phone = !string.IsNullOrEmpty(formModel.Phone) ? formModel.Phone : null,
                     Province = formModel.Province,
                     Zip = formModel.Zip
                 };
 
-                await this.Service.UpdateCheckoutAsync(this.Context.Checkout);
+                checkout.Currency = Context.Shop.Currency;
+                checkout.Email = formModel.Email;
+                checkout.ShippingAddress = shippingAddress;
+
+                var customer = await this.CustomerService.GetCustomerAsync(formModel.Email, Context.Shop.StoreId);
+                if (customer != null)
+                {
+                    customer.Addresses.Add(shippingAddress);
+                    await CustomerService.UpdateCustomerAsync(customer);
+                }
+
+                await Service.UpdateCheckoutAsync(checkout);
+
+                return RedirectToAction("Step2", "Checkout");
             }
 
-            return RedirectToAction("Step2");
+            return View("error");
         }
 
+        //
+        // GET: /Checkout/Step2
         [HttpGet]
         [Route("checkout/step-2")]
         public async Task<ActionResult> Step2()
         {
-            this.Context.Checkout = await this.Service.GetCheckoutAsync();
+            var checkout = await Service.GetCheckoutAsync();
 
-            if (this.Context.Checkout.ShippingAddress == null || !this.Context.Checkout.ShippingAddress.IsFilledCorrectly)
+            if (checkout.ShippingAddress == null || !checkout.ShippingAddress.IsFilledCorrectly)
             {
-                return View("checkout-step-1");
+                return RedirectToAction("Step1", "Checkout");
             }
+
+            Context.Checkout = checkout;
 
             return View("checkout-step-2");
         }
 
+        //
+        // POST: /Checkout/Step2
         [HttpPost]
         public async Task<ActionResult> Step2(CheckoutSecondStepFormModel formModel)
         {
@@ -141,38 +122,42 @@ namespace VirtoCommerce.Web.Controllers
                     return this.View("checkout-step-2");
                 }
 
-                this.Context.Checkout = await this.Service.GetCheckoutAsync();
-                this.Context.Checkout.Currency = this.Context.Shop.Currency;
+                var checkout = await Service.GetCheckoutAsync();
 
-                this.Context.Checkout.BillingAddress = new CustomerAddress
+                var billingAddress = new CustomerAddress
                 {
                     Address1 = formModel.Address1,
-                    Address2 = formModel.Address2.Length > 0 ? formModel.Address2 : null,
+                    Address2 = !string.IsNullOrEmpty(formModel.Address2) ? formModel.Address2 : null,
                     City = formModel.City,
-                    Company = formModel.Company.Length > 0 ? formModel.Company : null,
+                    Company = !string.IsNullOrEmpty(formModel.Company) ? formModel.Company : null,
                     Country = formModel.Country,
                     CountryCode = "RUS",
                     FirstName = formModel.FirstName,
                     LastName = formModel.LastName,
-                    Phone = formModel.Phone.Length > 0 ? formModel.Phone : null,
+                    Phone = !string.IsNullOrEmpty(formModel.Phone) ? formModel.Phone : null,
                     Province = formModel.Province,
                     Zip = formModel.Zip
                 };
 
-                this.Context.Checkout.ShippingMethod = this.Context.Checkout.ShippingMethods.FirstOrDefault(sm => sm.Handle == formModel.ShippingMethodId);
-                this.Context.Checkout.PaymentMethod = this.Context.Checkout.PaymentMethods.FirstOrDefault(pm => pm.Handle == formModel.PaymentMethodId);
+                checkout.BillingAddress = billingAddress;
+                checkout.ShippingMethod = checkout.ShippingMethods.FirstOrDefault(sm => sm.Handle == formModel.ShippingMethodId);
+                checkout.PaymentMethod = checkout.PaymentMethods.FirstOrDefault(pm => pm.Handle == formModel.PaymentMethodId);
 
-                this.Context.Customer = await this.CustomerService.GetCustomerAsync(this.Context.Checkout.Email, this.Context.Shop.StoreId);
-                this.Context.Customer.Addresses.Add(this.Context.Checkout.ShippingAddress);
+                var customer = await CustomerService.GetCustomerAsync(checkout.Email, Context.Shop.StoreId);
+                if (customer != null)
+                {
+                    customer.Addresses.Add(billingAddress);
+                    await this.CustomerService.UpdateCustomerAsync(customer);
+                }
 
-                await this.CustomerService.UpdateCustomerAsync(this.Context.Customer);
+                checkout.Order = await Service.CreateOrderAsync(checkout);
 
-                this.Context.Checkout.CustomerId = this.Context.Customer.Id;
+                Context.Checkout = checkout;
+
+                return View("thanks_page");
             }
 
-            var order = await this.Service.CreateOrderAsync(this.Context.Checkout);
-
-            return RedirectToAction("Order", "Account", new { Id = order.Id });
+            return View("error");
         }
     }
 }
