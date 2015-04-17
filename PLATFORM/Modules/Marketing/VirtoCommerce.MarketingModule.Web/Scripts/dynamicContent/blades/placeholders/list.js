@@ -8,7 +8,7 @@
 	$scope.selectedNodeId = null;
 
 	blade.initialize = function () {
-		marketing_dynamicContents_res_search.search({ folder: 'ContentPlace', respGroup: 'WithFolders' }, function (data) {
+		marketing_dynamicContents_res_search.search({ folder: 'ContentPlace', respGroup: 'Full' }, function (data) {
 			blade.currentEntities = data.contentFolders;
 		});
 
@@ -99,11 +99,8 @@
 		if (angular.isUndefined(blade.choosenFolder) || !angular.equals(blade.choosenFolder, placeholderFolder.id)) {
 			blade.choosenFolder = placeholderFolder.id;
 			blade.currentEntity = placeholderFolder;
-			marketing_dynamicContents_res_search.search({ folder: placeholderFolder.id, respGroup: 'WithFolders' }, function (data) {
+			marketing_dynamicContents_res_search.search({ folder: placeholderFolder.id, respGroup: 'Full' }, function (data) {
 				placeholderFolder.childrenFolders = data.contentFolders;
-			});
-
-			marketing_dynamicContents_res_search.search({ folder: placeholderFolder.id, respGroup: 'WithContentPlaces' }, function (data) {
 				placeholderFolder.placeholders = data.contentPlaces;
 			});
 		}
@@ -141,16 +138,13 @@
 
 	blade.updateChoosen = function () {
 		if (blade.choosenFolder === 'ContentPlace') {
-			marketing_dynamicContents_res_search.search({ folder: blade.choosenFolder, respGroup: 'WithFolders' }, function (data) {
+			marketing_dynamicContents_res_search.search({ folder: blade.choosenFolder, respGroup: 'Full' }, function (data) {
 				blade.currentEntities = data.contentFolders;
 			});
 		}
 		else {
-			marketing_dynamicContents_res_search.search({ folder: blade.choosenFolder, respGroup: 'WithFolders' }, function (data) {
+			marketing_dynamicContents_res_search.search({ folder: blade.choosenFolder, respGroup: 'Full' }, function (data) {
 				blade.currentEntity.childrenFolders = data.contentFolders;
-			});
-
-			marketing_dynamicContents_res_search.search({ folder: blade.choosenFolder, respGroup: 'WithContentPlaceholders' }, function (data) {
 				blade.currentEntity.placeholders = data.contentPlaces;
 			});
 		}

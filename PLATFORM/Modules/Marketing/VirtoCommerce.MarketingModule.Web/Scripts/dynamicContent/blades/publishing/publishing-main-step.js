@@ -1,29 +1,17 @@
 ﻿angular.module('virtoCommerce.marketingModule')
-.controller('addPublishingFirstStepController', ['$scope', 'bladeNavigationService', function ($scope, bladeNavigationService) {
+.controller('addPublishingFirstStepController', ['$scope', 'marketing_dynamicContents_res_contentPublications', 'bladeNavigationService', function ($scope, marketing_dynamicContents_res_contentPublications, bladeNavigationService) {
 	$scope.setForm = function (form) {
 		$scope.formScope = form;
 	}
 
 	var blade = $scope.blade;
 
-	blade.entity = {
-		id: '',
-		name: '',
-		description: '',
-		priority: 0,
-		isActive: true,
-		startDate: '',
-		endDate: '',
-		contentItems: [],
-		contentPlaces: []
-	};
-
 	blade.initializeBlade = function () {
 		blade.isLoading = false;
 
 		if (blade.isNew) {
 			blade.entity = {
-				id: '',
+				id: null,
 				name: '',
 				description: '',
 				priority: 0,
@@ -37,6 +25,8 @@
 	}
 
 	blade.addPlaceholders = function () {
+		blade.closeChildrenBlades();
+
 		var newBlade = {
 			id: 'publishing_add_placeholders',
 			title: 'Add placeholders elements',
@@ -69,7 +59,9 @@
 	}
 
 	blade.saveChanges = function () {
-		
+		marketing_dynamicContents_res_contentPublications.save({}, blade.entity, function (data) {
+			alert('hmm');
+		});
 	}
 
 	blade.availableSave = function () {

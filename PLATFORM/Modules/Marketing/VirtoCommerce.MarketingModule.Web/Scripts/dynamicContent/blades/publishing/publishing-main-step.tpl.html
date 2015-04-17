@@ -1,5 +1,5 @@
 ﻿<div class="blade-static __bottom" ng-if="blade.isNew">
-	<button class="btn" ng-click="blade.saveChanges()" ng-disabled="blade.availableSave()">
+	<button class="btn" ng-click="blade.saveChanges()" ng-disabled="!blade.availableSave()">
 		<span>Create</span>
 	</button>
 </div>

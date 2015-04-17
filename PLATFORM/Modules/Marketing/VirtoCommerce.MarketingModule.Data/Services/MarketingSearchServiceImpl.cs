@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Data.Entity;
 using VirtoCommerce.Domain.Marketing.Services;
 using VirtoCommerce.Foundation.Frameworks.Caching;
 using VirtoCommerce.MarketingModule.Data.Repositories;
@@ -99,7 +100,7 @@ namespace VirtoCommerce.MarketingModule.Data.Services
 		{
 			using (var repository = _contentRepositoryFactory())
 			{
-				var query = repository.Items.Where(x => x.FolderId == criteria.FolderId);
+				var query = repository.Items.Include(x => x.PropertyValues).Where(x => x.FolderId == criteria.FolderId);
 				result.TotalCount += query.Count();
 
 				result.ContentItems = query.OrderBy(x => x.DynamicContentItemId)

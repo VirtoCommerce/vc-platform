@@ -1,6 +1,6 @@
 ﻿angular.module('virtoCommerce.marketingModule')
-.controller('addPublishingContentItemsStepController', ['$scope', 'bladeNavigationService', function ($scope, bladeNavigationService) {
-
+.controller('addPublishingContentItemsStepController', ['$scope', 'marketing_dynamicContents_res_search', 'bladeNavigationService', function ($scope, marketing_dynamicContents_res_search, bladeNavigationService) {
+	
 	var blade = $scope.blade;
 
 	blade.choosenFolder = undefined;
@@ -8,7 +8,7 @@
 	blade.currentEntities = [];
 
 	blade.initialize = function () {
-		marketing_dynamicContents_res_search.search({ folder: 'ContentItem', respGroup: 'WithFolders' }, function (data) {
+		marketing_dynamicContents_res_search.search({ folder: 'ContentItem', respGroup: 'Full' }, function (data) {
 			blade.currentEntities = data.contentFolders;
 		});
 
@@ -35,11 +35,8 @@
 		if (angular.isUndefined(blade.choosenFolder) || !angular.equals(blade.choosenFolder, contentItem.id)) {
 			blade.choosenFolder = contentItem.id;
 			blade.currentEntity = contentItem;
-			marketing_dynamicContents_res_search.search({ folder: contentItem.id, respGroup: 'WithFolders' }, function (data) {
+			marketing_dynamicContents_res_search.search({ folder: contentItem.id, respGroup: 'Full' }, function (data) {
 				contentItem.childrenFolders = data.contentFolders;
-			});
-
-			marketing_dynamicContents_res_search.search({ folder: contentItem.id, respGroup: 'WithContentItems' }, function (data) {
 				contentItem.items = data.contentItems;
 			});
 		}

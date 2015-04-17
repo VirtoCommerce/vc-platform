@@ -2,11 +2,11 @@
 .controller('promotionDetailController', ['$scope', 'bladeNavigationService', 'marketing_res_promotions', 'catalogs', 'stores', 'settings', 'dialogService', 'vaDynamicExpressionService', function ($scope, bladeNavigationService, marketing_res_promotions, catalogs, stores, settings, dialogService, vaDynamicExpressionService) {
     $scope.blade.refresh = function (parentRefresh) {
         if ($scope.blade.isNew) {
-        	marketing_res_promotions.getNew({}, function (data) {
+            marketing_res_promotions.getNew({}, function (data) {
                 initializeBlade(data);
             });
         } else {
-        	marketing_res_promotions.get({ id: $scope.blade.currentEntityId }, function (data) {
+            marketing_res_promotions.get({ id: $scope.blade.currentEntityId }, function (data) {
                 initializeBlade(data);
                 if (parentRefresh) {
                     $scope.blade.parentBlade.refresh();
@@ -20,7 +20,9 @@
             $scope.blade.title = data.name;
         }
 
-        initializeExpressions(data.dynamicExpression);
+        if (data.dynamicExpression) {
+            _.each(data.dynamicExpression.children, extendElementBlock);
+        }
 
         $scope.blade.currentEntity = angular.copy(data);
         $scope.blade.origEntity = data;
@@ -43,7 +45,7 @@
         _.each($scope.blade.currentEntity.dynamicExpression.children, stripOffUiInformation);
 
         if ($scope.blade.isNew) {
-        	marketing_res_promotions.save({}, $scope.blade.currentEntity, function (data) {
+            marketing_res_promotions.save({}, $scope.blade.currentEntity, function (data) {
                 $scope.blade.isNew = undefined;
                 $scope.blade.currentEntityId = data.id;
                 initializeToolbar();
@@ -52,7 +54,7 @@
                 bladeNavigationService.setError('Error ' + error.status, $scope.blade);
             });
         } else {
-        	marketing_res_promotions.update({}, $scope.blade.currentEntity, function (data) {
+            marketing_res_promotions.update({}, $scope.blade.currentEntity, function (data) {
                 $scope.blade.refresh(true);
             }, function (error) {
                 bladeNavigationService.setError('Error ' + error.status, $scope.blade);
@@ -159,10 +161,7 @@
     $scope.format = 'shortDate';
 
     // Dynamic ExpressionBlock
-    function initializeExpressions(data) {
-        _.each(data.children, extendElementBlock);
-    }
-    
+
     function extendElementBlock(expressionBlock) {
         var retVal = vaDynamicExpressionService.expressions[expressionBlock.id];
         if (!retVal) {

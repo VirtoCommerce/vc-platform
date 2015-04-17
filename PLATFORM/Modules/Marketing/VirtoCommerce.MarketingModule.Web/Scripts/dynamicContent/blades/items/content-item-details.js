@@ -38,6 +38,8 @@
 					}
 				}
 			];
+
+			blade.unpackingContentItem();
 		}
 
 		blade.isLoading = false;
@@ -55,6 +57,12 @@
 			marketing_dynamicContents_res_contentItems.update({}, blade.entity, function (data) {
 				blade.originalEntity = angular.copy(blade.entity);
 			});
+		}
+	}
+
+	blade.unpackingContentItem = function () {
+		for (var i = 0; i < blade.entity.properties.length; i++) {
+			blade.entity[blade.entity.properties[i].name] = blade.entity.properties[i].value;
 		}
 	}
 

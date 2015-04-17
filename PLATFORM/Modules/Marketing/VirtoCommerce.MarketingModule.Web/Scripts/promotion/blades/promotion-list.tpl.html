@@ -6,7 +6,7 @@
         <p class="form-count">Count: <span class="count">{{pageSettings.totalItems}}</span></p>
     </div>
 </div>
-<div class="blade-content __medium-wide">
+<div class="blade-content __large-wide">
     <div class="blade-inner">
         <div class="inner-block">
             <div class="table-wrapper">
@@ -28,7 +28,7 @@
                         <tr class="table-item" ng-repeat="data in blade.currentEntities track by data.id" ng-class="{'__selected': data.id === selectedNodeId}">
                             <td class="table-col __product-control">
                                 <label class="form-control __checkbox">
-                                    <input type="checkbox" ng-model="data.selected">
+                                    <input type="checkbox" ng-model="data.selected" ng-disabled="data.type !== 'DynamicPromotion'">
                                     <span class="check"></span>
                                 </label>
                             </td>
@@ -36,7 +36,7 @@
                                 <span class="table-t">{{data.name}}</span>
                             </td>
                             <td class="table-col __product-code" ng-click='selectNode(data)'>
-                                <span>{{data.priceCount}}</span>
+                                <span>{{data.type}}</span>
                             </td>
                             <td class="table-col __date" ng-click='selectNode(data)'>
                                 <span class="table-date" am-time-ago="data.modifiedDate"></span>
