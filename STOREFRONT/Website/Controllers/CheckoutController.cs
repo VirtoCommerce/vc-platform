@@ -39,7 +39,7 @@ namespace VirtoCommerce.Web.Controllers
         [HttpPost]
         public async Task<ActionResult> Step1(CheckoutFirstStepFormModel formModel)
         {
-            var form = Service.GetForm(formModel.form_type);
+            var form = GetForm(formModel.form_type);
 
             var checkout = await Service.GetCheckoutAsync();
 
@@ -48,7 +48,7 @@ namespace VirtoCommerce.Web.Controllers
                 if (!ModelState.IsValid)
                 {
                     var errors = ModelState.Values.SelectMany(v => v.Errors);
-                    form.Errors = new[] { errors.Select(e => e.ErrorMessage).FirstOrDefault() };
+                    //form.Errors = new[] { errors.Select(e => e.ErrorMessage).FirstOrDefault() };
 
                     return RedirectToAction("Step1", "Checkout");
                 }
@@ -110,14 +110,14 @@ namespace VirtoCommerce.Web.Controllers
         [HttpPost]
         public async Task<ActionResult> Step2(CheckoutSecondStepFormModel formModel)
         {
-            var form = this.Service.GetForm(formModel.form_type);
+            var form = GetForm(formModel.form_type);
 
             if (form != null)
             {
                 if (!ModelState.IsValid)
                 {
                     var errors = this.ModelState.Values.SelectMany(v => v.Errors);
-                    form.Errors = new[] { errors.Select(e => e.ErrorMessage).FirstOrDefault() };
+                    //form.Errors = new[] { errors.Select(e => e.ErrorMessage).FirstOrDefault() };
 
                     return this.View("checkout-step-2");
                 }

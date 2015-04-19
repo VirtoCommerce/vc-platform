@@ -1,6 +1,7 @@
 ﻿#region
 
 using System;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
 using VirtoCommerce.ApiClient.DataContracts.Security;
@@ -56,6 +57,31 @@ namespace VirtoCommerce.ApiClient
             return SendAsync(requestUri, HttpMethod.Post, userId);
         }
 
+        public Task<ApplicationUser> FindAsync(UserLoginInfo loginInfo)
+        {
+            var parameters = new[]
+            {
+                new KeyValuePair<string, string>("loginProvider", loginInfo.LoginProvider),
+                new KeyValuePair<string, string>("providerKey", loginInfo.ProviderKey)
+            };
+
+            var requestUri = CreateRequestUri(RelativePaths.Users, parameters);
+
+            return GetAsync<ApplicationUser>(requestUri, useCache: false);
+        }
+
+        public Task AddLoginAsync(ApplicationUser user, UserLoginInfo login)
+        {
+            if (user.Logins == null)
+            {
+                user.Logins = new List<UserLoginInfo>();
+            }
+
+            user.Logins.Add(login);
+
+            return UpdateAsync(user);
+        }
+
         public Task<ApplicationUser> FindByEmailAsync(string email)
         {
             var requestUri = CreateRequestUri(string.Format(RelativePaths.FindByEmail, email));
@@ -92,6 +118,8 @@ namespace VirtoCommerce.ApiClient
         {
             #region Constants
 
+            public const string Users = "users";
+
             public const string Create = "users/create";
 
             public const string Delete = "users/delete";
@@ -102,7 +130,7 @@ namespace VirtoCommerce.ApiClient
 
             public const string FindByName = "users/name/{0}";
 
-            public const string Update = "users/update";
+            public const string Update = "users";
 
             public const string UserInfo = "usersession/{0}";
 

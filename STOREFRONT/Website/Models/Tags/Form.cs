@@ -13,7 +13,7 @@ namespace VirtoCommerce.Web.Models.Tags
         private static readonly Regex Syntax = new Regex(string.Format(@"^({0})", Liquid.QuotedFragment));
 
         private string _templateName;
-        private string _formSuffix;
+        //private string _formSuffix;
 
         public override void Initialize(string tagName, string markup, List<string> tokens)
         {
@@ -23,14 +23,14 @@ namespace VirtoCommerce.Web.Models.Tags
             {
                 _templateName = syntaxMatch.Groups[1].Value;
 
-                if (markup.Trim() == "'customer_address', customer.new_address")
-                {
-                    _formSuffix = "new";
-                }
-                else if (markup.Trim() == "'customer_address', address")
-                {
-                    _formSuffix = "1";
-                }
+                //if (markup.Trim() == "'customer_address', customer.new_address")
+                //{
+                //    _formSuffix = "new";
+                //}
+                //else if (markup.Trim() == "'customer_address', address")
+                //{
+                //    _formSuffix = "1";
+                //}
             }
             else
             {
@@ -52,23 +52,26 @@ namespace VirtoCommerce.Web.Models.Tags
 
             var form = forms.FirstOrDefault(f => f.Id == template);
 
-            if (form == null)
+            //if (form == null)
+            //{
+            //    string formId = "address_form_" + _formSuffix;
+
+            //    form = forms.Where(f => f.Properties.ContainsKey("id"))
+            //        .SingleOrDefault(f => f.Properties["id"].ToString() == formId);
+            //}
+
+            if (form != null)
             {
-                string formId = "address_form_" + _formSuffix;
+                result.WriteLine(
+                    "<form accept-charset=\"UTF-8\" action=\"{0}\" method=\"post\" id=\"{1}\">",
+                    form != null ? form.ActionLink : "",
+                    form.Properties.ContainsKey("id") ? form.Properties["id"] : form.Id);
+                result.WriteLine("<input name=\"form_type\" type=\"hidden\" value=\"{0}\" />", form.FormType);
 
-                form = forms.Where(f => f.Properties.ContainsKey("id"))
-                    .SingleOrDefault(f => f.Properties["id"].ToString() == formId);
+                context["form"] = form;
+                this.RenderAll(this.NodeList, context, result);
+                result.WriteLine("</form>");
             }
-
-            result.WriteLine(
-                "<form accept-charset=\"UTF-8\" action=\"{0}\" method=\"post\" id=\"{1}\">",
-                form != null ? form.ActionLink : "",
-                form.Properties.ContainsKey("id") ? form.Properties["id"] : form.Id);
-            result.WriteLine("<input name=\"form_type\" type=\"hidden\" value=\"{0}\" />", form.FormType);
-
-            context["form"] = form;
-            this.RenderAll(this.NodeList, context, result);
-            result.WriteLine("</form>");
         }
     }
 }
