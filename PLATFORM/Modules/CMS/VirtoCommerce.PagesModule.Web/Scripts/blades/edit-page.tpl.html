@@ -27,10 +27,11 @@
 					</div>
 				</div>
 				<div class="form-group">
-					<label class="form-label">Page content:</label>
-					<div class="form-input">
-						<textarea style="max-height:350px; min-height:350px;" required class="form-control big" cols="60" rows="30" ng-model="blade.currentEntity.content" placeholder="Enter page content"></textarea>
-					</div>
+					<label class="form-label">Page content</label>
+				    <div class="form-input">
+				        <ui-codemirror style="max-height:350px; min-height:350px;" required class="form-control big" ng-model="blade.currentEntity.content" placeholder="Enter page content" ui-codemirror-opts="editorOptions"></ui-codemirror>
+                        <!--<textarea ui-codemirror="editorOptions"  style="max-height:350px; min-height:350px;" required class="form-control big" cols="60" rows="30" ng-model="blade.currentEntity.content" placeholder="Enter page content"></textarea>-->
+				    </div>
 				</div>
 			</form>
 		</div>

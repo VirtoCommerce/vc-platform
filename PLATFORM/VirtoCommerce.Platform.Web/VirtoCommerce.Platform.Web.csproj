@@ -238,6 +238,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\angular-multi-select.css" />
+    <Content Include="Content\codemirror.css" />
     <Content Include="Content\fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Content\ng-tags-input.css" />
     <Content Include="Content\ng-tags-input.min.css" />
@@ -358,6 +359,7 @@
     <Content Include="Scripts\angular-messages.js" />
     <Content Include="Scripts\angular-messages.min.js" />
     <Content Include="Scripts\angular-mocks.js" />
+    <Content Include="Scripts\codemirror\codemirror.js" />
     <Content Include="Scripts\common\directives\angular-money-directive.js" />
     <Content Include="Scripts\angular-multi-select.js" />
     <Content Include="Scripts\angular-resource.js" />
@@ -477,6 +479,7 @@
     <Content Include="Scripts\common\security\wizards\newAccount\new-account-wizard.js" />
     <Content Include="Scripts\common\security\wizards\newAccount\new-account-wizard.tpl.html" />
     <Content Include="Scripts\common\security\wizards\new-role-wizard.tpl.html" />
+    <Content Include="Scripts\codemirror\css.js" />
     <Content Include="Scripts\errors.json" />
     <Content Include="Scripts\angular-touch.min.js.map" />
     <Content Include="Scripts\angular-messages.min.js.map" />
@@ -505,6 +508,7 @@
     <Content Include="Content\ui-grid.ttf" />
     <Content Include="Content\ui-grid.woff" />
     <None Include="Scripts\jquery-1.11.1.intellisense.js" />
+    <Content Include="Scripts\codemirror\htmlmixed.js" />
     <Content Include="Scripts\i18n\angular-locale_aa-dj.js" />
     <Content Include="Scripts\i18n\angular-locale_aa-er.js" />
     <Content Include="Scripts\i18n\angular-locale_aa-et.js" />
@@ -1229,6 +1233,7 @@
     <Content Include="Scripts\i18n\angular-locale_zh.js" />
     <Content Include="Scripts\i18n\angular-locale_zu-za.js" />
     <Content Include="Scripts\i18n\angular-locale_zu.js" />
+    <Content Include="Scripts\codemirror\javascript.js" />
     <Content Include="Scripts\jquery-1.11.1.js" />
     <Content Include="Scripts\jquery-1.11.1.min.js" />
     <Content Include="Scripts\jquery-1.11.1.min.map" />
@@ -1258,12 +1263,14 @@
     <Content Include="Scripts\sortable.js" />
     <Content Include="Scripts\textAngular-rangy.min.js" />
     <Content Include="Scripts\textAngular.min.js" />
+    <Content Include="Scripts\codemirror\ui-codemirror.js" />
     <Content Include="Scripts\ui-grid-unstable.js" />
     <Content Include="Scripts\ui-grid-unstable.min.js" />
     <Content Include="Scripts\underscore.js" />
     <Content Include="Scripts\underscore.min.js" />
     <Content Include="Scripts\xeditable.js" />
     <Content Include="Scripts\xeditable.min.js" />
+    <Content Include="Scripts\codemirror\xml.js" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
