@@ -317,7 +317,7 @@
     <Content Include="App_Data\Themes\_Default\assets\slide_1.jpg" />
     <Content Include="App_Data\Themes\_Default\assets\slide_2.jpg" />
     <Content Include="App_Data\Themes\_Default\config\settings.html" />
-    <Content Include="App_Data\Themes\_Global\templates\confirmation-reset-password.liquid" />
+    <Content Include="App_Data\Themes\_Global\templates\password_reseted.liquid" />
     <Content Include="App_Data\Themes\_Global\layout\theme.liquid" />
     <None Include="App_Data\Themes\_Global\templates\external_login_confirmation.liquid" />
     <Content Include="App_Data\Themes\_Global\templates\index.liquid" />

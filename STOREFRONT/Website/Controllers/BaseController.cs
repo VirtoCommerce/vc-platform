@@ -64,18 +64,42 @@ namespace VirtoCommerce.Web.Controllers
             return base.View(viewName, masterName, model ?? this.Context);
         }
 
-        protected void UpdateForms(IEnumerable<SubmitForm> forms)
+        protected void UpdateForms(IEnumerable<SubmitForm> forms, bool shouldRemoveExisting = false)
         {
-            if (Session["Forms"] == null)
+            if (shouldRemoveExisting)
+            {
+                Session.Remove("Forms");
+            }
+
+            var sessionForms = Session["Forms"] as ICollection<SubmitForm>;
+
+            if (sessionForms == null)
             {
                 Session.Add("Forms", forms);
+                Context.Forms = forms.ToArray();
             }
             else
             {
-                Session["Forms"] = forms;
-            }
+                var updatedForms = new List<SubmitForm>();
 
-            Context.Forms = forms.ToArray();
+                foreach (var sessionForm in sessionForms)
+                {
+                    var updatingForm = forms.FirstOrDefault(f => f.Id == sessionForm.Id);
+
+                    if (updatingForm != null)
+                    {
+                        updatedForms.Add(updatingForm);
+                    }
+                    else
+                    {
+                        sessionForm.Errors = null;
+                        updatedForms.Add(sessionForm);
+                    }
+                }
+
+                Session["Forms"] = updatedForms;
+                Context.Forms = updatedForms.ToArray();
+            }
         }
 
         protected SubmitForm GetForm(string formId)

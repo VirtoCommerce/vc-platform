@@ -12,8 +12,7 @@ namespace VirtoCommerce.Web.Models.Tags
     {
         private static readonly Regex Syntax = new Regex(string.Format(@"^({0})", Liquid.QuotedFragment));
 
-        private string _templateName;
-        //private string _formSuffix;
+        private string _formId;
 
         public override void Initialize(string tagName, string markup, List<string> tokens)
         {
@@ -21,20 +20,36 @@ namespace VirtoCommerce.Web.Models.Tags
 
             if (syntaxMatch.Success)
             {
-                _templateName = syntaxMatch.Groups[1].Value;
+                var template = syntaxMatch.Groups[1].Value.Trim('\'').Trim();
 
-                //if (markup.Trim() == "'customer_address', customer.new_address")
-                //{
-                //    _formSuffix = "new";
-                //}
-                //else if (markup.Trim() == "'customer_address', address")
-                //{
-                //    _formSuffix = "1";
-                //}
-            }
-            else
-            {
-                throw new SyntaxException("LayoutTagSyntaxException");
+                _formId = template;
+
+                if (template == "customer_address")
+                {
+                    if (markup.Trim() == "'customer_address', customer.new_address")
+                    {
+                        _formId = "new";
+                    }
+                    else if (markup.Trim() == "'customer_address', address")
+                    {
+                        _formId = "1";
+                    }
+                }
+
+            //    _templateName = syntaxMatch.Groups[1].Value;
+
+            //    if (markup.Trim() == "'customer_address', customer.new_address")
+            //    {
+            //        _formSuffix = "new";
+            //    }
+            //    else if (markup.Trim() == "'customer_address', address")
+            //    {
+            //        _formSuffix = "1";
+            //    }
+            //}
+            //else
+            //{
+            //    throw new SyntaxException("LayoutTagSyntaxException");
             }
 
             base.Initialize(tagName, markup, tokens);
@@ -42,23 +57,15 @@ namespace VirtoCommerce.Web.Models.Tags
 
         public override void Render(Context context, TextWriter result)
         {
-            var template = context[this._templateName].ToNullOrString();
-            if (template == null)
-            {
-                template = this._templateName;
-            }
+            //var template = context[this._templateName].ToNullOrString();
+            //if (template == null)
+            //{
+            //    template = this._templateName;
+            //}
 
             var forms = context["Forms"] as SubmitForm[];
 
-            var form = forms.FirstOrDefault(f => f.Id == template);
-
-            //if (form == null)
-            //{
-            //    string formId = "address_form_" + _formSuffix;
-
-            //    form = forms.Where(f => f.Properties.ContainsKey("id"))
-            //        .SingleOrDefault(f => f.Properties["id"].ToString() == formId);
-            //}
+            var form = forms.FirstOrDefault(f => f.Id == _formId);
 
             if (form != null)
             {

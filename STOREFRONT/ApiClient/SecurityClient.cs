@@ -112,6 +112,26 @@ namespace VirtoCommerce.ApiClient
             return SendAsync(requestUri, HttpMethod.Put, user);
         }
 
+        public Task SendMessageAsync(SecurityMessage securityMessage)
+        {
+            var requestUri = CreateRequestUri(RelativePaths.SendMessage);
+            return SendAsync(requestUri, HttpMethod.Post, securityMessage);
+        }
+
+        public Task<IdentityResult> ResetPasswordAsync(string userId, string token, string password)
+        {
+            var parameters = new[]
+            {
+                new KeyValuePair<string, string>("UserId", userId),
+                new KeyValuePair<string, string>("Token", token),
+                new KeyValuePair<string, string>("NewPassword", password)
+            };
+
+            var requestUri = CreateRequestUri(RelativePaths.ResetPassword, parameters);
+
+            return SendAsync<IdentityResult>(requestUri, HttpMethod.Post);
+        }
+
         #endregion
 
         protected class RelativePaths
@@ -132,7 +152,11 @@ namespace VirtoCommerce.ApiClient
 
             public const string Update = "users";
 
+            public const string SendMessage = "users/notifications";
+
             public const string UserInfo = "usersession/{0}";
+
+            public const string ResetPassword = "users/resetpassword";
 
             #endregion
         }

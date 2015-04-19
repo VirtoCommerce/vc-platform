@@ -15,30 +15,6 @@ namespace VirtoCommerce.Web.Models.FormModels
             this.Customer = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
         }
 
-        public string Email
-        {
-            get
-            {
-                return this.GetValue("email");
-            }
-            set
-            {
-                this.SetValue("email", value);
-            }
-        }
-
-        public string Code
-        {
-            get
-            {
-                return this.GetValue("code");
-            }
-            set
-            {
-                this.SetValue("code", value);
-            }
-        }
-
         [Required]
         [StringLength(20, MinimumLength = 6)]
         public string Password
