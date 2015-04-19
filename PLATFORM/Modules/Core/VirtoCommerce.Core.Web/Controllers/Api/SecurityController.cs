@@ -475,13 +475,24 @@ namespace VirtoCommerce.CoreModule.Web.Controllers.Api
                         HttpUtility.HtmlEncode(uriBuilder.ToString()));
                     string subject = string.Format("{0} reset password link", securityMessage.StoreId);
 
-                    BackgroundJob.Enqueue(() => SendEmail(securityMessage.UserId, subject, message));
+                    await UserManager.SendEmailAsync(securityMessage.UserId, subject, message);
+
+                    //BackgroundJob.Enqueue(() => SendEmail(securityMessage.UserId, subject, message));
 
                     return Ok();
                 }
             }
 
             return BadRequest();
+        }
+
+        [HttpPost]
+        [Route("users/resetpassword")]
+        public async Task<IHttpActionResult> ResetPassword(string userId, string token, string newPassword)
+        {
+            var result = await UserManager.ResetPasswordAsync(userId, token, newPassword);
+
+            return Ok(result);
         }
 
         #endregion
