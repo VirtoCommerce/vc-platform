@@ -8,7 +8,7 @@ namespace VirtoCommerce.MarketingModule.Expressions.Promotion
 	//Category is []
 	public class ConditionCategoryIs : ConditionBase, IConditionExpression
 	{
-		public string SelectedCategoryId { get; set;}
+		public string CategoryId { get; set; }
 		public string CategoryName { get; set; }
 	
 		#region IConditionExpression Members
@@ -22,7 +22,7 @@ namespace VirtoCommerce.MarketingModule.Expressions.Promotion
 			var castOp = linq.Expression.MakeUnary(linq.ExpressionType.Convert, paramX, typeof(PromotionEvaluationContext));
 			var methodInfo = typeof(PromotionEvaluationContextExtension).GetMethod("IsItemInCategory");
 
-			var methodCall = linq.Expression.Call(null, methodInfo, castOp, linq.Expression.Constant(SelectedCategoryId), GetNewArrayExpression(ExcludingCategoryIds),
+			var methodCall = linq.Expression.Call(null, methodInfo, castOp, linq.Expression.Constant(CategoryId), GetNewArrayExpression(ExcludingCategoryIds),
 												  GetNewArrayExpression(ExcludingProductIds));
 			var retVal = linq.Expression.Lambda<Func<IPromotionEvaluationContext, bool>>(methodCall, paramX);
 

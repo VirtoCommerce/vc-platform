@@ -17,7 +17,8 @@
                 name: "Pick selected", icon: 'fa fa-plus',
                 executeMethod: function (blade) {
                     //parentElement.selectedListEntry = selectedListEntries[0];
-                    parentElement.productId = selectedListEntries[0].id;
+                	parentElement.productId = selectedListEntries[0].id;
+                	parentElement.productName = selectedListEntries[0].name;
                     bladeNavigationService.closeBlade(blade);
                 },
                 canExecuteMethod: function () {
@@ -61,7 +62,8 @@
             {
                 name: "Pick selected", icon: 'fa fa-plus',
                 executeMethod: function (blade) {
-                    parentElement.selectedCategoryId = selectedListEntries[0].id;
+                	parentElement.categoryId = selectedListEntries[0].id;
+                	parentElement.categoryName = selectedListEntries[0].name;
                     bladeNavigationService.closeBlade(blade);
                 },
                 canExecuteMethod: function () {

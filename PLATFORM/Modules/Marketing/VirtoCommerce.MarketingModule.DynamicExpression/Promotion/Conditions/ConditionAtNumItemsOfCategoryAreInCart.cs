@@ -12,7 +12,8 @@ namespace VirtoCommerce.MarketingModule.Expressions.Promotion
 	
 		public bool Exactly { get; set; }
 
-		public string SelectedCategoryId { get; set; }
+		public string CategoryId { get; set; }
+		public string CategoryName { get; set; }
 	
 
 		#region IConditionExpression Members
@@ -25,7 +26,7 @@ namespace VirtoCommerce.MarketingModule.Expressions.Promotion
 			var paramX = linq.Expression.Parameter(typeof(IPromotionEvaluationContext), "x");
 			var castOp = linq.Expression.MakeUnary(linq.ExpressionType.Convert, paramX, typeof(PromotionEvaluationContext));
 			var methodInfo = typeof(PromotionEvaluationContextExtension).GetMethod("GetCartItemsOfCategoryQuantity");
-			var methodCall = linq.Expression.Call(null, methodInfo, castOp, linq.Expression.Constant(SelectedCategoryId), GetNewArrayExpression(ExcludingCategoryIds),
+			var methodCall = linq.Expression.Call(null, methodInfo, castOp, linq.Expression.Constant(CategoryId), GetNewArrayExpression(ExcludingCategoryIds),
 																	  GetNewArrayExpression(ExcludingProductIds));
 			var numItem = linq.Expression.Constant(NumItem);
 			var binaryOp = Exactly ? linq.Expression.Equal(methodCall, numItem) : linq.Expression.GreaterThanOrEqual(methodCall, numItem);

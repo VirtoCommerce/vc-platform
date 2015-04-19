@@ -196,6 +196,7 @@
     <Content Include="Scripts\dynamicContent\blades\placeholders\list.js" />
     <Content Include="Scripts\dynamicContent\blades\placeholders\list.tpl.html" />
     <Content Include="Scripts\dynamicContent\resources\dynamicContents.js" />
+    <Content Include="Scripts\promotion\blades\promotion-detail-toolbar.tpl.html" />
     <Content Include="Scripts\promotion\blades\promotion-expressions.js" />
     <Content Include="Scripts\promotion\blades\promotion-detail.js" />
     <Content Include="Scripts\promotion\blades\promotion-detail.tpl.html" />

@@ -33,8 +33,8 @@ namespace VirtoCommerce.CustomerModule.Data.Converters
 			retVal.Id = dbEntity.PromotionId;
 			retVal.Coupon = dbEntity.CouponCode;
 			retVal.Store = dbEntity.StoreId;
-			retVal.TotalUsageLimit = dbEntity.TotalLimit;
-			retVal.PerCustomerUsageLimit = dbEntity.PerCustomerLimit;
+			retVal.MaxUsageCount = dbEntity.TotalLimit;
+			retVal.MaxPersonalUsageCount = dbEntity.PerCustomerLimit;
 
 			retVal.CreatedDate = dbEntity.Created.Value;
 			retVal.ModifiedDate = dbEntity.LastModified;
@@ -63,8 +63,8 @@ namespace VirtoCommerce.CustomerModule.Data.Converters
 			retVal.StartDate = promotion.StartDate ?? DateTime.UtcNow;
 			retVal.StoreId = promotion.Store;
 			retVal.CouponCode = promotion.Coupon;
-			retVal.TotalLimit = promotion.TotalUsageLimit;
-			retVal.PerCustomerLimit = promotion.PerCustomerUsageLimit;
+			retVal.TotalLimit = promotion.MaxUsageCount;
+			retVal.PerCustomerLimit = promotion.MaxPersonalUsageCount;
 			retVal.Status = promotion.IsActive ? foundationModel.PromotionStatus.Active.ToString() : foundationModel.PromotionStatus.Inactive.ToString();
 			return retVal;
 		}

@@ -329,6 +329,23 @@ namespace VirtoCommerce.CoreModule.Web.Controllers.Api
 
             dbUser.InjectFrom(user);
 
+            foreach (var login in user.Logins)
+            {
+                var userLogin = dbUser.Logins.FirstOrDefault(l => l.LoginProvider == login.LoginProvider);
+                if (userLogin != null)
+                {
+                    userLogin.ProviderKey = login.ProviderKey;
+                }
+                else
+                {
+                    dbUser.Logins.Add(new Microsoft.AspNet.Identity.EntityFramework.IdentityUserLogin
+                    {
+                        LoginProvider = login.LoginProvider,
+                        ProviderKey = login.ProviderKey,
+                        UserId = dbUser.Id
+                    });
+                }
+            }
 
             var result = await UserManager.UpdateAsync(dbUser);
 
