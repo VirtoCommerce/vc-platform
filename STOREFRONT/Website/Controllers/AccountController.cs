@@ -231,6 +231,9 @@ namespace VirtoCommerce.Web.Controllers
 
                         if (result.Succeeded)
                         {
+                            await CustomerService.CreateCustomerAsync(
+                                formModel.Email, formModel.Email, null, user.Id, null);
+
                             await _signInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
 
                             return RedirectToLocal(formModel.ReturnUrl);
@@ -263,6 +266,16 @@ namespace VirtoCommerce.Web.Controllers
             }
 
             return View("error");
+        }
+
+        //
+        // GET: /Account/LogOFf
+        [HttpGet]
+        public ActionResult LogOff()
+        {
+            _authenticationManager.SignOut();
+
+            return RedirectToAction("Index", "Home");
         }
 
         ////
