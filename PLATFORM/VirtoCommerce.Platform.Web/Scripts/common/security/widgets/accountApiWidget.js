@@ -5,7 +5,6 @@
     $scope.openBlade = function () {
         var newBlade = {
             id: "accountChildBlade",
-            promise: $scope.blade.promise,
             title: $scope.blade.title,
             subtitle: 'API access',
             controller: 'accountApiController',

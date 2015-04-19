@@ -423,6 +423,10 @@
     <Content Include="Scripts\common\security\blades\account-changePassword.tpl.html" />
     <Content Include="Scripts\common\security\blades\account-api.tpl.html" />
     <Content Include="Scripts\common\security\blades\account-api.js" />
+    <Content Include="Scripts\common\security\blades\account-roles-list.js" />
+    <Content Include="Scripts\common\security\blades\account-roles-list.tpl.html" />
+    <Content Include="Scripts\common\security\blades\role-permissions.js" />
+    <Content Include="Scripts\common\security\blades\role-permissions.tpl.html" />
     <Content Include="Scripts\common\security\blades\account-roles.tpl.html" />
     <Content Include="Scripts\common\security\blades\account-roles.js" />
     <Content Include="Scripts\common\security\blades\security-main.js" />
@@ -472,6 +476,7 @@
     <Content Include="Scripts\common\security\widgets\accountRolesWidget.tpl.html" />
     <Content Include="Scripts\common\security\wizards\newAccount\new-account-wizard.js" />
     <Content Include="Scripts\common\security\wizards\newAccount\new-account-wizard.tpl.html" />
+    <Content Include="Scripts\common\security\wizards\new-role-wizard.tpl.html" />
     <Content Include="Scripts\errors.json" />
     <Content Include="Scripts\angular-touch.min.js.map" />
     <Content Include="Scripts\angular-messages.min.js.map" />
