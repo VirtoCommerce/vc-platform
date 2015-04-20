@@ -475,9 +475,7 @@ namespace VirtoCommerce.CoreModule.Web.Controllers.Api
                         HttpUtility.HtmlEncode(uriBuilder.ToString()));
                     string subject = string.Format("{0} reset password link", securityMessage.StoreId);
 
-                    await UserManager.SendEmailAsync(securityMessage.UserId, subject, message);
-
-                    //BackgroundJob.Enqueue(() => SendEmail(securityMessage.UserId, subject, message));
+                    BackgroundJob.Enqueue(() => SendEmail(securityMessage.UserId, subject, message));
 
                     return Ok();
                 }
