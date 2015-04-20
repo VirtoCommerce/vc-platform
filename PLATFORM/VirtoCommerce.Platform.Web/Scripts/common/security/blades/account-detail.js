@@ -1,5 +1,5 @@
 ﻿angular.module('platformWebApp')
-.controller('accountDetailController', ['$scope', 'bladeNavigationService', 'accounts', 'platform_res_roles', '$interval', 'uiGridConstants', 'dialogService', function ($scope, bladeNavigationService, accounts, roles, $interval, uiGridConstants, dialogService) {
+.controller('accountDetailController', ['$scope', 'bladeNavigationService', 'accounts', 'platform_res_roles', 'dialogService', function ($scope, bladeNavigationService, accounts, roles, dialogService) {
     $scope.blade.promise = roles.get({ count: 10000 }).$promise;
 
     $scope.blade.refresh = function (parentRefresh) {
