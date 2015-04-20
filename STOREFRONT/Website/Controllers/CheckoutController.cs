@@ -83,11 +83,14 @@ namespace VirtoCommerce.Web.Controllers
                     checkout.Email = formModel.Email;
                     checkout.ShippingAddress = shippingAddress;
 
-                    var customer = await this.CustomerService.GetCustomerAsync(formModel.Email, Context.Shop.StoreId);
-                    if (customer != null)
+                    if (User.Identity.IsAuthenticated)
                     {
-                        customer.Addresses.Add(shippingAddress);
-                        await CustomerService.UpdateCustomerAsync(customer);
+                        var customer = await this.CustomerService.GetCustomerAsync(formModel.Email, Context.Shop.StoreId);
+                        if (customer != null)
+                        {
+                            customer.Addresses.Add(shippingAddress);
+                            await CustomerService.UpdateCustomerAsync(customer);
+                        }
                     }
 
                     await Service.UpdateCheckoutAsync(checkout);
@@ -174,11 +177,14 @@ namespace VirtoCommerce.Web.Controllers
                     checkout.ShippingMethod = checkout.ShippingMethods.FirstOrDefault(sm => sm.Handle == formModel.ShippingMethodId);
                     checkout.PaymentMethod = checkout.PaymentMethods.FirstOrDefault(pm => pm.Handle == formModel.PaymentMethodId);
 
-                    var customer = await CustomerService.GetCustomerAsync(checkout.Email, Context.Shop.StoreId);
-                    if (customer != null)
+                    if (User.Identity.IsAuthenticated)
                     {
-                        customer.Addresses.Add(billingAddress);
-                        await this.CustomerService.UpdateCustomerAsync(customer);
+                        var customer = await CustomerService.GetCustomerAsync(checkout.Email, Context.Shop.StoreId);
+                        if (customer != null)
+                        {
+                            customer.Addresses.Add(billingAddress);
+                            await this.CustomerService.UpdateCustomerAsync(customer);
+                        }
                     }
 
                     checkout.Order = await Service.CreateOrderAsync(checkout);
