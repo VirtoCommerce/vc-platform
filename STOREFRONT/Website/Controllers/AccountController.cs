@@ -209,6 +209,8 @@ namespace VirtoCommerce.Web.Controllers
                 return View("error");
             }
 
+            Session["Forms"] = null;
+            
             var forms = new[]
             {
                 new SubmitForm
