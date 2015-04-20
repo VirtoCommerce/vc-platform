@@ -49,6 +49,20 @@ namespace VirtoCommerce.Web.Models
             }
         }
 
+        public string ErrorMessage
+        {
+            get
+            {
+                object retValue;
+                return _Storage.TryGetValue("error_message", out retValue) ? retValue as string : null;
+            }
+            set
+            {
+                this.Set("error_message", value);
+            }
+
+        }
+
         public LoginProvider[] LoginProviders
         {
             get
@@ -113,6 +127,8 @@ namespace VirtoCommerce.Web.Models
                 this.Set("country_option_tags", value);
             }
         }
+
+        public string CustomerId { get; set; }
 
         public Customer Customer
         {

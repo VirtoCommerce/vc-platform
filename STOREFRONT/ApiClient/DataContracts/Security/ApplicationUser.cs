@@ -1,16 +1,12 @@
 ﻿#region
 
 using System;
+using System.Collections.Generic;
 
 #endregion
 
 namespace VirtoCommerce.ApiClient.DataContracts.Security
 {
-
-    #region
-
-    #endregion
-
     public class ApplicationUser
     {
         #region Public Properties
@@ -40,11 +36,11 @@ namespace VirtoCommerce.ApiClient.DataContracts.Security
         ///// 
         ///// </summary>
         //public virtual ICollection<TClaim> Claims { get; }
-        ///// <summary>
-        ///// Navigation property for user logins
-        ///// 
-        ///// </summary>
-        //public virtual ICollection<TLogin> Logins { get; }
+        /// <summary>
+        /// Navigation property for user logins
+        /// 
+        /// </summary>
+        public virtual ICollection<UserLoginInfo> Logins { get; set; }
         /// <summary>
         ///     Navigation property for user roles
         /// </summary>

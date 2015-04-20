@@ -107,7 +107,18 @@ namespace VirtoCommerce.CartModule.Data.Services
 
 		public void Delete(string[] cartIds)
 		{
-			throw new NotImplementedException();
+			using (var repository = _repositoryFactory())
+			{
+				foreach (var id in cartIds)
+				{
+					var entity = repository.GetShoppingCartById(id);
+					if (entity != null)
+					{
+						repository.Remove(entity);
+					}
+				}
+				repository.UnitOfWork.Commit();
+			}
 		}
 
 		#endregion

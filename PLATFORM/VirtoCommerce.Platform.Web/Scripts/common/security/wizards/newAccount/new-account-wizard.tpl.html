@@ -20,21 +20,19 @@
                         <input ng-model="blade.currentEntity.newPassword2" required placeholder="Repeat new password" type="password">
                     </div>
                 </div>
-                <div class="sub-t __border">Assigned roles</div>
-                <div class="form">
-                    <div class="form-group">
-                        <a class="clear text-mini __link" ng-click="removeAll()">Clear all</a>
-                        <ul class="list __inline __choosen">
-                            <li class="list-item" ng-repeat="data in blade.currentEntity.roles">
-                                <a class="list-remove" ng-click="remove(data)">×</a>
-                                <span class="list-name">{{data.name}}</span>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="sub-t __border">Available roles</div>
-                <div ui-grid="gridOptions" ui-grid-selection></div>
             </form>
+            <div class="sub-t">Assign roles</div>
+            <div class="list __items">
+                <label class="list-item" ng-repeat="data in blade.currentEntities">
+                    <input type="checkbox" ng-model="data.isChecked">
+                    <span class="switch"></span>
+                    <span class="list-name">{{data.name}}</span>
+                    <i class="fa fa-info-circle" left-click-menu data-target="naw_menu{{$index}}"></i>
+                    <ul class="menu __context" role="menu" id="naw_menu{{$index}}">
+                        <li class="menu-item" ng-repeat="x in data.permissions">{{x.name}}</li>
+                    </ul>
+                </label>
+            </div>
         </div>
     </div>
 </div>

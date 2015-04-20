@@ -6,9 +6,9 @@
             id: "accountChildBlade",
             promise: $scope.blade.promise,
             title: $scope.blade.title,
-            subtitle: 'Manage roles',
-            controller: 'accountRolesController',
-            template: 'Scripts/common/security/blades/account-roles.tpl.html'
+            subtitle: 'View roles',
+            controller: 'accountRolesListController',
+            template: 'Scripts/common/security/blades/account-roles-list.tpl.html'
         };
         bladeNavigationService.showBlade(newBlade, $scope.blade);
     };

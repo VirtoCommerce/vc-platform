@@ -28,6 +28,7 @@
 
 			bundles.Add(
 				new BetterStyleBundle("~/css/core").Include(
+					"~/Content/codemirror.css",
 					"~/Content/select.css",
 					"~/Content/angular-multi-select.css",
 					"~/Content/ng-tags-input.css",
@@ -104,6 +105,7 @@
 					"~/Scripts/ng-tags-input.js",
 					"~/Scripts/textAngular.min.js",
 					"~/Scripts/textAngular-rangy.min.js")
+                    .IncludeDirectory("~/Scripts/codemirror/", "*.js", true)
 					.IncludeDirectory("~/Scripts/app/", "*.js", true)
 					.IncludeDirectory("~/Scripts/common/", "*.js", true));
 

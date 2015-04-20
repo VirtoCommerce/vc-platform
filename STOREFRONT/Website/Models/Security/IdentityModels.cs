@@ -46,11 +46,11 @@
         ///// 
         ///// </summary>
         //public virtual ICollection<TClaim> Claims { get; }
-        
+
         /// <summary>
         /// Navigation property for user logins
         /// </summary>
-        //public virtual ICollection<TLogin> Logins { get; }
+        public virtual ICollection<UserLoginInfo> Logins { get; set; }
 
         /// <summary>
         ///     Is lockout enabled for this user

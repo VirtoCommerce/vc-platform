@@ -21,6 +21,10 @@ namespace VirtoCommerce.Web.Models.Convertors
                 ret.Items = new List<Data.CartItem>(cart.Items.Select(x => x.AsServiceModel()));
                 //cart.Items.ForEach(i => ret.Items.Add(i.AsServiceModel()));
             }
+            else
+            {
+                ret.Items = new List<Data.CartItem>();
+            }
 
             return ret;
         }

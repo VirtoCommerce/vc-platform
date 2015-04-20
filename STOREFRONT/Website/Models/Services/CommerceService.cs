@@ -22,6 +22,7 @@ using VirtoCommerce.Web.Models.Helpers;
 using VirtoCommerce.Web.Models.Lists;
 using VirtoCommerce.Web.Views.Engines.Liquid;
 using VirtoCommerce.ApiClient.DataContracts.Cart;
+using VirtoCommerce.ApiClient.DataContracts.Marketing;
 
 #endregion
 
@@ -46,6 +47,7 @@ namespace VirtoCommerce.Web.Models.Services
         private readonly ReviewsClient _reviewsClient;
         private readonly string _themesCacheStoragePath;
         private readonly string _pagesCacheStoragePath;
+        private readonly MarketingClient _marketingClient;
 
         private static readonly object _LockObject = new object();
         #endregion
@@ -60,6 +62,7 @@ namespace VirtoCommerce.Web.Models.Services
             this._orderClient = ClientContext.Clients.CreateOrderClient();
             this._securityClient = ClientContext.Clients.CreateSecurityClient();
             this._priceClient = ClientContext.Clients.CreatePriceClient();
+            this._marketingClient = ClientContext.Clients.CreateMarketingClient();
             this._inventoryClient = ClientContext.Clients.CreateInventoryClient();
             this._themeClient = ClientContext.Clients.CreateThemeClient();
             this._pageClient = ClientContext.Clients.CreatePageClient();
@@ -153,102 +156,134 @@ namespace VirtoCommerce.Web.Models.Services
             return "<option value=\"United States\" data-provinces=\"[&quot;California&quot;,&quot;Ohio&quot;]\">United States</option>";
         }
 
+        public async Task<Cart> CreateCartAsync(ShoppingCart dtoCart)
+        {
+            await _cartClient.CreateCartAsync(dtoCart);
+
+            dtoCart = await _cartClient.GetCartAsync(dtoCart.StoreId, dtoCart.CustomerId);
+
+            return dtoCart != null ? dtoCart.AsWebModel() : null;
+        }
+
+        public async Task DeleteCartAsync(string cartId)
+        {
+            await _cartClient.DeleteCartAsync(new[] { cartId });
+        }
+
         public async Task<Cart> GetCurrentCartAsync()
         {
-            var cart = await this._cartClient.GetCartAsync(SiteContext.Current.StoreId, SiteContext.Current.Customer.Id);
-            return cart.AsWebModel();
+            var cart = await this._cartClient.GetCartAsync(SiteContext.Current.StoreId, SiteContext.Current.CustomerId);
+            return cart != null ? cart.AsWebModel() : null;
         }
 
         public async Task<Checkout> GetCheckoutAsync()
         {
-            Checkout checkout = null;
+            var checkout = new Checkout();
 
-            var dtoCart = await _cartClient.GetCartAsync(SiteContext.Current.StoreId, SiteContext.Current.Customer.Id);
-
+            var dtoCart = await _cartClient.GetCartAsync(SiteContext.Current.StoreId, SiteContext.Current.CustomerId);
             if (dtoCart != null)
             {
-                checkout = new Checkout();
-
-                var dtoBillingAddress = dtoCart.Addresses != null ? dtoCart.Addresses.FirstOrDefault(a => a.Type == AddressType.Billing) : null;
-
-                if (dtoBillingAddress != null)
+                if (dtoCart.Addresses != null)
                 {
-                    checkout.BillingAddress = dtoBillingAddress.AsCartWebModel();
-                    checkout.Email = dtoBillingAddress.Email;
-                }
-
-                checkout.BuyerAcceptsMarketing = true;
-
-                if (dtoCart.Discounts != null)
-                {
-                    foreach (var discount in dtoCart.Discounts)
+                    var billingAddress = dtoCart.Addresses.FirstOrDefault(a => a.Type == AddressType.Billing);
+                    if (billingAddress != null)
                     {
-                        checkout.Discounts.Add(new Discount
+                        checkout.BillingAddress = billingAddress.AsCartWebModel();
+                    }
+
+                    var shippingAddress = dtoCart.Addresses.FirstOrDefault(a => a.Type == AddressType.Shipping);
+                    if (shippingAddress != null)
+                    {
+                        checkout.ShippingAddress = shippingAddress.AsCartWebModel();
+                    }
+
+                    checkout.BuyerAcceptsMarketing = true; // TODO
+                    checkout.Currency = dtoCart.Currency;
+                    checkout.CustomerId = dtoCart.CustomerId;
+
+                    // TODO: Discounts
+                    // TODO: GiftCards
+
+                    checkout.Email = SiteContext.Current.Customer != null ? SiteContext.Current.Customer.Email : null;
+                    checkout.GuestLogin = dtoCart.IsAnonymous;
+                    checkout.Id = dtoCart.Id;
+
+                    if (dtoCart.Items != null)
+                    {
+                        checkout.LineItems = new List<LineItem>();
+                        foreach (var dtoItem in dtoCart.Items)
                         {
-                            Amount = discount.DiscountAmount ?? 0,
-                            Code = discount.PromotionId
-                        });
+                            checkout.LineItems.Add(dtoItem.AsWebModel());
+                        }
                     }
-                }
 
-                if (dtoCart.Items != null)
-                {
-                    foreach (var lineItem in dtoCart.Items)
+                    checkout.Name = dtoCart.Name;
+                    checkout.Note = dtoCart.Note;
+                    checkout.Order = null; // TODO
+
+                    if (dtoCart.Payments != null)
                     {
-                        checkout.LineItems.Add(lineItem.AsWebModel());
+                        var dtoPayment = dtoCart.Payments.FirstOrDefault();
+                        if (dtoPayment != null)
+                        {
+                            checkout.PaymentMethod = new PaymentMethod
+                            {
+                                Handle = dtoPayment.PaymentGatewayCode
+                            };
+                        }
                     }
-                }
 
-                checkout.RequiresShipping = true;
-
-                var dtoShippingAddress = dtoCart.Addresses != null ? dtoCart.Addresses.FirstOrDefault(a => a.Type == AddressType.Shipping) : null;
-
-                if (dtoShippingAddress != null)
-                {
-                    checkout.ShippingAddress = dtoShippingAddress.AsCartWebModel();
-                    checkout.Email = dtoShippingAddress.Email;
-                }
-
-                var dtoShipment = dtoCart.Shipments != null ? dtoCart.Shipments.FirstOrDefault() : null;
-
-                if (dtoShipment != null)
-                {
-                    checkout.ShippingMethod = new ShippingMethod
+                    checkout.PaymentMethods = new List<PaymentMethod>
                     {
-                        Handle = dtoShipment.ShipmentMethodCode,
-                        Price = dtoShipment.Total,
-                        Title = dtoShipment.ShipmentMethodCode
+                        new PaymentMethod { Handle = "Klarna" },
+                        new PaymentMethod { Handle = "MeS" },
+                        new PaymentMethod { Handle = "PayPal" }
                     };
-                }
 
+                    checkout.RequiresShipping = true; // TODO
 
-                checkout.PaymentMethods.Add(new PaymentMethod { Handle = "Klarna" });
-                checkout.PaymentMethods.Add(new PaymentMethod { Handle = "MeS" });
-                checkout.PaymentMethods.Add(new PaymentMethod { Handle = "PayPal" });
-
-                var shippingMethods = await _cartClient.GetCartShippingMethods(dtoCart.Id);
-
-                foreach (var shippingMethod in shippingMethods)
-                {
-                    checkout.ShippingMethods.Add(new ShippingMethod
+                    if (dtoCart.Shipments != null)
                     {
-                        Handle = shippingMethod.ShipmentMethodCode,
-                        Price = shippingMethod.Price,
-                        Title = shippingMethod.Name
-                    });
-                }
+                        var dtoShipment = dtoCart.Shipments.FirstOrDefault();
+                        if (dtoShipment != null)
+                        {
+                            checkout.ShippingMethod = new ShippingMethod
+                            {
+                                Handle = dtoShipment.ShipmentMethodCode,
+                                Price = dtoShipment.ShippingPrice,
+                                Title = dtoShipment.ShipmentMethodCode
+                            };
+                        }
+                    }
 
-                // Taxes
+                    var dtoShippingMethods = await _cartClient.GetCartShippingMethods(dtoCart.Id);
+                    if (dtoShippingMethods != null)
+                    {
+                        checkout.ShippingMethods = new List<ShippingMethod>();
+                        foreach (var dtoShippingMethod in dtoShippingMethods)
+                        {
+                            checkout.ShippingMethods.Add(new ShippingMethod
+                            {
+                                Handle = dtoShippingMethod.ShipmentMethodCode,
+                                Price = dtoShippingMethod.Price,
+                                Title = dtoShippingMethod.Name
+                            });
+                        }
+                    }
+
+                    // TODO: TaxLines
+                    // TODO: Transactions
+                }
             }
 
             return checkout;
         }
 
-        public async Task<Checkout> UpdateCheckoutAsync(Checkout checkout)
+        public async Task UpdateCheckoutAsync(Checkout checkout)
         {
-            var dtoCart = await _cartClient.GetCartAsync(SiteContext.Current.StoreId, SiteContext.Current.Customer.Id);
-            dtoCart.Currency = checkout.Currency;
-            dtoCart.Addresses = new List<ApiClient.DataContracts.Cart.Address>();
+            var dtoCart = await _cartClient.GetCartAsync(SiteContext.Current.StoreId, SiteContext.Current.CustomerId);
+
+            dtoCart.Addresses = new List<VirtoCommerce.ApiClient.DataContracts.Cart.Address>();
 
             if (checkout.BillingAddress != null)
             {
@@ -257,49 +292,6 @@ namespace VirtoCommerce.Web.Models.Services
                 billingAddress.Type = AddressType.Billing;
                 dtoCart.Addresses.Add(billingAddress);
             }
-
-            foreach (var discount in checkout.Discounts)
-            {
-                dtoCart.Discounts = new List<ApiClient.DataContracts.Cart.Discount>();
-                dtoCart.Discounts.Add(new ApiClient.DataContracts.Cart.Discount
-                {
-                    Coupon = new ApiClient.DataContracts.Cart.Coupon { CouponCode = discount.Code },
-                    Currency = dtoCart.Currency,
-                    DiscountAmount = discount.Amount,
-                    Description = discount.Code
-                });
-            }
-
-            dtoCart.Items = new List<ApiClient.DataContracts.Cart.CartItem>();
-            foreach (var lineItem in checkout.LineItems)
-            {
-                dtoCart.Items.Add(lineItem.AsServiceModel());
-            }
-
-            if (checkout.BillingAddress != null)
-            {
-                dtoCart.Payments = new List<ApiClient.DataContracts.Cart.Payment>();
-                dtoCart.Payments.Add(new ApiClient.DataContracts.Cart.Payment
-                {
-                    Amount = checkout.TotalPrice,
-                    BillingAddress = checkout.BillingAddress != null ? checkout.BillingAddress.AsCartServiceModel() : null,
-                    Currency = dtoCart.Currency,
-                    OuterId = "", // TODO!!!
-                });
-            }
-
-            if (checkout.ShippingAddress != null && checkout.ShippingMethod != null)
-            {
-                dtoCart.Shipments = new List<ApiClient.DataContracts.Cart.Shipment>();
-                dtoCart.Shipments.Add(new ApiClient.DataContracts.Cart.Shipment
-                {
-                    Currency = dtoCart.Currency,
-                    RecipientAddress = checkout.ShippingAddress.AsCartServiceModel(),
-                    ShipmentMethodCode = checkout.ShippingMethod.Handle,
-                    ShippingPrice = checkout.ShippingPrice
-                });
-            }
-
             if (checkout.ShippingAddress != null)
             {
                 var shippingAddress = checkout.ShippingAddress.AsCartServiceModel();
@@ -308,19 +300,45 @@ namespace VirtoCommerce.Web.Models.Services
                 dtoCart.Addresses.Add(shippingAddress);
             }
 
+            dtoCart.Currency = checkout.Currency;
+            dtoCart.CustomerId = checkout.CustomerId;
+
+            // TODO: Discounts
+            // TODO: GiftCards
+
+            if (checkout.LineItems != null)
+            {
+                dtoCart.Items = new List<CartItem>();
+                foreach (var lineItem in checkout.LineItems)
+                {
+                    dtoCart.Items.Add(lineItem.AsServiceModel());
+                }
+            }
+
+            dtoCart.Note = checkout.Note;
+
+            if (checkout.PaymentMethod != null)
+            {
+                dtoCart.Payments = new List<Payment>();
+                dtoCart.Payments.Add(new Payment
+                {
+                    PaymentGatewayCode = checkout.PaymentMethod.Handle
+                });
+            }
+
+            dtoCart.StoreId = SiteContext.Current.StoreId;
+
             dtoCart.ShippingTotal = checkout.ShippingPrice;
             dtoCart.SubTotal = checkout.SubtotalPrice;
             dtoCart.TaxTotal = checkout.TaxPrice;
             dtoCart.Total = checkout.TotalPrice;
 
             await _cartClient.UpdateCurrentCartAsync(dtoCart);
-
-            return checkout;
         }
 
         public async Task<CustomerOrder> CreateOrderAsync(Checkout checkout)
         {
-            var dtoCart = await _cartClient.GetCartAsync(SiteContext.Current.StoreId, SiteContext.Current.Customer.Id);
+            var dtoCart = await _cartClient.GetCartAsync(SiteContext.Current.StoreId, SiteContext.Current.CustomerId);
             dtoCart.Currency = checkout.Currency;
             dtoCart.CustomerId = checkout.CustomerId;
 
@@ -331,15 +349,18 @@ namespace VirtoCommerce.Web.Models.Services
             billingAddress.Type = AddressType.Billing;
             dtoCart.Addresses.Add(billingAddress);
 
-            foreach (var discount in checkout.Discounts)
+            if (checkout.Discounts != null)
             {
-                dtoCart.Discounts.Add(new ApiClient.DataContracts.Cart.Discount
+                foreach (var discount in checkout.Discounts)
                 {
-                    Coupon = new ApiClient.DataContracts.Cart.Coupon { CouponCode = discount.Code },
-                    Currency = dtoCart.Currency,
-                    DiscountAmount = discount.Amount,
-                    Description = discount.Code
-                });
+                    dtoCart.Discounts.Add(new ApiClient.DataContracts.Cart.Discount
+                    {
+                        Coupon = new ApiClient.DataContracts.Cart.Coupon { CouponCode = discount.Code },
+                        Currency = dtoCart.Currency,
+                        DiscountAmount = discount.Amount,
+                        Description = discount.Code
+                    });
+                }
             }
 
             dtoCart.Items.Clear();
@@ -376,93 +397,95 @@ namespace VirtoCommerce.Web.Models.Services
 
             var order = await _orderClient.CreateOrderAsync(dtoCart.Id);
 
+            await DeleteCartAsync(dtoCart.Id);
+
             return order.AsWebModel();
         }
 
-        public SubmitForm GetForm(string id)
-        {
-            var forms = SiteContext.Current.Forms;
+        //public SubmitForm GetForm(string id)
+        //{
+        //    var forms = SiteContext.Current.Forms;
 
-            var form = forms.SingleOrDefault(f => f.Id == id);
-            return form;
-        }
+        //    var form = forms.SingleOrDefault(f => f.Id == id);
+        //    return form;
+        //}
 
-        public SubmitForm[] GetForms()
-        {
-            var allForms = new[]
-                           {
-                               new SubmitForm
-                               {
-                                   Id = "customer_login",
-                                   FormType = "customer_login",
-                                   ActionLink = VirtualPathUtility.ToAbsolute("~/account/login"),
-                                   PasswordNeeded = true
-                               },
-                               new SubmitForm
-                               {
-                                   Id = "external_login",
-                                   FormType = "external_login",
-                                   ActionLink = VirtualPathUtility.ToAbsolute("~/account/externallogin")
-                               },
-                               new SubmitForm
-                               {
-                                   Id = "guest_login",
-                                   FormType = "guest_login",
-                                   ActionLink = VirtualPathUtility.ToAbsolute("~/account/guestlogin")
-                               },
-                               new SubmitForm
-                               {
-                                   Id = "create_customer",
-                                   FormType = "create_customer",
-                                   ActionLink = VirtualPathUtility.ToAbsolute("~/account/register"),
-                                   PasswordNeeded = true
-                               },
-                               new SubmitForm
-                               {
-                                   Id = "recover_customer_password",
-                                   FormType = "recover_customer_password",
-                                   ActionLink = VirtualPathUtility.ToAbsolute("~/account/forgotpassword")
-                               },
-                               new SubmitForm
-                               {
-                                   Id = "reset-password",
-                                   FormType = "reset_password",
-                                   ActionLink = VirtualPathUtility.ToAbsolute("~/account/resetpassword")
-                               },
-                               new SubmitForm
-                               {
-                                   Id = "send-code",
-                                   FormType = "send_code",
-                                   ActionLink = VirtualPathUtility.ToAbsolute("~/account/sendcode")
-                               },
-                               new SubmitForm
-                               {
-                                   Id = "verify_code",
-                                   FormType = "verify_code",
-                                   ActionLink = VirtualPathUtility.ToAbsolute("~/account/verifycode")
-                               },
-                               new SubmitForm
-                               {
-                                   Id = "confirm-external-login",
-                                   FormType = "confirm_external_login",
-                                   ActionLink = VirtualPathUtility.ToAbsolute("~/account/externalloginconfirmation")
-                               },
-                               new SubmitForm
-                               {
-                                   Id = "edit_checkout_step_1",
-                                   FormType = "edit_checkout_step_1",
-                                   ActionLink = VirtualPathUtility.ToAbsolute("~/checkout/step1"),
-                               },
-                               new SubmitForm
-                               {
-                                   Id = "edit_checkout_step_2",
-                                   FormType = "edit_checkout_step_2",
-                                   ActionLink = VirtualPathUtility.ToAbsolute("~/checkout/step2"),
-                               }
-                           };
+        //public SubmitForm[] GetForms()
+        //{
+        //    var allForms = new[]
+        //                   {
+        //                       new SubmitForm
+        //                       {
+        //                           Id = "customer_login",
+        //                           FormType = "customer_login",
+        //                           ActionLink = VirtualPathUtility.ToAbsolute("~/account/login"),
+        //                           PasswordNeeded = true
+        //                       },
+        //                       new SubmitForm
+        //                       {
+        //                           Id = "external_login",
+        //                           FormType = "external_login",
+        //                           ActionLink = VirtualPathUtility.ToAbsolute("~/account/externallogin")
+        //                       },
+        //                       new SubmitForm
+        //                       {
+        //                           Id = "guest_login",
+        //                           FormType = "guest_login",
+        //                           ActionLink = VirtualPathUtility.ToAbsolute("~/account/guestlogin")
+        //                       },
+        //                       new SubmitForm
+        //                       {
+        //                           Id = "create_customer",
+        //                           FormType = "create_customer",
+        //                           ActionLink = VirtualPathUtility.ToAbsolute("~/account/register"),
+        //                           PasswordNeeded = true
+        //                       },
+        //                       new SubmitForm
+        //                       {
+        //                           Id = "recover_customer_password",
+        //                           FormType = "recover_customer_password",
+        //                           ActionLink = VirtualPathUtility.ToAbsolute("~/account/forgotpassword")
+        //                       },
+        //                       new SubmitForm
+        //                       {
+        //                           Id = "reset-password",
+        //                           FormType = "reset_password",
+        //                           ActionLink = VirtualPathUtility.ToAbsolute("~/account/resetpassword")
+        //                       },
+        //                       new SubmitForm
+        //                       {
+        //                           Id = "send-code",
+        //                           FormType = "send_code",
+        //                           ActionLink = VirtualPathUtility.ToAbsolute("~/account/sendcode")
+        //                       },
+        //                       new SubmitForm
+        //                       {
+        //                           Id = "verify_code",
+        //                           FormType = "verify_code",
+        //                           ActionLink = VirtualPathUtility.ToAbsolute("~/account/verifycode")
+        //                       },
+        //                       new SubmitForm
+        //                       {
+        //                           Id = "confirm-external-login",
+        //                           FormType = "confirm_external_login",
+        //                           ActionLink = VirtualPathUtility.ToAbsolute("~/account/externalloginconfirmation")
+        //                       },
+        //                       new SubmitForm
+        //                       {
+        //                           Id = "edit_checkout_step_1",
+        //                           FormType = "edit_checkout_step_1",
+        //                           ActionLink = VirtualPathUtility.ToAbsolute("~/checkout/step1"),
+        //                       },
+        //                       new SubmitForm
+        //                       {
+        //                           Id = "edit_checkout_step_2",
+        //                           FormType = "edit_checkout_step_2",
+        //                           ActionLink = VirtualPathUtility.ToAbsolute("~/checkout/step2"),
+        //                       }
+        //                   };
 
-            return allForms;
-        }
+        //    return allForms;
+        //}
 
         public async Task<LinkLists> GetListsAsync()
         {
@@ -484,9 +507,40 @@ namespace VirtoCommerce.Web.Models.Services
 
             var variationIds = product.GetAllVariationIds();
             var prices = await this.GetProductPricesAsync(SiteContext.Current.PriceLists, variationIds);
+
+            var price = prices.FirstOrDefault(p => p.ProductId == product.Code);
+            if (product.Variations != null)
+            {
+                foreach (var variation in product.Variations)
+                {
+                    price = prices.FirstOrDefault(p => p.ProductId == variation.Code);
+                }
+            }
+
+            var promoContext = new PromotionEvaluationContext
+            {
+                CustomerId = SiteContext.Current.CustomerId,
+                CartTotal = SiteContext.Current.Cart.TotalPrice,
+                Currency = SiteContext.Current.Shop.Currency,
+                PromoEntries = new List<ProductPromoEntry>
+                {
+                    new ProductPromoEntry
+                    {
+                        CatalogId = product.CatalogId,
+                        Price = price.Sale.HasValue ? price.Sale.Value : price.List,
+                        ProductId = product.Id,
+                        Quantity = 1
+                    }
+                },
+                IsRegisteredUser = SiteContext.Current.Customer != null,
+                StoreId = SiteContext.Current.StoreId
+            };
+
+            var rewards = await _marketingClient.GetPromotionRewardsAsync(promoContext);
+
             //var inventories = await this.GetItemInventoriesAsync(variationIds);
 
-            return product.AsWebModel(prices/*, inventories*/);
+            return product.AsWebModel(prices, rewards/*, inventories*/);
         }
 
         public async Task<Product> GetProductByKeywordAsync(string keyword)
@@ -501,9 +555,40 @@ namespace VirtoCommerce.Web.Models.Services
 
             var variationIds = product.Variations.Select(v => v.Id).ToArray();
             var prices = await this.GetProductPricesAsync(SiteContext.Current.PriceLists, variationIds);
+
+            var price = prices.FirstOrDefault(p => p.ProductId == product.Code);
+            if (product.Variations != null)
+            {
+                foreach (var variation in product.Variations)
+                {
+                    price = prices.FirstOrDefault(p => p.ProductId == variation.Code);
+                }
+            }
+
+            var promoContext = new PromotionEvaluationContext
+            {
+                CustomerId = SiteContext.Current.CustomerId,
+                CartTotal = SiteContext.Current.Cart.TotalPrice,
+                Currency = SiteContext.Current.Shop.Currency,
+                PromoEntries = new List<ProductPromoEntry>
+                {
+                    new ProductPromoEntry
+                    {
+                        CatalogId = product.CatalogId,
+                        Price = price.Sale.HasValue ? price.Sale.Value : price.List,
+                        ProductId = product.Id,
+                        Quantity = 1
+                    }
+                },
+                IsRegisteredUser = SiteContext.Current.Customer != null,
+                StoreId = SiteContext.Current.StoreId
+            };
+
+            var rewards = await _marketingClient.GetPromotionRewardsAsync(promoContext);
+
             //var inventories = await this.GetItemInventoriesAsync(variationIds);
 
-            return product.AsWebModel(prices/*, inventories*/);
+            return product.AsWebModel(prices, rewards/*, inventories*/);
         }
 
         public async Task<ProductSearchResult> GetProductsAsync(
@@ -573,6 +658,12 @@ namespace VirtoCommerce.Web.Models.Services
             }
 
             return inventories;
+        }
+
+        public async Task<IEnumerable<ApiClient.DataContracts.Marketing.PromotionReward>>
+            GetPromoRewardsAsync(ApiClient.DataContracts.Marketing.PromotionEvaluationContext context)
+        {
+            return await _marketingClient.GetPromotionRewardsAsync(context);
         }
 
         public async Task<IEnumerable<ApiClient.DataContracts.Price>> GetProductPricesAsync(string[] priceLists, string[] productIds)
@@ -706,10 +797,44 @@ namespace VirtoCommerce.Web.Models.Services
 
             var allIds = response.Items.ToArray().GetAllVariationIds();
             var prices = await GetProductPricesAsync(priceLists, allIds.ToArray());
+
+            var promoContext = new PromotionEvaluationContext
+            {
+                CustomerId = SiteContext.Current.CustomerId,
+                CartTotal = SiteContext.Current.Cart.TotalPrice,
+                Currency = SiteContext.Current.Shop.Currency,
+                IsRegisteredUser = SiteContext.Current.Customer != null,
+                StoreId = SiteContext.Current.StoreId
+            };
+
+            var promoEntries = new List<ProductPromoEntry>();
+            foreach (var item in response.Items)
+            {
+                var price = prices.FirstOrDefault(p => p.ProductId == item.Code);
+                if (item.Variations != null)
+                {
+                    foreach (var variation in item.Variations)
+                    {
+                        price = prices.FirstOrDefault(p => p.ProductId == variation.Code);
+                    }
+                }
+
+                promoEntries.Add(new ProductPromoEntry
+                {
+                    CatalogId = item.CatalogId,
+                    Price = price != null && price.Sale.HasValue ? price.Sale.Value : price.List,
+                    ProductId = item.Id,
+                    Quantity = 1
+                });
+            }
+            promoContext.PromoEntries = promoEntries;
+
+            var rewards = await _marketingClient.GetPromotionRewardsAsync(promoContext);
+
             //var inventories = await this.GetItemInventoriesAsync(allIds);
 
             result.ResultsCount = response.TotalCount;
-            result.Results = new List<object>(response.Items.Select(i => i.AsWebModel(prices/*, inventories*/)));
+            result.Results = new List<object>(response.Items.Select(i => i.AsWebModel(prices, rewards/*, inventories*/)));
 
             return result;
         }

@@ -4,9 +4,8 @@
 
     function initializeBlade() {
         var entities = [
-            { id: '3', name: 'Promotions', entityName: 'promotion' },
-            { id: '20', name: 'Dynamic content', entityName: 'dynamicContent' },
-            { id: '1', name: 'Content publishing', entityName: 'contentPublishing' }];
+            { id: '3', name: 'Promotions', entityName: 'promotion', icon: 'fa-area-chart' },
+            { id: '20', name: 'Dynamic content', entityName: 'dynamicContent', icon: 'fa-calendar-o' }];
         $scope.blade.currentEntities = entities;
         $scope.blade.isLoading = false;
 

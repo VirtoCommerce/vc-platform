@@ -94,7 +94,7 @@
         });
     }
 
-    $scope.bladeHeadIco = 'fa-flag';
+    $scope.bladeHeadIco = 'fa-area-chart';
 
     $scope.bladeToolbarCommands = [
         {
