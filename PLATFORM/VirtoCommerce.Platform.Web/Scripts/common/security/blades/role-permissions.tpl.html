@@ -1,0 +1,15 @@
+﻿<div class="blade-static __bottom" ng-include="'Modules/$(VirtoCommerce.Core)/Scripts/common/ok-cancel.tpl.html'"></div>
+<div class="blade-content">
+    <div class="blade-inner">
+        <div class="inner-block">
+            <div class="sub-t">Select permissions</div>
+            <div class="list __items">
+                <label class="list-item" ng-repeat="data in blade.currentEntities">
+                    <input type="checkbox" ng-model="data.isChecked">
+                    <span class="switch"></span>
+                    <span class="list-name">{{data.name}}</span>
+                </label>
+            </div>
+        </div>
+    </div>
+</div>

@@ -21,6 +21,18 @@
                     </div>
                 </div>
             </form>
+            <div class="sub-t">Assign roles</div>
+            <div class="list __items">
+                <label class="list-item" ng-repeat="data in blade.currentEntities">
+                    <input type="checkbox" ng-model="data.isChecked">
+                    <span class="switch"></span>
+                    <span class="list-name">{{data.name}}</span>
+                    <i class="fa fa-info-circle" left-click-menu data-target="naw_menu{{$index}}"></i>
+                    <ul class="menu __context" role="menu" id="naw_menu{{$index}}">
+                        <li class="menu-item" ng-repeat="x in data.permissions">{{x.name}}</li>
+                    </ul>
+                </label>
+            </div>
         </div>
     </div>
 </div>

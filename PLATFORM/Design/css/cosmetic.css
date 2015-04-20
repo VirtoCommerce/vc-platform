@@ -126,7 +126,8 @@ a:hover,
 			transition: border-color .2s ease-in-out 0s;
 }
 
-.tile
+.tile,
+.gridster .list-item
 {
 	-webkit-transition: box-shadow .25s ease-in-out 0s, height .25s ease-in-out 0s, width .25s ease-in-out 0s;
 			transition: box-shadow .25s ease-in-out 0s, height .25s ease-in-out 0s, width .25s ease-in-out 0s;

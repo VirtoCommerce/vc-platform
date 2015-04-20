@@ -1,42 +1,29 @@
-﻿<div class="blade-content">
+﻿<div class="blade-content __gray">
     <div class="blade-inner">
         <div class="inner-block clearfix">
-            <form class="form" name="detailForm">
-                <fieldset>
-                    <div class="form-group" ng-init="setForm(detailForm)">
-                        <label class="form-label">Login</label>
-                        <div class="form-input">
-                            <p class="form-text">{{blade.currentEntity.userName}}</p>
-                        </div>
-                    </div>
-                </fieldset>
-                <fieldset>
-                    <div class="form-group __head">
-                        <label class="form-label">
-                            API access
-                        </label>
-                        <div class="form-nav">
-                            <a href="" ng-click="generateNewApiAccount()">
-                                Generate
-                            </a>
-                        </div>
+            <div class="sub-t __border">User information</div>
+            <div class="form-group">
+                <label class="form-label">Login</label>
+                <div class="form-input">
+                    <p class="form-text">{{blade.currentEntity.userName}}</p>
+                </div>
+            </div>
 
-                    </div>
-                    <div class="form-group">
+            <!--<div class="sub-t __border">Assigned roles</div>
+            <div class="form">
+                <div class="form-group">
+                    <a class="clear text-mini __link" ng-click="removeAll()">Clear all</a>
+                    <ul class="list __inline __choosen">
+                        <li class="list-item" ng-repeat="data in blade.currentEntity.roles">
+                            <a class="list-remove" ng-click="remove(data)">×</a>
+                            <span class="list-name">{{data.name}}</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="sub-t __border">Available roles</div>-->
 
-                        <label class="form-label">
-                            AppId
-                        </label>
-                        <div class="form-input">
-                            <input ng-model="blade.currentEntity.apiAcounts[0].appId" placeholder="Generate appId" readonly>
-                        </div>
-                        <label class="form-label">App secret</label>
-                        <div class="form-input">
-                            <textarea class="form-control" cols="30" rows="3" id="secretKey" ng-model="blade.currentEntity.apiAcounts[0].secretKey" placeholder="Generate secret key" readonly></textarea>
-                        </div>
-                    </div>
-                </fieldset>
-            </form>
+            <va-widget-container group="accountDetail" blade="blade"></va-widget-container>
         </div>
     </div>
 </div>

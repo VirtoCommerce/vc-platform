@@ -65,4 +65,14 @@
             permission: 'securityMenuPermission'
         };
         mainMenuService.addMenuItem(menuItem);
+
+        //Register widgets
+        widgetService.registerWidget({
+            controller: 'accountRolesWidgetController',
+            template: 'Scripts/common/security/widgets/accountRolesWidget.tpl.html',
+        }, 'accountDetail');
+        widgetService.registerWidget({
+            controller: 'accountApiWidgetController',
+            template: 'Scripts/common/security/widgets/accountApiWidget.tpl.html',
+        }, 'accountDetail');
     }]);

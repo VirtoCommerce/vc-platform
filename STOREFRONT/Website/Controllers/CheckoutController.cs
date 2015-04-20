@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Web;
 using System.Web.Mvc;
 using VirtoCommerce.Web.Models;
 using VirtoCommerce.Web.Models.FormModels;
@@ -9,170 +10,203 @@ namespace VirtoCommerce.Web.Controllers
 {
     public class CheckoutController : BaseController
     {
+        //
+        // GET: /Checkout
         [HttpGet]
         public ActionResult Index()
         {
-            return RedirectToAction("Step1");
+            return RedirectToAction("Step1", "Checkout");
         }
 
+        //
+        // GET: /Checkout/Step1
         [HttpGet]
         [Route("checkout/step-1")]
         public async Task<ActionResult> Step1()
         {
-            if (this.Context.Cart.ItemCount == 0)
+            if (Context.Cart.ItemCount == 0)
             {
-                return View("cart");
+                return RedirectToAction("Index", "Cart");
             }
 
-            this.Context.Checkout = await this.Service.GetCheckoutAsync();
-
-            if (this.Context.Checkout != null)
+            var forms = new[]
             {
-                this.Context.Checkout.Email = this.Context.Customer != null ? this.Context.Customer.Email : null;
-                this.Context.Checkout.ShippingAddress = this.Context.Customer != null ? this.Context.Customer.DefaultAddress : new CustomerAddress();
-                this.Context.Checkout.Currency = this.Context.Shop.Currency;
-            }
+                new SubmitForm
+                {
+                    ActionLink = VirtualPathUtility.ToAbsolute("~/checkout/step1"),
+                    FormType = "edit_checkout_step_1",
+                    Id = "edit_checkout_step_1",
+                }
+            };
+
+            UpdateForms(forms, true);
+
+            var checkout = await Service.GetCheckoutAsync();
+            Context.Checkout = checkout;
 
             return View("checkout-step-1");
         }
 
+        //
+        // POST: /Checkout/Step1
         [HttpPost]
         public async Task<ActionResult> Step1(CheckoutFirstStepFormModel formModel)
         {
-            this.Context.Checkout = await this.Service.GetCheckoutAsync();
-            this.Context.Checkout.Currency = this.Context.Shop.Currency;
+            var form = GetForm(formModel.form_type);
 
-            var form = this.Service.GetForm(formModel.form_type);
+            var checkout = await Service.GetCheckoutAsync();
 
             if (form != null)
             {
-                if (!ModelState.IsValid)
+                var formErrors = GetFormErrors(ModelState);
+
+                if (formErrors == null)
                 {
-                    var errors = this.ModelState.Values.SelectMany(v => v.Errors);
-                    form.Errors = new[] { errors.Select(e => e.ErrorMessage).FirstOrDefault() };
+                    form.PostedSuccessfully = true;
 
-                    return this.View("checkout-step-1");
-                }
-
-                var customer = await this.CustomerService.GetCustomerAsync(formModel.Email, this.Context.Shop.StoreId);
-
-                if (customer == null)
-                {
-                    var account = await this.SecurityService.GetUserByNameAsync(formModel.Email);
-
-                    if (account == null)
-                    {
-                        await this.SecurityService.RegisterUser(
-                            formModel.Email, formModel.FirstName, formModel.LastName, null, this.Context.StoreId);
-                    }
-
-                    var user = await this.SecurityService.GetUserByNameAsync(formModel.Email);
-
-                    var customerAddresses = new List<CustomerAddress>();
-                    customerAddresses.Add(new CustomerAddress
+                    var shippingAddress = new CustomerAddress
                     {
                         Address1 = formModel.Address1,
-                        Address2 = formModel.Address2,
+                        Address2 = !string.IsNullOrEmpty(formModel.Address2) ? formModel.Address2 : null,
                         City = formModel.City,
-                        Company = formModel.Company,
+                        Company = !string.IsNullOrEmpty(formModel.Company) ? formModel.Company : null,
                         Country = formModel.Country,
                         CountryCode = "RUS",
                         FirstName = formModel.FirstName,
                         LastName = formModel.LastName,
-                        Phone = formModel.Phone,
+                        Phone = !string.IsNullOrEmpty(formModel.Phone) ? formModel.Phone : null,
                         Province = formModel.Province,
                         Zip = formModel.Zip
-                    });
+                    };
 
-                    customer = await this.CustomerService.CreateCustomerAsync(
-                        formModel.Email, formModel.FirstName, formModel.LastName, user.Id, customerAddresses);
+                    checkout.Currency = Context.Shop.Currency;
+                    checkout.Email = formModel.Email;
+                    checkout.ShippingAddress = shippingAddress;
+
+                    if (User.Identity.IsAuthenticated)
+                    {
+                        var customer = await this.CustomerService.GetCustomerAsync(formModel.Email, Context.Shop.StoreId);
+                        if (customer != null)
+                        {
+                            customer.Addresses.Add(shippingAddress);
+                            await CustomerService.UpdateCustomerAsync(customer);
+                        }
+                    }
+
+                    await Service.UpdateCheckoutAsync(checkout);
+
+                    return RedirectToAction("Step2", "Checkout");
                 }
-
-                this.Context.Customer = customer;
-                this.Context.Checkout.Email = customer.Email;
-
-                this.Context.Checkout.ShippingAddress = new CustomerAddress
+                else
                 {
-                    Address1 = formModel.Address1,
-                    Address2 = formModel.Address2.Length > 0 ? formModel.Address2 : null,
-                    City = formModel.City,
-                    Company = formModel.Company.Length > 0 ? formModel.Company : null,
-                    Country = formModel.Country,
-                    CountryCode = "RUS",
-                    FirstName = formModel.FirstName,
-                    LastName = formModel.LastName,
-                    Phone = formModel.Phone.Length > 0 ? formModel.Phone : null,
-                    Province = formModel.Province,
-                    Zip = formModel.Zip
-                };
+                    form.Errors = formErrors;
+                    form.PostedSuccessfully = false;
 
-                await this.Service.UpdateCheckoutAsync(this.Context.Checkout);
+                    UpdateForms(new[] { form });
+
+                    return RedirectToAction("Step1", "Checkout");
+                }
             }
 
-            return RedirectToAction("Step2");
+            Context.ErrorMessage = "Liquid error: Form context was not found.";
+
+            return View("error");
         }
 
+        //
+        // GET: /Checkout/Step2
         [HttpGet]
         [Route("checkout/step-2")]
         public async Task<ActionResult> Step2()
         {
-            this.Context.Checkout = await this.Service.GetCheckoutAsync();
+            var checkout = await Service.GetCheckoutAsync();
 
-            if (this.Context.Checkout.ShippingAddress == null || !this.Context.Checkout.ShippingAddress.IsFilledCorrectly)
+            if (checkout.ShippingAddress == null || !checkout.ShippingAddress.IsFilledCorrectly)
             {
-                return View("checkout-step-1");
+                return RedirectToAction("Step1", "Checkout");
             }
+
+            var forms = new[]
+            {
+                new SubmitForm
+                {
+                    ActionLink = VirtualPathUtility.ToAbsolute("~/checkout/step2"),
+                    FormType = "edit_checkout_step_2",
+                    Id = "edit_checkout_step_2",
+                }
+            };
+
+            UpdateForms(forms, true);
+
+            Context.Checkout = checkout;
 
             return View("checkout-step-2");
         }
 
+        //
+        // POST: /Checkout/Step2
         [HttpPost]
         public async Task<ActionResult> Step2(CheckoutSecondStepFormModel formModel)
         {
-            var form = this.Service.GetForm(formModel.form_type);
+            var form = GetForm(formModel.form_type);
 
             if (form != null)
             {
-                if (!ModelState.IsValid)
-                {
-                    var errors = this.ModelState.Values.SelectMany(v => v.Errors);
-                    form.Errors = new[] { errors.Select(e => e.ErrorMessage).FirstOrDefault() };
+                var formErrors = GetFormErrors(ModelState);
 
-                    return this.View("checkout-step-2");
+                if (formErrors == null)
+                {
+                    var checkout = await Service.GetCheckoutAsync();
+
+                    var billingAddress = new CustomerAddress
+                    {
+                        Address1 = formModel.Address1,
+                        Address2 = !string.IsNullOrEmpty(formModel.Address2) ? formModel.Address2 : null,
+                        City = formModel.City,
+                        Company = !string.IsNullOrEmpty(formModel.Company) ? formModel.Company : null,
+                        Country = formModel.Country,
+                        CountryCode = "RUS",
+                        FirstName = formModel.FirstName,
+                        LastName = formModel.LastName,
+                        Phone = !string.IsNullOrEmpty(formModel.Phone) ? formModel.Phone : null,
+                        Province = formModel.Province,
+                        Zip = formModel.Zip
+                    };
+
+                    checkout.BillingAddress = billingAddress;
+                    checkout.ShippingMethod = checkout.ShippingMethods.FirstOrDefault(sm => sm.Handle == formModel.ShippingMethodId);
+                    checkout.PaymentMethod = checkout.PaymentMethods.FirstOrDefault(pm => pm.Handle == formModel.PaymentMethodId);
+
+                    if (User.Identity.IsAuthenticated)
+                    {
+                        var customer = await CustomerService.GetCustomerAsync(checkout.Email, Context.Shop.StoreId);
+                        if (customer != null)
+                        {
+                            customer.Addresses.Add(billingAddress);
+                            await this.CustomerService.UpdateCustomerAsync(customer);
+                        }
+                    }
+
+                    checkout.Order = await Service.CreateOrderAsync(checkout);
+
+                    Context.Checkout = checkout;
+
+                    Session.Remove("Forms");
+
+                    return View("thanks_page");
                 }
-
-                this.Context.Checkout = await this.Service.GetCheckoutAsync();
-                this.Context.Checkout.Currency = this.Context.Shop.Currency;
-
-                this.Context.Checkout.BillingAddress = new CustomerAddress
+                else
                 {
-                    Address1 = formModel.Address1,
-                    Address2 = formModel.Address2.Length > 0 ? formModel.Address2 : null,
-                    City = formModel.City,
-                    Company = formModel.Company.Length > 0 ? formModel.Company : null,
-                    Country = formModel.Country,
-                    CountryCode = "RUS",
-                    FirstName = formModel.FirstName,
-                    LastName = formModel.LastName,
-                    Phone = formModel.Phone.Length > 0 ? formModel.Phone : null,
-                    Province = formModel.Province,
-                    Zip = formModel.Zip
-                };
+                    form.Errors = formErrors;
+                    form.PostedSuccessfully = false;
 
-                this.Context.Checkout.ShippingMethod = this.Context.Checkout.ShippingMethods.FirstOrDefault(sm => sm.Handle == formModel.ShippingMethodId);
-                this.Context.Checkout.PaymentMethod = this.Context.Checkout.PaymentMethods.FirstOrDefault(pm => pm.Handle == formModel.PaymentMethodId);
+                    UpdateForms(new[] { form });
 
-                this.Context.Customer = await this.CustomerService.GetCustomerAsync(this.Context.Checkout.Email, this.Context.Shop.StoreId);
-                this.Context.Customer.Addresses.Add(this.Context.Checkout.ShippingAddress);
-
-                await this.CustomerService.UpdateCustomerAsync(this.Context.Customer);
-
-                this.Context.Checkout.CustomerId = this.Context.Customer.Id;
+                    return View("checkout-step-2");
+                }
             }
 
-            var order = await this.Service.CreateOrderAsync(this.Context.Checkout);
-
-            return RedirectToAction("Order", "Account", new { Id = order.Id });
+            return View("error");
         }
     }
 }

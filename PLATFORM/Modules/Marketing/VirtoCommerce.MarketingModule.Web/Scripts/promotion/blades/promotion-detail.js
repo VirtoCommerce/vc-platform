@@ -2,11 +2,11 @@
 .controller('promotionDetailController', ['$scope', 'bladeNavigationService', 'marketing_res_promotions', 'catalogs', 'stores', 'settings', 'dialogService', 'vaDynamicExpressionService', function ($scope, bladeNavigationService, marketing_res_promotions, catalogs, stores, settings, dialogService, vaDynamicExpressionService) {
     $scope.blade.refresh = function (parentRefresh) {
         if ($scope.blade.isNew) {
-        	marketing_res_promotions.getNew({}, function (data) {
+            marketing_res_promotions.getNew({}, function (data) {
                 initializeBlade(data);
             });
         } else {
-        	marketing_res_promotions.get({ id: $scope.blade.currentEntityId }, function (data) {
+            marketing_res_promotions.get({ id: $scope.blade.currentEntityId }, function (data) {
                 initializeBlade(data);
                 if (parentRefresh) {
                     $scope.blade.parentBlade.refresh();
@@ -20,7 +20,9 @@
             $scope.blade.title = data.name;
         }
 
-        initializeExpressions(data.dynamicExpression);
+        if (data.dynamicExpression) {
+            _.each(data.dynamicExpression.children, extendElementBlock);
+        }
 
         $scope.blade.currentEntity = angular.copy(data);
         $scope.blade.origEntity = data;
@@ -43,7 +45,7 @@
         _.each($scope.blade.currentEntity.dynamicExpression.children, stripOffUiInformation);
 
         if ($scope.blade.isNew) {
-        	marketing_res_promotions.save({}, $scope.blade.currentEntity, function (data) {
+            marketing_res_promotions.save({}, $scope.blade.currentEntity, function (data) {
                 $scope.blade.isNew = undefined;
                 $scope.blade.currentEntityId = data.id;
                 initializeToolbar();
@@ -52,7 +54,7 @@
                 bladeNavigationService.setError('Error ' + error.status, $scope.blade);
             });
         } else {
-        	marketing_res_promotions.update({}, $scope.blade.currentEntity, function (data) {
+            marketing_res_promotions.update({}, $scope.blade.currentEntity, function (data) {
                 $scope.blade.refresh(true);
             }, function (error) {
                 bladeNavigationService.setError('Error ' + error.status, $scope.blade);
@@ -109,10 +111,11 @@
         });
     }
 
-    $scope.bladeHeadIco = 'fa-flag';
+    $scope.bladeHeadIco = 'fa-area-chart';
 
     function initializeToolbar() {
-        if (!$scope.blade.isNew) {
+    	if (!$scope.blade.isNew) {
+    		$scope.toolbarTemplate = 'Modules/$(VirtoCommerce.Marketing)/Scripts/promotion/blades/promotion-detail-toolbar.tpl.html';
             $scope.bladeToolbarCommands = [
                 {
                     name: "Save",
@@ -159,18 +162,14 @@
     $scope.format = 'shortDate';
 
     // Dynamic ExpressionBlock
-    function initializeExpressions(data) {
-        _.each(data.children, extendElementBlock);
-    }
-    
+
     function extendElementBlock(expressionBlock) {
         var retVal = vaDynamicExpressionService.expressions[expressionBlock.id];
         if (!retVal) {
             retVal = { displayName: 'unknown element: ' + expressionBlock.id };
         }
 
-        //angular.merge(expressionBlock, retVal);
-        //angular.extend(expressionBlock, retVal);
+
         _.extend(expressionBlock, retVal);
 
         if (!expressionBlock.children) {
@@ -188,27 +187,8 @@
         return expressionBlock;
     };
 
-    //$scope.$watch('blade.currentEntity.dynamicExpression.children', function (children) {
-    //    $scope.blade.isExpresionValid = _.all(children, validateExpression);
-    //});
-    //function validateExpression(x) {
-    //    return !x.getValidationError || !x.getValidationError();
-    //}
-    //$scope.blade.isExpresionValid = false;
-    //$scope.promotionExpressionValidator = function (value) {
-    //    var retVal = true;
-
-    //    return retVal;
-    //}
-
-
     initializeToolbar();
     $scope.blade.refresh(false);
-    //$scope.catalogs = catalogs.getCatalogs();
     $scope.stores = stores.query();
-    //$scope.exclusivities = settings.getValues({ id: 'VirtoCommerce.Marketing.Promotions.Exclusivities' }, function (data) {
-    //    if ($scope.blade.isNew && data && data[0]) {
-    //        $scope.blade.currentEntity.exclusivity = data[0];
-    //    }
-    //});
+   
 }]);

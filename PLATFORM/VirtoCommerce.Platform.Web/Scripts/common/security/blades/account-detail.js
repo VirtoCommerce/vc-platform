@@ -1,5 +1,7 @@
 ﻿angular.module('platformWebApp')
-.controller('accountDetailController', ['$scope', 'bladeNavigationService', 'accounts', 'dialogService', function ($scope, bladeNavigationService, accounts, dialogService) {
+.controller('accountDetailController', ['$scope', 'bladeNavigationService', 'accounts', 'platform_res_roles', 'dialogService', function ($scope, bladeNavigationService, accounts, roles, dialogService) {
+    $scope.blade.promise = roles.get({ count: 10000 }).$promise;
+
     $scope.blade.refresh = function (parentRefresh) {
         accounts.get({ id: $scope.blade.data.userName }, function (data) {
             initializeBlade(data);
@@ -10,9 +12,6 @@
     }
 
     function initializeBlade(data) {
-        // $scope.blade.currentEntityId = data.id;
-        $scope.blade.title = data.fullName;
-
         $scope.blade.currentEntity = angular.copy(data);
         $scope.blade.origEntity = data;
         $scope.blade.isLoading = false;
@@ -31,11 +30,7 @@
             bladeNavigationService.setError('Error ' + error.status, $scope.blade);
         });
     };
-
-    $scope.setForm = function (form) {
-        $scope.formScope = form;
-    }
-
+    
     $scope.blade.onClose = function (closeCallback) {
         closeChildrenBlades();
         if (isDirty()) {
@@ -73,7 +68,7 @@
                 $scope.saveChanges();
             },
             canExecuteMethod: function () {
-                return isDirty() && $scope.formScope && $scope.formScope.$valid;
+                return isDirty();
             }
         },
         {
@@ -105,29 +100,6 @@
             }
         }
     ];
-
-
-    $scope.generateNewApiAccount = function () {
-        $scope.blade.isLoading = true;
-
-        accounts.generateNewApiAccount({}, function (apiAccount) {
-            $scope.blade.isLoading = false;
-            if ($scope.blade.currentEntity.apiAcounts && $scope.blade.currentEntity.apiAcounts.length > 0) {
-                $scope.blade.currentEntity.apiAcounts[0] = apiAccount;
-            }
-            else {
-                $scope.blade.currentEntity.apiAcounts = [apiAccount];
-            }
-        }, function (error) {
-            bladeNavigationService.setError('Error ' + error.status, $scope.blade);
-        });
-    };
-
-    $scope.copyCode = function () {
-        var secretKey = document.getElementById('secretKey');
-        secretKey.focus();
-        secretKey.select();
-    };
 
     // actions on load
     $scope.blade.refresh(false);

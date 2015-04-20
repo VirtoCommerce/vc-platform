@@ -15,7 +15,7 @@
         $scope.blade.selectedAll = false;
 
         marketing_res_search.search({
-			respGroup: 'withPromotions',
+            respGroup: 'withPromotions',
             keyword: $scope.filter.searchKeyword,
             start: ($scope.pageSettings.currentPage - 1) * $scope.pageSettings.itemsPerPageCount,
             count: $scope.pageSettings.itemsPerPageCount
@@ -56,7 +56,9 @@
 
     $scope.toggleAll = function () {
         angular.forEach($scope.blade.currentEntities, function (item) {
-            item.selected = $scope.blade.selectedAll;
+            if (item.type === 'DynamicPromotion') {
+                item.selected = $scope.blade.selectedAll;
+            }
         });
     };
 
@@ -92,7 +94,7 @@
         });
     }
 
-    $scope.bladeHeadIco = 'fa-flag';
+    $scope.bladeHeadIco = 'fa-area-chart';
 
     $scope.bladeToolbarCommands = [
         {

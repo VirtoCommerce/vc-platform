@@ -89,10 +89,6 @@
     <Reference Include="Microsoft.Data.Services.Client, Version=5.6.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Microsoft.Data.Services.Client.5.6.0\lib\net40\Microsoft.Data.Services.Client.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.OData.EntityFrameworkProvider, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\Microsoft.OData.EntityFrameworkProvider.1.0.0-alpha2\lib\net40\Microsoft.OData.EntityFrameworkProvider.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.Practices.ServiceLocation, Version=1.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\CommonServiceLocator.1.2\lib\portable-windows8+net40+sl5+windowsphone8\Microsoft.Practices.ServiceLocation.dll</HintPath>
@@ -297,7 +293,6 @@
     <Compile Include="Reviews\SqlReviewSampleDatabaseInitializer.cs" />
     <Compile Include="Search\SearchDatabaseInitializer.cs" />
     <Compile Include="Security\Identity\IdentityDatabaseInitializer.cs" />
-    <Compile Include="Security\Identity\IdentitySampleDatabaseInitializer.cs" />
     <Compile Include="Security\Identity\Migrations\201411101625303_InitialCreate.cs" />
     <Compile Include="Security\Identity\Migrations\201411101625303_InitialCreate.Designer.cs">
       <DependentUpon>201411101625303_InitialCreate.cs</DependentUpon>
@@ -314,7 +309,6 @@
       <DependentUpon>201502131605531_AddApiAcount.cs</DependentUpon>
     </Compile>
     <Compile Include="Security\SqlSecurityDatabaseInitializer.cs" />
-    <Compile Include="Security\SqlSecuritySampleDatabaseInitializer.cs" />
     <Compile Include="Stores\Migrations\201402141710203_Initial.cs" />
     <Compile Include="Stores\Migrations\201402141710203_Initial.Designer.cs">
       <DependentUpon>201402141710203_Initial.cs</DependentUpon>
@@ -376,7 +370,9 @@
     <None Include="app.config">
       <SubType>Designer</SubType>
     </None>
-    <None Include="packages.config" />
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.0">

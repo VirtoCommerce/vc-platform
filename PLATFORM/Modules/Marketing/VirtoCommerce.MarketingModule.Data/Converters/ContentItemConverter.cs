@@ -34,7 +34,7 @@ namespace VirtoCommerce.CustomerModule.Data.Converters
 
 			retVal.CreatedDate = dbEntity.Created.Value;
 			retVal.ModifiedDate = dbEntity.LastModified;
-
+			retVal.ContentType = dbEntity.ContentTypeId;
 			retVal.Properties = dbEntity.PropertyValues.Select(x => x.ToCoreModel()).ToList();
 
 			if (dbEntity.Folder != null)
@@ -53,7 +53,7 @@ namespace VirtoCommerce.CustomerModule.Data.Converters
 
 			var retVal = new foundationModel.DynamicContentItem();
 			retVal.InjectFrom(contentItem);
-
+			retVal.ContentTypeId = contentItem.ContentType;
 			if (contentItem.Id != null)
 			{
 				retVal.DynamicContentItemId = contentItem.Id;
@@ -64,7 +64,7 @@ namespace VirtoCommerce.CustomerModule.Data.Converters
 				retVal.PropertyValues = new ObservableCollection<foundationModel.DynamicContentItemProperty>(contentItem.Properties.Select(x => x.ToFoundation()));
 				foreach (var property in retVal.PropertyValues)
 				{
-					property.DynamicContentItemId = contentItem.Id;
+					property.DynamicContentItemId = retVal.DynamicContentItemId;
 				}
 			}
 			return retVal;
@@ -80,7 +80,7 @@ namespace VirtoCommerce.CustomerModule.Data.Converters
 			if (target == null)
 				throw new ArgumentNullException("target");
 
-			var patchInjection = new PatchInjection<foundationModel.DynamicContentItem>(x => x.Name, x => x.Description, x=>x.FolderId, x=>x.ImageUrl);
+			var patchInjection = new PatchInjection<foundationModel.DynamicContentItem>(x => x.Name, x => x.Description, x=>x.FolderId, x=>x.ImageUrl, x=>x.ContentTypeId);
 			if (!source.PropertyValues.IsNullCollection())
 			{
 				var propertyComparer = AnonymousComparer.Create((foundationModel.DynamicContentItemProperty x) => x.PropertyValueId);

@@ -1,0 +1,31 @@
+﻿<div class="blade-content">
+    <div class="blade-inner">
+        <div class="inner-block form">
+            <!--<div class="form-group __head">
+                <label class="form-label">
+                    API access
+                </label>
+                <div class="form-nav">
+                    <a href="" ng-click="generateNewApiAccount()">
+                        Generate
+                    </a>
+                </div>
+            </div>-->
+            <div class="form-group">
+                <label class="form-label">
+                    AppId
+                </label>
+                <div class="form-input">
+                    <input ng-model="blade.currentEntity.apiAcounts[0].appId" placeholder="Generate appId" readonly>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="form-label">App secret</label>
+                <div class="form-input">
+                    <textarea class="form-control" cols="30" rows="3" id="secretKey" ng-model="blade.currentEntity.apiAcounts[0].secretKey" placeholder="Generate secret key" readonly></textarea>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="blade-static __bottom" ng-include="'Modules/$(VirtoCommerce.Core)/Scripts/common/ok-cancel.tpl.html'"></div>

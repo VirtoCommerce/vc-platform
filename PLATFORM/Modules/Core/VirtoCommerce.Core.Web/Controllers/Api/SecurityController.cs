@@ -21,6 +21,7 @@ using VirtoCommerce.Foundation.Frameworks.Extensions;
 using VirtoCommerce.Foundation.Security.Model;
 using VirtoCommerce.Framework.Web.Security;
 using ApiAccount = VirtoCommerce.Foundation.Security.Model.ApiAccount;
+using Hangfire;
 
 namespace VirtoCommerce.CoreModule.Web.Controllers.Api
 {
@@ -328,6 +329,23 @@ namespace VirtoCommerce.CoreModule.Web.Controllers.Api
 
             dbUser.InjectFrom(user);
 
+            foreach (var login in user.Logins)
+            {
+                var userLogin = dbUser.Logins.FirstOrDefault(l => l.LoginProvider == login.LoginProvider);
+                if (userLogin != null)
+                {
+                    userLogin.ProviderKey = login.ProviderKey;
+                }
+                else
+                {
+                    dbUser.Logins.Add(new Microsoft.AspNet.Identity.EntityFramework.IdentityUserLogin
+                    {
+                        LoginProvider = login.LoginProvider,
+                        ProviderKey = login.ProviderKey,
+                        UserId = dbUser.Id
+                    });
+                }
+            }
 
             var result = await UserManager.UpdateAsync(dbUser);
 
@@ -407,6 +425,14 @@ namespace VirtoCommerce.CoreModule.Web.Controllers.Api
                         StoreId = user.StoreId
                     };
 
+                    if (user.Roles != null)
+                    {
+                        foreach (var role in user.Roles)
+                        {
+                            account.RoleAssignments.Add(new RoleAssignment { RoleId = role.Id, AccountId = account.AccountId });
+                        }
+                    }
+
                     repository.Add(account);
                     repository.UnitOfWork.Commit();
                 }
@@ -431,7 +457,6 @@ namespace VirtoCommerce.CoreModule.Web.Controllers.Api
             // AO
             // TODO: Get actual store
             // TODO: Localize subject and message to user's shop language
-            // TODO: Queue as job
 
             SendingMethod sendingMethod;
             if (Enum.TryParse(securityMessage.SendingMethod, out sendingMethod))
@@ -450,7 +475,7 @@ namespace VirtoCommerce.CoreModule.Web.Controllers.Api
                         HttpUtility.HtmlEncode(uriBuilder.ToString()));
                     string subject = string.Format("{0} reset password link", securityMessage.StoreId);
 
-                    await UserManager.SendEmailAsync(securityMessage.UserId, subject, message);
+                    BackgroundJob.Enqueue(() => SendEmail(securityMessage.UserId, subject, message));
 
                     return Ok();
                 }
@@ -459,11 +484,25 @@ namespace VirtoCommerce.CoreModule.Web.Controllers.Api
             return BadRequest();
         }
 
+        [HttpPost]
+        [Route("users/resetpassword")]
+        public async Task<IHttpActionResult> ResetPassword(string userId, string token, string newPassword)
+        {
+            var result = await UserManager.ResetPasswordAsync(userId, token, newPassword);
+
+            return Ok(result);
+        }
+
         #endregion
 
         #endregion
 
         #region Helpers
+
+        public void SendEmail(string userId, string subject, string message)
+        {
+            UserManager.SendEmail(userId, subject, message);
+        }
 
         private async Task<ApplicationUserExtended> GetUserExtended(string loginProvider, string providerKey, UserDetails detailsLevel)
         {
@@ -509,10 +548,10 @@ namespace VirtoCommerce.CoreModule.Web.Controllers.Api
                                     .ToArray();
 
                             result.Permissions = permissionIds;
-                            result.ApiAcounts = user.ApiAccounts.Select(x => x.ToWebModel()).ToList();
-                        }
+                        result.ApiAcounts = user.ApiAccounts.Select(x => x.ToWebModel()).ToList();
                     }
                 }
+            }
             }
 
             return result;

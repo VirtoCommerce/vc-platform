@@ -14,7 +14,10 @@
   'angularFileUpload',
   'ngSanitize',
   'ng-context-menu',
-  'ui.grid', 'ui.grid.selection'
+  //'ui.grid',
+  //'ui.grid.selection',
+  'ui.codemirror',
+  'ngTagsInput'
 ];
 
 angular.module('platformWebApp', AppDependencies).

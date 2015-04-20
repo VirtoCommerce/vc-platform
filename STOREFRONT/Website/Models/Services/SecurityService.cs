@@ -7,6 +7,7 @@ using System.Web;
 using VirtoCommerce.Web.Models.FormModels;
 using VirtoCommerce.Web.Models.Security;
 using System.Collections.Generic;
+using VirtoCommerce.ApiClient.DataContracts.Security;
 
 namespace VirtoCommerce.Web.Models.Services
 {
@@ -59,7 +60,7 @@ namespace VirtoCommerce.Web.Models.Services
         {
             string[] errors = null;
 
-            var user = new ApplicationUser
+            var user = new VirtoCommerce.Web.Models.Security.ApplicationUser
                        {
                            Email = email,
                            FullName =
@@ -80,7 +81,7 @@ namespace VirtoCommerce.Web.Models.Services
             return errors;
         }
 
-        public async Task<ApplicationUser> GetUserByNameAsync(string username)
+        public async Task<VirtoCommerce.Web.Models.Security.ApplicationUser> GetUserByNameAsync(string username)
         {
             return await _userManager.FindByNameAsync(username);
         }

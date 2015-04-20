@@ -284,6 +284,7 @@
     <Compile Include="Models\ItemCollection.cs" />
     <Compile Include="Models\Storage\FileAsset.cs" />
     <Compile Include="Models\SubmitForm.cs" />
+    <Compile Include="Models\SubmitFormErrors.cs" />
     <Compile Include="Models\Tag.cs" />
     <Compile Include="Models\Tags\Form.cs" />
     <Compile Include="Models\TaxLine.cs" />
@@ -317,9 +318,9 @@
     <Content Include="App_Data\Themes\_Default\assets\slide_1.jpg" />
     <Content Include="App_Data\Themes\_Default\assets\slide_2.jpg" />
     <Content Include="App_Data\Themes\_Default\config\settings.html" />
-    <Content Include="App_Data\Themes\_Global\templates\confirmation-reset-password.liquid" />
-    <Content Include="App_Data\Themes\_Global\templates\confirmation-external-login.liquid" />
+    <Content Include="App_Data\Themes\_Global\templates\password_reseted.liquid" />
     <Content Include="App_Data\Themes\_Global\layout\theme.liquid" />
+    <None Include="App_Data\Themes\_Global\templates\external_login_confirmation.liquid" />
     <Content Include="App_Data\Themes\_Global\templates\index.liquid" />
     <None Include="App_Data\Themes\_Global\templates\reset-password.liquid" />
     <Content Include="Content\responsive\css\main.css" />
@@ -346,6 +347,7 @@
     <Content Include="Web.Release.config">
       <DependentUpon>Web.config</DependentUpon>
     </Content>
+    <Content Include="App_Data\Themes\_Global\templates\thanks_page.liquid" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
@@ -458,7 +460,7 @@
     <Content Include="App_Data\Themes\_Global\templates\checkout-step-2.liquid" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="App_Data\Themes\_Global\templates\lockout.liquid" />
+    <Content Include="App_Data\Themes\_Global\templates\lockedout.liquid" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="App_Data\Themes\_Global\templates\confirmation-done.liquid" />

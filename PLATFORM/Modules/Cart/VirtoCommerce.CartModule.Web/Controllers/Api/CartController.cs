@@ -42,22 +42,11 @@ namespace VirtoCommerce.CartModule.Web.Controllers.Api
 
 			var searchResult = this._searchService.Search(criteria);
 			var retVal = searchResult.ShopingCarts.FirstOrDefault(x=>x.Name == "default");
-			if (retVal == null)
+			if(retVal == null)
 			{
-				var newCart = new CatalogModule.Web.Model.ShoppingCart
-				{
-					Id = Guid.NewGuid().ToString(),
-					CustomerId = customerId,
-					IsAnonymous = this.User.Identity.IsAuthenticated,
-					StoreId = storeId,
-					//Temporary get as chanel client account
-					ChannelId = this.User.Identity.Name,
-					Name = "default",
-					Currency = CurrencyCodes.USD
-				};
-				retVal = this._shoppingCartService.Create(newCart.ToCoreModel());
+				return NotFound();
 			}
-			return this.Ok(retVal.ToWebModel());
+			return Ok(retVal.ToWebModel());
 		}
 
 		// GET: api/cart/carts/{id}
@@ -69,9 +58,9 @@ namespace VirtoCommerce.CartModule.Web.Controllers.Api
 			var retVal = this._shoppingCartService.GetById(id);
 			if(retVal == null)
 			{
-				return this.NotFound();
+				return NotFound();
 			}
-			return this.Ok(retVal.ToWebModel());
+			return Ok(retVal.ToWebModel());
 		}
 
 		// GET: api/cart/carts?q=ddd&site=site1&customer=user1&start=0&count=20
@@ -81,7 +70,7 @@ namespace VirtoCommerce.CartModule.Web.Controllers.Api
 		public IHttpActionResult SearchCarts([ModelBinder(typeof(SearchCriteriaBinder))] CatalogModule.Web.Model.SearchCriteria criteria)
 		{
 			var retVal = this._searchService.Search(criteria.ToCoreModel());
-			return this.Ok(retVal.ToWebModel());
+			return Ok(retVal.ToWebModel());
 		}
 
 		// POST: api/cart/carts
@@ -102,9 +91,9 @@ namespace VirtoCommerce.CartModule.Web.Controllers.Api
         public IHttpActionResult Update(CatalogModule.Web.Model.ShoppingCart cart)
         {
             var coreCart = cart.ToCoreModel();
-            this._shoppingCartService.Update(new[] { coreCart });
-            var retVal = this._shoppingCartService.GetById(coreCart.Id);
-            return this.Ok(retVal.ToWebModel());
+            _shoppingCartService.Update(new[] { coreCart });
+            var retVal = _shoppingCartService.GetById(coreCart.Id);
+            return Ok(retVal.ToWebModel());
         }
 
 		// GET: api/cart/carts/{cartId}/shipmentMethods
@@ -113,7 +102,7 @@ namespace VirtoCommerce.CartModule.Web.Controllers.Api
 		[Route("carts/{cartId}/shipmentMethods")]
 		public IHttpActionResult GetShipmentMethods(string cartId)
 		{
-			var cart = this._shoppingCartService.GetById(cartId);
+			var cart = _shoppingCartService.GetById(cartId);
 			var retVal = new[] 
 			{
 				 new CatalogModule.Web.Model.ShipmentMethod {
@@ -124,7 +113,7 @@ namespace VirtoCommerce.CartModule.Web.Controllers.Api
 				 }
 			};
 
-			return this.Ok(retVal);
+			return Ok(retVal);
 		}
 
 		// GET: api/cart/carts/{cartId}/paymentMethods
@@ -133,7 +122,7 @@ namespace VirtoCommerce.CartModule.Web.Controllers.Api
 		[Route("carts/{cartId}/paymentMethods")]
 		public IHttpActionResult GetPaymentMethods(string cartId)
 		{
-			var cart = this._shoppingCartService.GetById(cartId);
+			var cart = _shoppingCartService.GetById(cartId);
 			var retVal = new[] 
 			{
 				 new CatalogModule.Web.Model.PaymentMethod {
@@ -151,7 +140,7 @@ namespace VirtoCommerce.CartModule.Web.Controllers.Api
 		[Route("carts/{cartId}/coupons/{couponCode}")]
 		public IHttpActionResult ApplyCoupon(string cartId, string couponCode)
 		{
-			var retVal = this._shoppingCartService.GetById(cartId);
+			var retVal = _shoppingCartService.GetById(cartId);
 
 			//TODO: check coupon from marketing service 
 
@@ -167,10 +156,20 @@ namespace VirtoCommerce.CartModule.Web.Controllers.Api
 			};
 			retVal.Discounts.Add(discount);
 			retVal.Coupon = coupon;
-			this._shoppingCartService.Update(new[] { retVal });
+			_shoppingCartService.Update(new[] { retVal });
 
 
 			return this.Ok(retVal.ToWebModel());
+		}
+
+		// DELETE: api/cart/carts?ids=21
+		[HttpDelete]
+		[ResponseType(typeof(void))]
+		[Route("carts")]
+		public IHttpActionResult DeleteCarts([FromUri] string[] ids)
+		{
+			_shoppingCartService.Delete(ids);
+			return StatusCode(HttpStatusCode.NoContent);
 		}
     }
 }

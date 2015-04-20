@@ -243,7 +243,7 @@
         }
         #endregion
 
-        public Task AddLoginAsync(ApplicationUser user, UserLoginInfo login)
+        public async Task AddLoginAsync(ApplicationUser user, UserLoginInfo login)
         {
             if (user == null)
             {
@@ -254,17 +254,31 @@
                 throw new ArgumentNullException("login");
             }
 
-            throw new NotImplementedException();
+            var loginInfo = new ApiClient.DataContracts.Security.UserLoginInfo
+            {
+                LoginProvider = login.LoginProvider,
+                ProviderKey = login.ProviderKey
+            };
+
+            await SecurityClient.AddLoginAsync(user.ToServiceModel(), loginInfo);
         }
 
-        public Task<ApplicationUser> FindAsync(UserLoginInfo login)
+        public async Task<ApplicationUser> FindAsync(UserLoginInfo login)
         {
             if (login == null)
             {
                 throw new ArgumentNullException("login");
             }
 
-            throw new NotImplementedException();
+            var loginInfo = new ApiClient.DataContracts.Security.UserLoginInfo
+            {
+                LoginProvider = login.LoginProvider,
+                ProviderKey = login.ProviderKey
+            };
+
+            var user = await SecurityClient.FindAsync(loginInfo);
+
+            return user.ToWebModel();
         }
 
         public Task<IList<UserLoginInfo>> GetLoginsAsync(ApplicationUser user)

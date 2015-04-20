@@ -7,6 +7,6 @@ namespace GoogleShopping.MerchantModule.Web.Providers
     {
         IEnumerable<Product> GetProductUpdates(IEnumerable<string> ids);
         ProductsCustomBatchRequest GetProductsBatchRequest(IEnumerable<string> ids);
-        ProductsCustomBatchRequest GetCatalogProductsBatchRequest(string catalogId);
+        ProductsCustomBatchRequest GetCatalogProductsBatchRequest(string catalogId, string categoryId = "");
     }
 }

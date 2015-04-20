@@ -2,10 +2,10 @@
 using Microsoft.Practices.Unity;
 using VirtoCommerce.Domain.Inventory.Services;
 using VirtoCommerce.Domain.Order.Services;
-using VirtoCommerce.Foundation.Data.Infrastructure;
 using VirtoCommerce.Foundation.Data.Infrastructure.Interceptors;
 using VirtoCommerce.Foundation.Frameworks.Workflow.Services;
 using VirtoCommerce.Framework.Web.Modularity;
+using VirtoCommerce.OrderModule.Data.Orders;
 using VirtoCommerce.OrderModule.Data.Repositories;
 using VirtoCommerce.OrderModule.Data.Services;
 using VirtoCommerce.OrderModule.Data.Workflow;
@@ -14,6 +14,7 @@ namespace VirtoCommerce.OrderModule.Web
 {
     public class Module : IModule, IDatabaseModule
     {
+        private const string _connectionStringName = "VirtoCommerce";
         private readonly IUnityContainer _container;
 
         public Module(IUnityContainer container)
@@ -50,9 +51,21 @@ namespace VirtoCommerce.OrderModule.Web
 
         public void SetupDatabase(SampleDataLevel sampleDataLevel)
         {
-            using (var context = new OrderRepositoryImpl())
+            using (var context = new OrderRepositoryImpl(_connectionStringName))
             {
-                var initializer = new SetupDatabaseInitializer<OrderRepositoryImpl, VirtoCommerce.OrderModule.Data.Migrations.Configuration>();
+                OrderDatabaseInitializer initializer;
+
+                switch (sampleDataLevel)
+                {
+                    case SampleDataLevel.Full:
+                    case SampleDataLevel.Reduced:
+                        initializer = new OrderSampleDatabaseInitializer();
+                        break;
+                    default:
+                        initializer = new OrderDatabaseInitializer();
+                        break;
+                }
+
                 initializer.InitializeDatabase(context);
             }
         }

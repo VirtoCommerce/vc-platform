@@ -13,7 +13,7 @@ namespace VirtoCommerce.Web.Models
 
         public string ActionLink { get; set; }
 
-        public string[] Errors { get; set; }
+        public SubmitFormErrors Errors { get; set; }
 
         public string Id { get; set; }
 
@@ -21,7 +21,7 @@ namespace VirtoCommerce.Web.Models
 
         public bool PasswordNeeded { get; set; }
 
-        public bool PostedSuccessfully { get; set; }
+        public bool? PostedSuccessfully { get; set; }
 
         public Dictionary<string, object> Properties { get; set; }
 
