@@ -109,7 +109,13 @@ namespace VirtoCommerce.Web
                     if (string.IsNullOrEmpty(cookie))
                     {
                         cookie = Guid.NewGuid().ToString();
-                        context.Response.Cookies.Append(anonymousCookieName, cookie);
+
+                        var cookieOptions = new CookieOptions
+                        {
+                            Expires = DateTime.UtcNow.AddDays(30)
+                        };
+
+                        context.Response.Cookies.Append(anonymousCookieName, cookie, cookieOptions);
                     }
 
                     ctx.CustomerId = cookie;
