@@ -140,6 +140,7 @@
     </Content>
     <None Include="module.manifest" />
     <Content Include="Scripts\gshopping.js" />
+    <Content Include="Scripts\resources\gshopping.js" />
     <Content Include="Scripts\widgets\gshoppingWidget.js" />
     <Content Include="Scripts\widgets\gshoppingWidget.tpl.html" />
     <Content Include="web.config">

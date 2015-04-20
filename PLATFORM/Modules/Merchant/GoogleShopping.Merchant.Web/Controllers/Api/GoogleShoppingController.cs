@@ -6,6 +6,7 @@ using System.Web.Http;
 using System.Web.Http.Description;
 using System.Collections.Generic;
 using Microsoft.Practices.ObjectBuilder2;
+using VirtoCommerce.Domain.Catalog.Model;
 using VirtoCommerce.Framework.Web.Notification;
 
 #region Google usings
@@ -105,10 +106,25 @@ namespace GoogleShopping.MerchantModule.Web.Controllers.Api
         [HttpGet]
         [ResponseType(typeof(void))]
         [Route("products/sync/batch/{catalogId}")]
-        public IHttpActionResult BatchAllProducts(string catalogId)
+        public IHttpActionResult BatchCatalogProducts(string catalogId)
         {
             var products = _productProvider.GetCatalogProductsBatchRequest(catalogId);
-            if (products == null || !products.Entries.Any())
+            if (products.Entries == null || !products.Entries.Any())
+            {
+                return StatusCode(HttpStatusCode.NoContent);
+            }
+            products.Entries.ForEach(item => item.MerchantId = _settingsManager.MerchantId);
+            var res = _contentService.Products.Custombatch(products).Execute();
+            return Ok(res);
+        }
+
+        [HttpGet]
+        [ResponseType(typeof(void))]
+        [Route("products/sync/batch/{catalogId}/{categoryId}")]
+        public IHttpActionResult BatchCategoryProducts(string catalogId, string categoryId)
+        {
+            var products = _productProvider.GetCatalogProductsBatchRequest(catalogId, categoryId);
+            if (products.Entries == null || !products.Entries.Any())
             {
                 return StatusCode(HttpStatusCode.NoContent);
             }
