@@ -2,16 +2,12 @@
 <div class="blade-content">
     <div class="blade-inner">
         <div class="inner-block">
-            <div class="sub-t">Select roles</div>
+            <div class="sub-t">Select permissions</div>
             <div class="list __items">
                 <label class="list-item" ng-repeat="data in blade.currentEntities">
                     <input type="checkbox" ng-model="data.isChecked">
                     <span class="switch"></span>
                     <span class="list-name">{{data.name}}</span>
-                    <i class="fa fa-info-circle" left-click-menu data-target="sar_menu{{$index}}"></i>
-                    <ul class="menu __context" role="menu" id="sar_menu{{$index}}">
-                        <li class="menu-item" ng-repeat="x in data.permissions">{{x.name}}</li>
-                    </ul>
                 </label>
             </div>
         </div>

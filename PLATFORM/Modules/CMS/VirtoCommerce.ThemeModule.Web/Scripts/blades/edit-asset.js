@@ -127,5 +127,14 @@
 
     $scope.bladeHeadIco = 'fa fa-archive';
 
+    // Codemirror configuration
+    $scope.editorOptions = {
+        autofocus: true,
+        lineWrapping: true,
+        lineNumbers: true,
+        // mode: 'htmlmixed'
+        mode: {name: "javascript", globalVars: true}
+    };
+
     initializeBlade();
 }]);

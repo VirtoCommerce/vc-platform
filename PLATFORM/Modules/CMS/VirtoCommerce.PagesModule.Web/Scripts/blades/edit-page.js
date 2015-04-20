@@ -158,30 +158,47 @@
 
     $scope.bladeHeadIco = 'fa fa-archive';
 
-    blade.getFlag = function (lang) {
-    	switch (lang) {
-    		case 'ru-RU':
-    			return 'ru';
+    blade.getFlag = function(lang) {
+        switch (lang) {
+        case 'ru-RU':
+            return 'ru';
 
-    		case 'en-US':
-    			return 'us';
+        case 'en-US':
+            return 'us';
 
-    		case 'fr-FR':
-    			return 'fr';
+        case 'fr-FR':
+            return 'fr';
 
-    		case 'zh-CN':
-    			return 'ch';
+        case 'zh-CN':
+            return 'ch';
 
-    		case 'ru-RU':
-    			return 'ru';
+        case 'ru-RU':
+            return 'ru';
 
-    		case 'ja-JP':
-    			return 'jp';
+        case 'ja-JP':
+            return 'jp';
 
-    		case 'de-DE':
-    			return 'de';
-    	}
-    }
+        case 'de-DE':
+            return 'de';
+        }
+    };
+
+    // Codemirror configuration
+    $scope.editorOptions = {
+        autofocus: true,
+        lineWrapping: true,
+        lineNumbers: true,
+        //onLoad : function(_editor){
+        //    // Editor part
+        //    var _doc = _editor.getDoc();
+        //    _editor.focus();
+
+        //    // Options
+        //    _doc.markClean();
+        //},
+        //mode: 'xml'
+        mode: 'htmlmixed'
+    };
 
     blade.refresh();
 }]);

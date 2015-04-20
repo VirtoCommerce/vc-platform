@@ -115,7 +115,7 @@ function ($scope, roles, bladeNavigationService, dialogService) {
                     title: 'New Role',
                     subtitle: $scope.blade.subtitle,
                     controller: 'roleDetailController',
-                    template: 'Scripts/common/security/blades/role-detail.tpl.html'
+                    template: 'Scripts/common/security/wizards/new-role-wizard.tpl.html'
                 };
                 bladeNavigationService.showBlade(newBlade, $scope.blade);
             },
