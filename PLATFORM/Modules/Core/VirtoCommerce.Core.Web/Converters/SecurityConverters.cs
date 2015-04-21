@@ -5,14 +5,14 @@ using Omu.ValueInjecter;
 using VirtoCommerce.Foundation.Frameworks;
 using VirtoCommerce.Foundation.Frameworks.ConventionInjections;
 using VirtoCommerce.Foundation.Frameworks.Extensions;
+using VirtoCommerce.Platform.Core.Security;
 using foundation = VirtoCommerce.Foundation.Security.Model;
-using coreModel = VirtoCommerce.Framework.Web.Security;
 
 namespace VirtoCommerce.CoreModule.Web.Converters
 {
     public static class SecurityConverters
     {
-        public static foundation.Role ToFoundation(this coreModel.RoleDescriptor source)
+        public static foundation.Role ToFoundation(this RoleDescriptor source)
         {
             var result = new foundation.Role
             {
@@ -32,7 +32,7 @@ namespace VirtoCommerce.CoreModule.Web.Converters
             return result;
         }
 
-        public static foundation.Permission ToFoundation(this coreModel.PermissionDescriptor source)
+        public static foundation.Permission ToFoundation(this PermissionDescriptor source)
         {
             var result = new foundation.Permission
             {
@@ -43,9 +43,9 @@ namespace VirtoCommerce.CoreModule.Web.Converters
             return result;
         }
 
-        public static coreModel.RoleDescriptor ToCoreModel(this foundation.Role source, bool fillPermissions)
+        public static RoleDescriptor ToCoreModel(this foundation.Role source, bool fillPermissions)
         {
-            var result = new coreModel.RoleDescriptor
+            var result = new RoleDescriptor
             {
                 Id = source.RoleId,
                 Name = source.Name,
@@ -59,9 +59,9 @@ namespace VirtoCommerce.CoreModule.Web.Converters
             return result;
         }
 
-        public static coreModel.PermissionDescriptor ToCoreModel(this foundation.Permission source)
+        public static PermissionDescriptor ToCoreModel(this foundation.Permission source)
         {
-            var result = new coreModel.PermissionDescriptor
+            var result = new PermissionDescriptor
             {
                 Id = source.PermissionId,
                 Name = source.Name,

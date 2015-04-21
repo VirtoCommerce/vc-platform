@@ -2,8 +2,8 @@
 using MailChimp.MailingModule.Web.Managers;
 using MailChimp.MailingModule.Web.Services;
 using Microsoft.Practices.Unity;
-using VirtoCommerce.Framework.Web.Modularity;
-using VirtoCommerce.Framework.Web.Settings;
+using VirtoCommerce.Platform.Core.Modularity;
+using VirtoCommerce.Platform.Core.Settings;
 
 namespace MailChimp.MailingModule.Web
 {

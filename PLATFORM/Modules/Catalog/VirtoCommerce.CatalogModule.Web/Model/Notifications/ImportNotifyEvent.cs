@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using VirtoCommerce.Foundation.Importing.Model;
-using VirtoCommerce.Framework.Web.Notification;
+using VirtoCommerce.Platform.Core.Notification;
 
 namespace VirtoCommerce.CatalogModule.Web.Model.Notifications
 {

@@ -1,7 +1,7 @@
 ﻿using Microsoft.Practices.Unity;
 using VirtoCommerce.Domain.Store.Services;
 using VirtoCommerce.Foundation.Data.Infrastructure.Interceptors;
-using VirtoCommerce.Framework.Web.Modularity;
+using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.StoreModule.Data.Repositories;
 using VirtoCommerce.StoreModule.Data.Services;
 

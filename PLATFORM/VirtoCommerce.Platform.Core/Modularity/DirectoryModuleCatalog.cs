@@ -5,10 +5,10 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Security.Policy;
-using VirtoCommerce.Framework.Web.Common;
-using VirtoCommerce.Framework.Web.Properties;
+using VirtoCommerce.Platform.Core.Common;
+using VirtoCommerce.Platform.Core.Properties;
 
-namespace VirtoCommerce.Framework.Web.Modularity
+namespace VirtoCommerce.Platform.Core.Modularity
 {
     /// <summary>
     /// Represets a catalog created from a directory on disk.

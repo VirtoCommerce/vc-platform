@@ -1,6 +1,6 @@
 using System;
 
-namespace VirtoCommerce.Framework.Web.Modularity
+namespace VirtoCommerce.Platform.Core.Modularity
 {
     /// <summary>
     /// Specifies that the current module has a dependency on another module. This attribute should be used on classes that implement <see cref="IModule"/>.

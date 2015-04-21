@@ -1,6 +1,6 @@
 using System;
 
-namespace VirtoCommerce.Framework.Web.Modularity.Exceptions
+namespace VirtoCommerce.Platform.Core.Modularity.Exceptions
 {
     /// <summary>
     /// Exception thrown when a requested <see cref="InitializationMode.OnDemand"/> <see cref="IModule"/> was not found.

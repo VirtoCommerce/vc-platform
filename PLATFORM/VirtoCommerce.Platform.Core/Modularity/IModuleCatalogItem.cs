@@ -1,4 +1,4 @@
-namespace VirtoCommerce.Framework.Web.Modularity
+namespace VirtoCommerce.Platform.Core.Modularity
 {
     /// <summary>
     /// Marker interface that allows both <see cref="ModuleInfoGroup"/>s and <see cref="ModuleInfo"/>s to be

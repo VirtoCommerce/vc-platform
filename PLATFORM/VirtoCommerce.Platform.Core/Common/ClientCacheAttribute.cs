@@ -2,7 +2,7 @@
 using System.Net.Http.Headers;
 using System.Web.Http.Filters;
 
-namespace VirtoCommerce.Framework.Web.Common
+namespace VirtoCommerce.Platform.Core.Common
 {
     public class ClientCacheAttribute : ActionFilterAttribute
     {

@@ -1,6 +1,6 @@
 using System;
 
-namespace VirtoCommerce.Framework.Web.Modularity.Exceptions
+namespace VirtoCommerce.Platform.Core.Modularity.Exceptions
 {
     /// <summary>
     /// Exception thrown when a module is declared twice in the same catalog.

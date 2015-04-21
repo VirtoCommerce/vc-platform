@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace VirtoCommerce.Framework.Web.Asset
+namespace VirtoCommerce.Platform.Core.Asset
 {
     public interface IAssetsConnection
     {

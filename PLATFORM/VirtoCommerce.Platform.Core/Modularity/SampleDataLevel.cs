@@ -1,4 +1,4 @@
-﻿namespace VirtoCommerce.Framework.Web.Modularity
+﻿namespace VirtoCommerce.Platform.Core.Modularity
 {
 	public enum SampleDataLevel
 	{

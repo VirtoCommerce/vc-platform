@@ -5,8 +5,8 @@ using GoogleShopping.MerchantModule.Web.Managers;
 using GoogleShopping.MerchantModule.Web.Providers;
 using GoogleShopping.MerchantModule.Web.Services;
 using Microsoft.Practices.Unity;
-using VirtoCommerce.Framework.Web.Modularity;
-using VirtoCommerce.Framework.Web.Settings;
+using VirtoCommerce.Platform.Core.Modularity;
+using VirtoCommerce.Platform.Core.Settings;
 
 namespace GoogleShopping.MerchantModule.Web
 {

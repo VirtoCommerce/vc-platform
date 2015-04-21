@@ -3,7 +3,7 @@ using VirtoCommerce.CustomerModule.Data.Repositories;
 using VirtoCommerce.CustomerModule.Data.Services;
 using VirtoCommerce.Domain.Customer.Services;
 using VirtoCommerce.Foundation.Data.Infrastructure.Interceptors;
-using VirtoCommerce.Framework.Web.Modularity;
+using VirtoCommerce.Platform.Core.Modularity;
 
 namespace VirtoCommerce.CustomerModule.Web
 {

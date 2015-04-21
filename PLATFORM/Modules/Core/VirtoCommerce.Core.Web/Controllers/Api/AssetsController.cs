@@ -6,8 +6,8 @@ using System.Web.Hosting;
 using System.Web.Http;
 using VirtoCommerce.CoreModule.Web.Assets;
 using VirtoCommerce.Foundation.Assets.Repositories;
-using VirtoCommerce.Framework.Web.Asset;
-using VirtoCommerce.Framework.Web.Common;
+using VirtoCommerce.Platform.Core.Asset;
+using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.CoreModule.Web.Controllers.Api
 {

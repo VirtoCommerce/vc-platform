@@ -2,9 +2,9 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using VirtoCommerce.Framework.Web.Properties;
+using VirtoCommerce.Platform.Core.Properties;
 
-namespace VirtoCommerce.Framework.Web.Modularity
+namespace VirtoCommerce.Platform.Core.Modularity
 {
     /// <summary>
     /// Represents a group of <see cref="ModuleInfo"/> instances that are usually deployed together. <see cref="ModuleInfoGroup"/>s 

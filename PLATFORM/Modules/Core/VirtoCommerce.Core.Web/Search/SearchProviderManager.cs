@@ -2,7 +2,7 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using VirtoCommerce.Foundation.Search;
-using VirtoCommerce.Framework.Web.Search;
+using VirtoCommerce.Platform.Core.Search;
 
 namespace VirtoCommerce.CoreModule.Web.Search
 {

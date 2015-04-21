@@ -7,7 +7,7 @@
 //using System.Web.Http.Results;
 //using VirtoCommerce.Content.Data.Repositories;
 //using VirtoCommerce.Content.Data.Services;
-//using VirtoCommerce.Framework.Web.Settings;
+//using VirtoCommerce.Platform.Core.Settings;
 //using VirtoCommerce.ThemeModule.Web.Controllers.Api;
 //using VirtoCommerce.ThemeModule.Web.Models;
 //using Xunit;

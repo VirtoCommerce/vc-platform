@@ -19,9 +19,9 @@ using VirtoCommerce.CoreModule.Web.Security.Models;
 using VirtoCommerce.Foundation.Data.Security.Identity;
 using VirtoCommerce.Foundation.Frameworks.Extensions;
 using VirtoCommerce.Foundation.Security.Model;
-using VirtoCommerce.Framework.Web.Security;
 using ApiAccount = VirtoCommerce.Foundation.Security.Model.ApiAccount;
 using Hangfire;
+using VirtoCommerce.Platform.Core.Security;
 
 namespace VirtoCommerce.CoreModule.Web.Controllers.Api
 {

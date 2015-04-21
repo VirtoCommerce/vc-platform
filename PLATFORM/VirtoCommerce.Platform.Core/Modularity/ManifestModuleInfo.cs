@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Microsoft.Practices.ObjectBuilder2;
 
-namespace VirtoCommerce.Framework.Web.Modularity
+namespace VirtoCommerce.Platform.Core.Modularity
 {
     public class ManifestModuleInfo : ModuleInfo
     {

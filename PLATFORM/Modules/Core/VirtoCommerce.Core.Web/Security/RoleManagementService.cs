@@ -4,7 +4,7 @@ using System.Linq;
 using VirtoCommerce.CoreModule.Web.Converters;
 using VirtoCommerce.Foundation.Data.Infrastructure;
 using VirtoCommerce.Foundation.Security.Repositories;
-using VirtoCommerce.Framework.Web.Security;
+using VirtoCommerce.Platform.Core.Security;
 
 namespace VirtoCommerce.CoreModule.Web.Security
 {

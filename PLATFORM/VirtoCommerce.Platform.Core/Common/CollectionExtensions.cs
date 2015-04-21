@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
-namespace VirtoCommerce.Framework.Web.Common
+namespace VirtoCommerce.Platform.Core.Common
 {
     /// <summary>
     /// Class that provides extension methods to Collection

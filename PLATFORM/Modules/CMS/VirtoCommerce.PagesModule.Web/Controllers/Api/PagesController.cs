@@ -1,4 +1,5 @@
-﻿using VirtoCommerce.Framework.Web.Common;
+﻿using VirtoCommerce.Platform.Core.Common;
+using VirtoCommerce.Platform.Core.Settings;
 
 namespace VirtoCommerce.PagesModule.Web.Controllers.Api
 {
@@ -9,7 +10,6 @@ namespace VirtoCommerce.PagesModule.Web.Controllers.Api
 	using System.Web.Http;
 	using System.Web.Http.Description;
 	using VirtoCommerce.Content.Pages.Data.Services;
-	using VirtoCommerce.Framework.Web.Settings;
 	using VirtoCommerce.PagesModule.Web.Models;
 	using VirtoCommerce.PagesModule.Web.Converters;
 	using System.Collections.Generic;

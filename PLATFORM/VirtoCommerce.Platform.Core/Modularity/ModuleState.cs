@@ -1,4 +1,4 @@
-namespace VirtoCommerce.Framework.Web.Modularity
+namespace VirtoCommerce.Platform.Core.Modularity
 {
     /// <summary>
     /// Defines the states a <see cref="ModuleInfo"/> can be in, with regards to the module loading and initialization process. 

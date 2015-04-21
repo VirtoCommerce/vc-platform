@@ -3,8 +3,8 @@ using System.Linq;
 using VirtoCommerce.Caching.HttpCache;
 using VirtoCommerce.CoreModule.Web.Settings;
 using VirtoCommerce.Foundation.Data.AppConfig;
-using VirtoCommerce.Framework.Web.Modularity;
-using VirtoCommerce.Framework.Web.Settings;
+using VirtoCommerce.Platform.Core.Modularity;
+using VirtoCommerce.Platform.Core.Settings;
 using Xunit;
 
 namespace VirtoCommerce.CoreModule.Tests

@@ -2,7 +2,7 @@
 using System.Web.Http.OData.Extensions;
 using Newtonsoft.Json;
 using VirtoCommerce.Foundation.Security.Model;
-using VirtoCommerce.Framework.Web.Security;
+using VirtoCommerce.Platform.Core.Security;
 
 namespace VirtoCommerce.Platform.Web
 {

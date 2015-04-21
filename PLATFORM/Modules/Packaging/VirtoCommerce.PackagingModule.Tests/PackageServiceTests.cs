@@ -3,11 +3,11 @@ using System.IO;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NuGet;
-using VirtoCommerce.Framework.Web.Modularity;
 using VirtoCommerce.PackagingModule.Data.Repositories;
 using VirtoCommerce.PackagingModule.Data.Services;
 using VirtoCommerce.PackagingModule.Model;
 using VirtoCommerce.PackagingModule.Services;
+using VirtoCommerce.Platform.Core.Modularity;
 
 namespace VirtoCommerce.PackagingModule.Tests
 {

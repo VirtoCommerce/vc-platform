@@ -10,7 +10,7 @@ using Microsoft.Owin.StaticFiles;
 using Microsoft.Practices.Unity;
 using Owin;
 using VirtoCommerce.Framework.Core.Utils;
-using VirtoCommerce.Framework.Web.Modularity;
+using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Web;
 using WebGrease.Extensions;
 

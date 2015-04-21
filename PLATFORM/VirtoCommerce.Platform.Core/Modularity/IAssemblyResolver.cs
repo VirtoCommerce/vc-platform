@@ -1,4 +1,4 @@
-namespace VirtoCommerce.Framework.Web.Modularity
+namespace VirtoCommerce.Platform.Core.Modularity
 {
     /// <summary>
     /// Interface for classes that are responsible for resolving and loading assembly files. 

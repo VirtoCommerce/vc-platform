@@ -1,4 +1,4 @@
-﻿namespace VirtoCommerce.Framework.Web.Security
+﻿namespace VirtoCommerce.Platform.Core.Security
 {
     public interface IPermissionService
     {

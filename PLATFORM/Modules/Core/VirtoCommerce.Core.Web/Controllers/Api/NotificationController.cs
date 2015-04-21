@@ -5,8 +5,7 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Http;
 using System.Web.Http.Description;
-using VirtoCommerce.Framework.Web.Notification;
-
+using VirtoCommerce.Platform.Core.Notification;
 
 namespace VirtoCommerce.CoreModule.Web.Controllers.Api
 {

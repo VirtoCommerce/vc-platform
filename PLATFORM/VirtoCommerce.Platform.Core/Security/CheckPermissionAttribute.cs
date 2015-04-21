@@ -2,9 +2,9 @@
 using System.Security.Principal;
 using System.Web.Http;
 using System.Web.Http.Controllers;
-using VirtoCommerce.Framework.Web.Common;
+using VirtoCommerce.Platform.Core.Common;
 
-namespace VirtoCommerce.Framework.Web.Security
+namespace VirtoCommerce.Platform.Core.Security
 {
     public class CheckPermissionAttribute : AuthorizeAttribute
     {

@@ -4,11 +4,11 @@ using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Globalization;
 using System.Linq;
-using VirtoCommerce.Framework.Web.Common;
-using VirtoCommerce.Framework.Web.Modularity.Exceptions;
-using VirtoCommerce.Framework.Web.Properties;
+using VirtoCommerce.Platform.Core.Common;
+using VirtoCommerce.Platform.Core.Modularity.Exceptions;
+using VirtoCommerce.Platform.Core.Properties;
 
-namespace VirtoCommerce.Framework.Web.Modularity
+namespace VirtoCommerce.Platform.Core.Modularity
 {
     /// <summary>
     /// The <see cref="ModuleCatalog"/> holds information about the modules that can be used by the 

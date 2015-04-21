@@ -1,4 +1,4 @@
-﻿namespace VirtoCommerce.Framework.Web.Settings
+﻿namespace VirtoCommerce.Platform.Core.Settings
 {
     public class SettingDescriptor
     {

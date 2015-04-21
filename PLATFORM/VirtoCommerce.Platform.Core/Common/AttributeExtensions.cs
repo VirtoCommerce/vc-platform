@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 
-namespace VirtoCommerce.Framework.Web.Common
+namespace VirtoCommerce.Platform.Core.Common
 {
     public static class AttributeExtensions
     {

@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using VirtoCommerce.Content.Data.Models;
-using VirtoCommerce.Framework.Web.Common;
+using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.Content.Data.Repositories
 {

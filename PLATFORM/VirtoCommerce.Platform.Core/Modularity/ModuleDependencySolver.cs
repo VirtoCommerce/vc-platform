@@ -1,11 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using VirtoCommerce.Framework.Web.Common;
-using VirtoCommerce.Framework.Web.Modularity.Exceptions;
-using VirtoCommerce.Framework.Web.Properties;
+using VirtoCommerce.Platform.Core.Common;
+using VirtoCommerce.Platform.Core.Modularity.Exceptions;
+using VirtoCommerce.Platform.Core.Properties;
 
-namespace VirtoCommerce.Framework.Web.Modularity
+namespace VirtoCommerce.Platform.Core.Modularity
 {
     /// <summary>
     /// Used by <see cref="ModuleInitializer"/> to get the load sequence

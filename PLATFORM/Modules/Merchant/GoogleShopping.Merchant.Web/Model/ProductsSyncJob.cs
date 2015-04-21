@@ -1,7 +1,7 @@
 ﻿using System.Threading;
 using GoogleShopping.MerchantModule.Web.Model.Notifications;
 using Newtonsoft.Json;
-using VirtoCommerce.Framework.Web.Notification;
+using VirtoCommerce.Platform.Core.Notification;
 
 namespace GoogleShopping.MerchantModule.Web.Model
 {

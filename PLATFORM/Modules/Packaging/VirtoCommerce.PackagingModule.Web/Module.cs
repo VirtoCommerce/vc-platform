@@ -1,10 +1,10 @@
 ﻿using Microsoft.Practices.Unity;
 using System.Web.Hosting;
-using VirtoCommerce.Framework.Web.Modularity;
 using VirtoCommerce.PackagingModule.Data.Services;
 using VirtoCommerce.PackagingModule.Web.Controllers.Api;
 using VirtoCommerce.PackagingModule.Data.Repositories;
 using NuGet;
+using VirtoCommerce.Platform.Core.Modularity;
 
 namespace VirtoCommerce.PackagingModule.Web
 {

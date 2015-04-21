@@ -1,16 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
-using System.Text;
 using System.Threading.Tasks;
 using VirtoCommerce.Foundation.Assets.Model;
 using VirtoCommerce.Foundation.Assets.Repositories;
 using VirtoCommerce.Foundation.Assets.Services;
 
-namespace VirtoCommerce.Framework.Web.Asset
+namespace VirtoCommerce.Platform.Core.Asset
 {
 	public class BlobStorageMultipartProvider : MultipartFileStreamProvider
 	{
