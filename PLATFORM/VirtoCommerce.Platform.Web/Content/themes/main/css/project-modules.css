@@ -21,7 +21,6 @@
 /* Dashboard */
 .dashboard
 {
-	background: #d4e2eb;
 	font-family: 'Exo 2';
 
 	-webkit-box-shadow: -5px 0 5px -6px rgba(0, 0, 0, .1) inset;
@@ -47,7 +46,7 @@
 
 	.dashboard .dashboard-area:hover
 	{
-		overflow-y: auto;
+		overflow: auto;
 	}
 
 	.dashboard .dashboard-inner
@@ -186,7 +185,7 @@
 {
     font-size: 12px;
     vertical-align: top;
-    width: 20%;
+    width: 25%;
 }
 
 .table .table-col.__lang
