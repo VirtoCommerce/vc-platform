@@ -119,7 +119,6 @@ namespace GoogleShopping.MerchantModule.Web.Controllers.Api
         }
 
         [HttpGet]
-        [ResponseType(typeof(void))]
         [Route("products/sync/batch/{catalogId}/{categoryId}")]
         public IHttpActionResult BatchCategoryProducts(string catalogId, string categoryId)
         {
@@ -130,7 +129,7 @@ namespace GoogleShopping.MerchantModule.Web.Controllers.Api
             }
             products.Entries.ForEach(item => item.MerchantId = _settingsManager.MerchantId);
             var res = _contentService.Products.Custombatch(products).Execute();
-            return Ok(res);
+            return Ok(new[] { res.Entries.Count });
         }
 
         private ICollection<string> GetOutdatedProducts(IEnumerable<ProductStatus> productStatuses)
