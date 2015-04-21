@@ -166,13 +166,14 @@
     <Content Include="Scripts\common\marketing-main.tpl.html" />
     <Content Include="Scripts\dynamicContent\blades\items\add.js" />
     <Content Include="Scripts\dynamicContent\blades\items\add.tpl.html" />
+    <Content Include="Scripts\dynamicContent\blades\items\breadcrumbs-item.tpl.html" />
     <Content Include="Scripts\dynamicContent\blades\items\folder-details.js" />
     <Content Include="Scripts\dynamicContent\blades\items\folder-details.tpl.html" />
-    <Content Include="Scripts\dynamicContent\blades\items\list-items.tpl.html" />
     <Content Include="Scripts\dynamicContent\blades\items\list.js" />
     <Content Include="Scripts\dynamicContent\blades\items\list.tpl.html" />
     <Content Include="Scripts\dynamicContent\blades\items\content-item-details.js" />
     <Content Include="Scripts\dynamicContent\blades\items\content-item-details.tpl.html" />
+    <Content Include="Scripts\dynamicContent\blades\placeholders\breadcrumbs-item.tpl.html" />
     <Content Include="Scripts\dynamicContent\blades\placeholders\folder-details.js" />
     <Content Include="Scripts\dynamicContent\blades\placeholders\folder-details.tpl.html" />
     <Content Include="Scripts\dynamicContent\blades\placeholders\list-items.tpl.html" />

@@ -138,7 +138,7 @@ namespace VirtoCommerce.MarketingModule.Data.Services
 			{
 				foreach (var id in ids)
 				{
-					var entity = repository.GetContentItemById(id);
+					var entity = repository.GetContentPlaceById(id);
 					repository.Remove(entity);
 				}
 				CommitChanges(repository);

@@ -7,7 +7,7 @@
 	$scope.selectedNodeId = null;
 
 	blade.initialize = function () {
-		marketing_dynamicContents_res_search.search({ respGroup: 'WithContentPublications' }, function (data) {
+		marketing_dynamicContents_res_search.search({ respGroup: '8' }, function (data) {
 			blade.currentEntities = data.contentPublications;
 		});
 
@@ -28,7 +28,7 @@
 		bladeNavigationService.showBlade(newBlade, $scope.blade);
 	}
 
-	blade.editPublising = function (data) {
+	blade.editPublishing = function (data) {
 		blade.closeChildrenBlades();
 
 		var newBlade = {
@@ -37,8 +37,8 @@
 			subtitle: 'Edit publising element',
 			entity: data,
 			isNew: false,
-			controller: 'addPublishingController',
-			template: 'Modules/$(VirtoCommerce.Marketing)/Scripts/dynamicContent/blades/placeholders/publishing-main-step.tpl.html'
+			controller: 'addPublishingFirstStepController',
+			template: 'Modules/$(VirtoCommerce.Marketing)/Scripts/dynamicContent/blades/publishing/publishing-main-step.tpl.html'
 		};
 		bladeNavigationService.showBlade(newBlade, $scope.blade);
 	}
@@ -58,15 +58,6 @@
 	}
 
 	$scope.bladeToolbarCommands = [
-        {
-        	name: "Refresh", icon: 'fa fa-refresh',
-        	executeMethod: function () {
-        		$scope.blade.refresh();
-        	},
-        	canExecuteMethod: function () {
-        		return true;
-        	}
-        },
         {
         	name: "Add", icon: 'fa fa-plus',
         	executeMethod: function () {

@@ -31,10 +31,11 @@
 				{
 					name: "Delete", icon: 'fa fa-trash',
 					executeMethod: function () {
-						blade.delete();
+						blade.parentBlade.deleteFolder(blade.entity);
+						bladeNavigationService.closeBlade(blade);
 					},
 					canExecuteMethod: function () {
-						return !angular.equals(blade.originalEntity, blade.entity);
+						return true;
 					}
 				}
 			];
@@ -47,11 +48,13 @@
 		if (blade.isNew) {
 			marketing_dynamicContents_res_folders.save({}, blade.entity, function (data) {
 				bladeNavigationService.closeBlade(blade);
+				blade.parentBlade.updateChoosen();
 			});
 		}
 		else {
 			marketing_dynamicContents_res_folders.update({}, blade.entity, function (data) {
 				blade.originalEntity = angular.copy(blade.entity);
+				blade.parentBlade.updateChoosen();
 			});
 		}
 	}

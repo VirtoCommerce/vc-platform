@@ -2,9 +2,9 @@
 	<div class="blade-inner">
 		<div class="inner-block">
 			<fieldset>
-				<legend class="ng-binding">Choosen placeholders</legend>
+				<legend class="ng-binding">Choosen content items</legend>
 				<div class="form-group">
-					<a class="clear text-mini __link" ng-click="blade.deleteAllPlaceholder()">Clear all</a>
+					<a class="clear text-mini __link" ng-click="blade.deleteAllPlaceholder()" ng-if="blade.entity.contentPlaces.length">Clear all</a>
 					<ul class="list __inline __choosen">
 						<li class="list-item" ng-repeat="place in blade.entity.contentPlaces">
 							<a class="list-remove" ng-click="blade.deletePlaceholder(place)">×</a>
@@ -14,16 +14,90 @@
 				</div>
 			</fieldset>
 			<fieldset>
-				<legend class="ng-binding">Placeholders</legend>
-				<ul class="list __files" ng-if="blade.currentEntities.length">
-					<li class="list-item" ng-click="blade.folderClick(data)" ng-repeat="data in blade.currentEntities" ng-include="'Modules/$(VirtoCommerce.Marketing)/Scripts/dynamicContent/blades/publishing/placeholders.tpl.html'">
+				<legend class="ng-binding">Content items</legend>
+				<div class="breadcrumbs">
+					<ul class="menu __inline">
+						<li class="menu-item">
+							<a class="menu-link" ng-click="blade.clickDefault(data);">Content items</a>
+						</li>
+						<boo ng-repeat="data in blade.currentEntities" ng-if="blade.checkFolder(data)">
+							<foo>
+								<li class="menu-item __divider"></li>
+								<li class="menu-item">
+									<a class="menu-link" ng-click="event.preventDefault(); blade.folderClick(data);">{{data.name}}</a>
+								</li>
+							</foo>
+							<foo ng-if="blade.checkFolder(data)" ng-repeat="data in data.childrenFolders" ng-include="'Modules/$(VirtoCommerce.Marketing)/Scripts/dynamicContent/blades/items/breadcrumbs-item.tpl.html'">
 
-					</li>
-				</ul>
+							</foo>
+						</boo>
+					</ul>
+				</div>
+				<div class="table-wrapper">
+					<table class="table" ng-if="!blade.currentEntity && blade.currentEntities.length">
+						<thead>
+							<tr>
+								<th class="table-col">Pic</th>
+								<th class="table-col">Name</th>
+								<th class="table-col">Description</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr class="table-item" ng-repeat="data in blade.currentEntities" ng-click="blade.folderClick(data)">
+								<td class="table-col __product-img">
+									<div class="product-img">
+										<i class="table-ico fa fa-folder"></i>
+									</div>
+								</td>
+								<td class="table-col __product-name">
+									{{data.name}}
+								</td>
+								<td class="table-col">
+									{{data.description}}
+								</td>
+							</tr>
+						</tbody>
+					</table>
+					<table class="table" ng-if="blade.currentEntity && (blade.currentEntity.childrenFolders.length > 0 || blade.currentEntity.placeholders.length > 0)">
+						<thead>
+							<tr>
+								<th class="table-col">Pic</th>
+								<th class="table-col">Name</th>
+								<th class="table-col">Description</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr class="table-item" ng-repeat="data in blade.currentEntity.childrenFolders" ng-click="blade.folderClick(data)">
+								<td class="table-col __product-img">
+									<div class="product-img">
+										<i class="table-ico fa fa-folder"></i>
+									</div>
+								</td>
+								<td class="table-col __product-name">
+									{{data.name}}
+								</td>
+								<td class="table-col">
+									{{data.description}}
+								</td>
+							</tr>
+							<tr class="table-item" ng-repeat="placeholder in blade.currentEntity.placeholders" ng-click="blade.addPlaceholder(placeholder)" ng-if="blade.checkPlaceholder(placeholder)">
+								<td class="table-col __product-img">
+									<div class="product-img">
+										<i class="table-ico fa fa-location-arrow"></i>
+									</div>
+								</td>
+								<td class="table-col __product-name">
+									{{placeholder.name}}
+								</td>
+								<td class="table-col">
+									{{placeholder.description}}
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
 				<p class="text" ng-if="!blade.currentEntities.length">No Placeholders yet</p>
 			</fieldset>
 		</div>
 	</div>
 </div>
-
-
