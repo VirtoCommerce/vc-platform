@@ -73,14 +73,25 @@
     <Compile Include="Asset\IAssetsConnection.cs" />
     <Compile Include="Asset\IAssetsProviderManager.cs" />
     <Compile Include="Bootstrapper.cs" />
+    <Compile Include="Common\AnnonymousComparer.cs" />
     <Compile Include="Common\ArrayInputAttribute.cs" />
     <Compile Include="Common\AttributeExtensions.cs" />
     <Compile Include="Common\ClientCacheAttribute.cs" />
     <Compile Include="Common\DateTimeExtensions.cs" />
+    <Compile Include="Common\Entity.cs" />
+    <Compile Include="Common\EntryState.cs" />
     <Compile Include="Common\FormatingExtensions.cs" />
+    <Compile Include="Common\IAuditable.cs" />
+    <Compile Include="Common\IQueryableExtensions.cs" />
+    <Compile Include="Common\IRepository.cs" />
+    <Compile Include="Common\IUnitOfWork.cs" />
     <Compile Include="Common\KeyValuePairExtensions.cs" />
     <Compile Include="Common\ListDictionary.cs" />
     <Compile Include="Common\CollectionExtensions.cs" />
+    <Compile Include="Common\NullCollection.cs" />
+    <Compile Include="Common\PredicateBuilder.cs" />
+    <Compile Include="Common\TreeExtension.cs" />
+    <Compile Include="Common\ValueObject.cs" />
     <Compile Include="Modularity\AssemblyResolver.cs" />
     <Compile Include="Modularity\Exceptions\CyclicDependencyFoundException.cs" />
     <Compile Include="Modularity\DirectoryModuleCatalog.cs" />
@@ -170,12 +181,6 @@
     </None>
   </ItemGroup>
   <ItemGroup />
-  <ItemGroup>
-    <ProjectReference Include="..\Core\CommerceFoundation\CommerceFoundation.csproj">
-      <Project>{e7fc9a51-1b39-4bdc-983a-8a059c5fc58b}</Project>
-      <Name>CommerceFoundation</Name>
-    </ProjectReference>
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

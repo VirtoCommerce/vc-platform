@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace VirtoCommerce.Framework.Web.Common
+namespace VirtoCommerce.Platform.Core.Common
 {
 	public static class FormatingExtensions
 	{
