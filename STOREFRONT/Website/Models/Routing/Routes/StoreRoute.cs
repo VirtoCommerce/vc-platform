@@ -129,7 +129,7 @@ namespace VirtoCommerce.Web.Models.Routing.Routes
                 //If both store and languange are missing
                 if (pathSegments.Length == 0)
                 {
-                    values.Add(Constants.Language, Thread.CurrentThread.CurrentUICulture);
+                    values.Add(Constants.Language, Thread.CurrentThread.CurrentUICulture.ToString());
                     values.Add(Constants.Store, SiteContext.Current.StoreId);
                 }
                 else

@@ -134,10 +134,9 @@ namespace VirtoCommerce.Web.Models.Routing
         new RouteValueDictionary { { "namespaces", new[] { "VirtoCommerce.Web.Controllers" } } },
         new MvcRouteHandler()));
             */
-
+            routes.Add("Store", storeRoute);
             routes.Add("Item", itemRoute);
             routes.Add("Category", categoryRoute);
-            routes.Add("Store", storeRoute);
 
             //Other actions
             routes.Add("RelativeDefault", defaultRoute);

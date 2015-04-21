@@ -223,6 +223,7 @@
     <Compile Include="Models\LoginProvider.cs" />
     <Compile Include="Models\PaymentMethod.cs" />
     <Compile Include="Models\Review.cs" />
+    <Compile Include="Models\Routing\CanonicalizedAttribute.cs" />
     <Compile Include="Models\Routing\RedirectRouteExtensions.cs" />
     <Compile Include="Models\Services\CommerceService.cs" />
     <Compile Include="Models\Services\CustomerService.cs" />
