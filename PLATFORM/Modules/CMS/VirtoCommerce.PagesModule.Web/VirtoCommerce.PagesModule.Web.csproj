@@ -136,9 +136,9 @@
       <Project>{e7fc9a51-1b39-4bdc-983a-8a059c5fc58b}</Project>
       <Name>CommerceFoundation</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\VirtoCommerce.Framework.Web\VirtoCommerce.Framework.Web.csproj">
+    <ProjectReference Include="..\..\..\VirtoCommerce.Platform.Core\VirtoCommerce.Platform.Core.csproj">
       <Project>{f7c9313b-522e-4619-abc9-8c7d4600d6b5}</Project>
-      <Name>VirtoCommerce.Framework.Web</Name>
+      <Name>VirtoCommerce.Platform.Core</Name>
     </ProjectReference>
     <ProjectReference Include="..\VirtoCommerce.Content.Pages.Data\VirtoCommerce.Content.Pages.Data.csproj">
       <Project>{8f9f26fc-344e-4599-b2f3-cb560f1d5499}</Project>
