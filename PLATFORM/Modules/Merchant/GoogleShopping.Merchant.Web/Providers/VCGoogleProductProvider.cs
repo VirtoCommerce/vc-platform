@@ -62,9 +62,9 @@ namespace GoogleShopping.MerchantModule.Web.Providers
             return retVal;
         }
 
-        public ProductsCustomBatchRequest GetCatalogProductsBatchRequest(string catalogId)
+        public ProductsCustomBatchRequest GetCatalogProductsBatchRequest(string catalogId, string categoryId = "")
         {
-            var result = _catalogSearchService.Search(new SearchCriteria { CatalogId = catalogId, ResponseGroup = ResponseGroup.WithProducts | ResponseGroup.WithVariations });
+            var result = _catalogSearchService.Search(new SearchCriteria { CatalogId = catalogId, CategoryId = categoryId, ResponseGroup = ResponseGroup.WithProducts | ResponseGroup.WithVariations });
             var retVal = new ProductsCustomBatchRequest();
             foreach (var product in result.Products.Select((value, index) => new { Value = value, Index = index }))
             {

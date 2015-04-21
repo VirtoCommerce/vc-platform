@@ -12,9 +12,13 @@ angular.module(moduleName, [
   ['$rootScope', 'mainMenuService', 'widgetService', '$state', function ($rootScope, mainMenuService, widgetService, $state) {
      
       //Register widgets in catalog item details
-      widgetService.registerWidget({
+      /*widgetService.registerWidget({
           controller: 'gshoppingWidgetController',
           template: 'Modules/$(GoogleShopping.Merchant)/Scripts/widgets/gshoppingWidget.tpl.html'
-      }, 'moduleDetail');
-  }])
-;
+      }, 'catalogDetail');*/
+
+      widgetService.registerWidget({
+          controller: 'gshoppingSyncCatWidgetController',
+          template: 'Modules/$(GoogleShopping.Merchant)/Scripts/widgets/gshoppingWidget.tpl.html'
+      }, 'categoryDetail');
+  }]);

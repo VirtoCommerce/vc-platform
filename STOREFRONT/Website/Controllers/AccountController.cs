@@ -7,6 +7,8 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
+using VirtoCommerce.ApiClient;
+using VirtoCommerce.ApiClient.Extensions;
 using VirtoCommerce.Web.Models;
 using VirtoCommerce.Web.Models.Convertors;
 using VirtoCommerce.Web.Models.FormModels;
@@ -18,6 +20,14 @@ namespace VirtoCommerce.Web.Controllers
     public class AccountController : BaseController
     {
         private const string XsrfKey = "XsrfId";
+
+        private SecurityClient _sucurityClient
+        {
+            get
+            {
+                return ClientContext.Clients.CreateSecurityClient();
+            }
+        }
 
         private ApplicationSignInManager _signInManager
         {
@@ -49,7 +59,37 @@ namespace VirtoCommerce.Web.Controllers
         [AllowAnonymous]
         public ActionResult Login(string returnUrl)
         {
-            return this.View("customers/login");
+            var forms = Session["Forms"] as ICollection<SubmitForm>;
+
+            if (forms == null)
+            {
+                forms = new[]
+                {
+                    new SubmitForm
+                    {
+                        ActionLink = VirtualPathUtility.ToAbsolute("~/account/login"),
+                        FormType = "customer_login",
+                        Id = "customer_login",
+                        PasswordNeeded = true
+                    },
+                    new SubmitForm
+                    {
+                        ActionLink = VirtualPathUtility.ToAbsolute("~/account/externallogin"),
+                        FormType = "external_login",
+                        Id = "external_login"
+                    },
+                    new SubmitForm
+                    {
+                        ActionLink = VirtualPathUtility.ToAbsolute("~/account/forgotpassword"),
+                        FormType = "recover_customer_password",
+                        Id = "recover_customer_password"
+                    }
+                };
+            }
+
+            UpdateForms(forms);
+
+            return View("customers/login");
         }
 
         //
@@ -58,248 +98,50 @@ namespace VirtoCommerce.Web.Controllers
         [AllowAnonymous]
         public async Task<ActionResult> Login(LoginFormModel formModel, string returnUrl)
         {
-            var form = this.Service.GetForm(formModel.form_type);
+            var form = GetForm(formModel.form_type);
 
-            if (!ModelState.IsValid)
+            if (form != null)
             {
-                var errors = this.ModelState.Values.SelectMany(v => v.Errors);
-                form.Errors = new[] { errors.Select(e => e.ErrorMessage).FirstOrDefault() };
+                var formErrors = GetFormErrors(ModelState);
 
-                return this.View("customers/login");
-            }
-
-            var result = await _signInManager.PasswordSignInAsync(
-                formModel.Email, formModel.Password, isPersistent: false, shouldLockout: true);
-
-            switch (result)
-            {
-                case SignInStatus.Success:
-                    return RedirectToLocal(returnUrl);
-                case SignInStatus.LockedOut:
-                    return this.View("lockout");
-                case SignInStatus.RequiresVerification:
-                    return RedirectToAction("SendCode", "Account",
-                        new { ReturnUrl = returnUrl, RememberMe = formModel.RememberMe });
-                case SignInStatus.Failure:
-                default:
-                    form.Errors = new[] { "Invalid login attempt." };
-                    return this.View("customers/login");
-            }
-        }
-
-        //
-        // GET: /Account/VerifyCode
-        [HttpGet]
-        public async Task<ActionResult> VerifyCode(string provider, string returnUrl, bool rememberMe = false)
-        {
-            if (!await _signInManager.HasBeenVerifiedAsync())
-            {
-                return this.View("error");
-            }
-
-            var formModel = new VerifyCodeFormModel
-            {
-                Provider = provider,
-                RememberMe = rememberMe,
-                ReturnUrl = returnUrl
-            };
-
-            return this.View("verify-code", formModel);
-        }
-
-        //
-        // POST: /Account/VerifyCode
-        [HttpPost]
-        public async Task<ActionResult> VerifyCode(VerifyCodeFormModel formModel)
-        {
-            var form = this.Service.GetForm(formModel.form_type);
-
-            if (!ModelState.IsValid)
-            {
-                var errors = this.ModelState.Values.SelectMany(v => v.Errors);
-                form.Errors = new[] { errors.Select(e => e.ErrorMessage).FirstOrDefault() };
-
-                return this.View("verify-code");
-            }
-
-            var result = await _signInManager.TwoFactorSignInAsync(formModel.Provider, formModel.Code,
-                isPersistent: formModel.RememberMe, rememberBrowser: false);
-
-            switch (result)
-            {
-                case SignInStatus.Success:
-                    return RedirectToLocal(formModel.ReturnUrl);
-                case SignInStatus.LockedOut:
-                    return this.View("lockout");
-                case SignInStatus.Failure:
-                default:
-                    form.Errors = new[] { "Invalid code" };
-                    return this.View("verify-code");
-            }
-        }
-
-        //
-        // GET: /Account/Register
-        [HttpGet]
-        [AllowAnonymous]
-        public ActionResult Register()
-        {
-            return this.View("customers/register");
-        }
-
-        //
-        // POST: /Accout/Register
-        [HttpPost]
-        [AllowAnonymous]
-        public async Task<ActionResult> Register(RegisterFormModel formModel)
-        {
-            var form = this.Service.GetForm(formModel.form_type);
-
-            if (!ModelState.IsValid)
-            {
-                var errors = this.ModelState.Values.SelectMany(v => v.Errors);
-                form.Errors = new[] { errors.Select(e => e.ErrorMessage).FirstOrDefault() };
-
-                return this.View("customers/register");
-            }
-
-            var user = new ApplicationUser
-            {
-                FullName = string.Format("{0} {1}", formModel.FirstName.Trim(), formModel.LastName.Trim()).Trim(),
-                Email = formModel.Email,
-                StoreId = this.Context.StoreId,
-                UserName = formModel.Email
-            };
-
-            var result = await _userManager.CreateAsync(user, formModel.Password);
-
-            if (result.Succeeded)
-            {
-                user = await _userManager.FindByNameAsync(user.UserName);
-
-                if (user.TwoFactorEnabled)
+                if (formErrors == null)
                 {
-                    string code = await _userManager.GenerateEmailConfirmationTokenAsync(user.Id);
-                    string callbackUrl = Url.Action("ConfirmEmail", "Account",
-                        new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
-                    string messageBody =
-                        string.Format("Please confirm your account by clicking this <strong><a href=\"{0}\">link</a></strong>", callbackUrl);
+                    form.Errors = null;
+                    form.PostedSuccessfully = true;
 
-                    await _userManager.SendEmailAsync(user.Id, "Confirm your account", messageBody);
+                    var loginResult = await _signInManager.PasswordSignInAsync(
+                        formModel.Email, formModel.Password, false, true);
 
-                    return this.View("confirmation-sent");
+                    switch (loginResult)
+                    {
+                        case SignInStatus.Success:
+                            return RedirectToLocal(returnUrl);
+                        case SignInStatus.LockedOut:
+                            return View("lockedout");
+                        case SignInStatus.RequiresVerification:
+                            return RedirectToAction("SendCode", "Account");
+                        case SignInStatus.Failure:
+                        default:
+                            form.Errors = new SubmitFormErrors("form", "Login attempt fails.");
+                            form.PostedSuccessfully = false;
+                            UpdateForms(new[] { form });
+                            return View("customers/login");
+                    }
                 }
                 else
                 {
-                    this.Context.Customer = await this.CustomerService.CreateCustomerAsync(formModel.Email, formModel.FirstName, formModel.LastName, user.Id, null);
+                    form.Errors = formErrors;
+                    form.PostedSuccessfully = false;
 
-                    await _signInManager.PasswordSignInAsync(formModel.Email, formModel.Password, isPersistent: false, shouldLockout: false);
+                    UpdateForms(new[] { form });
 
-                    return RedirectToAction("Index", "Account");
+                    return View("customers/login");
                 }
             }
-            else
-            {
-                form.Errors = result.Errors.ToArray();
 
-                return this.View("customers/register");
-            }
-        }
+            Context.ErrorMessage = "Liquid error: Form context was not found.";
 
-        //
-        // GET: /Account/ConfirmEmail
-        [HttpGet]
-        [AllowAnonymous]
-        public async Task<ActionResult> ConfirmEmail(string userId, string code)
-        {
-            if (userId == null || code == null)
-            {
-                return this.View("error");
-            }
-
-            var result = await _userManager.ConfirmEmailAsync(userId, code);
-
-            return View(result.Succeeded ? "confirmation-done" : "error");
-        }
-
-        //
-        // POST: /Account/ForgotPassword
-        [HttpPost]
-        [AllowAnonymous]
-        public async Task<ActionResult> ForgotPassword(ForgotPasswordFormModel formModel)
-        {
-            var form = this.Service.GetForm(formModel.form_type);
-
-            if (!ModelState.IsValid)
-            {
-                var errors = this.ModelState.Values.SelectMany(v => v.Errors);
-                form.Errors = new[] { errors.Select(e => e.ErrorMessage).FirstOrDefault() };
-
-                return this.View("customers/login");
-            }
-
-            var user = await _userManager.FindByNameAsync(formModel.Email);
-
-            if (user == null || !(await _userManager.IsEmailConfirmedAsync(user.Id)))
-            {
-                return this.View("error");
-            }
-
-            string code = await _userManager.GeneratePasswordResetTokenAsync(user.Id);
-            string callbackUrl = Url.Action("ResetPassword", "Account",
-                new { UserId = user.Id, Code = code }, protocol: Request.Url.Scheme);
-            string messageBody =
-                string.Format("Please reset your password by clicking <strong><a href=\"{0}\">here</a></strong>", callbackUrl);
-
-            await _userManager.SendEmailAsync(user.Id, "Reset password", messageBody);
-
-            return this.View("confirmation-forgot-password");
-        }
-
-        //
-        // GET: /Account/ResetPassword
-        [HttpGet]
-        [AllowAnonymous]
-        public ActionResult ResetPassword(string code)
-        {
-            return string.IsNullOrEmpty(code) ?
-                this.View("error") :
-                this.View("reset-password");
-        }
-
-        //
-        // POST: /Account/ResetPassword
-        [HttpPost]
-        [AllowAnonymous]
-        public async Task<ActionResult> ResetPassword(ResetPasswordFormModel formModel)
-        {
-            var form = this.Service.GetForm(formModel.form_type);
-
-            if (!ModelState.IsValid)
-            {
-                var errors = this.ModelState.Values.SelectMany(v => v.Errors);
-                form.Errors = new[] { errors.Select(e => e.ErrorMessage).FirstOrDefault() };
-
-                return this.View("customers/reset_password");
-            }
-
-            var user = await _userManager.FindByNameAsync(formModel.Email);
-
-            if (user == null)
-            {
-                return this.View("error");
-            }
-
-            var result = await _userManager.ResetPasswordAsync(user.Id, formModel.Code, formModel.Password);
-
-            if (result.Succeeded)
-            {
-                return this.View("confirmation-reset-password");
-            }
-            else
-            {
-                return this.View("error");
-            }
+            return View("error");
         }
 
         //
@@ -308,59 +150,18 @@ namespace VirtoCommerce.Web.Controllers
         [AllowAnonymous]
         public ActionResult ExternalLogin(ExternalLoginFormModel formModel, string returnUrl)
         {
-            return new ChallengeResult(
-                formModel.AuthenticationType,
-                Url.Action("ExternalLoginCallback", "Account", new { ReturnUrl = returnUrl }));
-        }
+            var form = GetForm(formModel.form_type);
 
-        //
-        // GET: /Account/SendCode
-        [HttpGet]
-        [AllowAnonymous]
-        public async Task<ActionResult> SendCode(string returnUrl, bool rememberMe = false)
-        {
-            string userId = await _signInManager.GetVerifiedUserIdAsync();
-
-            if (userId == null)
+            if (form != null)
             {
-                return this.View("error");
+                return new ChallengeResult(
+                    formModel.AuthenticationType,
+                    Url.Action("ExternalLoginCallback", "Account", new { ReturnUrl = returnUrl }));
             }
 
-            var formModel = new SendCodeFormModel
-            {
-                Providers = await _userManager.GetValidTwoFactorProvidersAsync(userId),
-                RememberMe = rememberMe,
-                ReturnUrl = returnUrl
-            };
+            Context.ErrorMessage = "Liquid error: Form context was not found.";
 
-            return this.View("send-code", formModel);
-        }
-
-        //
-        // POST: /Account/SendCode
-        [HttpPost]
-        [AllowAnonymous]
-        public async Task<ActionResult> SendCode(SendCodeFormModel formModel)
-        {
-            var form = this.Service.GetForm(formModel.form_type);
-
-            if (!ModelState.IsValid)
-            {
-                var errors = this.ModelState.Values.SelectMany(v => v.Errors);
-                form.Errors = new[] { errors.Select(e => e.ErrorMessage).FirstOrDefault() };
-
-                return this.View("send-code");
-            }
-
-            if (!await _signInManager.SendTwoFactorCodeAsync(formModel.SelectedProvider))
-            {
-                return this.View("error");
-            }
-            else
-            {
-                return RedirectToAction("VerifyCode", "Account",
-                    new { Provider = formModel.SelectedProvider, ReturnUrl = formModel.ReturnUrl, RememberMe = formModel.RememberMe });
-            }
+            return View("error");
         }
 
         //
@@ -373,28 +174,60 @@ namespace VirtoCommerce.Web.Controllers
 
             if (loginInfo == null)
             {
-                return RedirectToAction("Login", "Account");
+                Context.ErrorMessage = "External login info was not found.";
+
+                return View("error");
             }
 
-            if (string.IsNullOrEmpty(loginInfo.Email))
-            {
-                return RedirectToAction("", "Account", new { ReturnUrl = returnUrl });
-            }
+            var loginResult = await _signInManager.ExternalSignInAsync(loginInfo, false);
 
-            var result = await _signInManager.ExternalSignInAsync(loginInfo, isPersistent: false);
-
-            switch (result)
+            switch (loginResult)
             {
                 case SignInStatus.Success:
                     return RedirectToLocal(returnUrl);
                 case SignInStatus.LockedOut:
-                    return View("lockout");
+                    return View("lockedout");
                 case SignInStatus.RequiresVerification:
-                    return RedirectToAction("SendCode", new { ReturnUrl = returnUrl, RememberMe = false });
+                    return RedirectToAction("SendCode", "Account");
                 case SignInStatus.Failure:
                 default:
-                    return this.View("confirmation-external-login");
+                    return RedirectToAction("ExternalLoginConfirmation", "Account",
+                        new { ReturnUrl = returnUrl, LoginProvider = loginInfo.Login.LoginProvider });
             }
+        }
+
+        //
+        // GET: /Account/ExternalLoginConfirmation
+        [HttpGet]
+        [AllowAnonymous]
+        public ActionResult ExternalLoginConfirmation(string returnUrl, string loginProvider)
+        {
+            if (string.IsNullOrEmpty(loginProvider))
+            {
+                Context.ErrorMessage = "URL format error.";
+
+                return View("error");
+            }
+
+            Session["Forms"] = null;
+            
+            var forms = new[]
+            {
+                new SubmitForm
+                {
+                    ActionLink = VirtualPathUtility.ToAbsolute("~/account/externalloginconfirmation"),
+                    FormType = "confirm_external_login",
+                    Id = "confirm_external_login",
+                    Properties = {
+                        { "return_url", returnUrl },
+                        { "login_provider", loginProvider }
+                    }
+                }
+            };
+
+            UpdateForms(forms);
+
+            return View("external_login_confirmation");
         }
 
         //
@@ -403,65 +236,324 @@ namespace VirtoCommerce.Web.Controllers
         [AllowAnonymous]
         public async Task<ActionResult> ExternalLoginConfirmation(ExternalLoginConfirmationFormModel formModel)
         {
-            if (User.Identity.IsAuthenticated)
+            var form = GetForm(formModel.form_type);
+
+            if (form != null)
             {
-                return RedirectToAction("Index", "Account");
-            }
+                var formErrors = GetFormErrors(ModelState);
 
-            var form = this.Service.GetForm(formModel.form_type);
-
-            if (!ModelState.IsValid)
-            {
-                var errors = this.ModelState.Values.SelectMany(v => v.Errors);
-                form.Errors = new[] { errors.Select(e => e.ErrorMessage).FirstOrDefault() };
-
-                return this.View("confirmation-external-login");
-            }
-
-            var loginInfo = await _authenticationManager.GetExternalLoginInfoAsync();
-
-            if (loginInfo == null)
-            {
-                return RedirectToAction("Login", "Account");
-            }
-
-            var user = new ApplicationUser { UserName = formModel.Email, Email = formModel.Email };
-
-            var result = await _userManager.CreateAsync(user);
-
-            if (result.Succeeded)
-            {
-                result = await _userManager.AddLoginAsync(user.Id, loginInfo.Login);
-
-                if (result.Succeeded)
+                if (formErrors == null)
                 {
-                    await _signInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
+                    form.Errors = null;
+                    form.PostedSuccessfully = true;
 
-                    return RedirectToAction("Index", "Account");
+                    var loginInfo = await _authenticationManager.GetExternalLoginInfoAsync();
+
+                    if (loginInfo == null)
+                    {
+                        Context.ErrorMessage = "External login info was not found";
+
+                        return View("error");
+                    }
+
+                    var user = new ApplicationUser { UserName = formModel.Email, Email = formModel.Email };
+
+                    var result = await _userManager.CreateAsync(user);
+                    if (result.Succeeded)
+                    {
+                        user = await _userManager.FindByNameAsync(formModel.Email);
+                        result = await _userManager.AddLoginAsync(user.Id, loginInfo.Login);
+
+                        if (result.Succeeded)
+                        {
+                            await CustomerService.CreateCustomerAsync(
+                                formModel.Email, formModel.Email, null, user.Id, null);
+
+                            await _signInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
+
+                            return RedirectToLocal(formModel.ReturnUrl);
+                        }
+                        else
+                        {
+                            form.Errors = new SubmitFormErrors("form", result.Errors.First());
+                            form.PostedSuccessfully = false;
+                            UpdateForms(new[] { form });
+                            return View("external_login_confirmation");
+                        }
+                    }
+                    else
+                    {
+                        form.Errors = new SubmitFormErrors("form", result.Errors.First());
+                        form.PostedSuccessfully = false;
+                        UpdateForms(new[] { form });
+                        return View("external_login_confirmation");
+                    }
                 }
                 else
                 {
-                    form.Errors = result.Errors.ToArray();
+                    form.Errors = formErrors;
+                    form.PostedSuccessfully = false;
 
-                    return this.View("confirmation-external-login");
+                    UpdateForms(new[] { form });
+
+                    return View("external_login_confirmation");
+                }
+            }
+
+            Context.ErrorMessage = "Liquid error: Form context was not found.";
+
+            return View("error");
+        }
+
+        //
+        // POST: /Accout/ForgotPassword
+        [HttpPost]
+        [AllowAnonymous]
+        public async Task<ActionResult> ForgotPassword(ForgotPasswordFormModel formModel)
+        {
+            var form = GetForm(formModel.form_type);
+
+            if (form != null)
+            {
+                var formErrors = GetFormErrors(ModelState);
+
+                if (formErrors == null)
+                {
+                    form.Errors = null;
+                    form.PostedSuccessfully = true;
+
+                    var user = await _userManager.FindByNameAsync(formModel.Email);
+
+                    if (user != null)
+                    {
+                        var securityMessage = new VirtoCommerce.ApiClient.DataContracts.Security.SecurityMessage
+                        {
+                            CallbackUrl = Url.Action("ResetPassword", "Account",
+                                new { UserId = user.Id, Code = "token" }, protocol: Request.Url.Scheme),
+                            Language = Context.Language,
+                            SendingMethod = "Email",
+                            StoreId = Context.StoreId,
+                            UserId = user.Id
+                        };
+
+                        UpdateForms(new[] { form });
+
+                        await _sucurityClient.SendMessageAsync(securityMessage);
+                    }
+                    else
+                    {
+                        form.Errors = new SubmitFormErrors("form", "User not found");
+                        form.PostedSuccessfully = false;
+
+                        UpdateForms(new[] { form });
+                    }
+                }
+                else
+                {
+                    form.Errors = formErrors;
+                    form.PostedSuccessfully = false;
+
+                    UpdateForms(new[] { form });
                 }
             }
             else
             {
-                form.Errors = result.Errors.ToArray();
+                Context.ErrorMessage = "Liquid error: Form context was not found.";
 
-                return this.View("confirmation-external-login");
+                return View("error");
             }
+
+            return new RedirectResult(Url.Action("Login", "Account") + "#recover");
         }
 
         //
-        // GET: /Account/LogOff
+        // GET: /Account/ResetPassword
+        [HttpGet]
+        [AllowAnonymous]
+        public async Task<ActionResult> ResetPassword(string code, string userId)
+        {
+            if (string.IsNullOrEmpty(code))
+            {
+                return View("error");
+            }
+
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null)
+            {
+                Context.ErrorMessage = "User was not found.";
+
+                return View("error");
+            }
+
+            var forms = new[]
+            {
+                new SubmitForm
+                {
+                    ActionLink = VirtualPathUtility.ToAbsolute("~/account/resetpassword"),
+                    FormType = "reset_customer_password",
+                    Id = "reset_customer_password",
+                    PasswordNeeded = true
+                }
+            };
+
+            UpdateForms(forms, true);
+
+            Session["ResetPassword_UserId"] = userId;
+            Session["ResetPassword_Token"] = code;
+
+            return View("customers/reset_password");
+        }
+
+        //
+        // POST: /Account/ResetPassword
+        [HttpPost]
+        [AllowAnonymous]
+        public async Task<ActionResult> ResetPassword(ResetPasswordFormModel formModel)
+        {
+            var form = GetForm(formModel.form_type);
+
+            if (form != null)
+            {
+                var formErrors = GetFormErrors(ModelState);
+
+                string userId = Session["ResetPassword_UserId"] as string;
+                string token = Session["ResetPassword_Token"] as string;
+
+                if (userId == null && userId == null)
+                {
+                    Context.ErrorMessage = "Not eonough info for reseting password";
+
+                    return View("error");
+                }
+
+                if (formErrors == null)
+                {
+                    var result = await _sucurityClient.ResetPasswordAsync(userId, token, formModel.Password);
+
+                    if (result.Succeeded)
+                    {
+                        Session.Remove("ResetPassword_UserId");
+                        Session.Remove("ResetPassword_Token");
+
+                        return View("password_reseted");
+                    }
+                    else
+                    {
+                        form.Errors = new SubmitFormErrors("form", result.Errors.First());
+                        form.PostedSuccessfully = false;
+
+                        UpdateForms(new[] { form });
+                    }
+                }
+                else
+                {
+                    form.Errors = formErrors;
+                    form.PostedSuccessfully = false;
+
+                    UpdateForms(new[] { form });
+                }
+            }
+            else
+            {
+                Context.ErrorMessage = "Liquid error: Form context was not found.";
+
+                return View("error");
+            }
+
+            return View("customers/reset_password");
+        }
+
+        //
+        // GET: /Account/LogOFf
         [HttpGet]
         public ActionResult LogOff()
         {
             _authenticationManager.SignOut();
 
-            return RedirectToAction("Index", "Home");
+            return Redirect("~");
+        }
+
+        //
+        // GET: /Account/Register
+        [HttpGet]
+        [AllowAnonymous]
+        public ActionResult Register()
+        {
+            var forms = new[]
+            {
+                new SubmitForm
+                {
+                    ActionLink = VirtualPathUtility.ToAbsolute("~/account/register"),
+                    FormType = "create_customer",
+                    Id = "create_customer",
+                    PasswordNeeded = true
+                }
+            };
+
+            UpdateForms(forms, true);
+
+            return View("customers/register");
+        }
+
+        //
+        // POST: /Account/Register
+        [HttpPost]
+        [AllowAnonymous]
+        public async Task<ActionResult> Register(RegisterFormModel formModel)
+        {
+            var form = GetForm(formModel.form_type);
+
+            if (form != null)
+            {
+                var formErrors = GetFormErrors(ModelState);
+
+                if (formErrors == null)
+                {
+                    form.Errors = null;
+                    form.PostedSuccessfully = true;
+
+                    var user = new ApplicationUser
+                    {
+                        FullName = string.Format("{0} {1}", formModel.FirstName.Trim(), formModel.LastName.Trim()).Trim(),
+                        Email = formModel.Email,
+                        StoreId = this.Context.StoreId,
+                        UserName = formModel.Email
+                    };
+
+                    var result = await _userManager.CreateAsync(user, formModel.Password);
+
+                    if (result.Succeeded)
+                    {
+                        user = await _userManager.FindByNameAsync(user.UserName);
+
+                        this.Context.Customer = await this.CustomerService.CreateCustomerAsync(formModel.Email, formModel.FirstName, formModel.LastName, user.Id, null);
+
+                        await _signInManager.PasswordSignInAsync(formModel.Email, formModel.Password, isPersistent: false, shouldLockout: false);
+
+                        return RedirectToAction("Index", "Account");
+                    }
+                    else
+                    {
+                        form.Errors = new SubmitFormErrors("form", result.Errors.First());
+                        form.PostedSuccessfully = false;
+
+                        UpdateForms(new[] { form });
+                    }
+                }
+                else
+                {
+                    form.Errors = formErrors;
+                    form.PostedSuccessfully = false;
+
+                    UpdateForms(new[] { form });
+                }
+            }
+            else
+            {
+                return View("error");
+            }
+
+            return View("customers/register");
         }
 
         //
@@ -509,7 +601,7 @@ namespace VirtoCommerce.Web.Controllers
         [HttpGet]
         public ActionResult Addresses()
         {
-            var forms = this.Context.Forms.ToList();
+            var forms = new List<SubmitForm>();
 
             foreach (var address in this.Context.Customer.Addresses)
             {
@@ -525,7 +617,7 @@ namespace VirtoCommerce.Web.Controllers
                 addressForm.Properties["country"] = address.Country;
                 addressForm.Properties["country_code"] = address.CountryCode;
                 addressForm.Properties["first_name"] = address.FirstName;
-                addressForm.Properties["id"] = "address_form_" + address.Id;
+                addressForm.Properties["id"] = address.Id;
                 addressForm.Properties["last_name"] = address.LastName;
                 addressForm.Properties["phone"] = address.Phone;
                 addressForm.Properties["province"] = address.Province;
@@ -538,14 +630,13 @@ namespace VirtoCommerce.Web.Controllers
             var newAddress = new SubmitForm
             {
                 ActionLink = "/Account/NewAddress",
-                Id = "new",
+                Id = "address_form_new",
                 FormType = "customer_address"
             };
-            newAddress.Properties.Add("id", "address_form_new");
 
             forms.Add(newAddress);
 
-            this.Context.Forms = forms.ToArray();
+            UpdateForms(forms.ToArray());
 
             return this.View("customers/addresses");
         }
@@ -555,15 +646,15 @@ namespace VirtoCommerce.Web.Controllers
         [HttpPost]
         public async Task<ActionResult> NewAddress(NewAddressFormModel formModel)
         {
-            var form = this.Service.GetForm(formModel.form_type);
+            var form = GetForm(formModel.form_type);
 
-            if (!this.ModelState.IsValid)
-            {
-                var errors = this.ModelState.Values.SelectMany(v => v.Errors);
-                form.Errors = new[] { errors.Select(e => e.ErrorMessage).FirstOrDefault() };
+            //if (!this.ModelState.IsValid)
+            //{
+            //    var errors = this.ModelState.Values.SelectMany(v => v.Errors);
+            //    form.Errors = new[] { errors.Select(e => e.ErrorMessage).FirstOrDefault() };
 
-                return this.View("customers/addresses");
-            }
+            //    return this.View("customers/addresses");
+            //}
 
             var customer = this.Context.Customer;
             customer.Addresses.Add(formModel.AsWebModel());
@@ -578,15 +669,15 @@ namespace VirtoCommerce.Web.Controllers
         [HttpPost]
         public async Task<ActionResult> EditAddress(CustomerAddressFormModel formModel, string id)
         {
-            var form = this.Service.GetForm(formModel.form_type);
+            var form = GetForm(formModel.form_type);
 
-            if (!this.ModelState.IsValid)
-            {
-                var errors = this.ModelState.Values.SelectMany(v => v.Errors);
-                form.Errors = new[] { errors.Select(e => e.ErrorMessage).FirstOrDefault() };
+            //if (!this.ModelState.IsValid)
+            //{
+            //    var errors = this.ModelState.Values.SelectMany(v => v.Errors);
+            //    form.Errors = new[] { errors.Select(e => e.ErrorMessage).FirstOrDefault() };
 
-                return this.View("customers/addresses");
-            }
+            //    return this.View("customers/addresses");
+            //}
 
             var customer = this.Context.Customer;
             var customerAddress = customer.Addresses.FirstOrDefault(a => a.Id == id);
@@ -595,24 +686,6 @@ namespace VirtoCommerce.Web.Controllers
             {
                 customer.Addresses.Remove(customerAddress);
                 customer.Addresses.Add(formModel.AsWebModel());
-
-                await this.CustomerService.UpdateCustomerAsync(customer);
-            }
-
-            return RedirectToAction("Addresses", "Account");
-        }
-
-        //
-        // POST: /Account/Addresses
-        [HttpPost]
-        public async Task<ActionResult> Addresses(string id)
-        {
-            var customer = this.Context.Customer;
-            var customerAddress = customer.Addresses.FirstOrDefault(a => a.Id == id);
-
-            if (customerAddress != null)
-            {
-                customer.Addresses.Remove(customerAddress);
 
                 await this.CustomerService.UpdateCustomerAsync(customer);
             }
@@ -670,7 +743,7 @@ namespace VirtoCommerce.Web.Controllers
                 return Redirect(returnUrl);
             }
 
-            return RedirectToAction("Index", "Home");
+            return Redirect("~");
         }
     }
 }

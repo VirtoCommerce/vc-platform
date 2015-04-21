@@ -62,7 +62,7 @@ namespace VirtoCommerce.Web.Models.Helpers
                 }
             }
 
-            await this._commerceService.SaveChangesAsync(cart);
+            cart = await this._commerceService.SaveChangesAsync(cart);
 
             return cart;
         }

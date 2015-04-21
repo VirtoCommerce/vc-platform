@@ -109,7 +109,13 @@ namespace VirtoCommerce.Web
                     if (string.IsNullOrEmpty(cookie))
                     {
                         cookie = Guid.NewGuid().ToString();
-                        context.Response.Cookies.Append(anonymousCookieName, cookie);
+
+                        var cookieOptions = new CookieOptions
+                        {
+                            Expires = DateTime.UtcNow.AddDays(30)
+                        };
+
+                        context.Response.Cookies.Append(anonymousCookieName, cookie, cookieOptions);
                     }
 
                     ctx.CustomerId = cookie;
@@ -122,7 +128,7 @@ namespace VirtoCommerce.Web
                 ctx.PageTitle = ctx.Shop.Name;
                 ctx.Collections = await commerceService.GetCollectionsAsync();
                 ctx.Pages = new PageCollection();
-                ctx.Forms = commerceService.GetForms();
+                //ctx.Forms = commerceService.GetForms();
 
                 var cart = await commerceService.GetCurrentCartAsync();
                 if (cart == null)
@@ -266,8 +272,6 @@ namespace VirtoCommerce.Web
                             s => s.StoreId.Equals(storeId, StringComparison.OrdinalIgnoreCase));
                 }
             }
-
-            store.Checkout.GuestLogin = true;
 
             return store;
         }

@@ -39,9 +39,10 @@ namespace VirtoCommerce.CoreModule.Web.Security
                     .OrderBy(r => r.Name)
                     .Skip(request.Start)
                     .Take(request.Count)
+                    .Include(r => r.RolePermissions.Select(rp => rp.Permission))
                     .ToArray();
 
-                result.Roles = roles.Select(r => r.ToCoreModel(false)).ToArray();
+                result.Roles = roles.Select(r => r.ToCoreModel(true)).ToArray();
             }
 
             return result;
