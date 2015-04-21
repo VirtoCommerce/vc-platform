@@ -1,7 +1,7 @@
 ﻿<div class="blade-content __large-wide">
     <div class="blade-inner">
         <div class="inner-block">
-            <form class="form">
+            <form class="form" name="formScope">
                 <div class="form-group">
                     <label class="form-label">Name:</label>
                     <div class="form-input">
@@ -11,11 +11,11 @@
                 <div class="form-group">
                     <label class="form-label">Editorial asset content</label>
                     <div class="form-input __expanded">
-                        <ui-codemirror required ng-model="blade.currentEntity.content" ui-codemirror-opts="editorOptions" placeholder="Enter asset content"></ui-codemirror>
-                        <!--<textarea required cols="60" rows="30" ng-model="blade.currentEntity.content" placeholder="Enter asset content"></textarea>-->
+                        <ui-codemirror required ng-model="blade.currentEntity.content" ui-codemirror-opts="editorOptions"></ui-codemirror>
                     </div>
                 </div>
             </form>
         </div>
     </div>
 </div>
+<div class="blade-static __bottom" ng-include="'Modules/$(VirtoCommerce.Core)/Scripts/common/create.tpl.html'" ng-if="blade.newAsset"></div>

@@ -229,7 +229,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Scripts\directives\" />
-    <Folder Include="Scripts\wizards\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\Core\CommerceFoundation.Data\CommerceFoundation.Data.csproj">

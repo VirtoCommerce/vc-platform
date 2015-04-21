@@ -28,7 +28,8 @@
 
 			bundles.Add(
 				new BetterStyleBundle("~/css/core").Include(
-					"~/Content/codemirror.css",
+                    "~/Scripts/codemirror/codemirror.css",
+                    "~/Scripts/codemirror/fold/foldgutter.css",
 					"~/Content/select.css",
 					"~/Content/angular-multi-select.css",
 					"~/Content/ng-tags-input.css",
