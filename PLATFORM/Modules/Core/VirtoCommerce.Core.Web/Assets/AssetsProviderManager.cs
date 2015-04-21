@@ -7,7 +7,7 @@ using VirtoCommerce.Foundation.Assets.Model;
 using VirtoCommerce.Foundation.Assets.Repositories;
 using VirtoCommerce.Foundation.Assets.Services;
 using VirtoCommerce.Foundation.Frameworks;
-using VirtoCommerce.Framework.Web.Asset;
+using VirtoCommerce.Platform.Core.Asset;
 
 namespace VirtoCommerce.CoreModule.Web.Assets
 {

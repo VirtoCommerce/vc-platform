@@ -1,6 +1,6 @@
 using System;
 
-namespace VirtoCommerce.Framework.Web.Modularity.Exceptions
+namespace VirtoCommerce.Platform.Core.Modularity.Exceptions
 {
     /// <summary>
     /// Represents the exception that is thrown when there is a circular dependency

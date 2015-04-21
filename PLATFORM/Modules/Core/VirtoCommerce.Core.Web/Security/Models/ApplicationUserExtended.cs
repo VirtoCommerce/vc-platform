@@ -2,7 +2,7 @@
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using VirtoCommerce.Foundation.Data.Security.Identity;
-using VirtoCommerce.Framework.Web.Security;
+using VirtoCommerce.Platform.Core.Security;
 
 namespace VirtoCommerce.CoreModule.Web.Security.Models
 {

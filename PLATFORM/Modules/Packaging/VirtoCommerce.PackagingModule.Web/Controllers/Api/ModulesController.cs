@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Description;
 using VirtoCommerce.Foundation.Assets.Repositories;
-using VirtoCommerce.Framework.Web.Asset;
 using VirtoCommerce.PackagingModule.Services;
 using VirtoCommerce.PackagingModule.Web.Converters;
+using VirtoCommerce.Platform.Core.Asset;
 using moduleModel = VirtoCommerce.PackagingModule.Model;
 using webModel = VirtoCommerce.PackagingModule.Web.Model;
 

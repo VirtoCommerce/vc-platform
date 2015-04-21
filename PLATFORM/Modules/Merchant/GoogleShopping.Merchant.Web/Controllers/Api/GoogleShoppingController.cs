@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using VirtoCommerce.Platform.Core.Notification;
+using System.Collections;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Net;
@@ -7,7 +8,6 @@ using System.Web.Http.Description;
 using System.Collections.Generic;
 using Microsoft.Practices.ObjectBuilder2;
 using VirtoCommerce.Domain.Catalog.Model;
-using VirtoCommerce.Framework.Web.Notification;
 
 #region Google usings
 using Google.Apis.ShoppingContent.v2;

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace VirtoCommerce.Framework.Web.Modularity
+namespace VirtoCommerce.Platform.Core.Modularity
 {
     public class ModuleInitializerOptions : IModuleInitializerOptions
     {

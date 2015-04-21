@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Microsoft.Practices.ServiceLocation;
 using Microsoft.Practices.Unity;
 
-namespace VirtoCommerce.Framework.Web
+namespace VirtoCommerce.Platform.Core
 {
     /// <summary>
     /// Defines a <see cref="IUnityContainer"/> adapter for the <see cref="IServiceLocator"/> interface to be used by the Prism Library.

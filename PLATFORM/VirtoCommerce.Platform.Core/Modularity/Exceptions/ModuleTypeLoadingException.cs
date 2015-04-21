@@ -1,8 +1,8 @@
 using System;
 using System.Globalization;
-using VirtoCommerce.Framework.Web.Properties;
+using VirtoCommerce.Platform.Core.Properties;
 
-namespace VirtoCommerce.Framework.Web.Modularity.Exceptions
+namespace VirtoCommerce.Platform.Core.Modularity.Exceptions
 {
     /// <summary>
     /// Exception thrown by <see cref="IModuleManager"/> implementations whenever 

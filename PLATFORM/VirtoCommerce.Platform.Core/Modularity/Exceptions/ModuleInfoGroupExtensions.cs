@@ -1,7 +1,7 @@
 using System;
-using VirtoCommerce.Framework.Web.Common;
+using VirtoCommerce.Platform.Core.Common;
 
-namespace VirtoCommerce.Framework.Web.Modularity.Exceptions
+namespace VirtoCommerce.Platform.Core.Modularity.Exceptions
 {
     /// <summary>
     /// Defines extension methods for the <see cref="ModuleInfoGroup"/> class.

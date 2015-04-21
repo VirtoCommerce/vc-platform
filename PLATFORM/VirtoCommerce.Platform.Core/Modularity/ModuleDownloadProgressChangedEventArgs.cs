@@ -1,7 +1,7 @@
 using System;
 using System.ComponentModel;
 
-namespace VirtoCommerce.Framework.Web.Modularity
+namespace VirtoCommerce.Platform.Core.Modularity
 {
     /// <summary>
     /// Provides progress information as a module downloads.

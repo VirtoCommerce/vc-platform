@@ -4,9 +4,9 @@ using System.Linq;
 using VirtoCommerce.Foundation.Frameworks;
 using VirtoCommerce.Foundation.Security.Model;
 using VirtoCommerce.Foundation.Security.Repositories;
-using VirtoCommerce.Framework.Web.Modularity;
-using VirtoCommerce.Framework.Web.Security;
-using VirtoCommerce.Framework.Web.Settings;
+using VirtoCommerce.Platform.Core.Modularity;
+using VirtoCommerce.Platform.Core.Security;
+using VirtoCommerce.Platform.Core.Settings;
 
 namespace VirtoCommerce.CoreModule.Web.Security
 {

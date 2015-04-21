@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using Common.Logging;
-using VirtoCommerce.Framework.Web.Modularity.Exceptions;
-using VirtoCommerce.Framework.Web.Properties;
+using VirtoCommerce.Platform.Core.Modularity.Exceptions;
+using VirtoCommerce.Platform.Core.Properties;
 
-namespace VirtoCommerce.Framework.Web.Modularity
+namespace VirtoCommerce.Platform.Core.Modularity
 {
     /// <summary>
     /// Component responsible for coordinating the modules' type loading and module initialization process. 

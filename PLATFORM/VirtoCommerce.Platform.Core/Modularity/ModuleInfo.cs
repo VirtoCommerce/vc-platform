@@ -1,7 +1,7 @@
 using System;
 using System.Collections.ObjectModel;
 
-namespace VirtoCommerce.Framework.Web.Modularity
+namespace VirtoCommerce.Platform.Core.Modularity
 {
     /// <summary>
     /// Defines the metadata that describes a module.

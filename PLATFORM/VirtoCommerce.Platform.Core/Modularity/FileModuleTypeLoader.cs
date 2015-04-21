@@ -1,8 +1,8 @@
 using System;
-using System.IO;
 using System.Collections.Generic;
+using System.IO;
 
-namespace VirtoCommerce.Framework.Web.Modularity
+namespace VirtoCommerce.Platform.Core.Modularity
 {
     /// <summary>
     /// Loads modules from an arbitrary location on the filesystem. This typeloader is only called if 

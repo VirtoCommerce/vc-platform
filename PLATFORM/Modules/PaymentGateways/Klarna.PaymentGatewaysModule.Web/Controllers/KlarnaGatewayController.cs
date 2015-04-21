@@ -10,7 +10,6 @@ using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.Description;
 using VirtoCommerce.Domain.Payment.Services;
-using VirtoCommerce.Framework.Web.Settings;
 
 namespace Klarna.PaymentGatewaysModule.Web.Controllers
 {

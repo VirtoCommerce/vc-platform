@@ -8,7 +8,6 @@ using VirtoCommerce.Domain.Catalog.Services;
 using VirtoCommerce.Foundation;
 using VirtoCommerce.Foundation.Frameworks;
 using VirtoCommerce.Foundation.Frameworks.Caching;
-using VirtoCommerce.Framework.Web.Settings;
 using foundation = VirtoCommerce.Foundation.Catalogs.Model;
 using module = VirtoCommerce.Domain.Catalog.Model;
 

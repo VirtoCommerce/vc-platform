@@ -1,7 +1,7 @@
 ﻿using System.Globalization;
 using System.Xml.Serialization;
 
-namespace VirtoCommerce.Framework.Web.Modularity
+namespace VirtoCommerce.Platform.Core.Modularity
 {
     public class ModuleSetting
     {

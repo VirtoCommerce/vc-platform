@@ -1,6 +1,6 @@
 using System;
 
-namespace VirtoCommerce.Framework.Web.Modularity
+namespace VirtoCommerce.Platform.Core.Modularity
 {
     /// <summary>
     /// Defines the interface for the service that will retrieve and initialize the application's modules.

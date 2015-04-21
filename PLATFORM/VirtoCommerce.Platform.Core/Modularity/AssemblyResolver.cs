@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using VirtoCommerce.Framework.Web.Properties;
+using VirtoCommerce.Platform.Core.Properties;
 
-namespace VirtoCommerce.Framework.Web.Modularity
+namespace VirtoCommerce.Platform.Core.Modularity
 {
     /// <summary>
     /// Handles AppDomain's AssemblyResolve event to be able to load assemblies dynamically in 

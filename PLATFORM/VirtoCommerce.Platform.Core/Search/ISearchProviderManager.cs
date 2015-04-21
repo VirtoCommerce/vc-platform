@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using VirtoCommerce.Foundation.Search;
 
-namespace VirtoCommerce.Framework.Web.Search
+namespace VirtoCommerce.Platform.Core.Search
 {
     public interface ISearchProviderManager
     {

@@ -13,9 +13,9 @@ using VirtoCommerce.Foundation.Data.Importing;
 using VirtoCommerce.Foundation.Frameworks.Caching;
 using VirtoCommerce.Foundation.Importing.Repositories;
 using VirtoCommerce.Foundation.Importing.Services;
-using VirtoCommerce.Framework.Web.Modularity;
-using VirtoCommerce.Framework.Web.Notification;
-using VirtoCommerce.Framework.Web.Settings;
+using VirtoCommerce.Platform.Core.Modularity;
+using VirtoCommerce.Platform.Core.Notification;
+using VirtoCommerce.Platform.Core.Settings;
 
 namespace VirtoCommerce.CatalogModule.Web
 {

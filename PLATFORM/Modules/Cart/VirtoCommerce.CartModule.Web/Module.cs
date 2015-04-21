@@ -8,7 +8,7 @@ using VirtoCommerce.Domain.Cart.Services;
 using VirtoCommerce.Foundation.Data.Infrastructure;
 using VirtoCommerce.Foundation.Data.Infrastructure.Interceptors;
 using VirtoCommerce.Foundation.Frameworks.Workflow.Services;
-using VirtoCommerce.Framework.Web.Modularity;
+using VirtoCommerce.Platform.Core.Modularity;
 
 namespace VirtoCommerce.CartModule.Web
 {

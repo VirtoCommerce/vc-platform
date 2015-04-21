@@ -2,9 +2,9 @@ using System;
 using System.Globalization;
 using Common.Logging;
 using Microsoft.Practices.ServiceLocation;
-using VirtoCommerce.Framework.Web.Modularity.Exceptions;
+using VirtoCommerce.Platform.Core.Modularity.Exceptions;
 
-namespace VirtoCommerce.Framework.Web.Modularity
+namespace VirtoCommerce.Platform.Core.Modularity
 {
     /// <summary>
     /// Implements the <see cref="IModuleInitializer"/> interface. Handles loading of a module based on a type.

@@ -6,7 +6,7 @@ using VirtoCommerce.Foundation;
 using VirtoCommerce.Foundation.Frameworks;
 using VirtoCommerce.Foundation.Stores.Model;
 using VirtoCommerce.Foundation.Stores.Repositories;
-using VirtoCommerce.Framework.Web.Settings;
+using VirtoCommerce.Platform.Core.Settings;
 
 namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 {

@@ -6,7 +6,7 @@ using System.Web.Http.Controllers;
 using System.Web.Http.Filters;
 using Microsoft.Practices.ObjectBuilder2;
 
-namespace VirtoCommerce.Framework.Web.Common
+namespace VirtoCommerce.Platform.Core.Common
 {
     public class ArrayInputAttribute : ActionFilterAttribute
     {

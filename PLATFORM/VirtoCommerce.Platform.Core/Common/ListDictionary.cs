@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace VirtoCommerce.Framework.Web.Common
+namespace VirtoCommerce.Platform.Core.Common
 {
     /// <summary>
     /// A dictionary of lists.

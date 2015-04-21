@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using VirtoCommerce.Framework.Web.Properties;
+using VirtoCommerce.Platform.Core.Properties;
 
-namespace VirtoCommerce.Framework.Web.Modularity
+namespace VirtoCommerce.Platform.Core.Modularity
 {
     public class ManifestModuleCatalog : ModuleCatalog
     {

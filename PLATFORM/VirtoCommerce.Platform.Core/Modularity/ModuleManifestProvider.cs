@@ -2,7 +2,7 @@
 using System.IO;
 using System.Linq;
 
-namespace VirtoCommerce.Framework.Web.Modularity
+namespace VirtoCommerce.Platform.Core.Modularity
 {
     public class ModuleManifestProvider : IModuleManifestProvider
     {

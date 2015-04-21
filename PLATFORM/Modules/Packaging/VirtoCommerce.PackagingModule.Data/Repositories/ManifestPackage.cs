@@ -5,7 +5,7 @@ using System.IO.Packaging;
 using System.Linq;
 using System.Runtime.Versioning;
 using NuGet;
-using VirtoCommerce.Framework.Web.Modularity;
+using VirtoCommerce.Platform.Core.Modularity;
 
 namespace VirtoCommerce.PackagingModule.Data.Repositories
 {

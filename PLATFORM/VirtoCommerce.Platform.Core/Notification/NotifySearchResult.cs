@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
-namespace VirtoCommerce.Framework.Web.Notification
+namespace VirtoCommerce.Platform.Core.Notification
 {
 	public class NotifySearchResult
 	{

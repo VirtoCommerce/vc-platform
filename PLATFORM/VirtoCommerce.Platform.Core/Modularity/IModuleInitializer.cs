@@ -1,4 +1,4 @@
-namespace VirtoCommerce.Framework.Web.Modularity
+namespace VirtoCommerce.Platform.Core.Modularity
 {
     /// <summary>
     /// Declares a service which initializes the modules into the application.

@@ -1,6 +1,6 @@
 ﻿using VirtoCommerce.Foundation.Assets.Factories;
 using VirtoCommerce.Foundation.Data.Asset;
-using VirtoCommerce.Framework.Web.Asset;
+using VirtoCommerce.Platform.Core.Asset;
 
 namespace VirtoCommerce.CoreModule.Web.Assets
 {

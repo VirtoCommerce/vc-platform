@@ -7,8 +7,8 @@ using VirtoCommerce.Content.Data.Repositories;
 using VirtoCommerce.Content.Data.Services;
 using VirtoCommerce.Foundation.Assets.Repositories;
 using VirtoCommerce.Foundation.Data.Infrastructure.Interceptors;
-using VirtoCommerce.Framework.Web.Modularity;
-using VirtoCommerce.Framework.Web.Settings;
+using VirtoCommerce.Platform.Core.Modularity;
+using VirtoCommerce.Platform.Core.Settings;
 using VirtoCommerce.ThemeModule.Web.Controllers.Api;
 
 namespace VirtoCommerce.ThemeModule.Web

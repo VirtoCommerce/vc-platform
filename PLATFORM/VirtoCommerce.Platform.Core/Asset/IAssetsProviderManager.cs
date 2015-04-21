@@ -1,7 +1,7 @@
 ﻿using System;
 using VirtoCommerce.Foundation.Assets.Repositories;
 
-namespace VirtoCommerce.Framework.Web.Asset
+namespace VirtoCommerce.Platform.Core.Asset
 {
     public interface IAssetsProviderManager
     {

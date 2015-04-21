@@ -1,6 +1,6 @@
 ﻿using System.Xml.Serialization;
 
-namespace VirtoCommerce.Framework.Web.Modularity
+namespace VirtoCommerce.Platform.Core.Modularity
 {
     [XmlType("module")]
     public class ModuleManifest

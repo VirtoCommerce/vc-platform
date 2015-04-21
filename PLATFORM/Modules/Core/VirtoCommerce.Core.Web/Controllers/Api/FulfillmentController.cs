@@ -6,8 +6,6 @@ using System.Web;
 using System.Web.Http;
 using System.Web.Http.Description;
 using VirtoCommerce.Domain.Payment.Services;
-using VirtoCommerce.Framework.Web.Notification;
-using VirtoCommerce.Framework.Web.Settings;
 using VirtoCommerce.CoreModule.Web.Converters;
 using VirtoCommerce.Domain.Fulfillment.Services;
 using webModel = VirtoCommerce.CoreModule.Web.Model;

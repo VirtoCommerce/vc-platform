@@ -1,4 +1,6 @@
-﻿namespace VirtoCommerce.Platform.Web
+﻿using VirtoCommerce.Platform.Core.Modularity;
+
+namespace VirtoCommerce.Platform.Web
 {
 	#region
 
@@ -10,9 +12,7 @@
 
 	using Microsoft.Practices.ServiceLocation;
 
-	using VirtoCommerce.Framework.Web.Modularity;
-
-	#endregion
+    #endregion
 
 	public class BundleConfig
 	{

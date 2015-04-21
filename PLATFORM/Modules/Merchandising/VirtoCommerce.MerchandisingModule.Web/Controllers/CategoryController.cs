@@ -9,9 +9,9 @@ using VirtoCommerce.Domain.Catalog.Services;
 using VirtoCommerce.Foundation.AppConfig.Model;
 using VirtoCommerce.Foundation.Frameworks;
 using VirtoCommerce.Foundation.Stores.Repositories;
-using VirtoCommerce.Framework.Web.Common;
-using VirtoCommerce.Framework.Web.Settings;
 using VirtoCommerce.MerchandisingModule.Web.Converters;
+using VirtoCommerce.Platform.Core.Common;
+using VirtoCommerce.Platform.Core.Settings;
 using moduleModel = VirtoCommerce.Domain.Catalog.Model;
 using webModel = VirtoCommerce.MerchandisingModule.Web.Model;
 

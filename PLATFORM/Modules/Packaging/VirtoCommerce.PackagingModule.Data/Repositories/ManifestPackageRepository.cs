@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using NuGet;
-using VirtoCommerce.Framework.Web.Modularity;
+using VirtoCommerce.Platform.Core.Modularity;
 
 namespace VirtoCommerce.PackagingModule.Data.Repositories
 {

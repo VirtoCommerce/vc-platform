@@ -153,6 +153,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.MarketingModu
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.MarketingModule.Expressions", "Modules\Marketing\VirtoCommerce.MarketingModule.DynamicExpression\VirtoCommerce.MarketingModule.Expressions.csproj", "{9E4301FC-541E-4880-A28C-4F617D272B69}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.Platform.Data", "VirtoCommerce.Platform.Data\VirtoCommerce.Platform.Data.csproj", "{39AFD233-B2F7-4178-817D-0A339C57525D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -383,6 +385,10 @@ Global
 		{9E4301FC-541E-4880-A28C-4F617D272B69}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9E4301FC-541E-4880-A28C-4F617D272B69}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9E4301FC-541E-4880-A28C-4F617D272B69}.Release|Any CPU.Build.0 = Release|Any CPU
+		{39AFD233-B2F7-4178-817D-0A339C57525D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{39AFD233-B2F7-4178-817D-0A339C57525D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{39AFD233-B2F7-4178-817D-0A339C57525D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{39AFD233-B2F7-4178-817D-0A339C57525D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
