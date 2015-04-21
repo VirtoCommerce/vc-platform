@@ -9,19 +9,33 @@ namespace VirtoCommerce.Web.Models.Routing
 {
     public class CanonicalizedAttribute : ActionFilterAttribute
     {
-        private readonly bool _usePermanentRedirect;
-        private readonly Type[] _skipControllers;
+        #region Fields
 
-        public CanonicalizedAttribute(params Type[] skipControllers) : this(true, skipControllers) { }
+        private readonly Type[] _skipControllers;
+        private readonly bool _usePermanentRedirect;
+
+        #endregion
+
+        #region Constructors and Destructors
+
+        public CanonicalizedAttribute(params Type[] skipControllers)
+            : this(true, skipControllers)
+        {
+        }
+
         public CanonicalizedAttribute(bool usePermanentRedirect, params Type[] skipControllers)
         {
-            _usePermanentRedirect = usePermanentRedirect;
-            _skipControllers = skipControllers;
+            this._usePermanentRedirect = usePermanentRedirect;
+            this._skipControllers = skipControllers;
         }
+
+        #endregion
+
+        #region Public Methods and Operators
 
         public override void OnActionExecuting(ActionExecutingContext filterContext)
         {
-            if (_skipControllers.Any(x => filterContext.ActionDescriptor.ControllerDescriptor.ControllerType == x))
+            if (this._skipControllers.Any(x => filterContext.ActionDescriptor.ControllerDescriptor.ControllerType == x))
             {
                 return;
             }
@@ -41,7 +55,8 @@ namespace VirtoCommerce.Web.Models.Routing
                     context.Request.Url.Host,
                     context.Request.Url.Port == 80 ? "" : ":" + context.Request.Url.Port);
 
-                var path = HttpUtility.UrlDecode(string.Concat(baseUri, context.Request.Url.AbsolutePath));
+                //var path = HttpUtility.UrlDecode(string.Concat(baseUri, context.Request.Url.AbsolutePath));
+                var path = string.Concat(baseUri, context.Request.Url.AbsolutePath);
 
                 if (!string.IsNullOrEmpty(path))
                 {
@@ -49,12 +64,11 @@ namespace VirtoCommerce.Web.Models.Routing
                     var queryString = context.Request.QueryString;
                     var needRedirect = false;
 
-
                     //make language code allways be five symbols
-                    if (filterContext.RouteData.Values.ContainsKey(Routing.Constants.Language) &&
-                        filterContext.RouteData.Values[Routing.Constants.Language] as string != null)
+                    if (filterContext.RouteData.Values.ContainsKey(Constants.Language) &&
+                        filterContext.RouteData.Values[Constants.Language] as string != null)
                     {
-                        var lang = filterContext.RouteData.Values[Routing.Constants.Language].ToString();
+                        var lang = filterContext.RouteData.Values[Constants.Language].ToString();
                         if (lang.Length < 5)
                         {
                             try
@@ -62,7 +76,7 @@ namespace VirtoCommerce.Web.Models.Routing
                                 var cult = CultureInfo.CreateSpecificCulture(lang);
                                 if (!lang.Equals(cult.Name, StringComparison.InvariantCultureIgnoreCase))
                                 {
-                                    filterContext.RouteData.Values[Routing.Constants.Language] =
+                                    filterContext.RouteData.Values[Constants.Language] =
                                         cult.Name.ToLowerInvariant();
                                     needRedirect = true;
                                 }
@@ -75,7 +89,8 @@ namespace VirtoCommerce.Web.Models.Routing
                     }
 
                     //Make sure we allways use same virtual path as Route provides
-                    var routePath = filterContext.RouteData.Route.GetVirtualPath(filterContext.RequestContext,
+                    var routePath = filterContext.RouteData.Route.GetVirtualPath(
+                        filterContext.RequestContext,
                         filterContext.RouteData.Values);
 
                     if (routePath != null && !string.IsNullOrEmpty(routePath.VirtualPath))
@@ -95,7 +110,6 @@ namespace VirtoCommerce.Web.Models.Routing
                         //Rebuild querystring from scratch
                         var newQuery = string.Empty;
 
-
                         //First goes search filter ordered based on document
                         //var helper = StoreHelper.SearchFilter;
                         var urlHelper = new UrlHelper(context.Request.RequestContext);
@@ -113,7 +127,7 @@ namespace VirtoCommerce.Web.Models.Routing
                         //}
 
                         //Order remaining parameters
-                        var otherParams = queryString.AllKeys/*.Where(key => !parameters.ContainsKey(key))*/.OrderBy(k => k)
+                        var otherParams = queryString.AllKeys /*.Where(key => !parameters.ContainsKey(key))*/.OrderBy(k => k)
                             .ToDictionary<string, string, object>(key => key, key => queryString[key]);
 
                         if (otherParams.Any())
@@ -133,7 +147,6 @@ namespace VirtoCommerce.Web.Models.Routing
                             query = newQuery;
                             needRedirect = true;
                         }
-
                     }
 
                     // check for any upper-case letters:
@@ -153,32 +166,36 @@ namespace VirtoCommerce.Web.Models.Routing
                         }
                     }
 
-
                     if (needRedirect)
                     {
-                        Redirect(context, path, query);
+                        this.Redirect(context, path, query);
                         return;
                     }
                 }
             }
 
             base.OnActionExecuting(filterContext);
-
         }
 
+        #endregion
 
         // correct as many 'rules' as possible per redirect to avoid
         // issuing too many redirects per request.
+
+        #region Methods
+
         private void Redirect(HttpContextBase context, string path, string query)
         {
             var newLocation = path;
 
             if (newLocation.EndsWith("/"))
+            {
                 newLocation = newLocation.Substring(0, newLocation.Length - 1);
+            }
 
             newLocation = newLocation.ToLower(CultureInfo.InvariantCulture);
 
-            if (_usePermanentRedirect)
+            if (this._usePermanentRedirect)
             {
                 context.Response.RedirectPermanent(newLocation + query, true);
             }
@@ -188,5 +205,6 @@ namespace VirtoCommerce.Web.Models.Routing
             }
         }
 
+        #endregion
     }
 }

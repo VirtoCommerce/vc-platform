@@ -112,11 +112,12 @@ namespace VirtoCommerce.Web.Models.Routing
              * */
 
             var defaultRoute = new NormalizeRoute(
-                new Route(string.Format("{{{0}}}/{{controller}}/{{action}}/{{id}}", Constants.Language),
+                new Route(string.Format("{0}/{{controller}}/{{action}}/{{id}}", Constants.StoreRoute),
                     new RouteValueDictionary { { "id", UrlParameter.Optional }, { "action", "Index" } },
                     new RouteValueDictionary
                     {
-                        { Constants.Language, new LanguageRouteConstraint() }
+                        { Constants.Language, new LanguageRouteConstraint() },
+                        { Constants.Store, new StoreRouteConstraint() }
                     },
                     new RouteValueDictionary { { "namespaces", new[] { "VirtoCommerce.Web.Controllers" } } },
                     new MvcRouteHandler()));
@@ -134,9 +135,9 @@ namespace VirtoCommerce.Web.Models.Routing
         new RouteValueDictionary { { "namespaces", new[] { "VirtoCommerce.Web.Controllers" } } },
         new MvcRouteHandler()));
             */
-            routes.Add("Store", storeRoute);
             routes.Add("Item", itemRoute);
             routes.Add("Category", categoryRoute);
+            routes.Add("Store", storeRoute);
 
             //Other actions
             routes.Add("RelativeDefault", defaultRoute);
