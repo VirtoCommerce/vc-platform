@@ -238,7 +238,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\angular-multi-select.css" />
-    <Content Include="Content\codemirror.css" />
+    <Content Include="Scripts\codemirror\codemirror.css" />
     <Content Include="Content\fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Content\ng-tags-input.css" />
     <Content Include="Content\ng-tags-input.min.css" />
@@ -360,6 +360,14 @@
     <Content Include="Scripts\angular-messages.min.js" />
     <Content Include="Scripts\angular-mocks.js" />
     <Content Include="Scripts\codemirror\codemirror.js" />
+    <Content Include="Scripts\codemirror\fold\brace-fold.js" />
+    <Content Include="Scripts\codemirror\fold\comment-fold.js" />
+    <Content Include="Scripts\codemirror\fold\foldcode.js" />
+    <Content Include="Scripts\codemirror\fold\foldgutter.css" />
+    <Content Include="Scripts\codemirror\fold\foldgutter.js" />
+    <Content Include="Scripts\codemirror\fold\indent-fold.js" />
+    <Content Include="Scripts\codemirror\fold\markdown-fold.js" />
+    <Content Include="Scripts\codemirror\fold\xml-fold.js" />
     <Content Include="Scripts\common\directives\angular-money-directive.js" />
     <Content Include="Scripts\angular-multi-select.js" />
     <Content Include="Scripts\angular-resource.js" />
@@ -1316,9 +1324,13 @@
       <Project>{E7FC9A51-1B39-4BDC-983A-8A059C5FC58B}</Project>
       <Name>CommerceFoundation</Name>
     </ProjectReference>
-    <ProjectReference Include="..\VirtoCommerce.Framework.Web\VirtoCommerce.Framework.Web.csproj">
+    <ProjectReference Include="..\VirtoCommerce.Platform.Core\VirtoCommerce.Platform.Core.csproj">
       <Project>{f7c9313b-522e-4619-abc9-8c7d4600d6b5}</Project>
-      <Name>VirtoCommerce.Framework.Web</Name>
+      <Name>VirtoCommerce.Platform.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\VirtoCommerce.Platform.Data\VirtoCommerce.Platform.Data.csproj">
+      <Project>{39afd233-b2f7-4178-817d-0a339c57525d}</Project>
+      <Name>VirtoCommerce.Platform.Data</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup>

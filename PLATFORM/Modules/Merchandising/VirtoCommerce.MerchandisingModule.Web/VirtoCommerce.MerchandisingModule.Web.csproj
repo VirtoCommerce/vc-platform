@@ -190,9 +190,9 @@
       <Project>{9F5493C4-0080-4BB5-9C12-25D0CDBEA2DD}</Project>
       <Name>VirtoCommerce.Search.Index</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\VirtoCommerce.Framework.Web\VirtoCommerce.Framework.Web.csproj">
+    <ProjectReference Include="..\..\..\VirtoCommerce.Platform.Core\VirtoCommerce.Platform.Core.csproj">
       <Project>{f7c9313b-522e-4619-abc9-8c7d4600d6b5}</Project>
-      <Name>VirtoCommerce.Framework.Web</Name>
+      <Name>VirtoCommerce.Platform.Core</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Catalog\VirtoCommerce.CatalogModule.Data\VirtoCommerce.CatalogModule.Data.csproj">
       <Project>{b8c758d7-822f-40d8-b28c-ef21c873af49}</Project>

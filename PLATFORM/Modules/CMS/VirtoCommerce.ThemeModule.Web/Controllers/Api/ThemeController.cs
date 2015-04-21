@@ -12,9 +12,8 @@ using System.Web.Http.Description;
 using VirtoCommerce.Content.Data.Services;
 using VirtoCommerce.Content.Data.Utility;
 using VirtoCommerce.Foundation.Assets.Repositories;
-using VirtoCommerce.Framework.Web.Asset;
-using VirtoCommerce.Framework.Web.Common;
-using VirtoCommerce.Framework.Web.Settings;
+using VirtoCommerce.Platform.Core.Common;
+using VirtoCommerce.Platform.Core.Settings;
 using VirtoCommerce.ThemeModule.Web.Converters;
 using VirtoCommerce.ThemeModule.Web.Models;
 

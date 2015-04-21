@@ -2,9 +2,9 @@
 using System.Linq;
 using webModels = VirtoCommerce.ThemeModule.Web.Models;
 using domainModels = VirtoCommerce.Content.Data.Models;
-using VirtoCommerce.Framework.Web.Common;
 using System.Text;
 using VirtoCommerce.Content.Data.Utility;
+using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.ThemeModule.Web.Converters
 {

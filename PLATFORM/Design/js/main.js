@@ -138,6 +138,17 @@ $(function () {
         });
     }
 
+    $('.form-input.__info .btn').on('click', function () {
+        var self = $(this),
+            posLeft = self.offset().left + 60,
+            posTop = self.offset().top,
+            toolText = self.find('.btn-ico').data('text');
+
+        $('.tooltip').remove();
+
+        $('body').prepend('<div class="tooltip" style="left: ' + posLeft + 'px; top: ' + posTop + 'px;"><div class="tooltip-cnt">' + toolText + '</div></div>');
+    });
+
     /* Close dropdown if click in other area window */
     $(document).on("click", function (event) {
         if (!$('.nav-bar').is(event.target) && !$('.nav-bar').has(event.target).length) {
@@ -159,6 +170,10 @@ $(function () {
 
         if (!$('.menu.__context').is(event.target) && !$('.menu.__context').has(event.target).length) {
             $('.menu.__context').remove();
+        }
+
+        if (!$('.tooltip, .btn').is(event.target) && !$('.tooltip, .btn').has(event.target).length) {
+            $('.tooltip').remove();
         }
     });
 

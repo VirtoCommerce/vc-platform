@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.marketingModule')
-.controller('itemsDynamicContentListController', ['$scope', 'marketing_dynamicContents_res_search', 'bladeNavigationService', function ($scope, marketing_dynamicContents_res_search, bladeNavigationService) {
+.controller('itemsDynamicContentListController', ['$scope', 'marketing_dynamicContents_res_search', 'marketing_dynamicContents_res_folders', 'bladeNavigationService', function ($scope, marketing_dynamicContents_res_search, marketing_dynamicContents_res_folders, bladeNavigationService) {
 	var blade = $scope.blade;
 	blade.choosenFolder = 'ContentItem';
 	blade.currentEntity = undefined;
@@ -7,7 +7,7 @@
 	$scope.selectedNodeId = null;
 
 	blade.initializeBlade = function () {
-		marketing_dynamicContents_res_search.search({ folder: blade.choosenFolder, respGroup: 'Full' }, function (data) {
+		marketing_dynamicContents_res_search.search({ folder: blade.choosenFolder, respGroup: '18' }, function (data) {
 			blade.currentEntities = data.contentFolders;
 		});
 
@@ -52,8 +52,8 @@
 			subtitle: 'Edit content items folder element',
 			entity: data,
 			isNew: false,
-			controller: 'addFolderPlaceholderController',
-			template: 'Modules/$(VirtoCommerce.Marketing)/Scripts/dynamicContent/blades/placeholders/folder-details.tpl.html'
+			controller: 'addFolderContentItemsController',
+			template: 'Modules/$(VirtoCommerce.Marketing)/Scripts/dynamicContent/blades/items/folder-details.tpl.html'
 		};
 		bladeNavigationService.showBlade(newBlade, $scope.blade);
 	}
@@ -94,18 +94,16 @@
 		});
 	}
 
-	blade.folderClick = function (contentItem) {
-		if (angular.isUndefined(blade.choosenFolder) || !angular.equals(blade.choosenFolder, contentItem.id)) {
-			blade.choosenFolder = contentItem.id;
-			blade.currentEntity = contentItem;
-			marketing_dynamicContents_res_search.search({ folder: contentItem.id, respGroup: 'Full' }, function (data) {
-				contentItem.childrenFolders = data.contentFolders;
-				contentItem.items = data.contentItems;
+	blade.folderClick = function (contentItemFolder) {
+		blade.closeChildrenBlades();
+
+		if (angular.isUndefined(blade.choosenFolder) || !angular.equals(blade.choosenFolder, contentItemFolder.id)) {
+			blade.choosenFolder = contentItemFolder.id;
+			blade.currentEntity = contentItemFolder;
+			marketing_dynamicContents_res_search.search({ folder: contentItemFolder.id, respGroup: '18' }, function (data) {
+				contentItemFolder.childrenFolders = data.contentFolders;
+				contentItemFolder.items = data.contentItems;
 			});
-		}
-		else {
-			blade.choosenFolder = contentItem.parentFolderId;
-			blade.currentEntity = undefined;
 		}
 	}
 
@@ -137,31 +135,58 @@
 
 	blade.updateChoosen = function () {
 		if (blade.choosenFolder === 'ContentItem') {
-			marketing_dynamicContents_res_search.search({ folder: blade.choosenFolder, respGroup: 'WithFolders' }, function (data) {
+			marketing_dynamicContents_res_search.search({ folder: blade.choosenFolder, respGroup: '18' }, function (data) {
 				blade.currentEntities = data.contentFolders;
 			});
 		}
 		else {
-			marketing_dynamicContents_res_search.search({ folder: blade.choosenFolder, respGroup: 'WithFolders' }, function (data) {
+			marketing_dynamicContents_res_search.search({ folder: blade.choosenFolder, respGroup: '18' }, function (data) {
 				blade.currentEntity.childrenFolders = data.contentFolders;
-			});
-
-			marketing_dynamicContents_res_search.search({ folder: blade.choosenFolder, respGroup: 'WithContentItems' }, function (data) {
 				blade.currentEntity.items = data.contentItems;
 			});
 		}
 	};
 
-	$scope.bladeToolbarCommands = [
-		{
-			name: "Refresh", icon: 'fa fa-refresh',
-			executeMethod: function () {
-				$scope.blade.refresh();
-			},
-			canExecuteMethod: function () {
-				return true;
+	blade.clickDefault = function () {
+		blade.choosenFolder = 'ContentItem';
+		blade.currentEntity = undefined;
+	}
+
+	blade.deleteFolder = function (data) {
+		marketing_dynamicContents_res_folders.delete({ ids: [data.id] }, function () {
+			if (data.id === blade.choosenFolder) {
+				blade.choosenFolder = data.parentFolderId;
+				var coll = blade.currentEntities;
+				var newColl = [];
+				var ent = undefined;
+				while(coll.length > 0) {
+					angular.forEach(coll, function (folder) {
+						if (folder.id === blade.choosenFolder) {
+							ent = folder;
+						}
+						angular.forEach(folder.childrenFolders, function (folder) {
+							newColl.push(folder)
+						})
+					});
+					if (ent !== undefined) {
+						coll = [];
+					}
+					else {
+						coll = newColl;
+					}
+				}
+
+				blade.currentEntity = ent;
 			}
-		},
+
+			marketing_dynamicContents_res_search.search({ folder: blade.choosenFolder, respGroup: '18' }, function (data) {
+				blade.currentEntity.childrenFolders = data.contentFolders;
+				blade.currentEntity.items = data.contentItems;
+			});
+		});
+	}
+
+	$scope.bladeToolbarCommands = [
 		{
 			name: "Add", icon: 'fa fa-plus',
 			executeMethod: function () {

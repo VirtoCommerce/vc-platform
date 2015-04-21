@@ -33,11 +33,11 @@ using VirtoCommerce.Foundation.Search.CQRS;
 using VirtoCommerce.Foundation.Search.Factories;
 using VirtoCommerce.Foundation.Search.Repositories;
 using VirtoCommerce.Foundation.Stores.Repositories;
-using VirtoCommerce.Framework.Web.Modularity;
-using VirtoCommerce.Framework.Web.Settings;
 using VirtoCommerce.MerchandisingModule.Web.BackgroundJobs;
 using VirtoCommerce.MerchandisingModule.Web.Controllers;
 using VirtoCommerce.MerchandisingModule.Web.Services;
+using VirtoCommerce.Platform.Core.Modularity;
+using VirtoCommerce.Platform.Core.Settings;
 using VirtoCommerce.Search.Index;
 
 namespace VirtoCommerce.MerchandisingModule.Web

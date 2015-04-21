@@ -31,10 +31,11 @@
 				{
 					name: "Delete", icon: 'fa fa-trash',
 					executeMethod: function () {
-						blade.delete();
+						blade.parentBlade.deleteFolder(blade.entity);
+						bladeNavigationService.closeBlade(blade);
 					},
 					canExecuteMethod: function () {
-						return !angular.equals(blade.originalEntity, blade.entity);
+						return true;
 					}
 				}
 			];
@@ -52,6 +53,7 @@
 		}
 		else {
 			marketing_dynamicContents_res_folders.update({}, blade.entity, function (data) {
+				blade.parentBlade.updateChoosen();
 				blade.originalEntity = angular.copy(blade.entity);
 			});
 		}

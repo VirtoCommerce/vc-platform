@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using VirtoCommerce.Framework.Web.Asset;
+using VirtoCommerce.Platform.Core.Asset;
 
 namespace VirtoCommerce.CoreModule.Web.Assets
 {

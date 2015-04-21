@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using VirtoCommerce.Platform.Core.Notification;
+using System.Collections;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Net;
@@ -7,7 +8,6 @@ using System.Web.Http.Description;
 using System.Collections.Generic;
 using Microsoft.Practices.ObjectBuilder2;
 using VirtoCommerce.Domain.Catalog.Model;
-using VirtoCommerce.Framework.Web.Notification;
 
 #region Google usings
 using Google.Apis.ShoppingContent.v2;
@@ -119,7 +119,6 @@ namespace GoogleShopping.MerchantModule.Web.Controllers.Api
         }
 
         [HttpGet]
-        [ResponseType(typeof(void))]
         [Route("products/sync/batch/{catalogId}/{categoryId}")]
         public IHttpActionResult BatchCategoryProducts(string catalogId, string categoryId)
         {
@@ -130,7 +129,7 @@ namespace GoogleShopping.MerchantModule.Web.Controllers.Api
             }
             products.Entries.ForEach(item => item.MerchantId = _settingsManager.MerchantId);
             var res = _contentService.Products.Custombatch(products).Execute();
-            return Ok(res);
+            return Ok(new[] { res.Entries.Count });
         }
 
         private ICollection<string> GetOutdatedProducts(IEnumerable<ProductStatus> productStatuses)

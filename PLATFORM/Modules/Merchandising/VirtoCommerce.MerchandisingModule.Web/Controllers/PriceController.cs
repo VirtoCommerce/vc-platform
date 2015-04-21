@@ -10,10 +10,10 @@ using VirtoCommerce.Foundation.Frameworks;
 using VirtoCommerce.Foundation.Frameworks.Extensions;
 using VirtoCommerce.Foundation.Frameworks.Tagging;
 using VirtoCommerce.Foundation.Stores.Repositories;
-using VirtoCommerce.Framework.Web.Common;
-using VirtoCommerce.Framework.Web.Settings;
 using VirtoCommerce.MerchandisingModule.Web.Converters;
 using VirtoCommerce.MerchandisingModule.Web.Model;
+using VirtoCommerce.Platform.Core.Common;
+using VirtoCommerce.Platform.Core.Settings;
 
 namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 {

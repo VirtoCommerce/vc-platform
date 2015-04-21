@@ -15,8 +15,8 @@ using VirtoCommerce.Foundation.Data.Security.Identity;
 using VirtoCommerce.Foundation.Frameworks;
 using VirtoCommerce.Foundation.Frameworks.Caching;
 using VirtoCommerce.Foundation.Security.Model;
-using VirtoCommerce.Framework.Web.Security;
-using VirtoCommerce.Framework.Web.Settings;
+using VirtoCommerce.Platform.Core.Security;
+using VirtoCommerce.Platform.Core.Settings;
 
 namespace VirtoCommerce.CoreModule.Web.Security
 {

@@ -72,9 +72,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\VirtoCommerce.Framework.Web\VirtoCommerce.Framework.Web.csproj">
+    <ProjectReference Include="..\..\..\VirtoCommerce.Platform.Core\VirtoCommerce.Platform.Core.csproj">
       <Project>{f7c9313b-522e-4619-abc9-8c7d4600d6b5}</Project>
-      <Name>VirtoCommerce.Framework.Web</Name>
+      <Name>VirtoCommerce.Platform.Core</Name>
     </ProjectReference>
     <ProjectReference Include="..\VirtoCommerce.PackagingModule\VirtoCommerce.PackagingModule.csproj">
       <Project>{569f3d73-80dd-4e8a-93a4-4cca2751d495}</Project>
@@ -99,4 +99,3 @@
   </Target>
   -->
 </Project>
-

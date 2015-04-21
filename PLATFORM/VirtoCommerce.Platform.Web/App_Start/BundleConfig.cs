@@ -1,4 +1,6 @@
-﻿namespace VirtoCommerce.Platform.Web
+﻿using VirtoCommerce.Platform.Core.Modularity;
+
+namespace VirtoCommerce.Platform.Web
 {
 	#region
 
@@ -10,9 +12,7 @@
 
 	using Microsoft.Practices.ServiceLocation;
 
-	using VirtoCommerce.Framework.Web.Modularity;
-
-	#endregion
+    #endregion
 
 	public class BundleConfig
 	{
@@ -28,7 +28,8 @@
 
 			bundles.Add(
 				new BetterStyleBundle("~/css/core").Include(
-					"~/Content/codemirror.css",
+                    "~/Scripts/codemirror/codemirror.css",
+                    "~/Scripts/codemirror/fold/foldgutter.css",
 					"~/Content/select.css",
 					"~/Content/angular-multi-select.css",
 					"~/Content/ng-tags-input.css",

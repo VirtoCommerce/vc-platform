@@ -8,8 +8,8 @@ using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
 using Unity.WebApi;
-using VirtoCommerce.Framework.Web;
-using VirtoCommerce.Framework.Web.Modularity;
+using VirtoCommerce.Platform.Core;
+using VirtoCommerce.Platform.Core.Modularity;
 
 namespace VirtoCommerce.Platform.Web
 {

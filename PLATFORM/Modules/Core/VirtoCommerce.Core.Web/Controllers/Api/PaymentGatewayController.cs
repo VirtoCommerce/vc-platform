@@ -7,8 +7,6 @@ using System.Web.Http;
 using System.Web.Http.Description;
 using VirtoCommerce.CoreModule.Web.Model;
 using VirtoCommerce.Domain.Payment.Services;
-using VirtoCommerce.Framework.Web.Notification;
-using VirtoCommerce.Framework.Web.Settings;
 using VirtoCommerce.CoreModule.Web.Converters;
 
 namespace VirtoCommerce.CoreModule.Web.Controllers.Api

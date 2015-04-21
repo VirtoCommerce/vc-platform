@@ -17,7 +17,7 @@ using VirtoCommerce.Foundation.Catalogs.Model;
 using VirtoCommerce.Foundation.Frameworks.Extensions;
 using VirtoCommerce.Foundation.Importing.Repositories;
 using VirtoCommerce.Foundation.Importing.Services;
-using VirtoCommerce.Framework.Web.Notification;
+using VirtoCommerce.Platform.Core.Notification;
 using foundation = VirtoCommerce.Foundation.Importing.Model;
 using webModel = VirtoCommerce.CatalogModule.Web.Model;
 

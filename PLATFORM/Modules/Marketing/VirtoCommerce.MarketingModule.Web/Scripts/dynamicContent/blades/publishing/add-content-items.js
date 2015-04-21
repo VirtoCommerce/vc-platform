@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.marketingModule')
-.controller('addPublishingContentItemsStepController', ['$scope', 'marketing_dynamicContents_res_search', 'bladeNavigationService', function ($scope, marketing_dynamicContents_res_search, bladeNavigationService) {
+.controller('addPublishingContentItemsStepController', ['$scope', 'marketing_dynamicContents_res_search', 'marketing_dynamicContents_res_contentItems', 'bladeNavigationService', function ($scope, marketing_dynamicContents_res_search, marketing_dynamicContents_res_contentItems, bladeNavigationService) {
 	
 	var blade = $scope.blade;
 
@@ -8,8 +8,14 @@
 	blade.currentEntities = [];
 
 	blade.initialize = function () {
-		marketing_dynamicContents_res_search.search({ folder: 'ContentItem', respGroup: 'Full' }, function (data) {
+		marketing_dynamicContents_res_search.search({ folder: 'ContentItem', respGroup: '18' }, function (data) {
 			blade.currentEntities = data.contentFolders;
+		});
+
+		blade.entity.contentItems.forEach(function (el) {
+			marketing_dynamicContents_res_contentItems.get({ id: el.id }, function (data) {
+				el.path = data.path;
+			})
 		});
 
 		blade.isLoading = false;
@@ -23,27 +29,28 @@
 		blade.entity.contentItems = [];
 	}
 
-	blade.deletePlaceholder = function (data) {
+	blade.deleteContentItem = function (data) {
 		blade.entity.contentItems = _.filter(blade.entity.contentItems, function (place) { return !angular.equals(data.id, place.id); });;
 	}
 
 	blade.checkContentItem = function (data) {
-		return _.filter(blade.entity.contentItems, function (ci) { return angular.equals(ci, data); }).length == 0;
+		return _.filter(blade.entity.contentItems, function (ci) { return angular.equals(ci.id, data.id); }).length == 0;
 	}
 
 	blade.folderClick = function (contentItem) {
 		if (angular.isUndefined(blade.choosenFolder) || !angular.equals(blade.choosenFolder, contentItem.id)) {
 			blade.choosenFolder = contentItem.id;
 			blade.currentEntity = contentItem;
-			marketing_dynamicContents_res_search.search({ folder: contentItem.id, respGroup: 'Full' }, function (data) {
+			marketing_dynamicContents_res_search.search({ folder: contentItem.id, respGroup: '18' }, function (data) {
 				contentItem.childrenFolders = data.contentFolders;
 				contentItem.items = data.contentItems;
 			});
 		}
-		else {
-			blade.choosenFolder = contentItem.parentFolderId;
-			blade.currentEntity = undefined;
-		}
+	}
+
+	blade.clickDefault = function () {
+		blade.choosenFolder = 'ContentItem';
+		blade.currentEntity = undefined;
 	}
 
 	blade.checkFolder = function (data) {

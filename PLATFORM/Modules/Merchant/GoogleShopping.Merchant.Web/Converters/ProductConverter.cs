@@ -29,6 +29,15 @@ namespace GoogleShopping.MerchantModule.Web.Converters
             retVal.Condition = "new";
             retVal.GoogleProductCategory = "Media > Books";
             retVal.Gtin = "9780007350896";
+            retVal.Taxes = new[] { new googleModel.ProductTax { Country = "US", Rate = 10, Region = "CA" } };
+            retVal.Shipping = new[]
+            {
+                new googleModel.ProductShipping
+                {
+                    Country = "US",
+                    Price = new googleModel.Price { Currency = "USD", Value = "5"}
+                }
+            };
 
             return retVal;
         }

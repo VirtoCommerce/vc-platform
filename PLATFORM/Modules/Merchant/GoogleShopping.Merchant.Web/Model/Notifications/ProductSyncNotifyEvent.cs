@@ -1,4 +1,4 @@
-﻿using VirtoCommerce.Framework.Web.Notification;
+﻿using VirtoCommerce.Platform.Core.Notification;
 
 namespace GoogleShopping.MerchantModule.Web.Model.Notifications
 {

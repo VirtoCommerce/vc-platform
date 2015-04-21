@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.marketingModule')
-.controller('addPublishingPlaceholdersStepController', ['$scope', 'marketing_dynamicContents_res_search', 'bladeNavigationService', function ($scope, marketing_dynamicContents_res_search, bladeNavigationService) {
+.controller('addPublishingPlaceholdersStepController', ['$scope', 'marketing_dynamicContents_res_search', 'marketing_dynamicContents_res_contentPlaces', 'bladeNavigationService', function ($scope, marketing_dynamicContents_res_search, marketing_dynamicContents_res_contentPlaces, bladeNavigationService) {
 	var blade = $scope.blade;
 
 	blade.choosenFolder = undefined;
@@ -7,15 +7,21 @@
 	blade.currentEntities = [];
 
 	blade.initialize = function () {
-		marketing_dynamicContents_res_search.search({ folder: 'ContentPlace', respGroup: 'Full' }, function (data) {
+		marketing_dynamicContents_res_search.search({ folder: 'ContentPlace', respGroup: '20' }, function (data) {
 			blade.currentEntities = data.contentFolders;
 		});
+
+		blade.entity.contentPlaces.forEach(function(el) {
+			marketing_dynamicContents_res_contentPlaces.get({ id: el.id }, function (data) {
+				el.path = data.path;
+			})
+		});
+		
 
 		blade.isLoading = false;
 	}
 
 	blade.addPlaceholder = function (placeholder) {
-
 
 		blade.entity.contentPlaces.push(placeholder);
 	}
@@ -24,7 +30,7 @@
 		if (angular.isUndefined(blade.choosenFolder) || !angular.equals(blade.choosenFolder, placeholderFolder.id)) {
 			blade.choosenFolder = placeholderFolder.id;
 			blade.currentEntity = placeholderFolder;
-			marketing_dynamicContents_res_search.search({ folder: placeholderFolder.id, respGroup: 'Full' }, function (data) {
+			marketing_dynamicContents_res_search.search({ folder: placeholderFolder.id, respGroup: '20' }, function (data) {
 				placeholderFolder.childrenFolders = data.contentFolders;
 				placeholderFolder.placeholders = data.contentPlaces;
 			});
@@ -70,7 +76,12 @@
 	}
 
 	blade.checkPlaceholder = function (data) {
-		return _.filter(blade.entity.contentPlaces, function (ci) { return angular.equals(ci, data); }).length == 0;
+		return _.filter(blade.entity.contentPlaces, function (ci) { return angular.equals(ci.id, data.id); }).length == 0;
+	}
+
+	blade.clickDefault = function () {
+		blade.choosenFolder = 'ContentItem';
+		blade.currentEntity = undefined;
 	}
 
 	blade.initialize();

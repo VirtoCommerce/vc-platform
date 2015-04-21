@@ -2,6 +2,7 @@
     .factory('gshopping_res_items', [
         '$resource', function($resource) {
             return $resource('api/g/products/sync/batch/:id', { id: '@Id' }, {
+                query: { isArray: false },
                 update: { method: 'PUT' }
             });
         }

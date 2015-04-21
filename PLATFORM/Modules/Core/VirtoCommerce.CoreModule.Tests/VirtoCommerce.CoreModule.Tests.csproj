@@ -76,9 +76,9 @@
       <Project>{3FE4EB14-557A-46BC-94AD-2E9874F85ACE}</Project>
       <Name>VirtoCommerce.Caching.HttpCache</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\VirtoCommerce.Framework.Web\VirtoCommerce.Framework.Web.csproj">
+    <ProjectReference Include="..\..\..\VirtoCommerce.Platform.Core\VirtoCommerce.Platform.Core.csproj">
       <Project>{f7c9313b-522e-4619-abc9-8c7d4600d6b5}</Project>
-      <Name>VirtoCommerce.Framework.Web</Name>
+      <Name>VirtoCommerce.Platform.Core</Name>
     </ProjectReference>
     <ProjectReference Include="..\VirtoCommerce.Core.Web\VirtoCommerce.CoreModule.Web.csproj">
       <Project>{47d7c89c-62a8-44ec-b544-f24e874192ac}</Project>

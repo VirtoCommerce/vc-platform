@@ -5,7 +5,6 @@
 	}
 
 	var blade = $scope.blade;
-	blade.originalEntity = angular.copy(blade.entity);
 
 	blade.initialize = function () {
 		if (!blade.isNew) {
@@ -42,7 +41,16 @@
 			blade.unpackingContentItem();
 		}
 
+		blade.originalEntity = angular.copy(blade.entity);
+
 		blade.isLoading = false;
+	}
+
+	blade.delete = function () {
+		marketing_dynamicContents_res_contentItems.delete({ ids: [blade.entity.id] }, function () {
+			blade.parentBlade.updateChoosen();
+			bladeNavigationService.closeBlade(blade);
+		});
 	}
 
 	blade.saveChanges = function () {
@@ -55,6 +63,7 @@
 		}
 		else {
 			marketing_dynamicContents_res_contentItems.update({}, blade.entity, function (data) {
+				blade.parentBlade.updateChoosen();
 				blade.originalEntity = angular.copy(blade.entity);
 			});
 		}

@@ -1,4 +1,6 @@
-﻿namespace VirtoCommerce.MenuModule.Web
+﻿using VirtoCommerce.Platform.Core.Modularity;
+
+namespace VirtoCommerce.MenuModule.Web
 {
 	#region
 
@@ -11,8 +13,6 @@
 	using VirtoCommerce.Content.Menu.Data.Services;
 	using VirtoCommerce.Foundation.Data.Infrastructure;
 	using VirtoCommerce.Foundation.Data.Infrastructure.Interceptors;
-	using VirtoCommerce.Framework.Web.Modularity;
-	using VirtoCommerce.Framework.Web.Settings;
 	using VirtoCommerce.MenuModule.Web.Controllers.Api;
 
 	#endregion
