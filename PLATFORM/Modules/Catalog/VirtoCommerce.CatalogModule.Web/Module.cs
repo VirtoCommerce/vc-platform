@@ -4,15 +4,12 @@ using VirtoCommerce.CatalogModule.Data.Repositories;
 using VirtoCommerce.CatalogModule.Data.Services;
 using VirtoCommerce.CatalogModule.Web.Controllers.Api;
 using VirtoCommerce.Domain.Catalog.Services;
-using VirtoCommerce.Foundation.Assets.Factories;
-using VirtoCommerce.Foundation.Assets.Repositories;
-using VirtoCommerce.Foundation.Assets.Services;
-using VirtoCommerce.Foundation.Data.Asset;
 using VirtoCommerce.Foundation.Data.Catalogs;
 using VirtoCommerce.Foundation.Data.Importing;
 using VirtoCommerce.Foundation.Frameworks.Caching;
 using VirtoCommerce.Foundation.Importing.Repositories;
 using VirtoCommerce.Foundation.Importing.Services;
+using VirtoCommerce.Platform.Core.Asset;
 using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Core.Notification;
 using VirtoCommerce.Platform.Core.Settings;
@@ -78,7 +75,7 @@ namespace VirtoCommerce.CatalogModule.Web
             var itemService = new ItemServiceImpl(catalogRepFactory, appConfigRepFactory, CacheManager.NoCache);
             var catalogSearchService = new CatalogSearchServiceImpl(catalogRepFactory, itemService, catalogService, categoryService, CacheManager.NoCache);
 
-            var blobStorageProvider = _container.Resolve<IBlobStorageProvider>();
+            var blobUrlResolver = _container.Resolve<IBlobUrlResolver>();
 
             _container.RegisterInstance<IItemService>(itemService);
             _container.RegisterInstance<ICategoryService>(categoryService);
@@ -86,9 +83,9 @@ namespace VirtoCommerce.CatalogModule.Web
             _container.RegisterInstance<IPropertyService>(propertyService);
             _container.RegisterInstance<ICatalogSearchService>(catalogSearchService);
 
-            _container.RegisterType<ProductsController>(new InjectionConstructor(itemService, propertyService, blobStorageProvider));
+			_container.RegisterType<ProductsController>(new InjectionConstructor(itemService, propertyService, blobUrlResolver));
             _container.RegisterType<PropertiesController>(new InjectionConstructor(propertyService, categoryService, catalogService));
-            _container.RegisterType<ListEntryController>(new InjectionConstructor(catalogSearchService, categoryService, itemService, blobStorageProvider));
+			_container.RegisterType<ListEntryController>(new InjectionConstructor(catalogSearchService, categoryService, itemService, blobUrlResolver));
             _container.RegisterType<CategoriesController>(new InjectionConstructor(catalogSearchService, categoryService, propertyService, catalogService));
             _container.RegisterType<CatalogsController>(new InjectionConstructor(catalogService, catalogSearchService, appConfigRepFactory, propertyService));
             #endregion
@@ -103,9 +100,7 @@ namespace VirtoCommerce.CatalogModule.Web
             #region Import dependencies
             Func<IImportRepository> importRepFactory = () => new EFImportingRepository(_connectionStringName);
 
-            var fileSystemAssetRep = new FileSystemBlobAssetRepository("~", new AssetEntityFactory());
-            var assetService = new AssetService(fileSystemAssetRep, fileSystemAssetRep);
-            Func<IImportService> imporServiceFactory = () => new ImportService(importRepFactory(), assetService, catalogRepFactory(), null, null);
+            Func<IImportService> imporServiceFactory = () => new ImportService(importRepFactory(), null, catalogRepFactory(), null, null);
 
             _container.RegisterType<ImportController>(new InjectionConstructor(importRepFactory, imporServiceFactory, catalogRepFactory, _container.Resolve<INotifier>()));
 

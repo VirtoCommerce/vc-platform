@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace VirtoCommerce.CoreModule.Web.Assets
+namespace VirtoCommerce.Platform.Web.Model.Asset
 {
 	public class BlobInfo
 	{

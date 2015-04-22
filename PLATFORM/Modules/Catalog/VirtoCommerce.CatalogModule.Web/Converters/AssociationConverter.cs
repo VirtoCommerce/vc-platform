@@ -1,5 +1,5 @@
 ﻿using Omu.ValueInjecter;
-using VirtoCommerce.Foundation.Assets.Services;
+using VirtoCommerce.Platform.Core.Asset;
 using moduleModel = VirtoCommerce.Domain.Catalog.Model;
 using webModel = VirtoCommerce.CatalogModule.Web.Model;
 
@@ -7,13 +7,13 @@ namespace VirtoCommerce.CatalogModule.Web.Converters
 {
     public static class AssociationConverter
     {
-        public static webModel.ProductAssociation ToWebModel(this moduleModel.ProductAssociation association, IAssetUrlResolver assetUrlResolver)
+        public static webModel.ProductAssociation ToWebModel(this moduleModel.ProductAssociation association, IBlobUrlResolver blobUrlResolver)
         {
             var retVal = new webModel.ProductAssociation();
             retVal.InjectFrom(association);
             if (association.AssociatedProduct != null)
             {
-                var associatedProduct = association.AssociatedProduct.ToWebModel(assetUrlResolver);
+                var associatedProduct = association.AssociatedProduct.ToWebModel(blobUrlResolver);
                 retVal.ProductId = associatedProduct.Id;
                 retVal.ProductCode = associatedProduct.Code;
                 retVal.ProductImg = associatedProduct.ImgSrc;

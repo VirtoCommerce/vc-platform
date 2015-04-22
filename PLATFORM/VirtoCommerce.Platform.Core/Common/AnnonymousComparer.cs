@@ -8,9 +8,11 @@
 * http://linqcomparer.codeplex.com/
 *--------------------------------------------------------------------------*/
 
+using System;
 using System.Collections.Generic;
+using System.Linq;
 
-namespace System.Linq
+namespace VirtoCommerce.Platform.Core.Common
 {
 	public static class AnonymousComparer
 	{
