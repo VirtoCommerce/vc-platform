@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Omu.ValueInjecter;
-using VirtoCommerce.Foundation.Assets.Services;
+using VirtoCommerce.Platform.Core.Asset;
 using moduleModel = VirtoCommerce.Domain.Catalog.Model;
 using webModel = VirtoCommerce.MerchandisingModule.Web.Model;
 
@@ -11,7 +11,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Converters
     {
         #region Public Methods and Operators
 
-        public static moduleModel.CatalogProduct ToModuleModel(this webModel.CatalogItem catalogItem, IAssetUrlResolver assetUrlResolver)
+        public static moduleModel.CatalogProduct ToModuleModel(this webModel.CatalogItem catalogItem, IBlobUrlResolver blobUrlResolver)
         {
             var retVal = new moduleModel.CatalogProduct();
             retVal.InjectFrom(catalogItem);
@@ -22,7 +22,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Converters
                 var isMain = true;
                 foreach (var productImage in catalogItem.Images)
                 {
-                    var image = productImage.ToModuleModel(assetUrlResolver);
+                    var image = productImage.ToModuleModel(blobUrlResolver);
                     image.Type = moduleModel.ItemAssetType.Image;
                     image.Group = isMain ? "primaryimage" : "images";
                     retVal.Assets.Add(image);
@@ -48,7 +48,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Converters
 
         public static webModel.CatalogItem ToWebModel(
             this moduleModel.CatalogProduct product,
-            IAssetUrlResolver assetUrlResolver = null,
+            IBlobUrlResolver blobUrlResolver = null,
             webModel.Product parentProduct = null)
         {
             webModel.CatalogItem retVal = new webModel.Product();
@@ -62,14 +62,14 @@ namespace VirtoCommerce.MerchandisingModule.Web.Converters
             {
                 retVal.Images =
                     product.Assets.Where(x => x.Type == moduleModel.ItemAssetType.Image)
-                        .Select(x => x.ToWebModel(assetUrlResolver))
+                        .Select(x => x.ToWebModel(blobUrlResolver))
                         .ToArray();
             }
 
             if (product.Variations != null && product.Variations.Any())
             {
                 ((webModel.Product)retVal).Variations =
-                    product.Variations.Select(x => x.ToWebModel(assetUrlResolver, (webModel.Product)retVal))
+                    product.Variations.Select(x => x.ToWebModel(blobUrlResolver, (webModel.Product)retVal))
                         .OfType<webModel.ProductVariation>()
                         .ToArray();
             }

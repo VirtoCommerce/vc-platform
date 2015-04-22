@@ -109,7 +109,8 @@ namespace VirtoCommerce.Platform.Web
 					"~/Scripts/textAngular-rangy.min.js")
                     .IncludeDirectory("~/Scripts/codemirror/", "*.js", true)
 					.IncludeDirectory("~/Scripts/app/", "*.js", true)
-					.IncludeDirectory("~/Scripts/common/", "*.js", true));
+                    .IncludeDirectory("~/Scripts/common/", "*.js", true)
+                    .IncludeDirectory("~/Scripts/Packaging/", "*.js", true));
 
 			#endregion
 

@@ -21,8 +21,8 @@ namespace VirtoCommerce.CatalogModule.Test
             var catalogController = new CatalogsController(GetCatalogService(), GetSearchService(), null, GetPropertyService());
             var categoryController = new CategoriesController(GetSearchService(), GetCategoryService(), GetPropertyService(), GetCatalogService());
             var propertyController = new PropertiesController(GetPropertyService(), GetCategoryService(), GetCatalogService());
-            var productController = new ProductsController(GetItemService(), GetPropertyService(), GetAssetUrlResolver());
-            var listEntryController = new ListEntryController(GetSearchService(), GetCategoryService(), GetItemService(), GetAssetUrlResolver());
+            var productController = new ProductsController(GetItemService(), GetPropertyService(), null);
+            var listEntryController = new ListEntryController(GetSearchService(), GetCategoryService(), GetItemService(), null);
 
             //var propertyResult = propertyController.GetNewCatalogProperty("Apple") as OkNegotiatedContentResult<webModel.Property>;
             //var property = propertyResult.Content;

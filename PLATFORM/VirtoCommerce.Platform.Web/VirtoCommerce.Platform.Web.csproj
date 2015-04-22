@@ -125,9 +125,21 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Unity.3.5.1404.0\lib\net45\Microsoft.Practices.Unity.RegistrationByConvention.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.Web.XmlTransform, Version=2.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Web.Xdt.2.1.1\lib\net40\Microsoft.Web.XmlTransform.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Newtonsoft.Json.6.0.8\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="NuGet.Core, Version=2.8.50926.602, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\NuGet.Core.2.8.3\lib\net40-Client\NuGet.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Omu.ValueInjecter, Version=2.3.3.0, Culture=neutral, PublicKeyToken=c7694541b0ac80e4, processorArchitecture=MSIL">
+      <HintPath>..\packages\valueinjecter.2.3.3\lib\net35\Omu.ValueInjecter.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="Owin">
       <HintPath>..\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
@@ -235,10 +247,18 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Bootstraper.cs" />
+    <Compile Include="Controllers\Api\AssetsController.cs" />
+    <Compile Include="Controllers\Api\ModulesController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Converters\Packaging\ModuleDescriptorConverter.cs" />
+    <Compile Include="Converters\Packaging\ProgressMessageConverter.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Model\Asset\BlobInfo.cs" />
+    <Compile Include="Model\Packaging\ModuleDescriptor.cs" />
+    <Compile Include="Model\Packaging\ModuleWorkerJob.cs" />
+    <Compile Include="Model\Packaging\ProgressMessage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="UrlRewriterOwinMiddleware.cs" />
@@ -1278,6 +1298,16 @@
     <Content Include="Scripts\ng-focus-on.js" />
     <Content Include="Scripts\ng-google-chart.js" />
     <Content Include="Scripts\ng-tags-input.js" />
+    <Content Include="Scripts\Packaging\blades\module-detail.js" />
+    <Content Include="Scripts\Packaging\blades\module-detail.tpl.html" />
+    <Content Include="Scripts\Packaging\blades\modules-list.js" />
+    <Content Include="Scripts\Packaging\blades\modules-list.tpl.html" />
+    <Content Include="Scripts\Packaging\home.tpl.html" />
+    <Content Include="Scripts\Packaging\packaging.js" />
+    <Content Include="Scripts\Packaging\resources\modules.js" />
+    <Content Include="Scripts\Packaging\wizards\newModule\install-wizard.js" />
+    <Content Include="Scripts\Packaging\wizards\newModule\module-wizard-progress-step.js" />
+    <Content Include="Scripts\Packaging\wizards\newModule\module-wizard-progress-step.tpl.html" />
     <Content Include="Scripts\sortable.js" />
     <Content Include="Scripts\textAngular-rangy.min.js" />
     <Content Include="Scripts\textAngular.min.js" />
@@ -1330,10 +1360,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Core\CommerceFoundation\CommerceFoundation.csproj">
-      <Project>{E7FC9A51-1B39-4BDC-983A-8A059C5FC58B}</Project>
-      <Name>CommerceFoundation</Name>
-    </ProjectReference>
     <ProjectReference Include="..\VirtoCommerce.Platform.Core\VirtoCommerce.Platform.Core.csproj">
       <Project>{f7c9313b-522e-4619-abc9-8c7d4600d6b5}</Project>
       <Name>VirtoCommerce.Platform.Core</Name>
