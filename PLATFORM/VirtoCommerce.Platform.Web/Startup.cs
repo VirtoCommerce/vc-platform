@@ -60,8 +60,8 @@ namespace VirtoCommerce.Platform.Web
                 });
             }
 
-			//Initialize Platform dependencies
-			PlatformInitialize(bootstraper.Container);
+            //Initialize Platform dependencies
+            PlatformInitialize(bootstraper.Container);
 
             // Ensure all modules are loaded
             var moduleManager = bootstraper.Container.Resolve<IModuleManager>();
@@ -84,21 +84,25 @@ namespace VirtoCommerce.Platform.Web
         }
 
 
-		private void PlatformInitialize(IUnityContainer container)
-		{
-			var assetsConnection = ConfigurationManager.ConnectionStrings["AssetsConnectionString"]; 
+        private void PlatformInitialize(IUnityContainer container)
+        {
+            var assetsConnection = ConfigurationManager.ConnectionStrings["AssetsConnectionString"];
 
-			if(assetsConnection != null)
-			{
-				var properties = assetsConnection.ConnectionString.ToDictionary(";", "=");
-				//TODO Parse parameters from connection string
-				var fileSystemBlobProvider = new FileSystemBlobProvider(HostingEnvironment.MapPath(properties["rootPath"]), properties["publicUrl"]);
-				container.RegisterInstance<IBlobStorageProvider>(fileSystemBlobProvider);
-				container.RegisterInstance<IBlobUrlResolver>(fileSystemBlobProvider);
-			}
-			
+            if (assetsConnection != null)
+            {
+                var properties = assetsConnection.ConnectionString.ToDictionary(";", "=");
+                var provider = properties["provider"];
 
-		}
+                if (string.Equals(provider, FileSystemBlobProvider.ProviderName))
+                {
+                    var rootPath = HostingEnvironment.MapPath(properties["rootPath"]);
+                    var publicUrl = properties["publicUrl"];
+                    var fileSystemBlobProvider = new FileSystemBlobProvider(rootPath, publicUrl);
+                    container.RegisterInstance<IBlobStorageProvider>(fileSystemBlobProvider);
+                    container.RegisterInstance<IBlobUrlResolver>(fileSystemBlobProvider);
+                }
+            }
+        }
 
         private static string MakeRelativePath(string rootPath, string fullPath)
         {
