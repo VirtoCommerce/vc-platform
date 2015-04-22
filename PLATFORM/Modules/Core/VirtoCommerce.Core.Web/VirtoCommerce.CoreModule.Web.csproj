@@ -133,6 +133,7 @@
     <Compile Include="Assets\AzureAssetsProvider.cs" />
     <Compile Include="Assets\Model\BlobInfo.cs" />
     <Compile Include="Assets\LocalAssetsProvider.cs" />
+    <Compile Include="Controllers\Api\FrontendSecurityController.cs" />
     <Compile Include="Converters\SecurityConverters.cs" />
     <Compile Include="Controllers\Api\AssetsController.cs" />
     <Compile Include="Hangfire\PermissionBasedAuthorizationFilter.cs" />

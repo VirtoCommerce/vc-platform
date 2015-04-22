@@ -242,16 +242,6 @@ namespace VirtoCommerce.CoreModule.Web.Controllers.Api
             return Ok(retVal);
         }
 
-        [HttpGet]
-        [ResponseType(typeof(IdentityResult))]
-        [Route("users")]
-        public async Task<IHttpActionResult> GetUserByLogin(string loginProvider, string providerKey)
-        {
-            var retVal = await GetUserExtended(loginProvider, providerKey, UserDetails.Full);
-
-            return Ok(retVal);
-        }
-
         /// <summary>
         ///  GET: api/security/users?q=ddd&amp;start=0&amp;count=20
         /// </summary>
@@ -444,66 +434,11 @@ namespace VirtoCommerce.CoreModule.Web.Controllers.Api
                 return BadRequest(String.Join(" ", result.Errors));
             }
         }
-
-        /// <summary>
-        /// POST: api/security/notifications
-        /// </summary>
-        /// <param name="securityMessage"></param>
-        /// <returns></returns>
-        [HttpPost]
-        [Route("users/notifications")]
-        public async Task<IHttpActionResult> CreateSendMessageJob(SecurityMessage securityMessage)
-        {
-            // AO
-            // TODO: Get actual store
-            // TODO: Localize subject and message to user's shop language
-
-            SendingMethod sendingMethod;
-            if (Enum.TryParse(securityMessage.SendingMethod, out sendingMethod))
-            {
-                if (sendingMethod == SendingMethod.Email)
-                {
-                    string code = await UserManager.GeneratePasswordResetTokenAsync(securityMessage.UserId);
-
-                    var uriBuilder = new UriBuilder(securityMessage.CallbackUrl);
-                    var query = HttpUtility.ParseQueryString(uriBuilder.Query);
-                    query["code"] = code;
-                    uriBuilder.Query = query.ToString();
-
-                    string message = string.Format(
-                        "Please reset your password by clicking <strong><a href=\"{0}\">here</a></strong>",
-                        HttpUtility.HtmlEncode(uriBuilder.ToString()));
-                    string subject = string.Format("{0} reset password link", securityMessage.StoreId);
-
-                    BackgroundJob.Enqueue(() => SendEmail(securityMessage.UserId, subject, message));
-
-                    return Ok();
-                }
-            }
-
-            return BadRequest();
-        }
-
-        [HttpPost]
-        [Route("users/resetpassword")]
-        public async Task<IHttpActionResult> ResetPassword(string userId, string token, string newPassword)
-        {
-            var result = await UserManager.ResetPasswordAsync(userId, token, newPassword);
-
-            return Ok(result);
-        }
-
         #endregion
 
         #endregion
 
         #region Helpers
-
-        public void SendEmail(string userId, string subject, string message)
-        {
-            UserManager.SendEmail(userId, subject, message);
-        }
-
         private async Task<ApplicationUserExtended> GetUserExtended(string loginProvider, string providerKey, UserDetails detailsLevel)
         {
             var applicationUser = await UserManager.FindAsync(new UserLoginInfo(loginProvider, providerKey));
