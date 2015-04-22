@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.packaging.wizards.newModule.moduleInstallProgress', [])
-.controller('moduleInstallProgressController', ['$scope', '$interval', 'bladeNavigationService', 'modules', function ($scope, $interval, bladeNavigationService, modules) {
+.controller('moduleInstallProgressController', ['$scope', '$interval', '$window', 'bladeNavigationService', 'modules', function ($scope, $interval, $window, bladeNavigationService, modules) {
     $scope.blade.refresh = function () {
         // $scope.blade.isLoading = true;
 
@@ -25,6 +25,12 @@
         // Make sure that the interval is destroyed too
         stopRefresh();
     });
+
+    $scope.restart = function () {
+        modules.restart({}, function () {
+            $window.location.reload();
+        });
+    }
 
     $scope.blade.refresh();
     var intervalPromise = $interval($scope.blade.refresh, 1500);

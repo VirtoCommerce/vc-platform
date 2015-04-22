@@ -1,5 +1,5 @@
 ﻿<div class="blade-static __bottom">
-    <button class="btn" ng-click="restart()" ng-disabled="!completed">
+    <button class="btn" ng-click="restarted=true; restart();" ng-disabled="!completed || restarted">
         <span>Restart</span>
     </button>
 </div>
