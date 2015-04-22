@@ -30,18 +30,6 @@ namespace VirtoCommerce.Platform.Data.Asset
 
 		#region IBlobStorageProvider members
 
-		public async Task<string> UploadAsync(UploadStreamInfo request)
-		{
-			var task = Task.Run(() => Upload(request));
-			return await task;
-		}
-
-		public async Task<Stream> OpenReadOnlyAsync(string assetKey)
-		{
-			var task = Task.Run(() => OpenReadOnly(assetKey));
-			return await task;
-		}
-
 		public string Upload(UploadStreamInfo request)
 		{
 			if (request == null)

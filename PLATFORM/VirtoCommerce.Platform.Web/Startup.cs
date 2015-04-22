@@ -90,11 +90,24 @@ namespace VirtoCommerce.Platform.Web
 
 			if(assetsConnection != null)
 			{
-				var properties = assetsConnection.ConnectionString.ToDictionary(";", "=");
-				//TODO Parse parameters from connection string
-				var fileSystemBlobProvider = new FileSystemBlobProvider(HostingEnvironment.MapPath(properties["rootPath"]), properties["publicUrl"]);
-				container.RegisterInstance<IBlobStorageProvider>(fileSystemBlobProvider);
-				container.RegisterInstance<IBlobUrlResolver>(fileSystemBlobProvider);
+				IBlobStorageProvider blobProvider = null;
+				IBlobUrlResolver blobUrlResolver = null;
+				
+				if (String.Equals(assetsConnection.ProviderName, "AzureBlobStorage", StringComparison.InvariantCultureIgnoreCase))
+				{
+					var azureBlobProvider = new AzureBlobProvider(assetsConnection.ConnectionString);
+					blobProvider = azureBlobProvider;
+					blobUrlResolver = azureBlobProvider;
+				}
+				else
+				{
+					var properties = assetsConnection.ConnectionString.ToDictionary(";", "=");
+					var fileSystemBlobProvider = new FileSystemBlobProvider(HostingEnvironment.MapPath(properties["rootPath"]), properties["publicUrl"]);
+					blobProvider = fileSystemBlobProvider;
+					blobUrlResolver = fileSystemBlobProvider;
+				}
+				container.RegisterInstance<IBlobStorageProvider>(blobProvider);
+				container.RegisterInstance<IBlobUrlResolver>(blobUrlResolver);
 			}
 			
 

@@ -39,14 +39,14 @@ namespace VirtoCommerce.Platform.Data.Asset
 						FolderName = _folder
 					};
 
-					var link = _blobProvider.Upload(uploadStreamInfo);
+					var blobKey = _blobProvider.Upload(uploadStreamInfo);
 
 					BlobInfos.Add(new BlobInfo
 					{
 						ContentType = fileData.Headers.ContentType.MediaType,
 						FileName = fileInfo.Name,
 						Size = fileInfo.Length,
-						Key = link
+						Key = blobKey
 					});
 					
 				}
