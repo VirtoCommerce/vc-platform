@@ -8,8 +8,8 @@ using System.Web.Http.ModelBinding;
 using VirtoCommerce.CatalogModule.Web.Binders;
 using VirtoCommerce.CatalogModule.Web.Converters;
 using VirtoCommerce.Domain.Catalog.Services;
-using VirtoCommerce.Foundation.Assets.Services;
 using VirtoCommerce.Foundation.Frameworks.Extensions;
+using VirtoCommerce.Platform.Core.Asset;
 using moduleModel = VirtoCommerce.Domain.Catalog.Model;
 using webModel = VirtoCommerce.CatalogModule.Web.Model;
 
@@ -21,16 +21,16 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
         private readonly ICatalogSearchService _searchService;
         private readonly ICategoryService _categoryService;
         private readonly IItemService _itemService;
-        private readonly IAssetUrlResolver _assetUrlResolver;
+		private readonly IBlobUrlResolver _blobUrlResolver;
 
         public ListEntryController(ICatalogSearchService searchService,
                                    ICategoryService categoryService,
-                                   IItemService itemService, IAssetUrlResolver assetUrlResolver)
+                                   IItemService itemService, IBlobUrlResolver blobUrlResolver)
         {
             _searchService = searchService;
             _categoryService = categoryService;
             _itemService = itemService;
-            _assetUrlResolver = assetUrlResolver;
+            _blobUrlResolver = blobUrlResolver;
         }
         // GET: api/catalog/listentries&q='some'&catalog=apple&category=cat1&respGroup=8&skip=0&take=20
         [HttpGet]
@@ -47,7 +47,7 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 
             // all categories
             var categories = serviceResult.Categories.Select(x => new webModel.ListEntryCategory(x.ToWebModel()));
-            var products = serviceResult.Products.Select(x => new webModel.ListEntryProduct(x.ToWebModel(_assetUrlResolver)));
+            var products = serviceResult.Products.Select(x => new webModel.ListEntryProduct(x.ToWebModel(_blobUrlResolver)));
 
             retVal.TotalCount = categories.Count() + serviceResult.TotalCount;
             retVal.ListEntries.AddRange(categories.Skip(start).Take(count));

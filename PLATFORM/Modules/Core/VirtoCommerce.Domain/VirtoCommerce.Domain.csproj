@@ -180,6 +180,7 @@
     <Compile Include="Pricing\Model\PricelistAssignment.cs" />
     <Compile Include="Pricing\Services\IPricingService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Search\ISearchProviderManager.cs" />
     <Compile Include="Store\Model\FulfillmentCenter.cs" />
     <Compile Include="Store\Model\SettingValueType.cs" />
     <Compile Include="Store\Model\Store.cs" />

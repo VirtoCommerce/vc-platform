@@ -1,5 +1,4 @@
-﻿#region
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 using System.Web.Routing;
@@ -7,8 +6,6 @@ using VirtoCommerce.Web.Models;
 using VirtoCommerce.Web.Models.Helpers;
 using VirtoCommerce.Web.Models.Routing;
 using VirtoCommerce.Web.Models.Services;
-
-#endregion
 
 namespace VirtoCommerce.Web.Controllers
 {
@@ -40,7 +37,7 @@ namespace VirtoCommerce.Web.Controllers
         {
             get
             {
-                return this._securityService ?? (this._securityService = new SecurityService(this.HttpContext));
+                return this._securityService ?? (this._securityService = new SecurityService());
             }
         }
 
