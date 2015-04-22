@@ -38,8 +38,6 @@ namespace VirtoCommerce.Web.Models.Services
         {
             Customer customer = null;
 
-            var userInfo = await this._securityClient.GetUserInfo(email);
-
             var contact = await this.GetContactAsync(email);
 
             if (contact != null)
@@ -109,10 +107,6 @@ namespace VirtoCommerce.Web.Models.Services
             contact.Id = id;
             contact = await this._customerClient.CreateContactAsync(contact);
 
-            //var authInfo = await this._securityClient.GetUserInfo(email);
-
-            //contact.Id = authInfo.Id;
-
             return contact.AsWebModel();
         }
         #endregion
@@ -122,11 +116,11 @@ namespace VirtoCommerce.Web.Models.Services
         {
             Contact contact = null;
 
-            var userInfo = await this._securityClient.GetUserInfo(email);
+            var user = await this._securityClient.FindUserByNameAsync(email);
 
-            if (userInfo != null)
+            if (user != null)
             {
-                contact = await this._customerClient.GetContactByIdAsync(userInfo.Id);
+                contact = await this._customerClient.GetContactByIdAsync(user.Id);
             }
 
             return contact;

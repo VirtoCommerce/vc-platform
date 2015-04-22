@@ -11,120 +11,87 @@ using VirtoCommerce.ApiClient.Utilities;
 
 namespace VirtoCommerce.ApiClient
 {
-
-    #region
-
-    #endregion
-
     public class SecurityClient : BaseClient
     {
-        #region Constructors and Destructors
-
-        /// <summary>
-        ///     Initializes a new instance of the SecurityClient class.
-        /// </summary>
-        /// <param name="adminBaseEndpoint">Admin endpoint</param>
-        /// <param name="appId">The API application ID.</param>
-        /// <param name="secretKey">The API secret key.</param>
         public SecurityClient(Uri adminBaseEndpoint, string appId, string secretKey)
             : base(adminBaseEndpoint, new HmacMessageProcessingHandler(appId, secretKey))
         {
         }
 
-        /// <summary>
-        ///     Initializes a new instance of the SecurityClient class.
-        /// </summary>
-        /// <param name="adminBaseEndpoint">Admin endpoint</param>
-        /// <param name="handler"></param>
         public SecurityClient(Uri adminBaseEndpoint, MessageProcessingHandler handler)
             : base(adminBaseEndpoint, handler)
         {
         }
 
-        #endregion
-
-        #region Public Methods and Operators
-
-        public Task CreateAsync(ApplicationUser user)
-        {
-            var requestUri = CreateRequestUri(RelativePaths.Create);
-            return SendAsync(requestUri, HttpMethod.Post, user);
-        }
-
-        public Task DeleteAsync(string userId)
-        {
-            var requestUri = CreateRequestUri(RelativePaths.Delete);
-            return SendAsync(requestUri, HttpMethod.Post, userId);
-        }
-
-        public Task<ApplicationUser> FindAsync(UserLoginInfo loginInfo)
+        public Task<SignInStatus> PasswordSignInAsync(string username, string password)
         {
             var parameters = new[]
             {
-                new KeyValuePair<string, string>("loginProvider", loginInfo.LoginProvider),
-                new KeyValuePair<string, string>("providerKey", loginInfo.ProviderKey)
+                new KeyValuePair<string, string>("username", username),
+                new KeyValuePair<string, string>("password", password),
+                new KeyValuePair<string, string>("isPersistent", "false")
             };
 
-            var requestUri = CreateRequestUri(RelativePaths.Users, parameters);
+            var requesrtUri = CreateRequestUri(RelativePaths.SignIn, parameters);
+
+            return SendAsync<SignInStatus>(requesrtUri, HttpMethod.Post);
+        }
+
+        public Task<IdentityResult> CreateUserAsync(ApplicationUser user)
+        {
+            var requestUri = CreateRequestUri(RelativePaths.Common);
+
+            return SendAsync<ApplicationUser, IdentityResult>(requestUri, HttpMethod.Post, user);
+        }
+
+        public Task<ApplicationUser> FindUserByIdAsync(string userId)
+        {
+            var requestUri = CreateRequestUri(string.Format(RelativePaths.GetUserById, userId));
 
             return GetAsync<ApplicationUser>(requestUri, useCache: false);
         }
 
-        public Task AddLoginAsync(ApplicationUser user, UserLoginInfo login)
+        public Task<ApplicationUser> FindUserByNameAsync(string userName)
         {
-            if (user.Logins == null)
-            {
-                user.Logins = new List<UserLoginInfo>();
-            }
+            var requestUri = CreateRequestUri(string.Format(RelativePaths.GetUserByName, userName));
 
-            user.Logins.Add(login);
-
-            return UpdateAsync(user);
-        }
-
-        public Task<ApplicationUser> FindByEmailAsync(string email)
-        {
-            var requestUri = CreateRequestUri(string.Format(RelativePaths.FindByEmail, email));
             return GetAsync<ApplicationUser>(requestUri, useCache: false);
         }
 
-        public Task<ApplicationUser> FindByIdAsync(string userId)
-        {
-            var requestUri = CreateRequestUri(string.Format(RelativePaths.FindById, userId));
-            return GetAsync<ApplicationUser>(requestUri, useCache: false);
-        }
-
-        public Task<ApplicationUser> FindByNameAsync(string userName)
-        {
-            var requestUri = CreateRequestUri(string.Format(RelativePaths.FindByName, userName));
-            return GetAsync<ApplicationUser>(requestUri, useCache: false);
-        }
-
-        public Task<AuthInfo> GetUserInfo(string userName)
-        {
-            var requestUri = CreateRequestUri(string.Format(RelativePaths.UserInfo, userName));
-            return GetAsync<AuthInfo>(requestUri, useCache: false);
-        }
-
-        public Task UpdateAsync(ApplicationUser user)
-        {
-            var requestUri = CreateRequestUri(RelativePaths.Update);
-            return SendAsync(requestUri, HttpMethod.Put, user);
-        }
-
-        public Task SendMessageAsync(SecurityMessage securityMessage)
-        {
-            var requestUri = CreateRequestUri(RelativePaths.SendMessage);
-            return SendAsync(requestUri, HttpMethod.Post, securityMessage);
-        }
-
-        public Task<IdentityResult> ResetPasswordAsync(string userId, string token, string password)
+        public Task<ApplicationUser> FindUserByLoginAsync(string loginProvider, string providerKey)
         {
             var parameters = new[]
             {
-                new KeyValuePair<string, string>("UserId", userId),
-                new KeyValuePair<string, string>("Token", token),
-                new KeyValuePair<string, string>("NewPassword", password)
+                new KeyValuePair<string, string>("loginProvider", loginProvider),
+                new KeyValuePair<string, string>("providerKey", providerKey)
+            };
+
+            var requestUri = CreateRequestUri(RelativePaths.GetUserByLogin, parameters);
+
+            return GetAsync<ApplicationUser>(requestUri, useCache: false);
+        }
+
+        public Task GenerateResetPasswordTokenAsync(string userId, string storeName, string callbackUrl)
+        {
+            var parameters = new[]
+            {
+                new KeyValuePair<string, string>("userId", userId),
+                new KeyValuePair<string, string>("storeName", callbackUrl),
+                new KeyValuePair<string, string>("callbackUrl", callbackUrl)
+            };
+
+            var requestUri = CreateRequestUri(RelativePaths.GenerateResetPasswordToken, parameters);
+
+            return SendAsync(requestUri, HttpMethod.Post);
+        }
+
+        public Task<IdentityResult> ResetPasswordAsync(string userId, string token, string newPassword)
+        {
+            var parameters = new[]
+            {
+                new KeyValuePair<string, string>("userId", userId),
+                new KeyValuePair<string, string>("token", token),
+                new KeyValuePair<string, string>("newPassword", newPassword)
             };
 
             var requestUri = CreateRequestUri(RelativePaths.ResetPassword, parameters);
@@ -132,33 +99,15 @@ namespace VirtoCommerce.ApiClient
             return SendAsync<IdentityResult>(requestUri, HttpMethod.Post);
         }
 
-        #endregion
-
         protected class RelativePaths
         {
-            #region Constants
-
-            public const string Users = "users";
-
-            public const string Create = "users/create";
-
-            public const string Delete = "users/delete";
-
-            public const string FindByEmail = "users/email/{0}";
-
-            public const string FindById = "users/id/{0}";
-
-            public const string FindByName = "users/name/{0}";
-
-            public const string Update = "users";
-
-            public const string SendMessage = "users/notifications";
-
-            public const string UserInfo = "usersession/{0}";
-
-            public const string ResetPassword = "users/resetpassword";
-
-            #endregion
+            public const string Common = "frontend/user";
+            public const string GetUserById = Common + "/id/{0}";
+            public const string GetUserByName = Common + "/name/{0}";
+            public const string GetUserByLogin = Common + "/login";
+            public const string SignIn = Common + "/signin";
+            public const string GenerateResetPasswordToken = Common + "/password/resettoken";
+            public const string ResetPassword = Common + "/password/reset";
         }
     }
 }

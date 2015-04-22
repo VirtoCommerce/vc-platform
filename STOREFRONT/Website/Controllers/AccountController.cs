@@ -1,50 +1,20 @@
-﻿using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.Owin;
-using Microsoft.Owin.Security;
+﻿using Microsoft.Owin.Security;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
-using VirtoCommerce.ApiClient;
-using VirtoCommerce.ApiClient.Extensions;
+using VirtoCommerce.ApiClient.DataContracts.Security;
 using VirtoCommerce.Web.Models;
 using VirtoCommerce.Web.Models.Convertors;
 using VirtoCommerce.Web.Models.FormModels;
-using VirtoCommerce.Web.Models.Security;
 
 namespace VirtoCommerce.Web.Controllers
 {
     [Authorize]
     public class AccountController : BaseController
     {
-        private const string XsrfKey = "XsrfId";
-
-        private SecurityClient _sucurityClient
-        {
-            get
-            {
-                return ClientContext.Clients.CreateSecurityClient();
-            }
-        }
-
-        private ApplicationSignInManager _signInManager
-        {
-            get
-            {
-                return HttpContext.GetOwinContext().Get<ApplicationSignInManager>();
-            }
-        }
-
-        private ApplicationUserManager _userManager
-        {
-            get
-            {
-                return HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
-            }
-        }
-
         private IAuthenticationManager _authenticationManager
         {
             get
@@ -64,27 +34,27 @@ namespace VirtoCommerce.Web.Controllers
             if (forms == null)
             {
                 forms = new[]
-                {
-                    new SubmitForm
                     {
-                        ActionLink = VirtualPathUtility.ToAbsolute("~/account/login"),
-                        FormType = "customer_login",
-                        Id = "customer_login",
-                        PasswordNeeded = true
-                    },
-                    new SubmitForm
-                    {
-                        ActionLink = VirtualPathUtility.ToAbsolute("~/account/externallogin"),
-                        FormType = "external_login",
-                        Id = "external_login"
-                    },
-                    new SubmitForm
-                    {
-                        ActionLink = VirtualPathUtility.ToAbsolute("~/account/forgotpassword"),
-                        FormType = "recover_customer_password",
-                        Id = "recover_customer_password"
-                    }
-                };
+                        new SubmitForm
+                        {
+                            ActionLink = VirtualPathUtility.ToAbsolute("~/account/login"),
+                            FormType = "customer_login",
+                            Id = "customer_login",
+                            PasswordNeeded = true
+                        },
+                        new SubmitForm
+                        {
+                            ActionLink = VirtualPathUtility.ToAbsolute("~/account/externallogin"),
+                            FormType = "external_login",
+                            Id = "external_login"
+                        },
+                        new SubmitForm
+                        {
+                            ActionLink = VirtualPathUtility.ToAbsolute("~/account/forgotpassword"),
+                            FormType = "recover_customer_password",
+                            Id = "recover_customer_password"
+                        }
+                    };
             }
 
             UpdateForms(forms);
@@ -109,12 +79,14 @@ namespace VirtoCommerce.Web.Controllers
                     form.Errors = null;
                     form.PostedSuccessfully = true;
 
-                    var loginResult = await _signInManager.PasswordSignInAsync(
-                        formModel.Email, formModel.Password, false, true);
+                    var loginResult = await SecurityService.PasswordSingInAsync(
+                        formModel.Email, formModel.Password, false);
 
                     switch (loginResult)
                     {
                         case SignInStatus.Success:
+                            var identity = SecurityService.CreateClaimsIdentity(formModel.Email);
+                            _authenticationManager.SignIn(identity);
                             return RedirectToLocal(returnUrl);
                         case SignInStatus.LockedOut:
                             return View("lockedout");
@@ -142,6 +114,262 @@ namespace VirtoCommerce.Web.Controllers
             Context.ErrorMessage = "Liquid error: Form context was not found.";
 
             return View("error");
+        }
+
+        //
+        // GET: /Account/Register
+        [HttpGet]
+        [AllowAnonymous]
+        public ActionResult Register()
+        {
+            Session["Forms"] = null;
+
+            var forms = new[]
+            {
+                new SubmitForm
+                {
+                    ActionLink = VirtualPathUtility.ToAbsolute("~/account/register"),
+                    FormType = "create_customer",
+                    Id = "create_customer",
+                    PasswordNeeded = true
+                }
+            };
+
+            UpdateForms(forms, true);
+
+            return View("customers/register");
+        }
+
+        //
+        // POST: /Account/Register
+        [HttpPost]
+        [AllowAnonymous]
+        public async Task<ActionResult> Register(RegisterFormModel formModel)
+        {
+            var form = GetForm(formModel.form_type);
+
+            if (form != null)
+            {
+                var formErrors = GetFormErrors(ModelState);
+
+                if (formErrors == null)
+                {
+                    form.Errors = null;
+                    form.PostedSuccessfully = true;
+
+                    var user = new ApplicationUser
+                    {
+                        Email = formModel.Email,
+                        Password = formModel.Password,
+                        UserName = formModel.Email
+                    };
+
+                    var result = await SecurityService.CreateUserAsync(user);
+
+                    if (result.Succeeded)
+                    {
+                        user = await SecurityService.GetUserByNameAsync(user.UserName);
+
+                        Context.Customer = await this.CustomerService.CreateCustomerAsync(
+                            formModel.Email, formModel.FirstName, formModel.LastName, user.Id, null);
+
+                        await SecurityService.PasswordSingInAsync(formModel.Email, formModel.Password, false);
+
+                        var identity = SecurityService.CreateClaimsIdentity(formModel.Email);
+                        _authenticationManager.SignIn(identity);
+
+                        Session["Forms"] = null;
+
+                        return RedirectToAction("Index", "Account");
+                    }
+                    else
+                    {
+                        form.Errors = new SubmitFormErrors("form", result.Errors.First());
+                        form.PostedSuccessfully = false;
+
+                        UpdateForms(new[] { form });
+                    }
+                }
+                else
+                {
+                    form.Errors = formErrors;
+                    form.PostedSuccessfully = false;
+
+                    UpdateForms(new[] { form });
+                }
+            }
+            else
+            {
+                return View("error");
+            }
+
+            return View("customers/register");
+        }
+
+        //
+        // POST: /Account/ForgotPassword
+        [HttpPost]
+        [AllowAnonymous]
+        public async Task<ActionResult> ForgotPassword(ForgotPasswordFormModel formModel)
+        {
+            var form = GetForm(formModel.form_type);
+
+            if (form != null)
+            {
+                var formErrors = GetFormErrors(ModelState);
+
+                if (formErrors == null)
+                {
+                    form.Errors = null;
+                    form.PostedSuccessfully = true;
+
+                    var user = await SecurityService.GetUserByNameAsync(formModel.Email);
+
+                    if (user != null)
+                    {
+                        string callbackUrl = Url.Action("ResetPassword", "Account",
+                            new { UserId = user.Id, Code = "token" }, protocol: Request.Url.Scheme);
+
+                        UpdateForms(new[] { form });
+
+                        await SecurityService.GenerateResetPasswordTokenAsync(
+                            user.Id, Context.Shop.Name, callbackUrl);
+                    }
+                    else
+                    {
+                        form.Errors = new SubmitFormErrors("form", "User not found");
+                        form.PostedSuccessfully = false;
+
+                        UpdateForms(new[] { form });
+                    }
+                }
+                else
+                {
+                    form.Errors = formErrors;
+                    form.PostedSuccessfully = false;
+
+                    UpdateForms(new[] { form });
+                }
+            }
+            else
+            {
+                Context.ErrorMessage = "Liquid error: Form context was not found.";
+
+                return View("error");
+            }
+
+            return new RedirectResult(Url.Action("Login", "Account") + "#recover");
+        }
+
+        //
+        // GET: /Account/ResetPassword
+        [HttpGet]
+        [AllowAnonymous]
+        public async Task<ActionResult> ResetPassword(string code, string userId)
+        {
+            if (string.IsNullOrEmpty(code) && string.IsNullOrEmpty(userId))
+            {
+                Context.ErrorMessage = "Error in URL format";
+
+                return View("error");
+            }
+
+            var user = await SecurityService.GetUserByIdAsync(userId);
+            if (user == null)
+            {
+                Context.ErrorMessage = "User was not found.";
+
+                return View("error");
+            }
+
+            Session["Forms"] = null;
+
+            var forms = new[]
+            {
+                new SubmitForm
+                {
+                    ActionLink = VirtualPathUtility.ToAbsolute("~/account/resetpassword"),
+                    FormType = "reset_customer_password",
+                    Id = "reset_customer_password",
+                    PasswordNeeded = true
+                }
+            };
+
+            UpdateForms(forms, true);
+
+            Session["ResetPassword_UserId"] = userId;
+            Session["ResetPassword_Token"] = code;
+
+            return View("customers/reset_password");
+        }
+
+        //
+        // POST: /Account/ResetPassword
+        [HttpPost]
+        [AllowAnonymous]
+        public async Task<ActionResult> ResetPassword(ResetPasswordFormModel formModel)
+        {
+            var form = GetForm(formModel.form_type);
+
+            if (form != null)
+            {
+                var formErrors = GetFormErrors(ModelState);
+
+                string userId = Session["ResetPassword_UserId"] as string;
+                string token = Session["ResetPassword_Token"] as string;
+
+                if (userId == null && token == null)
+                {
+                    Context.ErrorMessage = "Not enough info for reseting password";
+
+                    return View("error");
+                }
+
+                if (formErrors == null)
+                {
+                    var result = await SecurityService.ResetPasswordAsync(userId, token, formModel.Password);
+
+                    if (result.Succeeded)
+                    {
+                        Session.Remove("ResetPassword_UserId");
+                        Session.Remove("ResetPassword_Token");
+
+                        return View("password_reseted");
+                    }
+                    else
+                    {
+                        form.Errors = new SubmitFormErrors("form", result.Errors.First());
+                        form.PostedSuccessfully = false;
+
+                        UpdateForms(new[] { form });
+                    }
+                }
+                else
+                {
+                    form.Errors = formErrors;
+                    form.PostedSuccessfully = false;
+
+                    UpdateForms(new[] { form });
+                }
+            }
+            else
+            {
+                Context.ErrorMessage = "Liquid error: Form context was not found.";
+
+                return View("error");
+            }
+
+            return View("customers/reset_password");
+        }
+
+        //
+        // GET: /Account/LogOFf
+        [HttpGet]
+        public ActionResult LogOff()
+        {
+            _authenticationManager.SignOut();
+
+            return Redirect("~");
         }
 
         //
@@ -179,20 +407,24 @@ namespace VirtoCommerce.Web.Controllers
                 return View("error");
             }
 
-            var loginResult = await _signInManager.ExternalSignInAsync(loginInfo, false);
-
-            switch (loginResult)
+            var user = await SecurityService.GetUserByLoginAsync(new UserLoginInfo
             {
-                case SignInStatus.Success:
-                    return RedirectToLocal(returnUrl);
-                case SignInStatus.LockedOut:
-                    return View("lockedout");
-                case SignInStatus.RequiresVerification:
-                    return RedirectToAction("SendCode", "Account");
-                case SignInStatus.Failure:
-                default:
-                    return RedirectToAction("ExternalLoginConfirmation", "Account",
-                        new { ReturnUrl = returnUrl, LoginProvider = loginInfo.Login.LoginProvider });
+                LoginProvider = loginInfo.Login.LoginProvider,
+                ProviderKey = loginInfo.Login.ProviderKey
+            });
+
+            if (user == null)
+            {
+                return RedirectToAction("ExternalLoginConfirmation", "Account",
+                    new { ReturnUrl = returnUrl, LoginProvider = loginInfo.Login.LoginProvider });
+            }
+            else
+            {
+                var identity = SecurityService.CreateClaimsIdentity(user.UserName);
+
+                _authenticationManager.SignIn(identity);
+
+                return RedirectToLocal(returnUrl);
             }
         }
 
@@ -210,7 +442,7 @@ namespace VirtoCommerce.Web.Controllers
             }
 
             Session["Forms"] = null;
-            
+
             var forms = new[]
             {
                 new SubmitForm
@@ -257,35 +489,39 @@ namespace VirtoCommerce.Web.Controllers
                     }
 
                     var user = new ApplicationUser { UserName = formModel.Email, Email = formModel.Email };
+                    user.Logins = new List<UserLoginInfo>
+                    {
+                        new UserLoginInfo
+                        {
+                            LoginProvider = loginInfo.Login.LoginProvider,
+                            ProviderKey = loginInfo.Login.ProviderKey
+                        }
+                    };
 
-                    var result = await _userManager.CreateAsync(user);
+                    var result = await SecurityService.CreateUserAsync(user);
+
                     if (result.Succeeded)
                     {
-                        user = await _userManager.FindByNameAsync(formModel.Email);
-                        result = await _userManager.AddLoginAsync(user.Id, loginInfo.Login);
+                        form.Errors = null;
+                        form.PostedSuccessfully = true;
+                        UpdateForms(new[] { form });
 
-                        if (result.Succeeded)
-                        {
-                            await CustomerService.CreateCustomerAsync(
-                                formModel.Email, formModel.Email, null, user.Id, null);
+                        user = await SecurityService.GetUserByNameAsync(formModel.Email);
 
-                            await _signInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
+                        Context.Customer = await this.CustomerService.CreateCustomerAsync(
+                            formModel.Email, formModel.Email, null, user.Id, null);
 
-                            return RedirectToLocal(formModel.ReturnUrl);
-                        }
-                        else
-                        {
-                            form.Errors = new SubmitFormErrors("form", result.Errors.First());
-                            form.PostedSuccessfully = false;
-                            UpdateForms(new[] { form });
-                            return View("external_login_confirmation");
-                        }
+                        var identity = SecurityService.CreateClaimsIdentity(user.UserName);
+                        _authenticationManager.SignIn(identity);
+
+                        return RedirectToLocal(formModel.ReturnUrl);
                     }
                     else
                     {
                         form.Errors = new SubmitFormErrors("form", result.Errors.First());
                         form.PostedSuccessfully = false;
                         UpdateForms(new[] { form });
+
                         return View("external_login_confirmation");
                     }
                 }
@@ -303,257 +539,6 @@ namespace VirtoCommerce.Web.Controllers
             Context.ErrorMessage = "Liquid error: Form context was not found.";
 
             return View("error");
-        }
-
-        //
-        // POST: /Accout/ForgotPassword
-        [HttpPost]
-        [AllowAnonymous]
-        public async Task<ActionResult> ForgotPassword(ForgotPasswordFormModel formModel)
-        {
-            var form = GetForm(formModel.form_type);
-
-            if (form != null)
-            {
-                var formErrors = GetFormErrors(ModelState);
-
-                if (formErrors == null)
-                {
-                    form.Errors = null;
-                    form.PostedSuccessfully = true;
-
-                    var user = await _userManager.FindByNameAsync(formModel.Email);
-
-                    if (user != null)
-                    {
-                        var securityMessage = new VirtoCommerce.ApiClient.DataContracts.Security.SecurityMessage
-                        {
-                            CallbackUrl = Url.Action("ResetPassword", "Account",
-                                new { UserId = user.Id, Code = "token" }, protocol: Request.Url.Scheme),
-                            Language = Context.Language,
-                            SendingMethod = "Email",
-                            StoreId = Context.StoreId,
-                            UserId = user.Id
-                        };
-
-                        UpdateForms(new[] { form });
-
-                        await _sucurityClient.SendMessageAsync(securityMessage);
-                    }
-                    else
-                    {
-                        form.Errors = new SubmitFormErrors("form", "User not found");
-                        form.PostedSuccessfully = false;
-
-                        UpdateForms(new[] { form });
-                    }
-                }
-                else
-                {
-                    form.Errors = formErrors;
-                    form.PostedSuccessfully = false;
-
-                    UpdateForms(new[] { form });
-                }
-            }
-            else
-            {
-                Context.ErrorMessage = "Liquid error: Form context was not found.";
-
-                return View("error");
-            }
-
-            return new RedirectResult(Url.Action("Login", "Account") + "#recover");
-        }
-
-        //
-        // GET: /Account/ResetPassword
-        [HttpGet]
-        [AllowAnonymous]
-        public async Task<ActionResult> ResetPassword(string code, string userId)
-        {
-            if (string.IsNullOrEmpty(code))
-            {
-                return View("error");
-            }
-
-            var user = await _userManager.FindByIdAsync(userId);
-            if (user == null)
-            {
-                Context.ErrorMessage = "User was not found.";
-
-                return View("error");
-            }
-
-            var forms = new[]
-            {
-                new SubmitForm
-                {
-                    ActionLink = VirtualPathUtility.ToAbsolute("~/account/resetpassword"),
-                    FormType = "reset_customer_password",
-                    Id = "reset_customer_password",
-                    PasswordNeeded = true
-                }
-            };
-
-            UpdateForms(forms, true);
-
-            Session["ResetPassword_UserId"] = userId;
-            Session["ResetPassword_Token"] = code;
-
-            return View("customers/reset_password");
-        }
-
-        //
-        // POST: /Account/ResetPassword
-        [HttpPost]
-        [AllowAnonymous]
-        public async Task<ActionResult> ResetPassword(ResetPasswordFormModel formModel)
-        {
-            var form = GetForm(formModel.form_type);
-
-            if (form != null)
-            {
-                var formErrors = GetFormErrors(ModelState);
-
-                string userId = Session["ResetPassword_UserId"] as string;
-                string token = Session["ResetPassword_Token"] as string;
-
-                if (userId == null && userId == null)
-                {
-                    Context.ErrorMessage = "Not eonough info for reseting password";
-
-                    return View("error");
-                }
-
-                if (formErrors == null)
-                {
-                    var result = await _sucurityClient.ResetPasswordAsync(userId, token, formModel.Password);
-
-                    if (result.Succeeded)
-                    {
-                        Session.Remove("ResetPassword_UserId");
-                        Session.Remove("ResetPassword_Token");
-
-                        return View("password_reseted");
-                    }
-                    else
-                    {
-                        form.Errors = new SubmitFormErrors("form", result.Errors.First());
-                        form.PostedSuccessfully = false;
-
-                        UpdateForms(new[] { form });
-                    }
-                }
-                else
-                {
-                    form.Errors = formErrors;
-                    form.PostedSuccessfully = false;
-
-                    UpdateForms(new[] { form });
-                }
-            }
-            else
-            {
-                Context.ErrorMessage = "Liquid error: Form context was not found.";
-
-                return View("error");
-            }
-
-            return View("customers/reset_password");
-        }
-
-        //
-        // GET: /Account/LogOFf
-        [HttpGet]
-        public ActionResult LogOff()
-        {
-            _authenticationManager.SignOut();
-
-            return Redirect("~");
-        }
-
-        //
-        // GET: /Account/Register
-        [HttpGet]
-        [AllowAnonymous]
-        public ActionResult Register()
-        {
-            var forms = new[]
-            {
-                new SubmitForm
-                {
-                    ActionLink = VirtualPathUtility.ToAbsolute("~/account/register"),
-                    FormType = "create_customer",
-                    Id = "create_customer",
-                    PasswordNeeded = true
-                }
-            };
-
-            UpdateForms(forms, true);
-
-            return View("customers/register");
-        }
-
-        //
-        // POST: /Account/Register
-        [HttpPost]
-        [AllowAnonymous]
-        public async Task<ActionResult> Register(RegisterFormModel formModel)
-        {
-            var form = GetForm(formModel.form_type);
-
-            if (form != null)
-            {
-                var formErrors = GetFormErrors(ModelState);
-
-                if (formErrors == null)
-                {
-                    form.Errors = null;
-                    form.PostedSuccessfully = true;
-
-                    var user = new ApplicationUser
-                    {
-                        FullName = string.Format("{0} {1}", formModel.FirstName.Trim(), formModel.LastName.Trim()).Trim(),
-                        Email = formModel.Email,
-                        StoreId = this.Context.StoreId,
-                        UserName = formModel.Email
-                    };
-
-                    var result = await _userManager.CreateAsync(user, formModel.Password);
-
-                    if (result.Succeeded)
-                    {
-                        user = await _userManager.FindByNameAsync(user.UserName);
-
-                        this.Context.Customer = await this.CustomerService.CreateCustomerAsync(formModel.Email, formModel.FirstName, formModel.LastName, user.Id, null);
-
-                        await _signInManager.PasswordSignInAsync(formModel.Email, formModel.Password, isPersistent: false, shouldLockout: false);
-
-                        return RedirectToAction("Index", "Account");
-                    }
-                    else
-                    {
-                        form.Errors = new SubmitFormErrors("form", result.Errors.First());
-                        form.PostedSuccessfully = false;
-
-                        UpdateForms(new[] { form });
-                    }
-                }
-                else
-                {
-                    form.Errors = formErrors;
-                    form.PostedSuccessfully = false;
-
-                    UpdateForms(new[] { form });
-                }
-            }
-            else
-            {
-                return View("error");
-            }
-
-            return View("customers/register");
         }
 
         //
@@ -718,21 +703,21 @@ namespace VirtoCommerce.Web.Controllers
 
             public ChallengeResult(string loginProvider, string redirectUri, string userId)
             {
-                this.LoginProvider = loginProvider;
-                this.RedirectUri = redirectUri;
-                this.UserId = userId;
+                LoginProvider = loginProvider;
+                RedirectUri = redirectUri;
+                UserId = userId;
             }
 
             public override void ExecuteResult(ControllerContext context)
             {
-                var properties = new AuthenticationProperties { RedirectUri = this.RedirectUri };
+                var properties = new AuthenticationProperties { RedirectUri = RedirectUri };
 
                 if (this.UserId != null)
                 {
-                    properties.Dictionary[XsrfKey] = this.UserId;
+                    properties.Dictionary["XsrfId"] = this.UserId;
                 }
 
-                context.HttpContext.GetOwinContext().Authentication.Challenge(properties, this.LoginProvider);
+                context.HttpContext.GetOwinContext().Authentication.Challenge(properties, LoginProvider);
             }
         }
 

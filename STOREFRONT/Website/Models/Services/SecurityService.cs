@@ -1,102 +1,66 @@
-﻿using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.Owin;
-using Microsoft.Owin.Security;
-using System.Linq;
+﻿using System.Collections.Generic;
+using System.Security.Claims;
 using System.Threading.Tasks;
-using System.Web;
-using VirtoCommerce.Web.Models.FormModels;
-using VirtoCommerce.Web.Models.Security;
-using System.Collections.Generic;
+using VirtoCommerce.ApiClient;
 using VirtoCommerce.ApiClient.DataContracts.Security;
+using VirtoCommerce.ApiClient.Extensions;
 
 namespace VirtoCommerce.Web.Models.Services
 {
     public class SecurityService
     {
-        private const string XsrfKey = "XsrfId";
-
-        #region Fields
-        private readonly IAuthenticationManager _authManager;
-
-        private readonly ApplicationSignInManager _signInManager;
-
-        private readonly ApplicationUserManager _userManager;
-        #endregion
-
-        #region Constructors and Destructors
-        public SecurityService(HttpContextBase httpContext)
+        private SecurityClient _securityClient
         {
-            this._signInManager = httpContext.GetOwinContext().Get<ApplicationSignInManager>();
-            this._userManager = httpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
-            this._authManager = httpContext.GetOwinContext().Authentication;
-        }
-        #endregion
-
-        #region Public Methods and Operators
-        public async Task<string[]> Login(string username, string password)
-        {
-            string[] errors = null;
-
-            var loginResult = await this._signInManager.PasswordSignInAsync(username, password, true, false);
-
-            switch (loginResult)
+            get
             {
-                case SignInStatus.LockedOut:
-                case SignInStatus.RequiresVerification:
-                case SignInStatus.Failure:
-                    errors = new string[] { "Invalid login attempt" };
-                    break;
+                return ClientContext.Clients.CreateSecurityClient();
             }
-
-            return errors;
         }
 
-        public void Logout()
+        public ClaimsIdentity CreateClaimsIdentity(string userName)
         {
-            this._authManager.SignOut();
+            var claims = new List<Claim>();
+            claims.Add(new Claim(ClaimTypes.Name, userName));
+
+            var identity = new ClaimsIdentity(claims, Microsoft.AspNet.Identity.DefaultAuthenticationTypes.ApplicationCookie);
+
+            return identity;
         }
 
-        public async Task<string[]> RegisterUser(string email, string firstName, string lastName, string password, string storeId)
+        public async Task<SignInStatus> PasswordSingInAsync(
+            string username, string password, bool isPersistent)
         {
-            string[] errors = null;
-
-            var user = new VirtoCommerce.Web.Models.Security.ApplicationUser
-                       {
-                           Email = email,
-                           FullName =
-                               string.Format("{0} {1}", firstName, lastName),
-                           StoreId = storeId,
-                           UserName = email
-                       };
-
-            var registerResult = string.IsNullOrEmpty(password) ?
-                await this._userManager.CreateAsync(user) :
-                await this._userManager.CreateAsync(user, password);
-
-            if (!registerResult.Succeeded)
-            {
-                errors = registerResult.Errors.ToArray();
-            }
-
-            return errors;
+            return await _securityClient.PasswordSignInAsync(username, password);
         }
 
-        public async Task<VirtoCommerce.Web.Models.Security.ApplicationUser> GetUserByNameAsync(string username)
+        public async Task<IdentityResult> CreateUserAsync(ApplicationUser user)
         {
-            return await _userManager.FindByNameAsync(username);
+            return await _securityClient.CreateUserAsync(user);
         }
 
-        public void ExternalLogin(string loginProvider, string redirectUrl, string userId)
+        public async Task<ApplicationUser> GetUserByNameAsync(string userName)
         {
-            var properties = new AuthenticationProperties { RedirectUri = redirectUrl };
-
-            if (!string.IsNullOrEmpty(userId))
-            {
-                properties.Dictionary[XsrfKey] = userId;
-            }
-
-            _authManager.Challenge(properties, loginProvider);
+            return await _securityClient.FindUserByNameAsync(userName);
         }
-        #endregion
+
+        public async Task<ApplicationUser> GetUserByIdAsync(string userId)
+        {
+            return await _securityClient.FindUserByIdAsync(userId);
+        }
+
+        public async Task<ApplicationUser> GetUserByLoginAsync(UserLoginInfo loginInfo)
+        {
+            return await _securityClient.FindUserByLoginAsync(loginInfo.LoginProvider, loginInfo.ProviderKey);
+        }
+
+        public async Task GenerateResetPasswordTokenAsync(string userId, string storeName, string callbakUrl)
+        {
+            await _securityClient.GenerateResetPasswordTokenAsync(userId, storeName, callbakUrl);
+        }
+
+        public async Task<IdentityResult> ResetPasswordAsync(string userId, string token, string newPassword)
+        {
+            return await _securityClient.ResetPasswordAsync(userId, token, newPassword);
+        }
     }
 }
