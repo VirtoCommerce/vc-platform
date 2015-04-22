@@ -40,7 +40,7 @@ namespace VirtoCommerce.CoreModule.Web.Controllers.Api
         {
             get
             {
-                return _signInManager ?? _signInManagerFactory();
+                return _signInManager ?? (_signInManager = _signInManagerFactory());
             }
         }
 
@@ -49,7 +49,7 @@ namespace VirtoCommerce.CoreModule.Web.Controllers.Api
         {
             get
             {
-                return _userManager ?? _userManagerFactory();
+                return _userManager ?? (_userManager = _userManagerFactory());
             }
         }
 
