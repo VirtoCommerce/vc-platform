@@ -98,13 +98,21 @@ namespace VirtoCommerce.Platform.Web
                 var properties = assetsConnection.ConnectionString.ToDictionary(";", "=");
                 var provider = properties["provider"];
 
-                if (string.Equals(provider, FileSystemBlobProvider.ProviderName))
+                if (string.Equals(provider, FileSystemBlobProvider.ProviderName, StringComparison.OrdinalIgnoreCase))
                 {
                     var rootPath = HostingEnvironment.MapPath(properties["rootPath"]);
                     var publicUrl = properties["publicUrl"];
                     var fileSystemBlobProvider = new FileSystemBlobProvider(rootPath, publicUrl);
+
                     container.RegisterInstance<IBlobStorageProvider>(fileSystemBlobProvider);
                     container.RegisterInstance<IBlobUrlResolver>(fileSystemBlobProvider);
+                }
+                else if (string.Equals(provider, AzureBlobProvider.ProviderName, StringComparison.OrdinalIgnoreCase))
+                {
+                    var azureBlobProvider = new AzureBlobProvider(assetsConnection.ConnectionString);
+
+                    container.RegisterInstance<IBlobStorageProvider>(azureBlobProvider);
+                    container.RegisterInstance<IBlobUrlResolver>(azureBlobProvider);
                 }
             }
 
