@@ -15,11 +15,12 @@ namespace VirtoCommerce.Web.Controllers
     [Authorize]
     public class AccountController : BaseController
     {
-        private IAuthenticationManager _authenticationManager
+        private IAuthenticationManager _authenticationManager;
+        private IAuthenticationManager AuthenticationManager
         {
             get
             {
-                return HttpContext.GetOwinContext().Authentication;
+                return _authenticationManager ?? (_authenticationManager = HttpContext.GetOwinContext().Authentication);
             }
         }
 
@@ -86,7 +87,7 @@ namespace VirtoCommerce.Web.Controllers
                     {
                         case SignInStatus.Success:
                             var identity = SecurityService.CreateClaimsIdentity(formModel.Email);
-                            _authenticationManager.SignIn(identity);
+                            AuthenticationManager.SignIn(identity);
                             return RedirectToLocal(returnUrl);
                         case SignInStatus.LockedOut:
                             return View("lockedout");
@@ -176,7 +177,7 @@ namespace VirtoCommerce.Web.Controllers
                         await SecurityService.PasswordSingInAsync(formModel.Email, formModel.Password, false);
 
                         var identity = SecurityService.CreateClaimsIdentity(formModel.Email);
-                        _authenticationManager.SignIn(identity);
+                        AuthenticationManager.SignIn(identity);
 
                         Session["Forms"] = null;
 
@@ -398,7 +399,7 @@ namespace VirtoCommerce.Web.Controllers
         [AllowAnonymous]
         public async Task<ActionResult> ExternalLoginCallback(string returnUrl)
         {
-            var loginInfo = await _authenticationManager.GetExternalLoginInfoAsync();
+            var loginInfo = await AuthenticationManager.GetExternalLoginInfoAsync();
 
             if (loginInfo == null)
             {
@@ -422,7 +423,7 @@ namespace VirtoCommerce.Web.Controllers
             {
                 var identity = SecurityService.CreateClaimsIdentity(user.UserName);
 
-                _authenticationManager.SignIn(identity);
+                AuthenticationManager.SignIn(identity);
 
                 return RedirectToLocal(returnUrl);
             }
@@ -479,7 +480,7 @@ namespace VirtoCommerce.Web.Controllers
                     form.Errors = null;
                     form.PostedSuccessfully = true;
 
-                    var loginInfo = await _authenticationManager.GetExternalLoginInfoAsync();
+                    var loginInfo = await AuthenticationManager.GetExternalLoginInfoAsync();
 
                     if (loginInfo == null)
                     {
@@ -512,7 +513,7 @@ namespace VirtoCommerce.Web.Controllers
                             formModel.Email, formModel.Email, null, user.Id, null);
 
                         var identity = SecurityService.CreateClaimsIdentity(user.UserName);
-                        _authenticationManager.SignIn(identity);
+                        AuthenticationManager.SignIn(identity);
 
                         return RedirectToLocal(formModel.ReturnUrl);
                     }

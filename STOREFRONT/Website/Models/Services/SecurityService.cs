@@ -9,11 +9,12 @@ namespace VirtoCommerce.Web.Models.Services
 {
     public class SecurityService
     {
-        private SecurityClient _securityClient
+        private SecurityClient _securityClient;
+        private SecurityClient SecurityClient
         {
             get
             {
-                return ClientContext.Clients.CreateSecurityClient();
+                return _securityClient ?? (_securityClient = ClientContext.Clients.CreateSecurityClient());
             }
         }
 
@@ -30,37 +31,37 @@ namespace VirtoCommerce.Web.Models.Services
         public async Task<SignInStatus> PasswordSingInAsync(
             string username, string password, bool isPersistent)
         {
-            return await _securityClient.PasswordSignInAsync(username, password);
+            return await SecurityClient.PasswordSignInAsync(username, password);
         }
 
         public async Task<IdentityResult> CreateUserAsync(ApplicationUser user)
         {
-            return await _securityClient.CreateUserAsync(user);
+            return await SecurityClient.CreateUserAsync(user);
         }
 
         public async Task<ApplicationUser> GetUserByNameAsync(string userName)
         {
-            return await _securityClient.FindUserByNameAsync(userName);
+            return await SecurityClient.FindUserByNameAsync(userName);
         }
 
         public async Task<ApplicationUser> GetUserByIdAsync(string userId)
         {
-            return await _securityClient.FindUserByIdAsync(userId);
+            return await SecurityClient.FindUserByIdAsync(userId);
         }
 
         public async Task<ApplicationUser> GetUserByLoginAsync(UserLoginInfo loginInfo)
         {
-            return await _securityClient.FindUserByLoginAsync(loginInfo.LoginProvider, loginInfo.ProviderKey);
+            return await SecurityClient.FindUserByLoginAsync(loginInfo.LoginProvider, loginInfo.ProviderKey);
         }
 
         public async Task GenerateResetPasswordTokenAsync(string userId, string storeName, string callbakUrl)
         {
-            await _securityClient.GenerateResetPasswordTokenAsync(userId, storeName, callbakUrl);
+            await SecurityClient.GenerateResetPasswordTokenAsync(userId, storeName, callbakUrl);
         }
 
         public async Task<IdentityResult> ResetPasswordAsync(string userId, string token, string newPassword)
         {
-            return await _securityClient.ResetPasswordAsync(userId, token, newPassword);
+            return await SecurityClient.ResetPasswordAsync(userId, token, newPassword);
         }
     }
 }
