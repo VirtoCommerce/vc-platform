@@ -76,8 +76,10 @@ namespace VirtoCommerce.Platform.Web
             {
                 module.PostInitialize();
             }
-        }
 
+            app.MapSignalR();
+        }
+        
 
         private static string MakeRelativePath(string rootPath, string fullPath)
         {

@@ -69,6 +69,7 @@ namespace VirtoCommerce.Platform.Web
 				new ScriptBundle("~/scripts/jquery").Include(
 					"~/Scripts/jquery-{version}.js",
 					"~/Scripts/jquery.mousewheel.js",
+                    "~/Scripts/jquery.signalR-2.2.0.min.js",
 					"~/Scripts/jquery-ui-{version}.js",
 					"~/Scripts/underscore.js",
 					"~/Scripts/moment.js"));

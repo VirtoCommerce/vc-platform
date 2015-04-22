@@ -21,79 +21,83 @@
 ];
 
 angular.module('platformWebApp', AppDependencies).
-  controller('appCtrl', ['$scope', '$state', '$http', 'mainMenuService', 'notificationService', function ($scope, $state, $http, mainMenuService, notificationService) {
-	
-	notificationService.run();
+  controller('appCtrl', ['$scope', '$state', 'notificationService', function ($scope, $state, notificationService) {
 
-    $scope.curentStateName = function () {
-        return $state.current.name;
-    };
-   
+      notificationService.run();
+
+      $scope.curentStateName = function () {
+          return $state.current.name;
+      };
   }])
+// Specify SignalR server URL for supporting CORS
+.factory('signalRServer', ['$location', function apiTokenFactory($location) {
+    var retVal = $location.url() ? $location.absUrl().slice(0, -$location.url().length - 1) : $location.absUrl();
+    return retVal;
+}])
 .factory('httpErrorInterceptor', ['$q', '$rootScope', function ($q, $rootScope) {
-	var httpErrorInterceptor = {};
+    var httpErrorInterceptor = {};
 
-	httpErrorInterceptor.responseError = function (rejection) {
-		if (rejection.status === 401) {
-			$rootScope.$broadcast('unauthorized', rejection);
-		}
-		else {
-			$rootScope.$broadcast('httpError', rejection);
-		}
-		return $q.reject(rejection);
-	};
-	httpErrorInterceptor.requestError = function (rejection) {
-		$rootScope.$broadcast('httpError', rejection);
-		return $q.reject(rejection);
-	};
+    httpErrorInterceptor.responseError = function (rejection) {
+        if (rejection.status === 401) {
+            $rootScope.$broadcast('unauthorized', rejection);
+        }
+        else {
+            $rootScope.$broadcast('httpError', rejection);
+        }
+        return $q.reject(rejection);
+    };
+    httpErrorInterceptor.requestError = function (rejection) {
+        $rootScope.$broadcast('httpError', rejection);
+        return $q.reject(rejection);
+    };
 
-	return httpErrorInterceptor;
+    return httpErrorInterceptor;
 }])
 .config(
   ['$stateProvider', '$httpProvider', 'uiSelectConfig', function ($stateProvider, $httpProvider, uiSelectConfig) {
-    $stateProvider.state('workspace', {
-						  templateUrl: 'Scripts/app/workspace.tpl.html'
-    });
+      $stateProvider.state('workspace', {
+          templateUrl: 'Scripts/app/workspace.tpl.html'
+      });
 
-	//Add interseptor
-    $httpProvider.interceptors.push('httpErrorInterceptor');
-	//ui-select set selectize as default theme
-    uiSelectConfig.theme = 'select2';
-  	
+      //Add interseptor
+      $httpProvider.interceptors.push('httpErrorInterceptor');
+      //ui-select set selectize as default theme
+      uiSelectConfig.theme = 'select2';
+
   }
   ]
 )
 .run(
   ['$rootScope', '$state', '$stateParams', 'authService', 'mainMenuService', 'editableOptions', 'notificationService', '$animate', '$templateCache',
     function ($rootScope, $state, $stateParams, authService, mainMenuService, editableOptions, notificationService, $animate, $templateCache) {
-    	//Disable animation
-    	$animate.enabled(false);
-       	editableOptions.theme = 'bs3'; // bootstrap3 theme. Can be also 'bs2', 'default'
+        //Disable animation
+        $animate.enabled(false);
+        editableOptions.theme = 'bs3'; // bootstrap3 theme. Can be also 'bs2', 'default'
 
         $rootScope.$state = $state;
         $rootScope.$stateParams = $stateParams;
         var homeMenuItem = {
-        	path: 'home',
-        	title: 'Home',
-        	icon: 'fa fa-home',
-        	action: function () { $state.go('workspace') },
-           	priority: 0
+            path: 'home',
+            title: 'Home',
+            icon: 'fa fa-home',
+            action: function () { $state.go('workspace') },
+            priority: 0
         };
         mainMenuService.addMenuItem(homeMenuItem);
 
         var menuItem = {
-        	path: 'browse',
-        	icon: 'fa fa-search',
-        	title: 'Browse',
-        	priority: 90,
+            path: 'browse',
+            icon: 'fa fa-search',
+            title: 'Browse',
+            priority: 90,
         };
         mainMenuService.addMenuItem(menuItem);
 
         var journeyMenuItem = {
-        	path: 'active',
-        	title: 'Active',
-        	icon: 'fa fa-tasks',
-        	priority: 999
+            path: 'active',
+            title: 'Active',
+            icon: 'fa fa-tasks',
+            priority: 999
         };
         mainMenuService.addMenuItem(journeyMenuItem);
 
@@ -103,19 +107,18 @@ angular.module('platformWebApp', AppDependencies).
         });
 
         $rootScope.$on('httpError', function (event, rejection) {
-        	if (!(rejection.config.url.indexOf('api/notification') + 1)) {
-        		notificationService.error({ title: 'HTTP error', description: rejection.status + ' — ' + rejection.statusText, extendedData: rejection.data });
-          }
+            if (!(rejection.config.url.indexOf('api/notification') + 1)) {
+                notificationService.error({ title: 'HTTP error', description: rejection.status + ' — ' + rejection.statusText, extendedData: rejection.data });
+            }
         });
 
         $rootScope.$on('loginStatusChanged', function (event, authContext) {
-        	if (authContext.isAuthenticated) {
-        		console.log('State - ' + $state.current.name);
-        		if(!$state.current.name || $state.current.name == 'loginDialog')
-        		{
-        			homeMenuItem.action();
-        		}
-	        }
+            if (authContext.isAuthenticated) {
+                console.log('State - ' + $state.current.name);
+                if (!$state.current.name || $state.current.name == 'loginDialog') {
+                    homeMenuItem.action();
+                }
+            }
             else {
                 $state.go('loginDialog');
             }
