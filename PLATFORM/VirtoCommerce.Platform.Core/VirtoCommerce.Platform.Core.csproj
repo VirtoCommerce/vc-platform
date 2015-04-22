@@ -61,6 +61,7 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.5.2.3\lib\net45\System.Net.Http.Formatting.dll</HintPath>
     </Reference>
+    <Reference Include="System.ServiceModel" />
     <Reference Include="System.Web" />
     <Reference Include="System.Web.Http, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -70,19 +71,47 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Asset\BlobStorageMultipartStreamProvider.cs" />
-    <Compile Include="Asset\CustomMultipartStreamProvider.cs" />
-    <Compile Include="Asset\IAssetsConnection.cs" />
-    <Compile Include="Asset\IAssetsProviderManager.cs" />
+    <Compile Include="Asset\BlobInfo.cs" />
+    <Compile Include="Asset\IBlobUrlResolver.cs" />
+    <Compile Include="Asset\IBlobStorageProvider.cs" />
+    <Compile Include="Asset\UploadStreamInfo.cs" />
     <Compile Include="Bootstrapper.cs" />
+    <Compile Include="Caching\CacheExtensions.cs" />
+    <Compile Include="Caching\Cachekey.cs" />
+    <Compile Include="Caching\CacheLinqQuery.cs" />
+    <Compile Include="Caching\CacheManager.cs" />
+    <Compile Include="Caching\CacheObject.cs" />
+    <Compile Include="Caching\CacheQueryProvider.cs" />
+    <Compile Include="Caching\CacheSettings.cs" />
+    <Compile Include="Caching\ExpressionCacheKeyGenerator.cs" />
+    <Compile Include="Caching\ICacheKeyGenerator.cs" />
+    <Compile Include="Caching\ICacheProvider.cs" />
+    <Compile Include="Caching\ICacheRepository.cs" />
+    <Compile Include="Caching\TypeSystem.cs" />
+    <Compile Include="Common\AnnonymousComparer.cs" />
     <Compile Include="Common\ArrayInputAttribute.cs" />
     <Compile Include="Common\AttributeExtensions.cs" />
     <Compile Include="Common\ClientCacheAttribute.cs" />
     <Compile Include="Common\DateTimeExtensions.cs" />
+    <Compile Include="Common\Entity.cs" />
+    <Compile Include="Common\EntryState.cs" />
+    <Compile Include="Common\EnumUtility.cs" />
     <Compile Include="Common\FormatingExtensions.cs" />
+    <Compile Include="Common\IAuditable.cs" />
+    <Compile Include="Common\IQueryableExtensions.cs" />
+    <Compile Include="Common\IRepository.cs" />
+    <Compile Include="Common\IUnitOfWork.cs" />
     <Compile Include="Common\KeyValuePairExtensions.cs" />
     <Compile Include="Common\ListDictionary.cs" />
     <Compile Include="Common\CollectionExtensions.cs" />
+    <Compile Include="Common\NullCollection.cs" />
+    <Compile Include="Common\ObservableChangeTracker.cs" />
+    <Compile Include="Common\PredicateBuilder.cs" />
+    <Compile Include="Common\ReflectionUtility.cs" />
+    <Compile Include="Common\StringExtensions.cs" />
+    <Compile Include="Common\TrackingEntry.cs" />
+    <Compile Include="Common\TreeExtension.cs" />
+    <Compile Include="Common\ValueObject.cs" />
     <Compile Include="Modularity\AssemblyResolver.cs" />
     <Compile Include="Modularity\Exceptions\CyclicDependencyFoundException.cs" />
     <Compile Include="Modularity\DirectoryModuleCatalog.cs" />
@@ -140,7 +169,6 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="Search\ISearchProviderManager.cs" />
     <Compile Include="Security\CheckPermissionAttribute.cs" />
     <Compile Include="Security\IPermissionService.cs" />
     <Compile Include="Security\IRoleManagementService.cs" />
@@ -172,12 +200,6 @@
     </None>
   </ItemGroup>
   <ItemGroup />
-  <ItemGroup>
-    <ProjectReference Include="..\Core\CommerceFoundation\CommerceFoundation.csproj">
-      <Project>{e7fc9a51-1b39-4bdc-983a-8a059c5fc58b}</Project>
-      <Name>CommerceFoundation</Name>
-    </ProjectReference>
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

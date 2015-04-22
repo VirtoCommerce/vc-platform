@@ -11,6 +11,7 @@ using System.Web.Http.Description;
 using VirtoCommerce.PackagingModule.Services;
 using VirtoCommerce.PackagingModule.Web.Converters;
 using VirtoCommerce.Platform.Core.Asset;
+using VirtoCommerce.Platform.Data.Asset;
 using moduleModel = VirtoCommerce.PackagingModule.Model;
 using webModel = VirtoCommerce.PackagingModule.Web.Model;
 

@@ -4,20 +4,19 @@ using System.IO;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
-using VirtoCommerce.Foundation.Assets.Model;
-using VirtoCommerce.Foundation.Assets.Repositories;
-using VirtoCommerce.Foundation.Assets.Services;
+using VirtoCommerce.Platform.Core.Asset;
 
-namespace VirtoCommerce.Platform.Core.Asset
+
+namespace VirtoCommerce.Platform.Data.Asset
 {
 	public class BlobStorageMultipartProvider : MultipartFileStreamProvider
 	{
 		private readonly IBlobStorageProvider _blobProvider;
-		private readonly string _container;
-		public BlobStorageMultipartProvider(IBlobStorageProvider blobProvider, string tempPath, string container)
+		private readonly string _folder;
+		public BlobStorageMultipartProvider(IBlobStorageProvider blobProvider, string tempPath, string folder)
 			: base(tempPath)
 		{
-			_container = container;
+			_folder = folder;
 			_blobProvider = blobProvider;
 			BlobInfos = new List<BlobInfo>();
 		}
@@ -35,8 +34,9 @@ namespace VirtoCommerce.Platform.Core.Asset
 					var uploadStreamInfo = new UploadStreamInfo
 					{
 						FileByteStream = stream,
-						FileName = _container + "/" + fileInfo.Name,
-						Length = fileInfo.Length
+						FileName = fileInfo.Name,
+						Length = fileInfo.Length,
+						FolderName = _folder
 					};
 
 					var link = _blobProvider.Upload(uploadStreamInfo);
@@ -44,9 +44,9 @@ namespace VirtoCommerce.Platform.Core.Asset
 					BlobInfos.Add(new BlobInfo
 					{
 						ContentType = fileData.Headers.ContentType.MediaType,
-						Name = fileInfo.Name,
+						FileName = fileInfo.Name,
 						Size = fileInfo.Length,
-						Location = link
+						Key = link
 					});
 					
 				}

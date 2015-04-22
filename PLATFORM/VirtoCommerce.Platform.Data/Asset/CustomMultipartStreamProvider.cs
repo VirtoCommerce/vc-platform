@@ -1,7 +1,7 @@
 ﻿using System.Net.Http;
 using System.Net.Http.Headers;
 
-namespace VirtoCommerce.Platform.Core.Asset
+namespace VirtoCommerce.Platform.Data.Asset
 {
 	// We implement MultipartFormDataStreamProvider to override the filename of File which 
 	// will be stored on server, or else the default name will be of the format like Body- 

@@ -9,10 +9,12 @@ using Microsoft.Owin.FileSystems;
 using Microsoft.Owin.StaticFiles;
 using Microsoft.Practices.Unity;
 using Owin;
-using VirtoCommerce.Framework.Core.Utils;
+using VirtoCommerce.Platform.Core.Asset;
 using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Web;
 using WebGrease.Extensions;
+using VirtoCommerce.Platform.Core.Common;
+using VirtoCommerce.Platform.Data.Asset;
 
 [assembly: OwinStartup(typeof(Startup))]
 
@@ -58,6 +60,9 @@ namespace VirtoCommerce.Platform.Web
                 });
             }
 
+            //Initialize Platform dependencies
+            PlatformInitialize(bootstraper.Container);
+
             // Ensure all modules are loaded
             var moduleManager = bootstraper.Container.Resolve<IModuleManager>();
 
@@ -78,6 +83,26 @@ namespace VirtoCommerce.Platform.Web
             }
         }
 
+
+        private void PlatformInitialize(IUnityContainer container)
+        {
+            var assetsConnection = ConfigurationManager.ConnectionStrings["AssetsConnectionString"];
+
+            if (assetsConnection != null)
+            {
+                var properties = assetsConnection.ConnectionString.ToDictionary(";", "=");
+                var provider = properties["provider"];
+
+                if (string.Equals(provider, FileSystemBlobProvider.ProviderName))
+                {
+                    var rootPath = HostingEnvironment.MapPath(properties["rootPath"]);
+                    var publicUrl = properties["publicUrl"];
+                    var fileSystemBlobProvider = new FileSystemBlobProvider(rootPath, publicUrl);
+                    container.RegisterInstance<IBlobStorageProvider>(fileSystemBlobProvider);
+                    container.RegisterInstance<IBlobUrlResolver>(fileSystemBlobProvider);
+                }
+            }
+        }
 
         private static string MakeRelativePath(string rootPath, string fullPath)
         {
