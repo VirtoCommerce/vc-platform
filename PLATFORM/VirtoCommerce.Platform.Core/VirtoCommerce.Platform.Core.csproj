@@ -93,6 +93,7 @@
     <Compile Include="Common\AttributeExtensions.cs" />
     <Compile Include="Common\ClientCacheAttribute.cs" />
     <Compile Include="Common\DateTimeExtensions.cs" />
+    <Compile Include="Common\DictionaryExtensions.cs" />
     <Compile Include="Common\Entity.cs" />
     <Compile Include="Common\EntryState.cs" />
     <Compile Include="Common\EnumUtility.cs" />

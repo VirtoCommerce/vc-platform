@@ -1,13 +1,9 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Drawing;
 using System.Globalization;
 using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Web;
+using System.Web.Hosting;
 using VirtoCommerce.Platform.Core.Asset;
+using VirtoCommerce.Platform.Core.Common;
 
 
 namespace VirtoCommerce.Platform.Data.Asset
@@ -19,10 +15,17 @@ namespace VirtoCommerce.Platform.Data.Asset
         private readonly string _storagePath;
         private readonly string _publicUrl;
 
-        public FileSystemBlobProvider(string storagePath, string publicUrl)
+        public FileSystemBlobProvider(string connectionString)
         {
-            _storagePath = storagePath;
-            _publicUrl = publicUrl;
+            if (connectionString == null)
+            {
+                throw new ArgumentNullException("connectionString");
+            }
+
+            var properties = connectionString.ToDictionary(";", "=");
+
+            _storagePath = HostingEnvironment.MapPath(properties["rootPath"]);
+            _publicUrl = properties["publicUrl"];
 
             if (_publicUrl != null && !_publicUrl.EndsWith("/"))
             {

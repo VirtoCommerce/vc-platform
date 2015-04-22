@@ -64,7 +64,7 @@ namespace VirtoCommerce.Platform.Web
             }
 
             //Initialize Platform dependencies
-            PlatformInitialize(bootstraper.Container);
+            InitializePlatform(bootstraper.Container);
 
             // Ensure all modules are loaded
             var moduleManager = bootstraper.Container.Resolve<IModuleManager>();
@@ -87,7 +87,7 @@ namespace VirtoCommerce.Platform.Web
         }
 
 
-        private void PlatformInitialize(IUnityContainer container)
+        private static void InitializePlatform(IUnityContainer container)
         {
             #region Assets
 
@@ -97,19 +97,18 @@ namespace VirtoCommerce.Platform.Web
             {
                 var properties = assetsConnection.ConnectionString.ToDictionary(";", "=");
                 var provider = properties["provider"];
+                var assetsConnectionString = properties.ToString(";", "=", "provider");
 
                 if (string.Equals(provider, FileSystemBlobProvider.ProviderName, StringComparison.OrdinalIgnoreCase))
                 {
-                    var rootPath = HostingEnvironment.MapPath(properties["rootPath"]);
-                    var publicUrl = properties["publicUrl"];
-                    var fileSystemBlobProvider = new FileSystemBlobProvider(rootPath, publicUrl);
+                    var fileSystemBlobProvider = new FileSystemBlobProvider(assetsConnectionString);
 
                     container.RegisterInstance<IBlobStorageProvider>(fileSystemBlobProvider);
                     container.RegisterInstance<IBlobUrlResolver>(fileSystemBlobProvider);
                 }
                 else if (string.Equals(provider, AzureBlobProvider.ProviderName, StringComparison.OrdinalIgnoreCase))
                 {
-                    var azureBlobProvider = new AzureBlobProvider(assetsConnection.ConnectionString);
+                    var azureBlobProvider = new AzureBlobProvider(assetsConnectionString);
 
                     container.RegisterInstance<IBlobStorageProvider>(azureBlobProvider);
                     container.RegisterInstance<IBlobUrlResolver>(azureBlobProvider);
