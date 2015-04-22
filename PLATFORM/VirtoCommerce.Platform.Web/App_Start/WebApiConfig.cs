@@ -10,7 +10,7 @@ namespace VirtoCommerce.Platform.Web
     {
         public static void Register(HttpConfiguration config)
         {
-			config.Filters.Add(new CheckPermissionAttribute { Permission = "Call API methods" });
+            config.Filters.Add(new CheckPermissionAttribute { Permission = "security:call_api" });
 
             // Web API routes
             config.MapHttpAttributeRoutes();
