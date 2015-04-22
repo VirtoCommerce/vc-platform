@@ -43,7 +43,7 @@
 			satisfy: function (notification, place) { return place == 'menu'; },
 			//template for display that notification in menu and list
 			template: 'Scripts/common/notification/menuDefault.tpl.html',
-			//action execuded when notification selected
+			//action executed when notification selected
 			action: function (notify) { $state.go('notificationsHistory', notify) }
 		};
 
@@ -54,7 +54,7 @@
 			satisfy: function (notification, place) { return place == 'history'; },
 			//template for display that notification in menu and list
 			template: 'Scripts/common/notification/blade/historyDefault.tpl.html',
-			//action excecuted in event detail
+			//action executed in event detail
 			action: function (notify) {
 				var blade = {
 					id: 'notifyDetail',
@@ -73,7 +73,28 @@
 
 	return retVal;
 }])
-.factory('notificationService', ['$http', '$interval', '$state', 'mainMenuService', 'notificationTemplateResolver', 'notifications', function ($http, $interval, $state, mainMenuService, notificationTemplateResolver, notifications) {
+.factory('notificationService', ['signalRHubProxy', '$interval', '$state', 'mainMenuService', 'notificationTemplateResolver', 'notifications', function (signalRHubProxy, $interval, $state, mainMenuService, notificationTemplateResolver, notifications) {
+
+    var clientPushHubProxy = signalRHubProxy(signalRHubProxy.defaultServer, 'clientPushHub', { logging: true });
+    clientPushHubProxy.on('notification', function (data) {
+        var notifyMenu = mainMenuService.findByPath('notification');
+        var notificationTemplate = notificationTemplateResolver.resolve(data, 'menu');
+
+        var menuItem = {
+            parent: notifyMenu,
+            path: 'notification/events',
+            icon: 'fa fa-comment',
+            title: data.title,
+            priority: 2,
+            permission: '',
+            action: notificationTemplate.action,
+            template: notificationTemplate.template,
+            notify: data
+        };
+        notifyMenu.children.push(menuItem);
+
+        notifyMenu.incremented = true;
+    });
 
 	//var timer = new Date().getUTCDate();
 	var notifyStatusEnum =
@@ -101,64 +122,61 @@
 	};
 
 	function notificationRefresh() {
-		var notifyMenu = mainMenuService.findByPath('notification');
-		if (!angular.isDefined(notifyMenu)) {
-			notifyMenu = {
-				path: 'notification',
-				icon: 'fa fa-comments',
-				title: 'Notifications',
-				priority: 2,
-				permission: '',
-				headerTemplate: 'Scripts/common/notification/menuHeader.tpl.html',
-				listTemplate: 'Scripts/common/notification/menuList.tpl.html',
-				template: 'Scripts/common/notification/menu.tpl.html',
-				action: function () { markAllAsRead(); },
-				showHistory: function () { $state.go('notificationsHistory') },
-				clearRecent: function () { notifyMenu.children.splice(0, notifyMenu.children.length) },
-				children: [],
-				newCount : 0
-			};
-			mainMenuService.addMenuItem(notifyMenu);
-		}
-		notifyMenu.incremented = false;
-		notifications.query({ start: 0, count: 15 }, function (data, status, headers, config) {
+		//notifyMenu.incremented = false;
+		//notifications.query({ start: 0, count: 15 }, function (data, status, headers, config) {
 
-			//timer = new Date().getUTCDate();
-			notifyMenu.incremented = notifyMenu.newCount < data.newCount;
-			notifyMenu.newCount = data.newCount;
-			notifyMenu.progress = _.some(data.notifyEvents, function (x) { return x.isRunning; });
+		//	notifyMenu.incremented = notifyMenu.newCount < data.newCount;
+		//	notifyMenu.newCount = data.newCount;
+		//	notifyMenu.progress = _.some(data.notifyEvents, function (x) { return x.isRunning; });
 
-			//clear all child
-			notifyMenu.children.splice(0, notifyMenu.children.length);
+		//	//clear all child
+		//	notifyMenu.children.splice(0, notifyMenu.children.length);
 
-			//Add all events
-			angular.forEach(data.notifyEvents, function (x) {
+		//	//Add all events
+		//	angular.forEach(data.notifyEvents, function (x) {
 
-				notificationTemplate = notificationTemplateResolver.resolve(x, 'menu');
+		//		var notificationTemplate = notificationTemplateResolver.resolve(x, 'menu');
 
-				var menuItem = {
-					parent: notifyMenu,
-					path: 'notification/events',
-					icon: 'fa fa-comment',
-					title: x.title,
-					priority: 2,
-					permission: '',
-					action: notificationTemplate.action,
-					template: notificationTemplate.template,
-					notify: x
-				};
-				notifyMenu.children.push(menuItem);
-			});
+		//		var menuItem = {
+		//			parent: notifyMenu,
+		//			path: 'notification/events',
+		//			icon: 'fa fa-comment',
+		//			title: x.title,
+		//			priority: 2,
+		//			permission: '',
+		//			action: notificationTemplate.action,
+		//			template: notificationTemplate.template,
+		//			notify: x
+		//		};
+		//		notifyMenu.children.push(menuItem);
+		//	});
 
-		});
+		//});
 	};
 
 	var retVal = {
 		run: function () {
 			if (!this.running) {
-				notificationRefresh();
+			    var notifyMenu = mainMenuService.findByPath('notification');
+			    if (!angular.isDefined(notifyMenu)) {
+			        notifyMenu = {
+			            path: 'notification',
+			            icon: 'fa fa-comments',
+			            title: 'Notifications',
+			            priority: 2,
+			            permission: '',
+			            headerTemplate: 'Scripts/common/notification/menuHeader.tpl.html',
+			            listTemplate: 'Scripts/common/notification/menuList.tpl.html',
+			            template: 'Scripts/common/notification/menu.tpl.html',
+			            action: function () { markAllAsRead(); },
+			            showHistory: function () { $state.go('notificationsHistory'); },
+			            clearRecent: function () { notifyMenu.children.splice(0, notifyMenu.children.length); },
+			            children: [],
+			            newCount: 0
+			        };
+			        mainMenuService.addMenuItem(notifyMenu);
+			    }
 				this.running = true;
-				//$interval(notificationRefresh, 10000);
 			};
 		},
 		running: false,
