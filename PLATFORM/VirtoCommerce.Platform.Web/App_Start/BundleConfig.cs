@@ -30,6 +30,7 @@ namespace VirtoCommerce.Platform.Web
                 new BetterStyleBundle("~/css/core").Include(
                     "~/Scripts/codemirror/codemirror.css",
                     "~/Scripts/codemirror/fold/foldgutter.css",
+                    "~/Scripts/codemirror/liquid.css",
                     "~/Content/select.css",
                     "~/Content/angular-multi-select.css",
                     "~/Content/ng-tags-input.css",

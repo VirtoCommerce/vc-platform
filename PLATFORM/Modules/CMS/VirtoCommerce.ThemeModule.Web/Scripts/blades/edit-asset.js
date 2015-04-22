@@ -102,6 +102,41 @@
         }
     }
 
+    function getEditorMode() {
+        // mode: { name: "htmlmixed" } // html
+        // mode: { name: "javascript" } // javascript
+        // mode: { name: "javascript", json: true } // json
+        // mode: "liquid-html" // liquid html
+        // mode: "liquid-css" // liquid css
+        // mode: "liquid-javascript" // liquid css
+
+        if (!blade.newAsset) {
+            if (blade.choosenAssetId.endsWith(".json")) {
+                return { name: "javascript", json: true };
+            }
+            else if (blade.choosenAssetId.endsWith(".js")) {
+                return "javascript";
+            }
+            else if (blade.choosenAssetId.endsWith(".js.liquid")) {
+                return "liquid-javascript";
+            }
+            else if (blade.choosenAssetId.endsWith(".css.liquid")) {
+                return "liquid-css";
+            }
+            else if (blade.choosenAssetId.endsWith(".css")) {
+                return "css";
+            }
+            else if (blade.choosenAssetId.endsWith(".scss.liquid")) {
+                return "liquid-css";
+            }
+            else if (blade.choosenAssetId.endsWith(".liquid")) {
+                return "liquid-html";
+            }
+
+        }
+        return "htmlmixed";
+    }
+
     blade.onClose = function (closeCallback) {
         if ((isDirty() && !blade.newAsset) || (isCanSave() && blade.newAsset)) {
             var dialog = {
@@ -126,8 +161,9 @@
 
     // Codemirror configuration
     $scope.editorOptions = {
-        lineWrapping: true,
+        lineWrapping: false,
         lineNumbers: true,
+        parserfile: "liquid.js",
         extraKeys: { "Ctrl-Q": function (cm) { cm.foldCode(cm.getCursor()); } },
         foldGutter: true,
         gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"],
@@ -135,7 +171,7 @@
             codemirrorEditor = _editor;
         },
         // mode: 'htmlmixed'
-        mode: { name: "javascript", globalVars: true }
+        mode: getEditorMode()
     };
 
     initializeBlade();

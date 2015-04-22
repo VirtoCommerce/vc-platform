@@ -258,6 +258,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\angular-multi-select.css" />
+    <Content Include="Scripts\codemirror\addon\mode\overlay.js" />
     <Content Include="Scripts\codemirror\codemirror.css" />
     <Content Include="Content\fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Content\ng-tags-input.css" />
@@ -388,6 +389,8 @@
     <Content Include="Scripts\codemirror\fold\indent-fold.js" />
     <Content Include="Scripts\codemirror\fold\markdown-fold.js" />
     <Content Include="Scripts\codemirror\fold\xml-fold.js" />
+    <Content Include="Scripts\codemirror\liquid.css" />
+    <Content Include="Scripts\codemirror\liquid.js" />
     <Content Include="Scripts\common\directives\angular-money-directive.js" />
     <Content Include="Scripts\angular-multi-select.js" />
     <Content Include="Scripts\angular-resource.js" />
