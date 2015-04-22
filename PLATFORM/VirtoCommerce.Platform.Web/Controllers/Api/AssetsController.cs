@@ -9,24 +9,24 @@ using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Data.Asset;
 using webModel = VirtoCommerce.Platform.Web.Model.Asset;
 
-namespace VirtoCommerce.CoreModule.Web.Controllers.Api
+namespace VirtoCommerce.Platform.Web.Controllers.Api
 {
     [RoutePrefix("api/assets")]
     public class AssetsController : ApiController
     {
         private readonly IBlobStorageProvider _blobProvider;
-		private readonly IBlobUrlResolver _urlResolver;
+        private readonly IBlobUrlResolver _urlResolver;
         private readonly string _tempPath;
         public AssetsController(IBlobStorageProvider blobProvider, IBlobUrlResolver urlResolver)
         {
             _blobProvider = blobProvider;
-			_urlResolver = urlResolver;
+            _urlResolver = urlResolver;
             _tempPath = HostingEnvironment.MapPath("~/App_Data/Uploads/");
         }
 
         [HttpPost]
         [Route("")]
-		public async Task<webModel.BlobInfo[]> UploadAsset()
+        public async Task<webModel.BlobInfo[]> UploadAsset()
         {
             if (!Request.Content.IsMimeMultipartContent())
             {
@@ -40,12 +40,12 @@ namespace VirtoCommerce.CoreModule.Web.Controllers.Api
 
             foreach (var blobInfo in blobMultipartProvider.BlobInfos)
             {
-				retVal.Add(new webModel.BlobInfo
+                retVal.Add(new webModel.BlobInfo
                 {
                     Name = blobInfo.FileName,
                     Size = blobInfo.Size.ToHumanReadableSize(),
                     MimeType = blobInfo.ContentType,
-					Url = _urlResolver.GetAbsoluteUrl(blobInfo.Key)
+                    Url = _urlResolver.GetAbsoluteUrl(blobInfo.Key)
                 });
             }
 

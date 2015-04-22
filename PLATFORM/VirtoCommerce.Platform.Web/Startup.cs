@@ -5,9 +5,9 @@ using System.IO;
 using System.Linq;
 using System.Web.Hosting;
 using Microsoft.Owin;
-using Microsoft.Owin.FileSystems;
 using Microsoft.Owin.StaticFiles;
 using Microsoft.Practices.Unity;
+using NuGet;
 using Owin;
 using VirtoCommerce.Platform.Core.Asset;
 using VirtoCommerce.Platform.Core.Modularity;
@@ -15,6 +15,9 @@ using VirtoCommerce.Platform.Web;
 using WebGrease.Extensions;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Data.Asset;
+using VirtoCommerce.Platform.Data.Packaging;
+using VirtoCommerce.Platform.Data.Packaging.Repositories;
+using VirtoCommerce.Platform.Web.Controllers.Api;
 
 [assembly: OwinStartup(typeof(Startup))]
 
@@ -56,7 +59,7 @@ namespace VirtoCommerce.Platform.Web
                 app.Use<UrlRewriterOwinMiddleware>(urlRewriterOptions);
                 app.UseStaticFiles(new StaticFileOptions
                 {
-                    FileSystem = new PhysicalFileSystem(modulesRelativePath)
+                    FileSystem = new Microsoft.Owin.FileSystems.PhysicalFileSystem(modulesRelativePath)
                 });
             }
 
@@ -86,6 +89,8 @@ namespace VirtoCommerce.Platform.Web
 
         private void PlatformInitialize(IUnityContainer container)
         {
+            #region Assets
+
             var assetsConnection = ConfigurationManager.ConnectionStrings["AssetsConnectionString"];
 
             if (assetsConnection != null)
@@ -102,6 +107,31 @@ namespace VirtoCommerce.Platform.Web
                     container.RegisterInstance<IBlobUrlResolver>(fileSystemBlobProvider);
                 }
             }
+
+            #endregion
+
+            #region Packaging
+
+            var sourcePath = HostingEnvironment.MapPath("~/App_Data/SourcePackages");
+            var packagesPath = HostingEnvironment.MapPath("~/App_Data/InstalledPackages");
+
+            var manifestProvider = container.Resolve<IModuleManifestProvider>();
+            var modulesPath = manifestProvider.RootPath;
+
+            var projectSystem = new WebsiteProjectSystem(modulesPath);
+
+            var nugetProjectManager = new ProjectManager(
+                new WebsiteLocalPackageRepository(sourcePath),
+                new DefaultPackagePathResolver(modulesPath),
+                projectSystem,
+                new ManifestPackageRepository(manifestProvider, new WebsitePackageRepository(packagesPath, projectSystem))
+            );
+
+            var packageService = new PackageService(nugetProjectManager);
+
+            container.RegisterType<ModulesController>(new InjectionConstructor(packageService, sourcePath));
+
+            #endregion
         }
 
         private static string MakeRelativePath(string rootPath, string fullPath)

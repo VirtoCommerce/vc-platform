@@ -38,9 +38,17 @@
     <Reference Include="EntityFramework.SqlServer">
       <HintPath>..\packages\EntityFramework.6.1.1\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.Web.XmlTransform, Version=2.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Web.Xdt.2.1.1\lib\net40\Microsoft.Web.XmlTransform.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Newtonsoft.Json.6.0.8\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="NuGet.Core, Version=2.8.50926.602, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\NuGet.Core.2.8.3\lib\net40-Client\NuGet.Core.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
@@ -62,6 +70,7 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Asset\BlobStorageMultipartStreamProvider.cs" />
@@ -82,6 +91,22 @@
     <Compile Include="Infrastructure\Interceptors\TypeInterceptor.cs" />
     <Compile Include="Infrastructure\ServiceBase.cs" />
     <Compile Include="Infrastructure\SetupDatabaseInitializer.cs" />
+    <Compile Include="Packaging\PackageService.cs" />
+    <Compile Include="Packaging\Repositories\ManifestPackage.cs" />
+    <Compile Include="Packaging\Repositories\ManifestPackageRepository.cs" />
+    <Compile Include="Packaging\Repositories\NuGet\CommonResources.cs" />
+    <Compile Include="Packaging\Repositories\NuGet\CommonResources.designer.cs">
+      <DependentUpon>CommonResources.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Packaging\Repositories\NuGet\Constants.cs" />
+    <Compile Include="Packaging\Repositories\NuGet\OptimizedZipPackage.cs" />
+    <Compile Include="Packaging\Repositories\NuGet\PackageBuilder.cs" />
+    <Compile Include="Packaging\Repositories\NuGet\UriUtility.cs" />
+    <Compile Include="Packaging\Repositories\NuGet\ZipPackage.cs" />
+    <Compile Include="Packaging\Repositories\WebsiteLocalPackageRepository.cs" />
+    <Compile Include="Packaging\Repositories\WebsiteOptimizedZipPackage.cs" />
+    <Compile Include="Packaging\Repositories\WebsitePackageRepository.cs" />
+    <Compile Include="Packaging\Repositories\WebsiteProjectSystem.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -92,9 +117,15 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-    <None Include="packages.config" />
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <EmbeddedResource Include="Packaging\Repositories\NuGet\CommonResources.resx">
+      <DependentUpon>CommonResources.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
