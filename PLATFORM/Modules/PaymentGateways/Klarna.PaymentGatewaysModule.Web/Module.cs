@@ -7,8 +7,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using VirtoCommerce.Domain.Payment.Services;
-using VirtoCommerce.Framework.Web.Modularity;
-using VirtoCommerce.Framework.Web.Settings;
+using VirtoCommerce.Platform.Core.Modularity;
+using VirtoCommerce.Platform.Core.Settings;
 
 namespace Klarna.PaymentGatewaysModule.Web
 {

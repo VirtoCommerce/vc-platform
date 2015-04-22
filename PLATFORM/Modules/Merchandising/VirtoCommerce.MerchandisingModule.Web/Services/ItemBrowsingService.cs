@@ -4,7 +4,6 @@ using System.Linq;
 using VirtoCommerce.CatalogModule.Data.Repositories;
 using VirtoCommerce.Domain.Catalog.Services;
 using VirtoCommerce.Foundation;
-using VirtoCommerce.Foundation.Assets.Services;
 using VirtoCommerce.Foundation.Catalogs;
 using VirtoCommerce.Foundation.Catalogs.Search;
 using VirtoCommerce.Foundation.Frameworks;
@@ -15,8 +14,9 @@ using VirtoCommerce.MerchandisingModule.Web.Model;
 
 namespace VirtoCommerce.MerchandisingModule.Web.Services
 {
-    using foundation = VirtoCommerce.Foundation.Catalogs.Model;
-    using moduleModel = VirtoCommerce.Domain.Catalog.Model;
+	using VirtoCommerce.Platform.Core.Asset;
+	using foundation = VirtoCommerce.Foundation.Catalogs.Model;
+	using moduleModel = VirtoCommerce.Domain.Catalog.Model;
 
     public class ItemBrowsingService : IItemBrowsingService
     {
@@ -48,7 +48,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Services
 
         #region Fields
 
-        private readonly IAssetUrlResolver _assetUrlResolver;
+        private readonly IBlobUrlResolver _blobUrlResolver;
         private readonly ICacheRepository _cacheRepository;
         private readonly Func<IFoundationCatalogRepository> _catalogRepositoryFactory;
         private readonly bool _isEnabled;
@@ -66,7 +66,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Services
             Func<IFoundationCatalogRepository> catalogRepositoryFactory,
             ISearchProvider searchService,
             ICacheRepository cacheRepository,
-            IAssetUrlResolver assetUrlResolver = null,
+            IBlobUrlResolver blobUrlResolver = null,
             ISearchConnection searchConnection = null)
         {
             this._searchService = searchService;
@@ -74,7 +74,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Services
             this._cacheRepository = cacheRepository;
             this._searchConnection = searchConnection;
             this._itemService = itemService;
-            this._assetUrlResolver = assetUrlResolver;
+            this._blobUrlResolver = blobUrlResolver;
             this._isEnabled = CatalogConfiguration.Instance.Cache.IsEnabled;
         }
 
@@ -107,7 +107,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Services
                 var currentOutline = this.GetItemOutlineUsingContext(
                     searchTags[criteria.OutlineField].ToString(),
                     criteria.Catalog);
-                var catalogItem = item.ToWebModel(this._assetUrlResolver) as Product;
+                var catalogItem = item.ToWebModel(this._blobUrlResolver) as Product;
                 catalogItem.Outline = this.StripCatalogFromOutline(currentOutline, criteria.Catalog);
 
                 int reviewTotal;

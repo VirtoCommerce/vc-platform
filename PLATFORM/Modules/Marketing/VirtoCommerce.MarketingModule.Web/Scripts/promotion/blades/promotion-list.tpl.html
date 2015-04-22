@@ -32,7 +32,8 @@
                                 </label>
                             </td>
                             <td class="table-col" ng-click='selectNode(data)'>
-                                <span class="table-t"><i class="table-ico fa" ng-class="data.type == 'DynamicPromotion' ? 'fa-asterisk' : ' fa-file-code-o'"></i>&nbsp;{{data.name}}</span>
+                                <i class="table-ico fa" ng-class="data.type == 'DynamicPromotion' ? 'fa-asterisk' : ' fa-file-code-o'"></i>
+                                <span class="table-t">{{data.name}}</span>
                             </td>
                             <td class="table-col __date" ng-click='selectNode(data)'>
                                 <span class="table-date" am-time-ago="data.modifiedDate"></span>

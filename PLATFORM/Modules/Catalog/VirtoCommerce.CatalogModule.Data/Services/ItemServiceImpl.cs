@@ -3,7 +3,6 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using VirtoCommerce.CatalogModule.Data.Converters;
 using VirtoCommerce.Foundation.Frameworks;
-using VirtoCommerce.Framework.Web.Settings;
 using foundation = VirtoCommerce.Foundation.Catalogs.Model;
 using foundationConfig = VirtoCommerce.Foundation.AppConfig.Model;
 using module = VirtoCommerce.Domain.Catalog.Model;

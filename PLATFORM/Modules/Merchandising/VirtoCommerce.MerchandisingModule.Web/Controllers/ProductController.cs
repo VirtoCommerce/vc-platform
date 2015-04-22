@@ -15,12 +15,13 @@ using VirtoCommerce.Foundation.Frameworks;
 using VirtoCommerce.Foundation.Search;
 using VirtoCommerce.Foundation.Search.Schemas;
 using VirtoCommerce.Foundation.Stores.Repositories;
-using VirtoCommerce.Framework.Web.Common;
-using VirtoCommerce.Framework.Web.Settings;
 using VirtoCommerce.MerchandisingModule.Web.Binders;
 using VirtoCommerce.MerchandisingModule.Web.Converters;
 using VirtoCommerce.MerchandisingModule.Web.Model;
 using VirtoCommerce.MerchandisingModule.Web.Services;
+using VirtoCommerce.Platform.Core.Asset;
+using VirtoCommerce.Platform.Core.Common;
+using VirtoCommerce.Platform.Core.Settings;
 using moduleModel = VirtoCommerce.Domain.Catalog.Model;
 
 namespace VirtoCommerce.MerchandisingModule.Web.Controllers
@@ -30,7 +31,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
     {
         #region Fields
 
-        private readonly IAssetUrlResolver _assetUrlResolver;
+        private readonly IBlobUrlResolver _blobUrlResolver;
         private readonly IBrowseFilterService _browseFilterService;
         private readonly IItemBrowsingService _browseService;
 
@@ -51,7 +52,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
             Func<IFoundationAppConfigRepository> foundationAppConfigRepFactory,
             Func<ICatalogOutlineBuilder> catalogOutlineBuilderFactory,
             Func<IStoreRepository> storeRepository,
-            IAssetUrlResolver assetUrlResolver,
+            IBlobUrlResolver blobUrlResolver,
             ISettingsManager settingsManager,
             ICacheRepository cache)
             : base(storeRepository, settingsManager, cache)
@@ -60,7 +61,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
             this._foundationCatalogRepositoryFactory = foundationCatalogRepositoryFactory;
             this._foundationAppConfigRepFactory = foundationAppConfigRepFactory;
             this._catalogOutlineBuilderFactory = catalogOutlineBuilderFactory;
-            this._assetUrlResolver = assetUrlResolver;
+			this._blobUrlResolver = blobUrlResolver;
             this._browseService = browseService;
             this._browseFilterService = browseFilterService;
         }
@@ -84,7 +85,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 
             if (result != null)
             {
-                var webModelProduct = result.ToWebModel(this._assetUrlResolver);
+                var webModelProduct = result.ToWebModel(this._blobUrlResolver);
                 //Build category path outline for requested catalog, can be virtual catalog as well
                 webModelProduct.Outline =
                     this._catalogOutlineBuilderFactory()
@@ -143,7 +144,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
                 if (keywordValue != null)
                 {
                     var result = this._itemService.GetById(keywordValue.KeywordValue, responseGroup);
-                    return this.Ok(result.ToWebModel(this._assetUrlResolver));
+                    return this.Ok(result.ToWebModel(this._blobUrlResolver));
                 }
             }
             return this.StatusCode(HttpStatusCode.NotFound);

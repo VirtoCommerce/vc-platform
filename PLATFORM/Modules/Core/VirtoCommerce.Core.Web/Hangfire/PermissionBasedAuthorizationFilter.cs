@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Hangfire.Dashboard;
 using Microsoft.Owin;
-using VirtoCommerce.Framework.Web.Security;
+using VirtoCommerce.Platform.Core.Security;
 
 namespace VirtoCommerce.CoreModule.Web.Hangfire
 {

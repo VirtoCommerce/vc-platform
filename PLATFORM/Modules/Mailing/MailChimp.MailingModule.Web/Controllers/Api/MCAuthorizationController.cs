@@ -7,7 +7,7 @@ using System.Web.Http.Description;
 using MailChimp.Helper;
 using MailChimp.Lists;
 using MailChimp.MailingModule.Web.Services;
-using VirtoCommerce.Framework.Web.Settings;
+using VirtoCommerce.Platform.Core.Settings;
 
 namespace MailChimp.MailingModule.Web.Controllers.Api
 {

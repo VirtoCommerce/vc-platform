@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using VirtoCommerce.Domain.Search;
 using VirtoCommerce.Foundation.Search;
-using VirtoCommerce.Framework.Web.Search;
 
 namespace VirtoCommerce.CoreModule.Web.Search
 {

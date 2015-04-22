@@ -5,7 +5,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using VirtoCommerce.CatalogModule.Web.Model.Notifications;
 using VirtoCommerce.Foundation.Importing.Services;
-using VirtoCommerce.Framework.Web.Notification;
+using VirtoCommerce.Platform.Core.Notification;
 
 namespace VirtoCommerce.CatalogModule.Web.Model
 {

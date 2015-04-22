@@ -14,7 +14,7 @@ using VirtoCommerce.CatalogModule.Web.Model.Notifications;
 using VirtoCommerce.Foundation.DataManagement.Services;
 using VirtoCommerce.Foundation.Importing.Repositories;
 using VirtoCommerce.Foundation.Importing.Services;
-using VirtoCommerce.Framework.Web.Notification;
+using VirtoCommerce.Platform.Core.Notification;
 using webModel = VirtoCommerce.CatalogModule.Web.Model;
 
 namespace VirtoCommerce.CatalogModule.Web.Controllers.Api

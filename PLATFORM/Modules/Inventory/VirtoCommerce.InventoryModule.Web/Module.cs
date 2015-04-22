@@ -1,9 +1,9 @@
 ﻿using Microsoft.Practices.Unity;
 using VirtoCommerce.Domain.Inventory.Services;
 using VirtoCommerce.Foundation.Data.Infrastructure.Interceptors;
-using VirtoCommerce.Framework.Web.Modularity;
 using VirtoCommerce.InventoryModule.Data.Repositories;
 using VirtoCommerce.InventoryModule.Data.Services;
+using VirtoCommerce.Platform.Core.Modularity;
 
 namespace VirtoCommerce.InventoryModule.Web
 {

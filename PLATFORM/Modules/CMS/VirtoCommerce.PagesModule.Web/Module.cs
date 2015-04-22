@@ -1,4 +1,7 @@
-﻿namespace VirtoCommerce.PagesModule.Web
+﻿using VirtoCommerce.Platform.Core.Modularity;
+using VirtoCommerce.Platform.Core.Settings;
+
+namespace VirtoCommerce.PagesModule.Web
 {
 	#region
 
@@ -11,8 +14,6 @@
 	using VirtoCommerce.Content.Pages.Data.Services;
 	using VirtoCommerce.Foundation.Data.Infrastructure;
 	using VirtoCommerce.Foundation.Data.Infrastructure.Interceptors;
-	using VirtoCommerce.Framework.Web.Modularity;
-	using VirtoCommerce.Framework.Web.Settings;
 	using VirtoCommerce.PagesModule.Web.Controllers.Api;
 
 	#endregion

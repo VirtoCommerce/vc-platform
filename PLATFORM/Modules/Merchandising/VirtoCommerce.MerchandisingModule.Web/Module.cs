@@ -5,8 +5,6 @@ using VirtoCommerce.Caching.HttpCache;
 using VirtoCommerce.CatalogModule.Data.Repositories;
 using VirtoCommerce.CatalogModule.Data.Services;
 using VirtoCommerce.Foundation;
-using VirtoCommerce.Foundation.Assets.Repositories;
-using VirtoCommerce.Foundation.Assets.Services;
 using VirtoCommerce.Foundation.Catalogs;
 using VirtoCommerce.Foundation.Catalogs.Repositories;
 using VirtoCommerce.Foundation.Catalogs.Services;
@@ -33,11 +31,12 @@ using VirtoCommerce.Foundation.Search.CQRS;
 using VirtoCommerce.Foundation.Search.Factories;
 using VirtoCommerce.Foundation.Search.Repositories;
 using VirtoCommerce.Foundation.Stores.Repositories;
-using VirtoCommerce.Framework.Web.Modularity;
-using VirtoCommerce.Framework.Web.Settings;
 using VirtoCommerce.MerchandisingModule.Web.BackgroundJobs;
 using VirtoCommerce.MerchandisingModule.Web.Controllers;
 using VirtoCommerce.MerchandisingModule.Web.Services;
+using VirtoCommerce.Platform.Core.Asset;
+using VirtoCommerce.Platform.Core.Modularity;
+using VirtoCommerce.Platform.Core.Settings;
 using VirtoCommerce.Search.Index;
 
 namespace VirtoCommerce.MerchandisingModule.Web
@@ -129,14 +128,14 @@ namespace VirtoCommerce.MerchandisingModule.Web
             #endregion
 
             var blobStorageProvider = _container.Resolve<IBlobStorageProvider>();
-            var assetUrlResolver = _container.Resolve<IAssetUrlResolver>();
+            var blobUrlResolver = _container.Resolve<IBlobUrlResolver>();
 
             var itemBrowseService = new ItemBrowsingService(
                 itemService,
                 catalogRepFactory,
                 searchProvider,
                 cacheRepository,
-                assetUrlResolver,
+                blobUrlResolver,
                 searchConnection);
             var filterService = new FilterService(storeRepFactory, catalogRepFactory, new HttpCacheRepository());
 
@@ -194,7 +193,6 @@ namespace VirtoCommerce.MerchandisingModule.Web
                     new PriceListAssignmentEvaluationContext(),
                     settingsManager,
                     cacheRepository));
-            _container.RegisterType<IAssetService, AssetService>();
             _container.RegisterType<IItemBrowsingService, ItemBrowsingService>();
 
             //Register prmotion evaluation policies

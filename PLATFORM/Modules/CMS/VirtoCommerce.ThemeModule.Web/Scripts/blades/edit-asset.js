@@ -3,20 +3,28 @@
 ])
 .controller('editAssetController', ['$scope', 'dialogService', 'themes', '$timeout', function ($scope, dialogService, themes, $timeout) {
     var blade = $scope.blade;
+    var codemirrorEditor;
 
     function initializeBlade() {
         if (!blade.newAsset) {
             themes.getAsset({ storeId: blade.choosenStoreId, themeId: blade.choosenThemeId, assetId: blade.choosenAssetId }, function (data) {
                 blade.isLoading = false;
-                blade.currentEntity = angular.copy(data);
-                blade.origEntity = data;
+                blade.currentEntity = data;
+
+                $timeout(function () {
+                    if (codemirrorEditor) {
+                        codemirrorEditor.refresh();
+                        codemirrorEditor.focus();
+                    }
+                    blade.origEntity = angular.copy(blade.currentEntity);
+                }, 1);
             });
 
             $scope.bladeToolbarCommands = [
 			{
 			    name: "Save", icon: 'fa fa-save',
 			    executeMethod: function () {
-			        saveChanges();
+			        $scope.saveChanges();
 			    },
 			    canExecuteMethod: function () {
 			        return isDirty();
@@ -42,17 +50,6 @@
 			}];
         }
         else {
-            $scope.bladeToolbarCommands = [
-			{
-			    name: "Save", icon: 'fa fa-save',
-			    executeMethod: function () {
-			        saveChanges();
-			    },
-			    canExecuteMethod: function () {
-			        return isCanSave();
-			    }
-			}];
-
             blade.isLoading = false;
         }
     };
@@ -61,7 +58,7 @@
         return !angular.equals(blade.currentEntity, blade.origEntity);
     };
 
-    function saveChanges() {
+    $scope.saveChanges = function() {
         blade.isLoading = true;
 
         themes.updateAsset({ storeId: blade.choosenStoreId, themeId: blade.choosenThemeId }, blade.currentEntity, function () {
@@ -113,7 +110,7 @@
                 message: "The asset has been modified. Do you want to save changes?",
                 callback: function (needSave) {
                     if (needSave) {
-                        saveChanges();
+                        $scope.saveChanges();
                     }
                     closeCallback();
                 }
@@ -131,11 +128,11 @@
     $scope.editorOptions = {
         lineWrapping: true,
         lineNumbers: true,
+        extraKeys: { "Ctrl-Q": function (cm) { cm.foldCode(cm.getCursor()); } },
+        foldGutter: true,
+        gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"],
         onLoad: function (_editor) {
-            $timeout(function () {
-                _editor.refresh();
-                _editor.focus();
-            }, 100);
+            codemirrorEditor = _editor;
         },
         // mode: 'htmlmixed'
         mode: { name: "javascript", globalVars: true }

@@ -6,7 +6,7 @@ using System.Web.Http;
 using System.Web.Http.Description;
 using VirtoCommerce.CatalogModule.Web.Converters;
 using VirtoCommerce.Domain.Catalog.Services;
-using VirtoCommerce.Foundation.Assets.Services;
+using VirtoCommerce.Platform.Core.Asset;
 using moduleModel = VirtoCommerce.Domain.Catalog.Model;
 using webModel = VirtoCommerce.CatalogModule.Web.Model;
 
@@ -17,13 +17,13 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
     {
         private readonly IItemService _itemsService;
         private readonly IPropertyService _propertyService;
-        private readonly IAssetUrlResolver _assetUrlResolver;
+		private readonly IBlobUrlResolver _blobUrlResolver;
 
-        public ProductsController(IItemService itemsService, IPropertyService propertyService, IAssetUrlResolver assetUrlResolver)
+		public ProductsController(IItemService itemsService, IPropertyService propertyService, IBlobUrlResolver blobUrlResolver)
         {
             _itemsService = itemsService;
             _propertyService = propertyService;
-            _assetUrlResolver = assetUrlResolver;
+			_blobUrlResolver = blobUrlResolver;
         }
 
         // GET: api/catalog/products/5
@@ -39,7 +39,7 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
             }
 
 			var properties = GetAllCatalogProperies(item.CatalogId, item.CategoryId);
-            var retVal = item.ToWebModel(_assetUrlResolver, properties);
+			var retVal = item.ToWebModel(_blobUrlResolver, properties);
 
             return Ok(retVal);
         }
@@ -94,7 +94,7 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
             }
 
 			var properties = GetAllCatalogProperies(product.CatalogId, product.CategoryId);
-		    var mainWebProduct = product.ToWebModel(_assetUrlResolver, properties);
+		    var mainWebProduct = product.ToWebModel(_blobUrlResolver, properties);
 
             var newVariation = new webModel.Product
             {
@@ -172,7 +172,7 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 
         private moduleModel.CatalogProduct UpdateProduct(webModel.Product product)
         {
-            var moduleProduct = product.ToModuleModel(_assetUrlResolver);
+            var moduleProduct = product.ToModuleModel(_blobUrlResolver);
             if (moduleProduct.Id == null)
             {
                 return _itemsService.Create(moduleProduct);

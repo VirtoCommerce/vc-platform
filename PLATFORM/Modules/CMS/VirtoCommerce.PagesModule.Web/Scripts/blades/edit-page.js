@@ -4,6 +4,7 @@
 ])
 .controller('editPageController', ['$scope', 'dialogService', 'pagesStores', 'pages', '$timeout', function ($scope, dialogService, pagesStores, pages, $timeout) {
     var blade = $scope.blade;
+    var codemirrorEditor;
 
     blade.refresh = function () {
         pagesStores.get({ id: blade.choosenStoreId }, function (data) {
@@ -13,15 +14,22 @@
             if (!blade.newPage) {
                 pages.getPage({ storeId: blade.choosenStoreId, language: blade.choosenPageLanguage, pageName: blade.choosenPageName }, function (data) {
                     blade.isLoading = false;
-                    blade.currentEntity = angular.copy(data);
-                    blade.origEntity = data;
+                    blade.currentEntity = data;
+                    
+                    $timeout(function () {
+                        if (codemirrorEditor) {
+                            codemirrorEditor.refresh();
+                            codemirrorEditor.focus();
+                        }
+                        blade.origEntity = angular.copy(blade.currentEntity);
+                    }, 1);
                 });
 
                 $scope.bladeToolbarCommands = [
 				{
 				    name: "Save page", icon: 'fa fa-save',
 				    executeMethod: function () {
-				        saveChanges();
+				        $scope.saveChanges();
 				    },
 				    canExecuteMethod: function () {
 				        return isDirty();
@@ -49,17 +57,6 @@
             else {
                 blade.currentEntity = { storeId: blade.choosenStoreId, language: blade.defaultStoreLanguage };
 
-                $scope.bladeToolbarCommands = [
-				{
-				    name: "Save page", icon: 'fa fa-save',
-				    executeMethod: function () {
-				        saveChanges();
-				    },
-				    canExecuteMethod: function () {
-				        return isCanSave();
-				    }
-				}];
-
                 blade.isLoading = false;
             }
         });
@@ -69,7 +66,7 @@
         return !angular.equals(blade.currentEntity, blade.origEntity);
     };
 
-    function saveChanges() {
+    $scope.saveChanges = function () {
         blade.isLoading = true;
 
         if (blade.newPage) {
@@ -144,7 +141,7 @@
                 message: "The page has been modified. Do you want to save changes?",
                 callback: function (needSave) {
                     if (needSave) {
-                        saveChanges();
+                        $scope.saveChanges();
                     }
                     closeCallback();
                 }
@@ -187,11 +184,11 @@
     $scope.editorOptions = {
         lineWrapping: true,
         lineNumbers: true,
+        extraKeys: { "Ctrl-Q": function (cm) { cm.foldCode(cm.getCursor()); } },
+        foldGutter: true,
+        gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"],
         onLoad: function (_editor) {
-            $timeout(function () {
-                _editor.refresh();
-                _editor.focus();
-            }, 100);
+            codemirrorEditor = _editor;
         },
         //mode: 'xml'
         mode: 'htmlmixed'

@@ -29,7 +29,7 @@ namespace VirtoCommerce.MarketingModule.Data.Repositories
 		public DynamicContentFolder GetContentFolderById(string id)
 		{
 			var retVal = Folders.FirstOrDefault(x => x.DynamicContentFolderId == id);
-			if(retVal != null)
+			if (retVal != null)
 			{
 				if (retVal.ParentFolderId != null)
 				{
@@ -41,8 +41,8 @@ namespace VirtoCommerce.MarketingModule.Data.Repositories
 
 		public DynamicContentItem GetContentItemById(string id)
 		{
-			var retVal =  Items.Include(x => x.PropertyValues).FirstOrDefault(x => x.DynamicContentItemId == id);
-			if(retVal != null)
+			var retVal = Items.Include(x => x.PropertyValues).FirstOrDefault(x => x.DynamicContentItemId == id);
+			if (retVal != null)
 			{
 				retVal.Folder = GetContentFolderById(retVal.FolderId);
 			}
@@ -51,7 +51,7 @@ namespace VirtoCommerce.MarketingModule.Data.Repositories
 
 		public DynamicContentPlace GetContentPlaceById(string id)
 		{
-			var retVal =  Places.FirstOrDefault(x => x.DynamicContentPlaceId == id);
+			var retVal = Places.FirstOrDefault(x => x.DynamicContentPlaceId == id);
 			if (retVal != null)
 			{
 				retVal.Folder = GetContentFolderById(retVal.FolderId);

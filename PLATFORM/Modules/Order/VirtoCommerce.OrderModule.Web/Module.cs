@@ -4,11 +4,11 @@ using VirtoCommerce.Domain.Inventory.Services;
 using VirtoCommerce.Domain.Order.Services;
 using VirtoCommerce.Foundation.Data.Infrastructure.Interceptors;
 using VirtoCommerce.Foundation.Frameworks.Workflow.Services;
-using VirtoCommerce.Framework.Web.Modularity;
 using VirtoCommerce.OrderModule.Data.Orders;
 using VirtoCommerce.OrderModule.Data.Repositories;
 using VirtoCommerce.OrderModule.Data.Services;
 using VirtoCommerce.OrderModule.Data.Workflow;
+using VirtoCommerce.Platform.Core.Modularity;
 
 namespace VirtoCommerce.OrderModule.Web
 {

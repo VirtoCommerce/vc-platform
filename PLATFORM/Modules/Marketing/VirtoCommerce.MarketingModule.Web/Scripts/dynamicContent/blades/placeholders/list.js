@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.marketingModule')
-.controller('placeholdersDynamicContentListController', ['$scope', 'marketing_dynamicContents_res_search', 'bladeNavigationService', function ($scope, marketing_dynamicContents_res_search, bladeNavigationService) {
+.controller('placeholdersDynamicContentListController', ['$scope', 'marketing_dynamicContents_res_search', 'marketing_dynamicContents_res_folders', 'bladeNavigationService', function ($scope, marketing_dynamicContents_res_search, marketing_dynamicContents_res_folders, bladeNavigationService) {
 	var blade = $scope.blade;
 	blade.choosenFolder = 'ContentPlace';
 	blade.currentEntity = undefined;
@@ -8,7 +8,7 @@
 	$scope.selectedNodeId = null;
 
 	blade.initialize = function () {
-		marketing_dynamicContents_res_search.search({ folder: 'ContentPlace', respGroup: 'Full' }, function (data) {
+		marketing_dynamicContents_res_search.search({ folder: 'ContentPlace', respGroup: '20' }, function (data) {
 			blade.currentEntities = data.contentFolders;
 		});
 
@@ -96,17 +96,15 @@
 	}
 
 	blade.folderClick = function (placeholderFolder) {
+		blade.closeChildrenBlades();
+
 		if (angular.isUndefined(blade.choosenFolder) || !angular.equals(blade.choosenFolder, placeholderFolder.id)) {
 			blade.choosenFolder = placeholderFolder.id;
 			blade.currentEntity = placeholderFolder;
-			marketing_dynamicContents_res_search.search({ folder: placeholderFolder.id, respGroup: 'Full' }, function (data) {
+			marketing_dynamicContents_res_search.search({ folder: placeholderFolder.id, respGroup: '20' }, function (data) {
 				placeholderFolder.childrenFolders = data.contentFolders;
 				placeholderFolder.placeholders = data.contentPlaces;
 			});
-		}
-		else {
-			blade.choosenFolder = placeholderFolder.parentFolderId;
-			blade.currentEntity = undefined;
 		}
 	}
 
@@ -138,32 +136,58 @@
 
 	blade.updateChoosen = function () {
 		if (blade.choosenFolder === 'ContentPlace') {
-			marketing_dynamicContents_res_search.search({ folder: blade.choosenFolder, respGroup: 'Full' }, function (data) {
+			marketing_dynamicContents_res_search.search({ folder: blade.choosenFolder, respGroup: '20' }, function (data) {
 				blade.currentEntities = data.contentFolders;
 			});
 		}
 		else {
-			marketing_dynamicContents_res_search.search({ folder: blade.choosenFolder, respGroup: 'Full' }, function (data) {
+			marketing_dynamicContents_res_search.search({ folder: blade.choosenFolder, respGroup: '20' }, function (data) {
 				blade.currentEntity.childrenFolders = data.contentFolders;
 				blade.currentEntity.placeholders = data.contentPlaces;
 			});
 		}
 	};
 
-	blade.deleteLink = function (data) {
+	blade.clickDefault = function () {
+		blade.choosenFolder = 'ContentPlace';
+		blade.currentEntity = undefined;
+	}
 
+	blade.deleteFolder = function (data) {
+		marketing_dynamicContents_res_folders.delete({ ids: [data.id] }, function () {
+			if (data.id === blade.choosenFolder) {
+				blade.choosenFolder = data.parentFolderId;
+				var coll = blade.currentEntities;
+				var newColl = [];
+				var ent = undefined;
+				while (coll.length > 0) {
+					angular.forEach(coll, function (folder) {
+						if (folder.id === blade.choosenFolder) {
+							ent = folder;
+						}
+						angular.forEach(folder.childrenFolders, function (folder) {
+							newColl.push(folder)
+						})
+					});
+					if (ent !== undefined) {
+						coll = [];
+					}
+					else {
+						coll = newColl;
+					}
+				}
+
+				blade.currentEntity = ent;
+			}
+
+			marketing_dynamicContents_res_search.search({ folder: blade.choosenFolder, respGroup: '20' }, function (data) {
+				blade.currentEntity.childrenFolders = data.contentFolders;
+				blade.currentEntity.palceholders = data.contentPlaces;
+			});
+		});
 	}
 
 	$scope.bladeToolbarCommands = [
-        {
-        	name: "Refresh", icon: 'fa fa-refresh',
-        	executeMethod: function () {
-        		$scope.blade.refresh();
-        	},
-        	canExecuteMethod: function () {
-        		return true;
-        	}
-        },
         {
         	name: "Add", icon: 'fa fa-plus',
         	executeMethod: function () {

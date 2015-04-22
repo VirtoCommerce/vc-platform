@@ -4,12 +4,12 @@ using System.Linq;
 using VirtoCommerce.Domain.Common;
 using VirtoCommerce.Domain.Marketing.Services;
 using VirtoCommerce.Foundation.Data.Infrastructure.Interceptors;
-using VirtoCommerce.Framework.Web.Modularity;
 using VirtoCommerce.MarketingModule.Data.Repositories;
 using VirtoCommerce.MarketingModule.Data.Services;
 using VirtoCommerce.MarketingModule.Expressions.Promotion;
 using VirtoCommerce.MarketingModule.Expressions;
 using VirtoCommerce.MarketingModule.Web.Model;
+using VirtoCommerce.Platform.Core.Modularity;
 
 namespace VirtoCommerce.MarketingModule.Web
 {
