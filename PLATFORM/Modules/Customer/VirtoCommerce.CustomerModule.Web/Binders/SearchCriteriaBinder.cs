@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Http.ModelBinding;
-using VirtoCommerce.Foundation.Frameworks.Extensions;
 using VirtoCommerce.CustomerModule.Web.Model;
+using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.CustomerModule.Web.Binders
 {

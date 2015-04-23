@@ -3,21 +3,21 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using foundationModel = VirtoCommerce.Foundation.Customers.Model;
+using foundationModel = VirtoCommerce.CustomerModule.Data.Model;
 using coreModel = VirtoCommerce.Domain.Customer.Model;
 using VirtoCommerce.Domain.Store.Services;
-using VirtoCommerce.Foundation.Data.Infrastructure;
 using VirtoCommerce.Domain.Customer.Services;
 using VirtoCommerce.CustomerModule.Data.Repositories;
 using VirtoCommerce.CustomerModule.Data.Converters;
 using System.Data.Entity;
+using VirtoCommerce.Platform.Data.Infrastructure;
 
 namespace VirtoCommerce.CustomerModule.Data.Services
 {
 	public class OrganizationServiceImpl : ServiceBase, IOrganizationService
 	{
-		private readonly Func<IFoundationCustomerRepository> _repositoryFactory;
-		public OrganizationServiceImpl(Func<IFoundationCustomerRepository> repositoryFactory)
+		private readonly Func<ICustomerRepository> _repositoryFactory;
+		public OrganizationServiceImpl(Func<ICustomerRepository> repositoryFactory)
 		{
 			_repositoryFactory = repositoryFactory;
 		}
@@ -48,7 +48,7 @@ namespace VirtoCommerce.CustomerModule.Data.Services
 				repository.Add(entity);
 				CommitChanges(repository);
 			}
-            retVal = GetById(entity.MemberId);
+            retVal = GetById(entity.Id);
 			return retVal;
 		}
 
