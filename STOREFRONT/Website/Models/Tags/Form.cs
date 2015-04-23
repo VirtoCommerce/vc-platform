@@ -1,5 +1,6 @@
 ﻿using DotLiquid;
 using DotLiquid.Exceptions;
+using DotLiquid.Util;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -10,9 +11,10 @@ namespace VirtoCommerce.Web.Models.Tags
 {
     public class Form : Block
     {
-        private static readonly Regex Syntax = new Regex(string.Format(@"^({0})", Liquid.QuotedFragment));
+        private static readonly Regex Syntax = R.B(R.Q(@"('{0}'),?\s?({0})?"), Liquid.QuotedFragment);
 
         private string _formId;
+        private Variable _parameter;
 
         public override void Initialize(string tagName, string markup, List<string> tokens)
         {
@@ -28,6 +30,7 @@ namespace VirtoCommerce.Web.Models.Tags
                 {
                     if (markup.Trim() == "'customer_address', customer.new_address")
                     {
+                        var variable = CreateVariable("new_address");
                         _formId = "new";
                     }
                     else if (markup.Trim() == "'customer_address', address")

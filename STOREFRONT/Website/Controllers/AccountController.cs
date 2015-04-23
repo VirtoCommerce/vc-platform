@@ -587,7 +587,19 @@ namespace VirtoCommerce.Web.Controllers
         [HttpGet]
         public ActionResult Addresses()
         {
+            Session["Forms"] = null;
+
             var forms = new List<SubmitForm>();
+
+            var newAddress = new SubmitForm
+            {
+                ActionLink = "/Account/NewAddress",
+                Id = "new",
+                FormType = "customer_address",
+            };
+            newAddress.Properties["id"] = "new";
+
+            forms.Add(newAddress);
 
             foreach (var address in this.Context.Customer.Addresses)
             {
@@ -613,18 +625,9 @@ namespace VirtoCommerce.Web.Controllers
                 forms.Add(addressForm);
             }
 
-            var newAddress = new SubmitForm
-            {
-                ActionLink = "/Account/NewAddress",
-                Id = "address_form_new",
-                FormType = "customer_address"
-            };
-
-            forms.Add(newAddress);
-
             UpdateForms(forms.ToArray());
 
-            return this.View("customers/addresses");
+            return View("customers/addresses");
         }
 
         //
@@ -632,22 +635,34 @@ namespace VirtoCommerce.Web.Controllers
         [HttpPost]
         public async Task<ActionResult> NewAddress(NewAddressFormModel formModel)
         {
-            var form = GetForm(formModel.form_type);
+            var form = GetForm(formModel.Id);
 
-            //if (!this.ModelState.IsValid)
-            //{
-            //    var errors = this.ModelState.Values.SelectMany(v => v.Errors);
-            //    form.Errors = new[] { errors.Select(e => e.ErrorMessage).FirstOrDefault() };
+            if (form != null)
+            {
+                var formErrors = GetFormErrors(ModelState);
 
-            //    return this.View("customers/addresses");
-            //}
+                if (formErrors == null)
+                {
+                    form.PostedSuccessfully = true;
 
-            var customer = this.Context.Customer;
-            customer.Addresses.Add(formModel.AsWebModel());
+                    Context.Customer.Addresses.Add(formModel.AsWebModel());
 
-            await this.CustomerService.UpdateCustomerAsync(customer);
+                    await this.CustomerService.UpdateCustomerAsync(Context.Customer);
+                }
+                else
+                {
+                    form.Errors = formErrors;
+                    form.PostedSuccessfully = false;
 
-            return this.View("customers/addresses");
+                    UpdateForms(new[] { form });
+                }
+
+                return View("customers/addresses");
+            }
+
+            Context.ErrorMessage = "Liquid error: Form context was not found.";
+
+            return View("error");
         }
 
         //

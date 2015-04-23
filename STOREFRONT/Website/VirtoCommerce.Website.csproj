@@ -201,7 +201,6 @@
     <Compile Include="Models\Extensions\StringExtensions.cs" />
     <Compile Include="Models\Extensions\UrlHelperExtensions.cs" />
     <Compile Include="Models\Filters\TranslationFilter.cs" />
-    <Compile Include="Models\FormModels\BaseAddressFormModel.cs" />
     <Compile Include="Models\FormModels\CheckoutFirstStepFormModel.cs" />
     <Compile Include="Models\FormModels\CheckoutSecondStepFormModel.cs" />
     <Compile Include="Models\FormModels\CustomerAddressFormModel.cs" />
