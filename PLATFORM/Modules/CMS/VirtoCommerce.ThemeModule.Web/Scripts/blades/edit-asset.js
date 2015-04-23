@@ -165,7 +165,7 @@
 
     // Codemirror configuration
     $scope.editorOptions = {
-        lineWrapping: false,
+        lineWrapping: true,
         lineNumbers: true,
         parserfile: "liquid.js",
         extraKeys: { "Ctrl-Q": function (cm) { cm.foldCode(cm.getCursor()); } },
