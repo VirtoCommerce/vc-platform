@@ -4,7 +4,7 @@
   	$stateProvider
 		.state('notificationsHistory', {
 			url: '/notification/:id',
-			templateUrl: 'Scripts/common/notification/notification.tpl.html',
+			templateUrl: 'Scripts/app/notification/notification.tpl.html',
 			controller: ['$scope', 'bladeNavigationService', 'notificationService', function ($scope, bladeNavigationService, notificationService) {
 				var blade = {
 					id: 'notifications',
@@ -12,7 +12,7 @@
 					breadcrumbs: [],
 					subtitle: 'Notifications history',
 					controller: 'notificationsHistoryController',
-					template: 'Scripts/common/notification/blade/history.tpl.html',
+					template: 'Scripts/app/notification/blade/history.tpl.html',
 					isClosingDisabled: true
 				};
 				bladeNavigationService.showBlade(blade);
@@ -42,7 +42,7 @@
 			priority: 1000,
 			satisfy: function (notification, place) { return place == 'menu'; },
 			//template for display that notification in menu and list
-			template: 'Scripts/common/notification/menuDefault.tpl.html',
+			template: 'Scripts/app/notification/menuDefault.tpl.html',
 			//action executed when notification selected
 			action: function (notify) { $state.go('notificationsHistory', notify) }
 		};
@@ -53,14 +53,14 @@
 			priority: 1000,
 			satisfy: function (notification, place) { return place == 'history'; },
 			//template for display that notification in menu and list
-			template: 'Scripts/common/notification/blade/historyDefault.tpl.html',
+			template: 'Scripts/app/notification/blade/historyDefault.tpl.html',
 			//action executed in event detail
 			action: function (notify) {
 				var blade = {
 					id: 'notifyDetail',
 					title: 'Event detail',
 					subtitle: 'Event detail',
-					template: 'Scripts/common/notification/blade/historyDetailDefault.tpl.html',
+					template: 'Scripts/app/notification/blade/historyDetailDefault.tpl.html',
 					isClosingDisabled: false,
 					notify: notify
 				};
@@ -165,9 +165,9 @@
 			            title: 'Notifications',
 			            priority: 2,
 			            permission: '',
-			            headerTemplate: 'Scripts/common/notification/menuHeader.tpl.html',
-			            listTemplate: 'Scripts/common/notification/menuList.tpl.html',
-			            template: 'Scripts/common/notification/menu.tpl.html',
+			            headerTemplate: 'Scripts/app/notification/menuHeader.tpl.html',
+			            listTemplate: 'Scripts/app/notification/menuList.tpl.html',
+			            template: 'Scripts/app/notification/menu.tpl.html',
 			            action: function () { markAllAsRead(); },
 			            showHistory: function () { $state.go('notificationsHistory'); },
 			            clearRecent: function () { notifyMenu.children.splice(0, notifyMenu.children.length); },

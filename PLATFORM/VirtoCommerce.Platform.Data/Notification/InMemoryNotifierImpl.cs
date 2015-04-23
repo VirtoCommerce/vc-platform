@@ -2,17 +2,25 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNet.SignalR;
-using VirtoCommerce.CoreModule.Web.SignalR;
-using VirtoCommerce.Foundation.Frameworks.Extensions;
 using VirtoCommerce.Platform.Core.Notification;
-
-namespace VirtoCommerce.CoreModule.Web.Notification
+using VirtoCommerce.Platform.Core.Common;
+namespace VirtoCommerce.Platform.Data.Notification
 {
+	[CLSCompliant(false)]
+	public class ClientPushHub : Hub
+	{
+	}
+
+	[CLSCompliant(false)]
     public class InMemoryNotifierImpl : INotifier
     {
         private List<NotifyEvent> _innerList = new List<NotifyEvent>();
-        private IHubContext hub = GlobalHost.ConnectionManager.GetHubContext<ClientPushHub>();
-        
+		private readonly IHubContext _hubSignalR;
+
+		public InMemoryNotifierImpl(IHubContext hubSignalR)
+		{
+			_hubSignalR = hubSignalR;
+		}
         #region INotifier Members
 
         public void Upsert(NotifyEvent notify)
@@ -42,7 +50,7 @@ namespace VirtoCommerce.CoreModule.Web.Notification
 
             if (notify.New)
             {
-                hub.Clients.All.notification(notify);
+                _hubSignalR.Clients.All.notification(notify);
             }
         }
 

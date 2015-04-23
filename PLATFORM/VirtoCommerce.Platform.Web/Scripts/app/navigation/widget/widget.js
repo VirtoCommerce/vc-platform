@@ -18,7 +18,7 @@
 	return {
 		restrict: 'E',
 		replace: true,
-		templateUrl: 'Scripts/common/navigation/widget/widgetContainer.tpl.html',
+		templateUrl: 'Scripts/app/navigation/widget/widgetContainer.tpl.html',
 		scope: {
 		    group: '@',
             blade: '='

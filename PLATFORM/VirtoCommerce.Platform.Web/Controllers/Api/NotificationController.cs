@@ -7,7 +7,7 @@ using System.Web.Http;
 using System.Web.Http.Description;
 using VirtoCommerce.Platform.Core.Notification;
 
-namespace VirtoCommerce.CoreModule.Web.Controllers.Api
+namespace VirtoCommerce.Platform.Web.Controllers.Api
 {
     [RoutePrefix("api/notifications")]
     public class NotificationController : ApiController

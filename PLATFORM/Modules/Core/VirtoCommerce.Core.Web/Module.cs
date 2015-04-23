@@ -5,7 +5,6 @@ using Microsoft.Owin.Security;
 using Microsoft.Practices.Unity;
 using Owin;
 using VirtoCommerce.Caching.HttpCache;
-using VirtoCommerce.CoreModule.Web.Notification;
 using VirtoCommerce.CoreModule.Web.Repositories;
 using VirtoCommerce.CoreModule.Web.Search;
 using VirtoCommerce.CoreModule.Web.Security;
@@ -160,12 +159,7 @@ namespace VirtoCommerce.CoreModule.Web
 
             #endregion
 
-            #region Notification
-
-            _container.RegisterType<INotifier, InMemoryNotifierImpl>(new ContainerControlledLifetimeManager());
-
-            #endregion
-
+         
             #region Fulfillment
 
             _container.RegisterType<IFoundationFulfillmentRepository>(new InjectionFactory(c => new FoundationFulfillmentRepositoryImpl(_connectionStringName)));

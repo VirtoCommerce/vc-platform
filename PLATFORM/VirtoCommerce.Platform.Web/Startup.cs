@@ -23,7 +23,10 @@ using VirtoCommerce.Platform.Data.Caching;
 using VirtoCommerce.Platform.Core.Settings;
 using VirtoCommerce.Platform.Data.Settings;
 using VirtoCommerce.Platform.Data.Repositories;
+using Microsoft.AspNet.SignalR;
 using VirtoCommerce.Platform.Data.Infrastructure.Interceptors;
+using VirtoCommerce.Platform.Data.Notification;
+using VirtoCommerce.Platform.Core.Notification;
 
 [assembly: OwinStartup(typeof(Startup))]
 
@@ -106,7 +109,13 @@ namespace VirtoCommerce.Platform.Web
 			container.RegisterInstance<ICacheProvider>(cacheProvider);
 
             #endregion
-		
+
+			#region Notifications
+			var hubSignalR = GlobalHost.ConnectionManager.GetHubContext<ClientPushHub>();
+			var notifier = new InMemoryNotifierImpl(hubSignalR);
+			container.RegisterInstance<INotifier>(notifier);
+
+			#endregion
 
             #region Assets
 

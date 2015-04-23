@@ -4,7 +4,7 @@ angular.module('platformWebApp')
     return {
         restrict: 'E',
         replace: true,
-        templateUrl: 'Scripts/common/navigation/blade/bladeContainer.tpl.html',
+        templateUrl: 'Scripts/app/navigation/blade/bladeContainer.tpl.html',
         link: function (scope)
         {
             scope.blades = bladeNavigationService.stateBlades();
