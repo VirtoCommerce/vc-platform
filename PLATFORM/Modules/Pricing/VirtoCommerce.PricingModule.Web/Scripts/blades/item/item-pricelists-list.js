@@ -1,6 +1,4 @@
-﻿angular.module('virtoCommerce.pricingModule.blades.item', [
-    'virtoCommerce.pricingModule.resources.pricing'
-])
+﻿angular.module('virtoCommerce.pricingModule')
 .controller('itemPricelistsListController', ['$scope', 'prices', 'bladeNavigationService', function ($scope, prices, bladeNavigationService) {
     $scope.selectedItem = null;
 

@@ -1,7 +1,4 @@
-﻿angular.module('virtoCommerce.pricingModule.widget.itemPricesWidget', [
-    'virtoCommerce.pricingModule.blades.item',
-    'virtoCommerce.pricingModule.resources.pricing'
-])
+﻿angular.module('virtoCommerce.pricingModule')
 .controller('itemPricesWidgetController', ['$scope', '$filter', 'bladeNavigationService', 'prices', function ($scope, $filter, bladeNavigationService, prices) {
     $scope.currentBlade = $scope.widget.blade;
 

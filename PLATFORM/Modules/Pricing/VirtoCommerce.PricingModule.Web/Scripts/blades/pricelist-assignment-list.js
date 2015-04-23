@@ -16,8 +16,8 @@
             origEntity: selectedNode,
             title: selectedNode.name,
             subtitle: 'Edit catalog assignment',
-            controller: 'pricelistAssignmentDetailController',
-            template: 'Modules/$(VirtoCommerce.Pricing)/Scripts/blades/pricelist-assignment-detail.tpl.html'
+            controller: 'assignmentDetailController',
+            template: 'Modules/$(VirtoCommerce.Pricing)/Scripts/blades/assignment-detail.tpl.html'
         };
 
         bladeNavigationService.showBlade(newBlade, $scope.blade);
