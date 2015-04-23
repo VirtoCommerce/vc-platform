@@ -102,6 +102,10 @@
         }
     }
 
+    function endsWith(str, suffix) {
+        return str.indexOf(suffix, str.length - suffix.length) !== -1;
+    }
+
     function getEditorMode() {
         // mode: { name: "htmlmixed" } // html
         // mode: { name: "javascript" } // javascript
@@ -111,25 +115,25 @@
         // mode: "liquid-javascript" // liquid css
 
         if (!blade.newAsset) {
-            if (blade.choosenAssetId.endsWith(".json")) {
+            if (endsWith(blade.choosenAssetId, ".json")) {
                 return { name: "javascript", json: true };
             }
-            else if (blade.choosenAssetId.endsWith(".js")) {
+            else if (endsWith(blade.choosenAssetId, ".js")) {
                 return "javascript";
             }
-            else if (blade.choosenAssetId.endsWith(".js.liquid")) {
+            else if (endsWith(blade.choosenAssetId, ".js.liquid")) {
                 return "liquid-javascript";
             }
-            else if (blade.choosenAssetId.endsWith(".css.liquid")) {
+            else if (endsWith(blade.choosenAssetId, ".css.liquid")) {
                 return "liquid-css";
             }
-            else if (blade.choosenAssetId.endsWith(".css")) {
+            else if (endsWith(blade.choosenAssetId, ".css")) {
                 return "css";
             }
-            else if (blade.choosenAssetId.endsWith(".scss.liquid")) {
+            else if (endsWith(blade.choosenAssetId, ".scss.liquid")) {
                 return "liquid-css";
             }
-            else if (blade.choosenAssetId.endsWith(".liquid")) {
+            else if (endsWith(blade.choosenAssetId, ".liquid")) {
                 return "liquid-html";
             }
 
