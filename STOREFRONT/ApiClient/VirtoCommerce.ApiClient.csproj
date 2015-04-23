@@ -88,6 +88,7 @@
     <Compile Include="DataContracts\Price.cs" />
     <Compile Include="DataContracts\Security\IdentityResult.cs" />
     <Compile Include="DataContracts\Security\SecurityMessage.cs" />
+    <Compile Include="DataContracts\Security\SignInStatus.cs" />
     <Compile Include="DataContracts\Security\UserLoginInfo.cs" />
     <Compile Include="Extensions\InventoryClientExtension.cs" />
     <Compile Include="Extensions\ListClientExtensions.cs" />

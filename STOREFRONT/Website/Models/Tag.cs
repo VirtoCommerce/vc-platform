@@ -6,10 +6,6 @@ using DotLiquid;
 
 namespace VirtoCommerce.Web.Models
 {
-
-    #region
-    #endregion
-
     public class Tag : Drop
     {
         #region Public Properties
@@ -31,7 +27,7 @@ namespace VirtoCommerce.Web.Models
             //return String.Format("{0}_{1} ({2})", Field, Label, Count);
 
             // eliminate count for now, since it problematic to make it work in some templates, especially when determine active tag
-            return String.Format("{0}_{1}", this.Field, this.Label);
+            return String.Format("{0}_{1}", this.Field, this.Label).ToLower();
         }
         #endregion
     }

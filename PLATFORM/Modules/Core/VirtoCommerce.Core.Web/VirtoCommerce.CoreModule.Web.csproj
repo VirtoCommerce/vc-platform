@@ -11,7 +11,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>VirtoCommerce.CoreModule.Web</RootNamespace>
     <AssemblyName>VirtoCommerce.CoreModule.Web</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\..\..\..\..\</SolutionDir>
     <RestorePackages>true</RestorePackages>
@@ -20,6 +20,7 @@
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
     <IISExpressUseClassicPipelineMode />
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -106,13 +107,17 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
-    <Reference Include="System.Core" />
+    <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Net.Http.Formatting, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\packages\Microsoft.AspNet.WebApi.Client.5.2.3\lib\net45\System.Net.Http.Formatting.dll</HintPath>
     </Reference>
     <Reference Include="System.Web" />
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System.Web.DynamicData" />
+    <Reference Include="System.Web.Entity" />
+    <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Web.Http, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\packages\Microsoft.AspNet.WebApi.Core.5.2.3\lib\net45\System.Web.Http.dll</HintPath>
@@ -121,36 +126,27 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\packages\Microsoft.AspNet.WebApi.Owin.5.2.3\lib\net45\System.Web.Http.Owin.dll</HintPath>
     </Reference>
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\AssetsConnection.cs" />
-    <Compile Include="Assets\AssetsProviderManager.cs" />
-    <Compile Include="Assets\AzureAssetsProvider.cs" />
-    <Compile Include="Assets\Model\BlobInfo.cs" />
-    <Compile Include="Assets\LocalAssetsProvider.cs" />
+    <Compile Include="Controllers\Api\FrontendSecurityController.cs" />
     <Compile Include="Converters\SecurityConverters.cs" />
-    <Compile Include="Controllers\Api\AssetsController.cs" />
     <Compile Include="Hangfire\PermissionBasedAuthorizationFilter.cs" />
     <Compile Include="Hangfire\UnityBootstrapperConfigurationExtensions.cs" />
     <Compile Include="Hangfire\UnityJobActivator.cs" />
     <Compile Include="Binders\UserSearchCriteriaBinder.cs" />
     <Compile Include="Controllers\Api\FulfillmentController.cs" />
-    <Compile Include="Controllers\Api\NotificationController.cs" />
     <Compile Include="Controllers\Api\PaymentGatewayController.cs" />
     <Compile Include="Controllers\Api\SecurityController.cs" />
-    <Compile Include="Controllers\Api\SettingController.cs" />
     <Compile Include="Converters\ApiAccountConverter.cs" />
     <Compile Include="Converters\FulfillmentCenterConverter.cs" />
     <Compile Include="Converters\PaymentGatewayConverter.cs" />
     <Compile Include="Model\FulfillmentCenter.cs" />
     <Compile Include="Model\PaymentGateway.cs" />
     <Compile Include="Module.cs" />
-    <Compile Include="Notification\InMemoryNotifierImpl.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\IFoundationFulfillmentRepository.cs" />
     <Compile Include="Repositories\FoundationFulfillmentRepositoryImpl.cs" />
@@ -189,7 +185,6 @@
     <Compile Include="Security\PermissionService.cs" />
     <Compile Include="Security\RoleManagementService.cs" />
     <Compile Include="Services\FulfillmentServiceImpl.cs" />
-    <Compile Include="Settings\SettingsManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\css\dynamic-expression.css" />
@@ -205,8 +200,6 @@
     <Content Include="Scripts\Fulfillment\blades\fulfillment-center-contact.tpl.html" />
     <Content Include="Scripts\Fulfillment\widgets\fulfillmentCenterContactWidget.js" />
     <Content Include="Scripts\Fulfillment\widgets\fulfillmentCenterContactWidget.tpl.html" />
-    <Content Include="Scripts\Settings\blades\setting-dictionary.js" />
-    <Content Include="Scripts\Settings\blades\setting-dictionary.tpl.html" />
     <Content Include="Scripts\virtoCommerce-core.js" />
     <Content Include="Scripts\common\ok-cancel2.tpl.html" />
     <Content Include="Scripts\common\resources\countries.js" />
@@ -219,21 +212,15 @@
     <Content Include="Scripts\Fulfillment\fulfillment.js" />
     <Content Include="Scripts\Fulfillment\widgets\fulfillmentWidget.js" />
     <Content Include="Scripts\Fulfillment\widgets\fulfillmentWidget.tpl.html" />
-    <Content Include="Scripts\Settings\blades\settings-detail.js" />
-    <Content Include="Scripts\Settings\blades\settings-detail.tpl.html" />
-    <Content Include="Scripts\Settings\blades\settings-list.js" />
-    <Content Include="Scripts\Settings\blades\settings-list.tpl.html" />
     <Content Include="Scripts\home.tpl.html" />
-    <Content Include="Scripts\Settings\resources\setting.js" />
-    <Content Include="Scripts\Settings\settings.js" />
     <Content Include="Scripts\common\ok-cancel.tpl.html" />
-    <Content Include="Scripts\Settings\widgets\settingsWidget.js" />
-    <Content Include="Scripts\Settings\widgets\settingsWidget.tpl.html" />
     <None Include="app.config" />
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>
-    <Content Include="web.config" />
+    <Content Include="web.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Scripts\common\blades\address-list.tpl.html" />
     <None Include="web.Debug.config">
       <DependentUpon>web.config</DependentUpon>
@@ -274,6 +261,10 @@
     <ProjectReference Include="..\..\..\VirtoCommerce.Platform.Core\VirtoCommerce.Platform.Core.csproj">
       <Project>{f7c9313b-522e-4619-abc9-8c7d4600d6b5}</Project>
       <Name>VirtoCommerce.Platform.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\VirtoCommerce.Platform.Data\VirtoCommerce.Platform.Data.csproj">
+      <Project>{39afd233-b2f7-4178-817d-0a339c57525d}</Project>
+      <Name>VirtoCommerce.Platform.Data</Name>
     </ProjectReference>
     <ProjectReference Include="..\VirtoCommerce.Domain\VirtoCommerce.Domain.csproj">
       <Project>{67c58a78-ddea-4fa3-a969-1cab582918e4}</Project>

@@ -183,7 +183,6 @@
     <Content Include="Default_Theme\Default\assets\respond.min.js" />
     <Content Include="Default_Theme\Default\assets\slide_1.jpg" />
     <Content Include="Default_Theme\Default\assets\slide_2.jpg" />
-    <Content Include="Default_Theme\Default\config\settings.html" />
     <Content Include="module.manifest" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>

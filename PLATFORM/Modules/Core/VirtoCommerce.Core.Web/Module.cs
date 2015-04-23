@@ -5,16 +5,14 @@ using Microsoft.Owin.Security;
 using Microsoft.Practices.Unity;
 using Owin;
 using VirtoCommerce.Caching.HttpCache;
-using VirtoCommerce.CoreModule.Web.Assets;
-using VirtoCommerce.CoreModule.Web.Notification;
 using VirtoCommerce.CoreModule.Web.Repositories;
 using VirtoCommerce.CoreModule.Web.Search;
 using VirtoCommerce.CoreModule.Web.Security;
 using VirtoCommerce.CoreModule.Web.Security.Data;
 using VirtoCommerce.CoreModule.Web.Services;
-using VirtoCommerce.CoreModule.Web.Settings;
 using VirtoCommerce.Domain.Fulfillment.Services;
 using VirtoCommerce.Domain.Payment.Services;
+using VirtoCommerce.Domain.Search;
 using VirtoCommerce.Foundation.AppConfig.Repositories;
 using VirtoCommerce.Foundation.Assets.Factories;
 using VirtoCommerce.Foundation.Assets.Repositories;
@@ -31,7 +29,6 @@ using VirtoCommerce.Foundation.Security.Repositories;
 using VirtoCommerce.Platform.Core.Asset;
 using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Core.Notification;
-using VirtoCommerce.Platform.Core.Search;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Settings;
 using VirtoCommerce.Search.Providers.Azure;
@@ -120,16 +117,13 @@ namespace VirtoCommerce.CoreModule.Web
         public void Initialize()
         {
             #region Caching
-
             _container.RegisterType<ICacheRepository, HttpCacheRepository>(new ContainerControlledLifetimeManager());
-
             #endregion
 
             #region Settings
 
             _container.RegisterType<IAppConfigRepository>(new InjectionFactory(c => new EFAppConfigRepository(_connectionStringName)));
-            _container.RegisterType<ISettingsManager, SettingsManager>(new ContainerControlledLifetimeManager());
-
+      
             #endregion
 
             #region Security
@@ -159,32 +153,13 @@ namespace VirtoCommerce.CoreModule.Web
 
             #endregion
 
-            #region Assets
-
-            var assetsConnection = new AssetsConnection(ConnectionHelper.GetConnectionString("AssetsConnectionString"));
-            _container.RegisterInstance<IAssetsConnection>(assetsConnection);
-
-            _container.RegisterType<IAssetEntityFactory, AssetEntityFactory>();
-
-            _container.RegisterType<IAssetsProviderManager, AssetsProviderManager>(new ContainerControlledLifetimeManager());
-            _container.RegisterType<IBlobStorageProvider, AssetsProviderManager>(new ContainerControlledLifetimeManager());
-            _container.RegisterType<IAssetRepository, AssetsProviderManager>(new ContainerControlledLifetimeManager());
-            _container.RegisterType<IAssetUrlResolver, AssetsProviderManager>(new ContainerControlledLifetimeManager());
-
-            #endregion
-
-            #region Payment gateways manager
+			 #region Payment gateways manager
 
             _container.RegisterType<IPaymentGatewayManager, InMemoryPaymentGatewayManagerImpl>(new ContainerControlledLifetimeManager());
 
             #endregion
 
-            #region Notification
-
-            _container.RegisterType<INotifier, InMemoryNotifierImpl>(new ContainerControlledLifetimeManager());
-
-            #endregion
-
+         
             #region Fulfillment
 
             _container.RegisterType<IFoundationFulfillmentRepository>(new InjectionFactory(c => new FoundationFulfillmentRepositoryImpl(_connectionStringName)));
@@ -205,11 +180,7 @@ namespace VirtoCommerce.CoreModule.Web
             searchProviderManager.RegisterSearchProvider(SearchProviders.Lucene.ToString(), connection => new LuceneSearchProvider(new LuceneSearchQueryBuilder(), connection));
             searchProviderManager.RegisterSearchProvider(SearchProviders.AzureSearch.ToString(), connection => new AzureSearchProvider(new AzureSearchQueryBuilder(), connection));
 
-            var assetsProviderManager = _container.Resolve<IAssetsProviderManager>();
-
-            assetsProviderManager.RegisterProvider(AzureAssetsProvider.ProviderName, connectionString => _container.Resolve<AzureAssetsProvider>());
-            assetsProviderManager.RegisterProvider(LocalAssetsProvider.ProviderName, connectionString => _container.Resolve<LocalAssetsProvider>());
-
+        
             OwinConfig.Configure(_appBuilder, _container, _connectionStringName);
         }
 

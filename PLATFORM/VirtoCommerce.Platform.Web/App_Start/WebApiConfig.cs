@@ -1,7 +1,7 @@
 ﻿using System.Web.Http;
 using System.Web.Http.OData.Extensions;
 using Newtonsoft.Json;
-using VirtoCommerce.Foundation.Security.Model;
+
 using VirtoCommerce.Platform.Core.Security;
 
 namespace VirtoCommerce.Platform.Web
@@ -10,7 +10,7 @@ namespace VirtoCommerce.Platform.Web
     {
         public static void Register(HttpConfiguration config)
         {
-            config.Filters.Add(new CheckPermissionAttribute { Permission = PredefinedPermissions.SecurityCallApi });
+            config.Filters.Add(new CheckPermissionAttribute { Permission = "security:call_api" });
 
             // Web API routes
             config.MapHttpAttributeRoutes();

@@ -64,6 +64,13 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Microsoft.AspNet.Identity.Owin.2.2.0\lib\net45\Microsoft.AspNet.Identity.Owin.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.AspNet.SignalR.Core">
+      <HintPath>..\packages\Microsoft.AspNet.SignalR.Core.2.2.0\lib\net45\Microsoft.AspNet.SignalR.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.SignalR.SystemWeb">
+      <HintPath>..\packages\Microsoft.AspNet.SignalR.SystemWeb.2.2.0\lib\net45\Microsoft.AspNet.SignalR.SystemWeb.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.Data.Edm">
       <HintPath>..\packages\Microsoft.Data.Edm.5.6.0\lib\net40\Microsoft.Data.Edm.dll</HintPath>
@@ -118,9 +125,21 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Unity.3.5.1404.0\lib\net45\Microsoft.Practices.Unity.RegistrationByConvention.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.Web.XmlTransform, Version=2.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Web.Xdt.2.1.1\lib\net40\Microsoft.Web.XmlTransform.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Newtonsoft.Json.6.0.8\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="NuGet.Core, Version=2.8.50926.602, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\NuGet.Core.2.8.3\lib\net40-Client\NuGet.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Omu.ValueInjecter, Version=2.3.3.0, Culture=neutral, PublicKeyToken=c7694541b0ac80e4, processorArchitecture=MSIL">
+      <HintPath>..\packages\valueinjecter.2.3.3\lib\net35\Omu.ValueInjecter.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="Owin">
       <HintPath>..\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
@@ -228,16 +247,51 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Bootstraper.cs" />
+    <Compile Include="Controllers\Api\AssetsController.cs" />
+    <Compile Include="Controllers\Api\ModulesController.cs" />
+    <Compile Include="Controllers\Api\NotificationController.cs" />
+    <Compile Include="Controllers\Api\SettingController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Converters\Packaging\ModuleDescriptorConverter.cs" />
+    <Compile Include="Converters\Packaging\ProgressMessageConverter.cs" />
+    <Compile Include="Converters\Settings\ModuleDescriptorConverter.cs" />
+    <Compile Include="Converters\Settings\SettingConverter.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Model\Asset\BlobInfo.cs" />
+    <Compile Include="Model\Packaging\ModuleDescriptor.cs" />
+    <Compile Include="Model\Packaging\ModuleWorkerJob.cs" />
+    <Compile Include="Model\Packaging\ProgressMessage.cs" />
+    <Compile Include="Model\Settings\ModuleDescriptor.cs" />
+    <Compile Include="Model\Settings\Setting.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="UrlRewriterOwinMiddleware.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\angular-multi-select.css" />
+    <Content Include="Scripts\app\packaging\blades\module-detail.js" />
+    <Content Include="Scripts\app\packaging\blades\module-detail.tpl.html" />
+    <Content Include="Scripts\app\packaging\blades\modules-list.js" />
+    <Content Include="Scripts\app\packaging\blades\modules-list.tpl.html" />
+    <Content Include="Scripts\app\packaging\home.tpl.html" />
+    <Content Include="Scripts\app\packaging\packaging.js" />
+    <Content Include="Scripts\app\packaging\resources\modules.js" />
+    <Content Include="Scripts\app\packaging\wizards\newModule\install-wizard.js" />
+    <Content Include="Scripts\app\packaging\wizards\newModule\module-wizard-progress-step.js" />
+    <Content Include="Scripts\app\packaging\wizards\newModule\module-wizard-progress-step.tpl.html" />
+    <Content Include="Scripts\app\settings\blades\setting-dictionary.js" />
+    <Content Include="Scripts\app\settings\blades\setting-dictionary.tpl.html" />
+    <Content Include="Scripts\app\settings\blades\settings-detail.js" />
+    <Content Include="Scripts\app\settings\blades\settings-detail.tpl.html" />
+    <Content Include="Scripts\app\settings\blades\settings-list.js" />
+    <Content Include="Scripts\app\settings\blades\settings-list.tpl.html" />
+    <Content Include="Scripts\app\settings\resources\setting.js" />
+    <Content Include="Scripts\app\settings\settings.js" />
+    <Content Include="Scripts\app\settings\widgets\settingsWidget.js" />
+    <Content Include="Scripts\codemirror\addon\mode\overlay.js" />
+    <Content Include="Scripts\app\settings\widgets\settingsWidget.tpl.html" />
     <Content Include="Scripts\codemirror\codemirror.css" />
     <Content Include="Content\fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Content\ng-tags-input.css" />
@@ -368,6 +422,8 @@
     <Content Include="Scripts\codemirror\fold\indent-fold.js" />
     <Content Include="Scripts\codemirror\fold\markdown-fold.js" />
     <Content Include="Scripts\codemirror\fold\xml-fold.js" />
+    <Content Include="Scripts\codemirror\liquid.css" />
+    <Content Include="Scripts\codemirror\liquid.js" />
     <Content Include="Scripts\common\directives\angular-money-directive.js" />
     <Content Include="Scripts\angular-multi-select.js" />
     <Content Include="Scripts\angular-resource.js" />
@@ -410,23 +466,24 @@
     <Content Include="Scripts\common\directives\inputNumber.js" />
     <Content Include="Scripts\common\directives\left-click-menu.js" />
     <Content Include="Scripts\common\filters.js" />
-    <Content Include="Scripts\common\navigation\breadcrumbs\breadcrumbs.js" />
-    <Content Include="Scripts\common\navigation\breadcrumbs\breadcrumbs.tpl.html" />
-    <Content Include="Scripts\common\navigation\menu\mainMenu.js" />
-    <Content Include="Scripts\common\navigation\menu\mainMenu.tpl.html" />
-    <Content Include="Scripts\common\navigation\widget\widget.js" />
-    <Content Include="Scripts\common\navigation\widget\widgetContainer.tpl.html" />
+    <Content Include="Scripts\app\navigation\breadcrumbs\breadcrumbs.js" />
+    <Content Include="Scripts\app\navigation\breadcrumbs\breadcrumbs.tpl.html" />
+    <Content Include="Scripts\app\navigation\menu\mainMenu.js" />
+    <Content Include="Scripts\app\navigation\menu\mainMenu.tpl.html" />
+    <Content Include="Scripts\app\navigation\widget\widget.js" />
+    <Content Include="Scripts\app\navigation\widget\widgetContainer.tpl.html" />
     <Content Include="Scripts\common\directives\overlay.js" />
-    <Content Include="Scripts\common\notification\blade\historyDetailDefault.tpl.html" />
-    <Content Include="Scripts\common\notification\blade\history.tpl.html" />
-    <Content Include="Scripts\common\notification\blade\historyDefault.tpl.html" />
-    <Content Include="Scripts\common\notification\menu.tpl.html" />
-    <Content Include="Scripts\common\notification\notification.js" />
-    <Content Include="Scripts\common\notification\blade\history.js" />
-    <Content Include="Scripts\common\notification\notification.tpl.html" />
-    <Content Include="Scripts\common\notification\menuDefault.tpl.html" />
-    <Content Include="Scripts\common\notification\menuHeader.tpl.html" />
-    <Content Include="Scripts\common\notification\resources\notifications.js" />
+    <Content Include="Scripts\app\notification\blade\historyDetailDefault.tpl.html" />
+    <Content Include="Scripts\app\notification\blade\history.tpl.html" />
+    <Content Include="Scripts\app\notification\blade\historyDefault.tpl.html" />
+    <Content Include="Scripts\app\notification\menu.tpl.html" />
+    <Content Include="Scripts\app\notification\notification.js" />
+    <Content Include="Scripts\app\notification\blade\history.js" />
+    <Content Include="Scripts\app\notification\notification.tpl.html" />
+    <Content Include="Scripts\app\notification\menuDefault.tpl.html" />
+    <Content Include="Scripts\app\notification\menuHeader.tpl.html" />
+    <Content Include="Scripts\app\notification\resources\signalRHubProxy.js" />
+    <Content Include="Scripts\app\notification\resources\notifications.js" />
     <Content Include="Scripts\common\objCompare.js" />
     <Content Include="Scripts\common\security\auth\auth.js" />
     <Content Include="Scripts\common\security\blades\account-changePassword.js" />
@@ -1246,12 +1303,14 @@
     <Content Include="Scripts\jquery-1.11.1.min.js" />
     <Content Include="Scripts\jquery-1.11.1.min.map" />
     <Content Include="Scripts\app\app.js" />
-    <Content Include="Scripts\common\navigation\blade\bladeContainer.tpl.html" />
-    <Content Include="Scripts\common\navigation\blade\bladeNavigation.js" />
+    <Content Include="Scripts\app\navigation\blade\bladeContainer.tpl.html" />
+    <Content Include="Scripts\app\navigation\blade\bladeNavigation.js" />
     <Content Include="Scripts\jquery-ui-1.10.4.js" />
     <Content Include="Scripts\jquery-ui-1.10.4.min.js" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
     <Content Include="Scripts\jquery.mousewheel.js" />
+    <Content Include="Scripts\jquery.signalR-2.2.0.js" />
+    <Content Include="Scripts\jquery.signalR-2.2.0.min.js" />
     <Content Include="Scripts\jquery.unobtrusive-ajax.js" />
     <Content Include="Scripts\jquery.unobtrusive-ajax.min.js" />
     <Content Include="Scripts\jquery.validate.js" />
@@ -1320,13 +1379,13 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Core\CommerceFoundation\CommerceFoundation.csproj">
-      <Project>{E7FC9A51-1B39-4BDC-983A-8A059C5FC58B}</Project>
-      <Name>CommerceFoundation</Name>
-    </ProjectReference>
     <ProjectReference Include="..\VirtoCommerce.Platform.Core\VirtoCommerce.Platform.Core.csproj">
       <Project>{f7c9313b-522e-4619-abc9-8c7d4600d6b5}</Project>
       <Name>VirtoCommerce.Platform.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\VirtoCommerce.Platform.Data\VirtoCommerce.Platform.Data.csproj">
+      <Project>{39afd233-b2f7-4178-817d-0a339c57525d}</Project>
+      <Name>VirtoCommerce.Platform.Data</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup>

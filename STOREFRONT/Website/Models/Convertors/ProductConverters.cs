@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
 using System.Web.UI.WebControls;
 using Omu.ValueInjecter;
+using VirtoCommerce.Web.Models.Extensions;
 using Data = VirtoCommerce.ApiClient.DataContracts;
 
 namespace VirtoCommerce.Web.Models.Convertors
@@ -34,7 +36,7 @@ namespace VirtoCommerce.Web.Models.Convertors
 
         public static Product AsWebModel(
             this Data.Product product, IEnumerable<Data.Price> prices,
-            IEnumerable<Data.Marketing.PromotionReward> rewards)
+            IEnumerable<Data.Marketing.PromotionReward> rewards, Collection collection = null)
         {
             var productModel = new Product();
 
@@ -58,6 +60,18 @@ namespace VirtoCommerce.Web.Models.Convertors
             productModel.Url = string.Format(pathTemplate, product.Code);
             productModel.Vendor = fieldsCollection.ContainsKey("brand") ? fieldsCollection["brand"] as string : null;
 
+            // specify SEO based url
+            if (productModel.Keywords != null)
+            {
+                var keyword = productModel.Keywords.SeoKeyword(Thread.CurrentThread.CurrentUICulture.Name);
+                if (keyword != null)
+                {
+                    var urlHelper = GetUrlHelper();
+                    var url = urlHelper.ItemUrl(keyword.Keyword, collection == null ? "" : collection.Outline);
+                    if(!String.IsNullOrEmpty(url))
+                        productModel.Url = url;
+                }
+            }
             var productRewards = rewards.Where(r => r.RewardType == "CatalogItemAmountReward" && r.ProductId == product.Id);
 
             if (product.Variations == null)
@@ -223,6 +237,23 @@ namespace VirtoCommerce.Web.Models.Convertors
             }
 
             return options;
+        }
+
+        private static UrlHelper GetUrlHelper()
+        {
+            var httpContext = HttpContext.Current;
+            if (httpContext == null)
+            {
+                return null;
+            }
+
+            var httpContextBase = new HttpContextWrapper(httpContext);
+            var routeData = new RouteData();
+            var requestContext = new RequestContext(httpContextBase, routeData);
+
+            var urlHelper = new UrlHelper(requestContext);
+            return urlHelper;
+
         }
     }
 }

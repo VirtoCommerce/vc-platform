@@ -1,6 +1,6 @@
 ﻿using System;
 using Omu.ValueInjecter;
-using VirtoCommerce.Foundation.Assets.Services;
+using VirtoCommerce.Platform.Core.Asset;
 using moduleModel = VirtoCommerce.Domain.Catalog.Model;
 using webModel = VirtoCommerce.CatalogModule.Web.Model;
 
@@ -8,7 +8,7 @@ namespace VirtoCommerce.CatalogModule.Web.Converters
 {
     public static class AssetConverter
     {
-        public static webModel.ProductAssetBase ToWebModel(this moduleModel.ItemAsset asset, IAssetUrlResolver assetUrlResolver)
+        public static webModel.ProductAssetBase ToWebModel(this moduleModel.ItemAsset asset, IBlobUrlResolver blobUrlResolver)
         {
             webModel.ProductAssetBase retVal = new webModel.ProductImage();
             if (asset.Type == moduleModel.ItemAssetType.File)
@@ -16,15 +16,15 @@ namespace VirtoCommerce.CatalogModule.Web.Converters
                 retVal = new webModel.ProductAsset();
             }
             retVal.InjectFrom(asset);
-            retVal.Url = assetUrlResolver.GetAbsoluteUrl(asset.Url);
+            retVal.Url = blobUrlResolver.GetAbsoluteUrl(asset.Url);
             return retVal;
         }
 
-        public static moduleModel.ItemAsset ToModuleModel(this webModel.ProductAssetBase assetBase, IAssetUrlResolver assetUrlResolver)
+		public static moduleModel.ItemAsset ToModuleModel(this webModel.ProductAssetBase assetBase, IBlobUrlResolver blobUrlResolver)
         {
             var retVal = new moduleModel.ItemAsset();
             retVal.InjectFrom(assetBase);
-            retVal.Url = assetUrlResolver.GetRelativeUrl(assetBase.Url).TrimStart('/');
+			retVal.Url = new Uri(assetBase.Url).AbsolutePath.TrimStart('/');
             if (String.IsNullOrEmpty(retVal.Group))
             {
                 retVal.Group = "default";

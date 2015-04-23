@@ -26,7 +26,7 @@
 		bladeNavigationService.showBlade(newBlade, blade);
 	}
 
-	$scope.bladeHeadIco = 'fa fa-flag';
+	$scope.bladeHeadIco = 'fa fa-calendar-o';
 
 	initializeBlade();
 }]);
