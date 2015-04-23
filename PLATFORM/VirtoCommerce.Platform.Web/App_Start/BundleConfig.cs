@@ -30,6 +30,7 @@ namespace VirtoCommerce.Platform.Web
                 new BetterStyleBundle("~/css/core").Include(
                     "~/Scripts/codemirror/codemirror.css",
                     "~/Scripts/codemirror/fold/foldgutter.css",
+                    "~/Scripts/codemirror/liquid.css",
                     "~/Content/select.css",
                     "~/Content/angular-multi-select.css",
                     "~/Content/ng-tags-input.css",
@@ -69,6 +70,7 @@ namespace VirtoCommerce.Platform.Web
                 new ScriptBundle("~/scripts/jquery").Include(
                     "~/Scripts/jquery-{version}.js",
                     "~/Scripts/jquery.mousewheel.js",
+                    "~/Scripts/jquery.signalR-2.2.0.min.js",
                     "~/Scripts/jquery-ui-{version}.js",
                     "~/Scripts/underscore.js",
                     "~/Scripts/moment.js"));

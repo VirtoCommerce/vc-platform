@@ -211,5 +211,7 @@
 	$scope.formats = ['shortDate', 'dd-MMMM-yyyy', 'yyyy/MM/dd'];
 	$scope.format = $scope.formats[0];
 
+	$scope.bladeHeadIco = 'fa fa-paperclip';
+
 	blade.initializeBlade();
 }]);

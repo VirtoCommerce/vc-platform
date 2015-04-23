@@ -64,6 +64,13 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Microsoft.AspNet.Identity.Owin.2.2.0\lib\net45\Microsoft.AspNet.Identity.Owin.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.AspNet.SignalR.Core">
+      <HintPath>..\packages\Microsoft.AspNet.SignalR.Core.2.2.0\lib\net45\Microsoft.AspNet.SignalR.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.SignalR.SystemWeb">
+      <HintPath>..\packages\Microsoft.AspNet.SignalR.SystemWeb.2.2.0\lib\net45\Microsoft.AspNet.SignalR.SystemWeb.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.Data.Edm">
       <HintPath>..\packages\Microsoft.Data.Edm.5.6.0\lib\net40\Microsoft.Data.Edm.dll</HintPath>
@@ -282,6 +289,7 @@
     <Content Include="Scripts\app\settings\resources\setting.js" />
     <Content Include="Scripts\app\settings\settings.js" />
     <Content Include="Scripts\app\settings\widgets\settingsWidget.js" />
+	<Content Include="Scripts\codemirror\addon\mode\overlay.js" />
     <Content Include="Scripts\app\settings\widgets\settingsWidget.tpl.html" />
     <Content Include="Scripts\codemirror\codemirror.css" />
     <Content Include="Content\fonts\glyphicons-halflings-regular.svg" />
@@ -413,6 +421,8 @@
     <Content Include="Scripts\codemirror\fold\indent-fold.js" />
     <Content Include="Scripts\codemirror\fold\markdown-fold.js" />
     <Content Include="Scripts\codemirror\fold\xml-fold.js" />
+    <Content Include="Scripts\codemirror\liquid.css" />
+    <Content Include="Scripts\codemirror\liquid.js" />
     <Content Include="Scripts\common\directives\angular-money-directive.js" />
     <Content Include="Scripts\angular-multi-select.js" />
     <Content Include="Scripts\angular-resource.js" />
@@ -471,6 +481,7 @@
     <Content Include="Scripts\common\notification\notification.tpl.html" />
     <Content Include="Scripts\common\notification\menuDefault.tpl.html" />
     <Content Include="Scripts\common\notification\menuHeader.tpl.html" />
+    <Content Include="Scripts\common\notification\resources\signalRHubProxy.js" />
     <Content Include="Scripts\common\notification\resources\notifications.js" />
     <Content Include="Scripts\common\objCompare.js" />
     <Content Include="Scripts\common\security\auth\auth.js" />
@@ -1297,6 +1308,8 @@
     <Content Include="Scripts\jquery-ui-1.10.4.min.js" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
     <Content Include="Scripts\jquery.mousewheel.js" />
+    <Content Include="Scripts\jquery.signalR-2.2.0.js" />
+    <Content Include="Scripts\jquery.signalR-2.2.0.min.js" />
     <Content Include="Scripts\jquery.unobtrusive-ajax.js" />
     <Content Include="Scripts\jquery.unobtrusive-ajax.min.js" />
     <Content Include="Scripts\jquery.validate.js" />

@@ -132,6 +132,23 @@
 		dialogService.showConfirmationDialog(dialog);
 	}
 
+	blade.folderSorting = function (entity) {
+	    if (entity.folderName == "layout")
+	        return 0;
+	    else if (entity.folderName == "templates")
+	        return 1;
+	    else if (entity.folderName == "snippets")
+	        return 2;
+	    else if (entity.folderName == "assets")
+	        return 3;
+	    else if (entity.folderName == "config")
+	        return 4;
+	    else if (entity.folderName == "locales")
+	        return 5;
+
+        return 10;
+    }
+
 	function openBladeNew() {
 		closeChildrenBlades();
 

@@ -90,8 +90,10 @@ namespace VirtoCommerce.Platform.Web
             {
                 module.PostInitialize();
             }
-        }
 
+            app.MapSignalR();
+        }
+        
 
         private static void InitializePlatform(IUnityContainer container)
         {

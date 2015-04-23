@@ -102,6 +102,45 @@
         }
     }
 
+    function endsWith(str, suffix) {
+        return str.indexOf(suffix, str.length - suffix.length) !== -1;
+    }
+
+    function getEditorMode() {
+        // mode: { name: "htmlmixed" } // html
+        // mode: { name: "javascript" } // javascript
+        // mode: { name: "javascript", json: true } // json
+        // mode: "liquid-html" // liquid html
+        // mode: "liquid-css" // liquid css
+        // mode: "liquid-javascript" // liquid css
+
+        if (!blade.newAsset) {
+            if (endsWith(blade.choosenAssetId, ".json")) {
+                return { name: "javascript", json: true };
+            }
+            else if (endsWith(blade.choosenAssetId, ".js")) {
+                return "javascript";
+            }
+            else if (endsWith(blade.choosenAssetId, ".js.liquid")) {
+                return "liquid-javascript";
+            }
+            else if (endsWith(blade.choosenAssetId, ".css.liquid")) {
+                return "liquid-css";
+            }
+            else if (endsWith(blade.choosenAssetId, ".css")) {
+                return "css";
+            }
+            else if (endsWith(blade.choosenAssetId, ".scss.liquid")) {
+                return "liquid-css";
+            }
+            else if (endsWith(blade.choosenAssetId, ".liquid")) {
+                return "liquid-html";
+            }
+
+        }
+        return "htmlmixed";
+    }
+
     blade.onClose = function (closeCallback) {
         if ((isDirty() && !blade.newAsset) || (isCanSave() && blade.newAsset)) {
             var dialog = {
@@ -128,6 +167,7 @@
     $scope.editorOptions = {
         lineWrapping: true,
         lineNumbers: true,
+        parserfile: "liquid.js",
         extraKeys: { "Ctrl-Q": function (cm) { cm.foldCode(cm.getCursor()); } },
         foldGutter: true,
         gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"],
@@ -135,7 +175,7 @@
             codemirrorEditor = _editor;
         },
         // mode: 'htmlmixed'
-        mode: { name: "javascript", globalVars: true }
+        mode: getEditorMode()
     };
 
     initializeBlade();
