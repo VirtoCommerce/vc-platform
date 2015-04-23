@@ -12,6 +12,7 @@ using Microsoft.Owin;
 using Microsoft.Owin.Extensions;
 using Microsoft.Owin.Security;
 using Owin;
+using VirtoCommerce.ApiClient;
 using VirtoCommerce.ApiClient.DataContracts;
 using VirtoCommerce.ApiClient.DataContracts.Stores;
 using VirtoCommerce.ApiClient.Extensions;
@@ -45,6 +46,22 @@ namespace VirtoCommerce.Web
 
     public class SiteContextDataOwinMiddleware : OwinMiddleware
     {
+        /// <summary>
+        /// The store cookie
+        /// </summary>
+        protected virtual string StoreCookie { get { return "vcf.store"; } }
+        /// <summary>
+        /// The currency cookie
+        /// </summary>
+        protected virtual string CurrencyCookie { get { return "vcf.currency"; } }
+
+        protected virtual string LanguageCookie { get { return "vcf.Language"; } }
+
+        protected virtual string AnonymousCookie
+        {
+            get { return "vcf.AnonymousId"; }
+        }
+
         #region Constructors and Destructors
         public SiteContextDataOwinMiddleware(OwinMiddleware next)
             : base(next)
@@ -52,9 +69,8 @@ namespace VirtoCommerce.Web
         }
         #endregion
 
-        const string anonymousCookieName = "vc-anonymous-id";
 
-        #region Public Methods and Operators
+            #region Public Methods and Operators
         public override async Task Invoke(IOwinContext context)
         {
             var customerService = new CustomerService();
@@ -72,7 +88,6 @@ namespace VirtoCommerce.Web
 
             // Get current language
             var language = this.GetLanguage(context).ToSpecificLangCode();
-            //CultureInfo.DefaultThreadCurrentUICulture = new CultureInfo(language);
             ctx.Language = language;
 
             var shop = this.GetStore(context, language);
@@ -93,20 +108,25 @@ namespace VirtoCommerce.Web
                 ctx.Language = language;
             }
 
+
             if (!this.IsResourceFile()) // only load settings for resource files, no need for other contents
             {
+                // save info to the cookies
+                context.Response.Cookies.Append(StoreCookie, shop.StoreId, new CookieOptions { Expires = DateTime.UtcNow.AddDays(30) });
+                context.Response.Cookies.Append(LanguageCookie, ctx.Language, new CookieOptions { Expires = DateTime.UtcNow.AddDays(30) });
+
                 if (context.Authentication.User != null && context.Authentication.User.Identity.IsAuthenticated)
                 {
                     ctx.Customer = await customerService.GetCustomerAsync(
                         context.Authentication.User.Identity.Name, shop.StoreId);
 
-                    context.Response.Cookies.Delete(anonymousCookieName);
+                    context.Response.Cookies.Delete(AnonymousCookie);
 
                     ctx.CustomerId = ctx.Customer.Id;
                 }
                 else
                 {
-                    string cookie = context.Request.Cookies[anonymousCookieName];
+                    var cookie = context.Request.Cookies[AnonymousCookie];
 
                     if (string.IsNullOrEmpty(cookie))
                     {
@@ -117,7 +137,7 @@ namespace VirtoCommerce.Web
                             Expires = DateTime.UtcNow.AddDays(30)
                         };
 
-                        context.Response.Cookies.Append(anonymousCookieName, cookie, cookieOptions);
+                        context.Response.Cookies.Append(AnonymousCookie, cookie, cookieOptions);
                     }
 
                     ctx.CustomerId = cookie;
@@ -195,7 +215,7 @@ namespace VirtoCommerce.Web
 
             if (string.IsNullOrEmpty(language))
             {
-                language = "en-US";
+                language = String.Empty;
             }
 
             //if (string.IsNullOrEmpty(language))
@@ -228,11 +248,20 @@ namespace VirtoCommerce.Web
             if (String.IsNullOrEmpty(storeId))
             {
                 // try getting store from URL
-                //storeid = storeClient.GetStoreIdByUrl(context.Request.Url.AbsoluteUri);
+                var allStores = SiteContext.Current.Shops;
+
+                var url = context.Request.Uri.AbsoluteUri.ToLower();
+                var stores = (from s in allStores where 
+                                  (!string.IsNullOrEmpty(s.Url) && url.Contains(s.Url)) ||
+                                  (!string.IsNullOrEmpty(s.SecureUrl) && url.Contains(s.SecureUrl))
+                              select s).ToArray();
+
+                storeId = stores.Length > 0 ? stores[0].StoreId : String.Empty;
+
                 if (String.IsNullOrEmpty(storeId))
                 {
                     // try getting store from the cookie
-                    // storeid = StoreHelper.GetCookieValue(StoreCookie, false);
+                    storeId = context.Request.Cookies[StoreCookie];
 
                     // try getting default store from settings
                     if (String.IsNullOrEmpty(storeId))
@@ -267,7 +296,8 @@ namespace VirtoCommerce.Web
             {
                 if (loadDefault)
                 {
-                    //StoreHelper.ClearCookie(StoreCookie, String.Empty, false);
+
+                    context.Response.Cookies.Delete(StoreCookie);
                     storeId = ConfigurationManager.AppSettings["DefaultStore"];
                     store =
                         SiteContext.Current.Shops.SingleOrDefault(
