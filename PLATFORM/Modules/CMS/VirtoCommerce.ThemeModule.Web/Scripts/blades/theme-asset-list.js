@@ -7,8 +7,9 @@
 .controller('themeAssetListController', ['$scope', 'themes', 'themesStores', 'bladeNavigationService', 'dialogService', function ($scope, themes, themesStores, bladeNavigationService, dialogService) {
 	var blade = $scope.blade;
 
-	$scope.selectedFolderId = undefined;
-	$scope.selectedAssetId = undefined;
+	blade.selectedFolderId = undefined;
+	blade.selectedAssetId = undefined;
+	blade.selectedFolder = undefined;
 
 	blade.refresh = function () {
 		blade.isLoading = true;
@@ -25,19 +26,25 @@
 		//closeChildrenBlades();
 
 		if (blade.checkFolder(data)) {
-			$scope.selectedFolderId = undefined;
+			blade.selectedFolderId = undefined;
 		}
 		else {
-			$scope.selectedFolderId = data.folderName;
+			blade.selectedFolderId = data.folderName;
+
+			var button = _.find($scope.bladeToolbarCommands, function (button) { return button.name.indexOf('Add') === 0; });
+			if (button !== undefined) {
+				blade.selectedFolder = _.find(blade.folders, function (folder) { return folder.name === blade.selectedFolderId });
+				button.name = 'Add ' + blade.selectedFolder.oneItemName;
+			}
 		}
 	}
 
 	blade.checkFolder = function (data) {
-		return $scope.selectedFolderId === data.folderName;
+		return blade.selectedFolderId === data.folderName;
 	}
 
 	blade.checkAsset = function (data) {
-		return $scope.selectedAssetId === data.id;
+		return blade.selectedAssetId === data.id;
 	}
 
 	blade.assetClass = function (asset) {
@@ -78,7 +85,7 @@
 	}
 
 	blade.openBlade = function (asset) {
-		$scope.selectedAssetId = asset.id;
+		blade.selectedAssetId = asset.id;
 		closeChildrenBlades();
 
 		if (asset.contentType === 'text/html' || asset.contentType === 'application/json' || asset.contentType === 'application/javascript') {
@@ -87,10 +94,10 @@
 				choosenStoreId: blade.choosenStoreId,
 				choosenThemeId: blade.choosenThemeId,
 				choosenAssetId: asset.id,
-				choosenFolder: $scope.selectedFolderId,
+				choosenFolder: blade.selectedFolderId,
 				newAsset: false,
 				title: asset.id,
-				subtitle: 'Edit text asset',
+				subtitle: 'Edit ' + asset.name,
 				controller: 'editAssetController',
 				template: 'Modules/$(VirtoCommerce.Theme)/Scripts/blades/edit-asset.tpl.html'
 			};
@@ -102,10 +109,10 @@
 				choosenStoreId: blade.choosenStoreId,
 				choosenThemeId: blade.choosenThemeId,
 				choosenAssetId: asset.id,
-				choosenFolder: $scope.selectedFolderId,
+				choosenFolder: blade.selectedFolderId,
 				newAsset: false,
 				title: asset.id,
-				subtitle: 'Edit image asset',
+				subtitle: 'Edit ' + asset.name,
 				controller: 'editImageAssetController',
 				template: 'Modules/$(VirtoCommerce.Theme)/Scripts/blades/edit-image-asset.tpl.html'
 			};
@@ -142,11 +149,11 @@
 				id: 'addAsset',
 				choosenStoreId: blade.choosenStoreId,
 				choosenThemeId: blade.choosenThemeId,
-				choosenFolder: $scope.selectedFolderId,
+				choosenFolder: blade.selectedFolderId,
 				newAsset: true,
-				currentEntity: { id: undefined, content: undefined, contentType: undefined, assetUrl: undefined, name: undefined },
-				title: 'New Asset',
-				subtitle: 'Create new text asset',
+				currentEntity: { id: undefined, content: undefined, contentType: blade.selectedFolder.defaultContentType, assetUrl: undefined, name: undefined },
+				title: 'New ' + blade.selectedFolder.oneItemName,
+				subtitle: 'Create new ' + blade.selectedFolder.oneItemName,
 				controller: 'editAssetController',
 				template: 'Modules/$(VirtoCommerce.Theme)/Scripts/blades/edit-asset.tpl.html'
 			};
@@ -157,11 +164,11 @@
 				id: 'addImageAsset',
 				choosenStoreId: blade.choosenStoreId,
 				choosenThemeId: blade.choosenThemeId,
-				choosenFolder: $scope.selectedFolderId,
+				choosenFolder: blade.selectedFolderId,
 				newAsset: true,
 				currentEntity: { id: undefined, content: undefined, contentType: undefined, assetUrl: undefined, name: undefined },
-				title: 'New Asset',
-				subtitle: 'Create new image asset',
+				title: 'New ' + blade.selectedFolder.oneItemName,
+				subtitle: 'Create new ' + blade.selectedFolder.oneItemName,
 				controller: 'editImageAssetController',
 				template: 'Modules/$(VirtoCommerce.Theme)/Scripts/blades/edit-image-asset.tpl.html'
 			};
@@ -182,18 +189,13 @@
 	}
 
 	blade.getContentType = function () {
-		switch ($scope.selectedFolderId)
-		{
-			case 'layout':
-			case 'templates':
-			case 'snippets':
-			case 'config':
-			case 'locales':
-				return 'text/html';
-
-			default:
-				return null;
+		var folder = _.find(blade.folders, function (folder) { return folder.name === blade.selectedFolderId });
+		
+		if(folder !== undefined){
+			return folder.defaultContentType;
 		}
+
+		return null;
 	}
 
     $scope.bladeHeadIco = 'fa fa-archive';
@@ -211,19 +213,19 @@
         {
         	name: "Refresh", icon: 'fa fa-refresh',
         	executeMethod: function () {
-        		$scope.blade.refresh();
+        		blade.refresh();
         	},
         	canExecuteMethod: function () {
         		return true;
         	}
         },
         {
-        	name: "Add asset", icon: 'fa fa-plus',
+        	name: "Add", icon: 'fa fa-plus',
         	executeMethod: function () {
         		openBladeNew();
         	},
         	canExecuteMethod: function () {
-        		return !angular.isUndefined($scope.selectedFolderId);
+        		return !angular.isUndefined(blade.selectedFolderId);
         	}
         },
 		{
@@ -235,7 +237,16 @@
 				return !angular.isUndefined(blade.choosenThemeId);
 			}
 		}
-	];
+    ];
+
+    blade.folders = [
+		{ name: 'assets', oneItemName: 'asset', defaultContentType: null },
+		{ name: 'layout', oneItemName: 'layout', defaultContentType: 'text/html' },
+		{ name: 'config', oneItemName: 'config', defaultContentType: 'text/html' },
+		{ name: 'locales', oneItemName: 'locale', defaultContentType: 'text/html' },
+		{ name: 'snippets', oneItemName: 'snippet', defaultContentType: 'text/html' },
+		{ name: 'templates', oneItemName: 'template', defaultContentType: 'text/html' }
+    ];
 
 	blade.refresh();
 }]);
