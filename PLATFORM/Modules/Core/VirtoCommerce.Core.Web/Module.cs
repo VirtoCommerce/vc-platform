@@ -11,7 +11,6 @@ using VirtoCommerce.CoreModule.Web.Search;
 using VirtoCommerce.CoreModule.Web.Security;
 using VirtoCommerce.CoreModule.Web.Security.Data;
 using VirtoCommerce.CoreModule.Web.Services;
-using VirtoCommerce.CoreModule.Web.Settings;
 using VirtoCommerce.Domain.Fulfillment.Services;
 using VirtoCommerce.Domain.Payment.Services;
 using VirtoCommerce.Domain.Search;
@@ -119,16 +118,13 @@ namespace VirtoCommerce.CoreModule.Web
         public void Initialize()
         {
             #region Caching
-
             _container.RegisterType<ICacheRepository, HttpCacheRepository>(new ContainerControlledLifetimeManager());
-
             #endregion
 
             #region Settings
 
             _container.RegisterType<IAppConfigRepository>(new InjectionFactory(c => new EFAppConfigRepository(_connectionStringName)));
-            _container.RegisterType<ISettingsManager, SettingsManager>(new ContainerControlledLifetimeManager());
-
+      
             #endregion
 
             #region Security

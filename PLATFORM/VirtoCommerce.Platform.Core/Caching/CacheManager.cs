@@ -3,18 +3,16 @@ using System.Collections.Generic;
 
 namespace VirtoCommerce.Platform.Core.Caching
 {
-	/// <summary>
-	/// Представляет методы работы с кэшем
-	/// </summary>
+
 	public class CacheManager
 	{
-		private Func<string, ICacheRepository> CacheRepositoryFactory;
+		private Func<string, ICacheProvider> CacheProviderFactory;
 		private Func<string, CacheSettings> CacheSettingFactory;
 		private static CacheManager _noCacheManager= new CacheManager(x => null , x => null);
 
-		public CacheManager(Func<string, ICacheRepository> cacheRepositoryFactory, Func<string, CacheSettings> settingFactory)
+		public CacheManager(Func<string, ICacheProvider> cacheProviderFactory, Func<string, CacheSettings> settingFactory)
 		{
-			CacheRepositoryFactory = cacheRepositoryFactory;
+			CacheProviderFactory = cacheProviderFactory;
 			CacheSettingFactory = settingFactory;
 		}
 	
@@ -114,14 +112,14 @@ namespace VirtoCommerce.Platform.Core.Caching
 		}
 
 
-		private ICacheRepository GetRepository(string group)
+		private ICacheProvider GetRepository(string group)
 		{
-			ICacheRepository retVal = null;
+			ICacheProvider retVal = null;
 
 			var settings = GetSettings(group);
 			if (settings != null && settings.IsEnabled)
 			{
-				retVal = CacheRepositoryFactory(settings.ProviderName);
+				retVal = CacheProviderFactory(settings.ProviderName);
 			}
 			return retVal;
 		}

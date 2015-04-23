@@ -5,7 +5,6 @@ if (AppDependencies != undefined) {
 }
 
 angular.module(moduleName, [
-	'virtoCommerce.coreModule.settings',
 	'virtoCommerce.coreModule.fulfillment',
 	'virtoCommerce.coreModule.common'
 ]);

@@ -65,6 +65,9 @@
       <HintPath>..\packages\NuGet.Core.2.8.3\lib\net40-Client\NuGet.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Omu.ValueInjecter">
+      <HintPath>..\packages\valueinjecter.2.3.3\lib\net35\Omu.ValueInjecter.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.configuration" />
@@ -97,7 +100,9 @@
     <Compile Include="Asset\BlobStorageMultipartStreamProvider.cs" />
     <Compile Include="Asset\CustomMultipartStreamProvider.cs" />
     <Compile Include="Asset\FileSystemBlobProvider.cs" />
-    <Compile Include="Caching\InMemoryCachingProvider.cs" />
+    <Compile Include="Caching\CacheEntries.cs" />
+    <Compile Include="Caching\CacheEntry.cs" />
+    <Compile Include="Caching\HttpCacheProvider.cs" />
     <Compile Include="Common\ExceptionExtensions.cs" />
     <Compile Include="Infrastructure\BasicUnitOfWork.cs" />
     <Compile Include="Infrastructure\DbMigrationContext.cs" />
@@ -112,6 +117,8 @@
     <Compile Include="Infrastructure\Interceptors\TypeInterceptor.cs" />
     <Compile Include="Infrastructure\ServiceBase.cs" />
     <Compile Include="Infrastructure\SetupDatabaseInitializer.cs" />
+    <Compile Include="Model\SettingEntity.cs" />
+    <Compile Include="Model\SettingValueEntity.cs" />
     <Compile Include="Packaging\PackageService.cs" />
     <Compile Include="Packaging\Repositories\ManifestPackage.cs" />
     <Compile Include="Packaging\Repositories\ManifestPackageRepository.cs" />
@@ -129,6 +136,12 @@
     <Compile Include="Packaging\Repositories\WebsitePackageRepository.cs" />
     <Compile Include="Packaging\Repositories\WebsiteProjectSystem.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Repositories\IPlatformRepository.cs" />
+    <Compile Include="Repositories\PlatformRepositoryImpl.cs" />
+    <Compile Include="Settings\Converters\ModuleConverter.cs" />
+    <Compile Include="Settings\Converters\SettingConverter.cs" />
+    <Compile Include="Settings\Converters\SettingValueConverter.cs" />
+    <Compile Include="Settings\SettingManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\VirtoCommerce.Platform.Core\VirtoCommerce.Platform.Core.csproj">
@@ -146,6 +159,9 @@
     <EmbeddedResource Include="Packaging\Repositories\NuGet\CommonResources.resx">
       <DependentUpon>CommonResources.cs</DependentUpon>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Migrations\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -76,17 +76,13 @@
     <Compile Include="Asset\IBlobStorageProvider.cs" />
     <Compile Include="Asset\UploadStreamInfo.cs" />
     <Compile Include="Bootstrapper.cs" />
-    <Compile Include="Caching\CacheExtensions.cs" />
     <Compile Include="Caching\Cachekey.cs" />
-    <Compile Include="Caching\CacheLinqQuery.cs" />
     <Compile Include="Caching\CacheManager.cs" />
     <Compile Include="Caching\CacheObject.cs" />
-    <Compile Include="Caching\CacheQueryProvider.cs" />
     <Compile Include="Caching\CacheSettings.cs" />
     <Compile Include="Caching\ExpressionCacheKeyGenerator.cs" />
     <Compile Include="Caching\ICacheKeyGenerator.cs" />
     <Compile Include="Caching\ICacheProvider.cs" />
-    <Compile Include="Caching\ICacheRepository.cs" />
     <Compile Include="Caching\TypeSystem.cs" />
     <Compile Include="Common\AnnonymousComparer.cs" />
     <Compile Include="Common\ArrayInputAttribute.cs" />
@@ -184,6 +180,7 @@
     <Compile Include="Settings\ISettingsManager.cs" />
     <Compile Include="Settings\ModuleDescriptor.cs" />
     <Compile Include="Settings\SettingDescriptor.cs" />
+    <Compile Include="Settings\SettingValueType.cs" />
     <Compile Include="UnityBootstrapper.cs" />
     <Compile Include="UnityBootstrapperExtension.cs" />
     <Compile Include="UnityContainerHelper.cs" />

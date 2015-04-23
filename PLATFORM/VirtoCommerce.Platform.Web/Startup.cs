@@ -18,6 +18,12 @@ using VirtoCommerce.Platform.Data.Asset;
 using VirtoCommerce.Platform.Data.Packaging;
 using VirtoCommerce.Platform.Data.Packaging.Repositories;
 using VirtoCommerce.Platform.Web.Controllers.Api;
+using VirtoCommerce.Platform.Core.Caching;
+using VirtoCommerce.Platform.Data.Caching;
+using VirtoCommerce.Platform.Core.Settings;
+using VirtoCommerce.Platform.Data.Settings;
+using VirtoCommerce.Platform.Data.Repositories;
+using VirtoCommerce.Platform.Data.Infrastructure.Interceptors;
 
 [assembly: OwinStartup(typeof(Startup))]
 
@@ -89,6 +95,17 @@ namespace VirtoCommerce.Platform.Web
 
         private static void InitializePlatform(IUnityContainer container)
         {
+
+			Func<IPlatformRepository> platformRepositoryFactory =()=> new PlatformRepositoryImpl("VirtoCommerce", new AuditableInterceptor(), new EntityPrimaryKeyGeneratorInterceptor());	 
+
+			#region Caching
+
+			var cacheProvider = new HttpCacheProvider();
+			container.RegisterInstance<ICacheProvider>(cacheProvider);
+
+            #endregion
+		
+
             #region Assets
 
             var assetsConnection = ConfigurationManager.ConnectionStrings["AssetsConnectionString"];
@@ -139,6 +156,14 @@ namespace VirtoCommerce.Platform.Web
             container.RegisterType<ModulesController>(new InjectionConstructor(packageService, sourcePath));
 
             #endregion
+
+			#region Settings
+
+			var cacheManager = new CacheManager(x => cacheProvider, x => new CacheSettings("", TimeSpan.FromDays(1), "", true));
+			var settingManager = new SettingsManager(manifestProvider, platformRepositoryFactory, cacheManager);
+			container.RegisterInstance<ISettingsManager>(settingManager);
+
+			#endregion
         }
 
         private static string MakeRelativePath(string rootPath, string fullPath)

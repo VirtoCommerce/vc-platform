@@ -138,7 +138,6 @@
     <Compile Include="Controllers\Api\NotificationController.cs" />
     <Compile Include="Controllers\Api\PaymentGatewayController.cs" />
     <Compile Include="Controllers\Api\SecurityController.cs" />
-    <Compile Include="Controllers\Api\SettingController.cs" />
     <Compile Include="Converters\ApiAccountConverter.cs" />
     <Compile Include="Converters\FulfillmentCenterConverter.cs" />
     <Compile Include="Converters\PaymentGatewayConverter.cs" />
@@ -184,7 +183,6 @@
     <Compile Include="Security\PermissionService.cs" />
     <Compile Include="Security\RoleManagementService.cs" />
     <Compile Include="Services\FulfillmentServiceImpl.cs" />
-    <Compile Include="Settings\SettingsManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\css\dynamic-expression.css" />
@@ -200,8 +198,6 @@
     <Content Include="Scripts\Fulfillment\blades\fulfillment-center-contact.tpl.html" />
     <Content Include="Scripts\Fulfillment\widgets\fulfillmentCenterContactWidget.js" />
     <Content Include="Scripts\Fulfillment\widgets\fulfillmentCenterContactWidget.tpl.html" />
-    <Content Include="Scripts\Settings\blades\setting-dictionary.js" />
-    <Content Include="Scripts\Settings\blades\setting-dictionary.tpl.html" />
     <Content Include="Scripts\virtoCommerce-core.js" />
     <Content Include="Scripts\common\ok-cancel2.tpl.html" />
     <Content Include="Scripts\common\resources\countries.js" />
@@ -214,16 +210,8 @@
     <Content Include="Scripts\Fulfillment\fulfillment.js" />
     <Content Include="Scripts\Fulfillment\widgets\fulfillmentWidget.js" />
     <Content Include="Scripts\Fulfillment\widgets\fulfillmentWidget.tpl.html" />
-    <Content Include="Scripts\Settings\blades\settings-detail.js" />
-    <Content Include="Scripts\Settings\blades\settings-detail.tpl.html" />
-    <Content Include="Scripts\Settings\blades\settings-list.js" />
-    <Content Include="Scripts\Settings\blades\settings-list.tpl.html" />
     <Content Include="Scripts\home.tpl.html" />
-    <Content Include="Scripts\Settings\resources\setting.js" />
-    <Content Include="Scripts\Settings\settings.js" />
     <Content Include="Scripts\common\ok-cancel.tpl.html" />
-    <Content Include="Scripts\Settings\widgets\settingsWidget.js" />
-    <Content Include="Scripts\Settings\widgets\settingsWidget.tpl.html" />
     <None Include="app.config" />
     <None Include="packages.config">
       <SubType>Designer</SubType>
