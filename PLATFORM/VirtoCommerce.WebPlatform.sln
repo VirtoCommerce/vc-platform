@@ -41,7 +41,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{0310F318-D
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.CoreModule.Web", "Modules\Core\VirtoCommerce.Core.Web\VirtoCommerce.CoreModule.Web.csproj", "{47D7C89C-62A8-44EC-B544-F24E874192AC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.Platform.Tests", "Tests\VirtoCommerce.Platform.Tests\VirtoCommerce.Platform.Tests.csproj", "{A3B5EC9F-A1C9-43FE-8FC9-E11BBACF31BD}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.PackagingModule.Tests", "Modules\Packaging\VirtoCommerce.PackagingModule.Tests\VirtoCommerce.PackagingModule.Tests.csproj", "{A3B5EC9F-A1C9-43FE-8FC9-E11BBACF31BD}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Cart", "Cart", "{8B27E533-BA11-47BD-8392-05CEB5DB0ED5}"
 EndProject

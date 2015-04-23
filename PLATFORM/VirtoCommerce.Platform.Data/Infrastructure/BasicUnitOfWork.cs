@@ -8,7 +8,7 @@ using System.Data.Entity;
 using System.Data.Entity.Core.Objects;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Data.Infrastructure.Interceptors;
-
+using VirtoCommerce.Platform.Data.Common;
 namespace VirtoCommerce.Platform.Data.Infrastructure
 {
 	public class BasicUnitOfWork : IUnitOfWork
@@ -25,7 +25,15 @@ namespace VirtoCommerce.Platform.Data.Infrastructure
 		#region IUnitOfWork Members
 		public virtual int Commit()
 		{
-			return SaveChanges();
+			try
+			{
+				return SaveChanges();
+			}
+			catch(Exception ex)
+			{
+				ex.ThrowFaultException();
+				return -1;
+			}
 		}
 
 		public virtual void RollbackChanges()

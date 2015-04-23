@@ -38,6 +38,9 @@
     <Reference Include="EntityFramework.SqlServer">
       <HintPath>..\packages\EntityFramework.6.1.1\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.AspNet.SignalR.Core">
+      <HintPath>..\packages\Microsoft.AspNet.SignalR.Core.2.2.0\lib\net45\Microsoft.AspNet.SignalR.Core.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Data.Edm, Version=5.6.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Data.Edm.5.6.0\lib\net40\Microsoft.Data.Edm.dll</HintPath>
     </Reference>
@@ -46,6 +49,12 @@
     </Reference>
     <Reference Include="Microsoft.Data.Services.Client, Version=5.6.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Data.Services.Client.5.6.0\lib\net40\Microsoft.Data.Services.Client.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin">
+      <HintPath>..\packages\Microsoft.Owin.3.0.1\lib\net45\Microsoft.Owin.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security">
+      <HintPath>..\packages\Microsoft.Owin.Security.3.0.1\lib\net45\Microsoft.Owin.Security.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.WindowsAzure.Configuration">
       <HintPath>..\packages\Microsoft.WindowsAzure.ConfigurationManager.2.0.3\lib\net40\Microsoft.WindowsAzure.Configuration.dll</HintPath>
@@ -64,6 +73,12 @@
     <Reference Include="NuGet.Core, Version=2.8.50926.602, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\NuGet.Core.2.8.3\lib\net40-Client\NuGet.Core.dll</HintPath>
       <Private>True</Private>
+    </Reference>
+    <Reference Include="Omu.ValueInjecter">
+      <HintPath>..\packages\valueinjecter.2.3.3\lib\net35\Omu.ValueInjecter.dll</HintPath>
+    </Reference>
+    <Reference Include="Owin">
+      <HintPath>..\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
@@ -97,7 +112,9 @@
     <Compile Include="Asset\BlobStorageMultipartStreamProvider.cs" />
     <Compile Include="Asset\CustomMultipartStreamProvider.cs" />
     <Compile Include="Asset\FileSystemBlobProvider.cs" />
-    <Compile Include="Caching\InMemoryCachingProvider.cs" />
+    <Compile Include="Caching\CacheEntries.cs" />
+    <Compile Include="Caching\CacheEntry.cs" />
+    <Compile Include="Caching\HttpCacheProvider.cs" />
     <Compile Include="Common\ExceptionExtensions.cs" />
     <Compile Include="Infrastructure\BasicUnitOfWork.cs" />
     <Compile Include="Infrastructure\DbMigrationContext.cs" />
@@ -112,6 +129,9 @@
     <Compile Include="Infrastructure\Interceptors\TypeInterceptor.cs" />
     <Compile Include="Infrastructure\ServiceBase.cs" />
     <Compile Include="Infrastructure\SetupDatabaseInitializer.cs" />
+    <Compile Include="Model\SettingEntity.cs" />
+    <Compile Include="Model\SettingValueEntity.cs" />
+    <Compile Include="Notification\InMemoryNotifierImpl.cs" />
     <Compile Include="Packaging\PackageService.cs" />
     <Compile Include="Packaging\Repositories\ManifestPackage.cs" />
     <Compile Include="Packaging\Repositories\ManifestPackageRepository.cs" />
@@ -129,6 +149,12 @@
     <Compile Include="Packaging\Repositories\WebsitePackageRepository.cs" />
     <Compile Include="Packaging\Repositories\WebsiteProjectSystem.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Repositories\IPlatformRepository.cs" />
+    <Compile Include="Repositories\PlatformRepositoryImpl.cs" />
+    <Compile Include="Settings\Converters\ModuleConverter.cs" />
+    <Compile Include="Settings\Converters\SettingConverter.cs" />
+    <Compile Include="Settings\Converters\SettingValueConverter.cs" />
+    <Compile Include="Settings\SettingManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\VirtoCommerce.Platform.Core\VirtoCommerce.Platform.Core.csproj">
@@ -146,6 +172,9 @@
     <EmbeddedResource Include="Packaging\Repositories\NuGet\CommonResources.resx">
       <DependentUpon>CommonResources.cs</DependentUpon>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Migrations\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
