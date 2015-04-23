@@ -4,10 +4,12 @@ using System.Web.Mvc;
 using System.Web.Routing;
 using VirtoCommerce.Web.Models;
 using VirtoCommerce.Web.Models.Helpers;
+using VirtoCommerce.Web.Models.Routing;
 using VirtoCommerce.Web.Models.Services;
 
 namespace VirtoCommerce.Web.Controllers
 {
+    [Canonicalized(typeof(AccountController)/*, typeof(CheckoutController)*/, Order = 1)]
     public class BaseController : Controller
     {
         private CustomerService _customerService;

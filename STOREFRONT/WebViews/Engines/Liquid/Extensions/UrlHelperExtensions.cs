@@ -11,9 +11,6 @@ using System.Web.Mvc;
 namespace VirtoCommerce.Web.Views.Engines.Liquid.Extensions
 {
 
-    #region
-    #endregion
-
     public static class UrlHelperExtensions
     {
         #region Public Methods and Operators

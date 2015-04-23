@@ -63,6 +63,13 @@ namespace VirtoCommerce.Web.Models.Routing.Routes
 
         public override VirtualPathData GetVirtualPath(RequestContext requestContext, RouteValueDictionary values)
         {
+            /*
+            if (!values.ContainsKey(Constants.Tags))
+            {
+                values.Add(Constants.Tags, null);
+            }
+             * */
+
             this.EncodeVirtualPath(values, SeoUrlKeywordTypes.Category);
             return base.GetVirtualPath(requestContext, values);
         }

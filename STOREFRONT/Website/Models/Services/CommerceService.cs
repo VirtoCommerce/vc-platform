@@ -553,7 +553,7 @@ namespace VirtoCommerce.Web.Models.Services
                         keyword,
                         ItemResponseGroups.ItemLarge);
 
-            var variationIds = product.Variations.Select(v => v.Id).ToArray();
+            var variationIds = product.GetAllVariationIds();
             var prices = await this.GetProductPricesAsync(SiteContext.Current.PriceLists, variationIds);
 
             var price = prices.FirstOrDefault(p => p.ProductId == product.Code);

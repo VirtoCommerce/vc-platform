@@ -1,12 +1,5 @@
 {% comment %}
-
-  MailChimp is the go-to newsletter service for Shopify.
-  Use the link below to find your MailChimp "form action"
-  and insert it in your site settings.
-
-  MailChimp newsletter integration and requirement:
-   - http://docs.shopify.com/support/configuration/store-customization/where-do-i-get-my-mailchimp-form-action
-
+Mail Chimp Integration
 {% endcomment %}
 <form action="{{ settings.mailing_list_form_action }}" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" target="_blank" class="input-group">
   <input type="email" value="{% if customer %}{{ customer.email }}{% endif %}" placeholder="{{ 'layout.footer.newsletter_email_placeholder' | t }}" name="EMAIL" id="mail" class="input-group-field" aria-label="{{ 'layout.footer.newsletter_email_placeholder' | t }}" autocorrect="off" autocapitalize="off">

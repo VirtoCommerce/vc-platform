@@ -1,13 +1,17 @@
 ﻿#region
+using System;
+using System.Linq;
 using System.Web;
 using System.Web.Routing;
+using VirtoCommerce.ApiClient.Extensions;
+using VirtoCommerce.Web.Models.Extensions;
 
 #endregion
 
 namespace VirtoCommerce.Web.Models.Routing.Constraints
 {
     /// <summary>
-    ///     Route constraint checks if store exists in database
+    /// Route constraint checks if store exists
     /// </summary>
     public class StoreRouteConstraint : BaseRouteConstraint
     {
@@ -29,7 +33,6 @@ namespace VirtoCommerce.Web.Models.Routing.Constraints
                 return false;
             }
 
-            /* SKIP DATABASE CHECKS!
             var slug = values[parameterName].ToString();
             var language = values.ContainsKey(Constants.Language) ? values[Constants.Language].ToString() : null;
             var dbStore = SiteContext.Current.GetShopBySlug(slug, language);
@@ -56,7 +59,6 @@ namespace VirtoCommerce.Web.Models.Routing.Constraints
                     return false;
                 }
             }
-             * */
 
             return true;
         }
