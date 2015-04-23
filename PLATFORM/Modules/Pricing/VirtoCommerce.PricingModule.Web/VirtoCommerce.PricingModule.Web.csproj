@@ -101,13 +101,15 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Scripts\blades\pricelist-assignment-detail.js" />
-    <Content Include="Scripts\blades\pricelist-assignment-detail.tpl.html" />
+    <Content Include="Scripts\blades\assignment-detail.js" />
+    <Content Include="Scripts\blades\assignment-detail.tpl.html" />
     <Content Include="Scripts\blades\pricelist-assignment-list.js" />
     <Content Include="Scripts\blades\pricelist-assignment-list.tpl.html" />
     <Content Include="Scripts\blades\pricelist-item-list.js" />
+    <Content Include="Scripts\blades\assignment-list.js" />
     <Content Include="Scripts\blades\pricelist-list.js" />
     <Content Include="Scripts\blades\pricelist-item-list.tpl.html" />
+    <Content Include="Scripts\blades\assignment-list.tpl.html" />
     <Content Include="Scripts\blades\pricelist-list.tpl.html" />
     <Content Include="Scripts\blades\prices-list.js" />
     <Content Include="Scripts\blades\prices-list.tpl.html" />
@@ -115,6 +117,8 @@
     <Content Include="Scripts\blades\item\item-pricelists-list.tpl.html" />
     <Content Include="Scripts\blades\pricelist-detail.js" />
     <Content Include="Scripts\blades\pricelist-detail.tpl.html" />
+    <Content Include="Scripts\blades\pricing-main.js" />
+    <Content Include="Scripts\blades\pricing-main.tpl.html" />
     <Content Include="Scripts\home.tpl.html" />
     <Content Include="Scripts\pricing.js" />
     <Content Include="Scripts\resources\pricing.js" />
