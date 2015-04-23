@@ -64,10 +64,12 @@
 	}
 
 	blade.check = function () {
-		if (blade.currentEntity.contentType === 'image/png' || blade.currentEntity.contentType === 'image/jpeg' || blade.currentEntity.contentType === 'image/bmp' || blade.currentEntity.contentType === 'image/gif') {
-			return true;
-		}
-		return false;
+	    if (!angular.isUndefined(blade.currentEntity)) {
+	        if (blade.currentEntity.contentType === 'image/png' || blade.currentEntity.contentType === 'image/jpeg' || blade.currentEntity.contentType === 'image/bmp' || blade.currentEntity.contentType === 'image/gif') {
+	            return true;
+	        }
+	    }
+	    return false;
 	}
 
 	blade.getImage = function () {

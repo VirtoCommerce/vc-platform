@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Routing;
 using Microsoft.Owin;
+using Microsoft.Owin.Extensions;
 using Microsoft.Owin.Security;
 using Owin;
 using VirtoCommerce.ApiClient.DataContracts;
@@ -35,6 +36,7 @@ namespace VirtoCommerce.Web
             }
 
             app.Use(typeof(SiteContextDataOwinMiddleware));
+            app.UseStageMarker(PipelineStage.ResolveCache);
 
             return app;
         }

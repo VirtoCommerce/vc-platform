@@ -30,6 +30,24 @@ namespace VirtoCommerce.Web.Models.Extensions
             }
             return helper.RouteUrl("Item", routeValues);
         }
+
+        public static string CategoryUrl(
+            this UrlHelper helper,
+            string categoryOutline,
+            string parentId = null)
+        {
+            var routeValues = new RouteValueDictionary();
+
+            if (!string.IsNullOrEmpty(parentId))
+            {
+                routeValues.Add("category", categoryOutline);
+            }
+            else
+            {
+                routeValues.Add("category", categoryOutline);
+            }
+            return helper.RouteUrl("category", routeValues);
+        }
         #endregion
     }
 }
