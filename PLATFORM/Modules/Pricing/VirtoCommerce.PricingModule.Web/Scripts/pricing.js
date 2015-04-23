@@ -5,41 +5,39 @@ if (AppDependencies != undefined) {
     AppDependencies.push(moduleName);
 }
 
-angular.module(moduleName, [
-    'virtoCommerce.pricingModule.widget.itemPricesWidget'
-])
+angular.module(moduleName, [])
 .config(
   ['$stateProvider', function ($stateProvider) {
-  	$stateProvider
-		.state('workspace.pricingModule', {
-			url: '/pricing',
-			templateUrl: 'Modules/$(VirtoCommerce.Pricing)/Scripts/home.tpl.html',
-			controller: [
-				'$scope', 'bladeNavigationService', function ($scope, bladeNavigationService) {
-					var blade = {
-						id: 'pricing',
-						title: 'Price lists',
-					    subtitle: 'Merchandise management',
-						controller: 'pricelistListController',
-						template: 'Modules/$(VirtoCommerce.Pricing)/Scripts/blades/pricelist-list.tpl.html',
-						isClosingDisabled: true
-					};
-					bladeNavigationService.showBlade(blade);
-				}
-			]
-		});
+      $stateProvider
+          .state('workspace.pricingModule', {
+              url: '/pricing',
+              templateUrl: 'Modules/$(VirtoCommerce.Pricing)/Scripts/home.tpl.html',
+              controller: [
+                  '$scope', 'bladeNavigationService', function ($scope, bladeNavigationService) {
+                      var blade = {
+                          id: 'pricing',
+                          title: 'Pricing',
+                          subtitle: 'Merchandise management',
+                          controller: 'pricingMainController',
+                          template: 'Modules/$(VirtoCommerce.Pricing)/Scripts/blades/pricing-main.tpl.html',
+                          isClosingDisabled: true
+                      };
+                      bladeNavigationService.showBlade(blade);
+                  }
+              ]
+          });
   }]
 )
 .run(
   ['$rootScope', 'mainMenuService', 'widgetService', '$state', function ($rootScope, mainMenuService, widgetService, $state) {
       //Register module in main menu
       var menuItem = {
-      	path: 'browse/pricing',
-      	icon: 'fa fa-usd',
-      	title: 'Pricing',
-      	priority: 30,
-      	action: function () { $state.go('workspace.pricingModule'); },
-      	permission: 'pricingMenuPermission'
+          path: 'browse/pricing',
+          icon: 'fa fa-usd',
+          title: 'Pricing',
+          priority: 30,
+          action: function () { $state.go('workspace.pricingModule'); },
+          permission: 'pricingMenuPermission'
       };
       mainMenuService.addMenuItem(menuItem);
 

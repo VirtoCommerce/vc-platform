@@ -1,4 +1,5 @@
-﻿<div class="blade-static __bottom" ng-include="'Modules/$(VirtoCommerce.Core)/Scripts/common/ok-cancel2.tpl.html'"></div>
+﻿<div class="blade-static __bottom" ng-include="'Modules/$(VirtoCommerce.Core)/Scripts/common/create.tpl.html'" ng-if="blade.isNew"></div>
+<div class="blade-static __bottom" ng-include="'Modules/$(VirtoCommerce.Core)/Scripts/common/ok-cancel2.tpl.html'" ng-if="!blade.isApiSave && !blade.isNew"></div>
 <div class="blade-content">
     <div class="blade-inner">
         <div class="inner-block">
@@ -7,6 +8,17 @@
                     <label class="form-label">Assignment name</label>
                     <div class="form-input">
                         <input ng-model="blade.currentEntity.name" required placeholder="Enter name" />
+                    </div>
+                </div>
+                <div class="form-group" ng-if="blade.isNew || blade.isApiSave">
+                    <label class="form-label">Price list</label>
+                    <div class="form-input">
+                        <ui-select ng-model="blade.currentEntity.priceListId" required>
+                            <ui-select-match placeholder="Select...">{{$select.selected.name}}</ui-select-match>
+                            <ui-select-choices repeat="x.id as x in pricelists | filter: { name: $select.search }">
+                                <span ng-bind-html="x.name | highlight: $select.search"></span>
+                            </ui-select-choices>
+                        </ui-select>
                     </div>
                 </div>
                 <div class="form-group">
