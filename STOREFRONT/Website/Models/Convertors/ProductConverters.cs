@@ -67,9 +67,13 @@ namespace VirtoCommerce.Web.Models.Convertors
                 if (keyword != null)
                 {
                     var urlHelper = GetUrlHelper();
-                    var url = urlHelper.ItemUrl(keyword.Keyword, collection == null ? "" : collection.Outline);
-                    if(!String.IsNullOrEmpty(url))
-                        productModel.Url = url;
+
+                    if (urlHelper != null)
+                    {
+                        var url = urlHelper.ItemUrl(keyword.Keyword, collection == null ? "" : collection.Outline);
+                        if (!String.IsNullOrEmpty(url))
+                            productModel.Url = url;
+                    }
                 }
             }
             var productRewards = rewards.Where(r => r.RewardType == "CatalogItemAmountReward" && r.ProductId == product.Id);
@@ -109,7 +113,7 @@ namespace VirtoCommerce.Web.Models.Convertors
                 variation.Images.FirstOrDefault(i => i.Name.Equals("primaryimage", StringComparison.OrdinalIgnoreCase)) ??
                 variation.Images.FirstOrDefault();
             var variationOptions = variation.Properties.Skip(0).Take(3).ToArray();
-            var variantlUrlParameter = HttpContext.Current.Request.QueryString["variant"];
+            string variantlUrlParameter = null;// HttpContext.Current.Request.QueryString["variant"];
             var pathTemplate = VirtualPathUtility.ToAbsolute("~/products/{0}?variant={1}");
 
             var reward = rewards.FirstOrDefault();
@@ -149,7 +153,8 @@ namespace VirtoCommerce.Web.Models.Convertors
             var variationImage =
                 product.Images.FirstOrDefault(i => i.Name.Equals("primaryimage", StringComparison.OrdinalIgnoreCase)) ??
                 product.Images.FirstOrDefault();
-            var variantlUrlParameter = HttpContext.Current.Request.QueryString["variant"];
+
+            string variantlUrlParameter = null;// HttpContext.Current.Request.QueryString["variant"];
             var pathTemplate = VirtualPathUtility.ToAbsolute("~/products/{0}");
 
             var reward = rewards.FirstOrDefault();

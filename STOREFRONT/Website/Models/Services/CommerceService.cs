@@ -781,17 +781,19 @@ namespace VirtoCommerce.Web.Models.Services
             return model.AsWebModel();
         }
 
-        public async Task<Search> SearchAsync(string type, string terms)
+        public async Task<Search> SearchAsync(SiteContext context, string type, string terms, int from, int? to)
         {
-            var result = new Search { Performed = true, Results = null, Terms = terms };
-            var query = new BrowseQuery { Search = terms };
-            var priceLists = SiteContext.Current.PriceLists;
+            var pageSize = to == null ? 50 : to - from;
+            var result = new Search { Performed = false, Terms = terms };
+
+            var query = new BrowseQuery { Search = terms, Skip = from, Take = pageSize };
+            var priceLists = context.PriceLists;
 
             var response =
                 await
                     this._browseClient.GetProductsAsync(
-                        SiteContext.Current.StoreId,
-                        SiteContext.Current.Language,
+                        context.StoreId,
+                        context.Language,
                         query,
                         ItemResponseGroups.ItemMedium);
 
@@ -800,11 +802,11 @@ namespace VirtoCommerce.Web.Models.Services
 
             var promoContext = new PromotionEvaluationContext
             {
-                CustomerId = SiteContext.Current.CustomerId,
-                CartTotal = SiteContext.Current.Cart.TotalPrice,
-                Currency = SiteContext.Current.Shop.Currency,
-                IsRegisteredUser = SiteContext.Current.Customer != null,
-                StoreId = SiteContext.Current.StoreId
+                CustomerId = context.CustomerId,
+                CartTotal = context.Cart.TotalPrice,
+                Currency = context.Shop.Currency,
+                IsRegisteredUser = context.Customer != null,
+                StoreId = context.StoreId
             };
 
             var promoEntries = new List<ProductPromoEntry>();
