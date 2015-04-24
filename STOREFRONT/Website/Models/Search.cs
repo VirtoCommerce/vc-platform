@@ -18,22 +18,33 @@ namespace VirtoCommerce.Web.Models
         public Search()
         {
             this.Performed = true;
-            this.Results = new List<object>();
         }
         #endregion
 
         #region Public Properties
         public bool Performed { get; set; }
 
-        private List<object> _Results = null;
+        private ItemCollection<object> _Results = null;
 
-        public List<object> Results
+        public ItemCollection<object> Results
         {
             get { this.LoadSearchResults();return _Results; }
             set { _Results = value; }
         }
 
-        public int ResultsCount { get; set; }
+        public int ResultsCount
+        {
+            get
+            {
+                var response = Results;
+                if (response != null)
+                {
+                    return response.Count;
+                }
+
+                return 0;
+            }
+        }
 
         public string Terms { get; set; }
         #endregion
@@ -54,8 +65,7 @@ namespace VirtoCommerce.Web.Models
             var siteContext = SiteContext.Current;
             var service = new CommerceService();
             var response = Task.Run(() => service.SearchAsync(siteContext, type, terms, skip, pageSize)).Result;
-            this.Results = response.Results;
-            this.ResultsCount = response.ResultsCount;
+            this.Results = response;
 
             this.Performed = false;
         }

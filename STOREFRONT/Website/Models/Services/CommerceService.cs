@@ -781,12 +781,11 @@ namespace VirtoCommerce.Web.Models.Services
             return model.AsWebModel();
         }
 
-        public async Task<Search> SearchAsync(SiteContext context, string type, string terms, int from, int? to)
+        public async Task<ItemCollection<object>> SearchAsync(SiteContext context, string type, string terms, int skip, int? take)
         {
-            var pageSize = to == null ? 50 : to - from;
-            var result = new Search { Performed = false, Terms = terms };
+            var pageSize = take ?? 20;
 
-            var query = new BrowseQuery { Search = terms, Skip = from, Take = pageSize };
+            var query = new BrowseQuery { Search = terms, Skip = skip, Take = pageSize };
             var priceLists = context.PriceLists;
 
             var response =
@@ -835,8 +834,7 @@ namespace VirtoCommerce.Web.Models.Services
 
             //var inventories = await this.GetItemInventoriesAsync(allIds);
 
-            result.ResultsCount = response.TotalCount;
-            result.Results = new List<object>(response.Items.Select(i => i.AsWebModel(prices, rewards/*, inventories*/)));
+            var result = new ItemCollection<object>(response.Items.Select(i => i.AsWebModel(prices, rewards/*, inventories*/))) { TotalCount = response.TotalCount };
 
             return result;
         }
