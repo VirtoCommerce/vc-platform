@@ -132,16 +132,8 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Controllers\Api\FrontendSecurityController.cs" />
-    <Compile Include="Converters\SecurityConverters.cs" />
-    <Compile Include="Hangfire\PermissionBasedAuthorizationFilter.cs" />
-    <Compile Include="Hangfire\UnityBootstrapperConfigurationExtensions.cs" />
-    <Compile Include="Hangfire\UnityJobActivator.cs" />
-    <Compile Include="Binders\UserSearchCriteriaBinder.cs" />
     <Compile Include="Controllers\Api\FulfillmentController.cs" />
     <Compile Include="Controllers\Api\PaymentGatewayController.cs" />
-    <Compile Include="Controllers\Api\SecurityController.cs" />
-    <Compile Include="Converters\ApiAccountConverter.cs" />
     <Compile Include="Converters\FulfillmentCenterConverter.cs" />
     <Compile Include="Converters\PaymentGatewayConverter.cs" />
     <Compile Include="Model\FulfillmentCenter.cs" />
@@ -151,39 +143,11 @@
     <Compile Include="Repositories\IFoundationFulfillmentRepository.cs" />
     <Compile Include="Repositories\FoundationFulfillmentRepositoryImpl.cs" />
     <Compile Include="Search\SearchProviderManager.cs" />
-    <Compile Include="Security\ApiAccountProvider.cs" />
-    <Compile Include="Security\ApplicationClaimsIdentityProvider.cs" />
-    <Compile Include="Security\ApplicationUserStore.cs" />
-    <Compile Include="Security\CachingSecurityService.cs" />
-    <Compile Include="Security\Data\UserDetails.cs" />
-    <Compile Include="Security\Hmac\HmacAuthenticationExtensions.cs" />
-    <Compile Include="Security\Hmac\HmacAuthenticationHandler.cs" />
-    <Compile Include="Security\Hmac\HmacAuthenticationMiddleware.cs" />
-    <Compile Include="Security\Hmac\HmacAuthenticationOptions.cs" />
-    <Compile Include="Security\ApplicationOAuthProvider.cs" />
-    <Compile Include="Security\ApplicationSignInManager.cs" />
-    <Compile Include="Security\ApplicationUserManager.cs" />
     <Compile Include="Security\Data\FoundationCustomerRepositoryImpl.cs" />
-    <Compile Include="Security\Data\FoundationSecurityRepositoryImpl.cs" />
     <Compile Include="Security\Data\IFoundationCustomerRepository.cs" />
-    <Compile Include="Security\Data\IFoundationSecurityRepository.cs" />
-    <Compile Include="Security\Hmac\HmacUtility.cs" />
-    <Compile Include="Security\IApiAccountProvider.cs" />
-    <Compile Include="Security\IClaimsIdentityProvider.cs" />
-    <Compile Include="Security\Models\ApiAccount.cs" />
-    <Compile Include="Security\Models\ApplicationUserExtended.cs" />
-    <Compile Include="Security\Models\ChangePasswordInfo.cs" />
     <Compile Include="Security\Models\SecurityMessage.cs" />
     <Compile Include="Security\Models\MessageType.cs" />
     <Compile Include="Security\Models\SendingMethod.cs" />
-    <Compile Include="Security\Models\UserState.cs" />
-    <Compile Include="Security\Models\UserLogin.cs" />
-    <Compile Include="Security\Models\UserSearchCriteria.cs" />
-    <Compile Include="Security\Models\UserSearchResult.cs" />
-    <Compile Include="Security\Models\UserType.cs" />
-    <Compile Include="Security\OwinConfig.cs" />
-    <Compile Include="Security\PermissionService.cs" />
-    <Compile Include="Security\RoleManagementService.cs" />
     <Compile Include="Services\FulfillmentServiceImpl.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -76,6 +76,7 @@
     <Compile Include="Asset\IBlobStorageProvider.cs" />
     <Compile Include="Asset\UploadStreamInfo.cs" />
     <Compile Include="Bootstrapper.cs" />
+    <Compile Include="Caching\CacheGroups.cs" />
     <Compile Include="Caching\Cachekey.cs" />
     <Compile Include="Caching\CacheManager.cs" />
     <Compile Include="Caching\CacheObject.cs" />
@@ -87,6 +88,7 @@
     <Compile Include="Common\AnnonymousComparer.cs" />
     <Compile Include="Common\ArrayInputAttribute.cs" />
     <Compile Include="Common\AttributeExtensions.cs" />
+    <Compile Include="Common\AuditableEntity.cs" />
     <Compile Include="Common\ClientCacheAttribute.cs" />
     <Compile Include="Common\DateTimeExtensions.cs" />
     <Compile Include="Common\DictionaryExtensions.cs" />
@@ -174,6 +176,7 @@
     <Compile Include="Security\IPermissionService.cs" />
     <Compile Include="Security\IRoleManagementService.cs" />
     <Compile Include="Security\PermissionDescriptor.cs" />
+    <Compile Include="Security\PredefinedPermissions.cs" />
     <Compile Include="Security\RoleDescriptor.cs" />
     <Compile Include="Security\RoleSearchRequest.cs" />
     <Compile Include="Security\RoleSearchResponse.cs" />

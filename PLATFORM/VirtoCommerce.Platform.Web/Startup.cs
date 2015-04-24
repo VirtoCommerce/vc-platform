@@ -3,7 +3,10 @@ using System.Configuration;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Web;
 using System.Web.Hosting;
+using Hangfire.SqlServer;
+using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin;
 using Microsoft.Owin.StaticFiles;
 using Microsoft.Practices.Unity;
@@ -24,9 +27,13 @@ using VirtoCommerce.Platform.Core.Settings;
 using VirtoCommerce.Platform.Data.Settings;
 using VirtoCommerce.Platform.Data.Repositories;
 using Microsoft.AspNet.SignalR;
+using Microsoft.Owin.Security;
 using VirtoCommerce.Platform.Data.Infrastructure.Interceptors;
 using VirtoCommerce.Platform.Data.Notification;
 using VirtoCommerce.Platform.Core.Notification;
+using VirtoCommerce.Platform.Core.Security;
+using VirtoCommerce.Platform.Data.Security;
+using VirtoCommerce.Platform.Data.Security.Identity;
 
 [assembly: OwinStartup(typeof(Startup))]
 
@@ -42,9 +49,11 @@ namespace VirtoCommerce.Platform.Web
 
             var bootstraper = new VirtoCommercePlatformWebBootstraper(modulesVirtualPath, modulesPhysicalPath, assembliesPath);
             bootstraper.Run();
-            bootstraper.Container.RegisterInstance(app);
 
-            var moduleCatalog = bootstraper.Container.Resolve<IModuleCatalog>();
+            var container = bootstraper.Container;
+            container.RegisterInstance(app);
+
+            var moduleCatalog = container.Resolve<IModuleCatalog>();
 
             // Register URL rewriter before modules initialization
             if (Directory.Exists(modulesPhysicalPath))
@@ -53,7 +62,7 @@ namespace VirtoCommerce.Platform.Web
                 var modulesRelativePath = MakeRelativePath(applicationBase, modulesPhysicalPath);
 
                 var urlRewriterOptions = new UrlRewriterOptions();
-                var moduleInitializerOptions = (ModuleInitializerOptions)bootstraper.Container.Resolve<IModuleInitializerOptions>();
+                var moduleInitializerOptions = (ModuleInitializerOptions)container.Resolve<IModuleInitializerOptions>();
                 moduleInitializerOptions.SampleDataLevel = EnumUtility.SafeParse(ConfigurationManager.AppSettings["VirtoCommerce:SampleDataLevel"], SampleDataLevel.None);
 
                 foreach (var module in moduleCatalog.Modules.OfType<ManifestModuleInfo>())
@@ -73,10 +82,11 @@ namespace VirtoCommerce.Platform.Web
             }
 
             //Initialize Platform dependencies
-            InitializePlatform(bootstraper.Container);
+            const string connectionStringName = "VirtoCommerce";
+            InitializePlatform(container, connectionStringName);
 
             // Ensure all modules are loaded
-            var moduleManager = bootstraper.Container.Resolve<IModuleManager>();
+            var moduleManager = container.Resolve<IModuleManager>();
 
             foreach (var module in moduleCatalog.Modules.Where(x => x.State == ModuleState.NotStarted))
             {
@@ -84,6 +94,8 @@ namespace VirtoCommerce.Platform.Web
             }
 
             // Post-initialize
+            OwinConfig.Configure(app, container, connectionStringName);
+
             var postInitializeModules = moduleCatalog.CompleteListWithDependencies(moduleCatalog.Modules)
                 .Select(m => m.ModuleInstance)
                 .OfType<IPostInitialize>()
@@ -96,26 +108,52 @@ namespace VirtoCommerce.Platform.Web
 
             app.MapSignalR();
         }
-        
 
-        private static void InitializePlatform(IUnityContainer container)
+
+        private static void InitializePlatform(IUnityContainer container, string connectionStringName)
         {
+            #region Setup database
 
-			Func<IPlatformRepository> platformRepositoryFactory =()=> new PlatformRepositoryImpl("VirtoCommerce", new AuditableInterceptor(), new EntityPrimaryKeyGeneratorInterceptor());	 
+            using (var db = new SecurityDbContext(connectionStringName))
+            {
+                new IdentityDatabaseInitializer().InitializeDatabase(db);
+            }
 
-			#region Caching
+            using (var context = new PlatformRepository(connectionStringName, new AuditableInterceptor(), new EntityPrimaryKeyGeneratorInterceptor()))
+            {
+                new PlatformDatabaseInitializer().InitializeDatabase(context);
+            }
 
-			var cacheProvider = new HttpCacheProvider();
-			container.RegisterInstance<ICacheProvider>(cacheProvider);
+            // Create Hangfire tables
+            new SqlServerStorage(connectionStringName);
 
             #endregion
 
-			#region Notifications
-			var hubSignalR = GlobalHost.ConnectionManager.GetHubContext<ClientPushHub>();
-			var notifier = new InMemoryNotifierImpl(hubSignalR);
-			container.RegisterInstance<INotifier>(notifier);
+            Func<IPlatformRepository> platformRepositoryFactory = () => new PlatformRepository(connectionStringName, new AuditableInterceptor(), new EntityPrimaryKeyGeneratorInterceptor());
+            container.RegisterType<IPlatformRepository>(new InjectionFactory(c => platformRepositoryFactory()));
+            var manifestProvider = container.Resolve<IModuleManifestProvider>();
 
-			#endregion
+            #region Caching
+
+            var cacheProvider = new HttpCacheProvider();
+            container.RegisterInstance<ICacheProvider>(cacheProvider);
+
+            var cacheSettings = new[] 
+			{
+				new CacheSettings(CacheGroups.Settings, TimeSpan.FromDays(1)),
+				new CacheSettings(CacheGroups.Security, TimeSpan.FromMinutes(1)),
+			};
+
+            var cacheManager = new CacheManager(x => cacheProvider, group => cacheSettings.FirstOrDefault(s => s.Group == group));
+
+            #endregion
+
+            #region Notifications
+            var hubSignalR = GlobalHost.ConnectionManager.GetHubContext<ClientPushHub>();
+            var notifier = new InMemoryNotifierImpl(hubSignalR);
+            container.RegisterInstance<INotifier>(notifier);
+
+            #endregion
 
             #region Assets
 
@@ -150,7 +188,6 @@ namespace VirtoCommerce.Platform.Web
             var sourcePath = HostingEnvironment.MapPath("~/App_Data/SourcePackages");
             var packagesPath = HostingEnvironment.MapPath("~/App_Data/InstalledPackages");
 
-            var manifestProvider = container.Resolve<IModuleManifestProvider>();
             var modulesPath = manifestProvider.RootPath;
 
             var projectSystem = new WebsiteProjectSystem(modulesPath);
@@ -168,13 +205,30 @@ namespace VirtoCommerce.Platform.Web
 
             #endregion
 
-			#region Settings
+            #region Settings
 
-			var cacheManager = new CacheManager(x => cacheProvider, x => new CacheSettings("", TimeSpan.FromDays(1), "", true));
-			var settingManager = new SettingsManager(manifestProvider, platformRepositoryFactory, cacheManager);
-			container.RegisterInstance<ISettingsManager>(settingManager);
+            var settingsManager = new SettingsManager(manifestProvider, platformRepositoryFactory, cacheManager);
+            container.RegisterInstance<ISettingsManager>(settingsManager);
 
-			#endregion
+            #endregion
+
+            #region Security
+
+            var permissionService = new PermissionService(platformRepositoryFactory, manifestProvider, cacheManager);
+            container.RegisterInstance<IPermissionService>(permissionService);
+
+            container.RegisterType<IRoleManagementService, RoleManagementService>(new ContainerControlledLifetimeManager());
+
+            var apiAccountProvider = new ApiAccountProvider(platformRepositoryFactory, cacheManager);
+            container.RegisterInstance<IApiAccountProvider>(apiAccountProvider);
+
+            container.RegisterType<IClaimsIdentityProvider, ApplicationClaimsIdentityProvider>(new ContainerControlledLifetimeManager());
+
+            container.RegisterType<ApplicationSignInManager>(new InjectionFactory(c => HttpContext.Current.GetOwinContext().Get<ApplicationSignInManager>()));
+            container.RegisterType<ApplicationUserManager>(new InjectionFactory(c => HttpContext.Current.GetOwinContext().GetUserManager<ApplicationUserManager>()));
+            container.RegisterType<IAuthenticationManager>(new InjectionFactory(c => HttpContext.Current.GetOwinContext().Authentication));
+
+            #endregion
         }
 
         private static string MakeRelativePath(string rootPath, string fullPath)
