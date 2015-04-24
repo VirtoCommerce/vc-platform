@@ -368,7 +368,7 @@ namespace VirtoCommerce.Web.Controllers
         [HttpGet]
         public ActionResult LogOff()
         {
-            _authenticationManager.SignOut();
+            AuthenticationManager.SignOut();
 
             return Redirect("~");
         }
