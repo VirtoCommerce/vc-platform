@@ -3,25 +3,24 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using foundationModel = VirtoCommerce.Foundation.Catalogs.Model;
+using foundationModel = VirtoCommerce.PricingModule.Data.Model;
 using coreModel = VirtoCommerce.Domain.Pricing.Model;
 using VirtoCommerce.Domain.Store.Services;
-using VirtoCommerce.Foundation.Data.Infrastructure;
 using VirtoCommerce.Domain.Customer.Services;
 using VirtoCommerce.PricingModule.Data.Repositories;
 using VirtoCommerce.PricingModule.Data.Converters;
 using System.Data.Entity;
 using VirtoCommerce.Domain.Pricing.Services;
-using VirtoCommerce.Foundation.Frameworks;
 using VirtoCommerce.Domain.Catalog.Services;
-using VirtoCommerce.Foundation.Money;
+using VirtoCommerce.Platform.Data.Infrastructure;
+using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.PricingModule.Data.Services
 {
 	public class PricingServiceImpl : ServiceBase, IPricingService
 	{
-		private readonly Func<IFoundationPricingRepository> _repositoryFactory;
-		public PricingServiceImpl(Func<IFoundationPricingRepository> repositoryFactory)
+		private readonly Func<IPricingRepository> _repositoryFactory;
+		public PricingServiceImpl(Func<IPricingRepository> repositoryFactory)
 		{
 			_repositoryFactory = repositoryFactory;
 		}
@@ -42,7 +41,7 @@ namespace VirtoCommerce.PricingModule.Data.Services
 			var retVal = new List<coreModel.Price>();
 			using (var repository = _repositoryFactory())
 			{
-				var prices = repository.Prices.Include(x => x.Pricelist).Where(x => x.ItemId == evalContext.ProductId)
+				var prices = repository.Prices.Include(x => x.Pricelist).Where(x => x.Id == evalContext.ProductId)
 											  .ToArray()
 											  .Select(x => x.ToCoreModel());
 
@@ -134,7 +133,7 @@ namespace VirtoCommerce.PricingModule.Data.Services
 				repository.Add(entity);
 				CommitChanges(repository);
 			}
-			return GetPricelistById(entity.PricelistId);
+			return GetPricelistById(entity.Id);
 		}
 
 		public virtual void UpdatePrices(coreModel.Price[] prices)
@@ -198,7 +197,7 @@ namespace VirtoCommerce.PricingModule.Data.Services
 			var retVal = "Default" + currency.ToString();
 			return retVal;
 		}
-		private void GenericDelete(string[] ids, Func<IFoundationPricingRepository, string, StorageEntity> getter)
+		private void GenericDelete(string[] ids, Func<IPricingRepository, string, Entity> getter)
 		{
 			using (var repository = _repositoryFactory())
 			{
@@ -241,7 +240,7 @@ namespace VirtoCommerce.PricingModule.Data.Services
 				repository.Add(entity);
 				CommitChanges(repository);
 			}
-			retVal = GetPricelistAssignmentById(entity.PricelistAssignmentId);
+			retVal = GetPricelistAssignmentById(entity.Id);
 			return retVal;
 		}
 

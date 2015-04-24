@@ -1,7 +1,7 @@
 ﻿using Microsoft.Practices.Unity;
 using VirtoCommerce.Domain.Pricing.Services;
-using VirtoCommerce.Foundation.Data.Infrastructure.Interceptors;
 using VirtoCommerce.Platform.Core.Modularity;
+using VirtoCommerce.Platform.Data.Infrastructure.Interceptors;
 using VirtoCommerce.PricingModule.Data.Repositories;
 using VirtoCommerce.PricingModule.Data.Services;
 
@@ -20,7 +20,7 @@ namespace VirtoCommerce.PricingModule.Web
 
         public void Initialize()
         {
-            _container.RegisterType<IFoundationPricingRepository>(new InjectionFactory(c => new FoundationPricingRepositoryImpl("VirtoCommerce", new AuditChangeInterceptor())));
+			_container.RegisterType<IPricingRepository>(new InjectionFactory(c => new PricingRepositoryImpl("VirtoCommerce", new EntityPrimaryKeyGeneratorInterceptor(), new AuditableInterceptor())));
 
             _container.RegisterType<IPricingService, PricingServiceImpl>();
         }

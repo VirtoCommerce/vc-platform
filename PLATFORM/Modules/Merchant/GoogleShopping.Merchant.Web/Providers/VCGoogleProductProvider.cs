@@ -9,7 +9,7 @@ using VirtoCommerce.Domain.Catalog.Services;
 using VirtoCommerce.Domain.Pricing.Model;
 using VirtoCommerce.Domain.Pricing.Services;
 using VirtoCommerce.Foundation.Assets.Services;
-using VirtoCommerce.Foundation.Money;
+using VirtoCommerce.Platform.Core.Common;
 
 namespace GoogleShopping.MerchantModule.Web.Providers
 {
