@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using foundationModel = VirtoCommerce.Foundation.Customers.Model;
+using foundationModel = VirtoCommerce.CustomerModule.Data.Model;
 using coreModel = VirtoCommerce.Domain.Customer.Model;
 using Omu.ValueInjecter;
-using VirtoCommerce.Foundation.Frameworks.ConventionInjections;
+using VirtoCommerce.Platform.Data.Common;
 
 namespace VirtoCommerce.CustomerModule.Data.Converters
 {
@@ -19,9 +19,7 @@ namespace VirtoCommerce.CustomerModule.Data.Converters
 
 			var retVal = new coreModel.Note();
 			retVal.InjectFrom(entity);
-			retVal.CreatedDate = entity.Created ?? DateTime.UtcNow;
-			retVal.CreatedBy = entity.AuthorName;
-			retVal.ModifiedBy = entity.ModifierName;
+		
 			return retVal;
 		}
 

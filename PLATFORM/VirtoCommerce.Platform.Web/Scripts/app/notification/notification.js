@@ -116,7 +116,10 @@
 
 	function markAllAsRead() {
 		notifications.markAllAsRead(null, function (data, status, headers, config) {
-			notificationRefresh();
+		    notificationRefresh();
+
+		    var notifyMenu = mainMenuService.findByPath('notification');
+		    notifyMenu.incremented = false;
 		});
 
 	};

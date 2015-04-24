@@ -123,6 +123,9 @@
     <Compile Include="Caching\CacheEntries.cs" />
     <Compile Include="Caching\CacheEntry.cs" />
     <Compile Include="Caching\HttpCacheProvider.cs" />
+    <Compile Include="Common\ConventionInjections\CloneInjection.cs" />
+    <Compile Include="Common\ConventionInjections\IgnorePropertiesInjection.cs" />
+    <Compile Include="Common\ConventionInjections\PatchInjection.cs" />
     <Compile Include="Common\ExceptionExtensions.cs" />
     <Compile Include="Infrastructure\BasicUnitOfWork.cs" />
     <Compile Include="Infrastructure\DbMigrationContext.cs" />
@@ -136,6 +139,7 @@
     <Compile Include="Infrastructure\Interceptors\IInterceptor.cs" />
     <Compile Include="Infrastructure\Interceptors\InterceptionContext.cs" />
     <Compile Include="Infrastructure\Interceptors\TypeInterceptor.cs" />
+    <Compile Include="Infrastructure\ParrentAttribute.cs" />
     <Compile Include="Infrastructure\ServiceBase.cs" />
     <Compile Include="Infrastructure\SetupDatabaseInitializer.cs" />
     <Compile Include="Model\AccountEntity.cs" />

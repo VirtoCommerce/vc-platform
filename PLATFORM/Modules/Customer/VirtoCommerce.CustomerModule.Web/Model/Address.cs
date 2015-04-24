@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using VirtoCommerce.Domain.Customer.Model;
-using VirtoCommerce.Foundation.Frameworks;
 
 namespace VirtoCommerce.CustomerModule.Web.Model
 {
