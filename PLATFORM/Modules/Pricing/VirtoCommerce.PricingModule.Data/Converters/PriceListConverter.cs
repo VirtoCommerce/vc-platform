@@ -4,13 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Omu.ValueInjecter;
-using VirtoCommerce.Foundation.Money;
-using VirtoCommerce.Foundation.Frameworks;
 using System.Collections.ObjectModel;
-using VirtoCommerce.Foundation.Frameworks.ConventionInjections;
-using VirtoCommerce.Foundation.Frameworks.Extensions;
-using foundationModel = VirtoCommerce.Foundation.Catalogs.Model;
+using foundationModel = VirtoCommerce.PricingModule.Data.Model;
 using coreModel = VirtoCommerce.Domain.Pricing.Model;
+using VirtoCommerce.Platform.Core.Common;
+using VirtoCommerce.Platform.Data.Common;
 
 namespace VirtoCommerce.PricingModule.Data.Converters
 {
@@ -28,10 +26,6 @@ namespace VirtoCommerce.PricingModule.Data.Converters
 
 			var retVal = new coreModel.Pricelist();
 			retVal.InjectFrom(dbEntity);
-			retVal.Id = dbEntity.PricelistId;
-			
-			retVal.CreatedDate = dbEntity.Created ?? DateTime.MinValue;
-			retVal.ModifiedDate = dbEntity.LastModified;
 			retVal.Currency = (CurrencyCodes)Enum.Parse(typeof(CurrencyCodes), dbEntity.Currency);
 			retVal.Prices = dbEntity.Prices.Select(x => x.ToCoreModel()).ToList();
 		
@@ -50,18 +44,13 @@ namespace VirtoCommerce.PricingModule.Data.Converters
 			retVal.InjectFrom(priceList);
 			retVal.Currency = priceList.Currency.ToString();
 
-			if (priceList.Id != null)
-			{
-				retVal.PricelistId = priceList.Id;
-			}
-
 			retVal.Prices = new NullCollection<foundationModel.Price>();
 			if (priceList.Prices != null)
 			{
 				retVal.Prices = new ObservableCollection<foundationModel.Price>(priceList.Prices.Select(x=>x.ToFoundation()));
 				foreach(var price in retVal.Prices)
 				{
-					price.PricelistId = retVal.PricelistId;
+					price.PricelistId = retVal.Id;
 				}
 			}
 
@@ -83,8 +72,7 @@ namespace VirtoCommerce.PricingModule.Data.Converters
 		
 			if (!source.Prices.IsNullCollection())
 			{
-				var priceComparer = AnonymousComparer.Create((foundationModel.Price x) => x.PriceId);
-				source.Prices.Patch(target.Prices, priceComparer, (sourcePrice, targetPrice) => sourcePrice.Patch(targetPrice));
+				source.Prices.Patch(target.Prices, (sourcePrice, targetPrice) => sourcePrice.Patch(targetPrice));
 			}
 		
 		} 

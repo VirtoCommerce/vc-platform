@@ -4,13 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Omu.ValueInjecter;
-using VirtoCommerce.Foundation.Money;
-using VirtoCommerce.Foundation.Frameworks;
 using System.Collections.ObjectModel;
-using VirtoCommerce.Foundation.Frameworks.ConventionInjections;
-using VirtoCommerce.Foundation.Frameworks.Extensions;
-using foundationModel = VirtoCommerce.Foundation.Catalogs.Model;
+using foundationModel = VirtoCommerce.PricingModule.Data.Model;
 using coreModel = VirtoCommerce.Domain.Pricing.Model;
+using VirtoCommerce.Platform.Data.Common;
 
 namespace VirtoCommerce.PricingModule.Data.Converters
 {
@@ -28,7 +25,6 @@ namespace VirtoCommerce.PricingModule.Data.Converters
 
 			var retVal = new coreModel.PricelistAssignment();
 			retVal.InjectFrom(dbEntity);
-			retVal.Id = dbEntity.PricelistAssignmentId;
 			return retVal;
 
 		}
@@ -43,10 +39,6 @@ namespace VirtoCommerce.PricingModule.Data.Converters
 
 			retVal.InjectFrom(assignment);
 
-			if (assignment.Id != null)
-			{
-				retVal.PricelistAssignmentId = assignment.Id;
-			}
 			return retVal;
 		}
 

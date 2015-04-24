@@ -7,8 +7,8 @@ using VirtoCommerce.Domain.Pricing.Services;
 using VirtoCommerce.PricingModule.Web.Converters;
 using webModel = VirtoCommerce.PricingModule.Web.Model;
 using coreModel = VirtoCommerce.Domain.Pricing.Model;
-using VirtoCommerce.Foundation.Frameworks.Extensions;
 using VirtoCommerce.Domain.Catalog.Services;
+using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.PricingModule.Web.Controllers.Api
 {

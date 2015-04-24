@@ -4,13 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Omu.ValueInjecter;
-using VirtoCommerce.Foundation.Money;
-using VirtoCommerce.Foundation.Frameworks;
 using System.Collections.ObjectModel;
-using VirtoCommerce.Foundation.Frameworks.ConventionInjections;
-using VirtoCommerce.Foundation.Frameworks.Extensions;
-using foundationModel = VirtoCommerce.Foundation.Catalogs.Model;
+using foundationModel = VirtoCommerce.PricingModule.Data.Model;
 using coreModel = VirtoCommerce.Domain.Pricing.Model;
+using VirtoCommerce.Platform.Core.Common;
+using VirtoCommerce.Platform.Data.Common;
 
 namespace VirtoCommerce.PricingModule.Data.Converters
 {
@@ -28,11 +26,8 @@ namespace VirtoCommerce.PricingModule.Data.Converters
 
 			var retVal = new coreModel.Price();
 			retVal.InjectFrom(dbEntity);
-			retVal.Id = dbEntity.PriceId;
 			retVal.Currency = (CurrencyCodes)Enum.Parse(typeof(CurrencyCodes), dbEntity.Pricelist.Currency);
-			retVal.ProductId = dbEntity.ItemId;
-			retVal.CreatedDate = dbEntity.Created.Value;
-			retVal.ModifiedDate = dbEntity.LastModified;
+			retVal.ProductId = dbEntity.ProductId;
 			retVal.MinQuantity = (int)dbEntity.MinQuantity;
 			return retVal;
 
@@ -47,11 +42,7 @@ namespace VirtoCommerce.PricingModule.Data.Converters
 			var retVal = new foundationModel.Price();
 
 			retVal.InjectFrom(price);
-			retVal.ItemId = price.ProductId;
-			if (price.Id != null)
-			{
-				retVal.PriceId = price.Id;
-			}
+			retVal.ProductId = price.ProductId;
 			retVal.MinQuantity = price.MinQuantity;
 			return retVal;
 		}
@@ -65,7 +56,7 @@ namespace VirtoCommerce.PricingModule.Data.Converters
 		{
 			if (target == null)
 				throw new ArgumentNullException("target");
-			var patchInjection = new PatchInjection<foundationModel.Price>(x => x.ItemId, x => x.List,
+			var patchInjection = new PatchInjection<foundationModel.Price>(x => x.ProductId, x => x.List,
 																		   x => x.MinQuantity, x=>x.Sale);
 			target.InjectFrom(patchInjection, source);
 		}
