@@ -27,6 +27,7 @@ using Microsoft.AspNet.SignalR;
 using VirtoCommerce.Platform.Data.Infrastructure.Interceptors;
 using VirtoCommerce.Platform.Data.Notification;
 using VirtoCommerce.Platform.Core.Notification;
+using VirtoCommerce.Platform.Data.Security.Identity;
 
 [assembly: OwinStartup(typeof(Startup))]
 
@@ -96,26 +97,36 @@ namespace VirtoCommerce.Platform.Web
 
             app.MapSignalR();
         }
-        
+
 
         private static void InitializePlatform(IUnityContainer container)
         {
+            const string connectionStringName = "VirtoCommerce";
+            Func<PlatformRepositoryImpl> platformRepositoryFactory = () => new PlatformRepositoryImpl(connectionStringName, new AuditableInterceptor(), new EntityPrimaryKeyGeneratorInterceptor());
 
-			Func<IPlatformRepository> platformRepositoryFactory =()=> new PlatformRepositoryImpl("VirtoCommerce", new AuditableInterceptor(), new EntityPrimaryKeyGeneratorInterceptor());	 
+            using (var db = new SecurityDbContext(connectionStringName))
+            {
+                new IdentityDatabaseInitializer().InitializeDatabase(db);
+            }
 
-			#region Caching
+            using (var context = platformRepositoryFactory())
+            {
+                //new PlatformDatabaseInitializer().InitializeDatabase(context);
+            }
 
-			var cacheProvider = new HttpCacheProvider();
-			container.RegisterInstance<ICacheProvider>(cacheProvider);
+            #region Caching
+
+            var cacheProvider = new HttpCacheProvider();
+            container.RegisterInstance<ICacheProvider>(cacheProvider);
 
             #endregion
 
-			#region Notifications
-			var hubSignalR = GlobalHost.ConnectionManager.GetHubContext<ClientPushHub>();
-			var notifier = new InMemoryNotifierImpl(hubSignalR);
-			container.RegisterInstance<INotifier>(notifier);
+            #region Notifications
+            var hubSignalR = GlobalHost.ConnectionManager.GetHubContext<ClientPushHub>();
+            var notifier = new InMemoryNotifierImpl(hubSignalR);
+            container.RegisterInstance<INotifier>(notifier);
 
-			#endregion
+            #endregion
 
             #region Assets
 
@@ -168,13 +179,13 @@ namespace VirtoCommerce.Platform.Web
 
             #endregion
 
-			#region Settings
+            #region Settings
 
-			var cacheManager = new CacheManager(x => cacheProvider, x => new CacheSettings("", TimeSpan.FromDays(1), "", true));
-			var settingManager = new SettingsManager(manifestProvider, platformRepositoryFactory, cacheManager);
-			container.RegisterInstance<ISettingsManager>(settingManager);
+            var cacheManager = new CacheManager(x => cacheProvider, x => new CacheSettings("", TimeSpan.FromDays(1), "", true));
+            var settingManager = new SettingsManager(manifestProvider, platformRepositoryFactory, cacheManager);
+            container.RegisterInstance<ISettingsManager>(settingManager);
 
-			#endregion
+            #endregion
         }
 
         private static string MakeRelativePath(string rootPath, string fullPath)
