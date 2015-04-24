@@ -5,7 +5,7 @@
         public string GroupName { get; set; }
         public string Name { get; set; }
         public string Value { get; set; }
-        public string ValueType { get; set; }
+        public SettingValueType ValueType { get; set; }
         public string[] AllowedValues { get; set; }
         public string DefaultValue { get; set; }
         public bool IsArray { get; set; }

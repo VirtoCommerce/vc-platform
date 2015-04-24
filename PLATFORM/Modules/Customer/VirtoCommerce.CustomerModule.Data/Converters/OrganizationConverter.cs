@@ -4,13 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Omu.ValueInjecter;
-using VirtoCommerce.Foundation.Money;
-using VirtoCommerce.Foundation.Frameworks;
 using System.Collections.ObjectModel;
-using VirtoCommerce.Foundation.Frameworks.ConventionInjections;
-using VirtoCommerce.Foundation.Frameworks.Extensions;
-using foundationModel = VirtoCommerce.Foundation.Customers.Model;
+using foundationModel = VirtoCommerce.CustomerModule.Data.Model;
 using coreModel = VirtoCommerce.Domain.Customer.Model;
+using VirtoCommerce.Platform.Core.Common;
+using VirtoCommerce.Platform.Data.Common;
 
 namespace VirtoCommerce.CustomerModule.Data.Converters
 {
@@ -28,11 +26,7 @@ namespace VirtoCommerce.CustomerModule.Data.Converters
 
 			var retVal = new coreModel.Organization();
 			retVal.InjectFrom(dbEntity);
-			retVal.Id = dbEntity.MemberId;
-		
-			retVal.CreatedDate = dbEntity.Created.Value;
-			retVal.ModifiedDate = dbEntity.LastModified;
-
+	
 			retVal.Addresses = dbEntity.Addresses.Select(x => x.ToCoreModel()).ToList();
 			retVal.Emails = dbEntity.Emails.Select(x => x.Address).ToList();
 			retVal.Notes = dbEntity.Notes.Select(x => x.ToCoreModel()).ToList();
@@ -55,11 +49,6 @@ namespace VirtoCommerce.CustomerModule.Data.Converters
 			var retVal = new foundationModel.Organization();
 
 			retVal.InjectFrom(organization);
-
-			if (organization.Id != null)
-			{
-				retVal.MemberId = organization.Id;
-			}
 
 			retVal.Phones = new NullCollection<foundationModel.Phone>();
 			if (organization.Phones != null)
@@ -147,7 +136,7 @@ namespace VirtoCommerce.CustomerModule.Data.Converters
 			}
 			if (!source.Notes.IsNullCollection())
 			{
-				var noteComparer = AnonymousComparer.Create((foundationModel.Note x) => x.NoteId);
+				var noteComparer = AnonymousComparer.Create((foundationModel.Note x) => x.Id);
 				source.Notes.Patch(target.Notes, noteComparer, (sourceNote, targetNote) => sourceNote.Patch(targetNote));
 			}
 		}

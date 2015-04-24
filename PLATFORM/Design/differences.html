@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="app">
+    <head>
+        <meta charset="UTF-8">
+        <title>Metro Theme | Refactoring</title>
+
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+        <!-- Google fonts -->
+        <link href='http://fonts.googleapis.com/css?family=Exo+2:400,300,500,600,400italic&amp;subset=latin,cyrillic' rel='stylesheet' type='text/css'>
+
+        <link rel="stylesheet" href="css/reset.css">
+        <link rel="stylesheet" href="ui-grid/ui-grid-unstable.css">
+        <link rel="stylesheet" href="css/base-modules.css">
+        <link rel="stylesheet" href="css/project-modules.css">
+        <link rel="stylesheet" href="css/cosmetic.css">
+        <link rel="stylesheet" href="css/modules/order.css">
+        <link rel="stylesheet" href="css/modules/dynamic-expression.css">
+        <link rel="stylesheet" href="chosen/chosen.css">
+
+        <!-- Gridster CSS -->
+        <link rel="stylesheet" href="css/gridster.css">
+
+    </head>
+    <body>
+
+        <div id="layout">
+            <nav class="nav-bar">
+                <ul class="menu bar">
+                    <li class="menu-item __logo">
+                        <span class="logo-img">Virto Commerce</span>
+                        <span class="logo-version">1.0.0</span>
+                    </li>
+                    <li class="menu-item __home">
+                        <a class="menu-link" href="#">
+                            <span class="menu-ico fa fa-home"></span>
+                            Home
+                        </a>
+                    </li>
+                    <li class="menu-item">
+                        <a class="menu-link" href="#">
+                            <span class="menu-ico fa fa-comments"></span>
+                            Notifications
+                        </a>
+                    </li>
+                    <li class="menu-item">
+                        <a class="menu-link" href="#">
+                            <span class="menu-ico fa fa-search"></span>
+                            Browse
+                        </a>
+                    </li>
+                    <li class="menu-item">
+                        <a class="menu-link" href="#">
+                            <span class="menu-ico fa fa-signal"></span>
+                            Activity
+                        </a>
+                    </li>
+                </ul>
+                <div class="dropdown">
+                    <a class="dropdown-close">×</a>
+                    <div class="dropdown-head">
+                        <ul class="menu __inline">
+                            <li class="menu-item">
+                                <a class="menu-link">
+                                    <i class="menu-ico fa fa-times-circle"></i>
+                                    <span class="menu-name">Clear all recent</span>
+                                </a>
+                            </li>
+                            <li class="menu-item">
+                                <a class="menu-link">
+                                    <i class="menu-ico fa fa-clock-o"></i>
+                                    <span class="menu-name">Everything</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="dropdown-content">
+                        <ul class="list">
+                            <li class="list-item">
+                                <a class="list-link" href="#">
+                                    <i class="list-ico fa fa-folder"></i>
+                                    Catalog
+                                </a>
+                            </li>
+                            <li class="list-item">
+                                <a class="list-link" href="#">
+                                    <i class="list-ico fa fa-shopping-cart"></i>
+                                    Shopping carts
+                                </a>
+                            </li>
+                            <li class="list-item">
+                                <a class="list-link" href="#">
+                                    <i class="list-ico fa fa-cube"></i>
+                                    Module
+                                </a>
+                            </li>
+                            <li class="list-item">
+                                <a class="list-link" href="#">
+                                    <i class="list-ico fa fa-cogs"></i>
+                                    Settings
+                                </a>
+                            </li>
+                            <li class="list-item">
+                                <a class="list-link" href="#">
+                                    <i class="list-ico fa fa-cubes"></i>
+                                    Modules
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+            <article class="cnt" role="main">
+                <div class="cnt-inner">
+                    <div class="dashboard">
+                        <header class="dashboard-head">
+                            <h1 class="dashboard-title">Virto Commerce</h1>
+                            <div class="dashboard-account">
+                                <div class="user-name">
+                                    <div class="first-name">Mikhail</div>
+                                    <div class="last-name">Chirskiy</div>
+                                </div>
+                                <a href="#" class="sign-out">
+                                    <i class="sign-ico fa fa-sign-out"></i>
+                                    Sign out
+                                </a>
+                            </div>
+                        </header>
+                        <div class="dashboard-area">
+                            <div class="dashboard-inner">
+                                <div class="gridster">
+                                    <ul class="list">
+                                        
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="blade __active">
+                        <header class="blade-head">
+                            <div class="blade-status">
+                                <div class="progress-bar"></div>
+                            </div>
+                            <div class="blade-nav">
+                                <ul class="menu __inline">
+                                    <li class="menu-item __minimize">
+                                        Minimize
+                                    </li>
+                                    <li class="menu-item __maximize">
+                                        Maximize
+                                    </li>
+                                    <li class="menu-item __close">
+                                        Close
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="blade-t __secondary">
+                                <i class="blade-t_ico fa fa-folder"></i>
+                                <p class="blade-t_head">Catalogs</p>
+                                <p class="blade-t_subhead">Manage catalogs</p>
+                            </div>
+                        </header>
+                        <div class="blade-container">
+                            <div class="blade-content">
+                                <div class="blade-inner">
+                                    <div class="inner-block">
+                                        <ul class="list __items">
+                                            <li class="list-item">
+                                                <i class="list-ico fa fa-cloud"></i>
+                                                <span class="list-name">VendorVirtual (virtual)</span>
+                                            </li>
+                                            <li class="list-item">
+                                                <i class="list-ico fa fa-folder"></i>
+                                                <span class="list-name">Sony</span>
+                                            </li>
+                                            <li class="list-item ng-scope ng-isolate-scope">
+                                                <i class="list-ico fa fa-folder"></i>
+                                                <span class="list-name">Samsung</span>
+                                            </li>
+                                            <li class="list-item ng-scope ng-isolate-scope">
+                                                <i class="list-ico fa fa-folder"></i>
+                                                <span class="list-name">Apple</span>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="blade">
+                        <header class="blade-head">
+                            <div class="blade-status">
+                                <div class="progress-bar"></div>
+                            </div>
+                            <div class="blade-nav">
+                                <ul class="menu __inline">
+                                    <li class="menu-item __minimize">
+                                        Minimize
+                                    </li>
+                                    <li class="menu-item __maximize">
+                                        Maximize
+                                    </li>
+                                    <li class="menu-item __close">
+                                        Close
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="blade-t __secondary">
+                                <i class="blade-t_ico fa fa-folder"></i>
+                                <p class="blade-t_head">Catalogs</p>
+                                <p class="blade-t_subhead">Manage catalogs</p>
+                            </div>
+                        </header>
+                        <div class="blade-container">
+                            <div class="blade-content">
+                                <div class="blade-inner">
+                                    <div class="inner-block">
+                                        <ul class="list __items">
+                                            <li class="list-item">
+                                                <i class="list-ico fa fa-cloud"></i>
+                                                <span class="list-name">VendorVirtual (virtual)</span>
+                                            </li>
+                                            <li class="list-item">
+                                                <i class="list-ico fa fa-folder"></i>
+                                                <span class="list-name">Sony</span>
+                                            </li>
+                                            <li class="list-item ng-scope ng-isolate-scope">
+                                                <i class="list-ico fa fa-folder"></i>
+                                                <span class="list-name">Samsung</span>
+                                            </li>
+                                            <li class="list-item ng-scope ng-isolate-scope">
+                                                <i class="list-ico fa fa-folder"></i>
+                                                <span class="list-name">Apple</span>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                </div>
+            </article>
+        </div>
+
+        <script src="http://code.angularjs.org/1.2.7/angular.js"></script>
+        <script src="js/jquery/jquery.min.js"></script>
+        <script src="js/jquery/jquery.mousewheel.js"></script>
+        <script src="chosen/chosen.jquery.min.js"></script>
+        <script src="js/gridster.js"></script>
+        <script src="js/ngGridster.js"></script>
+        <script src="js/main.js"></script>
+        <script src="js/app.js"></script>
+
+        <script src="https://www.google.com/jsapi"></script>
+        <script>
+            $(function () {
+                $('select').chosen();
+
+                $('.__new-blade').on('click', function () {
+                    var blade = $(this).parents('.blade'),
+                        newBlade = $('<div class="blade __animate"><header class="blade-head"><div class="blade-status"></div><div class="blade-nav"><ul class="menu __inline"><li class="menu-item __close"><button>Close</button></li></ul></div></header><div class="blade-container"></div></div>'),
+                        bladeW;
+
+                    blade.after(newBlade);
+                    bladeW = newBlade.width();
+                    $('.blade.__animate').css('margin-left', '-' + bladeW + 'px');
+
+                    setTimeout(function () {
+                        $('.blade.__animate').animate({'margin-left': 0}, 250, function () {
+                            $(this).removeAttr('style').removeClass('__animate');
+                        });
+                    }, 100);
+                });
+
+                $('body').delegate('.blade-nav .menu-item.__close', 'click', function () {
+                    var blade = $(this).parents('.blade'),
+                        bladeW = blade.width();
+
+                    blade.addClass('__animate').animate({'margin-left': '-' + bladeW + 'px'}, 250, function () {
+                        $(this).remove();
+                    });
+                });
+            });
+
+            $(window).ready(function () {
+                var grid_canvas;
+                 
+                grid_canvas = $(".gridster > ul").gridster({
+                    widget_margins: [5, 5],
+                    widget_base_dimensions: [120, 120],
+                }).data('gridster');
+
+                grid_canvas.add_widget('<li class="list-item"><div class="gridster-cnt"><div class="cnt-inner"><div class="list-t">Revenue</div><div class="list-count">$3.6M</div></div></div></li>', 2, 1);
+                grid_canvas.add_widget('<li class="list-item"><div class="gridster-cnt"><div class="cnt-inner"><div class="list-t">Customers with orders</div><div class="list-count">108</div></div></div></li>', 2, 1);
+                grid_canvas.add_widget('<li class="list-item"><div class="gridster-cnt"><div class="cnt-inner"><div class="list-t">Revenue per customer</div><div class="list-count">$33,633</div></div></div></li>', 2, 1);
+                grid_canvas.add_widget('<li class="list-item"><div class="gridster-cnt"><div class="cnt-inner"><div class="list-t">Average order value</div><div class="list-count">$314</div></div></div></li>', 2, 1);
+                grid_canvas.add_widget('<li class="list-item"><div class="gridster-cnt"><div class="cnt-inner"><div class="list-t">Products purchased</div><div class="list-count">16,741</div></div></div></li>', 2, 1);
+                grid_canvas.add_widget('<li class="list-item"><div class="gridster-cnt"><div class="cnt-inner"><div class="list-t">Lines per order</div><div class="list-count">4.0</div></div></div></li>', 2, 1);
+                grid_canvas.add_widget('<li class="list-item"><div id="chart_div"></div></li>', 3, 2);
+                grid_canvas.add_widget('<li class="list-item"><div id="chart_div_2"></div></li>', 3, 2);
+                grid_canvas.add_widget('<li class="list-item"><div id="chart_div_3"></div></li>', 6, 2);
+
+            });
+
+        </script>
+        <script>
+            google.load('visualization', '1', {packages: ['corechart', 'bar']});
+            google.setOnLoadCallback(drawBasic);
+
+            function drawBasic() {
+
+                  var data = new google.visualization.DataTable();
+                  data.addColumn('timeofday', 'Time of Day');
+                  data.addColumn('number', 'Motivation Level');
+
+                  data.addRows([
+                    [{v: [8, 0, 0], f: '8 am'}, 1],
+                    [{v: [9, 0, 0], f: '9 am'}, 2],
+                    [{v: [10, 0, 0], f:'10 am'}, 3],
+                    [{v: [11, 0, 0], f: '11 am'}, 4],
+                    [{v: [12, 0, 0], f: '12 pm'}, 5],
+                    [{v: [13, 0, 0], f: '1 pm'}, 6],
+                    [{v: [14, 0, 0], f: '2 pm'}, 7],
+                    [{v: [15, 0, 0], f: '3 pm'}, 8],
+                    [{v: [16, 0, 0], f: '4 pm'}, 9],
+                    [{v: [17, 0, 0], f: '5 pm'}, 10],
+                  ]);
+
+                  var options = {
+                    title: 'Motivation Level Throughout the Day',
+                    hAxis: {
+                      title: 'Time of Day',
+                      format: 'h:mm a',
+                      viewWindow: {
+                        min: [7, 30, 0],
+                        max: [17, 30, 0]
+                      }
+                    },
+                    vAxis: {
+                      title: 'Rating (scale of 1-10)'
+                    }
+                  };
+
+                  var chart = new google.visualization.ColumnChart(
+                    document.getElementById('chart_div'));
+
+                  chart.draw(data, options);
+                }
+        </script>
+        
+        <script>
+            google.load('visualization', '1', {packages: ['corechart', 'line']});
+            google.setOnLoadCallback(drawBasic);
+
+            function drawBasic() {
+
+                  var data = new google.visualization.DataTable();
+                  data.addColumn('number', 'X');
+                  data.addColumn('number', 'Dogs');
+
+                  data.addRows([
+                    [0, 0],   [1, 10],  [2, 23],  [3, 17],  [4, 18],  [5, 9],
+                    [6, 11],  [7, 27],  [8, 33],  [9, 40],  [10, 32], [11, 35],
+                    [12, 30], [13, 40], [14, 42], [15, 47], [16, 44], [17, 48],
+                    [18, 52], [19, 54], [20, 42], [21, 55], [22, 56], [23, 57],
+                    [24, 60], [25, 50], [26, 52], [27, 51], [28, 49], [29, 53],
+                    [30, 55], [31, 60], [32, 61], [33, 59], [34, 62], [35, 65],
+                    [36, 62], [37, 58], [38, 55], [39, 61], [40, 64], [41, 65],
+                    [42, 63], [43, 66], [44, 67], [45, 69], [46, 69], [47, 70],
+                    [48, 72], [49, 68], [50, 66], [51, 65], [52, 67], [53, 70],
+                    [54, 71], [55, 72], [56, 73], [57, 75], [58, 70], [59, 68],
+                    [60, 64], [61, 60], [62, 65], [63, 67], [64, 68], [65, 69],
+                    [66, 70], [67, 72], [68, 75], [69, 80]
+                  ]);
+
+                  var options = {
+                    hAxis: {
+                      title: 'Time'
+                    },
+                    vAxis: {
+                      title: 'Popularity'
+                    }
+                  };
+
+                  var chart = new google.visualization.LineChart(document.getElementById('chart_div_2'));
+
+                  chart.draw(data, options);
+                }
+        </script>
+
+        <script>
+            google.load('visualization', '1', {packages: ['corechart', 'bar']});
+            google.setOnLoadCallback(drawStacked);
+
+            function drawStacked() {
+                  var data = google.visualization.arrayToDataTable([
+                    ['City', '2010 Population', '2000 Population'],
+                    ['New York City, NY', 8175000, 8008000],
+                    ['Los Angeles, CA', 3792000, 3694000],
+                    ['Chicago, IL', 2695000, 2896000],
+                    ['Houston, TX', 2099000, 1953000],
+                    ['Philadelphia, PA', 1526000, 1517000]
+                  ]);
+
+                  var options = {
+                    title: 'Population of Largest U.S. Cities',
+                    chartArea: {width: '50%'},
+                    isStacked: true,
+                    hAxis: {
+                      title: 'Total Population',
+                      minValue: 0,
+                    },
+                    vAxis: {
+                      title: 'City'
+                    }
+                  };
+                  var chart = new google.visualization.BarChart(document.getElementById('chart_div_3'));
+                  chart.draw(data, options);
+                }
+        </script>
+
+    </body>
+</html>

@@ -60,7 +60,6 @@
     <Otherwise />
   </Choose>
   <ItemGroup>
-    <Compile Include="SettingsTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

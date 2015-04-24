@@ -14,7 +14,6 @@ using VirtoCommerce.CoreModule.Web.Security.Hmac;
 using VirtoCommerce.Foundation.Data.Security.Identity;
 using VirtoCommerce.Foundation.Frameworks;
 using VirtoCommerce.Foundation.Frameworks.Caching;
-using VirtoCommerce.Foundation.Security.Model;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Settings;
 

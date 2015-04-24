@@ -18,6 +18,16 @@ using VirtoCommerce.Platform.Data.Asset;
 using VirtoCommerce.Platform.Data.Packaging;
 using VirtoCommerce.Platform.Data.Packaging.Repositories;
 using VirtoCommerce.Platform.Web.Controllers.Api;
+using VirtoCommerce.Platform.Core.Caching;
+using VirtoCommerce.Platform.Data.Caching;
+using VirtoCommerce.Platform.Core.Settings;
+using VirtoCommerce.Platform.Data.Settings;
+using VirtoCommerce.Platform.Data.Repositories;
+using Microsoft.AspNet.SignalR;
+using VirtoCommerce.Platform.Data.Infrastructure.Interceptors;
+using VirtoCommerce.Platform.Data.Notification;
+using VirtoCommerce.Platform.Core.Notification;
+using VirtoCommerce.Platform.Data.Security.Identity;
 
 [assembly: OwinStartup(typeof(Startup))]
 
@@ -87,10 +97,37 @@ namespace VirtoCommerce.Platform.Web
 
             app.MapSignalR();
         }
-        
+
 
         private static void InitializePlatform(IUnityContainer container)
         {
+            const string connectionStringName = "VirtoCommerce";
+            Func<PlatformRepositoryImpl> platformRepositoryFactory = () => new PlatformRepositoryImpl(connectionStringName, new AuditableInterceptor(), new EntityPrimaryKeyGeneratorInterceptor());
+
+            using (var db = new SecurityDbContext(connectionStringName))
+            {
+                new IdentityDatabaseInitializer().InitializeDatabase(db);
+            }
+
+            using (var context = platformRepositoryFactory())
+            {
+                //new PlatformDatabaseInitializer().InitializeDatabase(context);
+            }
+
+            #region Caching
+
+            var cacheProvider = new HttpCacheProvider();
+            container.RegisterInstance<ICacheProvider>(cacheProvider);
+
+            #endregion
+
+            #region Notifications
+            var hubSignalR = GlobalHost.ConnectionManager.GetHubContext<ClientPushHub>();
+            var notifier = new InMemoryNotifierImpl(hubSignalR);
+            container.RegisterInstance<INotifier>(notifier);
+
+            #endregion
+
             #region Assets
 
             var assetsConnection = ConfigurationManager.ConnectionStrings["AssetsConnectionString"];
@@ -139,6 +176,14 @@ namespace VirtoCommerce.Platform.Web
             var packageService = new PackageService(nugetProjectManager);
 
             container.RegisterType<ModulesController>(new InjectionConstructor(packageService, sourcePath));
+
+            #endregion
+
+            #region Settings
+
+            var cacheManager = new CacheManager(x => cacheProvider, x => new CacheSettings("", TimeSpan.FromDays(1), "", true));
+            var settingManager = new SettingsManager(manifestProvider, platformRepositoryFactory, cacheManager);
+            container.RegisterInstance<ISettingsManager>(settingManager);
 
             #endregion
         }

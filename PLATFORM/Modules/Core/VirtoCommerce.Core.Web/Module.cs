@@ -5,13 +5,11 @@ using Microsoft.Owin.Security;
 using Microsoft.Practices.Unity;
 using Owin;
 using VirtoCommerce.Caching.HttpCache;
-using VirtoCommerce.CoreModule.Web.Notification;
 using VirtoCommerce.CoreModule.Web.Repositories;
 using VirtoCommerce.CoreModule.Web.Search;
 using VirtoCommerce.CoreModule.Web.Security;
 using VirtoCommerce.CoreModule.Web.Security.Data;
 using VirtoCommerce.CoreModule.Web.Services;
-using VirtoCommerce.CoreModule.Web.Settings;
 using VirtoCommerce.Domain.Fulfillment.Services;
 using VirtoCommerce.Domain.Payment.Services;
 using VirtoCommerce.Domain.Search;
@@ -119,16 +117,13 @@ namespace VirtoCommerce.CoreModule.Web
         public void Initialize()
         {
             #region Caching
-
             _container.RegisterType<ICacheRepository, HttpCacheRepository>(new ContainerControlledLifetimeManager());
-
             #endregion
 
             #region Settings
 
             _container.RegisterType<IAppConfigRepository>(new InjectionFactory(c => new EFAppConfigRepository(_connectionStringName)));
-            _container.RegisterType<ISettingsManager, SettingsManager>(new ContainerControlledLifetimeManager());
-
+      
             #endregion
 
             #region Security
@@ -164,12 +159,7 @@ namespace VirtoCommerce.CoreModule.Web
 
             #endregion
 
-            #region Notification
-
-            _container.RegisterType<INotifier, InMemoryNotifierImpl>(new ContainerControlledLifetimeManager());
-
-            #endregion
-
+         
             #region Fulfillment
 
             _container.RegisterType<IFoundationFulfillmentRepository>(new InjectionFactory(c => new FoundationFulfillmentRepositoryImpl(_connectionStringName)));

@@ -150,5 +150,7 @@
 		return retVal;
 	}
 
+	$scope.bladeHeadIco = 'fa fa-inbox';
+
 	blade.initialize();
 }]);

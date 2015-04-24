@@ -91,5 +91,7 @@
 		}
 	}
 
+	$scope.bladeHeadIco = 'fa fa-location-arrow';
+
 	blade.initialize();
 }]);

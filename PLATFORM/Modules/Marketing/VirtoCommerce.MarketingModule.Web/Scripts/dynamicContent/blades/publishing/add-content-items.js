@@ -79,5 +79,7 @@
 		return retVal;
 	}
 
+	$scope.bladeHeadIco = 'fa fa-paperclip';
+
 	blade.initialize();
 }]);

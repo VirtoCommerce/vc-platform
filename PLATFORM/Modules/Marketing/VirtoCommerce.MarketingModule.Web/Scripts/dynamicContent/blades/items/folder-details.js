@@ -59,5 +59,7 @@
 		}
 	}
 
+    $scope.bladeHeadIco = 'fa fa-inbox';
+
 	blade.initialize();
 }]);
