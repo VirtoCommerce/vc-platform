@@ -38,6 +38,14 @@
     <Reference Include="EntityFramework.SqlServer">
       <HintPath>..\packages\EntityFramework.6.1.1\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.AspNet.Identity.Core, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Identity.Core.2.1.0\lib\net45\Microsoft.AspNet.Identity.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.Identity.EntityFramework, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Identity.EntityFramework.2.1.0\lib\net45\Microsoft.AspNet.Identity.EntityFramework.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Microsoft.AspNet.SignalR.Core">
       <HintPath>..\packages\Microsoft.AspNet.SignalR.Core.2.2.0\lib\net45\Microsoft.AspNet.SignalR.Core.dll</HintPath>
     </Reference>
@@ -123,6 +131,7 @@
     <Compile Include="Infrastructure\DbMigrationContext.cs" />
     <Compile Include="Infrastructure\DbMigrationsConfigurationBase.cs" />
     <Compile Include="Infrastructure\DbMigrator.cs" />
+    <Compile Include="Infrastructure\DbModelBuilderExtensions.cs" />
     <Compile Include="Infrastructure\EFRepositoryBase.cs" />
     <Compile Include="Infrastructure\Interceptors\AuditableInterceptor.cs" />
     <Compile Include="Infrastructure\Interceptors\ChangeInterceptor.cs" />
@@ -133,6 +142,15 @@
     <Compile Include="Infrastructure\ParrentAttribute.cs" />
     <Compile Include="Infrastructure\ServiceBase.cs" />
     <Compile Include="Infrastructure\SetupDatabaseInitializer.cs" />
+    <Compile Include="Model\AccountEntity.cs" />
+    <Compile Include="Model\AccountState.cs" />
+    <Compile Include="Model\ApiAccountEntity.cs" />
+    <Compile Include="Model\ApiAccountType.cs" />
+    <Compile Include="Model\PermissionEntity.cs" />
+    <Compile Include="Model\RegisterType.cs" />
+    <Compile Include="Model\RoleAssignmentEntity.cs" />
+    <Compile Include="Model\RoleEntity.cs" />
+    <Compile Include="Model\RolePermissionEntity.cs" />
     <Compile Include="Model\SettingEntity.cs" />
     <Compile Include="Model\SettingValueEntity.cs" />
     <Compile Include="Notification\InMemoryNotifierImpl.cs" />
@@ -155,6 +173,14 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\IPlatformRepository.cs" />
     <Compile Include="Repositories\PlatformRepositoryImpl.cs" />
+    <Compile Include="Security\Identity\ApplicationUser.cs" />
+    <Compile Include="Security\Identity\IdentityDatabaseInitializer.cs" />
+    <Compile Include="Security\Identity\Migrations\201411101625303_InitialCreate.cs" />
+    <Compile Include="Security\Identity\Migrations\201411101625303_InitialCreate.Designer.cs">
+      <DependentUpon>201411101625303_InitialCreate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Security\Identity\Migrations\Configuration.cs" />
+    <Compile Include="Security\Identity\SecurityDbContext.cs" />
     <Compile Include="Settings\Converters\ModuleConverter.cs" />
     <Compile Include="Settings\Converters\SettingConverter.cs" />
     <Compile Include="Settings\Converters\SettingValueConverter.cs" />
@@ -175,6 +201,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Packaging\Repositories\NuGet\CommonResources.resx">
       <DependentUpon>CommonResources.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Security\Identity\Migrations\201411101625303_InitialCreate.resx">
+      <DependentUpon>201411101625303_InitialCreate.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

@@ -176,6 +176,7 @@
     <Compile Include="Security\IPermissionService.cs" />
     <Compile Include="Security\IRoleManagementService.cs" />
     <Compile Include="Security\PermissionDescriptor.cs" />
+    <Compile Include="Security\PredefinedPermissions.cs" />
     <Compile Include="Security\RoleDescriptor.cs" />
     <Compile Include="Security\RoleSearchRequest.cs" />
     <Compile Include="Security\RoleSearchResponse.cs" />

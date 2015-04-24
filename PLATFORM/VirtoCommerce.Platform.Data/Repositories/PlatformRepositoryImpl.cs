@@ -1,64 +1,112 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using VirtoCommerce.Platform.Data.Infrastructure;
+﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.Data.Entity;
+using System.Data.Entity.Infrastructure.Annotations;
 using System.Data.Entity.ModelConfiguration.Conventions;
+using System.Linq;
+using VirtoCommerce.Platform.Data.Infrastructure;
 using VirtoCommerce.Platform.Data.Infrastructure.Interceptors;
 using VirtoCommerce.Platform.Data.Model;
 
 namespace VirtoCommerce.Platform.Data.Repositories
 {
-	public class PlatformRepositoryImpl : EFRepositoryBase, IPlatformRepository
-	{
-		public PlatformRepositoryImpl()
-		{
-			Database.SetInitializer<PlatformRepositoryImpl>(null);
-			Configuration.LazyLoadingEnabled = false;
-		}
+    public class PlatformRepositoryImpl : EFRepositoryBase, IPlatformRepository
+    {
+        public PlatformRepositoryImpl()
+        {
+            Database.SetInitializer<PlatformRepositoryImpl>(null);
+            Configuration.LazyLoadingEnabled = false;
+        }
 
-		public PlatformRepositoryImpl(string nameOrConnectionString, params IInterceptor[] interceptors)
-			: base(nameOrConnectionString, null, interceptors)
-		{
-			Database.SetInitializer<PlatformRepositoryImpl>(null);
-			Configuration.LazyLoadingEnabled = false;
-		}
+        public PlatformRepositoryImpl(string nameOrConnectionString, params IInterceptor[] interceptors)
+            : base(nameOrConnectionString, null, interceptors)
+        {
+            Database.SetInitializer<PlatformRepositoryImpl>(null);
+            Configuration.LazyLoadingEnabled = false;
+        }
 
 
-		protected override void OnModelCreating(DbModelBuilder modelBuilder)
-		{
-			modelBuilder.Conventions.Remove<PluralizingTableNameConvention>();
+        protected override void OnModelCreating(DbModelBuilder modelBuilder)
+        {
+            modelBuilder.Conventions.Remove<PluralizingTableNameConvention>();
 
-			#region Settings
-			modelBuilder.Entity<SettingEntity>().HasKey(x => x.Id).Property(x => x.Id)
-												.HasColumnName("SettingId");
-				
+            #region Settings
 
-			modelBuilder.Entity<SettingEntity>().ToTable("Setting");
-			#endregion
+            modelBuilder.Entity<SettingEntity>("PlatformSetting", "SettingId");
+            modelBuilder.Entity<SettingValueEntity>("PlatformSettingValue", "SettingValueId");
 
-			#region SettingValue
-			modelBuilder.Entity<SettingValueEntity>().HasKey(x => x.Id)
-					    .Property(x => x.Id).HasColumnName("SettingValueId");
+            modelBuilder.Entity<SettingValueEntity>()
+                .HasRequired(x => x.Setting)
+                .WithMany(x => x.SettingValues)
+                .HasForeignKey(x => x.SettingId);
 
-			modelBuilder.Entity<SettingValueEntity>().HasRequired(x => x.Setting)
-									   .WithMany(x => x.SettingValues)
-									   .HasForeignKey(x => x.SettingId);
+            #endregion
 
-			modelBuilder.Entity<SettingValueEntity>().ToTable("SettingValue");
-			#endregion
-		
-		}
+            #region Security
 
-		#region IPlatformRepository Members
+            // Tables
+            modelBuilder.Entity<AccountEntity>("PlatformAccount", "AccountId");
+            modelBuilder.Entity<ApiAccountEntity>("PlatformApiAccount", "ApiAccountId");
+            modelBuilder.Entity<RoleEntity>("PlatformRole", "RoleId");
+            modelBuilder.Entity<PermissionEntity>("PlatformPermission", "PermissionId");
+            modelBuilder.Entity<RoleAssignmentEntity>("PlatformRoleAssignment", "RoleAssignmentId");
+            modelBuilder.Entity<RolePermissionEntity>("PlatformRolePermission", "RolePermissionId");
 
-		public IQueryable<SettingEntity> Settings
-		{
-			get { return GetAsQueryable<SettingEntity>(); }
-		}
+            // Properties
+            modelBuilder.Entity<AccountEntity>().Property(x => x.StoreId).HasMaxLength(128);
+            modelBuilder.Entity<AccountEntity>().Property(x => x.MemberId).HasMaxLength(64);
+            modelBuilder.Entity<AccountEntity>().Property(x => x.UserName).IsRequired().HasMaxLength(128);
 
-		#endregion
-	}
+            modelBuilder.Entity<ApiAccountEntity>().Property(x => x.AppId)
+                .IsRequired()
+                .HasMaxLength(128)
+                .HasColumnAnnotation("Index", new IndexAnnotation(new IndexAttribute("IX_AppId") { IsUnique = true }));
+
+            modelBuilder.Entity<RoleEntity>().Property(x => x.Name).IsRequired().HasMaxLength(128);
+
+            modelBuilder.Entity<PermissionEntity>().Property(x => x.Name).IsRequired().HasMaxLength(256);
+
+            modelBuilder.Entity<RoleAssignmentEntity>().Property(x => x.OrganizationId).HasMaxLength(64);
+
+            // Relations
+            modelBuilder.Entity<ApiAccountEntity>()
+                .HasRequired(x => x.Account)
+                .WithMany(x => x.ApiAccounts)
+                .HasForeignKey(x => x.AccountId);
+
+            modelBuilder.Entity<RoleAssignmentEntity>()
+                .HasRequired(x => x.Account)
+                .WithMany(x => x.RoleAssignments)
+                .HasForeignKey(x => x.AccountId);
+
+            modelBuilder.Entity<RoleAssignmentEntity>()
+                .HasRequired(x => x.Role)
+                .WithMany(x => x.RoleAssignments)
+                .HasForeignKey(x => x.RoleId);
+
+            modelBuilder.Entity<RolePermissionEntity>()
+                .HasRequired(x => x.Permission)
+                .WithMany(x => x.RolePermissions)
+                .HasForeignKey(x => x.PermissionId);
+
+            modelBuilder.Entity<RolePermissionEntity>()
+                .HasRequired(x => x.Role)
+                .WithMany(x => x.RolePermissions)
+                .HasForeignKey(x => x.RoleId);
+
+            #endregion
+        }
+
+        #region IPlatformRepository Members
+
+        public IQueryable<SettingEntity> Settings { get { return GetAsQueryable<SettingEntity>(); } }
+
+        public IQueryable<AccountEntity> Accounts { get { return GetAsQueryable<AccountEntity>(); } }
+        public IQueryable<ApiAccountEntity> ApiAccounts { get { return GetAsQueryable<ApiAccountEntity>(); } }
+        public IQueryable<RoleEntity> Roles { get { return GetAsQueryable<RoleEntity>(); } }
+        public IQueryable<PermissionEntity> Permissions { get { return GetAsQueryable<PermissionEntity>(); } }
+        public IQueryable<RoleAssignmentEntity> RoleAssignments { get { return GetAsQueryable<RoleAssignmentEntity>(); } }
+        public IQueryable<RolePermissionEntity> RolePermissions { get { return GetAsQueryable<RolePermissionEntity>(); } }
+
+        #endregion
+    }
 }

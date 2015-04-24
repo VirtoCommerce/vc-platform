@@ -7,6 +7,7 @@ using VirtoCommerce.Foundation.Security.Repositories;
 using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Settings;
+using PredefinedPermissions = VirtoCommerce.Platform.Core.Security.PredefinedPermissions;
 
 namespace VirtoCommerce.CoreModule.Web.Security
 {
