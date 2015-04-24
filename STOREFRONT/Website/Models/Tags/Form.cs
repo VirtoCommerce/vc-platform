@@ -63,7 +63,7 @@ namespace VirtoCommerce.Web.Models.Tags
 
             result.WriteLine(
                 "<form accept-charset=\"UTF-8\" action=\"{0}\" method=\"post\" id=\"{1}\">",
-                form == null ? "" : form.GetActionLink(contextFormObject), form == null ? "" : form.Id);
+                form == null ? "" : form.ActionLink, form == null ? "" : form.Id);
 
             result.WriteLine("<input name=\"form_type\" type=\"hidden\" value=\"{0}\" />", template);
 
