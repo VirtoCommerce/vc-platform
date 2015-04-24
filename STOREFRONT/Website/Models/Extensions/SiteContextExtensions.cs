@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using VirtoCommerce.ApiClient.DataContracts;
 
 #endregion
 
@@ -79,16 +80,21 @@ namespace VirtoCommerce.Web.Models.Extensions
                 }
 
                 //Default language failover scenario
-                var store = SiteContext.Current.Shop;
+                Shop store = null;
 
                 //if (store == null) throw new NullReferenceException("store is not initialized");
                 //Current store can be null when called from StoreHttpModule and store is not yet initialzed
-                /*
-                if (store == null && keywords[0].KeywordType == SeoUrlKeywordTypes.Store)
+                if (store == null /*&& keywords.ElementAt(0).KeywordType == SeoUrlKeywordTypes.Store*/)
                 {
-                    store = StoreHelper.StoreClient.GetStore(keywords[0].KeywordValue);
+                    var allShops = SiteContext.Current.Shops;
+
+                    if (!allShops.Any())
+                    {
+                        return null;
+                    }
+
+                    store = allShops.FirstOrDefault(x => x.StoreId.Equals(keywords.ElementAt(0).Keyword, StringComparison.InvariantCultureIgnoreCase));
                 }
-                 * */
 
                 if (store != null && !store.DefaultLanguage.Equals(language, StringComparison.OrdinalIgnoreCase))
                 {

@@ -117,12 +117,15 @@ namespace VirtoCommerce.ApiClient.Extensions
         {
             try
             {
+                if (String.IsNullOrEmpty(lang))
+                    return String.Empty;
+
                 var culture = CultureInfo.CreateSpecificCulture(lang);
                 return culture.Name;
             }
             catch
             {
-                return "";
+                return String.Empty;
             }
         }
 
