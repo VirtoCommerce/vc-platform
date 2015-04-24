@@ -2,8 +2,8 @@
 using System.Linq;
 using System.Web.Http.Results;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using VirtoCommerce.Foundation.Data.Infrastructure.Interceptors;
-using VirtoCommerce.Foundation.Money;
+using VirtoCommerce.Platform.Core.Common;
+using VirtoCommerce.Platform.Data.Infrastructure.Interceptors;
 using VirtoCommerce.StoreModule.Data.Repositories;
 using VirtoCommerce.StoreModule.Data.Services;
 using VirtoCommerce.StoreModule.Web.Controllers.Api;
@@ -89,9 +89,9 @@ namespace VirtoCommerce.StoreModule.Test
 		}
 		private static StoreModuleController GetStoreController()
 		{
-			Func<IFoundationStoreRepository> repositoryFactory = () =>
+			Func<IStoreRepository> repositoryFactory = () =>
 			{
-				return new FoundationStoreRepositoryImpl("VirtoCommerce", new AuditChangeInterceptor());
+				return new StoreRepositoryImpl("VirtoCommerce", new EntityPrimaryKeyGeneratorInterceptor(), new AuditableInterceptor());
 			};
 			
 			var storeService = new StoreServiceImpl(repositoryFactory);

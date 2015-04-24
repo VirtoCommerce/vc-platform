@@ -3,14 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using foundationModel = VirtoCommerce.Foundation.Stores.Model;
+using foundationModel = VirtoCommerce.StoreModule.Data.Model;
 using coreModel = VirtoCommerce.Domain.Store.Model;
 using Omu.ValueInjecter;
-using VirtoCommerce.Foundation.Money;
-using VirtoCommerce.Foundation.Frameworks;
 using System.Collections.ObjectModel;
-using VirtoCommerce.Foundation.Frameworks.ConventionInjections;
-using VirtoCommerce.Foundation.Frameworks.Extensions;
+using VirtoCommerce.Platform.Core.Common;
+using VirtoCommerce.Platform.Data.Common;
 
 namespace VirtoCommerce.StoreModule.Data.Converters
 {
@@ -28,10 +26,7 @@ namespace VirtoCommerce.StoreModule.Data.Converters
 
 			var retVal = new coreModel.Store();
 			retVal.InjectFrom(dbStore);
-			retVal.Id = dbStore.StoreId;
 	
-			retVal.CreatedDate = dbStore.Created.Value;
-			retVal.ModifiedDate = dbStore.LastModified;
 
 			if(dbStore.DefaultCurrency != null)
 			{
@@ -64,12 +59,6 @@ namespace VirtoCommerce.StoreModule.Data.Converters
 			var retVal = new foundationModel.Store();
 
 			retVal.InjectFrom(store);
-
-			if(store.Id != null)
-			{
-				retVal.StoreId = store.Id;
-			}
-
 			retVal.StoreState = (int)store.StoreState;
 			
 			if(store.DefaultCurrency != null)
@@ -78,13 +67,11 @@ namespace VirtoCommerce.StoreModule.Data.Converters
 			}
 			if (store.FulfillmentCenter != null)
 			{
-				retVal.FulfillmentCenter = store.FulfillmentCenter.ToFoundation();
-				retVal.FulfillmentCenterId = retVal.FulfillmentCenter.FulfillmentCenterId;
+				retVal.FulfillmentCenterId = retVal.FulfillmentCenter.Id;
 			}
 			if (store.ReturnsFulfillmentCenter != null)
 			{
-				retVal.ReturnsFulfillmentCenter = store.ReturnsFulfillmentCenter.ToFoundation();
-				retVal.ReturnsFulfillmentCenterId = retVal.ReturnsFulfillmentCenter.FulfillmentCenterId;
+				retVal.ReturnsFulfillmentCenterId = retVal.ReturnsFulfillmentCenter.Id;
 			}
 			retVal.Languages = new NullCollection<foundationModel.StoreLanguage>();
 			if (store.Languages != null)
@@ -92,7 +79,7 @@ namespace VirtoCommerce.StoreModule.Data.Converters
 				retVal.Languages = new ObservableCollection<foundationModel.StoreLanguage>(store.Languages.Select(x=> new foundationModel.StoreLanguage
 					{
 						LanguageCode = x,
-						StoreId = retVal.StoreId
+						StoreId = retVal.Id
 					}));
 			}
 			retVal.Settings = new NullCollection<foundationModel.StoreSetting>();
@@ -101,7 +88,7 @@ namespace VirtoCommerce.StoreModule.Data.Converters
 				retVal.Settings = new ObservableCollection<foundationModel.StoreSetting>(store.Settings.Select(x=>x.ToFoundation()));
 				foreach(var setting in retVal.Settings)
 				{
-					setting.StoreId = retVal.StoreId;
+					setting.StoreId = retVal.Id;
 				}
 			}
 			retVal.Currencies = new NullCollection<foundationModel.StoreCurrency>();
@@ -110,7 +97,7 @@ namespace VirtoCommerce.StoreModule.Data.Converters
 				retVal.Currencies = new ObservableCollection<foundationModel.StoreCurrency>(store.Currencies.Select(x => new foundationModel.StoreCurrency
 				{
 					CurrencyCode = x.ToString(),
-					StoreId = retVal.StoreId
+					StoreId = retVal.Id
 				}));
 			}
 			retVal.PaymentGateways = new NullCollection<foundationModel.StorePaymentGateway>();
@@ -119,7 +106,7 @@ namespace VirtoCommerce.StoreModule.Data.Converters
 				retVal.PaymentGateways = new ObservableCollection<foundationModel.StorePaymentGateway>(store.PaymentGateways.Select(x => new foundationModel.StorePaymentGateway
 				{
 					 PaymentGateway = x,
-					 StoreId = retVal.StoreId
+					 StoreId = retVal.Id
 				}));
 			}
 			return retVal;
@@ -145,12 +132,12 @@ namespace VirtoCommerce.StoreModule.Data.Converters
 
 			if (source.FulfillmentCenter != null)
 			{
-				target.FulfillmentCenterId = source.FulfillmentCenter.FulfillmentCenterId;
+				target.FulfillmentCenterId = source.FulfillmentCenter.Id;
 			}
 
 			if (source.ReturnsFulfillmentCenter != null)
 			{
-				target.ReturnsFulfillmentCenterId = source.ReturnsFulfillmentCenter.FulfillmentCenterId;
+				target.ReturnsFulfillmentCenterId = source.ReturnsFulfillmentCenter.Id;
 			}
 
 			if (!source.Settings.IsNullCollection())

@@ -41,7 +41,8 @@ namespace VirtoCommerce.PricingModule.Data.Repositories
 			MapEntity<Price>(modelBuilder, toTable: "vc_Price");
 			MapEntity<Pricelist>(modelBuilder, toTable: "vc_Pricelist");
 			MapEntity<PricelistAssignment>(modelBuilder, toTable: "vc_PricelistAssignment");
-
+			
+			base.OnModelCreating(modelBuilder);
 		}
 
 		#region IPricingRepository Members

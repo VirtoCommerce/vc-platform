@@ -3,19 +3,19 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using foundationModel = VirtoCommerce.Foundation.Stores.Model;
+using foundationModel = VirtoCommerce.StoreModule.Data.Model;
 using coreModel = VirtoCommerce.Domain.Store.Model;
 using VirtoCommerce.Domain.Store.Services;
 using VirtoCommerce.StoreModule.Data.Repositories;
 using VirtoCommerce.StoreModule.Data.Converters;
-using VirtoCommerce.Foundation.Data.Infrastructure;
+using VirtoCommerce.Platform.Data.Infrastructure;
 
 namespace VirtoCommerce.StoreModule.Data.Services
 {
 	public class StoreServiceImpl : ServiceBase, IStoreService
 	{
-		private readonly Func<IFoundationStoreRepository> _repositoryFactory;
-		public StoreServiceImpl(Func<IFoundationStoreRepository> repositoryFactory)
+		private readonly Func<IStoreRepository> _repositoryFactory;
+		public StoreServiceImpl(Func<IStoreRepository> repositoryFactory)
 		{
 			_repositoryFactory = repositoryFactory;
 		}
@@ -89,7 +89,7 @@ namespace VirtoCommerce.StoreModule.Data.Services
 			var retVal = new List<coreModel.Store>();
 			using (var repository = _repositoryFactory())
 			{
-				foreach (var storeId in repository.Stores.Select(x => x.StoreId).ToArray())
+				foreach (var storeId in repository.Stores.Select(x => x.Id).ToArray())
 				{
 					var entity = repository.GetStoreById(storeId);
 					retVal.Add(entity.ToCoreModel());

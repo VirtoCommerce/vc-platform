@@ -1,7 +1,7 @@
 ﻿using Microsoft.Practices.Unity;
 using VirtoCommerce.Domain.Store.Services;
-using VirtoCommerce.Foundation.Data.Infrastructure.Interceptors;
 using VirtoCommerce.Platform.Core.Modularity;
+using VirtoCommerce.Platform.Data.Infrastructure.Interceptors;
 using VirtoCommerce.StoreModule.Data.Repositories;
 using VirtoCommerce.StoreModule.Data.Services;
 
@@ -20,7 +20,7 @@ namespace VirtoCommerce.StoreModule.Web
 
         public void Initialize()
         {
-            _container.RegisterType<IFoundationStoreRepository>(new InjectionFactory(c => new FoundationStoreRepositoryImpl("VirtoCommerce", new AuditChangeInterceptor())));
+			_container.RegisterType<IStoreRepository>(new InjectionFactory(c => new StoreRepositoryImpl("VirtoCommerce", new EntityPrimaryKeyGeneratorInterceptor(), new AuditableInterceptor())));
 
             _container.RegisterType<IStoreService, StoreServiceImpl>();
         }

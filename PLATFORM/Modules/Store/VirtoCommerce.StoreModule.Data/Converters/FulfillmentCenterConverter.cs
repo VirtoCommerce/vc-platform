@@ -3,10 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using foundationModel = VirtoCommerce.Foundation.Stores.Model;
+using foundationModel = VirtoCommerce.StoreModule.Data.Model;
 using coreModel = VirtoCommerce.Domain.Store.Model;
 using Omu.ValueInjecter;
-using VirtoCommerce.Foundation.Frameworks.ConventionInjections;
 
 namespace VirtoCommerce.StoreModule.Data.Converters
 {
@@ -24,27 +23,10 @@ namespace VirtoCommerce.StoreModule.Data.Converters
 
 			var retVal = new coreModel.FulfillmentCenter();
 			retVal.InjectFrom(dbEntity);
-			retVal.Id = dbEntity.FulfillmentCenterId;
 		
 			return retVal;
 
 		}
 
-
-		public static foundationModel.FulfillmentCenter ToFoundation(this coreModel.FulfillmentCenter fulfillCenter)
-		{
-			if (fulfillCenter == null)
-				throw new ArgumentNullException("fulfillCenter");
-
-			var retVal = new foundationModel.FulfillmentCenter();
-			retVal.InjectFrom(fulfillCenter);
-
-			if (fulfillCenter.Id != null)
-			{
-				retVal.FulfillmentCenterId = fulfillCenter.Id;
-			}
-
-			return retVal;
-		}
 	}
 }
