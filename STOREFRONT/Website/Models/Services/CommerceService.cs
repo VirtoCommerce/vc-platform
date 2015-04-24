@@ -402,90 +402,84 @@ namespace VirtoCommerce.Web.Models.Services
             return order.AsWebModel();
         }
 
-        //public SubmitForm GetForm(string id)
-        //{
-        //    var forms = SiteContext.Current.Forms;
+        public SubmitForm GetForm(string id)
+        {
+            var forms = SiteContext.Current.Forms;
 
-        //    var form = forms.SingleOrDefault(f => f.Id == id);
-        //    return form;
-        //}
+            var form = forms.SingleOrDefault(f => f.Id == id);
+            return form;
+        }
 
-        //public SubmitForm[] GetForms()
-        //{
-        //    var allForms = new[]
-        //                   {
-        //                       new SubmitForm
-        //                       {
-        //                           Id = "customer_login",
-        //                           FormType = "customer_login",
-        //                           ActionLink = VirtualPathUtility.ToAbsolute("~/account/login"),
-        //                           PasswordNeeded = true
-        //                       },
-        //                       new SubmitForm
-        //                       {
-        //                           Id = "external_login",
-        //                           FormType = "external_login",
-        //                           ActionLink = VirtualPathUtility.ToAbsolute("~/account/externallogin")
-        //                       },
-        //                       new SubmitForm
-        //                       {
-        //                           Id = "guest_login",
-        //                           FormType = "guest_login",
-        //                           ActionLink = VirtualPathUtility.ToAbsolute("~/account/guestlogin")
-        //                       },
-        //                       new SubmitForm
-        //                       {
-        //                           Id = "create_customer",
-        //                           FormType = "create_customer",
-        //                           ActionLink = VirtualPathUtility.ToAbsolute("~/account/register"),
-        //                           PasswordNeeded = true
-        //                       },
-        //                       new SubmitForm
-        //                       {
-        //                           Id = "recover_customer_password",
-        //                           FormType = "recover_customer_password",
-        //                           ActionLink = VirtualPathUtility.ToAbsolute("~/account/forgotpassword")
-        //                       },
-        //                       new SubmitForm
-        //                       {
-        //                           Id = "reset-password",
-        //                           FormType = "reset_password",
-        //                           ActionLink = VirtualPathUtility.ToAbsolute("~/account/resetpassword")
-        //                       },
-        //                       new SubmitForm
-        //                       {
-        //                           Id = "send-code",
-        //                           FormType = "send_code",
-        //                           ActionLink = VirtualPathUtility.ToAbsolute("~/account/sendcode")
-        //                       },
-        //                       new SubmitForm
-        //                       {
-        //                           Id = "verify_code",
-        //                           FormType = "verify_code",
-        //                           ActionLink = VirtualPathUtility.ToAbsolute("~/account/verifycode")
-        //                       },
-        //                       new SubmitForm
-        //                       {
-        //                           Id = "confirm-external-login",
-        //                           FormType = "confirm_external_login",
-        //                           ActionLink = VirtualPathUtility.ToAbsolute("~/account/externalloginconfirmation")
-        //                       },
-        //                       new SubmitForm
-        //                       {
-        //                           Id = "edit_checkout_step_1",
-        //                           FormType = "edit_checkout_step_1",
-        //                           ActionLink = VirtualPathUtility.ToAbsolute("~/checkout/step1"),
-        //                       },
-        //                       new SubmitForm
-        //                       {
-        //                           Id = "edit_checkout_step_2",
-        //                           FormType = "edit_checkout_step_2",
-        //                           ActionLink = VirtualPathUtility.ToAbsolute("~/checkout/step2"),
-        //                       }
-        //                   };
+        public SubmitForm[] GetForms()
+        {
+            var allForms = new[]
+                           {
+                               new SubmitForm
+                               {
+                                   FormType = "customer_login",
+                                   ActionLink = VirtualPathUtility.ToAbsolute("~/account/login"),
+                                   PasswordNeeded = true
+                               },
+                               new SubmitForm
+                               {
+                                   FormType = "external_login",
+                                   ActionLink = VirtualPathUtility.ToAbsolute("~/account/externallogin")
+                               },
+                               new SubmitForm
+                               {
+                                   FormType = "guest_login",
+                                   ActionLink = VirtualPathUtility.ToAbsolute("~/account/guestlogin")
+                               },
+                               new SubmitForm
+                               {
+                                   FormType = "create_customer",
+                                   ActionLink = VirtualPathUtility.ToAbsolute("~/account/register"),
+                                   PasswordNeeded = true
+                               },
+                                new AddressForm
+                                {
+                                    FormType = "customer_address",
+                                    ActionLink = "/Account/NewAddress",
+                                },
+                               new SubmitForm
+                               {
+                                   FormType = "recover_customer_password",
+                                   ActionLink = VirtualPathUtility.ToAbsolute("~/account/forgotpassword")
+                               },
+                               new SubmitForm
+                               {
+                                   FormType = "reset_password",
+                                   ActionLink = VirtualPathUtility.ToAbsolute("~/account/resetpassword")
+                               },
+                               new SubmitForm
+                               {
+                                   FormType = "send_code",
+                                   ActionLink = VirtualPathUtility.ToAbsolute("~/account/sendcode")
+                               },
+                               new SubmitForm
+                               {
+                                   FormType = "verify_code",
+                                   ActionLink = VirtualPathUtility.ToAbsolute("~/account/verifycode")
+                               },
+                               new SubmitForm
+                               {
+                                   FormType = "confirm_external_login",
+                                   ActionLink = VirtualPathUtility.ToAbsolute("~/account/externalloginconfirmation")
+                               },
+                               new SubmitForm
+                               {
+                                   FormType = "edit_checkout_step_1",
+                                   ActionLink = VirtualPathUtility.ToAbsolute("~/checkout/step1"),
+                               },
+                               new SubmitForm
+                               {
+                                   FormType = "edit_checkout_step_2",
+                                   ActionLink = VirtualPathUtility.ToAbsolute("~/checkout/step2"),
+                               }
+                           };
 
-        //    return allForms;
-        //}
+            return allForms;
+        }
 
         public async Task<LinkLists> GetListsAsync()
         {

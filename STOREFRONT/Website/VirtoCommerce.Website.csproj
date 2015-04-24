@@ -287,7 +287,6 @@
     <Compile Include="Models\SubmitFormErrors.cs" />
     <Compile Include="Models\Tag.cs" />
     <Compile Include="Models\Tags\Form.cs" />
-    <Compile Include="Models\Tags\IFormNaming.cs" />
     <Compile Include="Models\TaxLine.cs" />
     <Compile Include="Models\ThemeAsset.cs" />
     <Compile Include="Models\Theme.cs" />

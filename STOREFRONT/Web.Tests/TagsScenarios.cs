@@ -28,18 +28,25 @@ namespace Web.Tests
             builder.AppendLine(String.Format("<form accept-charset=\"UTF-8\" action=\"{0}\" method=\"post\" id=\"{1}\">", form.ActionLink, form.Id));
             builder.AppendLine(String.Format("<input name=\"form_type\" type=\"hidden\" value=\"{0}\" />", form.Id));
             builder.AppendLine("</form>");
-            var context = Hash.FromAnonymousObject(new { Forms = allForms, Address = address });
+            var context = Hash.FromAnonymousObject(new { Forms = allForms, Address = address, Customer = new CustomerTestForm() });
             Helper.AssertTemplateResult(builder.ToString(), "{% form 'customer_login' %}{% endform %}", context);
-
+            //'customer_address', customer.new_address 
             var builder2 = new StringBuilder();
             builder2.AppendLine(String.Format("<form accept-charset=\"UTF-8\" action=\"{0}\" method=\"post\" id=\"{1}\">", form.ActionLink, address.FormName));
             builder2.AppendLine(String.Format("<input name=\"form_type\" type=\"hidden\" value=\"{0}\" />", form.Id));
             builder2.AppendLine("</form>");
 
             Helper.AssertTemplateResult(builder2.ToString(), "{% form 'customer_login',address %}{% endform %}", context);
+
+            var builder3 = new StringBuilder();
+            builder3.AppendLine(String.Format("<form accept-charset=\"UTF-8\" action=\"{0}\" method=\"post\" id=\"{1}\">", form.ActionLink, address.FormName));
+            builder3.AppendLine(String.Format("<input name=\"form_type\" type=\"hidden\" value=\"{0}\" />", form.Id));
+            builder3.AppendLine("</form>");
+            
+            Helper.AssertTemplateResult(builder3.ToString(), "{% form 'customer_login', customer.new_address %}{% endform %}", context);
         }
 
-        private class AddressTestForm : Drop, IFormNaming
+        private class AddressTestForm : Drop
         {
             #region Implementation of IFormNaming
 
@@ -48,6 +55,14 @@ namespace Web.Tests
             }
 
             #endregion
+        }
+
+        private class CustomerTestForm : Drop
+        {
+            public string NewAddress
+            {
+                get { return "address_form_123"; }
+            }
         }
     }
 

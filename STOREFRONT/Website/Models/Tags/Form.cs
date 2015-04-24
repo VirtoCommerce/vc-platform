@@ -15,7 +15,7 @@ namespace VirtoCommerce.Web.Models.Tags
     public class Form : Block
     {
         #region Static Fields
-        private static readonly Regex Syntax = new Regex(string.Format(@"^({0})\s*,?({1}*)\s*", Liquid.QuotedFragment, Liquid.VariableSignature));
+        private static readonly Regex Syntax = new Regex(string.Format(@"^({0})\s*,?\s*({1}*)\s*", Liquid.QuotedFragment, Liquid.VariableSignature));
         #endregion
 
         #region Fields
@@ -46,21 +46,24 @@ namespace VirtoCommerce.Web.Models.Tags
         {
             var template = context[this._templateName].ToNullOrString() ?? this._templateName;
 
-            var id = template;
+            object contextFormObject = null;
             if (!String.IsNullOrEmpty(_formVariableName))
             {
-                var formObject = context[this._formVariableName] as IFormNaming;
-                if (formObject != null)
-                    id = formObject.FormName;
+                contextFormObject = context[this._formVariableName];
             }
 
             var forms = context["Forms"] as SubmitForm[];
 
-            var form = forms.SingleOrDefault(f => f.Id == template);
+            var form = forms.SingleOrDefault(f => f.FormType == template);
+
+            if (form != null)
+            {
+                form.FormContext = contextFormObject;
+            }
 
             result.WriteLine(
                 "<form accept-charset=\"UTF-8\" action=\"{0}\" method=\"post\" id=\"{1}\">",
-                form != null ? form.ActionLink : "", id);
+                form == null ? "" : form.GetActionLink(contextFormObject), form == null ? "" : form.Id);
 
             result.WriteLine("<input name=\"form_type\" type=\"hidden\" value=\"{0}\" />", template);
 
