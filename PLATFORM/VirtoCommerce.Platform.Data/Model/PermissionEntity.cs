@@ -3,7 +3,7 @@ using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.Platform.Data.Model
 {
-    public class PermissionEntity : Entity
+    public class PermissionEntity : AuditableEntity
     {
         public PermissionEntity()
         {

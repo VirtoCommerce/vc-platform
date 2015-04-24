@@ -4,7 +4,7 @@ using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.Platform.Data.Model
 {
-    public class SettingEntity : Entity
+    public class SettingEntity : AuditableEntity
     {
         public SettingEntity()
         {

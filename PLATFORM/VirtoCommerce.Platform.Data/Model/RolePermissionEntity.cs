@@ -2,7 +2,7 @@
 
 namespace VirtoCommerce.Platform.Data.Model
 {
-    public class RolePermissionEntity : Entity
+    public class RolePermissionEntity : AuditableEntity
     {
         public string RoleId { get; set; }
         public string PermissionId { get; set; }

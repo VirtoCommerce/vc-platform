@@ -2,7 +2,7 @@
 
 namespace VirtoCommerce.Platform.Data.Model
 {
-    public class ApiAccountEntity : Entity
+    public class ApiAccountEntity : AuditableEntity
     {
         public ApiAccountType ApiAccountType { get; set; }
         public string AccountId { get; set; }

@@ -3,7 +3,7 @@ using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.Platform.Data.Model
 {
-    public class RoleEntity : Entity
+    public class RoleEntity : AuditableEntity
     {
         public RoleEntity()
         {

@@ -2,7 +2,7 @@
 
 namespace VirtoCommerce.Platform.Data.Model
 {
-    public class RoleAssignmentEntity : Entity
+    public class RoleAssignmentEntity : AuditableEntity
     {
         /// <summary>
         /// Organization within which member has a defined role

@@ -4,7 +4,7 @@ using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.Platform.Data.Model
 {
-    public class SettingValueEntity : Entity
+    public class SettingValueEntity : AuditableEntity
     {
         public const string TypeShortText = "ShortText";
         public const string TypeLongText = "LongText";
