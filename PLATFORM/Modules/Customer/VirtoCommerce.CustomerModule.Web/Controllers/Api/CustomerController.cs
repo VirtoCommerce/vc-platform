@@ -9,7 +9,6 @@ using VirtoCommerce.CustomerModule.Web.Binders;
 using VirtoCommerce.Domain.Cart.Services;
 using VirtoCommerce.Domain.Customer.Services;
 using VirtoCommerce.Domain.Store.Services;
-using VirtoCommerce.Foundation.Money;
 using VirtoCommerce.CustomerModule.Web.Converters;
 using coreModel = VirtoCommerce.Domain.Customer.Model;
 using webModel = VirtoCommerce.CustomerModule.Web.Model;

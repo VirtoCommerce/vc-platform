@@ -81,7 +81,9 @@ namespace VirtoCommerce.Web.Models.Routing
                     if (x.RouteData.Values.ContainsKey(Constants.Category))
                     {
                         var client = ClientContext.Clients.CreateBrowseClient();
-                        var category = Task.Run(() => client.GetCategoryByCodeAsync("samplestore", "en-us", x.RouteData.Values[Constants.Category].ToString())).Result;
+                        var store = SiteContext.Current.Shop.StoreId;
+                        var language = SiteContext.Current.Language;
+                        var category = Task.Run(() => client.GetCategoryByCodeAsync(store, language, x.RouteData.Values[Constants.Category].ToString())).Result;
                         if (category != null)
                         {
                             var model = category.AsWebModel();
@@ -90,26 +92,6 @@ namespace VirtoCommerce.Web.Models.Routing
                     }
                     return null;
                 });
-
-            /*
-            routes.Redirect(r => r.MapRoute("old_Item", string.Format("p/{{{0}}}", Constants.Item))).To(itemRoute,
-                x =>
-                {
-                    //Resolve item category dynamically
-                    //Expect to receive item code
-                    if (x.RouteData.Values.ContainsKey(Constants.Item))
-                    {
-                        var client = ClientContext.Clients.CreateBrowseClient(ClientContext.Session.StoreId, ClientContext.Session.Language);
-                        var item = Task.Run(() => client.GetProductByCodeAsync(x.RouteData.Values[Constants.Item].ToString(), ItemResponseGroups.ItemMedium)).Result;
-                        if (item != null)
-                        {
-                            //TODO return category for item
-                            return new RouteValueDictionary { { Constants.Category, item.Outline } };
-                        }
-                    }
-                    return null;
-                });
-             * */
 
             var defaultRoute = new NormalizeRoute(
                 new Route(string.Format("{0}/{{controller}}/{{action}}/{{id}}", Constants.StoreRoute),
@@ -122,19 +104,6 @@ namespace VirtoCommerce.Web.Models.Routing
                     new RouteValueDictionary { { "namespaces", new[] { "VirtoCommerce.Web.Controllers" } } },
                     new MvcRouteHandler()));
 
-
-            /*
-            var defaultRoute = new NormalizeRoute(
-    new StoreRoute(
-        string.Format("{{{0}}}/{{controller}}/{{action}}/{{id}}", Constants.StoreRoute),
-        new RouteValueDictionary { { "id", UrlParameter.Optional }, { "action", "Index" } },
-        new RouteValueDictionary
-                    {
-                        { Constants.Language, new LanguageRouteConstraint() }
-                    },
-        new RouteValueDictionary { { "namespaces", new[] { "VirtoCommerce.Web.Controllers" } } },
-        new MvcRouteHandler()));
-            */
             routes.Add("Item", itemRoute);
             routes.Add("Category", categoryRoute);
             routes.Add("Store", storeRoute);
