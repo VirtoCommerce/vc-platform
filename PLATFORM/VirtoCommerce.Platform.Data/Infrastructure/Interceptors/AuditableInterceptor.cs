@@ -17,8 +17,9 @@ namespace VirtoCommerce.Platform.Data.Infrastructure.Interceptors
 
 			var currentTime = DateTime.UtcNow;
 
-			item.CreatedDate = currentTime;
-            item.CreatedBy = GetCurrentUserName();
+			item.CreatedDate =  currentTime;
+			item.ModifiedDate = currentTime;
+            item.CreatedBy = item.ModifiedBy = GetCurrentUserName();
 		}
 
 		public override void OnBeforeUpdate(DbEntityEntry entry, IAuditable item)
