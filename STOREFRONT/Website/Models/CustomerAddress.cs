@@ -1,5 +1,6 @@
 ﻿#region
 using DotLiquid;
+using VirtoCommerce.Web.Models.Tags;
 
 #endregion
 
@@ -7,6 +8,10 @@ namespace VirtoCommerce.Web.Models
 {
     public class CustomerAddress : Drop
     {
+        public CustomerAddress()
+        {
+        }
+
         public string Address1 { get; set; }
 
         public string Address2 { get; set; }
