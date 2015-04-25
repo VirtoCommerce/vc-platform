@@ -1,11 +1,13 @@
 ﻿angular.module('virtoCommerce.content.themeModule.blades.editAsset', [
 	'virtoCommerce.content.themeModule.resources.themes'
 ])
-.controller('editAssetController', ['$scope', 'dialogService', 'themes', '$timeout', function ($scope, dialogService, themes, $timeout) {
+.controller('editAssetController', ['$scope', 'dialogService', 'themes', '$timeout', 'bladeNavigationService', function ($scope, dialogService, themes, $timeout, bladeNavigationService) {
     var blade = $scope.blade;
     var codemirrorEditor;
 
-    function initializeBlade() {
+    blade.initializeBlade = function () {
+    	blade.origEntity = angular.copy(blade.currentEntity);
+
         if (!blade.newAsset) {
             themes.getAsset({ storeId: blade.choosenStoreId, themeId: blade.choosenThemeId, assetId: blade.choosenAssetId }, function (data) {
                 blade.isLoading = false;
@@ -50,24 +52,44 @@
 			}];
         }
         else {
+        	$scope.bladeToolbarCommands = [
+			{
+				name: "Create", icon: 'fa fa-save',
+				executeMethod: function () {
+					$scope.saveChanges();
+				},
+				canExecuteMethod: function () {
+					return isDirty();
+				}
+			}];
+
             blade.isLoading = false;
         }
     };
 
     function isDirty() {
-        return !angular.equals(blade.currentEntity, blade.origEntity);
+    	return !angular.equals(blade.currentEntity, blade.origEntity) && !angular.isUndefined(blade.currentEntity.name) && !angular.isUndefined(blade.currentEntity.content);
     };
 
     $scope.saveChanges = function() {
-        blade.isLoading = true;
+    	blade.isLoading = true;
 
-        themes.updateAsset({ storeId: blade.choosenStoreId, themeId: blade.choosenThemeId }, blade.currentEntity, function () {
-            blade.parentBlade.refresh(true);
-            blade.choosenAssetId = blade.currentEntity.id;
-            blade.title = blade.currentEntity.id;
-            blade.subtitle = 'Edit asset';
-            blade.newAsset = false;
-            initializeBlade();
+    	blade.currentEntity.id = blade.choosenFolder + '/' + blade.currentEntity.name;
+
+    	themes.updateAsset({ storeId: blade.choosenStoreId, themeId: blade.choosenThemeId }, blade.currentEntity, function () {
+    		blade.origEntity = angular.copy(blade.currentEntity);
+        	blade.parentBlade.refresh(true);
+        	if (blade.newAsset) {
+        		blade.newAsset = false;
+        		bladeNavigationService.closeBlade(blade);
+        	}
+        	else {
+        		blade.choosenAssetId = blade.currentEntity.id;
+        		blade.title = blade.currentEntity.id;
+        		blade.subtitle = 'Edit ' + blade.currentEntity.name;
+        		blade.newAsset = false;
+        		blade.initializeBlade();
+        	}
         });
     };
 
@@ -178,5 +200,11 @@
         mode: getEditorMode()
     };
 
-    initializeBlade();
+    blade.getBladeStyle = function () {
+    	var value = $(window).width() - 550;
+
+    	return 'width:' + value + 'px';
+    }
+
+    blade.initializeBlade();
 }]);
