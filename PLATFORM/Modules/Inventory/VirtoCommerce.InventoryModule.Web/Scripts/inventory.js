@@ -5,9 +5,7 @@ if (AppDependencies != undefined) {
     AppDependencies.push(moduleName);
 }
 
-angular.module(moduleName, [
-    'virtoCommerce.inventoryModule.widgets'
-])
+angular.module(moduleName, [])
 //.config(
 //  ['$stateProvider', function ($stateProvider) {
 //      $stateProvider
@@ -19,8 +17,8 @@ angular.module(moduleName, [
 //                      var blade = {
 //                          id: 'inventory',
 //                          title: 'inventory',
-//                          controller: 'inventoryListController',
-//                          template: 'Modules/$(VirtoCommerce.Inventory)/Scripts/blades/! -list.tpl.html',
+//                          controller: 'virtoCommerce.inventoryModule.inventoryListController',
+//                          template: 'Modules/$(VirtoCommerce.Inventory)/Scripts/blades/ -list.tpl.html',
 //                          isClosingDisabled: true
 //                      };
 //                      bladeNavigationService.showBlade(blade);
@@ -44,7 +42,7 @@ angular.module(moduleName, [
 
       //Register widgets in catalog item details
       widgetService.registerWidget({
-          controller: 'inventoryWidgetController',
+          controller: 'virtoCommerce.inventoryModule.inventoryWidgetController',
           template: 'Modules/$(VirtoCommerce.Inventory)/Scripts/widgets/inventoryWidget.tpl.html'
       }, 'itemDetail');
   }])

@@ -6,8 +6,8 @@ if (AppDependencies != undefined) {
 }
 
 angular.module(moduleName, [
-    'virtoCommerce.storeModule.blades',
-    'virtoCommerce.storeModule.widgets'
+    // 'catalogModule.resources.catalogs'
+    'ngSanitize'
 ])
 .config(
   ['$stateProvider', function ($stateProvider) {
@@ -20,8 +20,8 @@ angular.module(moduleName, [
                       var blade = {
                           id: 'store',
                           title: 'Stores',
-                          controller: 'storesListController',
-                          template: 'Modules/$(VirtoCommerce.Store)/Scripts/blades/!stores-list.tpl.html',
+                          controller: 'virtoCommerce.storeModule.storesListController',
+                          template: 'Modules/$(VirtoCommerce.Store)/Scripts/blades/stores-list.tpl.html',
                           isClosingDisabled: true
                       };
                       bladeNavigationService.showBlade(blade);
@@ -45,23 +45,23 @@ angular.module(moduleName, [
 
       //Register widgets in store details
       widgetService.registerWidget({
-          controller: 'storeLanguagesWidgetController',
+          controller: 'virtoCommerce.storeModule.storeLanguagesWidgetController',
           template: 'Modules/$(VirtoCommerce.Store)/Scripts/widgets/storeLanguagesWidget.tpl.html'
       }, 'storeDetail');
       widgetService.registerWidget({
-          controller: 'storeCurrenciesWidgetController',
+          controller: 'virtoCommerce.storeModule.storeCurrenciesWidgetController',
           template: 'Modules/$(VirtoCommerce.Store)/Scripts/widgets/storeCurrenciesWidget.tpl.html'
       }, 'storeDetail');
       widgetService.registerWidget({
-          controller: 'storeAdvancedWidgetController',
+          controller: 'virtoCommerce.storeModule.storeAdvancedWidgetController',
           template: 'Modules/$(VirtoCommerce.Store)/Scripts/widgets/storeAdvancedWidget.tpl.html'
       }, 'storeDetail');
       widgetService.registerWidget({
-          controller: 'storeSettingsWidgetController',
+          controller: 'virtoCommerce.storeModule.storeSettingsWidgetController',
           template: 'Modules/$(VirtoCommerce.Store)/Scripts/widgets/storeSettingsWidget.tpl.html'
       }, 'storeDetail');
       widgetService.registerWidget({
-          controller: 'storePaymentsWidgetController',
+          controller: 'virtoCommerce.storeModule.storePaymentsWidgetController',
           template: 'Modules/$(VirtoCommerce.Store)/Scripts/widgets/storePaymentsWidget.tpl.html'
       }, 'storeDetail');
   }])

@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.pricingModule')
-.controller('pricelistAssignmentListController', ['$scope', 'bladeNavigationService', function ($scope, bladeNavigationService) {
+.controller('virtoCommerce.pricingModule.pricelistAssignmentListController', ['$scope', 'bladeNavigationService', function ($scope, bladeNavigationService) {
     var selectedNode = null;
 
     function initializeBlade(data) {
@@ -16,7 +16,7 @@
             origEntity: selectedNode,
             title: selectedNode.name,
             subtitle: 'Edit catalog assignment',
-            controller: 'assignmentDetailController',
+            controller: 'virtoCommerce.pricingModule.assignmentDetailController',
             template: 'Modules/$(VirtoCommerce.Pricing)/Scripts/blades/assignment-detail.tpl.html'
         };
 

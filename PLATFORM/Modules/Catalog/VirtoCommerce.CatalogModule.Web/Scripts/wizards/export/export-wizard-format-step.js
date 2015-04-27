@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.catalogModule')
-.controller('exportFormatController', ['$scope', function ($scope) {
+.controller('virtoCommerce.catalogModule.exportFormatController', ['$scope', function ($scope) {
     $scope.blade.refresh = function () {
         $scope.list = [
             { name: "Csv" }

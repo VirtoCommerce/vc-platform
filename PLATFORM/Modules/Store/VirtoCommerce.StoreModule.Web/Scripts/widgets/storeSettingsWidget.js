@@ -1,5 +1,5 @@
-﻿angular.module('virtoCommerce.storeModule.widgets')
-.controller('storeSettingsWidgetController', ['$scope', 'bladeNavigationService', function ($scope, bladeNavigationService) {
+﻿angular.module('virtoCommerce.storeModule')
+.controller('virtoCommerce.storeModule.storeSettingsWidgetController', ['$scope', 'bladeNavigationService', function ($scope, bladeNavigationService) {
     var blade = $scope.widget.blade;
     
     $scope.openBlade = function () {
@@ -8,7 +8,7 @@
             currentEntities: blade.currentEntity.settings,
             title: blade.title,
             subtitle: 'Settings',
-            controller: 'storeSettingsListController',
+            controller: 'virtoCommerce.storeModule.storeSettingsListController',
             template: 'Modules/$(VirtoCommerce.Store)/Scripts/blades/store-settings-list.tpl.html'
         };
         bladeNavigationService.showBlade(newBlade, blade);

@@ -1,5 +1,5 @@
-﻿angular.module('virtoCommerce.storeModule.blades')
-.controller('storeCurrenciesListController', ['$q', '$scope', 'settings', 'bladeNavigationService', 'dialogService', function ($q, $scope, settings, bladeNavigationService, dialogService) {
+﻿angular.module('virtoCommerce.storeModule')
+.controller('virtoCommerce.storeModule.storeCurrenciesListController', ['$q', '$scope', 'settings', 'bladeNavigationService', 'dialogService', function ($q, $scope, settings, bladeNavigationService, dialogService) {
     $scope.selectedItem = null;
 
     //function asyncQueryWithCustomCode() {

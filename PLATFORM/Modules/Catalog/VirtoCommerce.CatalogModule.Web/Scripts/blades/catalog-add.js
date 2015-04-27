@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.catalogModule')
-.controller('catalogAddController', ['$scope', 'bladeNavigationService', 'catalogs', function ($scope, bladeNavigationService, catalogs) {
+.controller('virtoCommerce.catalogModule.catalogAddController', ['$scope', 'bladeNavigationService', 'virtoCommerce.catalogModule.catalogs', function ($scope, bladeNavigationService, catalogs) {
 
     $scope.addCatalog = function () {
         catalogs.newCatalog({}, function (data) {
@@ -9,7 +9,7 @@
                 currentEntity: data,
                 title: 'New catalog',
                 subtitle: 'Catalog details',
-                controller: 'catalogDetailController',
+                controller: 'virtoCommerce.catalogModule.catalogDetailController',
                 template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/catalog-detail.tpl.html'
             };
 
@@ -26,7 +26,7 @@
                 currentEntity: data,
                 title: 'New virtual catalog',
                 subtitle: 'Virtual catalog details',
-                controller: 'virtualCatalogDetailController',
+                controller: 'virtoCommerce.catalogModule.virtualCatalogDetailController',
                 template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/virtual-catalog-detail.tpl.html'
             };
 

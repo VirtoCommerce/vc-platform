@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.catalogModule')
-.controller('newProductWizardPropertiesController', ['$scope', 'properties', 'bladeNavigationService', function ($scope, properties, bladeNavigationService) {
+.controller('virtoCommerce.catalogModule.newProductWizardPropertiesController', ['$scope', 'virtoCommerce.catalogModule.properties', 'bladeNavigationService', function ($scope, properties, bladeNavigationService) {
     $scope.blade.isLoading = false;
     $scope.blade.item = angular.copy($scope.blade.item);
    
@@ -28,7 +28,7 @@
             currentEntityId: prop.id,
             title: 'Edit category property',
             subtitle: 'enter property information',
-            controller: 'propertyDetailController',
+            controller: 'virtoCommerce.catalogModule.propertyDetailController',
             template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/property-detail.tpl.html'
         };
 

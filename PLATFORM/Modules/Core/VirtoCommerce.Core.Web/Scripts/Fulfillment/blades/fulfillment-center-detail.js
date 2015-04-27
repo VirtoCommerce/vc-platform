@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.coreModule.fulfillment')
-.controller('fulfillmentCenterDetailController', ['$scope', 'dialogService', 'bladeNavigationService', 'fulfillments', function ($scope, dialogService, bladeNavigationService, fulfillments) {
+.controller('virtoCommerce.coreModule.fulfillment.fulfillmentCenterDetailController', ['$scope', 'dialogService', 'bladeNavigationService', 'virtoCommerce.coreModule.fulfillment.fulfillments', function ($scope, dialogService, bladeNavigationService, fulfillments) {
 
     $scope.blade.refresh = function (parentRefresh) {
         if ($scope.blade.currentEntityId) {

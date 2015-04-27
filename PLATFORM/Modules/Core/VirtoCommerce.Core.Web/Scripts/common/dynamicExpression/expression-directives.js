@@ -1,5 +1,5 @@
-﻿angular.module('virtoCommerce.coreModule')
-.factory('vaDynamicExpressionService', function () {
+﻿angular.module('virtoCommerce.coreModule.common')
+.factory('virtoCommerce.coreModule.common.dynamicExpressionService', function () {
     var retVal = {
         expressions: [],
         registerExpression: function (expression) {

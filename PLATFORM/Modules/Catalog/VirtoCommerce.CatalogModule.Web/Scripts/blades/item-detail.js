@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.catalogModule')
-.controller('itemDetailController', ['$rootScope', '$scope', 'bladeNavigationService', '$injector', 'items', 'dialogService', function ($rootScope, $scope, bladeNavigationService, $injector, items, dialogService) {
+.controller('virtoCommerce.catalogModule.itemDetailController', ['$rootScope', '$scope', 'bladeNavigationService', '$injector', 'virtoCommerce.catalogModule.items', 'dialogService', function ($rootScope, $scope, bladeNavigationService, $injector, items, dialogService) {
     $scope.currentBlade = $scope.blade;
     $scope.currentBlade.origItem = {};
     $scope.currentBlade.item = {};
@@ -118,7 +118,7 @@
 	                     item: data,
 	                     title: "New variation",
 	                     subtitle: 'Fill all variation information',
-	                     controller: 'newProductWizardController',
+	                     controller: 'virtoCommerce.catalogModule.newProductWizardController',
 	                     template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/wizards/newProduct/new-variation-wizard.tpl.html'
 	                 };
 	                 bladeNavigationService.showBlade(blade, $scope.currentBlade);

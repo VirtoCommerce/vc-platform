@@ -5,9 +5,7 @@ if (AppDependencies != undefined) {
     AppDependencies.push(moduleName);
 }
 
-angular.module(moduleName, [
-    'virtoCommerce.cartModule.blades'
-])
+angular.module(moduleName, [])
 .config(
   ['$stateProvider', function ($stateProvider) {
       $stateProvider
@@ -20,8 +18,8 @@ angular.module(moduleName, [
                           id: 'carts',
                           title: 'Shopping carts',
                           //subtitle: 'Manage Shopping carts',
-                          controller: 'cartListController',
-                          template: 'Modules/$(VirtoCommerce.Cart)/Scripts/blades/!carts-list.tpl.html',
+                          controller: 'virtoCommerce.cartModule.cartListController',
+                          template: 'Modules/$(VirtoCommerce.Cart)/Scripts/blades/carts-list.tpl.html',
                           isClosingDisabled: true
                       };
                       bladeNavigationService.showBlade(blade);

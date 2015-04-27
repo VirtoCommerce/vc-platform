@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.catalogModule')
-.controller('importJobProgressController', ['$scope', '$interval', 'bladeNavigationService', 'imports', function ($scope, $interval, bladeNavigationService, imports) {
+.controller('virtoCommerce.catalogModule.importJobProgressController', ['$scope', '$interval', 'bladeNavigationService', 'virtoCommerce.catalogModule.imports', function ($scope, $interval, bladeNavigationService, imports) {
 	$scope.blade.refresh = function () {
 
 		imports.get({ id: $scope.blade.job.id }, function (data) {

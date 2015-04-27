@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.orderModule')
-.controller('orderOperationCommentDetail', ['$scope', 'dialogService', function ($scope, dialogService) {
+.controller('virtoCommerce.orderModule.orderOperationCommentDetail', ['$scope', 'dialogService', function ($scope, dialogService) {
 	
 	function initializeBlade() {
 	

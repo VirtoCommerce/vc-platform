@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.pricingModule')
-.controller('assignmentListController', ['$scope', 'pricelistAssignments', 'bladeNavigationService', 'dialogService',
+.controller('virtoCommerce.pricingModule.assignmentListController', ['$scope', 'virtoCommerce.pricingModule.pricelistAssignments', 'bladeNavigationService', 'dialogService',
 function ($scope, assignments, bladeNavigationService, dialogService) {
     var selectedNode = null;
 
@@ -25,7 +25,7 @@ function ($scope, assignments, bladeNavigationService, dialogService) {
             currentEntityId: selectedNode.id,
             title: selectedNode.name,
             subtitle: $scope.blade.subtitle,
-            controller: 'assignmentDetailController',
+            controller: 'virtoCommerce.pricingModule.assignmentDetailController',
             template: 'Modules/$(VirtoCommerce.Pricing)/Scripts/blades/assignment-detail.tpl.html'
         };
 
@@ -92,7 +92,7 @@ function ($scope, assignments, bladeNavigationService, dialogService) {
                     title: 'New price list assignment',
                     subtitle: $scope.blade.subtitle,
                     isNew: true,
-                    controller: 'assignmentDetailController',
+                    controller: 'virtoCommerce.pricingModule.assignmentDetailController',
                     template: 'Modules/$(VirtoCommerce.Pricing)/Scripts/blades/assignment-detail.tpl.html'
                 };
                 bladeNavigationService.showBlade(newBlade, $scope.blade);

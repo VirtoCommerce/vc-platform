@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.catalogModule')
-.controller('propertyAttributesController', ['$scope', '$filter', 'dialogService', function ($scope, $filter, dialogService) {
+.controller('virtoCommerce.catalogModule.propertyAttributesController', ['$scope', '$filter', 'dialogService', function ($scope, $filter, dialogService) {
     var pb = $scope.blade.parentBlade;
     $scope.pb = pb;
 

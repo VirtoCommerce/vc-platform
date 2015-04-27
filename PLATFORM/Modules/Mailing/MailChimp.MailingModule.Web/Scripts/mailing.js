@@ -13,7 +13,7 @@ angular.module(moduleName, [
      
       //Register widgets in catalog item details
       widgetService.registerWidget({
-          controller: 'mailingWidgetController',
+          controller: 'virtoCommerce.mailingModule.mailingWidgetController',
           template: 'Modules/$(MailChimp.Mailing)/Scripts/widgets/mailingWidget.tpl.html'
       }, 'moduleDetail');
   }])

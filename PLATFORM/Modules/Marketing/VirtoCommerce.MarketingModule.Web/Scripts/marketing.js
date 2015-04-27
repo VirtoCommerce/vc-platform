@@ -17,7 +17,7 @@ angular.module(moduleName, [])
                       var blade = {
                           id: 'marketing',
                           title: 'Marketing',
-                          controller: 'marketingMainController',
+                          controller: 'virtoCommerce.marketingModule.marketingMainController',
                           template: 'Modules/$(VirtoCommerce.Marketing)/Scripts/common/marketing-main.tpl.html',
                           isClosingDisabled: true
                       };
@@ -28,7 +28,7 @@ angular.module(moduleName, [])
   }]
 )
 .run(
-  ['$rootScope', 'mainMenuService', 'widgetService', '$state', 'vaDynamicExpressionService', function ($rootScope, mainMenuService, widgetService, $state, vaDynamicExpressionService) {
+  ['$rootScope', 'mainMenuService', 'widgetService', '$state', 'virtoCommerce.coreModule.common.dynamicExpressionService', function ($rootScope, mainMenuService, widgetService, $state, dynamicExpressionService) {
       //Register module in main menu
       var menuItem = {
           path: 'browse/marketing',
@@ -41,22 +41,22 @@ angular.module(moduleName, [])
       mainMenuService.addMenuItem(menuItem);
 
       //Register expressions
-      vaDynamicExpressionService.registerExpression({
+      dynamicExpressionService.registerExpression({
           id: 'BlockCustomerCondition',
           newChildLabel: '+ add user group',
           getValidationError: function () {
               return (this.children && this.children.length) ? undefined : 'Promotion requires at least one eligibility';
           }
       });
-      vaDynamicExpressionService.registerExpression({
+      dynamicExpressionService.registerExpression({
           id: 'ConditionIsEveryone',
           displayName: 'Everyone'
       });
-      vaDynamicExpressionService.registerExpression({
+      dynamicExpressionService.registerExpression({
           id: 'ConditionIsFirstTimeBuyer',
           displayName: 'First time buyer'
       });
-      vaDynamicExpressionService.registerExpression({
+      dynamicExpressionService.registerExpression({
           id: 'ConditionIsRegisteredUser',
           displayName: 'Registered user'
       });
@@ -69,113 +69,113 @@ angular.module(moduleName, [])
                 id: 'ExcludingProductCondition'
             }
       ];
-      vaDynamicExpressionService.registerExpression({
+      dynamicExpressionService.registerExpression({
           id: 'ExcludingCategoryCondition',
           displayName: 'Items of category'
       });
-      vaDynamicExpressionService.registerExpression({
+      dynamicExpressionService.registerExpression({
           id: 'ExcludingProductCondition',
           displayName: 'Items of entry'
       });
 
-      vaDynamicExpressionService.registerExpression({
+      dynamicExpressionService.registerExpression({
           id: 'BlockCatalogCondition',
           newChildLabel: '+ add condition'
       });
-      vaDynamicExpressionService.registerExpression({
+      dynamicExpressionService.registerExpression({
           id: 'ConditionEntryIs',
           // templateURL: 'expression-ConditionEntryIs.html',
           // controller: 'conditionEntryIsController'
           displayName: 'Product is []'
       });
-      vaDynamicExpressionService.registerExpression({
+      dynamicExpressionService.registerExpression({
           id: 'ConditionCurrencyIs',
           displayName: 'Currency is []'
       });
-      vaDynamicExpressionService.registerExpression({
+      dynamicExpressionService.registerExpression({
           id: 'ConditionCodeContains',
           displayName: 'Product code contains []'
       });
-      vaDynamicExpressionService.registerExpression({
+      dynamicExpressionService.registerExpression({
           id: 'ConditionCategoryIs',
           displayName: 'Category is []'
       });
 
-      vaDynamicExpressionService.registerExpression({
+      dynamicExpressionService.registerExpression({
           id: 'BlockCartCondition',
           newChildLabel: '+ add condition'
       });
-      vaDynamicExpressionService.registerExpression({
+      dynamicExpressionService.registerExpression({
           id: 'ConditionCartSubtotalLeast',
           displayName: 'Cart subtotal is []',
           availableChildren: availableExcludings,
           newChildLabel: '+ excluding'
       });
-      vaDynamicExpressionService.registerExpression({
+      dynamicExpressionService.registerExpression({
           id: 'ConditionAtNumItemsInCart',
           displayName: '[] [] items are in shopping cart',
           availableChildren: availableExcludings,
           newChildLabel: '+ excluding'
       });
-      vaDynamicExpressionService.registerExpression({
+      dynamicExpressionService.registerExpression({
           id: 'ConditionAtNumItemsInCategoryAreInCart',
           displayName: '[] [] items of category are in shopping cart',
           availableChildren: availableExcludings,
           newChildLabel: '+ excluding'
       });
-      vaDynamicExpressionService.registerExpression({
+      dynamicExpressionService.registerExpression({
           id: 'ConditionAtNumItemsOfEntryAreInCart',
           displayName: '[] [] items of entry are in shopping cart'
       });
 
-      vaDynamicExpressionService.registerExpression({
+      dynamicExpressionService.registerExpression({
           id: 'RewardBlock',
           newChildLabel: '+ add effect',
           getValidationError: function () {
               return (this.children && this.children.length) ? undefined : 'Promotion requires at least one reward';
           }
       });
-      vaDynamicExpressionService.registerExpression({
+      dynamicExpressionService.registerExpression({
           id: 'RewardCartGetOfAbsSubtotal',
           displayName: 'Get $[] off cart subtotal'
       });
-      vaDynamicExpressionService.registerExpression({
+      dynamicExpressionService.registerExpression({
           id: 'RewardCartGetOfRelSubtotal',
           displayName: 'Get [] % off cart subtotal'
       });
-      vaDynamicExpressionService.registerExpression({
+      dynamicExpressionService.registerExpression({
           id: 'RewardItemGetFreeNumItemOfProduct',
           displayName: 'Get [] free items of product []'
       });
-      vaDynamicExpressionService.registerExpression({
+      dynamicExpressionService.registerExpression({
           id: 'RewardItemGiftNumItem',
           displayName: 'Gift [] of product []'
       });
-      vaDynamicExpressionService.registerExpression({
+      dynamicExpressionService.registerExpression({
           id: 'RewardItemGetOfAbs',
           displayName: 'Get $[] off'
       });
-      vaDynamicExpressionService.registerExpression({
+      dynamicExpressionService.registerExpression({
           id: 'RewardItemGetOfRel',
           displayName: 'Get [] % off'
       });
-      vaDynamicExpressionService.registerExpression({
+      dynamicExpressionService.registerExpression({
           id: 'RewardItemGetOfAbsForNum',
           displayName: 'Get $[] off [] items of entry []'
           //availableChildren: availableExcludings,
           //newChildLabel: '+ excluding'
       });
-      vaDynamicExpressionService.registerExpression({
+      dynamicExpressionService.registerExpression({
           id: 'RewardItemGetOfRelForNum',
           displayName: 'Get [] % off [] items of entry []'
           //availableChildren: availableExcludings,
           //newChildLabel: '+ excluding'
       });
-      vaDynamicExpressionService.registerExpression({
+      dynamicExpressionService.registerExpression({
           id: 'RewardShippingGetOfAbsShippingMethod',
           displayName: 'Get $[] off shipping []'
       });
-      vaDynamicExpressionService.registerExpression({
+      dynamicExpressionService.registerExpression({
           id: 'RewardShippingGetOfRelShippingMethod',
           displayName: 'Get [] % off shipping []'
       });

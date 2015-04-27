@@ -103,8 +103,8 @@
   <ItemGroup>
     <Content Include="Scripts\blades\inventory-detail.js" />
     <Content Include="Scripts\blades\inventory-detail.tpl.html" />
-    <Content Include="Scripts\blades\!inventory-fulfillmentcenters-list.js" />
-    <Content Include="Scripts\blades\!inventory-fulfillmentcenters-list.tpl.html" />
+    <Content Include="Scripts\blades\inventory-fulfillmentcenters-list.js" />
+    <Content Include="Scripts\blades\inventory-fulfillmentcenters-list.tpl.html" />
     <Content Include="Scripts\resources\inventory.js" />
     <Content Include="Scripts\inventory.js" />
     <Content Include="Scripts\widgets\inventoryWidget.js" />

@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.marketingModule')
-.controller('itemsDynamicContentListController', ['$scope', 'marketing_dynamicContents_res_search', 'marketing_dynamicContents_res_folders', 'bladeNavigationService', function ($scope, marketing_dynamicContents_res_search, marketing_dynamicContents_res_folders, bladeNavigationService) {
+.controller('virtoCommerce.marketingModule.itemsDynamicContentListController', ['$scope', 'virtoCommerce.marketingModule.dynamicContent.search', 'virtoCommerce.marketingModule.dynamicContent.folders', 'bladeNavigationService', function ($scope, marketing_dynamicContents_res_search, marketing_dynamicContents_res_folders, bladeNavigationService) {
 	var blade = $scope.blade;
 	blade.choosenFolder = 'ContentItem';
 	blade.currentEntity = undefined;
@@ -22,7 +22,7 @@
 			title: 'New content items element',
 			subtitle: 'Add new content items element',
 			choosenFolder: blade.choosenFolder,
-			controller: 'addContentItemsElementController',
+			controller: 'virtoCommerce.marketingModule.addContentItemsElementController',
 			template: 'Modules/$(VirtoCommerce.Marketing)/Scripts/dynamicContent/blades/items/add.tpl.html'
 		};
 		bladeNavigationService.showBlade(newBlade, $scope.blade);
@@ -37,7 +37,7 @@
 			subtitle: 'Add new content items folder element',
 			entity: data,
 			isNew: true,
-			controller: 'addFolderContentItemsController',
+			controller: 'virtoCommerce.marketingModule.addFolderContentItemsController',
 			template: 'Modules/$(VirtoCommerce.Marketing)/Scripts/dynamicContent/blades/items/folder-details.tpl.html'
 		};
 		bladeNavigationService.showBlade(newBlade, $scope.blade);
@@ -52,7 +52,7 @@
 			subtitle: 'Edit content items folder element',
 			entity: data,
 			isNew: false,
-			controller: 'addFolderContentItemsController',
+			controller: 'virtoCommerce.marketingModule.addFolderContentItemsController',
 			template: 'Modules/$(VirtoCommerce.Marketing)/Scripts/dynamicContent/blades/items/folder-details.tpl.html'
 		};
 		bladeNavigationService.showBlade(newBlade, $scope.blade);
@@ -67,7 +67,7 @@
 			subtitle: 'Add new content item element',
 			entity: data,
 			isNew: true,
-			controller: 'addContentItemsController',
+			controller: 'virtoCommerce.marketingModule.addContentItemsController',
 			template: 'Modules/$(VirtoCommerce.Marketing)/Scripts/dynamicContent/blades/items/content-item-details.tpl.html'
 		};
 		bladeNavigationService.showBlade(newBlade, $scope.blade);
@@ -82,7 +82,7 @@
 			subtitle: 'Edit content item element',
 			entity: data,
 			isNew: false,
-			controller: 'addContentItemsController',
+			controller: 'virtoCommerce.marketingModule.addContentItemsController',
 			template: 'Modules/$(VirtoCommerce.Marketing)/Scripts/dynamicContent/blades/items/content-item-details.tpl.html'
 		};
 		bladeNavigationService.showBlade(newBlade, $scope.blade);

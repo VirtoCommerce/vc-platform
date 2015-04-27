@@ -1,5 +1,5 @@
-﻿angular.module('virtoCommerce.customerModule.widgets')
-.controller('memberPropertyWidgetController', ['$scope', 'bladeNavigationService', function ($scope, bladeNavigationService) {
+﻿angular.module('virtoCommerce.customerModule')
+.controller('virtoCommerce.customerModule.memberPropertyWidgetController', ['$scope', 'bladeNavigationService', function ($scope, bladeNavigationService) {
     $scope.blade = $scope.widget.blade;
 
     $scope.openBlade = function () {
@@ -10,7 +10,7 @@
             currentResource: $scope.blade.currentResource,
             title: $scope.blade.title,
             subtitle: 'Properties management',
-            controller: 'memberPropertyListController',
+            controller: 'virtoCommerce.customerModule.memberPropertyListController',
             template: 'Modules/$(VirtoCommerce.Customer)/Scripts/blades/member-property-list.tpl.html'
         };
 

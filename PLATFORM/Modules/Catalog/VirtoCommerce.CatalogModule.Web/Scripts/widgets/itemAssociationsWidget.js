@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.catalogModule')
-.controller('itemAssociationsWidgetController', ['$scope', 'bladeNavigationService', function ($scope, bladeNavigationService) {
+.controller('virtoCommerce.catalogModule.itemAssociationsWidgetController', ['$scope', 'bladeNavigationService', function ($scope, bladeNavigationService) {
     $scope.currentBlade = $scope.widget.blade;
 
     $scope.openBlade = function () {
@@ -12,7 +12,7 @@
                     currentEntities: $scope.currentBlade.item.associations,
                     title: $scope.currentBlade.title,
                     subtitle: 'Associations',
-                    controller: 'itemAssociationsListController',
+                    controller: 'virtoCommerce.catalogModule.itemAssociationsListController',
                     template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/item-associations-list.tpl.html'
                 };
             } else {
@@ -21,7 +21,7 @@
                     currentEntities: $scope.currentBlade.item.associations,
                     title: "New Associations",
                     //subtitle: '',
-                    controller: 'associationWizardController',
+                    controller: 'virtoCommerce.catalogModule.associationWizardController',
                     template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/wizards/newAssociation/association-wizard.tpl.html'
                 };
             }

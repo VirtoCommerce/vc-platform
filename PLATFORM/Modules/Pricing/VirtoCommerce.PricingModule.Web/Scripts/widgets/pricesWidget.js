@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.pricingModule')
-.controller('pricesWidgetController', ['$scope', 'bladeNavigationService', function ($scope, bladeNavigationService) {
+.controller('virtoCommerce.pricingModule.pricesWidgetController', ['$scope', 'bladeNavigationService', function ($scope, bladeNavigationService) {
     $scope.currentBlade = $scope.widget.blade;
 
     $scope.getPriceCount = function () {
@@ -21,7 +21,7 @@
             currentEntity: $scope.currentBlade.currentEntity,
             title: $scope.currentBlade.title,
             subtitle: 'Manage prices',
-            controller: 'pricelistItemListController',
+            controller: 'virtoCommerce.pricingModule.pricelistItemListController',
             template: 'Modules/$(VirtoCommerce.Pricing)/Scripts/blades/pricelist-item-list.tpl.html'
         };
 

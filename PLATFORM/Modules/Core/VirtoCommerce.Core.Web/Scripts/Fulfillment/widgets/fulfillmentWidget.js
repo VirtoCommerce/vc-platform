@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.coreModule.fulfillment')
-.controller('fulfillmentWidgetController', ['$scope', 'bladeNavigationService', 'fulfillments', function ($scope, bladeNavigationService, fulfillments) {
+.controller('virtoCommerce.coreModule.fulfillment.fulfillmentWidgetController', ['$scope', 'bladeNavigationService', 'virtoCommerce.coreModule.fulfillment.fulfillments', function ($scope, bladeNavigationService, fulfillments) {
     var blade = $scope.widget.blade;
     $scope.showWidget = blade.currentEntity.id == 'VirtoCommerce.Core';
 
@@ -14,7 +14,7 @@
         var newBlade = {
             id: 'fulfillmentCenterList',
             parentWidget: $scope.widget,
-            controller: 'fulfillmentListController',
+            controller: 'virtoCommerce.coreModule.fulfillment.fulfillmentListController',
             template: 'Modules/$(VirtoCommerce.Core)/Scripts/fulfillment/blades/fulfillment-center-list.tpl.html'
         };
         bladeNavigationService.showBlade(newBlade, blade);

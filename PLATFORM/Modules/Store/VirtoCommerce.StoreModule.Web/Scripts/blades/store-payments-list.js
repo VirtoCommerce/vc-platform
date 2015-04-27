@@ -1,5 +1,5 @@
-﻿angular.module('virtoCommerce.storeModule.blades')
-.controller('storePaymentsListController', ['$scope', 'bladeNavigationService', 'paymentgateways', function ($scope, bladeNavigationService, paymentgateways) {
+﻿angular.module('virtoCommerce.storeModule')
+.controller('virtoCommerce.storeModule.storePaymentsListController', ['$scope', 'bladeNavigationService', 'virtoCommerce.coreModule.common.paymentgateways', function ($scope, bladeNavigationService, paymentgateways) {
     function getAvailableGateways() {
         paymentgateways.query({}, function (data) {
             $scope.blade.isLoading = false;

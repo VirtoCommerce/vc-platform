@@ -1,9 +1,7 @@
-﻿angular.module('virtoCommerce.cartModule.blades', [
-   'virtoCommerce.cartModule.resources.carts'
-])
-.controller('cartListController', ['$scope', 'carts', 'bladeNavigationService', 'dialogService',
+﻿angular.module('virtoCommerce.cartModule')
+.controller('virtoCommerce.cartModule.cartListController', ['$scope', 'virtoCommerce.cartModule.carts', 'bladeNavigationService', 'dialogService',
 function ($scope, carts, bladeNavigationService, dialogService) {
-    //pagination settigs
+    //pagination settings
     $scope.pageSettings = {};
     $scope.pageSettings.totalItems = 0;
     $scope.pageSettings.currentPage = 1;
@@ -52,7 +50,7 @@ function ($scope, carts, bladeNavigationService, dialogService) {
             id: 'cartDetail',
             title: selectedNode.customerName + '\'s Shopping cart',
             currentEntityId: selectedNode.id,
-            controller: 'cartDetailController',
+            controller: 'virtoCommerce.cartModule.cartDetailController',
             template: 'Modules/$(VirtoCommerce.Cart)/Scripts/blades/cart-detail.tpl.html'
         };
 
