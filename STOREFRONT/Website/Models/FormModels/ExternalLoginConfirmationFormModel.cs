@@ -15,6 +15,14 @@ namespace VirtoCommerce.Web.Models.FormModels
             this.Context = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
         }
 
+        public string Id
+        {
+            get
+            {
+                return "confirm_external_login";
+            }
+        }
+
         [Required]
         [EmailAddress]
         public string Email

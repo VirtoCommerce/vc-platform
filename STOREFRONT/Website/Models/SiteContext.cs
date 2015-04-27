@@ -143,12 +143,12 @@ namespace VirtoCommerce.Web.Models
             }
         }
 
-        public SubmitForm[] Forms
+        public ICollection<SubmitForm> Forms
         {
             get
             {
                 object retValue;
-                return this._Storage.TryGetValue("forms", out retValue) ? retValue as SubmitForm[] : null;
+                return this._Storage.TryGetValue("forms", out retValue) ? retValue as List<SubmitForm> : null;
             }
             set
             {

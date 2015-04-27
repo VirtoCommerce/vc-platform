@@ -19,17 +19,12 @@
 
     <assemblyFile>VirtoCommerce.CoreModule.Web.dll</assemblyFile>
     <moduleType>VirtoCommerce.CoreModule.Web.Module, VirtoCommerce.CoreModule.Web</moduleType>
-  <styles>
-    <directory virtualPath="$/Content/css" searchPattern="*.css" searchSubdirectories="true" />
-  </styles>
+    <styles>
+        <directory virtualPath="$/Content/css" searchPattern="*.css" searchSubdirectories="true" />
+    </styles>
     <scripts>
         <directory virtualPath="$/Scripts" searchPattern="*.js" searchSubdirectories="true" />
     </scripts>
-
-    <permissions>
-        <permission id="security:call_api" name="Call API methods" />
-        <permission id="background_jobs:manage" name="Manage background jobs" />
-    </permissions>
 
     <settings>
         <group>
@@ -62,15 +57,6 @@
                     <value>ru-RU</value>
                     <value>zh-CN</value>
                 </arrayValues>
-            </setting>
-        </group>
-        <group name="Security">
-            <setting>
-                <name>VirtoCommerce.Core.Security.CacheTimeout</name>
-                <valueType>integer</valueType>
-                <defaultValue>60</defaultValue>
-                <title>Cache Timeout (in seconds)</title>
-                <description>Specify caching timeout in seconds for security entities</description>
             </setting>
         </group>
     </settings>
