@@ -76,6 +76,7 @@
     <Compile Include="Asset\IBlobStorageProvider.cs" />
     <Compile Include="Asset\UploadStreamInfo.cs" />
     <Compile Include="Bootstrapper.cs" />
+    <Compile Include="Caching\CacheGroups.cs" />
     <Compile Include="Caching\Cachekey.cs" />
     <Compile Include="Caching\CacheManager.cs" />
     <Compile Include="Caching\CacheObject.cs" />

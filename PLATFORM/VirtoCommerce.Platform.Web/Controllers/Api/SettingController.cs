@@ -13,72 +13,72 @@ using VirtoCommerce.Platform.Web.Converters.Settings;
 
 namespace VirtoCommerce.Platform.Web.Controllers.Api
 {
-	[RoutePrefix("api/settings")]
-	public class SettingController : ApiController
-	{
-		private readonly ISettingsManager _settingManager;
-		public SettingController(ISettingsManager settingManager)
-		{
-			_settingManager = settingManager;
-		}
+    [RoutePrefix("api/settings")]
+    public class SettingController : ApiController
+    {
+        private readonly ISettingsManager _settingsManager;
+        public SettingController(ISettingsManager settingsManager)
+        {
+            _settingsManager = settingsManager;
+        }
 
-		/// <summary>
-		/// api/settings/modules
-		/// </summary>
-		/// <returns></returns>
-		[HttpGet]
-		[ResponseType(typeof(webModel.ModuleDescriptor[]))]
-		[Route("modules")]
-		public IHttpActionResult GetModules()
-		{
-			var retVal = _settingManager.GetModules();
-			return Ok(retVal.Select(x=>x.ToWebModel()).ToArray());
-		}
+        /// <summary>
+        /// api/settings/modules
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        [ResponseType(typeof(webModel.ModuleDescriptor[]))]
+        [Route("modules")]
+        public IHttpActionResult GetModules()
+        {
+            var retVal = _settingsManager.GetModules();
+            return Ok(retVal.Select(x => x.ToWebModel()).ToArray());
+        }
 
-		/// <summary>
-		/// api/settings/modules/123
-		/// </summary>
-		/// <returns></returns>
-		[HttpGet]
-		[ResponseType(typeof(webModel.Setting[]))]
-		[Route("modules/{id}")]
-		public IHttpActionResult GetModuleSettings(string id)
-		{
-			var retVal = _settingManager.GetSettings(id);
-			return Ok(retVal.Select(x=>x.ToWebModel()).ToArray());
-		}
+        /// <summary>
+        /// api/settings/modules/123
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        [ResponseType(typeof(webModel.Setting[]))]
+        [Route("modules/{id}")]
+        public IHttpActionResult GetModuleSettings(string id)
+        {
+            var retVal = _settingsManager.GetSettings(id);
+            return Ok(retVal.Select(x => x.ToWebModel()).ToArray());
+        }
 
-		[HttpPost]
-		[Route("")]
-		public void Update(webModel.Setting[] settings)
-		{
-			_settingManager.SaveSettings(settings.Select(x=>x.ToModuleModel()).ToArray());
-		}
+        [HttpPost]
+        [Route("")]
+        public void Update(webModel.Setting[] settings)
+        {
+            _settingsManager.SaveSettings(settings.Select(x => x.ToModuleModel()).ToArray());
+        }
 
-		/// <summary>
-		/// api/settings/value/name
-		/// </summary>
-		/// <returns></returns>
-		[HttpGet]
-		[ResponseType(typeof(object))]
-		[Route("value/{name}")]
-		public IHttpActionResult GetValue(string name)
-		{
-			var value = _settingManager.GetValue<object>(name, null);
-			return Ok(value);
-		}
+        /// <summary>
+        /// api/settings/value/name
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        [ResponseType(typeof(object))]
+        [Route("value/{name}")]
+        public IHttpActionResult GetValue(string name)
+        {
+            var value = _settingsManager.GetValue<object>(name, null);
+            return Ok(value);
+        }
 
-		/// <summary>
-		/// api/settings/values/name
-		/// </summary>
-		/// <returns></returns>
-		[HttpGet]
-		[ResponseType(typeof(object))]
-		[Route("values/{name}")]
-		public IHttpActionResult GetArray(string name)
-		{
-			var value = _settingManager.GetArray<object>(name, null);
-			return Ok(value);
-		}
-	}
+        /// <summary>
+        /// api/settings/values/name
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        [ResponseType(typeof(object))]
+        [Route("values/{name}")]
+        public IHttpActionResult GetArray(string name)
+        {
+            var value = _settingsManager.GetArray<object>(name, null);
+            return Ok(value);
+        }
+    }
 }
