@@ -1,0 +1,99 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<module>
+  <id>VirtoCommerce.Content</id>
+  <version>1.0.0.0</version>
+  <dependencies>
+    <dependency>VirtoCommerce.Core</dependency>
+  </dependencies>
+
+  <title>Virto Commerce CMS Content</title>
+  <description>APIs and UI for CMS Content of public site</description>
+  <authors>
+    <author>Virto Commerce</author>
+  </authors>
+  <owners>
+    <owner>Virto Commerce</owner>
+  </owners>
+  <projectUrl>http://virtocommerce.com/</projectUrl>
+  <iconUrl>http://nuget.org/Content/Images/packageDefaultIcon-50x50.png</iconUrl>
+  <releaseNotes>First version.</releaseNotes>
+  <copyright>Copyright © 2011-2015 Virto Commerce. All rights reserved</copyright>
+  <tags>cms menu</tags>
+
+  <assemblyFile>VirtoCommerce.Content.Web.dll</assemblyFile>
+  <moduleType>VirtoCommerce.Content.Web.Module, VirtoCommerce.Content.Web</moduleType>
+  <styles>
+    <directory virtualPath="$/Content/css" searchPattern="*.css" searchSubdirectories="true" />
+  </styles>
+  <scripts>
+    <directory virtualPath="$/Scripts" searchPattern="*.js" searchSubdirectories="true" />
+  </scripts>
+
+	<settings>
+		<group name="Main Properties">
+			<setting>
+				<name>VirtoCommerce.Content.MainProperties.PagesRepositoryType</name>
+				<valueType>string</valueType>
+				<allowedValues>
+					<value>GitHub</value>
+					<value>Database</value>
+					<value>File system</value>
+				</allowedValues>
+				<defaultValue>Database</defaultValue>
+				<title>Pages repository type</title>
+				<description>Select one of the allowed pages repository type</description>
+			</setting>
+
+			<setting>
+				<name>VirtoCommerce.Content.MainProperties.ThemesRepositoryType</name>
+				<valueType>string</valueType>
+				<allowedValues>
+					<value>GitHub</value>
+					<value>Database</value>
+					<value>File system</value>
+				</allowedValues>
+				<defaultValue>Database</defaultValue>
+				<title>Pages repository type</title>
+				<description>Select one of the allowed themes repository type</description>
+			</setting>
+		</group>
+
+		<group name="GitHub">
+			<setting>
+				<name>VirtoCommerce.Content.GitHub.Login</name>
+				<valueType>string</valueType>
+				<defaultValue>qwerty</defaultValue>
+				<title>Github User Login</title>
+				<description>Github user login for connect to github repository</description>
+			</setting>
+			<setting>
+				<name>VirtoCommerce.Content.GitHub.Password</name>
+				<valueType>string</valueType>
+				<defaultValue>qwerty</defaultValue>
+				<title>Github User Password</title>
+				<description>Github user password for connect to github repository</description>
+			</setting>
+			<setting>
+				<name>VirtoCommerce.Content.GitHub.ProductHeaderValue</name>
+				<valueType>string</valueType>
+				<defaultValue>qwerty</defaultValue>
+				<title>Github Product Header Value</title>
+				<description>Github product header value</description>
+			</setting>
+			<setting>
+				<name>VirtoCommerce.Content.GitHub.OwnerName</name>
+				<valueType>string</valueType>
+				<defaultValue>qwerty</defaultValue>
+				<title>Github Repository Owner Name</title>
+				<description>Github repository owner name</description>
+			</setting>
+			<setting>
+				<name>VirtoCommerce.Content.GitHub.RepositoryName</name>
+				<valueType>string</valueType>
+				<defaultValue>qwerty</defaultValue>
+				<title>Github Repository Name</title>
+				<description>Github repository name</description>
+			</setting>
+		</group>
+	</settings>
+</module>
