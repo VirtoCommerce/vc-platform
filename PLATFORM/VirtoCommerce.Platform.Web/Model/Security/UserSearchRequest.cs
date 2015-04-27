@@ -1,10 +1,10 @@
-﻿namespace VirtoCommerce.Platform.Core.Security
+﻿namespace VirtoCommerce.Platform.Web.Model.Security
 {
-    public class RoleSearchRequest
+    public class UserSearchRequest
     {
-        public RoleSearchRequest()
+        public UserSearchRequest()
         {
-            TakeCount = 10;
+            TakeCount = 20;
         }
 
         public string Keyword { get; set; }

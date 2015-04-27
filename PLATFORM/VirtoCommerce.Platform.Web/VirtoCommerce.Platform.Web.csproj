@@ -260,7 +260,6 @@
     <Compile Include="App_Start\OwinConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
-    <Compile Include="Binders\UserSearchCriteriaBinder.cs" />
     <Compile Include="Bootstraper.cs" />
     <Compile Include="Controllers\Api\AssetsController.cs" />
     <Compile Include="Controllers\Api\FrontendSecurityController.cs" />
@@ -288,8 +287,8 @@
     <Compile Include="Model\Security\ApplicationUserExtended.cs" />
     <Compile Include="Model\Security\ChangePasswordInfo.cs" />
     <Compile Include="Model\Security\UserLogin.cs" />
-    <Compile Include="Model\Security\UserSearchCriteria.cs" />
-    <Compile Include="Model\Security\UserSearchResult.cs" />
+    <Compile Include="Model\Security\UserSearchRequest.cs" />
+    <Compile Include="Model\Security\UserSearchResponse.cs" />
     <Compile Include="Model\Security\UserState.cs" />
     <Compile Include="Model\Security\UserType.cs" />
     <Compile Include="Model\Settings\ModuleDescriptor.cs" />

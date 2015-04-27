@@ -17,8 +17,8 @@ function ($scope, accounts, bladeNavigationService, dialogService) {
 
         accounts.search({
             keyword: $scope.filter.searchKeyword,
-            start: ($scope.pageSettings.currentPage - 1) * $scope.pageSettings.itemsPerPageCount,
-            count: $scope.pageSettings.itemsPerPageCount
+            skipCount: ($scope.pageSettings.currentPage - 1) * $scope.pageSettings.itemsPerPageCount,
+            takeCount: $scope.pageSettings.itemsPerPageCount
         }, function (data) {
             $scope.blade.isLoading = false;
 

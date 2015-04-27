@@ -6,7 +6,6 @@ using System.Net;
 using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Description;
-using System.Web.Http.ModelBinding;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
@@ -17,7 +16,6 @@ using VirtoCommerce.Platform.Data.Model;
 using VirtoCommerce.Platform.Data.Repositories;
 using VirtoCommerce.Platform.Data.Security;
 using VirtoCommerce.Platform.Data.Security.Identity;
-using VirtoCommerce.Platform.Web.Binders;
 using VirtoCommerce.Platform.Web.Converters.Security;
 using VirtoCommerce.Platform.Web.Model.Security;
 
@@ -242,32 +240,41 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         /// <summary>
         ///  GET: api/security/users?q=ddd&amp;start=0&amp;count=20
         /// </summary>
-        /// <param name="criteria"></param>
+        /// <param name="request"></param>
         /// <returns></returns>
         [HttpGet]
-        [ResponseType(typeof(UserSearchResult))]
+        [ResponseType(typeof(UserSearchResponse))]
         [Route("users")]
-        public async Task<IHttpActionResult> SearchUsersAsync([ModelBinder(typeof(UserSearchCriteriaBinder))] UserSearchCriteria criteria)
+        public async Task<IHttpActionResult> SearchUsersAsync([FromUri] UserSearchRequest request)
         {
+            request = request ?? new UserSearchRequest();
+            var result = new UserSearchResponse();
+
             var query = UserManager.Users;
-            var retVal = new UserSearchResult
-            {
-                TotalCount = query.Count(),
-                Users = new List<ApplicationUserExtended>()
-            };
 
-            var result = query.OrderBy(x => x.UserName)
-                             .Skip(criteria.Start)
-                             .Take(criteria.Count)
-                             .ToArray();
-
-            foreach (var user in result)
+            if (request.Keyword != null)
             {
-                var userExt = await GetUserExtended(user.UserName, UserDetails.Reduced);
-                retVal.Users.Add(userExt);
+                query = query.Where(u => u.UserName.Contains(request.Keyword));
             }
 
-            return Ok(retVal);
+            result.TotalCount = query.Count();
+
+            var users = query.OrderBy(x => x.UserName)
+                             .Skip(request.SkipCount)
+                             .Take(request.TakeCount)
+                             .ToArray();
+
+            var extendedUsers = new List<ApplicationUserExtended>();
+
+            foreach (var user in users)
+            {
+                var extendedUser = await GetUserExtended(user.UserName, UserDetails.Reduced);
+                extendedUsers.Add(extendedUser);
+            }
+
+            result.Users = extendedUsers.ToArray();
+
+            return Ok(result);
         }
 
         /// <summary>

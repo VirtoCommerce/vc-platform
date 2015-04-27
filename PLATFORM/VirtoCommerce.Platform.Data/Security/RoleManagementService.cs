@@ -36,8 +36,8 @@ namespace VirtoCommerce.Platform.Data.Security
 
                 var roles = query
                     .OrderBy(r => r.Name)
-                    .Skip(request.Start)
-                    .Take(request.Count)
+                    .Skip(request.SkipCount)
+                    .Take(request.TakeCount)
                     .Include(r => r.RolePermissions.Select(rp => rp.Permission))
                     .ToArray();
 
