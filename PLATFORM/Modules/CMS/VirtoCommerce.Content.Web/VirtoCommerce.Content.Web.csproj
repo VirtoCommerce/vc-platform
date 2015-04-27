@@ -237,6 +237,7 @@
   <ItemGroup>
     <Compile Include="Controllers\Api\MenuController.cs" />
     <Compile Include="Controllers\Api\PagesController.cs" />
+    <Compile Include="Controllers\Api\SyncController.cs" />
     <Compile Include="Controllers\Api\ThemeController.cs" />
     <Compile Include="Converters\ContentItemConverter.cs" />
     <Compile Include="Converters\GetPagesCriteriaConverter.cs" />
@@ -244,6 +245,7 @@
     <Compile Include="Converters\MenuLinkConverter.cs" />
     <Compile Include="Converters\MenuLinkListConverter.cs" />
     <Compile Include="Converters\PageConverter.cs" />
+    <Compile Include="Converters\SyncAssetConverter.cs" />
     <Compile Include="Converters\ThemeAssetConverter.cs" />
     <Compile Include="Converters\ThemeConverter.cs" />
     <Compile Include="Models\CheckNameResponse.cs" />
@@ -254,6 +256,7 @@
     <Compile Include="Models\MenuLink.cs" />
     <Compile Include="Models\MenuLinkList.cs" />
     <Compile Include="Models\Page.cs" />
+    <Compile Include="Models\SyncAsset.cs" />
     <Compile Include="Models\Theme.cs" />
     <Compile Include="Models\ThemeAsset.cs" />
     <Compile Include="Models\ThemeAssetFolder.cs" />
