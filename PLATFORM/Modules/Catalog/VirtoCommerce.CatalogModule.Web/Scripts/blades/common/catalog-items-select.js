@@ -1,9 +1,9 @@
 ﻿angular.module('virtoCommerce.catalogModule')
-.controller('catalogItemSelectController', ['$rootScope', '$scope', '$filter', 'categories', 'items', 'catalogs', 'listEntries', 'bladeNavigationService', 'dialogService', function ($rootScope, $scope, $filter, categories, items, catalogs, listEntries, bladeNavigationService, dialogService) {
+.controller('virtoCommerce.catalogModule.catalogItemSelectController', ['$rootScope', '$scope', '$filter', 'virtoCommerce.catalogModule.categories', 'virtoCommerce.catalogModule.items', 'virtoCommerce.catalogModule.catalogs', 'virtoCommerce.catalogModule.listEntries', 'bladeNavigationService', 'dialogService', function ($rootScope, $scope, $filter, categories, items, catalogs, listEntries, bladeNavigationService, dialogService) {
 
 	$scope.blade.title = "Catalog items selection...";
 
-	//pagination settigs
+	//pagination settings
 	$scope.pageSettings = {};
 	$scope.pageSettings.totalItems = 0;
 	$scope.pageSettings.currentPage = 1;
@@ -115,7 +115,7 @@
 			itemId: id,
 			title: title,
 			subtitle: 'Item details',
-			controller: 'itemDetailController',
+			controller: 'virtoCommerce.catalogModule.itemDetailController',
 			template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/item-detail.tpl.html'
 		};
 		bladeNavigationService.showBlade(newBlade, $scope.blade);
@@ -141,7 +141,7 @@
 			breadcrumbs: $scope.blade.breadcrumbs,
 			catalogId: $scope.blade.catalogId,
 			catalog: $scope.blade.catalog,
-			controller: 'catalogItemSelectController',
+			controller: 'virtoCommerce.catalogModule.catalogItemSelectController',
 			template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/common/catalog-items-select.tpl.html',
 			options: $scope.blade.options,
 			bladeToolbarCommands: $scope.blade.bladeToolbarCommands

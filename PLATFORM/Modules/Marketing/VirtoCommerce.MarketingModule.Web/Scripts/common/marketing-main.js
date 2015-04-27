@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.marketingModule')
-.controller('marketingMainController', ['$scope', 'bladeNavigationService', function ($scope, bladeNavigationService) {
+.controller('virtoCommerce.marketingModule.marketingMainController', ['$scope', 'bladeNavigationService', function ($scope, bladeNavigationService) {
     $scope.selectedNodeId = null;
 
     function initializeBlade() {
@@ -19,7 +19,7 @@
             id: 'marketingDetails',
             title: data.name,
             subtitle: 'Marketing service',
-            controller: data.entityName + 'ListController',
+            controller: 'virtoCommerce.marketingModule.' + data.entityName + 'ListController',
             template: 'Modules/$(VirtoCommerce.Marketing)/Scripts/' + data.entityName + '/blades/' + data.entityName + '-list.tpl.html'
         };
         bladeNavigationService.showBlade(newBlade, $scope.blade);

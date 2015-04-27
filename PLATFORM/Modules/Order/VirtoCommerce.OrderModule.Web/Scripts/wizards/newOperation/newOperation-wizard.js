@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.orderModule')
-.controller('newOperationWizardController', ['$scope', 'bladeNavigationService', 'dialogService', 'order_res_customerOrders', function ($scope, bladeNavigationService, dialogService, order_res_customerOrders) {
+.controller('virtoCommerce.orderModule.newOperationWizardController', ['$scope', 'bladeNavigationService', 'dialogService', 'virtoCommerce.orderModule.order_res_customerOrders', function ($scope, bladeNavigationService, dialogService, order_res_customerOrders) {
 
 	$scope.blade.isLoading = false;
 	var shipmentOperation =
@@ -23,7 +23,7 @@
 						customerOrder: $scope.blade.customerOrder,
 						currentEntity: result,
 						isClosingDisabled: false,
-						controller: 'operationDetailController',
+						controller: 'virtoCommerce.orderModule.operationDetailController',
 						template: 'Modules/$(VirtoCommerce.Orders)/Scripts/blades/shipment-detail.tpl.html'
 					};
 				
@@ -52,7 +52,7 @@
 					customerOrder: $scope.blade.customerOrder,
 					currentEntity: result,
 					isNew: true,
-					controller: 'operationDetailController',
+					controller: 'virtoCommerce.orderModule.operationDetailController',
 					template: 'Modules/$(VirtoCommerce.Orders)/Scripts/blades/payment-detail.tpl.html'
 				};
 			

@@ -18,7 +18,7 @@ angular.module(moduleName, [])
                           id: 'pricing',
                           title: 'Pricing',
                           subtitle: 'Merchandise management',
-                          controller: 'pricingMainController',
+                          controller: 'virtoCommerce.pricingModule.pricingMainController',
                           template: 'Modules/$(VirtoCommerce.Pricing)/Scripts/blades/pricing-main.tpl.html',
                           isClosingDisabled: true
                       };
@@ -43,18 +43,18 @@ angular.module(moduleName, [])
 
       //Register item prices widget
       var itemPricesWidget = {
-          controller: 'itemPricesWidgetController',
+          controller: 'virtoCommerce.pricingModule.itemPricesWidgetController',
           template: 'Modules/$(VirtoCommerce.Pricing)/Scripts/widgets/itemPricesWidget.tpl.html',
       };
       widgetService.registerWidget(itemPricesWidget, 'itemDetail');
 
       //Register pricelist widgets
       widgetService.registerWidget({
-          controller: 'pricesWidgetController',
+          controller: 'virtoCommerce.pricingModule.pricesWidgetController',
           template: 'Modules/$(VirtoCommerce.Pricing)/Scripts/widgets/pricesWidget.tpl.html',
       }, 'pricelistDetail');
       widgetService.registerWidget({
-          controller: 'assignmentsWidgetController',
+          controller: 'virtoCommerce.pricingModule.assignmentsWidgetController',
           template: 'Modules/$(VirtoCommerce.Pricing)/Scripts/widgets/assignmentsWidget.tpl.html',
       }, 'pricelistDetail');
   }]);

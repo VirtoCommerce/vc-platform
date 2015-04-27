@@ -1,15 +1,15 @@
 ﻿angular.module('virtoCommerce.marketingModule')
-.controller('promotionConditionCurrencyIsController', ['$scope', 'settings', function ($scope, settings) {
+.controller('virtoCommerce.marketingModule.promotionConditionCurrencyIsController', ['$scope', 'settings', function ($scope, settings) {
     $scope.availableCurrencies = settings.getValues({ id: 'VirtoCommerce.Core.General.Currencies' });
 }])
-.controller('promotionExpressionsController', ['$scope', 'bladeNavigationService', function ($scope, bladeNavigationService) {
+.controller('virtoCommerce.marketingModule.promotionExpressionsController', ['$scope', 'bladeNavigationService', function ($scope, bladeNavigationService) {
 
     $scope.openItemSelectWizard = function (parentElement) {
         var selectedListEntries = [];
         var newBlade = {
             id: "CatalogEntrySelect",
             title: "Pick Product for promotion condition",
-            controller: 'catalogItemSelectController',
+            controller: 'virtoCommerce.catalogModule.catalogItemSelectController',
             template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/common/catalog-items-select.tpl.html',
             breadcrumbs: [],
             bladeToolbarCommands: [
@@ -55,7 +55,7 @@
         var newBlade = {
             id: "CatalogCategorySelect",
             title: "Pick Category for promotion condition",
-            controller: 'catalogItemSelectController',
+            controller: 'virtoCommerce.catalogModule.catalogItemSelectController',
             template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/common/catalog-items-select.tpl.html',
             breadcrumbs: [],
             bladeToolbarCommands: [

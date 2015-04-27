@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.marketingModule')
-.controller('addContentItemsElementController', ['$scope', 'bladeNavigationService', 'categories', 'items', function ($scope, bladeNavigationService, categories, items) {
+.controller('virtoCommerce.marketingModule.addContentItemsElementController', ['$scope', 'bladeNavigationService', 'virtoCommerce.catalogModule.categories', 'virtoCommerce.catalogModule.items', function ($scope, bladeNavigationService, categories, items) {
 	var blade = $scope.blade;
 
 	blade.addFolder = function () {

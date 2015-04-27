@@ -1,6 +1,6 @@
-﻿angular.module('virtoCommerce.customerModule.blades')
-.controller('memberListController', ['$scope', 'members', 'contacts', 'organizations', 'bladeNavigationService', 'dialogService', function ($scope, members, contacts, organizations, bladeNavigationService, dialogService) {
-    //pagination settigs
+﻿angular.module('virtoCommerce.customerModule')
+.controller('virtoCommerce.customerModule.memberListController', ['$scope', 'virtoCommerce.customerModule.members', 'virtoCommerce.customerModule.contacts', 'virtoCommerce.customerModule.organizations', 'bladeNavigationService', 'dialogService', function ($scope, members, contacts, organizations, bladeNavigationService, dialogService) {
+    //pagination settings
     $scope.pageSettings = {};
     $scope.pageSettings.totalItems = 0;
     $scope.pageSettings.currentPage = 1;
@@ -127,7 +127,7 @@
             isOrganization: false,
             title: title,
             subtitle: 'Customer details',
-            controller: 'memberDetailController',
+            controller: 'virtoCommerce.customerModule.memberDetailController',
             template: 'Modules/$(VirtoCommerce.Customer)/Scripts/blades/customer-detail.tpl.html'
         };
 
@@ -210,7 +210,7 @@
                     template: $scope.blade.template,
                     isClosingDisabled: true
                 };
-               
+
                 bladeNavigationService.showBlade(newBlade, $scope.blade.parentBlade);
             }
         } else {
@@ -250,7 +250,7 @@
                       id: 'listItemChild',
                       title: 'New member',
                       subtitle: 'Choose new member type',
-                      controller: 'memberAddController',
+                      controller: 'virtoCommerce.customerModule.memberAddController',
                       template: 'Modules/$(VirtoCommerce.Customer)/Scripts/blades/member-add.tpl.html'
                   };
                   bladeNavigationService.showBlade(newBlade, $scope.blade);
@@ -259,25 +259,25 @@
                   return true;
               }
           },
-            {
-                name: "Manage", icon: 'fa fa-edit',
-                executeMethod: function () {
-                    // selected OR the first checked listItem
-                    edit(selectedNode || _.find($scope.listEntries, function (x) { return x.selected; }));
-                },
-                canExecuteMethod: function () {
-                    return selectedNode || isItemsChecked();
-                }
-            },
-            {
-                name: "Delete", icon: 'fa fa-trash-o',
-                executeMethod: function () {
-                    deleteChecked();
-                },
-                canExecuteMethod: function () {
-                    return isItemsChecked();
-                }
-            }
+{
+    name: "Manage", icon: 'fa fa-edit',
+    executeMethod: function () {
+        // selected OR the first checked listItem
+        edit(selectedNode || _.find($scope.listEntries, function (x) { return x.selected; }));
+    },
+    canExecuteMethod: function () {
+        return selectedNode || isItemsChecked();
+    }
+},
+{
+    name: "Delete", icon: 'fa fa-trash-o',
+    executeMethod: function () {
+        deleteChecked();
+    },
+    canExecuteMethod: function () {
+        return isItemsChecked();
+    }
+}
     ];
 
     $scope.checkAll = function (selected) {

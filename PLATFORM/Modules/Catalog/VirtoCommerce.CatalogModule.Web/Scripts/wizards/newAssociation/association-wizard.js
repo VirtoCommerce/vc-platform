@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.catalogModule')
-.controller('associationWizardController', ['$scope', 'bladeNavigationService', 'dialogService', 'items', function ($scope, bladeNavigationService, dialogService, items) {
+.controller('virtoCommerce.catalogModule.associationWizardController', ['$scope', 'bladeNavigationService', 'dialogService', 'virtoCommerce.catalogModule.items', function ($scope, bladeNavigationService, dialogService, items) {
 
     $scope.create = function () {
         $scope.blade.isLoading = true;
@@ -29,7 +29,7 @@
                     newBlade = {
                         id: "associationGroup",
                         title: 'Association Group',
-                        controller: 'associationGroupSelectController',
+                        controller: 'virtoCommerce.catalogModule.associationGroupSelectController',
                         groupNames: ['Accessories', 'Related Items'],
                         template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/wizards/newAssociation/association-wizard-group-step.tpl.html'
                     };
@@ -44,7 +44,7 @@
                         id: 'selectCatalog',
                         title: 'Select Catalog',
                         subtitle: 'Adding Associations to product',
-                        controller: 'catalogsSelectController',
+                        controller: 'virtoCommerce.catalogModule.catalogsSelectController',
                         template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/catalogs-select.tpl.html'
                     };
 
@@ -67,7 +67,7 @@
             subtitle: 'Adding Associations to product',
             catalogId: selectedNode.id,
             catalog: selectedNode,
-            controller: 'categoriesItemsListController',
+            controller: 'virtoCommerce.catalogModule.categoriesItemsListController',
             template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/categories-items-list.tpl.html'
         };
         bladeNavigationService.showBlade(newBlade, $scope.blade);

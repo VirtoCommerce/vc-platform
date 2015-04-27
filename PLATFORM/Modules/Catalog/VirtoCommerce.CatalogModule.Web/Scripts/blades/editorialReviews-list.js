@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.catalogModule')
-.controller('editorialReviewsListController', ['$rootScope', '$scope', 'bladeNavigationService', 'items', function ($rootScope, $scope, bladeNavigationService, items) {
+.controller('virtoCommerce.catalogModule.editorialReviewsListController', ['$rootScope', '$scope', 'bladeNavigationService', 'virtoCommerce.catalogModule.items', function ($rootScope, $scope, bladeNavigationService, items) {
     //$scope.blade.origEntity = {};
     //$scope.blade.currentEntities = {};
 
@@ -27,7 +27,7 @@
             languages: $scope.blade.parentBlade.item.catalog.languages,
             title: 'Review',
             subtitle: 'Product Review',
-            controller: 'editorialReviewDetailController',
+            controller: 'virtoCommerce.catalogModule.editorialReviewDetailController',
             template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/editorialReview-detail.tpl.html'
         };
         bladeNavigationService.showBlade(newBlade, $scope.blade);

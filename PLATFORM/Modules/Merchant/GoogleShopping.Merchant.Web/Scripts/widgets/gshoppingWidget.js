@@ -1,12 +1,12 @@
 ﻿angular.module('virtoCommerce.gshoppingModule')
-.controller('gshoppingWidgetController', ['$scope', 'bladeNavigationService', 'gshopping_res_items', function ($scope, bladeNavigationService, items) {
+.controller('virtoCommerce.gshoppingModule.gshoppingWidgetController', ['$scope', 'bladeNavigationService', 'virtoCommerce.gshoppingModule.items', function ($scope, bladeNavigationService, items) {
     $scope.syncItems = function () {
         return items.query({ id: $scope.blade.currentEntityId }, function () {
         });
     }
 }])
 
-.controller('gshoppingSyncCatWidgetController', ['$scope', 'bladeNavigationService', 'gshopping_res_cat_items', function ($scope, bladeNavigationService, items) {
+.controller('virtoCommerce.gshoppingModule.gshoppingSyncCatWidgetController', ['$scope', 'bladeNavigationService', 'virtoCommerce.gshoppingModule.catalog_items', function ($scope, bladeNavigationService, items) {
 
     $scope.widget.refresh = function() {
         $scope.importedProducts = 0;

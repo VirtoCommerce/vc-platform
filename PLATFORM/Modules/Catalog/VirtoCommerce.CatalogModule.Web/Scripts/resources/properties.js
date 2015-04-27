@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.catalogModule')
-.factory('properties', ['$resource', function ($resource) {
+.factory('virtoCommerce.catalogModule.properties', ['$resource', function ($resource) {
 
 	return $resource('api/catalog/properties/:id', { id: '@id' }, {
 		newCategoryProperty: { method: 'GET', url: 'api/catalog/categories/:categoryId/properties/getnew' },

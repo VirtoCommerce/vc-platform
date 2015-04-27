@@ -1,6 +1,6 @@
 ﻿angular.module('virtoCommerce.catalogModule')
-.controller('advancedSearchResultsController', ['$rootScope', '$scope', '$filter', 'categories', 'items', 'listEntries', 'bladeNavigationService', 'dialogService', function ($rootScope, $scope, $filter, categories, items, listEntries, bladeNavigationService, dialogService) {
-    //pagination settigs
+.controller('virtoCommerce.catalogModule.advancedSearchResultsController', ['$rootScope', '$scope', '$filter', 'virtoCommerce.catalogModule.categories', 'virtoCommerce.catalogModule.items', 'virtoCommerce.catalogModule.listEntries', 'bladeNavigationService', 'dialogService', function ($rootScope, $scope, $filter, categories, items, listEntries, bladeNavigationService, dialogService) {
+    //pagination settings
     $scope.pageSettings = {};
     $scope.pageSettings.totalItems = 0;
     $scope.pageSettings.currentPage = 1;
@@ -52,7 +52,7 @@
             itemId: id,
             title: title,
             subtitle: 'Item details',
-            controller: 'itemDetailController',
+            controller: 'virtoCommerce.catalogModule.itemDetailController',
             template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/item-detail.tpl.html'
         };
         bladeNavigationService.showBlade(newBlade, $scope.blade);

@@ -1,7 +1,7 @@
 ﻿angular.module('virtoCommerce.marketingModule')
-.controller('promotionListController', ['$scope', 'marketing_res_search', 'marketing_res_promotions', 'bladeNavigationService', 'dialogService', function ($scope, marketing_res_search, marketing_res_promotions, bladeNavigationService, dialogService) {
+.controller('virtoCommerce.marketingModule.promotionListController', ['$scope', 'virtoCommerce.marketingModule.promotion.search', 'virtoCommerce.marketingModule.promotions', 'bladeNavigationService', 'dialogService', function ($scope, marketing_res_search, marketing_res_promotions, bladeNavigationService, dialogService) {
     var selectedNode = null;
-    //pagination settigs
+    //pagination settings
     $scope.pageSettings = {};
     $scope.pageSettings.totalItems = 0;
     $scope.pageSettings.currentPage = 1;
@@ -47,7 +47,7 @@
             currentEntityId: selectedNode.id,
             title: selectedNode.name,
             subtitle: $scope.blade.subtitle,
-            controller: 'promotionDetailController',
+            controller: 'virtoCommerce.marketingModule.promotionDetailController',
             template: 'Modules/$(VirtoCommerce.Marketing)/Scripts/promotion/blades/promotion-detail.tpl.html'
         };
 
@@ -116,7 +116,7 @@
                     title: 'New Promotion list',
                     subtitle: $scope.blade.subtitle,
                     isNew: true,
-                    controller: 'promotionDetailController',
+                    controller: 'virtoCommerce.marketingModule.promotionDetailController',
                     template: 'Modules/$(VirtoCommerce.Marketing)/Scripts/promotion/blades/promotion-detail.tpl.html'
                 };
                 bladeNavigationService.showBlade(newBlade, $scope.blade);
