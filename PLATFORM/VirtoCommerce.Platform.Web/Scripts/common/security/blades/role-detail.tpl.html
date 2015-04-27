@@ -16,12 +16,13 @@
                         <tr class="table-item" ng-repeat="data in blade.currentEntity.permissions track by data.id">
                             <td class="table-col">
                                 <span class="table-t">{{data.name}}</span>
+                                <span class="table-descr">{{data.description}}</span>
                             </td>
                         </tr>
                     </tbody>
                 </table>
             </div>
-            <p class="text" ng-if="!blade.currentEntity.permissions.length">No permission assigned</p>
+            <p class="text no-data" ng-if="!blade.currentEntity.permissions.length">No permissions assigned</p>
         </div>
     </div>
 </div>
