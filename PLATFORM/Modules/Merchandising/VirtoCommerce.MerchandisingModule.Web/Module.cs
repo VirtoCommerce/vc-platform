@@ -41,30 +41,98 @@ using VirtoCommerce.Search.Index;
 
 namespace VirtoCommerce.MerchandisingModule.Web
 {
-    public class Module : IModule, IDatabaseModule, IPostInitialize
+    public class Module : IModule
     {
-        #region Constants
-
         private const string _connectionStringName = "VirtoCommerce";
-
-        #endregion
-
-        #region Fields
-
         private readonly IUnityContainer _container;
-
-        #endregion
-
-        #region Constructors and Destructors
 
         public Module(IUnityContainer container)
         {
             _container = container;
         }
 
-        #endregion
+        #region IModule Members
 
-        #region Public Methods and Operators
+        public void SetupDatabase(SampleDataLevel sampleDataLevel)
+        {
+            using (var db = new EFReviewRepository(_connectionStringName))
+            {
+                SqlReviewDatabaseInitializer initializer;
+
+                switch (sampleDataLevel)
+                {
+                    case SampleDataLevel.Full:
+                    case SampleDataLevel.Reduced:
+                        initializer = new SqlReviewSampleDatabaseInitializer();
+                        break;
+                    default:
+                        initializer = new SqlReviewDatabaseInitializer();
+                        break;
+                }
+
+                initializer.InitializeDatabase(db);
+            }
+
+            using (var db = new EFStoreRepository(_connectionStringName))
+            {
+                SqlStoreDatabaseInitializer initializer;
+
+                switch (sampleDataLevel)
+                {
+                    case SampleDataLevel.Full:
+                    case SampleDataLevel.Reduced:
+                        initializer = new SqlStoreSampleDatabaseInitializer();
+                        break;
+                    default:
+                        initializer = new SqlStoreDatabaseInitializer();
+                        break;
+                }
+
+                initializer.InitializeDatabase(db);
+            }
+
+            using (var db = new EFMarketingRepository(_connectionStringName))
+            {
+                SqlPromotionDatabaseInitializer initializer;
+
+                switch (sampleDataLevel)
+                {
+                    case SampleDataLevel.Full:
+                    case SampleDataLevel.Reduced:
+                        initializer = new SqlPromotionSampleDatabaseInitializer();
+                        break;
+                    default:
+                        initializer = new SqlPromotionDatabaseInitializer();
+                        break;
+                }
+
+                initializer.InitializeDatabase(db);
+            }
+
+            using (var db = new EFDynamicContentRepository(_connectionStringName))
+            {
+                SqlDynamicContentDatabaseInitializer initializer;
+
+                switch (sampleDataLevel)
+                {
+                    case SampleDataLevel.Full:
+                    case SampleDataLevel.Reduced:
+                        initializer = new SqlDynamicContentSampleDatabaseInitializer();
+                        break;
+                    default:
+                        initializer = new SqlDynamicContentDatabaseInitializer();
+                        break;
+                }
+
+                initializer.InitializeDatabase(db);
+            }
+
+            using (var db = new OperationLogContext(_connectionStringName))
+            {
+                var initializer = new SetupDatabaseInitializer<OperationLogContext, VirtoCommerce.Foundation.Data.Infrastructure.LogMigrations.Configuration>();
+                initializer.InitializeDatabase(db);
+            }
+        }
 
         public void Initialize()
         {
@@ -208,87 +276,6 @@ namespace VirtoCommerce.MerchandisingModule.Web
         {
             var jobScheduler = _container.Resolve<SearchIndexJobsScheduler>();
             jobScheduler.SheduleJobs();
-        }
-
-        public void SetupDatabase(SampleDataLevel sampleDataLevel)
-        {
-            using (var db = new EFReviewRepository(_connectionStringName))
-            {
-                SqlReviewDatabaseInitializer initializer;
-
-                switch (sampleDataLevel)
-                {
-                    case SampleDataLevel.Full:
-                    case SampleDataLevel.Reduced:
-                        initializer = new SqlReviewSampleDatabaseInitializer();
-                        break;
-                    default:
-                        initializer = new SqlReviewDatabaseInitializer();
-                        break;
-                }
-
-                initializer.InitializeDatabase(db);
-            }
-
-            using (var db = new EFStoreRepository(_connectionStringName))
-            {
-                SqlStoreDatabaseInitializer initializer;
-
-                switch (sampleDataLevel)
-                {
-                    case SampleDataLevel.Full:
-                    case SampleDataLevel.Reduced:
-                        initializer = new SqlStoreSampleDatabaseInitializer();
-                        break;
-                    default:
-                        initializer = new SqlStoreDatabaseInitializer();
-                        break;
-                }
-
-                initializer.InitializeDatabase(db);
-            }
-
-            using (var db = new EFMarketingRepository(_connectionStringName))
-            {
-                SqlPromotionDatabaseInitializer initializer;
-
-                switch (sampleDataLevel)
-                {
-                    case SampleDataLevel.Full:
-                    case SampleDataLevel.Reduced:
-                        initializer = new SqlPromotionSampleDatabaseInitializer();
-                        break;
-                    default:
-                        initializer = new SqlPromotionDatabaseInitializer();
-                        break;
-                }
-
-                initializer.InitializeDatabase(db);
-            }
-
-            using (var db = new EFDynamicContentRepository(_connectionStringName))
-            {
-                SqlDynamicContentDatabaseInitializer initializer;
-
-                switch (sampleDataLevel)
-                {
-                    case SampleDataLevel.Full:
-                    case SampleDataLevel.Reduced:
-                        initializer = new SqlDynamicContentSampleDatabaseInitializer();
-                        break;
-                    default:
-                        initializer = new SqlDynamicContentDatabaseInitializer();
-                        break;
-                }
-
-                initializer.InitializeDatabase(db);
-            }
-
-            using (var db = new OperationLogContext(_connectionStringName))
-            {
-                var initializer = new SetupDatabaseInitializer<OperationLogContext, VirtoCommerce.Foundation.Data.Infrastructure.LogMigrations.Configuration>();
-                initializer.InitializeDatabase(db);
-            }
         }
 
         #endregion

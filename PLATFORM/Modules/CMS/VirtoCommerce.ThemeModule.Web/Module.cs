@@ -13,24 +13,29 @@ using VirtoCommerce.ThemeModule.Web.Controllers.Api;
 
 namespace VirtoCommerce.ThemeModule.Web
 {
-    public class Module : IModule, IDatabaseModule
+    public class Module : IModule
     {
-        #region Fields
-
         private readonly IUnityContainer _container;
-
-        #endregion
-
-        #region Constructors and Destructors
 
         public Module(IUnityContainer container)
         {
             _container = container;
         }
 
-        #endregion
+        #region IModule Members
 
-        #region Public Methods and Operators
+        public void SetupDatabase(SampleDataLevel sampleDataLevel)
+        {
+            var options = _container.Resolve<IModuleInitializerOptions>();
+            var modulePath = options.GetModuleDirectoryPath("VirtoCommerce.Theme");
+            var themePath = Path.Combine(modulePath, "Default_Theme");
+
+            using (var context = new DatabaseFileRepositoryImpl())
+            {
+                var initializer = new SqlThemeDatabaseInitializer(themePath);
+                initializer.InitializeDatabase(context);
+            }
+        }
 
         public void Initialize()
         {
@@ -100,17 +105,8 @@ namespace VirtoCommerce.ThemeModule.Web
             _container.RegisterType<ThemeController>(new InjectionConstructor(factory, settingsManager, uploadPath, uploadPathFiles));
         }
 
-        public void SetupDatabase(SampleDataLevel sampleDataLevel)
+        public void PostInitialize()
         {
-            var options = _container.Resolve<IModuleInitializerOptions>();
-            var modulePath = options.GetModuleDirectoryPath("VirtoCommerce.Theme");
-            var themePath = Path.Combine(modulePath, "Default_Theme");
-
-            using (var context = new DatabaseFileRepositoryImpl())
-            {
-                var initializer = new SqlThemeDatabaseInitializer(themePath);
-                initializer.InitializeDatabase(context);
-            }
         }
 
         #endregion

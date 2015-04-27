@@ -1,5 +1,4 @@
 ﻿using Microsoft.Practices.Unity;
-using Owin;
 using VirtoCommerce.Caching.HttpCache;
 using VirtoCommerce.CoreModule.Web.Repositories;
 using VirtoCommerce.CoreModule.Web.Search;
@@ -21,19 +20,17 @@ using VirtoCommerce.Search.Providers.Lucene;
 
 namespace VirtoCommerce.CoreModule.Web
 {
-    public class Module : IModule, IDatabaseModule, IPostInitialize
+    public class Module : IModule
     {
         private const string _connectionStringName = "VirtoCommerce";
         private readonly IUnityContainer _container;
-        private readonly IAppBuilder _appBuilder;
 
-        public Module(IUnityContainer container, IAppBuilder appBuilder)
+        public Module(IUnityContainer container)
         {
             _container = container;
-            _appBuilder = appBuilder;
         }
 
-        #region IDatabaseModule Members
+        #region IModule Members
 
         public void SetupDatabase(SampleDataLevel sampleDataLevel)
         {
@@ -61,14 +58,12 @@ namespace VirtoCommerce.CoreModule.Web
             }
         }
 
-        #endregion
-
-        #region IModule Members
-
         public void Initialize()
         {
             #region Caching
+
             _container.RegisterType<ICacheRepository, HttpCacheRepository>(new ContainerControlledLifetimeManager());
+
             #endregion
 
             #region Settings
@@ -93,7 +88,6 @@ namespace VirtoCommerce.CoreModule.Web
 
             #endregion
 
-
             #region Fulfillment
 
             _container.RegisterType<IFoundationFulfillmentRepository>(new InjectionFactory(c => new FoundationFulfillmentRepositoryImpl(_connectionStringName)));
@@ -101,10 +95,6 @@ namespace VirtoCommerce.CoreModule.Web
 
             #endregion
         }
-
-        #endregion
-
-        #region IPostInitialize Members
 
         public void PostInitialize()
         {

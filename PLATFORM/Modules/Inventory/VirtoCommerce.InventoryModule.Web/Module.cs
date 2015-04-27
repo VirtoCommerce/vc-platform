@@ -18,11 +18,19 @@ namespace VirtoCommerce.InventoryModule.Web
 
         #region IModule Members
 
+        public void SetupDatabase(SampleDataLevel sampleDataLevel)
+        {
+        }
+
         public void Initialize()
         {
             _container.RegisterType<IFoundationInventoryRepository>(new InjectionFactory(c => new FoundationInventoryRepositoryImpl("VirtoCommerce", new AuditChangeInterceptor())));
 
             _container.RegisterType<IInventoryService, InventoryServiceImpl>();
+        }
+
+        public void PostInitialize()
+        {
         }
 
         #endregion
