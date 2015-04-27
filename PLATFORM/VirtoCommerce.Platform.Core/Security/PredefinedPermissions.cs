@@ -5,9 +5,28 @@
         public const string SecurityCallApi = "security:call_api";
         public const string BackgroundJobsManage = "background_jobs:manage";
 
-        public const string NameSecurityCallApi = "Call API methods";
-        public const string NameBackgroundJobsManage = "Manage background jobs";
+        public static Permission[] Permissions { get; private set; }
 
-        public const string RoleApiClient = "API Client";
+        static PredefinedPermissions()
+        {
+            Permissions = new[]
+            {
+                new Permission
+                {
+                    Id = SecurityCallApi,
+                    Name = "Call API methods",
+                    Description = "Allows to make calls to Web API methods.",
+                    ModuleId = "VirtoCommerce.Platform"
+                },
+                new Permission
+                {
+                    Id = BackgroundJobsManage,
+                    Name = "Manage background jobs",
+                    Description = "Allows to view and manage background jobs.",
+                    ModuleId = "VirtoCommerce.Platform"
+                }
+            };
+
+        }
     }
 }

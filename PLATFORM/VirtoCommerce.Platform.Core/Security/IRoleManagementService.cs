@@ -3,8 +3,8 @@
     public interface IRoleManagementService
     {
         RoleSearchResponse SearchRoles(RoleSearchRequest request);
-        RoleDescriptor GetRole(string roleId);
+        Role GetRole(string roleId);
         void DeleteRole(string roleId);
-        RoleDescriptor AddOrUpdateRole(RoleDescriptor role);
+        Role AddOrUpdateRole(Role role);
     }
 }

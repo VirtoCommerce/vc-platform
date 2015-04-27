@@ -24,7 +24,7 @@ namespace VirtoCommerce.Platform.Data.Security
 
         #region Public Methods and Operators
 
-        public PermissionDescriptor[] GetAllPermissions()
+        public Permission[] GetAllPermissions()
         {
             return _cacheManager.Get(
                 CacheKey.Create(CacheGroups.Security, "AllPermissions"),
@@ -50,20 +50,10 @@ namespace VirtoCommerce.Platform.Data.Security
             return success;
         }
 
-
         #endregion
 
         #region Methods
 
-        private static PermissionDescriptor ConvertToPermissionDescriptor(ModulePermission permission, string moduleId)
-        {
-            return new PermissionDescriptor
-            {
-                Id = permission.Id,
-                Name = permission.Name,
-                ModuleId = moduleId
-            };
-        }
 
         private UserWithPermissions GetUserWithPermissions(string userName)
         {
@@ -72,13 +62,15 @@ namespace VirtoCommerce.Platform.Data.Security
                 () => LoadUserWithPermissions(userName));
         }
 
-        private PermissionDescriptor[] LoadAllPermissions()
+        private Permission[] LoadAllPermissions()
         {
-            var permissions = _manifestProvider.GetModuleManifests().Values
+            var manifestPermissions = _manifestProvider.GetModuleManifests().Values
                 .Where(m => m.Permissions != null)
-                .SelectMany(m => m.Permissions.Select(p => ConvertToPermissionDescriptor(p, m.Id)))
+                .SelectMany(m => m.Permissions.Select(p => p.ToCoreModel(m.Id)))
                 .ToArray();
-            return permissions;
+
+            var allPermissions = PredefinedPermissions.Permissions.Union(manifestPermissions).ToArray();
+            return allPermissions;
         }
 
         private UserWithPermissions LoadUserWithPermissions(string userName)

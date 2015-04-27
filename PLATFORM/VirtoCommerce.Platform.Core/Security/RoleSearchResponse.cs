@@ -2,7 +2,7 @@
 {
     public class RoleSearchResponse
     {
-        public RoleDescriptor[] Roles { get; set; }
+        public Role[] Roles { get; set; }
         public int TotalCount { get; set; }
     }
 }
