@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.catalogModule')
-.controller('itemPropertyWidgetController', ['$scope', 'bladeNavigationService', function ($scope, bladeNavigationService) {
+.controller('virtoCommerce.catalogModule.itemPropertyWidgetController', ['$scope', 'bladeNavigationService', function ($scope, bladeNavigationService) {
     $scope.currentBlade = $scope.widget.blade;
     $scope.propertiesCount = 'calculating';
 
@@ -14,7 +14,7 @@
             itemId: $scope.currentBlade.item.id,
             title: $scope.currentBlade.origItem.name,
             subtitle: 'item properties',
-            controller: 'itemPropertyController',
+            controller: 'virtoCommerce.catalogModule.itemPropertyController',
             template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/item-property-detail.tpl.html'
         };
         bladeNavigationService.showBlade(blade, $scope.currentBlade);

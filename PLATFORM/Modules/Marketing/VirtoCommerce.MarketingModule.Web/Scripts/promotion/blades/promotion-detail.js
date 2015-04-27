@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.marketingModule')
-.controller('promotionDetailController', ['$scope', 'bladeNavigationService', 'marketing_res_promotions', 'catalogs', 'stores', 'settings', 'dialogService', 'vaDynamicExpressionService', function ($scope, bladeNavigationService, marketing_res_promotions, catalogs, stores, settings, dialogService, vaDynamicExpressionService) {
+.controller('virtoCommerce.marketingModule.promotionDetailController', ['$scope', 'bladeNavigationService', 'virtoCommerce.marketingModule.promotions', 'virtoCommerce.catalogModule.catalogs', 'virtoCommerce.storeModule.stores', 'settings', 'dialogService', 'virtoCommerce.coreModule.common.dynamicExpressionService', function ($scope, bladeNavigationService, marketing_res_promotions, catalogs, stores, settings, dialogService, dynamicExpressionService) {
     $scope.blade.refresh = function (parentRefresh) {
         if ($scope.blade.isNew) {
             marketing_res_promotions.getNew({}, function (data) {
@@ -164,7 +164,7 @@
     // Dynamic ExpressionBlock
 
     function extendElementBlock(expressionBlock) {
-        var retVal = vaDynamicExpressionService.expressions[expressionBlock.id];
+        var retVal = dynamicExpressionService.expressions[expressionBlock.id];
         if (!retVal) {
             retVal = { displayName: 'unknown element: ' + expressionBlock.id };
         }

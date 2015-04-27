@@ -3,8 +3,8 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using Omu.ValueInjecter;
 using VirtoCommerce.Platform.Core.Common;
+using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Core.Security;
-using VirtoCommerce.Platform.Data.Common;
 using VirtoCommerce.Platform.Data.Common.ConventionInjections;
 using VirtoCommerce.Platform.Data.Model;
 
@@ -12,11 +12,12 @@ namespace VirtoCommerce.Platform.Data.Security
 {
     public static class SecurityConverters
     {
-        public static RoleEntity ToFoundation(this RoleDescriptor source)
+        public static RoleEntity ToDataModel(this Role source)
         {
             var result = new RoleEntity
             {
-                Name = source.Name
+                Name = source.Name,
+                Description = source.Description,
             };
 
             if (source.Id != null)
@@ -32,23 +33,25 @@ namespace VirtoCommerce.Platform.Data.Security
             return result;
         }
 
-        public static PermissionEntity ToFoundation(this PermissionDescriptor source)
+        public static PermissionEntity ToDataModel(this Permission source)
         {
             var result = new PermissionEntity
             {
                 Id = source.Id,
-                Name = source.Name
+                Name = source.Name,
+                Description = source.Description
             };
 
             return result;
         }
 
-        public static RoleDescriptor ToCoreModel(this RoleEntity source, bool fillPermissions)
+        public static Role ToCoreModel(this RoleEntity source, bool fillPermissions)
         {
-            var result = new RoleDescriptor
+            var result = new Role
             {
                 Id = source.Id,
                 Name = source.Name,
+                Description = source.Description,
             };
 
             if (fillPermissions && source.RolePermissions != null)
@@ -59,15 +62,27 @@ namespace VirtoCommerce.Platform.Data.Security
             return result;
         }
 
-        public static PermissionDescriptor ToCoreModel(this PermissionEntity source)
+        public static Permission ToCoreModel(this PermissionEntity source)
         {
-            var result = new PermissionDescriptor
+            var result = new Permission
             {
                 Id = source.Id,
                 Name = source.Name,
+                Description = source.Description,
             };
 
             return result;
+        }
+
+        public static Permission ToCoreModel(this ModulePermission source, string moduleId)
+        {
+            return new Permission
+            {
+                Id = source.Id,
+                Name = source.Name,
+                Description = source.Description,
+                ModuleId = moduleId,
+            };
         }
 
         public static void Patch(this RoleEntity source, RoleEntity target)
@@ -80,8 +95,8 @@ namespace VirtoCommerce.Platform.Data.Security
 
             if (!source.RolePermissions.IsNullCollection())
             {
-                var settingComparer = AnonymousComparer.Create((RolePermissionEntity rp) => rp.Id);
-                source.RolePermissions.Patch(target.RolePermissions, settingComparer, (sourceDiscount, targetDiscount) => sourceDiscount.Patch(targetDiscount));
+                var comparer = AnonymousComparer.Create((RolePermissionEntity rp) => rp.PermissionId);
+                source.RolePermissions.Patch(target.RolePermissions, comparer, (sourceItem, targetItem) => sourceItem.Patch(targetItem));
             }
         }
 

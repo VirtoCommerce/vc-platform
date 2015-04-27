@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.catalogModule')
-.controller('newProductWizardReviewsController', ['$scope', 'bladeNavigationService', function ($scope, bladeNavigationService)
+.controller('virtoCommerce.catalogModule.newProductWizardReviewsController', ['$scope', 'bladeNavigationService', function ($scope, bladeNavigationService)
 {
     $scope.blade.isLoading = false;
     $scope.wizardBlade = $scope.blade.parentBlade;
@@ -18,7 +18,7 @@
             languages: $scope.wizardBlade.parentBlade.catalog.languages,
             title: 'Review',
             subtitle: 'Product Review',
-            controller: 'editorialReviewDetailWizardStepController',
+            controller: 'virtoCommerce.catalogModule.editorialReviewDetailWizardStepController',
             template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/editorialReview-detail.tpl.html'
         };
         bladeNavigationService.showBlade(newBlade, $scope.blade);

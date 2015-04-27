@@ -19,7 +19,7 @@ namespace VirtoCommerce.Content.Web
 
 	#endregion
 
-	public class Module : IModule, IDatabaseModule
+	public class Module : IModule
 	{
 		#region Fields
 
@@ -194,6 +194,10 @@ namespace VirtoCommerce.Content.Web
 			}
 
 			#endregion
+		}
+
+		public void PostInitialize()
+		{
 		}
 
 		#endregion

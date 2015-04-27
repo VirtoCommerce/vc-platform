@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.pricingModule')
-.controller('itemPricesWidgetController', ['$scope', '$filter', 'bladeNavigationService', 'prices', function ($scope, $filter, bladeNavigationService, prices) {
+.controller('virtoCommerce.pricingModule.itemPricesWidgetController', ['$scope', '$filter', 'bladeNavigationService', 'virtoCommerce.pricingModule.prices', function ($scope, $filter, bladeNavigationService, prices) {
     $scope.currentBlade = $scope.widget.blade;
 
     $scope.widget.refresh = function () {
@@ -33,7 +33,7 @@
                 parentWidget: $scope.widget,
                 title: $scope.currentBlade.title,
                 subtitle: 'Select Price list to manage prices',
-                controller: 'itemPricelistsListController',
+                controller: 'virtoCommerce.pricingModule.itemPricelistsListController',
                 template: 'Modules/$(VirtoCommerce.Pricing)/Scripts/blades/item/item-pricelists-list.tpl.html'
             };
             bladeNavigationService.showBlade(newBlade, $scope.currentBlade);

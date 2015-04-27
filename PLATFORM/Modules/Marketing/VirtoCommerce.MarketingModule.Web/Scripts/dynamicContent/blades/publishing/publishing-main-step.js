@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.marketingModule')
-.controller('addPublishingFirstStepController', ['$scope', 'marketing_dynamicContents_res_contentPublications', 'bladeNavigationService', function ($scope, marketing_dynamicContents_res_contentPublications, bladeNavigationService) {
+.controller('virtoCommerce.marketingModule.addPublishingFirstStepController', ['$scope', 'virtoCommerce.marketingModule.dynamicContent.contentPublications', 'bladeNavigationService', function ($scope, marketing_dynamicContents_res_contentPublications, bladeNavigationService) {
 	$scope.setForm = function (form) {
 		$scope.formScope = form;
 	}
@@ -71,7 +71,7 @@
 			title: 'Add placeholders elements',
 			subtitle: 'Add placeholders elements',
 			entity: blade.entity,
-			controller: 'addPublishingPlaceholdersStepController',
+			controller: 'virtoCommerce.marketingModule.addPublishingPlaceholdersStepController',
 			template: 'Modules/$(VirtoCommerce.Marketing)/Scripts/dynamicContent/blades/publishing/add-placeholders.tpl.html'
 		};
 		bladeNavigationService.showBlade(newBlade, $scope.blade);
@@ -85,7 +85,7 @@
 			title: 'Add content items elements',
 			subtitle: 'Add content items elements',
 			entity: blade.entity,
-			controller: 'addPublishingContentItemsStepController',
+			controller: 'virtoCommerce.marketingModule.addPublishingContentItemsStepController',
 			template: 'Modules/$(VirtoCommerce.Marketing)/Scripts/dynamicContent/blades/publishing/add-content-items.tpl.html'
 		};
 		bladeNavigationService.showBlade(newBlade, $scope.blade);

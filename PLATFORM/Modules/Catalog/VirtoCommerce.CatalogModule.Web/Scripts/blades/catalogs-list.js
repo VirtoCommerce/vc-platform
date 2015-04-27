@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.catalogModule')
-.controller('catalogsListController', ['$injector', '$rootScope', '$scope', 'catalogs', 'bladeNavigationService', 'dialogService',
+.controller('virtoCommerce.catalogModule.catalogsListController', ['$injector', '$rootScope', '$scope', 'virtoCommerce.catalogModule.catalogs', 'bladeNavigationService', 'dialogService',
 function ($injector, $rootScope, $scope, catalogs, bladeNavigationService, dialogService) {
     var selectedNode = null;
     var preventCategoryListingOnce;
@@ -78,7 +78,7 @@ function ($injector, $rootScope, $scope, catalogs, bladeNavigationService, dialo
                 subtitle: 'Browsing ' + (selectedNode != null ? '"' + selectedNode.name + '"' : ''),
                 catalogId: (selectedNode != null) ? selectedNode.id : null,
                 catalog: selectedNode,
-                controller: 'categoriesItemsListController',
+                controller: 'virtoCommerce.catalogModule.categoriesItemsListController',
                 template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/categories-items-list.tpl.html'
             };
 
@@ -129,7 +129,7 @@ function ($injector, $rootScope, $scope, catalogs, bladeNavigationService, dialo
             catalog: node,
             title: 'Data export',
             subtitle: 'Configure & start data export',
-            controller: 'exportWizardController',
+            controller: 'virtoCommerce.catalogModule.exportWizardController',
             template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/wizards/export/export-wizard.tpl.html'
         };
         bladeNavigationService.showBlade(newBlade, $scope.blade);
@@ -141,7 +141,7 @@ function ($injector, $rootScope, $scope, catalogs, bladeNavigationService, dialo
             title: title,
             id: 'importJobs',
             subtitle: 'manage import jobs',
-            controller: 'importJobListController',
+            controller: 'virtoCommerce.catalogModule.importJobListController',
             template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/import/import-job-list.tpl.html'
         };
 
@@ -155,7 +155,7 @@ function ($injector, $rootScope, $scope, catalogs, bladeNavigationService, dialo
             title: title,
             id: 'catalogEdit',
             subtitle: 'edit catalog',
-            controller: 'catalogDetailController',
+            controller: 'virtoCommerce.catalogModule.catalogDetailController',
             template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/catalog-detail.tpl.html'
         };
 
@@ -169,7 +169,7 @@ function ($injector, $rootScope, $scope, catalogs, bladeNavigationService, dialo
             title: title,
             subtitle: 'Virtual catalog details',
             id: 'catalogEdit',
-            controller: 'virtualCatalogDetailController',
+            controller: 'virtoCommerce.catalogModule.virtualCatalogDetailController',
             template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/virtual-catalog-detail.tpl.html'
         };
 
@@ -193,7 +193,7 @@ function ($injector, $rootScope, $scope, catalogs, bladeNavigationService, dialo
                     id: 'listItemChild',
                     title: 'New catalog',
                     subtitle: 'choose new catalog type',
-                    controller: 'catalogAddController',
+                    controller: 'virtoCommerce.catalogModule.catalogAddController',
                     template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/catalog-add.tpl.html'
                 };
 

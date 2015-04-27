@@ -1,17 +1,40 @@
-﻿namespace VirtoCommerce.Web.Models.FormModels
+﻿using System;
+using System.Collections.Generic;
+
+namespace VirtoCommerce.Web.Models.FormModels
 {
-    public class NewAddressFormModel : BaseAddressFormModel
+    public class NewAddressFormModel
     {
-        #region Public Properties
+        public NewAddressFormModel()
+        {
+            Address = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+        }
+
+        public IDictionary<string, string> Address { get; set; }
+
+        public string form_type { get; set; }
+
+        public string Id
+        {
+            get
+            {
+                return GetValue("id");
+            }
+            set
+            {
+                SetValue("id", value);
+            }
+        }
+
         public string Address1
         {
             get
             {
-                return this.GetValue("address1");
+                return GetValue("address1");
             }
             set
             {
-                this.SetValue("address1", value);
+                SetValue("address1", value);
             }
         }
 
@@ -19,11 +42,11 @@
         {
             get
             {
-                return this.GetValue("address2");
+                return GetValue("address2");
             }
             set
             {
-                this.SetValue("address2", value);
+                SetValue("address2", value);
             }
         }
 
@@ -31,11 +54,11 @@
         {
             get
             {
-                return this.GetValue("city");
+                return GetValue("city");
             }
             set
             {
-                this.SetValue("city", value);
+                SetValue("city", value);
             }
         }
 
@@ -43,11 +66,11 @@
         {
             get
             {
-                return this.GetValue("company");
+                return GetValue("company");
             }
             set
             {
-                this.SetValue("company", value);
+                SetValue("company", value);
             }
         }
 
@@ -55,11 +78,11 @@
         {
             get
             {
-                return this.GetValue("country");
+                return GetValue("country");
             }
             set
             {
-                this.SetValue("country", value);
+                SetValue("country", value);
             }
         }
 
@@ -67,11 +90,11 @@
         {
             get
             {
-                return this.GetValue("first_name");
+                return GetValue("first_name");
             }
             set
             {
-                this.SetValue("first_name", value);
+                SetValue("first_name", value);
             }
         }
 
@@ -79,11 +102,11 @@
         {
             get
             {
-                return this.GetValue("last_name");
+                return GetValue("last_name");
             }
             set
             {
-                this.SetValue("last_name", value);
+                SetValue("last_name", value);
             }
         }
 
@@ -91,11 +114,11 @@
         {
             get
             {
-                return this.GetValue("phone");
+                return GetValue("phone");
             }
             set
             {
-                this.SetValue("phone", value);
+                SetValue("phone", value);
             }
         }
 
@@ -103,11 +126,11 @@
         {
             get
             {
-                return this.GetValue("province");
+                return GetValue("province");
             }
             set
             {
-                this.SetValue("province", value);
+                SetValue("province", value);
             }
         }
 
@@ -115,13 +138,29 @@
         {
             get
             {
-                return this.GetValue("zip");
+                return GetValue("zip");
             }
             set
             {
-                this.SetValue("zip", value);
+                SetValue("zip", value);
             }
         }
-        #endregion
+
+        public string GetValue(string key)
+        {
+            return Address.ContainsKey(key) ? Address[key] : null;
+        }
+
+        public void SetValue(string key, string value)
+        {
+            if (Address.ContainsKey(key))
+            {
+                Address[key] = value;
+            }
+            else
+            {
+                Address.Add(key, value);
+            }
+        }
     }
 }

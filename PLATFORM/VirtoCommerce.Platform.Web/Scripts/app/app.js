@@ -21,13 +21,13 @@
 ];
 
 angular.module('platformWebApp', AppDependencies).
-  controller('appCtrl', ['$scope', '$state', 'notificationService', function ($scope, $state, notificationService) {
+  controller('appCtrl', ['$scope', '$window', '$state', 'notificationService', function ($scope, $window, $state, notificationService) {
+        $scope.platformVersion = $window.platformVersion;
+        notificationService.run();
 
-      notificationService.run();
-
-      $scope.curentStateName = function () {
-          return $state.current.name;
-      };
+        $scope.curentStateName = function () {
+            return $state.current.name;
+        };
   }])
 // Specify SignalR server URL for supporting CORS
 .factory('signalRServer', ['$location', function apiTokenFactory($location) {

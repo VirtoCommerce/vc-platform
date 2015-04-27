@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.coreModule.common')
-.factory('countries', function () {
+.factory('virtoCommerce.coreModule.common.countries', function () {
     return {
         query: function () {
             return [

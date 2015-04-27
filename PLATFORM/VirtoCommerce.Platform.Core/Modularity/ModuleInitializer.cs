@@ -57,11 +57,7 @@ namespace VirtoCommerce.Platform.Core.Modularity
             try
             {
                 moduleInstance = CreateModule(moduleInfo);
-
-                var databaseModule = moduleInstance as IDatabaseModule;
-                if (databaseModule != null)
-                    databaseModule.SetupDatabase(_options.SampleDataLevel);
-
+                moduleInstance.SetupDatabase(_options.SampleDataLevel);
                 moduleInstance.Initialize();
                 moduleInfo.ModuleInstance = moduleInstance;
             }

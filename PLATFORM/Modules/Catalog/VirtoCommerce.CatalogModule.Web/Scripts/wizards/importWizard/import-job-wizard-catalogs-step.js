@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.catalogModule')
-.controller('importJobCatalogsController', ['$scope', 'catalogs', function ($scope, catalogs)
+.controller('virtoCommerce.catalogModule.importJobCatalogsController', ['$scope', 'virtoCommerce.catalogModule.catalogs', function ($scope, catalogs)
 {
     $scope.blade.refresh = function ()
     {

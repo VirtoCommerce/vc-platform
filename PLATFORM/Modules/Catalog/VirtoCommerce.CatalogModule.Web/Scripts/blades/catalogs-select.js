@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.catalogModule')
-.controller('catalogsSelectController', ['$scope', 'catalogs', 'bladeNavigationService', function ($scope, catalogs, bladeNavigationService) {
+.controller('virtoCommerce.catalogModule.catalogsSelectController', ['$scope', 'virtoCommerce.catalogModule.catalogs', 'bladeNavigationService', function ($scope, catalogs, bladeNavigationService) {
 
     $scope.blade.refresh = function () {
         $scope.blade.isLoading = true;

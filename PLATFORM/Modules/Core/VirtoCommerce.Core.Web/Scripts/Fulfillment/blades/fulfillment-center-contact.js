@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.coreModule.fulfillment')
-.controller('fulfillmentCenterContactController', ['$scope', 'bladeNavigationService', 'countries', function ($scope, bladeNavigationService, countries) {
+.controller('virtoCommerce.coreModule.fulfillment.fulfillmentCenterContactController', ['$scope', 'bladeNavigationService', 'virtoCommerce.coreModule.common.countries', function ($scope, bladeNavigationService, countries) {
     $scope.saveChanges = function () {
         angular.copy($scope.blade.currentEntity, $scope.blade.origEntity);
         $scope.bladeClose();

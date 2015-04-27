@@ -30,36 +30,6 @@ namespace VirtoCommerce.Web.Controllers
         [AllowAnonymous]
         public ActionResult Login(string returnUrl)
         {
-            //var forms = Session["Forms"] as ICollection<SubmitForm>;
-
-            //if (forms == null)
-            //{
-            //    forms = new[]
-            //        {
-            //            new SubmitForm
-            //            {
-            //                ActionLink = VirtualPathUtility.ToAbsolute("~/account/login"),
-            //                FormType = "customer_login",
-            //                Id = "customer_login",
-            //                PasswordNeeded = true
-            //            },
-            //            new SubmitForm
-            //            {
-            //                ActionLink = VirtualPathUtility.ToAbsolute("~/account/externallogin"),
-            //                FormType = "external_login",
-            //                Id = "external_login"
-            //            },
-            //            new SubmitForm
-            //            {
-            //                ActionLink = VirtualPathUtility.ToAbsolute("~/account/forgotpassword"),
-            //                FormType = "recover_customer_password",
-            //                Id = "recover_customer_password"
-            //            }
-            //        };
-            //}
-
-            //UpdateForms(forms);
-
             return View("customers/login");
         }
 
@@ -69,7 +39,7 @@ namespace VirtoCommerce.Web.Controllers
         [AllowAnonymous]
         public async Task<ActionResult> Login(LoginFormModel formModel, string returnUrl)
         {
-            var form = Service.GetForm(formModel.form_type);
+            var form = Service.GetForm(formModel.Id);
 
             if (form != null)
             {
@@ -77,7 +47,6 @@ namespace VirtoCommerce.Web.Controllers
 
                 if (formErrors == null)
                 {
-                    form.Errors = null;
                     form.PostedSuccessfully = true;
 
                     var loginResult = await SecurityService.PasswordSingInAsync(
@@ -97,7 +66,6 @@ namespace VirtoCommerce.Web.Controllers
                         default:
                             form.Errors = new SubmitFormErrors("form", "Login attempt fails.");
                             form.PostedSuccessfully = false;
-                            UpdateForms(new[] { form });
                             return View("customers/login");
                     }
                 }
@@ -105,8 +73,6 @@ namespace VirtoCommerce.Web.Controllers
                 {
                     form.Errors = formErrors;
                     form.PostedSuccessfully = false;
-
-                    //UpdateForms(new[] { form });
 
                     return View("customers/login");
                 }
@@ -123,21 +89,6 @@ namespace VirtoCommerce.Web.Controllers
         [AllowAnonymous]
         public ActionResult Register()
         {
-            //Session["Forms"] = null;
-
-            //var forms = new[]
-            //{
-            //    new SubmitForm
-            //    {
-            //        ActionLink = VirtualPathUtility.ToAbsolute("~/account/register"),
-            //        FormType = "create_customer",
-            //        Id = "create_customer",
-            //        PasswordNeeded = true
-            //    }
-            //};
-
-            //UpdateForms(forms, true);
-
             return View("customers/register");
         }
 
@@ -147,7 +98,7 @@ namespace VirtoCommerce.Web.Controllers
         [AllowAnonymous]
         public async Task<ActionResult> Register(RegisterFormModel formModel)
         {
-            var form = Service.GetForm(formModel.form_type);
+            var form = Service.GetForm(formModel.Id);
 
             if (form != null)
             {
@@ -155,7 +106,6 @@ namespace VirtoCommerce.Web.Controllers
 
                 if (formErrors == null)
                 {
-                    form.Errors = null;
                     form.PostedSuccessfully = true;
 
                     var user = new ApplicationUser
@@ -179,24 +129,18 @@ namespace VirtoCommerce.Web.Controllers
                         var identity = SecurityService.CreateClaimsIdentity(formModel.Email);
                         AuthenticationManager.SignIn(identity);
 
-                        //Session["Forms"] = null;
-
                         return RedirectToAction("Index", "Account");
                     }
                     else
                     {
                         form.Errors = new SubmitFormErrors("form", result.Errors.First());
                         form.PostedSuccessfully = false;
-
-                        //UpdateForms(new[] { form });
                     }
                 }
                 else
                 {
                     form.Errors = formErrors;
                     form.PostedSuccessfully = false;
-
-                    //UpdateForms(new[] { form });
                 }
             }
             else
@@ -213,7 +157,7 @@ namespace VirtoCommerce.Web.Controllers
         [AllowAnonymous]
         public async Task<ActionResult> ForgotPassword(ForgotPasswordFormModel formModel)
         {
-            var form = Service.GetForm(formModel.form_type);
+            var form = Service.GetForm(formModel.Id);
 
             if (form != null)
             {
@@ -221,7 +165,6 @@ namespace VirtoCommerce.Web.Controllers
 
                 if (formErrors == null)
                 {
-                    form.Errors = null;
                     form.PostedSuccessfully = true;
 
                     var user = await SecurityService.GetUserByNameAsync(formModel.Email);
@@ -231,8 +174,6 @@ namespace VirtoCommerce.Web.Controllers
                         string callbackUrl = Url.Action("ResetPassword", "Account",
                             new { UserId = user.Id, Code = "token" }, protocol: Request.Url.Scheme);
 
-                        //UpdateForms(new[] { form });
-
                         await SecurityService.GenerateResetPasswordTokenAsync(
                             user.Id, Context.Shop.Name, callbackUrl);
                     }
@@ -240,16 +181,12 @@ namespace VirtoCommerce.Web.Controllers
                     {
                         form.Errors = new SubmitFormErrors("form", "User not found");
                         form.PostedSuccessfully = false;
-
-                        //UpdateForms(new[] { form });
                     }
                 }
                 else
                 {
                     form.Errors = formErrors;
                     form.PostedSuccessfully = false;
-
-                    //UpdateForms(new[] { form });
                 }
             }
             else
@@ -282,21 +219,6 @@ namespace VirtoCommerce.Web.Controllers
 
                 return View("error");
             }
-
-            //Session["Forms"] = null;
-
-            //var forms = new[]
-            //{
-            //    new SubmitForm
-            //    {
-            //        ActionLink = VirtualPathUtility.ToAbsolute("~/account/resetpassword"),
-            //        FormType = "reset_customer_password",
-            //        Id = "reset_customer_password",
-            //        PasswordNeeded = true
-            //    }
-            //};
-
-            //UpdateForms(forms, true);
 
             Session["ResetPassword_UserId"] = userId;
             Session["ResetPassword_Token"] = code;
@@ -341,16 +263,12 @@ namespace VirtoCommerce.Web.Controllers
                     {
                         form.Errors = new SubmitFormErrors("form", result.Errors.First());
                         form.PostedSuccessfully = false;
-
-                        //UpdateForms(new[] { form });
                     }
                 }
                 else
                 {
                     form.Errors = formErrors;
                     form.PostedSuccessfully = false;
-
-                    //UpdateForms(new[] { form });
                 }
             }
             else
@@ -442,24 +360,6 @@ namespace VirtoCommerce.Web.Controllers
                 return View("error");
             }
 
-            Session["Forms"] = null;
-
-            var forms = new[]
-            {
-                new SubmitForm
-                {
-                    ActionLink = VirtualPathUtility.ToAbsolute("~/account/externalloginconfirmation"),
-                    FormType = "confirm_external_login",
-                    Id = "confirm_external_login",
-                    Properties = {
-                        { "return_url", returnUrl },
-                        { "login_provider", loginProvider }
-                    }
-                }
-            };
-
-            UpdateForms(forms);
-
             return View("external_login_confirmation");
         }
 
@@ -469,7 +369,7 @@ namespace VirtoCommerce.Web.Controllers
         [AllowAnonymous]
         public async Task<ActionResult> ExternalLoginConfirmation(ExternalLoginConfirmationFormModel formModel)
         {
-            var form = GetForm(formModel.form_type);
+            var form = GetForm(formModel.Id);
 
             if (form != null)
             {
@@ -477,7 +377,6 @@ namespace VirtoCommerce.Web.Controllers
 
                 if (formErrors == null)
                 {
-                    form.Errors = null;
                     form.PostedSuccessfully = true;
 
                     var loginInfo = await AuthenticationManager.GetExternalLoginInfoAsync();
@@ -503,9 +402,7 @@ namespace VirtoCommerce.Web.Controllers
 
                     if (result.Succeeded)
                     {
-                        form.Errors = null;
                         form.PostedSuccessfully = true;
-                        UpdateForms(new[] { form });
 
                         user = await SecurityService.GetUserByNameAsync(formModel.Email);
 
@@ -521,7 +418,6 @@ namespace VirtoCommerce.Web.Controllers
                     {
                         form.Errors = new SubmitFormErrors("form", result.Errors.First());
                         form.PostedSuccessfully = false;
-                        UpdateForms(new[] { form });
 
                         return View("external_login_confirmation");
                     }
@@ -530,8 +426,6 @@ namespace VirtoCommerce.Web.Controllers
                 {
                     form.Errors = formErrors;
                     form.PostedSuccessfully = false;
-
-                    UpdateForms(new[] { form });
 
                     return View("external_login_confirmation");
                 }
@@ -587,68 +481,17 @@ namespace VirtoCommerce.Web.Controllers
         [HttpGet]
         public ActionResult Addresses()
         {
-            var forms = new List<SubmitForm>();
-
             foreach (var address in this.Context.Customer.Addresses)
             {
-                var addressForm = new SubmitForm();
-
-                addressForm.ActionLink = "/Account/EditAddress?id=" + address.Id;
-                addressForm.Id = address.Id;
+                var addressForm = new AddressForm();
+                addressForm.FormContext = address;
                 addressForm.FormType = "customer_address";
+                addressForm.Id = address.Id;
 
-                addressForm.Properties["address1"] = address.Address1;
-                addressForm.Properties["address2"] = address.Address2;
-                addressForm.Properties["city"] = address.City;
-                addressForm.Properties["company"] = address.Company;
-                addressForm.Properties["country"] = address.Country;
-                addressForm.Properties["country_code"] = address.CountryCode;
-                addressForm.Properties["first_name"] = address.FirstName;
-                addressForm.Properties["id"] = address.Id;
-                addressForm.Properties["last_name"] = address.LastName;
-                addressForm.Properties["phone"] = address.Phone;
-                addressForm.Properties["province"] = address.Province;
-                addressForm.Properties["province_code"] = address.ProvinceCode;
-                addressForm.Properties["zip"] = address.Zip;
-
-                forms.Add(addressForm);
+                Context.Forms.Add(addressForm);
             }
 
-            var newAddress = new SubmitForm
-            {
-                ActionLink = "/Account/NewAddress",
-                Id = "address_form_new",
-                FormType = "customer_address"
-            };
-
-            forms.Add(newAddress);
-
-            //UpdateForms(forms.ToArray());
-
-            return this.View("customers/addresses");
-        }
-
-        //
-        // POST: /Account/NewAddress
-        [HttpPost]
-        public async Task<ActionResult> NewAddress(NewAddressFormModel formModel)
-        {
-            var form = GetForm(formModel.form_type);
-
-            //if (!this.ModelState.IsValid)
-            //{
-            //    var errors = this.ModelState.Values.SelectMany(v => v.Errors);
-            //    form.Errors = new[] { errors.Select(e => e.ErrorMessage).FirstOrDefault() };
-
-            //    return this.View("customers/addresses");
-            //}
-
-            var customer = this.Context.Customer;
-            customer.Addresses.Add(formModel.AsWebModel());
-
-            await this.CustomerService.UpdateCustomerAsync(customer);
-
-            return this.View("customers/addresses");
+            return View("customers/addresses");
         }
 
         //
@@ -658,31 +501,40 @@ namespace VirtoCommerce.Web.Controllers
         {
             var form = GetForm(formModel.form_type);
 
-            //if (!this.ModelState.IsValid)
-            //{
-            //    var errors = this.ModelState.Values.SelectMany(v => v.Errors);
-            //    form.Errors = new[] { errors.Select(e => e.ErrorMessage).FirstOrDefault() };
-
-            //    return this.View("customers/addresses");
-            //}
-
             var customer = this.Context.Customer;
             var customerAddress = customer.Addresses.FirstOrDefault(a => a.Id == id);
 
-            if (customerAddress != null) // update
+            if (customerAddress != null)
             {
                 customer.Addresses.Remove(customerAddress);
                 customer.Addresses.Add(formModel.AsWebModel());
-
-                await this.CustomerService.UpdateCustomerAsync(customer);
             }
-            else // add new
+            else
             {
                 customer.Addresses.Add(formModel.AsWebModel());
-                await this.CustomerService.UpdateCustomerAsync(customer);
             }
 
+            await this.CustomerService.UpdateCustomerAsync(customer);
+
             return RedirectToAction("Addresses", "Account");
+        }
+
+        //
+        // POST: /Account/Addresses
+        [HttpPost]
+        public async Task<ActionResult> Addresses(string id)
+        {
+            var address = Context.Customer.Addresses.FirstOrDefault(a => a.Id == id);
+
+            if (address != null)
+            {
+                Context.Customer.Addresses.Remove(address);
+                await CustomerService.UpdateCustomerAsync(Context.Customer);
+
+                return View("customers/addresses");
+            }
+
+            return View("error");
         }
 
         [HttpGet]

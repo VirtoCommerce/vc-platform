@@ -14,6 +14,14 @@ namespace VirtoCommerce.Web.Models.FormModels
             this.Context = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
         }
 
+        public string Id
+        {
+            get
+            {
+                return "external_login";
+            }
+        }
+
         public string AuthenticationType
         {
             get

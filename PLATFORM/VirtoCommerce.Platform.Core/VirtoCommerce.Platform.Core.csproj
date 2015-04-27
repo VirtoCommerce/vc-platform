@@ -117,7 +117,6 @@
     <Compile Include="Modularity\Exceptions\DuplicateModuleException.cs" />
     <Compile Include="Modularity\FileModuleTypeLoader.cs" />
     <Compile Include="Modularity\IAssemblyResolver.cs" />
-    <Compile Include="Modularity\IDatabaseModule.cs" />
     <Compile Include="Modularity\IModule.cs" />
     <Compile Include="Modularity\IModuleCatalog.cs" />
     <Compile Include="Modularity\IModuleCatalogItem.cs" />
@@ -127,7 +126,6 @@
     <Compile Include="Modularity\IModuleManifestProvider.cs" />
     <Compile Include="Modularity\IModuleTypeLoader.cs" />
     <Compile Include="Modularity\InitializationMode.cs" />
-    <Compile Include="Modularity\IPostInitialize.cs" />
     <Compile Include="Modularity\LoadModuleCompletedEventArgs.cs" />
     <Compile Include="Modularity\Exceptions\ModularityException.cs" />
     <Compile Include="Modularity\ManifestBundleDirectory.cs" />
@@ -175,9 +173,9 @@
     <Compile Include="Security\CheckPermissionAttribute.cs" />
     <Compile Include="Security\IPermissionService.cs" />
     <Compile Include="Security\IRoleManagementService.cs" />
-    <Compile Include="Security\PermissionDescriptor.cs" />
+    <Compile Include="Security\Permission.cs" />
     <Compile Include="Security\PredefinedPermissions.cs" />
-    <Compile Include="Security\RoleDescriptor.cs" />
+    <Compile Include="Security\Role.cs" />
     <Compile Include="Security\RoleSearchRequest.cs" />
     <Compile Include="Security\RoleSearchResponse.cs" />
     <Compile Include="Settings\ISettingsManager.cs" />

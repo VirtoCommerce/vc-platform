@@ -410,9 +410,9 @@ namespace VirtoCommerce.Web.Models.Services
             return form;
         }
 
-        public SubmitForm[] GetForms()
+        public ICollection<SubmitForm> GetForms()
         {
-            var allForms = new[]
+            var allForms = new List<SubmitForm>
                            {
                                new SubmitForm
                                {
@@ -439,7 +439,8 @@ namespace VirtoCommerce.Web.Models.Services
                                 new AddressForm
                                 {
                                     FormType = "customer_address",
-                                    ActionLink = "/Account/NewAddress",
+                                    Id = "new",
+                                    ActionLink = "/Account/NewAddress"
                                 },
                                new SubmitForm
                                {

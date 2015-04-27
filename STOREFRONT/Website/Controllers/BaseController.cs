@@ -63,57 +63,11 @@ namespace VirtoCommerce.Web.Controllers
             return base.View(viewName, masterName, model ?? this.Context);
         }
 
-        protected void UpdateForms(IEnumerable<SubmitForm> forms, bool shouldRemoveExisting = false)
-        {
-            if (shouldRemoveExisting)
-            {
-                Session.Remove("Forms");
-            }
-
-            var sessionForms = Session["Forms"] as ICollection<SubmitForm>;
-
-            if (sessionForms == null)
-            {
-                Session.Add("Forms", forms);
-                Context.Forms = forms.ToArray();
-            }
-            else
-            {
-                var updatedForms = new List<SubmitForm>();
-
-                foreach (var sessionForm in sessionForms)
-                {
-                    var updatingForm = forms.FirstOrDefault(f => f.Id == sessionForm.Id);
-
-                    if (updatingForm != null)
-                    {
-                        updatedForms.Add(updatingForm);
-                    }
-                    else
-                    {
-                        sessionForm.Errors = null;
-                        updatedForms.Add(sessionForm);
-                    }
-                }
-
-                Session["Forms"] = updatedForms;
-                Context.Forms = updatedForms.ToArray();
-            }
-        }
-
         protected SubmitForm GetForm(string formId)
         {
             SubmitForm form = null;
 
-            if (Session["Forms"] != null)
-            {
-                var forms = Session["Forms"] as ICollection<SubmitForm>;
-
-                if (forms != null)
-                {
-                    form = forms.FirstOrDefault(f => f.Id == formId);
-                }
-            }
+            form = SiteContext.Current.Forms.FirstOrDefault(f => f.Id == formId);
 
             return form;
         }
@@ -124,15 +78,15 @@ namespace VirtoCommerce.Web.Controllers
 
             if (!modelState.IsValid)
             {
-                var errorsDisctionary = new Dictionary<string, string>();
+                var errorsDictionary = new Dictionary<string, string>();
 
                 foreach (var error in modelState.Where(f => f.Value.Errors.Count > 0))
                 {
                     var errorMessage = error.Value.Errors.First();
-                    errorsDisctionary.Add(error.Key, errorMessage.ErrorMessage);
+                    errorsDictionary.Add(error.Key, errorMessage.ErrorMessage);
                 }
 
-                formErrors = new SubmitFormErrors(errorsDisctionary);
+                formErrors = new SubmitFormErrors(errorsDictionary);
             }
 
             return formErrors;

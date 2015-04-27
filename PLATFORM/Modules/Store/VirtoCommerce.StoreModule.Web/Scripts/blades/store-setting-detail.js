@@ -1,5 +1,5 @@
-﻿angular.module('virtoCommerce.storeModule.blades')
-.controller('storeSettingDetailController', ['$scope', 'dialogService', function ($scope, dialogService) {
+﻿angular.module('virtoCommerce.storeModule')
+.controller('virtoCommerce.storeModule.storeSettingDetailController', ['$scope', 'dialogService', function ($scope, dialogService) {
     $scope.types = ["Boolean", "ShortText", "Xml"];
 
     function initializeBlade(data) {

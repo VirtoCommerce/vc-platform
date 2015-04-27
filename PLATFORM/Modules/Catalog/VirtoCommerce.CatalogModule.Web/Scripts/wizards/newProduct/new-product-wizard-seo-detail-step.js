@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.catalogModule')
-.controller('newProductSeoDetailController', ['$scope', '$http', function ($scope, $http)
+.controller('virtoCommerce.catalogModule.newProductSeoDetailController', ['$scope', '$http', function ($scope, $http)
 {
     $scope.wizardBlade = $scope.blade.parentBlade;
 

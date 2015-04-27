@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.orderModule')
-.controller('operationDetailController', ['$scope', 'dialogService', 'bladeNavigationService', 'order_res_customerOrders', 'order_res_fulfilmentCenters', 'order_res_stores', 'order_res_paymentGateways', 'objCompareService', "settings",
+.controller('virtoCommerce.orderModule.operationDetailController', ['$scope', 'dialogService', 'bladeNavigationService', 'virtoCommerce.orderModule.order_res_customerOrders', 'virtoCommerce.orderModule.order_res_fulfilmentCenters', 'virtoCommerce.orderModule.order_res_stores', 'virtoCommerce.orderModule.order_res_paymentGateways', 'objCompareService', 'settings',
 			function ($scope, dialogService, bladeNavigationService, order_res_customerOrders, order_res_fulfilmentCenters, order_res_stores, order_res_paymentGateways, objCompareService, settings) {
 
 				$scope.blade.refresh = function (noRefresh) {
@@ -69,7 +69,7 @@
 					var newBlade = {
 						id: 'fulfillmentCenterList',
 						parentWidget: $scope.blade,
-						controller: 'fulfillmentListController',
+						controller: 'virtoCommerce.coreModule.fulfillment.fulfillmentListController',
 						template: 'Modules/$(VirtoCommerce.Core)/Scripts/fulfillment/blades/fulfillment-center-list.tpl.html'
 					};
 					bladeNavigationService.showBlade(newBlade, $scope.blade);
@@ -101,7 +101,7 @@
 								currentEntity: $scope.blade.currentEntity,
 								title: "New operation",
 								subtitle: 'Select operation type',
-								controller: 'newOperationWizardController',
+								controller: 'virtoCommerce.orderModule.newOperationWizardController',
 								template: 'Modules/$(VirtoCommerce.Orders)/Scripts/wizards/newOperation/newOperation-wizard.tpl.html'
 							};
 							bladeNavigationService.showBlade(newBlade, $scope.blade);
@@ -230,7 +230,7 @@
 				$scope.blade.refresh($scope.blade.isNew);
 
 			}])
-.controller('confirmCancelDialogController', ['$scope', '$modalInstance', function ($scope, $modalInstance, dialog) {
+.controller('virtoCommerce.orderModule.confirmCancelDialogController', ['$scope', '$modalInstance', function ($scope, $modalInstance, dialog) {
 
 	$scope.cancelReason = undefined;
 	$scope.yes = function () {

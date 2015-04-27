@@ -52,7 +52,7 @@ namespace VirtoCommerce.Web.Models
             get
             {
                 if(this.FormContext is CustomerAddress) // address
-                    return String.Format("address_form_{0}", (this.FormContext as CustomerAddress).Id);
+                    return String.Format("{0}", (this.FormContext as CustomerAddress).Id);
 
                 return base.Id;
             }

@@ -12,7 +12,7 @@ using VirtoCommerce.Platform.Core.Modularity;
 
 namespace VirtoCommerce.CartModule.Web
 {
-    public class Module : IModule, IDatabaseModule
+    public class Module : IModule
     {
         private readonly IUnityContainer _container;
 
@@ -22,6 +22,16 @@ namespace VirtoCommerce.CartModule.Web
         }
 
         #region IModule Members
+
+        public void SetupDatabase(SampleDataLevel sampleDataLevel)
+        {
+            using (var context = new CartRepositoryImpl())
+            {
+                var initializer = new SetupDatabaseInitializer<CartRepositoryImpl, VirtoCommerce.CartModule.Data.Migrations.Configuration>();
+                initializer.InitializeDatabase(context);
+            }
+
+        }
 
         public void Initialize()
         {
@@ -37,18 +47,8 @@ namespace VirtoCommerce.CartModule.Web
             _container.RegisterType<IShoppingCartSearchService, ShoppingCartSearchServiceImpl>();
         }
 
-        #endregion
-
-        #region IDatabaseModule Members
-
-        public void SetupDatabase(SampleDataLevel sampleDataLevel)
+        public void PostInitialize()
         {
-            using (var context = new CartRepositoryImpl())
-            {
-                var initializer = new SetupDatabaseInitializer<CartRepositoryImpl, VirtoCommerce.CartModule.Data.Migrations.Configuration>();
-                initializer.InitializeDatabase(context);
-            }
-
         }
 
         #endregion

@@ -98,7 +98,6 @@ namespace VirtoCommerce.Platform.Web
 
             var postInitializeModules = moduleCatalog.CompleteListWithDependencies(moduleCatalog.Modules)
                 .Select(m => m.ModuleInstance)
-                .OfType<IPostInitialize>()
                 .ToArray();
 
             foreach (var module in postInitializeModules)

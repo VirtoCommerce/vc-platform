@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.catalogModule')
-.controller('catalogPropertyController', ['$scope', 'catalogs', 'properties', 'bladeNavigationService', 'dialogService', function ($scope, catalogs, properties, bladeNavigationService, dialogService) {
+.controller('virtoCommerce.catalogModule.catalogPropertyController', ['$scope', 'virtoCommerce.catalogModule.catalogs', 'virtoCommerce.catalogModule.properties', 'bladeNavigationService', 'dialogService', function ($scope, catalogs, properties, bladeNavigationService, dialogService) {
 	$scope.blade.origEntity = {};
 
 	$scope.blade.refresh = function (parentRefresh) {
@@ -73,7 +73,7 @@
 			catalogId: $scope.blade.currentEntity.id,
 			title: 'Edit catalog property',
 			subtitle: 'enter property information',
-			controller: 'propertyDetailController',
+			controller: 'virtoCommerce.catalogModule.propertyDetailController',
 			template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/property-detail.tpl.html'
 		};
 
@@ -118,7 +118,7 @@
 		  			catalogId: $scope.blade.currentEntity.id,
 		  			title: 'New catalog property',
 		  			subtitle: 'enter property information',
-		  			controller: 'propertyDetailController',
+		  			controller: 'virtoCommerce.catalogModule.propertyDetailController',
 		  			template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/property-detail.tpl.html'
 		  		};
 

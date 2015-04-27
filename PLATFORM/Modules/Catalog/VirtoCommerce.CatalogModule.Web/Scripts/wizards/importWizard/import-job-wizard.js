@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.catalogModule')
-.controller('importJobWizardController', ['$scope', 'bladeNavigationService', 'dialogService', 'imports', 'FileUploader', 'notificationService', function ($scope, bladeNavigationService, dialogService, imports, FileUploader, notificationService) {
+.controller('virtoCommerce.catalogModule.importJobWizardController', ['$scope', 'bladeNavigationService', 'dialogService', 'virtoCommerce.catalogModule.imports', 'FileUploader', 'notificationService', function ($scope, bladeNavigationService, dialogService, imports, FileUploader, notificationService) {
 
     $scope.blade.refresh = function () {
         if ($scope.blade.isNew) {
@@ -82,7 +82,7 @@
                         id: "importJobImporters",
                         title: $scope.blade.item.name,
                         subtitle: 'Import types',
-                        controller: 'importJobImportersController',
+                        controller: 'virtoCommerce.catalogModule.importJobImportersController',
                         template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/wizards/importWizard/import-job-wizard-importers-step.tpl.html'
                     };
                     break;
@@ -92,7 +92,7 @@
                         item: $scope.blade.item,
                         title: $scope.blade.item.name,
                         subtitle: 'Catalogs',
-                        controller: 'importJobCatalogsController',
+                        controller: 'virtoCommerce.catalogModule.importJobCatalogsController',
                         template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/wizards/importWizard/import-job-wizard-catalogs-step.tpl.html'
                     };
                     break;
@@ -102,7 +102,7 @@
                         item: $scope.blade.item,
                         title: $scope.blade.item.name,
                         subtitle: 'Import settings',
-                        controller: 'importJobSettingsController',
+                        controller: 'virtoCommerce.catalogModule.importJobSettingsController',
                         template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/wizards/importWizard/import-job-wizard-settings-step.tpl.html'
                     };
                     break;
@@ -113,7 +113,7 @@
                         isNew: $scope.blade.isNew,
                         title: $scope.blade.item.name,
                         subtitle: 'Column mapping',
-                        controller: 'importJobMappingController',
+                        controller: 'virtoCommerce.catalogModule.importJobMappingController',
                         template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/wizards/importWizard/import-job-wizard-mapping-step.tpl.html'
                     };
                     break;

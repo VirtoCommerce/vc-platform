@@ -1,7 +1,5 @@
-﻿angular.module('virtoCommerce.inventoryModule.blades', [
-    'virtoCommerce.inventoryModule.resources'
-])
-.controller('inventoryFulfillmentcentersListController', ['$scope', 'bladeNavigationService', function ($scope, bladeNavigationService) {
+﻿angular.module('virtoCommerce.inventoryModule')
+.controller('virtoCommerce.inventoryModule.inventoryFulfillmentcentersListController', ['$scope', 'bladeNavigationService', function ($scope, bladeNavigationService) {
     $scope.selectedItem = null;
     var openFirstEntityDetailsOnce = _.once(function () {
         if ($scope.blade.currentEntities && $scope.blade.currentEntities.length > 0)
@@ -28,7 +26,7 @@
             data: data,
             title: data.fulfillmentCenter.name,
             subtitle: 'Edit Inventory',
-            controller: 'inventoryDetailController',
+            controller: 'virtoCommerce.inventoryModule.inventoryDetailController',
             template: 'Modules/$(VirtoCommerce.Inventory)/Scripts/blades/inventory-detail.tpl.html'
         };
         bladeNavigationService.showBlade(newBlade, $scope.blade);

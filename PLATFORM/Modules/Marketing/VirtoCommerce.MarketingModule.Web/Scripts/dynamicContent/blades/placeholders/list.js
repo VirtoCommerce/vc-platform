@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.marketingModule')
-.controller('placeholdersDynamicContentListController', ['$scope', 'marketing_dynamicContents_res_search', 'marketing_dynamicContents_res_folders', 'bladeNavigationService', function ($scope, marketing_dynamicContents_res_search, marketing_dynamicContents_res_folders, bladeNavigationService) {
+.controller('virtoCommerce.marketingModule.placeholdersDynamicContentListController', ['$scope', 'virtoCommerce.marketingModule.dynamicContent.search', 'virtoCommerce.marketingModule.dynamicContent.folders', 'bladeNavigationService', function ($scope, marketing_dynamicContents_res_search, marketing_dynamicContents_res_folders, bladeNavigationService) {
 	var blade = $scope.blade;
 	blade.choosenFolder = 'ContentPlace';
 	blade.currentEntity = undefined;
@@ -23,7 +23,7 @@
 			title: 'New placeholders element',
 			subtitle: 'Add new placeholders element',
 			choosenFolder: blade.choosenFolder,
-			controller: 'addPlaceholderElementController',
+			controller: 'virtoCommerce.marketingModule.addPlaceholderElementController',
 			template: 'Modules/$(VirtoCommerce.Marketing)/Scripts/dynamicContent/blades/placeholders/add.tpl.html'
 		};
 		bladeNavigationService.showBlade(newBlade, $scope.blade);
@@ -38,7 +38,7 @@
 			subtitle: 'Add new placeholders folder',
 			entity: data,
 			isNew: true,
-			controller: 'addFolderPlaceholderController',
+			controller: 'virtoCommerce.marketingModule.addFolderPlaceholderController',
 			template: 'Modules/$(VirtoCommerce.Marketing)/Scripts/dynamicContent/blades/placeholders/folder-details.tpl.html'
 		};
 		bladeNavigationService.showBlade(newBlade, $scope.blade);
@@ -53,7 +53,7 @@
 			subtitle: 'Edit placeholders folder',
 			entity: data,
 			isNew: false,
-			controller: 'addFolderPlaceholderController',
+			controller: 'virtoCommerce.marketingModule.addFolderPlaceholderController',
 			template: 'Modules/$(VirtoCommerce.Marketing)/Scripts/dynamicContent/blades/placeholders/folder-details.tpl.html'
 		};
 		bladeNavigationService.showBlade(newBlade, $scope.blade);
@@ -68,7 +68,7 @@
 			subtitle: 'Add new placeholders element',
 			entity: data,
 			isNew: true,
-			controller: 'addPlaceholderController',
+			controller: 'virtoCommerce.marketingModule.addPlaceholderController',
 			template: 'Modules/$(VirtoCommerce.Marketing)/Scripts/dynamicContent/blades/placeholders/placeholder-details.tpl.html'
 		};
 		bladeNavigationService.showBlade(newBlade, $scope.blade);
@@ -83,7 +83,7 @@
 			subtitle: 'Edit placeholders element',
 			entity: data,
 			isNew: false,
-			controller: 'addPlaceholderController',
+			controller: 'virtoCommerce.marketingModule.addPlaceholderController',
 			template: 'Modules/$(VirtoCommerce.Marketing)/Scripts/dynamicContent/blades/placeholders/placeholder-details.tpl.html'
 		};
 		bladeNavigationService.showBlade(newBlade, $scope.blade);

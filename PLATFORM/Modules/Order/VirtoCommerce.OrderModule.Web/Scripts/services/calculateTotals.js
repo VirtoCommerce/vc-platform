@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.orderModule')
-.factory('calculateTotalsService', [function () {
+.factory('virtoCommerce.orderModule.calculateTotalsService', [function () {
 
 	function recalculateTotals(operation)
 	{

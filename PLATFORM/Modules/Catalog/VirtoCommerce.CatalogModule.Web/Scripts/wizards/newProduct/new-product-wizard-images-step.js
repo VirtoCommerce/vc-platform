@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.catalogModule')
-.controller('newProductWizardImagesController', ['$scope', '$filter', 'FileUploader', function ($scope, $filter, FileUploader)
+.controller('virtoCommerce.catalogModule.newProductWizardImagesController', ['$scope', '$filter', 'FileUploader', function ($scope, $filter, FileUploader)
 {
     $scope.blade.isLoading = false;
     $scope.item = angular.copy($scope.blade.item);

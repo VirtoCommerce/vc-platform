@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.catalogModule')
-.factory('imports', ['$resource', function ($resource) {
+.factory('virtoCommerce.catalogModule.imports', ['$resource', function ($resource) {
 
 	return $resource('api/catalog/importjobs/:id', { id: '@id' }, {
 		remove: { method: 'DELETE', url: 'api/catalog/importjobs' },

@@ -26,6 +26,6 @@ namespace VirtoCommerce.Platform.Web.Model.Security
 
         public string Password { get; set; }
 
-        public new RoleDescriptor[] Roles { get; set; }
+        public new Role[] Roles { get; set; }
     }
 }

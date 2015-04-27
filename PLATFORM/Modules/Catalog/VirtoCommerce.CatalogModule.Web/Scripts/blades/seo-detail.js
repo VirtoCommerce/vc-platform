@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.catalogModule')
-.controller('seoDetailController', ['$scope', 'categories', 'items', 'dialogService', 'bladeNavigationService', function ($scope, categories, items, dialogService, bladeNavigationService) {
+.controller('virtoCommerce.catalogModule.seoDetailController', ['$scope', 'virtoCommerce.catalogModule.categories', 'virtoCommerce.catalogModule.items', 'dialogService', 'bladeNavigationService', function ($scope, categories, items, dialogService, bladeNavigationService) {
     $scope.blade.origItem = {};
 
     $scope.blade.refresh = function (parentRefresh) {

@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.catalogModule')
-.controller('exportTypesController', ['$scope', function ($scope) {
+.controller('virtoCommerce.catalogModule.exportTypesController', ['$scope', function ($scope) {
     $scope.blade.refresh = function () {
         $scope.list = [
             { name: "Product" },

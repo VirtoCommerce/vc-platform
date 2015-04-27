@@ -1,5 +1,5 @@
-﻿angular.module('virtoCommerce.customerModule.blades')
-.controller('memberAddController', ['$scope', 'bladeNavigationService', function ($scope, bladeNavigationService) {
+﻿angular.module('virtoCommerce.customerModule')
+.controller('virtoCommerce.customerModule.memberAddController', ['$scope', 'bladeNavigationService', function ($scope, bladeNavigationService) {
     var pb = $scope.blade.parentBlade;
 
     $scope.addOrganization = function () {

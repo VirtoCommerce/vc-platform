@@ -31,7 +31,7 @@ namespace VirtoCommerce.Web.Models.Tags
             if (syntaxMatch.Success)
             {
                 this._templateName = syntaxMatch.Groups[1].Value;
-                if(syntaxMatch.Groups.Count == 3)
+                if (syntaxMatch.Groups.Count == 3)
                     _formVariableName = syntaxMatch.Groups[2].Value;
             }
             else
@@ -52,18 +52,29 @@ namespace VirtoCommerce.Web.Models.Tags
                 contextFormObject = context[this._formVariableName];
             }
 
-            var forms = context["Forms"] as SubmitForm[];
+            var forms = context["Forms"] as List<SubmitForm>;
 
-            var form = forms.SingleOrDefault(f => f.FormType == template);
+            //var form = forms.SingleOrDefault(f => f.FormType == template);
+
+            var form = forms.FirstOrDefault(f => f.FormType == template);
 
             if (form != null)
             {
                 form.FormContext = contextFormObject;
             }
 
-            result.WriteLine(
-                "<form accept-charset=\"UTF-8\" action=\"{0}\" method=\"post\" id=\"{1}\">",
-                form == null ? "" : form.ActionLink, form == null ? "" : form.Id);
+            if (form is AddressForm)
+            {
+                result.WriteLine(
+                    "<form accept-charset=\"UTF-8\" action=\"{0}\" method=\"post\" id=\"{1}\">",
+                    form == null ? "" : form.ActionLink, "address_form_" + form.Id);
+            }
+            else
+            {
+                result.WriteLine(
+                    "<form accept-charset=\"UTF-8\" action=\"{0}\" method=\"post\" id=\"{1}\">",
+                    form == null ? "" : form.ActionLink, form == null ? "" : form.Id);
+            }
 
             result.WriteLine("<input name=\"form_type\" type=\"hidden\" value=\"{0}\" />", template);
 

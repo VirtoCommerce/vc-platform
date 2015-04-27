@@ -103,7 +103,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Scripts\blades\!blades.js" />
     <Content Include="Scripts\blades\member-add.js" />
     <Content Include="Scripts\blades\member-add.tpl.html" />
     <Content Include="Scripts\blades\organization-detail.tpl.html" />
@@ -125,10 +124,10 @@
     <Content Include="Scripts\customer.js" />
     <Content Include="Scripts\widgets\memberPhonesWidget.js" />
     <Content Include="Scripts\widgets\memberEmailsWidget.js" />
-    <Content Include="Scripts\widgets\!memberAddressesWidget.js" />
+    <Content Include="Scripts\widgets\memberAddressesWidget.js" />
     <Content Include="Scripts\widgets\memberPhonesWidget.tpl.html" />
     <Content Include="Scripts\widgets\memberEmailsWidget.tpl.html" />
-    <Content Include="Scripts\widgets\!memberAddressesWidget.tpl.html" />
+    <Content Include="Scripts\widgets\memberAddressesWidget.tpl.html" />
     <Content Include="Scripts\widgets\memberPropertyWidget.js" />
     <Content Include="Scripts\widgets\memberPropertyWidget.tpl.html" />
     <Content Include="Web.config" />

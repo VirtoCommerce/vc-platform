@@ -1,5 +1,5 @@
-﻿angular.module('virtoCommerce.coreModule')
-.controller('coreAddressListController', ['$scope', 'bladeNavigationService', function ($scope, bladeNavigationService) {
+﻿angular.module('virtoCommerce.coreModule.common')
+.controller('virtoCommerce.coreModule.common.coreAddressListController', ['$scope', 'bladeNavigationService', function ($scope, bladeNavigationService) {
 	$scope.selectedItem = null;
 
 	$scope.openDetailBlade = function (address) {
@@ -13,7 +13,7 @@
 			currentEntity: address,
 			title: $scope.blade.title,
 			subtitle: 'Edit address',
-			controller: 'coreAddressDetailController',
+			controller: 'virtoCommerce.coreModule.common.coreAddressDetailController',
 			confirmChangesFn: function(address)
 			{
 				if(address.isNew)

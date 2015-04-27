@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.catalogModule')
-.controller('associationGroupNewController', ['$scope', function ($scope) {
+.controller('virtoCommerce.catalogModule.associationGroupNewController', ['$scope', function ($scope) {
 
     $scope.setForm = function (form) {
         $scope.formScope = form;

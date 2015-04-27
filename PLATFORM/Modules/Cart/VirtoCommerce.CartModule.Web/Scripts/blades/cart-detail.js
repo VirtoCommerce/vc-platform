@@ -1,4 +1,4 @@
-﻿angular.module('virtoCommerce.cartModule.blades')
+﻿angular.module('virtoCommerce.cartModule')
 .controller('cartDetailController', ['$scope', 'dialogService', 'bladeNavigationService', 'carts', function ($scope, dialogService, bladeNavigationService, carts) {
 
     $scope.blade.refresh = function () {
