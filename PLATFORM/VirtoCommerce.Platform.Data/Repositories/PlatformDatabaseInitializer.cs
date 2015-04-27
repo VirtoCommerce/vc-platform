@@ -1,14 +1,16 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Data.Infrastructure;
 using VirtoCommerce.Platform.Data.Model;
+using VirtoCommerce.Platform.Data.Security;
 
 namespace VirtoCommerce.Platform.Data.Repositories
 {
     public class PlatformDatabaseInitializer : SetupDatabaseInitializer<PlatformRepository, Migrations.Configuration>
     {
+        private const string _roleApiClient = "API Client";
+
         protected override void Seed(PlatformRepository context)
         {
             base.Seed(context);
@@ -18,7 +20,35 @@ namespace VirtoCommerce.Platform.Data.Repositories
             CreateAccounts(context);
         }
 
-        private static void CreateAccounts(PlatformRepository repository)
+
+        private static void CreatePermissions(IRepository repository)
+        {
+            var permissions = PredefinedPermissions.Permissions.Select(p => p.ToDataModel()).ToList();
+            permissions.ForEach(repository.Add);
+            repository.UnitOfWork.Commit();
+        }
+
+        private static void CreateRoles(IRepository repository)
+        {
+            var roles = new[]
+            {
+                new Role
+                {
+                    Name = _roleApiClient,
+                    Description = "Allows to make calls to Web API methods.",
+                    Permissions = new []
+                    {
+                        new Permission { Id = PredefinedPermissions.SecurityCallApi }
+                    },
+                },
+            }
+            .Select(r => r.ToDataModel()).ToList();
+
+            roles.ForEach(repository.Add);
+            repository.UnitOfWork.Commit();
+        }
+
+        private static void CreateAccounts(IPlatformRepository repository)
         {
             repository.Add(new AccountEntity
             {
@@ -38,7 +68,7 @@ namespace VirtoCommerce.Platform.Data.Repositories
             frontendAccount.RoleAssignments.Add(new RoleAssignmentEntity
             {
                 AccountId = frontendAccount.Id,
-                RoleId = repository.Roles.Where(r => r.Name == PredefinedPermissions.RoleApiClient).Select(r => r.Id).FirstOrDefault(),
+                RoleId = repository.Roles.Where(r => r.Name == _roleApiClient).Select(r => r.Id).FirstOrDefault(),
             });
             frontendAccount.ApiAccounts.Add(new ApiAccountEntity
             {
@@ -50,30 +80,6 @@ namespace VirtoCommerce.Platform.Data.Repositories
             repository.Add(frontendAccount);
 
             repository.UnitOfWork.Commit();
-        }
-
-        private static void CreatePermissions(IRepository repository)
-        {
-            repository.Add(new PermissionEntity { Id = PredefinedPermissions.SecurityCallApi, Name = PredefinedPermissions.NameSecurityCallApi });
-            repository.UnitOfWork.Commit();
-        }
-
-        private static void CreateRoles(IPlatformRepository repository)
-        {
-            var allPermissions = repository.Permissions.ToArray();
-
-            CreateRole(repository, allPermissions, PredefinedPermissions.RoleApiClient, new[] { PredefinedPermissions.SecurityCallApi });
-
-            repository.UnitOfWork.Commit();
-        }
-
-        private static void CreateRole(IRepository repository, IEnumerable<PermissionEntity> allPermissions, string name, ICollection<string> permissionList)
-        {
-            var role = new RoleEntity { Name = name };
-
-            var rolePermissions = allPermissions.Where(p => permissionList.Contains(p.Id)).ToList();
-            rolePermissions.ForEach(p => role.RolePermissions.Add(new RolePermissionEntity { PermissionId = p.Id, Role = role }));
-            repository.Add(role);
         }
     }
 }

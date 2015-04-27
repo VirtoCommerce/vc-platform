@@ -94,7 +94,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
         [HttpGet]
         [Route("permissions")]
-        [ResponseType(typeof(PermissionDescriptor[]))]
+        [ResponseType(typeof(Permission[]))]
         public IHttpActionResult GetPermissions()
         {
             var result = _permissionService.GetAllPermissions()
@@ -115,7 +115,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
         [HttpGet]
         [Route("roles/{roleId}")]
-        [ResponseType(typeof(RoleDescriptor))]
+        [ResponseType(typeof(Role))]
         public IHttpActionResult GetRole(string roleId)
         {
             var result = _roleService.GetRole(roleId);
@@ -129,7 +129,6 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         /// <returns></returns>
         [HttpDelete]
         [Route("roles")]
-        [ResponseType(typeof(RoleDescriptor))]
         public IHttpActionResult DeleteRoles([FromUri(Name = "ids")] string[] roleIds)
         {
             if (roleIds != null)
@@ -145,8 +144,8 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
         [HttpPut]
         [Route("roles")]
-        [ResponseType(typeof(RoleDescriptor))]
-        public IHttpActionResult UpdateRole(RoleDescriptor role)
+        [ResponseType(typeof(Role))]
+        public IHttpActionResult UpdateRole(Role role)
         {
             var result = _roleService.AddOrUpdateRole(role);
             return Ok(result);

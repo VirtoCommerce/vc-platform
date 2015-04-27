@@ -47,9 +47,9 @@ namespace VirtoCommerce.Platform.Data.Security
             return result;
         }
 
-        public RoleDescriptor GetRole(string roleId)
+        public Role GetRole(string roleId)
         {
-            RoleDescriptor result = null;
+            Role result = null;
 
             using (var repository = _platformRepository())
             {
@@ -80,14 +80,14 @@ namespace VirtoCommerce.Platform.Data.Security
             }
         }
 
-        public RoleDescriptor AddOrUpdateRole(RoleDescriptor role)
+        public Role AddOrUpdateRole(Role role)
         {
             if (role == null)
             {
                 throw new ArgumentNullException("role");
             }
 
-            var sourceEntry = role.ToFoundation();
+            var sourceEntry = role.ToDataModel();
 
             using (var repository = _platformRepository())
             {
@@ -116,7 +116,7 @@ namespace VirtoCommerce.Platform.Data.Security
         #endregion
 
 
-        private static void AddOrUpdatePermissions(IPlatformRepository repository, PermissionDescriptor[] permissions)
+        private static void AddOrUpdatePermissions(IPlatformRepository repository, Permission[] permissions)
         {
             if (permissions != null)
             {
@@ -125,7 +125,7 @@ namespace VirtoCommerce.Platform.Data.Security
 
                 foreach (var permission in permissions)
                 {
-                    var sourceEntry = permission.ToFoundation();
+                    var sourceEntry = permission.ToDataModel();
                     var targetEntry = existingPermissions.FirstOrDefault(p => string.Equals(p.Id, permission.Id, StringComparison.OrdinalIgnoreCase));
 
                     if (targetEntry == null)
