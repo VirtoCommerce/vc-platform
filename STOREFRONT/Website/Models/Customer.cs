@@ -1,4 +1,6 @@
 ﻿#region
+
+using System;
 using System.Collections.Generic;
 using DotLiquid;
 
@@ -29,6 +31,14 @@ namespace VirtoCommerce.Web.Models
         }
 
         public CustomerAddress DefaultAddress { get; set; }
+
+        public CustomerAddress NewAddress
+        {
+            get
+            {
+                return new CustomerAddress() {Id = Guid.NewGuid().ToString()};
+            }
+        }
 
         public string Email { get; set; }
 

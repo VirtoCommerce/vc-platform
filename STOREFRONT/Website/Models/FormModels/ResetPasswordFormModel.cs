@@ -15,6 +15,14 @@ namespace VirtoCommerce.Web.Models.FormModels
             this.Customer = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
         }
 
+        public string Id
+        {
+            get
+            {
+                return "reset_password";
+            }
+        }
+
         [Required]
         [StringLength(20, MinimumLength = 6)]
         public string Password
