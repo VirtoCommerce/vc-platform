@@ -1,5 +1,5 @@
-﻿angular.module('virtoCommerce.customerModule.blades')
-.controller('memberPropertyValueTypeController', ['$scope', function ($scope) {
+﻿angular.module('virtoCommerce.customerModule')
+.controller('virtoCommerce.customerModule.memberPropertyValueTypeController', ['$scope', function ($scope) {
 
     $scope.selectOption = function (option) {
         $scope.blade.parentBlade.currentEntity.valueType = option;

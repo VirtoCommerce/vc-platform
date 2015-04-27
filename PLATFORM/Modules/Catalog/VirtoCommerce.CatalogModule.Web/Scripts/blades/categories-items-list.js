@@ -1,6 +1,6 @@
 ﻿angular.module('virtoCommerce.catalogModule')
-.controller('categoriesItemsListController', ['$rootScope', '$scope', '$filter', 'categories', 'items', 'listEntries', 'bladeNavigationService', 'dialogService', function ($rootScope, $scope, $filter, categories, items, listEntries, bladeNavigationService, dialogService) {
-    //pagination settigs
+.controller('virtoCommerce.catalogModule.categoriesItemsListController', ['$rootScope', '$scope', '$filter', 'virtoCommerce.catalogModule.categories', 'virtoCommerce.catalogModule.items', 'virtoCommerce.catalogModule.listEntries', 'bladeNavigationService', 'dialogService', function ($rootScope, $scope, $filter, categories, items, listEntries, bladeNavigationService, dialogService) {
+    //pagination settings
     $scope.pageSettings = {};
     $scope.pageSettings.totalItems = 0;
     $scope.pageSettings.currentPage = 1;
@@ -105,7 +105,7 @@
             currentEntity: data,
             title: title,
             subtitle: 'Category details',
-            controller: 'categoryDetailController',
+            controller: 'virtoCommerce.catalogModule.categoryDetailController',
             template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/category-detail.tpl.html',
         };
         bladeNavigationService.showBlade(newBlade, $scope.blade);
@@ -117,7 +117,7 @@
             itemId: id,
             title: title,
             subtitle: 'Item details',
-            controller: 'itemDetailController',
+            controller: 'virtoCommerce.catalogModule.itemDetailController',
             template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/item-detail.tpl.html'
         };
         bladeNavigationService.showBlade(newBlade, $scope.blade);
@@ -129,7 +129,7 @@
             item: inMemoryItem,
             title: "New product",
             subtitle: 'Fill all product information',
-            controller: 'newProductWizardController',
+            controller: 'virtoCommerce.catalogModule.newProductWizardController',
             template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/wizards/newProduct/new-product-wizard.tpl.html'
         };
         bladeNavigationService.showBlade(newBlade, $scope.blade);
@@ -141,7 +141,7 @@
             item: inMemoryItem,
             title: "New variation",
             subtitle: 'Fill all variation information',
-            controller: 'newProductWizardController',
+            controller: 'virtoCommerce.catalogModule.newProductWizardController',
             template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/wizards/newProduct/new-variation-wizard.tpl.html'
         };
         bladeNavigationService.showBlade(newBlade, $scope.blade);
@@ -282,7 +282,7 @@
                     catalog: $scope.blade.catalog,
                     categoryId: listItem.id,
                     category: listItem,
-                    controller: 'categoriesItemsListController',
+                    controller: 'virtoCommerce.catalogModule.categoriesItemsListController',
                     template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/categories-items-list.tpl.html'
                 };
 
@@ -348,7 +348,7 @@
                       id: 'listItemChild',
                       title: 'New category item',
                       subtitle: 'choose new item type',
-                      controller: 'categoriesItemsAddController',
+                      controller: 'virtoCommerce.catalogModule.categoriesItemsAddController',
                       template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/categories-items-add.tpl.html'
                   };
                   bladeNavigationService.showBlade(newBlade, $scope.blade);
@@ -383,7 +383,7 @@
             //            id: 'listItemChild',
             //            title: 'Advanced search',
             //            subtitle: 'Searching within...',
-            //            controller: 'advancedSearchController',
+            //            controller: 'virtoCommerce.catalogModule.advancedSearchController',
             //            template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/advanced-search.tpl.html'
             //        };
             //        bladeNavigationService.showBlade(newBlade, $scope.blade.parentBlade);
@@ -424,7 +424,7 @@
             subtitle: 'Creating a Link inside virtual catalog',
             catalogId: selectedNode.id,
             catalog: selectedNode,
-            controller: 'categoriesItemsListController',
+            controller: 'virtoCommerce.catalogModule.categoriesItemsListController',
             template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/categories-items-list.tpl.html'
         };
         bladeNavigationService.showBlade(newBlade, $scope.blade);

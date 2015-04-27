@@ -21,7 +21,7 @@ angular.module(catalogsModuleName, [
                           title: 'Catalogs',
                           breadcrumbs: [],
                           subtitle: 'Manage catalogs',
-                          controller: 'catalogsListController',
+                          controller: 'virtoCommerce.catalogModule.catalogsListController',
                           template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/catalogs-list.tpl.html',
                           isClosingDisabled: true
                       };
@@ -66,7 +66,7 @@ angular.module(catalogsModuleName, [
 		            title: 'catalog import detail',
 		            subtitle: 'detail',
 		            template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/import/import-job-progress.tpl.html',
-		            controller: 'importJobProgressController',
+		            controller: 'virtoCommerce.catalogModule.importJobProgressController',
 		            job: notify.job
 		        };
 		        bladeNavigationService.showBlade(blade);
@@ -76,80 +76,80 @@ angular.module(catalogsModuleName, [
 
       //Register image widget
       var itemImageWidget = {
-          controller: 'itemImageWidgetController',
+          controller: 'virtoCommerce.catalogModule.itemImageWidgetController',
           template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/widgets/itemImageWidget.tpl.html',
       };
       widgetService.registerWidget(itemImageWidget, 'itemDetail');
       //Register item property widget
       var itemPropertyWidget = {
-          controller: 'itemPropertyWidgetController',
+          controller: 'virtoCommerce.catalogModule.itemPropertyWidgetController',
           template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/widgets/itemPropertyWidget.tpl.html',
       };
       widgetService.registerWidget(itemPropertyWidget, 'itemDetail');
 
       //Register item associations widget
       var itemAssociationsWidget = {
-          controller: 'itemAssociationsWidgetController',
+          controller: 'virtoCommerce.catalogModule.itemAssociationsWidgetController',
           template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/widgets/itemAssociationsWidget.tpl.html',
       };
       widgetService.registerWidget(itemAssociationsWidget, 'itemDetail');
 
       //Register item seo widget
       var itemSeoWidget = {
-          controller: 'seoWidgetController',
+          controller: 'virtoCommerce.catalogModule.seoWidgetController',
           template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/widgets/seoWidget.tpl.html',
       };
       widgetService.registerWidget(itemSeoWidget, 'itemDetail');
 
       //Register item editorialReview widget
       var editorialReviewWidget = {
-          controller: 'editorialReviewWidgetController',
+          controller: 'virtoCommerce.catalogModule.editorialReviewWidgetController',
           template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/widgets/editorialReviewWidget.tpl.html',
       };
       widgetService.registerWidget(editorialReviewWidget, 'itemDetail');
 
       //Register variation widget
       var variationWidget = {
-          controller: 'itemVariationWidgetController',
+          controller: 'virtoCommerce.catalogModule.itemVariationWidgetController',
           template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/widgets/itemVariationWidget.tpl.html',
       };
       widgetService.registerWidget(variationWidget, 'itemDetail');
       //Register asset widget
       var itemAssetWidget = {
-          controller: 'itemAssetWidgetController',
+          controller: 'virtoCommerce.catalogModule.itemAssetWidgetController',
           template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/widgets/itemAssetWidget.tpl.html',
       };
       widgetService.registerWidget(itemAssetWidget, 'itemDetail');
 
       //Register category property widget
       var categoryPropertyWidget = {
-          controller: 'categoryPropertyWidgetController',
+          controller: 'virtoCommerce.catalogModule.categoryPropertyWidgetController',
           template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/widgets/categoryPropertyWidget.tpl.html',
       };
 
       widgetService.registerWidget(categoryPropertyWidget, 'categoryDetail');
 
-  
+
 
       //Register category seo widget
       var categorySeoWidget = {
-          controller: 'seoWidgetController',
+          controller: 'virtoCommerce.catalogModule.seoWidgetController',
           template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/widgets/seoWidget.tpl.html',
       };
 
       widgetService.registerWidget(categorySeoWidget, 'categoryDetail');
 
-    
+
       var catalogLanguagesWidget = {
-          controller: 'catalogLanguagesWidgetController',
+          controller: 'virtoCommerce.catalogModule.catalogLanguagesWidgetController',
           template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/widgets/catalogLanguagesWidget.tpl.html',
       };
       widgetService.registerWidget(catalogLanguagesWidget, 'catalogDetail');
 
-	 var catalogPropertyWidget = {
-       	controller: 'catalogPropertyWidgetController',
-      	template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/widgets/catalogPropertyWidget.tpl.html',
-	 };
-	 widgetService.registerWidget(catalogPropertyWidget, 'catalogDetail');
+      var catalogPropertyWidget = {
+          controller: 'virtoCommerce.catalogModule.catalogPropertyWidgetController',
+          template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/widgets/catalogPropertyWidget.tpl.html',
+      };
+      widgetService.registerWidget(catalogPropertyWidget, 'catalogDetail');
 
   }]);

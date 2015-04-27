@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.coreModule.fulfillment')
-.controller('fulfillmentCenterContactWidgetController', ['$scope', 'bladeNavigationService', function ($scope, bladeNavigationService) {
+.controller('virtoCommerce.coreModule.fulfillment.fulfillmentCenterContactWidgetController', ['$scope', 'bladeNavigationService', function ($scope, bladeNavigationService) {
     var blade = $scope.widget.blade;
     
     $scope.openBlade = function () {
@@ -8,7 +8,7 @@
             data: blade.currentEntity,
             title: blade.title,
             subtitle: 'Contact information',
-            controller: 'fulfillmentCenterContactController',
+            controller: 'virtoCommerce.coreModule.fulfillment.fulfillmentCenterContactController',
             template: 'Modules/$(VirtoCommerce.Core)/Scripts/fulfillment/blades/fulfillment-center-contact.tpl.html'
         };
         bladeNavigationService.showBlade(newBlade, blade);

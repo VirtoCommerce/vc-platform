@@ -1,5 +1,5 @@
-﻿angular.module('virtoCommerce.storeModule.blades')
-.controller('storeAdvancedController', ['$scope', 'bladeNavigationService', 'stores', 'fulfillments', 'countries', function ($scope, bladeNavigationService, stores, fulfillments, countries) {
+﻿angular.module('virtoCommerce.storeModule')
+.controller('virtoCommerce.storeModule.storeAdvancedController', ['$scope', 'bladeNavigationService', 'virtoCommerce.storeModule.stores', 'virtoCommerce.coreModule.fulfillment.fulfillments', 'virtoCommerce.coreModule.common.countries', function ($scope, bladeNavigationService, stores, fulfillments, countries) {
     $scope.saveChanges = function () {
         angular.copy($scope.blade.currentEntity, $scope.blade.origEntity);
         $scope.bladeClose();

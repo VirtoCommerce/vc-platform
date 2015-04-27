@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.catalogModule')
-.controller('propertyValueTypeController', ['$scope', function ($scope) {
+.controller('virtoCommerce.catalogModule.propertyValueTypeController', ['$scope', function ($scope) {
 
 	
     $scope.selectOption = function (option) {

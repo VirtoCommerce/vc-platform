@@ -1,6 +1,6 @@
 ﻿angular.module('virtoCommerce.orderModule')
-.controller('operationItemsController', ['$scope', 'bladeNavigationService', 'dialogService', 'calculateTotalsService', 'items', 'prices', function ($scope, bladeNavigationService, dialogService, calculateTotalsService, items, prices) {
-	//pagination settigs
+.controller('virtoCommerce.orderModule.operationItemsController', ['$scope', 'bladeNavigationService', 'dialogService', 'virtoCommerce.orderModule.calculateTotalsService', 'virtoCommerce.catalogModule.items', 'virtoCommerce.pricingModule.prices', function ($scope, bladeNavigationService, dialogService, calculateTotalsService, items, prices) {
+	//pagination settings
 	$scope.pageSettings = {};
 	$scope.totals = {};
 	$scope.pageSettings.totalItems = $scope.blade.currentEntity.items.length;
@@ -66,7 +66,7 @@
 				itemId: item.productId,
 				title: item.name,
 				subtitle: 'Item details',
-				controller: 'itemDetailController',
+				controller: 'virtoCommerce.catalogModule.itemDetailController',
 				template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/item-detail.tpl.html'
 			};
 			bladeNavigationService.showBlade(newBlade, $scope.blade);
@@ -90,7 +90,7 @@
 			id: "CatalogItemsSelect",
 			currentEntities: $scope.blade.currentEntity,
 			title: "Add item to order",
-			controller: 'catalogItemSelectController',
+			controller: 'virtoCommerce.catalogModule.catalogItemSelectController',
 			template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/common/catalog-items-select.tpl.html',
 			options: options,
 			breadcrumbs: [],

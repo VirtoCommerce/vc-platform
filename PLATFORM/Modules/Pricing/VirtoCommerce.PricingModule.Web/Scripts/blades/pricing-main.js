@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.pricingModule')
-.controller('pricingMainController', ['$scope', 'bladeNavigationService', function ($scope, bladeNavigationService) {
+.controller('virtoCommerce.pricingModule.pricingMainController', ['$scope', 'bladeNavigationService', function ($scope, bladeNavigationService) {
     $scope.selectedNodeId = null;
 
     function initializeBlade() {
@@ -19,7 +19,7 @@
             id: 'pricingList',
             title: data.name,
             subtitle: 'Merchandise management',
-            controller: data.entityName + 'ListController',
+            controller: 'virtoCommerce.pricingModule.'+ data.entityName + 'ListController',
             template: 'Modules/$(VirtoCommerce.Pricing)/Scripts/blades/' + data.entityName + '-list.tpl.html'
         };
         bladeNavigationService.showBlade(newBlade, $scope.blade);

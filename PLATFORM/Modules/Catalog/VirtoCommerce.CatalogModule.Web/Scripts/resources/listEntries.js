@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.catalogModule')
-.factory('listEntries', ['$resource', function ($resource) {
+.factory('virtoCommerce.catalogModule.listEntries', ['$resource', function ($resource) {
 
 	return $resource('api/catalog/listentries', {},
     {

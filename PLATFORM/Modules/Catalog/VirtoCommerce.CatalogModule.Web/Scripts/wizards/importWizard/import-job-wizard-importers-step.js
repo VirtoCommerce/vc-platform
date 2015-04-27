@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.catalogModule')
-.controller('importJobImportersController', ['$scope', function ($scope) {
+.controller('virtoCommerce.catalogModule.importJobImportersController', ['$scope', function ($scope) {
     $scope.blade.refresh = function () {
         $scope.selectedImporter = $scope.blade.parentBlade.item.entityImporter;
         $scope.blade.isLoading = false;

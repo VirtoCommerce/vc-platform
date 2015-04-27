@@ -1,10 +1,5 @@
-﻿angular.module('virtoCommerce.storeModule.blades', [
-    'virtoCommerce.storeModule.resources.stores',
-    'virtoCommerce.storeModule.wizards.newStore',
-    // 'catalogModule.resources.catalogs'
-    'ngSanitize'
-])
-.controller('storesListController', ['$scope', 'stores', 'bladeNavigationService', function ($scope, stores, bladeNavigationService) {
+﻿angular.module('virtoCommerce.storeModule')
+.controller('virtoCommerce.storeModule.storesListController', ['$scope', 'virtoCommerce.storeModule.stores', 'bladeNavigationService', function ($scope, stores, bladeNavigationService) {
     $scope.selectedNodeId = null;
 
     $scope.blade.refresh = function () {
@@ -24,7 +19,7 @@
             // currentEntity: data,
             title: data.name,
             subtitle: 'Store details',
-            controller: 'storeDetailController',
+            controller: 'virtoCommerce.storeModule.storeDetailController',
             template: 'Modules/$(VirtoCommerce.Store)/Scripts/blades/store-detail.tpl.html'
         };
         bladeNavigationService.showBlade(newBlade, $scope.blade);
@@ -39,7 +34,7 @@
             currentEntity: {},
             title: 'New Store',
             subtitle: 'Create new Store',
-            controller: 'newStoreWizardController',
+            controller: 'virtoCommerce.storeModule.newStoreWizardController',
             template: 'Modules/$(VirtoCommerce.Store)/Scripts/wizards/newStore/new-store-wizard.tpl.html'
         };
         bladeNavigationService.showBlade(newBlade, $scope.blade);
