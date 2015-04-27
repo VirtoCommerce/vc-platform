@@ -1,5 +1,5 @@
-﻿angular.module('virtoCommerce.storeModule.blades')
-.controller('storeDetailController', ['$scope', 'bladeNavigationService', 'stores', 'catalogs', 'settings', 'dialogService', function ($scope, bladeNavigationService, stores, catalogs, settings, dialogService) {
+﻿angular.module('virtoCommerce.storeModule')
+.controller('virtoCommerce.storeModule.storeDetailController', ['$scope', 'bladeNavigationService', 'virtoCommerce.storeModule.stores', 'virtoCommerce.catalogModule.catalogs', 'settings', 'dialogService', function ($scope, bladeNavigationService, stores, catalogs, settings, dialogService) {
     $scope.blade.refresh = function (parentRefresh) {
         stores.get({ id: $scope.blade.currentEntityId }, function (data) {
             initializeBlade(data);

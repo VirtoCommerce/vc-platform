@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.orderModule')
-.controller('customerOrderAddressWidgetController', ['$scope', 'bladeNavigationService', function ($scope, bladeNavigationService) {
+.controller('virtoCommerce.orderModule.customerOrderAddressWidgetController', ['$scope', 'bladeNavigationService', function ($scope, bladeNavigationService) {
 	$scope.currentBlade = $scope.widget.blade;
 	$scope.operation = {};
 	$scope.openAddressesBlade = function () {
@@ -7,7 +7,7 @@
 			id: 'orderOperationAddresses',
 			title: 'Manage addresses',
 			currentEntities: $scope.operation.addresses,
-			controller: 'coreAddressListController',
+			controller: 'virtoCommerce.coreModule.common.coreAddressListController',
 			template: 'Modules/$(VirtoCommerce.Core)/Scripts/common/blades/address-list.tpl.html'
 		};
 		bladeNavigationService.showBlade(newBlade, $scope.blade);

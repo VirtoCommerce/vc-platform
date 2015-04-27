@@ -13,12 +13,12 @@ angular.module(moduleName, [
      
       //Register widgets in catalog item details
       /*widgetService.registerWidget({
-          controller: 'gshoppingWidgetController',
+          controller: 'virtoCommerce.gshoppingModule.gshoppingWidgetController',
           template: 'Modules/$(GoogleShopping.Merchant)/Scripts/widgets/gshoppingWidget.tpl.html'
       }, 'catalogDetail');*/
 
       widgetService.registerWidget({
-          controller: 'gshoppingSyncCatWidgetController',
+          controller: 'virtoCommerce.gshoppingModule.gshoppingSyncCatWidgetController',
           template: 'Modules/$(GoogleShopping.Merchant)/Scripts/widgets/gshoppingWidget.tpl.html'
       }, 'categoryDetail');
   }]);

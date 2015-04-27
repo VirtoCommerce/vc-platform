@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.catalogModule')
-.controller('seoWidgetController', ['$scope', 'bladeNavigationService', function ($scope, bladeNavigationService) {
+.controller('virtoCommerce.catalogModule.seoWidgetController', ['$scope', 'bladeNavigationService', function ($scope, bladeNavigationService) {
     $scope.currentBlade = $scope.widget.blade;
 
     $scope.openSeoBlade = function () {
@@ -9,7 +9,7 @@
             parentEntity: getParentEntity(),
             title: $scope.currentBlade.title,
             subtitle: 'Seo details',
-            controller: 'seoDetailController',
+            controller: 'virtoCommerce.catalogModule.seoDetailController',
             template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/seo-detail.tpl.html'
         };
 

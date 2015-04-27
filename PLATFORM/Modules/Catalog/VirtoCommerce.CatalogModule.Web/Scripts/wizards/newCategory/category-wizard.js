@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.catalogModule')
-.controller('newCategoryWizardController', ['$scope', 'bladeNavigationService', 'dialogService', 'categories', function ($scope, bladeNavigationService, dialogService, categories) {
+.controller('virtoCommerce.catalogModule.newCategoryWizardController', ['$scope', 'bladeNavigationService', 'dialogService', 'virtoCommerce.catalogModule.categories', function ($scope, bladeNavigationService, dialogService, categories) {
     $scope.create = function () {
         $scope.blade.currentEntity.$update(null, function (data) {
             $scope.bladeClose();
@@ -22,8 +22,7 @@
                         currentEntity: $scope.blade.currentEntity,
                         title: $scope.blade.title,
                         subtitle: 'Category properties',
-                        controller: 'categoryPropertyController',
-                        //controller: 'newProductWizardPropertiesController',
+                        controller: 'virtoCommerce.catalogModule.categoryPropertyController',
                         //isNew: true,
                         template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/category-property-detail.tpl.html'
                     };
@@ -34,8 +33,7 @@
                         seoUrlKeywordType: 0,
                         parentEntity: $scope.blade.currentEntity,
                         title: $scope.blade.title,
-                        controller: 'seoDetailController',
-                        //controller: 'newProductSeoDetailController',
+                        controller: 'virtoCommerce.catalogModule.seoDetailController',
                         //seoInfos: $scope.blade.item.seoInfos,
                         template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/seo-detail.tpl.html'
                     };

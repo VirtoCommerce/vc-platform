@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.catalogModule')
-.controller('propertyDetailController', ['$scope', 'categories', 'properties', 'bladeNavigationService', 'dialogService', function ($scope, categories, properties, bladeNavigationService, dialogService) {
+.controller('virtoCommerce.catalogModule.propertyDetailController', ['$scope', 'virtoCommerce.catalogModule.categories', 'virtoCommerce.catalogModule.properties', 'bladeNavigationService', 'dialogService', function ($scope, categories, properties, bladeNavigationService, dialogService) {
     var b = $scope.blade;
     var formScope;
     b.origEntity = {};
@@ -30,32 +30,32 @@
 
     $scope.openChild = function (childType) {
     	var newBlade = { id: "propertyChild" };
-    	newBlade.property = b.currentEntity
+        newBlade.property = b.currentEntity;
 
         switch (childType) {
             case 'attr':
                 newBlade.title = b.origEntity.name ? b.origEntity.name : b.currentEntity.name + ' attributes';
                 newBlade.subtitle = 'manage attributes';
-                newBlade.controller = 'propertyAttributesController';
+                newBlade.controller = 'virtoCommerce.catalogModule.propertyAttributesController';
                 newBlade.template = 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/property-attributes.tpl.html';
                 break;
             case 'valType':
                 newBlade.title = b.origEntity.name ? b.origEntity.name : b.currentEntity.name + ' value type';
                 newBlade.subtitle = 'Change value type';
-                newBlade.controller = 'propertyValueTypeController';
+                newBlade.controller = 'virtoCommerce.catalogModule.propertyValueTypeController';
                 newBlade.template = 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/property-valueType.tpl.html';
                break;
             case 'appliesto':
                 newBlade.title = b.origEntity.name ? b.origEntity.name : b.currentEntity.name + ' applies to';
                 newBlade.subtitle = 'Change to what it applies';
-                newBlade.controller = 'propertyTypeController';
+                newBlade.controller = 'virtoCommerce.catalogModule.propertyTypeController';
                 newBlade.template = 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/property-type.tpl.html';
                 newBlade.availablePropertyTypes = b.catalogId ? ['Catalog', 'Category', 'Product', 'Variation'] : ['Category', 'Product', 'Variation'];
                 break;
             case 'dict':
                 newBlade.title = b.origEntity.name ? b.origEntity.name : b.currentEntity.name + ' dictionary';
                 newBlade.subtitle = 'Manage dictionary';
-                newBlade.controller = 'propertyDictionaryController';
+                newBlade.controller = 'virtoCommerce.catalogModule.propertyDictionaryController';
                 newBlade.template = 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/property-dictionary.tpl.html';
                 break;
         }

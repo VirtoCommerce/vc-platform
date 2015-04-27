@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.orderModule')
-.controller('operationTreeWidgetController', ['$scope', 'bladeNavigationService', function ($scope, bladeNavigationService) {
+.controller('virtoCommerce.orderModule.operationTreeWidgetController', ['$scope', 'bladeNavigationService', function ($scope, bladeNavigationService) {
 	$scope.blade = $scope.widget.blade;
 	$scope.currentOperation = {};
 	$scope.operation = {};
@@ -21,7 +21,7 @@
 					customerOrder: $scope.widget.blade.customerOrder,
 					currentEntity: operation,
 					isClosingDisabled: false,
-					controller: 'operationDetailController',
+					controller: 'virtoCommerce.orderModule.operationDetailController',
 					template: 'Modules/$(VirtoCommerce.Orders)/Scripts/blades/shipment-detail.tpl.html'
 				};
 			}
@@ -32,7 +32,7 @@
 					subtitle: 'Edit order details and related documents',
 					customerOrder: $scope.widget.blade.customerOrder,
 					currentEntity: operation,
-					controller: 'operationDetailController',
+					controller: 'virtoCommerce.orderModule.operationDetailController',
 					template: 'Modules/$(VirtoCommerce.Orders)/Scripts/blades/customerOrder-detail.tpl.html'
 				};
 			}
@@ -43,7 +43,7 @@
 					subtitle: 'Edit payment details and related documents',
 					customerOrder: $scope.widget.blade.customerOrder,
 					currentEntity: operation,
-					controller: 'operationDetailController',
+					controller: 'virtoCommerce.orderModule.operationDetailController',
 					template: 'Modules/$(VirtoCommerce.Orders)/Scripts/blades/payment-detail.tpl.html'
 				};
 			}

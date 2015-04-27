@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.catalogModule')
-.controller('importJobListController', ['$scope', 'bladeNavigationService', 'dialogService', 'imports', function ($scope, bladeNavigationService, dialogService, imports) {
+.controller('virtoCommerce.catalogModule.importJobListController', ['$scope', 'bladeNavigationService', 'dialogService', 'virtoCommerce.catalogModule.imports', function ($scope, bladeNavigationService, dialogService, imports) {
     $scope.selectedAll = false;
     $scope.selectedItem = null;
 
@@ -32,7 +32,7 @@
             isNew: false,
             title: 'Edit import job',
             subtitle: 'Manage import job',
-            controller: 'importJobWizardController',
+            controller: 'virtoCommerce.catalogModule.importJobWizardController',
             template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/wizards/importWizard/import-job-wizard.tpl.html'
         };
         bladeNavigationService.showBlade(newBlade, $scope.blade);
@@ -47,7 +47,7 @@
             item: $scope.selectedItem,
             title: 'Run import job',
             subtitle: 'Run import job',
-            controller: 'importJobRunController',
+            controller: 'virtoCommerce.catalogModule.importJobRunController',
             template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/import/import-job-run.tpl.html'
         };
         bladeNavigationService.showBlade(newBlade, $scope.blade);
@@ -122,7 +122,7 @@
                         isNew: true,
                         title: 'New import job',
                         subtitle: 'Create an import job',
-                        controller: 'importJobWizardController',
+                        controller: 'virtoCommerce.catalogModule.importJobWizardController',
                         template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/wizards/importWizard/import-job-wizard.tpl.html'
                     };
                     closeChildrenBlades();

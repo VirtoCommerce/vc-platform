@@ -1,5 +1,5 @@
-﻿angular.module('virtoCommerce.storeModule.widgets')
-.controller('storeLanguagesWidgetController', ['$scope', 'bladeNavigationService', function ($scope, bladeNavigationService) {
+﻿angular.module('virtoCommerce.storeModule')
+.controller('virtoCommerce.storeModule.storeLanguagesWidgetController', ['$scope', 'bladeNavigationService', function ($scope, bladeNavigationService) {
     var blade = $scope.widget.blade;
 
     $scope.openBlade = function () {
@@ -8,7 +8,7 @@
             itemId: blade.itemId,
             title: blade.title,
             subtitle: 'Manage languages',
-            controller: 'storeLanguagesListController',
+            controller: 'virtoCommerce.storeModule.storeLanguagesListController',
             template: 'Modules/$(VirtoCommerce.Store)/Scripts/blades/store-languages-list.tpl.html'
         };
         bladeNavigationService.showBlade(newBlade, blade);

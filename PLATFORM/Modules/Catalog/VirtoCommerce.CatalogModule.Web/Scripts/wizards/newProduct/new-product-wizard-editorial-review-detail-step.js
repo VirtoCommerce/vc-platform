@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.catalogModule')
-.controller('editorialReviewDetailWizardStepController', ['$scope', function ($scope)
+.controller('virtoCommerce.catalogModule.editorialReviewDetailWizardStepController', ['$scope', function ($scope)
 {
     function initializeBlade(data)
     {

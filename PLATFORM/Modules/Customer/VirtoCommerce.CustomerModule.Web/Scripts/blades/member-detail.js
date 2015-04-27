@@ -1,5 +1,5 @@
-﻿angular.module('virtoCommerce.customerModule.blades')
-.controller('memberDetailController', ['$scope', 'bladeNavigationService', 'contacts', 'organizations', 'dialogService', function ($scope, bladeNavigationService, contacts, organizations, dialogService) {
+﻿angular.module('virtoCommerce.customerModule')
+.controller('virtoCommerce.customerModule.memberDetailController', ['$scope', 'bladeNavigationService', 'virtoCommerce.customerModule.contacts', 'virtoCommerce.customerModule.organizations', 'dialogService', function ($scope, bladeNavigationService, contacts, organizations, dialogService) {
     $scope.blade.currentResource = $scope.blade.isOrganization ? organizations : contacts;
 
     $scope.blade.refresh = function (parentRefresh) {

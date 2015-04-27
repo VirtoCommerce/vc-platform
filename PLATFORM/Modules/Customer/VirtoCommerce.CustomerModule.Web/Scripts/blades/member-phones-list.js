@@ -1,5 +1,5 @@
-﻿angular.module('virtoCommerce.customerModule.blades')
-.controller('memberPhonesListController', ['$scope', 'bladeNavigationService', 'dialogService', function ($scope, bladeNavigationService, dialogService) {
+﻿angular.module('virtoCommerce.customerModule')
+.controller('virtoCommerce.customerModule.memberPhonesListController', ['$scope', 'bladeNavigationService', 'dialogService', function ($scope, bladeNavigationService, dialogService) {
     $scope.selectedItem = null;
 
     function transformDataElement(data) {
@@ -7,7 +7,7 @@
     }
 
     function initializeBlade(data) {
-        // transfornation to make complex object. Simple string isn't editable.
+        // transformation to make complex object. Simple string isn't editable.
         data = _.map(data, transformDataElement);
 
         $scope.blade.currentEntities = angular.copy(data);

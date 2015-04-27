@@ -14,9 +14,16 @@ namespace MailChimp.MailingModule.Web
         private const string _subscribersListIdPropertyName = "MailChimp.Mailing.SubscribersListId";
 
         private readonly IUnityContainer _container;
+
         public Module(IUnityContainer container)
         {
             _container = container;
+        }
+
+        #region IModule Members
+
+        public void SetupDatabase(SampleDataLevel sampleDataLevel)
+        {
         }
 
         public void Initialize()
@@ -49,5 +56,11 @@ namespace MailChimp.MailingModule.Web
                 (new InjectionConstructor(
                     settingsManager));
         }
+
+        public void PostInitialize()
+        {
+        }
+
+        #endregion
     }
 }

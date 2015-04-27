@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.catalogModule')
-.controller('itemVariationListController', ['$scope', 'bladeNavigationService', 'dialogService', 'items', function ($scope, bladeNavigationService, dialogService, items) {
+.controller('virtoCommerce.catalogModule.itemVariationListController', ['$scope', 'bladeNavigationService', 'dialogService', 'virtoCommerce.catalogModule.items', function ($scope, bladeNavigationService, dialogService, items) {
 
 	$scope.blade.refresh = function (parentRefresh) {
 		$scope.blade.isLoading = true;
@@ -24,7 +24,7 @@
             itemId: listItem.id,
             title: listItem.code,
             subtitle: 'Variation details',
-            controller: 'itemDetailController',
+            controller: 'virtoCommerce.catalogModule.itemDetailController',
             template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/item-detail.tpl.html'
         };
         bladeNavigationService.showBlade(blade, $scope.blade);

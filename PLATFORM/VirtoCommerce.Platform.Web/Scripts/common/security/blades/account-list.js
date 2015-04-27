@@ -1,7 +1,7 @@
 ﻿angular.module('platformWebApp')
 .controller('accountListController', ['$scope', 'accounts', 'bladeNavigationService', 'dialogService',
 function ($scope, accounts, bladeNavigationService, dialogService) {
-    //pagination settigs
+    //pagination settings
     $scope.pageSettings = {};
     $scope.pageSettings.totalItems = 0;
     $scope.pageSettings.currentPage = 1;

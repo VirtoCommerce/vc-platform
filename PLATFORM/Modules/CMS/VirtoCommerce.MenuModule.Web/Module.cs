@@ -2,60 +2,64 @@
 
 namespace VirtoCommerce.MenuModule.Web
 {
-	#region
+    #region
 
-	using Microsoft.Practices.Unity;
-	using System;
-	using System.IO;
-	using System.Web.Hosting;
-	using VirtoCommerce.Content.Menu.Data;
-	using VirtoCommerce.Content.Menu.Data.Repositories;
-	using VirtoCommerce.Content.Menu.Data.Services;
-	using VirtoCommerce.Foundation.Data.Infrastructure;
-	using VirtoCommerce.Foundation.Data.Infrastructure.Interceptors;
-	using VirtoCommerce.MenuModule.Web.Controllers.Api;
+    using Microsoft.Practices.Unity;
+    using System;
+    using System.IO;
+    using System.Web.Hosting;
+    using VirtoCommerce.Content.Menu.Data;
+    using VirtoCommerce.Content.Menu.Data.Repositories;
+    using VirtoCommerce.Content.Menu.Data.Services;
+    using VirtoCommerce.Foundation.Data.Infrastructure;
+    using VirtoCommerce.Foundation.Data.Infrastructure.Interceptors;
+    using VirtoCommerce.MenuModule.Web.Controllers.Api;
 
-	#endregion
+    #endregion
 
-	public class Module : IModule, IDatabaseModule
-	{
-		#region Fields
+    public class Module : IModule
+    {
+        #region Fields
 
-		private readonly IUnityContainer _container;
+        private readonly IUnityContainer _container;
 
-		#endregion
+        #endregion
 
-		#region Constructors and Destructors
+        #region Constructors and Destructors
 
-		public Module(IUnityContainer container)
-		{
-			this._container = container;
-		}
+        public Module(IUnityContainer container)
+        {
+            _container = container;
+        }
 
-		#endregion
+        #endregion
 
-		#region Public Methods and Operators
+        #region IModule Members
 
-		public void Initialize()
-		{
-			var repository = new DatabaseMenuRepositoryImpl("VirtoCommerce", new AuditableInterceptor(),
-															   new EntityPrimaryKeyGeneratorInterceptor());
+        public void SetupDatabase(SampleDataLevel sampleDataLevel)
+        {
+            using (var context = new DatabaseMenuRepositoryImpl())
+            {
+                SqlMenuDatabaseInitializer initializer = new SqlMenuDatabaseInitializer();
+                initializer.InitializeDatabase(context);
+            }
+        }
 
-			var service = new MenuServiceImpl(repository);
+        public void Initialize()
+        {
+            var repository = new DatabaseMenuRepositoryImpl("VirtoCommerce", new AuditableInterceptor(),
+                                                               new EntityPrimaryKeyGeneratorInterceptor());
 
-			this._container.RegisterType<MenuController>(new InjectionConstructor(service));
+            var service = new MenuServiceImpl(repository);
 
-		}
+            _container.RegisterType<MenuController>(new InjectionConstructor(service));
 
-		public void SetupDatabase(SampleDataLevel sampleDataLevel)
-		{
-			using (var context = new DatabaseMenuRepositoryImpl())
-			{
-				SqlMenuDatabaseInitializer initializer = new SqlMenuDatabaseInitializer();
-				initializer.InitializeDatabase(context);
-			}
-		}
+        }
 
-		#endregion
-	}
+        public void PostInitialize()
+        {
+        }
+
+        #endregion
+    }
 }

@@ -18,11 +18,18 @@ namespace VirtoCommerce.PricingModule.Web
 
         #region IModule Members
 
+        public void SetupDatabase(SampleDataLevel sampleDataLevel)
+        {
+        }
+
         public void Initialize()
         {
             _container.RegisterType<IFoundationPricingRepository>(new InjectionFactory(c => new FoundationPricingRepositoryImpl("VirtoCommerce", new AuditChangeInterceptor())));
-
             _container.RegisterType<IPricingService, PricingServiceImpl>();
+        }
+
+        public void PostInitialize()
+        {
         }
 
         #endregion

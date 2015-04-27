@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.catalogModule')
-.controller('catalogDetailController', ['$scope', 'bladeNavigationService', 'catalogs', 'dialogService', function ($scope, bladeNavigationService, catalogs, dialogService) {
+.controller('virtoCommerce.catalogModule.catalogDetailController', ['$scope', 'bladeNavigationService', 'virtoCommerce.catalogModule.catalogs', 'dialogService', function ($scope, bladeNavigationService, catalogs, dialogService) {
 
     $scope.blade.refresh = function (parentRefresh) {
         if ($scope.blade.isNew) {

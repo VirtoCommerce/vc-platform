@@ -1,7 +1,7 @@
 ﻿angular.module('platformWebApp')
 .controller('roleListController', ['$scope', 'platform_res_roles', 'bladeNavigationService', 'dialogService',
 function ($scope, roles, bladeNavigationService, dialogService) {
-    //pagination settigs
+    //pagination settings
     $scope.pageSettings = {};
     $scope.pageSettings.totalItems = 0;
     $scope.pageSettings.currentPage = 1;

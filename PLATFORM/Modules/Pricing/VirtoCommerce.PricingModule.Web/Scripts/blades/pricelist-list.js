@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.pricingModule')
-.controller('pricelistListController', ['$scope', 'pricelists', 'bladeNavigationService', 'dialogService',
+.controller('virtoCommerce.pricingModule.pricelistListController', ['$scope', 'virtoCommerce.pricingModule.pricelists', 'bladeNavigationService', 'dialogService',
 function ($scope, pricelists, bladeNavigationService, dialogService) {
     var selectedNode = null;
 
@@ -24,7 +24,7 @@ function ($scope, pricelists, bladeNavigationService, dialogService) {
             currentEntityId: selectedNode.id,
             title: selectedNode.name,
             subtitle: $scope.blade.subtitle,
-            controller: 'pricelistDetailController',
+            controller: 'virtoCommerce.pricingModule.pricelistDetailController',
             template: 'Modules/$(VirtoCommerce.Pricing)/Scripts/blades/pricelist-detail.tpl.html'
         };
 
@@ -91,7 +91,7 @@ function ($scope, pricelists, bladeNavigationService, dialogService) {
                     title: 'New Price list',
                     subtitle: $scope.blade.subtitle,
                     isNew: true,
-                    controller: 'pricelistDetailController',
+                    controller: 'virtoCommerce.pricingModule.pricelistDetailController',
                     template: 'Modules/$(VirtoCommerce.Pricing)/Scripts/blades/pricelist-detail.tpl.html'
                 };
                 bladeNavigationService.showBlade(newBlade, $scope.blade);

@@ -1,7 +1,7 @@
 ﻿angular.module('virtoCommerce.orderModule')
-.controller('customerOrderListController', ['$scope', 'order_res_customerOrders', 'bladeNavigationService', 'dialogService', 
+.controller('virtoCommerce.orderModule.customerOrderListController', ['$scope', 'virtoCommerce.orderModule.order_res_customerOrders', 'bladeNavigationService', 'dialogService',
 function ($scope, order_res_customerOrders, bladeNavigationService, dialogService) {
-    //pagination settigs
+    //pagination settings
     $scope.pageSettings = {};
     $scope.pageSettings.totalItems = 0;
     $scope.pageSettings.currentPage = 1;
@@ -54,7 +54,7 @@ function ($scope, order_res_customerOrders, bladeNavigationService, dialogServic
             title: selectedNode.customer + '\'s Customer Order',
             subtitle: 'Edit order details and related documents',
             customerOrder: selectedNode,
-            controller: 'operationDetailController',
+            controller: 'virtoCommerce.orderModule.operationDetailController',
             template: 'Modules/$(VirtoCommerce.Orders)/Scripts/blades/customerOrder-detail.tpl.html'
         };
 

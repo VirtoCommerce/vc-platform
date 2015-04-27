@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.catalogModule')
-.controller('importJobSettingsController', ['$scope', function ($scope)
+.controller('virtoCommerce.catalogModule.importJobSettingsController', ['$scope', function ($scope)
 {
     $scope.blade.isLoading = false;
     $scope.item = angular.copy($scope.blade.item);

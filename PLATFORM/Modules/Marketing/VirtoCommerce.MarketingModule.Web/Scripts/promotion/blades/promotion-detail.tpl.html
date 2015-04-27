@@ -80,7 +80,7 @@
                 <fieldset ng-if="blade.currentEntity.type==='DynamicPromotion'">
                     <legend>Promotion conditions</legend>
                     <div class="dynamic-expression">
-                        <va-dynamic-expression-tree ng-controller="promotionExpressionsController" source="blade.currentEntity.dynamicExpression"></va-dynamic-expression-tree>
+                        <va-dynamic-expression-tree ng-controller="virtoCommerce.marketingModule.promotionExpressionsController" source="blade.currentEntity.dynamicExpression"></va-dynamic-expression-tree>
                         <script type="text/ng-template" id="expression-BlockCustomerCondition.html">
                             For visitor with
                             <a class="__link" left-click-menu data-target="allAny_menu{{element.id}}">{{element.all | boolToValue:'all':'any'}}</a> of these eligibilities
@@ -122,7 +122,7 @@
     <a class="__link" ng-click="openItemSelectWizard(element1)">{{element1.productName ? element1.productName : 'select product' }}</a>
 </script>
 <script type="text/ng-template" id="expression-ConditionCurrencyIs.html">
-    <span ng-controller="promotionConditionCurrencyIsController">
+    <span ng-controller="virtoCommerce.marketingModule.promotionConditionCurrencyIsController">
         Currency is
         <a class="__link" left-click-menu data-target="pcrn_menu{{$index}}">{{element1.currency ? element1.currency : 'select currency' }}</a>
         <ul class="menu __context" role="menu" id="pcrn_menu{{$index}}">

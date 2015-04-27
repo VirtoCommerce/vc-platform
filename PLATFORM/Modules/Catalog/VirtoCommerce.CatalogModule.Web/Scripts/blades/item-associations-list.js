@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.catalogModule')
-.controller('itemAssociationsListController', ['$rootScope', '$scope', 'bladeNavigationService', 'dialogService', 'items', function ($rootScope, $scope, bladeNavigationService, dialogService, items) {
+.controller('virtoCommerce.catalogModule.itemAssociationsListController', ['$rootScope', '$scope', 'bladeNavigationService', 'dialogService', 'virtoCommerce.catalogModule.items', function ($rootScope, $scope, bladeNavigationService, dialogService, items) {
 
     $scope.blade.refresh = function () {
         $scope.blade.isLoading = true;
@@ -36,7 +36,7 @@
             currentEntities: $scope.blade.currentEntities,
             title: "New Associations",
             //subtitle: '',
-            controller: 'associationWizardController',
+            controller: 'virtoCommerce.catalogModule.associationWizardController',
             template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/wizards/newAssociation/association-wizard.tpl.html'
         };
         bladeNavigationService.showBlade(newBlade, $scope.blade);

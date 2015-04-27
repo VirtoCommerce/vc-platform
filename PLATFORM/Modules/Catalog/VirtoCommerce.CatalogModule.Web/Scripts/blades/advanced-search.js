@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.catalogModule')
-.controller('advancedSearchController', ['$scope', '$filter', 'listEntries', 'bladeNavigationService', function ($scope, $filter, listEntries, bladeNavigationService) {
+.controller('virtoCommerce.catalogModule.advancedSearchController', ['$scope', '$filter', 'virtoCommerce.catalogModule.listEntries', 'bladeNavigationService', function ($scope, $filter, listEntries, bladeNavigationService) {
     var propertyValues = undefined;
     $scope.filter = { searchKeyword: undefined };
 
@@ -34,7 +34,7 @@
             title: 'Search results',
             subtitle: '',
             filter: $scope.filter,
-            controller: 'advancedSearchResultsController',
+            controller: 'virtoCommerce.catalogModule.advancedSearchResultsController',
             template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/advanced-search-results.tpl.html'
         };
         bladeNavigationService.showBlade(newBlade, $scope.blade);

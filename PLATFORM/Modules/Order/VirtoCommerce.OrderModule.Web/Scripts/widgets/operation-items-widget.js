@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.orderModule')
-.controller('operationItemsWidgetController', ['$scope', 'bladeNavigationService', function ($scope, bladeNavigationService) {
+.controller('virtoCommerce.orderModule.operationItemsWidgetController', ['$scope', 'bladeNavigationService', function ($scope, bladeNavigationService) {
 	$scope.blade = $scope.widget.blade;
 	$scope.operation = {};
 
@@ -14,7 +14,7 @@
 			subtitle: 'Edit line items',
 			currentEntity: $scope.blade.currentEntity,
 			isClosingDisabled: false,
-			controller: 'operationItemsController',
+			controller: 'virtoCommerce.orderModule.operationItemsController',
 			template: 'Modules/$(VirtoCommerce.Orders)/Scripts/blades/operation-items.tpl.html'
 		};
 		bladeNavigationService.showBlade(newBlade, $scope.blade);

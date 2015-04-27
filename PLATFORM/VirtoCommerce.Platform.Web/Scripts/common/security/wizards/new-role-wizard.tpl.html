@@ -1,11 +1,18 @@
 ﻿<div class="blade-content">
     <div class="blade-inner">
         <div class="inner-block">
-            <div class="sub-t __border">Role name</div>
+            <div class="sub-t __border">Summary</div>
             <form class="form" name="formScope">
-                <div class="form-group">
+                <div class="form-group" ng-init="setForm(formScope)">
+                    <label class="form-label">Name</label>
                     <div class="form-input">
                         <input ng-model="blade.currentEntity.name" placeholder="Enter name" focus-on required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Description</label>
+                    <div class="form-input">
+                        <textarea class="form-control" cols="30" rows="3" ng-model="blade.currentEntity.description" placeholder="Enter description"></textarea>
                     </div>
                 </div>
             </form>

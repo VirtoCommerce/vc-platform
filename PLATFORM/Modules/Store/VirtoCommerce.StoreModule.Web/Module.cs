@@ -18,11 +18,18 @@ namespace VirtoCommerce.StoreModule.Web
 
         #region IModule Members
 
+        public void SetupDatabase(SampleDataLevel sampleDataLevel)
+        {
+        }
+
         public void Initialize()
         {
             _container.RegisterType<IFoundationStoreRepository>(new InjectionFactory(c => new FoundationStoreRepositoryImpl("VirtoCommerce", new AuditChangeInterceptor())));
-
             _container.RegisterType<IStoreService, StoreServiceImpl>();
+        }
+
+        public void PostInitialize()
+        {
         }
 
         #endregion
