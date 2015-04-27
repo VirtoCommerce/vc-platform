@@ -13,18 +13,18 @@
 	</div>
 </div>
 
-<div class="blade-content" style="{{blade.getBladeStyle()}}">
-    <div class="blade-inner" style="padding: 0" ng-if="!blade.newAsset">
-        <div class="inner-block">
-            <form class="form" style="padding: 0" name="formScope">
-                <div class="form-group">
-                    <div class="form-input __expanded">
-                        <ui-codemirror required ng-model="blade.currentEntity.content" ui-codemirror-opts="editorOptions"></ui-codemirror>
-                    </div>
-                </div>
-            </form>
-        </div>
-    </div>
+<div class="blade-content __code-editor" style="{{blade.getBladeStyle()}}">
+	<div class="blade-inner" style="padding: 0" ng-if="!blade.newAsset">
+		<div class="inner-block">
+			<form class="form" style="padding: 0" name="formScope">
+				<div class="form-group">
+					<div class="form-input __expanded">
+						<ui-codemirror required ng-model="blade.currentEntity.content" ui-codemirror-opts="editorOptions"></ui-codemirror>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
 	<div class="blade-inner" style="padding: 0" ng-if="blade.newAsset">
 		<div class="inner-block">
 			<form class="form" style="padding: 0" name="formScope">
