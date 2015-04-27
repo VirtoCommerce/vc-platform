@@ -20,6 +20,9 @@ namespace VirtoCommerce.Web.Models.Services
             var client = ClientContext.Clients.CreatePageClient();
             var page = await client.GetPageAsync(context.StoreId, context.Language, handle);
 
+            if (page == null)
+                return null;
+
             return new Page
             {
                 Author = "",

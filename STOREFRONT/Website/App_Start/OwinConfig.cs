@@ -50,6 +50,9 @@ namespace VirtoCommerce.Web
         /// The store cookie
         /// </summary>
         protected virtual string StoreCookie { get { return "vcf.store"; } }
+        
+        protected virtual string PreviewThemeCookie { get { return "vcf.previewtheme"; } }
+
         /// <summary>
         /// The currency cookie
         /// </summary>
@@ -413,6 +416,26 @@ namespace VirtoCommerce.Web
 
         private string ResolveTheme(Shop shop, IOwinContext context)
         {
+            #region Preview theme functionality
+            var previewTheme = context.Request.Query["previewtheme"];
+            if (!String.IsNullOrEmpty(previewTheme)) // save in cookie and return
+            {
+                var cookie = context.Request.Cookies[PreviewThemeCookie];
+
+                if (string.IsNullOrEmpty(cookie))
+                {
+                    context.Response.Cookies.Append(PreviewThemeCookie, cookie);
+                }
+            }
+            else
+            {
+                previewTheme = context.Request.Cookies[PreviewThemeCookie];
+            }
+            
+            if (!String.IsNullOrEmpty(previewTheme))
+                return previewTheme;
+            #endregion
+
             var theme = ConfigurationManager.AppSettings["Theme"];
             var shopMetaFields = shop.Metafields["global"];
             if (shopMetaFields != null)

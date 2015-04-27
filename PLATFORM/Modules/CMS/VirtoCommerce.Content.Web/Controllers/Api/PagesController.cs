@@ -1,4 +1,5 @@
-﻿using VirtoCommerce.Platform.Core.Common;
+﻿using System.Net;
+using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Settings;
 
 namespace VirtoCommerce.Content.Web.Controllers.Api
@@ -67,7 +68,12 @@ namespace VirtoCommerce.Content.Web.Controllers.Api
 		public IHttpActionResult GetPage(string storeId, string language, string pageName)
 		{
 			var item = _pagesService.GetPage(storeId, pageName, language);
-			return Ok(item.ToWebModel());
+		    if (item == null)
+		    {
+		        return StatusCode(HttpStatusCode.NoContent);
+		    }
+
+            return Ok(item.ToWebModel());
 		}
 
 		[HttpGet]
