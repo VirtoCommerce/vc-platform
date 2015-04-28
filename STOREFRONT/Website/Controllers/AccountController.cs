@@ -1,4 +1,5 @@
 ﻿using Microsoft.Owin.Security;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
@@ -15,6 +16,9 @@ namespace VirtoCommerce.Web.Controllers
     [Authorize]
     public class AccountController : BaseController
     {
+        private const string ResetCustomerPasswordTokenCookie = "Vcf.ResetCustomerPasswordToken";
+        private const string CustomerIdCookie = "Vcf.CustomerId";
+
         private IAuthenticationManager _authenticationManager;
         private IAuthenticationManager AuthenticationManager
         {
@@ -220,8 +224,18 @@ namespace VirtoCommerce.Web.Controllers
                 return View("error");
             }
 
-            Session["ResetPassword_UserId"] = userId;
-            Session["ResetPassword_Token"] = code;
+            HttpContext.Response.Cookies.Add(new HttpCookie
+            {
+                Name = ResetCustomerPasswordTokenCookie,
+                Value = code,
+                Expires = DateTime.UtcNow.AddDays(1)
+            });
+            HttpContext.Response.Cookies.Add(new HttpCookie
+            {
+                Name = CustomerIdCookie,
+                Value = userId,
+                Expires = DateTime.UtcNow.AddDays(1)
+            });
 
             return View("customers/reset_password");
         }
@@ -238,8 +252,10 @@ namespace VirtoCommerce.Web.Controllers
             {
                 var formErrors = GetFormErrors(ModelState);
 
-                string userId = Session["ResetPassword_UserId"] as string;
-                string token = Session["ResetPassword_Token"] as string;
+                string userId = HttpContext.Request.Cookies[CustomerIdCookie] != null ?
+                    HttpContext.Request.Cookies[CustomerIdCookie].Value : null;
+                string token = HttpContext.Request.Cookies[ResetCustomerPasswordTokenCookie] != null ?
+                    HttpContext.Request.Cookies[ResetCustomerPasswordTokenCookie].Value : null;
 
                 if (userId == null && token == null)
                 {
@@ -254,8 +270,8 @@ namespace VirtoCommerce.Web.Controllers
 
                     if (result.Succeeded)
                     {
-                        Session.Remove("ResetPassword_UserId");
-                        Session.Remove("ResetPassword_Token");
+                        HttpContext.Response.Cookies.Remove(CustomerIdCookie);
+                        HttpContext.Response.Cookies.Remove(ResetCustomerPasswordTokenCookie);
 
                         return View("password_reseted");
                     }
