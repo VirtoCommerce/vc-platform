@@ -97,6 +97,7 @@ namespace VirtoCommerce.Platform.Web
             OwinConfig.Configure(app, container, connectionStringName);
 
             var postInitializeModules = moduleCatalog.CompleteListWithDependencies(moduleCatalog.Modules)
+                .Where(m => m.ModuleInstance != null)
                 .Select(m => m.ModuleInstance)
                 .ToArray();
 
