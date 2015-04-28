@@ -27,39 +27,9 @@ namespace VirtoCommerce.ApiClient
             return rewards;
         }
 
-        public Task<DynamicContentItem> GetDynamicContentItemByIdAsync(string id)
-        {
-            var item = GetAsync<DynamicContentItem>(
-                CreateRequestUri(string.Format(RelativePaths.GetDynamicContentItemById, id)), useCache: false);
-
-            return item;
-        }
-
-        public Task<DynamicContentPlace> GetDynamicContentPlacesByIdAsync(string id)
-        {
-            var place = GetAsync<DynamicContentPlace>(
-                CreateRequestUri(string.Format(RelativePaths.GetDynamicContentPlaceById, id)), useCache: false);
-
-            return place;
-        }
-
-        public Task<DynamicContentPublication> GetDynamicContentPublicationByIdAsync(string id)
-        {
-            var publication = GetAsync<DynamicContentPublication>(
-                CreateRequestUri(string.Format(RelativePaths.GetDynamicContentPublicationById, id)), useCache: false);
-
-            return publication;
-        }
-
         protected class RelativePaths
         {
             public const string GetPromotionRewards = "marketing/promotions/evaluate";
-
-            public const string GetDynamicContentItemById = "marketing/contentitems/{0}";
-
-            public const string GetDynamicContentPlaceById = "marketing/contentplaces/{0}";
-
-            public const string GetDynamicContentPublicationById = "marketing/contentpublications/{0}";
         }
     }
 }
