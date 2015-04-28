@@ -1,4 +1,4 @@
-﻿var baseUrl = "http://localhost:55300";
+﻿var baseUrl = window.location.host;
 
 $(function () {
     jQuery.ajaxSettings.traditional = true;
