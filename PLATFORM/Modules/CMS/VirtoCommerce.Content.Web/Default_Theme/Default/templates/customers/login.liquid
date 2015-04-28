@@ -4,6 +4,12 @@
 
   <div class="grid-item large--one-third push--large--one-third text-center">
 
+    {% form 'external_login' %}
+        {% for login_provider in login_providers %}
+            <input name="context[authentication_type]" type="submit" class="btn" value="{{ login_provider.authentication_type }}" title="{{ login_provider.caption }}" />
+        {% endfor %}
+    {% endform %}
+
     <div class="note form-success" id="resetSuccess" style="display:none;">
       We've sent you an email with a link to update your password.
     </div>
