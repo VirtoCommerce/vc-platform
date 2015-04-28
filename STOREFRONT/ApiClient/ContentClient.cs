@@ -64,7 +64,22 @@ namespace VirtoCommerce.ApiClient
                 Properties = new System.Collections.Generic.Dictionary<string, string>
                 {
                     { "imageUrl", "http://www.ronyasoft.com/products/poster-forge/templates/banners/discount-banner-template/images/discount-banner-template.jpg" },
-                    { "alternativeText", "Banner" }
+                    { "alternativeText", "Banner 1" }
+                }
+            });
+            group.Items.Add(new DynamicContentItem
+            {
+                ContentType = "ImageClickable",
+                Description = "50% discount",
+                Id = System.Guid.NewGuid().ToString(),
+                IsMultilingual = true,
+                Name = "PromotionBanner2",
+                Properties = new System.Collections.Generic.Dictionary<string, string>
+                {
+                    { "imageUrl", "http://www.ronyasoft.com/products/poster-forge/templates/banners/discount-banner-template/images/discount-banner-template.jpg" },
+                    { "alternativeText", "Banner 2" },
+                    { "targetUrl", "http://localhost" },
+                    { "title", "Discount 50%!" }
                 }
             });
 
