@@ -224,18 +224,13 @@ namespace VirtoCommerce.Web.Controllers
                 return View("error");
             }
 
-            HttpContext.Response.Cookies.Add(new HttpCookie
-            {
-                Name = ResetCustomerPasswordTokenCookie,
-                Value = code,
-                Expires = DateTime.UtcNow.AddDays(1)
-            });
-            HttpContext.Response.Cookies.Add(new HttpCookie
-            {
-                Name = CustomerIdCookie,
-                Value = userId,
-                Expires = DateTime.UtcNow.AddDays(1)
-            });
+            var tokenCookie = new HttpCookie(ResetCustomerPasswordTokenCookie, code);
+            tokenCookie.Expires = DateTime.UtcNow.AddDays(1);
+            HttpContext.Response.Cookies.Add(tokenCookie);
+
+            var customerIdCookie = new HttpCookie(CustomerIdCookie, userId);
+            customerIdCookie.Expires = DateTime.UtcNow.AddDays(1);
+            HttpContext.Response.Cookies.Add(customerIdCookie);
 
             return View("customers/reset_password");
         }
