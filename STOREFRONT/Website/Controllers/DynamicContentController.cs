@@ -37,7 +37,7 @@ namespace VirtoCommerce.Web.Controllers
 
                         foreach (var item in group.Items)
                         {
-                            placeholder.Items.Add(HttpUtility.HtmlEncode(Parse(item)));
+                            placeholder.Items.Add(Parse(item));
                         }
                     }
 

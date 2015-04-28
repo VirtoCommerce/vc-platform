@@ -1,4 +1,4 @@
-﻿var baseUrl = window.location.host;
+﻿var baseUrl = window.location.protocol + "//" + window.location.host;
 
 $(function () {
     jQuery.ajaxSettings.traditional = true;
