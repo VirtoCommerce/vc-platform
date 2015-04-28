@@ -1,7 +1,5 @@
-﻿angular.module('virtoCommerce.content.themeModule.widgets.themesWidget', [
-	'virtoCommerce.content.themeModule.resources.themes'
-])
-.controller('themesWidgetController', ['$injector', '$rootScope', '$scope', 'themes', 'bladeNavigationService', function ($injector, $rootScope, $scope, themes, bladeNavigationService) {
+﻿angular.module('virtoCommerce.contentModule')
+.controller('virtoCommerce.contentModule.themesWidgetController', ['$injector', '$rootScope', '$scope', 'virtoCommerce.contentModule.themes', 'bladeNavigationService', function ($injector, $rootScope, $scope, themes, bladeNavigationService) {
 	var blade = $scope.widget.blade;
 
 	$scope.widget.refresh = function () {
@@ -18,7 +16,7 @@
 			parentWidget: $scope.widget,
 			title: blade.title,
 			subtitle: 'Themes List',
-			controller: 'themesListController',
+			controller: 'virtoCommerce.contentModule.themesListController',
 			template: 'Modules/$(VirtoCommerce.Content)/Scripts/blades/themes/themes-list.tpl.html'
 		};
 		bladeNavigationService.showBlade(newBlade, blade);

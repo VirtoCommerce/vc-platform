@@ -1,10 +1,5 @@
-﻿angular.module('virtoCommerce.content.menuModule.blades.linkLists', [
-    'virtoCommerce.content.menuModule.resources.menus',
-	'virtoCommerce.content.menuModule.resources.menusStores',
-	'virtoCommerce.content.menuModule.blades.menuLinkList',
-	'angularUUID2'
-])
-.controller('linkListsController', ['$scope', 'menus', 'menusStores', 'bladeNavigationService', function ($scope, menus, menusStores, bladeNavigationService) {
+﻿angular.module('virtoCommerce.contentModule')
+.controller('virtoCommerce.contentModule.linkListsController', ['$scope', 'virtoCommerce.contentModule.menus', 'virtoCommerce.contentModule.stores', 'bladeNavigationService', function ($scope, menus, menusStores, bladeNavigationService) {
 	$scope.selectedNodeId = null;
 
 	var blade = $scope.blade;
@@ -29,7 +24,7 @@
 			newList: false,
 			title: 'Edit ' + data.name + ' list',
 			subtitle: 'Link list edit',
-			controller: 'menuLinkListController',
+			controller: 'virtoCommerce.contentModule.menuLinkListController',
 			template: 'Modules/$(VirtoCommerce.Content)/Scripts/blades/menu/menu-link-list.tpl.html'
 		};
 		bladeNavigationService.showBlade(newBlade, blade);
@@ -45,7 +40,7 @@
 			newList: true,
 			title: 'Add new list',
 			subtitle: 'Create new list',
-			controller: 'menuLinkListController',
+			controller: 'virtoCommerce.contentModule.menuLinkListController',
 			template: 'Modules/$(VirtoCommerce.Content)/Scripts/blades/menu/menu-link-list.tpl.html'
 		};
 		bladeNavigationService.showBlade(newBlade, $scope.blade);

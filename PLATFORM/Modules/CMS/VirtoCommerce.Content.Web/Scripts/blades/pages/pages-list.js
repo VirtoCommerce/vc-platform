@@ -1,9 +1,5 @@
-﻿angular.module('virtoCommerce.content.pagesModule.blades.pagesList', [
-    'virtoCommerce.content.pagesModule.resources.pages',
-	'virtoCommerce.content.pagesModule.blades.editPage',
-	'virtoCommerce.content.pagesModule.resources.pagesStores'
-])
-.controller('pagesListController', ['$scope', 'pages', 'pagesStores', 'bladeNavigationService', function ($scope, pages, pagesStores, bladeNavigationService) {
+﻿angular.module('virtoCommerce.contentModule')
+.controller('virtoCommerce.contentModule.pagesListController', ['$scope', 'virtoCommerce.contentModule.pages', 'virtoCommerce.contentModule.stores', 'bladeNavigationService', function ($scope, pages, pagesStores, bladeNavigationService) {
 	$scope.selectedNodeId = null;
 
 	var blade = $scope.blade;
@@ -29,7 +25,7 @@
 			newPage: false,
 			title: 'Edit ' + data.name,
 			subtitle: 'Page edit',
-			controller: 'editPageController',
+			controller: 'virtoCommerce.contentModule.editPageController',
 			template: 'Modules/$(VirtoCommerce.Content)/Scripts/blades/pages/edit-page.tpl.html'
 		};
 		bladeNavigationService.showBlade(newBlade, blade);
@@ -46,7 +42,7 @@
 			newPage: true,
 			title: 'Add new page',
 			subtitle: 'Create new theme',
-			controller: 'editPageController',
+			controller: 'virtoCommerce.contentModule.editPageController',
 			template: 'Modules/$(VirtoCommerce.Content)/Scripts/blades/pages/edit-page.tpl.html'
 		};
 		bladeNavigationService.showBlade(newBlade, $scope.blade);

@@ -1,8 +1,5 @@
-﻿angular.module('virtoCommerce.content.menuModule.widgets.menuWidget', [
-	'virtoCommerce.content.menuModule.resources.menus',
-	'virtoCommerce.content.menuModule.blades.linkLists'
-])
-.controller('menuWidgetController', ['$injector', '$rootScope', '$scope', 'menus', 'bladeNavigationService', function ($injector, $rootScope, $scope, menus, bladeNavigationService) {
+﻿angular.module('virtoCommerce.contentModule')
+.controller('virtoCommerce.contentModule.menuWidgetController', ['$injector', '$rootScope', '$scope', 'virtoCommerce.contentModule.menus', 'bladeNavigationService', function ($injector, $rootScope, $scope, menus, bladeNavigationService) {
 	var blade = $scope.widget.blade;
 
 	$scope.widget.refresh = function () {
@@ -19,7 +16,7 @@
 			parentWidget: $scope.widget,
 			title: blade.title,
 			subtitle: 'Link Lists',
-			controller: 'linkListsController',
+			controller: 'virtoCommerce.contentModule.linkListsController',
 			template: 'Modules/$(VirtoCommerce.Content)/Scripts/blades/menu/link-lists.tpl.html'
 		};
 		bladeNavigationService.showBlade(newBlade, blade);

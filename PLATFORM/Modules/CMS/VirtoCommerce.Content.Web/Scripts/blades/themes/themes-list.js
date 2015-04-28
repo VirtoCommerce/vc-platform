@@ -1,10 +1,5 @@
-﻿angular.module('virtoCommerce.content.themeModule.blades.themeList', [
-    'virtoCommerce.content.themeModule.resources.themes',
-	'virtoCommerce.content.themeModule.resources.themesStores',
-	'virtoCommerce.content.themeModule.blades.themeAssetList',
-	'virtoCommerce.content.themeModule.blades.addTheme'
-])
-.controller('themesListController', ['$scope', 'themes', 'themesStores', 'bladeNavigationService', function ($scope, themes, themesStores, bladeNavigationService) {
+﻿angular.module('virtoCommerce.contentModule')
+.controller('virtoCommerce.contentModule.themesListController', ['$scope', 'virtoCommerce.contentModule.themes', 'virtoCommerce.contentModule.stores', 'bladeNavigationService', function ($scope, themes, themesStores, bladeNavigationService) {
 	$scope.selectedNodeId = null;
 
 	var blade = $scope.blade;
@@ -33,7 +28,7 @@
 			choosenTheme: data,
 			title: 'Edit ' + data.path,
 			subtitle: 'Theme asset list',
-			controller: 'themeAssetListController',
+			controller: 'virtoCommerce.contentModule.themeAssetListController',
 			template: 'Modules/$(VirtoCommerce.Content)/Scripts/blades/themes/theme-asset-list.tpl.html'
 		};
 		bladeNavigationService.showBlade(newBlade, blade);
@@ -54,7 +49,7 @@
 			currentEntity: {},
 			title: 'New theme asset',
 			subtitle: 'Create new theme',
-			controller: 'addThemeController',
+			controller: 'virtoCommerce.contentModule.addThemeController',
 			template: 'Modules/$(VirtoCommerce.Content)/Scripts/blades/themes/add-theme.tpl.html'
 		};
 		bladeNavigationService.showBlade(newBlade, $scope.blade);

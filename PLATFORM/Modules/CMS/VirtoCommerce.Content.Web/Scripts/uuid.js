@@ -1,5 +1,4 @@
-﻿'use strict'
-angular.module('angularUUID2', []).factory('uuid2', [
+﻿angular.module('angularUUID2', []).factory('uuid2', [
 	function () {
 		function s4() {
 			return Math.floor((1 + Math.random()) * 0x10000)

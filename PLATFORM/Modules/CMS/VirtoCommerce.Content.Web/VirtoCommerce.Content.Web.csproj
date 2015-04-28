@@ -219,12 +219,7 @@
     <Content Include="Scripts\blades\themes\themes-list.tpl.html" />
     <Content Include="Scripts\content.js" />
     <Content Include="Scripts\home.tpl.html" />
-    <Content Include="Scripts\resources\menus.js" />
-    <Content Include="Scripts\resources\menus_stores.js" />
-    <Content Include="Scripts\resources\pages.js" />
-    <Content Include="Scripts\resources\pagesStores.js" />
-    <Content Include="Scripts\resources\themes.js" />
-    <Content Include="Scripts\resources\themesStores.js" />
+    <Content Include="Scripts\resources\contentResource.js" />
     <Content Include="Scripts\uuid.js" />
     <Content Include="Scripts\widgets\menuWidget.js" />
     <Content Include="Scripts\widgets\menuWidget.tpl.html" />

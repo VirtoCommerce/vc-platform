@@ -1,7 +1,5 @@
-﻿angular.module('virtoCommerce.content.themeModule.blades.editImageAsset', [
-	'virtoCommerce.content.themeModule.resources.themes',
-	'angularFileUpload'
-]).controller('editImageAssetController', ['$scope', 'dialogService', 'themes', 'FileUploader', function ($scope, dialogService, themes, FileUploader) {
+﻿angular.module('virtoCommerce.contentModule')
+.controller('virtoCommerce.contentModule.editImageAssetController', ['$scope', 'dialogService', 'virtoCommerce.contentModule.themes', 'FileUploader', function ($scope, dialogService, themes, FileUploader) {
 	var blade = $scope.blade;
 
 	blade.initializeBlade = function () {

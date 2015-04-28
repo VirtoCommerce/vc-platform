@@ -1,8 +1,5 @@
-﻿angular.module('virtoCommerce.content.pagesModule.blades.editPage', [
-	'virtoCommerce.content.pagesModule.resources.pages',
-	'virtoCommerce.content.pagesModule.resources.pagesStores'
-])
-.controller('editPageController', ['$scope', 'dialogService', 'pagesStores', 'pages', '$timeout', function ($scope, dialogService, pagesStores, pages, $timeout) {
+﻿angular.module('virtoCommerce.contentModule')
+.controller('virtoCommerce.contentModule.editPageController', ['$scope', 'dialogService', 'virtoCommerce.contentModule.stores', 'virtoCommerce.contentModule.pages', '$timeout', function ($scope, dialogService, pagesStores, pages, $timeout) {
     var blade = $scope.blade;
     var codemirrorEditor;
 

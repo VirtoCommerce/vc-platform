@@ -1,10 +1,5 @@
-﻿angular.module('virtoCommerce.content.themeModule.blades.themeAssetList', [
-    'virtoCommerce.content.themeModule.resources.themes',
-	'virtoCommerce.content.themeModule.resources.themesStores',
-	'virtoCommerce.content.themeModule.blades.editAsset',
-	'virtoCommerce.content.themeModule.blades.editImageAsset'
-])
-.controller('themeAssetListController', ['$scope', 'themes', 'themesStores', 'bladeNavigationService', 'dialogService', function ($scope, themes, themesStores, bladeNavigationService, dialogService) {
+﻿angular.module('virtoCommerce.contentModule')
+.controller('virtoCommerce.contentModule.themeAssetListController', ['$scope', 'virtoCommerce.contentModule.themes', 'virtoCommerce.contentModule.stores', 'bladeNavigationService', 'dialogService', function ($scope, themes, themesStores, bladeNavigationService, dialogService) {
 	var blade = $scope.blade;
 
 	blade.selectedAssetId = undefined;
@@ -97,7 +92,7 @@
 				newAsset: false,
 				title: asset.id,
 				subtitle: 'Edit ' + asset.name,
-				controller: 'editAssetController',
+				controller: 'virtoCommerce.contentModule.editAssetController',
 				template: 'Modules/$(VirtoCommerce.Content)/Scripts/blades/themes/edit-asset.tpl.html'
 			};
 			bladeNavigationService.showBlade(newBlade, blade);
@@ -112,7 +107,7 @@
 				newAsset: false,
 				title: asset.id,
 				subtitle: 'Edit ' + asset.name,
-				controller: 'editImageAssetController',
+				controller: 'virtoCommerce.contentModule.editImageAssetController',
 				template: 'Modules/$(VirtoCommerce.Content)/Scripts/blades/themes/edit-image-asset.tpl.html'
 			};
 			bladeNavigationService.showBlade(newBlade, blade);
@@ -172,7 +167,7 @@
 				currentEntity: { id: undefined, content: undefined, contentType: contentType, assetUrl: undefined, name: name },
 				title: 'New ' + folder.oneItemName,
 				subtitle: 'Create new ' + folder.oneItemName,
-				controller: 'editAssetController',
+				controller: 'virtoCommerce.contentModule.editAssetController',
 				template: 'Modules/$(VirtoCommerce.Content)/Scripts/blades/themes/edit-asset.tpl.html'
 			};
 			bladeNavigationService.showBlade(newBlade, blade);
@@ -187,7 +182,7 @@
 				currentEntity: { id: undefined, content: undefined, contentType: undefined, assetUrl: undefined, name: undefined },
 				title: 'New ' + folder.oneItemName,
 				subtitle: 'Create new ' + folder.oneItemName,
-				controller: 'editImageAssetController',
+				controller: 'virtoCommerce.contentModule.editImageAssetController',
 				template: 'Modules/$(VirtoCommerce.Content)/Scripts/blades/themes/edit-image-asset.tpl.html'
 			};
 			bladeNavigationService.showBlade(newBlade, blade);
