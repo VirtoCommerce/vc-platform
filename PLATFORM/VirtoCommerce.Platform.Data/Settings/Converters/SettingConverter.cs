@@ -1,17 +1,14 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Omu.ValueInjecter;
+using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Core.Settings;
-using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Data.Model;
-using System.Collections;
-
 
 namespace VirtoCommerce.Platform.Data.Settings.Converters
 {
@@ -110,7 +107,7 @@ namespace VirtoCommerce.Platform.Data.Settings.Converters
             if (!source.SettingValues.IsNullCollection())
             {
                 var comparer = AnonymousComparer.Create((SettingValueEntity x) => x.ToString(CultureInfo.InvariantCulture));
-                source.SettingValues.Patch(target.SettingValues, comparer, (sourceSetting, targetSetting) => { return; });
+                source.SettingValues.Patch(target.SettingValues, comparer, (sourceSetting, targetSetting) => { });
             }
         }
 
@@ -123,7 +120,7 @@ namespace VirtoCommerce.Platform.Data.Settings.Converters
             }
             else if (string.Equals(valueType, ModuleSetting.TypeInteger, StringComparison.InvariantCultureIgnoreCase))
             {
-                retVal = SettingValueType.Integrer;
+                retVal = SettingValueType.Integer;
             }
             else if (string.Equals(valueType, ModuleSetting.TypeDecimal, StringComparison.InvariantCultureIgnoreCase))
             {
@@ -147,7 +144,7 @@ namespace VirtoCommerce.Platform.Data.Settings.Converters
             }
             else if (valueType == typeof(Int32))
             {
-                retVal = SettingValueType.Integrer;
+                retVal = SettingValueType.Integer;
             }
             else if (valueType == typeof(decimal))
             {
