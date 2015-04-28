@@ -109,6 +109,24 @@ namespace VirtoCommerce.Platform.Core.Caching
             return retVal;
         }
 
+        public bool Remove(CacheKey cacheKey)
+        {
+            if (cacheKey == null)
+            {
+                throw new ArgumentNullException("cacheKey");
+            }
+
+            var result = false;
+            var repository = GetRepository(cacheKey.CacheGroup);
+
+            if (repository != null)
+            {
+                result = repository.Remove(cacheKey.Key);
+            }
+
+            return result;
+        }
+
 
         private ICacheProvider GetRepository(string group)
         {
