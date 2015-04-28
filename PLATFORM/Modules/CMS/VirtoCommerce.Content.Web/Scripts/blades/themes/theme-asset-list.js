@@ -60,24 +60,6 @@
 		}
 	}
 
-	blade.setThemeAsActive = function () {
-		blade.isLoading = true;
-		if (_.where(blade.store.settings, { name: "DefaultThemeName" }).length > 0) {
-			angular.forEach(blade.store.settings, function (value, key) {
-				if (value.name === "DefaultThemeName") {
-					value.value = blade.choosenThemeId;
-				}
-			});
-		}
-		else {
-			blade.store.settings.push({ name: "DefaultThemeName", value: blade.choosenThemeId, valueType: "ShortText" })
-		}
-
-		themesStores.update({ storeId: blade.choosenStoreId }, blade.store, function (data) {
-			blade.isLoading = false;
-		});
-	}
-
 	blade.openBlade = function (asset, data) {
 		blade.selectedAssetId = asset.id;
 		closeChildrenBlades();
@@ -112,25 +94,6 @@
 			};
 			bladeNavigationService.showBlade(newBlade, blade);
 		}
-	}
-
-	blade.deleteTheme = function () {
-		var dialog = {
-			id: "confirmDelete",
-			title: "Delete confirmation",
-			message: "Are you sure want to delete " + blade.choosenThemeId + "?",
-			callback: function (remove) {
-				if (remove) {
-					blade.isLoading = true;
-					themes.deleteTheme({ storeId: blade.choosenStoreId, themeId: blade.choosenThemeId }, function (data) {
-						$scope.blade.parentBlade.refresh(true);
-						$scope.bladeClose();
-						blade.isLoading = false;
-					});
-				}
-			}
-		}
-		dialogService.showConfirmationDialog(dialog);
 	}
 
 	blade.folderSorting = function (entity) {
@@ -213,35 +176,35 @@
 
     $scope.bladeHeadIco = 'fa fa-archive';
 
-    $scope.bladeToolbarCommands = [
-		{
-			name: "Set Active", icon: 'fa fa-pencil-square-o',
-			executeMethod: function () {
-				blade.setThemeAsActive();
-			},
-			canExecuteMethod: function () {
-				return !angular.isUndefined(blade.choosenThemeId);
-			}
-		},
-        {
-        	name: "Refresh", icon: 'fa fa-refresh',
-        	executeMethod: function () {
-        		blade.refresh();
-        	},
-        	canExecuteMethod: function () {
-        		return true;
-        	}
-        },
-		{
-			name: "Delete theme", icon: 'fa fa-trash-o',
-			executeMethod: function () {
-				blade.deleteTheme();
-			},
-			canExecuteMethod: function () {
-				return !angular.isUndefined(blade.choosenThemeId);
-			}
-		}
-    ];
+    //$scope.bladeToolbarCommands = [
+	//	{
+	//		name: "Set Active", icon: 'fa fa-pencil-square-o',
+	//		executeMethod: function () {
+	//			blade.setThemeAsActive();
+	//		},
+	//		canExecuteMethod: function () {
+	//			return !angular.isUndefined(blade.choosenThemeId);
+	//		}
+	//	},
+    //    {
+    //    	name: "Refresh", icon: 'fa fa-refresh',
+    //    	executeMethod: function () {
+    //    		blade.refresh();
+    //    	},
+    //    	canExecuteMethod: function () {
+    //    		return true;
+    //    	}
+    //    },
+	//	{
+	//		name: "Delete theme", icon: 'fa fa-trash-o',
+	//		executeMethod: function () {
+	//			blade.deleteTheme();
+	//		},
+	//		canExecuteMethod: function () {
+	//			return !angular.isUndefined(blade.choosenThemeId);
+	//		}
+	//	}
+    //];
 
     blade.folders = [
 		{ name: 'assets', oneItemName: 'asset', defaultItemName: undefined, defaultContentType: null, isOpen: false },
