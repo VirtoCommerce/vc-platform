@@ -10,11 +10,11 @@ namespace VirtoCommerce.Content.Web.Converters
 {
     public static class SyncAssetConverter
     {
-        public static SyncAsset ToSyncModel(this ThemeAsset item, string theme)
+        public static SyncAsset ToSyncModel(this ThemeAsset item)
         {
             var retVal = new SyncAsset();
             retVal.InjectFrom(item);
-            retVal.Id = String.Format("{0}/{1}", theme, item.Id);
+            //retVal.Id = String.Format("{0}/{1}", theme, item.Id);
             return retVal;
         }
 
@@ -23,7 +23,7 @@ namespace VirtoCommerce.Content.Web.Converters
             var retVal = new SyncAsset();
             retVal.InjectFrom(item);
             retVal.Updated = item.ModifiedDate;
-            retVal.Id = String.Format("_pages/{0}/{1}", item.Language, item.Name);
+            retVal.Id = String.Format("{0}/pages/{1}", item.Language, item.Name);
             return retVal;
         }
     }

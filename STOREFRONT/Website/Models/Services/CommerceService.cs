@@ -867,24 +867,46 @@ namespace VirtoCommerce.Web.Models.Services
             var store = SiteContext.Current.StoreId;
             var theme = SiteContext.Current.Theme.Name;
             var themePath = String.Format("{0}\\{1}", _themesCacheStoragePath, SiteContext.Current.Theme.Path);
-            var storageClient = new FileStorageCacheService(HostingEnvironment.MapPath(themePath));
-            var lastUpdate = storageClient.GetLatestUpdate();
-            var response = await this._themeClient.GetThemeAssetsAsync(store, theme, lastUpdate, true);
-            //var response = await this._storeClient.GetStoreAssetsAsync(store, theme, lastUpdate);
+            var themeStorageClient = new FileStorageCacheService(HostingEnvironment.MapPath(themePath));
+            var pagesStorageClient = new FileStorageCacheService(HostingEnvironment.MapPath(String.Format("~/App_Data/Pages/{0}", store)));
+
+            // get last updated for both pages or theme files
+            var lastUpdate = new DateTime(Math.Max(themeStorageClient.GetLatestUpdate().Ticks, pagesStorageClient.GetLatestUpdate().Ticks));
+
+            //var response = await this._themeClient.GetThemeAssetsAsync(store, theme, lastUpdate, true);
+            var response = await this._storeClient.GetStoreAssetsAsync(store, theme, lastUpdate);
 
             if (response.Any())
             {
                 lock (_LockObject)
                 {
                     // check last update again, since going to the service is more expensive than checking local folders
-                    var newLastUpdate = storageClient.GetLatestUpdate();
+                    var newLastUpdate = new DateTime(Math.Max(themeStorageClient.GetLatestUpdate().Ticks, pagesStorageClient.GetLatestUpdate().Ticks));
                     if (newLastUpdate == lastUpdate)
                     {
+                        foreach (var syncAssetGroup in response)
+                        {
+                            if (syncAssetGroup.Type == "theme")
+                            {
+                                var reload = themeStorageClient.ApplyUpdates(syncAssetGroup.AsFileModel());
+                                if (reload)
+                                {
+                                    this._viewLocator.UpdateCache();
+                                }
+                            }
+                            else if (syncAssetGroup.Type == "pages")
+                            {
+                                pagesStorageClient.ApplyUpdates(syncAssetGroup.AsFileModel());
+                            }
+                        }
+
+                        /*
                         var reload = storageClient.ApplyUpdates(response.AsFileModel());
                         if (reload)
                         {
                             this._viewLocator.UpdateCache();
                         }
+                         * */
                     }
                 }
             }

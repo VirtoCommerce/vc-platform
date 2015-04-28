@@ -32,7 +32,8 @@ namespace VirtoCommerce.Web.Models
             if (result == null)
             {
                 var context = SiteContext.Current;
-                var response = Task.Run(() => new PagesService().GetPageAsync(context, method)).Result;
+                //var response = Task.Run(() => new PagesService().GetPageAsync(context, method)).Result;
+                var response = new PagesService().GetPage(context, method);
                 return response;
             }
 

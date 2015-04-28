@@ -251,6 +251,7 @@
     <Compile Include="Models\MenuLink.cs" />
     <Compile Include="Models\MenuLinkList.cs" />
     <Compile Include="Models\Page.cs" />
+    <Compile Include="Models\SyncAssetGroup.cs" />
     <Compile Include="Models\SyncAsset.cs" />
     <Compile Include="Models\Theme.cs" />
     <Compile Include="Models\ThemeAsset.cs" />
