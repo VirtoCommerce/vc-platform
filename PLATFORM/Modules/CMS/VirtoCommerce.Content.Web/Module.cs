@@ -169,7 +169,7 @@ namespace VirtoCommerce.Content.Web
             #endregion
 
             #region Sync_Initialize
-            //this._container.RegisterType<SyncController>(new InjectionConstructor(themesFactory, pagesFactory, settingsManager));
+            this._container.RegisterType<SyncController>(new InjectionConstructor(themesFactory, pagesFactory, settingsManager));
             #endregion
         }
 
