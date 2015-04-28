@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using VirtoCommerce.Platform.Core.Settings;
 using VirtoCommerce.Platform.Data.Model;
 
@@ -20,11 +21,11 @@ namespace VirtoCommerce.Platform.Data.Settings.Converters
             }
             else if (valueType == SettingValueType.Decimal)
             {
-                result.DecimalValue = Convert.ToDecimal(value);
+                result.DecimalValue = Convert.ToDecimal(value, CultureInfo.InvariantCulture);
             }
             else if (valueType == SettingValueType.Integer)
             {
-                result.IntegerValue = Convert.ToInt32(value);
+                result.IntegerValue = Convert.ToInt32(value, CultureInfo.InvariantCulture);
             }
             else if (valueType == SettingValueType.LongText)
             {
