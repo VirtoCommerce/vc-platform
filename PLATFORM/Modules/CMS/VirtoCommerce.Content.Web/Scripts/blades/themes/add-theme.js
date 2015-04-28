@@ -1,4 +1,4 @@
-﻿angular.module('virtoCommerce.contentModule.')
+﻿angular.module('virtoCommerce.contentModule')
 .controller('virtoCommerce.contentModule.addThemeController', ['$scope', 'dialogService', 'virtoCommerce.contentModule.themes', 'FileUploader', function ($scope, dialogService, themes, FileUploader) {
 	var blade = $scope.blade;
 
