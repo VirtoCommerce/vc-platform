@@ -175,7 +175,8 @@ namespace VirtoCommerce.Web.Views.Contents
         /// <summary>
         ///     Loads all content items in the certain collection
         /// </summary>
-        /// <param name="collectioName"></param>
+        /// <param name="context"></param>
+        /// <param name="collectionFolder"></param>
         /// <returns></returns>
         private ContentItem[] GetCollectionContentItemsInternal(
             SiteStaticContentContext context,
