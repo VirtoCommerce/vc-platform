@@ -23,6 +23,7 @@ using VirtoCommerce.Web.Models.Lists;
 using VirtoCommerce.Web.Views.Engines.Liquid;
 using VirtoCommerce.ApiClient.DataContracts.Cart;
 using VirtoCommerce.ApiClient.DataContracts.Marketing;
+using VirtoCommerce.ApiClient.DataContracts.Contents;
 
 #endregion
 
@@ -48,6 +49,7 @@ namespace VirtoCommerce.Web.Models.Services
         private readonly string _themesCacheStoragePath;
         private readonly string _pagesCacheStoragePath;
         private readonly MarketingClient _marketingClient;
+        private readonly ContentClient _contentClient;
 
         private static readonly object _LockObject = new object();
         #endregion
@@ -67,6 +69,7 @@ namespace VirtoCommerce.Web.Models.Services
             this._themeClient = ClientContext.Clients.CreateThemeClient();
             this._pageClient = ClientContext.Clients.CreatePageClient();
             this._reviewsClient = ClientContext.Clients.CreateReviewsClient();
+            this._contentClient = ClientContext.Clients.CreateDefaultContentClient();
 
             _themesCacheStoragePath = ConfigurationManager.AppSettings["ThemeCacheFolder"];
             _pagesCacheStoragePath = ConfigurationManager.AppSettings["PageCacheFolder"];
@@ -885,6 +888,11 @@ namespace VirtoCommerce.Web.Models.Services
                     }
                 }
             }
+        }
+
+        public async Task<ResponseCollection<DynamicContentItemGroup>> GetDynamicContentAsync(string[] placeholders)
+        {
+            return await _contentClient.GetDynamicContentAsync(placeholders, null);
         }
         #endregion
 
