@@ -113,7 +113,20 @@
 	}
 
 	blade.previewTheme = function () {
-		window.open('http://kitmall.ru?previewtheme=' + blade.choosenTheme.name, '_blank');
+		if (blade.store.url !== undefined) {
+			window.open(blade.store.url + '?previewtheme=' + blade.choosenTheme.name, '_blank');
+		}
+		else {
+			var dialog = {
+				id: "noUrlInStore",
+				title: "Url is not set for store",
+				message: "Please, set store url, before preview theme!",
+				callback: function (remove) {
+
+				}
+			}
+			dialogService.showNotificationDialog(dialog);
+		}
 	}
 
 	blade.checkTheme = function (data) {

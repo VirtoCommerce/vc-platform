@@ -68,7 +68,19 @@ namespace VirtoCommerce.Content.Web
             var uploadPath = HostingEnvironment.MapPath("~/App_Data/Uploads/");
             var uploadPathFiles = HostingEnvironment.MapPath("~/App_Data/Uploads/Files/");
 
-            Func<string, IThemeService> themesFactory = x =>
+			#region Clear uploaded files directory
+
+			var files = Directory.GetFiles(uploadPathFiles);
+			foreach (var file in files)
+				File.Delete(file);
+
+			files = Directory.GetFiles(uploadPath);
+			foreach (var file in files)
+				File.Delete(file);
+
+			#endregion
+
+			Func<string, IThemeService> themesFactory = x =>
             {
                 switch (x)
                 {
