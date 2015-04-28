@@ -3,6 +3,7 @@ using System.Linq;
 using Omu.ValueInjecter;
 using VirtoCommerce.Web.Models.Storage;
 using Data = VirtoCommerce.ApiClient.DataContracts.Themes;
+using Data2 = VirtoCommerce.ApiClient.DataContracts.Stores;
 
 #endregion
 
@@ -38,6 +39,18 @@ namespace VirtoCommerce.Web.Models.Convertors
         }
 
         public static FileAsset[] AsFileModel(this Data.ThemeAsset[] assets)
+        {
+            return assets == null ? null : assets.Select(t => t.AsFileModel()).ToArray();
+        }
+
+        public static FileAsset AsFileModel(this Data2.SyncAsset asset)
+        {
+            var ret = new FileAsset();
+            ret.InjectFrom(asset);
+            return ret;
+        }
+
+        public static FileAsset[] AsFileModel(this Data2.SyncAsset[] assets)
         {
             return assets == null ? null : assets.Select(t => t.AsFileModel()).ToArray();
         }

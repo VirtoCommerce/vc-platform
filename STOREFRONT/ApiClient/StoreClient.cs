@@ -47,6 +47,15 @@ namespace VirtoCommerce.ApiClient
             return GetAsync<Store[]>(CreateRequestUri(RelativePaths.Stores));
         }
 
+        public async Task<SyncAsset[]> GetStoreAssetsAsync(string storeId, string themeId, DateTime since)
+        {
+            var parameters = new{ since, themeId };
+            return await
+                GetAsync<SyncAsset[]>(
+                    CreateRequestUri(
+                        String.Format(RelativePaths.StoreAssets, storeId), parameters));
+        }
+
         #endregion
 
         protected class RelativePaths
@@ -54,7 +63,7 @@ namespace VirtoCommerce.ApiClient
             #region Constants
 
             public const string Stores = "mp/stores";
-
+            public const string StoreAssets = "cms/sync/stores/{0}/assets";
             #endregion
         }
     }

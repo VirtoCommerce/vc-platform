@@ -867,6 +867,7 @@ namespace VirtoCommerce.Web.Models.Services
             var storageClient = new FileStorageCacheService(HostingEnvironment.MapPath(themePath));
             var lastUpdate = storageClient.GetLatestUpdate();
             var response = await this._themeClient.GetThemeAssetsAsync(store, theme, lastUpdate, true);
+            //var response = await this._storeClient.GetStoreAssetsAsync(store, theme, lastUpdate);
 
             if (response.Any())
             {

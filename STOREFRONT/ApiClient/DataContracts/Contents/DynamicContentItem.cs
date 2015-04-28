@@ -7,11 +7,6 @@ using Newtonsoft.Json;
 
 namespace VirtoCommerce.ApiClient.DataContracts.Contents
 {
-
-    #region
-
-    #endregion
-
     public class DynamicContentItem
     {
         #region Fields
