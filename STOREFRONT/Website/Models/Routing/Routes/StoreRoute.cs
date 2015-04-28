@@ -279,7 +279,7 @@ namespace VirtoCommerce.Web.Models.Routing.Routes
                 values[Constants.Language] = store.DefaultLanguage;
             }
 
-            var isLanguageNeeded = this.IsLanguageNeeded(store);
+            var isLanguageNeeded = this.IsLanguageNeeded(store, values[Constants.Language] as string);
             var isStoreNeeded = this.IsStoreNeeded(store);
 
             if (!isStoreNeeded || !isLanguageNeeded)
@@ -347,9 +347,10 @@ namespace VirtoCommerce.Web.Models.Routing.Routes
             }
         }
 
-        protected virtual bool IsLanguageNeeded(Shop dbStore)
+        protected virtual bool IsLanguageNeeded(Shop dbStore, string language)
         {
-            return dbStore == null || dbStore.Languages.Any();
+            return true;
+            //return dbStore == null || (dbStore.Languages.Any() /*&& !dbStore.DefaultLanguage.Equals(language, StringComparison.OrdinalIgnoreCase)*/);
         }
 
         /// <summary>

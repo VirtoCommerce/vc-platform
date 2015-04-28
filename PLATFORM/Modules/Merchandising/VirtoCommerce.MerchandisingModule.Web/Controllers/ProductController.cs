@@ -208,15 +208,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
                 {
                     var termFilter = new AttributeFilter
                                      {
-                                         Key = term.Key,
-                                         Values =
-                                             term.Value.Select(
-                                                 x =>
-                                             new AttributeFilterValue
-                                             {
-                                                 Id = x.ToLowerInvariant(),
-                                                 Value = x.ToLowerInvariant()
-                                             }).ToArray()
+                                         Key = term.Key, Values = term.Value.Select(x => new AttributeFilterValue {Id = x.ToLowerInvariant(), Value = x.ToLowerInvariant()}).ToArray()
                                      };
 
                     criteria.Apply(termFilter);
@@ -263,11 +255,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
                             sortObject = new SearchSort(
                                 criteria.Pricelists.Select(
                                     priceList =>
-                                        new SearchSortField(
-                                            String.Format(
-                                                "price_{0}_{1}",
-                                                criteria.Currency.ToLower(),
-                                                priceList.ToLower()))
+                                        new SearchSortField(String.Format("price_{0}_{1}",criteria.Currency.ToLower(),priceList.ToLower()))
                                         {
                                             IgnoredUnmapped = true,
                                             IsDescending = isDescending,
