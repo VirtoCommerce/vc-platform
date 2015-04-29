@@ -27,7 +27,7 @@ Copyright (C) Microsoft Corporation. All rights reserved.
         <CleanWebProjectOutputDir Condition="$(WebProjectOutputDirInsideProject)" >False</CleanWebProjectOutputDir>
     </PropertyGroup>
 
-    <!--Only setup $(WebProjectOutputDir) iff user haven't set it up-->
+    <!--Only setup $(WebProjectOutputDir) if user haven't set it up-->
     <PropertyGroup Condition="'$(WebProjectOutputDir)'==''">
         <WebProjectOutputDir>$(MSBuildProjectDirectory)</WebProjectOutputDir>
         <WebProjectOutputDir Condition="!$(WebProjectOutputDirInsideProject)">$(OutDir)_PublishedWebsites\$(MSBuildProjectName)</WebProjectOutputDir>
@@ -36,7 +36,7 @@ Copyright (C) Microsoft Corporation. All rights reserved.
 
     <PropertyGroup Condition="'$(WebProjectOutputBinDir)'==''">
         <WebProjectOutputBinDir>$(WebProjectOutputDir)\bin</WebProjectOutputBinDir>
-        <WebProjectOutputBinDir Condition="!$(WebProjectOutputDirInsideProject) And '$(VCModulesOutputDir)' != ''">$(VCModulesOutputDir)\bin</WebProjectOutputBinDir>
+        <WebProjectOutputBinDir Condition="!$(WebProjectOutputDirInsideProject) And '$(VCModulesOutputDir)' != '' And '$(VCModulesZipDir)' == ''">$(VCModulesOutputDir)\bin</WebProjectOutputBinDir>
     </PropertyGroup>
 
     <PropertyGroup>
@@ -139,7 +139,8 @@ Copyright (C) Microsoft Corporation. All rights reserved.
         <MakeDir Directories="$(WebProjectOutputBinDir)" />
 
         <!-- Copy build outputs to _PublishedWebsites\app\bin folder -->
-        <Copy SourceFiles="@(IntermediateAssembly)" DestinationFolder="$(WebProjectOutputBinDir)"
+        <Copy SourceFiles="@(IntermediateAssembly)"
+              DestinationFolder="$(WebProjectOutputBinDir)"
               SkipUnchangedFiles="true"
               Retries="$(CopyRetryCount)"
               RetryDelayMilliseconds="$(CopyRetryDelayMilliseconds)"/>
@@ -396,4 +397,23 @@ Copyright (C) Microsoft Corporation. All rights reserved.
         <AutoUnifyAssemblyReferences>false</AutoUnifyAssemblyReferences>
         <AppConfig Condition="'$(AppConfig)' == '' And Exists('$(ProjectConfigFileName)')">$(ProjectConfigFileName)</AppConfig>
     </PropertyGroup>
+
+    <PropertyGroup>
+        <MSBuildCommunityTasksPath>$(SolutionDir)\.build</MSBuildCommunityTasksPath>
+    </PropertyGroup>  
+
+    <Import Project="$(MSBuildCommunityTasksPath)\MSBuild.Community.Tasks.targets" />
+    
+    <Target Name="AfterBuild" Condition="'$(VCModulesZipDir)' != ''">
+        <ItemGroup>
+            <Link Include="$(WebProjectOutputDir)\bin\**\*.*" />
+        </ItemGroup>
+        <XmlRead XmlFileName="module.manifest" XPath="/module/id">
+            <Output TaskParameter="Value" PropertyName="VCModuleId" />
+        </XmlRead>
+        <XmlRead XmlFileName="module.manifest" XPath="/module/version">
+            <Output TaskParameter="Value" PropertyName="VCModuleVersion" />
+        </XmlRead>
+        <Zip Files="@(Content);@(Link)" WorkingDirectory="$(WebProjectOutputDir)" ZipFileName="$(VCModulesZipDir)\$(VCModuleId)_$(VCModuleVersion).zip" ZipLevel="9" />
+    </Target>
 </Project>
