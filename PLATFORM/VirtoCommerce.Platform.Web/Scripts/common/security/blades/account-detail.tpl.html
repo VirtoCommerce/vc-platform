@@ -8,20 +8,21 @@
                     <p class="form-text">{{blade.currentEntity.userName}}</p>
                 </div>
             </div>
-
-            <!--<div class="sub-t __border">Assigned roles</div>
-            <div class="form">
-                <div class="form-group">
-                    <a class="clear text-mini __link" ng-click="removeAll()">Clear all</a>
-                    <ul class="list __inline __choosen">
-                        <li class="list-item" ng-repeat="data in blade.currentEntity.roles">
-                            <a class="list-remove" ng-click="remove(data)">×</a>
-                            <span class="list-name">{{data.name}}</span>
-                        </li>
-                    </ul>
+            <div class="form-group">
+                <label class="form-label">Account state</label>
+                <div class="form-input">
+                    <p class="form-text">{{blade.currentEntity.userState}}</p>
                 </div>
             </div>
-            <div class="sub-t __border">Available roles</div>-->
+            <div class="form-group">
+                <label class="form-label">Is administrator</label>
+                <div class="form-control __switch">
+                    <label class="form-label">
+                        <input type="checkbox" ng-model="blade.currentEntity.userType" ng-true-value="'Administrator'" ng-false-value="'SiteAdministrator'" />
+                        <span class="switch"></span>
+                    </label>
+                </div>
+            </div>
 
             <va-widget-container group="accountDetail" blade="blade"></va-widget-container>
         </div>

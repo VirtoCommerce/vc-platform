@@ -87,7 +87,8 @@
             },
             canExecuteMethod: function () {
                 return true;
-            }
+            },
+            permission: 'customer:manage'
         },
         {
             name: "Reset", icon: 'fa fa-undo',
@@ -96,7 +97,8 @@
             },
             canExecuteMethod: function () {
                 return isDirty();
-            }
+            },
+            permission: 'customer:manage'
         }
     ];
 

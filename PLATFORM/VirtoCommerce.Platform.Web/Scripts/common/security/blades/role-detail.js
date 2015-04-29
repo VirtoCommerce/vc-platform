@@ -99,7 +99,8 @@
                     },
                     canExecuteMethod: function () {
                         return isDirty() && $scope.formScope && $scope.formScope.$valid;
-                    }
+                    },
+                    permission: 'platform:security:manage'
                 },
                 {
                     name: "Reset",
@@ -109,7 +110,8 @@
                     },
                     canExecuteMethod: function () {
                         return isDirty();
-                    }
+                    },
+                    permission: 'platform:security:manage'
                 },
                 {
                     name: "Manage permissions", icon: 'fa fa-edit',
@@ -127,7 +129,8 @@
                     },
                     canExecuteMethod: function () {
                         return true;
-                    }
+                    },
+                    permission: 'platform:security:manage'
                 }
             ];
         }

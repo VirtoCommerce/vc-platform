@@ -39,7 +39,7 @@ angular.module(moduleName, [
           title: 'Stores',
           priority: 110,
           action: function () { $state.go('workspace.storeModule'); },
-          permission: 'storesMenuPermission'
+          permission: 'store:query'
       };
       mainMenuService.addMenuItem(menuItem);
 

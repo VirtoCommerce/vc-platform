@@ -8,11 +8,12 @@ using System.Web.Http.ModelBinding;
 using VirtoCommerce.CartModule.Web.Binders;
 using VirtoCommerce.CartModule.Web.Converters;
 using VirtoCommerce.Domain.Cart.Services;
-using VirtoCommerce.Foundation.Money;
+using VirtoCommerce.Platform.Core.Security;
 
 namespace VirtoCommerce.CartModule.Web.Controllers.Api
 {
     [RoutePrefix("api/cart")]
+    [CheckPermission(Permission = PredefinedPermissions.Query)]
 	public class CartController : ApiController
 	{
 		private readonly IShoppingCartService _shoppingCartService;
@@ -77,6 +78,7 @@ namespace VirtoCommerce.CartModule.Web.Controllers.Api
 		[HttpPost]
 		[ResponseType(typeof(void))]
 		[Route("carts")]
+        [CheckPermission(Permission = PredefinedPermissions.Manage)]
 		public IHttpActionResult Create(CatalogModule.Web.Model.ShoppingCart cart)
 		{
 			var coreCart = cart.ToCoreModel();
@@ -88,6 +90,7 @@ namespace VirtoCommerce.CartModule.Web.Controllers.Api
         [HttpPut]
         [ResponseType(typeof(CatalogModule.Web.Model.ShoppingCart))]
         [Route("carts")]
+        [CheckPermission(Permission = PredefinedPermissions.Manage)]
         public IHttpActionResult Update(CatalogModule.Web.Model.ShoppingCart cart)
         {
             var coreCart = cart.ToCoreModel();
@@ -166,6 +169,7 @@ namespace VirtoCommerce.CartModule.Web.Controllers.Api
 		[HttpDelete]
 		[ResponseType(typeof(void))]
 		[Route("carts")]
+        [CheckPermission(Permission = PredefinedPermissions.Manage)]
 		public IHttpActionResult DeleteCarts([FromUri] string[] ids)
 		{
 			_shoppingCartService.Delete(ids);

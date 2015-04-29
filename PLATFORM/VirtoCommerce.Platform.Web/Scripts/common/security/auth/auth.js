@@ -2,27 +2,25 @@
 .directive('vaPermission', ['authService', function (authService) {
     return {
         link: function (scope, element, attrs) {
+            if (attrs.vaPermission) {
+                var permissionValue = attrs.vaPermission.trim();
+                var notPermissionFlag = permissionValue[0] === '!';
+                if (notPermissionFlag) {
+                    permissionValue = permissionValue.slice(1).trim();
+                }
 
-            if (!attrs.vaPermission)
-                throw "permission must be not null";
+                function toggleVisibilityBasedOnPermission() {
+                    var hasPermission = authService.checkPermission(permissionValue);
 
-            var permissionValue = attrs.vaPermission.trim();
-            var notPermissionFlag = permissionValue[0] === '!';
-            if (notPermissionFlag) {
-                permissionValue = permissionValue.slice(1).trim();
+                    if (hasPermission && !notPermissionFlag || !hasPermission && notPermissionFlag)
+                        element.show();
+                    else
+                        element.hide();
+                }
+
+                toggleVisibilityBasedOnPermission();
+                scope.$on('loginStatusChanged', toggleVisibilityBasedOnPermission);
             }
-
-            function toggleVisibilityBasedOnPermission() {
-                var hasPermission = authService.checkPermission(permissionValue);
-
-                if (hasPermission && !notPermissionFlag || !hasPermission && notPermissionFlag)
-                    element.show();
-                else
-                    element.hide();
-            }
-
-            toggleVisibilityBasedOnPermission();
-            scope.$on('loginStatusChanged', toggleVisibilityBasedOnPermission);
         }
     };
 }])
@@ -36,36 +34,36 @@
     };
 
     authContext.fillAuthData = function () {
-    	$http.get(serviceBase + 'usersession').then(
+        $http.get(serviceBase + 'usersession').then(
 			function (results) {
-				changeAuth(results.data);
+			    changeAuth(results.data);
 			});
     };
 
     authContext.login = function (email, password, remember) {
-    	return $http.post(serviceBase + 'login/', { userName: email, password: password, rememberMe: remember }).then(
+        return $http.post(serviceBase + 'login/', { userName: email, password: password, rememberMe: remember }).then(
 			function (results) {
 			    changeAuth(results.data);
 			    return authContext.isAuthenticated;
 			});
     };
     authContext.logout = function () {
-    	$http.post(serviceBase + 'logout/').then(function (result) {
+        $http.post(serviceBase + 'logout/').then(function (result) {
 
-    		authContext.isAuthenticated = false;
-    		authContext.userLogin = null;
-    		authContext.fullName = null;
-    		authContext.permissions = null;
-    		authContext.userType = null;
+            authContext.isAuthenticated = false;
+            authContext.userLogin = null;
+            authContext.fullName = null;
+            authContext.permissions = null;
+            authContext.userType = null;
 
-    		$rootScope.$broadcast('loginStatusChanged', authContext);
-    	});
+            $rootScope.$broadcast('loginStatusChanged', authContext);
+        });
     };
 
     authContext.checkPermission = function (permission) {
         //first check admin permission
-    	// var hasPermission = $.inArray('admin', authContext.permissions) > -1;
-    	var hasPermission = authContext.userType == 'Administrator';
+        // var hasPermission = $.inArray('admin', authContext.permissions) > -1;
+        var hasPermission = authContext.userType == 'Administrator';
         if (!hasPermission) {
             permission = permission.trim();
             hasPermission = $.inArray(permission, authContext.permissions) > -1;

@@ -233,6 +233,7 @@
     <Compile Include="Controllers\Api\MenuController.cs" />
     <Compile Include="Controllers\Api\PagesController.cs" />
     <Compile Include="Controllers\Api\ThemeController.cs" />
+    <Compile Include="Controllers\PredefinedPermissions.cs" />
     <Compile Include="Converters\ContentItemConverter.cs" />
     <Compile Include="Converters\GetPagesCriteriaConverter.cs" />
     <Compile Include="Converters\GetThemeAssetsCriteriaConverter.cs" />

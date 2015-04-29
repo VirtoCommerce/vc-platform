@@ -99,7 +99,8 @@
             },
             canExecuteMethod: function () {
                 return isDirty();
-            }
+            },
+            permission: 'customer:manage'
         },
 		{
 		    name: "Delete", icon: 'fa fa-trash-o',
@@ -108,7 +109,8 @@
 		    },
 		    canExecuteMethod: function () {
 		        return !(b.origEntity.isNew || isDirty());
-		    }
+		    },
+		    permission: 'customer:manage'
 		}
     ];
 

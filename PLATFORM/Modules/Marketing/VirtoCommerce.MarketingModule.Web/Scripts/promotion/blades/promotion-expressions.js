@@ -2,9 +2,13 @@
 .controller('virtoCommerce.marketingModule.promotionConditionCurrencyIsController', ['$scope', 'settings', function ($scope, settings) {
     $scope.availableCurrencies = settings.getValues({ id: 'VirtoCommerce.Core.General.Currencies' });
 }])
-.controller('virtoCommerce.marketingModule.promotionExpressionsController', ['$scope', 'bladeNavigationService', function ($scope, bladeNavigationService) {
+.controller('virtoCommerce.marketingModule.promotionExpressionsController', ['$scope', 'authService', 'bladeNavigationService', function ($scope, authService, bladeNavigationService) {
 
     $scope.openItemSelectWizard = function (parentElement) {
+        if (!authService.checkPermission('marketing:manage')) {
+            return;
+        }
+
         var selectedListEntries = [];
         var newBlade = {
             id: "CatalogEntrySelect",
@@ -17,8 +21,8 @@
                 name: "Pick selected", icon: 'fa fa-plus',
                 executeMethod: function (blade) {
                     //parentElement.selectedListEntry = selectedListEntries[0];
-                	parentElement.productId = selectedListEntries[0].id;
-                	parentElement.productName = selectedListEntries[0].name;
+                    parentElement.productId = selectedListEntries[0].id;
+                    parentElement.productName = selectedListEntries[0].name;
                     bladeNavigationService.closeBlade(blade);
                 },
                 canExecuteMethod: function () {
@@ -51,6 +55,10 @@
     }
 
     $scope.openCategorySelectWizard = function (parentElement) {
+        if (!authService.checkPermission('marketing:manage')) {
+            return;
+        }
+
         var selectedListEntries = [];
         var newBlade = {
             id: "CatalogCategorySelect",
@@ -62,8 +70,8 @@
             {
                 name: "Pick selected", icon: 'fa fa-plus',
                 executeMethod: function (blade) {
-                	parentElement.categoryId = selectedListEntries[0].id;
-                	parentElement.categoryName = selectedListEntries[0].name;
+                    parentElement.categoryId = selectedListEntries[0].id;
+                    parentElement.categoryName = selectedListEntries[0].name;
                     bladeNavigationService.closeBlade(blade);
                 },
                 canExecuteMethod: function () {

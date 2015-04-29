@@ -37,7 +37,7 @@ angular.module(moduleName, ['virtoCommerce.catalogModule', 'virtoCommerce.pricin
   		title: 'Orders',
   		priority: 99,
   		action: function () { $state.go('workspace.orderModule'); },
-  		permission: 'ordersMenuPermission'
+  		permission: 'order:query'
   	};
   	mainMenuService.addMenuItem(menuItem);
 

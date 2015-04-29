@@ -8,11 +8,7 @@
                     <input type="checkbox" ng-model="data.isChecked">
                     <span class="switch"></span>
                     <span class="list-name">{{data.name}}</span>
-                    <i class="fa fa-info-circle" left-click-menu data-target="sar_menu{{$index}}"></i>
-                    <ul class="menu __context" role="menu" id="sar_menu{{$index}}">
-                        <li class="menu-item">{{data.description}}</li>
-                        <!--<li class="menu-item" ng-repeat="x in data.permissions">{{x.name}}</li>-->
-                    </ul>
+                    <span class="list-descr">{{data.description}}</span>
                 </label>
             </div>
         </div>

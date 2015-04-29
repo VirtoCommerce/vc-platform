@@ -10,12 +10,14 @@ using VirtoCommerce.CatalogModule.Web.Converters;
 using VirtoCommerce.Domain.Catalog.Services;
 using VirtoCommerce.Foundation.Frameworks.Extensions;
 using VirtoCommerce.Platform.Core.Asset;
+using VirtoCommerce.Platform.Core.Security;
 using moduleModel = VirtoCommerce.Domain.Catalog.Model;
 using webModel = VirtoCommerce.CatalogModule.Web.Model;
 
 namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 {
     [RoutePrefix("api/catalog/listentries")]
+    [CheckPermission(Permission = PredefinedPermissions.Query)]
     public class ListEntryController : ApiController
     {
         private readonly ICatalogSearchService _searchService;
