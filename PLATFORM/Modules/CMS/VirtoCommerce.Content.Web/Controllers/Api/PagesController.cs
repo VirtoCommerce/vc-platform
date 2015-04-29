@@ -1,5 +1,6 @@
 ﻿using System.Net;
 using VirtoCommerce.Platform.Core.Common;
+using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Settings;
 
 namespace VirtoCommerce.Content.Web.Controllers.Api
@@ -19,6 +20,7 @@ namespace VirtoCommerce.Content.Web.Controllers.Api
 	#endregion
 
 	[RoutePrefix("api/cms/{storeId}")]
+    [CheckPermission(Permission = PredefinedPermissions.Query)]
 	public class PagesController : ApiController
 	{
 		#region Fields
@@ -88,6 +90,7 @@ namespace VirtoCommerce.Content.Web.Controllers.Api
 
 		[HttpPost]
 		[Route("pages")]
+        [CheckPermission(Permission = PredefinedPermissions.Manage)]
 		public IHttpActionResult SaveItem(string storeId, Page page)
 		{
 			_pagesService.SavePage(storeId, page.ToCoreModel());
@@ -96,6 +99,7 @@ namespace VirtoCommerce.Content.Web.Controllers.Api
 
 		[HttpDelete]
 		[Route("pages")]
+        [CheckPermission(Permission = PredefinedPermissions.Manage)]
 		public IHttpActionResult DeleteItem(string storeId, [FromUri]string[] pageNamesAndLanguges)
 		{
 			_pagesService.DeletePage(storeId, PagesUtility.GetShortPageInfoFromString(pageNamesAndLanguges).ToArray());

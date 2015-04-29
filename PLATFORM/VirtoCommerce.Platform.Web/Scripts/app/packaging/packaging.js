@@ -37,7 +37,7 @@ angular.module(moduleName)
           title: 'Modules',
           priority: 200,
           action: function () { $state.go('workspace.packaging'); },
-          permission: 'modulesMenuPermission'
+          permission: 'platform:module:query'
       };
       mainMenuService.addMenuItem(menuItem);
   }])

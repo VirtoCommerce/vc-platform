@@ -55,7 +55,8 @@
             },
             canExecuteMethod: function () {
                 return true;
-            }
+            },
+            permission: 'platform:module:manage'
         }
     ];
 

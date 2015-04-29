@@ -28,4 +28,8 @@
   <scripts>
     <directory virtualPath="$/Scripts" searchPattern="*.js" searchSubdirectories="true" />
   </scripts>
+  <permissions>
+    <permission id="cart:query" name="Browse carts" description="Permission to open carts menu and browse data."/>
+    <permission id="cart:manage" name="Manage carts" description="Permission to manage cart."/>
+  </permissions>
 </module>

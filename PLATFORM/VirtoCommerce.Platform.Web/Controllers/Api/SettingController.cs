@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Http;
 using System.Web.Http.Description;
+using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Settings;
 using VirtoCommerce.Platform.Web.Model.Settings;
 using webModel = VirtoCommerce.Platform.Web.Model.Settings;
@@ -50,6 +51,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
         [HttpPost]
         [Route("")]
+        [CheckPermission(Permission = PredefinedPermissions.SettingManage)]
         public void Update(webModel.Setting[] settings)
         {
             _settingsManager.SaveSettings(settings.Select(x => x.ToModuleModel()).ToArray());

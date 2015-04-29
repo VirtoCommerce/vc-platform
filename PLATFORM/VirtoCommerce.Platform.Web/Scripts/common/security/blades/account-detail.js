@@ -15,6 +15,8 @@
         $scope.blade.currentEntity = angular.copy(data);
         $scope.blade.origEntity = data;
         $scope.blade.isLoading = false;
+
+        userStateCommand.updateName();
     };
 
     function isDirty() {
@@ -30,7 +32,7 @@
             bladeNavigationService.setError('Error ' + error.status, $scope.blade);
         });
     };
-    
+
     $scope.blade.onClose = function (closeCallback) {
         closeChildrenBlades();
         if (isDirty()) {
@@ -60,6 +62,26 @@
 
     $scope.bladeHeadIco = 'fa-lock';
 
+    var userStateCommand = {
+        updateName: function () {
+            return this.name = ($scope.blade.currentEntity && $scope.blade.currentEntity.userState === 'Approved') ? 'Reject user' : 'Approve user';
+        },
+        // name: this.updateName(),
+        icon: 'fa fa-dot-circle-o',
+        executeMethod: function () {
+            if ($scope.blade.currentEntity.userState === 'Approved') {
+                $scope.blade.currentEntity.userState = 'Rejected';
+            } else {
+                $scope.blade.currentEntity.userState = 'Approved';
+            }
+            this.updateName();
+        },
+        canExecuteMethod: function () {
+            return true;
+        },
+        permission: 'platform:security:manage'
+    };
+
     $scope.bladeToolbarCommands = [
         {
             name: "Save",
@@ -69,18 +91,22 @@
             },
             canExecuteMethod: function () {
                 return isDirty();
-            }
+            },
+            permission: 'platform:security:manage'
         },
         {
             name: "Reset",
             icon: 'fa fa-undo',
             executeMethod: function () {
                 angular.copy($scope.blade.origEntity, $scope.blade.currentEntity);
+                userStateCommand.updateName();
             },
             canExecuteMethod: function () {
                 return isDirty();
-            }
+            },
+            permission: 'platform:security:manage'
         },
+        userStateCommand,
         {
             name: "Change password",
             icon: 'fa fa-refresh',
@@ -97,7 +123,8 @@
             },
             canExecuteMethod: function () {
                 return true;
-            }
+            },
+            permission: 'platform:security:manage'
         }
     ];
 

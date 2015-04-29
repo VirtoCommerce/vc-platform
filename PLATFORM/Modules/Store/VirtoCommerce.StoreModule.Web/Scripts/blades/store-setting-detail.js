@@ -86,7 +86,8 @@
             },
             canExecuteMethod: function () {
                 return isDirty();
-            }
+            },
+            permission: 'store:manage'
         },
         {
             name: "Delete", icon: 'fa fa-trash-o',
@@ -95,7 +96,8 @@
             },
             canExecuteMethod: function () {
                 return !$scope.blade.currentEntity.isNew && !isDirty();
-            }
+            },
+            permission: 'store:manage'
         }
     ];
 

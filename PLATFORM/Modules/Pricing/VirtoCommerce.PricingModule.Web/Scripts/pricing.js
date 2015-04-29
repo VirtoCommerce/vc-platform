@@ -37,7 +37,7 @@ angular.module(moduleName, [])
           title: 'Pricing',
           priority: 30,
           action: function () { $state.go('workspace.pricingModule'); },
-          permission: 'pricingMenuPermission'
+          permission: 'pricing:query'
       };
       mainMenuService.addMenuItem(menuItem);
 

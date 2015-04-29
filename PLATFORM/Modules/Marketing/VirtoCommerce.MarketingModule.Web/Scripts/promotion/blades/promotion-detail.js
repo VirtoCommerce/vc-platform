@@ -125,7 +125,8 @@
                     },
                     canExecuteMethod: function () {
                         return isDirty() && $scope.formScope && $scope.formScope.$valid;
-                    }
+                    },
+                    permission: 'marketing:manage'
                 },
                 {
                     name: "Reset",
@@ -135,7 +136,8 @@
                     },
                     canExecuteMethod: function () {
                         return isDirty();
-                    }
+                    },
+                    permission: 'marketing:manage'
                 }
             ];
         }

@@ -92,7 +92,8 @@
                     },
                     canExecuteMethod: function () {
                         return isDirty();
-                    }
+                    },
+                    permission: 'catalog:virtual_catalogs:manage'
                 },
                 {
                     name: "Reset", icon: 'fa fa-undo',
@@ -101,7 +102,8 @@
                     },
                     canExecuteMethod: function () {
                         return isDirty();
-                    }
+                    },
+                    permission: 'catalog:virtual_catalogs:manage'
                 }
             ];
         }
