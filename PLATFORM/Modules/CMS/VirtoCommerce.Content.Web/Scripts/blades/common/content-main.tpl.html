@@ -1,0 +1,55 @@
+﻿<div class="blade-content __large-wide __gray">
+	<div class="blade-inner">
+		<div class="inner-block">
+			<div class="form">
+				<div class="tile-group five" ng-repeat="data in blade.currentEntities">
+					<div class="tile double __brand">
+						<div class="tile-descr">{{data.store.name}}</div>
+						<div class="tile-image"></div>
+					</div>
+					<div class="tile triple wide mini" ng-if="!data.defaultThemeName" ng-click="blade.openThemes(data)">
+						<div class="tile-t">No active theme, click to choose</div>
+					</div>
+					<div class="tile triple wide mini" ng-if="data.defaultThemeName">
+						<div class="tile-t">Active theme: {{data.defaultThemeName}}</div>
+						<ul class="menu __inline __theme-links">
+							<li class="menu-item" ng-click="blade.openTheme(data); $event.stopPropagation();">
+								<a class="menu-link">
+									<i class="menu-ico fa fa-edit"></i>
+									Edit CSS/HTML
+								</a>
+							</li>
+							<li class="menu-item" ng-click="blade.previewTheme(data); $event.stopPropagation();">
+								<a class="menu-link">
+									<i class="menu-ico fa fa-eye"></i>
+									Preview theme
+								</a>
+							</li>
+							<li class="menu-item" ng-click="blade.customizeTheme(data); $event.stopPropagation();">
+								<a class="menu-link">
+									<i class="menu-ico fa fa-wrench"></i>
+									Customize theme
+								</a>
+							</li>
+						</ul>
+					</div>
+					<div class="tile" ng-click="blade.openThemes(data)">
+						<div class="tile-descr">Themes</div>
+						<div class="tile-count">{{data.themesCount}}</div>
+						<a class="btn" ng-click="blade.addNewTheme(data); $event.stopPropagation();">Add</a>
+					</div>
+					<div class="tile" ng-click="blade.openPages(data)">
+						<div class="tile-descr">Pages</div>
+						<div class="tile-count">{{data.pagesCount}}</div>
+						<a class="btn" ng-click="blade.addNewPage(data); $event.stopPropagation();">Add</a>
+					</div>
+					<div class="tile" ng-click="blade.openLinkLists(data)">
+						<div class="tile-descr">Link lists</div>
+						<div class="tile-count">{{data.listLinksCount}}</div>
+						<a class="btn" ng-click="blade.addNewLinkList(data); $event.stopPropagation();">Add</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

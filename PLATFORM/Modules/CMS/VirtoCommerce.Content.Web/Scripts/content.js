@@ -42,10 +42,10 @@ angular.module(moduleName, ['angularUUID2'])
 			controller: [
 				'$scope', 'bladeNavigationService', function ($scope, bladeNavigationService) {
 					var blade = {
-						id: 'marketing',
-						title: 'Marketing',
-						controller: 'virtoCommerce.contentModule.ContentMainController',
-						template: 'Modules/$(VirtoCommerce.Marketing)/Scripts/common/content-main.tpl.html',
+						id: 'content',
+						title: 'Content',
+						controller: 'virtoCommerce.contentModule.contentMainController',
+						template: 'Modules/$(VirtoCommerce.Content)/Scripts/blades/common/content-main.tpl.html',
 						isClosingDisabled: true
 					};
 					bladeNavigationService.showBlade(blade);

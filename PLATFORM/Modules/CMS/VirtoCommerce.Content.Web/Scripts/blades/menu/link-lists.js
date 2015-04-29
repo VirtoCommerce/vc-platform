@@ -8,7 +8,6 @@
 		blade.isLoading = true;
 		menus.get({ storeId: blade.storeId }, function (data) {
 			blade.currentEntities = data;
-			blade.parentWidget.refresh();
 			blade.isLoading = false;
 		});
 	}

@@ -199,6 +199,8 @@
     <Content Include="Default_Theme\Default\assets\respond.min.js" />
     <Content Include="Default_Theme\Default\assets\slide_1.jpg" />
     <Content Include="Default_Theme\Default\assets\slide_2.jpg" />
+    <Content Include="Scripts\blades\common\content-main.js" />
+    <Content Include="Scripts\blades\common\content-main.tpl.html" />
     <Content Include="Scripts\blades\themes\add-theme.js" />
     <Content Include="Scripts\blades\themes\add-theme.tpl.html" />
     <Content Include="Scripts\blades\themes\edit-asset.js" />
