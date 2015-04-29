@@ -103,6 +103,7 @@
     <Compile Include="Controllers\Api\ListEntryController.cs" />
     <Compile Include="Controllers\Api\ImportController.cs" />
     <Compile Include="Controllers\Api\PropertiesController.cs" />
+    <Compile Include="Controllers\PredefinedPermissions.cs" />
     <Compile Include="Converters\AssetConverter.cs" />
     <Compile Include="Converters\AssociationConverter.cs" />
     <Compile Include="Converters\CatalogConverter.cs" />

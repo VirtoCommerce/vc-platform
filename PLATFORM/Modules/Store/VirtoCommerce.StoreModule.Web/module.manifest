@@ -64,4 +64,8 @@
       </setting>
     </group>
   </settings>
+  <permissions>
+    <permission id="store:query" name="Browse stores" description="Permission to open stores menu and browse data."/>
+    <permission id="store:manage" name="Manage stores" description="Permission to manage stores information."/>
+  </permissions>
 </module>

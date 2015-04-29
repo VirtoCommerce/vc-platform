@@ -62,7 +62,7 @@
             title: 'Security',
             priority: 190,
             action: function () { $state.go('workspace.securityModule'); },
-            permission: 'securityMenuPermission'
+            permission: 'platform:security:query'
         };
         mainMenuService.addMenuItem(menuItem);
 

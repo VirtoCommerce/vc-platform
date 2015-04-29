@@ -12,6 +12,7 @@ using VirtoCommerce.Foundation.Importing.Services;
 using VirtoCommerce.Platform.Core.Asset;
 using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Core.Notification;
+using VirtoCommerce.Platform.Core.Security;
 
 namespace VirtoCommerce.CatalogModule.Web
 {
@@ -68,6 +69,7 @@ namespace VirtoCommerce.CatalogModule.Web
             var itemService = new ItemServiceImpl(catalogRepFactory, appConfigRepFactory, CacheManager.NoCache);
             var catalogSearchService = new CatalogSearchServiceImpl(catalogRepFactory, itemService, catalogService, categoryService, CacheManager.NoCache);
 
+            var permissionService = _container.Resolve<IPermissionService>();
             var blobUrlResolver = _container.Resolve<IBlobUrlResolver>();
 
             _container.RegisterInstance<IItemService>(itemService);
@@ -80,7 +82,7 @@ namespace VirtoCommerce.CatalogModule.Web
             _container.RegisterType<PropertiesController>(new InjectionConstructor(propertyService, categoryService, catalogService));
             _container.RegisterType<ListEntryController>(new InjectionConstructor(catalogSearchService, categoryService, itemService, blobUrlResolver));
             _container.RegisterType<CategoriesController>(new InjectionConstructor(catalogSearchService, categoryService, propertyService, catalogService));
-            _container.RegisterType<CatalogsController>(new InjectionConstructor(catalogService, catalogSearchService, appConfigRepFactory, propertyService));
+            _container.RegisterType<CatalogsController>(new InjectionConstructor(catalogService, catalogSearchService, appConfigRepFactory, propertyService, permissionService));
 
             #endregion
 

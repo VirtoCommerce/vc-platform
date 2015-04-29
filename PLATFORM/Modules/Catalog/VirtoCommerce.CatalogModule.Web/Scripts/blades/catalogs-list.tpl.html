@@ -3,16 +3,16 @@
         <div class="inner-block clearfix">
             <ul class="list __items">
                 <li class="list-item" ng-repeat="data in objects track by data.id" ng-class="{'__selected': data.id === selectedNodeId}" ng-click='selectNode(data)' context-menu data-target="cl_menu{{$index}}">
+                    <i class="list-ico fa" ng-class="data.virtual ? 'fa-cloud' : 'fa-folder'"></i>
+                    <span class="list-name">{{data.name + (data.virtual ? ' (virtual)' : '')}}</span>
                     <ul class="menu __context" role="menu" id="cl_menu{{$index}}">
-                        <li class="menu-item" ng-click='editCatalog(data)'>
+                        <li class="menu-item" ng-click='editCatalog(data)' va-permission="catalog:catalogs:manage">
                             <i class="menu-ico fa fa-edit"></i> Manage
                         </li>
-                        <li class="menu-item" ng-click='deleteCatalog(data)'>
+                        <li class="menu-item" ng-click='deleteCatalog(data)' va-permission="catalog:catalogs:manage">
                             <i class="menu-ico fa fa-trash-o"></i> Delete
                         </li>
                     </ul>
-                    <i class="list-ico fa" ng-class="data.virtual ? 'fa-cloud' : 'fa-folder'"></i>
-                    <span class="list-name">{{data.name + (data.virtual ? ' (virtual)' : '')}}</span>
                 </li>
             </ul>
         </div>

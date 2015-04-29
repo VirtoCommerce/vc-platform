@@ -50,7 +50,7 @@ angular.module(moduleName, [])
           title: 'customers',
           priority: 180,
           action: function () { $state.go('workspace.customerModule'); },
-          permission: 'customersMenuPermission'
+          permission: 'customer:query'
       };
       mainMenuService.addMenuItem(menuItem);
 

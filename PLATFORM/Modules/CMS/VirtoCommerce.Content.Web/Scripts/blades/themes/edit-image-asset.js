@@ -21,7 +21,8 @@
 				},
 				canExecuteMethod: function () {
 					return isDirty();
-				}
+				},
+				permission: 'content:manage'
 			},
 			{
 				name: "Reset", icon: 'fa fa-undo',
@@ -30,7 +31,8 @@
 				},
 				canExecuteMethod: function () {
 					return isDirty();
-				}
+				},
+				permission: 'content:manage'
 			},
 			{
 				name: "Delete", icon: 'fa fa-trash-o',
@@ -39,7 +41,8 @@
 				},
 				canExecuteMethod: function () {
 					return !isDirty();
-				}
+				},
+				permission: 'content:manage'
 			}];
 		}
 		else {
@@ -54,7 +57,8 @@
 				},
 				canExecuteMethod: function () {
 					return isDirty() && isCanSave();
-				}
+				},
+				permission: 'content:manage'
 			}];
 
 			blade.isLoading = false;

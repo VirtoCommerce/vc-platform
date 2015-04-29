@@ -195,7 +195,8 @@
         	},
         	canExecuteMethod: function () {
         		return true;
-        	}
+        	},
+        	permission: 'marketing:manage'
         },
 		{
 			name: "Edit folder", icon: 'fa fa-pencil-square-o',
@@ -204,7 +205,8 @@
 			},
 			canExecuteMethod: function () {
 				return !angular.isUndefined(blade.currentEntity);
-			}
+			},
+			permission: 'marketing:manage'
 		}
 	];
 

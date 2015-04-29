@@ -91,7 +91,8 @@
         	},
         	canExecuteMethod: function () {
         		return true;
-        	}
+        	},
+        	permission: 'content:manage'
         }
 	];
 

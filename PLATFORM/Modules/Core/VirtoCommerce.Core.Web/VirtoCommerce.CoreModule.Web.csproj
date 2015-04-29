@@ -134,6 +134,7 @@
   <ItemGroup>
     <Compile Include="Controllers\Api\FulfillmentController.cs" />
     <Compile Include="Controllers\Api\PaymentGatewayController.cs" />
+    <Compile Include="Controllers\PredefinedPermissions.cs" />
     <Compile Include="Converters\FulfillmentCenterConverter.cs" />
     <Compile Include="Converters\PaymentGatewayConverter.cs" />
     <Compile Include="Model\FulfillmentCenter.cs" />

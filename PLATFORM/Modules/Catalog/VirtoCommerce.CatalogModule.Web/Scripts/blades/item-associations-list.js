@@ -50,7 +50,8 @@
             },
             canExecuteMethod: function () {
                 return true;
-            }
+            },
+            permission: 'catalog:items:manage'
         },
         {
             name: "Delete", icon: 'fa fa-trash-o',
@@ -76,7 +77,8 @@
             },
             canExecuteMethod: function () {
                 return _.any($scope.blade.currentEntities, function (x) { return x.selected; });;
-            }
+            },
+            permission: 'catalog:items:manage'
         }
     ];
 

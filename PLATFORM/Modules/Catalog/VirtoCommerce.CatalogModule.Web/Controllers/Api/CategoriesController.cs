@@ -5,11 +5,13 @@ using System.Web.Http;
 using System.Web.Http.Description;
 using VirtoCommerce.CatalogModule.Web.Converters;
 using VirtoCommerce.Domain.Catalog.Services;
+using VirtoCommerce.Platform.Core.Security;
 using webModel = VirtoCommerce.CatalogModule.Web.Model;
 
 namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 {
     [RoutePrefix("api/catalog/categories")]
+    [CheckPermission(Permission = PredefinedPermissions.CategoriesManage)]
     public class CategoriesController : ApiController
     {
         private readonly ICatalogSearchService _searchService;

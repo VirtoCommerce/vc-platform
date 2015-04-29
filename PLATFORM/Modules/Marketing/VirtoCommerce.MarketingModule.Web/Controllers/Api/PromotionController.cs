@@ -9,12 +9,14 @@ using VirtoCommerce.Domain.Marketing.Services;
 using VirtoCommerce.MarketingModule.Data.Promotions;
 using VirtoCommerce.MarketingModule.Expressions.Promotion;
 using VirtoCommerce.MarketingModule.Web.Converters;
+using VirtoCommerce.Platform.Core.Security;
 using coreModel = VirtoCommerce.Domain.Marketing.Model;
 using webModel = VirtoCommerce.MarketingModule.Web.Model;
 
 namespace VirtoCommerce.MarketingModule.Web.Controllers.Api
 {
 	[RoutePrefix("api/marketing/promotions")]
+    [CheckPermission(Permission = PredefinedPermissions.Query)]
     public class PromotionController : ApiController
     {
 		private readonly IMarketingExtensionManager _promotionManager;
@@ -66,6 +68,7 @@ namespace VirtoCommerce.MarketingModule.Web.Controllers.Api
         [HttpGet]
         [ResponseType(typeof(webModel.Promotion))]
         [Route("new")]
+        [CheckPermission(Permission = PredefinedPermissions.Manage)]
         public IHttpActionResult GetNewDynamicPromotion()
         {
             var retVal = new webModel.Promotion
@@ -81,6 +84,7 @@ namespace VirtoCommerce.MarketingModule.Web.Controllers.Api
 		[HttpPost]
 		[ResponseType(typeof(webModel.Promotion))]
 		[Route("")]
+        [CheckPermission(Permission = PredefinedPermissions.Manage)]
 		public IHttpActionResult CreatePromotion(webModel.Promotion promotion)
 		{
 			var retVal = _promotionService.CreatePromotion(promotion.ToCoreModel());
@@ -92,6 +96,7 @@ namespace VirtoCommerce.MarketingModule.Web.Controllers.Api
 		[HttpPut]
 		[ResponseType(typeof(void))]
 		[Route("")]
+        [CheckPermission(Permission = PredefinedPermissions.Manage)]
 		public IHttpActionResult UpdatePromotions(webModel.Promotion promotion)
 		{
 			_promotionService.UpdatePromotions(new coreModel.Promotion[] { promotion.ToCoreModel() });
@@ -102,6 +107,7 @@ namespace VirtoCommerce.MarketingModule.Web.Controllers.Api
 		[HttpDelete]
 		[ResponseType(typeof(void))]
 		[Route("")]
+        [CheckPermission(Permission = PredefinedPermissions.Manage)]
 		public IHttpActionResult DeletePromotions([FromUri] string[] ids)
 		{
 			_promotionService.DeletePromotions(ids);

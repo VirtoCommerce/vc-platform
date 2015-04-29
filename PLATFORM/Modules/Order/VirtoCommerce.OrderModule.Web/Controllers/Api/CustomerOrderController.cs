@@ -6,6 +6,7 @@ using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.Description;
 using VirtoCommerce.Domain.Order.Services;
+using VirtoCommerce.Platform.Core.Security;
 using coreModel = VirtoCommerce.Domain.Order.Model;
 using webModel = VirtoCommerce.OrderModule.Web.Model;
 using VirtoCommerce.OrderModule.Web.Converters;
@@ -17,6 +18,7 @@ using VirtoCommerce.Foundation.Frameworks.Extensions;
 namespace VirtoCommerce.OrderModule.Web.Controllers.Api
 {
 	[RoutePrefix("api/order/customerOrders")]
+    [CheckPermission(Permission = PredefinedPermissions.Query)]
     public class CustomerOrderController : ApiController
     {
 		private readonly ICustomerOrderService _customerOrderService;
@@ -78,6 +80,7 @@ namespace VirtoCommerce.OrderModule.Web.Controllers.Api
 		[HttpPut]
 		[ResponseType(typeof(void))]
 		[Route("")]
+        [CheckPermission(Permission = PredefinedPermissions.Manage)]
 		public IHttpActionResult Update(webModel.CustomerOrder order)
 		{
 			var coreOrder = order.ToCoreModel();
@@ -139,6 +142,7 @@ namespace VirtoCommerce.OrderModule.Web.Controllers.Api
 		[HttpDelete]
 		[ResponseType(typeof(void))]
 		[Route("")]
+        [CheckPermission(Permission = PredefinedPermissions.Manage)]
 		public IHttpActionResult Delete([FromUri] string[] ids)
 		{
 			_customerOrderService.Delete(ids);

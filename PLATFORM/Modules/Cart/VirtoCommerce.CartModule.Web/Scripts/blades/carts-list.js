@@ -105,14 +105,14 @@ function ($scope, carts, bladeNavigationService, dialogService) {
                   return true;
               }
           },
-          {
-              name: "Advanced search", icon: 'fa fa-search',
-              executeMethod: function () {
-              },
-              canExecuteMethod: function () {
-                  return false;
-              }
-          },
+          //{
+          //    name: "Advanced search", icon: 'fa fa-search',
+          //    executeMethod: function () {
+          //    },
+          //    canExecuteMethod: function () {
+          //        return false;
+          //    }
+          //},
           {
               name: "Open in Store", icon: 'fa fa-edit',
               executeMethod: function () {
@@ -128,7 +128,8 @@ function ($scope, carts, bladeNavigationService, dialogService) {
               },
               canExecuteMethod: function () {
                   return isItemsChecked();
-              }
+              },
+              permission: 'cart:manage'
           }
     ];
 

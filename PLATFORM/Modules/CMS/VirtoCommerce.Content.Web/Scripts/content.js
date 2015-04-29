@@ -13,7 +13,8 @@ angular.module(moduleName, ['angularUUID2'])
 		icon: 'fa fa-code',
 		title: 'Content',
 		priority: 111,
-		action: function () { $state.go('workspace.content'); }
+		action: function () { $state.go('workspace.content'); },
+		permission: 'content:query'
 	};
 	mainMenuService.addMenuItem(menuItem);
 

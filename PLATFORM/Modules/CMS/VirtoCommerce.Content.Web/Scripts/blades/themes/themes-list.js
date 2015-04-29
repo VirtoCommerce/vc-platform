@@ -96,7 +96,7 @@
 
 	blade.setThemeAsActive = function () {
 		blade.isLoading = true;
-		if (_.where(blade.store.settings, { name: "DefaultThemeName" }).length > 0) {
+				if (_.where(blade.store.settings, { name: "DefaultThemeName" }).length > 0) {
 			angular.forEach(blade.store.settings, function (value, key) {
 				if (value.name === "DefaultThemeName") {
 					value.value = blade.choosenTheme.name;
@@ -165,8 +165,8 @@
 	blade.isThemeSelected = function (data) {
 		if (blade.choosenTheme !== undefined) {
 			if (blade.choosenTheme.name === data.name) {
-				return true;
-			}
+			return true;
+		}
 		}
 		return false;
 	}

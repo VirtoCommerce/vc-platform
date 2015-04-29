@@ -92,7 +92,8 @@
 		    },
 		    canExecuteMethod: function () {
 		        return isDirty() && formScope && formScope.$valid;
-		    }
+		    },
+		    permission: 'catalog:items:manage'
 		},
         {
             name: "Reset", icon: 'fa fa-undo',
@@ -101,7 +102,8 @@
             },
             canExecuteMethod: function () {
                 return isDirty();
-            }
+            },
+            permission: 'catalog:items:manage'
         }
     ];
 

@@ -117,7 +117,8 @@ function ($scope, order_res_customerOrders, bladeNavigationService, dialogServic
               },
               canExecuteMethod: function () {
                   return isItemsChecked();
-              }
+              },
+              permission: 'order:manage'
           }
     ];
 

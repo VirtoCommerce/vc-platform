@@ -111,7 +111,7 @@ function ($scope, accounts, bladeNavigationService, dialogService) {
 
                 var newBlade = {
                     id: 'listItemChild',
-                    currentEntity: { roles: [] },
+                    currentEntity: { roles: [], userType: 'SiteAdministrator' },
                     title: 'New Account',
                     subtitle: $scope.blade.subtitle,
                     controller: 'newAccountWizardController',
@@ -121,7 +121,8 @@ function ($scope, accounts, bladeNavigationService, dialogService) {
             },
             canExecuteMethod: function () {
                 return true;
-            }
+            },
+            permission: 'platform:security:manage'
         },
         {
             name: "Delete", icon: 'fa fa-trash-o',
@@ -130,7 +131,8 @@ function ($scope, accounts, bladeNavigationService, dialogService) {
             },
             canExecuteMethod: function () {
                 return isItemsChecked();
-            }
+            },
+            permission: 'platform:security:manage'
         }
     ];
 
