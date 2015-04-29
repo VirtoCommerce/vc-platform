@@ -65,7 +65,8 @@
         	},
         	canExecuteMethod: function () {
         		return true;
-        	}
+        	},
+        	permission: 'marketing:manage'
         }
 	];
 

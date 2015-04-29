@@ -107,7 +107,8 @@
             },
             canExecuteMethod: function () {
                 return isDirty() && formScope && formScope.$valid;
-            }
+            },
+            permission: 'platform:setting:manage'
         },
         {
             name: "Reset", icon: 'fa fa-undo',
@@ -116,7 +117,8 @@
             },
             canExecuteMethod: function () {
                 return isDirty();
-            }
+            },
+            permission: 'platform:setting:manage'
         }
     ];
 

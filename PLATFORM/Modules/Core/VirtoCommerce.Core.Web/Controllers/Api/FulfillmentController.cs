@@ -8,6 +8,7 @@ using System.Web.Http.Description;
 using VirtoCommerce.Domain.Payment.Services;
 using VirtoCommerce.CoreModule.Web.Converters;
 using VirtoCommerce.Domain.Fulfillment.Services;
+using VirtoCommerce.Platform.Core.Security;
 using webModel = VirtoCommerce.CoreModule.Web.Model;
 
 namespace VirtoCommerce.CoreModule.Web.Controllers.Api
@@ -48,6 +49,7 @@ namespace VirtoCommerce.CoreModule.Web.Controllers.Api
         [HttpPut]
         [ResponseType(typeof(webModel.FulfillmentCenter))]
         [Route("centers")]
+        [CheckPermission(Permission = PredefinedPermissions.FulfillmentManage)]
         public IHttpActionResult UpdateFulfillmentCenter(webModel.FulfillmentCenter center)
         {
             var retVal = _fulfillmentService.UpsertFulfillmentCenter(center.ToCoreModel());

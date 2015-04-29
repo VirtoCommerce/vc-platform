@@ -40,7 +40,8 @@
             },
             canExecuteMethod: function () {
                 return true;
-            }
+            },
+            permission: 'store:manage'
         }
     ];
 

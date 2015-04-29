@@ -131,7 +131,8 @@
             },
             canExecuteMethod: function () {
                 return true;
-            }
+            },
+            permission: 'catalog:catalogs:manage'
         },
         {
             name: "Manage", icon: 'fa fa-edit',
@@ -149,7 +150,8 @@
             },
             canExecuteMethod: function () {
                 return $scope.selectedItem;
-            }
+            },
+            permission: 'catalog:catalogs:manage'
         },
         {
             name: "Delete", icon: 'fa fa-trash-o',
@@ -158,7 +160,8 @@
             },
             canExecuteMethod: function () {
                 return isAnyChecked();
-            }
+            },
+            permission: 'catalog:catalogs:manage'
         }
     ];
 

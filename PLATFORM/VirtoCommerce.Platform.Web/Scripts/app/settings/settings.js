@@ -30,7 +30,7 @@
       //    title: 'Settings',
       //    priority: 190,
       //    action: function () { $state.go('workspace.coreModulesettings'); },
-      //    permission: 'settingsMenuPermission'
+      //    permission: 'platform:setting:manage'
       //};
       //mainMenuService.addMenuItem(menuItem);
 

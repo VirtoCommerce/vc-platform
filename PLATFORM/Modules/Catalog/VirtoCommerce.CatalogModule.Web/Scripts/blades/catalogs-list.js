@@ -7,7 +7,7 @@ function ($injector, $rootScope, $scope, catalogs, bladeNavigationService, dialo
     $scope.blade.refresh = function () {
         $scope.blade.isLoading = true;
 
-        var searchResult = catalogs.getCatalogs({}, function (results) {
+        catalogs.getCatalogs({}, function (results) {
             $scope.blade.isLoading = false;
 
             $scope.objects = results;
@@ -192,7 +192,7 @@ function ($injector, $rootScope, $scope, catalogs, bladeNavigationService, dialo
                 var newBlade = {
                     id: 'listItemChild',
                     title: 'New catalog',
-                    subtitle: 'choose new catalog type',
+                    subtitle: 'Choose new catalog type',
                     controller: 'virtoCommerce.catalogModule.catalogAddController',
                     template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/catalog-add.tpl.html'
                 };
@@ -210,7 +210,8 @@ function ($injector, $rootScope, $scope, catalogs, bladeNavigationService, dialo
             },
             canExecuteMethod: function () {
                 return selectedNode;
-            }
+            },
+            permission: 'catalog:catalogs:manage'
         },
         {
             name: "Import", icon: 'fa fa-download',
@@ -237,7 +238,8 @@ function ($injector, $rootScope, $scope, catalogs, bladeNavigationService, dialo
           },
           canExecuteMethod: function () {
               return selectedNode;
-          }
+          },
+          permission: 'catalog:catalogs:manage'
       }
     ];
 

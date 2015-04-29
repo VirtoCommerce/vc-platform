@@ -7,10 +7,12 @@ using VirtoCommerce.Content.Data.Services;
 using VirtoCommerce.Content.Web.Converters;
 using VirtoCommerce.Content.Web.Models;
 using VirtoCommerce.Platform.Core.Common;
+using VirtoCommerce.Platform.Core.Security;
 
 namespace VirtoCommerce.Content.Web.Controllers.Api
 {
 	[RoutePrefix("api/cms/{storeId}")]
+    [CheckPermission(Permission = PredefinedPermissions.Query)]
 	public class MenuController : ApiController
 	{
 		private readonly IMenuService _menuService;
@@ -59,6 +61,7 @@ namespace VirtoCommerce.Content.Web.Controllers.Api
 		[HttpPost]
 		[ResponseType(typeof(void))]
 		[Route("menu")]
+        [CheckPermission(Permission = PredefinedPermissions.Manage)]
 		public IHttpActionResult Update(string storeId, MenuLinkList list)
 		{
 			_menuService.UpdateList(list.ToCoreModel());
@@ -68,6 +71,7 @@ namespace VirtoCommerce.Content.Web.Controllers.Api
 		[HttpDelete]
 		[ResponseType(typeof(void))]
 		[Route("menu")]
+        [CheckPermission(Permission = PredefinedPermissions.Manage)]
 		public IHttpActionResult Delete(string listId)
 		{
 			_menuService.DeleteList(listId);

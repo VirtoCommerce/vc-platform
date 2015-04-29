@@ -26,7 +26,8 @@
             },
             canExecuteMethod: function () {
                 return $scope.currentEntity && $scope.currentEntity.isRemovable;
-            }
+            },
+            permission: 'platform:module:manage'
         },
         {
             name: "Uninstall", icon: 'fa fa-trash-o',
@@ -35,7 +36,8 @@
             },
             canExecuteMethod: function () {
                 return $scope.currentEntity && $scope.currentEntity.isRemovable;
-            }
+            },
+            permission: 'platform:module:manage'
         }
     ];
 

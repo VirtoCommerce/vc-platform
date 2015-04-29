@@ -105,7 +105,8 @@
         },
         canExecuteMethod: function () {
             return true;
-        }
+        },
+        permission: 'pricing:manage'
     }
     ];
 

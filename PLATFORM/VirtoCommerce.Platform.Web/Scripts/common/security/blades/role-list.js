@@ -121,7 +121,8 @@ function ($scope, roles, bladeNavigationService, dialogService) {
             },
             canExecuteMethod: function () {
                 return true;
-            }
+            },
+            permission: 'platform:security:manage'
         },
         {
             name: "Delete", icon: 'fa fa-trash-o',
@@ -130,7 +131,8 @@ function ($scope, roles, bladeNavigationService, dialogService) {
             },
             canExecuteMethod: function () {
                 return isItemsChecked();
-            }
+            },
+            permission: 'platform:security:manage'
         }
     ];
 

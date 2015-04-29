@@ -30,7 +30,8 @@
 				    },
 				    canExecuteMethod: function () {
 				        return isDirty();
-				    }
+				    },
+				    permission: 'content:manage'
 				},
 				{
 				    name: "Reset page", icon: 'fa fa-undo',
@@ -39,7 +40,8 @@
 				    },
 				    canExecuteMethod: function () {
 				        return isDirty();
-				    }
+				    },
+				    permission: 'content:manage'
 				},
 				{
 				    name: "Delete page", icon: 'fa fa-trash-o',
@@ -48,7 +50,8 @@
 				    },
 				    canExecuteMethod: function () {
 				        return !isDirty();
-				    }
+				    },
+				    permission: 'content:manage'
 				}];
             }
             else {

@@ -7,6 +7,7 @@ using System.Web.Http.Description;
 using VirtoCommerce.CatalogModule.Web.Converters;
 using VirtoCommerce.Domain.Catalog.Services;
 using VirtoCommerce.Platform.Core.Asset;
+using VirtoCommerce.Platform.Core.Security;
 using moduleModel = VirtoCommerce.Domain.Catalog.Model;
 using webModel = VirtoCommerce.CatalogModule.Web.Model;
 
@@ -47,6 +48,7 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
         [HttpGet]
         [ResponseType(typeof(webModel.Product))]
         [Route("~/api/catalog/{catalogId}/products/getnew")]
+        [CheckPermission(Permission = PredefinedPermissions.ItemsManage)]
         public IHttpActionResult GetNewProduct(string catalogId)
         {
             return GetNewProduct(catalogId, null);
@@ -56,6 +58,7 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
         [HttpGet]
         [ResponseType(typeof(webModel.Product))]
         [Route("~/api/catalog/{catalogId}/categories/{categoryId}/products/getnew")]
+        [CheckPermission(Permission = PredefinedPermissions.ItemsManage)]
         public IHttpActionResult GetNewProduct(string catalogId, string categoryId)
         {
             var retVal = new webModel.Product
@@ -85,6 +88,7 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
         [HttpGet]
         [ResponseType(typeof(webModel.Product))]
         [Route("{productId}/getnewvariation")]
+        [CheckPermission(Permission = PredefinedPermissions.ItemsManage)]
         public IHttpActionResult GetNewVariation(string productId)
         {
             var product = _itemsService.GetById(productId, moduleModel.ItemResponseGroup.ItemLarge);
@@ -133,6 +137,7 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
         [HttpPost]
         [ResponseType(typeof(void))]
         [Route("")]
+        [CheckPermission(Permission = PredefinedPermissions.ItemsManage)]
         public IHttpActionResult Update(webModel.Product product)
         {
             var updatedProduct = UpdateProduct(product);
@@ -147,6 +152,7 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
         [HttpDelete]
         [ResponseType(typeof(void))]
         [Route("")]
+        [CheckPermission(Permission = PredefinedPermissions.ItemsManage)]
         public IHttpActionResult Delete([FromUri] string[] ids)
         {
             _itemsService.Delete(ids);

@@ -38,7 +38,7 @@
             </div>
             <div class="blade-toolbar">
                 <ul class="menu __inline">
-                    <li class="menu-item" ng-class="{'__disabled': !toolbarCommand.canExecuteMethod()}" ng-click='executeCommand(toolbarCommand)' ng-repeat="toolbarCommand in bladeToolbarCommands">
+                    <li class="menu-item" ng-class="{'__disabled': !toolbarCommand.canExecuteMethod()}" ng-click='executeCommand(toolbarCommand)' ng-repeat="toolbarCommand in bladeToolbarCommands" va-permission="{{toolbarCommand.permission}}">
                         <button class="menu-btn" ng-disabled="!toolbarCommand.canExecuteMethod()">
                             <i class="menu-ico" ng-class="toolbarCommand.icon"></i>
                             {{toolbarCommand.name}}
@@ -49,14 +49,14 @@
             <ng-include src="toolbarTemplate" />            
         </header>
         <div class="blade-container">
-            <div class="loader" ng-if="blade.isLoading">
+            <div class="loader" ng-show="blade.isLoading">
                 <span></span>
                 <span></span>
                 <span></span>
                 <span></span>
                 <span></span>
             </div>
-            <ng-include src='blade.template' ng-show="!blade.isLoading"> </ng-include>
+            <ng-include src='blade.template'></ng-include>
         </div>
     </div>
 </div>

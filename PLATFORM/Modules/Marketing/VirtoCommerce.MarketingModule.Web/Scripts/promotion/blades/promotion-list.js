@@ -123,7 +123,8 @@
             },
             canExecuteMethod: function () {
                 return true;
-            }
+            },
+            permission: 'marketing:manage'
         },
         {
             name: "Delete", icon: 'fa fa-trash-o',
@@ -132,7 +133,8 @@
             },
             canExecuteMethod: function () {
                 return isItemsChecked();
-            }
+            },
+            permission: 'marketing:manage'
         }
     ];
 
