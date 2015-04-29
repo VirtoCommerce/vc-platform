@@ -1,5 +1,5 @@
-﻿angular.module('virtoCommerce.cartModule.resources.carts', [])
-.factory('carts', ['$resource', function ($resource) {
+﻿angular.module('virtoCommerce.cartModule')
+.factory('virtoCommerce.cartModule.carts', ['$resource', function ($resource) {
     return $resource('api/cart/:id', { id: '@Id' }, {
         cartsSearch: { url: 'api/cart/carts' },
         getCart: { url: 'api/cart/carts/:id' },

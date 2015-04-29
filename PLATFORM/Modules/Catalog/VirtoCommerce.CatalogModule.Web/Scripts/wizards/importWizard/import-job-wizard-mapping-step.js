@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.catalogModule')
-.controller('importJobMappingController', ['$scope', 'bladeNavigationService', 'imports', function ($scope, bladeNavigationService, imports) {
+.controller('virtoCommerce.catalogModule.importJobMappingController', ['$scope', 'bladeNavigationService', 'virtoCommerce.catalogModule.imports', function ($scope, bladeNavigationService, imports) {
     $scope.blade.refresh = function () {
         $scope.blade.isLoading = true;
 
@@ -48,7 +48,7 @@
             csvColumns: $scope.item.availableCsvColumns,
             title: column.entityColumnName,
             subtitle: 'Edit column mapping',
-            controller: 'importJobMappingEditController',
+            controller: 'virtoCommerce.catalogModule.importJobMappingEditController',
             template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/wizards/importWizard/import-job-wizard-mapping-step-edit.tpl.html'
         };
         bladeNavigationService.showBlade(newBlade, $scope.blade);

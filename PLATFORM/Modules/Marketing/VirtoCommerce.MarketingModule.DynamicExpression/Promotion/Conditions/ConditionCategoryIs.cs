@@ -1,6 +1,5 @@
 ﻿using System;
 using VirtoCommerce.Domain.Marketing.Model;
-using VirtoCommerce.Foundation.Frameworks;
 using linq = System.Linq.Expressions;
 
 namespace VirtoCommerce.MarketingModule.Expressions.Promotion

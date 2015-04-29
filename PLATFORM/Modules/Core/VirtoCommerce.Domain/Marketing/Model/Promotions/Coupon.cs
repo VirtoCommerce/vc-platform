@@ -1,21 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using VirtoCommerce.Foundation.Frameworks;
-
+using VirtoCommerce.Platform.Core.Common;
 namespace VirtoCommerce.Domain.Marketing.Model
 {
-	public class Coupon : Entity
+	public class Coupon : AuditableEntity
 	{
 
-		#region IAuditable Members
-		public DateTime CreatedDate { get; set; }
-		public string CreatedBy { get; set; }
-		public DateTime? ModifiedDate { get; set; }
-		public string ModifiedBy { get; set; }
-		#endregion
-
-	
 		public string CustomerId { get; set; }
 
 		public string CustomerName { get; set; }

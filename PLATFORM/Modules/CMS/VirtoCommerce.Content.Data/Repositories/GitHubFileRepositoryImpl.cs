@@ -1,22 +1,19 @@
-﻿namespace VirtoCommerce.Content.Data.Repositories
+﻿
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+
+using Octokit;
+
+using VirtoCommerce.Content.Data.Converters;
+using VirtoCommerce.Content.Data.Models;
+
+using ContentType = Octokit.ContentType;
+using System.Text;
+
+namespace VirtoCommerce.Content.Data.Repositories
 {
-	#region
-
-	using System;
-	using System.Collections.Generic;
-	using System.Linq;
-	using System.Threading.Tasks;
-
-	using Octokit;
-
-	using VirtoCommerce.Content.Data.Converters;
-	using VirtoCommerce.Content.Data.Models;
-
-	using ContentType = Octokit.ContentType;
-	using System.Text;
-
-	#endregion
-
 	public class GitHubFileRepositoryImpl : IFileRepository
 	{
 		#region Fields

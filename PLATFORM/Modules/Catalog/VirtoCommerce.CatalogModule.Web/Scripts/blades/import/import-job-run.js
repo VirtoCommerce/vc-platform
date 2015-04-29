@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.catalogModule')
-.controller('importJobRunController', ['$scope', 'FileUploader', 'notificationService', 'imports', function ($scope, FileUploader, notificationService, imports) {
+.controller('virtoCommerce.catalogModule.importJobRunController', ['$scope', 'FileUploader', 'notificationService', 'virtoCommerce.catalogModule.imports', function ($scope, FileUploader, notificationService, imports) {
     $scope.blade.isLoading = false;
     $scope.job = angular.copy($scope.blade.item);
 

@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.catalogModule')
-.controller('categoriesItemsAddController', ['$scope', 'bladeNavigationService', 'categories', 'items', function ($scope, bladeNavigationService, categories, items) {
+.controller('virtoCommerce.catalogModule.categoriesItemsAddController', ['$scope', 'bladeNavigationService', 'virtoCommerce.catalogModule.categories', 'virtoCommerce.catalogModule.items', function ($scope, bladeNavigationService, categories, items) {
     var pb = $scope.blade.parentBlade;
 
     $scope.addCategory = function () {
@@ -10,7 +10,7 @@
                     currentEntity: data,
                     title: "New category",
                     subtitle: 'Fill category information',
-                    controller: 'newCategoryWizardController',
+                    controller: 'virtoCommerce.catalogModule.newCategoryWizardController',
                     template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/wizards/newCategory/category-wizard.tpl.html'
                 };
                 bladeNavigationService.showBlade(newBlade, pb);
@@ -26,7 +26,7 @@
             id: 'selectCatalog',
             title: 'Select Catalog',
             subtitle: 'Creating a Link inside virtual catalog',
-            controller: 'catalogsSelectController',
+            controller: 'virtoCommerce.catalogModule.catalogsSelectController',
             template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/catalogs-select.tpl.html'
         };
         bladeNavigationService.showBlade(newBlade, $scope.blade.parentBlade);

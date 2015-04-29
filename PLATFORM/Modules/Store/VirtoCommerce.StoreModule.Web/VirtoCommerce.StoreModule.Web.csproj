@@ -101,8 +101,8 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Scripts\blades\!stores-list.js" />
-    <Content Include="Scripts\blades\!stores-list.tpl.html" />
+    <Content Include="Scripts\blades\stores-list.js" />
+    <Content Include="Scripts\blades\stores-list.tpl.html" />
     <Content Include="Scripts\blades\store-currencies-list.js" />
     <Content Include="Scripts\blades\store-languages-list.js" />
     <Content Include="Scripts\blades\store-currencies-list.tpl.html" />

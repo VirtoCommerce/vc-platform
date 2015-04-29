@@ -13,11 +13,9 @@ namespace VirtoCommerce.CatalogModule.Data.Services
 	public class PropertyServiceImpl : ServiceBase, IPropertyService
 	{
 		private readonly Func<ICatalogRepository> _catalogRepositoryFactory;
-		private readonly CacheManager _cacheManager;
-		public PropertyServiceImpl(Func<ICatalogRepository> catalogRepositoryFactory, CacheManager cacheManager)
+		public PropertyServiceImpl(Func<ICatalogRepository> catalogRepositoryFactory)
 		{
 			_catalogRepositoryFactory = catalogRepositoryFactory;
-			_cacheManager = cacheManager;
 		}
 
 

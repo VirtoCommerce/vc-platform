@@ -16,11 +16,9 @@ namespace VirtoCommerce.CatalogModule.Data.Services
 	public class CategoryServiceImpl : ServiceBase, ICategoryService
     {
         private readonly Func<ICatalogRepository> _catalogRepositoryFactory;
-	    private readonly CacheManager _cacheManager;
-        public CategoryServiceImpl(Func<ICatalogRepository> catalogRepositoryFactory, CacheManager cacheManager)
+        public CategoryServiceImpl(Func<ICatalogRepository> catalogRepositoryFactory)
         {
             _catalogRepositoryFactory = catalogRepositoryFactory;
-            _cacheManager = cacheManager;
         }
 
         #region ICategoryService Members

@@ -44,12 +44,12 @@ namespace VirtoCommerce.CustomerModule.Data.Repositories
 
 			InheritanceMapping(modelBuilder);
 
-			MapEntity<Address>(modelBuilder, toTable: "vc_Address");
-			MapEntity<ContactPropertyValue>(modelBuilder, toTable: "vc_ContactPropertyValue");
-			MapEntity<Email>(modelBuilder, toTable: "vc_Email");
-			MapEntity<Note>(modelBuilder, toTable: "vc_Note");
-			MapEntity<Phone>(modelBuilder, toTable: "vc_Phone");
-			MapEntity<Organization>(modelBuilder, toTable: "vc_Organization");
+			MapEntity<Address>(modelBuilder, toTable: "Address");
+			MapEntity<ContactPropertyValue>(modelBuilder, toTable: "ContactPropertyValue");
+			MapEntity<Email>(modelBuilder, toTable: "Email");
+			MapEntity<Note>(modelBuilder, toTable: "Note");
+			MapEntity<Phone>(modelBuilder, toTable: "Phone");
+			MapEntity<Organization>(modelBuilder, toTable: "Organization");
 			
 
 			base.OnModelCreating(modelBuilder);
@@ -60,14 +60,14 @@ namespace VirtoCommerce.CustomerModule.Data.Repositories
 
 			modelBuilder.Entity<Member>().Map(entity =>
 				{
-					entity.ToTable("vc_Member");
+					entity.ToTable("vMember");
 				});
 			modelBuilder.Entity<Contact>().Map(entity =>
 				{
-					entity.ToTable("vc_Contact");
+					entity.ToTable("Contact");
 				});
 
-			MapEntity<MemberRelation>(modelBuilder, toTable: "vc_MemberRelation");
+			MapEntity<MemberRelation>(modelBuilder, toTable: "MemberRelation");
 
 			#region Contact mapping
 

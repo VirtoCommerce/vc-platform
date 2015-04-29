@@ -6,8 +6,6 @@ using VirtoCommerce.CatalogModule.Data.Services;
 using VirtoCommerce.CatalogModule.Web.Controllers.Api;
 using VirtoCommerce.Domain.Catalog.Model;
 using VirtoCommerce.Domain.Catalog.Services;
-using VirtoCommerce.Foundation.Data.Azure.Asset;
-using VirtoCommerce.Foundation.Data.Infrastructure;
 using webModel = VirtoCommerce.CatalogModule.Web.Model;
 
 namespace VirtoCommerce.CatalogModule.Test
@@ -133,22 +131,22 @@ namespace VirtoCommerce.CatalogModule.Test
 
         private IPropertyService GetPropertyService()
         {
-            return new PropertyServiceImpl(() => { return GetRepository(); }, null);
+            return new PropertyServiceImpl(() => { return GetRepository(); });
         }
 
         private ICategoryService GetCategoryService()
         {
-            return new CategoryServiceImpl(() => { return GetRepository(); }, () => { return GetAppConfigRepository(); }, null);
+            return new CategoryServiceImpl(() => { return GetRepository(); });
         }
 
         private ICatalogService GetCatalogService()
         {
-            return new CatalogServiceImpl(() => { return GetRepository(); }, null);
+            return new CatalogServiceImpl(() => { return GetRepository(); });
         }
 
         private IItemService GetItemService()
         {
-            return new ItemServiceImpl(() => { return GetRepository(); }, () => { return GetAppConfigRepository(); });
+            return new ItemServiceImpl(() => { return GetRepository(); });
         }
 
 
@@ -158,18 +156,8 @@ namespace VirtoCommerce.CatalogModule.Test
             return retVal;
         }
 
-        private IFoundationAppConfigRepository GetAppConfigRepository()
-        {
-            var retVal = new FoundationAppConfigRepositoryImpl("VirtoCommerce");
-            return retVal;
-        }
+    
 
-        private static AzureBlobAssetRepository GetAssetUrlResolver()
-        {
-            // TODO: It could be not the Azure provider.
-            var assetsConnectionString = ConnectionHelper.GetConnectionString("AssetsConnectionString");
-            var blobStorageProvider = new AzureBlobAssetRepository(assetsConnectionString, null);
-            return blobStorageProvider;
-        }
+   
     }
 }

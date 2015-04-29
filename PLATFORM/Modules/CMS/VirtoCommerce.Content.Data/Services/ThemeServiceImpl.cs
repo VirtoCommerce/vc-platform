@@ -9,7 +9,7 @@ using VirtoCommerce.Content.Data.Converters;
 using VirtoCommerce.Content.Data.Models;
 using VirtoCommerce.Content.Data.Repositories;
 using VirtoCommerce.Content.Data.Utility;
-using VirtoCommerce.Foundation.Assets.Repositories;
+using VirtoCommerce.Platform.Core.Asset;
 
 namespace VirtoCommerce.Content.Data.Services
 {

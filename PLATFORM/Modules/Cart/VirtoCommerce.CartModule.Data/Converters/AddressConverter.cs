@@ -5,9 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using VirtoCommerce.CartModule.Data.Model;
 using VirtoCommerce.Domain.Cart.Model;
-using VirtoCommerce.Foundation.Frameworks.Extensions;
 using Omu.ValueInjecter;
-using VirtoCommerce.Foundation.Frameworks.ConventionInjections;
+using VirtoCommerce.Platform.Data.Common.ConventionInjections;
 
 namespace VirtoCommerce.CartModule.Data.Converters
 {

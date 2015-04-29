@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using VirtoCommerce.Foundation.Frameworks.CQRS;
 
 namespace VirtoCommerce.Domain.Search.Services
 {

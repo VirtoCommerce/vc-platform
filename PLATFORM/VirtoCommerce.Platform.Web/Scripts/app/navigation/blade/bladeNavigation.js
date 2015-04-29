@@ -30,7 +30,7 @@ angular.module('platformWebApp')
             {
                 var mainContent = $('.cnt');
                 var blade = $(element).parent('.blade');
-                var offset = parseInt(blade.offset().left + mainContent.scrollLeft() + blade.width() + 85 - mainContent[0].clientWidth);
+                var offset = parseInt(blade.offset().left + mainContent.scrollLeft() + blade.width() + 125 - mainContent[0].clientWidth);
                 if (offset > mainContent.scrollLeft()) {
                     mainContent.animate({ scrollLeft: offset + 'px' }, 500);
                 }

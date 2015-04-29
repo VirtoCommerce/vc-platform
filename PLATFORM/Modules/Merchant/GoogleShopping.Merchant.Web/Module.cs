@@ -13,18 +13,24 @@ namespace GoogleShopping.MerchantModule.Web
     public class Module : IModule
     {
         private const string _merchantIdPropertyName = "GoogleShopping.Merchant.MerchantId";
-
         private readonly IUnityContainer _container;
+
         public Module(IUnityContainer container)
         {
             _container = container;
+        }
+
+        #region IModule Members
+
+        public void SetupDatabase(SampleDataLevel sampleDataLevel)
+        {
         }
 
         public void Initialize()
         {
             var settingsManager = _container.Resolve<ISettingsManager>();
 
-            var googleMerchantId = (ulong) settingsManager.GetValue(_merchantIdPropertyName, 0);
+            var googleMerchantId = (ulong)settingsManager.GetValue(_merchantIdPropertyName, 0);
 
             var googleShoppingCode = settingsManager.GetValue("GoogleShopping.Merchant.Code", string.Empty);
             var googleShoppingDescription = settingsManager.GetValue("GoogleShopping.Merchant.Description", string.Empty);
@@ -39,5 +45,11 @@ namespace GoogleShopping.MerchantModule.Web
 
             _container.RegisterType<GoogleShoppingController>();
         }
+
+        public void PostInitialize()
+        {
+        }
+
+        #endregion
     }
 }

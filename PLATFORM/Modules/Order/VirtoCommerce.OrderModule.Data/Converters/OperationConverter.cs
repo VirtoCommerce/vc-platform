@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using VirtoCommerce.Domain.Order.Model;
-using VirtoCommerce.Foundation.Frameworks.ConventionInjections;
 using VirtoCommerce.OrderModule.Data.Model;
 using Omu.ValueInjecter;
+using VirtoCommerce.Platform.Data.Common.ConventionInjections;
 namespace VirtoCommerce.OrderModule.Data.Converters
 {
 	public static class OperationConverter

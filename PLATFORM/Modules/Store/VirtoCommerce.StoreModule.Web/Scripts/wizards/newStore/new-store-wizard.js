@@ -1,5 +1,5 @@
-﻿angular.module('virtoCommerce.storeModule.wizards.newStore', [])
-.controller('newStoreWizardController', ['$scope', 'bladeNavigationService', 'stores', 'catalogs', 'settings', 'dialogService', function ($scope, bladeNavigationService, stores, catalogs, settings, dialogService) {
+﻿angular.module('virtoCommerce.storeModule')
+.controller('virtoCommerce.storeModule.newStoreWizardController', ['$scope', 'bladeNavigationService', 'virtoCommerce.storeModule.stores', 'virtoCommerce.catalogModule.catalogs', 'settings', 'dialogService', function ($scope, bladeNavigationService, stores, catalogs, settings, dialogService) {
 
     function initializeBlade(data) {
         $scope.blade.currentEntityId = data.id;

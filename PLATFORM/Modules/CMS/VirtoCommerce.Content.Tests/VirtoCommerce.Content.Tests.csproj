@@ -97,14 +97,6 @@
     <Compile Include="ThemeServiceTests.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Core\CommerceFoundation.Data\CommerceFoundation.Data.csproj">
-      <Project>{bb168a74-0f1e-43be-a616-134902238b80}</Project>
-      <Name>CommerceFoundation.Data</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\Core\CommerceFoundation\CommerceFoundation.csproj">
-      <Project>{e7fc9a51-1b39-4bdc-983a-8a059c5fc58b}</Project>
-      <Name>CommerceFoundation</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\..\VirtoCommerce.Platform.Core\VirtoCommerce.Platform.Core.csproj">
       <Project>{f7c9313b-522e-4619-abc9-8c7d4600d6b5}</Project>
       <Name>VirtoCommerce.Platform.Core</Name>
@@ -112,22 +104,6 @@
     <ProjectReference Include="..\VirtoCommerce.Content.Data\VirtoCommerce.Content.Data.csproj">
       <Project>{e55e08b5-3af9-467d-8f90-4bef27bafa28}</Project>
       <Name>VirtoCommerce.Content.Data</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\VirtoCommerce.Content.Menu.Data\VirtoCommerce.Content.Menu.Data.csproj">
-      <Project>{4021578c-a4a9-4c1f-bfa3-d10532533c5f}</Project>
-      <Name>VirtoCommerce.Content.Menu.Data</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\VirtoCommerce.Content.Pages.Data\VirtoCommerce.Content.Pages.Data.csproj">
-      <Project>{8f9f26fc-344e-4599-b2f3-cb560f1d5499}</Project>
-      <Name>VirtoCommerce.Content.Pages.Data</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\VirtoCommerce.PagesModule.Web\VirtoCommerce.PagesModule.Web.csproj">
-      <Project>{11ff29eb-5d91-46e4-b593-0deb2f67b094}</Project>
-      <Name>VirtoCommerce.PagesModule.Web</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\VirtoCommerce.ThemeModule.Web\VirtoCommerce.ThemeModule.Web.csproj">
-      <Project>{639fa8e1-99be-4386-9808-fc1aec35fd61}</Project>
-      <Name>VirtoCommerce.ThemeModule.Web</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

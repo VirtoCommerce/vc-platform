@@ -12,7 +12,7 @@ using VirtoCommerce.OrderModule.Web.Converters;
 using VirtoCommerce.Domain.Cart.Services;
 using System.Web.Http.ModelBinding;
 using VirtoCommerce.OrderModule.Web.Binders;
-using VirtoCommerce.Foundation.Frameworks.Extensions;
+using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.OrderModule.Web.Controllers.Api
 {

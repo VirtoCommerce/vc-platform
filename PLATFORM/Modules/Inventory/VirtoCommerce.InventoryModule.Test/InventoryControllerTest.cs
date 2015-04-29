@@ -2,14 +2,11 @@
 using System.Linq;
 using System.Web.Http.Results;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using VirtoCommerce.CoreModule.Web.Repositories;
-using VirtoCommerce.CoreModule.Web.Services;
-using VirtoCommerce.Foundation.Data.Infrastructure.Interceptors;
-using VirtoCommerce.Foundation.Money;
 using VirtoCommerce.InventoryModule.Data.Repositories;
 using VirtoCommerce.InventoryModule.Data.Services;
 using VirtoCommerce.InventoryModule.Web.Controllers.Api;
 using VirtoCommerce.InventoryModule.Web.Model;
+using VirtoCommerce.Platform.Data.Infrastructure.Interceptors;
 
 namespace VirtoCommerce.InventoryModule.Test
 {
@@ -30,19 +27,8 @@ namespace VirtoCommerce.InventoryModule.Test
 
 		private static InventoryController GetController()
 		{
-			Func<IFoundationInventoryRepository> repositoryFactory = () =>
-			{
-				return new FoundationInventoryRepositoryImpl("VirtoCommerce", new AuditChangeInterceptor());
-			};
-
-			Func<IFoundationFulfillmentRepository> fulfillRepositoryFactory = () =>
-			{
-				return new FoundationFulfillmentRepositoryImpl("VirtoCommerce", new AuditChangeInterceptor());
-			};
 			
-			var service = new InventoryServiceImpl(repositoryFactory);
-			var fulfillmentService = new FulfillmentServiceImpl(fulfillRepositoryFactory);
-			var controller = new InventoryController(service, fulfillmentService);
+			var controller = new InventoryController(null, null);
 			return controller;
 		}
 	}

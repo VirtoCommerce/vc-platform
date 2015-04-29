@@ -1,5 +1,5 @@
-﻿angular.module('virtoCommerce.customerModule.blades')
-.controller('memberEmailsListController', ['$scope', 'bladeNavigationService', 'dialogService', function ($scope, bladeNavigationService, dialogService) {
+﻿angular.module('virtoCommerce.customerModule')
+.controller('virtoCommerce.customerModule.memberEmailsListController', ['$scope', 'bladeNavigationService', 'dialogService', function ($scope, bladeNavigationService, dialogService) {
     $scope.selectedItem = null;
 
     function transformDataElement(data) {

@@ -5,29 +5,17 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using VirtoCommerce.Foundation.Frameworks;
+using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.CartModule.Data.Model
 {
-	public class ShipmentEntity : Entity, IAuditable
+	public class ShipmentEntity : AuditableEntity
 	{
 		public ShipmentEntity()
 		{
 			Items = new NullCollection<LineItemEntity>();
 			Addresses = new NullCollection<AddressEntity>();
 		}
-		#region IAuditable Members
-
-		[Required]
-		public DateTime CreatedDate { get; set; }
-		[Required]
-		[StringLength(64)]
-		public string CreatedBy { get; set; }
-		public DateTime? ModifiedDate { get; set; }
-		[StringLength(64)]
-		public string ModifiedBy { get; set; }
-
-		#endregion
 
 		[StringLength(64)]
 		public string ShipmentMethodCode { get; set; }

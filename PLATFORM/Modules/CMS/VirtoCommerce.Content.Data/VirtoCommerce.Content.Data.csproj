@@ -58,40 +58,33 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Converters\ContentItemConverter.cs" />
+    <Compile Include="Converters\PageConverter.cs" />
     <Compile Include="Converters\ThemeItemConverter.cs" />
-    <Compile Include="Migrations\201502151704128_Initial.cs" />
-    <Compile Include="Migrations\201502151704128_Initial.Designer.cs">
-      <DependentUpon>201502151704128_Initial.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201502161220499_AddContentType.cs" />
-    <Compile Include="Migrations\201502161220499_AddContentType.Designer.cs">
-      <DependentUpon>201502161220499_AddContentType.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201502161344479_AddThemes.cs" />
-    <Compile Include="Migrations\201502161344479_AddThemes.Designer.cs">
-      <DependentUpon>201502161344479_AddThemes.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201502171619353_AddThemesAuditable.cs" />
-    <Compile Include="Migrations\201502171619353_AddThemesAuditable.Designer.cs">
-      <DependentUpon>201502171619353_AddThemesAuditable.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201503041636021_AddByteContent.cs" />
-    <Compile Include="Migrations\201503041636021_AddByteContent.Designer.cs">
-      <DependentUpon>201503041636021_AddByteContent.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\ContentItem.cs" />
+    <Compile Include="Models\GetPagesCriteria.cs" />
     <Compile Include="Models\GetThemeAssetsCriteria.cs" />
+    <Compile Include="Models\MenuLink.cs" />
+    <Compile Include="Models\MenuLinkList.cs" />
+    <Compile Include="Models\Page.cs" />
     <Compile Include="Models\Theme.cs" />
     <Compile Include="Models\ThemeAsset.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\DatabaseFileRepositoryImpl.cs" />
+    <Compile Include="Repositories\DatabaseMenuRepositoryImpl.cs" />
+    <Compile Include="Repositories\DatabasePagesRepositoryImpl.cs" />
     <Compile Include="Repositories\FileSystemFileRepositoryImpl.cs" />
+    <Compile Include="Repositories\FileSystemPagesRepositoryImpl.cs" />
     <Compile Include="Repositories\GitHubFileRepositoryImpl.cs" />
+    <Compile Include="Repositories\GitHubPagesRepositoryImpl.cs" />
     <Compile Include="Repositories\IFileRepository.cs" />
+    <Compile Include="Repositories\IMenuRepository.cs" />
+    <Compile Include="Repositories\IPagesRepository.cs" />
+    <Compile Include="Services\IMenuService.cs" />
+    <Compile Include="Services\IPagesService.cs" />
     <Compile Include="Services\IThemeService.cs" />
+    <Compile Include="Services\MenuServiceImpl.cs" />
+    <Compile Include="Services\PagesServiceImpl.cs" />
     <Compile Include="Services\ThemeServiceImpl.cs" />
-    <Compile Include="SqlThemeDatabaseInitializer.cs" />
     <Compile Include="Utility\ContentTypeUtility.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -99,35 +92,17 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Core\CommerceFoundation.Data\CommerceFoundation.Data.csproj">
-      <Project>{bb168a74-0f1e-43be-a616-134902238b80}</Project>
-      <Name>CommerceFoundation.Data</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\Core\CommerceFoundation\CommerceFoundation.csproj">
-      <Project>{e7fc9a51-1b39-4bdc-983a-8a059c5fc58b}</Project>
-      <Name>CommerceFoundation</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\..\VirtoCommerce.Platform.Core\VirtoCommerce.Platform.Core.csproj">
       <Project>{F7C9313B-522E-4619-ABC9-8C7D4600D6B5}</Project>
       <Name>VirtoCommerce.Platform.Core</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\..\VirtoCommerce.Platform.Data\VirtoCommerce.Platform.Data.csproj">
+      <Project>{39afd233-b2f7-4178-817d-0a339c57525d}</Project>
+      <Name>VirtoCommerce.Platform.Data</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201502151704128_Initial.resx">
-      <DependentUpon>201502151704128_Initial.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201502161220499_AddContentType.resx">
-      <DependentUpon>201502161220499_AddContentType.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201502161344479_AddThemes.resx">
-      <DependentUpon>201502161344479_AddThemes.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201502171619353_AddThemesAuditable.resx">
-      <DependentUpon>201502171619353_AddThemesAuditable.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201503041636021_AddByteContent.resx">
-      <DependentUpon>201503041636021_AddByteContent.cs</DependentUpon>
-    </EmbeddedResource>
+    <Folder Include="Migrations\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -7,6 +7,7 @@ using foundation = VirtoCommerce.CatalogModule.Data.Model;
 using module = VirtoCommerce.Domain.Catalog.Model;
 using Omu.ValueInjecter;
 using VirtoCommerce.Platform.Data.Common;
+using VirtoCommerce.Platform.Data.Common.ConventionInjections;
 
 namespace VirtoCommerce.CatalogModule.Data.Converters
 {

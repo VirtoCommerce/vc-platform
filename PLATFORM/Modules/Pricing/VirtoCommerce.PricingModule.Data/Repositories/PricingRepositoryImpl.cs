@@ -38,9 +38,9 @@ namespace VirtoCommerce.PricingModule.Data.Repositories
 			modelBuilder.Entity<PricelistAssignment>().HasKey(x => x.Id).Property(x => x.Id)
 										.HasColumnName("PricelistAssignmentId");
 
-			MapEntity<Price>(modelBuilder, toTable: "vc_Price");
-			MapEntity<Pricelist>(modelBuilder, toTable: "vc_Pricelist");
-			MapEntity<PricelistAssignment>(modelBuilder, toTable: "vc_PricelistAssignment");
+			MapEntity<Price>(modelBuilder, toTable: "Price");
+			MapEntity<Pricelist>(modelBuilder, toTable: "Pricelist");
+			MapEntity<PricelistAssignment>(modelBuilder, toTable: "PricelistAssignment");
 			
 			base.OnModelCreating(modelBuilder);
 		}

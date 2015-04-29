@@ -1,7 +1,7 @@
 ﻿angular.module('platformWebApp')
 .controller('roleListController', ['$scope', 'platform_res_roles', 'bladeNavigationService', 'dialogService',
 function ($scope, roles, bladeNavigationService, dialogService) {
-    //pagination settigs
+    //pagination settings
     $scope.pageSettings = {};
     $scope.pageSettings.totalItems = 0;
     $scope.pageSettings.currentPage = 1;
@@ -17,8 +17,8 @@ function ($scope, roles, bladeNavigationService, dialogService) {
 
         roles.get({
             keyword: $scope.filter.searchKeyword,
-            start: ($scope.pageSettings.currentPage - 1) * $scope.pageSettings.itemsPerPageCount,
-            count: $scope.pageSettings.itemsPerPageCount
+            skipCount: ($scope.pageSettings.currentPage - 1) * $scope.pageSettings.itemsPerPageCount,
+            takeCount: $scope.pageSettings.itemsPerPageCount
         }, function (data) {
             $scope.blade.isLoading = false;
 

@@ -9,8 +9,9 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>VirtoCommerce.Domain</RootNamespace>
     <AssemblyName>VirtoCommerce.Domain</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -93,6 +94,9 @@
     <Compile Include="Catalog\Services\IItemService.cs" />
     <Compile Include="Catalog\Services\IPropertyService.cs" />
     <Compile Include="Common\IDynamicExpression.cs" />
+    <Compile Include="Common\IWorkflowService.cs" />
+    <Compile Include="Common\ObservableWorkflowService.cs" />
+    <Compile Include="Common\ObserverFactory.cs" />
     <Compile Include="Customer\Model\Address.cs" />
     <Compile Include="Customer\Model\AddressType.cs" />
     <Compile Include="Customer\Model\Contact.cs" />
@@ -237,10 +241,6 @@
     <Compile Include="Store\Services\IStoreService.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Core\CommerceFoundation\CommerceFoundation.csproj">
-      <Project>{e7fc9a51-1b39-4bdc-983a-8a059c5fc58b}</Project>
-      <Name>CommerceFoundation</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\..\VirtoCommerce.Platform.Core\VirtoCommerce.Platform.Core.csproj">
       <Project>{f7c9313b-522e-4619-abc9-8c7d4600d6b5}</Project>
       <Name>VirtoCommerce.Platform.Core</Name>

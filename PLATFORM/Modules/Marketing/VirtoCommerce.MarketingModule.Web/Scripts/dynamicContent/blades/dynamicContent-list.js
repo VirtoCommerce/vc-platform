@@ -1,6 +1,6 @@
 ﻿angular.module('virtoCommerce.marketingModule')
-.controller('dynamicContentListController', ['$scope', 'bladeNavigationService', function ($scope, bladeNavigationService) {
-	var blade = $scope.blade
+.controller('virtoCommerce.marketingModule.dynamicContentListController', ['$scope', 'bladeNavigationService', function ($scope, bladeNavigationService) {
+    var blade = $scope.blade;
 
 	$scope.selectedNodeId = null;
 
@@ -20,7 +20,7 @@
 			id: 'marketingDetails',
 			title: data.name,
 			subtitle: 'Marketing service',
-			controller: data.entityName + 'DynamicContentListController',
+			controller: 'virtoCommerce.marketingModule.' + data.entityName + 'DynamicContentListController',
 			template: 'Modules/$(VirtoCommerce.Marketing)/Scripts/dynamicContent/blades/' + data.entityName + '/list.tpl.html'
 		};
 		bladeNavigationService.showBlade(newBlade, blade);

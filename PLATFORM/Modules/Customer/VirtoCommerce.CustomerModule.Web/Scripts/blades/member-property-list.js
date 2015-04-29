@@ -1,5 +1,5 @@
-﻿angular.module('virtoCommerce.customerModule.blades')
-.controller('memberPropertyListController', ['$scope', 'bladeNavigationService', 'dialogService', function ($scope, bladeNavigationService, dialogService) {
+﻿angular.module('virtoCommerce.customerModule')
+.controller('virtoCommerce.customerModule.memberPropertyListController', ['$scope', 'bladeNavigationService', 'dialogService', function ($scope, bladeNavigationService, dialogService) {
     $scope.blade.origEntity = {};
 
     function initializeBlade(properties) {
@@ -65,7 +65,7 @@
             origEntity: data,
             title: title,
             subtitle: 'Enter property information',
-            controller: 'memberPropertyDetailController',
+            controller: 'virtoCommerce.customerModule.memberPropertyDetailController',
             template: 'Modules/$(VirtoCommerce.Customer)/Scripts/blades/member-property-detail.tpl.html'
         };
         bladeNavigationService.showBlade(newBlade, $scope.blade);

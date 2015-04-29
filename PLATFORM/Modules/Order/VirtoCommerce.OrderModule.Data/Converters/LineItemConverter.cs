@@ -5,12 +5,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using VirtoCommerce.Domain.Order.Model;
-using VirtoCommerce.Foundation.Frameworks.Extensions;
 using Omu.ValueInjecter;
 using VirtoCommerce.OrderModule.Data.Model;
-using VirtoCommerce.Foundation.Money;
-using VirtoCommerce.Foundation.Frameworks.ConventionInjections;
 using cart = VirtoCommerce.Domain.Cart.Model;
+using VirtoCommerce.Platform.Core.Common;
+using VirtoCommerce.Platform.Data.Common.ConventionInjections;
 
 namespace VirtoCommerce.OrderModule.Data.Converters
 {

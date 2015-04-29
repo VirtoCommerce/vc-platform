@@ -3,16 +3,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using foundationModel = VirtoCommerce.Foundation.Marketing.Model.DynamicContent;
+using dataModel = VirtoCommerce.MarketingModule.Data.Model;
 using coreModel = VirtoCommerce.Domain.Marketing.Model;
 using Omu.ValueInjecter;
-using VirtoCommerce.Foundation.Frameworks.ConventionInjections;
+using VirtoCommerce.Platform.Data.Common.ConventionInjections;
 
 namespace VirtoCommerce.CustomerModule.Data.Converters
 {
 	public static class PropertyConverter
 	{
-		public static coreModel.Property ToCoreModel(this foundationModel.DynamicContentItemProperty entity)
+		public static coreModel.Property ToCoreModel(this dataModel.DynamicContentItemProperty entity)
 		{
 			if (entity == null)
 				throw new ArgumentNullException("entity");
@@ -25,12 +25,12 @@ namespace VirtoCommerce.CustomerModule.Data.Converters
 			return retVal;
 		}
 
-		public static foundationModel.DynamicContentItemProperty ToFoundation(this coreModel.Property property)
+		public static dataModel.DynamicContentItemProperty ToFoundation(this coreModel.Property property)
 		{
 			if (property == null)
 				throw new ArgumentNullException("property");
 
-			var retVal = new foundationModel.DynamicContentItemProperty();
+			var retVal = new dataModel.DynamicContentItemProperty();
 			retVal.InjectFrom(property);
 			retVal.ValueType = (int)property.ValueType;
 			SetPropertyValue(retVal, property);
@@ -43,15 +43,15 @@ namespace VirtoCommerce.CustomerModule.Data.Converters
 		/// </summary>
 		/// <param name="source"></param>
 		/// <param name="target"></param>
-		public static void Patch(this foundationModel.DynamicContentItemProperty source, foundationModel.DynamicContentItemProperty target)
+		public static void Patch(this dataModel.DynamicContentItemProperty source, dataModel.DynamicContentItemProperty target)
 		{
-			var patchInjectionPolicy = new PatchInjection<foundationModel.DynamicContentItemProperty>(x => x.BooleanValue, x => x.DateTimeValue,
+			var patchInjectionPolicy = new PatchInjection<dataModel.DynamicContentItemProperty>(x => x.BooleanValue, x => x.DateTimeValue,
 																						  x => x.DecimalValue, x => x.IntegerValue,
 																						  x => x.ShortTextValue, x => x.LongTextValue, x => x.ValueType);
 			target.InjectFrom(patchInjectionPolicy, source);
 		}
 
-		private static object GetPropertyValue(foundationModel.DynamicContentItemProperty propValue)
+		private static object GetPropertyValue(dataModel.DynamicContentItemProperty propValue)
 		{
 			object retVal = null;
 			switch ((coreModel.PropertyValueType)propValue.ValueType)
@@ -78,7 +78,7 @@ namespace VirtoCommerce.CustomerModule.Data.Converters
 			return retVal;
 		}
 
-		private static void SetPropertyValue(foundationModel.DynamicContentItemProperty retVal, coreModel.Property property)
+		private static void SetPropertyValue(dataModel.DynamicContentItemProperty retVal, coreModel.Property property)
 		{
 			switch (property.ValueType)
 			{

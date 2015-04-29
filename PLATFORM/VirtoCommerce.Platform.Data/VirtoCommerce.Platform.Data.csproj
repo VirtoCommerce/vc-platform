@@ -39,11 +39,15 @@
       <HintPath>..\packages\EntityFramework.6.1.1\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.AspNet.Identity.Core, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.AspNet.Identity.Core.2.1.0\lib\net45\Microsoft.AspNet.Identity.Core.dll</HintPath>
+      <HintPath>..\packages\Microsoft.AspNet.Identity.Core.2.2.0\lib\net45\Microsoft.AspNet.Identity.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.AspNet.Identity.EntityFramework, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.Identity.EntityFramework.2.1.0\lib\net45\Microsoft.AspNet.Identity.EntityFramework.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.Identity.Owin, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Identity.Owin.2.2.0\lib\net45\Microsoft.AspNet.Identity.Owin.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.AspNet.SignalR.Core">
@@ -63,6 +67,14 @@
     </Reference>
     <Reference Include="Microsoft.Owin.Security">
       <HintPath>..\packages\Microsoft.Owin.Security.3.0.1\lib\net45\Microsoft.Owin.Security.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security.Cookies, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.Security.Cookies.3.0.1\lib\net45\Microsoft.Owin.Security.Cookies.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security.OAuth, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.Security.OAuth.3.0.1\lib\net45\Microsoft.Owin.Security.OAuth.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.WindowsAzure.Configuration">
       <HintPath>..\packages\Microsoft.WindowsAzure.ConfigurationManager.2.0.3\lib\net40\Microsoft.WindowsAzure.Configuration.dll</HintPath>
@@ -154,6 +166,7 @@
     <Compile Include="Model\RolePermissionEntity.cs" />
     <Compile Include="Model\SettingEntity.cs" />
     <Compile Include="Model\SettingValueEntity.cs" />
+    <Compile Include="Model\UserDetails.cs" />
     <Compile Include="Notification\InMemoryNotifierImpl.cs" />
     <Compile Include="Packaging\PackageService.cs" />
     <Compile Include="Packaging\Repositories\ManifestPackage.cs" />
@@ -173,8 +186,26 @@
     <Compile Include="Packaging\Repositories\WebsiteProjectSystem.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\IPlatformRepository.cs" />
-    <Compile Include="Repositories\PlatformRepositoryImpl.cs" />
+    <Compile Include="Repositories\Migrations\201504241004018_Initial.cs" />
+    <Compile Include="Repositories\Migrations\201504241004018_Initial.Designer.cs">
+      <DependentUpon>201504241004018_Initial.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Repositories\Migrations\Configuration.cs" />
+    <Compile Include="Repositories\PlatformDatabaseInitializer.cs" />
+    <Compile Include="Repositories\PlatformRepository.cs" />
+    <Compile Include="Security\ApiAccountProvider.cs" />
+    <Compile Include="Security\Hmac\HmacAuthenticationExtensions.cs" />
+    <Compile Include="Security\Hmac\HmacAuthenticationHandler.cs" />
+    <Compile Include="Security\Hmac\HmacAuthenticationMiddleware.cs" />
+    <Compile Include="Security\Hmac\HmacAuthenticationOptions.cs" />
+    <Compile Include="Security\Hmac\HmacUtility.cs" />
+    <Compile Include="Security\Identity\ApplicationClaimsIdentityProvider.cs" />
+    <Compile Include="Security\Identity\ApplicationSignInManager.cs" />
     <Compile Include="Security\Identity\ApplicationUser.cs" />
+    <Compile Include="Security\Identity\ApplicationUserManager.cs" />
+    <Compile Include="Security\Identity\ApplicationUserStore.cs" />
+    <Compile Include="Security\IApiAccountProvider.cs" />
+    <Compile Include="Security\Identity\IClaimsIdentityProvider.cs" />
     <Compile Include="Security\Identity\IdentityDatabaseInitializer.cs" />
     <Compile Include="Security\Identity\Migrations\201411101625303_InitialCreate.cs" />
     <Compile Include="Security\Identity\Migrations\201411101625303_InitialCreate.Designer.cs">
@@ -182,6 +213,9 @@
     </Compile>
     <Compile Include="Security\Identity\Migrations\Configuration.cs" />
     <Compile Include="Security\Identity\SecurityDbContext.cs" />
+    <Compile Include="Security\PermissionService.cs" />
+    <Compile Include="Security\RoleManagementService.cs" />
+    <Compile Include="Security\SecurityConverters.cs" />
     <Compile Include="Settings\Converters\ModuleConverter.cs" />
     <Compile Include="Settings\Converters\SettingConverter.cs" />
     <Compile Include="Settings\Converters\SettingValueConverter.cs" />
@@ -194,7 +228,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>
@@ -202,6 +238,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Packaging\Repositories\NuGet\CommonResources.resx">
       <DependentUpon>CommonResources.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Repositories\Migrations\201504241004018_Initial.resx">
+      <DependentUpon>201504241004018_Initial.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Security\Identity\Migrations\201411101625303_InitialCreate.resx">
       <DependentUpon>201411101625303_InitialCreate.cs</DependentUpon>

@@ -4,15 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Omu.ValueInjecter;
-using VirtoCommerce.Foundation.Money;
-using VirtoCommerce.Foundation.Frameworks;
 using System.Collections.ObjectModel;
-using VirtoCommerce.Foundation.Frameworks.ConventionInjections;
-using VirtoCommerce.Foundation.Frameworks.Extensions;
-using foundationModel = VirtoCommerce.Foundation.Marketing.Model.DynamicContent;
+using dataModel = VirtoCommerce.MarketingModule.Data.Model;
 using coreModel = VirtoCommerce.Domain.Marketing.Model;
 using VirtoCommerce.MarketingModule.Data.Promotions;
 using ExpressionSerialization;
+using VirtoCommerce.Platform.Core.Common;
+using VirtoCommerce.Platform.Data.Common.ConventionInjections;
 
 namespace VirtoCommerce.CustomerModule.Data.Converters
 {
@@ -23,17 +21,14 @@ namespace VirtoCommerce.CustomerModule.Data.Converters
 		/// </summary>
 		/// <param name="catalogBase"></param>
 		/// <returns></returns>
-		public static coreModel.DynamicContentItem ToCoreModel(this foundationModel.DynamicContentItem dbEntity)
+		public static coreModel.DynamicContentItem ToCoreModel(this dataModel.DynamicContentItem dbEntity)
 		{
 			if (dbEntity == null)
 				throw new ArgumentNullException("dbEntity");
 
 			var retVal = new coreModel.DynamicContentItem();
 			retVal.InjectFrom(dbEntity);
-			retVal.Id = dbEntity.DynamicContentItemId;
 
-			retVal.CreatedDate = dbEntity.Created.Value;
-			retVal.ModifiedDate = dbEntity.LastModified;
 			retVal.ContentType = dbEntity.ContentTypeId;
 			retVal.Properties = dbEntity.PropertyValues.Select(x => x.ToCoreModel()).ToList();
 
@@ -46,25 +41,22 @@ namespace VirtoCommerce.CustomerModule.Data.Converters
 		}
 
 
-		public static foundationModel.DynamicContentItem ToFoundation(this coreModel.DynamicContentItem contentItem)
+		public static dataModel.DynamicContentItem ToDataModel(this coreModel.DynamicContentItem contentItem)
 		{
 			if (contentItem == null)
 				throw new ArgumentNullException("contentItem");
 
-			var retVal = new foundationModel.DynamicContentItem();
+			var retVal = new dataModel.DynamicContentItem();
 			retVal.InjectFrom(contentItem);
 			retVal.ContentTypeId = contentItem.ContentType;
-			if (contentItem.Id != null)
-			{
-				retVal.DynamicContentItemId = contentItem.Id;
-			}
-			retVal.PropertyValues = new NullCollection<foundationModel.DynamicContentItemProperty>();
+		
+			retVal.PropertyValues = new NullCollection<dataModel.DynamicContentItemProperty>();
 			if(contentItem.Properties != null)
 			{
-				retVal.PropertyValues = new ObservableCollection<foundationModel.DynamicContentItemProperty>(contentItem.Properties.Select(x => x.ToFoundation()));
+				retVal.PropertyValues = new ObservableCollection<dataModel.DynamicContentItemProperty>(contentItem.Properties.Select(x => x.ToFoundation()));
 				foreach (var property in retVal.PropertyValues)
 				{
-					property.DynamicContentItemId = retVal.DynamicContentItemId;
+					property.DynamicContentItemId = retVal.Id;
 				}
 			}
 			return retVal;
@@ -75,15 +67,15 @@ namespace VirtoCommerce.CustomerModule.Data.Converters
 		/// </summary>
 		/// <param name="source"></param>
 		/// <param name="target"></param>
-		public static void Patch(this foundationModel.DynamicContentItem source, foundationModel.DynamicContentItem target)
+		public static void Patch(this dataModel.DynamicContentItem source, dataModel.DynamicContentItem target)
 		{
 			if (target == null)
 				throw new ArgumentNullException("target");
 
-			var patchInjection = new PatchInjection<foundationModel.DynamicContentItem>(x => x.Name, x => x.Description, x=>x.FolderId, x=>x.ImageUrl, x=>x.ContentTypeId);
+			var patchInjection = new PatchInjection<dataModel.DynamicContentItem>(x => x.Name, x => x.Description, x=>x.FolderId, x=>x.ImageUrl, x=>x.ContentTypeId);
 			if (!source.PropertyValues.IsNullCollection())
 			{
-				var propertyComparer = AnonymousComparer.Create((foundationModel.DynamicContentItemProperty x) => x.PropertyValueId);
+				var propertyComparer = AnonymousComparer.Create((dataModel.DynamicContentItemProperty x) => x.Id);
 				source.PropertyValues.Patch(target.PropertyValues, propertyComparer, (sourceProperty, targetProperty) => sourceProperty.Patch(targetProperty));
 			}
 			target.InjectFrom(patchInjection, source);

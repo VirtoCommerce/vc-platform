@@ -4,8 +4,8 @@ using System.Linq;
 using System.Web;
 using System.Web.Http.ModelBinding;
 using VirtoCommerce.Domain.Marketing.Model;
-using VirtoCommerce.Foundation.Frameworks.Extensions;
 using VirtoCommerce.MarketingModule.Web.Model;
+using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.CustomerModule.Web.Binders
 {

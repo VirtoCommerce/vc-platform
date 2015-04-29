@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using VirtoCommerce.Foundation.Search;
 using System.Collections.Specialized;
 using System.Runtime.Serialization;
 

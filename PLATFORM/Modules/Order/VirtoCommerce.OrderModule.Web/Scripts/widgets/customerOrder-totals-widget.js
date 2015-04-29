@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.orderModule')
-.controller('customerOrderTotalsWidgetController', ['$scope', 'calculateTotalsService', 'bladeNavigationService', function ($scope, calculateTotalsService, bladeNavigationService) {
+.controller('virtoCommerce.orderModule.customerOrderTotalsWidgetController', ['$scope', 'virtoCommerce.orderModule.calculateTotalsService', 'bladeNavigationService', function ($scope, calculateTotalsService, bladeNavigationService) {
 	$scope.blade = $scope.widget.blade;
 	$scope.customerOrder = {};
 

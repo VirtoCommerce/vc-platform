@@ -1,9 +1,10 @@
 ﻿using Microsoft.Practices.Unity;
 using VirtoCommerce.Domain.Inventory.Services;
-using VirtoCommerce.Foundation.Data.Infrastructure.Interceptors;
 using VirtoCommerce.InventoryModule.Data.Repositories;
 using VirtoCommerce.InventoryModule.Data.Services;
 using VirtoCommerce.Platform.Core.Modularity;
+using VirtoCommerce.Platform.Data.Infrastructure;
+using VirtoCommerce.Platform.Data.Infrastructure.Interceptors;
 
 namespace VirtoCommerce.InventoryModule.Web
 {
@@ -18,11 +19,24 @@ namespace VirtoCommerce.InventoryModule.Web
 
         #region IModule Members
 
+        public void SetupDatabase(SampleDataLevel sampleDataLevel)
+        {
+			using (var context = new InventoryRepositoryImpl())
+			{
+				var initializer = new SetupDatabaseInitializer<InventoryRepositoryImpl, VirtoCommerce.InventoryModule.Data.Migrations.Configuration>();
+				initializer.InitializeDatabase(context);
+			}
+        }
+
         public void Initialize()
         {
-            _container.RegisterType<IFoundationInventoryRepository>(new InjectionFactory(c => new FoundationInventoryRepositoryImpl("VirtoCommerce", new AuditChangeInterceptor())));
+			_container.RegisterType<IInventoryRepository>(new InjectionFactory(c => new InventoryRepositoryImpl("VirtoCommerce", new EntityPrimaryKeyGeneratorInterceptor(), new AuditableInterceptor())));
 
             _container.RegisterType<IInventoryService, InventoryServiceImpl>();
+        }
+
+        public void PostInitialize()
+        {
         }
 
         #endregion

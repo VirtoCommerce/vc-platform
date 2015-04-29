@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.catalogModule')
-.controller('editorialReviewWidgetController', ['$scope', 'bladeNavigationService', function ($scope, bladeNavigationService) {
+.controller('virtoCommerce.catalogModule.editorialReviewWidgetController', ['$scope', 'bladeNavigationService', function ($scope, bladeNavigationService) {
     $scope.currentBlade = $scope.widget.blade;
 
     $scope.openBlade = function () {
@@ -9,7 +9,7 @@
             currentEntities: $scope.currentBlade.item.reviews,
             title: $scope.currentBlade.title,
             subtitle: 'Product Reviews',
-            controller: 'editorialReviewsListController',
+            controller: 'virtoCommerce.catalogModule.editorialReviewsListController',
             template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/editorialReviews-list.tpl.html'
         };
 

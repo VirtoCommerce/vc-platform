@@ -1,19 +1,15 @@
-﻿namespace VirtoCommerce.Content.Data.Repositories
+﻿using System;
+using System.Collections.Generic;
+using System.Data.Entity;
+using System.Data.Entity.ModelConfiguration.Conventions;
+using System.Linq;
+using System.Threading.Tasks;
+using VirtoCommerce.Content.Data.Models;
+using VirtoCommerce.Platform.Data.Infrastructure;
+using VirtoCommerce.Platform.Data.Infrastructure.Interceptors;
+
+namespace VirtoCommerce.Content.Data.Repositories
 {
-	#region
-
-	using System;
-	using System.Collections.Generic;
-	using System.Data.Entity;
-	using System.Data.Entity.ModelConfiguration.Conventions;
-	using System.Linq;
-	using System.Threading.Tasks;
-	using VirtoCommerce.Content.Data.Models;
-	using VirtoCommerce.Foundation.Data;
-	using VirtoCommerce.Foundation.Data.Infrastructure.Interceptors;
-
-	#endregion
-
 	public class DatabaseFileRepositoryImpl : EFRepositoryBase, IFileRepository
 	{
 		#region
@@ -25,7 +21,7 @@
 		}
 
 		public DatabaseFileRepositoryImpl(string nameOrConnectionString, params IInterceptor[] interceptors)
-			: base(nameOrConnectionString, null, null, interceptors)
+			: base(nameOrConnectionString, null, interceptors)
 		{
 			Database.SetInitializer<DatabaseFileRepositoryImpl>(null);
 			Configuration.LazyLoadingEnabled = false;

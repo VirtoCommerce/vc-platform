@@ -9,7 +9,6 @@ using System.Web.Http;
 using System.Web.Http.Description;
 using System.Web.Http.ModelBinding;
 using VirtoCommerce.Domain.Payment.Services;
-using VirtoCommerce.Foundation.Money;
 
 namespace MeS.PaymentGatewaysModule.Web.Controllers
 {

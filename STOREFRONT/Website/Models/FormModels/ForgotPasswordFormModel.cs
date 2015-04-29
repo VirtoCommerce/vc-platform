@@ -15,6 +15,14 @@ namespace VirtoCommerce.Web.Models.FormModels
             this.Customer = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
         }
 
+        public string Id
+        {
+            get
+            {
+                return "recover_customer_password";
+            }
+        }
+
         [Required]
         [EmailAddress]
         public string Email

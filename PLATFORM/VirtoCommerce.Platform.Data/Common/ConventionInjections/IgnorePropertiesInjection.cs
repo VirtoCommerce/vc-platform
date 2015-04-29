@@ -1,11 +1,8 @@
-﻿using Omu.ValueInjecter;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Omu.ValueInjecter;
 
-namespace VirtoCommerce.Platform.Data.Common
+namespace VirtoCommerce.Platform.Data.Common.ConventionInjections
 {
     public class IgnorePropertiesInjection : LoopValueInjection
     {

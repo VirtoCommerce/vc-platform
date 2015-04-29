@@ -1,55 +1,42 @@
-﻿using DotLiquid;
-using DotLiquid.Exceptions;
+﻿#region
+
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using DotLiquid;
+using DotLiquid.Exceptions;
 using VirtoCommerce.Web.Views.Engines.Liquid.Extensions;
+#endregion
 
 namespace VirtoCommerce.Web.Models.Tags
 {
     public class Form : Block
     {
-        private static readonly Regex Syntax = new Regex(string.Format(@"^({0})", Liquid.QuotedFragment));
+        #region Static Fields
+        private static readonly Regex Syntax = new Regex(string.Format(@"^({0})\s*,?\s*({1}*)\s*", Liquid.QuotedFragment, Liquid.VariableSignature));
+        #endregion
 
-        private string _formId;
+        #region Fields
+        private string _templateName;
+        private string _formVariableName;
+        #endregion
 
+        #region Public Methods and Operators
         public override void Initialize(string tagName, string markup, List<string> tokens)
         {
             var syntaxMatch = Syntax.Match(markup);
 
             if (syntaxMatch.Success)
             {
-                var template = syntaxMatch.Groups[1].Value.Trim('\'').Trim();
-
-                _formId = template;
-
-                if (template == "customer_address")
-                {
-                    if (markup.Trim() == "'customer_address', customer.new_address")
-                    {
-                        _formId = "new";
-                    }
-                    else if (markup.Trim() == "'customer_address', address")
-                    {
-                        _formId = "1";
-                    }
-                }
-
-            //    _templateName = syntaxMatch.Groups[1].Value;
-
-            //    if (markup.Trim() == "'customer_address', customer.new_address")
-            //    {
-            //        _formSuffix = "new";
-            //    }
-            //    else if (markup.Trim() == "'customer_address', address")
-            //    {
-            //        _formSuffix = "1";
-            //    }
-            //}
-            //else
-            //{
-            //    throw new SyntaxException("LayoutTagSyntaxException");
+                this._templateName = syntaxMatch.Groups[1].Value;
+                if (syntaxMatch.Groups.Count == 3)
+                    _formVariableName = syntaxMatch.Groups[2].Value;
+            }
+            else
+            {
+                throw new SyntaxException("LayoutTagSyntaxException");
             }
 
             base.Initialize(tagName, markup, tokens);
@@ -57,28 +44,44 @@ namespace VirtoCommerce.Web.Models.Tags
 
         public override void Render(Context context, TextWriter result)
         {
-            //var template = context[this._templateName].ToNullOrString();
-            //if (template == null)
-            //{
-            //    template = this._templateName;
-            //}
+            var template = context[this._templateName].ToNullOrString() ?? this._templateName;
 
-            var forms = context["Forms"] as SubmitForm[];
+            object contextFormObject = null;
+            if (!String.IsNullOrEmpty(_formVariableName))
+            {
+                contextFormObject = context[this._formVariableName];
+            }
 
-            var form = forms.FirstOrDefault(f => f.Id == _formId);
+            var forms = context["Forms"] as List<SubmitForm>;
+
+            //var form = forms.SingleOrDefault(f => f.FormType == template);
+
+            var form = forms.FirstOrDefault(f => f.FormType == template);
 
             if (form != null)
             {
+                form.FormContext = contextFormObject;
+            }
+
+            if (form is AddressForm)
+            {
                 result.WriteLine(
                     "<form accept-charset=\"UTF-8\" action=\"{0}\" method=\"post\" id=\"{1}\">",
-                    form != null ? form.ActionLink : "",
-                    form.Properties.ContainsKey("id") ? form.Properties["id"] : form.Id);
-                result.WriteLine("<input name=\"form_type\" type=\"hidden\" value=\"{0}\" />", form.FormType);
-
-                context["form"] = form;
-                this.RenderAll(this.NodeList, context, result);
-                result.WriteLine("</form>");
+                    form == null ? "" : form.ActionLink, "address_form_" + form.Id);
             }
+            else
+            {
+                result.WriteLine(
+                    "<form accept-charset=\"UTF-8\" action=\"{0}\" method=\"post\" id=\"{1}\">",
+                    form == null ? "" : form.ActionLink, form == null ? "" : form.Id);
+            }
+
+            result.WriteLine("<input name=\"form_type\" type=\"hidden\" value=\"{0}\" />", template);
+
+            context["form"] = form;
+            this.RenderAll(this.NodeList, context, result);
+            result.WriteLine("</form>");
         }
+        #endregion
     }
 }

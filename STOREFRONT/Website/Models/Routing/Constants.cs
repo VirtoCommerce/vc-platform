@@ -75,6 +75,14 @@
             }
         }
 
+        public static string ItemRouteWithCode
+        {
+            get
+            {
+                return string.Format("{0}/products/{{{1}}}", CategoryRoute, Item);
+            }
+        }
+
         /// <summary>
         ///     Gets the store route. {lang}/{store}
         /// </summary>

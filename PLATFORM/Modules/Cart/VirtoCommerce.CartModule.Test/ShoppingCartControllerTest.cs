@@ -7,16 +7,15 @@ using VirtoCommerce.CartModule.Data.Repositories;
 using VirtoCommerce.CartModule.Data.Services;
 using VirtoCommerce.Domain.Cart.Model;
 using VirtoCommerce.Domain.Cart.Services;
-using VirtoCommerce.Foundation.Data.Infrastructure.Interceptors;
-using VirtoCommerce.Foundation.Money;
 using coreModel = VirtoCommerce.Domain.Cart.Model;
 using webModel = VirtoCommerce.CatalogModule.Web.Model;
-using VirtoCommerce.Foundation.Frameworks.Workflow.Services;
 using VirtoCommerce.CartModule.Data.Workflow;
 
 namespace VirtoCommerce.CartModule.Test
 {
     using VirtoCommerce.CartModule.Web.Controllers.Api;
+	using VirtoCommerce.Platform.Data.Infrastructure.Interceptors;
+	using VirtoCommerce.Domain.Common;
 
     [TestClass]
 	public class ShoppingCartControllerTest

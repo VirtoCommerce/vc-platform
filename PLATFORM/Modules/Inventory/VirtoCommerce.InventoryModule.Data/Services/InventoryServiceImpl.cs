@@ -8,20 +8,19 @@ using System.Threading.Tasks;
 using VirtoCommerce.Domain.Customer.Services;
 using VirtoCommerce.Domain.Inventory.Services;
 using VirtoCommerce.Domain.Store.Services;
-using VirtoCommerce.Foundation.Data.Infrastructure;
-using VirtoCommerce.Foundation.Frameworks;
-using VirtoCommerce.Foundation.Frameworks.Extensions;
 using VirtoCommerce.InventoryModule.Data.Converters;
 using VirtoCommerce.InventoryModule.Data.Repositories;
+using VirtoCommerce.Platform.Data.Infrastructure;
 using coreModel = VirtoCommerce.Domain.Inventory.Model;
-using foundationModel = VirtoCommerce.Foundation.Inventories.Model;
+using dataModel = VirtoCommerce.InventoryModule.Data.Model;
+using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.InventoryModule.Data.Services
 {
 	public class InventoryServiceImpl : ServiceBase, IInventoryService
 	{
-		private readonly Func<IFoundationInventoryRepository> _repositoryFactory;
-		public InventoryServiceImpl(Func<IFoundationInventoryRepository> repositoryFactory)
+		private readonly Func<IInventoryRepository> _repositoryFactory;
+		public InventoryServiceImpl(Func<IInventoryRepository> repositoryFactory)
 		{
 			_repositoryFactory = repositoryFactory;
 		}
@@ -47,9 +46,9 @@ namespace VirtoCommerce.InventoryModule.Data.Services
 				var changedProductIds = inventoryInfos.Select(x => x.ProductId).ToArray();
 				var targetEntities = repository.GetProductsInventories(changedProductIds).ToList();
 
-				var targetCollection = new ObservableCollection<foundationModel.Inventory>(targetEntities);
+				var targetCollection = new ObservableCollection<dataModel.Inventory>(targetEntities);
 				targetCollection.ObserveCollection(x => repository.Add(x), null);
-				var inventoryComparer = AnonymousComparer.Create((foundationModel.Inventory x) => x.FulfillmentCenterId + "-" + x.Sku);
+				var inventoryComparer = AnonymousComparer.Create((dataModel.Inventory x) => x.FulfillmentCenterId + "-" + x.Sku);
 				sourceEntities.Patch(targetCollection, inventoryComparer, (source, target) => source.Patch(target));
 
 				CommitChanges(repository);

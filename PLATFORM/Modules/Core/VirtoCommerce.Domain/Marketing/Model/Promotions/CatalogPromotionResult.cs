@@ -6,9 +6,6 @@ using System.Threading.Tasks;
 
 namespace VirtoCommerce.Domain.Marketing.Model
 {
-	/// <summary>
-	/// Элемент каталога МП
-	/// </summary>
 	public abstract class CatalogPromotionResult
 	{
 		public CatalogPromotionResult(Promotion promo)
@@ -16,9 +13,6 @@ namespace VirtoCommerce.Domain.Marketing.Model
 			CatalogPromotionId = promo.Name;
 			Description = promo.Description;
 		}
-		/// <summary>
-		/// Признак действия
-		/// </summary>
 		public bool IsValid { get; set; }
 
 		public string CatalogPromotionId { get; set; }

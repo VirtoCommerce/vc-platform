@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.marketingModule')
-.controller('addPublishingPlaceholdersStepController', ['$scope', 'marketing_dynamicContents_res_search', 'marketing_dynamicContents_res_contentPlaces', 'bladeNavigationService', function ($scope, marketing_dynamicContents_res_search, marketing_dynamicContents_res_contentPlaces, bladeNavigationService) {
+.controller('virtoCommerce.marketingModule.addPublishingPlaceholdersStepController', ['$scope', 'virtoCommerce.marketingModule.dynamicContent.search', 'virtoCommerce.marketingModule.dynamicContent.contentPlaces', 'bladeNavigationService', function ($scope, marketing_dynamicContents_res_search, marketing_dynamicContents_res_contentPlaces, bladeNavigationService) {
 	var blade = $scope.blade;
 
 	blade.choosenFolder = undefined;

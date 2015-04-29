@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.marketingModule')
-.controller('publishingDynamicContentListController', ['$scope', 'marketing_dynamicContents_res_search', 'bladeNavigationService', function ($scope, marketing_dynamicContents_res_search, bladeNavigationService) {
+.controller('virtoCommerce.marketingModule.publishingDynamicContentListController', ['$scope', 'virtoCommerce.marketingModule.dynamicContent.search', 'bladeNavigationService', function ($scope, marketing_dynamicContents_res_search, bladeNavigationService) {
 	var blade = $scope.blade;
 	blade.currentEntity = undefined;
 	blade.currentEntities = [];
@@ -22,7 +22,7 @@
 			title: 'New publising element',
 			subtitle: 'New publising element',
 			isNew: true,
-			controller: 'addPublishingFirstStepController',
+			controller: 'virtoCommerce.marketingModule.addPublishingFirstStepController',
 			template: 'Modules/$(VirtoCommerce.Marketing)/Scripts/dynamicContent/blades/publishing/publishing-main-step.tpl.html'
 		};
 		bladeNavigationService.showBlade(newBlade, $scope.blade);
@@ -37,7 +37,7 @@
 			subtitle: 'Edit publising element',
 			entity: data,
 			isNew: false,
-			controller: 'addPublishingFirstStepController',
+			controller: 'virtoCommerce.marketingModule.addPublishingFirstStepController',
 			template: 'Modules/$(VirtoCommerce.Marketing)/Scripts/dynamicContent/blades/publishing/publishing-main-step.tpl.html'
 		};
 		bladeNavigationService.showBlade(newBlade, $scope.blade);

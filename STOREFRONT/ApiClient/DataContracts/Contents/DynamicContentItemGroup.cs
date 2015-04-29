@@ -6,11 +6,6 @@ using System.Collections.Generic;
 
 namespace VirtoCommerce.ApiClient.DataContracts.Contents
 {
-
-    #region
-
-    #endregion
-
     public class DynamicContentItemGroup
     {
         #region Constructors and Destructors

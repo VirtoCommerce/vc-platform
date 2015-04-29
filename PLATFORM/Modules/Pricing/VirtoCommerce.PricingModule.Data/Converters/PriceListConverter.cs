@@ -9,6 +9,7 @@ using foundationModel = VirtoCommerce.PricingModule.Data.Model;
 using coreModel = VirtoCommerce.Domain.Pricing.Model;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Data.Common;
+using VirtoCommerce.Platform.Data.Common.ConventionInjections;
 
 namespace VirtoCommerce.PricingModule.Data.Converters
 {

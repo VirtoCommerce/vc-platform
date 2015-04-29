@@ -8,7 +8,7 @@ using VirtoCommerce.Domain.Catalog.Model;
 using VirtoCommerce.Domain.Catalog.Services;
 using VirtoCommerce.Domain.Pricing.Model;
 using VirtoCommerce.Domain.Pricing.Services;
-using VirtoCommerce.Foundation.Assets.Services;
+using VirtoCommerce.Platform.Core.Asset;
 using VirtoCommerce.Platform.Core.Common;
 
 namespace GoogleShopping.MerchantModule.Web.Providers
@@ -17,10 +17,10 @@ namespace GoogleShopping.MerchantModule.Web.Providers
     {
         private readonly IItemService _itemService;
         private readonly IPricingService _pricingService;
-        private readonly IAssetUrlResolver _assetUrlResolver;
+        private readonly IBlobUrlResolver _assetUrlResolver;
         private readonly ICatalogSearchService _catalogSearchService;
 
-        public VCGoogleProductProvider(IItemService itemService, IPricingService pricingService, IAssetUrlResolver assetUrlResolver, ICatalogSearchService catalogSearchService)
+		public VCGoogleProductProvider(IItemService itemService, IPricingService pricingService, IBlobUrlResolver assetUrlResolver, ICatalogSearchService catalogSearchService)
         {
             _itemService = itemService;
             _pricingService = pricingService;

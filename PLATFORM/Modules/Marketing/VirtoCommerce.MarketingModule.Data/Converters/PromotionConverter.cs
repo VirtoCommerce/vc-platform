@@ -4,15 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Omu.ValueInjecter;
-using VirtoCommerce.Foundation.Money;
-using VirtoCommerce.Foundation.Frameworks;
 using System.Collections.ObjectModel;
-using VirtoCommerce.Foundation.Frameworks.ConventionInjections;
-using VirtoCommerce.Foundation.Frameworks.Extensions;
-using foundationModel = VirtoCommerce.Foundation.Marketing.Model;
+using dataModel = VirtoCommerce.MarketingModule.Data.Model;
 using coreModel = VirtoCommerce.Domain.Marketing.Model;
 using VirtoCommerce.MarketingModule.Data.Promotions;
 using ExpressionSerialization;
+using VirtoCommerce.Platform.Data.Common.ConventionInjections;
+using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.CustomerModule.Data.Converters
 {
@@ -23,49 +21,37 @@ namespace VirtoCommerce.CustomerModule.Data.Converters
 		/// </summary>
 		/// <param name="catalogBase"></param>
 		/// <returns></returns>
-		public static coreModel.Promotion ToCoreModel(this foundationModel.Promotion dbEntity)
+		public static coreModel.Promotion ToCoreModel(this dataModel.Promotion dbEntity)
 		{
 			if (dbEntity == null)
 				throw new ArgumentNullException("dbEntity");
 
 			var retVal = new DynamicPromotion();
 			retVal.InjectFrom(dbEntity);
-			retVal.Id = dbEntity.PromotionId;
-			retVal.Coupon = dbEntity.CouponCode;
+			retVal.Coupons = dbEntity.Coupons.Select(x=>x.Code).ToArray();
 			retVal.Store = dbEntity.StoreId;
 			retVal.MaxUsageCount = dbEntity.TotalLimit;
 			retVal.MaxPersonalUsageCount = dbEntity.PerCustomerLimit;
 
-			retVal.CreatedDate = dbEntity.Created.Value;
-			retVal.ModifiedDate = dbEntity.LastModified;
-
-			var status = (foundationModel.PromotionStatus)Enum.Parse(typeof(foundationModel.PromotionStatus), dbEntity.Status);
-			retVal.IsActive = status == foundationModel.PromotionStatus.Active;
-		
 			return retVal;
 		}
 
 
-		public static foundationModel.Promotion ToFoundation(this coreModel.Promotion promotion)
+		public static dataModel.Promotion ToFoundation(this coreModel.Promotion promotion)
 		{
 			if (promotion == null)
 				throw new ArgumentNullException("promotion");
 
-			//TODO: Need rid for typized promotion in db. Temporary  save all promotion as catalogPromotion
-			var retVal = new foundationModel.CatalogPromotion();
+			var retVal = new dataModel.Promotion();
 			retVal.StartDate = DateTime.UtcNow;
 			retVal.InjectFrom(promotion);
-
-			if (promotion.Id != null)
-			{
-				retVal.PromotionId = promotion.Id;
-			}
+	
 			retVal.StartDate = promotion.StartDate ?? DateTime.UtcNow;
 			retVal.StoreId = promotion.Store;
-			retVal.CouponCode = promotion.Coupon;
+			retVal.Coupons = new ObservableCollection<dataModel.Coupon>(promotion.Coupons.Select(x=> new dataModel.Coupon { Code = x }));
 			retVal.TotalLimit = promotion.MaxUsageCount;
 			retVal.PerCustomerLimit = promotion.MaxPersonalUsageCount;
-			retVal.Status = promotion.IsActive ? foundationModel.PromotionStatus.Active.ToString() : foundationModel.PromotionStatus.Inactive.ToString();
+		
 			return retVal;
 		}
 
@@ -74,16 +60,22 @@ namespace VirtoCommerce.CustomerModule.Data.Converters
 		/// </summary>
 		/// <param name="source"></param>
 		/// <param name="target"></param>
-		public static void Patch(this foundationModel.Promotion source, foundationModel.Promotion target)
+		public static void Patch(this dataModel.Promotion source, dataModel.Promotion target)
 		{
 			if (target == null)
 				throw new ArgumentNullException("target");
 
-			var patchInjection = new PatchInjection<foundationModel.Promotion>(x => x.Name, x => x.Description, x=>x.Priority, x=>x.CouponCode, x=>x.StoreId,
-																		   x => x.StartDate, x => x.EndDate, x => x.Status, x => x.TotalLimit, x => x.PerCustomerLimit, x => x.PredicateSerialized,
+			var patchInjection = new PatchInjection<dataModel.Promotion>(x => x.Name, x => x.Description, x=>x.Priority, x=>x.CouponCode, x=>x.StoreId,
+																		   x => x.StartDate, x => x.EndDate, x => x.IsActive, x => x.TotalLimit, x => x.PerCustomerLimit, x => x.PredicateSerialized,
 																		   x => x.PredicateVisualTreeSerialized, x => x.RewardsSerialized);
 		
 			target.InjectFrom(patchInjection, source);
+
+			if (!source.Coupons.IsNullCollection())
+			{
+				var couponComparer = AnonymousComparer.Create((dataModel.Coupon x) => x.Code);
+				source.Coupons.Patch(target.Coupons, (sourceCoupon, targetCoupon) => { return; });
+			}
 		}
 
 

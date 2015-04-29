@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.pricingModule')
-.controller('pricelistItemListController', ['$scope', '$filter', 'bladeNavigationService', function ($scope, $filter, bladeNavigationService) {
+.controller('virtoCommerce.pricingModule.pricelistItemListController', ['$scope', '$filter', 'bladeNavigationService', function ($scope, $filter, bladeNavigationService) {
     var selectedNode = null;
 
     function initializeBlade(data) {
@@ -18,7 +18,7 @@
             currency: $scope.blade.currency,
             title: 'Prices for ' + selectedNode.name,
             subtitle: 'Edit prices',
-            controller: 'pricesListController',
+            controller: 'virtoCommerce.pricingModule.pricesListController',
             template: 'Modules/$(VirtoCommerce.Pricing)/Scripts/blades/prices-list.tpl.html'
         };
 
@@ -41,7 +41,7 @@
         var newBlade = {
             id: "CatalogItemsSelect",
             title: "Select items for pricing",
-            controller: 'catalogItemSelectController',
+            controller: 'virtoCommerce.catalogModule.catalogItemSelectController',
             template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/common/catalog-items-select.tpl.html',
             breadcrumbs: [],
             bladeToolbarCommands: [

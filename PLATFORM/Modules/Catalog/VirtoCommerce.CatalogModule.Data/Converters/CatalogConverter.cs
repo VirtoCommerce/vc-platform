@@ -9,6 +9,7 @@ using System.Collections.ObjectModel;
 using VirtoCommerce.Platform.Core.Common;
 using Omu.ValueInjecter;
 using VirtoCommerce.Platform.Data.Common;
+using VirtoCommerce.Platform.Data.Common.ConventionInjections;
 
 
 namespace VirtoCommerce.CatalogModule.Data.Converters

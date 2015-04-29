@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.catalogModule')
-.controller('exportWizardController', ['$scope', 'bladeNavigationService', 'dialogService', 'imports', 'notificationService', function ($scope, bladeNavigationService, dialogService, imports, notificationService) {
+.controller('virtoCommerce.catalogModule.exportWizardController', ['$scope', 'bladeNavigationService', 'dialogService', 'virtoCommerce.catalogModule.imports', 'notificationService', function ($scope, bladeNavigationService, dialogService, imports, notificationService) {
     $scope.blade.currentEntity = { types: [] };
 
     $scope.openBlade = function (type) {
@@ -9,7 +9,7 @@
                 case 'catalog':
                     newBlade = {
                         subtitle: 'Select Catalog to export from',
-                        controller: 'catalogsSelectController',
+                        controller: 'virtoCommerce.catalogModule.catalogsSelectController',
                         doShowAllCatalogs: true,
                         template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/catalogs-select.tpl.html'
                     };
@@ -17,14 +17,14 @@
                 case 'types':
                     newBlade = {
                         subtitle: 'Select what to export',
-                        controller: 'exportTypesController',
+                        controller: 'virtoCommerce.catalogModule.exportTypesController',
                         template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/wizards/export/export-wizard-types-step.tpl.html'
                     };
                     break;
                 case 'format':
                     newBlade = {
                         subtitle: 'Select export data format',
-                        controller: 'exportFormatController',
+                        controller: 'virtoCommerce.catalogModule.exportFormatController',
                         template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/wizards/export/export-wizard-format-step.tpl.html'
                     };
                     break;

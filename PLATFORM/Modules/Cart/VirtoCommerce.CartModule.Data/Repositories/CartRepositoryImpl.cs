@@ -6,8 +6,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using VirtoCommerce.CartModule.Data.Model;
-using VirtoCommerce.Foundation.Data;
-using VirtoCommerce.Foundation.Data.Infrastructure.Interceptors;
+using VirtoCommerce.Platform.Data.Infrastructure;
+using VirtoCommerce.Platform.Data.Infrastructure.Interceptors;
 
 namespace VirtoCommerce.CartModule.Data.Repositories
 {
@@ -20,7 +20,7 @@ namespace VirtoCommerce.CartModule.Data.Repositories
 		}
 
 		public CartRepositoryImpl(string nameOrConnectionString, params IInterceptor[] interceptors)
-			: base(nameOrConnectionString, null, null, interceptors)
+			: base(nameOrConnectionString, null, interceptors)
 		{
 			Database.SetInitializer<CartRepositoryImpl>(null);
 			Configuration.LazyLoadingEnabled = false;
@@ -95,6 +95,8 @@ namespace VirtoCommerce.CartModule.Data.Repositories
 
 			modelBuilder.Entity<PaymentEntity>().ToTable("cart_Payment");
 			#endregion
+
+			base.OnModelCreating(modelBuilder);
 		}
 
 		#region IOrderRepository Members

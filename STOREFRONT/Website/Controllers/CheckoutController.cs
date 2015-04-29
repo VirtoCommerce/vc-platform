@@ -29,18 +29,6 @@ namespace VirtoCommerce.Web.Controllers
                 return RedirectToAction("Index", "Cart");
             }
 
-            var forms = new[]
-            {
-                new SubmitForm
-                {
-                    ActionLink = VirtualPathUtility.ToAbsolute("~/checkout/step1"),
-                    FormType = "edit_checkout_step_1",
-                    Id = "edit_checkout_step_1",
-                }
-            };
-
-            UpdateForms(forms, true);
-
             var checkout = await Service.GetCheckoutAsync();
             Context.Checkout = checkout;
 
@@ -102,8 +90,6 @@ namespace VirtoCommerce.Web.Controllers
                     form.Errors = formErrors;
                     form.PostedSuccessfully = false;
 
-                    UpdateForms(new[] { form });
-
                     return RedirectToAction("Step1", "Checkout");
                 }
             }
@@ -125,18 +111,6 @@ namespace VirtoCommerce.Web.Controllers
             {
                 return RedirectToAction("Step1", "Checkout");
             }
-
-            var forms = new[]
-            {
-                new SubmitForm
-                {
-                    ActionLink = VirtualPathUtility.ToAbsolute("~/checkout/step2"),
-                    FormType = "edit_checkout_step_2",
-                    Id = "edit_checkout_step_2",
-                }
-            };
-
-            UpdateForms(forms, true);
 
             Context.Checkout = checkout;
 
@@ -199,8 +173,6 @@ namespace VirtoCommerce.Web.Controllers
                 {
                     form.Errors = formErrors;
                     form.PostedSuccessfully = false;
-
-                    UpdateForms(new[] { form });
 
                     return View("checkout-step-2");
                 }

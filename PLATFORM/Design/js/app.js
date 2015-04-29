@@ -48,7 +48,7 @@ angular.module('app')
             {
                 wide: 2,
                 tall: 2,
-                template: '<div class="image __main"><img src="http://virtotest.blob.core.windows.net/catalog/v-b0056ey8x0/9bh0llrknu2bs7jrswnreg.jpg" alt="" /></div>'
+                template: 'Template 1'
             },
             {
                 wide: 2,

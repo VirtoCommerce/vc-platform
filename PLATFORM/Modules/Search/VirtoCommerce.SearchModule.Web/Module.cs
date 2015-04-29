@@ -1,4 +1,5 @@
 ﻿using Microsoft.Practices.Unity;
+using Owin;
 using VirtoCommerce.Domain.Inventory.Services;
 using VirtoCommerce.Domain.Search;
 using VirtoCommerce.Domain.Search.Services;
@@ -9,13 +10,14 @@ using VirtoCommerce.SearchModule.Data.Services;
 
 namespace VirtoCommerce.InventoryModule.Web
 {
-    public class Module : IModule, IPostInitialize
+    public class Module : IModule
     {
         private readonly IUnityContainer _container;
-
-        public Module(IUnityContainer container)
+		private readonly IAppBuilder _appBuilder;
+        public Module(IUnityContainer container, IAppBuilder appBuilder)
         {
             _container = container;
+			_appBuilder = appBuilder;
         }
 
         #region IModule Members
@@ -33,10 +35,6 @@ namespace VirtoCommerce.InventoryModule.Web
 
         }
 
-        #endregion
-
-		#region IPostInitialize Members
-
 		public void PostInitialize()
 		{
 			var jobScheduler = _container.Resolve<SearchIndexJobsScheduler>();
@@ -44,13 +42,18 @@ namespace VirtoCommerce.InventoryModule.Web
 
             var searchProviderManager = _container.Resolve<ISearchProviderManager>();
 
-            searchProviderManager.RegisterSearchProvider(SearchProviders.Elasticsearch.ToString(), connection => new ElasticSearchProvider(new ElasticSearchQueryBuilder(), connection));
-            searchProviderManager.RegisterSearchProvider(SearchProviders.Lucene.ToString(), connection => new LuceneSearchProvider(new LuceneSearchQueryBuilder(), connection));
-            searchProviderManager.RegisterSearchProvider(SearchProviders.AzureSearch.ToString(), connection => new AzureSearchProvider(new AzureSearchQueryBuilder(), connection));
+			//searchProviderManager.RegisterSearchProvider(SearchProviders.Elasticsearch.ToString(), connection => new ElasticSearchProvider(new ElasticSearchQueryBuilder(), connection));
+			//searchProviderManager.RegisterSearchProvider(SearchProviders.Lucene.ToString(), connection => new LuceneSearchProvider(new LuceneSearchQueryBuilder(), connection));
+			//searchProviderManager.RegisterSearchProvider(SearchProviders.AzureSearch.ToString(), connection => new AzureSearchProvider(new AzureSearchQueryBuilder(), connection));
 
         
-            OwinConfig.Configure(_appBuilder, _container, _connectionStringName);
+            //OwinConfig.Configure(_appBuilder, _container, _connectionStringName);
 
+		}
+
+		public void SetupDatabase(SampleDataLevel sampleDataLevel)
+		{
+			
 		}
 
 		#endregion

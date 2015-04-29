@@ -1,0 +1,26 @@
+﻿<div class="blade-content __tree">
+	<div class="blade-inner">
+		<div class="inner-block">
+			<ul class="list __files" ng-if="blade.currentEntities.length">
+				<li class="list-item" ng-click="blade.folderClick(data)" ng-repeat="data in blade.currentEntities | orderBy:blade.folderSorting" ng-class="{'__selected': blade.checkFolder(data) }">
+					<a class="list-block">
+						<i class="list-ico fa" ng-class="{'fa-folder-open': blade.checkFolder(data), 'fa-folder': !blade.checkFolder(data) }"></i>
+						<span class="list-name">{{data.folderName}}</span>
+					</a>
+					<ul class="list __sub" ng-show="blade.checkFolder(data)">
+						<li class="list-item">
+							<a class="list-link" ng-click="blade.openBladeNew(data); $event.stopPropagation();">Add new {{blade.getOneItemName(data)}}</a>
+						</li>
+						<li class="list-item" ng-click="blade.openBlade(asset, data); $event.stopPropagation();" ng-class="{'__selected': blade.checkAsset(asset) }" ng-repeat="asset in data.assets | orderBy:'name':reverse">
+							<a class="list-block">
+								<i class="list-ico fa" ng-class="blade.assetClass(asset)"></i>
+								<span class="list-name">{{asset.name}}</span>
+							</a>
+						</li>
+					</ul>
+				</li>
+			</ul>
+			<p class="text" ng-if="!blade.currentEntities.length">No Assets yet</p>
+		</div>
+	</div>
+</div>

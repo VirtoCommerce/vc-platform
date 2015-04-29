@@ -1,0 +1,14 @@
+﻿<div class="blade-content">
+	<div class="blade-inner">
+		<div class="inner-block">
+			<ul class="list __items" ng-if="blade.currentEntities.length">
+				<li class="list-item __not-icon " ng-click="blade.checkTheme(data)" ng-repeat="data in blade.currentEntities | orderBy:name" ng-class="blade.themeClass(data)">
+					<span class="list-name">
+						{{data.name}}
+					</span>
+				</li>
+			</ul>
+			<p class="text" ng-if="!blade.currentEntities.length">No Themes yet</p>
+		</div>
+	</div>
+</div>

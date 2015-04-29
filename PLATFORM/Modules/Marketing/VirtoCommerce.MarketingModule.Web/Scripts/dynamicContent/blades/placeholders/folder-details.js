@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.marketingModule')
-.controller('addFolderPlaceholderController', ['$scope', 'marketing_dynamicContents_res_folders', 'bladeNavigationService', function ($scope, marketing_dynamicContents_res_folders, bladeNavigationService) {
+.controller('virtoCommerce.marketingModule.addFolderPlaceholderController', ['$scope', 'virtoCommerce.marketingModule.dynamicContent.folders', 'bladeNavigationService', function ($scope, marketing_dynamicContents_res_folders, bladeNavigationService) {
 	$scope.setForm = function (form) {
 		$scope.formScope = form;
 	}

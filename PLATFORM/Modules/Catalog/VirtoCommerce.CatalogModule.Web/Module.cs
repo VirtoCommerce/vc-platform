@@ -10,10 +10,11 @@ using VirtoCommerce.Platform.Core.Caching;
 using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Core.Notification;
 using VirtoCommerce.Platform.Core.Settings;
+using VirtoCommerce.Platform.Data.Infrastructure.Interceptors;
 
 namespace VirtoCommerce.CatalogModule.Web
 {
-    public class Module : IModule, IDatabaseModule
+    public class Module : IModule
     {
         private const string _connectionStringName = "VirtoCommerce";
         private readonly IUnityContainer _container;
@@ -53,21 +54,18 @@ namespace VirtoCommerce.CatalogModule.Web
 			//}
         }
 
-        #endregion
-
-        #region IModule Members
-
+  
         public void Initialize()
         {
             #region Catalog dependencies
 
             var settingsManager = _container.Resolve<ISettingsManager>();
 
-            Func<ICatalogRepository> catalogRepFactory = () => new CatalogRepositoryImpl(_connectionStringName);
+			Func<ICatalogRepository> catalogRepFactory = () => new CatalogRepositoryImpl(_connectionStringName, new EntityPrimaryKeyGeneratorInterceptor(), new AuditableInterceptor());
         
-            var catalogService = new CatalogServiceImpl(catalogRepFactory, CacheManager.NoCache);
-            var propertyService = new PropertyServiceImpl(catalogRepFactory, CacheManager.NoCache);
-            var categoryService = new CategoryServiceImpl(catalogRepFactory, CacheManager.NoCache);
+            var catalogService = new CatalogServiceImpl(catalogRepFactory);
+            var propertyService = new PropertyServiceImpl(catalogRepFactory);
+            var categoryService = new CategoryServiceImpl(catalogRepFactory);
             var itemService = new ItemServiceImpl(catalogRepFactory);
             var catalogSearchService = new CatalogSearchServiceImpl(catalogRepFactory, itemService, catalogService, categoryService, CacheManager.NoCache);
 
@@ -98,6 +96,12 @@ namespace VirtoCommerce.CatalogModule.Web
 
         }
 
-        #endregion
-    }
+
+		public void PostInitialize()
+		{
+		
+		}
+
+		#endregion
+	}
 }

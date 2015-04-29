@@ -7,6 +7,7 @@ using System.Linq;
 using System.Web;
 using VirtoCommerce.Domain.Payment.Model;
 using VirtoCommerce.Domain.Payment.Services;
+using VirtoCommerce.Platform.Core.Common;
 
 namespace Klarna.PaymentGatewaysModule.Web.Managers
 {
@@ -85,7 +86,7 @@ namespace Klarna.PaymentGatewaysModule.Web.Managers
 			retVal.CreatedDate = DateTime.TryParse(createdDate, out dateTime) ? dateTime : new Nullable<DateTime>();
 
 			var currency = order.GetValue("purchase_currency") as string;
-			retVal.Currency = (VirtoCommerce.Foundation.Money.CurrencyCodes)Enum.Parse(typeof(VirtoCommerce.Foundation.Money.CurrencyCodes), currency);
+			retVal.Currency = (CurrencyCodes)Enum.Parse(typeof(CurrencyCodes), currency);
 
 			var gatewayCode = order.GetValue("id") as string;
 			retVal.GatewayCode = gatewayCode;

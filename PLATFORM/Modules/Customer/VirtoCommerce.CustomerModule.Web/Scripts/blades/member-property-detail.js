@@ -1,5 +1,5 @@
-﻿angular.module('virtoCommerce.customerModule.blades')
-.controller('memberPropertyDetailController', ['$scope', 'bladeNavigationService', 'dialogService', function ($scope, bladeNavigationService, dialogService) {
+﻿angular.module('virtoCommerce.customerModule')
+.controller('virtoCommerce.customerModule.memberPropertyDetailController', ['$scope', 'bladeNavigationService', 'dialogService', function ($scope, bladeNavigationService, dialogService) {
     var b = $scope.blade;
 
     function initializeBlade(data) {
@@ -17,7 +17,7 @@
             case 'valType':
                 newBlade.title = b.origEntity.name ? b.origEntity.name : b.currentEntity.name + ' value type';
                 newBlade.subtitle = 'Change value type';
-                newBlade.controller = 'memberPropertyValueTypeController';
+                newBlade.controller = 'virtoCommerce.customerModule.memberPropertyValueTypeController';
                 newBlade.template = 'Modules/$(VirtoCommerce.Customer)/Scripts/blades/member-property-valueType.tpl.html';
                 break;
         }

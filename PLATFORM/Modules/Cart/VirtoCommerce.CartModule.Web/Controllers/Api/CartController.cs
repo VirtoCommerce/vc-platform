@@ -8,7 +8,6 @@ using System.Web.Http.ModelBinding;
 using VirtoCommerce.CartModule.Web.Binders;
 using VirtoCommerce.CartModule.Web.Converters;
 using VirtoCommerce.Domain.Cart.Services;
-using VirtoCommerce.Foundation.Money;
 
 namespace VirtoCommerce.CartModule.Web.Controllers.Api
 {

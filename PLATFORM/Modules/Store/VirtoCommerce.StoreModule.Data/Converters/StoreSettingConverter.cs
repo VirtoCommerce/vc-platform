@@ -7,6 +7,7 @@ using foundationModel = VirtoCommerce.StoreModule.Data.Model;
 using coreModel = VirtoCommerce.Domain.Store.Model;
 using Omu.ValueInjecter;
 using VirtoCommerce.Platform.Data.Common;
+using VirtoCommerce.Platform.Data.Common.ConventionInjections;
 
 namespace VirtoCommerce.StoreModule.Data.Converters
 {

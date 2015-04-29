@@ -3,7 +3,7 @@
     public interface IPermissionService
     {
         bool UserHasAnyPermission(string userName, params string[] permissionIds);
-        PermissionDescriptor[] GetAllPermissions();
+        Permission[] GetAllPermissions();
         string[] GetUserPermissionIds(string userName);
     }
 }

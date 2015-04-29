@@ -7,8 +7,9 @@ using VirtoCommerce.CartModule.Data.Converters;
 using VirtoCommerce.CartModule.Data.Repositories;
 using VirtoCommerce.Domain.Cart.Model;
 using VirtoCommerce.Domain.Cart.Services;
-using VirtoCommerce.Foundation.Data.Infrastructure;
-using VirtoCommerce.Foundation.Frameworks.Workflow.Services;
+using VirtoCommerce.Domain.Common;
+using VirtoCommerce.Platform.Data.Infrastructure;
+
 
 namespace VirtoCommerce.CartModule.Data.Services
 {
@@ -126,8 +127,7 @@ namespace VirtoCommerce.CartModule.Data.Services
 		private void RecalculateCart(ShoppingCart cart)
 		{
 			var parameters = new Dictionary<string, object>();
-			parameters["cart"] = cart;
-			_workflowService.RunWorkflow(_workflowName, parameters, null);
+			_workflowService.RunWorkflow(cart);
 		}
 	}
 }

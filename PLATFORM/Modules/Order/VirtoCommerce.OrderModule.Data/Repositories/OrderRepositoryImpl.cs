@@ -3,9 +3,9 @@ using System.Data.Entity;
 using System.Data.Entity.ModelConfiguration.Conventions;
 using System.Linq;
 using VirtoCommerce.Domain.Order.Model;
-using VirtoCommerce.Foundation.Data;
-using VirtoCommerce.Foundation.Data.Infrastructure.Interceptors;
 using VirtoCommerce.OrderModule.Data.Model;
+using VirtoCommerce.Platform.Data.Infrastructure;
+using VirtoCommerce.Platform.Data.Infrastructure.Interceptors;
 
 namespace VirtoCommerce.OrderModule.Data.Repositories
 {
@@ -18,7 +18,7 @@ namespace VirtoCommerce.OrderModule.Data.Repositories
 		}
 
 		public OrderRepositoryImpl(string nameOrConnectionString, params IInterceptor[] interceptors)
-			: base(nameOrConnectionString, null, null, interceptors)
+			: base(nameOrConnectionString, null,  interceptors)
 		{
 			Database.SetInitializer<OrderRepositoryImpl>(null);
 			Configuration.LazyLoadingEnabled = false;
@@ -128,6 +128,8 @@ namespace VirtoCommerce.OrderModule.Data.Repositories
 
 			modelBuilder.Entity<DiscountEntity>().ToTable("order_Discount");
 			#endregion
+
+			base.OnModelCreating(modelBuilder);
 		}
 
 		#region IOrderRepository Members

@@ -2,10 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using VirtoCommerce.Foundation.Search;
 using System.Runtime.Serialization;
-using VirtoCommerce.Foundation.Catalogs.Model;
-using VirtoCommerce.Foundation.Search.Facets;
+
 
 namespace VirtoCommerce.Domain.Search
 {

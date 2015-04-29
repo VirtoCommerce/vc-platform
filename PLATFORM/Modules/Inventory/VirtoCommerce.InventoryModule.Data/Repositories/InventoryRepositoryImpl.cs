@@ -3,37 +3,51 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using VirtoCommerce.Foundation.Data.Infrastructure.Interceptors;
-using VirtoCommerce.Foundation.Data.Stores;
 using System.Data.Entity;
-using VirtoCommerce.Foundation.Data.Catalogs;
-using VirtoCommerce.Foundation.Inventories.Model;
-using VirtoCommerce.Foundation.Data.Inventories;
+using VirtoCommerce.Platform.Data.Infrastructure;
+using VirtoCommerce.Platform.Data.Infrastructure.Interceptors;
+using VirtoCommerce.InventoryModule.Data.Model;
 
 namespace VirtoCommerce.InventoryModule.Data.Repositories
 {
-	public class FoundationInventoryRepositoryImpl : EFInventoryRepository, IFoundationInventoryRepository
+	public class InventoryRepositoryImpl : EFRepositoryBase, IInventoryRepository
 	{
-		public FoundationInventoryRepositoryImpl(string nameOrConnectionString)
+		public InventoryRepositoryImpl()
+		{
+		}
+
+		public InventoryRepositoryImpl(string nameOrConnectionString)
 			: this(nameOrConnectionString, null)
 		{
 		}
-		public FoundationInventoryRepositoryImpl(string nameOrConnectionString, params IInterceptor[] interceptors)
+		public InventoryRepositoryImpl(string nameOrConnectionString, params IInterceptor[] interceptors)
 			: base(nameOrConnectionString, null, interceptors)
 		{
 
 		}
 
+
+		protected override void OnModelCreating(DbModelBuilder modelBuilder)
+		{
+			modelBuilder.Entity<Inventory>().HasKey(x => x.Id).Property(x => x.Id)
+											.HasColumnName("InventoryId");
+
+			MapEntity<Inventory>(modelBuilder, toTable: "Inventory");
+
+			base.OnModelCreating(modelBuilder);
+		}
+
+
 		#region IFoundationInventoryRepository Members
 
-	
-		#endregion
-
-		#region IFoundationInventoryRepository Members
+		public IQueryable<Inventory> Inventories
+		{
+			get { return GetAsQueryable<Inventory>(); }
+		}
 
 		public IEnumerable<Inventory> GetProductsInventories(string[] productIds)
 		{
-			return base.Inventories.Where(x => productIds.Contains(x.Sku)).ToArray();
+			return Inventories.Where(x => productIds.Contains(x.Sku)).ToArray();
 		}
 
 		#endregion

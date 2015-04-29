@@ -9,13 +9,12 @@ using VirtoCommerce.Domain.Order.Model;
 using VirtoCommerce.Domain.Order.Services;
 using VirtoCommerce.OrderModule.Data.Converters;
 using VirtoCommerce.OrderModule.Data.Repositories;
-using VirtoCommerce.Foundation.Frameworks.Extensions;
-using VirtoCommerce.Foundation.Frameworks;
-using VirtoCommerce.Foundation.Frameworks.Workflow.Services;
-using VirtoCommerce.Foundation.Data.Infrastructure;
 using VirtoCommerce.OrderModule.Data.Workflow;
 using VirtoCommerce.OrderModule.Data.Model;
 using System.Collections.ObjectModel;
+using VirtoCommerce.Platform.Data.Infrastructure;
+using VirtoCommerce.Domain.Common;
+using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.OrderModule.Data.Services
 {
@@ -171,9 +170,7 @@ namespace VirtoCommerce.OrderModule.Data.Services
 		}
 		private void RecalculateOrder(CustomerOrderStateBasedEvalContext context)
 		{
-			var parameters = new Dictionary<string, object>();
-			parameters["context"] = context;
-			_workflowService.RunWorkflow(_workflowName, parameters, null);
+			_workflowService.RunWorkflow(context);
 		}
 
 		private void EnsureThatAllOperationsHasNumber(CustomerOrder order)

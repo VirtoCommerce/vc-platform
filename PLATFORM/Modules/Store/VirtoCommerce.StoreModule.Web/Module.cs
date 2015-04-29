@@ -8,7 +8,7 @@ using VirtoCommerce.StoreModule.Web.SampleData;
 
 namespace VirtoCommerce.StoreModule.Web
 {
-	public class Module : IModule, IDatabaseModule
+	public class Module : IModule
     {
         private readonly IUnityContainer _container;
 
@@ -19,20 +19,8 @@ namespace VirtoCommerce.StoreModule.Web
 
         #region IModule Members
 
-        public void Initialize()
+        public void SetupDatabase(SampleDataLevel sampleDataLevel)
         {
-			_container.RegisterType<IStoreRepository>(new InjectionFactory(c => new StoreRepositoryImpl("VirtoCommerce", new EntityPrimaryKeyGeneratorInterceptor(), new AuditableInterceptor())));
-
-            _container.RegisterType<IStoreService, StoreServiceImpl>();
-        }
-
-        #endregion
-
-		#region IDatabaseModule Members
-
-		public void SetupDatabase(SampleDataLevel sampleDataLevel)
-		{
-
 			using (var db = new StoreRepositoryImpl("VirtoCommerce"))
 			{
 				SqlStoreDatabaseInitializer initializer;
@@ -50,8 +38,17 @@ namespace VirtoCommerce.StoreModule.Web
 
 				initializer.InitializeDatabase(db);
 			}
-		}
+        }
 
-		#endregion
-	}
+		public void Initialize()
+		{
+			_container.RegisterType<IStoreRepository>(new InjectionFactory(c => new StoreRepositoryImpl("VirtoCommerce", new EntityPrimaryKeyGeneratorInterceptor(), new AuditableInterceptor())));
+		}
+        public void PostInitialize()
+        {
+        }
+
+		
+        #endregion
+    }
 }
