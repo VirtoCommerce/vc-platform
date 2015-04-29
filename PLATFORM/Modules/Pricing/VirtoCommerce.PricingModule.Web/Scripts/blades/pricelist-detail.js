@@ -83,7 +83,7 @@
             });
         }
 
-        $scope.bladeHeadIco = 'fa-usd';
+        $scope.bladeHeadIco = 'fa-anchor';
 
         function initializeToolbar() {
             if (!$scope.blade.isNew) {
