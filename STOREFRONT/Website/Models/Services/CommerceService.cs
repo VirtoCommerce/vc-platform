@@ -871,18 +871,20 @@ namespace VirtoCommerce.Web.Models.Services
             var pagesStorageClient = new FileStorageCacheService(HostingEnvironment.MapPath(String.Format("~/App_Data/Pages/{0}", store)));
 
             // get last updated for both pages or theme files
-            var lastUpdate = new DateTime(Math.Max(themeStorageClient.GetLatestUpdate().Ticks, pagesStorageClient.GetLatestUpdate().Ticks));
+            var themeLastUpdated = themeStorageClient.GetLatestUpdate();
+            var pagesLastUpdated = pagesStorageClient.GetLatestUpdate();
 
-            //var response = await this._themeClient.GetThemeAssetsAsync(store, theme, lastUpdate, true);
-            var response = await this._storeClient.GetStoreAssetsAsync(store, theme, lastUpdate);
+            var response = await this._storeClient.GetStoreAssetsAsync(store, theme, themeLastUpdated, pagesLastUpdated);
 
             if (response.Any())
             {
                 lock (_LockObject)
                 {
                     // check last update again, since going to the service is more expensive than checking local folders
-                    var newLastUpdate = new DateTime(Math.Max(themeStorageClient.GetLatestUpdate().Ticks, pagesStorageClient.GetLatestUpdate().Ticks));
-                    if (newLastUpdate == lastUpdate)
+                    var newThemeLastUpdated = themeStorageClient.GetLatestUpdate();
+                    var newPagesLastUpdated = pagesStorageClient.GetLatestUpdate();
+
+                    if (newThemeLastUpdated == themeLastUpdated && newPagesLastUpdated == pagesLastUpdated)
                     {
                         foreach (var syncAssetGroup in response)
                         {
@@ -899,14 +901,6 @@ namespace VirtoCommerce.Web.Models.Services
                                 pagesStorageClient.ApplyUpdates(syncAssetGroup.AsFileModel());
                             }
                         }
-
-                        /*
-                        var reload = storageClient.ApplyUpdates(response.AsFileModel());
-                        if (reload)
-                        {
-                            this._viewLocator.UpdateCache();
-                        }
-                         * */
                     }
                 }
             }

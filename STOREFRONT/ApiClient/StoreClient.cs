@@ -47,9 +47,9 @@ namespace VirtoCommerce.ApiClient
             return GetAsync<Store[]>(CreateRequestUri(RelativePaths.Stores));
         }
 
-        public async Task<SyncAssetGroup[]> GetStoreAssetsAsync(string storeId, string theme, DateTime since)
+        public async Task<SyncAssetGroup[]> GetStoreAssetsAsync(string storeId, string theme, DateTime themeUpdated, DateTime pagesUpdated)
         {
-            var parameters = new{ since, theme };
+            var parameters = new{ themeUpdated, pagesUpdated, theme };
             return await
                 GetAsync<SyncAssetGroup[]>(
                     CreateRequestUri(

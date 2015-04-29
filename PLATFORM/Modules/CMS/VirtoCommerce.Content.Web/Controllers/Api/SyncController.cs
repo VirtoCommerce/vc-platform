@@ -51,10 +51,10 @@ namespace VirtoCommerce.Content.Web.Controllers.Api
         [HttpGet]
         [ResponseType(typeof(SyncAssetGroup[]))]
         [Route("assets")]
-        public async Task<IHttpActionResult> SyncAssets(string storeId, string theme, DateTime since)
+        public async Task<IHttpActionResult> SyncAssets(string storeId, string theme, DateTime themeUpdated, DateTime pagesUpdated)
         {
-            var themeItems = await this._themeService.GetThemeAssets(storeId, theme, new GetThemeAssetsCriteria() { LoadContent = true, LastUpdateDate = since});
-            var pageItems = _pagesService.GetPages(storeId, new GetPagesCriteria(){ LastUpdateDate = since}).Select(s => s.ToWebModel());
+            var themeItems = await this._themeService.GetThemeAssets(storeId, theme, new GetThemeAssetsCriteria() { LoadContent = true, LastUpdateDate = themeUpdated});
+            var pageItems = _pagesService.GetPages(storeId, new GetPagesCriteria() { LastUpdateDate = pagesUpdated }).Select(s => s.ToWebModel());
 
             var themeGroup = new SyncAssetGroup { Type = "theme", Assets = themeItems.Select(s => s.ToWebModel()).Select(x => x.ToSyncModel()).OrderBy(x => x.Updated).ToArray() };
             var pageGroup = new SyncAssetGroup { Type = "pages", Assets = pageItems.Select(x => x.ToSyncModel()).OrderBy(x => x.Updated).ToArray() };
