@@ -18,6 +18,7 @@ namespace VirtoCommerce.Platform.Data.Settings
         private readonly IModuleManifestProvider _manifestProvider;
         private readonly Func<IPlatformRepository> _repositoryFactory;
         private readonly CacheManager _cacheManager;
+        private readonly CacheKey _cacheKey = CacheKey.Create(CacheGroups.Settings, "AllSettings");
 
         public SettingsManager(IModuleManifestProvider manifestProvider, Func<IPlatformRepository> repositoryFactory, CacheManager cacheManager)
         {
@@ -43,27 +44,19 @@ namespace VirtoCommerce.Platform.Data.Settings
 
             var manifest = GetModuleManifestsWithSettings().FirstOrDefault(m => m.Id == moduleId);
 
-            if (manifest != null && manifest.Settings != null)
+            if (manifest != null && manifest.Settings != null && manifest.Settings.Any())
             {
-                var settingNames = manifest.Settings.SelectMany(g => g.Settings)
-                                                    .Select(s => s.Name)
-                                                    .Distinct().ToArray();
+                var settingEntities = GetAllEntities();
 
-                if (settingNames.Any())
+                foreach (var group in manifest.Settings)
                 {
-                    var settingEntities = LoadSettings(settingNames);
-
-                    foreach (var group in manifest.Settings)
+                    if (group.Settings != null)
                     {
-                        if (group.Settings != null)
+                        foreach (var setting in group.Settings)
                         {
-                            foreach (var setting in group.Settings)
-                            {
-                                var settingEntity = settingEntities.FirstOrDefault(x => x.Name == setting.Name);
-                                var settingDescriptor = setting.ToModel(settingEntity);
-                                settingDescriptor.GroupName = group.Name;
-                                result.Add(settingDescriptor);
-                            }
+                            var settingEntity = settingEntities.FirstOrDefault(x => x.Name == setting.Name);
+                            var settingDescriptor = setting.ToModel(settingEntity, group.Name);
+                            result.Add(settingDescriptor);
                         }
                     }
                 }
@@ -81,20 +74,22 @@ namespace VirtoCommerce.Platform.Data.Settings
                     .Distinct()
                     .ToArray();
 
-                var existingSettings = LoadSettings(settingNames);
+                var existingSettings = GetAllEntities()
+                    .Where(s => settingNames.Contains(s.Name, StringComparer.OrdinalIgnoreCase))
+                    .ToList();
 
                 using (var repository = _repositoryFactory())
                 {
                     var targetSettings = new ObservableCollection<SettingEntity>(existingSettings);
                     var sourceSettings = new ObservableCollection<SettingEntity>(settings.Select(x => x.ToEntity()));
                     var settingComparer = AnonymousComparer.Create((SettingEntity x) => x.Name);
-                    targetSettings.ObserveCollection(x => repository.Add(x), x => { repository.Attach(x); repository.Remove(x); });
+                    targetSettings.ObserveCollection(e => repository.Add(e), e => { repository.Attach(e); repository.Remove(e); });
                     sourceSettings.Patch(targetSettings, settingComparer, (source, target) => source.Patch(target));
 
                     repository.UnitOfWork.Commit();
                 }
 
-                UpdateCache(settingNames, existingSettings);
+                ClearCache();
             }
         }
 
@@ -102,7 +97,9 @@ namespace VirtoCommerce.Platform.Data.Settings
         {
             var result = defaultValue;
 
-            var repositorySetting = LoadSettings(name).FirstOrDefault();
+            var repositorySetting = GetAllEntities()
+                .FirstOrDefault(s => string.Equals(s.Name, name, StringComparison.OrdinalIgnoreCase));
+
             if (repositorySetting != null)
             {
                 result = repositorySetting.SettingValues
@@ -112,6 +109,7 @@ namespace VirtoCommerce.Platform.Data.Settings
             else
             {
                 var manifestSetting = LoadSettingFromManifest(name);
+
                 if (manifestSetting != null)
                 {
                     if (manifestSetting.ArrayValues != null)
@@ -135,6 +133,7 @@ namespace VirtoCommerce.Platform.Data.Settings
             var result = defaultValue;
 
             var values = GetArray(name, new[] { defaultValue });
+
             if (values.Any())
             {
                 result = values.First();
@@ -146,7 +145,6 @@ namespace VirtoCommerce.Platform.Data.Settings
         public void SetValue<T>(string name, T value)
         {
             var setting = name.ToModel(value);
-
             SaveSettings(new[] { setting });
         }
 
@@ -159,6 +157,11 @@ namespace VirtoCommerce.Platform.Data.Settings
                 .Where(m => m.Settings != null && m.Settings.Any());
         }
 
+        private ModuleSetting LoadSettingFromManifest(string name)
+        {
+            return GetAllManifestSettings().FirstOrDefault(s => s.Name == name);
+        }
+
         private IEnumerable<ModuleSetting> GetAllManifestSettings()
         {
             return GetModuleManifestsWithSettings()
@@ -166,48 +169,25 @@ namespace VirtoCommerce.Platform.Data.Settings
                 .SelectMany(g => g.Settings);
         }
 
-        private ModuleSetting LoadSettingFromManifest(string name)
+        private List<SettingEntity> GetAllEntities()
         {
-            return GetAllManifestSettings().FirstOrDefault(s => s.Name == name);
+            var result = _cacheManager.Get(_cacheKey, LoadAllEntities);
+            return result;
         }
 
-
-        private List<SettingEntity> LoadSettings(params string[] settingNames)
-        {
-            var dic = settingNames.ToDictionary(x => x, x => _cacheManager.Get<SettingEntity>(CacheKey.Create(CacheGroups.Settings, x)));
-            var cachedSettings = dic.Values.Where(s => s != null).ToList();
-            var settings = cachedSettings.OfType<SettingEntity>().ToList();
-
-            // Load settings which are not in cache and put them to cache
-            if (cachedSettings.Count != settingNames.Length)
-            {
-                var namesToLoad = dic.Where(pair => pair.Value == null).Select(pair => pair.Key).ToArray();
-                var settingsNotInCache = LoadSettingsFromRepository(namesToLoad);
-                UpdateCache(namesToLoad, settingsNotInCache);
-                settings.AddRange(settingsNotInCache);
-            }
-
-            return settings;
-        }
-
-        private List<SettingEntity> LoadSettingsFromRepository(IEnumerable<string> settingNames)
+        private List<SettingEntity> LoadAllEntities()
         {
             using (var repository = _repositoryFactory())
             {
-                return repository.Settings.Include(s => s.SettingValues)
-                    .Where(s => settingNames.Contains(s.Name))
+                return repository.Settings
+                    .Include(s => s.SettingValues)
                     .ToList();
             }
         }
 
-        private void UpdateCache(IEnumerable<string> names, IEnumerable<SettingEntity> settings)
+        private void ClearCache()
         {
-            var dictionary = names.ToDictionary(name => name, name => settings.FirstOrDefault(s => s.Name == name));
-            foreach (var pair in dictionary)
-            {
-                var cacheKey = CacheKey.Create(CacheGroups.Settings, pair.Key);
-                _cacheManager.Put(cacheKey, pair.Value);
-            }
+            _cacheManager.Remove(_cacheKey);
         }
     }
 }

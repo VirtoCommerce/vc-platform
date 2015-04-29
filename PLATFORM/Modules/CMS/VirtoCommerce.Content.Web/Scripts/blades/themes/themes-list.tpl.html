@@ -2,7 +2,7 @@
 	<div class="blade-inner">
 		<div class="inner-block">
 			<ul class="list __items" ng-if="blade.currentEntities.length">
-				<li class="list-item" ng-click="blade.openBlade(data)" ng-repeat="data in blade.currentEntities | orderBy:name" ng-class="blade.selectedTheme(data)">
+				<li class="list-item __not-icon " ng-click="blade.checkTheme(data)" ng-repeat="data in blade.currentEntities | orderBy:name" ng-class="blade.themeClass(data)">
 					<span class="list-name">
 						{{data.name}}
 					</span>

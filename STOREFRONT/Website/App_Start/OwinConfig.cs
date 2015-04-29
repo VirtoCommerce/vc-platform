@@ -420,18 +420,13 @@ namespace VirtoCommerce.Web
             var previewTheme = context.Request.Query["previewtheme"];
             if (!String.IsNullOrEmpty(previewTheme)) // save in cookie and return
             {
-                var cookie = context.Request.Cookies[PreviewThemeCookie];
-
-                if (string.IsNullOrEmpty(cookie))
-                {
-                    context.Response.Cookies.Append(PreviewThemeCookie, cookie);
-                }
+                context.Response.Cookies.Append(PreviewThemeCookie, previewTheme);
             }
             else
             {
                 previewTheme = context.Request.Cookies[PreviewThemeCookie];
             }
-            
+
             if (!String.IsNullOrEmpty(previewTheme))
                 return previewTheme;
             #endregion

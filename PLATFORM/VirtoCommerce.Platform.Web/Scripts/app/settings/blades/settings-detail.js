@@ -6,7 +6,7 @@
 
         // parse values as they all are strings
         settings.getSettings({ id: $scope.blade.moduleId }, function (results) {
-            var selectedSettings = _.where(results, { valueType: 'integer' });
+            var selectedSettings = _.where(results, { valueType: 'Integer' });
             _.forEach(selectedSettings, function (setting) {
                 setting.value = parseInt(setting.value, 10);
                 if (setting.allowedValues) {
@@ -14,7 +14,7 @@
                 }
             });
 
-            selectedSettings = _.where(results, { valueType: 'decimal' });
+            selectedSettings = _.where(results, { valueType: 'Decimal' });
             _.forEach(selectedSettings, function (setting) {
                 setting.value = parseFloat(setting.value);
                 if (setting.allowedValues) {
@@ -22,7 +22,7 @@
                 }
             });
 
-            selectedSettings = _.where(results, { valueType: 'boolean' });
+            selectedSettings = _.where(results, { valueType: 'Boolean' });
             _.forEach(selectedSettings, function (setting) {
                 setting.value = setting.value.toLowerCase() === 'true';
                 if (setting.allowedValues) {
