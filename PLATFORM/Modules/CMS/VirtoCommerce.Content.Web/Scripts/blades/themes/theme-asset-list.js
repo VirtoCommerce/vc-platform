@@ -184,7 +184,8 @@
 	//		},
 	//		canExecuteMethod: function () {
 	//			return !angular.isUndefined(blade.choosenThemeId);
-	//		}
+	//		},
+	//		permission: 'content:manage'
 	//	},
     //    {
     //    	name: "Refresh", icon: 'fa fa-refresh',
@@ -202,7 +203,8 @@
 	//		},
 	//		canExecuteMethod: function () {
 	//			return !angular.isUndefined(blade.choosenThemeId);
-	//		}
+	//		},
+	//		permission: 'content:manage'
 	//	}
     //];
 

@@ -62,7 +62,8 @@
             },
             canExecuteMethod: function () {
                 return isDirty() && isValid();
-            }
+            },
+            permission: 'core:fulfillment:manage'
         },
         {
             name: "Reset", icon: 'fa fa-undo',
@@ -71,7 +72,8 @@
             },
             canExecuteMethod: function () {
                 return isDirty();
-            }
+            },
+            permission: 'core:fulfillment:manage'
         },
         {
             name: "Delete", icon: 'fa fa-trash-o',
@@ -80,7 +82,8 @@
             },
             canExecuteMethod: function () {
                 return !isDirty();
-            }
+            },
+            permission: 'core:fulfillment:manage'
         }
     ];
 
@@ -88,7 +91,7 @@
         var dialog = {
             id: "confirmDelete",
             title: "Delete confirmation",
-            message: "Are you sure you want to delete this Fullfillment center?",
+            message: "Are you sure you want to delete this Fulfillment center?",
             callback: function (remove) {
                 if (remove) {
                     $scope.blade.isLoading = true;

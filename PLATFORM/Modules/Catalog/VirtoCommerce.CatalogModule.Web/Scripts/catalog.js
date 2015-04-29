@@ -40,8 +40,8 @@ angular.module(catalogsModuleName, [
           icon: 'fa fa-folder',
           title: 'Catalog',
           priority: 20,
-          action: function () { $state.go('workspace.catalog') },
-          permission: 'catalogMenuPermission'
+          action: function () { $state.go('workspace.catalog'); },
+          permission: 'catalog:query'
       };
       mainMenuService.addMenuItem(menuItem);
 

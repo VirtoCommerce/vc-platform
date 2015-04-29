@@ -99,7 +99,8 @@
 			},
 			canExecuteMethod: function () {
 				return isDirty() && formScope && formScope.$valid;
-			}
+			},
+			permission: 'catalog:catalogs:manage'
 		},
         {
         	name: "Reset", icon: 'fa fa-undo',
@@ -108,7 +109,8 @@
         	},
         	canExecuteMethod: function () {
         		return isDirty();
-        	}
+        	},
+        	permission: 'catalog:catalogs:manage'
         },
 		  {
 		  	name: "Add property", icon: 'fa fa-plus',
@@ -126,7 +128,8 @@
 		  	},
 		  	canExecuteMethod: function () {
 		  		return true;
-		  	}
+		  	},
+		  	permission: 'catalog:catalogs:manage'
 		  }
 	];
 

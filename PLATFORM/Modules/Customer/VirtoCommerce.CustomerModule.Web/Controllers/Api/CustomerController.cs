@@ -10,12 +10,14 @@ using VirtoCommerce.Domain.Cart.Services;
 using VirtoCommerce.Domain.Customer.Services;
 using VirtoCommerce.Domain.Store.Services;
 using VirtoCommerce.CustomerModule.Web.Converters;
+using VirtoCommerce.Platform.Core.Security;
 using coreModel = VirtoCommerce.Domain.Customer.Model;
 using webModel = VirtoCommerce.CustomerModule.Web.Model;
 
 namespace VirtoCommerce.CustomerModule.Web.Controllers.Api
 {
 	[RoutePrefix("api")]
+    [CheckPermission(Permission = PredefinedPermissions.Query)]
 	public class CustomerController : ApiController
 	{
 		private readonly IContactService _contactService;
@@ -85,6 +87,7 @@ namespace VirtoCommerce.CustomerModule.Web.Controllers.Api
 		[HttpPost]
 		[ResponseType(typeof(webModel.Contact))]
 		[Route("contacts")]
+        [CheckPermission(Permission = PredefinedPermissions.Manage)]
 		public IHttpActionResult CreateContact(webModel.Contact contact)
 		{
 			var retVal = _contactService.Create(contact.ToCoreModel());
@@ -95,6 +98,7 @@ namespace VirtoCommerce.CustomerModule.Web.Controllers.Api
 		[HttpPut]
 		[ResponseType(typeof(void))]
 		[Route("contacts")]
+        [CheckPermission(Permission = PredefinedPermissions.Manage)]
 		public IHttpActionResult UpdateContact(webModel.Contact contact)
 		{
 			_contactService.Update(new coreModel.Contact[] { contact.ToCoreModel() });
@@ -105,6 +109,7 @@ namespace VirtoCommerce.CustomerModule.Web.Controllers.Api
 		[HttpDelete]
 		[ResponseType(typeof(void))]
 		[Route("contacts")]
+        [CheckPermission(Permission = PredefinedPermissions.Manage)]
 		public IHttpActionResult DeleteContacts([FromUri] string[] ids)
 		{
 			_contactService.Delete(ids);
@@ -131,6 +136,7 @@ namespace VirtoCommerce.CustomerModule.Web.Controllers.Api
 		[HttpPost]
 		[ResponseType(typeof(webModel.Organization))]
 		[Route("organizations")]
+        [CheckPermission(Permission = PredefinedPermissions.Manage)]
 		public IHttpActionResult CreateOrganization(webModel.Organization organization)
 		{
 			var retVal = _organizationService.Create(organization.ToCoreModel());
@@ -141,6 +147,7 @@ namespace VirtoCommerce.CustomerModule.Web.Controllers.Api
 		[HttpPut]
 		[ResponseType(typeof(void))]
 		[Route("organizations")]
+        [CheckPermission(Permission = PredefinedPermissions.Manage)]
 		public IHttpActionResult UpdateOrganization(webModel.Organization organization)
 		{
 			_organizationService.Update(new coreModel.Organization[] { organization.ToCoreModel() });
@@ -151,6 +158,7 @@ namespace VirtoCommerce.CustomerModule.Web.Controllers.Api
 		[HttpDelete]
 		[ResponseType(typeof(void))]
 		[Route("organizations")]
+        [CheckPermission(Permission = PredefinedPermissions.Manage)]
 		public IHttpActionResult DeleteOrganizations([FromUri] string[] ids)
 		{
 			_organizationService.Delete(ids);

@@ -26,7 +26,7 @@
 		<directory virtualPath="$/Scripts" searchPattern="*.js" searchSubdirectories="true" />
 	</scripts>
   
-  <settings>
+  <!--<settings>
     <group>
       <setting>
         <name>VirtoCommerce.Marketing.Promotions.Exclusivities</name>
@@ -42,5 +42,9 @@
         </arrayValues>
       </setting>
     </group>
-  </settings>
+  </settings>-->
+  <permissions>
+    <permission id="marketing:query" name="Browse marketing data" description="Permission to open marketing menu and browse data."/>
+    <permission id="marketing:manage" name="Manage marketing" description="Permission to manage marketing information."/>
+  </permissions>
 </module>

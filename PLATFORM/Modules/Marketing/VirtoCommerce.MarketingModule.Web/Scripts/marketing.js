@@ -36,7 +36,7 @@ angular.module(moduleName, [])
           title: 'Marketing',
           priority: 40,
           action: function () { $state.go('workspace.marketingModule'); },
-          permission: 'marketingMenuPermission'
+          permission: 'marketing:query'
       };
       mainMenuService.addMenuItem(menuItem);
 

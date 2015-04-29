@@ -7,6 +7,7 @@ using System.Web.Http.Description;
 using VirtoCommerce.CatalogModule.Web.Converters;
 using VirtoCommerce.Foundation.AppConfig.Repositories;
 using VirtoCommerce.Foundation.Frameworks.Extensions;
+using VirtoCommerce.Platform.Core.Security;
 using moduleModel = VirtoCommerce.Domain.Catalog.Model;
 using webModel = VirtoCommerce.CatalogModule.Web.Model;
 using Microsoft.Practices.Unity;
@@ -15,29 +16,31 @@ using VirtoCommerce.CatalogModule.Data.Repositories;
 
 namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 {
-	[RoutePrefix("api/catalog/catalogs")]
+    [RoutePrefix("api/catalog/catalogs")]
     public class CatalogsController : ApiController
     {
         private readonly ICatalogService _catalogService;
         private readonly ICatalogSearchService _searchService;
-		private readonly IPropertyService _propertyService;
-		private readonly Func<IAppConfigRepository> _appConfigRepositoryFactory;
+        private readonly IPropertyService _propertyService;
+        private readonly Func<IAppConfigRepository> _appConfigRepositoryFactory;
+        private readonly IPermissionService _permissionService;
 
         public CatalogsController(ICatalogService catalogService,
-								  ICatalogSearchService itemSearchService,
-								  Func<IFoundationAppConfigRepository> appConfigRepositoryFactory,
-								  IPropertyService propertyService)
+                                  ICatalogSearchService itemSearchService,
+                                  Func<IFoundationAppConfigRepository> appConfigRepositoryFactory,
+                                  IPropertyService propertyService, IPermissionService permissionService)
         {
             _catalogService = catalogService;
             _searchService = itemSearchService;
-			_appConfigRepositoryFactory = appConfigRepositoryFactory;
-			_propertyService = propertyService;
+            _appConfigRepositoryFactory = appConfigRepositoryFactory;
+            _propertyService = propertyService;
+            _permissionService = permissionService;
         }
 
-		// GET: api/catalog/catalogs
-		[HttpGet]
-		[ResponseType(typeof(webModel.Catalog[]))]
-		[Route("")]
+        // GET: api/catalog/catalogs
+        [HttpGet]
+        [ResponseType(typeof(webModel.Catalog[]))]
+        [Route("")]
         public IHttpActionResult GetCatalogs()
         {
             var criteria = new moduleModel.SearchCriteria
@@ -49,10 +52,11 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
             return Ok(retVal);
         }
 
-		// GET:  api/catalog/catalogs/4
-		[HttpGet]
+        // GET:  api/catalog/catalogs/4
+        [HttpGet]
         [ResponseType(typeof(webModel.Catalog))]
-		[Route("{id}")]
+        [Route("{id}")]
+        [CheckPermission(Permission = PredefinedPermissions.Query)]
         public IHttpActionResult Get(string id)
         {
             var catalog = _catalogService.GetById(id);
@@ -60,8 +64,8 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
             {
                 return NotFound();
             }
-			var allCatalogProperties = _propertyService.GetCatalogProperties(id);
-			return Ok(catalog.ToWebModel(allCatalogProperties));
+            var allCatalogProperties = _propertyService.GetCatalogProperties(id);
+            return Ok(catalog.ToWebModel(allCatalogProperties));
         }
 
         //// GET:  api/catalog/catalogs/4/languages
@@ -110,10 +114,11 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
         //    return Ok();
         //}
 
-		// GET: api/catalog/catalogs/getnew
+        // GET: api/catalog/catalogs/getnew
         [HttpGet]
         [ResponseType(typeof(webModel.Catalog))]
-		[Route("getnew")]
+        [Route("getnew")]
+        [CheckPermission(Permission = PredefinedPermissions.CatalogsManage)]
         public IHttpActionResult GetNewCatalog()
         {
             var retVal = new webModel.Catalog
@@ -135,7 +140,8 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
         // GET: api/catalogs/getnewvirtualcatalog
         [HttpGet]
         [ResponseType(typeof(webModel.Catalog))]
-		[Route("getnewvirtual")]
+        [Route("getnewvirtual")]
+        [CheckPermission(Permission = PredefinedPermissions.VirtualCatalogsManage)]
         public IHttpActionResult GetNewVirtualCatalog()
         {
             var retVal = new webModel.Catalog
@@ -155,31 +161,42 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
             return Ok(retVal);
         }
 
-		// POST: api/catalog/catalogs
-		[HttpPost]
-		[ResponseType(typeof(webModel.Catalog))]
-		[Route("")]
-		public IHttpActionResult Create(webModel.Catalog catalog)
-		{
-			var retVal = _catalogService.Create(catalog.ToModuleModel());
-			return Ok(retVal.ToWebModel());
-		}
+        // POST: api/catalog/catalogs
+        [HttpPost]
+        [ResponseType(typeof(webModel.Catalog))]
+        [Route("")]
+        [CheckPermission(Permissions = new[] { PredefinedPermissions.CatalogsManage, PredefinedPermissions.VirtualCatalogsManage })]
+        public IHttpActionResult Create(webModel.Catalog catalog)
+        {
+            if ((_permissionService.UserHasAnyPermission(RequestContext.Principal.Identity.Name, PredefinedPermissions.CatalogsManage) && !catalog.Virtual)
+                || (_permissionService.UserHasAnyPermission(RequestContext.Principal.Identity.Name, PredefinedPermissions.VirtualCatalogsManage) && catalog.Virtual))
+            {
+                var retVal = _catalogService.Create(catalog.ToModuleModel());
+                return Ok(retVal.ToWebModel());
+            }
+            else
+            {
+                throw new UnauthorizedAccessException();
+            }
+        }
 
-		// PUT: api/catalog/catalogs
-		[HttpPut]
+        // PUT: api/catalog/catalogs
+        [HttpPut]
         [ResponseType(typeof(void))]
-		[Route("")]
+        [Route("")]
+        [CheckPermission(Permissions = new[] { PredefinedPermissions.CatalogsManage, PredefinedPermissions.VirtualCatalogsManage })]
         public IHttpActionResult Update(webModel.Catalog catalog)
         {
-			UpdateCatalog(catalog);
+            UpdateCatalog(catalog);
             return StatusCode(HttpStatusCode.NoContent);
         }
-      
+
 
         // DELETE: api/catalogs/5
-		[HttpDelete]
+        [HttpDelete]
         [ResponseType(typeof(void))]
-		[Route("{id}")]
+        [Route("{id}")]
+        [CheckPermission(Permissions = new[] { PredefinedPermissions.CatalogsManage, PredefinedPermissions.VirtualCatalogsManage })]
         public IHttpActionResult Delete(string id)
         {
             _catalogService.Delete(new string[] { id });
@@ -195,20 +212,20 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
         private IEnumerable<webModel.CatalogLanguage> GetSystemLanguages()
         {
             var retVal = new List<webModel.CatalogLanguage>();
-			using (var appConfigRep = _appConfigRepositoryFactory())
-			{
-				if (appConfigRep != null)
-				{
-					var languageSetting = appConfigRep.Settings.Expand(x => x.SettingValues).FirstOrDefault(x => x.Name.Equals("Languages"));
-					if (languageSetting != null)
-					{
-						foreach (var languageCode in languageSetting.SettingValues.Select(x => x.ToString()))
-						{
-							retVal.Add(new webModel.CatalogLanguage(languageCode));
-						}
-					}
-				}
-			}
+            using (var appConfigRep = _appConfigRepositoryFactory())
+            {
+                if (appConfigRep != null)
+                {
+                    var languageSetting = appConfigRep.Settings.Expand(x => x.SettingValues).FirstOrDefault(x => x.Name.Equals("Languages"));
+                    if (languageSetting != null)
+                    {
+                        foreach (var languageCode in languageSetting.SettingValues.Select(x => x.ToString()))
+                        {
+                            retVal.Add(new webModel.CatalogLanguage(languageCode));
+                        }
+                    }
+                }
+            }
             return retVal;
         }
     }

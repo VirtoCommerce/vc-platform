@@ -1,5 +1,4 @@
 ﻿using VirtoCommerce.Platform.Core.Notification;
-using System.Collections;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Net;
@@ -7,7 +6,7 @@ using System.Web.Http;
 using System.Web.Http.Description;
 using System.Collections.Generic;
 using Microsoft.Practices.ObjectBuilder2;
-using VirtoCommerce.Domain.Catalog.Model;
+using VirtoCommerce.Platform.Core.Security;
 
 #region Google usings
 using Google.Apis.ShoppingContent.v2;
@@ -22,6 +21,7 @@ using GoogleShopping.MerchantModule.Web.Helpers.Interfaces;
 namespace GoogleShopping.MerchantModule.Web.Controllers.Api
 {
     [RoutePrefix("api/g")]
+    [CheckPermission(Permission = PredefinedPermissions.Manage)]
     public class GoogleShoppingController : ApiController
     {
         private const string _accessTokenPropertyName = "Google.Shopping.Credentials.AccessToken";

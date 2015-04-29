@@ -132,7 +132,8 @@
         	canExecuteMethod: function ()
         	{
         	    return $scope.isDirty();
-        	}
+        	},
+        	permission: 'catalog:items:manage'
         },
 		{
 		    name: "Remove", icon: 'fa fa-trash-o', executeMethod: function () { $scope.removeAction(); },
@@ -143,7 +144,8 @@
 					retVal = selectedImages.length > 0;
 				}
 				return retVal;
-			}
+			},
+			permission: 'catalog:items:manage'
 		}
     ];
 

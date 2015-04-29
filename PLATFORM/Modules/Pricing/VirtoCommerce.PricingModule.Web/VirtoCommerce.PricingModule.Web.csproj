@@ -132,6 +132,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\Api\PricingController.cs" />
+    <Compile Include="Controllers\PredefinedPermissions.cs" />
     <Compile Include="Converters\PricelistAssignmentConverter.cs" />
     <Compile Include="Converters\PriceListConverter.cs" />
     <Compile Include="Converters\PriceConverter.cs" />

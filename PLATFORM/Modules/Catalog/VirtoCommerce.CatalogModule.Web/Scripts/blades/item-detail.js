@@ -96,7 +96,8 @@
 	     },
 	     canExecuteMethod: function () {
 	         return isDirty() && formScope && formScope.$valid;
-	     }
+	     },
+	     permission: 'catalog:items:manage'
 	 },
         {
             name: "Reset", icon: 'fa fa-undo',
@@ -106,7 +107,8 @@
             },
             canExecuteMethod: function () {
                 return isDirty();
-            }
+            },
+            permission: 'catalog:items:manage'
         },
 	     {
 	         name: "New variation", icon: 'fa fa-plus',
@@ -126,7 +128,8 @@
 	         },
 	         canExecuteMethod: function () {
 	             return $scope.isTitularConfirmed;
-	         }
+	         },
+	         permission: 'catalog:items:manage'
 	     }
     ];
 

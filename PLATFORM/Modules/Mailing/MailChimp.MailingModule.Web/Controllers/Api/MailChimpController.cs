@@ -2,10 +2,12 @@
 using System.Web.Http.Description;
 using MailChimp.Helper;
 using MailChimp.MailingModule.Web.Services;
+using VirtoCommerce.Platform.Core.Security;
 
 namespace MailChimp.MailingModule.Web.Controllers.Api
 {
     [RoutePrefix("api/mc")]
+    [CheckPermission(Permission = PredefinedPermissions.Manage)]
     public class MailChimpController : ApiController
     {
         private readonly IMailing _mailingSettings;
