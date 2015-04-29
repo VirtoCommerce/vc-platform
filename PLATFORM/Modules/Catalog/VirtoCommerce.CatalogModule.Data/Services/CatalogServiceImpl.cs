@@ -6,19 +6,18 @@ using System.Threading.Tasks;
 using VirtoCommerce.CatalogModule.Data.Converters;
 using VirtoCommerce.CatalogModule.Data.Repositories;
 using VirtoCommerce.Domain.Catalog.Services;
-using VirtoCommerce.Foundation.Data.Infrastructure;
-using VirtoCommerce.Foundation.Frameworks;
-using VirtoCommerce.Foundation.Frameworks.Caching;
-using foundation = VirtoCommerce.Foundation.Catalogs.Model;
+using VirtoCommerce.Platform.Core.Caching;
+using VirtoCommerce.Platform.Data.Infrastructure;
+using foundation = VirtoCommerce.CatalogModule.Data.Model;
 using module = VirtoCommerce.Domain.Catalog.Model;
 
 namespace VirtoCommerce.CatalogModule.Data.Services
 {
 	public class CatalogServiceImpl : ServiceBase, ICatalogService
 	{
-		private readonly Func<IFoundationCatalogRepository> _catalogRepositoryFactory;
+		private readonly Func<ICatalogRepository> _catalogRepositoryFactory;
 		private readonly CacheManager _cacheManager;
-		public CatalogServiceImpl(Func<IFoundationCatalogRepository> catalogRepositoryFactory, CacheManager cacheManager = null)
+		public CatalogServiceImpl(Func<ICatalogRepository> catalogRepositoryFactory, CacheManager cacheManager = null)
 		{
 			_catalogRepositoryFactory = catalogRepositoryFactory;
 			_cacheManager = cacheManager ?? CacheManager.NoCache;
@@ -49,7 +48,7 @@ namespace VirtoCommerce.CatalogModule.Data.Services
 				repository.Add(dbCatalog);
 				CommitChanges(repository);
 			}
-			retVal = GetById(dbCatalog.CatalogId);
+			retVal = GetById(dbCatalog.Id);
 			return retVal;
 		}
 

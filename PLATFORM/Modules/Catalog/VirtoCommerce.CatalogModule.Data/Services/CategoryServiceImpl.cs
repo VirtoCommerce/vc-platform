@@ -5,25 +5,21 @@ using System.Linq;
 using VirtoCommerce.CatalogModule.Data.Converters;
 using VirtoCommerce.CatalogModule.Data.Repositories;
 using VirtoCommerce.Domain.Catalog.Services;
-using VirtoCommerce.Foundation.Data.Infrastructure;
-using VirtoCommerce.Foundation.Frameworks.Caching;
-using VirtoCommerce.Foundation.Frameworks.Extensions;
-using foundation = VirtoCommerce.Foundation.Catalogs.Model;
-using foundationConfig = VirtoCommerce.Foundation.AppConfig.Model;
+using VirtoCommerce.Platform.Core.Caching;
+using VirtoCommerce.Platform.Data.Infrastructure;
+using foundation = VirtoCommerce.CatalogModule.Data.Model;
 using module = VirtoCommerce.Domain.Catalog.Model;
+using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.CatalogModule.Data.Services
 {
 	public class CategoryServiceImpl : ServiceBase, ICategoryService
     {
-        private readonly Func<IFoundationCatalogRepository> _catalogRepositoryFactory;
-		private readonly Func<IFoundationAppConfigRepository> _appConfigRepositoryFactory;
-        private readonly CacheManager _cacheManager;
-        public CategoryServiceImpl(Func<IFoundationCatalogRepository> catalogRepositoryFactory, Func<IFoundationAppConfigRepository> appConfigRepositoryFactory, 
-								   CacheManager cacheManager)
+        private readonly Func<ICatalogRepository> _catalogRepositoryFactory;
+	    private readonly CacheManager _cacheManager;
+        public CategoryServiceImpl(Func<ICatalogRepository> catalogRepositoryFactory, CacheManager cacheManager)
         {
             _catalogRepositoryFactory = catalogRepositoryFactory;
-			_appConfigRepositoryFactory = appConfigRepositoryFactory;
             _cacheManager = cacheManager;
         }
 
@@ -33,15 +29,14 @@ namespace VirtoCommerce.CatalogModule.Data.Services
         {
 			module.Category retVal = null;
             using (var repository = _catalogRepositoryFactory())
-			using (var appConfigRepository = _appConfigRepositoryFactory())
-            {
+	        {
                 var dbCategory = repository.GetCategoryById(categoryId);
 				if (dbCategory != null)
 				{
 					var dbCatalog = repository.GetCatalogById(dbCategory.CatalogId);
 					var dbProperties = repository.GetAllCategoryProperties(dbCategory);
 					var dbLinks = repository.GetCategoryLinks(categoryId);
-					var seoInfos = appConfigRepository.GetAllSeoInformation(categoryId);
+					var seoInfos = repository.GetAllSeoInformation(categoryId);
 
 					var catalog = dbCatalog.ToModuleModel();
 					var properties = dbProperties.Select(x => x.ToModuleModel(catalog, dbCategory.ToModuleModel(catalog, null, dbLinks)))
@@ -62,7 +57,6 @@ namespace VirtoCommerce.CatalogModule.Data.Services
             var dbCategory = category.ToFoundation();
             module.Category retVal = null;
             using (var repository = _catalogRepositoryFactory())
-			using (var appConfigRepository = _appConfigRepositoryFactory())
             {
 				//Need add seo separately
 				if (category.SeoInfos != null)
@@ -70,23 +64,21 @@ namespace VirtoCommerce.CatalogModule.Data.Services
 					foreach(var seoInfo in category.SeoInfos)
 					{
 						var dbSeoInfo = seoInfo.ToFoundation(category);
-						appConfigRepository.Add(dbSeoInfo);
+						repository.Add(dbSeoInfo);
 					}
 				}
 
                 repository.Add(dbCategory);
 
                 CommitChanges(repository);
-				CommitChanges(appConfigRepository);
             }
-            retVal = GetById(dbCategory.CategoryId);
+            retVal = GetById(dbCategory.Id);
             return retVal;
         }
 
         public void Update(module.Category[] categories)
         {
             using (var repository = _catalogRepositoryFactory())
-			using (var appConfigRepository = _appConfigRepositoryFactory())
 			using (var changeTracker = base.GetChangeTracker(repository))
             {
 				foreach (var category in categories)
@@ -101,11 +93,11 @@ namespace VirtoCommerce.CatalogModule.Data.Services
 					//Patch SeoInfo  separately
 					if (category.SeoInfos != null)
 					{
-						var dbSeoInfos = new ObservableCollection<foundationConfig.SeoUrlKeyword>(appConfigRepository.GetAllSeoInformation(category.Id));
+						var dbSeoInfos = new ObservableCollection<foundation.SeoUrlKeyword>(repository.GetAllSeoInformation(category.Id));
 						var changedSeoInfos = category.SeoInfos.Select(x => x.ToFoundation(category)).ToList();
-						dbSeoInfos.ObserveCollection(x => appConfigRepository.Add(x), x => appConfigRepository.Remove(x));
+						dbSeoInfos.ObserveCollection(x => repository.Add(x), x => repository.Remove(x));
 
-						changedSeoInfos.Patch(dbSeoInfos, new SeoInfoComparer(), (source, target) => source.Patch(target));
+						changedSeoInfos.Patch(dbSeoInfos, (source, target) => source.Patch(target));
 					}
 
 					//Patch  Links  separately
@@ -123,7 +115,6 @@ namespace VirtoCommerce.CatalogModule.Data.Services
 					dbCategoryChanged.Patch(dbCategory);
 				}
 				CommitChanges(repository);
-				CommitChanges(appConfigRepository);
 
 			}
         }

@@ -3,9 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using VirtoCommerce.Foundation.Frameworks.Extensions;
-using foundation = VirtoCommerce.Foundation.Catalogs.Model;
+using foundation = VirtoCommerce.CatalogModule.Data.Model;
 using module = VirtoCommerce.Domain.Catalog.Model;
+using Omu.ValueInjecter;
+using VirtoCommerce.Platform.Data.Common;
 
 namespace VirtoCommerce.CatalogModule.Data.Converters
 {
@@ -21,13 +22,14 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 			if (property == null)
 				throw new ArgumentNullException("dbProperty");
 
-			var retVal = new module.PropertyAttribute
-					{
-						Name = dbAttribute.PropertyAttributeName,
-						Value = dbAttribute.PropertyAttributeValue,
-						PropertyId = property.Id,
-						Property = property
-					};
+			var retVal = new module.PropertyAttribute();
+			retVal.InjectFrom(dbAttribute);
+
+			retVal.Name = dbAttribute.PropertyAttributeName;
+			retVal.Value = dbAttribute.PropertyAttributeValue;
+			retVal.PropertyId = property.Id;
+			retVal.Property = property;
+			
 			return retVal;
 		}
 
@@ -38,15 +40,11 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 		/// <returns></returns>
 		public static foundation.PropertyAttribute ToFoundation(this module.PropertyAttribute attribute)
 		{
-			var retVal = new foundation.PropertyAttribute
-			{
-				PropertyAttributeName = attribute.Name,
-				PropertyAttributeValue = attribute.Value,
-				PropertyId = attribute.PropertyId
-			};
-			retVal.PropertyAttributeId = retVal.GenerateNewKey();
-			if (attribute.Id != null)
-				retVal.PropertyAttributeId = attribute.Id;
+			var retVal = new foundation.PropertyAttribute();
+			retVal.InjectFrom(attribute);
+
+			retVal.PropertyAttributeName = attribute.Name;
+			retVal.PropertyAttributeValue = attribute.Value;
 			return retVal;
 		}
 
@@ -61,30 +59,10 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 			if (target == null)
 				throw new ArgumentNullException("target");
 
-			//Simply propertie spatch
-			if (source.PropertyAttributeName != null)
-				target.PropertyAttributeName = source.PropertyAttributeName;
-			if (source.PropertyAttributeValue != null)
-				target.PropertyAttributeValue = source.PropertyAttributeValue;
+			var patchInjectionPolicy = new PatchInjection<foundation.PropertyAttribute>(x => x.PropertyAttributeName, x => x.PropertyAttributeValue);
+			target.InjectFrom(patchInjectionPolicy, source);
 		}
 
-	}
-
-	public class PropertyAttributeComparer : IEqualityComparer<foundation.PropertyAttribute>
-	{
-		#region IEqualityComparer<CatalogLanguage> Members
-
-		public bool Equals(foundation.PropertyAttribute x, foundation.PropertyAttribute y)
-		{
-			return x.PropertyAttributeId == y.PropertyAttributeId;
-		}
-
-		public int GetHashCode(foundation.PropertyAttribute obj)
-		{
-			return obj.GetHashCode();
-		}
-
-		#endregion
 	}
 
 }

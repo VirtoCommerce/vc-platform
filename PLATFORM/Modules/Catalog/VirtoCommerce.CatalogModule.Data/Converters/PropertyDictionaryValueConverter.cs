@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using foundation = VirtoCommerce.Foundation.Catalogs.Model;
+using foundation = VirtoCommerce.CatalogModule.Data.Model;
 using module = VirtoCommerce.Domain.Catalog.Model;
+using Omu.ValueInjecter;
+using VirtoCommerce.Platform.Core.Common;
+using VirtoCommerce.Platform.Data.Common;
 
 namespace VirtoCommerce.CatalogModule.Data.Converters
 {
@@ -17,16 +20,14 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
             if (property == null)
                 throw new ArgumentNullException("property");
 
-            var retVal = new module.PropertyDictionaryValue
-            {
-                LanguageCode = dbPropValue.Locale,
-                Value = dbPropValue.ToString(),
-                PropertyId = property.Id,
-                Property = property
-            };
-            if (dbPropValue.PropertyValueId != null)
-                retVal.Id = dbPropValue.PropertyValueId;
+			var retVal = new module.PropertyDictionaryValue();
+			retVal.InjectFrom(dbPropValue);
 
+			retVal.LanguageCode = dbPropValue.Locale;
+			retVal.Value = dbPropValue.ToString();
+			retVal.PropertyId = property.Id;
+			retVal.Property = property;
+          
             return retVal;
         }
 
@@ -42,7 +43,7 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
                 Locale = propDictValue.LanguageCode,
                 PropertyId = property.Id,
             };
-            SetPropertyValue(retVal, property.ValueType.ToFoundation(), propDictValue.Value);
+            SetPropertyValue(retVal, property.ValueType, propDictValue.Value);
 
             return retVal;
         }
@@ -60,22 +61,22 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 
             var newValue = target.ToString();
             if (newValue != null)
-                SetPropertyValue(target, (foundation.PropertyValueType)target.ValueType, target.ToString());
+                SetPropertyValue(target, (module.PropertyValueType)target.ValueType, target.ToString());
             if (source.KeyValue != null)
                 target.KeyValue = source.KeyValue;
         }
 
-        private static void SetPropertyValue(foundation.PropertyValueBase retVal, foundation.PropertyValueType type, string value)
+		private static void SetPropertyValue(foundation.PropertyValueBase retVal, module.PropertyValueType type, string value)
         {
             switch (type)
             {
-                case foundation.PropertyValueType.LongString:
+				case module.PropertyValueType.LongText:
                     retVal.LongTextValue = value;
                     break;
-                case foundation.PropertyValueType.ShortString:
+				case module.PropertyValueType.ShortText:
                     retVal.ShortTextValue = value;
                     break;
-                case foundation.PropertyValueType.Decimal:
+				case module.PropertyValueType.Number:
                     decimal parsedDecimal;
                     Decimal.TryParse(value, out parsedDecimal);
                     retVal.DecimalValue = parsedDecimal;
@@ -85,21 +86,5 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 
     }
 
-    public class PropertyDictionaryValueComparer : IEqualityComparer<foundation.PropertyValue>
-    {
-        #region IEqualityComparer<CatalogLanguage> Members
-
-        public bool Equals(foundation.PropertyValue x, foundation.PropertyValue y)
-        {
-            return x.PropertyValueId == y.PropertyValueId;
-        }
-
-        public int GetHashCode(foundation.PropertyValue obj)
-        {
-            return obj.GetHashCode();
-        }
-
-        #endregion
-    }
-
+   
 }

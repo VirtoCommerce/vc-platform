@@ -9,10 +9,11 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>VirtoCommerce.CatalogModule.Data</RootNamespace>
     <AssemblyName>VirtoCommerce.CatalogModule.Data</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\..\</SolutionDir>
     <RestorePackages>true</RestorePackages>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -70,13 +71,43 @@
     <Compile Include="Converters\PropertyConverter.cs" />
     <Compile Include="Converters\PropertyDictionaryValueConverter.cs" />
     <Compile Include="Converters\PropertyValueConverter.cs" />
-    <Compile Include="Converters\PropertyValueTypeConverter.cs" />
     <Compile Include="Converters\SeoInfoConverter.cs" />
+    <Compile Include="Migrations\201504271228539_Initial.cs" />
+    <Compile Include="Migrations\201504271228539_Initial.Designer.cs">
+      <DependentUpon>201504271228539_Initial.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Model\Association.cs" />
+    <Compile Include="Model\AssociationGroup.cs" />
+    <Compile Include="Model\Catalog.cs" />
+    <Compile Include="Model\CatalogBase.cs" />
+    <Compile Include="Model\CatalogLanguage.cs" />
+    <Compile Include="Model\CatalogPropertyValue.cs" />
+    <Compile Include="Model\Category.cs" />
+    <Compile Include="Model\CategoryBase.cs" />
+    <Compile Include="Model\CategoryItemRelation.cs" />
+    <Compile Include="Model\CategoryPropertyValue.cs" />
+    <Compile Include="Model\EditorialReview.cs" />
+    <Compile Include="Model\Item.cs" />
+    <Compile Include="Model\ItemAsset.cs" />
+    <Compile Include="Model\ItemPropertyValue.cs" />
+    <Compile Include="Model\ItemRelation.cs" />
+    <Compile Include="Model\LinkedCategory.cs" />
+    <Compile Include="Model\Product.cs" />
+    <Compile Include="Model\Property.cs" />
+    <Compile Include="Model\PropertyAttribute.cs" />
+    <Compile Include="Model\PropertySet.cs" />
+    <Compile Include="Model\PropertySetProperty.cs" />
+    <Compile Include="Model\PropertyValue.cs" />
+    <Compile Include="Model\PropertyValueBase.cs" />
+    <Compile Include="Model\SeoUrlKeyword.cs">
+      <SubType>
+      </SubType>
+    </Compile>
+    <Compile Include="Model\VirtualCatalog.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Repositories\FoundationAppConfigRepositoryImpl.cs" />
-    <Compile Include="Repositories\FoundationCatalogRepositoryImpl.cs" />
-    <Compile Include="Repositories\IFoundationAppConfigRepository.cs" />
-    <Compile Include="Repositories\IFoundationCatalogRepository.cs" />
+    <Compile Include="Repositories\CatalogRepositoryImpl.cs" />
+    <Compile Include="Repositories\ICatalogRepository.cs" />
     <Compile Include="Services\CatalogSearchServiceImpl.cs" />
     <Compile Include="Services\CategoryServiceImpl.cs" />
     <Compile Include="Services\ItemServiceImpl.cs" />
@@ -92,24 +123,24 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Core\CommerceFoundation.Data\CommerceFoundation.Data.csproj">
-      <Project>{bb168a74-0f1e-43be-a616-134902238b80}</Project>
-      <Name>CommerceFoundation.Data</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\Core\CommerceFoundation\CommerceFoundation.csproj">
-      <Project>{e7fc9a51-1b39-4bdc-983a-8a059c5fc58b}</Project>
-      <Name>CommerceFoundation</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\..\VirtoCommerce.Platform.Core\VirtoCommerce.Platform.Core.csproj">
       <Project>{F7C9313B-522E-4619-ABC9-8C7D4600D6B5}</Project>
       <Name>VirtoCommerce.Platform.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\VirtoCommerce.Platform.Data\VirtoCommerce.Platform.Data.csproj">
+      <Project>{39afd233-b2f7-4178-817d-0a339c57525d}</Project>
+      <Name>VirtoCommerce.Platform.Data</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Core\VirtoCommerce.Domain\VirtoCommerce.Domain.csproj">
       <Project>{67c58a78-ddea-4fa3-a969-1cab582918e4}</Project>
       <Name>VirtoCommerce.Domain</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\201504271228539_Initial.resx">
+      <DependentUpon>201504271228539_Initial.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

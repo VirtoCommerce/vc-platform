@@ -5,7 +5,7 @@ namespace VirtoCommerce.StoreModule.Data.Migrations
     using System.Data.Entity.Migrations;
     using System.Linq;
 
-    internal sealed class Configuration : DbMigrationsConfiguration<VirtoCommerce.StoreModule.Data.Repositories.StoreRepositoryImpl>
+    public sealed class Configuration : DbMigrationsConfiguration<VirtoCommerce.StoreModule.Data.Repositories.StoreRepositoryImpl>
     {
         public Configuration()
         {

@@ -4,24 +4,23 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using VirtoCommerce.CatalogModule.Data.Repositories;
+using VirtoCommerce.Domain.Catalog.Model;
 using VirtoCommerce.Domain.Catalog.Services;
-using VirtoCommerce.Foundation;
-using VirtoCommerce.Foundation.Frameworks;
-using VirtoCommerce.Foundation.Frameworks.Caching;
-using foundation = VirtoCommerce.Foundation.Catalogs.Model;
+using VirtoCommerce.Platform.Core.Caching;
+using foundation = VirtoCommerce.CatalogModule.Data.Model;
 using module = VirtoCommerce.Domain.Catalog.Model;
 
 namespace VirtoCommerce.CatalogModule.Data.Services
 {
     public class CatalogSearchServiceImpl : ICatalogSearchService
     {
-	    private readonly Func<IFoundationCatalogRepository> _catalogRepositoryFactory;
+	    private readonly Func<ICatalogRepository> _catalogRepositoryFactory;
         private readonly IItemService _itemService;
         private readonly ICatalogService _catalogService;
         private readonly ICategoryService _categoryService;
         private readonly CacheManager _cacheManager;
 
-        public CatalogSearchServiceImpl(Func<IFoundationCatalogRepository> catalogRepositoryFactory, IItemService itemService,
+        public CatalogSearchServiceImpl(Func<ICatalogRepository> catalogRepositoryFactory, IItemService itemService,
                                         ICatalogService catalogService, ICategoryService categoryService, CacheManager cacheManager = null)
         {
             _catalogRepositoryFactory = catalogRepositoryFactory;
@@ -33,7 +32,7 @@ namespace VirtoCommerce.CatalogModule.Data.Services
 
 		public module.SearchResult Search(module.SearchCriteria criteria)
 		{
-			var cacheKey = CacheKey.Create(Constants.CatalogCachePrefix + ".Search", criteria.ToString());
+			var cacheKey = CacheKey.Create("CatalogSearchServiceImpl.Search", criteria.ToString());
 			var result = _cacheManager.Get(cacheKey, () =>
 				{
 					var retVal = new module.SearchResult();
@@ -69,7 +68,7 @@ namespace VirtoCommerce.CatalogModule.Data.Services
                 {
                     var query = repository.Categories.Where(x => x.CatalogId == criteria.CatalogId);
 
-					var cacheKey = CacheKey.Create(Constants.CatalogCachePrefix + ".GetCatalogById", criteria.CatalogId);
+					var cacheKey = CacheKey.Create("CatalogSearchServiceImpl.GetCatalogById", criteria.CatalogId);
 					var dbCatalog = _cacheManager.Get(cacheKey, () => repository.GetCatalogById(criteria.CatalogId));
 
                     var isVirtual = dbCatalog is foundation.VirtualCatalog;
@@ -86,13 +85,29 @@ namespace VirtoCommerce.CatalogModule.Data.Services
                                                     .ToArray();
                             //Search in all catalogs
                             query = repository.Categories;
-                            query = query.Where(x => x.ParentCategoryId == criteria.CategoryId || allLinkedPhysicalCategoriesIds.Contains(x.CategoryId));
+                            query = query.Where(x => x.ParentCategoryId == criteria.CategoryId || allLinkedPhysicalCategoriesIds.Contains(x.Id));
                         }
                         else
                         {
                             query = query.Where(x => x.ParentCategoryId == criteria.CategoryId);
                         }
                     }
+					else if(!String.IsNullOrEmpty(criteria.Code))
+					{
+						query = query.Where(x => x.Code == criteria.Code);
+					}
+					else if (!String.IsNullOrEmpty(criteria.SeoKeyword))
+					{
+						var urlKeyword = repository.SeoUrlKeywords.FirstOrDefault(x => x.KeywordType == (int)SeoUrlKeywordTypes.Category && x.Keyword == criteria.SeoKeyword);
+						if(urlKeyword == null)
+						{
+							query = query.Where(x=> false);
+						}
+						else
+						{
+							query = query.Where(x => x.Id == urlKeyword.KeywordValue);
+						}
+					}
                     else if (!String.IsNullOrEmpty(criteria.CatalogId))
                     {
                         query = query.Where(x => x.CatalogId == criteria.CatalogId && (x.ParentCategoryId == null || criteria.GetAllCategories));
@@ -102,11 +117,11 @@ namespace VirtoCommerce.CatalogModule.Data.Services
                             var allLinkedCategoriesIds = repository.GetCatalogLinks(criteria.CatalogId).Select(x => x.ParentCategoryId).ToArray();
                             //Search in all catalogs
                             query = repository.Categories;
-                            query = query.Where(x => (x.CatalogId == criteria.CatalogId && (x.ParentCategoryId == null || criteria.GetAllCategories)) || allLinkedCategoriesIds.Contains(x.CategoryId));
+                            query = query.Where(x => (x.CatalogId == criteria.CatalogId && (x.ParentCategoryId == null || criteria.GetAllCategories)) || allLinkedCategoriesIds.Contains(x.Id));
                         }
                     }
 
-                    var categoryIds = query.OfType<foundation.Category>().Select(x => x.CategoryId).ToArray();
+                    var categoryIds = query.OfType<foundation.Category>().Select(x => x.Id).ToArray();
 
                     var categories = new ConcurrentBag<module.Category>();
                     var parallelOptions = new ParallelOptions
@@ -131,7 +146,7 @@ namespace VirtoCommerce.CatalogModule.Data.Services
         {
             using (var repository = _catalogRepositoryFactory())
             {
-                var catalogIds = repository.Catalogs.Select(x => x.CatalogId).ToArray();
+                var catalogIds = repository.Catalogs.Select(x => x.Id).ToArray();
                 var catalogs = new ConcurrentBag<module.Catalog>();
                 var parallelOptions = new ParallelOptions
                 {
@@ -164,13 +179,30 @@ namespace VirtoCommerce.CatalogModule.Data.Services
                 {
                     query = query.Where(x => x.CatalogId == criteria.CatalogId && !x.CategoryItemRelations.Any());
                 }
-				
+
+				if (!String.IsNullOrEmpty(criteria.Code))
+				{
+					query = query.Where(x => x.Code == criteria.Code);
+				}
+				else if (!String.IsNullOrEmpty(criteria.SeoKeyword))
+				{
+					var urlKeyword = repository.SeoUrlKeywords.FirstOrDefault(x => x.KeywordType == (int)SeoUrlKeywordTypes.Item && x.Keyword == criteria.SeoKeyword);
+					if (urlKeyword == null)
+					{
+						query = query.Where(x => false);
+					}
+					else
+					{
+						query = query.Where(x => x.Id == urlKeyword.KeywordValue);
+					}
+				}
+
                 result.TotalCount = query.Count();
 
                 var itemIds = query.OrderByDescending(x => x.Name)
                                    .Skip(criteria.Start)
                                    .Take(criteria.Count)
-                                   .Select(x => x.ItemId)
+                                   .Select(x => x.Id)
                                    .ToArray();
 
 				var productResponseGroup = module.ItemResponseGroup.ItemInfo | module.ItemResponseGroup.ItemAssets;

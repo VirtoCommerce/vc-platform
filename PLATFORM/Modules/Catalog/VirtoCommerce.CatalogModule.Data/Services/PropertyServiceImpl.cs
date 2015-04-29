@@ -3,18 +3,18 @@ using System.Linq;
 using VirtoCommerce.CatalogModule.Data.Converters;
 using VirtoCommerce.CatalogModule.Data.Repositories;
 using VirtoCommerce.Domain.Catalog.Services;
-using VirtoCommerce.Foundation.Data.Infrastructure;
-using VirtoCommerce.Foundation.Frameworks.Caching;
 using module = VirtoCommerce.Domain.Catalog.Model;
-using foundation = VirtoCommerce.Foundation.Catalogs.Model;
+using foundation = VirtoCommerce.CatalogModule.Data.Model;
+using VirtoCommerce.Platform.Data.Infrastructure;
+using VirtoCommerce.Platform.Core.Caching;
 
 namespace VirtoCommerce.CatalogModule.Data.Services
 {
 	public class PropertyServiceImpl : ServiceBase, IPropertyService
 	{
-		private readonly Func<IFoundationCatalogRepository> _catalogRepositoryFactory;
+		private readonly Func<ICatalogRepository> _catalogRepositoryFactory;
 		private readonly CacheManager _cacheManager;
-		public PropertyServiceImpl(Func<IFoundationCatalogRepository> catalogRepositoryFactory, CacheManager cacheManager)
+		public PropertyServiceImpl(Func<ICatalogRepository> catalogRepositoryFactory, CacheManager cacheManager)
 		{
 			_catalogRepositoryFactory = catalogRepositoryFactory;
 			_cacheManager = cacheManager;
@@ -33,10 +33,10 @@ namespace VirtoCommerce.CatalogModule.Data.Services
 				{
 					foundation.Catalog dbCatalog = null;
 					foundation.Category dbCategory = null;
-					dbCatalog = repository.GetPropertyCatalog(dbProperty.PropertyId);
+					dbCatalog = repository.GetPropertyCatalog(dbProperty.Id);
 					if (dbCatalog == null)
 					{
-						dbCategory = repository.GetPropertyCategory(dbProperty.PropertyId);
+						dbCategory = repository.GetPropertyCategory(dbProperty.Id);
 						dbCatalog = repository.GetCatalogById(dbCategory.CatalogId) as foundation.Catalog;
 					}
 		
@@ -106,7 +106,7 @@ namespace VirtoCommerce.CatalogModule.Data.Services
 				repository.Add(dbProperty);
 				CommitChanges(repository);
 			}
-			var retVal = GetById(dbProperty.PropertyId);
+			var retVal = GetById(dbProperty.Id);
 			return retVal;
 		}
 
@@ -119,7 +119,7 @@ namespace VirtoCommerce.CatalogModule.Data.Services
 
 				foreach (var dbProperty in dbProperties)
 				{
-					var property = properties.FirstOrDefault(x => x.Id == dbProperty.PropertyId);
+					var property = properties.FirstOrDefault(x => x.Id == dbProperty.Id);
 					if (property != null)
 					{
 						changeTracker.Attach(property);

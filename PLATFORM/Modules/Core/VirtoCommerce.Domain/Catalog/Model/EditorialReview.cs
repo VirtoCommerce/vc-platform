@@ -1,9 +1,9 @@
 ﻿
+using VirtoCommerce.Platform.Core.Common;
 namespace VirtoCommerce.Domain.Catalog.Model
 {
-	public class EditorialReview : ILanguageSupport
+	public class EditorialReview : AuditableEntity, ILanguageSupport
 	{
-		public string Id { get; set; }
 	
 		public string Content { get; set; }
 		public string ReviewType { get; set; }

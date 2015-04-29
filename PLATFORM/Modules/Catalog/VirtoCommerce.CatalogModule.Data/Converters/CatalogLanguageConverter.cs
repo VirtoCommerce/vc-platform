@@ -3,9 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using VirtoCommerce.Foundation.Frameworks.Extensions;
-using foundation = VirtoCommerce.Foundation.Catalogs.Model;
+using foundation = VirtoCommerce.CatalogModule.Data.Model;
 using module = VirtoCommerce.Domain.Catalog.Model;
+using Omu.ValueInjecter;
+using VirtoCommerce.Platform.Data.Common;
 
 namespace VirtoCommerce.CatalogModule.Data.Converters
 {
@@ -18,13 +19,12 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 		/// <returns></returns>
 		public static module.CatalogLanguage ToModuleModel(this foundation.CatalogLanguage dbLanguage, module.Catalog catalog)
 		{
-			var retVal = new module.CatalogLanguage
-					{
-						CatalogId = catalog.Id,
-						LanguageCode = dbLanguage.Language
-					};
-			if (dbLanguage.CatalogLanguageId != null)
-				retVal.Id = dbLanguage.CatalogLanguageId;
+			var retVal = new module.CatalogLanguage();
+			retVal.InjectFrom(dbLanguage);
+
+			retVal.CatalogId = catalog.Id;
+			retVal.LanguageCode = dbLanguage.Language;
+
 			return retVal;
 		}
 
@@ -54,27 +54,12 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 			if (target == null)
 				throw new ArgumentNullException("target");
 
-			//Simply propertie spatch
-			if (source.Language != null)
-				target.Language = source.Language;
+			var patchInjectionPolicy = new PatchInjection<foundation.CatalogLanguage>(x => x.Language);
+			target.InjectFrom(patchInjectionPolicy, source);
+
 		}
 
 	}
 
-	public class CatalogLanguageComparer : IEqualityComparer<foundation.CatalogLanguage>
-	{
-		#region IEqualityComparer<CatalogLanguage> Members
-
-		public bool Equals(foundation.CatalogLanguage x, foundation.CatalogLanguage y)
-		{
-			return x.Language == y.Language;
-		}
-
-		public int GetHashCode(foundation.CatalogLanguage obj)
-		{
-			return obj.GetHashCode();
-		}
-
-		#endregion
-	}
+	
 }

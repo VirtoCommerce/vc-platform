@@ -152,9 +152,9 @@ namespace VirtoCommerce.CatalogModule.Test
         }
 
 
-        private IFoundationCatalogRepository GetRepository()
+        private ICatalogRepository GetRepository()
         {
-            var retVal = new FoundationCatalogRepositoryImpl("VirtoCommerce");
+            var retVal = new CatalogRepositoryImpl("VirtoCommerce");
             return retVal;
         }
 

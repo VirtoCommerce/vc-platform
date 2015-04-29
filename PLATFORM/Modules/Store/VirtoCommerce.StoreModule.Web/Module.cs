@@ -4,10 +4,11 @@ using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Data.Infrastructure.Interceptors;
 using VirtoCommerce.StoreModule.Data.Repositories;
 using VirtoCommerce.StoreModule.Data.Services;
+using VirtoCommerce.StoreModule.Web.SampleData;
 
 namespace VirtoCommerce.StoreModule.Web
 {
-    public class Module : IModule
+	public class Module : IModule, IDatabaseModule
     {
         private readonly IUnityContainer _container;
 
@@ -26,5 +27,31 @@ namespace VirtoCommerce.StoreModule.Web
         }
 
         #endregion
-    }
+
+		#region IDatabaseModule Members
+
+		public void SetupDatabase(SampleDataLevel sampleDataLevel)
+		{
+
+			using (var db = new StoreRepositoryImpl("VirtoCommerce"))
+			{
+				SqlStoreDatabaseInitializer initializer;
+
+				switch (sampleDataLevel)
+				{
+					case SampleDataLevel.Full:
+					case SampleDataLevel.Reduced:
+						initializer = new SqlStoreSampleDatabaseInitializer();
+						break;
+					default:
+						initializer = new SqlStoreDatabaseInitializer();
+						break;
+				}
+
+				initializer.InitializeDatabase(db);
+			}
+		}
+
+		#endregion
+	}
 }

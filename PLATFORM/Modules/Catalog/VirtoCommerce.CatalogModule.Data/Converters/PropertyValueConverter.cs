@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using foundation = VirtoCommerce.Foundation.Catalogs.Model;
+using foundation = VirtoCommerce.CatalogModule.Data.Model;
 using module = VirtoCommerce.Domain.Catalog.Model;
-using VirtoCommerce.Foundation.Frameworks.ConventionInjections;
 using Omu.ValueInjecter;
+using VirtoCommerce.Platform.Core.Common;
+using VirtoCommerce.Platform.Data.Common;
 
 namespace VirtoCommerce.CatalogModule.Data.Converters
 {
@@ -23,15 +24,13 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
             if (dbPropValue == null)
                 throw new ArgumentNullException("dbPropValue");
 
-            var retVal = new module.PropertyValue
-            {
-                Id = dbPropValue.PropertyValueId,
-                LanguageCode = dbPropValue.Locale,
-                PropertyName = dbPropValue.Name,
-                Value = dbPropValue.ToObjectValue(), // retain the correct object type value
-                ValueId = dbPropValue.KeyValue,
-                ValueType = ((foundation.PropertyValueType)dbPropValue.ValueType).ToModuleModel()
-            };
+			var retVal = new module.PropertyValue();
+			retVal.InjectFrom(dbPropValue);
+			retVal.LanguageCode = dbPropValue.Locale;
+			retVal.PropertyName = dbPropValue.Name;
+			retVal.Value = dbPropValue.ToObjectValue();
+			retVal.ValueId = dbPropValue.KeyValue;
+			retVal.ValueType = (module.PropertyValueType)dbPropValue.ValueType;
 
             if (properties != null)
             {
@@ -58,14 +57,13 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 
             var retVal = new T();
 
-            if (propValue.Id != null)
-                retVal.PropertyValueId = propValue.Id;
+			retVal.InjectFrom(propValue);
 
             retVal.Name = propValue.PropertyName;
             retVal.KeyValue = propValue.ValueId;
             retVal.Locale = propValue.LanguageCode;
-            retVal.ValueType = (int)propValue.ValueType.ToFoundation();
-            SetPropertyValue(retVal, propValue.ValueType.ToFoundation(), propValue.Value.ToString());
+            retVal.ValueType = (int)propValue.ValueType;
+            SetPropertyValue(retVal, propValue.ValueType, propValue.Value.ToString());
 
             return retVal;
         }
@@ -89,25 +87,25 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 			target.InjectFrom(patchInjectionPolicy, source);
         }
 
-		private static void SetPropertyValue(foundation.PropertyValueBase retVal, foundation.PropertyValueType type, string value)
+		private static void SetPropertyValue(foundation.PropertyValueBase retVal, module.PropertyValueType type, string value)
 		{
 			switch (type)
 			{
-				case foundation.PropertyValueType.LongString:
+				case module.PropertyValueType.LongText:
 					retVal.LongTextValue = value;
 					break;
-				case foundation.PropertyValueType.ShortString:
+				case module.PropertyValueType.ShortText:
 					retVal.ShortTextValue = value;
 					break;
-				case foundation.PropertyValueType.Decimal:
+				case module.PropertyValueType.Number:
 					decimal parsedDecimal;
 					Decimal.TryParse(value, out parsedDecimal);
 					retVal.DecimalValue = parsedDecimal;
 					break;
-				case foundation.PropertyValueType.DateTime:
+				case module.PropertyValueType.DateTime:
 					retVal.DateTimeValue = DateTime.Parse(value);
 					break;
-				case foundation.PropertyValueType.Boolean:
+				case module.PropertyValueType.Boolean:
 					retVal.BooleanValue = Boolean.Parse(value);
 					break;
 			}
@@ -116,20 +114,5 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 
 
 
-    public class PropertyValueComparer : IEqualityComparer<foundation.PropertyValueBase>
-    {
-        #region IEqualityComparer<Item> Members
-
-        public bool Equals(foundation.PropertyValueBase x, foundation.PropertyValueBase y)
-        {
-            return x.PropertyValueId == y.PropertyValueId;
-        }
-
-        public int GetHashCode(foundation.PropertyValueBase obj)
-        {
-            return obj.GetHashCode();
-        }
-
-        #endregion
-    }
+  
 }

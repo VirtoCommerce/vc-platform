@@ -5,13 +5,12 @@ using System.Net;
 using System.Web.Http;
 using System.Web.Http.Description;
 using VirtoCommerce.CatalogModule.Web.Converters;
-using VirtoCommerce.Foundation.AppConfig.Repositories;
-using VirtoCommerce.Foundation.Frameworks.Extensions;
 using moduleModel = VirtoCommerce.Domain.Catalog.Model;
 using webModel = VirtoCommerce.CatalogModule.Web.Model;
 using Microsoft.Practices.Unity;
 using VirtoCommerce.Domain.Catalog.Services;
 using VirtoCommerce.CatalogModule.Data.Repositories;
+using VirtoCommerce.Platform.Core.Settings;
 
 namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 {
@@ -21,17 +20,17 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
         private readonly ICatalogService _catalogService;
         private readonly ICatalogSearchService _searchService;
 		private readonly IPropertyService _propertyService;
-		private readonly Func<IAppConfigRepository> _appConfigRepositoryFactory;
+		private readonly ISettingsManager _settingManager;
 
         public CatalogsController(ICatalogService catalogService,
 								  ICatalogSearchService itemSearchService,
-								  Func<IFoundationAppConfigRepository> appConfigRepositoryFactory,
+								  ISettingsManager settingManager,
 								  IPropertyService propertyService)
         {
             _catalogService = catalogService;
             _searchService = itemSearchService;
-			_appConfigRepositoryFactory = appConfigRepositoryFactory;
 			_propertyService = propertyService;
+			_settingManager = settingManager;
         }
 
 		// GET: api/catalog/catalogs
@@ -192,24 +191,18 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
             _catalogService.Update(new moduleModel.Catalog[] { moduleCatalog });
         }
 
-        private IEnumerable<webModel.CatalogLanguage> GetSystemLanguages()
-        {
-            var retVal = new List<webModel.CatalogLanguage>();
-			using (var appConfigRep = _appConfigRepositoryFactory())
+		private IEnumerable<webModel.CatalogLanguage> GetSystemLanguages()
+		{
+			var retVal = new List<webModel.CatalogLanguage>();
+
+			var languages = _settingManager.GetArray<string>("VirtoCommerce.Core.Languages", new string[] { "en-US" });
+
+			foreach (var languageCode in languages)
 			{
-				if (appConfigRep != null)
-				{
-					var languageSetting = appConfigRep.Settings.Expand(x => x.SettingValues).FirstOrDefault(x => x.Name.Equals("Languages"));
-					if (languageSetting != null)
-					{
-						foreach (var languageCode in languageSetting.SettingValues.Select(x => x.ToString()))
-						{
-							retVal.Add(new webModel.CatalogLanguage(languageCode));
-						}
-					}
-				}
+				retVal.Add(new webModel.CatalogLanguage(languageCode));
 			}
-            return retVal;
-        }
+
+			return retVal;
+		}
     }
 }

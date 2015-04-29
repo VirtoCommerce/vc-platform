@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using VirtoCommerce.Foundation.Frameworks.Extensions;
-using foundation = VirtoCommerce.Foundation.Catalogs.Model;
+using foundation = VirtoCommerce.CatalogModule.Data.Model;
 using module = VirtoCommerce.Domain.Catalog.Model;
+using Omu.ValueInjecter;
+using VirtoCommerce.Platform.Core.Common;
+using VirtoCommerce.Platform.Data.Common;
 
 namespace VirtoCommerce.CatalogModule.Data.Converters
 {
@@ -62,15 +64,13 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 		/// <param name="target"></param>
 		public static void Patch(this foundation.AssociationGroup source, foundation.AssociationGroup target)
 		{
-			//Simply properties patch
-			if (source.Name != null)
-				target.Name = source.Name;
-			if (source.Description != null)
-				target.Description = source.Description;
+			var patchInjectionPolicy = new PatchInjection<foundation.AssociationGroup>(x => x.Name, x => x.Description);
+			target.InjectFrom(patchInjectionPolicy, source);
 
 			if (!source.Associations.IsNullCollection())
 			{
-				source.Associations.Patch(target.Associations, new AssociationComparer(),
+				var associationComparer = AnonymousComparer.Create((foundation.Association x) => x.ItemId);
+				source.Associations.Patch(target.Associations, associationComparer,
 										 (sourceAssociation, targetAssociation) => sourceAssociation.Patch(targetAssociation));
 			}
 		}
@@ -81,48 +81,10 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 		/// <param name="target"></param>
 		public static void Patch(this foundation.Association source, foundation.Association target)
 		{
-			if (source.Priority != target.Priority)
-				target.Priority = source.Priority;
+			var patchInjectionPolicy = new PatchInjection<foundation.Association>(x => x.Priority);
+			target.InjectFrom(patchInjectionPolicy, source);
 		}
 	}
 
-	public class AssociationGroupComparer : IEqualityComparer<foundation.AssociationGroup>
-	{
-		#region IEqualityComparer<AssociationGroup> Members
-
-		public bool Equals(foundation.AssociationGroup x, foundation.AssociationGroup y)
-		{
-			var retVal = x.Name == y.Name;
-			return retVal;
-		}
-
-		public int GetHashCode(foundation.AssociationGroup obj)
-		{
-			var retVal = obj.Name.GetHashCode();
-			return retVal;
-		}
-
-		#endregion
-	}
-
-	public class AssociationComparer : IEqualityComparer<foundation.Association>
-	{
-		#region IEqualityComparer<Association> Members
-
-		public bool Equals(foundation.Association x, foundation.Association y)
-		{
-			var retVal = x.ItemId == y.ItemId;
-		
-			return retVal;
-		}
-
-		public int GetHashCode(foundation.Association obj)
-		{
-			var retVal = obj.ItemId.GetHashCode();
-			return retVal;
-		}
-
-		#endregion
-	}
-
+	
 }

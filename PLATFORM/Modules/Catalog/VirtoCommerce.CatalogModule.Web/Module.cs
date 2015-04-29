@@ -3,13 +3,10 @@ using Microsoft.Practices.Unity;
 using VirtoCommerce.CatalogModule.Data.Repositories;
 using VirtoCommerce.CatalogModule.Data.Services;
 using VirtoCommerce.CatalogModule.Web.Controllers.Api;
+using VirtoCommerce.CatalogModule.Web.SampleData;
 using VirtoCommerce.Domain.Catalog.Services;
-using VirtoCommerce.Foundation.Data.Catalogs;
-using VirtoCommerce.Foundation.Data.Importing;
-using VirtoCommerce.Foundation.Frameworks.Caching;
-using VirtoCommerce.Foundation.Importing.Repositories;
-using VirtoCommerce.Foundation.Importing.Services;
 using VirtoCommerce.Platform.Core.Asset;
+using VirtoCommerce.Platform.Core.Caching;
 using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Core.Notification;
 using VirtoCommerce.Platform.Core.Settings;
@@ -29,7 +26,7 @@ namespace VirtoCommerce.CatalogModule.Web
 
         public void SetupDatabase(SampleDataLevel sampleDataLevel)
         {
-            using (var db = new EFCatalogRepository(_connectionStringName))
+			using (var db = new CatalogRepositoryImpl(_connectionStringName))
             {
                 SqlCatalogDatabaseInitializer initializer;
 
@@ -49,11 +46,11 @@ namespace VirtoCommerce.CatalogModule.Web
                 initializer.InitializeDatabase(db);
             }
 
-            using (var db = new EFImportingRepository(_connectionStringName))
-            {
-                var initializer = new SqlImportDatabaseInitializer();
-                initializer.InitializeDatabase(db);
-            }
+			//using (var db = new CatalogRepositoryImpl(_connectionStringName))
+			//{
+			//	var initializer = new SqlImportDatabaseInitializer();
+			//	initializer.InitializeDatabase(db);
+			//}
         }
 
         #endregion
@@ -66,13 +63,12 @@ namespace VirtoCommerce.CatalogModule.Web
 
             var settingsManager = _container.Resolve<ISettingsManager>();
 
-            Func<IFoundationCatalogRepository> catalogRepFactory = () => new FoundationCatalogRepositoryImpl(_connectionStringName);
-            Func<IFoundationAppConfigRepository> appConfigRepFactory = () => new FoundationAppConfigRepositoryImpl(_connectionStringName);
-
+            Func<ICatalogRepository> catalogRepFactory = () => new CatalogRepositoryImpl(_connectionStringName);
+        
             var catalogService = new CatalogServiceImpl(catalogRepFactory, CacheManager.NoCache);
             var propertyService = new PropertyServiceImpl(catalogRepFactory, CacheManager.NoCache);
-            var categoryService = new CategoryServiceImpl(catalogRepFactory, appConfigRepFactory, CacheManager.NoCache);
-            var itemService = new ItemServiceImpl(catalogRepFactory, appConfigRepFactory, CacheManager.NoCache);
+            var categoryService = new CategoryServiceImpl(catalogRepFactory, CacheManager.NoCache);
+            var itemService = new ItemServiceImpl(catalogRepFactory);
             var catalogSearchService = new CatalogSearchServiceImpl(catalogRepFactory, itemService, catalogService, categoryService, CacheManager.NoCache);
 
             var blobUrlResolver = _container.Resolve<IBlobUrlResolver>();
@@ -87,37 +83,18 @@ namespace VirtoCommerce.CatalogModule.Web
             _container.RegisterType<PropertiesController>(new InjectionConstructor(propertyService, categoryService, catalogService));
 			_container.RegisterType<ListEntryController>(new InjectionConstructor(catalogSearchService, categoryService, itemService, blobUrlResolver));
             _container.RegisterType<CategoriesController>(new InjectionConstructor(catalogSearchService, categoryService, propertyService, catalogService));
-            _container.RegisterType<CatalogsController>(new InjectionConstructor(catalogService, catalogSearchService, appConfigRepFactory, propertyService));
+            _container.RegisterType<CatalogsController>(new InjectionConstructor(catalogService, catalogSearchService, settingsManager, propertyService));
             #endregion
-
-            #region Search dependencies
-            //var searchConnection = new SearchConnection(ConnectionHelper.GetConnectionString("SearchConnectionString"));
-            //var elasticSearchProvider = new ElasticSearchProvider(new ElasticSearchQueryBuilder(), searchConnection);
-            //_container.RegisterInstance<ISearchProvider>("Catalog", elasticSearchProvider);
-            #endregion
-
 
             #region Import dependencies
-            Func<IImportRepository> importRepFactory = () => new EFImportingRepository(_connectionStringName);
+			//Func<IImportRepository> importRepFactory = () => new EFImportingRepository(_connectionStringName);
 
-            Func<IImportService> imporServiceFactory = () => new ImportService(importRepFactory(), null, catalogRepFactory(), null, null);
+			//Func<IImportService> imporServiceFactory = () => new ImportService(importRepFactory(), null, catalogRepFactory(), null, null);
 
-            _container.RegisterType<ImportController>(new InjectionConstructor(importRepFactory, imporServiceFactory, catalogRepFactory, _container.Resolve<INotifier>()));
-
-            #endregion
-
-
-            #region Mock
-            //var localPath = Path.Combine(HttpRuntime.AppDomainAppPath, @"App_data\priceRuCategoryTest.yml");
-            //var mockCatalogService = new MockCatalogService(localPath);
-            //_container.RegisterInstance<ICatalogService>(mockCatalogService);
-            //_container.RegisterInstance<ICategoryService>(mockCatalogService);
-            //_container.RegisterInstance<IItemSearchService>(mockCatalogService);
-            //_container.RegisterInstance<IItemService>(mockCatalogService);
-
-            //_container.RegisterInstance<IPropertyService>(mockCatalogService);
+			//_container.RegisterType<ImportController>(new InjectionConstructor(importRepFactory, imporServiceFactory, catalogRepFactory, _container.Resolve<INotifier>()));
 
             #endregion
+
 
         }
 

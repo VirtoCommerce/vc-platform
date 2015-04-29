@@ -1,8 +1,8 @@
-﻿namespace VirtoCommerce.Domain.Catalog.Model
+﻿using VirtoCommerce.Platform.Core.Common;
+namespace VirtoCommerce.Domain.Catalog.Model
 {
-	public class PropertyValue : ILanguageSupport
+	public class PropertyValue : AuditableEntity, ILanguageSupport
 	{
-		public string Id { get; set; }
 		public string PropertyId { get; set; }
 		public string PropertyName { get; set; }
 		public string ValueId { get; set; }

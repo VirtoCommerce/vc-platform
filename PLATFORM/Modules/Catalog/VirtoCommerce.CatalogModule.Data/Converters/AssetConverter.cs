@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using foundation = VirtoCommerce.Foundation.Catalogs.Model;
+using foundation = VirtoCommerce.CatalogModule.Data.Model;
 using module = VirtoCommerce.Domain.Catalog.Model;
+using Omu.ValueInjecter;
+using VirtoCommerce.Platform.Data.Common;
 
 namespace VirtoCommerce.CatalogModule.Data.Converters
 {
@@ -19,14 +21,15 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 		{
 			if (dbAsset == null)
 				throw new ArgumentNullException("dbAsset");
-			var retVal = new module.ItemAsset
-			{
-				Id = dbAsset.ItemAssetId,
-				ItemId = dbAsset.ItemId,
-				Group = dbAsset.GroupName,
-				Type = (module.ItemAssetType)Enum.Parse(typeof(module.ItemAssetType), dbAsset.AssetType, true),
-				Url = dbAsset.AssetId
-			};
+
+			var retVal = new module.ItemAsset();
+
+			retVal.InjectFrom(dbAsset);
+
+			retVal.Group = dbAsset.GroupName;
+			retVal.Type = (module.ItemAssetType)Enum.Parse(typeof(module.ItemAssetType), dbAsset.AssetType, true);
+			retVal.Url = dbAsset.AssetId;
+
 			return retVal;
 
 		}
@@ -42,17 +45,14 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 			if (itemAsset == null)
 				throw new ArgumentNullException("itemAsset");
 
-			var retVal = new foundation.ItemAsset
-			{
-				AssetId = itemAsset.Url,
-				GroupName = itemAsset.Group,
-				AssetType = itemAsset.Type.ToString().ToLower(),
-				ItemId = itemAsset.ItemId,
-			};
-			if (itemAsset.Id != null)
-			{
-				retVal.ItemAssetId = itemAsset.Id;
-			}
+			var retVal = new foundation.ItemAsset();
+			retVal.InjectFrom(itemAsset);
+
+			retVal.AssetId = itemAsset.Url;
+			retVal.GroupName = itemAsset.Group;
+			retVal.AssetType = itemAsset.Type.ToString().ToLower();
+
+		
 			return retVal;
 		}
 
@@ -65,30 +65,10 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 		{
 			if (target == null)
 				throw new ArgumentNullException("target");
-
-			//Simply properties patch
-			if (source.AssetType != null)
-				target.AssetType = source.AssetType;
-
-			target.SortOrder = source.SortOrder;
+			
+			var patchInjectionPolicy = new PatchInjection<foundation.ItemAsset>(x => x.AssetType, x=> x.SortOrder );
+			target.InjectFrom(patchInjectionPolicy, source);
 
 		}
-	}
-
-	public class ItemAssetComparer : IEqualityComparer<foundation.ItemAsset>
-	{
-		#region IEqualityComparer<Item> Members
-
-		public bool Equals(foundation.ItemAsset x, foundation.ItemAsset y)
-		{
-			return x.ItemAssetId == y.ItemAssetId;
-		}
-
-		public int GetHashCode(foundation.ItemAsset obj)
-		{
-			return obj.ItemAssetId.GetHashCode();
-		}
-
-		#endregion
 	}
 }

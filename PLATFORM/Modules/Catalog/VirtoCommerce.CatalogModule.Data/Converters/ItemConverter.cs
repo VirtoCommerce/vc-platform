@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using VirtoCommerce.Foundation.Frameworks;
-using VirtoCommerce.Foundation.Frameworks.Extensions;
-using foundation = VirtoCommerce.Foundation.Catalogs.Model;
+using foundation = VirtoCommerce.CatalogModule.Data.Model;
 using module = VirtoCommerce.Domain.Catalog.Model;
-using foundationConfig = VirtoCommerce.Foundation.AppConfig.Model;
+using VirtoCommerce.Platform.Data.Common;
+using Omu.ValueInjecter;
+using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.CatalogModule.Data.Converters
 {
@@ -19,27 +19,22 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 		public static module.CatalogProduct ToModuleModel(this foundation.Item dbItem, module.Catalog catalog,
 														  module.Category category, module.Property[] properties,
 														  foundation.Item[] variations,
-														  foundationConfig.SeoUrlKeyword[] seoInfos,
+														  foundation.SeoUrlKeyword[] seoInfos,
 														  string mainProductId,
 														  module.CatalogProduct[] associatedProducts)
 		{
-			var retVal = new module.CatalogProduct {
-                Id = dbItem.ItemId, 
-                Catalog = catalog, 
-                CatalogId = catalog.Id,
-                StartDate = dbItem.StartDate
-            };
+			var retVal = new module.CatalogProduct();
+			retVal.InjectFrom(dbItem);
+			retVal.Catalog = catalog;
+			retVal.CatalogId = catalog.Id;
+		
 			if (category != null)
 			{
 				retVal.Category = category;
 				retVal.CategoryId = category.Id;
 			}
-			retVal.Code = dbItem.Code;
-			retVal.Name = dbItem.Name;
-            retVal.IsBuyable = dbItem.IsBuyable;
+
 			retVal.MainProductId = mainProductId;
-            retVal.IsActive = dbItem.IsActive;
-            retVal.TrackInventory = dbItem.TrackInventory;
 
 			#region Links
 			retVal.Links = dbItem.CategoryItemRelations.Select(x => x.ToModuleModel()).ToList();
@@ -115,35 +110,18 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 		/// <returns></returns>
 		public static foundation.Item ToFoundation(this module.CatalogProduct product)
 		{
-
 			var retVal = new foundation.Product();
-
+			retVal.InjectFrom(product);
 			//Constant fields
 			//Only for main product
-			retVal.AvailabilityRule = (int)foundation.AvailabilityRule.Always;
-			retVal.StartDate = product.StartDate;
-            retVal.IsBuyable = product.IsBuyable;
+			retVal.AvailabilityRule = (int)module.AvailabilityRule.Always;
 			retVal.MinQuantity = 1;
 			retVal.MaxQuantity = 0;
 			//If it variation need make active false (workaround)
 			// retVal.IsActive = product.MainProductId == null;
-		    retVal.IsActive = product.IsActive;
-            retVal.TrackInventory = product.TrackInventory;
-
+  
 			//Changed fields
-			retVal.Name = product.Name;
-			retVal.Code = product.Code;
 			retVal.CatalogId = product.CatalogId;
-
-			if (product.Id != null)
-			{
-				retVal.ItemId = product.Id;
-			}
-			else
-			{
-				//Copy over generated id
-				product.Id = retVal.ItemId;
-			}
 
 			#region ItemPropertyValues
 			retVal.ItemPropertyValues = new NullCollection<foundation.ItemPropertyValue>();
@@ -153,7 +131,6 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 				foreach (var propValue in product.PropertyValues)
 				{
 					var dbPropValue = propValue.ToFoundation<foundation.ItemPropertyValue>() as foundation.ItemPropertyValue;
-					dbPropValue.ItemId = retVal.ItemId;
 					retVal.ItemPropertyValues.Add(dbPropValue);
 				}
 			}
@@ -169,7 +146,6 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 				{
 					var asset = assets[order];
 					var dbAsset = asset.ToFoundation();
-					dbAsset.ItemId = product.Id;
 					dbAsset.SortOrder = order;
 					retVal.ItemAssets.Add(dbAsset);
 				}
@@ -211,7 +187,6 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 							Name = association.Name,
 							Description = association.Description,
 							Priority = 1,
-							ItemId = retVal.ItemId
 						};
 						retVal.AssociationGroups.Add(associationGroup);
 					}
@@ -236,31 +211,20 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 			if (target == null)
 				throw new ArgumentNullException("target");
 
-			//Simple properties patch
-			if (source.Name != null)
-				target.Name = source.Name;
-			if (source.Code != null)
-			{
-				target.Code = source.Code;
-                target.IsBuyable = source.IsBuyable;
-                target.IsActive = source.IsActive;
-                target.TrackInventory = source.TrackInventory;
-			}
-
+			var patchInjectionPolicy = new PatchInjection<foundation.Item>(x => x.Name, x => x.Code, x => x.IsBuyable, x=> x.IsActive, x=>x.TrackInventory);
+			target.InjectFrom(patchInjectionPolicy, source);
 
 			#region ItemAssets
 			if (!source.ItemAssets.IsNullCollection())
 			{
-				source.ItemAssets.Patch(target.ItemAssets, new ItemAssetComparer(),
-										 (sourceAsset, targetAsset) => sourceAsset.Patch(targetAsset));
+				source.ItemAssets.Patch(target.ItemAssets, (sourceAsset, targetAsset) => sourceAsset.Patch(targetAsset));
 			}
 			#endregion
 
 			#region ItemPropertyValues
 			if (!source.ItemPropertyValues.IsNullCollection())
 			{
-				source.ItemPropertyValues.Patch(target.ItemPropertyValues, new PropertyValueComparer(),
-										 (sourcePropValue, targetPropValue) => sourcePropValue.Patch(targetPropValue));
+				source.ItemPropertyValues.Patch(target.ItemPropertyValues, (sourcePropValue, targetPropValue) => sourcePropValue.Patch(targetPropValue));
 			}
 
 			#endregion
@@ -277,36 +241,19 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 			#region EditorialReviews
 			if (!source.EditorialReviews.IsNullCollection())
 			{
-				source.EditorialReviews.Patch(target.EditorialReviews, new EditorialReviewComparer(),
-										 (sourcePropValue, targetPropValue) => sourcePropValue.Patch(targetPropValue));
+				source.EditorialReviews.Patch(target.EditorialReviews, (sourcePropValue, targetPropValue) => sourcePropValue.Patch(targetPropValue));
 			}
 			#endregion
 
 			#region Association
 			if (!source.AssociationGroups.IsNullCollection())
 			{
-				source.AssociationGroups.Patch(target.AssociationGroups, new AssociationGroupComparer(),
+				var associationComparer = AnonymousComparer.Create((foundation.AssociationGroup x) => x.Name);
+				source.AssociationGroups.Patch(target.AssociationGroups, associationComparer,
 										 (sourceGroup, targetGroup) => sourceGroup.Patch(targetGroup));
 			}
 			#endregion
 		}
 
-	}
-
-	public class ItemComparer : IEqualityComparer<foundation.Item>
-	{
-		#region IEqualityComparer<Item> Members
-
-		public bool Equals(foundation.Item x, foundation.Item y)
-		{
-			return x.ItemId == y.ItemId;
-		}
-
-		public int GetHashCode(foundation.Item obj)
-		{
-			return obj.GetHashCode();
-		}
-
-		#endregion
 	}
 }

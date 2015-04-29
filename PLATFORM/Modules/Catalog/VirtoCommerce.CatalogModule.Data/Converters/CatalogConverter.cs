@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using VirtoCommerce.Foundation.Frameworks.Extensions;
-using foundation = VirtoCommerce.Foundation.Catalogs.Model;
+using foundation = VirtoCommerce.CatalogModule.Data.Model;
 using module = VirtoCommerce.Domain.Catalog.Model;
-using VirtoCommerce.Framework.Core.Utils;
 using System.Collections.ObjectModel;
-using VirtoCommerce.Foundation.Frameworks;
+using VirtoCommerce.Platform.Core.Common;
+using Omu.ValueInjecter;
+using VirtoCommerce.Platform.Data.Common;
+
 
 namespace VirtoCommerce.CatalogModule.Data.Converters
 {
@@ -26,13 +27,11 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 
 			var catalog = catalogBase as foundation.Catalog;
 			var virtualCatalog = catalogBase as foundation.VirtualCatalog;
-			var retVal = new module.Catalog
-			{
-				Id = catalogBase.CatalogId,
-				Name = catalogBase.Name,
-				Virtual = virtualCatalog != null
-			};
 
+			var retVal = new module.Catalog();
+			retVal.InjectFrom(catalogBase);
+			retVal.Virtual = virtualCatalog != null;
+			
 			if(catalog != null)
 			{
 				retVal.Languages = new List<module.CatalogLanguage>();
@@ -49,9 +48,6 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 				}
 
 			}
-
-
-
 			return retVal;
 		}
 
@@ -88,18 +84,16 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 				}
 				retVal = dbCatalog;
 			}
-			
-			retVal.CatalogId = retVal.GenerateNewKey();
 
-			if (catalog.Id != null)
-				retVal.CatalogId = catalog.Id;
+			retVal.InjectFrom(catalog);
+	
 
 			if (dbCatalog != null && catalog.Languages != null)
 			{
 				dbCatalog.CatalogLanguages = new ObservableCollection<foundation.CatalogLanguage>();
 				foreach(var dbCatalogLanguage  in catalog.Languages.Select(x => x.ToFoundation()))
 				{
-					dbCatalogLanguage.CatalogId = retVal.CatalogId;
+					dbCatalogLanguage.CatalogId = retVal.Id;
 					dbCatalog.CatalogLanguages.Add(dbCatalogLanguage);
 				}
 				retVal.DefaultLanguage = catalog.Languages.Where(x => x.IsDefault).Select(x => x.LanguageCode).FirstOrDefault();
@@ -126,27 +120,23 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 			if (target == null)
 				throw new ArgumentNullException("target");
 
-		
-			//Simply properties patch
-			if(source.Name != null)
-				target.Name =  source.Name;
-			if (source.DefaultLanguage != null)
-				target.DefaultLanguage = source.DefaultLanguage;
+			var patchInjectionPolicy = new PatchInjection<foundation.CatalogBase>(x => x.Name, x => x.DefaultLanguage);
+			target.InjectFrom(patchInjectionPolicy, source);
 
 			//Languages patch
 			var sourceCatalog = source as foundation.Catalog;
 			var targetCatalog = target as foundation.Catalog;
 			if (sourceCatalog != null && targetCatalog != null && !sourceCatalog.CatalogLanguages.IsNullCollection())
 			{
-				sourceCatalog.CatalogLanguages.Patch(targetCatalog.CatalogLanguages, new CatalogLanguageComparer(),
+				var languageComparer = AnonymousComparer.Create((foundation.CatalogLanguage x) => x.Language);
+				sourceCatalog.CatalogLanguages.Patch(targetCatalog.CatalogLanguages, languageComparer,
 													 (sourceLang, targetlang) => sourceLang.Patch(targetlang));
 			}
 
 			//Property values
 			if (!sourceCatalog.CatalogPropertyValues.IsNullCollection())
 			{
-				sourceCatalog.CatalogPropertyValues.Patch(targetCatalog.CatalogPropertyValues, new PropertyValueComparer(),
-					(sourcePropValue, targetPropValue) => sourcePropValue.Patch(targetPropValue));
+				sourceCatalog.CatalogPropertyValues.Patch(targetCatalog.CatalogPropertyValues, (sourcePropValue, targetPropValue) => sourcePropValue.Patch(targetPropValue));
 			}
 
 

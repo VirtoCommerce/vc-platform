@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Linq;
-using VirtoCommerce.Foundation.Frameworks;
-using VirtoCommerce.Foundation.Frameworks.Extensions;
-using foundation = VirtoCommerce.Foundation.Catalogs.Model;
-using foundationConfig = VirtoCommerce.Foundation.AppConfig.Model;
+using foundation = VirtoCommerce.CatalogModule.Data.Model;
 using module = VirtoCommerce.Domain.Catalog.Model;
+using Omu.ValueInjecter;
+using VirtoCommerce.Platform.Core.Common;
+using VirtoCommerce.Platform.Data.Common;
 
 namespace VirtoCommerce.CatalogModule.Data.Converters
 {
@@ -21,29 +21,21 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
         /// <exception cref="System.ArgumentNullException">catalog</exception>
         public static module.Category ToModuleModel(this foundation.CategoryBase dbCategoryBase, module.Catalog catalog,
                                                     module.Property[] properties = null, foundation.LinkedCategory[] dbLinks = null,
-                                                    foundationConfig.SeoUrlKeyword[] seoInfos = null, foundation.Category[] allParents = null)
+                                                    foundation.SeoUrlKeyword[] seoInfos = null, foundation.Category[] allParents = null)
         {
             if (catalog == null)
                 throw new ArgumentNullException("catalog");
 
+			var retVal = new module.Category();
+			retVal.InjectFrom(dbCategoryBase);
+			retVal.CatalogId = catalog.Id;
+			retVal.Catalog = catalog;
+			retVal.ParentId = dbCategoryBase.ParentCategoryId;
+
             var dbCategory = dbCategoryBase as foundation.Category;
-            var retVal = new module.Category
-            {
-                CatalogId = catalog.Id,
-                Code = dbCategoryBase.Code,
-                Catalog = catalog,
-                Id = dbCategoryBase.CategoryId,
-                ParentId = dbCategoryBase.ParentCategoryId,
-                Priority = dbCategoryBase.Priority,
-                IsActive = dbCategoryBase.IsActive
-
-            };
-
             if (dbCategory != null)
             {
-                retVal.Name = dbCategory.Name;
                 retVal.PropertyValues = dbCategory.CategoryPropertyValues.Select(x => x.ToModuleModel(properties)).ToList();
-
                 retVal.Virtual = catalog.Virtual;
             }
 
@@ -73,19 +65,12 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
         /// <returns></returns>
         public static foundation.CategoryBase ToFoundation(this module.Category category)
         {
-            var retVal = new foundation.Category
-            {
-                CatalogId = category.CatalogId,
-                Name = category.Name,
-                Code = category.Code,
-                ParentCategoryId = category.ParentId,
-                EndDate = DateTime.UtcNow.AddYears(100),
-                StartDate = DateTime.UtcNow,
-                IsActive = category.IsActive
-            };
-            if (category.Id != null)
-                retVal.CategoryId = category.Id;
-
+			var retVal = new foundation.Category();
+			retVal.InjectFrom(category);
+			retVal.ParentCategoryId = category.ParentId;
+			retVal.EndDate = DateTime.UtcNow.AddYears(100);
+			retVal.StartDate = DateTime.UtcNow;
+          
             retVal.CategoryPropertyValues = new NullCollection<foundation.CategoryPropertyValue>();
             if (category.PropertyValues != null)
             {
@@ -118,15 +103,12 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 
             if (dbSource != null && dbTarget != null)
             {
-                if (dbSource.Code != null)
-                    dbTarget.Code = dbSource.Code;
-                if (dbSource.Name != null)
-                    dbTarget.Name = dbSource.Name;
+				var patchInjectionPolicy = new PatchInjection<foundation.Category>(x => x.Code, x=>x.Name);
+				target.InjectFrom(patchInjectionPolicy, source);
 
                 if (!dbSource.CategoryPropertyValues.IsNullCollection())
                 {
-                    dbSource.CategoryPropertyValues.Patch(dbTarget.CategoryPropertyValues, new PropertyValueComparer(),
-                        (sourcePropValue, targetPropValue) => sourcePropValue.Patch(targetPropValue));
+                    dbSource.CategoryPropertyValues.Patch(dbTarget.CategoryPropertyValues, (sourcePropValue, targetPropValue) => sourcePropValue.Patch(targetPropValue));
                 }
             }
         }

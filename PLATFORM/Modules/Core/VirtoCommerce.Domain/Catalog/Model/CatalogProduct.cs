@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.Domain.Catalog.Model
 {
-	public class CatalogProduct : ILinkSupport, ISeoSupport
+	public class CatalogProduct : AuditableEntity, ILinkSupport, ISeoSupport
 	{
-		public string Id { get; set; }
 		public string Code { get; set; }
 		public string Name { get; set; }
 

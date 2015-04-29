@@ -1,8 +1,7 @@
 ﻿using System.Linq;
 using Omu.ValueInjecter;
-using VirtoCommerce.Foundation.Catalogs.Search;
-using VirtoCommerce.Foundation.Search;
-using VirtoCommerce.Foundation.Search.Schemas;
+using VirtoCommerce.Domain.Search;
+using VirtoCommerce.Domain.Search.Services;
 
 namespace VirtoCommerce.MerchandisingModule.Web.Services
 {
