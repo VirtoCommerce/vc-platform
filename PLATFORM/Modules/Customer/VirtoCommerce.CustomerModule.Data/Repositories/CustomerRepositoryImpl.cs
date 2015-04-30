@@ -19,7 +19,7 @@ namespace VirtoCommerce.CustomerModule.Data.Repositories
 		public CustomerRepositoryImpl(string nameOrConnectionString, params IInterceptor[] interceptors)
 			: base(nameOrConnectionString, null, interceptors)
 		{
-			this.Configuration.AutoDetectChangesEnabled = true;
+			//this.Configuration.AutoDetectChangesEnabled = true;
 			this.Configuration.ProxyCreationEnabled = false;
 			Database.SetInitializer<CustomerRepositoryImpl>(null);
 		}
