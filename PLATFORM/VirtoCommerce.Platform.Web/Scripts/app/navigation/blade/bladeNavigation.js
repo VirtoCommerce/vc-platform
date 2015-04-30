@@ -22,21 +22,25 @@ angular.module('platformWebApp')
 
             var speed = (window.navigator.platform == 'MacIntel' ? .5 : 40);
 
+            var mainContent = $('.cnt');
+            var blade = $(element).parent('.blade');
+            var offset = parseInt(blade.offset().left + mainContent.scrollLeft() + blade.width() + 125 - mainContent[0].clientWidth);
+
+            blade.css('margin-left', '-' + blade.width() + 'px').addClass('__animate');
+                
+                setTimeout(function () {
+                    blade.animate({ 'margin-left': 0 }, 125, function () {
+                        blade.removeAttr('style').removeClass('__animate');
+                    });
+                }, 0);
+
             $timeout(function () {
-                var mainContent = $('.cnt');
-                var blade = $(element).parent('.blade');
-                var offset = parseInt(blade.offset().left + mainContent.scrollLeft() + blade.width() + 125 - mainContent[0].clientWidth);
+                
                 if (offset > mainContent.scrollLeft()) {
                     mainContent.animate({ scrollLeft: offset + 'px' }, 500);
                 }
 
-                blade.css('margin-left', '-' + blade.width() + 'px');
                 
-                setTimeout(function () {
-                    blade.animate({ 'margin-left': 0 }, 250, function () {
-                        // $(this).removeAttr('style').removeClass('__animate');
-                    });
-                }, 100);
             }, 0, false);
 
 
@@ -122,10 +126,10 @@ angular.module('platformWebApp')
             };
 
             scope.bladeClose = function () {
-                var blade = $(element),
+                var blade = $(element).parent('.blade'),
                     bladeW = blade.width();
 
-                blade.addClass('__animate').animate({ 'margin-left': '-' + bladeW + 'px' }, 250, function () {
+                blade.addClass('__animate').animate({ 'margin-left': '-' + bladeW + 'px' }, 125, function () {
                     $timeout(function () {
                         bladeNavigationService.closeBlade(scope.blade);
                     }, 0, true);
