@@ -7,11 +7,11 @@ using VirtoCommerce.Platform.Core.Packaging;
 
 namespace VirtoCommerce.Platform.Data.Packaging
 {
-    public class PackageService : IPackageService
+    public class NuGetPackageService : IPackageService
     {
         private readonly ProjectManager _projectManager;
 
-        public PackageService(ProjectManager nugetProjectManager)
+        public NuGetPackageService(ProjectManager nugetProjectManager)
         {
             _projectManager = nugetProjectManager;
         }
