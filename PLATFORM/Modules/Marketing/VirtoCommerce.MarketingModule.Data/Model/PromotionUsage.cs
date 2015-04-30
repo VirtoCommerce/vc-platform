@@ -30,7 +30,6 @@ namespace VirtoCommerce.MarketingModule.Data.Model
 		#region Navigation Properties
 
 		[StringLength(128)]
-		[ForeignKey("Promotion")]
 		public string PromotionId { get; set; }
 
         public virtual Promotion Promotion { get; set; }

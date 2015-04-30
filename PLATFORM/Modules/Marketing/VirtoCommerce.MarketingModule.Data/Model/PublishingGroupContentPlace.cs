@@ -13,17 +13,12 @@ namespace VirtoCommerce.MarketingModule.Data.Model
 	{
 		#region Navigation Properties
 		[StringLength(128)]
-		[ForeignKey("PublishingGroup")]
-		[Required]
 		public string DynamicContentPublishingGroupId { get; set; }
 
 		public virtual DynamicContentPublishingGroup PublishingGroup { get; set; }
 
 		[StringLength(128)]
-        [ForeignKey("ContentPlace")]
-		[Required]
 		public string DynamicContentPlaceId { get; set; }
-
 		public virtual DynamicContentPlace ContentPlace { get; set; }
 				
 		#endregion

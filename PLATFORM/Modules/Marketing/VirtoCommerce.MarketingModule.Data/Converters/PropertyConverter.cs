@@ -25,7 +25,7 @@ namespace VirtoCommerce.CustomerModule.Data.Converters
 			return retVal;
 		}
 
-		public static dataModel.DynamicContentItemProperty ToFoundation(this coreModel.Property property)
+		public static dataModel.DynamicContentItemProperty ToDataModel(this coreModel.Property property)
 		{
 			if (property == null)
 				throw new ArgumentNullException("property");

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -11,8 +12,8 @@ namespace VirtoCommerce.MarketingModule.Data.Model
 	{
 		public DynamicContentPublishingGroup()
 		{
-			ContentItems = new ObservableCollection<PublishingGroupContentItem>();
-			ContentPlaces = new ObservableCollection<PublishingGroupContentPlace>();
+			ContentItems = new NullCollection<PublishingGroupContentItem>();
+			ContentPlaces = new NullCollection<PublishingGroupContentPlace>();
 		}
 
 		[Required]
@@ -36,9 +37,9 @@ namespace VirtoCommerce.MarketingModule.Data.Model
 
 		#region Navigation Properties
 
-		public virtual ObservableCollection<PublishingGroupContentItem> ContentItems { get; set; }
+		public virtual ICollection<PublishingGroupContentItem> ContentItems { get; set; }
 
-		public virtual ObservableCollection<PublishingGroupContentPlace> ContentPlaces { get; set; }
+		public virtual ICollection<PublishingGroupContentPlace> ContentPlaces { get; set; }
 		#endregion
 	}
 }

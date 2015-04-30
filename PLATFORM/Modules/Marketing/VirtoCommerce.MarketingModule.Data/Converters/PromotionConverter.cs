@@ -37,7 +37,7 @@ namespace VirtoCommerce.CustomerModule.Data.Converters
 		}
 
 
-		public static dataModel.Promotion ToFoundation(this coreModel.Promotion promotion)
+		public static dataModel.Promotion ToDataModel(this coreModel.Promotion promotion)
 		{
 			if (promotion == null)
 				throw new ArgumentNullException("promotion");
@@ -48,7 +48,10 @@ namespace VirtoCommerce.CustomerModule.Data.Converters
 	
 			retVal.StartDate = promotion.StartDate ?? DateTime.UtcNow;
 			retVal.StoreId = promotion.Store;
-			retVal.Coupons = new ObservableCollection<dataModel.Coupon>(promotion.Coupons.Select(x=> new dataModel.Coupon { Code = x }));
+			if (promotion.Coupons != null)
+			{
+				retVal.Coupons = new ObservableCollection<dataModel.Coupon>(promotion.Coupons.Select(x => new dataModel.Coupon { Code = x }));
+			}
 			retVal.TotalLimit = promotion.MaxUsageCount;
 			retVal.PerCustomerLimit = promotion.MaxPersonalUsageCount;
 		

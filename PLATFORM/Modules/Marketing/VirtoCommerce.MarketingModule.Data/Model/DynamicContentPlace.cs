@@ -20,7 +20,6 @@ namespace VirtoCommerce.MarketingModule.Data.Model
 
 		#region Navigation Properties
 		[StringLength(128)]
-		[ForeignKey("Folder")]
 		public string FolderId { get; set; }
 
 		public virtual DynamicContentFolder Folder { get; set; }

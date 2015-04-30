@@ -44,6 +44,7 @@ namespace VirtoCommerce.StoreModule.Web
 		public void Initialize()
 		{
 			_container.RegisterType<IStoreRepository>(new InjectionFactory(c => new StoreRepositoryImpl("VirtoCommerce", new EntityPrimaryKeyGeneratorInterceptor(), new AuditableInterceptor())));
+			_container.RegisterType<IStoreService, StoreServiceImpl>();
 		}
         public void PostInitialize()
         {

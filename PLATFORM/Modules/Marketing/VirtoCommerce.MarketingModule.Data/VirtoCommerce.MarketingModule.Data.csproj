@@ -64,9 +64,9 @@
     <Compile Include="Converters\ContentPlaceConverter.cs" />
     <Compile Include="Converters\PromotionConverter.cs" />
     <Compile Include="Converters\PropertyConverter.cs" />
-    <Compile Include="Migrations\201504291310102_Initial.cs" />
-    <Compile Include="Migrations\201504291310102_Initial.Designer.cs">
-      <DependentUpon>201504291310102_Initial.cs</DependentUpon>
+    <Compile Include="Migrations\201504301503151_Initial.cs" />
+    <Compile Include="Migrations\201504301503151_Initial.Designer.cs">
+      <DependentUpon>201504301503151_Initial.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Model\Coupon.cs" />
@@ -106,8 +106,8 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201504291310102_Initial.resx">
-      <DependentUpon>201504291310102_Initial.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201504301503151_Initial.resx">
+      <DependentUpon>201504301503151_Initial.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

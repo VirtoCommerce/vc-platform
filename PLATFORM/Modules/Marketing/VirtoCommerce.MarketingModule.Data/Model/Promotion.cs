@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations.Schema;
 using VirtoCommerce.Platform.Core.Common;
+using System.Collections.Generic;
 
 namespace VirtoCommerce.MarketingModule.Data.Model
 {
@@ -11,8 +12,8 @@ namespace VirtoCommerce.MarketingModule.Data.Model
     {
 		public Promotion()
 		{
-			Coupons = new ObservableCollection<Coupon>();
-			PromotionUsages = new ObservableCollection<PromotionUsage>();
+			Coupons = new NullCollection<Coupon>();
+			PromotionUsages = new NullCollection<PromotionUsage>();
 		}
 
 		[StringLength(128)]
@@ -54,9 +55,9 @@ namespace VirtoCommerce.MarketingModule.Data.Model
        
         #region Navigation Properties
 
-		public ObservableCollection<Coupon> Coupons { get; set; }
+		public ICollection<Coupon> Coupons { get; set; }
 
-		public ObservableCollection<PromotionUsage> PromotionUsages { get; set; }
+		public ICollection<PromotionUsage> PromotionUsages { get; set; }
 
         #endregion
 

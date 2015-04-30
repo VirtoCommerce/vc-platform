@@ -4,6 +4,7 @@ using System.Web.Http.Results;
 using VirtoCommerce.Domain.Common;
 using VirtoCommerce.Domain.Marketing.Model;
 using VirtoCommerce.Domain.Marketing.Services;
+using dataModel = VirtoCommerce.MarketingModule.Data.Model;
 using VirtoCommerce.MarketingModule.Data.Repositories;
 using VirtoCommerce.MarketingModule.Data.Services;
 using VirtoCommerce.MarketingModule.Expressions;
@@ -19,6 +20,25 @@ namespace VirtoCommerce.MarketingModule.Test
 {
 	public class MarketingControllerTest
 	{
+		[Fact]
+		public void Test()
+		{
+			var repository = new MarketingRepositoryImpl("VirtoCommerce", new EntityPrimaryKeyGeneratorInterceptor(), new AuditableInterceptor());
+			var contentItem = new dataModel.DynamicContentItem()
+			{
+				Name = "ss",
+			};
+			contentItem.PropertyValues = new dataModel.DynamicContentItemProperty[] { 
+				new dataModel.DynamicContentItemProperty
+				{
+					 Name = "ssss",
+					  DecimalValue = 33.0m
+				}
+			};
+			repository.Add(contentItem);
+			repository.UnitOfWork.Commit();
+
+		}
 		
 		[Fact]
 		public void CreateStandartDynamicPromotionThroughtApi()

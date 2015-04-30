@@ -1,4 +1,5 @@
-﻿using System.Collections.ObjectModel;
+﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Runtime.Serialization;
@@ -10,8 +11,8 @@ namespace VirtoCommerce.MarketingModule.Data.Model
 	{
 		public DynamicContentFolder()
 		{
-			ContentItems = new ObservableCollection<DynamicContentItem>();
-			ContentPlaces = new ObservableCollection<DynamicContentFolder>();
+			ContentItems = new NullCollection<DynamicContentItem>();
+			ContentPlaces = new NullCollection<DynamicContentPlace>();
 		}
 
 		[Required]
@@ -26,14 +27,11 @@ namespace VirtoCommerce.MarketingModule.Data.Model
 
 		#region Navigation Properties
 		[StringLength(128)]
-		[ForeignKey("ParentFolder")]
 		public string ParentFolderId { get; set; }
-
 		public virtual DynamicContentFolder ParentFolder { get; set; }
 
-		public virtual ObservableCollection<DynamicContentItem> ContentItems { get; set; }
-
-		public virtual ObservableCollection<DynamicContentFolder> ContentPlaces { get; set; }
+		public virtual ICollection<DynamicContentItem> ContentItems { get; set; }
+		public virtual ICollection<DynamicContentPlace> ContentPlaces { get; set; }
 		#endregion
 	}
 }

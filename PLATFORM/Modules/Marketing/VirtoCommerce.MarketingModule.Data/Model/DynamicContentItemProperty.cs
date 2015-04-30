@@ -41,8 +41,6 @@ namespace VirtoCommerce.MarketingModule.Data.Model
 		#region Navigation Properties
 
 		[StringLength(128)]
-		[ForeignKey("DynamicContentItem")]
-		[Required]
 		public string DynamicContentItemId { get; set; }  
 		public virtual DynamicContentItem DynamicContentItem { get; set; }
 

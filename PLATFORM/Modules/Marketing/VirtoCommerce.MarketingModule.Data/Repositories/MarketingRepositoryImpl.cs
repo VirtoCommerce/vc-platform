@@ -23,26 +23,67 @@ namespace VirtoCommerce.MarketingModule.Data.Repositories
 		public MarketingRepositoryImpl(string nameOrConnectionString, params IInterceptor[] interceptors)
 			: base(nameOrConnectionString, null, interceptors)
 		{
-			this.Configuration.ProxyCreationEnabled = false;
+			Configuration.LazyLoadingEnabled = false;
 			Database.SetInitializer<MarketingRepositoryImpl>(null);
 		}
 
 		protected override void OnModelCreating(DbModelBuilder modelBuilder)
 		{
-			MapEntity<Promotion>(modelBuilder, toTable: "Promotion");
-			MapEntity<Coupon>(modelBuilder, toTable: "Coupon");
-			MapEntity<PromotionUsage>(modelBuilder, toTable: "PromotionUsage");
+			modelBuilder.Entity<Promotion>().ToTable("Promotion");
+			modelBuilder.Entity<Promotion>().HasKey(x => x.Id)
+						.Property(x => x.Id);
 
-			MapEntity<DynamicContentItem>(modelBuilder, toTable: "DynamicContentItem");
-			MapEntity<DynamicContentPlace>(modelBuilder, toTable: "DynamicContentPlace");
-			MapEntity<DynamicContentPublishingGroup>(modelBuilder, toTable: "DynamicContentPublishingGroup");
-			MapEntity<PublishingGroupContentItem>(modelBuilder, toTable: "PublishingGroupContentItem");
-			MapEntity<PublishingGroupContentPlace>(modelBuilder, toTable: "PublishingGroupContentPlace");
-			MapEntity<DynamicContentFolder>(modelBuilder, toTable: "DynamicContentFolder");
+			modelBuilder.Entity<PromotionUsage>().ToTable("PromotionUsage");
+			modelBuilder.Entity<PromotionUsage>().HasKey(x => x.Id)
+						.Property(x => x.Id);
+			modelBuilder.Entity<PromotionUsage>().HasRequired(x => x.Promotion)
+								   .WithMany(x => x.PromotionUsages)
+								   .HasForeignKey(x => x.PromotionId);
 
-			modelBuilder.Entity<PublishingGroupContentItem>().HasRequired(p => p.ContentItem).WithMany().WillCascadeOnDelete(false);
-			modelBuilder.Entity<PublishingGroupContentPlace>().HasRequired(p => p.ContentPlace).WithMany().WillCascadeOnDelete(false);
+			modelBuilder.Entity<DynamicContentItem>().ToTable("DynamicContentItem");
+			modelBuilder.Entity<DynamicContentItem>().HasKey(x => x.Id)
+						.Property(x => x.Id);
+			modelBuilder.Entity<DynamicContentItem>().HasOptional(x => x.Folder)
+								   .WithMany(x => x.ContentItems)
+								   .HasForeignKey(x => x.FolderId);
 
+			modelBuilder.Entity<DynamicContentItemProperty>().ToTable("DynamicContentItemProperty");
+			modelBuilder.Entity<DynamicContentItemProperty>().HasKey(x => x.Id)
+					.Property(x => x.Id);
+			modelBuilder.Entity<DynamicContentItemProperty>().HasRequired(x => x.DynamicContentItem)
+									   .WithMany(x => x.PropertyValues)
+									   .HasForeignKey(x => x.DynamicContentItemId);
+
+			modelBuilder.Entity<DynamicContentPlace>().ToTable("DynamicContentPlace");
+			modelBuilder.Entity<DynamicContentPlace>().HasKey(x => x.Id)
+					.Property(x => x.Id);
+			modelBuilder.Entity<DynamicContentPlace>().HasOptional(x => x.Folder)
+							   .WithMany(x => x.ContentPlaces)
+							   .HasForeignKey(x => x.FolderId);
+
+			modelBuilder.Entity<DynamicContentPublishingGroup>().ToTable("DynamicContentPublishingGroup");
+			modelBuilder.Entity<DynamicContentPublishingGroup>().HasKey(x => x.Id)
+					.Property(x => x.Id);
+
+			modelBuilder.Entity<PublishingGroupContentItem>().ToTable("PublishingGroupContentItem");
+			modelBuilder.Entity<PublishingGroupContentItem>().HasKey(x => x.Id)
+					.Property(x => x.Id);
+			modelBuilder.Entity<PublishingGroupContentItem>().HasRequired(p => p.ContentItem)
+					.WithMany().HasForeignKey(x=>x.DynamicContentItemId)
+					.WillCascadeOnDelete(false);
+	
+			modelBuilder.Entity<PublishingGroupContentPlace>().ToTable("PublishingGroupContentPlace");
+			modelBuilder.Entity<PublishingGroupContentPlace>().HasKey(x => x.Id)
+					.Property(x => x.Id);
+			modelBuilder.Entity<PublishingGroupContentPlace>().HasRequired(p => p.ContentPlace).WithMany()
+				.HasForeignKey(x=>x.DynamicContentPlaceId)
+				.WillCascadeOnDelete(false);
+
+			modelBuilder.Entity<DynamicContentFolder>().ToTable("DynamicContentFolder");
+			modelBuilder.Entity<DynamicContentFolder>().HasKey(x => x.Id)
+				.Property(x => x.Id);
+
+	
 			base.OnModelCreating(modelBuilder);
 		}
 

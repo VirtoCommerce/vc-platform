@@ -29,9 +29,8 @@ namespace VirtoCommerce.MarketingModule.Data.Migrations
                         TotalLimit = c.Int(nullable: false),
                         CreatedDate = c.DateTime(nullable: false),
                         ModifiedDate = c.DateTime(),
-                        CreatedBy = c.String(),
-                        ModifiedBy = c.String(),
-                        Discriminator = c.String(maxLength: 128),
+                        CreatedBy = c.String(maxLength: 64),
+                        ModifiedBy = c.String(maxLength: 64),
                     })
                 .PrimaryKey(t => t.Id);
             
@@ -44,9 +43,8 @@ namespace VirtoCommerce.MarketingModule.Data.Migrations
                         PromotionId = c.String(maxLength: 128),
                         CreatedDate = c.DateTime(nullable: false),
                         ModifiedDate = c.DateTime(),
-                        CreatedBy = c.String(),
-                        ModifiedBy = c.String(),
-                        Discriminator = c.String(maxLength: 128),
+                        CreatedBy = c.String(maxLength: 64),
+                        ModifiedBy = c.String(maxLength: 64),
                     })
                 .PrimaryKey(t => t.Id)
                 .ForeignKey("dbo.Promotion", t => t.PromotionId)
@@ -63,15 +61,14 @@ namespace VirtoCommerce.MarketingModule.Data.Migrations
                         OrderNumber = c.String(maxLength: 128),
                         CouponCode = c.String(maxLength: 64),
                         UsageDate = c.DateTime(),
-                        PromotionId = c.String(maxLength: 128),
+                        PromotionId = c.String(nullable: false, maxLength: 128),
                         CreatedDate = c.DateTime(nullable: false),
                         ModifiedDate = c.DateTime(),
-                        CreatedBy = c.String(),
-                        ModifiedBy = c.String(),
-                        Discriminator = c.String(maxLength: 128),
+                        CreatedBy = c.String(maxLength: 64),
+                        ModifiedBy = c.String(maxLength: 64),
                     })
                 .PrimaryKey(t => t.Id)
-                .ForeignKey("dbo.Promotion", t => t.PromotionId)
+                .ForeignKey("dbo.Promotion", t => t.PromotionId, cascadeDelete: true)
                 .Index(t => t.PromotionId);
             
             CreateTable(
@@ -87,9 +84,8 @@ namespace VirtoCommerce.MarketingModule.Data.Migrations
                         ImageUrl = c.String(maxLength: 2048),
                         CreatedDate = c.DateTime(nullable: false),
                         ModifiedDate = c.DateTime(),
-                        CreatedBy = c.String(),
-                        ModifiedBy = c.String(),
-                        Discriminator = c.String(maxLength: 128),
+                        CreatedBy = c.String(maxLength: 64),
+                        ModifiedBy = c.String(maxLength: 64),
                     })
                 .PrimaryKey(t => t.Id)
                 .ForeignKey("dbo.DynamicContentFolder", t => t.FolderId)
@@ -106,13 +102,30 @@ namespace VirtoCommerce.MarketingModule.Data.Migrations
                         ParentFolderId = c.String(maxLength: 128),
                         CreatedDate = c.DateTime(nullable: false),
                         ModifiedDate = c.DateTime(),
-                        CreatedBy = c.String(),
-                        ModifiedBy = c.String(),
-                        Discriminator = c.String(maxLength: 128),
+                        CreatedBy = c.String(maxLength: 64),
+                        ModifiedBy = c.String(maxLength: 64),
                     })
                 .PrimaryKey(t => t.Id)
                 .ForeignKey("dbo.DynamicContentFolder", t => t.ParentFolderId)
                 .Index(t => t.ParentFolderId);
+            
+            CreateTable(
+                "dbo.DynamicContentPlace",
+                c => new
+                    {
+                        Id = c.String(nullable: false, maxLength: 128),
+                        Name = c.String(nullable: false, maxLength: 128),
+                        Description = c.String(maxLength: 256),
+                        ImageUrl = c.String(maxLength: 2048),
+                        FolderId = c.String(maxLength: 128),
+                        CreatedDate = c.DateTime(nullable: false),
+                        ModifiedDate = c.DateTime(),
+                        CreatedBy = c.String(maxLength: 64),
+                        ModifiedBy = c.String(maxLength: 64),
+                    })
+                .PrimaryKey(t => t.Id)
+                .ForeignKey("dbo.DynamicContentFolder", t => t.FolderId)
+                .Index(t => t.FolderId);
             
             CreateTable(
                 "dbo.DynamicContentItemProperty",
@@ -133,31 +146,12 @@ namespace VirtoCommerce.MarketingModule.Data.Migrations
                         DynamicContentItemId = c.String(nullable: false, maxLength: 128),
                         CreatedDate = c.DateTime(nullable: false),
                         ModifiedDate = c.DateTime(),
-                        CreatedBy = c.String(),
-                        ModifiedBy = c.String(),
+                        CreatedBy = c.String(maxLength: 64),
+                        ModifiedBy = c.String(maxLength: 64),
                     })
                 .PrimaryKey(t => t.Id)
                 .ForeignKey("dbo.DynamicContentItem", t => t.DynamicContentItemId, cascadeDelete: true)
                 .Index(t => t.DynamicContentItemId);
-            
-            CreateTable(
-                "dbo.DynamicContentPlace",
-                c => new
-                    {
-                        Id = c.String(nullable: false, maxLength: 128),
-                        Name = c.String(nullable: false, maxLength: 128),
-                        Description = c.String(maxLength: 256),
-                        ImageUrl = c.String(maxLength: 2048),
-                        FolderId = c.String(maxLength: 128),
-                        CreatedDate = c.DateTime(nullable: false),
-                        ModifiedDate = c.DateTime(),
-                        CreatedBy = c.String(),
-                        ModifiedBy = c.String(),
-                        Discriminator = c.String(maxLength: 128),
-                    })
-                .PrimaryKey(t => t.Id)
-                .ForeignKey("dbo.DynamicContentFolder", t => t.FolderId)
-                .Index(t => t.FolderId);
             
             CreateTable(
                 "dbo.DynamicContentPublishingGroup",
@@ -174,9 +168,8 @@ namespace VirtoCommerce.MarketingModule.Data.Migrations
                         PredicateVisualTreeSerialized = c.String(),
                         CreatedDate = c.DateTime(nullable: false),
                         ModifiedDate = c.DateTime(),
-                        CreatedBy = c.String(),
-                        ModifiedBy = c.String(),
-                        Discriminator = c.String(maxLength: 128),
+                        CreatedBy = c.String(maxLength: 64),
+                        ModifiedBy = c.String(maxLength: 64),
                     })
                 .PrimaryKey(t => t.Id);
             
@@ -185,17 +178,16 @@ namespace VirtoCommerce.MarketingModule.Data.Migrations
                 c => new
                     {
                         Id = c.String(nullable: false, maxLength: 128),
-                        DynamicContentPublishingGroupId = c.String(nullable: false, maxLength: 128),
+                        DynamicContentPublishingGroupId = c.String(maxLength: 128),
                         DynamicContentItemId = c.String(nullable: false, maxLength: 128),
                         CreatedDate = c.DateTime(nullable: false),
                         ModifiedDate = c.DateTime(),
-                        CreatedBy = c.String(),
-                        ModifiedBy = c.String(),
-                        Discriminator = c.String(maxLength: 128),
+                        CreatedBy = c.String(maxLength: 64),
+                        ModifiedBy = c.String(maxLength: 64),
                     })
                 .PrimaryKey(t => t.Id)
                 .ForeignKey("dbo.DynamicContentItem", t => t.DynamicContentItemId)
-                .ForeignKey("dbo.DynamicContentPublishingGroup", t => t.DynamicContentPublishingGroupId, cascadeDelete: true)
+                .ForeignKey("dbo.DynamicContentPublishingGroup", t => t.DynamicContentPublishingGroupId)
                 .Index(t => t.DynamicContentPublishingGroupId)
                 .Index(t => t.DynamicContentItemId);
             
@@ -204,17 +196,16 @@ namespace VirtoCommerce.MarketingModule.Data.Migrations
                 c => new
                     {
                         Id = c.String(nullable: false, maxLength: 128),
-                        DynamicContentPublishingGroupId = c.String(nullable: false, maxLength: 128),
+                        DynamicContentPublishingGroupId = c.String(maxLength: 128),
                         DynamicContentPlaceId = c.String(nullable: false, maxLength: 128),
                         CreatedDate = c.DateTime(nullable: false),
                         ModifiedDate = c.DateTime(),
-                        CreatedBy = c.String(),
-                        ModifiedBy = c.String(),
-                        Discriminator = c.String(maxLength: 128),
+                        CreatedBy = c.String(maxLength: 64),
+                        ModifiedBy = c.String(maxLength: 64),
                     })
                 .PrimaryKey(t => t.Id)
                 .ForeignKey("dbo.DynamicContentPlace", t => t.DynamicContentPlaceId)
-                .ForeignKey("dbo.DynamicContentPublishingGroup", t => t.DynamicContentPublishingGroupId, cascadeDelete: true)
+                .ForeignKey("dbo.DynamicContentPublishingGroup", t => t.DynamicContentPublishingGroupId)
                 .Index(t => t.DynamicContentPublishingGroupId)
                 .Index(t => t.DynamicContentPlaceId);
             
@@ -226,18 +217,18 @@ namespace VirtoCommerce.MarketingModule.Data.Migrations
             DropForeignKey("dbo.PublishingGroupContentPlace", "DynamicContentPlaceId", "dbo.DynamicContentPlace");
             DropForeignKey("dbo.PublishingGroupContentItem", "DynamicContentPublishingGroupId", "dbo.DynamicContentPublishingGroup");
             DropForeignKey("dbo.PublishingGroupContentItem", "DynamicContentItemId", "dbo.DynamicContentItem");
-            DropForeignKey("dbo.DynamicContentPlace", "FolderId", "dbo.DynamicContentFolder");
             DropForeignKey("dbo.DynamicContentItemProperty", "DynamicContentItemId", "dbo.DynamicContentItem");
             DropForeignKey("dbo.DynamicContentItem", "FolderId", "dbo.DynamicContentFolder");
             DropForeignKey("dbo.DynamicContentFolder", "ParentFolderId", "dbo.DynamicContentFolder");
+            DropForeignKey("dbo.DynamicContentPlace", "FolderId", "dbo.DynamicContentFolder");
             DropForeignKey("dbo.PromotionUsage", "PromotionId", "dbo.Promotion");
             DropForeignKey("dbo.Coupon", "PromotionId", "dbo.Promotion");
             DropIndex("dbo.PublishingGroupContentPlace", new[] { "DynamicContentPlaceId" });
             DropIndex("dbo.PublishingGroupContentPlace", new[] { "DynamicContentPublishingGroupId" });
             DropIndex("dbo.PublishingGroupContentItem", new[] { "DynamicContentItemId" });
             DropIndex("dbo.PublishingGroupContentItem", new[] { "DynamicContentPublishingGroupId" });
-            DropIndex("dbo.DynamicContentPlace", new[] { "FolderId" });
             DropIndex("dbo.DynamicContentItemProperty", new[] { "DynamicContentItemId" });
+            DropIndex("dbo.DynamicContentPlace", new[] { "FolderId" });
             DropIndex("dbo.DynamicContentFolder", new[] { "ParentFolderId" });
             DropIndex("dbo.DynamicContentItem", new[] { "FolderId" });
             DropIndex("dbo.PromotionUsage", new[] { "PromotionId" });
@@ -245,8 +236,8 @@ namespace VirtoCommerce.MarketingModule.Data.Migrations
             DropTable("dbo.PublishingGroupContentPlace");
             DropTable("dbo.PublishingGroupContentItem");
             DropTable("dbo.DynamicContentPublishingGroup");
-            DropTable("dbo.DynamicContentPlace");
             DropTable("dbo.DynamicContentItemProperty");
+            DropTable("dbo.DynamicContentPlace");
             DropTable("dbo.DynamicContentFolder");
             DropTable("dbo.DynamicContentItem");
             DropTable("dbo.PromotionUsage");

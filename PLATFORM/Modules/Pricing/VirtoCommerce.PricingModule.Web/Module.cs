@@ -44,6 +44,7 @@ namespace VirtoCommerce.PricingModule.Web
         public void Initialize()
         {
 			_container.RegisterType<IPricingRepository>(new InjectionFactory(c => new PricingRepositoryImpl("VirtoCommerce", new EntityPrimaryKeyGeneratorInterceptor(), new AuditableInterceptor())));
+			_container.RegisterType<IPricingService, PricingServiceImpl>();
 		}
 
         public void PostInitialize()

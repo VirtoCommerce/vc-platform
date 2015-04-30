@@ -61,7 +61,7 @@ namespace VirtoCommerce.MarketingModule.Data.Services
 
 		public Promotion CreatePromotion(Promotion promotion)
 		{
-			var entity = promotion.ToFoundation();
+			var entity = promotion.ToDataModel();
 			coreModel.Promotion retVal = null;
 			using (var repository = _repositoryFactory())
 			{
@@ -79,7 +79,7 @@ namespace VirtoCommerce.MarketingModule.Data.Services
 			{
 				foreach (var promotion in promotions)
 				{
-					var sourceEntity = promotion.ToFoundation();
+					var sourceEntity = promotion.ToDataModel();
 					var targetEntity = repository.GetPromotionById(promotion.Id);
 					if (targetEntity == null)
 					{

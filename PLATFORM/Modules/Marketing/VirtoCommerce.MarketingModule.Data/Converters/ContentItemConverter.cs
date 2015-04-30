@@ -53,7 +53,7 @@ namespace VirtoCommerce.CustomerModule.Data.Converters
 			retVal.PropertyValues = new NullCollection<dataModel.DynamicContentItemProperty>();
 			if(contentItem.Properties != null)
 			{
-				retVal.PropertyValues = new ObservableCollection<dataModel.DynamicContentItemProperty>(contentItem.Properties.Select(x => x.ToFoundation()));
+				retVal.PropertyValues = new ObservableCollection<dataModel.DynamicContentItemProperty>(contentItem.Properties.Select(x => x.ToDataModel()));
 				foreach (var property in retVal.PropertyValues)
 				{
 					property.DynamicContentItemId = retVal.Id;

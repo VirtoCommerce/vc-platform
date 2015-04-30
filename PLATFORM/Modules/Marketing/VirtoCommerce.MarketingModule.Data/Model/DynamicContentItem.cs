@@ -4,6 +4,7 @@ using System.Runtime.Serialization;
 using System.Collections.ObjectModel;
 using System;
 using VirtoCommerce.Platform.Core.Common;
+using System.Collections.Generic;
 
 namespace VirtoCommerce.MarketingModule.Data.Model
 {
@@ -11,7 +12,7 @@ namespace VirtoCommerce.MarketingModule.Data.Model
 	{
 		public DynamicContentItem()
 		{
-			PropertyValues = new ObservableCollection<DynamicContentItemProperty>();
+			PropertyValues = new NullCollection<DynamicContentItemProperty>();
 		}
 
 		[Required]
@@ -40,7 +41,7 @@ namespace VirtoCommerce.MarketingModule.Data.Model
 
 		public virtual DynamicContentFolder Folder { get; set; }
 
-		public virtual ObservableCollection<DynamicContentItemProperty> PropertyValues { get; set; }
+		public virtual ICollection<DynamicContentItemProperty> PropertyValues { get; set; }
 
 		#endregion
 	}
