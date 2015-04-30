@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using foundation = VirtoCommerce.CatalogModule.Data.Model;
-using module = VirtoCommerce.Domain.Catalog.Model;
+using dataModel = VirtoCommerce.CatalogModule.Data.Model;
+using coreModel = VirtoCommerce.Domain.Catalog.Model;
 using Omu.ValueInjecter;
 using VirtoCommerce.Platform.Data.Common;
 using VirtoCommerce.Platform.Data.Common.ConventionInjections;
@@ -18,9 +18,9 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 		/// </summary>
 		/// <param name="catalogBase"></param>
 		/// <returns></returns>
-		public static module.CatalogLanguage ToModuleModel(this foundation.CatalogLanguage dbLanguage, module.Catalog catalog)
+		public static coreModel.CatalogLanguage ToCoreModel(this dataModel.CatalogLanguage dbLanguage, coreModel.Catalog catalog)
 		{
-			var retVal = new module.CatalogLanguage();
+			var retVal = new coreModel.CatalogLanguage();
 			retVal.InjectFrom(dbLanguage);
 
 			retVal.CatalogId = catalog.Id;
@@ -34,9 +34,9 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 		/// </summary>
 		/// <param name="catalog"></param>
 		/// <returns></returns>
-		public static foundation.CatalogLanguage ToFoundation(this module.CatalogLanguage language)
+		public static dataModel.CatalogLanguage ToDataModel(this coreModel.CatalogLanguage language)
 		{
-			var retVal = new foundation.CatalogLanguage
+			var retVal = new dataModel.CatalogLanguage
 			{
 				Language = language.LanguageCode,
 			};
@@ -50,12 +50,12 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 		/// </summary>
 		/// <param name="source"></param>
 		/// <param name="target"></param>
-		public static void Patch(this foundation.CatalogLanguage source, foundation.CatalogLanguage target)
+		public static void Patch(this dataModel.CatalogLanguage source, dataModel.CatalogLanguage target)
 		{
 			if (target == null)
 				throw new ArgumentNullException("target");
 
-			var patchInjectionPolicy = new PatchInjection<foundation.CatalogLanguage>(x => x.Language);
+			var patchInjectionPolicy = new PatchInjection<dataModel.CatalogLanguage>(x => x.Language);
 			target.InjectFrom(patchInjectionPolicy, source);
 
 		}

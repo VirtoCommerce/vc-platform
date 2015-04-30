@@ -36,7 +36,7 @@ namespace VirtoCommerce.CartModule.Data.Repositories
 			modelBuilder.Entity<ShoppingCartEntity>().HasKey(x => x.Id)
 					.Property(x => x.Id);
 
-			modelBuilder.Entity<ShoppingCartEntity>().ToTable("cart_ShoppingCart");
+			modelBuilder.Entity<ShoppingCartEntity>().ToTable("Cart");
 			#endregion
 
 			#region LineItem
@@ -51,7 +51,7 @@ namespace VirtoCommerce.CartModule.Data.Repositories
 									   .WithMany(x => x.Items)
 									   .HasForeignKey(x => x.ShipmentId);
 
-			modelBuilder.Entity<LineItemEntity>().ToTable("cart_LineItem");
+			modelBuilder.Entity<LineItemEntity>().ToTable("CartLineItem");
 			#endregion
 
 			#region Shipment
@@ -63,7 +63,7 @@ namespace VirtoCommerce.CartModule.Data.Repositories
 										   .HasForeignKey(x => x.ShoppingCartId);
 
 
-			modelBuilder.Entity<ShipmentEntity>().ToTable("cart_Shipment");
+			modelBuilder.Entity<ShipmentEntity>().ToTable("CartShipment");
 			#endregion
 
 			#region Address
@@ -82,7 +82,7 @@ namespace VirtoCommerce.CartModule.Data.Repositories
 									   .WithMany(x => x.Addresses)
 									   .HasForeignKey(x => x.PaymentId);
 
-			modelBuilder.Entity<AddressEntity>().ToTable("cart_Address");
+			modelBuilder.Entity<AddressEntity>().ToTable("CartAddress");
 			#endregion
 
 			#region Payment
@@ -93,7 +93,7 @@ namespace VirtoCommerce.CartModule.Data.Repositories
 									   .WithMany(x => x.Payments)
 									   .HasForeignKey(x => x.ShoppingCartId);
 
-			modelBuilder.Entity<PaymentEntity>().ToTable("cart_Payment");
+			modelBuilder.Entity<PaymentEntity>().ToTable("CartPayment");
 			#endregion
 
 			base.OnModelCreating(modelBuilder);

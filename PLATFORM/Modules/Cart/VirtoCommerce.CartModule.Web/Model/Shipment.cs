@@ -11,11 +11,6 @@ namespace VirtoCommerce.CatalogModule.Web.Model
 {
 	public class Shipment : AuditableEntity
 	{
-		public DateTime CreatedDate { get; set; }
-		public string CreatedBy { get; set; }
-		public DateTime? ModifiedDate { get; set; }
-		public string ModifiedBy { get; set; }
-
 		public string ShipmentMethodCode { get; set; }
 		public string FulfilmentCenterId { get; set; }
 		public Address DeliveryAddress { get; set; }

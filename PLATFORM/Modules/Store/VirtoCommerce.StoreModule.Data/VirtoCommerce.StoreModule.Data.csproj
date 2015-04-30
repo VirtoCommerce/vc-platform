@@ -54,21 +54,20 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Converters\FulfillmentCenterConverter.cs" />
     <Compile Include="Converters\StoreConverter.cs" />
     <Compile Include="Converters\StoreSettingConverter.cs" />
-    <Compile Include="Migrations\201504241342095_Initial.cs" />
-    <Compile Include="Migrations\201504241342095_Initial.Designer.cs">
-      <DependentUpon>201504241342095_Initial.cs</DependentUpon>
+    <Compile Include="Migrations\201504301210161_Initial.cs" />
+    <Compile Include="Migrations\201504301210161_Initial.Designer.cs">
+      <DependentUpon>201504301210161_Initial.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
-    <Compile Include="Model\FulfillmentCenter.cs" />
     <Compile Include="Model\Store.cs" />
     <Compile Include="Model\StoreCurrency.cs" />
     <Compile Include="Model\StoreLanguage.cs" />
     <Compile Include="Model\StorePaymentGateway.cs" />
     <Compile Include="Model\StoreSetting.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Repositories\SqlStoreSampleDatabaseInitializer.cs" />
     <Compile Include="Repositories\StoreRepositoryImpl.cs" />
     <Compile Include="Repositories\IStoreRepository.cs" />
     <Compile Include="Services\StoreServiceImpl.cs" />
@@ -92,8 +91,8 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201504241342095_Initial.resx">
-      <DependentUpon>201504241342095_Initial.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201504301210161_Initial.resx">
+      <DependentUpon>201504301210161_Initial.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

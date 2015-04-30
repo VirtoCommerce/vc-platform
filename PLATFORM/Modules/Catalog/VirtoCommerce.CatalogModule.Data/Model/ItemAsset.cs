@@ -12,6 +12,10 @@ namespace VirtoCommerce.CatalogModule.Data.Model
 {
 	public class ItemAsset : AuditableEntity
     {
+		public ItemAsset()
+		{
+			Id = Guid.NewGuid().ToString("N");
+		}
 		[StringLength(128)]
 		[Required]
 		public string AssetId { get; set; }

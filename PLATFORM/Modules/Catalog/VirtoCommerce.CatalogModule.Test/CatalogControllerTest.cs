@@ -126,7 +126,7 @@ namespace VirtoCommerce.CatalogModule.Test
 
         private ICatalogSearchService GetSearchService()
         {
-            return new CatalogSearchServiceImpl(GetRepository, GetItemService(), GetCatalogService(), GetCategoryService());
+            return new CatalogSearchServiceImpl(GetRepository, GetItemService(), GetCatalogService(), GetCategoryService(), null);
         }
 
         private IPropertyService GetPropertyService()
@@ -136,7 +136,7 @@ namespace VirtoCommerce.CatalogModule.Test
 
         private ICategoryService GetCategoryService()
         {
-            return new CategoryServiceImpl(() => { return GetRepository(); });
+            return new CategoryServiceImpl(() => { return GetRepository(); }, null);
         }
 
         private ICatalogService GetCatalogService()
@@ -146,7 +146,7 @@ namespace VirtoCommerce.CatalogModule.Test
 
         private IItemService GetItemService()
         {
-            return new ItemServiceImpl(() => { return GetRepository(); });
+            return new ItemServiceImpl(() => { return GetRepository(); }, null);
         }
 
 

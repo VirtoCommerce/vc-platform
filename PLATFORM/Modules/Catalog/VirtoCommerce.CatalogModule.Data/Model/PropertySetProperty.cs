@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Runtime.Serialization;
 using VirtoCommerce.Platform.Core.Common;
@@ -8,6 +9,11 @@ namespace VirtoCommerce.CatalogModule.Data.Model
 {
     public class PropertySetProperty : Entity
     {
+		public PropertySetProperty()
+		{
+			Id = Guid.NewGuid().ToString("N");
+		}
+
 		public int Priority { get; set; }
 
         #region Navigation Properties

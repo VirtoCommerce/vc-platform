@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
-using foundation = VirtoCommerce.CatalogModule.Data.Model;
-using moduleModel = VirtoCommerce.Domain.Catalog.Model;
+using dataModel = VirtoCommerce.CatalogModule.Data.Model;
+using coreModel = VirtoCommerce.Domain.Catalog.Model;
 using VirtoCommerce.Platform.Data.Infrastructure;
 using VirtoCommerce.Platform.Data.Infrastructure.Interceptors;
 using System.Data.Entity.ModelConfiguration.Conventions;
@@ -28,58 +28,27 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
 		{
 			modelBuilder.Conventions.Remove<PluralizingTableNameConvention>();
 
-			modelBuilder.Entity<foundation.CategoryItemRelation>().HasKey(x => x.Id).Property(x => x.Id)
-								.HasColumnName("CategoryItemRelationId");
-			modelBuilder.Entity<foundation.ItemAsset>().HasKey(x => x.Id).Property(x => x.Id)
-										.HasColumnName("ItemAssetId");
-			modelBuilder.Entity<foundation.Association>().HasKey(x => x.Id).Property(x => x.Id)
-										.HasColumnName("AssociationId");
-			modelBuilder.Entity<foundation.AssociationGroup>().HasKey(x => x.Id).Property(x => x.Id)
-										.HasColumnName("AssociationGroupId");
-			modelBuilder.Entity<foundation.CatalogBase>().HasKey(x => x.Id).Property(x => x.Id)
-									.HasColumnName("CatalogId");
-			modelBuilder.Entity<foundation.CategoryBase>().HasKey(x => x.Id).Property(x => x.Id)
-								.HasColumnName("CategoryId");
-			modelBuilder.Entity<foundation.CatalogLanguage>().HasKey(x => x.Id).Property(x => x.Id)
-										.HasColumnName("CatalogLanguageId");
-			modelBuilder.Entity<foundation.EditorialReview>().HasKey(x => x.Id).Property(x => x.Id)
-									.HasColumnName("EditorialReviewId");
-			modelBuilder.Entity<foundation.ItemRelation>().HasKey(x => x.Id).Property(x => x.Id)
-									.HasColumnName("ItemRelationId");
-			modelBuilder.Entity<foundation.Property>().HasKey(x => x.Id).Property(x => x.Id)
-							.HasColumnName("PropertyId");
-			modelBuilder.Entity<foundation.PropertyValueBase>().HasKey(x => x.Id).Property(x => x.Id)
-							.HasColumnName("PropertyValueId");
-			modelBuilder.Entity<foundation.Item>().HasKey(x => x.Id).Property(x => x.Id)
-						.HasColumnName("ItemId");
-			modelBuilder.Entity<foundation.PropertyAttribute>().HasKey(x => x.Id).Property(x => x.Id)
-						.HasColumnName("PropertyAttributeId");
-			modelBuilder.Entity<foundation.PropertySet>().HasKey(x => x.Id).Property(x => x.Id)
-						.HasColumnName("PropertySetId");
-			modelBuilder.Entity<foundation.PropertySetProperty>().HasKey(x => x.Id).Property(x => x.Id)
-						.HasColumnName("PropertySetPropertyId");
-
 			InheritanceMapping(modelBuilder);
 
-			MapEntity<foundation.CategoryItemRelation>(modelBuilder, toTable: "CategoryItemRelation");
-			MapEntity<foundation.ItemAsset>(modelBuilder, toTable: "ItemAsset");
-			MapEntity<foundation.Association>(modelBuilder, toTable: "Association");
-			MapEntity<foundation.AssociationGroup>(modelBuilder, toTable: "AssociationGroup");
-			MapEntity<foundation.CatalogLanguage>(modelBuilder, toTable: "CatalogLanguage");
-			MapEntity<foundation.EditorialReview>(modelBuilder, toTable: "EditorialReview");
-			MapEntity<foundation.ItemRelation>(modelBuilder, toTable: "ItemRelation");
-			MapEntity<foundation.Property>(modelBuilder, toTable: "Property");
-			MapEntity<foundation.PropertyAttribute>(modelBuilder, toTable: "PropertyAttribute");
-			MapEntity<foundation.PropertySet>(modelBuilder, toTable: "PropertySet");
-			MapEntity<foundation.PropertySetProperty>(modelBuilder, toTable: "PropertySetProperty");
+			MapEntity<dataModel.CategoryItemRelation>(modelBuilder, toTable: "CategoryItemRelation");
+			MapEntity<dataModel.ItemAsset>(modelBuilder, toTable: "ItemAsset");
+			MapEntity<dataModel.Association>(modelBuilder, toTable: "Association");
+			MapEntity<dataModel.AssociationGroup>(modelBuilder, toTable: "AssociationGroup");
+			MapEntity<dataModel.CatalogLanguage>(modelBuilder, toTable: "CatalogLanguage");
+			MapEntity<dataModel.EditorialReview>(modelBuilder, toTable: "EditorialReview");
+			MapEntity<dataModel.ItemRelation>(modelBuilder, toTable: "ItemRelation");
+			MapEntity<dataModel.Property>(modelBuilder, toTable: "Property");
+			MapEntity<dataModel.PropertyAttribute>(modelBuilder, toTable: "PropertyAttribute");
+			MapEntity<dataModel.PropertySet>(modelBuilder, toTable: "PropertySet");
+			MapEntity<dataModel.PropertySetProperty>(modelBuilder, toTable: "PropertySetProperty");
 		
 			// Introducing FOREIGN KEY constraint 'FK_dbo.Association_dbo.Item_ItemId' on table 'Association' may cause cycles or multiple cascade paths.
-			modelBuilder.Entity<foundation.Association>().HasRequired(m => m.CatalogItem).WithMany().WillCascadeOnDelete(false);
-			modelBuilder.Entity<foundation.CategoryItemRelation>().HasRequired(p => p.Category).WithMany().WillCascadeOnDelete(false);
-			modelBuilder.Entity<foundation.ItemRelation>().HasRequired(m => m.ChildItem).WithMany().WillCascadeOnDelete(false);
+			modelBuilder.Entity<dataModel.Association>().HasRequired(m => m.CatalogItem).WithMany().WillCascadeOnDelete(false);
+			modelBuilder.Entity<dataModel.CategoryItemRelation>().HasRequired(p => p.Category).WithMany().WillCascadeOnDelete(false);
+			modelBuilder.Entity<dataModel.ItemRelation>().HasRequired(m => m.ChildItem).WithMany().WillCascadeOnDelete(false);
 			// cascade delete Item and Category when PropertySet is deleted. This should happen ONLY when catalog is being deleted.
-			modelBuilder.Entity<foundation.Item>().HasOptional(m => m.PropertySet).WithMany().WillCascadeOnDelete(false);
-			modelBuilder.Entity<foundation.Category>().HasOptional(m => m.PropertySet).WithMany().WillCascadeOnDelete(false);
+			modelBuilder.Entity<dataModel.Item>().HasOptional(m => m.PropertySet).WithMany().WillCascadeOnDelete(false);
+			modelBuilder.Entity<dataModel.Category>().HasOptional(m => m.PropertySet).WithMany().WillCascadeOnDelete(false);
 
 			base.OnModelCreating(modelBuilder);
 		}
@@ -91,58 +60,58 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
 		private void InheritanceMapping(DbModelBuilder modelBuilder)
 		{
 			#region Catalog TPT
-			modelBuilder.Entity<foundation.CatalogBase>().Map(entity =>
+			modelBuilder.Entity<dataModel.CatalogBase>().Map(entity =>
 			{
 				entity.ToTable("CatalogBase");
 			});
-			modelBuilder.Entity<foundation.VirtualCatalog>().Map(entity =>
+			modelBuilder.Entity<dataModel.VirtualCatalog>().Map(entity =>
 			{
 				entity.ToTable("VirtualCatalog");
 			});
-			modelBuilder.Entity<foundation.Catalog>().Map(entity =>
+			modelBuilder.Entity<dataModel.Catalog>().Map(entity =>
 			{
 				entity.ToTable("Catalog");
 			});
 			#endregion
 
 			#region Category TPT
-			modelBuilder.Entity<foundation.CategoryBase>().Map(entity =>
+			modelBuilder.Entity<dataModel.CategoryBase>().Map(entity =>
 			{
 				entity.ToTable("CategoryBase");
 			});
-			modelBuilder.Entity<foundation.Category>().Map(entity =>
+			modelBuilder.Entity<dataModel.Category>().Map(entity =>
 			{
 				entity.ToTable("Category");
 			});
-			modelBuilder.Entity<foundation.LinkedCategory>().Map(entity =>
+			modelBuilder.Entity<dataModel.LinkedCategory>().Map(entity =>
 			{
 				entity.ToTable("LinkedCategory");
 			});
 			#endregion
 
 			#region Item TPH
-			MapEntity<foundation.Item>(modelBuilder, toTable: "Item");
-			MapEntity<foundation.Product>(modelBuilder, toTable: "Item", discriminatorValue: "Product");
+			MapEntity<dataModel.Item>(modelBuilder, toTable: "Item");
+			MapEntity<dataModel.Product>(modelBuilder, toTable: "Item", discriminatorValue: "Product");
 		
 			#endregion
 
 			#region PropertyValueBase TPC
-			modelBuilder.Entity<foundation.CatalogPropertyValue>().Map(entity =>
+			modelBuilder.Entity<dataModel.CatalogPropertyValue>().Map(entity =>
 			{
 				entity.MapInheritedProperties();
 				entity.ToTable("CatalogPropertyValue");
 			});
-			modelBuilder.Entity<foundation.CategoryPropertyValue>().Map(entity =>
+			modelBuilder.Entity<dataModel.CategoryPropertyValue>().Map(entity =>
 			{
 				entity.MapInheritedProperties();
 				entity.ToTable("CategoryPropertyValue");
 			});
-			modelBuilder.Entity<foundation.PropertyValue>().Map(entity =>
+			modelBuilder.Entity<dataModel.PropertyValue>().Map(entity =>
 			{
 				entity.MapInheritedProperties();
 				entity.ToTable("PropertyValue");
 			});
-			modelBuilder.Entity<foundation.ItemPropertyValue>().Map(entity =>
+			modelBuilder.Entity<dataModel.ItemPropertyValue>().Map(entity =>
 			{
 				entity.MapInheritedProperties();
 				entity.ToTable("ItemPropertyValue");
@@ -151,23 +120,23 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
 
 			#region Navigation properties required
 
-			modelBuilder.Entity<foundation.Item>()
+			modelBuilder.Entity<dataModel.Item>()
 				.HasMany(c => c.AssociationGroups)
 				.WithRequired(p => p.CatalogItem);
 
-			modelBuilder.Entity<foundation.Item>()
+			modelBuilder.Entity<dataModel.Item>()
 				.HasMany(c => c.CategoryItemRelations)
 				.WithRequired(p => p.CatalogItem);
 
-			modelBuilder.Entity<foundation.Item>()
+			modelBuilder.Entity<dataModel.Item>()
 				.HasMany(c => c.ItemAssets)
 				.WithRequired(p => p.CatalogItem);
 
-			modelBuilder.Entity<foundation.AssociationGroup>()
+			modelBuilder.Entity<dataModel.AssociationGroup>()
 						.HasMany(c => c.Associations)
 						.WithRequired(a => a.AssociationGroup);
 
-			modelBuilder.Entity<foundation.Property>()
+			modelBuilder.Entity<dataModel.Property>()
 						.HasMany(x => x.PropertyValues)
 						.WithRequired(x => x.Property);
 
@@ -177,77 +146,66 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
 
 
 		#region ICatalogRepository Members
-
-		public IQueryable<foundation.SeoUrlKeyword> SeoUrlKeywords
+		public IQueryable<dataModel.CategoryBase> Categories
 		{
-			get { return GetAsQueryable<foundation.SeoUrlKeyword>(); }
+			get { return GetAsQueryable<dataModel.CategoryBase>(); }
 		}
 
-		public IQueryable<foundation.CategoryBase> Categories
+		public IQueryable<dataModel.CatalogBase> Catalogs
 		{
-			get { return GetAsQueryable<foundation.CategoryBase>(); }
+			get { return GetAsQueryable<dataModel.CatalogBase>(); }
 		}
 
-		public IQueryable<foundation.CatalogBase> Catalogs
+		public IQueryable<dataModel.Item> Items
 		{
-			get { return GetAsQueryable<foundation.CatalogBase>(); }
+			get { return GetAsQueryable<dataModel.Item>(); }
 		}
 
-		public IQueryable<foundation.Item> Items
+		public IQueryable<dataModel.Property> Properties
 		{
-			get { return GetAsQueryable<foundation.Item>(); }
+			get { return GetAsQueryable<dataModel.Property>(); }
 		}
 
-		public IQueryable<foundation.Property> Properties
+		public IQueryable<dataModel.PropertySet> PropertySets
 		{
-			get { return GetAsQueryable<foundation.Property>(); }
+			get { return GetAsQueryable<dataModel.PropertySet>(); }
 		}
 
-		public IQueryable<foundation.PropertySet> PropertySets
+		public IQueryable<dataModel.ItemRelation> ItemRelations
 		{
-			get { return GetAsQueryable<foundation.PropertySet>(); }
+			get { return GetAsQueryable<dataModel.ItemRelation>(); }
 		}
 
-		public IQueryable<foundation.ItemRelation> ItemRelations
+		public IQueryable<dataModel.CategoryItemRelation> CategoryItemRelations
 		{
-			get { return GetAsQueryable<foundation.ItemRelation>(); }
+			get { return GetAsQueryable<dataModel.CategoryItemRelation>(); }
 		}
 
-		public IQueryable<foundation.CategoryItemRelation> CategoryItemRelations
+		public IQueryable<dataModel.Association> Associations
 		{
-			get { return GetAsQueryable<foundation.CategoryItemRelation>(); }
+			get { return GetAsQueryable<dataModel.Association>(); }
 		}
 
-		public IQueryable<foundation.Association> Associations
+		public dataModel.CatalogBase GetCatalogById(string catalogId)
 		{
-			get { return GetAsQueryable<foundation.Association>(); }
-		}
-
-		public foundation.SeoUrlKeyword[] GetAllSeoInformation(string id)
-		{
-			return SeoUrlKeywords.Where(x => x.IsActive && (string.IsNullOrEmpty(id) || x.KeywordValue == id)).ToArray();
-		}
-
-		public foundation.CatalogBase GetCatalogById(string catalogId)
-		{
-			foundation.CatalogBase retVal = Catalogs.OfType<foundation.Catalog>()
+			dataModel.CatalogBase retVal = Catalogs.OfType<dataModel.Catalog>()
 														 .Include(x => x.CatalogLanguages)
 														 .Include(x => x.CatalogPropertyValues)
 														 .Include(x => x.PropertySet.PropertySetProperties.Select(y => y.Property))
 														 .FirstOrDefault(x => x.Id == catalogId);
 			if (retVal == null)
 			{
-				retVal = Catalogs.OfType<foundation.VirtualCatalog>()
+				retVal = Catalogs.OfType<dataModel.VirtualCatalog>()
 								 .FirstOrDefault(x => x.Id == catalogId);
 			}
 			return retVal;
 		}
 
-		public foundation.LinkedCategory[] GetCategoryLinks(string categoryId)
+		public dataModel.LinkedCategory[] GetCategoryLinks(string categoryId)
 		{
-			var retVal = new List<foundation.LinkedCategory>();
+			var retVal = new List<dataModel.LinkedCategory>();
 			//Load links for both categories (source and target)
-			var allLinks = Categories.OfType<foundation.LinkedCategory>()
+			var allLinks = Categories.OfType<dataModel.LinkedCategory>()
 										.AsNoTracking()
 										.Where(x => x.ParentCategoryId == categoryId || x.LinkedCategoryId == categoryId)
 										.ToArray();
@@ -267,9 +225,9 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
 		}
 
 
-		public foundation.LinkedCategory[] GetCatalogLinks(string catalogId)
+		public dataModel.LinkedCategory[] GetCatalogLinks(string catalogId)
 		{
-			var retVal = Categories.OfType<foundation.LinkedCategory>()
+			var retVal = Categories.OfType<dataModel.LinkedCategory>()
 										.AsNoTracking()
 										.Where(x => x.LinkedCatalogId == catalogId && x.LinkedCategoryId == null)
 										.ToArray();
@@ -277,13 +235,13 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
 			return retVal;
 		}
 
-		public foundation.Category[] GetAllCategoryParents(foundation.Category category)
+		public dataModel.Category[] GetAllCategoryParents(dataModel.Category category)
 		{
-			var retVal = new List<foundation.Category>();
+			var retVal = new List<dataModel.Category>();
 
 			if (category.ParentCategoryId != null)
 			{
-				var parentCategory = Categories.OfType<foundation.Category>()
+				var parentCategory = Categories.OfType<dataModel.Category>()
 									.FirstOrDefault(x => x.Id == category.ParentCategoryId);
 				if (parentCategory != null)
 				{
@@ -294,9 +252,9 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
 			return retVal.ToArray();
 		}
 
-		public foundation.Category GetCategoryById(string categoryId)
+		public dataModel.Category GetCategoryById(string categoryId)
 		{
-			var retVal = Categories.OfType<foundation.Category>()
+			var retVal = Categories.OfType<dataModel.Category>()
 										.Include(x => x.CategoryPropertyValues)
 										.Include(x => x.PropertySet.PropertySetProperties.Select(y => y.Property))
 										.FirstOrDefault(x => x.Id == categoryId);
@@ -305,27 +263,27 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
 			return retVal;
 		}
 
-		public foundation.Item[] GetItemByIds(string[] itemIds, moduleModel.ItemResponseGroup respGroup = moduleModel.ItemResponseGroup.ItemLarge)
+		public dataModel.Item[] GetItemByIds(string[] itemIds, coreModel.ItemResponseGroup respGroup = coreModel.ItemResponseGroup.ItemLarge)
 		{
 			var query = Items.Include(x => x.Catalog).Where(x => itemIds.Contains(x.Id));
 
-            if ((respGroup & moduleModel.ItemResponseGroup.Categories) == moduleModel.ItemResponseGroup.Categories)
+            if ((respGroup & coreModel.ItemResponseGroup.Categories) == coreModel.ItemResponseGroup.Categories)
             {
                 query = query.Include(x => x.CategoryItemRelations);
             }
-			if ((respGroup & moduleModel.ItemResponseGroup.ItemProperties) == moduleModel.ItemResponseGroup.ItemProperties)
+			if ((respGroup & coreModel.ItemResponseGroup.ItemProperties) == coreModel.ItemResponseGroup.ItemProperties)
 			{
 				query = query.Include(x => x.ItemPropertyValues);
 			}
-			if ((respGroup & moduleModel.ItemResponseGroup.ItemAssets) == moduleModel.ItemResponseGroup.ItemAssets)
+			if ((respGroup & coreModel.ItemResponseGroup.ItemAssets) == coreModel.ItemResponseGroup.ItemAssets)
 			{
 				query = query.Include(x => x.ItemAssets);
 			}
-			if ((respGroup & moduleModel.ItemResponseGroup.ItemEditorialReviews) == moduleModel.ItemResponseGroup.ItemEditorialReviews)
+			if ((respGroup & coreModel.ItemResponseGroup.ItemEditorialReviews) == coreModel.ItemResponseGroup.ItemEditorialReviews)
 			{
 				query = query.Include(x => x.EditorialReviews);
 			}
-			if ((respGroup & moduleModel.ItemResponseGroup.ItemAssociations) == moduleModel.ItemResponseGroup.ItemAssociations)
+			if ((respGroup & coreModel.ItemResponseGroup.ItemAssociations) == coreModel.ItemResponseGroup.ItemAssociations)
 			{
 				query = query.Include(x => x.AssociationGroups.Select(y=>y.Associations));
 			}
@@ -334,7 +292,7 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
 			return retVal;
 		}
 
-		public foundation.Property[] GetPropertiesByIds(string[] propIds)
+		public dataModel.Property[] GetPropertiesByIds(string[] propIds)
 		{
 			var retVal = Properties.Include(x => x.Catalog)
 										.Include(x => x.PropertyValues)
@@ -343,30 +301,30 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
 										.ToArray();
 			return retVal;
 		}
-		public foundation.Catalog GetPropertyCatalog(string propId)
+		public dataModel.Catalog GetPropertyCatalog(string propId)
 		{
-			foundation.Catalog retVal = null;
+			dataModel.Catalog retVal = null;
 			var propSet = PropertySets.FirstOrDefault(x => x.PropertySetProperties.Any(y => y.PropertyId == propId));
 			if (propSet != null)
 			{
-				var catalogId = Catalogs.OfType<foundation.Catalog>()
+				var catalogId = Catalogs.OfType<dataModel.Catalog>()
 								   .Where(x => x.PropertySetId == propSet.Id)
 								   .Select(x => x.Id).FirstOrDefault();
 				if (catalogId != null)
 				{
-					retVal = GetCatalogById(catalogId) as foundation.Catalog;
+					retVal = GetCatalogById(catalogId) as dataModel.Catalog;
 				}
 			}
 			return retVal;
 		}
 
-		public foundation.Category GetPropertyCategory(string propId)
+		public dataModel.Category GetPropertyCategory(string propId)
 		{
-			foundation.Category retVal = null;
+			dataModel.Category retVal = null;
 			var propSet = PropertySets.FirstOrDefault(x => x.PropertySetProperties.Any(y => y.PropertyId == propId));
 			if (propSet != null)
 			{
-				var categoryId = Categories.OfType<foundation.Category>()
+				var categoryId = Categories.OfType<dataModel.Category>()
 								   .Where(x => x.PropertySetId == propSet.Id)
 								   .Select(x => x.Id).FirstOrDefault();
 				if (categoryId != null)
@@ -377,15 +335,15 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
 			return retVal;
 		}
 
-		public foundation.Property[] GetCatalogProperties(foundation.CatalogBase catalogBase)
+		public dataModel.Property[] GetCatalogProperties(dataModel.CatalogBase catalogBase)
 		{
-			var retVal = new List<foundation.Property>();
-			var catalog = catalogBase as foundation.Catalog;
+			var retVal = new List<dataModel.Property>();
+			var catalog = catalogBase as dataModel.Catalog;
 			if (catalog != null)
 			{
 				if(catalog.PropertySet == null && catalog.PropertySetId != null)
 				{
-					catalog = GetCatalogById(catalogBase.Id) as foundation.Catalog;
+					catalog = GetCatalogById(catalogBase.Id) as dataModel.Catalog;
 				}
 				if (catalog.PropertySet != null)
 				{
@@ -395,9 +353,9 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
 			return retVal.ToArray();
 		}
 
-		public foundation.Property[] GetAllCategoryProperties(foundation.Category category)
+		public dataModel.Property[] GetAllCategoryProperties(dataModel.Category category)
 		{
-			var retVal = new List<foundation.Property>();
+			var retVal = new List<dataModel.Property>();
 			if (category.PropertySet != null)
 			{
 				retVal.AddRange(category.PropertySet.PropertySetProperties.Select(x => x.Property));
@@ -420,7 +378,7 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
 			return retVal.Distinct().ToArray();
 		}
 
-		public foundation.Item[] GetAllItemVariations(string itemId)
+		public dataModel.Item[] GetAllItemVariations(string itemId)
 		{
 			//Load Variations
 			var itemIds = ItemRelations.Where(x => x.ParentItemId == itemId).Select(x => x.ChildItemId).ToArray();
@@ -433,7 +391,7 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
         /// </summary>
         /// <param name="itemIds"></param>
         /// <returns></returns>
-        public Dictionary<string, IEnumerable<foundation.Item>> GetAllItemsVariations(string[] itemIds)
+        public Dictionary<string, IEnumerable<dataModel.Item>> GetAllItemsVariations(string[] itemIds)
         {
             var singleRelations =
                 ItemRelations.Where(x => itemIds.Contains(x.ParentItemId))
@@ -455,11 +413,11 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
             return groupedItems;
         }
 
-		public void SetCatalogProperty(foundation.Catalog catalog, foundation.Property property)
+		public void SetCatalogProperty(dataModel.Catalog catalog, dataModel.Property property)
 		{
 			if (catalog.PropertySet == null)
 			{
-				var propertySet = new foundation.PropertySet
+				var propertySet = new dataModel.PropertySet
 				{
 					CatalogId = catalog.Id,
 					Name = catalog.Name + " property set",
@@ -469,7 +427,7 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
 				catalog.PropertySetId = propertySet.Id;
 			}
 
-			var propertySetProperty = new foundation.PropertySetProperty
+			var propertySetProperty = new dataModel.PropertySetProperty
 			{
 				PropertySetId = catalog.PropertySetId,
 				PropertyId = property.Id
@@ -478,11 +436,11 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
 
 		}
 
-		public void SetCategoryProperty(foundation.Category category, foundation.Property property)
+		public void SetCategoryProperty(dataModel.Category category, dataModel.Property property)
 		{
 			if (category.PropertySet == null)
 			{
-				var propertySet = new foundation.PropertySet
+				var propertySet = new dataModel.PropertySet
 				{
 					CatalogId = category.CatalogId,
 					Name = category.Name + " property set",
@@ -492,7 +450,7 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
 				category.PropertySetId = propertySet.Id;
 			}
 
-			var propertySetProperty = new foundation.PropertySetProperty
+			var propertySetProperty = new dataModel.PropertySetProperty
 			{
 				PropertySetId = category.PropertySetId,
 				PropertyId = property.Id
@@ -501,12 +459,12 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
 
 		}
 
-		public void SetVariationRelation(foundation.Item item, string mainProductId)
+		public void SetVariationRelation(dataModel.Item item, string mainProductId)
 		{
 			var itemRelation = ItemRelations.FirstOrDefault(x => x.ChildItemId == item.Id);
 			if (itemRelation == null)
 			{
-				 itemRelation = new foundation.ItemRelation
+				 itemRelation = new dataModel.ItemRelation
 				{
 					RelationTypeId = "Sku",
 					GroupName = "variation",
@@ -527,7 +485,7 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
 			}
 		}
 
-		public void SwitchProductToMain(foundation.Item item)
+		public void SwitchProductToMain(dataModel.Item item)
 		{
 			var itemRelation = ItemRelations.FirstOrDefault(x => x.ChildItemId == item.Id);
 			if (itemRelation != null)
@@ -549,9 +507,9 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
 			}
 		}
 
-		public void SetItemCategoryRelation(foundation.Item item, foundation.Category category)
+		public void SetItemCategoryRelation(dataModel.Item item, dataModel.Category category)
 		{
-			item.CategoryItemRelations.Add(new foundation.CategoryItemRelation
+			item.CategoryItemRelations.Add(new dataModel.CategoryItemRelation
 			{
 				CatalogId = category.CatalogId,
 				CategoryId = category.Id,

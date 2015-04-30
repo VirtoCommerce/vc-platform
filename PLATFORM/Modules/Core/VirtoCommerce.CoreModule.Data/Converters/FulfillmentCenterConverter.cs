@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using Omu.ValueInjecter;
-using coreModel = VirtoCommerce.Domain.Fulfillment.Model;
+using coreModel = VirtoCommerce.Domain.Commerce.Model;
 using dataModel = VirtoCommerce.CoreModule.Data.Model;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Data.Common.ConventionInjections;
@@ -20,7 +20,7 @@ namespace VirtoCommerce.CoreModule.Data.Converters
 			return retVal;
 		}
 
-		public static dataModel.FulfillmentCenter ToFoundation(this coreModel.FulfillmentCenter center)
+		public static dataModel.FulfillmentCenter ToDataModel(this coreModel.FulfillmentCenter center)
 		{
 			var retVal = new dataModel.FulfillmentCenter();
 			retVal.InjectFrom(center);

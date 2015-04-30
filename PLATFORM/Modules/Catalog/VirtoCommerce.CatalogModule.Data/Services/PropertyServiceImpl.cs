@@ -3,8 +3,8 @@ using System.Linq;
 using VirtoCommerce.CatalogModule.Data.Converters;
 using VirtoCommerce.CatalogModule.Data.Repositories;
 using VirtoCommerce.Domain.Catalog.Services;
-using module = VirtoCommerce.Domain.Catalog.Model;
-using foundation = VirtoCommerce.CatalogModule.Data.Model;
+using coreModel = VirtoCommerce.Domain.Catalog.Model;
+using dataModel = VirtoCommerce.CatalogModule.Data.Model;
 using VirtoCommerce.Platform.Data.Infrastructure;
 using VirtoCommerce.Platform.Core.Caching;
 
@@ -21,70 +21,70 @@ namespace VirtoCommerce.CatalogModule.Data.Services
 
 		#region IPropertyService Members
 
-		public module.Property GetById(string propertyId)
+		public coreModel.Property GetById(string propertyId)
 		{
-			module.Property retVal = null;
+			coreModel.Property retVal = null;
 			using (var repository = _catalogRepositoryFactory())
 			{
 				var dbProperty = repository.GetPropertiesByIds(new string[] { propertyId }).FirstOrDefault();
 				if (dbProperty != null)
 				{
-					foundation.Catalog dbCatalog = null;
-					foundation.Category dbCategory = null;
+					dataModel.Catalog dbCatalog = null;
+					dataModel.Category dbCategory = null;
 					dbCatalog = repository.GetPropertyCatalog(dbProperty.Id);
 					if (dbCatalog == null)
 					{
 						dbCategory = repository.GetPropertyCategory(dbProperty.Id);
-						dbCatalog = repository.GetCatalogById(dbCategory.CatalogId) as foundation.Catalog;
+						dbCatalog = repository.GetCatalogById(dbCategory.CatalogId) as dataModel.Catalog;
 					}
 		
-					var catalog = dbCatalog.ToModuleModel();
-					var category = dbCategory != null ? dbCategory.ToModuleModel(catalog) : null;
+					var catalog = dbCatalog.ToCoreModel();
+					var category = dbCategory != null ? dbCategory.ToCoreModel(catalog) : null;
 
-					retVal = dbProperty.ToModuleModel(catalog, category);
+					retVal = dbProperty.ToCoreModel(catalog, category);
 				}
 			}
 			return retVal;
 		}
 
-		public module.Property[] GetCatalogProperties(string catalogId)
+		public coreModel.Property[] GetCatalogProperties(string catalogId)
 		{
-			module.Property[] retVal = null;
+			coreModel.Property[] retVal = null;
 			using (var repository = _catalogRepositoryFactory())
 			{
 				var dbCatalog = repository.GetCatalogById(catalogId);
 				var dbCatalogProperties = repository.GetCatalogProperties(dbCatalog);
-				var catalog = dbCatalog.ToModuleModel();
-				retVal = dbCatalogProperties.Select(x => x.ToModuleModel(catalog, null)).ToArray();
+				var catalog = dbCatalog.ToCoreModel();
+				retVal = dbCatalogProperties.Select(x => x.ToCoreModel(catalog, null)).ToArray();
 			}
 			return retVal;
 		}
 
-		public module.Property[] GetCategoryProperties(string categoryId)
+		public coreModel.Property[] GetCategoryProperties(string categoryId)
 		{
-			module.Property[] retVal = null;
+			coreModel.Property[] retVal = null;
 			using (var repository = _catalogRepositoryFactory())
 			{
 				var dbCategory = repository.GetCategoryById(categoryId);
 				var dbCatalog = repository.GetCatalogById(dbCategory.CatalogId);
 				var dbProperties = repository.GetAllCategoryProperties(dbCategory);
 			
-				var catalog = dbCatalog.ToModuleModel();
-				var category = dbCategory.ToModuleModel(catalog);
+				var catalog = dbCatalog.ToCoreModel();
+				var category = dbCategory.ToCoreModel(catalog);
 
-				retVal = dbProperties.Select(x => x.ToModuleModel(catalog, category)).ToArray();
+				retVal = dbProperties.Select(x => x.ToCoreModel(catalog, category)).ToArray();
 			}
 			return retVal;
 		}
 
-		public module.Property Create(module.Property property)
+		public coreModel.Property Create(coreModel.Property property)
 		{
 			if (property.CatalogId == null)
 			{
 				throw new NullReferenceException("property.CatalogId");
 			}
 		
-			var dbProperty = property.ToFoundation();
+			var dbProperty = property.ToDataModel();
 			using (var repository = _catalogRepositoryFactory())
 			{
 				if (property.CategoryId != null)
@@ -94,7 +94,7 @@ namespace VirtoCommerce.CatalogModule.Data.Services
 				}
 				else
 				{
-					var dbCatalog = repository.GetCatalogById(property.CatalogId) as foundation.Catalog;
+					var dbCatalog = repository.GetCatalogById(property.CatalogId) as dataModel.Catalog;
 					if(dbCatalog == null)
 					{
 						throw new OperationCanceledException("Add property only to catalog");
@@ -108,7 +108,7 @@ namespace VirtoCommerce.CatalogModule.Data.Services
 			return retVal;
 		}
 
-		public void Update(module.Property[] properties)
+		public void Update(coreModel.Property[] properties)
 		{
 			using (var repository = _catalogRepositoryFactory())
 			using (var changeTracker = base.GetChangeTracker(repository))
@@ -122,7 +122,7 @@ namespace VirtoCommerce.CatalogModule.Data.Services
 					{
 						changeTracker.Attach(property);
 
-						var dbPropertyChanged = property.ToFoundation();
+						var dbPropertyChanged = property.ToDataModel();
 						dbPropertyChanged.Patch(dbProperty);
 					}
 				}
@@ -146,7 +146,7 @@ namespace VirtoCommerce.CatalogModule.Data.Services
 			}
 		}
 
-		public module.PropertyDictionaryValue[] SearchDictionaryValues(string propertyId, string keyword)
+		public coreModel.PropertyDictionaryValue[] SearchDictionaryValues(string propertyId, string keyword)
 		{
 			var property = GetById(propertyId);
 			var query = property.DictionaryValues.AsQueryable();

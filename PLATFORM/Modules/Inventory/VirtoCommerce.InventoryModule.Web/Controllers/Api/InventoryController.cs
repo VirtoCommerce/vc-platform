@@ -6,7 +6,7 @@ using VirtoCommerce.Domain.Inventory.Services;
 using coreModel = VirtoCommerce.Domain.Inventory.Model;
 using webModel = VirtoCommerce.InventoryModule.Web.Model;
 using VirtoCommerce.InventoryModule.Web.Converters;
-using VirtoCommerce.Domain.Fulfillment.Services;
+using VirtoCommerce.Domain.Commerce.Services;
 using System.Collections.Generic;
 
 namespace VirtoCommerce.InventoryModule.Web.Controllers.Api
@@ -15,11 +15,11 @@ namespace VirtoCommerce.InventoryModule.Web.Controllers.Api
 	public class InventoryController : ApiController
 	{
 		private readonly IInventoryService _inventoryService;
-		private readonly IFulfillmentService _fulfillmentService;
-		public InventoryController(IInventoryService inventoryService, IFulfillmentService fulfillmentService)
+		private readonly ICommerceService _commerceService;
+		public InventoryController(IInventoryService inventoryService, ICommerceService commerceService)
 		{
 			_inventoryService = inventoryService;
-			_fulfillmentService = fulfillmentService;
+			_commerceService = commerceService;
 		}
 
 		// GET: api/inventory/products?ids=212&ids=333
@@ -29,7 +29,7 @@ namespace VirtoCommerce.InventoryModule.Web.Controllers.Api
 		public IHttpActionResult GetProductsInventories([FromUri] string[] ids)
 		{
 			var retVal = new List<webModel.InventoryInfo>();
-			var allFulfillments = _fulfillmentService.GetAllFulfillmentCenters();
+			var allFulfillments = _commerceService.GetAllFulfillmentCenters();
 			var inventories = _inventoryService.GetProductsInventoryInfos(ids).ToList();
 
 			foreach (var productId in ids)

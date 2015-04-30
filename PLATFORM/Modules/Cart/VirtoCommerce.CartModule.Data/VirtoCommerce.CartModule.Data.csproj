@@ -60,9 +60,9 @@
     <Compile Include="Converters\PaymentConverter.cs" />
     <Compile Include="Converters\ShipmentConverter.cs" />
     <Compile Include="Converters\ShoppingCartConverter.cs" />
-    <Compile Include="Migrations\201504291401224_Initial.cs" />
-    <Compile Include="Migrations\201504291401224_Initial.Designer.cs">
-      <DependentUpon>201504291401224_Initial.cs</DependentUpon>
+    <Compile Include="Migrations\201504300613351_Initial.cs" />
+    <Compile Include="Migrations\201504300613351_Initial.Designer.cs">
+      <DependentUpon>201504300613351_Initial.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Model\AddressEntity.cs" />
@@ -96,8 +96,8 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201504291401224_Initial.resx">
-      <DependentUpon>201504291401224_Initial.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201504300613351_Initial.resx">
+      <DependentUpon>201504300613351_Initial.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

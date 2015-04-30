@@ -11,7 +11,7 @@ using VirtoCommerce.Platform.Data.Infrastructure;
 
 namespace VirtoCommerce.CustomerModule.Data.Model
 {
-	public class Address : Entity
+	public class Address : AuditableEntity
 	{
 		[Required]
 		[StringLength(128)]

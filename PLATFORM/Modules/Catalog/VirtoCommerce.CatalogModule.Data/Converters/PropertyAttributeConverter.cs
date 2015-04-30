@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using foundation = VirtoCommerce.CatalogModule.Data.Model;
-using module = VirtoCommerce.Domain.Catalog.Model;
+using dataModel = VirtoCommerce.CatalogModule.Data.Model;
+using coreModel = VirtoCommerce.Domain.Catalog.Model;
 using Omu.ValueInjecter;
 using VirtoCommerce.Platform.Data.Common;
 using VirtoCommerce.Platform.Data.Common.ConventionInjections;
@@ -18,12 +18,12 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 		/// </summary>
 		/// <param name="catalogBase"></param>
 		/// <returns></returns>
-		public static module.PropertyAttribute ToModuleModel(this foundation.PropertyAttribute dbAttribute, module.Property property)
+		public static coreModel.PropertyAttribute ToCoreModel(this dataModel.PropertyAttribute dbAttribute, coreModel.Property property)
 		{
 			if (property == null)
 				throw new ArgumentNullException("dbProperty");
 
-			var retVal = new module.PropertyAttribute();
+			var retVal = new coreModel.PropertyAttribute();
 			retVal.InjectFrom(dbAttribute);
 
 			retVal.Name = dbAttribute.PropertyAttributeName;
@@ -39,10 +39,15 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 		/// </summary>
 		/// <param name="catalog"></param>
 		/// <returns></returns>
-		public static foundation.PropertyAttribute ToFoundation(this module.PropertyAttribute attribute)
+		public static dataModel.PropertyAttribute ToDataModel(this coreModel.PropertyAttribute attribute)
 		{
-			var retVal = new foundation.PropertyAttribute();
+			var retVal = new dataModel.PropertyAttribute();
+			var id = retVal.Id;
 			retVal.InjectFrom(attribute);
+			if(attribute.Id == null)
+			{
+				retVal.Id = id;
+			}
 
 			retVal.PropertyAttributeName = attribute.Name;
 			retVal.PropertyAttributeValue = attribute.Value;
@@ -55,12 +60,12 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 		/// </summary>
 		/// <param name="source"></param>
 		/// <param name="target"></param>
-		public static void Patch(this foundation.PropertyAttribute source, foundation.PropertyAttribute target)
+		public static void Patch(this dataModel.PropertyAttribute source, dataModel.PropertyAttribute target)
 		{
 			if (target == null)
 				throw new ArgumentNullException("target");
 
-			var patchInjectionPolicy = new PatchInjection<foundation.PropertyAttribute>(x => x.PropertyAttributeName, x => x.PropertyAttributeValue);
+			var patchInjectionPolicy = new PatchInjection<dataModel.PropertyAttribute>(x => x.PropertyAttributeName, x => x.PropertyAttributeValue);
 			target.InjectFrom(patchInjectionPolicy, source);
 		}
 

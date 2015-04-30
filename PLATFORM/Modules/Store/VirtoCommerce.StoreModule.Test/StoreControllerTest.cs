@@ -94,7 +94,7 @@ namespace VirtoCommerce.StoreModule.Test
 				return new StoreRepositoryImpl("VirtoCommerce", new EntityPrimaryKeyGeneratorInterceptor(), new AuditableInterceptor());
 			};
 			
-			var storeService = new StoreServiceImpl(repositoryFactory);
+			var storeService = new StoreServiceImpl(repositoryFactory, null);
 			var controller = new StoreModuleController(storeService);
 			return controller;
 		}

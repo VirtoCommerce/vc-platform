@@ -50,17 +50,20 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Converters\SeoUrlKeywordConverter.cs" />
     <Compile Include="Converters\FulfillmentCenterConverter.cs" />
-    <Compile Include="Migrations\201504291145270_Initial.cs" />
-    <Compile Include="Migrations\201504291145270_Initial.Designer.cs">
-      <DependentUpon>201504291145270_Initial.cs</DependentUpon>
+    <Compile Include="Migrations\201504301238451_Initial.cs" />
+    <Compile Include="Migrations\201504301238451_Initial.Designer.cs">
+      <DependentUpon>201504301238451_Initial.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Model\FulfillmentCenter.cs" />
+    <Compile Include="Model\SeoUrlKeyword.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\CommerceRepositoryImpl.cs" />
     <Compile Include="Repositories\IСommerceRepository.cs" />
-    <Compile Include="Services\FulfillmentServiceImpl.cs" />
+    <Compile Include="Repositories\SqlCommerceSampleDatabaseInitializer.cs" />
+    <Compile Include="Services\CommerceServiceImpl.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\VirtoCommerce.Platform.Core\VirtoCommerce.Platform.Core.csproj">
@@ -81,8 +84,8 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201504291145270_Initial.resx">
-      <DependentUpon>201504291145270_Initial.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201504301238451_Initial.resx">
+      <DependentUpon>201504301238451_Initial.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

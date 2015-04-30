@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using foundation = VirtoCommerce.CatalogModule.Data.Model;
-using module = VirtoCommerce.Domain.Catalog.Model;
+using dataModel = VirtoCommerce.CatalogModule.Data.Model;
+using coreModel = VirtoCommerce.Domain.Catalog.Model;
 using Omu.ValueInjecter;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Data.Common;
@@ -19,12 +19,12 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 		/// </summary>
 		/// <param name="catalogBase"></param>
 		/// <returns></returns>
-		public static module.ProductAssociation ToModuleModel(this foundation.Association dbAssociation, module.CatalogProduct associatedProduct)
+		public static coreModel.ProductAssociation ToCoreModel(this dataModel.Association dbAssociation, coreModel.CatalogProduct associatedProduct)
 		{
 			if (dbAssociation == null)
 				throw new ArgumentNullException("dbAssociation");
 
-			var retVal = new module.ProductAssociation
+			var retVal = new coreModel.ProductAssociation
 			{
 				Name = dbAssociation.AssociationGroup.Name,
 				Description = dbAssociation.AssociationGroup.Description,
@@ -43,12 +43,12 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 		/// </summary>
 		/// <param name="catalog"></param>
 		/// <returns></returns>
-		public static foundation.Association ToFoundation(this module.ProductAssociation association)
+		public static dataModel.Association ToDataModel(this coreModel.ProductAssociation association)
 		{
 			if (association == null)
 				throw new ArgumentNullException("association");
 
-			var retVal = new foundation.Association
+			var retVal = new dataModel.Association
 			{
 				ItemId = association.AssociatedProductId,
 				Priority = association.Priority,
@@ -63,14 +63,14 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 		/// </summary>
 		/// <param name="source"></param>
 		/// <param name="target"></param>
-		public static void Patch(this foundation.AssociationGroup source, foundation.AssociationGroup target)
+		public static void Patch(this dataModel.AssociationGroup source, dataModel.AssociationGroup target)
 		{
-			var patchInjectionPolicy = new PatchInjection<foundation.AssociationGroup>(x => x.Name, x => x.Description);
+			var patchInjectionPolicy = new PatchInjection<dataModel.AssociationGroup>(x => x.Name, x => x.Description);
 			target.InjectFrom(patchInjectionPolicy, source);
 
 			if (!source.Associations.IsNullCollection())
 			{
-				var associationComparer = AnonymousComparer.Create((foundation.Association x) => x.ItemId);
+				var associationComparer = AnonymousComparer.Create((dataModel.Association x) => x.ItemId);
 				source.Associations.Patch(target.Associations, associationComparer,
 										 (sourceAssociation, targetAssociation) => sourceAssociation.Patch(targetAssociation));
 			}
@@ -80,9 +80,9 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 		/// </summary>
 		/// <param name="source"></param>
 		/// <param name="target"></param>
-		public static void Patch(this foundation.Association source, foundation.Association target)
+		public static void Patch(this dataModel.Association source, dataModel.Association target)
 		{
-			var patchInjectionPolicy = new PatchInjection<foundation.Association>(x => x.Priority);
+			var patchInjectionPolicy = new PatchInjection<dataModel.Association>(x => x.Priority);
 			target.InjectFrom(patchInjectionPolicy, source);
 		}
 	}

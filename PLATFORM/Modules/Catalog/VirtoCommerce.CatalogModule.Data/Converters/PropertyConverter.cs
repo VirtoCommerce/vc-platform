@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using foundation = VirtoCommerce.CatalogModule.Data.Model;
-using module = VirtoCommerce.Domain.Catalog.Model;
+using dataModel = VirtoCommerce.CatalogModule.Data.Model;
+using coreModel = VirtoCommerce.Domain.Catalog.Model;
 using Omu.ValueInjecter;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Data.Common;
@@ -18,24 +18,24 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 		/// </summary>
 		/// <param name="catalogBase"></param>
 		/// <returns></returns>
-		public static module.Property ToModuleModel(this foundation.Property dbProperty, module.Catalog catalog, module.Category category)
+		public static coreModel.Property ToCoreModel(this dataModel.Property dbProperty, coreModel.Catalog catalog, coreModel.Category category)
 		{
 			if (dbProperty == null)
 				throw new ArgumentNullException("dbProperty");
 
-			var retVal = new module.Property();
+			var retVal = new coreModel.Property();
 			retVal.InjectFrom(dbProperty);
 			retVal.Required = dbProperty.IsRequired;
 			retVal.Multivalue = dbProperty.IsMultiValue;
 			retVal.Multilanguage = dbProperty.IsLocaleDependant;
 			retVal.Dictionary = dbProperty.IsEnum;
-			retVal.ValueType = (module.PropertyValueType)dbProperty.PropertyValueType;
+			retVal.ValueType = (coreModel.PropertyValueType)dbProperty.PropertyValueType;
 			retVal.CatalogId = catalog.Id;
 			retVal.Catalog = catalog;
 			retVal.CategoryId = category == null ? null : category.Id;
 			retVal.Category = category;
 
-			module.PropertyType propertyType;
+			coreModel.PropertyType propertyType;
 			if (!string.IsNullOrEmpty(dbProperty.TargetType) && Enum.TryParse(dbProperty.TargetType, out propertyType))
 			{
 				retVal.Type = propertyType;
@@ -43,13 +43,13 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 
 			if (dbProperty.PropertyAttributes != null)
 			{
-				retVal.Attributes = new List<module.PropertyAttribute>();
-				retVal.Attributes.AddRange(dbProperty.PropertyAttributes.Select(x => x.ToModuleModel(retVal)));
+				retVal.Attributes = new List<coreModel.PropertyAttribute>();
+				retVal.Attributes.AddRange(dbProperty.PropertyAttributes.Select(x => x.ToCoreModel(retVal)));
 			}
 			if (dbProperty.PropertyValues != null)
 			{
-				retVal.DictionaryValues = new List<module.PropertyDictionaryValue>();
-				retVal.DictionaryValues.AddRange(dbProperty.PropertyValues.Select(x => x.ToModuleModel(retVal)));
+				retVal.DictionaryValues = new List<coreModel.PropertyDictionaryValue>();
+				retVal.DictionaryValues.AddRange(dbProperty.PropertyValues.Select(x => x.ToCoreModel(retVal)));
 			}
 
 			return retVal;
@@ -61,13 +61,19 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 		/// </summary>
 		/// <param name="catalog"></param>
 		/// <returns></returns>
-		public static foundation.Property ToFoundation(this module.Property property)
+		public static dataModel.Property ToDataModel(this coreModel.Property property)
 		{
 			if (property == null)
 				throw new ArgumentNullException("property");
 
-			var retVal = new foundation.Property();
+			var retVal = new dataModel.Property();
+			var id = retVal.Id;
 			retVal.InjectFrom(property);
+
+			if(property.Id == null)
+			{
+				retVal.Id = id;
+			}
 			retVal.PropertyValueType = (int)property.ValueType;
 			retVal.IsMultiValue = property.Multivalue;
 			retVal.IsLocaleDependant = property.Multilanguage;
@@ -75,24 +81,24 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 			retVal.IsRequired = property.Required;
 			retVal.TargetType = property.Type.ToString();
 
-			retVal.PropertyAttributes = new NullCollection<foundation.PropertyAttribute>();
+			retVal.PropertyAttributes = new NullCollection<dataModel.PropertyAttribute>();
 			if (property.Attributes != null)
 			{
-				retVal.PropertyAttributes = new ObservableCollection<foundation.PropertyAttribute>();
+				retVal.PropertyAttributes = new ObservableCollection<dataModel.PropertyAttribute>();
 				foreach (var attribute in property.Attributes)
 				{
-					var dbAttribute = attribute.ToFoundation();
+					var dbAttribute = attribute.ToDataModel();
 					retVal.PropertyAttributes.Add(dbAttribute);
 				}
 			}
 
-			retVal.PropertyValues = new NullCollection<foundation.PropertyValue>();
+			retVal.PropertyValues = new NullCollection<dataModel.PropertyValue>();
 			if (property.DictionaryValues != null)
 			{
-				retVal.PropertyValues = new ObservableCollection<foundation.PropertyValue>();
+				retVal.PropertyValues = new ObservableCollection<dataModel.PropertyValue>();
 				foreach (var dictValue in property.DictionaryValues)
 				{
-					var dbDictValue = dictValue.ToFoundation(property);
+					var dbDictValue = dictValue.ToDataModel(property);
 					retVal.PropertyValues.Add(dbDictValue);
 				}
 			}
@@ -106,12 +112,12 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 		/// </summary>
 		/// <param name="source"></param>
 		/// <param name="target"></param>
-		public static void Patch(this foundation.Property source, foundation.Property target)
+		public static void Patch(this dataModel.Property source, dataModel.Property target)
 		{
 			if (target == null)
 				throw new ArgumentNullException("target");
 
-			var patchInjectionPolicy = new PatchInjection<foundation.Property>(x => x.PropertyValueType, x => x.IsEnum, x => x.IsMultiValue, x => x.IsLocaleDependant,
+			var patchInjectionPolicy = new PatchInjection<dataModel.Property>(x => x.PropertyValueType, x => x.IsEnum, x => x.IsMultiValue, x => x.IsLocaleDependant,
 																			   x => x.IsRequired, x => x.TargetType, x => x.Name);
 			target.InjectFrom(patchInjectionPolicy, source);
 

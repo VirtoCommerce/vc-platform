@@ -9,15 +9,18 @@ using VirtoCommerce.Domain.Store.Services;
 using VirtoCommerce.StoreModule.Data.Repositories;
 using VirtoCommerce.StoreModule.Data.Converters;
 using VirtoCommerce.Platform.Data.Infrastructure;
+using VirtoCommerce.Domain.Commerce.Services;
 
 namespace VirtoCommerce.StoreModule.Data.Services
 {
 	public class StoreServiceImpl : ServiceBase, IStoreService
 	{
 		private readonly Func<IStoreRepository> _repositoryFactory;
-		public StoreServiceImpl(Func<IStoreRepository> repositoryFactory)
+		private readonly ICommerceService _commerceService;
+		public StoreServiceImpl(Func<IStoreRepository> repositoryFactory, ICommerceService commerceService)
 		{
 			_repositoryFactory = repositoryFactory;
+			_commerceService = commerceService;
 		}
 
 		#region IStoreService Members
@@ -32,6 +35,9 @@ namespace VirtoCommerce.StoreModule.Data.Services
 				{
 					retVal = entity.ToCoreModel();
 				}
+				var fulfillmentCenters = _commerceService.GetAllFulfillmentCenters();
+				retVal.ReturnsFulfillmentCenter = fulfillmentCenters.FirstOrDefault(x => x.Id == entity.ReturnsFulfillmentCenterId);
+				retVal.FulfillmentCenter = fulfillmentCenters.FirstOrDefault(x => x.Id == entity.FulfillmentCenterId);
 			}
 
 			return retVal;

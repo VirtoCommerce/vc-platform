@@ -120,13 +120,6 @@
     <Compile Include="Model\Operation.cs" />
     <Compile Include="Module.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SampleData\OrderDatabaseInitializer.cs" />
-    <Compile Include="SampleData\OrderSampleDatabaseInitializer.cs" />
-    <EmbeddedResource Include="SampleData\Sql\order_Address.sql" />
-    <EmbeddedResource Include="SampleData\Sql\order_CustomerOrder.sql" />
-    <EmbeddedResource Include="SampleData\Sql\order_LineItem.sql" />
-    <EmbeddedResource Include="SampleData\Sql\order_PaymentIn.sql" />
-    <EmbeddedResource Include="SampleData\Sql\order_Shipment.sql" />
     <Content Include="Scripts\blades\operation-comment.js" />
     <Content Include="Scripts\blades\operation-comment.tpl.html" />
     <Content Include="Scripts\dialogs\cancelOperation-dialog.tpl.html" />

@@ -10,12 +10,32 @@ using module = VirtoCommerce.Domain.Catalog.Model;
 using VirtoCommerce.Domain.Catalog.Model;
 using VirtoCommerce.Domain.Catalog.Services;
 using VirtoCommerce.Platform.Core.Common;
+using VirtoCommerce.Platform.Data.Infrastructure.Interceptors;
 
 namespace VirtoCommerce.CatalogModule.Test
 {
 	[TestClass]
 	public class CatalogTest
 	{
+		[TestMethod]
+		public void Tst1()
+		{
+			var repository = GetRepository();
+			var catalog = new dataModel.Catalog
+			{
+				Id = "sss",
+				 Name = "test",
+				 DefaultLanguage = "en-us"
+			};
+			var language = new dataModel.CatalogLanguage
+			{
+				 Language = "sss"
+			};
+			catalog.CatalogLanguages.Add(language);
+			repository.Add(catalog);
+			repository.UnitOfWork.Commit();
+		}
+
 		[TestMethod]
 		public void CatalogPatchTest()
 		{
@@ -313,7 +333,7 @@ namespace VirtoCommerce.CatalogModule.Test
 
 		private ICatalogSearchService GetSearchService()
 		{
-			return new CatalogSearchServiceImpl(GetRepository, GetItemService(), GetCatalogService(), GetCategoryService());
+			return new CatalogSearchServiceImpl(GetRepository, GetItemService(), GetCatalogService(), GetCategoryService(), null);
 		}
 
 		private IPropertyService GetPropertyService()
@@ -323,7 +343,7 @@ namespace VirtoCommerce.CatalogModule.Test
 
 		private ICategoryService GetCategoryService()
 		{
-			return new CategoryServiceImpl(() => { return GetRepository(); });
+			return new CategoryServiceImpl(() => { return GetRepository(); }, null);
 		}
 
 		private ICatalogService GetCatalogService()
@@ -333,13 +353,13 @@ namespace VirtoCommerce.CatalogModule.Test
 
 		private IItemService GetItemService()
 		{
-			return new ItemServiceImpl(() => { return GetRepository(); });
+			return new ItemServiceImpl(() => { return GetRepository(); }, null);
 		}
 
 
 		private ICatalogRepository GetRepository()
 		{
-			var retVal = new CatalogRepositoryImpl("VirtoCommerce");
+			var retVal = new CatalogRepositoryImpl("VirtoCommerce",  new EntityPrimaryKeyGeneratorInterceptor(), new AuditableInterceptor());
 			return retVal;
 		}
 	

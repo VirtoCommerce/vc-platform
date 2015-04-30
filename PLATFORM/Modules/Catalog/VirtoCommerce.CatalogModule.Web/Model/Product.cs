@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace VirtoCommerce.CatalogModule.Web.Model
@@ -15,7 +16,7 @@ namespace VirtoCommerce.CatalogModule.Web.Model
         public string CategoryId { get; set; }
         public Category Category { get; set; }
 		public string Outline { get; set; }
-
+		public DateTime? IndexingDate { get; set; } 
         public string TitularItemId { get; set; }
         public bool IsBuyable { get; set; }
         public bool IsActive { get; set; }

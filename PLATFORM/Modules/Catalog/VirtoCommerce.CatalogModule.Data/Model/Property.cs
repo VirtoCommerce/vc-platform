@@ -14,6 +14,7 @@ namespace VirtoCommerce.CatalogModule.Data.Model
 	{
 		public Property()
 		{
+			Id = Guid.NewGuid().ToString("N");
 			PropertyValues = new ObservableCollection<PropertyValue>();
 			PropertyAttributes = new ObservableCollection<PropertyAttribute>();
 		}

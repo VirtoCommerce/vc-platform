@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using module = VirtoCommerce.Domain.Catalog.Model;
-using foundation = VirtoCommerce.CatalogModule.Data.Model;
+using coreModel = VirtoCommerce.Domain.Catalog.Model;
+using dataModel = VirtoCommerce.CatalogModule.Data.Model;
 using Omu.ValueInjecter;
 using VirtoCommerce.Platform.Data.Common;
 using VirtoCommerce.Platform.Data.Common.ConventionInjections;
+using VirtoCommerce.Domain.Commerce.Model;
 
 namespace VirtoCommerce.CatalogModule.Data.Converters
 {
@@ -13,16 +14,16 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
         /// <summary>
         /// Converting to model type
         /// </summary>
-        /// <param name="dbSeoInfo">The database seo information.</param>
+        /// <param name="seoUrlKeyword">The database seo information.</param>
         /// <returns></returns>
-		public static module.SeoInfo ToModuleModel(this foundation.SeoUrlKeyword dbSeoInfo)
+		public static coreModel.SeoInfo ToCoreModel(this SeoUrlKeyword seoUrlKeyword)
 		{
-			var retVal = new module.SeoInfo();
-			retVal.InjectFrom(dbSeoInfo);
+			var retVal = new coreModel.SeoInfo();
+			retVal.InjectFrom(seoUrlKeyword);
 
-			retVal.SemanticUrl = dbSeoInfo.Keyword;
-			retVal.LanguageCode = dbSeoInfo.Language;
-			retVal.PageTitle = dbSeoInfo.Title;
+			retVal.SemanticUrl = seoUrlKeyword.Keyword;
+			retVal.LanguageCode = seoUrlKeyword.Language;
+			retVal.PageTitle = seoUrlKeyword.Title;
 
 			return retVal;
 		}
@@ -33,11 +34,11 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
         /// <param name="seoInfo">The seo information.</param>
         /// <param name="product">The product.</param>
         /// <returns></returns>
-		public static foundation.SeoUrlKeyword ToFoundation(this module.SeoInfo seoInfo, module.CatalogProduct product)
+		public static SeoUrlKeyword ToCoreModel(this coreModel.SeoInfo seoInfo, dataModel.Item product)
 		{
-			var retVal = seoInfo.ToFoundation();
+			var retVal = seoInfo.ToCoreModel();
 			retVal.KeywordValue = product.Id;
-			retVal.KeywordType = (int)module.SeoUrlKeywordTypes.Item;
+			retVal.KeywordType = (int)coreModel.SeoUrlKeywordTypes.Item;
 			return retVal;
 		}
 
@@ -47,18 +48,23 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
         /// <param name="seoInfo">The seo information.</param>
         /// <param name="category">The category.</param>
         /// <returns></returns>
-		public static foundation.SeoUrlKeyword ToFoundation(this module.SeoInfo seoInfo, module.Category category)
+		public static SeoUrlKeyword ToCoreModel(this coreModel.SeoInfo seoInfo, dataModel.CategoryBase category)
 		{
-			var retVal = seoInfo.ToFoundation();
+			var retVal = seoInfo.ToCoreModel();
 			retVal.KeywordValue = category.Id;
-			retVal.KeywordType = (int)module.SeoUrlKeywordTypes.Category;
+			retVal.KeywordType = (int)coreModel.SeoUrlKeywordTypes.Category;
 			return retVal;
 		}
 
-		private static foundation.SeoUrlKeyword ToFoundation(this module.SeoInfo seoInfo)
+		private static SeoUrlKeyword ToCoreModel(this coreModel.SeoInfo seoInfo)
 		{
-			var retVal = new foundation.SeoUrlKeyword();
+			var retVal = new SeoUrlKeyword();
+			var id = retVal.Id;
 			retVal.InjectFrom(seoInfo);
+			if(seoInfo.Id == null)
+			{
+				retVal.Id = id;
+			}
 			retVal.Keyword = seoInfo.SemanticUrl;
 			retVal.Language = seoInfo.LanguageCode;
 			retVal.Title = seoInfo.PageTitle;
@@ -66,23 +72,7 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 		
 			return retVal;
 		}
-
-		/// <summary>
-		/// Patch CatalogLanguage type
-		/// </summary>
-		/// <param name="source"></param>
-		/// <param name="target"></param>
-		public static void Patch(this foundation.SeoUrlKeyword source, foundation.SeoUrlKeyword target)
-		{
-			if (target == null)
-				throw new ArgumentNullException("target");
-
-			var patchInjectionPolicy = new PatchInjection<foundation.SeoUrlKeyword>(x => x.Keyword, x => x.MetaDescription,
-																			  x => x.ImageAltDescription, x => x.Title);
-			target.InjectFrom(patchInjectionPolicy, source);
-	
-		}
-
+				
 	}
 
 }

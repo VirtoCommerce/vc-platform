@@ -62,6 +62,10 @@
     <Compile Include="Converters\OperationConverter.cs" />
     <Compile Include="Converters\PaymentInConverter.cs" />
     <Compile Include="Converters\ShipmentConverter.cs" />
+    <Compile Include="Migrations\201504300638236_Initial.cs" />
+    <Compile Include="Migrations\201504300638236_Initial.Designer.cs">
+      <DependentUpon>201504300638236_Initial.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Model\AddressEntity.cs" />
     <Compile Include="Model\CustomerOrderEntity.cs" />
@@ -73,6 +77,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\IOrderRepository.cs" />
     <Compile Include="Repositories\OrderRepositoryImpl.cs" />
+    <Compile Include="Repositories\OrderSampleDatabaseInitializer.cs" />
     <Compile Include="Services\CustomerOrderSearchServiceImpl.cs" />
     <Compile Include="Services\CustomerOrderServiceImpl.cs" />
     <Compile Include="Services\TimeBasedNumberGeneratorImpl.cs" />
@@ -97,6 +102,24 @@
       <Project>{67c58a78-ddea-4fa3-a969-1cab582918e4}</Project>
       <Name>VirtoCommerce.Domain</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\201504300638236_Initial.resx">
+      <DependentUpon>201504300638236_Initial.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Repositories\Sql\OrderAddress.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Repositories\Sql\CustomerOrder.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Repositories\Sql\OrderLineItem.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Repositories\Sql\OrderPaymentIn.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Repositories\Sql\OrderShipment.sql" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -1,6 +1,7 @@
-﻿using Microsoft.Practices.Unity;
+﻿using System.Data.Entity;
+using Microsoft.Practices.Unity;
 using VirtoCommerce.CoreModule.Data.Repositories;
-using VirtoCommerce.Domain.Fulfillment.Services;
+using VirtoCommerce.Domain.Commerce.Services;
 using VirtoCommerce.Domain.Payment.Services;
 using VirtoCommerce.Domain.Search;
 using VirtoCommerce.Platform.Core.Modularity;
@@ -24,12 +25,24 @@ namespace VirtoCommerce.CoreModule.Web
 
         public void SetupDatabase(SampleDataLevel sampleDataLevel)
         {
-			using (var context = new CommerceRepositoryImpl())
+			using (var db = new CommerceRepositoryImpl("VirtoCommerce"))
 			{
-				var initializer = new SetupDatabaseInitializer<CommerceRepositoryImpl, VirtoCommerce.CoreModule.Data.Migrations.Configuration>();
-				initializer.InitializeDatabase(context);
+				IDatabaseInitializer<CommerceRepositoryImpl> initializer;
+
+				switch (sampleDataLevel)
+				{
+					case SampleDataLevel.Full:
+					case SampleDataLevel.Reduced:
+						initializer = new SqlCommerceSampleDatabaseInitializer();
+						break;
+					default:
+						initializer = new SetupDatabaseInitializer<CommerceRepositoryImpl, VirtoCommerce.CoreModule.Data.Migrations.Configuration>();
+						break;
+				}
+
+				initializer.InitializeDatabase(db);
 			}
-        }
+	    }
 
         public void Initialize()
         {
@@ -42,7 +55,7 @@ namespace VirtoCommerce.CoreModule.Web
            #region Fulfillment
 
 			_container.RegisterType<IСommerceRepository>(new InjectionFactory(c => new CommerceRepositoryImpl(_connectionStringName, new EntityPrimaryKeyGeneratorInterceptor(), new AuditableInterceptor())));
-            _container.RegisterType<IFulfillmentService, FulfillmentServiceImpl>();
+			_container.RegisterType<ICommerceService, CommerceServiceImpl>();
 
             #endregion
         }

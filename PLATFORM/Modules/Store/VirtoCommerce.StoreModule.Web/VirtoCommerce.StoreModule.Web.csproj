@@ -146,8 +146,6 @@
     <Compile Include="Model\StoreSetting.cs" />
     <Compile Include="Module.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SampleData\SqlStoreDatabaseInitializer.cs" />
-    <Compile Include="SampleData\SqlStoreSampleDatabaseInitializer.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\VirtoCommerce.Platform.Core\VirtoCommerce.Platform.Core.csproj">

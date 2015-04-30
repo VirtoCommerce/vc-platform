@@ -63,10 +63,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Extensions\Cache\VirtoCommerce.Caching.HttpCache\VirtoCommerce.Caching.HttpCache.csproj">
-      <Project>{3FE4EB14-557A-46BC-94AD-2E9874F85ACE}</Project>
-      <Name>VirtoCommerce.Caching.HttpCache</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\..\VirtoCommerce.Platform.Core\VirtoCommerce.Platform.Core.csproj">
       <Project>{f7c9313b-522e-4619-abc9-8c7d4600d6b5}</Project>
       <Name>VirtoCommerce.Platform.Core</Name>

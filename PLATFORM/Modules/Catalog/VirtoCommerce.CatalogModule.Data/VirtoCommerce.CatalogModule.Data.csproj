@@ -72,9 +72,9 @@
     <Compile Include="Converters\PropertyDictionaryValueConverter.cs" />
     <Compile Include="Converters\PropertyValueConverter.cs" />
     <Compile Include="Converters\SeoInfoConverter.cs" />
-    <Compile Include="Migrations\201504271228539_Initial.cs" />
-    <Compile Include="Migrations\201504271228539_Initial.Designer.cs">
-      <DependentUpon>201504271228539_Initial.cs</DependentUpon>
+    <Compile Include="Migrations\201504301302574_Initial.cs" />
+    <Compile Include="Migrations\201504301302574_Initial.Designer.cs">
+      <DependentUpon>201504301302574_Initial.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Model\Association.cs" />
@@ -100,14 +100,12 @@
     <Compile Include="Model\PropertySetProperty.cs" />
     <Compile Include="Model\PropertyValue.cs" />
     <Compile Include="Model\PropertyValueBase.cs" />
-    <Compile Include="Model\SeoUrlKeyword.cs">
-      <SubType>
-      </SubType>
-    </Compile>
     <Compile Include="Model\VirtualCatalog.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\CatalogRepositoryImpl.cs" />
     <Compile Include="Repositories\ICatalogRepository.cs" />
+    <Compile Include="Repositories\SqlCatalogReducedSampleDatabaseInitializer.cs" />
+    <Compile Include="Repositories\SqlCatalogSampleDatabaseInitializer.cs" />
     <Compile Include="Services\CatalogSearchServiceImpl.cs" />
     <Compile Include="Services\CategoryServiceImpl.cs" />
     <Compile Include="Services\ItemServiceImpl.cs" />
@@ -137,9 +135,88 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201504271228539_Initial.resx">
-      <DependentUpon>201504271228539_Initial.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201504301302574_Initial.resx">
+      <DependentUpon>201504301302574_Initial.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Repositories\Sql\Association.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Repositories\Sql\AssociationGroup.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Repositories\Sql\Catalog.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Repositories\Sql\CatalogBase.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Repositories\Sql\CatalogLanguage.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Repositories\Sql\Category.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Repositories\Sql\CategoryBase.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Repositories\Sql\CategoryItemRelation.reduced.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Repositories\Sql\CategoryItemRelation.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Repositories\Sql\EditorialReview.reduced.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Repositories\Sql\EditorialReview.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Repositories\Sql\Item.reduced.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Repositories\Sql\Item.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Repositories\Sql\ItemAsset.reduced.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Repositories\Sql\ItemAsset.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Repositories\Sql\ItemPropertyValue.reduced.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Repositories\Sql\ItemPropertyValue.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Repositories\Sql\ItemRelation.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Repositories\Sql\LinkedCategory.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Repositories\Sql\Property.reduced.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Repositories\Sql\Property.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Repositories\Sql\PropertyAttribute.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Repositories\Sql\PropertySet.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Repositories\Sql\PropertySetProperty.reduced.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Repositories\Sql\PropertySetProperty.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Repositories\Sql\TaxCategory.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Repositories\Sql\VirtualCatalog.sql" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

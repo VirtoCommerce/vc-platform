@@ -87,12 +87,13 @@
     <Compile Include="Catalog\Model\SearchCriteria.cs" />
     <Compile Include="Catalog\Model\SearchResult.cs" />
     <Compile Include="Catalog\Model\SeoInfo.cs" />
-    <Compile Include="Catalog\Model\SeoUrlKeywordTypes.cs" />
     <Compile Include="Catalog\Services\ICatalogSearchService.cs" />
     <Compile Include="Catalog\Services\ICatalogService.cs" />
     <Compile Include="Catalog\Services\ICategoryService.cs" />
     <Compile Include="Catalog\Services\IItemService.cs" />
     <Compile Include="Catalog\Services\IPropertyService.cs" />
+    <Compile Include="Commerce\Model\SeoUrlKeyword.cs" />
+    <Compile Include="Commerce\Model\SeoUrlKeywordTypes.cs" />
     <Compile Include="Common\IDynamicExpression.cs" />
     <Compile Include="Common\IWorkflowService.cs" />
     <Compile Include="Common\ObservableWorkflowService.cs" />
@@ -109,8 +110,8 @@
     <Compile Include="Customer\Services\ICustomerSearchService.cs" />
     <Compile Include="Customer\Services\IContactService.cs" />
     <Compile Include="Customer\Services\IOrganizationService.cs" />
-    <Compile Include="Fulfillment\Model\FulfillmentCenter.cs" />
-    <Compile Include="Fulfillment\Services\IFulfillmentService.cs" />
+    <Compile Include="Commerce\Model\FulfillmentCenter.cs" />
+    <Compile Include="Commerce\Services\ICommerceService.cs" />
     <Compile Include="Inventory\Model\InventoryInfo.cs" />
     <Compile Include="Inventory\Model\InventoryStatus.cs" />
     <Compile Include="Inventory\Services\IInventoryService.cs" />
@@ -233,7 +234,6 @@
     <Compile Include="Search\Model\SearchSort.cs" />
     <Compile Include="Search\Model\SearchSortField.cs" />
     <Compile Include="Search\Services\ISearchService.cs" />
-    <Compile Include="Store\Model\FulfillmentCenter.cs" />
     <Compile Include="Store\Model\SettingValueType.cs" />
     <Compile Include="Store\Model\Store.cs" />
     <Compile Include="Store\Model\StoreSetting.cs" />

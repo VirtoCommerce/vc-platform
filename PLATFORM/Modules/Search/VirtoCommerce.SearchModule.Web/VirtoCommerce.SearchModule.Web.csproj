@@ -120,7 +120,6 @@
     <Compile Include="BackgroundJobs\SearchIndexJobsScheduler.cs" />
     <Compile Include="Module.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Services\SearchProviderManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Controllers\Api\" />

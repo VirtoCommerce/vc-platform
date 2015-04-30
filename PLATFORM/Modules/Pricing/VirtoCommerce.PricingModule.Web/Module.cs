@@ -1,4 +1,5 @@
-﻿using Microsoft.Practices.Unity;
+﻿using System.Data.Entity;
+using Microsoft.Practices.Unity;
 using VirtoCommerce.Domain.Pricing.Services;
 using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Data.Infrastructure;
@@ -21,9 +22,21 @@ namespace VirtoCommerce.PricingModule.Web
 
         public void SetupDatabase(SampleDataLevel sampleDataLevel)
         {
-			using (var context = new PricingRepositoryImpl())
+			using (var context = new PricingRepositoryImpl("VirtoCommerce"))
 			{
-				var initializer = new SetupDatabaseInitializer<PricingRepositoryImpl, VirtoCommerce.PricingModule.Data.Migrations.Configuration>();
+				IDatabaseInitializer<PricingRepositoryImpl> initializer;
+
+				switch (sampleDataLevel)
+				{
+					case SampleDataLevel.Full:
+					case SampleDataLevel.Reduced:
+						initializer = new PricingSampleDatabaseInitializer();
+						break;
+					default:
+						initializer = new SetupDatabaseInitializer<PricingRepositoryImpl, VirtoCommerce.PricingModule.Data.Migrations.Configuration>();
+						break;
+				}
+
 				initializer.InitializeDatabase(context);
 			}
         }

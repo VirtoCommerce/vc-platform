@@ -28,26 +28,11 @@ namespace VirtoCommerce.StoreModule.Data.Repositories
 
 		protected override void OnModelCreating(DbModelBuilder modelBuilder)
 		{
-		
-			modelBuilder.Entity<FulfillmentCenter>().HasKey(x => x.Id).Property(x => x.Id)
-									.HasColumnName("FulfillmentCenterId");
-			modelBuilder.Entity<Store>().HasKey(x => x.Id).Property(x => x.Id)
-										.HasColumnName("StoreId");
-			modelBuilder.Entity<StoreCurrency>().HasKey(x => x.Id).Property(x => x.Id)
-										.HasColumnName("StoreCurrencyId");
-			modelBuilder.Entity<StoreLanguage>().HasKey(x => x.Id).Property(x => x.Id)
-										.HasColumnName("StoreLanguageId");
-			modelBuilder.Entity<StorePaymentGateway>().HasKey(x => x.Id).Property(x => x.Id)
-										.HasColumnName("StorePaymentGatewayId");
-			modelBuilder.Entity<StoreSetting>().HasKey(x => x.Id).Property(x => x.Id)
-									.HasColumnName("StoreSettingId");
-
-			MapEntity<FulfillmentCenter>(modelBuilder, toTable: "vc_FulfillmentCenter");
-			MapEntity<Store>(modelBuilder, toTable: "vc_Store");
-			MapEntity<StoreCurrency>(modelBuilder, toTable: "vc_StoreCurrency");
-			MapEntity<StoreLanguage>(modelBuilder, toTable: "vc_StoreLanguage");
-			MapEntity<StorePaymentGateway>(modelBuilder, toTable: "vc_StorePaymentGateway");
-			MapEntity<StoreSetting>(modelBuilder, toTable: "vc_StoreSetting");
+			MapEntity<Store>(modelBuilder, toTable: "Store");
+			MapEntity<StoreCurrency>(modelBuilder, toTable: "StoreCurrency");
+			MapEntity<StoreLanguage>(modelBuilder, toTable: "StoreLanguage");
+			MapEntity<StorePaymentGateway>(modelBuilder, toTable: "StorePaymentGateway");
+			MapEntity<StoreSetting>(modelBuilder, toTable: "StoreSetting");
 
 			base.OnModelCreating(modelBuilder);
 		}
@@ -57,11 +42,9 @@ namespace VirtoCommerce.StoreModule.Data.Repositories
 		public Store GetStoreById(string id)
 		{
 			var retVal = Stores.Where(x => x.Id == id).Include(x => x.Settings)
-														 .Include(x => x.ReturnsFulfillmentCenter)
 														 .Include(x => x.Languages)
 														 .Include(x => x.Currencies)
-														 .Include(x=> x.PaymentGateways)
-														 .Include(x => x.FulfillmentCenter);
+														 .Include(x => x.PaymentGateways);
 			return retVal.FirstOrDefault();
 		}
 

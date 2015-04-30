@@ -11,5 +11,6 @@ namespace VirtoCommerce.CoreModule.Data.Repositories
 	public interface IСommerceRepository : IRepository
 	{
 		IQueryable<FulfillmentCenter> FulfillmentCenters { get; }
+		IQueryable<SeoUrlKeyword> SeoUrlKeywords { get; }
 	}
 }

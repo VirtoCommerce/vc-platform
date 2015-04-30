@@ -31,13 +31,6 @@ namespace VirtoCommerce.PricingModule.Data.Repositories
 
 		protected override void OnModelCreating(DbModelBuilder modelBuilder)
 		{
-			modelBuilder.Entity<Price>().HasKey(x => x.Id).Property(x => x.Id)
-										.HasColumnName("PriceId");
-			modelBuilder.Entity<Pricelist>().HasKey(x => x.Id).Property(x => x.Id)
-										.HasColumnName("PricelistId");
-			modelBuilder.Entity<PricelistAssignment>().HasKey(x => x.Id).Property(x => x.Id)
-										.HasColumnName("PricelistAssignmentId");
-
 			MapEntity<Price>(modelBuilder, toTable: "Price");
 			MapEntity<Pricelist>(modelBuilder, toTable: "Pricelist");
 			MapEntity<PricelistAssignment>(modelBuilder, toTable: "PricelistAssignment");

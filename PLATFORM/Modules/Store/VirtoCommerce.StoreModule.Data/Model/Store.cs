@@ -64,18 +64,13 @@ namespace VirtoCommerce.StoreModule.Data.Model
 
 		public bool DisplayOutOfStock { get; set; }
 
-		#region Navigation Properties
-
 		[StringLength(128)]
 		public string FulfillmentCenterId { get; set; }
-        [ForeignKey("FulfillmentCenterId")]
-		public FulfillmentCenter FulfillmentCenter { get; set; }
-
-        [ForeignKey("ReturnsFulfillmentCenter")]
 		[StringLength(128)]
 		public string ReturnsFulfillmentCenterId { get; set; }
-		public FulfillmentCenter ReturnsFulfillmentCenter { get; set; }
 
+		#region Navigation Properties
+	
 		public ObservableCollection<StoreLanguage> Languages { get; set; }
 
 		public ObservableCollection<StoreCurrency> Currencies { get; set; }

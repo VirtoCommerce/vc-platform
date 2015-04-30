@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Runtime.Serialization;
 using VirtoCommerce.Platform.Core.Common;
@@ -7,6 +8,10 @@ namespace VirtoCommerce.CatalogModule.Data.Model
 {
 	public class ItemRelation : AuditableEntity
 	{
+		public ItemRelation()
+		{
+			Id = Guid.NewGuid().ToString("N");
+		}
 		[StringLength(64)]
 		public string RelationTypeId { get; set; }
 

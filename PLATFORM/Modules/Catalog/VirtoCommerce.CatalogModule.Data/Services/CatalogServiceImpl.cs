@@ -8,8 +8,8 @@ using VirtoCommerce.CatalogModule.Data.Repositories;
 using VirtoCommerce.Domain.Catalog.Services;
 using VirtoCommerce.Platform.Core.Caching;
 using VirtoCommerce.Platform.Data.Infrastructure;
-using foundation = VirtoCommerce.CatalogModule.Data.Model;
-using module = VirtoCommerce.Domain.Catalog.Model;
+using dataModel = VirtoCommerce.CatalogModule.Data.Model;
+using coreModel = VirtoCommerce.Domain.Catalog.Model;
 
 namespace VirtoCommerce.CatalogModule.Data.Services
 {
@@ -23,24 +23,24 @@ namespace VirtoCommerce.CatalogModule.Data.Services
 
 		#region ICatalogService Members
 
-		public module.Catalog GetById(string catalogId)
+		public coreModel.Catalog GetById(string catalogId)
 		{
-			module.Catalog retVal = null;
+			coreModel.Catalog retVal = null;
 			using (var repository = _catalogRepositoryFactory())
 			{
 				var dbCatalogBase = repository.GetCatalogById(catalogId);
 
 				var dbProperties = repository.GetCatalogProperties(dbCatalogBase);
-				var properties = dbProperties.Select(x => x.ToModuleModel(dbCatalogBase.ToModuleModel(), null)).ToArray();
-				retVal = dbCatalogBase.ToModuleModel(properties);
+				var properties = dbProperties.Select(x => x.ToCoreModel(dbCatalogBase.ToCoreModel(), null)).ToArray();
+				retVal = dbCatalogBase.ToCoreModel(properties);
 			}
 			return retVal;
 		}
 
-		public module.Catalog Create(module.Catalog catalog)
+		public coreModel.Catalog Create(coreModel.Catalog catalog)
 		{
-			var dbCatalog = catalog.ToFoundation();
-			module.Catalog retVal = null;
+			var dbCatalog = catalog.ToDataModel();
+			coreModel.Catalog retVal = null;
 			using (var repository = _catalogRepositoryFactory())
 			{
 				repository.Add(dbCatalog);
@@ -50,7 +50,7 @@ namespace VirtoCommerce.CatalogModule.Data.Services
 			return retVal;
 		}
 
-		public void Update(module.Catalog[] catalogs)
+		public void Update(coreModel.Catalog[] catalogs)
 		{
 			using (var repository = _catalogRepositoryFactory())
 			using (var changeTracker = base.GetChangeTracker(repository))
@@ -62,7 +62,7 @@ namespace VirtoCommerce.CatalogModule.Data.Services
 					{
 						throw new NullReferenceException("dbCatalog");
 					}
-					var dbCatalogChanged = catalog.ToFoundation();
+					var dbCatalogChanged = catalog.ToDataModel();
 
 					changeTracker.Attach(dbCatalog);
 					dbCatalogChanged.Patch(dbCatalog);
@@ -86,14 +86,14 @@ namespace VirtoCommerce.CatalogModule.Data.Services
 		}
 
 
-		public IEnumerable<module.Catalog> GetCatalogsList()
+		public IEnumerable<coreModel.Catalog> GetCatalogsList()
 		{
-			var retVal = new List<module.Catalog>();
+			var retVal = new List<coreModel.Catalog>();
 			using (var repository = _catalogRepositoryFactory())
 			{
 				foreach(var catalogBase in repository.Catalogs)
 				{
-					retVal.Add(catalogBase.ToModuleModel());
+					retVal.Add(catalogBase.ToCoreModel());
 				}
 			}
 			return retVal;

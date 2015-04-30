@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using foundation = VirtoCommerce.CatalogModule.Data.Model;
-using module = VirtoCommerce.Domain.Catalog.Model;
+using dataModel = VirtoCommerce.CatalogModule.Data.Model;
+using coreModel = VirtoCommerce.Domain.Catalog.Model;
 using Omu.ValueInjecter;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Data.Common;
@@ -15,12 +15,12 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
         /// </summary>
         /// <param name="catalogBase"></param>
         /// <returns></returns>
-        public static module.PropertyDictionaryValue ToModuleModel(this foundation.PropertyValue dbPropValue, module.Property property)
+        public static coreModel.PropertyDictionaryValue ToCoreModel(this dataModel.PropertyValue dbPropValue, coreModel.Property property)
         {
             if (property == null)
                 throw new ArgumentNullException("property");
 
-			var retVal = new module.PropertyDictionaryValue();
+			var retVal = new coreModel.PropertyDictionaryValue();
 			retVal.InjectFrom(dbPropValue);
 
 			retVal.LanguageCode = dbPropValue.Locale;
@@ -36,9 +36,9 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
         /// </summary>
         /// <param name="catalog"></param>
         /// <returns></returns>
-        public static foundation.PropertyValue ToFoundation(this module.PropertyDictionaryValue propDictValue, module.Property property)
+        public static dataModel.PropertyValue ToDataModel(this coreModel.PropertyDictionaryValue propDictValue, coreModel.Property property)
         {
-            var retVal = new foundation.PropertyValue
+            var retVal = new dataModel.PropertyValue
             {
                 Locale = propDictValue.LanguageCode,
                 PropertyId = property.Id,
@@ -54,29 +54,29 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
         /// </summary>
         /// <param name="source"></param>
         /// <param name="target"></param>
-        public static void Patch(this foundation.PropertyValue source, foundation.PropertyValue target)
+        public static void Patch(this dataModel.PropertyValue source, dataModel.PropertyValue target)
         {
             if (target == null)
                 throw new ArgumentNullException("target");
 
             var newValue = target.ToString();
             if (newValue != null)
-                SetPropertyValue(target, (module.PropertyValueType)target.ValueType, target.ToString());
+                SetPropertyValue(target, (coreModel.PropertyValueType)target.ValueType, target.ToString());
             if (source.KeyValue != null)
                 target.KeyValue = source.KeyValue;
         }
 
-		private static void SetPropertyValue(foundation.PropertyValueBase retVal, module.PropertyValueType type, string value)
+		private static void SetPropertyValue(dataModel.PropertyValueBase retVal, coreModel.PropertyValueType type, string value)
         {
             switch (type)
             {
-				case module.PropertyValueType.LongText:
+				case coreModel.PropertyValueType.LongText:
                     retVal.LongTextValue = value;
                     break;
-				case module.PropertyValueType.ShortText:
+				case coreModel.PropertyValueType.ShortText:
                     retVal.ShortTextValue = value;
                     break;
-				case module.PropertyValueType.Number:
+				case coreModel.PropertyValueType.Number:
                     decimal parsedDecimal;
                     Decimal.TryParse(value, out parsedDecimal);
                     retVal.DecimalValue = parsedDecimal;

@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Runtime.Serialization;
 using VirtoCommerce.Platform.Core.Common;
@@ -8,6 +9,10 @@ namespace VirtoCommerce.CatalogModule.Data.Model
 {
 	public class PropertyAttribute : AuditableEntity
 	{
+		public PropertyAttribute()
+		{
+			Id = Guid.NewGuid().ToString("N");
+		}
 		[Required]
 		[StringLength(128)]
 		public string PropertyAttributeName { get; set; }

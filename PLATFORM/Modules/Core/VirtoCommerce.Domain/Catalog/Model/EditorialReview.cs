@@ -4,7 +4,6 @@ namespace VirtoCommerce.Domain.Catalog.Model
 {
 	public class EditorialReview : AuditableEntity, ILanguageSupport
 	{
-	
 		public string Content { get; set; }
 		public string ReviewType { get; set; }
 

@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using foundation = VirtoCommerce.CatalogModule.Data.Model;
-using module = VirtoCommerce.Domain.Catalog.Model;
+using dataModel = VirtoCommerce.CatalogModule.Data.Model;
+using coreModel = VirtoCommerce.Domain.Catalog.Model;
 using Omu.ValueInjecter;
 
 namespace VirtoCommerce.CatalogModule.Data.Converters
@@ -16,12 +16,12 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 		/// </summary>
 		/// <param name="catalogBase"></param>
 		/// <returns></returns>
-		public static module.CategoryLink ToModuleModel(this foundation.CategoryItemRelation categoryItemRelation)
+		public static coreModel.CategoryLink ToCoreModel(this dataModel.CategoryItemRelation categoryItemRelation)
 		{
 			if (categoryItemRelation == null)
 				throw new ArgumentNullException("categoryItemRelation");
 
-			var retVal = new module.CategoryLink
+			var retVal = new coreModel.CategoryLink
 			{
 				 CategoryId = categoryItemRelation.CategoryId,
 				 CatalogId = categoryItemRelation.CatalogId
@@ -34,12 +34,12 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 		/// </summary>
 		/// <param name="catalog"></param>
 		/// <returns></returns>
-		public static module.CategoryLink ToModuleModel(this foundation.LinkedCategory linkedCategory, module.Category category)
+		public static coreModel.CategoryLink ToCoreModel(this dataModel.LinkedCategory linkedCategory, coreModel.Category category)
 		{
 			if (linkedCategory == null)
 				throw new ArgumentNullException("linkedCategory");
 
-			var retVal = new module.CategoryLink();
+			var retVal = new coreModel.CategoryLink();
 		
 			retVal.CategoryId = linkedCategory.LinkedCategoryId;
 			retVal.CatalogId = linkedCategory.LinkedCatalogId;
@@ -52,9 +52,9 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 		/// </summary>
 		/// <param name="catalog"></param>
 		/// <returns></returns>
-		public static foundation.CategoryItemRelation ToFoundation(this module.CategoryLink categoryLink, module.CatalogProduct product)
+		public static dataModel.CategoryItemRelation ToDataModel(this coreModel.CategoryLink categoryLink, coreModel.CatalogProduct product)
 		{
-			var retVal = new foundation.CategoryItemRelation
+			var retVal = new dataModel.CategoryItemRelation
 			{
 				 CategoryId = categoryLink.CategoryId,
 				 ItemId = product.Id,
@@ -69,9 +69,9 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 		/// </summary>
 		/// <param name="catalog"></param>
 		/// <returns></returns>
-		public static foundation.LinkedCategory ToFoundation(this module.CategoryLink categoryLink, module.Category category)
+		public static dataModel.LinkedCategory ToDataModel(this coreModel.CategoryLink categoryLink, coreModel.Category category)
 		{
-			var retVal = new foundation.LinkedCategory
+			var retVal = new dataModel.LinkedCategory
 			{
 				CatalogId = category.CatalogId,
 				LinkedCategoryId = categoryLink.CategoryId,
@@ -88,7 +88,7 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 		/// </summary>
 		/// <param name="source"></param>
 		/// <param name="target"></param>
-		public static void Patch(this foundation.LinkedCategory source, foundation.LinkedCategory target)
+		public static void Patch(this dataModel.LinkedCategory source, dataModel.LinkedCategory target)
 		{
 			//Nothing todo. Because we not support change  link
 		}
@@ -98,18 +98,18 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 		/// </summary>
 		/// <param name="source"></param>
 		/// <param name="target"></param>
-		public static void Patch(this foundation.CategoryItemRelation source, foundation.CategoryItemRelation target)
+		public static void Patch(this dataModel.CategoryItemRelation source, dataModel.CategoryItemRelation target)
 		{
 			//Nothing todo. Because we not support change link
 		}
 
 	}
 
-	public class CategoryItemRelationComparer : IEqualityComparer<foundation.CategoryItemRelation>
+	public class CategoryItemRelationComparer : IEqualityComparer<dataModel.CategoryItemRelation>
 	{
 		#region IEqualityComparer<CategoryItemRelation> Members
 
-		public bool Equals(foundation.CategoryItemRelation x, foundation.CategoryItemRelation y)
+		public bool Equals(dataModel.CategoryItemRelation x, dataModel.CategoryItemRelation y)
 		{
 			var retVal = x.CatalogId == y.CatalogId;
 			
@@ -121,7 +121,7 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 			return retVal;
 		}
 
-		public int GetHashCode(foundation.CategoryItemRelation obj)
+		public int GetHashCode(dataModel.CategoryItemRelation obj)
 		{
 			var retVal = obj.CatalogId.GetHashCode();
 			if (obj.CategoryId != null)
@@ -134,11 +134,11 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 		#endregion
 	}
 
-	public class LinkedCategoryComparer : IEqualityComparer<foundation.LinkedCategory>
+	public class LinkedCategoryComparer : IEqualityComparer<dataModel.LinkedCategory>
 	{
 		#region IEqualityComparer<LinkedCategory> Members
 
-		public bool Equals(foundation.LinkedCategory x, foundation.LinkedCategory y)
+		public bool Equals(dataModel.LinkedCategory x, dataModel.LinkedCategory y)
 		{
 			var retVal = x.LinkedCatalogId == y.LinkedCatalogId;;
 			if(retVal && x.LinkedCategoryId != null)
@@ -149,7 +149,7 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 			return retVal;
 		}
 
-		public int GetHashCode(foundation.LinkedCategory obj)
+		public int GetHashCode(dataModel.LinkedCategory obj)
 		{
 			var retVal = obj.LinkedCatalogId.GetHashCode();
 			if(obj.LinkedCategoryId != null)

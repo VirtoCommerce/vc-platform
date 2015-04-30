@@ -22,6 +22,7 @@ namespace VirtoCommerce.Domain.Catalog.Model
         public bool IsBuyable { get; set; }
         public bool IsActive { get; set; }
         public bool TrackInventory { get; set; }
+		public DateTime? IndexingDate { get; set; }
 	
 		public ICollection<PropertyValue> PropertyValues { get; set; }
 		public ICollection<ItemAsset> Assets { get; set; }

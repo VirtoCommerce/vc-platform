@@ -19,9 +19,7 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
 		IQueryable<foundation.ItemRelation> ItemRelations { get; }
 		IQueryable<foundation.CategoryItemRelation> CategoryItemRelations { get; }
 		IQueryable<foundation.Association> Associations { get; }
-		IQueryable<foundation.SeoUrlKeyword> SeoUrlKeywords { get; }
 
-		foundation.SeoUrlKeyword[] GetAllSeoInformation(string id);
 		foundation.Category[] GetAllCategoryParents(foundation.Category categoryId);
 		foundation.CatalogBase GetCatalogById(string catalogId);
 		foundation.Category GetCategoryById(string categoryId);

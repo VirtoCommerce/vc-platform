@@ -1,4 +1,5 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
 using System.Runtime.Serialization;
 using VirtoCommerce.Platform.Core.Common;
@@ -9,6 +10,7 @@ namespace VirtoCommerce.CatalogModule.Data.Model
 	{
 		public CatalogBase()
 		{
+			Id = Guid.NewGuid().ToString("N");
 			CategoryBases = new ObservableCollection<CategoryBase>();
 		}
 

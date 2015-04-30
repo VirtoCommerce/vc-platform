@@ -34,14 +34,7 @@ namespace VirtoCommerce.StoreModule.Data.Converters
 				retVal.DefaultCurrency = (CurrencyCodes?)Enum.Parse(typeof(CurrencyCodes), dbStore.DefaultCurrency, true);
 			}
 			retVal.StoreState = (coreModel.StoreState)dbStore.StoreState;
-			if(dbStore.FulfillmentCenter != null)
-			{
-				retVal.FulfillmentCenter = dbStore.FulfillmentCenter.ToCoreModel();
-			}
-			if (dbStore.ReturnsFulfillmentCenter != null)
-			{
-				retVal.ReturnsFulfillmentCenter = dbStore.ReturnsFulfillmentCenter.ToCoreModel();
-			}
+			
 			retVal.Settings = dbStore.Settings.Select(x => x.ToCoreModel()).ToList();
 			retVal.Languages = dbStore.Languages.Select(x => x.LanguageCode).ToList();
 			retVal.Currencies = dbStore.Currencies.Select(x => (CurrencyCodes)Enum.Parse(typeof(CurrencyCodes), x.CurrencyCode, true)).ToList();
@@ -68,11 +61,11 @@ namespace VirtoCommerce.StoreModule.Data.Converters
 			}
 			if (store.FulfillmentCenter != null)
 			{
-				retVal.FulfillmentCenterId = retVal.FulfillmentCenter.Id;
+				retVal.FulfillmentCenterId = store.FulfillmentCenter.Id;
 			}
 			if (store.ReturnsFulfillmentCenter != null)
 			{
-				retVal.ReturnsFulfillmentCenterId = retVal.ReturnsFulfillmentCenter.Id;
+				retVal.ReturnsFulfillmentCenterId = store.ReturnsFulfillmentCenter.Id;
 			}
 			retVal.Languages = new NullCollection<foundationModel.StoreLanguage>();
 			if (store.Languages != null)
@@ -122,7 +115,8 @@ namespace VirtoCommerce.StoreModule.Data.Converters
 		{
 			if (target == null)
 				throw new ArgumentNullException("target");
-			var patchInjectionPolicy = new PatchInjection<foundationModel.Store>(x => x.AdminEmail, x => x.Catalog,
+			var patchInjectionPolicy = new PatchInjection<foundationModel.Store>(x=>x.FulfillmentCenterId, x=>x.ReturnsFulfillmentCenterId, 
+																		   x => x.AdminEmail, x => x.Catalog,
 																		   x => x.Country, x => x.CreditCardSavePolicy,
 																		   x => x.DefaultCurrency, x => x.DefaultLanguage,
 																		   x => x.Description, x => x.DisplayOutOfStock,
@@ -131,15 +125,6 @@ namespace VirtoCommerce.StoreModule.Data.Converters
 			target.InjectFrom(patchInjectionPolicy, source);
 
 
-			if (source.FulfillmentCenter != null)
-			{
-				target.FulfillmentCenterId = source.FulfillmentCenter.Id;
-			}
-
-			if (source.ReturnsFulfillmentCenter != null)
-			{
-				target.ReturnsFulfillmentCenterId = source.ReturnsFulfillmentCenter.Id;
-			}
 
 			if (!source.Settings.IsNullCollection())
 			{

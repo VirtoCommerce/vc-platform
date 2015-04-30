@@ -55,15 +55,16 @@
     <Compile Include="Converters\PriceConverter.cs" />
     <Compile Include="Converters\PriceListAssignmentConverter.cs" />
     <Compile Include="Converters\PricelistConverter.cs" />
-    <Compile Include="Migrations\201504241007181_Initial.cs" />
-    <Compile Include="Migrations\201504241007181_Initial.Designer.cs">
-      <DependentUpon>201504241007181_Initial.cs</DependentUpon>
+    <Compile Include="Migrations\201504291837167_Initial.cs" />
+    <Compile Include="Migrations\201504291837167_Initial.Designer.cs">
+      <DependentUpon>201504291837167_Initial.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Model\Price.cs" />
     <Compile Include="Model\Pricelist.cs" />
     <Compile Include="Model\PricelistAssignment.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Repositories\PricingSampleDatabaseInitializer.cs" />
     <Compile Include="Repositories\PricingRepositoryImpl.cs" />
     <Compile Include="Repositories\IPricingRepository.cs" />
     <Compile Include="Services\PricingServiceImpl.cs" />
@@ -83,13 +84,23 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201504241007181_Initial.resx">
-      <DependentUpon>201504241007181_Initial.cs</DependentUpon>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\201504291837167_Initial.resx">
+      <DependentUpon>201504291837167_Initial.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <EmbeddedResource Include="Repositories\Sql\Price.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Repositories\Sql\Pricelist.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Repositories\Sql\PricelistAssignment.sql" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

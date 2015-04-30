@@ -1,4 +1,5 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Runtime.Serialization;
@@ -11,6 +12,7 @@ namespace VirtoCommerce.CatalogModule.Data.Model
 	{
 		public AssociationGroup()
 		{
+			Id = Guid.NewGuid().ToString("N");
 			Associations = new ObservableCollection<Association>();
 		}
 

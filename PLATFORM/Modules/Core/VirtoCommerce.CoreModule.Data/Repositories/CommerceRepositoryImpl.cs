@@ -28,10 +28,8 @@ namespace VirtoCommerce.CoreModule.Data.Repositories
 
 		protected override void OnModelCreating(DbModelBuilder modelBuilder)
 		{
-			modelBuilder.Entity<FulfillmentCenter>().HasKey(x => x.Id).Property(x => x.Id)
-											.HasColumnName("FulfillmentCenterId");
-
 			MapEntity<FulfillmentCenter>(modelBuilder, toTable: "FulfillmentCenter");
+			MapEntity<SeoUrlKeyword>(modelBuilder, toTable: "SeoUrlKeyword");
 
 			base.OnModelCreating(modelBuilder);
 		}
@@ -42,8 +40,13 @@ namespace VirtoCommerce.CoreModule.Data.Repositories
 		{
 			get { return GetAsQueryable<FulfillmentCenter>(); }
 		}
-
+		public IQueryable<SeoUrlKeyword> SeoUrlKeywords
+		{
+			get { return GetAsQueryable<SeoUrlKeyword>(); }
+		}
 		#endregion
+
+	
 	}
 
 }

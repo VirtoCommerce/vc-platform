@@ -23,6 +23,8 @@ namespace VirtoCommerce.MarketingModule.Data.Repositories
 		public MarketingRepositoryImpl(string nameOrConnectionString, params IInterceptor[] interceptors)
 			: base(nameOrConnectionString, null, interceptors)
 		{
+			this.Configuration.ProxyCreationEnabled = false;
+			Database.SetInitializer<MarketingRepositoryImpl>(null);
 		}
 
 		protected override void OnModelCreating(DbModelBuilder modelBuilder)

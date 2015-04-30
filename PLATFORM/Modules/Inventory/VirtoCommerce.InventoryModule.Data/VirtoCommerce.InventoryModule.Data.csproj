@@ -53,9 +53,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Converters\InventoryConverter.cs" />
-    <Compile Include="Migrations\201504291152397_Initial.cs" />
-    <Compile Include="Migrations\201504291152397_Initial.Designer.cs">
-      <DependentUpon>201504291152397_Initial.cs</DependentUpon>
+    <Compile Include="Migrations\201504300631475_Initial.cs" />
+    <Compile Include="Migrations\201504300631475_Initial.Designer.cs">
+      <DependentUpon>201504300631475_Initial.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Model\Inventory.cs" />
@@ -79,13 +79,13 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201504291152397_Initial.resx">
-      <DependentUpon>201504291152397_Initial.cs</DependentUpon>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\201504300631475_Initial.resx">
+      <DependentUpon>201504300631475_Initial.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

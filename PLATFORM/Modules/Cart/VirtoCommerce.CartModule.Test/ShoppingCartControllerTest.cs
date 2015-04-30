@@ -8,6 +8,7 @@ using VirtoCommerce.CartModule.Data.Services;
 using VirtoCommerce.Domain.Cart.Model;
 using VirtoCommerce.Domain.Cart.Services;
 using coreModel = VirtoCommerce.Domain.Cart.Model;
+using dataModel = VirtoCommerce.CartModule.Data.Model;
 using webModel = VirtoCommerce.CatalogModule.Web.Model;
 using VirtoCommerce.CartModule.Data.Workflow;
 
@@ -20,6 +21,29 @@ namespace VirtoCommerce.CartModule.Test
     [TestClass]
 	public class ShoppingCartControllerTest
 	{
+		[TestMethod]
+		public void Tst1()
+		{
+			var repository = new CartRepositoryImpl("VirtoCommerce", new AuditableInterceptor(),
+															   new EntityPrimaryKeyGeneratorInterceptor());
+			var cart = new dataModel.ShoppingCartEntity
+			{
+				StoreId = "ss",
+				CustomerId = "ss",
+				Currency = "ss",
+
+			};
+
+			var shipment = new dataModel.ShipmentEntity
+			{
+				Currency = "sss",
+
+			};
+			cart.Shipments.Add(shipment);
+			repository.Add(cart);
+			repository.UnitOfWork.Commit();
+		}
+
 		[TestMethod]
 		public void GetCurrentCartTest()
 		{

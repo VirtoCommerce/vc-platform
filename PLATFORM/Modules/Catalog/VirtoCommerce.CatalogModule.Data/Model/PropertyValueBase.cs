@@ -8,6 +8,10 @@ namespace VirtoCommerce.CatalogModule.Data.Model
 {
     public abstract class PropertyValueBase : AuditableEntity
     {
+		public PropertyValueBase()
+		{
+			Id = Guid.NewGuid().ToString("N");
+		}
 		[StringLength(64)]
 		public string Alias { get; set; }
 

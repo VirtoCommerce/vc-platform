@@ -34,7 +34,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 		private readonly CacheManager _cacheManager;
 
 		public ProductController(ICatalogSearchService searchService, ICategoryService categoryService,
-								 IStoreService storeService, IItemService itemService, IBlobUrlResolver blobUrlResolver, 
+								 IStoreService storeService, IItemService itemService, IBlobUrlResolver blobUrlResolver,
 								 IBrowseFilterService browseFilterService, IItemBrowsingService browseService, CacheManager cacheManager)
         {
 			_itemService = itemService;

@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Runtime.Serialization;
 using VirtoCommerce.Platform.Core.Common;
@@ -8,6 +9,10 @@ namespace VirtoCommerce.CatalogModule.Data.Model
 {
 	public class Association : AuditableEntity
 	{
+		public Association()
+		{
+			Id = Guid.NewGuid().ToString("N");
+		}
 		/// <summary>
 		/// Gets or sets the type of the association. The examples association types are: optional, required. AssociationTypes.Required or AssociationTypes.Optional
 		/// </summary>

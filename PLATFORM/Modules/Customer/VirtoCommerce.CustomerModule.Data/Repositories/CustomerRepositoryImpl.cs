@@ -26,22 +26,6 @@ namespace VirtoCommerce.CustomerModule.Data.Repositories
 
 		protected override void OnModelCreating(DbModelBuilder modelBuilder)
 		{
-			modelBuilder.Entity<Address>().HasKey(x => x.Id).Property(x => x.Id)
-											.HasColumnName("AddressId");
-			modelBuilder.Entity<ContactPropertyValue>().HasKey(x => x.Id).Property(x => x.Id)
-											.HasColumnName("PropertyValueId");
-			modelBuilder.Entity<Note>().HasKey(x => x.Id).Property(x => x.Id)
-											.HasColumnName("NoteId");
-			modelBuilder.Entity<Email>().HasKey(x => x.Id).Property(x => x.Id)
-										.HasColumnName("EmailId");
-			modelBuilder.Entity<Member>().HasKey(x => x.Id).Property(x => x.Id)
-											.HasColumnName("MemberId");
-			modelBuilder.Entity<Phone>().HasKey(x => x.Id).Property(x => x.Id)
-											.HasColumnName("PhoneId");
-			modelBuilder.Entity<MemberRelation>().HasKey(x => x.Id).Property(x => x.Id)
-											.HasColumnName("MemberRelationId");
-	
-
 			InheritanceMapping(modelBuilder);
 
 			MapEntity<Address>(modelBuilder, toTable: "Address");
@@ -60,7 +44,7 @@ namespace VirtoCommerce.CustomerModule.Data.Repositories
 
 			modelBuilder.Entity<Member>().Map(entity =>
 				{
-					entity.ToTable("vMember");
+					entity.ToTable("Member");
 				});
 			modelBuilder.Entity<Contact>().Map(entity =>
 				{

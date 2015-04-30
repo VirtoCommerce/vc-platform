@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using foundation = VirtoCommerce.CatalogModule.Data.Model;
-using module = VirtoCommerce.Domain.Catalog.Model;
+using dataModel = VirtoCommerce.CatalogModule.Data.Model;
+using coreModel = VirtoCommerce.Domain.Catalog.Model;
 using Omu.ValueInjecter;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Data.Common;
@@ -20,18 +20,18 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
         /// <param name="properties">The properties.</param>
         /// <returns></returns>
         /// <exception cref="System.ArgumentNullException">dbPropValue</exception>
-        public static module.PropertyValue ToModuleModel(this foundation.PropertyValueBase dbPropValue, module.Property[] properties)
+        public static coreModel.PropertyValue ToCoreModel(this dataModel.PropertyValueBase dbPropValue, coreModel.Property[] properties)
         {
             if (dbPropValue == null)
                 throw new ArgumentNullException("dbPropValue");
 
-			var retVal = new module.PropertyValue();
+			var retVal = new coreModel.PropertyValue();
 			retVal.InjectFrom(dbPropValue);
 			retVal.LanguageCode = dbPropValue.Locale;
 			retVal.PropertyName = dbPropValue.Name;
 			retVal.Value = dbPropValue.ToObjectValue();
 			retVal.ValueId = dbPropValue.KeyValue;
-			retVal.ValueType = (module.PropertyValueType)dbPropValue.ValueType;
+			retVal.ValueType = (coreModel.PropertyValueType)dbPropValue.ValueType;
 
             if (properties != null)
             {
@@ -51,14 +51,18 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
         /// <param name="propValue">The property value.</param>
         /// <returns></returns>
         /// <exception cref="System.ArgumentNullException">propValue</exception>
-        public static foundation.PropertyValueBase ToFoundation<T>(this module.PropertyValue propValue) where T : foundation.PropertyValueBase, new()
+        public static dataModel.PropertyValueBase ToDataModel<T>(this coreModel.PropertyValue propValue) where T : dataModel.PropertyValueBase, new()
         {
             if (propValue == null)
                 throw new ArgumentNullException("propValue");
 
             var retVal = new T();
-
+			var id = retVal.Id;
 			retVal.InjectFrom(propValue);
+			if(propValue.Id == null)
+			{
+				retVal.Id = id;
+			}
 
             retVal.Name = propValue.PropertyName;
             retVal.KeyValue = propValue.ValueId;
@@ -74,7 +78,7 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
         /// </summary>
         /// <param name="source"></param>
         /// <param name="target"></param>
-        public static void Patch(this foundation.PropertyValueBase source, foundation.PropertyValueBase target)
+        public static void Patch(this dataModel.PropertyValueBase source, dataModel.PropertyValueBase target)
         {
             if (target == null)
             {
@@ -82,31 +86,31 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
             }
 
 
-			var patchInjectionPolicy = new PatchInjection<foundation.PropertyValueBase>(x => x.BooleanValue, x => x.DateTimeValue,
+			var patchInjectionPolicy = new PatchInjection<dataModel.PropertyValueBase>(x => x.BooleanValue, x => x.DateTimeValue,
 																				  x => x.DecimalValue, x => x.IntegerValue,
 																				  x => x.KeyValue, x => x.LongTextValue, x => x.ShortTextValue);
 			target.InjectFrom(patchInjectionPolicy, source);
         }
 
-		private static void SetPropertyValue(foundation.PropertyValueBase retVal, module.PropertyValueType type, string value)
+		private static void SetPropertyValue(dataModel.PropertyValueBase retVal, coreModel.PropertyValueType type, string value)
 		{
 			switch (type)
 			{
-				case module.PropertyValueType.LongText:
+				case coreModel.PropertyValueType.LongText:
 					retVal.LongTextValue = value;
 					break;
-				case module.PropertyValueType.ShortText:
+				case coreModel.PropertyValueType.ShortText:
 					retVal.ShortTextValue = value;
 					break;
-				case module.PropertyValueType.Number:
+				case coreModel.PropertyValueType.Number:
 					decimal parsedDecimal;
 					Decimal.TryParse(value, out parsedDecimal);
 					retVal.DecimalValue = parsedDecimal;
 					break;
-				case module.PropertyValueType.DateTime:
+				case coreModel.PropertyValueType.DateTime:
 					retVal.DateTimeValue = DateTime.Parse(value);
 					break;
-				case module.PropertyValueType.Boolean:
+				case coreModel.PropertyValueType.Boolean:
 					retVal.BooleanValue = Boolean.Parse(value);
 					break;
 			}

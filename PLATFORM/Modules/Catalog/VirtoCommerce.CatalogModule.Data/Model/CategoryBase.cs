@@ -14,6 +14,7 @@ namespace VirtoCommerce.CatalogModule.Data.Model
 	{
 		public CategoryBase()
 		{
+			Id = Guid.NewGuid().ToString("N");
 			LinkedCategories = new ObservableCollection<LinkedCategory>();
 		}
 

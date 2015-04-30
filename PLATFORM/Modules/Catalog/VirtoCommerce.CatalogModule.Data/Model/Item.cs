@@ -14,6 +14,7 @@ namespace VirtoCommerce.CatalogModule.Data.Model
     {
 		public Item()
 		{
+			Id = Guid.NewGuid().ToString("N");
 			CategoryItemRelations = new ObservableCollection<CategoryItemRelation>();
 			ItemAssets = new ObservableCollection<ItemAsset>();
 			AssociationGroups = new ObservableCollection<AssociationGroup>();
