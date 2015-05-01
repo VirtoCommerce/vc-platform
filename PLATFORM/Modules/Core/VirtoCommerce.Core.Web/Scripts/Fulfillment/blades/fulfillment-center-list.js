@@ -73,7 +73,8 @@ function ($scope, fulfillments, bladeNavigationService) {
             },
             canExecuteMethod: function () {
                 return true;
-            }
+            },
+            permission: 'core:fulfillment:manage'
         }
     ];
 

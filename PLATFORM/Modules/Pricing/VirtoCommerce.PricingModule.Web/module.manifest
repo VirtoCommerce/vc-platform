@@ -28,4 +28,8 @@
   <scripts>
     <directory virtualPath="$/Scripts" searchPattern="*.js" searchSubdirectories="true" />
   </scripts>
+  <permissions>
+    <permission id="pricing:query" name="Browse pricing data" description="Permission to open pricing menu and browse data."/>
+    <permission id="pricing:manage" name="Manage pricing data" description="Permission to manage pricing information."/>
+  </permissions>
 </module>

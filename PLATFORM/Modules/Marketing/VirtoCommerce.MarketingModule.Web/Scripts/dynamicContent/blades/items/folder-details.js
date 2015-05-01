@@ -17,7 +17,8 @@
         			},
         			canExecuteMethod: function () {
         				return !angular.equals(blade.originalEntity, blade.entity);
-        			}
+        			},
+        			permission: 'marketing:manage'
 				},
 				{
         			name: "Save", icon: 'fa fa-save',
@@ -26,7 +27,8 @@
         			},
         			canExecuteMethod: function () {
         				return !angular.equals(blade.originalEntity, blade.entity) && !$scope.formScope.$invalid;
-        			}
+        			},
+        			permission: 'marketing:manage'
 				},
 				{
 					name: "Delete", icon: 'fa fa-trash',
@@ -36,7 +38,8 @@
 					},
 					canExecuteMethod: function () {
 						return true;
-					}
+					},
+					permission: 'marketing:manage'
 				}
 			];
 		}

@@ -36,7 +36,7 @@ angular.module(moduleName, [])
       //    title: 'inventorys',
       //    priority: 110,
       //    action: function () { $state.go('workspace.inventoryModule'); },
-      //    permission: 'inventoryMenuPermission'
+      //    permission: 'inventory:manage'
       //};
       //mainMenuService.addMenuItem(menuItem);
 

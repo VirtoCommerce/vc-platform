@@ -168,7 +168,7 @@
     <Compile Include="Model\SettingValueEntity.cs" />
     <Compile Include="Model\UserDetails.cs" />
     <Compile Include="Notification\InMemoryNotifierImpl.cs" />
-    <Compile Include="Packaging\PackageService.cs" />
+    <Compile Include="Packaging\NuGetPackageService.cs" />
     <Compile Include="Packaging\Repositories\ManifestPackage.cs" />
     <Compile Include="Packaging\Repositories\ManifestPackageRepository.cs" />
     <Compile Include="Packaging\Repositories\NuGet\CommonResources.cs" />

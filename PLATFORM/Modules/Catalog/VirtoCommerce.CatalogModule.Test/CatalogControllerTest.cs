@@ -6,6 +6,7 @@ using VirtoCommerce.CatalogModule.Data.Services;
 using VirtoCommerce.CatalogModule.Web.Controllers.Api;
 using VirtoCommerce.Domain.Catalog.Model;
 using VirtoCommerce.Domain.Catalog.Services;
+using VirtoCommerce.Platform.Core.Security;
 using webModel = VirtoCommerce.CatalogModule.Web.Model;
 
 namespace VirtoCommerce.CatalogModule.Test
@@ -16,7 +17,7 @@ namespace VirtoCommerce.CatalogModule.Test
         [TestMethod]
         public void WorkingWithCatalogPropertyTest()
         {
-            var catalogController = new CatalogsController(GetCatalogService(), GetSearchService(), null, GetPropertyService());
+            var catalogController = new CatalogsController(GetCatalogService(), GetSearchService(), null, GetPropertyService(), GetPermissionService());
             var categoryController = new CategoriesController(GetSearchService(), GetCategoryService(), GetPropertyService(), GetCatalogService());
             var propertyController = new PropertiesController(GetPropertyService(), GetCategoryService(), GetCatalogService());
             var productController = new ProductsController(GetItemService(), GetPropertyService(), null);
@@ -54,7 +55,7 @@ namespace VirtoCommerce.CatalogModule.Test
         public void VirtualCatalogWorkingTest()
         {
 
-            var catalogController = new CatalogsController(GetCatalogService(), GetSearchService(), null, GetPropertyService());
+            var catalogController = new CatalogsController(GetCatalogService(), GetSearchService(), null, GetPropertyService(), GetPermissionService());
             var categoryController = new CategoriesController(GetSearchService(), GetCategoryService(), GetPropertyService(), GetCatalogService());
             var listEntryController = new ListEntryController(GetSearchService(), GetCategoryService(), GetItemService(), null);
 
@@ -129,6 +130,11 @@ namespace VirtoCommerce.CatalogModule.Test
             return new CatalogSearchServiceImpl(GetRepository, GetItemService(), GetCatalogService(), GetCategoryService(), null);
         }
 
+        private IPermissionService GetPermissionService()
+        {
+            return new TestPermissionService();
+        }
+
         private IPropertyService GetPropertyService()
         {
             return new PropertyServiceImpl(() => { return GetRepository(); });
@@ -156,8 +162,28 @@ namespace VirtoCommerce.CatalogModule.Test
             return retVal;
         }
 
-    
 
-   
+
+		internal class TestPermissionService : IPermissionService
+		{
+			#region Implementation of IPermissionService
+
+			public bool UserHasAnyPermission(string userName, params string[] permissionIds)
+			{
+				return true;
+			}
+
+			public Permission[] GetAllPermissions()
+			{
+				throw new System.NotImplementedException();
+			}
+
+			public string[] GetUserPermissionIds(string userName)
+			{
+				throw new System.NotImplementedException();
+			}
+
+			#endregion
+		}
     }
 }

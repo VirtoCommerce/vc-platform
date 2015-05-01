@@ -28,4 +28,20 @@
 	<scripts>
 		<directory virtualPath="$/Scripts" searchPattern="*.js" searchSubdirectories="true" />
 	</scripts>
+
+  <permissions>
+    <permission id="catalog:query" name="Browse catalog data" description="Permission to open catalog menu and browse data."/>
+    <permission id="catalog:items:manage" name="Manage catalog items" description="Permission to manage catalog items."/>
+    <permission id="catalog:catalogs:manage" name="Manage catalogs" description="Permission to manage catalogs."/>
+    <permission id="catalog:virtual_catalogs:manage" name="Manage virtual catalogs" description="Permission to manage virtual catalogs."/>
+    <permission id="catalog:categories:manage" name="Manage categories" description="Permission to manage catalog categories."/>
+     <!--"catalog:linked_categories:manage",
+     "catalog:catalog_import_jobs:manage",
+     "catalog:catalog_import_jobs:run",
+     "catalog:item:associations:manage",
+     "catalog:item:editorial_reviews:create_edit",
+     "catalog:item:editorial_reviews:publish",
+     "catalog:item:editorial_reviews:remove",
+     "catalog:customer_reviews:manage",-->
+  </permissions>
 </module>

@@ -137,6 +137,7 @@
   <ItemGroup>
     <Compile Include="Controllers\Api\MCAuthorizationController.cs" />
     <Compile Include="Controllers\Api\MailChimpController.cs" />
+    <Compile Include="Controllers\PredefinedPermissions.cs" />
     <Compile Include="Managers\MailChimpMailingImpl.cs" />
     <Compile Include="Module.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

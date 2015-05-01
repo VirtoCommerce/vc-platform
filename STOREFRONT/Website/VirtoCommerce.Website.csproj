@@ -180,7 +180,7 @@
     <Compile Include="Controllers\CartController.cs" />
     <Compile Include="Controllers\CheckoutController.cs" />
     <Compile Include="Controllers\CollectionsController.cs" />
-    <Compile Include="Controllers\DynamicContentController.cs" />
+    <Compile Include="Controllers\BannerController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\PageController.cs" />
     <Compile Include="Controllers\ProductController.cs" />
@@ -189,7 +189,11 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\Banners\BannerCollection.cs" />
+    <Compile Include="Models\Banners\PlaceHolder.cs" />
+    <Compile Include="Models\Banners\PlaceHolderCollection.cs" />
     <Compile Include="Models\Checkout.cs" />
+    <Compile Include="Models\Convertors\BannerConverters.cs" />
     <Compile Include="Models\Convertors\ListConverters.cs" />
     <Compile Include="Models\Convertors\CustomerConverters.cs" />
     <Compile Include="Models\Convertors\OrderConverters.cs" />
@@ -197,6 +201,7 @@
     <Compile Include="Models\Convertors\ShopConverters.cs" />
     <Compile Include="Models\CreditCard.cs" />
     <Compile Include="Models\Discount.cs" />
+    <Compile Include="Models\Banners\Banner.cs" />
     <Compile Include="Models\DynamicContentPlaceholder.cs" />
     <Compile Include="Models\Extensions\ProductExtensions.cs" />
     <Compile Include="Models\Extensions\RouteValueDictionaryExtensions.cs" />
@@ -322,8 +327,13 @@
     <Content Include="App_Data\Themes\_Default\config\settings.html" />
     <Content Include="App_Data\Themes\_Global\templates\password_reseted.liquid" />
     <Content Include="App_Data\Themes\_Global\layout\theme.liquid" />
+    <Content Include="App_Data\Themes\_Global\templates\banners\ImageNonClickable.liquid" />
+    <Content Include="App_Data\Themes\_Global\templates\banners\ImageClickable.liquid" />
+    <Content Include="App_Data\Themes\_Global\templates\placeholders.liquid" />
+    <Content Include="App_Data\Themes\_Global\templates\placeholder.liquid" />
     <None Include="App_Data\Themes\_Global\templates\external_login_confirmation.liquid" />
     <Content Include="App_Data\Themes\_Global\templates\index.liquid" />
+    <Content Include="App_Data\Themes\_Global\templates\banner.liquid" />
     <None Include="App_Data\Themes\_Global\templates\reset-password.liquid" />
     <Content Include="Content\responsive\css\main.css" />
     <Content Include="Content\responsive\css\reset.css" />

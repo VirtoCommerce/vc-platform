@@ -98,7 +98,8 @@ function ($scope, pricelists, bladeNavigationService, dialogService) {
             },
             canExecuteMethod: function () {
                 return true;
-            }
+            },
+            permission: 'pricing:manage'
         },
         {
             name: "Clone", icon: 'fa fa-files-o',
@@ -106,7 +107,8 @@ function ($scope, pricelists, bladeNavigationService, dialogService) {
             },
             canExecuteMethod: function () {
                 return false;
-            }
+            },
+            permission: 'pricing:manage'
         },
         {
             name: "Delete", icon: 'fa fa-trash-o',
@@ -115,7 +117,8 @@ function ($scope, pricelists, bladeNavigationService, dialogService) {
             },
             canExecuteMethod: function () {
                 return isItemsChecked();
-            }
+            },
+            permission: 'pricing:manage'
         }
     ];
 

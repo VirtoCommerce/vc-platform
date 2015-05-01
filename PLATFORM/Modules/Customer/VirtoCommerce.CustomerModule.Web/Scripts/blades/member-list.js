@@ -241,43 +241,46 @@
                 return true;
             }
         },
-          {
-              name: "Add", icon: 'fa fa-plus',
-              executeMethod: function () {
-                  closeChildrenBlades();
+        {
+            name: "Add", icon: 'fa fa-plus',
+            executeMethod: function () {
+                closeChildrenBlades();
 
-                  var newBlade = {
-                      id: 'listItemChild',
-                      title: 'New member',
-                      subtitle: 'Choose new member type',
-                      controller: 'virtoCommerce.customerModule.memberAddController',
-                      template: 'Modules/$(VirtoCommerce.Customer)/Scripts/blades/member-add.tpl.html'
-                  };
-                  bladeNavigationService.showBlade(newBlade, $scope.blade);
-              },
-              canExecuteMethod: function () {
-                  return true;
-              }
-          },
-{
-    name: "Manage", icon: 'fa fa-edit',
-    executeMethod: function () {
-        // selected OR the first checked listItem
-        edit(selectedNode || _.find($scope.listEntries, function (x) { return x.selected; }));
-    },
-    canExecuteMethod: function () {
-        return selectedNode || isItemsChecked();
-    }
-},
-{
-    name: "Delete", icon: 'fa fa-trash-o',
-    executeMethod: function () {
-        deleteChecked();
-    },
-    canExecuteMethod: function () {
-        return isItemsChecked();
-    }
-}
+                var newBlade = {
+                    id: 'listItemChild',
+                    title: 'New member',
+                    subtitle: 'Choose new member type',
+                    controller: 'virtoCommerce.customerModule.memberAddController',
+                    template: 'Modules/$(VirtoCommerce.Customer)/Scripts/blades/member-add.tpl.html'
+                };
+                bladeNavigationService.showBlade(newBlade, $scope.blade);
+            },
+            canExecuteMethod: function () {
+                return true;
+            },
+            permission: 'customer:manage'
+        },
+        {
+            name: "Manage", icon: 'fa fa-edit',
+            executeMethod: function () {
+                // selected OR the first checked listItem
+                edit(selectedNode || _.find($scope.listEntries, function (x) { return x.selected; }));
+            },
+            canExecuteMethod: function () {
+                return selectedNode || isItemsChecked();
+            },
+            permission: 'customer:manage'
+        },
+        {
+            name: "Delete", icon: 'fa fa-trash-o',
+            executeMethod: function () {
+                deleteChecked();
+            },
+            canExecuteMethod: function () {
+                return isItemsChecked();
+            },
+            permission: 'customer:manage'
+        }
     ];
 
     $scope.checkAll = function (selected) {

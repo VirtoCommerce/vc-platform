@@ -12,6 +12,7 @@ using System.Web.Http.Description;
 using VirtoCommerce.Content.Data.Services;
 using VirtoCommerce.Content.Data.Utility;
 using VirtoCommerce.Platform.Core.Common;
+using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Settings;
 using VirtoCommerce.Content.Web.Converters;
 using VirtoCommerce.Content.Web.Models;
@@ -21,6 +22,7 @@ using VirtoCommerce.Content.Web.Models;
 namespace VirtoCommerce.Content.Web.Controllers.Api
 {
 	[RoutePrefix("api/cms/{storeId}")]
+    [CheckPermission(Permission = PredefinedPermissions.Query)]
 	public class ThemeController : ApiController
 	{
 		#region Fields
@@ -83,6 +85,7 @@ namespace VirtoCommerce.Content.Web.Controllers.Api
 		[HttpDelete]
 		[ResponseType(typeof(void))]
 		[Route("themes/{themeId}")]
+        [CheckPermission(Permission = PredefinedPermissions.Manage)]
 		public async Task<IHttpActionResult> DeleteTheme(string storeId, string themeId)
 		{
 			await this._themeService.DeleteTheme(storeId, themeId);
@@ -112,6 +115,7 @@ namespace VirtoCommerce.Content.Web.Controllers.Api
 
 		[HttpPost]
 		[Route("themes/{themeId}/assets")]
+        [CheckPermission(Permission = PredefinedPermissions.Manage)]
 		public async Task<IHttpActionResult> SaveItem(ThemeAsset asset, string storeId, string themeId)
 		{
 			if (!string.IsNullOrEmpty(asset.AssetUrl))
@@ -126,6 +130,7 @@ namespace VirtoCommerce.Content.Web.Controllers.Api
 
 		[HttpDelete]
 		[Route("themes/{themeId}/assets")]
+        [CheckPermission(Permission = PredefinedPermissions.Manage)]
 		public async Task<IHttpActionResult> DeleteAssets(string storeId, string themeId, [FromUri]string[] assetIds)
 		{
 			await this._themeService.DeleteThemeAssets(storeId, themeId, assetIds);
@@ -134,6 +139,7 @@ namespace VirtoCommerce.Content.Web.Controllers.Api
 
 		[HttpPost]
 		[Route("themes/file")]
+        [CheckPermission(Permission = PredefinedPermissions.Manage)]
 		public async Task<IHttpActionResult> UploadThemeFile(string storeId)
 		{
 			if (!Request.Content.IsMimeMultipartContent())
@@ -159,6 +165,7 @@ namespace VirtoCommerce.Content.Web.Controllers.Api
 
 		[HttpPost]
 		[Route("themes/{themeId}/assets/file/{folderName}")]
+        [CheckPermission(Permission = PredefinedPermissions.Manage)]
 		public async Task<IHttpActionResult> SaveImageItem(string storeId, string themeId, string folderName)
 		{
 			if (!Request.Content.IsMimeMultipartContent())

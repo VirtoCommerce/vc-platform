@@ -4,6 +4,7 @@ using System.Net;
 using System.Web.Http;
 using System.Web.Http.Description;
 using VirtoCommerce.Domain.Pricing.Services;
+using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.PricingModule.Web.Converters;
 using webModel = VirtoCommerce.PricingModule.Web.Model;
 using coreModel = VirtoCommerce.Domain.Pricing.Model;
@@ -13,6 +14,7 @@ using VirtoCommerce.Platform.Core.Common;
 namespace VirtoCommerce.PricingModule.Web.Controllers.Api
 {
 	[RoutePrefix("")]
+    [CheckPermission(Permission = PredefinedPermissions.Query)]
 	public class PricingController : ApiController
 	{
 		private readonly IPricingService _pricingService;
@@ -54,6 +56,7 @@ namespace VirtoCommerce.PricingModule.Web.Controllers.Api
 		[HttpPost]
         [ResponseType(typeof(webModel.PricelistAssignment))]
 		[Route("api/pricing/assignments")]
+        [CheckPermission(Permission = PredefinedPermissions.Manage)]
 		public IHttpActionResult CreatePriceList(webModel.PricelistAssignment assignment)
 		{
 			var retVal = _pricingService.CreatePriceListAssignment(assignment.ToCoreModel());
@@ -64,6 +67,7 @@ namespace VirtoCommerce.PricingModule.Web.Controllers.Api
 		[HttpPut]
 		[ResponseType(typeof(void))]
 		[Route("api/pricing/assignments")]
+        [CheckPermission(Permission = PredefinedPermissions.Manage)]
 		public IHttpActionResult UpdatePriceListAssignment(webModel.PricelistAssignment assignment)
 		{
 			_pricingService.UpdatePricelistAssignments(new coreModel.PricelistAssignment[] { assignment.ToCoreModel() });
@@ -74,6 +78,7 @@ namespace VirtoCommerce.PricingModule.Web.Controllers.Api
 		[HttpDelete]
 		[ResponseType(typeof(void))]
 		[Route("api/pricing/assignments")]
+        [CheckPermission(Permission = PredefinedPermissions.Manage)]
 		public IHttpActionResult DeleteAssignments([FromUri] string[] ids)
 		{
 			_pricingService.DeletePricelistsAssignments(ids);
@@ -148,6 +153,7 @@ namespace VirtoCommerce.PricingModule.Web.Controllers.Api
 		[HttpPost]
 		[ResponseType(typeof(webModel.Pricelist))]
 		[Route("api/pricing/pricelists")]
+        [CheckPermission(Permission = PredefinedPermissions.Manage)]
 		public IHttpActionResult CreatePriceList(webModel.Pricelist priceList)
 		{
 			var retVal = _pricingService.CreatePricelist(priceList.ToCoreModel());
@@ -158,6 +164,7 @@ namespace VirtoCommerce.PricingModule.Web.Controllers.Api
 		[HttpPut]
         [ResponseType(typeof(void))]
 		[Route("api/pricing/pricelists")]
+        [CheckPermission(Permission = PredefinedPermissions.Manage)]
 		public IHttpActionResult UpdatePriceList(webModel.Pricelist priceList)
 		{
 			_pricingService.UpdatePricelists(new coreModel.Pricelist[] {  priceList.ToCoreModel() });
@@ -168,6 +175,7 @@ namespace VirtoCommerce.PricingModule.Web.Controllers.Api
 		[HttpPut]
 		[ResponseType(typeof(void))]
 		[Route("api/catalog/products/{productId}/pricelists")]
+        [CheckPermission(Permission = PredefinedPermissions.Manage)]
 		public IHttpActionResult UpdateProductPriceLists(string productId, webModel.Pricelist priceList)
 		{
 			var originalPriceList = _pricingService.GetPricelistById(priceList.Id);
@@ -193,6 +201,7 @@ namespace VirtoCommerce.PricingModule.Web.Controllers.Api
 		[HttpDelete]
 		[ResponseType(typeof(void))]
 		[Route("api/pricing/pricelists")]
+        [CheckPermission(Permission = PredefinedPermissions.Manage)]
 		public IHttpActionResult DeletePriceLists([FromUri] string[] ids)
 		{
 			_pricingService.DeletePricelists(ids);

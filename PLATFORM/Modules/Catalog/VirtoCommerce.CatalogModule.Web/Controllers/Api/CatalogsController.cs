@@ -5,6 +5,7 @@ using System.Net;
 using System.Web.Http;
 using System.Web.Http.Description;
 using VirtoCommerce.CatalogModule.Web.Converters;
+using VirtoCommerce.Platform.Core.Security;
 using moduleModel = VirtoCommerce.Domain.Catalog.Model;
 using webModel = VirtoCommerce.CatalogModule.Web.Model;
 using Microsoft.Practices.Unity;
@@ -21,16 +22,18 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
         private readonly ICatalogSearchService _searchService;
 		private readonly IPropertyService _propertyService;
 		private readonly ISettingsManager _settingManager;
+		private readonly IPermissionService _permissionService;
 
         public CatalogsController(ICatalogService catalogService,
 								  ICatalogSearchService itemSearchService,
 								  ISettingsManager settingManager,
-								  IPropertyService propertyService)
+								  IPropertyService propertyService, IPermissionService permissionService)
         {
             _catalogService = catalogService;
             _searchService = itemSearchService;
 			_propertyService = propertyService;
 			_settingManager = settingManager;
+			_permissionService = permissionService;
         }
 
 		// GET: api/catalog/catalogs
@@ -52,6 +55,7 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 		[HttpGet]
         [ResponseType(typeof(webModel.Catalog))]
 		[Route("{id}")]
+        [CheckPermission(Permission = PredefinedPermissions.Query)]
         public IHttpActionResult Get(string id)
         {
             var catalog = _catalogService.GetById(id);
@@ -113,6 +117,7 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
         [HttpGet]
         [ResponseType(typeof(webModel.Catalog))]
 		[Route("getnew")]
+        [CheckPermission(Permission = PredefinedPermissions.CatalogsManage)]
         public IHttpActionResult GetNewCatalog()
         {
             var retVal = new webModel.Catalog
@@ -135,6 +140,7 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
         [HttpGet]
         [ResponseType(typeof(webModel.Catalog))]
 		[Route("getnewvirtual")]
+        [CheckPermission(Permission = PredefinedPermissions.VirtualCatalogsManage)]
         public IHttpActionResult GetNewVirtualCatalog()
         {
             var retVal = new webModel.Catalog
@@ -158,16 +164,26 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 		[HttpPost]
 		[ResponseType(typeof(webModel.Catalog))]
 		[Route("")]
+        [CheckPermission(Permissions = new[] { PredefinedPermissions.CatalogsManage, PredefinedPermissions.VirtualCatalogsManage })]
 		public IHttpActionResult Create(webModel.Catalog catalog)
 		{
+            if ((_permissionService.UserHasAnyPermission(RequestContext.Principal.Identity.Name, PredefinedPermissions.CatalogsManage) && !catalog.Virtual)
+                || (_permissionService.UserHasAnyPermission(RequestContext.Principal.Identity.Name, PredefinedPermissions.VirtualCatalogsManage) && catalog.Virtual))
+            {
 			var retVal = _catalogService.Create(catalog.ToModuleModel());
 			return Ok(retVal.ToWebModel());
 		}
+            else
+            {
+                throw new UnauthorizedAccessException();
+            }
+        }
 
 		// PUT: api/catalog/catalogs
 		[HttpPut]
         [ResponseType(typeof(void))]
 		[Route("")]
+        [CheckPermission(Permissions = new[] { PredefinedPermissions.CatalogsManage, PredefinedPermissions.VirtualCatalogsManage })]
         public IHttpActionResult Update(webModel.Catalog catalog)
         {
 			UpdateCatalog(catalog);
@@ -179,6 +195,7 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 		[HttpDelete]
         [ResponseType(typeof(void))]
 		[Route("{id}")]
+        [CheckPermission(Permissions = new[] { PredefinedPermissions.CatalogsManage, PredefinedPermissions.VirtualCatalogsManage })]
         public IHttpActionResult Delete(string id)
         {
             _catalogService.Delete(new string[] { id });
@@ -191,18 +208,18 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
             _catalogService.Update(new moduleModel.Catalog[] { moduleCatalog });
         }
 
-		private IEnumerable<webModel.CatalogLanguage> GetSystemLanguages()
-		{
-			var retVal = new List<webModel.CatalogLanguage>();
+        private IEnumerable<webModel.CatalogLanguage> GetSystemLanguages()
+        {
+            var retVal = new List<webModel.CatalogLanguage>();
 
 			var languages = _settingManager.GetArray<string>("VirtoCommerce.Core.Languages", new string[] { "en-US" });
 
 			foreach (var languageCode in languages)
-			{
-				retVal.Add(new webModel.CatalogLanguage(languageCode));
-			}
+						{
+							retVal.Add(new webModel.CatalogLanguage(languageCode));
+						}
 
-			return retVal;
-		}
+            return retVal;
+        }
     }
 }

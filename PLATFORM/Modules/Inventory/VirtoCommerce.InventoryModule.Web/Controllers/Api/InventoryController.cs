@@ -3,6 +3,7 @@ using System.Linq;
 using System.Web.Http;
 using System.Web.Http.Description;
 using VirtoCommerce.Domain.Inventory.Services;
+using VirtoCommerce.Platform.Core.Security;
 using coreModel = VirtoCommerce.Domain.Inventory.Model;
 using webModel = VirtoCommerce.InventoryModule.Web.Model;
 using VirtoCommerce.InventoryModule.Web.Converters;
@@ -67,6 +68,7 @@ namespace VirtoCommerce.InventoryModule.Web.Controllers.Api
 		[HttpPut]
 		[ResponseType(typeof(webModel.InventoryInfo))]
 		[Route("~/api/inventory/products/{productId}")]
+        [CheckPermission(Permission = PredefinedPermissions.Manage)]
 		public IHttpActionResult UpsertProductInventory(webModel.InventoryInfo inventory)
 		{
 			var retVal = _inventoryService.UpsertInventory( inventory.ToCoreModel() );

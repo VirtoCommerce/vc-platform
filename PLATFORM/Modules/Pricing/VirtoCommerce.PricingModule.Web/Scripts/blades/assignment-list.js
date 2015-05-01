@@ -70,7 +70,7 @@ function ($scope, assignments, bladeNavigationService, dialogService) {
         });
     }
 
-    $scope.bladeHeadIco = 'fa-usd';
+    $scope.bladeHeadIco = 'fa-anchor';
 
     $scope.bladeToolbarCommands = [
         {
@@ -99,7 +99,8 @@ function ($scope, assignments, bladeNavigationService, dialogService) {
             },
             canExecuteMethod: function () {
                 return true;
-            }
+            },
+            permission: 'pricing:manage'
         },
         {
             name: "Delete", icon: 'fa fa-trash-o',
@@ -108,7 +109,8 @@ function ($scope, assignments, bladeNavigationService, dialogService) {
             },
             canExecuteMethod: function () {
                 return isItemsChecked();
-            }
+            },
+            permission: 'pricing:manage'
         }
     ];
 

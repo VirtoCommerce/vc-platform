@@ -12,6 +12,7 @@ using VirtoCommerce.Platform.Core.Notification;
 using VirtoCommerce.Platform.Core.Settings;
 using VirtoCommerce.Platform.Data.Infrastructure;
 using VirtoCommerce.Platform.Data.Infrastructure.Interceptors;
+using VirtoCommerce.Platform.Core.Security;
 
 namespace VirtoCommerce.CatalogModule.Web
 {
@@ -48,7 +49,7 @@ namespace VirtoCommerce.CatalogModule.Web
                 initializer.InitializeDatabase(db);
             }
 
-        }
+            }
 
   
         public void Initialize()
@@ -58,7 +59,7 @@ namespace VirtoCommerce.CatalogModule.Web
          	Func<ICatalogRepository> catalogRepFactory = () => new CatalogRepositoryImpl(_connectionStringName, new EntityPrimaryKeyGeneratorInterceptor(), new AuditableInterceptor());
 			_container.RegisterInstance<Func<ICatalogRepository>>(catalogRepFactory);
 
-     
+
 			_container.RegisterType<IItemService, ItemServiceImpl>();
 			_container.RegisterType<ICategoryService, CategoryServiceImpl>();
 			_container.RegisterType<ICatalogService, CatalogServiceImpl>();
@@ -79,11 +80,11 @@ namespace VirtoCommerce.CatalogModule.Web
         }
 
 
-		public void PostInitialize()
-		{
+        public void PostInitialize()
+        {
 		
-		}
+        }
 
-		#endregion
-	}
+        #endregion
+    }
 }

@@ -36,7 +36,8 @@
                },
                canExecuteMethod: function () {
                    return true;
-               }
+               },
+               permission: 'platform:security:manage'
            }
     ];
 

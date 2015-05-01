@@ -113,6 +113,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\Api\InventoryController.cs" />
+    <Compile Include="Controllers\PredefinedPermissions.cs" />
     <Compile Include="Converters\FulfillmentCenterConverter.cs" />
     <Compile Include="Converters\InventoryConverter.cs" />
     <Compile Include="Model\FulfillmentCenter.cs" />

@@ -3,6 +3,7 @@ using System.Net;
 using System.Web.Http;
 using System.Web.Http.Description;
 using VirtoCommerce.Domain.Store.Services;
+using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.StoreModule.Web.Converters;
 using coreModel = VirtoCommerce.Domain.Store.Model;
 using webModel = VirtoCommerce.StoreModule.Web.Model;
@@ -10,6 +11,7 @@ using webModel = VirtoCommerce.StoreModule.Web.Model;
 namespace VirtoCommerce.StoreModule.Web.Controllers.Api
 {
 	[RoutePrefix("api/stores")]
+    [CheckPermission(Permission = PredefinedPermissions.Query)]
 	public class StoreModuleController : ApiController
 	{
 		private readonly IStoreService _storeService;
@@ -47,6 +49,7 @@ namespace VirtoCommerce.StoreModule.Web.Controllers.Api
 		[HttpPost]
 		[ResponseType(typeof(webModel.Store))]
 		[Route("")]
+        [CheckPermission(Permission = PredefinedPermissions.Manage)]
 		public IHttpActionResult Create(webModel.Store store)
 		{
 			var coreStore = store.ToCoreModel();
@@ -58,6 +61,7 @@ namespace VirtoCommerce.StoreModule.Web.Controllers.Api
 		[HttpPut]
 		[ResponseType(typeof(void))]
 		[Route("")]
+        [CheckPermission(Permission = PredefinedPermissions.Manage)]
 		public IHttpActionResult Update(webModel.Store store)
 		{
 			var coreStore = store.ToCoreModel();
@@ -69,6 +73,7 @@ namespace VirtoCommerce.StoreModule.Web.Controllers.Api
 		[HttpDelete]
 		[ResponseType(typeof(void))]
 		[Route("")]
+        [CheckPermission(Permission = PredefinedPermissions.Manage)]
 		public IHttpActionResult Delete([FromUri] string[] ids)
 		{
 			_storeService.Delete(ids);
