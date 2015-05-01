@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Omu.ValueInjecter;
 using System.Collections.ObjectModel;
-using foundationModel = VirtoCommerce.PricingModule.Data.Model;
+using dataModel = VirtoCommerce.PricingModule.Data.Model;
 using coreModel = VirtoCommerce.Domain.Pricing.Model;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Data.Common;
@@ -20,7 +20,7 @@ namespace VirtoCommerce.PricingModule.Data.Converters
 		/// </summary>
 		/// <param name="catalogBase"></param>
 		/// <returns></returns>
-		public static coreModel.Price ToCoreModel(this foundationModel.Price dbEntity)
+		public static coreModel.Price ToCoreModel(this dataModel.Price dbEntity)
 		{
 			if (dbEntity == null)
 				throw new ArgumentNullException("dbEntity");
@@ -35,12 +35,12 @@ namespace VirtoCommerce.PricingModule.Data.Converters
 		}
 
 
-		public static foundationModel.Price ToFoundation(this coreModel.Price price)
+		public static dataModel.Price ToDataModel(this coreModel.Price price)
 		{
 			if (price == null)
 				throw new ArgumentNullException("price");
 
-			var retVal = new foundationModel.Price();
+			var retVal = new dataModel.Price();
 
 			retVal.InjectFrom(price);
 			retVal.ProductId = price.ProductId;
@@ -53,11 +53,11 @@ namespace VirtoCommerce.PricingModule.Data.Converters
 		/// </summary>
 		/// <param name="source"></param>
 		/// <param name="target"></param>
-		public static void Patch(this foundationModel.Price source, foundationModel.Price target)
+		public static void Patch(this dataModel.Price source, dataModel.Price target)
 		{
 			if (target == null)
 				throw new ArgumentNullException("target");
-			var patchInjection = new PatchInjection<foundationModel.Price>(x => x.ProductId, x => x.List,
+			var patchInjection = new PatchInjection<dataModel.Price>(x => x.ProductId, x => x.List,
 																		   x => x.MinQuantity, x=>x.Sale);
 			target.InjectFrom(patchInjection, source);
 		}

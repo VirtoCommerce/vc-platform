@@ -14,11 +14,11 @@ namespace VirtoCommerce.CustomerModule.Data.Model
 	{
 		public Member()
 		{
-			Notes = new ObservableCollection<Note>();
-			Addresses = new ObservableCollection<Address>();
-			MemberRelations = new ObservableCollection<MemberRelation>();
-			Phones = new ObservableCollection<Phone>();
-			Emails = new ObservableCollection<Email>();
+			Notes = new NullCollection<Note>();
+			Addresses = new NullCollection<Address>();
+			MemberRelations = new NullCollection<MemberRelation>();
+			Phones = new NullCollection<Phone>();
+			Emails = new NullCollection<Email>();
 		}
 
 		#region NavigationProperties

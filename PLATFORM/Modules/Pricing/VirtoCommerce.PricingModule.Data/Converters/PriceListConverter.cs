@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Omu.ValueInjecter;
 using System.Collections.ObjectModel;
-using foundationModel = VirtoCommerce.PricingModule.Data.Model;
+using dataModel = VirtoCommerce.PricingModule.Data.Model;
 using coreModel = VirtoCommerce.Domain.Pricing.Model;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Data.Common;
@@ -20,7 +20,7 @@ namespace VirtoCommerce.PricingModule.Data.Converters
 		/// </summary>
 		/// <param name="catalogBase"></param>
 		/// <returns></returns>
-		public static coreModel.Pricelist ToCoreModel(this foundationModel.Pricelist dbEntity)
+		public static coreModel.Pricelist ToCoreModel(this dataModel.Pricelist dbEntity)
 		{
 			if (dbEntity == null)
 				throw new ArgumentNullException("dbEntity");
@@ -35,20 +35,20 @@ namespace VirtoCommerce.PricingModule.Data.Converters
 		}
 
 
-		public static foundationModel.Pricelist ToFoundation(this coreModel.Pricelist priceList)
+		public static dataModel.Pricelist ToDataModel(this coreModel.Pricelist priceList)
 		{
 			if (priceList == null)
 				throw new ArgumentNullException("priceList");
 
-			var retVal = new foundationModel.Pricelist();
+			var retVal = new dataModel.Pricelist();
 
 			retVal.InjectFrom(priceList);
 			retVal.Currency = priceList.Currency.ToString();
 
-			retVal.Prices = new NullCollection<foundationModel.Price>();
+			retVal.Prices = new NullCollection<dataModel.Price>();
 			if (priceList.Prices != null)
 			{
-				retVal.Prices = new ObservableCollection<foundationModel.Price>(priceList.Prices.Select(x=>x.ToFoundation()));
+				retVal.Prices = new ObservableCollection<dataModel.Price>(priceList.Prices.Select(x=>x.ToDataModel()));
 				foreach(var price in retVal.Prices)
 				{
 					price.PricelistId = retVal.Id;
@@ -63,11 +63,11 @@ namespace VirtoCommerce.PricingModule.Data.Converters
 		/// </summary>
 		/// <param name="source"></param>
 		/// <param name="target"></param>
-		public static void Patch(this foundationModel.Pricelist source, foundationModel.Pricelist target)
+		public static void Patch(this dataModel.Pricelist source, dataModel.Pricelist target)
 		{
 			if (target == null)
 				throw new ArgumentNullException("target");
-			var patchInjection = new PatchInjection<foundationModel.Pricelist>(x => x.Name, x => x.Currency,
+			var patchInjection = new PatchInjection<dataModel.Pricelist>(x => x.Name, x => x.Currency,
 																		   x => x.Description);
 			target.InjectFrom(patchInjection, source);
 		

@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Omu.ValueInjecter;
 using System.Collections.ObjectModel;
-using foundationModel = VirtoCommerce.PricingModule.Data.Model;
+using dataModel = VirtoCommerce.PricingModule.Data.Model;
 using coreModel = VirtoCommerce.Domain.Pricing.Model;
 using VirtoCommerce.Platform.Data.Common;
 using VirtoCommerce.Platform.Data.Common.ConventionInjections;
@@ -19,7 +19,7 @@ namespace VirtoCommerce.PricingModule.Data.Converters
 		/// </summary>
 		/// <param name="catalogBase"></param>
 		/// <returns></returns>
-		public static coreModel.PricelistAssignment ToCoreModel(this foundationModel.PricelistAssignment dbEntity)
+		public static coreModel.PricelistAssignment ToCoreModel(this dataModel.PricelistAssignment dbEntity)
 		{
 			if (dbEntity == null)
 				throw new ArgumentNullException("dbEntity");
@@ -31,12 +31,12 @@ namespace VirtoCommerce.PricingModule.Data.Converters
 		}
 
 
-		public static foundationModel.PricelistAssignment ToFoundation(this coreModel.PricelistAssignment assignment)
+		public static dataModel.PricelistAssignment ToDataModel(this coreModel.PricelistAssignment assignment)
 		{
 			if (assignment == null)
 				throw new ArgumentNullException("assignment");
 
-			var retVal = new foundationModel.PricelistAssignment();
+			var retVal = new dataModel.PricelistAssignment();
 
 			retVal.InjectFrom(assignment);
 
@@ -48,11 +48,11 @@ namespace VirtoCommerce.PricingModule.Data.Converters
 		/// </summary>
 		/// <param name="source"></param>
 		/// <param name="target"></param>
-		public static void Patch(this foundationModel.PricelistAssignment source, foundationModel.PricelistAssignment target)
+		public static void Patch(this dataModel.PricelistAssignment source, dataModel.PricelistAssignment target)
 		{
 			if (target == null)
 				throw new ArgumentNullException("target");
-			var patchInjection = new PatchInjection<foundationModel.PricelistAssignment>(x => x.Name, x => x.Description,
+			var patchInjection = new PatchInjection<dataModel.PricelistAssignment>(x => x.Name, x => x.Description,
 																						 x => x.StartDate, x => x.EndDate, x => x.CatalogId,
 																						 x => x.PricelistId, x => x.Priority, x => x.ConditionExpression);
 			target.InjectFrom(patchInjection, source);

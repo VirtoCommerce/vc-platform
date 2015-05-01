@@ -30,7 +30,7 @@ namespace VirtoCommerce.CartModule.Data.Converters
 			return retVal;
 		}
 
-		public static PaymentEntity ToEntity(this Payment payment)
+		public static PaymentEntity ToDataModel(this Payment payment)
 		{
 			if (payment == null)
 				throw new ArgumentNullException("payment");
@@ -42,7 +42,7 @@ namespace VirtoCommerce.CartModule.Data.Converters
 
 			if (payment.BillingAddress != null)
 			{
-				retVal.Addresses = new ObservableCollection<AddressEntity>(new AddressEntity[] { payment.BillingAddress.ToEntity() });
+				retVal.Addresses = new ObservableCollection<AddressEntity>(new AddressEntity[] { payment.BillingAddress.ToDataModel() });
 			}
 			return retVal;
 		}

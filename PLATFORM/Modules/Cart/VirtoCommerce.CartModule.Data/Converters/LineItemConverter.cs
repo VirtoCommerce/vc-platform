@@ -25,7 +25,7 @@ namespace VirtoCommerce.CartModule.Data.Converters
 			return retVal;
 		}
 
-		public static LineItemEntity ToEntity(this LineItem lineItem)
+		public static LineItemEntity ToDataModel(this LineItem lineItem)
 		{
 			if (lineItem == null)
 				throw new ArgumentNullException("lineItem");

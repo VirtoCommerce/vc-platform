@@ -23,7 +23,7 @@ namespace VirtoCommerce.CartModule.Data.Converters
 			return retVal;
 		}
 
-		public static AddressEntity ToEntity(this Address address)
+		public static AddressEntity ToDataModel(this Address address)
 		{
 			if (address == null)
 				throw new ArgumentNullException("address");

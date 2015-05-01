@@ -97,7 +97,7 @@ namespace VirtoCommerce.PricingModule.Data.Services
 
 		public virtual coreModel.Price CreatePrice(coreModel.Price price)
 		{
-			var entity = price.ToFoundation();
+			var entity = price.ToDataModel();
 			coreModel.Price retVal = null;
 			using (var repository = _repositoryFactory())
 			{
@@ -114,7 +114,7 @@ namespace VirtoCommerce.PricingModule.Data.Services
 							Name = defaultPriceListId,
 							Description = defaultPriceListId
 						};
-						foundationDefaultPriceList = defaultPriceList.ToFoundation();
+						foundationDefaultPriceList = defaultPriceList.ToDataModel();
 					}
 					entity.Pricelist = foundationDefaultPriceList;
 				}
@@ -127,7 +127,7 @@ namespace VirtoCommerce.PricingModule.Data.Services
 
 		public virtual coreModel.Pricelist CreatePricelist(coreModel.Pricelist priceList)
 		{
-			var entity = priceList.ToFoundation();
+			var entity = priceList.ToDataModel();
 			using (var repository = _repositoryFactory())
 			{
 				repository.Add(entity);
@@ -143,7 +143,7 @@ namespace VirtoCommerce.PricingModule.Data.Services
 			{
 				foreach (var price in prices)
 				{
-					var sourceEntity = price.ToFoundation();
+					var sourceEntity = price.ToDataModel();
 					var targetEntity = repository.GetPriceById(price.Id);
 					if (targetEntity == null)
 					{
@@ -164,7 +164,7 @@ namespace VirtoCommerce.PricingModule.Data.Services
 			{
 				foreach (var priceList in priceLists)
 				{
-					var sourceEntity = priceList.ToFoundation();
+					var sourceEntity = priceList.ToDataModel();
 					var targetEntity = repository.GetPricelistById(priceList.Id);
 					if (targetEntity == null)
 					{
@@ -233,7 +233,7 @@ namespace VirtoCommerce.PricingModule.Data.Services
 
 		public coreModel.PricelistAssignment CreatePriceListAssignment(coreModel.PricelistAssignment assignment)
 		{
-			var entity = assignment.ToFoundation();
+			var entity = assignment.ToDataModel();
 			coreModel.PricelistAssignment retVal = null;
 			using (var repository = _repositoryFactory())
 			{
@@ -251,7 +251,7 @@ namespace VirtoCommerce.PricingModule.Data.Services
 			{
 				foreach (var assignment in assignments)
 				{
-					var sourceEntity = assignment.ToFoundation();
+					var sourceEntity = assignment.ToDataModel();
 					var targetEntity = repository.GetPricelistAssignmentById(assignment.Id);
 					if (targetEntity == null)
 					{

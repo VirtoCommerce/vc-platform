@@ -91,7 +91,7 @@ namespace VirtoCommerce.OrderModule.Data.Converters
 			return retVal;
 		}
 
-		public static CustomerOrderEntity ToEntity(this CustomerOrder order)
+		public static CustomerOrderEntity ToDataModel(this CustomerOrder order)
 		{
 			if (order == null)
 				throw new ArgumentNullException("order");
@@ -103,23 +103,23 @@ namespace VirtoCommerce.OrderModule.Data.Converters
 		
 			if(order.Addresses != null)
 			{
-				retVal.Addresses = new ObservableCollection<AddressEntity>(order.Addresses.Select(x=>x.ToEntity()));
+				retVal.Addresses = new ObservableCollection<AddressEntity>(order.Addresses.Select(x=>x.ToDataModel()));
 			}
 			if(order.Items != null)
 			{
-				retVal.Items = new ObservableCollection<LineItemEntity>(order.Items.Select(x=>x.ToEntity()));
+				retVal.Items = new ObservableCollection<LineItemEntity>(order.Items.Select(x=>x.ToDataModel()));
 			}
 			if(order.Shipments != null)
 			{
-				retVal.Shipments = new ObservableCollection<ShipmentEntity>(order.Shipments.Select(x=>x.ToEntity()));
+				retVal.Shipments = new ObservableCollection<ShipmentEntity>(order.Shipments.Select(x=>x.ToDataModel()));
 			}
 			if(order.InPayments != null)
 			{
-				retVal.InPayments = new ObservableCollection<PaymentInEntity>(order.InPayments.Select(x => x.ToEntity()));
+				retVal.InPayments = new ObservableCollection<PaymentInEntity>(order.InPayments.Select(x => x.ToDataModel()));
 			}
 			if(order.Discount != null)
 			{
-				retVal.Discounts = new ObservableCollection<DiscountEntity>(new DiscountEntity[] { order.Discount.ToEntity() });
+				retVal.Discounts = new ObservableCollection<DiscountEntity>(new DiscountEntity[] { order.Discount.ToDataModel() });
 			}
 			return retVal;
 		}

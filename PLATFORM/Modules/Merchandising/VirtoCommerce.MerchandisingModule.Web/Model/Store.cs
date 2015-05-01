@@ -1,4 +1,7 @@
-﻿namespace VirtoCommerce.MerchandisingModule.Web.Model.Stores
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+using VirtoCommerce.Platform.Core.Common;
+namespace VirtoCommerce.MerchandisingModule.Web.Model
 {
     public class Store
     {
@@ -6,9 +9,10 @@
 
         public string Catalog { get; set; }
         public string Country { get; set; }
-        public string[] Currencies { get; set; }
-
-        public string DefaultCurrency { get; set; }
+		[JsonConverter(typeof(StringEnumConverter))]
+        public CurrencyCodes[] Currencies { get; set; }
+		[JsonConverter(typeof(StringEnumConverter))]
+		public CurrencyCodes DefaultCurrency { get; set; }
         public string DefaultLanguage { get; set; }
         public string Description { get; set; }
         public string Id { get; set; }

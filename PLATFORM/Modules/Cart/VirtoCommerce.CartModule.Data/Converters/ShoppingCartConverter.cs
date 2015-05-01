@@ -43,7 +43,7 @@ namespace VirtoCommerce.CartModule.Data.Converters
 			return retVal;
 		}
 
-		public static ShoppingCartEntity ToEntity(this ShoppingCart cart)
+		public static ShoppingCartEntity ToDataModel(this ShoppingCart cart)
 		{
 			if (cart == null)
 				throw new ArgumentNullException("cart");
@@ -55,19 +55,19 @@ namespace VirtoCommerce.CartModule.Data.Converters
 
 			if (cart.Addresses != null)
 			{
-				retVal.Addresses = new ObservableCollection<AddressEntity>(cart.Addresses.Select(x => x.ToEntity()));
+				retVal.Addresses = new ObservableCollection<AddressEntity>(cart.Addresses.Select(x => x.ToDataModel()));
 			}
 			if (cart.Items != null)
 			{
-				retVal.Items = new ObservableCollection<LineItemEntity>(cart.Items.Select(x => x.ToEntity()));
+				retVal.Items = new ObservableCollection<LineItemEntity>(cart.Items.Select(x => x.ToDataModel()));
 			}
 			if (cart.Shipments != null)
 			{
-				retVal.Shipments = new ObservableCollection<ShipmentEntity>(cart.Shipments.Select(x => x.ToEntity()));
+				retVal.Shipments = new ObservableCollection<ShipmentEntity>(cart.Shipments.Select(x => x.ToDataModel()));
 			}
 			if (cart.Payments != null)
 			{
-				retVal.Payments = new ObservableCollection<PaymentEntity>(cart.Payments.Select(x => x.ToEntity()));
+				retVal.Payments = new ObservableCollection<PaymentEntity>(cart.Payments.Select(x => x.ToDataModel()));
 			}
 
 			return retVal;

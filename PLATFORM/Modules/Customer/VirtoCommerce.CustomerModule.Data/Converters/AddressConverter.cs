@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using foundationModel = VirtoCommerce.CustomerModule.Data.Model;
+using dataModel = VirtoCommerce.CustomerModule.Data.Model;
 using coreModel = VirtoCommerce.Domain.Customer.Model;
 using Omu.ValueInjecter;
 using VirtoCommerce.Platform.Data.Common;
@@ -13,7 +13,7 @@ namespace VirtoCommerce.CustomerModule.Data.Converters
 {
     public static class AddressConverter
     {
-        public static coreModel.Address ToCoreModel(this foundationModel.Address entity)
+        public static coreModel.Address ToCoreModel(this dataModel.Address entity)
         {
             if (entity == null)
                 throw new ArgumentNullException("entity");
@@ -24,12 +24,12 @@ namespace VirtoCommerce.CustomerModule.Data.Converters
             return retVal;
         }
 
-        public static foundationModel.Address ToFoundation(this coreModel.Address address)
+        public static dataModel.Address ToDataModel(this coreModel.Address address)
         {
             if (address == null)
                 throw new ArgumentNullException("address");
 
-            var retVal = new foundationModel.Address();
+            var retVal = new dataModel.Address();
             retVal.InjectFrom(address);
             retVal.DaytimePhoneNumber = address.Phone;
             return retVal;
@@ -41,9 +41,9 @@ namespace VirtoCommerce.CustomerModule.Data.Converters
         /// </summary>
         /// <param name="source"></param>
         /// <param name="target"></param>
-        public static void Patch(this foundationModel.Address source, foundationModel.Address target)
+        public static void Patch(this dataModel.Address source, dataModel.Address target)
         {
-            var patchInjectionPolicy = new PatchInjection<foundationModel.Address>(x => x.City, x => x.CountryCode,
+            var patchInjectionPolicy = new PatchInjection<dataModel.Address>(x => x.City, x => x.CountryCode,
                                                                                       x => x.CountryName, x => x.DaytimePhoneNumber,
                                                                                       x => x.Email, x => x.EveningPhoneNumber, x => x.FaxNumber,
                                                                                       x => x.FirstName, x => x.LastName, x => x.Line1,
@@ -54,16 +54,16 @@ namespace VirtoCommerce.CustomerModule.Data.Converters
 
     }
 
-    public class AddressComparer : IEqualityComparer<foundationModel.Address>
+    public class AddressComparer : IEqualityComparer<dataModel.Address>
     {
         #region IEqualityComparer<Discount> Members
 
-        public bool Equals(foundationModel.Address x, foundationModel.Address y)
+        public bool Equals(dataModel.Address x, dataModel.Address y)
         {
             return GetHashCode(x) == GetHashCode(y);
         }
 
-        public int GetHashCode(foundationModel.Address obj)
+        public int GetHashCode(dataModel.Address obj)
         {
             var result = String.Join(":", obj.Organization, obj.City, obj.CountryCode, obj.CountryName, obj.FaxNumber, obj.Name, obj.RegionName, obj.RegionId, obj.StateProvince,
                                           obj.Email, obj.FirstName, obj.LastName, obj.Line1, obj.Line2, obj.DaytimePhoneNumber, obj.PostalCode);

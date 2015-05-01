@@ -41,7 +41,7 @@ namespace VirtoCommerce.InventoryModule.Data.Converters
 		}
 
 
-		public static dataModel.Inventory ToFoundation(this coreModel.InventoryInfo inventory)
+		public static dataModel.Inventory ToDataModel(this coreModel.InventoryInfo inventory)
 		{
 			if (inventory == null)
 				throw new ArgumentNullException("inventory");

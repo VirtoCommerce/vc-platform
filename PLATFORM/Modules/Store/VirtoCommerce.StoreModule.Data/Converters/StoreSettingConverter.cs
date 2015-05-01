@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using foundationModel = VirtoCommerce.StoreModule.Data.Model;
+using dataModel = VirtoCommerce.StoreModule.Data.Model;
 using coreModel = VirtoCommerce.Domain.Store.Model;
 using Omu.ValueInjecter;
 using VirtoCommerce.Platform.Data.Common;
@@ -18,7 +18,7 @@ namespace VirtoCommerce.StoreModule.Data.Converters
 		/// </summary>
 		/// <param name="catalogBase"></param>
 		/// <returns></returns>
-		public static coreModel.StoreSetting ToCoreModel(this foundationModel.StoreSetting dbEntity)
+		public static coreModel.StoreSetting ToCoreModel(this dataModel.StoreSetting dbEntity)
 		{
 			if (dbEntity == null)
 				throw new ArgumentNullException("dbEntity");
@@ -32,12 +32,12 @@ namespace VirtoCommerce.StoreModule.Data.Converters
 		}
 
 
-		public static foundationModel.StoreSetting ToFoundation(this coreModel.StoreSetting setting)
+		public static dataModel.StoreSetting ToDataModel(this coreModel.StoreSetting setting)
 		{
 			if (setting == null)
 				throw new ArgumentNullException("setting");
 
-			var retVal = new foundationModel.StoreSetting();
+			var retVal = new dataModel.StoreSetting();
 			retVal.InjectFrom(setting);
 			retVal.ValueType = setting.ValueType.ToString();
 			SetPropertyValue(retVal, setting);
@@ -49,12 +49,12 @@ namespace VirtoCommerce.StoreModule.Data.Converters
 		/// </summary>
 		/// <param name="source"></param>
 		/// <param name="target"></param>
-		public static void Patch(this foundationModel.StoreSetting source, foundationModel.StoreSetting target)
+		public static void Patch(this dataModel.StoreSetting source, dataModel.StoreSetting target)
 		{
 			if (target == null)
 				throw new ArgumentNullException("target");
 
-			var patchInjectionPolicy = new PatchInjection<foundationModel.StoreSetting>(x => x.BooleanValue, x => x.DateTimeValue,
+			var patchInjectionPolicy = new PatchInjection<dataModel.StoreSetting>(x => x.BooleanValue, x => x.DateTimeValue,
 																					   x => x.DecimalValue, x => x.IntegerValue,
 																					   x => x.Locale, x => x.LongTextValue, x => x.ShortTextValue,
 																					   x => x.ValueType);
@@ -62,7 +62,7 @@ namespace VirtoCommerce.StoreModule.Data.Converters
 
 		}
 
-		private static void SetPropertyValue(foundationModel.StoreSetting retVal, coreModel.StoreSetting setting)
+		private static void SetPropertyValue(dataModel.StoreSetting retVal, coreModel.StoreSetting setting)
 		{
 			switch (setting.ValueType)
 			{

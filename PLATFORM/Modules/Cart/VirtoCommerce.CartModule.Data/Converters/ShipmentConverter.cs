@@ -37,7 +37,7 @@ namespace VirtoCommerce.CartModule.Data.Converters
 			return retVal;
 		}
 
-		public static ShipmentEntity ToEntity(this Shipment shipment)
+		public static ShipmentEntity ToDataModel(this Shipment shipment)
 		{
 			if (shipment == null)
 				throw new ArgumentNullException("shipment");
@@ -49,11 +49,11 @@ namespace VirtoCommerce.CartModule.Data.Converters
 		
 			if (shipment.DeliveryAddress != null)
 			{
-				retVal.Addresses = new ObservableCollection<AddressEntity>(new AddressEntity[] { shipment.DeliveryAddress.ToEntity() });
+				retVal.Addresses = new ObservableCollection<AddressEntity>(new AddressEntity[] { shipment.DeliveryAddress.ToDataModel() });
 			}
 			if (shipment.Items != null)
 			{
-				retVal.Items = new ObservableCollection<LineItemEntity>(shipment.Items.Select(x => x.ToEntity()));
+				retVal.Items = new ObservableCollection<LineItemEntity>(shipment.Items.Select(x => x.ToDataModel()));
 			}
 			return retVal;
 		}

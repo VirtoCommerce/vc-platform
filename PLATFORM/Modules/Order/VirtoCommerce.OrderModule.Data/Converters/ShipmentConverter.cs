@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using VirtoCommerce.Domain.Order.Model;
 using Omu.ValueInjecter;
 using VirtoCommerce.OrderModule.Data.Model;
-using cart = VirtoCommerce.Domain.Cart.Model;
+using coreModel = VirtoCommerce.Domain.Cart.Model;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Data.Common.ConventionInjections;
 
@@ -44,7 +44,7 @@ namespace VirtoCommerce.OrderModule.Data.Converters
 			return retVal;
 		}
 
-		public static Shipment ToCoreModel(this cart.Shipment shipment)
+		public static Shipment ToCoreModel(this coreModel.Shipment shipment)
 		{
 
 			var retVal = new Shipment();
@@ -85,7 +85,7 @@ namespace VirtoCommerce.OrderModule.Data.Converters
 			return retVal;
 		}
 
-		public static ShipmentEntity ToEntity(this Shipment shipment)
+		public static ShipmentEntity ToDataModel(this Shipment shipment)
 		{
 			if (shipment == null)
 				throw new ArgumentNullException("shipment");
@@ -99,11 +99,11 @@ namespace VirtoCommerce.OrderModule.Data.Converters
 			retVal.Addresses = new ObservableCollection<AddressEntity>();
 			if (shipment.DeliveryAddress != null)
 			{
-				retVal.Addresses = new ObservableCollection<AddressEntity>(new AddressEntity[] { shipment.DeliveryAddress.ToEntity() });
+				retVal.Addresses = new ObservableCollection<AddressEntity>(new AddressEntity[] { shipment.DeliveryAddress.ToDataModel() });
 			}
 			if(shipment.Items != null)
 			{
-				retVal.Items = new ObservableCollection<LineItemEntity>(shipment.Items.Select(x=>x.ToEntity()));
+				retVal.Items = new ObservableCollection<LineItemEntity>(shipment.Items.Select(x=>x.ToDataModel()));
 			}
 			return retVal;
 		}

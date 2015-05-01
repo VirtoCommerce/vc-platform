@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using VirtoCommerce.Domain.Order.Model;
 using Omu.ValueInjecter;
 using VirtoCommerce.OrderModule.Data.Model;
-using cart = VirtoCommerce.Domain.Cart.Model;
+using coreModel = VirtoCommerce.Domain.Cart.Model;
 using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.OrderModule.Data.Converters
@@ -38,7 +38,7 @@ namespace VirtoCommerce.OrderModule.Data.Converters
 			return retVal;
 		}
 
-		public static Discount ToCoreModel(this cart.Discount discount)
+		public static Discount ToCoreModel(this coreModel.Discount discount)
 		{
 			if (discount == null)
 				throw new ArgumentNullException("discount");
@@ -50,7 +50,7 @@ namespace VirtoCommerce.OrderModule.Data.Converters
 			return retVal;
 		}
 
-		public static DiscountEntity ToEntity(this Discount discount)
+		public static DiscountEntity ToDataModel(this Discount discount)
 		{
 			if (discount == null)
 				throw new ArgumentNullException("discount");

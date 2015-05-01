@@ -98,14 +98,18 @@
     <Compile Include="Binders\SearchParameterBinder.cs" />
     <Compile Include="Binders\CatalogItemSearchCriteriaBinder.cs" />
     <Compile Include="Controllers\CategoryController.cs" />
+    <Compile Include="Controllers\StoreController.cs" />
+    <Compile Include="Controllers\PriceController.cs" />
     <Compile Include="Controllers\ProductController.cs" />
     <Compile Include="Converters\AssetConverter.cs" />
     <Compile Include="Converters\AssociationConverter.cs" />
     <Compile Include="Converters\CategoryConverter.cs" />
     <Compile Include="Converters\FacetConverters.cs" />
     <Compile Include="Converters\KeywordConverter.cs" />
+    <Compile Include="Converters\PriceConverter.cs" />
     <Compile Include="Converters\ProductConverter.cs" />
     <Compile Include="Converters\ResponseGroupConverter.cs" />
+    <Compile Include="Converters\StoreConverter.cs" />
     <Compile Include="Extensions\ItemServiceExtensions.cs" />
     <Compile Include="Model\Price.cs" />
     <Compile Include="Model\Association.cs" />
@@ -119,7 +123,7 @@
     <Compile Include="Model\ReviewComment.cs" />
     <Compile Include="Model\SearchParameters.cs" />
     <Compile Include="Model\SeoKeyword.cs" />
-    <Compile Include="Model\Stores\Store.cs" />
+    <Compile Include="Model\Store.cs" />
     <Compile Include="Module.cs" />
     <Compile Include="Model\CatalogItem.cs" />
     <Compile Include="Model\Category.cs" />

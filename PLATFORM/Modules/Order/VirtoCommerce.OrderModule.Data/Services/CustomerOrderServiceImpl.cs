@@ -57,7 +57,7 @@ namespace VirtoCommerce.OrderModule.Data.Services
 
 			//TODO: for approved sipments need decrease inventory
 
-			var orderEntity = order.ToEntity();
+			var orderEntity = order.ToDataModel();
 			CustomerOrder retVal = null;
 			using (var repository = _repositoryFactory())
 			{
@@ -97,7 +97,7 @@ namespace VirtoCommerce.OrderModule.Data.Services
 					//Do business logic on temporary  order object
 					RecalculateOrder(new CustomerOrderStateBasedEvalContext(EntryState.Modified, origOrder, order));
 
-					var sourceOrderEntity = order.ToEntity();
+					var sourceOrderEntity = order.ToDataModel();
 					var targetOrderEntity = repository.GetCustomerOrderById(order.Id, CustomerOrderResponseGroup.Full);
 
 					if (targetOrderEntity == null)

@@ -48,7 +48,7 @@ namespace VirtoCommerce.CartModule.Data.Services
 			//Do business logic on temporary  order object
 			RecalculateCart(cart);
 
-			var entity = cart.ToEntity();
+			var entity = cart.ToDataModel();
 			ShoppingCart retVal = null;
 			using (var repository = _repositoryFactory())
 			{
@@ -74,8 +74,8 @@ namespace VirtoCommerce.CartModule.Data.Services
 				{
 					throw new NullReferenceException("targetCart");
 				}
-				var sourceCartEntity = cart.ToEntity();
-				var targetCartEntity = targetCart.ToEntity();
+				var sourceCartEntity = cart.ToDataModel();
+				var targetCartEntity = targetCart.ToDataModel();
 				sourceCartEntity.Patch(targetCartEntity);
 				var changedCart = targetCartEntity.ToCoreModel();
 				changedCarts.Add(changedCart);
@@ -91,7 +91,7 @@ namespace VirtoCommerce.CartModule.Data.Services
 					//Do business logic on temporary  order object
 					RecalculateCart(changedCart);
 
-					var sourceCartEntity = changedCart.ToEntity();
+					var sourceCartEntity = changedCart.ToDataModel();
 					var targetCartEntity = repository.GetShoppingCartById(changedCart.Id);
 					if (targetCartEntity == null)
 					{

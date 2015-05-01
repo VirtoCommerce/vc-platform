@@ -45,7 +45,7 @@ namespace VirtoCommerce.StoreModule.Data.Services
 
 		public coreModel.Store Create(coreModel.Store store)
 		{
-			var entity = store.ToFoundation();
+			var entity = store.ToDataModel();
 			coreModel.Store retVal = null;
 			using (var repository = _repositoryFactory())
 			{
@@ -63,7 +63,7 @@ namespace VirtoCommerce.StoreModule.Data.Services
 			{
 				foreach (var store in stores)
 				{
-					var sourceEntity = store.ToFoundation();
+					var sourceEntity = store.ToDataModel();
 					var targetEntity = repository.GetStoreById(store.Id);
 					if (targetEntity == null)
 					{

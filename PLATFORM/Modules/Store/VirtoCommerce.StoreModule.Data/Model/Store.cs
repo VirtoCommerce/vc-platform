@@ -14,10 +14,10 @@ namespace VirtoCommerce.StoreModule.Data.Model
 	{
 		public Store()
 		{
-			Languages = new ObservableCollection<StoreLanguage>();
-			Currencies = new ObservableCollection<StoreCurrency>();
-			Settings = new ObservableCollection<StoreSetting>();
-			PaymentGateways = new ObservableCollection<StorePaymentGateway>();
+			Languages = new NullCollection<StoreLanguage>();
+			Currencies = new NullCollection<StoreCurrency>();
+			Settings = new NullCollection<StoreSetting>();
+			PaymentGateways = new NullCollection<StorePaymentGateway>();
 		}
 
 		[Required]

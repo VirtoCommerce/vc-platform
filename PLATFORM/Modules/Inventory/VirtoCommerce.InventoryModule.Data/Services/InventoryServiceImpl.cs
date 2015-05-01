@@ -42,7 +42,7 @@ namespace VirtoCommerce.InventoryModule.Data.Services
 		{
 			using (var repository = _repositoryFactory())
 			{
-				var sourceEntities = inventoryInfos.Select(x => x.ToFoundation()).ToList();
+				var sourceEntities = inventoryInfos.Select(x => x.ToDataModel()).ToList();
 				var changedProductIds = inventoryInfos.Select(x => x.ProductId).ToArray();
 				var targetEntities = repository.GetProductsInventories(changedProductIds).ToList();
 
@@ -64,7 +64,7 @@ namespace VirtoCommerce.InventoryModule.Data.Services
 			coreModel.InventoryInfo retVal = null;
 			using (var repository = _repositoryFactory())
 			{
-				var sourceInventory = inventoryInfo.ToFoundation();
+				var sourceInventory = inventoryInfo.ToDataModel();
 
 				var alreadyExistInventories =  repository.GetProductsInventories(new string[]  { inventoryInfo.ProductId });
 				var targetInventory = alreadyExistInventories.FirstOrDefault(x => x.FulfillmentCenterId == sourceInventory.FulfillmentCenterId);

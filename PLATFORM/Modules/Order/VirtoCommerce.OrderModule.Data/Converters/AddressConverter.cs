@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using VirtoCommerce.Domain.Order.Model;
 using Omu.ValueInjecter;
 using VirtoCommerce.OrderModule.Data.Model;
-using cart = VirtoCommerce.Domain.Cart.Model;
+using coreModel = VirtoCommerce.Domain.Cart.Model;
 
 namespace VirtoCommerce.OrderModule.Data.Converters
 {
@@ -25,7 +25,7 @@ namespace VirtoCommerce.OrderModule.Data.Converters
 			return retVal;
 		}
 
-		public static Address ToCoreModel(this cart.Address address)
+		public static Address ToCoreModel(this coreModel.Address address)
 		{
 			if (address == null)
 				throw new ArgumentNullException("entity");
@@ -36,7 +36,7 @@ namespace VirtoCommerce.OrderModule.Data.Converters
 			return retVal;
 		}
 
-		public static AddressEntity ToEntity(this Address address)
+		public static AddressEntity ToDataModel(this Address address)
 		{
 			if (address == null)
 				throw new ArgumentNullException("address");
