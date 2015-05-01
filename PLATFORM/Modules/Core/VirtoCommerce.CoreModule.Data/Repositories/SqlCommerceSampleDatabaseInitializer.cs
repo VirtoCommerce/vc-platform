@@ -14,6 +14,11 @@ namespace VirtoCommerce.CoreModule.Data.Repositories
 	{
 		private readonly bool _reduced;
 
+		readonly string[] _files =
+		{
+			"SeoUrlKeyword.sql"
+		
+		};
 		public SqlCommerceSampleDatabaseInitializer(bool reduced = false)
 		{
 			_reduced = reduced;
@@ -25,6 +30,13 @@ namespace VirtoCommerce.CoreModule.Data.Repositories
 			base.Seed(context);
 		}
 
+		private void ExcecuteSqlScripts(CommerceRepositoryImpl context)
+		{
+			foreach (var file in _files)
+			{
+				ExecuteSqlScriptFile(context, file, "Commerce");
+			}
+		}
 
 		public static void CreateFulfillmentCenter(CommerceRepositoryImpl context)
 		{
