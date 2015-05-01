@@ -31,14 +31,14 @@ namespace VirtoCommerce.Web.Models.Extensions
                         keyword = parent.Keywords.SeoKeyword(language);
                     }
 
-                    segments.Add(parent.Id, keyword != null ? keyword.Keyword : parent.Id);
+                    segments.Add(parent.Id, keyword != null ? keyword.Keyword : parent.Handle);
                 }
             }
 
             //Finally add category itself
             {
                 var keyword = collection.Keywords != null ? collection.Keywords.SeoKeyword(language) : null;
-                segments.Add(collection.Id, keyword != null ? keyword.Keyword : collection.Id);
+                segments.Add(collection.Id, keyword != null ? keyword.Keyword : collection.Handle);
             }
 
             return segments;

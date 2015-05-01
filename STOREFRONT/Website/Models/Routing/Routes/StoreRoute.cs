@@ -115,6 +115,10 @@ namespace VirtoCommerce.Web.Models.Routing.Routes
                                   + httpContext.Request.PathInfo;
                 var pathSegments = requestPath.Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
 
+
+                //RouteParser.Parse(value);
+                //RouteValueDictionary values = _parsedRoute.Match(requestPath, Defaults);
+
                 //Store route can only have up to 2 segments
                 //Other routes have unlimited number of segments due to category path
                 if (this.GetType() == typeof(StoreRoute) && pathSegments.Length > this.Url.Split(new[] { '/' }).Length)
@@ -151,7 +155,7 @@ namespace VirtoCommerce.Web.Models.Routing.Routes
                     }
                     else
                     {
-                        values.Add(Constants.Language, Thread.CurrentThread.CurrentUICulture);
+                        values.Add(Constants.Language, Thread.CurrentThread.CurrentUICulture.Name);
                     }
 
                     var storeFound = false;
@@ -201,6 +205,16 @@ namespace VirtoCommerce.Web.Models.Routing.Routes
                             categoryParseEndIndex = pathSegments.Length - 1;
                             //Last must be item code
                             values.Add(Constants.Item, pathSegments[categoryParseEndIndex]);
+
+                            // hack: for quick comparison and choosing correct item handler since RouteParser is internal method of .net
+                            // have to change this for MVC5
+                            if (this.Url.Equals(Constants.ItemRouteWithCode))
+                            {
+                                if (!pathSegments[categoryParseEndIndex].StartsWith("itm-"))
+                                {
+                                    return null;
+                                }
+                            }
                         }
                         //Parse category path
                         if (categoryParseEndIndex > startIndex)
