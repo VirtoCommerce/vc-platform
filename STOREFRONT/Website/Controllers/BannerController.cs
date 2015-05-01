@@ -1,16 +1,51 @@
-﻿using DotLiquid;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
-using System.Web;
 using System.Web.Mvc;
-using VirtoCommerce.ApiClient.DataContracts.Contents;
-using VirtoCommerce.Web.Models;
+using VirtoCommerce.Web.Models.Banners;
+using VirtoCommerce.Web.Models.Convertors;
 
 namespace VirtoCommerce.Web.Controllers
 {
-    public class DynamicContentController : BaseController
+    [RoutePrefix("banners")]
+    public class BannerController : BaseController
     {
+		/// <summary>
+		/// Shows the dynamic content
+		/// </summary>
+		/// <param name="placeName">Name of dynamic content place.</param>
+		/// <returns>ActionResult.</returns>
+        //[DonutOutputCache(CacheProfile = "BannerCache")]
+        [Route("{placename}")]
+        //[ChildActionOnly]
+        public async Task<ActionResult> ShowDynamicContent(string placeName)
+		{
+            var response = await Service.GetDynamicContentAsync(new [] { placeName });
+            if (response != null && response.Items != null)
+            {
+                Context.Set("banner", response.Items.First().Items.ToArray().First().AsWebModel());
+                return PartialView("banner", this.Context);
+            }
+            
+            return null;
+        }
+
+        //[DonutOutputCache(CacheProfile = "BannerCache")]
+        [Route("")]
+        public async Task<ActionResult> ShowDynamicContents(string[] placeName)
+        {
+            var response = await Service.GetDynamicContentAsync(placeName);
+            if (response != null && response.Items != null)
+            {
+                Context.Set("placeholders", new PlaceHolderCollection(response.Items.AsWebModel()));
+                return PartialView("placeholders", this.Context);
+            }
+
+            return null;
+        }
+
+        /*
+
+
         [HttpGet]
         public async Task<ActionResult> GetBanners(string[] placeholderIds)
         {
@@ -82,5 +117,6 @@ namespace VirtoCommerce.Web.Controllers
 
             return html;
         }
+         * */
     }
 }

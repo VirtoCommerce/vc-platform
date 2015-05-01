@@ -10,10 +10,6 @@ using DotLiquid;
 
 namespace VirtoCommerce.Web.Models
 {
-
-    #region
-    #endregion
-
     [DataContract]
     public class ItemCollection<T> : Drop, IEnumerable<T>, ICollection //, IVirtualCollection
     {
@@ -69,7 +65,7 @@ namespace VirtoCommerce.Web.Models
             }
         }
 
-        public int TotalCount { get; set; }
+        public virtual int TotalCount { get; set; }
         #endregion
 
         #region Public Methods and Operators
