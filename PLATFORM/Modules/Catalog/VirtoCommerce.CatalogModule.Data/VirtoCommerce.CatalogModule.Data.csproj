@@ -213,9 +213,6 @@
     <EmbeddedResource Include="Repositories\Sql\PropertySetProperty.sql" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Repositories\Sql\TaxCategory.sql" />
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="Repositories\Sql\VirtualCatalog.sql" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

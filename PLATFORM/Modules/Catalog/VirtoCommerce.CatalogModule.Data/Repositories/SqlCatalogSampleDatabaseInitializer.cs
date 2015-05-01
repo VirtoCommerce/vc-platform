@@ -42,7 +42,7 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
 		{
 			foreach (var file in GetSampleFiles())
 			{
-				//ExecuteSqlScriptFile(context, file, "Catalogs");
+				ExecuteSqlScriptFile(context, file, "Catalogs");
 			}
 		}
 	}
