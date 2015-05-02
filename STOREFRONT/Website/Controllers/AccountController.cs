@@ -13,6 +13,7 @@ using VirtoCommerce.Web.Models.FormModels;
 
 namespace VirtoCommerce.Web.Controllers
 {
+    [RoutePrefix("account")]
     [Authorize]
     public class AccountController : BaseController
     {
@@ -32,6 +33,7 @@ namespace VirtoCommerce.Web.Controllers
         // GET: /Account/Login
         [HttpGet]
         [AllowAnonymous]
+        //[Route("login")]
         public ActionResult Login(string returnUrl)
         {
             return View("customers/login");
@@ -41,6 +43,7 @@ namespace VirtoCommerce.Web.Controllers
         // POST: /Account/Login
         [HttpPost]
         [AllowAnonymous]
+        //[Route("login")]
         public async Task<ActionResult> Login(LoginFormModel formModel, string returnUrl)
         {
             var form = Service.GetForm(formModel.Id);
@@ -91,6 +94,7 @@ namespace VirtoCommerce.Web.Controllers
         // GET: /Account/Register
         [HttpGet]
         [AllowAnonymous]
+        [Route("register")]
         public ActionResult Register()
         {
             return View("customers/register");

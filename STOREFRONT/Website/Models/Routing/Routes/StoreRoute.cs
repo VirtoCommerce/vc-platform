@@ -204,7 +204,7 @@ namespace VirtoCommerce.Web.Models.Routing.Routes
                         {
                             categoryParseEndIndex = pathSegments.Length - 1;
                             //Last must be item code
-                            values.Add(Constants.Item, pathSegments[categoryParseEndIndex]);
+                            values.Add(Constants.Item, pathSegments[categoryParseEndIndex].StartsWith("itm-") ? pathSegments[categoryParseEndIndex].Substring(4) : pathSegments[categoryParseEndIndex]);
 
                             // hack: for quick comparison and choosing correct item handler since RouteParser is internal method of .net
                             // have to change this for MVC5
@@ -363,8 +363,7 @@ namespace VirtoCommerce.Web.Models.Routing.Routes
 
         protected virtual bool IsLanguageNeeded(Shop dbStore, string language)
         {
-            return true;
-            //return dbStore == null || (dbStore.Languages.Any() /*&& !dbStore.DefaultLanguage.Equals(language, StringComparison.OrdinalIgnoreCase)*/);
+            return dbStore == null || (dbStore.Languages.Any() && !dbStore.DefaultLanguage.Equals(language, StringComparison.OrdinalIgnoreCase));
         }
 
         /// <summary>

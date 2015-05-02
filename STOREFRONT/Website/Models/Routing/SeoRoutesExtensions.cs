@@ -33,7 +33,6 @@ namespace VirtoCommerce.Web.Models.Routing
                                         { Constants.Store, new StoreRouteConstraint() },
                                         { Constants.Category, new CategoryRouteConstraint() },
                                         { Constants.Item, new ItemRouteConstraint() }
-                                        //{ Constants.Item, "itm-.+" }
                                     },
                         new RouteValueDictionary { { "namespaces", new[] { "VirtoCommerce.Web.Controllers" } } },
                         new MvcRouteHandler()));
