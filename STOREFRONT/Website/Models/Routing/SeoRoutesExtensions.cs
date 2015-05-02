@@ -25,7 +25,7 @@ namespace VirtoCommerce.Web.Models.Routing
                         new RouteValueDictionary
                                     {
                                         { "controller", "Product" },
-                                        { "action", "ProductByCodeAsync" }
+                                        { "action", "ProductAsync" }
                                     },
                         new RouteValueDictionary
                                     {
@@ -61,7 +61,7 @@ namespace VirtoCommerce.Web.Models.Routing
             var categoryRoute =
                 new NormalizeRoute(
                     new CategoryRoute(
-                        Constants.CategoryRouteWithTags,
+                        Constants.CategoryRoute,
                         new RouteValueDictionary
                         {
                             { "controller", "Collections" },

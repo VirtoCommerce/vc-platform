@@ -93,7 +93,7 @@ namespace VirtoCommerce.Web.Controllers
                 return null;
             }
 
-            var tagsArray = tags.Split(new[] { '+' });
+            var tagsArray = tags.Split(new[] { ',' });
             return tagsArray;
         }
         #endregion
