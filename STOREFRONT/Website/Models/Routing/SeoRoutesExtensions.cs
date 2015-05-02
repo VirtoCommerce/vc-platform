@@ -25,7 +25,7 @@ namespace VirtoCommerce.Web.Models.Routing
                         new RouteValueDictionary
                                     {
                                         { "controller", "Product" },
-                                        { "action", "ProductAsync" }
+                                        { "action", "ProductByCodeAsync" }
                                     },
                         new RouteValueDictionary
                                     {
@@ -135,6 +135,20 @@ namespace VirtoCommerce.Web.Models.Routing
                     }
                     return null;
                 });
+
+            /*
+            routes.Redirect(r => r.MapRoute("old_Product", string.Format("products/{{{0}}}", Constants.Item))).To(itemRouteWithCode,
+                    x =>
+                    {
+                        //Expect to receive category code
+                        if (x.RouteData.Values.ContainsKey(Constants.Item))
+                        {
+                            return new RouteValueDictionary { { Constants.Item, x.RouteData.Values[Constants.Item].ToString() } };
+                        }
+                        return null;
+                    });
+             * */
+
 
             var defaultRoute = new NormalizeRoute(
                 new Route(string.Format("{0}/{{controller}}/{{action}}/{{id}}", Constants.StoreRoute),

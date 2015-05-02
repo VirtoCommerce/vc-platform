@@ -11,13 +11,25 @@ namespace VirtoCommerce.Web.Controllers
     public class ProductController : BaseController
     {
         #region Public Methods and Operators
-        //[Route("products/{item}")]
+        [Route("products/{item}")]
         public async Task<ActionResult> ProductAsync(string item)
         {
             var product = await this.Service.GetProductAsync(item);
             this.Context.Set("Product", product);
 
             if(product == null)
+                throw new HttpException(404, "Product not found");
+
+            //this.Context.Set("current_page", page);
+            return this.View("product");
+        }
+
+        public async Task<ActionResult> ProductByCodeAsync(string item)
+        {
+            var product = await this.Service.GetProductAsync(item);
+            this.Context.Set("Product", product);
+
+            if (product == null)
                 throw new HttpException(404, "Product not found");
 
             //this.Context.Set("current_page", page);
