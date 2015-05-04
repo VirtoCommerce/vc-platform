@@ -9,9 +9,8 @@ Website: http://virtocommerce.com
 
 Documentation: http://docs.virtocommerce.com
 
-Online Demo: http://virtocommerce.com/sandbox
-
-Web Admin Demo: http://virtoadmin.azurewebsites.net 
+Frontend Demo: http://demo2.virtocommerce.com
+Web Admin Demo: http://demo2.virtocommerce.com/admin
 
 Contributing
 -----------
