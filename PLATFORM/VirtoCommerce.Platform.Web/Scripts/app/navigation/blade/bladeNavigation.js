@@ -27,20 +27,20 @@ angular.module('platformWebApp')
             var offset = parseInt(blade.offset().left + mainContent.scrollLeft() + blade.width() + 125 - mainContent[0].clientWidth);
 
             blade.css('margin-left', '-' + blade.width() + 'px').addClass('__animate');
-                
-                setTimeout(function () {
-                    blade.animate({ 'margin-left': 0 }, 125, function () {
-                        blade.removeAttr('style').removeClass('__animate');
-                    });
-                }, 0);
+
+            setTimeout(function () {
+                blade.animate({ 'margin-left': 0 }, 125, function () {
+                    blade.removeAttr('style').removeClass('__animate');
+                });
+            }, 0);
 
             $timeout(function () {
-                
+
                 if (offset > mainContent.scrollLeft()) {
                     mainContent.animate({ scrollLeft: offset + 'px' }, 500);
                 }
 
-                
+
             }, 0, false);
 
 
@@ -125,14 +125,9 @@ angular.module('platformWebApp')
                 $('.cnt').animate({ scrollLeft: offset + 'px' }, 250);
             };
 
-            scope.bladeClose = function () {
-                var blade = $(element).parent('.blade'),
-                    bladeW = blade.width();
-
-                blade.addClass('__animate').animate({ 'margin-left': '-' + bladeW + 'px' }, 125, function () {
-                    $timeout(function () {
-                        bladeNavigationService.closeBlade(scope.blade);
-                    }, 0, true);
+            scope.bladeClose = function (onAfterClose) {
+                bladeNavigationService.closeBlade(scope.blade, onAfterClose, function (callback) {
+                    blade.addClass('__animate').animate({ 'margin-left': '-' + blade.width() + 'px' }, 125, callback);
                 });
             };
 
@@ -147,14 +142,26 @@ angular.module('platformWebApp')
     var service = {
         blades: [],
         currentBlade: undefined,
-        closeBlade: function (blade, callback) {
+        closeBlade: function (blade, callback, onBeforeClosing) {
             //Need in case a copy was passed
             blade = service.findBlade(blade.id);
+
+            // close all children
+            closeChildren(blade);
+
             var idx = service.stateBlades().indexOf(blade);
 
             var doCloseBlade = function () {
+                if (angular.isFunction(onBeforeClosing)) {
+                    onBeforeClosing(doCloseBladeFinal);
+                } else {
+                    doCloseBladeFinal();
+                }
+            }
+
+            var doCloseBladeFinal = function () {
                 service.stateBlades().splice(idx, 1);
-                //remove blade from childs collection
+                //remove blade from children collection
                 if (angular.isDefined(blade.parentBlade)) {
                     var childIdx = blade.parentBlade.childrenBlades.indexOf(blade);
                     if (childIdx >= 0) {
@@ -165,6 +172,7 @@ angular.module('platformWebApp')
                     callback();
                 };
             };
+
             if (idx >= 0) {
                 if (angular.isFunction(blade.onClose)) {
                     blade.onClose(doCloseBlade);
@@ -200,7 +208,6 @@ angular.module('platformWebApp')
             return found;
         },
         showBlade: function (blade, parentBlade) {
-
             blade.isLoading = true;
             blade.parentBlade = parentBlade;
             blade.childrenBlades = [];
@@ -221,6 +228,7 @@ angular.module('platformWebApp')
 
             if (angular.isDefined(parentBlade)) {
                 blade.xindex = service.stateBlades().indexOf(parentBlade) + 1;
+                closeChildren(parentBlade);
                 parentBlade.childrenBlades.push(blade);
             }
 
@@ -230,12 +238,12 @@ angular.module('platformWebApp')
                 service.currentBlade = blade;
             };
 
-            if (existingBlade != undefined) {
-                service.closeBlade(existingBlade, showBlade);
-            }
-            else {
-                showBlade();
-            }
+            //if (existingBlade != undefined) {
+            //    service.closeBlade(existingBlade, showBlade);
+            //}
+            //else {
+            showBlade();
+            //}
 
         },
         setError: function (msg, blade) {
@@ -243,6 +251,14 @@ angular.module('platformWebApp')
             blade.error = msg;
         }
     };
+
+    function closeChildren(blade) {
+        if (blade && blade.childrenBlades) {
+            angular.forEach(blade.childrenBlades.slice(), function (child) {
+                service.closeBlade(child);
+            });
+        }
+    }
 
     return service;
 }]);
