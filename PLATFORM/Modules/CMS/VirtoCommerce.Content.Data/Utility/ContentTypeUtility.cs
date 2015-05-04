@@ -22,14 +22,14 @@ namespace VirtoCommerce.Content.Data.Utility
 
 		public static string ConvertImageToBase64String(byte[] image, string contentType)
 		{
-		    var retVal = string.Format("{0}{1}",
-		        string.Format(Base64StringPrefix, contentType),
-		        Convert.ToBase64String(image));
+			var retVal = string.Format("{0}{1}",
+				string.Format(Base64StringPrefix, contentType),
+				Convert.ToBase64String(image));
 
-		    return retVal;
+			return retVal;
 		}
 
-	    public static bool IsImageContentType(string contentType)
+		public static bool IsImageContentType(string contentType)
 		{
 			return contentType.Equals("image/bmp") ||
 				contentType.Equals("image/png") ||
@@ -63,6 +63,7 @@ namespace VirtoCommerce.Content.Data.Utility
 			new ContentTypeInfo { StartBytes = new byte[] { }, Extension = ".ttf", ContentType = "application/x-font-truetype" },
 			new ContentTypeInfo { StartBytes = new byte[] { }, Extension = ".woff", ContentType = "application/font-woff" },
 			new ContentTypeInfo { StartBytes = new byte[] { }, Extension = ".html", ContentType = "text/html" },
+			new ContentTypeInfo { StartBytes = new byte[] { }, Extension = ".md", ContentType = "text/html" },
 		};
 	}
 

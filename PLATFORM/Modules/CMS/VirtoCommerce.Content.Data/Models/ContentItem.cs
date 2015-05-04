@@ -11,9 +11,6 @@
     {
         #region Public Properties
 
-        //[Required]
-        public string Content { get; set; }
-
 		//[Required]
 		public string ContentType { get; set; }
 

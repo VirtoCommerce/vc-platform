@@ -83,7 +83,7 @@
 		blade.currentEntity.id = blade.choosenFolder + '/' + blade.currentEntity.name;
 
 		themes.updateAsset({ storeId: blade.choosenStoreId, themeId: blade.choosenThemeId }, blade.currentEntity, function () {
-			blade.parentBlade.refresh(true);
+			blade.parentBlade.initialize();
 			blade.choosenAssetId = blade.currentEntity.id;
 			blade.title = blade.currentEntity.id;
 			blade.subtitle = 'Edit asset';
@@ -107,7 +107,7 @@
 
 					themes.deleteAsset({ storeId: blade.choosenStoreId, themeId: blade.choosenThemeId, assetIds: blade.choosenAssetId }, function () {
 						$scope.bladeClose();
-						$scope.blade.parentBlade.refresh(true);
+						$scope.blade.parentBlade.initialize(true);
 					});
 				}
 			}

@@ -7,8 +7,8 @@
 						<div class="tile-descr">{{data.store.name}}</div>
 						<div class="tile-image"></div>
 					</div>
-					<div class="tile triple wide mini" ng-if="!data.defaultThemeName" ng-click="blade.openThemes(data)">
-						<div class="tile-t">No active theme, click to choose</div>
+					<div class="tile triple wide mini __informer" ng-if="!data.defaultThemeName" ng-click="blade.openThemes(data)">
+						<p>No active theme, click to choose</p>
 					</div>
 					<div class="tile triple wide mini" ng-if="data.defaultThemeName">
 						<div class="tile-t">Active theme: {{data.defaultThemeName}}</div>

@@ -2,30 +2,21 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using VirtoCommerce.Content.Data.Models;
 using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.Content.Data.Repositories
 {
-	public class FileSystemFileRepositoryImpl : IFileRepository
+	public class FileSystemContentRepositoryImpl : IContentRepository
 	{
-		#region Fields
-
 		private readonly string _baseDirectoryPath;
 
-		#endregion
-
-		#region Constructors and Destructors
-
-		public FileSystemFileRepositoryImpl(string baseDirectoryPath)
+		public FileSystemContentRepositoryImpl(string baseDirectoryPath)
 		{
 			this._baseDirectoryPath = baseDirectoryPath;
 		}
-
-		#endregion
-
-		#region Public Methods and Operators
 
 		public Task<bool> DeleteContentItem(string path)
 		{
@@ -48,11 +39,6 @@ namespace VirtoCommerce.Content.Data.Repositories
 			return Task.FromResult(true);
 		}
 
-		/// <summary>
-		///     Gets content item.
-		/// </summary>
-		/// <param name="path"></param>
-		/// <returns></returns>
 		public Task<ContentItem> GetContentItem(string path)
 		{
 			var retVal = new ContentItem();
@@ -96,7 +82,6 @@ namespace VirtoCommerce.Content.Data.Repositories
 				{
 					var fullFile = await this.GetContentItem(contentItem.Path);
 					contentItem.ByteContent = fullFile.ByteContent;
-					contentItem.Content = fullFile.Content;
 					contentItem.ContentType = fullFile.ContentType;
 				}
 			}
@@ -163,10 +148,6 @@ namespace VirtoCommerce.Content.Data.Repositories
 			return Task.FromResult(true);
 		}
 
-		#endregion
-
-		#region Methods
-
 		private string FixName(string path, string fullPath)
 		{
 			return path.Replace(fullPath, string.Empty).Trim('\\');
@@ -174,7 +155,6 @@ namespace VirtoCommerce.Content.Data.Repositories
 
 		private string GetFullPath(string path)
 		{
-			//return string.Format("{0}{2}", this._baseDirectoryPath, path).Replace("/", "\\");
 			return Path.Combine(this._baseDirectoryPath, path).Replace("/", "\\");
 		}
 
@@ -183,10 +163,106 @@ namespace VirtoCommerce.Content.Data.Repositories
 			return path.Replace(this._baseDirectoryPath, string.Empty).Replace("\\", "/").TrimStart('/');
 		}
 
-		#endregion
-
-
 		public Task<bool> DeleteTheme(string path)
+		{
+			throw new NotImplementedException();
+		}
+
+
+		public Models.ContentPage GetPage(string path)
+		{
+			var retVal = new Models.ContentPage();
+
+			var fullPath = GetFullPath(path);
+
+			if (File.Exists(fullPath))
+			{
+				var itemName = Path.GetFileNameWithoutExtension(fullPath);
+
+				var content = File.ReadAllBytes(fullPath);
+
+				retVal.Language = GetLanguageFromFullPath(fullPath);
+				retVal.ByteContent = content;
+				retVal.Name = itemName;
+			}
+			else
+			{
+				retVal = null;
+			}
+
+			return retVal;
+		}
+
+		public IEnumerable<Models.ContentPage> GetPages(string path)
+		{
+			var list = new List<Models.ContentPage>();
+
+			var retVal = new List<Models.ContentPage>();
+
+			var fullPath = GetFullPath(path);
+
+			if (!Directory.Exists(fullPath))
+			{
+				Directory.CreateDirectory(fullPath);
+			}
+
+			var languages = Directory.GetDirectories(fullPath);
+
+			foreach (var language in languages)
+			{
+				var files = Directory.GetFiles(language); ;
+
+				list.AddRange(files.Select(f => new Models.ContentPage
+				{
+					Name = Path.GetFileNameWithoutExtension(f),
+					ModifiedDate = Directory.GetLastWriteTimeUtc(f),
+					Language = GetLanguageFromFullPath(f)
+				}));
+			}
+
+			return list.ToArray();
+		}
+
+		public void SavePage(string path, Models.ContentPage page)
+		{
+			var fullPath = GetFullPath(path);
+
+			if (!Directory.Exists(Path.GetDirectoryName(fullPath)))
+			{
+				Directory.CreateDirectory(Path.GetDirectoryName(fullPath));
+			}
+
+			using (var fs = new FileStream(fullPath, FileMode.Create, FileAccess.Write))
+			{
+				using (var sw = new StreamWriter(fs))
+				{
+					sw.Write(page.ByteContent);
+					sw.Close();
+				}
+				fs.Close();
+			}
+		}
+
+		public void DeletePage(string path)
+		{
+			var fullPath = GetFullPath(path);
+
+			if (File.Exists(fullPath))
+			{
+				File.Delete(fullPath);
+			}
+		}
+
+		private string GetLanguageFromFullPath(string fullPath)
+		{
+			var steps = fullPath.Split('\\');
+			var language = steps[steps.Length - 2];
+
+			return language;
+		}
+
+
+		public IEnumerable<ContentPage> GetPages(string path, GetPagesCriteria criteria)
 		{
 			throw new NotImplementedException();
 		}

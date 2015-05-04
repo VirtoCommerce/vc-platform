@@ -1,4 +1,4 @@
-﻿<div class="blade-content __medium-wide">
+﻿<!--<div class="blade-content __medium-wide">
 	<div class="blade-inner">
 		<div class="inner-block">
 			<div class="table-wrapper">
@@ -28,42 +28,62 @@
 			</div>
 		</div>
 	</div>
-</div>
-
-<!--<div class="blade-content">
-	<div class="blade-inner">
-		<div class="inner-block">
-			<ul class="list __items" ng-if="blade.currentEntities.length">
-				<li class="list-item" ng-click="blade.openBlade(data)" ng-repeat="data in blade.currentEntities | orderBy:name:reverse" ng-class="{'__selected': data.id === selectedNodeId}">
-					<span class="list-name">
-						{{data.name}}
-					</span>
-				</li>
-			</ul>
-			<p class="text" ng-if="!blade.currentEntities.length">No Pages yet</p>
-		</div>
-	</div>
 </div>-->
 
-<!--<div class="blade-content __medium-wide">
+
+<div class="blade-static __collapsed">
+	<div class="breadcrumbs">
+		<ul class="menu __inline">
+			<foo ng-repeat="data in blade.steps">
+				<li class="menu-item">
+					<a class="menu-link" ng-click="blade.selectedStep = $index; blade.stepsClick();">{{data}}</a>
+				</li>
+				<li class="menu-item __divider"></li>
+			</foo>
+		</ul>
+	</div>
+</div>
+
+<div class="blade-content __medium-wide">
 	<div class="blade-inner">
 		<div class="inner-block">
 			<div class="table-wrapper">
 				<table class="table">
 					<thead>
 						<tr>
-							<th class="table-col" ng-repeat="column in columns | orderBy:name:reverse" ng-click="setOrder(column)" ng-class="(column.checked) ? '__sorted' : ''">
-								{{column.title}}
-								<i ng-class="column.checked ? (column.reverse ?'sort-up':'sort-down') : ''" class="table-ico fa"></i>
-							</th>
+							<th class="table-col"></th>
+							<th class="table-col">Name</th>
+							<th class="table-col">Modified</th>
 						</tr>
 					</thead>
 					<tbody>
-						<tr class="table-item" ng-click="notification.action(notification)" ng-repeat="page in blade.currentEntities" ng-include="notification.template"></tr>
+						<tr class="table-item" ng-repeat="data in blade.currentPageCatalog.folders" ng-click="blade.folderClick(data)">
+							<td class="table-col __product-img">
+								<div class="product-img">
+									<i class="table-ico fa fa-folder"></i>
+								</div>
+							</td>
+							<td class="table-col __product-name">
+								{{data.folderName}}
+							</td>
+							<td class="table-col"></td>
+						</tr>
+						<tr class="table-item" ng-repeat="page in blade.currentPageCatalog.pages" ng-click="blade.openBlade(page)">
+							<td class="table-col __product-img">
+								<div class="product-img">
+									<i class="table-ico flag flag-{{blade.getFlag(page.language)}}"></i>
+								</div>
+							</td>
+							<td class="table-col __product-name">
+								{{page.name}}
+							</td>
+							<td class="table-col __datePage">
+								<span class="table-date" am-time-ago="data.modifiedDate"></span>
+							</td>
+						</tr>
 					</tbody>
 				</table>
 			</div>
-			<p class="text" ng-if="!blade.currentEntities.length">No Pages yet</p>
 		</div>
 	</div>
-</div>-->
+</div>

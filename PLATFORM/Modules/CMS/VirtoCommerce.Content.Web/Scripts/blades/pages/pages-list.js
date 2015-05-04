@@ -3,24 +3,37 @@
 	$scope.selectedNodeId = null;
 
 	var blade = $scope.blade;
+	blade.steps = ['Pages'];
+	blade.selectedStep = 0;
 
-	blade.refresh = function () {
+	blade.initialize = function () {
 		blade.isLoading = true;
-		pages.get({ storeId: blade.storeId }, function (data) {
+		pages.getFolders({ storeId: blade.storeId }, function (data) {
 			blade.isLoading = false;
-			blade.currentEntities = data;
-			blade.parentWidget.refresh();
-		});
+			blade.pagesCatalog = data;
+			blade.currentPageCatalog = data;
+
+			for (var i = 1; i < blade.steps.length; i++) {
+				blade.currentPageCatalog = _.find(blade.currentPageCatalog.folders, function (folder) { return folder.folderName === blade.steps[i] });
+			}
+
+			blade.parentBlade.initialize();
+		})
 	}
 
 	blade.openBlade = function (data) {
-		$scope.selectedNodeId = data.name;
+		$scope.selectedNodeId = data.pageName;
 		closeChildrenBlades();
+
+		var add = '';
+		if (blade.steps.length > 1) {
+			add = _.last(blade.steps) + '/';
+		}
 
 		var newBlade = {
 			id: 'editPageBlade',
 			choosenStoreId: blade.storeId,
-			choosenPageName: data.name,
+			choosenPageName: add + data.name,
 			choosenPageLanguage: data.language,
 			newPage: false,
 			title: 'Edit ' + data.name,
@@ -35,10 +48,15 @@
 		$scope.selectedNodeId = null;
 		closeChildrenBlades();
 
+		var add = '';
+		if (blade.steps.length > 1) {
+			add = _.last(blade.steps) + '/';
+		}
+
 		var newBlade = {
 			id: 'addPageBlade',
 			choosenStoreId: blade.storeId,
-			currentEntity: { name: null, content: null },
+			currentEntity: { name: add + 'new_page.md', content: null, contentType: 'text/html', language: null, storeId: blade.storeId },
 			newPage: true,
 			title: 'Add new page',
 			subtitle: 'Create new theme',
@@ -69,12 +87,29 @@
 					blade.isLoading = true;
 
 					pages.delete({ storeId: blade.choosenStoreId, pageNames: blade.page.name }, function () {
-						blade.refresh();
+						blade.initialize();
 					});
 				}
 			}
 		}
 		dialogService.showConfirmationDialog(dialog);
+	}
+
+	blade.folderClick = function (data) {
+		blade.steps.push(data.folderName);
+
+		blade.currentPageCatalog = data;
+	}
+
+	blade.stepsClick = function () {
+		blade.currentPageCatalog = blade.pagesCatalog;
+		var index = blade.selectedStep + 1;
+
+		blade.steps.splice(index);
+
+		for (var i = 1; i < index; i++) {
+			blade.currentPageCatalog = _.find(blade.currentPageCatalog.folders, function (folder) { return folder.folderName === blade.steps[i] });
+		}
 	}
 
 	$scope.bladeHeadIco = 'fa fa-archive';
@@ -117,5 +152,5 @@
         }
 	];
 
-	blade.refresh();
+	blade.initialize();
 }]);

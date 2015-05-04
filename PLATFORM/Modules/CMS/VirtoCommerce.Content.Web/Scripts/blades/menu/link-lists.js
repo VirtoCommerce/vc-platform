@@ -4,7 +4,7 @@
 
 	var blade = $scope.blade;
 
-	blade.refresh = function () {
+	blade.initialize = function () {
 		blade.isLoading = true;
 		menus.get({ storeId: blade.storeId }, function (data) {
 			blade.currentEntities = data;
@@ -96,5 +96,5 @@
         }
 	];
 
-	blade.refresh();
+	blade.initialize();
 }]);

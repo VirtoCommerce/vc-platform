@@ -29,21 +29,20 @@
 
 <div class="blade-static __collapsed" ng-if="!blade.newPage">
 	<div class="form-group">
-		<label>{{blade.currentEntity.name}}</label> | <label>{{blade.currentEntity.language}}</label> | Liquid Documentation
+		<label>{{blade.currentEntity.name}}</label> | <span class="flag flag-{{blade.getFlag(blade.currentEntity.language)}}"></span> <label>{{blade.currentEntity.language}}</label> | Liquid Documentation
 	</div>
 </div>
 
-<div class="blade-content __code-editor ">
-	<div class="blade-inner">
+<div class="blade-content __code-editor" style="{{blade.getBladeStyle()}}">
+	<div class="blade-inner" style="padding: 0">
 		<div class="inner-block">
-            <form class="form" name="formScope">
-                <div class="form-group">
-                    <label class="form-label">Page content</label>
-                    <div class="form-input">
-                        <ui-codemirror style="max-height:350px; min-height:350px;" required class="form-control big" ng-model="blade.currentEntity.content" placeholder="Enter page content" ui-codemirror-opts="editorOptions"></ui-codemirror>
-                    </div>
-                </div>
-            </form>
+			<form class="form" style="padding: 0" name="formScope">
+				<div class="form-group">
+					<div class="form-input __expanded">
+						<ui-codemirror required ng-model="blade.currentEntity.content" ui-codemirror-opts="editorOptions"></ui-codemirror>
+					</div>
+				</div>
+			</form>
 		</div>
 	</div>
 </div>

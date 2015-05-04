@@ -16,8 +16,7 @@
         {
             var retVal = new ContentItem();
 
-            retVal.Content = item.Content;
-            retVal.CreatedDate = DateTime.UtcNow;
+			retVal.CreatedDate = DateTime.UtcNow;
             retVal.Name = item.Name;
             retVal.Path = item.Path;
             
@@ -28,7 +27,6 @@
         {
             var retVal = new Models.ContentItem();
 
-            retVal.Content = item.Content;
             retVal.Name = item.Name;
             retVal.Path = item.Path;
 
