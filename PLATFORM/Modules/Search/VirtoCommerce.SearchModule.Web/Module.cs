@@ -1,9 +1,11 @@
-﻿using Microsoft.Practices.Unity;
+﻿using System;
+using Microsoft.Practices.Unity;
 using Owin;
 using VirtoCommerce.Domain.Inventory.Services;
 using VirtoCommerce.Domain.Search;
 using VirtoCommerce.Domain.Search.Services;
 using VirtoCommerce.InventoryModule.Web.BackgroundJobs;
+using VirtoCommerce.Platform.Core.Caching;
 using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Data.Common;
 using VirtoCommerce.SearchModule.Data.Provides.Azure;
@@ -42,13 +44,20 @@ namespace VirtoCommerce.SearchModule.Web
 		public void PostInitialize()
 		{
 			var jobScheduler = _container.Resolve<SearchIndexJobsScheduler>();
-			jobScheduler.SheduleJobs();
+			//jobScheduler.SheduleJobs();
 
 			var searchProviderManager = _container.Resolve<ISearchProviderManager>();
 
 			searchProviderManager.RegisterSearchProvider(SearchProviders.Elasticsearch.ToString(), connection => new ElasticSearchProvider(new ElasticSearchQueryBuilder(), connection));
 			searchProviderManager.RegisterSearchProvider(SearchProviders.Lucene.ToString(), connection => new LuceneSearchProvider(new LuceneSearchQueryBuilder(), connection));
 			searchProviderManager.RegisterSearchProvider(SearchProviders.AzureSearch.ToString(), connection => new AzureSearchProvider(new AzureSearchQueryBuilder(), connection));
+
+			var cacheManager = _container.Resolve<CacheManager>();
+			var cacheSettings = new[] 
+			{
+				new CacheSettings("CatalogItemIndexBuilder.IndexItemCategories", TimeSpan.FromMinutes(30))
+			};
+			cacheManager.AddCacheSettings(cacheSettings);
 
 		}
 

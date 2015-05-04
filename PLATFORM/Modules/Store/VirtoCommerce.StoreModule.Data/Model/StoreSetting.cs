@@ -66,6 +66,7 @@ namespace VirtoCommerce.StoreModule.Data.Model
                 case "Integer":
                     return IntegerValue;
                 case "LongText":
+				case "xml":
                     return LongTextValue;
                 case "ShortText":
                     return ShortTextValue;

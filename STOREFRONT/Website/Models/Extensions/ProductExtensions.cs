@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using Data = VirtoCommerce.ApiClient.DataContracts;
 
 namespace VirtoCommerce.Web.Models.Extensions
@@ -31,6 +33,20 @@ namespace VirtoCommerce.Web.Models.Extensions
             allIds.AddRange(productIds);
 
             return allIds.ToArray();
+        }
+
+        public static string BuildOutline(this Product product, string language, Collection collection)
+        {
+            var outline = String.Empty;
+            if (product.Keywords != null)
+            {
+                var keyword = product.Keywords.SeoKeyword(Thread.CurrentThread.CurrentUICulture.Name);
+                if (keyword != null)
+                {
+                }
+            }
+
+            return outline;
         }
     }
 }

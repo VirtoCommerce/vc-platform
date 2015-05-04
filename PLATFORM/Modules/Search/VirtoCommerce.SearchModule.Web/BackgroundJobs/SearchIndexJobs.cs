@@ -10,9 +10,9 @@ namespace VirtoCommerce.InventoryModule.Web.BackgroundJobs
             _controller = controller;
         }
 
-        public void Process(string scope)
+        public void Process(string scope, string documentType)
         {
-            _controller.Process(scope);
+			_controller.Process(scope, documentType);
         }
     }
 }

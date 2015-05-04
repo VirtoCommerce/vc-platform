@@ -1,11 +1,15 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using System.Threading.Tasks;
 using VirtoCommerce.Domain.Catalog.Model;
 using VirtoCommerce.Domain.Catalog.Services;
 using VirtoCommerce.Domain.Pricing.Services;
 using VirtoCommerce.Domain.Search;
 using VirtoCommerce.Domain.Search.Services;
+using VirtoCommerce.Platform.Core.Caching;
 
 namespace VirtoCommerce.SearchModule.Data.Services
 {
@@ -20,9 +24,10 @@ namespace VirtoCommerce.SearchModule.Data.Services
 		private readonly IItemService _itemService;
 		private readonly ICategoryService _categoryService;
 		private readonly IPropertyService _propertyService;
+		private readonly CacheManager _cacheManager;
 		public CatalogItemIndexBuilder(ISearchProvider searchProvider, ICatalogSearchService catalogSearchService, 
 									   IItemService itemService, IPricingService pricingService, 
-									   ICategoryService categoryService, IPropertyService propertyService)
+									   ICategoryService categoryService, IPropertyService propertyService, CacheManager cacheManager)
 		{
 			_searchProvider = searchProvider;
 			_itemService = itemService;
@@ -30,6 +35,7 @@ namespace VirtoCommerce.SearchModule.Data.Services
 			_pricingService = pricingService;
 			_categoryService = categoryService;
 			_propertyService = propertyService;
+			_cacheManager = cacheManager;
 		}
 		#region ISearchIndexBuilder Members
 		public string DocumentType
@@ -48,16 +54,18 @@ namespace VirtoCommerce.SearchModule.Data.Services
 			if (partition.Keys == null)
 				throw new ArgumentNullException("partition.Keys");
 
-
-			var index = 0;
-			//Trace.TraceInformation(String.Format("Processing documents starting {0} of {1} - {2}%", source.Start, source.Total, (source.Start * 100 / source.Total)));
-			foreach (var productId in partition.Keys)
-			{
-				var doc = new ResultDocument();
-				IndexItem(ref doc, productId);
-				yield return doc;
-				index++;
-			}
+			var retVal = new ConcurrentBag<IDocument>();
+	
+			var parallelOptions = new ParallelOptions { MaxDegreeOfParallelism = 5 };
+			
+			Parallel.ForEach(partition.Keys, parallelOptions, (x) =>
+		   {
+			   //Trace.TraceInformation(String.Format("Processing documents starting {0} of {1} - {2}%", partition.Start, partition.Total, (partition.Start * 100 / partition.Total)));
+			   var doc = new ResultDocument();
+			   IndexItem(ref doc, x);
+			   retVal.Add(doc);
+		   });
+			return retVal;
 		}
 
 		public void PublishDocuments(string scope, IDocument[] documents)
@@ -124,8 +132,11 @@ namespace VirtoCommerce.SearchModule.Data.Services
 			doc.Add(new DocumentField("catalog", item.CatalogId.ToLower(), new[] { IndexStore.YES, IndexType.NOT_ANALYZED, IndexDataType.StringCollection }));
 			doc.Add(new DocumentField("__outline", item.CatalogId.ToLower(), new[] { IndexStore.YES, IndexType.NOT_ANALYZED, IndexDataType.StringCollection }));
 
-			// Index categories
-			IndexItemCategories(ref doc, item);
+			if (item.CategoryId != null)
+			{
+				// Index categories
+				IndexItemCategories(ref doc, item);
+			}
 
 			// Index custom properties
 			IndexItemCustomProperties(ref doc, item);
@@ -180,7 +191,8 @@ namespace VirtoCommerce.SearchModule.Data.Services
 		#region Category Indexing
 		protected virtual void IndexItemCategories(ref ResultDocument doc, CatalogProduct item)
 		{
-			var category = _categoryService.GetById(item.CategoryId);
+			var cacheKey = CacheKey.Create("CatalogItemIndexBuilder.IndexItemCategories", item.CategoryId);
+			var category = _cacheManager.Get(cacheKey, () => _categoryService.GetById(item.CategoryId));
 			doc.Add(new DocumentField(String.Format("sort{0}{1}", category.CatalogId, category.Id), category.Priority, new string[] { IndexStore.YES, IndexType.NOT_ANALYZED }));
 			IndexCategory(ref doc, category);
 		}
@@ -194,11 +206,12 @@ namespace VirtoCommerce.SearchModule.Data.Services
 			doc.Add(new DocumentField("__outline", outline.ToLower(), new[] { IndexStore.YES, IndexType.NOT_ANALYZED }));
 
 			// Now index all linked categories
-			foreach (var link in category.Links)
-			{
-				var linkCategory = _categoryService.GetById(link.CategoryId);
-				IndexCategory(ref doc, linkCategory);
-			}
+			//Current code occur stack overflow
+			//foreach (var link in category.Links)
+			//{
+			//	var linkCategory = _categoryService.GetById(link.CategoryId);
+			//	IndexCategory(ref doc, linkCategory);
+			//}
 		}
 
 		#endregion

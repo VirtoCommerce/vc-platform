@@ -47,14 +47,13 @@ namespace VirtoCommerce.Web.Models.Routing.Constraints
             }
 
             var client = ClientContext.Clients.CreateBrowseClient();
-            var item =
-                Task.Run(
-                    () => client.GetProductByKeywordAsync(storeId, language, productSlug, ItemResponseGroups.ItemMedium))
-                    .Result;
+            var item = Task.Run(() => client.GetProductByKeywordAsync(storeId, language, productSlug, ItemResponseGroups.ItemMedium)).Result;
 
             if (item == null)
             {
-                return false;
+                item = Task.Run(() => client.GetProductByCodeAsync(storeId, language, productSlug)).Result;
+                if (item == null)
+                    return false;
             }
 
             //Check if category is correct

@@ -12,6 +12,10 @@ namespace VirtoCommerce.Platform.Core.Caching
         public CacheManager(ICacheProvider defaultCacheProvider, CacheSettings[] cacheSettings)
         {
 			_cacheSettings = new List<CacheSettings>();
+			if(cacheSettings != null)
+			{
+				_cacheSettings.AddRange(cacheSettings);
+			}
 			_cacheProviders = new Dictionary<string, ICacheProvider>();
 			AddCacheProvider("default", defaultCacheProvider);
         }
@@ -159,7 +163,6 @@ namespace VirtoCommerce.Platform.Core.Caching
 						throw new NullReferenceException("Cache provider " + settings.ProviderName + " not registered");
 					}
 				}
-				retVal = _cacheProviders[settings.ProviderName];
             }
             return retVal;
         }

@@ -347,7 +347,7 @@
     <Content Include="Content\responsive\js\main.js" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
-    <Content Include="index.html" />
+    <Content Include="index_frame.html" />
     <Content Include="App_Data\configuration\connectionStrings.config" />
     <Content Include="App_Data\Themes\_Global\customer_area.js" />
     <Content Include="App_Data\Themes\_Global\option_selection.js" />

@@ -135,6 +135,7 @@
     <Compile Include="Caching\CacheEntries.cs" />
     <Compile Include="Caching\CacheEntry.cs" />
     <Compile Include="Caching\HttpCacheProvider.cs" />
+    <Compile Include="Caching\InMemoryCacheProvider.cs" />
     <Compile Include="Common\ConnectionHelper.cs" />
     <Compile Include="Common\ConventionInjections\CloneInjection.cs" />
     <Compile Include="Common\ConventionInjections\IgnorePropertiesInjection.cs" />

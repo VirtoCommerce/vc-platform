@@ -14,7 +14,7 @@ namespace VirtoCommerce.InventoryModule.Web.BackgroundJobs
 
         public void SheduleJobs()
         {
-             RecurringJob.AddOrUpdate<SearchIndexJobs>("813dea57-494e-434a-b4b4-6027e4d76f8f", x => x.Process(_searchConnection.Scope), Cron.Minutely);
+             RecurringJob.AddOrUpdate<SearchIndexJobs>("catalogIndexJob", x => x.Process(_searchConnection.Scope, "catalogitem"), Cron.Minutely);
         }
     }
 }

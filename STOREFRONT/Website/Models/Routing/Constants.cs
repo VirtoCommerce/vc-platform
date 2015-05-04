@@ -53,13 +53,21 @@
         ///     The category route.
         /// </value>
 
-        public static string CategoryRouteWithTags
-        {
-            get
-            {
-                return string.Format("{0}/{{{1}}}/{{{2}}}", StoreRoute, Category, Tags);
-            }
-        }
+        //public static string CategoryRouteWithTags
+        //{
+        //    get
+        //    {
+        //        return string.Format("{0}/{{{1}}}/{{{2}}}", StoreRoute, Category, Tags);
+        //    }
+        //}
+
+        //public static string CategoryRouteCodeWithTags
+        //{
+        //    get
+        //    {
+        //        return string.Format("{0}/{{{1}}}/collection/{{{2}}}", StoreRoute, Category, Tags);
+        //    }
+        //}
 
         /// <summary>
         ///     Gets the item route. {lang}/{store}/{category}/{item}
@@ -79,7 +87,7 @@
         {
             get
             {
-                return string.Format("{0}/products/{{{1}}}", CategoryRoute, Item);
+                return string.Format("{0}/itm-{{{1}}}", CategoryRoute, Item);
             }
         }
 

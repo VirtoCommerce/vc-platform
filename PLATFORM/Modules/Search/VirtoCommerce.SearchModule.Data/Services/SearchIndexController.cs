@@ -16,7 +16,7 @@ namespace VirtoCommerce.SearchModule.Data.Services
 		private readonly ISearchIndexBuilder[] _indexBuilders;
 		private readonly ISettingsManager _settingManager;
 
-		public SearchIndexController(ISettingsManager settingManager, ISearchProvider searchProvider, ISearchIndexBuilder[] indexBuilders)
+		public SearchIndexController(ISettingsManager settingManager, ISearchProvider searchProvider, params ISearchIndexBuilder[] indexBuilders)
 		{
 			_settingManager = settingManager;
 			_searchProvider = searchProvider;

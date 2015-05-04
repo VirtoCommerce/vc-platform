@@ -15,6 +15,25 @@ namespace VirtoCommerce.Web.Models.Extensions
             string categoryOutline,
             string parentId = null)
         {
+            return ItemUrl(helper, "Item", itemKeyword, categoryOutline, parentId);
+        }
+
+        public static string ItemUrlWithCode(
+            this UrlHelper helper,
+            string itemCode,
+            string categoryOutline,
+            string parentId = null)
+        {
+            return ItemUrl(helper, "ItemWithCode", itemCode, categoryOutline, parentId);
+        }
+
+        public static string ItemUrl(
+            this UrlHelper helper,
+            string routeName,
+            string itemKeyword,
+            string categoryOutline,
+            string parentId)
+        {
             var routeValues = new RouteValueDictionary();
 
             if (!string.IsNullOrEmpty(parentId))
@@ -28,7 +47,7 @@ namespace VirtoCommerce.Web.Models.Extensions
                 routeValues.Add("item", itemKeyword);
                 routeValues.Add("category", categoryOutline);
             }
-            return helper.RouteUrl("Item", routeValues);
+            return helper.RouteUrl(routeName, routeValues);
         }
 
         public static string CategoryUrl(
