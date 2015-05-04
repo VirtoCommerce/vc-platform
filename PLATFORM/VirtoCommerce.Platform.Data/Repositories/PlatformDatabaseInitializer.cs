@@ -40,7 +40,7 @@ namespace VirtoCommerce.Platform.Data.Repositories
                     {
                         new Permission { Id = PredefinedPermissions.SecurityCallApi }
                     },
-                },
+                }
             }
             .Select(r => r.ToDataModel()).ToList();
 
@@ -62,7 +62,8 @@ namespace VirtoCommerce.Platform.Data.Repositories
             {
                 Id = "9b605a3096ba4cc8bc0b8d80c397c59f",
                 UserName = "frontend",
-                RegisterType = RegisterType.SiteAdministrator,
+                //RegisterType = RegisterType.SiteAdministrator,
+                RegisterType = RegisterType.Administrator, // temporal hack 
                 AccountState = AccountState.Approved,
             };
             frontendAccount.RoleAssignments.Add(new RoleAssignmentEntity

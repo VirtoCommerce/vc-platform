@@ -8,11 +8,11 @@ using System.Web.Mvc;
 
 namespace VirtoCommerce.Web.Controllers
 {
-    [RoutePrefix("collections")]
+    //[RoutePrefix("collections")]
     public class CollectionsController : BaseController
     {
         #region Public Methods and Operators
-        [Route("all/{tags?}")]
+        //[Route("all/{tags?}")]
         public async Task<ActionResult> AllAsync(
             string tags,
             string view = "grid",
@@ -34,7 +34,7 @@ namespace VirtoCommerce.Web.Controllers
             return View(template);
         }
 
-        [Route("{category}/{tags?}", Order = 1)]
+        //[Route("{category}/{tags?}", Order = 1)]
         public async Task<ActionResult> GetCollectionAsync(
             string category,
             string tags,
@@ -62,7 +62,9 @@ namespace VirtoCommerce.Web.Controllers
             int page = 1,
             string sort_by = "manual")
         {
-            this.Context.Set("Collection", await this.Service.GetCollectionByKeywordAsync(category, sort_by));
+            var categoryModel = await this.Service.GetCollectionByKeywordAsync(category, sort_by) ?? await this.Service.GetCollectionAsync(category, sort_by);
+
+            this.Context.Set("Collection", categoryModel);
             this.Context.Set("current_page", page);
             this.Context.Set("current_tags", this.ParseTags(tags));
 
@@ -75,7 +77,7 @@ namespace VirtoCommerce.Web.Controllers
             return View(template);
         }
 
-        [Route("{tags?}", Order = 2)]
+        //[Route("{tags?}", Order = 2)]
         public async Task<ActionResult> IndexAsync(string tags, int page = 1, string sort_by = "manual")
         {
             this.Context.Set("current_tags", this.ParseTags(tags));
@@ -91,7 +93,7 @@ namespace VirtoCommerce.Web.Controllers
                 return null;
             }
 
-            var tagsArray = tags.Split(new[] { '+' });
+            var tagsArray = tags.Split(new[] { ',' });
             return tagsArray;
         }
         #endregion

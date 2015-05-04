@@ -9,6 +9,7 @@ using System.Web.Mvc;
 using System.Web.Routing;
 using DotLiquid;
 using VirtoCommerce.Web.Views.Engines.Liquid;
+using VirtoCommerce.Web.Views.Engines.Liquid.Extensions;
 using VirtoCommerce.Web.Views.Engines.Liquid.ViewEngine.Extensions;
 using System.Threading;
 
@@ -315,21 +316,32 @@ namespace VirtoCommerce.Web.Models.Filters
 
         private static string UpdateWithTags(Context context, Uri requestUri, string tag, bool remove = false)
         {
-            var path = requestUri.LocalPath;
+            var helper = Url;
+            if (remove)
+            {
+                return helper.RemoveParameterUrl(requestUri.PathAndQuery, "tags", tag);
+            }
+            else
+            {
+                return helper.SetParameter(requestUri.PathAndQuery, "tags", tag, false);
+            }
 
-            var allTags = new List<string>();
+            var path = requestUri.LocalPath;
+            var query = requestUri.Query;
+
+           var allTags = new List<string>();
             var current = context["current_tags"] as string[];
 
             // remove existing tags
             if (current != null)
             {
-                path = current.Aggregate(path, (current1, s) => current1.Replace(s, ""));
-                path = path.TrimEnd(new[] { '+' });
+                query = current.Aggregate(query, (current1, s) => current1.Replace(s, ""));
+                query = query.TrimEnd(new[] { '+' });
                 allTags.AddRange(current);
             }
 
             // add trailing "/"
-            path = path.EndsWith("/") ? path : path + "/";
+            //path = path.EndsWith("/") ? path : path + "/";
 
             if (remove)
             {
@@ -342,10 +354,37 @@ namespace VirtoCommerce.Web.Models.Filters
 
             var allTagsString = String.Join("+", allTags.OrderBy(x => x));
 
-            var ret = String.Format("{0}{1}{2}", path, allTagsString, requestUri.Query);
+            var ret = String.Empty;
+            if (String.IsNullOrEmpty(query))
+            {
+                ret = String.Format("{0}?tags={1}", path, allTagsString);
+            }
+            else
+            {
+                ret = String.Format("{0}{1}&tags={2}", path, query, allTagsString);
+            }
 
             return ret;
         }
         #endregion
+
+        private static UrlHelper Url
+        {
+            get
+            {
+                var httpContext = HttpContext.Current;
+                if (httpContext == null)
+                {
+                    throw new InvalidOperationException("The link tag can only be used within a valid HttpContext");
+                }
+
+                var httpContextBase = new HttpContextWrapper(httpContext);
+                var routeData = new RouteData();
+                var requestContext = new RequestContext(httpContextBase, routeData);
+
+                var urlHelper = new UrlHelper(requestContext);
+                return urlHelper;
+            }
+        }
     }
 }

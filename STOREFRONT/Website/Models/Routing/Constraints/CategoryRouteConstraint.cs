@@ -1,6 +1,11 @@
 ﻿#region
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Routing;
+using VirtoCommerce.ApiClient;
+using VirtoCommerce.ApiClient.Extensions;
 
 #endregion
 
@@ -29,10 +34,8 @@ namespace VirtoCommerce.Web.Models.Routing.Constraints
                 return true;
             }
 
-            /*
+            
             var categoryPath = values[parameterName].ToString();
-
-
             var childCategorySlug = categoryPath.Split(this.Separator.ToCharArray()).Last();
             var language = values.ContainsKey(Constants.Language) ? values[Constants.Language].ToString() : Thread.CurrentThread.CurrentUICulture.Name;
 
@@ -44,14 +47,16 @@ namespace VirtoCommerce.Web.Models.Routing.Constraints
             var storeId = this.GetStoreId(values);
             if (storeId == null) return false;
 
-            var client = ClientContext.Clients.CreateBrowseClient(storeId, language);
-            var category = Task.Run(() => client.GetCategoryByKeywordAsync(childCategorySlug)).Result;
+            var client = ClientContext.Clients.CreateBrowseClient();
+            var category = Task.Run(() => client.GetCategoryByKeywordAsync(storeId, language, childCategorySlug)).Result;
 
-            var outline = category.AsWebModel().BuildOutline(language);
-            return category != null && this.ValidateCategoryPath(outline, categoryPath);
-             * */
+            if(category == null)
+                category = Task.Run(() => client.GetCategoryByCodeAsync(storeId, language, childCategorySlug)).Result;
 
-            return true;
+            //var outline = category.AsWebModel().BuildOutline(language);
+            //return category != null && this.ValidateCategoryPath(outline, categoryPath);
+
+            return category != null;
         }
         #endregion
     }

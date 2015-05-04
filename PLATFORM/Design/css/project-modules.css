@@ -21,7 +21,10 @@
 /* Dashboard */
 .dashboard
 {
+    background: #eef5f7;
 	font-family: 'Exo 2';
+    position: relative;
+    z-index: 50;
 }
 
 	.dashboard .dashboard-head

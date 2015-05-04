@@ -60,22 +60,29 @@ namespace VirtoCommerce.Web.Models.Convertors
             productModel.Url = string.Format(pathTemplate, product.Code);
             productModel.Vendor = fieldsCollection.ContainsKey("brand") ? fieldsCollection["brand"] as string : null;
 
+            // form url
+            // "/products/code" or "/en-us/store/collection/outline" 
+
             // specify SEO based url
-            if (productModel.Keywords != null)
+            var urlHelper = GetUrlHelper();
+            if (urlHelper != null && productModel.Keywords != null && productModel.Keywords.Any())
             {
                 var keyword = productModel.Keywords.SeoKeyword(Thread.CurrentThread.CurrentUICulture.Name);
                 if (keyword != null)
                 {
-                    var urlHelper = GetUrlHelper();
-
-                    if (urlHelper != null)
-                    {
-                        var url = urlHelper.ItemUrl(keyword.Keyword, collection == null ? "" : collection.Outline);
-                        if (!String.IsNullOrEmpty(url))
-                            productModel.Url = url;
-                    }
+                    var url = urlHelper.ItemUrl(keyword.Keyword, collection == null ? "" : collection.Outline);
+                    if (!String.IsNullOrEmpty(url))
+                        productModel.Url = url;
                 }
             }
+            else
+            {
+                //var url = urlHelper.ItemUrlWithCode(productModel.Handle, collection == null ? "" : collection.Outline);
+                var url = urlHelper.ItemUrl(productModel.Handle, collection == null ? "" : collection.Outline);
+                if (!String.IsNullOrEmpty(url))
+                    productModel.Url = url;
+            }
+
             var productRewards = rewards.Where(r => r.RewardType == "CatalogItemAmountReward" && r.ProductId == product.Id);
 
             if (product.Variations == null)
