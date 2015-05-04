@@ -14,7 +14,7 @@ using VirtoCommerce.Web.Models.Helpers;
 namespace VirtoCommerce.Web.Controllers
 {
     [RoutePrefix("")]
-    public class AssetsController : BaseController
+    public class AssetsController : StoreControllerBase
     {
         #region Fields
         private readonly ISassCompiler _compiler = new SassCompiler();

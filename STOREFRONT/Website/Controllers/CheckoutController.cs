@@ -8,7 +8,7 @@ using VirtoCommerce.Web.Models.FormModels;
 
 namespace VirtoCommerce.Web.Controllers
 {
-    public class CheckoutController : BaseController
+    public class CheckoutController : StoreControllerBase
     {
         //
         // GET: /Checkout

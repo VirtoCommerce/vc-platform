@@ -8,7 +8,7 @@ using VirtoCommerce.Web.Models;
 namespace VirtoCommerce.Web.Controllers
 {
     [RoutePrefix("search")]
-    public class SearchController : BaseController
+    public class SearchController : StoreControllerBase
     {
         #region Public Methods and Operators
         [Route("")]

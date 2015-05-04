@@ -3,13 +3,15 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
+using VirtoCommerce.Web.Models;
+using VirtoCommerce.Web.Models.Extensions;
 
 #endregion
 
 namespace VirtoCommerce.Web.Controllers
 {
     //[RoutePrefix("collections")]
-    public class CollectionsController : BaseController
+    public class CollectionsController : StoreControllerBase
     {
         #region Public Methods and Operators
         //[Route("all/{tags?}")]
@@ -63,6 +65,12 @@ namespace VirtoCommerce.Web.Controllers
             string sort_by = "manual")
         {
             var categoryModel = await this.Service.GetCollectionByKeywordAsync(category, sort_by) ?? await this.Service.GetCollectionAsync(category, sort_by);
+
+            if (categoryModel != null)
+            {
+                var keyword = categoryModel.Keywords.SeoKeyword();
+                SetPageMeta(keyword);
+            }
 
             this.Context.Set("Collection", categoryModel);
             this.Context.Set("current_page", page);

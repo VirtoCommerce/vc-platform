@@ -234,6 +234,19 @@ namespace VirtoCommerce.Web.Models
             }
         }
 
+        public string PageKeywords
+        {
+            get
+            {
+                object retValue;
+                return this._Storage.TryGetValue("page_keywords", out retValue) ? retValue as string : null;
+            }
+            set
+            {
+                this.Set("page_keywords", value);
+            }
+        }
+
         public PageCollection Pages
         {
             get
