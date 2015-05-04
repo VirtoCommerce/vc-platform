@@ -77,7 +77,8 @@ namespace VirtoCommerce.Web.Models.Convertors
             }
             else
             {
-                var url = urlHelper.ItemUrlWithCode(productModel.Handle, collection == null ? "" : collection.Outline);
+                //var url = urlHelper.ItemUrlWithCode(productModel.Handle, collection == null ? "" : collection.Outline);
+                var url = urlHelper.ItemUrl(productModel.Handle, collection == null ? "" : collection.Outline);
                 if (!String.IsNullOrEmpty(url))
                     productModel.Url = url;
             }

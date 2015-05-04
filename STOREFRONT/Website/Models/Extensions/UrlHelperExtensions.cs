@@ -18,6 +18,7 @@ namespace VirtoCommerce.Web.Models.Extensions
             return ItemUrl(helper, "Item", itemKeyword, categoryOutline, parentId);
         }
 
+        /*
         public static string ItemUrlWithCode(
             this UrlHelper helper,
             string itemCode,
@@ -26,6 +27,7 @@ namespace VirtoCommerce.Web.Models.Extensions
         {
             return ItemUrl(helper, "ItemWithCode", itemCode, categoryOutline, parentId);
         }
+         * */
 
         public static string ItemUrl(
             this UrlHelper helper,

@@ -18,6 +18,7 @@ namespace VirtoCommerce.Web.Models.Routing
         #region Public Methods and Operators
         public static void MapSeoRoutes(this RouteCollection routes)
         {
+            /*
             var itemRouteWithCode =
                 new NormalizeRoute(
                     new ItemRoute( 
@@ -36,6 +37,7 @@ namespace VirtoCommerce.Web.Models.Routing
                                     },
                         new RouteValueDictionary { { "namespaces", new[] { "VirtoCommerce.Web.Controllers" } } },
                         new MvcRouteHandler()));
+             * */
 
             var itemRoute =
                 new NormalizeRoute(
@@ -164,7 +166,7 @@ namespace VirtoCommerce.Web.Models.Routing
                     new RouteValueDictionary { { "namespaces", new[] { "VirtoCommerce.Web.Controllers" } } },
                     new MvcRouteHandler()));
 
-            routes.Add("ItemWithCode", itemRouteWithCode);
+            //routes.Add("ItemWithCode", itemRouteWithCode);
             routes.Add("Item", itemRoute);
             routes.Add("Category", categoryRoute);
             //routes.Add("CategoryCode", categoryRouteWithCode);

@@ -38,7 +38,7 @@ namespace VirtoCommerce.Web.Controllers
 
         public async Task<ActionResult> ProductByKeywordAsync(string item)
         {
-            var product = await this.Service.GetProductByKeywordAsync(item);
+            var product = await this.Service.GetProductByKeywordAsync(item) ?? await this.Service.GetProductAsync(item);
             this.Context.Set("Product", product);
 
             if (product == null)
