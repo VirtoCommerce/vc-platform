@@ -42,6 +42,8 @@ namespace VirtoCommerce.Platform.Data.Infrastructure
             _unitOfWork = unitOfWork;
             _interceptors = interceptors;
 
+			Configuration.LazyLoadingEnabled = false;
+
         }
 
         /// <summary>
@@ -55,6 +57,8 @@ namespace VirtoCommerce.Platform.Data.Infrastructure
         {
             _unitOfWork = unitOfWork;
             _interceptors = interceptors;
+
+			Configuration.LazyLoadingEnabled = false;
         }
 
         /// <summary>

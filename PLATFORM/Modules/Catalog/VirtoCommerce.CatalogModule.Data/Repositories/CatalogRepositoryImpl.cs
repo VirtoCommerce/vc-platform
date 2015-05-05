@@ -23,7 +23,6 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
             : base(nameOrConnectionString, null, interceptors)
 		{
 			Database.SetInitializer<CatalogRepositoryImpl>(null);
-			Configuration.LazyLoadingEnabled = false;
 		}
 
 		protected override void OnModelCreating(System.Data.Entity.DbModelBuilder modelBuilder)
