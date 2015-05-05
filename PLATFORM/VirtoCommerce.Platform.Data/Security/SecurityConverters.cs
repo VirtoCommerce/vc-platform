@@ -96,17 +96,8 @@ namespace VirtoCommerce.Platform.Data.Security
             if (!source.RolePermissions.IsNullCollection())
             {
                 var comparer = AnonymousComparer.Create((RolePermissionEntity rp) => rp.PermissionId);
-                source.RolePermissions.Patch(target.RolePermissions, comparer, (sourceItem, targetItem) => sourceItem.Patch(targetItem));
+				source.RolePermissions.Patch(target.RolePermissions, comparer, (sourceItem, targetItem) => { return; });
             }
-        }
-
-        public static void Patch(this RolePermissionEntity source, RolePermissionEntity target)
-        {
-            if (target == null)
-                throw new ArgumentNullException("target");
-
-            var patchInjection = new PatchInjection<RolePermissionEntity>(x => x.RoleId, x => x.PermissionId);
-            target.InjectFrom(patchInjection, source);
         }
 
         public static void Patch(this PermissionEntity source, PermissionEntity target)
