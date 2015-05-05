@@ -140,9 +140,11 @@
     <Compile Include="Controllers\Api\StoreModuleController.cs" />
     <Compile Include="Controllers\PredefinedPermissions.cs" />
     <Compile Include="Converters\FulfillmentConverter.cs" />
+    <Compile Include="Converters\SeoInfoConverter.cs" />
     <Compile Include="Converters\StoreConverter.cs" />
     <Compile Include="Converters\StoreSettingConverter.cs" />
     <Compile Include="Model\FulfillmentCenter.cs" />
+    <Compile Include="Model\SeoInfo.cs" />
     <Compile Include="Model\Store.cs" />
     <Compile Include="Model\StoreSetting.cs" />
     <Compile Include="Module.cs" />

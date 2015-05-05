@@ -234,6 +234,7 @@
     <Compile Include="Search\Model\SearchSort.cs" />
     <Compile Include="Search\Model\SearchSortField.cs" />
     <Compile Include="Search\Services\ISearchService.cs" />
+    <Compile Include="Store\Model\SeoInfo.cs" />
     <Compile Include="Store\Model\SettingValueType.cs" />
     <Compile Include="Store\Model\Store.cs" />
     <Compile Include="Store\Model\StoreSetting.cs" />
