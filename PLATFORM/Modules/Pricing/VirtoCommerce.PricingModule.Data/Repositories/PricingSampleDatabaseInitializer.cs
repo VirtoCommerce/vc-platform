@@ -18,9 +18,9 @@ namespace VirtoCommerce.PricingModule.Data.Repositories
 
         private readonly string[] _orderFiles =
 		{ 
+			"Pricelist.sql",
             "Price.sql",
-            "Pricelist.sql",
-            "PricelistAssignment.sql"
+			"PricelistAssignment.sql"
 		};
     }
 }
