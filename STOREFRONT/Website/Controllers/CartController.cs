@@ -9,7 +9,7 @@ using VirtoCommerce.Web.Models;
 namespace VirtoCommerce.Web.Controllers
 {
     [RoutePrefix("cart")]
-    public class CartController : BaseController
+    public class CartController : StoreControllerBase
     {
         #region Public Methods and Operators
         [Route("add")]

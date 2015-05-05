@@ -15,7 +15,7 @@ namespace VirtoCommerce.Web.Controllers
 {
     [RoutePrefix("account")]
     [Authorize]
-    public class AccountController : BaseController
+    public class AccountController : StoreControllerBase
     {
         private const string ResetCustomerPasswordTokenCookie = "Vcf.ResetCustomerPasswordToken";
         private const string CustomerIdCookie = "Vcf.CustomerId";

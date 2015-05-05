@@ -5,7 +5,7 @@ using System.Web.Mvc;
 
 namespace VirtoCommerce.Web.Controllers
 {
-    public class HomeController : BaseController
+    public class HomeController : StoreControllerBase
     {
         #region Public Methods and Operators
         public ActionResult Index()

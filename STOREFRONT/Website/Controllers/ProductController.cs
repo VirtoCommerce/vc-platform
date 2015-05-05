@@ -2,13 +2,14 @@
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
+using VirtoCommerce.Web.Models.Extensions;
 
 #endregion
 
 namespace VirtoCommerce.Web.Controllers
 {
     [RoutePrefix("")]
-    public class ProductController : BaseController
+    public class ProductController : StoreControllerBase
     {
         #region Public Methods and Operators
         [Route("products/{item}")]
@@ -39,6 +40,13 @@ namespace VirtoCommerce.Web.Controllers
         public async Task<ActionResult> ProductByKeywordAsync(string item)
         {
             var product = await this.Service.GetProductByKeywordAsync(item) ?? await this.Service.GetProductAsync(item);
+
+            if (product != null)
+            {
+                var keyword = product.Keywords.SeoKeyword();
+                SetPageMeta(keyword);
+            }
+
             this.Context.Set("Product", product);
 
             if (product == null)
