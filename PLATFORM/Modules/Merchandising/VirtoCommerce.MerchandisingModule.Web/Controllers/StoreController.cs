@@ -1,73 +1,46 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Web.Http;
 using System.Web.Http.Description;
-using VirtoCommerce.CatalogModule.Data.Repositories;
-using VirtoCommerce.Foundation.Frameworks;
-using VirtoCommerce.Foundation.Frameworks.Extensions;
-using VirtoCommerce.Foundation.Stores.Repositories;
+using VirtoCommerce.Domain.Pricing.Services;
+using VirtoCommerce.Domain.Store.Services;
 using VirtoCommerce.MerchandisingModule.Web.Converters;
-using VirtoCommerce.MerchandisingModule.Web.Model.Stores;
+using VirtoCommerce.MerchandisingModule.Web.Model;
+using VirtoCommerce.Platform.Core.Caching;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Settings;
-using foundation = VirtoCommerce.Foundation.Stores.Model;
 
 namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 {
-    [RoutePrefix("api/mp/stores")]
-    public class StoreController : BaseController
-    {
-        #region Fields
+	[RoutePrefix("api/mp/stores")]
+	public class StoreController  : ApiController
+	{
+		private readonly IStoreService _storeService;
+		private readonly CacheManager _cacheManager;
 
-        private readonly Func<IFoundationAppConfigRepository> _appConfigRepFactory;
-        private readonly Func<IStoreRepository> _storeRepository;
 
-        #endregion
+		public StoreController(IStoreService storeService, CacheManager cacheManager)
+		{
+			_storeService = storeService;
+			_cacheManager = cacheManager;
+		}
 
-        #region Constructors and Destructors
 
-        public StoreController(
-            Func<IStoreRepository> storeRepository,
-            Func<IFoundationAppConfigRepository> appConfigRepFactory,
-            ISettingsManager settingsManager,
-            ICacheRepository cache)
-            : base(storeRepository, settingsManager, cache)
-        {
-            this._storeRepository = storeRepository;
-            this._appConfigRepFactory = appConfigRepFactory;
-        }
+		[HttpGet]
+		[ResponseType(typeof(Store[]))]
+		[ClientCache(Duration = 60)]
+		[Route("")]
+		public IHttpActionResult GetStores()
+		{
+			var cacheKey = CacheKey.Create("PriceController.GetStores");
+			var stores = _cacheManager.Get(cacheKey, () => _storeService.GetStoreList());
 
-        #endregion
 
-        #region Public Methods and Operators
+			return Ok(stores.Select(x=> x.ToWebModel()).ToArray());
+		}
 
-        [HttpGet]
-        [ResponseType(typeof(Store[]))]
-        [ClientCache(Duration = 60)]
-        [Route("")]
-        public IHttpActionResult GetStores()
-        {
-            var retVal = new List<Store>();
 
-            foundation.Store[] stores;
-            using (var repository = this._storeRepository())
-            {
-                stores = repository.Stores.ExpandAll().ToArray();
-            }
-
-            if (stores.Any())
-            {
-                using (var appConfig = this._appConfigRepFactory())
-                {
-                    retVal.AddRange(
-                        stores.Select(store => store.ToWebModel(appConfig.GetAllSeoInformation(store.StoreId))));
-                }
-            }
-
-            return this.Ok(retVal.ToArray());
-        }
-
-        #endregion
-    }
+	}
 }

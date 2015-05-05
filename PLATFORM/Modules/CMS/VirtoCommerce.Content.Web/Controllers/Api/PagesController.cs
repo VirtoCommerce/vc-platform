@@ -20,7 +20,7 @@ namespace VirtoCommerce.Content.Web.Controllers.Api
 	#endregion
 
 	[RoutePrefix("api/cms/{storeId}")]
-    [CheckPermission(Permission = PredefinedPermissions.Query)]
+	[CheckPermission(Permission = PredefinedPermissions.Query)]
 	public class PagesController : ApiController
 	{
 		#region Fields
@@ -64,18 +64,28 @@ namespace VirtoCommerce.Content.Web.Controllers.Api
 		}
 
 		[HttpGet]
+		[ResponseType(typeof(GetPagesResponse))]
+		[Route("pages/folders")]
+		public IHttpActionResult GetFolders(string storeId)
+		{
+			var items = _pagesService.GetPages(storeId, null);
+
+			return Ok(items.ToWebModel());
+		}
+
+		[HttpGet]
 		[ResponseType(typeof(Page))]
-        [ClientCache(Duration = 30)]
-		[Route("pages/{language}/{pageName}")]
+		[ClientCache(Duration = 30)]
+		[Route("pages/{language}/{*pageName}")]
 		public IHttpActionResult GetPage(string storeId, string language, string pageName)
 		{
 			var item = _pagesService.GetPage(storeId, pageName, language);
-		    if (item == null)
-		    {
-		        return StatusCode(HttpStatusCode.NoContent);
-		    }
+			if (item == null)
+			{
+				return StatusCode(HttpStatusCode.NoContent);
+			}
 
-            return Ok(item.ToWebModel());
+			return Ok(item.ToWebModel());
 		}
 
 		[HttpGet]
@@ -90,7 +100,7 @@ namespace VirtoCommerce.Content.Web.Controllers.Api
 
 		[HttpPost]
 		[Route("pages")]
-        [CheckPermission(Permission = PredefinedPermissions.Manage)]
+		[CheckPermission(Permission = PredefinedPermissions.Manage)]
 		public IHttpActionResult SaveItem(string storeId, Page page)
 		{
 			_pagesService.SavePage(storeId, page.ToCoreModel());
@@ -99,7 +109,7 @@ namespace VirtoCommerce.Content.Web.Controllers.Api
 
 		[HttpDelete]
 		[Route("pages")]
-        [CheckPermission(Permission = PredefinedPermissions.Manage)]
+		[CheckPermission(Permission = PredefinedPermissions.Manage)]
 		public IHttpActionResult DeleteItem(string storeId, [FromUri]string[] pageNamesAndLanguges)
 		{
 			_pagesService.DeletePage(storeId, PagesUtility.GetShortPageInfoFromString(pageNamesAndLanguges).ToArray());

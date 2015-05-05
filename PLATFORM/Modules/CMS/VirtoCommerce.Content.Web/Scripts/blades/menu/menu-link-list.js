@@ -3,7 +3,7 @@
     var blade = $scope.blade;
     blade.selectedItemIds = [];
 
-    blade.refresh = function () {
+    blade.initialize = function () {
         menusStores.get({ id: blade.choosenStoreId }, function (data) {
             blade.languages = data.languages;
             blade.defaultStoreLanguage = data.defaultLanguage;
@@ -105,7 +105,7 @@
         return _.contains(blade.selectedItemIds, id);
     }
 
-    blade.refresh();
+    blade.initialize();
 
     blade.saveChanges = function () {
         //checkForNull();
@@ -114,8 +114,8 @@
             if (Boolean(data.result)) {
                 menus.update({ storeId: blade.choosenStoreId }, blade.currentEntity, function (data) {
                     blade.newList = false;
-                    blade.refresh();
-                    blade.parentBlade.refresh();
+                    blade.initialize();
+                    blade.parentBlade.initialize();
                 });
             }
             else {
@@ -155,7 +155,7 @@
 
                     menus.delete({ storeId: blade.choosenStoreId, listId: blade.choosenListId }, function () {
                         $scope.bladeClose();
-                        blade.parentBlade.refresh();
+                        blade.parentBlade.initialize();
                     });
                 }
             }

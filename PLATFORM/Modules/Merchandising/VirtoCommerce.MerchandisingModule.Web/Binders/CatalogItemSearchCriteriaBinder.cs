@@ -6,10 +6,8 @@ using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.Http.Controllers;
 using System.Web.Http.ModelBinding;
-using VirtoCommerce.Foundation.Catalogs.Search;
-using VirtoCommerce.Foundation.Frameworks.Extensions;
-using VirtoCommerce.Foundation.Search;
-using VirtoCommerce.Foundation.Search.Schemas;
+using VirtoCommerce.Domain.Search;
+using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.MerchandisingModule.Web.Binders
 {
@@ -33,7 +31,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Binders
 
         public bool BindModel(HttpActionContext actionContext, ModelBindingContext bindingContext)
         {
-            if (bindingContext.ModelType != typeof(CatalogItemSearchCriteria))
+            if (bindingContext.ModelType != typeof(CatalogIndexedSearchCriteria))
             {
                 return false;
             }
@@ -54,7 +52,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Binders
                     .Select(k => k.WithKey(TermRegex.Replace(k.Key, "")))
                     .ToDictionary(x => x.Key, y => y.Value.Split(','));
 
-            var result = new CatalogItemSearchCriteria
+			var result = new CatalogIndexedSearchCriteria
                          {
                              SearchPhrase = qs["q"].EmptyToNull(),
                              RecordsToRetrieve = qs["take"].TryParse(20),
@@ -162,7 +160,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Binders
                     sortObject = new SearchSort(result.ReviewsTotalField, isDescending);
                     break;
                 default:
-                    sortObject = CatalogItemSearchCriteria.DefaultSortOrder;
+					sortObject = CatalogIndexedSearchCriteria.DefaultSortOrder;
                     break;
             }
 

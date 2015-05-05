@@ -5,10 +5,10 @@ using System.Text;
 using System.Threading.Tasks;
 using VirtoCommerce.CartModule.Data.Model;
 using VirtoCommerce.Domain.Cart.Model;
-using VirtoCommerce.Foundation.Frameworks.Extensions;
-using VirtoCommerce.Foundation.Money;
 using Omu.ValueInjecter;
 using System.Collections.ObjectModel;
+using VirtoCommerce.Platform.Core.Common;
+using VirtoCommerce.Platform.Data.Common.ConventionInjections;
 
 namespace VirtoCommerce.CartModule.Data.Converters
 {
@@ -30,7 +30,7 @@ namespace VirtoCommerce.CartModule.Data.Converters
 			return retVal;
 		}
 
-		public static PaymentEntity ToEntity(this Payment payment)
+		public static PaymentEntity ToDataModel(this Payment payment)
 		{
 			if (payment == null)
 				throw new ArgumentNullException("payment");
@@ -42,7 +42,7 @@ namespace VirtoCommerce.CartModule.Data.Converters
 
 			if (payment.BillingAddress != null)
 			{
-				retVal.Addresses = new ObservableCollection<AddressEntity>(new AddressEntity[] { payment.BillingAddress.ToEntity() });
+				retVal.Addresses = new ObservableCollection<AddressEntity>(new AddressEntity[] { payment.BillingAddress.ToDataModel() });
 			}
 			return retVal;
 		}
@@ -58,11 +58,8 @@ namespace VirtoCommerce.CartModule.Data.Converters
 			if (target == null)
 				throw new ArgumentNullException("target");
 
-			//Simply properties patch
-			target.Amount = source.Amount;
-
-			if (source.GatewayCode != null)
-				target.GatewayCode = source.GatewayCode;
+			var patchInjection = new PatchInjection<PaymentEntity>(x => x.Amount, x => x.GatewayCode);
+			target.InjectFrom(patchInjection, source);
 
 			if (!source.Addresses.IsNullCollection())
 			{

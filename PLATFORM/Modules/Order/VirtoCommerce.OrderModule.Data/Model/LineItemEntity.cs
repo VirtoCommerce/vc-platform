@@ -7,25 +7,17 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using VirtoCommerce.Domain.Order.Model;
-using VirtoCommerce.Foundation.Frameworks;
+using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.OrderModule.Data.Model
 {
-	public class LineItemEntity : Entity, IAuditable, IPosition
+	public class LineItemEntity : AuditableEntity, IPosition
 	{
 		public LineItemEntity()
 		{
 			Discounts = new NullCollection<DiscountEntity>();
 		}
 
-		[Required]
-		public DateTime CreatedDate { get; set; }
-		[Required]
-		[StringLength(64)]
-		public string CreatedBy { get; set; }
-		public DateTime? ModifiedDate { get; set; }
-		[StringLength(64)]
-		public string ModifiedBy { get; set; }
 		[Required]
 		[StringLength(3)]
 		public string Currency { get; set; }

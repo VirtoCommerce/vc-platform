@@ -1,5 +1,5 @@
 ﻿using Omu.ValueInjecter;
-using coreModel = VirtoCommerce.Domain.Fulfillment.Model;
+using coreModel = VirtoCommerce.Domain.Commerce.Model;
 using webModel = VirtoCommerce.InventoryModule.Web.Model;
 
 namespace VirtoCommerce.InventoryModule.Web.Converters

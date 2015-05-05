@@ -199,6 +199,8 @@
     <Content Include="Default_Theme\Default\assets\respond.min.js" />
     <Content Include="Default_Theme\Default\assets\slide_1.jpg" />
     <Content Include="Default_Theme\Default\assets\slide_2.jpg" />
+    <Content Include="Scripts\blades\common\content-main.js" />
+    <Content Include="Scripts\blades\common\content-main.tpl.html" />
     <Content Include="Scripts\blades\themes\add-theme.js" />
     <Content Include="Scripts\blades\themes\add-theme.tpl.html" />
     <Content Include="Scripts\blades\themes\edit-asset.js" />
@@ -247,11 +249,13 @@
     <Compile Include="Models\CheckNameResponse.cs" />
     <Compile Include="Models\ContentItem.cs" />
     <Compile Include="Models\GetPagesCriteria.cs" />
+    <Compile Include="Models\GetPagesResponse.cs" />
     <Compile Include="Models\GetThemeAssetsCriteria.cs" />
     <Compile Include="Models\LoadItemInfo.cs" />
     <Compile Include="Models\MenuLink.cs" />
     <Compile Include="Models\MenuLinkList.cs" />
     <Compile Include="Models\Page.cs" />
+    <Compile Include="Models\PageFolder.cs" />
     <Compile Include="Models\SyncAsset.cs" />
     <Compile Include="Models\Theme.cs" />
     <Compile Include="Models\ThemeAsset.cs" />
@@ -264,14 +268,6 @@
     <Folder Include="Scripts\directives\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Core\CommerceFoundation.Data\CommerceFoundation.Data.csproj">
-      <Project>{bb168a74-0f1e-43be-a616-134902238b80}</Project>
-      <Name>CommerceFoundation.Data</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\Core\CommerceFoundation\CommerceFoundation.csproj">
-      <Project>{e7fc9a51-1b39-4bdc-983a-8a059c5fc58b}</Project>
-      <Name>CommerceFoundation</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\..\VirtoCommerce.Platform.Core\VirtoCommerce.Platform.Core.csproj">
       <Project>{f7c9313b-522e-4619-abc9-8c7d4600d6b5}</Project>
       <Name>VirtoCommerce.Platform.Core</Name>

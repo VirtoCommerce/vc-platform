@@ -90,6 +90,7 @@
     <Compile Include="Common\AttributeExtensions.cs" />
     <Compile Include="Common\AuditableEntity.cs" />
     <Compile Include="Common\ClientCacheAttribute.cs" />
+    <Compile Include="Common\CurrencyCode.cs" />
     <Compile Include="Common\DateTimeExtensions.cs" />
     <Compile Include="Common\DictionaryExtensions.cs" />
     <Compile Include="Common\Entity.cs" />

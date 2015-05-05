@@ -4,8 +4,7 @@ using System.Web;
 using System.Web.Http.Controllers;
 using System.Web.Http.ModelBinding;
 using VirtoCommerce.CatalogModule.Web.Model;
-using VirtoCommerce.Foundation.Catalogs.Search;
-using VirtoCommerce.Foundation.Frameworks.Extensions;
+using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.CatalogModule.Web.Binders
 {

@@ -85,6 +85,7 @@ namespace VirtoCommerce.Platform.Data.Infrastructure
         {
             modelBuilder.Conventions.Remove<PluralizingTableNameConvention>();
 
+			modelBuilder.Properties().Where(x => x.Name == "ModifiedBy" || x.Name == "CreatedBy").Configure(x => x.HasMaxLength(64));
             base.OnModelCreating(modelBuilder);
         }
 
@@ -123,14 +124,6 @@ namespace VirtoCommerce.Platform.Data.Infrastructure
           DbModelBuilder modelBuilder, string toTable, string discriminatorColumn = DiscriminatorFieldName, string discriminatorValue = "")
           where T : class
         {
-            /*
-            modelBuilder.Entity<T>().Map(
-              entity =>
-              {
-                  entity.ToTable(toTable);
-              });
-             * */
-
             var val = String.IsNullOrEmpty(discriminatorValue) ? typeof(T).Name : discriminatorValue;
 
             var config = modelBuilder.Entity<T>().Map(

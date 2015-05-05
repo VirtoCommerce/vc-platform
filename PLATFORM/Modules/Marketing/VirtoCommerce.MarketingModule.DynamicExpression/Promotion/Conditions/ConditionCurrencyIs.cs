@@ -3,8 +3,8 @@ using System.Linq;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using VirtoCommerce.Domain.Marketing.Model;
-using VirtoCommerce.Foundation.Frameworks;
-using VirtoCommerce.Foundation.Money;
+
+
 using linq = System.Linq.Expressions;
 
 namespace VirtoCommerce.MarketingModule.Expressions.Promotion

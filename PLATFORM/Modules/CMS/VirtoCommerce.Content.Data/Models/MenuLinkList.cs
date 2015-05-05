@@ -2,15 +2,14 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using VirtoCommerce.Foundation.Frameworks;
+using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.Content.Data.Models
 {
-	public class MenuLinkList : Entity, IAuditable
+	public class MenuLinkList : AuditableEntity
 	{
 		public MenuLinkList()
 		{
-			CreatedDate = DateTime.UtcNow;
 			MenuLinks = new NullCollection<MenuLink>();
 		}
 
@@ -21,16 +20,6 @@ namespace VirtoCommerce.Content.Data.Models
 
 		[Required]
 		public string Language { get; set; }
-
-		[Required]
-		public DateTime CreatedDate { get; set; }
-
-		[Required]
-		public string CreatedBy { get; set; }
-
-		public DateTime? ModifiedDate { get; set; }
-
-		public string ModifiedBy { get; set; }
 
 		public virtual ICollection<MenuLink> MenuLinks { get; set; }
 

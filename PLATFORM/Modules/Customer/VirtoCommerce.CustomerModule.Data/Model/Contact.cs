@@ -6,6 +6,7 @@ using System.Runtime.Serialization;
 using System.ComponentModel.DataAnnotations;
 using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations.Schema;
+using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.CustomerModule.Data.Model
 {
@@ -14,7 +15,7 @@ namespace VirtoCommerce.CustomerModule.Data.Model
         public Contact()
         {
             BirthDate = DateTime.Now;
-			ContactPropertyValues = new ObservableCollection<ContactPropertyValue>();
+			ContactPropertyValues = new NullCollection<ContactPropertyValue>();
         }
 
         #region UserProfile members

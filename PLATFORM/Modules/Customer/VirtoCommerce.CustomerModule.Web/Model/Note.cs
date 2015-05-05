@@ -7,16 +7,8 @@ using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.CustomerModule.Web.Model
 {
-	public class Note : Entity, IAuditable
+	public class Note : AuditableEntity
 	{
-		#region IAuditable Members
-
-		public DateTime CreatedDate { get; set; }
-		public string CreatedBy { get; set; }
-		public DateTime? ModifiedDate { get; set; }
-		public string ModifiedBy { get; set; }
-		#endregion
-
 		public string Title { get; set; }
 		public string Body { get; set; }
 	}

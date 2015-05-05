@@ -1,22 +1,13 @@
-﻿using Microsoft.Practices.Unity;
-using VirtoCommerce.Caching.HttpCache;
-using VirtoCommerce.CoreModule.Web.Repositories;
-using VirtoCommerce.CoreModule.Web.Search;
-using VirtoCommerce.CoreModule.Web.Services;
-using VirtoCommerce.Domain.Fulfillment.Services;
+﻿using System.Data.Entity;
+using Microsoft.Practices.Unity;
+using VirtoCommerce.CoreModule.Data.Repositories;
+using VirtoCommerce.Domain.Commerce.Services;
 using VirtoCommerce.Domain.Payment.Services;
 using VirtoCommerce.Domain.Search;
-using VirtoCommerce.Foundation.AppConfig.Repositories;
-using VirtoCommerce.Foundation.Data.AppConfig;
-using VirtoCommerce.Foundation.Data.Customers;
-using VirtoCommerce.Foundation.Data.Infrastructure;
-using VirtoCommerce.Foundation.Data.Search;
-using VirtoCommerce.Foundation.Frameworks;
-using VirtoCommerce.Foundation.Search;
 using VirtoCommerce.Platform.Core.Modularity;
-using VirtoCommerce.Search.Providers.Azure;
-using VirtoCommerce.Search.Providers.Elastic;
-using VirtoCommerce.Search.Providers.Lucene;
+using VirtoCommerce.Platform.Data.Infrastructure;
+using VirtoCommerce.Platform.Data.Infrastructure.Interceptors;
+
 
 namespace VirtoCommerce.CoreModule.Web
 {
@@ -34,75 +25,44 @@ namespace VirtoCommerce.CoreModule.Web
 
         public void SetupDatabase(SampleDataLevel sampleDataLevel)
         {
-            using (var db = new EFCustomerRepository(_connectionStringName))
-            {
-                SqlCustomerDatabaseInitializer initializer;
+			using (var db = new CommerceRepositoryImpl("VirtoCommerce"))
+			{
+				IDatabaseInitializer<CommerceRepositoryImpl> initializer;
 
-                switch (sampleDataLevel)
-                {
-                    case SampleDataLevel.Full:
-                    case SampleDataLevel.Reduced:
-                        initializer = new SqlCustomerSampleDatabaseInitializer();
-                        break;
-                    default:
-                        initializer = new SqlCustomerDatabaseInitializer();
-                        break;
-                }
+				switch (sampleDataLevel)
+				{
+					case SampleDataLevel.Full:
+					case SampleDataLevel.Reduced:
+						initializer = new SqlCommerceSampleDatabaseInitializer();
+						break;
+					default:
+						initializer = new SetupDatabaseInitializer<CommerceRepositoryImpl, VirtoCommerce.CoreModule.Data.Migrations.Configuration>();
+						break;
+				}
 
-                initializer.InitializeDatabase(db);
-            }
-
-            using (var db = new EFSearchRepository(_connectionStringName))
-            {
-                new SearchDatabaseInitializer().InitializeDatabase(db);
-            }
-        }
+				initializer.InitializeDatabase(db);
+			}
+	    }
 
         public void Initialize()
         {
-            #region Caching
-
-            _container.RegisterType<ICacheRepository, HttpCacheRepository>(new ContainerControlledLifetimeManager());
-
-            #endregion
-
-            #region Settings
-
-            _container.RegisterType<IAppConfigRepository>(new InjectionFactory(c => new EFAppConfigRepository(_connectionStringName)));
-
-            #endregion
-
-            #region Search providers
-
-            var searchConnection = new SearchConnection(ConnectionHelper.GetConnectionString("SearchConnectionString"));
-            _container.RegisterInstance<ISearchConnection>(searchConnection);
-
-            _container.RegisterType<ISearchProviderManager, SearchProviderManager>(new ContainerControlledLifetimeManager());
-            _container.RegisterType<ISearchProvider, SearchProviderManager>(new ContainerControlledLifetimeManager());
-
-            #endregion
-
-            #region Payment gateways manager
+           #region Payment gateways manager
 
             _container.RegisterType<IPaymentGatewayManager, InMemoryPaymentGatewayManagerImpl>(new ContainerControlledLifetimeManager());
 
             #endregion
 
-            #region Fulfillment
+           #region Fulfillment
 
-            _container.RegisterType<IFoundationFulfillmentRepository>(new InjectionFactory(c => new FoundationFulfillmentRepositoryImpl(_connectionStringName)));
-            _container.RegisterType<IFulfillmentService, FulfillmentServiceImpl>();
+			_container.RegisterType<IСommerceRepository>(new InjectionFactory(c => new CommerceRepositoryImpl(_connectionStringName, new EntityPrimaryKeyGeneratorInterceptor(), new AuditableInterceptor())));
+			_container.RegisterType<ICommerceService, CommerceServiceImpl>();
 
             #endregion
         }
 
         public void PostInitialize()
         {
-            var searchProviderManager = _container.Resolve<ISearchProviderManager>();
-
-            searchProviderManager.RegisterSearchProvider(SearchProviders.Elasticsearch.ToString(), connection => new ElasticSearchProvider(new ElasticSearchQueryBuilder(), connection));
-            searchProviderManager.RegisterSearchProvider(SearchProviders.Lucene.ToString(), connection => new LuceneSearchProvider(new LuceneSearchQueryBuilder(), connection));
-            searchProviderManager.RegisterSearchProvider(SearchProviders.AzureSearch.ToString(), connection => new AzureSearchProvider(new AzureSearchQueryBuilder(), connection));
+      
         }
 
         #endregion

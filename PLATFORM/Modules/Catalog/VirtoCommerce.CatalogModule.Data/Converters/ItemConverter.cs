@@ -2,11 +2,13 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using VirtoCommerce.Foundation.Frameworks;
-using VirtoCommerce.Foundation.Frameworks.Extensions;
-using foundation = VirtoCommerce.Foundation.Catalogs.Model;
-using module = VirtoCommerce.Domain.Catalog.Model;
-using foundationConfig = VirtoCommerce.Foundation.AppConfig.Model;
+using dataModel = VirtoCommerce.CatalogModule.Data.Model;
+using coreModel = VirtoCommerce.Domain.Catalog.Model;
+using VirtoCommerce.Platform.Data.Common;
+using Omu.ValueInjecter;
+using VirtoCommerce.Platform.Core.Common;
+using VirtoCommerce.Platform.Data.Common.ConventionInjections;
+using VirtoCommerce.Domain.Commerce.Model;
 
 namespace VirtoCommerce.CatalogModule.Data.Converters
 {
@@ -16,42 +18,37 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 		/// Converting to model type
 		/// </summary>
 		/// <returns></returns>
-		public static module.CatalogProduct ToModuleModel(this foundation.Item dbItem, module.Catalog catalog,
-														  module.Category category, module.Property[] properties,
-														  foundation.Item[] variations,
-														  foundationConfig.SeoUrlKeyword[] seoInfos,
+		public static coreModel.CatalogProduct ToCoreModel(this dataModel.Item dbItem, coreModel.Catalog catalog,
+														  coreModel.Category category, coreModel.Property[] properties,
+														  dataModel.Item[] variations,
+														  SeoUrlKeyword[] seoInfos,
 														  string mainProductId,
-														  module.CatalogProduct[] associatedProducts)
+														  coreModel.CatalogProduct[] associatedProducts)
 		{
-			var retVal = new module.CatalogProduct {
-                Id = dbItem.ItemId, 
-                Catalog = catalog, 
-                CatalogId = catalog.Id,
-                StartDate = dbItem.StartDate
-            };
+			var retVal = new coreModel.CatalogProduct();
+			retVal.InjectFrom(dbItem);
+			retVal.Catalog = catalog;
+			retVal.CatalogId = catalog.Id;
+		
 			if (category != null)
 			{
 				retVal.Category = category;
 				retVal.CategoryId = category.Id;
 			}
-			retVal.Code = dbItem.Code;
-			retVal.Name = dbItem.Name;
-            retVal.IsBuyable = dbItem.IsBuyable;
+
 			retVal.MainProductId = mainProductId;
-            retVal.IsActive = dbItem.IsActive;
-            retVal.TrackInventory = dbItem.TrackInventory;
 
 			#region Links
-			retVal.Links = dbItem.CategoryItemRelations.Select(x => x.ToModuleModel()).ToList();
+			retVal.Links = dbItem.CategoryItemRelations.Select(x => x.ToCoreModel()).ToList();
 			#endregion
 
 			#region Variations
 			if (variations != null)
 			{
-				retVal.Variations = new List<module.CatalogProduct>();
+				retVal.Variations = new List<coreModel.CatalogProduct>();
 				foreach (var variation in variations)
 				{
-					var productVaraition = variation.ToModuleModel(catalog, category, properties,
+					var productVaraition = variation.ToCoreModel(catalog, category, properties,
 																   variations: null,
 																   seoInfos: null,
 																   mainProductId: retVal.Id, associatedProducts: null);
@@ -65,41 +62,41 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 			#region Assets
 			if (dbItem.ItemAssets != null)
 			{
-				retVal.Assets = dbItem.ItemAssets.OrderBy(x => x.SortOrder).Select(x => x.ToModuleModel()).ToList();
+				retVal.Assets = dbItem.ItemAssets.OrderBy(x => x.SortOrder).Select(x => x.ToCoreModel()).ToList();
 			}
 			#endregion
 
 			#region Property values
 			if (dbItem.ItemPropertyValues != null)
 			{
-				retVal.PropertyValues = dbItem.ItemPropertyValues.Select(x => x.ToModuleModel(properties)).ToList();
+				retVal.PropertyValues = dbItem.ItemPropertyValues.Select(x => x.ToCoreModel(properties)).ToList();
 			}
 			#endregion
 
 			#region SeoInfo
 			if (seoInfos != null)
 			{
-				retVal.SeoInfos = seoInfos.Select(x => x.ToModuleModel()).ToList();
+				retVal.SeoInfos = seoInfos.Select(x => x.ToCoreModel()).ToList();
 			}
 			#endregion
 
 			#region EditorialReviews
 			if (dbItem.EditorialReviews != null)
 			{
-				retVal.Reviews = dbItem.EditorialReviews.Select(x => x.ToModuleModel()).ToList();
+				retVal.Reviews = dbItem.EditorialReviews.Select(x => x.ToCoreModel()).ToList();
 			}
 			#endregion
 
 			#region Associations
 			if (dbItem.AssociationGroups != null && associatedProducts != null)
 			{
-				retVal.Associations = new List<module.ProductAssociation>();
+				retVal.Associations = new List<coreModel.ProductAssociation>();
 				foreach (var association in dbItem.AssociationGroups.SelectMany(x => x.Associations))
 				{
 					var associatedProduct = associatedProducts.FirstOrDefault(x => x.Id == association.ItemId);
 					if (associatedProduct != null)
 					{
-						var productAssociation = association.ToModuleModel(associatedProduct);
+						var productAssociation = association.ToCoreModel(associatedProduct);
 						retVal.Associations.Add(productAssociation);
 					}
 				}
@@ -113,63 +110,49 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 		/// </summary>
 		/// <param name="catalog"></param>
 		/// <returns></returns>
-		public static foundation.Item ToFoundation(this module.CatalogProduct product)
+		public static dataModel.Item ToDataModel(this coreModel.CatalogProduct product)
 		{
-
-			var retVal = new foundation.Product();
-
+			var retVal = new dataModel.Product();
+			var id = retVal.Id;
+			retVal.InjectFrom(product);
+			if (product.Id == null)
+			{
+				retVal.Id = id;
+			}
 			//Constant fields
 			//Only for main product
-			retVal.AvailabilityRule = (int)foundation.AvailabilityRule.Always;
-			retVal.StartDate = product.StartDate;
-            retVal.IsBuyable = product.IsBuyable;
+			retVal.AvailabilityRule = (int)coreModel.AvailabilityRule.Always;
 			retVal.MinQuantity = 1;
 			retVal.MaxQuantity = 0;
 			//If it variation need make active false (workaround)
 			// retVal.IsActive = product.MainProductId == null;
-		    retVal.IsActive = product.IsActive;
-            retVal.TrackInventory = product.TrackInventory;
-
+  
 			//Changed fields
-			retVal.Name = product.Name;
-			retVal.Code = product.Code;
 			retVal.CatalogId = product.CatalogId;
 
-			if (product.Id != null)
-			{
-				retVal.ItemId = product.Id;
-			}
-			else
-			{
-				//Copy over generated id
-				product.Id = retVal.ItemId;
-			}
-
 			#region ItemPropertyValues
-			retVal.ItemPropertyValues = new NullCollection<foundation.ItemPropertyValue>();
+			retVal.ItemPropertyValues = new NullCollection<dataModel.ItemPropertyValue>();
 			if (product.PropertyValues != null)
 			{
-				retVal.ItemPropertyValues = new ObservableCollection<foundation.ItemPropertyValue>();
+				retVal.ItemPropertyValues = new ObservableCollection<dataModel.ItemPropertyValue>();
 				foreach (var propValue in product.PropertyValues)
 				{
-					var dbPropValue = propValue.ToFoundation<foundation.ItemPropertyValue>() as foundation.ItemPropertyValue;
-					dbPropValue.ItemId = retVal.ItemId;
+					var dbPropValue = propValue.ToDataModel<dataModel.ItemPropertyValue>() as dataModel.ItemPropertyValue;
 					retVal.ItemPropertyValues.Add(dbPropValue);
 				}
 			}
 			#endregion
 
 			#region ItemAssets
-			retVal.ItemAssets = new NullCollection<foundation.ItemAsset>();
+			retVal.ItemAssets = new NullCollection<dataModel.ItemAsset>();
 			if (product.Assets != null)
 			{
 				var assets = product.Assets.ToArray();
-				retVal.ItemAssets = new ObservableCollection<foundation.ItemAsset>();
+				retVal.ItemAssets = new ObservableCollection<dataModel.ItemAsset>();
 				for (int order = 0; order < assets.Length; order++)
 				{
 					var asset = assets[order];
-					var dbAsset = asset.ToFoundation();
-					dbAsset.ItemId = product.Id;
+					var dbAsset = asset.ToDataModel();
 					dbAsset.SortOrder = order;
 					retVal.ItemAssets.Add(dbAsset);
 				}
@@ -177,28 +160,28 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 			#endregion
 
 			#region CategoryItemRelations
-			retVal.CategoryItemRelations = new NullCollection<foundation.CategoryItemRelation>();
+			retVal.CategoryItemRelations = new NullCollection<dataModel.CategoryItemRelation>();
 			if (product.Links != null)
 			{
-				retVal.CategoryItemRelations = new ObservableCollection<foundation.CategoryItemRelation>();
-				retVal.CategoryItemRelations.AddRange(product.Links.Select(x => x.ToFoundation(product)));
+				retVal.CategoryItemRelations = new ObservableCollection<dataModel.CategoryItemRelation>();
+				retVal.CategoryItemRelations.AddRange(product.Links.Select(x => x.ToDataModel(product)));
 			}
 			#endregion
 
 			#region EditorialReview
-			retVal.EditorialReviews = new NullCollection<foundation.EditorialReview>();
+			retVal.EditorialReviews = new NullCollection<dataModel.EditorialReview>();
 			if (product.Reviews != null)
 			{
-				retVal.EditorialReviews = new ObservableCollection<foundation.EditorialReview>();
-				retVal.EditorialReviews.AddRange(product.Reviews.Select(x => x.ToFoundation(product)));
+				retVal.EditorialReviews = new ObservableCollection<dataModel.EditorialReview>();
+				retVal.EditorialReviews.AddRange(product.Reviews.Select(x => x.ToDataModel(retVal)));
 			}
 			#endregion
 
 			#region Associations
-			retVal.AssociationGroups = new NullCollection<foundation.AssociationGroup>();
+			retVal.AssociationGroups = new NullCollection<dataModel.AssociationGroup>();
 			if (product.Associations != null)
 			{
-				retVal.AssociationGroups = new ObservableCollection<foundation.AssociationGroup>();
+				retVal.AssociationGroups = new ObservableCollection<dataModel.AssociationGroup>();
 				var associations = product.Associations.ToArray();
 				for (int order = 0; order < associations.Count(); order++)
 				{
@@ -206,16 +189,15 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 					var associationGroup = retVal.AssociationGroups.FirstOrDefault(x => x.Name == association.Name);
 					if (associationGroup == null)
 					{
-						associationGroup = new foundation.AssociationGroup
+						associationGroup = new dataModel.AssociationGroup
 						{
 							Name = association.Name,
 							Description = association.Description,
 							Priority = 1,
-							ItemId = retVal.ItemId
 						};
 						retVal.AssociationGroups.Add(associationGroup);
 					}
-					var foundationAssociation = association.ToFoundation();
+					var foundationAssociation = association.ToDataModel();
 					foundationAssociation.Priority = order;
 					associationGroup.Associations.Add(foundationAssociation);
 				}
@@ -231,36 +213,25 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 		/// </summary>
 		/// <param name="source"></param>
 		/// <param name="target"></param>
-		public static void Patch(this foundation.Item source, foundation.Item target)
+		public static void Patch(this dataModel.Item source, dataModel.Item target)
 		{
 			if (target == null)
 				throw new ArgumentNullException("target");
 
-			//Simple properties patch
-			if (source.Name != null)
-				target.Name = source.Name;
-			if (source.Code != null)
-			{
-				target.Code = source.Code;
-                target.IsBuyable = source.IsBuyable;
-                target.IsActive = source.IsActive;
-                target.TrackInventory = source.TrackInventory;
-			}
-
+			var patchInjectionPolicy = new PatchInjection<dataModel.Item>(x => x.Name, x => x.Code, x => x.IsBuyable, x=> x.IsActive, x=>x.TrackInventory);
+			target.InjectFrom(patchInjectionPolicy, source);
 
 			#region ItemAssets
 			if (!source.ItemAssets.IsNullCollection())
 			{
-				source.ItemAssets.Patch(target.ItemAssets, new ItemAssetComparer(),
-										 (sourceAsset, targetAsset) => sourceAsset.Patch(targetAsset));
+				source.ItemAssets.Patch(target.ItemAssets, (sourceAsset, targetAsset) => sourceAsset.Patch(targetAsset));
 			}
 			#endregion
 
 			#region ItemPropertyValues
 			if (!source.ItemPropertyValues.IsNullCollection())
 			{
-				source.ItemPropertyValues.Patch(target.ItemPropertyValues, new PropertyValueComparer(),
-										 (sourcePropValue, targetPropValue) => sourcePropValue.Patch(targetPropValue));
+				source.ItemPropertyValues.Patch(target.ItemPropertyValues, (sourcePropValue, targetPropValue) => sourcePropValue.Patch(targetPropValue));
 			}
 
 			#endregion
@@ -277,36 +248,19 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 			#region EditorialReviews
 			if (!source.EditorialReviews.IsNullCollection())
 			{
-				source.EditorialReviews.Patch(target.EditorialReviews, new EditorialReviewComparer(),
-										 (sourcePropValue, targetPropValue) => sourcePropValue.Patch(targetPropValue));
+				source.EditorialReviews.Patch(target.EditorialReviews, (sourcePropValue, targetPropValue) => sourcePropValue.Patch(targetPropValue));
 			}
 			#endregion
 
 			#region Association
 			if (!source.AssociationGroups.IsNullCollection())
 			{
-				source.AssociationGroups.Patch(target.AssociationGroups, new AssociationGroupComparer(),
+				var associationComparer = AnonymousComparer.Create((dataModel.AssociationGroup x) => x.Name);
+				source.AssociationGroups.Patch(target.AssociationGroups, associationComparer,
 										 (sourceGroup, targetGroup) => sourceGroup.Patch(targetGroup));
 			}
 			#endregion
 		}
 
-	}
-
-	public class ItemComparer : IEqualityComparer<foundation.Item>
-	{
-		#region IEqualityComparer<Item> Members
-
-		public bool Equals(foundation.Item x, foundation.Item y)
-		{
-			return x.ItemId == y.ItemId;
-		}
-
-		public int GetHashCode(foundation.Item obj)
-		{
-			return obj.GetHashCode();
-		}
-
-		#endregion
 	}
 }

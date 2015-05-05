@@ -3,9 +3,9 @@ using System.Data.Entity;
 using System.Data.Entity.ModelConfiguration.Conventions;
 using System.Linq;
 using VirtoCommerce.Domain.Order.Model;
-using VirtoCommerce.Foundation.Data;
-using VirtoCommerce.Foundation.Data.Infrastructure.Interceptors;
 using VirtoCommerce.OrderModule.Data.Model;
+using VirtoCommerce.Platform.Data.Infrastructure;
+using VirtoCommerce.Platform.Data.Infrastructure.Interceptors;
 
 namespace VirtoCommerce.OrderModule.Data.Repositories
 {
@@ -18,7 +18,7 @@ namespace VirtoCommerce.OrderModule.Data.Repositories
 		}
 
 		public OrderRepositoryImpl(string nameOrConnectionString, params IInterceptor[] interceptors)
-			: base(nameOrConnectionString, null, null, interceptors)
+			: base(nameOrConnectionString, null,  interceptors)
 		{
 			Database.SetInitializer<OrderRepositoryImpl>(null);
 			Configuration.LazyLoadingEnabled = false;
@@ -34,7 +34,7 @@ namespace VirtoCommerce.OrderModule.Data.Repositories
 			modelBuilder.Entity<CustomerOrderEntity>().HasKey(x => x.Id)
 					.Property(x => x.Id);
 
-			modelBuilder.Entity<CustomerOrderEntity>().ToTable("order_CustomerOrder");
+			modelBuilder.Entity<CustomerOrderEntity>().ToTable("CustomerOrder");
 			#endregion
 
 			#region LineItem
@@ -52,7 +52,7 @@ namespace VirtoCommerce.OrderModule.Data.Repositories
 									   .HasForeignKey(x => x.ShipmentId);
 									   
 
-			modelBuilder.Entity<LineItemEntity>().ToTable("order_LineItem");
+			modelBuilder.Entity<LineItemEntity>().ToTable("OrderLineItem");
 			#endregion
 
 			#region Shipment
@@ -66,7 +66,7 @@ namespace VirtoCommerce.OrderModule.Data.Repositories
 										   
 
 
-			modelBuilder.Entity<ShipmentEntity>().ToTable("order_Shipment");
+			modelBuilder.Entity<ShipmentEntity>().ToTable("OrderShipment");
 			#endregion
 
 			#region Address
@@ -88,7 +88,7 @@ namespace VirtoCommerce.OrderModule.Data.Repositories
 									   .HasForeignKey(x => x.PaymentInId);
 									  
 
-			modelBuilder.Entity<AddressEntity>().ToTable("order_Address");
+			modelBuilder.Entity<AddressEntity>().ToTable("OrderAddress");
 			#endregion
 
 			#region PaymentIn
@@ -105,7 +105,7 @@ namespace VirtoCommerce.OrderModule.Data.Repositories
 									   .HasForeignKey(x => x.ShipmentId);
 									   
 
-			modelBuilder.Entity<PaymentInEntity>().ToTable("order_PaymentIn");
+			modelBuilder.Entity<PaymentInEntity>().ToTable("OrderPaymentIn");
 			#endregion
 
 			#region Discount
@@ -126,8 +126,10 @@ namespace VirtoCommerce.OrderModule.Data.Repositories
 									   .HasForeignKey(x => x.LineItemId);
 									  
 
-			modelBuilder.Entity<DiscountEntity>().ToTable("order_Discount");
+			modelBuilder.Entity<DiscountEntity>().ToTable("OrderDiscount");
 			#endregion
+
+			base.OnModelCreating(modelBuilder);
 		}
 
 		#region IOrderRepository Members

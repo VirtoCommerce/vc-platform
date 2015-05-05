@@ -1,8 +1,9 @@
 ﻿using System;
+using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.Platform.Core.Caching
 {
-    public class CacheSettings
+	public class CacheSettings : ValueObject<CacheSettings>
     {
         public string ProviderName { get; private set; }
         public TimeSpan Timeout { get; private set; }
