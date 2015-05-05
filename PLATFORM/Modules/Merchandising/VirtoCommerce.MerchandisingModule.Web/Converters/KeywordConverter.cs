@@ -8,10 +8,14 @@ namespace VirtoCommerce.MerchandisingModule.Web.Converters
     {
         #region Public Methods and Operators
 
-        public static webModel.SeoKeyword ToWebModel(this SeoInfo keyword)
+        public static webModel.SeoKeyword ToWebModel(this SeoInfo seoInfo)
         {
             var retVal = new webModel.SeoKeyword();
-            retVal.InjectFrom(keyword);
+
+			retVal.InjectFrom(seoInfo);
+			retVal.Keyword = seoInfo.SemanticUrl;
+			retVal.Language = seoInfo.LanguageCode;
+			retVal.Title = seoInfo.PageTitle;
             return retVal;
         }
 
