@@ -302,6 +302,7 @@
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="App_Data\Themes\_Global\virtocommerce.js" />
     <Content Include="App_Data\Themes\_Global\social\shopify-social.svg" />
     <Content Include="App_Data\Themes\_Global\social\social-icons.css" />
     <Content Include="App_Data\Themes\_Default\assets\arrow-left.svg" />
