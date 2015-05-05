@@ -104,7 +104,7 @@ namespace VirtoCommerce.Platform.Web
                 module.PostInitialize();
             }
 
-            //app.MapSignalR();
+            app.MapSignalR();
         }
 
 
