@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using VirtoCommerce.Foundation.Frameworks;
+using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.InventoryModule.Web.Model
 {
-	public class FulfillmentCenter : Entity
+	public class FulfillmentCenter : AuditableEntity
 	{
 		public string Name { get; set; }
 		public string Description { get; set; }

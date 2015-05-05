@@ -5,12 +5,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using VirtoCommerce.Domain.Order.Model;
-using VirtoCommerce.Foundation.Frameworks.Extensions;
 using Omu.ValueInjecter;
 using VirtoCommerce.OrderModule.Data.Model;
-using VirtoCommerce.Foundation.Money;
-using VirtoCommerce.Foundation.Frameworks.ConventionInjections;
-using cart = VirtoCommerce.Domain.Cart.Model;
+using coreModel = VirtoCommerce.Domain.Cart.Model;
+using VirtoCommerce.Platform.Core.Common;
+using VirtoCommerce.Platform.Data.Common.ConventionInjections;
 
 namespace VirtoCommerce.OrderModule.Data.Converters
 {
@@ -33,7 +32,7 @@ namespace VirtoCommerce.OrderModule.Data.Converters
 			return retVal;
 		}
 
-		public static LineItem ToCoreModel(this cart.LineItem lineItem)
+		public static LineItem ToCoreModel(this coreModel.LineItem lineItem)
 		{
 			if (lineItem == null)
 				throw new ArgumentNullException("lineItem");
@@ -54,7 +53,7 @@ namespace VirtoCommerce.OrderModule.Data.Converters
 			return retVal;
 		}
 
-		public static LineItemEntity ToEntity(this LineItem lineItem)
+		public static LineItemEntity ToDataModel(this LineItem lineItem)
 		{
 			if (lineItem == null)
 				throw new ArgumentNullException("lineItem");
@@ -64,7 +63,7 @@ namespace VirtoCommerce.OrderModule.Data.Converters
 			retVal.Currency = lineItem.Currency.ToString();
 			if(lineItem.Discount != null)
 			{
-				retVal.Discounts = new ObservableCollection<DiscountEntity>(new DiscountEntity[] { lineItem.Discount.ToEntity() });
+				retVal.Discounts = new ObservableCollection<DiscountEntity>(new DiscountEntity[] { lineItem.Discount.ToDataModel() });
 			}
 			return retVal;
 		}

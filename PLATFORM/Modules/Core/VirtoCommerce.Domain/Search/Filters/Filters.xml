@@ -1,0 +1,105 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<browsing>
+  <attribute key="A00551" localized="false">
+    <simple id="01" value="CCD" />
+    <simple id="02" value="CMOS" />
+    <simple id="03" value="Super HAD CCD" />
+    <simple id="04" value="Live MOS" />
+    <simple id="05" value="3CCD" />
+    <simple id="06" value="LBCAST" />
+  </attribute>
+  <attribute key="A00556" localized="true">
+    <simple id="01" value="TFT active matrix" language="en" />
+    <simple id="02" value="Matrice active TFT" language="fr" />
+    <simple id="03" value="LCD passive matrix" language="en" />
+    <simple id="04" value="LCD à matrice passive" language="fr" />
+    <simple id="05" value="None" language="en" />
+    <simple id="06" value="Aucun(e)" language="fr" />
+    <simple id="07" value="LCD" language="en" />
+    <simple id="08" value="LCD" language="fr" />
+  </attribute>
+  <attributeRange key="A00140" localized="false">
+    <range lower="" upper="1.9" id="_1.9">
+      <display language="en">
+        <value>1.9 in. &amp; Under</value>
+        <seo>1.9in-and-under</seo>
+      </display>
+      <display language="fr">
+        <value>1.9 in. et dessous</value>
+        <seo>1.9in-et-dessous</seo>
+      </display>
+    </range>
+    <range lower="2" upper="2.9" id="2_2.9">
+      <display language="en">
+        <value>2 to 2.9 in.</value>
+        <seo>2-to-2.9in</seo>
+      </display>
+      <display language="fr">
+        <value>2 et 2.9 in.</value>
+        <seo>2-et-2.9in</seo>
+      </display>
+    </range>
+    <range lower="3" upper="" id="3_">
+      <display language="en">
+        <value>3in. &amp; Up</value>
+        <seo>3in-and-up</seo>
+      </display>
+      <display language="fr">
+        <value>3in. et Plus</value>
+        <seo>3in-et-plus</seo>
+      </display>
+    </range>
+  </attributeRange>
+  <price currency="USD" localized="false">
+    <range lower="" upper="100" id="_100">
+      <display language="en">
+        <value>Under $100</value>
+        <seo>under-$100</seo>
+      </display>
+      <display language="fr">
+        <value>au-dessous de $100</value>
+        <seo>au-dessousd-de-$100</seo>
+      </display>
+    </range>
+    <range lower="100" upper="300" id="100_300">
+      <display language="en">
+        <value>$100 to $300</value>
+        <seo>$100-to-$300</seo>
+      </display>
+      <display language="fr">
+        <value>$100 et $300</value>
+        <seo>$100-et-$300</seo>
+      </display>
+      <range lower="100" upper="200" id="100_200">
+        <display language="en">
+          <value>$100 to $200</value>
+          <seo>$100-to-$200</seo>
+        </display>
+        <display language="fr">
+          <value>$100 et $200</value>
+          <seo>$100-et-$200</seo>
+        </display>
+      </range>
+      <range lower="200" upper="300" id="200_300">
+        <display language="en">
+          <value>$200 to $300</value>
+          <seo>$200-to-$300</seo>
+        </display>
+        <display language="fr">
+          <value>$200 et $300</value>
+          <seo>$200-et-$300</seo>
+        </display>
+      </range>
+    </range>
+    <range lower="300" upper="" id="300_">
+      <display language="en">
+        <value>More than $300</value>
+        <seo>more-than-$300</seo>
+      </display>
+      <display language="fr">
+        <value>au-dessous de $300</value>
+        <seo>au-dessousd-de-$300</seo>
+      </display>
+    </range>
+  </price>
+</browsing>

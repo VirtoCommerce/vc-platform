@@ -1,21 +1,41 @@
 ﻿using System;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using foundation = VirtoCommerce.Foundation.Catalogs.Model;
+using dataModel = VirtoCommerce.CatalogModule.Data.Model;
 using VirtoCommerce.CatalogModule.Data.Converters;
-using VirtoCommerce.Foundation.Frameworks;
 using VirtoCommerce.CatalogModule.Data.Repositories;
 using VirtoCommerce.CatalogModule.Data.Services;
 using System.Collections.Generic;
 using module = VirtoCommerce.Domain.Catalog.Model;
 using VirtoCommerce.Domain.Catalog.Model;
 using VirtoCommerce.Domain.Catalog.Services;
+using VirtoCommerce.Platform.Core.Common;
+using VirtoCommerce.Platform.Data.Infrastructure.Interceptors;
 
 namespace VirtoCommerce.CatalogModule.Test
 {
 	[TestClass]
 	public class CatalogTest
 	{
+		[TestMethod]
+		public void Tst1()
+		{
+			var repository = GetRepository();
+			var catalog = new dataModel.Catalog
+			{
+				Id = "sss",
+				 Name = "test",
+				 DefaultLanguage = "en-us"
+			};
+			var language = new dataModel.CatalogLanguage
+			{
+				 Language = "sss"
+			};
+			catalog.CatalogLanguages.Add(language);
+			repository.Add(catalog);
+			repository.UnitOfWork.Commit();
+		}
+
 		[TestMethod]
 		public void CatalogPatchTest()
 		{
@@ -27,19 +47,19 @@ namespace VirtoCommerce.CatalogModule.Test
 				}
 			};
 
-			var dbCatalog1 = new foundation.Catalog
+			var dbCatalog1 = new dataModel.Catalog
 			{
 				 Name = "catalog1",
 				 DefaultLanguage = "en-us"
 			};
-			dbCatalog1.CatalogLanguages.Add(new foundation.CatalogLanguage { Language = "en-us" });
-			dbCatalog1.CatalogLanguages.Add(new foundation.CatalogLanguage { Language = "fr-fr" });
+			dbCatalog1.CatalogLanguages.Add(new dataModel.CatalogLanguage { Language = "en-us" });
+			dbCatalog1.CatalogLanguages.Add(new dataModel.CatalogLanguage { Language = "fr-fr" });
 
-			var dbCatalog2 = new foundation.Catalog
+			var dbCatalog2 = new dataModel.Catalog
 			{
 				Name = "unknow"
 			};
-			dbCatalog2.CatalogLanguages.Add(new foundation.CatalogLanguage { Language = "ru-ru" });
+			dbCatalog2.CatalogLanguages.Add(new dataModel.CatalogLanguage { Language = "ru-ru" });
 
 			chageTracker.Attach(dbCatalog2);
 			dbCatalog1.Patch(dbCatalog2);
@@ -313,40 +333,35 @@ namespace VirtoCommerce.CatalogModule.Test
 
 		private ICatalogSearchService GetSearchService()
 		{
-			return new CatalogSearchServiceImpl(GetRepository, GetItemService(), GetCatalogService(), GetCategoryService());
+			return new CatalogSearchServiceImpl(GetRepository, GetItemService(), GetCatalogService(), GetCategoryService(), null);
 		}
 
 		private IPropertyService GetPropertyService()
 		{
-			return new PropertyServiceImpl(() => { return GetRepository(); }, null);
+			return new PropertyServiceImpl(() => { return GetRepository(); });
 		}
 
 		private ICategoryService GetCategoryService()
 		{
-			return new CategoryServiceImpl(() => { return GetRepository(); }, () => { return GetAppConfigRepository(); }, null);
+			return new CategoryServiceImpl(() => { return GetRepository(); }, null);
 		}
 
 		private ICatalogService GetCatalogService()
 		{
-			return new CatalogServiceImpl(() => { return GetRepository(); }, null);
+			return new CatalogServiceImpl(() => { return GetRepository(); });
 		}
 
 		private IItemService GetItemService()
 		{
-			return new ItemServiceImpl(() => { return GetRepository(); }, () => { return GetAppConfigRepository(); });
+			return new ItemServiceImpl(() => { return GetRepository(); }, null);
 		}
 
 
-		private IFoundationCatalogRepository GetRepository()
+		private ICatalogRepository GetRepository()
 		{
-			var retVal = new FoundationCatalogRepositoryImpl("VirtoCommerce");
+			var retVal = new CatalogRepositoryImpl("VirtoCommerce",  new EntityPrimaryKeyGeneratorInterceptor(), new AuditableInterceptor());
 			return retVal;
 		}
-
-		private IFoundationAppConfigRepository GetAppConfigRepository()
-		{
-			var retVal = new FoundationAppConfigRepositoryImpl("VirtoCommerce");
-			return retVal;
-		}
+	
 	}
 }

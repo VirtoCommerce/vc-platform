@@ -1,33 +1,50 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace VirtoCommerce.Platform.Core.Caching
 {
     public class CacheManager
     {
-        private readonly Func<string, ICacheProvider> _cacheProviderFactory;
-        private readonly Func<string, CacheSettings> _cacheSettingFactory;
-        private static readonly CacheManager _noCacheManager = new CacheManager(x => null, x => null);
+        private readonly Dictionary<string, ICacheProvider> _cacheProviders;
+        private readonly List<CacheSettings> _cacheSettings;
 
-        public CacheManager(Func<string, ICacheProvider> cacheProviderFactory, Func<string, CacheSettings> settingFactory)
+        public CacheManager(ICacheProvider defaultCacheProvider, CacheSettings[] cacheSettings)
         {
-            _cacheProviderFactory = cacheProviderFactory;
-            _cacheSettingFactory = settingFactory;
+			_cacheSettings = new List<CacheSettings>();
+			if(cacheSettings != null)
+			{
+				_cacheSettings.AddRange(cacheSettings);
+			}
+			_cacheProviders = new Dictionary<string, ICacheProvider>();
+			AddCacheProvider("default", defaultCacheProvider);
         }
 
-        public static CacheManager NoCache
-        {
-            get
-            {
-                return _noCacheManager;
-            }
-        }
+		public void AddCacheSettings(CacheSettings[] cacheSettings)
+		{
+			if(cacheSettings == null)
+			{
+				throw new ArgumentNullException("cacheSettings");
+			}
+			_cacheSettings.AddRange(cacheSettings.Where(x => !_cacheSettings.Contains(x)));
+		}
+
+		public void AddCacheProvider(string providerName, ICacheProvider cacheProvider)
+		{
+			if (!_cacheProviders.ContainsKey(providerName))
+			{
+				_cacheProviders.Add(providerName, cacheProvider);
+			}
+		}
+
+      
 
         public void Put(CacheKey cacheKey, object cacheValue)
         {
             if (cacheKey == null)
                 throw new ArgumentNullException("cacheKey");
 
-            var repository = GetRepository(cacheKey.CacheGroup);
+            var repository = GetProvider(cacheKey.CacheGroup);
             if (repository != null)
             {
                 var expirationTimeout = GetExpirationTimeoutByCacheGroup(cacheKey.CacheGroup);
@@ -50,7 +67,7 @@ namespace VirtoCommerce.Platform.Core.Caching
             }
             T retVal = default(T);
 
-            var repository = GetRepository(cacheKey.CacheGroup);
+            var repository = GetProvider(cacheKey.CacheGroup);
 
             if (repository != null)
             {
@@ -83,7 +100,7 @@ namespace VirtoCommerce.Platform.Core.Caching
 
             T retVal;
 
-            var repository = GetRepository(cacheKey.CacheGroup);
+            var repository = GetProvider(cacheKey.CacheGroup);
 
             if (repository == null)
             {
@@ -117,7 +134,7 @@ namespace VirtoCommerce.Platform.Core.Caching
             }
 
             var result = false;
-            var repository = GetRepository(cacheKey.CacheGroup);
+            var repository = GetProvider(cacheKey.CacheGroup);
 
             if (repository != null)
             {
@@ -128,14 +145,24 @@ namespace VirtoCommerce.Platform.Core.Caching
         }
 
 
-        private ICacheProvider GetRepository(string group)
+        private ICacheProvider GetProvider(string group)
         {
             ICacheProvider retVal = null;
 
             var settings = GetSettings(group);
             if (settings != null && settings.IsEnabled)
             {
-                retVal = _cacheProviderFactory(settings.ProviderName);
+				if (!_cacheProviders.TryGetValue(settings.ProviderName, out retVal))
+				{
+					if(String.IsNullOrEmpty(settings.ProviderName))
+					{
+						retVal = _cacheProviders["default"];
+					}
+					else
+					{
+						throw new NullReferenceException("Cache provider " + settings.ProviderName + " not registered");
+					}
+				}
             }
             return retVal;
         }
@@ -153,7 +180,7 @@ namespace VirtoCommerce.Platform.Core.Caching
 
         private CacheSettings GetSettings(string cacheGroup)
         {
-            return _cacheSettingFactory(cacheGroup);
+			return _cacheSettings.FirstOrDefault(x => String.Equals(cacheGroup, x.Group));
         }
     }
 }

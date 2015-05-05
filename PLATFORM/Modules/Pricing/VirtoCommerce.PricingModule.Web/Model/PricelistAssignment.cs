@@ -2,11 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
-using VirtoCommerce.Foundation.Frameworks;
-
+using VirtoCommerce.Platform.Core.Common;
 namespace VirtoCommerce.PricingModule.Web.Model
 {
-	public class PricelistAssignment : Entity
+	public class PricelistAssignment : AuditableEntity
 	{
 		public string CatalogName { get; set; }
 		public string CatalogId { get; set; }

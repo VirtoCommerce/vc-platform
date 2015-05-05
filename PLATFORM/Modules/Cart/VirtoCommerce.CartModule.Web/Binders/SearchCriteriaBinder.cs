@@ -4,8 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Http.ModelBinding;
 using VirtoCommerce.CatalogModule.Web.Model;
-using VirtoCommerce.Foundation.Frameworks.Extensions;
-
+using VirtoCommerce.Platform.Core.Common;
 namespace VirtoCommerce.CartModule.Web.Binders
 {
 

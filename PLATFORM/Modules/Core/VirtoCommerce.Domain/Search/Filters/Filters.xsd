@@ -1,0 +1,130 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	<xs:complexType name="PropertyValue">
+		<xs:attribute name="id" type="xs:string" use="required" />
+		<xs:attribute name="value" type="xs:string" use="required" />
+		<xs:attribute name="language" type="xs:string" use="optional" />
+	</xs:complexType>
+
+	<xs:complexType name="FilterProperty">
+		<xs:sequence>
+			<xs:element maxOccurs="unbounded" name="simple" type="PropertyValue"/>
+		</xs:sequence>
+		<xs:attribute name="key" type="xs:string" use="required" />
+		<xs:attribute name="localized" type="xs:boolean" use="required" />
+	</xs:complexType>
+
+	<xs:complexType name="PropertyDisplay">
+		<xs:sequence>
+			<xs:element name="value" type="xs:string" />
+			<xs:element name="seo" type="xs:string" />
+		</xs:sequence>
+		<xs:attribute name="language" type="xs:string" use="required" />
+	</xs:complexType>
+
+	<xs:complexType name="RangeValue">
+		<xs:sequence>
+			<xs:element maxOccurs="unbounded" name="display" type="PropertyDisplay"/>
+		</xs:sequence>
+		<xs:attribute name="lower" type="xs:string" use="required" />
+		<xs:attribute name="upper" type="xs:string" use="required" />
+		<xs:attribute name="id" type="xs:string" use="required" />
+	</xs:complexType>
+
+	<xs:complexType name="FilterRange">
+		<xs:sequence>
+			<xs:element maxOccurs="unbounded" name="range" type="RangeValue"/>
+		</xs:sequence>
+		<xs:attribute name="key" type="xs:string" use="required" />
+		<xs:attribute name="localized" type="xs:boolean" use="required" />
+	</xs:complexType>
+
+	<xs:complexType name="FilterPriceRange">
+		<xs:sequence>
+			<xs:element maxOccurs="unbounded" name="range" type="RangeValue"/>
+		</xs:sequence>
+		<xs:attribute name="currency" type="xs:string" use="required" />
+		<xs:attribute name="localized" type="xs:boolean" use="required" />
+	</xs:complexType>
+
+	<xs:complexType name="FilteredBrowsing">
+		<xs:sequence>
+			<xs:element minOccurs="0" maxOccurs="unbounded" name="property" type="FilterProperty"></xs:element>
+			<xs:element minOccurs="0" maxOccurs="unbounded" name="propertyRange" type="FilterRange"></xs:element>
+			<xs:element minOccurs="0" maxOccurs="unbounded" name="price" type="FilterPriceRange"></xs:element>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:element name="browsing" type="FilteredBrowsing">
+	</xs:element>
+
+	<!-- OLD DEFINITIONS -->
+	<!--
+	<xs:complexType name="Description">
+		<xs:simpleContent>
+			<xs:extension base="xs:string">
+				<xs:attribute name="locale" type="xs:string" use="required" />
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+	<xs:complexType name="Descriptions">
+		<xs:sequence>
+			<xs:element maxOccurs="unbounded" name="Description" type="Description"/>
+		</xs:sequence>
+		<xs:attribute name="defaultLocale" type="xs:string" use="required" />
+	</xs:complexType>
+	<xs:complexType name="RangeValue">
+		<xs:sequence>
+			<xs:element name="Descriptions" type="Descriptions"></xs:element>
+		</xs:sequence>
+		<xs:attribute name="key" type="xs:string" use="required" />
+		<xs:attribute name="locale" type="xs:string" use="optional" />
+		<xs:attribute name="lowerbound" type="xs:string" use="optional" />
+		<xs:attribute name="upperbound" type="xs:string" use="optional" />
+		<xs:attribute name="lowerboundincluded" type="xs:boolean" default="false" use="optional" />
+		<xs:attribute name="upperboundincluded" type="xs:boolean" default="true" use="optional" />
+		<xs:attribute name="numeric" type="xs:boolean" default="false" use="optional" />
+	</xs:complexType>
+	<xs:complexType name="PriceRangeValue">
+		<xs:sequence>
+			<xs:element name="Descriptions" type="Descriptions"></xs:element>
+		</xs:sequence>
+		<xs:attribute name="key" type="xs:string" use="required" />
+		<xs:attribute name="locale" type="xs:string" use="optional" />
+		<xs:attribute name="lowerbound" type="xs:string" use="optional" />
+		<xs:attribute name="upperbound" type="xs:string" use="optional" />
+		<xs:attribute name="lowerboundincluded" type="xs:boolean" default="false" use="optional" />
+		<xs:attribute name="upperboundincluded" type="xs:boolean" default="true" use="optional" />
+		<xs:attribute name="currency" type="xs:string" use="required" />
+	</xs:complexType>
+	<xs:complexType name="SimpleValue">
+		<xs:sequence>
+			<xs:element name="Descriptions" type="Descriptions"></xs:element>
+		</xs:sequence>
+		<xs:attribute name="key" type="xs:string" use="required" />
+		<xs:attribute name="value" type="xs:string" use="required" />
+		<xs:attribute name="numeric" type="xs:boolean" default="false" use="optional" />
+		<xs:attribute name="locale" type="xs:string" use="optional" />
+	</xs:complexType>
+	<xs:complexType name="SearchFilter">
+		<xs:sequence>
+			<xs:element name="Descriptions" type="Descriptions"></xs:element>
+			<xs:element name="Values">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element minOccurs="0" maxOccurs="unbounded" name="RangeValue" type="RangeValue"></xs:element>
+						<xs:element minOccurs="0" maxOccurs="unbounded" name="PriceRangeValue" type="PriceRangeValue"></xs:element>
+						<xs:element minOccurs="0" maxOccurs="unbounded" name="SimpleValue" type="SimpleValue"></xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute name="field" type="xs:string" use="required" />
+	</xs:complexType>
+	<xs:complexType name="SearchFilters">
+		<xs:sequence>
+			<xs:element maxOccurs="unbounded" minOccurs="1" name="Filter" type="SearchFilter"></xs:element>
+		</xs:sequence>
+	</xs:complexType>
+-->
+</xs:schema>

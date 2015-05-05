@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using VirtoCommerce.Foundation.Frameworks;
+using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.Domain.Pricing.Model
 {
-	public class PricelistAssignment : Entity
+	public class PricelistAssignment : AuditableEntity
 	{
 		public string CatalogId { get; set; }
 		public string PriceListId { get; set; }

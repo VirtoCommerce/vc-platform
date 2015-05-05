@@ -1,15 +1,15 @@
 ﻿using System;
 using System.Linq;
 using Omu.ValueInjecter;
-using VirtoCommerce.Foundation.Assets.Services;
 using moduleModel = VirtoCommerce.Domain.Catalog.Model;
 using googleModel = Google.Apis.ShoppingContent.v2.Data;
+using VirtoCommerce.Platform.Core.Asset;
 
 namespace GoogleShopping.MerchantModule.Web.Converters
 {
     public static class ProductConverter
     {
-        public static googleModel.Product ToGoogleModel(this moduleModel.CatalogProduct product, IAssetUrlResolver assetUrlResolver, moduleModel.Property[] properties = null)
+        public static googleModel.Product ToGoogleModel(this moduleModel.CatalogProduct product, IBlobUrlResolver assetUrlResolver, moduleModel.Property[] properties = null)
         {
             var retVal = new googleModel.Product();
             retVal.InjectFrom(product);
@@ -42,7 +42,7 @@ namespace GoogleShopping.MerchantModule.Web.Converters
             return retVal;
         }
 
-        public static moduleModel.CatalogProduct ToModuleModel(this googleModel.Product product, IAssetUrlResolver assetUrlResolver)
+		public static moduleModel.CatalogProduct ToModuleModel(this googleModel.Product product, IBlobUrlResolver assetUrlResolver)
         {
             var retVal = new moduleModel.CatalogProduct();
             retVal.InjectFrom(product);

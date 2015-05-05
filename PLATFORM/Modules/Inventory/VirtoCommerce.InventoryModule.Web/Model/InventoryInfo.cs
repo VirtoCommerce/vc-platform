@@ -1,6 +1,6 @@
 ﻿using System;
 using VirtoCommerce.Domain.Inventory.Model;
-using VirtoCommerce.Foundation.Frameworks;
+using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.InventoryModule.Web.Model
 {

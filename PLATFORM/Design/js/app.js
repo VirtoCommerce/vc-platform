@@ -103,16 +103,11 @@ angular.module('app')
         }
 
         $scope.standardItems = [
-            { sizeX: 2, sizeY: 1, row: 0, col: 0, template: 'tmp1.html', data: { name: 'naME1' } },
-            { sizeX: 3, sizeY: 3, row: 0, col: 2, template: 'graph.html', data: { chartObject: $scope.chartObject } },
-            { sizeX: 1, sizeY: 1, row: 0, col: 5, template: 'tmp2.html', data: { name: 'naME4' } },
-            { sizeX: 1, sizeY: 1, row: 1, col: 0, template: 'tmp1.html', data: { name: 'naME5' } },
-            { sizeX: 1, sizeY: 1, row: 1, col: 1, template: 'tmp2.html', data: { name: 'naME5' } },
-            { sizeX: 1, sizeY: 2, row: 1, col: 5, template: 'tmp1.html', data: { name: 'naME7' } },
-            { sizeX: 2, sizeY: 1, row: 2, col: 0, template: 'tmp2.html', data: { name: 'naME8' } },
-            { sizeX: 3, sizeY: 1, row: 3, col: 1, template: 'tmp1.html', data: { name: 'naME9' } },
-            { sizeX: 1, sizeY: 1, row: 3, col: 0, template: 'tmp2.html', data: { name: 'naME0' } },
-            { sizeX: 1, sizeY: 1, row: 3, col: 5, template: 'tmp1.html', data: { name: 'naME-' } }
+            { sizeX: 2, sizeY: 1, template: 'tmp1.html', data: { name: 'Modules', count: 30 } },
+            { sizeX: 3, sizeY: 3, template: 'graph.html', data: { chartObject: $scope.chartObject } },
+            { sizeX: 1, sizeY: 1, row: 2, col: 1, template: 'tmp1.html', data: { name: 'Catalogs', count: 5 } },
+            { sizeX: 1, sizeY: 1, row: 2, col: 0, template: 'tmp1.html', data: { name: 'Products', count: 456 } },
+            { sizeX: 1, sizeY: 1, row: 0, col: 5, template: 'tmp2.html', data: { name: 'Graphic', ico: 'fa-signal' } },
         ];
         $scope.gridsterOpts = {
             minRows: 2, // the minimum height of the grid, in rows

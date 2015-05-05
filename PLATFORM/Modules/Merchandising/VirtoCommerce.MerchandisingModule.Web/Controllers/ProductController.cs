@@ -5,68 +5,48 @@ using System.Net;
 using System.Web.Http;
 using System.Web.Http.Description;
 using System.Web.Http.ModelBinding;
-using VirtoCommerce.CatalogModule.Data.Repositories;
+using VirtoCommerce.Domain.Catalog.Model;
 using VirtoCommerce.Domain.Catalog.Services;
-using VirtoCommerce.Foundation.AppConfig.Model;
-using VirtoCommerce.Foundation.Assets.Services;
-using VirtoCommerce.Foundation.Catalogs.Search;
-using VirtoCommerce.Foundation.Catalogs.Services;
-using VirtoCommerce.Foundation.Frameworks;
-using VirtoCommerce.Foundation.Search;
-using VirtoCommerce.Foundation.Search.Schemas;
-using VirtoCommerce.Foundation.Stores.Repositories;
+using VirtoCommerce.Domain.Search;
+using VirtoCommerce.Domain.Search.Services;
+using VirtoCommerce.Domain.Store.Services;
 using VirtoCommerce.MerchandisingModule.Web.Binders;
 using VirtoCommerce.MerchandisingModule.Web.Converters;
 using VirtoCommerce.MerchandisingModule.Web.Model;
-using VirtoCommerce.MerchandisingModule.Web.Services;
 using VirtoCommerce.Platform.Core.Asset;
 using VirtoCommerce.Platform.Core.Common;
-using VirtoCommerce.Platform.Core.Settings;
 using moduleModel = VirtoCommerce.Domain.Catalog.Model;
+using VirtoCommerce.MerchandisingModule.Web.Services;
+using VirtoCommerce.Platform.Core.Caching;
 
 namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 {
     [RoutePrefix("api/mp/products")]
-    public class ProductController : BaseController
+    public class ProductController : ApiController
     {
-        #region Fields
+		private readonly ICategoryService _categoryService;
+		private readonly IItemService _itemService;
+		private readonly ICatalogSearchService _searchService;
+		private readonly IStoreService _storeService;
+		private readonly IBlobUrlResolver _blobUrlResolver;
+		private readonly IBrowseFilterService _browseFilterService;
+		private readonly IItemBrowsingService _browseService;
+		private readonly CacheManager _cacheManager;
 
-        private readonly IBlobUrlResolver _blobUrlResolver;
-        private readonly IBrowseFilterService _browseFilterService;
-        private readonly IItemBrowsingService _browseService;
-
-        private readonly Func<ICatalogOutlineBuilder> _catalogOutlineBuilderFactory;
-        private readonly Func<IFoundationAppConfigRepository> _foundationAppConfigRepFactory;
-        private readonly Func<IFoundationCatalogRepository> _foundationCatalogRepositoryFactory;
-        private readonly IItemService _itemService;
-
-        #endregion
-
-        #region Constructors and Destructors
-
-        public ProductController(
-            IItemService itemService,
-            IItemBrowsingService browseService,
-            IBrowseFilterService browseFilterService,
-            Func<IFoundationCatalogRepository> foundationCatalogRepositoryFactory,
-            Func<IFoundationAppConfigRepository> foundationAppConfigRepFactory,
-            Func<ICatalogOutlineBuilder> catalogOutlineBuilderFactory,
-            Func<IStoreRepository> storeRepository,
-            IBlobUrlResolver blobUrlResolver,
-            ISettingsManager settingsManager,
-            ICacheRepository cache)
-            : base(storeRepository, settingsManager, cache)
+		public ProductController(ICatalogSearchService searchService, ICategoryService categoryService,
+								 IStoreService storeService, IItemService itemService, IBlobUrlResolver blobUrlResolver,
+								 IBrowseFilterService browseFilterService, IItemBrowsingService browseService, CacheManager cacheManager)
         {
-            this._itemService = itemService;
-            this._foundationCatalogRepositoryFactory = foundationCatalogRepositoryFactory;
-            this._foundationAppConfigRepFactory = foundationAppConfigRepFactory;
-            this._catalogOutlineBuilderFactory = catalogOutlineBuilderFactory;
-			this._blobUrlResolver = blobUrlResolver;
-            this._browseService = browseService;
-            this._browseFilterService = browseFilterService;
+			_itemService = itemService;
+			_storeService = storeService;
+            _searchService = searchService;
+            _categoryService = categoryService;
+			_blobUrlResolver = blobUrlResolver;
+			_browseFilterService = browseFilterService;
+			_browseService = browseService;
+			_cacheManager = cacheManager;
         }
 
-        #endregion
 
         #region Public Methods and Operators
 
@@ -74,26 +54,20 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
         [ResponseType(typeof(Product))]
         [ClientCache(Duration = 30)]
         [Route("{product}")]
-        public IHttpActionResult GetProduct(
-            string store,
-            string product,
-            [FromUri] moduleModel.ItemResponseGroup responseGroup = moduleModel.ItemResponseGroup.ItemLarge,
-            string language = "en-us")
+        public IHttpActionResult GetProduct(string store,  string product, [FromUri] moduleModel.ItemResponseGroup responseGroup = moduleModel.ItemResponseGroup.ItemLarge, string language = "en-us")
         {
-            var catalog = this.GetCatalogId(store);
-            var result = this._itemService.GetById(product, responseGroup);
+			var catalog = _storeService.GetById(store).Catalog;
+            var item = _itemService.GetById(product, responseGroup);
 
-            if (result != null)
+            if (product != null)
             {
-                var webModelProduct = result.ToWebModel(this._blobUrlResolver);
-                //Build category path outline for requested catalog, can be virtual catalog as well
-                webModelProduct.Outline =
-                    this._catalogOutlineBuilderFactory()
-                        .BuildCategoryOutline(catalog, result.Id)
-                        .ToString("/")
-                        .ToLowerInvariant();
-                webModelProduct.Outline = webModelProduct.Outline.Replace(catalog + "/", "");
-                return this.Ok(webModelProduct);
+				var webModelProduct = item.ToWebModel(_blobUrlResolver);
+				if(item.CategoryId != null)
+				{
+					var category = _categoryService.GetById(item.CategoryId);
+					webModelProduct.Outline = string.Join("/", category.Parents.Select(x => x.Id)) + "/" + category.Id;
+				}
+			    return this.Ok(webModelProduct);
             }
 
             return this.StatusCode(HttpStatusCode.NotFound);
@@ -104,50 +78,46 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
         [ResponseType(typeof(Product))]
         [ClientCache(Duration = 30)]
         [Route("")]
-        public IHttpActionResult GetProductByCode(
-            string store,
-            [FromUri] string code,
-            [FromUri] moduleModel.ItemResponseGroup responseGroup = moduleModel.ItemResponseGroup.ItemLarge,
-            string language = "en-us")
+        public IHttpActionResult GetProductByCode(string store, [FromUri] string code, [FromUri] moduleModel.ItemResponseGroup responseGroup = moduleModel.ItemResponseGroup.ItemLarge, string language = "en-us")
         {
-            //var catalog = GetCatalogId(store);
+			var catalog = _storeService.GetById(store).Catalog;
+			var searchCriteria = new SearchCriteria
+			{
+				ResponseGroup = ResponseGroup.WithProducts,
+				Code = code,
+				CatalogId = catalog
+			};
 
-            using (var repository = this._foundationCatalogRepositoryFactory())
-            {
-                //Cannot filter by catalogId here because it fails when catalog is virtual
-                var itemId = repository.Items.Where(x => x.Code == code).Select(x => x.ItemId).FirstOrDefault();
-                if (itemId != null)
-                {
-                    return this.GetProduct(store, itemId, responseGroup);
-                }
-            }
-            return this.StatusCode(HttpStatusCode.NotFound);
+			var result = _searchService.Search(searchCriteria);
+			if (result.Products != null && result.Products.Any())
+			{
+				var item = _itemService.GetById(result.Products.First().Id, ItemResponseGroup.ItemLarge);
+				return Ok(item.ToWebModel(_blobUrlResolver));
+			}
+			return this.StatusCode(HttpStatusCode.NotFound);
         }
 
         [HttpGet]
         [ResponseType(typeof(Product))]
         [ClientCache(Duration = 30)]
         [Route("")]
-        public IHttpActionResult GetProductByKeyword(
-            string store,
-            [FromUri] string keyword,
-            [FromUri] moduleModel.ItemResponseGroup responseGroup = moduleModel.ItemResponseGroup.ItemLarge,
-            string language = "en-us")
+        public IHttpActionResult GetProductByKeyword(string store, [FromUri] string keyword, [FromUri] moduleModel.ItemResponseGroup responseGroup = moduleModel.ItemResponseGroup.ItemLarge, string language = "en-us")
         {
-            using (var appConfigRepo = this._foundationAppConfigRepFactory())
-            {
-                var keywordValue =
-                    appConfigRepo.SeoUrlKeywords.FirstOrDefault(
-                        x => x.KeywordType == (int)SeoUrlKeywordTypes.Item
-                            && x.Keyword.Equals(keyword, StringComparison.OrdinalIgnoreCase));
+			var catalog = _storeService.GetById(store).Catalog;
+			var searchCriteria = new SearchCriteria
+			{
+				ResponseGroup = ResponseGroup.WithProducts,
+				SeoKeyword = keyword,
+				CatalogId = catalog
+			};
 
-                if (keywordValue != null)
-                {
-                    var result = this._itemService.GetById(keywordValue.KeywordValue, responseGroup);
-                    return this.Ok(result.ToWebModel(this._blobUrlResolver));
-                }
-            }
-            return this.StatusCode(HttpStatusCode.NotFound);
+			var result = _searchService.Search(searchCriteria);
+			if (result.Products != null && result.Products.Any())
+			{
+				var item = _itemService.GetById(result.Products.First().Id, ItemResponseGroup.ItemLarge);
+				return Ok(item.ToWebModel(_blobUrlResolver));
+			}
+			return this.StatusCode(HttpStatusCode.NotFound);
         }
 
         /// <summary>
@@ -166,24 +136,19 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
         [ClientCache(Duration = 30)]
         [Route("")]
         [ResponseType(typeof(ProductSearchResult))]
-        public IHttpActionResult Search(
-            string store,
-            string[] priceLists,
-            [ModelBinder(typeof(SearchParametersBinder))] SearchParameters parameters,
-            [FromUri] moduleModel.ItemResponseGroup responseGroup = moduleModel.ItemResponseGroup.ItemMedium,
-            [FromUri] string outline = "",
-            string language = "en-us",
-            string currency = "USD")
+        public IHttpActionResult Search(string store, string[] priceLists, [ModelBinder(typeof(SearchParametersBinder))] SearchParameters parameters,
+										[FromUri] moduleModel.ItemResponseGroup responseGroup = moduleModel.ItemResponseGroup.ItemMedium,
+										[FromUri] string outline = "", string language = "en-us", string currency = "USD")
         {
             var context = new Dictionary<string, object>
                           {
                               { "StoreId", store },
                           };
 
-            var catalog = this.GetCatalogId(store);
+			var catalog = _storeService.GetById(store).Catalog;
             string categoryId = null;
 
-            var criteria = new CatalogItemSearchCriteria { Locale = language, Catalog = catalog.ToLowerInvariant() };
+            var criteria = new CatalogIndexedSearchCriteria { Locale = language, Catalog = catalog.ToLowerInvariant() };
 
             if (!string.IsNullOrWhiteSpace(outline))
             {
@@ -193,7 +158,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
             }
 
             // Now fill in filters
-            var filters = this._browseFilterService.GetFilters(context);
+            var filters = _browseFilterService.GetFilters(context);
 
             // Add all filters
             foreach (var filter in filters)
@@ -226,7 +191,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
                             && (!(x is PriceRangeFilter)
                                 || ((PriceRangeFilter)x).Currency.Equals(currency, StringComparison.OrdinalIgnoreCase)));
 
-                    var appliedFilter = this._browseFilterService.Convert(filter, facets[key]);
+                    var appliedFilter = _browseFilterService.Convert(filter, facets[key]);
                     criteria.Apply(appliedFilter);
                 }
             }
@@ -283,7 +248,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
                         sortObject = new SearchSort(criteria.ReviewsTotalField, isDescending);
                         break;
                     default:
-                        sortObject = CatalogItemSearchCriteria.DefaultSortOrder;
+                        sortObject = CatalogIndexedSearchCriteria.DefaultSortOrder;
                         break;
                 }
 
@@ -293,51 +258,14 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
             #endregion
 
             //Load ALL products 
-            var searchResults = this._browseService.SearchItems(criteria, responseGroup);
+			var cacheKey = CacheKey.Create("ProductController.Search", criteria.CacheKey);
+            var searchResults = _cacheManager.Get(cacheKey, ()=> _browseService.SearchItems(criteria, responseGroup));
 
             return this.Ok(searchResults);
         }
 
         #endregion
 
-        /*
-        [HttpPost]
-        [ResponseType(typeof(ResponseCollection<Product>))]
-        [Route("")]
-        public IHttpActionResult GetProducts(string store, string[] productIds, [FromUri]moduleModel.ItemResponseGroup responseGroup = moduleModel.ItemResponseGroup.ItemLarge, string language = "en-us")
-        {
-            var catalog = GetCatalogId(store);
-            var products = _itemService.GetByIds(productIds, responseGroup);
-            var response = new ResponseCollection<Product>();
-            if (products == null)
-            {
-                foreach (var product in products)
-                {
-                    response.Items.Add(product.ToWebModel(_assetUri));
-                }
-                //Lets treat product as slug
-                using (var appConfigRepo = _foundationAppConfigRepFactory())
-                {
-                    var keyword = appConfigRepo.SeoUrlKeywords.FirstOrDefault(x => x.KeywordType == (int)SeoUrlKeywordTypes.Item
-                        && x.Keyword.Equals(product, StringComparison.InvariantCultureIgnoreCase));
-
-                    if (keyword != null)
-                    {
-                        result = _itemService.GetById(keyword.KeywordValue, responseGroup);
-                    }
-                }
-            }
-
-            if (result != null)
-            {
-                var webModelProduct = result.ToWebModel(_assetUri);
-                //Build category path outline for requested catalog, can be virtual catalog as well
-                webModelProduct.Outline = _catalogOutlineBuilderFactory().BuildCategoryOutline(catalog, result.Id).ToString("/").ToLowerInvariant();
-                webModelProduct.Outline = webModelProduct.Outline.Replace(catalog + "/", "");
-                return Ok(webModelProduct);
-            }
-            return StatusCode(HttpStatusCode.NotFound);
-        }
-         * */
+      
     }
 }

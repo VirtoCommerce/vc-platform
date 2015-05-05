@@ -3,12 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Data.Entity;
 using VirtoCommerce.Domain.Marketing.Services;
-using VirtoCommerce.Foundation.Frameworks.Caching;
 using VirtoCommerce.MarketingModule.Data.Repositories;
-using foundationModel = VirtoCommerce.Foundation.Marketing.Model;
+using dataModel = VirtoCommerce.MarketingModule.Data.Model;
 using coreModel = VirtoCommerce.Domain.Marketing.Model;
-using VirtoCommerce.Foundation.Data.Infrastructure;
-using VirtoCommerce.Foundation.Frameworks.Extensions;
 using Omu.ValueInjecter;
 using VirtoCommerce.CustomerModule.Data.Converters;
 using ExpressionSerialization;
@@ -17,14 +14,12 @@ namespace VirtoCommerce.MarketingModule.Data.Services
 {
 	public class MarketingSearchServiceImpl : IMarketingSearchService
 	{
-		private readonly Func<IFoundationPromotionRepository> _promotionRepositoryFactory;
-		private readonly Func<IFoundationDynamicContentRepository> _contentRepositoryFactory;
+		private readonly Func<IMarketingRepository> _repositoryFactory;
 		private readonly IMarketingExtensionManager _customPromotionManager;
 
-		public MarketingSearchServiceImpl(Func<IFoundationPromotionRepository> repositoryFactory, Func<IFoundationDynamicContentRepository> contentRepositoryFactory, IMarketingExtensionManager customPromotionManager)
+		public MarketingSearchServiceImpl(Func<IMarketingRepository> repositoryFactory, IMarketingExtensionManager customPromotionManager)
 		{
-			_promotionRepositoryFactory = repositoryFactory;
-			_contentRepositoryFactory = contentRepositoryFactory;
+			_repositoryFactory = repositoryFactory;
 			_customPromotionManager = customPromotionManager;
 		}
 
@@ -67,10 +62,10 @@ namespace VirtoCommerce.MarketingModule.Data.Services
 		#endregion
 		private void SearchFolders(coreModel.MarketingSearchCriteria criteria, coreModel.MarketingSearchResult result)
 		{
-			using (var repository = _contentRepositoryFactory())
+			using (var repository = _repositoryFactory())
 			{
 				var query = repository.Folders.Where(x => x.ParentFolderId == criteria.FolderId);
-				var folderIds = query.Select(x => x.DynamicContentFolderId).ToArray();
+				var folderIds = query.Select(x => x.Id).ToArray();
 
 				result.ContentFolders = new List<coreModel.DynamicContentFolder>();
 				foreach(var folderId in folderIds)
@@ -98,12 +93,12 @@ namespace VirtoCommerce.MarketingModule.Data.Services
 
 		private void SearchContentItems(coreModel.MarketingSearchCriteria criteria, coreModel.MarketingSearchResult result)
 		{
-			using (var repository = _contentRepositoryFactory())
+			using (var repository = _repositoryFactory())
 			{
 				var query = repository.Items.Include(x => x.PropertyValues).Where(x => x.FolderId == criteria.FolderId);
 				result.TotalCount += query.Count();
 
-				result.ContentItems = query.OrderBy(x => x.DynamicContentItemId)
+				result.ContentItems = query.OrderBy(x => x.Id)
 											  .Skip(criteria.Start)
 											  .Take(criteria.Count)
 											  .ToArray()
@@ -115,12 +110,12 @@ namespace VirtoCommerce.MarketingModule.Data.Services
 
 		private void SearchContentPlaces(coreModel.MarketingSearchCriteria criteria, coreModel.MarketingSearchResult result)
 		{
-			using (var repository = _contentRepositoryFactory())
+			using (var repository = _repositoryFactory())
 			{
 				var query = repository.Places.Where(x => x.FolderId == criteria.FolderId);
 				result.TotalCount += query.Count();
 
-				result.ContentPlaces = query.OrderBy(x => x.DynamicContentPlaceId)
+				result.ContentPlaces = query.OrderBy(x => x.Id)
 											  .Skip(criteria.Start)
 											  .Take(criteria.Count)
 											  .ToArray()
@@ -132,12 +127,12 @@ namespace VirtoCommerce.MarketingModule.Data.Services
 
 		private void SearchContentPublications(coreModel.MarketingSearchCriteria criteria, coreModel.MarketingSearchResult result)
 		{
-			using (var repository = _contentRepositoryFactory())
+			using (var repository = _repositoryFactory())
 			{
 				var query = repository.PublishingGroups;
 				result.TotalCount += query.Count();
 
-				result.ContentPublications = query.OrderBy(x => x.DynamicContentPublishingGroupId)
+				result.ContentPublications = query.OrderBy(x => x.Id)
 											  .Skip(criteria.Start)
 											  .Take(criteria.Count)
 											  .ToArray()
@@ -150,9 +145,9 @@ namespace VirtoCommerce.MarketingModule.Data.Services
 		{
 			var promotions = new List<coreModel.Promotion>();
 			var totalCount = 0;
-			using (var repository = _promotionRepositoryFactory())
+			using (var repository = _repositoryFactory())
 			{
-				promotions = repository.Promotions.OrderBy(x => x.PromotionId)
+				promotions = repository.Promotions.OrderBy(x => x.Id)
 											  .Skip(criteria.Start)
 											  .Take(criteria.Count)
 											  .ToArray()

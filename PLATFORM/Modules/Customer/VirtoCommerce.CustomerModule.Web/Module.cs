@@ -1,4 +1,5 @@
-﻿using Microsoft.Practices.Unity;
+﻿using System.Data.Entity;
+using Microsoft.Practices.Unity;
 using VirtoCommerce.CustomerModule.Data.Repositories;
 using VirtoCommerce.CustomerModule.Data.Services;
 using VirtoCommerce.Domain.Customer.Services;
@@ -21,11 +22,24 @@ namespace VirtoCommerce.CustomerModule.Web
 
         public void SetupDatabase(SampleDataLevel sampleDataLevel)
         {
-            using (var context = new CustomerRepositoryImpl())
-            {
-                var initializer = new SetupDatabaseInitializer<CustomerRepositoryImpl, VirtoCommerce.CustomerModule.Data.Migrations.Configuration>();
-                initializer.InitializeDatabase(context);
-            }
+			using (var db = new CustomerRepositoryImpl("VirtoCommerce"))
+			{
+				IDatabaseInitializer<CustomerRepositoryImpl> initializer;
+
+				switch (sampleDataLevel)
+				{
+					case SampleDataLevel.Full:
+					case SampleDataLevel.Reduced:
+						initializer = new SqlCustomerSampleDatabaseInitializer();
+						break;
+					default:
+						initializer = new SetupDatabaseInitializer<CustomerRepositoryImpl, VirtoCommerce.CustomerModule.Data.Migrations.Configuration>();
+						break;
+				}
+
+				initializer.InitializeDatabase(db);
+			}
+
         }
 
         public void Initialize()

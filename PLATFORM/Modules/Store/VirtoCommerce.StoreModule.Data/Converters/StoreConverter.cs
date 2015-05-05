@@ -3,14 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using foundationModel = VirtoCommerce.Foundation.Stores.Model;
+using dataModel = VirtoCommerce.StoreModule.Data.Model;
 using coreModel = VirtoCommerce.Domain.Store.Model;
 using Omu.ValueInjecter;
-using VirtoCommerce.Foundation.Money;
-using VirtoCommerce.Foundation.Frameworks;
 using System.Collections.ObjectModel;
-using VirtoCommerce.Foundation.Frameworks.ConventionInjections;
-using VirtoCommerce.Foundation.Frameworks.Extensions;
+using VirtoCommerce.Platform.Core.Common;
+using VirtoCommerce.Platform.Data.Common;
+using VirtoCommerce.Platform.Data.Common.ConventionInjections;
 
 namespace VirtoCommerce.StoreModule.Data.Converters
 {
@@ -21,31 +20,21 @@ namespace VirtoCommerce.StoreModule.Data.Converters
 		/// </summary>
 		/// <param name="catalogBase"></param>
 		/// <returns></returns>
-		public static coreModel.Store ToCoreModel(this foundationModel.Store dbStore)
+		public static coreModel.Store ToCoreModel(this dataModel.Store dbStore)
 		{
 			if (dbStore == null)
 				throw new ArgumentNullException("dbStore");
 
 			var retVal = new coreModel.Store();
 			retVal.InjectFrom(dbStore);
-			retVal.Id = dbStore.StoreId;
 	
-			retVal.CreatedDate = dbStore.Created.Value;
-			retVal.ModifiedDate = dbStore.LastModified;
 
 			if(dbStore.DefaultCurrency != null)
 			{
 				retVal.DefaultCurrency = (CurrencyCodes?)Enum.Parse(typeof(CurrencyCodes), dbStore.DefaultCurrency, true);
 			}
 			retVal.StoreState = (coreModel.StoreState)dbStore.StoreState;
-			if(dbStore.FulfillmentCenter != null)
-			{
-				retVal.FulfillmentCenter = dbStore.FulfillmentCenter.ToCoreModel();
-			}
-			if (dbStore.ReturnsFulfillmentCenter != null)
-			{
-				retVal.ReturnsFulfillmentCenter = dbStore.ReturnsFulfillmentCenter.ToCoreModel();
-			}
+			
 			retVal.Settings = dbStore.Settings.Select(x => x.ToCoreModel()).ToList();
 			retVal.Languages = dbStore.Languages.Select(x => x.LanguageCode).ToList();
 			retVal.Currencies = dbStore.Currencies.Select(x => (CurrencyCodes)Enum.Parse(typeof(CurrencyCodes), x.CurrencyCode, true)).ToList();
@@ -56,20 +45,14 @@ namespace VirtoCommerce.StoreModule.Data.Converters
 		}
 
 
-		public static foundationModel.Store ToFoundation(this coreModel.Store store)
+		public static dataModel.Store ToDataModel(this coreModel.Store store)
 		{
 			if (store == null)
 				throw new ArgumentNullException("store");
 
-			var retVal = new foundationModel.Store();
+			var retVal = new dataModel.Store();
 
 			retVal.InjectFrom(store);
-
-			if(store.Id != null)
-			{
-				retVal.StoreId = store.Id;
-			}
-
 			retVal.StoreState = (int)store.StoreState;
 			
 			if(store.DefaultCurrency != null)
@@ -78,48 +61,42 @@ namespace VirtoCommerce.StoreModule.Data.Converters
 			}
 			if (store.FulfillmentCenter != null)
 			{
-				retVal.FulfillmentCenter = store.FulfillmentCenter.ToFoundation();
-				retVal.FulfillmentCenterId = retVal.FulfillmentCenter.FulfillmentCenterId;
+				retVal.FulfillmentCenterId = store.FulfillmentCenter.Id;
 			}
 			if (store.ReturnsFulfillmentCenter != null)
 			{
-				retVal.ReturnsFulfillmentCenter = store.ReturnsFulfillmentCenter.ToFoundation();
-				retVal.ReturnsFulfillmentCenterId = retVal.ReturnsFulfillmentCenter.FulfillmentCenterId;
+				retVal.ReturnsFulfillmentCenterId = store.ReturnsFulfillmentCenter.Id;
 			}
-			retVal.Languages = new NullCollection<foundationModel.StoreLanguage>();
 			if (store.Languages != null)
 			{
-				retVal.Languages = new ObservableCollection<foundationModel.StoreLanguage>(store.Languages.Select(x=> new foundationModel.StoreLanguage
+				retVal.Languages = new ObservableCollection<dataModel.StoreLanguage>(store.Languages.Select(x=> new dataModel.StoreLanguage
 					{
 						LanguageCode = x,
-						StoreId = retVal.StoreId
+						StoreId = retVal.Id
 					}));
 			}
-			retVal.Settings = new NullCollection<foundationModel.StoreSetting>();
 			if(store.Settings != null)
 			{
-				retVal.Settings = new ObservableCollection<foundationModel.StoreSetting>(store.Settings.Select(x=>x.ToFoundation()));
+				retVal.Settings = new ObservableCollection<dataModel.StoreSetting>(store.Settings.Select(x=>x.ToDataModel()));
 				foreach(var setting in retVal.Settings)
 				{
-					setting.StoreId = retVal.StoreId;
+					setting.StoreId = retVal.Id;
 				}
 			}
-			retVal.Currencies = new NullCollection<foundationModel.StoreCurrency>();
 			if(store.Currencies != null)
 			{
-				retVal.Currencies = new ObservableCollection<foundationModel.StoreCurrency>(store.Currencies.Select(x => new foundationModel.StoreCurrency
+				retVal.Currencies = new ObservableCollection<dataModel.StoreCurrency>(store.Currencies.Select(x => new dataModel.StoreCurrency
 				{
 					CurrencyCode = x.ToString(),
-					StoreId = retVal.StoreId
+					StoreId = retVal.Id
 				}));
 			}
-			retVal.PaymentGateways = new NullCollection<foundationModel.StorePaymentGateway>();
 			if (store.PaymentGateways != null)
 			{
-				retVal.PaymentGateways = new ObservableCollection<foundationModel.StorePaymentGateway>(store.PaymentGateways.Select(x => new foundationModel.StorePaymentGateway
+				retVal.PaymentGateways = new ObservableCollection<dataModel.StorePaymentGateway>(store.PaymentGateways.Select(x => new dataModel.StorePaymentGateway
 				{
 					 PaymentGateway = x,
-					 StoreId = retVal.StoreId
+					 StoreId = retVal.Id
 				}));
 			}
 			return retVal;
@@ -130,11 +107,12 @@ namespace VirtoCommerce.StoreModule.Data.Converters
 		/// </summary>
 		/// <param name="source"></param>
 		/// <param name="target"></param>
-		public static void Patch(this foundationModel.Store source, foundationModel.Store target)
+		public static void Patch(this dataModel.Store source, dataModel.Store target)
 		{
 			if (target == null)
 				throw new ArgumentNullException("target");
-			var patchInjectionPolicy = new PatchInjection<foundationModel.Store>(x => x.AdminEmail, x => x.Catalog,
+			var patchInjectionPolicy = new PatchInjection<dataModel.Store>(x=>x.FulfillmentCenterId, x=>x.ReturnsFulfillmentCenterId, 
+																		   x => x.AdminEmail, x => x.Catalog,
 																		   x => x.Country, x => x.CreditCardSavePolicy,
 																		   x => x.DefaultCurrency, x => x.DefaultLanguage,
 																		   x => x.Description, x => x.DisplayOutOfStock,
@@ -143,36 +121,27 @@ namespace VirtoCommerce.StoreModule.Data.Converters
 			target.InjectFrom(patchInjectionPolicy, source);
 
 
-			if (source.FulfillmentCenter != null)
-			{
-				target.FulfillmentCenterId = source.FulfillmentCenter.FulfillmentCenterId;
-			}
-
-			if (source.ReturnsFulfillmentCenter != null)
-			{
-				target.ReturnsFulfillmentCenterId = source.ReturnsFulfillmentCenter.FulfillmentCenterId;
-			}
 
 			if (!source.Settings.IsNullCollection())
 			{
-				var settingComparer = AnonymousComparer.Create((foundationModel.StoreSetting x) => x.Name);
+				var settingComparer = AnonymousComparer.Create((dataModel.StoreSetting x) => x.Name);
 				source.Settings.Patch(target.Settings, settingComparer,	(sourceSetting, targetSetting) => sourceSetting.Patch(targetSetting));
 			}
 			if (!source.Languages.IsNullCollection())
 			{
-				var languageComparer = AnonymousComparer.Create((foundationModel.StoreLanguage x) => x.LanguageCode);
+				var languageComparer = AnonymousComparer.Create((dataModel.StoreLanguage x) => x.LanguageCode);
 				source.Languages.Patch(target.Languages, languageComparer, 
 									  (sourceLang, targetLang) =>  targetLang.LanguageCode = sourceLang.LanguageCode);
 			}
 			if (!source.Currencies.IsNullCollection())
 			{
-				var currencyComparer = AnonymousComparer.Create((foundationModel.StoreCurrency x) => x.CurrencyCode);
+				var currencyComparer = AnonymousComparer.Create((dataModel.StoreCurrency x) => x.CurrencyCode);
 				source.Currencies.Patch(target.Currencies, currencyComparer,
 									  (sourceCurrency, targetCurrency) => targetCurrency.CurrencyCode = sourceCurrency.CurrencyCode);
 			}
 			if (!source.PaymentGateways.IsNullCollection())
 			{
-				var paymentComparer = AnonymousComparer.Create((foundationModel.StorePaymentGateway x) => x.PaymentGateway);
+				var paymentComparer = AnonymousComparer.Create((dataModel.StorePaymentGateway x) => x.PaymentGateway);
 				source.PaymentGateways.Patch(target.PaymentGateways, paymentComparer,
 									  (sourceGateway, targetGateway) => targetGateway.PaymentGateway = sourceGateway.PaymentGateway);
 			}

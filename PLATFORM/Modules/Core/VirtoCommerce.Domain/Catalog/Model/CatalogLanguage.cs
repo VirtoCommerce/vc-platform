@@ -1,9 +1,9 @@
 ﻿
+using VirtoCommerce.Platform.Core.Common;
 namespace VirtoCommerce.Domain.Catalog.Model
 {
-    public class CatalogLanguage
+    public class CatalogLanguage : Entity
     {
-		public string Id { get; set; }
 	    public string CatalogId { get; set; }
 		public Catalog Catalog { get; set; }
 

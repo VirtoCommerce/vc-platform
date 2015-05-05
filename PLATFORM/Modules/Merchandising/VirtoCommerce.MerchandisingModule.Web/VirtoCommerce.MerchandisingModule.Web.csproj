@@ -46,10 +46,6 @@
     <Reference Include="EntityFramework.SqlServer">
       <HintPath>..\..\..\packages\EntityFramework.6.1.1\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
-    <Reference Include="Hangfire.Core, Version=1.3.4.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\Hangfire.Core.1.3.4\lib\net45\Hangfire.Core.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="Microsoft.Practices.ServiceLocation, Version=1.3.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\packages\CommonServiceLocator.1.2\lib\portable-windows8+net40+sl5+windowsphone8\Microsoft.Practices.ServiceLocation.dll</HintPath>
@@ -99,34 +95,23 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BackgroundJobs\SearchIndexJobsScheduler.cs" />
-    <Compile Include="BackgroundJobs\SearchIndexJobs.cs" />
     <Compile Include="Binders\SearchParameterBinder.cs" />
     <Compile Include="Binders\CatalogItemSearchCriteriaBinder.cs" />
-    <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\CategoryController.cs" />
-    <Compile Include="Controllers\ContentController.cs" />
+    <Compile Include="Controllers\StoreController.cs" />
     <Compile Include="Controllers\PriceController.cs" />
     <Compile Include="Controllers\ProductController.cs" />
-    <Compile Include="Controllers\ReviewController.cs" />
-    <Compile Include="Controllers\KeywordController.cs" />
-    <Compile Include="Controllers\StoreController.cs" />
     <Compile Include="Converters\AssetConverter.cs" />
     <Compile Include="Converters\AssociationConverter.cs" />
     <Compile Include="Converters\CategoryConverter.cs" />
-    <Compile Include="Converters\DynamicContentItemConverter.cs" />
     <Compile Include="Converters\FacetConverters.cs" />
+    <Compile Include="Converters\KeywordConverter.cs" />
     <Compile Include="Converters\PriceConverter.cs" />
     <Compile Include="Converters\ProductConverter.cs" />
     <Compile Include="Converters\ResponseGroupConverter.cs" />
-    <Compile Include="Converters\ReviewCommentConverter.cs" />
-    <Compile Include="Converters\ReviewConverter.cs" />
-    <Compile Include="Converters\KeywordConverter.cs" />
     <Compile Include="Converters\StoreConverter.cs" />
     <Compile Include="Extensions\ItemServiceExtensions.cs" />
     <Compile Include="Model\Price.cs" />
-    <Compile Include="Services\BrowseFilterServiceExtensions.cs" />
-    <Compile Include="Services\FilterService.cs" />
     <Compile Include="Model\Association.cs" />
     <Compile Include="Model\CategoryInfo.cs" />
     <Compile Include="Model\Facet.cs" />
@@ -138,7 +123,7 @@
     <Compile Include="Model\ReviewComment.cs" />
     <Compile Include="Model\SearchParameters.cs" />
     <Compile Include="Model\SeoKeyword.cs" />
-    <Compile Include="Model\Stores\Store.cs" />
+    <Compile Include="Model\Store.cs" />
     <Compile Include="Module.cs" />
     <Compile Include="Model\CatalogItem.cs" />
     <Compile Include="Model\Category.cs" />
@@ -152,6 +137,8 @@
     <Compile Include="Model\ResponseCollection.cs" />
     <Compile Include="Model\PropertyDictionary.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\BrowseFilterServiceExtensions.cs" />
+    <Compile Include="Services\FilterService.cs" />
     <Compile Include="Services\IItemBrowsingService.cs" />
     <Compile Include="Services\ItemBrowsingService.cs" />
   </ItemGroup>
@@ -172,30 +159,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Core\CommerceFoundation.Data\CommerceFoundation.Data.csproj">
-      <Project>{bb168a74-0f1e-43be-a616-134902238b80}</Project>
-      <Name>CommerceFoundation.Data</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\Core\CommerceFoundation\CommerceFoundation.csproj">
-      <Project>{e7fc9a51-1b39-4bdc-983a-8a059c5fc58b}</Project>
-      <Name>CommerceFoundation</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\Extensions\Azure\CommerceFoundation.Data.Azure\CommerceFoundation.Data.Azure.csproj">
-      <Project>{E3769352-34C8-41A9-A6C8-DA95D7DFF903}</Project>
-      <Name>CommerceFoundation.Data.Azure</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\Extensions\Cache\VirtoCommerce.Caching.HttpCache\VirtoCommerce.Caching.HttpCache.csproj">
-      <Project>{3fe4eb14-557a-46bc-94ad-2e9874f85ace}</Project>
-      <Name>VirtoCommerce.Caching.HttpCache</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\Extensions\Search\ElasticSearchProvider\ElasticSearchProvider.csproj">
-      <Project>{039e7914-2925-44c4-acad-6bccfa2a370e}</Project>
-      <Name>ElasticSearchProvider</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\Extensions\Search\IndexingProviders\VirtoCommerce.Search.Index.csproj">
-      <Project>{9F5493C4-0080-4BB5-9C12-25D0CDBEA2DD}</Project>
-      <Name>VirtoCommerce.Search.Index</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\..\VirtoCommerce.Platform.Core\VirtoCommerce.Platform.Core.csproj">
       <Project>{f7c9313b-522e-4619-abc9-8c7d4600d6b5}</Project>
       <Name>VirtoCommerce.Platform.Core</Name>
@@ -203,10 +166,6 @@
     <ProjectReference Include="..\..\..\VirtoCommerce.Platform.Data\VirtoCommerce.Platform.Data.csproj">
       <Project>{39afd233-b2f7-4178-817d-0a339c57525d}</Project>
       <Name>VirtoCommerce.Platform.Data</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Catalog\VirtoCommerce.CatalogModule.Data\VirtoCommerce.CatalogModule.Data.csproj">
-      <Project>{b8c758d7-822f-40d8-b28c-ef21c873af49}</Project>
-      <Name>VirtoCommerce.CatalogModule.Data</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Core\VirtoCommerce.Domain\VirtoCommerce.Domain.csproj">
       <Project>{67c58a78-ddea-4fa3-a969-1cab582918e4}</Project>

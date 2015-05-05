@@ -7,21 +7,11 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using VirtoCommerce.Domain.Order.Model;
-using VirtoCommerce.Foundation.Frameworks;
-using VirtoCommerce.Foundation.Money;
-
+using VirtoCommerce.Platform.Core.Common;
 namespace VirtoCommerce.OrderModule.Data.Model
 {
-	public abstract class OperationEntity : Entity, IAuditable, IOperation
+	public abstract class OperationEntity : AuditableEntity, IOperation
 	{
-		[Required]
-		public DateTime CreatedDate { get; set; }
-		[Required]
-		[StringLength(64)]
-		public string CreatedBy { get; set; }
-		public DateTime? ModifiedDate { get; set; }
-		[StringLength(64)]
-		public string ModifiedBy { get; set; }
 		[Required]
 		[StringLength(64)]
 		public string Number { get; set; }

@@ -1,14 +1,15 @@
 ﻿using System;
+using System.Data.Entity;
 using Microsoft.Practices.Unity;
+using VirtoCommerce.Domain.Common;
 using VirtoCommerce.Domain.Inventory.Services;
 using VirtoCommerce.Domain.Order.Services;
-using VirtoCommerce.Foundation.Data.Infrastructure.Interceptors;
-using VirtoCommerce.Foundation.Frameworks.Workflow.Services;
-using VirtoCommerce.OrderModule.Data.Orders;
 using VirtoCommerce.OrderModule.Data.Repositories;
 using VirtoCommerce.OrderModule.Data.Services;
 using VirtoCommerce.OrderModule.Data.Workflow;
 using VirtoCommerce.Platform.Core.Modularity;
+using VirtoCommerce.Platform.Data.Infrastructure;
+using VirtoCommerce.Platform.Data.Infrastructure.Interceptors;
 
 namespace VirtoCommerce.OrderModule.Web
 {
@@ -28,7 +29,7 @@ namespace VirtoCommerce.OrderModule.Web
         {
             using (var context = new OrderRepositoryImpl(_connectionStringName))
             {
-                OrderDatabaseInitializer initializer;
+				IDatabaseInitializer<OrderRepositoryImpl> initializer;
 
                 switch (sampleDataLevel)
                 {
@@ -37,7 +38,7 @@ namespace VirtoCommerce.OrderModule.Web
                         initializer = new OrderSampleDatabaseInitializer();
                         break;
                     default:
-                        initializer = new OrderDatabaseInitializer();
+						initializer = new SetupDatabaseInitializer<OrderRepositoryImpl, VirtoCommerce.OrderModule.Data.Migrations.Configuration>();
                         break;
                 }
 

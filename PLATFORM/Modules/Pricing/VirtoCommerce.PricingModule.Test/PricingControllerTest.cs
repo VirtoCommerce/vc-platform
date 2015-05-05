@@ -2,8 +2,7 @@
 using System.Linq;
 using System.Web.Http.Results;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using VirtoCommerce.Foundation.Data.Infrastructure.Interceptors;
-using VirtoCommerce.Foundation.Money;
+using VirtoCommerce.Platform.Data.Infrastructure.Interceptors;
 using VirtoCommerce.PricingModule.Data.Repositories;
 using VirtoCommerce.PricingModule.Data.Services;
 using VirtoCommerce.PricingModule.Web.Controllers.Api;
@@ -56,9 +55,9 @@ namespace VirtoCommerce.PricingModule.Test
 
 		private static PricingController GetController()
 		{
-			Func<IFoundationPricingRepository> repositoryFactory = () =>
+			Func<IPricingRepository> repositoryFactory = () =>
 			{
-				return new FoundationPricingRepositoryImpl("VirtoCommerce", new AuditChangeInterceptor());
+				return new PricingRepositoryImpl("VirtoCommerce", new EntityPrimaryKeyGeneratorInterceptor(), new AuditableInterceptor());
 			};
 
 			var pricingService = new PricingServiceImpl(repositoryFactory);

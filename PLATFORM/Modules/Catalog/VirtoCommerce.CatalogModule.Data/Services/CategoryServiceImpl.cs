@@ -5,93 +5,87 @@ using System.Linq;
 using VirtoCommerce.CatalogModule.Data.Converters;
 using VirtoCommerce.CatalogModule.Data.Repositories;
 using VirtoCommerce.Domain.Catalog.Services;
-using VirtoCommerce.Foundation.Data.Infrastructure;
-using VirtoCommerce.Foundation.Frameworks.Caching;
-using VirtoCommerce.Foundation.Frameworks.Extensions;
-using foundation = VirtoCommerce.Foundation.Catalogs.Model;
-using foundationConfig = VirtoCommerce.Foundation.AppConfig.Model;
-using module = VirtoCommerce.Domain.Catalog.Model;
+using VirtoCommerce.Platform.Core.Caching;
+using VirtoCommerce.Platform.Data.Infrastructure;
+using dataModel = VirtoCommerce.CatalogModule.Data.Model;
+using coreModel = VirtoCommerce.Domain.Catalog.Model;
+using VirtoCommerce.Platform.Core.Common;
+using VirtoCommerce.Domain.Commerce.Services;
+using VirtoCommerce.Domain.Commerce.Model;
 
 namespace VirtoCommerce.CatalogModule.Data.Services
 {
 	public class CategoryServiceImpl : ServiceBase, ICategoryService
     {
-        private readonly Func<IFoundationCatalogRepository> _catalogRepositoryFactory;
-		private readonly Func<IFoundationAppConfigRepository> _appConfigRepositoryFactory;
-        private readonly CacheManager _cacheManager;
-        public CategoryServiceImpl(Func<IFoundationCatalogRepository> catalogRepositoryFactory, Func<IFoundationAppConfigRepository> appConfigRepositoryFactory, 
-								   CacheManager cacheManager)
+        private readonly Func<ICatalogRepository> _catalogRepositoryFactory;
+		private readonly ICommerceService _commerceService;
+        public CategoryServiceImpl(Func<ICatalogRepository> catalogRepositoryFactory, ICommerceService commerceService)
         {
             _catalogRepositoryFactory = catalogRepositoryFactory;
-			_appConfigRepositoryFactory = appConfigRepositoryFactory;
-            _cacheManager = cacheManager;
+			_commerceService = commerceService;
         }
 
         #region ICategoryService Members
 
-        public module.Category GetById(string categoryId)
+        public coreModel.Category GetById(string categoryId)
         {
-			module.Category retVal = null;
+			coreModel.Category retVal = null;
             using (var repository = _catalogRepositoryFactory())
-			using (var appConfigRepository = _appConfigRepositoryFactory())
-            {
+	        {
                 var dbCategory = repository.GetCategoryById(categoryId);
 				if (dbCategory != null)
 				{
 					var dbCatalog = repository.GetCatalogById(dbCategory.CatalogId);
 					var dbProperties = repository.GetAllCategoryProperties(dbCategory);
 					var dbLinks = repository.GetCategoryLinks(categoryId);
-					var seoInfos = appConfigRepository.GetAllSeoInformation(categoryId);
+					var seoInfos = _commerceService.GetSeoKeywordsForEntity(categoryId).ToArray();
 
-					var catalog = dbCatalog.ToModuleModel();
-					var properties = dbProperties.Select(x => x.ToModuleModel(catalog, dbCategory.ToModuleModel(catalog, null, dbLinks)))
+					var catalog = dbCatalog.ToCoreModel();
+					var properties = dbProperties.Select(x => x.ToCoreModel(catalog, dbCategory.ToCoreModel(catalog, null, dbLinks)))
 												 .ToArray();
 					var allParents = repository.GetAllCategoryParents(dbCategory);
 
-					retVal = dbCategory.ToModuleModel(catalog, properties, dbLinks, seoInfos, allParents);
+					retVal = dbCategory.ToCoreModel(catalog, properties, dbLinks, seoInfos, allParents);
 				}
             }
             return retVal;
         }
 
-        public module.Category Create(module.Category category)
+        public coreModel.Category Create(coreModel.Category category)
         {
             if (category == null)
                 throw new ArgumentNullException("category");
 
-            var dbCategory = category.ToFoundation();
-            module.Category retVal = null;
+            var dbCategory = category.ToDataModel();
+            coreModel.Category retVal = null;
             using (var repository = _catalogRepositoryFactory())
-			using (var appConfigRepository = _appConfigRepositoryFactory())
             {
 				//Need add seo separately
 				if (category.SeoInfos != null)
 				{
 					foreach(var seoInfo in category.SeoInfos)
 					{
-						var dbSeoInfo = seoInfo.ToFoundation(category);
-						appConfigRepository.Add(dbSeoInfo);
+						var dbSeoInfo = seoInfo.ToCoreModel(dbCategory);
+						repository.Add(dbSeoInfo);
 					}
 				}
 
                 repository.Add(dbCategory);
 
                 CommitChanges(repository);
-				CommitChanges(appConfigRepository);
             }
-            retVal = GetById(dbCategory.CategoryId);
+            retVal = GetById(dbCategory.Id);
             return retVal;
         }
 
-        public void Update(module.Category[] categories)
+        public void Update(coreModel.Category[] categories)
         {
             using (var repository = _catalogRepositoryFactory())
-			using (var appConfigRepository = _appConfigRepositoryFactory())
 			using (var changeTracker = base.GetChangeTracker(repository))
             {
 				foreach (var category in categories)
 				{
-					var dbCategory = repository.GetCategoryById(category.Id) as foundation.Category;
+					var dbCategory = repository.GetCategoryById(category.Id) as dataModel.Category;
 					
 					if (dbCategory == null)
 					{
@@ -101,29 +95,30 @@ namespace VirtoCommerce.CatalogModule.Data.Services
 					//Patch SeoInfo  separately
 					if (category.SeoInfos != null)
 					{
-						var dbSeoInfos = new ObservableCollection<foundationConfig.SeoUrlKeyword>(appConfigRepository.GetAllSeoInformation(category.Id));
-						var changedSeoInfos = category.SeoInfos.Select(x => x.ToFoundation(category)).ToList();
-						dbSeoInfos.ObserveCollection(x => appConfigRepository.Add(x), x => appConfigRepository.Remove(x));
+						var dbSeoInfos = new ObservableCollection<SeoUrlKeyword>(_commerceService.GetSeoKeywordsForEntity(category.Id));
+						var changedSeoInfos = category.SeoInfos.Select(x => x.ToCoreModel(dbCategory)).ToList();
+						dbSeoInfos.ObserveCollection(x => _commerceService.UpsertSeoKeyword(x), x => _commerceService.DeleteSeoKeywords(new string[] { x.Id }));
 
-						changedSeoInfos.Patch(dbSeoInfos, new SeoInfoComparer(), (source, target) => source.Patch(target));
+						changedSeoInfos.Patch(dbSeoInfos, (source, target) => _commerceService.UpsertSeoKeyword(source));
+
 					}
+			
 
 					//Patch  Links  separately
 					if (category.Links != null)
 					{
-						var dbLinks = new ObservableCollection<foundation.LinkedCategory>(repository.GetCategoryLinks(category.Id));
-						var changedLinks = category.Links.Select(x => x.ToFoundation(category)).ToList();
+						var dbLinks = new ObservableCollection<dataModel.LinkedCategory>(repository.GetCategoryLinks(category.Id));
+						var changedLinks = category.Links.Select(x => x.ToDataModel(category)).ToList();
 						dbLinks.ObserveCollection(x => repository.Add(x), x => { repository.Attach(x); repository.Remove(x); });
 						changedLinks.Patch(dbLinks, new LinkedCategoryComparer(), (source, target) => source.Patch(target));
 					}
 
-					var dbCategoryChanged = category.ToFoundation();
+					var dbCategoryChanged = category.ToDataModel();
 					changeTracker.Attach(dbCategory);
 				
 					dbCategoryChanged.Patch(dbCategory);
 				}
 				CommitChanges(repository);
-				CommitChanges(appConfigRepository);
 
 			}
         }

@@ -4,15 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Omu.ValueInjecter;
-using VirtoCommerce.Foundation.Money;
-using VirtoCommerce.Foundation.Frameworks;
 using System.Collections.ObjectModel;
-using VirtoCommerce.Foundation.Frameworks.ConventionInjections;
-using VirtoCommerce.Foundation.Frameworks.Extensions;
-using foundationModel = VirtoCommerce.Foundation.Marketing.Model.DynamicContent;
+using dataModel = VirtoCommerce.MarketingModule.Data.Model;
 using coreModel = VirtoCommerce.Domain.Marketing.Model;
 using VirtoCommerce.MarketingModule.Data.Promotions;
 using ExpressionSerialization;
+using VirtoCommerce.Platform.Data.Common.ConventionInjections;
 
 namespace VirtoCommerce.CustomerModule.Data.Converters
 {
@@ -23,14 +20,13 @@ namespace VirtoCommerce.CustomerModule.Data.Converters
 		/// </summary>
 		/// <param name="catalogBase"></param>
 		/// <returns></returns>
-		public static coreModel.DynamicContentFolder ToCoreModel(this foundationModel.DynamicContentFolder dbEntity)
+		public static coreModel.DynamicContentFolder ToCoreModel(this dataModel.DynamicContentFolder dbEntity)
 		{
 			if (dbEntity == null)
 				throw new ArgumentNullException("dbEntity");
 
 			var retVal = new coreModel.DynamicContentFolder();
 			retVal.InjectFrom(dbEntity);
-			retVal.Id = dbEntity.DynamicContentFolderId;
 			if (dbEntity.ParentFolder != null)
 			{
 				retVal.ParentFolder = dbEntity.ParentFolder.ToCoreModel();
@@ -39,18 +35,13 @@ namespace VirtoCommerce.CustomerModule.Data.Converters
 		}
 
 
-		public static foundationModel.DynamicContentFolder ToFoundation(this coreModel.DynamicContentFolder contentFolder)
+		public static dataModel.DynamicContentFolder ToDataModel(this coreModel.DynamicContentFolder contentFolder)
 		{
 			if (contentFolder == null)
 				throw new ArgumentNullException("contentFolder");
 
-			var retVal = new foundationModel.DynamicContentFolder();
+			var retVal = new dataModel.DynamicContentFolder();
 			retVal.InjectFrom(contentFolder);
-
-			if (contentFolder.Id != null)
-			{
-				retVal.DynamicContentFolderId = contentFolder.Id;
-			}
 			return retVal;
 		}
 
@@ -59,12 +50,12 @@ namespace VirtoCommerce.CustomerModule.Data.Converters
 		/// </summary>
 		/// <param name="source"></param>
 		/// <param name="target"></param>
-		public static void Patch(this foundationModel.DynamicContentFolder source, foundationModel.DynamicContentFolder target)
+		public static void Patch(this dataModel.DynamicContentFolder source, dataModel.DynamicContentFolder target)
 		{
 			if (target == null)
 				throw new ArgumentNullException("target");
 
-			var patchInjection = new PatchInjection<foundationModel.DynamicContentFolder>(x => x.Name, x => x.Description, x => x.ImageUrl);
+			var patchInjection = new PatchInjection<dataModel.DynamicContentFolder>(x => x.Name, x => x.Description, x => x.ImageUrl);
 
 			target.InjectFrom(patchInjection, source);
 		}
