@@ -1,33 +1,31 @@
-<span>
+<div>
     <script type="text/ng-template" id="tile-notifications.html">
-        <div class="tile __info">
-            <ul class="list __notice">
-                <li class="list-item __info">
-                    <a class="list-link" href="" ng-click="notification('info')">
-                        <i class="list-ico fa fa-comments"></i>
-                        Info
-                    </a>
-                </li>
-                <li class="list-item __warning">
-                    <a class="list-link" href="" ng-click="notification('warning')">
-                        <i class="list-ico fa fa-warning"></i>
-                        Warning
-                    </a>
-                </li>
-                <li class="list-item __task">
-                    <a class="list-link" href="" ng-click="notification('task')">
-                        <i class="list-ico fa fa-tasks"></i>
-                        Task
-                    </a>
-                </li>
-                <li class="list-item __error">
-                    <a class="list-link" href="" ng-click="notification('error')">
-                        <i class="list-ico fa fa-warning"></i>
-                        Error
-                    </a>
-                </li>
-            </ul>
-        </div>
+        <ul class="list __notice">
+            <li class="list-item __info">
+                <a class="list-link" href="" ng-click="notification('info')">
+                    <i class="list-ico fa fa-comments"></i>
+                    Info
+                </a>
+            </li>
+            <li class="list-item __warning">
+                <a class="list-link" href="" ng-click="notification('warning')">
+                    <i class="list-ico fa fa-warning"></i>
+                    Warning
+                </a>
+            </li>
+            <li class="list-item __task">
+                <a class="list-link" href="" ng-click="notification('task')">
+                    <i class="list-ico fa fa-tasks"></i>
+                    Task
+                </a>
+            </li>
+            <li class="list-item __error">
+                <a class="list-link" href="" ng-click="notification('error')">
+                    <i class="list-ico fa fa-warning"></i>
+                    Error
+                </a>
+            </li>
+        </ul>
     </script>
     <script type="text/ng-template" id="graph.html">
         <div google-chart chart="item.data.chartObject" style="height:100%"></div>
@@ -36,7 +34,7 @@
         <div class="gridster-cnt">
             <div class="cnt-inner">
                 <div class="list-count">{{item.data.count}}</div>
-                <div class="list-t">{{item.data.name}}</div>
+                <div class="list-t">{{item.data.descr}}</div>
             </div>
         </div>
     </script>
@@ -45,4 +43,4 @@
             <li class="list-item" gridster-item row="$storage['mainTilesY'+item.position]" col="$storage['mainTilesX'+item.position]" size-x="item.size[0]" size-y="item.size[1]" ng-repeat="item in tilesList" ng-include="item.template"></li>
         </ul>
     </div>
-</span>
+</div>
