@@ -17,7 +17,7 @@ namespace VirtoCommerce.Platform.Web.Model.Packaging
     {
         public ModuleWorkerJob(IPackageService packageService, ModuleDescriptor moduleDescriptor, ModuleAction action)
         {
-            Id = Guid.NewGuid().ToString();
+            Id = Guid.NewGuid().ToString("N");
             CancellationToken = new CancellationToken();
             PackageService = packageService;
             ModuleDescriptor = moduleDescriptor;

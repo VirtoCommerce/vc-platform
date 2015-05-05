@@ -70,6 +70,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             {
                 throw new HttpResponseException(HttpStatusCode.UnsupportedMediaType);
             }
+
             if (!Directory.Exists(_packagesPath))
             {
                 Directory.CreateDirectory(_packagesPath);
@@ -78,7 +79,6 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             var streamProvider = new CustomMultipartFormDataStreamProvider(_packagesPath);
             await Request.Content.ReadAsMultipartAsync(streamProvider);
 
-
             var file = streamProvider.FileData.FirstOrDefault();
             if (file != null)
             {
@@ -86,21 +86,26 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 if (descriptor != null)
                 {
                     var retVal = descriptor.ToWebModel();
-                    var allInstalledModules = _packageService.GetModules().Select(x => x.Id);
-                    //check unresolved dependencies 
-                    if (descriptor.Dependencies != null)
-                    {
-                        retVal.ValidationErrors = descriptor.Dependencies.Except(allInstalledModules).Select(x => "Unresolved dependency: " + x).ToList();
-                    }
-                    //Check module already installed
-                    if (allInstalledModules.Contains(descriptor.Id))
+                    var installedModuleIds = _packageService.GetModules().Select(m => m.Id).ToList();
+
+                    // Check if module is already installed
+                    if (installedModuleIds.Contains(descriptor.Id))
                     {
                         retVal.ValidationErrors.Add("Already installed");
                     }
+
+                    // Check dependencies 
+                    if (descriptor.Dependencies != null)
+                    {
+                        var missingModuleIds = descriptor.Dependencies.Except(installedModuleIds).ToList();
+                        missingModuleIds.ForEach(id => retVal.ValidationErrors.Add("Dependency is not installed: " + id));
+                    }
+
                     retVal.FileName = file.LocalFileName;
                     return Ok(retVal);
                 }
             }
+
             return NotFound();
         }
 
@@ -109,14 +114,16 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [ResponseType(typeof(webModel.ModuleWorkerJob))]
         [Route("install")]
         [CheckPermission(Permission = PredefinedPermissions.ModuleManage)]
-        public IHttpActionResult InstallModule([FromUri]string fileName)
+        public IHttpActionResult InstallModule(string fileName)
         {
-            var descriptor = _packageService.OpenPackage(Path.Combine(_packagesPath, fileName));
-            if (descriptor != null)
+            var package = _packageService.OpenPackage(Path.Combine(_packagesPath, fileName));
+
+            if (package != null)
             {
-                var retVal = SheduleJob(descriptor.ToWebModel(), webModel.ModuleAction.Install);
-                return Ok(retVal);
+                var result = SheduleJob(package.ToWebModel(), webModel.ModuleAction.Install);
+                return Ok(result);
             }
+
             return InternalServerError();
         }
 
@@ -125,14 +132,21 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [ResponseType(typeof(webModel.ModuleWorkerJob))]
         [Route("{id}/update")]
         [CheckPermission(Permission = PredefinedPermissions.ModuleManage)]
-        public IHttpActionResult UpdateModule(string id)
+        public IHttpActionResult UpdateModule(string id, string fileName)
         {
-            var descriptor = _packageService.GetModules().FirstOrDefault(x => x.Id == id);
-            if (descriptor != null)
+            var module = _packageService.GetModules().FirstOrDefault(m => m.Id == id);
+
+            if (module != null)
             {
-                var retVal = SheduleJob(descriptor.ToWebModel(), webModel.ModuleAction.Update);
-                return Ok(retVal);
+                var package = _packageService.OpenPackage(Path.Combine(_packagesPath, fileName));
+
+                if (package != null && package.Id == module.Id)
+                {
+                    var result = SheduleJob(package.ToWebModel(), webModel.ModuleAction.Update);
+                    return Ok(result);
+                }
             }
+
             return InternalServerError();
         }
 
@@ -143,11 +157,11 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [CheckPermission(Permission = PredefinedPermissions.ModuleManage)]
         public IHttpActionResult UninstallModule(string id)
         {
-            var descriptor = _packageService.GetModules().FirstOrDefault(x => x.Id == id);
-            if (descriptor != null)
+            var module = _packageService.GetModules().FirstOrDefault(m => m.Id == id);
+            if (module != null)
             {
-                var retVal = SheduleJob(descriptor.ToWebModel(), webModel.ModuleAction.Uninstall);
-                return Ok(retVal);
+                var result = SheduleJob(module.ToWebModel(), webModel.ModuleAction.Uninstall);
+                return Ok(result);
             }
             return InternalServerError();
         }

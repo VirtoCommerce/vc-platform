@@ -7,33 +7,31 @@ using System.Web;
 using System.Web.Hosting;
 using Hangfire.SqlServer;
 using Microsoft.AspNet.Identity.Owin;
+using Microsoft.AspNet.SignalR;
 using Microsoft.Owin;
+using Microsoft.Owin.Security;
 using Microsoft.Owin.StaticFiles;
 using Microsoft.Practices.Unity;
-using NuGet;
 using Owin;
 using VirtoCommerce.Platform.Core.Asset;
-using VirtoCommerce.Platform.Core.Modularity;
-using VirtoCommerce.Platform.Web;
-using WebGrease.Extensions;
-using VirtoCommerce.Platform.Core.Common;
-using VirtoCommerce.Platform.Data.Asset;
-using VirtoCommerce.Platform.Data.Packaging;
-using VirtoCommerce.Platform.Data.Packaging.Repositories;
-using VirtoCommerce.Platform.Web.Controllers.Api;
 using VirtoCommerce.Platform.Core.Caching;
-using VirtoCommerce.Platform.Data.Caching;
-using VirtoCommerce.Platform.Core.Settings;
-using VirtoCommerce.Platform.Data.Settings;
-using VirtoCommerce.Platform.Data.Repositories;
-using Microsoft.AspNet.SignalR;
-using Microsoft.Owin.Security;
-using VirtoCommerce.Platform.Data.Infrastructure.Interceptors;
-using VirtoCommerce.Platform.Data.Notification;
+using VirtoCommerce.Platform.Core.Common;
+using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Core.Notification;
 using VirtoCommerce.Platform.Core.Security;
+using VirtoCommerce.Platform.Core.Settings;
+using VirtoCommerce.Platform.Data.Asset;
+using VirtoCommerce.Platform.Data.Caching;
+using VirtoCommerce.Platform.Data.Infrastructure.Interceptors;
+using VirtoCommerce.Platform.Data.Notification;
+using VirtoCommerce.Platform.Data.Packaging;
+using VirtoCommerce.Platform.Data.Repositories;
 using VirtoCommerce.Platform.Data.Security;
 using VirtoCommerce.Platform.Data.Security.Identity;
+using VirtoCommerce.Platform.Data.Settings;
+using VirtoCommerce.Platform.Web;
+using VirtoCommerce.Platform.Web.Controllers.Api;
+using WebGrease.Extensions;
 
 [assembly: OwinStartup(typeof(Startup))]
 
@@ -187,18 +185,7 @@ namespace VirtoCommerce.Platform.Web
             var sourcePath = HostingEnvironment.MapPath("~/App_Data/SourcePackages");
             var packagesPath = HostingEnvironment.MapPath("~/App_Data/InstalledPackages");
 
-            var modulesPath = manifestProvider.RootPath;
-
-            var projectSystem = new WebsiteProjectSystem(modulesPath);
-
-            var nugetProjectManager = new ProjectManager(
-                new WebsiteLocalPackageRepository(sourcePath),
-                new DefaultPackagePathResolver(modulesPath),
-                projectSystem,
-                new ManifestPackageRepository(manifestProvider, new WebsitePackageRepository(packagesPath, projectSystem))
-            );
-
-            var packageService = new NuGetPackageService(nugetProjectManager);
+            var packageService = new ZipPackageService(manifestProvider, packagesPath, sourcePath);
 
             container.RegisterType<ModulesController>(new InjectionConstructor(packageService, sourcePath));
 
