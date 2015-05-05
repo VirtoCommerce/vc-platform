@@ -32,7 +32,7 @@ namespace VirtoCommerce.Platform.Web
                     "~/Scripts/codemirror/fold/foldgutter.css",
                     "~/Scripts/codemirror/liquid.css",
                     "~/Content/select.css",
-                    "~/Content/angular-gridster.min.css",
+                    "~/Content/angular-gridster.css",
                     "~/Content/angular-multi-select.css",
                     "~/Content/ng-tags-input.css",
                     "~/Content/textAngular.css",
