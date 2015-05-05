@@ -10,29 +10,18 @@ using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.CustomerModule.Data.Model
 {
-	public abstract class Member : Entity, IAuditable
+	public abstract class Member : AuditableEntity
 	{
 		public Member()
 		{
-			Notes = new ObservableCollection<Note>();
-			Addresses = new ObservableCollection<Address>();
-			MemberRelations = new ObservableCollection<MemberRelation>();
-			Phones = new ObservableCollection<Phone>();
-			Emails = new ObservableCollection<Email>();
+			Notes = new NullCollection<Note>();
+			Addresses = new NullCollection<Address>();
+			MemberRelations = new NullCollection<MemberRelation>();
+			Phones = new NullCollection<Phone>();
+			Emails = new NullCollection<Email>();
 		}
 
-		#region IAuditable Members
-		[Required]
-		public DateTime CreatedDate { get; set; }
-		[Required]
-		[StringLength(64)]
-		public string CreatedBy { get; set; }
-		public DateTime? ModifiedDate { get; set; }
-		[StringLength(64)]
-		public string ModifiedBy { get; set; }
-		#endregion
-
-        #region NavigationProperties
+		#region NavigationProperties
 
 		public ObservableCollection<Note> Notes { get; set; }
 

@@ -90,21 +90,22 @@ namespace VirtoCommerce.Platform.Data.Security
             var sourceEntry = role.ToDataModel();
 
             using (var repository = _platformRepository())
+			using(var changeTracker = GetChangeTracker(repository))
             {
-                AddOrUpdatePermissions(repository, role.Permissions);
+				AddOrUpdatePermissions(repository, role.Permissions);
 
-                var targetEntry = repository.Roles
-                    .Include(r => r.RolePermissions)
-                    .FirstOrDefault(r => r.Id == role.Id);
-
-                if (targetEntry == null)
-                {
-                    repository.Add(sourceEntry);
-                }
-                else
-                {
-                    sourceEntry.Patch(targetEntry);
-                }
+                var targetEntry = repository.Roles.Include(r => r.RolePermissions)
+											.FirstOrDefault(r => r.Id == role.Id);
+				if (targetEntry == null)
+				{
+					repository.Add(sourceEntry);
+				}
+				else
+				{
+					changeTracker.Attach(targetEntry);
+					sourceEntry.Patch(targetEntry);
+				}
+                
 
                 CommitChanges(repository);
             }
@@ -114,9 +115,8 @@ namespace VirtoCommerce.Platform.Data.Security
         }
 
         #endregion
-
-
-        private static void AddOrUpdatePermissions(IPlatformRepository repository, Permission[] permissions)
+    
+		private static void AddOrUpdatePermissions(IPlatformRepository repository, Permission[] permissions)
         {
             if (permissions != null)
             {

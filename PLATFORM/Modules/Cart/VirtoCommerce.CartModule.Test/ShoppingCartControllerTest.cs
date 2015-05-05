@@ -7,20 +7,43 @@ using VirtoCommerce.CartModule.Data.Repositories;
 using VirtoCommerce.CartModule.Data.Services;
 using VirtoCommerce.Domain.Cart.Model;
 using VirtoCommerce.Domain.Cart.Services;
-using VirtoCommerce.Foundation.Data.Infrastructure.Interceptors;
-using VirtoCommerce.Foundation.Money;
 using coreModel = VirtoCommerce.Domain.Cart.Model;
+using dataModel = VirtoCommerce.CartModule.Data.Model;
 using webModel = VirtoCommerce.CatalogModule.Web.Model;
-using VirtoCommerce.Foundation.Frameworks.Workflow.Services;
 using VirtoCommerce.CartModule.Data.Workflow;
 
 namespace VirtoCommerce.CartModule.Test
 {
     using VirtoCommerce.CartModule.Web.Controllers.Api;
+	using VirtoCommerce.Platform.Data.Infrastructure.Interceptors;
+	using VirtoCommerce.Domain.Common;
 
     [TestClass]
 	public class ShoppingCartControllerTest
 	{
+		[TestMethod]
+		public void Tst1()
+		{
+			var repository = new CartRepositoryImpl("VirtoCommerce", new AuditableInterceptor(),
+															   new EntityPrimaryKeyGeneratorInterceptor());
+			var cart = new dataModel.ShoppingCartEntity
+			{
+				StoreId = "ss",
+				CustomerId = "ss",
+				Currency = "ss",
+
+			};
+
+			var shipment = new dataModel.ShipmentEntity
+			{
+				Currency = "sss",
+
+			};
+			cart.Shipments.Add(shipment);
+			repository.Add(cart);
+			repository.UnitOfWork.Commit();
+		}
+
 		[TestMethod]
 		public void GetCurrentCartTest()
 		{
@@ -162,7 +185,7 @@ namespace VirtoCommerce.CartModule.Test
 															   new EntityPrimaryKeyGeneratorInterceptor());
 			};
 			//Business logic for core model
-			var cartWorkflowService = new ObservableWorkflowService<ShoppingCart>();
+			var cartWorkflowService = new ShoppingCartWorflow();
 			//Subscribe to cart changes. Calculate totals  
 			cartWorkflowService.Subscribe(new CalculateTotalsActivity());
 

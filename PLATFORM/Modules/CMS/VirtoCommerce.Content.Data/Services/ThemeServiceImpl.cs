@@ -9,18 +9,18 @@ using VirtoCommerce.Content.Data.Converters;
 using VirtoCommerce.Content.Data.Models;
 using VirtoCommerce.Content.Data.Repositories;
 using VirtoCommerce.Content.Data.Utility;
-using VirtoCommerce.Foundation.Assets.Repositories;
+using VirtoCommerce.Platform.Core.Asset;
 
 namespace VirtoCommerce.Content.Data.Services
 {
 	public class ThemeServiceImpl : IThemeService
 	{
 		private readonly object _lockObject = new object();
-		private readonly IFileRepository _repository;
+		private readonly IContentRepository _repository;
 		private readonly IBlobStorageProvider _blobProvider;
 		private readonly string _tempPath;
 
-		public ThemeServiceImpl(IFileRepository repository)
+		public ThemeServiceImpl(IContentRepository repository)
 		{
 			if (repository == null)
 				throw new ArgumentNullException("repository");
@@ -28,7 +28,7 @@ namespace VirtoCommerce.Content.Data.Services
 			_repository = repository;
 		}
 
-		public ThemeServiceImpl(IFileRepository repository, IBlobStorageProvider blobProvider, string tempPath)
+		public ThemeServiceImpl(IContentRepository repository, IBlobStorageProvider blobProvider, string tempPath)
 		{
 			if (repository == null)
 				throw new ArgumentNullException("repository");

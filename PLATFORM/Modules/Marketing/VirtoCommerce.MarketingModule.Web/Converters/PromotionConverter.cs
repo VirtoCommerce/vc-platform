@@ -8,14 +8,13 @@ using ExpressionSerialization;
 using Newtonsoft.Json;
 using Omu.ValueInjecter;
 using VirtoCommerce.Domain.Common;
-using VirtoCommerce.Foundation.Money;
 using VirtoCommerce.MarketingModule.Data.Common;
 using VirtoCommerce.MarketingModule.Data.Promotions;
 using coreModel = VirtoCommerce.Domain.Marketing.Model;
 using webModel = VirtoCommerce.MarketingModule.Web.Model;
-using VirtoCommerce.Foundation.Frameworks.Extensions;
 using VirtoCommerce.MarketingModule.Expressions.Promotion;
 using VirtoCommerce.MarketingModule.Expressions;
+using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.MarketingModule.Web.Converters
 {
@@ -25,6 +24,7 @@ namespace VirtoCommerce.MarketingModule.Web.Converters
 		{
 			var retVal = new webModel.Promotion();
 			retVal.InjectFrom(promotion);
+			retVal.Coupons = promotion.Coupons;
 			retVal.Type = promotion.GetType().Name;
 			var dynamicPromotion = promotion as DynamicPromotion;
 			if (dynamicPromotion != null && etalonEpressionTree != null)
@@ -54,6 +54,7 @@ namespace VirtoCommerce.MarketingModule.Web.Converters
 		{
 			var retVal = new DynamicPromotion();
 			retVal.InjectFrom(promotion);
+			retVal.Coupons = promotion.Coupons;
 
 			if (promotion.DynamicExpression != null && promotion.DynamicExpression.Children != null)
 			{

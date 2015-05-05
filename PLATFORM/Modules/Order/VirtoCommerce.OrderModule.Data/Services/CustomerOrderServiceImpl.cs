@@ -9,13 +9,12 @@ using VirtoCommerce.Domain.Order.Model;
 using VirtoCommerce.Domain.Order.Services;
 using VirtoCommerce.OrderModule.Data.Converters;
 using VirtoCommerce.OrderModule.Data.Repositories;
-using VirtoCommerce.Foundation.Frameworks.Extensions;
-using VirtoCommerce.Foundation.Frameworks;
-using VirtoCommerce.Foundation.Frameworks.Workflow.Services;
-using VirtoCommerce.Foundation.Data.Infrastructure;
 using VirtoCommerce.OrderModule.Data.Workflow;
 using VirtoCommerce.OrderModule.Data.Model;
 using System.Collections.ObjectModel;
+using VirtoCommerce.Platform.Data.Infrastructure;
+using VirtoCommerce.Domain.Common;
+using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.OrderModule.Data.Services
 {
@@ -26,7 +25,7 @@ namespace VirtoCommerce.OrderModule.Data.Services
 		private readonly IOperationNumberGenerator _operationNumberGenerator;
 		private readonly IShoppingCartService _shoppingCartService;
 		private readonly IWorkflowService _workflowService;
-		public CustomerOrderServiceImpl(Func<IOrderRepository> orderRepositoryFactory, IOperationNumberGenerator operationNumberGenerator, IWorkflowService workflowService, IShoppingCartService shoppingCartService)
+		public CustomerOrderServiceImpl(Func<IOrderRepository> orderRepositoryFactory, IOperationNumberGenerator operationNumberGenerator, ICustomerOrderWorkflow workflowService, IShoppingCartService shoppingCartService)
 		{
 			_repositoryFactory = orderRepositoryFactory;
 			_shoppingCartService = shoppingCartService;
@@ -58,7 +57,7 @@ namespace VirtoCommerce.OrderModule.Data.Services
 
 			//TODO: for approved sipments need decrease inventory
 
-			var orderEntity = order.ToEntity();
+			var orderEntity = order.ToDataModel();
 			CustomerOrder retVal = null;
 			using (var repository = _repositoryFactory())
 			{
@@ -98,7 +97,7 @@ namespace VirtoCommerce.OrderModule.Data.Services
 					//Do business logic on temporary  order object
 					RecalculateOrder(new CustomerOrderStateBasedEvalContext(EntryState.Modified, origOrder, order));
 
-					var sourceOrderEntity = order.ToEntity();
+					var sourceOrderEntity = order.ToDataModel();
 					var targetOrderEntity = repository.GetCustomerOrderById(order.Id, CustomerOrderResponseGroup.Full);
 
 					if (targetOrderEntity == null)
@@ -171,9 +170,7 @@ namespace VirtoCommerce.OrderModule.Data.Services
 		}
 		private void RecalculateOrder(CustomerOrderStateBasedEvalContext context)
 		{
-			var parameters = new Dictionary<string, object>();
-			parameters["context"] = context;
-			_workflowService.RunWorkflow(_workflowName, parameters, null);
+			_workflowService.RunWorkflow(context);
 		}
 
 		private void EnsureThatAllOperationsHasNumber(CustomerOrder order)

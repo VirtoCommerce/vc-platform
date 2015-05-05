@@ -4,13 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Omu.ValueInjecter;
-using VirtoCommerce.Foundation.Money;
-using VirtoCommerce.Foundation.Frameworks;
 using System.Collections.ObjectModel;
-using VirtoCommerce.Foundation.Frameworks.ConventionInjections;
-using VirtoCommerce.Foundation.Frameworks.Extensions;
-using foundationModel = VirtoCommerce.Foundation.Inventories.Model;
+using dataModel = VirtoCommerce.InventoryModule.Data.Model;
 using coreModel = VirtoCommerce.Domain.Inventory.Model;
+using VirtoCommerce.Platform.Data.Common.ConventionInjections;
 
 namespace VirtoCommerce.InventoryModule.Data.Converters
 {
@@ -21,7 +18,7 @@ namespace VirtoCommerce.InventoryModule.Data.Converters
 		/// </summary>
 		/// <param name="catalogBase"></param>
 		/// <returns></returns>
-		public static coreModel.InventoryInfo ToCoreModel(this foundationModel.Inventory dbEntity)
+		public static coreModel.InventoryInfo ToCoreModel(this dataModel.Inventory dbEntity)
 		{
 			if (dbEntity == null)
 				throw new ArgumentNullException("dbEntity");
@@ -30,8 +27,6 @@ namespace VirtoCommerce.InventoryModule.Data.Converters
 			retVal.InjectFrom(dbEntity);
 			retVal.Status = (coreModel.InventoryStatus)dbEntity.Status;
 			retVal.ProductId = dbEntity.Sku;
-			retVal.CreatedDate = dbEntity.Created.Value;
-			retVal.ModifiedDate = dbEntity.LastModified;
 
 
 			retVal.ReservedQuantity = (long)dbEntity.ReservedQuantity;
@@ -46,12 +41,12 @@ namespace VirtoCommerce.InventoryModule.Data.Converters
 		}
 
 
-		public static foundationModel.Inventory ToFoundation(this coreModel.InventoryInfo inventory)
+		public static dataModel.Inventory ToDataModel(this coreModel.InventoryInfo inventory)
 		{
 			if (inventory == null)
 				throw new ArgumentNullException("inventory");
 
-			var retVal = new foundationModel.Inventory();
+			var retVal = new dataModel.Inventory();
 
 			retVal.InjectFrom(inventory);
 
@@ -73,11 +68,11 @@ namespace VirtoCommerce.InventoryModule.Data.Converters
 		/// </summary>
 		/// <param name="source"></param>
 		/// <param name="target"></param>
-		public static void Patch(this foundationModel.Inventory source, foundationModel.Inventory target)
+		public static void Patch(this dataModel.Inventory source, dataModel.Inventory target)
 		{
 			if (target == null)
 				throw new ArgumentNullException("target");
-			var patchInjection = new PatchInjection<foundationModel.Inventory>(x => x.Sku, x => x.Status,
+			var patchInjection = new PatchInjection<dataModel.Inventory>(x => x.Sku, x => x.Status,
 																			   x => x.AllowBackorder, x => x.AllowPreorder,
 																			   x => x.BackorderAvailabilityDate, x => x.BackorderQuantity,
 																			   x => x.FulfillmentCenterId, x => x.InStockQuantity, x => x.PreorderAvailabilityDate,

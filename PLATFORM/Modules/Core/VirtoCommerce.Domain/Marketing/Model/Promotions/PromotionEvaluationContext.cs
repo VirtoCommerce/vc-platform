@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using VirtoCommerce.Domain.Cart.Model;
 using VirtoCommerce.Domain.Catalog.Model;
 using VirtoCommerce.Domain.Marketing.Model;
-using VirtoCommerce.Foundation.Money;
 
 namespace VirtoCommerce.Domain.Marketing.Model
 {

@@ -9,13 +9,17 @@ namespace VirtoCommerce.Platform.Core.Modularity
         private IDictionary<string, ModuleManifest> _Modules;
 
         public string RootPath { get; private set; }
-
-        public string ManifestFileName { get; set; }
+        public string ManifestFileName { get; private set; }
 
         public ModuleManifestProvider(string rootPath)
+            : this(rootPath, "module.manifest")
+        {
+        }
+
+        public ModuleManifestProvider(string rootPath, string manifestFileName)
         {
             RootPath = rootPath;
-            ManifestFileName = "module.manifest";
+            ManifestFileName = manifestFileName;
         }
 
         public IDictionary<string, ModuleManifest> GetModuleManifests()

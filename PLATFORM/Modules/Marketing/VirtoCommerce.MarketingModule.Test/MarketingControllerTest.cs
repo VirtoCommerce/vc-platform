@@ -4,14 +4,15 @@ using System.Web.Http.Results;
 using VirtoCommerce.Domain.Common;
 using VirtoCommerce.Domain.Marketing.Model;
 using VirtoCommerce.Domain.Marketing.Services;
-using VirtoCommerce.Foundation.Data.Infrastructure.Interceptors;
-using VirtoCommerce.Foundation.Money;
+using dataModel = VirtoCommerce.MarketingModule.Data.Model;
 using VirtoCommerce.MarketingModule.Data.Repositories;
 using VirtoCommerce.MarketingModule.Data.Services;
 using VirtoCommerce.MarketingModule.Expressions;
 using VirtoCommerce.MarketingModule.Expressions.Promotion;
 using VirtoCommerce.MarketingModule.Test.CustomDynamicPromotionExpressions;
 using VirtoCommerce.MarketingModule.Web.Controllers.Api;
+using VirtoCommerce.Platform.Core.Common;
+using VirtoCommerce.Platform.Data.Infrastructure.Interceptors;
 using Xunit;
 using webModel = VirtoCommerce.MarketingModule.Web.Model;
 
@@ -19,6 +20,25 @@ namespace VirtoCommerce.MarketingModule.Test
 {
 	public class MarketingControllerTest
 	{
+		[Fact]
+		public void Test()
+		{
+			var repository = new MarketingRepositoryImpl("VirtoCommerce", new EntityPrimaryKeyGeneratorInterceptor(), new AuditableInterceptor());
+			var contentItem = new dataModel.DynamicContentItem()
+			{
+				Name = "ss",
+			};
+			contentItem.PropertyValues = new dataModel.DynamicContentItemProperty[] { 
+				new dataModel.DynamicContentItemProperty
+				{
+					 Name = "ssss",
+					  DecimalValue = 33.0m
+				}
+			};
+			repository.Add(contentItem);
+			repository.UnitOfWork.Commit();
+
+		}
 		
 		[Fact]
 		public void CreateStandartDynamicPromotionThroughtApi()
@@ -162,7 +182,7 @@ namespace VirtoCommerce.MarketingModule.Test
 
 		private static IPromotionService GetMarketingService()
 		{
-			Func<IFoundationPromotionRepository> foundationRepositoryFactory = () => new PromotionRepositoryImpl("VirtoCommerce", new AuditChangeInterceptor());
+			Func<IMarketingRepository> foundationRepositoryFactory = () => new MarketingRepositoryImpl("VirtoCommerce", new EntityPrimaryKeyGeneratorInterceptor(), new AuditableInterceptor());
 			var promotionExtensionManager = new InMemoryExtensionManagerImpl();
 			var retVal = new PromotionServiceImpl(foundationRepositoryFactory, promotionExtensionManager);
 			return retVal;
@@ -170,8 +190,7 @@ namespace VirtoCommerce.MarketingModule.Test
 
 		private static PromotionController GetMarketingController(IMarketingExtensionManager extensionManager)
 		{
-			Func<IFoundationPromotionRepository> foundationRepositoryFactory = () => new PromotionRepositoryImpl("VirtoCommerce", new AuditChangeInterceptor());
-			var retVal = new PromotionController(new PromotionServiceImpl(foundationRepositoryFactory, extensionManager), extensionManager, null);
+			var retVal = new PromotionController(GetMarketingService(), extensionManager, null);
 			return retVal;
 		}
 

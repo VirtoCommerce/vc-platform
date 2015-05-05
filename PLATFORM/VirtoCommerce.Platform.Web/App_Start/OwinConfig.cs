@@ -65,13 +65,13 @@ namespace VirtoCommerce.Platform.Web
                 AllowInsecureHttp = true
             });
 
-            var cacheProvider = container.Resolve<ICacheProvider>();
+            var cacheManager = container.Resolve<CacheManager>();
             var cacheSettings = new[]
             {
-                new CacheSettings(HmacAuthenticationHandler.CacheGroup, TimeSpan.FromSeconds(60), "", true)
+                new CacheSettings(HmacAuthenticationHandler.CacheGroup, TimeSpan.FromSeconds(60))
             };
-            var cacheManager = new CacheManager(provider => cacheProvider, group => cacheSettings.FirstOrDefault(settings => settings.Group == group));
-
+			cacheManager.AddCacheSettings(cacheSettings);
+        
             app.UseHmacAuthentication(new HmacAuthenticationOptions
             {
                 ApiCredentialsProvider = container.Resolve<IApiAccountProvider>(),

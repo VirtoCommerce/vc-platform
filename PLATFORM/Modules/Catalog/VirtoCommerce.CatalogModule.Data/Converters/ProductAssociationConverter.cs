@@ -3,9 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using VirtoCommerce.Foundation.Frameworks.Extensions;
-using foundation = VirtoCommerce.Foundation.Catalogs.Model;
-using module = VirtoCommerce.Domain.Catalog.Model;
+using dataModel = VirtoCommerce.CatalogModule.Data.Model;
+using coreModel = VirtoCommerce.Domain.Catalog.Model;
+using Omu.ValueInjecter;
+using VirtoCommerce.Platform.Core.Common;
+using VirtoCommerce.Platform.Data.Common;
+using VirtoCommerce.Platform.Data.Common.ConventionInjections;
 
 namespace VirtoCommerce.CatalogModule.Data.Converters
 {
@@ -16,12 +19,12 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 		/// </summary>
 		/// <param name="catalogBase"></param>
 		/// <returns></returns>
-		public static module.ProductAssociation ToModuleModel(this foundation.Association dbAssociation, module.CatalogProduct associatedProduct)
+		public static coreModel.ProductAssociation ToCoreModel(this dataModel.Association dbAssociation, coreModel.CatalogProduct associatedProduct)
 		{
 			if (dbAssociation == null)
 				throw new ArgumentNullException("dbAssociation");
 
-			var retVal = new module.ProductAssociation
+			var retVal = new coreModel.ProductAssociation
 			{
 				Name = dbAssociation.AssociationGroup.Name,
 				Description = dbAssociation.AssociationGroup.Description,
@@ -40,12 +43,12 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 		/// </summary>
 		/// <param name="catalog"></param>
 		/// <returns></returns>
-		public static foundation.Association ToFoundation(this module.ProductAssociation association)
+		public static dataModel.Association ToDataModel(this coreModel.ProductAssociation association)
 		{
 			if (association == null)
 				throw new ArgumentNullException("association");
 
-			var retVal = new foundation.Association
+			var retVal = new dataModel.Association
 			{
 				ItemId = association.AssociatedProductId,
 				Priority = association.Priority,
@@ -60,17 +63,15 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 		/// </summary>
 		/// <param name="source"></param>
 		/// <param name="target"></param>
-		public static void Patch(this foundation.AssociationGroup source, foundation.AssociationGroup target)
+		public static void Patch(this dataModel.AssociationGroup source, dataModel.AssociationGroup target)
 		{
-			//Simply properties patch
-			if (source.Name != null)
-				target.Name = source.Name;
-			if (source.Description != null)
-				target.Description = source.Description;
+			var patchInjectionPolicy = new PatchInjection<dataModel.AssociationGroup>(x => x.Name, x => x.Description);
+			target.InjectFrom(patchInjectionPolicy, source);
 
 			if (!source.Associations.IsNullCollection())
 			{
-				source.Associations.Patch(target.Associations, new AssociationComparer(),
+				var associationComparer = AnonymousComparer.Create((dataModel.Association x) => x.ItemId);
+				source.Associations.Patch(target.Associations, associationComparer,
 										 (sourceAssociation, targetAssociation) => sourceAssociation.Patch(targetAssociation));
 			}
 		}
@@ -79,50 +80,12 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 		/// </summary>
 		/// <param name="source"></param>
 		/// <param name="target"></param>
-		public static void Patch(this foundation.Association source, foundation.Association target)
+		public static void Patch(this dataModel.Association source, dataModel.Association target)
 		{
-			if (source.Priority != target.Priority)
-				target.Priority = source.Priority;
+			var patchInjectionPolicy = new PatchInjection<dataModel.Association>(x => x.Priority);
+			target.InjectFrom(patchInjectionPolicy, source);
 		}
 	}
 
-	public class AssociationGroupComparer : IEqualityComparer<foundation.AssociationGroup>
-	{
-		#region IEqualityComparer<AssociationGroup> Members
-
-		public bool Equals(foundation.AssociationGroup x, foundation.AssociationGroup y)
-		{
-			var retVal = x.Name == y.Name;
-			return retVal;
-		}
-
-		public int GetHashCode(foundation.AssociationGroup obj)
-		{
-			var retVal = obj.Name.GetHashCode();
-			return retVal;
-		}
-
-		#endregion
-	}
-
-	public class AssociationComparer : IEqualityComparer<foundation.Association>
-	{
-		#region IEqualityComparer<Association> Members
-
-		public bool Equals(foundation.Association x, foundation.Association y)
-		{
-			var retVal = x.ItemId == y.ItemId;
-		
-			return retVal;
-		}
-
-		public int GetHashCode(foundation.Association obj)
-		{
-			var retVal = obj.ItemId.GetHashCode();
-			return retVal;
-		}
-
-		#endregion
-	}
-
+	
 }

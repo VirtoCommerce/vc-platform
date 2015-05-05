@@ -90,6 +90,7 @@
     <Compile Include="Common\AttributeExtensions.cs" />
     <Compile Include="Common\AuditableEntity.cs" />
     <Compile Include="Common\ClientCacheAttribute.cs" />
+    <Compile Include="Common\CurrencyCode.cs" />
     <Compile Include="Common\DateTimeExtensions.cs" />
     <Compile Include="Common\DictionaryExtensions.cs" />
     <Compile Include="Common\Entity.cs" />
@@ -111,6 +112,7 @@
     <Compile Include="Common\TrackingEntry.cs" />
     <Compile Include="Common\TreeExtension.cs" />
     <Compile Include="Common\ValueObject.cs" />
+    <Compile Include="Modularity\AbstractModule.cs" />
     <Compile Include="Modularity\AssemblyResolver.cs" />
     <Compile Include="Modularity\Exceptions\CyclicDependencyFoundException.cs" />
     <Compile Include="Modularity\DirectoryModuleCatalog.cs" />

@@ -5,8 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
-using VirtoCommerce.Foundation.Frameworks;
-using VirtoCommerce.Foundation.Money;
+using VirtoCommerce.Platform.Core.Common;
+
 
 namespace VirtoCommerce.CatalogModule.Web.Model
 {

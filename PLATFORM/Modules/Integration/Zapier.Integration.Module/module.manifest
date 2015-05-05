@@ -1,0 +1,50 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<module>
+  <id>Zapier.Integration</id>
+  <version>1.0.0.0</version>
+  <dependencies>
+    <dependency>VirtoCommerce.Core</dependency>
+  </dependencies>
+
+  <title>Zapier integration</title>
+  <description>APIs and UI for sync with Zapier</description>
+  <authors>
+    <author>Virto Commerce</author>
+  </authors>
+  <owners>
+    <owner>Virto Commerce</owner>
+  </owners>
+  <projectUrl>http://virtocommerce.com/</projectUrl>
+  <iconUrl>http://nuget.org/Content/Images/packageDefaultIcon-50x50.png</iconUrl>
+  <releaseNotes>First version.</releaseNotes>
+  <copyright>Copyright © 2011-2015 Virto Commerce. All rights reserved</copyright>
+  <tags>zapier</tags>
+
+  <assemblyFile>Zapier.IntegrationModule.Web.dll</assemblyFile>
+  <moduleType>Zapier.IntegrationModule.Web.Module, Zapier.IntegrationModule.Web</moduleType>
+  <!--<styles>
+		<directory virtualPath="$/Content/css" searchPattern="*.css" searchSubdirectories="true" />
+	</styles>-->
+  <!--<scripts>
+    <directory virtualPath="$/Scripts" searchPattern="*.js" searchSubdirectories="true" />
+  </scripts>-->
+
+  <settings>
+    <group name="Zapier Description">
+      <setting>
+        <name>Zapier.IntegrationModule.Description</name>
+        <valueType>string</valueType>
+        <defaultValue>Zapier public site description</defaultValue>
+        <title>Description</title>
+        <description>Description of Zapier for public site</description>
+      </setting>
+      <setting>
+        <name>Zapier.IntegrationModule.LogoUrl</name>
+        <valueType>string</valueType>
+        <defaultValue>https://sendgrid.com/blog/wp-content/uploads/2012/09/Zapier-300x155.png</defaultValue>
+        <title>Logo url</title>
+        <description>Zapier logo url</description>
+      </setting>
+    </group>
+  </settings>
+</module>

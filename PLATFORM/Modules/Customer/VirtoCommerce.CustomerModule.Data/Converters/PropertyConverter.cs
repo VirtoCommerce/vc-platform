@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using foundationModel = VirtoCommerce.CustomerModule.Data.Model;
+using dataModel = VirtoCommerce.CustomerModule.Data.Model;
 using coreModel = VirtoCommerce.Domain.Customer.Model;
 using Omu.ValueInjecter;
 using VirtoCommerce.Platform.Data.Common;
@@ -13,7 +13,7 @@ namespace VirtoCommerce.CustomerModule.Data.Converters
 {
     public static class PropertyConverter
     {
-        public static coreModel.Property ToCoreModel(this foundationModel.ContactPropertyValue entity)
+        public static coreModel.Property ToCoreModel(this dataModel.ContactPropertyValue entity)
         {
             if (entity == null)
                 throw new ArgumentNullException("entity");
@@ -26,12 +26,12 @@ namespace VirtoCommerce.CustomerModule.Data.Converters
             return retVal;
         }
 
-        public static foundationModel.ContactPropertyValue ToFoundation(this coreModel.Property property)
+        public static dataModel.ContactPropertyValue ToDataModel(this coreModel.Property property)
         {
             if (property == null)
                 throw new ArgumentNullException("property");
 
-            var retVal = new foundationModel.ContactPropertyValue();
+            var retVal = new dataModel.ContactPropertyValue();
             retVal.InjectFrom(property);
             retVal.ValueType = (int)property.ValueType;
             SetPropertyValue(retVal, property);
@@ -44,15 +44,15 @@ namespace VirtoCommerce.CustomerModule.Data.Converters
         /// </summary>
         /// <param name="source"></param>
         /// <param name="target"></param>
-        public static void Patch(this foundationModel.ContactPropertyValue source, foundationModel.ContactPropertyValue target)
+        public static void Patch(this dataModel.ContactPropertyValue source, dataModel.ContactPropertyValue target)
         {
-            var patchInjectionPolicy = new PatchInjection<foundationModel.ContactPropertyValue>(x => x.BooleanValue, x => x.DateTimeValue,
+            var patchInjectionPolicy = new PatchInjection<dataModel.ContactPropertyValue>(x => x.BooleanValue, x => x.DateTimeValue,
                                                                                           x => x.DecimalValue, x => x.IntegerValue,
                                                                                           x => x.ShortTextValue, x => x.LongTextValue, x => x.ValueType);
             target.InjectFrom(patchInjectionPolicy, source);
         }
 
-        private static object GetPropertyValue(foundationModel.ContactPropertyValue propValue)
+        private static object GetPropertyValue(dataModel.ContactPropertyValue propValue)
         {
             object retVal = null;
             switch ((coreModel.PropertyValueType)propValue.ValueType)
@@ -79,7 +79,7 @@ namespace VirtoCommerce.CustomerModule.Data.Converters
             return retVal;
         }
 
-        private static void SetPropertyValue(foundationModel.ContactPropertyValue retVal, coreModel.Property property)
+        private static void SetPropertyValue(dataModel.ContactPropertyValue retVal, coreModel.Property property)
         {
             switch (property.ValueType)
             {

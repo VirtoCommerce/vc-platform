@@ -4,19 +4,14 @@ using System.Linq;
 using System.Web;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
-using VirtoCommerce.Foundation.Frameworks;
 using VirtoCommerce.MarketingModule.Expressions.Promotion;
 using VirtoCommerce.MarketingModule.Web.Converters;
+using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.MarketingModule.Web.Model
 {
-	public class Promotion : Entity, IAuditable
+	public class Promotion : AuditableEntity
 	{
-		public DateTime CreatedDate { get; set; }
-		public string CreatedBy { get; set; }
-		public DateTime? ModifiedDate { get; set; }
-		public string ModifiedBy { get; set; }
-
 		public string Type { get; set; }
 		public string Name { get; set; }
 		public string Store { get; set; }
@@ -26,7 +21,7 @@ namespace VirtoCommerce.MarketingModule.Web.Model
 		public bool IsActive { get; set; }
 		public int MaxUsageCount { get; set; }
 		public int MaxPersonalUsageCount { get; set; }
-		public string Coupon { get; set; }
+		public string[] Coupons { get; set; }
 		public int Priority { get; set; }
 
 		public DateTime? StartDate { get; set; }

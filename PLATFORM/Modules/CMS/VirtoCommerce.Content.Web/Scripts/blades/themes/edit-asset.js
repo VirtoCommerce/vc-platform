@@ -13,7 +13,7 @@
 
                 $timeout(function () {
                     if (codemirrorEditor) {
-                        codemirrorEditor.refresh();
+                        codemirrorEditor.initialize();
                         codemirrorEditor.focus();
                     }
                     blade.origEntity = angular.copy(blade.currentEntity);
@@ -80,7 +80,7 @@
 
     	themes.updateAsset({ storeId: blade.choosenStoreId, themeId: blade.choosenThemeId }, blade.currentEntity, function () {
     		blade.origEntity = angular.copy(blade.currentEntity);
-        	blade.parentBlade.refresh(true);
+        	blade.parentBlade.initialize();
         	if (blade.newAsset) {
         		blade.newAsset = false;
         		bladeNavigationService.closeBlade(blade);
@@ -106,7 +106,7 @@
 
                     themes.deleteAsset({ storeId: blade.choosenStoreId, themeId: blade.choosenThemeId, assetIds: blade.choosenAssetId }, function () {
                         $scope.bladeClose();
-                        $scope.blade.parentBlade.refresh(true);
+                        $scope.blade.parentBlade.initialize(true);
                     });
                 }
             }

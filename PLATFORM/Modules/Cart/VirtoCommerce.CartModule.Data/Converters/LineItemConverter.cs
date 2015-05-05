@@ -5,9 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 using VirtoCommerce.CartModule.Data.Model;
 using VirtoCommerce.Domain.Cart.Model;
-using VirtoCommerce.Foundation.Frameworks.Extensions;
 using Omu.ValueInjecter;
-using VirtoCommerce.Foundation.Money;
+using VirtoCommerce.Platform.Core.Common;
+using VirtoCommerce.Platform.Data.Common.ConventionInjections;
 
 namespace VirtoCommerce.CartModule.Data.Converters
 {
@@ -25,7 +25,7 @@ namespace VirtoCommerce.CartModule.Data.Converters
 			return retVal;
 		}
 
-		public static LineItemEntity ToEntity(this LineItem lineItem)
+		public static LineItemEntity ToDataModel(this LineItem lineItem)
 		{
 			if (lineItem == null)
 				throw new ArgumentNullException("lineItem");
@@ -46,11 +46,9 @@ namespace VirtoCommerce.CartModule.Data.Converters
 			if (target == null)
 				throw new ArgumentNullException("target");
 
-			//Simply properties patch
-			target.Quantity = source.Quantity;
-			target.SalePrice = source.SalePrice;
-			target.PlacedPrice = source.PlacedPrice;
-			target.ListPrice = source.ListPrice;
+			var patchInjection = new PatchInjection<LineItemEntity>(x => x.Quantity, x => x.SalePrice, x => x.PlacedPrice, x => x.ListPrice);
+			target.InjectFrom(patchInjection, source);
+
 		}
 
 	}

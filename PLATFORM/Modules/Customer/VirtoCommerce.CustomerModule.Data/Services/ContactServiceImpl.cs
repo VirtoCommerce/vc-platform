@@ -41,7 +41,7 @@ namespace VirtoCommerce.CustomerModule.Data.Services
 
 		public coreModel.Contact Create(coreModel.Contact contact)
 		{
-			var entity = contact.ToFoundation();
+			var entity = contact.ToDataModel();
 			coreModel.Contact retVal = null;
 			using (var repository = _repositoryFactory())
 			{
@@ -59,7 +59,7 @@ namespace VirtoCommerce.CustomerModule.Data.Services
 			{
 				foreach (var contact in contacts)
 				{
-					var sourceEntity = contact.ToFoundation();
+					var sourceEntity = contact.ToDataModel();
 					var targetEntity = repository.GetContactById(contact.Id);
 					if (targetEntity == null)
 					{

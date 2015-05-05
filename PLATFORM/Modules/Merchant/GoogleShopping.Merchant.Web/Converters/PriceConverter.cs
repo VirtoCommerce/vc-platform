@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Globalization;
 using Omu.ValueInjecter;
-using VirtoCommerce.Foundation.Money;
+using VirtoCommerce.Platform.Core.Common;
 using coreModel = VirtoCommerce.Domain.Pricing.Model;
 using googleModel = Google.Apis.ShoppingContent.v2.Data;
 

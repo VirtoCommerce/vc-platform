@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using foundationModel = VirtoCommerce.CustomerModule.Data.Model;
+using dataModel = VirtoCommerce.CustomerModule.Data.Model;
 using coreModel = VirtoCommerce.Domain.Customer.Model;
 using Omu.ValueInjecter;
 using VirtoCommerce.Platform.Data.Common;
@@ -13,7 +13,7 @@ namespace VirtoCommerce.CustomerModule.Data.Converters
 {
     public static class NoteConverter
     {
-        public static coreModel.Note ToCoreModel(this foundationModel.Note entity)
+        public static coreModel.Note ToCoreModel(this dataModel.Note entity)
         {
             if (entity == null)
                 throw new ArgumentNullException("entity");
@@ -24,12 +24,12 @@ namespace VirtoCommerce.CustomerModule.Data.Converters
             return retVal;
         }
 
-        public static foundationModel.Note ToFoundation(this coreModel.Note note)
+        public static dataModel.Note ToDataModel(this coreModel.Note note)
         {
             if (note == null)
                 throw new ArgumentNullException("note");
 
-            var retVal = new foundationModel.Note();
+            var retVal = new dataModel.Note();
             retVal.InjectFrom(note);
             retVal.AuthorName = note.CreatedBy;
             retVal.ModifierName = note.ModifiedBy;
@@ -42,9 +42,9 @@ namespace VirtoCommerce.CustomerModule.Data.Converters
         /// </summary>
         /// <param name="source"></param>
         /// <param name="target"></param>
-        public static void Patch(this foundationModel.Note source, foundationModel.Note target)
+        public static void Patch(this dataModel.Note source, dataModel.Note target)
         {
-            var patchInjectionPolicy = new PatchInjection<foundationModel.Note>(x => x.Body, x => x.Title);
+            var patchInjectionPolicy = new PatchInjection<dataModel.Note>(x => x.Body, x => x.Title);
             target.InjectFrom(patchInjectionPolicy, source);
         }
 

@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using foundation = VirtoCommerce.Foundation.Catalogs.Model;
-using module = VirtoCommerce.Domain.Catalog.Model;
-using VirtoCommerce.Foundation.Frameworks.ConventionInjections;
+using dataModel = VirtoCommerce.CatalogModule.Data.Model;
+using coreModel = VirtoCommerce.Domain.Catalog.Model;
 using Omu.ValueInjecter;
+using VirtoCommerce.Platform.Core.Common;
+using VirtoCommerce.Platform.Data.Common;
+using VirtoCommerce.Platform.Data.Common.ConventionInjections;
 
 namespace VirtoCommerce.CatalogModule.Data.Converters
 {
@@ -18,20 +20,18 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
         /// <param name="properties">The properties.</param>
         /// <returns></returns>
         /// <exception cref="System.ArgumentNullException">dbPropValue</exception>
-        public static module.PropertyValue ToModuleModel(this foundation.PropertyValueBase dbPropValue, module.Property[] properties)
+        public static coreModel.PropertyValue ToCoreModel(this dataModel.PropertyValueBase dbPropValue, coreModel.Property[] properties)
         {
             if (dbPropValue == null)
                 throw new ArgumentNullException("dbPropValue");
 
-            var retVal = new module.PropertyValue
-            {
-                Id = dbPropValue.PropertyValueId,
-                LanguageCode = dbPropValue.Locale,
-                PropertyName = dbPropValue.Name,
-                Value = dbPropValue.ToObjectValue(), // retain the correct object type value
-                ValueId = dbPropValue.KeyValue,
-                ValueType = ((foundation.PropertyValueType)dbPropValue.ValueType).ToModuleModel()
-            };
+			var retVal = new coreModel.PropertyValue();
+			retVal.InjectFrom(dbPropValue);
+			retVal.LanguageCode = dbPropValue.Locale;
+			retVal.PropertyName = dbPropValue.Name;
+			retVal.Value = dbPropValue.ToObjectValue();
+			retVal.ValueId = dbPropValue.KeyValue;
+			retVal.ValueType = (coreModel.PropertyValueType)dbPropValue.ValueType;
 
             if (properties != null)
             {
@@ -51,21 +51,24 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
         /// <param name="propValue">The property value.</param>
         /// <returns></returns>
         /// <exception cref="System.ArgumentNullException">propValue</exception>
-        public static foundation.PropertyValueBase ToFoundation<T>(this module.PropertyValue propValue) where T : foundation.PropertyValueBase, new()
+        public static dataModel.PropertyValueBase ToDataModel<T>(this coreModel.PropertyValue propValue) where T : dataModel.PropertyValueBase, new()
         {
             if (propValue == null)
                 throw new ArgumentNullException("propValue");
 
             var retVal = new T();
-
-            if (propValue.Id != null)
-                retVal.PropertyValueId = propValue.Id;
+			var id = retVal.Id;
+			retVal.InjectFrom(propValue);
+			if(propValue.Id == null)
+			{
+				retVal.Id = id;
+			}
 
             retVal.Name = propValue.PropertyName;
             retVal.KeyValue = propValue.ValueId;
             retVal.Locale = propValue.LanguageCode;
-            retVal.ValueType = (int)propValue.ValueType.ToFoundation();
-            SetPropertyValue(retVal, propValue.ValueType.ToFoundation(), propValue.Value.ToString());
+            retVal.ValueType = (int)propValue.ValueType;
+            SetPropertyValue(retVal, propValue.ValueType, propValue.Value.ToString());
 
             return retVal;
         }
@@ -75,7 +78,7 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
         /// </summary>
         /// <param name="source"></param>
         /// <param name="target"></param>
-        public static void Patch(this foundation.PropertyValueBase source, foundation.PropertyValueBase target)
+        public static void Patch(this dataModel.PropertyValueBase source, dataModel.PropertyValueBase target)
         {
             if (target == null)
             {
@@ -83,31 +86,31 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
             }
 
 
-			var patchInjectionPolicy = new PatchInjection<foundation.PropertyValueBase>(x => x.BooleanValue, x => x.DateTimeValue,
+			var patchInjectionPolicy = new PatchInjection<dataModel.PropertyValueBase>(x => x.BooleanValue, x => x.DateTimeValue,
 																				  x => x.DecimalValue, x => x.IntegerValue,
 																				  x => x.KeyValue, x => x.LongTextValue, x => x.ShortTextValue);
 			target.InjectFrom(patchInjectionPolicy, source);
         }
 
-		private static void SetPropertyValue(foundation.PropertyValueBase retVal, foundation.PropertyValueType type, string value)
+		private static void SetPropertyValue(dataModel.PropertyValueBase retVal, coreModel.PropertyValueType type, string value)
 		{
 			switch (type)
 			{
-				case foundation.PropertyValueType.LongString:
+				case coreModel.PropertyValueType.LongText:
 					retVal.LongTextValue = value;
 					break;
-				case foundation.PropertyValueType.ShortString:
+				case coreModel.PropertyValueType.ShortText:
 					retVal.ShortTextValue = value;
 					break;
-				case foundation.PropertyValueType.Decimal:
+				case coreModel.PropertyValueType.Number:
 					decimal parsedDecimal;
 					Decimal.TryParse(value, out parsedDecimal);
 					retVal.DecimalValue = parsedDecimal;
 					break;
-				case foundation.PropertyValueType.DateTime:
+				case coreModel.PropertyValueType.DateTime:
 					retVal.DateTimeValue = DateTime.Parse(value);
 					break;
-				case foundation.PropertyValueType.Boolean:
+				case coreModel.PropertyValueType.Boolean:
 					retVal.BooleanValue = Boolean.Parse(value);
 					break;
 			}
@@ -116,20 +119,5 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 
 
 
-    public class PropertyValueComparer : IEqualityComparer<foundation.PropertyValueBase>
-    {
-        #region IEqualityComparer<Item> Members
-
-        public bool Equals(foundation.PropertyValueBase x, foundation.PropertyValueBase y)
-        {
-            return x.PropertyValueId == y.PropertyValueId;
-        }
-
-        public int GetHashCode(foundation.PropertyValueBase obj)
-        {
-            return obj.GetHashCode();
-        }
-
-        #endregion
-    }
+  
 }

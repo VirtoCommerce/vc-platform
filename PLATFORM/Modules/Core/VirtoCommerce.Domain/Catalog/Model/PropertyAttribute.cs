@@ -1,9 +1,9 @@
 ﻿
+using VirtoCommerce.Platform.Core.Common;
 namespace VirtoCommerce.Domain.Catalog.Model
 {
-    public class PropertyAttribute
+	public class PropertyAttribute : AuditableEntity
     {
-		public string Id { get; set; }
 		public string PropertyId { get; set; }
         public Property Property { get; set; }
         public string Value { get; set; }

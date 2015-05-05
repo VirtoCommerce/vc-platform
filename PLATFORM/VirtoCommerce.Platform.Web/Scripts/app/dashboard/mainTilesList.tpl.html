@@ -1,16 +1,5 @@
-<div class="tile-group six" ng-show="auth.isAuthenticated">
-    <div class="tile quadro __info">
-        <div google-chart chart="chartObject" style="height:100%"></div>
-    </div>
-    <div class="tile __info">
-        <span class="tile-count">5</span>
-        <span class="tile-descr">Catalogs</span>
-    </div>
-    <div class="tile __info">
-        <span class="tile-count">456</span>
-        <span class="tile-descr">Products</span>
-    </div>
-    <div class="tile __info">
+<div>
+    <script type="text/ng-template" id="tile-notifications.html">
         <ul class="list __notice">
             <li class="list-item __info">
                 <a class="list-link" href="" ng-click="notification('info')">
@@ -36,6 +25,22 @@
                     Error
                 </a>
             </li>
-        </ul> 
+        </ul>
+    </script>
+    <script type="text/ng-template" id="graph.html">
+        <div google-chart chart="item.data.chartObject" style="height:100%"></div>
+    </script>
+    <script type="text/ng-template" id="tile-count.html">
+        <div class="gridster-cnt">
+            <div class="cnt-inner">
+                <div class="list-count">{{item.data.count}}</div>
+                <div class="list-t">{{item.data.descr}}</div>
+            </div>
+        </div>
+    </script>
+    <div gridster="gridsterOpts">
+        <ul class="list">
+            <li class="list-item" gridster-item row="$storage['mainTilesY'+item.position]" col="$storage['mainTilesX'+item.position]" size-x="item.size[0]" size-y="item.size[1]" ng-repeat="item in tilesList" ng-include="item.template"></li>
+        </ul>
     </div>
 </div>

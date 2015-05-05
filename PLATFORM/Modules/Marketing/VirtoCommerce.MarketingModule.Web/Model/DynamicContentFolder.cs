@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
-using VirtoCommerce.Foundation.Frameworks;
+using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.MarketingModule.Web.Model
 {
-	public class DynamicContentFolder : Entity
+	public class DynamicContentFolder : AuditableEntity
 	{
 		public string Name { get; set; }
 		public string Description { get; set; }

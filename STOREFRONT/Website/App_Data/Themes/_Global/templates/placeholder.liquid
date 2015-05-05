@@ -1,3 +1,6 @@
 ﻿{% for banner in placeholder.banners %}
-<div id="{{placeholder.name}}">{% include 'banner' with banner %}</div>
+    {% comment %}
+        <div id="{{placeholder.name}}">{% include 'banner' with banner %}</div>
+    {% endcomment %}
+    {% include 'banner' with banner %}
 {% endfor%}

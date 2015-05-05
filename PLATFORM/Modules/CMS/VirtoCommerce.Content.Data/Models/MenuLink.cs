@@ -4,11 +4,11 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using VirtoCommerce.Foundation.Frameworks;
+using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.Content.Data.Models
 {
-	public class MenuLink : Entity, IAuditable
+	public class MenuLink : AuditableEntity
 	{
 		public MenuLink()
 		{
@@ -25,16 +25,6 @@ namespace VirtoCommerce.Content.Data.Models
 		public bool IsActive { get; set; }
 		[Required]
 		public int Priority { get; set; }
-
-		[Required]
-		public DateTime CreatedDate { get; set; }
-
-		[Required]
-		public string CreatedBy { get; set; }
-
-		public DateTime? ModifiedDate { get; set; }
-
-		public string ModifiedBy { get; set; }
 
 		public virtual MenuLinkList MenuLinkList { get; set; }
 		public string MenuLinkListId { get; set; }

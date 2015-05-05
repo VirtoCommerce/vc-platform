@@ -4,7 +4,6 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Web;
 using VirtoCommerce.Domain.Payment.Model;
-using VirtoCommerce.Foundation.Money;
 
 namespace MeS.PaymentGatewaysModule.Web.Models
 {

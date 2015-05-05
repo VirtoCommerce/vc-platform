@@ -148,7 +148,7 @@ namespace VirtoCommerce.Platform.Data.Infrastructure
             {
                 var assembly = GetType().Assembly;
                 var assemblyName = assembly.FullName.Substring(0, assembly.FullName.IndexOf(','));
-                var name = string.Join(".", assemblyName, modelName, "Data", fileName);
+                var name = string.Join(".", assemblyName, "Repositories.Sql", fileName);
                 var stream = assembly.GetManifestResourceStream(name);
 
                 if (stream != null)

@@ -4,15 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Omu.ValueInjecter;
-using VirtoCommerce.Foundation.Money;
-using VirtoCommerce.Foundation.Frameworks;
 using System.Collections.ObjectModel;
-using VirtoCommerce.Foundation.Frameworks.ConventionInjections;
-using VirtoCommerce.Foundation.Frameworks.Extensions;
-using foundationModel = VirtoCommerce.Foundation.Marketing.Model.DynamicContent;
+using dataModel = VirtoCommerce.MarketingModule.Data.Model;
 using coreModel = VirtoCommerce.Domain.Marketing.Model;
 using VirtoCommerce.MarketingModule.Data.Promotions;
 using ExpressionSerialization;
+using VirtoCommerce.Platform.Core.Common;
+using VirtoCommerce.Platform.Data.Common.ConventionInjections;
 
 namespace VirtoCommerce.CustomerModule.Data.Converters
 {
@@ -23,17 +21,14 @@ namespace VirtoCommerce.CustomerModule.Data.Converters
 		/// </summary>
 		/// <param name="catalogBase"></param>
 		/// <returns></returns>
-		public static coreModel.DynamicContentPublication ToCoreModel(this foundationModel.DynamicContentPublishingGroup dbEntity)
+		public static coreModel.DynamicContentPublication ToCoreModel(this dataModel.DynamicContentPublishingGroup dbEntity)
 		{
 			if (dbEntity == null)
 				throw new ArgumentNullException("dbEntity");
 
 			var retVal = new coreModel.DynamicContentPublication();
 			retVal.InjectFrom(dbEntity);
-			retVal.Id = dbEntity.DynamicContentPublishingGroupId;
 
-			retVal.CreatedDate = dbEntity.Created.Value;
-			retVal.ModifiedDate = dbEntity.LastModified;
 			if (dbEntity.ContentItems != null)
 			{
 				retVal.ContentItems = dbEntity.ContentItems.Select(x => x.ContentItem.ToCoreModel()).ToList();
@@ -47,27 +42,23 @@ namespace VirtoCommerce.CustomerModule.Data.Converters
 		}
 
 
-		public static foundationModel.DynamicContentPublishingGroup ToFoundation(this coreModel.DynamicContentPublication publication)
+		public static dataModel.DynamicContentPublishingGroup ToDataModel(this coreModel.DynamicContentPublication publication)
 		{
 			if (publication == null)
 				throw new ArgumentNullException("publication");
 
-			var retVal = new foundationModel.DynamicContentPublishingGroup();
+			var retVal = new dataModel.DynamicContentPublishingGroup();
 			retVal.InjectFrom(publication);
 
-			if (publication.Id != null)
-			{
-				retVal.DynamicContentPublishingGroupId = publication.Id;
-			}
-			retVal.ContentItems = new NullCollection<foundationModel.PublishingGroupContentItem>();
+			retVal.ContentItems = new NullCollection<dataModel.PublishingGroupContentItem>();
 			if (publication.ContentItems != null)
 			{
-				retVal.ContentItems = new ObservableCollection<foundationModel.PublishingGroupContentItem>(publication.ContentItems.Select(x => new foundationModel.PublishingGroupContentItem { DynamicContentPublishingGroupId = retVal.DynamicContentPublishingGroupId, DynamicContentItemId = x.Id }));
+				retVal.ContentItems = new ObservableCollection<dataModel.PublishingGroupContentItem>(publication.ContentItems.Select(x => new dataModel.PublishingGroupContentItem { DynamicContentPublishingGroupId = retVal.Id, DynamicContentItemId = x.Id }));
 			}
-			retVal.ContentPlaces = new NullCollection<foundationModel.PublishingGroupContentPlace>();
+			retVal.ContentPlaces = new NullCollection<dataModel.PublishingGroupContentPlace>();
 			if (publication.ContentPlaces != null)
 			{
-				retVal.ContentPlaces = new ObservableCollection<foundationModel.PublishingGroupContentPlace>(publication.ContentPlaces.Select(x => new foundationModel.PublishingGroupContentPlace { DynamicContentPublishingGroupId = retVal.DynamicContentPublishingGroupId, DynamicContentPlaceId = x.Id }));
+				retVal.ContentPlaces = new ObservableCollection<dataModel.PublishingGroupContentPlace>(publication.ContentPlaces.Select(x => new dataModel.PublishingGroupContentPlace { DynamicContentPublishingGroupId = retVal.Id, DynamicContentPlaceId = x.Id }));
 			}
 			return retVal;
 		}
@@ -77,25 +68,25 @@ namespace VirtoCommerce.CustomerModule.Data.Converters
 		/// </summary>
 		/// <param name="source"></param>
 		/// <param name="target"></param>
-		public static void Patch(this foundationModel.DynamicContentPublishingGroup source, foundationModel.DynamicContentPublishingGroup target)
+		public static void Patch(this dataModel.DynamicContentPublishingGroup source, dataModel.DynamicContentPublishingGroup target)
 		{
 			if (target == null)
 				throw new ArgumentNullException("target");
 
-			var patchInjection = new PatchInjection<foundationModel.DynamicContentPublishingGroup>(x => x.Name, x => x.Description, x => x.IsActive,
+			var patchInjection = new PatchInjection<dataModel.DynamicContentPublishingGroup>(x => x.Name, x => x.Description, x => x.IsActive,
 																								  x => x.StartDate, x => x.EndDate);
 
 			target.InjectFrom(patchInjection, source);
 
 			if (!source.ContentItems.IsNullCollection())
 			{
-				var itemComparer = AnonymousComparer.Create((foundationModel.PublishingGroupContentItem x) => x.DynamicContentItemId);
+				var itemComparer = AnonymousComparer.Create((dataModel.PublishingGroupContentItem x) => x.DynamicContentItemId);
 				source.ContentItems.Patch(target.ContentItems, itemComparer, (sourceProperty, targetProperty) => { });
 			}
 
 			if (!source.ContentPlaces.IsNullCollection())
 			{
-				var itemComparer = AnonymousComparer.Create((foundationModel.PublishingGroupContentPlace x) => x.DynamicContentPlaceId);
+				var itemComparer = AnonymousComparer.Create((dataModel.PublishingGroupContentPlace x) => x.DynamicContentPlaceId);
 				source.ContentPlaces.Patch(target.ContentPlaces, itemComparer, (sourceProperty, targetProperty) => { });
 			}
 

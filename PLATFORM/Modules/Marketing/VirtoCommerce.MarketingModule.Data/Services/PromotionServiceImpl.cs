@@ -3,24 +3,23 @@ using System.Collections.Generic;
 using System.Linq;
 using VirtoCommerce.Domain.Marketing.Model;
 using VirtoCommerce.Domain.Marketing.Services;
-using VirtoCommerce.Foundation.Frameworks.Caching;
 using VirtoCommerce.MarketingModule.Data.Repositories;
-using foundationModel = VirtoCommerce.Foundation.Marketing.Model;
+using foundationModel = VirtoCommerce.MarketingModule.Data.Model;
 using coreModel = VirtoCommerce.Domain.Marketing.Model;
-using VirtoCommerce.Foundation.Data.Infrastructure;
-using VirtoCommerce.Foundation.Frameworks.Extensions;
 using Omu.ValueInjecter;
 using VirtoCommerce.CustomerModule.Data.Converters;
 using ExpressionSerialization;
+using VirtoCommerce.Platform.Data.Infrastructure;
+using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.MarketingModule.Data.Services
 {
 	public class PromotionServiceImpl : ServiceBase, IPromotionService
     {
-		private readonly Func<IFoundationPromotionRepository> _repositoryFactory;
+		private readonly Func<IMarketingRepository> _repositoryFactory;
 		private readonly IMarketingExtensionManager _customPromotionManager;
 
-		public PromotionServiceImpl(Func<IFoundationPromotionRepository> repositoryFactory, IMarketingExtensionManager customPromotionManager)
+		public PromotionServiceImpl(Func<IMarketingRepository> repositoryFactory, IMarketingExtensionManager customPromotionManager)
         {
 			_repositoryFactory = repositoryFactory;
 			_customPromotionManager = customPromotionManager;
@@ -62,14 +61,14 @@ namespace VirtoCommerce.MarketingModule.Data.Services
 
 		public Promotion CreatePromotion(Promotion promotion)
 		{
-			var entity = promotion.ToFoundation();
+			var entity = promotion.ToDataModel();
 			coreModel.Promotion retVal = null;
 			using (var repository = _repositoryFactory())
 			{
 				repository.Add(entity);
 				CommitChanges(repository);
 			}
-			retVal = GetPromotionById(entity.PromotionId);
+			retVal = GetPromotionById(entity.Id);
 			return retVal;
 		}
 
@@ -80,7 +79,7 @@ namespace VirtoCommerce.MarketingModule.Data.Services
 			{
 				foreach (var promotion in promotions)
 				{
-					var sourceEntity = promotion.ToFoundation();
+					var sourceEntity = promotion.ToDataModel();
 					var targetEntity = repository.GetPromotionById(promotion.Id);
 					if (targetEntity == null)
 					{

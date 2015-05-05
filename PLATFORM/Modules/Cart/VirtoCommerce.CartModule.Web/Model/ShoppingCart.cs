@@ -5,18 +5,12 @@ using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
-using VirtoCommerce.Foundation.Frameworks;
-using VirtoCommerce.Foundation.Money;
+using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.CatalogModule.Web.Model
 {
-	public class ShoppingCart : Entity, IAuditable
+	public class ShoppingCart : AuditableEntity
 	{
-		public DateTime CreatedDate { get; set; }
-		public string CreatedBy { get; set; }
-		public DateTime? ModifiedDate { get; set; }
-		public string ModifiedBy { get; set; }
-	
 		public string Name { get; set; }
 		public string StoreId { get; set; }
 		public string ChannelId { get; set; }

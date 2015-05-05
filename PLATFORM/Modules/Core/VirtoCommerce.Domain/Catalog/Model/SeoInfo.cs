@@ -3,13 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.Domain.Catalog.Model
 {
-	public class SeoInfo : ILanguageSupport
+	public class SeoInfo : AuditableEntity, ILanguageSupport
 	{
-		public string Id { get; set; }
-	
 		public string SemanticUrl { get; set; }
 		public string PageTitle { get; set; }
 		public string MetaDescription { get; set; }
