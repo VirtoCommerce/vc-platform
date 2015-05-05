@@ -80,12 +80,10 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
         [Route("")]
         public IHttpActionResult GetProductByCode(string store, [FromUri] string code, [FromUri] moduleModel.ItemResponseGroup responseGroup = moduleModel.ItemResponseGroup.ItemLarge, string language = "en-us")
         {
-			var catalog = _storeService.GetById(store).Catalog;
 			var searchCriteria = new SearchCriteria
 			{
 				ResponseGroup = ResponseGroup.WithProducts,
 				Code = code,
-				CatalogId = catalog
 			};
 
 			var result = _searchService.Search(searchCriteria);
@@ -103,12 +101,10 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
         [Route("")]
         public IHttpActionResult GetProductByKeyword(string store, [FromUri] string keyword, [FromUri] moduleModel.ItemResponseGroup responseGroup = moduleModel.ItemResponseGroup.ItemLarge, string language = "en-us")
         {
-			var catalog = _storeService.GetById(store).Catalog;
 			var searchCriteria = new SearchCriteria
 			{
 				ResponseGroup = ResponseGroup.WithProducts,
 				SeoKeyword = keyword,
-				CatalogId = catalog
 			};
 
 			var result = _searchService.Search(searchCriteria);
