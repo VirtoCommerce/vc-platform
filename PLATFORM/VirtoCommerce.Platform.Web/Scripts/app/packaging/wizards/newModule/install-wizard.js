@@ -7,7 +7,7 @@
         if ($scope.blade.mode === 'install') {
             modules.install({ fileName: $scope.currentEntity.fileName }, onAfterSubmitted);
         } else if ($scope.blade.mode === 'update') {
-            modules.update({ id: $scope.currentEntity.id }, onAfterSubmitted);
+            modules.update({ id: $scope.currentEntity.id, fileName: $scope.currentEntity.fileName }, onAfterSubmitted);
         }
     };
 
@@ -44,7 +44,7 @@
             uploader.filters.push({
                 name: 'packageFilter',
                 fn: function (i /*{File|FileLikeObject}*/, options) {
-                    return endsWith(i.name, '.nupkg');
+                    return endsWith(i.name, '.zip');
                 }
             });
 
