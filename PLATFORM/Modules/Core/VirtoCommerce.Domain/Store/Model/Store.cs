@@ -35,5 +35,6 @@ namespace VirtoCommerce.Domain.Store.Model
 		public ICollection<StoreSetting> Settings { get; set; }
 		public ICollection<string> PaymentGateways { get; set; }
 		public ICollection<string> ShipmentGateways { get; set; }
+		public ICollection<SeoInfo> SeoInfos { get; set; }
 	}
 }

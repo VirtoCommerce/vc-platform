@@ -25,7 +25,7 @@ namespace VirtoCommerce.OrderModule.Data.Services
 		private readonly IOperationNumberGenerator _operationNumberGenerator;
 		private readonly IShoppingCartService _shoppingCartService;
 		private readonly IWorkflowService _workflowService;
-		public CustomerOrderServiceImpl(Func<IOrderRepository> orderRepositoryFactory, IOperationNumberGenerator operationNumberGenerator, IWorkflowService workflowService, IShoppingCartService shoppingCartService)
+		public CustomerOrderServiceImpl(Func<IOrderRepository> orderRepositoryFactory, IOperationNumberGenerator operationNumberGenerator, ICustomerOrderWorkflow workflowService, IShoppingCartService shoppingCartService)
 		{
 			_repositoryFactory = orderRepositoryFactory;
 			_shoppingCartService = shoppingCartService;

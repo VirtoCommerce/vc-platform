@@ -76,6 +76,8 @@
     <Compile Include="Services\ShoppingCartSearchServiceImpl.cs" />
     <Compile Include="Services\ShoppingCartServiceImpl.cs" />
     <Compile Include="Workflow\CalculateTotalsActivity.cs" />
+    <Compile Include="Workflow\IShoppingCartWorkflow.cs" />
+    <Compile Include="Workflow\ShoppingCartWorkflow.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

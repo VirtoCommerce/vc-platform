@@ -80,6 +80,8 @@
     <Compile Include="Repositories\OrderSampleDatabaseInitializer.cs" />
     <Compile Include="Services\CustomerOrderSearchServiceImpl.cs" />
     <Compile Include="Services\CustomerOrderServiceImpl.cs" />
+    <Compile Include="Workflow\CustomerOrderWorkflow.cs" />
+    <Compile Include="Workflow\ICustomerOrderWorkflow.cs" />
     <Compile Include="Services\TimeBasedNumberGeneratorImpl.cs" />
     <Compile Include="Workflow\AdjustInventoryActivity.cs" />
     <Compile Include="Workflow\CalculateTotalsActivity.cs" />

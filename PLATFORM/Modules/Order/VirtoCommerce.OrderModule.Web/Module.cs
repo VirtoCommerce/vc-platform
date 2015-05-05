@@ -49,7 +49,7 @@ namespace VirtoCommerce.OrderModule.Web
         public void Initialize()
         {
             //Business logic for core model
-            var orderWorkflowService = new ObservableWorkflowService<CustomerOrderStateBasedEvalContext>();
+			var orderWorkflowService = new CustomerOrderWorkflow();
 
             //Subscribe to order changes. Calculate totals  
             orderWorkflowService.Subscribe(new CalculateTotalsActivity());
@@ -57,7 +57,7 @@ namespace VirtoCommerce.OrderModule.Web
             orderWorkflowService.Subscribe(new ObserverFactory<CustomerOrderStateBasedEvalContext>(() => { return new AdjustInventoryActivity(_container.Resolve<IInventoryService>()); }));
             _container.RegisterInstance<IObservable<CustomerOrderStateBasedEvalContext>>(orderWorkflowService);
 
-            _container.RegisterInstance<IWorkflowService>(orderWorkflowService);
+            _container.RegisterInstance<ICustomerOrderWorkflow>(orderWorkflowService);
 
             _container.RegisterType<IOrderRepository>(new InjectionFactory(c => new OrderRepositoryImpl("VirtoCommerce", new AuditableInterceptor(), new EntityPrimaryKeyGeneratorInterceptor())));
             //_container.RegisterInstance<IInventoryService>(new Mock<IInventoryService>().Object);

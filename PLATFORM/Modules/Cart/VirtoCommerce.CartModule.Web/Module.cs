@@ -36,10 +36,10 @@ namespace VirtoCommerce.CartModule.Web
         public void Initialize()
         {
             //Business logic for core model
-            var cartWorkflowService = new ObservableWorkflowService<ShoppingCart>();
+			var cartWorkflowService = new ShoppingCartWorflow();
             //Subscribe to cart changes. Calculate totals  
             cartWorkflowService.Subscribe(new CalculateTotalsActivity());
-            _container.RegisterInstance<IObservable<ShoppingCart>>(cartWorkflowService);
+            _container.RegisterInstance<IShoppingCartWorkflow>(cartWorkflowService);
 
 			_container.RegisterType<ICartRepository>(new InjectionFactory(c => new CartRepositoryImpl("VirtoCommerce", new EntityPrimaryKeyGeneratorInterceptor(), new AuditableInterceptor())));
 

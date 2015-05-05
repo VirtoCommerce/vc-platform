@@ -38,6 +38,7 @@ namespace VirtoCommerce.StoreModule.Data.Services
 				var fulfillmentCenters = _commerceService.GetAllFulfillmentCenters();
 				retVal.ReturnsFulfillmentCenter = fulfillmentCenters.FirstOrDefault(x => x.Id == entity.ReturnsFulfillmentCenterId);
 				retVal.FulfillmentCenter = fulfillmentCenters.FirstOrDefault(x => x.Id == entity.FulfillmentCenterId);
+				retVal.SeoInfos = _commerceService.GetSeoKeywordsForEntity(id).Select(x => x.ToCoreModel()).ToList();
 			}
 
 			return retVal;
