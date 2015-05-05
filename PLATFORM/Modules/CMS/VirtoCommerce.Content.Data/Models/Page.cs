@@ -8,33 +8,18 @@ using VirtoCommerce.Foundation.Frameworks;
 
 namespace VirtoCommerce.Content.Data.Models
 {
-	public class Page : Entity, IAuditable
+	public class Page
 	{
-		public Page()
-		{
-			CreatedDate = DateTime.UtcNow;
-		}
+		public string Id { get; set; }
 
-		[Required]
-		public string Name { get; set; }
-		[Required]
-		public string Content { get; set; }
-		[Required]
-		public string Path { get; set; }
-		[Required]
+		public string PageName { get; set; }
+
 		public string Language { get; set; }
 
-		#region IAuditable Methods
+		public byte[] ByteContent { get; set; }
 
-		[Required]
-		public DateTime CreatedDate { get; set; }
+		public string ContentType { get; set; }
 
-		public string CreatedBy { get; set; }
-
-		public DateTime? ModifiedDate { get; set; }
-
-		public string ModifiedBy { get; set; }
-
-		#endregion
+		public DateTime Updated { get; set; }
 	}
 }

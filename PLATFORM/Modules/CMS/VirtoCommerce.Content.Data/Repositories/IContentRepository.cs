@@ -10,10 +10,8 @@ namespace VirtoCommerce.Content.Data.Repositories
 
 	#endregion
 
-	public interface IFileRepository
+	public interface IContentRepository
 	{
-		#region Public Methods and Operators
-
 		Task<ContentItem> GetContentItem(string path);
 
 		Task<IEnumerable<ContentItem>> GetContentItems(string path, GetThemeAssetsCriteria criteria);
@@ -26,6 +24,12 @@ namespace VirtoCommerce.Content.Data.Repositories
 
 		Task<bool> DeleteTheme(string path);
 
-		#endregion
+		ContentPage GetPage(string path);
+
+		IEnumerable<ContentPage> GetPages(string path, GetPagesCriteria criteria);
+
+		void SavePage(string path, ContentPage page);
+
+		void DeletePage(string path);
 	}
 }

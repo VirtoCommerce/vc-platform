@@ -58,56 +58,15 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Converters\ContentItemConverter.cs" />
-    <Compile Include="Converters\PageConverter.cs" />
+    <Compile Include="Converters\ContentPageConverter.cs" />
     <Compile Include="Converters\ThemeItemConverter.cs" />
-    <Compile Include="Migrations\201502151704128_Initial.cs" />
-    <Compile Include="Migrations\201502151704128_Initial.Designer.cs">
-      <DependentUpon>201502151704128_Initial.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201502161220499_AddContentType.cs" />
-    <Compile Include="Migrations\201502161220499_AddContentType.Designer.cs">
-      <DependentUpon>201502161220499_AddContentType.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201502161344479_AddThemes.cs" />
-    <Compile Include="Migrations\201502161344479_AddThemes.Designer.cs">
-      <DependentUpon>201502161344479_AddThemes.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201502171619353_AddThemesAuditable.cs" />
-    <Compile Include="Migrations\201502171619353_AddThemesAuditable.Designer.cs">
-      <DependentUpon>201502171619353_AddThemesAuditable.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201502231500102_Initial.cs" />
-    <Compile Include="Migrations\201502231500102_Initial.Designer.cs">
-      <DependentUpon>201502231500102_Initial.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201502261622360_Initial.cs" />
-    <Compile Include="Migrations\201502261622360_Initial.Designer.cs">
-      <DependentUpon>201502261622360_Initial.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201502271929017_CascadeDelete.cs" />
-    <Compile Include="Migrations\201502271929017_CascadeDelete.Designer.cs">
-      <DependentUpon>201502271929017_CascadeDelete.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201503041636021_AddByteContent.cs" />
-    <Compile Include="Migrations\201503041636021_AddByteContent.Designer.cs">
-      <DependentUpon>201503041636021_AddByteContent.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201503091625145_UpdateModel.cs" />
-    <Compile Include="Migrations\201503091625145_UpdateModel.Designer.cs">
-      <DependentUpon>201503091625145_UpdateModel.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201503092100208_AddListPropertyLanguageRemoveLinkProperties.cs" />
-    <Compile Include="Migrations\201503092100208_AddListPropertyLanguageRemoveLinkProperties.Designer.cs">
-      <DependentUpon>201503092100208_AddListPropertyLanguageRemoveLinkProperties.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201503161710486_AddLanguage.cs" />
-    <Compile Include="Migrations\201503161710486_AddLanguage.Designer.cs">
-      <DependentUpon>201503161710486_AddLanguage.cs</DependentUpon>
+    <Compile Include="Migrations\201504301233056_Initial.cs" />
+    <Compile Include="Migrations\201504301233056_Initial.Designer.cs">
+      <DependentUpon>201504301233056_Initial.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
-    <Compile Include="Migrations\Configuration_Menu.cs" />
-    <Compile Include="Migrations\Configuration_Pages.cs" />
     <Compile Include="Models\ContentItem.cs" />
+    <Compile Include="Models\ContentPage.cs" />
     <Compile Include="Models\GetPagesCriteria.cs" />
     <Compile Include="Models\GetThemeAssetsCriteria.cs" />
     <Compile Include="Models\MenuLink.cs" />
@@ -116,25 +75,17 @@
     <Compile Include="Models\Theme.cs" />
     <Compile Include="Models\ThemeAsset.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Repositories\DatabaseFileRepositoryImpl.cs" />
-    <Compile Include="Repositories\DatabaseMenuRepositoryImpl.cs" />
-    <Compile Include="Repositories\DatabasePagesRepositoryImpl.cs" />
-    <Compile Include="Repositories\FileSystemFileRepositoryImpl.cs" />
-    <Compile Include="Repositories\FileSystemPagesRepositoryImpl.cs" />
-    <Compile Include="Repositories\GitHubFileRepositoryImpl.cs" />
-    <Compile Include="Repositories\GitHubPagesRepositoryImpl.cs" />
-    <Compile Include="Repositories\IFileRepository.cs" />
+    <Compile Include="Repositories\DatabaseContentRepositoryImpl.cs" />
+    <Compile Include="Repositories\FileSystemContentRepositoryImpl.cs" />
+    <Compile Include="Repositories\GitHubContentRepositoryImpl.cs" />
+    <Compile Include="Repositories\IContentRepository.cs" />
     <Compile Include="Repositories\IMenuRepository.cs" />
-    <Compile Include="Repositories\IPagesRepository.cs" />
     <Compile Include="Services\IMenuService.cs" />
     <Compile Include="Services\IPagesService.cs" />
     <Compile Include="Services\IThemeService.cs" />
     <Compile Include="Services\MenuServiceImpl.cs" />
     <Compile Include="Services\PagesServiceImpl.cs" />
     <Compile Include="Services\ThemeServiceImpl.cs" />
-    <Compile Include="SqlMenuDatabaseInitializer.cs" />
-    <Compile Include="SqlPagesDatabaseInitializer.cs" />
-    <Compile Include="SqlThemeDatabaseInitializer.cs" />
     <Compile Include="Utility\ContentTypeUtility.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -156,38 +107,8 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201502151704128_Initial.resx">
-      <DependentUpon>201502151704128_Initial.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201502161220499_AddContentType.resx">
-      <DependentUpon>201502161220499_AddContentType.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201502161344479_AddThemes.resx">
-      <DependentUpon>201502161344479_AddThemes.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201502171619353_AddThemesAuditable.resx">
-      <DependentUpon>201502171619353_AddThemesAuditable.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201502231500102_Initial.resx">
-      <DependentUpon>201502231500102_Initial.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201502261622360_Initial.resx">
-      <DependentUpon>201502261622360_Initial.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201502271929017_CascadeDelete.resx">
-      <DependentUpon>201502271929017_CascadeDelete.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201503041636021_AddByteContent.resx">
-      <DependentUpon>201503041636021_AddByteContent.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201503091625145_UpdateModel.resx">
-      <DependentUpon>201503091625145_UpdateModel.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201503092100208_AddListPropertyLanguageRemoveLinkProperties.resx">
-      <DependentUpon>201503092100208_AddListPropertyLanguageRemoveLinkProperties.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201503161710486_AddLanguage.resx">
-      <DependentUpon>201503161710486_AddLanguage.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201504301233056_Initial.resx">
+      <DependentUpon>201504301233056_Initial.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

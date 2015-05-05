@@ -4,7 +4,7 @@
 
 	blade.selectedAssetId = undefined;
 
-	blade.refresh = function () {
+	blade.initialize = function () {
 		blade.isLoading = true;
 		themes.getAssets({ storeId: blade.choosenStoreId, themeId: blade.choosenThemeId }, function (data) {
 			blade.currentEntities = data;
@@ -176,38 +176,6 @@
 
     $scope.bladeHeadIco = 'fa fa-archive';
 
-    //$scope.bladeToolbarCommands = [
-	//	{
-	//		name: "Set Active", icon: 'fa fa-pencil-square-o',
-	//		executeMethod: function () {
-	//			blade.setThemeAsActive();
-	//		},
-	//		canExecuteMethod: function () {
-	//			return !angular.isUndefined(blade.choosenThemeId);
-	//		},
-	//		permission: 'content:manage'
-	//	},
-    //    {
-    //    	name: "Refresh", icon: 'fa fa-refresh',
-    //    	executeMethod: function () {
-    //    		blade.refresh();
-    //    	},
-    //    	canExecuteMethod: function () {
-    //    		return true;
-    //    	}
-    //    },
-	//	{
-	//		name: "Delete theme", icon: 'fa fa-trash-o',
-	//		executeMethod: function () {
-	//			blade.deleteTheme();
-	//		},
-	//		canExecuteMethod: function () {
-	//			return !angular.isUndefined(blade.choosenThemeId);
-	//		},
-	//		permission: 'content:manage'
-	//	}
-    //];
-
     blade.folders = [
 		{ name: 'assets', oneItemName: 'asset', defaultItemName: undefined, defaultContentType: null, isOpen: false },
 		{ name: 'layout', oneItemName: 'layout', defaultItemName: 'new_layout.liquid', defaultContentType: 'text/html', isOpen: false },
@@ -217,5 +185,5 @@
 		{ name: 'templates', oneItemName: 'template', defaultItemName: 'new_template.liquid', defaultContentType: 'text/html', isOpen: false }
     ];
 
-	blade.refresh();
+	blade.initialize();
 }]);
