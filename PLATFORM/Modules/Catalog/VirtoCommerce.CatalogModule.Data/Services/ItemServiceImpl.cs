@@ -46,7 +46,12 @@ namespace VirtoCommerce.CatalogModule.Data.Services
 			using (var repository = _catalogRepositoryFactory())
 			{
 				var dbItems = repository.GetItemByIds(itemIds, respGroup);
-				var dbAllVariations = repository.GetAllItemsVariations(itemIds);
+				Dictionary<string, IEnumerable<dataModel.Item>> dbAllVariations = null;
+				if ((respGroup & coreModel.ItemResponseGroup.Variations) == coreModel.ItemResponseGroup.Variations)
+				{
+					dbAllVariations = repository.GetAllItemsVariations(itemIds, respGroup);
+				}
+
 				foreach (var dbItem in dbItems)
 				{
 					// Sasha: we don't need to return variations for the variation even if it is a product
@@ -76,7 +81,7 @@ namespace VirtoCommerce.CatalogModule.Data.Services
 
 					dataModel.Item[] dbVariations = null;
 
-					if (dbAllVariations.ContainsKey(dbItem.Id))
+					if (dbAllVariations != null && dbAllVariations.ContainsKey(dbItem.Id))
 					{
 						dbVariations = dbAllVariations[dbItem.Id].ToArray();
 					}
@@ -211,88 +216,6 @@ namespace VirtoCommerce.CatalogModule.Data.Services
 		}
 
 		#endregion
-
-
-		private coreModel.CatalogProduct[] InternalGetByIds(string[] itemIds, coreModel.ItemResponseGroup respGroup)
-		{
-			// TODO: Optimize performance (Sasha)
-			// 1. Catalog should be cached and not retrieved every time from the db
-			// 2. SEO info can be retrieved for all items at once instead of one by one
-			// 3. Optimize how main variation is loaded
-			// 4. Associations shouldn't be loaded always and must be optimized as well
-			// 5. No need to get properties meta data to just retrieve property ID
-			var retVal = new List<coreModel.CatalogProduct>();
-			using (var repository = _catalogRepositoryFactory())
-			{
-				var dbItems = repository.GetItemByIds(itemIds, respGroup);
-				var dbAllVariations = repository.GetAllItemsVariations(itemIds);
-				foreach (var dbItem in dbItems)
-				{
-					// Sasha: we don't need to return variations for the variation even if it is a product
-					//var parentItemRelation = repository.ItemRelations.FirstOrDefault(x => x.ChildItemId == dbItem.ItemId);
-					//var parentItemId = parentItemRelation == null ? null : parentItemRelation.ParentItemId;
-					string parentItemId = null;
-
-					/*
-					foundation.Item[] dbVariations = null;
-					if ((respGroup & module.ItemResponseGroup.Variations) == module.ItemResponseGroup.Variations)
-					{
-						//dbVariations = repository.GetAllItemVariations(parentItemId ?? dbItem.ItemId);
-						dbVariations = repository.GetAllItemVariations(dbItem.ItemId);
-						// Sasha: we don't need to return variations for a variation
-						//When user load not main product need to include main product in variation list and exclude current
-
-						if (parentItemId != null)
-						{
-							var dbMainItem = repository.GetItemByIds(new[] { parentItemId }, respGroup).FirstOrDefault();
-							dbVariations = dbVariations.Concat(new[] { dbMainItem }).Where(x => x.ItemId != dbItem.ItemId).ToArray();
-						}
-
-						//Need this for add main product to variations list except current  
-						dbVariations = dbVariations.Concat(new[] { dbItem }).Where(x => x.ItemId != dbItem.ItemId).ToArray();
-					}
-					*/
-
-					dataModel.Item[] dbVariations = null;
-
-					if (dbAllVariations.ContainsKey(dbItem.Id))
-					{
-						dbVariations = dbAllVariations[dbItem.Id].ToArray();
-					}
-
-					SeoUrlKeyword[] seoInfos = null;
-					if ((respGroup & coreModel.ItemResponseGroup.Seo) == coreModel.ItemResponseGroup.Seo)
-					{
-						seoInfos = _commerceService.GetSeoKeywordsForEntity(dbItem.Id).ToArray();
-					}
-
-					var associatedProducts = new List<coreModel.CatalogProduct>();
-					if ((respGroup & coreModel.ItemResponseGroup.ItemAssociations) == coreModel.ItemResponseGroup.ItemAssociations)
-					{
-						if (dbItem.AssociationGroups.Any())
-						{
-							foreach (var association in dbItem.AssociationGroups.SelectMany(x => x.Associations))
-							{
-								var associatedProduct = GetById(association.ItemId, coreModel.ItemResponseGroup.ItemAssets);
-								associatedProducts.Add(associatedProduct);
-							}
-						}
-					}
-
-					var dbCatalog =  repository.GetCatalogById(dbItem.CatalogId);
-
-					var catalog = dbCatalog.ToCoreModel();
-					coreModel.Category category = null;
-					if (dbItem.CategoryItemRelations.Any())
-					{
-						var dbCategory = repository.GetCategoryById(dbItem.CategoryItemRelations.OrderBy(x => x.Priority).First().CategoryId);
-						category = dbCategory.ToCoreModel(catalog);
-					}
-					retVal.Add(dbItem.ToCoreModel(catalog, category, null, dbVariations, seoInfos, parentItemId, associatedProducts.ToArray()));
-				}
-			}
-
-			return retVal.ToArray();
-		}
+	
     }
 }
