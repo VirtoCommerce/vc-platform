@@ -551,6 +551,9 @@ namespace VirtoCommerce.Web.Models.Services
                         keyword,
                         ItemResponseGroups.ItemLarge);
 
+            if (product == null)
+                return null;
+
             var variationIds = product.GetAllVariationIds();
             var prices = await this.GetProductPricesAsync(SiteContext.Current.PriceLists, variationIds);
 

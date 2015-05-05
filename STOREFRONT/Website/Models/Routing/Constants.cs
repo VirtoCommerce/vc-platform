@@ -83,6 +83,7 @@
             }
         }
 
+        /*
         public static string ItemRouteWithCode
         {
             get
@@ -90,6 +91,7 @@
                 return string.Format("{0}/itm-{{{1}}}", CategoryRoute, Item);
             }
         }
+         * */
 
         /// <summary>
         ///     Gets the store route. {lang}/{store}

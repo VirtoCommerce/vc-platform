@@ -11,7 +11,7 @@ using VirtoCommerce.Web.Models.Services;
 namespace VirtoCommerce.Web.Controllers
 {
     [RoutePrefix("pages")]
-    public class PageController : BaseController
+    public class PageController : StoreControllerBase
     {
         #region Public Methods and Operators
         [Route("{page}")]

@@ -199,6 +199,8 @@
     <Content Include="Default_Theme\Default\assets\respond.min.js" />
     <Content Include="Default_Theme\Default\assets\slide_1.jpg" />
     <Content Include="Default_Theme\Default\assets\slide_2.jpg" />
+    <Content Include="Scripts\blades\common\content-main.js" />
+    <Content Include="Scripts\blades\common\content-main.tpl.html" />
     <Content Include="Scripts\blades\themes\add-theme.js" />
     <Content Include="Scripts\blades\themes\add-theme.tpl.html" />
     <Content Include="Scripts\blades\themes\edit-asset.js" />
@@ -247,20 +249,19 @@
     <Compile Include="Models\CheckNameResponse.cs" />
     <Compile Include="Models\ContentItem.cs" />
     <Compile Include="Models\GetPagesCriteria.cs" />
+    <Compile Include="Models\GetPagesResponse.cs" />
     <Compile Include="Models\GetThemeAssetsCriteria.cs" />
     <Compile Include="Models\LoadItemInfo.cs" />
     <Compile Include="Models\MenuLink.cs" />
     <Compile Include="Models\MenuLinkList.cs" />
     <Compile Include="Models\Page.cs" />
+    <Compile Include="Models\PageFolder.cs" />
     <Compile Include="Models\SyncAsset.cs" />
     <Compile Include="Models\Theme.cs" />
     <Compile Include="Models\ThemeAsset.cs" />
     <Compile Include="Models\ThemeAssetFolder.cs" />
     <Compile Include="Module.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SampleData\SqlMenuDatabaseInitializer.cs" />
-    <Compile Include="SampleData\SqlPagesDatabaseInitializer.cs" />
-    <Compile Include="SampleData\SqlThemeDatabaseInitializer.cs" />
     <Compile Include="Utilities\PagesUtility.cs" />
   </ItemGroup>
   <ItemGroup>

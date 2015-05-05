@@ -34,7 +34,7 @@ namespace VirtoCommerce.Content.Web
 
         public void Initialize()
         {
-            var repository = new DatabaseMenuRepositoryImpl(
+			var repository = new DatabaseContentRepositoryImpl(
                 "VirtoCommerce",
                 new AuditableInterceptor(),
                 new EntityPrimaryKeyGeneratorInterceptor());
@@ -74,7 +74,7 @@ namespace VirtoCommerce.Content.Web
                 {
                     case "GitHub":
                         return new ThemeServiceImpl(
-                            new GitHubFileRepositoryImpl(
+                            new GitHubContentRepositoryImpl(
                                 githubLogin,
                                 githubPassword,
                                 githubProductHeaderValue,
@@ -84,17 +84,17 @@ namespace VirtoCommerce.Content.Web
 
                     case "Database":
                         return new ThemeServiceImpl(
-                            new DatabaseFileRepositoryImpl(
+                            new DatabaseContentRepositoryImpl(
                                 "VirtoCommerce",
                                 new AuditableInterceptor(),
                                 new EntityPrimaryKeyGeneratorInterceptor()));
 
                     case "File System":
-                        return new ThemeServiceImpl(new FileSystemFileRepositoryImpl(fileSystemMainPath));
+                        return new ThemeServiceImpl(new FileSystemContentRepositoryImpl(fileSystemMainPath));
 
                     case "Azure and Database":
                         return new ThemeServiceImpl(
-                            new DatabaseFileRepositoryImpl(
+							new DatabaseContentRepositoryImpl(
                                 "VirtoCommerce",
                                 new AuditableInterceptor(),
                                 new EntityPrimaryKeyGeneratorInterceptor()),
@@ -102,7 +102,7 @@ namespace VirtoCommerce.Content.Web
                             uploadPath); // TODO: It could be not the Azure provider.
 
                     default:
-                        return new ThemeServiceImpl(new FileSystemFileRepositoryImpl(fileSystemMainPath));
+						return new ThemeServiceImpl(new FileSystemContentRepositoryImpl(fileSystemMainPath));
                 }
             };
 
@@ -148,7 +148,7 @@ namespace VirtoCommerce.Content.Web
                 {
                     case "GitHub":
                         return new PagesServiceImpl(
-                            new GitHubPagesRepositoryImpl(
+                            new GitHubContentRepositoryImpl(
                                 githubLogin,
                                 githubPassword,
                                 githubProductHeaderValue,
@@ -158,16 +158,16 @@ namespace VirtoCommerce.Content.Web
 
                     case "Database":
                         return new PagesServiceImpl(
-                            new DatabasePagesRepositoryImpl(
+							new DatabaseContentRepositoryImpl(
                                 "VirtoCommerce",
                                 new AuditableInterceptor(),
                                 new EntityPrimaryKeyGeneratorInterceptor()));
 
                     case "File System":
-                        return new PagesServiceImpl(new FileSystemPagesRepositoryImpl(pagesFileSystemMainPath));
+                        return new PagesServiceImpl(new FileSystemContentRepositoryImpl(pagesFileSystemMainPath));
 
                     default:
-                        return new PagesServiceImpl(new FileSystemPagesRepositoryImpl(pagesFileSystemMainPath));
+						return new PagesServiceImpl(new FileSystemContentRepositoryImpl(pagesFileSystemMainPath));
                 }
             };
 
@@ -191,35 +191,15 @@ namespace VirtoCommerce.Content.Web
 
         public void SetupDatabase(SampleDataLevel sampleDataLevel)
         {
-			//using (var context = new DatabaseMenuRepositoryImpl())
-			//{
-			//	var initializer = new SqlMenuDatabaseInitializer();
-			//	initializer.InitializeDatabase(context);
-			//}
+            var options = this._container.Resolve<IModuleInitializerOptions>();
+            var modulePath = options.GetModuleDirectoryPath("VirtoCommerce.Content");
+            var themePath = Path.Combine(modulePath, "Default_Theme");
 
-			//#region Themes_SetupDatabase
-
-			//var options = this._container.Resolve<IModuleInitializerOptions>();
-			//var modulePath = options.GetModuleDirectoryPath("VirtoCommerce.Content");
-			//var themePath = Path.Combine(modulePath, "Default_Theme");
-
-			//using (var context = new DatabaseFileRepositoryImpl())
-			//{
-			//	var initializer = new SqlThemeDatabaseInitializer(themePath);
-			//	initializer.InitializeDatabase(context);
-			//}
-
-			//#endregion
-
-			//#region Pages_SetupDatabase
-
-			//using (var context = new DatabasePagesRepositoryImpl())
-			//{
-			//	var initializer = new SqlPagesDatabaseInitializer();
-			//	initializer.InitializeDatabase(context);
-			//}
-
-			//#endregion
+			using (var context = new DatabaseContentRepositoryImpl())
+            {
+                var initializer = new SqlContentDatabaseInitializer(themePath);
+                initializer.InitializeDatabase(context);
+            }
         }
 
         #endregion

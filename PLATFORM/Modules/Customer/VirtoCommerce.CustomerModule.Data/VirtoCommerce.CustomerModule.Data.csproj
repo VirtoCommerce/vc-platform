@@ -57,9 +57,9 @@
     <Compile Include="Converters\NoteConverter.cs" />
     <Compile Include="Converters\OrganizationConverter.cs" />
     <Compile Include="Converters\PropertyConverter.cs" />
-    <Compile Include="Migrations\201504300627019_Initial.cs" />
-    <Compile Include="Migrations\201504300627019_Initial.Designer.cs">
-      <DependentUpon>201504300627019_Initial.cs</DependentUpon>
+    <Compile Include="Migrations\201505050914307_Initial.cs" />
+    <Compile Include="Migrations\201505050914307_Initial.Designer.cs">
+      <DependentUpon>201505050914307_Initial.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Model\Address.cs" />
@@ -98,8 +98,8 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201504300627019_Initial.resx">
-      <DependentUpon>201504300627019_Initial.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201505050914307_Initial.resx">
+      <DependentUpon>201505050914307_Initial.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

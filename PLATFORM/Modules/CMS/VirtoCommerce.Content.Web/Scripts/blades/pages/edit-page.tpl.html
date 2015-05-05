@@ -1,39 +1,48 @@
-﻿<div class="blade-content __large-wide">
-	<div class="blade-inner">
-		<div class="inner-block">
-            <form class="form" name="formScope">
-                <div class="columns clearfix">
-                    <div class="column">
-                        <div class="form-group">
-                            <label class="form-label">Name</label>
-                            <div class="form-input">
-                                <input focus-on="" ng-disabled="!blade.newPage" required class="form-control" ng-model="blade.currentEntity.name" placeholder="Enter page name" />
-                            </div>
-                        </div>
-                    </div>
-                    <div class="column">
-                        <div class="form-group">
-                            <label class="form-label">Language</label>
-                            <div class="form-input">
-                                <ui-select ng-model="blade.currentEntity.language" ng-disabled="!blade.newPage">
-                                    <ui-select-match placeholder="Select...">{{$select.selected}}</ui-select-match>
-                                    <ui-select-choices repeat="x in blade.languages">
-                                        <span class="flag flag-{{blade.getFlag(x)}}"></span>
-                                        <span ng-bind-html="x"></span>
-                                    </ui-select-choices>
-                                </ui-select>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Page content</label>
-                    <div class="form-input">
-                        <ui-codemirror style="max-height:350px; min-height:350px;" required class="form-control big" ng-model="blade.currentEntity.content" placeholder="Enter page content" ui-codemirror-opts="editorOptions"></ui-codemirror>
-                    </div>
-                </div>
-            </form>
+﻿<div class="blade-static __expanded" ng-if="blade.newPage">
+	<div class="form">
+		<div class="columns clearfix">
+			<div class="column">
+				<div class="form-group">
+					<label class="form-label">Name</label>
+					<div class="form-input">
+						<input focus-on="" required class="form-control" ng-model="blade.currentEntity.name" placeholder="Enter page name" />
+					</div>
+				</div>
+			</div>
+			<div class="column">
+				<div class="form-group">
+					<label class="form-label">Language</label>
+					<div class="form-input">
+						<ui-select ng-model="blade.currentEntity.language">
+							<ui-select-match placeholder="Select...">{{$select.selected}}</ui-select-match>
+							<ui-select-choices repeat="x in blade.languages">
+								<span class="flag flag-{{blade.getFlag(x)}}"></span>
+								<span ng-bind-html="x"></span>
+							</ui-select-choices>
+						</ui-select>
+					</div>
+				</div>
+			</div>
 		</div>
 	</div>
 </div>
-<div class="blade-static __bottom" ng-include="'Modules/$(VirtoCommerce.Core)/Scripts/common/create.tpl.html'" ng-if="blade.newPage"></div>
+
+<div class="blade-static __collapsed" ng-if="!blade.newPage">
+	<div class="form-group">
+		<label>{{blade.currentEntity.name}}</label> | <span class="flag flag-{{blade.getFlag(blade.currentEntity.language)}}"></span> <label>{{blade.currentEntity.language}}</label> | Liquid Documentation
+	</div>
+</div>
+
+<div class="blade-content __code-editor" style="{{blade.getBladeStyle()}}">
+	<div class="blade-inner" style="padding: 0">
+		<div class="inner-block">
+			<form class="form" style="padding: 0" name="formScope">
+				<div class="form-group">
+					<div class="form-input __expanded">
+						<ui-codemirror required ng-model="blade.currentEntity.content" ui-codemirror-opts="editorOptions"></ui-codemirror>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>

@@ -10,7 +10,7 @@ using VirtoCommerce.Web.Models.Services;
 namespace VirtoCommerce.Web.Controllers
 {
     [Canonicalized(typeof(AccountController)/*, typeof(CheckoutController)*/, Order = 1)]
-    public class BaseController : Controller
+    public abstract class StoreControllerBase : Controller
     {
         private CustomerService _customerService;
         private SecurityService _securityService;
@@ -90,6 +90,19 @@ namespace VirtoCommerce.Web.Controllers
             }
 
             return formErrors;
+        }
+
+        protected virtual void SetPageMeta(SeoKeyword keyword)
+        {
+            if (keyword == null)
+            {
+                return;
+            }
+
+            var ctx = SiteContext.Current;
+            ctx.PageDescription = keyword.MetaDescription;
+            ctx.PageTitle = keyword.Title;
+            ctx.PageKeywords = keyword.MetaKeywords;
         }
         #endregion
     }

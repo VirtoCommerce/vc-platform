@@ -2,7 +2,7 @@
 .controller('virtoCommerce.contentModule.addThemeController', ['$scope', 'dialogService', 'virtoCommerce.contentModule.themes', 'FileUploader', function ($scope, dialogService, themes, FileUploader) {
 	var blade = $scope.blade;
 
-	blade.refresh = function () {
+	blade.initialize = function () {
 		blade.isLoading = false;
 	}
 
@@ -21,11 +21,11 @@
 		}
 
 		uploader.onSuccessItem = function (fileItem, image, status, headers) {
-			$scope.blade.parentBlade.refresh(true);
+			$scope.blade.parentBlade.initialize();
 			$scope.bladeClose();
 			blade.isLoading = false;
 		};
 	}
 
-	blade.refresh();
+	blade.initialize();
 }]);

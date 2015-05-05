@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.catalogModule')
-.controller('virtoCommerce.catalogModule.catalogsSelectController', ['$scope', 'virtoCommerce.catalogModule.catalogs', 'bladeNavigationService', function ($scope, catalogs, bladeNavigationService) {
+.controller('virtoCommerce.catalogModule.catalogsSelectController', ['$scope', 'virtoCommerce.catalogModule.catalogs', '$timeout', function ($scope, catalogs, $timeout) {
 
     $scope.blade.refresh = function () {
         $scope.blade.isLoading = true;
@@ -16,8 +16,11 @@
     };
 
     $scope.selectNode = function (selectedNode) {
-        $scope.bladeClose();
-        $scope.blade.parentBlade.onAfterCatalogSelected(selectedNode);
+        $scope.bladeClose(function () {
+            $timeout(function () {
+                $scope.blade.parentBlade.onAfterCatalogSelected(selectedNode);
+            });
+        });
     };
 
     // actions on load

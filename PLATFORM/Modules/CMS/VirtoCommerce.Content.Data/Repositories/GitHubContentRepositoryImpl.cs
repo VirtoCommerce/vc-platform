@@ -1,36 +1,22 @@
-﻿
+﻿using Octokit;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
-
-using Octokit;
-
-using VirtoCommerce.Content.Data.Converters;
-using VirtoCommerce.Content.Data.Models;
-
-using ContentType = Octokit.ContentType;
 using System.Text;
+using System.Threading.Tasks;
+using VirtoCommerce.Content.Data.Models;
+using VirtoCommerce.Content.Data.Converters;
 
 namespace VirtoCommerce.Content.Data.Repositories
 {
-	public class GitHubFileRepositoryImpl : IFileRepository
+	public class GitHubContentRepositoryImpl : IContentRepository
 	{
-		#region Fields
-
 		private readonly GitHubClient _client;
-
 		private readonly string _ownerName;
-
 		private readonly string _repositoryName;
-
 		private readonly string _mainPath;
 
-		#endregion
-
-		#region Constructors and Destructors
-
-		public GitHubFileRepositoryImpl(
+		public GitHubContentRepositoryImpl(
 			string login,
 			string password,
 			string productHeaderValue,
@@ -53,10 +39,6 @@ namespace VirtoCommerce.Content.Data.Repositories
 			this._mainPath = mainPath;
 
 		}
-
-		#endregion
-
-		#region Public Methods and Operators
 
 		public async Task<ContentItem> GetContentItem(string path)
 		{
@@ -152,7 +134,7 @@ namespace VirtoCommerce.Content.Data.Repositories
 				Parallel.ForEach(files, async file =>
 				{
 					var fullFile = await GetContentItem(file.Path);
-					file.Content = fullFile.Content;
+					file.ByteContent = fullFile.ByteContent;
 				});
 			}
 
@@ -174,7 +156,7 @@ namespace VirtoCommerce.Content.Data.Repositories
 						this._ownerName,
 						this._repositoryName,
 						fullPath,
-						new CreateFileRequest("Updating file from admin", item.Content));
+						new CreateFileRequest("Updating file from admin", Encoding.UTF8.GetString(item.ByteContent)));
 			}
 			else // update existing
 			{
@@ -206,10 +188,6 @@ namespace VirtoCommerce.Content.Data.Repositories
 			return true;
 		}
 
-		#endregion
-
-		#region Methods
-
 		private async Task<RepositoryContent> GetItem(string path)
 		{
 			try
@@ -239,10 +217,98 @@ namespace VirtoCommerce.Content.Data.Repositories
 			return path.Replace(_mainPath, string.Empty).TrimStart('/');
 		}
 
-		#endregion
-
-
 		public Task<bool> DeleteTheme(string path)
+		{
+			throw new NotImplementedException();
+		}
+
+		public Models.ContentPage GetPage(string path)
+		{
+			var fullPath = GetFullPath(path);
+
+			var retVal = new Models.ContentPage();
+			var result = this._client.Repository.Content.GetContents(this._ownerName, this._repositoryName, fullPath).Result;
+
+			var item = result.SingleOrDefault();
+			if (item != null)
+			{
+				retVal = item.ToPageModel();
+			}
+
+			return retVal;
+		}
+
+		public IEnumerable<Models.ContentPage> GetPages(string path)
+		{
+			var retVal = new List<Models.ContentPage>();
+
+			var fullPath = GetFullPath(path);
+
+			var result = this._client.Repository.Content.GetContents(this._ownerName, this._repositoryName, fullPath).Result;
+
+			var files = result.Where(s => s.Type == ContentType.File);
+
+			Parallel.ForEach(files, file =>
+			{
+				var commits = this._client.
+					Repository.
+					Commits.
+					GetAll(this._ownerName, this._repositoryName, new CommitRequest { Path = file.Path }).Result;
+
+				var commit = commits.First();
+				var date = commit.Commit.Committer.Date;
+
+				retVal.Add(file.ToShortModel(date.DateTime));
+			});
+
+			return retVal;
+		}
+
+		public void SavePage(string path, Models.ContentPage page)
+		{
+			var fullPath = GetFullPath(path);
+
+			var existingItem = this.GetItem(fullPath).Result;
+
+			var sha = String.Empty;
+
+			if (existingItem == null) // create new
+			{
+				var response =
+					this._client.Repository.Content.CreateFile(
+						this._ownerName,
+						this._repositoryName,
+						fullPath,
+						new CreateFileRequest("Updating file from admin", Encoding.UTF8.GetString(page.ByteContent))).Result;
+			}
+			else // update existing
+			{
+				var response =
+					this._client.Repository.Content.UpdateFile(
+						this._ownerName,
+						this._repositoryName,
+						fullPath,
+						new UpdateFileRequest("Updating file from admin", Encoding.UTF8.GetString(page.ByteContent), existingItem.Sha)).Result;
+			}
+		}
+
+		public void DeletePage(string path)
+		{
+			var fullPath = GetFullPath(path);
+
+			var existingItem = this.GetItem(fullPath).Result;
+			if (existingItem != null)
+			{
+				this._client.Repository.Content.DeleteFile(
+					this._ownerName,
+					this._repositoryName,
+					fullPath,
+					new DeleteFileRequest("Updating file from admin", existingItem.Sha)).Wait();
+			}
+		}
+
+
+		public IEnumerable<ContentPage> GetPages(string path, GetPagesCriteria criteria)
 		{
 			throw new NotImplementedException();
 		}

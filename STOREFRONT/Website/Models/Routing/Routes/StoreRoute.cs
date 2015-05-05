@@ -204,10 +204,12 @@ namespace VirtoCommerce.Web.Models.Routing.Routes
                         {
                             categoryParseEndIndex = pathSegments.Length - 1;
                             //Last must be item code
-                            values.Add(Constants.Item, pathSegments[categoryParseEndIndex].StartsWith("itm-") ? pathSegments[categoryParseEndIndex].Substring(4) : pathSegments[categoryParseEndIndex]);
+                            //values.Add(Constants.Item, pathSegments[categoryParseEndIndex].StartsWith("itm-") ? pathSegments[categoryParseEndIndex].Substring(4) : pathSegments[categoryParseEndIndex]);
+                            values.Add(Constants.Item, pathSegments[categoryParseEndIndex]);
 
                             // hack: for quick comparison and choosing correct item handler since RouteParser is internal method of .net
                             // have to change this for MVC5
+                            /*
                             if (this.Url.Equals(Constants.ItemRouteWithCode))
                             {
                                 if (!pathSegments[categoryParseEndIndex].StartsWith("itm-"))
@@ -215,6 +217,7 @@ namespace VirtoCommerce.Web.Models.Routing.Routes
                                     return null;
                                 }
                             }
+                             * */
                         }
                         //Parse category path
                         if (categoryParseEndIndex > startIndex)

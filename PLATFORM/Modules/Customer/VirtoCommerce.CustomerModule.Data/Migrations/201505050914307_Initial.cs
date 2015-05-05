@@ -89,16 +89,16 @@ namespace VirtoCommerce.CustomerModule.Data.Migrations
                 c => new
                     {
                         Id = c.String(nullable: false, maxLength: 128),
-                        CreatedDate = c.DateTime(nullable: false),
-                        CreatedBy = c.String(nullable: false, maxLength: 64),
-                        ModifiedDate = c.DateTime(),
-                        ModifiedBy = c.String(maxLength: 64),
                         AuthorName = c.String(maxLength: 128),
                         ModifierName = c.String(maxLength: 128),
                         Title = c.String(maxLength: 128),
                         Body = c.String(),
                         IsSticky = c.Boolean(nullable: false),
                         MemberId = c.String(maxLength: 128),
+                        CreatedDate = c.DateTime(nullable: false),
+                        ModifiedDate = c.DateTime(),
+                        CreatedBy = c.String(maxLength: 64),
+                        ModifiedBy = c.String(maxLength: 64),
                         Discriminator = c.String(maxLength: 128),
                     })
                 .PrimaryKey(t => t.Id)

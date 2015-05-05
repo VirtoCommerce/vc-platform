@@ -7,7 +7,7 @@ using VirtoCommerce.Web.Models.Convertors;
 namespace VirtoCommerce.Web.Controllers
 {
     [RoutePrefix("banners")]
-    public class BannerController : BaseController
+    public class BannerController : StoreControllerBase
     {
 		/// <summary>
 		/// Shows the dynamic content
