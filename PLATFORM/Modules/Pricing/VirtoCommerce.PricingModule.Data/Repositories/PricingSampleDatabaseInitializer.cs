@@ -11,7 +11,7 @@ namespace VirtoCommerce.PricingModule.Data.Repositories
 
             foreach (var file in _orderFiles)
             {
-               // ExecuteSqlScriptFile(context, file, "Sql");
+                ExecuteSqlScriptFile(context, file, "Sql");
             }
         }
 
