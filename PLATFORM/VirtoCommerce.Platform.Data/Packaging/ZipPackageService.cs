@@ -38,9 +38,14 @@ namespace VirtoCommerce.Platform.Data.Packaging
 
         public ModuleDescriptor[] GetModules()
         {
-            var installedPackages = Directory.EnumerateFiles(_installedPackagesPath, _packageFilePattern)
-                .Select(Path.GetFileName)
-                .ToList();
+            List<string> installedPackages = null;
+
+            if (Directory.Exists(_installedPackagesPath))
+            {
+                installedPackages = Directory.EnumerateFiles(_installedPackagesPath, _packageFilePattern)
+                    .Select(Path.GetFileName)
+                    .ToList();
+            }
 
             var result = _manifestProvider.GetModuleManifests().Values
                 .Select(m => ConvertToModuleDescriptor(m, installedPackages))
