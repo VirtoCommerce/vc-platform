@@ -7,8 +7,8 @@ namespace VirtoCommerce.Platform.Data.Model
     {
         public RoleEntity()
         {
-            RolePermissions = new ObservableCollection<RolePermissionEntity>();
-            RoleAssignments = new ObservableCollection<RoleAssignmentEntity>();
+            RolePermissions = new NullCollection<RolePermissionEntity>();
+			RoleAssignments = new NullCollection<RoleAssignmentEntity>();
         }
 
         public string Name { get; set; }

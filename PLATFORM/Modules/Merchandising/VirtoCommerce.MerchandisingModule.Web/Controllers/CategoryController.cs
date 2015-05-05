@@ -4,11 +4,9 @@ using System.Linq;
 using System.Net;
 using System.Web.Http;
 using System.Web.Http.Description;
-using VirtoCommerce.CatalogModule.Data.Repositories;
+using VirtoCommerce.Domain.Catalog.Model;
 using VirtoCommerce.Domain.Catalog.Services;
-using VirtoCommerce.Foundation.AppConfig.Model;
-using VirtoCommerce.Foundation.Frameworks;
-using VirtoCommerce.Foundation.Stores.Repositories;
+using VirtoCommerce.Domain.Store.Services;
 using VirtoCommerce.MerchandisingModule.Web.Converters;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Settings;
@@ -18,42 +16,23 @@ using webModel = VirtoCommerce.MerchandisingModule.Web.Model;
 namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 {
     [RoutePrefix("api/mp/categories")]
-    public class CategoryController : BaseController
+	public class CategoryController : ApiController
     {
-        #region Fields
-
         private readonly ICategoryService _categoryService;
-        private readonly Func<IFoundationAppConfigRepository> _foundationAppConfigRepFactory;
-        private readonly Func<IFoundationCatalogRepository> _foundationCatalogRepositoryFactory;
         private readonly IPropertyService _propertyService;
         private readonly ICatalogSearchService _searchService;
+		private readonly IStoreService _storeService;
 
-        #endregion
-
-        #region Constructors and Destructors
-
-        public CategoryController(
-            ICatalogSearchService searchService,
-            ICategoryService categoryService,
-            IPropertyService propertyService,
-            Func<IFoundationCatalogRepository> foundationCatalogRepositoryFactory,
-            Func<IFoundationAppConfigRepository> foundationAppConfigRepFactory,
-            Func<IStoreRepository> storeRepository,
-            ISettingsManager settingsManager,
-            ICacheRepository cache)
-            : base(storeRepository, settingsManager, cache)
+        public CategoryController(ICatalogSearchService searchService, ICategoryService categoryService,
+								  IPropertyService propertyService, IStoreService storeService)
+      
         {
-            this._searchService = searchService;
-            this._categoryService = categoryService;
-            this._propertyService = propertyService;
-            this._foundationCatalogRepositoryFactory = foundationCatalogRepositoryFactory;
-            this._foundationAppConfigRepFactory = foundationAppConfigRepFactory;
+			_storeService = storeService;
+            _searchService = searchService;
+            _categoryService = categoryService;
+            _propertyService = propertyService;
         }
-
-        #endregion
-
-        #region Public Methods and Operators
-
+   
         [HttpGet]
         [ResponseType(typeof(webModel.Category))]
         [ClientCache(Duration = 30)]
@@ -76,18 +55,19 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
         [Route("")]
         public IHttpActionResult GetByCode(string store, [FromUri] string code, string language = "en-us")
         {
-            var catalog = this.GetCatalogId(store);
-            using (var repository = this._foundationCatalogRepositoryFactory())
-            {
-                var categoryId =
-                    repository.Categories.Where(x => x.CatalogId == catalog && x.Code == code)
-                        .Select(x => x.CategoryId)
-                        .FirstOrDefault();
-                if (categoryId != null)
-                {
-                    return this.Get(categoryId, catalog, language);
-                }
-            }
+			var catalog = _storeService.GetById(store).Catalog;
+			var searchCriteria = new SearchCriteria
+			{
+				ResponseGroup = ResponseGroup.WithCategories,
+				Code = code,
+				CatalogId = catalog
+			};
+
+			var result = _searchService.Search(searchCriteria);
+			if(result.Categories != null && result.Categories.Any())
+			{
+				return this.Get(result.Categories.First().Id, catalog, language);
+			}
             return this.StatusCode(HttpStatusCode.NotFound);
         }
 
@@ -98,42 +78,20 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
         [Route("")]
         public IHttpActionResult GetByKeyword(string store, [FromUri] string keyword, string language = "en-us")
         {
-            //var catalog = GetCatalogId(store);
-            SeoUrlKeyword urlKeyword = null;
-            using (var appConfigRepo = this._foundationAppConfigRepFactory())
-            {
-                urlKeyword =
-                    appConfigRepo.SeoUrlKeywords.FirstOrDefault(
-                        x => x.KeywordType == (int)SeoUrlKeywordTypes.Category
-                            && x.Keyword.Equals(keyword, StringComparison.OrdinalIgnoreCase));
-            }
+			var catalog = _storeService.GetById(store).Catalog;
+			var searchCriteria = new SearchCriteria
+			{
+				ResponseGroup = ResponseGroup.WithCategories,
+				SeoKeyword = keyword,
+				CatalogId = catalog
+			};
 
-            if (urlKeyword != null)
-            {
-                var result = this._categoryService.GetById(urlKeyword.KeywordValue);
-
-                if (result != null)
-                {
-                    //need seo info for parents
-                    var keywords = new List<SeoUrlKeyword>();
-                    /*
-                    if (result.Parents != null)
-                    {
-                        using (var appConfigRepo = _foundationAppConfigRepFactory())
-                        {
-                            foreach (var parent in result.Parents)
-                            {
-                                keywords.AddRange(appConfigRepo.GetAllSeoInformation(parent.Id));
-                            }
-                        }
-                    }
-                     * */
-
-                    return this.Ok(result.ToWebModel());
-                }
-            }
-
-            return this.StatusCode(HttpStatusCode.NotFound);
+			var result = _searchService.Search(searchCriteria);
+			if (result.Categories != null && result.Categories.Any())
+			{
+				return this.Get(result.Categories.First().Id, catalog, language);
+			}
+			return this.StatusCode(HttpStatusCode.NotFound);
         }
 
         /// <summary>
@@ -149,7 +107,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
         [Route("")]
         public IHttpActionResult Search(string store, string language = "en-us", [FromUri] string parentId = null)
         {
-            var catalog = this.GetCatalogId(store);
+			var catalog = _storeService.GetById(store).Catalog;
             var criteria = new moduleModel.SearchCriteria
                            {
                                CatalogId = catalog,
@@ -169,6 +127,5 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
             return this.Ok(retVal);
         }
 
-        #endregion
     }
 }

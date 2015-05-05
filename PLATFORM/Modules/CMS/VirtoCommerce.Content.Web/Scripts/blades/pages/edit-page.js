@@ -1,12 +1,13 @@
 ﻿angular.module('virtoCommerce.contentModule')
-.controller('virtoCommerce.contentModule.editPageController', ['$scope', 'dialogService', 'virtoCommerce.contentModule.stores', 'virtoCommerce.contentModule.pages', '$timeout', function ($scope, dialogService, pagesStores, pages, $timeout) {
+.controller('virtoCommerce.contentModule.editPageController', ['$scope', 'dialogService', 'virtoCommerce.contentModule.stores', 'virtoCommerce.contentModule.pages', '$timeout', 'bladeNavigationService', function ($scope, dialogService, pagesStores, pages, $timeout, bladeNavigationService) {
     var blade = $scope.blade;
     var codemirrorEditor;
 
-    blade.refresh = function () {
+    blade.initialize = function () {
         pagesStores.get({ id: blade.choosenStoreId }, function (data) {
             blade.languages = data.languages;
             blade.defaultStoreLanguage = data.defaultLanguage;
+            blade.parentBlade.initialize();
 
             if (!blade.newPage) {
                 pages.getPage({ storeId: blade.choosenStoreId, language: blade.choosenPageLanguage, pageName: blade.choosenPageName }, function (data) {
@@ -15,11 +16,12 @@
                     
                     $timeout(function () {
                         if (codemirrorEditor) {
-                            codemirrorEditor.refresh();
+                            codemirrorEditor.initialize();
                             codemirrorEditor.focus();
                         }
-                        blade.origEntity = angular.copy(blade.currentEntity);
                     }, 1);
+
+                    blade.origEntity = angular.copy(blade.currentEntity);
                 });
 
                 $scope.bladeToolbarCommands = [
@@ -55,9 +57,23 @@
 				}];
             }
             else {
-                blade.currentEntity = { storeId: blade.choosenStoreId, language: blade.defaultStoreLanguage };
+            	blade.currentEntity.language = blade.defaultStoreLanguage;
+
+                $scope.bladeToolbarCommands = [
+				{
+					name: "Create", icon: 'fa fa-save',
+					executeMethod: function () {
+						$scope.saveChanges();
+					},
+					canExecuteMethod: function () {
+						return isDirty();
+					},
+					permission: 'content:manage'
+				}];
 
                 blade.isLoading = false;
+
+                blade.origEntity = angular.copy(blade.currentEntity);
             }
         });
     };
@@ -72,14 +88,11 @@
         if (blade.newPage) {
             pages.checkName({ storeId: blade.choosenStoreId, pageName: blade.currentEntity.name, language: blade.currentEntity.language }, function (data) {
                 if (Boolean(data.result)) {
-                    pages.update({ storeId: blade.choosenStoreId }, blade.currentEntity, function () {
-                        blade.parentBlade.refresh(true);
-                        blade.choosenPageName = blade.currentEntity.name;
-                        blade.choosenPageLanguage = blade.currentEntity.language;
-                        blade.title = blade.currentEntity.name;
-                        blade.subtitle = 'Edit page';
-                        blade.newPage = false;
-                        blade.refresh();
+                	pages.update({ storeId: blade.choosenStoreId }, blade.currentEntity, function () {
+                		blade.origEntity = angular.copy(blade.currentEntity);
+                		blade.newPage = false;
+                		bladeNavigationService.closeBlade(blade);
+                        blade.parentBlade.initialize();
                     });
                 }
                 else {
@@ -98,13 +111,13 @@
         }
         else {
             pages.update({ storeId: blade.choosenStoreId }, blade.currentEntity, function () {
-                blade.parentBlade.refresh(true);
+                blade.parentBlade.initialize();
                 blade.choosenPageName = blade.currentEntity.name;
                 blade.choosenPageLanguage = blade.currentEntity.language;
                 blade.title = blade.currentEntity.name;
                 blade.subtitle = 'Edit page';
                 blade.newPage = false;
-                blade.refresh();
+                blade.initialize();
             });
         }
     };
@@ -120,7 +133,7 @@
 
                     pages.delete({ storeId: blade.choosenStoreId, pageNamesAndLanguges: blade.choosenPageLanguage + '^' + blade.choosenPageName }, function () {
                         $scope.bladeClose();
-                        blade.parentBlade.refresh();
+                        blade.parentBlade.initialize();
                     });
                 }
             }
@@ -194,5 +207,11 @@
         mode: 'htmlmixed'
     };
 
-    blade.refresh();
+    blade.getBladeStyle = function () {
+    	var value = $(window).width() - 550;
+
+    	return 'width:' + value + 'px';
+    }
+
+    blade.initialize();
 }]);

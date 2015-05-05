@@ -136,6 +136,8 @@
     <Compile Include="Caching\CacheEntries.cs" />
     <Compile Include="Caching\CacheEntry.cs" />
     <Compile Include="Caching\HttpCacheProvider.cs" />
+    <Compile Include="Caching\InMemoryCacheProvider.cs" />
+    <Compile Include="Common\ConnectionHelper.cs" />
     <Compile Include="Common\ConventionInjections\CloneInjection.cs" />
     <Compile Include="Common\ConventionInjections\IgnorePropertiesInjection.cs" />
     <Compile Include="Common\ConventionInjections\PatchInjection.cs" />
@@ -187,9 +189,9 @@
     <Compile Include="Packaging\Repositories\WebsiteProjectSystem.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\IPlatformRepository.cs" />
-    <Compile Include="Repositories\Migrations\201504241004018_Initial.cs" />
-    <Compile Include="Repositories\Migrations\201504241004018_Initial.Designer.cs">
-      <DependentUpon>201504241004018_Initial.cs</DependentUpon>
+    <Compile Include="Repositories\Migrations\201504300700222_Initial.cs" />
+    <Compile Include="Repositories\Migrations\201504300700222_Initial.Designer.cs">
+      <DependentUpon>201504300700222_Initial.cs</DependentUpon>
     </Compile>
     <Compile Include="Repositories\Migrations\Configuration.cs" />
     <Compile Include="Repositories\PlatformDatabaseInitializer.cs" />
@@ -240,8 +242,8 @@
     <EmbeddedResource Include="Packaging\Repositories\NuGet\CommonResources.resx">
       <DependentUpon>CommonResources.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Repositories\Migrations\201504241004018_Initial.resx">
-      <DependentUpon>201504241004018_Initial.cs</DependentUpon>
+    <EmbeddedResource Include="Repositories\Migrations\201504300700222_Initial.resx">
+      <DependentUpon>201504300700222_Initial.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Security\Identity\Migrations\201411101625303_InitialCreate.resx">
       <DependentUpon>201411101625303_InitialCreate.cs</DependentUpon>

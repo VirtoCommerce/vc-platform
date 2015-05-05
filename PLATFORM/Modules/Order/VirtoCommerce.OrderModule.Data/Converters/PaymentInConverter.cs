@@ -7,10 +7,9 @@ using System.Threading.Tasks;
 using VirtoCommerce.Domain.Order.Model;
 using VirtoCommerce.OrderModule.Data.Model;
 using Omu.ValueInjecter;
-using VirtoCommerce.Foundation.Money;
-using VirtoCommerce.Foundation.Frameworks.Extensions;
-using VirtoCommerce.Foundation.Frameworks.ConventionInjections;
-using cart = VirtoCommerce.Domain.Cart.Model;
+using coreModel = VirtoCommerce.Domain.Cart.Model;
+using VirtoCommerce.Platform.Core.Common;
+using VirtoCommerce.Platform.Data.Common.ConventionInjections;
 
 namespace VirtoCommerce.OrderModule.Data.Converters
 {
@@ -32,7 +31,7 @@ namespace VirtoCommerce.OrderModule.Data.Converters
 			return retVal;
 		}
 
-		public static PaymentIn ToCoreModel(this cart.Payment payment)
+		public static PaymentIn ToCoreModel(this coreModel.Payment payment)
 		{
 			if (payment == null)
 				throw new ArgumentNullException("payment");
@@ -51,7 +50,7 @@ namespace VirtoCommerce.OrderModule.Data.Converters
 			return retVal;
 		}
 
-		public static PaymentInEntity ToEntity(this PaymentIn paymentIn)
+		public static PaymentInEntity ToDataModel(this PaymentIn paymentIn)
 		{
 			if (paymentIn == null)
 				throw new ArgumentNullException("paymentIn");
@@ -63,7 +62,7 @@ namespace VirtoCommerce.OrderModule.Data.Converters
 
 			if (paymentIn.BillingAddress != null)
 			{
-				retVal.Addresses = new ObservableCollection<AddressEntity>(new AddressEntity[] { paymentIn.BillingAddress.ToEntity() });
+				retVal.Addresses = new ObservableCollection<AddressEntity>(new AddressEntity[] { paymentIn.BillingAddress.ToDataModel() });
 			}
 			return retVal;
 		}

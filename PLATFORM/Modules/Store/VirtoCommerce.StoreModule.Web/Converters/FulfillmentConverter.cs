@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
-using coreModel = VirtoCommerce.Domain.Store.Model;
+using coreModel = VirtoCommerce.Domain.Commerce.Model;
 using webModel = VirtoCommerce.StoreModule.Web.Model;
 using Omu.ValueInjecter;
 

@@ -31,8 +31,8 @@ namespace VirtoCommerce.Platform.Data.Repositories
 
             #region Settings
 
-            modelBuilder.Entity<SettingEntity>("PlatformSetting", "SettingId");
-            modelBuilder.Entity<SettingValueEntity>("PlatformSettingValue", "SettingValueId");
+            modelBuilder.Entity<SettingEntity>("PlatformSetting", "Id");
+            modelBuilder.Entity<SettingValueEntity>("PlatformSettingValue", "Id");
 
             modelBuilder.Entity<SettingValueEntity>()
                 .HasRequired(x => x.Setting)
@@ -44,12 +44,12 @@ namespace VirtoCommerce.Platform.Data.Repositories
             #region Security
 
             // Tables
-            modelBuilder.Entity<AccountEntity>("PlatformAccount", "AccountId");
-            modelBuilder.Entity<ApiAccountEntity>("PlatformApiAccount", "ApiAccountId");
-            modelBuilder.Entity<RoleEntity>("PlatformRole", "RoleId");
-            modelBuilder.Entity<PermissionEntity>("PlatformPermission", "PermissionId");
-            modelBuilder.Entity<RoleAssignmentEntity>("PlatformRoleAssignment", "RoleAssignmentId");
-            modelBuilder.Entity<RolePermissionEntity>("PlatformRolePermission", "RolePermissionId");
+			modelBuilder.Entity<AccountEntity>("PlatformAccount", "Id");
+			modelBuilder.Entity<ApiAccountEntity>("PlatformApiAccount", "Id");
+			modelBuilder.Entity<RoleEntity>("PlatformRole", "Id");
+			modelBuilder.Entity<PermissionEntity>("PlatformPermission", "Id");
+			modelBuilder.Entity<RoleAssignmentEntity>("PlatformRoleAssignment", "Id");
+			modelBuilder.Entity<RolePermissionEntity>("PlatformRolePermission", "Id");
 
             // Properties
             modelBuilder.Entity<AccountEntity>().Property(x => x.StoreId).HasMaxLength(128);
@@ -94,6 +94,8 @@ namespace VirtoCommerce.Platform.Data.Repositories
                 .HasForeignKey(x => x.RoleId);
 
             #endregion
+
+			base.OnModelCreating(modelBuilder);
         }
 
         #region IPlatformRepository Members

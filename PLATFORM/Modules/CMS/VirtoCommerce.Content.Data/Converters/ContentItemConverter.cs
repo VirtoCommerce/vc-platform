@@ -1,14 +1,9 @@
-﻿namespace VirtoCommerce.Content.Data.Converters
+﻿using Octokit;
+using System.Text;
+using VirtoCommerce.Content.Data.Models;
+
+namespace VirtoCommerce.Content.Data.Converters
 {
-	#region
-
-	using Octokit;
-	using System.Text;
-	using VirtoCommerce.Content.Data.Models;
-	using ContentType = Octokit.ContentType;
-
-	#endregion
-
 	public static class ContentItemConverter
 	{
 		#region Public Methods and Operators

@@ -5,10 +5,10 @@ using VirtoCommerce.CartModule.Data.Services;
 using VirtoCommerce.CartModule.Data.Workflow;
 using VirtoCommerce.Domain.Cart.Model;
 using VirtoCommerce.Domain.Cart.Services;
-using VirtoCommerce.Foundation.Data.Infrastructure;
-using VirtoCommerce.Foundation.Data.Infrastructure.Interceptors;
-using VirtoCommerce.Foundation.Frameworks.Workflow.Services;
+using VirtoCommerce.Domain.Common;
 using VirtoCommerce.Platform.Core.Modularity;
+using VirtoCommerce.Platform.Data.Infrastructure;
+using VirtoCommerce.Platform.Data.Infrastructure.Interceptors;
 
 namespace VirtoCommerce.CartModule.Web
 {
@@ -36,12 +36,12 @@ namespace VirtoCommerce.CartModule.Web
         public void Initialize()
         {
             //Business logic for core model
-            var cartWorkflowService = new ObservableWorkflowService<ShoppingCart>();
+			var cartWorkflowService = new ShoppingCartWorflow();
             //Subscribe to cart changes. Calculate totals  
             cartWorkflowService.Subscribe(new CalculateTotalsActivity());
-            _container.RegisterInstance<IObservable<ShoppingCart>>(cartWorkflowService);
+            _container.RegisterInstance<IShoppingCartWorkflow>(cartWorkflowService);
 
-            _container.RegisterType<ICartRepository>(new InjectionFactory(c => new CartRepositoryImpl("VirtoCommerce", new AuditableInterceptor(), new EntityPrimaryKeyGeneratorInterceptor())));
+			_container.RegisterType<ICartRepository>(new InjectionFactory(c => new CartRepositoryImpl("VirtoCommerce", new EntityPrimaryKeyGeneratorInterceptor(), new AuditableInterceptor())));
 
             _container.RegisterType<IShoppingCartService, ShoppingCartServiceImpl>();
             _container.RegisterType<IShoppingCartSearchService, ShoppingCartSearchServiceImpl>();

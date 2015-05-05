@@ -15,11 +15,19 @@ namespace VirtoCommerce.Domain.Catalog.Model
         public string Keyword { get; set; }
         public string CategoryId { get; set; }
         public string CatalogId { get; set; }
+		public string Code { get; set; }
+		public string SeoKeyword { get; set; }
+
         public List<PropertyValue> PropertyValues { get; set; }
 
         public int Start { get; set; }
 
         public int Count { get; set; }
+
+		/// <summary>
+		/// All products have index date less that specified
+		/// </summary>
+		public DateTime? IndexDate { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether [get all categories]. Needed not to filter root categories only

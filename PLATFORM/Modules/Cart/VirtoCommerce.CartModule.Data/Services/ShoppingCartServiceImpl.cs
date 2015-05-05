@@ -5,10 +5,12 @@ using System.Text;
 using System.Threading.Tasks;
 using VirtoCommerce.CartModule.Data.Converters;
 using VirtoCommerce.CartModule.Data.Repositories;
+using VirtoCommerce.CartModule.Data.Workflow;
 using VirtoCommerce.Domain.Cart.Model;
 using VirtoCommerce.Domain.Cart.Services;
-using VirtoCommerce.Foundation.Data.Infrastructure;
-using VirtoCommerce.Foundation.Frameworks.Workflow.Services;
+using VirtoCommerce.Domain.Common;
+using VirtoCommerce.Platform.Data.Infrastructure;
+
 
 namespace VirtoCommerce.CartModule.Data.Services
 {
@@ -16,8 +18,8 @@ namespace VirtoCommerce.CartModule.Data.Services
 	{
 		private const string _workflowName = "CartRecalculate";
 		private Func<ICartRepository> _repositoryFactory;
-		private readonly IWorkflowService _workflowService;
-		public ShoppingCartServiceImpl(Func<ICartRepository> repositoryFactory, IWorkflowService workflowService)
+		private readonly IShoppingCartWorkflow _workflowService;
+		public ShoppingCartServiceImpl(Func<ICartRepository> repositoryFactory, IShoppingCartWorkflow workflowService)
 		{
 			_repositoryFactory = repositoryFactory;
 			_workflowService = workflowService;
@@ -47,7 +49,7 @@ namespace VirtoCommerce.CartModule.Data.Services
 			//Do business logic on temporary  order object
 			RecalculateCart(cart);
 
-			var entity = cart.ToEntity();
+			var entity = cart.ToDataModel();
 			ShoppingCart retVal = null;
 			using (var repository = _repositoryFactory())
 			{
@@ -73,8 +75,8 @@ namespace VirtoCommerce.CartModule.Data.Services
 				{
 					throw new NullReferenceException("targetCart");
 				}
-				var sourceCartEntity = cart.ToEntity();
-				var targetCartEntity = targetCart.ToEntity();
+				var sourceCartEntity = cart.ToDataModel();
+				var targetCartEntity = targetCart.ToDataModel();
 				sourceCartEntity.Patch(targetCartEntity);
 				var changedCart = targetCartEntity.ToCoreModel();
 				changedCarts.Add(changedCart);
@@ -90,7 +92,7 @@ namespace VirtoCommerce.CartModule.Data.Services
 					//Do business logic on temporary  order object
 					RecalculateCart(changedCart);
 
-					var sourceCartEntity = changedCart.ToEntity();
+					var sourceCartEntity = changedCart.ToDataModel();
 					var targetCartEntity = repository.GetShoppingCartById(changedCart.Id);
 					if (targetCartEntity == null)
 					{
@@ -126,8 +128,7 @@ namespace VirtoCommerce.CartModule.Data.Services
 		private void RecalculateCart(ShoppingCart cart)
 		{
 			var parameters = new Dictionary<string, object>();
-			parameters["cart"] = cart;
-			_workflowService.RunWorkflow(_workflowName, parameters, null);
+			_workflowService.RunWorkflow(cart);
 		}
 	}
 }

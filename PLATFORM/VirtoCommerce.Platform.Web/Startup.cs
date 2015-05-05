@@ -134,15 +134,14 @@ namespace VirtoCommerce.Platform.Web
             #region Caching
 
             var cacheProvider = new HttpCacheProvider();
-            container.RegisterInstance<ICacheProvider>(cacheProvider);
-
             var cacheSettings = new[] 
 			{
 				new CacheSettings(CacheGroups.Settings, TimeSpan.FromDays(1)),
 				new CacheSettings(CacheGroups.Security, TimeSpan.FromMinutes(1)),
 			};
 
-            var cacheManager = new CacheManager(x => cacheProvider, group => cacheSettings.FirstOrDefault(s => s.Group == group));
+            var cacheManager = new CacheManager(cacheProvider, cacheSettings);
+			container.RegisterInstance<CacheManager>(cacheManager);
 
             #endregion
 

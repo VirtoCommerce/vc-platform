@@ -1,7 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using foundationConfig = VirtoCommerce.Foundation.AppConfig.Model;
-using module = VirtoCommerce.Domain.Catalog.Model;
+using coreModel = VirtoCommerce.Domain.Catalog.Model;
+using dataModel = VirtoCommerce.CatalogModule.Data.Model;
+using Omu.ValueInjecter;
+using VirtoCommerce.Platform.Data.Common;
+using VirtoCommerce.Platform.Data.Common.ConventionInjections;
+using VirtoCommerce.Domain.Commerce.Model;
 
 namespace VirtoCommerce.CatalogModule.Data.Converters
 {
@@ -10,20 +14,17 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
         /// <summary>
         /// Converting to model type
         /// </summary>
-        /// <param name="dbSeoInfo">The database seo information.</param>
+        /// <param name="seoUrlKeyword">The database seo information.</param>
         /// <returns></returns>
-		public static module.SeoInfo ToModuleModel(this foundationConfig.SeoUrlKeyword dbSeoInfo)
+		public static coreModel.SeoInfo ToCoreModel(this SeoUrlKeyword seoUrlKeyword)
 		{
-			var retVal = new module.SeoInfo
-			{
-				Id = dbSeoInfo.SeoUrlKeywordId,
-				SemanticUrl = dbSeoInfo.Keyword,
-				ImageAltDescription = dbSeoInfo.ImageAltDescription,
-				LanguageCode = dbSeoInfo.Language,
-				MetaDescription = dbSeoInfo.MetaDescription,
-                MetaKeywords = dbSeoInfo.MetaKeywords,
-				PageTitle = dbSeoInfo.Title
-			};
+			var retVal = new coreModel.SeoInfo();
+			retVal.InjectFrom(seoUrlKeyword);
+
+			retVal.SemanticUrl = seoUrlKeyword.Keyword;
+			retVal.LanguageCode = seoUrlKeyword.Language;
+			retVal.PageTitle = seoUrlKeyword.Title;
+
 			return retVal;
 		}
 
@@ -33,11 +34,11 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
         /// <param name="seoInfo">The seo information.</param>
         /// <param name="product">The product.</param>
         /// <returns></returns>
-		public static foundationConfig.SeoUrlKeyword ToFoundation(this module.SeoInfo seoInfo, module.CatalogProduct product)
+		public static SeoUrlKeyword ToCoreModel(this coreModel.SeoInfo seoInfo, dataModel.Item product)
 		{
-			var retVal = seoInfo.ToFoundation();
+			var retVal = seoInfo.ToCoreModel();
 			retVal.KeywordValue = product.Id;
-			retVal.KeywordType = (int)foundationConfig.SeoUrlKeywordTypes.Item;
+			retVal.KeywordType = (int)coreModel.SeoUrlKeywordTypes.Item;
 			return retVal;
 		}
 
@@ -47,70 +48,31 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
         /// <param name="seoInfo">The seo information.</param>
         /// <param name="category">The category.</param>
         /// <returns></returns>
-		public static foundationConfig.SeoUrlKeyword ToFoundation(this module.SeoInfo seoInfo, module.Category category)
+		public static SeoUrlKeyword ToCoreModel(this coreModel.SeoInfo seoInfo, dataModel.CategoryBase category)
 		{
-			var retVal = seoInfo.ToFoundation();
+			var retVal = seoInfo.ToCoreModel();
 			retVal.KeywordValue = category.Id;
-			retVal.KeywordType = (int)foundationConfig.SeoUrlKeywordTypes.Category;
+			retVal.KeywordType = (int)coreModel.SeoUrlKeywordTypes.Category;
 			return retVal;
 		}
 
-		private static foundationConfig.SeoUrlKeyword ToFoundation(this module.SeoInfo seoInfo)
+		private static SeoUrlKeyword ToCoreModel(this coreModel.SeoInfo seoInfo)
 		{
-			var retVal = new foundationConfig.SeoUrlKeyword
+			var retVal = new SeoUrlKeyword();
+			var id = retVal.Id;
+			retVal.InjectFrom(seoInfo);
+			if(seoInfo.Id == null)
 			{
-				Keyword = seoInfo.SemanticUrl,
-				Language = seoInfo.LanguageCode,
-				MetaDescription = seoInfo.MetaDescription,
-				Title = seoInfo.PageTitle,
-				ImageAltDescription = seoInfo.ImageAltDescription,
-				IsActive = true
-			};
-			if (seoInfo.Id != null)
-			{
-				retVal.SeoUrlKeywordId = seoInfo.Id;
+				retVal.Id = id;
 			}
+			retVal.Keyword = seoInfo.SemanticUrl;
+			retVal.Language = seoInfo.LanguageCode;
+			retVal.Title = seoInfo.PageTitle;
+			retVal.IsActive = true;
+		
 			return retVal;
 		}
-
-		/// <summary>
-		/// Patch CatalogLanguage type
-		/// </summary>
-		/// <param name="source"></param>
-		/// <param name="target"></param>
-		public static void Patch(this foundationConfig.SeoUrlKeyword source, foundationConfig.SeoUrlKeyword target)
-		{
-			if (target == null)
-				throw new ArgumentNullException("target");
-
-			//Simply patch
-			if (source.Keyword != null)
-				target.Keyword = source.Keyword;
-			if (source.MetaDescription != null)
-				target.MetaDescription = source.MetaDescription;
-			if (source.ImageAltDescription != null)
-				target.ImageAltDescription = source.ImageAltDescription;
-			if (source.Title != null)
-				target.Title = source.Title;
-		}
-
-	}
-
-	public class SeoInfoComparer : IEqualityComparer<foundationConfig.SeoUrlKeyword>
-	{
-		#region IEqualityComparer<SeoUrlKeyword> Members
-
-		public bool Equals(foundationConfig.SeoUrlKeyword x, foundationConfig.SeoUrlKeyword y)
-		{
-			return x.SeoUrlKeywordId == y.SeoUrlKeywordId;
-		}
-
-		public int GetHashCode(foundationConfig.SeoUrlKeyword obj)
-		{
-			return obj.SeoUrlKeywordId.GetHashCode();
-		}
-
-		#endregion
+				
 	}
 
 }

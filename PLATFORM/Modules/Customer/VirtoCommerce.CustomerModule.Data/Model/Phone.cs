@@ -20,7 +20,6 @@ namespace VirtoCommerce.CustomerModule.Data.Model
 		public string MemberId { get; set; }
 
         [ForeignKey("MemberId")]
-        [Parent]
 		public virtual Member Member { get; set; }
 
 

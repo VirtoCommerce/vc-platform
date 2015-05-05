@@ -1,25 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
-using VirtoCommerce.Foundation.Frameworks;
+using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.Domain.Marketing.Model
 {
-	public class Promotion : Entity, IAuditable
+	public class Promotion : AuditableEntity
 	{
 		public Promotion()
 		{
 			IsActive = true;
 			Id = Name = this.GetType().Name;
 		}
-
-		#region IAuditable Members
-
-		public DateTime CreatedDate { get; set; }
-		public string CreatedBy { get; set; }
-		public DateTime? ModifiedDate { get; set; }
-		public string ModifiedBy { get; set; }
-
-		#endregion
 
 		public string Store { get; set; }
 		public string Name { get; set; }
@@ -28,7 +19,7 @@ namespace VirtoCommerce.Domain.Marketing.Model
 
 		public int Priority { get; set; }
 
-		public string Coupon { get; set; }
+		public string[] Coupons { get; set; }
 
 		public string Description { get; set; }
 

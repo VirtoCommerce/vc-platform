@@ -65,7 +65,12 @@ namespace VirtoCommerce.Platform.Core.Common
 				{
 					if (obj == null)
 						return 0;
-					return compareKeySelector(obj).GetHashCode();
+					var retVal = compareKeySelector(obj);
+					if(retVal == null)
+					{
+						return 0;
+					}
+					return retVal.GetHashCode();
 				});
 		}
 

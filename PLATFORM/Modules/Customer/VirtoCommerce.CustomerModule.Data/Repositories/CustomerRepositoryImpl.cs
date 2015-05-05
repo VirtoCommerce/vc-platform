@@ -19,37 +19,21 @@ namespace VirtoCommerce.CustomerModule.Data.Repositories
 		public CustomerRepositoryImpl(string nameOrConnectionString, params IInterceptor[] interceptors)
 			: base(nameOrConnectionString, null, interceptors)
 		{
-			this.Configuration.AutoDetectChangesEnabled = true;
+			//this.Configuration.AutoDetectChangesEnabled = true;
 			this.Configuration.ProxyCreationEnabled = false;
 			Database.SetInitializer<CustomerRepositoryImpl>(null);
 		}
 
 		protected override void OnModelCreating(DbModelBuilder modelBuilder)
 		{
-			modelBuilder.Entity<Address>().HasKey(x => x.Id).Property(x => x.Id)
-											.HasColumnName("AddressId");
-			modelBuilder.Entity<ContactPropertyValue>().HasKey(x => x.Id).Property(x => x.Id)
-											.HasColumnName("PropertyValueId");
-			modelBuilder.Entity<Note>().HasKey(x => x.Id).Property(x => x.Id)
-											.HasColumnName("NoteId");
-			modelBuilder.Entity<Email>().HasKey(x => x.Id).Property(x => x.Id)
-										.HasColumnName("EmailId");
-			modelBuilder.Entity<Member>().HasKey(x => x.Id).Property(x => x.Id)
-											.HasColumnName("MemberId");
-			modelBuilder.Entity<Phone>().HasKey(x => x.Id).Property(x => x.Id)
-											.HasColumnName("PhoneId");
-			modelBuilder.Entity<MemberRelation>().HasKey(x => x.Id).Property(x => x.Id)
-											.HasColumnName("MemberRelationId");
-	
-
 			InheritanceMapping(modelBuilder);
 
-			MapEntity<Address>(modelBuilder, toTable: "vc_Address");
-			MapEntity<ContactPropertyValue>(modelBuilder, toTable: "vc_ContactPropertyValue");
-			MapEntity<Email>(modelBuilder, toTable: "vc_Email");
-			MapEntity<Note>(modelBuilder, toTable: "vc_Note");
-			MapEntity<Phone>(modelBuilder, toTable: "vc_Phone");
-			MapEntity<Organization>(modelBuilder, toTable: "vc_Organization");
+			MapEntity<Address>(modelBuilder, toTable: "Address");
+			MapEntity<ContactPropertyValue>(modelBuilder, toTable: "ContactPropertyValue");
+			MapEntity<Email>(modelBuilder, toTable: "Email");
+			MapEntity<Note>(modelBuilder, toTable: "Note");
+			MapEntity<Phone>(modelBuilder, toTable: "Phone");
+			MapEntity<Organization>(modelBuilder, toTable: "Organization");
 			
 
 			base.OnModelCreating(modelBuilder);
@@ -60,14 +44,14 @@ namespace VirtoCommerce.CustomerModule.Data.Repositories
 
 			modelBuilder.Entity<Member>().Map(entity =>
 				{
-					entity.ToTable("vc_Member");
+					entity.ToTable("Member");
 				});
 			modelBuilder.Entity<Contact>().Map(entity =>
 				{
-					entity.ToTable("vc_Contact");
+					entity.ToTable("Contact");
 				});
 
-			MapEntity<MemberRelation>(modelBuilder, toTable: "vc_MemberRelation");
+			MapEntity<MemberRelation>(modelBuilder, toTable: "MemberRelation");
 
 			#region Contact mapping
 

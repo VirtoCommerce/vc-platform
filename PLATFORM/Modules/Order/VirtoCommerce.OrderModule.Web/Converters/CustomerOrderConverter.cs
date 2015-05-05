@@ -5,7 +5,6 @@ using System.Web;
 using Omu.ValueInjecter;
 using coreModel = VirtoCommerce.Domain.Order.Model;
 using webModel = VirtoCommerce.OrderModule.Web.Model;
-using VirtoCommerce.Foundation.Frameworks.Extensions;
 
 namespace VirtoCommerce.OrderModule.Web.Converters
 {

@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Omu.ValueInjecter;
-using VirtoCommerce.Foundation.Money;
 using coreModel = VirtoCommerce.Domain.Store.Model;
 using webModel = VirtoCommerce.StoreModule.Web.Model;
 
@@ -33,6 +32,8 @@ namespace VirtoCommerce.StoreModule.Web.Converters
 				retVal.ReturnsFulfillmentCenter = store.ReturnsFulfillmentCenter.ToWebModel();
 			if (store.FulfillmentCenter != null)
 				retVal.FulfillmentCenter = store.FulfillmentCenter.ToWebModel();
+			if (store.SeoInfos != null)
+				retVal.SeoInfos = store.SeoInfos.Select(x => x.ToWebModel()).ToList();
 
 			return retVal;
 		}
@@ -57,6 +58,8 @@ namespace VirtoCommerce.StoreModule.Web.Converters
 				retVal.ReturnsFulfillmentCenter = store.ReturnsFulfillmentCenter.ToCoreModel();
 			if (store.FulfillmentCenter != null)
 				retVal.FulfillmentCenter = store.FulfillmentCenter.ToCoreModel();
+			if (store.SeoInfos != null)
+				retVal.SeoInfos = store.SeoInfos.Select(x => x.ToCoreModel()).ToList();
 
 			return retVal;
 		}

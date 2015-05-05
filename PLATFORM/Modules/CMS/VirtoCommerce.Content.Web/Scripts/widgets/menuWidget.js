@@ -2,7 +2,7 @@
 .controller('virtoCommerce.contentModule.menuWidgetController', ['$injector', '$rootScope', '$scope', 'virtoCommerce.contentModule.menus', 'bladeNavigationService', function ($injector, $rootScope, $scope, menus, bladeNavigationService) {
 	var blade = $scope.widget.blade;
 
-	$scope.widget.refresh = function () {
+	$scope.widget.initialize = function () {
 		$scope.meniLinkListsCount = '...';
 		return menus.query({ storeId: blade.currentEntityId }, function (data) {
 			$scope.meniLinkListsCount = data.length;
@@ -22,6 +22,6 @@
 		bladeNavigationService.showBlade(newBlade, blade);
 	};
 
-	$scope.widget.refresh();
+	$scope.widget.initialize();
 }]);
 

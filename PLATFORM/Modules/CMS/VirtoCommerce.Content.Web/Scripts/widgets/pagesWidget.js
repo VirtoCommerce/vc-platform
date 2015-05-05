@@ -2,7 +2,7 @@
 .controller('virtoCommerce.contentModule.pagesWidgetController', ['$injector', '$rootScope', '$scope', 'virtoCommerce.contentModule.pages', 'bladeNavigationService', function ($injector, $rootScope, $scope, pages, bladeNavigationService) {
 	var blade = $scope.widget.blade;
 
-	$scope.widget.refresh = function () {
+	$scope.widget.initialize = function () {
 		$scope.pagesCount = '...';
 		return pages.query({ storeId: blade.currentEntityId }, function (data) {
 			$scope.pagesCount = data.length;
@@ -22,5 +22,5 @@
 		bladeNavigationService.showBlade(newBlade, blade);
 	};
 
-	$scope.widget.refresh();
+	$scope.widget.initialize();
 }]);

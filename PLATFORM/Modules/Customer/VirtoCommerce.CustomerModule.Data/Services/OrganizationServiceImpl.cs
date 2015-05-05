@@ -41,7 +41,7 @@ namespace VirtoCommerce.CustomerModule.Data.Services
 
 		public coreModel.Organization Create(coreModel.Organization organization)
 		{
-			var entity = organization.ToFoundation();
+			var entity = organization.ToDataModel();
 			coreModel.Organization retVal = null;
 			using (var repository = _repositoryFactory())
 			{
@@ -59,7 +59,7 @@ namespace VirtoCommerce.CustomerModule.Data.Services
 			{
 				foreach (var organization in organizations)
 				{
-					var sourceEntity = organization.ToFoundation();
+					var sourceEntity = organization.ToDataModel();
 					var targetEntity = repository.GetOrganizationById(organization.Id);
 					if (targetEntity == null)
 					{

@@ -5,8 +5,9 @@ using System.Web;
 using Newtonsoft.Json;
 using VirtoCommerce.Domain.Common;
 using VirtoCommerce.Domain.Marketing.Model;
-using VirtoCommerce.Foundation.Frameworks;
-using VirtoCommerce.Foundation.Frameworks.Extensions;
+using VirtoCommerce.Platform.Core.Common;
+
+
 
 namespace VirtoCommerce.MarketingModule.Expressions.Promotion
 {
