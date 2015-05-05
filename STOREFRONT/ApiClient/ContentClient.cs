@@ -53,8 +53,8 @@ namespace VirtoCommerce.ApiClient
             string[] placeHolder,
             TagQuery query)
         {
-            var group = new DynamicContentItemGroup("promotion-banners-1");
-            group.Items.Add(new DynamicContentItem
+            var group1 = new DynamicContentItemGroup("HomeTopPromoBanners");
+            group1.Items.Add(new DynamicContentItem
             {
                 ContentType = "ImageNonClickable",
                 Description = "50% discount",
@@ -67,7 +67,7 @@ namespace VirtoCommerce.ApiClient
                     { "alternativeText", "Banner 1" }
                 }
             });
-            group.Items.Add(new DynamicContentItem
+            group1.Items.Add(new DynamicContentItem
             {
                 ContentType = "ImageClickable",
                 Description = "50% discount",
@@ -83,8 +83,40 @@ namespace VirtoCommerce.ApiClient
                 }
             });
 
+            var group2 = new DynamicContentItemGroup("HomeBottomPromoBanners");
+            group2.Items.Add(new DynamicContentItem
+            {
+                ContentType = "ImageNonClickable",
+                Description = "50% discount",
+                Id = System.Guid.NewGuid().ToString(),
+                IsMultilingual = true,
+                Name = "PromotionBanner1",
+                Properties = new System.Collections.Generic.Dictionary<string, string>
+                {
+                    { "imageUrl", "http://www.ronyasoft.com/products/poster-forge/templates/banners/discount-banner-template/images/discount-banner-template.jpg" },
+                    { "alternativeText", "Banner 1" }
+                }
+            });
+            group2.Items.Add(new DynamicContentItem
+            {
+                ContentType = "ImageClickable",
+                Description = "50% discount",
+                Id = System.Guid.NewGuid().ToString(),
+                IsMultilingual = true,
+                Name = "PromotionBanner2",
+                Properties = new System.Collections.Generic.Dictionary<string, string>
+                {
+                    { "imageUrl", "http://www.ronyasoft.com/products/poster-forge/templates/banners/discount-banner-template/images/discount-banner-template.jpg" },
+                    { "alternativeText", "Banner 2" },
+                    { "targetUrl", "http://localhost" },
+                    { "title", "Discount 50%!" }
+                }
+            });
+
+
             var response = new ResponseCollection<DynamicContentItemGroup>();
-            response.Items.Add(group);
+            response.Items.Add(group1);
+            response.Items.Add(group2);
 
             return Task.FromResult(response);
                 //GetAsync<ResponseCollection<DynamicContentItemGroup>>(

@@ -1,7 +1,6 @@
 ﻿using Octokit;
 using System.Text;
 using VirtoCommerce.Content.Data.Models;
-using Octokit;
 
 namespace VirtoCommerce.Content.Data.Converters
 {

@@ -1,11 +1,13 @@
 ﻿var AppDependencies = [
   'ui.router',
   'googlechart',
+  'gridster',
   'ui.bootstrap',
   'ui.utils',
   'ui.sortable',
   'ui.select',
   'ngAnimate',
+  'ngStorage',
   'ngResource',
   'xeditable',
   'fiestah.money',

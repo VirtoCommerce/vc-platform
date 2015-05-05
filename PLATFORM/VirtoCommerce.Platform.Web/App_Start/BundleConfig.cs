@@ -32,6 +32,7 @@ namespace VirtoCommerce.Platform.Web
                     "~/Scripts/codemirror/fold/foldgutter.css",
                     "~/Scripts/codemirror/liquid.css",
                     "~/Content/select.css",
+                    "~/Content/angular-gridster.min.css",
                     "~/Content/angular-multi-select.css",
                     "~/Content/ng-tags-input.css",
                     "~/Content/textAngular.css",
@@ -101,11 +102,13 @@ namespace VirtoCommerce.Platform.Web
                 //Angular ui-grid
                     "~/Scripts/ui-grid-unstable.js",
                 // Angular Misc
+                    "~/Scripts/angular-gridster.js",
                     "~/Scripts/ng-context-menu.js",
                     "~/Scripts/xeditable.js",
                     "~/Scripts/ng-focus-on.js",
                     "~/Scripts/ng-google-chart.js",
                     "~/Scripts/ng-tags-input.js",
+                    "~/Scripts/ngStorage.min.js",
                     "~/Scripts/textAngular.min.js",
                     "~/Scripts/textAngular-rangy.min.js")
                     .IncludeDirectory("~/Scripts/codemirror/", "*.js", true)
