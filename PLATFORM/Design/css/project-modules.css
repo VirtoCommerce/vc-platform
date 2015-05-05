@@ -38,22 +38,23 @@
 		height: calc(100% - 144px);
 		margin: 0 3px 0 0;
 		overflow: hidden;
-		min-width: 970px;
+		width: 970px;
 
 		-webkit-box-sizing: border-box;
 				box-sizing: border-box;
 	}
 
-	.dashboard .dashboard-area:hover
-	{
-		overflow: auto;
-	}
-
 	.dashboard .dashboard-inner
 	{
+        height: 100%;
 		padding: 0 80px 0 90px;
 		position: relative;
 	}
+
+    .dashboard .dashboard-area:hover .dashboard-inner
+    {
+        overflow: auto;
+    }
 
 		.dashboard .dashboard-title,
 		.dashboard .dashboard-account
