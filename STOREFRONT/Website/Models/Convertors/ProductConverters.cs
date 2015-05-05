@@ -65,20 +65,21 @@ namespace VirtoCommerce.Web.Models.Convertors
 
             // specify SEO based url
             var urlHelper = GetUrlHelper();
+            var url = String.Empty;
             if (urlHelper != null && productModel.Keywords != null && productModel.Keywords.Any())
             {
                 var keyword = productModel.Keywords.SeoKeyword(Thread.CurrentThread.CurrentUICulture.Name);
                 if (keyword != null)
                 {
-                    var url = urlHelper.ItemUrl(keyword.Keyword, collection == null ? "" : collection.Outline);
+                    url = urlHelper.ItemUrl(keyword.Keyword, collection == null ? "" : collection.Outline);
                     if (!String.IsNullOrEmpty(url))
                         productModel.Url = url;
                 }
             }
-            else
+
+            if (String.IsNullOrEmpty(url))
             {
-                //var url = urlHelper.ItemUrlWithCode(productModel.Handle, collection == null ? "" : collection.Outline);
-                var url = urlHelper.ItemUrl(productModel.Handle, collection == null ? "" : collection.Outline);
+                url = urlHelper.ItemUrl(productModel.Handle, collection == null ? "" : collection.Outline);
                 if (!String.IsNullOrEmpty(url))
                     productModel.Url = url;
             }
