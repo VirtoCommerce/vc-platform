@@ -50,7 +50,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 								{
 									ProductId = product
 								};
-				var cacheKey = CacheKey.Create("PriceController.GetProductPrices", products);
+				var cacheKey = CacheKey.Create("PriceController.GetProductPrices", product);
 				var prices = _cacheManager.Get(cacheKey, () => _pricingService.EvaluateProductPrices(evalContext));
 				retVal.AddRange(prices.Select(x => x.ToWebModel()));
 	
