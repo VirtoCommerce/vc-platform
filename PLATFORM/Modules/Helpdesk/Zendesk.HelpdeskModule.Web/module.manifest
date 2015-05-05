@@ -1,0 +1,64 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<module>
+	<id>Zendesk.Helpdesk</id>
+	<version>1.0.0.0</version>
+	<dependencies>
+		<dependency>VirtoCommerce.Core</dependency>
+	</dependencies>
+
+	<title>Zendesk helpdesk</title>
+	<description>APIs and UI for Zendesk helpdesk</description>
+	<authors>
+		<author>Virto Commerce</author>
+	</authors>
+	<owners>
+		<owner>Virto Commerce</owner>
+	</owners>
+	<projectUrl>http://virtocommerce.com/</projectUrl>
+	<iconUrl>http://nuget.org/Content/Images/packageDefaultIcon-50x50.png</iconUrl>
+	<releaseNotes>First version.</releaseNotes>
+	<copyright>Copyright © 2011-2015 Virto Commerce. All rights reserved</copyright>
+	<tags>zendesk help helpdesk customer support</tags>
+
+	<assemblyFile>Zendesk.HelpdeskModule.Web.dll</assemblyFile>
+	<moduleType>Zendesk.HelpdeskModule.Web.Module, Zendesk.HelpdeskModule.Web</moduleType>
+	<!--<styles>
+		<directory virtualPath="$/Content/css" searchPattern="*.css" searchSubdirectories="true" />
+	</styles>-->
+	<scripts>
+		<directory virtualPath="$/Scripts" searchPattern="*.js" searchSubdirectories="true" />
+	</scripts>
+
+	<settings>
+		<group name="Credentials">
+			<setting>
+				<name>Zendesk.Helpdesk.Credentials.AccessToken</name>
+				<valueType>secureString</valueType>
+				<title>Zendesk API access token</title>
+				<description>Zendesk API access token</description>
+			</setting>
+      <setting>
+        <name>Zendesk.Helpdesk.Subdomain</name>
+        <valueType>string</valueType>
+        <title>Zendesk subdomain name</title>
+        <description>Subdomain name of your Zendesk helpdesk. It should be like 'https://{subdomain}.subdomain.com'</description>
+      </setting>
+    </group>
+    <group name="Zendesk Description">
+      <setting>
+        <name>Zendesk.Helpdesk.Description</name>
+        <valueType>string</valueType>
+        <defaultValue>Zendesk public site description</defaultValue>
+        <title>Description</title>
+        <description>Description of zendesk for public site</description>
+      </setting>
+      <setting>
+        <name>Zendesk.Helpdesk.LogoUrl</name>
+        <valueType>string</valueType>
+        <defaultValue>https://d16cvnquvjw7pr.cloudfront.net/www/img/p-brand/downloads/Logo/Zendesk_logo_on_green_RGB.png</defaultValue>
+        <title>Logo url</title>
+        <description>Zendesk logo url</description>
+      </setting>
+    </group>
+	</settings>
+</module>
