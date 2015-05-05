@@ -96,8 +96,15 @@ namespace VirtoCommerce.Platform.Data.Security
 
                 var targetEntry = repository.Roles.Include(r => r.RolePermissions)
 											.FirstOrDefault(r => r.Id == role.Id);
-				changeTracker.Attach(targetEntry);
-                sourceEntry.Patch(targetEntry);
+				if (targetEntry == null)
+				{
+					repository.Add(sourceEntry);
+				}
+				else
+				{
+					changeTracker.Attach(targetEntry);
+					sourceEntry.Patch(targetEntry);
+				}
                 
 
                 CommitChanges(repository);
