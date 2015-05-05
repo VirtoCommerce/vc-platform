@@ -55,6 +55,13 @@ namespace VirtoCommerce.MerchandisingModule.Web
 
         public void SetupDatabase(SampleDataLevel sampleDataLevel)
         {
+            using (var db = new VirtoCommerce.Foundation.Data.AppConfig.EFAppConfigRepository(_connectionStringName))
+            {
+                var  initializer = new VirtoCommerce.Foundation.Data.AppConfig.SqlAppConfigSampleDatabaseInitializer();
+                 
+                initializer.InitializeDatabase(db);
+            }
+
             using (var db = new EFReviewRepository(_connectionStringName))
             {
                 SqlReviewDatabaseInitializer initializer;

@@ -199,7 +199,7 @@ namespace VirtoCommerce.Platform.Web
                 new ManifestPackageRepository(manifestProvider, new WebsitePackageRepository(packagesPath, projectSystem))
             );
 
-            var packageService = new PackageService(nugetProjectManager);
+            var packageService = new NuGetPackageService(nugetProjectManager);
 
             container.RegisterType<ModulesController>(new InjectionConstructor(packageService, sourcePath));
 

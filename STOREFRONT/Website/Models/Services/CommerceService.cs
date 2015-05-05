@@ -551,6 +551,9 @@ namespace VirtoCommerce.Web.Models.Services
                         keyword,
                         ItemResponseGroups.ItemLarge);
 
+            if (product == null)
+                return null;
+
             var variationIds = product.GetAllVariationIds();
             var prices = await this.GetProductPricesAsync(SiteContext.Current.PriceLists, variationIds);
 
@@ -669,9 +672,6 @@ namespace VirtoCommerce.Web.Models.Services
             if (priceLists == null || productIds == null) return null;
 
             return await this._priceClient.GetPrices(priceLists, productIds).ConfigureAwait(false);
-
-            //if (response != null)
-            //    return response.Select(p => p.AsWebModel());
         }
 
         public async Task<string[]> GetPriceListsAsync(string catalog, string currency, TagQuery tags)

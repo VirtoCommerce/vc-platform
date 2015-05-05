@@ -22,39 +22,37 @@
     }
 
     $scope.openBlade = function (type) {
-        $scope.blade.onClose(function () {
-            var newBlade = null;
-            switch (type) {
-                case 'group':
-                    newBlade = {
-                        id: "associationGroup",
-                        title: 'Association Group',
-                        controller: 'virtoCommerce.catalogModule.associationGroupSelectController',
-                        groupNames: ['Accessories', 'Related Items'],
-                        template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/wizards/newAssociation/association-wizard-group-step.tpl.html'
-                    };
+        var newBlade = null;
+        switch (type) {
+            case 'group':
+                newBlade = {
+                    id: "associationGroup",
+                    title: 'Association Group',
+                    controller: 'virtoCommerce.catalogModule.associationGroupSelectController',
+                    groupNames: ['Accessories', 'Related Items'],
+                    template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/wizards/newAssociation/association-wizard-group-step.tpl.html'
+                };
 
-                    if ($scope.blade.groupName && !_.contains(newBlade.groupNames, $scope.blade.groupName)) {
-                        newBlade.groupNames.splice(0, 0, $scope.blade.groupName);
-                    }
+                if ($scope.blade.groupName && !_.contains(newBlade.groupNames, $scope.blade.groupName)) {
+                    newBlade.groupNames.splice(0, 0, $scope.blade.groupName);
+                }
 
-                    break;
-                case 'products':
-                    newBlade = {
-                        id: 'selectCatalog',
-                        title: 'Select Catalog',
-                        subtitle: 'Adding Associations to product',
-                        controller: 'virtoCommerce.catalogModule.catalogsSelectController',
-                        template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/catalogs-select.tpl.html'
-                    };
+                break;
+            case 'products':
+                newBlade = {
+                    id: 'selectCatalog',
+                    title: 'Select Catalog',
+                    subtitle: 'Adding Associations to product',
+                    controller: 'virtoCommerce.catalogModule.catalogsSelectController',
+                    template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/catalogs-select.tpl.html'
+                };
 
-                    break;
-            }
+                break;
+        }
 
-            if (newBlade != null) {
-                bladeNavigationService.showBlade(newBlade, $scope.blade);
-            }
-        });
+        if (newBlade != null) {
+            bladeNavigationService.showBlade(newBlade, $scope.blade);
+        }
     }
 
     $scope.blade.onAfterCatalogSelected = function (selectedNode) {

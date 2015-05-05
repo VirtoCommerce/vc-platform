@@ -68,18 +68,6 @@ namespace VirtoCommerce.Content.Web
             var uploadPath = HostingEnvironment.MapPath("~/App_Data/Uploads/");
             var uploadPathFiles = HostingEnvironment.MapPath("~/App_Data/Uploads/Files/");
 
-			#region Clear uploaded files directory
-
-			var files = Directory.GetFiles(uploadPathFiles);
-			foreach (var file in files)
-				File.Delete(file);
-
-			files = Directory.GetFiles(uploadPath);
-			foreach (var file in files)
-				File.Delete(file);
-
-			#endregion
-
 			Func<string, IThemeService> themesFactory = x =>
             {
                 switch (x)
@@ -127,10 +115,22 @@ namespace VirtoCommerce.Content.Web
             {
                 Directory.CreateDirectory(uploadPath);
             }
+            else
+            {
+                var files = Directory.GetFiles(uploadPath);
+                foreach (var file in files)
+                    File.Delete(file);
+            }
 
             if (!Directory.Exists(uploadPathFiles))
             {
                 Directory.CreateDirectory(uploadPathFiles);
+            }
+            else
+            {
+                var files = Directory.GetFiles(uploadPathFiles);
+                foreach (var file in files)
+                    File.Delete(file);
             }
 
             this._container.RegisterType<ThemeController>(new InjectionConstructor(themesFactory, settingsManager, uploadPath, uploadPathFiles));
