@@ -65,8 +65,14 @@ namespace VirtoCommerce.Web.Models.Services
 
             using (var fs = new FileStream(fullPath, FileMode.Create))
             {
-                var byteContent = item.ByteContent ?? Encoding.UTF8.GetBytes(item.Content);
-                fs.Write(byteContent, 0, byteContent.Length);
+                var byteContent = item.ByteContent;
+
+                if (byteContent == null && !String.IsNullOrEmpty(item.Content))
+                    byteContent = Encoding.UTF8.GetBytes(item.Content);
+
+                if(byteContent != null)
+                    fs.Write(byteContent, 0, byteContent.Length);
+
                 fs.Close();
             }
 

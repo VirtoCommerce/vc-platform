@@ -23,7 +23,7 @@ namespace VirtoCommerce.Content.Web.Converters
             var retVal = new SyncAsset();
             retVal.InjectFrom(item);
             retVal.Updated = item.ModifiedDate;
-            retVal.Id = String.Format("{0}/pages/{1}", item.Language, item.Name);
+            retVal.Id = String.Format("{0}/{1}", item.Language, item.Name);
             return retVal;
         }
     }
