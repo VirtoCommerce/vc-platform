@@ -194,12 +194,12 @@ namespace VirtoCommerce.SearchModule.Data.Providers.Azure
                             indexField.IsKey();
                         }
 
-                        if (field.ContainsAttribute(IndexStore.YES))
+                        if (field.ContainsAttribute(IndexStore.Yes))
                         {
                             indexField.IsRetrievable();
                         }
 
-                        if (field.ContainsAttribute(IndexType.ANALYZED))
+                        if (field.ContainsAttribute(IndexType.Analyzed))
                         {
                             indexField.IsSearchable();
                         }
@@ -213,7 +213,7 @@ namespace VirtoCommerce.SearchModule.Data.Providers.Azure
                         if (indexField.Type == FieldType.StringCollection || indexField.Type == FieldType.String)
                         {
 
-                            if (field.ContainsAttribute(IndexType.ANALYZED))
+                            if (field.ContainsAttribute(IndexType.Analyzed))
                             {
                                 indexField.IsSearchable();
                             }

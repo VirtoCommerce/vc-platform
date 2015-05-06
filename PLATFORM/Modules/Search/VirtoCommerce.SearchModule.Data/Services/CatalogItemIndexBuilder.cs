@@ -119,19 +119,19 @@ namespace VirtoCommerce.SearchModule.Data.Services
         {
             var item = _itemService.GetById(productId, ItemResponseGroup.ItemProperties | ItemResponseGroup.Categories);
 
-            doc.Add(new DocumentField("__key", item.Id.ToLower(), new[] { IndexStore.YES, IndexType.NOT_ANALYZED }));
+            doc.Add(new DocumentField("__key", item.Id.ToLower(), new[] { IndexStore.Yes, IndexType.NotAnalyzed }));
             //doc.Add(new DocumentField("__loc", "en-us", new[] { IndexStore.YES, IndexType.NOT_ANALYZED }));
-            doc.Add(new DocumentField("__type", item.GetType().Name, new[] { IndexStore.YES, IndexType.NOT_ANALYZED }));
-            doc.Add(new DocumentField("__sort", item.Name, new[] { IndexStore.YES, IndexType.NOT_ANALYZED }));
-            doc.Add(new DocumentField("__hidden", (!item.IsActive).ToString().ToLower(), new[] { IndexStore.YES, IndexType.NOT_ANALYZED }));
-            doc.Add(new DocumentField("code", item.Code, new[] { IndexStore.YES, IndexType.NOT_ANALYZED }));
-            doc.Add(new DocumentField("name", item.Name, new[] { IndexStore.YES, IndexType.NOT_ANALYZED }));
+            doc.Add(new DocumentField("__type", item.GetType().Name, new[] { IndexStore.Yes, IndexType.NotAnalyzed }));
+            doc.Add(new DocumentField("__sort", item.Name, new[] { IndexStore.Yes, IndexType.NotAnalyzed }));
+            doc.Add(new DocumentField("__hidden", (!item.IsActive).ToString().ToLower(), new[] { IndexStore.Yes, IndexType.NotAnalyzed }));
+            doc.Add(new DocumentField("code", item.Code, new[] { IndexStore.Yes, IndexType.NotAnalyzed }));
+            doc.Add(new DocumentField("name", item.Name, new[] { IndexStore.Yes, IndexType.NotAnalyzed }));
             //doc.Add(new DocumentField("startdate", item.StartDate, new[] { IndexStore.YES, IndexType.NOT_ANALYZED }));
             //doc.Add(new DocumentField("enddate", item.P.HasValue ? item.EndDate : DateTime.MaxValue, new[] { IndexStore.YES, IndexType.NOT_ANALYZED }));
-            doc.Add(new DocumentField("createddate", item.CreatedDate, new[] { IndexStore.YES, IndexType.NOT_ANALYZED }));
-            doc.Add(new DocumentField("lastmodifieddate", item.ModifiedDate ?? DateTime.MaxValue, new[] { IndexStore.YES, IndexType.NOT_ANALYZED }));
-            doc.Add(new DocumentField("catalog", item.CatalogId.ToLower(), new[] { IndexStore.YES, IndexType.NOT_ANALYZED, IndexDataType.StringCollection }));
-            doc.Add(new DocumentField("__outline", item.CatalogId.ToLower(), new[] { IndexStore.YES, IndexType.NOT_ANALYZED, IndexDataType.StringCollection }));
+            doc.Add(new DocumentField("createddate", item.CreatedDate, new[] { IndexStore.Yes, IndexType.NotAnalyzed }));
+            doc.Add(new DocumentField("lastmodifieddate", item.ModifiedDate ?? DateTime.MaxValue, new[] { IndexStore.Yes, IndexType.NotAnalyzed }));
+            doc.Add(new DocumentField("catalog", item.CatalogId.ToLower(), new[] { IndexStore.Yes, IndexType.NotAnalyzed, IndexDataType.StringCollection }));
+            doc.Add(new DocumentField("__outline", item.CatalogId.ToLower(), new[] { IndexStore.Yes, IndexType.NotAnalyzed, IndexDataType.StringCollection }));
 
             if (item.CategoryId != null)
             {
@@ -149,8 +149,8 @@ namespace VirtoCommerce.SearchModule.Data.Services
             //IndexReviews(ref doc, item);
 
             // add to content
-            doc.Add(new DocumentField("__content", item.Name, new[] { IndexStore.YES, IndexType.ANALYZED, IndexDataType.StringCollection }));
-            doc.Add(new DocumentField("__content", item.Code, new[] { IndexStore.YES, IndexType.ANALYZED, IndexDataType.StringCollection }));
+            doc.Add(new DocumentField("__content", item.Name, new[] { IndexStore.Yes, IndexType.Analyzed, IndexDataType.StringCollection }));
+            doc.Add(new DocumentField("__content", item.Code, new[] { IndexStore.Yes, IndexType.Analyzed, IndexDataType.StringCollection }));
         }
 
         protected virtual void IndexItemCustomProperties(ref ResultDocument doc, CatalogProduct item)
@@ -166,7 +166,7 @@ namespace VirtoCommerce.SearchModule.Data.Services
                 {
                     case PropertyValueType.LongText:
                     case PropertyValueType.ShortText:
-                        doc.Add(new DocumentField(contentField, propValue.Value.ToString().ToLower(), new[] { IndexStore.YES, IndexType.ANALYZED, IndexDataType.StringCollection }));
+                        doc.Add(new DocumentField(contentField, propValue.Value.ToString().ToLower(), new[] { IndexStore.Yes, IndexType.Analyzed, IndexDataType.StringCollection }));
                         break;
                 }
 
@@ -179,11 +179,11 @@ namespace VirtoCommerce.SearchModule.Data.Services
                     case PropertyValueType.Boolean:
                     case PropertyValueType.DateTime:
                     case PropertyValueType.Number:
-                        doc.Add(new DocumentField(propValue.PropertyName, propValue.Value, new[] { IndexStore.YES, IndexType.ANALYZED }));
+                        doc.Add(new DocumentField(propValue.PropertyName, propValue.Value, new[] { IndexStore.Yes, IndexType.Analyzed }));
                         break;
                     case PropertyValueType.LongText:
                     case PropertyValueType.ShortText:
-                        doc.Add(new DocumentField(propValue.PropertyName, propValue.Value.ToString().ToLower(), new[] { IndexStore.YES, IndexType.ANALYZED }));
+                        doc.Add(new DocumentField(propValue.PropertyName, propValue.Value.ToString().ToLower(), new[] { IndexStore.Yes, IndexType.Analyzed }));
                         break;
                 }
             }
@@ -194,17 +194,17 @@ namespace VirtoCommerce.SearchModule.Data.Services
         {
             var cacheKey = CacheKey.Create("CatalogItemIndexBuilder.IndexItemCategories", item.CategoryId);
             var category = _cacheManager.Get(cacheKey, () => _categoryService.GetById(item.CategoryId));
-            doc.Add(new DocumentField(String.Format("sort{0}{1}", category.CatalogId, category.Id), category.Priority, new string[] { IndexStore.YES, IndexType.NOT_ANALYZED }));
+            doc.Add(new DocumentField(String.Format("sort{0}{1}", category.CatalogId, category.Id), category.Priority, new string[] { IndexStore.Yes, IndexType.NotAnalyzed }));
             IndexCategory(ref doc, category);
         }
 
         protected virtual void IndexCategory(ref ResultDocument doc, Category category)
         {
-            doc.Add(new DocumentField("catalog", category.CatalogId.ToLower(), new[] { IndexStore.YES, IndexType.NOT_ANALYZED }));
+            doc.Add(new DocumentField("catalog", category.CatalogId.ToLower(), new[] { IndexStore.Yes, IndexType.NotAnalyzed }));
 
             // get category path
             var outline = String.Join(";", category.Parents.Select(x => x.Id));
-            doc.Add(new DocumentField("__outline", outline.ToLower(), new[] { IndexStore.YES, IndexType.NOT_ANALYZED }));
+            doc.Add(new DocumentField("__outline", outline.ToLower(), new[] { IndexStore.Yes, IndexType.NotAnalyzed }));
 
             // Now index all linked categories
             //Current code occur stack overflow
@@ -231,8 +231,8 @@ namespace VirtoCommerce.SearchModule.Data.Services
             foreach (var price in prices)
             {
                 //var priceList = price.Pricelist;
-                doc.Add(new DocumentField(String.Format("price_{0}_{1}", price.Currency, price.PricelistId), price.Sale ?? price.List, new[] { IndexStore.NO, IndexType.NOT_ANALYZED }));
-                doc.Add(new DocumentField(String.Format("price_{0}_{1}_value", price.Currency, price.PricelistId), price.Sale == null ? price.List.ToString() : price.Sale.ToString(), new[] { IndexStore.YES, IndexType.NOT_ANALYZED }));
+                doc.Add(new DocumentField(String.Format("price_{0}_{1}", price.Currency, price.PricelistId), price.Sale ?? price.List, new[] { IndexStore.No, IndexType.NotAnalyzed }));
+                doc.Add(new DocumentField(String.Format("price_{0}_{1}_value", price.Currency, price.PricelistId), price.Sale == null ? price.List.ToString() : price.Sale.ToString(), new[] { IndexStore.Yes, IndexType.NotAnalyzed }));
             }
 
         }

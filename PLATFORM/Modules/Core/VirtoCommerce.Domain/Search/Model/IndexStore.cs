@@ -1,14 +1,14 @@
 ﻿namespace VirtoCommerce.Domain.Search.Model
 {
-    public partial class IndexStore
+    public static class IndexStore
     {
         /// <summary>
         /// Values are stored in the index
         /// </summary>
-        public static string YES = "Store.Yes";
+        public const string Yes = "Store.Yes";
         /// <summary>
         /// Values are not stored
         /// </summary>
-        public static string NO = "Store.No";
+        public const string No = "Store.No";
     }
 }

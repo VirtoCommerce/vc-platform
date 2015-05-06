@@ -401,13 +401,13 @@ namespace VirtoCommerce.SearchModule.Data.Providers.ElasticSearch
                     {
                         var type = field.Value != null ? field.Value.GetType() : null;
                         var propertyMap = new CustomPropertyMap<ESDocument>(field.Name, type)
-                        .Store(field.ContainsAttribute(IndexStore.YES))
-                        .When(field.ContainsAttribute(IndexType.NOT_ANALYZED), p => p.Index(IndexState.not_analyzed))
+                        .Store(field.ContainsAttribute(IndexStore.Yes))
+                        .When(field.ContainsAttribute(IndexType.NotAnalyzed), p => p.Index(IndexState.not_analyzed))
                         .When(field.Name.StartsWith("__content", StringComparison.OrdinalIgnoreCase), p => p.Analyzer(SearchAnalyzer))
                         .When(Regex.Match(field.Name, "__content_en.*").Success, x => x.Analyzer("english"))
                         .When(Regex.Match(field.Name, "__content_de.*").Success, x => x.Analyzer("german"))
                         .When(Regex.Match(field.Name, "__content_ru.*").Success, x => x.Analyzer("russian"))
-                        .When(field.ContainsAttribute(IndexType.NO), p => p.Index(IndexState.no));
+                        .When(field.ContainsAttribute(IndexType.No), p => p.Index(IndexState.no));
 
                         properties.CustomProperty(field.Name, p => propertyMap);
 

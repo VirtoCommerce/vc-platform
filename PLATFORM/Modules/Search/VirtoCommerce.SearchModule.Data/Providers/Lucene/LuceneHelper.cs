@@ -41,16 +41,16 @@ namespace VirtoCommerce.SearchModule.Data.Providers.Lucene
             var store = Field.Store.YES;
             var index = Field.Index.NOT_ANALYZED;
 
-            if (field.ContainsAttribute(value: IndexStore.NO))
+            if (field.ContainsAttribute(IndexStore.No))
             {
                 store = Field.Store.NO;
             }
 
-            if (field.ContainsAttribute(IndexType.ANALYZED))
+            if (field.ContainsAttribute(IndexType.Analyzed))
             {
                 index = Field.Index.ANALYZED;
             }
-            else if (field.ContainsAttribute(IndexType.NO))
+            else if (field.ContainsAttribute(IndexType.No))
             {
                 index = Field.Index.NO;
             }

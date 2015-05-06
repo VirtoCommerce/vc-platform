@@ -1,18 +1,18 @@
 ﻿namespace VirtoCommerce.Domain.Search.Model
 {
-    public partial class IndexType
+    public static class IndexType
     {
         /// <summary>
         /// Values are parsed to tokens
         /// </summary>
-        public static string ANALYZED = "Index.Analyzed";
+        public const string Analyzed = "Index.Analyzed";
         /// <summary>
         /// Values are indexed as is
         /// </summary>
-        public static string NOT_ANALYZED = "Index.NotAnalyzed";
+        public const string NotAnalyzed = "Index.NotAnalyzed";
         /// <summary>
         /// Values are not indexed
         /// </summary>
-        public static string NO = "Index.No";
+        public const string No = "Index.No";
     }
 }
