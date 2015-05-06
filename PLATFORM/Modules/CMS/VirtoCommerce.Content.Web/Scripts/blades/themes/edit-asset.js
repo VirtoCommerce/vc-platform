@@ -10,10 +10,11 @@
             themes.getAsset({ storeId: blade.choosenStoreId, themeId: blade.choosenThemeId, assetId: blade.choosenAssetId }, function (data) {
                 blade.isLoading = false;
                 blade.currentEntity = data;
+                blade.origEntity = angular.copy(blade.currentEntity);
 
                 $timeout(function () {
                     if (codemirrorEditor) {
-                        codemirrorEditor.initialize();
+                    	codemirrorEditor.refresh();
                         codemirrorEditor.focus();
                     }
                     blade.origEntity = angular.copy(blade.currentEntity);

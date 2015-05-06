@@ -7,6 +7,7 @@
 
 	blade.initialize = function () {
 		blade.isLoading = true;
+		blade.currentEntities = [];
 
 		stores.query({}, function (data) {
 			for (var i = 0; i < data.length; i++) {

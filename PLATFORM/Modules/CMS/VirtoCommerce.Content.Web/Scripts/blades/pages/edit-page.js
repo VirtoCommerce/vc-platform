@@ -16,7 +16,7 @@
                     
                     $timeout(function () {
                         if (codemirrorEditor) {
-                            codemirrorEditor.initialize();
+                        	codemirrorEditor.refresh();
                             codemirrorEditor.focus();
                         }
                     }, 1);
