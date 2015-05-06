@@ -1,17 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-
-using global::Lucene.Net.Index;
-
-using global::Lucene.Net.Search;
-
-using global::Lucene.Net.Util;
-
+using Lucene.Net.Index;
+using Lucene.Net.Search;
+using Lucene.Net.Util;
 using SpellChecker.Net.Search.Spell;
 using VirtoCommerce.Domain.Search;
+using VirtoCommerce.Domain.Search.Filters;
+using VirtoCommerce.Domain.Search.Model;
 
-namespace VirtoCommerce.SearchModule.Data.Provides.Lucene
+namespace VirtoCommerce.SearchModule.Data.Providers.Lucene
 {
     public class LuceneSearchResults
     {
@@ -65,8 +63,8 @@ namespace VirtoCommerce.SearchModule.Data.Provides.Lucene
                 if (v.Displays != null)
                 {
                     var returnVal = from d in v.Displays
-                        where d.Language.Equals(locale, StringComparison.OrdinalIgnoreCase)
-                        select d.Value;
+                                    where d.Language.Equals(locale, StringComparison.OrdinalIgnoreCase)
+                                    select d.Value;
                     return returnVal.ToString();
                 }
                 return v.Id;
@@ -120,7 +118,8 @@ namespace VirtoCommerce.SearchModule.Data.Provides.Lucene
             {
                 if (!f.Key.Equals(facetGroup.FieldName))
                 {
-                    if (ffilter == null) ffilter = new BooleanFilter();
+                    if (ffilter == null)
+                        ffilter = new BooleanFilter();
 
                     var q = LuceneQueryHelper.CreateQuery(criteria, f, Occur.SHOULD);
                     ffilter.Add(new FilterClause(q, Occur.MUST));
@@ -130,18 +129,20 @@ namespace VirtoCommerce.SearchModule.Data.Provides.Lucene
             foreach (var value in values)
             {
                 var queryFilter = new BooleanFilter();
-                    
+
                 var valueFilter = LuceneQueryHelper.CreateQueryForValue(Results.SearchCriteria, filter, value);
 
-                if (valueFilter == null) continue;
+                if (valueFilter == null)
+                    continue;
 
                 queryFilter.Add(new FilterClause(valueFilter, Occur.MUST));
-                if(ffilter!=null)
+                if (ffilter != null)
                     queryFilter.Add(new FilterClause(ffilter, Occur.MUST));
 
                 var filterArray = queryFilter.GetDocIdSet(reader);
                 var newCount = (int)CalculateFacetCount(baseDocIdSet, filterArray);
-                if (newCount == 0) continue;
+                if (newCount == 0)
+                    continue;
 
                 var newFacet = new Facet(facetGroup, value.Id, GetDescription(value, Results.SearchCriteria.Locale), newCount);
                 facetGroup.Facets.Add(newFacet);
@@ -160,7 +161,7 @@ namespace VirtoCommerce.SearchModule.Data.Provides.Lucene
         /// <returns></returns>
         private string[] SuggestSimilar(IndexReader reader, string fieldName, string word)
         {
-			var spell = new SpellChecker.Net.Search.Spell.SpellChecker(reader.Directory());
+            var spell = new SpellChecker.Net.Search.Spell.SpellChecker(reader.Directory());
             spell.IndexDictionary(new LuceneDictionary(reader, fieldName));
             var similarWords = spell.SuggestSimilar(word, 2);
 
@@ -178,7 +179,8 @@ namespace VirtoCommerce.SearchModule.Data.Provides.Lucene
         private void CreateDocuments(Searcher searcher, TopDocs topDocs)
         {
             // if no documents found return
-            if (topDocs == null) return;
+            if (topDocs == null)
+                return;
 
             var entries = new List<ResultDocument>();
 
@@ -186,11 +188,13 @@ namespace VirtoCommerce.SearchModule.Data.Provides.Lucene
             var totalCount = topDocs.TotalHits;
             var recordsToRetrieve = Results.SearchCriteria.RecordsToRetrieve;
             var startIndex = Results.SearchCriteria.StartingRecord;
-            if (recordsToRetrieve > totalCount) recordsToRetrieve = totalCount;
+            if (recordsToRetrieve > totalCount)
+                recordsToRetrieve = totalCount;
 
             for (var index = startIndex; index < startIndex + recordsToRetrieve; index++)
             {
-                if (index >= totalCount) break;
+                if (index >= totalCount)
+                    break;
 
                 var document = searcher.Doc(topDocs.ScoreDocs[index].Doc);
                 var doc = new ResultDocument();
@@ -208,7 +212,8 @@ namespace VirtoCommerce.SearchModule.Data.Provides.Lucene
                             if (doc.ContainsKey(field.Name))
                             {
                                 var existingField = doc[field.Name] as DocumentField;
-                                if (existingField != null) existingField.AddValue(field.StringValue);
+                                if (existingField != null)
+                                    existingField.AddValue(field.StringValue);
                             }
                             else // add new
                             {
@@ -244,7 +249,7 @@ namespace VirtoCommerce.SearchModule.Data.Provides.Lucene
 
             #region Subcategory filters
 
-           
+
             /* 
             var catalogCriteria = Results.SearchCriteria as CatalogItemSearchCriteria;
             if (catalogCriteria != null && catalogCriteria.ChildCategoryFilters.Any())
@@ -287,7 +292,7 @@ namespace VirtoCommerce.SearchModule.Data.Provides.Lucene
 
                     if (!String.IsNullOrEmpty(Results.SearchCriteria.Currency) && filter is PriceRangeFilter)
                     {
-                        var valCurrency = ((PriceRangeFilter) filter).Currency;
+                        var valCurrency = ((PriceRangeFilter)filter).Currency;
                         if (
                             !valCurrency.Equals(
                                 Results.SearchCriteria.Currency, StringComparison.OrdinalIgnoreCase))
@@ -317,15 +322,15 @@ namespace VirtoCommerce.SearchModule.Data.Provides.Lucene
         /// <param name="criteria">The criteria.</param>
         private void CreateSuggestions(IndexReader reader, ISearchCriteria criteria)
         {
-			if (criteria is KeywordSearchCriteria)
-			{
-			    var c = criteria as KeywordSearchCriteria;
-				var phrase = c.SearchPhrase;
-			    if (!String.IsNullOrEmpty(phrase))
-			    {
-			        Results.Suggestions = SuggestSimilar(reader, "_content", phrase);
-			    }
-			}
+            if (criteria is KeywordSearchCriteria)
+            {
+                var c = criteria as KeywordSearchCriteria;
+                var phrase = c.SearchPhrase;
+                if (!String.IsNullOrEmpty(phrase))
+                {
+                    Results.Suggestions = SuggestSimilar(reader, "_content", phrase);
+                }
+            }
         }
 
         #endregion

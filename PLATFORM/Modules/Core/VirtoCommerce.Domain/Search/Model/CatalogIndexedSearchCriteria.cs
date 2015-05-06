@@ -1,51 +1,35 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Collections.Specialized;
-using System.Runtime.Serialization;
+using System.Text;
 
-namespace VirtoCommerce.Domain.Search
+namespace VirtoCommerce.Domain.Search.Model
 {
     public class CatalogIndexedSearchCriteria : KeywordSearchCriteria
     {
-		/// <summary>
-		/// Initializes a new instance of the <see cref="CatalogItemSearchCriteria"/> class.
-		/// </summary>
-		/// <param name="documentType">Type of the document.</param>
-		public CatalogIndexedSearchCriteria(string documentType)
-			: base(documentType)
-		{
-		}
+        public const string DocType = "catalogitem";
 
-		/// <summary>
-		/// Initializes a new instance of the <see cref="CatalogItemSearchCriteria"/> class.
-		/// </summary>
-		public CatalogIndexedSearchCriteria()
-			: base("catalogitem")
-		{
-		}
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CatalogIndexedSearchCriteria"/> class.
+        /// </summary>
+        /// <param name="documentType">Type of the document.</param>
+        public CatalogIndexedSearchCriteria(string documentType)
+            : base(documentType)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CatalogIndexedSearchCriteria"/> class.
+        /// </summary>
+        public CatalogIndexedSearchCriteria()
+            : base(DocType)
+        {
+        }
 
         /// <summary>
         /// Gets the default sort order.
         /// </summary>
         /// <value>The default sort order.</value>
         public static SearchSort DefaultSortOrder { get { return new SearchSort("__sort", false); } }
-
-        /// <summary>
-        /// Gets or sets the sort.
-        /// </summary>
-        /// <value>The sort.</value>
-        public override SearchSort Sort
-        {
-            get
-            {
-                return base.Sort;
-            }
-            set
-            {
-                base.Sort = value;
-            }
-        }
 
         private bool _isFuzzySearch;
 
@@ -111,7 +95,7 @@ namespace VirtoCommerce.Domain.Search
             set { ChangeState(); _outlines = value; }
         }
 
-   
+
         private string[] _pricelists;
         /// <summary>
         /// Gets or sets the price lists that should be considered for filtering.
@@ -187,7 +171,7 @@ namespace VirtoCommerce.Domain.Search
             set { ChangeState(); _endDate = value; }
         }
 
-       
+
 
         /// <summary>
         /// Gets the cache key. Used to generate hash that will be used to store data in memory if needed.
@@ -199,13 +183,13 @@ namespace VirtoCommerce.Domain.Search
             {
                 var key = new StringBuilder();
 
-				key.Append("_rg" + ResponseGroups);
+                key.Append("_rg" + ResponseGroups);
                 key.Append("_ct" + Catalog);
                 key.Append("_fs" + IsFuzzySearch.ToString());
                 key.Append("_pl" + String.Join("-", Pricelists));
-				//Because not null-able and  always cache key have new value 
-               // key.Append("_st" + StartDate.ToString("s"));
-               // key.Append("_ed" + (EndDate.HasValue ? EndDate.Value.ToString("s") : ""));
+                //Because not null-able and  always cache key have new value 
+                // key.Append("_st" + StartDate.ToString("s"));
+                // key.Append("_ed" + (EndDate.HasValue ? EndDate.Value.ToString("s") : ""));
                 key.Append("_phr" + SearchPhrase);
                 // Add active fields
 

@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
-namespace VirtoCommerce.SearchModule.Data.Provides.Azure
+namespace VirtoCommerce.SearchModule.Data.Providers.Azure
 {
     public class AzureDocument : Dictionary<string, object>
     {

@@ -1,16 +1,17 @@
 ﻿using System;
 using System.Collections.Specialized;
-using System.Linq;
-using global::Lucene.Net.Index;
-using global::Lucene.Net.Search;
+using Lucene.Net.Index;
+using Lucene.Net.Search;
 using VirtoCommerce.Domain.Search;
+using VirtoCommerce.Domain.Search.Filters;
+using VirtoCommerce.Domain.Search.Model;
 using VirtoCommerce.Domain.Search.Services;
 
-namespace VirtoCommerce.SearchModule.Data.Provides.Lucene
+namespace VirtoCommerce.SearchModule.Data.Providers.Lucene
 {
     public class BaseSearchQueryBuilder : ISearchQueryBuilder
     {
-        
+
         /// <summary>
         ///     Builds the query.
         /// </summary>

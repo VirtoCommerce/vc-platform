@@ -1,23 +1,22 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
-namespace VirtoCommerce.SearchModule.Data.Provides.Azure
+namespace VirtoCommerce.SearchModule.Data.Providers.Azure
 {
     public static class StringBuilderExtensions
     {
         public static void Filter(this StringBuilder builder, string field, string value, bool and = true)
         {
-            if (builder.Length > 0) builder.AppendFormat(" {0} ", and ? "and" : "or");
+            if (builder.Length > 0)
+                builder.AppendFormat(" {0} ", and ? "and" : "or");
 
             builder.AppendFormat("{0} eq '{1}'", field, value);
         }
 
         public static void Filter(this StringBuilder builder, string field, string[] values, bool and = true)
         {
-            if (builder.Length > 0) builder.AppendFormat(" {0} ", and ? "and" : "or");
+            if (builder.Length > 0)
+                builder.AppendFormat(" {0} ", and ? "and" : "or");
 
             var index = 0;
             builder.AppendFormat("(");
@@ -36,7 +35,8 @@ namespace VirtoCommerce.SearchModule.Data.Provides.Azure
 
         public static void Filter(this StringBuilder builder, string field, DateTime value, string op, bool and = true)
         {
-            if (builder.Length > 0) builder.AppendFormat(" {0} ", and ? "and" : "or");
+            if (builder.Length > 0)
+                builder.AppendFormat(" {0} ", and ? "and" : "or");
 
             builder.AppendFormat("(");
             builder.AppendFormat("{0} {1} {2}", field, op, AzureSearchHelper.ConvertToOffset(value).ToString("u").Replace(" ", "T"));
@@ -45,16 +45,19 @@ namespace VirtoCommerce.SearchModule.Data.Provides.Azure
 
         public static void FilterContains(this StringBuilder builder, string field, string value, bool and = true)
         {
-            if (builder.Length > 0) builder.AppendFormat(" {0} ", and ? "and" : "or");
+            if (builder.Length > 0)
+                builder.AppendFormat(" {0} ", and ? "and" : "or");
 
             builder.AppendFormat("{0}/any(t: t eq '{1}')", field, value);
         }
 
         public static void FilterContains(this StringBuilder builder, string field, string[] values, bool and = true)
         {
-            if (values.Length == 0) return;
-            
-            if (builder.Length > 0) builder.AppendFormat(" {0} ", and ? "and" : "or");
+            if (values.Length == 0)
+                return;
+
+            if (builder.Length > 0)
+                builder.AppendFormat(" {0} ", and ? "and" : "or");
 
             var index = 0;
             builder.AppendFormat("{0}/any(t:", field);
@@ -74,15 +77,18 @@ namespace VirtoCommerce.SearchModule.Data.Provides.Azure
 
         public static void Query(this StringBuilder builder, string value, bool and = true)
         {
-            if (builder.Length > 0) builder.AppendFormat("{0}", and ? "+" : "|");
+            if (builder.Length > 0)
+                builder.AppendFormat("{0}", and ? "+" : "|");
             builder.AppendFormat("{0}", value);
         }
 
         public static void Query(this StringBuilder builder, string field, string[] values, bool and = true)
         {
-            if (values.Length == 0) return;
+            if (values.Length == 0)
+                return;
 
-            if (builder.Length > 0) builder.AppendFormat("{0}", and ? "+" : "|");
+            if (builder.Length > 0)
+                builder.AppendFormat("{0}", and ? "+" : "|");
 
             var index = 0;
             builder.AppendFormat("(");

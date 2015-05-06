@@ -1,12 +1,13 @@
 ﻿using System;
-using global::Lucene.Net.Documents;
+using Lucene.Net.Documents;
 using VirtoCommerce.Domain.Search;
+using VirtoCommerce.Domain.Search.Model;
 
-namespace VirtoCommerce.SearchModule.Data.Provides.Lucene
+namespace VirtoCommerce.SearchModule.Data.Providers.Lucene
 {
     public class LuceneHelper
     {
- 
+
         /// <summary>
         ///     Converts the search document to lucene document
         /// </summary>

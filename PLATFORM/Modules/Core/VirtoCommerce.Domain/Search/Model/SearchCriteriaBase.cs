@@ -1,22 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.Serialization;
 using System.Text;
 
-namespace VirtoCommerce.Domain.Search
+namespace VirtoCommerce.Domain.Search.Model
 {
-
     public abstract class SearchCriteriaBase : ISearchCriteria
     {
-        string _documentType = String.Empty;
-        /// <summary>
-        /// Gets the scope.
-        /// </summary>
+        private readonly string _documentType;
         public virtual string DocumentType
         {
             get { return _documentType; }
-            private set { _documentType = value; }
         }
 
         bool _cacheResults = true;
@@ -86,32 +79,21 @@ namespace VirtoCommerce.Domain.Search
             }
         }
 
-        public virtual SearchSort Sort
-        {
-            get;
-            set;
-        }
+        public virtual SearchSort Sort { get; set; }
 
-        public virtual string Locale
-        {
-            get;set;
-        }
+        public virtual string Locale { get; set; }
 
-        public virtual string Currency
-        {
-            get;
-            set;
-        }
+        public virtual string Currency { get; set; }
 
         public virtual string KeyField
         {
             get { return "__key"; }
         }
 
-		public virtual string OutlineField
-		{
-			get { return "__outline"; }
-		}
+        public virtual string OutlineField
+        {
+            get { return "__outline"; }
+        }
 
         public virtual string ReviewsTotalField
         {
@@ -170,10 +152,7 @@ namespace VirtoCommerce.Domain.Search
         /// <value>
         /// 	<c>true</c> if this instance is modified; otherwise, <c>false</c>.
         /// </value>
-        protected bool IsModified
-        {
-            get; set;
-        }
+        protected bool IsModified { get; set; }
 
         /// <summary>
         /// Changes the state.

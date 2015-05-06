@@ -1,17 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Net;
 using System.Threading;
-using RedDog.Search;
 using RedDog.Search.Http;
 using RedDog.Search.Model;
-using VirtoCommerce.Domain.Search.Services;
 using VirtoCommerce.Domain.Search;
+using VirtoCommerce.Domain.Search.Model;
+using VirtoCommerce.Domain.Search.Services;
 
-namespace VirtoCommerce.SearchModule.Data.Provides.Azure
+namespace VirtoCommerce.SearchModule.Data.Providers.Azure
 {
     public class AzureSearchProvider : ISearchProvider
     {
@@ -94,12 +92,12 @@ namespace VirtoCommerce.SearchModule.Data.Provides.Azure
 
                 resultDocs = searchResponse.Body;
             }
-                /*
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-                 * */
+            /*
+        catch (Exception ex)
+        {
+            throw ex;
+        }
+             * */
 
             // Parse documents returned
             var documents = new ResultDocumentSet { TotalCount = resultDocs.Count };
@@ -180,13 +178,13 @@ namespace VirtoCommerce.SearchModule.Data.Provides.Azure
                 }
                 else
                 {
-                    if (mapping == null || !mapping.Fields.Any(x=>x.Name.Equals(key)))
+                    if (mapping == null || !mapping.Fields.Any(x => x.Name.Equals(key)))
                     {
                         if (mapping == null)
                         {
                             mapping = new Index(scope);
                         }
-                       
+
                         var indexField = new IndexField(key, AzureTypeMapper.GetAzureSearchType(field));
 
                         indexField.IsFilterable();
@@ -238,13 +236,13 @@ namespace VirtoCommerce.SearchModule.Data.Provides.Azure
                 IApiResponse<Index> result = null;
                 if (indexAlreadyCreated)
                 {
-                    result = Client.UpdateIndex(mapping).Result;    
+                    result = Client.UpdateIndex(mapping).Result;
                 }
                 else
                 {
-                    result = Client.CreateIndex(mapping).Result;    
+                    result = Client.CreateIndex(mapping).Result;
                 }
-                
+
                 if (!result.IsSuccess)
                 {
                     throw new IndexBuildException(AzureSearchHelper.FormatSearchException(result));
@@ -276,9 +274,9 @@ namespace VirtoCommerce.SearchModule.Data.Provides.Azure
                 }
                 else
                 {
-                    throw new IndexBuildException(AzureSearchHelper.FormatSearchException(result));    
+                    throw new IndexBuildException(AzureSearchHelper.FormatSearchException(result));
                 }
-                
+
             }
         }
 

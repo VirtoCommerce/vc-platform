@@ -1,22 +1,22 @@
-﻿using u = Lucene.Net.Util;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Web;
-
-using global::Lucene.Net.Analysis.Standard;
-using global::Lucene.Net.Documents;
-using global::Lucene.Net.Index;
-using global::Lucene.Net.Search;
-using global::Lucene.Net.Store;
-using VirtoCommerce.Domain.Search.Services;
+using Lucene.Net.Analysis.Standard;
+using Lucene.Net.Documents;
+using Lucene.Net.Index;
+using Lucene.Net.Search;
+using Lucene.Net.Store;
 using VirtoCommerce.Domain.Search;
+using VirtoCommerce.Domain.Search.Model;
+using VirtoCommerce.Domain.Search.Services;
+using u = Lucene.Net.Util;
 
-namespace VirtoCommerce.SearchModule.Data.Provides.Lucene
+namespace VirtoCommerce.SearchModule.Data.Providers.Lucene
 {
-   
+
     /// <summary>
     ///     File based search provider based on Lucene.
     /// </summary>
@@ -112,7 +112,7 @@ namespace VirtoCommerce.SearchModule.Data.Provides.Lucene
         }
 
 
-  
+
         /// <summary>
         ///     Closes the specified provider.
         /// </summary>
@@ -158,7 +158,7 @@ namespace VirtoCommerce.SearchModule.Data.Provides.Lucene
         ///     Adds the document to the index. Depending on the provider, the document will be commited only after commit is called.
         /// </summary>
         /// <param name="scope">The scope of the document, used to seperate indexes for different applications.</param>
-        /// <param name="documentType">The type of the document, typically simply the name associated with an indexer like "catalog", "order" or "catalogitem".</param>
+        /// <param name="documentType">The type of the document, typically simply the name associated with an indexer like catalog, order or catalogitem.</param>
         /// <param name="document">The document.</param>
         public virtual void Index(string scope, string documentType, IDocument document)
         {

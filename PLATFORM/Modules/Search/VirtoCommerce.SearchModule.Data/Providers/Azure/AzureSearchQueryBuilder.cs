@@ -1,13 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using RedDog.Search.Model;
 using VirtoCommerce.Domain.Search;
+using VirtoCommerce.Domain.Search.Model;
 using VirtoCommerce.Domain.Search.Services;
 
-namespace VirtoCommerce.SearchModule.Data.Provides.Azure
+namespace VirtoCommerce.SearchModule.Data.Providers.Azure
 {
     public class AzureSearchQueryBuilder : ISearchQueryBuilder
     {
@@ -38,7 +37,7 @@ namespace VirtoCommerce.SearchModule.Data.Provides.Azure
             #region CatalogItemSearchCriteria
             if (criteria is CatalogIndexedSearchCriteria)
             {
-				var c = criteria as CatalogIndexedSearchCriteria;
+                var c = criteria as CatalogIndexedSearchCriteria;
 
                 if (!String.IsNullOrEmpty(c.SearchPhrase))
                 {
@@ -75,7 +74,7 @@ namespace VirtoCommerce.SearchModule.Data.Provides.Azure
                     filterBuilder.FilterContains("catalog", c.Catalog);
                 }
 
-                
+
 
             }
             #endregion

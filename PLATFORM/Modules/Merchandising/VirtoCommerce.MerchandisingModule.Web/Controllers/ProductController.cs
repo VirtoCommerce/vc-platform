@@ -7,7 +7,8 @@ using System.Web.Http.Description;
 using System.Web.Http.ModelBinding;
 using VirtoCommerce.Domain.Catalog.Model;
 using VirtoCommerce.Domain.Catalog.Services;
-using VirtoCommerce.Domain.Search;
+using VirtoCommerce.Domain.Search.Filters;
+using VirtoCommerce.Domain.Search.Model;
 using VirtoCommerce.Domain.Search.Services;
 using VirtoCommerce.Domain.Store.Services;
 using VirtoCommerce.MerchandisingModule.Web.Binders;
@@ -24,27 +25,27 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
     [RoutePrefix("api/mp/products")]
     public class ProductController : ApiController
     {
-		private readonly ICategoryService _categoryService;
-		private readonly IItemService _itemService;
-		private readonly ICatalogSearchService _searchService;
-		private readonly IStoreService _storeService;
-		private readonly IBlobUrlResolver _blobUrlResolver;
-		private readonly IBrowseFilterService _browseFilterService;
-		private readonly IItemBrowsingService _browseService;
-		private readonly CacheManager _cacheManager;
+        private readonly ICategoryService _categoryService;
+        private readonly IItemService _itemService;
+        private readonly ICatalogSearchService _searchService;
+        private readonly IStoreService _storeService;
+        private readonly IBlobUrlResolver _blobUrlResolver;
+        private readonly IBrowseFilterService _browseFilterService;
+        private readonly IItemBrowsingService _browseService;
+        private readonly CacheManager _cacheManager;
 
-		public ProductController(ICatalogSearchService searchService, ICategoryService categoryService,
-								 IStoreService storeService, IItemService itemService, IBlobUrlResolver blobUrlResolver,
-								 IBrowseFilterService browseFilterService, IItemBrowsingService browseService, CacheManager cacheManager)
+        public ProductController(ICatalogSearchService searchService, ICategoryService categoryService,
+                                 IStoreService storeService, IItemService itemService, IBlobUrlResolver blobUrlResolver,
+                                 IBrowseFilterService browseFilterService, IItemBrowsingService browseService, CacheManager cacheManager)
         {
-			_itemService = itemService;
-			_storeService = storeService;
+            _itemService = itemService;
+            _storeService = storeService;
             _searchService = searchService;
             _categoryService = categoryService;
-			_blobUrlResolver = blobUrlResolver;
-			_browseFilterService = browseFilterService;
-			_browseService = browseService;
-			_cacheManager = cacheManager;
+            _blobUrlResolver = blobUrlResolver;
+            _browseFilterService = browseFilterService;
+            _browseService = browseService;
+            _cacheManager = cacheManager;
         }
 
 
@@ -54,20 +55,20 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
         [ResponseType(typeof(Product))]
         [ClientCache(Duration = 30)]
         [Route("{product}")]
-        public IHttpActionResult GetProduct(string store,  string product, [FromUri] moduleModel.ItemResponseGroup responseGroup = moduleModel.ItemResponseGroup.ItemLarge, string language = "en-us")
+        public IHttpActionResult GetProduct(string store, string product, [FromUri] moduleModel.ItemResponseGroup responseGroup = moduleModel.ItemResponseGroup.ItemLarge, string language = "en-us")
         {
-			var catalog = _storeService.GetById(store).Catalog;
+            var catalog = _storeService.GetById(store).Catalog;
             var item = _itemService.GetById(product, responseGroup);
 
             if (product != null)
             {
-				var webModelProduct = item.ToWebModel(_blobUrlResolver);
-				if(item.CategoryId != null)
-				{
-					var category = _categoryService.GetById(item.CategoryId);
-					webModelProduct.Outline = string.Join("/", category.Parents.Select(x => x.Id)) + "/" + category.Id;
-				}
-			    return this.Ok(webModelProduct);
+                var webModelProduct = item.ToWebModel(_blobUrlResolver);
+                if (item.CategoryId != null)
+                {
+                    var category = _categoryService.GetById(item.CategoryId);
+                    webModelProduct.Outline = string.Join("/", category.Parents.Select(x => x.Id)) + "/" + category.Id;
+                }
+                return this.Ok(webModelProduct);
             }
 
             return this.StatusCode(HttpStatusCode.NotFound);
@@ -80,19 +81,19 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
         [Route("")]
         public IHttpActionResult GetProductByCode(string store, [FromUri] string code, [FromUri] moduleModel.ItemResponseGroup responseGroup = moduleModel.ItemResponseGroup.ItemLarge, string language = "en-us")
         {
-			var searchCriteria = new SearchCriteria
-			{
-				ResponseGroup = ResponseGroup.WithProducts,
-				Code = code,
-			};
+            var searchCriteria = new SearchCriteria
+            {
+                ResponseGroup = ResponseGroup.WithProducts,
+                Code = code,
+            };
 
-			var result = _searchService.Search(searchCriteria);
-			if (result.Products != null && result.Products.Any())
-			{
-				var item = _itemService.GetById(result.Products.First().Id, ItemResponseGroup.ItemLarge);
-				return Ok(item.ToWebModel(_blobUrlResolver));
-			}
-			return this.StatusCode(HttpStatusCode.NotFound);
+            var result = _searchService.Search(searchCriteria);
+            if (result.Products != null && result.Products.Any())
+            {
+                var item = _itemService.GetById(result.Products.First().Id, ItemResponseGroup.ItemLarge);
+                return Ok(item.ToWebModel(_blobUrlResolver));
+            }
+            return this.StatusCode(HttpStatusCode.NotFound);
         }
 
         [HttpGet]
@@ -101,19 +102,19 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
         [Route("")]
         public IHttpActionResult GetProductByKeyword(string store, [FromUri] string keyword, [FromUri] moduleModel.ItemResponseGroup responseGroup = moduleModel.ItemResponseGroup.ItemLarge, string language = "en-us")
         {
-			var searchCriteria = new SearchCriteria
-			{
-				ResponseGroup = ResponseGroup.WithProducts,
-				SeoKeyword = keyword,
-			};
+            var searchCriteria = new SearchCriteria
+            {
+                ResponseGroup = ResponseGroup.WithProducts,
+                SeoKeyword = keyword,
+            };
 
-			var result = _searchService.Search(searchCriteria);
-			if (result.Products != null && result.Products.Any())
-			{
-				var item = _itemService.GetById(result.Products.First().Id, ItemResponseGroup.ItemLarge);
-				return Ok(item.ToWebModel(_blobUrlResolver));
-			}
-			return this.StatusCode(HttpStatusCode.NotFound);
+            var result = _searchService.Search(searchCriteria);
+            if (result.Products != null && result.Products.Any())
+            {
+                var item = _itemService.GetById(result.Products.First().Id, ItemResponseGroup.ItemLarge);
+                return Ok(item.ToWebModel(_blobUrlResolver));
+            }
+            return this.StatusCode(HttpStatusCode.NotFound);
         }
 
         /// <summary>
@@ -133,15 +134,15 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
         [Route("")]
         [ResponseType(typeof(ProductSearchResult))]
         public IHttpActionResult Search(string store, string[] priceLists, [ModelBinder(typeof(SearchParametersBinder))] SearchParameters parameters,
-										[FromUri] moduleModel.ItemResponseGroup responseGroup = moduleModel.ItemResponseGroup.ItemMedium,
-										[FromUri] string outline = "", string language = "en-us", string currency = "USD")
+                                        [FromUri] moduleModel.ItemResponseGroup responseGroup = moduleModel.ItemResponseGroup.ItemMedium,
+                                        [FromUri] string outline = "", string language = "en-us", string currency = "USD")
         {
             var context = new Dictionary<string, object>
                           {
                               { "StoreId", store },
                           };
 
-			var catalog = _storeService.GetById(store).Catalog;
+            var catalog = _storeService.GetById(store).Catalog;
             string categoryId = null;
 
             var criteria = new CatalogIndexedSearchCriteria { Locale = language, Catalog = catalog.ToLowerInvariant() };
@@ -169,7 +170,8 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
                 {
                     var termFilter = new AttributeFilter
                                      {
-                                         Key = term.Key, Values = term.Value.Select(x => new AttributeFilterValue {Id = x.ToLowerInvariant(), Value = x.ToLowerInvariant()}).ToArray()
+                                         Key = term.Key,
+                                         Values = term.Value.Select(x => new AttributeFilterValue { Id = x.ToLowerInvariant(), Value = x.ToLowerInvariant() }).ToArray()
                                      };
 
                     criteria.Apply(termFilter);
@@ -216,7 +218,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
                             sortObject = new SearchSort(
                                 criteria.Pricelists.Select(
                                     priceList =>
-                                        new SearchSortField(String.Format("price_{0}_{1}",criteria.Currency.ToLower(),priceList.ToLower()))
+                                        new SearchSortField(String.Format("price_{0}_{1}", criteria.Currency.ToLower(), priceList.ToLower()))
                                         {
                                             IgnoredUnmapped = true,
                                             IsDescending = isDescending,
@@ -254,14 +256,14 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
             #endregion
 
             //Load ALL products 
-			var cacheKey = CacheKey.Create("ProductController.Search", criteria.CacheKey);
-            var searchResults = _cacheManager.Get(cacheKey, ()=> _browseService.SearchItems(criteria, responseGroup));
+            var cacheKey = CacheKey.Create("ProductController.Search", criteria.CacheKey);
+            var searchResults = _cacheManager.Get(cacheKey, () => _browseService.SearchItems(criteria, responseGroup));
 
             return this.Ok(searchResults);
         }
 
         #endregion
 
-      
+
     }
 }

@@ -2,15 +2,18 @@
 using System.Linq;
 using PlainElastic.Net.Queries;
 using VirtoCommerce.Domain.Search;
+using VirtoCommerce.Domain.Search.Filters;
+using VirtoCommerce.Domain.Search.Model;
 
-namespace VirtoCommerce.SearchModule.Data.Provides.Elastic
+namespace VirtoCommerce.SearchModule.Data.Providers.ElasticSearch
 {
     public class ElasticQueryHelper
     {
         public static BoolFilter<ESDocument> CreateQuery(ISearchCriteria criteria, ISearchFilter filter)
         {
             var values = GetFilterValues(filter);
-            if (values == null) return null;
+            if (values == null)
+                return null;
 
             var query = new BoolFilter<ESDocument>();
             foreach (var value in values)
@@ -18,7 +21,7 @@ namespace VirtoCommerce.SearchModule.Data.Provides.Elastic
                 var valueQuery = CreateQueryForValue(criteria, filter, value);
                 //var boolQuery = new Query<ESDocument>();
                 //boolQuery.Bool(x => valueQuery);
-                query.Should(x=>x.Bool(y=>valueQuery));
+                query.Should(x => x.Bool(y => valueQuery));
             }
 
             return query;
@@ -40,7 +43,7 @@ namespace VirtoCommerce.SearchModule.Data.Provides.Elastic
             {
                 if (value.GetType() == typeof(AttributeFilterValue))
                 {
-                    query.Must(q => q.Term(t=>t.Field(field).Value(((AttributeFilterValue)value).Value)));
+                    query.Must(q => q.Term(t => t.Field(field).Value(((AttributeFilterValue)value).Value)));
                 }
                 else if (value.GetType() == typeof(RangeFilterValue))
                 {
@@ -100,7 +103,7 @@ namespace VirtoCommerce.SearchModule.Data.Provides.Elastic
             string[] pls = null;
             if (criteria is CatalogIndexedSearchCriteria)
             {
-				pls = ((CatalogIndexedSearchCriteria)criteria).Pricelists;
+                pls = ((CatalogIndexedSearchCriteria)criteria).Pricelists;
             }
 
             var parentPriceList = String.Empty;

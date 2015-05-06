@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
-namespace VirtoCommerce.Domain.Search
+namespace VirtoCommerce.Domain.Search.Model
 {
     public class SearchEventArgs : EventArgs
     {

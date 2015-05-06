@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using System.Web;
+using VirtoCommerce.Domain.Search;
+using VirtoCommerce.Domain.Search.Model;
 
-namespace VirtoCommerce.Domain.Search
+namespace VirtoCommerce.SearchModule.Data.Model
 {
     /// <summary>
     /// Contains connection parameters to connecting to the search service.
@@ -74,8 +72,11 @@ namespace VirtoCommerce.Domain.Search
 
         public string DataSource
         {
-            get { if (_Parameters != null) return _Parameters["server"];
-            
+            get
+            {
+                if (_Parameters != null)
+                    return _Parameters["server"];
+
                 throw new ArgumentNullException("DataSource must be specified using server parameter for the search connection string");
             }
             private set
@@ -88,7 +89,8 @@ namespace VirtoCommerce.Domain.Search
         {
             get
             {
-                if (_Parameters != null) return _Parameters["key"];
+                if (_Parameters != null)
+                    return _Parameters["key"];
 
                 throw new ArgumentNullException("Key must be specified using server parameter for the search connection string");
             }
@@ -100,8 +102,10 @@ namespace VirtoCommerce.Domain.Search
 
         public string Scope
         {
-            get { 
-                if (_Parameters != null) return _Parameters["scope"];
+            get
+            {
+                if (_Parameters != null)
+                    return _Parameters["scope"];
                 return "default";
             }
             private set
@@ -114,7 +118,8 @@ namespace VirtoCommerce.Domain.Search
         {
             get
             {
-                if (_Parameters != null && _Parameters.ContainsKey("provider")) return _Parameters["provider"];
+                if (_Parameters != null && _Parameters.ContainsKey("provider"))
+                    return _Parameters["provider"];
                 return "default";
             }
             private set

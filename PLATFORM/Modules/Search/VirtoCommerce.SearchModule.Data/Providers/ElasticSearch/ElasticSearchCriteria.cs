@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.Serialization;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Text;
 using VirtoCommerce.Domain.Search;
+using VirtoCommerce.Domain.Search.Model;
 
-namespace VirtoCommerce.SearchModule.Data.Provides.Elastic
+namespace VirtoCommerce.SearchModule.Data.Providers.ElasticSearch
 {
     public class ElasticSearchCriteria : SearchCriteriaBase
     {
@@ -32,7 +28,7 @@ namespace VirtoCommerce.SearchModule.Data.Provides.Elastic
             get
             {
                 StringBuilder key = new StringBuilder();
-                
+
                 if (this.RawQuery != null)
                 {
                     key.Append("_qry:" + RawQuery);
@@ -42,7 +38,8 @@ namespace VirtoCommerce.SearchModule.Data.Provides.Elastic
             }
         }
 
-        public ElasticSearchCriteria(string documentType) : base(documentType)
+        public ElasticSearchCriteria(string documentType)
+            : base(documentType)
         {
         }
     }
