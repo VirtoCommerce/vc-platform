@@ -10,11 +10,11 @@ using VirtoCommerce.Web.Models.Extensions;
 
 namespace VirtoCommerce.Web.Controllers
 {
-    //[RoutePrefix("collections")]
+    [RoutePrefix("collections")]
     public class CollectionsController : StoreControllerBase
     {
         #region Public Methods and Operators
-        //[Route("all/{tags?}")]
+        [Route("all/{tags?}")]
         public async Task<ActionResult> AllAsync(
             string tags,
             string view = "grid",
