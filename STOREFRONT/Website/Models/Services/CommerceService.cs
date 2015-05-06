@@ -156,7 +156,21 @@ namespace VirtoCommerce.Web.Models.Services
 
         public string GetCountryTags()
         {
-            return "<option value=\"United States\" data-provinces=\"[&quot;California&quot;,&quot;Ohio&quot;]\">United States</option>";
+            var countries = new Dictionary<string, ICollection<string>>();
+            countries.Add("United States", new List<string>
+            {
+                "Delaware", "Pennsylvania", "New Jersey", "Georgia", "Connecticut", "Massachusetts",
+                "Maryland", "South Carolina", "New Hampshire", "Virginia", "New York", "North Carolina",
+                "Rhode Island", "Vermont", "Kentucky", "Tennessee", "Ohio", "Louisiana",
+                "Indiana", "Mississippi", "Illinois", "Alabama", "Maine", "Missouri",
+                "Arkansas", "Michigan", "Florida", "Texas", "Iowa", "Wisconsin",
+                "California", "Minnesota", "Oregon", "Kansas", "West Virginia", "Nevada",
+                "Nebraska", "Colorado", "North Dakota", "South Dakota", "Montana", "Washington",
+                "Idaho", "Wyoming", "Utah", "Oklahoma", "New Mexico", "Arizona",
+                "Alaska", "Hawaii"
+            });
+
+            return new CountryOptionTags(countries).ToString();
         }
 
         public async Task<Cart> CreateCartAsync(ShoppingCart dtoCart)
@@ -821,7 +835,7 @@ namespace VirtoCommerce.Web.Models.Services
                 promoEntries.Add(new ProductPromoEntry
                 {
                     CatalogId = item.CatalogId,
-                    Price = price != null && price.Sale.HasValue ? price.Sale.Value : price.List,
+                    Price = price != null ? (price.Sale.HasValue ? price.Sale.Value : price.List) : 0M,
                     ProductId = item.Id,
                     Quantity = 1
                 });

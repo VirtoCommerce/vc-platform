@@ -30,6 +30,11 @@ namespace VirtoCommerce.Web.Models
                     }
                 }
 
+                if (Price == 0)
+                {
+                    isAvailable = false;
+                }
+
                 return isAvailable;
             }
         }
