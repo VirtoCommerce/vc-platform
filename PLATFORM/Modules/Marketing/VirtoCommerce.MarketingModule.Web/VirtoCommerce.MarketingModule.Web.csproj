@@ -119,21 +119,17 @@
     <Compile Include="Converters\ContentPlaceConverter.cs" />
     <Compile Include="Converters\ContentPublicationConverter.cs" />
     <Compile Include="Converters\PropertyConverter.cs" />
-    <Compile Include="Converters\MarketingEventConverter.cs" />
     <Compile Include="Converters\PromotionConverter.cs" />
     <Compile Include="Converters\ContentItemConverter.cs" />
-    <Compile Include="Converters\PromotionRewardConverter.cs" />
     <Compile Include="Model\MarketingConstants.cs" />
     <Compile Include="Model\DynamicContentFolder.cs" />
     <Compile Include="Model\DynamicContentItem.cs" />
     <Compile Include="Model\DynamicContentPlace.cs" />
     <Compile Include="Model\DynamicContentPublication.cs" />
-    <Compile Include="Model\MarketingEvent.cs" />
     <Compile Include="Model\Promotion.cs" />
-    <Compile Include="Model\PromotionReward.cs" />
     <Compile Include="Model\Property.cs" />
     <Compile Include="Model\MarketingSearchResult.cs" />
-    <Compile Include="Scripts\Module.cs" />
+    <Compile Include="Module.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

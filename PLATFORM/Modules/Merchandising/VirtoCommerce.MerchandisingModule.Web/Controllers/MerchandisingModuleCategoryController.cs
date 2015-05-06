@@ -16,14 +16,14 @@ using webModel = VirtoCommerce.MerchandisingModule.Web.Model;
 namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 {
     [RoutePrefix("api/mp/categories")]
-	public class CategoryController : ApiController
+	public class MerchandisingModuleCategoryController : ApiController
     {
         private readonly ICategoryService _categoryService;
         private readonly IPropertyService _propertyService;
         private readonly ICatalogSearchService _searchService;
 		private readonly IStoreService _storeService;
 
-        public CategoryController(ICatalogSearchService searchService, ICategoryService categoryService,
+        public MerchandisingModuleCategoryController(ICatalogSearchService searchService, ICategoryService categoryService,
 								  IPropertyService propertyService, IStoreService storeService)
       
         {

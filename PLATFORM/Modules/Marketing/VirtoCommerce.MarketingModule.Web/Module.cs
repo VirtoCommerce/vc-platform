@@ -42,6 +42,7 @@ namespace VirtoCommerce.MarketingModule.Web
 
             _container.RegisterInstance<IMarketingExtensionManager>(promotionExtensionManager);
             _container.RegisterType<IPromotionService, PromotionServiceImpl>();
+			_container.RegisterType<IMarketingDynamicContentEvaluator, DefaultDynamicContentEvaluatorImpl>();
             _container.RegisterType<IDynamicContentService, DynamicContentServiceImpl>();
             _container.RegisterType<IMarketingSearchService, MarketingSearchServiceImpl>();
             _container.RegisterType<IMarketingPromoEvaluator, DefaultPromotionEvaluatorImpl>();

@@ -21,35 +21,14 @@ namespace VirtoCommerce.MarketingModule.Web.Controllers.Api
     {
 		private readonly IMarketingExtensionManager _promotionManager;
 		private readonly IPromotionService _promotionService;
-		private readonly IMarketingPromoEvaluator _promotionEvaluator;
 
-		public PromotionController(IPromotionService promotionService, 	IMarketingExtensionManager promotionManager, IMarketingPromoEvaluator promotionEvaluator)
+		public PromotionController(IPromotionService promotionService, 	IMarketingExtensionManager promotionManager)
 		{
 			_promotionManager = promotionManager;
 			_promotionService = promotionService;
-			_promotionEvaluator = promotionEvaluator;
 		}
 
-		// POST: api/marketing/promotions/evaluate
-		[HttpPost]
-		[ResponseType(typeof(webModel.PromotionReward[]))]
-		[Route("evaluate")]
-		public IHttpActionResult Evaluate(PromotionEvaluationContext context)
-		{
-			var retVal = _promotionEvaluator.EvaluatePromotion(context);
-			return Ok(retVal.Rewards.Select(x => x.ToWebModel()).ToArray());
-		}
-
-		// POST: api/marketing/promotions/processevent
-		[HttpPost]
-		[ResponseType(typeof(webModel.PromotionReward[]))]
-		[Route("processevent")]
-		public IHttpActionResult ProcessEvent(webModel.MarketingEvent marketingEvent)
-		{
-			var retVal = _promotionEvaluator.ProcessEvent(marketingEvent.ToCoreModel());
-			return Ok(retVal.Rewards.Select(x => x.ToWebModel()).ToArray());
-		}
-
+		
 		// GET: api/marketing/promotions/{id}
 		[HttpGet]
 		[ResponseType(typeof(webModel.Promotion))]

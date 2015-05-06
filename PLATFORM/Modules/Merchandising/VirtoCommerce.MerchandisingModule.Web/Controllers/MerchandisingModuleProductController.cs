@@ -22,7 +22,7 @@ using VirtoCommerce.Platform.Core.Caching;
 namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 {
     [RoutePrefix("api/mp/products")]
-    public class ProductController : ApiController
+    public class MerchandisingModuleProductController : ApiController
     {
 		private readonly ICategoryService _categoryService;
 		private readonly IItemService _itemService;
@@ -33,7 +33,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 		private readonly IItemBrowsingService _browseService;
 		private readonly CacheManager _cacheManager;
 
-		public ProductController(ICatalogSearchService searchService, ICategoryService categoryService,
+		public MerchandisingModuleProductController(ICatalogSearchService searchService, ICategoryService categoryService,
 								 IStoreService storeService, IItemService itemService, IBlobUrlResolver blobUrlResolver,
 								 IBrowseFilterService browseFilterService, IItemBrowsingService browseService, CacheManager cacheManager)
         {

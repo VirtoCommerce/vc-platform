@@ -14,13 +14,13 @@ using VirtoCommerce.Platform.Core.Settings;
 namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 {
 	[RoutePrefix("api/mp")]
-	public class PriceController : ApiController
+	public class MerchandisingModulePriceController : ApiController
 	{
 		private readonly IPricingService _pricingService;
 		private readonly CacheManager _cacheManager;
 
 	
-		public PriceController(IPricingService pricingService, CacheManager cacheManager)
+		public MerchandisingModulePriceController(IPricingService pricingService, CacheManager cacheManager)
 		{
 			_pricingService = pricingService;
 			_cacheManager = cacheManager;

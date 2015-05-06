@@ -6,7 +6,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using VirtoCommerce.Domain.Marketing.Model;
 
-namespace VirtoCommerce.MarketingModule.Web.Model
+namespace VirtoCommerce.MerchandisingModule.Web.Model
 {
 	public class PromotionReward
 	{

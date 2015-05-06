@@ -1,8 +1,8 @@
 ﻿using Omu.ValueInjecter;
 using coreModel = VirtoCommerce.Domain.Marketing.Model;
-using webModel = VirtoCommerce.MarketingModule.Web.Model;
+using webModel = VirtoCommerce.MerchandisingModule.Web.Model;
 
-namespace VirtoCommerce.MarketingModule.Web.Converters
+namespace VirtoCommerce.MerchandisingModule.Web.Converters
 {
 	public static class PromotionRewardConverter
 	{

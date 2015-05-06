@@ -15,13 +15,13 @@ using VirtoCommerce.Platform.Core.Settings;
 namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 {
 	[RoutePrefix("api/mp/stores")]
-	public class StoreController  : ApiController
+	public class MerchandisingModuleStoreController  : ApiController
 	{
 		private readonly IStoreService _storeService;
 		private readonly CacheManager _cacheManager;
 
 
-		public StoreController(IStoreService storeService, CacheManager cacheManager)
+		public MerchandisingModuleStoreController(IStoreService storeService, CacheManager cacheManager)
 		{
 			_storeService = storeService;
 			_cacheManager = cacheManager;

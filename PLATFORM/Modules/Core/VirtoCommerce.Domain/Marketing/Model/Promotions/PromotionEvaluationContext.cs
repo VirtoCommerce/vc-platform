@@ -67,8 +67,7 @@ namespace VirtoCommerce.Domain.Marketing.Model
 		public ProductPromoEntry PromoEntry { get; set; }
 
 		public Dictionary<string, string> Attributes { get; set; }
-
-		
+	
 	}
 	
 }
