@@ -17,6 +17,8 @@ namespace Zapier.IntegrationModule.Web
 
         public override void Initialize()
         {
+            base.Initialize();
+
             _container.RegisterType<IContactsProvider, ContactsProvider>(new ContainerControlledLifetimeManager());
             _container.RegisterType<IOrdersProvider, OrdersProvider>(new ContainerControlledLifetimeManager());
             _container.RegisterType<PollingController>();

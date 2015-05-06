@@ -1,7 +1,8 @@
 ﻿using System;
 using VirtoCommerce.Domain.Search;
+using VirtoCommerce.Domain.Search.Model;
 
-namespace VirtoCommerce.SearchModule.Data.Provides.Lucene
+namespace VirtoCommerce.SearchModule.Data.Providers.Lucene
 {
 
     public class LuceneSearchException : SearchException

@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Linq;
-using coreModel = VirtoCommerce.Domain.Search;
+using coreModel = VirtoCommerce.Domain.Search.Model;
 using webModel = VirtoCommerce.MerchandisingModule.Web.Model;
 
 namespace VirtoCommerce.MerchandisingModule.Web.Converters

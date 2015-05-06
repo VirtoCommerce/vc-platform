@@ -3,7 +3,7 @@ using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
 
-namespace VirtoCommerce.Domain.Search
+namespace VirtoCommerce.Domain.Search.Model
 {
     public struct FacetTypes
     {

@@ -1,13 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using RedDog.Search;
 using RedDog.Search.Http;
 using RedDog.Search.Model;
 
-namespace VirtoCommerce.SearchModule.Data.Provides.Azure
+namespace VirtoCommerce.SearchModule.Data.Providers.Azure
 {
     public class AzureSearchClient
     {
@@ -66,7 +64,7 @@ namespace VirtoCommerce.SearchModule.Data.Provides.Azure
         public async Task<IApiResponse<IEnumerable<IndexOperationResult>>> IndexBulk(string indexName, IEnumerable<AzureDocument> documents = null)
         {
             var operations = from d in documents
-                select new IndexOperation(IndexOperationType.Upload, AzureDocument.KeyFieldName, d.Id.ToString()) { Properties = d };
+                             select new IndexOperation(IndexOperationType.Upload, AzureDocument.KeyFieldName, d.Id.ToString()) { Properties = d };
 
             var result = await IndexClient.PopulateAsync(indexName, operations.ToArray()).ConfigureAwait(false);
 

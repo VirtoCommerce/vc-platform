@@ -2,14 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using VirtoCommerce.Domain.Catalog.Services;
+using VirtoCommerce.Domain.Search.Model;
+using VirtoCommerce.Domain.Search.Services;
 using VirtoCommerce.MerchandisingModule.Web.Converters;
 using VirtoCommerce.MerchandisingModule.Web.Model;
 using VirtoCommerce.Platform.Core.Asset;
 using VirtoCommerce.Platform.Core.Caching;
-using moduleModel = VirtoCommerce.Domain.Catalog.Model;
 using VirtoCommerce.Platform.Core.Common;
-using VirtoCommerce.Domain.Search.Services;
-using VirtoCommerce.Domain.Search;
+using moduleModel = VirtoCommerce.Domain.Catalog.Model;
 
 namespace VirtoCommerce.MerchandisingModule.Web.Services
 {
@@ -20,7 +20,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Services
         private readonly ISearchConnection _searchConnection;
         private readonly ISearchProvider _searchProvider;
 
-        public ItemBrowsingService(IItemService itemService, ISearchProvider searchService,  CacheManager cacheManager, IBlobUrlResolver blobUrlResolver = null, ISearchConnection searchConnection = null)
+        public ItemBrowsingService(IItemService itemService, ISearchProvider searchService, CacheManager cacheManager, IBlobUrlResolver blobUrlResolver = null, ISearchConnection searchConnection = null)
         {
             _searchProvider = searchService;
             _searchConnection = searchConnection;
@@ -57,7 +57,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Services
                 {
                     catalogItem.Rating = reviewAvg;
                 }
-    
+
                 catalogItems.Add(catalogItem);
             }
 
@@ -72,7 +72,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Services
             return response;
         }
 
-     
+
 
         /// <summary>
         ///     Gets the context item outline based on what customer is browsing
@@ -84,7 +84,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Services
             if (String.IsNullOrEmpty(itemOutline))
             {
                 return String.Empty;
-		    }
+            }
 
             var outline = itemOutline.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries)
                 .FirstOrDefault(x => x.StartsWith(prefixOutline, StringComparison.OrdinalIgnoreCase)) ?? string.Empty;
@@ -92,9 +92,9 @@ namespace VirtoCommerce.MerchandisingModule.Web.Services
             return outline;
         }
 
-		private IEnumerable<moduleModel.CatalogProduct> Search(CatalogIndexedSearchCriteria criteria, out CatalogItemSearchResults results,   moduleModel.ItemResponseGroup responseGroup = moduleModel.ItemResponseGroup.ItemSmall) 
+        private IEnumerable<moduleModel.CatalogProduct> Search(CatalogIndexedSearchCriteria criteria, out CatalogItemSearchResults results, moduleModel.ItemResponseGroup responseGroup = moduleModel.ItemResponseGroup.ItemSmall)
         {
-			var items = new List<moduleModel.CatalogProduct>();
+            var items = new List<moduleModel.CatalogProduct>();
             var itemsOrderedList = new List<string>();
 
             int foundItemCount;
@@ -102,15 +102,15 @@ namespace VirtoCommerce.MerchandisingModule.Web.Services
             var searchRetry = 0;
 
             //var myCriteria = criteria.Clone();
-			var myCriteria = criteria;
+            var myCriteria = criteria;
 
             do
             {
                 // Search using criteria, it will only return IDs of the items
-				var scope = _searchConnection.Scope;
-				var searchResults = _searchProvider.Search(scope, criteria) as SearchResults;
-				var findedItems = searchResults.GetKeyAndOutlineFieldValueMap<string>();
-				results = new CatalogItemSearchResults(myCriteria, findedItems, searchResults);
+                var scope = _searchConnection.Scope;
+                var searchResults = _searchProvider.Search(scope, criteria) as SearchResults;
+                var findedItems = searchResults.GetKeyAndOutlineFieldValueMap<string>();
+                results = new CatalogItemSearchResults(myCriteria, findedItems, searchResults);
 
                 searchRetry++;
 
@@ -126,10 +126,10 @@ namespace VirtoCommerce.MerchandisingModule.Web.Services
                 itemsOrderedList.AddRange(uniqueKeys);
 
                 // Now load items from repository
-				var currentItems = _itemService.GetByIds(uniqueKeys.ToArray(), responseGroup);
+                var currentItems = _itemService.GetByIds(uniqueKeys.ToArray(), responseGroup);
 
                 var orderedList = currentItems.OrderBy(i => itemsOrderedList.IndexOf(i.Id));
-				items.AddRange((IEnumerable<moduleModel.CatalogProduct>)orderedList);
+                items.AddRange((IEnumerable<moduleModel.CatalogProduct>)orderedList);
                 dbItemCount = currentItems.Length;
 
                 //If some items where removed and search is out of sync try getting extra items
@@ -145,7 +145,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Services
             return items;
         }
 
-    
+
         private string StripCatalogFromOutline(string outline, string catalog)
         {
             if (String.IsNullOrEmpty(outline))
@@ -161,6 +161,6 @@ namespace VirtoCommerce.MerchandisingModule.Web.Services
             return String.Empty;
         }
 
-     
+
     }
 }

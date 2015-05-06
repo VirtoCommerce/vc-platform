@@ -6,7 +6,8 @@ using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.Http.Controllers;
 using System.Web.Http.ModelBinding;
-using VirtoCommerce.Domain.Search;
+using VirtoCommerce.Domain.Search.Filters;
+using VirtoCommerce.Domain.Search.Model;
 using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.MerchandisingModule.Web.Binders
@@ -52,7 +53,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Binders
                     .Select(k => k.WithKey(TermRegex.Replace(k.Key, "")))
                     .ToDictionary(x => x.Key, y => y.Value.Split(','));
 
-			var result = new CatalogIndexedSearchCriteria
+            var result = new CatalogIndexedSearchCriteria
                          {
                              SearchPhrase = qs["q"].EmptyToNull(),
                              RecordsToRetrieve = qs["take"].TryParse(20),
@@ -160,7 +161,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Binders
                     sortObject = new SearchSort(result.ReviewsTotalField, isDescending);
                     break;
                 default:
-					sortObject = CatalogIndexedSearchCriteria.DefaultSortOrder;
+                    sortObject = CatalogIndexedSearchCriteria.DefaultSortOrder;
                     break;
             }
 

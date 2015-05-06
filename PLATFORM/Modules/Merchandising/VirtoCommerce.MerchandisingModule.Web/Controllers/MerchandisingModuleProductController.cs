@@ -7,7 +7,8 @@ using System.Web.Http.Description;
 using System.Web.Http.ModelBinding;
 using VirtoCommerce.Domain.Catalog.Model;
 using VirtoCommerce.Domain.Catalog.Services;
-using VirtoCommerce.Domain.Search;
+using VirtoCommerce.Domain.Search.Filters;
+using VirtoCommerce.Domain.Search.Model;
 using VirtoCommerce.Domain.Search.Services;
 using VirtoCommerce.Domain.Store.Services;
 using VirtoCommerce.MerchandisingModule.Web.Binders;
@@ -54,7 +55,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
         [ResponseType(typeof(Product))]
         [ClientCache(Duration = 30)]
         [Route("{product}")]
-        public IHttpActionResult GetProduct(string store,  string product, [FromUri] moduleModel.ItemResponseGroup responseGroup = moduleModel.ItemResponseGroup.ItemLarge, string language = "en-us")
+        public IHttpActionResult GetProduct(string store, string product, [FromUri] moduleModel.ItemResponseGroup responseGroup = moduleModel.ItemResponseGroup.ItemLarge, string language = "en-us")
         {
 			var catalog = _storeService.GetById(store).Catalog;
             var item = _itemService.GetById(product, responseGroup);
@@ -62,7 +63,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
             if (product != null)
             {
 				var webModelProduct = item.ToWebModel(_blobUrlResolver);
-				if(item.CategoryId != null)
+                if (item.CategoryId != null)
 				{
 					var category = _categoryService.GetById(item.CategoryId);
 					webModelProduct.Outline = string.Join("/", category.Parents.Select(x => x.Id)) + "/" + category.Id;
@@ -169,7 +170,8 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
                 {
                     var termFilter = new AttributeFilter
                                      {
-                                         Key = term.Key, Values = term.Value.Select(x => new AttributeFilterValue {Id = x.ToLowerInvariant(), Value = x.ToLowerInvariant()}).ToArray()
+                                         Key = term.Key,
+                                         Values = term.Value.Select(x => new AttributeFilterValue { Id = x.ToLowerInvariant(), Value = x.ToLowerInvariant() }).ToArray()
                                      };
 
                     criteria.Apply(termFilter);
@@ -216,7 +218,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
                             sortObject = new SearchSort(
                                 criteria.Pricelists.Select(
                                     priceList =>
-                                        new SearchSortField(String.Format("price_{0}_{1}",criteria.Currency.ToLower(),priceList.ToLower()))
+                                        new SearchSortField(String.Format("price_{0}_{1}", criteria.Currency.ToLower(), priceList.ToLower()))
                                         {
                                             IgnoredUnmapped = true,
                                             IsDescending = isDescending,
@@ -255,7 +257,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 
             //Load ALL products 
 			var cacheKey = CacheKey.Create("ProductController.Search", criteria.CacheKey);
-            var searchResults = _cacheManager.Get(cacheKey, ()=> _browseService.SearchItems(criteria, responseGroup));
+            var searchResults = _cacheManager.Get(cacheKey, () => _browseService.SearchItems(criteria, responseGroup));
 
             return this.Ok(searchResults);
         }

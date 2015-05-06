@@ -2,15 +2,17 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
-using PlainElastic.Net.IndexSettings;
 using PlainElastic.Net;
+using PlainElastic.Net.IndexSettings;
 using PlainElastic.Net.Mappings;
-using PlainElastic.Net.Serialization;
 using PlainElastic.Net.Queries;
-using VirtoCommerce.Domain.Search.Services;
+using PlainElastic.Net.Serialization;
 using VirtoCommerce.Domain.Search;
+using VirtoCommerce.Domain.Search.Filters;
+using VirtoCommerce.Domain.Search.Model;
+using VirtoCommerce.Domain.Search.Services;
 
-namespace VirtoCommerce.SearchModule.Data.Provides.Elastic
+namespace VirtoCommerce.SearchModule.Data.Providers.ElasticSearch
 {
     public class ElasticSearchProvider : ISearchProvider
     {
@@ -49,7 +51,7 @@ namespace VirtoCommerce.SearchModule.Data.Provides.Elastic
                     var arr = url.Split(':');
                     var host = arr[0];
                     var port = "8080";
-                    if(arr.Length>1)
+                    if (arr.Length > 1)
                         port = arr[1];
 
                     _client = new ElasticClient<ESDocument>(host, Int32.Parse(port));
@@ -191,7 +193,7 @@ namespace VirtoCommerce.SearchModule.Data.Provides.Elastic
                     var groupCount = 0;
 
                     var group = new FacetGroup(filter.Key);
-                    
+
                     if (filter is AttributeFilter)
                     {
                         group.FacetType = FacetTypes.Attribute;
@@ -242,13 +244,15 @@ namespace VirtoCommerce.SearchModule.Data.Provides.Elastic
                                 {
                                     var key = String.Format("{0}-{1}", myFilter.Key, value.Id).ToLower();
 
-                                    if (!resultDocs.facets.ContainsKey(key)) continue;
+                                    if (!resultDocs.facets.ContainsKey(key))
+                                        continue;
 
                                     var facet = resultDocs.facets[key] as FilterFacetResult;
 
                                     if (facet != null && facet.count > 0)
                                     {
-                                        if (facet.count == 0) continue;
+                                        if (facet.count == 0)
+                                            continue;
 
                                         var myFacet = new Facet(
                                             @group, value.Id, GetDescription(value, criteria.Locale), facet.count);
@@ -397,13 +401,13 @@ namespace VirtoCommerce.SearchModule.Data.Provides.Elastic
                     {
                         var type = field.Value != null ? field.Value.GetType() : null;
                         var propertyMap = new CustomPropertyMap<ESDocument>(field.Name, type)
-                        .Store(field.ContainsAttribute(IndexStore.YES))
-                        .When(field.ContainsAttribute(IndexType.NOT_ANALYZED), p => p.Index(IndexState.not_analyzed))
+                        .Store(field.ContainsAttribute(IndexStore.Yes))
+                        .When(field.ContainsAttribute(IndexType.NotAnalyzed), p => p.Index(IndexState.not_analyzed))
                         .When(field.Name.StartsWith("__content", StringComparison.OrdinalIgnoreCase), p => p.Analyzer(SearchAnalyzer))
                         .When(Regex.Match(field.Name, "__content_en.*").Success, x => x.Analyzer("english"))
                         .When(Regex.Match(field.Name, "__content_de.*").Success, x => x.Analyzer("german"))
                         .When(Regex.Match(field.Name, "__content_ru.*").Success, x => x.Analyzer("russian"))
-                        .When(field.ContainsAttribute(IndexType.NO), p => p.Index(IndexState.no));
+                        .When(field.ContainsAttribute(IndexType.No), p => p.Index(IndexState.no));
 
                         properties.CustomProperty(field.Name, p => propertyMap);
 
@@ -435,7 +439,7 @@ namespace VirtoCommerce.SearchModule.Data.Provides.Elastic
                     if (response.error != null)
                         throw new IndexBuildException(response.error);
                 }
-                else if(!_settingsUpdated)
+                else if (!_settingsUpdated)
                 {
                     // We can't update settings on active index.
                     // So we need to close it, then update settings and then open index back.

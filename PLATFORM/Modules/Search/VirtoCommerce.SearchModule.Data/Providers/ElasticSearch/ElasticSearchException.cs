@@ -1,7 +1,8 @@
 ﻿using System;
 using VirtoCommerce.Domain.Search;
+using VirtoCommerce.Domain.Search.Model;
 
-namespace VirtoCommerce.SearchModule.Data.Provides.Elastic
+namespace VirtoCommerce.SearchModule.Data.Providers.ElasticSearch
 {
     /// <summary>
     /// General Elastic Search Exception

@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using VirtoCommerce.Domain.Search;
+using VirtoCommerce.Domain.Search.Model;
 
-namespace VirtoCommerce.SearchModule.Data.Provides.Azure
+namespace VirtoCommerce.SearchModule.Data.Providers.Azure
 {
 
     public class AzureSearchException : SearchException

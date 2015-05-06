@@ -1,13 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 
-namespace VirtoCommerce.SearchModule.Data.Provides.Elastic
+namespace VirtoCommerce.SearchModule.Data.Providers.ElasticSearch
 {
     public class ESDocument : Dictionary<string, object>
     {
-        public object Id { 
+        public object Id
+        {
             get
             {
                 if (this.ContainsKey("__key"))

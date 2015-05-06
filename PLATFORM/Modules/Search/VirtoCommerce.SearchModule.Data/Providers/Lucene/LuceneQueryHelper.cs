@@ -1,14 +1,13 @@
 ﻿using System;
 using System.Linq;
-
-using global::Lucene.Net.Documents;
-using global::Lucene.Net.Index;
-
-using global::Lucene.Net.Search;
-using global::Lucene.Net.Util;
+using Lucene.Net.Index;
+using Lucene.Net.Search;
+using Lucene.Net.Util;
 using VirtoCommerce.Domain.Search;
+using VirtoCommerce.Domain.Search.Filters;
+using VirtoCommerce.Domain.Search.Model;
 
-namespace VirtoCommerce.SearchModule.Data.Provides.Lucene
+namespace VirtoCommerce.SearchModule.Data.Providers.Lucene
 {
     public class LuceneQueryHelper
     {
@@ -62,7 +61,8 @@ namespace VirtoCommerce.SearchModule.Data.Provides.Lucene
         public static Filter CreateQuery(ISearchCriteria criteria, ISearchFilter filter, Occur clause)
         {
             var values = GetFilterValues(filter);
-            if (values == null) return null;
+            if (values == null)
+                return null;
 
             var query = new BooleanFilter();
             foreach (var value in values)
@@ -255,7 +255,7 @@ namespace VirtoCommerce.SearchModule.Data.Provides.Lucene
         }
 
 
-     
+
 
         /// <summary>
         ///     Creates the price range query.

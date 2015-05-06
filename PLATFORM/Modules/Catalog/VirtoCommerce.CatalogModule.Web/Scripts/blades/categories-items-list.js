@@ -387,7 +387,6 @@
             //            template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/advanced-search.tpl.html'
             //        };
             //        bladeNavigationService.showBlade(newBlade, $scope.blade.parentBlade);
-            //        $scope.bladeClose();
             //    },
             //    canExecuteMethod: function () {
             //        return true;

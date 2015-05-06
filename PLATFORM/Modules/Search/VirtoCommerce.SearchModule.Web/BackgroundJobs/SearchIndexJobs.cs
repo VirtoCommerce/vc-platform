@@ -1,5 +1,7 @@
-﻿using VirtoCommerce.Domain.Search.Services;
-namespace VirtoCommerce.InventoryModule.Web.BackgroundJobs
+﻿using Hangfire;
+using VirtoCommerce.Domain.Search.Services;
+
+namespace VirtoCommerce.SearchModule.Web.BackgroundJobs
 {
     public class SearchIndexJobs
     {
@@ -10,9 +12,10 @@ namespace VirtoCommerce.InventoryModule.Web.BackgroundJobs
             _controller = controller;
         }
 
+        [DisableConcurrentExecution(int.MaxValue)]
         public void Process(string scope, string documentType)
         {
-			_controller.Process(scope, documentType);
+            _controller.Process(scope, documentType, false);
         }
     }
 }

@@ -1,13 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+using RedDog.Search.Http;
 
-namespace VirtoCommerce.SearchModule.Data.Provides.Azure
+namespace VirtoCommerce.SearchModule.Data.Providers.Azure
 {
-    using RedDog.Search.Http;
-
     public class AzureSearchHelper
     {
         public static DateTimeOffset ConvertToOffset(DateTime value)
@@ -27,13 +23,14 @@ namespace VirtoCommerce.SearchModule.Data.Provides.Azure
 
         public static string CombineFilters(string original, string target, bool and = true)
         {
-            return String.Format("{0}{1}{2}", original.Length > 0 ? 
+            return String.Format("{0}{1}{2}", original.Length > 0 ?
                 String.Format("{0} {1} ", original, and ? "and" : "or") : "", target);
         }
 
         public static void Combine(StringBuilder original, string target, bool and = true)
         {
-            if (original.Length > 0) original.AppendFormat(" {0} ", and ? "AND" : "OR");
+            if (original.Length > 0)
+                original.AppendFormat(" {0} ", and ? "AND" : "OR");
 
             original.Append(target);
         }

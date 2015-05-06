@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using Omu.ValueInjecter;
-using VirtoCommerce.Domain.Search;
+using VirtoCommerce.Domain.Search.Filters;
+using VirtoCommerce.Domain.Search.Model;
 using VirtoCommerce.Domain.Search.Services;
 
 namespace VirtoCommerce.MerchandisingModule.Web.Services

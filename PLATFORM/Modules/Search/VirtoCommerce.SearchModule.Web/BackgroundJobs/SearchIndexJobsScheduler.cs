@@ -1,7 +1,7 @@
 ﻿using Hangfire;
-using VirtoCommerce.Domain.Search;
+using VirtoCommerce.Domain.Search.Model;
 
-namespace VirtoCommerce.InventoryModule.Web.BackgroundJobs
+namespace VirtoCommerce.SearchModule.Web.BackgroundJobs
 {
     public class SearchIndexJobsScheduler
     {
@@ -14,7 +14,7 @@ namespace VirtoCommerce.InventoryModule.Web.BackgroundJobs
 
         public void SheduleJobs()
         {
-             RecurringJob.AddOrUpdate<SearchIndexJobs>("catalogIndexJob", x => x.Process(_searchConnection.Scope, "catalogitem"), Cron.Minutely);
+            RecurringJob.AddOrUpdate<SearchIndexJobs>("CatalogIndexJob", x => x.Process(_searchConnection.Scope, CatalogIndexedSearchCriteria.DocType), Cron.Minutely);
         }
     }
 }

@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using PlainElastic.Net.Serialization;
+﻿using System.Collections.Generic;
 using PlainElastic.Net;
 using PlainElastic.Net.Queries;
+using PlainElastic.Net.Serialization;
 
-namespace VirtoCommerce.SearchModule.Data.Provides.Elastic
+namespace VirtoCommerce.SearchModule.Data.Providers.ElasticSearch
 {
     public class ElasticClient<T>
     {
@@ -132,8 +128,8 @@ namespace VirtoCommerce.SearchModule.Data.Provides.Elastic
 
         public SearchResult<T> Search(SearchCommand searchCommand, QueryBuilder<T> query)
         {
-	        string jsonData = query.Build();
-			var results = connection.Post(searchCommand, jsonData);
+            string jsonData = query.Build();
+            var results = connection.Post(searchCommand, jsonData);
             return Serializer.ToSearchResult<T>(results);
         }
 

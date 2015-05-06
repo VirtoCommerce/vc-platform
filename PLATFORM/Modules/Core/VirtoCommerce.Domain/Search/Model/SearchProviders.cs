@@ -1,4 +1,4 @@
-﻿namespace VirtoCommerce.Domain.Search
+﻿namespace VirtoCommerce.Domain.Search.Model
 {
     public enum SearchProviders
     {
