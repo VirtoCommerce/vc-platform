@@ -90,12 +90,12 @@ namespace VirtoCommerce.Web.Models.Convertors
             {
                 var price = prices.FirstOrDefault(p => p.ProductId == product.Id);
 
-                if (price != null)
-                {
+                //if (price != null)
+                //{
                     var variant = product.AsVariantWebModel(price, options, productRewards);
 
                     productModel.Variants.Add(variant);
-                }
+                //}
             }
             else
             {
@@ -103,10 +103,10 @@ namespace VirtoCommerce.Web.Models.Convertors
                 {
                     var price = prices.FirstOrDefault(p => p.ProductId == variation.Id);
 
-                    if (price != null)
-                    {
+                    //if (price != null)
+                    //{
                         productModel.Variants.Add(variation.AsWebModel(price, options, productRewards));
-                    }
+                    //}
                 }
             }
 
@@ -127,7 +127,7 @@ namespace VirtoCommerce.Web.Models.Convertors
             var reward = rewards.FirstOrDefault();
 
             variantModel.Barcode = null; // TODO
-            variantModel.CompareAtPrice = price.Sale.HasValue ? price.Sale.Value : price.List;
+            variantModel.CompareAtPrice = price != null ? (price.Sale.HasValue ? price.Sale.Value : price.List) : 0M;
             variantModel.Id = variation.Id;
             variantModel.Image = variationImage != null ? variationImage.AsWebModel(variation.Name, variation.MainProductId) : null;
             variantModel.InventoryManagement = null; // TODO
@@ -137,7 +137,7 @@ namespace VirtoCommerce.Web.Models.Convertors
             variantModel.Option2 = options.Length >= 2 ? variation.Properties[options[1]] as string : null;
             variantModel.Option3 = options.Length >= 3 ? variation.Properties[options[2]] as string : null;
 
-            variantModel.Price = price.Sale.HasValue ? price.Sale.Value : price.List;
+            variantModel.Price = price != null ? (price.Sale.HasValue ? price.Sale.Value : price.List) : 0M;
             if (reward != null)
             {
                 variantModel.Price -= reward.Amount;
@@ -168,7 +168,7 @@ namespace VirtoCommerce.Web.Models.Convertors
             var reward = rewards.FirstOrDefault();
 
             variantModel.Barcode = null; // TODO
-            variantModel.CompareAtPrice = price.Sale.HasValue ? price.Sale.Value : price.List;
+            variantModel.CompareAtPrice = price != null ? (price.Sale.HasValue ? price.Sale.Value : price.List) : 0M;
             variantModel.Id = product.Id;
             variantModel.Image = variationImage != null ? variationImage.AsWebModel(product.Name, product.Id) : null;
             variantModel.InventoryManagement = null; // TODO
@@ -178,7 +178,7 @@ namespace VirtoCommerce.Web.Models.Convertors
             variantModel.Option2 = options.Length >= 2 ? product.Properties[options[1]] as string : null;
             variantModel.Option3 = options.Length >= 3 ? product.Properties[options[2]] as string : null;
 
-            variantModel.Price = price.Sale.HasValue ? price.Sale.Value : price.List;
+            variantModel.Price = price != null ? (price.Sale.HasValue ? price.Sale.Value : price.List) : 0M;
             if (reward != null)
             {
                 variantModel.Price -= reward.Amount;
