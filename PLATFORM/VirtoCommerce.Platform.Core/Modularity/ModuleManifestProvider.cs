@@ -6,7 +6,7 @@ namespace VirtoCommerce.Platform.Core.Modularity
 {
     public class ModuleManifestProvider : IModuleManifestProvider
     {
-        private IDictionary<string, ModuleManifest> _Modules;
+        private IDictionary<string, ModuleManifest> _modules;
 
         public string RootPath { get; private set; }
         public string ManifestFileName { get; private set; }
@@ -24,16 +24,21 @@ namespace VirtoCommerce.Platform.Core.Modularity
 
         public IDictionary<string, ModuleManifest> GetModuleManifests()
         {
-            if (_Modules != null)
-                return _Modules;
+            if (_modules != null)
+                return _modules;
 
             var result = new Dictionary<string, ModuleManifest>();
 
             if (Directory.Exists(RootPath))
                 result = Directory.EnumerateFiles(RootPath, ManifestFileName, SearchOption.AllDirectories).ToDictionary(path => path, ManifestReader.Read);
 
-            _Modules = result;
-            return _Modules;
+            _modules = result;
+            return _modules;
+        }
+
+        public void ClearCache()
+        {
+            _modules = null;
         }
     }
 }
