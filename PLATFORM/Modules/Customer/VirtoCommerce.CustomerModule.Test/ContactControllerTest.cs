@@ -138,7 +138,7 @@ namespace VirtoCommerce.CustomerModule.Test
 			Assert.IsNull(result);
 
 		}
-		private static CustomerController GetContactController()
+		private static CustomerModuleController GetContactController()
 		{
 			Func<ICustomerRepository> customerRepositoryFactory = () =>
 			{
@@ -147,7 +147,7 @@ namespace VirtoCommerce.CustomerModule.Test
 			var contactService = new ContactServiceImpl(customerRepositoryFactory);
 			var orgService = new OrganizationServiceImpl(customerRepositoryFactory);
 			var searchService = new CustomerSearchServiceImpl(customerRepositoryFactory);
-			return new CustomerController(contactService, orgService, searchService);
+			return new CustomerModuleController(contactService, orgService, searchService);
 		}
 	
 	}

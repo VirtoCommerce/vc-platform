@@ -8,7 +8,7 @@ namespace VirtoCommerce.Domain.Marketing.Model
 {
 	public class MarketingEvent : IMarketingEvent
 	{
-		public string EventType { get; set;}
+		public string EventType { get; set; }
 		public Dictionary<string, string> EventParams { get; set; }
 	}
 }

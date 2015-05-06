@@ -1,7 +1,6 @@
-﻿using System.Runtime.Serialization;
-using System.Text;
+﻿using System.Text;
 
-namespace VirtoCommerce.Domain.Search
+namespace VirtoCommerce.Domain.Search.Model
 {
     public class CategoryFilter : ISearchFilter
     {

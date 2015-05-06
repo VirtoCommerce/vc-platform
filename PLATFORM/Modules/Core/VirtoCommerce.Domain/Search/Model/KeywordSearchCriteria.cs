@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Runtime.Serialization;
-namespace VirtoCommerce.Domain.Search
+
+namespace VirtoCommerce.Domain.Search.Model
 {
 
 

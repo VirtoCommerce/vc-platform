@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using VirtoCommerce.Domain.Search;
+using VirtoCommerce.Domain.Search.Model;
 using VirtoCommerce.Domain.Search.Services;
 
 namespace VirtoCommerce.Domain.Search

@@ -96,7 +96,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Binders\SearchCriteriaBinder.cs" />
-    <Compile Include="Controllers\Api\CartController.cs" />
+    <Compile Include="Controllers\Api\CartModuleController.cs" />
     <Compile Include="Controllers\PredefinedPermissions.cs" />
     <Compile Include="Converters\AddressConverter.cs" />
     <Compile Include="Converters\LineItemConverter.cs" />

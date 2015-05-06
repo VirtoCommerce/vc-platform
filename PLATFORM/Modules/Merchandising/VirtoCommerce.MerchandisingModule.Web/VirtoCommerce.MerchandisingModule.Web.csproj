@@ -97,17 +97,21 @@
   <ItemGroup>
     <Compile Include="Binders\SearchParameterBinder.cs" />
     <Compile Include="Binders\CatalogItemSearchCriteriaBinder.cs" />
-    <Compile Include="Controllers\CategoryController.cs" />
-    <Compile Include="Controllers\StoreController.cs" />
-    <Compile Include="Controllers\PriceController.cs" />
-    <Compile Include="Controllers\ProductController.cs" />
+    <Compile Include="Controllers\MerchandisingModuleMarketingController.cs" />
+    <Compile Include="Controllers\MerchandisingModuleCategoryController.cs" />
+    <Compile Include="Controllers\MerchandisingModuleStoreController.cs" />
+    <Compile Include="Controllers\MerchandisingModulePriceController.cs" />
+    <Compile Include="Controllers\MerchandisingModuleProductController.cs" />
     <Compile Include="Converters\AssetConverter.cs" />
     <Compile Include="Converters\AssociationConverter.cs" />
     <Compile Include="Converters\CategoryConverter.cs" />
+    <Compile Include="Converters\ContentItemConverter.cs" />
     <Compile Include="Converters\FacetConverters.cs" />
     <Compile Include="Converters\KeywordConverter.cs" />
     <Compile Include="Converters\PriceConverter.cs" />
     <Compile Include="Converters\ProductConverter.cs" />
+    <Compile Include="Converters\PromotionConverter.cs" />
+    <Compile Include="Converters\PromotionRewardConverter.cs" />
     <Compile Include="Converters\ResponseGroupConverter.cs" />
     <Compile Include="Converters\SeoInfoConverter.cs" />
     <Compile Include="Converters\StoreConverter.cs" />
@@ -120,6 +124,8 @@
     <Compile Include="Model\IFeedbackCounterSupport.cs" />
     <Compile Include="Model\EditorialReview.cs" />
     <Compile Include="Model\ProductSearchResult.cs" />
+    <Compile Include="Model\Promotion.cs" />
+    <Compile Include="Model\PromotionReward.cs" />
     <Compile Include="Model\Review.cs" />
     <Compile Include="Model\ReviewComment.cs" />
     <Compile Include="Model\SearchParameters.cs" />

@@ -1,15 +1,16 @@
-﻿using PlainElastic.Net;
-using PlainElastic.Net.Queries;
-using System;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
+using PlainElastic.Net;
+using PlainElastic.Net.Queries;
+using VirtoCommerce.Domain.Search;
+using VirtoCommerce.Domain.Search.Filters;
+using VirtoCommerce.Domain.Search.Model;
+using VirtoCommerce.Domain.Search.Services;
 
-namespace VirtoCommerce.SearchModule.Data.Provides.Elastic
+namespace VirtoCommerce.SearchModule.Data.Providers.ElasticSearch
 {
-    using System.Collections.Generic;
-	using VirtoCommerce.Domain.Search.Services;
-	using VirtoCommerce.Domain.Search;
-
     public class ElasticSearchQueryBuilder : ISearchQueryBuilder
     {
         #region ISearchQueryBuilder Members
@@ -68,7 +69,7 @@ namespace VirtoCommerce.SearchModule.Data.Provides.Elastic
             #region CatalogItemSearchCriteria
             if (criteria is CatalogIndexedSearchCriteria)
             {
-				var c = criteria as CatalogIndexedSearchCriteria;
+                var c = criteria as CatalogIndexedSearchCriteria;
 
                 mainQuery.Must(m => m
                     .Range(r => r.Field("startdate").To(c.StartDate.ToString("s")))
@@ -248,7 +249,8 @@ namespace VirtoCommerce.SearchModule.Data.Provides.Elastic
         private void AddFacetQueries(
             Facets<ESDocument> param, string fieldName, IEnumerable<AttributeFilterValue> values, ISearchCriteria criteria)
         {
-            if (values == null) return;
+            if (values == null)
+                return;
 
             var ffilter = new BoolFilter<ESDocument>();
             foreach (var f in criteria.CurrentFilters)

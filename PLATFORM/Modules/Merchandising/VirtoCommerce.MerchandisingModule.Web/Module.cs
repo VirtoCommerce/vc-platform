@@ -41,6 +41,8 @@ namespace VirtoCommerce.MerchandisingModule.Web
 			var cacheManager = _container.Resolve<CacheManager>();
 			var cacheSettings = new[] 
 			{
+				new CacheSettings("MarketingController.EvaluatePromotions", TimeSpan.FromMinutes(settingsManager.GetValue("MerchandisingModule.Caching.MarketingTimeout", 1))),
+				new CacheSettings("MarketingController.EvaluateDynamicContent", TimeSpan.FromMinutes(settingsManager.GetValue("MerchandisingModule.Caching.MarketingTimeout", 1))),
 				new CacheSettings("ProductController.Search", TimeSpan.FromMinutes(settingsManager.GetValue("MerchandisingModule.Caching.SearchTimeout", 30))),
 				new CacheSettings("PriceController.GetProductPrices", TimeSpan.FromMinutes(settingsManager.GetValue("MerchandisingModule.Caching.PricingTimeout", 30))),
 				new CacheSettings("PriceController.GetPriceListStack", TimeSpan.FromMinutes(settingsManager.GetValue("MerchandisingModule.Caching.PricingTimeout", 30)))

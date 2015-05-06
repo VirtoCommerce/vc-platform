@@ -83,6 +83,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\IMarketingRepository.cs" />
     <Compile Include="Repositories\MarketingRepositoryImpl.cs" />
+    <Compile Include="Services\DefaultDynamicContentEvaluatorImpl.cs" />
     <Compile Include="Services\DefaultPromotionEvaluatorImpl.cs" />
     <Compile Include="Services\DynamicContentServiceImpl.cs" />
     <Compile Include="Services\MarketingSearchServiceImpl.cs" />

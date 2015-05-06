@@ -1,12 +1,13 @@
 ﻿using System;
-using global::Lucene.Net.Documents;
+using Lucene.Net.Documents;
 using VirtoCommerce.Domain.Search;
+using VirtoCommerce.Domain.Search.Model;
 
-namespace VirtoCommerce.SearchModule.Data.Provides.Lucene
+namespace VirtoCommerce.SearchModule.Data.Providers.Lucene
 {
     public class LuceneHelper
     {
- 
+
         /// <summary>
         ///     Converts the search document to lucene document
         /// </summary>
@@ -40,16 +41,16 @@ namespace VirtoCommerce.SearchModule.Data.Provides.Lucene
             var store = Field.Store.YES;
             var index = Field.Index.NOT_ANALYZED;
 
-            if (field.ContainsAttribute(value: IndexStore.NO))
+            if (field.ContainsAttribute(IndexStore.No))
             {
                 store = Field.Store.NO;
             }
 
-            if (field.ContainsAttribute(IndexType.ANALYZED))
+            if (field.ContainsAttribute(IndexType.Analyzed))
             {
                 index = Field.Index.ANALYZED;
             }
-            else if (field.ContainsAttribute(IndexType.NO))
+            else if (field.ContainsAttribute(IndexType.No))
             {
                 index = Field.Index.NO;
             }

@@ -115,7 +115,7 @@ namespace VirtoCommerce.Web.Models
         {
             get
             {
-                return this.SelectedOrFirstAvailableVariant.Price;
+                return this.SelectedOrFirstAvailableVariant.NumericPrice;
             }
         }
 
@@ -124,7 +124,7 @@ namespace VirtoCommerce.Web.Models
         {
             get
             {
-                return this.Variants.Max(v => v.Price);
+                return this.Variants.Max(v => v.NumericPrice);
             }
         }
 
@@ -133,7 +133,7 @@ namespace VirtoCommerce.Web.Models
         {
             get
             {
-                return this.Variants.Min(v => v.Price);
+                return this.Variants.Min(v => v.NumericPrice);
             }
         }
 

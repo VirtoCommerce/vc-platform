@@ -24,7 +24,7 @@ namespace VirtoCommerce.OrderModule.Test
 	[TestClass]
 	public class OrderControllerTest
 	{
-		private CustomerOrderController _controller;
+		private OrderModuleController _controller;
 		[TestInitialize]
 		public void Initialize()
 		{
@@ -314,7 +314,7 @@ namespace VirtoCommerce.OrderModule.Test
 			return order;
 		}
 
-		private static CustomerOrderController GetCustomerOrderController()
+		private static OrderModuleController GetCustomerOrderController()
 		{
 			var mockInventory = new Mock<IInventoryService>();
 			Func<ICartRepository> repositoryFactory = () =>
@@ -334,7 +334,7 @@ namespace VirtoCommerce.OrderModule.Test
 			orderWorkflowService.Subscribe(new VirtoCommerce.OrderModule.Data.Workflow.CalculateTotalsActivity());
 			var orderService = new CustomerOrderServiceImpl(orderRepositoryFactory, new TimeBasedNumberGeneratorImpl(), orderWorkflowService, cartService);
 
-			var controller = new CustomerOrderController(orderService, null, new TimeBasedNumberGeneratorImpl());
+			var controller = new OrderModuleController(orderService, null, new TimeBasedNumberGeneratorImpl());
 			return controller;
 		}
 

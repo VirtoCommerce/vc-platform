@@ -1,22 +1,17 @@
-﻿using System.Globalization;
-using u = Lucene.Net.Util;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
-using System.Text.RegularExpressions;
-
-using global::Lucene.Net.Analysis.Standard;
-
-using global::Lucene.Net.Documents;
-
-using global::Lucene.Net.Index;
-
-using global::Lucene.Net.QueryParsers;
-
-using global::Lucene.Net.Search;
+using Lucene.Net.Analysis.Standard;
+using Lucene.Net.Documents;
+using Lucene.Net.Index;
+using Lucene.Net.QueryParsers;
+using Lucene.Net.Search;
 using VirtoCommerce.Domain.Search;
+using VirtoCommerce.Domain.Search.Model;
+using u = Lucene.Net.Util;
 
-namespace VirtoCommerce.SearchModule.Data.Provides.Lucene
+namespace VirtoCommerce.SearchModule.Data.Providers.Lucene
 {
     public class LuceneSearchQueryBuilder : BaseSearchQueryBuilder
     {
@@ -81,10 +76,10 @@ namespace VirtoCommerce.SearchModule.Data.Provides.Lucene
                     var fields = new List<string> { "__content" };
                     if (c.Locale != null)
                     {
-                        var contentField = string.Format("__content_{0}", c.Locale.ToLower());    
+                        var contentField = string.Format("__content_{0}", c.Locale.ToLower());
                         fields.Add(contentField);
                     }
-                    
+
                     var parser = new MultiFieldQueryParser(u.Version.LUCENE_30, fields.ToArray(), analyzer)
                                      {
                                          DefaultOperator =
@@ -97,15 +92,15 @@ namespace VirtoCommerce.SearchModule.Data.Provides.Lucene
 
                 }
             }
-			//else if (criteria is OrderSearchCriteria)
-			//{
-			//	var c = criteria as OrderSearchCriteria;
+            //else if (criteria is OrderSearchCriteria)
+            //{
+            //	var c = criteria as OrderSearchCriteria;
 
-			//	if (!String.IsNullOrEmpty(c.CustomerId))
-			//	{
-			//		AddQuery("customerid", query, c.CustomerId);
-			//	}
-			//}
+            //	if (!String.IsNullOrEmpty(c.CustomerId))
+            //	{
+            //		AddQuery("customerid", query, c.CustomerId);
+            //	}
+            //}
 
             return builder;
         }

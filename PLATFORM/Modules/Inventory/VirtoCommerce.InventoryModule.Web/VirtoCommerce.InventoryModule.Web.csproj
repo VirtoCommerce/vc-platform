@@ -112,7 +112,7 @@
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Controllers\Api\InventoryController.cs" />
+    <Compile Include="Controllers\Api\InventoryModuleController.cs" />
     <Compile Include="Controllers\PredefinedPermissions.cs" />
     <Compile Include="Converters\FulfillmentCenterConverter.cs" />
     <Compile Include="Converters\InventoryConverter.cs" />

@@ -40,9 +40,13 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
         {
             var retVal = new dataModel.PropertyValue
             {
-                Locale = propDictValue.LanguageCode,
+	            Locale = propDictValue.LanguageCode,
                 PropertyId = property.Id,
             };
+			if(propDictValue.Id != null)
+			{
+				retVal.Id = propDictValue.Id;
+			}
             SetPropertyValue(retVal, property.ValueType, propDictValue.Value);
 
             return retVal;

@@ -1,5 +1,5 @@
 ﻿using VirtoCommerce.Domain.Catalog.Model;
-using VirtoCommerce.Domain.Search;
+using VirtoCommerce.Domain.Search.Model;
 using VirtoCommerce.MerchandisingModule.Web.Model;
 
 namespace VirtoCommerce.MerchandisingModule.Web.Services
