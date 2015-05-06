@@ -29,7 +29,7 @@ angular.module('platformWebApp')
             blade.css('margin-left', '-' + blade.width() + 'px').addClass('__animate');
 
             setTimeout(function () {
-                blade.animate({ 'margin-left': 0 }, 125, function () {
+                blade.animate({ 'margin-left': 0 }, 250, function () {
                     blade.removeAttr('style').removeClass('__animate');
                 });
             }, 0);
@@ -127,7 +127,9 @@ angular.module('platformWebApp')
 
             scope.bladeClose = function (onAfterClose) {
                 bladeNavigationService.closeBlade(scope.blade, onAfterClose, function (callback) {
-                    blade.addClass('__animate').animate({ 'margin-left': '-' + blade.width() + 'px' }, 125, callback);
+                    blade.addClass('__animate').animate({ 'margin-left': '-' + blade.width() + 'px' }, 125, function () {
+                        blade.remove();
+                    });
                 });
             };
 

@@ -57,7 +57,7 @@ namespace Zapier.IntegrationModule.Web.Controllers.Api
         [HttpPost]
         [ResponseType(typeof(void))]
         [Route("hooks")]
-        public async Task<IHttpActionResult> PostWebHooks()
+        public IHttpActionResult PostWebHooks()
         {
             var result = await Task.FromResult(HttpStatusCode.Created);
             return Ok(result);
@@ -66,7 +66,7 @@ namespace Zapier.IntegrationModule.Web.Controllers.Api
         [HttpDelete]
         [ResponseType(typeof(void))]
         [Route("hooks/{id}")]
-        public async Task<IHttpActionResult> DeleteWebHook(string id)
+        public IHttpActionResult DeleteWebHook(string id)
         {
             await Task.FromResult<object>(null);
             return Ok();

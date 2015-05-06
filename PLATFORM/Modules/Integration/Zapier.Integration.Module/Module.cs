@@ -6,7 +6,7 @@ using Zapier.IntegrationModule.Web.Providers.Interfaces;
 
 namespace Zapier.IntegrationModule.Web
 {
-    public class Module : AbstractModule
+    public class Module : ModuleBase
     {
         private readonly IUnityContainer _container;
 
