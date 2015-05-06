@@ -13,10 +13,10 @@ namespace VirtoCommerce.MarketingModule.Web.Controllers.Api
 {
 	[RoutePrefix("api/marketing")]
     [CheckPermission(Permission = PredefinedPermissions.Query)]
-    public class MarketingController : ApiController
+    public class MarketingModuleController : ApiController
     {
 		private readonly IMarketingSearchService _marketingSearchService;
-		public MarketingController(IMarketingSearchService marketingSearchService)
+		public MarketingModuleController(IMarketingSearchService marketingSearchService)
 		{
 			_marketingSearchService = marketingSearchService;
 		}

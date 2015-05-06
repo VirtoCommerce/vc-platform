@@ -98,7 +98,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Binders\SearchCriteriaBinder.cs" />
-    <Compile Include="Controllers\Api\CustomerOrderController.cs" />
+    <Compile Include="Controllers\Api\OrderModuleController.cs" />
     <Compile Include="Controllers\PredefinedPermissions.cs" />
     <Compile Include="Converters\AddressConverter.cs" />
     <Compile Include="Converters\CustomerOrderConverter.cs" />

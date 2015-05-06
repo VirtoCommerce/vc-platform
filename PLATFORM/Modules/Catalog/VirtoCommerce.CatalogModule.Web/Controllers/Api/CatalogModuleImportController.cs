@@ -20,7 +20,7 @@ using webModel = VirtoCommerce.CatalogModule.Web.Model;
 namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 {
 	[RoutePrefix("api/catalog/importjobs")]
-	public class ImportController : ApiController
+	public class CatalogModuleImportController : ApiController
 	{
 		//private readonly Func<IImportRepository> _importRepositoryFactory;
 		//private readonly Func<IImportService> _importServiceFactory;

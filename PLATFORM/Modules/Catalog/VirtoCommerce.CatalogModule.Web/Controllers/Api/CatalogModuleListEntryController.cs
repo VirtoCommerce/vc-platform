@@ -18,14 +18,14 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 {
     [RoutePrefix("api/catalog/listentries")]
     [CheckPermission(Permission = PredefinedPermissions.Query)]
-    public class ListEntryController : ApiController
+    public class CatalogModuleListEntryController : ApiController
     {
         private readonly ICatalogSearchService _searchService;
         private readonly ICategoryService _categoryService;
         private readonly IItemService _itemService;
 		private readonly IBlobUrlResolver _blobUrlResolver;
 
-        public ListEntryController(ICatalogSearchService searchService,
+        public CatalogModuleListEntryController(ICatalogSearchService searchService,
                                    ICategoryService categoryService,
                                    IItemService itemService, IBlobUrlResolver blobUrlResolver)
         {

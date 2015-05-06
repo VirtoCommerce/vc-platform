@@ -16,7 +16,7 @@ using VirtoCommerce.Platform.Core.Settings;
 namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 {
 	[RoutePrefix("api/catalog/catalogs")]
-    public class CatalogsController : ApiController
+    public class CatalogModuleCatalogsController : ApiController
     {
         private readonly ICatalogService _catalogService;
         private readonly ICatalogSearchService _searchService;
@@ -24,7 +24,7 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 		private readonly ISettingsManager _settingManager;
 		private readonly IPermissionService _permissionService;
 
-        public CatalogsController(ICatalogService catalogService,
+        public CatalogModuleCatalogsController(ICatalogService catalogService,
 								  ICatalogSearchService itemSearchService,
 								  ISettingsManager settingManager,
 								  IPropertyService propertyService, IPermissionService permissionService)

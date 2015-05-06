@@ -14,13 +14,13 @@ using webModel = VirtoCommerce.CatalogModule.Web.Model;
 namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 {
     [RoutePrefix("api/catalog/products")]
-    public class ProductsController : ApiController
+    public class CatalogModuleProductsController : ApiController
     {
         private readonly IItemService _itemsService;
         private readonly IPropertyService _propertyService;
 		private readonly IBlobUrlResolver _blobUrlResolver;
 
-		public ProductsController(IItemService itemsService, IPropertyService propertyService, IBlobUrlResolver blobUrlResolver)
+		public CatalogModuleProductsController(IItemService itemsService, IPropertyService propertyService, IBlobUrlResolver blobUrlResolver)
         {
             _itemsService = itemsService;
             _propertyService = propertyService;

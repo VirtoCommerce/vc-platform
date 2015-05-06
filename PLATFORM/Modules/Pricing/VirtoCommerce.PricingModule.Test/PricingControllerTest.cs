@@ -53,7 +53,7 @@ namespace VirtoCommerce.PricingModule.Test
 		
 		}
 
-		private static PricingController GetController()
+		private static PricingModuleController GetController()
 		{
 			Func<IPricingRepository> repositoryFactory = () =>
 			{
@@ -61,7 +61,7 @@ namespace VirtoCommerce.PricingModule.Test
 			};
 
 			var pricingService = new PricingServiceImpl(repositoryFactory);
-			var controller = new PricingController(pricingService, null, null);
+			var controller = new PricingModuleController(pricingService, null, null);
 			return controller;
 		}
 	}

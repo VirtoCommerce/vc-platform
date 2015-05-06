@@ -17,11 +17,11 @@ namespace VirtoCommerce.CatalogModule.Test
         [TestMethod]
         public void WorkingWithCatalogPropertyTest()
         {
-            var catalogController = new CatalogsController(GetCatalogService(), GetSearchService(), null, GetPropertyService(), GetPermissionService());
-            var categoryController = new CategoriesController(GetSearchService(), GetCategoryService(), GetPropertyService(), GetCatalogService());
-            var propertyController = new PropertiesController(GetPropertyService(), GetCategoryService(), GetCatalogService());
-            var productController = new ProductsController(GetItemService(), GetPropertyService(), null);
-            var listEntryController = new ListEntryController(GetSearchService(), GetCategoryService(), GetItemService(), null);
+            var catalogController = new CatalogModuleCatalogsController(GetCatalogService(), GetSearchService(), null, GetPropertyService(), GetPermissionService());
+            var categoryController = new CatalogModuleCategoriesController(GetSearchService(), GetCategoryService(), GetPropertyService(), GetCatalogService());
+            var propertyController = new CatalogModulePropertiesController(GetPropertyService(), GetCategoryService(), GetCatalogService());
+            var productController = new CatalogModuleProductsController(GetItemService(), GetPropertyService(), null);
+            var listEntryController = new CatalogModuleListEntryController(GetSearchService(), GetCategoryService(), GetItemService(), null);
 
             //var propertyResult = propertyController.GetNewCatalogProperty("Apple") as OkNegotiatedContentResult<webModel.Property>;
             //var property = propertyResult.Content;
@@ -55,9 +55,9 @@ namespace VirtoCommerce.CatalogModule.Test
         public void VirtualCatalogWorkingTest()
         {
 
-            var catalogController = new CatalogsController(GetCatalogService(), GetSearchService(), null, GetPropertyService(), GetPermissionService());
-            var categoryController = new CategoriesController(GetSearchService(), GetCategoryService(), GetPropertyService(), GetCatalogService());
-            var listEntryController = new ListEntryController(GetSearchService(), GetCategoryService(), GetItemService(), null);
+            var catalogController = new CatalogModuleCatalogsController(GetCatalogService(), GetSearchService(), null, GetPropertyService(), GetPermissionService());
+            var categoryController = new CatalogModuleCategoriesController(GetSearchService(), GetCategoryService(), GetPropertyService(), GetCatalogService());
+            var listEntryController = new CatalogModuleListEntryController(GetSearchService(), GetCategoryService(), GetItemService(), null);
 
             //Create virtual catalog
             var catalogResult = catalogController.GetNewVirtualCatalog() as OkNegotiatedContentResult<webModel.Catalog>;
@@ -103,7 +103,7 @@ namespace VirtoCommerce.CatalogModule.Test
         public void AssociationTest()
         {
             //Get all product associations
-            var productController = new ProductsController(GetItemService(), GetPropertyService(), null);
+            var productController = new CatalogModuleProductsController(GetItemService(), GetPropertyService(), null);
             var productResult = productController.Get("v-b004y45rxi") as OkNegotiatedContentResult<webModel.Product>;
             var product = productResult.Content;
             Assert.IsFalse(product.Associations.Any());

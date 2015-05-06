@@ -177,7 +177,7 @@ namespace VirtoCommerce.CartModule.Test
 		//	Assert.IsNotNull(result.Content);
 		//}
 
-		private static CartController GetCartController()
+		private static CartModuleController GetCartController()
 		{
 			Func<ICartRepository> repositoryFactory = () =>
 			{
@@ -191,7 +191,7 @@ namespace VirtoCommerce.CartModule.Test
 
 			var cartService = new ShoppingCartServiceImpl(repositoryFactory, cartWorkflowService);
 			var searchService = new ShoppingCartSearchServiceImpl(repositoryFactory);
-			var controller = new CartController(cartService, searchService);
+			var controller = new CartModuleController(cartService, searchService);
 			return controller;
 		}
 	}

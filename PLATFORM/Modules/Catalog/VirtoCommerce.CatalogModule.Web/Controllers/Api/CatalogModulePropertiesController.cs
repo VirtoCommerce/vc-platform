@@ -14,13 +14,13 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 {
 	[RoutePrefix("api/catalog/properties")]
     [CheckPermission(Permission = PredefinedPermissions.Query)]
-    public class PropertiesController : ApiController
+    public class CatalogModulePropertiesController : ApiController
     {
         private readonly IPropertyService _propertyService;
 		private readonly ICategoryService _categoryService;
 		private readonly ICatalogService _catalogService;
 
-		public PropertiesController(IPropertyService propertyService,
+		public CatalogModulePropertiesController(IPropertyService propertyService,
 									ICategoryService categoryService, ICatalogService catalogService)
         {
             _propertyService = propertyService;

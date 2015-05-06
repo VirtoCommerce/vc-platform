@@ -100,13 +100,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Binders\ListEntrySearchCriteriaBinder.cs" />
-    <Compile Include="Controllers\Api\CatalogsController.cs" />
-    <Compile Include="Controllers\Api\CategoriesController.cs" />
-    <Compile Include="Controllers\Api\ExportController.cs" />
-    <Compile Include="Controllers\Api\ProductsController.cs" />
-    <Compile Include="Controllers\Api\ListEntryController.cs" />
-    <Compile Include="Controllers\Api\ImportController.cs" />
-    <Compile Include="Controllers\Api\PropertiesController.cs" />
+    <Compile Include="Controllers\Api\CatalogModuleCatalogsController.cs" />
+    <Compile Include="Controllers\Api\CatalogModuleCategoriesController.cs" />
+    <Compile Include="Controllers\Api\CatalogModuleExportController.cs" />
+    <Compile Include="Controllers\Api\CatalogModuleProductsController.cs" />
+    <Compile Include="Controllers\Api\CatalogModuleListEntryController.cs" />
+    <Compile Include="Controllers\Api\CatalogModuleImportController.cs" />
+    <Compile Include="Controllers\Api\CatalogModulePropertiesController.cs" />
     <Compile Include="Controllers\PredefinedPermissions.cs" />
     <Compile Include="Converters\AssetConverter.cs" />
     <Compile Include="Converters\AssociationConverter.cs" />

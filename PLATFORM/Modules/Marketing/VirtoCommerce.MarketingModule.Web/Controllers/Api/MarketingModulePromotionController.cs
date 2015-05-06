@@ -17,12 +17,12 @@ namespace VirtoCommerce.MarketingModule.Web.Controllers.Api
 {
 	[RoutePrefix("api/marketing/promotions")]
     [CheckPermission(Permission = PredefinedPermissions.Query)]
-    public class PromotionController : ApiController
+    public class MarketingModulePromotionController : ApiController
     {
 		private readonly IMarketingExtensionManager _promotionManager;
 		private readonly IPromotionService _promotionService;
 
-		public PromotionController(IPromotionService promotionService, 	IMarketingExtensionManager promotionManager)
+		public MarketingModulePromotionController(IPromotionService promotionService, 	IMarketingExtensionManager promotionManager)
 		{
 			_promotionManager = promotionManager;
 			_promotionService = promotionService;

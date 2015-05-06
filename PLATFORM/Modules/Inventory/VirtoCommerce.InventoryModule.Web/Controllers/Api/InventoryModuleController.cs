@@ -13,11 +13,11 @@ using System.Collections.Generic;
 namespace VirtoCommerce.InventoryModule.Web.Controllers.Api
 {
 	[RoutePrefix("")]
-	public class InventoryController : ApiController
+	public class InventoryModuleController : ApiController
 	{
 		private readonly IInventoryService _inventoryService;
 		private readonly ICommerceService _commerceService;
-		public InventoryController(IInventoryService inventoryService, ICommerceService commerceService)
+		public InventoryModuleController(IInventoryService inventoryService, ICommerceService commerceService)
 		{
 			_inventoryService = inventoryService;
 			_commerceService = commerceService;

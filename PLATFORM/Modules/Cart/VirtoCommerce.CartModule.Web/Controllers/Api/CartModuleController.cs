@@ -14,11 +14,11 @@ namespace VirtoCommerce.CartModule.Web.Controllers.Api
 {
     [RoutePrefix("api/cart")]
     [CheckPermission(Permission = PredefinedPermissions.Query)]
-	public class CartController : ApiController
+	public class CartModuleController : ApiController
 	{
 		private readonly IShoppingCartService _shoppingCartService;
 		private readonly IShoppingCartSearchService _searchService;
-		public CartController(IShoppingCartService cartService, IShoppingCartSearchService searchService)
+		public CartModuleController(IShoppingCartService cartService, IShoppingCartSearchService searchService)
 		{
 			this._shoppingCartService = cartService;
 			this._searchService = searchService;

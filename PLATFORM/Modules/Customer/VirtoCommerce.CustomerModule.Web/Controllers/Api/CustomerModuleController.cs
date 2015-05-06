@@ -18,12 +18,12 @@ namespace VirtoCommerce.CustomerModule.Web.Controllers.Api
 {
 	[RoutePrefix("api")]
     [CheckPermission(Permission = PredefinedPermissions.Query)]
-	public class CustomerController : ApiController
+	public class CustomerModuleController : ApiController
 	{
 		private readonly IContactService _contactService;
 		private readonly IOrganizationService _organizationService;
 		private readonly ICustomerSearchService _contactSearchService;
-		public CustomerController(IContactService contactService, IOrganizationService organizationService, ICustomerSearchService contactSearchService)
+		public CustomerModuleController(IContactService contactService, IOrganizationService organizationService, ICustomerSearchService contactSearchService)
 		{
 			_contactSearchService = contactSearchService;
 			_organizationService = organizationService;

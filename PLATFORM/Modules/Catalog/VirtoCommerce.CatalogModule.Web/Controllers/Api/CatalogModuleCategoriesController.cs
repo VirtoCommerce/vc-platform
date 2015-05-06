@@ -12,14 +12,14 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 {
     [RoutePrefix("api/catalog/categories")]
     [CheckPermission(Permission = PredefinedPermissions.CategoriesManage)]
-    public class CategoriesController : ApiController
+    public class CatalogModuleCategoriesController : ApiController
     {
         private readonly ICatalogSearchService _searchService;
         private readonly ICategoryService _categoryService;
         private readonly IPropertyService _propertyService;
         private readonly ICatalogService _catalogService;
 
-        public CategoriesController(ICatalogSearchService searchService,
+        public CatalogModuleCategoriesController(ICatalogSearchService searchService,
                                     ICategoryService categoryService,
                                     IPropertyService propertyService, ICatalogService catalogService)
         {

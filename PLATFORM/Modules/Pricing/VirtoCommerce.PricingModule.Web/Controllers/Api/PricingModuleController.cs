@@ -15,12 +15,12 @@ namespace VirtoCommerce.PricingModule.Web.Controllers.Api
 {
 	[RoutePrefix("")]
     [CheckPermission(Permission = PredefinedPermissions.Query)]
-	public class PricingController : ApiController
+	public class PricingModuleController : ApiController
 	{
 		private readonly IPricingService _pricingService;
 		private readonly IItemService _itemService;
 		private readonly ICatalogService _catalogService;
-		public PricingController(IPricingService pricingService, IItemService itemService, ICatalogService catalogService)
+		public PricingModuleController(IPricingService pricingService, IItemService itemService, ICatalogService catalogService)
 		{
 			_pricingService = pricingService;
 			_itemService = itemService;

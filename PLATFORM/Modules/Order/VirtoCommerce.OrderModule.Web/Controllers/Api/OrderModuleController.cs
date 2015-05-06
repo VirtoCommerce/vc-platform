@@ -19,13 +19,13 @@ namespace VirtoCommerce.OrderModule.Web.Controllers.Api
 {
 	[RoutePrefix("api/order/customerOrders")]
     [CheckPermission(Permission = PredefinedPermissions.Query)]
-    public class CustomerOrderController : ApiController
+    public class OrderModuleController : ApiController
     {
 		private readonly ICustomerOrderService _customerOrderService;
 		private readonly ICustomerOrderSearchService _searchService;
 		private readonly IOperationNumberGenerator _operationNumberGenerator;
 	
-		public CustomerOrderController(ICustomerOrderService customerOrderService, ICustomerOrderSearchService searchService, IOperationNumberGenerator numberGenerator)
+		public OrderModuleController(ICustomerOrderService customerOrderService, ICustomerOrderSearchService searchService, IOperationNumberGenerator numberGenerator)
 		{
 			_customerOrderService = customerOrderService;
 			_searchService = searchService;

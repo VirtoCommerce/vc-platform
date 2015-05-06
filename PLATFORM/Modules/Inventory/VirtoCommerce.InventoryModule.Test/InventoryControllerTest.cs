@@ -25,10 +25,10 @@ namespace VirtoCommerce.InventoryModule.Test
 		
 		}
 
-		private static InventoryController GetController()
+		private static InventoryModuleController GetController()
 		{
 			
-			var controller = new InventoryController(null, null);
+			var controller = new InventoryModuleController(null, null);
 			return controller;
 		}
 	}

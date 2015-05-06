@@ -12,10 +12,10 @@ namespace VirtoCommerce.MarketingModule.Web.Controllers.Api
 {
 	[RoutePrefix("api/marketing")]
     [CheckPermission(Permission = PredefinedPermissions.Query)]
-    public class DynamicContentController: ApiController
+    public class MarketingModuleDynamicContentController: ApiController
     {
 		private readonly IDynamicContentService _dynamicContentService;
-		public DynamicContentController(IDynamicContentService dynamicContentService)
+		public MarketingModuleDynamicContentController(IDynamicContentService dynamicContentService)
 		{
 			_dynamicContentService = dynamicContentService;
 		}
