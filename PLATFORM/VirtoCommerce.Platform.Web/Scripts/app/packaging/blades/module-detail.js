@@ -74,7 +74,6 @@
                             template: 'Scripts/app/packaging/wizards/newModule/module-wizard-progress-step.tpl.html'
                         };
                         bladeNavigationService.showBlade(newBlade, $scope.blade.parentBlade);
-                        $scope.bladeClose();
                     });
                 }
             }
