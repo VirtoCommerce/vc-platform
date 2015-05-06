@@ -77,7 +77,7 @@ namespace VirtoCommerce.Web.Models.Filters
                 return null;
             }
 
-            decimal val = (decimal)input;
+            decimal val = Convert.ToDecimal(input, CultureInfo.GetCultureInfo("en-US"));
 
             string currency = _context.Shop.Currency;
 

@@ -30,7 +30,7 @@ namespace VirtoCommerce.Web.Models
                     }
                 }
 
-                if (Price == 0)
+                if (NumericPrice == 0)
                 {
                     isAvailable = false;
                 }
@@ -78,8 +78,16 @@ namespace VirtoCommerce.Web.Models
         [DataMember]
         public string Option3 { get; set; }
 
+        public decimal NumericPrice { get; set; }
+
         [DataMember]
-        public decimal Price { get; set; }
+        public string Price
+        {
+            get
+            {
+                return NumericPrice.ToString("#.00", System.Globalization.CultureInfo.GetCultureInfo("en-US"));
+            }
+        }
 
         [DataMember]
         public bool Selected { get; set; }

@@ -24,7 +24,7 @@ namespace VirtoCommerce.Web.Models.Convertors
                                ProductId = product.Id,
                                VariantId = variant.Id,
                                Handle = product.Handle,
-                               Price = variant.Price,
+                               Price = variant.NumericPrice,
                                Quantity = 1,
                                Url = product.Url,
                                Title = product.Title,
@@ -137,10 +137,10 @@ namespace VirtoCommerce.Web.Models.Convertors
             variantModel.Option2 = options.Length >= 2 ? variation.Properties[options[1]] as string : null;
             variantModel.Option3 = options.Length >= 3 ? variation.Properties[options[2]] as string : null;
 
-            variantModel.Price = price != null ? (price.Sale.HasValue ? price.Sale.Value : price.List) : 0M;
+            variantModel.NumericPrice = price != null ? (price.Sale.HasValue ? price.Sale.Value : price.List) : 0M;
             if (reward != null)
             {
-                variantModel.Price -= reward.Amount;
+                variantModel.NumericPrice -= reward.Amount;
             }
 
             variantModel.Selected = variantlUrlParameter != null;
@@ -178,10 +178,10 @@ namespace VirtoCommerce.Web.Models.Convertors
             variantModel.Option2 = options.Length >= 2 ? product.Properties[options[1]] as string : null;
             variantModel.Option3 = options.Length >= 3 ? product.Properties[options[2]] as string : null;
 
-            variantModel.Price = price != null ? (price.Sale.HasValue ? price.Sale.Value : price.List) : 0M;
+            variantModel.NumericPrice = price != null ? (price.Sale.HasValue ? price.Sale.Value : price.List) : 0M;
             if (reward != null)
             {
-                variantModel.Price -= reward.Amount;
+                variantModel.NumericPrice -= reward.Amount;
             }
 
             variantModel.Selected = variantlUrlParameter != null;
