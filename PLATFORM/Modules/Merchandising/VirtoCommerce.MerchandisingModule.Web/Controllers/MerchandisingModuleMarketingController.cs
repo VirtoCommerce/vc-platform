@@ -32,8 +32,10 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 		[ClientCache(Duration = 1)]
 		public IHttpActionResult EvaluatePromotions(coreModel.PromotionEvaluationContext context)
 		{
-			var cacheKey = CacheKey.Create("MarketingController.EvaluatePromotions", context.GetHash<MD5CryptoServiceProvider>());
-			var retVal = _cacheManager.Get(cacheKey, () => _promotionEvaluator.EvaluatePromotion(context));
+            // DOESN'T WORK
+			//var cacheKey = CacheKey.Create("MarketingController.EvaluatePromotions", context.GetHash<MD5CryptoServiceProvider>());
+			//var retVal = _cacheManager.Get(cacheKey, () => _promotionEvaluator.EvaluatePromotion(context));
+		    var retVal = _promotionEvaluator.EvaluatePromotion(context);
 			return Ok(retVal.Rewards.Select(x => x.ToWebModel()).ToArray());
 		}
 

@@ -29,7 +29,7 @@ namespace VirtoCommerce.ApiClient
 
         protected class RelativePaths
         {
-            public const string GetPromotionRewards = "marketing/promotions/evaluate";
+            public const string GetPromotionRewards = "mp/promotions/evaluate";
         }
     }
 }
