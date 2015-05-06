@@ -32,7 +32,7 @@ namespace VirtoCommerce.Web.Models
 
         public override string ToString()
         {
-            return this.Src;
+            return Src;
         }
     }
 }

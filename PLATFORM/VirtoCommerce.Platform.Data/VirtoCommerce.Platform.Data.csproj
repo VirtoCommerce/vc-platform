@@ -82,17 +82,9 @@
     <Reference Include="Microsoft.WindowsAzure.Storage">
       <HintPath>..\packages\WindowsAzure.Storage.3.0.1.0\lib\net40\Microsoft.WindowsAzure.Storage.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Web.XmlTransform, Version=2.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Web.Xdt.2.1.1\lib\net40\Microsoft.Web.XmlTransform.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Newtonsoft.Json.6.0.8\lib\net45\Newtonsoft.Json.dll</HintPath>
-    </Reference>
-    <Reference Include="NuGet.Core, Version=2.8.50926.602, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\NuGet.Core.2.8.3\lib\net40-Client\NuGet.Core.dll</HintPath>
-      <Private>True</Private>
     </Reference>
     <Reference Include="Omu.ValueInjecter">
       <HintPath>..\packages\valueinjecter.2.3.3\lib\net35\Omu.ValueInjecter.dll</HintPath>
@@ -170,23 +162,7 @@
     <Compile Include="Model\SettingValueEntity.cs" />
     <Compile Include="Model\UserDetails.cs" />
     <Compile Include="Notification\InMemoryNotifierImpl.cs" />
-    <Compile Include="Packaging\NuGetPackageService.cs" />
     <Compile Include="Packaging\ZipPackageService.cs" />
-    <Compile Include="Packaging\Repositories\ManifestPackage.cs" />
-    <Compile Include="Packaging\Repositories\ManifestPackageRepository.cs" />
-    <Compile Include="Packaging\Repositories\NuGet\CommonResources.cs" />
-    <Compile Include="Packaging\Repositories\NuGet\CommonResources.designer.cs">
-      <DependentUpon>CommonResources.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Packaging\Repositories\NuGet\Constants.cs" />
-    <Compile Include="Packaging\Repositories\NuGet\OptimizedZipPackage.cs" />
-    <Compile Include="Packaging\Repositories\NuGet\PackageBuilder.cs" />
-    <Compile Include="Packaging\Repositories\NuGet\UriUtility.cs" />
-    <Compile Include="Packaging\Repositories\NuGet\ZipPackage.cs" />
-    <Compile Include="Packaging\Repositories\WebsiteLocalPackageRepository.cs" />
-    <Compile Include="Packaging\Repositories\WebsiteOptimizedZipPackage.cs" />
-    <Compile Include="Packaging\Repositories\WebsitePackageRepository.cs" />
-    <Compile Include="Packaging\Repositories\WebsiteProjectSystem.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\IPlatformRepository.cs" />
     <Compile Include="Repositories\Migrations\201504300700222_Initial.cs" />
@@ -239,9 +215,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Packaging\Repositories\NuGet\CommonResources.resx">
-      <DependentUpon>CommonResources.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Repositories\Migrations\201504300700222_Initial.resx">
       <DependentUpon>201504300700222_Initial.cs</DependentUpon>
     </EmbeddedResource>
