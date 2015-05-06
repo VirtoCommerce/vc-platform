@@ -139,6 +139,7 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 				{
 					var dbPropValue = propValue.ToDataModel<dataModel.ItemPropertyValue>() as dataModel.ItemPropertyValue;
 					retVal.ItemPropertyValues.Add(dbPropValue);
+					dbPropValue.ItemId = retVal.Id;
 				}
 			}
 			#endregion
