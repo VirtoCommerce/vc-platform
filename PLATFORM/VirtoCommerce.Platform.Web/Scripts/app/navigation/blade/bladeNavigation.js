@@ -218,13 +218,10 @@ angular.module('platformWebApp')
             if (existingBlade != undefined) {
                 //store prev blade x-index
                 blade.xindex = existingBlade.xindex;
-            }
-
-            //Show blade as last one by default
-            if (!angular.isDefined(blade.xindex)) {
+            } else if (!angular.isDefined(blade.xindex)) {
+                //Show blade as last one by default
                 blade.xindex = service.stateBlades().length;
             }
-
 
             if (angular.isDefined(parentBlade)) {
                 blade.xindex = service.stateBlades().indexOf(parentBlade) + 1;
@@ -238,13 +235,11 @@ angular.module('platformWebApp')
                 service.currentBlade = blade;
             };
 
-            //if (existingBlade != undefined) {
-            //    service.closeBlade(existingBlade, showBlade);
-            //}
-            //else {
-            showBlade();
-            //}
-
+            if (angular.isDefined(existingBlade) && angular.isUndefined(parentBlade)) {
+                service.closeBlade(existingBlade, showBlade);
+            } else {
+                showBlade();
+            }
         },
         setError: function (msg, blade) {
             blade.isLoading = false;
