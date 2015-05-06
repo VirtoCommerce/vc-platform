@@ -471,7 +471,7 @@ Shopify.Image = {
     for (var i=0; i < images.length; i++) {
       var image = images[i];
 
-      this.loadImage(this.getSizedImageUrl(image, size));
+      this.loadImage(this.getSizedImageUrl(image.src, size)); // change to image.src - according to (1)
     }
   },
 
@@ -485,7 +485,7 @@ Shopify.Image = {
     }
 
     var size = this.imageSize(element.src)
-    var imageUrl = this.getSizedImageUrl(image.src, size);
+    var imageUrl = this.getSizedImageUrl(image.src, size); // (1)
 
     if (callback) {
       callback(imageUrl, image, element);

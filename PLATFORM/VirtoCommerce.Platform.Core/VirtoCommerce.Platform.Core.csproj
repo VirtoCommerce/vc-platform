@@ -112,7 +112,7 @@
     <Compile Include="Common\TrackingEntry.cs" />
     <Compile Include="Common\TreeExtension.cs" />
     <Compile Include="Common\ValueObject.cs" />
-    <Compile Include="Modularity\AbstractModule.cs" />
+    <Compile Include="Modularity\ModuleBase.cs" />
     <Compile Include="Modularity\AssemblyResolver.cs" />
     <Compile Include="Modularity\Exceptions\CyclicDependencyFoundException.cs" />
     <Compile Include="Modularity\DirectoryModuleCatalog.cs" />
