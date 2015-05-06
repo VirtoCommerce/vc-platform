@@ -8,7 +8,7 @@ using Zendesk.HelpdeskModule.Web.Services;
 
 namespace Zendesk.HelpdeskModule.Web
 {
-    public class Module : AbstractModule
+    public class Module : ModuleBase
     {
         private const string _accessTokenPropertyName = "Zendesk.Helpdesk.Credentials.AccessToken";
 

@@ -1,7 +1,7 @@
 ﻿
 namespace VirtoCommerce.Platform.Core.Modularity
 {
-    public abstract class AbstractModule: IModule
+    public abstract class ModuleBase: IModule
     {
         public virtual void SetupDatabase(SampleDataLevel sampleDataLevel)
         {
