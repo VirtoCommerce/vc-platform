@@ -18,26 +18,25 @@ namespace VirtoCommerce.Web.Models.Routing
         #region Public Methods and Operators
         public static void MapSeoRoutes(this RouteCollection routes)
         {
-            /*
-            var itemRouteWithCode =
+            var pageRoute =
                 new NormalizeRoute(
-                    new ItemRoute( 
-                        Constants.ItemRouteWithCode,
+                    new PageRoute(
+                        Constants.PageRoute,
                         new RouteValueDictionary
-                                    {
-                                        { "controller", "Product" },
-                                        { "action", "ProductAsync" }
-                                    },
+                        {
+                            { "controller", "Page" },
+                            { "action", "DisplayPageAsync" },
+                            //{ Constants.Language, UrlParameter.Optional }
+
+                        },
                         new RouteValueDictionary
-                                    {
-                                        { Constants.Language, new LanguageRouteConstraint() },
-                                        { Constants.Store, new StoreRouteConstraint() },
-                                        { Constants.Category, new CategoryRouteConstraint() },
-                                        { Constants.Item, new ItemRouteConstraint() }
-                                    },
+                        {
+                            { Constants.Language, new LanguageRouteConstraint() },
+                            { Constants.Store, new StoreRouteConstraint() },
+                            { Constants.Page, new PageRouteConstraint() }
+                        },
                         new RouteValueDictionary { { "namespaces", new[] { "VirtoCommerce.Web.Controllers" } } },
                         new MvcRouteHandler()));
-             * */
 
             var itemRoute =
                 new NormalizeRoute(
@@ -81,30 +80,6 @@ namespace VirtoCommerce.Web.Models.Routing
                         new RouteValueDictionary { { "namespaces", new[] { "VirtoCommerce.Web.Controllers" } } },
                         new MvcRouteHandler()));
 
-            /*
-            var categoryRouteWithCode =
-                new NormalizeRoute(
-                    new CategoryRoute(
-                        Constants.CategoryRouteCodeWithTags,
-                        new RouteValueDictionary
-                        {
-                            { "controller", "Collections" },
-                            { "action", "GetCollectionByCodeAsync" },
-                            //{ Constants.Language, UrlParameter.Optional },
-                            { Constants.Tags, UrlParameter.Optional },
-                        },
-                        new RouteValueDictionary
-                        {
-                            { Constants.Language, new LanguageRouteConstraint() },
-                            { Constants.Store, new StoreRouteConstraint() },
-                            { Constants.Category, new CategoryRouteConstraint() }//,
-                            //{ Constants.Tags, @"^$|[0-9][0-9]"}
-                        },
-                        new RouteValueDictionary { { "namespaces", new[] { "VirtoCommerce.Web.Controllers" } } },
-                        new MvcRouteHandler()));
-             * */
-
-
             var storeRoute =
                 new NormalizeRoute(
                     new StoreRoute(
@@ -138,19 +113,6 @@ namespace VirtoCommerce.Web.Models.Routing
                     return null;
                 });
 
-            /*
-            routes.Redirect(r => r.MapRoute("old_Product", string.Format("products/{{{0}}}", Constants.Item))).To(itemRouteWithCode,
-                    x =>
-                    {
-                        //Expect to receive category code
-                        if (x.RouteData.Values.ContainsKey(Constants.Item))
-                        {
-                            return new RouteValueDictionary { { Constants.Item, x.RouteData.Values[Constants.Item].ToString() } };
-                        }
-                        return null;
-                    });
-             * */
-
 
             var defaultRoute = new NormalizeRoute(
                 new Route(string.Format("{0}/{{controller}}/{{action}}/{{id}}", Constants.StoreRoute),
@@ -166,10 +128,9 @@ namespace VirtoCommerce.Web.Models.Routing
                     new RouteValueDictionary { { "namespaces", new[] { "VirtoCommerce.Web.Controllers" } } },
                     new MvcRouteHandler()));
 
-            //routes.Add("ItemWithCode", itemRouteWithCode);
+            routes.Add("Page", pageRoute);
             routes.Add("Item", itemRoute);
             routes.Add("Category", categoryRoute);
-            //routes.Add("CategoryCode", categoryRouteWithCode);
             routes.Add("Store", storeRoute);
 
             //Other actions

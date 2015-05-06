@@ -115,10 +115,6 @@ namespace VirtoCommerce.Web.Models.Routing.Routes
                                   + httpContext.Request.PathInfo;
                 var pathSegments = requestPath.Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
 
-
-                //RouteParser.Parse(value);
-                //RouteValueDictionary values = _parsedRoute.Match(requestPath, Defaults);
-
                 //Store route can only have up to 2 segments
                 //Other routes have unlimited number of segments due to category path
                 if (this.GetType() == typeof(StoreRoute) && pathSegments.Length > this.Url.Split(new[] { '/' }).Length)
@@ -143,12 +139,7 @@ namespace VirtoCommerce.Web.Models.Routing.Routes
                     var languageConstraint = new LanguageRouteConstraint();
 
                     var languageFound = false;
-                    if (languageConstraint.Match(
-                        httpContext,
-                        this,
-                        Constants.Language,
-                        new RouteValueDictionary { { Constants.Language, pathSegments[0] } }.Merge(values),
-                        RouteDirection.IncomingRequest))
+                    if (languageConstraint.Match(httpContext,this,Constants.Language,new RouteValueDictionary { { Constants.Language, pathSegments[0] } }.Merge(values),RouteDirection.IncomingRequest))
                     {
                         languageFound = true;
                         values.Add(Constants.Language, pathSegments[0]);
@@ -164,13 +155,7 @@ namespace VirtoCommerce.Web.Models.Routing.Routes
                         : pathSegments.Length > 1 ? pathSegments[1] : null;
                     var storeConstraint = new StoreRouteConstraint();
 
-                    if (!string.IsNullOrEmpty(storeCandidate)
-                        && storeConstraint.Match(
-                            httpContext,
-                            this,
-                            Constants.Store,
-                            new RouteValueDictionary { { Constants.Store, storeCandidate } }.Merge(values),
-                            RouteDirection.IncomingRequest))
+                    if (!string.IsNullOrEmpty(storeCandidate) && storeConstraint.Match(httpContext,this,Constants.Store,new RouteValueDictionary { { Constants.Store, storeCandidate } }.Merge(values),RouteDirection.IncomingRequest))
                     {
                         storeFound = true;
                         values.Add(Constants.Store, storeCandidate);
@@ -203,22 +188,9 @@ namespace VirtoCommerce.Web.Models.Routing.Routes
                         if (this.GetType() == typeof(ItemRoute))
                         {
                             categoryParseEndIndex = pathSegments.Length - 1;
-                            //Last must be item code
-                            //values.Add(Constants.Item, pathSegments[categoryParseEndIndex].StartsWith("itm-") ? pathSegments[categoryParseEndIndex].Substring(4) : pathSegments[categoryParseEndIndex]);
                             values.Add(Constants.Item, pathSegments[categoryParseEndIndex]);
-
-                            // hack: for quick comparison and choosing correct item handler since RouteParser is internal method of .net
-                            // have to change this for MVC5
-                            /*
-                            if (this.Url.Equals(Constants.ItemRouteWithCode))
-                            {
-                                if (!pathSegments[categoryParseEndIndex].StartsWith("itm-"))
-                                {
-                                    return null;
-                                }
-                            }
-                             * */
                         }
+
                         //Parse category path
                         if (categoryParseEndIndex > startIndex)
                         {
@@ -231,7 +203,8 @@ namespace VirtoCommerce.Web.Models.Routing.Routes
                                 }
                                 categoryPath += pathSegments[i];
                             }
-                            values.Add(Constants.Category, categoryPath);
+
+                            values.Add(this.GetType() == typeof(PageRoute) ? Constants.Page : Constants.Category, categoryPath);
                         }
                     }
 

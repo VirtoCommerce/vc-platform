@@ -13,6 +13,8 @@
         /// </summary>
         public const string Item = "item";
 
+        public const string Page = "page";
+
         /// <summary>
         ///     The language route key
         /// </summary>
@@ -32,6 +34,14 @@
         #endregion
 
         #region Public Properties
+        public static string PageRoute
+        {
+            get
+            {
+                return string.Format("{0}/{{{1}}}", StoreRoute, Page);
+            }
+        }
+
         /// <summary>
         ///     Gets the category route. {lang}/{store}/{category}
         /// </summary>
@@ -47,29 +57,6 @@
         }
 
         /// <summary>
-        ///     Gets the category route. {lang}/{store}/{category}
-        /// </summary>
-        /// <value>
-        ///     The category route.
-        /// </value>
-
-        //public static string CategoryRouteWithTags
-        //{
-        //    get
-        //    {
-        //        return string.Format("{0}/{{{1}}}/{{{2}}}", StoreRoute, Category, Tags);
-        //    }
-        //}
-
-        //public static string CategoryRouteCodeWithTags
-        //{
-        //    get
-        //    {
-        //        return string.Format("{0}/{{{1}}}/collection/{{{2}}}", StoreRoute, Category, Tags);
-        //    }
-        //}
-
-        /// <summary>
         ///     Gets the item route. {lang}/{store}/{category}/{item}
         /// </summary>
         /// <value>
@@ -82,16 +69,6 @@
                 return string.Format("{0}/{{{1}}}", CategoryRoute, Item);
             }
         }
-
-        /*
-        public static string ItemRouteWithCode
-        {
-            get
-            {
-                return string.Format("{0}/itm-{{{1}}}", CategoryRoute, Item);
-            }
-        }
-         * */
 
         /// <summary>
         ///     Gets the store route. {lang}/{store}

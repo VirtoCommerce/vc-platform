@@ -44,7 +44,10 @@ namespace VirtoCommerce.Web.Models.Services
             var filesPath = HostingEnvironment.MapPath(String.Format("~/App_Data/Pages/{0}/{1}", context.StoreId, context.Language));
             var service = new PublishingService(filesPath, new[] { new LiquidTemplateEngine(filesPath) });
 
-            var item = service.GetContentItem(handle.Contains("/") ? handle : String.Format("/pages/{0}", handle));
+            if (!handle.StartsWith("/"))
+                handle = "/" + handle;
+
+            var item = service.GetContentItem(handle);
 
             if (item == null)
             {

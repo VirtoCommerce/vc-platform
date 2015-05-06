@@ -158,6 +158,7 @@
     <Compile Include="Routing\CanonicalizedAttribute.cs" />
     <Compile Include="Routing\Constants.cs" />
     <Compile Include="Routing\Constraints\BaseRouteConstraint.cs" />
+    <Compile Include="Routing\Constraints\PageRouteConstraint.cs" />
     <Compile Include="Routing\Constraints\CategoryRouteConstraint.cs" />
     <Compile Include="Routing\Constraints\ItemRouteConstraint.cs" />
     <Compile Include="Routing\Constraints\LanguageRouteConstraint.cs" />
@@ -165,6 +166,7 @@
     <Compile Include="Routing\HttpHandlers\DelegateHttpHandler.cs" />
     <Compile Include="Routing\HttpHandlers\RedirectHttpHandler.cs" />
     <Compile Include="Routing\RedirectRouteExtensions.cs" />
+    <Compile Include="Routing\Routes\PageRoute.cs" />
     <Compile Include="Routing\Routes\CategoryRoute.cs" />
     <Compile Include="Routing\Routes\ItemRoute.cs" />
     <Compile Include="Routing\Routes\NormalizeRoute.cs" />
