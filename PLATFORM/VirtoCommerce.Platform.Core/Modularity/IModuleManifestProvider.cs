@@ -7,5 +7,6 @@ namespace VirtoCommerce.Platform.Core.Modularity
         string RootPath { get; }
         string ManifestFileName { get; }
         IDictionary<string, ModuleManifest> GetModuleManifests();
+        void ClearCache();
     }
 }

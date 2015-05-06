@@ -20,7 +20,7 @@ namespace Zapier.IntegrationModule.Web.Controllers.Api
         [HttpPost]
         [ResponseType(typeof(void))]
         [Route("customer")]
-        public IHttpActionResult CreateCustomer()
+        public async Task<IHttpActionResult> CreateCustomer()
         {
             var result = await Task.FromResult(HttpStatusCode.Created);
             return Ok(result);

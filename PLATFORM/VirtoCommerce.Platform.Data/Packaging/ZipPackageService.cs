@@ -96,6 +96,8 @@ namespace VirtoCommerce.Platform.Data.Packaging
                     }
                 }
             }
+
+            _manifestProvider.ClearCache();
         }
 
         public void Update(string packageId, string version, IProgress<ProgressMessage> progress)
@@ -160,6 +162,8 @@ namespace VirtoCommerce.Platform.Data.Packaging
                     }
                 }
             }
+
+            _manifestProvider.ClearCache();
         }
 
         public void Uninstall(string packageId, IProgress<ProgressMessage> progress)
@@ -169,7 +173,11 @@ namespace VirtoCommerce.Platform.Data.Packaging
             var modules = GetModules();
             var module = modules.FirstOrDefault(m => m.Id == packageId);
 
-            if (module != null)
+            if (module == null)
+            {
+                Report(progress, ProgressMessageLevel.Info, "'{0}' is not installed.", packageId);
+            }
+            else
             {
                 // Check dependent modules
                 var dependentModules = modules
@@ -193,10 +201,12 @@ namespace VirtoCommerce.Platform.Data.Packaging
                     // Delete package from installed packages directory
                     Report(progress, ProgressMessageLevel.Debug, "Deleting package '{0}'.", installedPackageFilePath);
                     File.Delete(installedPackageFilePath);
+
+                    Report(progress, ProgressMessageLevel.Info, "Successfully uninstalled '{0}'.", packageId);
                 }
             }
 
-            Report(progress, ProgressMessageLevel.Info, "Successfully uninstalled '{0}'.", packageId);
+            _manifestProvider.ClearCache();
         }
 
         #endregion
@@ -255,7 +265,7 @@ namespace VirtoCommerce.Platform.Data.Packaging
             using (var packageStream = File.Open(packageFilePath, FileMode.Open))
             using (var package = new ZipArchive(packageStream, ZipArchiveMode.Read))
             {
-                foreach (var entry in package.Entries)
+                foreach (var entry in package.Entries.Where(e => !string.IsNullOrEmpty(e.Name)))
                 {
                     var filePath = Path.Combine(targetDirectoryPath, entry.FullName);
                     files.Add(filePath);
