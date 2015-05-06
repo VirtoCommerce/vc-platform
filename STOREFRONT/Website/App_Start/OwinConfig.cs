@@ -12,13 +12,11 @@ using Microsoft.Owin;
 using Microsoft.Owin.Extensions;
 using Microsoft.Owin.Security;
 using Owin;
-using VirtoCommerce.ApiClient;
 using VirtoCommerce.ApiClient.DataContracts;
 using VirtoCommerce.ApiClient.DataContracts.Stores;
 using VirtoCommerce.ApiClient.Extensions;
 using VirtoCommerce.Web.Models;
 using VirtoCommerce.Web.Models.Extensions;
-using VirtoCommerce.Web.Models.Helpers;
 using VirtoCommerce.Web.Models.Routing;
 using VirtoCommerce.Web.Models.Services;
 

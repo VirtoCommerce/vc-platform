@@ -189,116 +189,6 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Models\Banners\BannerCollection.cs" />
-    <Compile Include="Models\Banners\PlaceHolder.cs" />
-    <Compile Include="Models\Banners\PlaceHolderCollection.cs" />
-    <Compile Include="Models\Checkout.cs" />
-    <Compile Include="Models\Convertors\BannerConverters.cs" />
-    <Compile Include="Models\Convertors\ListConverters.cs" />
-    <Compile Include="Models\Convertors\CustomerConverters.cs" />
-    <Compile Include="Models\Convertors\OrderConverters.cs" />
-    <Compile Include="Models\Convertors\ThemeConverters.cs" />
-    <Compile Include="Models\Convertors\ShopConverters.cs" />
-    <Compile Include="Models\CountryOptionTags.cs" />
-    <Compile Include="Models\CreditCard.cs" />
-    <Compile Include="Models\Discount.cs" />
-    <Compile Include="Models\Banners\Banner.cs" />
-    <Compile Include="Models\DynamicContentPlaceholder.cs" />
-    <Compile Include="Models\Extensions\ProductExtensions.cs" />
-    <Compile Include="Models\Extensions\RouteValueDictionaryExtensions.cs" />
-    <Compile Include="Models\Extensions\StringExtensions.cs" />
-    <Compile Include="Models\Extensions\UrlHelperExtensions.cs" />
-    <Compile Include="Models\Filters\TranslationFilter.cs" />
-    <Compile Include="Models\FormModels\CheckoutFirstStepFormModel.cs" />
-    <Compile Include="Models\FormModels\CheckoutSecondStepFormModel.cs" />
-    <Compile Include="Models\FormModels\CustomerAddressFormModel.cs" />
-    <Compile Include="Models\FormModels\ExternalLoginConfirmationFormModel.cs" />
-    <Compile Include="Models\FormModels\ExternalLoginFormModel.cs" />
-    <Compile Include="Models\FormModels\LoginFormModel.cs" />
-    <Compile Include="Models\FormModels\NewAddressFormModel.cs" />
-    <Compile Include="Models\FormModels\ForgotPasswordFormModel.cs" />
-    <Compile Include="Models\FormModels\RegisterFormModel.cs" />
-    <Compile Include="Models\FormModels\ResetPasswordFormModel.cs" />
-    <Compile Include="Models\FormModels\SendCodeFormModel.cs" />
-    <Compile Include="Models\FormModels\VerifyCodeFormModel.cs" />
-    <Compile Include="Models\Fulfillment.cs" />
-    <Compile Include="Models\GiftCard.cs" />
-    <Compile Include="Models\Helpers\CartHelper.cs" />
-    <Compile Include="Models\Extensions\CategoryExtensions.cs" />
-    <Compile Include="Models\Language.cs" />
-    <Compile Include="Models\LoginProvider.cs" />
-    <Compile Include="Models\PaymentMethod.cs" />
-    <Compile Include="Models\Review.cs" />
-    <Compile Include="Models\Routing\CanonicalizedAttribute.cs" />
-    <Compile Include="Models\Routing\RedirectRouteExtensions.cs" />
-    <Compile Include="Models\Services\CommerceService.cs" />
-    <Compile Include="Models\Services\CustomerService.cs" />
-    <Compile Include="Models\Helpers\DownloadResult.cs" />
-    <Compile Include="Models\Helpers\ExtensionMapper.cs" />
-    <Compile Include="Models\Helpers\ExtensionPartialView.cs" />
-    <Compile Include="Models\Extensions\ModelExtensions.cs" />
-    <Compile Include="Models\Services\FileStorageCacheService.cs" />
-    <Compile Include="Models\Services\FileThemeViewLocator.cs" />
-    <Compile Include="Models\Services\PagesService.cs" />
-    <Compile Include="Models\Article.cs" />
-    <Compile Include="Models\Cart.cs" />
-    <Compile Include="Models\Collection.cs" />
-    <Compile Include="Models\Comment.cs" />
-    <Compile Include="Models\Convertors\CartConverters.cs" />
-    <Compile Include="Models\Convertors\FacetConverters.cs" />
-    <Compile Include="Models\Customer.cs" />
-    <Compile Include="Models\CustomerAddress.cs" />
-    <Compile Include="Models\CustomerOrder.cs" />
-    <Compile Include="Models\Filters\ModelFilters.cs" />
-    <Compile Include="Models\Extensions\SiteContextExtensions.cs" />
-    <Compile Include="Models\LineItem.cs" />
-    <Compile Include="Models\Lists\Link.cs" />
-    <Compile Include="Models\Lists\LinkList.cs" />
-    <Compile Include="Models\Lists\LinkLists.cs" />
-    <Compile Include="Models\MetafieldsCollection.cs" />
-    <Compile Include="Models\PageCollection.cs" />
-    <Compile Include="Models\Collections.cs" />
-    <Compile Include="Models\Convertors\CollectionConverters.cs" />
-    <Compile Include="Models\Convertors\ProductConverters.cs" />
-    <Compile Include="Models\Convertors\UserConverters.cs" />
-    <Compile Include="Models\Image.cs" />
-    <Compile Include="Models\Page.cs" />
-    <Compile Include="Models\Price.cs" />
-    <Compile Include="Models\Product.cs" />
-    <Compile Include="Models\Routing\Constants.cs" />
-    <Compile Include="Models\Routing\Constraints\BaseRouteConstraint.cs" />
-    <Compile Include="Models\Routing\Constraints\CategoryRouteConstraint.cs" />
-    <Compile Include="Models\Routing\Constraints\ItemRouteConstraint.cs" />
-    <Compile Include="Models\Routing\Constraints\LanguageRouteConstraint.cs" />
-    <Compile Include="Models\Routing\Constraints\StoreRouteConstraint.cs" />
-    <Compile Include="Models\Routing\HttpHandlers\DelegateHttpHandler.cs" />
-    <Compile Include="Models\Routing\HttpHandlers\RedirectHttpHandler.cs" />
-    <Compile Include="Models\Routing\Routes\CategoryRoute.cs" />
-    <Compile Include="Models\Routing\Routes\ItemRoute.cs" />
-    <Compile Include="Models\Routing\Routes\NormalizeRoute.cs" />
-    <Compile Include="Models\Routing\Routes\RedirectRoute.cs" />
-    <Compile Include="Models\Routing\Routes\StoreRoute.cs" />
-    <Compile Include="Models\Routing\SeoRoutesExtensions.cs" />
-    <Compile Include="Models\Search.cs" />
-    <Compile Include="Models\Security\AccountModels.cs" />
-    <Compile Include="Models\Security\IdentityModels.cs" />
-    <Compile Include="Models\Services\SecurityService.cs" />
-    <Compile Include="Models\SeoKeyword.cs" />
-    <Compile Include="Models\Settings.cs" />
-    <Compile Include="Models\ShippingMethod.cs" />
-    <Compile Include="Models\Shop.cs" />
-    <Compile Include="Models\SiteContext.cs" />
-    <Compile Include="Models\ItemCollection.cs" />
-    <Compile Include="Models\Storage\FileAsset.cs" />
-    <Compile Include="Models\SubmitForm.cs" />
-    <Compile Include="Models\SubmitFormErrors.cs" />
-    <Compile Include="Models\Tag.cs" />
-    <Compile Include="Models\Tags\Form.cs" />
-    <Compile Include="Models\TaxLine.cs" />
-    <Compile Include="Models\ThemeAsset.cs" />
-    <Compile Include="Models\Theme.cs" />
-    <Compile Include="Models\Transaction.cs" />
-    <Compile Include="Models\Variant.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
@@ -369,6 +259,10 @@
     <ProjectReference Include="..\ApiClient\VirtoCommerce.ApiClient.csproj">
       <Project>{84b945b7-85e4-4057-b0df-1f8a03b8d53c}</Project>
       <Name>VirtoCommerce.ApiClient</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\WebModels\VirtoCommerce.WebModels.csproj">
+      <Project>{0a52dfa2-2ebe-4182-b1e5-1ef88f8dbac5}</Project>
+      <Name>VirtoCommerce.WebModels</Name>
     </ProjectReference>
     <ProjectReference Include="..\WebViews\VirtoCommerce.WebViews.csproj">
       <Project>{6695201C-2168-47FC-A4C0-FDD5AB5CB135}</Project>
