@@ -35,7 +35,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 		public IHttpActionResult GetStores()
 		{
 			var cacheKey = CacheKey.Create("PriceController.GetStores");
-			var stores = _cacheManager.Get(cacheKey, () => GetFullLoadedStoreList());
+			var stores = _cacheManager.Get(cacheKey, this.GetFullLoadedStoreList);
 
 
 			return Ok(stores);
@@ -43,14 +43,8 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 
 		private Store[] GetFullLoadedStoreList()
 		{
-			var retVal = new List<Store>();
-			var stores = _storeService.GetStoreList();
-			foreach(var store in stores)
-			{
-				var fullLoadedStore = _storeService.GetById(store.Id);
-				retVal.Add(fullLoadedStore.ToWebModel());
-			}
-			return retVal.ToArray();
+		    var stores = _storeService.GetStoreList();
+		    return stores.Select(store => this._storeService.GetById(store.Id)).Select(fullLoadedStore => fullLoadedStore.ToWebModel()).ToArray();
 		}
 
 
