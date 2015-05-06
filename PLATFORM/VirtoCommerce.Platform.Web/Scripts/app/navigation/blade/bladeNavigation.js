@@ -129,6 +129,7 @@ angular.module('platformWebApp')
                 bladeNavigationService.closeBlade(scope.blade, onAfterClose, function (callback) {
                     blade.addClass('__animate').animate({ 'margin-left': '-' + blade.width() + 'px' }, 125, function () {
                         blade.remove();
+                        callback();
                     });
                 });
             };
