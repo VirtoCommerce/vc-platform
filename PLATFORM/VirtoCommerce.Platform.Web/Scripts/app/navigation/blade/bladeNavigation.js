@@ -140,7 +140,7 @@ angular.module('platformWebApp')
         }
     };
 }])
-.factory('bladeNavigationService', ['$rootScope', '$filter', '$state', function ($rootScope, $filter, $state) {
+.factory('bladeNavigationService', ['$rootScope', '$timeout', '$state', function ($rootScope, $timeout, $state) {
     var service = {
         blades: [],
         currentBlade: undefined,
@@ -171,7 +171,7 @@ angular.module('platformWebApp')
                     }
                 }
                 if (angular.isFunction(callback)) {
-                    callback();
+                    $timeout(callback);
                 };
             };
 

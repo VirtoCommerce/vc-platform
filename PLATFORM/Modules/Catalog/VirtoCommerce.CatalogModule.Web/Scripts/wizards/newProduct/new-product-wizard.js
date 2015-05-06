@@ -5,8 +5,6 @@
     $scope.createItem = function () {
         $scope.blade.item.$updateitem(null,
         function (dbItem) {
-            $scope.bladeClose();
-
             //TODO: need better way to find category list blade.
             var categoryListBlade = $scope.blade.parentBlade;
 

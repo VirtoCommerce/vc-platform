@@ -17,9 +17,7 @@
 
     $scope.selectNode = function (selectedNode) {
         $scope.bladeClose(function () {
-            $timeout(function () {
-                $scope.blade.parentBlade.onAfterCatalogSelected(selectedNode);
-            });
+            $scope.blade.parentBlade.onAfterCatalogSelected(selectedNode);
         });
     };
 

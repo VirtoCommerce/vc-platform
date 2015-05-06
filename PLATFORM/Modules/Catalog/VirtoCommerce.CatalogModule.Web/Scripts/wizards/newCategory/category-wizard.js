@@ -2,12 +2,12 @@
 .controller('virtoCommerce.catalogModule.newCategoryWizardController', ['$scope', 'bladeNavigationService', 'dialogService', 'virtoCommerce.catalogModule.categories', function ($scope, bladeNavigationService, dialogService, categories) {
     $scope.create = function () {
         $scope.blade.currentEntity.$update(null, function (data) {
-            $scope.bladeClose();
-
-            var categoryListBlade = $scope.blade.parentBlade;
-            // categoryListBlade.showCategoryBlade(data.id, data, data.name);
-            categoryListBlade.setSelectedItem(data);
-            categoryListBlade.refresh();
+            $scope.bladeClose(function () {
+                var categoryListBlade = $scope.blade.parentBlade;
+                // categoryListBlade.showCategoryBlade(data.id, data, data.name);
+                categoryListBlade.setSelectedItem(data);
+                categoryListBlade.refresh();
+            });
         });
     }
 
