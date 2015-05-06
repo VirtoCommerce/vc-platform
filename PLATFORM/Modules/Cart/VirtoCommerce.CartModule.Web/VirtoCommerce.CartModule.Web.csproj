@@ -120,7 +120,7 @@
     <Compile Include="Model\ShipmentMethod.cs" />
     <Compile Include="Model\ShoppingCart.cs" />
     <Compile Include="Model\Weight.cs" />
-    <Compile Include="Scripts\Module.cs" />
+    <Compile Include="Module.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup />

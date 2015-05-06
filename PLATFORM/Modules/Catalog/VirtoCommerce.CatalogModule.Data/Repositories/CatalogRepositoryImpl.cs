@@ -22,8 +22,9 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
         public CatalogRepositoryImpl(string nameOrConnectionString, params IInterceptor[] interceptors)
             : base(nameOrConnectionString, null, interceptors)
 		{
-			
+			Database.SetInitializer<CatalogRepositoryImpl>(null);
 		}
+
 		protected override void OnModelCreating(System.Data.Entity.DbModelBuilder modelBuilder)
 		{
 			modelBuilder.Conventions.Remove<PluralizingTableNameConvention>();
@@ -391,7 +392,7 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
         /// </summary>
         /// <param name="itemIds"></param>
         /// <returns></returns>
-        public Dictionary<string, IEnumerable<dataModel.Item>> GetAllItemsVariations(string[] itemIds)
+		public Dictionary<string, IEnumerable<dataModel.Item>> GetAllItemsVariations(string[] itemIds, coreModel.ItemResponseGroup respGroup)
         {
             var singleRelations =
                 ItemRelations.Where(x => itemIds.Contains(x.ParentItemId))
@@ -404,7 +405,7 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
             // now get items from database all at once
             var relationItemIds = singleRelations.Select(x => x.Child).Distinct().ToArray();
 
-            var items = GetItemByIds(relationItemIds);
+			var items = GetItemByIds(relationItemIds, respGroup);
 
             var groupedItems =
                 groupedRelations.Select(

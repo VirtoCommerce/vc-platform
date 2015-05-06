@@ -9,10 +9,10 @@ namespace VirtoCommerce.MerchandisingModule.Web.Model
 
         public string Catalog { get; set; }
         public string Country { get; set; }
-		[JsonConverter(typeof(StringEnumConverter))]
+		[JsonProperty(ItemConverterType = typeof(StringEnumConverter))]
         public CurrencyCodes[] Currencies { get; set; }
 		[JsonConverter(typeof(StringEnumConverter))]
-		public CurrencyCodes DefaultCurrency { get; set; }
+		public CurrencyCodes? DefaultCurrency { get; set; }
         public string DefaultLanguage { get; set; }
         public string Description { get; set; }
         public string Id { get; set; }

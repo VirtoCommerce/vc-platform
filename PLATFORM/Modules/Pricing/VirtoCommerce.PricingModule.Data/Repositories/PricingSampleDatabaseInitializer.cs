@@ -11,16 +11,16 @@ namespace VirtoCommerce.PricingModule.Data.Repositories
 
             foreach (var file in _orderFiles)
             {
-               // ExecuteSqlScriptFile(context, file, "Sql");
+                ExecuteSqlScriptFile(context, file, "Sql");
             }
         }
 
 
         private readonly string[] _orderFiles =
 		{ 
+			"Pricelist.sql",
             "Price.sql",
-            "Pricelist.sql",
-            "PricelistAssignment.sql"
+			"PricelistAssignment.sql"
 		};
     }
 }

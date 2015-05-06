@@ -26,6 +26,16 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 			_cacheManager = cacheManager;
 		}
 
+		[HttpGet]
+		[ClientCache(Duration = 60)]
+		[ResponseType(typeof(string[]))]
+		[Route("pricelists")]
+		public IHttpActionResult GetPriceListStack(string catalog, string currency,	[FromUri] string[] tags)
+		{
+			var cacheKey = CacheKey.Create("PriceController.GetPriceListStack", catalog, currency);
+			var retVal = _cacheManager.Get(cacheKey, () => _pricingService.GetPriceLists().Select(x=>x.Id).ToArray());
+			return this.Ok(retVal);
+		}
 
 		[HttpGet]
 		[ResponseType(typeof(Price[]))]
@@ -40,7 +50,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 								{
 									ProductId = product
 								};
-				var cacheKey = CacheKey.Create("PriceController.GetProductPrices", products);
+				var cacheKey = CacheKey.Create("PriceController.GetProductPrices", product);
 				var prices = _cacheManager.Get(cacheKey, () => _pricingService.EvaluateProductPrices(evalContext));
 				retVal.AddRange(prices.Select(x => x.ToWebModel()));
 	

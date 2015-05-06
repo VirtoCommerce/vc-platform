@@ -43,6 +43,12 @@ namespace VirtoCommerce.Web.Models.Convertors
             return assets == null ? null : assets.Select(t => t.AsFileModel()).ToArray();
         }
 
+
+        public static FileAsset[] AsFileModel(this Data2.SyncAssetGroup group)
+        {
+            return group == null ? null : group.Assets.Select(t => t.AsFileModel()).ToArray();
+        }
+
         public static FileAsset AsFileModel(this Data2.SyncAsset asset)
         {
             var ret = new FileAsset();

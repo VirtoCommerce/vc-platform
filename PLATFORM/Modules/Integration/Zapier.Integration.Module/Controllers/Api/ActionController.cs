@@ -16,14 +16,14 @@ namespace Zapier.IntegrationModule.Web.Controllers.Api
         {
             _contactsProvider = contactsProvider;
         }
-        
+
         [HttpPost]
         [ResponseType(typeof(void))]
         [Route("customer")]
         public IHttpActionResult CreateCustomer()
         {
-            return Ok(HttpStatusCode.Created);
+            var result = await Task.FromResult(HttpStatusCode.Created);
+            return Ok(result);
         }
-
     }
 }

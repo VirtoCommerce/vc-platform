@@ -185,7 +185,7 @@ namespace VirtoCommerce.CartModule.Test
 															   new EntityPrimaryKeyGeneratorInterceptor());
 			};
 			//Business logic for core model
-			var cartWorkflowService = new ObservableWorkflowService<ShoppingCart>();
+			var cartWorkflowService = new ShoppingCartWorflow();
 			//Subscribe to cart changes. Calculate totals  
 			cartWorkflowService.Subscribe(new CalculateTotalsActivity());
 

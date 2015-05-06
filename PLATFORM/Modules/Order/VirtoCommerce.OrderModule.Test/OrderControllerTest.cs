@@ -17,6 +17,7 @@ using VirtoCommerce.Platform.Data.Infrastructure.Interceptors;
 using VirtoCommerce.Domain.Common;
 using VirtoCommerce.CartModule.Data.Services;
 using VirtoCommerce.Platform.Core.Common;
+using VirtoCommerce.CartModule.Data.Workflow;
 
 namespace VirtoCommerce.OrderModule.Test
 {
@@ -321,16 +322,16 @@ namespace VirtoCommerce.OrderModule.Test
 				return new CartRepositoryImpl("VirtoCommerce", new AuditableInterceptor());
 			};
 
-			var mockWorkflow = new Mock<IWorkflowService>();
-			var cartService = new ShoppingCartServiceImpl(repositoryFactory, mockWorkflow.Object);
+			var mockCartWorkflow = new Mock<IShoppingCartWorkflow>();
+			var cartService = new ShoppingCartServiceImpl(repositoryFactory, mockCartWorkflow.Object);
 
 			Func<IOrderRepository> orderRepositoryFactory = () => { return new OrderRepositoryImpl("VirtoCommerce", 
 																		   new AuditableInterceptor(),
 																		   new EntityPrimaryKeyGeneratorInterceptor());
 			};
-			var orderWorkflowService = new ObservableWorkflowService<CustomerOrderStateBasedEvalContext>();
+			var orderWorkflowService = new CustomerOrderWorkflow();
 			//Subscribe to order changes. Calculate totals  
-			orderWorkflowService.Subscribe(new CalculateTotalsActivity());
+			orderWorkflowService.Subscribe(new VirtoCommerce.OrderModule.Data.Workflow.CalculateTotalsActivity());
 			var orderService = new CustomerOrderServiceImpl(orderRepositoryFactory, new TimeBasedNumberGeneratorImpl(), orderWorkflowService, cartService);
 
 			var controller = new CustomerOrderController(orderService, null, new TimeBasedNumberGeneratorImpl());

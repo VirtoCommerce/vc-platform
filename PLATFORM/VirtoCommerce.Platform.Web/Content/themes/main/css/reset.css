@@ -27,3 +27,8 @@ body
 	display: block;
 	font-size: 0;
 }
+
+*::selection
+{
+	background: none;
+}

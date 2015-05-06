@@ -203,8 +203,9 @@ namespace VirtoCommerce.Domain.Search
                 key.Append("_ct" + Catalog);
                 key.Append("_fs" + IsFuzzySearch.ToString());
                 key.Append("_pl" + String.Join("-", Pricelists));
-                key.Append("_st" + StartDate.ToString("s"));
-                key.Append("_ed" + (EndDate.HasValue ? EndDate.Value.ToString("s") : ""));
+				//Because not null-able and  always cache key have new value 
+               // key.Append("_st" + StartDate.ToString("s"));
+               // key.Append("_ed" + (EndDate.HasValue ? EndDate.Value.ToString("s") : ""));
                 key.Append("_phr" + SearchPhrase);
                 // Add active fields
 

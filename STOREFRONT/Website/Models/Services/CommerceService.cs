@@ -156,7 +156,21 @@ namespace VirtoCommerce.Web.Models.Services
 
         public string GetCountryTags()
         {
-            return "<option value=\"United States\" data-provinces=\"[&quot;California&quot;,&quot;Ohio&quot;]\">United States</option>";
+            var countries = new Dictionary<string, ICollection<string>>();
+            countries.Add("United States", new List<string>
+            {
+                "Delaware", "Pennsylvania", "New Jersey", "Georgia", "Connecticut", "Massachusetts",
+                "Maryland", "South Carolina", "New Hampshire", "Virginia", "New York", "North Carolina",
+                "Rhode Island", "Vermont", "Kentucky", "Tennessee", "Ohio", "Louisiana",
+                "Indiana", "Mississippi", "Illinois", "Alabama", "Maine", "Missouri",
+                "Arkansas", "Michigan", "Florida", "Texas", "Iowa", "Wisconsin",
+                "California", "Minnesota", "Oregon", "Kansas", "West Virginia", "Nevada",
+                "Nebraska", "Colorado", "North Dakota", "South Dakota", "Montana", "Washington",
+                "Idaho", "Wyoming", "Utah", "Oklahoma", "New Mexico", "Arizona",
+                "Alaska", "Hawaii"
+            });
+
+            return new CountryOptionTags(countries).ToString();
         }
 
         public async Task<Cart> CreateCartAsync(ShoppingCart dtoCart)
@@ -821,7 +835,7 @@ namespace VirtoCommerce.Web.Models.Services
                 promoEntries.Add(new ProductPromoEntry
                 {
                     CatalogId = item.CatalogId,
-                    Price = price != null && price.Sale.HasValue ? price.Sale.Value : price.List,
+                    Price = price != null ? (price.Sale.HasValue ? price.Sale.Value : price.List) : 0M,
                     ProductId = item.Id,
                     Quantity = 1
                 });
@@ -867,23 +881,39 @@ namespace VirtoCommerce.Web.Models.Services
             var store = SiteContext.Current.StoreId;
             var theme = SiteContext.Current.Theme.Name;
             var themePath = String.Format("{0}\\{1}", _themesCacheStoragePath, SiteContext.Current.Theme.Path);
-            var storageClient = new FileStorageCacheService(HostingEnvironment.MapPath(themePath));
-            var lastUpdate = storageClient.GetLatestUpdate();
-            var response = await this._themeClient.GetThemeAssetsAsync(store, theme, lastUpdate, true);
-            //var response = await this._storeClient.GetStoreAssetsAsync(store, theme, lastUpdate);
+            var themeStorageClient = new FileStorageCacheService(HostingEnvironment.MapPath(themePath));
+            var pagesStorageClient = new FileStorageCacheService(HostingEnvironment.MapPath(String.Format("~/App_Data/Pages/{0}", store)));
+
+            // get last updated for both pages or theme files
+            var themeLastUpdated = themeStorageClient.GetLatestUpdate();
+            var pagesLastUpdated = pagesStorageClient.GetLatestUpdate();
+
+            var response = await this._storeClient.GetStoreAssetsAsync(store, theme, themeLastUpdated, pagesLastUpdated);
 
             if (response.Any())
             {
                 lock (_LockObject)
                 {
                     // check last update again, since going to the service is more expensive than checking local folders
-                    var newLastUpdate = storageClient.GetLatestUpdate();
-                    if (newLastUpdate == lastUpdate)
+                    var newThemeLastUpdated = themeStorageClient.GetLatestUpdate();
+                    var newPagesLastUpdated = pagesStorageClient.GetLatestUpdate();
+
+                    if (newThemeLastUpdated == themeLastUpdated && newPagesLastUpdated == pagesLastUpdated)
                     {
-                        var reload = storageClient.ApplyUpdates(response.AsFileModel());
-                        if (reload)
+                        foreach (var syncAssetGroup in response)
                         {
-                            this._viewLocator.UpdateCache();
+                            if (syncAssetGroup.Type == "theme")
+                            {
+                                var reload = themeStorageClient.ApplyUpdates(syncAssetGroup.AsFileModel());
+                                if (reload)
+                                {
+                                    this._viewLocator.UpdateCache();
+                                }
+                            }
+                            else if (syncAssetGroup.Type == "pages")
+                            {
+                                pagesStorageClient.ApplyUpdates(syncAssetGroup.AsFileModel());
+                            }
                         }
                     }
                 }

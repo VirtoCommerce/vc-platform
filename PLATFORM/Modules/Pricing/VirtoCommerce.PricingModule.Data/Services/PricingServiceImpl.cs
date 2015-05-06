@@ -41,7 +41,7 @@ namespace VirtoCommerce.PricingModule.Data.Services
 			var retVal = new List<coreModel.Price>();
 			using (var repository = _repositoryFactory())
 			{
-				var prices = repository.Prices.Include(x => x.Pricelist).Where(x => x.Id == evalContext.ProductId)
+				var prices = repository.Prices.Include(x => x.Pricelist).Where(x => x.ProductId == evalContext.ProductId)
 											  .ToArray()
 											  .Select(x => x.ToCoreModel());
 

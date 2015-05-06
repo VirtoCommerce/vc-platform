@@ -27,6 +27,7 @@ namespace VirtoCommerce.CoreModule.Data.Repositories
 		protected override void Seed(CommerceRepositoryImpl context)
 		{
 			CreateFulfillmentCenter(context);
+			ExcecuteSqlScripts(context);
 			base.Seed(context);
 		}
 

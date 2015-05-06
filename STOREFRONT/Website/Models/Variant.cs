@@ -17,25 +17,22 @@ namespace VirtoCommerce.Web.Models
         {
             get
             {
-                bool isAvailable = false;
+                bool isAvailable = true;
 
-                if (string.IsNullOrEmpty(this.InventoryManagement))
+                if (!string.IsNullOrEmpty(InventoryManagement))
                 {
-                    isAvailable = true;
-                }
-                else
-                {
-                    if (this.InventoryPolicy.Equals("deny", StringComparison.OrdinalIgnoreCase))
+                    if (InventoryPolicy.Equals("deny", StringComparison.OrdinalIgnoreCase))
                     {
-                        if (this.InventoryQuantity > 0)
+                        if (InventoryQuantity <= 0)
                         {
-                            isAvailable = true;
+                            isAvailable = false;
                         }
                     }
-                    else if (this.InventoryPolicy.Equals("continue", StringComparison.OrdinalIgnoreCase))
-                    {
-                        isAvailable = true;
-                    }
+                }
+
+                if (Price == 0)
+                {
+                    isAvailable = false;
                 }
 
                 return isAvailable;

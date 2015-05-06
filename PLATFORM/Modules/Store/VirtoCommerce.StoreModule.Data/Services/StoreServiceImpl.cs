@@ -31,13 +31,16 @@ namespace VirtoCommerce.StoreModule.Data.Services
 			using (var repository = _repositoryFactory())
 			{
 				var entity = repository.GetStoreById(id);
+			
 				if (entity != null)
 				{
 					retVal = entity.ToCoreModel();
+					var fulfillmentCenters = _commerceService.GetAllFulfillmentCenters();
+					retVal.ReturnsFulfillmentCenter = fulfillmentCenters.FirstOrDefault(x => x.Id == entity.ReturnsFulfillmentCenterId);
+					retVal.FulfillmentCenter = fulfillmentCenters.FirstOrDefault(x => x.Id == entity.FulfillmentCenterId);
+					retVal.SeoInfos = _commerceService.GetSeoKeywordsForEntity(id).Select(x => x.ToCoreModel()).ToList();
 				}
-				var fulfillmentCenters = _commerceService.GetAllFulfillmentCenters();
-				retVal.ReturnsFulfillmentCenter = fulfillmentCenters.FirstOrDefault(x => x.Id == entity.ReturnsFulfillmentCenterId);
-				retVal.FulfillmentCenter = fulfillmentCenters.FirstOrDefault(x => x.Id == entity.FulfillmentCenterId);
+		
 			}
 
 			return retVal;

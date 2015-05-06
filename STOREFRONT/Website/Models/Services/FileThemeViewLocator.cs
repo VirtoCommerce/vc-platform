@@ -162,7 +162,7 @@ namespace VirtoCommerce.Web.Models.Services
 
         private ViewLocationResult[] LoadThemeFiles(bool reload = false)
         {
-            const string contextKey = "vc-cms-files";
+            var contextKey = "vc-cms-files-" + ThemeDirectory;
             var value = !reload ? HttpRuntime.Cache.Get(contextKey) : null;
 
             if (value != null)

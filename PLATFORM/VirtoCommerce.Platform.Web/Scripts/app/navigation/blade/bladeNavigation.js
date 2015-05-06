@@ -29,7 +29,7 @@ angular.module('platformWebApp')
             blade.css('margin-left', '-' + blade.width() + 'px').addClass('__animate');
 
             setTimeout(function () {
-                blade.animate({ 'margin-left': 0 }, 125, function () {
+                blade.animate({ 'margin-left': 0 }, 250, function () {
                     blade.removeAttr('style').removeClass('__animate');
                 });
             }, 0);
@@ -127,7 +127,9 @@ angular.module('platformWebApp')
 
             scope.bladeClose = function (onAfterClose) {
                 bladeNavigationService.closeBlade(scope.blade, onAfterClose, function (callback) {
-                    blade.addClass('__animate').animate({ 'margin-left': '-' + blade.width() + 'px' }, 125, callback);
+                    blade.addClass('__animate').animate({ 'margin-left': '-' + blade.width() + 'px' }, 125, function () {
+                        blade.remove();
+                    });
                 });
             };
 
@@ -218,13 +220,10 @@ angular.module('platformWebApp')
             if (existingBlade != undefined) {
                 //store prev blade x-index
                 blade.xindex = existingBlade.xindex;
-            }
-
-            //Show blade as last one by default
-            if (!angular.isDefined(blade.xindex)) {
+            } else if (!angular.isDefined(blade.xindex)) {
+                //Show blade as last one by default
                 blade.xindex = service.stateBlades().length;
             }
-
 
             if (angular.isDefined(parentBlade)) {
                 blade.xindex = service.stateBlades().indexOf(parentBlade) + 1;
@@ -238,13 +237,11 @@ angular.module('platformWebApp')
                 service.currentBlade = blade;
             };
 
-            //if (existingBlade != undefined) {
-            //    service.closeBlade(existingBlade, showBlade);
-            //}
-            //else {
-            showBlade();
-            //}
-
+            if (angular.isDefined(existingBlade) && angular.isUndefined(parentBlade)) {
+                service.closeBlade(existingBlade, showBlade);
+            } else {
+                showBlade();
+            }
         },
         setError: function (msg, blade) {
             blade.isLoading = false;

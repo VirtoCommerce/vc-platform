@@ -18,6 +18,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Converters
 			{
 				retVal.Languages = store.Languages.ToArray();
 			}
+			retVal.DefaultCurrency = store.DefaultCurrency;
 
 			if (store.Currencies != null)
 			{
@@ -39,10 +40,10 @@ namespace VirtoCommerce.MerchandisingModule.Web.Converters
 				}
 			}
 
-			//if (store. != null)
-			//{
-			//	retVal.Seo = keywords.Select(x => x.ToWebModel()).ToArray();
-			//}
+			if (store.SeoInfos != null)
+			{
+				retVal.Seo = store.SeoInfos.Select(x => x.ToWebModel()).ToArray();
+			}
 
 			return retVal;
 		}
