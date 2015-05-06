@@ -13,6 +13,7 @@ namespace Zendesk.HelpdeskModule.Web
         private const string _accessTokenPropertyName = "Zendesk.Helpdesk.Credentials.AccessToken";
 
         private readonly IUnityContainer _container;
+
         public Module(IUnityContainer container)
         {
             _container = container;
@@ -20,6 +21,8 @@ namespace Zendesk.HelpdeskModule.Web
 
         public override void Initialize()
         {
+            base.Initialize();
+
             var settingsManager = _container.Resolve<ISettingsManager>();
 
             var zendeskAccessToken = settingsManager.GetValue(_accessTokenPropertyName, string.Empty);
