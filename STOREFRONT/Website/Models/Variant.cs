@@ -49,11 +49,11 @@ namespace VirtoCommerce.Web.Models
         public string Id { get; set; }
 
         [DataMember]
-        public string FeaturedImage
+        public Image FeaturedImage
         {
             get
             {
-                return this.Image != null ? this.Image.Src : null;
+                return this.Image != null ? this.Image : null;
             }
         }
 
