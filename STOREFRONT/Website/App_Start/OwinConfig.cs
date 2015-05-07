@@ -105,6 +105,11 @@ namespace VirtoCommerce.Web
             if (String.IsNullOrEmpty(ctx.Language))
             {
                 language = shop.DefaultLanguage;
+                if (String.IsNullOrEmpty(language))
+                {
+                    throw new HttpException(404, "Store Language Not Designed");
+                }
+                
                 CultureInfo.DefaultThreadCurrentUICulture = new CultureInfo(language);
                 ctx.Language = language;
             }
@@ -430,13 +435,16 @@ namespace VirtoCommerce.Web
             #endregion
 
             var theme = ConfigurationManager.AppSettings["Theme"];
-            var shopMetaFields = shop.Metafields["global"];
-            if (shopMetaFields != null)
+            if (shop.Metafields != null)
             {
-                object themeObject;
-                if (shop.Metafields["global"].TryGetValue("defaultThemeName", out themeObject))
+                var shopMetaFields = shop.Metafields["global"];
+                if (shopMetaFields != null)
                 {
-                    return themeObject.ToString();
+                    object themeObject;
+                    if (shop.Metafields["global"].TryGetValue("defaultThemeName", out themeObject))
+                    {
+                        return themeObject.ToString();
+                    }
                 }
             }
 

@@ -503,7 +503,7 @@ namespace VirtoCommerce.Web.Models.Services
             var store = SiteContext.Current.StoreId;
             var language = SiteContext.Current.Language;
             var response = await this._listClient.GetLinkListsAsync(store);
-            return response.Where(r => r.Language == language).ToArray().AsWebModel();
+            return response == null ? null : response.Where(r => r.Language == language).AsWebModel();
         }
 
         public async Task<Product> GetProductAsync(string handle)

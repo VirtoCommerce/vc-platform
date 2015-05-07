@@ -22,8 +22,8 @@ namespace VirtoCommerce.Web.Controllers
             var context = SiteContext.Current;
             var model = new PagesService().GetPage(context, page);
 
-            //if(model == null)
-            //    throw new HttpException(404, "NotFound");
+            if(model == null)
+                throw new HttpException(404, "NotFound");
 
             this.Context.Set("page", model);
 

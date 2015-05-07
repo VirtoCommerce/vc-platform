@@ -1,5 +1,6 @@
 ﻿#region
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using Omu.ValueInjecter;
@@ -13,7 +14,7 @@ namespace VirtoCommerce.Web.Models.Convertors
     public static class ListConverters
     {
         #region Public Methods and Operators
-        public static LinkLists AsWebModel(this services.LinkList[] lists)
+        public static LinkLists AsWebModel(this IEnumerable<services.LinkList> lists)
         {
             var listsModel = new LinkLists(lists.Select(l=>l.AsWebModel()));
             return listsModel;
