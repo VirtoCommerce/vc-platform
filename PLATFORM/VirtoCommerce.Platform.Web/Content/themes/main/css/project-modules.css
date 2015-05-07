@@ -329,3 +329,135 @@
 {
     left: 0;
 }
+
+/* Gallery */
+.gallery
+{
+    height: 100%;
+    position: relative;
+    width: 100%;
+}
+
+.gallery .gallery-img
+{
+    border: 1px solid #dee9f0;
+    position: absolute;
+
+    -webkit-box-sizing: border-box;
+            box-sizing: border-box;
+}
+
+.gallery .gallery-img:hover
+{
+    border-color: #a1c0d4;
+}
+
+.gallery-img
+{
+    cursor: pointer;
+    height: 50px;
+    line-height: 42px;
+    left: 69px;
+    top: 69px;
+    width: 50px;
+}
+
+.gallery-img.__main
+{
+    height: 108px;
+    line-height: 100px;
+    overflow: hidden;
+    width: 108px;
+}
+
+    .gallery-img *
+    {
+        display: inline-block;
+        max-height: 100%;
+        max-width: 100%;
+        vertical-align: middle;
+    }
+
+.gallery-img:nth-last-child(2) + .gallery-img
+{
+    left: 69px;
+    top: 13px;
+}
+
+.gallery-img:nth-last-child(3) + .gallery-img
+{
+    left: 127px;
+    top: 13px;
+}
+
+.gallery-img:nth-last-child(4) + .gallery-img
+{
+    left: auto;
+    right: 13px;
+    top: 69px;
+}
+
+.gallery-img:nth-last-child(5) + .gallery-img
+{
+    left: auto;
+    right: 13px;
+    top: 127px;
+}
+
+.gallery-img:nth-last-child(6) + .gallery-img
+{
+    bottom: 13px;
+    left: auto;
+    right: 69px;
+    top: auto;
+}
+
+.gallery-img:nth-last-child(7) + .gallery-img
+{
+    bottom: 13px;
+    left: auto;
+    right: 127px;
+    top: auto;
+}
+
+.gallery-img:nth-last-child(8) + .gallery-img
+{
+    bottom: 69px;
+    left: 13px;
+    top: auto;
+}
+
+.gallery-img:nth-last-child(9) + .gallery-img
+{
+    bottom: 127px;
+    left: 13px;
+    top: auto;
+}
+
+.gallery-img:nth-last-child(10) + .gallery-img
+{
+    left: 13px;
+    top: 13px;
+}
+
+.gallery-img:nth-last-child(11) + .gallery-img
+{
+    left: auto;
+    right: 13px;
+    top: 13px;
+}
+
+.gallery-img:nth-last-child(12) + .gallery-img
+{
+    bottom: 13px;
+    left: auto;
+    right: 13px;
+    top: auto;
+}
+
+.gallery-img:nth-last-child(13) + .gallery-img
+{
+    bottom: 13px;
+    left: 13px;
+    top: auto;
+}
