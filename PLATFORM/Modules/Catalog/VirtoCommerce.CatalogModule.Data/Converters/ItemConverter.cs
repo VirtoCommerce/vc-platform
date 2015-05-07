@@ -122,7 +122,7 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 
 			if(product.StartDate == default(DateTime))
 			{
-				product.StartDate = DateTime.UtcNow;
+				retVal.StartDate = DateTime.UtcNow;
 			}
 			//Constant fields
 			//Only for main product
