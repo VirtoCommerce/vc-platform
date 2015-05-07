@@ -199,7 +199,6 @@
     <Content Include="Scripts\marketing.js" />
     <Content Include="Scripts\promotion\resources\marketing.js" />
     <Content Include="web.config" />
-    <Content Include="VirtoCommerce.MarketingModule.Web.nuspec" />
     <None Include="web.Debug.config">
       <DependentUpon>web.config</DependentUpon>
     </None>
