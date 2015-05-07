@@ -224,6 +224,7 @@
     <Content Include="App_Data\Themes\_Global\templates\placeholder.liquid" />
     <Content Include="App_Data\Themes\_Global\templates\banners\Html.liquid" />
     <Content Include="App_Data\Themes\_Global\templates\banners\ProductWithImageAndPrice.liquid" />
+    <Content Include="App_Data\Themes\_Global\templates\banners\CategoryWithImages.liquid" />
     <None Include="App_Data\Themes\_Global\templates\external_login_confirmation.liquid" />
     <Content Include="App_Data\Themes\_Global\templates\index.liquid" />
     <Content Include="App_Data\Themes\_Global\templates\banner.liquid" />
