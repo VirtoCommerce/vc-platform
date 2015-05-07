@@ -21,7 +21,7 @@
                 for (var i = 0; i < placeholders.length; i++) {
                     var placeholderId = $(placeholders[i]).data("vccontentid");
                     placeholderIds.push(placeholderId);
-                    url += "placename=" + placeholderId;
+                    url += "placenames=" + placeholderId;
                     if (i < placeholders.length - 1) {
                         url += "&";
                     }

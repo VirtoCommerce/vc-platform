@@ -1,6 +1,9 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
+using VirtoCommerce.Web.Models;
 using VirtoCommerce.Web.Models.Banners;
 using VirtoCommerce.Web.Models.Convertors;
 
@@ -20,9 +23,9 @@ namespace VirtoCommerce.Web.Controllers
         public async Task<ActionResult> ShowDynamicContent(string placeName)
 		{
             var response = await Service.GetDynamicContentAsync(new [] { placeName });
-            if (response != null && response.Items != null)
+            if (response != null)
             {
-                Context.Set("banner", response.Items.First().Items.ToArray().First().AsWebModel());
+                //Context.Set("banner", response.Items.First().Items.ToArray().First().AsWebModel());
                 return PartialView("banner", this.Context);
             }
             
@@ -30,16 +33,93 @@ namespace VirtoCommerce.Web.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult> ShowDynamicContents(string[] placeName)
+        public async Task<ActionResult> ShowDynamicContents(string[] placeNames)
         {
-            var response = await Service.GetDynamicContentAsync(placeName);
-            if (response != null && response.Items != null)
+            // Only one placeholder can be requested on service for now.
+            // Will be fixed.
+
+            var placeholders = new List<PlaceHolder>();
+
+            foreach (var placeName in placeNames)
             {
-                Context.Set("placeholders", new PlaceHolderCollection(response.Items.AsWebModel()));
-                return PartialView("placeholders", this.Context);
+                var response = await Service.GetDynamicContentAsync(new[] { placeName });
+                if (response != null)
+                {
+                    var banners = new List<Banner>();
+
+                    foreach (var contentItem in response)
+                    {
+                        var banner = contentItem.AsWebModel();
+
+                        IDictionary<string, string> bannerAdditionalProperties = null;
+
+                        if (contentItem.ContentType == "ProductWithImageAndPrice")
+                        {
+                            bannerAdditionalProperties = await GetProductBannerInfoAsync(banner.Properties["productCode"]);
+                        }
+                        if (contentItem.ContentType == "CategoryWithImages")
+                        {
+                            bannerAdditionalProperties = await GetCategoryBannerInfoAsync(banner.Properties["categoryId"]);
+                        }
+
+                        if (bannerAdditionalProperties != null)
+                        {
+                            foreach (var property in bannerAdditionalProperties)
+                            {
+                                banner.Properties.Add(property);
+                            }
+                        }
+
+                        banners.Add(banner);
+                    }
+
+                    placeholders.Add(new PlaceHolder
+                    {
+                        Name = placeName,
+                        Banners = new BannerCollection(banners)
+                    });
+                }
             }
 
-            return null;
+            Context.Set("placeholders", new PlaceHolderCollection(placeholders));
+
+            return PartialView("placeholders", this.Context);
+        }
+
+        private async Task<IDictionary<string, string>> GetProductBannerInfoAsync(string handle)
+        {
+            Dictionary<string, string> info = null;
+
+            var product = await Service.GetProductAsync(handle);
+
+            if (product != null)
+            {
+                info = new Dictionary<string, string>();
+
+                info.Add("productName", product.Title);
+                info.Add("productImage", product.FeaturedImage.Src);
+                info.Add("productPrice", product.Price.ToString("#.00", CultureInfo.GetCultureInfo("en-US")));
+                info.Add("productUrl", product.Url);
+            }
+
+            return info;
+        }
+
+        private async Task<IDictionary<string, string>> GetCategoryBannerInfoAsync(string handle)
+        {
+            Dictionary<string, string> info = null;
+
+            var collection = await Service.GetCollectionByKeywordAsync(handle);
+
+            if (collection != null)
+            {
+                info = new Dictionary<string, string>();
+
+                info.Add("categoryName", collection.Title);
+                info.Add("categoryUrl", collection.Url);
+            }
+
+            return info;
         }
     }
 }
