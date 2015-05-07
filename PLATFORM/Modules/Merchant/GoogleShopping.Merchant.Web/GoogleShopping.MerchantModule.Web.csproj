@@ -138,7 +138,7 @@
     <Content Include="packages.config">
       <SubType>Designer</SubType>
     </Content>
-    <None Include="module.manifest" />
+    <Content Include="module.manifest" />
     <Content Include="Scripts\gshopping.js" />
     <Content Include="Scripts\resources\gshopping.js" />
     <Content Include="Scripts\widgets\gshoppingWidget.js" />
