@@ -2,6 +2,7 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using VirtoCommerce.Domain.Catalog.Model;
 using VirtoCommerce.Domain.Catalog.Services;
@@ -201,9 +202,9 @@ namespace VirtoCommerce.SearchModule.Data.Services
         protected virtual void IndexCategory(ref ResultDocument doc, Category category)
         {
             doc.Add(new DocumentField("catalog", category.CatalogId.ToLower(), new[] { IndexStore.Yes, IndexType.NotAnalyzed }));
-
+			var outlineParts = new string[] { category.CatalogId, category.Id }.Concat(category.Parents.Select(x => x.Id));
             // get category path
-            var outline = String.Join(";", category.Parents.Select(x => x.Id));
+			var outline = String.Join("/", outlineParts);
             doc.Add(new DocumentField("__outline", outline.ToLower(), new[] { IndexStore.Yes, IndexType.NotAnalyzed }));
 
             // Now index all linked categories

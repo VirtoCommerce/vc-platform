@@ -27,17 +27,21 @@ namespace VirtoCommerce.SearchModule.Tests
 {
     public class SearchTest
     {
-        [Fact]
-        public void SearchCatalogBuilderTest()
-        {
+		[Fact]
+		public void SettingManagerTest()
+		{
 			Func<IPlatformRepository> platformRepositoryFactory = () => new PlatformRepository("VirtoCommerce", new AuditableInterceptor(), new EntityPrimaryKeyGeneratorInterceptor());
-						
+
 			var cacheManager = new CacheManager(new InMemoryCachingProvider(), null);
 			var settingManager = new SettingsManager(null, platformRepositoryFactory, cacheManager);
 			var name = Guid.NewGuid().ToString();
 			settingManager.SetValue("VV", DateTime.Now); // сохраняется
 			settingManager.SetValue("VV", DateTime.Now.AddDays(100)); // не сохраняется
-
+		}
+        [Fact]
+        public void SearchCatalogBuilderTest()
+        {
+		
             var controller = GetSearchIndexController();
             controller.Process("default", CatalogIndexedSearchCriteria.DocType, true);
         }
