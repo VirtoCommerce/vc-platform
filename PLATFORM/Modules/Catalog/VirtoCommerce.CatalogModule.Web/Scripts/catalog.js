@@ -77,6 +77,7 @@ angular.module(catalogsModuleName, [
       //Register image widget
       var itemImageWidget = {
           controller: 'virtoCommerce.catalogModule.itemImageWidgetController',
+          size: [2, 2],
           template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/widgets/itemImageWidget.tpl.html',
       };
       widgetService.registerWidget(itemImageWidget, 'itemDetail');

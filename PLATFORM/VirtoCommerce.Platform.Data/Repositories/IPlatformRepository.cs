@@ -14,6 +14,7 @@ namespace VirtoCommerce.Platform.Data.Repositories
         IQueryable<PermissionEntity> Permissions { get; }
         IQueryable<RoleAssignmentEntity> RoleAssignments { get; }
         IQueryable<RolePermissionEntity> RolePermissions { get; }
+		//IQueryable<OperationLog> OperationLogs { get; set; }
 
         AccountEntity GetAccountByName(string userName, UserDetails detailsLevel);
     }
