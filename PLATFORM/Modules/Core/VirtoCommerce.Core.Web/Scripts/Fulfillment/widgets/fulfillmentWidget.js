@@ -1,7 +1,6 @@
 ﻿angular.module('virtoCommerce.coreModule.fulfillment')
 .controller('virtoCommerce.coreModule.fulfillment.fulfillmentWidgetController', ['$scope', 'bladeNavigationService', 'virtoCommerce.coreModule.fulfillment.fulfillments', function ($scope, bladeNavigationService, fulfillments) {
     var blade = $scope.widget.blade;
-    $scope.showWidget = blade.currentEntity.id == 'VirtoCommerce.Core';
 
     $scope.widget.refresh = function () {
         $scope.currentNumberInfo = '...';
@@ -20,7 +19,5 @@
         bladeNavigationService.showBlade(newBlade, blade);
     };
 
-    if ($scope.showWidget) {
-        $scope.widget.refresh();
-    }
+    $scope.widget.refresh();
 }]);

@@ -290,7 +290,7 @@
     <Compile Include="UrlRewriterOwinMiddleware.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Content\angular-gridster.min.css" />
+    <Content Include="Content\angular-gridster.css" />
     <Content Include="Content\angular-multi-select.css" />
     <Content Include="Scripts\angular-gridster.js" />
     <Content Include="Scripts\app\packaging\blades\module-detail.js" />

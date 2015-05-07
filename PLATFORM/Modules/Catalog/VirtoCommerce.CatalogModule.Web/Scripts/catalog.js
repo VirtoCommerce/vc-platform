@@ -129,14 +129,14 @@ angular.module(catalogsModuleName, [
           template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/widgets/categoryPropertyWidget.tpl.html',
       };
       widgetService.registerWidget(categoryPropertyWidget, 'categoryDetail');
-      
+
       //Register category seo widget
       var categorySeoWidget = {
           controller: 'virtoCommerce.catalogModule.seoWidgetController',
           template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/widgets/seoWidget.tpl.html',
       };
       widgetService.registerWidget(categorySeoWidget, 'categoryDetail');
-      
+
 
       var catalogLanguagesWidget = {
           controller: 'virtoCommerce.catalogModule.catalogLanguagesWidgetController',
@@ -145,8 +145,9 @@ angular.module(catalogsModuleName, [
       widgetService.registerWidget(catalogLanguagesWidget, 'catalogDetail');
 
       var catalogPropertyWidget = {
+          isVisible: function (blade) { return !blade.isNew && blade.controller !== 'virtoCommerce.catalogModule.virtualCatalogDetailController'; },
           controller: 'virtoCommerce.catalogModule.catalogPropertyWidgetController',
-          template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/widgets/catalogPropertyWidget.tpl.html',
+          template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/widgets/catalogPropertyWidget.tpl.html'
       };
       widgetService.registerWidget(catalogPropertyWidget, 'catalogDetail');
 
