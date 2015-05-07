@@ -48,7 +48,6 @@ namespace VirtoCommerce.Web.Models.Services
         private readonly string _themesCacheStoragePath;
         private readonly string _pagesCacheStoragePath;
         private readonly MarketingClient _marketingClient;
-        private readonly ContentClient _contentClient;
 
         private static readonly object _LockObject = new object();
         #endregion
@@ -68,7 +67,6 @@ namespace VirtoCommerce.Web.Models.Services
             this._themeClient = ClientContext.Clients.CreateThemeClient();
             this._pageClient = ClientContext.Clients.CreatePageClient();
             this._reviewsClient = ClientContext.Clients.CreateReviewsClient();
-            this._contentClient = ClientContext.Clients.CreateDefaultContentClient();
 
             _themesCacheStoragePath = ConfigurationManager.AppSettings["ThemeCacheFolder"];
             _pagesCacheStoragePath = ConfigurationManager.AppSettings["PageCacheFolder"];
@@ -919,15 +917,9 @@ namespace VirtoCommerce.Web.Models.Services
             }
         }
 
-        public async Task<DynamicContentItem[]> GetDynamicContentAsync(string[] placeholders)
+        public async Task<ResponseCollection<DynamicContentItemGroup>> GetDynamicContentAsync(string[] placeholders)
         {
-            var context = new DynamicContentEvaluationContext
-            {
-                PlaceName = placeholders.First(),
-                ToDate = DateTime.UtcNow.AddDays(5) // For test
-            };
-
-            return await _contentClient.GetDynamicContentAsync(context);
+            return await _marketingClient.GetDynamicContentAsync(placeholders, new TagQuery());
         }
         #endregion
 
