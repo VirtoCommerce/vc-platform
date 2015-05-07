@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using VirtoCommerce.CatalogModule.Data.Repositories;
 using VirtoCommerce.CatalogModule.Data.Services;
 using VirtoCommerce.CoreModule.Data.Repositories;
@@ -11,12 +12,16 @@ using VirtoCommerce.Platform.Core.Settings;
 using VirtoCommerce.Platform.Data.Caching;
 using VirtoCommerce.Platform.Data.Common;
 using VirtoCommerce.Platform.Data.Infrastructure.Interceptors;
+using VirtoCommerce.Platform.Data.Repositories;
+using VirtoCommerce.Platform.Data.Settings;
 using VirtoCommerce.PricingModule.Data.Repositories;
 using VirtoCommerce.PricingModule.Data.Services;
 using VirtoCommerce.SearchModule.Data.Model;
 using VirtoCommerce.SearchModule.Data.Providers.Lucene;
 using VirtoCommerce.SearchModule.Data.Services;
 using Xunit;
+using System.Data.Entity;
+using VirtoCommerce.Platform.Data.Model;
 
 namespace VirtoCommerce.SearchModule.Tests
 {
@@ -25,6 +30,14 @@ namespace VirtoCommerce.SearchModule.Tests
         [Fact]
         public void SearchCatalogBuilderTest()
         {
+			Func<IPlatformRepository> platformRepositoryFactory = () => new PlatformRepository("VirtoCommerce", new AuditableInterceptor(), new EntityPrimaryKeyGeneratorInterceptor());
+						
+			var cacheManager = new CacheManager(new InMemoryCachingProvider(), null);
+			var settingManager = new SettingsManager(null, platformRepositoryFactory, cacheManager);
+			var name = Guid.NewGuid().ToString();
+			settingManager.SetValue("VV", DateTime.Now); // сохраняется
+			settingManager.SetValue("VV", DateTime.Now.AddDays(100)); // не сохраняется
+
             var controller = GetSearchIndexController();
             controller.Process("default", CatalogIndexedSearchCriteria.DocType, true);
         }

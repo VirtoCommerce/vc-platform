@@ -1,4 +1,5 @@
-﻿using System.Collections.ObjectModel;
+﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
 using VirtoCommerce.Platform.Core.Common;
 
@@ -8,7 +9,7 @@ namespace VirtoCommerce.Platform.Data.Model
     {
         public SettingEntity()
         {
-            SettingValues = new ObservableCollection<SettingValueEntity>();
+            SettingValues = new NullCollection<SettingValueEntity>();
         }
 
         [StringLength(128)]
@@ -34,6 +35,6 @@ namespace VirtoCommerce.Platform.Data.Model
         /// </value>
         public bool IsLocaleDependant { get; set; }
 
-        public ObservableCollection<SettingValueEntity> SettingValues { get; set; }
+        public virtual ObservableCollection<SettingValueEntity> SettingValues { get; set; }
     }
 }
