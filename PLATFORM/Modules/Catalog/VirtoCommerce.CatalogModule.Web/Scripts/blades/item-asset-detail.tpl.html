@@ -36,17 +36,13 @@
             <script type="text/ng-template" id="assetTemplate.html">
                 <img class="tile-img" src="{{data.url}}" alt="">
                 <ul class="menu __context" id="itemAssetMenu{{$index}}" role="menu" aria-labelledby="dropdownMenu2">
-                    <li class="list-item">
-                        <a role="menuitem" tabindex="1" ng-click="removeAction([data])">
-                            <i class="list-ico fa fa-trash-o"></i>
-                            Remove
-                        </a>
+                    <li class="menu-item" ng-click="removeAction([data])">
+                        <i class="menu-ico fa fa-trash-o"></i>
+                        Remove
                     </li>
-                    <li class="list-item">
-                        <a role="menuitem" tabindex="1" ng-click="copyUrl(data)">
-                            <i class="list-ico fa fa-link"></i>
-                            Copy link
-                        </a>
+                    <li class="menu-item" ng-click="copyUrl(data)">
+                        <i class="menu-ico fa fa-link"></i>
+                        Copy link
                     </li>
                 </ul>
             </script>
