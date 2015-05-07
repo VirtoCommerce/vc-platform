@@ -36,8 +36,42 @@
                     }
                 }
             });
+        },
+        changeCurrency: function (currencyCode) {
+            var currencyCookie = getCookie("vcf.currency");
+            if (currencyCookie) {
+                deleteCookie("vcf.currency");
+            }
+            setCookie("vcf.currency", currencyCode, 30);
+            window.location.reload();
         }
     }
 
     virtoCommerce = new VirtoCommerce();
 });
+
+function deleteCookie(cookieName) {
+    document.cookie = cookieName + "=; Expires=Thu, 01 Jan 1970 00:00:00 UTC";
+}
+
+function getCookie(cookieName) {
+    var name = cookieName + "=";
+    var ca = document.cookie.split(';');
+    for (var i = 0; i < ca.length; i++) {
+        var c = ca[i];
+        while (c.charAt(0) == ' ') {
+            c = c.substring(1);
+        }
+        if (c.indexOf(name) == 0) {
+            return c.substring(name.length, c.length);
+        }
+    }
+    return "";
+}
+
+function setCookie(name, value, daysToExpired) {
+    var date = new Date();
+    date.setTime(date.getTime() + (daysToExpired * 24 * 60 * 60 * 1000));
+    var expires = "Expires=" + date.toUTCString();
+    document.cookie = name + "=" + value + "; " + expires;
+}
