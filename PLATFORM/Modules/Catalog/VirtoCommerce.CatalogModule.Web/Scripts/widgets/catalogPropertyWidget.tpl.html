@@ -1,4 +1,4 @@
-﻿<div class="tile" ng-click="openCatalogPropertyBlade()" ng-if="!blade.isNew">
+﻿<div class="tile" ng-click="openCatalogPropertyBlade()" ng-if="!blade.isNew && !blade.currentEntity.virtual">
     <span class="tile-count">{{blade.currentEntity.properties.length}}</span>
     <span class="tile-descr">Properties</span>
 </div>

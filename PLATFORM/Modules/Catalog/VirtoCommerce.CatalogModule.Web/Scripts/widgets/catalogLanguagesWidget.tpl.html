@@ -16,7 +16,15 @@
             </span>
         </li>
     </ul>-->
-<div class="tile" ng-click="openBlade()">
-    <span class="tile-count">{{blade.currentEntity.languages.length}}</span>
-    <span class="tile-descr">Languages</span>
+<div class="gridster-cnt" ng-click="openBlade()" ng-if="!blade.currentEntity.virtual">
+    <div class="cnt-inner">
+        <div class="list-count">{{blade.currentEntity.languages.length}}</div>
+        <div class="list-t">Languages</div>
+    </div>
+</div>
+<div class="gridster-cnt" ng-click="openBlade()" ng-if="blade.currentEntity.virtual">
+    <div class="cnt-inner">
+        <div class="list-count">{{blade.currentEntity.defaultLanguage.languageCode}}</div>
+        <div class="list-t">Default language</div>
+    </div>
 </div>

@@ -128,7 +128,7 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
                     new webModel.CatalogLanguage
                     {
                         IsDefault = true, 
-                        LanguageCode = "en-us"
+                        LanguageCode = "en-US"
                     }
                 }
             };
@@ -152,7 +152,7 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
                     new webModel.CatalogLanguage
                     {
                         IsDefault = true, 
-                        LanguageCode = "en-us"
+                        LanguageCode = "en-US"
                     }
                 }
             };
