@@ -57,6 +57,10 @@ namespace VirtoCommerce.Web.Controllers
                         {
                             bannerAdditionalProperties = await GetProductBannerInfoAsync(banner.Properties["productCode"]);
                         }
+                        if (contentItem.ContentType == "CategoryWithImages")
+                        {
+                            bannerAdditionalProperties = await GetCategoryBannerInfoAsync(banner.Properties["categoryId"]);
+                        }
 
                         if (bannerAdditionalProperties != null)
                         {
@@ -96,6 +100,23 @@ namespace VirtoCommerce.Web.Controllers
                 info.Add("productImage", product.FeaturedImage.Src);
                 info.Add("productPrice", product.Price.ToString("#.00", CultureInfo.GetCultureInfo("en-US")));
                 info.Add("productUrl", product.Url);
+            }
+
+            return info;
+        }
+
+        private async Task<IDictionary<string, string>> GetCategoryBannerInfoAsync(string handle)
+        {
+            Dictionary<string, string> info = null;
+
+            var collection = await Service.GetCollectionByKeywordAsync(handle);
+
+            if (collection != null)
+            {
+                info = new Dictionary<string, string>();
+
+                info.Add("categoryName", collection.Title);
+                info.Add("categoryUrl", collection.Url);
             }
 
             return info;
