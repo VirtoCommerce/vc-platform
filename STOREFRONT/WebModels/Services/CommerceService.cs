@@ -919,9 +919,15 @@ namespace VirtoCommerce.Web.Models.Services
             }
         }
 
-        public async Task<ResponseCollection<DynamicContentItemGroup>> GetDynamicContentAsync(string[] placeholders)
+        public async Task<DynamicContentItem[]> GetDynamicContentAsync(string[] placeholders)
         {
-            return await _contentClient.GetDynamicContentAsync(placeholders, null);
+            var context = new DynamicContentEvaluationContext
+            {
+                PlaceName = placeholders.First(),
+                ToDate = DateTime.UtcNow.AddDays(5) // For test
+            };
+
+            return await _contentClient.GetDynamicContentAsync(context);
         }
         #endregion
 

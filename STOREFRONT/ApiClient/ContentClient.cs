@@ -1,14 +1,11 @@
-﻿#region
-
-using System;
+﻿using System;
 using System.Net.Http;
 using System.Threading.Tasks;
 using VirtoCommerce.ApiClient.DataContracts;
 using VirtoCommerce.ApiClient.DataContracts.Contents;
+using VirtoCommerce.ApiClient.DataContracts.Marketing;
 using VirtoCommerce.ApiClient.Extensions;
 using VirtoCommerce.ApiClient.Utilities;
-
-#endregion
 
 namespace VirtoCommerce.ApiClient
 {
@@ -49,80 +46,10 @@ namespace VirtoCommerce.ApiClient
         /// <summary>
         ///     List items matching the given query
         /// </summary>
-        public Task<ResponseCollection<DynamicContentItemGroup>> GetDynamicContentAsync(
-            string[] placeHolder,
-            TagQuery query)
+        public Task<DynamicContentItem[]> GetDynamicContentAsync(DynamicContentEvaluationContext context)
         {
-            var group1 = new DynamicContentItemGroup("HomeTopPromoBanners");
-            group1.Items.Add(new DynamicContentItem
-            {
-                ContentType = "ImageNonClickable",
-                Description = "50% discount",
-                Id = System.Guid.NewGuid().ToString(),
-                IsMultilingual = true,
-                Name = "PromotionBanner1",
-                Properties = new System.Collections.Generic.Dictionary<string, string>
-                {
-                    { "imageUrl", "http://www.ronyasoft.com/products/poster-forge/templates/banners/discount-banner-template/images/discount-banner-template.jpg" },
-                    { "alternativeText", "Banner 1" }
-                }
-            });
-            group1.Items.Add(new DynamicContentItem
-            {
-                ContentType = "ImageClickable",
-                Description = "50% discount",
-                Id = System.Guid.NewGuid().ToString(),
-                IsMultilingual = true,
-                Name = "PromotionBanner2",
-                Properties = new System.Collections.Generic.Dictionary<string, string>
-                {
-                    { "imageUrl", "http://www.ronyasoft.com/products/poster-forge/templates/banners/discount-banner-template/images/discount-banner-template.jpg" },
-                    { "alternativeText", "Banner 2" },
-                    { "targetUrl", "http://localhost" },
-                    { "title", "Discount 50%!" }
-                }
-            });
-
-            var group2 = new DynamicContentItemGroup("HomeBottomPromoBanners");
-            group2.Items.Add(new DynamicContentItem
-            {
-                ContentType = "ImageNonClickable",
-                Description = "50% discount",
-                Id = System.Guid.NewGuid().ToString(),
-                IsMultilingual = true,
-                Name = "PromotionBanner1",
-                Properties = new System.Collections.Generic.Dictionary<string, string>
-                {
-                    { "imageUrl", "http://www.ronyasoft.com/products/poster-forge/templates/banners/discount-banner-template/images/discount-banner-template.jpg" },
-                    { "alternativeText", "Banner 1" }
-                }
-            });
-            group2.Items.Add(new DynamicContentItem
-            {
-                ContentType = "ImageClickable",
-                Description = "50% discount",
-                Id = System.Guid.NewGuid().ToString(),
-                IsMultilingual = true,
-                Name = "PromotionBanner2",
-                Properties = new System.Collections.Generic.Dictionary<string, string>
-                {
-                    { "imageUrl", "http://www.ronyasoft.com/products/poster-forge/templates/banners/discount-banner-template/images/discount-banner-template.jpg" },
-                    { "alternativeText", "Banner 2" },
-                    { "targetUrl", "http://localhost" },
-                    { "title", "Discount 50%!" }
-                }
-            });
-
-
-            var response = new ResponseCollection<DynamicContentItemGroup>();
-            response.Items.Add(group1);
-            response.Items.Add(group2);
-
-            return Task.FromResult(response);
-                //GetAsync<ResponseCollection<DynamicContentItemGroup>>(
-                //    CreateRequestUri(
-                //        String.Format(RelativePaths.Contents, string.Join(",", placeHolder)),
-                //        query.GetQueryString()));
+            return SendAsync<DynamicContentEvaluationContext, DynamicContentItem[]>(
+                CreateRequestUri(RelativePaths.Contents), HttpMethod.Post, context);
         }
 
         #endregion
@@ -131,7 +58,7 @@ namespace VirtoCommerce.ApiClient
         {
             #region Constants
 
-            public const string Contents = "contents/{0}";
+            public const string Contents = "contentitems/evaluate";
 
             #endregion
         }

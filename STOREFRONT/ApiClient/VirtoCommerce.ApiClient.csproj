@@ -75,6 +75,7 @@
     <Compile Include="Constants.cs" />
     <Compile Include="DataContracts\Cart\AddressType.cs" />
     <Compile Include="DataContracts\Cart\CartItem.cs" />
+    <Compile Include="DataContracts\Contents\DynamicContentEvaluationContext.cs" />
     <Compile Include="DataContracts\CustomerService\Address.cs" />
     <Compile Include="DataContracts\CustomerService\CustomerSearchResult.cs" />
     <Compile Include="DataContracts\ItemInventory.cs" />
