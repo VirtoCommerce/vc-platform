@@ -69,22 +69,23 @@ namespace VirtoCommerce.Platform.Data.Settings
         {
             if (settings != null)
             {
-                var settingNames = settings
-                    .Select(s => s.Name)
-                    .Distinct()
-                    .ToArray();
-
-                var existingSettings = GetAllEntities()
-                    .Where(s => settingNames.Contains(s.Name, StringComparer.OrdinalIgnoreCase))
-                    .ToList();
-
+                var settingNames = settings.Select(s => s.Name).Distinct().ToArray();
+           
                 using (var repository = _repositoryFactory())
+				using(var changeTracker = new ObservableChangeTracker())
                 {
-                    var targetSettings = new ObservableCollection<SettingEntity>(existingSettings);
-                    var sourceSettings = new ObservableCollection<SettingEntity>(settings.Select(x => x.ToEntity()));
+					var alreadyExistSettings =  repository.Settings.Include(s => s.SettingValues)
+																   .Where(x=> settingNames.Contains(x.Name)).ToList();
+
+					changeTracker.AddAction = x=>  repository.Add(x);
+					changeTracker.RemoveAction = x => repository.Remove(x);
+
+					var target = new { Settings = new ObservableCollection<SettingEntity>(alreadyExistSettings) };
+					var source = new { Settings = new ObservableCollection<SettingEntity>(settings.Select(x => x.ToEntity())) };
+                  
+					changeTracker.Attach(target);
                     var settingComparer = AnonymousComparer.Create((SettingEntity x) => x.Name);
-                    targetSettings.ObserveCollection(e => repository.Add(e), e => { repository.Attach(e); repository.Remove(e); });
-                    sourceSettings.Patch(targetSettings, settingComparer, (source, target) => source.Patch(target));
+					source.Settings.Patch(target.Settings, settingComparer, (sourceSetting, targetSetting) => sourceSetting.Patch(targetSetting));
 
                     repository.UnitOfWork.Commit();
                 }

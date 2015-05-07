@@ -131,12 +131,13 @@ angular.module('platformWebApp', AppDependencies).
         // cache application level templates
         $templateCache.put('pagerTemplate.html', '<div class="pagination"><pagination boundary-links="true" max-size="pageSettings.numPages" items-per-page="pageSettings.itemsPerPageCount" total-items="pageSettings.totalItems" ng-model="pageSettings.currentPage" class="pagination-sm" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></pagination></div>');
 
-        gridsterConfig.columns = 3;
+        gridsterConfig.columns = 4;
         gridsterConfig.colWidth = 130;
         gridsterConfig.defaultSizeX = 1;
         gridsterConfig.resizable = { enabled: false, handles: [] };
         gridsterConfig.maxRows = 10;
         gridsterConfig.mobileModeEnabled = false;
+        gridsterConfig.outerMargin = false;
 
         String.prototype.hashCode = function () {
             var hash = 0, i, chr, len;

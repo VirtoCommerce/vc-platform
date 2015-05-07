@@ -32,7 +32,7 @@ namespace VirtoCommerce.Platform.Data.Model
         public string Locale { get; set; }
 
         public string SettingId { get; set; }
-        public SettingEntity Setting { get; set; }
+        public virtual SettingEntity Setting { get; set; }
 
 
         public object RawValue()

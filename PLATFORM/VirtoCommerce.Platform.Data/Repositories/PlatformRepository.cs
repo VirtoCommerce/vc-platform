@@ -30,9 +30,15 @@ namespace VirtoCommerce.Platform.Data.Repositories
             modelBuilder.Conventions.Remove<PluralizingTableNameConvention>();
 
             #region Settings
+			modelBuilder.Entity<SettingEntity>().HasKey(x => x.Id)
+							.Property(x => x.Id);
+			modelBuilder.Entity<SettingEntity>().ToTable("PlatformSetting");
+			modelBuilder.Entity<SettingValueEntity>().HasKey(x => x.Id)
+							.Property(x => x.Id);
+			modelBuilder.Entity<SettingValueEntity>().ToTable("PlatformSettingValue");
 
-            modelBuilder.Entity<SettingEntity>("PlatformSetting", "Id");
-            modelBuilder.Entity<SettingValueEntity>("PlatformSettingValue", "Id");
+			//modelBuilder.Entity<SettingEntity>("PlatformSetting", "Id");
+			//modelBuilder.Entity<SettingValueEntity>("PlatformSettingValue", "Id");
 
             modelBuilder.Entity<SettingValueEntity>()
                 .HasRequired(x => x.Setting)

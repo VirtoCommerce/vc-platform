@@ -6,7 +6,7 @@
     $scope.pageSettings.currentPage = 1;
     $scope.pageSettings.numPages = 5;
     $scope.pageSettings.itemsPerPageCount = 20;
- 
+
     $scope.filter = { searchKeyword: undefined };
 
     $scope.selectedAll = false;
@@ -14,7 +14,7 @@
     var preventCategoryListingOnce; // prevent from unwanted additional actions after command was activated from context menu
 
     $scope.blade.refresh = function () {
-    	$scope.blade.isLoading = true;
+        $scope.blade.isLoading = true;
         listEntries.listitemssearch(
             {
                 catalog: $scope.blade.catalogId,
@@ -110,7 +110,7 @@
         };
         bladeNavigationService.showBlade(newBlade, $scope.blade);
     };
-    
+
     $scope.blade.showItemBlade = function (id, title) {
         var newBlade = {
             id: "listItemDetail",
@@ -282,6 +282,7 @@
                     catalog: $scope.blade.catalog,
                     categoryId: listItem.id,
                     category: listItem,
+                    disableOpenAnimation: true,
                     controller: 'virtoCommerce.catalogModule.categoriesItemsListController',
                     template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/categories-items-list.tpl.html'
                 };
@@ -423,6 +424,7 @@
             subtitle: 'Creating a Link inside virtual catalog',
             catalogId: selectedNode.id,
             catalog: selectedNode,
+            disableOpenAnimation: true,
             controller: 'virtoCommerce.catalogModule.categoriesItemsListController',
             template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/categories-items-list.tpl.html'
         };

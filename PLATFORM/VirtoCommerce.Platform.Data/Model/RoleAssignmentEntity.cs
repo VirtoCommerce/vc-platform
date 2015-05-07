@@ -11,7 +11,7 @@ namespace VirtoCommerce.Platform.Data.Model
         public string AccountId { get; set; }
         public string RoleId { get; set; }
 
-        public RoleEntity Role { get; set; }
-        public AccountEntity Account { get; set; }
+        public virtual RoleEntity Role { get; set; }
+		public virtual AccountEntity Account { get; set; }
     }
 }

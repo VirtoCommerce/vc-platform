@@ -7,8 +7,8 @@ namespace VirtoCommerce.Platform.Data.Model
     {
         public AccountEntity()
         {
-            RoleAssignments = new ObservableCollection<RoleAssignmentEntity>();
-            ApiAccounts = new ObservableCollection<ApiAccountEntity>();
+            RoleAssignments = new NullCollection<RoleAssignmentEntity>();
+			ApiAccounts = new NullCollection<ApiAccountEntity>();
         }
 
         public string StoreId { get; set; }
@@ -17,7 +17,7 @@ namespace VirtoCommerce.Platform.Data.Model
         public RegisterType RegisterType { get; set; }
         public AccountState AccountState { get; set; }
 
-        public ObservableCollection<RoleAssignmentEntity> RoleAssignments { get; set; }
-        public ObservableCollection<ApiAccountEntity> ApiAccounts { get; set; }
+		public virtual ObservableCollection<RoleAssignmentEntity> RoleAssignments { get; set; }
+		public virtual ObservableCollection<ApiAccountEntity> ApiAccounts { get; set; }
     }
 }
