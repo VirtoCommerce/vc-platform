@@ -138,6 +138,7 @@ namespace VirtoCommerce.Platform.Data.Settings.Converters
         private static SettingValueType ConvertToSettingValueType(Type valueType)
         {
             var retVal = SettingValueType.ShortText;
+
             if (valueType == typeof(bool))
             {
                 retVal = SettingValueType.Boolean;
@@ -150,6 +151,11 @@ namespace VirtoCommerce.Platform.Data.Settings.Converters
             {
                 retVal = SettingValueType.Decimal;
             }
+            else if (valueType == typeof(DateTime))
+            {
+                retVal = SettingValueType.DateTime;
+            }
+
             return retVal;
         }
 
