@@ -22,6 +22,7 @@ namespace Zapier.IntegrationModule.Web
             _container.RegisterType<IContactsProvider, ContactsProvider>(new ContainerControlledLifetimeManager());
             _container.RegisterType<IOrdersProvider, OrdersProvider>(new ContainerControlledLifetimeManager());
             _container.RegisterType<PollingController>();
+            _container.RegisterType<ActionController>();
         }
     }
 }

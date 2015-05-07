@@ -19,6 +19,7 @@ angular.module(moduleName, [
 
       widgetService.registerWidget({
           controller: 'virtoCommerce.gshoppingModule.gshoppingSyncCatWidgetController',
+          size: [2, 1],
           template: 'Modules/$(GoogleShopping.Merchant)/Scripts/widgets/gshoppingWidget.tpl.html'
       }, 'categoryDetail');
   }]);

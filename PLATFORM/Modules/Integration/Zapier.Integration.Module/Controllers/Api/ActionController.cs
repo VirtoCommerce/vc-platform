@@ -1,7 +1,7 @@
-﻿using System.Net;
-using System.Threading.Tasks;
-using System.Web.Http;
+﻿using System.Web.Http;
 using System.Web.Http.Description;
+using Newtonsoft.Json;
+using VirtoCommerce.Domain.Customer.Model;
 using Zapier.IntegrationModule.Web.Providers.Interfaces;
 
 namespace Zapier.IntegrationModule.Web.Controllers.Api
@@ -18,12 +18,13 @@ namespace Zapier.IntegrationModule.Web.Controllers.Api
         }
 
         [HttpPost]
-        [ResponseType(typeof(void))]
-        [Route("customer")]
-        public async Task<IHttpActionResult> CreateCustomer()
+        [ResponseType(typeof(Contact))]
+        [Route("contact")]
+        public IHttpActionResult CreateContact(string jsonContact)
         {
-            var result = await Task.FromResult(HttpStatusCode.Created);
-            return Ok(result);
+            var deserializedContact = JsonConvert.DeserializeObject<Contact>(jsonContact);
+            var retVal = _contactsProvider.NewContact(deserializedContact);
+            return Ok(retVal);
         }
     }
 }

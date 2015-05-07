@@ -77,6 +77,7 @@ angular.module(catalogsModuleName, [
       //Register image widget
       var itemImageWidget = {
           controller: 'virtoCommerce.catalogModule.itemImageWidgetController',
+          size: [2, 2],
           template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/widgets/itemImageWidget.tpl.html',
       };
       widgetService.registerWidget(itemImageWidget, 'itemDetail');
@@ -124,21 +125,18 @@ angular.module(catalogsModuleName, [
       //Register category property widget
       var categoryPropertyWidget = {
           controller: 'virtoCommerce.catalogModule.categoryPropertyWidgetController',
+          size: [2, 1],
           template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/widgets/categoryPropertyWidget.tpl.html',
       };
-
       widgetService.registerWidget(categoryPropertyWidget, 'categoryDetail');
-
-
-
+      
       //Register category seo widget
       var categorySeoWidget = {
           controller: 'virtoCommerce.catalogModule.seoWidgetController',
           template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/widgets/seoWidget.tpl.html',
       };
-
       widgetService.registerWidget(categorySeoWidget, 'categoryDetail');
-
+      
 
       var catalogLanguagesWidget = {
           controller: 'virtoCommerce.catalogModule.catalogLanguagesWidgetController',
