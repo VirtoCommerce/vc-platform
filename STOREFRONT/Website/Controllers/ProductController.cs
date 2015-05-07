@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
+using VirtoCommerce.Web.Models;
 using VirtoCommerce.Web.Models.Extensions;
 
 #endregion
@@ -15,7 +16,7 @@ namespace VirtoCommerce.Web.Controllers
         [Route("products/{item}")]
         public async Task<ActionResult> ProductAsync(string item)
         {
-            var product = await this.Service.GetProductAsync(item);
+            var product = await this.Service.GetProductAsync(SiteContext.Current, item);
             this.Context.Set("Product", product);
 
             if(product == null)
@@ -27,7 +28,7 @@ namespace VirtoCommerce.Web.Controllers
 
         public async Task<ActionResult> ProductByCodeAsync(string item)
         {
-            var product = await this.Service.GetProductAsync(item);
+            var product = await this.Service.GetProductAsync(SiteContext.Current, item);
             this.Context.Set("Product", product);
 
             if (product == null)
@@ -39,7 +40,7 @@ namespace VirtoCommerce.Web.Controllers
 
         public async Task<ActionResult> ProductByKeywordAsync(string item)
         {
-            var product = await this.Service.GetProductByKeywordAsync(item) ?? await this.Service.GetProductAsync(item);
+            var product = await this.Service.GetProductByKeywordAsync(SiteContext.Current, item) ?? await this.Service.GetProductAsync(SiteContext.Current, item);
 
             if (product != null)
             {
@@ -58,9 +59,9 @@ namespace VirtoCommerce.Web.Controllers
         //[Route("collections/{collection}/products/{handle}")]
         public async Task<ActionResult> ProductInCollectionAsync(string collection, string handle, int page = 1)
         {
-            this.Context.Set("Collection", await this.Service.GetCollectionAsync(collection));
+            this.Context.Set("Collection", await this.Service.GetCollectionAsync(SiteContext.Current, collection));
 
-            var product = await this.Service.GetProductAsync(handle);
+            var product = await this.Service.GetProductAsync(SiteContext.Current, handle);
             this.Context.Set("Product", product);
 
             if (product == null)
@@ -73,7 +74,7 @@ namespace VirtoCommerce.Web.Controllers
         [Route("products/{handle}.js")]
         public async Task<ActionResult> ProductJsonAsync(string handle)
         {
-            var product = await this.Service.GetProductAsync(handle);
+            var product = await this.Service.GetProductAsync(SiteContext.Current, handle);
             return this.Json(product, JsonRequestBehavior.AllowGet);
         }
         #endregion

@@ -1,4 +1,6 @@
 ﻿#region
+
+using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
@@ -64,7 +66,7 @@ namespace VirtoCommerce.Web.Models
 
             var siteContext = SiteContext.Current;
             var service = new CommerceService();
-            var response = Task.Run(() => service.SearchAsync(siteContext, type, terms, skip, pageSize)).Result;
+            var response = Task.Run(() => service.SearchAsync<object>(siteContext, type, terms, String.Empty, skip, pageSize)).Result;
             this.Results = response;
 
             this.Performed = false;

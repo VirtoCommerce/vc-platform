@@ -21,8 +21,9 @@ namespace VirtoCommerce.Web.Models.Filters
         public static string t(string input, params object[] variables)
         {
             var service = new CommerceService();
-            var locs = service.GetLocale();
-            var defaultLocs = service.GetLocale(true);
+            var context = SiteContext.Current;
+            var locs = service.GetLocale(context);
+            var defaultLocs = service.GetLocale(context, true);
 
             if (locs == null && defaultLocs == null)
             {

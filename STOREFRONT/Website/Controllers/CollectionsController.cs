@@ -21,7 +21,7 @@ namespace VirtoCommerce.Web.Controllers
             int page = 1,
             string sort_by = "manual")
         {
-            var collections = await this.Service.GetCollectionsAsync(sort_by);
+            var collections = await this.Service.GetCollectionsAsync(SiteContext.Current, sort_by);
 
             this.Context.Set("Collection", collections.First());
             this.Context.Set("current_page", page);
@@ -44,7 +44,7 @@ namespace VirtoCommerce.Web.Controllers
             int page = 1,
             string sort_by = "manual")
         {
-            this.Context.Set("Collection", await this.Service.GetCollectionAsync(category));
+            this.Context.Set("Collection", await this.Service.GetCollectionAsync(SiteContext.Current, category));
             this.Context.Set("current_page", page);
             this.Context.Set("current_tags", this.ParseTags(tags));
 
@@ -64,7 +64,7 @@ namespace VirtoCommerce.Web.Controllers
             int page = 1,
             string sort_by = "manual")
         {
-            var categoryModel = await this.Service.GetCollectionByKeywordAsync(category, sort_by) ?? await this.Service.GetCollectionAsync(category, sort_by);
+            var categoryModel = await this.Service.GetCollectionByKeywordAsync(SiteContext.Current, category, sort_by) ?? await this.Service.GetCollectionAsync(SiteContext.Current, category, sort_by);
 
             if (categoryModel != null)
             {

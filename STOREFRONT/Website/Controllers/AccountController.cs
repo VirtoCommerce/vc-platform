@@ -46,7 +46,7 @@ namespace VirtoCommerce.Web.Controllers
         //[Route("login")]
         public async Task<ActionResult> Login(LoginFormModel formModel, string returnUrl)
         {
-            var form = Service.GetForm(formModel.Id);
+            var form = Service.GetForm(SiteContext.Current, formModel.Id);
 
             if (form != null)
             {
@@ -106,7 +106,7 @@ namespace VirtoCommerce.Web.Controllers
         [AllowAnonymous]
         public async Task<ActionResult> Register(RegisterFormModel formModel)
         {
-            var form = Service.GetForm(formModel.Id);
+            var form = Service.GetForm(SiteContext.Current, formModel.Id);
 
             if (form != null)
             {
@@ -165,7 +165,7 @@ namespace VirtoCommerce.Web.Controllers
         [AllowAnonymous]
         public async Task<ActionResult> ForgotPassword(ForgotPasswordFormModel formModel)
         {
-            var form = Service.GetForm(formModel.Id);
+            var form = Service.GetForm(SiteContext.Current, formModel.Id);
 
             if (form != null)
             {
@@ -245,7 +245,7 @@ namespace VirtoCommerce.Web.Controllers
         [AllowAnonymous]
         public async Task<ActionResult> ResetPassword(ResetPasswordFormModel formModel)
         {
-            var form = Service.GetForm(formModel.form_type);
+            var form = Service.GetForm(SiteContext.Current, formModel.form_type);
 
             if (form != null)
             {
