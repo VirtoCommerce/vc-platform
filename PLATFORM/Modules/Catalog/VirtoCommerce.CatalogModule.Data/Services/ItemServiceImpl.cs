@@ -165,12 +165,15 @@ namespace VirtoCommerce.CatalogModule.Data.Services
 
 		public void Update(coreModel.CatalogProduct[] items)
 		{
+			var now = DateTime.UtcNow;
 			using (var repository = _catalogRepositoryFactory())
 			using (var changeTracker = base.GetChangeTracker(repository))
 			{
 				var dbItems = repository.GetItemByIds(items.Select(x => x.Id).ToArray(), coreModel.ItemResponseGroup.ItemLarge);
 				foreach (var dbItem in dbItems)
 				{
+					dbItem.ModifiedDate = now;
+					dbItem.ModifiedBy = CurrentPrincipal.GetCurrentUserName();
 					var item = items.FirstOrDefault(x => x.Id == dbItem.Id);
 					if (item != null)
 					{
