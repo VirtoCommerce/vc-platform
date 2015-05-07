@@ -1,7 +1,7 @@
-﻿<div class="tile wide" ng-click="openAddressesBlade()">
-
-    <span class="tile-count" ng-if="!operation.deliveryAddress">N/A</span>
-    <span class="tile-descr" ng-if="operation.deliveryAddress">{{ getAddressName(operation.deliveryAddress) | limitTo :40 }}</span>
-    <span class="tile-descr">Delivery address</span>
-
+﻿<div class="gridster-cnt">
+    <div class="cnt-inner" ng-click="openAddressesBlade()">
+        <div class="list-count" ng-if="!operation.deliveryAddress">N/A</div>
+        <div class="list-t" ng-if="operation.deliveryAddress">Delivery address</div>
+        <div class="list-price">{{ getAddressName(operation.deliveryAddress) | limitTo :40 }}</div>
+    </div>
 </div>

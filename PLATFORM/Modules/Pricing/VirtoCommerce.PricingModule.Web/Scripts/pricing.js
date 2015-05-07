@@ -44,6 +44,7 @@ angular.module(moduleName, [])
       //Register item prices widget
       var itemPricesWidget = {
           controller: 'virtoCommerce.pricingModule.itemPricesWidgetController',
+          size: [2, 1],
           template: 'Modules/$(VirtoCommerce.Pricing)/Scripts/widgets/itemPricesWidget.tpl.html',
       };
       widgetService.registerWidget(itemPricesWidget, 'itemDetail');

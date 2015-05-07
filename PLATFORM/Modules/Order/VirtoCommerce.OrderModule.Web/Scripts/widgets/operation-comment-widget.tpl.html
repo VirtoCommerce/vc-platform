@@ -1,4 +1,6 @@
-﻿<div class="tile double wide __note" ng-click="openCommentBlade()">
-    <span class="tile-ico fa fa-comments" ng-if="!operation.comment"></span>
-    <span class="tile-descr">{{operation.comment ? operation.comment : 'no comments'}}</span>
+﻿<div class="gridster-cnt __note">
+    <div class="cnt-inner" ng-click="openCommentBlade()">
+        <div class="comment-ico fa fa-comments" ng-if="!operation.comment"></div>
+        <div class="list-t">{{operation.comment ? operation.comment : 'no comments'}}</div>
+    </div>
 </div>
