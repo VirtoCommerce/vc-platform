@@ -6,5 +6,6 @@ namespace Zapier.IntegrationModule.Web.Providers.Interfaces
     public interface IContactsProvider
     {
         IEnumerable<Contact> GetNewContacts();
+        Contact NewContact(Contact newContact);
     }
 }
