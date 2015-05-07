@@ -97,6 +97,7 @@
   <ItemGroup>
     <Compile Include="Binders\SearchParameterBinder.cs" />
     <Compile Include="Binders\CatalogItemSearchCriteriaBinder.cs" />
+    <Compile Include="Controllers\MerchandisingModuleReviewController.cs" />
     <Compile Include="Controllers\MerchandisingModuleMarketingController.cs" />
     <Compile Include="Controllers\MerchandisingModuleCategoryController.cs" />
     <Compile Include="Controllers\MerchandisingModuleStoreController.cs" />
