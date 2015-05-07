@@ -1,11 +1,21 @@
 ﻿<div class="blade-static __bottom" ng-include="'Modules/$(VirtoCommerce.Core)/Scripts/common/ok-cancel.tpl.html'"></div>
 <div class="blade-content">
     <div class="blade-inner">
-        <div class="inner-block">
+        <div class="inner-block" ng-if="!blade.data.virtual">
             <div class="sub-t">Select languages</div>
             <div class="list __items">
                 <label class="list-item" ng-repeat="data in blade.currentEntities" ng-class="{'__selected': data.isDefault}">
                     <input type="checkbox" ng-disabled="data.isDefault" ng-model="data.isChecked" ng-click="selectItem(data)">
+                    <span class="switch"></span>
+                    <span class="list-name">{{data.languageCode}}</span>
+                </label>
+            </div>
+        </div>
+        <div class="inner-block" ng-if="blade.data.virtual">
+            <div class="sub-t">Default language</div>
+            <div class="list __items">
+                <label class="list-item" ng-repeat="data in blade.currentEntities">
+                    <input type="radio" ng-model="blade.currentEntity" ng-value="data.languageCode">
                     <span class="switch"></span>
                     <span class="list-name">{{data.languageCode}}</span>
                 </label>

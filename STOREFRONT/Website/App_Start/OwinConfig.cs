@@ -120,6 +120,7 @@ namespace VirtoCommerce.Web
                 // save info to the cookies
                 context.Response.Cookies.Append(StoreCookie, shop.StoreId, new CookieOptions { Expires = DateTime.UtcNow.AddDays(30) });
                 context.Response.Cookies.Append(LanguageCookie, ctx.Language, new CookieOptions { Expires = DateTime.UtcNow.AddDays(30) });
+                context.Response.Cookies.Append(CurrencyCookie, shop.Currency, new CookieOptions { Expires = DateTime.UtcNow.AddDays(30) });
 
                 if (context.Authentication.User != null && context.Authentication.User.Identity.IsAuthenticated)
                 {
@@ -178,7 +179,7 @@ namespace VirtoCommerce.Web
                 }
 
                 ctx.Cart = cart;
-                ctx.PriceLists = await commerceService.GetPriceListsAsync(ctx.Shop.Catalog, ctx.Shop.Currency, new TagQuery());
+                ctx.PriceLists = await commerceService.GetPriceListsAsync(ctx.Shop.Catalog, shop.Currency, new TagQuery());
                 ctx.Theme = commerceService.GetTheme(this.ResolveTheme(shop, context));
 
                 // update theme files
@@ -309,6 +310,11 @@ namespace VirtoCommerce.Web
                         SiteContext.Current.Shops.SingleOrDefault(
                             s => s.StoreId.Equals(storeId, StringComparison.OrdinalIgnoreCase));
                 }
+            }
+
+            if (context.Request.Cookies[CurrencyCookie] != null)
+            {
+                store.Currency = context.Request.Cookies[CurrencyCookie];
             }
 
             return store;
