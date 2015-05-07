@@ -32,5 +32,6 @@ namespace VirtoCommerce.Domain.Catalog.Model
 		public ICollection<EditorialReview> Reviews { get; set; }
 		public ICollection<ProductAssociation> Associations { get; set; }
 	    public DateTime StartDate { get; set; }
+		public DateTime? EndDate { get; set; }
 	}
 }

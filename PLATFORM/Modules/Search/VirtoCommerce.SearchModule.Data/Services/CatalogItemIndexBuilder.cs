@@ -126,8 +126,8 @@ namespace VirtoCommerce.SearchModule.Data.Services
             doc.Add(new DocumentField("__hidden", (!item.IsActive).ToString().ToLower(), new[] { IndexStore.Yes, IndexType.NotAnalyzed }));
             doc.Add(new DocumentField("code", item.Code, new[] { IndexStore.Yes, IndexType.NotAnalyzed }));
             doc.Add(new DocumentField("name", item.Name, new[] { IndexStore.Yes, IndexType.NotAnalyzed }));
-            //doc.Add(new DocumentField("startdate", item.StartDate, new[] { IndexStore.YES, IndexType.NOT_ANALYZED }));
-            //doc.Add(new DocumentField("enddate", item.P.HasValue ? item.EndDate : DateTime.MaxValue, new[] { IndexStore.YES, IndexType.NOT_ANALYZED }));
+			doc.Add(new DocumentField("startdate", item.StartDate, new[] { IndexStore.Yes, IndexType.NotAnalyzed }));
+			doc.Add(new DocumentField("enddate", item.EndDate.HasValue ? item.EndDate : DateTime.MaxValue, new[] { IndexStore.Yes, IndexType.NotAnalyzed }));
             doc.Add(new DocumentField("createddate", item.CreatedDate, new[] { IndexStore.Yes, IndexType.NotAnalyzed }));
             doc.Add(new DocumentField("lastmodifieddate", item.ModifiedDate ?? DateTime.MaxValue, new[] { IndexStore.Yes, IndexType.NotAnalyzed }));
             doc.Add(new DocumentField("catalog", item.CatalogId.ToLower(), new[] { IndexStore.Yes, IndexType.NotAnalyzed, IndexDataType.StringCollection }));

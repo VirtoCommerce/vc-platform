@@ -119,6 +119,11 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 			{
 				retVal.Id = id;
 			}
+
+			if(product.StartDate == default(DateTime))
+			{
+				product.StartDate = DateTime.UtcNow;
+			}
 			//Constant fields
 			//Only for main product
 			retVal.AvailabilityRule = (int)coreModel.AvailabilityRule.Always;
