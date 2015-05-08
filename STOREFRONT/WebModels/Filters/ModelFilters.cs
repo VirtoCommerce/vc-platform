@@ -19,8 +19,6 @@ namespace VirtoCommerce.Web.Models.Filters
 {
     public class ModelFilters
     {
-        private static SiteContext _context = HttpContext.Current.Items["vc-sitecontext"] as SiteContext;
-
         private static readonly Lazy<CultureInfo[]> _cultures = new Lazy<CultureInfo[]>(
             CreateCultures,
             LazyThreadSafetyMode.ExecutionAndPublication);
@@ -79,7 +77,7 @@ namespace VirtoCommerce.Web.Models.Filters
 
             decimal val = Convert.ToDecimal(input, CultureInfo.GetCultureInfo("en-US"));
 
-            string currency = _context.Shop.Currency;
+            string currency = SiteContext.Current.Shop.Currency;
 
             var culture = _cultures.Value.FirstOrDefault(c => new RegionInfo(c.Name).ISOCurrencySymbol.Equals(currency, StringComparison.OrdinalIgnoreCase));
 
