@@ -8,7 +8,6 @@ margin:auto;
 list-style:none;
 margin:0;
 padding:0;
-height: 100%;
 }
 
 .gridster-item {
@@ -53,11 +52,6 @@ transition-delay:50ms;
     -moz-transition-delay:50ms;
     -o-transition-delay:50ms;
     transition-delay:50ms;
-
-    background: #dee9f0;
-    border-color: #a1c0d4;
-    border-style: dashed;
-    border-width: 1px;
 }
 
 .gridster-loaded .gridster-item.gridster-item-moving {
