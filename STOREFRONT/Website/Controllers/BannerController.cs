@@ -6,12 +6,15 @@ using System.Web.Mvc;
 using VirtoCommerce.Web.Models;
 using VirtoCommerce.Web.Models.Banners;
 using VirtoCommerce.Web.Models.Convertors;
+using VirtoCommerce.Web.Models.Services;
 
 namespace VirtoCommerce.Web.Controllers
 {
     [RoutePrefix("banners")]
     public class BannerController : StoreControllerBase
     {
+        BannerTypeResolver _bannerResolver = new BannerTypeResolver();
+
         /// <summary>
         /// Shows the dynamic content
         /// </summary>
@@ -25,7 +28,7 @@ namespace VirtoCommerce.Web.Controllers
             var response = await Service.GetDynamicContentAsync(new[] { placeName });
             if (response != null && response.Items != null)
             {
-                Context.Set("banner", response.Items.First().Items.ToArray().First().AsWebModel());
+                Context.Set("banner", _bannerResolver.ResolveBannerFromContent(response.Items.First().Items.ToArray().First()));
                 return PartialView("banner", this.Context);
             }
 

@@ -65,8 +65,9 @@ namespace VirtoCommerce.Web.Models.Banners
             var service = new CommerceService();
             var context = SiteContext.Current;
 
+            var productCode = this.Properties["productCode"];
             var response =
-                Task.Run(() => service.GetProductAsync(context, this.Context["product_code"].ToString(), ItemResponseGroups.ItemSmall)).Result;
+                Task.Run(() => service.GetProductAsync(context, productCode, ItemResponseGroups.ItemSmall)).Result;
 
             Product = response;
         }
