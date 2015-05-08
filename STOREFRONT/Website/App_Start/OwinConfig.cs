@@ -114,7 +114,6 @@ namespace VirtoCommerce.Web
                 ctx.Language = language;
             }
 
-
             if (!this.IsResourceFile()) // only load settings for resource files, no need for other contents
             {
                 // save info to the cookies
@@ -126,8 +125,6 @@ namespace VirtoCommerce.Web
                 {
                     ctx.Customer = await customerService.GetCustomerAsync(
                         context.Authentication.User.Identity.Name, shop.StoreId);
-
-                    context.Response.Cookies.Delete(AnonymousCookie);
 
                     ctx.CustomerId = ctx.Customer.Id;
                 }
@@ -159,7 +156,7 @@ namespace VirtoCommerce.Web
                 ctx.Pages = new PageCollection();
                 ctx.Forms = commerceService.GetForms();
 
-                var cart = await commerceService.GetCurrentCartAsync(SiteContext.Current);
+                var cart = await commerceService.GetCartAsync(SiteContext.Current.StoreId, SiteContext.Current.CustomerId);
                 if (cart == null)
                 {
                     var dtoCart = new ApiClient.DataContracts.Cart.ShoppingCart
@@ -175,10 +172,28 @@ namespace VirtoCommerce.Web
                     };
 
                     await commerceService.CreateCartAsync(dtoCart);
-                    cart = await commerceService.GetCurrentCartAsync(SiteContext.Current);
+                    cart = await commerceService.GetCartAsync(SiteContext.Current.StoreId, SiteContext.Current.CustomerId);
                 }
 
                 ctx.Cart = cart;
+
+                if (context.Authentication.User.Identity.IsAuthenticated)
+                {
+                    var anonymousCookie = context.Request.Cookies[AnonymousCookie];
+
+                    if (anonymousCookie != null)
+                    {
+                        var anonymousCart = await commerceService.GetCartAsync(ctx.StoreId, anonymousCookie);
+
+                        if (anonymousCart != null)
+                        {
+                            ctx.Cart = await commerceService.MergeCartsAsync(anonymousCart);
+                        }
+                    }
+
+                    context.Response.Cookies.Delete(AnonymousCookie);
+                }
+
                 ctx.PriceLists = await commerceService.GetPriceListsAsync(ctx.Shop.Catalog, shop.Currency, new TagQuery());
                 ctx.Theme = commerceService.GetTheme(SiteContext.Current, this.ResolveTheme(shop, context));
 

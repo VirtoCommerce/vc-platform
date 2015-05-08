@@ -94,7 +94,7 @@ namespace VirtoCommerce.Web.Controllers
         // GET: /Account/Register
         [HttpGet]
         [AllowAnonymous]
-        [Route("register")]
+        //[Route("register")]
         public ActionResult Register()
         {
             return View("customers/register");
