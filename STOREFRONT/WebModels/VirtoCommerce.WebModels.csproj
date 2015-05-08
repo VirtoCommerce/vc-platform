@@ -174,9 +174,13 @@
     <Compile Include="Routing\Routes\StoreRoute.cs" />
     <Compile Include="Routing\SeoRoutesExtensions.cs" />
     <Compile Include="Search.cs" />
+    <Compile Include="Searching\FacetFilter.cs" />
+    <Compile Include="Searching\FacetFilterValue.cs" />
+    <Compile Include="Searching\SearchResults.cs" />
     <Compile Include="Security\AccountModels.cs" />
     <Compile Include="Security\IdentityModels.cs" />
     <Compile Include="SeoKeyword.cs" />
+    <Compile Include="Services\BannerTypeResolver.cs" />
     <Compile Include="Services\CommerceService.cs" />
     <Compile Include="Services\CustomerService.cs" />
     <Compile Include="Services\FileStorageCacheService.cs" />

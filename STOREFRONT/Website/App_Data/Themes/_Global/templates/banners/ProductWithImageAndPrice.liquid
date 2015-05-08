@@ -5,7 +5,7 @@
                 <img alt="{{ banner.productName }}" src="{{ banner.productImage }}">
             </div>
         </div>
-        <p>{{ banner.productName }}</p>
+        <p>{{ banner.product.title }}</p>
         {% include 'price' with banner.productPrice %}
     </a>
 </div>

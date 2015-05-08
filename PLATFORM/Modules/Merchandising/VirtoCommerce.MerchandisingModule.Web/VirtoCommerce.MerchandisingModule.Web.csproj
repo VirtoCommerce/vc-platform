@@ -97,6 +97,7 @@
   <ItemGroup>
     <Compile Include="Binders\SearchParameterBinder.cs" />
     <Compile Include="Binders\CatalogItemSearchCriteriaBinder.cs" />
+    <Compile Include="Controllers\MerchandisingModuleReviewController.cs" />
     <Compile Include="Controllers\MerchandisingModuleMarketingController.cs" />
     <Compile Include="Controllers\MerchandisingModuleCategoryController.cs" />
     <Compile Include="Controllers\MerchandisingModuleStoreController.cs" />
@@ -116,6 +117,7 @@
     <Compile Include="Converters\SeoInfoConverter.cs" />
     <Compile Include="Converters\StoreConverter.cs" />
     <Compile Include="Extensions\ItemServiceExtensions.cs" />
+    <Compile Include="Model\DynamicContentItemGroup.cs" />
     <Compile Include="Model\Price.cs" />
     <Compile Include="Model\Association.cs" />
     <Compile Include="Model\CategoryInfo.cs" />

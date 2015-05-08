@@ -6,120 +6,158 @@ using System.Web.Mvc;
 using VirtoCommerce.Web.Models;
 using VirtoCommerce.Web.Models.Banners;
 using VirtoCommerce.Web.Models.Convertors;
+using VirtoCommerce.Web.Models.Services;
 
 namespace VirtoCommerce.Web.Controllers
 {
     [RoutePrefix("banners")]
     public class BannerController : StoreControllerBase
     {
-		/// <summary>
-		/// Shows the dynamic content
-		/// </summary>
-		/// <param name="placeName">Name of dynamic content place.</param>
-		/// <returns>ActionResult.</returns>
+        BannerTypeResolver _bannerResolver = new BannerTypeResolver();
+
+        /// <summary>
+        /// Shows the dynamic content
+        /// </summary>
+        /// <param name="placeName">Name of dynamic content place.</param>
+        /// <returns>ActionResult.</returns>
         //[DonutOutputCache(CacheProfile = "BannerCache")]
         [Route("{placename}")]
         //[ChildActionOnly]
         public async Task<ActionResult> ShowDynamicContent(string placeName)
-		{
-            var response = await Service.GetDynamicContentAsync(new [] { placeName });
-            if (response != null)
+        {
+            var response = await Service.GetDynamicContentAsync(new[] { placeName });
+            if (response != null && response.Items != null)
             {
-                //Context.Set("banner", response.Items.First().Items.ToArray().First().AsWebModel());
+                Context.Set("banner", _bannerResolver.ResolveBannerFromContent(response.Items.First().Items.ToArray().First()));
                 return PartialView("banner", this.Context);
             }
-            
+
             return null;
         }
 
-        [HttpGet]
+        //[DonutOutputCache(CacheProfile = "BannerCache")]
+        [Route("")]
         public async Task<ActionResult> ShowDynamicContents(string[] placeNames)
         {
-            // Only one placeholder can be requested on service for now.
-            // Will be fixed.
-
-            var placeholders = new List<PlaceHolder>();
-
-            foreach (var placeName in placeNames)
+            var response = await Service.GetDynamicContentAsync(placeNames);
+            if (response != null && response.Items != null)
             {
-                var response = await Service.GetDynamicContentAsync(new[] { placeName });
-                if (response != null)
-                {
-                    var banners = new List<Banner>();
-
-                    foreach (var contentItem in response)
-                    {
-                        var banner = contentItem.AsWebModel();
-
-                        IDictionary<string, string> bannerAdditionalProperties = null;
-
-                        if (contentItem.ContentType == "ProductWithImageAndPrice")
-                        {
-                            bannerAdditionalProperties = await GetProductBannerInfoAsync(banner.Properties["productCode"]);
-                        }
-                        if (contentItem.ContentType == "CategoryWithImages")
-                        {
-                            bannerAdditionalProperties = await GetCategoryBannerInfoAsync(banner.Properties["categoryId"]);
-                        }
-
-                        if (bannerAdditionalProperties != null)
-                        {
-                            foreach (var property in bannerAdditionalProperties)
-                            {
-                                banner.Properties.Add(property);
-                            }
-                        }
-
-                        banners.Add(banner);
-                    }
-
-                    placeholders.Add(new PlaceHolder
-                    {
-                        Name = placeName,
-                        Banners = new BannerCollection(banners)
-                    });
-                }
+                Context.Set("placeholders", new PlaceHolderCollection(response.Items.AsWebModel()));
+                return PartialView("placeholders", this.Context);
             }
 
-            Context.Set("placeholders", new PlaceHolderCollection(placeholders));
-
-            return PartialView("placeholders", this.Context);
+            return null;
         }
 
-        private async Task<IDictionary<string, string>> GetProductBannerInfoAsync(string handle)
-        {
-            Dictionary<string, string> info = null;
 
-            var product = await Service.GetProductAsync(handle);
+        ///// <summary>
+        ///// Shows the dynamic content
+        ///// </summary>
+        ///// <param name="placeName">Name of dynamic content place.</param>
+        ///// <returns>ActionResult.</returns>
+        ////[DonutOutputCache(CacheProfile = "BannerCache")]
+        //[Route("{placename}")]
+        ////[ChildActionOnly]
+        //public async Task<ActionResult> ShowDynamicContent(string placeName)
+        //{
+        //    var response = await Service.GetDynamicContentAsync(new [] { placeName });
+        //    if (response != null)
+        //    {
+        //        //Context.Set("banner", response.Items.First().Items.ToArray().First().AsWebModel());
+        //        return PartialView("banner", this.Context);
+        //    }
+            
+        //    return null;
+        //}
 
-            if (product != null)
-            {
-                info = new Dictionary<string, string>();
+        //[HttpGet]
+        //public async Task<ActionResult> ShowDynamicContents(string[] placeNames)
+        //{
+        //    // Only one placeholder can be requested on service for now.
+        //    // Will be fixed.
 
-                info.Add("productName", product.Title);
-                info.Add("productImage", product.FeaturedImage.Src);
-                info.Add("productPrice", product.Price.ToString("#.00", CultureInfo.GetCultureInfo("en-US")));
-                info.Add("productUrl", product.Url);
-            }
+        //    var placeholders = new List<PlaceHolder>();
 
-            return info;
-        }
+        //    foreach (var placeName in placeNames)
+        //    {
+        //        var response = await Service.GetDynamicContentAsync(new[] { placeName });
+        //        if (response != null)
+        //        {
+        //            var banners = new List<Banner>();
 
-        private async Task<IDictionary<string, string>> GetCategoryBannerInfoAsync(string handle)
-        {
-            Dictionary<string, string> info = null;
+        //            foreach (var contentItem in response)
+        //            {
+        //                var banner = contentItem.AsWebModel();
 
-            var collection = await Service.GetCollectionByKeywordAsync(handle);
+        //                IDictionary<string, string> bannerAdditionalProperties = null;
 
-            if (collection != null)
-            {
-                info = new Dictionary<string, string>();
+        //                if (contentItem.ContentType == "ProductWithImageAndPrice")
+        //                {
+        //                    bannerAdditionalProperties = await GetProductBannerInfoAsync(banner.Properties["productCode"]);
+        //                }
+        //                if (contentItem.ContentType == "CategoryWithImages")
+        //                {
+        //                    bannerAdditionalProperties = await GetCategoryBannerInfoAsync(banner.Properties["categoryId"]);
+        //                }
 
-                info.Add("categoryName", collection.Title);
-                info.Add("categoryUrl", collection.Url);
-            }
+        //                if (bannerAdditionalProperties != null)
+        //                {
+        //                    foreach (var property in bannerAdditionalProperties)
+        //                    {
+        //                        banner.Properties.Add(property);
+        //                    }
+        //                }
 
-            return info;
-        }
+        //                banners.Add(banner);
+        //            }
+
+        //            placeholders.Add(new PlaceHolder
+        //            {
+        //                Name = placeName,
+        //                Banners = new BannerCollection(banners)
+        //            });
+        //        }
+        //    }
+
+        //    Context.Set("placeholders", new PlaceHolderCollection(placeholders));
+
+        //    return PartialView("placeholders", this.Context);
+        //}
+
+        //private async Task<IDictionary<string, string>> GetProductBannerInfoAsync(string handle)
+        //{
+        //    Dictionary<string, string> info = null;
+
+        //    var product = await Service.GetProductAsync(handle);
+
+        //    if (product != null)
+        //    {
+        //        info = new Dictionary<string, string>();
+
+        //        info.Add("productName", product.Title);
+        //        info.Add("productImage", product.FeaturedImage.Src);
+        //        info.Add("productPrice", product.Price.ToString("#.00", CultureInfo.GetCultureInfo("en-US")));
+        //        info.Add("productUrl", product.Url);
+        //    }
+
+        //    return info;
+        //}
+
+        //private async Task<IDictionary<string, string>> GetCategoryBannerInfoAsync(string handle)
+        //{
+        //    Dictionary<string, string> info = null;
+
+        //    var collection = await Service.GetCollectionByKeywordAsync(handle);
+
+        //    if (collection != null)
+        //    {
+        //        info = new Dictionary<string, string>();
+
+        //        info.Add("categoryName", collection.Title);
+        //        info.Add("categoryUrl", collection.Url);
+        //    }
+
+        //    return info;
+        //}
     }
 }

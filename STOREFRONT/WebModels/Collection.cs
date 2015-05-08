@@ -6,6 +6,7 @@ using System.Runtime.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 using DotLiquid;
+using VirtoCommerce.ApiClient.DataContracts;
 using VirtoCommerce.ApiClient.DataContracts.Search;
 using VirtoCommerce.Web.Models.Convertors;
 using VirtoCommerce.Web.Models.Extensions;
@@ -142,51 +143,34 @@ namespace VirtoCommerce.Web.Models
             }
 
             var service = new CommerceService();
-            var storeId = SiteContext.Current.StoreId;
-            var language = SiteContext.Current.Language;
-            var priceLists = SiteContext.Current.PriceLists;
+            var context = SiteContext.Current;
 
-            var response =
-                Task.Run(() => service.GetProductsAsync(
-                    storeId,
-                    language,
-                    priceLists,
-                    this.Id,
-                    string.IsNullOrEmpty(this.SortBy) ? this.DefaultSortBy : this.SortBy, from, pageSize.Value, filters)).Result;
+            var sortProperty = String.Empty;
+            var sortDirection = "ascending";
 
-            this.AllProductsCount = response.TotalCount;
-            var allIds = response.Items.ToArray().GetAllVariationIds();
-
-            var prices =
-                Task.Run(() => service.GetProductPricesAsync(priceLists, allIds.ToArray())).Result;
-
-            var promoEntries = new List<ProductPromoEntry>();
-            foreach (var item in response.Items)
+            var sort = string.IsNullOrEmpty(this.SortBy) ? this.DefaultSortBy : this.SortBy;
+            if (sort.Equals("manual"))
             {
-                var price = prices.FirstOrDefault(p => p.ProductId == item.Id);
-                promoEntries.Add(new ProductPromoEntry
+                sortProperty = "position";
+            }
+            else if (sort.Equals("best-selling"))
+            {
+                sortProperty = "position";
+            }
+            else
+            {
+                var sortArray = sort.Split(new[] { '-' });
+                if (sortArray.Length > 1)
                 {
-                    CatalogId = item.CatalogId,
-                    Code = item.Code,
-                    Price = price != null ? price.List : 0M,
-                    ProductId = item.Id,
-                    Quantity = 1
-                });
+                    sortProperty = sortArray[0];
+                    sortDirection = sortArray[1];
+                }
             }
 
-            var promoContext = new PromotionEvaluationContext
-            {
-                IsEveryone = true,
-                PromoEntries = promoEntries,
-                StoreId = SiteContext.Current.StoreId
-            };
-
-            var rewards = Task.Run(() => service.GetPromoRewardsAsync(promoContext)).Result;
-
-            //var inventories =
-            //    Task.Run(() => service.GetItemInventoriesAsync(allIds.ToArray())).Result;
-
-            var productCollection = new ItemCollection<Product>(response.Items.Select(i => i.AsWebModel(prices, rewards, this/*, inventories*/))) { TotalCount = response.TotalCount};
+            var searchQuery = new BrowseQuery() { SortProperty = sortProperty, SortDirection = sortDirection, Filters = filters, Skip = from, Take = pageSize.Value, Outline = this.Id };
+            var response =
+                Task.Run(() => service.SearchAsync<Product>(context, 
+                    searchQuery, this, responseGroups: ItemResponseGroups.ItemSmall | ItemResponseGroups.Variations)).Result;
 
             // populate tags with facets returned
             if (response.Facets != null && response.Facets.Any())
@@ -195,7 +179,7 @@ namespace VirtoCommerce.Web.Models
                 this.Tags = new ItemCollection<Tag>(values.ToArray());
             }
 
-            this.Products = productCollection;
+            this.Products = response;
         }
 
         public override string ToString()

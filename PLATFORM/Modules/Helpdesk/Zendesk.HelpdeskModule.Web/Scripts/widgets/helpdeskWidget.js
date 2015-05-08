@@ -8,7 +8,5 @@
         });
     }
 
-    $scope.showWidget = $scope.blade.currentEntity.id == 'Zendesk.Helpdesk';
-
     $scope.widget.refresh();
 }]);

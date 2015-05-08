@@ -26,6 +26,13 @@ namespace VirtoCommerce.Web.Models.Convertors
             return dc;
         }
 
+        public static T AsWebModel<T>(this Data.DynamicContentItem item) where T : Banner, new()
+        {
+            var dc = new T();
+            dc.InjectFrom(item);
+            return dc;
+        }
+
         public static IEnumerable<Banner> AsWebModel(this IEnumerable<Data.DynamicContentItem> items)
         {
             return items.Select(x => x.AsWebModel());

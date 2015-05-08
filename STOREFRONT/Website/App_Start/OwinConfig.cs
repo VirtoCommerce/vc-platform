@@ -99,7 +99,7 @@ namespace VirtoCommerce.Web
             }
 
             ctx.Shop = shop;
-            ctx.Themes = await commerceService.GetThemesAsync();
+            ctx.Themes = await commerceService.GetThemesAsync(SiteContext.Current);
 
             // if language is not set, set it to default shop language
             if (String.IsNullOrEmpty(ctx.Language))
@@ -153,13 +153,13 @@ namespace VirtoCommerce.Web
                 // TODO: detect if shop exists, user has access
                 // TODO: store anonymous customer id in cookie and update and merge cart once customer is logged in
 
-                ctx.Linklists = await commerceService.GetListsAsync();
+                ctx.Linklists = await commerceService.GetListsAsync(SiteContext.Current);
                 ctx.PageTitle = ctx.Shop.Name;
-                ctx.Collections = await commerceService.GetCollectionsAsync();
+                ctx.Collections = await commerceService.GetCollectionsAsync(SiteContext.Current);
                 ctx.Pages = new PageCollection();
                 ctx.Forms = commerceService.GetForms();
 
-                var cart = await commerceService.GetCurrentCartAsync();
+                var cart = await commerceService.GetCurrentCartAsync(SiteContext.Current);
                 if (cart == null)
                 {
                     var dtoCart = new ApiClient.DataContracts.Cart.ShoppingCart
@@ -175,19 +175,19 @@ namespace VirtoCommerce.Web
                     };
 
                     await commerceService.CreateCartAsync(dtoCart);
-                    cart = await commerceService.GetCurrentCartAsync();
+                    cart = await commerceService.GetCurrentCartAsync(SiteContext.Current);
                 }
 
                 ctx.Cart = cart;
                 ctx.PriceLists = await commerceService.GetPriceListsAsync(ctx.Shop.Catalog, shop.Currency, new TagQuery());
-                ctx.Theme = commerceService.GetTheme(this.ResolveTheme(shop, context));
+                ctx.Theme = commerceService.GetTheme(SiteContext.Current, this.ResolveTheme(shop, context));
 
                 // update theme files
-                await commerceService.UpdateThemeCacheAsync();
+                await commerceService.UpdateThemeCacheAsync(SiteContext.Current);
             }
             else
             {
-                ctx.Theme = commerceService.GetTheme(this.ResolveTheme(shop, context));
+                ctx.Theme = commerceService.GetTheme(SiteContext.Current, this.ResolveTheme(shop, context));
             }
 
             ctx.Settings = commerceService.GetSettings(
