@@ -46,9 +46,7 @@ namespace GoogleShopping.MerchantModule.Web.Converters
         {
             var retVal = new moduleModel.CatalogProduct();
             retVal.InjectFrom(product);
-
-            retVal.StartDate = DateTime.UtcNow;
-            
+      
             return retVal;
         }
     }

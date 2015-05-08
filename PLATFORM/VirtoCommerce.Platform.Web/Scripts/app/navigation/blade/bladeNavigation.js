@@ -26,13 +26,15 @@ angular.module('platformWebApp')
             var blade = $(element).parent('.blade');
             var offset = parseInt(blade.offset().left + mainContent.scrollLeft() + blade.width() + 125 - mainContent[0].clientWidth);
 
-            blade.css('margin-left', '-' + blade.width() + 'px').addClass('__animate');
+            if (!scope.blade.disableOpenAnimation) {
+                blade.css('margin-left', '-' + blade.width() + 'px').addClass('__animate');
 
-            setTimeout(function () {
-                blade.animate({ 'margin-left': 0 }, 250, function () {
-                    blade.removeAttr('style').removeClass('__animate');
-                });
-            }, 0);
+                setTimeout(function () {
+                    blade.animate({ 'margin-left': 0 }, 250, function () {
+                        blade.removeAttr('style').removeClass('__animate');
+                    });
+                }, 0);
+            }
 
             $timeout(function () {
 

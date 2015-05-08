@@ -10,6 +10,6 @@ namespace VirtoCommerce.Platform.Data.Model
         public string SecretKey { get; set; }
         public bool IsActive { get; set; }
 
-        public AccountEntity Account { get; set; }
+		public virtual AccountEntity Account { get; set; }
     }
 }

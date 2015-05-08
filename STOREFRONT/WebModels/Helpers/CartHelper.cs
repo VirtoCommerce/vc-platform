@@ -30,7 +30,7 @@ namespace VirtoCommerce.Web.Models.Helpers
         #region Public Methods and Operators
         public async Task<LineItem> AddAsync(string variantId)
         {
-            var product = await _commerceService.GetProductAsync(variantId);
+            var product = await _commerceService.GetProductAsync(SiteContext.Current, variantId);
 
             var lineItem = product.AsLineItem();
 

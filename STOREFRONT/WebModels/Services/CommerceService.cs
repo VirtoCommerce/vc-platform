@@ -19,6 +19,7 @@ using VirtoCommerce.Web.Models.Convertors;
 using VirtoCommerce.Web.Models.Extensions;
 using VirtoCommerce.Web.Models.Helpers;
 using VirtoCommerce.Web.Models.Lists;
+using VirtoCommerce.Web.Models.Searching;
 using VirtoCommerce.Web.Views.Engines.Liquid;
 using VirtoCommerce.ApiClient.DataContracts.Cart;
 using VirtoCommerce.ApiClient.DataContracts.Marketing;
@@ -48,7 +49,6 @@ namespace VirtoCommerce.Web.Models.Services
         private readonly string _themesCacheStoragePath;
         private readonly string _pagesCacheStoragePath;
         private readonly MarketingClient _marketingClient;
-        private readonly ContentClient _contentClient;
 
         private static readonly object _LockObject = new object();
         #endregion
@@ -68,7 +68,6 @@ namespace VirtoCommerce.Web.Models.Services
             this._themeClient = ClientContext.Clients.CreateThemeClient();
             this._pageClient = ClientContext.Clients.CreatePageClient();
             this._reviewsClient = ClientContext.Clients.CreateReviewsClient();
-            this._contentClient = ClientContext.Clients.CreateDefaultContentClient();
 
             _themesCacheStoragePath = ConfigurationManager.AppSettings["ThemeCacheFolder"];
             _pagesCacheStoragePath = ConfigurationManager.AppSettings["PageCacheFolder"];
@@ -107,13 +106,13 @@ namespace VirtoCommerce.Web.Models.Services
             return webReviews;
         }
 
-        public async Task<Collection> GetAllCollectionAsync(string sort = "")
+        public async Task<Collection> GetAllCollectionAsync(SiteContext context, string sort = "")
         {
-            var collections = await this.GetCollectionsAsync(sort);
+            var collections = await this.GetCollectionsAsync(context, sort);
             return collections.First();
         }
 
-        public async Task<Collection> GetCollectionAsync(string handle, string sort = "")
+        public async Task<Collection> GetCollectionAsync(SiteContext context, string handle, string sort = "")
         {
             if (handle == "undefined")
             {
@@ -123,29 +122,29 @@ namespace VirtoCommerce.Web.Models.Services
             var category =
                 await
                     this._browseClient.GetCategoryByCodeAsync(
-                        SiteContext.Current.StoreId,
-                        SiteContext.Current.Language,
+                        context.StoreId,
+                        context.Language,
                         handle);
 
             return this.CreateCollection(category, sort);
         }
 
-        public async Task<Collection> GetCollectionByKeywordAsync(string keyword, string sort = "")
+        public async Task<Collection> GetCollectionByKeywordAsync(SiteContext context, string keyword, string sort = "")
         {
             var category =
                 await
                     this._browseClient.GetCategoryByKeywordAsync(
-                        SiteContext.Current.StoreId,
-                        SiteContext.Current.Language,
+                        context.StoreId,
+                        context.Language,
                         keyword);
 
             return this.CreateCollection(category, sort);
         }
 
-        public async Task<Collections> GetCollectionsAsync(string sort = "")
+        public async Task<Collections> GetCollectionsAsync(SiteContext context, string sort = "")
         {
             var categories =
-                await this._browseClient.GetCategoriesAsync(SiteContext.Current.StoreId, SiteContext.Current.Language);
+                await this._browseClient.GetCategoriesAsync(context.StoreId, context.Language);
 
             var collections = new Collections(
                 categories.Items.Select(category => this.CreateCollection(category, sort)));
@@ -181,22 +180,48 @@ namespace VirtoCommerce.Web.Models.Services
             return dtoCart != null ? dtoCart.AsWebModel() : null;
         }
 
+        public async Task<Cart> MergeCartsAsync(Cart anonymousCart)
+        {
+            var customerCart = SiteContext.Current.Cart;
+
+            foreach (var anonymousLineItem in anonymousCart.Items)
+            {
+                var customerLineItem = customerCart.Items
+                    .FirstOrDefault(i => i.Handle == anonymousLineItem.Handle);
+
+                if (customerLineItem != null)
+                {
+                    customerLineItem.Quantity += anonymousLineItem.Quantity;
+                }
+                else
+                {
+                    anonymousLineItem.Id = null;
+                    customerCart.Items.Add(anonymousLineItem);
+                }
+            }
+
+            var cart = await SaveChangesAsync(customerCart);
+            await DeleteCartAsync(anonymousCart.Key);
+
+            return cart;
+        }
+
         public async Task DeleteCartAsync(string cartId)
         {
             await _cartClient.DeleteCartAsync(new[] { cartId });
         }
 
-        public async Task<Cart> GetCurrentCartAsync()
+        public async Task<Cart> GetCartAsync(string storeId, string customerId)
         {
-            var cart = await this._cartClient.GetCartAsync(SiteContext.Current.StoreId, SiteContext.Current.CustomerId);
+            var cart = await this._cartClient.GetCartAsync(storeId, customerId);
             return cart != null ? cart.AsWebModel() : null;
         }
 
-        public async Task<Checkout> GetCheckoutAsync()
+        public async Task<Checkout> GetCheckoutAsync(SiteContext context)
         {
             var checkout = new Checkout();
 
-            var dtoCart = await _cartClient.GetCartAsync(SiteContext.Current.StoreId, SiteContext.Current.CustomerId);
+            var dtoCart = await _cartClient.GetCartAsync(context.StoreId, context.CustomerId);
             if (dtoCart != null)
             {
                 if (dtoCart.Addresses != null)
@@ -220,7 +245,7 @@ namespace VirtoCommerce.Web.Models.Services
                     // TODO: Discounts
                     // TODO: GiftCards
 
-                    checkout.Email = SiteContext.Current.Customer != null ? SiteContext.Current.Customer.Email : null;
+                    checkout.Email = context.Customer != null ? context.Customer.Email : null;
                     checkout.GuestLogin = dtoCart.IsAnonymous;
                     checkout.Id = dtoCart.Id;
 
@@ -295,9 +320,9 @@ namespace VirtoCommerce.Web.Models.Services
             return checkout;
         }
 
-        public async Task UpdateCheckoutAsync(Checkout checkout)
+        public async Task UpdateCheckoutAsync(SiteContext context, Checkout checkout)
         {
-            var dtoCart = await _cartClient.GetCartAsync(SiteContext.Current.StoreId, SiteContext.Current.CustomerId);
+            var dtoCart = await _cartClient.GetCartAsync(context.StoreId, context.CustomerId);
 
             dtoCart.Addresses = new List<VirtoCommerce.ApiClient.DataContracts.Cart.Address>();
 
@@ -342,7 +367,7 @@ namespace VirtoCommerce.Web.Models.Services
                 });
             }
 
-            dtoCart.StoreId = SiteContext.Current.StoreId;
+            dtoCart.StoreId = context.StoreId;
 
             dtoCart.ShippingTotal = checkout.ShippingPrice;
             dtoCart.SubTotal = checkout.SubtotalPrice;
@@ -352,9 +377,9 @@ namespace VirtoCommerce.Web.Models.Services
             await _cartClient.UpdateCurrentCartAsync(dtoCart);
         }
 
-        public async Task<CustomerOrder> CreateOrderAsync(Checkout checkout)
+        public async Task<CustomerOrder> CreateOrderAsync(SiteContext context, Checkout checkout)
         {
-            var dtoCart = await _cartClient.GetCartAsync(SiteContext.Current.StoreId, SiteContext.Current.CustomerId);
+            var dtoCart = await _cartClient.GetCartAsync(context.StoreId, context.CustomerId);
             dtoCart.Currency = checkout.Currency;
             dtoCart.CustomerId = checkout.CustomerId;
 
@@ -418,9 +443,9 @@ namespace VirtoCommerce.Web.Models.Services
             return order.AsWebModel();
         }
 
-        public SubmitForm GetForm(string id)
+        public SubmitForm GetForm(SiteContext context, string id)
         {
-            var forms = SiteContext.Current.Forms;
+            var forms = context.Forms;
 
             var form = forms.SingleOrDefault(f => f.Id == id);
             return form;
@@ -498,26 +523,26 @@ namespace VirtoCommerce.Web.Models.Services
             return allForms;
         }
 
-        public async Task<LinkLists> GetListsAsync()
+        public async Task<LinkLists> GetListsAsync(SiteContext context)
         {
-            var store = SiteContext.Current.StoreId;
-            var language = SiteContext.Current.Language;
+            var store = context.StoreId;
+            var language = context.Language;
             var response = await this._listClient.GetLinkListsAsync(store);
             return response == null ? null : response.Where(r => r.Language == language).AsWebModel();
         }
 
-        public async Task<Product> GetProductAsync(string handle)
+        public async Task<Product> GetProductAsync(SiteContext context, string handle, ItemResponseGroups responseGroup = ItemResponseGroups.ItemLarge)
         {
             var product =
                 await
                     this._browseClient.GetProductByCodeAsync(
-                        SiteContext.Current.StoreId,
-                        SiteContext.Current.Language,
+                        context.StoreId,
+                        context.Language,
                         handle,
-                        ItemResponseGroups.ItemLarge);
+                        responseGroup);
 
             var variationIds = product.GetAllVariationIds();
-            var prices = await this.GetProductPricesAsync(SiteContext.Current.PriceLists, variationIds);
+            var prices = await this.GetProductPricesAsync(context.PriceLists, variationIds);
 
             var price = prices.FirstOrDefault(p => p.ProductId == product.Code);
             if (product.Variations != null)
@@ -530,9 +555,9 @@ namespace VirtoCommerce.Web.Models.Services
 
             var promoContext = new PromotionEvaluationContext
             {
-                CustomerId = SiteContext.Current.CustomerId,
-                CartTotal = SiteContext.Current.Cart.TotalPrice,
-                Currency = SiteContext.Current.Shop.Currency,
+                CustomerId = context.CustomerId,
+                CartTotal = context.Cart.TotalPrice,
+                Currency = context.Shop.Currency,
                 PromoEntries = new List<ProductPromoEntry>
                 {
                     new ProductPromoEntry
@@ -543,8 +568,8 @@ namespace VirtoCommerce.Web.Models.Services
                         Quantity = 1
                     }
                 },
-                IsRegisteredUser = SiteContext.Current.Customer != null,
-                StoreId = SiteContext.Current.StoreId
+                IsRegisteredUser = context.Customer != null,
+                StoreId = context.StoreId
             };
 
             var rewards = await _marketingClient.GetPromotionRewardsAsync(promoContext);
@@ -554,21 +579,21 @@ namespace VirtoCommerce.Web.Models.Services
             return product.AsWebModel(prices, rewards/*, inventories*/);
         }
 
-        public async Task<Product> GetProductByKeywordAsync(string keyword)
+        public async Task<Product> GetProductByKeywordAsync(SiteContext context, string keyword, ItemResponseGroups responseGroup = ItemResponseGroups.ItemLarge)
         {
             var product =
                 await
                     this._browseClient.GetProductByKeywordAsync(
-                        SiteContext.Current.StoreId,
-                        SiteContext.Current.Language,
+                        context.StoreId,
+                        context.Language,
                         keyword,
-                        ItemResponseGroups.ItemLarge);
+                        responseGroup);
 
             if (product == null)
                 return null;
 
             var variationIds = product.GetAllVariationIds();
-            var prices = await this.GetProductPricesAsync(SiteContext.Current.PriceLists, variationIds);
+            var prices = await this.GetProductPricesAsync(context.PriceLists, variationIds);
 
             var price = prices.FirstOrDefault(p => p.ProductId == product.Code);
             if (product.Variations != null)
@@ -581,9 +606,9 @@ namespace VirtoCommerce.Web.Models.Services
 
             var promoContext = new PromotionEvaluationContext
             {
-                CustomerId = SiteContext.Current.CustomerId,
-                CartTotal = SiteContext.Current.Cart.TotalPrice,
-                Currency = SiteContext.Current.Shop.Currency,
+                CustomerId = context.CustomerId,
+                CartTotal = context.Cart.TotalPrice,
+                Currency = context.Shop.Currency,
                 PromoEntries = new List<ProductPromoEntry>
                 {
                     new ProductPromoEntry
@@ -594,8 +619,8 @@ namespace VirtoCommerce.Web.Models.Services
                         Quantity = 1
                     }
                 },
-                IsRegisteredUser = SiteContext.Current.Customer != null,
-                StoreId = SiteContext.Current.StoreId
+                IsRegisteredUser = context.Customer != null,
+                StoreId = context.StoreId
             };
 
             var rewards = await _marketingClient.GetPromotionRewardsAsync(promoContext);
@@ -603,58 +628,6 @@ namespace VirtoCommerce.Web.Models.Services
             //var inventories = await this.GetItemInventoriesAsync(variationIds);
 
             return product.AsWebModel(prices, rewards/*, inventories*/);
-        }
-
-        public async Task<ProductSearchResult> GetProductsAsync(
-            string storeId,
-            string language,
-            string[] priceLists,
-            string collectionId,
-            string sort,
-            int skip,
-            int take,
-            Dictionary<string, string[]> filters = null)
-        {
-            // determine sort
-            var sortProperty = String.Empty;
-            var sortDirection = "ascending";
-
-            if (sort.Equals("manual"))
-            {
-                sortProperty = "position";
-            }
-            else if (sort.Equals("best-selling"))
-            {
-                sortProperty = "position";
-            }
-            else
-            {
-                var sortArray = sort.Split(new[] { '-' });
-                if (sortArray.Length > 1)
-                {
-                    sortProperty = sortArray[0];
-                    sortDirection = sortArray[1];
-                }
-            }
-
-            var response =
-                await
-                    this._browseClient.GetProductsAsync(
-                        storeId,
-                        language,
-                        new BrowseQuery
-                        {
-                            Outline = collectionId,
-                            Skip = skip,
-                            Take = take,
-                            SortProperty = sortProperty,
-                            SortDirection = sortDirection,
-                            Filters = filters,
-                            PriceLists = priceLists
-                        },
-                        ItemResponseGroups.ItemSmall | ItemResponseGroups.Variations).ConfigureAwait(false);
-
-            return response;
         }
 
         public async Task<ItemInventory> GetItemInventoryAsync(string itemId)
@@ -735,10 +708,10 @@ namespace VirtoCommerce.Web.Models.Services
             return new Settings(parameters, defaultValue);
         }
 
-        public JObject GetLocale(bool loadDefault = false)
+        public JObject GetLocale(SiteContext context, bool loadDefault = false)
         {
-            var theme = SiteContext.Current.Theme;
-            var language = SiteContext.Current.Language;
+            var theme = context.Theme;
+            var language = context.Language;
             var contextKey = String.Format("vc-localizations-{0}-{1}-{2}", theme, language, loadDefault);
             var value = HttpRuntime.Cache.Get(contextKey);
 
@@ -792,11 +765,8 @@ namespace VirtoCommerce.Web.Models.Services
             return model.AsWebModel();
         }
 
-        public async Task<ItemCollection<object>> SearchAsync(SiteContext context, string type, string terms, int skip, int? take)
+        public async Task<SearchResults<T>> SearchAsync<T>(SiteContext context, BrowseQuery query, Collection parentCollection = null, ItemResponseGroups? responseGroups = ItemResponseGroups.ItemMedium)
         {
-            var pageSize = take ?? 20;
-
-            var query = new BrowseQuery { Search = terms, Skip = skip, Take = pageSize };
             var priceLists = context.PriceLists;
 
             var response =
@@ -805,7 +775,7 @@ namespace VirtoCommerce.Web.Models.Services
                         context.StoreId,
                         context.Language,
                         query,
-                        ItemResponseGroups.ItemMedium);
+                        responseGroups);
 
             var allIds = response.Items.ToArray().GetAllVariationIds();
             var prices = await GetProductPricesAsync(priceLists, allIds.ToArray());
@@ -845,12 +815,15 @@ namespace VirtoCommerce.Web.Models.Services
 
             //var inventories = await this.GetItemInventoriesAsync(allIds);
 
-            var result = new ItemCollection<object>(response.Items.Select(i => i.AsWebModel(prices, rewards/*, inventories*/))) { TotalCount = response.TotalCount };
+            var result = new SearchResults<T>(response.Items.Select(i => i.AsWebModel(prices, rewards, parentCollection/*, inventories*/)).OfType<T>()) { TotalCount = response.TotalCount };
+
+            if (response.Facets != null && response.Facets.Any())
+                result.Facets = response.Facets.Select(x => x.AsWebModel()).ToArray();
 
             return result;
         }
 
-        public Theme GetTheme(string themeName)
+        public Theme GetTheme(SiteContext context, string themeName)
         {
             var id = themeName;
             var name = themeName;
@@ -860,26 +833,26 @@ namespace VirtoCommerce.Web.Models.Services
             }
 
             Theme currentTheme = null;
-            if (SiteContext.Current.Themes != null)
+            if (context.Themes != null)
             {
-                currentTheme = SiteContext.Current.Themes.SingleOrDefault(x => x.Id.Equals(themeName, StringComparison.OrdinalIgnoreCase));
+                currentTheme = context.Themes.SingleOrDefault(x => x.Id.Equals(themeName, StringComparison.OrdinalIgnoreCase));
             }
 
             return currentTheme ?? new Theme { Id = id, Name = name, Role = "main", Path = id };
         }
 
-        public async Task<Theme[]> GetThemesAsync()
+        public async Task<Theme[]> GetThemesAsync(SiteContext context)
         {
-            var store = SiteContext.Current.StoreId;
+            var store = context.StoreId;
             var response = await this._themeClient.GetThemesAsync(store);
             return response.AsWebModel();
         }
 
-        public async Task UpdateThemeCacheAsync()
+        public async Task UpdateThemeCacheAsync(SiteContext context)
         {
-            var store = SiteContext.Current.StoreId;
-            var theme = SiteContext.Current.Theme.Name;
-            var themePath = String.Format("{0}\\{1}", _themesCacheStoragePath, SiteContext.Current.Theme.Path);
+            var store = context.StoreId;
+            var theme = context.Theme.Name;
+            var themePath = String.Format("{0}\\{1}", _themesCacheStoragePath, context.Theme.Path);
             var themeStorageClient = new FileStorageCacheService(HostingEnvironment.MapPath(themePath));
             var pagesStorageClient = new FileStorageCacheService(HostingEnvironment.MapPath(String.Format("~/App_Data/Pages/{0}", store)));
 
@@ -921,7 +894,7 @@ namespace VirtoCommerce.Web.Models.Services
 
         public async Task<ResponseCollection<DynamicContentItemGroup>> GetDynamicContentAsync(string[] placeholders)
         {
-            return await _contentClient.GetDynamicContentAsync(placeholders, null);
+            return await _marketingClient.GetDynamicContentAsync(placeholders, new TagQuery());
         }
         #endregion
 

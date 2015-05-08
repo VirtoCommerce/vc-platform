@@ -15,6 +15,7 @@ using Microsoft.Practices.Unity;
 using Owin;
 using VirtoCommerce.Platform.Core.Asset;
 using VirtoCommerce.Platform.Core.Caching;
+using VirtoCommerce.Platform.Core.ChangeLog;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Core.Notification;
@@ -22,6 +23,7 @@ using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Settings;
 using VirtoCommerce.Platform.Data.Asset;
 using VirtoCommerce.Platform.Data.Caching;
+using VirtoCommerce.Platform.Data.ChangeLog;
 using VirtoCommerce.Platform.Data.Infrastructure.Interceptors;
 using VirtoCommerce.Platform.Data.Notification;
 using VirtoCommerce.Platform.Data.Packaging;
@@ -129,6 +131,7 @@ namespace VirtoCommerce.Platform.Web
 
             Func<IPlatformRepository> platformRepositoryFactory = () => new PlatformRepository(connectionStringName, new AuditableInterceptor(), new EntityPrimaryKeyGeneratorInterceptor());
             container.RegisterType<IPlatformRepository>(new InjectionFactory(c => platformRepositoryFactory()));
+			container.RegisterInstance<Func<IPlatformRepository>>(platformRepositoryFactory);
             var manifestProvider = container.Resolve<IModuleManifestProvider>();
 
             #region Caching
@@ -198,9 +201,13 @@ namespace VirtoCommerce.Platform.Web
 
             #endregion
 
-            #region Security
+			#region ChangeLogging
+			var changeLogService = new ChangeLogService(platformRepositoryFactory);
+			container.RegisterInstance<IChangeLogService>(changeLogService);
+			#endregion
+			#region Security
 
-            var permissionService = new PermissionService(platformRepositoryFactory, manifestProvider, cacheManager);
+			var permissionService = new PermissionService(platformRepositoryFactory, manifestProvider, cacheManager);
             container.RegisterInstance<IPermissionService>(permissionService);
 
             container.RegisterType<IRoleManagementService, RoleManagementService>(new ContainerControlledLifetimeManager());

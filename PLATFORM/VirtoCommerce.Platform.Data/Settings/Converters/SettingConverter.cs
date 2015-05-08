@@ -90,7 +90,7 @@ namespace VirtoCommerce.Platform.Data.Settings.Converters
             }
 
             retVal.SettingValues = new ObservableCollection<SettingValueEntity>(valueEntities.Select(x => x.ToEntity(setting.ValueType)));
-
+		
             return retVal;
         }
 
@@ -108,7 +108,7 @@ namespace VirtoCommerce.Platform.Data.Settings.Converters
             {
                 var comparer = AnonymousComparer.Create((SettingValueEntity x) => x.ToString(CultureInfo.InvariantCulture));
                 source.SettingValues.Patch(target.SettingValues, comparer, (sourceSetting, targetSetting) => { });
-            }
+			}
         }
 
         private static SettingValueType ConvertToSettingValueType(string valueType)
@@ -150,6 +150,10 @@ namespace VirtoCommerce.Platform.Data.Settings.Converters
             {
                 retVal = SettingValueType.Decimal;
             }
+			else if (valueType == typeof(DateTime))
+			{
+				retVal = SettingValueType.DateTime;
+			}
             return retVal;
         }
 

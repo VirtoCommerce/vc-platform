@@ -132,29 +132,12 @@
                     tileDefaults['mainTilesY' + x.position] = x.position[0];
                     tileDefaults['mainTilesX' + x.position] = x.position[1];
                 });
-                
+
                 $scope.$storage = $localStorage.$default(tileDefaults);
-                
+
                 $scope.gridsterOpts = {
-                    //columns: 6, // the width of the grid, in columns
-                    colWidth: '130', // can be an integer or 'auto'.  'auto' uses the pixel width of the element divided by 'columns'
-                    //margins: [10, 10], // the pixel distance between each widget
-                    //defaultSizeX: 2, // the default width of a gridster item, if not specified
-                    //defaultSizeY: 1, // the default height of a gridster item, if not specified
-                    //mobileBreakPoint: 600, // if the screen is not wider that this, remove the grid layout and stack the items
+                    columns: 6, // the width of the grid, in columns
                     minRows: 4, // the minimum height of the grid, in rows
-                    maxRows: 10,
-                    resizable: { enabled: false }
-                    //draggable: {
-                    //    enabled: true, // whether dragging items is supported
-                    //    handle: '.my-class', // optional selector for resize handle
-                    //    //start: function (event, uiWidget, $element) {
-                    //    //}, // optional callback fired when drag is started,
-                    //    //drag: function (event, uiWidget, $element) {
-                    //    //}, // optional callback fired when item is moved,
-                    //    //stop: function (event, uiWidget, $element) {
-                    //    //} // optional callback fired when item is finished dragging
-                    //}
                 };
             }
         }

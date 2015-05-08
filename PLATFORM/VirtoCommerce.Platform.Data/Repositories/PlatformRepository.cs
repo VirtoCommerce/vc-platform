@@ -29,10 +29,21 @@ namespace VirtoCommerce.Platform.Data.Repositories
         {
             modelBuilder.Conventions.Remove<PluralizingTableNameConvention>();
 
-            #region Settings
+			#region Change logging
+			modelBuilder.Entity<OperationLogEntity>().HasKey(x => x.Id)
+						.Property(x => x.Id);
+			modelBuilder.Entity<OperationLogEntity>().ToTable("PlatformOperationLog");
+			#endregion
 
-            modelBuilder.Entity<SettingEntity>("PlatformSetting", "Id");
-            modelBuilder.Entity<SettingValueEntity>("PlatformSettingValue", "Id");
+            #region Settings
+			modelBuilder.Entity<SettingEntity>("PlatformSetting", "Id");
+			modelBuilder.Entity<SettingValueEntity>("PlatformSettingValue", "Id");
+			//modelBuilder.Entity<SettingEntity>().HasKey(x => x.Id)
+			//				.Property(x => x.Id);
+			//modelBuilder.Entity<SettingEntity>().ToTable("PlatformSetting");
+			//modelBuilder.Entity<SettingValueEntity>().HasKey(x => x.Id)
+			//				.Property(x => x.Id);
+			//modelBuilder.Entity<SettingValueEntity>().ToTable("PlatformSettingValue");
 
             modelBuilder.Entity<SettingValueEntity>()
                 .HasRequired(x => x.Setting)
@@ -108,6 +119,7 @@ namespace VirtoCommerce.Platform.Data.Repositories
         public IQueryable<PermissionEntity> Permissions { get { return GetAsQueryable<PermissionEntity>(); } }
         public IQueryable<RoleAssignmentEntity> RoleAssignments { get { return GetAsQueryable<RoleAssignmentEntity>(); } }
         public IQueryable<RolePermissionEntity> RolePermissions { get { return GetAsQueryable<RolePermissionEntity>(); } }
+		public IQueryable<OperationLogEntity> OperationLogs { get { return GetAsQueryable<OperationLogEntity>(); } }
 
         public AccountEntity GetAccountByName(string userName, UserDetails detailsLevel)
         {
@@ -124,5 +136,7 @@ namespace VirtoCommerce.Platform.Data.Repositories
         }
 
         #endregion
-    }
+
+		
+	}
 }

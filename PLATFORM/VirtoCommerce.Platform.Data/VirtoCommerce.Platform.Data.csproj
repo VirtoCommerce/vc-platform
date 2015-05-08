@@ -129,6 +129,8 @@
     <Compile Include="Caching\CacheEntry.cs" />
     <Compile Include="Caching\HttpCacheProvider.cs" />
     <Compile Include="Caching\InMemoryCacheProvider.cs" />
+    <Compile Include="ChangeLog\ChangeLogConverter.cs" />
+    <Compile Include="ChangeLog\ChangeLogService.cs" />
     <Compile Include="Common\ConnectionHelper.cs" />
     <Compile Include="Common\ConventionInjections\CloneInjection.cs" />
     <Compile Include="Common\ConventionInjections\IgnorePropertiesInjection.cs" />
@@ -140,11 +142,16 @@
     <Compile Include="Infrastructure\DbMigrator.cs" />
     <Compile Include="Infrastructure\DbModelBuilderExtensions.cs" />
     <Compile Include="Infrastructure\EFRepositoryBase.cs" />
-    <Compile Include="Infrastructure\Interceptors\AuditableInterceptor.cs" />
+    <Compile Include="Infrastructure\Interceptors\AuditableInterceptor.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Infrastructure\Interceptors\ChangeInterceptor.cs" />
     <Compile Include="Infrastructure\Interceptors\EntityPrimaryKeyGeneratorInterceptor.cs" />
     <Compile Include="Infrastructure\Interceptors\IInterceptor.cs" />
     <Compile Include="Infrastructure\Interceptors\InterceptionContext.cs" />
+    <Compile Include="Infrastructure\Interceptors\ChangeLogInterceptor.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Infrastructure\Interceptors\TypeInterceptor.cs" />
     <Compile Include="Infrastructure\ParrentAttribute.cs" />
     <Compile Include="Infrastructure\ServiceBase.cs" />
@@ -153,6 +160,7 @@
     <Compile Include="Model\AccountState.cs" />
     <Compile Include="Model\ApiAccountEntity.cs" />
     <Compile Include="Model\ApiAccountType.cs" />
+    <Compile Include="Model\OperationLogEntity.cs" />
     <Compile Include="Model\PermissionEntity.cs" />
     <Compile Include="Model\RegisterType.cs" />
     <Compile Include="Model\RoleAssignmentEntity.cs" />
@@ -168,6 +176,10 @@
     <Compile Include="Repositories\Migrations\201504300700222_Initial.cs" />
     <Compile Include="Repositories\Migrations\201504300700222_Initial.Designer.cs">
       <DependentUpon>201504300700222_Initial.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Repositories\Migrations\201505080835453_OperationLog.cs" />
+    <Compile Include="Repositories\Migrations\201505080835453_OperationLog.Designer.cs">
+      <DependentUpon>201505080835453_OperationLog.cs</DependentUpon>
     </Compile>
     <Compile Include="Repositories\Migrations\Configuration.cs" />
     <Compile Include="Repositories\PlatformDatabaseInitializer.cs" />
@@ -218,13 +230,14 @@
     <EmbeddedResource Include="Repositories\Migrations\201504300700222_Initial.resx">
       <DependentUpon>201504300700222_Initial.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Repositories\Migrations\201505080835453_OperationLog.resx">
+      <DependentUpon>201505080835453_OperationLog.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Security\Identity\Migrations\201411101625303_InitialCreate.resx">
       <DependentUpon>201411101625303_InitialCreate.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Migrations\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

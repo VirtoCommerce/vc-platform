@@ -29,7 +29,7 @@ namespace VirtoCommerce.Web.Controllers
                 return RedirectToAction("Index", "Cart");
             }
 
-            var checkout = await Service.GetCheckoutAsync();
+            var checkout = await Service.GetCheckoutAsync(SiteContext.Current);
             Context.Checkout = checkout;
 
             return View("checkout-step-1");
@@ -42,7 +42,7 @@ namespace VirtoCommerce.Web.Controllers
         {
             var form = GetForm(formModel.form_type);
 
-            var checkout = await Service.GetCheckoutAsync();
+            var checkout = await Service.GetCheckoutAsync(SiteContext.Current);
 
             if (form != null)
             {
@@ -81,7 +81,7 @@ namespace VirtoCommerce.Web.Controllers
                         }
                     }
 
-                    await Service.UpdateCheckoutAsync(checkout);
+                    await Service.UpdateCheckoutAsync(SiteContext.Current, checkout);
 
                     return RedirectToAction("Step2", "Checkout");
                 }
@@ -105,7 +105,7 @@ namespace VirtoCommerce.Web.Controllers
         [Route("checkout/step-2")]
         public async Task<ActionResult> Step2()
         {
-            var checkout = await Service.GetCheckoutAsync();
+            var checkout = await Service.GetCheckoutAsync(SiteContext.Current);
 
             if (checkout.ShippingAddress == null || !checkout.ShippingAddress.IsFilledCorrectly)
             {
@@ -130,7 +130,7 @@ namespace VirtoCommerce.Web.Controllers
 
                 if (formErrors == null)
                 {
-                    var checkout = await Service.GetCheckoutAsync();
+                    var checkout = await Service.GetCheckoutAsync(SiteContext.Current);
 
                     var billingAddress = new CustomerAddress
                     {
@@ -161,7 +161,7 @@ namespace VirtoCommerce.Web.Controllers
                         }
                     }
 
-                    checkout.Order = await Service.CreateOrderAsync(checkout);
+                    checkout.Order = await Service.CreateOrderAsync(SiteContext.Current, checkout);
 
                     Context.Checkout = checkout;
 

@@ -77,7 +77,7 @@ namespace VirtoCommerce.Web.Models.Convertors
                 }
             }
 
-            if (String.IsNullOrEmpty(url))
+            if (String.IsNullOrEmpty(url) && urlHelper != null)
             {
                 url = urlHelper.ItemUrl(productModel.Handle, collection == null ? "" : collection.Outline);
                 if (!String.IsNullOrEmpty(url))

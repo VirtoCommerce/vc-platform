@@ -14,7 +14,6 @@
             };
 
             bladeNavigationService.showBlade(newBlade, $scope.blade.parentBlade);
-            $scope.bladeClose();
         });
     };
 
@@ -27,11 +26,10 @@
                 title: 'New virtual catalog',
                 subtitle: 'Virtual catalog details',
                 controller: 'virtoCommerce.catalogModule.virtualCatalogDetailController',
-                template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/virtual-catalog-detail.tpl.html'
+                template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/catalog-detail.tpl.html'
             };
 
             bladeNavigationService.showBlade(newBlade, $scope.blade.parentBlade);
-            $scope.bladeClose();
         });
     };
     

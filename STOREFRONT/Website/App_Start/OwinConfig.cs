@@ -99,7 +99,7 @@ namespace VirtoCommerce.Web
             }
 
             ctx.Shop = shop;
-            ctx.Themes = await commerceService.GetThemesAsync();
+            ctx.Themes = await commerceService.GetThemesAsync(SiteContext.Current);
 
             // if language is not set, set it to default shop language
             if (String.IsNullOrEmpty(ctx.Language))
@@ -114,19 +114,17 @@ namespace VirtoCommerce.Web
                 ctx.Language = language;
             }
 
-
             if (!this.IsResourceFile()) // only load settings for resource files, no need for other contents
             {
                 // save info to the cookies
                 context.Response.Cookies.Append(StoreCookie, shop.StoreId, new CookieOptions { Expires = DateTime.UtcNow.AddDays(30) });
                 context.Response.Cookies.Append(LanguageCookie, ctx.Language, new CookieOptions { Expires = DateTime.UtcNow.AddDays(30) });
+                context.Response.Cookies.Append(CurrencyCookie, shop.Currency, new CookieOptions { Expires = DateTime.UtcNow.AddDays(30) });
 
                 if (context.Authentication.User != null && context.Authentication.User.Identity.IsAuthenticated)
                 {
                     ctx.Customer = await customerService.GetCustomerAsync(
                         context.Authentication.User.Identity.Name, shop.StoreId);
-
-                    context.Response.Cookies.Delete(AnonymousCookie);
 
                     ctx.CustomerId = ctx.Customer.Id;
                 }
@@ -152,13 +150,13 @@ namespace VirtoCommerce.Web
                 // TODO: detect if shop exists, user has access
                 // TODO: store anonymous customer id in cookie and update and merge cart once customer is logged in
 
-                ctx.Linklists = await commerceService.GetListsAsync();
+                ctx.Linklists = await commerceService.GetListsAsync(SiteContext.Current);
                 ctx.PageTitle = ctx.Shop.Name;
-                ctx.Collections = await commerceService.GetCollectionsAsync();
+                ctx.Collections = await commerceService.GetCollectionsAsync(SiteContext.Current);
                 ctx.Pages = new PageCollection();
                 ctx.Forms = commerceService.GetForms();
 
-                var cart = await commerceService.GetCurrentCartAsync();
+                var cart = await commerceService.GetCartAsync(SiteContext.Current.StoreId, SiteContext.Current.CustomerId);
                 if (cart == null)
                 {
                     var dtoCart = new ApiClient.DataContracts.Cart.ShoppingCart
@@ -174,19 +172,37 @@ namespace VirtoCommerce.Web
                     };
 
                     await commerceService.CreateCartAsync(dtoCart);
-                    cart = await commerceService.GetCurrentCartAsync();
+                    cart = await commerceService.GetCartAsync(SiteContext.Current.StoreId, SiteContext.Current.CustomerId);
                 }
 
                 ctx.Cart = cart;
-                ctx.PriceLists = await commerceService.GetPriceListsAsync(ctx.Shop.Catalog, ctx.Shop.Currency, new TagQuery());
-                ctx.Theme = commerceService.GetTheme(this.ResolveTheme(shop, context));
+
+                if (context.Authentication.User.Identity.IsAuthenticated)
+                {
+                    var anonymousCookie = context.Request.Cookies[AnonymousCookie];
+
+                    if (anonymousCookie != null)
+                    {
+                        var anonymousCart = await commerceService.GetCartAsync(ctx.StoreId, anonymousCookie);
+
+                        if (anonymousCart != null)
+                        {
+                            ctx.Cart = await commerceService.MergeCartsAsync(anonymousCart);
+                        }
+                    }
+
+                    context.Response.Cookies.Delete(AnonymousCookie);
+                }
+
+                ctx.PriceLists = await commerceService.GetPriceListsAsync(ctx.Shop.Catalog, shop.Currency, new TagQuery());
+                ctx.Theme = commerceService.GetTheme(SiteContext.Current, this.ResolveTheme(shop, context));
 
                 // update theme files
-                await commerceService.UpdateThemeCacheAsync();
+                await commerceService.UpdateThemeCacheAsync(SiteContext.Current);
             }
             else
             {
-                ctx.Theme = commerceService.GetTheme(this.ResolveTheme(shop, context));
+                ctx.Theme = commerceService.GetTheme(SiteContext.Current, this.ResolveTheme(shop, context));
             }
 
             ctx.Settings = commerceService.GetSettings(
@@ -309,6 +325,11 @@ namespace VirtoCommerce.Web
                         SiteContext.Current.Shops.SingleOrDefault(
                             s => s.StoreId.Equals(storeId, StringComparison.OrdinalIgnoreCase));
                 }
+            }
+
+            if (context.Request.Cookies[CurrencyCookie] != null)
+            {
+                store.Currency = context.Request.Cookies[CurrencyCookie];
             }
 
             return store;

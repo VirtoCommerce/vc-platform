@@ -13,6 +13,7 @@ angular.module(moduleName, [
      
       //Register widgets in catalog item details
       widgetService.registerWidget({
+          isVisible: function (blade) { return blade.currentEntity.id == 'MailChimp.Mailing'; },
           controller: 'virtoCommerce.mailingModule.mailingWidgetController',
           template: 'Modules/$(MailChimp.Mailing)/Scripts/widgets/mailingWidget.tpl.html'
       }, 'moduleDetail');

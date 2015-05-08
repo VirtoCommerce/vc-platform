@@ -96,8 +96,6 @@ namespace VirtoCommerce.CatalogModule.Web.Converters
         {
             var retVal = new moduleModel.CatalogProduct();
             retVal.InjectFrom(product);
-
-            retVal.StartDate = DateTime.UtcNow;
             if (product.Images != null)
             {
                 retVal.Assets = new List<moduleModel.ItemAsset>();

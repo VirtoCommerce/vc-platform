@@ -1,5 +1,7 @@
-﻿<div class="tile __price wide" ng-click="openItemsBlade()">
-    <span class="tile-count">{{operation.items.length}}</span>
-    <span class="tile-descr">Line items</span>
-    <span class="tile-price">{{operation._subTotal | number:2}}&nbsp;{{operation.currency}}</span>
+﻿<div class="gridster-cnt" ng-click="openItemsBlade()">
+    <div class="cnt-inner">
+        <div class="list-count">{{operation.items.length}}</div>
+        <div class="list-t">Line items</div>
+        <div class="list-price">{{operation._subTotal | number:2}}&nbsp;{{operation.currency}}</div>
+    </div>
 </div>
