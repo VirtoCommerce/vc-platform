@@ -13,6 +13,8 @@ using VirtoCommerce.Platform.Core.Settings;
 using VirtoCommerce.Platform.Data.Infrastructure;
 using VirtoCommerce.Platform.Data.Infrastructure.Interceptors;
 using VirtoCommerce.Platform.Core.Security;
+using VirtoCommerce.Platform.Data.Repositories;
+using dataModel = VirtoCommerce.CatalogModule.Data.Model;
 
 namespace VirtoCommerce.CatalogModule.Web
 {
@@ -56,7 +58,8 @@ namespace VirtoCommerce.CatalogModule.Web
         {
             #region Catalog dependencies
 
-         	Func<ICatalogRepository> catalogRepFactory = () => new CatalogRepositoryImpl(_connectionStringName, new EntityPrimaryKeyGeneratorInterceptor(), new AuditableInterceptor());
+         	Func<ICatalogRepository> catalogRepFactory = () => new CatalogRepositoryImpl(_connectionStringName, new EntityPrimaryKeyGeneratorInterceptor(), new AuditableInterceptor(), 
+																						new ChangeLogInterceptor(_container.Resolve<Func<IPlatformRepository>>(), ChangeLogPolicy.Commulative, new string[] { typeof(dataModel.Product).Name }));
 			_container.RegisterInstance<Func<ICatalogRepository>>(catalogRepFactory);
 
 
