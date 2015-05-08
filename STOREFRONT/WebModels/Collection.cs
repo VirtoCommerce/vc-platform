@@ -145,11 +145,32 @@ namespace VirtoCommerce.Web.Models
             var service = new CommerceService();
             var context = SiteContext.Current;
 
+            var sortProperty = String.Empty;
+            var sortDirection = "ascending";
+
+            var sort = string.IsNullOrEmpty(this.SortBy) ? this.DefaultSortBy : this.SortBy;
+            if (sort.Equals("manual"))
+            {
+                sortProperty = "position";
+            }
+            else if (sort.Equals("best-selling"))
+            {
+                sortProperty = "position";
+            }
+            else
+            {
+                var sortArray = sort.Split(new[] { '-' });
+                if (sortArray.Length > 1)
+                {
+                    sortProperty = sortArray[0];
+                    sortDirection = sortArray[1];
+                }
+            }
+
+            var searchQuery = new BrowseQuery() { SortProperty = sortProperty, SortDirection = sortDirection, Filters = filters, Skip = from, Take = pageSize.Value, Outline = this.Id };
             var response =
-                Task.Run(() => service.SearchAsync<Product>(context, "product", 
-                    String.Empty, 
-                    string.IsNullOrEmpty(this.SortBy) ? this.DefaultSortBy : this.SortBy,
-                    from, pageSize.Value, filters, this, responseGroups: ItemResponseGroups.ItemSmall | ItemResponseGroups.Variations)).Result;
+                Task.Run(() => service.SearchAsync<Product>(context, 
+                    searchQuery, this, responseGroups: ItemResponseGroups.ItemSmall | ItemResponseGroups.Variations)).Result;
 
             // populate tags with facets returned
             if (response.Facets != null && response.Facets.Any())

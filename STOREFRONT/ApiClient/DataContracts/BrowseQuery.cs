@@ -79,6 +79,7 @@ namespace VirtoCommerce.ApiClient.DataContracts
         ///     Gets or sets the number of items to take as part of this query
         /// </summary>
         [DataMember]
+        [DefaultValue(20)]
         public int? Take { get; set; }
 
         #endregion

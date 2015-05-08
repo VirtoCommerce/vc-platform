@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using DotLiquid;
 using VirtoCommerce.ApiClient.DataContracts;
@@ -73,8 +74,43 @@ namespace VirtoCommerce.Web.Models.Banners
 
     public class CategorySearchBanner : Banner
     {
-        public string Products { get; set; }
+        private bool _productsLoaded;
+        private ItemCollection<Product> _products;
+
+        public ItemCollection<Product> Products
+        {
+            get
+            {
+                this.LoadProducts();
+                return this._products;
+            }
+            set
+            {
+                this._products = value;
+            }
+        }
 
         public string Collection { get; set; }
+
+        private void LoadProducts()
+        {
+            if (this._productsLoaded)
+            {
+                return;
+            }
+
+            //var pageSize = this.Context == null ? 20 : this.Context["paginate.page_size"].ToInt(20);
+
+            this._productsLoaded = true;
+
+            var service = new CommerceService();
+            var context = SiteContext.Current;
+
+            var searchQuery = new BrowseQuery() { Skip = 0, Take = 20 };
+            var response =
+                Task.Run(() => service.SearchAsync<Product>(context, searchQuery, responseGroups: ItemResponseGroups.ItemSmall | ItemResponseGroups.Variations)).Result;
+
+            Products = response;
+        }
     }
 }

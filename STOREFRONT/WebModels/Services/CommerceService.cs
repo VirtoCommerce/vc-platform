@@ -739,33 +739,8 @@ namespace VirtoCommerce.Web.Models.Services
             return model.AsWebModel();
         }
 
-        public async Task<SearchResults<T>> SearchAsync<T>(SiteContext context, string type, string terms, string sort, int skip, int? take, 
-            Dictionary<string, string[]> filters = null, Collection parentCollection = null, ItemResponseGroups? responseGroups = ItemResponseGroups.ItemMedium)
+        public async Task<SearchResults<T>> SearchAsync<T>(SiteContext context, BrowseQuery query, Collection parentCollection = null, ItemResponseGroups? responseGroups = ItemResponseGroups.ItemMedium)
         {
-            var pageSize = take ?? 20;
-            var sortProperty = String.Empty;
-            var sortDirection = "ascending";
-
-            if (sort.Equals("manual"))
-            {
-                sortProperty = "position";
-            }
-            else if (sort.Equals("best-selling"))
-            {
-                sortProperty = "position";
-            }
-            else
-            {
-                var sortArray = sort.Split(new[] { '-' });
-                if (sortArray.Length > 1)
-                {
-                    sortProperty = sortArray[0];
-                    sortDirection = sortArray[1];
-                }
-            }
-
-            var query = new BrowseQuery { Search = terms, Skip = skip, Take = pageSize, SortDirection = sortDirection, 
-                SortProperty = sortProperty, PriceLists = context.PriceLists, Filters = filters};
             var priceLists = context.PriceLists;
 
             var response =

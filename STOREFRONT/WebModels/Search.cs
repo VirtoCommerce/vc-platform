@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
 using DotLiquid;
+using VirtoCommerce.ApiClient.DataContracts;
 using VirtoCommerce.Web.Models.Services;
 using VirtoCommerce.Web.Views.Engines.Liquid.Extensions;
 
@@ -66,7 +67,8 @@ namespace VirtoCommerce.Web.Models
 
             var siteContext = SiteContext.Current;
             var service = new CommerceService();
-            var response = Task.Run(() => service.SearchAsync<object>(siteContext, type, terms, String.Empty, skip, pageSize)).Result;
+            var searchQuery = new BrowseQuery() { Skip = skip, Take = pageSize, Search = terms};
+            var response = Task.Run(() => service.SearchAsync<object>(siteContext, searchQuery)).Result;
             this.Results = response;
 
             this.Performed = false;
