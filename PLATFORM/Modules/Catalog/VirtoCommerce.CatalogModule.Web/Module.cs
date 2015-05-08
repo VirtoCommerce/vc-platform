@@ -1,27 +1,22 @@
 ﻿using System;
 using System.Data.Entity;
 using Microsoft.Practices.Unity;
+using VirtoCommerce.CatalogModule.Data.Model;
 using VirtoCommerce.CatalogModule.Data.Repositories;
 using VirtoCommerce.CatalogModule.Data.Services;
-using VirtoCommerce.CatalogModule.Web.Controllers.Api;
 using VirtoCommerce.Domain.Catalog.Services;
-using VirtoCommerce.Platform.Core.Asset;
-using VirtoCommerce.Platform.Core.Caching;
 using VirtoCommerce.Platform.Core.Modularity;
-using VirtoCommerce.Platform.Core.Notification;
-using VirtoCommerce.Platform.Core.Settings;
 using VirtoCommerce.Platform.Data.Infrastructure;
 using VirtoCommerce.Platform.Data.Infrastructure.Interceptors;
-using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Data.Repositories;
-using dataModel = VirtoCommerce.CatalogModule.Data.Model;
 
 namespace VirtoCommerce.CatalogModule.Web
 {
-    public class Module : IModule
+    public class Module : ModuleBase
     {
         private const string _connectionStringName = "VirtoCommerce";
         private readonly IUnityContainer _container;
+
         public Module(IUnityContainer container)
         {
             _container = container;
@@ -29,11 +24,13 @@ namespace VirtoCommerce.CatalogModule.Web
 
         #region IDatabaseModule Members
 
-        public void SetupDatabase(SampleDataLevel sampleDataLevel)
+        public override void SetupDatabase(SampleDataLevel sampleDataLevel)
         {
-			using (var db = new CatalogRepositoryImpl(_connectionStringName))
+            base.SetupDatabase(sampleDataLevel);
+
+            using (var db = new CatalogRepositoryImpl(_connectionStringName))
             {
-				IDatabaseInitializer<CatalogRepositoryImpl> initializer;
+                IDatabaseInitializer<CatalogRepositoryImpl> initializer;
 
                 switch (sampleDataLevel)
                 {
@@ -44,48 +41,42 @@ namespace VirtoCommerce.CatalogModule.Web
                         initializer = new SqlCatalogReducedSampleDatabaseInitializer();
                         break;
                     default:
-						initializer = new SetupDatabaseInitializer<CatalogRepositoryImpl, VirtoCommerce.CatalogModule.Data.Migrations.Configuration>();
+                        initializer = new SetupDatabaseInitializer<CatalogRepositoryImpl, Data.Migrations.Configuration>();
                         break;
                 }
 
                 initializer.InitializeDatabase(db);
             }
+        }
 
-            }
-
-  
-        public void Initialize()
+        public override void Initialize()
         {
+            base.Initialize();
+
             #region Catalog dependencies
 
-         	Func<ICatalogRepository> catalogRepFactory = () => new CatalogRepositoryImpl(_connectionStringName, new EntityPrimaryKeyGeneratorInterceptor(), new AuditableInterceptor(), 
-																						new ChangeLogInterceptor(_container.Resolve<Func<IPlatformRepository>>(), ChangeLogPolicy.Commulative, new string[] { typeof(dataModel.Product).Name }));
-			_container.RegisterInstance<Func<ICatalogRepository>>(catalogRepFactory);
+            Func<ICatalogRepository> catalogRepFactory = () =>
+                new CatalogRepositoryImpl(_connectionStringName, new EntityPrimaryKeyGeneratorInterceptor(), new AuditableInterceptor(),
+                    new ChangeLogInterceptor(_container.Resolve<Func<IPlatformRepository>>(), ChangeLogPolicy.Cumulative, new[] { typeof(Product).Name }));
 
+            _container.RegisterInstance(catalogRepFactory);
 
-			_container.RegisterType<IItemService, ItemServiceImpl>();
-			_container.RegisterType<ICategoryService, CategoryServiceImpl>();
-			_container.RegisterType<ICatalogService, CatalogServiceImpl>();
-			_container.RegisterType<IPropertyService, PropertyServiceImpl>();
-			_container.RegisterType<ICatalogSearchService, CatalogSearchServiceImpl>();
+            _container.RegisterType<IItemService, ItemServiceImpl>();
+            _container.RegisterType<ICategoryService, CategoryServiceImpl>();
+            _container.RegisterType<ICatalogService, CatalogServiceImpl>();
+            _container.RegisterType<IPropertyService, PropertyServiceImpl>();
+            _container.RegisterType<ICatalogSearchService, CatalogSearchServiceImpl>();
+
             #endregion
 
             #region Import dependencies
-			//Func<IImportRepository> importRepFactory = () => new EFImportingRepository(_connectionStringName);
+            //Func<IImportRepository> importRepFactory = () => new EFImportingRepository(_connectionStringName);
 
-			//Func<IImportService> imporServiceFactory = () => new ImportService(importRepFactory(), null, catalogRepFactory(), null, null);
+            //Func<IImportService> imporServiceFactory = () => new ImportService(importRepFactory(), null, catalogRepFactory(), null, null);
 
-			//_container.RegisterType<ImportController>(new InjectionConstructor(importRepFactory, imporServiceFactory, catalogRepFactory, _container.Resolve<INotifier>()));
+            //_container.RegisterType<ImportController>(new InjectionConstructor(importRepFactory, imporServiceFactory, catalogRepFactory, _container.Resolve<INotifier>()));
 
             #endregion
-
-
-        }
-
-
-        public void PostInitialize()
-        {
-		
         }
 
         #endregion
