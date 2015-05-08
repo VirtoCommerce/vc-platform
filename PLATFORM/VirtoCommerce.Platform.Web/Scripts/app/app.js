@@ -135,6 +135,7 @@ angular.module('platformWebApp', AppDependencies).
         gridsterConfig.colWidth = 130;
         gridsterConfig.defaultSizeX = 1;
         gridsterConfig.resizable = { enabled: false, handles: [] };
+        gridsterConfig.maxRows = 8;
         gridsterConfig.mobileModeEnabled = false;
         gridsterConfig.outerMargin = false;
 

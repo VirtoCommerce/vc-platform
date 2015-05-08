@@ -28,7 +28,7 @@ angular.module(moduleName, [])
 //  }]
 //)
 .run(
-  ['$rootScope', 'mainMenuService', 'widgetService', '$state', function ($rootScope, mainMenuService, widgetService, $state) {
+  ['$rootScope', 'mainMenuService', 'widgetService', 'authService', function ($rootScope, mainMenuService, widgetService, authService) {
       //Register module in main menu
       //var menuItem = {
       //    path: 'browse/inventory',
@@ -42,6 +42,7 @@ angular.module(moduleName, [])
 
       //Register widgets in catalog item details
       widgetService.registerWidget({
+          isVisible: function (blade) { return authService.checkPermission('inventory:manage'); },
           controller: 'virtoCommerce.inventoryModule.inventoryWidgetController',
           template: 'Modules/$(VirtoCommerce.Inventory)/Scripts/widgets/inventoryWidget.tpl.html'
       }, 'itemDetail');

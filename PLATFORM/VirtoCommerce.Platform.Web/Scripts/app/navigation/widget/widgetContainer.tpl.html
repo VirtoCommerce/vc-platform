@@ -1,5 +1,5 @@
 ﻿<div>
-    <div gridster>
+    <div gridster="gridsterOpts">
         <ul class="list">
             <li class="list-item" ng-repeat="widget in widgets" gridster-item row="$storage[getKey('row', widget)]" col="$storage[getKey('col', widget)]" size-x="widget.size[0]" size-y="widget.size[1]">
                 <div va-widget="widget" ng-include="widget.template"></div>
