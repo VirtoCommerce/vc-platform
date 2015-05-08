@@ -563,7 +563,7 @@ namespace VirtoCommerce.Web.Models.Services
                     new ProductPromoEntry
                     {
                         CatalogId = product.CatalogId,
-                        Price = price.Sale.HasValue ? price.Sale.Value : price.List,
+                        Price = price != null ? (price.Sale.HasValue ? price.Sale.Value : price.List) : 0M,
                         ProductId = product.Id,
                         Quantity = 1
                     }
