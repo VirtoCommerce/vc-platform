@@ -1,12 +1,14 @@
-﻿<div class="gridster-cnt">
-    <div class="cnt-inner">
-        <i class="gallery-ico fa fa-image" ng-if="currentBlade.item.images.length == 0"></i>
-        <div class="gallery-descr" ng-if="currentBlade.item.images.length == 0">No images</div>
-        <div ng-click="openItemImageBlade()" class="gallery-img __main" ng-repeat="image in currentBlade.item.images | filter: { group: 'primaryimage' } | limitTo : 1  track by image.id">
-            <img ng-src="{{image.url ? image.url : ''}}" />
+﻿<div class="gallery">
+    <div class="gridster-cnt">
+        <div class="cnt-inner" ng-if="currentBlade.item.images.length == 0">
+            <i class="gallery-ico fa fa-image"></i>
+            <div class="gallery-descr">No images</div>
         </div>
-        <div ng-click="openItemImageBlade()" class="gallery-img" ng-repeat="image in currentBlade.item.images | filter: { group: '!primaryimage' } | limitTo : 11 track by image.id">
-            <img ng-src="{{image.url ? image.url : ''}}" />
-        </div>
+    </div>
+    <div ng-click="openItemImageBlade()" class="gallery-img __main" ng-repeat="image in currentBlade.item.images | filter: { group: 'primaryimage' } | limitTo : 1  track by image.id">
+        <img ng-src="{{image.url ? image.url : ''}}" />
+    </div>
+    <div ng-click="openItemImageBlade()" class="gallery-img" ng-repeat="image in currentBlade.item.images | filter: { group: '!primaryimage' } | limitTo : 11 track by image.id">
+        <img ng-src="{{image.url ? image.url : ''}}" />
     </div>
 </div>

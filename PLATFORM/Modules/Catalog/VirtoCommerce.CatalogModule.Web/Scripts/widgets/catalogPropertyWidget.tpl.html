@@ -1,4 +1,6 @@
-﻿<div class="tile" ng-click="openCatalogPropertyBlade()">
-    <span class="tile-count">{{blade.currentEntity.properties.length}}</span>
-    <span class="tile-descr">Properties</span>
+﻿<div class="gridster-cnt" ng-if="!blade.isNew && !blade.currentEntity.virtual">
+    <div class="cnt-inner" ng-click="openCatalogPropertyBlade()">
+        <div class="list-count">{{blade.currentEntity.properties.length}}</div>
+        <div class="list-t">Properties</div>
+    </div>
 </div>
