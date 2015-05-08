@@ -1,10 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
+﻿using System.Net;
 using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Description;
+using Newtonsoft.Json;
+using VirtoCommerce.Domain.Customer.Model;
 using Zapier.IntegrationModule.Web.Providers.Interfaces;
 
 namespace Zapier.IntegrationModule.Web.Controllers.Api
@@ -57,9 +56,9 @@ namespace Zapier.IntegrationModule.Web.Controllers.Api
         [HttpPost]
         [ResponseType(typeof(void))]
         [Route("hooks")]
-        public async Task<IHttpActionResult> PostWebHooks()
+        public IHttpActionResult PostWebHooks()
         {
-            var result = await Task.FromResult(HttpStatusCode.Created);
+            var result = HttpStatusCode.Created;
             return Ok(result);
         }
 
