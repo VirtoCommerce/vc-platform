@@ -8,7 +8,7 @@ using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.Platform.Data.Model
 {
-	public class OperationLog : AuditableEntity
+	public class OperationLogEntity : AuditableEntity
 	{
 
 		[StringLength(50)]
