@@ -146,6 +146,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Infrastructure\Interceptors\ChangeInterceptor.cs" />
+    <Compile Include="Infrastructure\Interceptors\ChangeLogPolicy.cs" />
     <Compile Include="Infrastructure\Interceptors\EntityPrimaryKeyGeneratorInterceptor.cs" />
     <Compile Include="Infrastructure\Interceptors\IInterceptor.cs" />
     <Compile Include="Infrastructure\Interceptors\InterceptionContext.cs" />
