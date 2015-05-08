@@ -71,6 +71,7 @@
         breadCrumb.navigate = function (breadcrumb) {
             bladeNavigationService.closeBlade($scope.blade,
 						function () {
+						    $scope.blade.disableOpenAnimation = true;
 						    bladeNavigationService.showBlade($scope.blade, $scope.blade.parentBlade);
 						    $scope.blade.refresh();
 						});
