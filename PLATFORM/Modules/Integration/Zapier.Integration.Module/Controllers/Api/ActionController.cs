@@ -20,10 +20,9 @@ namespace Zapier.IntegrationModule.Web.Controllers.Api
         [HttpPost]
         [ResponseType(typeof(Contact))]
         [Route("contact")]
-        public IHttpActionResult CreateContact(string jsonContact)
+        public IHttpActionResult CreateContact(Contact contact)
         {
-            var deserializedContact = JsonConvert.DeserializeObject<Contact>(jsonContact);
-            var retVal = _contactsProvider.NewContact(deserializedContact);
+            var retVal = _contactsProvider.NewContact(contact);
             return Ok(retVal);
         }
     }
