@@ -20,6 +20,9 @@
             $scope.blade.title = data.name;
         }
 
+        // transform simple string to complex object. Simple string isn't editable.
+        data.coupons = _.map(data.coupons, function (x) { return { text: x } });
+        
         if (data.dynamicExpression) {
             _.each(data.dynamicExpression.children, extendElementBlock);
         }
@@ -42,6 +45,8 @@
         bladeNavigationService.setError(null, $scope.blade);
         $scope.blade.isLoading = true;
 
+        $scope.blade.currentEntity.coupons = _.pluck($scope.blade.currentEntity.coupons, 'text');
+        
         _.each($scope.blade.currentEntity.dynamicExpression.children, stripOffUiInformation);
 
         if ($scope.blade.isNew) {

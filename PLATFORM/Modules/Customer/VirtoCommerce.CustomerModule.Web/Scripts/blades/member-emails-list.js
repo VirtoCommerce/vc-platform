@@ -7,7 +7,7 @@
     }
 
     function initializeBlade(data) {
-        // transfornation to make complex object. Simple string isn't editable.
+        // transform simple string to complex object. Simple string isn't editable.
         data = _.map(data, transformDataElement);
 
         $scope.blade.currentEntities = angular.copy(data);
