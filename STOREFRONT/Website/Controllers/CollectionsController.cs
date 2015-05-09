@@ -85,7 +85,7 @@ namespace VirtoCommerce.Web.Controllers
             return View(template);
         }
 
-        //[Route("{tags?}", Order = 2)]
+        [Route("", Order = 2)]
         public async Task<ActionResult> IndexAsync(string tags, int page = 1, string sort_by = "manual")
         {
             this.Context.Set("current_tags", this.ParseTags(tags));
