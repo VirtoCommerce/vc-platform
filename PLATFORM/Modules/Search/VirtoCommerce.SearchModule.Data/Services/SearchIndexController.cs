@@ -35,17 +35,14 @@ namespace VirtoCommerce.SearchModule.Data.Services
 
             var validBulders = _indexBuilders.Where(x => String.Equals(x.DocumentType, documentType, StringComparison.InvariantCultureIgnoreCase));
 
-            var lastIndexTimeSetting = new SettingDescriptor
-            {
-                Name = String.Format("build_{0}_{1}", scope, documentType),
-                ValueType = SettingValueType.DateTime
-            };
-            var lastBuildTime = _settingManager.GetValue(lastIndexTimeSetting.Name, DateTime.UtcNow);
-            lastIndexTimeSetting.Value = lastBuildTime.ToString(CultureInfo.InvariantCulture);
+            var lastBuildTimeName = string.Format(CultureInfo.InvariantCulture, "VirtoCommerce.Search.LastBuildTime_{0}_{1}", scope, documentType);
+            var lastBuildTime = _settingManager.GetValue(lastBuildTimeName, DateTime.MinValue);
+            var nowUtc = DateTime.UtcNow;
 
             foreach (var indexBuilder in validBulders)
             {
-                var partitions = indexBuilder.GetPartitions(scope, lastBuildTime);
+                var partitions = indexBuilder.GetPartitions(lastBuildTime, nowUtc);
+
                 foreach (var partition in partitions)
                 {
                     if (partition.OperationType == OperationType.Remove)
@@ -64,7 +61,11 @@ namespace VirtoCommerce.SearchModule.Data.Services
                 }
             }
 
-            _settingManager.SaveSettings(new[] { lastIndexTimeSetting });
+            var lastBuildTime2 = _settingManager.GetValue(lastBuildTimeName, DateTime.MinValue);
+            if (lastBuildTime2 == lastBuildTime)
+            {
+                _settingManager.SetValue(lastBuildTimeName, nowUtc);
+            }
         }
 
         #endregion

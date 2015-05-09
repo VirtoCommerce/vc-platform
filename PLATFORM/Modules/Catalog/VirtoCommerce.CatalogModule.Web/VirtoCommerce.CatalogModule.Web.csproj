@@ -217,7 +217,7 @@
     <Content Include="Scripts\blades\property-detail.js" />
     <Content Include="Scripts\blades\property-detail.tpl.html" />
     <Content Include="Scripts\blades\virtual-catalog-detail.js" />
-    <Content Include="Scripts\blades\virtual-catalog-detail.tpl.html" />
+    <Content Include="Scripts\blades\virtual-catalog-languages.js" />
     <Content Include="Scripts\catalog.js" />
     <Content Include="Scripts\directives\property2.js" />
     <Content Include="Scripts\directives\property2.tpl.html" />

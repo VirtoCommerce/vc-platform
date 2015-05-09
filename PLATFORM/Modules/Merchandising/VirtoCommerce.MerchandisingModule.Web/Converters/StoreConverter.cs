@@ -32,7 +32,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Converters
 
 				foreach (var propValueGroup in store.Settings.GroupBy(x => x.Name))
 				{
-					var val = propValueGroup.Select(g => g.Value);
+					var val = propValueGroup.Select(g => g.Value).SingleOrDefault();
 					if (val != null)
 					{
 						retVal.Settings.Add(propValueGroup.Key, val);

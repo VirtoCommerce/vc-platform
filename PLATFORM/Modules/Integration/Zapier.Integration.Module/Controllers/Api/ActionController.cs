@@ -1,7 +1,9 @@
 ﻿using System.Net;
+using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Description;
+using VirtoCommerce.Domain.Customer.Model;
 using Zapier.IntegrationModule.Web.Providers.Interfaces;
 
 namespace Zapier.IntegrationModule.Web.Controllers.Api
@@ -18,12 +20,17 @@ namespace Zapier.IntegrationModule.Web.Controllers.Api
         }
 
         [HttpPost]
-        [ResponseType(typeof(void))]
-        [Route("customer")]
-        public async Task<IHttpActionResult> CreateCustomer()
+        [ResponseType(typeof(Contact))]
+        [Route("contact")]
+        public async Task<IHttpActionResult> CreateContact(Contact contact)
         {
-            var result = await Task.FromResult(HttpStatusCode.Created);
-            return Ok(result);
+            var ret = await Task.FromResult(_contactsProvider.NewContact(contact));
+            if (ret != null)
+            {
+                return Ok(ret);
+            }
+
+            return BadRequest();
         }
     }
 }

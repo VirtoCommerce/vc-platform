@@ -11,6 +11,11 @@
     {
         font-size: 14px;
         padding: 4px 0;
+        position: inherit;
+        text-align: left;
+
+        -webkit-box-shadow: inherit;
+                box-shadow: inherit;
     }
 
     .list.__prices .list-item.__total

@@ -77,6 +77,7 @@ angular.module(catalogsModuleName, [
       //Register image widget
       var itemImageWidget = {
           controller: 'virtoCommerce.catalogModule.itemImageWidgetController',
+          size: [2, 2],
           template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/widgets/itemImageWidget.tpl.html',
       };
       widgetService.registerWidget(itemImageWidget, 'itemDetail');
@@ -111,6 +112,7 @@ angular.module(catalogsModuleName, [
       //Register variation widget
       var variationWidget = {
           controller: 'virtoCommerce.catalogModule.itemVariationWidgetController',
+          size: [2, 1],
           template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/widgets/itemVariationWidget.tpl.html',
       };
       widgetService.registerWidget(variationWidget, 'itemDetail');
@@ -126,17 +128,13 @@ angular.module(catalogsModuleName, [
           controller: 'virtoCommerce.catalogModule.categoryPropertyWidgetController',
           template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/widgets/categoryPropertyWidget.tpl.html',
       };
-
       widgetService.registerWidget(categoryPropertyWidget, 'categoryDetail');
-
-
 
       //Register category seo widget
       var categorySeoWidget = {
           controller: 'virtoCommerce.catalogModule.seoWidgetController',
           template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/widgets/seoWidget.tpl.html',
       };
-
       widgetService.registerWidget(categorySeoWidget, 'categoryDetail');
 
 
@@ -147,8 +145,9 @@ angular.module(catalogsModuleName, [
       widgetService.registerWidget(catalogLanguagesWidget, 'catalogDetail');
 
       var catalogPropertyWidget = {
+          isVisible: function (blade) { return !blade.isNew && blade.controller !== 'virtoCommerce.catalogModule.virtualCatalogDetailController'; },
           controller: 'virtoCommerce.catalogModule.catalogPropertyWidgetController',
-          template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/widgets/catalogPropertyWidget.tpl.html',
+          template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/widgets/catalogPropertyWidget.tpl.html'
       };
       widgetService.registerWidget(catalogPropertyWidget, 'catalogDetail');
 

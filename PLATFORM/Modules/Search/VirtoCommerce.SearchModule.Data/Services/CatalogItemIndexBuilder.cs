@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using VirtoCommerce.Domain.Catalog.Model;
@@ -9,13 +10,14 @@ using VirtoCommerce.Domain.Pricing.Services;
 using VirtoCommerce.Domain.Search.Model;
 using VirtoCommerce.Domain.Search.Services;
 using VirtoCommerce.Platform.Core.Caching;
+using VirtoCommerce.Platform.Core.ChangeLog;
+using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.SearchModule.Data.Services
 {
     public class CatalogItemIndexBuilder : ISearchIndexBuilder
     {
-        private const int DatabasePartitionSizeCount = 5000; // the size of data loaded from database at one time
-        private const int PartitionSizeCount = 100; // the maximum partition size, keep it smaller to prevent too big of the sql requests and too large messages in the queue
+        private const int _partitionSizeCount = 100; // the maximum partition size, keep it smaller to prevent too big of the sql requests and too large messages in the queue
 
         private readonly ISearchProvider _searchProvider;
         private readonly ICatalogSearchService _catalogSearchService;
@@ -23,10 +25,13 @@ namespace VirtoCommerce.SearchModule.Data.Services
         private readonly IItemService _itemService;
         private readonly ICategoryService _categoryService;
         private readonly IPropertyService _propertyService;
+        private readonly IChangeLogService _changeLogService;
         private readonly CacheManager _cacheManager;
+
         public CatalogItemIndexBuilder(ISearchProvider searchProvider, ICatalogSearchService catalogSearchService,
                                        IItemService itemService, IPricingService pricingService,
-                                       ICategoryService categoryService, IPropertyService propertyService, CacheManager cacheManager)
+                                       ICategoryService categoryService, IPropertyService propertyService,
+                                       IChangeLogService changeLogService, CacheManager cacheManager)
         {
             _searchProvider = searchProvider;
             _itemService = itemService;
@@ -34,6 +39,7 @@ namespace VirtoCommerce.SearchModule.Data.Services
             _pricingService = pricingService;
             _categoryService = categoryService;
             _propertyService = propertyService;
+            _changeLogService = changeLogService;
             _cacheManager = cacheManager;
         }
 
@@ -47,26 +53,33 @@ namespace VirtoCommerce.SearchModule.Data.Services
             }
         }
 
+        public IEnumerable<Partition> GetPartitions(DateTime startDate, DateTime endDate)
+        {
+            var partitions = (startDate == DateTime.MinValue)
+                ? GetPartitionsForAllProducts()
+                : GetPartitionsForModifiedProducts(startDate, endDate);
+
+            return partitions;
+        }
+
         public IEnumerable<IDocument> CreateDocuments(Partition partition)
         {
             if (partition == null)
                 throw new ArgumentNullException("partition");
 
-            if (partition.Keys == null)
-                throw new ArgumentNullException("partition.Keys");
-
-            var retVal = new ConcurrentBag<IDocument>();
+            var documents = new ConcurrentBag<IDocument>();
 
             var parallelOptions = new ParallelOptions { MaxDegreeOfParallelism = 5 };
 
-            Parallel.ForEach(partition.Keys, parallelOptions, (x) =>
-           {
-               //Trace.TraceInformation(String.Format("Processing documents starting {0} of {1} - {2}%", partition.Start, partition.Total, (partition.Start * 100 / partition.Total)));
-               var doc = new ResultDocument();
-               IndexItem(ref doc, x);
-               retVal.Add(doc);
-           });
-            return retVal;
+            Parallel.ForEach(partition.Keys, parallelOptions, key =>
+            {
+                //Trace.TraceInformation(string.Format("Processing documents starting {0} of {1} - {2}%", partition.Start, partition.Total, (partition.Start * 100 / partition.Total)));
+                var doc = new ResultDocument();
+                IndexItem(ref doc, key);
+                documents.Add(doc);
+            });
+
+            return documents;
         }
 
         public void PublishDocuments(string scope, IDocument[] documents)
@@ -89,30 +102,6 @@ namespace VirtoCommerce.SearchModule.Data.Services
             _searchProvider.Commit(scope);
         }
 
-
-        public IEnumerable<Partition> GetPartitions(string scope, DateTime lastBuild)
-        {
-            var retVal = new List<Partition>();
-
-            var criteria = new SearchCriteria
-            {
-                IndexDate = lastBuild,
-                ResponseGroup = ResponseGroup.WithProducts,
-                Count = 0
-            };
-            var result = _catalogSearchService.Search(criteria);
-
-            for (var start = 0; start < result.TotalCount; start += PartitionSizeCount)
-            {
-                criteria.Start = start;
-                criteria.Count += PartitionSizeCount;
-                //TODO: Need optimize search to result only product ids
-                result = _catalogSearchService.Search(criteria);
-                retVal.Add(new Partition(result.Products.Select(x => x.Id).ToArray(), OperationType.Index, "", start, result.TotalCount));
-            }
-            return retVal;
-        }
-
         #endregion
 
         protected virtual void IndexItem(ref ResultDocument doc, string productId)
@@ -126,8 +115,8 @@ namespace VirtoCommerce.SearchModule.Data.Services
             doc.Add(new DocumentField("__hidden", (!item.IsActive).ToString().ToLower(), new[] { IndexStore.Yes, IndexType.NotAnalyzed }));
             doc.Add(new DocumentField("code", item.Code, new[] { IndexStore.Yes, IndexType.NotAnalyzed }));
             doc.Add(new DocumentField("name", item.Name, new[] { IndexStore.Yes, IndexType.NotAnalyzed }));
-            //doc.Add(new DocumentField("startdate", item.StartDate, new[] { IndexStore.YES, IndexType.NOT_ANALYZED }));
-            //doc.Add(new DocumentField("enddate", item.P.HasValue ? item.EndDate : DateTime.MaxValue, new[] { IndexStore.YES, IndexType.NOT_ANALYZED }));
+            doc.Add(new DocumentField("startdate", item.StartDate, new[] { IndexStore.Yes, IndexType.NotAnalyzed }));
+            doc.Add(new DocumentField("enddate", item.EndDate.HasValue ? item.EndDate : DateTime.MaxValue, new[] { IndexStore.Yes, IndexType.NotAnalyzed }));
             doc.Add(new DocumentField("createddate", item.CreatedDate, new[] { IndexStore.Yes, IndexType.NotAnalyzed }));
             doc.Add(new DocumentField("lastmodifieddate", item.ModifiedDate ?? DateTime.MaxValue, new[] { IndexStore.Yes, IndexType.NotAnalyzed }));
             doc.Add(new DocumentField("catalog", item.CatalogId.ToLower(), new[] { IndexStore.Yes, IndexType.NotAnalyzed, IndexDataType.StringCollection }));
@@ -158,7 +147,7 @@ namespace VirtoCommerce.SearchModule.Data.Services
             foreach (var propValue in item.PropertyValues.Where(x => x.Value != null))
             {
                 var properties = item.CategoryId != null ? _propertyService.GetCategoryProperties(item.CategoryId) : _propertyService.GetCatalogProperties(item.CatalogId);
-                var property = properties.FirstOrDefault(x => String.Equals(x.Name, propValue.PropertyName, StringComparison.InvariantCultureIgnoreCase) && x.ValueType == propValue.ValueType);
+                var property = properties.FirstOrDefault(x => string.Equals(x.Name, propValue.PropertyName, StringComparison.InvariantCultureIgnoreCase) && x.ValueType == propValue.ValueType);
 
                 var contentField = string.Format("__content{0}", property != null && (property.Multilanguage && !string.IsNullOrWhiteSpace(propValue.LanguageCode)) ? "_" + propValue.LanguageCode.ToLower() : string.Empty);
 
@@ -174,7 +163,7 @@ namespace VirtoCommerce.SearchModule.Data.Services
                     continue;
 
 
-                switch ((PropertyValueType)propValue.ValueType)
+                switch (propValue.ValueType)
                 {
                     case PropertyValueType.Boolean:
                     case PropertyValueType.DateTime:
@@ -190,20 +179,21 @@ namespace VirtoCommerce.SearchModule.Data.Services
         }
 
         #region Category Indexing
+
         protected virtual void IndexItemCategories(ref ResultDocument doc, CatalogProduct item)
         {
             var cacheKey = CacheKey.Create("CatalogItemIndexBuilder.IndexItemCategories", item.CategoryId);
             var category = _cacheManager.Get(cacheKey, () => _categoryService.GetById(item.CategoryId));
-            doc.Add(new DocumentField(String.Format("sort{0}{1}", category.CatalogId, category.Id), category.Priority, new string[] { IndexStore.Yes, IndexType.NotAnalyzed }));
+            doc.Add(new DocumentField(string.Format("sort{0}{1}", category.CatalogId, category.Id), category.Priority, new[] { IndexStore.Yes, IndexType.NotAnalyzed }));
             IndexCategory(ref doc, category);
         }
 
         protected virtual void IndexCategory(ref ResultDocument doc, Category category)
         {
             doc.Add(new DocumentField("catalog", category.CatalogId.ToLower(), new[] { IndexStore.Yes, IndexType.NotAnalyzed }));
-
+            var outlineParts = new[] { category.CatalogId, category.Id }.Concat(category.Parents.Select(x => x.Id));
             // get category path
-            var outline = String.Join(";", category.Parents.Select(x => x.Id));
+            var outline = string.Join("/", outlineParts);
             doc.Add(new DocumentField("__outline", outline.ToLower(), new[] { IndexStore.Yes, IndexType.NotAnalyzed }));
 
             // Now index all linked categories
@@ -218,6 +208,7 @@ namespace VirtoCommerce.SearchModule.Data.Services
         #endregion
 
         #region Price Lists Indexing
+
         protected virtual void IndexItemPrices(ref ResultDocument doc, CatalogProduct item)
         {
             var evalContext = new Domain.Pricing.Model.PriceEvaluationContext()
@@ -231,11 +222,12 @@ namespace VirtoCommerce.SearchModule.Data.Services
             foreach (var price in prices)
             {
                 //var priceList = price.Pricelist;
-                doc.Add(new DocumentField(String.Format("price_{0}_{1}", price.Currency, price.PricelistId), price.Sale ?? price.List, new[] { IndexStore.No, IndexType.NotAnalyzed }));
-                doc.Add(new DocumentField(String.Format("price_{0}_{1}_value", price.Currency, price.PricelistId), price.Sale == null ? price.List.ToString() : price.Sale.ToString(), new[] { IndexStore.Yes, IndexType.NotAnalyzed }));
+                doc.Add(new DocumentField(string.Format("price_{0}_{1}", price.Currency, price.PricelistId), price.Sale ?? price.List, new[] { IndexStore.No, IndexType.NotAnalyzed }));
+                doc.Add(new DocumentField(string.Format("price_{0}_{1}_value", price.Currency, price.PricelistId), (price.Sale ?? price.List).ToString(CultureInfo.InvariantCulture), new[] { IndexStore.Yes, IndexType.NotAnalyzed }));
             }
 
         }
+
         #endregion
 
         //protected virtual void IndexReviews(ref ResultDocument doc, CatalogProduct item)
@@ -248,8 +240,68 @@ namespace VirtoCommerce.SearchModule.Data.Services
         //}
 
 
+        private IEnumerable<Partition> GetPartitionsForAllProducts()
+        {
+            var partitions = new List<Partition>();
 
+            var criteria = new SearchCriteria
+            {
+                ResponseGroup = ResponseGroup.WithProducts,
+                Count = 0
+            };
 
+            var result = _catalogSearchService.Search(criteria);
 
+            for (var start = 0; start < result.TotalCount; start += _partitionSizeCount)
+            {
+                criteria.Start = start;
+                criteria.Count = _partitionSizeCount;
+
+                //TODO: Need optimize search to result only product ids
+                result = _catalogSearchService.Search(criteria);
+
+                var productIds = result.Products.Select(p => p.Id).ToArray();
+                partitions.Add(new Partition(OperationType.Index, productIds));
+            }
+
+            return partitions;
+        }
+
+        private IEnumerable<Partition> GetPartitionsForModifiedProducts(DateTime startDate, DateTime endDate)
+        {
+            var partitions = new List<Partition>();
+
+            var allProductChanges = _changeLogService.FindChangeHistory("Product", startDate, endDate);
+
+            // Calculate last operation type for each object
+            var productChanges = allProductChanges.GroupBy(c => c.ObjectId)
+                .Select(g => new OperationLog { ObjectId = g.Key, OperationType = g.OrderBy(c => c.ModifiedDate).Select(c => c.OperationType).Last() })
+                .ToList();
+
+            var deletedProductIds = productChanges.Where(c => c.OperationType == EntryState.Deleted).Select(c => c.ObjectId).ToList();
+            var modifiedProductIds = productChanges.Where(c => c.OperationType != EntryState.Deleted).Select(c => c.ObjectId).ToList();
+
+            partitions.AddRange(CreatePartitions(OperationType.Remove, deletedProductIds));
+            partitions.AddRange(CreatePartitions(OperationType.Index, modifiedProductIds));
+
+            // TODO: Check price changes
+
+            return partitions;
+        }
+
+        private static IEnumerable<Partition> CreatePartitions(OperationType operationType, List<string> allProductIds)
+        {
+            var partitions = new List<Partition>();
+
+            var totalCount = allProductIds.Count;
+
+            for (var start = 0; start < totalCount; start += _partitionSizeCount)
+            {
+                var productIds = allProductIds.Skip(start).Take(_partitionSizeCount).ToArray();
+                partitions.Add(new Partition(operationType, productIds));
+            }
+
+            return partitions;
+        }
     }
 }

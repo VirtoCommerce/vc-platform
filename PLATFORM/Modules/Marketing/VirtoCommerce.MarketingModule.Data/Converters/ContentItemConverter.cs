@@ -75,7 +75,7 @@ namespace VirtoCommerce.CustomerModule.Data.Converters
 			var patchInjection = new PatchInjection<dataModel.DynamicContentItem>(x => x.Name, x => x.Description, x=>x.FolderId, x=>x.ImageUrl, x=>x.ContentTypeId);
 			if (!source.PropertyValues.IsNullCollection())
 			{
-				var propertyComparer = AnonymousComparer.Create((dataModel.DynamicContentItemProperty x) => x.Id);
+				var propertyComparer = AnonymousComparer.Create((dataModel.DynamicContentItemProperty x) => x.Name);
 				source.PropertyValues.Patch(target.PropertyValues, propertyComparer, (sourceProperty, targetProperty) => sourceProperty.Patch(targetProperty));
 			}
 			target.InjectFrom(patchInjection, source);

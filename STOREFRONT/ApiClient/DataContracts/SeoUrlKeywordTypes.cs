@@ -3,9 +3,7 @@
     public enum SeoUrlKeywordTypes
     {
         Category,
-
         Item,
-
         Store
     }
 }

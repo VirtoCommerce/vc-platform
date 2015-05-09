@@ -1,26 +1,24 @@
 ﻿<div class="blade-content __gray">
-	<div class="blade-inner">
-		<div class="inner-block">
-			<form name="contextEntityDetailForm" class="form">
-			    <fieldset ng-init="setForm(contextEntityDetailForm);">
+    <div class="blade-inner">
+        <div class="inner-block">
+            <form name="contextEntityDetailForm" class="form">
+                <fieldset ng-init="setForm(contextEntityDetailForm);">
                     <div class="form-group">
-                    	<label class="form-label">Name:</label>
-	                    <div class="form-input">
-	                        <input focus-on="" required class="form-control" ng-model="blade.currentEntity.name" placeholder="Enter category name" />
-	                    </div>
+                        <label class="form-label">Name:</label>
+                        <div class="form-input">
+                            <input focus-on="" required class="form-control" ng-model="blade.currentEntity.name" placeholder="Enter category name" />
+                        </div>
                     </div>
-			        <div class="form-group">
-			        	<label class="form-label">Code:</label>
-				        <div class="form-input">
-	                        <input required class="form-control" ng-model="blade.currentEntity.code" placeholder="Enter category code" />
-				        </div>
-			        </div>
-			    </fieldset>
-		    </form>
+                    <div class="form-group">
+                        <label class="form-label">Code:</label>
+                        <div class="form-input">
+                            <input required class="form-control" ng-model="blade.currentEntity.code" placeholder="Enter category code" />
+                        </div>
+                    </div>
+                </fieldset>
+            </form>
 
-		    <div class="tile-group three">
-		    	<va-widget-container group="categoryDetail" blade="blade"></va-widget-container>
-		    </div>
-		</div>
-	</div>
+            <va-widget-container group="categoryDetail" blade="blade" gridster-opts="{width: 396}"></va-widget-container>
+        </div>
+    </div>
 </div>

@@ -17,7 +17,7 @@ namespace VirtoCommerce.Platform.Data.Settings.Converters
             }
             else if (valueType == SettingValueType.DateTime)
             {
-                result.DateTimeValue = Convert.ToDateTime(value);
+                result.DateTimeValue = Convert.ToDateTime(value, CultureInfo.InvariantCulture);
             }
             else if (valueType == SettingValueType.Decimal)
             {

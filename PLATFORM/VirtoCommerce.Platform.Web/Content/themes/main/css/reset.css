@@ -28,7 +28,7 @@ body
 	font-size: 0;
 }
 
-*::selection
+*::selection:not(input):not(textarea)
 {
 	background: none;
 }

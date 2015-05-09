@@ -58,7 +58,8 @@ angular.module(moduleName, ['virtoCommerce.catalogModule', 'virtoCommerce.pricin
   	widgetService.registerWidget(customerOrderAddressWidget, 'customerOrderDetailWidgets');
   	
   	var customerOrderTotalsWidget = {
-  	    controller: 'virtoCommerce.orderModule.customerOrderTotalsWidgetController',
+  	  controller: 'virtoCommerce.orderModule.customerOrderTotalsWidgetController',
+      size: [2, 1],
   		template: 'Modules/$(VirtoCommerce.Orders)/Scripts/widgets/customerOrder-totals-widget.tpl.html',
   	};
   	widgetService.registerWidget(customerOrderTotalsWidget, 'customerOrderDetailWidgets');
@@ -87,6 +88,7 @@ angular.module(moduleName, ['virtoCommerce.catalogModule', 'virtoCommerce.pricin
 
   	var operationsTreeWidget = {
   		controller: 'virtoCommerce.orderModule.operationTreeWidgetController',
+      size: [4, 4],
   		template: 'Modules/$(VirtoCommerce.Orders)/Scripts/widgets/operation-tree-widget.tpl.html',
   	};
   	widgetService.registerWidget(operationsTreeWidget, 'customerOrderDetailWidgets');

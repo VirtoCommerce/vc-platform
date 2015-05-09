@@ -3,7 +3,7 @@
   ['$stateProvider', function ($stateProvider) {
   	$stateProvider
 		.state('notificationsHistory', {
-			url: '/notification/:id',
+			url: '/notifications',
 			templateUrl: 'Scripts/app/notification/notification.tpl.html',
 			controller: ['$scope', 'bladeNavigationService', 'notificationService', function ($scope, bladeNavigationService, notificationService) {
 				var blade = {

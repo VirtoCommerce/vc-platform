@@ -195,7 +195,7 @@ namespace VirtoCommerce.Content.Data
 				MenuLinkListId = audioMP3List.Id,
 				Priority = 0,
 				Title = "Apple iPod",
-				Url = "~/collections/audio-mp3/brand_Apple",
+				Url = "~/collections/audio-mp3?tags=brand_Apple",
 				CreatedDate = DateTime.UtcNow,
 				CreatedBy = "initialize"
 			});
@@ -207,7 +207,7 @@ namespace VirtoCommerce.Content.Data
 				MenuLinkListId = audioMP3List.Id,
 				Priority = 0,
 				Title = "Sony Walkman",
-				Url = "~/collections/audio-mp3/brand_Sony",
+                Url = "~/collections/audio-mp3?tags=brand_Sony",
 				CreatedDate = DateTime.UtcNow,
 				CreatedBy = "initialize"
 			});

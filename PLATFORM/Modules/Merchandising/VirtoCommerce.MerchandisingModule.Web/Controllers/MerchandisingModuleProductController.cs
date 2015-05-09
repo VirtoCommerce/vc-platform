@@ -83,7 +83,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
         {
 			var searchCriteria = new SearchCriteria
 			{
-				ResponseGroup = ResponseGroup.WithProducts,
+				ResponseGroup = ResponseGroup.WithProducts | ResponseGroup.WithVariations,
 				Code = code,
 			};
 
@@ -256,8 +256,9 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
             #endregion
 
             //Load ALL products 
-			var cacheKey = CacheKey.Create("ProductController.Search", criteria.CacheKey);
-            var searchResults = _cacheManager.Get(cacheKey, () => _browseService.SearchItems(criteria, responseGroup));
+			//var cacheKey = CacheKey.Create("ProductController.Search", criteria.CacheKey);
+            //var searchResults = _cacheManager.Get(cacheKey, () => _browseService.SearchItems(criteria, responseGroup));
+			var searchResults = _browseService.SearchItems(criteria, responseGroup);
 
             return this.Ok(searchResults);
         }

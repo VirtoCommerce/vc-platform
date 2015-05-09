@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
@@ -44,8 +45,8 @@ namespace VirtoCommerce.CartModule.Data.Model
 		[Column(TypeName = "Money")]
 		public decimal TaxTotal { get; set; }
 
-		public ICollection<AddressEntity> Addresses { get; set; }
-		public ICollection<LineItemEntity> Items { get; set; }
+		public virtual ObservableCollection<AddressEntity> Addresses { get; set; }
+		public virtual ObservableCollection<LineItemEntity> Items { get; set; }
 
 		public virtual ShoppingCartEntity ShoppingCart { get; set; }
 		public string ShoppingCartId { get; set; }

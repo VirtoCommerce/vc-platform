@@ -13,6 +13,7 @@ angular.module(moduleName, [
      
       //Register widgets in catalog item details
       widgetService.registerWidget({
+          isVisible: function (blade) { return blade.currentEntity.id == 'Zendesk.Helpdesk'; },
           controller: 'helpdeskWidgetController',
           template: 'Modules/$(Zendesk.Helpdesk)/Scripts/widgets/helpdeskWidget.tpl.html'
       }, 'moduleDetail');

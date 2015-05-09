@@ -119,6 +119,7 @@
     <Compile Include="Marketing\Model\DynamicContent\DynamicContentFolder.cs" />
     <Compile Include="Marketing\Model\DynamicContent\IDynamicContentEvaluationContext.cs" />
     <Compile Include="Marketing\Model\DynamicContent\IsHasFolder.cs" />
+    <Compile Include="Marketing\Model\DynamicContent\TagSet.cs" />
     <Compile Include="Marketing\Model\Promotions\CatalogPromotionResult.cs" />
     <Compile Include="Marketing\Model\Promotions\Coupon.cs" />
     <Compile Include="Marketing\Model\DynamicContent\DynamicContentItem.cs" />

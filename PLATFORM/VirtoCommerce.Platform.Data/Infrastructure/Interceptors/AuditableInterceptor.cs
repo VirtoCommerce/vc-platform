@@ -19,7 +19,7 @@ namespace VirtoCommerce.Platform.Data.Infrastructure.Interceptors
 
 			item.CreatedDate =  currentTime;
 			item.ModifiedDate = currentTime;
-            item.CreatedBy = item.ModifiedBy = GetCurrentUserName();
+			item.CreatedBy = item.ModifiedBy = CurrentPrincipal.GetCurrentUserName();
 		}
 
 		public override void OnBeforeUpdate(DbEntityEntry entry, IAuditable item)
@@ -27,7 +27,7 @@ namespace VirtoCommerce.Platform.Data.Infrastructure.Interceptors
 			base.OnBeforeUpdate(entry, item);
 			var currentTime = DateTime.UtcNow;
 			item.ModifiedDate = currentTime;
-            item.CreatedBy = GetCurrentUserName();
+			item.CreatedBy = CurrentPrincipal.GetCurrentUserName();
 		}
 
 		public override void OnAfterInsert(DbEntityEntry entry, IAuditable item)
@@ -35,11 +35,6 @@ namespace VirtoCommerce.Platform.Data.Infrastructure.Interceptors
 			base.OnAfterInsert(entry, item);
 		}
 
-	    private string GetCurrentUserName()
-	    {
-            var userName = Thread.CurrentPrincipal == null ? "unknown" : Thread.CurrentPrincipal.Identity.Name;
-	        if (String.IsNullOrEmpty(userName)) userName = "unknown";
-	        return userName;
-	    }
+	    
 	}
 }

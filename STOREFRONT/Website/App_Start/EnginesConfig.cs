@@ -7,7 +7,6 @@ using System.Web.Mvc;
 using DotLiquid;
 using DotLiquid.FileSystems;
 using VirtoCommerce.Web.Models.Filters;
-using VirtoCommerce.Web.Models.Helpers;
 using VirtoCommerce.Web.Models.Services;
 using VirtoCommerce.Web.Models.Tags;
 using VirtoCommerce.Web.Views.Engines.Liquid;

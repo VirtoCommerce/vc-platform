@@ -24,12 +24,12 @@
 
 angular.module('platformWebApp', AppDependencies).
   controller('appCtrl', ['$scope', '$window', '$state', 'notificationService', function ($scope, $window, $state, notificationService) {
-        $scope.platformVersion = $window.platformVersion;
-        notificationService.run();
+      $scope.platformVersion = $window.platformVersion;
+      notificationService.run();
 
-        $scope.curentStateName = function () {
-            return $state.current.name;
-        };
+      $scope.curentStateName = function () {
+          return $state.current.name;
+      };
   }])
 // Specify SignalR server URL for supporting CORS
 .factory('signalRServer', ['$location', function apiTokenFactory($location) {
@@ -70,8 +70,8 @@ angular.module('platformWebApp', AppDependencies).
   ]
 )
 .run(
-  ['$rootScope', '$state', '$stateParams', 'authService', 'mainMenuService', 'editableOptions', 'notificationService', '$animate', '$templateCache',
-    function ($rootScope, $state, $stateParams, authService, mainMenuService, editableOptions, notificationService, $animate, $templateCache) {
+  ['$rootScope', '$state', '$stateParams', 'authService', 'mainMenuService', 'editableOptions', 'notificationService', '$animate', '$templateCache', 'gridsterConfig',
+    function ($rootScope, $state, $stateParams, authService, mainMenuService, editableOptions, notificationService, $animate, $templateCache, gridsterConfig) {
         //Disable animation
         $animate.enabled(false);
         editableOptions.theme = 'bs3'; // bootstrap3 theme. Can be also 'bs2', 'default'
@@ -130,6 +130,25 @@ angular.module('platformWebApp', AppDependencies).
 
         // cache application level templates
         $templateCache.put('pagerTemplate.html', '<div class="pagination"><pagination boundary-links="true" max-size="pageSettings.numPages" items-per-page="pageSettings.itemsPerPageCount" total-items="pageSettings.totalItems" ng-model="pageSettings.currentPage" class="pagination-sm" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></pagination></div>');
+
+        gridsterConfig.columns = 4;
+        gridsterConfig.colWidth = 130;
+        gridsterConfig.defaultSizeX = 1;
+        gridsterConfig.resizable = { enabled: false, handles: [] };
+        gridsterConfig.maxRows = 8;
+        gridsterConfig.mobileModeEnabled = false;
+        gridsterConfig.outerMargin = false;
+
+        String.prototype.hashCode = function () {
+            var hash = 0, i, chr, len;
+            if (this.length == 0) return hash;
+            for (i = 0, len = this.length; i < len; i++) {
+                chr = this.charCodeAt(i);
+                hash = ((hash << 5) - hash) + chr;
+                hash |= 0; // Convert to 32bit integer
+            }
+            return hash;
+        };
     }
   ]
 );

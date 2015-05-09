@@ -13,15 +13,14 @@
                 pages.getPage({ storeId: blade.choosenStoreId, language: blade.choosenPageLanguage, pageName: blade.choosenPageName }, function (data) {
                     blade.isLoading = false;
                     blade.currentEntity = data;
-                    
+
                     $timeout(function () {
                         if (codemirrorEditor) {
-                        	codemirrorEditor.refresh();
+                            codemirrorEditor.refresh();
                             codemirrorEditor.focus();
                         }
+                        blade.origEntity = angular.copy(blade.currentEntity);
                     }, 1);
-
-                    blade.origEntity = angular.copy(blade.currentEntity);
                 });
 
                 $scope.bladeToolbarCommands = [
@@ -57,18 +56,18 @@
 				}];
             }
             else {
-            	blade.currentEntity.language = blade.defaultStoreLanguage;
+                blade.currentEntity.language = blade.defaultStoreLanguage;
 
                 $scope.bladeToolbarCommands = [
 				{
-					name: "Create", icon: 'fa fa-save',
-					executeMethod: function () {
-						$scope.saveChanges();
-					},
-					canExecuteMethod: function () {
-						return isDirty();
-					},
-					permission: 'content:manage'
+				    name: "Create", icon: 'fa fa-save',
+				    executeMethod: function () {
+				        $scope.saveChanges();
+				    },
+				    canExecuteMethod: function () {
+				        return isDirty();
+				    },
+				    permission: 'content:manage'
 				}];
 
                 blade.setContentTypeValue();
@@ -100,10 +99,10 @@
         if (blade.newPage) {
             pages.checkName({ storeId: blade.choosenStoreId, pageName: blade.currentEntity.name, language: blade.currentEntity.language }, function (data) {
                 if (Boolean(data.result)) {
-                	pages.update({ storeId: blade.choosenStoreId }, blade.currentEntity, function () {
-                		blade.origEntity = angular.copy(blade.currentEntity);
-                		blade.newPage = false;
-                		bladeNavigationService.closeBlade(blade);
+                    pages.update({ storeId: blade.choosenStoreId }, blade.currentEntity, function () {
+                        blade.origEntity = angular.copy(blade.currentEntity);
+                        blade.newPage = false;
+                        bladeNavigationService.closeBlade(blade);
                         blade.parentBlade.initialize();
                     });
                 }
@@ -220,9 +219,9 @@
     };
 
     blade.getBladeStyle = function () {
-    	var value = $(window).width() - 550;
+        var value = $(window).width() - 550;
 
-    	return 'width:' + value + 'px';
+        return 'width:' + value + 'px';
     }
 
     blade.initialize();

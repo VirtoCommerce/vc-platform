@@ -34,20 +34,23 @@ namespace VirtoCommerce.StoreModule.Data.Model
 
 		public override string ToString()
 		{
-			switch (ValueType)
+		    if (ValueType == null)
+		        return base.ToString();
+
+			switch (ValueType.ToLowerInvariant())
 			{
-				case "Boolean":
+				case "boolean":
 					return BooleanValue.ToString();
-				case "DateTime":
+				case "datetime":
 					return DateTimeValue.ToString();
-				case "Decimal":
+				case "decimal":
 					return DecimalValue.ToString();
-				case "Integer":
+				case "integer":
 					return IntegerValue.ToString();
-				case "LongText":
+				case "longtext":
                 case "xml":
 					return LongTextValue;
-				case "ShortText":
+				case "shorttext":
 					return ShortTextValue;
 			}
 			return base.ToString();
@@ -55,20 +58,23 @@ namespace VirtoCommerce.StoreModule.Data.Model
 
         public object RawValue()
         {
-            switch (ValueType)
+            if (ValueType == null)
+                return null;
+
+            switch (ValueType.ToLowerInvariant())
             {
-                case "Boolean":
+                case "boolean":
                     return BooleanValue;
-                case "DateTime":
+                case "datetime":
                     return DateTimeValue;
-                case "Decimal":
+                case "decimal":
                     return DecimalValue;
-                case "Integer":
+                case "integer":
                     return IntegerValue;
-                case "LongText":
+                case "longtext":
 				case "xml":
                     return LongTextValue;
-                case "ShortText":
+                case "shorttext":
                     return ShortTextValue;
             }
 

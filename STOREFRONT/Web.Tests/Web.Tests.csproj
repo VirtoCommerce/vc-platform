@@ -90,6 +90,10 @@
       <Project>{84b945b7-85e4-4057-b0df-1f8a03b8d53c}</Project>
       <Name>VirtoCommerce.ApiClient</Name>
     </ProjectReference>
+    <ProjectReference Include="..\WebModels\VirtoCommerce.WebModels.csproj">
+      <Project>{0a52dfa2-2ebe-4182-b1e5-1ef88f8dbac5}</Project>
+      <Name>VirtoCommerce.WebModels</Name>
+    </ProjectReference>
     <ProjectReference Include="..\WebViews\VirtoCommerce.WebViews.csproj">
       <Project>{6695201C-2168-47FC-A4C0-FDD5AB5CB135}</Project>
       <Name>VirtoCommerce.WebViews</Name>

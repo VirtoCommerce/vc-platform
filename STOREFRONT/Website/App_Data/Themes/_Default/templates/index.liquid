@@ -1,5 +1,14 @@
 {% include 'slider' %}
 
+<div data-vccontentid="MainPageTopBanners" style="text-align: center;">
+</div>
+<div data-vccontentid="TopHtmlBanner" style="text-align: center;">
+</div>
+<div data-vccontentid="ProductBanner" style="text-align: center;">
+</div>
+<div data-vccontentid="CategoryWithImagesBanner" style="text-align: center;">
+</div>
+
 {% unless settings.home_content == blank or pages[settings.home_content].empty? or pages[settings.home_content].content == blank %}
   {% assign page = pages[settings.home_content] %}
   <div class="rte">

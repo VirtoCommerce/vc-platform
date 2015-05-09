@@ -8,17 +8,24 @@ namespace Zapier.IntegrationModule.Web.Providers.Implementations
 {
     public class ContactsProvider: IContactsProvider
     {
-        private readonly ICustomerSearchService _contactService;
+        private readonly ICustomerSearchService _customerSearchService;
+        private readonly IContactService _contactService;
 
-        public ContactsProvider(ICustomerSearchService contactService)
+        public ContactsProvider(ICustomerSearchService customerSearchService, IContactService contactService)
         {
+            _customerSearchService = customerSearchService;
             _contactService = contactService;
         }
 
 
         public IEnumerable<Contact> GetNewContacts()
         {
-            return _contactService.Search(new SearchCriteria()).Contacts.OrderByDescending(c => c.CreatedDate);
+            return _customerSearchService.Search(new SearchCriteria()).Contacts.OrderByDescending(c => c.CreatedDate);
+        }
+
+        public Contact NewContact(Contact newContact)
+        {
+            return _contactService.Create(newContact);
         }
     }
 }
