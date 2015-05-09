@@ -121,12 +121,17 @@
 					<div class="editable" text-angular ng-model="blade.entity.rawHtml" text-angular-name="myEditor"></div>
 				</div>
 
-				<div class="form-group" ng-if="blade.isPropertyShows('razorHtml')">
-					<label class="form-label">Razor Html:</label>
-					<div class="editable" text-angular ng-model="blade.entity.razorHtml" text-angular-name="myEditor"></div>
-				</div>
+			    <div class="form-group" ng-if="blade.isPropertyShows('razorHtml')">
+			        <label class="form-label">Razor Html:</label>
+			        <div class="editable" text-angular ng-model="blade.entity.razorHtml" text-angular-name="myEditor"></div>
+			    </div>
+                
+                <div class="form-group" ng-if="blade.isPropertyShows('liquidHtml')">
+                    <label class="form-label">Razor Html:</label>
+                    <div class="editable" text-angular ng-model="blade.entity.liquidHtml" text-angular-name="myEditor"></div>
+                </div>
 
-				<div class="form-group" ng-if="blade.isPropertyShows('alternativeText')">
+			    <div class="form-group" ng-if="blade.isPropertyShows('alternativeText')">
 					<label class="form-label">Alternative Text:</label>
 					<div class="form-input">
 						<input focus-on="" required class="form-control" ng-model="blade.entity.alternativeText" placeholder="Enter alternative text" />

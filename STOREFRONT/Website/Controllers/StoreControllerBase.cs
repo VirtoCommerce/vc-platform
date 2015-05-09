@@ -63,6 +63,12 @@ namespace VirtoCommerce.Web.Controllers
             return base.View(viewName, masterName, model ?? this.Context);
         }
 
+        protected override PartialViewResult PartialView(string viewName, object model)
+        {
+            this.Context.Template = viewName;
+            return base.PartialView(viewName, model ?? this.Context);
+        }
+
         protected SubmitForm GetForm(string formId)
         {
             SubmitForm form = null;
