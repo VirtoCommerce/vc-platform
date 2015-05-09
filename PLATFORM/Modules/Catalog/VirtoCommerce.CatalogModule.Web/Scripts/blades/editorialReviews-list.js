@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.catalogModule')
-.controller('virtoCommerce.catalogModule.editorialReviewsListController', ['$rootScope', '$scope', 'bladeNavigationService', 'virtoCommerce.catalogModule.items', function ($rootScope, $scope, bladeNavigationService, items) {
+.controller('virtoCommerce.catalogModule.editorialReviewsListController', ['$rootScope', '$scope', 'platformWebApp.bladeNavigationService', 'virtoCommerce.catalogModule.items', function ($rootScope, $scope, bladeNavigationService, items) {
     //$scope.blade.origEntity = {};
     //$scope.blade.currentEntities = {};
 

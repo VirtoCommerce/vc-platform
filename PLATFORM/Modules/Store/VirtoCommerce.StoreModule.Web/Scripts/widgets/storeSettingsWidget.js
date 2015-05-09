@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.storeModule')
-.controller('virtoCommerce.storeModule.storeSettingsWidgetController', ['$scope', 'bladeNavigationService', function ($scope, bladeNavigationService) {
+.controller('virtoCommerce.storeModule.storeSettingsWidgetController', ['$scope', 'platformWebApp.bladeNavigationService', function ($scope, bladeNavigationService) {
     var blade = $scope.widget.blade;
     
     $scope.openBlade = function () {

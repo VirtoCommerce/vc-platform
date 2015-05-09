@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.catalogModule')
-.controller('virtoCommerce.catalogModule.virtualcatalogLanguagesController', ['$scope', 'bladeNavigationService', 'settings', 'dialogService', function ($scope, bladeNavigationService, settings, dialogService) {
+.controller('virtoCommerce.catalogModule.virtualcatalogLanguagesController', ['$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.settings', 'platformWebApp.dialogService', function ($scope, bladeNavigationService, settings, dialogService) {
     var promise = settings.getValues({ id: 'VirtoCommerce.Core.General.Languages' }).$promise;
 
     function initializeBlade(data) {

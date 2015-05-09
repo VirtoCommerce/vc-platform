@@ -1,6 +1,6 @@
 ﻿angular.module("virtoCommerce.coreModule.fulfillment", [])
 .run(
-  ['$rootScope', 'mainMenuService', 'widgetService', '$state', function ($rootScope, mainMenuService, widgetService, $state) {
+  ['$rootScope', 'platformWebApp.mainMenuService', 'platformWebApp.widgetService', '$state', function ($rootScope, mainMenuService, widgetService, $state) {
       //Register module widget
       widgetService.registerWidget({
           isVisible: function (blade) { return blade.currentEntity.id == 'VirtoCommerce.Core'; },

@@ -1,5 +1,5 @@
 ﻿angular.module('platformWebApp')
-.controller('accountApiWidgetController', ['$scope', 'bladeNavigationService', function ($scope, bladeNavigationService) {
+.controller('platformWebApp.accountApiWidgetController', ['$scope', 'platformWebApp.bladeNavigationService', function ($scope, bladeNavigationService) {
 
    
     $scope.openBlade = function () {
@@ -7,7 +7,7 @@
             id: "accountChildBlade",
             title: $scope.blade.title,
             subtitle: 'API access',
-            controller: 'accountApiController',
+            controller: 'platformWebApp.accountApiController',
             template: 'Scripts/common/security/blades/account-api.tpl.html'
         };
         bladeNavigationService.showBlade(newBlade, $scope.blade);

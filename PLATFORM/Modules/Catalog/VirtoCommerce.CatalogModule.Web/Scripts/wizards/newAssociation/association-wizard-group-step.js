@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.catalogModule')
-.controller('virtoCommerce.catalogModule.associationGroupSelectController', ['$scope', 'bladeNavigationService', function ($scope, bladeNavigationService) {
+.controller('virtoCommerce.catalogModule.associationGroupSelectController', ['$scope', 'platformWebApp.bladeNavigationService', function ($scope, bladeNavigationService) {
     $scope.blade.refresh = function () {
         $scope.selectedId = $scope.blade.parentBlade.groupName;
         $scope.blade.isLoading = false;

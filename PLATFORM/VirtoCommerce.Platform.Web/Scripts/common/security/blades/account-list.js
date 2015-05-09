@@ -1,5 +1,5 @@
 ﻿angular.module('platformWebApp')
-.controller('accountListController', ['$scope', 'accounts', 'bladeNavigationService', 'dialogService',
+.controller('platformWebApp.accountListController', ['$scope', 'platformWebApp.accounts', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService',
 function ($scope, accounts, bladeNavigationService, dialogService) {
     //pagination settings
     $scope.pageSettings = {};
@@ -47,7 +47,7 @@ function ($scope, accounts, bladeNavigationService, dialogService) {
             data: selectedNode,
             title: selectedNode.userName,
             subtitle: $scope.blade.subtitle,
-            controller: 'accountDetailController',
+            controller: 'platformWebApp.accountDetailController',
             template: 'Scripts/common/security/blades/account-detail.tpl.html'
         };
 
@@ -114,7 +114,7 @@ function ($scope, accounts, bladeNavigationService, dialogService) {
                     currentEntity: { roles: [], userType: 'SiteAdministrator' },
                     title: 'New Account',
                     subtitle: $scope.blade.subtitle,
-                    controller: 'newAccountWizardController',
+                    controller: 'platformWebApp.newAccountWizardController',
                     template: 'Scripts/common/security/wizards/newAccount/new-account-wizard.tpl.html'
                 };
                 bladeNavigationService.showBlade(newBlade, $scope.blade);

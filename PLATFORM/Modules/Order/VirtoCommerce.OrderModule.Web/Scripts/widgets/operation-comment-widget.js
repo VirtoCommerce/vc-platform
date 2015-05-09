@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.orderModule')
-.controller('virtoCommerce.orderModule.operationCommentWidgetController', ['$scope', 'bladeNavigationService', function ($scope, bladeNavigationService) {
+.controller('virtoCommerce.orderModule.operationCommentWidgetController', ['$scope', 'platformWebApp.bladeNavigationService', function ($scope, bladeNavigationService) {
 	$scope.currentBlade = $scope.widget.blade;
 	$scope.operation = {};
 

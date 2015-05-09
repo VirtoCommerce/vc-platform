@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.catalogModule')
-.controller('virtoCommerce.catalogModule.advancedSearchController', ['$scope', '$filter', 'virtoCommerce.catalogModule.listEntries', 'bladeNavigationService', function ($scope, $filter, listEntries, bladeNavigationService) {
+.controller('virtoCommerce.catalogModule.advancedSearchController', ['$scope', '$filter', 'virtoCommerce.catalogModule.listEntries', 'platformWebApp.bladeNavigationService', function ($scope, $filter, listEntries, bladeNavigationService) {
     var propertyValues = undefined;
     $scope.filter = { searchKeyword: undefined };
 

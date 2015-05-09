@@ -1,5 +1,5 @@
 ﻿angular.module('platformWebApp')
-.controller('settingsWidgetController', ['$scope', 'bladeNavigationService', 'settings', function ($scope, bladeNavigationService, settings) {
+.controller('platformWebApp.settingsWidgetController', ['$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.settings', function ($scope, bladeNavigationService, settings) {
     var blade = $scope.widget.blade;
     
     $scope.widget.refresh = function () {
@@ -16,7 +16,7 @@
             // parentWidget: $scope.widget,
             title: 'Module settings',
             //subtitle: '',
-            controller: 'settingsDetailController',
+            controller: 'platformWebApp.settingsDetailController',
             template: 'Scripts/app/settings/blades/settings-detail.tpl.html'
         };
         bladeNavigationService.showBlade(newBlade, blade);

@@ -5,13 +5,12 @@
 //          .state('workspace.coreModulesettings', {
 //              url: '/settings',
 //              templateUrl: 'Modules/$(VirtoCommerce.Core)/Scripts/home.tpl.html',
-//              controller: [
-//                  '$scope', 'bladeNavigationService', function ($scope, bladeNavigationService) {
+//              controller: ['$scope', 'platformWebApp.bladeNavigationService', function ($scope, bladeNavigationService) {
 //                      var blade = {
 //                          id: 'settings',
 //                          title: 'Settings',
 //                          //subtitle: 'Manage settings',
-//                          controller: 'settingsListController',
+//                          controller: 'platformWebApp.settingsListController',
 //                          template: 'Scripts/app/settings//blades/settings-list.tpl.html',
 //                          isClosingDisabled: true
 //                      };
@@ -22,7 +21,7 @@
 //  }]
 //)
 .run(
-  ['$rootScope', 'mainMenuService', 'widgetService', '$state', function ($rootScope, mainMenuService, widgetService, $state) {
+  ['$rootScope', 'platformWebApp.mainMenuService', 'platformWebApp.widgetService', '$state', function ($rootScope, mainMenuService, widgetService, $state) {
       ////Register module in main menu
       //var menuItem = {
       //    path: 'browse/settings',
@@ -36,7 +35,7 @@
 
       //Register item prices widget
       widgetService.registerWidget({
-          controller: 'settingsWidgetController',
+          controller: 'platformWebApp.settingsWidgetController',
           template: 'Scripts/app/settings/widgets/settingsWidget.tpl.html'
       }, 'moduleDetail');
 

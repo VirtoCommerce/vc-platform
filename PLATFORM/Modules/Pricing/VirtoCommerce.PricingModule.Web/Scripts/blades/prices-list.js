@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.pricingModule')
-.controller('virtoCommerce.pricingModule.pricesListController', ['$scope', 'virtoCommerce.pricingModule.prices', 'objCompareService', 'bladeNavigationService', 'dialogService', function ($scope, prices, objCompareService, bladeNavigationService, dialogService) {
+.controller('virtoCommerce.pricingModule.pricesListController', ['$scope', 'virtoCommerce.pricingModule.prices', 'platformWebApp.objCompareService', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', function ($scope, prices, objCompareService, bladeNavigationService, dialogService) {
     $scope.blade.selectedAll = false;
     $scope.selectedItem = null;
 

@@ -1,5 +1,5 @@
 ﻿angular.module('platformWebApp')
-.directive('vaLoginToolbar', ['$document', '$timeout', 'authService', function ($document, $timeout, authService) {
+.directive('vaLoginToolbar', ['$document', '$timeout', 'platformWebApp.authService', function ($document, $timeout, authService) {
     return {
         templateUrl: 'Scripts/common/security/login/loginToolbar.tpl.html',
         restrict: 'E',

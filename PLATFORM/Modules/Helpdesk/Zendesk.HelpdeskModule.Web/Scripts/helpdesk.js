@@ -9,7 +9,7 @@ angular.module(moduleName, [
 ])
 
 .run(
-  ['$rootScope', 'mainMenuService', 'widgetService', '$state', function ($rootScope, mainMenuService, widgetService, $state) {
+  ['$rootScope', 'platformWebApp.mainMenuService', 'platformWebApp.widgetService', '$state', function ($rootScope, mainMenuService, widgetService, $state) {
      
       //Register widgets in catalog item details
       widgetService.registerWidget({

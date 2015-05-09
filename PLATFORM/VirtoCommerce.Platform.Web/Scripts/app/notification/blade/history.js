@@ -1,5 +1,5 @@
 angular.module('platformWebApp')
-.controller('notificationsHistoryController', ['$scope', 'bladeNavigationService', 'notificationTemplateResolver', 'notifications',
+.controller('platformWebApp.notificationsHistoryController', ['$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.notificationTemplateResolver', 'platformWebApp.notifications',
 function ($scope, bladeNavigationService, notificationTemplateResolver, notifications) {
 
     $scope.pageSettings = {};

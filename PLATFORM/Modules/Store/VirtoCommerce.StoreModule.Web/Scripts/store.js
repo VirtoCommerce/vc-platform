@@ -16,7 +16,7 @@ angular.module(moduleName, [
               url: '/store',
               templateUrl: 'Modules/$(VirtoCommerce.Store)/Scripts/home.tpl.html',
               controller: [
-                  '$scope', 'bladeNavigationService', function ($scope, bladeNavigationService) {
+                  '$scope', 'platformWebApp.bladeNavigationService', function ($scope, bladeNavigationService) {
                       var blade = {
                           id: 'store',
                           title: 'Stores',
@@ -31,7 +31,7 @@ angular.module(moduleName, [
   }]
 )
 .run(
-  ['$rootScope', 'mainMenuService', 'widgetService', '$state', function ($rootScope, mainMenuService, widgetService, $state) {
+  ['$rootScope', 'platformWebApp.mainMenuService', 'platformWebApp.widgetService', '$state', function ($rootScope, mainMenuService, widgetService, $state) {
       //Register module in main menu
       var menuItem = {
           path: 'browse/store',

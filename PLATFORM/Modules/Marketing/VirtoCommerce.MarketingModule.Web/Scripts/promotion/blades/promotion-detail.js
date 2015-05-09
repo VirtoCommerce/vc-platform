@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.marketingModule')
-.controller('virtoCommerce.marketingModule.promotionDetailController', ['$scope', 'bladeNavigationService', 'virtoCommerce.marketingModule.promotions', 'virtoCommerce.catalogModule.catalogs', 'virtoCommerce.storeModule.stores', 'settings', 'dialogService', 'virtoCommerce.coreModule.common.dynamicExpressionService', function ($scope, bladeNavigationService, marketing_res_promotions, catalogs, stores, settings, dialogService, dynamicExpressionService) {
+.controller('virtoCommerce.marketingModule.promotionDetailController', ['$scope', 'platformWebApp.bladeNavigationService', 'virtoCommerce.marketingModule.promotions', 'virtoCommerce.catalogModule.catalogs', 'virtoCommerce.storeModule.stores', 'platformWebApp.settings', 'platformWebApp.dialogService', 'virtoCommerce.coreModule.common.dynamicExpressionService', function ($scope, bladeNavigationService, marketing_res_promotions, catalogs, stores, settings, dialogService, dynamicExpressionService) {
     $scope.blade.refresh = function (parentRefresh) {
         if ($scope.blade.isNew) {
             marketing_res_promotions.getNew({}, function (data) {

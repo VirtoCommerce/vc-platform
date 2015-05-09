@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.catalogModule')
-.controller('virtoCommerce.catalogModule.newProductWizardReviewsController', ['$scope', 'bladeNavigationService', function ($scope, bladeNavigationService)
+.controller('virtoCommerce.catalogModule.newProductWizardReviewsController', ['$scope', 'platformWebApp.bladeNavigationService', function ($scope, bladeNavigationService)
 {
     $scope.blade.isLoading = false;
     $scope.wizardBlade = $scope.blade.parentBlade;

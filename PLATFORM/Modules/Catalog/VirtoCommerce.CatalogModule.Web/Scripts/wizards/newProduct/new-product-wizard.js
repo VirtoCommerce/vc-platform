@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.catalogModule')
-.controller('virtoCommerce.catalogModule.newProductWizardController', ['$scope', 'bladeNavigationService', 'dialogService', 'virtoCommerce.catalogModule.items', function ($scope, bladeNavigationService, dialogService, items) {
+.controller('virtoCommerce.catalogModule.newProductWizardController', ['$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', 'virtoCommerce.catalogModule.items', function ($scope, bladeNavigationService, dialogService, items) {
     
     $scope.blade.isLoading = false;
     $scope.createItem = function () {

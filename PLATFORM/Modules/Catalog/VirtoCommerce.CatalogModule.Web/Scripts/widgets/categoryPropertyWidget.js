@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.catalogModule')
-.controller('virtoCommerce.catalogModule.categoryPropertyWidgetController', ['$scope', 'bladeNavigationService', function ($scope, bladeNavigationService)
+.controller('virtoCommerce.catalogModule.categoryPropertyWidgetController', ['$scope', 'platformWebApp.bladeNavigationService', function ($scope, bladeNavigationService)
 {
     $scope.currentBlade = $scope.widget.blade;
 

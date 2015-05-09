@@ -1,5 +1,5 @@
 ﻿angular.module('platformWebApp')
-.factory('mainMenuService', ['$filter', function ($filter) {
+.factory('platformWebApp.mainMenuService', ['$filter', function ($filter) {
 
 	var menuItems = [];
 
@@ -62,7 +62,7 @@
 	};
 	return retVal;
 }])
-.directive('vaMainMenu', ['$compile', '$filter', '$state', 'mainMenuService', function ($compile, $filter, $state, mainMenuService) {
+.directive('vaMainMenu', ['$compile', '$filter', '$state', 'platformWebApp.mainMenuService', function ($compile, $filter, $state, mainMenuService) {
 
 	return {
 		restrict: 'E',

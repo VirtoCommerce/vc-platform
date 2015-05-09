@@ -1,5 +1,5 @@
 ﻿angular.module('platformWebApp')
-.controller('roleListController', ['$scope', 'platform_res_roles', 'bladeNavigationService', 'dialogService',
+.controller('platformWebApp.roleListController', ['$scope', 'platformWebApp.roles', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService',
 function ($scope, roles, bladeNavigationService, dialogService) {
     //pagination settings
     $scope.pageSettings = {};
@@ -47,7 +47,7 @@ function ($scope, roles, bladeNavigationService, dialogService) {
             data: selectedNode,
             title: selectedNode.name,
             subtitle: $scope.blade.subtitle,
-            controller: 'roleDetailController',
+            controller: 'platformWebApp.roleDetailController',
             template: 'Scripts/common/security/blades/role-detail.tpl.html'
         };
 
@@ -114,7 +114,7 @@ function ($scope, roles, bladeNavigationService, dialogService) {
                     isNew: true,
                     title: 'New Role',
                     subtitle: $scope.blade.subtitle,
-                    controller: 'roleDetailController',
+                    controller: 'platformWebApp.roleDetailController',
                     template: 'Scripts/common/security/wizards/new-role-wizard.tpl.html'
                 };
                 bladeNavigationService.showBlade(newBlade, $scope.blade);

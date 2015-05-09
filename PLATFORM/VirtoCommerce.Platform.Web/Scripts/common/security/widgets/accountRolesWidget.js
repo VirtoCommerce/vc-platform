@@ -1,5 +1,5 @@
 ﻿angular.module('platformWebApp')
-.controller('accountRolesWidgetController', ['$scope', 'bladeNavigationService', function ($scope, bladeNavigationService) {
+.controller('platformWebApp.accountRolesWidgetController', ['$scope', 'platformWebApp.bladeNavigationService', function ($scope, bladeNavigationService) {
 
     $scope.openBlade = function () {
         var newBlade = {
@@ -7,7 +7,7 @@
             promise: $scope.blade.promise,
             title: $scope.blade.title,
             subtitle: 'View roles',
-            controller: 'accountRolesListController',
+            controller: 'platformWebApp.accountRolesListController',
             template: 'Scripts/common/security/blades/account-roles-list.tpl.html'
         };
         bladeNavigationService.showBlade(newBlade, $scope.blade);

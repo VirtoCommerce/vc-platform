@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.contentModule')
-.controller('virtoCommerce.contentModule.linkListsController', ['$scope', 'virtoCommerce.contentModule.menus', 'virtoCommerce.contentModule.stores', 'bladeNavigationService', function ($scope, menus, menusStores, bladeNavigationService) {
+.controller('virtoCommerce.contentModule.linkListsController', ['$scope', 'virtoCommerce.contentModule.menus', 'virtoCommerce.contentModule.stores', 'platformWebApp.bladeNavigationService', function ($scope, menus, menusStores, bladeNavigationService) {
 	$scope.selectedNodeId = null;
 
 	var blade = $scope.blade;

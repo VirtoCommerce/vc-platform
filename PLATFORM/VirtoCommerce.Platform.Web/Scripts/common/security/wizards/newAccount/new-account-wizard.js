@@ -1,5 +1,5 @@
 ﻿angular.module('platformWebApp')
-.controller('newAccountWizardController', ['$scope', 'bladeNavigationService', 'accounts', 'platform_res_roles', function ($scope, bladeNavigationService, accounts, roles) {
+.controller('platformWebApp.newAccountWizardController', ['$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.accounts', 'platformWebApp.roles', function ($scope, bladeNavigationService, accounts, roles) {
     var promise = roles.get({ count: 10000 }).$promise;
 
     function initializeBlade(data) {

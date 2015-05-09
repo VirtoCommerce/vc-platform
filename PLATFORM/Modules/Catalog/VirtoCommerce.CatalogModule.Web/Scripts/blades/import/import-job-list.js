@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.catalogModule')
-.controller('virtoCommerce.catalogModule.importJobListController', ['$scope', 'bladeNavigationService', 'dialogService', 'virtoCommerce.catalogModule.imports', function ($scope, bladeNavigationService, dialogService, imports) {
+.controller('virtoCommerce.catalogModule.importJobListController', ['$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', 'virtoCommerce.catalogModule.imports', function ($scope, bladeNavigationService, dialogService, imports) {
     $scope.selectedAll = false;
     $scope.selectedItem = null;
 

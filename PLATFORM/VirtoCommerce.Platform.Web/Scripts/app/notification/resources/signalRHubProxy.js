@@ -1,7 +1,7 @@
 ﻿angular.module('platformWebApp')
-.factory('signalRHubProxy', ['$rootScope', 'signalRServer', function ($rootScope, signalRServer) {
+.factory('platformWebApp.signalRHubProxy', ['$rootScope', 'platformWebApp.signalRServerName', function ($rootScope, signalRServerName) {
     function signalRHubProxyFactory(serverUrl, hubName, startOptions) {
-        var connection = $.hubConnection(signalRServer);
+        var connection = $.hubConnection(signalRServerName);
         var proxy = connection.createHubProxy(hubName);
         connection.start(startOptions).done(function () { });
 

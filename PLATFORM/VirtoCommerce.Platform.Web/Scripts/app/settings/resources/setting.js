@@ -1,5 +1,5 @@
 ﻿angular.module('platformWebApp')
-.factory('settings', ['$resource', function ($resource) {
+.factory('platformWebApp.settings', ['$resource', function ($resource) {
     return $resource('api/settings/:id', { id: '@Id' }, {
         getModules: { url: 'api/settings/modules', isArray: true },
         getSettings: { url: 'api/settings/modules/:id', isArray: true },

@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.pricingModule')
-.controller('virtoCommerce.pricingModule.pricelistItemListController', ['$scope', '$filter', 'bladeNavigationService', function ($scope, $filter, bladeNavigationService) {
+.controller('virtoCommerce.pricingModule.pricelistItemListController', ['$scope', '$filter', 'platformWebApp.bladeNavigationService', function ($scope, $filter, bladeNavigationService) {
     var selectedNode = null;
 
     function initializeBlade(data) {

@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.catalogModule')
-.controller('virtoCommerce.catalogModule.catalogPropertyController', ['$scope', 'virtoCommerce.catalogModule.catalogs', 'virtoCommerce.catalogModule.properties', 'bladeNavigationService', 'dialogService', function ($scope, catalogs, properties, bladeNavigationService, dialogService) {
+.controller('virtoCommerce.catalogModule.catalogPropertyController', ['$scope', 'virtoCommerce.catalogModule.catalogs', 'virtoCommerce.catalogModule.properties', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', function ($scope, catalogs, properties, bladeNavigationService, dialogService) {
 	$scope.blade.origEntity = {};
 
 	$scope.blade.refresh = function (parentRefresh) {

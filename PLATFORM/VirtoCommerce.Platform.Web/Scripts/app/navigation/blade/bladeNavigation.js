@@ -1,5 +1,5 @@
 angular.module('platformWebApp')
-.directive('vaBladeContainer', ['$compile', 'bladeNavigationService', function ($compile, bladeNavigationService) {
+.directive('vaBladeContainer', ['$compile', 'platformWebApp.bladeNavigationService', function ($compile, bladeNavigationService) {
     return {
         restrict: 'E',
         replace: true,
@@ -9,7 +9,7 @@ angular.module('platformWebApp')
         }
     }
 }])
-.directive('vaBlade', ['$compile', 'bladeNavigationService', '$timeout', function ($compile, bladeNavigationService, $timeout) {
+.directive('vaBlade', ['$compile', 'platformWebApp.bladeNavigationService', '$timeout', function ($compile, bladeNavigationService, $timeout) {
     return {
         terminal: true,
         priority: 100,
@@ -143,7 +143,7 @@ angular.module('platformWebApp')
         }
     };
 }])
-.factory('bladeNavigationService', ['$rootScope', '$timeout', '$state', function ($rootScope, $timeout, $state) {
+.factory('platformWebApp.bladeNavigationService', ['$rootScope', '$timeout', '$state', function ($rootScope, $timeout, $state) {
     var service = {
         blades: [],
         currentBlade: undefined,

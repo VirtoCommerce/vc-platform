@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.pricingModule')
-    .controller('virtoCommerce.pricingModule.pricelistDetailController', ['$scope', 'bladeNavigationService', 'virtoCommerce.pricingModule.pricelists', 'settings', 'dialogService', function ($scope, bladeNavigationService, pricelists, settings, dialogService) {
+    .controller('virtoCommerce.pricingModule.pricelistDetailController', ['$scope', 'platformWebApp.bladeNavigationService', 'virtoCommerce.pricingModule.pricelists', 'platformWebApp.settings', 'platformWebApp.dialogService', function ($scope, bladeNavigationService, pricelists, settings, dialogService) {
         $scope.blade.refresh = function (parentRefresh) {
             if ($scope.blade.isNew) {
                 initializeBlade({ productPrices: [], assignments: [] });

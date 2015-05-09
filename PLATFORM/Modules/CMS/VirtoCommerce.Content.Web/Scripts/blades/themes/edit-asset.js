@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.contentModule')
-.controller('virtoCommerce.contentModule.editAssetController', ['$scope', 'dialogService', 'virtoCommerce.contentModule.themes', '$timeout', 'bladeNavigationService', function ($scope, dialogService, themes, $timeout, bladeNavigationService) {
+.controller('virtoCommerce.contentModule.editAssetController', ['$scope', 'platformWebApp.dialogService', 'virtoCommerce.contentModule.themes', '$timeout', 'platformWebApp.bladeNavigationService', function ($scope, dialogService, themes, $timeout, bladeNavigationService) {
     var blade = $scope.blade;
     var codemirrorEditor;
 

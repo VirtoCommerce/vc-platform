@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.catalogModule')
-.controller('virtoCommerce.catalogModule.editorialReviewDetailController', ['$scope', '$filter', 'dialogService', 'virtoCommerce.catalogModule.items', function ($scope, $filter, dialogService, items) {
+.controller('virtoCommerce.catalogModule.editorialReviewDetailController', ['$scope', '$filter', 'platformWebApp.dialogService', 'virtoCommerce.catalogModule.items', function ($scope, $filter, dialogService, items) {
     $scope.types = ["QuickReview", "FullReview"];
 
     function initializeBlade(data) {

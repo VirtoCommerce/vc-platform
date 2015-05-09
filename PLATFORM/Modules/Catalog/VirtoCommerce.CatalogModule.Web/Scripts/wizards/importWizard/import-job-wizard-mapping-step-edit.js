@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.catalogModule')
-.controller('virtoCommerce.catalogModule.importJobMappingEditController', ['$scope', 'bladeNavigationService', function ($scope, bladeNavigationService)
+.controller('virtoCommerce.catalogModule.importJobMappingEditController', ['$scope', 'platformWebApp.bladeNavigationService', function ($scope, bladeNavigationService)
 {
     function initializeBlade(data)
     {

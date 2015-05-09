@@ -1,5 +1,5 @@
 ﻿angular.module('platformWebApp')
-    .directive('vaMainTilesList', ['$localStorage', 'authService', 'notificationService', function ($localStorage, authService, notificationService) {
+    .directive('vaMainTilesList', ['$localStorage', 'platformWebApp.authService', 'platformWebApp.notificationService', function ($localStorage, authService, notificationService) {
         return {
             templateUrl: 'Scripts/app/dashboard/mainTilesList.tpl.html',
             restrict: 'E',

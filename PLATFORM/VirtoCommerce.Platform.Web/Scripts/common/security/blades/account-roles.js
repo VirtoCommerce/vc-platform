@@ -1,5 +1,5 @@
 ﻿angular.module('platformWebApp')
-.controller('accountRolesController', ['$scope', 'bladeNavigationService', 'dialogService', function ($scope, bladeNavigationService, dialogService) {
+.controller('platformWebApp.accountRolesController', ['$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', function ($scope, bladeNavigationService, dialogService) {
     
     function initializeBlade(data) {
         $scope.blade.data = data;

@@ -15,7 +15,7 @@ angular.module(catalogsModuleName, [
               url: '/catalog',
               templateUrl: 'Modules/$(VirtoCommerce.Catalog)/Scripts/home/home.tpl.html',
               controller: [
-                  '$scope', 'bladeNavigationService', function ($scope, bladeNavigationService) {
+                  '$scope', 'platformWebApp.bladeNavigationService', function ($scope, bladeNavigationService) {
                       var blade = {
                           id: 'categories',
                           title: 'Catalogs',
@@ -33,7 +33,7 @@ angular.module(catalogsModuleName, [
   ]
 )
 .run(
-  ['$rootScope', 'mainMenuService', 'widgetService', '$state', 'notificationTemplateResolver', 'bladeNavigationService', function ($rootScope, mainMenuService, widgetService, $state, notificationTemplateResolver, bladeNavigationService) {
+  ['$rootScope', 'platformWebApp.mainMenuService', 'platformWebApp.widgetService', '$state', 'platformWebApp.notificationTemplateResolver', 'platformWebApp.bladeNavigationService', function ($rootScope, mainMenuService, widgetService, $state, notificationTemplateResolver, bladeNavigationService) {
       //Register module in main menu
       var menuItem = {
           path: 'browse/catalog',

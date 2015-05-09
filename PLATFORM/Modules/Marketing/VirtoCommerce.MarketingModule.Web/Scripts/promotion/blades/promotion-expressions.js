@@ -1,8 +1,8 @@
 ﻿angular.module('virtoCommerce.marketingModule')
-.controller('virtoCommerce.marketingModule.promotionConditionCurrencyIsController', ['$scope', 'settings', function ($scope, settings) {
+.controller('virtoCommerce.marketingModule.promotionConditionCurrencyIsController', ['$scope', 'platformWebApp.settings', function ($scope, settings) {
     $scope.availableCurrencies = settings.getValues({ id: 'VirtoCommerce.Core.General.Currencies' });
 }])
-.controller('virtoCommerce.marketingModule.promotionExpressionsController', ['$scope', 'authService', 'bladeNavigationService', function ($scope, authService, bladeNavigationService) {
+.controller('virtoCommerce.marketingModule.promotionExpressionsController', ['$scope', 'platformWebApp.authService', 'platformWebApp.bladeNavigationService', function ($scope, authService, bladeNavigationService) {
 
     $scope.openItemSelectWizard = function (parentElement) {
         if (!authService.checkPermission('marketing:manage')) {

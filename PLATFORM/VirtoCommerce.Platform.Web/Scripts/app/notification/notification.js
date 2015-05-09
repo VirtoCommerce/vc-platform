@@ -5,13 +5,13 @@
 		.state('notificationsHistory', {
 			url: '/notifications',
 			templateUrl: 'Scripts/app/notification/notification.tpl.html',
-			controller: ['$scope', 'bladeNavigationService', 'notificationService', function ($scope, bladeNavigationService, notificationService) {
+			controller: ['$scope', 'platformWebApp.bladeNavigationService', function ($scope, bladeNavigationService) {
 				var blade = {
 					id: 'notifications',
 					title: 'Notifications',
 					breadcrumbs: [],
 					subtitle: 'Notifications history',
-					controller: 'notificationsHistoryController',
+					controller: 'platformWebApp.notificationsHistoryController',
 					template: 'Scripts/app/notification/blade/history.tpl.html',
 					isClosingDisabled: true
 				};
@@ -20,7 +20,7 @@
 			]
 		});
   }])
-.factory('notificationTemplateResolver', ['bladeNavigationService', '$state', function (bladeNavigationService, $state) {
+.factory('platformWebApp.notificationTemplateResolver', ['platformWebApp.bladeNavigationService', '$state', function (bladeNavigationService, $state) {
 	var notificationTemplates = [];
 
 	var defaultTypes = ['error', 'info', 'warning'];
@@ -73,7 +73,7 @@
 
 	return retVal;
 }])
-.factory('notificationService', ['signalRHubProxy', '$interval', '$state', 'mainMenuService', 'notificationTemplateResolver', 'notifications', function (signalRHubProxy, $interval, $state, mainMenuService, notificationTemplateResolver, notifications) {
+.factory('platformWebApp.notificationService', ['platformWebApp.signalRHubProxy', '$interval', '$state', 'platformWebApp.mainMenuService', 'platformWebApp.notificationTemplateResolver', 'platformWebApp.notifications', function (signalRHubProxy, $interval, $state, mainMenuService, notificationTemplateResolver, notifications) {
 
     var clientPushHubProxy = signalRHubProxy(signalRHubProxy.defaultServer, 'clientPushHub', { logging: true });
     clientPushHubProxy.on('notification', function (data) {

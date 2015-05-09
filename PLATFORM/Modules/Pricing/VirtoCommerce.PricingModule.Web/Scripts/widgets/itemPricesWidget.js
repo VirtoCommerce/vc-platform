@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.pricingModule')
-.controller('virtoCommerce.pricingModule.itemPricesWidgetController', ['$scope', '$filter', 'bladeNavigationService', 'virtoCommerce.pricingModule.prices', function ($scope, $filter, bladeNavigationService, prices) {
+.controller('virtoCommerce.pricingModule.itemPricesWidgetController', ['$scope', '$filter', 'platformWebApp.bladeNavigationService', 'virtoCommerce.pricingModule.prices', function ($scope, $filter, bladeNavigationService, prices) {
     $scope.currentBlade = $scope.widget.blade;
 
     $scope.widget.refresh = function () {
