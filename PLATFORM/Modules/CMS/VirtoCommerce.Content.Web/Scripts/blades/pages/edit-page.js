@@ -71,6 +71,7 @@
 					permission: 'content:manage'
 				}];
 
+                blade.setContentTypeValue();
                 blade.isLoading = false;
 
                 blade.origEntity = angular.copy(blade.currentEntity);
@@ -81,6 +82,17 @@
     function isDirty() {
         return !angular.equals(blade.currentEntity, blade.origEntity);
     };
+
+    blade.setContentTypeValue = function () {
+    	if (blade.currentEntity.contentType === 'text/html' ||
+			blade.contentType === 'application/json' ||
+			blade.contentType === 'application/javascript') {
+
+    		return false;
+    	}
+
+    	return true;
+    }
 
     $scope.saveChanges = function () {
         blade.isLoading = true;

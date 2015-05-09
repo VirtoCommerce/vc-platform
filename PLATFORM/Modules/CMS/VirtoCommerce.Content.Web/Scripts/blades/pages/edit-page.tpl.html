@@ -33,28 +33,33 @@
 	</div>
 </div>
 
-<!--<div class="blade-content">
-	<div>
+<div class="blade-content" ng-if="blade.isByteContent">
+	<div class="blade-inner">
+		<div class="inner-block">
+			<div class="inner-block">
+				<form class="form">
+					<div ng-show="uploader.isHTML5">
+						<div over-class="bd-blue" nv-file-over="" nv-file-drop="" uploader="uploader" class="drag-area">
+							<div class="drag-content">
+								Drag and drop image here
+							</div>
+						</div>
+					</div>
 
-	</div>
-	<div ng-show="uploader.isHTML5">
-		<div over-class="bd-blue" nv-file-over="" nv-file-drop="" uploader="uploader" class="drag-area">
-			<div class="drag-content">
-				Drag and drop image here
+					<div class="form-input">
+						<input type="file" uploader="uploader" nv-file-select="" style="z-index: 0;" tabindex="-1">
+						<input type="text" style="z-index: 1; cursor: default;" readonly="">
+						<button class="btn __file" type="button" onclick="$('input[type=file]').trigger('click')">
+							<i class="btn-ico fa fa-image"></i>
+						</button>
+					</div>
+				</form>
 			</div>
 		</div>
 	</div>
+</div>
 
-	<div class="form-input">
-		<input type="file" uploader="uploader" nv-file-select="" style="z-index: 0;" tabindex="-1">
-		<input type="text" style="z-index: 1; cursor: default;" readonly="">
-		<button class="btn __file" type="button" onclick="$('input[type=file]').trigger('click')">
-			<i class="btn-ico fa fa-image"></i>
-		</button>
-	</div>
-</div>-->
-
-<div class="blade-content __code-editor" style="{{blade.getBladeStyle()}}">
+<div class="blade-content __code-editor" style="{{blade.getBladeStyle()}}" ng-if="!blade.isByteContent">
 	<div class="blade-inner" style="padding: 0">
 		<div class="inner-block">
 			<form class="form" style="padding: 0" name="formScope">

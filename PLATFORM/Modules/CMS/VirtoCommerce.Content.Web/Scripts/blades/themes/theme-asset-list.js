@@ -179,8 +179,8 @@
     blade.folders = [
 		{ name: 'assets', oneItemName: 'asset', defaultItemName: undefined, defaultContentType: null, isOpen: false },
 		{ name: 'layout', oneItemName: 'layout', defaultItemName: 'new_layout.liquid', defaultContentType: 'text/html', isOpen: false },
-		{ name: 'config', oneItemName: 'config', defaultItemName: 'new_config.json', defaultContentType: 'text/html', isOpen: false },
-		{ name: 'locales', oneItemName: 'locale', defaultItemName: 'new_locale.json', defaultContentType: 'text/html', isOpen: false },
+		{ name: 'config', oneItemName: 'config', defaultItemName: 'new_config.json', defaultContentType: 'application/json', isOpen: false },
+		{ name: 'locales', oneItemName: 'locale', defaultItemName: 'new_locale.json', defaultContentType: 'application/json', isOpen: false },
 		{ name: 'snippets', oneItemName: 'snippet', defaultItemName: 'new_snippet.liquid', defaultContentType: 'text/html', isOpen: false },
 		{ name: 'templates', oneItemName: 'template', defaultItemName: 'new_template.liquid', defaultContentType: 'text/html', isOpen: false }
     ];
