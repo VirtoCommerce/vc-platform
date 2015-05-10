@@ -8,11 +8,16 @@
         promise.then(function (promiseData) {
             promiseData = _.map(promiseData, function (x) { return { languageCode: x }; });
 
+            var defaultLang = _.find(promiseData, function (x) { return x.languageCode.toLowerCase() === $scope.blade.currentEntity.toLowerCase(); });
+            if (defaultLang) {
+                $scope.blade.currentEntity = defaultLang.languageCode;
+            }
+
             $scope.blade.currentEntities = angular.copy(promiseData);
             $scope.blade.isLoading = false;
         });
     };
-    
+
     $scope.blade.onClose = function (closeCallback) {
         if (isDirty()) {
             var dialog = {
@@ -49,7 +54,7 @@
     $scope.saveChanges = function () {
         $scope.blade.data.languages[0].languageCode = $scope.blade.currentEntity;
         $scope.blade.data.defaultLanguage.languageCode = $scope.blade.currentEntity;
-        
+
         $scope.bladeClose();
     };
 
