@@ -106,7 +106,9 @@ namespace VirtoCommerce.Platform.Web
                 module.PostInitialize();
             }
 
-            app.MapSignalR();
+            var hubConfiguration = new HubConfiguration();
+            hubConfiguration.EnableJavaScriptProxies = false;
+            app.MapSignalR(hubConfiguration);
         }
 
 
@@ -131,7 +133,7 @@ namespace VirtoCommerce.Platform.Web
 
             Func<IPlatformRepository> platformRepositoryFactory = () => new PlatformRepository(connectionStringName, new AuditableInterceptor(), new EntityPrimaryKeyGeneratorInterceptor());
             container.RegisterType<IPlatformRepository>(new InjectionFactory(c => platformRepositoryFactory()));
-			container.RegisterInstance<Func<IPlatformRepository>>(platformRepositoryFactory);
+            container.RegisterInstance<Func<IPlatformRepository>>(platformRepositoryFactory);
             var manifestProvider = container.Resolve<IModuleManifestProvider>();
 
             #region Caching
@@ -144,7 +146,7 @@ namespace VirtoCommerce.Platform.Web
 			};
 
             var cacheManager = new CacheManager(cacheProvider, cacheSettings);
-			container.RegisterInstance<CacheManager>(cacheManager);
+            container.RegisterInstance<CacheManager>(cacheManager);
 
             #endregion
 
@@ -201,13 +203,13 @@ namespace VirtoCommerce.Platform.Web
 
             #endregion
 
-			#region ChangeLogging
-			var changeLogService = new ChangeLogService(platformRepositoryFactory);
-			container.RegisterInstance<IChangeLogService>(changeLogService);
-			#endregion
-			#region Security
+            #region ChangeLogging
+            var changeLogService = new ChangeLogService(platformRepositoryFactory);
+            container.RegisterInstance<IChangeLogService>(changeLogService);
+            #endregion
+            #region Security
 
-			var permissionService = new PermissionService(platformRepositoryFactory, manifestProvider, cacheManager);
+            var permissionService = new PermissionService(platformRepositoryFactory, manifestProvider, cacheManager);
             container.RegisterInstance<IPermissionService>(permissionService);
 
             container.RegisterType<IRoleManagementService, RoleManagementService>(new ContainerControlledLifetimeManager());

@@ -31,7 +31,7 @@ angular.module('platformWebApp', AppDependencies).
           return $state.current.name;
       };
   }])
-// Specify SignalR server URL for supporting CORS
+// Specify SignalR server URL (application URL)
 .factory('platformWebApp.signalRServerName', ['$location', function apiTokenFactory($location) {
     var retVal = $location.url() ? $location.absUrl().slice(0, -$location.url().length - 1) : $location.absUrl();
     return retVal;
