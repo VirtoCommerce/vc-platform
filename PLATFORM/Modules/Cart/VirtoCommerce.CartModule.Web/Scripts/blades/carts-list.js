@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.cartModule')
-.controller('virtoCommerce.cartModule.cartListController', ['$scope', 'virtoCommerce.cartModule.carts', 'bladeNavigationService', 'dialogService',
+.controller('virtoCommerce.cartModule.cartListController', ['$scope', 'virtoCommerce.cartModule.carts', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService',
 function ($scope, carts, bladeNavigationService, dialogService) {
     //pagination settings
     $scope.pageSettings = {};

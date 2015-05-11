@@ -1,5 +1,5 @@
 ﻿angular.module('platformWebApp')
-.controller('moduleInstallProgressController', ['$scope', '$interval', '$window', 'bladeNavigationService', 'modules', function ($scope, $interval, $window, bladeNavigationService, modules) {
+.controller('platformWebApp.moduleInstallProgressController', ['$scope', '$interval', '$window', 'platformWebApp.bladeNavigationService', 'platformWebApp.modules', function ($scope, $interval, $window, bladeNavigationService, modules) {
     $scope.blade.refresh = function () {
         // $scope.blade.isLoading = true;
 

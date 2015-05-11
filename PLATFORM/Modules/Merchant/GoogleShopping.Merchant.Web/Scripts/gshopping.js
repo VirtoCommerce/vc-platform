@@ -9,7 +9,7 @@ angular.module(moduleName, [
 ])
 
 .run(
-  ['$rootScope', 'mainMenuService', 'widgetService', '$state', function ($rootScope, mainMenuService, widgetService, $state) {
+  ['$rootScope', 'platformWebApp.mainMenuService', 'platformWebApp.widgetService', 'platformWebApp.authService', function ($rootScope, mainMenuService, widgetService, authService) {
      
       //Register widgets in catalog item details
       /*widgetService.registerWidget({
@@ -18,6 +18,7 @@ angular.module(moduleName, [
       }, 'catalogDetail');*/
 
       widgetService.registerWidget({
+          isVisible: function (blade) { return authService.checkPermission('googleShopping:manage'); },
           controller: 'virtoCommerce.gshoppingModule.gshoppingSyncCatWidgetController',
           size: [2, 1],
           template: 'Modules/$(GoogleShopping.Merchant)/Scripts/widgets/gshoppingWidget.tpl.html'

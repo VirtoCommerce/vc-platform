@@ -1,5 +1,5 @@
 ﻿angular.module('platformWebApp')
-.controller('installWizardController', ['$scope', 'bladeNavigationService', 'FileUploader', 'modules', function ($scope, bladeNavigationService, FileUploader, modules) {
+.controller('platformWebApp.installWizardController', ['$scope', 'platformWebApp.bladeNavigationService', 'FileUploader', 'platformWebApp.modules', function ($scope, bladeNavigationService, FileUploader, modules) {
 
     $scope.submit = function () {
         $scope.isInstalling = true;
@@ -17,7 +17,7 @@
             currentEntityId: data.id,
             title: $scope.blade.title,
             subtitle: 'Installation progress',
-            controller: 'moduleInstallProgressController',
+            controller: 'platformWebApp.moduleInstallProgressController',
             template: 'Scripts/app/packaging/wizards/newModule/module-wizard-progress-step.tpl.html'
         };
         bladeNavigationService.showBlade(newBlade, $scope.blade.parentBlade);

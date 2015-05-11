@@ -111,7 +111,6 @@
     <Compile Include="CustomerAddress.cs" />
     <Compile Include="CustomerOrder.cs" />
     <Compile Include="Discount.cs" />
-    <Compile Include="DynamicContentPlaceholder.cs" />
     <Compile Include="Extensions\CategoryExtensions.cs" />
     <Compile Include="Extensions\ModelExtensions.cs" />
     <Compile Include="Extensions\ProductExtensions.cs" />
@@ -180,7 +179,6 @@
     <Compile Include="Security\AccountModels.cs" />
     <Compile Include="Security\IdentityModels.cs" />
     <Compile Include="SeoKeyword.cs" />
-    <Compile Include="Services\BannerTypeResolver.cs" />
     <Compile Include="Services\CommerceService.cs" />
     <Compile Include="Services\CustomerService.cs" />
     <Compile Include="Services\FileStorageCacheService.cs" />

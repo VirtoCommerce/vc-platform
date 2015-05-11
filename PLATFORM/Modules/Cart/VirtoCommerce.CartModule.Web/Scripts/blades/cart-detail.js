@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.cartModule')
-.controller('cartDetailController', ['$scope', 'dialogService', 'bladeNavigationService', 'carts', function ($scope, dialogService, bladeNavigationService, carts) {
+.controller('cartDetailController', ['$scope', 'platformWebApp.dialogService', 'platformWebApp.bladeNavigationService', 'carts', function ($scope, dialogService, bladeNavigationService, carts) {
 
     $scope.blade.refresh = function () {
         $scope.blade.isLoading = true;

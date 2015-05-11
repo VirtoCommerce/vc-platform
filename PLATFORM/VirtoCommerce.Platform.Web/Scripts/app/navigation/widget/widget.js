@@ -1,5 +1,5 @@
 ﻿angular.module('platformWebApp')
-.factory('widgetService', function () {
+.factory('platformWebApp.widgetService', function () {
 
     var retVal = {
         widgetsMap: [],
@@ -13,28 +13,29 @@
     };
     return retVal;
 })
-.directive('vaWidgetContainer', ['$compile', '$localStorage', 'widgetService', function ($compile, $localStorage, widgetService) {
+.directive('vaWidgetContainer', ['$compile', '$localStorage', 'platformWebApp.widgetService', function ($compile, $localStorage, widgetService) {
     return {
         restrict: 'E',
         replace: true,
         templateUrl: 'Scripts/app/navigation/widget/widgetContainer.tpl.html',
         scope: {
-            gridsterOpts: '=',
+            gridsterOpts: '=?',
             group: '@',
             blade: '='
         },
         link: function (scope, element, attr) {
+            if (!scope.gridsterOpts) { scope.gridsterOpts = {}; }
             scope.$storage = $localStorage;
             scope.widgets = _.filter(widgetService.widgetsMap[scope.group], function (w) { return !angular.isFunction(w.isVisible) || w.isVisible(scope.blade); });
             angular.forEach(scope.widgets, function (w) { w.blade = scope.blade; });
-            
+
             scope.getKey = function (prefix, widget) {
                 return (prefix + widget.controller + widget.template).hashCode();
             }
         }
     }
 }])
-.directive('vaWidget', ['$compile', 'widgetService', function ($compile, widgetService) {
+.directive('vaWidget', ['$compile', 'platformWebApp.widgetService', function ($compile, widgetService) {
     return {
         terminal: true,
         priority: 1000,

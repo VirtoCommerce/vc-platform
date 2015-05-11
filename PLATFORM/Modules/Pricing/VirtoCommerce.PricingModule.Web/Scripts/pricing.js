@@ -13,7 +13,7 @@ angular.module(moduleName, [])
               url: '/pricing',
               templateUrl: 'Modules/$(VirtoCommerce.Pricing)/Scripts/home.tpl.html',
               controller: [
-                  '$scope', 'bladeNavigationService', function ($scope, bladeNavigationService) {
+                  '$scope', 'platformWebApp.bladeNavigationService', function ($scope, bladeNavigationService) {
                       var blade = {
                           id: 'pricing',
                           title: 'Pricing',
@@ -29,7 +29,7 @@ angular.module(moduleName, [])
   }]
 )
 .run(
-  ['$rootScope', 'mainMenuService', 'widgetService', '$state', function ($rootScope, mainMenuService, widgetService, $state) {
+  ['$rootScope', 'platformWebApp.mainMenuService', 'platformWebApp.widgetService', '$state', 'platformWebApp.authService', function ($rootScope, mainMenuService, widgetService, $state, authService) {
       //Register module in main menu
       var menuItem = {
           path: 'browse/pricing',
@@ -43,6 +43,7 @@ angular.module(moduleName, [])
 
       //Register item prices widget
       var itemPricesWidget = {
+          isVisible: function (blade) { return authService.checkPermission('pricing:query'); },
           controller: 'virtoCommerce.pricingModule.itemPricesWidgetController',
           size: [2, 1],
           template: 'Modules/$(VirtoCommerce.Pricing)/Scripts/widgets/itemPricesWidget.tpl.html',

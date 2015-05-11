@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.marketingModule')
-.controller('virtoCommerce.marketingModule.promotionListController', ['$scope', 'virtoCommerce.marketingModule.promotion.search', 'virtoCommerce.marketingModule.promotions', 'bladeNavigationService', 'dialogService', function ($scope, marketing_res_search, marketing_res_promotions, bladeNavigationService, dialogService) {
+.controller('virtoCommerce.marketingModule.promotionListController', ['$scope', 'virtoCommerce.marketingModule.promotion.search', 'virtoCommerce.marketingModule.promotions', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', function ($scope, marketing_res_search, marketing_res_promotions, bladeNavigationService, dialogService) {
     var selectedNode = null;
     //pagination settings
     $scope.pageSettings = {};

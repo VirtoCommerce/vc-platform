@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.storeModule')
-.controller('virtoCommerce.storeModule.storeLanguagesListController', ['$scope', 'settings', 'bladeNavigationService', 'dialogService', function ($scope, settings, bladeNavigationService, dialogService) {
+.controller('virtoCommerce.storeModule.storeLanguagesListController', ['$scope', 'platformWebApp.settings', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', function ($scope, settings, bladeNavigationService, dialogService) {
     $scope.selectedItem = null;
     var promise = settings.getValues({ id: 'VirtoCommerce.Core.General.Languages' }).$promise;
 

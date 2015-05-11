@@ -1,5 +1,5 @@
 ﻿angular.module('platformWebApp')
-.controller('accountDetailController', ['$scope', 'bladeNavigationService', 'accounts', 'platform_res_roles', 'dialogService', function ($scope, bladeNavigationService, accounts, roles, dialogService) {
+.controller('platformWebApp.accountDetailController', ['$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.accounts', 'platformWebApp.roles', 'platformWebApp.dialogService', function ($scope, bladeNavigationService, accounts, roles, dialogService) {
     $scope.blade.promise = roles.get({ count: 10000 }).$promise;
 
     $scope.blade.refresh = function (parentRefresh) {
@@ -116,7 +116,7 @@
                     currentEntityId: $scope.blade.currentEntity.userName,
                     title: $scope.blade.title,
                     subtitle: "Change your password",
-                    controller: 'accountChangePasswordController',
+                    controller: 'platformWebApp.accountChangePasswordController',
                     template: 'Scripts/common/security/blades/account-changePassword.tpl.html'
                 };
                 bladeNavigationService.showBlade(newBlade, $scope.blade);

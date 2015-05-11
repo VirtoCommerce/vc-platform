@@ -41,7 +41,8 @@ namespace VirtoCommerce.SearchModule.Data.Services
 
             foreach (var indexBuilder in validBulders)
             {
-                var partitions = indexBuilder.GetPartitions(scope, lastBuildTime);
+                var partitions = indexBuilder.GetPartitions(lastBuildTime, nowUtc);
+
                 foreach (var partition in partitions)
                 {
                     if (partition.OperationType == OperationType.Remove)
@@ -60,7 +61,11 @@ namespace VirtoCommerce.SearchModule.Data.Services
                 }
             }
 
-            _settingManager.SetValue(lastBuildTimeName, nowUtc);
+            var lastBuildTime2 = _settingManager.GetValue(lastBuildTimeName, DateTime.MinValue);
+            if (lastBuildTime2 == lastBuildTime)
+            {
+                _settingManager.SetValue(lastBuildTimeName, nowUtc);
+            }
         }
 
         #endregion

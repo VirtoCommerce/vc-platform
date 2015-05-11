@@ -1,5 +1,5 @@
 ﻿angular.module('platformWebApp')
-.controller('modulesListController', ['$rootScope', '$scope', 'bladeNavigationService', 'dialogService', 'modules', function ($rootScope, $scope, bladeNavigationService, dialogService, modules) {
+.controller('platformWebApp.modulesListController', ['$rootScope', '$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', 'platformWebApp.modules', function ($rootScope, $scope, bladeNavigationService, dialogService, modules) {
     $scope.selectedEntityId = null;
 
     $scope.blade.refresh = function () {
@@ -18,7 +18,7 @@
             id: 'moduleDetails',
             title: 'Module information',
             currentEntity: listItem,
-            controller: 'moduleDetailController',
+            controller: 'platformWebApp.moduleDetailController',
             template: 'Scripts/app/packaging/blades/module-detail.tpl.html'
         };
 
@@ -68,7 +68,7 @@
             title: "Module install",
             // subtitle: '',
             mode: 'install',
-            controller: 'installWizardController',
+            controller: 'platformWebApp.installWizardController',
             template: 'Scripts/app/packaging/blades/module-detail.tpl.html'
         };
         bladeNavigationService.showBlade(newBlade, $scope.blade);

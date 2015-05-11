@@ -13,7 +13,7 @@ angular.module(moduleName, ['virtoCommerce.catalogModule', 'virtoCommerce.pricin
 			url: '/orders',
 			templateUrl: 'Modules/$(VirtoCommerce.Orders)/Scripts/home.tpl.html',
 			controller: [
-				'$scope', 'bladeNavigationService', function ($scope, bladeNavigationService) {
+				'$scope', 'platformWebApp.bladeNavigationService', function ($scope, bladeNavigationService) {
 					var blade = {
 						id: 'orders',
 						title: 'Customer orders',
@@ -29,7 +29,7 @@ angular.module(moduleName, ['virtoCommerce.catalogModule', 'virtoCommerce.pricin
   }]
 )
 .run(
-  ['$rootScope', 'mainMenuService', 'widgetService', '$state', function ($rootScope, mainMenuService, widgetService, $state) {
+  ['$rootScope', 'platformWebApp.mainMenuService', 'platformWebApp.widgetService', '$state', function ($rootScope, mainMenuService, widgetService, $state) {
   	//Register module in main menu
   	var menuItem = {
   		path: 'browse/orders',

@@ -1,5 +1,5 @@
 ﻿angular.module('platformWebApp')
-.controller('roleDetailController', ['$scope', 'bladeNavigationService', 'platform_res_roles', 'dialogService', function ($scope, bladeNavigationService, roles, dialogService) {
+.controller('platformWebApp.roleDetailController', ['$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.roles', 'platformWebApp.dialogService', function ($scope, bladeNavigationService, roles, dialogService) {
     var promise = roles.queryPermissions().$promise;
 
     $scope.blade.refresh = function (parentRefresh) {
@@ -121,7 +121,7 @@
                             promise: promise,
                             title: $scope.blade.title,
                             subtitle: 'Manage permissions',
-                            controller: 'rolePermissionsController',
+                            controller: 'platformWebApp.rolePermissionsController',
                             template: 'Scripts/common/security/blades/role-permissions.tpl.html'
                         };
 

@@ -180,14 +180,40 @@ namespace VirtoCommerce.Web.Models.Services
             return dtoCart != null ? dtoCart.AsWebModel() : null;
         }
 
+        public async Task<Cart> MergeCartsAsync(Cart anonymousCart)
+        {
+            var customerCart = SiteContext.Current.Cart;
+
+            foreach (var anonymousLineItem in anonymousCart.Items)
+            {
+                var customerLineItem = customerCart.Items
+                    .FirstOrDefault(i => i.Handle == anonymousLineItem.Handle);
+
+                if (customerLineItem != null)
+                {
+                    customerLineItem.Quantity += anonymousLineItem.Quantity;
+                }
+                else
+                {
+                    anonymousLineItem.Id = null;
+                    customerCart.Items.Add(anonymousLineItem);
+                }
+            }
+
+            var cart = await SaveChangesAsync(customerCart);
+            await DeleteCartAsync(anonymousCart.Key);
+
+            return cart;
+        }
+
         public async Task DeleteCartAsync(string cartId)
         {
             await _cartClient.DeleteCartAsync(new[] { cartId });
         }
 
-        public async Task<Cart> GetCurrentCartAsync(SiteContext context)
+        public async Task<Cart> GetCartAsync(string storeId, string customerId)
         {
-            var cart = await this._cartClient.GetCartAsync(context.StoreId, context.CustomerId);
+            var cart = await this._cartClient.GetCartAsync(storeId, customerId);
             return cart != null ? cart.AsWebModel() : null;
         }
 
@@ -537,7 +563,7 @@ namespace VirtoCommerce.Web.Models.Services
                     new ProductPromoEntry
                     {
                         CatalogId = product.CatalogId,
-                        Price = price.Sale.HasValue ? price.Sale.Value : price.List,
+                        Price = price != null ? (price.Sale.HasValue ? price.Sale.Value : price.List) : 0M,
                         ProductId = product.Id,
                         Quantity = 1
                     }

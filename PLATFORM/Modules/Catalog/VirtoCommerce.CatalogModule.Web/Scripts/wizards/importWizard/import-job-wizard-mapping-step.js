@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.catalogModule')
-.controller('virtoCommerce.catalogModule.importJobMappingController', ['$scope', 'bladeNavigationService', 'virtoCommerce.catalogModule.imports', function ($scope, bladeNavigationService, imports) {
+.controller('virtoCommerce.catalogModule.importJobMappingController', ['$scope', 'platformWebApp.bladeNavigationService', 'virtoCommerce.catalogModule.imports', function ($scope, bladeNavigationService, imports) {
     $scope.blade.refresh = function () {
         $scope.blade.isLoading = true;
 

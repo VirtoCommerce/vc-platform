@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.storeModule')
-.controller('virtoCommerce.storeModule.storesListController', ['$scope', 'virtoCommerce.storeModule.stores', 'bladeNavigationService', function ($scope, stores, bladeNavigationService) {
+.controller('virtoCommerce.storeModule.storesListController', ['$scope', 'virtoCommerce.storeModule.stores', 'platformWebApp.bladeNavigationService', function ($scope, stores, bladeNavigationService) {
     $scope.selectedNodeId = null;
 
     $scope.blade.refresh = function () {

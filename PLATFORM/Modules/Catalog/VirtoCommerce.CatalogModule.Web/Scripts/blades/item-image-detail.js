@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.catalogModule')
-.controller('virtoCommerce.catalogModule.itemImageController', ['$scope', 'virtoCommerce.catalogModule.items', '$filter', 'FileUploader', 'dialogService', function ($scope, items, $filter, FileUploader, dialogService) {
+.controller('virtoCommerce.catalogModule.itemImageController', ['$scope', 'virtoCommerce.catalogModule.items', '$filter', 'FileUploader', 'platformWebApp.dialogService', function ($scope, items, $filter, FileUploader, dialogService) {
     $scope.currentBlade = $scope.blade;
 	$scope.item = {};
 	$scope.origItem = {};

@@ -23,7 +23,7 @@
 ];
 
 angular.module('platformWebApp', AppDependencies).
-  controller('appCtrl', ['$scope', '$window', '$state', 'notificationService', function ($scope, $window, $state, notificationService) {
+  controller('platformWebApp.appCtrl', ['$scope', '$window', '$state', 'platformWebApp.notificationService', function ($scope, $window, $state, notificationService) {
       $scope.platformVersion = $window.platformVersion;
       notificationService.run();
 
@@ -31,12 +31,12 @@ angular.module('platformWebApp', AppDependencies).
           return $state.current.name;
       };
   }])
-// Specify SignalR server URL for supporting CORS
-.factory('signalRServer', ['$location', function apiTokenFactory($location) {
+// Specify SignalR server URL (application URL)
+.factory('platformWebApp.signalRServerName', ['$location', function apiTokenFactory($location) {
     var retVal = $location.url() ? $location.absUrl().slice(0, -$location.url().length - 1) : $location.absUrl();
     return retVal;
 }])
-.factory('httpErrorInterceptor', ['$q', '$rootScope', function ($q, $rootScope) {
+.factory('platformWebApp.httpErrorInterceptor', ['$q', '$rootScope', function ($q, $rootScope) {
     var httpErrorInterceptor = {};
 
     httpErrorInterceptor.responseError = function (rejection) {
@@ -62,7 +62,7 @@ angular.module('platformWebApp', AppDependencies).
       });
 
       //Add interseptor
-      $httpProvider.interceptors.push('httpErrorInterceptor');
+      $httpProvider.interceptors.push('platformWebApp.httpErrorInterceptor');
       //ui-select set selectize as default theme
       uiSelectConfig.theme = 'select2';
 
@@ -70,7 +70,7 @@ angular.module('platformWebApp', AppDependencies).
   ]
 )
 .run(
-  ['$rootScope', '$state', '$stateParams', 'authService', 'mainMenuService', 'editableOptions', 'notificationService', '$animate', '$templateCache', 'gridsterConfig',
+  ['$rootScope', '$state', '$stateParams', 'platformWebApp.authService', 'platformWebApp.mainMenuService', 'editableOptions', 'platformWebApp.notificationService', '$animate', '$templateCache', 'gridsterConfig',
     function ($rootScope, $state, $stateParams, authService, mainMenuService, editableOptions, notificationService, $animate, $templateCache, gridsterConfig) {
         //Disable animation
         $animate.enabled(false);
@@ -135,6 +135,7 @@ angular.module('platformWebApp', AppDependencies).
         gridsterConfig.colWidth = 130;
         gridsterConfig.defaultSizeX = 1;
         gridsterConfig.resizable = { enabled: false, handles: [] };
+        gridsterConfig.maxRows = 8;
         gridsterConfig.mobileModeEnabled = false;
         gridsterConfig.outerMargin = false;
 
