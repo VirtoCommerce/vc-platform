@@ -81,7 +81,6 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 			retVal.IsRequired = property.Required;
 			retVal.TargetType = property.Type.ToString();
 
-			retVal.PropertyAttributes = new NullCollection<dataModel.PropertyAttribute>();
 			if (property.Attributes != null)
 			{
 				retVal.PropertyAttributes = new ObservableCollection<dataModel.PropertyAttribute>();
@@ -92,7 +91,6 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 				}
 			}
 
-			retVal.PropertyValues = new NullCollection<dataModel.PropertyValue>();
 			if (property.DictionaryValues != null)
 			{
 				retVal.PropertyValues = new ObservableCollection<dataModel.PropertyValue>();

@@ -134,11 +134,26 @@ namespace VirtoCommerce.SearchModule.Data.Services
             doc.Add(new DocumentField("catalog", item.CatalogId.ToLower(), new[] { IndexStore.Yes, IndexType.NotAnalyzed, IndexDataType.StringCollection }));
             doc.Add(new DocumentField("__outline", item.CatalogId.ToLower(), new[] { IndexStore.Yes, IndexType.NotAnalyzed, IndexDataType.StringCollection }));
 
-            if (item.CategoryId != null)
-            {
-                // Index categories
-                IndexItemCategories(ref doc, item);
-            }
+          	//Index item direct categories links
+			if(item.Links != null)
+			{
+				foreach(var link in item.Links)
+				{
+					var category = GetCategoryById(link.CategoryId);
+					if (category != null)
+					{
+						IndexCategory(ref doc, category);
+						foreach(var categoryLink in category.Links)
+						{
+							var linkCategory = GetCategoryById(categoryLink.CategoryId);
+							if (linkCategory != null)
+							{
+								IndexCategory(ref doc, linkCategory);
+							}
+						}
+					}
+				}
+			}
 
             // Index custom properties
             IndexItemCustomProperties(ref doc, item);
@@ -191,29 +206,24 @@ namespace VirtoCommerce.SearchModule.Data.Services
         }
 
         #region Category Indexing
-        protected virtual void IndexItemCategories(ref ResultDocument doc, CatalogProduct item)
-        {
-            var cacheKey = CacheKey.Create("CatalogItemIndexBuilder.IndexItemCategories", item.CategoryId);
-            var category = _cacheManager.Get(cacheKey, () => _categoryService.GetById(item.CategoryId));
-            doc.Add(new DocumentField(String.Format("sort{0}{1}", category.CatalogId, category.Id), category.Priority, new string[] { IndexStore.Yes, IndexType.NotAnalyzed }));
-            IndexCategory(ref doc, category);
-        }
+		private Category GetCategoryById(string categoryId)
+		{
+			var cacheKey = CacheKey.Create("CatalogItemIndexBuilder.GetCategoryById", categoryId);
+			var retVal = _cacheManager.Get(cacheKey, () => _categoryService.GetById(categoryId));
+			return retVal;
+		}
 
+       
         protected virtual void IndexCategory(ref ResultDocument doc, Category category)
         {
+			doc.Add(new DocumentField(String.Format("sort{0}{1}", category.CatalogId, category.Id), category.Priority, new string[] { IndexStore.Yes, IndexType.NotAnalyzed }));
+
             doc.Add(new DocumentField("catalog", category.CatalogId.ToLower(), new[] { IndexStore.Yes, IndexType.NotAnalyzed }));
-			var outlineParts = new string[] { category.CatalogId, category.Id }.Concat(category.Parents.Select(x => x.Id));
+			var outlineParts = new string[] { category.CatalogId, category.Id }.Concat(category.Parents.Select(x => x.Id)).Where(x=>!String.IsNullOrEmpty(x));
             // get category path
 			var outline = String.Join("/", outlineParts);
             doc.Add(new DocumentField("__outline", outline.ToLower(), new[] { IndexStore.Yes, IndexType.NotAnalyzed }));
-
-            // Now index all linked categories
-            //Current code occur stack overflow
-            //foreach (var link in category.Links)
-            //{
-            //	var linkCategory = _categoryService.GetById(link.CategoryId);
-            //	IndexCategory(ref doc, linkCategory);
-            //}
+     
         }
 
         #endregion

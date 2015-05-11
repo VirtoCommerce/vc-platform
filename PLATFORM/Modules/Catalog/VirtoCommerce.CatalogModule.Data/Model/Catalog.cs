@@ -6,6 +6,7 @@ using System.Runtime.Serialization;
 using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.CatalogModule.Data.Model
 {
@@ -13,9 +14,10 @@ namespace VirtoCommerce.CatalogModule.Data.Model
     {
 		public Catalog()
 		{
-			PropertySets = new ObservableCollection<PropertySet>();
-			CatalogLanguages = new ObservableCollection<CatalogLanguage>();
-			CatalogPropertyValues = new ObservableCollection<CatalogPropertyValue>();
+			PropertySets = new NullCollection<PropertySet>();
+			CatalogLanguages = new NullCollection<CatalogLanguage>();
+			CatalogPropertyValues = new NullCollection<CatalogPropertyValue>();
+		
 		}
 
 		public int WeightMeasure { get; set; }
@@ -31,7 +33,6 @@ namespace VirtoCommerce.CatalogModule.Data.Model
 		public string PropertySetId { get; set; }
 
 		public virtual PropertySet PropertySet { get; set; }
-
 
 		public virtual ObservableCollection<CatalogPropertyValue> CatalogPropertyValues { get; set; }
 
