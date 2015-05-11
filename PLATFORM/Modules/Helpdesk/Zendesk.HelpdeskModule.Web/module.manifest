@@ -40,8 +40,8 @@
       <setting>
         <name>Zendesk.Helpdesk.Subdomain</name>
         <valueType>string</valueType>
-        <title>Zendesk subdomain name</title>
-        <description>Subdomain name of your Zendesk helpdesk. It should be like 'https://{subdomain}.subdomain.com'</description>
+        <title>Your Zendesk subdomain name</title>
+        <description>Subdomain name of your Zendesk helpdesk. It should be like 'https://{subdomain}.zendesk.com'</description>
       </setting>
     </group>
     <group name="Zendesk Description">
@@ -61,4 +61,7 @@
       </setting>
     </group>
 	</settings>
+  <permissions>
+    <permission id="helpdeskModule:manage" name="Manage Zendesk helpdesk" description="Permission to manage Zendesk functionality."/>
+  </permissions>
 </module>
