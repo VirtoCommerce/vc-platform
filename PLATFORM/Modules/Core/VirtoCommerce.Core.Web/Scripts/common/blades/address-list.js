@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.coreModule.common')
-.controller('virtoCommerce.coreModule.common.coreAddressListController', ['$scope', 'bladeNavigationService', function ($scope, bladeNavigationService) {
+.controller('virtoCommerce.coreModule.common.coreAddressListController', ['$scope', 'platformWebApp.bladeNavigationService', function ($scope, bladeNavigationService) {
 	$scope.selectedItem = null;
 
 	$scope.openDetailBlade = function (address) {

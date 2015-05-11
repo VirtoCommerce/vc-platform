@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.catalogModule')
-.controller('virtoCommerce.catalogModule.importJobWizardController', ['$scope', 'bladeNavigationService', 'dialogService', 'virtoCommerce.catalogModule.imports', 'FileUploader', 'notificationService', function ($scope, bladeNavigationService, dialogService, imports, FileUploader, notificationService) {
+.controller('virtoCommerce.catalogModule.importJobWizardController', ['$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', 'virtoCommerce.catalogModule.imports', 'FileUploader', 'platformWebApp.notificationService', function ($scope, bladeNavigationService, dialogService, imports, FileUploader, notificationService) {
 
     $scope.blade.refresh = function () {
         if ($scope.blade.isNew) {

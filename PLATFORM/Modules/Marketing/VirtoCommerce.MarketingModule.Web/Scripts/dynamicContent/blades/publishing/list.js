@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.marketingModule')
-.controller('virtoCommerce.marketingModule.publishingDynamicContentListController', ['$scope', 'virtoCommerce.marketingModule.dynamicContent.search', 'bladeNavigationService', function ($scope, marketing_dynamicContents_res_search, bladeNavigationService) {
+.controller('virtoCommerce.marketingModule.publishingDynamicContentListController', ['$scope', 'virtoCommerce.marketingModule.dynamicContent.search', 'platformWebApp.bladeNavigationService', function ($scope, marketing_dynamicContents_res_search, bladeNavigationService) {
 	var blade = $scope.blade;
 	blade.currentEntity = undefined;
 	blade.currentEntities = [];

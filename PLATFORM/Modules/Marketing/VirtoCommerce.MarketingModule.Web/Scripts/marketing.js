@@ -13,7 +13,7 @@ angular.module(moduleName, [])
               url: '/marketing',
               templateUrl: 'Modules/$(VirtoCommerce.Core)/Scripts/home.tpl.html',
               controller: [
-                  '$scope', 'bladeNavigationService', function ($scope, bladeNavigationService) {
+                  '$scope', 'platformWebApp.bladeNavigationService', function ($scope, bladeNavigationService) {
                       var blade = {
                           id: 'marketing',
                           title: 'Marketing',
@@ -28,7 +28,7 @@ angular.module(moduleName, [])
   }]
 )
 .run(
-  ['$rootScope', 'mainMenuService', 'widgetService', '$state', 'virtoCommerce.coreModule.common.dynamicExpressionService', function ($rootScope, mainMenuService, widgetService, $state, dynamicExpressionService) {
+  ['$rootScope', 'platformWebApp.mainMenuService', 'platformWebApp.widgetService', '$state', 'virtoCommerce.coreModule.common.dynamicExpressionService', function ($rootScope, mainMenuService, widgetService, $state, dynamicExpressionService) {
       //Register module in main menu
       var menuItem = {
           path: 'browse/marketing',

@@ -1,5 +1,5 @@
 ﻿angular.module('platformWebApp')
-.controller('securityMainController', ['$scope', 'bladeNavigationService', function ($scope, bladeNavigationService) {
+.controller('platformWebApp.securityMainController', ['$scope', 'platformWebApp.bladeNavigationService', function ($scope, bladeNavigationService) {
     $scope.selectedNodeId = null;
 
     function initializeBlade() {
@@ -19,7 +19,7 @@
             id: 'securityDetails',
             title: data.name,
             subtitle: 'Security service',
-            controller: data.entityName + 'ListController',
+            controller: 'platformWebApp.' + data.entityName + 'ListController',
             template: 'Scripts/common/security/blades/' + data.entityName + '-list.tpl.html'
         };
         bladeNavigationService.showBlade(newBlade, $scope.blade);

@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.catalogModule')
-.controller('virtoCommerce.catalogModule.exportWizardController', ['$scope', 'bladeNavigationService', 'dialogService', 'virtoCommerce.catalogModule.imports', 'notificationService', function ($scope, bladeNavigationService, dialogService, imports, notificationService) {
+.controller('virtoCommerce.catalogModule.exportWizardController', ['$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', 'virtoCommerce.catalogModule.imports', 'platformWebApp.notificationService', function ($scope, bladeNavigationService, dialogService, imports, notificationService) {
     $scope.blade.currentEntity = { types: [] };
 
     $scope.openBlade = function (type) {

@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.catalogModule')
-.controller('virtoCommerce.catalogModule.itemVariationListController', ['$scope', 'bladeNavigationService', 'dialogService', 'virtoCommerce.catalogModule.items', function ($scope, bladeNavigationService, dialogService, items) {
+.controller('virtoCommerce.catalogModule.itemVariationListController', ['$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', 'virtoCommerce.catalogModule.items', function ($scope, bladeNavigationService, dialogService, items) {
 
 	$scope.blade.refresh = function (parentRefresh) {
 		$scope.blade.isLoading = true;

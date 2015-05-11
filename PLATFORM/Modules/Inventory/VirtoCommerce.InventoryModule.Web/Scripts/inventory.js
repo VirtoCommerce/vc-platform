@@ -13,7 +13,7 @@ angular.module(moduleName, [])
 //              url: '/inventory',
 //              templateUrl: 'Modules/$(VirtoCommerce.Inventory)/Scripts/home.tpl.html',
 //              controller: [
-//                  '$scope', 'bladeNavigationService', function ($scope, bladeNavigationService) {
+//                  '$scope', 'platformWebApp.bladeNavigationService', function ($scope, bladeNavigationService) {
 //                      var blade = {
 //                          id: 'inventory',
 //                          title: 'inventory',
@@ -28,7 +28,7 @@ angular.module(moduleName, [])
 //  }]
 //)
 .run(
-  ['$rootScope', 'mainMenuService', 'widgetService', 'authService', function ($rootScope, mainMenuService, widgetService, authService) {
+  ['$rootScope', 'platformWebApp.mainMenuService', 'platformWebApp.widgetService', 'platformWebApp.authService', function ($rootScope, mainMenuService, widgetService, authService) {
       //Register module in main menu
       //var menuItem = {
       //    path: 'browse/inventory',

@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.customerModule')
-.controller('virtoCommerce.customerModule.memberEmailsWidgetController', ['$scope', 'bladeNavigationService', function ($scope, bladeNavigationService) {
+.controller('virtoCommerce.customerModule.memberEmailsWidgetController', ['$scope', 'platformWebApp.bladeNavigationService', function ($scope, bladeNavigationService) {
     $scope.blade = $scope.widget.blade;
 
     $scope.openBlade = function () {

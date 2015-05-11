@@ -5,4 +5,13 @@
                 update: { method: 'PUT' }
             });
         }
+    ])
+
+
+    .factory('virtoCommerce.helpdeskModule.user_tickets', [
+        '$resource', function ($resource) {
+            return $resource('api/help/tickets/:status/:email', { status: '@Status', email: '@Email' }, {
+                update: { method: 'PUT' }
+            });
+        }
     ]);

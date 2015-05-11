@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.catalogModule')
-.controller('virtoCommerce.catalogModule.catalogItemSelectController', ['$rootScope', '$scope', '$filter', 'virtoCommerce.catalogModule.categories', 'virtoCommerce.catalogModule.items', 'virtoCommerce.catalogModule.catalogs', 'virtoCommerce.catalogModule.listEntries', 'bladeNavigationService', 'dialogService', function ($rootScope, $scope, $filter, categories, items, catalogs, listEntries, bladeNavigationService, dialogService) {
+.controller('virtoCommerce.catalogModule.catalogItemSelectController', ['$rootScope', '$scope', '$filter', 'virtoCommerce.catalogModule.categories', 'virtoCommerce.catalogModule.items', 'virtoCommerce.catalogModule.catalogs', 'virtoCommerce.catalogModule.listEntries', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', function ($rootScope, $scope, $filter, categories, items, catalogs, listEntries, bladeNavigationService, dialogService) {
 
 	$scope.blade.title = "Catalog items selection...";
 

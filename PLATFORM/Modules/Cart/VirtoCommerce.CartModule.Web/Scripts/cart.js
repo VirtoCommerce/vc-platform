@@ -13,7 +13,7 @@ angular.module(moduleName, [])
               url: '/carts',
               templateUrl: 'Modules/$(VirtoCommerce.Cart)/Scripts/home.tpl.html',
               controller: [
-                  '$scope', 'bladeNavigationService', function ($scope, bladeNavigationService) {
+                  '$scope', 'platformWebApp.bladeNavigationService', function ($scope, bladeNavigationService) {
                       var blade = {
                           id: 'carts',
                           title: 'Shopping carts',
@@ -29,7 +29,7 @@ angular.module(moduleName, [])
   }]
 )
 .run(
-  ['$rootScope', 'mainMenuService', 'widgetService', '$state', function ($rootScope, mainMenuService, widgetService, $state) {
+  ['$rootScope', 'platformWebApp.mainMenuService', 'platformWebApp.widgetService', '$state', function ($rootScope, mainMenuService, widgetService, $state) {
       //Register module in main menu
       var menuItem = {
           path: 'browse/carts',

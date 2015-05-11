@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.customerModule')
-.controller('virtoCommerce.customerModule.memberPropertyDetailController', ['$scope', 'bladeNavigationService', 'dialogService', function ($scope, bladeNavigationService, dialogService) {
+.controller('virtoCommerce.customerModule.memberPropertyDetailController', ['$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', function ($scope, bladeNavigationService, dialogService) {
     var b = $scope.blade;
 
     function initializeBlade(data) {

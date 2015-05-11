@@ -8,13 +8,15 @@ namespace Zendesk.HelpdeskModule.Web.Managers
         private readonly string _code;
         private readonly string _description;
         private readonly string _logoUrl;
+        private readonly string _subdomain;
 
-        public ZendeskHelpdeskImpl(string apiAccessToken, string code, string description, string logoUrl)
+        public ZendeskHelpdeskImpl(string apiAccessToken, string code, string description, string logoUrl, string subdomain)
         {
             _apiAccessToken = apiAccessToken;
             _code = code;
             _description = description;
             _logoUrl = logoUrl;
+            _subdomain = subdomain;
         }
 
         public string AccessToken
@@ -35,6 +37,11 @@ namespace Zendesk.HelpdeskModule.Web.Managers
         public string LogoUrl
         {
             get { return _logoUrl; }
+        }
+
+        public string Subdomain
+        {
+            get { return _subdomain; }
         }
     }
 }

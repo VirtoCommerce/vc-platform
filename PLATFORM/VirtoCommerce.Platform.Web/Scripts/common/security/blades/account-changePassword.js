@@ -1,5 +1,5 @@
 ﻿angular.module('platformWebApp')
-.controller('accountChangePasswordController', ['$scope', 'bladeNavigationService', 'accounts', 'dialogService', function ($scope, bladeNavigationService, accounts, dialogService) {
+.controller('platformWebApp.accountChangePasswordController', ['$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.accounts', 'platformWebApp.dialogService', function ($scope, bladeNavigationService, accounts, dialogService) {
 
     function initializeBlade() {
         $scope.blade.currentEntity = {

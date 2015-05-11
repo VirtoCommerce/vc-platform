@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.catalogModule')
-.controller('virtoCommerce.catalogModule.itemDetailController', ['$rootScope', '$scope', 'bladeNavigationService', '$injector', 'virtoCommerce.catalogModule.items', 'dialogService', function ($rootScope, $scope, bladeNavigationService, $injector, items, dialogService) {
+.controller('virtoCommerce.catalogModule.itemDetailController', ['$rootScope', '$scope', 'platformWebApp.bladeNavigationService', '$injector', 'virtoCommerce.catalogModule.items', 'platformWebApp.dialogService', function ($rootScope, $scope, bladeNavigationService, $injector, items, dialogService) {
     $scope.currentBlade = $scope.blade;
     $scope.currentBlade.origItem = {};
     $scope.currentBlade.item = {};

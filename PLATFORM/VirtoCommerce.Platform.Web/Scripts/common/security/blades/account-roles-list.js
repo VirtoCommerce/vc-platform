@@ -1,5 +1,5 @@
 ﻿angular.module('platformWebApp')
-.controller('accountRolesListController', ['$scope', 'bladeNavigationService', function ($scope, bladeNavigationService) {
+.controller('platformWebApp.accountRolesListController', ['$scope', 'platformWebApp.bladeNavigationService', function ($scope, bladeNavigationService) {
 
     function initializeBlade(data) {
         $scope.blade.currentEntity = data;
@@ -28,7 +28,7 @@
                        promise: $scope.blade.promise,
                        title: $scope.blade.title,
                        subtitle: 'Manage roles',
-                       controller: 'accountRolesController',
+                       controller: 'platformWebApp.accountRolesController',
                        template: 'Scripts/common/security/blades/account-roles.tpl.html'
                    };
 

@@ -1,5 +1,5 @@
 ﻿angular.module('platformWebApp')
-.factory('notifications', ['$resource', function ($resource) {
+.factory('platformWebApp.notifications', ['$resource', function ($resource) {
 
 	return $resource('api/notifications/:id', { id: '@Id' }, {
 		markAllAsRead: { method: 'GET', url: 'api/notifications/markAllAsRead' },

@@ -1,4 +1,4 @@
 ﻿angular.module('virtoCommerce.mailingModule')
-.controller('virtoCommerce.mailingModule.mailingWidgetController', ['$scope', 'bladeNavigationService', function ($scope, bladeNavigationService) {
+.controller('virtoCommerce.mailingModule.mailingWidgetController', ['$scope', 'platformWebApp.bladeNavigationService', function ($scope, bladeNavigationService) {
     
 }]);

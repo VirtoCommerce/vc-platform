@@ -1,11 +1,11 @@
 ﻿angular.module('platformWebApp')
 .config(['$httpProvider', function ($httpProvider) {
-	$httpProvider.interceptors.push('httpInterceptor');
+    $httpProvider.interceptors.push('platformWebApp.httpInterceptor');
 }])
-.factory('httpInterceptor', function () {
+.factory('platformWebApp.httpInterceptor', function () {
 	return {};
 })
-.directive('wcOverlay', ['$q', '$timeout', '$window', 'httpInterceptor', function ($q, $timeout, $window, httpInterceptor) {
+.directive('wcOverlay', ['$q', '$timeout', '$window', 'platformWebApp.httpInterceptor', function ($q, $timeout, $window, httpInterceptor) {
 	return {
 		restrict: 'EA',
 		transclude: true,

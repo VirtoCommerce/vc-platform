@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.marketingModule')
-.controller('virtoCommerce.marketingModule.addContentItemsController', ['$scope', 'virtoCommerce.marketingModule.dynamicContent.contentItems', 'bladeNavigationService', function ($scope, marketing_dynamicContents_res_contentItems, bladeNavigationService) {
+.controller('virtoCommerce.marketingModule.addContentItemsController', ['$scope', 'virtoCommerce.marketingModule.dynamicContent.contentItems', 'platformWebApp.bladeNavigationService', function ($scope, marketing_dynamicContents_res_contentItems, bladeNavigationService) {
 	$scope.setForm = function (form) {
 		$scope.formScope = form;
 	}
@@ -89,24 +89,26 @@
 	}
 
 	blade.contentTypes = [
-		'CategoryWithImages',
-		'CategoryUrl',
-		'Flash',
 		'Html',
-		'Razor',
+        'Flash',
+        'Liquid',
+        'Razor',
 		'ImageClickable',
 		'ImageNonClickable',
-		'ProductWithImageAndPrice'
+		'Product',
+        'ProductsWithinCategory'
 	];
 
 	blade.properties = {
-		CategoryWithImages: [
+        /*
+	    Category: [
 			{ name: 'categoryId', valueType: 'ShortText' },
 			{ name: 'imageUrl', valueType: 'ShortText' },
 			{ name: 'externalImageUrl', valueType: 'ShortText' },
 			{ name: 'message', valueType: 'LongText' }
 		],
-		CategoryUrl: [
+        */
+		ProductsWithinCategory: [
 			{ name: 'categoryCode', valueType: 'ShortText' },
 			{ name: 'title', valueType: 'ShortText' },
 			{ name: 'sortField', valueType: 'ShortText' },
@@ -125,6 +127,9 @@
 		Razor: [
 			{ name: 'razorHtml', valueType: 'LongText' }
 		],
+		Liquid: [
+			{ name: 'liquidHtml', valueType: 'LongText' }
+		],
 		ImageClickable: [
 			{ name: 'alternativeText', valueType: 'LongText' },
 			{ name: 'imageUrl', valueType: 'ShortText' },
@@ -135,7 +140,7 @@
 			{ name: 'alternativeText', valueType: 'LongText' },
 			{ name: 'imageUrl', valueType: 'ShortText' }
 		],
-		ProductWithImageAndPrice: [
+		Product: [
 			{ name: 'productCode', valueType: 'ShortText' },
 		]
 	}

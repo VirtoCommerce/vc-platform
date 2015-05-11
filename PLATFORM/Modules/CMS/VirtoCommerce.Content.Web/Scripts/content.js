@@ -6,7 +6,7 @@ if (AppDependencies != undefined) {
 }
 
 angular.module(moduleName, ['angularUUID2'])
-.run(['$rootScope', 'mainMenuService', 'widgetService', '$state', function ($rootScope, mainMenuService, widgetService, $state) {
+.run(['$rootScope', 'platformWebApp.mainMenuService', 'platformWebApp.widgetService', '$state', function ($rootScope, mainMenuService, widgetService, $state) {
 
 	var menuItem = {
 		path: 'browse/content',
@@ -41,7 +41,7 @@ angular.module(moduleName, ['angularUUID2'])
 			url: '/content',
 			templateUrl: 'Modules/$(VirtoCommerce.Content)/Scripts/home.tpl.html',
 			controller: [
-				'$scope', 'bladeNavigationService', function ($scope, bladeNavigationService) {
+				'$scope', 'platformWebApp.bladeNavigationService', function ($scope, bladeNavigationService) {
 					var blade = {
 						id: 'content',
 						title: 'Content',

@@ -1,5 +1,5 @@
 ﻿angular.module('platformWebApp')
-.controller('rolePermissionsController', ['$scope', 'dialogService', function ($scope, dialogService) {
+.controller('platformWebApp.rolePermissionsController', ['$scope', 'platformWebApp.dialogService', function ($scope, dialogService) {
 
     function initializeBlade(data) {
         $scope.blade.data = data;

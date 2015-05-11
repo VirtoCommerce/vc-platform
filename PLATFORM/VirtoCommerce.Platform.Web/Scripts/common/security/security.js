@@ -4,7 +4,7 @@
 	    $stateProvider.state('loginDialog', {
 	        url: '/login',
 	        templateUrl: 'Scripts/common/security/login/login.tpl.html',
-	        controller: ['$scope', 'authService', function ($scope, authService) {
+	        controller: ['$scope', 'platformWebApp.authService', function ($scope, authService) {
 	            $scope.user = {};
 	            $scope.authError = null;
 	            $scope.authReason = false;
@@ -39,13 +39,12 @@
 	    .state('workspace.securityModule', {
 	        url: '/security',
 	        template: '<va-blade-container />',
-	        controller: [
-				'$scope', 'bladeNavigationService', function ($scope, bladeNavigationService) {
+	        controller: ['$scope', 'platformWebApp.bladeNavigationService', function ($scope, bladeNavigationService) {
 				    var blade = {
 				        id: 'security',
 				        title: 'Security',
 				        subtitle: 'User management',
-				        controller: 'securityMainController',
+				        controller: 'platformWebApp.securityMainController',
 				        template: 'Scripts/common/security/blades/security-main.tpl.html',
 				        isClosingDisabled: true
 				    };
@@ -54,7 +53,7 @@
 	        ]
 	    });
 	}])
-    .run(['$rootScope', 'mainMenuService', 'widgetService', '$state', function ($rootScope, mainMenuService, widgetService, $state) {
+    .run(['$rootScope', 'platformWebApp.mainMenuService', 'platformWebApp.widgetService', '$state', function ($rootScope, mainMenuService, widgetService, $state) {
         //Register module in main menu
         var menuItem = {
             path: 'browse/security',
@@ -68,11 +67,11 @@
 
         //Register widgets
         widgetService.registerWidget({
-            controller: 'accountRolesWidgetController',
+            controller: 'platformWebApp.accountRolesWidgetController',
             template: 'Scripts/common/security/widgets/accountRolesWidget.tpl.html',
         }, 'accountDetail');
         widgetService.registerWidget({
-            controller: 'accountApiWidgetController',
+            controller: 'platformWebApp.accountApiWidgetController',
             template: 'Scripts/common/security/widgets/accountApiWidget.tpl.html',
         }, 'accountDetail');
     }]);

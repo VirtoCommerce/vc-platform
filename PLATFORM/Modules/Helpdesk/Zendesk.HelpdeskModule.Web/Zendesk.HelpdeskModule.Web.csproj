@@ -96,7 +96,9 @@
   <ItemGroup>
     <Content Include="Scripts\helpdesk.js" />
     <Content Include="Scripts\resources\zendesk.js" />
+    <Content Include="Scripts\widgets\openTicketsWidget.js" />
     <Content Include="Scripts\widgets\helpdeskWidget.js" />
+    <Content Include="Scripts\widgets\openTicketsWidget.tpl.html" />
     <Content Include="Scripts\widgets\helpdeskWidget.tpl.html" />
     <Content Include="web.config" />
   </ItemGroup>

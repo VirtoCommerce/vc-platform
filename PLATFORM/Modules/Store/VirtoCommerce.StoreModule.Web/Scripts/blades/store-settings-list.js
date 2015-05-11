@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.storeModule')
-.controller('virtoCommerce.storeModule.storeSettingsListController', ['$scope', 'bladeNavigationService', function ($scope, bladeNavigationService) {
+.controller('virtoCommerce.storeModule.storeSettingsListController', ['$scope', 'platformWebApp.bladeNavigationService', function ($scope, bladeNavigationService) {
     $scope.openBlade = function (data) {
         var newBlade = {
             id: 'storeSetting',

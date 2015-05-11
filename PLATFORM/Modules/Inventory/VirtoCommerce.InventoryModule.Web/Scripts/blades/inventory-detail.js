@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.inventoryModule')
-.controller('virtoCommerce.inventoryModule.inventoryDetailController', ['$scope', 'dialogService', 'virtoCommerce.inventoryModule.inventories', function ($scope, dialogService, inventories) {
+.controller('virtoCommerce.inventoryModule.inventoryDetailController', ['$scope', 'platformWebApp.dialogService', 'virtoCommerce.inventoryModule.inventories', function ($scope, dialogService, inventories) {
 
     $scope.blade.refresh = function () {
         $scope.blade.isLoading = true;

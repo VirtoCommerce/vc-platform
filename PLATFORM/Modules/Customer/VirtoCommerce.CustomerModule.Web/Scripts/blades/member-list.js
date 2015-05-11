@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.customerModule')
-.controller('virtoCommerce.customerModule.memberListController', ['$scope', 'virtoCommerce.customerModule.members', 'virtoCommerce.customerModule.contacts', 'virtoCommerce.customerModule.organizations', 'bladeNavigationService', 'dialogService', function ($scope, members, contacts, organizations, bladeNavigationService, dialogService) {
+.controller('virtoCommerce.customerModule.memberListController', ['$scope', 'virtoCommerce.customerModule.members', 'virtoCommerce.customerModule.contacts', 'virtoCommerce.customerModule.organizations', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', function ($scope, members, contacts, organizations, bladeNavigationService, dialogService) {
     //pagination settings
     $scope.pageSettings = {};
     $scope.pageSettings.totalItems = 0;

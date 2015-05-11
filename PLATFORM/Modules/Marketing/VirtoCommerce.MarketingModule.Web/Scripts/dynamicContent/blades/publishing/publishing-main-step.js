@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.marketingModule')
-.controller('virtoCommerce.marketingModule.addPublishingFirstStepController', ['$scope', 'virtoCommerce.marketingModule.dynamicContent.contentPublications', 'bladeNavigationService', function ($scope, marketing_dynamicContents_res_contentPublications, bladeNavigationService) {
+.controller('virtoCommerce.marketingModule.addPublishingFirstStepController', ['$scope', 'virtoCommerce.marketingModule.dynamicContent.contentPublications', 'platformWebApp.bladeNavigationService', function ($scope, marketing_dynamicContents_res_contentPublications, bladeNavigationService) {
     $scope.setForm = function (form) {
         $scope.formScope = form;
     }

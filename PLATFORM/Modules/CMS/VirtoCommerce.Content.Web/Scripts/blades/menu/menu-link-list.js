@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.contentModule')
-.controller('virtoCommerce.contentModule.menuLinkListController', ['$scope', 'virtoCommerce.contentModule.menus', 'virtoCommerce.contentModule.stores', 'bladeNavigationService', 'dialogService', 'uuid2', function ($scope, menus, menusStores, bladeNavigationService, dialogService, uuid2) {
+.controller('virtoCommerce.contentModule.menuLinkListController', ['$scope', 'virtoCommerce.contentModule.menus', 'virtoCommerce.contentModule.stores', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', 'uuid2', function ($scope, menus, menusStores, bladeNavigationService, dialogService, uuid2) {
     var blade = $scope.blade;
     blade.selectedItemIds = [];
 

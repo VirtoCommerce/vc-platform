@@ -1,5 +1,5 @@
 ﻿angular.module('platformWebApp')
-.controller('confirmDialogController', ['$scope', '$modalInstance', 'dialog', function ($scope, $modalInstance, dialog) {
+.controller('platformWebApp.confirmDialogController', ['$scope', '$modalInstance', 'dialog', function ($scope, $modalInstance, dialog) {
 	$scope.message = dialog.message;
 	$scope.title = dialog.title;
 
@@ -15,7 +15,7 @@
         $modalInstance.dismiss('cancel');
     };
 }])
-.factory('dialogService', ['$rootScope', '$modal', function ($rootScope, $modal) {
+.factory('platformWebApp.dialogService', ['$rootScope', '$modal', function ($rootScope, $modal) {
     var dialogService = {
         dialogs: [],
         currentDialog: undefined
@@ -64,11 +64,11 @@
     };
 
     dialogService.showConfirmationDialog = function (dialog) {
-    	dialogService.showDialog(dialog, 'Scripts/common/confirmDialog/confirmDialog.tpl.html', 'confirmDialogController');
+        dialogService.showDialog(dialog, 'Scripts/common/confirmDialog/confirmDialog.tpl.html', 'platformWebApp.confirmDialogController');
     };
 
     dialogService.showNotificationDialog = function (dialog) {
-    	dialogService.showDialog(dialog, 'Scripts/common/confirmDialog/notifyDialog.tpl.html', 'confirmDialogController');
+        dialogService.showDialog(dialog, 'Scripts/common/confirmDialog/notifyDialog.tpl.html', 'platformWebApp.confirmDialogController');
     };
 
     return dialogService;
