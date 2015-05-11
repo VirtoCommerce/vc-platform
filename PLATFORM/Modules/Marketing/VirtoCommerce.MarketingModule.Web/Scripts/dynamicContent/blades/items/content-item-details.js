@@ -91,11 +91,11 @@
 	blade.contentTypes = [
 		'Html',
         'Flash',
-        'Liquid',
-        'Razor',
+        //'Liquid',
+        //'Razor',
 		'ImageClickable',
 		'ImageNonClickable',
-		'Product',
+		//'Product',
         'ProductsWithinCategory'
 	];
 

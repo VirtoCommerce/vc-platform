@@ -66,6 +66,11 @@ namespace VirtoCommerce.ApiClient.Extensions
                         filter => String.Format("t_{0}={1}", filter.Key, String.Join(",", filter.Value))));
             }
 
+            if (query.PriceLists != null && query.PriceLists.Length > 0)
+            {
+                parts.Add(String.Format("pricelists={0}", String.Join(",", query.PriceLists)));
+            }
+
             if (additionalParameters != null)
             {
                 var parameters = additionalParameters.ToPropertyDictionary();

@@ -768,6 +768,7 @@ namespace VirtoCommerce.Web.Models.Services
         public async Task<SearchResults<T>> SearchAsync<T>(SiteContext context, BrowseQuery query, Collection parentCollection = null, ItemResponseGroups? responseGroups = ItemResponseGroups.ItemMedium)
         {
             var priceLists = context.PriceLists;
+            query.PriceLists = priceLists;
 
             var response =
                 await
