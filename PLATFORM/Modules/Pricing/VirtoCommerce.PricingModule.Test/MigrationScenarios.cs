@@ -9,6 +9,7 @@ namespace VirtoCommerce.PricingModule.Test
     public class MigrationScenarios : MigrationsTestBase
     {
         [Fact]
+        [Trait("Category", "CI")]
         public void Can_create_price_new_database()
         {
             DropDatabase();
