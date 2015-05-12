@@ -168,13 +168,20 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
             {
                 foreach (var term in parameters.Terms)
                 {
+                    var filter = filters.SingleOrDefault(x => x.Key.Equals(term.Key, StringComparison.OrdinalIgnoreCase)
+                        && (!(x is PriceRangeFilter) || ((PriceRangeFilter)x).Currency.Equals(currency, StringComparison.OrdinalIgnoreCase)));
+
+                    var appliedFilter = _browseFilterService.Convert(filter, term.Value);
+
+                    /*
                     var termFilter = new AttributeFilter
                                      {
                                          Key = term.Key,
                                          Values = term.Value.Select(x => new AttributeFilterValue { Id = x.ToLowerInvariant(), Value = x.ToLowerInvariant() }).ToArray()
                                      };
+                     * */
 
-                    criteria.Apply(termFilter);
+                    criteria.Apply(appliedFilter);
                 }
             }
 

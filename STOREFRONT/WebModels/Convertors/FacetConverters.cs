@@ -14,7 +14,7 @@ namespace VirtoCommerce.Web.Models.Convertors
         #region Public Methods and Operators
         public static Tag AsWebModel(this FacetFilterValue facetValue, string field)
         {
-            return new Tag { Field = field, Label = facetValue.Label, Count = facetValue.Count };
+            return new Tag { Field = field, Label = facetValue.Label, Count = facetValue.Count, Value = facetValue.Value };
         }
 
         public static FacetFilter AsWebModel(this Data.Facet facet)

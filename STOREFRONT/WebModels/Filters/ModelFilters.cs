@@ -8,6 +8,7 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
 using DotLiquid;
+using DotLiquid.Util;
 using VirtoCommerce.Web.Views.Engines.Liquid;
 using VirtoCommerce.Web.Views.Engines.Liquid.Extensions;
 using VirtoCommerce.Web.Views.Engines.Liquid.ViewEngine.Extensions;
@@ -19,6 +20,8 @@ namespace VirtoCommerce.Web.Models.Filters
 {
     public class ModelFilters
     {
+        private static readonly Regex TagSyntax = R.B(R.Q(@"([A-Za-z0-9]+)_([A-Za-z0-9].+)"));
+
         private static readonly Lazy<CultureInfo[]> _cultures = new Lazy<CultureInfo[]>(
             CreateCultures,
             LazyThreadSafetyMode.ExecutionAndPublication);
@@ -146,8 +149,7 @@ namespace VirtoCommerce.Web.Models.Filters
                 return String.Format("<a title=\"Remove all tags\" href=\"{1}\">{0}</a>", input, relativeUri.LocalPath);
             }
 
-            var syntax = new Regex(@"([A-Za-z0-9]+)_([A-Za-z0-9]+)");
-            var match = syntax.Match(tag.ToString());
+            var match = TagSyntax.Match(tag.ToString());
 
             if (match.Success)
             {
@@ -188,8 +190,7 @@ namespace VirtoCommerce.Web.Models.Filters
 
             // parse "brand_sony (12)" and convert it to filter of type brand=sony
             // var syntax = new Regex(@"([A-Za-z0-9]+)_([A-Za-z0-9]+)\s\(([0-9]+)\)");
-            var syntax = new Regex(@"([A-Za-z0-9]+)_([A-Za-z0-9]+)");
-            var match = syntax.Match(tag.ToString());
+            var match = TagSyntax.Match(tag.ToString());
 
             if (match.Success)
             {

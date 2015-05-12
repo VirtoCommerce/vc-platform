@@ -14,6 +14,9 @@ namespace VirtoCommerce.Web.Models
         public string Field { get; set; }
 
         public string Label { get; set; }
+
+        public object Value { get; set; }
+
         #endregion
 
         #region Public Methods and Operators
@@ -27,7 +30,7 @@ namespace VirtoCommerce.Web.Models
             //return String.Format("{0}_{1} ({2})", Field, Label, Count);
 
             // eliminate count for now, since it problematic to make it work in some templates, especially when determine active tag
-            return String.Format("{0}_{1}", this.Field, this.Label).ToLower();
+            return String.Format("{0}_{1}", this.Field, this.Value).ToLower();
         }
         #endregion
     }
