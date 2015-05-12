@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.contentModule')
-.controller('virtoCommerce.contentModule.editPageController', ['$scope', 'platformWebApp.dialogService', 'virtoCommerce.contentModule.stores', 'virtoCommerce.contentModule.pages', '$timeout', 'bladeNavigationService', 'FileUploader', function ($scope, dialogService, pagesStores, pages, $timeout, bladeNavigationService, FileUploader) {
+.controller('virtoCommerce.contentModule.editPageController', ['$scope', 'platformWebApp.dialogService', 'virtoCommerce.contentModule.stores', 'virtoCommerce.contentModule.pages', '$timeout', 'platformWebApp.bladeNavigationService', 'FileUploader', function ($scope, dialogService, pagesStores, pages, $timeout, bladeNavigationService, FileUploader) {
     var blade = $scope.blade;
     var codemirrorEditor;
 

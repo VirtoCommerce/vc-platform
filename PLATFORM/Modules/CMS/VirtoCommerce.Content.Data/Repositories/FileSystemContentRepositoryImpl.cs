@@ -177,7 +177,7 @@ namespace VirtoCommerce.Content.Data.Repositories
 
 			if (File.Exists(fullPath))
 			{
-				var itemName = Path.GetFileNameWithoutExtension(fullPath);
+				var itemName = Path.GetFileName(fullPath);
 
 				var content = File.ReadAllBytes(fullPath);
 
@@ -193,7 +193,7 @@ namespace VirtoCommerce.Content.Data.Repositories
 			return retVal;
 		}
 
-		public IEnumerable<Models.ContentPage> GetPages(string path)
+		public IEnumerable<Models.ContentPage> GetPages(string path, GetPagesCriteria criteria)
 		{
 			var list = new List<Models.ContentPage>();
 
@@ -234,11 +234,7 @@ namespace VirtoCommerce.Content.Data.Repositories
 
 			using (var fs = new FileStream(fullPath, FileMode.Create, FileAccess.Write))
 			{
-				using (var sw = new StreamWriter(fs))
-				{
-					sw.Write(page.ByteContent);
-					sw.Close();
-				}
+				fs.Write(page.ByteContent, 0, page.ByteContent.Length);
 				fs.Close();
 			}
 		}
@@ -259,12 +255,6 @@ namespace VirtoCommerce.Content.Data.Repositories
 			var language = steps[steps.Length - 2];
 
 			return language;
-		}
-
-
-		public IEnumerable<ContentPage> GetPages(string path, GetPagesCriteria criteria)
-		{
-			throw new NotImplementedException();
 		}
 	}
 }

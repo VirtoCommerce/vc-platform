@@ -5,19 +5,17 @@ using System.Text;
 using System.Threading.Tasks;
 using VirtoCommerce.Content.Data.Models;
 using VirtoCommerce.Content.Data.Repositories;
+using VirtoCommerce.Platform.Data.Infrastructure.Interceptors;
 using Xunit;
 
 namespace VirtoCommerce.Content.Tests.PagesTests
 {
-	public class FileSystemPagesRepositoryTests
+	public class DatabasePagesTests
 	{
-		private string _path = Environment.CurrentDirectory.Replace("\\bin\\Debug", string.Empty);
-
-		private FileSystemContentRepositoryImpl GetRepository()
+		private DatabaseContentRepositoryImpl GetRepository()
 		{
-			var fullPath = string.Format("{0}\\Pages\\", _path);
-
-			var repository = new FileSystemContentRepositoryImpl(fullPath);
+			var repository = new DatabaseContentRepositoryImpl("VirtoCommerce", new AuditableInterceptor(),
+															   new EntityPrimaryKeyGeneratorInterceptor());
 
 			return repository;
 		}

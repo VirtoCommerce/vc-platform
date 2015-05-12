@@ -45,6 +45,7 @@ angular.module(moduleName, ['angularUUID2'])
 					var blade = {
 						id: 'content',
 						title: 'Content',
+						subtitle: 'Content service',
 						controller: 'virtoCommerce.contentModule.contentMainController',
 						template: 'Modules/$(VirtoCommerce.Content)/Scripts/blades/common/content-main.tpl.html',
 						isClosingDisabled: true

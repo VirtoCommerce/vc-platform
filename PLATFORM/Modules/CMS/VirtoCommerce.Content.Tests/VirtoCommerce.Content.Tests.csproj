@@ -94,7 +94,7 @@
     <Compile Include="GitHubRepositoryTest.cs" />
     <Compile Include="MenuTests\MenuRepositoryTests.cs" />
     <Compile Include="MenuTests\MenuServiceTests.cs" />
-    <Compile Include="PagesTests\DatabasePagesRepositoryTests.cs" />
+    <Compile Include="PagesTests\DatabasePagesTests.cs" />
     <Compile Include="PagesTests\FileSystemPagesRepositoryTests.cs" />
     <Compile Include="PagesTests\GitHubPagesRepositoryTests.cs" />
     <Compile Include="PagesTests\PagesControllerTests.cs" />
@@ -108,9 +108,17 @@
       <Project>{f7c9313b-522e-4619-abc9-8c7d4600d6b5}</Project>
       <Name>VirtoCommerce.Platform.Core</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\..\VirtoCommerce.Platform.Data\VirtoCommerce.Platform.Data.csproj">
+      <Project>{39afd233-b2f7-4178-817d-0a339c57525d}</Project>
+      <Name>VirtoCommerce.Platform.Data</Name>
+    </ProjectReference>
     <ProjectReference Include="..\VirtoCommerce.Content.Data\VirtoCommerce.Content.Data.csproj">
       <Project>{e55e08b5-3af9-467d-8f90-4bef27bafa28}</Project>
       <Name>VirtoCommerce.Content.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\VirtoCommerce.Content.Web\VirtoCommerce.Content.Web.csproj">
+      <Project>{2db42ccf-cf00-4ee1-82ae-e985a0457b05}</Project>
+      <Name>VirtoCommerce.Content.Web</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
