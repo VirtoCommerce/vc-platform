@@ -43,27 +43,43 @@
 		};
 		bladeNavigationService.showBlade(newBlade, blade);
 	}
-
-	function openBladeNew() {
+	
+	blade.openBladeNew = function(isBytes) {
 		$scope.selectedNodeId = null;
 		closeChildrenBlades();
 
-		var add = '';
+		var path = '';
 		if (blade.steps.length > 1) {
-			add = _.last(blade.steps) + '/';
+			path = _.last(blade.steps) + '/';
 		}
 
-		var newBlade = {
-			id: 'addPageBlade',
-			choosenStoreId: blade.storeId,
-			currentEntity: { name: add + 'new_page.md', content: null, contentType: 'text/html', language: null, storeId: blade.storeId },
-			newPage: true,
-			title: 'Add new page',
-			subtitle: 'Create new theme',
-			controller: 'virtoCommerce.contentModule.editPageController',
-			template: 'Modules/$(VirtoCommerce.Content)/Scripts/blades/pages/edit-page.tpl.html'
-		};
-		bladeNavigationService.showBlade(newBlade, $scope.blade);
+		if (!isBytes) {
+			var newBlade = {
+				id: 'addPageBlade',
+				choosenStoreId: blade.storeId,
+				currentEntity: { name: path + 'new_page.md', content: null, contentType: 'text/html', language: null, storeId: blade.storeId },
+				newPage: true,
+				title: 'Add new page',
+				subtitle: 'Create new page',
+				controller: 'virtoCommerce.contentModule.editPageController',
+				template: 'Modules/$(VirtoCommerce.Content)/Scripts/blades/pages/edit-page.tpl.html'
+			};
+			bladeNavigationService.showBlade(newBlade, $scope.blade);
+		}
+		else {
+			var newBlade = {
+				id: 'addPageBlade',
+				choosenStoreId: blade.storeId,
+				path: path,
+				currentEntity: { name: path + 'new_file', content: null, contentType: null, language: null, storeId: blade.storeId },
+				newPage: true,
+				title: 'Add new file',
+				subtitle: 'Create new file',
+				controller: 'virtoCommerce.contentModule.editPageController',
+				template: 'Modules/$(VirtoCommerce.Content)/Scripts/blades/pages/edit-page.tpl.html'
+			};
+			bladeNavigationService.showBlade(newBlade, $scope.blade);
+		}
 	}
 
 	$scope.blade.onClose = function (closeCallback) {
@@ -112,6 +128,14 @@
 		}
 	}
 
+	blade.showDivider = function (index) {
+		if (index === blade.steps.length - 1) {
+			return false;
+		}
+
+		return true;
+	}
+
 	$scope.bladeHeadIco = 'fa fa-archive';
 
 	blade.getFlag = function (lang) {
@@ -143,13 +167,23 @@
         {
         	name: "Add page", icon: 'fa fa-plus',
         	executeMethod: function () {
-        		openBladeNew();
+        		blade.openBladeNew(false);
         	},
         	canExecuteMethod: function () {
         		return true;
         	},
         	permission: 'content:manage'
-        }
+        },
+		{
+			name: "Add file", icon: 'fa fa-plus',
+			executeMethod: function () {
+				blade.openBladeNew(true);
+			},
+			canExecuteMethod: function () {
+				return true;
+			},
+			permission: 'content:manage'
+		},
 	];
 
 	blade.initialize();

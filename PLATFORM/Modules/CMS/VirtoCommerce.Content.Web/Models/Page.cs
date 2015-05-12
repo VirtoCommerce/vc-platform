@@ -14,5 +14,7 @@ namespace VirtoCommerce.Content.Web.Models
 		public string ContentType { get; set; }
 		public string Language { get; set; }
 		public DateTime ModifiedDate { get; set; }
+
+		public string FileUrl { get; set; }
 	}
 }

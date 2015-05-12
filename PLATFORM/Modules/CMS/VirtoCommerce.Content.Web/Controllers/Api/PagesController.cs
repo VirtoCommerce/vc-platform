@@ -103,6 +103,15 @@ namespace VirtoCommerce.Content.Web.Controllers.Api
 		[CheckPermission(Permission = PredefinedPermissions.Manage)]
 		public IHttpActionResult SaveItem(string storeId, Page page)
 		{
+			if (!string.IsNullOrEmpty(page.FileUrl))
+			{
+				using(var webClient = new WebClient())
+				{
+					var byteContent = webClient.DownloadData(page.FileUrl);
+					page.ByteContent = byteContent;
+				}
+			}
+
 			_pagesService.SavePage(storeId, page.ToCoreModel());
 			return Ok();
 		}

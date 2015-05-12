@@ -1,8 +1,8 @@
 ﻿<div class="blade-static __expanded" ng-if="blade.newPage">
-	<div class="form">
+	<form class="form" name="pageForm">
 		<div class="columns clearfix">
 			<div class="column">
-				<div class="form-group">
+				<div class="form-group" ng-init="setForm(pageForm)">
 					<label class="form-label">Name</label>
 					<div class="form-input">
 						<input focus-on="" required class="form-control" ng-model="blade.currentEntity.name" placeholder="Enter page name" />
@@ -24,7 +24,7 @@
 				</div>
 			</div>
 		</div>
-	</div>
+	</form>
 </div>
 
 <div class="blade-static __collapsed" ng-if="!blade.newPage">
@@ -33,7 +33,7 @@
 	</div>
 </div>
 
-<div class="blade-content" ng-if="blade.isByteContent">
+<div class="blade-content __large-wide" ng-if="blade.isByteContent">
 	<div class="blade-inner">
 		<div class="inner-block">
 			<div class="inner-block">
@@ -41,7 +41,7 @@
 					<div ng-show="uploader.isHTML5">
 						<div over-class="bd-blue" nv-file-over="" nv-file-drop="" uploader="uploader" class="drag-area">
 							<div class="drag-content">
-								Drag and drop image here
+								Drag and drop file here
 							</div>
 						</div>
 					</div>
@@ -54,6 +54,17 @@
 						</button>
 					</div>
 				</form>
+
+				<div ng-show="uploader.isUploading">
+					<div class="sub-t">Progress:</div>
+					<div class="progress-bar __aqua" ng-style="{'width': uploader.progress + '%'}"></div>
+				</div>
+
+				<div class="tile-group triple __images-list" ng-if="blade.isImage()">
+					<div class="tile double">
+						<img class="tile-img" ng-src="{{blade.image}}">
+					</div>
+				</div>
 			</div>
 		</div>
 	</div>
