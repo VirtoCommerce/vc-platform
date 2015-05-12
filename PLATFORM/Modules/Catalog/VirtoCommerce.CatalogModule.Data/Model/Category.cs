@@ -6,6 +6,7 @@ using System.Runtime.Serialization;
 using System.ComponentModel.DataAnnotations;
 using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations.Schema;
+using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.CatalogModule.Data.Model
 {
@@ -13,7 +14,9 @@ namespace VirtoCommerce.CatalogModule.Data.Model
     {
 		public Category()
 		{
-			CategoryPropertyValues = new ObservableCollection<CategoryPropertyValue>();
+			CategoryPropertyValues = new NullCollection<CategoryPropertyValue>();
+			OutgoingLinks = new NullCollection<CategoryRelation>();
+			IncommingLinks = new NullCollection<CategoryRelation>();
 		}
 		[Required]
 		[StringLength(128)]
@@ -30,9 +33,10 @@ namespace VirtoCommerce.CatalogModule.Data.Model
 		public string PropertySetId { get; set; }
 
         public virtual PropertySet PropertySet { get; set; }
-
 		public virtual ObservableCollection<CategoryPropertyValue> CategoryPropertyValues { get; set; }
-
+		//It new navigation property for link replace to stupid CategoryLink (will be removed later)
+		public virtual ObservableCollection<CategoryRelation> OutgoingLinks { get; set; }
+		public virtual ObservableCollection<CategoryRelation> IncommingLinks { get; set; }
 	    #endregion
     }
 }

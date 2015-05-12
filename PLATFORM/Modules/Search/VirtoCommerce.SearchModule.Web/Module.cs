@@ -61,7 +61,7 @@ namespace VirtoCommerce.SearchModule.Web
             var cacheManager = _container.Resolve<CacheManager>();
             var cacheSettings = new[] 
 			{
-				new CacheSettings("CatalogItemIndexBuilder.IndexItemCategories", TimeSpan.FromMinutes(30))
+				new CacheSettings("CatalogItemIndexBuilder.GetCategoryById", TimeSpan.FromMinutes(30))
 			};
             cacheManager.AddCacheSettings(cacheSettings);
 

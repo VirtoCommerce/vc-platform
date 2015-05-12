@@ -136,7 +136,6 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 			retVal.CatalogId = product.CatalogId;
 
 			#region ItemPropertyValues
-			retVal.ItemPropertyValues = new NullCollection<dataModel.ItemPropertyValue>();
 			if (product.PropertyValues != null)
 			{
 				retVal.ItemPropertyValues = new ObservableCollection<dataModel.ItemPropertyValue>();
@@ -150,7 +149,6 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 			#endregion
 
 			#region ItemAssets
-			retVal.ItemAssets = new NullCollection<dataModel.ItemAsset>();
 			if (product.Assets != null)
 			{
 				var assets = product.Assets.ToArray();
@@ -166,7 +164,6 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 			#endregion
 
 			#region CategoryItemRelations
-			retVal.CategoryItemRelations = new NullCollection<dataModel.CategoryItemRelation>();
 			if (product.Links != null)
 			{
 				retVal.CategoryItemRelations = new ObservableCollection<dataModel.CategoryItemRelation>();
@@ -175,7 +172,6 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 			#endregion
 
 			#region EditorialReview
-			retVal.EditorialReviews = new NullCollection<dataModel.EditorialReview>();
 			if (product.Reviews != null)
 			{
 				retVal.EditorialReviews = new ObservableCollection<dataModel.EditorialReview>();
@@ -184,7 +180,6 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 			#endregion
 
 			#region Associations
-			retVal.AssociationGroups = new NullCollection<dataModel.AssociationGroup>();
 			if (product.Associations != null)
 			{
 				retVal.AssociationGroups = new ObservableCollection<dataModel.AssociationGroup>();

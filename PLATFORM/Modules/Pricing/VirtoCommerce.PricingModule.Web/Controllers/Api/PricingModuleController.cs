@@ -92,10 +92,10 @@ namespace VirtoCommerce.PricingModule.Web.Controllers.Api
 		public IHttpActionResult GetProductPrices(string productId)
 		{
 			IHttpActionResult retVal = NotFound();
-			var prices = _pricingService.EvaluateProductPrices(new coreModel.PriceEvaluationContext { ProductId = productId });
+			var prices = _pricingService.EvaluateProductPrices(new coreModel.PriceEvaluationContext { ProductIds = new string[] { productId } });
 			if (prices != null)
 			{
-				retVal = Ok(prices.Select(x => x.ToWebModel()).ToArray());
+				retVal = Ok(prices.GroupBy(x=>x.Currency).Select(x => x.First().ToWebModel()).ToArray());
 			}
 			return retVal;
 		}

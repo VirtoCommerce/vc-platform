@@ -82,10 +82,7 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
             else
             {
                 dbCatalog = new dataModel.Catalog();
-                dbCatalog.CatalogLanguages = new NullCollection<dataModel.CatalogLanguage>();
 
-
-                dbCatalog.CatalogPropertyValues = new NullCollection<dataModel.CatalogPropertyValue>();
                 if (catalog.PropertyValues != null)
                 {
                     dbCatalog.CatalogPropertyValues = new ObservableCollection<dataModel.CatalogPropertyValue>();

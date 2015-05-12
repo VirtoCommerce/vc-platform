@@ -15,11 +15,11 @@ namespace VirtoCommerce.CatalogModule.Data.Model
 		public Item()
 		{
 			Id = Guid.NewGuid().ToString("N");
-			CategoryItemRelations = new ObservableCollection<CategoryItemRelation>();
-			ItemAssets = new ObservableCollection<ItemAsset>();
-			AssociationGroups = new ObservableCollection<AssociationGroup>();
-			EditorialReviews = new ObservableCollection<EditorialReview>();
-			ItemPropertyValues = new ObservableCollection<ItemPropertyValue>();
+			CategoryItemRelations = new NullCollection<CategoryItemRelation>();
+			ItemAssets = new NullCollection<ItemAsset>();
+			AssociationGroups = new NullCollection<AssociationGroup>();
+			EditorialReviews = new NullCollection<EditorialReview>();
+			ItemPropertyValues = new NullCollection<ItemPropertyValue>();
 		}
 
 		[StringLength(1024)]

@@ -212,16 +212,21 @@
                             $scope.blade.refresh();
                             if ($scope.blade.mode === 'mappingSource')
                                 $scope.blade.parentBlade.refresh();
+                        }, function (error) {
+                        	bladeNavigationService.setError('Error ' + error.status, $scope.blade);
                         });
                     }
                     if (categoryIds.length > 0) {
                         categories.remove({ ids: categoryIds }, function (data, headers) {
-                            $scope.blade.refresh();
+                            $scope.blade.refresh(); }, function (error) {
+                        	bladeNavigationService.setError('Error ' + error.status, $scope.blade);
                         });
                     }
                     if (itemIds.length > 0) {
                         items.remove({ ids: itemIds }, function (data, headers) {
                             $scope.blade.refresh();
+                        }, function (error) {
+                        	bladeNavigationService.setError('Error ' + error.status, $scope.blade);
                         });
                     }
                 }

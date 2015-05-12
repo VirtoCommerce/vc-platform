@@ -76,6 +76,10 @@
     <Compile Include="Migrations\201504301302574_Initial.Designer.cs">
       <DependentUpon>201504301302574_Initial.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201505111257502_CategoryRelation.cs" />
+    <Compile Include="Migrations\201505111257502_CategoryRelation.Designer.cs">
+      <DependentUpon>201505111257502_CategoryRelation.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Model\Association.cs" />
     <Compile Include="Model\AssociationGroup.cs" />
@@ -86,13 +90,13 @@
     <Compile Include="Model\Category.cs" />
     <Compile Include="Model\CategoryBase.cs" />
     <Compile Include="Model\CategoryItemRelation.cs" />
+    <Compile Include="Model\CategoryRelation.cs" />
     <Compile Include="Model\CategoryPropertyValue.cs" />
     <Compile Include="Model\EditorialReview.cs" />
     <Compile Include="Model\Item.cs" />
     <Compile Include="Model\ItemAsset.cs" />
     <Compile Include="Model\ItemPropertyValue.cs" />
     <Compile Include="Model\ItemRelation.cs" />
-    <Compile Include="Model\LinkedCategory.cs" />
     <Compile Include="Model\Product.cs" />
     <Compile Include="Model\Property.cs" />
     <Compile Include="Model\PropertyAttribute.cs" />
@@ -137,6 +141,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201504301302574_Initial.resx">
       <DependentUpon>201504301302574_Initial.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201505111257502_CategoryRelation.resx">
+      <DependentUpon>201505111257502_CategoryRelation.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Repositories\Sql\Association.sql" />
   </ItemGroup>
@@ -192,9 +199,6 @@
     <EmbeddedResource Include="Repositories\Sql\ItemRelation.sql" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Repositories\Sql\LinkedCategory.sql" />
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="Repositories\Sql\Property.reduced.sql" />
   </ItemGroup>
   <ItemGroup>
@@ -214,6 +218,9 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Repositories\Sql\VirtualCatalog.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Repositories\Sql\LinkedCategory.sql" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

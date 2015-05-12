@@ -72,12 +72,12 @@ namespace VirtoCommerce.SearchModule.Data.Services
             var parallelOptions = new ParallelOptions { MaxDegreeOfParallelism = 5 };
 
             Parallel.ForEach(partition.Keys, parallelOptions, key =>
-            {
+           {
                 //Trace.TraceInformation(string.Format("Processing documents starting {0} of {1} - {2}%", partition.Start, partition.Total, (partition.Start * 100 / partition.Total)));
-                var doc = new ResultDocument();
+               var doc = new ResultDocument();
                 IndexItem(ref doc, key);
                 documents.Add(doc);
-            });
+           });
 
             return documents;
         }
@@ -115,18 +115,33 @@ namespace VirtoCommerce.SearchModule.Data.Services
             doc.Add(new DocumentField("__hidden", (!item.IsActive).ToString().ToLower(), new[] { IndexStore.Yes, IndexType.NotAnalyzed }));
             doc.Add(new DocumentField("code", item.Code, new[] { IndexStore.Yes, IndexType.NotAnalyzed }));
             doc.Add(new DocumentField("name", item.Name, new[] { IndexStore.Yes, IndexType.NotAnalyzed }));
-            doc.Add(new DocumentField("startdate", item.StartDate, new[] { IndexStore.Yes, IndexType.NotAnalyzed }));
-            doc.Add(new DocumentField("enddate", item.EndDate.HasValue ? item.EndDate : DateTime.MaxValue, new[] { IndexStore.Yes, IndexType.NotAnalyzed }));
+			doc.Add(new DocumentField("startdate", item.StartDate, new[] { IndexStore.Yes, IndexType.NotAnalyzed }));
+			doc.Add(new DocumentField("enddate", item.EndDate.HasValue ? item.EndDate : DateTime.MaxValue, new[] { IndexStore.Yes, IndexType.NotAnalyzed }));
             doc.Add(new DocumentField("createddate", item.CreatedDate, new[] { IndexStore.Yes, IndexType.NotAnalyzed }));
             doc.Add(new DocumentField("lastmodifieddate", item.ModifiedDate ?? DateTime.MaxValue, new[] { IndexStore.Yes, IndexType.NotAnalyzed }));
             doc.Add(new DocumentField("catalog", item.CatalogId.ToLower(), new[] { IndexStore.Yes, IndexType.NotAnalyzed, IndexDataType.StringCollection }));
             doc.Add(new DocumentField("__outline", item.CatalogId.ToLower(), new[] { IndexStore.Yes, IndexType.NotAnalyzed, IndexDataType.StringCollection }));
 
-            if (item.CategoryId != null)
+          	//Index item direct categories links
+			if(item.Links != null)
             {
-                // Index categories
-                IndexItemCategories(ref doc, item);
+				foreach(var link in item.Links)
+				{
+					var category = GetCategoryById(link.CategoryId);
+					if (category != null)
+					{
+						IndexCategory(ref doc, category);
+						foreach(var categoryLink in category.Links)
+						{
+							var linkCategory = GetCategoryById(categoryLink.CategoryId);
+							if (linkCategory != null)
+							{
+								IndexCategory(ref doc, linkCategory);
             }
+						}
+					}
+				}
+			}
 
             // Index custom properties
             IndexItemCustomProperties(ref doc, item);
@@ -179,30 +194,24 @@ namespace VirtoCommerce.SearchModule.Data.Services
         }
 
         #region Category Indexing
-
-        protected virtual void IndexItemCategories(ref ResultDocument doc, CatalogProduct item)
+		private Category GetCategoryById(string categoryId)
         {
-            var cacheKey = CacheKey.Create("CatalogItemIndexBuilder.IndexItemCategories", item.CategoryId);
-            var category = _cacheManager.Get(cacheKey, () => _categoryService.GetById(item.CategoryId));
-            doc.Add(new DocumentField(string.Format("sort{0}{1}", category.CatalogId, category.Id), category.Priority, new[] { IndexStore.Yes, IndexType.NotAnalyzed }));
-            IndexCategory(ref doc, category);
+			var cacheKey = CacheKey.Create("CatalogItemIndexBuilder.GetCategoryById", categoryId);
+			var retVal = _cacheManager.Get(cacheKey, () => _categoryService.GetById(categoryId));
+			return retVal;
         }
 
+       
         protected virtual void IndexCategory(ref ResultDocument doc, Category category)
         {
+			doc.Add(new DocumentField(String.Format("sort{0}{1}", category.CatalogId, category.Id), category.Priority, new string[] { IndexStore.Yes, IndexType.NotAnalyzed }));
+
             doc.Add(new DocumentField("catalog", category.CatalogId.ToLower(), new[] { IndexStore.Yes, IndexType.NotAnalyzed }));
-            var outlineParts = new[] { category.CatalogId, category.Id }.Concat(category.Parents.Select(x => x.Id));
+			var outlineParts = new string[] { category.CatalogId, category.Id }.Concat(category.Parents.Select(x => x.Id)).Where(x=>!String.IsNullOrEmpty(x));
             // get category path
             var outline = string.Join("/", outlineParts);
             doc.Add(new DocumentField("__outline", outline.ToLower(), new[] { IndexStore.Yes, IndexType.NotAnalyzed }));
 
-            // Now index all linked categories
-            //Current code occur stack overflow
-            //foreach (var link in category.Links)
-            //{
-            //	var linkCategory = _categoryService.GetById(link.CategoryId);
-            //	IndexCategory(ref doc, linkCategory);
-            //}
         }
 
         #endregion
@@ -213,7 +222,7 @@ namespace VirtoCommerce.SearchModule.Data.Services
         {
             var evalContext = new Domain.Pricing.Model.PriceEvaluationContext()
             {
-                ProductId = item.Id
+                ProductIds = new string[] {  item.Id }
             };
 
             var prices = _pricingService.EvaluateProductPrices(evalContext);
@@ -222,8 +231,8 @@ namespace VirtoCommerce.SearchModule.Data.Services
             foreach (var price in prices)
             {
                 //var priceList = price.Pricelist;
-                doc.Add(new DocumentField(string.Format("price_{0}_{1}", price.Currency, price.PricelistId), price.Sale ?? price.List, new[] { IndexStore.No, IndexType.NotAnalyzed }));
-                doc.Add(new DocumentField(string.Format("price_{0}_{1}_value", price.Currency, price.PricelistId), (price.Sale ?? price.List).ToString(CultureInfo.InvariantCulture), new[] { IndexStore.Yes, IndexType.NotAnalyzed }));
+                doc.Add(new DocumentField(string.Format("price_{0}_{1}", price.Currency, price.PricelistId), price.EffectiveValue, new[] { IndexStore.No, IndexType.NotAnalyzed }));
+				doc.Add(new DocumentField(string.Format("price_{0}_{1}_value", price.Currency, price.PricelistId), (price.EffectiveValue).ToString(CultureInfo.InvariantCulture), new[] { IndexStore.Yes, IndexType.NotAnalyzed }));
             }
 
         }

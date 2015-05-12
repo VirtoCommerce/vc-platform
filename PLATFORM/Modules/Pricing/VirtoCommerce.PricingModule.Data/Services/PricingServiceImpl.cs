@@ -26,6 +26,33 @@ namespace VirtoCommerce.PricingModule.Data.Services
 		}
 
 		#region IPricingService Members
+		public IEnumerable<coreModel.Pricelist> EvaluatePriceLists(coreModel.PriceEvaluationContext evalContext)
+		{
+			IEnumerable<coreModel.Pricelist> retVal = null;
+			using(var repository = _repositoryFactory())
+			{
+				var query = repository.PricelistAssignments.Include(x => x.Pricelist);
+
+				//filter by catalog
+				query = query.Where(x => (x.CatalogId == evalContext.CatalogId));
+
+				if (evalContext.Currency != null)
+				{
+					//filter by currency
+					query = query.Where(x => x.Pricelist.Currency == evalContext.Currency.ToString());
+				}
+				if (evalContext.CertainDate != null)
+				{
+					//filter by date expiration
+					query = query.Where(x => (x.StartDate == null || evalContext.CertainDate >= x.StartDate) && (x.EndDate == null || x.EndDate >= evalContext.CertainDate));
+				}
+				// sort content by type and priority
+				retVal = query.OrderByDescending(x => x.Priority).ThenByDescending(x => x.Name)
+							  .ToArray().Select(x => x.Pricelist.ToCoreModel());
+			}
+	
+			return retVal;
+		}
 
 		public IEnumerable<coreModel.Price> EvaluateProductPrices(coreModel.PriceEvaluationContext evalContext)
 		{
@@ -33,22 +60,36 @@ namespace VirtoCommerce.PricingModule.Data.Services
 			{
 				throw new ArgumentNullException("evalContext");
 			}
-			if (evalContext.ProductId == null)
+			if (evalContext.ProductIds == null)
 			{
-				throw new MissingFieldException("ProductId");
+				throw new MissingFieldException("ProductIds");
 			}
 
 			var retVal = new List<coreModel.Price>();
 			using (var repository = _repositoryFactory())
 			{
-				var prices = repository.Prices.Include(x => x.Pricelist).Where(x => x.ProductId == evalContext.ProductId)
-											  .ToArray()
-											  .Select(x => x.ToCoreModel());
+				//Get a price range satisfying by passing context
+				var query = repository.Prices.Include(x => x.Pricelist)
+											 .Where(x => evalContext.ProductIds.Contains(x.ProductId))
+											 .Where(x => evalContext.Quantity >= x.MinQuantity || evalContext.Quantity == 0);
 
-				foreach (var groupItem in prices.GroupBy(x => x.Currency))
+				if(evalContext.PricelistIds != null)
 				{
-					var activePice = groupItem.OrderByDescending(x => x.CreatedDate).FirstOrDefault();
-					retVal.Add(activePice);
+					query = query.Where(x => evalContext.PricelistIds.Contains(x.PricelistId));
+				}
+				var prices = query.ToArray().Select(x => x.ToCoreModel());
+
+				foreach (var currencyPricesGroup in prices.GroupBy(x => x.Currency))
+				{
+					var groupPrices = currencyPricesGroup.OrderBy(x=> 1);
+					if (evalContext.PricelistIds != null)
+					{
+						//Construct ordered groups of list prices (ordered by pricelist priority taken from pricelistid array as index)
+						groupPrices = groupPrices.OrderBy(x => Array.IndexOf(evalContext.PricelistIds, x.PricelistId));
+					}
+					//Order by  price value
+					var orderedPrices = groupPrices.OrderBy(x => Math.Min(x.Sale.HasValue ? x.Sale.Value : x.List, x.List));
+					retVal.AddRange(orderedPrices);
 				}
 			}
 			return retVal;
@@ -270,7 +311,5 @@ namespace VirtoCommerce.PricingModule.Data.Services
 			GenericDelete(ids, (repository, id) => repository.GetPricelistAssignmentById(id));
 		}
 		#endregion
-
-
 	}
 }

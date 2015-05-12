@@ -31,6 +31,26 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
 
 			InheritanceMapping(modelBuilder);
 
+			#region CategoryLink
+
+			modelBuilder.Entity<dataModel.CategoryRelation>().HasKey(x => x.Id)
+					.Property(x => x.Id);
+
+			modelBuilder.Entity<dataModel.CategoryRelation>().HasOptional(x => x.TargetCategory)
+									   .WithMany(x=>x.IncommingLinks)
+									   .HasForeignKey(x => x.TargetCategoryId).WillCascadeOnDelete(false);
+
+			modelBuilder.Entity<dataModel.CategoryRelation>().HasRequired(x => x.SourceCategory)
+									   .WithMany(x=>x.OutgoingLinks)
+									   .HasForeignKey(x => x.SourceCategoryId).WillCascadeOnDelete(false);
+
+			modelBuilder.Entity<dataModel.CategoryRelation>().HasOptional(x => x.TargetCatalog)
+									   .WithMany(x=>x.IncommingLinks)
+									   .HasForeignKey(x => x.TargetCatalogId).WillCascadeOnDelete(false);
+
+			modelBuilder.Entity<dataModel.CategoryRelation>().ToTable("CategoryRelation"); 
+			#endregion
+
 			MapEntity<dataModel.CategoryItemRelation>(modelBuilder, toTable: "CategoryItemRelation");
 			MapEntity<dataModel.ItemAsset>(modelBuilder, toTable: "ItemAsset");
 			MapEntity<dataModel.Association>(modelBuilder, toTable: "Association");
@@ -84,10 +104,10 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
 			{
 				entity.ToTable("Category");
 			});
-			modelBuilder.Entity<dataModel.LinkedCategory>().Map(entity =>
-			{
-				entity.ToTable("LinkedCategory");
-			});
+			//modelBuilder.Entity<dataModel.LinkedCategory>().Map(entity =>
+			//{
+			//	entity.ToTable("LinkedCategory");
+			//});
 			#endregion
 
 			#region Item TPH
@@ -187,6 +207,11 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
 			get { return GetAsQueryable<dataModel.Association>(); }
 		}
 
+		public IQueryable<dataModel.CategoryRelation> CategoryLinks
+		{
+			get { return GetAsQueryable<dataModel.CategoryRelation>(); }
+		}
+
 		public dataModel.CatalogBase GetCatalogById(string catalogId)
 		{
 			dataModel.CatalogBase retVal = Catalogs.OfType<dataModel.Catalog>()
@@ -197,44 +222,40 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
 			if (retVal == null)
 			{
 				retVal = Catalogs.OfType<dataModel.VirtualCatalog>()
-								 .FirstOrDefault(x => x.Id == catalogId);
+								.Include(x=>x.IncommingLinks)
+								.FirstOrDefault(x => x.Id == catalogId);
 			}
 			return retVal;
 		}
 
-		public dataModel.LinkedCategory[] GetCategoryLinks(string categoryId)
-		{
-			var retVal = new List<dataModel.LinkedCategory>();
-			//Load links for both categories (source and target)
-			var allLinks = Categories.OfType<dataModel.LinkedCategory>()
-										.AsNoTracking()
-										.Where(x => x.ParentCategoryId == categoryId || x.LinkedCategoryId == categoryId)
-										.ToArray();
-			foreach (var link in allLinks)
-			{
-
-				//Need to swap link role for both source and target categories
-				if (categoryId != link.ParentCategoryId)
-				{
-					link.LinkedCategoryId = link.ParentCategoryId;
-					link.LinkedCatalogId = link.CatalogId;
-				}
-				retVal.Add(link);
+		//public dataModel.CategoryLink[] GetCategoryLinks(string categoryId)
+		//{
+		//	var retVal = new List<dataModel.CategoryLink>();
+		//	//Load links for both categories (source and target)
+		//	var allLinks = CategoryLinks.AsNoTracking().Include(x=>x.Category).Where(x=> x.CategoryId == categoryId || x.LinkCategoryId == categoryId).ToArray();
+		//	foreach (var link in allLinks)
+		//	{
+		//		//Need to swap link role for both source and target categories
+		//		if (categoryId != link.CategoryId)
+		//		{
+		//			link.LinkCategoryId = link.CategoryId;
+		//			link.LinkCatalogId = link.Category.CatalogId;
+		//		}
+		//		retVal.Add(link);
 			
-			}
-			return retVal.ToArray();
-		}
+		//	}
+		//	return retVal.ToArray();
+		//}
 
 
-		public dataModel.LinkedCategory[] GetCatalogLinks(string catalogId)
-		{
-			var retVal = Categories.OfType<dataModel.LinkedCategory>()
-										.AsNoTracking()
-										.Where(x => x.LinkedCatalogId == catalogId && x.LinkedCategoryId == null)
-										.ToArray();
+		//public dataModel.CategoryLink[] GetCatalogLinks(string catalogId)
+		//{
+		//	var retVal = CategoryLinks.AsNoTracking()
+		//								.Where(x => x.LinkCatalogId == catalogId && x.LinkCategoryId == null)
+		//								.ToArray();
 
-			return retVal;
-		}
+		//	return retVal;
+		//}
 
 		public dataModel.Category[] GetAllCategoryParents(dataModel.Category category)
 		{
@@ -257,6 +278,8 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
 		{
 			var retVal = Categories.OfType<dataModel.Category>()
 										.Include(x => x.CategoryPropertyValues)
+										.Include(x=> x.OutgoingLinks)
+										.Include(x=>x.IncommingLinks)
 										.Include(x => x.PropertySet.PropertySetProperties.Select(y => y.Property))
 										.FirstOrDefault(x => x.Id == categoryId);
 

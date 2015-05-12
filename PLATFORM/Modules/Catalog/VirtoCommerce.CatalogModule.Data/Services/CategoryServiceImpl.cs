@@ -37,15 +37,15 @@ namespace VirtoCommerce.CatalogModule.Data.Services
 				{
 					var dbCatalog = repository.GetCatalogById(dbCategory.CatalogId);
 					var dbProperties = repository.GetAllCategoryProperties(dbCategory);
-					var dbLinks = repository.GetCategoryLinks(categoryId);
+					//var dbLinks = repository.GetCategoryLinks(categoryId);
 					var seoInfos = _commerceService.GetSeoKeywordsForEntity(categoryId).ToArray();
 
 					var catalog = dbCatalog.ToCoreModel();
-					var properties = dbProperties.Select(x => x.ToCoreModel(catalog, dbCategory.ToCoreModel(catalog, null, dbLinks)))
+					var properties = dbProperties.Select(x => x.ToCoreModel(catalog, dbCategory.ToCoreModel(catalog)))
 												 .ToArray();
 					var allParents = repository.GetAllCategoryParents(dbCategory);
 
-					retVal = dbCategory.ToCoreModel(catalog, properties, dbLinks, seoInfos, allParents);
+					retVal = dbCategory.ToCoreModel(catalog, properties, seoInfos, allParents);
 				}
             }
             return retVal;
@@ -100,19 +100,8 @@ namespace VirtoCommerce.CatalogModule.Data.Services
 						dbSeoInfos.ObserveCollection(x => _commerceService.UpsertSeoKeyword(x), x => _commerceService.DeleteSeoKeywords(new string[] { x.Id }));
 
 						changedSeoInfos.Patch(dbSeoInfos, (source, target) => _commerceService.UpsertSeoKeyword(source));
-
 					}
-			
-
-					//Patch  Links  separately
-					if (category.Links != null)
-					{
-						var dbLinks = new ObservableCollection<dataModel.LinkedCategory>(repository.GetCategoryLinks(category.Id));
-						var changedLinks = category.Links.Select(x => x.ToDataModel(category)).ToList();
-						dbLinks.ObserveCollection(x => repository.Add(x), x => { repository.Attach(x); repository.Remove(x); });
-						changedLinks.Patch(dbLinks, new LinkedCategoryComparer(), (source, target) => source.Patch(target));
-					}
-
+		
 					var dbCategoryChanged = category.ToDataModel();
 					changeTracker.Attach(dbCategory);
 				

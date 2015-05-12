@@ -28,6 +28,7 @@ namespace VirtoCommerce.Domain.Pricing.Services
 		void DeletePrices(string[] ids);
 		void DeletePricelistsAssignments(string[] ids);
 
+		IEnumerable<Pricelist> EvaluatePriceLists(PriceEvaluationContext evalContext);
 		IEnumerable<Price> EvaluateProductPrices(PriceEvaluationContext evalContext);
 	}
 }
