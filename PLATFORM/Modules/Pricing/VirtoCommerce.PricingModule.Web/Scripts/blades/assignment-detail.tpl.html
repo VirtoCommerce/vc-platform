@@ -13,7 +13,7 @@
                 <div class="form-group" ng-if="blade.isNew || blade.isApiSave">
                     <label class="form-label">Price list</label>
                     <div class="form-input">
-                        <ui-select ng-model="blade.currentEntity.priceListId" required>
+                        <ui-select ng-model="blade.currentEntity.pricelistId" required>
                             <ui-select-match placeholder="Select...">{{$select.selected.name}}</ui-select-match>
                             <ui-select-choices repeat="x.id as x in pricelists | filter: { name: $select.search }">
                                 <span ng-bind-html="x.name | highlight: $select.search"></span>

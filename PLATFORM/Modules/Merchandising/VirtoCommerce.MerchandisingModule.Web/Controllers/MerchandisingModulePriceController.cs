@@ -30,31 +30,41 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 		[ClientCache(Duration = 60)]
 		[ResponseType(typeof(string[]))]
 		[Route("pricelists")]
-		public IHttpActionResult GetPriceListStack(string catalog, string currency,	[FromUri] string[] tags)
+		public IHttpActionResult GetPriceListStack(string catalog, string currency = null,	[FromUri] string[] tags = null)
 		{
-			var cacheKey = CacheKey.Create("PriceController.GetPriceListStack", catalog, currency);
-			var retVal = _cacheManager.Get(cacheKey, () => _pricingService.GetPriceLists().Select(x=>x.Id).ToArray());
+			var evaluationContext = new Domain.Pricing.Model.PriceEvaluationContext()
+								{
+									CatalogId = catalog,
+									Currency = currency != null ? (CurrencyCodes?)Enum.Parse(typeof(CurrencyCodes), currency) : null,
+									CertainDate = DateTime.UtcNow,
+									Tags = tags
+								};
+			var strTags = tags != null ? String.Join(":", tags) : string.Empty;
+			var cacheKey = CacheKey.Create("PriceController.GetPriceListStack", catalog, currency, strTags);
+			var retVal = _cacheManager.Get(cacheKey, () => _pricingService.EvaluatePriceLists(evaluationContext).Select(x=>x.Id).ToArray());
 			return this.Ok(retVal);
 		}
 
 		[HttpGet]
 		[ResponseType(typeof(Price[]))]
+		[ArrayInput(ParameterName = "priceLists")]
 		[ArrayInput(ParameterName = "products")]
 		[Route("prices")]
-		public IHttpActionResult GetProductPrices([FromUri] string[] products)
+		public IHttpActionResult GetProductPrices([FromUri] string[] priceLists, [FromUri] string[] products)
 		{
 			var retVal = new List<Price>();
-			foreach (var product in products)
-			{
-				var evalContext = new Domain.Pricing.Model.PriceEvaluationContext()
-								{
-									ProductId = product
-								};
-				var cacheKey = CacheKey.Create("PriceController.GetProductPrices", product);
-				var prices = _cacheManager.Get(cacheKey, () => _pricingService.EvaluateProductPrices(evalContext));
-				retVal.AddRange(prices.Select(x => x.ToWebModel()));
-	
-			}
+
+			var evalContext = new Domain.Pricing.Model.PriceEvaluationContext()
+							{
+								ProductIds = products,
+								PricelistIds = priceLists
+							};
+			var strProducts = priceLists != null ? String.Join(":", priceLists) : string.Empty;
+			var strPriceLists = products != null ? String.Join(":", products) : string.Empty;
+			var cacheKey = CacheKey.Create("PriceController.GetProductPrices", strProducts, strPriceLists);
+			var prices = _cacheManager.Get(cacheKey, () => _pricingService.EvaluateProductPrices(evalContext));
+			retVal.AddRange(prices.Select(x => x.ToWebModel()));
+
 			return Ok(retVal);
 		}
 

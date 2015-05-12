@@ -36,7 +36,7 @@ namespace GoogleShopping.MerchantModule.Web.Providers
             items.ForEach(product =>
             {
                 var converted = product.ToGoogleModel(_assetUrlResolver);
-                var prices = _pricingService.EvaluateProductPrices(new PriceEvaluationContext { ProductId = converted.Id });
+                var prices = _pricingService.EvaluateProductPrices(new PriceEvaluationContext { ProductIds = new string[] { converted.Id } });
                 if (prices != null)
                 {
                     converted.Price = prices.First(x => x.Currency == CurrencyCodes.USD).ToGoogleModel();
@@ -69,7 +69,7 @@ namespace GoogleShopping.MerchantModule.Web.Providers
             foreach (var product in result.Products.Select((value, index) => new { Value = value, Index = index }))
             {
                 var converted = product.Value.ToGoogleModel(_assetUrlResolver);
-                var prices = _pricingService.EvaluateProductPrices(new PriceEvaluationContext { ProductId = converted.Id });
+                var prices = _pricingService.EvaluateProductPrices(new PriceEvaluationContext { ProductIds = new string[] { converted.Id } });
                 if (prices != null)
                 {
                     converted.Price = prices.First(x => x.Currency == CurrencyCodes.USD).ToGoogleModel();

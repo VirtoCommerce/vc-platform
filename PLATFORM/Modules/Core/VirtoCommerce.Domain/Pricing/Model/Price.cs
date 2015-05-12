@@ -15,5 +15,13 @@ namespace VirtoCommerce.Domain.Pricing.Model
 		public decimal? Sale { get; set; }
 		public decimal List { get; set; }
 		public int MinQuantity { get; set; }
+
+		public decimal	EffectiveValue 
+		{ 
+			get
+			{
+				return Sale ?? List;
+			}
+		}
 	}
 }

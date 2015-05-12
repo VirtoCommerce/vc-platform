@@ -222,7 +222,7 @@ namespace VirtoCommerce.SearchModule.Data.Services
         {
             var evalContext = new Domain.Pricing.Model.PriceEvaluationContext()
             {
-                ProductId = item.Id
+                ProductIds = new string[] {  item.Id }
             };
 
             var prices = _pricingService.EvaluateProductPrices(evalContext);
@@ -231,8 +231,8 @@ namespace VirtoCommerce.SearchModule.Data.Services
             foreach (var price in prices)
             {
                 //var priceList = price.Pricelist;
-                doc.Add(new DocumentField(string.Format("price_{0}_{1}", price.Currency, price.PricelistId), price.Sale ?? price.List, new[] { IndexStore.No, IndexType.NotAnalyzed }));
-                doc.Add(new DocumentField(string.Format("price_{0}_{1}_value", price.Currency, price.PricelistId), (price.Sale ?? price.List).ToString(CultureInfo.InvariantCulture), new[] { IndexStore.Yes, IndexType.NotAnalyzed }));
+                doc.Add(new DocumentField(string.Format("price_{0}_{1}", price.Currency, price.PricelistId), price.EffectiveValue, new[] { IndexStore.No, IndexType.NotAnalyzed }));
+				doc.Add(new DocumentField(string.Format("price_{0}_{1}_value", price.Currency, price.PricelistId), (price.EffectiveValue).ToString(CultureInfo.InvariantCulture), new[] { IndexStore.Yes, IndexType.NotAnalyzed }));
             }
 
         }
