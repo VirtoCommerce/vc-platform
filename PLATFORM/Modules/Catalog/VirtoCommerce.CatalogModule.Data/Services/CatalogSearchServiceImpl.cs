@@ -69,18 +69,16 @@ namespace VirtoCommerce.CatalogModule.Data.Services
                     var isVirtual = dbCatalog is dataModel.VirtualCatalog;
                     if (!String.IsNullOrEmpty(criteria.CategoryId))
                     {
-                        //var dbCategory = repository.GetCategoryById(criteria.CategoryId);
-
                         if (isVirtual)
                         {
+							var dbCategory = repository.GetCategoryById(criteria.CategoryId);
                             //Need return all linked categories also
-                            var allLinkedPhysicalCategoriesIds = repository.Categories.OfType<dataModel.LinkedCategory>()
-                                                    .Where(x => x.LinkedCategoryId == criteria.CategoryId)
-                                                    .Select(x => x.ParentCategoryId)
-                                                    .ToArray();
-                            //Search in all catalogs
-                            query = repository.Categories;
-                            query = query.Where(x => x.ParentCategoryId == criteria.CategoryId || allLinkedPhysicalCategoriesIds.Contains(x.Id));
+							var allLinkedPhysicalCategoriesIds = dbCategory.IncommingLinks.Select(x => x.SourceCategoryId).ToArray();
+					        query = repository.Categories;
+							if(allLinkedPhysicalCategoriesIds.Any())
+								query = query.Where(x => x.ParentCategoryId == criteria.CategoryId || allLinkedPhysicalCategoriesIds.Contains(x.ParentCategoryId));
+							else
+								query = query.Where(x => x.ParentCategoryId == criteria.CategoryId);
                         }
                         else
                         {
@@ -109,7 +107,7 @@ namespace VirtoCommerce.CatalogModule.Data.Services
                         if (isVirtual)
                         {
                             //Need return all linked categories 
-                            var allLinkedCategoriesIds = repository.GetCatalogLinks(criteria.CatalogId).Select(x => x.ParentCategoryId).ToArray();
+							var allLinkedCategoriesIds = ((dataModel.VirtualCatalog)dbCatalog).IncommingLinks.Select(x => x.SourceCategoryId);
                             //Search in all catalogs
                             query = repository.Categories;
                             query = query.Where(x => (x.CatalogId == criteria.CatalogId && (x.ParentCategoryId == null || criteria.GetAllCategories)) || allLinkedCategoriesIds.Contains(x.Id));
@@ -160,6 +158,13 @@ namespace VirtoCommerce.CatalogModule.Data.Services
         {
             using (var repository = _catalogRepositoryFactory())
             {
+				var isVirtual = false;
+				if (criteria.CatalogId != null)
+				{
+					var dbCatalog = repository.GetCatalogById(criteria.CatalogId);
+					isVirtual = dbCatalog is dataModel.VirtualCatalog;
+				}
+
 				var query = repository.Items;
 				if ((criteria.ResponseGroup & coreModel.ResponseGroup.WithVariations) != coreModel.ResponseGroup.WithVariations)
 				{
@@ -168,11 +173,24 @@ namespace VirtoCommerce.CatalogModule.Data.Services
 
                 if (!String.IsNullOrEmpty(criteria.CategoryId))
                 {
-                    query = query.Where(x=> x.CategoryItemRelations.Any(c => c.CategoryId == criteria.CategoryId));
+					if (isVirtual)
+					{
+						var dbCategory = repository.GetCategoryById(criteria.CategoryId);
+						//Need return all items belongs to linked categories
+						var allLinkedPhysicalCategoriesIds = dbCategory.IncommingLinks.Select(x => x.SourceCategoryId).ToArray();
+
+						query = query.Where(x => x.CategoryItemRelations.Any(c => c.CategoryId == criteria.CategoryId || allLinkedPhysicalCategoriesIds.Contains(c.CategoryId)));
+					}
+					else
+					{
+						query = query.Where(x => x.CategoryItemRelations.Any(c => c.CategoryId == criteria.CategoryId));
+					}
+				
                 }
                 else if (!String.IsNullOrEmpty(criteria.CatalogId))
                 {
                     query = query.Where(x => x.CatalogId == criteria.CatalogId && !x.CategoryItemRelations.Any());
+				
                 }
 
 				if (!String.IsNullOrEmpty(criteria.Code))

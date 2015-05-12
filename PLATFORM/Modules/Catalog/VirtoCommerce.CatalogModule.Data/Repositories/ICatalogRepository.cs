@@ -19,6 +19,7 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
 		IQueryable<foundation.ItemRelation> ItemRelations { get; }
 		IQueryable<foundation.CategoryItemRelation> CategoryItemRelations { get; }
 		IQueryable<foundation.Association> Associations { get; }
+		IQueryable<foundation.CategoryRelation> CategoryLinks { get; }
 
 		foundation.Category[] GetAllCategoryParents(foundation.Category categoryId);
 		foundation.CatalogBase GetCatalogById(string catalogId);
@@ -29,8 +30,8 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
 		foundation.Property[] GetPropertiesByIds(string[] propIds);
 		foundation.Catalog GetPropertyCatalog(string propId);
 		foundation.Category GetPropertyCategory(string propId);
-		foundation.LinkedCategory[] GetCategoryLinks(string categoryId);
-		foundation.LinkedCategory[] GetCatalogLinks(string catalogId);
+		//foundation.CategoryLink[] GetCategoryLinks(string categoryId);
+		//foundation.CategoryLink[] GetCatalogLinks(string catalogId);
 		foundation.Property[] GetCatalogProperties(foundation.CatalogBase catalog);
 		foundation.Property[] GetAllCategoryProperties(foundation.Category category);
 		void SetItemCategoryRelation(foundation.Item item, foundation.Category category);

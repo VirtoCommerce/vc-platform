@@ -36,7 +36,8 @@
                             <td class="table-col __product-img" ng-click='selectItem($event, data)'>
                                 <div class="product-img">
                                     <div class="image" style="background-image: url({{data.imageUrl}})" ng-if="data.type!=='category' && data.imageUrl"></div>
-                                    <i class="table-ico fa" ng-class="data.type == 'category' ? 'fa-folder' : 'fa-image'" ng-if="!data.imageUrl"></i>
+                                    <i class="table-ico fa" ng-class="data.type == 'category' ? ' fa-folder' : ' fa-image'" ng-if="!data.imageUrl"></i>
+                                    <i class="table-ico fa fa-link " ng-if="blade.catalog.virtual"></i>
                                 </div>
                             </td>
                             <td class="table-col __product-name" ng-click='selectItem($event, data)' class="product-name">

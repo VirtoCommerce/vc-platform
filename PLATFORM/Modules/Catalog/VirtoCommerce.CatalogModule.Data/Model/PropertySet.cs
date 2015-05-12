@@ -13,7 +13,7 @@ namespace VirtoCommerce.CatalogModule.Data.Model
 		public PropertySet()
 		{
 			Id = Guid.NewGuid().ToString("N");
-			PropertySetProperties = new ObservableCollection<PropertySetProperty>();
+			PropertySetProperties = new NullCollection<PropertySetProperty>();
 		}
 		[Required]
 		[StringLength(128)]
