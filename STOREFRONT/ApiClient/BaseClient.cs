@@ -303,6 +303,10 @@ namespace VirtoCommerce.ApiClient
                     // ReadAsAsync will synchronously throw InvalidOperationException when there is no default formatter for the ContentType.
                     // We will treat these cases as an unknown error
                 }
+                catch (UnsupportedMediaTypeException) // can't parse the message, create it manually
+                {
+                    
+                }
 
                 var errorCode = UnknownErrorCode;
                 var errorMessage = "An unknown error has occurred during this operation";
