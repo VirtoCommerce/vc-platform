@@ -1,10 +1,6 @@
 ﻿angular.module('virtoCommerce.contentModule')
-.controller('virtoCommerce.contentModule.editPageController', ['$scope', 'dialogService', 'virtoCommerce.contentModule.stores', 'virtoCommerce.contentModule.pages', '$timeout', 'bladeNavigationService', 'FileUploader', function ($scope, dialogService, pagesStores, pages, $timeout, bladeNavigationService, FileUploader) {
-	$scope.setForm = function (form) {
-		$scope.formScope = form;
-	}
-
-	var blade = $scope.blade;
+.controller('virtoCommerce.contentModule.editPageController', ['$scope', 'platformWebApp.dialogService', 'virtoCommerce.contentModule.stores', 'virtoCommerce.contentModule.pages', '$timeout', 'bladeNavigationService', 'FileUploader', function ($scope, dialogService, pagesStores, pages, $timeout, bladeNavigationService, FileUploader) {
+    var blade = $scope.blade;
     var codemirrorEditor;
 
     blade.initialize = function () {
@@ -18,15 +14,15 @@
                     blade.isLoading = false;
                     blade.currentEntity = data;
                     blade.isByteContent = blade.isFile();
-                    
+
                     if (!blade.isFile()) {
-                    	$timeout(function () {
-                    		if (codemirrorEditor) {
-                    			codemirrorEditor.refresh();
-                    			codemirrorEditor.focus();
-                    		}
-                    		blade.origEntity = angular.copy(blade.currentEntity);
-                    	}, 1);
+                    $timeout(function () {
+                        if (codemirrorEditor) {
+                            codemirrorEditor.refresh();
+                            codemirrorEditor.focus();
+                        }
+                        blade.origEntity = angular.copy(blade.currentEntity);
+                    }, 1);
                     }
                     else {
                     	if (blade.isImage()) {
@@ -85,24 +81,24 @@
     	if(!blade.newPage){
     		$scope.bladeToolbarCommands.push(
 				{
-					name: "Save page", icon: 'fa fa-save',
+				    name: "Save page", icon: 'fa fa-save',
 					executeMethod: function () { $scope.saveChanges(); }, canExecuteMethod: function () { return blade.isDirty(); }, permission: 'content:manage'
 				});
     		$scope.bladeToolbarCommands.push(
 				{
-					name: "Reset page", icon: 'fa fa-undo',
+				    name: "Reset page", icon: 'fa fa-undo',
 					executeMethod: function () { angular.copy(blade.origEntity, blade.currentEntity); }, canExecuteMethod: function () { return blade.isDirty(); }, permission: 'content:manage'
 				});
     		$scope.bladeToolbarCommands.push(
 				{
-					name: "Delete page", icon: 'fa fa-trash-o',
+				    name: "Delete page", icon: 'fa fa-trash-o',
 					executeMethod: function () { blade.deleteEntry(); }, canExecuteMethod: function () { return true; }, permission: 'content:manage'
 				});
-    	}
-    	else {
+            }
+            else {
     		$scope.bladeToolbarCommands.push(
 				{
-					name: "Create", icon: 'fa fa-save',
+				    name: "Create", icon: 'fa fa-save',
 					executeMethod: function () { $scope.saveChanges(); }, canExecuteMethod: function () { return blade.isDirty(); }, permission: 'content:manage'
 				});
     	}
@@ -113,7 +109,7 @@
 
     	if (!angular.isUndefined($scope.formScope)) {
     		retVal = retVal && !$scope.formScope.$invalid;
-    	}
+            }
     	return retVal;
     };
 
@@ -150,10 +146,10 @@
         if (blade.newPage) {
             pages.checkName({ storeId: blade.choosenStoreId, pageName: blade.currentEntity.name, language: blade.currentEntity.language }, function (data) {
                 if (Boolean(data.result)) {
-                	pages.update({ storeId: blade.choosenStoreId }, blade.currentEntity, function () {
-                		blade.origEntity = angular.copy(blade.currentEntity);
-                		blade.newPage = false;
-                		bladeNavigationService.closeBlade(blade);
+                    pages.update({ storeId: blade.choosenStoreId }, blade.currentEntity, function () {
+                        blade.origEntity = angular.copy(blade.currentEntity);
+                        blade.newPage = false;
+                        bladeNavigationService.closeBlade(blade);
                         blade.parentBlade.initialize();
                     });
                 }
@@ -270,9 +266,9 @@
     };
 
     blade.getBladeStyle = function () {
-    	var value = $(window).width() - 550;
+        var value = $(window).width() - 550;
 
-    	return 'width:' + value + 'px';
+        return 'width:' + value + 'px';
     }
 
     blade.initialize();

@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.coreModule.common')
-.controller('virtoCommerce.coreModule.common.coreAddressDetailController', ['$scope', 'virtoCommerce.coreModule.common.countries', 'dialogService', function ($scope, countries, dialogService) {
+.controller('virtoCommerce.coreModule.common.coreAddressDetailController', ['$scope', 'virtoCommerce.coreModule.common.countries', 'platformWebApp.dialogService', function ($scope, countries, dialogService) {
     $scope.addressTypes = ['Billing', 'Shipping'];
     function initializeBlade() {
     	

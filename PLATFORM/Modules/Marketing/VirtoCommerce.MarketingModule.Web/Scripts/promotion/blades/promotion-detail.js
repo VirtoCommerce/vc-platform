@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.marketingModule')
-.controller('virtoCommerce.marketingModule.promotionDetailController', ['$scope', 'bladeNavigationService', 'virtoCommerce.marketingModule.promotions', 'virtoCommerce.catalogModule.catalogs', 'virtoCommerce.storeModule.stores', 'settings', 'dialogService', 'virtoCommerce.coreModule.common.dynamicExpressionService', function ($scope, bladeNavigationService, marketing_res_promotions, catalogs, stores, settings, dialogService, dynamicExpressionService) {
+.controller('virtoCommerce.marketingModule.promotionDetailController', ['$scope', 'platformWebApp.bladeNavigationService', 'virtoCommerce.marketingModule.promotions', 'virtoCommerce.catalogModule.catalogs', 'virtoCommerce.storeModule.stores', 'platformWebApp.settings', 'platformWebApp.dialogService', 'virtoCommerce.coreModule.common.dynamicExpressionService', function ($scope, bladeNavigationService, marketing_res_promotions, catalogs, stores, settings, dialogService, dynamicExpressionService) {
     $scope.blade.refresh = function (parentRefresh) {
         if ($scope.blade.isNew) {
             marketing_res_promotions.getNew({}, function (data) {
@@ -20,6 +20,9 @@
             $scope.blade.title = data.name;
         }
 
+        // transform simple string to complex object. Simple string isn't editable.
+        data.coupons = _.map(data.coupons, function (x) { return { text: x } });
+        
         if (data.dynamicExpression) {
             _.each(data.dynamicExpression.children, extendElementBlock);
         }
@@ -42,6 +45,8 @@
         bladeNavigationService.setError(null, $scope.blade);
         $scope.blade.isLoading = true;
 
+        $scope.blade.currentEntity.coupons = _.pluck($scope.blade.currentEntity.coupons, 'text');
+        
         _.each($scope.blade.currentEntity.dynamicExpression.children, stripOffUiInformation);
 
         if ($scope.blade.isNew) {

@@ -1,5 +1,5 @@
 ﻿angular.module('platformWebApp')
-.controller('settingDictionaryController', ['$scope', 'dialogService', function ($scope, dialogService) {
+.controller('platformWebApp.settingDictionaryController', ['$scope', 'platformWebApp.dialogService', function ($scope, dialogService) {
 
     $scope.dictValueValidator = function (value) {
     	if ($scope.blade.currentEntity.valueType == 'ShortText') {

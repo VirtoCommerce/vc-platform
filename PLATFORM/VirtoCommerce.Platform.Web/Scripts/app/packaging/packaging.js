@@ -12,13 +12,12 @@ angular.module(moduleName)
           .state('workspace.packaging', {
               url: '/modules',
               templateUrl: 'Scripts/app/packaging/home.tpl.html',
-              controller: [
-                  '$scope', 'bladeNavigationService', function ($scope, bladeNavigationService) {
+              controller: ['$scope', 'platformWebApp.bladeNavigationService', function ($scope, bladeNavigationService) {
                       var blade = {
                           id: 'modules',
                           title: 'Modules',
                           subtitle: 'Manage installed modules',
-                          controller: 'modulesListController',
+                          controller: 'platformWebApp.modulesListController',
                           template: 'Scripts/app/packaging/blades/modules-list.tpl.html',
                           isClosingDisabled: true
                       };
@@ -29,7 +28,7 @@ angular.module(moduleName)
   }]
 )
 .run(
-  ['$rootScope', 'mainMenuService', 'widgetService', '$state', function ($rootScope, mainMenuService, widgetService, $state) {
+  ['$rootScope', 'platformWebApp.mainMenuService', 'platformWebApp.widgetService', '$state', function ($rootScope, mainMenuService, widgetService, $state) {
       //Register module in main menu
       var menuItem = {
           path: 'browse/packaging',

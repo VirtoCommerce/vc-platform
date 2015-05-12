@@ -1,5 +1,5 @@
 ﻿angular.module('platformWebApp')
-.directive('vaPermission', ['authService', function (authService) {
+.directive('vaPermission', ['platformWebApp.authService', function (authService) {
     return {
         link: function (scope, element, attrs) {
             if (attrs.vaPermission) {
@@ -24,7 +24,7 @@
         }
     };
 }])
-.factory('authService', ['$http', '$rootScope', '$cookieStore', '$state', function ($http, $rootScope, $cookieStore, $state) {
+.factory('platformWebApp.authService', ['$http', '$rootScope', '$cookieStore', '$state', function ($http, $rootScope, $cookieStore, $state) {
     var serviceBase = 'api/security/';
     var authContext = {
         userLogin: null,

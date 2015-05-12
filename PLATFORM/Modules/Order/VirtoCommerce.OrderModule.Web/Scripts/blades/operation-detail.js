@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.orderModule')
-.controller('virtoCommerce.orderModule.operationDetailController', ['$scope', 'dialogService', 'bladeNavigationService', 'virtoCommerce.orderModule.order_res_customerOrders', 'virtoCommerce.orderModule.order_res_fulfilmentCenters', 'virtoCommerce.orderModule.order_res_stores', 'virtoCommerce.orderModule.order_res_paymentGateways', 'objCompareService', 'settings',
+.controller('virtoCommerce.orderModule.operationDetailController', ['$scope', 'platformWebApp.dialogService', 'platformWebApp.bladeNavigationService', 'virtoCommerce.orderModule.order_res_customerOrders', 'virtoCommerce.orderModule.order_res_fulfilmentCenters', 'virtoCommerce.orderModule.order_res_stores', 'virtoCommerce.orderModule.order_res_paymentGateways', 'platformWebApp.objCompareService', 'platformWebApp.settings',
 			function ($scope, dialogService, bladeNavigationService, order_res_customerOrders, order_res_fulfilmentCenters, order_res_stores, order_res_paymentGateways, objCompareService, settings) {
 
 			    $scope.blade.refresh = function (noRefresh) {
@@ -82,7 +82,7 @@
 			            // parentWidget: $scope.widget,
 			            title: 'Order settings',
 			            //subtitle: '',
-			            controller: 'settingsDetailController',
+			            controller: 'platformWebApp.settingsDetailController',
 			            template: 'Modules/$(VirtoCommerce.Core)/Scripts/Settings/blades/settings-detail.tpl.html'
 			        };
 			        bladeNavigationService.showBlade(newBlade, $scope.blade);
@@ -186,7 +186,7 @@
 					                }
 					            }
 					        };
-					        dialogService.showDialog(dialog, 'Modules/$(VirtoCommerce.Orders)/Scripts/dialogs/cancelOperation-dialog.tpl.html', 'confirmCancelDialogController');
+					        dialogService.showDialog(dialog, 'Modules/$(VirtoCommerce.Orders)/Scripts/dialogs/cancelOperation-dialog.tpl.html', 'virtoCommerce.orderModule.confirmCancelDialogController');
 					    },
 					    canExecuteMethod: function () {
 					        return $scope.blade.currentEntity && !$scope.blade.currentEntity.isCancelled;

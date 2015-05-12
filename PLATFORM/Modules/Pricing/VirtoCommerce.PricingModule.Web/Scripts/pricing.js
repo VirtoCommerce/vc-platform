@@ -13,7 +13,7 @@ angular.module(moduleName, [])
               url: '/pricing',
               templateUrl: 'Modules/$(VirtoCommerce.Pricing)/Scripts/home.tpl.html',
               controller: [
-                  '$scope', 'bladeNavigationService', function ($scope, bladeNavigationService) {
+                  '$scope', 'platformWebApp.bladeNavigationService', function ($scope, bladeNavigationService) {
                       var blade = {
                           id: 'pricing',
                           title: 'Pricing',
@@ -29,7 +29,7 @@ angular.module(moduleName, [])
   }]
 )
 .run(
-  ['$rootScope', 'mainMenuService', 'widgetService', '$state', 'authService', function ($rootScope, mainMenuService, widgetService, $state, authService) {
+  ['$rootScope', 'platformWebApp.mainMenuService', 'platformWebApp.widgetService', '$state', 'platformWebApp.authService', function ($rootScope, mainMenuService, widgetService, $state, authService) {
       //Register module in main menu
       var menuItem = {
           path: 'browse/pricing',

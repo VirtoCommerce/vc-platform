@@ -1,5 +1,5 @@
 ﻿angular.module('platformWebApp')
-.factory('accounts', ['$resource', function ($resource) {
+.factory('platformWebApp.accounts', ['$resource', function ($resource) {
     return $resource('api/security/users/:id', { id: '@Id' }, {
         search: {},
         generateNewApiAccount: { url: 'api/security/apiaccounts/new' },

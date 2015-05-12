@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.catalogModule')
-.controller('virtoCommerce.catalogModule.itemVariationWidgetController', ['$injector', '$rootScope', '$scope', 'bladeNavigationService', function ($injector, $rootScope, $scope, bladeNavigationService) {
+.controller('virtoCommerce.catalogModule.itemVariationWidgetController', ['$injector', '$rootScope', '$scope', 'platformWebApp.bladeNavigationService', function ($injector, $rootScope, $scope, bladeNavigationService) {
     $scope.currentBlade = $scope.widget.blade;
 
     $scope.openItemDetailBlade = function (variation, $event) {

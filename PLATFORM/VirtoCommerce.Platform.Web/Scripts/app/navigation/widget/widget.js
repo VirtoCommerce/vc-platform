@@ -1,5 +1,5 @@
 ﻿angular.module('platformWebApp')
-.factory('widgetService', function () {
+.factory('platformWebApp.widgetService', function () {
 
     var retVal = {
         widgetsMap: [],
@@ -13,7 +13,7 @@
     };
     return retVal;
 })
-.directive('vaWidgetContainer', ['$compile', '$localStorage', 'widgetService', function ($compile, $localStorage, widgetService) {
+.directive('vaWidgetContainer', ['$compile', '$localStorage', 'platformWebApp.widgetService', function ($compile, $localStorage, widgetService) {
     return {
         restrict: 'E',
         replace: true,
@@ -35,7 +35,7 @@
         }
     }
 }])
-.directive('vaWidget', ['$compile', 'widgetService', function ($compile, widgetService) {
+.directive('vaWidget', ['$compile', 'platformWebApp.widgetService', function ($compile, widgetService) {
     return {
         terminal: true,
         priority: 1000,

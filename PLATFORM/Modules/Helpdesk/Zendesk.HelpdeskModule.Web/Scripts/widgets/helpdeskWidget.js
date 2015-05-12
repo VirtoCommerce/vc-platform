@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.helpdeskModule')
-.controller('helpdeskWidgetController', ['$scope', 'bladeNavigationService', 'zendesk_res_authlink', function ($scope, bladeNavigationService, authLink) {
+.controller('helpdeskWidgetController', ['$scope', 'platformWebApp.bladeNavigationService', 'zendesk_res_authlink', function ($scope, bladeNavigationService, authLink) {
 
     $scope.widget.refresh = function () {
         $scope.authLink = "";

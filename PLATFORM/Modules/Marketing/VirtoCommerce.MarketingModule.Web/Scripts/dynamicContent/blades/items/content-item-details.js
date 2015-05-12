@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.marketingModule')
-.controller('virtoCommerce.marketingModule.addContentItemsController', ['$scope', 'virtoCommerce.marketingModule.dynamicContent.contentItems', 'bladeNavigationService', function ($scope, marketing_dynamicContents_res_contentItems, bladeNavigationService) {
+.controller('virtoCommerce.marketingModule.addContentItemsController', ['$scope', 'virtoCommerce.marketingModule.dynamicContent.contentItems', 'platformWebApp.bladeNavigationService', function ($scope, marketing_dynamicContents_res_contentItems, bladeNavigationService) {
 	$scope.setForm = function (form) {
 		$scope.formScope = form;
 	}
@@ -91,11 +91,11 @@
 	blade.contentTypes = [
 		'Html',
         'Flash',
-        'Liquid',
-        'Razor',
+        //'Liquid',
+        //'Razor',
 		'ImageClickable',
 		'ImageNonClickable',
-		'Product',
+		//'Product',
         'ProductsWithinCategory'
 	];
 

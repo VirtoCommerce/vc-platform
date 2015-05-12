@@ -1,5 +1,5 @@
 ﻿angular.module('platformWebApp')
-.controller('moduleDetailController', ['$scope', 'dialogService', 'bladeNavigationService', 'modules', function ($scope, dialogService, bladeNavigationService, modules) {
+.controller('platformWebApp.moduleDetailController', ['$scope', 'platformWebApp.dialogService', 'platformWebApp.bladeNavigationService', 'platformWebApp.modules', function ($scope, dialogService, bladeNavigationService, modules) {
 
     function initializeBlade(data) {
         $scope.currentEntity = angular.copy(data);
@@ -49,7 +49,7 @@
             title: "Module update",
             // subtitle: '',
             mode: 'update',
-            controller: 'installWizardController',
+            controller: 'platformWebApp.installWizardController',
             template: 'Scripts/app/packaging/blades/module-detail.tpl.html'
         };
         bladeNavigationService.showBlade(newBlade, $scope.blade);
@@ -70,7 +70,7 @@
                             currentEntityId: data.id,
                             title: 'module uninstall',
                             subtitle: 'Installation progress',
-                            controller: 'moduleInstallProgressController',
+                            controller: 'platformWebApp.moduleInstallProgressController',
                             template: 'Scripts/app/packaging/wizards/newModule/module-wizard-progress-step.tpl.html'
                         };
                         bladeNavigationService.showBlade(newBlade, $scope.blade.parentBlade);

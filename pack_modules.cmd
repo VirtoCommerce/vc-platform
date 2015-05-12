@@ -50,6 +50,13 @@ SET PUBLISHED_WEBSITES=%DEPLOYMENT_TEMP%\_PublishedWebsites
 SET PUBLISHED_MODULES=%PUBLISHED_WEBSITES%
 SET PUBLISHED_PACKAGES=%PUBLISHED_MODULES%
 
+IF "%1" NEQ "" (
+	SET PROJECT_FILE=%1
+)
+IF NOT DEFINED PROJECT_FILE (
+	SET PROJECT_FILE=%ADMIN_SOLUTION_FILE%
+)
+
 ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 :: Deployment
 :: ----------
@@ -62,7 +69,7 @@ call :ExecuteCmd "%NUGET%" restore "%ADMIN_SOLUTION_FILE%"
 IF !ERRORLEVEL! NEQ 0 goto error
 
 :: 2. Build to the temporary path
-call :ExecuteCmd "%MSBUILD_PATH%" "%ADMIN_SOLUTION_FILE%" /nologo /verbosity:m /t:Build /p:Configuration=Release;DebugType=none;AllowedReferenceRelatedFileExtensions=":";SolutionDir="%ADMIN_SOLUTION_DIR%\.\\";OutputPath="%DEPLOYMENT_TEMP%";VCModulesOutputDir="%PUBLISHED_MODULES%";VCModulesZipDir="%PUBLISHED_PACKAGES%" %SCM_BUILD_ARGS%
+call :ExecuteCmd "%MSBUILD_PATH%" "%PROJECT_FILE%" /nologo /verbosity:m /t:Build /p:Configuration=Release;DebugType=none;AllowedReferenceRelatedFileExtensions=":";SolutionDir="%ADMIN_SOLUTION_DIR%\.\\";OutputPath="%DEPLOYMENT_TEMP%";VCModulesOutputDir="%PUBLISHED_MODULES%";VCModulesZipDir="%PUBLISHED_PACKAGES%" %SCM_BUILD_ARGS%
 IF !ERRORLEVEL! NEQ 0 goto error
 
 :: Move modules to target directory

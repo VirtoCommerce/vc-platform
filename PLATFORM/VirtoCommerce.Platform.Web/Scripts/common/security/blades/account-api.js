@@ -1,5 +1,5 @@
 ﻿angular.module('platformWebApp')
-.controller('accountApiController', ['$scope', 'bladeNavigationService', 'accounts', function ($scope, bladeNavigationService, accounts) {
+.controller('platformWebApp.accountApiController', ['$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.accounts', function ($scope, bladeNavigationService, accounts) {
     
     function initializeBlade(data) {
         $scope.blade.currentEntity = angular.copy(data);

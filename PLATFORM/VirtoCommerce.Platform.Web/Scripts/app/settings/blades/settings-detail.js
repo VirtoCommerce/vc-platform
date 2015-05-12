@@ -1,5 +1,5 @@
 ﻿angular.module('platformWebApp')
-.controller('settingsDetailController', ['$scope', 'dialogService', 'objCompareService', 'bladeNavigationService', 'settings', function ($scope, dialogService, objCompareService, bladeNavigationService, settings) {
+.controller('platformWebApp.settingsDetailController', ['$scope', 'platformWebApp.dialogService', 'platformWebApp.objCompareService', 'platformWebApp.bladeNavigationService', 'platformWebApp.settings', function ($scope, dialogService, objCompareService, bladeNavigationService, settings) {
 
     $scope.blade.refresh = function () {
         $scope.blade.isLoading = true;
@@ -55,7 +55,7 @@
             currentEntityId: node.name,
             title: $scope.blade.title,
             subtitle: 'Manage dictionary values',
-            controller: 'settingDictionaryController',
+            controller: 'platformWebApp.settingDictionaryController',
             template: 'Scripts/app/settings/blades/setting-dictionary.tpl.html'
         };
         bladeNavigationService.showBlade(newBlade, $scope.blade);

@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.contentModule')
-.controller('virtoCommerce.contentModule.themesWidgetController', ['$injector', '$rootScope', '$scope', 'virtoCommerce.contentModule.themes', 'bladeNavigationService', function ($injector, $rootScope, $scope, themes, bladeNavigationService) {
+.controller('virtoCommerce.contentModule.themesWidgetController', ['$injector', '$rootScope', '$scope', 'virtoCommerce.contentModule.themes', 'platformWebApp.bladeNavigationService', function ($injector, $rootScope, $scope, themes, bladeNavigationService) {
 	var blade = $scope.widget.blade;
 
 	$scope.widget.initialize = function () {

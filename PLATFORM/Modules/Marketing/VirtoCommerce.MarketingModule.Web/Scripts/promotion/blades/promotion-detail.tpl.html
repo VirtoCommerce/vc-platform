@@ -51,9 +51,12 @@
                             </div>
                             <div class="column">
                                 <div class="form-group">
-                                    <label class="form-label">Coupon</label>
+                                    <label class="form-label">Coupons</label>
                                     <div class="form-input">
-                                        <input ng-model="blade.currentEntity.coupon" placeholder="Enter coupon code...">
+                                        <tags-input ng-model="blade.currentEntity.coupons"
+                                                    add-on-blur="false"
+                                                    placeholder="Enter coupon codes...">
+                                        </tags-input>
                                     </div>
                                 </div>
                                 <div class="form-group">
