@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
 using PlainElastic.Net;
@@ -551,8 +552,28 @@ namespace VirtoCommerce.SearchModule.Data.Providers.ElasticSearch
             if (value is RangeFilterValue)
             {
                 var v = value as RangeFilterValue;
-                var returnVal = from d in v.Displays where d.Language.Equals(locale, StringComparison.OrdinalIgnoreCase) select d.Value;
-                return returnVal.ToString();
+                var returnVal = v.Displays.Where(d => d.Language.Equals(locale, StringComparison.OrdinalIgnoreCase)).Select(d => d.Value);
+                
+                if (!returnVal.Any())
+                {
+                    try
+                    {
+                        var localeShort = new CultureInfo(locale).TwoLetterISOLanguageName;
+                        returnVal = v.Displays.Where(d => d.Language.Equals(localeShort, StringComparison.OrdinalIgnoreCase)).Select(d => d.Value);
+                    }
+                    catch
+                    {
+                    }
+                }
+
+                if (returnVal.Any())
+                {
+                    return returnVal.SingleOrDefault();
+                }
+                else
+                {
+                    return v.Id;
+                }
             }
             if (value is CategoryFilterValue)
             {

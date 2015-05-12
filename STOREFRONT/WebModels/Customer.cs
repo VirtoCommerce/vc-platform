@@ -60,7 +60,7 @@ namespace VirtoCommerce.Web.Models
 
         public CustomerOrder RecentOrder { get; set; }
 
-        public string[] Tags { get; set; }
+        public ICollection<Tag> Tags { get; set; }
 
         public decimal TotalSpent { get; set; }
         #endregion

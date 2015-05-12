@@ -768,6 +768,7 @@ namespace VirtoCommerce.Web.Models.Services
         public async Task<SearchResults<T>> SearchAsync<T>(SiteContext context, BrowseQuery query, Collection parentCollection = null, ItemResponseGroups? responseGroups = ItemResponseGroups.ItemMedium)
         {
             var priceLists = context.PriceLists;
+            query.PriceLists = priceLists;
 
             var response =
                 await
@@ -894,7 +895,19 @@ namespace VirtoCommerce.Web.Models.Services
 
         public async Task<ResponseCollection<DynamicContentItemGroup>> GetDynamicContentAsync(string[] placeholders)
         {
-            return await _marketingClient.GetDynamicContentAsync(placeholders, new TagQuery());
+            var tagQuery = new TagQuery();
+
+            var customerTags = SiteContext.Current.Customer.Tags;
+
+            if (customerTags != null)
+            {
+                foreach (var tag in customerTags)
+                {
+                    tagQuery.Add("customer_tag", tag.ToString());
+                }
+            }
+
+            return await _marketingClient.GetDynamicContentAsync(placeholders, tagQuery);
         }
         #endregion
 
