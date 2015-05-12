@@ -1,9 +1,11 @@
 ﻿#region
+
 using System.Collections.Generic;
+using VirtoCommerce.Web.Models;
 
 #endregion
 
-namespace VirtoCommerce.Web.Models.Extensions
+namespace VirtoCommerce.Web.Extensions
 {
     public static class CategoryExtensions
     {

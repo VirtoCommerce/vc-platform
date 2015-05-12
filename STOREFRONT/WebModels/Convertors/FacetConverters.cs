@@ -2,12 +2,13 @@
 
 using System.Linq;
 using Omu.ValueInjecter;
+using VirtoCommerce.Web.Models;
 using VirtoCommerce.Web.Models.Searching;
 using Data = VirtoCommerce.ApiClient.DataContracts.Search;
 
 #endregion
 
-namespace VirtoCommerce.Web.Models.Convertors
+namespace VirtoCommerce.Web.Convertors
 {
     public static class FacetConverters
     {

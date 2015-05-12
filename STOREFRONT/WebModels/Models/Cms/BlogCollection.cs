@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
-namespace VirtoCommerce.Web.Models.Blogs
+namespace VirtoCommerce.Web.Models.Cms
 {
     public class BlogCollection : ItemCollection<Blog>
     {
@@ -15,7 +11,7 @@ namespace VirtoCommerce.Web.Models.Blogs
 
         public override int TotalCount
         {
-            get { return Size; }
+            get { return this.Size; }
         }
     }
 

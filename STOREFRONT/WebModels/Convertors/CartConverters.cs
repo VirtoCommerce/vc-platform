@@ -3,11 +3,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using VirtoCommerce.ApiClient.DataContracts.Cart;
+using VirtoCommerce.Web.Models;
 using Data = VirtoCommerce.ApiClient.DataContracts.Cart;
 
 #endregion
 
-namespace VirtoCommerce.Web.Models.Convertors
+namespace VirtoCommerce.Web.Convertors
 {
     public static class CartConverters
     {

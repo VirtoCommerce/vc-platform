@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using System.Web.Mvc;
 using VirtoCommerce.Web.Models.Banners;
-using VirtoCommerce.Web.Models.Convertors;
+using VirtoCommerce.Web.Convertors;
 
 namespace VirtoCommerce.Web.Controllers
 {

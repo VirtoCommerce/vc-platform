@@ -9,9 +9,6 @@ using System.Web.Mvc;
 namespace VirtoCommerce.Web.Models.Security
 {
 
-    #region
-    #endregion
-
     public abstract class BaseCustomerFormModel
     {
         #region Constructors and Destructors

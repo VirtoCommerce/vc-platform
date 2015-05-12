@@ -3,6 +3,7 @@
 using System;
 using System.Web.Hosting;
 using VirtoCommerce.Web.Models;
+using VirtoCommerce.Web.Models.Cms;
 using VirtoCommerce.Web.Views.Contents;
 using VirtoCommerce.Web.Views.Engines.Liquid;
 

@@ -1,9 +1,10 @@
 ﻿#region
+
 using System.Web.Routing;
 
 #endregion
 
-namespace VirtoCommerce.Web.Models.Extensions
+namespace VirtoCommerce.Web.Extensions
 {
     public static class RouteValueDictionaryExtensions
     {

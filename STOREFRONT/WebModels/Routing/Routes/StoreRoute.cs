@@ -9,8 +9,8 @@ using VirtoCommerce.ApiClient;
 using VirtoCommerce.ApiClient.DataContracts;
 using VirtoCommerce.ApiClient.DataContracts.Stores;
 using VirtoCommerce.ApiClient.Extensions;
-using VirtoCommerce.Web.Models.Convertors;
-using VirtoCommerce.Web.Models.Extensions;
+using VirtoCommerce.Web.Convertors;
+using VirtoCommerce.Web.Extensions;
 using VirtoCommerce.Web.Models.Routing.Constraints;
 
 #endregion

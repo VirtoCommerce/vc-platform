@@ -2,8 +2,8 @@
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
+using VirtoCommerce.Web.Extensions;
 using VirtoCommerce.Web.Models;
-using VirtoCommerce.Web.Models.Extensions;
 
 #endregion
 

@@ -1,10 +1,11 @@
 ﻿#region
+
 using System.Linq;
 using System.Web.ModelBinding;
 
 #endregion
 
-namespace VirtoCommerce.Web.Models.Extensions
+namespace VirtoCommerce.Web.Extensions
 {
     public static class ModelExtensions
     {

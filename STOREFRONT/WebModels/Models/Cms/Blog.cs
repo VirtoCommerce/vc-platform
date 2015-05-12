@@ -1,6 +1,6 @@
 ﻿using DotLiquid;
 
-namespace VirtoCommerce.Web.Models.Blogs
+namespace VirtoCommerce.Web.Models.Cms
 {
     public class Blog : Drop
     {

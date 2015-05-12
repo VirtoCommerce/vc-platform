@@ -8,7 +8,7 @@ using System.Web;
 using System.Web.Mvc;
 using VirtoCommerce.ApiClient.DataContracts.Security;
 using VirtoCommerce.Web.Models;
-using VirtoCommerce.Web.Models.Convertors;
+using VirtoCommerce.Web.Convertors;
 using VirtoCommerce.Web.Models.FormModels;
 
 namespace VirtoCommerce.Web.Controllers

@@ -5,7 +5,7 @@ using System.Web.Mvc;
 using System.Web.Routing;
 using VirtoCommerce.ApiClient;
 using VirtoCommerce.ApiClient.Extensions;
-using VirtoCommerce.Web.Models.Convertors;
+using VirtoCommerce.Web.Convertors;
 using VirtoCommerce.Web.Models.Routing.Constraints;
 using VirtoCommerce.Web.Models.Routing.Routes;
 

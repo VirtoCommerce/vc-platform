@@ -1,7 +1,7 @@
 ﻿    #region
 using System.Linq;
 using System.Threading.Tasks;
-using VirtoCommerce.Web.Models.Convertors;
+using VirtoCommerce.Web.Convertors;
 using VirtoCommerce.Web.Models.Services;
 
 #endregion

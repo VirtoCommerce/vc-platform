@@ -1,18 +1,17 @@
 ﻿#region
 using System;
 using System.Linq;
-using VirtoCommerce.ApiClient.DataContracts.Orders;
-using Address = VirtoCommerce.ApiClient.DataContracts.Security.Address;
+using VirtoCommerce.Web.Models;
 using Data = VirtoCommerce.ApiClient.DataContracts;
 
 #endregion
 
-namespace VirtoCommerce.Web.Models.Convertors
+namespace VirtoCommerce.Web.Convertors
 {
     public static class OrderConverters
     {
         #region Public Methods and Operators
-        public static CustomerOrder AsWebModel(this ApiClient.DataContracts.Orders.CustomerOrder customerOrder)
+        public static CustomerOrder AsWebModel(this Data.Orders.CustomerOrder customerOrder)
         {
             var ret = new CustomerOrder { Id = customerOrder.Id };
 
@@ -119,7 +118,7 @@ namespace VirtoCommerce.Web.Models.Convertors
             return ret;
         }
 
-        public static ShippingMethod AsWebModel(this Shipment shipment)
+        public static ShippingMethod AsWebModel(this Data.Orders.Shipment shipment)
         {
             var ret = new ShippingMethod { Price = shipment.Sum, Title = shipment.FulfilmentCenterId, Handle = null };
 

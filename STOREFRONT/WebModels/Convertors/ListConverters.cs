@@ -4,12 +4,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using Omu.ValueInjecter;
-using VirtoCommerce.Web.Models.Extensions;
+using VirtoCommerce.Web.Extensions;
 using services = VirtoCommerce.ApiClient.DataContracts.Lists;
 using VirtoCommerce.Web.Models.Lists;
 #endregion
 
-namespace VirtoCommerce.Web.Models.Convertors
+namespace VirtoCommerce.Web.Convertors
 {
     public static class ListConverters
     {

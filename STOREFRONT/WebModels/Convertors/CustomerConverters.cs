@@ -2,19 +2,20 @@
 using System.Linq;
 using VirtoCommerce.ApiClient.DataContracts.CustomerService;
 using VirtoCommerce.ApiClient.DataContracts.Security;
+using VirtoCommerce.Web.Models;
 using VirtoCommerce.Web.Models.FormModels;
-using Address = VirtoCommerce.ApiClient.DataContracts.CustomerService.Address;
+using Data = VirtoCommerce.ApiClient.DataContracts.CustomerService;
 
 #endregion
 
-namespace VirtoCommerce.Web.Models.Convertors
+namespace VirtoCommerce.Web.Convertors
 {
     public static class CustomerConverters
     {
         #region Public Methods and Operators
-        public static Address AsServiceModel(this CustomerAddress customerAddress)
+        public static Data.Address AsServiceModel(this CustomerAddress customerAddress)
         {
-            var address = new Address();
+            var address = new Data.Address();
 
             address.City = customerAddress.City;
             address.CountryCode = customerAddress.CountryCode;
@@ -65,7 +66,7 @@ namespace VirtoCommerce.Web.Models.Convertors
             return customer;
         }
 
-        public static CustomerAddress AsWebModel(this Address address)
+        public static CustomerAddress AsWebModel(this Data.Address address)
         {
             var customerAddress = new CustomerAddress();
 

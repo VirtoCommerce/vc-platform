@@ -1,15 +1,12 @@
 ﻿#region
+
 using System;
 using DotLiquid;
 
 #endregion
 
-namespace VirtoCommerce.Web.Models
+namespace VirtoCommerce.Web.Models.Cms
 {
-
-    #region
-    #endregion
-
     public class Page : Drop
     {
         #region Public Properties

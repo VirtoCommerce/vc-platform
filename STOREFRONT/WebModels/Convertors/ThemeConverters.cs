@@ -1,13 +1,14 @@
 ﻿#region
 using System.Linq;
 using Omu.ValueInjecter;
+using VirtoCommerce.Web.Models.Cms;
 using VirtoCommerce.Web.Models.Storage;
 using Data = VirtoCommerce.ApiClient.DataContracts.Themes;
 using Data2 = VirtoCommerce.ApiClient.DataContracts.Stores;
 
 #endregion
 
-namespace VirtoCommerce.Web.Models.Convertors
+namespace VirtoCommerce.Web.Convertors
 {
     public static class ThemeConverters
     {

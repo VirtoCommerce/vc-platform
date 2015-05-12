@@ -1,11 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Omu.ValueInjecter;
 using VirtoCommerce.Web.Models.Banners;
 using Data = VirtoCommerce.ApiClient.DataContracts.Contents;
 
-namespace VirtoCommerce.Web.Models.Convertors
+namespace VirtoCommerce.Web.Convertors
 {
     public static class BannerConverters
     {

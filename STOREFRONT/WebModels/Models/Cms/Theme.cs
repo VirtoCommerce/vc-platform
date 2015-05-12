@@ -1,10 +1,11 @@
 ﻿#region
+
 using System.Runtime.Serialization;
 using DotLiquid;
 
 #endregion
 
-namespace VirtoCommerce.Web.Models
+namespace VirtoCommerce.Web.Models.Cms
 {
     [DataContract]
     public class Theme : Drop

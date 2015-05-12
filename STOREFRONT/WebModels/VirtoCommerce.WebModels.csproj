@@ -84,18 +84,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Models\Blogs\Article.cs" />
+    <Compile Include="Models\Cms\Article.cs" />
     <Compile Include="Models\Banners\Banner.cs" />
     <Compile Include="Models\Banners\BannerCollection.cs" />
     <Compile Include="Models\Banners\PlaceHolder.cs" />
     <Compile Include="Models\Banners\PlaceHolderCollection.cs" />
-    <Compile Include="Models\Blogs\Blog.cs" />
-    <Compile Include="Models\Blogs\BlogCollection.cs" />
+    <Compile Include="Models\Cms\Blog.cs" />
+    <Compile Include="Models\Cms\BlogCollection.cs" />
     <Compile Include="Models\Cart.cs" />
     <Compile Include="Models\Checkout.cs" />
     <Compile Include="Models\Collection.cs" />
     <Compile Include="Models\Collections.cs" />
-    <Compile Include="Models\Blogs\Comment.cs" />
+    <Compile Include="Models\Cms\Comment.cs" />
     <Compile Include="Convertors\BannerConverters.cs" />
     <Compile Include="Convertors\CartConverters.cs" />
     <Compile Include="Convertors\CollectionConverters.cs" />
@@ -149,8 +149,8 @@
     <Compile Include="Models\Lists\LinkLists.cs" />
     <Compile Include="Models\LoginProvider.cs" />
     <Compile Include="Models\MetafieldsCollection.cs" />
-    <Compile Include="Models\Page.cs" />
-    <Compile Include="Models\PageCollection.cs" />
+    <Compile Include="Models\Cms\Page.cs" />
+    <Compile Include="Models\Cms\PageCollection.cs" />
     <Compile Include="Models\PaymentMethod.cs" />
     <Compile Include="Models\Price.cs" />
     <Compile Include="Models\Product.cs" />
@@ -197,8 +197,8 @@
     <Compile Include="Models\Tag.cs" />
     <Compile Include="Models\Forms\Form.cs" />
     <Compile Include="Models\TaxLine.cs" />
-    <Compile Include="Models\Theme.cs" />
-    <Compile Include="Models\ThemeAsset.cs" />
+    <Compile Include="Models\Cms\Theme.cs" />
+    <Compile Include="Models\Cms\ThemeAsset.cs" />
     <Compile Include="Models\Transaction.cs" />
     <Compile Include="Models\Variant.cs" />
   </ItemGroup>

@@ -5,7 +5,7 @@ using DotLiquid;
 
 #endregion
 
-namespace VirtoCommerce.Web.Models.Blogs
+namespace VirtoCommerce.Web.Models.Cms
 {
     public class Article : Drop
     {

@@ -1,13 +1,13 @@
 ﻿#region
+
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
-using VirtoCommerce.Web.Models.Services;
 using VirtoCommerce.Web.Services;
 
 #endregion
 
-namespace VirtoCommerce.Web.Models
+namespace VirtoCommerce.Web.Models.Cms
 {
     [DataContract]
     public class PageCollection : ItemCollection<Page>

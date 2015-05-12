@@ -1,5 +1,5 @@
 ﻿#region
-using System;
+
 using System.Globalization;
 using System.Web;
 using System.Web.Mvc;
@@ -7,7 +7,7 @@ using System.Web.Routing;
 
 #endregion
 
-namespace VirtoCommerce.Web.Models.Extensions
+namespace VirtoCommerce.Web.Extensions
 {
     public static class StringExtensions
     {

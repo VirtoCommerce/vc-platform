@@ -7,10 +7,6 @@ using System.Linq;
 
 namespace VirtoCommerce.Web.Views.Contents
 {
-
-    #region
-    #endregion
-
     public class ContentItem
     {
         //public Series Series { get; set; }

@@ -2,9 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using VirtoCommerce.Web.Models;
 using Data = VirtoCommerce.ApiClient.DataContracts;
 
-namespace VirtoCommerce.Web.Models.Extensions
+namespace VirtoCommerce.Web.Extensions
 {
     public static class ProductExtensions
     {

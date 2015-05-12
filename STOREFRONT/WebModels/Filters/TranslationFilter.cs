@@ -6,7 +6,6 @@ using System.Web.Caching;
 using DotLiquid;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using VirtoCommerce.Web.Models.Extensions;
 using VirtoCommerce.Web.Models.Services;
 using VirtoCommerce.Web.Views.Engines.Liquid.Extensions;
 using VirtoCommerce.Web.Views.Engines.Liquid.ViewEngine.Util;

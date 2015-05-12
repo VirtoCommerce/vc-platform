@@ -1,16 +1,15 @@
 ﻿#region
 using System;
-using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using Omu.ValueInjecter;
 using VirtoCommerce.ApiClient.DataContracts.Stores;
-using VirtoCommerce.Web.Models.Extensions;
+using VirtoCommerce.Web.Extensions;
+using VirtoCommerce.Web.Models;
 using Data = VirtoCommerce.ApiClient.DataContracts;
 
 #endregion
 
-namespace VirtoCommerce.Web.Models.Convertors
+namespace VirtoCommerce.Web.Convertors
 {
     public static class ShopConverters
     {

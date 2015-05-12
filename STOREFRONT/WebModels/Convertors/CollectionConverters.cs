@@ -4,10 +4,11 @@ using System.Threading;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
-using VirtoCommerce.Web.Models.Extensions;
+using VirtoCommerce.Web.Extensions;
+using VirtoCommerce.Web.Models;
 using Data = VirtoCommerce.ApiClient.DataContracts;
 
-namespace VirtoCommerce.Web.Models.Convertors
+namespace VirtoCommerce.Web.Convertors
 {
     public static class CollectionConverters
     {

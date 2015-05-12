@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Web;
 using DotLiquid;
 using VirtoCommerce.Web.Models;
+using VirtoCommerce.Web.Models.Cms;
 
 #endregion
 

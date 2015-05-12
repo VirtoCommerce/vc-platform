@@ -15,8 +15,9 @@ using Owin;
 using VirtoCommerce.ApiClient.DataContracts;
 using VirtoCommerce.ApiClient.DataContracts.Stores;
 using VirtoCommerce.ApiClient.Extensions;
+using VirtoCommerce.Web.Extensions;
 using VirtoCommerce.Web.Models;
-using VirtoCommerce.Web.Models.Extensions;
+using VirtoCommerce.Web.Models.Cms;
 using VirtoCommerce.Web.Models.Routing;
 using VirtoCommerce.Web.Models.Services;
 

@@ -2,7 +2,7 @@
 using System;
 using System.Web;
 using System.Web.Routing;
-using VirtoCommerce.Web.Models.Extensions;
+using VirtoCommerce.Web.Extensions;
 using VirtoCommerce.Web.Models.Routing.HttpHandlers;
 
 #endregion

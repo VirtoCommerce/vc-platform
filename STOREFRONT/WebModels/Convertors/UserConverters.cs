@@ -1,15 +1,16 @@
 ﻿#region
 using Omu.ValueInjecter;
 using VirtoCommerce.ApiClient.DataContracts.Security;
+using WebModel = VirtoCommerce.Web.Models.Security;
 
 #endregion
 
-namespace VirtoCommerce.Web.Models.Convertors
+namespace VirtoCommerce.Web.Convertors
 {
     public static class UserConverters
     {
         #region Public Methods and Operators
-        public static ApplicationUser ToServiceModel(this Security.ApplicationUser user)
+        public static ApplicationUser ToServiceModel(this WebModel.ApplicationUser user)
         {
             if (user == null)
             {
@@ -19,13 +20,13 @@ namespace VirtoCommerce.Web.Models.Convertors
             return retVal;
         }
 
-        public static Security.ApplicationUser ToWebModel(this ApplicationUser user)
+        public static WebModel.ApplicationUser ToWebModel(this ApplicationUser user)
         {
             if (user == null)
             {
                 return null;
             }
-            var retVal = (Security.ApplicationUser)new Security.ApplicationUser().InjectFrom(user);
+            var retVal = (WebModel.ApplicationUser)new WebModel.ApplicationUser().InjectFrom(user);
             return retVal;
         }
         #endregion
