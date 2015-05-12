@@ -7,7 +7,7 @@
     <ProjectGuid>{0A52DFA2-2EBE-4182-B1E5-1EF88F8DBAC5}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>VirtoCommerce.Web.Models</RootNamespace>
+    <RootNamespace>VirtoCommerce.Web</RootNamespace>
     <AssemblyName>VirtoCommerce.WebModels</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -84,16 +84,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Article.cs" />
-    <Compile Include="Banners\Banner.cs" />
-    <Compile Include="Banners\BannerCollection.cs" />
-    <Compile Include="Banners\PlaceHolder.cs" />
-    <Compile Include="Banners\PlaceHolderCollection.cs" />
-    <Compile Include="Cart.cs" />
-    <Compile Include="Checkout.cs" />
-    <Compile Include="Collection.cs" />
-    <Compile Include="Collections.cs" />
-    <Compile Include="Comment.cs" />
+    <Compile Include="Models\Blogs\Article.cs" />
+    <Compile Include="Models\Banners\Banner.cs" />
+    <Compile Include="Models\Banners\BannerCollection.cs" />
+    <Compile Include="Models\Banners\PlaceHolder.cs" />
+    <Compile Include="Models\Banners\PlaceHolderCollection.cs" />
+    <Compile Include="Models\Blogs\Blog.cs" />
+    <Compile Include="Models\Blogs\BlogCollection.cs" />
+    <Compile Include="Models\Cart.cs" />
+    <Compile Include="Models\Checkout.cs" />
+    <Compile Include="Models\Collection.cs" />
+    <Compile Include="Models\Collections.cs" />
+    <Compile Include="Models\Blogs\Comment.cs" />
     <Compile Include="Convertors\BannerConverters.cs" />
     <Compile Include="Convertors\CartConverters.cs" />
     <Compile Include="Convertors\CollectionConverters.cs" />
@@ -105,12 +107,12 @@
     <Compile Include="Convertors\ShopConverters.cs" />
     <Compile Include="Convertors\ThemeConverters.cs" />
     <Compile Include="Convertors\UserConverters.cs" />
-    <Compile Include="CountryOptionTags.cs" />
-    <Compile Include="CreditCard.cs" />
-    <Compile Include="Customer.cs" />
-    <Compile Include="CustomerAddress.cs" />
-    <Compile Include="CustomerOrder.cs" />
-    <Compile Include="Discount.cs" />
+    <Compile Include="Models\CountryOptionTags.cs" />
+    <Compile Include="Models\CreditCard.cs" />
+    <Compile Include="Models\Customer.cs" />
+    <Compile Include="Models\CustomerAddress.cs" />
+    <Compile Include="Models\CustomerOrder.cs" />
+    <Compile Include="Models\Discount.cs" />
     <Compile Include="Extensions\CategoryExtensions.cs" />
     <Compile Include="Extensions\ModelExtensions.cs" />
     <Compile Include="Extensions\ProductExtensions.cs" />
@@ -120,40 +122,40 @@
     <Compile Include="Extensions\UrlHelperExtensions.cs" />
     <Compile Include="Filters\ModelFilters.cs" />
     <Compile Include="Filters\TranslationFilter.cs" />
-    <Compile Include="FormModels\CheckoutFirstStepFormModel.cs" />
-    <Compile Include="FormModels\CheckoutSecondStepFormModel.cs" />
-    <Compile Include="FormModels\CustomerAddressFormModel.cs" />
-    <Compile Include="FormModels\ExternalLoginConfirmationFormModel.cs" />
-    <Compile Include="FormModels\ExternalLoginFormModel.cs" />
-    <Compile Include="FormModels\ForgotPasswordFormModel.cs" />
-    <Compile Include="FormModels\LoginFormModel.cs" />
-    <Compile Include="FormModels\NewAddressFormModel.cs" />
-    <Compile Include="FormModels\RegisterFormModel.cs" />
-    <Compile Include="FormModels\ResetPasswordFormModel.cs" />
-    <Compile Include="FormModels\SendCodeFormModel.cs" />
-    <Compile Include="FormModels\VerifyCodeFormModel.cs" />
-    <Compile Include="Fulfillment.cs" />
-    <Compile Include="GiftCard.cs" />
+    <Compile Include="Models\Forms\CheckoutFirstStepFormModel.cs" />
+    <Compile Include="Models\Forms\CheckoutSecondStepFormModel.cs" />
+    <Compile Include="Models\Forms\CustomerAddressFormModel.cs" />
+    <Compile Include="Models\Forms\ExternalLoginConfirmationFormModel.cs" />
+    <Compile Include="Models\Forms\ExternalLoginFormModel.cs" />
+    <Compile Include="Models\Forms\ForgotPasswordFormModel.cs" />
+    <Compile Include="Models\Forms\LoginFormModel.cs" />
+    <Compile Include="Models\Forms\NewAddressFormModel.cs" />
+    <Compile Include="Models\Forms\RegisterFormModel.cs" />
+    <Compile Include="Models\Forms\ResetPasswordFormModel.cs" />
+    <Compile Include="Models\Forms\SendCodeFormModel.cs" />
+    <Compile Include="Models\Forms\VerifyCodeFormModel.cs" />
+    <Compile Include="Models\Fulfillment.cs" />
+    <Compile Include="Models\GiftCard.cs" />
     <Compile Include="Helpers\CartHelper.cs" />
     <Compile Include="Helpers\DownloadResult.cs" />
     <Compile Include="Helpers\ExtensionMapper.cs" />
     <Compile Include="Helpers\ExtensionPartialView.cs" />
-    <Compile Include="Image.cs" />
-    <Compile Include="ItemCollection.cs" />
-    <Compile Include="Language.cs" />
-    <Compile Include="LineItem.cs" />
-    <Compile Include="Lists\Link.cs" />
-    <Compile Include="Lists\LinkList.cs" />
-    <Compile Include="Lists\LinkLists.cs" />
-    <Compile Include="LoginProvider.cs" />
-    <Compile Include="MetafieldsCollection.cs" />
-    <Compile Include="Page.cs" />
-    <Compile Include="PageCollection.cs" />
-    <Compile Include="PaymentMethod.cs" />
-    <Compile Include="Price.cs" />
-    <Compile Include="Product.cs" />
+    <Compile Include="Models\Image.cs" />
+    <Compile Include="Models\ItemCollection.cs" />
+    <Compile Include="Models\Language.cs" />
+    <Compile Include="Models\LineItem.cs" />
+    <Compile Include="Models\Lists\Link.cs" />
+    <Compile Include="Models\Lists\LinkList.cs" />
+    <Compile Include="Models\Lists\LinkLists.cs" />
+    <Compile Include="Models\LoginProvider.cs" />
+    <Compile Include="Models\MetafieldsCollection.cs" />
+    <Compile Include="Models\Page.cs" />
+    <Compile Include="Models\PageCollection.cs" />
+    <Compile Include="Models\PaymentMethod.cs" />
+    <Compile Include="Models\Price.cs" />
+    <Compile Include="Models\Product.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Review.cs" />
+    <Compile Include="Models\Review.cs" />
     <Compile Include="Routing\CanonicalizedAttribute.cs" />
     <Compile Include="Routing\Constants.cs" />
     <Compile Include="Routing\Constraints\BaseRouteConstraint.cs" />
@@ -172,33 +174,33 @@
     <Compile Include="Routing\Routes\RedirectRoute.cs" />
     <Compile Include="Routing\Routes\StoreRoute.cs" />
     <Compile Include="Routing\SeoRoutesExtensions.cs" />
-    <Compile Include="Search.cs" />
+    <Compile Include="Models\Search.cs" />
     <Compile Include="Searching\FacetFilter.cs" />
     <Compile Include="Searching\FacetFilterValue.cs" />
     <Compile Include="Searching\SearchResults.cs" />
-    <Compile Include="Security\AccountModels.cs" />
-    <Compile Include="Security\IdentityModels.cs" />
-    <Compile Include="SeoKeyword.cs" />
+    <Compile Include="Models\Security\AccountModels.cs" />
+    <Compile Include="Models\Security\IdentityModels.cs" />
+    <Compile Include="Models\SeoKeyword.cs" />
     <Compile Include="Services\CommerceService.cs" />
     <Compile Include="Services\CustomerService.cs" />
     <Compile Include="Services\FileStorageCacheService.cs" />
     <Compile Include="Services\FileThemeViewLocator.cs" />
     <Compile Include="Services\PagesService.cs" />
     <Compile Include="Services\SecurityService.cs" />
-    <Compile Include="Settings.cs" />
-    <Compile Include="ShippingMethod.cs" />
-    <Compile Include="Shop.cs" />
+    <Compile Include="Models\Settings.cs" />
+    <Compile Include="Models\ShippingMethod.cs" />
+    <Compile Include="Models\Shop.cs" />
     <Compile Include="SiteContext.cs" />
-    <Compile Include="Storage\FileAsset.cs" />
-    <Compile Include="SubmitForm.cs" />
-    <Compile Include="SubmitFormErrors.cs" />
-    <Compile Include="Tag.cs" />
-    <Compile Include="Tags\Form.cs" />
-    <Compile Include="TaxLine.cs" />
-    <Compile Include="Theme.cs" />
-    <Compile Include="ThemeAsset.cs" />
-    <Compile Include="Transaction.cs" />
-    <Compile Include="Variant.cs" />
+    <Compile Include="Models\Storage\FileAsset.cs" />
+    <Compile Include="Models\SubmitForm.cs" />
+    <Compile Include="Models\SubmitFormErrors.cs" />
+    <Compile Include="Models\Tag.cs" />
+    <Compile Include="Models\Forms\Form.cs" />
+    <Compile Include="Models\TaxLine.cs" />
+    <Compile Include="Models\Theme.cs" />
+    <Compile Include="Models\ThemeAsset.cs" />
+    <Compile Include="Models\Transaction.cs" />
+    <Compile Include="Models\Variant.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -213,6 +215,7 @@
       <Name>VirtoCommerce.WebViews</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

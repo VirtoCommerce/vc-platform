@@ -1,14 +1,11 @@
 ﻿#region
+
 using DotLiquid;
 
 #endregion
 
-namespace VirtoCommerce.Web.Models
+namespace VirtoCommerce.Web.Models.Blogs
 {
-
-    #region
-    #endregion
-
     public class Comment : Drop
     {
         #region Public Properties

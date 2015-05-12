@@ -1,14 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Web;
-using System.Web.Hosting;
 using Omu.ValueInjecter;
+using VirtoCommerce.Web.Models;
 using VirtoCommerce.Web.Views.Engines.Liquid;
 
-namespace VirtoCommerce.Web.Models.Services
+namespace VirtoCommerce.Web.Services
 {
     public class FileThemeViewLocator : IViewLocator
     {
@@ -55,7 +54,7 @@ namespace VirtoCommerce.Web.Models.Services
                     break;
                 }
 
-                checkedLocations.Add(Path.Combine(_baseDirectoryPath, fullPath));
+                checkedLocations.Add(Path.Combine(this._baseDirectoryPath, fullPath));
             }
 
             // use more flex method
@@ -94,7 +93,7 @@ namespace VirtoCommerce.Web.Models.Services
                         break;
                     }
 
-                    checkedLocations.Add(Path.Combine(_baseDirectoryPath, fullPath));
+                    checkedLocations.Add(Path.Combine(this._baseDirectoryPath, fullPath));
                 }
             }
 
@@ -141,7 +140,7 @@ namespace VirtoCommerce.Web.Models.Services
 
         public ViewLocationResult LocateResource(string resourceName)
         {
-            return LocateResource(resourceName, null);
+            return this.LocateResource(resourceName, null);
         }
 
         #endregion
@@ -162,7 +161,7 @@ namespace VirtoCommerce.Web.Models.Services
 
         private ViewLocationResult[] LoadThemeFiles(bool reload = false)
         {
-            var contextKey = "vc-cms-files-" + ThemeDirectory;
+            var contextKey = "vc-cms-files-" + this.ThemeDirectory;
             var value = !reload ? HttpRuntime.Cache.Get(contextKey) : null;
 
             if (value != null)
@@ -210,7 +209,7 @@ namespace VirtoCommerce.Web.Models.Services
         {
             get
             {
-                var fileSystemMainPath = Path.Combine(_baseDirectoryPath, SiteContext.Current.Theme.Path);
+                var fileSystemMainPath = Path.Combine(this._baseDirectoryPath, SiteContext.Current.Theme.Path);
                 return fileSystemMainPath;
             }
         }

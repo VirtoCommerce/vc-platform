@@ -8,6 +8,7 @@ using VirtoCommerce.ApiClient.DataContracts.Orders;
 using VirtoCommerce.ApiClient.Extensions;
 using VirtoCommerce.Web.Models.Convertors;
 using VirtoCommerce.Web.Models.Security;
+using VirtoCommerce.Web.Models;
 using Address = VirtoCommerce.ApiClient.DataContracts.CustomerService.Address;
 
 #endregion

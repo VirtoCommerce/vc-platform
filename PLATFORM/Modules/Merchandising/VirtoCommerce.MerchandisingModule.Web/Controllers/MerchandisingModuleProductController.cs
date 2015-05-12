@@ -173,14 +173,6 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 
                     var appliedFilter = _browseFilterService.Convert(filter, term.Value);
 
-                    /*
-                    var termFilter = new AttributeFilter
-                                     {
-                                         Key = term.Key,
-                                         Values = term.Value.Select(x => new AttributeFilterValue { Id = x.ToLowerInvariant(), Value = x.ToLowerInvariant() }).ToArray()
-                                     };
-                     * */
-
                     criteria.Apply(appliedFilter);
                 }
             }

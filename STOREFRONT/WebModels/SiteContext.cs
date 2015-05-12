@@ -1,12 +1,14 @@
 ﻿#region
+
 using System;
 using System.Collections.Generic;
 using System.Web;
 using DotLiquid;
+using VirtoCommerce.Web.Models;
 
 #endregion
 
-namespace VirtoCommerce.Web.Models
+namespace VirtoCommerce.Web
 {
     public class SiteContext : Drop
     {
@@ -54,7 +56,7 @@ namespace VirtoCommerce.Web.Models
             get
             {
                 object retValue;
-                return _Storage.TryGetValue("error_message", out retValue) ? retValue as string : null;
+                return this._Storage.TryGetValue("error_message", out retValue) ? retValue as string : null;
             }
             set
             {
@@ -68,7 +70,7 @@ namespace VirtoCommerce.Web.Models
             get
             {
                 object retValue;
-                return _Storage.TryGetValue("login_providers", out retValue) ? retValue as LoginProvider[] : null;
+                return this._Storage.TryGetValue("login_providers", out retValue) ? retValue as LoginProvider[] : null;
             }
             set
             {
@@ -94,11 +96,11 @@ namespace VirtoCommerce.Web.Models
             get
             {
                 object retValue;
-                return _Storage.TryGetValue("checkout", out retValue) ? retValue as Checkout : null;
+                return this._Storage.TryGetValue("checkout", out retValue) ? retValue as Checkout : null;
             }
             set
             {
-                Set("checkout", value);
+                this.Set("checkout", value);
             }
         }
 

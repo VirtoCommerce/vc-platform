@@ -9,9 +9,6 @@ using DotLiquid;
 namespace VirtoCommerce.Web.Models
 {
 
-    #region
-    #endregion
-
     [DataContract]
     public class CustomerOrder : Drop
     {

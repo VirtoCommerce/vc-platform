@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using VirtoCommerce.Web.Models.Storage;
 
-namespace VirtoCommerce.Web.Models.Services
+namespace VirtoCommerce.Web.Services
 {
     public class FileStorageCacheService
     {
@@ -91,7 +91,7 @@ namespace VirtoCommerce.Web.Models.Services
         {
             get
             {
-                return _baseFolder;
+                return this._baseFolder;
             }
         }
     }

@@ -7,6 +7,7 @@ using System.Web.Routing;
 using VirtoCommerce.ApiClient;
 using VirtoCommerce.ApiClient.Extensions;
 using VirtoCommerce.Web.Models.Services;
+using VirtoCommerce.Web.Services;
 
 #endregion
 

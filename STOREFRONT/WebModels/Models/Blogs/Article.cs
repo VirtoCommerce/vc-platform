@@ -1,15 +1,12 @@
 ﻿#region
+
 using System;
 using DotLiquid;
 
 #endregion
 
-namespace VirtoCommerce.Web.Models
+namespace VirtoCommerce.Web.Models.Blogs
 {
-
-    #region
-    #endregion
-
     public class Article : Drop
     {
         #region Constructors and Destructors

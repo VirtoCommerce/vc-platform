@@ -20,6 +20,7 @@ using VirtoCommerce.Web.Models.Extensions;
 using VirtoCommerce.Web.Models.Helpers;
 using VirtoCommerce.Web.Models.Lists;
 using VirtoCommerce.Web.Models.Searching;
+using VirtoCommerce.Web.Services;
 using VirtoCommerce.Web.Views.Engines.Liquid;
 using VirtoCommerce.ApiClient.DataContracts.Cart;
 using VirtoCommerce.ApiClient.DataContracts.Marketing;

@@ -1,16 +1,14 @@
 ﻿#region
 
 using System;
-using System.Threading.Tasks;
 using System.Web.Hosting;
-using VirtoCommerce.ApiClient;
-using VirtoCommerce.ApiClient.Extensions;
+using VirtoCommerce.Web.Models;
 using VirtoCommerce.Web.Views.Contents;
 using VirtoCommerce.Web.Views.Engines.Liquid;
 
 #endregion
 
-namespace VirtoCommerce.Web.Models.Services
+namespace VirtoCommerce.Web.Services
 {
     public class PagesService
     {

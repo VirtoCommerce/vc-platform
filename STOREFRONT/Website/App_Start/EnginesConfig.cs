@@ -9,6 +9,7 @@ using DotLiquid.FileSystems;
 using VirtoCommerce.Web.Models.Filters;
 using VirtoCommerce.Web.Models.Services;
 using VirtoCommerce.Web.Models.Tags;
+using VirtoCommerce.Web.Services;
 using VirtoCommerce.Web.Views.Engines.Liquid;
 using VirtoCommerce.Web.Views.Engines.Liquid.ViewEngine;
 using VirtoCommerce.Web.Views.Engines.Liquid.ViewEngine.FileSystems;

@@ -7,10 +7,6 @@ using System.Runtime.Serialization;
 
 namespace VirtoCommerce.Web.Models
 {
-
-    #region
-    #endregion
-
     [DataContract]
     public class Collections : ItemCollection<Collection>
     {
