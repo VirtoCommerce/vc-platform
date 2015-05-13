@@ -629,14 +629,7 @@ namespace VirtoCommerce.Web.Models.Services
 
             //var inventories = await this.GetItemInventoriesAsync(variationIds);
 
-            Collection collection = null;
-            var collectionKeyword = HttpContext.Current.Request.Url.Segments[2];
-            if (collectionKeyword != null)
-            {
-                collection = await GetCollectionByKeywordAsync(SiteContext.Current, collectionKeyword.Trim('/'));
-            }
-
-            return product.AsWebModel(prices, rewards/*, inventories*/, collection);
+            return product.AsWebModel(prices, rewards/*, inventories*/);
         }
 
         public async Task<ItemInventory> GetItemInventoryAsync(string itemId)

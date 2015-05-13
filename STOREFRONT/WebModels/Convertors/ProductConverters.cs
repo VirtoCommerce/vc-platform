@@ -42,14 +42,15 @@ namespace VirtoCommerce.Web.Convertors
 
             var pathTemplate = VirtualPathUtility.ToAbsolute("~/products/{0}");
             var description = product.EditorialReviews != null ?
-                product.EditorialReviews.FirstOrDefault() : null;
+                product.EditorialReviews.FirstOrDefault(er => er.ReviewType.Equals("quickreview", StringComparison.OrdinalIgnoreCase)) : null;
+
             var fieldsCollection = new MetafieldsCollection("global", product.Properties);
             var options = GetOptions(product.Properties).Select(o => o.Key).ToArray();
 
             var keywords = product.Seo != null ? product.Seo.Select(k => k.AsWebModel()) : null;
 
             productModel.Description = description != null ? description.Content : null;
-            productModel.Handle = keywords != null ? keywords.Select(k => k.Keyword).First() : product.Code;
+            productModel.Handle = product.Code;
             productModel.Id = product.Id;
             productModel.Images = new ItemCollection<Image>(product.Images.Select(i => i.AsWebModel(product.Name, product.Id)));
             productModel.Keywords = keywords;
