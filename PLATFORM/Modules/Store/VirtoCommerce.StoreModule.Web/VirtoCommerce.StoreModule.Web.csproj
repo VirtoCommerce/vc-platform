@@ -126,7 +126,6 @@
     <Content Include="Scripts\widgets\storeAdvancedWidget.tpl.html" />
     <Content Include="Scripts\wizards\newStore\new-store-wizard.tpl.html" />
     <Content Include="Scripts\blades\store-detail.tpl.html" />
-    <Content Include="Scripts\home.tpl.html" />
     <Content Include="Scripts\store.js" />
     <Content Include="Scripts\resources\stores.js" />
     <Content Include="Scripts\widgets\storeLanguagesWidget.js" />

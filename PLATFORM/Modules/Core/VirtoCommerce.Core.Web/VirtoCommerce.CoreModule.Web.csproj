@@ -150,13 +150,11 @@
     <Content Include="Scripts\common\common.js" />
     <Content Include="Scripts\common\dynamicExpression\expression-tree.tpl.html" />
     <Content Include="Scripts\common\dynamicExpression\expression-directives.js" />
-    <Content Include="Scripts\common\create.tpl.html" />
     <Content Include="Scripts\Fulfillment\blades\fulfillment-center-contact.js" />
     <Content Include="Scripts\Fulfillment\blades\fulfillment-center-contact.tpl.html" />
     <Content Include="Scripts\Fulfillment\widgets\fulfillmentCenterContactWidget.js" />
     <Content Include="Scripts\Fulfillment\widgets\fulfillmentCenterContactWidget.tpl.html" />
     <Content Include="Scripts\virtoCommerce-core.js" />
-    <Content Include="Scripts\common\ok-cancel2.tpl.html" />
     <Content Include="Scripts\common\resources\countries.js" />
     <Content Include="Scripts\Fulfillment\resources\fulfillments.js" />
     <Content Include="Scripts\common\resources\paymentgateways.js" />
@@ -167,8 +165,6 @@
     <Content Include="Scripts\Fulfillment\fulfillment.js" />
     <Content Include="Scripts\Fulfillment\widgets\fulfillmentWidget.js" />
     <Content Include="Scripts\Fulfillment\widgets\fulfillmentWidget.tpl.html" />
-    <Content Include="Scripts\home.tpl.html" />
-    <Content Include="Scripts\common\ok-cancel.tpl.html" />
     <None Include="app.config" />
     <None Include="packages.config">
       <SubType>Designer</SubType>

@@ -297,7 +297,7 @@
     <Content Include="Scripts\app\packaging\blades\module-detail.tpl.html" />
     <Content Include="Scripts\app\packaging\blades\modules-list.js" />
     <Content Include="Scripts\app\packaging\blades\modules-list.tpl.html" />
-    <Content Include="Scripts\app\packaging\home.tpl.html" />
+    <Content Include="Scripts\common\templates\home.tpl.html" />
     <Content Include="Scripts\app\packaging\packaging.js" />
     <Content Include="Scripts\app\packaging\resources\modules.js" />
     <Content Include="Scripts\app\packaging\wizards\newModule\install-wizard.js" />
@@ -446,6 +446,7 @@
     <Content Include="Scripts\codemirror\fold\xml-fold.js" />
     <Content Include="Scripts\codemirror\liquid.css" />
     <Content Include="Scripts\codemirror\liquid.js" />
+    <Content Include="Scripts\common\templates\create.tpl.html" />
     <Content Include="Scripts\common\directives\angular-money-directive.js" />
     <Content Include="Scripts\angular-multi-select.js" />
     <Content Include="Scripts\angular-resource.js" />
@@ -507,6 +508,8 @@
     <Content Include="Scripts\app\notification\resources\signalRHubProxy.js" />
     <Content Include="Scripts\app\notification\resources\notifications.js" />
     <Content Include="Scripts\common\objCompare.js" />
+    <Content Include="Scripts\common\templates\ok-cancel.tpl.html" />
+    <Content Include="Scripts\common\templates\ok-cancel2.tpl.html" />
     <Content Include="Scripts\common\security\auth\auth.js" />
     <Content Include="Scripts\common\security\blades\account-changePassword.js" />
     <Content Include="Scripts\common\security\blades\account-changePassword.tpl.html" />

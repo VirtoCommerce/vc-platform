@@ -139,7 +139,6 @@
     <Content Include="Scripts\blades\operation-detail-toolbar.tpl.html" />
     <Content Include="Scripts\blades\payment-detail.tpl.html" />
     <Content Include="Scripts\blades\shipment-detail.tpl.html" />
-    <Content Include="Scripts\home.tpl.html" />
     <Content Include="Scripts\order.js" />
   </ItemGroup>
   <ItemGroup>

@@ -11,7 +11,7 @@ angular.module(moduleName)
       $stateProvider
           .state('workspace.packaging', {
               url: '/modules',
-              templateUrl: 'Scripts/app/packaging/home.tpl.html',
+              templateUrl: 'Scripts/common/templates/home.tpl.html',
               controller: ['$scope', 'platformWebApp.bladeNavigationService', function ($scope, bladeNavigationService) {
                       var blade = {
                           id: 'modules',

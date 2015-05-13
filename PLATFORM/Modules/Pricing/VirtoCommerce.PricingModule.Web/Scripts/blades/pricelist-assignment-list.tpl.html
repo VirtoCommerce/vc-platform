@@ -11,7 +11,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr class="table-item" ng-repeat="data in blade.currentEntities track by data.id" ng-class="{'__selected': data.id === selectedNodeId}" ng-click='selectNode(data)'>
+                        <tr class="table-item" ng-repeat="data in blade.currentEntities | orderBy:'priority' track by data.id" ng-class="{'__selected': data.id === selectedNodeId}" ng-click='selectNode(data)'>
                             <td class="table-col">
                                 <span class="table-t">{{data.name}}</span>
                             </td>
