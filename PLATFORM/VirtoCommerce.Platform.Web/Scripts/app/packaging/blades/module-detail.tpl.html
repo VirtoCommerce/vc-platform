@@ -1,22 +1,22 @@
 ﻿<div class="blade-static __bottom __expanded" ng-if="blade.mode">
-    <div class="form-input" ng-if="currentEntity.requireLicenseAcceptance">
+    <div class="form-input" ng-if="blade.currentEntity.requireLicenseAcceptance">
         <div class="form-control __checkbox">
             <label class="form-label">
                 <!--currentEntity.validationErrors.length>0 ||-->
-                <input type="checkbox" ng-model="currentEntity.licenseAccepted" ng-disabled="!currentEntity || isInstalling">
+                <input type="checkbox" ng-model="blade.currentEntity.licenseAccepted" ng-disabled="!blade.currentEntity || isInstalling">
                 <span class="check"></span>
-                <span class="name">I accept the <a ng-href="{{currentEntity.licenseUrl}}" ng-if="currentEntity.licenseUrl" target="_blank">License</a> agreement</span>
+                <span class="name">I accept the <a ng-href="{{blade.currentEntity.licenseUrl}}" ng-if="blade.currentEntity.licenseUrl" target="_blank">License</a> agreement</span>
             </label>
         </div>
     </div>
-    <button class="btn" ng-click="submit()" ng-disabled="!currentEntity || isInstalling || (currentEntity.requireLicenseAcceptance && !currentEntity.licenseAccepted)">
+    <button class="btn" ng-click="submit()" ng-disabled="!blade.currentEntity || isInstalling || (blade.currentEntity.requireLicenseAcceptance && !blade.currentEntity.licenseAccepted)">
         <span>{{actionButtonTitle}}</span>
     </button>
 </div>
 <div class="blade-content __gray">
     <div class="blade-inner">
         <div class="inner-block">
-            <div class="form" ng-if="!currentEntity">
+            <div class="form" ng-if="!blade.currentEntity">
                 <div class="form-group">
                     <label class="form-label">Select module file:</label>
                     <div class="form-input">
@@ -28,54 +28,54 @@
                     </div>
                 </div>
             </div>
-            <div ng-if="currentEntity">
+            <div ng-if="blade.currentEntity">
                 <div class="t __divider">Module info</div>
                 <ul class="list __info">
                     <li class="list-item">
                         <div class="list-t">Title</div>
-                        <div class="list-descr">{{currentEntity.title}}</div>
+                        <div class="list-descr">{{blade.currentEntity.title}}</div>
                     </li>
                     <li class="list-item">
                         <div class="list-t">Author</div>
                         <div class="list-descr">
-                            <span ng-repeat="x in currentEntity.authors">{{x}}</span>
+                            <span ng-repeat="x in blade.currentEntity.authors">{{x}}</span>
                         </div>
                     </li>
                     <li class="list-item">
                         <div class="list-t">ID</div>
-                        <div class="list-descr">{{currentEntity.id}}</div>
+                        <div class="list-descr">{{blade.currentEntity.id}}</div>
                     </li>
                     <li class="list-item">
                         <div class="list-t">Version</div>
-                        <div class="list-descr">{{currentEntity.version}}</div>
+                        <div class="list-descr">{{blade.currentEntity.version}}</div>
                     </li>
                     <li class="list-item">
-                        <a class="list-link" ng-if="currentEntity.licenseUrl" ng-href="{{currentEntity.licenseUrl}}" target="_blank">License</a>
-                        <a class="list-link" ng-if="currentEntity.projectUrl" ng-href="{{currentEntity.projectUrl}}" target="_blank">Project Information</a>
+                        <a class="list-link" ng-if="blade.currentEntity.licenseUrl" ng-href="{{blade.currentEntity.licenseUrl}}" target="_blank">License</a>
+                        <a class="list-link" ng-if="blade.currentEntity.projectUrl" ng-href="{{blade.currentEntity.projectUrl}}" target="_blank">Project Information</a>
                     </li>
                     <li class="list-item">
                         <div class="list-t">Description</div>
-                        <div class="list-descr">{{currentEntity.description}}</div>
+                        <div class="list-descr">{{blade.currentEntity.description}}</div>
                     </li>
-                    <li class="list-item" ng-if="currentEntity.dependencies">
+                    <li class="list-item" ng-if="blade.currentEntity.dependencies">
                         <div class="list-t">Dependencies</div>
                         <div class="list-descr">
-                            <span>{{x}}</span>
+                            <a ng-repeat="x in blade.currentEntity.dependencies" ng-click="openModule(x)">{{x}}</a>
                         </div>
                     </li>
                     <li class="list-item">
                         <div class="list-t">Tags</div>
                         <ul class="list __tags">
-                            <li class="list-item" ng-repeat="tag in currentEntity.tags">
+                            <li class="list-item" ng-repeat="tag in blade.currentEntity.tags">
                                 <i class="list-ico fa fa-tags"></i>
                                 <div class="list-name">{{tag}}</div>
                             </li>
                         </ul>
                     </li>
-                    <li class="list-item" ng-if="currentEntity.validationErrors.length>0">
+                    <li class="list-item" ng-if="blade.currentEntity.validationErrors.length>0">
                         <div class="list-t">Errors</div>
                         <div class="list-descr">
-                            <span ng-repeat="x in currentEntity.validationErrors">{{x}}<br></span>
+                            <span ng-repeat="x in blade.currentEntity.validationErrors">{{x}}<br></span>
                         </div>
                     </li>
                 </ul>

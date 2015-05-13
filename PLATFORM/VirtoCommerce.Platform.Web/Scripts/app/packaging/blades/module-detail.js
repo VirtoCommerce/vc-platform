@@ -1,13 +1,23 @@
 ﻿angular.module('platformWebApp')
-.controller('platformWebApp.moduleDetailController', ['$scope', 'platformWebApp.dialogService', 'platformWebApp.bladeNavigationService', 'platformWebApp.modules', function ($scope, dialogService, bladeNavigationService, modules) {
+.controller('platformWebApp.moduleDetailController', ['$scope', 'platformWebApp.dialogService', 'platformWebApp.bladeNavigationService', 'platformWebApp.modules', 'platformWebApp.settings', function ($scope, dialogService, bladeNavigationService, modules, settings) {
     $scope.selectedEntityId = null;
 
+    $scope.blade.refresh = function () {
+        if($scope.blade.currentEntity) {
+            initializeBlade($scope.blade.currentEntity);
+        } else {
+            modules.get({ id: $scope.blade.currentEntityId }, function (data) {
+                initializeBlade(data);
+            });
+        }
+    }
+
     function initializeBlade(data) {
-        $scope.currentEntity = angular.copy(data);
+        $scope.blade.currentEntity = angular.copy(data);
         $scope.blade.origEntity = data;
         $scope.blade.isLoading = false;
 
-        $scope.currentEntity.tags = $scope.currentEntity.tags.split(' ');
+        $scope.blade.currentEntity.tags = $scope.blade.currentEntity.tags.split(' ');
     };
 
     $scope.blade.onClose = function (closeCallback) {
@@ -19,6 +29,18 @@
         angular.forEach($scope.blade.childrenBlades.slice(), function (child) {
             bladeNavigationService.closeBlade(child);
         });
+    }
+
+    $scope.openModule = function(module) {
+        var newBlade = {
+            id: 'moduleDetails',
+            title: 'Module information',
+            currentEntityId: module,
+            controller: 'platformWebApp.moduleDetailController',
+            template: 'Scripts/app/packaging/blades/module-detail.tpl.html'
+        };
+
+        bladeNavigationService.showBlade(newBlade, $scope.blade.parentBlade);
     }
 
     $scope.bladeToolbarCommands = [
@@ -41,6 +63,24 @@
                 return $scope.currentEntity && $scope.currentEntity.isRemovable;
             },
             permission: 'platform:module:manage'
+        },
+        {
+            name: "Settings", icon: 'fa fa-wrench',
+            executeMethod: function () {
+                var newBlade = {
+                    id: 'moduleSettingsSection',
+                    moduleId: $scope.blade.currentEntity.id,
+                    // parentWidget: $scope.widget,
+                    title: 'Module settings',
+                    //subtitle: '',
+                    controller: 'platformWebApp.settingsDetailController',
+                    template: 'Scripts/app/settings/blades/settings-detail.tpl.html'
+                };
+                bladeNavigationService.showBlade(newBlade, $scope.blade);
+            },
+            canExecuteMethod: function () {
+                return true;
+            }
         }
     ];
 
@@ -87,5 +127,5 @@
     $scope.bladeHeadIco = 'fa fa-cubes';
 
     // on load
-    initializeBlade($scope.blade.currentEntity);
+    $scope.blade.refresh();
 }]);
