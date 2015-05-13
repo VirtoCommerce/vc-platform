@@ -4,7 +4,7 @@
 			<fieldset>
 				<legend class="ng-binding">Choosen content items</legend>
 				<div class="form-group">
-					<a class="clear text-mini __link" ng-click="blade.deleteAllPlaceholder()" ng-if="blade.entity.contentItems.length > 0">Clear all</a>
+					<a class="clear text-mini __link" ng-click="blade.deleteAllContentItems()" ng-if="blade.entity.contentItems.length > 0">Clear all</a>
 					<ul class="list __inline __choosen">
 						<li class="list-item" ng-repeat="item in blade.entity.contentItems">
 							<a class="list-remove" ng-click="blade.deleteContentItem(item)">×</a>
@@ -96,7 +96,7 @@
 						</tbody>
 					</table>
 				</div>
-				<p class="text" ng-if="!blade.currentEntities.length">No Placeholders yet</p>
+				<p class="text" ng-if="!blade.currentEntities.length">No Content items yet</p>
 			</fieldset>
 		</div>
 	</div>

@@ -34,7 +34,7 @@
         var newBlade = {
             id: "associationWizard",
             currentEntities: $scope.blade.currentEntities,
-            title: "New Associations",
+            title: "New Association",
             //subtitle: '',
             controller: 'virtoCommerce.catalogModule.associationWizardController',
             template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/wizards/newAssociation/association-wizard.tpl.html'

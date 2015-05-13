@@ -1,5 +1,6 @@
 ﻿using Microsoft.Practices.Unity;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Web.Http;
@@ -55,7 +56,7 @@ namespace VirtoCommerce.Platform.Web
             GlobalConfiguration.Configuration.DependencyResolver = new UnityDependencyResolver(Container);
 
             //It necessary because WEB API does not get assemblies from AppDomain.
-            GlobalConfiguration.Configuration.Services.Replace(typeof(IAssembliesResolver), new CustomAssemblyResolver(from m in ModuleCatalog.Modules select m));
+            GlobalConfiguration.Configuration.Services.Replace(typeof(IAssembliesResolver), new CustomAssemblyResolver(ModuleCatalog.Modules));
 
             var moduleCatalog = ModuleCatalog as ManifestModuleCatalog;
             if (moduleCatalog != null)
@@ -87,14 +88,52 @@ namespace VirtoCommerce.Platform.Web
             {
                 var baseAssemblies = base.GetAssemblies();
                 var assemblies = new List<Assembly>(baseAssemblies);
-                assemblies.AddRange(_modules
+
+                var moduleAssemblies = _modules
                     .Where(m => !string.IsNullOrEmpty(m.Ref))
                     .Select(m => Assembly.LoadFrom(m.Ref))
-                );
+                    .ToList();
+
+                foreach (var moduleAssembly in moduleAssemblies)
+                {
+                    AddAssemblyWithReferencesRecursive(moduleAssembly, assemblies);
+                }
 
                 return assemblies;
             }
 
+
+            static void AddAssemblyWithReferencesRecursive(Assembly assembly, List<Assembly> assemblies)
+            {
+                if (!assemblies.Contains(assembly))
+                {
+                    assemblies.Add(assembly);
+
+                    var referencedAssemblies = assembly
+                        .GetReferencedAssemblies()
+                        .Select(LoadAssembly)
+                        .Where(a => a != null)
+                        .ToList();
+
+                    foreach (var referencedAssembly in referencedAssemblies)
+                    {
+                        AddAssemblyWithReferencesRecursive(referencedAssembly, assemblies);
+                    }
+                }
+            }
+
+            static Assembly LoadAssembly(AssemblyName name)
+            {
+                Assembly result = null;
+
+                try
+                {
+                    result = Assembly.Load(name);
+                }
+                catch (FileLoadException) { } // TODO: Add assembly discovery.
+
+                return result;
+            }
         }
     }
 }

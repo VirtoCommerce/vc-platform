@@ -39,7 +39,7 @@ angular.module(moduleName, ['angularUUID2'])
 	$stateProvider
 		.state('workspace.content', {
 			url: '/content',
-			templateUrl: 'Modules/$(VirtoCommerce.Content)/Scripts/home.tpl.html',
+			templateUrl: 'Scripts/common/templates/home.tpl.html',
 			controller: [
 				'$scope', 'platformWebApp.bladeNavigationService', function ($scope, bladeNavigationService) {
 					var blade = {

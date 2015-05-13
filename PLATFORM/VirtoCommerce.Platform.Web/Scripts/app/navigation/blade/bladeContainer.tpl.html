@@ -48,15 +48,15 @@
             </div>
             <ng-include src="toolbarTemplate" />            
         </header>
-        <div class="blade-container">
-            <div class="loader" ng-show="blade.isLoading">
-                <span></span>
-                <span></span>
-                <span></span>
-                <span></span>
-                <span></span>
-            </div>
-            <ng-include src='blade.template' ng-show="!blade.isLoading"></ng-include>
+        <div class="loader" ng-show="blade.isLoading">
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+        <div class="blade-container" ng-class="{'__loading': blade.isLoading}">
+            <ng-include src='blade.template'></ng-include>
         </div>
     </div>
 </div>
