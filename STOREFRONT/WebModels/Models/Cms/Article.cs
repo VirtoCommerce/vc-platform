@@ -7,7 +7,7 @@ using DotLiquid;
 
 namespace VirtoCommerce.Web.Models.Cms
 {
-    public class Article : Drop
+    public class Article : PropertiesDrop
     {
         #region Constructors and Destructors
         public Article()

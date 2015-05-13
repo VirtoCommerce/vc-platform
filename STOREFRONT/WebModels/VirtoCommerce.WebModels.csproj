@@ -84,6 +84,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Convertors\PagesConverters.cs" />
     <Compile Include="Models\Cms\Article.cs" />
     <Compile Include="Models\Banners\Banner.cs" />
     <Compile Include="Models\Banners\BannerCollection.cs" />
@@ -154,6 +155,7 @@
     <Compile Include="Models\PaymentMethod.cs" />
     <Compile Include="Models\Price.cs" />
     <Compile Include="Models\Product.cs" />
+    <Compile Include="Models\PropertiesDrop.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Models\Review.cs" />
     <Compile Include="Routing\CanonicalizedAttribute.cs" />

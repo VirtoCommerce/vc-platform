@@ -2,7 +2,7 @@
 
 using System;
 using System.Web.Hosting;
-using VirtoCommerce.Web.Models;
+using VirtoCommerce.Web.Convertors;
 using VirtoCommerce.Web.Models.Cms;
 using VirtoCommerce.Web.Views.Contents;
 using VirtoCommerce.Web.Views.Engines.Liquid;
@@ -13,30 +13,6 @@ namespace VirtoCommerce.Web.Services
 {
     public class PagesService
     {
-        /*
-        #region Public Methods and Operators
-        public async Task<Page> GetPageAsync(SiteContext context, string handle)
-        {
-            var client = ClientContext.Clients.CreatePageClient();
-            var page = await client.GetPageAsync(context.StoreId, context.Language, handle);
-
-            if (page == null)
-                return null;
-
-            return new Page
-            {
-                Author = "",
-                Content = page.Content,
-                Handle = handle,
-                Id = handle,
-                Url = "/pages/"+handle,
-                PublishedAt = page.ModifiedDate,
-                Title = page.Name
-            };
-        }
-        #endregion
-         * */
-
         #region Public Methods and Operators
         public Page GetPage(SiteContext context, string handle)
         {
@@ -53,17 +29,7 @@ namespace VirtoCommerce.Web.Services
                 return null;
             }
 
-            return new Page
-            {
-                Author = item.Author,
-                Content = item.Content,
-                Handle = handle,
-                Id = handle,
-                Url = item.Url,
-                PublishedAt = item.Date,
-                Title = item.Title,
-                Layout = item.Layout
-            };
+            return item.AsPageWebModel();
         }
         #endregion
     }
