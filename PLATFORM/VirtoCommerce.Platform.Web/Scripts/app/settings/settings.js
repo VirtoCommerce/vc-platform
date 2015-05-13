@@ -4,7 +4,7 @@
 //      $stateProvider
 //          .state('workspace.coreModulesettings', {
 //              url: '/settings',
-//              templateUrl: 'Modules/$(VirtoCommerce.Core)/Scripts/home.tpl.html',
+//              templateUrl: 'Scripts/common/templates/home.tpl.html',
 //              controller: ['$scope', 'platformWebApp.bladeNavigationService', function ($scope, bladeNavigationService) {
 //                      var blade = {
 //                          id: 'settings',

@@ -161,7 +161,6 @@
     <Content Include="Scripts\blades\carts-list.tpl.html" />
     <Content Include="Scripts\blades\cart-detail.js" />
     <Content Include="Scripts\blades\cart-detail.tpl.html" />
-    <Content Include="Scripts\home.tpl.html" />
     <Content Include="Scripts\resources\carts.js" />
     <Content Include="Scripts\cart.js" />
   </ItemGroup>

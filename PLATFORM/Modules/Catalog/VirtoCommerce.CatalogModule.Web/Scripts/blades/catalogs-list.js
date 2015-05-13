@@ -1,6 +1,6 @@
 ﻿angular.module('virtoCommerce.catalogModule')
-.controller('virtoCommerce.catalogModule.catalogsListController', ['$injector', '$rootScope', '$scope', 'virtoCommerce.catalogModule.catalogs', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService',
-function ($injector, $rootScope, $scope, catalogs, bladeNavigationService, dialogService) {
+.controller('virtoCommerce.catalogModule.catalogsListController', ['$injector', '$rootScope', '$scope', 'virtoCommerce.catalogModule.catalogs', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', 'platformWebApp.authService',
+function ($injector, $rootScope, $scope, catalogs, bladeNavigationService, dialogService, authService) {
     var selectedNode = null;
     var preventCategoryListingOnce;
 
@@ -187,23 +187,6 @@ function ($injector, $rootScope, $scope, catalogs, bladeNavigationService, dialo
 
     $scope.bladeToolbarCommands = [
         {
-            name: "Add", icon: 'fa fa-plus',
-            executeMethod: function () {
-                var newBlade = {
-                    id: 'listItemChild',
-                    title: 'New catalog',
-                    subtitle: 'Choose new catalog type',
-                    controller: 'virtoCommerce.catalogModule.catalogAddController',
-                    template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/catalog-add.tpl.html'
-                };
-
-                bladeNavigationService.showBlade(newBlade, $scope.blade);
-            },
-            canExecuteMethod: function () {
-                return true;
-            }
-        },
-        {
             name: "Manage", icon: 'fa fa-edit',
             executeMethod: function () {
                 $scope.editCatalog(selectedNode);
@@ -242,6 +225,27 @@ function ($injector, $rootScope, $scope, catalogs, bladeNavigationService, dialo
           permission: 'catalog:catalogs:manage'
       }
     ];
+
+    if (authService.checkPermission('catalog:catalogs:manage') || authService.checkPermission('catalog:virtual_catalogs:manage')) {
+        $scope.bladeToolbarCommands.splice(0, 0, {
+            name: "Add",
+            icon: 'fa fa-plus',
+            executeMethod: function () {
+                var newBlade = {
+                    id: 'listItemChild',
+                    title: 'New catalog',
+                    subtitle: 'Choose new catalog type',
+                    controller: 'virtoCommerce.catalogModule.catalogAddController',
+                    template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/catalog-add.tpl.html'
+                };
+
+                bladeNavigationService.showBlade(newBlade, $scope.blade);
+            },
+            canExecuteMethod: function () {
+                return true;
+            }
+        });
+    }
 
     // actions on load
     $scope.blade.refresh();

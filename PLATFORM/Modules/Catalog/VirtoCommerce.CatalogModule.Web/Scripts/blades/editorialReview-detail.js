@@ -16,15 +16,15 @@
         return !angular.equals($scope.currentEntity, $scope.blade.origEntity);
     };
 
-    function saveChanges(data) {
+    function saveChanges() {
         $scope.blade.isLoading = true;
         var entriesCopy = $scope.blade.parentBlade.currentEntities.slice();
 
-        if (angular.isDefined(data.id)) {
-            entriesCopy = _.reject(entriesCopy, function (ent) { return ent.id === data.id; });
+        if (angular.isDefined($scope.currentEntity.id)) {
+            entriesCopy = _.reject(entriesCopy, function (ent) { return ent.id === $scope.currentEntity.id; });
         }
 
-        entriesCopy.push(data);
+        entriesCopy.push($scope.currentEntity);
 
         items.updateitem({ id: $scope.blade.parentBlade.currentEntityId, reviews: entriesCopy }, function () {
             angular.copy($scope.currentEntity, $scope.blade.origEntity);
@@ -80,7 +80,7 @@
         {
             name: "Save", icon: 'fa fa-save',
             executeMethod: function () {
-                saveChanges($scope.currentEntity);
+                saveChanges();
             },
             canExecuteMethod: function () {
                 return isDirty();

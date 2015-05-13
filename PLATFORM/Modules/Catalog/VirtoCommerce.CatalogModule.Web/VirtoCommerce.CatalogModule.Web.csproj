@@ -221,7 +221,6 @@
     <Content Include="Scripts\catalog.js" />
     <Content Include="Scripts\directives\property2.js" />
     <Content Include="Scripts\directives\property2.tpl.html" />
-    <Content Include="Scripts\home\home.tpl.html" />
     <Content Include="Scripts\notifications\historyImport.tpl.html" />
     <Content Include="Scripts\notifications\menuImport.tpl.html" />
     <Content Include="Scripts\blades\import\import-job-progress.js" />

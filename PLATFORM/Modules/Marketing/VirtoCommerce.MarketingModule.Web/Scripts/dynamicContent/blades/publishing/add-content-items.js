@@ -25,7 +25,7 @@
 		blade.entity.contentItems.push(contentItem);
 	}
 
-	blade.deleteAllPlaceholder = function () {
+	blade.deleteAllContentItems = function () {
 		blade.entity.contentItems = [];
 	}
 

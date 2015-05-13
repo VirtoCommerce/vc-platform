@@ -41,7 +41,7 @@
                             </td>
                             <td class="table-col __product-name" ng-click='selectItem($event, data)'>
                                 <!-- <i class="table-ico fa fa-link " ng-if="blade.catalog.virtual"></i> -->
-                                <i class="table-ico fa fa-link" ng-if="hasLinks(data)"></i>
+                                <i class="table-ico fa fa-link" ng-if="hasLinks(data)" title="This category is linked"></i>
                                 {{data.name}}
                                 <ul class="menu __context" role="menu" id="cil_menu_{{data.id+blade.level}}">
                                     <li class="menu-item" ng-click='edit(data)'>
