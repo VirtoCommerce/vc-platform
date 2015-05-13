@@ -15,7 +15,7 @@ namespace VirtoCommerce.Web.Services
             this._baseFolder = baseFolder;
         }
 
-        public DateTime GetLatestUpdate()
+        public DateTime? GetLatestUpdate()
         {
             var directory = new DirectoryInfo(this.BaseDirectory);
 
@@ -29,9 +29,9 @@ namespace VirtoCommerce.Web.Services
                     .OrderByDescending(f => f.LastWriteTimeUtc)
                     .FirstOrDefault();
 
-            if (latest == null) return DateTime.MinValue;
+            //if (latest == null) return DateTime.MinValue;
 
-            return latest.LastWriteTimeUtc;
+            return latest != null ? (DateTime?)latest.LastWriteTimeUtc : null;
         }
 
         public bool ApplyUpdates(FileAsset[] items)

@@ -11,8 +11,7 @@ angular.module(moduleName, [])
       $stateProvider
           .state('workspace.customerModule', {
               url: '/customers',
-              // templateUrl: 'Modules/$(VirtoCommerce.Customer)/Scripts/home.tpl.html',
-              templateUrl: 'Modules/$(VirtoCommerce.Core)/Scripts/home.tpl.html',
+              templateUrl: 'Scripts/common/templates/home.tpl.html',
               controller: [
                   '$scope', 'platformWebApp.bladeNavigationService', function ($scope, bladeNavigationService) {
                       var blade = {

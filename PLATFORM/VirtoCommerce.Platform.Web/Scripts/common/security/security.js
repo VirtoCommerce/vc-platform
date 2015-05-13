@@ -38,7 +38,7 @@
 
 	    .state('workspace.securityModule', {
 	        url: '/security',
-	        template: '<va-blade-container />',
+	        templateUrl: 'Scripts/common/templates/home.tpl.html',
 	        controller: ['$scope', 'platformWebApp.bladeNavigationService', function ($scope, bladeNavigationService) {
 				    var blade = {
 				        id: 'security',

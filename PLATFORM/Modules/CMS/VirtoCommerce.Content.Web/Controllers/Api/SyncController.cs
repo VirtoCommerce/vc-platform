@@ -15,7 +15,7 @@ using ThemeAsset = VirtoCommerce.Content.Web.Models.ThemeAsset;
 
 namespace VirtoCommerce.Content.Web.Controllers.Api
 {
-    [RoutePrefix("api/cms/sync/stores/{storeId}")]
+    [RoutePrefix("api/cms/sync")]
     public class SyncController : ApiController
     {
         #region Fields
@@ -50,8 +50,8 @@ namespace VirtoCommerce.Content.Web.Controllers.Api
 
         [HttpGet]
         [ResponseType(typeof(SyncAssetGroup[]))]
-        [Route("assets")]
-        public async Task<IHttpActionResult> SyncAssets(string storeId, string theme, DateTime themeUpdated, DateTime pagesUpdated)
+        [Route("stores/{storeId}/assets")]
+        public async Task<IHttpActionResult> SyncAssets(string storeId, string theme, DateTime? themeUpdated, DateTime? pagesUpdated)
         {
             var themeItems = await this._themeService.GetThemeAssets(storeId, theme, new GetThemeAssetsCriteria() { LoadContent = true, LastUpdateDate = themeUpdated});
             var pageItems = _pagesService.GetPages(storeId, new GetPagesCriteria() { LastUpdateDate = pagesUpdated }).Select(s => s.ToWebModel());

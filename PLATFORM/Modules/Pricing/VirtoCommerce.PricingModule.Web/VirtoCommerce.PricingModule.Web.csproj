@@ -119,7 +119,6 @@
     <Content Include="Scripts\blades\pricelist-detail.tpl.html" />
     <Content Include="Scripts\blades\pricing-main.js" />
     <Content Include="Scripts\blades\pricing-main.tpl.html" />
-    <Content Include="Scripts\home.tpl.html" />
     <Content Include="Scripts\pricing.js" />
     <Content Include="Scripts\resources\pricing.js" />
     <Content Include="Scripts\widgets\assignmentsWidget.js" />

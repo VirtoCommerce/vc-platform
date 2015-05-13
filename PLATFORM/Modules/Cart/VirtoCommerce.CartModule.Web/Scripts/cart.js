@@ -11,7 +11,7 @@ angular.module(moduleName, [])
       $stateProvider
           .state('workspace.cartModule', {
               url: '/carts',
-              templateUrl: 'Modules/$(VirtoCommerce.Cart)/Scripts/home.tpl.html',
+              templateUrl: 'Scripts/common/templates/home.tpl.html',
               controller: [
                   '$scope', 'platformWebApp.bladeNavigationService', function ($scope, bladeNavigationService) {
                       var blade = {

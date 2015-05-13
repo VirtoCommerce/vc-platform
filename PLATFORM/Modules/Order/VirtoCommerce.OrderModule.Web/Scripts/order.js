@@ -11,7 +11,7 @@ angular.module(moduleName, ['virtoCommerce.catalogModule', 'virtoCommerce.pricin
   	$stateProvider
 		.state('workspace.orderModule', {
 			url: '/orders',
-			templateUrl: 'Modules/$(VirtoCommerce.Orders)/Scripts/home.tpl.html',
+			templateUrl: 'Scripts/common/templates/home.tpl.html',
 			controller: [
 				'$scope', 'platformWebApp.bladeNavigationService', function ($scope, bladeNavigationService) {
 					var blade = {
