@@ -59,6 +59,26 @@ $(function () {
         }
     });
 
+    $('body').delegate('.gridster .list:not(.__editing) .gridster-item', 'mouseenter', function () {
+        var self = $(this);
+
+        self.prepend('<a class="customize">Customize</a>');
+
+        $('.customize').on('click', function () {
+            $('.dashboard .gridster ul').addClass('__editing');
+
+            $('.nav-bar .bar').prepend('<li class="menu-item __done"><a class="menu-link"><span class="menu-ico fa fa-check"></span>Done</a></li>');
+
+            $('.__done .menu-link').on('click', function () {
+                $(this).remove();
+                $('.dashboard .gridster ul').removeClass('__editing');
+            });
+        });
+
+    }).delegate('.gridster-loaded .gridster-item', 'mouseleave', function () {
+        $('.customize').remove();
+    });
+
     $('.form-input.__number .down, .form-input.__number .up').on('click', function () {
         var step = $(this).parents('.form-input.__number').data('step'),
             value = $(this).parents('.form-input.__number').find('input').val();

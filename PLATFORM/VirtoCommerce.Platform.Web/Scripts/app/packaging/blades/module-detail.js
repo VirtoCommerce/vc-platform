@@ -1,10 +1,13 @@
 ﻿angular.module('platformWebApp')
 .controller('platformWebApp.moduleDetailController', ['$scope', 'platformWebApp.dialogService', 'platformWebApp.bladeNavigationService', 'platformWebApp.modules', function ($scope, dialogService, bladeNavigationService, modules) {
+    $scope.selectedEntityId = null;
 
     function initializeBlade(data) {
         $scope.currentEntity = angular.copy(data);
         $scope.blade.origEntity = data;
         $scope.blade.isLoading = false;
+
+        $scope.currentEntity.tags = $scope.currentEntity.tags.split(' ');
     };
 
     $scope.blade.onClose = function (closeCallback) {

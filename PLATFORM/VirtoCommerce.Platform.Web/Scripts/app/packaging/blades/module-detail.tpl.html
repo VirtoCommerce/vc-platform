@@ -16,8 +16,8 @@
 <div class="blade-content __gray">
     <div class="blade-inner">
         <div class="inner-block">
-            <div class="form">
-                <div class="form-group" ng-if="!currentEntity">
+            <div class="form" ng-if="!currentEntity">
+                <div class="form-group">
                     <label class="form-label">Select module file:</label>
                     <div class="form-input">
                         <input type="file" uploader="uploader" nv-file-select>
@@ -27,54 +27,60 @@
                         </button>
                     </div>
                 </div>
-                <div ng-if="currentEntity">
-                    <div class="form-group">
-                        <p class="sub-t">Title</p>
-                        <p class="text">{{currentEntity.title}}</p>
-                    </div>
-                    <div class="form-group">
-                        <p class="sub-t">Author</p>
-                        <p class="text" ng-repeat="x in currentEntity.authors">{{x}} </p>
-                    </div>
-                    <div class="form-group">
-                        <p class="sub-t">ID</p>
-                        <p class="text">{{currentEntity.id}}</p>
-                    </div>
-                    <div class="form-group">
-                        <p class="sub-t">Version</p>
-                        <p class="text">{{currentEntity.version}}</p>
-                    </div>
-                    <div class="form-group">
-                        <p ng-if="currentEntity.licenseUrl">
-                            <a ng-href="{{currentEntity.licenseUrl}}" target="_blank">License</a>
-                        </p>
-                        <p class="text" ng-if="currentEntity.projectUrl">
-                            <a ng-href="{{currentEntity.projectUrl}}" target="_blank">Project Information</a>
-                        </p>
-                    </div>
-                    <div class="form-group">
-                        <p class="sub-t">Description</p>
-                        <p class="text">{{currentEntity.description}}</p>
-                    </div>
-                    <div class="form-group">
-                        <p class="sub-t">Dependencies</p>
-                        <ul class="list">
-                            <li class="list-item" ng-repeat="x in currentEntity.dependencies">
-                                <a class="list-link text">{{x}}</a>
+            </div>
+            <div ng-if="currentEntity">
+                <div class="t __divider">Module info</div>
+                <ul class="list __info">
+                    <li class="list-item">
+                        <div class="list-t">Title</div>
+                        <div class="list-descr">{{currentEntity.title}}</div>
+                    </li>
+                    <li class="list-item">
+                        <div class="list-t">Author</div>
+                        <div class="list-descr">
+                            <span ng-repeat="x in currentEntity.authors">{{x}}</span>
+                        </div>
+                    </li>
+                    <li class="list-item">
+                        <div class="list-t">ID</div>
+                        <div class="list-descr">{{currentEntity.id}}</div>
+                    </li>
+                    <li class="list-item">
+                        <div class="list-t">Version</div>
+                        <div class="list-descr">{{currentEntity.version}}</div>
+                    </li>
+                    <li class="list-item">
+                        <a class="list-link" ng-if="currentEntity.licenseUrl" ng-href="{{currentEntity.licenseUrl}}" target="_blank">License</a>
+                        <a class="list-link" ng-if="currentEntity.projectUrl" ng-href="{{currentEntity.projectUrl}}" target="_blank">Project Information</a>
+                    </li>
+                    <li class="list-item">
+                        <div class="list-t">Description</div>
+                        <div class="list-descr">{{currentEntity.description}}</div>
+                    </li>
+                    <li class="list-item" ng-if="currentEntity.dependencies">
+                        <div class="list-t">Dependencies</div>
+                        <div class="list-descr">
+                            <span>{{x}}</span>
+                        </div>
+                    </li>
+                    <li class="list-item">
+                        <div class="list-t">Tags</div>
+                        <ul class="list __tags">
+                            <li class="list-item" ng-repeat="tag in currentEntity.tags">
+                                <i class="list-ico fa fa-tags"></i>
+                                <div class="list-name">{{tag}}</div>
                             </li>
                         </ul>
-                    </div>
-                    <div class="form-group">
-                        <p class="sub-t">Tags</p>
-                        <p class="text">{{currentEntity.tags}}</p>
-                    </div>
-                    <div class="form-group">
-                        <p class="sub-t" ng-if="currentEntity.validationErrors.length>0">Errors</p>
-                        <p class="text"><span ng-repeat="x in currentEntity.validationErrors">{{x}}<br></span></p>
-                    </div>
+                    </li>
+                    <li class="list-item" ng-if="currentEntity.validationErrors.length>0">
+                        <div class="list-t">Errors</div>
+                        <div class="list-descr">
+                            <span ng-repeat="x in currentEntity.validationErrors">{{x}}<br></span>
+                        </div>
+                    </li>
+                </ul>
 
-                    <va-widget-container group="moduleDetail" blade="blade" gridster-opts="{width: 380}"></va-widget-container>
-                </div>
+                <va-widget-container group="moduleDetail" blade="blade" gridster-opts="{width: 380}"></va-widget-container>
             </div>
         </div>
     </div>
