@@ -32,6 +32,19 @@ namespace Zendesk.HelpdeskModule.Web.Controllers.Api
                 return Ok(tickets);
         }
 
+        [HttpGet]
+        [ResponseType(typeof(Ticket[]))]
+        [Route("tickets/{status}")]
+        public IHttpActionResult GetTickets(string status)
+        {
+            if (!string.IsNullOrEmpty(status))
+            {
+                var tickets = _api.Tickets.GetAllTickets().Tickets.Where(t => t.Status == status).ToArray();
+                return Ok(tickets);
+            }
+            return BadRequest();
+        }
+
         //Get by email
         [HttpGet]
         [ResponseType(typeof(void))]
@@ -61,6 +74,41 @@ namespace Zendesk.HelpdeskModule.Web.Controllers.Api
 
             return Ok();
         }
+
+        //Get by status and requester email
+        [HttpGet]
+        [ResponseType(typeof(string))]
+        [Route("link/{email}")]
+        public IHttpActionResult GetLink(string email)
+        {
+            var retVal = string.Empty;
+            if (_api != null)
+            {
+                var users = _api.Users.SearchByEmail(email);
+                if (users.Users != null && users.Users.Any())
+                {
+                    var user = users.Users[0];
+                    if (user.Id.HasValue)
+                    {
+                        retVal = string.Format("https://{0}.zendesk.com/agent/users/{1}/requested_tickets", _zendeskSettings.Subdomain, user.Id.Value);
+                    }
+                }
+            }
+
+            return Ok(new[] { retVal });
+        }
+
+        //Get by status and requester email
+        [HttpGet]
+        [ResponseType(typeof(string))]
+        [Route("dashboard")]
+        public IHttpActionResult GetDashboardLink()
+        {
+            
+            return Ok(new[] { string.Format("https://{0}.zendesk.com/agent/dashboard", _zendeskSettings.Subdomain) });
+        }
+
+        
 
         private ZendeskApi GetZendeskApi(string subdomain, string token)
         {
