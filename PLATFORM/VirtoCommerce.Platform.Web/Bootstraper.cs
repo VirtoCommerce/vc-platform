@@ -1,5 +1,6 @@
 ﻿using Microsoft.Practices.Unity;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -130,7 +131,18 @@ namespace VirtoCommerce.Platform.Web
                 {
                     result = Assembly.Load(name);
                 }
-                catch (FileLoadException) { } // TODO: Add assembly discovery.
+                catch (FileLoadException)
+                {
+                    Debug.WriteLine("Cannot load assembly '{0}'.", name);
+                }
+
+                if (result == null && name.Version != null)
+                {
+                    var nameWithoutVersion = (AssemblyName)name.Clone();
+                    nameWithoutVersion.Version = null;
+
+                    result = LoadAssembly(nameWithoutVersion);
+                }
 
                 return result;
             }
