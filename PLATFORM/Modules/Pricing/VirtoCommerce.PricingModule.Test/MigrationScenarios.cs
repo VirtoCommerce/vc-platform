@@ -10,6 +10,13 @@ namespace VirtoCommerce.PricingModule.Test
     {
         [Fact]
         [Trait("Category", "CI")]
+        public void Always_fail()
+        {
+            Assert.True(false);
+        }
+
+        [Fact]
+        [Trait("Category", "CI")]
         public void Can_create_price_new_database()
         {
             DropDatabase();
