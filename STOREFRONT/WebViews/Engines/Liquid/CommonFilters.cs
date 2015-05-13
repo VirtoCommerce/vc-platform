@@ -69,6 +69,11 @@ namespace VirtoCommerce.Web.Views.Engines.Liquid
 
         public static string Md5(string input)
         {
+            if (input == null)
+            {
+                return null;
+            }
+
             byte[] hash;
             using (var md5 = MD5.Create())
             {
