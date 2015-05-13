@@ -55,7 +55,7 @@ namespace VirtoCommerce.Platform.Web
             GlobalConfiguration.Configuration.DependencyResolver = new UnityDependencyResolver(Container);
 
             //It necessary because WEB API does not get assemblies from AppDomain.
-            GlobalConfiguration.Configuration.Services.Replace(typeof(IAssembliesResolver), new CustomAssemblyResolver(from m in ModuleCatalog.Modules select m));
+            GlobalConfiguration.Configuration.Services.Replace(typeof(IAssembliesResolver), new CustomAssemblyResolver(ModuleCatalog.Modules));
 
             var moduleCatalog = ModuleCatalog as ManifestModuleCatalog;
             if (moduleCatalog != null)
@@ -87,14 +87,38 @@ namespace VirtoCommerce.Platform.Web
             {
                 var baseAssemblies = base.GetAssemblies();
                 var assemblies = new List<Assembly>(baseAssemblies);
-                assemblies.AddRange(_modules
+
+                var moduleAssemblies = _modules
                     .Where(m => !string.IsNullOrEmpty(m.Ref))
                     .Select(m => Assembly.LoadFrom(m.Ref))
-                );
+                    .ToList();
+
+                foreach (var moduleAssembly in moduleAssemblies)
+                {
+                    AddAssemblyWithReferencesRecursive(moduleAssembly, assemblies);
+                }
 
                 return assemblies;
             }
 
+
+            static void AddAssemblyWithReferencesRecursive(Assembly assembly, List<Assembly> assemblies)
+            {
+                if (!assemblies.Contains(assembly))
+                {
+                    assemblies.Add(assembly);
+
+                    var referencedAssemblies = assembly
+                        .GetReferencedAssemblies()
+                        .Select(Assembly.Load)
+                        .ToList();
+
+                    foreach (var referencedAssembly in referencedAssemblies)
+                    {
+                        AddAssemblyWithReferencesRecursive(referencedAssembly, assemblies);
+                    }
+                }
+            }
         }
     }
 }
