@@ -10,7 +10,7 @@
 <div class="blade-content __medium-wide">
     <div class="blade-inner">
         <div class="inner-block">
-            <div class="table-wrapper">
+            <div class="table-wrapper" ng-if="items.length > 0">
                 <table class="table">
                     <thead>
                         <tr>
@@ -37,10 +37,10 @@
                                 <div class="product-img">
                                     <div class="image" style="background-image: url({{data.imageUrl}})" ng-if="data.type!=='category' && data.imageUrl"></div>
                                     <i class="table-ico fa" ng-class="data.type == 'category' ? ' fa-folder' : ' fa-image'" ng-if="!data.imageUrl"></i>
-                                    <i class="table-ico fa fa-link " ng-if="blade.catalog.virtual"></i>
                                 </div>
                             </td>
-                            <td class="table-col __product-name" ng-click='selectItem($event, data)' class="product-name">
+                            <td class="table-col __product-name" ng-click='selectItem($event, data)'>
+                                <!-- <i class="table-ico fa fa-link " ng-if="blade.catalog.virtual"></i> -->
                                 <i class="table-ico fa fa-link" ng-if="hasLinks(data)"></i>
                                 {{data.name}}
                                 <ul class="menu __context" role="menu" id="cil_menu_{{data.id+blade.level}}">
@@ -58,6 +58,9 @@
                         </tr>
                     </tbody>
                 </table>
+            </div>
+            <div class="note" ng-if="items.length == 0">
+                No data
             </div>
         </div>
     </div>
