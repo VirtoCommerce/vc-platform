@@ -1,46 +1,20 @@
 ﻿angular.module('platformWebApp')
-.controller('platformWebApp.moduleDetailController', ['$scope', 'platformWebApp.dialogService', 'platformWebApp.bladeNavigationService', 'platformWebApp.modules', 'platformWebApp.settings', function ($scope, dialogService, bladeNavigationService, modules, settings) {
-    $scope.selectedEntityId = null;
+.controller('platformWebApp.moduleDetailController', ['$scope', 'platformWebApp.dialogService', 'platformWebApp.bladeNavigationService', 'platformWebApp.modules', function ($scope, dialogService, bladeNavigationService, modules) {
 
     $scope.blade.refresh = function () {
-        if($scope.blade.currentEntity) {
-            initializeBlade($scope.blade.currentEntity);
-        } else {
-            modules.get({ id: $scope.blade.currentEntityId }, function (data) {
-                initializeBlade(data);
-            });
-        }
-    }
-
-    function initializeBlade(data) {
-        $scope.blade.currentEntity = angular.copy(data);
-        $scope.blade.origEntity = data;
-        $scope.blade.isLoading = false;
-
-        $scope.blade.currentEntity.tags = $scope.blade.currentEntity.tags.split(' ');
-    };
-
-    $scope.blade.onClose = function (closeCallback) {
-        closeChildrenBlades();
-        closeCallback();
-    };
-
-    function closeChildrenBlades() {
-        angular.forEach($scope.blade.childrenBlades.slice(), function (child) {
-            bladeNavigationService.closeBlade(child);
+        modules.get({ id: $scope.blade.currentEntityId }, function(data) {
+            initializeBlade(data);
         });
     }
 
-    $scope.openModule = function(module) {
-        var newBlade = {
-            id: 'moduleDetails',
-            title: 'Module information',
-            currentEntityId: module,
-            controller: 'platformWebApp.moduleDetailController',
-            template: 'Scripts/app/packaging/blades/module-detail.tpl.html'
-        };
-
-        bladeNavigationService.showBlade(newBlade, $scope.blade.parentBlade);
+    function initializeBlade(data) {
+        data.tags = data.tags.split(' ');
+        $scope.blade.currentEntity = data;
+        $scope.blade.isLoading = false;
+    };
+    
+    $scope.openModule = function (module) {
+        $scope.blade.parentBlade.selectItem(module);
     }
 
     $scope.bladeToolbarCommands = [
@@ -69,8 +43,7 @@
             executeMethod: function () {
                 var newBlade = {
                     id: 'moduleSettingsSection',
-                    moduleId: $scope.blade.currentEntity.id,
-                    // parentWidget: $scope.widget,
+                    moduleId: $scope.blade.currentEntityId,
                     title: 'Module settings',
                     //subtitle: '',
                     controller: 'platformWebApp.settingsDetailController',
@@ -85,8 +58,6 @@
     ];
 
     function openUpdateEntityBlade() {
-        closeChildrenBlades();
-
         var newBlade = {
             id: "moduleWizard",
             title: "Module update",

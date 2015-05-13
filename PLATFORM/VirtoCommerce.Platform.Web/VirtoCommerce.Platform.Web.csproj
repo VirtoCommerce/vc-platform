@@ -297,6 +297,7 @@
     <Content Include="Scripts\app\packaging\blades\module-detail.tpl.html" />
     <Content Include="Scripts\app\packaging\blades\modules-list.js" />
     <Content Include="Scripts\app\packaging\blades\modules-list.tpl.html" />
+    <Content Include="Scripts\common\security\blades\account-detail-toolbar.tpl.html" />
     <Content Include="Scripts\common\templates\home.tpl.html" />
     <Content Include="Scripts\app\packaging\packaging.js" />
     <Content Include="Scripts\app\packaging\resources\modules.js" />

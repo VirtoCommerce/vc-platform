@@ -906,7 +906,7 @@ namespace VirtoCommerce.Web.Models.Services
         {
             var tagQuery = new TagQuery();
 
-            var customerTags = SiteContext.Current.Customer.Tags;
+            var customerTags = SiteContext.Current.Customer != null ? SiteContext.Current.Customer.Tags : null;
 
             if (customerTags != null)
             {

@@ -2,7 +2,7 @@
     <div class="form-input" ng-if="blade.currentEntity.requireLicenseAcceptance">
         <div class="form-control __checkbox">
             <label class="form-label">
-                <!--currentEntity.validationErrors.length>0 ||-->
+                <!--blade.currentEntity.validationErrors.length>0 ||-->
                 <input type="checkbox" ng-model="blade.currentEntity.licenseAccepted" ng-disabled="!blade.currentEntity || isInstalling">
                 <span class="check"></span>
                 <span class="name">I accept the <a ng-href="{{blade.currentEntity.licenseUrl}}" ng-if="blade.currentEntity.licenseUrl" target="_blank">License</a> agreement</span>
@@ -16,7 +16,7 @@
 <div class="blade-content __gray">
     <div class="blade-inner">
         <div class="inner-block">
-            <div class="form" ng-if="!blade.currentEntity">
+            <div class="form" ng-if="!blade.currentEntity && !blade.isLoading">
                 <div class="form-group">
                     <label class="form-label">Select module file:</label>
                     <div class="form-input">
@@ -80,7 +80,7 @@
                     </li>
                 </ul>
 
-                <va-widget-container group="moduleDetail" blade="blade" gridster-opts="{width: 380}"></va-widget-container>
+                <va-widget-container group="moduleDetail" blade="blade" gridster-opts="{width: 380}" ng-if="!blade.mode"></va-widget-container>
             </div>
         </div>
     </div>
