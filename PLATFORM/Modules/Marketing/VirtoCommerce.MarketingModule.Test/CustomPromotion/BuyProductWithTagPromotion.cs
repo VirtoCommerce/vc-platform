@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using VirtoCommerce.Domain.Common;
 using VirtoCommerce.Domain.Marketing.Model;
 using VirtoCommerce.MarketingModule.Data;
 
@@ -19,7 +20,7 @@ namespace VirtoCommerce.MarketingModule.Test.CustomPromotion
 			_discountAmount = discountAmount;
 		}
 
-		public override PromotionReward[] EvaluatePromotion(IPromotionEvaluationContext context)
+		public override PromotionReward[] EvaluatePromotion(IEvaluationContext context)
 		{
 			var retVal = new List<PromotionReward>();
 			var promoContext = context as PromotionEvaluationContext;

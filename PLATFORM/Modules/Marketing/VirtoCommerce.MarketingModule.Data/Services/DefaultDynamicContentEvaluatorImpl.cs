@@ -9,6 +9,7 @@ using VirtoCommerce.Domain.Marketing.Services;
 using VirtoCommerce.MarketingModule.Data.Repositories;
 using VirtoCommerce.Domain.Marketing.Model;
 using VirtoCommerce.Platform.Core.Caching;
+using VirtoCommerce.Domain.Common;
 
 namespace VirtoCommerce.MarketingModule.Data.Services
 {
@@ -23,7 +24,7 @@ namespace VirtoCommerce.MarketingModule.Data.Services
 		}
 		#region IMarketingDynamicContentEvaluator Members
 
-		public DynamicContentItem[] EvaluateItems(IDynamicContentEvaluationContext context)
+		public DynamicContentItem[] EvaluateItems(IEvaluationContext context)
 		{
 			var dynamicContext = context as DynamicContentEvaluationContext;
 			if(context == null)

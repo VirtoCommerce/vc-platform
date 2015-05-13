@@ -44,26 +44,34 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Promotion\Conditions\BlockCartCondition.cs" />
-    <Compile Include="Promotion\Conditions\BlockCatalogCondition.cs" />
-    <Compile Include="Promotion\Conditions\BlockConditionAndOr.cs" />
-    <Compile Include="Promotion\Conditions\BlockCustomerCondition.cs" />
-    <Compile Include="Promotion\Conditions\ConditionAtCartItemExtendedTotal.cs" />
-    <Compile Include="Promotion\Conditions\ConditionAtNumItemsInCart.cs" />
-    <Compile Include="Promotion\Conditions\ConditionAtNumItemsOfCategoryAreInCart.cs" />
-    <Compile Include="Promotion\Conditions\ConditionAtNumItemsOfEntryAreInCart.cs" />
+    <Compile Include="Content\Conditions\Browse\BlockBrowseCondition.cs" />
+    <Compile Include="Content\Conditions\GeoConditions\BlockGeoCondition.cs" />
+    <Compile Include="Content\Conditions\Browse\ConditionStoreSearchedPhrase.cs" />
+    <Compile Include="Content\Conditions\GeoConditions\ConditionGeoTimeZone.cs" />
+    <Compile Include="Content\Conditions\CompareConditionBase.cs" />
+    <Compile Include="Content\Conditions\MatchedConditionBase.cs" />
+    <Compile Include="Content\Conditions\GeoConditions\ConditionGeoZipCode.cs" />
+    <Compile Include="Content\DynamicContentExpressionTree.cs" />
+    <Compile Include="Promotion\Conditions\CartConditions\BlockCartCondition.cs" />
+    <Compile Include="Promotion\Conditions\CatalogConditions\BlockCatalogCondition.cs" />
+    <Compile Include="BlockConditionAndOr.cs" />
+    <Compile Include="Promotion\Conditions\CustomerConditions\BlockCustomerCondition.cs" />
+    <Compile Include="Promotion\Conditions\CartConditions\ConditionAtCartItemExtendedTotal.cs" />
+    <Compile Include="Promotion\Conditions\CartConditions\ConditionAtNumItemsInCart.cs" />
+    <Compile Include="Promotion\Conditions\CartConditions\ConditionAtNumItemsOfCategoryAreInCart.cs" />
+    <Compile Include="Promotion\Conditions\CartConditions\ConditionAtNumItemsOfEntryAreInCart.cs" />
     <Compile Include="Promotion\Conditions\ConditionBase.cs" />
-    <Compile Include="Promotion\Conditions\ConditionCartSubtotalLeast.cs" />
-    <Compile Include="Promotion\Conditions\ConditionCategoryIs.cs" />
-    <Compile Include="Promotion\Conditions\ConditionCodeContains.cs" />
-    <Compile Include="Promotion\Conditions\ConditionCurrencyIs.cs" />
-    <Compile Include="Promotion\Conditions\ConditionEntryIs.cs" />
-    <Compile Include="Promotion\Conditions\ConditionIsEveryone.cs" />
-    <Compile Include="Promotion\Conditions\ConditionIsFirstTimeBuyer.cs" />
-    <Compile Include="Promotion\Conditions\ConditionIsRegisteredUser.cs" />
+    <Compile Include="Promotion\Conditions\CartConditions\ConditionCartSubtotalLeast.cs" />
+    <Compile Include="Promotion\Conditions\CatalogConditions\ConditionCategoryIs.cs" />
+    <Compile Include="Promotion\Conditions\CatalogConditions\ConditionCodeContains.cs" />
+    <Compile Include="Promotion\Conditions\CatalogConditions\ConditionCurrencyIs.cs" />
+    <Compile Include="Promotion\Conditions\CatalogConditions\ConditionEntryIs.cs" />
+    <Compile Include="Promotion\Conditions\CustomerConditions\ConditionIsEveryone.cs" />
+    <Compile Include="Promotion\Conditions\CustomerConditions\ConditionIsFirstTimeBuyer.cs" />
+    <Compile Include="Promotion\Conditions\CustomerConditions\ConditionIsRegisteredUser.cs" />
     <Compile Include="DynamicExpression.cs" />
     <Compile Include="Promotion\Helpers\PromotionEvaluationContextExtension.cs" />
-    <Compile Include="Promotion\IConditionExpression.cs" />
+    <Compile Include="IConditionExpression.cs" />
     <Compile Include="Promotion\IRewardExpression.cs" />
     <Compile Include="Promotion\PromoDynamicExpressionTree.cs" />
     <Compile Include="Promotion\Rewards\BlockReward.cs" />
@@ -92,9 +100,7 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Content\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

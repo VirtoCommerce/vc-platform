@@ -29,6 +29,9 @@ namespace VirtoCommerce.CustomerModule.Data.Converters
 			var retVal = new coreModel.DynamicContentPublication();
 			retVal.InjectFrom(dbEntity);
 
+			retVal.PredicateSerialized = dbEntity.ConditionExpression;
+			retVal.PredicateVisualTreeSerialized = dbEntity.PredicateVisualTreeSerialized;
+
 			if (dbEntity.ContentItems != null)
 			{
 				retVal.ContentItems = dbEntity.ContentItems.Select(x => x.ContentItem.ToCoreModel()).ToList();
@@ -50,12 +53,13 @@ namespace VirtoCommerce.CustomerModule.Data.Converters
 			var retVal = new dataModel.DynamicContentPublishingGroup();
 			retVal.InjectFrom(publication);
 
-			retVal.ContentItems = new NullCollection<dataModel.PublishingGroupContentItem>();
+			retVal.ConditionExpression = publication.PredicateSerialized;
+			retVal.PredicateVisualTreeSerialized = publication.PredicateVisualTreeSerialized;
+
 			if (publication.ContentItems != null)
 			{
 				retVal.ContentItems = new ObservableCollection<dataModel.PublishingGroupContentItem>(publication.ContentItems.Select(x => new dataModel.PublishingGroupContentItem { DynamicContentPublishingGroupId = retVal.Id, DynamicContentItemId = x.Id }));
 			}
-			retVal.ContentPlaces = new NullCollection<dataModel.PublishingGroupContentPlace>();
 			if (publication.ContentPlaces != null)
 			{
 				retVal.ContentPlaces = new ObservableCollection<dataModel.PublishingGroupContentPlace>(publication.ContentPlaces.Select(x => new dataModel.PublishingGroupContentPlace { DynamicContentPublishingGroupId = retVal.Id, DynamicContentPlaceId = x.Id }));
@@ -74,7 +78,7 @@ namespace VirtoCommerce.CustomerModule.Data.Converters
 				throw new ArgumentNullException("target");
 
 			var patchInjection = new PatchInjection<dataModel.DynamicContentPublishingGroup>(x => x.Name, x => x.Description, x => x.IsActive,
-																								  x => x.StartDate, x => x.EndDate);
+																								  x => x.StartDate, x => x.EndDate, x=>x.PredicateVisualTreeSerialized, x=>x.ConditionExpression);
 
 			target.InjectFrom(patchInjection, source);
 

@@ -22,14 +22,9 @@ namespace VirtoCommerce.PricingModule.Data.Model
 		public decimal MinQuantity { get; set; }
 
 		#region Navigation Properties
-		[StringLength(128)]
-		[Required]
 		public string PricelistId { get; set; }
 
-        [Parent]
-		[ForeignKey("PricelistId")] 
 		public virtual Pricelist Pricelist { get; set; }
-	
 
 		#endregion
 

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using VirtoCommerce.Domain.Common;
 using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.Domain.Marketing.Model
@@ -32,15 +33,15 @@ namespace VirtoCommerce.Domain.Marketing.Model
 
 		public ICollection<PromotionUsage> Usages { get; set; }
 
-		public virtual PromotionReward[] EvaluatePromotion(IPromotionEvaluationContext context)
+		public virtual PromotionReward[] EvaluatePromotion(IEvaluationContext context)
 		{
 			return new PromotionReward[] { };
 		}
 
-		public virtual CatalogPromotionResult EvaluateCatalogPromotion(IPromotionEvaluationContext context)
-		{
-			return null;
-		}
+		//public virtual CatalogPromotionResult EvaluateCatalogPromotion(IEvaluationContext context)
+		//{
+		//	return null;
+		//}
 
 		public virtual PromotionReward[] ProcessEvent(IMarketingEvent marketingEvent)
 		{

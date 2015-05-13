@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Xml.Linq;
 using ExpressionSerialization;
 using Newtonsoft.Json;
+using VirtoCommerce.Domain.Common;
 using VirtoCommerce.Domain.Marketing.Model;
 using VirtoCommerce.MarketingModule.Data.Common;
 
@@ -17,7 +18,7 @@ namespace VirtoCommerce.MarketingModule.Data.Promotions
 		public string PredicateVisualTreeSerialized { get; set; }
 		public string RewardsSerialized { get; set; }
 
-		public override PromotionReward[] EvaluatePromotion(IPromotionEvaluationContext context)
+		public override PromotionReward[] EvaluatePromotion(IEvaluationContext context)
 		{
 			var retVal = new List<PromotionReward>();
 			var promoContext = context as PromotionEvaluationContext;
@@ -30,7 +31,7 @@ namespace VirtoCommerce.MarketingModule.Data.Promotions
 			var couponValid = Coupons != null  ? Coupons.Any(x=> String.Equals(x, promoContext.Coupon, StringComparison.InvariantCultureIgnoreCase)) : true;
 
 			//deserealize dynamic condition
-			var condition = SerializationUtil.DeserializeExpression<Func<IPromotionEvaluationContext, bool>>(PredicateSerialized);
+			var condition = SerializationUtil.DeserializeExpression<Func<IEvaluationContext, bool>>(PredicateSerialized);
 			//deserealize rewards
 			var rewards = JsonConvert.DeserializeObject<PromotionReward[]>(RewardsSerialized, new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All });
 			//Evaluate reward for all promoEntry in context

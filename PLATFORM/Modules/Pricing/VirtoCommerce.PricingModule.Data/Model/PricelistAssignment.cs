@@ -30,9 +30,6 @@ namespace VirtoCommerce.PricingModule.Data.Model
 
 
 		#region Navigation Properties
-
-		[StringLength(128)]
-		[Required]
 		public string PricelistId { get; set; }
 
 		public virtual Pricelist Pricelist { get; set; }

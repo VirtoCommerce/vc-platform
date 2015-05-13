@@ -59,6 +59,10 @@
     <Compile Include="Migrations\201504291837167_Initial.Designer.cs">
       <DependentUpon>201504291837167_Initial.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201505131253288_DropDescriminator.cs" />
+    <Compile Include="Migrations\201505131253288_DropDescriminator.Designer.cs">
+      <DependentUpon>201505131253288_DropDescriminator.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Model\Price.cs" />
     <Compile Include="Model\Pricelist.cs" />
@@ -94,6 +98,9 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
+    <EmbeddedResource Include="Migrations\201505131253288_DropDescriminator.resx">
+      <DependentUpon>201505131253288_DropDescriminator.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Repositories\Sql\Price.sql" />
   </ItemGroup>
   <ItemGroup>

@@ -49,10 +49,6 @@ namespace VirtoCommerce.PricingModule.Data.Converters
 			if (priceList.Prices != null)
 			{
 				retVal.Prices = new ObservableCollection<dataModel.Price>(priceList.Prices.Select(x=>x.ToDataModel()));
-				foreach(var price in retVal.Prices)
-				{
-					price.PricelistId = retVal.Id;
-				}
 			}
 
 			return retVal;

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using VirtoCommerce.Domain.Common;
 using VirtoCommerce.Domain.Marketing.Model;
 using VirtoCommerce.Domain.Marketing.Services;
 
@@ -17,7 +18,7 @@ namespace VirtoCommerce.MarketingModule.Data.Services
 		}
 
 		#region IMarketingEvaluator Members
-		public PromotionResult EvaluatePromotion(IPromotionEvaluationContext context)
+		public PromotionResult EvaluatePromotion(IEvaluationContext context)
 		{
 			var now = DateTime.UtcNow;
 			var promotions = _promotionService.GetActivePromotions();

@@ -19,12 +19,12 @@ namespace VirtoCommerce.MarketingModule.Web.Controllers.Api
     [CheckPermission(Permission = PredefinedPermissions.Query)]
     public class MarketingModulePromotionController : ApiController
     {
-		private readonly IMarketingExtensionManager _promotionManager;
+		private readonly IMarketingExtensionManager _marketingExtensionManager;
 		private readonly IPromotionService _promotionService;
 
 		public MarketingModulePromotionController(IPromotionService promotionService, 	IMarketingExtensionManager promotionManager)
 		{
-			_promotionManager = promotionManager;
+			_marketingExtensionManager = promotionManager;
 			_promotionService = promotionService;
 		}
 
@@ -38,7 +38,7 @@ namespace VirtoCommerce.MarketingModule.Web.Controllers.Api
 			var retVal = _promotionService.GetPromotionById(id);
 			if(retVal != null)
 			{
-				return Ok(retVal.ToWebModel(_promotionManager.PromotionDynamicExpressionTree as PromoDynamicExpressionTree)); 
+				return Ok(retVal.ToWebModel(_marketingExtensionManager.PromotionDynamicExpressionTree as PromoDynamicExpressionTree)); 
 			}
 			return NotFound();
 		}
@@ -53,7 +53,7 @@ namespace VirtoCommerce.MarketingModule.Web.Controllers.Api
             var retVal = new webModel.Promotion
             {
 				Type = typeof(DynamicPromotion).Name,
-				DynamicExpression = _promotionManager.PromotionDynamicExpressionTree as PromoDynamicExpressionTree,
+				DynamicExpression = _marketingExtensionManager.PromotionDynamicExpressionTree as PromoDynamicExpressionTree,
 				IsActive = true
             };
             return Ok(retVal);

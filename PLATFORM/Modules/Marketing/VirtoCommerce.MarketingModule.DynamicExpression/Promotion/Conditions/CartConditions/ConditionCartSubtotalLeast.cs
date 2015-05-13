@@ -1,4 +1,5 @@
 ﻿using System;
+using VirtoCommerce.Domain.Common;
 using VirtoCommerce.Domain.Marketing.Model;
 using linq = System.Linq.Expressions;
 
@@ -15,9 +16,9 @@ namespace VirtoCommerce.MarketingModule.Expressions.Promotion
 		/// ((PromotionEvaluationContext)x).GetCartTotalWithExcludings(ExcludingCategoryIds, ExcludingProductIds) > SubTotal
 		/// </summary>
 		/// <returns></returns>
-		public linq.Expression<Func<IPromotionEvaluationContext, bool>> GetConditionExpression()
+		public linq.Expression<Func<IEvaluationContext, bool>> GetConditionExpression()
 		{
-			var paramX = linq.Expression.Parameter(typeof(IPromotionEvaluationContext), "x");
+			var paramX = linq.Expression.Parameter(typeof(IEvaluationContext), "x");
 			var castOp = linq.Expression.MakeUnary(linq.ExpressionType.Convert, paramX, typeof(PromotionEvaluationContext));
 			var subTotal = linq.Expression.Constant(SubTotal);
 			var methodInfo = typeof(PromotionEvaluationContextExtension).GetMethod("GetCartTotalWithExcludings");
@@ -27,7 +28,7 @@ namespace VirtoCommerce.MarketingModule.Expressions.Promotion
 
 			var binaryOp = Exactly ? linq.Expression.Equal(methodCall, subTotal) : linq.Expression.GreaterThanOrEqual(methodCall, subTotal);
 
-			var retVal = linq.Expression.Lambda<Func<IPromotionEvaluationContext, bool>>(binaryOp, paramX);
+			var retVal = linq.Expression.Lambda<Func<IEvaluationContext, bool>>(binaryOp, paramX);
 
 			return retVal;
 		}

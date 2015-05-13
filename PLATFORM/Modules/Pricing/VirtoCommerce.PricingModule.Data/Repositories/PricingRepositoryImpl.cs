@@ -25,16 +25,26 @@ namespace VirtoCommerce.PricingModule.Data.Repositories
 			: base(nameOrConnectionString, null, interceptors)
 		{
 			this.Configuration.AutoDetectChangesEnabled = true;
-			this.Configuration.ProxyCreationEnabled = false;
+			this.Configuration.ProxyCreationEnabled = true;
 			Database.SetInitializer<PricingRepositoryImpl>(null);
 		}
 
 		protected override void OnModelCreating(DbModelBuilder modelBuilder)
 		{
-			MapEntity<Price>(modelBuilder, toTable: "Price");
-			MapEntity<Pricelist>(modelBuilder, toTable: "Pricelist");
-			MapEntity<PricelistAssignment>(modelBuilder, toTable: "PricelistAssignment");
-			
+			//MapEntity<Price>(modelBuilder, toTable: "Price");
+			//MapEntity<Pricelist>(modelBuilder, toTable: "Pricelist");
+			//MapEntity<PricelistAssignment>(modelBuilder, toTable: "PricelistAssignment");
+			modelBuilder.Entity<Price>().HasKey(x => x.Id).Property(x => x.Id);
+			modelBuilder.Entity<Price>().HasRequired(x => x.Pricelist).WithMany(x => x.Prices).HasForeignKey(x => x.PricelistId);
+			modelBuilder.Entity<Price>().ToTable("Price");
+
+			modelBuilder.Entity<Pricelist>().HasKey(x => x.Id).Property(x => x.Id);
+			modelBuilder.Entity<Pricelist>().ToTable("Pricelist");
+
+			modelBuilder.Entity<PricelistAssignment>().HasKey(x => x.Id).Property(x => x.Id);
+			modelBuilder.Entity<PricelistAssignment>().HasRequired(x => x.Pricelist).WithMany().HasForeignKey(x => x.PricelistId);
+			modelBuilder.Entity<PricelistAssignment>().ToTable("PricelistAssignment");
+
 			base.OnModelCreating(modelBuilder);
 		}
 

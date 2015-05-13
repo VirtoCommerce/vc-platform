@@ -14,6 +14,9 @@ namespace VirtoCommerce.Domain.Marketing.Model
 		public int Priority { get; set; }
 		public bool IsActive { get; set; }
 
+		public string PredicateSerialized { get; set; }
+		public string PredicateVisualTreeSerialized { get; set; }
+
 		public DateTime? StartDate { get; set; }
 		public DateTime? EndDate { get; set; }
 

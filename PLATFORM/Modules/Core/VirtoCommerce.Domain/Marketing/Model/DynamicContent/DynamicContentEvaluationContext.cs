@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using VirtoCommerce.Domain.Common;
 
 namespace VirtoCommerce.Domain.Marketing.Model.DynamicContent
 {
-	public class DynamicContentEvaluationContext :  IDynamicContentEvaluationContext
+	public class DynamicContentEvaluationContext :  EvaluationContextBase
 	{
 		public DynamicContentEvaluationContext()
 		{
@@ -24,5 +25,8 @@ namespace VirtoCommerce.Domain.Marketing.Model.DynamicContent
         public TagSet Tags { get; set; }
 
 		public DateTime ToDate { get; set; }
+
+
+
 	}
 }

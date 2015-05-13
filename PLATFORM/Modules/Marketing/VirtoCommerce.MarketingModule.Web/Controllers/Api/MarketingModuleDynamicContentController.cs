@@ -8,16 +8,19 @@ using VirtoCommerce.MarketingModule.Web.Converters;
 using VirtoCommerce.Platform.Core.Security;
 using webModel = VirtoCommerce.MarketingModule.Web.Model;
 using coreModel = VirtoCommerce.Domain.Marketing.Model;
+using VirtoCommerce.MarketingModule.Expressions.Content;
 namespace VirtoCommerce.MarketingModule.Web.Controllers.Api
 {
 	[RoutePrefix("api/marketing")]
     [CheckPermission(Permission = PredefinedPermissions.Query)]
     public class MarketingModuleDynamicContentController: ApiController
     {
+		private readonly IMarketingExtensionManager _marketingExtensionManager;
 		private readonly IDynamicContentService _dynamicContentService;
-		public MarketingModuleDynamicContentController(IDynamicContentService dynamicContentService)
+		public MarketingModuleDynamicContentController(IDynamicContentService dynamicContentService, IMarketingExtensionManager marketingExtensionManager)
 		{
 			_dynamicContentService = dynamicContentService;
+			_marketingExtensionManager = marketingExtensionManager;
 		}
 
 		// GET: api/marketing/contentitems/{id}
@@ -119,6 +122,20 @@ namespace VirtoCommerce.MarketingModule.Web.Controllers.Api
 			return StatusCode(HttpStatusCode.NoContent);
 		}
 
+		// GET: api/marketing/contentpublications/new
+		[HttpGet]
+		[ResponseType(typeof(webModel.Promotion))]
+		[Route("contentpublications/new")]
+		[CheckPermission(Permission = PredefinedPermissions.Manage)]
+		public IHttpActionResult GetNewDynamicPublication()
+		{
+			var retVal = new webModel.DynamicContentPublication
+			{
+				DynamicExpression = _marketingExtensionManager.DynamicContentExpressionTree as DynamicContentExpressionTree,
+				IsActive = true
+			};
+			return Ok(retVal);
+		}
 
 		// GET: api/marketing/contentpublications/{id}
 		[HttpGet]
@@ -129,7 +146,7 @@ namespace VirtoCommerce.MarketingModule.Web.Controllers.Api
 			var retVal = _dynamicContentService.GetPublicationById(id);
 			if (retVal != null)
 			{
-				return Ok(retVal.ToWebModel());
+				return Ok(retVal.ToWebModel(_marketingExtensionManager.DynamicContentExpressionTree as DynamicContentExpressionTree));
 			}
 			return NotFound();
 		}

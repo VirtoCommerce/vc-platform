@@ -5,18 +5,18 @@ using System.Text;
 using System.Threading.Tasks;
 using VirtoCommerce.Domain.Cart.Model;
 using VirtoCommerce.Domain.Catalog.Model;
+using VirtoCommerce.Domain.Common;
 using VirtoCommerce.Domain.Marketing.Model;
 
 namespace VirtoCommerce.Domain.Marketing.Model
 {
-	public class PromotionEvaluationContext : IPromotionEvaluationContext
+	public class PromotionEvaluationContext : EvaluationContextBase
 	{
 		public PromotionEvaluationContext()
 		{
 			IsEveryone = true;
 			CartPromoEntries = new List<ProductPromoEntry>();
 			PromoEntries = new List<ProductPromoEntry>();
-			Attributes = new Dictionary<string, string>();
 		}
 
 
@@ -66,7 +66,6 @@ namespace VirtoCommerce.Domain.Marketing.Model
 		/// </summary>
 		public ProductPromoEntry PromoEntry { get; set; }
 
-		public Dictionary<string, string> Attributes { get; set; }
 	
 	}
 	

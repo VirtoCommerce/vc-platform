@@ -8,6 +8,7 @@ using VirtoCommerce.MarketingModule.Data;
 using linq = System.Linq.Expressions;
 using VirtoCommerce.MarketingModule.Expressions;
 using VirtoCommerce.MarketingModule.Expressions.Promotion;
+using VirtoCommerce.Domain.Common;
 
 namespace VirtoCommerce.MarketingModule.Test.CustomDynamicPromotionExpressions
 {
@@ -21,16 +22,16 @@ namespace VirtoCommerce.MarketingModule.Test.CustomDynamicPromotionExpressions
 		/// ((PromotionEvaluationContext)x).CheckItemTags() > NumItem
 		/// </summary>
 		/// <returns></returns>
-		linq.Expression<Func<IPromotionEvaluationContext, bool>> IConditionExpression.GetConditionExpression()
+		linq.Expression<Func<IEvaluationContext, bool>> IConditionExpression.GetConditionExpression()
 		{
-			var paramX = linq.Expression.Parameter(typeof(IPromotionEvaluationContext), "x");
+			var paramX = linq.Expression.Parameter(typeof(IEvaluationContext), "x");
 			var castOp = linq.Expression.Convert(paramX, typeof(PromotionEvaluationContext));
 
 			var tagsArray = linq.Expression.NewArrayInit(typeof(string), Tags.Select(x=> linq.Expression.Constant(x)));
 
 			var methodInfo = typeof(CustomPromotionEvaluationContextExtension).GetMethod("CheckItemTags");
 			var methodCall = linq.Expression.Call(null, methodInfo, castOp, tagsArray);
-			var retVal = linq.Expression.Lambda<Func<IPromotionEvaluationContext, bool>>(methodCall, paramX);
+			var retVal = linq.Expression.Lambda<Func<IEvaluationContext, bool>>(methodCall, paramX);
 			return retVal;
 		}
 

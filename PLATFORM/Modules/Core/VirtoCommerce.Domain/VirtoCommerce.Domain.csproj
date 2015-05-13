@@ -94,7 +94,9 @@
     <Compile Include="Catalog\Services\IPropertyService.cs" />
     <Compile Include="Commerce\Model\SeoUrlKeyword.cs" />
     <Compile Include="Commerce\Model\SeoUrlKeywordTypes.cs" />
+    <Compile Include="Common\EvaluationContextBase.cs" />
     <Compile Include="Common\IDynamicExpression.cs" />
+    <Compile Include="Common\IEvaluationContext.cs" />
     <Compile Include="Common\IWorkflowService.cs" />
     <Compile Include="Common\ObservableWorkflowService.cs" />
     <Compile Include="Common\ObserverFactory.cs" />
@@ -117,7 +119,6 @@
     <Compile Include="Inventory\Services\IInventoryService.cs" />
     <Compile Include="Marketing\Model\DynamicContent\DynamicContentEvaluationContext.cs" />
     <Compile Include="Marketing\Model\DynamicContent\DynamicContentFolder.cs" />
-    <Compile Include="Marketing\Model\DynamicContent\IDynamicContentEvaluationContext.cs" />
     <Compile Include="Marketing\Model\DynamicContent\IsHasFolder.cs" />
     <Compile Include="Marketing\Model\DynamicContent\TagSet.cs" />
     <Compile Include="Marketing\Model\Promotions\CatalogPromotionResult.cs" />
@@ -128,7 +129,6 @@
     <Compile Include="Marketing\Model\DynamicContent\Property.cs" />
     <Compile Include="Marketing\Model\DynamicContent\PropertyValueType.cs" />
     <Compile Include="Marketing\Model\Promotions\IMarketingEvent.cs" />
-    <Compile Include="Marketing\Model\Promotions\IPromotionEvaluationContext.cs" />
     <Compile Include="Marketing\Model\Promotions\DefaultOrderEventType.cs" />
     <Compile Include="Marketing\Model\Promotions\MarketingEvent.cs" />
     <Compile Include="Marketing\Model\Promotions\ProductPromoEntry.cs" />

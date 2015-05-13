@@ -5,6 +5,7 @@ using VirtoCommerce.Domain.Marketing.Services;
 using VirtoCommerce.MarketingModule.Data.Repositories;
 using VirtoCommerce.MarketingModule.Data.Services;
 using VirtoCommerce.MarketingModule.Expressions;
+using contentExpression = VirtoCommerce.MarketingModule.Expressions.Content;
 using VirtoCommerce.MarketingModule.Expressions.Promotion;
 using VirtoCommerce.MarketingModule.Web.Model;
 using VirtoCommerce.Platform.Core.Modularity;
@@ -38,8 +39,7 @@ namespace VirtoCommerce.MarketingModule.Web
 			_container.RegisterType<IMarketingRepository>(new InjectionFactory(c => new MarketingRepositoryImpl("VirtoCommerce", new EntityPrimaryKeyGeneratorInterceptor(), new AuditableInterceptor())));
           
             var promotionExtensionManager = new InMemoryExtensionManagerImpl();
-            promotionExtensionManager.PromotionDynamicExpressionTree = GetDynamicExpression();
-
+            
             _container.RegisterInstance<IMarketingExtensionManager>(promotionExtensionManager);
             _container.RegisterType<IPromotionService, PromotionServiceImpl>();
 			_container.RegisterType<IMarketingDynamicContentEvaluator, DefaultDynamicContentEvaluatorImpl>();
@@ -50,12 +50,33 @@ namespace VirtoCommerce.MarketingModule.Web
 
         public void PostInitialize()
         {
+			var promotionExtensionManager = _container.Resolve<IMarketingExtensionManager>();
+			promotionExtensionManager.PromotionDynamicExpressionTree = GetPromotionDynamicExpression();
+			promotionExtensionManager.DynamicContentExpressionTree = GetContentDynamicExpression();
+
             EnsureRootFoldersExist(new[] { MarketingConstants.ContentPlacesRootFolderId, MarketingConstants.CotentItemRootFolderId });
         }
 
         #endregion
 
-        private static IDynamicExpression GetDynamicExpression()
+		private static IDynamicExpression GetContentDynamicExpression()
+		{
+			var geoBlock = new contentExpression.BlockGeoCondition();
+			geoBlock.AvailableChildren = new DynamicExpression[] { new contentExpression.ConditionGeoTimeZone(), new contentExpression.ConditionGeoTimeZone() }.ToList();
+
+			var browseBlock = new contentExpression.BlockBrowseCondition();
+			browseBlock.AvailableChildren = new DynamicExpression[] { new contentExpression.ConditionStoreSearchedPhrase() }.ToList();
+
+			var rootBlocks = new DynamicExpression[] { geoBlock, browseBlock }.ToList();
+			var retVal = new contentExpression.DynamicContentExpressionTree()
+			{
+				Children = rootBlocks,
+				AvailableChildren = rootBlocks
+			};
+			return retVal;
+		}
+
+        private static IDynamicExpression GetPromotionDynamicExpression()
         {
             var customerConditionBlock = new BlockCustomerCondition();
             customerConditionBlock.AvailableChildren = new DynamicExpression[] { new ConditionIsEveryone(), new ConditionIsFirstTimeBuyer(), 

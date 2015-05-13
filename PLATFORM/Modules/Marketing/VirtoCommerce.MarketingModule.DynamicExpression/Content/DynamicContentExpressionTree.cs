@@ -5,11 +5,12 @@ using System.Web;
 using Newtonsoft.Json;
 using VirtoCommerce.Domain.Common;
 using VirtoCommerce.Domain.Marketing.Model;
+using VirtoCommerce.Domain.Marketing.Model.DynamicContent;
 using VirtoCommerce.Platform.Core.Common;
 
-namespace VirtoCommerce.MarketingModule.Expressions.Promotion
+namespace VirtoCommerce.MarketingModule.Expressions.Content
 {
-	public class PromoDynamicExpressionTree : DynamicExpression, IConditionExpression, IRewardExpression
+	public class DynamicContentExpressionTree : DynamicExpression, IConditionExpression
 	{
 		#region IConditionExpression Members
 
@@ -20,17 +21,6 @@ namespace VirtoCommerce.MarketingModule.Expressions.Promotion
 			{
 				retVal = retVal.And(expression);
 			}
-			return retVal;
-		}
-
-		#endregion
-
-		#region IActionExpression Members
-
-		public PromotionReward[] GetRewards()
-		{
-			var retVal = Children.OfType<IRewardExpression>().SelectMany(x => x.GetRewards()).OfType<PromotionReward>().ToArray();
-
 			return retVal;
 		}
 

@@ -58,7 +58,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Common\SerializationUtil.cs" />
-    <Compile Include="Converters\ContenPublicationConverter.cs" />
+    <Compile Include="Converters\ContentPublicationConverter.cs" />
     <Compile Include="Converters\ContentFolderConverter.cs" />
     <Compile Include="Converters\ContentItemConverter.cs" />
     <Compile Include="Converters\ContentPlaceConverter.cs" />
@@ -111,6 +111,7 @@
       <DependentUpon>201504301503151_Initial.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
