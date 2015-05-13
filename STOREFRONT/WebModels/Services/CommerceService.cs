@@ -616,7 +616,7 @@ namespace VirtoCommerce.Web.Models.Services
                     new ProductPromoEntry
                     {
                         CatalogId = product.CatalogId,
-                        Price = price.Sale.HasValue ? price.Sale.Value : price.List,
+                        Price = price != null ? (price.Sale.HasValue ? price.Sale.Value : price.List) : 0M,
                         ProductId = product.Id,
                         Quantity = 1
                     }
@@ -629,7 +629,14 @@ namespace VirtoCommerce.Web.Models.Services
 
             //var inventories = await this.GetItemInventoriesAsync(variationIds);
 
-            return product.AsWebModel(prices, rewards/*, inventories*/);
+            Collection collection = null;
+            var collectionKeyword = HttpContext.Current.Request.Url.Segments[2];
+            if (collectionKeyword != null)
+            {
+                collection = await GetCollectionByKeywordAsync(SiteContext.Current, collectionKeyword.Trim('/'));
+            }
+
+            return product.AsWebModel(prices, rewards/*, inventories*/, collection);
         }
 
         public async Task<ItemInventory> GetItemInventoryAsync(string itemId)

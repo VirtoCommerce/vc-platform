@@ -330,7 +330,12 @@ namespace VirtoCommerce.Web
 
             if (context.Request.Cookies[CurrencyCookie] != null)
             {
-                store.Currency = context.Request.Cookies[CurrencyCookie];
+                var shopExistingCurrency = store.Currencies.FirstOrDefault(c => c == context.Request.Cookies[CurrencyCookie]);
+
+                if (shopExistingCurrency != null)
+                {
+                    store.Currency = context.Request.Cookies[CurrencyCookie];
+                }
             }
 
             return store;

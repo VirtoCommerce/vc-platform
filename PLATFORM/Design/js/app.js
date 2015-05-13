@@ -113,9 +113,10 @@ angular.module('app')
             minRows: 2, // the minimum height of the grid, in rows
             maxRows: 100,
             columns: 6, // the width of the grid, in columns
-            colWidth: 'auto', // can be an integer or 'auto'.  'auto' uses the pixel width of the element divided by 'columns'
+            colWidth: '130', // can be an integer or 'auto'.  'auto' uses the pixel width of the element divided by 'columns'
             rowHeight: 'match', // can be an integer or 'match'.  Match uses the colWidth, giving you square widgets.
             margins: [10, 10], // the pixel distance between each widget
+            outerMargin: false,
             defaultSizeX: 2, // the default width of a gridster item, if not specifed
             defaultSizeY: 1, // the default height of a gridster item, if not specified
             mobileBreakPoint: 600, // if the screen is not wider that this, remove the grid layout and stack the items

@@ -1,5 +1,7 @@
 ﻿using Microsoft.Practices.Unity;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Web.Http;
@@ -110,7 +112,8 @@ namespace VirtoCommerce.Platform.Web
 
                     var referencedAssemblies = assembly
                         .GetReferencedAssemblies()
-                        .Select(Assembly.Load)
+                        .Select(LoadAssembly)
+                        .Where(a => a != null)
                         .ToList();
 
                     foreach (var referencedAssembly in referencedAssemblies)
@@ -118,6 +121,30 @@ namespace VirtoCommerce.Platform.Web
                         AddAssemblyWithReferencesRecursive(referencedAssembly, assemblies);
                     }
                 }
+            }
+
+            static Assembly LoadAssembly(AssemblyName name)
+            {
+                Assembly result = null;
+
+                try
+                {
+                    result = Assembly.Load(name);
+                }
+                catch (FileLoadException)
+                {
+                    Debug.WriteLine("Cannot load assembly '{0}'.", name);
+                }
+
+                if (result == null && name.Version != null)
+                {
+                    var nameWithoutVersion = (AssemblyName)name.Clone();
+                    nameWithoutVersion.Version = null;
+
+                    result = LoadAssembly(nameWithoutVersion);
+                }
+
+                return result;
             }
         }
     }
