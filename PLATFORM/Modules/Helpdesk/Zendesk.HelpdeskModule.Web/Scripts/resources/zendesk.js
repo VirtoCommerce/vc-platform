@@ -7,6 +7,13 @@
         }
     ])
 
+    .factory('virtoCommerce.helpdeskModule.zendesk_dashboard_link', [
+        '$resource', function ($resource) {
+            return $resource('api/help/link/:email', { email: '@Email' }, {
+                update: { method: 'PUT' }
+            });
+        }
+    ])
 
     .factory('virtoCommerce.helpdeskModule.user_tickets', [
         '$resource', function ($resource) {

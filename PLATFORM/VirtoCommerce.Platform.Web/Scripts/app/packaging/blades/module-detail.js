@@ -1,21 +1,20 @@
 ﻿angular.module('platformWebApp')
 .controller('platformWebApp.moduleDetailController', ['$scope', 'platformWebApp.dialogService', 'platformWebApp.bladeNavigationService', 'platformWebApp.modules', function ($scope, dialogService, bladeNavigationService, modules) {
 
+    $scope.blade.refresh = function () {
+        modules.get({ id: $scope.blade.currentEntityId }, function(data) {
+            initializeBlade(data);
+        });
+    }
+
     function initializeBlade(data) {
-        $scope.currentEntity = angular.copy(data);
-        $scope.blade.origEntity = data;
+        data.tags = data.tags.split(' ');
+        $scope.blade.currentEntity = data;
         $scope.blade.isLoading = false;
     };
-
-    $scope.blade.onClose = function (closeCallback) {
-        closeChildrenBlades();
-        closeCallback();
-    };
-
-    function closeChildrenBlades() {
-        angular.forEach($scope.blade.childrenBlades.slice(), function (child) {
-            bladeNavigationService.closeBlade(child);
-        });
+    
+    $scope.openModule = function (module) {
+        $scope.blade.parentBlade.selectItem(module);
     }
 
     $scope.bladeToolbarCommands = [
@@ -38,12 +37,27 @@
                 return $scope.currentEntity && $scope.currentEntity.isRemovable;
             },
             permission: 'platform:module:manage'
+        },
+        {
+            name: "Settings", icon: 'fa fa-wrench',
+            executeMethod: function () {
+                var newBlade = {
+                    id: 'moduleSettingsSection',
+                    moduleId: $scope.blade.currentEntityId,
+                    title: 'Module settings',
+                    //subtitle: '',
+                    controller: 'platformWebApp.settingsDetailController',
+                    template: 'Scripts/app/settings/blades/settings-detail.tpl.html'
+                };
+                bladeNavigationService.showBlade(newBlade, $scope.blade);
+            },
+            canExecuteMethod: function () {
+                return true;
+            }
         }
     ];
 
     function openUpdateEntityBlade() {
-        closeChildrenBlades();
-
         var newBlade = {
             id: "moduleWizard",
             title: "Module update",
@@ -84,5 +98,5 @@
     $scope.bladeHeadIco = 'fa fa-cubes';
 
     // on load
-    initializeBlade($scope.blade.currentEntity);
+    $scope.blade.refresh();
 }]);

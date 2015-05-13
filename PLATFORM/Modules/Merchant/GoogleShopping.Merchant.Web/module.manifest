@@ -20,8 +20,8 @@
   <copyright>Copyright © 2011-2015 Virto Commerce. All rights reserved</copyright>
   <tags>google shopping merchant</tags>
 
-  <assemblyFile>GoogleShopping.MerchantModule.Web.dll</assemblyFile>
-  <moduleType>GoogleShopping.MerchantModule.Web.Module, GoogleShopping.MerchantModule.Web</moduleType>
+  <!--<assemblyFile>GoogleShopping.MerchantModule.Web.dll</assemblyFile>
+  <moduleType>GoogleShopping.MerchantModule.Web.Module, GoogleShopping.MerchantModule.Web</moduleType>-->
   <!--<styles>
 		<directory virtualPath="$/Content/css" searchPattern="*.css" searchSubdirectories="true" />
 	</styles>-->

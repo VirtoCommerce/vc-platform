@@ -11,13 +11,13 @@
         });
     };
 
-    $scope.selectItem = function (listItem) {
-        $scope.selectedEntityId = listItem.id;
+    $scope.blade.selectItem = function (id) {
+        $scope.selectedEntityId = id;
 
         var newBlade = {
             id: 'moduleDetails',
             title: 'Module information',
-            currentEntity: listItem,
+            currentEntityId: id,
             controller: 'platformWebApp.moduleDetailController',
             template: 'Scripts/app/packaging/blades/module-detail.tpl.html'
         };

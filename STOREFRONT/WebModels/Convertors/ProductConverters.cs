@@ -42,15 +42,17 @@ namespace VirtoCommerce.Web.Convertors
 
             var pathTemplate = VirtualPathUtility.ToAbsolute("~/products/{0}");
             var description = product.EditorialReviews != null ?
-                product.EditorialReviews.FirstOrDefault(er => er.ReviewType.Equals("quickreview", StringComparison.OrdinalIgnoreCase)) : null;
+                product.EditorialReviews.FirstOrDefault() : null;
             var fieldsCollection = new MetafieldsCollection("global", product.Properties);
             var options = GetOptions(product.Properties).Select(o => o.Key).ToArray();
 
+            var keywords = product.Seo != null ? product.Seo.Select(k => k.AsWebModel()) : null;
+
             productModel.Description = description != null ? description.Content : null;
-            productModel.Handle = product.Code;
+            productModel.Handle = keywords != null ? keywords.Select(k => k.Keyword).First() : product.Code;
             productModel.Id = product.Id;
             productModel.Images = new ItemCollection<Image>(product.Images.Select(i => i.AsWebModel(product.Name, product.Id)));
-            productModel.Keywords = product.Seo != null ? product.Seo.Select(k => k.AsWebModel()) : null;
+            productModel.Keywords = keywords;
             productModel.Metafields = new MetaFieldNamespacesCollection(new[] { fieldsCollection });
             productModel.Options = options;
             productModel.Tags = null; // TODO
@@ -86,29 +88,21 @@ namespace VirtoCommerce.Web.Convertors
 
             var productRewards = rewards.Where(r => r.RewardType == "CatalogItemAmountReward" && r.ProductId == product.Id);
 
-            if (product.Variations == null)
-            {
-                var price = prices.FirstOrDefault(p => p.ProductId == product.Id);
-
-                //if (price != null)
-                //{
-                    var variant = product.AsVariantWebModel(price, options, productRewards);
-
-                    productModel.Variants.Add(variant);
-                //}
-            }
-            else
+            if (product.Variations != null)
             {
                 foreach (var variation in product.Variations)
                 {
                     var price = prices.FirstOrDefault(p => p.ProductId == variation.Id);
 
-                    //if (price != null)
-                    //{
-                        productModel.Variants.Add(variation.AsWebModel(price, options, productRewards));
-                    //}
+                    productModel.Variants.Add(variation.AsWebModel(price, options, productRewards));
                 }
             }
+
+            var productPrice = prices.FirstOrDefault(p => p.ProductId == product.Id);
+
+            var variant = product.AsVariantWebModel(productPrice, options, productRewards);
+
+            productModel.Variants.Add(variant);
 
             return productModel;
         }
