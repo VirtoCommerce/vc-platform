@@ -80,6 +80,10 @@
     <Compile Include="Migrations\201505111257502_CategoryRelation.Designer.cs">
       <DependentUpon>201505111257502_CategoryRelation.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201505130951362_ItemCodeUniqueConstrain.cs" />
+    <Compile Include="Migrations\201505130951362_ItemCodeUniqueConstrain.Designer.cs">
+      <DependentUpon>201505130951362_ItemCodeUniqueConstrain.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Model\Association.cs" />
     <Compile Include="Model\AssociationGroup.cs" />
@@ -144,6 +148,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201505111257502_CategoryRelation.resx">
       <DependentUpon>201505111257502_CategoryRelation.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201505130951362_ItemCodeUniqueConstrain.resx">
+      <DependentUpon>201505130951362_ItemCodeUniqueConstrain.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Repositories\Sql\Association.sql" />
   </ItemGroup>

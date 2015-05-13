@@ -8,7 +8,7 @@
 	};
 
 	blade.addPlaceholder = function () {
-		var data = { name: '', description: '', imageUrl: 'http://mini.s-shot.ru/1024x768/JPEG/1024/Z100/?kitmall.ru', folderId: blade.choosenFolder };
+		var data = { name: '', description: '', imageUrl: 'http://virtotest.blob.core.windows.net/catalog/9f0113a5-fa34-4d83-bad8-2c9d6fdc763d.png', folderId: blade.choosenFolder };
 		blade.parentBlade.addNewPlaceholder(data);
 	};
 

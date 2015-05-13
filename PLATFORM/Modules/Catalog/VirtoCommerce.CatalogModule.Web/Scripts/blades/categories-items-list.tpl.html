@@ -37,11 +37,10 @@
                                 <div class="product-img">
                                     <div class="image" style="background-image: url({{data.imageUrl}})" ng-if="data.type!=='category' && data.imageUrl"></div>
                                     <i class="table-ico fa" ng-class="data.type == 'category' ? ' fa-folder' : ' fa-image'" ng-if="!data.imageUrl"></i>
-                                    <i class="table-ico fa fa-link " ng-if="blade.catalog.virtual"></i>
                                 </div>
                             </td>
                             <td class="table-col __product-name" ng-click='selectItem($event, data)' class="product-name">
-                                <i class="table-ico fa fa-link" ng-if="hasLinks(data)"></i>
+                                <i class="table-ico fa fa-link" ng-if="hasLinks(data)" title="This category is linked "></i>
                                 {{data.name}}
                                 <ul class="menu __context" role="menu" id="cil_menu_{{data.id+blade.level}}">
                                     <li class="menu-item" ng-click='edit(data)'>

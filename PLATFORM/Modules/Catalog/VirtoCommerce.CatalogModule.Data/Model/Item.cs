@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
@@ -52,6 +53,7 @@ namespace VirtoCommerce.CatalogModule.Data.Model
 
 		[StringLength(64)]
 		[Required]
+		[Index(IsUnique = true)] 
 		[CustomValidation(typeof(Item), "ValidateItemCode", ErrorMessage = @"Code can't contain $+;=%{}[]|\/@ ~#!^*&()?:'<>, characters")]
 		public string Code { get; set; }
 
