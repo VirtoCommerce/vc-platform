@@ -11,13 +11,13 @@
                 <table class="table">
                     <thead>
                         <tr>
-                            <th class="table-col">
+                            <th class="table-col __product-control">
                                 <label class="form-control __checkbox">
                                     <input type="checkbox" ng-model="blade.selectedAll" ng-change="checkAll(blade.selectedAll)" />
                                     <span class="check"></span>
                                 </label>
                             </th>
-                            <th class="table-col">Item</th>
+                            <th class="table-col __proudct-img">Item</th>
                             <th class="table-col">Qty</th>
                             <th class="table-col">Avail</th>
                             <th class="table-col">Await</th>
@@ -29,13 +29,13 @@
                     </thead>
                     <tbody>
                         <tr class="table-item" ng-repeat-start="data in blade.currentEntity.items" ng-class="{'__selected': data.id === selectedNodeId}" context-menu data-target="col_menu_{{data.id}}" ng-click='selectItem(data)'>
-                            <td class="table-col __product-control">
+                            <td class="table-col">
                                 <label class="form-control __checkbox">
                                     <input type="checkbox" ng-model="data.selected">
                                     <span class="check"></span>
                                 </label>
                             </td>
-                            <td class="table-col __proudct-img">
+                            <td class="table-col">
                                 <div class="product-img">
                                     <div class="image" style="background-image: url({{data.imageUrl}})" ng-if="data.imageUrl" ng-click="openItemDetail(data)"></div>
                                     <i class="table-ico fa fa-image" ng-if="!data.imageUrl" />
