@@ -127,7 +127,18 @@ namespace VirtoCommerce.SearchModule.Data.Providers.Lucene
 
                     foreach (var doc in documents)
                     {
-                        writer.AddDocument(doc);
+                        const string keyName = "__key";
+                        var key = doc.GetValues(keyName);
+
+                        if (key != null && key.Length > 0)
+                        {
+                            var term = new Term(keyName, key[0]);
+                            writer.UpdateDocument(term, doc);
+                        }
+                        else
+                        {
+                            writer.AddDocument(doc);
+                        }
                     }
 
                     // Remove documents
@@ -169,18 +180,27 @@ namespace VirtoCommerce.SearchModule.Data.Providers.Lucene
         /// <returns></returns>
         public virtual int Remove(string scope, string documentType, string key, string value)
         {
+            var result = 0;
+
             var term = new Term(key, value);
 
             // Close writer first
             Close(scope, documentType, false);
 
-            var dir = FSDirectory.Open(new DirectoryInfo(GetDirectoryPath(GetFolderName(scope, documentType))));
+            var directoryInfo = new DirectoryInfo(GetDirectoryPath(GetFolderName(scope, documentType)));
 
-            using (var indexReader = IndexReader.Open(dir, false))
+            if (directoryInfo.Exists)
             {
-                var num = indexReader.DeleteDocuments(term);
-                return num;
+                var dir = FSDirectory.Open(directoryInfo);
+
+                using (var indexReader = IndexReader.Open(dir, false))
+                {
+                    var num = indexReader.DeleteDocuments(term);
+                    result = num;
+                }
             }
+
+            return result;
         }
 
         /// <summary>
@@ -214,52 +234,63 @@ namespace VirtoCommerce.SearchModule.Data.Providers.Lucene
         /// <exception cref="VirtoCommerce.SearchModule.Data.Providers.Lucene.LuceneSearchException"></exception>
         public virtual ISearchResults Search(string scope, ISearchCriteria criteria)
         {
-            TopDocs docs;
+            ISearchResults result;
 
-            var folderName = GetFolderName(scope, criteria.DocumentType);
+            var directoryInfo = new DirectoryInfo(GetDirectoryPath(GetFolderName(scope, criteria.DocumentType)));
 
-            var dir = FSDirectory.Open(new DirectoryInfo(GetDirectoryPath(folderName)));
-            var searcher = new IndexSearcher(dir);
-
-            var q = (QueryBuilder)QueryBuilder.BuildQuery(criteria);
-
-            // filter out empty value
-            var filter = q.Filter.ToString().Equals("BooleanFilter()") ? null : q.Filter;
-
-            Debug.WriteLine("Search Lucene Query:{0}", (object)q.ToString());
-
-            try
+            if (directoryInfo.Exists)
             {
-                var numDocs = criteria.StartingRecord + criteria.RecordsToRetrieve;
+                var dir = FSDirectory.Open(directoryInfo);
+                var searcher = new IndexSearcher(dir);
 
-                if (criteria.Sort != null)
-                {
-                    var fields = criteria.Sort.GetSort();
+                var q = (QueryBuilder)QueryBuilder.BuildQuery(criteria);
 
-                    docs = searcher.Search(
-                        q.Query,
-                        filter,
-                        numDocs,
-                        new Sort(
-                            fields.Select(field => new SortField(field.FieldName, field.DataType, field.IsDescending))
-                                  .ToArray()));
-                }
-                else
+                // filter out empty value
+                var filter = q.Filter.ToString().Equals("BooleanFilter()") ? null : q.Filter;
+
+                Debug.WriteLine("Search Lucene Query:{0}", (object)q.ToString());
+
+                TopDocs docs;
+
+                try
                 {
-                    docs = searcher.Search(q.Query, filter, numDocs);
+                    var numDocs = criteria.StartingRecord + criteria.RecordsToRetrieve;
+
+                    if (criteria.Sort != null)
+                    {
+                        var fields = criteria.Sort.GetSort();
+
+                        docs = searcher.Search(
+                            q.Query,
+                            filter,
+                            numDocs,
+                            new Sort(
+                                fields.Select(field => new SortField(field.FieldName, field.DataType, field.IsDescending))
+                                    .ToArray()));
+                    }
+                    else
+                    {
+                        docs = searcher.Search(q.Query, filter, numDocs);
+                    }
                 }
+                catch (Exception ex)
+                {
+                    throw new LuceneSearchException("Search exception", ex);
+                }
+
+                var results = new LuceneSearchResults(searcher, searcher.IndexReader, docs, criteria, q.Query);
+
+                // Cleanup here
+                searcher.IndexReader.Dispose();
+                searcher.Dispose();
+                result = results.Results;
             }
-            catch (Exception ex)
+            else
             {
-                throw new LuceneSearchException("Search exception", ex);
+                result = new SearchResults(criteria, null);
             }
 
-            var results = new LuceneSearchResults(searcher, searcher.IndexReader, docs, criteria, q.Query);
-
-            // Cleanup here
-            searcher.IndexReader.Dispose();
-            searcher.Dispose();
-            return results.Results;
+            return result;
         }
 
 
