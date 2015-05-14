@@ -3,18 +3,18 @@
         <div class="inner-block">
             <div class="text" ng-if="blade.currentEntities.length == 0">No Modules yet</div>
             <div class="table-wrapper" ng-if="blade.currentEntities.length > 0">
-                <table class="table">
+                <table class="table __normal">
                     <thead>
                         <tr>
-                            <th class="table-col">Icon</th>
+                            <th class="table-col __product-img">Icon</th>
                             <th class="table-col">Module</th>
-                            <th class="table-col">Version</th>
-                            <th class="table-col">Author</th>
+                            <th class="table-col __version">Version</th>
+                            <th class="table-col __author">Author</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr class="table-item" ng-repeat="data in blade.currentEntities track by data.id" ng-class="{'__selected': data.id === selectedEntityId}" ng-click='blade.selectItem(data.id)'>
-                            <td class="table-col __product-img">
+                            <td class="table-col">
                                 <div class="product-img">
                                     <!-- <div class="image" style="background-image: url({{data.iconUrl}})" ng-if="data.iconUrl"></div> -->
                                     <i class="table-ico fa fa-cube"></i>

@@ -29,7 +29,7 @@
                 </div>
                 
                 <div class="tile-group triple __images-list" ui-sortable="sortableOptions" ng-model="item.images">
-                    <div class="tile" ng-class="{'__selected': data.selected}" ng-repeat="data in item.assets track by data.id" ng-include="'assetTemplate.html'" ng-click="toggleAssetSelect($event, data)" context-menu="toggleAssetSelect($event, data)" data-target="itemAssetMenu{{$index}}"></div>
+                    <div class="tile" ng-class="{'__selected': data.selected}" ng-repeat="data in item.assets" ng-include="'assetTemplate.html'" ng-click="toggleAssetSelect($event, data)" context-menu="toggleAssetSelect($event, data)" data-target="itemAssetMenu{{$index}}"></div>
                 </div>
             </div>
 

@@ -96,11 +96,11 @@
             image.selected = !image.selected;
         } else
         {
-            angular.forEach($scope.item.images, function (i)
-            {
-                i.selected = false;
-            });
-            image.selected = true;
+            if(image.selected) {
+                image.selected = false;
+            } else {
+                image.selected = true;
+            }
         }
     }
 

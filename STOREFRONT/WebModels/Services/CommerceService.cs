@@ -91,6 +91,23 @@ namespace VirtoCommerce.Web.Models.Services
         #endregion
 
         #region Public Methods and Operators
+        public IDictionary<string, string> CurrencyDictionary
+        {
+            get
+            {
+                var dictionary = new Dictionary<string, string>();
+
+                dictionary.Add("USD", "$");
+                dictionary.Add("GBP", "£");
+                dictionary.Add("RUB", "Ꝑ");
+                dictionary.Add("EUR", "€");
+                dictionary.Add("JPY", "¥");
+                dictionary.Add("CNY", "¥");
+
+                return dictionary;
+            }
+        }
+
         public async Task<ICollection<Review>> GetReviewsAsync(string productId)
         {
             var webReviews = new List<Review>();

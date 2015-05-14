@@ -77,10 +77,11 @@
         if (e.ctrlKey == 1) {
             asset.selected = !asset.selected;
         } else {
-            angular.forEach($scope.item.assets, function (i) {
-                i.selected = false;
-            });
-            asset.selected = true;
+            if(asset.selected) {
+                asset.selected = false;
+            } else {
+                asset.selected = true;
+            }
         }
     }
 

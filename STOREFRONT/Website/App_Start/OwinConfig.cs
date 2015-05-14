@@ -120,6 +120,11 @@ namespace VirtoCommerce.Web
                 // save info to the cookies
                 context.Response.Cookies.Append(StoreCookie, shop.StoreId, new CookieOptions { Expires = DateTime.UtcNow.AddDays(30) });
                 context.Response.Cookies.Append(LanguageCookie, ctx.Language, new CookieOptions { Expires = DateTime.UtcNow.AddDays(30) });
+
+                if (context.Request.Cookies[CurrencyCookie] != null)
+                {
+                    context.Response.Cookies.Delete(CurrencyCookie);
+                }
                 context.Response.Cookies.Append(CurrencyCookie, shop.Currency, new CookieOptions { Expires = DateTime.UtcNow.AddDays(30) });
 
                 if (context.Authentication.User != null && context.Authentication.User.Identity.IsAuthenticated)
@@ -211,6 +216,15 @@ namespace VirtoCommerce.Web
                 context.Request.Path.HasValue && context.Request.Path.Value.Contains(".scss") ? "''" : null);
 
             ctx.CountryOptionTags = commerceService.GetCountryTags();
+
+            if (ctx.Shop.Currency.Equals("GBP", StringComparison.OrdinalIgnoreCase) || ctx.Shop.Currency.Equals("USD", StringComparison.OrdinalIgnoreCase))
+            {
+                ctx.Shop.MoneyFormat = commerceService.CurrencyDictionary[ctx.Shop.Currency] + "{{ amount }}";
+            }
+            else
+            {
+                ctx.Shop.MoneyFormat = "{{ amount }} " + commerceService.CurrencyDictionary[ctx.Shop.Currency];
+            }
 
             context.Set("vc_sitecontext", ctx);
 

@@ -19,7 +19,6 @@ namespace VirtoCommerce.Web.Convertors
             var shop = new Shop
                        {
                            StoreId = store.Id,
-                           MoneyFormat = "${{amount}}",
                            Name = store.Name,
                            Email = "support@no-email.com",
                            Description = store.Description,
