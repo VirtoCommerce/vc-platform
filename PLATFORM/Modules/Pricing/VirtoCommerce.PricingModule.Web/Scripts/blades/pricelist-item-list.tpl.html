@@ -5,7 +5,7 @@
         </div>
     </div>
 </div>
-<div class="blade-content __medium-wide">
+<div class="blade-content __large-wide">
     <div class="blade-inner">
         <div class="inner-block">
             <div class="table-wrapper">
@@ -19,7 +19,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr class="table-item" ng-repeat="data in blade.currentEntities track by data.productId" ng-class="{'__selected': data.productId === selectedNodeId}" ng-click='selectNode(data)'>
+                        <tr class="table-item" ng-repeat="data in blade.currentEntities | orderBy:'productName' track by data.productId" ng-class="{'__selected': data.productId === selectedNodeId}" ng-click='selectNode(data)'>
                             <td class="table-col __product-name">
                                 <span title="{{data.productName}}">{{data.productName}}</span>
                             </td>
