@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Linq;
 using System.Web.Http.Results;
-using VirtoCommerce.Domain.Common;
 using VirtoCommerce.Domain.Marketing.Model;
 using VirtoCommerce.Domain.Marketing.Services;
+using VirtoCommerce.Platform.Tests.Bases;
 using dataModel = VirtoCommerce.MarketingModule.Data.Model;
 using VirtoCommerce.MarketingModule.Data.Repositories;
 using VirtoCommerce.MarketingModule.Data.Services;
@@ -18,7 +18,7 @@ using webModel = VirtoCommerce.MarketingModule.Web.Model;
 
 namespace VirtoCommerce.MarketingModule.Test
 {
-	public class MarketingControllerTest
+    public class MarketingControllerScenarios : FunctionalTestBase
 	{
 		[Fact]
 		public void Test()
