@@ -123,7 +123,8 @@ namespace VirtoCommerce.Web.Convertors
 
             variantModel.Barcode = null; // TODO
             variantModel.CompareAtPrice = price != null ? (price.Sale.HasValue ? price.Sale.Value : price.List) : 0M;
-            variantModel.Id = variation.Id;
+            //variantModel.Id = variation.Id;
+            variantModel.Id = variation.Code;
             variantModel.Image = variationImage != null ? variationImage.AsWebModel(variation.Name, variation.MainProductId) : null;
             variantModel.InventoryManagement = null; // TODO
             variantModel.InventoryPolicy = null; // TODO
@@ -164,7 +165,8 @@ namespace VirtoCommerce.Web.Convertors
 
             variantModel.Barcode = null; // TODO
             variantModel.CompareAtPrice = price != null ? (price.Sale.HasValue ? price.Sale.Value : price.List) : 0M;
-            variantModel.Id = product.Id;
+            //variantModel.Id = product.Id;
+            variantModel.Id = product.Code;
             variantModel.Image = variationImage != null ? variationImage.AsWebModel(product.Name, product.Id) : null;
             variantModel.InventoryManagement = null; // TODO
             variantModel.InventoryPolicy = null; // TODO
