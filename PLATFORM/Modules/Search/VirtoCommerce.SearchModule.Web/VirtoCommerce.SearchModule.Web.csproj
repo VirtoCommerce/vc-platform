@@ -118,11 +118,11 @@
   <ItemGroup>
     <Compile Include="BackgroundJobs\SearchIndexJobs.cs" />
     <Compile Include="BackgroundJobs\SearchIndexJobsScheduler.cs" />
+    <Compile Include="Controllers\Api\SearchModuleController.cs" />
     <Compile Include="Module.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Controllers\Api\" />
     <Folder Include="Converters\" />
     <Folder Include="Model\" />
   </ItemGroup>
