@@ -14,32 +14,32 @@
                 <table class="table">
                     <thead>
                         <tr>
-                            <th class="table-col">
+                            <th class="table-col __product-control">
                                 <label class="form-control __checkbox">
                                     <input type="checkbox" ng-model="selectedAll" ng-change="checkAll(selectedAll)" />
                                     <span class="check"></span>
                                 </label>
                             </th>
-                            <th class="table-col" title="Organization or individual Customer">Type</th>
-                            <th class="table-col">Name</th>
+                            <th class="table-col __product-img" title="Organization or individual Customer">Type</th>
+                            <th class="table-col __product-name">Name</th>
                             <th class="table-col">Address</th>
                             <th class="table-col">Email</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr class="table-item" ng-repeat="data in listEntries track by data.id" ng-class="{'__selected': data.id === selectedNodeId}" context-menu data-target="cml_menu_{{data.id}}">
-                            <td class="table-col __product-control">
+                            <td class="table-col">
                                 <label class="form-control __checkbox">
                                     <input type="checkbox" ng-model="data.selected">
                                     <span class="check"></span>
                                 </label>
                             </td>
-                            <td class="table-col __product-img" ng-attr-title="{{data.memberType}}" ng-click='selectNode(data)'>
+                            <td class="table-col" ng-attr-title="{{data.memberType}}" ng-click='selectNode(data)'>
                                 <div class="product-img">
                                     <i class="table-ico fa" ng-class="data.memberType === 'Organization' ? 'fa-university' : 'fa-user'"></i>
                                 </div>
                             </td>
-                            <td class="table-col" ng-click='selectNode(data)'>
+                            <td class="table-col __product-name" ng-click='selectNode(data)'>
                                 <span class="table-t">{{data.displayName}}</span>
                                 <!--<span class="table-descr" ng-if="data.statusId">{{data.statusId}}</span>-->
                             </td>

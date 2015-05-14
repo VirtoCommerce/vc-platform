@@ -200,13 +200,28 @@
     }
 
 
-.table .table-col.__date,
 .table .table-col.__author,
 .table .table-col.__version
 {
     font-size: 12px;
     vertical-align: top;
     width: 25%;
+}
+
+.table .table-col.__date
+{
+    vertical-align: middle;
+    width: 15%;
+}
+
+.table .table-col.__product-range
+{
+    width: 10%;
+}
+
+.table .table-col.__product-count
+{
+    width: 5%;
 }
 
 .table .table-col.__lang
@@ -241,7 +256,7 @@
 
 .table .table-col.__product-name
 {
-    max-width: 250px;
+    width: 170px;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -249,7 +264,10 @@
 
 .table .table-col.__product-code
 {
+    overflow: hidden;
+    text-overflow: ellipsis;
     white-space: nowrap;
+    width: 20%;
 }
 
 

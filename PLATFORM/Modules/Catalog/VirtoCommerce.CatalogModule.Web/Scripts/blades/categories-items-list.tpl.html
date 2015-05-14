@@ -14,26 +14,26 @@
                 <table class="table">
                     <thead>
                         <tr>
-                            <th class="table-col">
+                            <th class="table-col __product-control">
                                 <label class="form-control __checkbox">
                                     <input type="checkbox" ng-model="selectedAll" ng-change="checkAll(selectedAll)" />
                                     <span class="check"></span>
                                 </label>
                             </th>
-                            <th class="table-col">Pic</th>
-                            <th class="table-col">Name</th>
-                            <th class="table-col">Code</th>
+                            <th class="table-col __product-img">Pic</th>
+                            <th class="table-col __product-name">Name</th>
+                            <th class="table-col __product-code">Code</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr class="table-item" ng-repeat="data in items track by data.id" ng-class="{'__selected': data.id === selectedItem.id}" context-menu data-target="cil_menu_{{data.id+blade.level}}">
-                            <td class="table-col __product-control">
+                            <td class="table-col">
                                 <label class="form-control __checkbox" ng-if="showCheck(data)">
                                     <input type="checkbox" ng-model="data.selected" ng-change="checkOne(data)">
                                     <span class="check"></span>
                                 </label>
                             </td>
-                            <td class="table-col __product-img" ng-click='selectItem($event, data)'>
+                            <td class="table-col" ng-click='selectItem($event, data)'>
                                 <div class="product-img">
                                     <div class="image" style="background-image: url({{data.imageUrl}})" ng-if="data.type!=='category' && data.imageUrl"></div>
                                     <i class="table-ico fa" ng-class="data.type == 'category' ? ' fa-folder' : ' fa-image'" ng-if="!data.imageUrl"></i>

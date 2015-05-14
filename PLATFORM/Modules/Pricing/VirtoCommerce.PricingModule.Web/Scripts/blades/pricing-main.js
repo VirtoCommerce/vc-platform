@@ -5,7 +5,7 @@
     function initializeBlade() {
         var entities = [
             { name: 'Price lists', entityName: 'pricelist', icon: 'fa-usd' },
-            { name: 'Price list assignments', entityName: 'assignment', icon: 'fa-anchor' }];
+            { name: 'Price list assignments', entityName: 'assignment', icon: 'fa-usd' }];
         $scope.blade.currentEntities = entities;
         $scope.blade.isLoading = false;
 

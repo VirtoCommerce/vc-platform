@@ -70,7 +70,7 @@ function ($scope, assignments, bladeNavigationService, dialogService) {
         });
     }
 
-    $scope.bladeHeadIco = 'fa-anchor';
+    $scope.bladeHeadIco = 'fa-usd';
 
     $scope.bladeToolbarCommands = [
         {

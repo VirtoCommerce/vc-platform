@@ -51,33 +51,33 @@
 				<table class="table">
 					<thead>
 						<tr>
-							<th class="table-col"></th>
+							<th class="table-col __product-img"></th>
 							<th class="table-col">Name</th>
-							<th class="table-col">Modified</th>
+							<th class="table-col __date">Modified</th>
 						</tr>
 					</thead>
 					<tbody>
 						<tr class="table-item" ng-repeat="data in blade.currentPageCatalog.folders" ng-click="blade.folderClick(data)">
-							<td class="table-col __product-img">
+							<td class="table-col">
 								<div class="product-img">
 									<i class="table-ico fa fa-folder"></i>
 								</div>
 							</td>
-							<td class="table-col __product-name">
+							<td class="table-col">
 								{{data.folderName}}
 							</td>
 							<td class="table-col"></td>
 						</tr>
 						<tr class="table-item" ng-repeat="page in blade.currentPageCatalog.pages" ng-click="blade.openBlade(page)">
-							<td class="table-col __product-img">
+							<td class="table-col">
 								<div class="product-img">
 									<i class="table-ico flag flag-{{blade.getFlag(page.language)}}"></i>
 								</div>
 							</td>
-							<td class="table-col __product-name">
+							<td class="table-col">
 								{{page.name}}
 							</td>
-							<td class="table-col __datePage">
+							<td class="table-col">
 								<span class="table-date" am-time-ago="data.modifiedDate"></span>
 							</td>
 						</tr>
