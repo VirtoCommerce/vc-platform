@@ -22,7 +22,7 @@ namespace VirtoCommerce.Web.Convertors
                            Name = store.Name,
                            Email = "support@no-email.com",
                            Description = store.Description,
-                           Currency = store.Currencies.FirstOrDefault(),
+                           Currency = store.DefaultCurrency,
                            Url = store.Url ?? String.Format("~/{0}/{1}", store.DefaultLanguage, store.Id).ToAbsoluteUrl(),
                            SecureUrl = store.SecureUrl,
                            CustomerAccountsEnabled = true,

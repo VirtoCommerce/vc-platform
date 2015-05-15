@@ -99,6 +99,8 @@ namespace VirtoCommerce.Web
                 throw new HttpException(404, "Store Not Found");
             }
 
+            var currency = GetStoreCurrency(context, shop);
+            shop.Currency = currency;
             ctx.Shop = shop;
             ctx.Themes = await commerceService.GetThemesAsync(SiteContext.Current);
 
@@ -120,11 +122,6 @@ namespace VirtoCommerce.Web
                 // save info to the cookies
                 context.Response.Cookies.Append(StoreCookie, shop.StoreId, new CookieOptions { Expires = DateTime.UtcNow.AddDays(30) });
                 context.Response.Cookies.Append(LanguageCookie, ctx.Language, new CookieOptions { Expires = DateTime.UtcNow.AddDays(30) });
-
-                if (context.Request.Cookies[CurrencyCookie] != null)
-                {
-                    context.Response.Cookies.Delete(CurrencyCookie);
-                }
                 context.Response.Cookies.Append(CurrencyCookie, shop.Currency, new CookieOptions { Expires = DateTime.UtcNow.AddDays(30) });
 
                 if (context.Authentication.User != null && context.Authentication.User.Identity.IsAuthenticated)
@@ -263,6 +260,35 @@ namespace VirtoCommerce.Web
             return language;
         }
 
+        protected virtual string GetStoreCurrency(IOwinContext context, Shop store)
+        {
+            var currency = context.Request.Query.Get("currency");
+
+            if (String.IsNullOrEmpty(currency))
+            {
+                currency = String.Empty;
+
+                // try getting store from the cookie
+                if (String.IsNullOrEmpty(currency))
+                {
+                    currency = context.Request.Cookies[CurrencyCookie];
+                }
+
+                // try getting default store from settings
+                if (String.IsNullOrEmpty(currency))
+                {
+                    currency = store.Currency;
+                }
+            }
+            //if currency is invalid use dafault
+            else if (!store.Currencies.Any(c => c.Equals(currency, StringComparison.OrdinalIgnoreCase)))
+            {
+                currency = store.Currency;
+            }
+
+            return currency;
+        }
+
         protected virtual Shop GetStore(IOwinContext context, string language)
         {
             var loadDefault = true;
@@ -339,16 +365,6 @@ namespace VirtoCommerce.Web
                     store =
                         SiteContext.Current.Shops.SingleOrDefault(
                             s => s.StoreId.Equals(storeId, StringComparison.OrdinalIgnoreCase));
-                }
-            }
-
-            if (context.Request.Cookies[CurrencyCookie] != null)
-            {
-                var shopExistingCurrency = store.Currencies.FirstOrDefault(c => c == context.Request.Cookies[CurrencyCookie]);
-
-                if (shopExistingCurrency != null)
-                {
-                    store.Currency = context.Request.Cookies[CurrencyCookie];
                 }
             }
 
