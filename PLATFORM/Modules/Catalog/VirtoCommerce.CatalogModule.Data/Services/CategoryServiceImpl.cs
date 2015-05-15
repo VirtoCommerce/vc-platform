@@ -66,7 +66,7 @@ namespace VirtoCommerce.CatalogModule.Data.Services
 					foreach(var seoInfo in category.SeoInfos)
 					{
 						var dbSeoInfo = seoInfo.ToCoreModel(dbCategory);
-						repository.Add(dbSeoInfo);
+						_commerceService.UpsertSeoKeyword(dbSeoInfo);
 					}
 				}
 

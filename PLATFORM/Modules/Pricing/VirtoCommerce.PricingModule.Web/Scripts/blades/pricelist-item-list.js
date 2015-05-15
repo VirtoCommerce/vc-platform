@@ -58,7 +58,6 @@
         };
 
         newBlade.options = {
-            allowMultiple: true,
             checkItemFn: function (listItem, isSelected) {
                 if (listItem.type == 'category') {
                     newBlade.error = 'Categories are not supported';

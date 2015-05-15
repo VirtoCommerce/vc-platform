@@ -32,7 +32,7 @@
         };
 
         newBlade.options = {
-            allowMultiple: true,
+            showCheckingMultiple: false,
             checkItemFn: function (listItem, isSelected) {
                 if (listItem.type == 'category') {
                     newBlade.error = 'Must select Product';
@@ -81,7 +81,9 @@
         };
 
         newBlade.options = {
-            allowMultiple: true,
+            showCheckingMultiple: false,
+            allowCheckingItem: false,
+            allowCheckingCategory: true,
             checkItemFn: function (listItem, isSelected) {
                 if (listItem.type != 'category') {
                     newBlade.error = 'Must select Category';

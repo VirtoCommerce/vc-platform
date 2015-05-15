@@ -20,7 +20,7 @@ namespace VirtoCommerce.CatalogModule.Test
             var catalogController = new CatalogModuleCatalogsController(GetCatalogService(), GetSearchService(), null, GetPropertyService(), GetPermissionService());
             var categoryController = new CatalogModuleCategoriesController(GetSearchService(), GetCategoryService(), GetPropertyService(), GetCatalogService());
             var propertyController = new CatalogModulePropertiesController(GetPropertyService(), GetCategoryService(), GetCatalogService());
-            var productController = new CatalogModuleProductsController(GetItemService(), GetPropertyService(), null);
+            var productController = new CatalogModuleProductsController(GetItemService(), GetPropertyService(), null, null);
             var listEntryController = new CatalogModuleListEntryController(GetSearchService(), GetCategoryService(), GetItemService(), null);
 
             //var propertyResult = propertyController.GetNewCatalogProperty("Apple") as OkNegotiatedContentResult<webModel.Property>;
@@ -103,7 +103,7 @@ namespace VirtoCommerce.CatalogModule.Test
         public void AssociationTest()
         {
             //Get all product associations
-            var productController = new CatalogModuleProductsController(GetItemService(), GetPropertyService(), null);
+            var productController = new CatalogModuleProductsController(GetItemService(), GetPropertyService(), null, null);
             var productResult = productController.Get("v-b004y45rxi") as OkNegotiatedContentResult<webModel.Product>;
             var product = productResult.Content;
             Assert.IsFalse(product.Associations.Any());

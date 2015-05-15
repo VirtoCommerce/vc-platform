@@ -53,9 +53,9 @@
     }
 
     $scope.semanticUrlValidator = function (value) {
-        // var pattern = /^\w*$/; // alphanumeric and underscores
-        var pattern = /^([a-zA-Z0-9\(\)_\-.]+)*$/;
-        return pattern.test(value);
+        // var pattern = /^([a-zA-Z0-9\(\)_\-]+)*$/;
+        var pattern = /[$+;=%{}[\]|\/@ ~#!^*&()?:'<>,]/;
+        return !pattern.test(value);
     }
 
     function isDirty() {
