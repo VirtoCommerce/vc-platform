@@ -3,8 +3,10 @@ using System.Configuration;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Web;
 using System.Web.Hosting;
+using System.Web.Mvc;
 using Hangfire.SqlServer;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.AspNet.SignalR;
@@ -233,5 +235,25 @@ namespace VirtoCommerce.Platform.Web
             var relativePath = rootUri.MakeRelativeUri(fullUri).ToString();
             return relativePath;
         }
+    }
+
+    public static class HtmlHelperExtensions
+    {
+        private static MvcHtmlString _version;
+        /// <summary>
+        /// Versions the specified HTML.
+        /// </summary>
+        /// <param name="html">The HTML.</param>
+        /// <returns>MvcHtmlString.</returns>
+        public static MvcHtmlString Version(this HtmlHelper html)
+        {
+            if (_version == null)
+            {
+                var assembly = Assembly.GetExecutingAssembly();
+                _version = new MvcHtmlString(String.Format("{0} ({1})", assembly.GetInformationalVersion(), assembly.GetFileVersion()));
+            }
+
+            return _version;
+        }        
     }
 }

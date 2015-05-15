@@ -93,6 +93,7 @@
     <Compile Include="ChangeLog\OperationLog.cs" />
     <Compile Include="Common\AnnonymousComparer.cs" />
     <Compile Include="Common\ArrayInputAttribute.cs" />
+    <Compile Include="Common\AssemblyExtensions.cs" />
     <Compile Include="Common\AttributeExtensions.cs" />
     <Compile Include="Common\AuditableEntity.cs" />
     <Compile Include="Common\ClientCacheAttribute.cs" />
