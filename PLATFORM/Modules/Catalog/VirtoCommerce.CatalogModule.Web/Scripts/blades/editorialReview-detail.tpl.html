@@ -11,9 +11,9 @@
                         <!-- <select ng-model="currentEntity.reviewType" ng-options="x for x in types"></select> -->
 
                         <ui-select ng-model="currentEntity.reviewType" ng-disabled="disabled">
-                            <ui-select-match placeholder="Select type">{{$select.selected.value}}</ui-select-match>
-                            <ui-select-choices repeat="x in types | filter: {value: $select.search}">
-                                <span ng-bind-html="x.value | highlight: $select.search"></span>
+                            <ui-select-match placeholder="Select type">{{$select.selected}}</ui-select-match>
+                            <ui-select-choices repeat="x in types | filter: $select.search">
+                                <span ng-bind-html="x | highlight: $select.search"></span>
                             </ui-select-choices>
                         </ui-select>
                     </div>
@@ -25,7 +25,7 @@
                         
                         <ui-select ng-model="currentEntity.languageCode" ng-disabled="disabled">
                             <ui-select-match placeholder="Select language">{{$select.selected.displayName}}</ui-select-match>
-                            <ui-select-choices repeat="lang in blade.languages | filter: {displayName: $select.search}">
+                            <ui-select-choices repeat="lang.languageCode as lang in blade.languages | filter: {displayName: $select.search}">
                                 <span ng-bind-html="lang.displayName | highlight: $select.search"></span>
                             </ui-select-choices>
                         </ui-select>
