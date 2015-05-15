@@ -2,14 +2,16 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Text;
 using System.Web.Http;
 using System.Web.Http.Description;
 using VirtoCommerce.CatalogModule.Web.Converters;
 using VirtoCommerce.Domain.Catalog.Services;
 using VirtoCommerce.Platform.Core.Asset;
 using VirtoCommerce.Platform.Core.Security;
-using moduleModel = VirtoCommerce.Domain.Catalog.Model;
+using coreModel = VirtoCommerce.Domain.Catalog.Model;
 using webModel = VirtoCommerce.CatalogModule.Web.Model;
+using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 {
@@ -19,12 +21,14 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
         private readonly IItemService _itemsService;
         private readonly IPropertyService _propertyService;
 		private readonly IBlobUrlResolver _blobUrlResolver;
+		private readonly ICatalogService _catalogService;
 
-		public CatalogModuleProductsController(IItemService itemsService, IPropertyService propertyService, IBlobUrlResolver blobUrlResolver)
+		public CatalogModuleProductsController(IItemService itemsService, IPropertyService propertyService, IBlobUrlResolver blobUrlResolver, ICatalogService catalogService)
         {
             _itemsService = itemsService;
             _propertyService = propertyService;
 			_blobUrlResolver = blobUrlResolver;
+			_catalogService = catalogService;
         }
 
         // GET: api/catalog/products/5
@@ -33,7 +37,7 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
         [Route("{id}")]
         public IHttpActionResult Get(string id)
         {
-            var item = _itemsService.GetById(id, moduleModel.ItemResponseGroup.ItemLarge);
+            var item = _itemsService.GetById(id, coreModel.ItemResponseGroup.ItemLarge);
             if (item == null)
             {
                 return NotFound();
@@ -78,7 +82,7 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
                 {
                     property.Values = new List<webModel.PropertyValue>();
                     property.IsManageable = true;
-					property.IsReadOnly = property.Type != moduleModel.PropertyType.Product && property.Type != moduleModel.PropertyType.Variation;
+					property.IsReadOnly = property.Type != coreModel.PropertyType.Product && property.Type != coreModel.PropertyType.Variation;
                 }
             }
             return Ok(retVal);
@@ -91,7 +95,7 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
         [CheckPermission(Permission = PredefinedPermissions.ItemsManage)]
         public IHttpActionResult GetNewVariation(string productId)
         {
-            var product = _itemsService.GetById(productId, moduleModel.ItemResponseGroup.ItemLarge);
+            var product = _itemsService.GetById(productId, coreModel.ItemResponseGroup.ItemLarge);
             if (product == null)
             {
                 return NotFound();
@@ -106,8 +110,8 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
                 CategoryId = product.CategoryId,
                 CatalogId = product.CatalogId,
                 TitularItemId = product.MainProductId ?? productId,
-				Properties = mainWebProduct.Properties.Where(x => x.Type == moduleModel.PropertyType.Product
-					|| x.Type == moduleModel.PropertyType.Variation).ToList(),
+				Properties = mainWebProduct.Properties.Where(x => x.Type == coreModel.PropertyType.Product
+					|| x.Type == coreModel.PropertyType.Variation).ToList(),
             };
 
             foreach (var property in newVariation.Properties)
@@ -119,13 +123,13 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
                 }
 
                 // Mark variation property as required
-				if (property.Type == moduleModel.PropertyType.Variation)
+				if (property.Type == coreModel.PropertyType.Variation)
                 {
                     property.Required = true;
                 }
 
                 property.IsManageable = true;
-				property.IsReadOnly = property.Type != moduleModel.PropertyType.Product && property.Type != moduleModel.PropertyType.Variation;
+				property.IsReadOnly = property.Type != coreModel.PropertyType.Product && property.Type != coreModel.PropertyType.Variation;
             }
 
 
@@ -159,12 +163,12 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
             return StatusCode(HttpStatusCode.NoContent);
         }
 
-		private moduleModel.Property[] GetAllCatalogProperies(string catalogId, string categoryId)
+		private coreModel.Property[] GetAllCatalogProperies(string catalogId, string categoryId)
 		{
 			if (catalogId == null)
 				throw new ArgumentNullException("catalogId");
 
-			moduleModel.Property[] retVal = null;
+			coreModel.Property[] retVal = null;
 			if (!String.IsNullOrEmpty(categoryId))
 			{
 				retVal = _propertyService.GetCategoryProperties(categoryId);
@@ -176,11 +180,26 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 			return retVal;
 		}
 
-        private moduleModel.CatalogProduct UpdateProduct(webModel.Product product)
+        private coreModel.CatalogProduct UpdateProduct(webModel.Product product)
         {
             var moduleProduct = product.ToModuleModel(_blobUrlResolver);
             if (moduleProduct.Id == null)
             {
+				if (moduleProduct.SeoInfos == null || !moduleProduct.SeoInfos.Any())
+				{
+					var slugUrl = GenerateProductDefaultSlugUrl(product);
+					if (!string.IsNullOrEmpty(slugUrl))
+					{
+						var catalog = _catalogService.GetById(product.CatalogId);
+						var defaultLanguageCode = catalog.Languages.First(x => x.IsDefault).LanguageCode;
+						var seoInfo = new coreModel.SeoInfo
+						{
+							LanguageCode = defaultLanguageCode,
+							SemanticUrl = slugUrl
+						};
+						moduleProduct.SeoInfos = new coreModel.SeoInfo[] { seoInfo };
+					}
+				}
                 return _itemsService.Create(moduleProduct);
             }
             else
@@ -190,5 +209,19 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 
             return null;
         }
+
+		private string GenerateProductDefaultSlugUrl(webModel.Product product)
+		{
+			var retVal = new List<string>();
+			retVal.Add(product.Name);
+			if(product.Properties != null)
+			{
+				foreach(var property in product.Properties.Where(x=>x.Type == coreModel.PropertyType.Variation && x.Values != null))
+				{
+					retVal.AddRange(property.Values.Select(x=>x.PropertyName + "-" + x.Value));
+				}
+			}
+			return String.Join(" ", retVal).GenerateSlug();
+		}
     }
 }

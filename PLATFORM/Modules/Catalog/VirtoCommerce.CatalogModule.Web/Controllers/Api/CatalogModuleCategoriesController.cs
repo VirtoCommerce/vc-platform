@@ -2,11 +2,14 @@
 using System.Collections.Generic;
 using System.Net;
 using System.Web.Http;
+using System.Linq;
 using System.Web.Http.Description;
 using VirtoCommerce.CatalogModule.Web.Converters;
 using VirtoCommerce.Domain.Catalog.Services;
 using VirtoCommerce.Platform.Core.Security;
 using webModel = VirtoCommerce.CatalogModule.Web.Model;
+using coreModel = VirtoCommerce.Domain.Catalog.Model;
+using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 {
@@ -71,16 +74,27 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
         [Route("")]
         public IHttpActionResult Post(webModel.Category category)
         {
-            var moduleObj = category.ToModuleModel();
-            if (moduleObj.Id == null)
-            {
-                var retVal = _categoryService.Create(moduleObj).ToWebModel();
-                retVal.Catalog = null;
-                return Ok(retVal);
-            }
+            var coreCategory = category.ToModuleModel();
+            if (coreCategory.Id == null)
+			{
+				if (coreCategory.SeoInfos == null || !coreCategory.SeoInfos.Any())
+				{
+					var slugUrl = category.Name.GenerateSlug();
+					if (!String.IsNullOrEmpty(slugUrl))
+					{
+						var catalog = _catalogService.GetById(category.CatalogId);
+						var defaultLanguage = catalog.Languages.First(x => x.IsDefault).LanguageCode;
+						coreCategory.SeoInfos = new coreModel.SeoInfo[] { new coreModel.SeoInfo { LanguageCode = defaultLanguage, SemanticUrl = slugUrl } };
+					}
+				}
+
+				var retVal = _categoryService.Create(coreCategory).ToWebModel();
+				retVal.Catalog = null;
+				return Ok(retVal);
+			}
             else
             {
-                _categoryService.Update(new[] { moduleObj });
+                _categoryService.Update(new[] { coreCategory });
                 return StatusCode(HttpStatusCode.NoContent);
             }
         }
