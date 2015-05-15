@@ -121,6 +121,9 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\GlobalAssemblyInfo.cs">
+      <Link>Properties\GlobalAssemblyInfo.cs</Link>
+    </Compile>
     <Compile Include="Asset\AzureBlobProvider.cs" />
     <Compile Include="Asset\BlobStorageMultipartStreamProvider.cs" />
     <Compile Include="Asset\CustomMultipartStreamProvider.cs" />
