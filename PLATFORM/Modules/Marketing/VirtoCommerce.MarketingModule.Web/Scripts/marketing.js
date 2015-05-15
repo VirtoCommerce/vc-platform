@@ -40,7 +40,7 @@ angular.module(moduleName, [])
       };
       mainMenuService.addMenuItem(menuItem);
 
-      //Register expressions
+      //Register PROMOTION expressions
       dynamicExpressionService.registerExpression({
           id: 'BlockCustomerCondition',
           newChildLabel: '+ add user group',
@@ -178,5 +178,24 @@ angular.module(moduleName, [])
       dynamicExpressionService.registerExpression({
           id: 'RewardShippingGetOfRelShippingMethod',
           displayName: 'Get [] % off shipping []'
+      });
+      
+      //Register CONTENT PUBLISHING expressions
+      dynamicExpressionService.registerExpression({
+          id: 'BlockGeoCondition',
+          newChildLabel: '+ add Geo location'
+      });
+      dynamicExpressionService.registerExpression({
+          id: 'ConditionGeoTimeZone',
+          displayName: 'Are browsing from a time zone -/+ offset from UTC []'
+      });
+
+      dynamicExpressionService.registerExpression({
+          id: 'BlockBrowseCondition',
+          newChildLabel: '+ add browse behavior'
+      });
+      dynamicExpressionService.registerExpression({
+          id: 'ConditionStoreSearchedPhrase',
+          displayName: 'Shopper searched for phrase [] in store'
       });
   }]);

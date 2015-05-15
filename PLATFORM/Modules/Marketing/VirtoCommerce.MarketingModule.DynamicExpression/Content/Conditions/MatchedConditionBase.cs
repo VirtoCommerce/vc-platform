@@ -20,6 +20,7 @@ namespace VirtoCommerce.MarketingModule.Expressions.Content
 		protected MatchedConditionBase(string propertyName)
 		{
 			_propertyName = propertyName;
+		    MatchCondition = "Contains";
 		}
 
 		#region IConditionExpression Members

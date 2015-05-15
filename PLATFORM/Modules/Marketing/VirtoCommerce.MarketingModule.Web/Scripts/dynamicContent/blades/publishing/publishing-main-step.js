@@ -1,5 +1,8 @@
 ﻿angular.module('virtoCommerce.marketingModule')
-.controller('virtoCommerce.marketingModule.addPublishingFirstStepController', ['$scope', 'virtoCommerce.marketingModule.dynamicContent.contentPublications', 'platformWebApp.bladeNavigationService', function ($scope, marketing_dynamicContents_res_contentPublications, bladeNavigationService) {
+.controller('virtoCommerce.marketingModule.addPublishingFirstStepController.expressions', ['$scope', 'virtoCommerce.coreModule.common.countries', function ($scope, countries) {
+    $scope.timeZones = countries.getTimeZones();
+}])
+.controller('virtoCommerce.marketingModule.addPublishingFirstStepController', ['$scope', 'virtoCommerce.marketingModule.dynamicContent.contentPublications', 'platformWebApp.bladeNavigationService', 'virtoCommerce.coreModule.common.dynamicExpressionService', function ($scope, contentPublications, bladeNavigationService, dynamicExpressionService) {
     $scope.setForm = function (form) {
         $scope.formScope = form;
     }
@@ -8,9 +11,8 @@
 
     blade.initializeBlade = function () {
         if (!blade.isNew) {
-            marketing_dynamicContents_res_contentPublications.get({ id: blade.entity.id }, function (data) {
-                blade.entity = data;
-                blade.originalEntity = angular.copy(data);
+            contentPublications.get({ id: blade.entity.id }, function (data) {
+                initializeBlade(data);
 
                 $scope.bladeToolbarCommands = [
 				    {
@@ -48,21 +50,15 @@
             });
         }
         else {
-            blade.entity = {
-                id: null,
-                name: '',
-                description: '',
-                priority: 0,
-                isActive: true,
-                startDate: '',
-                endDate: '',
-                contentItems: [],
-                contentPlaces: []
-            };
+            contentPublications.getNew(initializeBlade);
         }
+    }
 
+    function initializeBlade(data) {
+        _.each(data.dynamicExpression.children, extendElementBlock);
+
+        blade.entity = data;
         blade.originalEntity = angular.copy(blade.entity);
-
         blade.isLoading = false;
     }
 
@@ -103,8 +99,12 @@
     blade.saveChanges = function () {
         blade.closeChildrenBlades();
 
+        blade.isLoading = true;
+        blade.entity.dynamicExpression.availableChildren = undefined;
+        _.each(blade.entity.dynamicExpression.children, stripOffUiInformation);
+
         if (blade.isNew) {
-            marketing_dynamicContents_res_contentPublications.save({}, blade.entity, function (data) {
+            contentPublications.save({}, blade.entity, function (data) {
                 blade.entity = data;
                 blade.originalEntity = angular.copy(data);
 
@@ -115,7 +115,7 @@
             });
         }
         else {
-            marketing_dynamicContents_res_contentPublications.update({}, blade.entity, function (data) {
+            contentPublications.update({}, blade.entity, function (data) {
                 blade.entity = data;
                 blade.originalEntity = angular.copy(data);
 
@@ -134,7 +134,7 @@
     }
 
     blade.delete = function () {
-        marketing_dynamicContents_res_contentPublications.delete({ ids: [blade.entity.id] }, function () {
+        contentPublications.delete({ ids: [blade.entity.id] }, function () {
             blade.parentBlade.isLoading = true;
             blade.parentBlade.initialize();
         });
@@ -215,6 +215,34 @@
     $scope.format = $scope.formats[0];
 
     $scope.bladeHeadIco = 'fa fa-paperclip';
+
+    // Dynamic ExpressionBlock
+    function extendElementBlock(expressionBlock) {
+        var retVal = dynamicExpressionService.expressions[expressionBlock.id];
+        if (!retVal) {
+            retVal = { displayName: 'unknown element: ' + expressionBlock.id };
+        }
+
+        _.extend(expressionBlock, retVal);
+
+        if (!expressionBlock.children) {
+            expressionBlock.children = [];
+        }
+
+        _.each(expressionBlock.children, extendElementBlock);
+        _.each(expressionBlock.availableChildren, extendElementBlock);
+        return expressionBlock;
+    };
+
+    function stripOffUiInformation(expressionElement) {
+        expressionElement.availableChildren = undefined;
+        expressionElement.displayName = undefined;
+        expressionElement.getValidationError = undefined;
+        expressionElement.newChildLabel = undefined;
+        expressionElement.templateURL = undefined;
+
+        _.each(expressionElement.children, stripOffUiInformation);
+    };
 
     blade.initializeBlade();
 }]);

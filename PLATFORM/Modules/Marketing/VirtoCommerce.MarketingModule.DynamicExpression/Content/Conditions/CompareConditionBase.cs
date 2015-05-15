@@ -21,6 +21,7 @@ namespace VirtoCommerce.MarketingModule.Expressions.Content
 		protected CompareConditionBase(string propertyName)
 		{
 			_propertyName = propertyName;
+		    CompareCondition = "IsMatching";
 		}
 
 		#region IConditionExpression Members
