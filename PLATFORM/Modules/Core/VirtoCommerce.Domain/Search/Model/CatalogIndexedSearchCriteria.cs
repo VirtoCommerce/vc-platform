@@ -186,7 +186,11 @@ namespace VirtoCommerce.Domain.Search.Model
                 key.Append("_rg" + ResponseGroups);
                 key.Append("_ct" + Catalog);
                 key.Append("_fs" + IsFuzzySearch.ToString());
-                key.Append("_pl" + String.Join("-", Pricelists));
+
+                if (Pricelists != null)
+                {
+                    key.Append("_pl" + String.Join("-", Pricelists));
+                }
                 //Because not null-able and  always cache key have new value 
                 // key.Append("_st" + StartDate.ToString("s"));
                 // key.Append("_ed" + (EndDate.HasValue ? EndDate.Value.ToString("s") : ""));

@@ -42,7 +42,8 @@ namespace VirtoCommerce.Web.Convertors
 
             var pathTemplate = VirtualPathUtility.ToAbsolute("~/products/{0}");
             var description = product.EditorialReviews != null ?
-                product.EditorialReviews.FirstOrDefault(er => er.ReviewType.Equals("quickreview", StringComparison.OrdinalIgnoreCase)) : null;
+                product.EditorialReviews.FirstOrDefault() : null; // Since there is no possibility to set review type in admin console for now
+                //product.EditorialReviews.FirstOrDefault(er => er.ReviewType.Equals("quickreview", StringComparison.OrdinalIgnoreCase)) : null;
 
             var fieldsCollection = new MetafieldsCollection("global", product.Properties);
             var options = GetOptions(product.Properties).Select(o => o.Key).ToArray();
@@ -123,7 +124,8 @@ namespace VirtoCommerce.Web.Convertors
 
             variantModel.Barcode = null; // TODO
             variantModel.CompareAtPrice = price != null ? (price.Sale.HasValue ? price.Sale.Value : price.List) : 0M;
-            variantModel.Id = variation.Id;
+            //variantModel.Id = variation.Id;
+            variantModel.Id = variation.Code;
             variantModel.Image = variationImage != null ? variationImage.AsWebModel(variation.Name, variation.MainProductId) : null;
             variantModel.InventoryManagement = null; // TODO
             variantModel.InventoryPolicy = null; // TODO
@@ -164,7 +166,8 @@ namespace VirtoCommerce.Web.Convertors
 
             variantModel.Barcode = null; // TODO
             variantModel.CompareAtPrice = price != null ? (price.Sale.HasValue ? price.Sale.Value : price.List) : 0M;
-            variantModel.Id = product.Id;
+            //variantModel.Id = product.Id;
+            variantModel.Id = product.Code;
             variantModel.Image = variationImage != null ? variationImage.AsWebModel(product.Name, product.Id) : null;
             variantModel.InventoryManagement = null; // TODO
             variantModel.InventoryPolicy = null; // TODO

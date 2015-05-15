@@ -140,7 +140,8 @@ a:hover,
 }
 
 .tile.__selected:after,
-.tile.__selected:before
+.tile.__selected:before,
+.btn
 {
 	-webkit-transition: opacity .25s ease-in-out 0s;
 			transition: opacity .25s ease-in-out 0s;

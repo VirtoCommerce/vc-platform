@@ -144,7 +144,7 @@
                     id: "newVariationWizard",
                     item: inMemoryItem,
                     title: "New variation",
-                    subtitle: 'Fill all variation information',
+                    subtitle: 'Fill variation information',
                     controller: 'virtoCommerce.catalogModule.newProductWizardController',
                     template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/wizards/newProduct/new-variation-wizard.tpl.html'
                 };

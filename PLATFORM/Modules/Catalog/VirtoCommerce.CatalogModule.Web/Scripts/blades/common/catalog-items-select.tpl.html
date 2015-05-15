@@ -15,8 +15,8 @@
                     <thead>
                         <tr>
                             <th class="table-col">
-                                <label class="form-control __checkbox">
-                                    <input type="checkbox" ng-model="selectedAll" ng-change="checkAll(selectedAll)" />
+                                <label class="form-control __checkbox" ng-if="options.showCheckingMultiple">
+                                    <input type="checkbox" ng-model="blade.selectedAll" ng-change="toggleAll()" />
                                     <span class="check"></span>
                                 </label>
                             </th>
@@ -28,7 +28,7 @@
                     <tbody>
                         <tr class="table-item" ng-repeat="data in items track by data.id" ng-class="{'__selected': data.id === selectedItem.id}" context-menu data-target="cil_menu_{{data.id+blade.level}}">
                             <td class="table-col __product-control">
-                                <label class="form-control __checkbox" ng-if="options.allowMultiple">
+                                <label class="form-control __checkbox" ng-if="canCheck(data)">
                                     <input type="checkbox" ng-model="data.selected" ng-change="checkItem(data)">
                                     <span class="check"></span>
                                 </label>

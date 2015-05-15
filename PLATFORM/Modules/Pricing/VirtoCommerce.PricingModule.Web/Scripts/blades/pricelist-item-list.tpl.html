@@ -5,31 +5,31 @@
         </div>
     </div>
 </div>
-<div class="blade-content __medium-wide">
+<div class="blade-content __large-wide">
     <div class="blade-inner">
         <div class="inner-block">
             <div class="table-wrapper">
                 <table class="table">
                     <thead>
                         <tr>
-                            <th class="table-col">Item name</th>
-                            <th class="table-col">Item code</th>
-                            <th class="table-col">Price range</th>
-                            <th class="table-col">Prices count</th>
+                            <th class="table-col __product-name">Item name</th>
+                            <th class="table-col __product-code">Item code</th>
+                            <th class="table-col __product-range">Price range</th>
+                            <th class="table-col __product-count">Prices count</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr class="table-item" ng-repeat="data in blade.currentEntities track by data.productId" ng-class="{'__selected': data.productId === selectedNodeId}" ng-click='selectNode(data)'>
+                        <tr class="table-item" ng-repeat="data in blade.currentEntities | orderBy:'productName' track by data.productId" ng-class="{'__selected': data.productId === selectedNodeId}" ng-click='selectNode(data)'>
                             <td class="table-col __product-name">
-                                <span class="table-t" title="{{data.productName}}">{{data.productName}}</span>
+                                <span title="{{data.productName}}">{{data.productName}}</span>
                             </td>
                             <td class="table-col">
                                 <span>{{data.productId}}</span>
                             </td>
-                            <td class="table-col __product-code">
+                            <td class="table-col">
                                 <span>{{getPriceRange(data)}}</span>
                             </td>
-                            <td class="table-col __product-img">
+                            <td class="table-col">
                                 {{data.prices.length}}
                             </td>
                         </tr>

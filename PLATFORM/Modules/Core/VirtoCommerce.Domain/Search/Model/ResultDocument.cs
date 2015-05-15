@@ -5,20 +5,23 @@ namespace VirtoCommerce.Domain.Search.Model
 {
     public class ResultDocument : IDocument
     {
-        private List<IDocumentField> _Fields = new List<IDocumentField>();
+        private readonly List<IDocumentField> _fields = new List<IDocumentField>();
+
+        public IEnumerable<IDocumentField> Fields { get { return _fields; } }
+
         public int FieldCount
         {
-            get { return _Fields.Count; }
+            get { return _fields.Count; }
         }
 
         public void Add(IDocumentField field)
         {
-            _Fields.Add(field);
+            _fields.Add(field);
         }
 
         public bool ContainsKey(string name)
         {
-            System.Collections.IEnumerator it = _Fields.GetEnumerator();
+            System.Collections.IEnumerator it = _fields.GetEnumerator();
             while (it.MoveNext())
             {
                 IDocumentField field = (IDocumentField)it.Current;
@@ -34,13 +37,13 @@ namespace VirtoCommerce.Domain.Search.Model
 
         public void RemoveField(string name)
         {
-            System.Collections.IEnumerator it = _Fields.GetEnumerator();
+            System.Collections.IEnumerator it = _fields.GetEnumerator();
             while (it.MoveNext())
             {
                 IDocumentField field = (IDocumentField)it.Current;
                 if (field.Name.Equals(name))
                 {
-                    _Fields.Remove(field);
+                    _fields.Remove(field);
                     return;
                 }
             }
@@ -50,11 +53,11 @@ namespace VirtoCommerce.Domain.Search.Model
         {
             get
             {
-                if (_Fields.Count < index)
+                if (_fields.Count < index)
                     throw new IndexOutOfRangeException();
 
-                if (_Fields != null && _Fields.Count > index)
-                    return _Fields[index];
+                if (_fields != null && _fields.Count > index)
+                    return _fields[index];
 
                 return null;
             }
@@ -64,7 +67,7 @@ namespace VirtoCommerce.Domain.Search.Model
         {
             get
             {
-                foreach (IDocumentField field in _Fields)
+                foreach (IDocumentField field in _fields)
                 {
                     if (field.Name.Equals(name, StringComparison.OrdinalIgnoreCase))
                         return field;
@@ -75,11 +78,11 @@ namespace VirtoCommerce.Domain.Search.Model
             private set
             {
                 int index = 0;
-                foreach (IDocumentField field in _Fields)
+                foreach (IDocumentField field in _fields)
                 {
                     if (field.Name.Equals(name, StringComparison.OrdinalIgnoreCase))
                     {
-                        _Fields[index] = value;
+                        _fields[index] = value;
                         return;
                     }
 
