@@ -42,7 +42,8 @@ namespace VirtoCommerce.Web.Convertors
 
             var pathTemplate = VirtualPathUtility.ToAbsolute("~/products/{0}");
             var description = product.EditorialReviews != null ?
-                product.EditorialReviews.FirstOrDefault(er => er.ReviewType.Equals("quickreview", StringComparison.OrdinalIgnoreCase)) : null;
+                product.EditorialReviews.FirstOrDefault() : null; // Since there is no possibility to set review type in admin console for now
+                //product.EditorialReviews.FirstOrDefault(er => er.ReviewType.Equals("quickreview", StringComparison.OrdinalIgnoreCase)) : null;
 
             var fieldsCollection = new MetafieldsCollection("global", product.Properties);
             var options = GetOptions(product.Properties).Select(o => o.Key).ToArray();
