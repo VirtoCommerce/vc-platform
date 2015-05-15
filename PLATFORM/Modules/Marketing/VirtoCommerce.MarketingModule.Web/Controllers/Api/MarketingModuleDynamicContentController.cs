@@ -124,13 +124,15 @@ namespace VirtoCommerce.MarketingModule.Web.Controllers.Api
 
 		// GET: api/marketing/contentpublications/new
 		[HttpGet]
-		[ResponseType(typeof(webModel.Promotion))]
+        [ResponseType(typeof(webModel.DynamicContentPublication))]
 		[Route("contentpublications/new")]
 		[CheckPermission(Permission = PredefinedPermissions.Manage)]
 		public IHttpActionResult GetNewDynamicPublication()
 		{
 			var retVal = new webModel.DynamicContentPublication
 			{
+                ContentItems = new webModel.DynamicContentItem[] {},
+                ContentPlaces = new webModel.DynamicContentPlace[] {},
 				DynamicExpression = _marketingExtensionManager.DynamicContentExpressionTree as DynamicContentExpressionTree,
 				IsActive = true
 			};
