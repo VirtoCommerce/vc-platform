@@ -18,10 +18,8 @@ namespace VirtoCommerce.Web.Extensions
             {
                 allIds.AddRange(product.Variations.Select(v=>v.Id));
             }
-            else
-            {
-                allIds.Add(product.Id);
-            }
+
+            allIds.Add(product.Id);
 
             return allIds.ToArray();
         }

@@ -89,18 +89,21 @@ namespace VirtoCommerce.Web.Models.Routing
                     }
 
                     //Make sure we allways use same virtual path as Route provides
-                    var routePath = filterContext.RouteData.Route.GetVirtualPath(
-                        filterContext.RequestContext,
-                        filterContext.RouteData.Values);
 
-                    if (routePath != null && !string.IsNullOrEmpty(routePath.VirtualPath))
+                    if (filterContext.RouteData.Route != null)
                     {
-                        var absoluteRoutePath = HttpUtility.UrlDecode(string.Concat(baseUri, context.Request.ApplicationPath, context.Request.ApplicationPath != "/" ? "/" : "", routePath.VirtualPath));
+                        var routePath = filterContext.RouteData.Route.GetVirtualPath(
+                            filterContext.RequestContext, filterContext.RouteData.Values);
 
-                        if (!string.IsNullOrEmpty(absoluteRoutePath) && !absoluteRoutePath.Equals(path, StringComparison.InvariantCultureIgnoreCase))
+                        if (routePath != null && !string.IsNullOrEmpty(routePath.VirtualPath))
                         {
-                            path = absoluteRoutePath;
-                            needRedirect = true;
+                            var absoluteRoutePath = HttpUtility.UrlDecode(string.Concat(baseUri, context.Request.ApplicationPath, context.Request.ApplicationPath != "/" ? "/" : "", routePath.VirtualPath));
+
+                            if (!string.IsNullOrEmpty(absoluteRoutePath) && !absoluteRoutePath.Equals(path, StringComparison.InvariantCultureIgnoreCase))
+                            {
+                                path = absoluteRoutePath;
+                                needRedirect = true;
+                            }
                         }
                     }
 
