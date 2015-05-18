@@ -46,6 +46,11 @@
         });
     }
 
+    $scope.codeValidator = function (value) {
+        var pattern = /[$+;=%{}[\]|\\\/@ ~#!^*&()?:'<>,]/;
+        return !pattern.test(value);
+    };
+
     $scope.setForm = function (form) {
         $scope.formScope = form;
     }

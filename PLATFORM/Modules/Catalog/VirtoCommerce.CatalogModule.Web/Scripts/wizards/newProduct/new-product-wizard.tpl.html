@@ -2,23 +2,24 @@
 <div class="blade-content">
     <div class="blade-inner">
         <div class="inner-block">
-            <form class="form" name="newProductForm">
-                <div class="form-group" ng-init="setForm(newProductForm)">
-                    <label class="form-label">SKU:</label>
+            <form class="form" name="detailForm">
+                <div class="form-group" ng-init="setForm(detailForm)">
+                    <label class="form-label">SKU</label>
                     <div class="form-input">
-                        <input required class="form-control" name="productCode" ng-model="blade.item.code" ng-class="{'error': newProductForm.productCode.$invalid && !newProductForm.productCode.$pristine}" placeholder="Enter item sku" />
+                        <input required class="form-control" name="code" ng-model="blade.item.code" ng-class="{'error': detailForm.code.$invalid && !detailForm.code.$pristine}" placeholder="Enter item sku" ui-validate=" 'codeValidator($value)' " />
                     </div>
-                    <div class="form-error" ng-if="newProductForm.productCode.$dirty && newProductForm.productCode.$invalid">
-                        <span ng-if="newProductForm.productCode.$error.required">Required</span>
+                    <div class="form-error" ng-if="detailForm.code.$dirty">
+                        <span data-ng-show="detailForm.code.$error.required">Required</span>
+                        <span data-ng-show="detailForm.code.$error.validator">Code can't contain $+;=%{}[]|\/@ ~#!^*&()?:'<>, characters</span>
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="form-label">Name:</label>
+                    <label class="form-label">Name</label>
                     <div class="form-input">
-                        <textarea name="productName" required class="form-control" cols="30" rows="3" ng-model="blade.item.name" ng-class="{'error': newProductForm.productName.$invalid && !newProductForm.productName.$pristine}" placeholder="Enter item name"></textarea>
+                        <textarea name="productName" required class="form-control" cols="30" rows="3" ng-model="blade.item.name" ng-class="{'error': detailForm.productName.$invalid && !detailForm.productName.$pristine}" placeholder="Enter item name"></textarea>
                     </div>
-                    <div class="form-error" ng-if="newProductForm.productName.$dirty && newProductForm.productName.$invalid">
-                        <span ng-if="newProductForm.productName.$error.required">Required</span>
+                    <div class="form-error" ng-if="detailForm.productName.$dirty && detailForm.productName.$invalid">
+                        <span ng-if="detailForm.productName.$error.required">Required</span>
                     </div>
                 </div>
             </form>

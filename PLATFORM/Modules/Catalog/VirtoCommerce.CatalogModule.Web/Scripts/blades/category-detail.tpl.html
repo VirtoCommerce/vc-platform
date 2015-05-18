@@ -1,18 +1,22 @@
 ﻿<div class="blade-content __gray">
     <div class="blade-inner">
         <div class="inner-block">
-            <form name="contextEntityDetailForm" class="form">
-                <fieldset ng-init="setForm(contextEntityDetailForm);">
+            <form name="detailForm" class="form">
+                <fieldset ng-init="setForm(detailForm);">
                     <div class="form-group">
-                        <label class="form-label">Name:</label>
+                        <label class="form-label">Name</label>
                         <div class="form-input">
                             <input focus-on="" required class="form-control" ng-model="blade.currentEntity.name" placeholder="Enter category name" />
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="form-label">Code:</label>
+                        <label class="form-label">Code</label>
                         <div class="form-input">
-                            <input required class="form-control" ng-model="blade.currentEntity.code" placeholder="Enter category code" />
+                            <input required class="form-control" ng-model="blade.currentEntity.code" placeholder="Enter category code" name="code" ui-validate=" 'codeValidator($value)' " />
+                        </div>
+                        <div class="form-error" data-ng-show="detailForm.code.$dirty">
+                            <!--<span data-ng-show="detailForm.code.$error.required">Required</span>-->
+                            <span data-ng-show="detailForm.code.$error.validator">Code can't contain $+;=%{}[]|\/@ ~#!^*&()?:'<>, characters</span>
                         </div>
                     </div>
                 </fieldset>
