@@ -138,7 +138,10 @@ namespace VirtoCommerce.Domain.Search.Model
 
         public virtual void Apply(ISearchFilter filter)
         {
-            _appliedFilters.Add(filter);
+            if (filter != null)
+            {
+                _appliedFilters.Add(filter);
+            }
         }
 
         protected SearchCriteriaBase(string documentType)
