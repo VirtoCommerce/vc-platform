@@ -2,7 +2,7 @@
 	<div class="blade-inner">
 		<div class="inner-block">
 			<ul class="list __items" ng-if="blade.currentEntities.length">
-                <li class="list-item" ng-click="openBlade(data)" ng-repeat="data in blade.currentEntities | orderBy:languageCode track by data.id">
+                <li class="list-item" ng-click="openBlade(data)" ng-repeat="data in blade.currentEntities | orderBy:languageCode">
                     <i class="list-ico fa fa-comment"></i>
                     <span class="list-t">
                         <span class="flag flag-{{data.languageCode.substr(3)}}"></span>
