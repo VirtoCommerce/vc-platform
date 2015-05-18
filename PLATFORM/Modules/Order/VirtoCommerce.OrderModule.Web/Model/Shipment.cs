@@ -13,6 +13,7 @@ namespace VirtoCommerce.OrderModule.Web.Model
 		public string OrganizationId { get; set; }
 		public string FulfillmentCenter { get; set; }
 		public string FulfillmentCenterId { get; set; }
+		public string ShipmentMethodCode { get; set; }
 		public string Employee { get; set; }
 		public string EmployeeId { get; set; }
 		public decimal DiscountAmount { get; set; }

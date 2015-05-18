@@ -31,7 +31,7 @@ namespace VirtoCommerce.Domain.Common
 		public virtual string GeoConnectionType { get; set; }
 
 		//this should return timezone
-		public virtual TimeSpan GeoTimeZone { get; set; }
+		public virtual string GeoTimeZone { get; set; }
 
 		public virtual string GeoIpRoutingType { get; set; }
 

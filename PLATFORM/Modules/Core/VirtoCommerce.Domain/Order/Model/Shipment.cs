@@ -8,6 +8,7 @@ namespace VirtoCommerce.Domain.Order.Model
 		public string OrganizationId { get; set; }
 		public string FulfillmentCenterId { get; set; }
 		public string EmployeeId { get; set; }
+		public string ShipmentMethodCode { get; set; }
 
 		public string CustomerOrderId { get; set; }
 		public CustomerOrder CustomerOrder { get; set; }
