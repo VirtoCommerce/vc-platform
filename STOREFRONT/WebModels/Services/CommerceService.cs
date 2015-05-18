@@ -46,7 +46,6 @@ namespace VirtoCommerce.Web.Models.Services
         private readonly ThemeClient _themeClient;
         private readonly PageClient _pageClient;
         private readonly IViewLocator _viewLocator;
-        private readonly FileStorageCacheService _pageStorageClient;
         private readonly ReviewsClient _reviewsClient;
         private readonly string _themesCacheStoragePath;
         private readonly string _pagesCacheStoragePath;
@@ -73,7 +72,7 @@ namespace VirtoCommerce.Web.Models.Services
 
             _themesCacheStoragePath = ConfigurationManager.AppSettings["ThemeCacheFolder"];
             _pagesCacheStoragePath = ConfigurationManager.AppSettings["PageCacheFolder"];
-            
+
             this._viewLocator = new FileThemeViewLocator(HostingEnvironment.MapPath(_themesCacheStoragePath));
 
             this._cartHelper = new CartHelper(this);
@@ -674,7 +673,8 @@ namespace VirtoCommerce.Web.Models.Services
 
         public async Task<IEnumerable<ApiClient.DataContracts.Price>> GetProductPricesAsync(string[] priceLists, string[] productIds)
         {
-            if (priceLists == null || productIds == null) return null;
+            if (priceLists == null || productIds == null)
+                return null;
 
             return await this._priceClient.GetPrices(priceLists, productIds).ConfigureAwait(false);
         }

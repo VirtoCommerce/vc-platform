@@ -30,8 +30,8 @@ namespace VirtoCommerce.Web.Controllers
         [Route("~/cart.js")]
         public async Task<ActionResult> CartAsync()
         {
-            var cart = SiteContext.Current.Cart;
-            return this.Json(cart, JsonRequestBehavior.AllowGet);
+            var cart = await Task.FromResult(SiteContext.Current.Cart);
+            return Json(cart, JsonRequestBehavior.AllowGet);
         }
 
         [Route("change")]
@@ -79,7 +79,8 @@ namespace VirtoCommerce.Web.Controllers
         // GET: Cart
         public async Task<ActionResult> IndexAsync()
         {
-            return this.View("Cart");
+            await Task.FromResult<object>(null);
+            return View("Cart");
         }
 
         [Route("")]
@@ -89,7 +90,7 @@ namespace VirtoCommerce.Web.Controllers
         {
             var item = await this.Service.Cart.UpdateAsync(updates, note, action);
 
-            if(update != null)
+            if (update != null)
                 return this.View("Cart");
 
             return RedirectToAction("Step1", "Checkout");
