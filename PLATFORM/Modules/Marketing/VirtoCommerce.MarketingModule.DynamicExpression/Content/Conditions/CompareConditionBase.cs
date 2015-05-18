@@ -30,7 +30,7 @@ namespace VirtoCommerce.MarketingModule.Expressions.Content
 		{
 			linq.ParameterExpression paramX = linq.Expression.Parameter(typeof(IEvaluationContext), "x");
 			var castOp = linq.Expression.MakeUnary(linq.ExpressionType.Convert, paramX, typeof(DynamicContentEvaluationContext));
-			var propertyValue = linq.Expression.Property(castOp, typeof(DynamicContentEvaluationContext).GetProperty("_propertyName"));
+			var propertyValue = linq.Expression.Property(castOp, typeof(DynamicContentEvaluationContext).GetProperty(_propertyName));
 
 			var valueExpression = linq.Expression.Constant(ParseString(Value));
 			linq.BinaryExpression binaryOp;
@@ -78,7 +78,7 @@ namespace VirtoCommerce.MarketingModule.Expressions.Content
 			else if (bool.TryParse(str, out boolValue))
 				return boolValue;
 
-			return null;
+			return str;
 		}
 	}
 }
