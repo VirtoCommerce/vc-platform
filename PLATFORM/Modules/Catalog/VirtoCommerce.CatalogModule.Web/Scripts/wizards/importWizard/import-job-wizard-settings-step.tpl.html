@@ -5,31 +5,31 @@
             <form name="settingsForm" class="form">
                 <fieldset ng-init="setForm(settingsForm)">
                     <div class="form-group">
-                        <label class="form-label">Errors allowed during import:</label>
+                        <label class="form-label">Errors allowed during import</label>
                         <div class="form-input __number">
                             <input va-number required ng-model="item.maxErrorsCount" min="0" step="1">
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="form-label">Import step (import every {{item.importStep}} entry):</label>
+                        <label class="form-label">Import step (import every {{item.importStep}} entry)</label>
                         <div class="form-input __number">
                             <input va-number required ng-model="item.importStep" min="1" step="1">
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="form-label">Start index:</label>
+                        <label class="form-label">Start index</label>
                         <div class="form-input __number">
                             <input va-number required ng-model="item.startIndex" min="0" step="1">
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="form-label">Import count (import all by default):</label>
+                        <label class="form-label">Import count (import all by default)</label>
                         <div class="form-input __number">
                             <input va-number required ng-model="item.importCount" min="0" step="1">
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="form-label">Column delimiter:</label>
+                        <label class="form-label">Column delimiter</label>
                         <div class="form-input">
                             <select ng-model="item.columnDelimiter" ng-options="obj.value as obj.name for obj in columnDelimiters">
                                 <option value="">Other</option>

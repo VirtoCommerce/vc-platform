@@ -90,7 +90,7 @@
                     </script>
                     <script type="text/ng-template" id="expression-ConditionGeoTimeZone.html">
                         Are browsing from a time zone -/+ offset from UTC
-                        <a class="__link" left-click-menu data-target="compareCondition_menu{{element1.id}}">{{element1.compareCondition}}</a>
+                        <a class="__link" left-click-menu data-target="compareCondition_menu{{element1.id}}">{{element1.compareCondition | compareConditionToText}}</a>
                         <div class="form-group" ng-controller="virtoCommerce.marketingModule.addPublishingFirstStepController.expressions">
                             <div class="form-input">
                                 <ui-select ng-model="element1.value">
@@ -120,7 +120,7 @@
                     </script>
                     <script type="text/ng-template" id="expression-ConditionStoreSearchedPhrase.html">
                         Shopper searched in store for phrase
-                        <a class="__link" left-click-menu data-target="compareString_menu{{element1.id}}">{{element1.matchCondition}}</a>
+                        <a class="__link" left-click-menu data-target="compareString_menu{{element1.id}}">{{element1.matchCondition | compareConditionToText}}</a>
                         <div class="form-group">
                             <div class="form-input">
                                 <input required class="form-control" ng-model="element1.value" placeholder="enter value..." />

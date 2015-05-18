@@ -1,10 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Hangfire.Dashboard;
 using Microsoft.Owin;
 using VirtoCommerce.Platform.Core.Security;
 
 namespace VirtoCommerce.Platform.Web.Hangfire
 {
+    [CLSCompliant(false)]
     public class PermissionBasedAuthorizationFilter : CheckPermissionAttribute, IAuthorizationFilter
     {
         private readonly IPermissionService _permissionService;

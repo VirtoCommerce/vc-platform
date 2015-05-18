@@ -10,22 +10,22 @@
 		if (!blade.isNew) {
 			$scope.bladeToolbarCommands = [
 				{
-					name: "Refresh", icon: 'fa fa-refresh',
-					executeMethod: function () {
-						blade.entity = angular.copy(blade.originalEntity);
-					},
-					canExecuteMethod: function () {
-						return !angular.equals(blade.originalEntity, blade.entity);
-					},
-					permission: 'marketing:manage'
-				},
-				{
 					name: "Save", icon: 'fa fa-save',
 					executeMethod: function () {
 						blade.saveChanges();
 					},
 					canExecuteMethod: function () {
 						return !angular.equals(blade.originalEntity, blade.entity) && !$scope.formScope.$invalid;
+					},
+					permission: 'marketing:manage'
+				},
+                {
+				    name: "Reset", icon: 'fa fa-undo',
+					executeMethod: function () {
+						blade.entity = angular.copy(blade.originalEntity);
+					},
+					canExecuteMethod: function () {
+						return !angular.equals(blade.originalEntity, blade.entity);
 					},
 					permission: 'marketing:manage'
 				},

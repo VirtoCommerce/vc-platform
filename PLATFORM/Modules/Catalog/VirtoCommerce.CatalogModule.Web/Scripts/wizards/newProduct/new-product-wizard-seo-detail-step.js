@@ -43,7 +43,7 @@
 
     $scope.semanticUrlValidator = function (value) {
         // var pattern = /^([a-zA-Z0-9\(\)_\-]+)*$/;
-        var pattern = /[$+;=%{}[\]|\/@ ~#!^*&()?:'<>,]/;
+        var pattern = /[$+;=%{}[\]|\\\/@ ~#!^*&?:'<>,]/;
         return !pattern.test(value);
     }
 

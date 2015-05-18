@@ -16,13 +16,13 @@
             <form name="importJobForm" class="form">
                 <fieldset ng-init="setForm(importJobForm)">
                     <div class="form-group">
-                        <label class="form-label">Name:</label>
+                        <label class="form-label">Name</label>
                         <div class="form-input">
                             <input required class="form-control" ng-model="blade.item.name" placeholder="Enter import job name" />
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="form-label">Csv Template:</label>
+                        <label class="form-label">Csv Template</label>
                         <div class="form-input">
                             <input type="file" uploader="uploader" nv-file-select style="z-index: 0;" tabindex="-1">
                             <input type="text" readonly="" ng-model="blade.item.templatePath">

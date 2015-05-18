@@ -1,14 +1,15 @@
-﻿using System.Web.Mvc;
+﻿using System.Net;
+using System.Web.Mvc;
 
 namespace VirtoCommerce.Web.Controllers
 {
     public class ErrorsController : StoreControllerBase
     {
         [HttpGet]
-        public ActionResult NotFound()
+        public ActionResult Http404()
         {
+            Response.StatusCode = (int)HttpStatusCode.NotFound;
             Response.TrySkipIisCustomErrors = true;
-            Response.StatusCode = 404;
 
             return View("404");
         }

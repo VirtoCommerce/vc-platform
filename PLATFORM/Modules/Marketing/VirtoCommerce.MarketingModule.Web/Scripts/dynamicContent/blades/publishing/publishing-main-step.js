@@ -2,6 +2,26 @@
 .controller('virtoCommerce.marketingModule.addPublishingFirstStepController.expressions', ['$scope', 'virtoCommerce.coreModule.common.countries', function ($scope, countries) {
     $scope.timeZones = countries.getTimeZones();
 }])
+.filter('compareConditionToText', function () {
+    return function (input) {
+        var retVal;
+        switch (input) {
+            case 'IsMatching': retVal = 'matching'; break;
+            case 'IsNotMatching': retVal = 'not matching'; break;
+            case 'IsGreaterThan': retVal = 'greater than'; break;
+            case 'IsGreaterThanOrEqual': retVal = 'greater than or equals'; break;
+            case 'IsLessThan': retVal = 'less than'; break;
+            case 'IsLessThanOrEqual': retVal = 'less than or equals'; break;
+            case 'Contains': retVal = 'containing'; break;
+            case 'NotContains': retVal = 'not containing'; break;
+            case 'Matching': retVal = 'matching'; break;
+            case 'NotMatching': retVal = 'not matching'; break;
+            default:
+                retVal = input;
+        }
+        return retVal;
+    };
+})
 .controller('virtoCommerce.marketingModule.addPublishingFirstStepController', ['$scope', 'virtoCommerce.marketingModule.dynamicContent.contentPublications', 'platformWebApp.bladeNavigationService', 'virtoCommerce.coreModule.common.dynamicExpressionService', function ($scope, contentPublications, bladeNavigationService, dynamicExpressionService) {
     $scope.setForm = function (form) {
         $scope.formScope = form;
@@ -26,7 +46,7 @@
 				        permission: 'marketing:manage'
 				    },
 				    {
-				        name: "Refresh", icon: 'fa fa-refresh',
+				        name: "Reset", icon: 'fa fa-undo',
 				        executeMethod: function () {
 				            blade.entity = angular.copy(blade.originalEntity);
 				        },
@@ -34,7 +54,7 @@
 				            return blade.checkDifferense();
 				        },
 				        permission: 'marketing:manage'
-				    },
+                    },
 				    {
 				        name: "Delete", icon: 'fa fa-trash',
 				        executeMethod: function () {
@@ -152,6 +172,7 @@
 				!angular.equals(blade.entity.isActive, blade.originalEntity.isActive) ||
 				!angular.equals(blade.entity.startDate, blade.originalEntity.startDate) ||
 				!angular.equals(blade.entity.endDate, blade.originalEntity.endDate) ||
+				!angular.equals(blade.entity.dynamicExpression, blade.originalEntity.dynamicExpression) ||
 				blade.entity.contentItems.length !== blade.originalEntity.contentItems.length ||
 				blade.entity.contentPlaces.length !== blade.originalEntity.contentPlaces.length;
 

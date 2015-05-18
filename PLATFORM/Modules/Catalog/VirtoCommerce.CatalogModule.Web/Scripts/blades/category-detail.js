@@ -18,6 +18,11 @@
         $scope.blade.isLoading = false;
     };
 
+    $scope.codeValidator = function(value) {
+        var pattern = /[$+;=%{}[\]|\\\/@ ~#!^*&()?:'<>,]/;
+        return !pattern.test(value);
+    };
+
     function isDirty() {
         return !angular.equals($scope.blade.currentEntity, $scope.blade.origEntity);
     };

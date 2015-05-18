@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.catalogModule')
-.controller('virtoCommerce.catalogModule.newProductWizardController', ['$scope', 'platformWebApp.bladeNavigationService', '$http', function ($scope, bladeNavigationService, $http) {
+.controller('virtoCommerce.catalogModule.newProductWizardController', ['$scope', 'platformWebApp.bladeNavigationService', function ($scope, bladeNavigationService) {
 
     $scope.blade.isLoading = false;
 
@@ -94,6 +94,11 @@
             bladeNavigationService.showBlade(newBlade, $scope.blade);
         }
     }
+
+    $scope.codeValidator = function (value) {
+        var pattern = /[$+;=%{}[\]|\\\/@ ~#!^*&()?:'<>,]/;
+        return !pattern.test(value);
+    };
 
     $scope.setForm = function (form) {
         $scope.formScope = form;

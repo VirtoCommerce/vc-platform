@@ -4,6 +4,7 @@ using Microsoft.Practices.Unity;
 
 namespace VirtoCommerce.Platform.Web.Hangfire
 {
+    [CLSCompliant(false)]
     public class UnityJobActivator : JobActivator
     {
         private readonly IUnityContainer _container;
