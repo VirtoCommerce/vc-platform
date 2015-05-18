@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Net.Http;
+using System.Text;
 using System.Threading.Tasks;
 using VirtoCommerce.ApiClient.DataContracts;
 using VirtoCommerce.ApiClient.Utilities;
@@ -18,16 +20,24 @@ namespace VirtoCommerce.ApiClient
         {
         }
 
-        public Task<ItemInventory> GetItemInventory(string itemId, bool useCache = false)
+        public Task<IEnumerable<InventoryInfo>> GetItemsInventories(string[] itemsIds)
         {
-            var inventory = GetAsync<ItemInventory>(CreateRequestUri(string.Format(RelativePaths.GetItemInventory, itemId)), useCache);
+            var parameters = new List<string>();
 
-            return inventory;
+            foreach (var itemId in itemsIds)
+            {
+                parameters.Add(string.Format("ids={0}", itemId));
+            }
+
+            var inventories = GetAsync<IEnumerable<InventoryInfo>>(
+                CreateRequestUri(RelativePaths.GetItemsInventories, string.Join("&", parameters)), false);
+
+            return inventories;
         }
 
         protected class RelativePaths
         {
-            public const string GetItemInventory = "catalog/products/{0}/inventory";
+            public const string GetItemsInventories = "inventory/products";
         }
     }
 }

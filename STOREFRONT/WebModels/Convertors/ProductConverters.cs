@@ -36,7 +36,7 @@ namespace VirtoCommerce.Web.Convertors
 
         public static Product AsWebModel(
             this Data.Product product, IEnumerable<Data.Price> prices,
-            IEnumerable<Data.Marketing.PromotionReward> rewards, Collection collection = null)
+            IEnumerable<Data.Marketing.PromotionReward> rewards, IEnumerable<Data.InventoryInfo> inventories, Collection collection = null)
         {
             var productModel = new Product();
 
@@ -95,20 +95,25 @@ namespace VirtoCommerce.Web.Convertors
                 {
                     var price = prices.FirstOrDefault(p => p.ProductId == variation.Id);
 
-                    productModel.Variants.Add(variation.AsWebModel(price, options, productRewards));
+                    var variantInventory = inventories.FirstOrDefault(i => i.ProductId == variation.Id);
+
+                    productModel.Variants.Add(variation.AsWebModel(price, options, productRewards, variantInventory));
                 }
             }
 
             var productPrice = prices.FirstOrDefault(p => p.ProductId == product.Id);
 
-            var variant = product.AsVariantWebModel(productPrice, options, productRewards);
+            var productInventory = inventories.FirstOrDefault(i => i.ProductId == product.Id);
+
+            var variant = product.AsVariantWebModel(productPrice, options, productRewards, productInventory);
 
             productModel.Variants.Add(variant);
 
             return productModel;
         }
 
-        public static Variant AsWebModel(this Data.CatalogItem variation, Data.Price price, string[] options, IEnumerable<Data.Marketing.PromotionReward> rewards)
+        public static Variant AsWebModel(this Data.CatalogItem variation, Data.Price price, string[] options,
+            IEnumerable<Data.Marketing.PromotionReward> rewards, Data.InventoryInfo inventory)
         {
             var variantModel = new Variant();
 
@@ -126,9 +131,9 @@ namespace VirtoCommerce.Web.Convertors
             //variantModel.Id = variation.Id;
             variantModel.Id = variation.Code;
             variantModel.Image = variationImage != null ? variationImage.AsWebModel(variation.Name, variation.MainProductId) : null;
-            variantModel.InventoryManagement = null; // TODO
-            variantModel.InventoryPolicy = null; // TODO
-            variantModel.InventoryQuantity = 0; // TODO
+            variantModel.InventoryManagement = inventory.FulfillmentCenterId;
+            variantModel.InventoryPolicy = inventory.AllowPreorder ? "contoniue" : "deny";
+            variantModel.InventoryQuantity = inventory.InStockQuantity;
             variantModel.Option1 = options.Length >= 1 ? variation.Properties[options[0]] as string : null;
             variantModel.Option2 = options.Length >= 2 ? variation.Properties[options[1]] as string : null;
             variantModel.Option3 = options.Length >= 3 ? variation.Properties[options[2]] as string : null;
@@ -150,7 +155,8 @@ namespace VirtoCommerce.Web.Convertors
             return variantModel;
         }
 
-        public static Variant AsVariantWebModel(this Data.Product product, Data.Price price, string[] options, IEnumerable<Data.Marketing.PromotionReward> rewards)
+        public static Variant AsVariantWebModel(this Data.Product product, Data.Price price, string[] options, IEnumerable<Data.Marketing.PromotionReward> rewards,
+            Data.InventoryInfo inventory)
         {
             var variantModel = new Variant();
 

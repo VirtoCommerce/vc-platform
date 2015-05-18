@@ -2,12 +2,8 @@
 
 namespace VirtoCommerce.ApiClient.DataContracts
 {
-    public class ItemInventory
+    public class InventoryInfo
     {
-        public DateTime CreatedDate { get; set; }
-
-        public DateTime? MidifiedDate { get; set; }
-
         public string FulfillmentCenterId { get; set; }
 
         public string ProductId { get; set; }
@@ -32,6 +28,6 @@ namespace VirtoCommerce.ApiClient.DataContracts
 
         public DateTime? BackorderAvailabilityDate { get; set; }
 
-        public int Status { get; set; }
+        public string Status { get; set; }
     }
 }
