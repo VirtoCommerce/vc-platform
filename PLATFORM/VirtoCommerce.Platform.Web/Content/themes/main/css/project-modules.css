@@ -262,12 +262,18 @@
     white-space: nowrap;
 }
 
+.table.__normal .table-col.__product-name
+{
+    max-width: 250px;
+    width: auto;
+}
+
 .table .table-col.__product-code
 {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-    width: 20%;
+    max-width: 100px;
 }
 
 
