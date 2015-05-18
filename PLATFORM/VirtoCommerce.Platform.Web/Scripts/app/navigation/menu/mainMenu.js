@@ -72,10 +72,22 @@
 
 			scope.currentMenuItem = undefined;
 			scope.menuItems = mainMenuService.menuItems;
+			scope.counter = 0;
 		
 			scope.selectMenuItem = function (menuItem) {
 				scope.currentMenuItem = menuItem;
 				scope.showSubMenu = angular.isDefined(menuItem.children) && menuItem.children.length > 0;
+
+				if (scope.showSubMenu) {
+					scope.counter++;
+				}
+
+				if (scope.counter > 1) {
+					scope.showSubMenu = false;
+					scope.counter = 0;
+				}
+
+				console.log(scope.counter)
 		
 				//run action
 				if (angular.isDefined(menuItem.action)) {
