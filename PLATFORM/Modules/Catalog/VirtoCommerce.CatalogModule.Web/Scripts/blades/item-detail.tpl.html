@@ -1,17 +1,20 @@
 ﻿<div class="blade-content __medium-wide __gray">
     <div class="blade-inner">
         <div class="inner-block">
-            <form name="itemDetailForm" class="form">
-                <div class="form-group" ng-init="setForm(itemDetailForm)">
-                    <label class="form-label">SKU:</label>
+            <form name="detailForm" class="form">
+                <div class="form-group" ng-init="setForm(detailForm)">
+                    <label class="form-label">SKU</label>
                     <div class="form-input">
-                        <input ng-class="{'error': itemDetailForm.itemCode.$invalid && !itemDetailForm.itemCode.$pristine}" required class="form-control" ng-model="blade.item.code" name="itemCode" placeholder="Enter item sku" />
+                        <input ng-class="{'error': detailForm.code.$invalid && !detailForm.code.$pristine}" required class="form-control" ng-model="blade.item.code" name="code" placeholder="Enter item sku" ui-validate=" 'codeValidator($value)' " />
+                    </div>
+                    <div class="form-error" data-ng-show="detailForm.code.$dirty">
+                        <span data-ng-show="detailForm.code.$error.validator">Code can't contain $+;=%{}[]|\/@ ~#!^*&()?:'<>, characters</span>
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="form-label">Name:</label>
+                    <label class="form-label">Name</label>
                     <div class="form-input">
-                        <textarea ng-class="{'error': itemDetailForm.itemName.$invalid && !itemDetailForm.itemName.$pristine}" cols="30" rows="3" ng-model="blade.item.name" name="itemName" placeholder="Enter item name"></textarea>
+                        <textarea ng-class="{'error': detailForm.itemName.$invalid && !detailForm.itemName.$pristine}" cols="30" rows="3" ng-model="blade.item.name" name="itemName" placeholder="Enter item name"></textarea>
                     </div>
                 </div>
                 <div class="columns">
