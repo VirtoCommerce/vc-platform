@@ -23,13 +23,18 @@
         });
     }
 
-    $scope.onTitularChange = function () {
-        $scope.isTitular = !$scope.isTitular;
-        if ($scope.isTitular) {
-            $scope.currentBlade.item.titularItemId = null;
-        } else {
-            $scope.currentBlade.item.titularItemId = $scope.currentBlade.origItem.titularItemId;
-        }
+    //$scope.onTitularChange = function () {
+    //    $scope.isTitular = !$scope.isTitular;
+    //    if ($scope.isTitular) {
+    //        $scope.currentBlade.item.titularItemId = null;
+    //    } else {
+    //        $scope.currentBlade.item.titularItemId = $scope.currentBlade.origItem.titularItemId;
+    //    }
+    //};
+
+    $scope.codeValidator = function(value) {
+        var pattern = /[$+;=%{}[\]|\\\/@ ~#!^*&()?:'<>,]/;
+        return !pattern.test(value);
     };
 
     function isDirty() {
@@ -39,7 +44,7 @@
 
     function saveChanges() {
         $scope.currentBlade.isLoading = true;
-        var changes = { id: $scope.currentBlade.item.id, name: $scope.currentBlade.item.name, titularItemId: $scope.currentBlade.item.titularItemId, code: $scope.currentBlade.item.code };
+        //var changes = { id: $scope.currentBlade.item.id, name: $scope.currentBlade.item.name, titularItemId: $scope.currentBlade.item.titularItemId, code: $scope.currentBlade.item.code };
         items.updateitem({}, $scope.currentBlade.item, function (data, headers) {
             $scope.currentBlade.refresh(true);
         }, function (error) {
