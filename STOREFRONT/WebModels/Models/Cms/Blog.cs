@@ -5,7 +5,7 @@ namespace VirtoCommerce.Web.Models.Cms
     public class Blog : Drop
     {
         private ItemCollection<Tag> _allTags;
-        private ItemCollection<Article> _articles;
+        //private ItemCollection<Article> _articles;
 
         public ItemCollection<Tag> AllTags
         {
@@ -31,24 +31,13 @@ namespace VirtoCommerce.Web.Models.Cms
             }
         }
 
-        public ItemCollection<Article> Articles
-        {
-            get
-            {
-                //this.LoadProducts();
-                return this._articles;
-            }
-            set
-            {
-                this._articles = value;
-            }
-        }
+        public Article[] Articles { get; set; }
 
         public int ArticlesCount
         {
             get
             {
-                return this.Articles == null ? 0 : this.Articles.Size;
+                return this.Articles == null ? 0 : this.Articles.Length;
             }
         }
 
