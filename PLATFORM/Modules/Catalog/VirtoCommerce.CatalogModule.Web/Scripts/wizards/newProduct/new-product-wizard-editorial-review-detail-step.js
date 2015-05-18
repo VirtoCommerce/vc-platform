@@ -1,8 +1,14 @@
 ﻿angular.module('virtoCommerce.catalogModule')
 .controller('virtoCommerce.catalogModule.editorialReviewDetailWizardStepController', ['$scope', function ($scope)
 {
+    $scope.types = ["QuickReview", "FullReview"];
+
     function initializeBlade(data)
     {
+        if (!data.reviewType) {
+            data.reviewType = $scope.types[0];
+        }
+
         $scope.currentEntity = angular.copy(data);
         $scope.blade.origEntity = data;
         $scope.blade.isLoading = false;

@@ -169,45 +169,48 @@ namespace VirtoCommerce.MerchandisingModule.Web.Services
 
         public static ISearchFilter Convert(this IBrowseFilterService helper, ISearchFilter filter, string[] keys)
         {
-            // get values that we have filters set for
-            var values = from v in filter.GetValues() where keys.Contains(v.Id) select v;
-
-            var attributeFilter = filter as AttributeFilter;
-            if (attributeFilter != null)
+            if (filter != null && keys != null)
             {
-                var newFilter = new AttributeFilter();
-                newFilter.InjectFrom(filter);
-                newFilter.Values = values.OfType<AttributeFilterValue>().ToArray();
-                return newFilter;
-            }
+                // get values that we have filters set for
+                var values = from v in filter.GetValues() where keys.Contains(v.Id) select v;
 
-            var rangeFilter = filter as RangeFilter;
-            if (rangeFilter != null)
-            {
-                var newFilter = new RangeFilter();
-                newFilter.InjectFrom(filter);
+                var attributeFilter = filter as AttributeFilter;
+                if (attributeFilter != null)
+                {
+                    var newFilter = new AttributeFilter();
+                    newFilter.InjectFrom(filter);
+                    newFilter.Values = values.OfType<AttributeFilterValue>().ToArray();
+                    return newFilter;
+                }
 
-                newFilter.Values = values.OfType<RangeFilterValue>().ToArray();
-                return newFilter;
-            }
+                var rangeFilter = filter as RangeFilter;
+                if (rangeFilter != null)
+                {
+                    var newFilter = new RangeFilter();
+                    newFilter.InjectFrom(filter);
 
-            var priceRangeFilter = filter as PriceRangeFilter;
-            if (priceRangeFilter != null)
-            {
-                var newFilter = new PriceRangeFilter();
-                newFilter.InjectFrom(filter);
+                    newFilter.Values = values.OfType<RangeFilterValue>().ToArray();
+                    return newFilter;
+                }
 
-                newFilter.Values = values.OfType<RangeFilterValue>().ToArray();
-                return newFilter;
-            }
+                var priceRangeFilter = filter as PriceRangeFilter;
+                if (priceRangeFilter != null)
+                {
+                    var newFilter = new PriceRangeFilter();
+                    newFilter.InjectFrom(filter);
 
-            var categoryFilter = filter as CategoryFilter;
-            if (categoryFilter != null)
-            {
-                var newFilter = new CategoryFilter();
-                newFilter.InjectFrom(filter);
-                newFilter.Values = values.OfType<CategoryFilterValue>().ToArray();
-                return newFilter;
+                    newFilter.Values = values.OfType<RangeFilterValue>().ToArray();
+                    return newFilter;
+                }
+
+                var categoryFilter = filter as CategoryFilter;
+                if (categoryFilter != null)
+                {
+                    var newFilter = new CategoryFilter();
+                    newFilter.InjectFrom(filter);
+                    newFilter.Values = values.OfType<CategoryFilterValue>().ToArray();
+                    return newFilter;
+                }
             }
 
             return null;

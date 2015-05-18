@@ -30,18 +30,21 @@ namespace VirtoCommerce.MarketingModule.Web.Converters
 			if (!String.IsNullOrEmpty(publication.PredicateVisualTreeSerialized))
 			{
 				retVal.DynamicExpression = JsonConvert.DeserializeObject<DynamicContentExpressionTree>(publication.PredicateVisualTreeSerialized);
-				//Copy available elements from etalon because they not persisted
-				var sourceBlocks = ((DynamicExpression)etalonEpressionTree).Traverse(x => x.AvailableChildren);
-				var targetBlocks = ((DynamicExpression)retVal.DynamicExpression).Traverse(x => x.Children);
-				foreach (var sourceBlock in sourceBlocks)
+				if (etalonEpressionTree != null)
 				{
-					foreach (var targetBlock in targetBlocks.Where(x => x.Id == sourceBlock.Id))
+					//Copy available elements from etalon because they not persisted
+					var sourceBlocks = ((DynamicExpression)etalonEpressionTree).Traverse(x => x.AvailableChildren);
+					var targetBlocks = ((DynamicExpression)retVal.DynamicExpression).Traverse(x => x.Children);
+					foreach (var sourceBlock in sourceBlocks)
 					{
-						targetBlock.AvailableChildren = sourceBlock.AvailableChildren;
+						foreach (var targetBlock in targetBlocks.Where(x => x.Id == sourceBlock.Id))
+						{
+							targetBlock.AvailableChildren = sourceBlock.AvailableChildren;
+						}
 					}
+					//copy available elements from etalon
+					retVal.DynamicExpression.AvailableChildren = etalonEpressionTree.AvailableChildren;
 				}
-				//copy available elements from etalon
-				retVal.DynamicExpression.AvailableChildren = etalonEpressionTree.AvailableChildren;
 			}
 			return retVal;
 		}
