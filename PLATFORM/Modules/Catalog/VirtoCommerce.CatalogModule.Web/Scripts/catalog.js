@@ -33,7 +33,7 @@ angular.module(catalogsModuleName, [
   ]
 )
 .run(
-  ['$rootScope', 'platformWebApp.mainMenuService', 'platformWebApp.widgetService', '$state', 'platformWebApp.notificationTemplateResolver', 'platformWebApp.bladeNavigationService', function ($rootScope, mainMenuService, widgetService, $state, notificationTemplateResolver, bladeNavigationService) {
+  ['$rootScope', 'platformWebApp.mainMenuService', 'platformWebApp.widgetService', '$state', 'platformWebApp.notificationTemplateResolver', 'platformWebApp.bladeNavigationService', 'virtoCommerce.catalogModule.catalogImportService', 'virtoCommerce.catalogModule.catalogExportService', function ($rootScope, mainMenuService, widgetService, $state, notificationTemplateResolver, bladeNavigationService, catalogImportService, catalogExportService) {
       //Register module in main menu
       var menuItem = {
           path: 'browse/catalog',
@@ -151,4 +151,13 @@ angular.module(catalogsModuleName, [
       };
       widgetService.registerWidget(catalogPropertyWidget, 'catalogDetail');
 
+      // IMPORT / EXPORT
+      catalogImportService.register({});
+      catalogExportService.register({
+          name: 'VirtoCommerce CSV export',
+          description: 'Native VirtoCommerce catalog data export to CSV',
+          icon: 'fa fa-file-archive-o',
+          controller: 'virtoCommerce.catalogModule.catalogCSVexportController',
+          template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/export/catalog-CSV-export.tpl.html'
+      });
   }]);

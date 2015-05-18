@@ -1,0 +1,19 @@
+﻿<div class="blade-static __bottom">
+    <button class="btn" ng-click="startProcess()" ng-disabled="formScope.$invalid">
+        <span>Start export</span>
+    </button>
+</div>
+<div class="blade-content">
+    <div class="blade-inner">
+        <div class="inner-block">
+            <form class="form" name="detailForm">
+                <div class="form-group" ng-init="setForm(detailForm)">
+                    <label class="form-label">CSV file name</label>
+                    <div class="form-input">
+                        <input focus-on="" required class="form-control" ng-model="blade.currentEntity.name" placeholder="Enter file name" />
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

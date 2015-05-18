@@ -122,19 +122,7 @@ function ($injector, $rootScope, $scope, catalogs, bladeNavigationService, dialo
             showImportJobsBlade(null, "All import jobs");
         }
     }
-
-    $scope.export = function (node) {
-        var newBlade = {
-            id: 'importJobs',
-            catalog: node,
-            title: 'Data export',
-            subtitle: 'Configure & start data export',
-            controller: 'virtoCommerce.catalogModule.exportWizardController',
-            template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/wizards/export/export-wizard.tpl.html'
-        };
-        bladeNavigationService.showBlade(newBlade, $scope.blade);
-    }
-
+    
     function showImportJobsBlade(id, title) {
         var newBlade = {
             catalogId: id,
@@ -205,15 +193,23 @@ function ($injector, $rootScope, $scope, catalogs, bladeNavigationService, dialo
                 return true;
             }
         },
-        //{
-        //    name: "Export", icon: 'fa fa-upload',
-        //    executeMethod: function () {
-        //        $scope.export(selectedNode);
-        //    },
-        //    canExecuteMethod: function () {
-        //        return true;
-        //    }
-        //},
+        {
+            name: "Export", icon: 'fa fa-upload',
+            executeMethod: function () {
+                var newBlade = {
+                    id: 'exports',
+                    title: 'Data export',
+                    catalogId: selectedNode.id,
+                    subtitle: 'Choose data format & start export',
+                    controller: 'virtoCommerce.catalogModule.exporterListController',
+                    template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/export/exporter-list.tpl.html'
+                };
+                bladeNavigationService.showBlade(newBlade, $scope.blade);
+            },
+            canExecuteMethod: function () {
+                return selectedNode;
+            }
+        },
       {
           name: "Delete", icon: 'fa fa-trash-o',
           executeMethod: function () {

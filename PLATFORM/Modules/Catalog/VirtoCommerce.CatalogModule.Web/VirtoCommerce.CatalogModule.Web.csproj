@@ -165,6 +165,12 @@
     <Content Include="Scripts\blades\catalog-property-detail.tpl.html" />
     <Content Include="Scripts\blades\common\catalog-items-select.js" />
     <Content Include="Scripts\blades\common\catalog-items-select.tpl.html" />
+    <Content Include="Scripts\blades\export\catalog-export.js" />
+    <Content Include="Scripts\blades\export\catalog-CSV-export.js" />
+    <Content Include="Scripts\blades\export\exporter-list.js" />
+    <Content Include="Scripts\blades\export\catalog-CSV-export.tpl.html" />
+    <Content Include="Scripts\blades\export\exporter-list.tpl.html" />
+    <Content Include="Scripts\blades\import\catalog-import.js" />
     <Content Include="Scripts\blades\item-associations-list.js" />
     <Content Include="Scripts\blades\editorialReviews-list.js" />
     <Content Include="Scripts\blades\item-associations-list.tpl.html" />
