@@ -41,7 +41,12 @@ namespace VirtoCommerce.SearchModule.Data.Services
 
             foreach (var indexBuilder in validBulders)
             {
-                var partitions = indexBuilder.GetPartitions(lastBuildTime, nowUtc);
+                if (rebuild)
+                {
+                    indexBuilder.RemoveAll(scope);
+                }
+
+                var partitions = indexBuilder.GetPartitions(rebuild, lastBuildTime, nowUtc);
 
                 foreach (var partition in partitions)
                 {
