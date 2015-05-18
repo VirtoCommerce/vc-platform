@@ -592,9 +592,9 @@ namespace VirtoCommerce.Web.Models.Services
 
             var rewards = await _marketingClient.GetPromotionRewardsAsync(promoContext);
 
-            //var inventories = await this.GetItemInventoriesAsync(variationIds);
+            var inventories = await this.GetItemsInventoriesAsync(variationIds);
 
-            return product.AsWebModel(prices, rewards/*, inventories*/);
+            return product.AsWebModel(prices, rewards, inventories);
         }
 
         public async Task<Product> GetProductByKeywordAsync(SiteContext context, string keyword, ItemResponseGroups responseGroup = ItemResponseGroups.ItemLarge)
@@ -643,26 +643,14 @@ namespace VirtoCommerce.Web.Models.Services
 
             var rewards = await _marketingClient.GetPromotionRewardsAsync(promoContext);
 
-            //var inventories = await this.GetItemInventoriesAsync(variationIds);
+            var inventories = await this.GetItemsInventoriesAsync(variationIds);
 
-            return product.AsWebModel(prices, rewards/*, inventories*/);
+            return product.AsWebModel(prices, rewards, inventories);
         }
 
-        public async Task<ItemInventory> GetItemInventoryAsync(string itemId)
+        public async Task<IEnumerable<InventoryInfo>> GetItemsInventoriesAsync(string[] itemIds)
         {
-            return await this._inventoryClient.GetItemInventory(itemId);
-        }
-
-        public async Task<IEnumerable<ItemInventory>> GetItemInventoriesAsync(string[] itemIds)
-        {
-            var inventories = new List<ItemInventory>();
-
-            foreach (var itemId in itemIds)
-            {
-                inventories.Add(await this.GetItemInventoryAsync(itemId));
-            }
-
-            return inventories;
+            return await _inventoryClient.GetItemsInventories(itemIds);
         }
 
         public async Task<IEnumerable<ApiClient.DataContracts.Marketing.PromotionReward>>
@@ -833,9 +821,9 @@ namespace VirtoCommerce.Web.Models.Services
 
             var rewards = await _marketingClient.GetPromotionRewardsAsync(promoContext);
 
-            //var inventories = await this.GetItemInventoriesAsync(allIds);
+            var inventories = await this.GetItemsInventoriesAsync(allIds);
 
-            var result = new SearchResults<T>(response.Items.Select(i => i.AsWebModel(prices, rewards, parentCollection/*, inventories*/)).OfType<T>()) { TotalCount = response.TotalCount };
+            var result = new SearchResults<T>(response.Items.Select(i => i.AsWebModel(prices, rewards,inventories, parentCollection)).OfType<T>()) { TotalCount = response.TotalCount };
 
             if (response.Facets != null && response.Facets.Any())
                 result.Facets = response.Facets.Select(x => x.AsWebModel()).ToArray();
