@@ -12,12 +12,15 @@ namespace VirtoCommerce.Platform.Core.Common
 
         public override void OnActionExecuted(HttpActionExecutedContext actionExecutedContext)
         {
-            actionExecutedContext.Response.Headers.CacheControl = new CacheControlHeaderValue
-                                                                  {
-                                                                      MaxAge = TimeSpan.FromSeconds(Duration),
-                                                                      MustRevalidate = MustRevalidate,
-                                                                      Public = true
-                                                                  };
+			if (actionExecutedContext != null && actionExecutedContext.Response != null)
+			{
+				actionExecutedContext.Response.Headers.CacheControl = new CacheControlHeaderValue
+																	  {
+																		  MaxAge = TimeSpan.FromSeconds(Duration),
+																		  MustRevalidate = MustRevalidate,
+																		  Public = true
+																	  };
+			}
         }
     }
 }
