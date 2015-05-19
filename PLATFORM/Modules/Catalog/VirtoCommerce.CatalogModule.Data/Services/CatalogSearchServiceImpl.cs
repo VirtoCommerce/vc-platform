@@ -170,8 +170,8 @@ namespace VirtoCommerce.CatalogModule.Data.Services
 				{
 					query = query.Where(x => x.IsActive);
 				}
-
-                if (!String.IsNullOrEmpty(criteria.CategoryId))
+				
+                if (!criteria.GetAllCategories && !String.IsNullOrEmpty(criteria.CategoryId))
                 {
 					if (isVirtual)
 					{
@@ -187,7 +187,7 @@ namespace VirtoCommerce.CatalogModule.Data.Services
 					}
 				
                 }
-                else if (!String.IsNullOrEmpty(criteria.CatalogId))
+                else if (!criteria.GetAllCategories && !String.IsNullOrEmpty(criteria.CatalogId))
                 {
                     query = query.Where(x => x.CatalogId == criteria.CatalogId && !x.CategoryItemRelations.Any());
 				

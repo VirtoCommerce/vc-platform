@@ -47,11 +47,9 @@ namespace VirtoCommerce.Platform.Data.Notification
                     _innerList.Add(notify);
                 }
             }
+         
+            _hubSignalR.Clients.All.notification(notify);
 
-            if (notify.New)
-            {
-                _hubSignalR.Clients.All.notification(notify);
-            }
         }
 
         public NotifySearchResult SearchNotifies(string userId, NotifySearchCriteria criteria)

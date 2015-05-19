@@ -124,39 +124,6 @@
 
     };
 
-    function notificationRefresh() {
-        //notifyMenu.incremented = false;
-        //notifications.query({ start: 0, count: 15 }, function (data, status, headers, config) {
-
-        //	notifyMenu.incremented = notifyMenu.newCount < data.newCount;
-        //	notifyMenu.newCount = data.newCount;
-        //	notifyMenu.progress = _.some(data.notifyEvents, function (x) { return x.isRunning; });
-
-        //	//clear all child
-        //	notifyMenu.children.splice(0, notifyMenu.children.length);
-
-        //	//Add all events
-        //	angular.forEach(data.notifyEvents, function (x) {
-
-        //		var notificationTemplate = notificationTemplateResolver.resolve(x, 'menu');
-
-        //		var menuItem = {
-        //			parent: notifyMenu,
-        //			path: 'notification/events',
-        //			icon: 'fa fa-comment',
-        //			title: x.title,
-        //			priority: 2,
-        //			permission: '',
-        //			action: notificationTemplate.action,
-        //			template: notificationTemplate.template,
-        //			notify: x
-        //		};
-        //		notifyMenu.children.push(menuItem);
-        //	});
-
-        //});
-    };
-
     var retVal = {
         run: function () {
             if (!this.running) {

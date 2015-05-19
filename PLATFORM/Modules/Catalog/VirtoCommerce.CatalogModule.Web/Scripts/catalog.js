@@ -55,6 +55,15 @@ angular.module(catalogsModuleName, [
 		 };
       notificationTemplateResolver.register(menuImportTemplate);
 
+      var menuExportTemplate =
+		 {
+		 	priority: 900,
+		 	satisfy: function (notify, place) { return place == 'menu' && notify.notifyType == 'CatalogExport'; },
+		 	template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/notifications/menuImport.tpl.html',
+		 	action: function (notify) { $state.go('notificationsHistory', notify) }
+		 };
+      notificationTemplateResolver.register(menuImportTemplate);
+
       var historyImportTemplate =
 		{
 		    priority: 900,

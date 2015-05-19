@@ -3,11 +3,44 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Reflection;
+using System.Linq.Expressions;
 
 namespace VirtoCommerce.Platform.Core.Common
 {
 	public static class ReflectionUtility
 	{
+		public static IEnumerable<string> GetPropertyNames<T>(params Expression<Func<T, object>>[] propertyExpressions)
+		{
+			var retVal = new List<string>();
+			foreach(var propertyExpression in propertyExpressions)
+			{
+				retVal.Add(GetPropertyName(propertyExpression));
+			}
+			return retVal;
+		}
+
+		public static string GetPropertyName<T>(Expression<Func<T, object>> propertyExpression)
+		{
+			string retVal = null;
+			if (propertyExpression != null)
+			{
+				var lambda = (LambdaExpression)propertyExpression;
+				MemberExpression memberExpression;
+				if (lambda.Body is UnaryExpression)
+				{
+					var unaryExpression = (UnaryExpression)lambda.Body;
+					memberExpression = (MemberExpression)unaryExpression.Operand;
+				}
+				else
+				{
+					memberExpression = (MemberExpression)lambda.Body;
+				}
+				retVal = memberExpression.Member.Name;
+
+			}
+			return retVal;
+		}
+
 		public static PropertyInfo[] FindPropertiesWithAttribute(this Type type, Type attribute)
 		{
 			PropertyInfo[] properties = type.GetProperties(BindingFlags.Public | BindingFlags.Instance);
