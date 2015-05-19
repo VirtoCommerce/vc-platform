@@ -102,7 +102,7 @@ namespace VirtoCommerce.CatalogModule.Web.Converters
                 bool isMain = true;
                 foreach (var productImage in product.Images)
                 {
-                    var image = productImage.ToModuleModel(blobUrlResolver);
+                    var image = productImage.ToModuleModel();
                     image.Type = moduleModel.ItemAssetType.Image;
                     image.Group = isMain ? "primaryimage" : "images";
                     retVal.Assets.Add(image);
@@ -119,7 +119,7 @@ namespace VirtoCommerce.CatalogModule.Web.Converters
 
                 foreach (var productAsset in product.Assets)
                 {
-                    var asset = productAsset.ToModuleModel(blobUrlResolver);
+                    var asset = productAsset.ToModuleModel();
                     asset.Type = moduleModel.ItemAssetType.File;
                     retVal.Assets.Add(asset);
                 }

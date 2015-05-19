@@ -21,6 +21,7 @@ namespace VirtoCommerce.CatalogModule.Data.Model
 			AssociationGroups = new NullCollection<AssociationGroup>();
 			EditorialReviews = new NullCollection<EditorialReview>();
 			ItemPropertyValues = new NullCollection<ItemPropertyValue>();
+			Childrens = new NullCollection<Item>();
 		}
 
 		[StringLength(1024)]
@@ -79,6 +80,12 @@ namespace VirtoCommerce.CatalogModule.Data.Model
 
         public virtual CatalogBase Catalog { get; set; }
 
+
+		[StringLength(128)]
+		public string ParentId { get; set; }
+		public virtual Item Parent { get; set; }
+
+		public virtual ObservableCollection<Item> Childrens { get; set; }
         #endregion
 
 		public static ValidationResult ValidateItemCode(string value, ValidationContext context)

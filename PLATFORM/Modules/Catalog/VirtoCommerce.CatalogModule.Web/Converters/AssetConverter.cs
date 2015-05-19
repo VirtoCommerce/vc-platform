@@ -17,14 +17,15 @@ namespace VirtoCommerce.CatalogModule.Web.Converters
             }
             retVal.InjectFrom(asset);
             retVal.Url = blobUrlResolver.GetAbsoluteUrl(asset.Url);
+			retVal.RelativeUrl = asset.Url;
             return retVal;
         }
 
-		public static moduleModel.ItemAsset ToModuleModel(this webModel.ProductAssetBase assetBase, IBlobUrlResolver blobUrlResolver)
+		public static moduleModel.ItemAsset ToModuleModel(this webModel.ProductAssetBase assetBase)
         {
             var retVal = new moduleModel.ItemAsset();
             retVal.InjectFrom(assetBase);
-			retVal.Url = new Uri(assetBase.Url).AbsolutePath.TrimStart('/');
+			retVal.Url = assetBase.RelativeUrl;
             if (String.IsNullOrEmpty(retVal.Group))
             {
                 retVal.Group = "default";

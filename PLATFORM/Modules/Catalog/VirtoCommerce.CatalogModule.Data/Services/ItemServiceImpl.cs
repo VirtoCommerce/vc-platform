@@ -46,46 +46,9 @@ namespace VirtoCommerce.CatalogModule.Data.Services
 			using (var repository = _catalogRepositoryFactory())
 			{
 				var dbItems = repository.GetItemByIds(itemIds, respGroup);
-				Dictionary<string, IEnumerable<dataModel.Item>> dbAllVariations = null;
-				if ((respGroup & coreModel.ItemResponseGroup.Variations) == coreModel.ItemResponseGroup.Variations)
-				{
-					dbAllVariations = repository.GetAllItemsVariations(itemIds, respGroup);
-				}
-
+				
 				foreach (var dbItem in dbItems)
 				{
-					// Sasha: we don't need to return variations for the variation even if it is a product
-					//var parentItemRelation = repository.ItemRelations.FirstOrDefault(x => x.ChildItemId == dbItem.ItemId);
-					//var parentItemId = parentItemRelation == null ? null : parentItemRelation.ParentItemId;
-					string parentItemId = null;
-
-					/*
-					foundation.Item[] dbVariations = null;
-					if ((respGroup & module.ItemResponseGroup.Variations) == module.ItemResponseGroup.Variations)
-					{
-						//dbVariations = repository.GetAllItemVariations(parentItemId ?? dbItem.ItemId);
-						dbVariations = repository.GetAllItemVariations(dbItem.ItemId);
-						// Sasha: we don't need to return variations for a variation
-						//When user load not main product need to include main product in variation list and exclude current
-
-						if (parentItemId != null)
-						{
-							var dbMainItem = repository.GetItemByIds(new[] { parentItemId }, respGroup).FirstOrDefault();
-							dbVariations = dbVariations.Concat(new[] { dbMainItem }).Where(x => x.ItemId != dbItem.ItemId).ToArray();
-						}
-
-						//Need this for add main product to variations list except current  
-						dbVariations = dbVariations.Concat(new[] { dbItem }).Where(x => x.ItemId != dbItem.ItemId).ToArray();
-					}
-					*/
-
-					dataModel.Item[] dbVariations = null;
-
-					if (dbAllVariations != null && dbAllVariations.ContainsKey(dbItem.Id))
-					{
-						dbVariations = dbAllVariations[dbItem.Id].ToArray();
-					}
-
 					SeoUrlKeyword[] seoInfos = null;
 					if ((respGroup & coreModel.ItemResponseGroup.Seo) == coreModel.ItemResponseGroup.Seo)
 					{
@@ -114,7 +77,7 @@ namespace VirtoCommerce.CatalogModule.Data.Services
 						var dbCategory = repository.GetCategoryById(dbItem.CategoryItemRelations.OrderBy(x => x.Priority).First().CategoryId);
 						category = dbCategory.ToCoreModel(catalog);
 					}
-					retVal.Add(dbItem.ToCoreModel(catalog, category, null, dbVariations, seoInfos, parentItemId, associatedProducts.ToArray()));
+					retVal.Add(dbItem.ToCoreModel(catalog: catalog, category: category, properties: null, seoInfos: seoInfos, associatedProducts: associatedProducts.ToArray()));
 				}
 			}
 
@@ -136,12 +99,6 @@ namespace VirtoCommerce.CatalogModule.Data.Services
 						throw new NullReferenceException("dbCategory");
 					}
 					repository.SetItemCategoryRelation(dbItem, dbCategory);
-				}
-
-				//Variation relation
-				if (item.MainProductId != null)
-				{
-					repository.SetVariationRelation(dbItem, item.MainProductId);
 				}
 
 				repository.Add(dbItem);
@@ -179,19 +136,8 @@ namespace VirtoCommerce.CatalogModule.Data.Services
 					{
 						changeTracker.Attach(dbItem);
 
-						var dbItemChanged = item.ToDataModel();
-						dbItemChanged.Patch(dbItem);
-
-						//Variation relation update
-						if (item.MainProductId != null)
-						{
-							repository.SetVariationRelation(dbItem, item.MainProductId);
-						}
-						//else
-						//{
-						//	//Switch item like a  main product
-						//	repository.SwitchProductToMain(dbItem);
-						//}
+						item.Patch(dbItem);
+			
 					}
 
 					//Patch seoInfo

@@ -8,6 +8,7 @@ namespace VirtoCommerce.Platform.Core.Notification
 		{
 			Count = 20;
 		}
+		public string[] Ids { get; set; }
 		public bool OnlyNew { get; set; }
 		public DateTime? StartDate { get; set; }
 		public DateTime? EndDate { get; set; }

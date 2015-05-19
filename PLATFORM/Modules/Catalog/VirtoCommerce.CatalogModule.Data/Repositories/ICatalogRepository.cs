@@ -25,8 +25,6 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
 		foundation.CatalogBase GetCatalogById(string catalogId);
 		foundation.Category GetCategoryById(string categoryId);
 		foundation.Item[] GetItemByIds(string[] itemIds, moduleModel.ItemResponseGroup respGroup);
-		foundation.Item[] GetAllItemVariations(string itemId);
-		Dictionary<string, IEnumerable<foundation.Item>> GetAllItemsVariations(string[] itemIds, moduleModel.ItemResponseGroup respGroup);
 		foundation.Property[] GetPropertiesByIds(string[] propIds);
 		foundation.Catalog GetPropertyCatalog(string propId);
 		foundation.Category GetPropertyCategory(string propId);
@@ -35,8 +33,6 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
 		foundation.Property[] GetCatalogProperties(foundation.CatalogBase catalog);
 		foundation.Property[] GetAllCategoryProperties(foundation.Category category);
 		void SetItemCategoryRelation(foundation.Item item, foundation.Category category);
-		void SetVariationRelation(foundation.Item item, string mainProductId);
-		void SwitchProductToMain(foundation.Item item);
 		void SetCatalogProperty(foundation.Catalog catalog, foundation.Property property);
 		void SetCategoryProperty(foundation.Category category, foundation.Property property);
 		void RemoveItems(string[] itemIds);

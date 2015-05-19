@@ -117,7 +117,7 @@ namespace VirtoCommerce.SearchModule.Data.Services
             //doc.Add(new DocumentField("__loc", "en-us", new[] { IndexStore.YES, IndexType.NOT_ANALYZED }));
             doc.Add(new DocumentField("__type", item.GetType().Name, new[] { IndexStore.Yes, IndexType.NotAnalyzed }));
             doc.Add(new DocumentField("__sort", item.Name, new[] { IndexStore.Yes, IndexType.NotAnalyzed }));
-            doc.Add(new DocumentField("__hidden", (!item.IsActive).ToString().ToLower(), new[] { IndexStore.Yes, IndexType.NotAnalyzed }));
+            doc.Add(new DocumentField("__hidden", (!item.IsActive.Value || item.MainProductId != null).ToString().ToLower(), new[] { IndexStore.Yes, IndexType.NotAnalyzed }));
             doc.Add(new DocumentField("code", item.Code, new[] { IndexStore.Yes, IndexType.NotAnalyzed }));
             doc.Add(new DocumentField("name", item.Name, new[] { IndexStore.Yes, IndexType.NotAnalyzed }));
             doc.Add(new DocumentField("startdate", item.StartDate, new[] { IndexStore.Yes, IndexType.NotAnalyzed }));

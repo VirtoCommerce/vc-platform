@@ -153,6 +153,10 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
 				.HasMany(c => c.ItemAssets)
 				.WithRequired(p => p.CatalogItem);
 
+			modelBuilder.Entity<dataModel.Item>()
+				.HasMany(c => c.Childrens)
+				.WithOptional(p => p.Parent).HasForeignKey(x=>x.ParentId);
+
 			modelBuilder.Entity<dataModel.AssociationGroup>()
 						.HasMany(c => c.Associations)
 						.WithRequired(a => a.AssociationGroup);
@@ -311,6 +315,10 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
 			{
 				query = query.Include(x => x.AssociationGroups.Select(y=>y.Associations));
 			}
+			if ((respGroup & coreModel.ItemResponseGroup.Variations) == coreModel.ItemResponseGroup.Variations)
+			{
+				query = query.Include(x => x.Childrens);
+			}
 			
 			var retVal = query.ToArray();
 			return retVal;
@@ -402,41 +410,7 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
 			return retVal.Distinct().ToArray();
 		}
 
-		public dataModel.Item[] GetAllItemVariations(string itemId)
-		{
-			//Load Variations
-			var itemIds = ItemRelations.Where(x => x.ParentItemId == itemId).Select(x => x.ChildItemId).ToArray();
-			return GetItemByIds(itemIds.ToArray());
-			
-		}
-
-        /// <summary>
-        /// Method loads all items variations using single database request and returns them grouped by the item id.
-        /// </summary>
-        /// <param name="itemIds"></param>
-        /// <returns></returns>
-		public Dictionary<string, IEnumerable<dataModel.Item>> GetAllItemsVariations(string[] itemIds, coreModel.ItemResponseGroup respGroup)
-        {
-            var singleRelations =
-                ItemRelations.Where(x => itemIds.Contains(x.ParentItemId))
-                    .Select(x => new { Parent = x.ParentItemId, Child = x.ChildItemId })
-                    .ToArray();
-
-            // group items
-            var groupedRelations = singleRelations.GroupBy(x => x.Parent, x => x.Child, (key, g) => new { Parent = key, Children = g.ToList()});
-
-            // now get items from database all at once
-            var relationItemIds = singleRelations.Select(x => x.Child).Distinct().ToArray();
-
-			var items = GetItemByIds(relationItemIds, respGroup);
-
-            var groupedItems =
-                groupedRelations.Select(
-                    x => new { Parent = x.Parent, Children = items.Where(y => x.Children.Contains(y.Id)) }).ToDictionary(x=>x.Parent, y=>y.Children);
-
-            return groupedItems;
-        }
-
+	     
 		public void SetCatalogProperty(dataModel.Catalog catalog, dataModel.Property property)
 		{
 			if (catalog.PropertySet == null)
@@ -483,54 +457,7 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
 
 		}
 
-		public void SetVariationRelation(dataModel.Item item, string mainProductId)
-		{
-			var itemRelation = ItemRelations.FirstOrDefault(x => x.ChildItemId == item.Id);
-			if (itemRelation == null)
-			{
-				 itemRelation = new dataModel.ItemRelation
-				{
-					RelationTypeId = "Sku",
-					GroupName = "variation",
-					Quantity = 1
-				};
-				Add(itemRelation);
-			}
-			if (itemRelation.ChildItemId != item.Id)
-				itemRelation.ChildItemId = item.Id;
-			if (itemRelation.ParentItemId != mainProductId)
-				itemRelation.ParentItemId = mainProductId;
-
-			//Need update all previous relations if main product changes
-			var allPrevRelations = ItemRelations.Where(x => x.ParentItemId == item.Id).ToArray();
-			foreach (var prevRelation in allPrevRelations)
-			{
-				prevRelation.ParentItemId = mainProductId;
-			}
-		}
-
-		public void SwitchProductToMain(dataModel.Item item)
-		{
-			var itemRelation = ItemRelations.FirstOrDefault(x => x.ChildItemId == item.Id);
-			if (itemRelation != null)
-			{
-				//Make a old parent relation to new
-				itemRelation.ChildItemId = itemRelation.ParentItemId;
-				itemRelation.ParentItemId = item.Id;
-
-				//Update all relations to new parent
-				var allVariationRelations = ItemRelations.Include(x=>x.ChildItem).Where(x => x.ParentItemId == itemRelation.ParentItemId);
-				foreach (var variationRelation in allVariationRelations)
-				{
-					variationRelation.ParentItemId = item.Id;
-					//hide all variation in search
-					variationRelation.ChildItem.IsActive = false;
-				}
-				
-
-			}
-		}
-
+	
 		public void SetItemCategoryRelation(dataModel.Item item, dataModel.Category category)
 		{
 			item.CategoryItemRelations.Add(new dataModel.CategoryItemRelation

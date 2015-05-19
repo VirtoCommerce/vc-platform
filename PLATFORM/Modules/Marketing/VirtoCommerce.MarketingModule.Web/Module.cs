@@ -61,16 +61,9 @@ namespace VirtoCommerce.MarketingModule.Web
 
 		private static IDynamicExpression GetContentDynamicExpression()
 		{
-			var geoBlock = new contentExpression.BlockGeoCondition();
-			geoBlock.AvailableChildren = new DynamicExpression[] { new contentExpression.ConditionGeoTimeZone(), new contentExpression.ConditionGeoTimeZone() }.ToList();
-
-			var browseBlock = new contentExpression.BlockBrowseCondition();
-			browseBlock.AvailableChildren = new DynamicExpression[] { new contentExpression.ConditionStoreSearchedPhrase() }.ToList();
-
-			var rootBlocks = new DynamicExpression[] { geoBlock, browseBlock }.ToList();
+			var rootBlocks = new DynamicExpression[] { new contentExpression.ConditionGeoTimeZone(), new contentExpression.ConditionGeoZipCode(), new contentExpression.ConditionStoreSearchedPhrase() }.ToList();
 			var retVal = new contentExpression.DynamicContentExpressionTree()
 			{
-				Children = rootBlocks,
 				AvailableChildren = rootBlocks
 			};
 			return retVal;
@@ -99,7 +92,6 @@ namespace VirtoCommerce.MarketingModule.Web
             var retVal = new PromoDynamicExpressionTree()
             {
                 Children = rootBlocks,
-                AvailableChildren = rootBlocks
             };
             return retVal;
         }

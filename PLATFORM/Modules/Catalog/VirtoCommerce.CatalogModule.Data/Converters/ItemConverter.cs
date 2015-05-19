@@ -20,9 +20,7 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 		/// <returns></returns>
 		public static coreModel.CatalogProduct ToCoreModel(this dataModel.Item dbItem, coreModel.Catalog catalog,
 														  coreModel.Category category, coreModel.Property[] properties,
-														  dataModel.Item[] variations,
 														  SeoUrlKeyword[] seoInfos,
-														  string mainProductId,
 														  coreModel.CatalogProduct[] associatedProducts)
 		{
 			var retVal = new coreModel.CatalogProduct();
@@ -36,26 +34,25 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 				retVal.CategoryId = category.Id;
 			}
 
-			retVal.MainProductId = mainProductId;
+			retVal.MainProductId = dbItem.ParentId;
+
+			retVal.IsActive = dbItem.IsActive;
+			retVal.IsBuyable = dbItem.IsBuyable;
+			retVal.TrackInventory = dbItem.TrackInventory;
 
 			#region Links
 			retVal.Links = dbItem.CategoryItemRelations.Select(x => x.ToCoreModel()).ToList();
 			#endregion
 
 			#region Variations
-			if (variations != null)
+			retVal.Variations = new List<coreModel.CatalogProduct>();
+			foreach (var variation in dbItem.Childrens)
 			{
-				retVal.Variations = new List<coreModel.CatalogProduct>();
-				foreach (var variation in variations)
-				{
-					var productVaraition = variation.ToCoreModel(catalog, category, properties,
-																   variations: null,
-																   seoInfos: null,
-																   mainProductId: retVal.Id, associatedProducts: null);
-					productVaraition.MainProduct = retVal;
-					productVaraition.MainProductId = retVal.Id;
-					retVal.Variations.Add(productVaraition);
-				}
+				var productVaraition = variation.ToCoreModel(catalog, category, properties,
+															   seoInfos: null, associatedProducts: null);
+				productVaraition.MainProduct = retVal;
+				productVaraition.MainProductId = retVal.Id;
+				retVal.Variations.Add(productVaraition);
 			}
 			#endregion
 
@@ -124,14 +121,17 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 			{
 				retVal.StartDate = DateTime.UtcNow;
 			}
+
+			retVal.IsActive = product.IsActive ?? true;
+			retVal.IsBuyable = product.IsBuyable ?? true;
+			retVal.TrackInventory = product.TrackInventory ?? true;
+			retVal.ParentId = product.MainProductId;
 			//Constant fields
 			//Only for main product
 			retVal.AvailabilityRule = (int)coreModel.AvailabilityRule.Always;
 			retVal.MinQuantity = 1;
 			retVal.MaxQuantity = 0;
-			//If it variation need make active false (workaround)
-			retVal.IsActive = product.MainProductId == null;
-  
+		 
 			//Changed fields
 			retVal.CatalogId = product.CatalogId;
 
@@ -214,50 +214,63 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 		/// </summary>
 		/// <param name="source"></param>
 		/// <param name="target"></param>
-		public static void Patch(this dataModel.Item source, dataModel.Item target)
+		public static void Patch(this coreModel.CatalogProduct source, dataModel.Item target)
 		{
 			if (target == null)
 				throw new ArgumentNullException("target");
 
+			//TODO: temporary solution because partial update replaced not nullable properties in db entity
+			if (source.Name != null)
+				target.Name = source.Name;
+			if (source.Code != null)
+				target.Code = source.Code;
+			if (source.IsBuyable != null)
+				target.IsBuyable = source.IsBuyable.Value;
+			if (source.IsActive != null)
+				target.IsActive = source.IsActive.Value;
+			if (source.TrackInventory != null)
+				target.TrackInventory = source.TrackInventory.Value;
+
 			var patchInjectionPolicy = new PatchInjection<dataModel.Item>(x => x.Name, x => x.Code, x => x.IsBuyable, x=> x.IsActive, x=>x.TrackInventory);
 			target.InjectFrom(patchInjectionPolicy, source);
 
+			var dbSource = source.ToDataModel();
 			#region ItemAssets
-			if (!source.ItemAssets.IsNullCollection())
+			if (!dbSource.ItemAssets.IsNullCollection())
 			{
-				source.ItemAssets.Patch(target.ItemAssets, (sourceAsset, targetAsset) => sourceAsset.Patch(targetAsset));
+				dbSource.ItemAssets.Patch(target.ItemAssets, (sourceAsset, targetAsset) => sourceAsset.Patch(targetAsset));
 			}
 			#endregion
 
 			#region ItemPropertyValues
-			if (!source.ItemPropertyValues.IsNullCollection())
+			if (!dbSource.ItemPropertyValues.IsNullCollection())
 			{
-				source.ItemPropertyValues.Patch(target.ItemPropertyValues, (sourcePropValue, targetPropValue) => sourcePropValue.Patch(targetPropValue));
+				dbSource.ItemPropertyValues.Patch(target.ItemPropertyValues, (sourcePropValue, targetPropValue) => sourcePropValue.Patch(targetPropValue));
 			}
 
 			#endregion
 
 			#region CategoryItemRelations
-			if (!source.CategoryItemRelations.IsNullCollection())
+			if (!dbSource.CategoryItemRelations.IsNullCollection())
 			{
-				source.CategoryItemRelations.Patch(target.CategoryItemRelations, new CategoryItemRelationComparer(),
+				dbSource.CategoryItemRelations.Patch(target.CategoryItemRelations, new CategoryItemRelationComparer(),
 										 (sourcePropValue, targetPropValue) => sourcePropValue.Patch(targetPropValue));
 			}
 			#endregion
 
 
 			#region EditorialReviews
-			if (!source.EditorialReviews.IsNullCollection())
+			if (!dbSource.EditorialReviews.IsNullCollection())
 			{
-				source.EditorialReviews.Patch(target.EditorialReviews, (sourcePropValue, targetPropValue) => sourcePropValue.Patch(targetPropValue));
+				dbSource.EditorialReviews.Patch(target.EditorialReviews, (sourcePropValue, targetPropValue) => sourcePropValue.Patch(targetPropValue));
 			}
 			#endregion
 
 			#region Association
-			if (!source.AssociationGroups.IsNullCollection())
+			if (!dbSource.AssociationGroups.IsNullCollection())
 			{
 				var associationComparer = AnonymousComparer.Create((dataModel.AssociationGroup x) => x.Name);
-				source.AssociationGroups.Patch(target.AssociationGroups, associationComparer,
+				dbSource.AssociationGroups.Patch(target.AssociationGroups, associationComparer,
 										 (sourceGroup, targetGroup) => sourceGroup.Patch(targetGroup));
 			}
 			#endregion

@@ -29,6 +29,8 @@ namespace VirtoCommerce.Web
 
             RouteData routeData = new RouteData();
             routeData.Values.Add("controller", "Errors");
+            routeData.Values.Add("action", "Http500");
+            routeData.Values.Add("exception", exception);
 
             var httpException = exception as HttpException;
 
@@ -38,7 +40,7 @@ namespace VirtoCommerce.Web
 
                 if (statusCode == 404)
                 {
-                    routeData.Values.Add("action", "Http404");
+                    routeData.Values["action"] = "Http404";
                 }
             }
 

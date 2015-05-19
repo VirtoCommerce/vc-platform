@@ -45,6 +45,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                     Name = blobInfo.FileName,
                     Size = blobInfo.Size.ToHumanReadableSize(),
                     MimeType = blobInfo.ContentType,
+					RelativeUrl = blobInfo.Key,
                     Url = _urlResolver.GetAbsoluteUrl(blobInfo.Key)
                 });
             }

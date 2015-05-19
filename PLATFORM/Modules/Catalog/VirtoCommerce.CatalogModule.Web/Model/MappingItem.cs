@@ -1,14 +1,10 @@
 ﻿using System;
+using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.CatalogModule.Web.Model
 {
-    public class MappingItem
+    public class MappingItem : ValueObject<MappingItem>
     {
-        public MappingItem()
-        {
-            Id = Guid.NewGuid().ToString();
-        }
-        public string Id { get; set; }
         public string EntityColumnName { get; set; }
         public string CsvColumnName { get; set; }
         public bool IsSystemProperty { get; set; }
@@ -17,7 +13,5 @@ namespace VirtoCommerce.CatalogModule.Web.Model
         public string DisplayName { get; set; }
         public string StringFormat { get; set; }
         public string Locale { get; set; }
-
-        public string ImportJobId { get; set; }
     }
 }

@@ -73,25 +73,34 @@
 
     return retVal;
 }])
-.factory('platformWebApp.notificationService', ['platformWebApp.signalRHubProxy', '$interval', '$state', 'platformWebApp.mainMenuService', 'platformWebApp.notificationTemplateResolver', 'platformWebApp.notifications', 'platformWebApp.signalRServerName', function (signalRHubProxy, $interval, $state, mainMenuService, notificationTemplateResolver, notifications, signalRServerName) {
+.factory('platformWebApp.notificationService', ['$rootScope', 'platformWebApp.signalRHubProxy', '$interval', '$state', 'platformWebApp.mainMenuService', 'platformWebApp.notificationTemplateResolver', 'platformWebApp.notifications', 'platformWebApp.signalRServerName', function ($rootScope, signalRHubProxy, $interval, $state, mainMenuService, notificationTemplateResolver, notifications, signalRServerName) {
 
     var clientPushHubProxy = signalRHubProxy(signalRServerName, 'clientPushHub', { logging: true });
     clientPushHubProxy.on('notification', function (data) {
         var notifyMenu = mainMenuService.findByPath('notification');
         var notificationTemplate = notificationTemplateResolver.resolve(data, 'menu');
+		//broadcast event
+        $rootScope.$broadcast("new-notification-event", data);
 
         var menuItem = {
-            parent: notifyMenu,
-            path: 'notification/events',
-            icon: 'fa fa-comment',
-            title: data.title,
-            priority: 2,
-            permission: '',
-            action: notificationTemplate.action,
-            template: notificationTemplate.template,
-            notify: data
+        	parent: notifyMenu,
+        	path: 'notification/events',
+        	icon: 'fa fa-comment',
+        	title: data.title,
+        	priority: 2,
+        	permission: '',
+        	action: notificationTemplate.action,
+        	template: notificationTemplate.template,
+        	notify: data
         };
-        notifyMenu.children.push(menuItem);
+
+        var alreadyExitstItem = _.find(notifyMenu.children, function (x) { return x.id == menuItem.id; });
+        if (alreadyExitstItem) {
+        	angular.copy(menuItem, alreadyExitstItem);
+        }
+        else {
+        	notifyMenu.children.push(menuItem);
+        }
 
         notifyMenu.incremented = true;
     });
@@ -110,51 +119,16 @@
         //Group notification by text
 
         notifications.upsert(notification, function (data, status, headers, config) {
-            notificationRefresh();
+         
         });
     };
 
     function markAllAsRead() {
         notifications.markAllAsRead(null, function (data, status, headers, config) {
-            notificationRefresh();
-
             var notifyMenu = mainMenuService.findByPath('notification');
             notifyMenu.incremented = false;
         });
 
-    };
-
-    function notificationRefresh() {
-        //notifyMenu.incremented = false;
-        //notifications.query({ start: 0, count: 15 }, function (data, status, headers, config) {
-
-        //	notifyMenu.incremented = notifyMenu.newCount < data.newCount;
-        //	notifyMenu.newCount = data.newCount;
-        //	notifyMenu.progress = _.some(data.notifyEvents, function (x) { return x.isRunning; });
-
-        //	//clear all child
-        //	notifyMenu.children.splice(0, notifyMenu.children.length);
-
-        //	//Add all events
-        //	angular.forEach(data.notifyEvents, function (x) {
-
-        //		var notificationTemplate = notificationTemplateResolver.resolve(x, 'menu');
-
-        //		var menuItem = {
-        //			parent: notifyMenu,
-        //			path: 'notification/events',
-        //			icon: 'fa fa-comment',
-        //			title: x.title,
-        //			priority: 2,
-        //			permission: '',
-        //			action: notificationTemplate.action,
-        //			template: notificationTemplate.template,
-        //			notify: x
-        //		};
-        //		notifyMenu.children.push(menuItem);
-        //	});
-
-        //});
     };
 
     var retVal = {
@@ -194,7 +168,11 @@
         info: function (notification) {
             notification.notifyType = 'info';
             return innerNotification(notification);
-        }
+        },
+    	task: function (notification) {
+    		notification.notifyType = 'CatalogExport';
+    	return innerNotification(notification);
+    }
     };
     return retVal;
 
