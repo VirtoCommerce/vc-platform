@@ -95,7 +95,8 @@ namespace VirtoCommerce.Web.Convertors
                 {
                     var price = prices.FirstOrDefault(p => p.ProductId == variation.Id);
 
-                    var variantInventory = inventories.FirstOrDefault(i => i.ProductId == variation.Id);
+                    var variantInventory = inventories != null ?
+                        inventories.FirstOrDefault(i => i.ProductId == variation.Id) : null;
 
                     productModel.Variants.Add(variation.AsWebModel(price, options, productRewards, variantInventory));
                 }
@@ -103,7 +104,8 @@ namespace VirtoCommerce.Web.Convertors
 
             var productPrice = prices.FirstOrDefault(p => p.ProductId == product.Id);
 
-            var productInventory = inventories.FirstOrDefault(i => i.ProductId == product.Id);
+            var productInventory = inventories != null ?
+                inventories.FirstOrDefault(i => i.ProductId == product.Id) : null;
 
             var variant = product.AsVariantWebModel(productPrice, options, productRewards, productInventory);
 
@@ -131,9 +133,9 @@ namespace VirtoCommerce.Web.Convertors
             //variantModel.Id = variation.Id;
             variantModel.Id = variation.Code;
             variantModel.Image = variationImage != null ? variationImage.AsWebModel(variation.Name, variation.MainProductId) : null;
-            variantModel.InventoryManagement = inventory.FulfillmentCenterId;
-            variantModel.InventoryPolicy = inventory.AllowPreorder ? "contoniue" : "deny";
-            variantModel.InventoryQuantity = inventory.InStockQuantity;
+            variantModel.InventoryManagement = inventory != null ? inventory.FulfillmentCenterId : null;
+            variantModel.InventoryPolicy = inventory != null ? (inventory.AllowPreorder ? "continue" : "deny") : null;
+            variantModel.InventoryQuantity = inventory != null ? inventory.InStockQuantity : 0;
             variantModel.Option1 = options.Length >= 1 ? variation.Properties[options[0]] as string : null;
             variantModel.Option2 = options.Length >= 2 ? variation.Properties[options[1]] as string : null;
             variantModel.Option3 = options.Length >= 3 ? variation.Properties[options[2]] as string : null;
@@ -174,9 +176,9 @@ namespace VirtoCommerce.Web.Convertors
             //variantModel.Id = product.Id;
             variantModel.Id = product.Code;
             variantModel.Image = variationImage != null ? variationImage.AsWebModel(product.Name, product.Id) : null;
-            variantModel.InventoryManagement = null; // TODO
-            variantModel.InventoryPolicy = null; // TODO
-            variantModel.InventoryQuantity = 0; // TODO
+            variantModel.InventoryManagement = inventory != null ? inventory.FulfillmentCenterId : null;
+            variantModel.InventoryPolicy = inventory != null ? (inventory.AllowPreorder ? "continue" : "deny") : null;
+            variantModel.InventoryQuantity = inventory != null ? inventory.InStockQuantity : 0;
             variantModel.Option1 = options.Length >= 1 ? product.Properties[options[0]] as string : null;
             variantModel.Option2 = options.Length >= 2 ? product.Properties[options[1]] as string : null;
             variantModel.Option3 = options.Length >= 3 ? product.Properties[options[2]] as string : null;
