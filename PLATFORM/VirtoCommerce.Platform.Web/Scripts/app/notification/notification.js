@@ -81,17 +81,24 @@
         var notificationTemplate = notificationTemplateResolver.resolve(data, 'menu');
 
         var menuItem = {
-            parent: notifyMenu,
-            path: 'notification/events',
-            icon: 'fa fa-comment',
-            title: data.title,
-            priority: 2,
-            permission: '',
-            action: notificationTemplate.action,
-            template: notificationTemplate.template,
-            notify: data
+        	parent: notifyMenu,
+        	path: 'notification/events',
+        	icon: 'fa fa-comment',
+        	title: data.title,
+        	priority: 2,
+        	permission: '',
+        	action: notificationTemplate.action,
+        	template: notificationTemplate.template,
+        	notify: data
         };
-        notifyMenu.children.push(menuItem);
+
+        var alreadyExitstItem = _.find(notifyMenu.children, function (x) { return x.id == menuItem.id; });
+        if (alreadyExitstItem) {
+        	angular.copy(menuItem, alreadyExitstItem);
+        }
+        else {
+        	notifyMenu.children.push(menuItem);
+        }
 
         notifyMenu.incremented = true;
     });
@@ -110,14 +117,12 @@
         //Group notification by text
 
         notifications.upsert(notification, function (data, status, headers, config) {
-            notificationRefresh();
+         
         });
     };
 
     function markAllAsRead() {
         notifications.markAllAsRead(null, function (data, status, headers, config) {
-            notificationRefresh();
-
             var notifyMenu = mainMenuService.findByPath('notification');
             notifyMenu.incremented = false;
         });
@@ -161,7 +166,11 @@
         info: function (notification) {
             notification.notifyType = 'info';
             return innerNotification(notification);
-        }
+        },
+    	task: function (notification) {
+    		notification.notifyType = 'CatalogExport';
+    	return innerNotification(notification);
+    }
     };
     return retVal;
 

@@ -25,6 +25,7 @@ namespace VirtoCommerce.CatalogModule.Web.BackgroundJobs
 		private readonly CacheManager _cacheManager;
 		private readonly IBlobStorageProvider _blobStorageProvider;
 		private readonly IBlobUrlResolver _blobUrlResolver;
+		private readonly ExportNotification _notification;
 
 		public CsvCatalogExportJob(ICatalogSearchService catalogSearchService,
 								ICategoryService categoryService, IItemService productService,
@@ -37,11 +38,17 @@ namespace VirtoCommerce.CatalogModule.Web.BackgroundJobs
 			_cacheManager = cacheManager;
 			_blobStorageProvider = blobProvider;
 			_blobUrlResolver = blobUrlResolver;
+			_notification = new ExportNotification
+			{ 
+				Title = "Catalog export task",
+				NotifyType = "CatalogExport",
+				Description = "starting export...."
+			};
+		
 		}
 
 		public virtual void DoExport(string catalogId)
 		{
-
 			var memoryStream = new MemoryStream();
 			var streamWriter = new StreamWriter(memoryStream);
 			var productPropertyInfos = typeof(CatalogProduct).GetProperties(BindingFlags.Instance | BindingFlags.Public);
@@ -49,68 +56,95 @@ namespace VirtoCommerce.CatalogModule.Web.BackgroundJobs
 			using (var csvWriter = new CsvWriter(streamWriter))
 			{
 				csvWriter.Configuration.Delimiter = ";";
-				var products = LoadProducts(catalogId);
 
-				var notification = new ExportNotification();
-				notification.NotifyType = "CatalogExport";
-				notification.TotalCount = products.Count();
-				_notifier.Upsert(notification);
+				//Notification
+				_notification.Description = "loading products...";
+				_notifier.Upsert(_notification);
 
-
-				var exportConfiguration = GetProductExportConfiguration(products);
-
-				//Write header
-				foreach (var cfgItem in exportConfiguration)
+				try
 				{
-					csvWriter.WriteField(cfgItem.Key);
-				}
-				csvWriter.NextRecord();
+					//Load all products to export
+					var products = LoadProducts(catalogId);
+					//Get a export configuration
+					var exportConfiguration = GetProductExportConfiguration(products);
 
-				var notifyProductSizeLImit = 10;
-				var counter = 0;
-				//Write content
-				foreach (var product in products)
-				{
-					
+					//Write header
 					foreach (var cfgItem in exportConfiguration)
 					{
-						var fieldValue = String.Empty;
-						if (cfgItem.Value == null)
-						{
-							var propertyInfo = productPropertyInfos.FirstOrDefault(x => x.Name == cfgItem.Key);
-							if (propertyInfo != null)
-							{
-								var objValue = propertyInfo.GetValue(product);
-								fieldValue = objValue != null ? objValue.ToString() : fieldValue;
-							}
-						}
-						else
-						{
-							fieldValue = cfgItem.Value(product);
-						}
-						csvWriter.WriteField(fieldValue);
+						csvWriter.WriteField(cfgItem.Key);
 					}
 					csvWriter.NextRecord();
 
-					counter++;
-					if(counter % notifyProductSizeLImit == 0)
+					var notifyProductSizeLimit = 100;
+					var counter = 0;
+					//Write products
+					foreach (var product in products)
 					{
-						notification.ProcessedCount = counter;
-						_notifier.Upsert(notification);
-					}
-				}
-				memoryStream.Position = 0;
-				//Upload result csv to blob storage
-				var uploadInfo = new UploadStreamInfo
-				{
-					FileName = "Catalog-" + catalogId + "-export.csv",
-					FileByteStream = memoryStream,
-					FolderName = "catalog"
-				};
-				var blobKey = _blobStorageProvider.Upload(uploadInfo);
+						try
+						{
+							foreach (var cfgItem in exportConfiguration)
+							{
+								var fieldValue = String.Empty;
+								if (cfgItem.Value == null)
+								{
+									var propertyInfo = productPropertyInfos.FirstOrDefault(x => x.Name == cfgItem.Key);
+									if (propertyInfo != null)
+									{
+										var objValue = propertyInfo.GetValue(product);
+										fieldValue = objValue != null ? objValue.ToString() : fieldValue;
+									}
+								}
+								else
+								{
+									fieldValue = cfgItem.Value(product);
+								}
+								csvWriter.WriteField(fieldValue);
+							}
+							csvWriter.NextRecord();
+						}
+						catch(Exception ex)
+						{
+							_notification.ErrorCount++;
+							_notification.Errors.Add(ex.ToString());
+							_notifier.Upsert(_notification);
+						}
 
-				//Get a download url
-				var downloadUrl = _blobUrlResolver.GetAbsoluteUrl(blobKey);
+						//Raise notification each notifyProductSizeLimit products
+						counter++;
+						if (counter % notifyProductSizeLimit == 0)
+						{
+							_notification.ProcessedCount = counter;
+							_notification.TotalCount = products.Count();
+							_notification.Description = string.Format("{0} of {1} products processed", _notification.ProcessedCount, _notification.TotalCount);
+							_notifier.Upsert(_notification);
+						}
+					}
+
+					memoryStream.Position = 0;
+					//Upload result csv to blob storage
+					var uploadInfo = new UploadStreamInfo
+					{
+						FileName = "Catalog-" + catalogId + "-export.csv",
+						FileByteStream = memoryStream,
+						FolderName = "export"
+					};
+					var blobKey = _blobStorageProvider.Upload(uploadInfo);
+					//Get a download url
+					_notification.DownloadUrl = _blobUrlResolver.GetAbsoluteUrl(blobKey);
+					_notification.Description = "Export finished";
+				}
+				catch(Exception ex)
+				{
+					_notification.Description = "Export error";
+					_notification.ErrorCount++;
+					_notification.Errors.Add(ex.ToString());
+				}
+				finally
+				{
+					_notification.Finished = DateTime.UtcNow;
+					_notifier.Upsert(_notification);
+				}
+		
 			}
 			
 		}
@@ -150,32 +184,50 @@ namespace VirtoCommerce.CatalogModule.Web.BackgroundJobs
 			//Category
 			retVal.Add("Category", (product) =>
 			{
-				var category = _categoryService.GetById(product.CategoryId);
-				var path = String.Join("/", category.Parents.Select(x => x.Name).Concat(new string[] { category.Name }));
-				return path;
+				if(product.CategoryId != null)
+				{
+					var category = _categoryService.GetById(product.CategoryId);
+					var path = String.Join("/", category.Parents.Select(x => x.Name).Concat(new string[] { category.Name }));
+					return path;
+				}
+				return String.Empty;
 			});
-			//Review
+
+			retVal.Add("ImageSrc", (product) =>
+			{
+				var image  = product.Assets.Where(x=>x.Type == ItemAssetType.Image).FirstOrDefault();
+				if (image != null)
+				{
+					return image.Url ?? String.Empty;
+				}
+				return String.Empty;
+			});
+
 			retVal.Add("Review", (product) =>
 			{
 				var review = product.Reviews.FirstOrDefault();
-				if(review != null)
+				if (review != null)
 				{
 					return review.Content ?? String.Empty;
 				}
 				return String.Empty;
 			});
+
 			//Properties
 			foreach (var propertyName in products.SelectMany(x => x.PropertyValues).Select(x => x.PropertyName).Distinct())
 			{
-				retVal.Add(propertyName, (product) =>
+				if (!retVal.ContainsKey(propertyName))
 				{
-					var propertyValue = product.PropertyValues.FirstOrDefault(x => x.PropertyName == propertyName);
-					if (propertyValue != null)
+					retVal.Add(propertyName, (product) =>
 					{
-						return propertyValue.Value != null ? propertyValue.Value.ToString() : String.Empty;
-					}
-					return String.Empty;
-				});
+						var propertyValue = product.PropertyValues.FirstOrDefault(x => x.PropertyName == propertyName);
+						if (propertyValue != null)
+						{
+							return propertyValue.Value != null ? propertyValue.Value.ToString() : String.Empty;
+						}
+						return String.Empty;
+					});
+				}
 			}
 			
 
