@@ -10,8 +10,11 @@
 	};
 
 	$scope.openBlade = function (data) {
-	    data.catalogId = blade.catalogId;
-		bladeNavigationService.showBlade(data, blade.parentBlade);
+		var newBlade = {};
+		angular.copy(data, newBlade);
+		newBlade.catalogId = blade.catalogId;
+
+		bladeNavigationService.showBlade(newBlade, blade.parentBlade);
 	}
 
 	$scope.bladeHeadIco = 'fa fa-upload';

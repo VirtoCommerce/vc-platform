@@ -171,8 +171,9 @@ namespace VirtoCommerce.CatalogModule.Data.Services
 					query = query.Where(x => x.IsActive);
 				}
 
-                if (!String.IsNullOrEmpty(criteria.CategoryId))
-                {
+
+				if (!criteria.GetAllCategories && !String.IsNullOrEmpty(criteria.CategoryId))
+				{
 					if (isVirtual)
 					{
 						var dbCategory = repository.GetCategoryById(criteria.CategoryId);
@@ -185,13 +186,15 @@ namespace VirtoCommerce.CatalogModule.Data.Services
 					{
 						query = query.Where(x => x.CategoryItemRelations.Any(c => c.CategoryId == criteria.CategoryId));
 					}
-				
-                }
-                else if (!String.IsNullOrEmpty(criteria.CatalogId))
-                {
-                    query = query.Where(x => x.CatalogId == criteria.CatalogId && !x.CategoryItemRelations.Any());
-				
-                }
+
+				}
+				else if (!String.IsNullOrEmpty(criteria.CatalogId))
+				{
+					query = query.Where(x => x.CatalogId == criteria.CatalogId && ( criteria.GetAllCategories || !x.CategoryItemRelations.Any()));
+
+				}
+		
+
 
 				if (!String.IsNullOrEmpty(criteria.Code))
 				{

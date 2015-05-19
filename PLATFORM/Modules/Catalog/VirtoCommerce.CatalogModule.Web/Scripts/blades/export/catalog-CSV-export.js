@@ -1,21 +1,26 @@
 ﻿angular.module('virtoCommerce.catalogModule')
-.controller('virtoCommerce.catalogModule.catalogCSVexportController', ['$scope', 'platformWebApp.bladeNavigationService', function ($scope, bladeNavigationService) {
-    var blade = $scope.blade;
+.controller('virtoCommerce.catalogModule.catalogCSVexportController', ['$scope', 'platformWebApp.bladeNavigationService', 'virtoCommerce.catalogModule.export', 'platformWebApp.notifications', function ($scope, bladeNavigationService, exportResourse, notificationsResource) {
+	var blade = $scope.blade;
+	blade.isLoading = false;
 
-    function initializeBlade() {
-        blade.currentEntity = { catalogId: blade.catalogId };
-        blade.isLoading = false;
-    };
+    $scope.$on("new-notification-event", function (event, notification) {
+    	if (blade.notification && notification.id == blade.notification.id)
+    	{
+    		angular.copy(notification, blade.notification);
+    	}
+    });
 
-    $scope.startProcess = function () {
-        console.log('Starting Catalog export: ' + angular.toJson(blade.currentEntity, true));
-    }
+    $scope.startExport = function () {
+     	exportResourse.run({ id: blade.catalogId }, function (data) {
+     		blade.notification = data;
+     	}, function (error) {
+     		bladeNavigationService.setError('Error ' + error.status, $scope.blade);
+     	});
+	}
 
     $scope.setForm = function (form) {
         $scope.formScope = form;
     }
 
     $scope.bladeHeadIco = 'fa fa-file-archive-o';
-
-    initializeBlade();
 }]);
