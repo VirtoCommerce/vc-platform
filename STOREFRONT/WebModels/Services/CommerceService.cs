@@ -750,6 +750,11 @@ namespace VirtoCommerce.Web.Models.Services
 
         public async Task<IEnumerable<InventoryInfo>> GetItemsInventoriesAsync(string[] itemIds)
         {
+            if (itemIds == null)
+            {
+                return null;
+            }
+
             return await _inventoryClient.GetItemsInventories(itemIds);
         }
 
@@ -928,7 +933,7 @@ namespace VirtoCommerce.Web.Models.Services
 
             var inventories = await this.GetItemsInventoriesAsync(allIds);
 
-            var result = new SearchResults<T>(response.Items.Select(i => i.AsWebModel(prices, rewards,inventories, parentCollection)).OfType<T>()) { TotalCount = response.TotalCount };
+            var result = new SearchResults<T>(response.Items.Select(i => i.AsWebModel(prices, rewards, inventories, parentCollection)).OfType<T>()) { TotalCount = response.TotalCount };
 
             if (response.Facets != null && response.Facets.Any())
                 result.Facets = response.Facets.Select(x => x.AsWebModel()).ToArray();
