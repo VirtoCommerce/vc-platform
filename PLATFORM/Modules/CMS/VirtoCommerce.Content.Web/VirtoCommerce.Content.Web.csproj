@@ -97,6 +97,7 @@
     <Reference Include="System.EnterpriseServices" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Default_Theme\Default\assets\arrow_switch.png" />
     <Content Include="module.manifest" />
     <Content Include="Default_Theme\Default\assets\ajaxify.js.liquid" />
     <Content Include="Default_Theme\Default\assets\ajaxify.scss.liquid" />
