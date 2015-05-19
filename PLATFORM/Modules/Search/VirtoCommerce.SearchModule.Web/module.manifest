@@ -1,9 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <module>
     <id>VirtoCommerce.Search</id>
-    <version>1.0.0.0</version>
+    <version>1.0.0</version>
+    <platformVersion>2.0.0</platformVersion>
     <dependencies>
-        <dependency>VirtoCommerce.Core</dependency>
+        <dependency id="VirtoCommerce.Core" version="1.0.0" />
     </dependencies>
 
     <title>Virto Commerce Search</title>

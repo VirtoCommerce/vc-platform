@@ -1,26 +1,27 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <module>
-	<id>VirtoCommerce.Merchandising</id>
-	<version>1.0.0.0</version>
-	<dependencies>
-		<dependency>VirtoCommerce.Core</dependency>
-		<dependency>VirtoCommerce.Catalog</dependency>
-	</dependencies>
+    <id>VirtoCommerce.Merchandising</id>
+    <version>1.0.0</version>
+    <platformVersion>2.0.0</platformVersion>
+    <dependencies>
+        <dependency id="VirtoCommerce.Core" version="1.0.0" />
+        <dependency id="VirtoCommerce.Catalog" version="1.0.0" />
+    </dependencies>
 
-	<title>Virto Commerce Merchandising</title>
-	<description>Web API for various frontends to access various modules functionality</description>
-	<authors>
-		<author>Virto Commerce</author>
-	</authors>
-	<owners>
-		<owner>Virto Commerce</owner>
-	</owners>
-	<projectUrl>http://virtocommerce.com/</projectUrl>
-	<iconUrl>http://nuget.org/Content/Images/packageDefaultIcon-50x50.png</iconUrl>
-	<releaseNotes>First version.</releaseNotes>
-	<copyright>Copyright © 2011-2015 Virto Commerce. All rights reserved</copyright>
-	<tags>merchandising</tags>
+    <title>Virto Commerce Merchandising</title>
+    <description>Web API for various frontends to access various modules functionality</description>
+    <authors>
+        <author>Virto Commerce</author>
+    </authors>
+    <owners>
+        <owner>Virto Commerce</owner>
+    </owners>
+    <projectUrl>http://virtocommerce.com/</projectUrl>
+    <iconUrl>http://nuget.org/Content/Images/packageDefaultIcon-50x50.png</iconUrl>
+    <releaseNotes>First version.</releaseNotes>
+    <copyright>Copyright © 2011-2015 Virto Commerce. All rights reserved</copyright>
+    <tags>merchandising</tags>
 
-	<assemblyFile>VirtoCommerce.MerchandisingModule.Web.dll</assemblyFile>
-	<moduleType>VirtoCommerce.MerchandisingModule.Web.Module, VirtoCommerce.MerchandisingModule.Web</moduleType>
+    <assemblyFile>VirtoCommerce.MerchandisingModule.Web.dll</assemblyFile>
+    <moduleType>VirtoCommerce.MerchandisingModule.Web.Module, VirtoCommerce.MerchandisingModule.Web</moduleType>
 </module>

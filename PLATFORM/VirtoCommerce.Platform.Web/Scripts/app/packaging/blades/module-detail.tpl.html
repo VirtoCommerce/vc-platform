@@ -57,10 +57,16 @@
                         <div class="list-t">Description</div>
                         <div class="list-descr">{{blade.currentEntity.description}}</div>
                     </li>
+                    <li class="list-item">
+                        <div class="list-t">Platform Version</div>
+                        <div class="list-descr">{{blade.currentEntity.platformVersion}}</div>
+                    </li>
                     <li class="list-item" ng-if="blade.currentEntity.dependencies">
                         <div class="list-t">Dependencies</div>
                         <div class="list-descr">
-                            <a class="__link" ng-repeat="x in blade.currentEntity.dependencies" ng-click="openModule(x)">{{x}}</a>
+                            <div ng-repeat="dependency in blade.currentEntity.dependencies">
+                                <a class="__link" ng-click="openModule(dependency.id)">{{dependency.id}}</a> {{dependency.version}}
+                            </div>
                         </div>
                     </li>
                     <li class="list-item">

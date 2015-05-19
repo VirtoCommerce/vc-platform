@@ -4,6 +4,8 @@ using System.Globalization;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
+using System.Reflection;
+using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Core.Packaging;
 
@@ -36,6 +38,12 @@ namespace VirtoCommerce.Platform.Data.Packaging
             return result;
         }
 
+        public string[] GetDependencyErrors(ModuleDescriptor package)
+        {
+            var dependencyErrors = GetDependencyErrors(package, GetModules());
+            return dependencyErrors.ToArray();
+        }
+
         public ModuleDescriptor[] GetModules()
         {
             List<string> installedPackages = null;
@@ -60,10 +68,10 @@ namespace VirtoCommerce.Platform.Data.Packaging
             var packageIdAndVersion = string.Join(" ", packageId, version);
             Report(progress, ProgressMessageLevel.Info, "Installing '{0}'.", packageIdAndVersion);
 
-            var installedModuleIds = GetModules().Select(m => m.Id).ToList();
+            var installedModules = GetModules();
 
             // Check if already installed
-            if (installedModuleIds.Contains(packageId))
+            if (installedModules.Any(m => m.Id == packageId))
             {
                 Report(progress, ProgressMessageLevel.Error, "'{0}' is already installed.", packageId);
             }
@@ -79,7 +87,7 @@ namespace VirtoCommerce.Platform.Data.Packaging
                 }
                 else
                 {
-                    if (CheckDependencies(sourcePackage, installedModuleIds, progress))
+                    if (CheckDependencies(sourcePackage, installedModules, progress))
                     {
                         // Unpack all files
                         var moduleDirectoryPath = Path.Combine(_manifestProvider.RootPath, sourcePackage.Id);
@@ -104,9 +112,8 @@ namespace VirtoCommerce.Platform.Data.Packaging
         {
             Report(progress, ProgressMessageLevel.Info, "Updating '{0}' to version '{1}'.", packageId, version);
 
-            var modules = GetModules();
-            var installedModuleIds = modules.Select(m => m.Id).ToList();
-            var module = modules.FirstOrDefault(m => m.Id == packageId);
+            var installedModules = GetModules();
+            var module = installedModules.FirstOrDefault(m => m.Id == packageId);
 
             if (module == null)
             {
@@ -134,7 +141,7 @@ namespace VirtoCommerce.Platform.Data.Packaging
                     }
                     else
                     {
-                        if (CheckDependencies(newPackage, installedModuleIds, progress))
+                        if (CheckDependencies(newPackage, installedModules, progress))
                         {
                             // Unpack all files
                             var moduleDirectoryPath = Path.Combine(_manifestProvider.RootPath, newPackage.Id);
@@ -181,7 +188,7 @@ namespace VirtoCommerce.Platform.Data.Packaging
             {
                 // Check dependent modules
                 var dependentModules = modules
-                    .Where(m => m.Dependencies != null && m.Dependencies.Contains(packageId))
+                    .Where(m => m.Dependencies != null && m.Dependencies.Any(d => d.Id == packageId))
                     .ToList();
 
                 dependentModules.ForEach(m => Report(progress, ProgressMessageLevel.Error, "'{0}' depends on '{1}'.", m.Id, module.Id));
@@ -212,18 +219,86 @@ namespace VirtoCommerce.Platform.Data.Packaging
         #endregion
 
 
-        private static bool CheckDependencies(ModuleDescriptor package, IEnumerable<string> installedModuleIds, IProgress<ProgressMessage> progress)
+        private static bool CheckDependencies(ModuleDescriptor package, IEnumerable<ModuleIdentity> installedModules, IProgress<ProgressMessage> progress)
         {
-            var dependenciesSatisfied = (package.Dependencies == null);
+            var dependencyErrors = GetDependencyErrors(package, installedModules);
+            dependencyErrors.ForEach(e => Report(progress, ProgressMessageLevel.Error, e));
+            return !dependencyErrors.Any();
+        }
 
-            if (!dependenciesSatisfied)
+        private static List<string> GetDependencyErrors(ModuleDescriptor package, IEnumerable<ModuleIdentity> installedModules)
+        {
+            var errors = new List<string>();
+
+            var platformVersion = GetPlatformVersion();
+
+            if (!IsCompatibleVersion(platformVersion, package.PlatformVersion))
             {
-                var missingModuleIds = package.Dependencies.Except(installedModuleIds).ToList();
-                missingModuleIds.ForEach(id => Report(progress, ProgressMessageLevel.Error, "Dependency is not installed: '{0}'.", id));
-                dependenciesSatisfied = !missingModuleIds.Any();
+                errors.Add(string.Format(CultureInfo.CurrentCulture, "Required platform version: '{0}'.", package.PlatformVersion));
+            }
+            else
+            {
+                var missingDependencies = GetMissingDependencies(package.Dependencies, installedModules);
+                missingDependencies.ForEach(d => errors.Add(string.Format(CultureInfo.CurrentCulture, "Dependency is not installed: '{0} {1}'.", d.Id, d.Version)));
             }
 
-            return dependenciesSatisfied;
+            return errors;
+        }
+
+        private static string GetPlatformVersion()
+        {
+            var assembly = Assembly.GetExecutingAssembly();
+            var result = string.Join(".", assembly.GetInformationalVersion(), assembly.GetFileVersion());
+            return result;
+        }
+
+        private static List<ModuleIdentity> GetMissingDependencies(IEnumerable<ModuleIdentity> dependencies, IEnumerable<ModuleIdentity> installedModules)
+        {
+            var result = new List<ModuleIdentity>();
+
+            if (dependencies != null)
+            {
+                var modules = installedModules.ToList();
+
+                foreach (var dependency in dependencies)
+                {
+                    var isMissing = true;
+                    var installedModule = modules.FirstOrDefault(m => m.Id == dependency.Id);
+
+                    if (installedModule != null)
+                    {
+                        isMissing = !IsCompatibleVersion(installedModule.Version, dependency.Version);
+                    }
+
+                    if (isMissing)
+                    {
+                        result.Add(dependency);
+                    }
+                }
+            }
+
+            return result;
+        }
+
+        private static bool IsCompatibleVersion(string version, string requiredVersion)
+        {
+            // TODO: support version ranges
+
+            var isCompatible = string.IsNullOrWhiteSpace(requiredVersion);
+
+            if (!isCompatible)
+            {
+                SemanticVersion semanticVersion;
+                SemanticVersion requiredSemanticVersion;
+
+                if (SemanticVersion.TryParse(version, out semanticVersion) && SemanticVersion.TryParse(requiredVersion, out requiredSemanticVersion))
+                {
+                    var comparisonResult = SemanticVersion.Compare(semanticVersion, requiredSemanticVersion);
+                    isCompatible = comparisonResult >= 0;
+                }
+            }
+
+            return isCompatible;
         }
 
         private static void Report(IProgress<ProgressMessage> progress, ProgressMessageLevel level, string format, params object[] args)
@@ -354,6 +429,7 @@ namespace VirtoCommerce.Platform.Data.Packaging
                 {
                     Id = manifest.Id,
                     Version = manifest.Version,
+                    PlatformVersion = manifest.PlatformVersion,
                     Title = manifest.Title,
                     Description = manifest.Description,
                     Authors = manifest.Authors,
@@ -362,8 +438,10 @@ namespace VirtoCommerce.Platform.Data.Packaging
                     ReleaseNotes = manifest.ReleaseNotes,
                     Copyright = manifest.Copyright,
                     Tags = manifest.Tags,
-                    Dependencies = manifest.Dependencies,
                 };
+
+                if (manifest.Dependencies != null)
+                    result.Dependencies = manifest.Dependencies.Select(d => new ModuleIdentity { Id = d.Id, Version = d.Version });
 
                 if (manifest.LicenseUrl != null)
                     result.LicenseUrl = new Uri(manifest.LicenseUrl);

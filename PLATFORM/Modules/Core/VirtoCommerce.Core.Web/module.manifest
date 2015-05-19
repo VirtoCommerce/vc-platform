@@ -1,66 +1,66 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <module>
-  <id>VirtoCommerce.Core</id>
-  <version>1.0.0.0</version>
+    <id>VirtoCommerce.Core</id>
+    <version>1.0.0</version>
+    <platformVersion>2.0.0</platformVersion>
+    <title>Virto Commerce Core</title>
+    <description>Core functionality</description>
+    <authors>
+        <author>Virto Commerce</author>
+    </authors>
+    <owners>
+        <owner>Virto Commerce</owner>
+    </owners>
+    <projectUrl>http://virtocommerce.com/</projectUrl>
+    <iconUrl>http://nuget.org/Content/Images/packageDefaultIcon-50x50.png</iconUrl>
+    <releaseNotes>First version.</releaseNotes>
+    <copyright>Copyright © 2011-2015 Virto Commerce. All rights reserved</copyright>
+    <tags>security core</tags>
 
-  <title>Virto Commerce Core</title>
-  <description>Core functionality</description>
-  <authors>
-    <author>Virto Commerce</author>
-  </authors>
-  <owners>
-    <owner>Virto Commerce</owner>
-  </owners>
-  <projectUrl>http://virtocommerce.com/</projectUrl>
-  <iconUrl>http://nuget.org/Content/Images/packageDefaultIcon-50x50.png</iconUrl>
-  <releaseNotes>First version.</releaseNotes>
-  <copyright>Copyright © 2011-2015 Virto Commerce. All rights reserved</copyright>
-  <tags>security core</tags>
+    <assemblyFile>VirtoCommerce.CoreModule.Web.dll</assemblyFile>
+    <moduleType>VirtoCommerce.CoreModule.Web.Module, VirtoCommerce.CoreModule.Web</moduleType>
+    <styles>
+        <directory virtualPath="$/Content/css" searchPattern="*.css" searchSubdirectories="true" />
+    </styles>
+    <scripts>
+        <directory virtualPath="$/Scripts" searchPattern="*.js" searchSubdirectories="true" />
+    </scripts>
 
-  <assemblyFile>VirtoCommerce.CoreModule.Web.dll</assemblyFile>
-  <moduleType>VirtoCommerce.CoreModule.Web.Module, VirtoCommerce.CoreModule.Web</moduleType>
-  <styles>
-    <directory virtualPath="$/Content/css" searchPattern="*.css" searchSubdirectories="true" />
-  </styles>
-  <scripts>
-    <directory virtualPath="$/Scripts" searchPattern="*.js" searchSubdirectories="true" />
-  </scripts>
-
-  <settings>
-    <group>
-      <setting>
-        <name>VirtoCommerce.Core.General.Currencies</name>
-        <valueType>string</valueType>
-        <defaultValue>USD</defaultValue>
-        <title>Currencies</title>
-        <description>Currencies available in system</description>
-        <isArray>true</isArray>
-        <arrayValues>
-          <value>JPY</value>
-          <value>GBP</value>
-          <value>EUR</value>
-          <value>USD</value>
-        </arrayValues>
-      </setting>
-      <setting>
-        <name>VirtoCommerce.Core.General.Languages</name>
-        <valueType>string</valueType>
-        <defaultValue>en-US</defaultValue>
-        <title>Languages</title>
-        <description>Languages available in system</description>
-        <isArray>true</isArray>
-        <arrayValues>
-          <value>en-US</value>
-          <value>fr-FR</value>
-          <value>de-DE</value>
-          <value>ja-JP</value>
-          <value>ru-RU</value>
-          <value>zh-CN</value>
-        </arrayValues>
-      </setting>
-    </group>
-  </settings>
-  <permissions>
-    <permission id="core:fulfillment:manage" name="Manage fulfillment centers" description="Permission to manage fulfillment centers."/>
-  </permissions>
+    <settings>
+        <group>
+            <setting>
+                <name>VirtoCommerce.Core.General.Currencies</name>
+                <valueType>string</valueType>
+                <defaultValue>USD</defaultValue>
+                <title>Currencies</title>
+                <description>Currencies available in system</description>
+                <isArray>true</isArray>
+                <arrayValues>
+                    <value>JPY</value>
+                    <value>GBP</value>
+                    <value>EUR</value>
+                    <value>USD</value>
+                </arrayValues>
+            </setting>
+            <setting>
+                <name>VirtoCommerce.Core.General.Languages</name>
+                <valueType>string</valueType>
+                <defaultValue>en-US</defaultValue>
+                <title>Languages</title>
+                <description>Languages available in system</description>
+                <isArray>true</isArray>
+                <arrayValues>
+                    <value>en-US</value>
+                    <value>fr-FR</value>
+                    <value>de-DE</value>
+                    <value>ja-JP</value>
+                    <value>ru-RU</value>
+                    <value>zh-CN</value>
+                </arrayValues>
+            </setting>
+        </group>
+    </settings>
+    <permissions>
+        <permission id="core:fulfillment:manage" name="Manage fulfillment centers" description="Permission to manage fulfillment centers."/>
+    </permissions>
 </module>

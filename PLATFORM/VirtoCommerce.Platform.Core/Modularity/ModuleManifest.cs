@@ -11,6 +11,9 @@ namespace VirtoCommerce.Platform.Core.Modularity
         [XmlElement("version")]
         public string Version { get; set; }
 
+        [XmlElement("platformVersion")]
+        public string PlatformVersion { get; set; }
+
         [XmlElement("title")]
         public string Title { get; set; }
 
@@ -54,7 +57,7 @@ namespace VirtoCommerce.Platform.Core.Modularity
 
         [XmlArray("dependencies")]
         [XmlArrayItem("dependency")]
-        public string[] Dependencies { get; set; }
+        public ManifestDependency[] Dependencies { get; set; }
 
         [XmlArray("styles")]
         [XmlArrayItem(typeof(ManifestBundleFile))]

@@ -1,4 +1,5 @@
-﻿using Omu.ValueInjecter;
+﻿using System.Linq;
+using Omu.ValueInjecter;
 using webModel = VirtoCommerce.Platform.Web.Model.Packaging;
 using moduleModel = VirtoCommerce.Platform.Core.Packaging;
 
@@ -10,7 +11,20 @@ namespace VirtoCommerce.Platform.Web.Converters.Packaging
         {
             var retVal = new webModel.ModuleDescriptor();
             retVal.InjectFrom(descriptor);
+
+            if (descriptor.Dependencies != null)
+            {
+                retVal.Dependencies = descriptor.Dependencies.Select(d => d.ToWebModel()).ToList();
+            }
+
             return retVal;
+        }
+
+        public static webModel.ModuleIdentity ToWebModel(this moduleModel.ModuleIdentity source)
+        {
+            var result = new webModel.ModuleIdentity();
+            result.InjectFrom(source);
+            return result;
         }
 
         public static moduleModel.ModuleDescriptor ToModuleModel(this webModel.ModuleDescriptor descriptor)

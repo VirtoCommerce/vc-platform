@@ -1,73 +1,74 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <module>
-	<id>Klarna.PaymentGateway</id>
-	<version>1.0.0.0</version>
-	<dependencies>
-		<dependency>VirtoCommerce.Core</dependency>
-	</dependencies>
+    <id>Klarna.PaymentGateway</id>
+    <version>1.0.0</version>
+    <platformVersion>2.0.0</platformVersion>
+    <dependencies>
+        <dependency id="VirtoCommerce.Core" version="1.0.0" />
+    </dependencies>
 
-	<title>Klarna Payment Gateway</title>
-	<description>APIs and UI for klarna payment gateway</description>
-	<authors>
-		<author>Virto Commerce</author>
-	</authors>
-	<owners>
-		<owner>Virto Commerce</owner>
-	</owners>
-	<projectUrl>http://virtocommerce.com/</projectUrl>
-	<iconUrl>http://nuget.org/Content/Images/packageDefaultIcon-50x50.png</iconUrl>
-	<releaseNotes>First version.</releaseNotes>
-	<copyright>Copyright © 2011-2015 Virto Commerce. All rights reserved</copyright>
-	<tags>klarna payment gateway</tags>
+    <title>Klarna Payment Gateway</title>
+    <description>APIs and UI for klarna payment gateway</description>
+    <authors>
+        <author>Virto Commerce</author>
+    </authors>
+    <owners>
+        <owner>Virto Commerce</owner>
+    </owners>
+    <projectUrl>http://virtocommerce.com/</projectUrl>
+    <iconUrl>http://nuget.org/Content/Images/packageDefaultIcon-50x50.png</iconUrl>
+    <releaseNotes>First version.</releaseNotes>
+    <copyright>Copyright © 2011-2015 Virto Commerce. All rights reserved</copyright>
+    <tags>klarna payment gateway</tags>
 
-	<assemblyFile>Klarna.PaymentGatewaysModule.Web.dll</assemblyFile>
-	<moduleType>Klarna.PaymentGatewaysModule.Web.Module, Klarna.PaymentGatewaysModule.Web</moduleType>
-	<!--<styles>
+    <assemblyFile>Klarna.PaymentGatewaysModule.Web.dll</assemblyFile>
+    <moduleType>Klarna.PaymentGatewaysModule.Web.Module, Klarna.PaymentGatewaysModule.Web</moduleType>
+    <!--<styles>
 		<directory virtualPath="$/Content/css" searchPattern="*.css" searchSubdirectories="true" />
 	</styles>-->
-	<!--<scripts>
+    <!--<scripts>
 		<directory virtualPath="$/Scripts" searchPattern="*.js" searchSubdirectories="true" />
 	</scripts>-->
 
-	<settings>
-		<group name="Credentials">
-			<setting>
-				<name>Klarna.PaymentGateway.Credentials.AppKey</name>
-				<valueType>integer</valueType>
-				<defaultValue>1000</defaultValue>
-				<title>Application Key</title>
-				<description>Klarna application key</description>
-			</setting>
-			<setting>
-				<name>Klarna.PaymentGateway.Credentials.SecretKey</name>
-				<valueType>string</valueType>
-				<defaultValue>qwerty</defaultValue>
-				<title>Secret Key</title>
-				<description>Klarna secret key</description>
-			</setting>
-		</group>
-		<group name="Gateway Description">
-			<setting>
-				<name>Klarna.PaymentGateway.GatewayDescription.GatewayCode</name>
-				<valueType>string</valueType>
-				<defaultValue>Klarna</defaultValue>
-				<title>Gateway code</title>
-				<description>Code that indentificates klarna gateway provider</description>
-			</setting>
-			<setting>
-				<name>Klarna.PaymentGateway.GatewayDescription.Description</name>
-				<valueType>string</valueType>
-				<defaultValue>Klarna public site description</defaultValue>
-				<title>Description</title>
-				<description>Description of klarna for public site</description>
-			</setting>
-			<setting>
-				<name>Klarna.PaymentGateway.GatewayDescription.LogoUrl</name>
-				<valueType>string</valueType>
-				<defaultValue>https://cdn.klarna.com/1.0/shared/image/generic/logo/global/tagline/vertical-blue.png</defaultValue>
-				<title>Logo url</title>
-				<description>Klarna logo url</description>
-			</setting>
-		</group>
-	</settings>
+    <settings>
+        <group name="Credentials">
+            <setting>
+                <name>Klarna.PaymentGateway.Credentials.AppKey</name>
+                <valueType>integer</valueType>
+                <defaultValue>1000</defaultValue>
+                <title>Application Key</title>
+                <description>Klarna application key</description>
+            </setting>
+            <setting>
+                <name>Klarna.PaymentGateway.Credentials.SecretKey</name>
+                <valueType>string</valueType>
+                <defaultValue>qwerty</defaultValue>
+                <title>Secret Key</title>
+                <description>Klarna secret key</description>
+            </setting>
+        </group>
+        <group name="Gateway Description">
+            <setting>
+                <name>Klarna.PaymentGateway.GatewayDescription.GatewayCode</name>
+                <valueType>string</valueType>
+                <defaultValue>Klarna</defaultValue>
+                <title>Gateway code</title>
+                <description>Code that indentificates klarna gateway provider</description>
+            </setting>
+            <setting>
+                <name>Klarna.PaymentGateway.GatewayDescription.Description</name>
+                <valueType>string</valueType>
+                <defaultValue>Klarna public site description</defaultValue>
+                <title>Description</title>
+                <description>Description of klarna for public site</description>
+            </setting>
+            <setting>
+                <name>Klarna.PaymentGateway.GatewayDescription.LogoUrl</name>
+                <valueType>string</valueType>
+                <defaultValue>https://cdn.klarna.com/1.0/shared/image/generic/logo/global/tagline/vertical-blue.png</defaultValue>
+                <title>Logo url</title>
+                <description>Klarna logo url</description>
+            </setting>
+        </group>
+    </settings>
 </module>
