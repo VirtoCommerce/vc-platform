@@ -47,7 +47,7 @@ namespace VirtoCommerce.Platform.Data.Asset
 
             folderName = request.FolderName;
             fileName = request.FileName;
-            key = string.Format(@"{0}\{1}", folderName, fileName);
+            key = string.Format(@"{0}/{1}", folderName, fileName);
             storagePath = string.Empty;
 
 

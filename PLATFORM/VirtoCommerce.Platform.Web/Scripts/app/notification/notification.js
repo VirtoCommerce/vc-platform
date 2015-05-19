@@ -73,12 +73,14 @@
 
     return retVal;
 }])
-.factory('platformWebApp.notificationService', ['platformWebApp.signalRHubProxy', '$interval', '$state', 'platformWebApp.mainMenuService', 'platformWebApp.notificationTemplateResolver', 'platformWebApp.notifications', 'platformWebApp.signalRServerName', function (signalRHubProxy, $interval, $state, mainMenuService, notificationTemplateResolver, notifications, signalRServerName) {
+.factory('platformWebApp.notificationService', ['$rootScope', 'platformWebApp.signalRHubProxy', '$interval', '$state', 'platformWebApp.mainMenuService', 'platformWebApp.notificationTemplateResolver', 'platformWebApp.notifications', 'platformWebApp.signalRServerName', function ($rootScope, signalRHubProxy, $interval, $state, mainMenuService, notificationTemplateResolver, notifications, signalRServerName) {
 
     var clientPushHubProxy = signalRHubProxy(signalRServerName, 'clientPushHub', { logging: true });
     clientPushHubProxy.on('notification', function (data) {
         var notifyMenu = mainMenuService.findByPath('notification');
         var notificationTemplate = notificationTemplateResolver.resolve(data, 'menu');
+		//broadcast event
+        $rootScope.$broadcast("new-notification-event", data);
 
         var menuItem = {
         	parent: notifyMenu,

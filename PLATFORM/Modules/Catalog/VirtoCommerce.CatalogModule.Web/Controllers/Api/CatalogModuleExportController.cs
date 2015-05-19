@@ -1,8 +1,10 @@
-﻿using System.Net;
+﻿using System;
+using System.Net;
 using System.Web.Http;
 using System.Web.Http.Description;
 using Hangfire;
 using VirtoCommerce.CatalogModule.Web.BackgroundJobs;
+using VirtoCommerce.CatalogModule.Web.Model.Notifications;
 using VirtoCommerce.Domain.Catalog.Services;
 using VirtoCommerce.Platform.Core.Asset;
 using VirtoCommerce.Platform.Core.Caching;
@@ -40,15 +42,23 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 		/// <param name="id"></param>
 		/// <param name="filePath"></param>
 		/// <returns></returns>
-		[ResponseType(typeof(void))]
+		[ResponseType(typeof(ExportNotification))]
 		[HttpGet]
 		[Route("{catalogId}")]
 		public IHttpActionResult DoExport(string catalogId)
 		{
+			var notification = new ExportNotification
+			{
+				Title = "Catalog export task",
+				NotifyType = "CatalogExport",
+				Description = "starting export...."
+			};
+			_notifier.Upsert(notification);
+
 			var exportJob = new CsvCatalogExportJob(_searchService, _categoryService, _productService, _notifier, _cacheManager, _blobStorageProvider, _blobUrlResolver);
-			BackgroundJob.Enqueue(() => exportJob.DoExport(catalogId));
-		
-			return Ok();
+			BackgroundJob.Enqueue(() => exportJob.DoExport(catalogId, notification.Id));
+
+			return Ok(notification);
 
 		}
 

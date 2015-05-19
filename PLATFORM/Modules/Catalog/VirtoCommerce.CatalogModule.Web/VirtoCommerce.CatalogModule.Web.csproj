@@ -166,6 +166,7 @@
     <Compile Include="Model\SeoInfo.cs" />
     <Compile Include="Module.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Content Include="Scripts\resources\export.js" />
   </ItemGroup>
   <ItemGroup>
     <!-- <Content Include="Content\css\catalog.css" /> -->
@@ -177,10 +178,8 @@
     <Content Include="Scripts\blades\catalog-property-detail.tpl.html" />
     <Content Include="Scripts\blades\common\catalog-items-select.js" />
     <Content Include="Scripts\blades\common\catalog-items-select.tpl.html" />
-    <Content Include="Scripts\blades\export\notifications\catalog-export-job-detail.tpl.html" />
     <Content Include="Scripts\blades\export\catalog-export.js" />
     <Content Include="Scripts\blades\export\catalog-CSV-export.js" />
-    <Content Include="Scripts\blades\export\notifications\catalog-export-job-detail.js" />
     <Content Include="Scripts\blades\export\exporter-list.js" />
     <Content Include="Scripts\blades\export\catalog-CSV-export.tpl.html" />
     <Content Include="Scripts\blades\export\exporter-list.tpl.html" />

@@ -65,8 +65,8 @@ angular.module(catalogsModuleName, [
 		            id: 'CatalogExportDetail',
 		            title: 'catalog export detail',
 		            subtitle: 'detail',
-		            template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/export/notifications/catalog-export-job-detail.tpl.html',
-		            controller: 'virtoCommerce.catalogModule.exportJobDetailController',
+		            template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/export/catalog-CSV-export.tpl.html',
+		            controller: 'virtoCommerce.catalogModule.catalogCSVexportController',
 		            notification: notify
 		        };
 		        bladeNavigationService.showBlade(blade);

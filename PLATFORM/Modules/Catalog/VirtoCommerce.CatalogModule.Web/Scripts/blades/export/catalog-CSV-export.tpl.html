@@ -1,19 +1,35 @@
 ﻿<div class="blade-static __bottom">
-    <button class="btn" ng-click="startProcess()" ng-disabled="formScope.$invalid">
+    <button class="btn" ng-click="startExport()" ng-disabled="blade.notification">
         <span>Start export</span>
     </button>
 </div>
 <div class="blade-content">
     <div class="blade-inner">
         <div class="inner-block">
-            <form class="form" name="detailForm">
-                <div class="form-group" ng-init="setForm(detailForm)">
-                    <label class="form-label">CSV file name</label>
-                    <div class="form-input">
-                        <input focus-on="" required class="form-control" ng-model="blade.currentEntity.name" placeholder="Enter file name" />
+            <div class="form">
+                <div>
+                    <p>{{blade.notification.description}}&nbsp;</p>
+                </div>
+                <div>
+                    <span class="sub-t">Start</span>
+                    <p>{{blade.notification.created | date : 'mediumTime'}}&nbsp;</p>
+                </div>
+                <div>
+                    <span class="sub-t">End</span>
+                    <p>{{blade.notification.finished | date : 'mediumTime'}}&nbsp;</p>
+                </div>
+                <div>
+                    <span class="sub-t">Progress</span>
+                    <p>{{blade.notification.totalCount + '/' + blade.notification.processedCount + '/' + blade.notification.errorCount}}&nbsp;</p>
+                </div>
+                <div>
+                    <span class="sub-t">Errors</span>
+                    <div class="log">
+                        <p ng-repeat="error in blade.notification.errors track by $index" class="error">{{error}}</p>
                     </div>
                 </div>
-            </form>
+                <p class="text">Download Url: <a href="{{blade.notification.downloadUrl}}">{{blade.notification.downloadUrl}}</a></p>
+            </div>
         </div>
     </div>
 </div>

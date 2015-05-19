@@ -55,6 +55,10 @@ namespace VirtoCommerce.Platform.Data.Notification
         public NotifySearchResult SearchNotifies(string userId, NotifySearchCriteria criteria)
         {
             var query = _innerList.OrderByDescending(x => x.Created).Where(x => x.Creator == userId).AsQueryable();
+			if (criteria.Ids != null && criteria.Ids.Any())
+			{
+				query = query.Where(x => criteria.Ids.Contains(x.Id));
+			}
             if (criteria.OnlyNew)
             {
                 query = query.Where(x => x.New);

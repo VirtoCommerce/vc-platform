@@ -25,8 +25,7 @@ namespace VirtoCommerce.CatalogModule.Web.BackgroundJobs
 		private readonly CacheManager _cacheManager;
 		private readonly IBlobStorageProvider _blobStorageProvider;
 		private readonly IBlobUrlResolver _blobUrlResolver;
-		private readonly ExportNotification _notification;
-
+	
 		public CsvCatalogExportJob(ICatalogSearchService catalogSearchService,
 								ICategoryService categoryService, IItemService productService,
 								INotifier notifier, CacheManager cacheManager, IBlobStorageProvider blobProvider, IBlobUrlResolver blobUrlResolver)
@@ -38,28 +37,31 @@ namespace VirtoCommerce.CatalogModule.Web.BackgroundJobs
 			_cacheManager = cacheManager;
 			_blobStorageProvider = blobProvider;
 			_blobUrlResolver = blobUrlResolver;
-			_notification = new ExportNotification
-			{ 
-				Title = "Catalog export task",
-				NotifyType = "CatalogExport",
-				Description = "starting export...."
-			};
-		
 		}
 
-		public virtual void DoExport(string catalogId)
+		public virtual void DoExport(string catalogId, string notificationId)
 		{
 			var memoryStream = new MemoryStream();
 			var streamWriter = new StreamWriter(memoryStream);
 			var productPropertyInfos = typeof(CatalogProduct).GetProperties(BindingFlags.Instance | BindingFlags.Public);
+
+			var notification = new ExportNotification
+			{
+				Id = notificationId,
+				Title = "Catalog export task",
+				NotifyType = "CatalogExport",
+				Description = "starting export...."
+			};
+			_notifier.Upsert(notification);
+
 
 			using (var csvWriter = new CsvWriter(streamWriter))
 			{
 				csvWriter.Configuration.Delimiter = ";";
 
 				//Notification
-				_notification.Description = "loading products...";
-				_notifier.Upsert(_notification);
+				notification.Description = "loading products...";
+				_notifier.Upsert(notification);
 
 				try
 				{
@@ -104,19 +106,19 @@ namespace VirtoCommerce.CatalogModule.Web.BackgroundJobs
 						}
 						catch(Exception ex)
 						{
-							_notification.ErrorCount++;
-							_notification.Errors.Add(ex.ToString());
-							_notifier.Upsert(_notification);
+							notification.ErrorCount++;
+							notification.Errors.Add(ex.ToString());
+							_notifier.Upsert(notification);
 						}
 
 						//Raise notification each notifyProductSizeLimit products
 						counter++;
 						if (counter % notifyProductSizeLimit == 0)
 						{
-							_notification.ProcessedCount = counter;
-							_notification.TotalCount = products.Count();
-							_notification.Description = string.Format("{0} of {1} products processed", _notification.ProcessedCount, _notification.TotalCount);
-							_notifier.Upsert(_notification);
+							notification.ProcessedCount = counter;
+							notification.TotalCount = products.Count();
+							notification.Description = string.Format("{0} of {1} products processed", notification.ProcessedCount, notification.TotalCount);
+							_notifier.Upsert(notification);
 						}
 					}
 
@@ -130,19 +132,19 @@ namespace VirtoCommerce.CatalogModule.Web.BackgroundJobs
 					};
 					var blobKey = _blobStorageProvider.Upload(uploadInfo);
 					//Get a download url
-					_notification.DownloadUrl = _blobUrlResolver.GetAbsoluteUrl(blobKey);
-					_notification.Description = "Export finished";
+					notification.DownloadUrl = _blobUrlResolver.GetAbsoluteUrl(blobKey);
+					notification.Description = "Export finished";
 				}
 				catch(Exception ex)
 				{
-					_notification.Description = "Export error";
-					_notification.ErrorCount++;
-					_notification.Errors.Add(ex.ToString());
+					notification.Description = "Export error";
+					notification.ErrorCount++;
+					notification.Errors.Add(ex.ToString());
 				}
 				finally
 				{
-					_notification.Finished = DateTime.UtcNow;
-					_notifier.Upsert(_notification);
+					notification.Finished = DateTime.UtcNow;
+					_notifier.Upsert(notification);
 				}
 		
 			}
