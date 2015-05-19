@@ -1,13 +1,10 @@
-﻿<td class="col">
-    <span class="pic">
-        <i class="icon"></i>
-    </span>
+﻿<td class="table-col __product-img">
+    <i class="table-ico fa fa-download"></i>
 </td>
-<td class="col">
-    <span class="title" ng-bind="notification.title"></span>
-    <span class="desc" ng-bind="notification.description"></span>
+<td class="table-col">
+    <span class="table-t" ng-bind="notification.title"></span>
+    <span class="table-descr" ng-bind="notification.description"></span>
  </td>
-<td class="col">
-    <span class="date" am-time-ago="notification.created"></span>
-    {{notification.created}}
+<td class="table-col __date">
+    <span class="table-date" am-time-ago="notification.created"></span>
 </td>
