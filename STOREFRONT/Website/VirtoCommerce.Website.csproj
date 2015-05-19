@@ -207,6 +207,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="App_Data\Themes\_Default\assets\arrow_switch.png" />
+    <Content Include="App_Data\Themes\_Default\assets\flags.png" />
     <Content Include="App_Data\Themes\_Global\virtocommerce.js" />
     <Content Include="App_Data\Themes\_Global\social\shopify-social.svg" />
     <Content Include="App_Data\Themes\_Global\social\social-icons.css" />
