@@ -128,7 +128,7 @@ namespace VirtoCommerce.CatalogModule.Web.BackgroundJobs
 					{
 						FileName = "Catalog-" + catalogId + "-export.csv",
 						FileByteStream = memoryStream,
-						FolderName = "export"
+						FolderName = "catalog"
 					};
 					var blobKey = _blobStorageProvider.Upload(uploadInfo);
 					//Get a download url

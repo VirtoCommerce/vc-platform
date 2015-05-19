@@ -28,32 +28,35 @@ namespace VirtoCommerce.Platform.Data.Asset
 
         #region IBlobStorageProvider Members
 
-        public string Upload(UploadStreamInfo request)
-        {
-            string result = null;
-            var containerName = request.FolderName;
+		public string Upload(UploadStreamInfo request)
+		{
+			string result = null;
+			var containerName = request.FolderName;
 
-            var container = _cloudBlobClient.GetContainerReference(containerName);
-            if (container.Exists())
-            {
-                var blob = container.GetBlockBlobReference(request.FileName);
-                blob.Properties.ContentType = ResolveContentType(request.FileName);
+			var container = _cloudBlobClient.GetContainerReference(containerName);
+			if (!container.Exists())
+			{
+				container.CreateIfNotExists();
+			}
 
-                using (var memoryStream = new MemoryStream())
-                {
-                    // upload to MemoryStream
-                    memoryStream.SetLength(request.Length);
-                    request.FileByteStream.CopyTo(memoryStream);
-                    memoryStream.Position = 0;
-                    // fill blob
-                    blob.UploadFromStream(memoryStream);
-                }
+			var blob = container.GetBlockBlobReference(request.FileName);
+			blob.Properties.ContentType = ResolveContentType(request.FileName);
 
-                result = blob.Uri.AbsolutePath.TrimStart('/');
-            }
+			using (var memoryStream = new MemoryStream())
+			{
+				// upload to MemoryStream
+				//memoryStream.SetLength(request.Length);
+				request.FileByteStream.CopyTo(memoryStream);
+				memoryStream.Position = 0;
+				// fill blob
+				blob.UploadFromStream(memoryStream);
+			}
 
-            return result;
-        }
+			result = blob.Uri.AbsolutePath.TrimStart('/');
+
+
+			return result;
+		}
 
 
         public System.IO.Stream OpenReadOnly(string blobKey)
