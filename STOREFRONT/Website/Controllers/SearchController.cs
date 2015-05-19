@@ -14,11 +14,12 @@ namespace VirtoCommerce.Web.Controllers
         [Route("")]
         public async Task<ActionResult> SearchAsync(string type, string q, int page = 1)
         {
-            this.Context.Set("current_page", page);
-            //this.Context.Set("current_query", q);
-            this.Context.Set("current_type", type);
-            this.Context.Set("Search", new Search() { Terms = q, Performed = true });
-            return this.View("search");
+            await Task.FromResult<object>(null);
+            Context.Set("current_page", page);
+            //Context.Set("current_query", q);
+            Context.Set("current_type", type);
+            Context.Set("Search", new Search() { Terms = q, Performed = true });
+            return View("search");
         }
         #endregion
     }

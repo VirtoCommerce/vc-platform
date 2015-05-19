@@ -5,7 +5,7 @@
             <form name="mappingForm" class="form">
                 <fieldset ng-init="setForm(mappingForm)">
                     <div class="form-group">
-                        <label class="form-label">CSV column:</label>
+                        <label class="form-label">CSV column</label>
                         <div class="form-input" style="width: 50%">
                             <select class="form-control" ng-model="currentEntity.csvColumnName" ng-options="obj for obj in blade.csvColumns">
                                 <option value="">Custom</option>
@@ -13,13 +13,13 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="form-label">Custom value:</label>
+                        <label class="form-label">Custom value</label>
                         <div class="form-input">
                             <input class="form-control" ng-model="currentEntity.customValue" type="text" ng-disabled="currentEntity.csvColumnName" />
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="form-label">Value format ({0} stands for value):</label>
+                        <label class="form-label">Value format ({0} stands for value)</label>
                         <div class="form-input">
                             <input class="form-control" ng-model="currentEntity.stringFormat" type="text" />
                         </div>

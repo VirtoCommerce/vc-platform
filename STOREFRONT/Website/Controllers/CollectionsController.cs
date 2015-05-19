@@ -88,8 +88,9 @@ namespace VirtoCommerce.Web.Controllers
         [Route("", Order = 2)]
         public async Task<ActionResult> IndexAsync(string tags, int page = 1, string sort_by = "manual")
         {
-            this.Context.Set("current_tags", this.ParseTags(tags));
-            return this.View("list-collections");
+            await Task.FromResult<object>(null);
+            Context.Set("current_tags", ParseTags(tags));
+            return View("list-collections");
         }
         #endregion
 

@@ -21,12 +21,12 @@ namespace VirtoCommerce.Web.Controllers
         public async Task<ActionResult> DisplayPageAsync(string page)
         {
             var context = SiteContext.Current;
-            var model = new PagesService().GetPage(context, page);
+            var model = await Task.FromResult(new PagesService().GetPage(context, page));
 
-            if(model == null)
+            if (model == null)
                 throw new HttpException(404, "NotFound");
 
-            this.Context.Set("page", model);
+            Context.Set("page", model);
 
             return View(model.Layout ?? "page");
         }

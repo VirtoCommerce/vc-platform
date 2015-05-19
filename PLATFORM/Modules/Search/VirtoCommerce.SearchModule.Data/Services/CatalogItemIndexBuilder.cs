@@ -53,9 +53,9 @@ namespace VirtoCommerce.SearchModule.Data.Services
             }
         }
 
-        public IEnumerable<Partition> GetPartitions(DateTime startDate, DateTime endDate)
+        public IEnumerable<Partition> GetPartitions(bool rebuild, DateTime startDate, DateTime endDate)
         {
-            var partitions = (startDate == DateTime.MinValue)
+            var partitions = (rebuild || startDate == DateTime.MinValue)
                 ? GetPartitionsForAllProducts()
                 : GetPartitionsForModifiedProducts(startDate, endDate);
 
@@ -100,6 +100,11 @@ namespace VirtoCommerce.SearchModule.Data.Services
                 _searchProvider.Remove(scope, DocumentType, "__key", doc);
             }
             _searchProvider.Commit(scope);
+        }
+
+        public void RemoveAll(string scope)
+        {
+            _searchProvider.RemoveAll(scope, DocumentType);
         }
 
         #endregion

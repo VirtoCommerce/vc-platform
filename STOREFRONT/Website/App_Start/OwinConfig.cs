@@ -158,6 +158,7 @@ namespace VirtoCommerce.Web
                 ctx.Collections = await commerceService.GetCollectionsAsync(SiteContext.Current);
                 ctx.Pages = new PageCollection();
                 ctx.Forms = commerceService.GetForms();
+                ctx.Blogs = commerceService.GetBlogs(SiteContext.Current);
 
                 var cart = await commerceService.GetCartAsync(SiteContext.Current.StoreId, SiteContext.Current.CustomerId);
                 if (cart == null)

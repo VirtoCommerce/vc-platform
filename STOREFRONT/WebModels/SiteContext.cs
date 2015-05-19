@@ -263,6 +263,19 @@ namespace VirtoCommerce.Web
             }
         }
 
+        public BlogCollection Blogs
+        {
+            get
+            {
+                object retValue;
+                return this._Storage.TryGetValue("blogs", out retValue) ? retValue as BlogCollection : null;
+            }
+            set
+            {
+                this.Set("blogs", value);
+            }
+        }
+
         public string PoweredByLink
         {
             get

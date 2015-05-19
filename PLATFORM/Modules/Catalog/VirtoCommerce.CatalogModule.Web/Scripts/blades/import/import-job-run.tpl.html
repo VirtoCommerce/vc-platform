@@ -1,6 +1,6 @@
 ﻿<form name="importJobForm">
     <fieldset ng-init="setForm(importJobForm)">
-        <label>Csv file:</label>
+        <label>Csv file</label>
         <div data-role="input-control" class="input-control file">
             <input type="file" uploader="uploader" nv-file-select style="z-index: 0;" tabindex="-1">
             <input required type="text" style="z-index: 1; cursor: default;" readonly="" onclick="$('input[type=file]').trigger('click')" ng-model="job.templatePath">

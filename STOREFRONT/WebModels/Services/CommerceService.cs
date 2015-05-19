@@ -12,8 +12,6 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using VirtoCommerce.ApiClient;
 using VirtoCommerce.ApiClient.DataContracts;
-using VirtoCommerce.ApiClient.DataContracts.Orders;
-using VirtoCommerce.ApiClient.DataContracts.Search;
 using VirtoCommerce.ApiClient.Extensions;
 using VirtoCommerce.Web.Extensions;
 using VirtoCommerce.Web.Models.Cms;
@@ -46,7 +44,6 @@ namespace VirtoCommerce.Web.Models.Services
         private readonly ThemeClient _themeClient;
         private readonly PageClient _pageClient;
         private readonly IViewLocator _viewLocator;
-        private readonly FileStorageCacheService _pageStorageClient;
         private readonly ReviewsClient _reviewsClient;
         private readonly string _themesCacheStoragePath;
         private readonly string _pagesCacheStoragePath;
@@ -73,7 +70,7 @@ namespace VirtoCommerce.Web.Models.Services
 
             _themesCacheStoragePath = ConfigurationManager.AppSettings["ThemeCacheFolder"];
             _pagesCacheStoragePath = ConfigurationManager.AppSettings["PageCacheFolder"];
-            
+
             this._viewLocator = new FileThemeViewLocator(HostingEnvironment.MapPath(_themesCacheStoragePath));
 
             this._cartHelper = new CartHelper(this);
@@ -93,19 +90,118 @@ namespace VirtoCommerce.Web.Models.Services
         #region Public Methods and Operators
         public IDictionary<string, string> CurrencyDictionary
         {
+            #region Currency Dictionary
             get
             {
-                var dictionary = new Dictionary<string, string>();
-
-                dictionary.Add("USD", "$");
-                dictionary.Add("GBP", "£");
-                dictionary.Add("RUB", "Ꝑ");
-                dictionary.Add("EUR", "€");
-                dictionary.Add("JPY", "¥");
-                dictionary.Add("CNY", "¥");
+                var dictionary = new Dictionary<string, string>() {
+                                                    {"AED", "د.إ.‏"},
+                                                    {"AFN", "؋ "},
+                                                    {"ALL", "Lek"},
+                                                    {"AMD", "դր."},
+                                                    {"ARS", "$"},
+                                                    {"AUD", "$"}, 
+                                                    {"AZN", "man."}, 
+                                                    {"BAM", "KM"}, 
+                                                    {"BDT", "৳"}, 
+                                                    {"BGN", "лв."}, 
+                                                    {"BHD", "د.ب.‏ "},
+                                                    {"BND", "$"}, 
+                                                    {"BOB", "$b"}, 
+                                                    {"BRL", "R$"}, 
+                                                    {"BYR", "р."}, 
+                                                    {"BZD", "BZ$"}, 
+                                                    {"CAD", "$"}, 
+                                                    {"CHF", "fr."}, 
+                                                    {"CLP", "$"}, 
+                                                    {"CNY", "¥"}, 
+                                                    {"COP", "$"}, 
+                                                    {"CRC", "₡"}, 
+                                                    {"CSD", "Din."}, 
+                                                    {"CZK", "Kč"}, 
+                                                    {"DKK", "kr."}, 
+                                                    {"DOP", "RD$"}, 
+                                                    {"DZD", "DZD"}, 
+                                                    {"EEK", "kr"}, 
+                                                    {"EGP", "ج.م.‏ "},
+                                                    {"ETB", "ETB"}, 
+                                                    {"EUR", "€"}, 
+                                                    {"GBP", "£"}, 
+                                                    {"GEL", "Lari"}, 
+                                                    {"GTQ", "Q"}, 
+                                                    {"HKD", "HK$"}, 
+                                                    {"HNL", "L."}, 
+                                                    {"HRK", "kn"}, 
+                                                    {"HUF", "Ft"}, 
+                                                    {"IDR", "Rp"}, 
+                                                    {"ILS", "₪"}, 
+                                                    {"INR", "रु"}, 
+                                                    {"IQD", "د.ع.‏ "},
+                                                    {"IRR", "ريال "},
+                                                    {"ISK", "kr."}, 
+                                                    {"JMD", "J$"}, 
+                                                    {"JOD", "د.ا.‏ "},
+                                                    {"JPY", "¥"}, 
+                                                    {"KES", "S"}, 
+                                                    {"KGS", "сом"}, 
+                                                    {"KHR", "៛"}, 
+                                                    {"KRW", "₩"}, 
+                                                    {"KWD", "د.ك.‏ "},
+                                                    {"KZT", "Т"}, 
+                                                    {"LAK", "₭"}, 
+                                                    {"LBP", "ل.ل.‏ "},
+                                                    {"LKR", "රු."}, 
+                                                    {"LTL", "Lt"}, 
+                                                    {"LVL", "Ls"}, 
+                                                    {"LYD", "د.ل.‏ "},
+                                                    {"MAD", "د.م.‏ "},
+                                                    {"MKD", "ден."}, 
+                                                    {"MNT", "₮"}, 
+                                                    {"MOP", "MOP"}, 
+                                                    {"MVR", "ރ."}, 
+                                                    {"MXN", "$"}, 
+                                                    {"MYR", "RM"}, 
+                                                    {"NIO", "N"}, 
+                                                    {"NOK", "kr"}, 
+                                                    {"NPR", "रु"}, 
+                                                    {"NZD", "$"}, 
+                                                    {"OMR", "ر.ع.‏ "},
+                                                    {"PAB", "B/."}, 
+                                                    {"PEN", "S/."}, 
+                                                    {"PHP", "PhP"}, 
+                                                    {"PKR", "Rs"}, 
+                                                    {"PLN", "zł"}, 
+                                                    {"PYG", "Gs"}, 
+                                                    {"QAR", "ر.ق.‏ "},
+                                                    {"RON", "lei"}, 
+                                                    {"RSD", "Din."}, 
+                                                    {"RUB", "р."}, 
+                                                    {"RWF", "RWF"}, 
+                                                    {"SAR", "ر.س.‏ "},
+                                                    {"SEK", "kr"}, 
+                                                    {"SGD", "$"}, 
+                                                    {"SYP", "ل.س.‏ "},
+                                                    {"THB", "฿"}, 
+                                                    {"TJS", "т.р."}, 
+                                                    {"TMT", "m."}, 
+                                                    {"TND", "د.ت.‏ "},
+                                                    {"TRY", "TL"}, 
+                                                    {"TTD", "TT$"}, 
+                                                    {"TWD", "NT$"}, 
+                                                    {"UAH", "₴"}, 
+                                                    {"USD", "$"}, 
+                                                    {"UYU", "$U"}, 
+                                                    {"UZS", "so'm"}, 
+                                                    {"VEF", "Bs. F."}, 
+                                                    {"VND", "₫"}, 
+                                                    {"XOF", "XOF"}, 
+                                                    {"YER", "ر.ي.‏ "},
+                                                    {"ZAR", "R"}, 
+                                                    {"ZWL", "Z$"} 
+                };
 
                 return dictionary;
             }
+            #endregion
         }
 
         public async Task<ICollection<Review>> GetReviewsAsync(string productId)
@@ -116,10 +212,7 @@ namespace VirtoCommerce.Web.Models.Services
 
             if (response != null)
             {
-                foreach (var review in response.Items)
-                {
-                    webReviews.Add(review.AsWebModel());
-                }
+                webReviews.AddRange(response.Items.Select(review => review.AsWebModel()));
             }
 
             return webReviews;
@@ -542,6 +635,12 @@ namespace VirtoCommerce.Web.Models.Services
             return allForms;
         }
 
+        public BlogCollection GetBlogs(SiteContext context)
+        {
+            var service = new PagesService();
+            return new BlogCollection(service.GetBlogs(context));
+        }
+
         public async Task<LinkLists> GetListsAsync(SiteContext context)
         {
             var store = context.StoreId;
@@ -593,9 +692,9 @@ namespace VirtoCommerce.Web.Models.Services
 
             var rewards = await _marketingClient.GetPromotionRewardsAsync(promoContext);
 
-            //var inventories = await this.GetItemInventoriesAsync(variationIds);
+            var inventories = await this.GetItemsInventoriesAsync(variationIds);
 
-            return product.AsWebModel(prices, rewards/*, inventories*/);
+            return product.AsWebModel(prices, rewards, inventories);
         }
 
         public async Task<Product> GetProductByKeywordAsync(SiteContext context, string keyword, ItemResponseGroups responseGroup = ItemResponseGroups.ItemLarge)
@@ -644,26 +743,14 @@ namespace VirtoCommerce.Web.Models.Services
 
             var rewards = await _marketingClient.GetPromotionRewardsAsync(promoContext);
 
-            //var inventories = await this.GetItemInventoriesAsync(variationIds);
+            var inventories = await this.GetItemsInventoriesAsync(variationIds);
 
-            return product.AsWebModel(prices, rewards/*, inventories*/);
+            return product.AsWebModel(prices, rewards, inventories);
         }
 
-        public async Task<ItemInventory> GetItemInventoryAsync(string itemId)
+        public async Task<IEnumerable<InventoryInfo>> GetItemsInventoriesAsync(string[] itemIds)
         {
-            return await this._inventoryClient.GetItemInventory(itemId);
-        }
-
-        public async Task<IEnumerable<ItemInventory>> GetItemInventoriesAsync(string[] itemIds)
-        {
-            var inventories = new List<ItemInventory>();
-
-            foreach (var itemId in itemIds)
-            {
-                inventories.Add(await this.GetItemInventoryAsync(itemId));
-            }
-
-            return inventories;
+            return await _inventoryClient.GetItemsInventories(itemIds);
         }
 
         public async Task<IEnumerable<ApiClient.DataContracts.Marketing.PromotionReward>>
@@ -674,7 +761,8 @@ namespace VirtoCommerce.Web.Models.Services
 
         public async Task<IEnumerable<ApiClient.DataContracts.Price>> GetProductPricesAsync(string[] priceLists, string[] productIds)
         {
-            if (priceLists == null || productIds == null) return null;
+            if (priceLists == null || productIds == null)
+                return null;
 
             return await this._priceClient.GetPrices(priceLists, productIds).ConfigureAwait(false);
         }
@@ -797,6 +885,11 @@ namespace VirtoCommerce.Web.Models.Services
                         query,
                         responseGroups);
 
+            if (!response.Items.Any()) // no results found
+            {
+                return new SearchResults<T>(null);
+            }
+
             var allIds = response.Items.ToArray().GetAllVariationIds();
             var prices = await GetProductPricesAsync(priceLists, allIds.ToArray());
 
@@ -833,9 +926,9 @@ namespace VirtoCommerce.Web.Models.Services
 
             var rewards = await _marketingClient.GetPromotionRewardsAsync(promoContext);
 
-            //var inventories = await this.GetItemInventoriesAsync(allIds);
+            var inventories = await this.GetItemsInventoriesAsync(allIds);
 
-            var result = new SearchResults<T>(response.Items.Select(i => i.AsWebModel(prices, rewards, parentCollection/*, inventories*/)).OfType<T>()) { TotalCount = response.TotalCount };
+            var result = new SearchResults<T>(response.Items.Select(i => i.AsWebModel(prices, rewards,inventories, parentCollection)).OfType<T>()) { TotalCount = response.TotalCount };
 
             if (response.Facets != null && response.Facets.Any())
                 result.Facets = response.Facets.Select(x => x.AsWebModel()).ToArray();

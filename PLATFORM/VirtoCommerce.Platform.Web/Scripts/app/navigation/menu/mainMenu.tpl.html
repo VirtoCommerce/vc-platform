@@ -12,7 +12,7 @@
         </li>
     </ul>
     <div class="dropdown" ng-class="{'__opened': showSubMenu}">
-        <a class="dropdown-close" ng-click="showSubMenu = false">×</a>
+        <a class="dropdown-close" ng-click="showSubMenu = false; counter = 0;">×</a>
         <div class="dropdown-head" ng-if="!currentMenuItem.headerTemplate">
             <!-- <ul class="menu __inline">
                 <li class="menu-item">

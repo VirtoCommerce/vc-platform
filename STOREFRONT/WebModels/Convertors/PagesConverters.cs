@@ -1,4 +1,5 @@
-﻿using VirtoCommerce.Web.Models.Cms;
+﻿using Omu.ValueInjecter;
+using VirtoCommerce.Web.Models.Cms;
 using VirtoCommerce.Web.Views.Contents;
 
 namespace VirtoCommerce.Web.Convertors
@@ -16,8 +17,20 @@ namespace VirtoCommerce.Web.Convertors
                 Url = item.Url,
                 PublishedAt = item.Date,
                 Title = item.Title,
-                Layout = item.Layout
+                Layout = item.Layout//,
+                //Properties = item.Settings
             };
+
+            return ret;
+        }
+
+        public static Article AsArticleWebModel(this ContentItem item)
+        {
+            var page = item.AsPageWebModel();
+            var ret = new Article();
+            ret.InjectFrom(page);
+            ret.Excerpt = item.ContentExcerpt;
+            //ret.Tags = item.
 
             return ret;
         }

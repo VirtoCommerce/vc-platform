@@ -7,7 +7,7 @@ using DotLiquid;
 
 namespace VirtoCommerce.Web.Models.Cms
 {
-    public class Page : Drop
+    public class Page : PropertiesDrop
     {
         #region Public Properties
         public string Author { get; set; }
