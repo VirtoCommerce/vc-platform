@@ -168,7 +168,7 @@ namespace VirtoCommerce.CatalogModule.Data.Services
 				var query = repository.Items;
 				if ((criteria.ResponseGroup & coreModel.ResponseGroup.WithVariations) != coreModel.ResponseGroup.WithVariations)
 				{
-					query = query.Where(x => x.IsActive);
+					query = query.Where(x => x.ParentId == null);
 				}
 
 
@@ -193,8 +193,6 @@ namespace VirtoCommerce.CatalogModule.Data.Services
 					query = query.Where(x => x.CatalogId == criteria.CatalogId && ( criteria.GetAllCategories || !x.CategoryItemRelations.Any()));
 
 				}
-		
-
 
 				if (!String.IsNullOrEmpty(criteria.Code))
 				{

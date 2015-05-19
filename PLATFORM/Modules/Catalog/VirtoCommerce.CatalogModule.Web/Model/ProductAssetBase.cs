@@ -10,6 +10,7 @@ namespace VirtoCommerce.CatalogModule.Web.Model
 	{
 		public string Id { get; set; }
 		public string ItemId { get; set; }
+		public string RelativeUrl { get; set; }
 		public string Url { get; set; }
 		public string TypeId { get; set; }
 	    public string Group { get; set; }
