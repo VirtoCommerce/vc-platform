@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using System;
+using System.Net;
 using System.Web.Mvc;
 
 namespace VirtoCommerce.Web.Controllers
@@ -12,6 +13,12 @@ namespace VirtoCommerce.Web.Controllers
             Response.TrySkipIisCustomErrors = true;
 
             return View("404");
+        }
+
+        [HttpGet]
+        public ActionResult Http500(Exception exception)
+        {
+            throw new Exception("", exception);
         }
     }
 }
