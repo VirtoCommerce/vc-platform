@@ -1,19 +1,29 @@
 ﻿angular.module('virtoCommerce.storeModule')
-.controller('virtoCommerce.storeModule.storeSettingDetailController', ['$scope', 'platformWebApp.dialogService', function ($scope, dialogService) {
-    $scope.types = ["Boolean", "ShortText", "Xml"];
+.controller('virtoCommerce.storeModule.storeSettingDetailController', ['$scope', '$timeout', 'platformWebApp.dialogService', function ($scope, $timeout, dialogService) {
+    var blade = $scope.blade;
+    var codemirrorEditor;
+    $scope.types = ["Boolean", "ShortText", "LongText", "Xml"];
 
     function initializeBlade(data) {
         if (data.isNew) {
             data.valueType = $scope.types[1];
+        } else if (data.valueType == $scope.types[3]) {
+            $timeout(function () {
+                if (codemirrorEditor) {
+                    codemirrorEditor.refresh();
+                    codemirrorEditor.focus();
+                }
+                angular.copy(blade.currentEntity, blade.origEntity);
+            }, 1);
         }
 
-        $scope.blade.currentEntity = angular.copy(data);
-        $scope.blade.origEntity = data;
-        $scope.blade.isLoading = false;
+        blade.currentEntity = angular.copy(data);
+        blade.origEntity = data;
+        blade.isLoading = false;
     };
 
     function isDirty() {
-        return !angular.equals($scope.blade.currentEntity, $scope.blade.origEntity);
+        return !angular.equals(blade.currentEntity, blade.origEntity);
     };
 
     $scope.setForm = function (form) {
@@ -21,15 +31,15 @@
     }
 
     $scope.saveChanges = function () {
-        if ($scope.blade.currentEntity.isNew) {
-            $scope.blade.currentEntity.isNew = undefined;
-            $scope.blade.parentBlade.currentEntities.push($scope.blade.currentEntity);
+        if (blade.currentEntity.isNew) {
+            blade.currentEntity.isNew = undefined;
+            blade.parentBlade.currentEntities.push(blade.currentEntity);
         }
 
-        angular.copy($scope.blade.currentEntity, $scope.blade.origEntity);
+        angular.copy(blade.currentEntity, blade.origEntity);
         $scope.bladeClose();
     };
-    
+
     $scope.isValid = function () {
         return $scope.formScope && $scope.formScope.$valid;
     }
@@ -38,7 +48,7 @@
         $scope.bladeClose();
     }
 
-    $scope.blade.onClose = function (closeCallback) {
+    blade.onClose = function (closeCallback) {
         if (isDirty()) {
             var dialog = {
                 id: "confirmCurrentBladeClose",
@@ -65,9 +75,9 @@
             message: "Are you sure you want to delete this Setting?",
             callback: function (remove) {
                 if (remove) {
-                    var idx = $scope.blade.parentBlade.currentEntities.indexOf($scope.blade.origEntity);
+                    var idx = blade.parentBlade.currentEntities.indexOf(blade.origEntity);
                     if (idx >= 0) {
-                        $scope.blade.parentBlade.currentEntities.splice(idx, 1);
+                        blade.parentBlade.currentEntities.splice(idx, 1);
                         $scope.bladeClose();
                     }
                 }
@@ -82,7 +92,7 @@
         {
             name: "Reset", icon: 'fa fa-undo',
             executeMethod: function () {
-                angular.copy($scope.blade.origEntity, $scope.blade.currentEntity);
+                angular.copy(blade.origEntity, blade.currentEntity);
             },
             canExecuteMethod: function () {
                 return isDirty();
@@ -95,12 +105,25 @@
                 deleteEntry();
             },
             canExecuteMethod: function () {
-                return !$scope.blade.currentEntity.isNew && !isDirty();
+                return !blade.currentEntity.isNew && !isDirty();
             },
             permission: 'store:manage'
         }
     ];
 
+    // Codemirror configuration
+    $scope.editorOptions = {
+        lineWrapping: true,
+        lineNumbers: true,
+        extraKeys: { "Ctrl-Q": function (cm) { cm.foldCode(cm.getCursor()); } },
+        foldGutter: true,
+        gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"],
+        onLoad: function (_editor) {
+            codemirrorEditor = _editor;
+        },
+        mode: 'xml'
+    };
+
     // on load
-    initializeBlade($scope.blade.origEntity);
+    initializeBlade(blade.origEntity);
 }]);
