@@ -67,6 +67,7 @@ namespace VirtoCommerce.CatalogModule.Web.BackgroundJobs
 				{
 					//Load all products to export
 					var products = LoadProducts(catalogId);
+					notification.TotalCount = products.Count();
 					//Get a export configuration
 					var exportConfiguration = GetProductExportConfiguration(products);
 
@@ -77,7 +78,7 @@ namespace VirtoCommerce.CatalogModule.Web.BackgroundJobs
 					}
 					csvWriter.NextRecord();
 
-					var notifyProductSizeLimit = 100;
+					var notifyProductSizeLimit = 50;
 					var counter = 0;
 					//Write products
 					foreach (var product in products)
@@ -112,12 +113,11 @@ namespace VirtoCommerce.CatalogModule.Web.BackgroundJobs
 						}
 
 						//Raise notification each notifyProductSizeLimit products
+						notification.ProcessedCount = counter;
+						notification.Description = string.Format("{0} of {1} products processed", notification.ProcessedCount, notification.TotalCount);
 						counter++;
 						if (counter % notifyProductSizeLimit == 0)
 						{
-							notification.ProcessedCount = counter;
-							notification.TotalCount = products.Count();
-							notification.Description = string.Format("{0} of {1} products processed", notification.ProcessedCount, notification.TotalCount);
 							_notifier.Upsert(notification);
 						}
 					}

@@ -21,7 +21,6 @@
     $scope.setForm = function (form) {
         $scope.formScope = form;
     }
-
-    $scope.blade.title = 'Catalog ' + blade.catalog.name + ' to csv export';
+  
     $scope.bladeHeadIco = 'fa fa-file-archive-o';
 }]);

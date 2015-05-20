@@ -39,10 +39,11 @@ namespace VirtoCommerce.DynamicExpressionModule.Web
 
 		private static IDynamicExpression GetContentDynamicExpression()
 		{
-			var rootBlocks = new DynamicExpression[] { new ConditionGeoTimeZone(), new ConditionGeoZipCode(), new ConditionStoreSearchedPhrase() }.ToList();
+			var conditions = new DynamicExpression[] { new ConditionGeoTimeZone(), new ConditionGeoZipCode(), new ConditionStoreSearchedPhrase() }.ToList();
+			var rootBlock = new BlockContentCondition { AvailableChildren = conditions };
 			var retVal = new DynamicContentExpressionTree()
 			{
-				AvailableChildren = rootBlocks
+				Children = new DynamicExpression[] { rootBlock }
 			};
 			return retVal;
 		}
