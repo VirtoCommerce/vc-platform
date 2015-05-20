@@ -29,7 +29,12 @@
         </ul>
         <a class="add __link __usergroup" left-click-menu data-target="det_add_{{element.id}}">{{element.newChildLabel}}</a>
         <ul class="menu __context" role="menu" id="det_add_{{element.id}}">
-            <li class="menu-item" ng-click='addChild(child, element);' ng-repeat="child in element.availableChildren">{{child.displayName}}</li>
+            <li class="menu-item" ng-class="{'__right': child.subitems}" ng-click='!child.subitems && addChild(child, element)' ng-repeat="child in element.availableChildren">
+                <i class="menu-ico fa fa-caret-right" ng-if="child.subitems"></i>{{child.displayName}}
+                <ul class="menu __sub" ng-if="child.subitems">
+                    <li class="menu-item" ng-click='addChild(child, element)' ng-repeat="child in child.subitems">{{child.displayName}}</li>
+                </ul>
+            </li>
         </ul>
     </div>
 </div>
