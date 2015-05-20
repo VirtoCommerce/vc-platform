@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Microsoft.Practices.ObjectBuilder2;
 
 namespace VirtoCommerce.Platform.Core.Modularity
@@ -10,7 +11,7 @@ namespace VirtoCommerce.Platform.Core.Modularity
         public ICollection<ManifestBundleItem> Scripts { get; private set; }
 
         public ManifestModuleInfo(ModuleManifest manifest, string fullPhysicalPath)
-            : base(manifest.Id, manifest.ModuleType, manifest.Dependencies)
+            : base(manifest.Id, manifest.ModuleType, (manifest.Dependencies ?? new ManifestDependency[0]).Select(d => d.Id).ToArray())
         {
             InitializationMode = InitializationMode.OnDemand;
             FullPhysicalPath = fullPhysicalPath;

@@ -28,6 +28,13 @@ namespace VirtoCommerce.ApiClient.DataContracts
 
         public DateTime? BackorderAvailabilityDate { get; set; }
 
-        public string Status { get; set; }
+        public InventoryStatus Status { get; set; }
+    }
+
+    public enum InventoryStatus
+    {
+        Disabled = 0,
+        Enabled = 1,
+        Ignored
     }
 }

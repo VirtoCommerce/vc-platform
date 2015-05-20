@@ -1,35 +1,36 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <module>
-  <id>VirtoCommerce.Cart</id>
-  <version>1.0.0.0</version>
-  <dependencies>
-    <dependency>VirtoCommerce.Core</dependency>
-  </dependencies>
+    <id>VirtoCommerce.Cart</id>
+    <version>1.0.0</version>
+    <platformVersion>2.0.0</platformVersion>
+    <dependencies>
+        <dependency id="VirtoCommerce.Core" version="1.0.0" />
+    </dependencies>
 
-  <title>Virto Commerce Cart</title>
-  <description>APIs and UI for managing shopping carts</description>
-  <authors>
-    <author>Virto Commerce</author>
-  </authors>
-  <owners>
-    <owner>Virto Commerce</owner>
-  </owners>
-  <projectUrl>http://virtocommerce.com/</projectUrl>
-  <iconUrl>http://nuget.org/Content/Images/packageDefaultIcon-50x50.png</iconUrl>
-  <releaseNotes>First version.</releaseNotes>
-  <copyright>Copyright © 2011-2015 Virto Commerce. All rights reserved</copyright>
-  <tags>shopping cart</tags>
+    <title>Virto Commerce Cart</title>
+    <description>APIs and UI for managing shopping carts</description>
+    <authors>
+        <author>Virto Commerce</author>
+    </authors>
+    <owners>
+        <owner>Virto Commerce</owner>
+    </owners>
+    <projectUrl>http://virtocommerce.com/</projectUrl>
+    <iconUrl>http://nuget.org/Content/Images/packageDefaultIcon-50x50.png</iconUrl>
+    <releaseNotes>First version.</releaseNotes>
+    <copyright>Copyright © 2011-2015 Virto Commerce. All rights reserved</copyright>
+    <tags>shopping cart</tags>
 
-  <assemblyFile>VirtoCommerce.CartModule.Web.dll</assemblyFile>
-  <moduleType>VirtoCommerce.CartModule.Web.Module, VirtoCommerce.CartModule.Web</moduleType>
-  <!--<styles>
+    <assemblyFile>VirtoCommerce.CartModule.Web.dll</assemblyFile>
+    <moduleType>VirtoCommerce.CartModule.Web.Module, VirtoCommerce.CartModule.Web</moduleType>
+    <!--<styles>
     <directory virtualPath="$/Content/css" searchPattern="*.css" searchSubdirectories="true" />
   </styles>-->
-  <scripts>
-    <directory virtualPath="$/Scripts" searchPattern="*.js" searchSubdirectories="true" />
-  </scripts>
-  <permissions>
-    <permission id="cart:query" name="Browse carts" description="Permission to open carts menu and browse data."/>
-    <permission id="cart:manage" name="Manage carts" description="Permission to manage cart."/>
-  </permissions>
+    <scripts>
+        <directory virtualPath="$/Scripts" searchPattern="*.js" searchSubdirectories="true" />
+    </scripts>
+    <permissions>
+        <permission id="cart:query" name="Browse carts" description="Permission to open carts menu and browse data."/>
+        <permission id="cart:manage" name="Manage carts" description="Permission to manage cart."/>
+    </permissions>
 </module>

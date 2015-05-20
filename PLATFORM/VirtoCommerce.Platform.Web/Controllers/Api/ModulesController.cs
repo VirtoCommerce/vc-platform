@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Http;
 using System.Web.Http.Description;
+using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Data.Asset;
 using VirtoCommerce.Platform.Core.Packaging;
@@ -26,7 +27,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         private static readonly ConcurrentQueue<webModel.ModuleWorkerJob> _sheduledJobs = new ConcurrentQueue<webModel.ModuleWorkerJob>();
         private static readonly ConcurrentBag<webModel.ModuleWorkerJob> _jobList = new ConcurrentBag<webModel.ModuleWorkerJob>();
         private static Task _runningTask;
-        private static readonly Object _lockObject = new Object();
+        private static readonly object _lockObject = new object();
 
         public ModulesController(IPackageService packageService, string packagesPath)
         {
@@ -86,22 +87,11 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 if (descriptor != null)
                 {
                     var retVal = descriptor.ToWebModel();
-                    var installedModuleIds = _packageService.GetModules().Select(m => m.Id).ToList();
-
-                    // Check if module is already installed
-                    if (installedModuleIds.Contains(descriptor.Id))
-                    {
-                        retVal.ValidationErrors.Add("Already installed");
-                    }
-
-                    // Check dependencies 
-                    if (descriptor.Dependencies != null)
-                    {
-                        var missingModuleIds = descriptor.Dependencies.Except(installedModuleIds).ToList();
-                        missingModuleIds.ForEach(id => retVal.ValidationErrors.Add("Dependency is not installed: " + id));
-                    }
-
                     retVal.FileName = file.LocalFileName;
+
+                    var dependencyErrors = _packageService.GetDependencyErrors(descriptor);
+                    retVal.ValidationErrors.AddRange(dependencyErrors);
+
                     return Ok(retVal);
                 }
             }
@@ -223,7 +213,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                     {
                         _jobList.Add(job);
                         job.Started = DateTime.UtcNow;
-                        var reportProgress = new Progress<moduleModel.ProgressMessage>((x) => { job.ProgressLog.Add(x.ToWebModel()); });
+                        var reportProgress = new Progress<ProgressMessage>(m => { job.ProgressLog.Add(m.ToWebModel()); });
 
                         if (job.Action == webModel.ModuleAction.Install)
                         {
@@ -240,7 +230,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                     }
                     catch (Exception ex)
                     {
-                        job.ProgressLog.Add(new webModel.ProgressMessage { Message = ex.ToString(), Level = moduleModel.ProgressMessageLevel.Error.ToString() });
+                        job.ProgressLog.Add(new webModel.ProgressMessage { Message = ex.ToString(), Level = ProgressMessageLevel.Error.ToString() });
                     }
 
                     job.Completed = DateTime.UtcNow;

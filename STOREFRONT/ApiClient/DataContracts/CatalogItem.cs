@@ -36,6 +36,13 @@ namespace VirtoCommerce.ApiClient.DataContracts
 
         public string Name { get; set; }
 
+        public bool? TrackInventory { get; set; }
+
+        public bool? IsBuyable { get; set; }
+
+        public bool? IsActive { get; set; }
+
+
         public string Outline { get; set; }
 
         public IDictionary<string, object> Properties
@@ -51,6 +58,8 @@ namespace VirtoCommerce.ApiClient.DataContracts
         public SeoKeyword[] Seo { get; set; }
 
         public DateTime StartDate { get; set; }
+
+        public DateTime? EndDate { get; set; }
 
         #endregion
 

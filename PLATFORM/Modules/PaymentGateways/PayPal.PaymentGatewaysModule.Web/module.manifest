@@ -1,73 +1,74 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <module>
-	<id>Paypal.PaymentGateway</id>
-	<version>1.0.0.0</version>
-	<dependencies>
-		<dependency>VirtoCommerce.Core</dependency>
-	</dependencies>
+    <id>Paypal.PaymentGateway</id>
+    <version>1.0.0</version>
+    <platformVersion>2.0.0</platformVersion>
+    <dependencies>
+        <dependency id="VirtoCommerce.Core" version="1.0.0" />
+    </dependencies>
 
-	<title>Paypal Payment Gateway</title>
-	<description>APIs and UI for paypal payment gateway</description>
-	<authors>
-		<author>Virto Commerce</author>
-	</authors>
-	<owners>
-		<owner>Virto Commerce</owner>
-	</owners>
-	<projectUrl>http://virtocommerce.com/</projectUrl>
-	<iconUrl>http://nuget.org/Content/Images/packageDefaultIcon-50x50.png</iconUrl>
-	<releaseNotes>First version.</releaseNotes>
-	<copyright>Copyright © 2011-2015 Virto Commerce. All rights reserved</copyright>
-	<tags>paypal payment gateway</tags>
+    <title>Paypal Payment Gateway</title>
+    <description>APIs and UI for paypal payment gateway</description>
+    <authors>
+        <author>Virto Commerce</author>
+    </authors>
+    <owners>
+        <owner>Virto Commerce</owner>
+    </owners>
+    <projectUrl>http://virtocommerce.com/</projectUrl>
+    <iconUrl>http://nuget.org/Content/Images/packageDefaultIcon-50x50.png</iconUrl>
+    <releaseNotes>First version.</releaseNotes>
+    <copyright>Copyright © 2011-2015 Virto Commerce. All rights reserved</copyright>
+    <tags>paypal payment gateway</tags>
 
-	<assemblyFile>PayPal.PaymentGatewaysModule.Web.dll</assemblyFile>
-	<moduleType>PayPal.PaymentGatewaysModule.Web.Module, PayPal.PaymentGatewaysModule.Web</moduleType>
-	<!--<styles>
+    <assemblyFile>PayPal.PaymentGatewaysModule.Web.dll</assemblyFile>
+    <moduleType>PayPal.PaymentGatewaysModule.Web.Module, PayPal.PaymentGatewaysModule.Web</moduleType>
+    <!--<styles>
 		<directory virtualPath="$/Content/css" searchPattern="*.css" searchSubdirectories="true" />
 	</styles>-->
-	<!--<scripts>
+    <!--<scripts>
 		<directory virtualPath="$/Scripts" searchPattern="*.js" searchSubdirectories="true" />
 	</scripts>-->
 
-	<settings>
-		<group name="Credentials">
-			<setting>
-				<name>PayPal.PaymentGateway.Credentials.AppKey</name>
-				<valueType>string</valueType>
-				<defaultValue>qwerty</defaultValue>
-				<title>AppKey</title>
-				<description>Paypal application key</description>
-			</setting>
-			<setting>
-				<name>PayPal.PaymentGateway.Credentials.SecretKey</name>
-				<valueType>string</valueType>
-				<defaultValue>qwerty</defaultValue>
-				<title>AppKey</title>
-				<description>Paypal secret key</description>
-			</setting>
-		</group>
-		<group name="Gateway Description">
-			<setting>
-				<name>Paypal.PaymentGateway.GatewayDescription.GatewayCode</name>
-				<valueType>string</valueType>
-				<defaultValue>Paypal</defaultValue>
-				<title>Gateway code</title>
-				<description>Code that indentificates paypal gateway provider</description>
-			</setting>
-			<setting>
-				<name>Paypal.PaymentGateway.GatewayDescription.Description</name>
-				<valueType>string</valueType>
-				<defaultValue>Paypal public site description</defaultValue>
-				<title>AppKey</title>
-				<description>Description of paypal for public site</description>
-			</setting>
-			<setting>
-				<name>Paypal.PaymentGateway.GatewayDescription.LogoUrl</name>
-				<valueType>string</valueType>
-				<defaultValue>https://www.paypalobjects.com/webstatic/i/logo/rebrand/ppcom.svg</defaultValue>
-				<title>AppKey</title>
-				<description>Paypal logo url</description>
-			</setting>
-		</group>
-	</settings>
+    <settings>
+        <group name="Credentials">
+            <setting>
+                <name>PayPal.PaymentGateway.Credentials.AppKey</name>
+                <valueType>string</valueType>
+                <defaultValue>qwerty</defaultValue>
+                <title>AppKey</title>
+                <description>Paypal application key</description>
+            </setting>
+            <setting>
+                <name>PayPal.PaymentGateway.Credentials.SecretKey</name>
+                <valueType>string</valueType>
+                <defaultValue>qwerty</defaultValue>
+                <title>AppKey</title>
+                <description>Paypal secret key</description>
+            </setting>
+        </group>
+        <group name="Gateway Description">
+            <setting>
+                <name>Paypal.PaymentGateway.GatewayDescription.GatewayCode</name>
+                <valueType>string</valueType>
+                <defaultValue>Paypal</defaultValue>
+                <title>Gateway code</title>
+                <description>Code that indentificates paypal gateway provider</description>
+            </setting>
+            <setting>
+                <name>Paypal.PaymentGateway.GatewayDescription.Description</name>
+                <valueType>string</valueType>
+                <defaultValue>Paypal public site description</defaultValue>
+                <title>AppKey</title>
+                <description>Description of paypal for public site</description>
+            </setting>
+            <setting>
+                <name>Paypal.PaymentGateway.GatewayDescription.LogoUrl</name>
+                <valueType>string</valueType>
+                <defaultValue>https://www.paypalobjects.com/webstatic/i/logo/rebrand/ppcom.svg</defaultValue>
+                <title>AppKey</title>
+                <description>Paypal logo url</description>
+            </setting>
+        </group>
+    </settings>
 </module>

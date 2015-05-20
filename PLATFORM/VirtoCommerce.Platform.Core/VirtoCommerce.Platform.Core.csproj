@@ -121,6 +121,7 @@
     <Compile Include="Common\TrackingEntry.cs" />
     <Compile Include="Common\TreeExtension.cs" />
     <Compile Include="Common\ValueObject.cs" />
+    <Compile Include="Modularity\ManifestDependency.cs" />
     <Compile Include="Modularity\ModuleBase.cs" />
     <Compile Include="Modularity\AssemblyResolver.cs" />
     <Compile Include="Modularity\Exceptions\CyclicDependencyFoundException.cs" />
@@ -171,6 +172,7 @@
     <Compile Include="Notification\NotifyEvent.cs" />
     <Compile Include="Notification\NotifySearchCriteria.cs" />
     <Compile Include="Notification\NotifySearchResult.cs" />
+    <Compile Include="Packaging\ModuleIdentity.cs" />
     <Compile Include="Packaging\IPackageService.cs" />
     <Compile Include="Packaging\ModuleDescriptor.cs" />
     <Compile Include="Packaging\ProgressMessage.cs" />

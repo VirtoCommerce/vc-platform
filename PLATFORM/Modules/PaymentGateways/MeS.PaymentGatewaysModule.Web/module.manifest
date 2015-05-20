@@ -1,67 +1,68 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <module>
-	<id>MeS.PaymentGateway</id>
-	<version>1.0.0.0</version>
-	<dependencies>
-		<dependency>VirtoCommerce.Core</dependency>
-	</dependencies>
+    <id>MeS.PaymentGateway</id>
+    <version>1.0.0</version>
+    <platformVersion>2.0.0</platformVersion>
+    <dependencies>
+        <dependency id="VirtoCommerce.Core" version="1.0.0" />
+    </dependencies>
 
-	<title>MeS Payment Gateway</title>
-	<description>APIs and UI for merchant e-solutions payment gateway</description>
-	<authors>
-		<author>Virto Commerce</author>
-	</authors>
-	<owners>
-		<owner>Virto Commerce</owner>
-	</owners>
-	<projectUrl>http://virtocommerce.com/</projectUrl>
-	<iconUrl>http://nuget.org/Content/Images/packageDefaultIcon-50x50.png</iconUrl>
-	<releaseNotes>First version.</releaseNotes>
-	<copyright>Copyright © 2011-2015 Virto Commerce. All rights reserved</copyright>
-	<tags>mes payment gateway</tags>
+    <title>MeS Payment Gateway</title>
+    <description>APIs and UI for merchant e-solutions payment gateway</description>
+    <authors>
+        <author>Virto Commerce</author>
+    </authors>
+    <owners>
+        <owner>Virto Commerce</owner>
+    </owners>
+    <projectUrl>http://virtocommerce.com/</projectUrl>
+    <iconUrl>http://nuget.org/Content/Images/packageDefaultIcon-50x50.png</iconUrl>
+    <releaseNotes>First version.</releaseNotes>
+    <copyright>Copyright © 2011-2015 Virto Commerce. All rights reserved</copyright>
+    <tags>mes payment gateway</tags>
 
-	<assemblyFile>MeS.PaymentGatewaysModule.Web.dll</assemblyFile>
-	<moduleType>MeS.PaymentGatewaysModule.Web.Module, MeS.PaymentGatewaysModule.Web</moduleType>
-	<!--<styles>
+    <assemblyFile>MeS.PaymentGatewaysModule.Web.dll</assemblyFile>
+    <moduleType>MeS.PaymentGatewaysModule.Web.Module, MeS.PaymentGatewaysModule.Web</moduleType>
+    <!--<styles>
 		<directory virtualPath="$/Content/css" searchPattern="*.css" searchSubdirectories="true" />
 	</styles>-->
-	<!--<scripts>
+    <!--<scripts>
 		<directory virtualPath="$/Scripts" searchPattern="*.js" searchSubdirectories="true" />
 	</scripts>-->
 
-	<settings>
-		<group name="Credentials">
-			<setting>
-				<name>Mes.PaymentGateway.Credentials.AppKey</name>
-				<valueType>string</valueType>
-				<defaultValue>qwerty</defaultValue>
-				<title>Application Key</title>
-				<description>Merchant e-solutions application key</description>
-			</setting>
-		</group>
-		<group name="Gateway Description">
-			<setting>
-				<name>Mes.PaymentGateway.GatewayDescription.GatewayCode</name>
-				<valueType>string</valueType>
-				<defaultValue>Mes</defaultValue>
-				<title>Gateway code</title>
-				<description>Code that indentificates merchant e-solutions gateway provider</description>
-			</setting>
-			<setting>
-				<name>Mes.PaymentGateway.GatewayDescription.Description</name>
-				<valueType>string</valueType>
-				<defaultValue>Merchant e-solutions public site description</defaultValue>
-				<title>Description</title>
-				<description>Description of merchant e-solutions for public site</description>
-			</setting>
-			<setting>
-				<name>Mes.PaymentGateway.GatewayDescription.LogoUrl</name>
-				<valueType>string</valueType>
-				<defaultValue>https://www.merchante-solutions.com/wp-content/themes/Foundation-master/img/logo2.png</defaultValue>
-				<title>Logo url</title>
-				<description>Merchant e-solutions logo url</description>
-			</setting>
-		</group>
-		
-	</settings>
+    <settings>
+        <group name="Credentials">
+            <setting>
+                <name>Mes.PaymentGateway.Credentials.AppKey</name>
+                <valueType>string</valueType>
+                <defaultValue>qwerty</defaultValue>
+                <title>Application Key</title>
+                <description>Merchant e-solutions application key</description>
+            </setting>
+        </group>
+        <group name="Gateway Description">
+            <setting>
+                <name>Mes.PaymentGateway.GatewayDescription.GatewayCode</name>
+                <valueType>string</valueType>
+                <defaultValue>Mes</defaultValue>
+                <title>Gateway code</title>
+                <description>Code that indentificates merchant e-solutions gateway provider</description>
+            </setting>
+            <setting>
+                <name>Mes.PaymentGateway.GatewayDescription.Description</name>
+                <valueType>string</valueType>
+                <defaultValue>Merchant e-solutions public site description</defaultValue>
+                <title>Description</title>
+                <description>Description of merchant e-solutions for public site</description>
+            </setting>
+            <setting>
+                <name>Mes.PaymentGateway.GatewayDescription.LogoUrl</name>
+                <valueType>string</valueType>
+                <defaultValue>https://www.merchante-solutions.com/wp-content/themes/Foundation-master/img/logo2.png</defaultValue>
+                <title>Logo url</title>
+                <description>Merchant e-solutions logo url</description>
+            </setting>
+        </group>
+
+    </settings>
 </module>

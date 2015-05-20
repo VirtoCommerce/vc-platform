@@ -276,6 +276,7 @@
     <Compile Include="Hangfire\UnityJobActivator.cs" />
     <Compile Include="Model\Asset\BlobInfo.cs" />
     <Compile Include="Model\Packaging\ModuleDescriptor.cs" />
+    <Compile Include="Model\Packaging\ModuleIdentity.cs" />
     <Compile Include="Model\Packaging\ModuleWorkerJob.cs" />
     <Compile Include="Model\Packaging\ProgressMessage.cs" />
     <Compile Include="Model\Security\ApiAccount.cs" />
