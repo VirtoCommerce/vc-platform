@@ -104,6 +104,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\Api\ZDAuthorizationController.cs" />
+    <Compile Include="Controllers\Api\DataFetchController.cs" />
     <Compile Include="Controllers\Api\ZendeskController.cs" />
     <Compile Include="Managers\ZendeskHelpdeskImpl.cs" />
     <Compile Include="Module.cs" />
@@ -118,6 +119,10 @@
     <ProjectReference Include="..\..\..\VirtoCommerce.Platform.Core\VirtoCommerce.Platform.Core.csproj">
       <Project>{f7c9313b-522e-4619-abc9-8c7d4600d6b5}</Project>
       <Name>VirtoCommerce.Platform.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Core\VirtoCommerce.Domain\VirtoCommerce.Domain.csproj">
+      <Project>{67c58a78-ddea-4fa3-a969-1cab582918e4}</Project>
+      <Name>VirtoCommerce.Domain</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
