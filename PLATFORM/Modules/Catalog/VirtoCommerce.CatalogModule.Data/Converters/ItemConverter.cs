@@ -40,6 +40,8 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 			retVal.IsBuyable = dbItem.IsBuyable;
 			retVal.TrackInventory = dbItem.TrackInventory;
 
+			retVal.MaxQuantity = (int)dbItem.MaxQuantity;
+			retVal.MinQuantity = (int)dbItem.MinQuantity;
 			#region Links
 			retVal.Links = dbItem.CategoryItemRelations.Select(x => x.ToCoreModel()).ToList();
 			#endregion
@@ -125,6 +127,9 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 			retVal.IsActive = product.IsActive ?? true;
 			retVal.IsBuyable = product.IsBuyable ?? true;
 			retVal.TrackInventory = product.TrackInventory ?? true;
+			retVal.MaxQuantity = product.MaxQuantity ?? 0;
+			retVal.MinQuantity = product.MinQuantity ?? 0;
+
 			retVal.ParentId = product.MainProductId;
 			//Constant fields
 			//Only for main product
@@ -230,6 +235,10 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 				target.IsActive = source.IsActive.Value;
 			if (source.TrackInventory != null)
 				target.TrackInventory = source.TrackInventory.Value;
+			if (source.MinQuantity != null)
+				target.MinQuantity = source.MinQuantity.Value;
+			if (source.MaxQuantity != null)
+				target.MaxQuantity = source.MaxQuantity.Value;
 
 			var patchInjectionPolicy = new PatchInjection<dataModel.Item>(x => x.Name, x => x.Code, x => x.IsBuyable, x=> x.IsActive, x=>x.TrackInventory);
 			target.InjectFrom(patchInjectionPolicy, source);

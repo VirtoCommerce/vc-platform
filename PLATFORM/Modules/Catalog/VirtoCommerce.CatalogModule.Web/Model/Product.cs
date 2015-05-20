@@ -21,6 +21,8 @@ namespace VirtoCommerce.CatalogModule.Web.Model
         public bool? IsBuyable { get; set; }
         public bool? IsActive { get; set; }
         public bool? TrackInventory { get; set; }
+		public int? MaxQuantity { get; set; }
+		public int? MinQuantity { get; set; }
 
 		private string _imgSrc;
         public string ImgSrc 

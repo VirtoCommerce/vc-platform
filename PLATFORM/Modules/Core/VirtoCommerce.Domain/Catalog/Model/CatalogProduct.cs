@@ -23,7 +23,9 @@ namespace VirtoCommerce.Domain.Catalog.Model
         public bool? IsActive { get; set; }
         public bool? TrackInventory { get; set; }
 		public DateTime? IndexingDate { get; set; }
-	
+		public int? MaxQuantity { get; set; }
+		public int? MinQuantity { get; set; }
+
 		public ICollection<PropertyValue> PropertyValues { get; set; }
 		public ICollection<ItemAsset> Assets { get; set; }
 		public ICollection<CategoryLink> Links { get; set; }
