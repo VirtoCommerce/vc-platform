@@ -8,7 +8,7 @@ using VirtoCommerce.MarketingModule.Web.Converters;
 using VirtoCommerce.Platform.Core.Security;
 using webModel = VirtoCommerce.MarketingModule.Web.Model;
 using coreModel = VirtoCommerce.Domain.Marketing.Model;
-using VirtoCommerce.MarketingModule.Expressions.Content;
+using VirtoCommerce.DynamicExpressionModule.Data.Content;
 namespace VirtoCommerce.MarketingModule.Web.Controllers.Api
 {
 	[RoutePrefix("api/marketing")]

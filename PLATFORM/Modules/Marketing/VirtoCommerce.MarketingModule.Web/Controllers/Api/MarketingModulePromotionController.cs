@@ -7,7 +7,7 @@ using VirtoCommerce.CustomerModule.Web.Binders;
 using VirtoCommerce.Domain.Marketing.Model;
 using VirtoCommerce.Domain.Marketing.Services;
 using VirtoCommerce.MarketingModule.Data.Promotions;
-using VirtoCommerce.MarketingModule.Expressions.Promotion;
+using VirtoCommerce.DynamicExpressionModule.Data.Promotion;
 using VirtoCommerce.MarketingModule.Web.Converters;
 using VirtoCommerce.Platform.Core.Security;
 using coreModel = VirtoCommerce.Domain.Marketing.Model;

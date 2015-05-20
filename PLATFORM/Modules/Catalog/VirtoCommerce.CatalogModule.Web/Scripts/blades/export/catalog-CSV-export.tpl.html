@@ -8,8 +8,11 @@
         <div class="inner-block">
             <div class="form">
                 <div class="block">
-                    <p ng-class="{'no-data': blade.notification.description}" class="text" ng-bind="blade.notification.description">All catalog products information should be exported to csv file, download url will be available after export will be finished.
-                    Caution: Sorting your CSV file in a spreadsheet program can cause product variants or image URLs to become dissassociated. Importing a CSV file that has been sorted may overwrite your existing products with bad data, which cannot be recovered.;</p>
+                    <p ng-class="{'no-data': blade.notification.description}" ng-if="!blade.notification" class="text">
+                        All catalog products information should be exported to csv file, download url will be available after export will be finished.
+                        Caution: Sorting your CSV file in a spreadsheet program can cause product variants or image URLs to become dissassociated. Importing a CSV file that has been sorted may overwrite your existing products with bad data, which cannot be recovered.;
+                    </p>
+                    <p  class="text">{{blade.notification.description}}</p>
                 </div>
                 <div class="block" ng-if="blade.notification.created || blade.notification.finished">
                     <p ng-if="blade.notification.created" ng-class="{'no-data': blade.notification.created}" class="text">Start — <i class="fa fa-clock-o"></i> {{blade.notification.created | date : 'mediumTime'}}</p>
