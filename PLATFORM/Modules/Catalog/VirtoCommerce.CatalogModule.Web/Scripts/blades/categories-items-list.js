@@ -376,7 +376,7 @@
 				 		var newBlade = {
 				 			id: 'exports',
 				 			title: 'Data export',
-				 			catalogId: blade.catalogId,
+                            catalog: blade.catalog,
 				 			subtitle: 'Choose data format & start export',
 				 			controller: 'virtoCommerce.catalogModule.exporterListController',
 				 			template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/export/exporter-list.tpl.html'

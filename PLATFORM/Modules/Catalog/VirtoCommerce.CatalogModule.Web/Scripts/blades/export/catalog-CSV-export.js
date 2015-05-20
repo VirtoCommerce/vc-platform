@@ -11,7 +11,7 @@
     });
 
     $scope.startExport = function () {
-     	exportResourse.run({ id: blade.catalogId }, function (data) {
+     	exportResourse.run({ id: blade.catalog.id }, function (data) {
      		blade.notification = data;
      	}, function (error) {
      		bladeNavigationService.setError('Error ' + error.status, $scope.blade);
@@ -22,5 +22,6 @@
         $scope.formScope = form;
     }
 
+    $scope.blade.title = 'Catalog ' + blade.catalog.name + ' to csv export';
     $scope.bladeHeadIco = 'fa fa-file-archive-o';
 }]);

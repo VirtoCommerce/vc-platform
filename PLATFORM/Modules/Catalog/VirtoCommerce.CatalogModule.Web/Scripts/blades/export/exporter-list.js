@@ -12,7 +12,7 @@
 	$scope.openBlade = function (data) {
 		var newBlade = {};
 		angular.copy(data, newBlade);
-		newBlade.catalogId = blade.catalogId;
+		newBlade.catalog = blade.catalog;
 
 		bladeNavigationService.showBlade(newBlade, blade.parentBlade);
 	}
