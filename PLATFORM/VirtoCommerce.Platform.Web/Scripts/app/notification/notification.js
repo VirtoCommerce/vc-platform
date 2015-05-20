@@ -100,8 +100,8 @@
         }
         else {
         	notifyMenu.children.push(menuItem);
+        	notifyMenu.newCount++;
         }
-
         notifyMenu.incremented = true;
     });
 
@@ -127,6 +127,7 @@
         notifications.markAllAsRead(null, function (data, status, headers, config) {
             var notifyMenu = mainMenuService.findByPath('notification');
             notifyMenu.incremented = false;
+            notifyMenu.newCount = 0;
         });
 
     };

@@ -13,6 +13,7 @@
 		var newBlade = {};
 		angular.copy(data, newBlade);
 		newBlade.catalog = blade.catalog;
+		newBlade.title = 'Catalog ' + blade.catalog.name + ' to csv export';
 
 		bladeNavigationService.showBlade(newBlade, blade.parentBlade);
 	}

@@ -44,6 +44,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Content\BlockContentCondition.cs" />
     <Compile Include="Content\Conditions\Browse\BlockBrowseCondition.cs" />
     <Compile Include="Content\Conditions\GeoConditions\BlockGeoCondition.cs" />
     <Compile Include="Content\Conditions\Browse\ConditionStoreSearchedPhrase.cs" />

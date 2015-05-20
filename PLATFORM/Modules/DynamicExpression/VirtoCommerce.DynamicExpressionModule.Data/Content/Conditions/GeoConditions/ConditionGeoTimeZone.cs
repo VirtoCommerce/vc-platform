@@ -7,14 +7,14 @@ using linq = System.Linq.Expressions;
 
 namespace VirtoCommerce.DynamicExpressionModule.Data.Content
 {
-	//Are browsing from a time zone -/+ offset from UTC 
-	public class ConditionGeoTimeZone : CompareConditionBase
-	{
-		public ConditionGeoTimeZone()
-			: base("GeoTimeZone")
-		{
+    //Browsing from a time zone -/+ offset from UTC 
+    public class ConditionGeoTimeZone : CompareConditionBase
+    {
+        public ConditionGeoTimeZone()
+            : base("GeoTimeZone")
+        {
 
-		}
-		
-	}
+        }
+
+    }
 }

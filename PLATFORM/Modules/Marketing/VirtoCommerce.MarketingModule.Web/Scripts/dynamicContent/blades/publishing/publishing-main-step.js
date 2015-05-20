@@ -54,7 +54,7 @@
 				            return blade.checkDifferense();
 				        },
 				        permission: 'marketing:manage'
-                    },
+				    },
 				    {
 				        name: "Delete", icon: 'fa fa-trash',
 				        executeMethod: function () {
@@ -76,6 +76,7 @@
 
     function initializeBlade(data) {
         _.each(data.dynamicExpression.children, extendElementBlock);
+        groupAvailableChildren(data.dynamicExpression.children[0]);
 
         blade.entity = data;
         blade.originalEntity = angular.copy(blade.entity);
@@ -253,7 +254,12 @@
         _.each(expressionBlock.children, extendElementBlock);
         _.each(expressionBlock.availableChildren, extendElementBlock);
         return expressionBlock;
-    };
+    }
+
+    function groupAvailableChildren(expressionBlock) {
+        results = _.groupBy(expressionBlock.availableChildren, 'groupName');
+        expressionBlock.availableChildren = _.map(results, function (items, key) { return { displayName: key, subitems: items }; });
+    }
 
     function stripOffUiInformation(expressionElement) {
         expressionElement.availableChildren = undefined;

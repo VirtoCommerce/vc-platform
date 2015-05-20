@@ -118,6 +118,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Scripts\all-templates.html" />
     <Content Include="Scripts\dynamicExpression.js" />
     <Content Include="web.config" />
     <None Include="web.Debug.config">

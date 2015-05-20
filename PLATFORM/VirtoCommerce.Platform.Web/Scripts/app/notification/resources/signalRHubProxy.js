@@ -3,7 +3,7 @@
     function signalRHubProxyFactory(serverUrl, hubName, startOptions) {
         var connection = $.hubConnection(serverUrl);
         var proxy = connection.createHubProxy(hubName);
-        connection.logging = true;
+        //connection.logging = true;
         connection.start(startOptions).done(function () { });
 
         connection.disconnected(function () {

@@ -7,12 +7,12 @@ using linq = System.Linq.Expressions;
 
 namespace VirtoCommerce.DynamicExpressionModule.Data.Content
 {
-	//Are browsing from zip/postal code []
-	public class ConditionGeoZipCode : MatchedConditionBase
-	{
-		public ConditionGeoZipCode()
-			:base("GeoZipCode")
-		{
-		}
-	}
+    //Browsing from zip/postal code []
+    public class ConditionGeoZipCode : MatchedConditionBase
+    {
+        public ConditionGeoZipCode()
+            : base("GeoZipCode")
+        {
+        }
+    }
 }
