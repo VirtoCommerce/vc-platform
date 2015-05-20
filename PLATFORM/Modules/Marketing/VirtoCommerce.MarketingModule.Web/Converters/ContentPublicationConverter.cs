@@ -2,10 +2,10 @@
 using System.Linq;
 using coreModel = VirtoCommerce.Domain.Marketing.Model;
 using webModel = VirtoCommerce.MarketingModule.Web.Model;
-using VirtoCommerce.MarketingModule.Expressions.Content;
+using VirtoCommerce.DynamicExpressionModule.Data.Content;
 using System;
 using Newtonsoft.Json;
-using VirtoCommerce.MarketingModule.Expressions;
+using VirtoCommerce.DynamicExpressionModule.Data;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.MarketingModule.Data.Common;
 

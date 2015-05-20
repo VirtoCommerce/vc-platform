@@ -4,7 +4,7 @@ using System.Linq;
 using System.Web;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
-using VirtoCommerce.MarketingModule.Expressions.Promotion;
+using VirtoCommerce.DynamicExpressionModule.Data.Promotion;
 using VirtoCommerce.MarketingModule.Web.Converters;
 using VirtoCommerce.Platform.Core.Common;
 

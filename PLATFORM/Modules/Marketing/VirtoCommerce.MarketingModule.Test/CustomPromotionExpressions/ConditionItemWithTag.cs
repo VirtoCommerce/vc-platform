@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 using VirtoCommerce.Domain.Marketing.Model;
 using VirtoCommerce.MarketingModule.Data;
 using linq = System.Linq.Expressions;
-using VirtoCommerce.MarketingModule.Expressions;
-using VirtoCommerce.MarketingModule.Expressions.Promotion;
+using VirtoCommerce.DynamicExpressionModule.Data;
+using VirtoCommerce.DynamicExpressionModule.Data.Promotion;
 using VirtoCommerce.Domain.Common;
 
 namespace VirtoCommerce.MarketingModule.Test.CustomDynamicPromotionExpressions
