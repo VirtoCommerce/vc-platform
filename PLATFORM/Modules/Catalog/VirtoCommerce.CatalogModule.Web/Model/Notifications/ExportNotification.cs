@@ -9,8 +9,8 @@ namespace VirtoCommerce.CatalogModule.Web.Model.Notifications
 {
 	public class ExportNotification : NotifyEvent
 	{
-		public ExportNotification()
-			:base("")
+		public ExportNotification(string sreator)
+			: base(sreator)
 		{
 			Errors = new List<string>();
 		}

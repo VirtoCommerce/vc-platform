@@ -39,21 +39,11 @@ namespace VirtoCommerce.CatalogModule.Web.BackgroundJobs
 			_blobUrlResolver = blobUrlResolver;
 		}
 
-		public virtual void DoExport(string catalogId, string notificationId)
+		public virtual void DoExport(string catalogId, ExportNotification notification)
 		{
 			var memoryStream = new MemoryStream();
 			var streamWriter = new StreamWriter(memoryStream);
 			var productPropertyInfos = typeof(CatalogProduct).GetProperties(BindingFlags.Instance | BindingFlags.Public);
-
-			var notification = new ExportNotification
-			{
-				Id = notificationId,
-				Title = "Catalog export task",
-				NotifyType = "CatalogExport",
-				Description = "starting export...."
-			};
-			_notifier.Upsert(notification);
-
 
 			using (var csvWriter = new CsvWriter(streamWriter))
 			{

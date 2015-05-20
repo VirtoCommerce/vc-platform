@@ -8,6 +8,7 @@ using VirtoCommerce.CatalogModule.Web.Model.Notifications;
 using VirtoCommerce.Domain.Catalog.Services;
 using VirtoCommerce.Platform.Core.Asset;
 using VirtoCommerce.Platform.Core.Caching;
+using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Notification;
 
 namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
@@ -47,7 +48,7 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 		[Route("{catalogId}")]
 		public IHttpActionResult DoExport(string catalogId)
 		{
-			var notification = new ExportNotification
+			var notification = new ExportNotification(CurrentPrincipal.GetCurrentUserName())
 			{
 				Title = "Catalog export task",
 				NotifyType = "CatalogExport",
@@ -56,7 +57,7 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 			_notifier.Upsert(notification);
 
 			var exportJob = new CsvCatalogExportJob(_searchService, _categoryService, _productService, _notifier, _cacheManager, _blobStorageProvider, _blobUrlResolver);
-			BackgroundJob.Enqueue(() => exportJob.DoExport(catalogId, notification.Id));
+			BackgroundJob.Enqueue(() => exportJob.DoExport(catalogId, notification));
 
 			return Ok(notification);
 
