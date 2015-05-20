@@ -54,7 +54,7 @@
 				            return blade.checkDifferense();
 				        },
 				        permission: 'marketing:manage'
-                    },
+				    },
 				    {
 				        name: "Delete", icon: 'fa fa-trash',
 				        executeMethod: function () {
@@ -75,6 +75,9 @@
     }
 
     function initializeBlade(data) {
+        // temp workaround?
+        data.dynamicExpression.children = [{ id: 'BlockRootCondition', availableChildren: data.dynamicExpression.availableChildren, children: data.dynamicExpression.children }];
+
         _.each(data.dynamicExpression.children, extendElementBlock);
 
         blade.entity = data;
@@ -121,6 +124,8 @@
 
         blade.isLoading = true;
         blade.entity.dynamicExpression.availableChildren = undefined;
+        // temp workaround?
+        blade.entity.dynamicExpression.children = blade.entity.dynamicExpression.children[0].children;
         _.each(blade.entity.dynamicExpression.children, stripOffUiInformation);
 
         if (blade.isNew) {

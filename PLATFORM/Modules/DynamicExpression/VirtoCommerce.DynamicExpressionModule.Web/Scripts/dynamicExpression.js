@@ -7,8 +7,8 @@ if (AppDependencies != undefined) {
 
 angular.module(moduleName, [])
 .run(
-  ['$rootScope', 'virtoCommerce.coreModule.common.dynamicExpressionService', function ($rootScope, dynamicExpressionService) {
-      
+  ['$http', '$compile', 'virtoCommerce.coreModule.common.dynamicExpressionService', function ($http, $compile, dynamicExpressionService) {
+
       //Register PROMOTION expressions
       dynamicExpressionService.registerExpression({
           id: 'BlockCustomerCondition',
@@ -148,23 +148,27 @@ angular.module(moduleName, [])
           id: 'RewardShippingGetOfRelShippingMethod',
           displayName: 'Get [] % off shipping []'
       });
-      
+
       //Register CONTENT PUBLISHING expressions
       dynamicExpressionService.registerExpression({
-          id: 'BlockGeoCondition',
-          newChildLabel: '+ add Geo location'
+          id: 'BlockRootCondition',
+          newChildLabel: '+ add condition'
       });
       dynamicExpressionService.registerExpression({
           id: 'ConditionGeoTimeZone',
-          displayName: 'Are browsing from a time zone -/+ offset from UTC []'
+          displayName: 'Browsing from a time zone -/+ offset from UTC []'
       });
-
       dynamicExpressionService.registerExpression({
-          id: 'BlockBrowseCondition',
-          newChildLabel: '+ add browse behavior'
+          id: 'ConditionGeoZipCode',
+          displayName: 'Browsing from zip/postal code []'
       });
       dynamicExpressionService.registerExpression({
           id: 'ConditionStoreSearchedPhrase',
           displayName: 'Shopper searched for phrase [] in store'
+      });
+
+      $http.get('Modules/$(VirtoCommerce.DynamicExpression)/Scripts/all-templates.html').then(function (response) {
+          // compile the response, which will put stuff into the cache
+          $compile(response.data);
       });
   }]);
