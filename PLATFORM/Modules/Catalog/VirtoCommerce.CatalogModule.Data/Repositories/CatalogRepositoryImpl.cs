@@ -318,6 +318,18 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
 			if ((respGroup & coreModel.ItemResponseGroup.Variations) == coreModel.ItemResponseGroup.Variations)
 			{
 				query = query.Include(x => x.Childrens);
+				if ((respGroup & coreModel.ItemResponseGroup.ItemProperties) == coreModel.ItemResponseGroup.ItemProperties)
+				{
+					query = query.Include(x => x.Childrens.Select(y=>y.ItemPropertyValues));
+				}
+				if ((respGroup & coreModel.ItemResponseGroup.ItemAssets) == coreModel.ItemResponseGroup.ItemAssets)
+				{
+					query = query.Include(x => x.Childrens.Select(y => y.ItemAssets));
+				}
+				if ((respGroup & coreModel.ItemResponseGroup.ItemEditorialReviews) == coreModel.ItemResponseGroup.ItemEditorialReviews)
+				{
+					query = query.Include(x => x.Childrens.Select(y => y.EditorialReviews));
+				}
 			}
 			
 			var retVal = query.ToArray();
