@@ -12,8 +12,8 @@ using VirtoCommerce.MarketingModule.Data.Common;
 using VirtoCommerce.MarketingModule.Data.Promotions;
 using coreModel = VirtoCommerce.Domain.Marketing.Model;
 using webModel = VirtoCommerce.MarketingModule.Web.Model;
-using VirtoCommerce.MarketingModule.Expressions.Promotion;
-using VirtoCommerce.MarketingModule.Expressions;
+using VirtoCommerce.DynamicExpressionModule.Data.Promotion;
+using VirtoCommerce.DynamicExpressionModule.Data;
 using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.MarketingModule.Web.Converters

@@ -36,7 +36,7 @@ namespace VirtoCommerce.Platform.Data.Asset
 			var container = _cloudBlobClient.GetContainerReference(containerName);
 			if (!container.Exists())
 			{
-				container.CreateIfNotExists();
+				container.CreateIfNotExists(BlobContainerPublicAccessType.Blob);
 			}
 
 			var blob = container.GetBlockBlobReference(request.FileName);
