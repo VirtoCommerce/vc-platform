@@ -81,13 +81,14 @@
 				if (scope.showSubMenu) {
 					scope.counter++;
 				}
+				else {
+					scope.counter = 0;
+				}
 
 				if (scope.counter > 1) {
 					scope.showSubMenu = false;
 					scope.counter = 0;
 				}
-
-				console.log(scope.counter)
 		
 				//run action
 				if (angular.isDefined(menuItem.action)) {
