@@ -1,8 +1,9 @@
 ﻿angular.module('platformWebApp')
 .controller('platformWebApp.moduleDetailController', ['$scope', 'platformWebApp.dialogService', 'platformWebApp.bladeNavigationService', 'platformWebApp.modules', function ($scope, dialogService, bladeNavigationService, modules) {
+    var blade = $scope.blade;
 
-    $scope.blade.refresh = function () {
-        modules.get({ id: $scope.blade.currentEntityId }, function (data) {
+    blade.refresh = function () {
+        modules.get({ id: blade.currentEntityId }, function (data) {
             initializeBlade(data);
         });
     }
@@ -11,12 +12,12 @@
         if (data.tags) {
             data.tags = data.tags.split(' ');
         }
-        $scope.blade.currentEntity = data;
-        $scope.blade.isLoading = false;
+        blade.currentEntity = data;
+        blade.isLoading = false;
     };
 
     $scope.openModule = function (module) {
-        $scope.blade.parentBlade.selectItem(module);
+        blade.parentBlade.selectItem(module);
     }
 
     $scope.bladeToolbarCommands = [
@@ -26,7 +27,7 @@
                 openUpdateEntityBlade();
             },
             canExecuteMethod: function () {
-                return $scope.currentEntity && $scope.currentEntity.isRemovable;
+                return blade.currentEntity && blade.currentEntity.isRemovable;
             },
             permission: 'platform:module:manage'
         },
@@ -36,7 +37,7 @@
                 openDeleteEntityBlade();
             },
             canExecuteMethod: function () {
-                return $scope.currentEntity && $scope.currentEntity.isRemovable;
+                return blade.currentEntity && blade.currentEntity.isRemovable;
             },
             permission: 'platform:module:manage'
         },
@@ -45,13 +46,13 @@
             executeMethod: function () {
                 var newBlade = {
                     id: 'moduleSettingsSection',
-                    moduleId: $scope.blade.currentEntityId,
+                    moduleId: blade.currentEntityId,
                     title: 'Module settings',
                     //subtitle: '',
                     controller: 'platformWebApp.settingsDetailController',
                     template: 'Scripts/app/settings/blades/settings-detail.tpl.html'
                 };
-                bladeNavigationService.showBlade(newBlade, $scope.blade);
+                bladeNavigationService.showBlade(newBlade, blade);
             },
             canExecuteMethod: function () {
                 return true;
@@ -68,7 +69,7 @@
             controller: 'platformWebApp.installWizardController',
             template: 'Scripts/app/packaging/blades/module-detail.tpl.html'
         };
-        bladeNavigationService.showBlade(newBlade, $scope.blade);
+        bladeNavigationService.showBlade(newBlade, blade);
     }
 
     function openDeleteEntityBlade() {
@@ -78,9 +79,9 @@
             message: "Are you sure you want to uninstall this Module?",
             callback: function (remove) {
                 if (remove) {
-                    $scope.blade.isLoading = true;
+                    blade.isLoading = true;
 
-                    modules.uninstall({ id: $scope.currentEntity.id }, function (data) {
+                    modules.uninstall({ id: blade.currentEntity.id }, function (data) {
                         var newBlade = {
                             id: 'moduleInstallProgress',
                             currentEntityId: data.id,
@@ -89,7 +90,7 @@
                             controller: 'platformWebApp.moduleInstallProgressController',
                             template: 'Scripts/app/packaging/wizards/newModule/module-wizard-progress-step.tpl.html'
                         };
-                        bladeNavigationService.showBlade(newBlade, $scope.blade.parentBlade);
+                        bladeNavigationService.showBlade(newBlade, blade.parentBlade);
                     });
                 }
             }
@@ -100,5 +101,5 @@
     $scope.bladeHeadIco = 'fa fa-cubes';
 
     // on load
-    $scope.blade.refresh();
+    blade.refresh();
 }]);
