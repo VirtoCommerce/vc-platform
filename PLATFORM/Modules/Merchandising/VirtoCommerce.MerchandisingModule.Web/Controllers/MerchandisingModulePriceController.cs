@@ -40,7 +40,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 									Tags = tags
 								};
 			var strTags = tags != null ? String.Join(":", tags) : string.Empty;
-			var cacheKey = CacheKey.Create("PriceController.GetPriceListStack", catalog, currency, strTags);
+			var cacheKey = CacheKey.Create("MP", "GetPriceListStack", catalog, currency, strTags);
 			var retVal = _cacheManager.Get(cacheKey, () => _pricingService.EvaluatePriceLists(evaluationContext).Select(x=>x.Id).ToArray());
 			return this.Ok(retVal);
 		}
@@ -61,7 +61,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 							};
 			var strProducts = priceLists != null ? String.Join(":", priceLists) : string.Empty;
 			var strPriceLists = products != null ? String.Join(":", products) : string.Empty;
-			var cacheKey = CacheKey.Create("PriceController.GetProductPrices", strProducts, strPriceLists);
+			var cacheKey = CacheKey.Create("MP", "GetProductPrices", strProducts, strPriceLists);
 			var prices = _cacheManager.Get(cacheKey, () => _pricingService.EvaluateProductPrices(evalContext));
 			retVal.AddRange(prices.Select(x => x.ToWebModel()));
 

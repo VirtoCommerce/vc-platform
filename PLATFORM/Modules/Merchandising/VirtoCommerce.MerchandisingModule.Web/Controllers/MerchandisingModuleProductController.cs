@@ -57,21 +57,29 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
         [Route("{product}")]
         public IHttpActionResult GetProduct(string store, string product, [FromUri] moduleModel.ItemResponseGroup responseGroup = moduleModel.ItemResponseGroup.ItemLarge, string language = "en-us")
         {
-			var catalog = _storeService.GetById(store).Catalog;
-            var item = _itemService.GetById(product, responseGroup);
-
-            if (product != null)
-            {
-				var webModelProduct = item.ToWebModel(_blobUrlResolver);
-                if (item.CategoryId != null)
+			var cacheKey = CacheKey.Create("MP", "GetProduct", store, product, responseGroup.ToString(), language);
+			var retVal = _cacheManager.Get(cacheKey, () =>
 				{
-					var category = _categoryService.GetById(item.CategoryId);
-					webModelProduct.Outline = string.Join("/", category.Parents.Select(x => x.Id)) + "/" + category.Id;
-				}
-			    return this.Ok(webModelProduct);
-            }
+					var catalog = _storeService.GetById(store).Catalog;
+					var item = _itemService.GetById(product, responseGroup);
 
-            return this.StatusCode(HttpStatusCode.NotFound);
+					if (product != null)
+					{
+						var webModelProduct = item.ToWebModel(_blobUrlResolver);
+						if (item.CategoryId != null)
+						{
+							var category = _categoryService.GetById(item.CategoryId);
+							webModelProduct.Outline = string.Join("/", category.Parents.Select(x => x.Id)) + "/" + category.Id;
+						}
+						return webModelProduct;
+					}
+					return null;
+				});
+
+			if(retVal != null)
+				return Ok(retVal);
+
+			return NotFound();
         }
 
         /// GET: api/mp/apple/en-us/products?code='22'
@@ -81,19 +89,28 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
         [Route("")]
         public IHttpActionResult GetProductByCode(string store, [FromUri] string code, [FromUri] moduleModel.ItemResponseGroup responseGroup = moduleModel.ItemResponseGroup.ItemLarge, string language = "en-us")
         {
-			var searchCriteria = new SearchCriteria
-			{
-				ResponseGroup = ResponseGroup.WithProducts | ResponseGroup.WithVariations,
-				Code = code,
-			};
+			var cacheKey = CacheKey.Create("MP", "GetProductByCode", store, code, responseGroup.ToString(), language);
+			var retVal = _cacheManager.Get(cacheKey, () =>
+				{
+					var searchCriteria = new SearchCriteria
+					{
+						ResponseGroup = ResponseGroup.WithProducts | ResponseGroup.WithVariations,
+						Code = code,
+					};
 
-			var result = _searchService.Search(searchCriteria);
-			if (result.Products != null && result.Products.Any())
-			{
-				var item = _itemService.GetById(result.Products.First().Id, ItemResponseGroup.ItemLarge);
-				return Ok(item.ToWebModel(_blobUrlResolver));
-			}
-			return this.StatusCode(HttpStatusCode.NotFound);
+					var result = _searchService.Search(searchCriteria);
+					if (result.Products != null && result.Products.Any())
+					{
+						var item = _itemService.GetById(result.Products.First().Id, ItemResponseGroup.ItemLarge);
+						return item.ToWebModel(_blobUrlResolver);
+					}
+					return null;
+				});
+
+			if (retVal != null)
+				return Ok(retVal);
+
+			return NotFound();
         }
 
         [HttpGet]
@@ -102,19 +119,28 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
         [Route("")]
         public IHttpActionResult GetProductByKeyword(string store, [FromUri] string keyword, [FromUri] moduleModel.ItemResponseGroup responseGroup = moduleModel.ItemResponseGroup.ItemLarge, string language = "en-us")
         {
-			var searchCriteria = new SearchCriteria
-			{
-				ResponseGroup = ResponseGroup.WithProducts,
-				SeoKeyword = keyword,
-			};
+			var cacheKey = CacheKey.Create("MP", "GetProductByKeyword", store, keyword, responseGroup.ToString(), language);
+			var retVal = _cacheManager.Get(cacheKey, () =>
+				{
+					var searchCriteria = new SearchCriteria
+					{
+						ResponseGroup = ResponseGroup.WithProducts,
+						SeoKeyword = keyword,
+					};
 
-			var result = _searchService.Search(searchCriteria);
-			if (result.Products != null && result.Products.Any())
-			{
-				var item = _itemService.GetById(result.Products.First().Id, ItemResponseGroup.ItemLarge);
-				return Ok(item.ToWebModel(_blobUrlResolver));
-			}
-			return this.StatusCode(HttpStatusCode.NotFound);
+					var result = _searchService.Search(searchCriteria);
+					if (result.Products != null && result.Products.Any())
+					{
+						var item = _itemService.GetById(result.Products.First().Id, ItemResponseGroup.ItemLarge);
+						return item.ToWebModel(_blobUrlResolver);
+					}
+					return null;
+				});
+
+			if (retVal != null)
+				return Ok(retVal);
+
+			return NotFound();
         }
 
         /// <summary>
@@ -142,124 +168,140 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
                               { "StoreId", store },
                           };
 
-			var catalog = _storeService.GetById(store).Catalog;
+			var storeCacheKey = CacheKey.Create("MP", "Store.GetById", store);
+			var catalog = _cacheManager.Get(storeCacheKey, () =>
+				{
+					var fullLoadedStore = _storeService.GetById(store);
+					if (fullLoadedStore == null)
+					{
+						throw new NullReferenceException(store + " not found");
+					}
+					return fullLoadedStore.Catalog;
+				});
+			
             string categoryId = null;
 
             var criteria = new CatalogIndexedSearchCriteria { Locale = language, Catalog = catalog.ToLowerInvariant() };
 
-            if (!string.IsNullOrWhiteSpace(outline))
-            {
-                criteria.Outlines.Add(String.Format("{0}/{1}*", catalog, outline));
-                categoryId = outline.Split(new[] { '/' }).Last();
-                context.Add("CategoryId", categoryId);
-            }
+			var cacheKey = CacheKey.Create("MP", "Search", store, criteria.CacheKey, responseGroup.ToString(), language, outline, currency);
+			var retVal = _cacheManager.Get(cacheKey, () =>
+				{
+					if (!string.IsNullOrWhiteSpace(outline))
+					{
+						criteria.Outlines.Add(String.Format("{0}/{1}*", catalog, outline));
+						categoryId = outline.Split(new[] { '/' }).Last();
+						context.Add("CategoryId", categoryId);
+					}
 
-            // Now fill in filters
-            var filters = _browseFilterService.GetFilters(context);
+					// Now fill in filters
+					var filters = _browseFilterService.GetFilters(context);
 
-            // Add all filters
-            foreach (var filter in filters)
-            {
-                criteria.Add(filter);
-            }
+					// Add all filters
+					foreach (var filter in filters)
+					{
+						criteria.Add(filter);
+					}
 
-            // apply terms
-            if (parameters.Terms != null && parameters.Terms.Count > 0)
-            {
-                foreach (var term in parameters.Terms)
-                {
-                    var filter = filters.SingleOrDefault(x => x.Key.Equals(term.Key, StringComparison.OrdinalIgnoreCase)
-                        && (!(x is PriceRangeFilter) || ((PriceRangeFilter)x).Currency.Equals(currency, StringComparison.OrdinalIgnoreCase)));
+					// apply terms
+					if (parameters.Terms != null && parameters.Terms.Count > 0)
+					{
+						foreach (var term in parameters.Terms)
+						{
+							var filter = filters.SingleOrDefault(x => x.Key.Equals(term.Key, StringComparison.OrdinalIgnoreCase)
+								&& (!(x is PriceRangeFilter) || ((PriceRangeFilter)x).Currency.Equals(currency, StringComparison.OrdinalIgnoreCase)));
 
-                    var appliedFilter = _browseFilterService.Convert(filter, term.Value);
+							var appliedFilter = _browseFilterService.Convert(filter, term.Value);
 
-                    criteria.Apply(appliedFilter);
-                }
-            }
+							criteria.Apply(appliedFilter);
+						}
+					}
 
-            // apply filters
-            var facets = parameters.Facets;
-            if (facets.Count != 0)
-            {
-                foreach (var key in facets.Keys)
-                {
-                    var filter = filters.SingleOrDefault(
-                        x => x.Key.Equals(key, StringComparison.OrdinalIgnoreCase)
-                            && (!(x is PriceRangeFilter)
-                                || ((PriceRangeFilter)x).Currency.Equals(currency, StringComparison.OrdinalIgnoreCase)));
+					// apply filters
+					var facets = parameters.Facets;
+					if (facets.Count != 0)
+					{
+						foreach (var key in facets.Keys)
+						{
+							var filter = filters.SingleOrDefault(
+								x => x.Key.Equals(key, StringComparison.OrdinalIgnoreCase)
+									&& (!(x is PriceRangeFilter)
+										|| ((PriceRangeFilter)x).Currency.Equals(currency, StringComparison.OrdinalIgnoreCase)));
 
-                    var appliedFilter = _browseFilterService.Convert(filter, facets[key]);
-                    criteria.Apply(appliedFilter);
-                }
-            }
+							var appliedFilter = _browseFilterService.Convert(filter, facets[key]);
+							criteria.Apply(appliedFilter);
+						}
+					}
 
-            //criteria.ClassTypes.Add("Product");
-            criteria.RecordsToRetrieve = parameters.PageSize == 0 ? 10 : parameters.PageSize;
-            criteria.StartingRecord = parameters.StartingRecord;
-            criteria.Pricelists = priceLists;
-            criteria.Currency = currency;
-            criteria.StartDateFrom = parameters.StartDateFrom;
-            criteria.SearchPhrase = parameters.FreeSearch;
+					//criteria.ClassTypes.Add("Product");
+					criteria.RecordsToRetrieve = parameters.PageSize == 0 ? 10 : parameters.PageSize;
+					criteria.StartingRecord = parameters.StartingRecord;
+					criteria.Pricelists = priceLists;
+					criteria.Currency = currency;
+					criteria.StartDateFrom = parameters.StartDateFrom;
+					criteria.SearchPhrase = parameters.FreeSearch;
 
-            #region sorting
+					#region sorting
 
-            if (!string.IsNullOrEmpty(parameters.Sort))
-            {
-                var isDescending = "desc".Equals(parameters.SortOrder, StringComparison.OrdinalIgnoreCase);
+					if (!string.IsNullOrEmpty(parameters.Sort))
+					{
+						var isDescending = "desc".Equals(parameters.SortOrder, StringComparison.OrdinalIgnoreCase);
 
-                SearchSort sortObject = null;
+						SearchSort sortObject = null;
 
-                switch (parameters.Sort.ToLowerInvariant())
-                {
-                    case "price":
-                        if (criteria.Pricelists != null)
-                        {
-                            sortObject = new SearchSort(
-                                criteria.Pricelists.Select(
-                                    priceList =>
-                                        new SearchSortField(String.Format("price_{0}_{1}", criteria.Currency.ToLower(), priceList.ToLower()))
-                                        {
-                                            IgnoredUnmapped = true,
-                                            IsDescending = isDescending,
-                                            DataType = SearchSortField.DOUBLE
-                                        })
-                                    .ToArray());
-                        }
-                        break;
-                    case "position":
-                        sortObject =
-                            new SearchSort(
-                                new SearchSortField(string.Format("sort{0}{1}", catalog, categoryId).ToLower())
-                                {
-                                    IgnoredUnmapped = true,
-                                    IsDescending = isDescending
-                                });
-                        break;
-                    case "name":
-                        sortObject = new SearchSort("name", isDescending);
-                        break;
-                    case "rating":
-                        sortObject = new SearchSort(criteria.ReviewsAverageField, isDescending);
-                        break;
-                    case "reviews":
-                        sortObject = new SearchSort(criteria.ReviewsTotalField, isDescending);
-                        break;
-                    default:
-                        sortObject = CatalogIndexedSearchCriteria.DefaultSortOrder;
-                        break;
-                }
+						switch (parameters.Sort.ToLowerInvariant())
+						{
+							case "price":
+								if (criteria.Pricelists != null)
+								{
+									sortObject = new SearchSort(
+										criteria.Pricelists.Select(
+											priceList =>
+												new SearchSortField(String.Format("price_{0}_{1}", criteria.Currency.ToLower(), priceList.ToLower()))
+												{
+													IgnoredUnmapped = true,
+													IsDescending = isDescending,
+													DataType = SearchSortField.DOUBLE
+												})
+											.ToArray());
+								}
+								break;
+							case "position":
+								sortObject =
+									new SearchSort(
+										new SearchSortField(string.Format("sort{0}{1}", catalog, categoryId).ToLower())
+										{
+											IgnoredUnmapped = true,
+											IsDescending = isDescending
+										});
+								break;
+							case "name":
+								sortObject = new SearchSort("name", isDescending);
+								break;
+							case "rating":
+								sortObject = new SearchSort(criteria.ReviewsAverageField, isDescending);
+								break;
+							case "reviews":
+								sortObject = new SearchSort(criteria.ReviewsTotalField, isDescending);
+								break;
+							default:
+								sortObject = CatalogIndexedSearchCriteria.DefaultSortOrder;
+								break;
+						}
 
-                criteria.Sort = sortObject;
-            }
+						criteria.Sort = sortObject;
+					}
 
-            #endregion
+					#endregion
 
-            //Load ALL products 
-			//var cacheKey = CacheKey.Create("ProductController.Search", criteria.CacheKey);
-            //var searchResults = _cacheManager.Get(cacheKey, () => _browseService.SearchItems(criteria, responseGroup));
-			var searchResults = _browseService.SearchItems(criteria, responseGroup);
+					//Load ALL products 
+					//var cacheKey = CacheKey.Create("ProductController.Search", criteria.CacheKey);
+					//var searchResults = _cacheManager.Get(cacheKey, () => _browseService.SearchItems(criteria, responseGroup));
+					var searchResults = _browseService.SearchItems(criteria, responseGroup);
+					return searchResults;
+				});
 
-            return this.Ok(searchResults);
+
+			return this.Ok(retVal);
         }
 
         #endregion
