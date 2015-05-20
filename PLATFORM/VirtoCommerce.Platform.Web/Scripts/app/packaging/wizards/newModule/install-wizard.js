@@ -56,7 +56,9 @@
             }
 
             uploader.onSuccessItem = function (fileItem, data, status, headers) {
-                data.tags = data.tags.split(' ');
+                if(data.tags) {
+                    data.tags = data.tags.split(' ');
+                }
                 $scope.blade.currentEntity = data;
             };
         }
