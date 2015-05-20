@@ -2,17 +2,19 @@
 .controller('platformWebApp.moduleDetailController', ['$scope', 'platformWebApp.dialogService', 'platformWebApp.bladeNavigationService', 'platformWebApp.modules', function ($scope, dialogService, bladeNavigationService, modules) {
 
     $scope.blade.refresh = function () {
-        modules.get({ id: $scope.blade.currentEntityId }, function(data) {
+        modules.get({ id: $scope.blade.currentEntityId }, function (data) {
             initializeBlade(data);
         });
     }
 
     function initializeBlade(data) {
-        data.tags = data.tags.split(' ');
+        if (data.tags) {
+            data.tags = data.tags.split(' ');
+        }
         $scope.blade.currentEntity = data;
         $scope.blade.isLoading = false;
     };
-    
+
     $scope.openModule = function (module) {
         $scope.blade.parentBlade.selectItem(module);
     }
