@@ -271,7 +271,7 @@ namespace VirtoCommerce.Web
             }
 
             if (String.IsNullOrEmpty(currency) ||
-                !store.Currencies.Any(c => c.Equals(currency, StringComparison.OrdinalIgnoreCase)))
+                !String.IsNullOrEmpty(currency) && !store.Currencies.Any(c => c.Equals(currency, StringComparison.OrdinalIgnoreCase)))
             {
                 currency = store.Currency;
             }
