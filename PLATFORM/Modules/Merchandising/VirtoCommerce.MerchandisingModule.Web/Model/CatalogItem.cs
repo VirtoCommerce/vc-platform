@@ -31,6 +31,9 @@ namespace VirtoCommerce.MerchandisingModule.Web.Model
 
         public bool? IsActive { get; set; }
 
+		public int? MaxQuantity { get; set; }
+		public int? MinQuantity { get; set; }
+
         public string Name { get; set; }
 
         public string Outline { get; set; }
