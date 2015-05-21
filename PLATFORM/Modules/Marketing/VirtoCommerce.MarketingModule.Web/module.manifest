@@ -5,7 +5,7 @@
     <platformVersion>2.0.0</platformVersion>
     <dependencies>
         <dependency id="VirtoCommerce.Core" version="1.0.0" />
-		<dependency id="VirtoCommerce.DynamicExpression" version="1.0.0" />
+        <dependency id="VirtoCommerce.DynamicExpression" version="1.0.0" />
     </dependencies>
 
     <title>Virto Commerce Marketing</title>
@@ -46,7 +46,9 @@
     </group>
   </settings>-->
     <permissions>
-        <permission id="marketing:query" name="Browse marketing data" description="Permission to open marketing menu and browse data."/>
-        <permission id="marketing:manage" name="Manage marketing" description="Permission to manage marketing information."/>
+        <group name="Marketing">
+            <permission id="marketing:query" name="Browse marketing data" description="Permission to open marketing menu and browse data."/>
+            <permission id="marketing:manage" name="Manage marketing" description="Permission to manage marketing information."/>
+        </group>
     </permissions>
 </module>

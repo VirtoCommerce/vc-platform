@@ -61,6 +61,8 @@
         </group>
     </settings>
     <permissions>
-        <permission id="core:fulfillment:manage" name="Manage fulfillment centers" description="Permission to manage fulfillment centers."/>
+        <group name="Core">
+            <permission id="core:fulfillment:manage" name="Manage fulfillment centers" description="Permission to manage fulfillment centers."/>
+        </group>
     </permissions>
 </module>

@@ -2,7 +2,6 @@
 
 namespace VirtoCommerce.Platform.Core.Modularity
 {
-    [XmlType("permission")]
     public class ModulePermission
     {
         [XmlAttribute("id")]

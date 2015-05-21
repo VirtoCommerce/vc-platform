@@ -98,7 +98,9 @@
         </group>
     </settings>
     <permissions>
-        <permission id="content:query" name="Browse store content data" description="Permission to open store content menu and browse data."/>
-        <permission id="content:manage" name="Manage store content data" description="Permission to manage store content data."/>
+        <group name="Content">
+            <permission id="content:query" name="Browse store content data" description="Permission to open store content menu and browse data."/>
+            <permission id="content:manage" name="Manage store content data" description="Permission to manage store content data."/>
+        </group>
     </permissions>
 </module>

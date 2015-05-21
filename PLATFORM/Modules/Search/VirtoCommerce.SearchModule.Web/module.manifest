@@ -25,6 +25,8 @@
     <moduleType>VirtoCommerce.SearchModule.Web.Module, VirtoCommerce.SearchModule.Web</moduleType>
 
     <permissions>
-        <permission id="VirtoCommerce.Search:Debug" name="Debug search providers" description="Allows to use low level search API."/>
+        <group name="Search">
+            <permission id="VirtoCommerce.Search:Debug" name="Debug search providers" description="Allows to use low level search API."/>
+        </group>
     </permissions>
 </module>

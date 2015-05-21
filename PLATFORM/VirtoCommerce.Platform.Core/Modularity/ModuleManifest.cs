@@ -60,13 +60,13 @@ namespace VirtoCommerce.Platform.Core.Modularity
         public ManifestDependency[] Dependencies { get; set; }
 
         [XmlArray("styles")]
-        [XmlArrayItem(typeof(ManifestBundleFile))]
-        [XmlArrayItem(typeof(ManifestBundleDirectory))]
+        [XmlArrayItem(typeof(ManifestBundleFile), ElementName = "file")]
+        [XmlArrayItem(typeof(ManifestBundleDirectory), ElementName = "directory")]
         public ManifestBundleItem[] Styles { get; set; }
 
         [XmlArray("scripts")]
-        [XmlArrayItem(typeof(ManifestBundleFile))]
-        [XmlArrayItem(typeof(ManifestBundleDirectory))]
+        [XmlArrayItem(typeof(ManifestBundleFile), ElementName = "file")]
+        [XmlArrayItem(typeof(ManifestBundleDirectory), ElementName = "directory")]
         public ManifestBundleItem[] Scripts { get; set; }
 
         [XmlArray("settings")]
@@ -74,7 +74,7 @@ namespace VirtoCommerce.Platform.Core.Modularity
         public ModuleSettingsGroup[] Settings { get; set; }
 
         [XmlArray("permissions")]
-        [XmlArrayItem("permission")]
-        public ModulePermission[] Permissions { get; set; }
+        [XmlArrayItem("group")]
+        public ModulePermissionGroup[] Permissions { get; set; }
     }
 }
