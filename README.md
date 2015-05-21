@@ -1,6 +1,5 @@
 Virto Commerce Community Edition
 ============
-Virto Commerce 2.x CI Build - 
 [![Build Status](http://ci.virtocommerce.com/buildStatus/icon?job=VirtoCommerce 2.x CI Build)](http://ci.virtocommerce.com/job/VirtoCommerce 2.x CI Build)
 
 Developed by the team that created Mediachase eCommerce Framework (now EPiServer Commerce), Virto Commerce is the 

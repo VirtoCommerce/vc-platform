@@ -75,10 +75,8 @@
     }
 
     function initializeBlade(data) {
-        // temp workaround?
-        data.dynamicExpression.children = [{ id: 'BlockRootCondition', availableChildren: data.dynamicExpression.availableChildren, children: data.dynamicExpression.children }];
-
         _.each(data.dynamicExpression.children, extendElementBlock);
+        groupAvailableChildren(data.dynamicExpression.children[0]);
 
         blade.entity = data;
         blade.originalEntity = angular.copy(blade.entity);
@@ -124,8 +122,6 @@
 
         blade.isLoading = true;
         blade.entity.dynamicExpression.availableChildren = undefined;
-        // temp workaround?
-        blade.entity.dynamicExpression.children = blade.entity.dynamicExpression.children[0].children;
         _.each(blade.entity.dynamicExpression.children, stripOffUiInformation);
 
         if (blade.isNew) {
@@ -258,7 +254,12 @@
         _.each(expressionBlock.children, extendElementBlock);
         _.each(expressionBlock.availableChildren, extendElementBlock);
         return expressionBlock;
-    };
+    }
+
+    function groupAvailableChildren(expressionBlock) {
+        results = _.groupBy(expressionBlock.availableChildren, 'groupName');
+        expressionBlock.availableChildren = _.map(results, function (items, key) { return { displayName: key, subitems: items }; });
+    }
 
     function stripOffUiInformation(expressionElement) {
         expressionElement.availableChildren = undefined;

@@ -150,19 +150,23 @@ angular.module(moduleName, [])
       });
 
       //Register CONTENT PUBLISHING expressions
+      var groupNames = ['Browse behavior', 'Shopper profile', 'Shopping cart', 'Geo location'];
       dynamicExpressionService.registerExpression({
-          id: 'BlockRootCondition',
+          id: 'BlockContentCondition',
           newChildLabel: '+ add condition'
       });
       dynamicExpressionService.registerExpression({
+          groupName: groupNames[3],
           id: 'ConditionGeoTimeZone',
           displayName: 'Browsing from a time zone -/+ offset from UTC []'
       });
       dynamicExpressionService.registerExpression({
+          groupName: groupNames[3],
           id: 'ConditionGeoZipCode',
           displayName: 'Browsing from zip/postal code []'
       });
       dynamicExpressionService.registerExpression({
+          groupName: groupNames[0],
           id: 'ConditionStoreSearchedPhrase',
           displayName: 'Shopper searched for phrase [] in store'
       });

@@ -129,6 +129,7 @@ namespace VirtoCommerce.Platform.Web
 
                 try
                 {
+                    Debug.WriteLine("Loading assembly '{0}'.", name);
                     result = Assembly.Load(name);
                 }
                 catch (FileLoadException)

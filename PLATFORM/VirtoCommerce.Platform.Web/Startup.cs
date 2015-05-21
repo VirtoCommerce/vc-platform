@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Configuration;
+using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -43,13 +44,16 @@ namespace VirtoCommerce.Platform.Web
 {
     public class Startup
     {
+        private static readonly string _assembliesPath = HostingEnvironment.MapPath("~/App_data/Modules");
+
         public void Configuration(IAppBuilder app)
         {
+            AppDomain.CurrentDomain.AssemblyResolve += CurrentDomainOnAssemblyResolve;
+
             const string modulesVirtualPath = "~/Modules";
             var modulesPhysicalPath = HostingEnvironment.MapPath(modulesVirtualPath).EnsureEndSeparator();
-            var assembliesPath = HostingEnvironment.MapPath("~/App_data/Modules");
 
-            var bootstraper = new VirtoCommercePlatformWebBootstraper(modulesVirtualPath, modulesPhysicalPath, assembliesPath);
+            var bootstraper = new VirtoCommercePlatformWebBootstraper(modulesVirtualPath, modulesPhysicalPath, _assembliesPath);
             bootstraper.Run();
 
             var container = bootstraper.Container;
@@ -113,6 +117,25 @@ namespace VirtoCommerce.Platform.Web
             app.MapSignalR(hubConfiguration);
         }
 
+
+        private static Assembly CurrentDomainOnAssemblyResolve(object sender, ResolveEventArgs args)
+        {
+            Assembly assembly = null;
+
+            Debug.WriteLine(string.Format("Resolving assembly '{0}'", args.Name));
+
+            var name = new AssemblyName(args.Name);
+            var fileName = name.Name + ".dll";
+            var filePath = Path.Combine(_assembliesPath, fileName);
+
+            if (File.Exists(filePath))
+            {
+                Debug.WriteLine(string.Format("Loading assembly from '{0}'", filePath));
+                assembly = Assembly.LoadFrom(filePath);
+            }
+
+            return assembly;
+        }
 
         private static void InitializePlatform(IUnityContainer container, string connectionStringName)
         {
@@ -254,6 +277,6 @@ namespace VirtoCommerce.Platform.Web
             }
 
             return _version;
-        }        
+        }
     }
 }
