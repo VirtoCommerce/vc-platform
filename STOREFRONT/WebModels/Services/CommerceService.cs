@@ -534,6 +534,7 @@ namespace VirtoCommerce.Web.Models.Services
                 Amount = checkout.TotalPrice,
                 BillingAddress = checkout.BillingAddress.AsCartServiceModel(),
                 Currency = dtoCart.Currency,
+                PaymentGatewayCode = checkout.PaymentMethod.Handle,
                 OuterId = "", // TODO!!!
             });
 
