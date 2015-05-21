@@ -395,7 +395,7 @@ namespace VirtoCommerce.Web.Models.Services
                         {
                             checkout.PaymentMethods.Add(new PaymentMethod
                             {
-                                Handle = dtoPaymentMethod.Name
+                                Handle = dtoPaymentMethod.GatewayCode
                             });
                         }
                     }

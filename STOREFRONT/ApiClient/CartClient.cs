@@ -67,7 +67,7 @@ namespace VirtoCommerce.ApiClient
         public Task<PaymentMethod[]> GetCartPaymentMethods(string cartId)
         {
             return GetAsync<PaymentMethod[]>(
-                CreateRequestUri(string.Format(RelativePaths.GetShippingMethods, cartId)),
+                CreateRequestUri(string.Format(RelativePaths.GetPaymentMethods, cartId)),
                 useCache: false);
         }
 
