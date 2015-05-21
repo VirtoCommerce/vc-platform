@@ -20,6 +20,9 @@ namespace VirtoCommerce.OrderModule.Web.Converters
 			retVal.Organization = retVal.OrganizationId;
 			retVal.Customer = retVal.CustomerId;
 
+			if (payment.Properties != null)
+				retVal.Properties = payment.Properties.Select(x => x.ToWebModel()).ToList();
+
 			retVal.ChildrenOperations = payment.ChildrenOperations.Select(x => x.ToWebModel()).ToList();
 
 			return retVal;
@@ -29,7 +32,10 @@ namespace VirtoCommerce.OrderModule.Web.Converters
 		{
 			var retVal = new coreModel.PaymentIn();
 			retVal.InjectFrom(payment);
-		
+
+			if (payment.Properties != null)
+				retVal.Properties = payment.Properties.Select(x => x.ToCoreModel()).ToList();
+
 			retVal.Currency = payment.Currency;
 			return retVal;
 		}

@@ -10,6 +10,8 @@ using VirtoCommerce.OrderModule.Data.Workflow;
 using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Data.Infrastructure;
 using VirtoCommerce.Platform.Data.Infrastructure.Interceptors;
+using VirtoCommerce.OrderModule.Data.Workflow;
+using VirtoCommerce.Domain.Order.Workflow;
 
 namespace VirtoCommerce.OrderModule.Web
 {
@@ -54,10 +56,10 @@ namespace VirtoCommerce.OrderModule.Web
             //Subscribe to order changes. Calculate totals  
             orderWorkflowService.Subscribe(new CalculateTotalsActivity());
             //Adjust inventory activity
-            orderWorkflowService.Subscribe(new ObserverFactory<CustomerOrderStateBasedEvalContext>(() => { return new AdjustInventoryActivity(_container.Resolve<IInventoryService>()); }));
-            _container.RegisterInstance<IObservable<CustomerOrderStateBasedEvalContext>>(orderWorkflowService);
+            orderWorkflowService.Subscribe(new ObserverFactory<OrderStateBasedEvalContext>(() => { return new AdjustInventoryActivity(_container.Resolve<IInventoryService>()); }));
+			_container.RegisterInstance<IObservable<OrderStateBasedEvalContext>>(orderWorkflowService);
 
-            _container.RegisterInstance<ICustomerOrderWorkflow>(orderWorkflowService);
+            _container.RegisterInstance<IOrderWorkflow>(orderWorkflowService);
 
             _container.RegisterType<IOrderRepository>(new InjectionFactory(c => new OrderRepositoryImpl("VirtoCommerce", new AuditableInterceptor(), new EntityPrimaryKeyGeneratorInterceptor())));
             //_container.RegisterInstance<IInventoryService>(new Mock<IInventoryService>().Object);

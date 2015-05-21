@@ -5,9 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 using VirtoCommerce.Domain.Common;
 
-namespace VirtoCommerce.OrderModule.Data.Workflow
+namespace VirtoCommerce.Domain.Order.Workflow
 {
-	public interface ICustomerOrderWorkflow : IWorkflowService
+	public interface IOrderWorkflow : IWorkflowService
 	{
 	}
 }

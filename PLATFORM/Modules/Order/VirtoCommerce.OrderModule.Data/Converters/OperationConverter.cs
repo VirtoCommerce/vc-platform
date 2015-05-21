@@ -7,10 +7,13 @@ using VirtoCommerce.Domain.Order.Model;
 using VirtoCommerce.OrderModule.Data.Model;
 using Omu.ValueInjecter;
 using VirtoCommerce.Platform.Data.Common.ConventionInjections;
+using VirtoCommerce.Platform.Core.Common;
+
 namespace VirtoCommerce.OrderModule.Data.Converters
 {
 	public static class OperationConverter
 	{
+	
 		/// <summary>
 		/// Patch CatalogBase type
 		/// </summary>
@@ -27,6 +30,10 @@ namespace VirtoCommerce.OrderModule.Data.Converters
 																			   x => x.TaxIncluded, x => x.IsApproved, x => x.Sum);
 			target.InjectFrom(patchInjectionPolicy, source);
 
+			if (!source.Properties.IsNullCollection())
+			{
+				source.Properties.Patch(target.Properties, (sourceProperty, targetProperty) => sourceProperty.Patch(targetProperty));
+			}
 		}
 	}
 }

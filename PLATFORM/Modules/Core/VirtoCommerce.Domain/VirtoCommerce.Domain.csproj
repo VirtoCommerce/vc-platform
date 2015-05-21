@@ -168,6 +168,8 @@
     <Compile Include="Order\Model\IStockOperation.cs" />
     <Compile Include="Order\Model\IStockOutOperation.cs" />
     <Compile Include="Order\Model\LineItem.cs" />
+    <Compile Include="Order\Model\OperationProperty.cs" />
+    <Compile Include="Order\Model\PropertyValueType.cs" />
     <Compile Include="Order\Model\Weight.cs" />
     <Compile Include="Order\Services\IOperationNumberGenerator.cs" />
     <Compile Include="Order\Model\CustomerOrderResponseGroup.cs" />
@@ -182,6 +184,8 @@
     <Compile Include="Order\Services\ICustomerOrderSearchService.cs" />
     <Compile Include="Order\Services\IPaymentService.cs" />
     <Compile Include="Order\Services\IShipmentService.cs" />
+    <Compile Include="Order\Workflow\OrderStateBasedEvalContext.cs" />
+    <Compile Include="Order\Workflow\IOrderWorkflow.cs" />
     <Compile Include="Payment\Model\PaymentInfo.cs" />
     <Compile Include="Payment\Services\InMemoryPaymentGatewayManagerImpl.cs" />
     <Compile Include="Payment\Services\IPaymentGateway.cs" />
@@ -238,6 +242,7 @@
     <Compile Include="Search\Model\SearchSort.cs" />
     <Compile Include="Search\Model\SearchSortField.cs" />
     <Compile Include="Search\Services\ISearchService.cs" />
+    <Compile Include="Shipping\Services\IShippingGatewayManager.cs" />
     <Compile Include="Store\Model\SeoInfo.cs" />
     <Compile Include="Store\Model\SettingValueType.cs" />
     <Compile Include="Store\Model\Store.cs" />
@@ -259,6 +264,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Search\Filters\Filters.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Shipping\Model\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
