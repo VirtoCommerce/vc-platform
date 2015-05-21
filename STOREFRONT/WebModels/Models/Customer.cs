@@ -7,6 +7,7 @@ using DotLiquid;
 using System.Threading.Tasks;
 using VirtoCommerce.Web.Models.Services;
 using VirtoCommerce.Web.Convertors;
+using VirtoCommerce.Web.Views.Engines.Liquid.Extensions;
 
 #endregion
 
@@ -71,19 +72,21 @@ namespace VirtoCommerce.Web.Models
 
         public void LoadSlice(int from, int? to)
         {
-            var pageSize = to == null ? 5 : to - from;
+            // TODO: Context is null - not good too, will remake
+
+            var pageSize = this.Context == null ? 5 : this.Context["paginate.page_size"].ToInt(5);
 
             var customerService = new CustomerService();
+
+            var test = SiteContext.Current.Customer.Context;
 
             var orderSearchResult =
                 Task.Run(() => customerService.GetOrdersAsync(
                     SiteContext.Current.StoreId,
                     Id,
                     null,
-                    from,
-                    pageSize.Value)).Result;
-
-            var test = SiteContext.Current;
+                    (from - 1) * pageSize,
+                    pageSize)).Result;
 
             var orders = orderSearchResult.CustomerOrders.Select(o => o.AsWebModel());
             var ordersCollection = new ItemCollection<CustomerOrder>(orders)
@@ -92,6 +95,7 @@ namespace VirtoCommerce.Web.Models
             };
 
             Orders = ordersCollection;
+            OrdersCount = orderSearchResult.TotalCount;
         }
     }
 }

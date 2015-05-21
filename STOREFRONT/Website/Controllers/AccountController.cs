@@ -461,9 +461,7 @@ namespace VirtoCommerce.Web.Controllers
                 Context.Customer = await CustomerService.GetCustomerAsync(
                     HttpContext.User.Identity.Name, Context.StoreId);
 
-                int pageSize = 5; // TODO: Should be taken from customer model
-
-                Context.Customer.LoadSlice((page - 1) * pageSize, pageSize);
+                Context.Customer.LoadSlice(page, null);
                 Context.Set("current_page", page);
 
                 return this.View("customers/account");
@@ -534,7 +532,7 @@ namespace VirtoCommerce.Web.Controllers
         }
 
         [HttpGet]
-        [Route("account/order/{id}")]
+        [Route("order/{id}")]
         public async Task<ActionResult> Order(string id)
         {
             this.Context.Order =
