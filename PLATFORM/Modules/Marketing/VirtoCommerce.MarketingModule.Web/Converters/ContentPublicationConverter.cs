@@ -33,7 +33,7 @@ namespace VirtoCommerce.MarketingModule.Web.Converters
 				if (etalonEpressionTree != null)
 				{
 					//Copy available elements from etalon because they not persisted
-					var sourceBlocks = ((DynamicExpression)etalonEpressionTree).Traverse(x => x.AvailableChildren);
+					var sourceBlocks = ((DynamicExpression)etalonEpressionTree).Traverse(x => x.Children);
 					var targetBlocks = ((DynamicExpression)retVal.DynamicExpression).Traverse(x => x.Children);
 					foreach (var sourceBlock in sourceBlocks)
 					{
