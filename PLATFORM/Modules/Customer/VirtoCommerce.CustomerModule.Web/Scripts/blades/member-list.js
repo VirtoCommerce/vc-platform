@@ -115,7 +115,7 @@
         if (listItem.memberType === 'Organization') {
             $scope.blade.showDetailBlade(listItem, listItem.displayName);
         }
-        // else do nothing as item is opened on selecting it.
+        // else do nothing as customer is opened on selecting it.
     };
 
     $scope.blade.showDetailBlade = function (listItem, title) {

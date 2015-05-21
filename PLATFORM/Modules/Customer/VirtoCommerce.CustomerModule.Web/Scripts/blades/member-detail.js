@@ -14,6 +14,7 @@
             });
         } else {
             var newEntity = {
+                properties: [],
                 addresses: [],
                 phones: [],
                 emails: []
@@ -22,7 +23,6 @@
             if ($scope.blade.isOrganization) {
                 newEntity.parentId = $scope.blade.parentBlade.currentEntity.id;
             } else {
-                newEntity.properties = [];
                 newEntity.organizations = [];
                 if ($scope.blade.parentBlade.currentEntity.id) {
                     newEntity.organizations.push($scope.blade.parentBlade.currentEntity.id);
@@ -53,7 +53,7 @@
 
         // temporal workaround
         if (!$scope.blade.isOrganization) {
-            $scope.blade.currentEntity.organizations = $scope.blade.currentEntity.organization? [$scope.blade.currentEntity.organization] : [];
+            $scope.blade.currentEntity.organizations = $scope.blade.currentEntity.organization ? [$scope.blade.currentEntity.organization] : [];
         }
 
         if ($scope.blade.currentEntityId) {

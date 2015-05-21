@@ -3,9 +3,16 @@
     $scope.blade.origEntity = {};
 
     function initializeBlade(properties) {
-        var numberProps = _.where(properties, { valueType: 'Decimal' });
-        _.forEach(numberProps, function (prop) {
-            prop.value = parseFloat(prop.value);
+        //var selectedProps = _.where(properties, { valueType: 'Decimal' });
+        //_.forEach(selectedProps, function (prop) {
+        //    prop.value = parseFloat(prop.value);
+        //});
+
+        var selectedProps = _.where(properties, { valueType: 'Boolean' });
+        _.forEach(selectedProps, function (prop) {
+            if (angular.isFunction(prop.value.toLowerCase)) {
+                prop.value = prop.value.toLowerCase() === 'true';
+            }
         });
 
         $scope.blade.currentEntities = angular.copy(properties);
@@ -101,6 +108,23 @@
             permission: 'customer:manage'
         }
     ];
+
+    // datepicker
+    $scope.datepickers = {
+        str: false
+    }
+
+    $scope.open = function ($event, which) {
+        $event.preventDefault();
+        $event.stopPropagation();
+
+        $scope.datepickers[which] = true;
+    };
+
+    $scope.dateOptions = {
+        'year-format': "'yyyy'",
+    };
+
 
     $scope.blade.isLoading = false;
     $scope.$watch('blade.parentBlade.currentEntity.properties', function (currentEntities) {

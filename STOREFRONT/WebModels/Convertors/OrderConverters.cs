@@ -132,7 +132,7 @@ namespace VirtoCommerce.Web.Convertors
                           Fulfillment = null,
                           Grams = 0,
                           Handle = null,
-                          Id = null,
+                          Id = lineItem.Id,
                           Image = lineItem.ImageUrl,
                           Price = lineItem.Price,
                           Product = null,

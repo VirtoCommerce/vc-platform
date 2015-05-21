@@ -454,36 +454,15 @@ namespace VirtoCommerce.Web.Controllers
         //
         // GET: /Account
         [HttpGet]
-        public async Task<ActionResult> Index(int? skip, int? take)
+        public async Task<ActionResult> Index(int page = 1)
         {
             if (HttpContext.User.Identity.IsAuthenticated)
             {
-                skip = skip ?? 0;
-                take = take ?? 10;
-
-                this.Context.Customer = await CustomerService.GetCustomerAsync(
+                Context.Customer = await CustomerService.GetCustomerAsync(
                     HttpContext.User.Identity.Name, Context.StoreId);
 
-                var orderSearchResult =
-                    await
-                        this.CustomerService.GetOrdersAsync(
-                            this.Context.Shop.StoreId,
-                            this.Context.Customer.Id,
-                            null,
-                            skip.Value,
-                            take.Value);
-
-                this.Context.Customer.OrdersCount = orderSearchResult.TotalCount;
-
-                if (orderSearchResult.TotalCount > 0)
-                {
-                    this.Context.Customer.Orders = new List<CustomerOrder>();
-
-                    foreach (var order in orderSearchResult.CustomerOrders)
-                    {
-                        this.Context.Customer.Orders.Add(order.AsWebModel());
-                    }
-                }
+                Context.Customer.LoadSlice(page, null);
+                Context.Set("current_page", page);
 
                 return this.View("customers/account");
             }
@@ -553,7 +532,7 @@ namespace VirtoCommerce.Web.Controllers
         }
 
         [HttpGet]
-        [Route("account/order/{id}")]
+        [Route("order/{id}")]
         public async Task<ActionResult> Order(string id)
         {
             this.Context.Order =

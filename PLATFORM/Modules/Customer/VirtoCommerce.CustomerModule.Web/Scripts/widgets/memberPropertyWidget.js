@@ -1,13 +1,9 @@
 ﻿angular.module('virtoCommerce.customerModule')
 .controller('virtoCommerce.customerModule.memberPropertyWidgetController', ['$scope', 'platformWebApp.bladeNavigationService', function ($scope, bladeNavigationService) {
-    $scope.blade = $scope.widget.blade;
-
+    
     $scope.openBlade = function () {
         var blade = {
-            id: "customerPropertyDetail",
-            currentEntityId: $scope.blade.currentEntityId,
-            //currentEntities: $scope.blade.currentEntity.properties,
-            currentResource: $scope.blade.currentResource,
+            id: "memberProperties",
             title: $scope.blade.title,
             subtitle: 'Properties management',
             controller: 'virtoCommerce.customerModule.memberPropertyListController',

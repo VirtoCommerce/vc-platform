@@ -2,13 +2,18 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using DotLiquid;
+using System.Threading.Tasks;
+using VirtoCommerce.Web.Models.Services;
+using VirtoCommerce.Web.Convertors;
+using VirtoCommerce.Web.Views.Engines.Liquid.Extensions;
 
 #endregion
 
 namespace VirtoCommerce.Web.Models
 {
-    public class Customer : Drop
+    public class Customer : Drop, ILoadSlice
     {
         #region Constructors and Destructors
         public Customer()
@@ -54,7 +59,7 @@ namespace VirtoCommerce.Web.Models
 
         public string Name { get; set; }
 
-        public List<CustomerOrder> Orders { get; set; }
+        public ItemCollection<CustomerOrder> Orders { get; set; }
 
         public int OrdersCount { get; set; }
 
@@ -64,5 +69,33 @@ namespace VirtoCommerce.Web.Models
 
         public decimal TotalSpent { get; set; }
         #endregion
+
+        public void LoadSlice(int from, int? to)
+        {
+            // TODO: Context is null - not good too, will remake
+
+            var pageSize = this.Context == null ? 5 : this.Context["paginate.page_size"].ToInt(5);
+
+            var customerService = new CustomerService();
+
+            var test = SiteContext.Current.Customer.Context;
+
+            var orderSearchResult =
+                Task.Run(() => customerService.GetOrdersAsync(
+                    SiteContext.Current.StoreId,
+                    Id,
+                    null,
+                    (from - 1) * pageSize,
+                    pageSize)).Result;
+
+            var orders = orderSearchResult.CustomerOrders.Select(o => o.AsWebModel());
+            var ordersCollection = new ItemCollection<CustomerOrder>(orders)
+            {
+                TotalCount = orderSearchResult.TotalCount
+            };
+
+            Orders = ordersCollection;
+            OrdersCount = orderSearchResult.TotalCount;
+        }
     }
 }

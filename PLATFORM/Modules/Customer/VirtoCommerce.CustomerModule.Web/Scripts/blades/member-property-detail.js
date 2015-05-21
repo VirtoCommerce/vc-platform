@@ -17,6 +17,7 @@
             case 'valType':
                 newBlade.title = b.origEntity.name ? b.origEntity.name : b.currentEntity.name + ' value type';
                 newBlade.subtitle = 'Change value type';
+                newBlade.valueType = b.currentEntity.valueType
                 newBlade.controller = 'virtoCommerce.customerModule.memberPropertyValueTypeController';
                 newBlade.template = 'Modules/$(VirtoCommerce.Customer)/Scripts/blades/member-property-valueType.tpl.html';
                 break;

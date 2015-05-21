@@ -22,6 +22,7 @@
           </tr>
         </thead>
         <tbody>
+          {% paginate customer.orders by 5 %}
           {% for order in customer.orders %}
             <tr>
               <td>{{ order.name | link_to: order.customer_url }}</td>
@@ -31,9 +32,12 @@
               <td>{{ order.total_price | money }}</td>
             </tr>
           {% endfor %}
+          {% endpaginate %}
         </tbody>
       </table>
-
+      {% if paginate.pages > 1 %}
+        {% include 'pagination-custom' %}
+      {% endif %}
     {% else %}
 
       <p>{{ 'customer.orders.none' | t }}</p>
