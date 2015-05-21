@@ -12,7 +12,7 @@ angular.module(moduleName, [
   ['$rootScope', 'platformWebApp.mainMenuService', 'platformWebApp.widgetService', 'platformWebApp.authService', function ($rootScope, mainMenuService, widgetService, authService) {
 
       widgetService.registerWidget({
-          isVisible: function(blade) { return authService.checkPermission('helpdeskModule:manage'); },
+          isVisible: function (blade) { return blade.currentEntityId && authService.checkPermission('helpdeskModule:manage'); },
           controller: 'virtoCommerce.helpdeskModule.openTicketsWidgetController',
           template: 'Modules/$(Zendesk.Helpdesk)/Scripts/widgets/openTicketsWidget.tpl.html'
       }, 'customerDetail2');
