@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
@@ -8,10 +9,16 @@ using System.Threading;
 using System.Threading.Tasks;
 using VirtoCommerce.Domain.Order.Model;
 using VirtoCommerce.Platform.Core.Common;
+
 namespace VirtoCommerce.OrderModule.Data.Model
 {
 	public abstract class OperationEntity : AuditableEntity, IOperation
 	{
+		public OperationEntity()
+		{
+			Properties = new NullCollection<OperationPropertyEntity>();
+		}
+
 		[Required]
 		[StringLength(64)]
 		public string Number { get; set; }
@@ -50,6 +57,11 @@ namespace VirtoCommerce.OrderModule.Data.Model
 			}
 		}
 
+		#endregion
+
+		#region Navigation property
+
+		public virtual ObservableCollection<OperationPropertyEntity> Properties { get; set; }
 		#endregion
 	}
 }

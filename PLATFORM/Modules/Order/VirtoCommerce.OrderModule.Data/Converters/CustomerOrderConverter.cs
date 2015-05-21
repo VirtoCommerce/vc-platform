@@ -21,10 +21,15 @@ namespace VirtoCommerce.OrderModule.Data.Converters
 				throw new ArgumentNullException("entity");
 
 			var retVal = new CustomerOrder();
+
 			retVal.InjectFrom(entity);
 
 			retVal.Currency = (CurrencyCodes)Enum.Parse(typeof(CurrencyCodes), entity.Currency);
-			
+
+			if (entity.Properties != null)
+			{
+				retVal.Properties = entity.Properties.Select(x => x.ToCoreModel()).ToList();
+			}
 			if(entity.Discounts != null && entity.Discounts.Any())
 			{
 				retVal.Discount = entity.Discounts.First().ToCoreModel();
@@ -61,7 +66,7 @@ namespace VirtoCommerce.OrderModule.Data.Converters
 				StoreId = cart.StoreId,
 				OrganizationId = cart.OrganizationId
 			};
-
+			
 			if(cart.Items != null)
 			{
 				retVal.Items = cart.Items.Select(x => x.ToCoreModel()).ToList();
@@ -100,7 +105,12 @@ namespace VirtoCommerce.OrderModule.Data.Converters
 			retVal.InjectFrom(order);
 
 			retVal.Currency = order.Currency.ToString();
-		
+
+			if (order.Properties != null)
+			{
+				retVal.Properties = new ObservableCollection<OperationPropertyEntity>(order.Properties.Select(x => x.ToDataModel()));
+			}
+
 			if(order.Addresses != null)
 			{
 				retVal.Addresses = new ObservableCollection<AddressEntity>(order.Addresses.Select(x=>x.ToDataModel()));

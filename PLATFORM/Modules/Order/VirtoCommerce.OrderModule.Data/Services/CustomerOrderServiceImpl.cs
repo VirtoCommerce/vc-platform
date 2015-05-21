@@ -15,6 +15,7 @@ using System.Collections.ObjectModel;
 using VirtoCommerce.Platform.Data.Infrastructure;
 using VirtoCommerce.Domain.Common;
 using VirtoCommerce.Platform.Core.Common;
+using VirtoCommerce.Domain.Order.Workflow;
 
 namespace VirtoCommerce.OrderModule.Data.Services
 {
@@ -25,7 +26,7 @@ namespace VirtoCommerce.OrderModule.Data.Services
 		private readonly IOperationNumberGenerator _operationNumberGenerator;
 		private readonly IShoppingCartService _shoppingCartService;
 		private readonly IWorkflowService _workflowService;
-		public CustomerOrderServiceImpl(Func<IOrderRepository> orderRepositoryFactory, IOperationNumberGenerator operationNumberGenerator, ICustomerOrderWorkflow workflowService, IShoppingCartService shoppingCartService)
+		public CustomerOrderServiceImpl(Func<IOrderRepository> orderRepositoryFactory, IOperationNumberGenerator operationNumberGenerator, IOrderWorkflow workflowService, IShoppingCartService shoppingCartService)
 		{
 			_repositoryFactory = orderRepositoryFactory;
 			_shoppingCartService = shoppingCartService;
@@ -51,7 +52,7 @@ namespace VirtoCommerce.OrderModule.Data.Services
 
 		public virtual CustomerOrder Create(CustomerOrder order)
 		{
-			RecalculateOrder(new CustomerOrderStateBasedEvalContext(EntryState.Added, null, order));
+			RecalculateOrder(new OrderStateBasedEvalContext(EntryState.Added, null, order));
 
 			EnsureThatAllOperationsHasNumber(order);
 
@@ -95,7 +96,7 @@ namespace VirtoCommerce.OrderModule.Data.Services
 					var origOrder = GetById(order.Id, CustomerOrderResponseGroup.Full);
 
 					//Do business logic on temporary  order object
-					RecalculateOrder(new CustomerOrderStateBasedEvalContext(EntryState.Modified, origOrder, order));
+					RecalculateOrder(new OrderStateBasedEvalContext(EntryState.Modified, origOrder, order));
 
 					var sourceOrderEntity = order.ToDataModel();
 					var targetOrderEntity = repository.GetCustomerOrderById(order.Id, CustomerOrderResponseGroup.Full);
@@ -168,7 +169,7 @@ namespace VirtoCommerce.OrderModule.Data.Services
 
 			return retVal;
 		}
-		private void RecalculateOrder(CustomerOrderStateBasedEvalContext context)
+		private void RecalculateOrder(OrderStateBasedEvalContext context)
 		{
 			_workflowService.RunWorkflow(context);
 		}

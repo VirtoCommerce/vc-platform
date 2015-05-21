@@ -40,6 +40,7 @@ namespace VirtoCommerce.OrderModule.Web.Model
 		public string ParentOperationId { get; set; }
 
 		public IEnumerable<Operation> ChildrenOperations { get; set; }
+		public IEnumerable<OperationProperty> Properties { get; set; }
 		
 	}
 }
