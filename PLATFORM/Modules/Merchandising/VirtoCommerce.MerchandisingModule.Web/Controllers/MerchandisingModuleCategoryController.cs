@@ -41,8 +41,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 		[Route("{category}")]
 		public IHttpActionResult GetCategoryById(string category, string store, string language = "en-us")
 		{
-			var cacheKey = CacheKey.Create("MP", "GetCategoryById", category, store, language);
-			var retVal = _cacheManager.Get(cacheKey, () => _categoryService.GetById(category));
+			var retVal = _categoryService.GetById(category);
 			if (retVal != null)
 				return Ok(retVal.ToWebModel());
 			return NotFound();
@@ -54,60 +53,53 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
         [ClientCache(Duration = 30)]
         [Route("")]
 		public IHttpActionResult GetCategoryByCode(string store, [FromUri] string code, string language = "en-us")
-        {
-			var cacheKey = CacheKey.Create("MP", "GetCategoryByCode", store, code, language);
-			var retVal = _cacheManager.Get(cacheKey, () =>
+		{
+			var catalog = _storeService.GetById(store).Catalog;
+			var searchCriteria = new SearchCriteria
+			{
+				ResponseGroup = ResponseGroup.WithCategories,
+				Code = code,
+				CatalogId = catalog
+			};
+
+			var result = _searchService.Search(searchCriteria);
+			if (result.Categories != null && result.Categories.Any())
+			{
+				var category = _categoryService.GetById(result.Categories.First().Id);
+				if (category != null)
 				{
-					var catalog = _storeService.GetById(store).Catalog;
-					var searchCriteria = new SearchCriteria
-					{
-						ResponseGroup = ResponseGroup.WithCategories,
-						Code = code,
-						CatalogId = catalog
-					};
+					return Ok(category.ToWebModel());
+				}
+			}
 
-					var result = _searchService.Search(searchCriteria);
-					if (result.Categories != null && result.Categories.Any())
-					{
-						return _categoryService.GetById(result.Categories.First().Id);
-					}
-					return null;
-				});
-
-			if (retVal != null)
-				return Ok(retVal.ToWebModel());
 			return NotFound();
-        }
+		}
 
         /// GET: api/mp/apple/en-us/categories?keyword=apple-mp3
         [HttpGet]
         [ResponseType(typeof(webModel.Category))]
         [ClientCache(Duration = 30)]
         [Route("")]
-        public IHttpActionResult GetCategoryByKeyword(string store, [FromUri] string keyword, string language = "en-us")
+		public IHttpActionResult GetCategoryByKeyword(string store, [FromUri] string keyword, string language = "en-us")
 		{
-			var cacheKey = CacheKey.Create("MP", "GetCategoryByKeyword", store, keyword, language);
-			var retVal = _cacheManager.Get(cacheKey, () =>
+
+			var catalog = _storeService.GetById(store).Catalog;
+			var searchCriteria = new SearchCriteria
+			{
+				ResponseGroup = ResponseGroup.WithCategories,
+				SeoKeyword = keyword,
+				CatalogId = catalog
+			};
+
+			var result = _searchService.Search(searchCriteria);
+			if (result.Categories != null && result.Categories.Any())
+			{
+				var category = _categoryService.GetById(result.Categories.First().Id);
+				if (category != null)
 				{
-
-					var catalog = _storeService.GetById(store).Catalog;
-					var searchCriteria = new SearchCriteria
-					{
-						ResponseGroup = ResponseGroup.WithCategories,
-						SeoKeyword = keyword,
-						CatalogId = catalog
-					};
-
-					var result = _searchService.Search(searchCriteria);
-					if (result.Categories != null && result.Categories.Any())
-					{
-						return _categoryService.GetById(result.Categories.First().Id);
-					}
-					return null;
-				});
-
-			if (retVal != null)
-				return Ok(retVal.ToWebModel());
+					return Ok(category.ToWebModel());
+				}
+			}
 			return NotFound();
 		}
 
