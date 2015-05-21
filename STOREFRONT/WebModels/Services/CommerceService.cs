@@ -386,12 +386,19 @@ namespace VirtoCommerce.Web.Models.Services
                         }
                     }
 
-                    checkout.PaymentMethods = new List<PaymentMethod>
+                    var dtoPaymentMethods = await _cartClient.GetCartPaymentMethods(dtoCart.Id);
+                    if (dtoPaymentMethods != null)
                     {
-                        new PaymentMethod { Handle = "Klarna" },
-                        new PaymentMethod { Handle = "MeS" },
-                        new PaymentMethod { Handle = "PayPal" }
-                    };
+                        checkout.PaymentMethods = new List<PaymentMethod>();
+
+                        foreach (var dtoPaymentMethod in dtoPaymentMethods)
+                        {
+                            checkout.PaymentMethods.Add(new PaymentMethod
+                            {
+                                Handle = dtoPaymentMethod.Name
+                            });
+                        }
+                    }
 
                     checkout.RequiresShipping = true; // TODO
 
