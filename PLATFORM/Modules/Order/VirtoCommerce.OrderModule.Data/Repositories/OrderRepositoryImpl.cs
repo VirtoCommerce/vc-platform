@@ -30,6 +30,22 @@ namespace VirtoCommerce.OrderModule.Data.Repositories
 		{
 			modelBuilder.Conventions.Remove<PluralizingTableNameConvention>();
 
+			#region Operation
+			modelBuilder.Entity<OperationEntity>().HasKey(x => x.Id)
+				.Property(x => x.Id);
+			modelBuilder.Entity<OperationEntity>().ToTable("OrderOperation");
+			#endregion
+
+			#region OperationProperty
+			modelBuilder.Entity<OperationPropertyEntity>().HasKey(x => x.Id)
+					.Property(x => x.Id);
+
+			modelBuilder.Entity<OperationPropertyEntity>().HasRequired(x => x.Operation)
+									   .WithMany(x => x.Properties)
+									   .HasForeignKey(x => x.OperationId);
+			modelBuilder.Entity<OperationPropertyEntity>().ToTable("OrderOperationProperty"); 
+			#endregion
+		
 			#region CustomerOrder
 			modelBuilder.Entity<CustomerOrderEntity>().HasKey(x => x.Id)
 					.Property(x => x.Id);

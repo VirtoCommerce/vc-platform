@@ -69,6 +69,8 @@
         </group>
     </settings>
     <permissions>
-        <permission id="mailing:manage" name="Manage mailing settings" description="Permission to manage mass mailing to customers."/>
+        <group name="Mailing">
+            <permission id="mailing:manage" name="Manage mailing settings" description="Permission to manage mass mailing to customers."/>
+        </group>
     </permissions>
 </module>

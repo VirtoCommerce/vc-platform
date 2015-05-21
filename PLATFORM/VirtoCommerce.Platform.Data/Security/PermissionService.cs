@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using VirtoCommerce.Platform.Core.Caching;
@@ -64,10 +65,25 @@ namespace VirtoCommerce.Platform.Data.Security
 
         private Permission[] LoadAllPermissions()
         {
-            var manifestPermissions = _manifestProvider.GetModuleManifests().Values
-                .Where(m => m.Permissions != null)
-                .SelectMany(m => m.Permissions.Select(p => p.ToCoreModel(m.Id)))
-                .ToArray();
+            var manifestPermissions = new List<Permission>();
+
+            var manifestsWithPermissions = _manifestProvider.GetModuleManifests().Values
+                .Where(m => m.Permissions != null);
+
+            foreach (var module in manifestsWithPermissions)
+            {
+                foreach (var group in module.Permissions)
+                {
+                    if (group.Permissions != null)
+                    {
+                        foreach (var modulePermission in group.Permissions)
+                        {
+                            var permission = modulePermission.ToCoreModel(module.Id, group.Name);
+                            manifestPermissions.Add(permission);
+                        }
+                    }
+                }
+            }
 
             var allPermissions = PredefinedPermissions.Permissions.Union(manifestPermissions).ToArray();
             return allPermissions;

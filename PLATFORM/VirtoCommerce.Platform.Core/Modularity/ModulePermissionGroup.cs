@@ -2,12 +2,12 @@
 
 namespace VirtoCommerce.Platform.Core.Modularity
 {
-    public class ModuleSettingsGroup
+    public class ModulePermissionGroup
     {
         [XmlAttribute("name")]
         public string Name { get; set; }
 
-        [XmlElement("setting")]
-        public ModuleSetting[] Settings { get; set; }
+        [XmlElement("permission")]
+        public ModulePermission[] Permissions { get; set; }
     }
 }

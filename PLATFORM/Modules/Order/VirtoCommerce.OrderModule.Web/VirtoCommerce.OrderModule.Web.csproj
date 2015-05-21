@@ -106,6 +106,7 @@
     <Compile Include="Converters\DiscountConverter.cs" />
     <Compile Include="Converters\InPaymentConverter.cs" />
     <Compile Include="Converters\OperationConverter.cs" />
+    <Compile Include="Converters\OperationPropertyConverter.cs" />
     <Compile Include="Converters\SearchCriteriaConverter.cs" />
     <Compile Include="Converters\SearchResultConverter.cs" />
     <Compile Include="Converters\ShipmentConverter.cs" />
@@ -119,6 +120,7 @@
     <Compile Include="Model\SearchResult.cs" />
     <Compile Include="Model\Shipment.cs" />
     <Compile Include="Model\Operation.cs" />
+    <Compile Include="Model\OperationProperty.cs" />
     <Compile Include="Module.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Content Include="Scripts\blades\operation-comment.js" />

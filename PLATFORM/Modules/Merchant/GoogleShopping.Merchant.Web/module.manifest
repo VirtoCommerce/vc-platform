@@ -57,6 +57,8 @@
         </group>
     </settings>
     <permissions>
-        <permission id="googleShopping:manage" name="Manage Google Shopping" description="Permission to manage Google Shopping Merchant."/>
+        <group name="Google Shopping">
+            <permission id="googleShopping:manage" name="Manage Google Shopping" description="Permission to manage Google Shopping Merchant."/>
+        </group>
     </permissions>
 </module>

@@ -28,6 +28,7 @@ namespace VirtoCommerce.Domain.Order.Model
 		public decimal Sum { get; set; }
 		public decimal Tax { get; set; }
 
+		public ICollection<OperationProperty> Properties { get; set; }
 		public abstract IEnumerable<Operation> ChildrenOperations
 		{
 			get;

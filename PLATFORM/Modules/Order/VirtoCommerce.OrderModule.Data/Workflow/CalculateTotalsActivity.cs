@@ -4,10 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using VirtoCommerce.Domain.Order.Model;
+using VirtoCommerce.Domain.Order.Workflow;
 
 namespace VirtoCommerce.OrderModule.Data.Workflow
 {
-	public class CalculateTotalsActivity : IObserver<CustomerOrderStateBasedEvalContext>
+	public class CalculateTotalsActivity : IObserver<OrderStateBasedEvalContext>
 	{
 		#region IObserver<CustomerOrder> Members
 
@@ -19,13 +20,13 @@ namespace VirtoCommerce.OrderModule.Data.Workflow
 		{
 		}
 
-		public void OnNext(CustomerOrderStateBasedEvalContext value)
+		public void OnNext(OrderStateBasedEvalContext value)
 		{
 			CalculateCustomerOrderTotals(value);
 		}
 
 		#endregion
-		private static void CalculateCustomerOrderTotals(CustomerOrderStateBasedEvalContext context)
+		private static void CalculateCustomerOrderTotals(OrderStateBasedEvalContext context)
 		{
 			var order = context.ModifiedOrder;
 

@@ -63,6 +63,8 @@
         </group>
     </settings>
     <permissions>
-        <permission id="helpdeskModule:manage" name="Manage Zendesk helpdesk" description="Permission to manage Zendesk functionality."/>
+        <group name="Helpdesk">
+            <permission id="helpdeskModule:manage" name="Manage Zendesk helpdesk" description="Permission to manage Zendesk functionality."/>
+        </group>
     </permissions>
 </module>

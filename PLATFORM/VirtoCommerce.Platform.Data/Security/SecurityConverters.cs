@@ -74,7 +74,7 @@ namespace VirtoCommerce.Platform.Data.Security
             return result;
         }
 
-        public static Permission ToCoreModel(this ModulePermission source, string moduleId)
+        public static Permission ToCoreModel(this ModulePermission source, string moduleId, string groupName)
         {
             return new Permission
             {
@@ -82,6 +82,7 @@ namespace VirtoCommerce.Platform.Data.Security
                 Name = source.Name,
                 Description = source.Description,
                 ModuleId = moduleId,
+                GroupName = groupName,
             };
         }
 
@@ -96,7 +97,7 @@ namespace VirtoCommerce.Platform.Data.Security
             if (!source.RolePermissions.IsNullCollection())
             {
                 var comparer = AnonymousComparer.Create((RolePermissionEntity rp) => rp.PermissionId);
-				source.RolePermissions.Patch(target.RolePermissions, comparer, (sourceItem, targetItem) => { return; });
+                source.RolePermissions.Patch(target.RolePermissions, comparer, (sourceItem, targetItem) => { });
             }
         }
 

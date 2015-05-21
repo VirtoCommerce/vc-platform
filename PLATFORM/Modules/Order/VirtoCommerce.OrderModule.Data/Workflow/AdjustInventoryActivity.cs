@@ -7,11 +7,12 @@ using System.Threading.Tasks;
 using VirtoCommerce.Domain.Inventory.Model;
 using VirtoCommerce.Domain.Inventory.Services;
 using VirtoCommerce.Domain.Order.Model;
+using VirtoCommerce.Domain.Order.Workflow;
 using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.OrderModule.Data.Workflow
 {
-	public class AdjustInventoryActivity : IObserver<CustomerOrderStateBasedEvalContext>
+	public class AdjustInventoryActivity : IObserver<OrderStateBasedEvalContext>
 	{
 		private readonly IInventoryService _inventoryService;
 		public AdjustInventoryActivity(IInventoryService inventoryService)
@@ -28,7 +29,7 @@ namespace VirtoCommerce.OrderModule.Data.Workflow
 		{
 		}
 
-		public void OnNext(CustomerOrderStateBasedEvalContext value)
+		public void OnNext(OrderStateBasedEvalContext value)
 		{
 			var origStockOutOperations = new IStockOutOperation[] { };
 			var modifiedStockOutOperations = new IStockOutOperation[] { };

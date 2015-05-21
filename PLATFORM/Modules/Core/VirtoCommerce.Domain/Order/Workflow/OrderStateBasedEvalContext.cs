@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 using VirtoCommerce.Domain.Order.Model;
 using VirtoCommerce.Platform.Core.Common;
 
-namespace VirtoCommerce.OrderModule.Data.Workflow
+namespace VirtoCommerce.Domain.Order.Workflow
 {
-	public class CustomerOrderStateBasedEvalContext
+	public class OrderStateBasedEvalContext
 	{
-		public CustomerOrderStateBasedEvalContext(EntryState state, CustomerOrder origOrder, CustomerOrder modifiedOrder)
+		public OrderStateBasedEvalContext(EntryState state, CustomerOrder origOrder, CustomerOrder modifiedOrder)
 		{
 			ChangeState = state;
 			OrigOrder = origOrder;
