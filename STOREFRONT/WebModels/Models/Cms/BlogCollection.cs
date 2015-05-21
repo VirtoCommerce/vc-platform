@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace VirtoCommerce.Web.Models.Cms
 {
@@ -12,6 +13,11 @@ namespace VirtoCommerce.Web.Models.Cms
         public override int TotalCount
         {
             get { return this.Size; }
+        }
+
+        public override object BeforeMethod(string method)
+        {
+            return this.Root.SingleOrDefault(x => x.Handle == method);
         }
     }
 
