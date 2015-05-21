@@ -97,7 +97,8 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         public IHttpActionResult GetPermissions()
         {
             var result = _permissionService.GetAllPermissions()
-                .OrderBy(p => p.Name)
+                .OrderBy(p => p.GroupName)
+                .ThenBy(p => p.Name)
                 .ToArray();
 
             return Ok(result);

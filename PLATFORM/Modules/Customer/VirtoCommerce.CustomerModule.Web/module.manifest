@@ -30,7 +30,9 @@
         <directory virtualPath="$/Scripts" searchPattern="*.js" searchSubdirectories="true" />
     </scripts>
     <permissions>
-        <permission id="customer:query" name="Browse customers" description="Permission to open customers menu and browse data."/>
-        <permission id="customer:manage" name="Manage customers" description="Permission to manage customers information."/>
+        <group name="Customers">
+            <permission id="customer:query" name="Browse customers" description="Permission to open customers menu and browse data."/>
+            <permission id="customer:manage" name="Manage customers" description="Permission to manage customers information."/>
+        </group>
     </permissions>
 </module>

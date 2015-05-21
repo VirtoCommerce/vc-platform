@@ -21,52 +21,58 @@
                     Id = ModuleQuery,
                     Name = "Browse modules",
                     Description = "Permission to open modules menu and browse data.",
-                    ModuleId = "VirtoCommerce.Platform"
+                    ModuleId = "VirtoCommerce.Platform",
+                    GroupName = "Modules"
                 },
                 new Permission
                 {
                     Id = ModuleManage,
                     Name = "Manage modules",
                     Description = "Permission to manage modules.",
-                    ModuleId = "VirtoCommerce.Platform"
+                    ModuleId = "VirtoCommerce.Platform",
+                    GroupName = "Modules"
                 },
                 new Permission
                 {
                     Id = SettingManage,
                     Name = "Manage settings",
                     Description = "Permission to manage settings.",
-                    ModuleId = "VirtoCommerce.Platform"
+                    ModuleId = "VirtoCommerce.Platform",
+                    GroupName = "Settings"
                 },
                 new Permission
                 {
                     Id = SecurityQuery,
                     Name = "Browse security data",
                     Description = "Permission to open security menu and view roles and users data.",
-                    ModuleId = "VirtoCommerce.Platform"
+                    ModuleId = "VirtoCommerce.Platform",
+                    GroupName = "Security"
                 },
                 new Permission
                 {
                     Id = SecurityManage,
                     Name = "Manage security data",
                     Description = "Permission to open manage roles and users.",
-                    ModuleId = "VirtoCommerce.Platform"
+                    ModuleId = "VirtoCommerce.Platform",
+                    GroupName = "Security"
                 },
                 new Permission
                 {
                     Id = SecurityCallApi,
-                    Name = "Call API methods",
+                    Name = "Call Web API methods",
                     Description = "Allows to make calls to Web API methods.",
-                    ModuleId = "VirtoCommerce.Platform"
+                    ModuleId = "VirtoCommerce.Platform",
+                    GroupName = "Web API"
                 },
                 new Permission
                 {
                     Id = BackgroundJobsManage,
                     Name = "Manage background jobs",
                     Description = "Allows to view and manage background jobs.",
-                    ModuleId = "VirtoCommerce.Platform"
+                    ModuleId = "VirtoCommerce.Platform",
+                    GroupName = "Background Jobs"
                 }
             };
-
         }
     }
 }

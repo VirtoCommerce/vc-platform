@@ -162,6 +162,7 @@
     <Compile Include="Modularity\ModuleManifest.cs" />
     <Compile Include="Modularity\ModuleManifestProvider.cs" />
     <Compile Include="Modularity\ModulePermission.cs" />
+    <Compile Include="Modularity\ModulePermissionGroup.cs" />
     <Compile Include="Modularity\ModuleSetting.cs" />
     <Compile Include="Modularity\ModuleSettingsGroup.cs" />
     <Compile Include="Modularity\ModuleState.cs" />

@@ -267,25 +267,36 @@ namespace VirtoCommerce.Web
 
             if (String.IsNullOrEmpty(currency))
             {
-                currency = String.Empty;
-
-                // try getting store from the cookie
-                if (String.IsNullOrEmpty(currency))
-                {
-                    currency = context.Request.Cookies[CurrencyCookie];
-                }
-
-                // try getting default store from settings
-                if (String.IsNullOrEmpty(currency))
-                {
-                    currency = store.Currency;
-                }
+                currency = context.Request.Cookies[CurrencyCookie];
             }
-            //if currency is invalid use dafault
-            else if (!store.Currencies.Any(c => c.Equals(currency, StringComparison.OrdinalIgnoreCase)))
+
+            if (String.IsNullOrEmpty(currency) ||
+                !String.IsNullOrEmpty(currency) && !store.Currencies.Any(c => c.Equals(currency, StringComparison.OrdinalIgnoreCase)))
             {
                 currency = store.Currency;
             }
+
+            //if (String.IsNullOrEmpty(currency))
+            //{
+            //    currency = String.Empty;
+
+            //    // try getting store from the cookie
+            //    if (String.IsNullOrEmpty(currency))
+            //    {
+            //        currency = context.Request.Cookies[CurrencyCookie];
+            //    }
+
+            //    // try getting default store from settings
+            //    if (String.IsNullOrEmpty(currency))
+            //    {
+            //        currency = store.Currency;
+            //    }
+            //}
+            ////if currency is invalid use dafault
+            //else if (!store.Currencies.Any(c => c.Equals(currency, StringComparison.OrdinalIgnoreCase)))
+            //{
+            //    currency = store.Currency;
+            //}
 
             return currency;
         }

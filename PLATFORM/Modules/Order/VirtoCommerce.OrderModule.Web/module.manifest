@@ -78,7 +78,9 @@
         </group>
     </settings>
     <permissions>
-        <permission id="order:query" name="Browse orders" description="Permission to open orders menu and browse data."/>
-        <permission id="order:manage" name="Manage orders" description="Permission to manage orders."/>
+        <group name="Order">
+            <permission id="order:query" name="Browse orders" description="Permission to open orders menu and browse data."/>
+            <permission id="order:manage" name="Manage orders" description="Permission to manage orders."/>
+        </group>
     </permissions>
 </module>
