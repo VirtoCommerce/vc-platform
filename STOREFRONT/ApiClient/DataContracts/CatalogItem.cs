@@ -61,6 +61,10 @@ namespace VirtoCommerce.ApiClient.DataContracts
 
         public DateTime? EndDate { get; set; }
 
+        public int? MaxQuantity { get; set; }
+
+        public int? MinQuantity { get; set; }
+
         #endregion
 
         #region Public Indexers

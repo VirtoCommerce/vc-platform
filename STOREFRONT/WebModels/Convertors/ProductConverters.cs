@@ -134,7 +134,7 @@ namespace VirtoCommerce.Web.Convertors
             variantModel.Id = variation.Code;
             variantModel.Image = variationImage != null ? variationImage.AsWebModel(variation.Name, variation.MainProductId) : null;
 
-            PoopulateInventory(ref variantModel, inventory);
+            PopulateInventory(ref variantModel, variation, inventory);
             variantModel.Option1 = options.Length >= 1 ? variation.Properties[options[0]] as string : null;
             variantModel.Option2 = options.Length >= 2 ? variation.Properties[options[1]] as string : null;
             variantModel.Option3 = options.Length >= 3 ? variation.Properties[options[2]] as string : null;
@@ -156,20 +156,34 @@ namespace VirtoCommerce.Web.Convertors
             return variantModel;
         }
 
-        private static void PoopulateInventory(ref Variant variant, Data.InventoryInfo inventory)
+        private static void PopulateInventory(ref Variant variant, Data.CatalogItem item, Data.InventoryInfo inventory)
         {
-            variant.InventoryPolicy = "continue";
-
-            if (inventory != null)
+            if (item.IsBuyable.HasValue && item.IsBuyable.Value &&
+                item.StartDate < DateTime.UtcNow &&
+                (!item.EndDate.HasValue || item.EndDate.Value > DateTime.UtcNow))
             {
-                if (inventory.Status == Data.InventoryStatus.Enabled)
+                if (item.TrackInventory.HasValue && item.TrackInventory.Value)
                 {
-                    variant.InventoryPolicy = "deny";
-                }
-                variant.InventoryManagement = inventory.FulfillmentCenterId;
-                variant.InventoryQuantity = inventory.InStockQuantity;
-            }
+                    if (inventory != null && inventory.Status == Data.InventoryStatus.Enabled)
+                    {
+                        variant.InventoryManagement = inventory.FulfillmentCenterId;
+                        variant.InventoryPolicy = "deny";
+                        variant.InventoryQuantity = inventory.InStockQuantity - inventory.ReservedQuantity;
 
+                        if (inventory.AllowBackorder && inventory.BackorderAvailabilityDate.HasValue &&
+                            inventory.BackorderAvailabilityDate.Value > DateTime.UtcNow)
+                        {
+                            variant.InventoryPolicy = "continue";
+                        }
+
+                        if (inventory.AllowPreorder && inventory.PreorderAvailabilityDate.HasValue &&
+                            inventory.PreorderAvailabilityDate.Value > DateTime.UtcNow)
+                        {
+                            variant.InventoryPolicy = "continue";
+                        }
+                    }
+                }
+            }
         }
 
         public static Variant AsVariantWebModel(this Data.Product product, Data.Price price, string[] options, IEnumerable<Data.Marketing.PromotionReward> rewards,
@@ -192,7 +206,7 @@ namespace VirtoCommerce.Web.Convertors
             variantModel.Id = product.Code;
             variantModel.Image = variationImage != null ? variationImage.AsWebModel(product.Name, product.Id) : null;
             
-            PoopulateInventory(ref variantModel, inventory);
+            PopulateInventory(ref variantModel, product, inventory);
 
             variantModel.Option1 = options.Length >= 1 ? product.Properties[options[0]] as string : null;
             variantModel.Option2 = options.Length >= 2 ? product.Properties[options[1]] as string : null;
