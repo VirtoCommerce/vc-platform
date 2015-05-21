@@ -2,7 +2,6 @@
 using System.Web.Http.Description;
 using VirtoCommerce.Domain.Order.Model;
 using VirtoCommerce.Domain.Order.Services;
-using ZendeskApi_v2.Models.Tickets;
 
 namespace Zendesk.HelpdeskModule.Web.Controllers.Api
 {

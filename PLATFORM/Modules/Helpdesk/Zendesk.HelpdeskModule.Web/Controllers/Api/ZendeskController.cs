@@ -61,17 +61,21 @@ namespace Zendesk.HelpdeskModule.Web.Controllers.Api
         [Route("tickets/{status}/{email}")]
         public IHttpActionResult GetNewTickets(string status, string email)
         {
-            var users = _api.Users.SearchByEmail(email);
-            if (users.Users != null && users.Users.Any())
+            if (_api != null)
             {
-                var user = users.Users[0];
-                if (user.Id.HasValue)
+                var users = _api.Users.SearchByEmail(email);
+                if (users.Users != null && users.Users.Any())
                 {
-                    var tickets = _api.Tickets.GetTicketsByUserID(user.Id.Value).Tickets;
-                    return string.IsNullOrEmpty(status) ? Ok(tickets.ToArray()) : Ok(tickets.Where(t => t.Status == status).ToArray());
+                    var user = users.Users[0];
+                    if (user.Id.HasValue)
+                    {
+                        var tickets = _api.Tickets.GetTicketsByUserID(user.Id.Value).Tickets;
+                        return string.IsNullOrEmpty(status)
+                            ? Ok(tickets.ToArray())
+                            : Ok(tickets.Where(t => t.Status == status).ToArray());
+                    }
                 }
             }
-
             return Ok();
         }
 
