@@ -53,5 +53,16 @@ namespace MeS.PaymentGatewaysModule.Web.Managers
 		{
 			return paymentInfo;
 		}
+
+
+		public PaymentGatewayType GatewayType
+		{
+			get { throw new NotImplementedException(); }
+		}
+
+		public PaymentInfo GetPayment(string paymentId, string orderId)
+		{
+			throw new NotImplementedException();
+		}
 	}
 }

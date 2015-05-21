@@ -78,6 +78,20 @@
 		return blade.currentEntity.content;
 	}
 
+	blade.isImage = function () {
+		if (!angular.isUndefined(blade.currentEntity)) {
+			if (blade.currentEntity.contentType === 'image/png' ||
+				blade.currentEntity.contentType === 'image/bmp' ||
+				blade.currentEntity.contentType === 'image/gif' ||
+				blade.currentEntity.contentType === 'image/jpeg') {
+
+				return true;
+			}
+		}
+
+		return false;
+	}
+
 	blade.saveChanges = function() {
 		blade.isLoading = true;
 		blade.currentEntity.id = blade.choosenFolder + '/' + blade.currentEntity.name;

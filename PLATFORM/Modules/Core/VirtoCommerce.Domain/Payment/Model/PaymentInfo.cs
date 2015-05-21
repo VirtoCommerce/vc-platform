@@ -17,5 +17,6 @@ namespace VirtoCommerce.Domain.Payment.Model
 		public CurrencyCodes Currency { get; set; }
 		public decimal Amount { get; set; }
 		public string Error { get; set; }
+		public string OrderId { get; set; }
 	}
 }

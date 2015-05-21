@@ -182,6 +182,8 @@
     <Compile Include="Order\Services\ICustomerOrderSearchService.cs" />
     <Compile Include="Order\Services\IPaymentService.cs" />
     <Compile Include="Order\Services\IShipmentService.cs" />
+    <Compile Include="Payment\Model\DirectRedirectUrlPaymentInfo.cs" />
+    <Compile Include="Payment\Model\PaymentGatewayType.cs" />
     <Compile Include="Payment\Model\PaymentInfo.cs" />
     <Compile Include="Payment\Services\InMemoryPaymentGatewayManagerImpl.cs" />
     <Compile Include="Payment\Services\IPaymentGateway.cs" />

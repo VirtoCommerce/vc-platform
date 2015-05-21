@@ -177,5 +177,16 @@ namespace Klarna.PaymentGatewaysModule.Web.Managers
 
 			return klarnaPaymentInfo;
 		}
+
+
+		public PaymentGatewayType GatewayType
+		{
+			get { throw new NotImplementedException(); }
+		}
+
+		public PaymentInfo GetPayment(string paymentId, string orderId)
+		{
+			throw new NotImplementedException();
+		}
 	}
 }

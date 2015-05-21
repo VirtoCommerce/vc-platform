@@ -58,7 +58,7 @@ namespace VirtoCommerce.OrderModule.Test
 
 			var mockPaymentManager = new Mock<IPaymentGatewayManager>();
 			var gateway = mockPaymentManager.Object.PaymentGateways.FirstOrDefault(x => x.GatewayCode == payment.GatewayCode);
-			var externalPaymentInfo = gateway.GetPaymentById(payment.OuterId);
+			var externalPaymentInfo = gateway.GetPayment(payment.OuterId, testOrder.Id);
 
 			payment.IsApproved = externalPaymentInfo.IsApproved;
 
