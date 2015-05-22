@@ -1,5 +1,6 @@
 ﻿#region
 
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
@@ -27,15 +28,16 @@ namespace VirtoCommerce.Web.Controllers
             return View("blog");
         }
 
-        [Route("{blog}/{article}")]
-        public async Task<ActionResult> DisplayBlogArticleAsync(string blog, string article)
+        [Route("{blog}/{handle}")]
+        public async Task<ActionResult> DisplayBlogArticleAsync(string blog, string handle)
         {
             var context = SiteContext.Current;
             var blogModel = context.Blogs[blog] as Blog;
             if (blogModel == null)
                 throw new HttpException(404, "NotFound");
 
-            var articleModel = blogModel.Articles.First(); //.SingleOrDefault(x => x.Handle.Equals(article));
+            var searchHandle = String.Format("{0}/{1}", blog, handle);
+            var articleModel = blogModel.Articles.SingleOrDefault(x => x.Handle.Equals(searchHandle));
             Context.Set("blog", blogModel);
             Context.Set("article", articleModel);
 

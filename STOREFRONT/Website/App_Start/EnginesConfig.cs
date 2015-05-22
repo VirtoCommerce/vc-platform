@@ -23,6 +23,7 @@ namespace VirtoCommerce.Web
         #region Public Methods and Operators
         public static void RegisterEngines(ViewEngineCollection engines)
         {
+            Liquid.UseRubyDateFormat = true;
             Template.RegisterTag<Form>("form");
 
             var filters = new[] { typeof(ModelFilters), typeof(TranslationFilter) };

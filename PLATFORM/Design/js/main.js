@@ -24,8 +24,19 @@ $(function () {
         WebAdmin.HorizontalScrollForBlades('off');
     });
 
-    $('.__items .list-item, .table .table-item').on('click', function () {
+    $('.table .table-item').on('click', function () {
         $(this).addClass('__selected').siblings().removeClass('__selected');
+    });
+
+    $('.list-group').on('click', function () {
+        var self = $(this);
+
+        if(self.next().is(':hidden')) {
+            self.addClass('__opened');
+        }
+        else {
+            self.removeClass('__opened');
+        }
     });
 
     $('.__images-list .tile').on('click', function () {

@@ -5,10 +5,6 @@ using System.Collections.Generic;
 
 namespace VirtoCommerce.Web.Views.Contents
 {
-
-    #region
-    #endregion
-
     internal class RawContentItem
     {
         #region Public Properties

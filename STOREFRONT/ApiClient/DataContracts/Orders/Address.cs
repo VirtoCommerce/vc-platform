@@ -32,6 +32,8 @@
 
         public string Zip { get; set; }
 
+        public AddressType AddressType { get; set; }
+
         #endregion
     }
 }

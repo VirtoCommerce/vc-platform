@@ -173,12 +173,12 @@ namespace VirtoCommerce.Web.Views.Contents
         }
 
         /// <summary>
-        ///     Loads all content items in the certain collection
+        /// Loads all content items in the certain collection
         /// </summary>
         /// <param name="context"></param>
         /// <param name="collectionFolder"></param>
         /// <returns></returns>
-        private ContentItem[] GetCollectionContentItemsInternal(
+        private IEnumerable<ContentItem> GetCollectionContentItemsInternal(
             SiteStaticContentContext context,
             string collectionFolder)
         {
@@ -190,7 +190,8 @@ namespace VirtoCommerce.Web.Views.Contents
                         .Select(file => this.CreateContentItem(context, file, this._Config))
                         .Where(post => post != null));
             }
-            return items.ToArray();
+
+            return items;
         }
 
         private string GetPageTitle(string file)

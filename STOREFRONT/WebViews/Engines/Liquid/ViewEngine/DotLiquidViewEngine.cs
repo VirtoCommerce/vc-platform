@@ -12,6 +12,7 @@ namespace VirtoCommerce.Web.Views.Engines.Liquid.ViewEngine
         private readonly IFileSystemFactory _fileSystem;
         public DotLiquidViewEngine(IFileSystemFactory fileSystem, IViewLocator viewLocator, IEnumerable<Type> filters)
         {
+            DotLiquid.Liquid.UseRubyDateFormat = true;
             _viewLocator = viewLocator;
             this._fileSystem = fileSystem;
             // Register custom tags (Only need to do this once)
@@ -26,7 +27,6 @@ namespace VirtoCommerce.Web.Views.Engines.Liquid.ViewEngine
             Template.RegisterTag<Paginate>("paginate");
             Template.RegisterTag<CurrentPage>("current_page");
             Template.RegisterTag<Layout>("layout");
-            DotLiquid.Liquid.UseRubyDateFormat = true;
         }
 
         public IEnumerable<string> Extensions

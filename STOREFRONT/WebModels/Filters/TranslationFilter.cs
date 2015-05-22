@@ -17,7 +17,7 @@ namespace VirtoCommerce.Web.Models.Filters
     public class TranslationFilter
     {
         #region Public Methods and Operators
-        public static string t(string input, params object[] variables)
+        public static string T(string input, params object[] variables)
         {
             var service = new CommerceService();
             var context = SiteContext.Current;
