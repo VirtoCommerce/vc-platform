@@ -26,7 +26,6 @@ namespace PayPal.PaymentGatewaysModule.Web.Managers
 
 		private ICustomerOrderService _customerOrderService;
 		private IStoreService _storeService;
-		private ISettingsManager _settingsManager;
 
 		private static string PaypalAPIModeStoreSetting = "Paypal.Mode";
 		private static string PaypalAPIUserNameStoreSetting = "Paypal.APIUsername";
@@ -46,8 +45,7 @@ namespace PayPal.PaymentGatewaysModule.Web.Managers
 			string logoUrl,
 			PaymentGatewayType gatewayType,
 			ICustomerOrderService customerOrderService,
-			IStoreService storeService,
-			ISettingsManager settingsManager)
+			IStoreService storeService)
 		{
 			if (string.IsNullOrEmpty(gatewayCode))
 				throw new ArgumentNullException("gatewayCode");
@@ -64,9 +62,6 @@ namespace PayPal.PaymentGatewaysModule.Web.Managers
 			if (storeService == null)
 				throw new ArgumentNullException("storeService");
 
-			if (settingsManager == null)
-				throw new ArgumentNullException("settingsManager");
-
 			_gatewayCode = gatewayCode;
 			_description = description;
 			_logoUrl = logoUrl;
@@ -74,7 +69,6 @@ namespace PayPal.PaymentGatewaysModule.Web.Managers
 
 			_customerOrderService = customerOrderService;
 			_storeService = storeService;
-			_settingsManager = settingsManager;
 		}
 
 		public string GatewayCode
@@ -236,8 +230,8 @@ namespace PayPal.PaymentGatewaysModule.Web.Managers
 			var ecDetails = new SetExpressCheckoutRequestDetailsType
 			{
 				CallbackTimeout = "3",
-				ReturnURL = string.Format("{0}/admin/api/paymentgateway/paypal/push?cancel=false&orderId={1}", store.Url, order.Id),
-				CancelURL = string.Format("{0}/admin/api/paymentgateway/paypal/push?cancel=true&orderId={1}", store.Url, order.Id),
+				ReturnURL = string.Format("{0}/admin/api/paymentgateway/paypal/push?cancel=false&orderId={1}&redirectUrl={2}", store.Url, order.Id, HttpUtility.UrlEncode(store.Url)),
+				CancelURL = string.Format("{0}/admin/api/paymentgateway/paypal/push?cancel=true&orderId={1}&redirectUrl={2}", store.Url, order.Id, HttpUtility.UrlEncode(store.Url)),
 				SolutionType = SolutionTypeType.MARK
 			};
 
@@ -254,7 +248,6 @@ namespace PayPal.PaymentGatewaysModule.Web.Managers
 				ecDetails.BuyerEmail = billingAddress.Email;
 
 			ecDetails.PaymentDetails.Add(GetPaypalPaymentDetail(currency, PaymentActionCodeType.SALE, payment));
-			ecDetails.InvoiceID = order.Id;
 
 			request.SetExpressCheckoutRequestDetails = ecDetails;
 
