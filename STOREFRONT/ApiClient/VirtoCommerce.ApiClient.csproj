@@ -84,6 +84,7 @@
     <Compile Include="DataContracts\Marketing\Promotion.cs" />
     <Compile Include="DataContracts\Marketing\PromotionEvaluationContext.cs" />
     <Compile Include="DataContracts\Marketing\PromotionReward.cs" />
+    <Compile Include="DataContracts\Orders\AddressType.cs" />
     <Compile Include="DataContracts\Pages\Page.cs" />
     <Compile Include="DataContracts\Price.cs" />
     <Compile Include="DataContracts\Security\IdentityResult.cs" />

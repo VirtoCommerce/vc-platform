@@ -272,6 +272,11 @@ namespace VirtoCommerce.Web.Models.Filters
                 var newFormat = TranslationFilter.T(loc);
                 if (newFormat != loc)
                     format = newFormat;
+
+                if (format == "long")
+                {
+                    format = "%d %b %Y %X";
+                }
             }
 
             return StandardFilters.Date(input, format);

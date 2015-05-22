@@ -15,15 +15,22 @@ namespace VirtoCommerce.Web.Convertors
         {
             var ret = new CustomerOrder { Id = customerOrder.Id };
 
-            var inPayment = customerOrder.InPayments.FirstOrDefault();
-
-            if (inPayment != null && inPayment.Addresses != null)
+            if (customerOrder.Addresses != null)
             {
-                var inPaymentAddress = inPayment.Addresses.FirstOrDefault();
+                var billingAddress = customerOrder.Addresses.FirstOrDefault(a =>
+                    a.AddressType == Data.Orders.AddressType.Billing);
 
-                if (inPaymentAddress != null)
+                if (billingAddress != null)
                 {
-                    ret.BillingAddress = inPaymentAddress.AsWebModel();
+                    ret.BillingAddress = billingAddress.AsWebModel();
+                }
+
+                var shippingAddress = customerOrder.Addresses.FirstOrDefault(a =>
+                    a.AddressType == Data.Orders.AddressType.Shipping);
+
+                if (shippingAddress != null)
+                {
+                    ret.ShippingAddress = shippingAddress.AsWebModel();
                 }
             }
 
@@ -59,13 +66,6 @@ namespace VirtoCommerce.Web.Convertors
 
             if (customerOrder.Shipments != null)
             {
-                var latestShipment = customerOrder.Shipments.OrderByDescending(s => s.CreatedDate).FirstOrDefault();
-
-                if (latestShipment != null && latestShipment.Addresses != null)
-                {
-                    ret.ShippingAddress = latestShipment.Addresses.LastOrDefault().AsWebModel();
-                }
-
                 foreach (var shipment in customerOrder.Shipments)
                 {
                     ret.ShippingMethods.Add(shipment.AsWebModel());
@@ -120,7 +120,12 @@ namespace VirtoCommerce.Web.Convertors
 
         public static ShippingMethod AsWebModel(this Data.Orders.Shipment shipment)
         {
-            var ret = new ShippingMethod { Price = shipment.Sum, Title = shipment.FulfilmentCenterId, Handle = null };
+            var ret = new ShippingMethod
+            {
+                Price = shipment.Sum,
+                Title = shipment.ShipmentMethodCode,
+                Handle = shipment.ShipmentMethodCode
+            };
 
             return ret;
         }
