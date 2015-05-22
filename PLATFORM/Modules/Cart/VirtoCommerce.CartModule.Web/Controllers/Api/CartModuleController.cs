@@ -4,10 +4,10 @@ using System.Net;
 using System.Web.Http;
 using System.Web.Http.Description;
 using System.Web.Http.ModelBinding;
-
 using VirtoCommerce.CartModule.Web.Binders;
 using VirtoCommerce.CartModule.Web.Converters;
 using VirtoCommerce.Domain.Cart.Services;
+using VirtoCommerce.Domain.Payment.Services;
 using VirtoCommerce.Platform.Core.Security;
 
 namespace VirtoCommerce.CartModule.Web.Controllers.Api
@@ -18,10 +18,13 @@ namespace VirtoCommerce.CartModule.Web.Controllers.Api
 	{
 		private readonly IShoppingCartService _shoppingCartService;
 		private readonly IShoppingCartSearchService _searchService;
-		public CartModuleController(IShoppingCartService cartService, IShoppingCartSearchService searchService)
+		private readonly IPaymentGatewayManager _paymentGatewayManager;
+
+		public CartModuleController(IShoppingCartService cartService, IShoppingCartSearchService searchService, IPaymentGatewayManager paymentGatewayManager)
 		{
 			this._shoppingCartService = cartService;
 			this._searchService = searchService;
+			_paymentGatewayManager = paymentGatewayManager;
 		}
 
 		// GET: api/cart/store1/customer2/carts/current
@@ -126,13 +129,16 @@ namespace VirtoCommerce.CartModule.Web.Controllers.Api
 		public IHttpActionResult GetPaymentMethods(string cartId)
 		{
 			var cart = _shoppingCartService.GetById(cartId);
-			var retVal = new[] 
-			{
-				 new CatalogModule.Web.Model.PaymentMethod {
-					GatewayCode = "PayPal",
-					Name = "PayPal"
-				 }
-			};
+
+			var retVal = _paymentGatewayManager
+				.PaymentGateways
+				.Select(p => new CatalogModule.Web.Model.PaymentMethod
+							{
+								GatewayCode = p.GatewayCode,
+								Name = p.GatewayCode,
+								IconUrl = p.LogoUrl
+							})
+				.ToArray();
 
 			return this.Ok(retVal);
 		}

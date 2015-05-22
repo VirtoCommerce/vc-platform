@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using VirtoCommerce.Domain.Order.Model;
 using VirtoCommerce.Domain.Payment.Model;
 using VirtoCommerce.Domain.Payment.Services;
 
@@ -39,19 +40,9 @@ namespace MeS.PaymentGatewaysModule.Web.Managers
 			get { return _logoUrl; }
 		}
 
-		public PaymentInfo GetPaymentById(string id)
+		public void CreatePayment(PaymentIn paymentInfo, CustomerOrder order)
 		{
-			var retVal = new PaymentInfo();
-			{
-
-			};
-
-			return retVal;
-		}
-
-		public PaymentInfo CreatePayment(PaymentInfo paymentInfo)
-		{
-			return paymentInfo;
+			//return paymentInfo;
 		}
 
 

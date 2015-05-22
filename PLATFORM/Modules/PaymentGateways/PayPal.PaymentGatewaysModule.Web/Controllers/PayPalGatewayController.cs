@@ -1,5 +1,4 @@
 ﻿using PayPal.PaymentGatewaysModule.Web.Managers;
-using PayPal.PaymentGatewaysModule.Web.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,8 +13,6 @@ using VirtoCommerce.Domain.Order.Services;
 using VirtoCommerce.Domain.Payment.Model;
 using VirtoCommerce.Domain.Payment.Services;
 using VirtoCommerce.Domain.Store.Services;
-using PayPal.PaymentGatewaysModule.Web.Converters;
-using webModels = PayPal.PaymentGatewaysModule.Web.Models;
 using coreModels = VirtoCommerce.Domain.Payment.Model;
 
 namespace PayPal.PaymentGatewaysModule.Web.Controllers
@@ -45,28 +42,34 @@ namespace PayPal.PaymentGatewaysModule.Web.Controllers
 			_customerOrderService = customerOrderService;
 		}
 
-		[HttpGet]
-		[Route("create")]
-		[ResponseType(typeof(webModels.DirectRedirectUrlPaymentInfo))]
-		public IHttpActionResult CreatePayment(string orderId)
-		{
-			var payment = new PaymentInfo
-			{
-				OrderId = orderId
-			};
+		//[HttpGet]
+		//[Route("create")]
+		//[ResponseType(typeof(webModels.DirectRedirectUrlPaymentInfo))]
+		//public IHttpActionResult CreatePayment(string orderId)
+		//{
+		//	var payment = new PaymentInfo
+		//	{
+		//		OrderId = orderId
+		//	};
 
-			var paymentInfo = _paymentGateway.CreatePayment(payment);
+		//	var paymentInfo = _paymentGateway.CreatePayment(payment);
 
-			return Ok((paymentInfo as coreModels.DirectRedirectUrlPaymentInfo).ToWebModel());
-		}
+		//	return Ok((paymentInfo as coreModels.DirectRedirectUrlPaymentInfo).ToWebModel());
+		//}
 
 		[HttpGet]
 		[Route("push")]
-		public IHttpActionResult ApprovePayment(string paymentId, string orderId)
+		public IHttpActionResult ApprovePayment(string token, string orderId, bool cancel)
 		{
-			var paymentInfo = _paymentGateway.GetPayment(paymentId, orderId);
+			if (!cancel)
+			{
+				var paymentInfo = _paymentGateway.GetPayment(token, orderId) as coreModels.DirectRedirectUrlPaymentInfo;
 
-			return Ok((paymentInfo as coreModels.DirectRedirectUrlPaymentInfo).ToWebModel());
+				return Redirect(paymentInfo.RedirectUrl);
+			}
+			return Redirect(string.Format("http://localhost/checkout/thanks?orderId={0}&isSuccess=false", orderId));
+
+			//return Ok((paymentInfo as coreModels.DirectRedirectUrlPaymentInfo).ToWebModel());
 		}
 
 		//[HttpGet]

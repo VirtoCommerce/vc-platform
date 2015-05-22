@@ -141,10 +141,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\PayPalGatewayController.cs" />
-    <Compile Include="Converters\PaymentInfoConverter.cs" />
+    <Compile Include="Managers\PaypalPaymentActivity.cs" />
     <Compile Include="Managers\PayPalPaymentGatewayImpl.cs" />
     <Compile Include="Managers\PaypalStoreSettingInitializer.cs" />
-    <Compile Include="Models\DirectRedirectUrlPaymentInfo.cs" />
     <Compile Include="Module.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

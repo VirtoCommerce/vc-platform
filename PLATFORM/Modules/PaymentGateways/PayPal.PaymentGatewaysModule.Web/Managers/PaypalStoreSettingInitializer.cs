@@ -25,8 +25,10 @@ namespace PayPal.PaymentGatewaysModule.Web.Managers
 
 			foreach(var store in stores)
 			{
-				CheckAndAddSetting("Paypal.AppKey", SettingValueType.ShortText, store);
-				CheckAndAddSetting("Paypal.Secret", SettingValueType.ShortText, store);
+				CheckAndAddSetting("Paypal.Mode", SettingValueType.ShortText, store);
+				CheckAndAddSetting("Paypal.APIUsername", SettingValueType.ShortText, store);
+				CheckAndAddSetting("Paypal.APIPassword", SettingValueType.ShortText, store);
+				CheckAndAddSetting("Paypal.APISignature", SettingValueType.ShortText, store);
 
 				_service.Update(new Store[] { store });
 			}

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using VirtoCommerce.Domain.Order.Model;
 using VirtoCommerce.Domain.Payment.Model;
 
 namespace VirtoCommerce.Domain.Payment.Services
@@ -15,6 +16,6 @@ namespace VirtoCommerce.Domain.Payment.Services
 		PaymentGatewayType GatewayType { get; }
 
 		PaymentInfo GetPayment(string paymentId, string orderId);
-		PaymentInfo CreatePayment(PaymentInfo paymentInfo);
+		void CreatePayment(PaymentIn payment, CustomerOrder order);
 	}
 }

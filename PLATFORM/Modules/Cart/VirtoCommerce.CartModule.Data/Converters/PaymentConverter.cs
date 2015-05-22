@@ -58,7 +58,7 @@ namespace VirtoCommerce.CartModule.Data.Converters
 			if (target == null)
 				throw new ArgumentNullException("target");
 
-			var patchInjection = new PatchInjection<PaymentEntity>(x => x.Amount, x => x.GatewayCode);
+			var patchInjection = new PatchInjection<PaymentEntity>(x => x.Amount, x => x.PaymentGatewayCode);
 			target.InjectFrom(patchInjection, source);
 
 			if (!source.Addresses.IsNullCollection())

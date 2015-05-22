@@ -2,6 +2,7 @@
 using PayPal.PayPalAPIInterfaceService.Model;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Linq;
 using System.Text;
@@ -98,8 +99,6 @@ namespace PayPal.PaymentGatewaysModule.Web.Managers
 
 		public PaymentInfo GetPayment(string paymentId, string orderId)
 		{
-			var retVal = new DirectRedirectUrlPaymentInfo();
-
 			var order = _customerOrderService.GetById(orderId, VirtoCommerce.Domain.Order.Model.CustomerOrderResponseGroup.Full);
 			if (order == null)
 				throw new NullReferenceException("no order with this id");
@@ -140,34 +139,22 @@ namespace PayPal.PaymentGatewaysModule.Web.Managers
 			if (response.GetExpressCheckoutDetailsResponseDetails.CheckoutStatus.Equals("PaymentActionCompleted"))
 			{
 				payment.IsApproved = true;
-				retVal = GetPaymentInfo(order, paymentId, true);
 			}
 			else
 			{
 				payment.IsApproved = false;
-				retVal = GetPaymentInfo(order, paymentId, false);
 			}
 
 			_customerOrderService.Update(new CustomerOrder[] { order });
 
-			return retVal;
+			return new DirectRedirectUrlPaymentInfo { IsApproved = payment.IsApproved, RedirectUrl = string.Format("{0}/checkout/thanks?orderId={1}&isSuccess=true", store.Url, orderId) };
 		}
 
-		public PaymentInfo CreatePayment(PaymentInfo paymentInfo)
+		public void CreatePayment(PaymentIn payment, CustomerOrder order)
 		{
-			var retVal = paymentInfo as DirectRedirectUrlPaymentInfo;
-
-			var order = _customerOrderService.GetById(paymentInfo.OrderId, VirtoCommerce.Domain.Order.Model.CustomerOrderResponseGroup.Full);
-			if (order == null)
-				throw new NullReferenceException("no order with this id");
-
 			var store = _storeService.GetById(order.StoreId);
 			if (!(store != null && !string.IsNullOrEmpty(store.Url)))
 				throw new NullReferenceException("no store with this id");
-
-			var payment = order.InPayments.FirstOrDefault(p => p.GatewayCode == GatewayCode);
-			if (payment == null)
-				throw new NullReferenceException("no payment paypal in this order");
 
 			var config = GetConfigMap(store);
 
@@ -192,16 +179,12 @@ namespace PayPal.PaymentGatewaysModule.Web.Managers
 
 			payment.OuterId = setEcResponse.Token;
 
-			retVal.RedirectUrl = string.Format("https://www.sandbox.paypal.com/cgi-bin/webscr?cmd={0}", "_express-checkout&useraction=commit&token=" + setEcResponse.Token);
-			retVal.Id = payment.OuterId;
-			retVal.GatewayCode = GatewayCode;
-			retVal.CreatedDate = DateTime.UtcNow;
-			retVal.Currency = order.Currency;
-			retVal.Status = payment.Status;
+			payment.Properties = new Collection<OperationProperty>();
+			payment.Properties.Add(new OperationProperty { Name = "RedirectUrl", Value = string.Format("https://www.sandbox.paypal.com/cgi-bin/webscr?cmd={0}", "_express-checkout&useraction=commit&token=" + setEcResponse.Token), ValueType = PropertyValueType.ShortText });
+			payment.Properties.Add(new OperationProperty { Name = "GatewayType", Value = GatewayType.ToString(), ValueType = PropertyValueType.ShortText });
+			
 
-			_customerOrderService.Update(new CustomerOrder[] { order });
-
-			return retVal;
+			//_customerOrderService.Update(new CustomerOrder[] { order });
 		}
 
 		private string FormatMoney(decimal amount)
@@ -209,10 +192,10 @@ namespace PayPal.PaymentGatewaysModule.Web.Managers
 			return amount.ToString("F2", new CultureInfo("en-US"));
 		}
 
-		private PaymentDetailsType GetPaypalPaymentDetail(CurrencyCodeType currency, PaymentActionCodeType paymentAction, CustomerOrder order, Store store)
+		private PaymentDetailsType GetPaypalPaymentDetail(CurrencyCodeType currency, PaymentActionCodeType paymentAction, PaymentIn payment)
 		{
 			var paymentDetails = new PaymentDetailsType { PaymentAction = paymentAction };
-			paymentDetails.OrderTotal = new BasicAmountType(currency, FormatMoney(order.Sum));
+			paymentDetails.OrderTotal = new BasicAmountType(currency, FormatMoney(payment.Sum));
 
 			return paymentDetails;
 		}
@@ -253,8 +236,8 @@ namespace PayPal.PaymentGatewaysModule.Web.Managers
 			var ecDetails = new SetExpressCheckoutRequestDetailsType
 			{
 				CallbackTimeout = "3",
-				ReturnURL = string.Format("{0}?cancel=false&orderId={}", store.Url),
-				CancelURL = string.Format("{0}?cancel=true", store.Url),
+				ReturnURL = string.Format("{0}/admin/api/paymentgateway/paypal/push?cancel=false&orderId={1}", store.Url, order.Id),
+				CancelURL = string.Format("{0}/admin/api/paymentgateway/paypal/push?cancel=true&orderId={1}", store.Url, order.Id),
 				SolutionType = SolutionTypeType.MARK
 			};
 
@@ -270,7 +253,8 @@ namespace PayPal.PaymentGatewaysModule.Web.Managers
 			if (billingAddress != null && !string.IsNullOrEmpty(billingAddress.Email))
 				ecDetails.BuyerEmail = billingAddress.Email;
 
-			ecDetails.PaymentDetails.Add(GetPaypalPaymentDetail(currency, PaymentActionCodeType.SALE, order, store));
+			ecDetails.PaymentDetails.Add(GetPaypalPaymentDetail(currency, PaymentActionCodeType.SALE, payment));
+			ecDetails.InvoiceID = order.Id;
 
 			request.SetExpressCheckoutRequestDetails = ecDetails;
 
@@ -304,25 +288,6 @@ namespace PayPal.PaymentGatewaysModule.Web.Managers
 					}
 				}
 			};
-		}
-
-		private DirectRedirectUrlPaymentInfo GetPaymentInfo(CustomerOrder order, string paymentId, bool isApproved)
-		{
-			var payment = order.InPayments.FirstOrDefault(p => p.GatewayCode == GatewayCode);
-
-			var retVal = new DirectRedirectUrlPaymentInfo
-			{
-				Amount = order.Sum,
-				CreatedDate = payment.CreatedDate,
-				Currency = order.Currency,
-				GatewayCode = GatewayCode,
-				Id = paymentId,
-				IsApproved = isApproved,
-				OrderId = order.Id,
-				Status = payment.Status
-			};
-
-			return retVal;
 		}
 
 		private void CheckResponse(AbstractResponseType response)

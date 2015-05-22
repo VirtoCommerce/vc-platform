@@ -3,8 +3,10 @@ using Microsoft.Practices.Unity;
 using PayPal.PaymentGatewaysModule.Web.Controllers;
 using PayPal.PaymentGatewaysModule.Web.Managers;
 using VirtoCommerce.Domain.Catalog.Services;
+using VirtoCommerce.Domain.Common;
 using VirtoCommerce.Domain.Marketing.Services;
 using VirtoCommerce.Domain.Order.Services;
+using VirtoCommerce.Domain.Order.Workflow;
 using VirtoCommerce.Domain.Payment.Model;
 using VirtoCommerce.Domain.Payment.Services;
 using VirtoCommerce.Domain.Store.Services;
@@ -38,8 +40,6 @@ namespace PayPal.PaymentGatewaysModule.Web
 			var storeService = ServiceLocator.Current.GetInstance<IStoreService>();
 			var customerOrderService = ServiceLocator.Current.GetInstance<ICustomerOrderService>();
 
-			var orderWorkflow = ServiceLocator.Current.GetInstance<ICustomerOrderWorkflow>()
-
 			PaypalStoreSettingInitializer initializer = new PaypalStoreSettingInitializer(storeService);
 			initializer.Initialize();
 
@@ -54,6 +54,10 @@ namespace PayPal.PaymentGatewaysModule.Web
 			paymentGatewayManager.RegisterGateway(paypalPaymentGateway);
 
 			_container.RegisterType<PayPalGatewayController>(new InjectionConstructor(paypalPaymentGateway, storeService, customerOrderService));
+
+			var orderWorkflow = ServiceLocator.Current.GetInstance<IOrderWorkflow>() as ObservableWorkflowService<OrderStateBasedEvalContext>;
+
+			orderWorkflow.Subscribe(new ObserverFactory<OrderStateBasedEvalContext>(() => { return new PaypalPaymentActivity(paypalPaymentGateway); }));
 		}
 
 		#endregion

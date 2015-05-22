@@ -85,18 +85,18 @@ namespace Klarna.PaymentGatewaysModule.Web.Controllers
 		[Route("klarna/create")]
 		public IHttpActionResult CreateKlarnaPayment(KlarnaPaymentInfo model)
 		{
-			CreatePaymentResult retVal = new CreatePaymentResult();
-			var paymentInfo = _paymentGateway.CreatePayment(model);
+			//CreatePaymentResult retVal = new CreatePaymentResult();
+			//var paymentInfo = _paymentGateway.CreatePayment(model);
 
-			var klarnaPaymentInfo = paymentInfo as KlarnaPaymentInfo;
+			//var klarnaPaymentInfo = paymentInfo as KlarnaPaymentInfo;
 
-			if (klarnaPaymentInfo != null)
-			{
-				retVal.Html = klarnaPaymentInfo.Html;
-				retVal.IsSuccess = klarnaPaymentInfo.Success;
-			}
+			//if (klarnaPaymentInfo != null)
+			//{
+			//	retVal.Html = klarnaPaymentInfo.Html;
+			//	retVal.IsSuccess = klarnaPaymentInfo.Success;
+			//}
 
-			return Ok(retVal);
+			return Ok();
 		}
 
 		private void ActivateKlarnaPayment(Order order)
