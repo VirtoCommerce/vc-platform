@@ -56,13 +56,24 @@ angular.module(moduleName, [
           controller: 'virtoCommerce.storeModule.storeAdvancedWidgetController',
           template: 'Modules/$(VirtoCommerce.Store)/Scripts/widgets/storeAdvancedWidget.tpl.html'
       }, 'storeDetail');
+
+      //???
       widgetService.registerWidget({
           controller: 'virtoCommerce.storeModule.storeSettingsWidgetController',
           template: 'Modules/$(VirtoCommerce.Store)/Scripts/widgets/storeSettingsWidget.tpl.html'
-      }, 'storeDetail');
+      }, 'storeDetail');     
+
       widgetService.registerWidget({
           controller: 'virtoCommerce.storeModule.storePaymentsWidgetController',
           template: 'Modules/$(VirtoCommerce.Store)/Scripts/widgets/storePaymentsWidget.tpl.html'
       }, 'storeDetail');
+      widgetService.registerWidget({
+          controller: 'virtoCommerce.storeModule.storeShippingWidgetController',
+          template: 'Modules/$(VirtoCommerce.Store)/Scripts/widgets/storeShippingWidget.tpl.html'
+      }, 'storeDetail');
+       widgetService.registerWidget({
+           controller: 'platformWebApp.entitySettingsWidgetController',
+           template: 'Scripts/app/settings/widgets/entitySettingsWidget.tpl.html'
+       }, 'shippingMethodDetail');
   }])
 ;

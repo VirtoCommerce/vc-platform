@@ -39,7 +39,7 @@
 
             results = _.groupBy(results, 'groupName');
             $scope.blade.groupNames = _.keys(results);
-            $scope.blade.objects = angular.copy(results);
+            $scope.blade.currentEntities = angular.copy(results);
             $scope.blade.origEntity = results;
             $scope.blade.isLoading = false;
         },
@@ -67,12 +67,12 @@
     }
 
     function isDirty() {
-        return !angular.equals($scope.blade.objects, $scope.blade.origEntity);
+        return !angular.equals($scope.blade.currentEntities, $scope.blade.origEntity);
     };
 
     function saveChanges() {
         $scope.blade.isLoading = true;
-        var objects = _.flatten(_.map($scope.blade.objects, _.values));
+        var objects = _.flatten(_.map($scope.blade.currentEntities, _.values));
 
         var selectedSettings = _.where(objects, { isArray: true });
         _.forEach(selectedSettings, function (setting) {
@@ -113,7 +113,7 @@
         {
             name: "Reset", icon: 'fa fa-undo',
             executeMethod: function () {
-                $scope.blade.objects = angular.copy($scope.blade.origEntity);
+                $scope.blade.currentEntities = angular.copy($scope.blade.origEntity);
             },
             canExecuteMethod: function () {
                 return isDirty();

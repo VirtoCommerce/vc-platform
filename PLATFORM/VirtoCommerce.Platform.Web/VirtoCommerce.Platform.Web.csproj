@@ -301,6 +301,10 @@
     <Content Include="Scripts\app\packaging\blades\module-detail.tpl.html" />
     <Content Include="Scripts\app\packaging\blades\modules-list.js" />
     <Content Include="Scripts\app\packaging\blades\modules-list.tpl.html" />
+    <Content Include="Scripts\app\settings\blades\entitySetting-list.js" />
+    <Content Include="Scripts\app\settings\blades\entitySetting-list.tpl.html" />
+    <Content Include="Scripts\app\settings\widgets\entitySettingsWidget.js" />
+    <Content Include="Scripts\app\settings\widgets\entitySettingsWidget.tpl.html" />
     <Content Include="Scripts\common\security\blades\account-detail-toolbar.tpl.html" />
     <Content Include="Scripts\common\templates\home.tpl.html" />
     <Content Include="Scripts\app\packaging\packaging.js" />
