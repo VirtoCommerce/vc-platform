@@ -8,7 +8,7 @@
                 x.isChecked = _.some(data.permissions, function (curr) { return curr.id === x.id; });
             });
 
-            $scope.blade.currentEntities = promiseData;
+            $scope.blade.currentEntities = _.groupBy(promiseData, 'groupName');
             $scope.blade.isLoading = false;
         });
     };
@@ -22,7 +22,8 @@
     }
 
     $scope.saveChanges = function () {
-        $scope.blade.data.permissions = _.where($scope.blade.currentEntities, { isChecked: true });
+        var values = _.flatten(_.values($scope.blade.currentEntities), true);
+        $scope.blade.data.permissions = _.where(values, { isChecked: true });
 
         $scope.bladeClose();
     };

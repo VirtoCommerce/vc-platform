@@ -22,7 +22,7 @@
         if ($scope.blade.isNew) {
             promise.then(function (promiseData) {
                 $scope.blade.isLoading = false;
-                $scope.blade.currentEntities = promiseData;
+                $scope.blade.currentEntities = _.groupBy(promiseData, 'groupName');
             });
         } else {
             $scope.blade.isLoading = false;
@@ -37,7 +37,8 @@
         $scope.blade.isLoading = true;
 
         if ($scope.blade.isNew) {
-            $scope.blade.currentEntity.permissions = _.where($scope.blade.currentEntities, { isChecked: true });
+            var values = _.flatten(_.values($scope.blade.currentEntities), true);
+            $scope.blade.currentEntity.permissions = _.where(values, { isChecked: true });
         }
 
         angular.copy($scope.blade.currentEntity, $scope.blade.origEntity);
@@ -136,7 +137,7 @@
         }
     }
 
-    
+
 
     // actions on load
     initializeToolbar();
