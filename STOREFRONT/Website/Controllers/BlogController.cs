@@ -27,15 +27,15 @@ namespace VirtoCommerce.Web.Controllers
             return View("blog");
         }
 
-        [Route("{blog}/{article}")]
-        public async Task<ActionResult> DisplayBlogArticleAsync(string blog, string article)
+        [Route("{blog}/{handle}")]
+        public async Task<ActionResult> DisplayBlogArticleAsync(string blog, string handle)
         {
             var context = SiteContext.Current;
             var blogModel = context.Blogs[blog] as Blog;
             if (blogModel == null)
                 throw new HttpException(404, "NotFound");
 
-            var articleModel = blogModel.Articles.First(); //.SingleOrDefault(x => x.Handle.Equals(article));
+            var articleModel = blogModel.Articles.SingleOrDefault(x => x.Handle.Equals(handle));
             Context.Set("blog", blogModel);
             Context.Set("article", articleModel);
 

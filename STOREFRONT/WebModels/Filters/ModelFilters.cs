@@ -257,6 +257,22 @@ namespace VirtoCommerce.Web.Models.Filters
 
             return url;
         }
+
+        /// <summary>
+        /// Date filter which is aware of locale settings for date formats.
+        /// </summary>
+        /// <param name="input"></param>
+        /// <param name="format"></param>
+        /// <returns></returns>
+        public static string Date(object input, string format)
+        {
+            if (!String.IsNullOrEmpty(format))
+            {
+                format = TranslationFilter.T(String.Format("date_formats.{0}",format));
+            }
+
+            return StandardFilters.Date(input, format);
+        }
         #endregion
 
         #region Methods
