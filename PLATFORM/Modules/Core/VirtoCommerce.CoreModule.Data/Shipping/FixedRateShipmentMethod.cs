@@ -14,6 +14,7 @@ namespace VirtoCommerce.CoreModule.Data.Shipping
 			: base("FixedRate")
 		{
 			Settings = settings;
+			Description = "Manual shipping method";
 		}
 		public decimal Rate { get; set; }
 
