@@ -1,5 +1,6 @@
 ﻿#region
 
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
@@ -35,7 +36,8 @@ namespace VirtoCommerce.Web.Controllers
             if (blogModel == null)
                 throw new HttpException(404, "NotFound");
 
-            var articleModel = blogModel.Articles.SingleOrDefault(x => x.Handle.Equals(handle));
+            var searchHandle = String.Format("{0}/{1}", blog, handle);
+            var articleModel = blogModel.Articles.SingleOrDefault(x => x.Handle.Equals(searchHandle));
             Context.Set("blog", blogModel);
             Context.Set("article", articleModel);
 
