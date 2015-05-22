@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
+using VirtoCommerce.Web.Convertors;
 using VirtoCommerce.Web.Models;
 using VirtoCommerce.Web.Models.FormModels;
 
@@ -161,13 +162,36 @@ namespace VirtoCommerce.Web.Controllers
                         }
                     }
 
-                    checkout.Order = await Service.CreateOrderAsync(SiteContext.Current, checkout);
+                    var dtoOrder = await Service.CreateOrderAsync(SiteContext.Current, checkout);
+
+                    checkout.Order = dtoOrder.AsWebModel();
 
                     Context.Checkout = checkout;
 
-                    Session.Remove("Forms");
+                    if (dtoOrder.InPayments != null)
+                    {
+                        var inPayment = dtoOrder.InPayments.FirstOrDefault(ip => ip.Properties != null);
 
-                    return View("thanks_page");
+                        if (inPayment != null)
+                        {
+                            var gatewayType = inPayment.Properties.FirstOrDefault(p => p.Name == "GatewayType");
+
+                            if (gatewayType != null)
+                            {
+                                if ((string)gatewayType.Value == "DirectRedirectUrlGateway")
+                                {
+                                    var redirectUrl = inPayment.Properties.FirstOrDefault(p => p.Name == "RedirectUrl");
+
+                                    if (redirectUrl != null)
+                                    {
+                                        return Redirect(redirectUrl.Value as string);
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    return RedirectToAction("Thanks", "checkout", new { @orderId = checkout.OrderId });
                 }
                 else
                 {
@@ -179,6 +203,33 @@ namespace VirtoCommerce.Web.Controllers
             }
 
             return View("error");
+        }
+
+        //
+        // GET: /checkout/thanks
+        [HttpGet]
+        public async Task<ActionResult> Thanks(string orderId, bool isSuccess)
+        {
+            CustomerOrder order = null;
+
+            if (orderId != null)
+            {
+                order = await CustomerService.GetOrderAsync(
+                    Context.StoreId, Context.CustomerId, orderId);
+            }
+
+            if (order == null)
+            {
+                Context.ErrorMessage = string.Format("Order with id {0} was not found.", orderId);
+                return View("error");
+            }
+
+            Context.Set("payment_status_text", isSuccess ?
+                "Success payment!" :
+                "Payment is not successed.");
+            Context.Order = order;
+
+            return View("thanks_page");
         }
     }
 }

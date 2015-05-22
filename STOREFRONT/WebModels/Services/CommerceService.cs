@@ -496,7 +496,7 @@ namespace VirtoCommerce.Web.Models.Services
             await _cartClient.UpdateCurrentCartAsync(dtoCart);
         }
 
-        public async Task<CustomerOrder> CreateOrderAsync(SiteContext context, Checkout checkout)
+        public async Task<VirtoCommerce.ApiClient.DataContracts.Orders.CustomerOrder> CreateOrderAsync(SiteContext context, Checkout checkout)
         {
             var dtoCart = await _cartClient.GetCartAsync(context.StoreId, context.CustomerId);
             dtoCart.Currency = checkout.Currency;
@@ -560,7 +560,7 @@ namespace VirtoCommerce.Web.Models.Services
 
             await DeleteCartAsync(dtoCart.Id);
 
-            return order.AsWebModel();
+            return order;
         }
 
         public SubmitForm GetForm(SiteContext context, string id)

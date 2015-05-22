@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace VirtoCommerce.ApiClient.DataContracts.Orders
 {
@@ -26,6 +27,8 @@ namespace VirtoCommerce.ApiClient.DataContracts.Orders
 
         public decimal Tax { get; set; }
         public bool TaxIncluded { get; set; }
+
+        public ICollection<OperationProperty> Properties { get; set; }
 
         #endregion
     }
