@@ -23,7 +23,7 @@ namespace VirtoCommerce.CartModule.Data.Model
 		[StringLength(64)]
 		public string Currency { get; set; }
 		[StringLength(64)]
-		public string GatewayCode { get; set; }
+		public string PaymentGatewayCode { get; set; }
 		[Column(TypeName = "Money")]
 		public decimal Amount { get; set; }
 		[StringLength(1024)]

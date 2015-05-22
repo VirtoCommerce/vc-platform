@@ -84,8 +84,8 @@ angular.module(moduleName, [])
           controller: 'virtoCommerce.customerModule.memberPhonesWidgetController',
           template: 'Modules/$(VirtoCommerce.Customer)/Scripts/widgets/memberPhonesWidget.tpl.html'
       }, 'organizationDetail1');
-      //widgetService.registerWidget({
-      //    controller:'virtoCommerce.customerModule.memberPropertyWidgetController',
-      //    template: 'Modules/$(VirtoCommerce.Customer)/Scripts/widgets/memberPropertyWidget.tpl.html'
-      //}, 'organizationDetail2');
+      widgetService.registerWidget({
+          controller:'virtoCommerce.customerModule.memberPropertyWidgetController',
+          template: 'Modules/$(VirtoCommerce.Customer)/Scripts/widgets/memberPropertyWidget.tpl.html'
+      }, 'organizationDetail2');
   }]);

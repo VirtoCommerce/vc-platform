@@ -1,26 +1,21 @@
 ﻿<div class="blade-content __gray">
     <div class="blade-inner">
         <div class="inner-block clearfix">
-            <div class="sub-t __border">User information</div>
-            <div class="form-group">
-                <label class="form-label">Login</label>
-                <div class="form-input">
-                    <p class="form-text">{{blade.currentEntity.userName}}</p>
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="form-label">Account state</label>
-                <div class="form-input">
-                    <p class="form-text">{{blade.currentEntity.userState}}</p>
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="form-label">Is administrator</label>
-                <div class="form-input">
-                    <p class="form-text">{{blade.currentEntity.userType}}</p>
-                </div>
-            </div>
-
+            <div class="t __divider">User information</div>
+            <ul class="list __info">
+                <li class="list-item">
+                    <div class="list-t">Login</div>
+                    <div class="list-descr">{{blade.currentEntity.userName}}</div>
+                </li>
+                <li class="list-item">
+                    <div class="list-t">Account state</div>
+                    <div class="list-descr">{{blade.currentEntity.userState}}</div>
+                </li>
+                <li class="list-item">
+                    <div class="list-t">Is administrator</div>
+                    <div class="list-descr">{{blade.currentEntity.userType}}</div>
+                </li>
+            </ul>
             <va-widget-container group="accountDetail" blade="blade" gridster-opts="{width: 396}"></va-widget-container>
         </div>
     </div>

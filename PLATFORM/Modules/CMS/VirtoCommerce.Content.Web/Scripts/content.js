@@ -17,23 +17,6 @@ angular.module(moduleName, ['angularUUID2'])
 		permission: 'content:query'
 	};
 	mainMenuService.addMenuItem(menuItem);
-
-	//Register widgets in store details
-	widgetService.registerWidget({
-		controller: 'virtoCommerce.contentModule.themesWidgetController',
-		template: 'Modules/$(VirtoCommerce.Content)/Scripts/widgets/themesWidget.tpl.html'
-	}, 'storeDetail');
-
-	widgetService.registerWidget({
-		controller: 'virtoCommerce.contentModule.menuWidgetController',
-		template: 'Modules/$(VirtoCommerce.Content)/Scripts/widgets/menuWidget.tpl.html'
-	}, 'storeDetail');
-
-	widgetService.registerWidget({
-		controller: 'virtoCommerce.contentModule.pagesWidgetController',
-		template: 'Modules/$(VirtoCommerce.Content)/Scripts/widgets/pagesWidget.tpl.html'
-	}, 'storeDetail');
-
 }])
 .config(['$stateProvider', function ($stateProvider) {
 	$stateProvider

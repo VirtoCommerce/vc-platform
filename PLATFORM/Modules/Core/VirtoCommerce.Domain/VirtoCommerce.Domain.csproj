@@ -186,6 +186,8 @@
     <Compile Include="Order\Services\IShipmentService.cs" />
     <Compile Include="Order\Workflow\OrderStateBasedEvalContext.cs" />
     <Compile Include="Order\Workflow\IOrderWorkflow.cs" />
+    <Compile Include="Payment\Model\DirectRedirectUrlPaymentInfo.cs" />
+    <Compile Include="Payment\Model\PaymentGatewayType.cs" />
     <Compile Include="Payment\Model\PaymentInfo.cs" />
     <Compile Include="Payment\Services\InMemoryPaymentGatewayManagerImpl.cs" />
     <Compile Include="Payment\Services\IPaymentGateway.cs" />

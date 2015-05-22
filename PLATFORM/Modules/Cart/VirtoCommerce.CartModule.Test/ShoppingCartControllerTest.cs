@@ -17,6 +17,7 @@ namespace VirtoCommerce.CartModule.Test
     using VirtoCommerce.CartModule.Web.Controllers.Api;
 	using VirtoCommerce.Platform.Data.Infrastructure.Interceptors;
 	using VirtoCommerce.Domain.Common;
+	using VirtoCommerce.Domain.Payment.Services;
 
     [TestClass]
 	public class ShoppingCartControllerTest
@@ -191,7 +192,10 @@ namespace VirtoCommerce.CartModule.Test
 
 			var cartService = new ShoppingCartServiceImpl(repositoryFactory, cartWorkflowService);
 			var searchService = new ShoppingCartSearchServiceImpl(repositoryFactory);
-			var controller = new CartModuleController(cartService, searchService);
+			var memoryPaymentGatewayManager = new InMemoryPaymentGatewayManagerImpl();
+
+
+			var controller = new CartModuleController(cartService, searchService, memoryPaymentGatewayManager);
 			return controller;
 		}
 	}

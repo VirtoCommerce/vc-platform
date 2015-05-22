@@ -64,6 +64,10 @@
     <Compile Include="Migrations\201504300613351_Initial.Designer.cs">
       <DependentUpon>201504300613351_Initial.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201505220955175_RenamePaymentGatewayCodeField.cs" />
+    <Compile Include="Migrations\201505220955175_RenamePaymentGatewayCodeField.Designer.cs">
+      <DependentUpon>201505220955175_RenamePaymentGatewayCodeField.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Model\AddressEntity.cs" />
     <Compile Include="Model\LineItemEntity.cs" />
@@ -100,6 +104,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201504300613351_Initial.resx">
       <DependentUpon>201504300613351_Initial.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201505220955175_RenamePaymentGatewayCodeField.resx">
+      <DependentUpon>201505220955175_RenamePaymentGatewayCodeField.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

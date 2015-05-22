@@ -61,6 +61,7 @@ namespace VirtoCommerce.OrderModule.Data.Converters
 
 			var retVal = new CustomerOrder()
 			{
+				Id = Guid.NewGuid().ToString(),
 				Currency = cart.Currency,
 				CustomerId = cart.CustomerId,
 				StoreId = cart.StoreId,

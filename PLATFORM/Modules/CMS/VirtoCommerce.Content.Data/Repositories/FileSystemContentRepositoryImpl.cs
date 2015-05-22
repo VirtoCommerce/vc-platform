@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using VirtoCommerce.Content.Data.Models;
+using VirtoCommerce.Content.Data.Utility;
 using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.Content.Data.Repositories
@@ -76,15 +77,15 @@ namespace VirtoCommerce.Content.Data.Repositories
 					file => new ContentItem { Name = Path.GetFileName(file), Path = this.RemoveBaseDirectory(file), ModifiedDate = File.GetLastWriteTimeUtc(file).Truncate(TimeSpan.FromSeconds(1)) })
 					.ToList();
 
-			if (criteria.LoadContent)
+			//if (criteria.LoadContent)
+			//{
+			foreach (var contentItem in items)
 			{
-				foreach (var contentItem in items)
-				{
-					var fullFile = await this.GetContentItem(contentItem.Path);
-					contentItem.ByteContent = fullFile.ByteContent;
-					contentItem.ContentType = fullFile.ContentType;
-				}
+				var fullFile = await this.GetContentItem(contentItem.Path);
+				contentItem.ByteContent = fullFile.ByteContent;
+				contentItem.ContentType = fullFile.ContentType;
 			}
+			//}
 
 			return await Task.FromResult(items.AsEnumerable());
 		}
@@ -184,6 +185,8 @@ namespace VirtoCommerce.Content.Data.Repositories
 				retVal.Language = GetLanguageFromFullPath(fullPath);
 				retVal.ByteContent = content;
 				retVal.Name = itemName;
+				retVal.ContentType = ContentTypeUtility.GetContentType(fullPath, content);
+				retVal.Path = path;
 			}
 			else
 			{
@@ -210,14 +213,21 @@ namespace VirtoCommerce.Content.Data.Repositories
 
 			foreach (var language in languages)
 			{
-				var files = Directory.GetFiles(language); ;
+				var files = Directory.GetFiles(fullPath, "*.*", SearchOption.AllDirectories); ;
 
-				list.AddRange(files.Select(f => new Models.ContentPage
-				{
-					Name = Path.GetFileNameWithoutExtension(f),
-					ModifiedDate = Directory.GetLastWriteTimeUtc(f),
-					Language = GetLanguageFromFullPath(f)
-				}));
+				//foreach(var file in files)
+				//{
+				//	var addedPage = 
+				//}
+
+				//list.AddRange(files.Select(f => new Models.ContentPage
+				//{
+				//	Name = Path.GetFileNameWithoutExtension(f),
+				//	ModifiedDate = Directory.GetLastWriteTimeUtc(f),
+				//	Language = GetLanguageFromFullPath(f),
+				//	ByteContent = File.ReadAllBytes(f),
+				//	ContentType
+				//}));
 			}
 
 			return list.ToArray();

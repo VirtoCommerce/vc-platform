@@ -64,6 +64,13 @@ namespace VirtoCommerce.ApiClient
                     useCache: false); 
         }
 
+        public Task<PaymentMethod[]> GetCartPaymentMethods(string cartId)
+        {
+            return GetAsync<PaymentMethod[]>(
+                CreateRequestUri(string.Format(RelativePaths.GetPaymentMethods, cartId)),
+                useCache: false);
+        }
+
         public Task<ShipmentMethod[]> GetCartShippingMethods(string cartId)
         {
             return GetAsync<ShipmentMethod[]>(
@@ -102,6 +109,8 @@ namespace VirtoCommerce.ApiClient
             public const string Cart = "cart/{0}/{1}/carts/current";
 
             public const string GetShippingMethods = "cart/carts/{0}/shipmentMethods";
+
+            public const string GetPaymentMethods = "cart/carts/{0}/paymentMethods";
 
             public const string UpdateCart = "cart/carts";
 

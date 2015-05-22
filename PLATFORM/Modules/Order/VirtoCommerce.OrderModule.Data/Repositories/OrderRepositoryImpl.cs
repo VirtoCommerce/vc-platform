@@ -168,7 +168,8 @@ namespace VirtoCommerce.OrderModule.Data.Repositories
 		public CustomerOrderEntity GetCustomerOrderById(string id, CustomerOrderResponseGroup responseGroup)
 		{
 			var query = CustomerOrders.Where(x => x.Id == id)
-									  .Include(x => x.Discounts);
+									  .Include(x => x.Discounts)
+									  .Include(x => x.Properties);
 
 			if ((responseGroup & CustomerOrderResponseGroup.WithAddresses) == CustomerOrderResponseGroup.WithAddresses)
 			{
@@ -176,7 +177,8 @@ namespace VirtoCommerce.OrderModule.Data.Repositories
 			}
 			if ((responseGroup & CustomerOrderResponseGroup.WithInPayments) == CustomerOrderResponseGroup.WithInPayments)
 			{
-				query = query.Include(x => x.InPayments.Select(y => y.Addresses));
+				query = query.Include(x => x.InPayments.Select(y => y.Addresses))
+							 .Include(x => x.InPayments.Select(y => y.Properties));
 			}
 			if ((responseGroup & CustomerOrderResponseGroup.WithItems) == CustomerOrderResponseGroup.WithItems)
 			{
@@ -186,7 +188,8 @@ namespace VirtoCommerce.OrderModule.Data.Repositories
 			{
 				query = query.Include(x => x.Shipments.Select(y => y.Discounts))
 							 .Include(x => x.Shipments.Select(y => y.Items))
-							 .Include(x => x.Shipments.Select(y => y.Addresses));
+							 .Include(x => x.Shipments.Select(y => y.Addresses))
+							 .Include(x => x.Shipments.Select(y => y.Properties));
 			}
 			return query.FirstOrDefault();
 		}

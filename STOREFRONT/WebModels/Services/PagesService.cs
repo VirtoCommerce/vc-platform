@@ -58,7 +58,8 @@ namespace VirtoCommerce.Web.Services
                 return null;
             }
 
-            var blog = new Blog() { Id = "news", Handle = "news", Url = "/blogs/news", Articles = items.Select(x=>x.AsArticleWebModel()).ToArray()};
+            // TODO: remove hard coded news blog
+            var blog = new Blog() { Id = "news", Handle = "news", Url = "/blogs/news", Title = "News", Articles = items.Select(x=>x.AsArticleWebModel()).ToArray()};
             return new[] { blog };
         }
 

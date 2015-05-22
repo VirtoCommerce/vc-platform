@@ -1,6 +1,7 @@
 ﻿using Omu.ValueInjecter;
 using VirtoCommerce.Web.Models.Cms;
 using VirtoCommerce.Web.Views.Contents;
+using VirtoCommerce.Web.Extensions;
 
 namespace VirtoCommerce.Web.Convertors
 {
@@ -29,8 +30,9 @@ namespace VirtoCommerce.Web.Convertors
             var page = item.AsPageWebModel();
             var ret = new Article();
             ret.InjectFrom(page);
+            ret.Handle = item.Url.TrimStart('/').TrimStart("blogs/");
+            ret.Id = item.Url.TrimStart('/');
             ret.Excerpt = item.ContentExcerpt;
-            //ret.Tags = item.
 
             return ret;
         }
