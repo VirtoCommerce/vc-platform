@@ -4,11 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using VirtoCommerce.Domain.Commerce.Model;
+using VirtoCommerce.Domain.Shipping.Model;
 using VirtoCommerce.Platform.Core.Common;
+using VirtoCommerce.Platform.Core.Settings;
 
 namespace VirtoCommerce.Domain.Store.Model
 {
-	public class Store : AuditableEntity
+	public class Store : AuditableEntity, IHaveSettings
 	{
 		public string Name { get; set; }
 		public string Description { get; set; }
@@ -32,9 +34,15 @@ namespace VirtoCommerce.Domain.Store.Model
 		public FulfillmentCenter ReturnsFulfillmentCenter { get; set; }
 		public ICollection<string> Languages { get; set; }
 		public ICollection<CurrencyCodes> Currencies { get; set; }
-		public ICollection<StoreSetting> Settings { get; set; }
+
 		public ICollection<string> PaymentGateways { get; set; }
-		public ICollection<string> ShipmentGateways { get; set; }
+		public ICollection<ShippingMethod> ShippingMethods { get; set; }
 		public ICollection<SeoInfo> SeoInfos { get; set; }
+
+		#region IHaveSettings Members
+
+		public ICollection<SettingEntry> Settings { get; set; }
+
+		#endregion
 	}
 }

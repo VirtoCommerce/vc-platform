@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Omu.ValueInjecter;
+using VirtoCommerce.Domain.Shipping.Model;
 using coreModel = VirtoCommerce.Domain.Store.Model;
 using webModel = VirtoCommerce.StoreModule.Web.Model;
 
@@ -20,8 +21,8 @@ namespace VirtoCommerce.StoreModule.Web.Converters
 			retVal.StoreState = store.StoreState;
 			if (store.Settings != null)
 				retVal.Settings = store.Settings.Select(x => x.ToWebModel()).ToList();
-			if (store.ShipmentGateways != null)
-				retVal.ShipmentGateways = store.ShipmentGateways;
+			if (store.ShippingMethods != null)
+				retVal.ShippingMethods = store.ShippingMethods.Select(x => x.ToWebModel()).ToList();
 			if (store.PaymentGateways != null)
 				retVal.PaymentGateways = store.PaymentGateways;
 			if (store.Languages != null)
@@ -38,7 +39,7 @@ namespace VirtoCommerce.StoreModule.Web.Converters
 			return retVal;
 		}
 
-		public static coreModel.Store ToCoreModel(this webModel.Store store)
+		public static coreModel.Store ToCoreModel(this webModel.Store store, ShippingMethod[] shippingMethods)
 		{
 			var retVal = new coreModel.Store();
 			retVal.InjectFrom(store);
@@ -46,8 +47,20 @@ namespace VirtoCommerce.StoreModule.Web.Converters
 			retVal.StoreState = store.StoreState;
 			if (store.Settings != null)
 				retVal.Settings = store.Settings.Select(x => x.ToCoreModel()).ToList();
-			if (store.ShipmentGateways != null)
-				retVal.ShipmentGateways = store.ShipmentGateways;
+
+			if (store.ShippingMethods != null)
+			{
+				retVal.ShippingMethods = new List<ShippingMethod>();
+				foreach (var shippingMethod in shippingMethods)
+				{
+					var webShippingMethod = store.ShippingMethods.FirstOrDefault(x => x.Code == shippingMethod.Code);
+					if (webShippingMethod != null)
+					{
+						retVal.ShippingMethods.Add(webShippingMethod.ToCoreModel(shippingMethod));
+					}
+				}
+			}
+
 			if (store.PaymentGateways != null)
 				retVal.PaymentGateways = store.PaymentGateways;
 			if (store.Languages != null)

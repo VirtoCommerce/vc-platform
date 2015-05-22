@@ -84,9 +84,6 @@ namespace VirtoCommerce.OrderModule.Data.Model
 		}
 
 		#region Navigation Properties
-
-		[Required]
-		[StringLength(128)]
 		public string OperationId { get; set; }
 
 		public OperationEntity Operation { get; set; }

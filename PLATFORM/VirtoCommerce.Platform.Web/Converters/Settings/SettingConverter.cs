@@ -6,16 +6,16 @@ namespace VirtoCommerce.Platform.Web.Converters.Settings
 {
     public static class SettingConverter
     {
-        public static webModel.Setting ToWebModel(this moduleModel.SettingDescriptor setting)
+        public static webModel.Setting ToWebModel(this moduleModel.SettingEntry setting)
         {
 			var retVal = new webModel.Setting();
 			retVal.InjectFrom(setting);
             return retVal;
         }
 
-		public static moduleModel.SettingDescriptor ToModuleModel(this webModel.Setting setting)
+		public static moduleModel.SettingEntry ToModuleModel(this webModel.Setting setting)
         {
-			var retVal = new moduleModel.SettingDescriptor();
+			var retVal = new moduleModel.SettingEntry();
 			retVal.InjectFrom(setting);
 			return retVal;
         }

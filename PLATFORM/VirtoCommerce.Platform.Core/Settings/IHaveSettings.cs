@@ -4,9 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace VirtoCommerce.Domain.Shipping.Services
+namespace VirtoCommerce.Platform.Core.Settings
 {
-	class IShippingGatewayManager
+	public interface IHaveSettings
 	{
+		ICollection<SettingEntry> Settings { get; set; }
 	}
 }

@@ -10,7 +10,6 @@ using VirtoCommerce.OrderModule.Data.Workflow;
 using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Data.Infrastructure;
 using VirtoCommerce.Platform.Data.Infrastructure.Interceptors;
-using VirtoCommerce.OrderModule.Data.Workflow;
 using VirtoCommerce.Domain.Order.Workflow;
 
 namespace VirtoCommerce.OrderModule.Web

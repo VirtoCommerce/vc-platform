@@ -81,38 +81,38 @@ namespace VirtoCommerce.StoreModule.Data.Repositories
             store.FulfillmentCenterId = "vendor-fulfillment";
             store.ReturnsFulfillmentCenterId = "vendor-fulfillment";
 
-            store.Settings.Add(new StoreSetting
-                {
-                    Id = Guid.NewGuid().ToString("N"),
-                    StoreId = store.Id,
-                    ValueType = "xml",
-                    LongTextValue = CreateFiltersXml(),
-                    Name = "FilteredBrowsing"
-                });
-            store.Settings.Add(new StoreSetting
-                {
-                    Id = Guid.NewGuid().ToString("N"),
-                    StoreId = store.Id,
-                    ValueType = "ShortText",
-                    ShortTextValue = "The store is temporarily closed for maintenance. Please try again later.",
-                    Name = "StoreClosedMessage"
-                });
-            store.Settings.Add(new StoreSetting
-                {
-                    Id = Guid.NewGuid().ToString("N"),
-                    StoreId = store.Id,
-                    ValueType = "ShortText",
-                    ShortTextValue = "You do not have permissions to view this store",
-                    Name = "StoreRestrictedMessage"
-                });
-            store.Settings.Add(new StoreSetting
-                {
-                    Id = Guid.NewGuid().ToString("N"),
-                    StoreId = store.Id,
-                    ValueType = "Boolean",
-                    BooleanValue = false,
-                    Name = "RequireAccountConfirmation"
-                });
+			//store.Settings.Add(new StoreSetting
+			//	{
+			//		Id = Guid.NewGuid().ToString("N"),
+			//		StoreId = store.Id,
+			//		ValueType = "xml",
+			//		LongTextValue = CreateFiltersXml(),
+			//		Name = "FilteredBrowsing"
+			//	});
+			//store.Settings.Add(new StoreSetting
+			//	{
+			//		Id = Guid.NewGuid().ToString("N"),
+			//		StoreId = store.Id,
+			//		ValueType = "ShortText",
+			//		ShortTextValue = "The store is temporarily closed for maintenance. Please try again later.",
+			//		Name = "StoreClosedMessage"
+			//	});
+			//store.Settings.Add(new StoreSetting
+			//	{
+			//		Id = Guid.NewGuid().ToString("N"),
+			//		StoreId = store.Id,
+			//		ValueType = "ShortText",
+			//		ShortTextValue = "You do not have permissions to view this store",
+			//		Name = "StoreRestrictedMessage"
+			//	});
+			//store.Settings.Add(new StoreSetting
+			//	{
+			//		Id = Guid.NewGuid().ToString("N"),
+			//		StoreId = store.Id,
+			//		ValueType = "Boolean",
+			//		BooleanValue = false,
+			//		Name = "RequireAccountConfirmation"
+			//	});
 
             return store;
         }

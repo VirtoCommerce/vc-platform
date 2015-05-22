@@ -192,9 +192,10 @@
     <Compile Include="Security\Role.cs" />
     <Compile Include="Security\RoleSearchRequest.cs" />
     <Compile Include="Security\RoleSearchResponse.cs" />
+    <Compile Include="Settings\IHaveSettings.cs" />
     <Compile Include="Settings\ISettingsManager.cs" />
     <Compile Include="Settings\ModuleDescriptor.cs" />
-    <Compile Include="Settings\SettingDescriptor.cs" />
+    <Compile Include="Settings\SettingEntry.cs" />
     <Compile Include="Settings\SettingValueType.cs" />
     <Compile Include="UnityBootstrapper.cs" />
     <Compile Include="UnityBootstrapperExtension.cs" />

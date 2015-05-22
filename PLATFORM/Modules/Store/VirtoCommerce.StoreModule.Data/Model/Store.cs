@@ -16,8 +16,8 @@ namespace VirtoCommerce.StoreModule.Data.Model
 		{
 			Languages = new NullCollection<StoreLanguage>();
 			Currencies = new NullCollection<StoreCurrency>();
-			Settings = new NullCollection<StoreSetting>();
 			PaymentGateways = new NullCollection<StorePaymentGateway>();
+			ShippingMethods = new NullCollection<StoreShippingMethod>();
 		}
 
 		[Required]
@@ -75,9 +75,8 @@ namespace VirtoCommerce.StoreModule.Data.Model
 
 		public ObservableCollection<StoreCurrency> Currencies { get; set; }
 
-		public ObservableCollection<StoreSetting> Settings { get; set; }
-
 		public ObservableCollection<StorePaymentGateway> PaymentGateways { get; set; }
+		public ObservableCollection<StoreShippingMethod> ShippingMethods { get; set; }
 		#endregion
 
 		public static ValidationResult ValidateStoreId(string value, ValidationContext context)
