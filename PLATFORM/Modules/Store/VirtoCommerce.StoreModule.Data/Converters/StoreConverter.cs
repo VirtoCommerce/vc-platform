@@ -11,6 +11,7 @@ using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Data.Common;
 using VirtoCommerce.Platform.Data.Common.ConventionInjections;
 using VirtoCommerce.Domain.Shipping.Model;
+using VirtoCommerce.Domain.Payment2.Model;
 
 namespace VirtoCommerce.StoreModule.Data.Converters
 {
@@ -21,7 +22,7 @@ namespace VirtoCommerce.StoreModule.Data.Converters
 		/// </summary>
 		/// <param name="catalogBase"></param>
 		/// <returns></returns>
-		public static coreModel.Store ToCoreModel(this dataModel.Store dbStore, ShippingMethod[] shippingMethods)
+		public static coreModel.Store ToCoreModel(this dataModel.Store dbStore, ShippingMethod[] shippingMethods, PaymentMethod[] paymentMethods)
 		{
 			if (dbStore == null)
 				throw new ArgumentNullException("dbStore");
@@ -38,7 +39,17 @@ namespace VirtoCommerce.StoreModule.Data.Converters
 			
 			retVal.Languages = dbStore.Languages.Select(x => x.LanguageCode).ToList();
 			retVal.Currencies = dbStore.Currencies.Select(x => (CurrencyCodes)Enum.Parse(typeof(CurrencyCodes), x.CurrencyCode, true)).ToList();
-			retVal.PaymentGateways = dbStore.PaymentGateways.Select(x => x.PaymentGateway).ToList();
+		
+			//Payment methods need return only contains in registered
+			retVal.PaymentMethods = paymentMethods;
+			foreach (var paymentMethod in paymentMethods)
+			{
+				var dbStoredPaymentMethod = dbStore.ShippingMethods.FirstOrDefault(x => x.Code == paymentMethod.Code);
+				if (dbStoredPaymentMethod != null)
+				{
+					paymentMethod.InjectFrom(dbStoredPaymentMethod);
+				}
+			}
 
 			//Shipping methods need return only contains in registered
 			retVal.ShippingMethods = shippingMethods;
@@ -95,17 +106,14 @@ namespace VirtoCommerce.StoreModule.Data.Converters
 					StoreId = retVal.Id
 				}));
 			}
-			if (store.PaymentGateways != null)
-			{
-				retVal.PaymentGateways = new ObservableCollection<dataModel.StorePaymentGateway>(store.PaymentGateways.Select(x => new dataModel.StorePaymentGateway
-				{
-					 PaymentGateway = x,
-					 StoreId = retVal.Id
-				}));
-			}
+			
 			if (store.ShippingMethods != null)
 			{
 				retVal.ShippingMethods = new ObservableCollection<dataModel.StoreShippingMethod>(store.ShippingMethods.Select(x => x.ToDataModel()));
+			}
+			if (store.PaymentMethods != null)
+			{
+				retVal.PaymentMethods = new ObservableCollection<dataModel.StorePaymentMethod>(store.PaymentMethods.Select(x => x.ToDataModel()));
 			}
 			return retVal;
 		}
@@ -141,11 +149,11 @@ namespace VirtoCommerce.StoreModule.Data.Converters
 				source.Currencies.Patch(target.Currencies, currencyComparer,
 									  (sourceCurrency, targetCurrency) => targetCurrency.CurrencyCode = sourceCurrency.CurrencyCode);
 			}
-			if (!source.PaymentGateways.IsNullCollection())
+			if (!source.PaymentMethods.IsNullCollection())
 			{
-				var paymentComparer = AnonymousComparer.Create((dataModel.StorePaymentGateway x) => x.PaymentGateway);
-				source.PaymentGateways.Patch(target.PaymentGateways, paymentComparer,
-									  (sourceGateway, targetGateway) => targetGateway.PaymentGateway = sourceGateway.PaymentGateway);
+				var paymentComparer = AnonymousComparer.Create((dataModel.StorePaymentMethod x) => x.Code);
+				source.PaymentMethods.Patch(target.PaymentMethods, paymentComparer,
+									  (sourceMethod, targetMethod) => sourceMethod.Patch(targetMethod));
 			}
 			if (!source.ShippingMethods.IsNullCollection())
 			{

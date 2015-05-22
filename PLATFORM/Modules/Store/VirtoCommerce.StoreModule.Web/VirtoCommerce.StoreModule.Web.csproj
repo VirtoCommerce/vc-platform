@@ -140,11 +140,13 @@
     <Compile Include="Controllers\PredefinedPermissions.cs" />
     <Compile Include="Converters\FulfillmentConverter.cs" />
     <Compile Include="Converters\SeoInfoConverter.cs" />
+    <Compile Include="Converters\PaymentMethodConverter.cs" />
     <Compile Include="Converters\ShippingMethodConverter.cs" />
     <Compile Include="Converters\StoreConverter.cs" />
     <Compile Include="Converters\SettingConverter.cs" />
     <Compile Include="Model\FulfillmentCenter.cs" />
     <Compile Include="Model\SeoInfo.cs" />
+    <Compile Include="Model\PaymentMethod.cs" />
     <Compile Include="Model\ShippingMethod.cs" />
     <Compile Include="Model\Store.cs" />
     <Compile Include="Model\Setting.cs" />

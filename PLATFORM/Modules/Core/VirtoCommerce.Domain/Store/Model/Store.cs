@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using VirtoCommerce.Domain.Commerce.Model;
+using VirtoCommerce.Domain.Payment2.Model;
 using VirtoCommerce.Domain.Shipping.Model;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Settings;
@@ -35,7 +36,7 @@ namespace VirtoCommerce.Domain.Store.Model
 		public ICollection<string> Languages { get; set; }
 		public ICollection<CurrencyCodes> Currencies { get; set; }
 
-		public ICollection<string> PaymentGateways { get; set; }
+		public ICollection<PaymentMethod> PaymentMethods { get; set; }
 		public ICollection<ShippingMethod> ShippingMethods { get; set; }
 		public ICollection<SeoInfo> SeoInfos { get; set; }
 

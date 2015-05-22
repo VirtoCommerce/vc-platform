@@ -52,7 +52,7 @@ namespace VirtoCommerce.StoreModule.Test
 					StateProvince = "State",
 					PostalCode = "code"
 				},
-				PaymentGateways = new string[] { "PayPal", "Clarna" },
+				//PaymentGateways = new string[] { "PayPal", "Clarna" },
 				StoreState = Domain.Store.Model.StoreState.Open,
 				Settings = new Setting[] { new Setting { Name = "test", Value = "sss", ValueType =  Platform.Core.Settings.SettingValueType.ShortText} }
 
@@ -107,8 +107,8 @@ namespace VirtoCommerce.StoreModule.Test
 			};
 
 			var shippingService = new ShippingServiceImpl();
-			var storeService = new StoreServiceImpl(repositoryFactory, GetCommerceService(), null, null);
-			var controller = new StoreModuleController(storeService, null);
+			var storeService = new StoreServiceImpl(repositoryFactory, GetCommerceService(), null, null,  null);
+			var controller = new StoreModuleController(storeService, null, null);
 			return controller;
 		}
 	}

@@ -37,7 +37,7 @@ namespace VirtoCommerce.StoreModule.Web.Model
 		[JsonProperty(ItemConverterType = typeof(StringEnumConverter))]
 		public ICollection<CurrencyCodes> Currencies { get; set; }
 		public ICollection<Setting> Settings { get; set; }
-		public ICollection<string> PaymentGateways { get; set; }
+		public ICollection<PaymentMethod> PaymentMethods { get; set; }
 		public ICollection<ShippingMethod> ShippingMethods { get; set; }
 		public ICollection<SeoInfo> SeoInfos { get; set; }
 	}

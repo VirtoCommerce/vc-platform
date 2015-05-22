@@ -55,6 +55,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Converters\SeoInfoConverter.cs" />
+    <Compile Include="Converters\SorePaymentMethodConverter.cs" />
     <Compile Include="Converters\SoreShippingMethodConverter.cs" />
     <Compile Include="Converters\StoreConverter.cs" />
     <Compile Include="Migrations\201504301210161_Initial.cs" />
@@ -69,11 +70,15 @@
     <Compile Include="Migrations\201505220856293_ShippingMethod.Designer.cs">
       <DependentUpon>201505220856293_ShippingMethod.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201505221405397_PaymentMethod.cs" />
+    <Compile Include="Migrations\201505221405397_PaymentMethod.Designer.cs">
+      <DependentUpon>201505221405397_PaymentMethod.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Model\Store.cs" />
     <Compile Include="Model\StoreCurrency.cs" />
     <Compile Include="Model\StoreLanguage.cs" />
-    <Compile Include="Model\StorePaymentGateway.cs" />
+    <Compile Include="Model\StorePaymentMethod.cs" />
     <Compile Include="Model\StoreShippingMethod.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\SqlStoreSampleDatabaseInitializer.cs" />
@@ -108,6 +113,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201505220856293_ShippingMethod.resx">
       <DependentUpon>201505220856293_ShippingMethod.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201505221405397_PaymentMethod.resx">
+      <DependentUpon>201505221405397_PaymentMethod.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

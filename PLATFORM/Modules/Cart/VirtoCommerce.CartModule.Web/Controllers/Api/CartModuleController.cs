@@ -8,6 +8,7 @@ using VirtoCommerce.CartModule.Web.Binders;
 using VirtoCommerce.CartModule.Web.Converters;
 using VirtoCommerce.Domain.Cart.Services;
 using VirtoCommerce.Domain.Payment.Services;
+using VirtoCommerce.Domain.Store.Services;
 using VirtoCommerce.Platform.Core.Security;
 
 namespace VirtoCommerce.CartModule.Web.Controllers.Api
@@ -18,13 +19,12 @@ namespace VirtoCommerce.CartModule.Web.Controllers.Api
 	{
 		private readonly IShoppingCartService _shoppingCartService;
 		private readonly IShoppingCartSearchService _searchService;
-		private readonly IPaymentGatewayManager _paymentGatewayManager;
-
-		public CartModuleController(IShoppingCartService cartService, IShoppingCartSearchService searchService, IPaymentGatewayManager paymentGatewayManager)
+		private readonly IStoreService _storeService;
+		public CartModuleController(IShoppingCartService cartService, IShoppingCartSearchService searchService, IStoreService storeService)
 		{
 			this._shoppingCartService = cartService;
 			this._searchService = searchService;
-			_paymentGatewayManager = paymentGatewayManager;
+			_storeService = storeService;
 		}
 
 		// GET: api/cart/store1/customer2/carts/current
@@ -130,15 +130,14 @@ namespace VirtoCommerce.CartModule.Web.Controllers.Api
 		{
 			var cart = _shoppingCartService.GetById(cartId);
 
-			var retVal = _paymentGatewayManager
-				.PaymentGateways
-				.Select(p => new CatalogModule.Web.Model.PaymentMethod
+			var store = _storeService.GetById(cart.StoreId);
+
+			var retVal = store.PaymentMethods.Select(p => new CatalogModule.Web.Model.PaymentMethod
 							{
-								GatewayCode = p.GatewayCode,
-								Name = p.GatewayCode,
+								GatewayCode = p.Code,
+								Name = p.Description,
 								IconUrl = p.LogoUrl
-							})
-				.ToArray();
+							}).ToArray();
 
 			return this.Ok(retVal);
 		}

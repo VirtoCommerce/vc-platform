@@ -186,6 +186,12 @@
     <Compile Include="Order\Services\IShipmentService.cs" />
     <Compile Include="Order\Workflow\OrderStateBasedEvalContext.cs" />
     <Compile Include="Order\Workflow\IOrderWorkflow.cs" />
+    <Compile Include="Payment2\Model\PaymentEvaluationContext.cs" />
+    <Compile Include="Payment2\Model\PaymentMethod.cs" />
+    <Compile Include="Payment2\Model\PaymentStatus.cs" />
+    <Compile Include="Payment2\Model\ProcessPaymentResult.cs" />
+    <Compile Include="Payment2\Services\IPaymentService.cs" />
+    <Compile Include="Payment2\Services\PaymentServiceImpl.cs" />
     <Compile Include="Payment\Model\DirectRedirectUrlPaymentInfo.cs" />
     <Compile Include="Payment\Model\PaymentGatewayType.cs" />
     <Compile Include="Payment\Model\PaymentInfo.cs" />

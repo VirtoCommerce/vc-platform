@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Omu.ValueInjecter;
+using VirtoCommerce.Domain.Payment2.Model;
 using VirtoCommerce.Domain.Shipping.Model;
 using coreModel = VirtoCommerce.Domain.Store.Model;
 using webModel = VirtoCommerce.StoreModule.Web.Model;
@@ -23,8 +24,9 @@ namespace VirtoCommerce.StoreModule.Web.Converters
 				retVal.Settings = store.Settings.Select(x => x.ToWebModel()).ToList();
 			if (store.ShippingMethods != null)
 				retVal.ShippingMethods = store.ShippingMethods.Select(x => x.ToWebModel()).ToList();
-			if (store.PaymentGateways != null)
-				retVal.PaymentGateways = store.PaymentGateways;
+			if (store.PaymentMethods != null)
+				retVal.PaymentMethods = store.PaymentMethods.Select(x => x.ToWebModel()).ToList();
+
 			if (store.Languages != null)
 				retVal.Languages = store.Languages;
 			if (store.Currencies != null)
@@ -39,7 +41,7 @@ namespace VirtoCommerce.StoreModule.Web.Converters
 			return retVal;
 		}
 
-		public static coreModel.Store ToCoreModel(this webModel.Store store, ShippingMethod[] shippingMethods)
+		public static coreModel.Store ToCoreModel(this webModel.Store store, ShippingMethod[] shippingMethods, PaymentMethod[] paymentMethods)
 		{
 			var retVal = new coreModel.Store();
 			retVal.InjectFrom(store);
@@ -61,8 +63,19 @@ namespace VirtoCommerce.StoreModule.Web.Converters
 				}
 			}
 
-			if (store.PaymentGateways != null)
-				retVal.PaymentGateways = store.PaymentGateways;
+			if (store.PaymentMethods != null)
+			{
+				retVal.PaymentMethods = new List<PaymentMethod>();
+				foreach (var paymentMethod in paymentMethods)
+				{
+					var webPaymentMethod = store.PaymentMethods.FirstOrDefault(x => x.Code == paymentMethod.Code);
+					if (webPaymentMethod != null)
+					{
+						retVal.PaymentMethods.Add(webPaymentMethod.ToCoreModel(paymentMethod));
+					}
+				}
+			}
+
 			if (store.Languages != null)
 				retVal.Languages = store.Languages;
 			if (store.Currencies != null)

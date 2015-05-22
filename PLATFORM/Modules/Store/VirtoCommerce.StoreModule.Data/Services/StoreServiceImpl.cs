@@ -15,6 +15,7 @@ using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Domain.Shipping.Services;
 using VirtoCommerce.Domain.Shipping.Model;
 using Omu.ValueInjecter;
+using VirtoCommerce.Domain.Payment2.Services;
 
 namespace VirtoCommerce.StoreModule.Data.Services
 {
@@ -24,12 +25,15 @@ namespace VirtoCommerce.StoreModule.Data.Services
 		private readonly ICommerceService _commerceService;
 		private readonly ISettingsManager _settingManager;
 		private readonly IShippingService _shippingService;
-		public StoreServiceImpl(Func<IStoreRepository> repositoryFactory, ICommerceService commerceService, ISettingsManager settingManager, IShippingService shippingService)
+		private readonly IPaymentService _paymentService;
+
+		public StoreServiceImpl(Func<IStoreRepository> repositoryFactory, ICommerceService commerceService, ISettingsManager settingManager, IShippingService shippingService, IPaymentService paymentService)
 		{
 			_repositoryFactory = repositoryFactory;
 			_commerceService = commerceService;
 			_settingManager = settingManager;
 			_shippingService = shippingService;
+			_paymentService = paymentService;
 		}
 
 		#region IStoreService Members
@@ -44,8 +48,7 @@ namespace VirtoCommerce.StoreModule.Data.Services
 				if (entity != null)
 				{
 					//Load original typed shipping method and populate it  personalized information from db
-					var origShippingMethods = _shippingService.GetAllShippingMethods();
-					retVal = entity.ToCoreModel(origShippingMethods);
+					retVal = entity.ToCoreModel(_shippingService.GetAllShippingMethods(), _paymentService.GetAllPaymentMethods());
 
 					var fulfillmentCenters = _commerceService.GetAllFulfillmentCenters();
 					retVal.ReturnsFulfillmentCenter = fulfillmentCenters.FirstOrDefault(x => x.Id == entity.ReturnsFulfillmentCenterId);
@@ -123,12 +126,10 @@ namespace VirtoCommerce.StoreModule.Data.Services
 			var retVal = new List<coreModel.Store>();
 			using (var repository = _repositoryFactory())
 			{
-				var shippingMethods = _shippingService.GetAllShippingMethods();
-
 				foreach (var storeId in repository.Stores.Select(x => x.Id).ToArray())
 				{
-					var entity = repository.GetStoreById(storeId);
-					retVal.Add(entity.ToCoreModel(shippingMethods));
+					var store = GetById(storeId);
+					retVal.Add(store);
 				}
 			}
 			return retVal;

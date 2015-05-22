@@ -4,6 +4,8 @@ using Microsoft.Practices.Unity;
 using VirtoCommerce.CoreModule.Data.Repositories;
 using VirtoCommerce.Domain.Commerce.Services;
 using VirtoCommerce.Domain.Payment.Services;
+using VirtoCommerce.Domain.Payment2.Model;
+using VirtoCommerce.Domain.Payment2.Services;
 using VirtoCommerce.Domain.Search;
 using VirtoCommerce.Domain.Shipping.Model;
 using VirtoCommerce.Domain.Shipping.Services;
@@ -48,20 +50,20 @@ namespace VirtoCommerce.CoreModule.Web
 			}
 	    }
 
-        public void Initialize()
-        {
-           #region Payment gateways manager
+		public void Initialize()
+		{
+			#region Payment gateways manager
 
-            _container.RegisterType<IPaymentGatewayManager, InMemoryPaymentGatewayManagerImpl>(new ContainerControlledLifetimeManager());
+			_container.RegisterType<IPaymentGatewayManager, InMemoryPaymentGatewayManagerImpl>(new ContainerControlledLifetimeManager());
 
-            #endregion
+			#endregion
 
-           #region Fulfillment
+			#region Fulfillment
 
 			_container.RegisterType<IСommerceRepository>(new InjectionFactory(c => new CommerceRepositoryImpl(_connectionStringName, new EntityPrimaryKeyGeneratorInterceptor(), new AuditableInterceptor())));
 			_container.RegisterType<ICommerceService, CommerceServiceImpl>();
 
-            #endregion
+			#endregion
 
 			#region Shipping service
 			var shippingService = new ShippingServiceImpl();
@@ -69,15 +71,38 @@ namespace VirtoCommerce.CoreModule.Web
 
 			_container.RegisterType<IShippingRateEvaluator, StoreShippingRateEvaluator>();
 			#endregion
-        }
+
+			#region Payment service
+			var paymentService = new PaymentServiceImpl();
+			_container.RegisterInstance<IPaymentService>(paymentService);
+			#endregion
+		}
 
         public void PostInitialize()
         {
 			var settingManager = _container.Resolve<ISettingsManager>();
 			var shippingService = _container.Resolve<IShippingService>();
+			var paymentService = _container.Resolve<IPaymentService>();
+
 			shippingService.RegisterShippingMethod(() => new FixedRateShippingMethod(settingManager.GetModuleSettings("VirtoCommerce.Core")));
+			paymentService.RegisterPaymentMethod(() => new TemporaryPaymentMethod(settingManager.GetModuleSettings("VirtoCommerce.Core")));
       
         }
+
+		public class TemporaryPaymentMethod : PaymentMethod
+		{
+			public TemporaryPaymentMethod(ICollection<SettingEntry> settings)
+				: base("TemporaryPaymentMethod")
+			{
+				Settings = settings;
+			}
+
+
+			public override ProcessPaymentResult ProcessPayment(Domain.Common.IEvaluationContext context)
+			{
+				throw new System.NotImplementedException();
+			}
+		}
 
 
 		public class FixedRateShippingMethod : ShippingMethod

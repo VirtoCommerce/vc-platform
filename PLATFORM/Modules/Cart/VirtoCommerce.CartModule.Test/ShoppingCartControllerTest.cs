@@ -192,10 +192,10 @@ namespace VirtoCommerce.CartModule.Test
 
 			var cartService = new ShoppingCartServiceImpl(repositoryFactory, cartWorkflowService);
 			var searchService = new ShoppingCartSearchServiceImpl(repositoryFactory);
-			var memoryPaymentGatewayManager = new InMemoryPaymentGatewayManagerImpl();
+			//var memoryPaymentGatewayManager = new InMemoryPaymentGatewayManagerImpl();
 
 
-			var controller = new CartModuleController(cartService, searchService, memoryPaymentGatewayManager);
+			var controller = new CartModuleController(cartService, searchService, null);
 			return controller;
 		}
 	}

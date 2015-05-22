@@ -30,8 +30,6 @@ namespace VirtoCommerce.StoreModule.Data.Model
 
 		#region Navigation Properties
 
-		[Required]
-		[StringLength(128)]
 		public string StoreId { get; set; }
 
 		public Store Store { get; set; }
