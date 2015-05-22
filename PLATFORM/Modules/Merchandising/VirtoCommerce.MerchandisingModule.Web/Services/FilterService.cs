@@ -68,6 +68,9 @@ namespace VirtoCommerce.MerchandisingModule.Web.Services
         /// <returns>Filtered browsing</returns>
         private FilteredBrowsing GetStoreBrowseFilters(Store store)
         {
+            if (store == null || store.Settings == null)
+                return null;
+
             var filterSetting = store.Settings.FirstOrDefault(x => x.Name == "FilteredBrowsing");
             if (filterSetting != null && filterSetting.Value != null)
             {
