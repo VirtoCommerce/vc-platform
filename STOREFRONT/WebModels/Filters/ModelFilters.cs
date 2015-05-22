@@ -268,7 +268,10 @@ namespace VirtoCommerce.Web.Models.Filters
         {
             if (!String.IsNullOrEmpty(format))
             {
-                format = TranslationFilter.T(String.Format("date_formats.{0}",format));
+                var loc = String.Format("date_formats.{0}", format);
+                var newFormat = TranslationFilter.T(loc);
+                if (newFormat != loc)
+                    format = newFormat;
             }
 
             return StandardFilters.Date(input, format);
