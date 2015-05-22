@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Data.Entity;
 using Microsoft.Practices.Unity;
+using VirtoCommerce.CoreModule.Data.Payment;
 using VirtoCommerce.CoreModule.Data.Repositories;
+using VirtoCommerce.CoreModule.Data.Shipping;
 using VirtoCommerce.Domain.Commerce.Services;
 using VirtoCommerce.Domain.Payment.Services;
 using VirtoCommerce.Domain.Payment2.Model;
@@ -68,8 +70,6 @@ namespace VirtoCommerce.CoreModule.Web
 			#region Shipping service
 			var shippingService = new ShippingServiceImpl();
 			_container.RegisterInstance<IShippingService>(shippingService);
-
-			_container.RegisterType<IShippingRateEvaluator, StoreShippingRateEvaluator>();
 			#endregion
 
 			#region Payment service
@@ -85,40 +85,11 @@ namespace VirtoCommerce.CoreModule.Web
 			var paymentService = _container.Resolve<IPaymentService>();
 
 			shippingService.RegisterShippingMethod(() => new FixedRateShippingMethod(settingManager.GetModuleSettings("VirtoCommerce.Core")));
-			paymentService.RegisterPaymentMethod(() => new TemporaryPaymentMethod(settingManager.GetModuleSettings("VirtoCommerce.Core")));
+			paymentService.RegisterPaymentMethod(() => new ManualPaymentMethod(new SettingEntry[] { new SettingEntry { Name = "Rate", ValueType = SettingValueType.Decimal } }));
       
         }
 
-		public class TemporaryPaymentMethod : PaymentMethod
-		{
-			public TemporaryPaymentMethod(ICollection<SettingEntry> settings)
-				: base("TemporaryPaymentMethod")
-			{
-				Settings = settings;
-			}
-
-
-			public override ProcessPaymentResult ProcessPayment(Domain.Common.IEvaluationContext context)
-			{
-				throw new System.NotImplementedException();
-			}
-		}
-
-
-		public class FixedRateShippingMethod : ShippingMethod
-		{
-			public FixedRateShippingMethod(ICollection<SettingEntry> settings)
-				: base("FixedRate")
-			{
-				Settings = settings;
-			}
-			public decimal Rate { get; set; }
-
-			public override ShippingRate CalculateRate(Domain.Common.IEvaluationContext context)
-			{
-				return new ShippingRate { Rate = Rate, ShippingMethod = this };
-			}
-		}
+	
 
 		#endregion
     }

@@ -9,9 +9,6 @@ namespace VirtoCommerce.Domain.Shipping.Model
 {
 	public class ShippingRate
 	{
-		public string Name { get; set; }
-		public string Description { get; set; }
-
 		public decimal Rate { get; set; }
 		public CurrencyCodes Currency { get; set; }
 

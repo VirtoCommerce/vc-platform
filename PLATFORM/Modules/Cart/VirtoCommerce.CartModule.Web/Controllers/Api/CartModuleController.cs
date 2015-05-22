@@ -8,6 +8,7 @@ using VirtoCommerce.CartModule.Web.Binders;
 using VirtoCommerce.CartModule.Web.Converters;
 using VirtoCommerce.Domain.Cart.Services;
 using VirtoCommerce.Domain.Payment.Services;
+using VirtoCommerce.Domain.Shipping.Model;
 using VirtoCommerce.Domain.Store.Services;
 using VirtoCommerce.Platform.Core.Security;
 
@@ -104,21 +105,24 @@ namespace VirtoCommerce.CartModule.Web.Controllers.Api
 
 		// GET: api/cart/carts/{cartId}/shipmentMethods
 		[HttpGet]
-		[ResponseType(typeof(CatalogModule.Web.Model.ShipmentMethod[]))]
+		[ResponseType(typeof(CatalogModule.Web.Model.ShippingMethod[]))]
 		[Route("carts/{cartId}/shipmentMethods")]
 		public IHttpActionResult GetShipmentMethods(string cartId)
 		{
 			var cart = _shoppingCartService.GetById(cartId);
-			var retVal = new[] 
-			{
-				 new CatalogModule.Web.Model.ShipmentMethod {
-					 Currency = cart.Currency,
-					 Name = "USPS",
-					 Price = 10,
-					 ShipmentMethodCode = "USPS"
-				 }
-			};
+			var store = _storeService.GetById(cart.StoreId);
+			var evalContext = new ShippingEvaluationContext(cart);
 
+			var retVal = store.ShippingMethods.Where(x => x.IsActive).Select(x => x.CalculateRate(evalContext))
+				.Select(x => new CatalogModule.Web.Model.ShippingMethod
+				{
+					Currency = cart.Currency,
+					Name = x.ShippingMethod.Description,
+					Price = x.Rate,
+					ShipmentMethodCode = x.ShippingMethod.Code,
+					LogoUrl = x.ShippingMethod.LogoUrl
+				});
+			
 			return Ok(retVal);
 		}
 

@@ -254,8 +254,6 @@
     <Compile Include="Shipping\Model\ShippingMethod.cs" />
     <Compile Include="Shipping\Model\ShippingRate.cs" />
     <Compile Include="Shipping\Services\IShippingService.cs" />
-    <Compile Include="Shipping\Services\IShippingRateEvaluator.cs" />
-    <Compile Include="Shipping\Services\StoreShippingRateEvaluator.cs" />
     <Compile Include="Shipping\Services\ShippingServiceImpl.cs" />
     <Compile Include="Store\Model\SeoInfo.cs" />
     <Compile Include="Store\Model\Store.cs" />

@@ -11,15 +11,10 @@ namespace VirtoCommerce.Domain.Shipping.Model
 {
 	public class ShippingEvaluationContext : IEvaluationContext
 	{
-		public ShippingEvaluationContext(string storeId)
+		public ShippingEvaluationContext(ShoppingCart shoppingCart)
 		{
-			StoreId = storeId;
+			ShoppingCart = shoppingCart;
 		}
-		public string StoreId { get; set; }
-
-		public CurrencyCodes Currency { get; set; }
-
-		public Shipment CartShipment { get; set; }
 
 		public ShoppingCart ShoppingCart { get; set; }
 	}
