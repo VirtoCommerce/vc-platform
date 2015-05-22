@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Web;
 using VirtoCommerce.Domain.Store.Model;
 using VirtoCommerce.Domain.Store.Services;
+using VirtoCommerce.Platform.Core.Settings;
 
 namespace PayPal.PaymentGatewaysModule.Web.Managers
 {
@@ -23,24 +25,28 @@ namespace PayPal.PaymentGatewaysModule.Web.Managers
 		{
 			var stores = _service.GetStoreList();
 
-			foreach(var store in stores)
-			{
-				CheckAndAddSetting("Paypal.Mode", SettingValueType.ShortText, store);
-				CheckAndAddSetting("Paypal.APIUsername", SettingValueType.ShortText, store);
-				CheckAndAddSetting("Paypal.APIPassword", SettingValueType.ShortText, store);
-				CheckAndAddSetting("Paypal.APISignature", SettingValueType.ShortText, store);
+			//foreach(var store in stores)
+			//{
+			//	CheckAndAddSetting("Paypal.Mode", SettingValueType.ShortText, store);
+			//	CheckAndAddSetting("Paypal.APIUsername", SettingValueType.ShortText, store);
+			//	CheckAndAddSetting("Paypal.APIPassword", SettingValueType.ShortText, store);
+			//	CheckAndAddSetting("Paypal.APISignature", SettingValueType.ShortText, store);
 
-				_service.Update(new Store[] { store });
-			}
+			//	_service.Update(new Store[] { store });
+			//}
 		}
 
 		private void CheckAndAddSetting(string settingName, SettingValueType type, Store store)
 		{
+			if(store.Settings == null)
+			{
+				store.Settings = new Collection<SettingEntry>();
+			}
 			var setting = store.Settings.FirstOrDefault(s => s.Name == settingName);
 
 			if(setting == null)
 			{
-				store.Settings.Add(new StoreSetting
+				store.Settings.Add(new SettingEntry
 					{
 						Name = settingName,
 						Value = string.Empty,

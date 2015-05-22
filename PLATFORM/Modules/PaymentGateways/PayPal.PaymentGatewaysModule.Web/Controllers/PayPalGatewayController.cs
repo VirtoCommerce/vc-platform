@@ -59,17 +59,25 @@ namespace PayPal.PaymentGatewaysModule.Web.Controllers
 
 		[HttpGet]
 		[Route("push")]
-		public IHttpActionResult ApprovePayment(string token, string orderId, bool cancel)
+		public IHttpActionResult ApprovePayment(string token, string orderId, bool? cancel, string redirectUrl)
 		{
-			if (!cancel)
+			try
 			{
-				var paymentInfo = _paymentGateway.GetPayment(token, orderId) as coreModels.DirectRedirectUrlPaymentInfo;
+				if (cancel.HasValue)
+				{
+					if (!cancel.Value)
+					{
+						var paymentInfo = _paymentGateway.GetPayment(token, orderId) as coreModels.DirectRedirectUrlPaymentInfo;
 
-				return Redirect(paymentInfo.RedirectUrl);
+						return Redirect(paymentInfo.RedirectUrl);
+					}
+				}
+				return Redirect(string.Format("{0}/checkout/thanks?orderId={1}&isSuccess=false", redirectUrl, orderId));
 			}
-			return Redirect(string.Format("http://localhost/checkout/thanks?orderId={0}&isSuccess=false", orderId));
-
-			//return Ok((paymentInfo as coreModels.DirectRedirectUrlPaymentInfo).ToWebModel());
+			catch
+			{
+				return Redirect(string.Format("{0}/checkout/thanks?orderId={1}&isSuccess=false", redirectUrl, orderId));
+			}
 		}
 
 		//[HttpGet]
