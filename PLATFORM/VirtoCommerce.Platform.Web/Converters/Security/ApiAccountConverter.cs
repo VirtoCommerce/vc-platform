@@ -1,6 +1,5 @@
 ﻿using System;
 using Omu.ValueInjecter;
-using VirtoCommerce.Platform.Data.Common;
 using VirtoCommerce.Platform.Data.Common.ConventionInjections;
 using dataModel = VirtoCommerce.Platform.Data.Model;
 using webModel = VirtoCommerce.Platform.Web.Model.Security;
@@ -12,23 +11,28 @@ namespace VirtoCommerce.Platform.Web.Converters.Security
 
         public static dataModel.ApiAccountEntity ToFoundation(this webModel.ApiAccount account)
         {
-            var retVal = new dataModel.ApiAccountEntity();
-            retVal.InjectFrom(account);
+            var result = new dataModel.ApiAccountEntity();
+            result.InjectFrom(account);
 
             if (account.Id != null)
             {
-                retVal.Id = account.Id;
+                result.Id = account.Id;
             }
 
-            return retVal;
+            result.ApiAccountType = (dataModel.ApiAccountType)account.ApiAccountType;
+
+            return result;
         }
 
-        public static webModel.ApiAccount ToWebModel(this dataModel.ApiAccountEntity center)
+        public static webModel.ApiAccount ToWebModel(this dataModel.ApiAccountEntity account)
         {
-            var retVal = new webModel.ApiAccount();
-            retVal.InjectFrom(center);
-            retVal.Id = center.Id;
-            return retVal;
+            var result = new webModel.ApiAccount();
+            result.InjectFrom(account);
+
+            result.Id = account.Id;
+            result.ApiAccountType = (webModel.ApiAccountType)account.ApiAccountType;
+
+            return result;
         }
 
         /// <summary>

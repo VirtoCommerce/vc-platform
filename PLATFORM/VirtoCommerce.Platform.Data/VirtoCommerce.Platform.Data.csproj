@@ -190,15 +190,25 @@
     <Compile Include="Repositories\Migrations\201505211410074_ObjectForSetting.Designer.cs">
       <DependentUpon>201505211410074_ObjectForSetting.cs</DependentUpon>
     </Compile>
+    <Compile Include="Repositories\Migrations\201505250843471_ApiAccountName.cs" />
+    <Compile Include="Repositories\Migrations\201505250843471_ApiAccountName.Designer.cs">
+      <DependentUpon>201505250843471_ApiAccountName.cs</DependentUpon>
+    </Compile>
     <Compile Include="Repositories\Migrations\Configuration.cs" />
     <Compile Include="Repositories\PlatformDatabaseInitializer.cs" />
     <Compile Include="Repositories\PlatformRepository.cs" />
     <Compile Include="Security\ApiAccountProvider.cs" />
-    <Compile Include="Security\Hmac\HmacAuthenticationExtensions.cs" />
-    <Compile Include="Security\Hmac\HmacAuthenticationHandler.cs" />
-    <Compile Include="Security\Hmac\HmacAuthenticationMiddleware.cs" />
-    <Compile Include="Security\Hmac\HmacAuthenticationOptions.cs" />
-    <Compile Include="Security\Hmac\HmacUtility.cs" />
+    <Compile Include="Security\Authentication\ApiAuthenticationHandler.cs" />
+    <Compile Include="Security\Authentication\ApiAuthenticationOptions.cs" />
+    <Compile Include="Security\Authentication\ApiKeys\ApiKeysAuthenticationExtensions.cs" />
+    <Compile Include="Security\Authentication\ApiKeys\ApiKeysAuthenticationHandler.cs" />
+    <Compile Include="Security\Authentication\ApiKeys\ApiKeysAuthenticationMiddleware.cs" />
+    <Compile Include="Security\Authentication\ApiKeys\ApiKeysAuthenticationOptions.cs" />
+    <Compile Include="Security\Authentication\Hmac\HmacAuthenticationExtensions.cs" />
+    <Compile Include="Security\Authentication\Hmac\HmacAuthenticationHandler.cs" />
+    <Compile Include="Security\Authentication\Hmac\HmacAuthenticationMiddleware.cs" />
+    <Compile Include="Security\Authentication\Hmac\HmacAuthenticationOptions.cs" />
+    <Compile Include="Security\Authentication\Hmac\HmacUtility.cs" />
     <Compile Include="Security\Identity\ApplicationClaimsIdentityProvider.cs" />
     <Compile Include="Security\Identity\ApplicationSignInManager.cs" />
     <Compile Include="Security\Identity\ApplicationUser.cs" />
@@ -244,6 +254,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Repositories\Migrations\201505211410074_ObjectForSetting.resx">
       <DependentUpon>201505211410074_ObjectForSetting.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Repositories\Migrations\201505250843471_ApiAccountName.resx">
+      <DependentUpon>201505250843471_ApiAccountName.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Security\Identity\Migrations\201411101625303_InitialCreate.resx">
       <DependentUpon>201411101625303_InitialCreate.cs</DependentUpon>

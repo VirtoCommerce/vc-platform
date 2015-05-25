@@ -2,7 +2,7 @@
 using Microsoft.Owin.Extensions;
 using Owin;
 
-namespace VirtoCommerce.Platform.Data.Security.Hmac
+namespace VirtoCommerce.Platform.Data.Security.Authentication.Hmac
 {
     public static class HmacAuthenticationExtensions
     {

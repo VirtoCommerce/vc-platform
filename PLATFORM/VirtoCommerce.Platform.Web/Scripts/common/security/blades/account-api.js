@@ -26,7 +26,7 @@
         {
             name: "Generate", icon: 'fa fa-refresh',
             executeMethod: function () {
-                $scope.generateNewApiAccount();
+                $scope.generateNewApiAccount("No Name", "Hmac");
             },
             canExecuteMethod: function () {
                 return true;
@@ -35,10 +35,10 @@
         }
     ];
 
-    $scope.generateNewApiAccount = function () {
+    $scope.generateNewApiAccount = function (name, type) {
         $scope.blade.isLoading = true;
 
-        accounts.generateNewApiAccount({}, function (apiAccount) {
+        accounts.generateNewApiAccount({ "name": name, "type": type }, function (apiAccount) {
             $scope.blade.isLoading = false;
             if ($scope.blade.currentEntity.apiAcounts && $scope.blade.currentEntity.apiAcounts.length > 0) {
                 $scope.blade.currentEntity.apiAcounts[0] = apiAccount;

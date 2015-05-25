@@ -1,7 +1,7 @@
 ﻿using Microsoft.Owin;
 using Microsoft.Owin.Security.Infrastructure;
 
-namespace VirtoCommerce.Platform.Data.Security.Hmac
+namespace VirtoCommerce.Platform.Data.Security.Authentication.Hmac
 {
     public class HmacAuthenticationMiddleware : AuthenticationMiddleware<HmacAuthenticationOptions>
     {

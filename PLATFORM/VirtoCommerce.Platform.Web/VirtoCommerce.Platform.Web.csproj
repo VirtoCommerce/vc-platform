@@ -280,6 +280,7 @@
     <Compile Include="Model\Packaging\ModuleWorkerJob.cs" />
     <Compile Include="Model\Packaging\ProgressMessage.cs" />
     <Compile Include="Model\Security\ApiAccount.cs" />
+    <Compile Include="Model\Security\ApiAccountType.cs" />
     <Compile Include="Model\Security\ApplicationUserExtended.cs" />
     <Compile Include="Model\Security\ChangePasswordInfo.cs" />
     <Compile Include="Model\Security\UserLogin.cs" />

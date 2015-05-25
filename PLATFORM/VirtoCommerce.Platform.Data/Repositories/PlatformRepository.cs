@@ -29,21 +29,21 @@ namespace VirtoCommerce.Platform.Data.Repositories
         {
             modelBuilder.Conventions.Remove<PluralizingTableNameConvention>();
 
-			#region Change logging
-			modelBuilder.Entity<OperationLogEntity>().HasKey(x => x.Id)
-						.Property(x => x.Id);
-			modelBuilder.Entity<OperationLogEntity>().ToTable("PlatformOperationLog");
-			#endregion
+            #region Change logging
+            modelBuilder.Entity<OperationLogEntity>().HasKey(x => x.Id)
+                        .Property(x => x.Id);
+            modelBuilder.Entity<OperationLogEntity>().ToTable("PlatformOperationLog");
+            #endregion
 
             #region Settings
-			modelBuilder.Entity<SettingEntity>("PlatformSetting", "Id");
-			modelBuilder.Entity<SettingValueEntity>("PlatformSettingValue", "Id");
-			//modelBuilder.Entity<SettingEntity>().HasKey(x => x.Id)
-			//				.Property(x => x.Id);
-			//modelBuilder.Entity<SettingEntity>().ToTable("PlatformSetting");
-			//modelBuilder.Entity<SettingValueEntity>().HasKey(x => x.Id)
-			//				.Property(x => x.Id);
-			//modelBuilder.Entity<SettingValueEntity>().ToTable("PlatformSettingValue");
+            modelBuilder.Entity<SettingEntity>("PlatformSetting", "Id");
+            modelBuilder.Entity<SettingValueEntity>("PlatformSettingValue", "Id");
+            //modelBuilder.Entity<SettingEntity>().HasKey(x => x.Id)
+            //				.Property(x => x.Id);
+            //modelBuilder.Entity<SettingEntity>().ToTable("PlatformSetting");
+            //modelBuilder.Entity<SettingValueEntity>().HasKey(x => x.Id)
+            //				.Property(x => x.Id);
+            //modelBuilder.Entity<SettingValueEntity>().ToTable("PlatformSettingValue");
 
             modelBuilder.Entity<SettingValueEntity>()
                 .HasRequired(x => x.Setting)
@@ -55,21 +55,20 @@ namespace VirtoCommerce.Platform.Data.Repositories
             #region Security
 
             // Tables
-			modelBuilder.Entity<AccountEntity>("PlatformAccount", "Id");
-			modelBuilder.Entity<ApiAccountEntity>("PlatformApiAccount", "Id");
-			modelBuilder.Entity<RoleEntity>("PlatformRole", "Id");
-			modelBuilder.Entity<PermissionEntity>("PlatformPermission", "Id");
-			modelBuilder.Entity<RoleAssignmentEntity>("PlatformRoleAssignment", "Id");
-			modelBuilder.Entity<RolePermissionEntity>("PlatformRolePermission", "Id");
+            modelBuilder.Entity<AccountEntity>("PlatformAccount", "Id");
+            modelBuilder.Entity<ApiAccountEntity>("PlatformApiAccount", "Id");
+            modelBuilder.Entity<RoleEntity>("PlatformRole", "Id");
+            modelBuilder.Entity<PermissionEntity>("PlatformPermission", "Id");
+            modelBuilder.Entity<RoleAssignmentEntity>("PlatformRoleAssignment", "Id");
+            modelBuilder.Entity<RolePermissionEntity>("PlatformRolePermission", "Id");
 
             // Properties
             modelBuilder.Entity<AccountEntity>().Property(x => x.StoreId).HasMaxLength(128);
             modelBuilder.Entity<AccountEntity>().Property(x => x.MemberId).HasMaxLength(64);
             modelBuilder.Entity<AccountEntity>().Property(x => x.UserName).IsRequired().HasMaxLength(128);
 
-            modelBuilder.Entity<ApiAccountEntity>().Property(x => x.AppId)
-                .IsRequired()
-                .HasMaxLength(128)
+            modelBuilder.Entity<ApiAccountEntity>().Property(x => x.Name).HasMaxLength(128);
+            modelBuilder.Entity<ApiAccountEntity>().Property(x => x.AppId).IsRequired().HasMaxLength(128)
                 .HasColumnAnnotation("Index", new IndexAnnotation(new IndexAttribute("IX_AppId") { IsUnique = true }));
 
             modelBuilder.Entity<RoleEntity>().Property(x => x.Name).IsRequired().HasMaxLength(128);
@@ -106,7 +105,7 @@ namespace VirtoCommerce.Platform.Data.Repositories
 
             #endregion
 
-			base.OnModelCreating(modelBuilder);
+            base.OnModelCreating(modelBuilder);
         }
 
         #region IPlatformRepository Members
@@ -119,7 +118,7 @@ namespace VirtoCommerce.Platform.Data.Repositories
         public IQueryable<PermissionEntity> Permissions { get { return GetAsQueryable<PermissionEntity>(); } }
         public IQueryable<RoleAssignmentEntity> RoleAssignments { get { return GetAsQueryable<RoleAssignmentEntity>(); } }
         public IQueryable<RolePermissionEntity> RolePermissions { get { return GetAsQueryable<RolePermissionEntity>(); } }
-		public IQueryable<OperationLogEntity> OperationLogs { get { return GetAsQueryable<OperationLogEntity>(); } }
+        public IQueryable<OperationLogEntity> OperationLogs { get { return GetAsQueryable<OperationLogEntity>(); } }
 
         public AccountEntity GetAccountByName(string userName, UserDetails detailsLevel)
         {
@@ -137,6 +136,6 @@ namespace VirtoCommerce.Platform.Data.Repositories
 
         #endregion
 
-		
-	}
+
+    }
 }
