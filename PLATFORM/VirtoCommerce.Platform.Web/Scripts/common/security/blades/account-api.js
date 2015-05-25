@@ -26,7 +26,7 @@
         {
             name: "Generate", icon: 'fa fa-refresh',
             executeMethod: function () {
-                $scope.generateNewApiAccount("Name", "Hmac");
+                $scope.generateNewApiAccount("No Name", "Hmac");
             },
             canExecuteMethod: function () {
                 return true;

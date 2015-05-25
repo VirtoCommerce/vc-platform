@@ -33,7 +33,7 @@ namespace VirtoCommerce.Platform.Data.Security
         {
             var result = new ApiAccountEntity
             {
-                //Name = name,
+                Name = name,
                 ApiAccountType = type,
                 AppId = Guid.NewGuid().ToString("N"),
                 IsActive = true

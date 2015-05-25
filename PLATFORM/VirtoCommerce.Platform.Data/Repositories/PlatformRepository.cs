@@ -67,7 +67,7 @@ namespace VirtoCommerce.Platform.Data.Repositories
             modelBuilder.Entity<AccountEntity>().Property(x => x.MemberId).HasMaxLength(64);
             modelBuilder.Entity<AccountEntity>().Property(x => x.UserName).IsRequired().HasMaxLength(128);
 
-            //modelBuilder.Entity<ApiAccountEntity>().Property(x => x.Name).HasMaxLength(128);
+            modelBuilder.Entity<ApiAccountEntity>().Property(x => x.Name).HasMaxLength(128);
             modelBuilder.Entity<ApiAccountEntity>().Property(x => x.AppId).IsRequired().HasMaxLength(128)
                 .HasColumnAnnotation("Index", new IndexAnnotation(new IndexAttribute("IX_AppId") { IsUnique = true }));
 
