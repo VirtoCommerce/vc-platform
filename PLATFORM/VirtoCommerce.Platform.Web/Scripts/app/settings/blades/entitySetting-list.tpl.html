@@ -1,8 +1,9 @@
-﻿<div class="blade-content">
+﻿<div class="blade-static __bottom" ng-include="'Scripts/common/templates/ok-cancel2.tpl.html'"></div>
+<div class="blade-content">
     <div class="blade-inner">
         <div class="inner-block">
-            <form name="objectsForm" class="form">
-                <fieldset ng-repeat="groupName in blade.groupNames" ng-init="setForm(objectsForm)">
+            <form name="formScope" class="form">
+                <fieldset ng-repeat="groupName in blade.groupNames">
                     <legend>{{groupName==='undefined'?'General':groupName}}</legend>
                     <div class="form-group" ng-repeat="data in blade.currentEntities[groupName]" title="{{data.description}}">
                         <label class="form-label">{{data.title}} <a href="" ng-click="editArray(data);" ng-if="data.isArray"><i class="form-ico fa fa-pencil"></i></a></label>

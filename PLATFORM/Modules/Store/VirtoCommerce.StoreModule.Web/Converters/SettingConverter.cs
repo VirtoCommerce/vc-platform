@@ -10,6 +10,7 @@ namespace VirtoCommerce.StoreModule.Web.Converters
 		{
 			var retVal = new webModel.Setting();
 			retVal.InjectFrom(setting);
+			retVal.ValueType = setting.ValueType;
 			return retVal;
 		}
 
@@ -17,6 +18,7 @@ namespace VirtoCommerce.StoreModule.Web.Converters
 		{
 			var retVal = new coreModel.SettingEntry();
 			retVal.InjectFrom(setting);
+			retVal.ValueType = setting.ValueType;
 			return retVal;
 		}
 	}

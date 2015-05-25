@@ -15,6 +15,9 @@ namespace VirtoCommerce.Web.Models
 {
     public class Customer : Drop, ILoadSlice
     {
+        private bool _ordersLoaded;
+        private ItemCollection<CustomerOrder> _orders;
+
         #region Constructors and Destructors
         public Customer()
         {
@@ -59,9 +62,26 @@ namespace VirtoCommerce.Web.Models
 
         public string Name { get; set; }
 
-        public ItemCollection<CustomerOrder> Orders { get; set; }
+        public ItemCollection<CustomerOrder> Orders
+        {
+            get
+            {
+                LoadOrders();
+                return _orders;
+            }
+            set
+            {
+                _orders = value;
+            }
+        }
 
-        public int OrdersCount { get; set; }
+        public int OrdersCount
+        {
+            get
+            {
+                return Orders != null ? Orders.Size : 0;
+            }
+        }
 
         public CustomerOrder RecentOrder { get; set; }
 
@@ -72,21 +92,17 @@ namespace VirtoCommerce.Web.Models
 
         public void LoadSlice(int from, int? to)
         {
-            // TODO: Context is null - not good too, will remake
-
-            var pageSize = this.Context == null ? 5 : this.Context["paginate.page_size"].ToInt(5);
+            var pageSize = to == null ? 5 : to - from;
 
             var customerService = new CustomerService();
-
-            var test = SiteContext.Current.Customer.Context;
 
             var orderSearchResult =
                 Task.Run(() => customerService.GetOrdersAsync(
                     SiteContext.Current.StoreId,
                     Id,
                     null,
-                    (from - 1) * pageSize,
-                    pageSize)).Result;
+                    from,
+                    pageSize.Value)).Result;
 
             var orders = orderSearchResult.CustomerOrders.Select(o => o.AsWebModel());
             var ordersCollection = new ItemCollection<CustomerOrder>(orders)
@@ -95,7 +111,21 @@ namespace VirtoCommerce.Web.Models
             };
 
             Orders = ordersCollection;
-            OrdersCount = orderSearchResult.TotalCount;
+        }
+
+        private void LoadOrders()
+        {
+            if (_ordersLoaded)
+            {
+                return;
+            }
+
+            var pageSize = Context == null ? 5 : Context["paginate.page_size"].ToInt(5);
+            var skip = Context == null ? 0 : Context["paginate.current_offset"].ToInt();
+
+            LoadSlice(skip, pageSize + skip);
+
+            _ordersLoaded = true;
         }
     }
 }

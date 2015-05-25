@@ -10,6 +10,7 @@
     <h4>{{ 'customer.orders.title' | t }}</h4>
 
     {% if customer.orders.size != 0 %}
+        {% paginate customer.orders by 5 %}
 
       <table class="full">
         <thead>
@@ -22,7 +23,6 @@
           </tr>
         </thead>
         <tbody>
-          {% paginate customer.orders by 5 %}
           {% for order in customer.orders %}
             <tr>
               <td>{{ order.name | link_to: order.customer_url }}</td>
@@ -32,12 +32,12 @@
               <td>{{ order.total_price | money }}</td>
             </tr>
           {% endfor %}
-          {% endpaginate %}
         </tbody>
       </table>
       {% if paginate.pages > 1 %}
         {% include 'pagination-custom' %}
       {% endif %}
+      {% endpaginate %}
     {% else %}
 
       <p>{{ 'customer.orders.none' | t }}</p>

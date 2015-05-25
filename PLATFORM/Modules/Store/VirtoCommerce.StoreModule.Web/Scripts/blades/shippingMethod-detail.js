@@ -28,6 +28,7 @@
     }
 
     $scope.bladeHeadIco = 'fa fa-archive';
+    $scope.toolbarTemplate = 'Modules/$(VirtoCommerce.Store)/Scripts/blades/shippingMethod-detail-toolbar.tpl.html';
 
     $scope.bladeToolbarCommands = [
         {

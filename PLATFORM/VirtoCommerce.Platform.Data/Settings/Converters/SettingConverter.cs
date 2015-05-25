@@ -18,7 +18,7 @@ namespace VirtoCommerce.Platform.Data.Settings.Converters
 		{
 			var result = new SettingEntry();
 			result.InjectFrom(entity);
-
+			result.ValueType = (SettingValueType)Enum.Parse(typeof(SettingValueType), entity.SettingValueType);
 			var existingValues = entity.SettingValues.Select(x => x.ToString(CultureInfo.InvariantCulture)).ToArray();
 
 			if (entity.IsEnum)
@@ -42,7 +42,7 @@ namespace VirtoCommerce.Platform.Data.Settings.Converters
             result.InjectFrom(moduleSetting);
 
             result.Value = moduleSetting.DefaultValue;
-            result.ValueType = ConvertToSettingValueType(moduleSetting.ValueType);
+			result.ValueType = ConvertToSettingValueType(moduleSetting.ValueType);
             result.GroupName = groupName;
 
             if (entity != null)
@@ -132,30 +132,32 @@ namespace VirtoCommerce.Platform.Data.Settings.Converters
 			}
         }
 
-        private static SettingValueType ConvertToSettingValueType(string valueType)
-        {
-            var retVal = SettingValueType.ShortText;
-            if (string.Equals(valueType, ModuleSetting.TypeBoolean, StringComparison.InvariantCultureIgnoreCase))
-            {
-                retVal = SettingValueType.Boolean;
-            }
-            else if (string.Equals(valueType, ModuleSetting.TypeInteger, StringComparison.InvariantCultureIgnoreCase))
-            {
-                retVal = SettingValueType.Integer;
-            }
-            else if (string.Equals(valueType, ModuleSetting.TypeDecimal, StringComparison.InvariantCultureIgnoreCase))
-            {
-                retVal = SettingValueType.Decimal;
-            }
-            else if (string.Equals(valueType, ModuleSetting.TypeSecureString, StringComparison.InvariantCultureIgnoreCase))
-            {
-                retVal = SettingValueType.SecureString;
-            }
-
-            return retVal;
-        }
-
-
+		private static SettingValueType ConvertToSettingValueType(string valueType)
+		{
+			var retVal = SettingValueType.ShortText;
+			if (string.Equals(valueType, ModuleSetting.TypeBoolean, StringComparison.InvariantCultureIgnoreCase))
+			{
+				retVal = SettingValueType.Boolean;
+			}
+			else if (string.Equals(valueType, ModuleSetting.TypeInteger, StringComparison.InvariantCultureIgnoreCase))
+			{
+				retVal = SettingValueType.Integer;
+			}
+			else if (string.Equals(valueType, ModuleSetting.TypeDecimal, StringComparison.InvariantCultureIgnoreCase))
+			{
+				retVal = SettingValueType.Decimal;
+			}
+			else if (string.Equals(valueType, ModuleSetting.TypeSecureString, StringComparison.InvariantCultureIgnoreCase))
+			{
+				retVal = SettingValueType.SecureString;
+			}
+			else if (string.Equals(valueType, ModuleSetting.TypeText, StringComparison.InvariantCultureIgnoreCase))
+			{
+				retVal = SettingValueType.LongText;
+			}
+			return retVal;
+		}
+      
         private static SettingValueType ConvertToSettingValueType(Type valueType)
         {
             var retVal = SettingValueType.ShortText;

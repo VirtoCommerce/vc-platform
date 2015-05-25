@@ -18,11 +18,7 @@ namespace VirtoCommerce.OrderModule.Data.Repositories
 
         private readonly string[] _orderFiles =
 		{ 
-			"CustomerOrder.sql",
-			"OrderPaymentIn.sql",
-			"OrderShipment.sql",
-			"OrderAddress.sql",
-			"OrderLineItem.sql"
+			"OrderSampleData.sql"			
 		};
     }
 }
