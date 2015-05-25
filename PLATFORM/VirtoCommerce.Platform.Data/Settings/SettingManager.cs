@@ -38,9 +38,44 @@ namespace VirtoCommerce.Platform.Data.Settings
             return retVal;
         }
 
-        public SettingDescriptor[] GetSettings(string moduleId)
+		public SettingEntry[] GetObjectSettings(string objectType, string objectId)
+		{
+			if (objectType == null)
+				throw new ArgumentNullException("objectType");
+			if (objectId == null)
+				throw new ArgumentNullException("objectId");
+
+			var retVal = new List<SettingEntry>();
+			using(var repository = _repositoryFactory())
+			{
+				var settings = repository.Settings.Include(s => s.SettingValues)
+												  .Where(x => x.ObjectId == objectId && x.ObjectType == objectType).ToList();
+				retVal.AddRange(settings.Select(x => x.ToModel()));
+			}
+			return retVal.ToArray();
+		}
+
+		public void RemoveObjectSettings(string objectType, string objectId)
+		{
+			if (objectType == null)
+				throw new ArgumentNullException("objectType");
+			if (objectId == null)
+				throw new ArgumentNullException("objectId");
+			using (var repository = _repositoryFactory())
+			{
+				var settings = repository.Settings.Include(s => s.SettingValues)
+												  .Where(x => x.ObjectId == objectId && x.ObjectType == objectType).ToList();
+				foreach(var setting in settings)
+				{
+					repository.Remove(setting);
+				}
+				repository.UnitOfWork.Commit();
+			}
+
+		}
+        public SettingEntry[] GetModuleSettings(string moduleId)
         {
-            var result = new List<SettingDescriptor>();
+            var result = new List<SettingEntry>();
 
             var manifest = GetModuleManifestsWithSettings().FirstOrDefault(m => m.Id == moduleId);
 
@@ -54,7 +89,7 @@ namespace VirtoCommerce.Platform.Data.Settings
                     {
                         foreach (var setting in group.Settings)
                         {
-                            var settingEntity = settingEntities.FirstOrDefault(x => x.Name == setting.Name);
+                            var settingEntity = settingEntities.FirstOrDefault(x => x.Name == setting.Name && x.ObjectId == null);
                             var settingDescriptor = setting.ToModel(settingEntity, group.Name);
                             result.Add(settingDescriptor);
                         }
@@ -65,7 +100,7 @@ namespace VirtoCommerce.Platform.Data.Settings
             return result.ToArray();
         }
 
-        public void SaveSettings(SettingDescriptor[] settings)
+        public void SaveSettings(SettingEntry[] settings)
         {
             if (settings != null)
             {

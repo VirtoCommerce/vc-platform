@@ -9,7 +9,7 @@
 //        settings.getModules({}, function (results) {
 //            $scope.blade.isLoading = false;
 
-//            $scope.objects = results;
+//            $scope.currentEntities = results;
 
 //            if (selectedNode != null) {
 //                //select the node in the new list

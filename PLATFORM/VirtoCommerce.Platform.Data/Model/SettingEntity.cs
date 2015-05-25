@@ -12,6 +12,11 @@ namespace VirtoCommerce.Platform.Data.Model
             SettingValues = new NullCollection<SettingValueEntity>();
         }
 
+		[StringLength(128)]
+		public string ObjectId { get; set; }
+		[StringLength(128)]
+		public string ObjectType { get; set; }
+
         [StringLength(128)]
         public string Name { get; set; }
 

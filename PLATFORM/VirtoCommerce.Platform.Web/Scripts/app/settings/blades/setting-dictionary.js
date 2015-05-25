@@ -70,7 +70,7 @@
         dialogService.showConfirmationDialog(dialog);
     }
 
-    $scope.$watch('blade.parentBlade.objects', function (data) {
+    $scope.$watch('blade.parentBlade.currentEntities', function (data) {
         var allEntities = _.flatten(_.map(data, _.values));
         $scope.blade.currentEntity = _.findWhere(allEntities, { name: $scope.blade.currentEntityId });
         currentEntities = $scope.blade.currentEntity.arrayValues;

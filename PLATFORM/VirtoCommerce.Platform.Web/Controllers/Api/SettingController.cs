@@ -45,7 +45,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [Route("modules/{id}")]
         public IHttpActionResult GetModuleSettings(string id)
         {
-            var retVal = _settingsManager.GetSettings(id);
+            var retVal = _settingsManager.GetModuleSettings(id);
             return Ok(retVal.Select(x => x.ToWebModel()).ToArray());
         }
 

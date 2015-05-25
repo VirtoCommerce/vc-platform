@@ -31,8 +31,9 @@ namespace VirtoCommerce.StoreModule.Data.Repositories
 			MapEntity<Store>(modelBuilder, toTable: "Store");
 			MapEntity<StoreCurrency>(modelBuilder, toTable: "StoreCurrency");
 			MapEntity<StoreLanguage>(modelBuilder, toTable: "StoreLanguage");
-			MapEntity<StorePaymentGateway>(modelBuilder, toTable: "StorePaymentGateway");
-			MapEntity<StoreSetting>(modelBuilder, toTable: "StoreSetting");
+			MapEntity<StorePaymentMethod>(modelBuilder, toTable: "StorePaymentMethod");
+			MapEntity<StoreShippingMethod>(modelBuilder, toTable: "StoreShippingMethod");
+		
 
 			base.OnModelCreating(modelBuilder);
 		}
@@ -41,10 +42,10 @@ namespace VirtoCommerce.StoreModule.Data.Repositories
 
 		public Store GetStoreById(string id)
 		{
-			var retVal = Stores.Where(x => x.Id == id).Include(x => x.Settings)
-														 .Include(x => x.Languages)
+			var retVal = Stores.Where(x => x.Id == id).Include(x => x.Languages)
 														 .Include(x => x.Currencies)
-														 .Include(x => x.PaymentGateways);
+														 .Include(x => x.PaymentMethods)
+														 .Include(x => x.ShippingMethods);
 			return retVal.FirstOrDefault();
 		}
 

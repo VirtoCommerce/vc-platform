@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Reflection;
 using System.Linq.Expressions;
+using System.Collections;
 
 namespace VirtoCommerce.Platform.Core.Common
 {
@@ -84,6 +85,44 @@ namespace VirtoCommerce.Platform.Core.Common
 				retVal = type.BaseType.IsDerivativeOf(typeToCompare);
 			}
 			return retVal;
+		}
+
+		public static T[] GetFlatListObjectsWithInterface<T>(this object obj)
+		{
+			var retVal = new List<T>();
+
+			var objectType = obj.GetType();
+
+			if(objectType.GetInterface(typeof(T).Name) != null)
+			{
+				retVal.Add((T)obj);
+			}
+
+			var properties = objectType.GetProperties(BindingFlags.Public | BindingFlags.Instance);
+
+			var objects = properties.Where(x => x.PropertyType.GetInterface(typeof(T).Name) != null)
+									.Select(x =>(T)x.GetValue(obj)).ToList();
+
+			retVal.AddRange(objects.SelectMany(x => x.GetFlatListObjectsWithInterface<T>()));
+
+			var collections = properties.Select(x => x.GetValue(obj, null))
+										.Where(x => x is IEnumerable && !(x is String))
+										.Cast<IEnumerable>();
+
+			foreach(var collection in collections)
+			{
+				foreach(var collectionObject in collection)
+				{
+					if (collectionObject is T)
+					{
+						retVal.AddRange(collectionObject.GetFlatListObjectsWithInterface<T>());
+					}
+				}
+			}
+
+			return retVal.ToArray();
+		
+			
 		}
 
 	}

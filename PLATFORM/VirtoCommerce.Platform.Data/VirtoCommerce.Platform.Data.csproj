@@ -186,6 +186,10 @@
     <Compile Include="Repositories\Migrations\201505080835453_OperationLog.Designer.cs">
       <DependentUpon>201505080835453_OperationLog.cs</DependentUpon>
     </Compile>
+    <Compile Include="Repositories\Migrations\201505211410074_ObjectForSetting.cs" />
+    <Compile Include="Repositories\Migrations\201505211410074_ObjectForSetting.Designer.cs">
+      <DependentUpon>201505211410074_ObjectForSetting.cs</DependentUpon>
+    </Compile>
     <Compile Include="Repositories\Migrations\Configuration.cs" />
     <Compile Include="Repositories\PlatformDatabaseInitializer.cs" />
     <Compile Include="Repositories\PlatformRepository.cs" />
@@ -243,6 +247,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Repositories\Migrations\201505080835453_OperationLog.resx">
       <DependentUpon>201505080835453_OperationLog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Repositories\Migrations\201505211410074_ObjectForSetting.resx">
+      <DependentUpon>201505211410074_ObjectForSetting.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Security\Identity\Migrations\201411101625303_InitialCreate.resx">
       <DependentUpon>201411101625303_InitialCreate.cs</DependentUpon>

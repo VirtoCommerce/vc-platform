@@ -9,7 +9,7 @@ using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.CatalogModule.Web.Model
 {
-	public class ShipmentMethod : ValueObject<ShipmentMethod>
+	public class ShippingMethod : ValueObject<ShippingMethod>
 	{
 		public string ShipmentMethodCode { get; set; }
 		public string Name { get; set; }

@@ -186,6 +186,12 @@
     <Compile Include="Order\Services\IShipmentService.cs" />
     <Compile Include="Order\Workflow\OrderStateBasedEvalContext.cs" />
     <Compile Include="Order\Workflow\IOrderWorkflow.cs" />
+    <Compile Include="Payment2\Model\PaymentEvaluationContext.cs" />
+    <Compile Include="Payment2\Model\PaymentMethod.cs" />
+    <Compile Include="Payment2\Model\PaymentStatus.cs" />
+    <Compile Include="Payment2\Model\ProcessPaymentResult.cs" />
+    <Compile Include="Payment2\Services\IPaymentService.cs" />
+    <Compile Include="Payment2\Services\PaymentServiceImpl.cs" />
     <Compile Include="Payment\Model\DirectRedirectUrlPaymentInfo.cs" />
     <Compile Include="Payment\Model\PaymentGatewayType.cs" />
     <Compile Include="Payment\Model\PaymentInfo.cs" />
@@ -244,11 +250,13 @@
     <Compile Include="Search\Model\SearchSort.cs" />
     <Compile Include="Search\Model\SearchSortField.cs" />
     <Compile Include="Search\Services\ISearchService.cs" />
-    <Compile Include="Shipping\Services\IShippingGatewayManager.cs" />
+    <Compile Include="Shipping\Model\ShippingEvaluationContext.cs" />
+    <Compile Include="Shipping\Model\ShippingMethod.cs" />
+    <Compile Include="Shipping\Model\ShippingRate.cs" />
+    <Compile Include="Shipping\Services\IShippingService.cs" />
+    <Compile Include="Shipping\Services\ShippingServiceImpl.cs" />
     <Compile Include="Store\Model\SeoInfo.cs" />
-    <Compile Include="Store\Model\SettingValueType.cs" />
     <Compile Include="Store\Model\Store.cs" />
-    <Compile Include="Store\Model\StoreSetting.cs" />
     <Compile Include="Store\Model\StoreState.cs" />
     <Compile Include="Store\Services\IStoreService.cs" />
   </ItemGroup>
@@ -267,9 +275,7 @@
   <ItemGroup>
     <Content Include="Search\Filters\Filters.xml" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Shipping\Model\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

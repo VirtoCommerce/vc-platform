@@ -42,7 +42,7 @@
                 </allowedValues>
                 <defaultValue>Database</defaultValue>
                 <title>Pages repository type</title>
-                <description>Select one of the allowed pages repository type</description>
+                <description>Select one of the allowed pages repository types</description>
             </setting>
 
             <setting>
@@ -54,8 +54,8 @@
                     <value>File system</value>
                 </allowedValues>
                 <defaultValue>Database</defaultValue>
-                <title>Pages repository type</title>
-                <description>Select one of the allowed themes repository type</description>
+                <title>Themes repository type</title>
+                <description>Select one of the allowed themes repository types</description>
             </setting>
         </group>
 

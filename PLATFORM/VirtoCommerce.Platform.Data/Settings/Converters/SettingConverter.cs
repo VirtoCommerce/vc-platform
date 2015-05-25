@@ -14,10 +14,31 @@ namespace VirtoCommerce.Platform.Data.Settings.Converters
 {
     public static class SettingConverter
     {
-        public static SettingDescriptor ToModel(this ModuleSetting moduleSetting, SettingEntity entity, string groupName)
+		public static SettingEntry ToModel(this SettingEntity entity)
+		{
+			var result = new SettingEntry();
+			result.InjectFrom(entity);
+
+			var existingValues = entity.SettingValues.Select(x => x.ToString(CultureInfo.InvariantCulture)).ToArray();
+
+			if (entity.IsEnum)
+			{
+				result.ArrayValues = existingValues;
+			}
+			else
+			{
+				if (existingValues.Any())
+				{
+					result.Value = existingValues.First();
+				}
+			}
+			return result;
+		}
+
+        public static SettingEntry ToModel(this ModuleSetting moduleSetting, SettingEntity entity, string groupName)
         {
 
-            var result = new SettingDescriptor();
+            var result = new SettingEntry();
             result.InjectFrom(moduleSetting);
 
             result.Value = moduleSetting.DefaultValue;
@@ -44,10 +65,10 @@ namespace VirtoCommerce.Platform.Data.Settings.Converters
             return result;
         }
 
-        public static SettingDescriptor ToModel<T>(this string settingName, T value)
+        public static SettingEntry ToModel<T>(this string settingName, T value)
         {
             var type = typeof(T);
-            var retVal = new SettingDescriptor { Name = settingName };
+            var retVal = new SettingEntry { Name = settingName };
 
             if (type.IsArray)
             {
@@ -69,7 +90,7 @@ namespace VirtoCommerce.Platform.Data.Settings.Converters
             return retVal;
         }
 
-        public static SettingEntity ToEntity(this SettingDescriptor setting)
+        public static SettingEntity ToEntity(this SettingEntry setting)
         {
             if (setting == null)
                 throw new ArgumentNullException("setting");

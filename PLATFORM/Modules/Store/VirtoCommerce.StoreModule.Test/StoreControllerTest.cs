@@ -2,8 +2,14 @@
 using System.Linq;
 using System.Web.Http.Results;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using VirtoCommerce.CoreModule.Data.Repositories;
+using VirtoCommerce.Domain.Commerce.Services;
+using VirtoCommerce.Domain.Shipping.Services;
 using VirtoCommerce.Platform.Core.Common;
+using VirtoCommerce.Platform.Core.Settings;
 using VirtoCommerce.Platform.Data.Infrastructure.Interceptors;
+using VirtoCommerce.Platform.Data.Repositories;
+using VirtoCommerce.Platform.Data.Settings;
 using VirtoCommerce.StoreModule.Data.Repositories;
 using VirtoCommerce.StoreModule.Data.Services;
 using VirtoCommerce.StoreModule.Web.Controllers.Api;
@@ -46,9 +52,9 @@ namespace VirtoCommerce.StoreModule.Test
 					StateProvince = "State",
 					PostalCode = "code"
 				},
-				PaymentGateways = new string[] { "PayPal", "Clarna" },
+				//PaymentGateways = new string[] { "PayPal", "Clarna" },
 				StoreState = Domain.Store.Model.StoreState.Open,
-				Settings = new StoreSetting[] { new StoreSetting { Name = "test", Value = "sss", ValueType = Domain.Store.Model.SettingValueType.ShortText, Locale = "en-us" } }
+				Settings = new Setting[] { new Setting { Name = "test", Value = "sss", ValueType =  Platform.Core.Settings.SettingValueType.ShortText} }
 
 			};
 			var result = controller.Create(store) as OkNegotiatedContentResult<Store>;
@@ -66,7 +72,7 @@ namespace VirtoCommerce.StoreModule.Test
 			store.DefaultCurrency = CurrencyCodes.UYU;
 			store.Currencies.Add(CurrencyCodes.UYU);
 			store.Languages.Remove(store.Languages.FirstOrDefault());
-			store.Settings.Add(new StoreSetting { Name = "setting2", Value = "1223", ValueType = Domain.Store.Model.SettingValueType.Integer });
+			store.Settings.Add(new Setting { Name = "setting2", Value = "1223", ValueType = Platform.Core.Settings.SettingValueType.Integer});
 			store.FulfillmentCenter.CountryCode = "SSS";
 			store.ReturnsFulfillmentCenter = store.FulfillmentCenter;
 
@@ -87,15 +93,22 @@ namespace VirtoCommerce.StoreModule.Test
 			Assert.IsNull(result);
 
 		}
-		private static StoreModuleController GetStoreController()
+
+		private ICommerceService GetCommerceService()
+		{
+			return new CommerceServiceImpl(() => new CommerceRepositoryImpl("VirtoCommerce", new EntityPrimaryKeyGeneratorInterceptor(), new AuditableInterceptor()));
+		}
+	
+		private StoreModuleController GetStoreController()
 		{
 			Func<IStoreRepository> repositoryFactory = () =>
 			{
 				return new StoreRepositoryImpl("VirtoCommerce", new EntityPrimaryKeyGeneratorInterceptor(), new AuditableInterceptor());
 			};
-			
-			var storeService = new StoreServiceImpl(repositoryFactory, null);
-			var controller = new StoreModuleController(storeService);
+
+			var shippingService = new ShippingServiceImpl();
+			var storeService = new StoreServiceImpl(repositoryFactory, GetCommerceService(), null, null,  null);
+			var controller = new StoreModuleController(storeService, null, null);
 			return controller;
 		}
 	}

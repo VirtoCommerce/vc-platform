@@ -10,6 +10,12 @@ using VirtoCommerce.StoreModule.Data.Repositories;
 using VirtoCommerce.StoreModule.Data.Converters;
 using VirtoCommerce.Platform.Data.Infrastructure;
 using VirtoCommerce.Domain.Commerce.Services;
+using VirtoCommerce.Platform.Core.Settings;
+using VirtoCommerce.Platform.Core.Common;
+using VirtoCommerce.Domain.Shipping.Services;
+using VirtoCommerce.Domain.Shipping.Model;
+using Omu.ValueInjecter;
+using VirtoCommerce.Domain.Payment2.Services;
 
 namespace VirtoCommerce.StoreModule.Data.Services
 {
@@ -17,10 +23,17 @@ namespace VirtoCommerce.StoreModule.Data.Services
 	{
 		private readonly Func<IStoreRepository> _repositoryFactory;
 		private readonly ICommerceService _commerceService;
-		public StoreServiceImpl(Func<IStoreRepository> repositoryFactory, ICommerceService commerceService)
+		private readonly ISettingsManager _settingManager;
+		private readonly IShippingService _shippingService;
+		private readonly IPaymentService _paymentService;
+
+		public StoreServiceImpl(Func<IStoreRepository> repositoryFactory, ICommerceService commerceService, ISettingsManager settingManager, IShippingService shippingService, IPaymentService paymentService)
 		{
 			_repositoryFactory = repositoryFactory;
 			_commerceService = commerceService;
+			_settingManager = settingManager;
+			_shippingService = shippingService;
+			_paymentService = paymentService;
 		}
 
 		#region IStoreService Members
@@ -31,16 +44,20 @@ namespace VirtoCommerce.StoreModule.Data.Services
 			using (var repository = _repositoryFactory())
 			{
 				var entity = repository.GetStoreById(id);
-			
+
 				if (entity != null)
 				{
-					retVal = entity.ToCoreModel();
+					//Load original typed shipping method and populate it  personalized information from db
+					retVal = entity.ToCoreModel(_shippingService.GetAllShippingMethods(), _paymentService.GetAllPaymentMethods());
+
 					var fulfillmentCenters = _commerceService.GetAllFulfillmentCenters();
 					retVal.ReturnsFulfillmentCenter = fulfillmentCenters.FirstOrDefault(x => x.Id == entity.ReturnsFulfillmentCenterId);
 					retVal.FulfillmentCenter = fulfillmentCenters.FirstOrDefault(x => x.Id == entity.FulfillmentCenterId);
 					retVal.SeoInfos = _commerceService.GetSeoKeywordsForEntity(id).Select(x => x.ToCoreModel()).ToList();
+
+					LoadObjectSettings(_settingManager, retVal);
 				}
-		
+
 			}
 
 			return retVal;
@@ -55,6 +72,9 @@ namespace VirtoCommerce.StoreModule.Data.Services
 				repository.Add(entity);
 				CommitChanges(repository);
 			}
+
+			SaveObjectSettings(_settingManager, retVal);
+
 			retVal = GetById(store.Id);
 			return retVal;
 		}
@@ -75,9 +95,13 @@ namespace VirtoCommerce.StoreModule.Data.Services
 
 					changeTracker.Attach(targetEntity);
 					sourceEntity.Patch(targetEntity);
+
+					SaveObjectSettings(_settingManager, store);
 				}
 				CommitChanges(repository);
 			}
+
+
 		}
 
 		public void Delete(string[] ids)
@@ -86,8 +110,12 @@ namespace VirtoCommerce.StoreModule.Data.Services
 			{
 				foreach (var id in ids)
 				{
+					var store = GetById(id);
+					RemoveObjectSettings(_settingManager, store);
+
 					var entity = repository.GetStoreById(id);
 					repository.Remove(entity);
+
 				}
 				CommitChanges(repository);
 			}
@@ -100,13 +128,14 @@ namespace VirtoCommerce.StoreModule.Data.Services
 			{
 				foreach (var storeId in repository.Stores.Select(x => x.Id).ToArray())
 				{
-					var entity = repository.GetStoreById(storeId);
-					retVal.Add(entity.ToCoreModel());
+					var store = GetById(storeId);
+					retVal.Add(store);
 				}
 			}
 			return retVal;
 		}
 
 		#endregion
+
 	}
 }

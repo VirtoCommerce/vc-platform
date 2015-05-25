@@ -2,6 +2,8 @@
 using System.Net;
 using System.Web.Http;
 using System.Web.Http.Description;
+using VirtoCommerce.Domain.Payment2.Services;
+using VirtoCommerce.Domain.Shipping.Services;
 using VirtoCommerce.Domain.Store.Services;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.StoreModule.Web.Converters;
@@ -15,9 +17,13 @@ namespace VirtoCommerce.StoreModule.Web.Controllers.Api
 	public class StoreModuleController : ApiController
 	{
 		private readonly IStoreService _storeService;
-		public StoreModuleController(IStoreService storeService)
+		private readonly IShippingService _shippingService;
+		private readonly IPaymentService _paymentService;
+		public StoreModuleController(IStoreService storeService, IShippingService shippingService, IPaymentService paymentService)
 		{
 			_storeService = storeService;
+			_shippingService = shippingService;
+			_paymentService = paymentService;
 		}
 
 		// GET: api/stores
@@ -52,7 +58,7 @@ namespace VirtoCommerce.StoreModule.Web.Controllers.Api
         [CheckPermission(Permission = PredefinedPermissions.Manage)]
 		public IHttpActionResult Create(webModel.Store store)
 		{
-			var coreStore = store.ToCoreModel();
+			var coreStore = store.ToCoreModel(_shippingService.GetAllShippingMethods(), _paymentService.GetAllPaymentMethods());
 			var retVal = _storeService.Create(coreStore);
 			return Ok(retVal.ToWebModel());
 		}
@@ -64,7 +70,7 @@ namespace VirtoCommerce.StoreModule.Web.Controllers.Api
         [CheckPermission(Permission = PredefinedPermissions.Manage)]
 		public IHttpActionResult Update(webModel.Store store)
 		{
-			var coreStore = store.ToCoreModel();
+			var coreStore = store.ToCoreModel(_shippingService.GetAllShippingMethods(), _paymentService.GetAllPaymentMethods());
 			_storeService.Update(new coreModel.Store[] { coreStore });
 			return StatusCode(HttpStatusCode.NoContent);
 		}

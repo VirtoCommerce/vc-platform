@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using VirtoCommerce.Domain.Store.Model;
 using VirtoCommerce.Domain.Store.Services;
+using VirtoCommerce.Platform.Core.Settings;
 
 namespace PayPal.PaymentGatewaysModule.Web.Managers
 {
@@ -36,17 +37,17 @@ namespace PayPal.PaymentGatewaysModule.Web.Managers
 
 		private void CheckAndAddSetting(string settingName, SettingValueType type, Store store)
 		{
-			var setting = store.Settings.FirstOrDefault(s => s.Name == settingName);
+			//var setting = store.Settings.FirstOrDefault(s => s.Name == settingName);
 
-			if(setting == null)
-			{
-				store.Settings.Add(new StoreSetting
-					{
-						Name = settingName,
-						Value = string.Empty,
-						ValueType = type
-					});
-			}
+			//if(setting == null)
+			//{
+			//	//store.Settings.Add(new StoreSetting
+			//	//	{
+			//	//		Name = settingName,
+			//	//		Value = string.Empty,
+			//	//		ValueType = type
+			//	//	});
+			//}
 		}
 	}
 }

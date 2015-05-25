@@ -33,6 +33,7 @@ namespace PayPal.PaymentGatewaysModule.Web
 
 		public void Initialize()
 		{
+		
 		}
 
 		public void PostInitialize()
@@ -49,11 +50,11 @@ namespace PayPal.PaymentGatewaysModule.Web
 			var paypalDescription = settingsManager.GetValue("Paypal.PaymentGateway.GatewayDescription.Description", string.Empty);
 			var paypalLogoUrl = settingsManager.GetValue("Paypal.PaymentGateway.GatewayDescription.LogoUrl", string.Empty);
 
-			var paypalPaymentGateway = new PayPalPaymentGatewayImpl(paypalGatewayCode, paypalDescription, paypalLogoUrl, PaymentGatewayType.DirectRedirectUrlGateway, customerOrderService, storeService, settingsManager);
+			var paypalPaymentGateway = new PayPalPaymentGatewayImpl(paypalGatewayCode, paypalDescription, paypalLogoUrl, PaymentGatewayType.DirectRedirectUrlGateway, customerOrderService, storeService);
 			var paymentGatewayManager = _container.Resolve<IPaymentGatewayManager>();
 			paymentGatewayManager.RegisterGateway(paypalPaymentGateway);
 
-			_container.RegisterType<PayPalGatewayController>(new InjectionConstructor(paypalPaymentGateway, storeService, customerOrderService));
+			_container.RegisterInstance<PayPalPaymentGatewayImpl>(paypalPaymentGateway);
 
 			var orderWorkflow = ServiceLocator.Current.GetInstance<IOrderWorkflow>() as ObservableWorkflowService<OrderStateBasedEvalContext>;
 

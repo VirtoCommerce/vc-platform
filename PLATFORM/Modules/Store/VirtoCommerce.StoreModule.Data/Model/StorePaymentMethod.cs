@@ -9,17 +9,27 @@ using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.StoreModule.Data.Model
 {
-    public class StorePaymentGateway : Entity
+    public class StorePaymentMethod : Entity
     {
 		[Required]
 		[StringLength(128)]
-		public string PaymentGateway { get; set; }
+		public string Code { get; set; }
+
+		public int Priority { get; set; }
+
+		[StringLength(128)]
+		public string Name { get; set; }
+
+		public string Description { get; set; }
+
+		[StringLength(2048)]
+		public string LogoUrl { get; set; }
+
+		public bool IsActive { get; set; }
+
 
 		#region Navigation Properties
 
-		[Required]
-		[ForeignKey("Store")]
-		[StringLength(128)]
 		public string StoreId { get; set; }
 		
 		public Store Store { get; set; }

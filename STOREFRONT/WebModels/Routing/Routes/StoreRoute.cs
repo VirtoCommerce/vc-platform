@@ -356,9 +356,7 @@ namespace VirtoCommerce.Web.Models.Routing.Routes
 
             if (dbStore != null)
             {
-                return (string.IsNullOrEmpty(dbStore.Url) || 
-                    !(dbStore.Url.Contains("http://") || dbStore.Url.Contains("https://"))) 
-                    && string.IsNullOrEmpty(dbStore.SecureUrl);
+                return string.IsNullOrEmpty(dbStore.DefaultUrl);
             }
 
             return true;

@@ -118,7 +118,7 @@ namespace VirtoCommerce.CartModule.Test
 			cart = result.Content;
 
 			//Select appropriate shipment method
-			var shipmentMethodResult = controller.GetShipmentMethods(cart.Id) as OkNegotiatedContentResult<webModel.ShipmentMethod[]>;
+			var shipmentMethodResult = controller.GetShipmentMethods(cart.Id) as OkNegotiatedContentResult<webModel.ShippingMethod[]>;
 			var shipmentMethod = shipmentMethodResult.Content.FirstOrDefault();
 			var shipment = new webModel.Shipment
 			{
@@ -192,10 +192,10 @@ namespace VirtoCommerce.CartModule.Test
 
 			var cartService = new ShoppingCartServiceImpl(repositoryFactory, cartWorkflowService);
 			var searchService = new ShoppingCartSearchServiceImpl(repositoryFactory);
-			var memoryPaymentGatewayManager = new InMemoryPaymentGatewayManagerImpl();
+			//var memoryPaymentGatewayManager = new InMemoryPaymentGatewayManagerImpl();
 
 
-			var controller = new CartModuleController(cartService, searchService, memoryPaymentGatewayManager);
+			var controller = new CartModuleController(cartService, searchService, null);
 			return controller;
 		}
 	}

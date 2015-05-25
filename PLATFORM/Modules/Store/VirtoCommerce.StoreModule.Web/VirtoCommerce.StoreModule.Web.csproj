@@ -101,6 +101,10 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Scripts\blades\shippingMethod-detail.js" />
+    <Content Include="Scripts\blades\shippingMethod-detail.tpl.html" />
+    <Content Include="Scripts\blades\shippingMethod-list.js" />
+    <Content Include="Scripts\blades\shippingMethod-list.tpl.html" />
     <Content Include="Scripts\blades\stores-list.js" />
     <Content Include="Scripts\blades\stores-list.tpl.html" />
     <Content Include="Scripts\blades\store-currencies-list.js" />
@@ -124,6 +128,8 @@
     <Content Include="Scripts\widgets\storePaymentsWidget.tpl.html" />
     <Content Include="Scripts\widgets\storeSettingsWidget.tpl.html" />
     <Content Include="Scripts\widgets\storeAdvancedWidget.tpl.html" />
+    <Content Include="Scripts\widgets\storeShippingWidget.js" />
+    <Content Include="Scripts\widgets\storeShippingWidget.tpl.html" />
     <Content Include="Scripts\wizards\newStore\new-store-wizard.tpl.html" />
     <Content Include="Scripts\blades\store-detail.tpl.html" />
     <Content Include="Scripts\store.js" />
@@ -140,12 +146,16 @@
     <Compile Include="Controllers\PredefinedPermissions.cs" />
     <Compile Include="Converters\FulfillmentConverter.cs" />
     <Compile Include="Converters\SeoInfoConverter.cs" />
+    <Compile Include="Converters\PaymentMethodConverter.cs" />
+    <Compile Include="Converters\ShippingMethodConverter.cs" />
     <Compile Include="Converters\StoreConverter.cs" />
-    <Compile Include="Converters\StoreSettingConverter.cs" />
+    <Compile Include="Converters\SettingConverter.cs" />
     <Compile Include="Model\FulfillmentCenter.cs" />
     <Compile Include="Model\SeoInfo.cs" />
+    <Compile Include="Model\PaymentMethod.cs" />
+    <Compile Include="Model\ShippingMethod.cs" />
     <Compile Include="Model\Store.cs" />
-    <Compile Include="Model\StoreSetting.cs" />
+    <Compile Include="Model\Setting.cs" />
     <Compile Include="Module.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
