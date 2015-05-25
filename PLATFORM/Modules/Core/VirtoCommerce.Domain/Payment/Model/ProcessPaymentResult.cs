@@ -16,5 +16,7 @@ namespace VirtoCommerce.Domain.Payment.Model
 		public bool IsSuccess { get; set; }
 
 		public string Error { get; set; }
+
+		public string OuterId { get; set; }
 	}
 }

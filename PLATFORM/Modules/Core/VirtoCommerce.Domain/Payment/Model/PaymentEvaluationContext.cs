@@ -7,6 +7,7 @@ using VirtoCommerce.Domain.Cart.Model;
 using VirtoCommerce.Domain.Common;
 using VirtoCommerce.Domain.Order.Model;
 using VirtoCommerce.Platform.Core.Common;
+using VirtoCommerce.Domain.Store.Model;
 
 namespace VirtoCommerce.Domain.Payment.Model
 {
@@ -24,7 +25,9 @@ namespace VirtoCommerce.Domain.Payment.Model
 
 		public PaymentIn Payment { get; set; }
 
-		public string OrderId { get; set; }
+		public CustomerOrder Order { get; set; }
+
+		public Store.Model.Store Store { get; set; }
 
 		public string OuterId { get; set; }
 	}

@@ -17,9 +17,6 @@ namespace PayPal.PaymentGatewaysModule.Web.Managers
 {
 	public class PaypalPaymentMethod : VirtoCommerce.Domain.Payment.Model.PaymentMethod
 	{
-		public IStoreService _storeService;
-		public ICustomerOrderService _customerOrderService;
-
 		private static string PaypalAPIModeStoreSetting = "Paypal.Mode";
 		private static string PaypalAPIUserNameStoreSetting = "Paypal.APIUsername";
 		private static string PaypalAPIPasswordStoreSetting = "Paypal.APIPassword";
@@ -30,17 +27,12 @@ namespace PayPal.PaymentGatewaysModule.Web.Managers
 		private static string PaypalPasswordConfigSettingName = "account1.apiPassword";
 		private static string PaypalSignatureConfigSettingName = "account1.apiSignature";
 
-		public PaypalPaymentMethod(IStoreService storeService, ICustomerOrderService customerOrderService)
+		private static string SandboxPaypalBaseUrlFormat = "https://www.sandbox.paypal.com/cgi-bin/webscr?cmd=_express-checkout&useraction=commit&token={0}";
+		private static string LivePaypalBaseUrlFormat = "https://www.paypal.com/cgi-bin/webscr?cmd=_express-checkout&useraction=commit&token={0}";
+
+		public PaypalPaymentMethod()
 			: base("Paypal")
 		{
-			if (storeService == null)
-				throw new ArgumentNullException("storeService");
-
-			if (customerOrderService == null)
-				throw new ArgumentNullException("customerOrderService");
-
-			_storeService = storeService;
-			_customerOrderService = customerOrderService;
 		}
 
 		public override ProcessPaymentResult ProcessPayment(VirtoCommerce.Domain.Common.IEvaluationContext context)
@@ -51,19 +43,18 @@ namespace PayPal.PaymentGatewaysModule.Web.Managers
 			if (paymentEvaluationContext == null && paymentEvaluationContext.Payment == null)
 				throw new ArgumentNullException("paymentEvaluationContext");
 
-			var order = _customerOrderService.GetById(paymentEvaluationContext.OrderId, VirtoCommerce.Domain.Order.Model.CustomerOrderResponseGroup.Full);
-			if (order == null)
+			if (paymentEvaluationContext.Order == null)
 				throw new NullReferenceException("no order with this id");
 
-			var store = _storeService.GetById(order.StoreId);
-			if (!(store != null && !string.IsNullOrEmpty(store.Url)))
+			if (!(paymentEvaluationContext.Store != null && !string.IsNullOrEmpty(paymentEvaluationContext.Store.Url)))
 				throw new NullReferenceException("no store with this id");
 
-			var config = GetConfigMap(store);
+			var config = GetConfigMap(paymentEvaluationContext.Store);
+			var mode = GetSetting(paymentEvaluationContext.Store, "Paypal.Mode");
 
-			var url = store.Url;
+			var url = paymentEvaluationContext.Store.Url;
 
-			var request = CreatePaypalRequest(order, store, paymentEvaluationContext.Payment);
+			var request = CreatePaypalRequest(paymentEvaluationContext.Order, paymentEvaluationContext.Store, paymentEvaluationContext.Payment);
 
 			var service = new PayPalAPIInterfaceServiceService(config);
 
@@ -77,19 +68,13 @@ namespace PayPal.PaymentGatewaysModule.Web.Managers
 
 				retVal.IsSuccess = true;
 				retVal.NewPaymentStatus = PaymentStatus.Pending;
-
-				var existedPayment = order.InPayments.FirstOrDefault(p => p.Id == paymentEvaluationContext.Payment.Id);
-				if(existedPayment != null)
-				{
-					existedPayment.OuterId = setEcResponse.Token;
-					_customerOrderService.Update(new CustomerOrder[] { order });
-				}
+				retVal.OuterId = setEcResponse.Token;
+				var redirectBaseUrl = GetBaseUrl(mode);
+				retVal.RedirectUrl = string.Format(redirectBaseUrl, retVal.OuterId);
 			}
 			catch (System.Exception ex)
 			{
 				retVal.Error = ex.Message;
-
-				//throw new NullReferenceException("paypal not work", ex);
 			}
 
 			return retVal;
@@ -103,15 +88,13 @@ namespace PayPal.PaymentGatewaysModule.Web.Managers
 			if (paymentEvaluationContext == null && paymentEvaluationContext.Payment == null)
 				throw new ArgumentNullException("paymentEvaluationContext");
 
-			var order = _customerOrderService.GetById(paymentEvaluationContext.OrderId, VirtoCommerce.Domain.Order.Model.CustomerOrderResponseGroup.Full);
-			if (order == null)
+			if (paymentEvaluationContext.Order == null)
 				throw new NullReferenceException("no order with this id");
 
-			var store = _storeService.GetById(order.StoreId);
-			if (!(store != null && !string.IsNullOrEmpty(store.Url)))
+			if (!(paymentEvaluationContext.Store != null && !string.IsNullOrEmpty(paymentEvaluationContext.Store.Url)))
 				throw new NullReferenceException("no store with this id");
 
-			var config = GetConfigMap(store);
+			var config = GetConfigMap(paymentEvaluationContext.Store);
 
 			var service = new PayPalAPIInterfaceServiceService(config);
 
@@ -136,21 +119,15 @@ namespace PayPal.PaymentGatewaysModule.Web.Managers
 
 				if (response.GetExpressCheckoutDetailsResponseDetails.CheckoutStatus.Equals("PaymentActionCompleted"))
 				{
-					var existedPayment = order.InPayments.FirstOrDefault(p => p.OuterId == paymentEvaluationContext.OuterId);
-					existedPayment.IsApproved = true;
-					_customerOrderService.Update(new CustomerOrder[] { order });
-
 					retVal.IsSuccess = true;
 					retVal.NewPaymentStatus = PaymentStatus.Paid;
-					retVal.ReturnUrl = string.Format("{0}/checkout/thanks?orderId={1}&isSuccess=true", store.Url, paymentEvaluationContext.OrderId);
+					retVal.ReturnUrl = string.Format("{0}/checkout/thanks?orderId={1}&isSuccess=true", paymentEvaluationContext.Store.Url, paymentEvaluationContext.Order.Id);
 				}
 			}
 			catch (System.Exception ex)
 			{
 				retVal.Error = ex.Message;
-				retVal.ReturnUrl = string.Format("{0}/checkout/thanks?orderId={1}&isSuccess=false", store.Url, paymentEvaluationContext.OrderId);
-
-				//throw new NullReferenceException("paypal not work", ex);
+				retVal.ReturnUrl = string.Format("{0}/checkout/thanks?orderId={1}&isSuccess=false", paymentEvaluationContext.Store.Url, paymentEvaluationContext.Order.Id);
 			}
 
 			return retVal;
@@ -159,6 +136,22 @@ namespace PayPal.PaymentGatewaysModule.Web.Managers
 		public override PaymentMethodType PaymentMethodType
 		{
 			get { return PaymentMethodType.Redirection; }
+		}
+
+		private string GetBaseUrl(string mode)
+		{
+			var retVal = string.Empty;
+
+			if(mode.ToLower().Equals("sandbox"))
+			{
+				retVal = SandboxPaypalBaseUrlFormat;
+			}
+			else if(mode.ToLower().Equals("live"))
+			{
+				retVal = LivePaypalBaseUrlFormat;
+			}
+
+			return retVal;
 		}
 
 		private string FormatMoney(decimal amount)

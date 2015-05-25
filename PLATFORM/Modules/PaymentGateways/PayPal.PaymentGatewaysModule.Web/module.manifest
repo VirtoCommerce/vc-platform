@@ -35,9 +35,13 @@
             <setting>
                 <name>Paypal.Mode</name>
                 <valueType>string</valueType>
-				<defaultValue>sandbox</defaultValue>
+								<allowedValues>
+									<value>Sandbox</value>
+									<value>Live</value>
+								</allowedValues>
+								<defaultValue>Sandbox</defaultValue>
                 <title>Paypal working mode</title>
-                <description>Type of api (sandbox or real)</description>
+                <description>Type of api (sandbox or live)</description>
             </setting>
             <setting>
                 <name>Paypal.APIUsername</name>

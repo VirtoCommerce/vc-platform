@@ -1,7 +1,6 @@
 ﻿using System;
 using Microsoft.Practices.ServiceLocation;
 using Microsoft.Practices.Unity;
-using PayPal.PaymentGatewaysModule.Web.Controllers;
 using PayPal.PaymentGatewaysModule.Web.Managers;
 using VirtoCommerce.Domain.Catalog.Services;
 using VirtoCommerce.Domain.Common;
@@ -45,7 +44,7 @@ namespace PayPal.PaymentGatewaysModule.Web
 			var settingsManager = ServiceLocator.Current.GetInstance<ISettingsManager>();
 	
 			Func<PaypalPaymentMethod> paypalPaymentMethodFactory = () => {
-				return new PaypalPaymentMethod(storeService, customerOrderService)
+				return new PaypalPaymentMethod()
 				{
 					Name = "PayPal",
 					Description = "PayPal payment integration",
