@@ -1,3 +1,7 @@
+{% paginate customer.orders by 5 %}
+{% for order in customer.orders %}
+{% endfor %}
+
 {% layout settings.customer_layout %}
 
 <h1>{{ 'customer.account.title' | t }}</h1>
@@ -22,7 +26,6 @@
           </tr>
         </thead>
         <tbody>
-          {% paginate customer.orders by 5 %}
           {% for order in customer.orders %}
             <tr>
               <td>{{ order.name | link_to: order.customer_url }}</td>
@@ -32,7 +35,6 @@
               <td>{{ order.total_price | money }}</td>
             </tr>
           {% endfor %}
-          {% endpaginate %}
         </tbody>
       </table>
       {% if paginate.pages > 1 %}
@@ -86,3 +88,4 @@
   </div>
 
 </div>
+{% endpaginate %}

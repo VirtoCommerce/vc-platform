@@ -458,13 +458,13 @@ namespace VirtoCommerce.Web.Controllers
         {
             if (HttpContext.User.Identity.IsAuthenticated)
             {
-                Context.Customer = await CustomerService.GetCustomerAsync(
+                var customer = await CustomerService.GetCustomerAsync(
                     HttpContext.User.Identity.Name, Context.StoreId);
 
-                Context.Customer.LoadSlice(page, null);
+                Context.Set("Customer", customer);
                 Context.Set("current_page", page);
 
-                return this.View("customers/account");
+                return View("customers/account");
             }
 
             return RedirectToAction("Login", "Account");
