@@ -9,9 +9,8 @@
   <div class="grid-item two-thirds medium-down--one-whole">
     <h4>{{ 'customer.orders.title' | t }}</h4>
 
+    {% paginate customer.orders by 5 %}
     {% if customer.orders.size != 0 %}
-        {% paginate customer.orders by 5 %}
-
       <table class="full">
         <thead>
           <tr>
@@ -37,12 +36,10 @@
       {% if paginate.pages > 1 %}
         {% include 'pagination-custom' %}
       {% endif %}
-      {% endpaginate %}
     {% else %}
-
       <p>{{ 'customer.orders.none' | t }}</p>
-
     {% endif %}
+    {% endpaginate %}
   </div>
 
   <div class="grid-item one-third medium-down--one-whole">
