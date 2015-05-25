@@ -9,6 +9,7 @@ namespace VirtoCommerce.Platform.Core.Modularity
         public const string TypeInteger = "integer";
         public const string TypeDecimal = "decimal";
         public const string TypeString = "string";
+		public const string TypeText = "text";
         public const string TypeSecureString = "secureString";
 
         [XmlElement("name")]

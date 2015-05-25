@@ -18,12 +18,11 @@ namespace VirtoCommerce.Platform.Data.Infrastructure
 				var entity = haveSettingsObject as Entity;
 				if (entity != null && !entity.IsTransient())
 				{
-					var resultSettings = new List<SettingEntry>();
-
 					var storedSettings = settingManager.GetObjectSettings(entity.GetType().Name, entity.Id);
-					//Merge default shipping method settings and stored in db 
+					//Merge default settings and stored in db 
 					if (haveSettingsObject.Settings != null)
 					{
+						var resultSettings = new List<SettingEntry>();
 						foreach (var setting in haveSettingsObject.Settings)
 						{
 							var storedSetting = storedSettings.FirstOrDefault(x => x.Name == setting.Name);
@@ -37,6 +36,10 @@ namespace VirtoCommerce.Platform.Data.Infrastructure
 							}
 						}
 						haveSettingsObject.Settings = resultSettings;
+					}
+					else
+					{
+						haveSettingsObject.Settings = storedSettings;
 					}
 				}
 			}

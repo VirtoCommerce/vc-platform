@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace VirtoCommerce.Domain.Order.Model
 {
-	public class PaymentIn : Operation
+	public class PaymentIn : Operation, IFinanceInOperation
 	{
 		public string Purpose { get; set; }
 

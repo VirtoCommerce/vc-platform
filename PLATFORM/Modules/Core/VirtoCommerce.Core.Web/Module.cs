@@ -82,8 +82,13 @@ namespace VirtoCommerce.CoreModule.Web
 			var shippingService = _container.Resolve<IShippingService>();
 			var paymentService = _container.Resolve<IPaymentMethodsService>();
 
-			shippingService.RegisterShippingMethod(() => new FixedRateShippingMethod(settingManager.GetModuleSettings("VirtoCommerce.Core")));
-			paymentService.RegisterPaymentMethod(() => new ManualPaymentMethod(new SettingEntry[] { new SettingEntry { Name = "Rate", ValueType = SettingValueType.Decimal } }));
+			shippingService.RegisterShippingMethod(() => new FixedRateShippingMethod(new SettingEntry[] { new SettingEntry { Name = "Rate", ValueType = SettingValueType.Decimal } })
+				{
+					 Description  = "Fixed rate shipping method",
+					 LogoUrl = "http://somelogo.com/logo.png"	  
+					   
+				});
+			paymentService.RegisterPaymentMethod(() => new ManualPaymentMethod(settingManager.GetModuleSettings("VirtoCommerce.Core")));
       
         }
 
