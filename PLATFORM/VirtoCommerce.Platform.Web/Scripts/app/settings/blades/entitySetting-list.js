@@ -57,12 +57,7 @@
         };
         bladeNavigationService.showBlade(newBlade, blade);
     }
-
-    var formScope;
-    $scope.setForm = function (form) {
-        formScope = form;
-    }
-
+    
     function isDirty() {
         return !angular.equals(blade.currentEntities, blade.origEntity);
     };
@@ -70,11 +65,7 @@
     $scope.cancelChanges = function () {
         $scope.bladeClose();
     }
-
-    $scope.isValid = function () {
-        return true;
-    }
-
+    
     $scope.saveChanges = function () {
         blade.isLoading = true;
         var objects = _.flatten(_.map(blade.currentEntities, _.values));
@@ -88,6 +79,7 @@
 
         //console.log('saveChanges3: ' + angular.toJson(objects, true));
         angular.copy(objects, blade.data);
+        angular.copy(blade.currentEntities, blade.origEntity);
         $scope.bladeClose();
     };
 

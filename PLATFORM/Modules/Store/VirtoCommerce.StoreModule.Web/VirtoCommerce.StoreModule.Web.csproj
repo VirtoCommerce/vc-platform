@@ -101,6 +101,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Scripts\blades\shippingMethod-detail-toolbar.tpl.html" />
     <Content Include="Scripts\blades\shippingMethod-detail.js" />
     <Content Include="Scripts\blades\shippingMethod-detail.tpl.html" />
     <Content Include="Scripts\blades\shippingMethod-list.js" />

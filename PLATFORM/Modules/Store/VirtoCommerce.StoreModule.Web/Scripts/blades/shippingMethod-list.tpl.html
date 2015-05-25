@@ -1,25 +1,25 @@
-﻿<div class="blade-content __large-wide">
+﻿<div class="blade-content __medium-wide">
     <div class="blade-inner">
         <div class="inner-block">
+            <p class="text">Set the order how shipping methods appear sorted in web store. Drag and drop to change the order.</p>
             <div class="table-wrapper">
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th class="table-col __product-name">Code</th>
-                            <th class="table-col">Description</th>
-                            <th class="table-col __product-range">Priority</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr class="table-item" ng-repeat="data in blade.currentEntities | orderBy:['-priority', 'name'] track by data.id" ng-class="{'__selected': data.id === selectedNodeId}" ng-click='selectNode(data)'>
-                            <td class="table-col __product-name">
-                                <span>{{data.code}}</span>
+                <table class="table __normal">
+                    <tbody ui-sortable="sortableOptions" ng-model="blade.currentEntities">
+                        <tr class="table-item" ng-repeat="data in blade.currentEntities track by data.code" ng-class="{'__selected': data.code === selectedNodeId}">
+                            <td class="table-col __product-control">
+                                <label class="form-control __checkbox">
+                                    <input type="checkbox" ng-model="data.isActive">
+                                    <span class="check"></span>
+                                </label>
                             </td>
-                            <td class="table-col">
-                                <span>{{data.description}}</span>
+                            <td class="table-col __product-img" ng-click='selectNode(data)'>
+                                <div class="product-img">
+                                    <div style="background-image: url({{data.logoUrl}})" class="image"></div>
+                                </div>
                             </td>
-                            <td class="table-col __product-code">
-                                <span>{{data.priority}}</span>
+                            <td class="table-col" ng-click='selectNode(data)'>
+                                <div class="table-t">{{data.code}}</div>
+                                <div class="table-descr">{{data.description}}</div>
                             </td>
                         </tr>
                     </tbody>
