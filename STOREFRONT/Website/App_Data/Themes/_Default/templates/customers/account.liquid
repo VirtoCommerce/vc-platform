@@ -1,7 +1,3 @@
-{% paginate customer.orders by 5 %}
-{% for order in customer.orders %}
-{% endfor %}
-
 {% layout settings.customer_layout %}
 
 <h1>{{ 'customer.account.title' | t }}</h1>
@@ -14,6 +10,7 @@
     <h4>{{ 'customer.orders.title' | t }}</h4>
 
     {% if customer.orders.size != 0 %}
+        {% paginate customer.orders by 5 %}
 
       <table class="full">
         <thead>
@@ -40,6 +37,7 @@
       {% if paginate.pages > 1 %}
         {% include 'pagination-custom' %}
       {% endif %}
+      {% endpaginate %}
     {% else %}
 
       <p>{{ 'customer.orders.none' | t }}</p>
@@ -88,4 +86,3 @@
   </div>
 
 </div>
-{% endpaginate %}
