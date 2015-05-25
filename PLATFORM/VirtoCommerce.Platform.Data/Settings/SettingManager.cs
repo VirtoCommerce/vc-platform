@@ -49,7 +49,7 @@ namespace VirtoCommerce.Platform.Data.Settings
 			using(var repository = _repositoryFactory())
 			{
 				var settings = repository.Settings.Include(s => s.SettingValues)
-												  .Where(x => x.ObjectId == objectId && x.ObjectType == objectType).ToList();
+												  .Where(x => x.ObjectId == objectId && x.ObjectType == objectType).OrderBy(x=>x.Name).ToList();
 				retVal.AddRange(settings.Select(x => x.ToModel()));
 			}
 			return retVal.ToArray();
@@ -97,29 +97,30 @@ namespace VirtoCommerce.Platform.Data.Settings
                 }
             }
 
-            return result.ToArray();
+            return result.OrderBy(x=>x.Name).ToArray();
         }
 
         public void SaveSettings(SettingEntry[] settings)
         {
             if (settings != null)
             {
-                var settingNames = settings.Select(s => s.Name).Distinct().ToArray();
+				var settingKeys = settings.Select(x => String.Join("-", x.Name, x.ObjectType, x.ObjectId)).Distinct().ToArray();
            
                 using (var repository = _repositoryFactory())
 				using(var changeTracker = new ObservableChangeTracker())
                 {
 					var alreadyExistSettings =  repository.Settings.Include(s => s.SettingValues)
-																   .Where(x=> settingNames.Contains(x.Name)).ToList();
+																   .Where(x => settingKeys.Contains(x.Name + "-" + x.ObjectType + "-" + x.ObjectId)).ToList();
 
 					changeTracker.AddAction = x=>  repository.Add(x);
+					//Need for real remove object from nested collection (because EF default remove references only)
 					changeTracker.RemoveAction = x => repository.Remove(x);
 
 					var target = new { Settings = new ObservableCollection<SettingEntity>(alreadyExistSettings) };
 					var source = new { Settings = new ObservableCollection<SettingEntity>(settings.Select(x => x.ToEntity())) };
                   
 					changeTracker.Attach(target);
-                    var settingComparer = AnonymousComparer.Create((SettingEntity x) => x.Name);
+                    var settingComparer = AnonymousComparer.Create((SettingEntity x) => String.Join("-", x.Name, x.ObjectType, x.ObjectId));
 					source.Settings.Patch(target.Settings, settingComparer, (sourceSetting, targetSetting) => sourceSetting.Patch(targetSetting));
 
                     repository.UnitOfWork.Commit();

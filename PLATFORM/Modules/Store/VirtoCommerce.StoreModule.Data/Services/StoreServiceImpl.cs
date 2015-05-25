@@ -73,7 +73,7 @@ namespace VirtoCommerce.StoreModule.Data.Services
 				CommitChanges(repository);
 			}
 
-			SaveObjectSettings(_settingManager, retVal);
+			SaveObjectSettings(_settingManager, store);
 
 			retVal = GetById(store.Id);
 			return retVal;

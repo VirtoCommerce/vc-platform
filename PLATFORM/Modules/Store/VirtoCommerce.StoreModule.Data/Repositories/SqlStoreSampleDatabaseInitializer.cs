@@ -4,251 +4,258 @@ using System.IO;
 using System.Linq;
 using System.Xml.Serialization;
 using VirtoCommerce.Domain.Search.Filters;
+using VirtoCommerce.Platform.Core.Settings;
 using VirtoCommerce.Platform.Data.Infrastructure;
 using VirtoCommerce.StoreModule.Data.Model;
 using coreModel = VirtoCommerce.Domain.Store.Model;
 
 namespace VirtoCommerce.StoreModule.Data.Repositories
 {
-    public class SqlStoreSampleDatabaseInitializer : SetupDatabaseInitializer<StoreRepositoryImpl, VirtoCommerce.StoreModule.Data.Migrations.Configuration>
-    {
-        private readonly bool _reduced;
+	public class SqlStoreSampleDatabaseInitializer : SetupDatabaseInitializer<StoreRepositoryImpl, VirtoCommerce.StoreModule.Data.Migrations.Configuration>
+	{
+		private readonly bool _reduced;
+		private ISettingsManager _settingManager;
 
-        public SqlStoreSampleDatabaseInitializer(bool reduced = false)
-        {
-            _reduced = reduced;
-        }
+		public SqlStoreSampleDatabaseInitializer(ISettingsManager settingManager, bool reduced = false)
+		{
+			_reduced = reduced;
+			_settingManager = settingManager;
+		}
 
-        protected override void Seed(StoreRepositoryImpl context)
-        {
-            CreateStores(context, _reduced);
+		protected override void Seed(StoreRepositoryImpl context)
+		{
+			CreateStores(context, _reduced);
 
-            base.Seed(context);
-        }
+			base.Seed(context);
+		}
 
-        public static void CreateStores(StoreRepositoryImpl context, bool reduced = false)
-        {
-            var store = CreateStore("SampleStore", reduced);
+		public void CreateStores(StoreRepositoryImpl context, bool reduced = false)
+		{
+			var store = CreateStore("SampleStore", reduced);
 
-            var appleStore = CreateStore("AppleStore");
-            appleStore.Name = "Apple Store";
-            appleStore.Catalog = "Apple";
+			var appleStore = CreateStore("AppleStore");
+			appleStore.Name = "Apple Store";
+			appleStore.Catalog = "Apple";
 
-            var sonyStore = CreateStore("SonyStore");
-            sonyStore.Name = "Sony Store";
-            sonyStore.Catalog = "Sony";
+			var sonyStore = CreateStore("SonyStore");
+			sonyStore.Name = "Sony Store";
+			sonyStore.Catalog = "Sony";
 
-            context.Add(store);
-            context.Add(appleStore);
-            context.Add(sonyStore);
-            context.UnitOfWork.Commit();
-        }
+			context.Add(store);
+			context.Add(appleStore);
+			context.Add(sonyStore);
+			context.UnitOfWork.Commit();
+		}
 
-        private static Store CreateStore(string storeId, bool reduced = false)
-        {
-            var store = new Store
-                {
-                    Id = storeId,
-                    Name = "Electronics Store",
-                    Description = "Contains electronics from multiple vendors",
-                    StoreState = coreModel.StoreState.Open.GetHashCode(),
-                    TimeZone = TimeZone.CurrentTimeZone.StandardName,
-                    Country = "USA",
-                    Region = "California"
-                };
+		private Store CreateStore(string storeId, bool reduced = false)
+		{
+			var store = new Store
+				{
+					Id = storeId,
+					Name = "Electronics Store",
+					Description = "Contains electronics from multiple vendors",
+					StoreState = coreModel.StoreState.Open.GetHashCode(),
+					TimeZone = TimeZone.CurrentTimeZone.StandardName,
+					Country = "USA",
+					Region = "California"
+				};
 
-            store.Languages.Add(new StoreLanguage { Id = Guid.NewGuid().ToString("N"), StoreId = store.Id, LanguageCode = "en-US" });
-            store.Languages.Add(new StoreLanguage { Id = Guid.NewGuid().ToString("N"), StoreId = store.Id, LanguageCode = "de-DE" });
-            if (!reduced)
-            {
-                store.Languages.Add(new StoreLanguage { Id = Guid.NewGuid().ToString("N"), StoreId = store.Id, LanguageCode = "ru-RU" });
-                store.Languages.Add(new StoreLanguage { Id = Guid.NewGuid().ToString("N"), StoreId = store.Id, LanguageCode = "ja-JP" });
-            }
-            store.Currencies.Add(new StoreCurrency { Id = Guid.NewGuid().ToString("N"), StoreId = store.Id, CurrencyCode = "USD" });
-            store.Currencies.Add(new StoreCurrency { Id = Guid.NewGuid().ToString("N"), StoreId = store.Id, CurrencyCode = "EUR" });
-            store.DefaultLanguage = "en-US";
-            store.DefaultCurrency = "USD";
-            store.Catalog = "VendorVirtual";
+			store.Languages.Add(new StoreLanguage { Id = Guid.NewGuid().ToString("N"), StoreId = store.Id, LanguageCode = "en-US" });
+			store.Languages.Add(new StoreLanguage { Id = Guid.NewGuid().ToString("N"), StoreId = store.Id, LanguageCode = "de-DE" });
+			if (!reduced)
+			{
+				store.Languages.Add(new StoreLanguage { Id = Guid.NewGuid().ToString("N"), StoreId = store.Id, LanguageCode = "ru-RU" });
+				store.Languages.Add(new StoreLanguage { Id = Guid.NewGuid().ToString("N"), StoreId = store.Id, LanguageCode = "ja-JP" });
+			}
+			store.Currencies.Add(new StoreCurrency { Id = Guid.NewGuid().ToString("N"), StoreId = store.Id, CurrencyCode = "USD" });
+			store.Currencies.Add(new StoreCurrency { Id = Guid.NewGuid().ToString("N"), StoreId = store.Id, CurrencyCode = "EUR" });
+			store.DefaultLanguage = "en-US";
+			store.DefaultCurrency = "USD";
+			store.Catalog = "VendorVirtual";
 
-           
-            store.Email = "Vendor Store <vendor-store@virtocommerce.com>";
-            store.AdminEmail = "Vendor Store Admin <vendor-store-admin@virtocommerce.com>";
-            store.DisplayOutOfStock = true;
-            store.FulfillmentCenterId = "vendor-fulfillment";
-            store.ReturnsFulfillmentCenterId = "vendor-fulfillment";
 
-			//store.Settings.Add(new StoreSetting
-			//	{
-			//		Id = Guid.NewGuid().ToString("N"),
-			//		StoreId = store.Id,
-			//		ValueType = "xml",
-			//		LongTextValue = CreateFiltersXml(),
-			//		Name = "FilteredBrowsing"
-			//	});
-			//store.Settings.Add(new StoreSetting
-			//	{
-			//		Id = Guid.NewGuid().ToString("N"),
-			//		StoreId = store.Id,
-			//		ValueType = "ShortText",
-			//		ShortTextValue = "The store is temporarily closed for maintenance. Please try again later.",
-			//		Name = "StoreClosedMessage"
-			//	});
-			//store.Settings.Add(new StoreSetting
-			//	{
-			//		Id = Guid.NewGuid().ToString("N"),
-			//		StoreId = store.Id,
-			//		ValueType = "ShortText",
-			//		ShortTextValue = "You do not have permissions to view this store",
-			//		Name = "StoreRestrictedMessage"
-			//	});
-			//store.Settings.Add(new StoreSetting
-			//	{
-			//		Id = Guid.NewGuid().ToString("N"),
-			//		StoreId = store.Id,
-			//		ValueType = "Boolean",
-			//		BooleanValue = false,
-			//		Name = "RequireAccountConfirmation"
-			//	});
+			store.Email = "Vendor Store <vendor-store@virtocommerce.com>";
+			store.AdminEmail = "Vendor Store Admin <vendor-store-admin@virtocommerce.com>";
+			store.DisplayOutOfStock = true;
+			store.FulfillmentCenterId = "vendor-fulfillment";
+			store.ReturnsFulfillmentCenterId = "vendor-fulfillment";
 
-            return store;
-        }
+			var settings = new SettingEntry[] { 
+				new SettingEntry
+			{
+				ObjectId = storeId,
+				ObjectType = "Store",
+				 ValueType = SettingValueType.LongText,
+				Value = CreateFiltersXml(),
+				Name = "FilteredBrowsing"
+			},
+				new SettingEntry
+			{
+				ObjectId = storeId,
+				ObjectType = "Store",
+				 ValueType = SettingValueType.ShortText,
+				Value = "The store is temporarily closed for maintenance. Please try again later.",
+				Name = "StoreClosedMessage"
+			},
+				new SettingEntry
+			{
+				ObjectId = storeId,
+				ObjectType = "Store",
+				 ValueType = SettingValueType.LongText,
+				Value = "You do not have permissions to view this store",
+				Name = "StoreRestrictedMessage"
+			},
+				new SettingEntry
+			{
+				ObjectId = storeId,
+				ObjectType = "Store",
+				 ValueType = SettingValueType.Boolean,
+				Value = "false",
+				Name = "RequireAccountConfirmation"
+			}
+			};
 
-        #region Setup Filters
+			_settingManager.SaveSettings(settings);
 
-        private static string CreateFiltersXml()
-        {
-            var browsing = new FilteredBrowsing();
-            CreateFilters(browsing);
-            CreateColorFilters(browsing);
-            CreatePriceFilters(browsing);
+			return store;
+		}
 
-            var serializer = new XmlSerializer(typeof(FilteredBrowsing));
-            var writer = new StringWriter();
-            serializer.Serialize(writer, browsing);
-            var filtersXml = writer.ToString();
-            return filtersXml;
-        }
+		#region Setup Filters
 
-        private static void CreateColorFilters(FilteredBrowsing browsing)
-        {
-            var filters = browsing.Attributes != null ? new List<AttributeFilter>(browsing.Attributes) : new List<AttributeFilter>();
+		private static string CreateFiltersXml()
+		{
+			var browsing = new FilteredBrowsing();
+			CreateFilters(browsing);
+			CreateColorFilters(browsing);
+			CreatePriceFilters(browsing);
 
-            var filter = new AttributeFilter { Key = "color", IsLocalized = false };
+			var serializer = new XmlSerializer(typeof(FilteredBrowsing));
+			var writer = new StringWriter();
+			serializer.Serialize(writer, browsing);
+			var filtersXml = writer.ToString();
+			return filtersXml;
+		}
 
-            var colors = new[] { "White", "Black", "Red", "Yellow", "Green", "Blue", "Pink", "Magenta" };
+		private static void CreateColorFilters(FilteredBrowsing browsing)
+		{
+			var filters = browsing.Attributes != null ? new List<AttributeFilter>(browsing.Attributes) : new List<AttributeFilter>();
 
-            //var index = 0;
+			var filter = new AttributeFilter { Key = "color", IsLocalized = false };
 
-            filter.Values = colors.Select(color => new AttributeFilterValue { Id = color.ToLower(), Value = color.ToLower() }).ToArray();
-            filters.Add(filter);
-            browsing.Attributes = filters.ToArray();
-        }
+			var colors = new[] { "White", "Black", "Red", "Yellow", "Green", "Blue", "Pink", "Magenta" };
 
-        /*
-                private void CreateDisplayFilters(FilteredBrowsing browsing)
-                {
-                    List<RangeFilter> filters = null;
+			//var index = 0;
 
-                    if (browsing.AttributeRanges != null)
-                    {
-                        filters = new List<RangeFilter>(browsing.AttributeRanges);
-                    }
-                    else
-                    {
-                        filters = new List<RangeFilter>();
-                    }
+			filter.Values = colors.Select(color => new AttributeFilterValue { Id = color.ToLower(), Value = color.ToLower() }).ToArray();
+			filters.Add(filter);
+			browsing.Attributes = filters.ToArray();
+		}
 
-                    var filter = new RangeFilter();
-                    filter.Key = "DisplaySize";
+		/*
+				private void CreateDisplayFilters(FilteredBrowsing browsing)
+				{
+					List<RangeFilter> filters = null;
 
-                    var vals = new List<RangeFilterValue>();
+					if (browsing.AttributeRanges != null)
+					{
+						filters = new List<RangeFilter>(browsing.AttributeRanges);
+					}
+					else
+					{
+						filters = new List<RangeFilter>();
+					}
 
-                    vals.Add(CreateRange("20 Inches & Under", "under-i20", String.Empty, "20", "en"));
-                    vals.Add(CreateRange("21 to 29 Inches", "i21-29", "21", "29", "en"));
-                    vals.Add(CreateRange("30 to 39 Inches", "i21-29", "30", "39", "en"));
-                    vals.Add(CreateRange("40 to 49 Inches", "i21-29", "40", "49", "en"));
-                    vals.Add(CreateRange("50 Inches & Up", "over-i50", "50", String.Empty, "en"));
+					var filter = new RangeFilter();
+					filter.Key = "DisplaySize";
 
-                    filters.Add(filter);
+					var vals = new List<RangeFilterValue>();
 
-                    browsing.AttributeRanges = filters.ToArray();
-                }
-        */
+					vals.Add(CreateRange("20 Inches & Under", "under-i20", String.Empty, "20", "en"));
+					vals.Add(CreateRange("21 to 29 Inches", "i21-29", "21", "29", "en"));
+					vals.Add(CreateRange("30 to 39 Inches", "i21-29", "30", "39", "en"));
+					vals.Add(CreateRange("40 to 49 Inches", "i21-29", "40", "49", "en"));
+					vals.Add(CreateRange("50 Inches & Up", "over-i50", "50", String.Empty, "en"));
 
-        private static void CreateFilters(FilteredBrowsing browsing)
-        {
-            var filters = browsing.Attributes != null ? new List<AttributeFilter>(browsing.Attributes) : new List<AttributeFilter>();
+					filters.Add(filter);
 
-            var vals = new List<AttributeFilterValue>();
+					browsing.AttributeRanges = filters.ToArray();
+				}
+		*/
 
-            var filter = new AttributeFilter { Key = "Brand" };
+		private static void CreateFilters(FilteredBrowsing browsing)
+		{
+			var filters = browsing.Attributes != null ? new List<AttributeFilter>(browsing.Attributes) : new List<AttributeFilter>();
 
-            var val = new AttributeFilterValue { Id = "samsung", Value = "samsung" };
-            var val2 = new AttributeFilterValue { Id = "sony", Value = "sony" };
-            var val3 = new AttributeFilterValue { Id = "apple", Value = "apple" };
+			var vals = new List<AttributeFilterValue>();
 
-            vals.Add(val);
-            vals.Add(val2);
-            vals.Add(val3);
+			var filter = new AttributeFilter { Key = "Brand" };
 
-            filter.Values = vals.ToArray();
-            filters.Add(filter);
+			var val = new AttributeFilterValue { Id = "samsung", Value = "samsung" };
+			var val2 = new AttributeFilterValue { Id = "sony", Value = "sony" };
+			var val3 = new AttributeFilterValue { Id = "apple", Value = "apple" };
 
-            browsing.Attributes = filters.ToArray();
-        }
+			vals.Add(val);
+			vals.Add(val2);
+			vals.Add(val3);
 
-        private static void CreatePriceFilters(FilteredBrowsing browsing)
-        {
-            var filters = browsing.Prices != null ? new List<PriceRangeFilter>(browsing.Prices) : new List<PriceRangeFilter>();
+			filter.Values = vals.ToArray();
+			filters.Add(filter);
 
-            var vals = new List<RangeFilterValue>();
+			browsing.Attributes = filters.ToArray();
+		}
 
-            var filter = new PriceRangeFilter { Currency = "USD", IsLocalized = false };
+		private static void CreatePriceFilters(FilteredBrowsing browsing)
+		{
+			var filters = browsing.Prices != null ? new List<PriceRangeFilter>(browsing.Prices) : new List<PriceRangeFilter>();
 
-            vals.Add(CreateRange("Under $100", "under-100", String.Empty, "100", "en"));
+			var vals = new List<RangeFilterValue>();
 
-            vals.Add(CreateRange("$100 - $200", "100-200", "100", "200", "en"));
-            vals.Add(CreateRange("$200 - $600", "200-600", "200", "600", "en"));
-            vals.Add(CreateRange("$600 - $1000", "600-1000", "600", "1000", "en"));
-            vals.Add(CreateRange("Over $1000", "over-1000", "1000", String.Empty, "en"));
+			var filter = new PriceRangeFilter { Currency = "USD", IsLocalized = false };
 
-            filter.Values = vals.ToArray();
-            filters.Add(filter);
+			vals.Add(CreateRange("Under $100", "under-100", String.Empty, "100", "en"));
 
-            vals = new List<RangeFilterValue>();
+			vals.Add(CreateRange("$100 - $200", "100-200", "100", "200", "en"));
+			vals.Add(CreateRange("$200 - $600", "200-600", "200", "600", "en"));
+			vals.Add(CreateRange("$600 - $1000", "600-1000", "600", "1000", "en"));
+			vals.Add(CreateRange("Over $1000", "over-1000", "1000", String.Empty, "en"));
 
-            filter = new PriceRangeFilter { Currency = "EUR", IsLocalized = false };
+			filter.Values = vals.ToArray();
+			filters.Add(filter);
 
-            vals.Add(CreateRange("Under 100€", "under-100", String.Empty, "100", "en"));
+			vals = new List<RangeFilterValue>();
 
-            vals.Add(CreateRange("100€ - 200€", "100-200", "100", "200", "en"));
-            vals.Add(CreateRange("200€ - 600€", "200-600", "200", "600", "en"));
-            vals.Add(CreateRange("600€ - 1000€", "600-1000", "600", "1000", "en"));
-            vals.Add(CreateRange("Over 1000€", "over-1000", "1000", String.Empty, "en"));
+			filter = new PriceRangeFilter { Currency = "EUR", IsLocalized = false };
 
-            filter.Values = vals.ToArray();
-            filters.Add(filter);
+			vals.Add(CreateRange("Under 100€", "under-100", String.Empty, "100", "en"));
 
-            browsing.Prices = filters.ToArray();
-        }
+			vals.Add(CreateRange("100€ - 200€", "100-200", "100", "200", "en"));
+			vals.Add(CreateRange("200€ - 600€", "200-600", "200", "600", "en"));
+			vals.Add(CreateRange("600€ - 1000€", "600-1000", "600", "1000", "en"));
+			vals.Add(CreateRange("Over 1000€", "over-1000", "1000", String.Empty, "en"));
 
-        private static RangeFilterValue CreateRange(string desciption, string key, string lower, string upper, string lang)
-        {
-            var val = new RangeFilterValue { Id = key };
-            if (lower != null)
-            {
-                val.Lower = lower;
-            }
-            if (!String.IsNullOrEmpty(upper))
-            {
-                val.Upper = upper;
-            }
+			filter.Values = vals.ToArray();
+			filters.Add(filter);
 
-            var disp = new FilterValueDisplay { Value = desciption, Language = lang };
-            val.Displays = new[] { disp };
-            return val;
-        }
+			browsing.Prices = filters.ToArray();
+		}
 
-        #endregion
-    }
+		private static RangeFilterValue CreateRange(string desciption, string key, string lower, string upper, string lang)
+		{
+			var val = new RangeFilterValue { Id = key };
+			if (lower != null)
+			{
+				val.Lower = lower;
+			}
+			if (!String.IsNullOrEmpty(upper))
+			{
+				val.Upper = upper;
+			}
+
+			var disp = new FilterValueDisplay { Value = desciption, Language = lang };
+			val.Displays = new[] { disp };
+			return val;
+		}
+
+		#endregion
+	}
 }

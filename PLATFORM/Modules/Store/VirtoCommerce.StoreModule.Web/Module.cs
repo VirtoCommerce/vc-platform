@@ -2,6 +2,7 @@
 using Microsoft.Practices.Unity;
 using VirtoCommerce.Domain.Store.Services;
 using VirtoCommerce.Platform.Core.Modularity;
+using VirtoCommerce.Platform.Core.Settings;
 using VirtoCommerce.Platform.Data.Infrastructure;
 using VirtoCommerce.Platform.Data.Infrastructure.Interceptors;
 using VirtoCommerce.StoreModule.Data.Repositories;
@@ -30,7 +31,7 @@ namespace VirtoCommerce.StoreModule.Web
 				{
 					case SampleDataLevel.Full:
 					case SampleDataLevel.Reduced:
-						initializer = new SqlStoreSampleDatabaseInitializer();
+						initializer = new SqlStoreSampleDatabaseInitializer(_container.Resolve<ISettingsManager>());
 						break;
 					default:
 						initializer = new SetupDatabaseInitializer<StoreRepositoryImpl, VirtoCommerce.StoreModule.Data.Migrations.Configuration>();

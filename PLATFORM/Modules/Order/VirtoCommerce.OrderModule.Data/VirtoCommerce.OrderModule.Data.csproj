@@ -116,19 +116,9 @@
     <EmbeddedResource Include="Migrations\201505210916250_OperationProperty.resx">
       <DependentUpon>201505210916250_OperationProperty.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Repositories\Sql\OrderAddress.sql" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Repositories\Sql\CustomerOrder.sql" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Repositories\Sql\OrderLineItem.sql" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Repositories\Sql\OrderPaymentIn.sql" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Repositories\Sql\OrderShipment.sql" />
+    <EmbeddedResource Include="Repositories\Sql\OrderSampleData.sql" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

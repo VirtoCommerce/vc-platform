@@ -14,13 +14,26 @@ namespace VirtoCommerce.CoreModule.Data.Shipping
 			: base("FixedRate")
 		{
 			Settings = settings;
-			Description = "Manual shipping method";
 		}
-		public decimal Rate { get; set; }
+
+		private decimal Rate
+		{
+			get
+			{
+				var retVal = Settings.Where(x => x.Name == "Rate").Select(x => Convert.ToDecimal(x.Value)).FirstOrDefault();
+				return retVal;
+			}
+		}
 
 		public override ShippingRate CalculateRate(Domain.Common.IEvaluationContext context)
 		{
-			return new ShippingRate { Rate = Rate, ShippingMethod = this };
+			var shippingEvalContext = context as ShippingEvaluationContext;
+			if(shippingEvalContext == null)
+			{
+				throw new NullReferenceException("shippingEvalContext");
+			}
+
+			return new ShippingRate { Rate = Rate, Currency = shippingEvalContext.ShoppingCart.Currency, ShippingMethod = this };
 		}
 	}
 }
