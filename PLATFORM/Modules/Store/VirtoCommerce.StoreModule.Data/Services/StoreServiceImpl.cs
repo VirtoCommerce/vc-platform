@@ -15,7 +15,7 @@ using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Domain.Shipping.Services;
 using VirtoCommerce.Domain.Shipping.Model;
 using Omu.ValueInjecter;
-using VirtoCommerce.Domain.Payment2.Services;
+using VirtoCommerce.Domain.Payment.Services;
 
 namespace VirtoCommerce.StoreModule.Data.Services
 {
@@ -25,9 +25,9 @@ namespace VirtoCommerce.StoreModule.Data.Services
 		private readonly ICommerceService _commerceService;
 		private readonly ISettingsManager _settingManager;
 		private readonly IShippingService _shippingService;
-		private readonly IPaymentService _paymentService;
+		private readonly IPaymentMethodsService _paymentService;
 
-		public StoreServiceImpl(Func<IStoreRepository> repositoryFactory, ICommerceService commerceService, ISettingsManager settingManager, IShippingService shippingService, IPaymentService paymentService)
+		public StoreServiceImpl(Func<IStoreRepository> repositoryFactory, ICommerceService commerceService, ISettingsManager settingManager, IShippingService shippingService, IPaymentMethodsService paymentService)
 		{
 			_repositoryFactory = repositoryFactory;
 			_commerceService = commerceService;

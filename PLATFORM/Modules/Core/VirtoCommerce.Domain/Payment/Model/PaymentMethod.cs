@@ -7,7 +7,7 @@ using VirtoCommerce.Domain.Common;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Settings;
 
-namespace VirtoCommerce.Domain.Payment2.Model
+namespace VirtoCommerce.Domain.Payment.Model
 {
 	public abstract class PaymentMethod : Entity, IHaveSettings
 	{
@@ -34,6 +34,6 @@ namespace VirtoCommerce.Domain.Payment2.Model
 
 		public abstract ProcessPaymentResult ProcessPayment(IEvaluationContext context);
 
-
+		public abstract PostProcessPaymentResult PostProcessPayment(IEvaluationContext context);
 	}
 }

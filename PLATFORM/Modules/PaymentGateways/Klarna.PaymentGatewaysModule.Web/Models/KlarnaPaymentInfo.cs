@@ -7,7 +7,7 @@ using VirtoCommerce.Domain.Payment.Model;
 
 namespace Klarna.PaymentGatewaysModule.Web.Models
 {
-	public class KlarnaPaymentInfo : PaymentInfo
+	public class KlarnaPaymentInfo
 	{
 
 

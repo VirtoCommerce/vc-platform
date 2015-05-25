@@ -2,7 +2,7 @@
 using System.Net;
 using System.Web.Http;
 using System.Web.Http.Description;
-using VirtoCommerce.Domain.Payment2.Services;
+using VirtoCommerce.Domain.Payment.Services;
 using VirtoCommerce.Domain.Shipping.Services;
 using VirtoCommerce.Domain.Store.Services;
 using VirtoCommerce.Platform.Core.Security;
@@ -18,8 +18,8 @@ namespace VirtoCommerce.StoreModule.Web.Controllers.Api
 	{
 		private readonly IStoreService _storeService;
 		private readonly IShippingService _shippingService;
-		private readonly IPaymentService _paymentService;
-		public StoreModuleController(IStoreService storeService, IShippingService shippingService, IPaymentService paymentService)
+		private readonly IPaymentMethodsService _paymentService;
+		public StoreModuleController(IStoreService storeService, IShippingService shippingService, IPaymentMethodsService paymentService)
 		{
 			_storeService = storeService;
 			_shippingService = shippingService;

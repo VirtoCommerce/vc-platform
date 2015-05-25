@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace VirtoCommerce.CoreModule.Web.Model
 {
-	public class PaymentGateway
+	public class PaymentMethod
 	{
-		public string GatewayCode { get; set; }
+		public string Code { get; set; }
 		public string Description { get; set; }
 		public string LogoUrl { get; set; }
 	}

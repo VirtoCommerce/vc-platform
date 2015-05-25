@@ -135,9 +135,9 @@
     <Compile Include="Controllers\Api\CommerceController.cs" />
     <Compile Include="Controllers\PredefinedPermissions.cs" />
     <Compile Include="Converters\FulfillmentCenterConverter.cs" />
-    <Compile Include="Converters\PaymentGatewayConverter.cs" />
+    <Compile Include="Converters\PaymentMethodConverter.cs" />
     <Compile Include="Model\FulfillmentCenter.cs" />
-    <Compile Include="Model\PaymentGateway.cs" />
+    <Compile Include="Model\PaymentMethod.cs" />
     <Compile Include="Module.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

@@ -24,21 +24,21 @@ namespace Klarna.PaymentGatewaysModule.Web
 
         public void Initialize()
         {
-            var settingsManager = _container.Resolve<ISettingsManager>();
+			//var settingsManager = _container.Resolve<ISettingsManager>();
 
-            var klarnaEid = settingsManager.GetValue("Klarna.PaymentGateway.Credentials.AppKey", 0);
-            var klarnaSecret = settingsManager.GetValue("Klarna.PaymentGateway.Credentials.SecretKey", string.Empty);
+			//var klarnaEid = settingsManager.GetValue("Klarna.PaymentGateway.Credentials.AppKey", 0);
+			//var klarnaSecret = settingsManager.GetValue("Klarna.PaymentGateway.Credentials.SecretKey", string.Empty);
 
-            var klarnaGatewayCode = settingsManager.GetValue("Klarna.PaymentGateway.GatewayDescription.GatewayCode", string.Empty);
-            var klarnaDescription = settingsManager.GetValue("Klarna.PaymentGateway.GatewayDescription.Description", string.Empty);
-            var klarnaLogoUrl = settingsManager.GetValue("Klarna.PaymentGateway.GatewayDescription.LogoUrl", string.Empty);
+			//var klarnaGatewayCode = settingsManager.GetValue("Klarna.PaymentGateway.GatewayDescription.GatewayCode", string.Empty);
+			//var klarnaDescription = settingsManager.GetValue("Klarna.PaymentGateway.GatewayDescription.Description", string.Empty);
+			//var klarnaLogoUrl = settingsManager.GetValue("Klarna.PaymentGateway.GatewayDescription.LogoUrl", string.Empty);
 
 
-            var klarnaPaymentGateway = new KlarnaPaymentGatewayImpl(klarnaEid, klarnaSecret, klarnaGatewayCode, klarnaDescription, klarnaLogoUrl);
-            var paymentGatewayManager = _container.Resolve<IPaymentGatewayManager>();
-            paymentGatewayManager.RegisterGateway(klarnaPaymentGateway);
+			//var klarnaPaymentGateway = new KlarnaPaymentGatewayImpl(klarnaEid, klarnaSecret, klarnaGatewayCode, klarnaDescription, klarnaLogoUrl);
+			//var paymentGatewayManager = _container.Resolve<IPaymentGatewayManager>();
+			//paymentGatewayManager.RegisterGateway(klarnaPaymentGateway);
 
-            _container.RegisterType<KlarnaGatewayController>(new InjectionConstructor(klarnaPaymentGateway, klarnaEid, klarnaSecret));
+			//_container.RegisterType<KlarnaGatewayController>(new InjectionConstructor(klarnaPaymentGateway, klarnaEid, klarnaSecret));
         }
 
         public void PostInitialize()

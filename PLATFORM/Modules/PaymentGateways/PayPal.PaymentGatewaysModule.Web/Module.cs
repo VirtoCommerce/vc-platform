@@ -50,15 +50,14 @@ namespace PayPal.PaymentGatewaysModule.Web
 			var paypalDescription = settingsManager.GetValue("Paypal.PaymentGateway.GatewayDescription.Description", string.Empty);
 			var paypalLogoUrl = settingsManager.GetValue("Paypal.PaymentGateway.GatewayDescription.LogoUrl", string.Empty);
 
-			var paypalPaymentGateway = new PayPalPaymentGatewayImpl(paypalGatewayCode, paypalDescription, paypalLogoUrl, PaymentGatewayType.DirectRedirectUrlGateway, customerOrderService, storeService);
-			var paymentGatewayManager = _container.Resolve<IPaymentGatewayManager>();
-			paymentGatewayManager.RegisterGateway(paypalPaymentGateway);
+			var paypalPaymentMethod = new PaypalPaymentMethod(storeService, customerOrderService);
+			paypalPaymentMethod.Description = paypalDescription;
+			paypalPaymentMethod.LogoUrl = paypalPaymentMethod.LogoUrl;
 
-			_container.RegisterInstance<PayPalPaymentGatewayImpl>(paypalPaymentGateway);
+			var paymentMethodsService = _container.Resolve<IPaymentMethodsService>();
+			paymentMethodsService.RegisterPaymentMethod(() => paypalPaymentMethod);
 
-			var orderWorkflow = ServiceLocator.Current.GetInstance<IOrderWorkflow>() as ObservableWorkflowService<OrderStateBasedEvalContext>;
-
-			orderWorkflow.Subscribe(new ObserverFactory<OrderStateBasedEvalContext>(() => { return new PaypalPaymentActivity(paypalPaymentGateway); }));
+			_container.RegisterInstance<PaypalPaymentMethod>(paypalPaymentMethod);
 		}
 
 		#endregion

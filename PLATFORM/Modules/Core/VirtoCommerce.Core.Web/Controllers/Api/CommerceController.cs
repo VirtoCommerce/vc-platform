@@ -16,12 +16,12 @@ namespace VirtoCommerce.CoreModule.Web.Controllers.Api
     [RoutePrefix("api")]
     public class CommerceController : ApiController
     {
-		private readonly IPaymentGatewayManager _paymentGatewayManager;
+		private readonly IPaymentMethodsService _paymentMethodsService;
 	    private readonly ICommerceService _commerceService;
-		public CommerceController(ICommerceService commerceService, IPaymentGatewayManager paymentGatewayManager)
+		public CommerceController(ICommerceService commerceService, IPaymentMethodsService paymentMethodsService)
         {
 			_commerceService = commerceService;
-			_paymentGatewayManager = paymentGatewayManager;
+			_paymentMethodsService = paymentMethodsService;
         }
 
 		/// <summary>
@@ -29,11 +29,11 @@ namespace VirtoCommerce.CoreModule.Web.Controllers.Api
 		/// </summary>
 		/// <returns></returns>
 		[HttpGet]
-		[ResponseType(typeof(PaymentGateway[]))]
+		[ResponseType(typeof(PaymentMethod[]))]
 		[Route("paymentgateways")]
 		public IHttpActionResult GetGateways()
 		{
-			var retVal = _paymentGatewayManager.PaymentGateways.Select(x => x.ToWebModel()).ToArray();
+			var retVal = _paymentMethodsService.GetAllPaymentMethods().Select(x => x.ToWebModel()).ToArray();
 			return Ok(retVal);
 		}
 

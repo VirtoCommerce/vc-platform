@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using VirtoCommerce.Domain.Payment2.Model;
+using VirtoCommerce.Domain.Payment.Model;
 using VirtoCommerce.Platform.Core.Settings;
 
 namespace VirtoCommerce.CoreModule.Data.Payment
@@ -20,6 +20,11 @@ namespace VirtoCommerce.CoreModule.Data.Payment
 		public override ProcessPaymentResult ProcessPayment(Domain.Common.IEvaluationContext context)
 		{
 			throw new System.NotImplementedException();
+		}
+
+		public override PostProcessPaymentResult PostProcessPayment(Domain.Common.IEvaluationContext context)
+		{
+			throw new NotImplementedException();
 		}
 	}
 }
