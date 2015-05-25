@@ -15,41 +15,41 @@ namespace MeS.PaymentGatewaysModule.Web.Controllers
 	[RoutePrefix("api/paymentgateway")]
 	public class MeSGatewayController : ApiController
 	{
-		private string _mesAccountId;
+		//private string _mesAccountId;
 
-		private IPaymentGateway _paymentGateway;
+		//private IPaymentGateway _paymentGateway;
 
-		public MeSGatewayController(IPaymentGateway paymentGateway, string mesAccountId)
-		{
-			if (paymentGateway == null)
-				throw new ArgumentNullException("paymentGateway");
+		//public MeSGatewayController(IPaymentGateway paymentGateway, string mesAccountId)
+		//{
+		//	if (paymentGateway == null)
+		//		throw new ArgumentNullException("paymentGateway");
 
-			if (string.IsNullOrEmpty(mesAccountId))
-				throw new ArgumentNullException("mesAccountId");
+		//	if (string.IsNullOrEmpty(mesAccountId))
+		//		throw new ArgumentNullException("mesAccountId");
 
-			_paymentGateway = paymentGateway;
+		//	_paymentGateway = paymentGateway;
 
-			_mesAccountId = mesAccountId;
-		}
+		//	_mesAccountId = mesAccountId;
+		//}
 
-		[HttpPost]
-		[Route("mes/push")]
-		public IHttpActionResult PushMes([FromBody] MeSPushRequestModel mesPushRequest)
-		{
-			return Ok();
-		}
+		//[HttpPost]
+		//[Route("mes/push")]
+		//public IHttpActionResult PushMes([FromBody] MeSPushRequestModel mesPushRequest)
+		//{
+		//	return Ok();
+		//}
 
-		[HttpGet]
-		[ResponseType(typeof(GetPaymentParametersResult))]
-		[Route("mes/create")]
-		public IHttpActionResult CreatePayment()
-		{
-			var retVal = new GetPaymentParametersResult();
+		//[HttpGet]
+		//[ResponseType(typeof(GetPaymentParametersResult))]
+		//[Route("mes/create")]
+		//public IHttpActionResult CreatePayment()
+		//{
+		//	var retVal = new GetPaymentParametersResult();
 
-			retVal.MeSAccountId = _mesAccountId;
-			retVal.InvoiceNumber = Guid.NewGuid().ToString();
+		//	retVal.MeSAccountId = _mesAccountId;
+		//	retVal.InvoiceNumber = Guid.NewGuid().ToString();
 
-			return Ok(retVal);
-		}
+		//	return Ok(retVal);
+		//}
 	}
 }

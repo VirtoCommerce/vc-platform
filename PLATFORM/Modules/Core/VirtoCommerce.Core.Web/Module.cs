@@ -6,8 +6,6 @@ using VirtoCommerce.CoreModule.Data.Repositories;
 using VirtoCommerce.CoreModule.Data.Shipping;
 using VirtoCommerce.Domain.Commerce.Services;
 using VirtoCommerce.Domain.Payment.Services;
-using VirtoCommerce.Domain.Payment2.Model;
-using VirtoCommerce.Domain.Payment2.Services;
 using VirtoCommerce.Domain.Search;
 using VirtoCommerce.Domain.Shipping.Model;
 using VirtoCommerce.Domain.Shipping.Services;
@@ -54,11 +52,11 @@ namespace VirtoCommerce.CoreModule.Web
 
 		public void Initialize()
 		{
-			#region Payment gateways manager
+			//#region Payment gateways manager
 
-			_container.RegisterType<IPaymentGatewayManager, InMemoryPaymentGatewayManagerImpl>(new ContainerControlledLifetimeManager());
+			//_container.RegisterType<IPaymentGatewayManager, InMemoryPaymentGatewayManagerImpl>(new ContainerControlledLifetimeManager());
 
-			#endregion
+			//#endregion
 
 			#region Fulfillment
 
@@ -73,8 +71,8 @@ namespace VirtoCommerce.CoreModule.Web
 			#endregion
 
 			#region Payment service
-			var paymentService = new PaymentServiceImpl();
-			_container.RegisterInstance<IPaymentService>(paymentService);
+			var paymentService = new PaymentMethodsServiceImpl();
+			_container.RegisterInstance<IPaymentMethodsService>(paymentService);
 			#endregion
 		}
 
@@ -82,7 +80,7 @@ namespace VirtoCommerce.CoreModule.Web
         {
 			var settingManager = _container.Resolve<ISettingsManager>();
 			var shippingService = _container.Resolve<IShippingService>();
-			var paymentService = _container.Resolve<IPaymentService>();
+			var paymentService = _container.Resolve<IPaymentMethodsService>();
 
 			shippingService.RegisterShippingMethod(() => new FixedRateShippingMethod(new SettingEntry[] { new SettingEntry { Name = "Rate", ValueType = SettingValueType.Decimal, DefaultValue = "0" } })
 				{

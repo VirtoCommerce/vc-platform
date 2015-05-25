@@ -20,15 +20,15 @@ namespace PayPal.PaymentGatewaysModule.Web.Controllers
 	[RoutePrefix("api/paymentgateway/paypal")]
 	public class PayPalGatewayController : ApiController
 	{
-		private PayPalPaymentGatewayImpl _paymentGateway;
+		private PaypalPaymentMethod _paymentMethod;
 		private IStoreService _storeService;
 		private ICustomerOrderService _customerOrderService;
 
-		public PayPalGatewayController(PayPalPaymentGatewayImpl paymentGateway,
+		public PayPalGatewayController(PaypalPaymentMethod paymentMethod,
 			IStoreService storeService,
 			ICustomerOrderService customerOrderService)
 		{
-			if (paymentGateway == null)
+			if (paymentMethod == null)
 				throw new ArgumentNullException("paymentGateway");
 
 			if (storeService == null)
@@ -37,47 +37,27 @@ namespace PayPal.PaymentGatewaysModule.Web.Controllers
 			if (customerOrderService == null)
 				throw new ArgumentNullException("customerOrderService");
 
-			_paymentGateway = paymentGateway;
+			_paymentMethod = paymentMethod;
 			_storeService = storeService;
 			_customerOrderService = customerOrderService;
 		}
-
-		//[HttpGet]
-		//[Route("create")]
-		//[ResponseType(typeof(webModels.DirectRedirectUrlPaymentInfo))]
-		//public IHttpActionResult CreatePayment(string orderId)
-		//{
-		//	var payment = new PaymentInfo
-		//	{
-		//		OrderId = orderId
-		//	};
-
-		//	var paymentInfo = _paymentGateway.CreatePayment(payment);
-
-		//	return Ok((paymentInfo as coreModels.DirectRedirectUrlPaymentInfo).ToWebModel());
-		//}
 
 		[HttpGet]
 		[Route("push")]
 		public IHttpActionResult ApprovePayment(string token, string orderId, bool? cancel, string redirectUrl)
 		{
-			try
+			if (cancel.HasValue && !cancel.Value)
 			{
-				if (cancel.HasValue)
-				{
-					if (!cancel.Value)
-					{
-						var paymentInfo = _paymentGateway.GetPayment(token, orderId) as coreModels.DirectRedirectUrlPaymentInfo;
+				var paymentEvaluationContext = new PaymentEvaluationContext();
+				paymentEvaluationContext.OrderId = orderId;
+				paymentEvaluationContext.OuterId = token;
 
-						return Redirect(paymentInfo.RedirectUrl);
-					}
-				}
-				return Redirect(string.Format("{0}/checkout/thanks?orderId={1}&isSuccess=false", redirectUrl, orderId));
+				var paymentResult = _paymentMethod.PostProcessPayment(paymentEvaluationContext);
+
+				return Redirect(paymentResult.ReturnUrl);
 			}
-			catch
-			{
-				return Redirect(string.Format("{0}/checkout/thanks?orderId={1}&isSuccess=false", redirectUrl, orderId));
-			}
+
+			return Redirect(string.Format("{0}/checkout/thanks?orderId={1}&isSuccess=false", redirectUrl, orderId));
 		}
 
 		//[HttpGet]

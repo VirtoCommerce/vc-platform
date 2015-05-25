@@ -2,7 +2,6 @@
 using PayPal.PayPalAPIInterfaceService.Model;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Linq;
 using System.Text;
@@ -10,22 +9,16 @@ using System.Web;
 using VirtoCommerce.Domain.Order.Model;
 using VirtoCommerce.Domain.Order.Services;
 using VirtoCommerce.Domain.Payment.Model;
-using VirtoCommerce.Domain.Payment.Services;
 using VirtoCommerce.Domain.Store.Model;
 using VirtoCommerce.Domain.Store.Services;
 using VirtoCommerce.Platform.Core.Settings;
 
 namespace PayPal.PaymentGatewaysModule.Web.Managers
 {
-	public class PayPalPaymentGatewayImpl : IPaymentGateway
+	public class PaypalPaymentMethod : VirtoCommerce.Domain.Payment.Model.PaymentMethod
 	{
-		private string _gatewayCode;
-		private string _description;
-		private string _logoUrl;
-		private PaymentGatewayType _gatewayType;
-
-		private ICustomerOrderService _customerOrderService;
-		private IStoreService _storeService;
+		public IStoreService _storeService;
+		public ICustomerOrderService _customerOrderService;
 
 		private static string PaypalAPIModeStoreSetting = "Paypal.Mode";
 		private static string PaypalAPIUserNameStoreSetting = "Paypal.APIUsername";
@@ -37,115 +30,31 @@ namespace PayPal.PaymentGatewaysModule.Web.Managers
 		private static string PaypalPasswordConfigSettingName = "account1.apiPassword";
 		private static string PaypalSignatureConfigSettingName = "account1.apiSignature";
 
-		//private static string 
-
-		public PayPalPaymentGatewayImpl(
-			string gatewayCode,
-			string description,
-			string logoUrl,
-			PaymentGatewayType gatewayType,
-			ICustomerOrderService customerOrderService,
-			IStoreService storeService)
+		public PaypalPaymentMethod(IStoreService storeService, ICustomerOrderService customerOrderService)
+			: base("Paypal")
 		{
-			if (string.IsNullOrEmpty(gatewayCode))
-				throw new ArgumentNullException("gatewayCode");
-
-			if (string.IsNullOrEmpty(description))
-				throw new ArgumentNullException("description");
-
-			if (string.IsNullOrEmpty(logoUrl))
-				throw new ArgumentNullException("logoUrl");
+			if (storeService == null)
+				throw new ArgumentNullException("storeService");
 
 			if (customerOrderService == null)
 				throw new ArgumentNullException("customerOrderService");
 
-			if (storeService == null)
-				throw new ArgumentNullException("storeService");
-
-			_gatewayCode = gatewayCode;
-			_description = description;
-			_logoUrl = logoUrl;
-			_gatewayType = gatewayType;
-
-			_customerOrderService = customerOrderService;
 			_storeService = storeService;
+			_customerOrderService = customerOrderService;
 		}
 
-		public string GatewayCode
+		public override ProcessPaymentResult ProcessPayment(VirtoCommerce.Domain.Common.IEvaluationContext context)
 		{
-			get { return _gatewayCode; }
-		}
+			var retVal = new ProcessPaymentResult();
 
-		public string Description
-		{
-			get { return _description; }
-		}
+			var paymentEvaluationContext = context as PaymentEvaluationContext;
+			if (paymentEvaluationContext == null && paymentEvaluationContext.Payment == null)
+				throw new ArgumentNullException("paymentEvaluationContext");
 
-		public string LogoUrl
-		{
-			get { return _logoUrl; }
-		}
-
-		public PaymentGatewayType GatewayType
-		{
-			get { return _gatewayType; }
-		}
-
-		public PaymentInfo GetPayment(string paymentId, string orderId)
-		{
-			var order = _customerOrderService.GetById(orderId, VirtoCommerce.Domain.Order.Model.CustomerOrderResponseGroup.Full);
+			var order = _customerOrderService.GetById(paymentEvaluationContext.OrderId, VirtoCommerce.Domain.Order.Model.CustomerOrderResponseGroup.Full);
 			if (order == null)
 				throw new NullReferenceException("no order with this id");
 
-			var store = _storeService.GetById(order.StoreId);
-			if (!(store != null && !string.IsNullOrEmpty(store.Url)))
-				throw new NullReferenceException("no store with this id");
-
-			var payment = order.InPayments.FirstOrDefault(p => p.OuterId == paymentId);
-			if (payment == null)
-				throw new NullReferenceException("no payment paypal in this order");
-
-			var config = GetConfigMap(store);
-
-			var service = new PayPalAPIInterfaceServiceService(config);
-
-			GetExpressCheckoutDetailsResponseType response = null;
-			DoExpressCheckoutPaymentResponseType doResponse = null;
-
-			var getExpressCheckoutDetailsRequest = GetGetExpressCheckoutDetailsRequest(paymentId);
-			try
-			{
-				response = service.GetExpressCheckoutDetails(getExpressCheckoutDetailsRequest);
-			}
-			catch (System.Exception ex)
-			{
-				throw new NullReferenceException("paypal not work", ex);
-			}
-
-			CheckResponse(response);
-
-			var doExpressCheckoutPaymentRequest = GetDoExpressCheckoutPaymentRequest(response, paymentId);
-			doResponse = service.DoExpressCheckoutPayment(doExpressCheckoutPaymentRequest);
-
-			response = service.GetExpressCheckoutDetails(getExpressCheckoutDetailsRequest);
-			var status = response.GetExpressCheckoutDetailsResponseDetails.CheckoutStatus;
-
-			if (response.GetExpressCheckoutDetailsResponseDetails.CheckoutStatus.Equals("PaymentActionCompleted"))
-			{
-				payment.IsApproved = true;
-			}
-			else
-			{
-				payment.IsApproved = false;
-			}
-
-			_customerOrderService.Update(new CustomerOrder[] { order });
-
-			return new DirectRedirectUrlPaymentInfo { IsApproved = payment.IsApproved, RedirectUrl = string.Format("{0}/checkout/thanks?orderId={1}&isSuccess=true", store.Url, orderId) };
-		}
-
-		public void CreatePayment(PaymentIn payment, CustomerOrder order)
-		{
 			var store = _storeService.GetById(order.StoreId);
 			if (!(store != null && !string.IsNullOrEmpty(store.Url)))
 				throw new NullReferenceException("no store with this id");
@@ -154,7 +63,7 @@ namespace PayPal.PaymentGatewaysModule.Web.Managers
 
 			var url = store.Url;
 
-			var request = CreatePaypalRequest(order, store, payment);
+			var request = CreatePaypalRequest(order, store, paymentEvaluationContext.Payment);
 
 			var service = new PayPalAPIInterfaceServiceService(config);
 
@@ -163,22 +72,89 @@ namespace PayPal.PaymentGatewaysModule.Web.Managers
 			try
 			{
 				setEcResponse = service.SetExpressCheckout(request);
+
+				CheckResponse(setEcResponse);
+
+				retVal.GatewayType = PaymentGatewayType.DirectRedirectUrlGateway;
+				retVal.IsSuccess = true;
+				retVal.NewPaymentStatus = PaymentStatus.Pending;
+
+				var existedPayment = order.InPayments.FirstOrDefault(p => p.Id == paymentEvaluationContext.Payment.Id);
+				if(existedPayment != null)
+				{
+					existedPayment.OuterId = setEcResponse.Token;
+					_customerOrderService.Update(new CustomerOrder[] { order });
+				}
 			}
 			catch (System.Exception ex)
 			{
-				throw new NullReferenceException("paypal not work", ex);
+				retVal.Error = ex.Message;
+
+				//throw new NullReferenceException("paypal not work", ex);
 			}
 
-			CheckResponse(setEcResponse);
+			return retVal;
+		}
 
-			payment.OuterId = setEcResponse.Token;
+		public override PostProcessPaymentResult PostProcessPayment(VirtoCommerce.Domain.Common.IEvaluationContext context)
+		{
+			var retVal = new PostProcessPaymentResult();
 
-			payment.Properties = new Collection<OperationProperty>();
-			payment.Properties.Add(new OperationProperty { Name = "RedirectUrl", Value = string.Format("https://www.sandbox.paypal.com/cgi-bin/webscr?cmd={0}", "_express-checkout&useraction=commit&token=" + setEcResponse.Token), ValueType = PropertyValueType.ShortText });
-			payment.Properties.Add(new OperationProperty { Name = "GatewayType", Value = GatewayType.ToString(), ValueType = PropertyValueType.ShortText });
-			
+			var paymentEvaluationContext = context as PaymentEvaluationContext;
+			if (paymentEvaluationContext == null && paymentEvaluationContext.Payment == null)
+				throw new ArgumentNullException("paymentEvaluationContext");
 
-			//_customerOrderService.Update(new CustomerOrder[] { order });
+			var order = _customerOrderService.GetById(paymentEvaluationContext.OrderId, VirtoCommerce.Domain.Order.Model.CustomerOrderResponseGroup.Full);
+			if (order == null)
+				throw new NullReferenceException("no order with this id");
+
+			var store = _storeService.GetById(order.StoreId);
+			if (!(store != null && !string.IsNullOrEmpty(store.Url)))
+				throw new NullReferenceException("no store with this id");
+
+			var config = GetConfigMap(store);
+
+			var service = new PayPalAPIInterfaceServiceService(config);
+
+			GetExpressCheckoutDetailsResponseType response = null;
+			DoExpressCheckoutPaymentResponseType doResponse = null;
+
+			var getExpressCheckoutDetailsRequest = GetGetExpressCheckoutDetailsRequest(paymentEvaluationContext.OuterId);
+			try
+			{
+				response = service.GetExpressCheckoutDetails(getExpressCheckoutDetailsRequest);
+
+				CheckResponse(response);
+
+				var doExpressCheckoutPaymentRequest = GetDoExpressCheckoutPaymentRequest(response, paymentEvaluationContext.OuterId);
+				doResponse = service.DoExpressCheckoutPayment(doExpressCheckoutPaymentRequest);
+
+				CheckResponse(doResponse);
+
+				response = service.GetExpressCheckoutDetails(getExpressCheckoutDetailsRequest);
+
+				var status = response.GetExpressCheckoutDetailsResponseDetails.CheckoutStatus;
+
+				if (response.GetExpressCheckoutDetailsResponseDetails.CheckoutStatus.Equals("PaymentActionCompleted"))
+				{
+					var existedPayment = order.InPayments.FirstOrDefault(p => p.OuterId == paymentEvaluationContext.OuterId);
+					existedPayment.IsApproved = true;
+					_customerOrderService.Update(new CustomerOrder[] { order });
+
+					retVal.IsSuccess = true;
+					retVal.NewPaymentStatus = PaymentStatus.Paid;
+					retVal.ReturnUrl = string.Format("{0}/checkout/thanks?orderId={1}&isSuccess=true", store.Url, paymentEvaluationContext.OrderId);
+				}
+			}
+			catch (System.Exception ex)
+			{
+				retVal.Error = ex.Message;
+				retVal.ReturnUrl = string.Format("{0}/checkout/thanks?orderId={1}&isSuccess=false", store.Url, paymentEvaluationContext.OrderId);
+
+				//throw new NullReferenceException("paypal not work", ex);
+			}
+
+			return retVal;
 		}
 
 		private string FormatMoney(decimal amount)
@@ -261,9 +237,9 @@ namespace PayPal.PaymentGatewaysModule.Web.Managers
 			return new GetExpressCheckoutDetailsReq
 			{
 				GetExpressCheckoutDetailsRequest = new GetExpressCheckoutDetailsRequestType
-					{
-						Token = paymentId
-					}
+				{
+					Token = paymentId
+				}
 			};
 		}
 
@@ -283,9 +259,9 @@ namespace PayPal.PaymentGatewaysModule.Web.Managers
 			};
 		}
 
-		private void CheckResponse(AbstractResponseType response)
+		private bool CheckResponse(AbstractResponseType response)
 		{
-			if(response != null)
+			if (response != null)
 			{
 				if (response.Ack.Equals(AckCodeType.FAILURE) || (response.Errors != null && response.Errors.Count > 0))
 				{
@@ -302,6 +278,8 @@ namespace PayPal.PaymentGatewaysModule.Web.Managers
 			{
 				throw new NullReferenceException("response in null");
 			}
+
+			return true;
 		}
 	}
 }

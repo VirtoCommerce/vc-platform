@@ -31,22 +31,6 @@
 	</scripts>-->
 
     <settings>
-        <group name="Credentials">
-            <setting>
-                <name>PayPal.PaymentGateway.Credentials.AppKey</name>
-                <valueType>string</valueType>
-                <defaultValue>qwerty</defaultValue>
-                <title>AppKey</title>
-                <description>Paypal application key</description>
-            </setting>
-            <setting>
-                <name>PayPal.PaymentGateway.Credentials.SecretKey</name>
-                <valueType>string</valueType>
-                <defaultValue>qwerty</defaultValue>
-                <title>AppKey</title>
-                <description>Paypal secret key</description>
-            </setting>
-        </group>
         <group name="Gateway Description">
             <setting>
                 <name>Paypal.PaymentGateway.GatewayDescription.GatewayCode</name>

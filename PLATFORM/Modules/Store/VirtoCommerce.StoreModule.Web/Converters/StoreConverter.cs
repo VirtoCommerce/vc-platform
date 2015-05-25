@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Omu.ValueInjecter;
-using VirtoCommerce.Domain.Payment2.Model;
+using VirtoCommerce.Domain.Payment.Model;
 using VirtoCommerce.Domain.Shipping.Model;
 using coreModel = VirtoCommerce.Domain.Store.Model;
 using webModel = VirtoCommerce.StoreModule.Web.Model;

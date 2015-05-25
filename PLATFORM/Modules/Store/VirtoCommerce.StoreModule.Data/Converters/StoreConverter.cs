@@ -11,7 +11,7 @@ using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Data.Common;
 using VirtoCommerce.Platform.Data.Common.ConventionInjections;
 using VirtoCommerce.Domain.Shipping.Model;
-using VirtoCommerce.Domain.Payment2.Model;
+using VirtoCommerce.Domain.Payment.Model;
 
 namespace VirtoCommerce.StoreModule.Data.Converters
 {

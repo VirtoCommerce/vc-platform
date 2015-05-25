@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using VirtoCommerce.Domain.Commerce.Model;
-using VirtoCommerce.Domain.Payment2.Model;
+using VirtoCommerce.Domain.Payment.Model;
 using VirtoCommerce.Domain.Shipping.Model;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Settings;

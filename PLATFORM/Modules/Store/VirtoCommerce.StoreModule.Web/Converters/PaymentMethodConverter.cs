@@ -1,6 +1,6 @@
 ﻿using Omu.ValueInjecter;
 using webModel = VirtoCommerce.StoreModule.Web.Model;
-using coreModel = VirtoCommerce.Domain.Payment2.Model;
+using coreModel = VirtoCommerce.Domain.Payment.Model;
 using System.Linq;
 
 namespace VirtoCommerce.StoreModule.Web.Converters

@@ -25,19 +25,19 @@ namespace MeS.PaymentGatewaysModule.Web
 
         public void Initialize()
         {
-            var settingsManager = ServiceLocator.Current.GetInstance<ISettingsManager>();
+			//var settingsManager = ServiceLocator.Current.GetInstance<ISettingsManager>();
 
-            var mesAccountId = settingsManager.GetValue("Mes.PaymentGateway.Credentials.AppKey", string.Empty);
+			//var mesAccountId = settingsManager.GetValue("Mes.PaymentGateway.Credentials.AppKey", string.Empty);
 
-            var mesGatewayCode = settingsManager.GetValue("Mes.PaymentGateway.GatewayDescription.GatewayCode", string.Empty);
-            var mesDescription = settingsManager.GetValue("Mes.PaymentGateway.GatewayDescription.Description", string.Empty);
-            var mesLogoUrl = settingsManager.GetValue("Mes.PaymentGateway.GatewayDescription.LogoUrl", string.Empty);
+			//var mesGatewayCode = settingsManager.GetValue("Mes.PaymentGateway.GatewayDescription.GatewayCode", string.Empty);
+			//var mesDescription = settingsManager.GetValue("Mes.PaymentGateway.GatewayDescription.Description", string.Empty);
+			//var mesLogoUrl = settingsManager.GetValue("Mes.PaymentGateway.GatewayDescription.LogoUrl", string.Empty);
 
-            var mesPaymentGateway = new MeSPaymentGatewayImpl(mesAccountId, mesGatewayCode, mesDescription, mesLogoUrl);
-            var paymentGatewayManager = _container.Resolve<IPaymentGatewayManager>();
-            paymentGatewayManager.RegisterGateway(mesPaymentGateway);
+			//var mesPaymentGateway = new MeSPaymentGatewayImpl(mesAccountId, mesGatewayCode, mesDescription, mesLogoUrl);
+			//var paymentGatewayManager = _container.Resolve<IPaymentGatewayManager>();
+			//paymentGatewayManager.RegisterGateway(mesPaymentGateway);
 
-            _container.RegisterType<MeSGatewayController>(new InjectionConstructor(mesPaymentGateway, mesAccountId));
+			//_container.RegisterType<MeSGatewayController>(new InjectionConstructor(mesPaymentGateway, mesAccountId));
         }
 
         public void PostInitialize()

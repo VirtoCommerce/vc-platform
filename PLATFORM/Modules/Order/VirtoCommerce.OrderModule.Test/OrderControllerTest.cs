@@ -18,6 +18,7 @@ using VirtoCommerce.Domain.Common;
 using VirtoCommerce.CartModule.Data.Services;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.CartModule.Data.Workflow;
+using VirtoCommerce.Domain.Payment.Model;
 
 namespace VirtoCommerce.OrderModule.Test
 {
@@ -56,11 +57,14 @@ namespace VirtoCommerce.OrderModule.Test
 
 			var payment = testOrder.InPayments.FirstOrDefault();
 
-			var mockPaymentManager = new Mock<IPaymentGatewayManager>();
-			var gateway = mockPaymentManager.Object.PaymentGateways.FirstOrDefault(x => x.GatewayCode == payment.GatewayCode);
-			var externalPaymentInfo = gateway.GetPayment(payment.OuterId, testOrder.Id);
+			var mockPaymentManager = new Mock<IPaymentMethodsService>();
+			var gateway = mockPaymentManager.Object.GetAllPaymentMethods().FirstOrDefault(x => x.Code == payment.GatewayCode);
 
-			payment.IsApproved = externalPaymentInfo.IsApproved;
+			var paymentEvaluationContext = new PaymentEvaluationContext();
+
+			var paymentResult = gateway.ProcessPayment(paymentEvaluationContext);
+
+			payment.IsApproved = paymentResult.IsSuccess;
 
 			_controller.Update(testOrder);
 		}

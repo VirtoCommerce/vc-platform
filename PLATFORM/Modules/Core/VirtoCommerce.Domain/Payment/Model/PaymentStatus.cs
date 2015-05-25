@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace VirtoCommerce.Domain.Payment2.Model
+namespace VirtoCommerce.Domain.Payment.Model
 {
 	/// <summary>
 	/// Represents a payment status enumeration
