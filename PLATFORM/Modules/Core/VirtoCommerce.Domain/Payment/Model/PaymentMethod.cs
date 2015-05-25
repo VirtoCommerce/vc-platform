@@ -18,19 +18,24 @@ namespace VirtoCommerce.Domain.Payment.Model
 		}
 
 		/// <summary>
-		/// Method identity property
+		/// Method identity property (system name)
 		/// </summary>
 		public string Code { get; set; }
+
+		public string Name { get; set; }
 		public string Description { get; set; }
 		public string LogoUrl { get; set; }
 		public bool IsActive { get; set; }
 		public int Priority { get; set; }
+
 
 		#region IHaveSettings Members
 
 		public ICollection<SettingEntry> Settings { get; set; }
 
 		#endregion
+
+		public abstract PaymentMethodType PaymentMethodType { get; }
 
 		public abstract ProcessPaymentResult ProcessPayment(IEvaluationContext context);
 

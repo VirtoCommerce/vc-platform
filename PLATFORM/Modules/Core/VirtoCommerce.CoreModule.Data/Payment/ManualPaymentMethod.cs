@@ -26,5 +26,10 @@ namespace VirtoCommerce.CoreModule.Data.Payment
 		{
 			throw new NotImplementedException();
 		}
+
+		public override PaymentMethodType PaymentMethodType
+		{
+			get { return PaymentMethodType.Standard; }
+		}
 	}
 }

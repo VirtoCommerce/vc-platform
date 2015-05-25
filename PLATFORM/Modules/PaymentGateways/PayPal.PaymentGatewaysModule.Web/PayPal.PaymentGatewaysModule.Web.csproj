@@ -142,7 +142,6 @@
   <ItemGroup>
     <Compile Include="Controllers\PayPalGatewayController.cs" />
     <Compile Include="Managers\PaypalPaymentMethod.cs" />
-    <Compile Include="Managers\PaypalStoreSettingInitializer.cs" />
     <Compile Include="Module.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

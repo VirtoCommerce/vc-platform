@@ -11,8 +11,6 @@ namespace VirtoCommerce.Domain.Payment.Model
 	{
 		public PaymentStatus NewPaymentStatus { get; set; }
 
-		public PaymentGatewayType GatewayType { get; set; }
-
 		public string RedirectUrl { get; set; }
 
 		public bool IsSuccess { get; set; }

@@ -193,7 +193,7 @@
     <Compile Include="Payment\Model\ProcessPaymentResult.cs" />
     <Compile Include="Payment\Services\IPaymentService.cs" />
     <Compile Include="Payment\Services\PaymentServiceImpl.cs" />
-    <Compile Include="Payment\Model\PaymentGatewayType.cs" />
+    <Compile Include="Payment\Model\PaymentMethodType.cs" />
     <Compile Include="Pricing\Model\Price.cs" />
     <Compile Include="Pricing\Model\PriceEvaluationContext.cs" />
     <Compile Include="Pricing\Model\Pricelist.cs" />

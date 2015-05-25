@@ -75,7 +75,6 @@ namespace PayPal.PaymentGatewaysModule.Web.Managers
 
 				CheckResponse(setEcResponse);
 
-				retVal.GatewayType = PaymentGatewayType.DirectRedirectUrlGateway;
 				retVal.IsSuccess = true;
 				retVal.NewPaymentStatus = PaymentStatus.Pending;
 
@@ -155,6 +154,11 @@ namespace PayPal.PaymentGatewaysModule.Web.Managers
 			}
 
 			return retVal;
+		}
+
+		public override PaymentMethodType PaymentMethodType
+		{
+			get { return PaymentMethodType.Redirection; }
 		}
 
 		private string FormatMoney(decimal amount)
@@ -281,5 +285,7 @@ namespace PayPal.PaymentGatewaysModule.Web.Managers
 
 			return true;
 		}
+
+	
 	}
 }

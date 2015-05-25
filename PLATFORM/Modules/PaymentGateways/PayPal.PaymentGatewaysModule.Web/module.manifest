@@ -33,26 +33,33 @@
     <settings>
         <group name="Gateway Description">
             <setting>
-                <name>Paypal.PaymentGateway.GatewayDescription.GatewayCode</name>
+                <name>Paypal.Mode</name>
                 <valueType>string</valueType>
-                <defaultValue>Paypal</defaultValue>
-                <title>Gateway code</title>
-                <description>Code that indentificates paypal gateway provider</description>
+				<defaultValue>sandbox</defaultValue>
+                <title>Paypal working mode</title>
+                <description>Type of api (sandbox or real)</description>
             </setting>
             <setting>
-                <name>Paypal.PaymentGateway.GatewayDescription.Description</name>
+                <name>Paypal.APIUsername</name>
                 <valueType>string</valueType>
-                <defaultValue>Paypal public site description</defaultValue>
-                <title>AppKey</title>
-                <description>Description of paypal for public site</description>
+                <defaultValue></defaultValue>
+                <title>API username</title>
+                <description>merchant api username credential</description>
             </setting>
             <setting>
-                <name>Paypal.PaymentGateway.GatewayDescription.LogoUrl</name>
+                <name>Paypal.APIPassword</name>
                 <valueType>string</valueType>
-                <defaultValue>https://www.paypalobjects.com/webstatic/i/logo/rebrand/ppcom.svg</defaultValue>
-                <title>AppKey</title>
-                <description>Paypal logo url</description>
+                <defaultValue></defaultValue>
+                <title>API password</title>
+                <description>merchant api password credential</description>
             </setting>
+			<setting>
+				<name>Paypal.APISignature</name>
+				<valueType>string</valueType>
+				<defaultValue></defaultValue>
+				<title>API signature</title>
+				<description>merchant api signature credential</description>
+			</setting>
         </group>
     </settings>
 </module>

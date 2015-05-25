@@ -1,4 +1,5 @@
-﻿using Microsoft.Practices.ServiceLocation;
+﻿using System;
+using Microsoft.Practices.ServiceLocation;
 using Microsoft.Practices.Unity;
 using PayPal.PaymentGatewaysModule.Web.Controllers;
 using PayPal.PaymentGatewaysModule.Web.Managers;
@@ -41,23 +42,20 @@ namespace PayPal.PaymentGatewaysModule.Web
 			var storeService = ServiceLocator.Current.GetInstance<IStoreService>();
 			var customerOrderService = ServiceLocator.Current.GetInstance<ICustomerOrderService>();
 
-			PaypalStoreSettingInitializer initializer = new PaypalStoreSettingInitializer(storeService);
-			initializer.Initialize();
-
 			var settingsManager = ServiceLocator.Current.GetInstance<ISettingsManager>();
-
-			var paypalGatewayCode = settingsManager.GetValue("Paypal.PaymentGateway.GatewayDescription.GatewayCode", string.Empty);
-			var paypalDescription = settingsManager.GetValue("Paypal.PaymentGateway.GatewayDescription.Description", string.Empty);
-			var paypalLogoUrl = settingsManager.GetValue("Paypal.PaymentGateway.GatewayDescription.LogoUrl", string.Empty);
-
-			var paypalPaymentMethod = new PaypalPaymentMethod(storeService, customerOrderService);
-			paypalPaymentMethod.Description = paypalDescription;
-			paypalPaymentMethod.LogoUrl = paypalPaymentMethod.LogoUrl;
-
+	
+			Func<PaypalPaymentMethod> paypalPaymentMethodFactory = () => {
+				return new PaypalPaymentMethod(storeService, customerOrderService)
+				{
+					Name = "PayPal",
+					Description = "PayPal payment integration",
+					LogoUrl = "https://www.paypalobjects.com/webstatic/mktg/logo/pp_cc_mark_37x23.jpg",
+					Settings = settingsManager.GetModuleSettings("Paypal.PaymentGateway")
+				};
+			};
 			var paymentMethodsService = _container.Resolve<IPaymentMethodsService>();
-			paymentMethodsService.RegisterPaymentMethod(() => paypalPaymentMethod);
+			paymentMethodsService.RegisterPaymentMethod(paypalPaymentMethodFactory);
 
-			_container.RegisterInstance<PaypalPaymentMethod>(paypalPaymentMethod);
 		}
 
 		#endregion
