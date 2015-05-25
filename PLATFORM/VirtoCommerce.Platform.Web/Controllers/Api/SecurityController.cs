@@ -18,6 +18,8 @@ using VirtoCommerce.Platform.Data.Security;
 using VirtoCommerce.Platform.Data.Security.Identity;
 using VirtoCommerce.Platform.Web.Converters.Security;
 using VirtoCommerce.Platform.Web.Model.Security;
+using coreModel = VirtoCommerce.Platform.Data.Model;
+using webModel = VirtoCommerce.Platform.Web.Model.Security;
 
 namespace VirtoCommerce.Platform.Web.Controllers.Api
 {
@@ -201,10 +203,9 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [ResponseType(typeof(ApiAccount))]
         [Route("apiaccounts/new")]
         [CheckPermission(Permission = PredefinedPermissions.SecurityManage)]
-        public IHttpActionResult GenerateNewApiAccount()
+        public IHttpActionResult GenerateNewApiAccount(string name, webModel.ApiAccountType type)
         {
-            var apiAccount = _apiAccountProvider.GenerateApiCredentials();
-            apiAccount.IsActive = true;
+            var apiAccount = _apiAccountProvider.GenerateApiCredentials((coreModel.ApiAccountType)type, name);
             var result = apiAccount.ToWebModel();
             return Ok(result);
         }

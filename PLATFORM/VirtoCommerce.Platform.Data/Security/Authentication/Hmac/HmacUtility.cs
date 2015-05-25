@@ -4,7 +4,7 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace VirtoCommerce.Platform.Data.Security.Hmac
+namespace VirtoCommerce.Platform.Data.Security.Authentication.Hmac
 {
     public static class HmacUtility
     {

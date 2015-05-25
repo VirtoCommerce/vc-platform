@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using Hangfire;
 using Hangfire.SqlServer;
 using Microsoft.AspNet.Identity;
@@ -12,7 +11,8 @@ using Owin;
 using VirtoCommerce.Platform.Core.Caching;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Data.Security;
-using VirtoCommerce.Platform.Data.Security.Hmac;
+using VirtoCommerce.Platform.Data.Security.Authentication.ApiKeys;
+using VirtoCommerce.Platform.Data.Security.Authentication.Hmac;
 using VirtoCommerce.Platform.Data.Security.Identity;
 using VirtoCommerce.Platform.Web.Hangfire;
 
@@ -65,17 +65,27 @@ namespace VirtoCommerce.Platform.Web
                 AllowInsecureHttp = true
             });
 
+            var apiAccountProvider = container.Resolve<IApiAccountProvider>();
+            var claimsIdentityProvider = container.Resolve<IClaimsIdentityProvider>();
             var cacheManager = container.Resolve<CacheManager>();
+
             var cacheSettings = new[]
             {
                 new CacheSettings(HmacAuthenticationHandler.CacheGroup, TimeSpan.FromSeconds(60))
             };
-			cacheManager.AddCacheSettings(cacheSettings);
-        
+            cacheManager.AddCacheSettings(cacheSettings);
+
             app.UseHmacAuthentication(new HmacAuthenticationOptions
             {
-                ApiCredentialsProvider = container.Resolve<IApiAccountProvider>(),
-                IdentityProvider = container.Resolve<IClaimsIdentityProvider>(),
+                ApiCredentialsProvider = apiAccountProvider,
+                IdentityProvider = claimsIdentityProvider,
+                CacheManager = cacheManager,
+            });
+
+            app.UseApiKeysAuthentication(new ApiKeysAuthenticationOptions
+            {
+                ApiCredentialsProvider = apiAccountProvider,
+                IdentityProvider = claimsIdentityProvider,
                 CacheManager = cacheManager,
             });
 

@@ -22,30 +22,40 @@ namespace VirtoCommerce.Platform.Data.Security
 
         #region IApiAccountProvider Members
 
-        public ApiAccountEntity GetAccountByAppId(string appId)
+        public ApiAccountEntity GetAccountByAppId(ApiAccountType type, string appId)
         {
             return _cacheManager.Get(
-                CacheKey.Create(CacheGroups.Security, "ApiAccount", appId),
-                () => LoadApiAccount(appId));
+                CacheKey.Create(CacheGroups.Security, "ApiAccount", type.ToString(), appId),
+                () => LoadApiAccount(type, appId));
         }
 
-        public ApiAccountEntity GenerateApiCredentials()
+        public ApiAccountEntity GenerateApiCredentials(ApiAccountType type, string name)
         {
-            return new ApiAccountEntity
+            var result = new ApiAccountEntity
             {
+                //Name = name,
+                ApiAccountType = type,
                 AppId = Guid.NewGuid().ToString("N"),
-                SecretKey = ConvertBytesToHexString(GetRandomBytes(64))
+                IsActive = true
             };
+
+            if (type == ApiAccountType.Hmac)
+            {
+                result.SecretKey = ConvertBytesToHexString(GetRandomBytes(64));
+            }
+
+            return result;
         }
 
         #endregion
 
 
-        private ApiAccountEntity LoadApiAccount(string appId)
+        private ApiAccountEntity LoadApiAccount(ApiAccountType type, string appId)
         {
             using (var repository = _platformRepository())
             {
-                var apiAccount = repository.ApiAccounts.FirstOrDefault(c => c.AppId == appId && c.IsActive && c.Account.AccountState == AccountState.Approved);
+                var apiAccount = repository.ApiAccounts.FirstOrDefault(c => c.ApiAccountType == type && c.AppId == appId &&
+                    c.IsActive && c.Account.AccountState == AccountState.Approved);
                 return apiAccount;
             }
         }
