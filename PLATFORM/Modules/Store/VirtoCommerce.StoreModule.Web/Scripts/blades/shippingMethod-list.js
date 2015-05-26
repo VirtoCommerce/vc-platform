@@ -5,6 +5,7 @@
         // temp: mock data
         //data.push({ code: 'mock1', priority:2, logoUrl: 'https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcQ3_FeY5LAEBl0RM3Csu9eGegAsqoZkH2S4WbO7Cy0H4T9EJuIO_Q' });
         //data.push({ code: 'mock3', priority: 3, logoUrl: 'https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcQVmLBvDo6WwhIIFr8A0d0hfYWb1WqPWUX7XIH1lt2DVjOQGt0M' });
+        //data.push({ code: 'mock2', priority: 2 });
         //data.push({ code: 'mock4', priority: 4, logoUrl: 'https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcQOopZ_owqLWotyOx4QXvIwK0L2MDICd4_wE4IX4bV61fa5cvCw' });
         $scope.blade.currentEntities = data;
         $scope.blade.isLoading = false;

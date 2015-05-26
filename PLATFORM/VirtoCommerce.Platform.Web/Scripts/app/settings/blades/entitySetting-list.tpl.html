@@ -5,8 +5,8 @@
             <form name="formScope" class="form">
                 <fieldset ng-repeat="groupName in blade.groupNames">
                     <legend>{{groupName==='undefined'?'General':groupName}}</legend>
-                    <div class="form-group" ng-repeat="data in blade.currentEntities[groupName]" title="{{data.description}}">
-                        <label class="form-label">{{data.title}} <a href="" ng-click="editArray(data);" ng-if="data.isArray"><i class="form-ico fa fa-pencil"></i></a></label>
+                    <div class="form-group" ng-repeat="data in blade.currentEntities[groupName]">
+                        <label class="form-label">{{data.name}} <a href="" ng-click="editArray(data);" ng-if="data.isArray"><i class="form-ico fa fa-pencil"></i></a></label>
                         <div class="form-input" ng-class="data.valueType==='Boolean' ? 'switch' : '__number'" ng-if="!(data.allowedValues.length>0) && !data.isArray">
                             <input required ng-model="data.value" ng-if="data.valueType==='ShortText'" />
                             <input required ng-model="data.value" type="password" ng-if="data.valueType==='SecureString'">

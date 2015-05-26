@@ -1,15 +1,14 @@
 ﻿angular.module('virtoCommerce.storeModule')
 .controller('virtoCommerce.storeModule.storePaymentsWidgetController', ['$scope', 'platformWebApp.bladeNavigationService', function ($scope, bladeNavigationService) {
-    var blade = $scope.widget.blade;
+    var blade = $scope.blade;
     
     $scope.openBlade = function () {
         var newBlade = {
             id: "storeChildBlade",
-            currentEntities: blade.currentEntity.paymentGateways,
             title: blade.title,
-            subtitle: 'Manage store payments',
-            controller: 'virtoCommerce.storeModule.storePaymentsListController',
-            template: 'Modules/$(VirtoCommerce.Store)/Scripts/blades/store-payments-list.tpl.html'
+            subtitle: 'Payment methods',
+            controller: 'virtoCommerce.storeModule.paymentMethodListController',
+            template: 'Modules/$(VirtoCommerce.Store)/Scripts/blades/paymentMethod-list.tpl.html'
         };
         bladeNavigationService.showBlade(newBlade, blade);
     };

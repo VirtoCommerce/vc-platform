@@ -1,0 +1,24 @@
+﻿<div class="blade-static __bottom" ng-include="'Scripts/common/templates/ok-cancel2.tpl.html'"></div>
+<div class="blade-content __gray">
+    <div class="blade-inner">
+        <div class="inner-block clearfix">
+            <form class="form" name="detailForm">
+                <div class="form-group" ng-init="setForm(detailForm)">
+                    <label class="form-label">Code</label>
+                    <div class="form-input">
+                        <p class="form-text">{{blade.currentEntity.code}}</p>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Description</label>
+                    <div class="form-input">
+                        <textarea class="form-control" ng-model="blade.currentEntity.description" placeholder="Enter description"></textarea>
+                    </div>
+                </div>
+            </form>
+
+            <!--gridster-opts="{width: 526}"-->
+            <va-widget-container group="paymentMethodDetail" blade="blade"></va-widget-container>
+        </div>
+    </div>
+</div>

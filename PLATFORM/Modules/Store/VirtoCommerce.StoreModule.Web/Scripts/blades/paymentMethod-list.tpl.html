@@ -1,13 +1,13 @@
 ﻿<div class="blade-content __medium-wide">
     <div class="blade-inner">
         <div class="inner-block">
-            <p class="note">Set the order how shipping methods appear sorted in web store. Drag and drop to change the order.</p>
+            <p class="note">Set the order how payment methods appear sorted in web store. Drag and drop to change the order.</p>
             <div class="table-wrapper">
                 <table class="table __normal">
                     <thead>
                         <tr>
                             <th class="table-col">Is active</th>
-                            <th class="table-col" colspan="2">Shipping method</th>
+                            <th class="table-col" colspan="2">Payment method</th>
                         </tr>
                     </thead>
                     <tbody ui-sortable="sortableOptions" ng-model="blade.currentEntities">
@@ -26,7 +26,7 @@
                             </td>
                             <td class="table-col __product-name" ng-click='selectNode(data)'>
                                 <span>
-                                    <div class="table-t">{{data.name}}</div>
+                                    <div class="table-t">{{data.code}}</div>
                                     <div class="table-descr">{{data.description}}</div>
                                 </span>
                             </td>

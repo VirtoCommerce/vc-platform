@@ -101,10 +101,14 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Scripts\blades\shippingMethod-detail-toolbar.tpl.html" />
+    <Content Include="Scripts\blades\paymentMethod-detail.js" />
+    <Content Include="Scripts\blades\toolbar-isActive.tpl.html" />
     <Content Include="Scripts\blades\shippingMethod-detail.js" />
+    <Content Include="Scripts\blades\paymentMethod-detail.tpl.html" />
     <Content Include="Scripts\blades\shippingMethod-detail.tpl.html" />
+    <Content Include="Scripts\blades\paymentMethod-list.js" />
     <Content Include="Scripts\blades\shippingMethod-list.js" />
+    <Content Include="Scripts\blades\paymentMethod-list.tpl.html" />
     <Content Include="Scripts\blades\shippingMethod-list.tpl.html" />
     <Content Include="Scripts\blades\stores-list.js" />
     <Content Include="Scripts\blades\stores-list.tpl.html" />
@@ -114,9 +118,7 @@
     <Content Include="Scripts\blades\store-languages-list.tpl.html" />
     <Content Include="Scripts\blades\store-setting-detail.js" />
     <Content Include="Scripts\blades\store-setting-detail.tpl.html" />
-    <Content Include="Scripts\blades\store-payments-list.js" />
     <Content Include="Scripts\blades\store-settings-list.js" />
-    <Content Include="Scripts\blades\store-payments-list.tpl.html" />
     <Content Include="Scripts\blades\store-settings-list.tpl.html" />
     <Content Include="Scripts\blades\store-advanced.js" />
     <Content Include="Scripts\blades\store-detail.js" />
