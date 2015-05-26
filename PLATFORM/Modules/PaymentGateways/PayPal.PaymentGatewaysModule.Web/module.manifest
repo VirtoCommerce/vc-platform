@@ -46,24 +46,24 @@
             <setting>
                 <name>Paypal.APIUsername</name>
                 <valueType>string</valueType>
-                <defaultValue></defaultValue>
+                <defaultValue>evgokhrimenko_api1.gmail.com</defaultValue>
                 <title>API username</title>
                 <description>merchant api username credential</description>
             </setting>
             <setting>
                 <name>Paypal.APIPassword</name>
                 <valueType>string</valueType>
-                <defaultValue></defaultValue>
+                <defaultValue>XMDRC63XDNDQPXAZ</defaultValue>
                 <title>API password</title>
                 <description>merchant api password credential</description>
             </setting>
-			<setting>
-				<name>Paypal.APISignature</name>
-				<valueType>string</valueType>
-				<defaultValue></defaultValue>
-				<title>API signature</title>
-				<description>merchant api signature credential</description>
-			</setting>
+						<setting>
+							<name>Paypal.APISignature</name>
+							<valueType>string</valueType>
+							<defaultValue>AiPC9BjkCyDFQXbSkoZcgqH3hpacAddFA7jQMnRzruCFYMSKx38TE0pt</defaultValue>
+							<title>API signature</title>
+							<description>merchant api signature credential</description>
+						</setting>
         </group>
     </settings>
 </module>

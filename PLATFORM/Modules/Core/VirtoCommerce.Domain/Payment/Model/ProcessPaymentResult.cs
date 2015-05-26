@@ -13,6 +13,8 @@ namespace VirtoCommerce.Domain.Payment.Model
 
 		public string RedirectUrl { get; set; }
 
+		public string HtmlForm { get; set; }
+
 		public bool IsSuccess { get; set; }
 
 		public string Error { get; set; }

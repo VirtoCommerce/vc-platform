@@ -33,17 +33,10 @@ namespace PayPal.PaymentGatewaysModule.Web
 
 		public void Initialize()
 		{
-		
-		}
-
-		public void PostInitialize()
-		{
-			var storeService = ServiceLocator.Current.GetInstance<IStoreService>();
-			var customerOrderService = ServiceLocator.Current.GetInstance<ICustomerOrderService>();
-
 			var settingsManager = ServiceLocator.Current.GetInstance<ISettingsManager>();
-	
-			Func<PaypalPaymentMethod> paypalPaymentMethodFactory = () => {
+
+			Func<PaypalPaymentMethod> paypalPaymentMethodFactory = () =>
+			{
 				return new PaypalPaymentMethod()
 				{
 					Name = "PayPal",
@@ -54,6 +47,10 @@ namespace PayPal.PaymentGatewaysModule.Web
 			};
 			var paymentMethodsService = _container.Resolve<IPaymentMethodsService>();
 			paymentMethodsService.RegisterPaymentMethod(paypalPaymentMethodFactory);
+		}
+
+		public void PostInitialize()
+		{
 
 		}
 

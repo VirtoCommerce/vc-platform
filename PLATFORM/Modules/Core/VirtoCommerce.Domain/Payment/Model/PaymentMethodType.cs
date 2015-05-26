@@ -16,6 +16,10 @@ namespace VirtoCommerce.Domain.Payment.Model
 		/// <summary>
 		/// A customer is redirected to a third-party site in order to complete the payment
 		/// </summary>
-		Redirection
+		Redirection,
+		/// <summary>
+		/// Payment system send prepared html form for request
+		/// </summary>
+		PreparedForm
 	}
 }

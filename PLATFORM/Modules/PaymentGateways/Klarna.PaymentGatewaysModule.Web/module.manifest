@@ -33,42 +33,30 @@
     <settings>
         <group name="Credentials">
             <setting>
-                <name>Klarna.PaymentGateway.Credentials.AppKey</name>
+                <name>Klarna.AppKey</name>
                 <valueType>integer</valueType>
                 <defaultValue>1000</defaultValue>
-                <title>Application Key</title>
-                <description>Klarna application key</description>
+                <title>Application key</title>
+                <description>Klarna application key from credentials</description>
             </setting>
             <setting>
-                <name>Klarna.PaymentGateway.Credentials.SecretKey</name>
+                <name>Klarna.SecretKey</name>
                 <valueType>string</valueType>
                 <defaultValue>qwerty</defaultValue>
-                <title>Secret Key</title>
-                <description>Klarna secret key</description>
+                <title>Secret key</title>
+                <description>Klarna secret key from credentials</description>
             </setting>
-        </group>
-        <group name="Gateway Description">
-            <setting>
-                <name>Klarna.PaymentGateway.GatewayDescription.GatewayCode</name>
-                <valueType>string</valueType>
-                <defaultValue>Klarna</defaultValue>
-                <title>Gateway code</title>
-                <description>Code that indentificates klarna gateway provider</description>
-            </setting>
-            <setting>
-                <name>Klarna.PaymentGateway.GatewayDescription.Description</name>
-                <valueType>string</valueType>
-                <defaultValue>Klarna public site description</defaultValue>
-                <title>Description</title>
-                <description>Description of klarna for public site</description>
-            </setting>
-            <setting>
-                <name>Klarna.PaymentGateway.GatewayDescription.LogoUrl</name>
-                <valueType>string</valueType>
-                <defaultValue>https://cdn.klarna.com/1.0/shared/image/generic/logo/global/tagline/vertical-blue.png</defaultValue>
-                <title>Logo url</title>
-                <description>Klarna logo url</description>
-            </setting>
+						<setting>
+								<name>Klarna.Mode</name>
+								<valueType>string</valueType>
+								<defaultValue>test</defaultValue>
+								<allowedValues>
+									<value>test</value>
+									<value>real</value>
+								</allowedValues>
+								<title>Mode</title>
+								<description>Mode of klarna payment gateway (test or real)</description>
+						</setting>
         </group>
     </settings>
 </module>

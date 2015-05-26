@@ -35,6 +35,42 @@ namespace PayPal.PaymentGatewaysModule.Web.Managers
 		{
 		}
 
+		private string Mode
+		{
+			get
+			{
+				var retVal = GetSetting(PaypalAPIModeStoreSetting);
+				return retVal;
+			}
+		}
+
+		private string APIUsername
+		{
+			get
+			{
+				var retVal = GetSetting(PaypalAPIUserNameStoreSetting);
+				return retVal;
+			}
+		}
+
+		private string APIPassword
+		{
+			get
+			{
+				var retVal = GetSetting(PaypalAPIPasswordStoreSetting);
+				return retVal;
+			}
+		}
+
+		private string APISignature
+		{
+			get
+			{
+				var retVal = GetSetting(PaypalAPIPasswordStoreSetting);
+				return retVal;
+			}
+		}
+
 		public override ProcessPaymentResult ProcessPayment(VirtoCommerce.Domain.Common.IEvaluationContext context)
 		{
 			var retVal = new ProcessPaymentResult();
@@ -50,7 +86,6 @@ namespace PayPal.PaymentGatewaysModule.Web.Managers
 				throw new NullReferenceException("no store with this id");
 
 			var config = GetConfigMap(paymentEvaluationContext.Store);
-			var mode = GetSetting(paymentEvaluationContext.Store, "Paypal.Mode");
 
 			var url = paymentEvaluationContext.Store.Url;
 
@@ -69,7 +104,7 @@ namespace PayPal.PaymentGatewaysModule.Web.Managers
 				retVal.IsSuccess = true;
 				retVal.NewPaymentStatus = PaymentStatus.Pending;
 				retVal.OuterId = setEcResponse.Token;
-				var redirectBaseUrl = GetBaseUrl(mode);
+				var redirectBaseUrl = GetBaseUrl(Mode);
 				retVal.RedirectUrl = string.Format(redirectBaseUrl, retVal.OuterId);
 			}
 			catch (System.Exception ex)
@@ -171,22 +206,17 @@ namespace PayPal.PaymentGatewaysModule.Web.Managers
 		{
 			var retVal = new Dictionary<string, string>();
 
-			var mode = GetSetting(store, PaypalAPIModeStoreSetting);
-			var username = GetSetting(store, PaypalAPIUserNameStoreSetting);
-			var password = GetSetting(store, PaypalAPIPasswordStoreSetting);
-			var signature = GetSetting(store, PaypalAPISignatureStoreSetting);
-
-			retVal.Add(PaypalModeConfigSettingName, mode);
-			retVal.Add(PaypalUsernameConfigSettingName, username);
-			retVal.Add(PaypalPasswordConfigSettingName, password);
-			retVal.Add(PaypalSignatureConfigSettingName, signature);
+			retVal.Add(PaypalModeConfigSettingName, Mode);
+			retVal.Add(PaypalUsernameConfigSettingName, APIUsername);
+			retVal.Add(PaypalPasswordConfigSettingName, APIPassword);
+			retVal.Add(PaypalSignatureConfigSettingName, APISignature);
 
 			return retVal;
 		}
 
-		private string GetSetting(Store store, string settingName)
+		private string GetSetting(string settingName)
 		{
-			var setting = store.Settings.FirstOrDefault(s => s.Name == settingName);
+			var setting = Settings.FirstOrDefault(s => s.Name == settingName);
 
 			if (setting == null && setting.Value is string && string.IsNullOrEmpty((string)setting.Value))
 				throw new NullReferenceException(string.Format("{0} setting is not exist or null"));
