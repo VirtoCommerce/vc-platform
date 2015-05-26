@@ -14,6 +14,9 @@ using VirtoCommerce.Domain.Cart.Services;
 using System.Web.Http.ModelBinding;
 using VirtoCommerce.OrderModule.Web.Binders;
 using VirtoCommerce.Platform.Core.Common;
+using VirtoCommerce.Domain.Store.Services;
+using VirtoCommerce.Domain.Payment.Model;
+using Omu.ValueInjecter;
 
 namespace VirtoCommerce.OrderModule.Web.Controllers.Api
 {
@@ -24,12 +27,14 @@ namespace VirtoCommerce.OrderModule.Web.Controllers.Api
 		private readonly ICustomerOrderService _customerOrderService;
 		private readonly ICustomerOrderSearchService _searchService;
 		private readonly IOperationNumberGenerator _operationNumberGenerator;
+		private readonly IStoreService _storeService;
 	
-		public OrderModuleController(ICustomerOrderService customerOrderService, ICustomerOrderSearchService searchService, IOperationNumberGenerator numberGenerator)
+		public OrderModuleController(ICustomerOrderService customerOrderService, ICustomerOrderSearchService searchService, IStoreService storeService, IOperationNumberGenerator numberGenerator)
 		{
 			_customerOrderService = customerOrderService;
 			_searchService = searchService;
 			_operationNumberGenerator = numberGenerator;
+			_storeService = storeService;
 		}
 
 		// GET: api/order/customerOrders?q=ddd&site=site1&customer=user1&start=0&count=20
@@ -64,6 +69,48 @@ namespace VirtoCommerce.OrderModule.Web.Controllers.Api
 		{
 			var retVal = _customerOrderService.CreateByShoppingCart(cartId);
 			return Ok(retVal.ToWebModel());
+		}
+
+		// GET: api/order/customerOrders/{orderId}/processPayment
+		[HttpGet]
+		[ResponseType(typeof(webModel.CustomerOrder))]
+		[Route("{orderId}/processPayment/{paymentId}")]
+		public IHttpActionResult ProcessOrderPayments(string orderId, string paymentId)
+		{
+			var order = _customerOrderService.GetById(orderId, coreModel.CustomerOrderResponseGroup.Full);
+			if(order == null)
+			{
+				throw new NullReferenceException("order");
+			}
+			var payment = order.InPayments.FirstOrDefault(x=>x.Id == paymentId);
+			if(payment == null)
+			{
+				throw new NullReferenceException("payment");
+			}
+			var store = _storeService.GetById(order.StoreId);
+			var paymentMethod = store.PaymentMethods.FirstOrDefault(x => x.Code == payment.GatewayCode);
+			if (payment == null)
+			{
+				throw new NullReferenceException("appropriate paymentMethod not found");
+			}
+
+			var context = new PaymentEvaluationContext
+			{
+				Order = order,
+				Payment = payment,
+				Store = store
+			};
+
+			var result = paymentMethod.ProcessPayment(context);
+			if(result.NewPaymentStatus == PaymentStatus.Paid)
+			{
+				payment.IsApproved = true;
+				_customerOrderService.Update(new coreModel.CustomerOrder[] { order });
+			}
+			var retVal = new webModel.ProcessPaymentResult();
+			retVal.InjectFrom(result);
+
+			return Ok(retVal);
 		}
 
 		// POST: api/order/customerOrders

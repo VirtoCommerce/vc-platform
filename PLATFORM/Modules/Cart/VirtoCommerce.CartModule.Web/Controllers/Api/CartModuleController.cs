@@ -6,12 +6,13 @@ using System.Web.Http.Description;
 using System.Web.Http.ModelBinding;
 using VirtoCommerce.CartModule.Web.Binders;
 using VirtoCommerce.CartModule.Web.Converters;
+using VirtoCommerce.CartModule.Web.Model;
 using VirtoCommerce.Domain.Cart.Services;
 using VirtoCommerce.Domain.Payment.Services;
 using VirtoCommerce.Domain.Shipping.Model;
 using VirtoCommerce.Domain.Store.Services;
 using VirtoCommerce.Platform.Core.Security;
-
+using webModel = VirtoCommerce.CartModule.Web.Model;
 namespace VirtoCommerce.CartModule.Web.Controllers.Api
 {
     [RoutePrefix("api/cart")]
@@ -30,7 +31,7 @@ namespace VirtoCommerce.CartModule.Web.Controllers.Api
 
 		// GET: api/cart/store1/customer2/carts/current
 		[HttpGet]
-		[ResponseType(typeof(CatalogModule.Web.Model.ShoppingCart))]
+		[ResponseType(typeof(webModel.ShoppingCart))]
 		[Route("{storeId}/{customerId}/carts/current")]
 		public IHttpActionResult GetCurrentCart(string storeId, string customerId)
 		{
@@ -56,11 +57,11 @@ namespace VirtoCommerce.CartModule.Web.Controllers.Api
 
 		// GET: api/cart/carts/{id}
 		[HttpGet]
-		[ResponseType(typeof(CatalogModule.Web.Model.ShoppingCart))]
+		[ResponseType(typeof(webModel.ShoppingCart))]
 		[Route("carts/{id}")]
 		public IHttpActionResult GetCartById(string id)
 		{
-			var retVal = this._shoppingCartService.GetById(id);
+			var retVal = _shoppingCartService.GetById(id);
 			if(retVal == null)
 			{
 				return NotFound();
@@ -70,11 +71,11 @@ namespace VirtoCommerce.CartModule.Web.Controllers.Api
 
 		// GET: api/cart/carts?q=ddd&site=site1&customer=user1&start=0&count=20
 		[HttpGet]
-		[ResponseType(typeof(CatalogModule.Web.Model.SearchResult))]
+		[ResponseType(typeof(webModel.SearchResult))]
 		[Route("carts")]
-		public IHttpActionResult SearchCarts([ModelBinder(typeof(SearchCriteriaBinder))] CatalogModule.Web.Model.SearchCriteria criteria)
+		public IHttpActionResult SearchCarts([ModelBinder(typeof(SearchCriteriaBinder))] webModel.SearchCriteria criteria)
 		{
-			var retVal = this._searchService.Search(criteria.ToCoreModel());
+			var retVal = _searchService.Search(criteria.ToCoreModel());
 			return Ok(retVal.ToWebModel());
 		}
 
@@ -83,19 +84,19 @@ namespace VirtoCommerce.CartModule.Web.Controllers.Api
 		[ResponseType(typeof(void))]
 		[Route("carts")]
         [CheckPermission(Permission = PredefinedPermissions.Manage)]
-		public IHttpActionResult Create(CatalogModule.Web.Model.ShoppingCart cart)
+		public IHttpActionResult Create(webModel.ShoppingCart cart)
 		{
 			var coreCart = cart.ToCoreModel();
-			this._shoppingCartService.Create(coreCart);
+			_shoppingCartService.Create(coreCart);
 			return this.StatusCode(HttpStatusCode.NoContent);
 		}
 
 		// PUT: api/cart/carts
         [HttpPut]
-        [ResponseType(typeof(CatalogModule.Web.Model.ShoppingCart))]
+        [ResponseType(typeof(ShoppingCart))]
         [Route("carts")]
         [CheckPermission(Permission = PredefinedPermissions.Manage)]
-        public IHttpActionResult Update(CatalogModule.Web.Model.ShoppingCart cart)
+		public IHttpActionResult Update(webModel.ShoppingCart cart)
         {
             var coreCart = cart.ToCoreModel();
             _shoppingCartService.Update(new[] { coreCart });
@@ -105,7 +106,7 @@ namespace VirtoCommerce.CartModule.Web.Controllers.Api
 
 		// GET: api/cart/carts/{cartId}/shipmentMethods
 		[HttpGet]
-		[ResponseType(typeof(CatalogModule.Web.Model.ShippingMethod[]))]
+		[ResponseType(typeof(webModel.ShippingMethod[]))]
 		[Route("carts/{cartId}/shipmentMethods")]
 		public IHttpActionResult GetShipmentMethods(string cartId)
 		{
@@ -114,7 +115,7 @@ namespace VirtoCommerce.CartModule.Web.Controllers.Api
 			var evalContext = new ShippingEvaluationContext(cart);
 
 			var retVal = store.ShippingMethods.Where(x => x.IsActive).Select(x => x.CalculateRate(evalContext))
-				.Select(x => new CatalogModule.Web.Model.ShippingMethod
+				.Select(x => new webModel.ShippingMethod
 				{
 					Currency = cart.Currency,
 					Name = x.ShippingMethod.Description,
@@ -128,7 +129,7 @@ namespace VirtoCommerce.CartModule.Web.Controllers.Api
 
 		// GET: api/cart/carts/{cartId}/paymentMethods
 		[HttpGet]
-		[ResponseType(typeof(CatalogModule.Web.Model.PaymentMethod[]))]
+		[ResponseType(typeof(webModel.PaymentMethod[]))]
 		[Route("carts/{cartId}/paymentMethods")]
 		public IHttpActionResult GetPaymentMethods(string cartId)
 		{
@@ -136,7 +137,7 @@ namespace VirtoCommerce.CartModule.Web.Controllers.Api
 
 			var store = _storeService.GetById(cart.StoreId);
 
-			var retVal = store.PaymentMethods.Select(p => new CatalogModule.Web.Model.PaymentMethod
+			var retVal = store.PaymentMethods.Select(p => new webModel.PaymentMethod
 							{
 								GatewayCode = p.Code,
 								Name = p.Description,
@@ -148,7 +149,7 @@ namespace VirtoCommerce.CartModule.Web.Controllers.Api
 
 		// POST: api/cart/carts/{cartId}/coupons/{couponCode}
 		[HttpPost]
-		[ResponseType(typeof(CatalogModule.Web.Model.ShoppingCart))]
+		[ResponseType(typeof(webModel.ShoppingCart))]
 		[Route("carts/{cartId}/coupons/{couponCode}")]
 		public IHttpActionResult ApplyCoupon(string cartId, string couponCode)
 		{

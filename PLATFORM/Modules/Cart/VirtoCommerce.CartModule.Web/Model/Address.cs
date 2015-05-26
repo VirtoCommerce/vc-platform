@@ -8,7 +8,7 @@ using Newtonsoft.Json.Converters;
 using VirtoCommerce.Domain.Cart.Model;
 using VirtoCommerce.Platform.Core.Common;
 
-namespace VirtoCommerce.CatalogModule.Web.Model
+namespace VirtoCommerce.CartModule.Web.Model
 {
 	public class Address : ValueObject<Address>
 	{

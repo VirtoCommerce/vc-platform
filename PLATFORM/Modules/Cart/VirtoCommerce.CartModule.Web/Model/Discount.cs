@@ -8,7 +8,7 @@ using Newtonsoft.Json.Converters;
 using VirtoCommerce.Platform.Core.Common;
 
 
-namespace VirtoCommerce.CatalogModule.Web.Model
+namespace VirtoCommerce.CartModule.Web.Model
 {
 	public class Discount : ValueObject<Coupon>
 	{

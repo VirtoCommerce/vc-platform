@@ -116,6 +116,7 @@
     <Compile Include="Model\Discount.cs" />
     <Compile Include="Model\PaymentIn.cs" />
     <Compile Include="Model\LineItem.cs" />
+    <Compile Include="Model\ProcessPaymentResult.cs" />
     <Compile Include="Model\SearchCriteria.cs" />
     <Compile Include="Model\SearchResult.cs" />
     <Compile Include="Model\Shipment.cs" />

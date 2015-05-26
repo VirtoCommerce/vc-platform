@@ -338,7 +338,7 @@ namespace VirtoCommerce.OrderModule.Test
 			orderWorkflowService.Subscribe(new VirtoCommerce.OrderModule.Data.Workflow.CalculateTotalsActivity());
 			var orderService = new CustomerOrderServiceImpl(orderRepositoryFactory, new TimeBasedNumberGeneratorImpl(), orderWorkflowService, cartService);
 
-			var controller = new OrderModuleController(orderService, null, new TimeBasedNumberGeneratorImpl());
+			var controller = new OrderModuleController(orderService, null, null, new TimeBasedNumberGeneratorImpl());
 			return controller;
 		}
 

@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Omu.ValueInjecter;
 using coreModel = VirtoCommerce.Domain.Cart.Model;
-using webModel = VirtoCommerce.CatalogModule.Web.Model;
+using webModel = VirtoCommerce.CartModule.Web.Model;
 using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.CartModule.Web.Converters

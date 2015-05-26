@@ -9,7 +9,7 @@ using VirtoCommerce.Domain.Cart.Model;
 using VirtoCommerce.Domain.Cart.Services;
 using coreModel = VirtoCommerce.Domain.Cart.Model;
 using dataModel = VirtoCommerce.CartModule.Data.Model;
-using webModel = VirtoCommerce.CatalogModule.Web.Model;
+using webModel = VirtoCommerce.CartModule.Web.Model;
 using VirtoCommerce.CartModule.Data.Workflow;
 
 namespace VirtoCommerce.CartModule.Test
