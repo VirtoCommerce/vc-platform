@@ -150,7 +150,7 @@ namespace VirtoCommerce.Platform.Core.Caching
             ICacheProvider retVal = null;
 
             var settings = GetSettings(group);
-            if (settings != null && settings.IsEnabled)
+            if (settings != null)
             {
 				if (!_cacheProviders.TryGetValue(settings.ProviderName, out retVal))
 				{
@@ -171,10 +171,7 @@ namespace VirtoCommerce.Platform.Core.Caching
         {
             var retVal = TimeSpan.Zero;
             var settings = GetSettings(group);
-            if (settings.IsEnabled)
-            {
-                retVal = settings.Timeout;
-            }
+            retVal = settings.Timeout;
             return retVal;
         }
 
