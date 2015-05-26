@@ -81,6 +81,7 @@ namespace VirtoCommerce.Web.Convertors
                           Title = item.Name,
                           Price = item.PlacedPrice,
                           Quantity = item.Quantity,
+                          RequiresShipping = true,
                           Sku = item.ProductCode,
                           VariantId = item.ProductId,
                           Image = item.ImageUrl,
