@@ -117,6 +117,12 @@
         secretKey.select();
     };
 
+    $scope.$watch('blade.currentEntity.apiAccountType', function(oldVal, newVal) {
+        if (oldVal && newVal && oldVal !== newVal) {
+            generateNewApiAccount();
+        }
+    });
+
     // on load: 
     refresh();
 }]);
