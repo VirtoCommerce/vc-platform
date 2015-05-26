@@ -90,14 +90,15 @@
     function generateNewApiAccount(isInitialRequest) {
         var parameters;
         if (isInitialRequest) {
-            parameters = { "name": 'No Name', "type": $scope.apiAccountTypes[0] };
+            parameters = { "type": $scope.apiAccountTypes[0] };
         } else {
             $scope.blade.isLoading = true;
-            parameters = { "name": $scope.blade.currentEntity.name, "type": $scope.blade.currentEntity.apiAccountType };
+            parameters = { "type": $scope.blade.currentEntity.apiAccountType };
         }
         
         accounts.generateNewApiAccount(parameters, function (apiAccount) {
             if (isInitialRequest) {
+                apiAccount.isActive = true;
                 $scope.blade.origEntity = apiAccount;
                 initializeBlade($scope.blade.origEntity);
             } else {

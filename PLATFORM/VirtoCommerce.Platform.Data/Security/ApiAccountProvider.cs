@@ -29,14 +29,12 @@ namespace VirtoCommerce.Platform.Data.Security
                 () => LoadApiAccount(type, appId));
         }
 
-        public ApiAccountEntity GenerateApiCredentials(ApiAccountType type, string name)
+        public ApiAccountEntity GenerateApiCredentials(ApiAccountType type)
         {
             var result = new ApiAccountEntity
             {
-                Name = name,
                 ApiAccountType = type,
-                AppId = Guid.NewGuid().ToString("N"),
-                IsActive = true
+                AppId = Guid.NewGuid().ToString("N")
             };
 
             if (type == ApiAccountType.Hmac)

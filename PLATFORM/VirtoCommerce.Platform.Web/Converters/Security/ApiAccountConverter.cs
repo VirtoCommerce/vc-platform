@@ -19,6 +19,11 @@ namespace VirtoCommerce.Platform.Web.Converters.Security
                 result.Id = account.Id;
             }
 
+            if (account.IsActive != null)
+            {
+                result.IsActive = account.IsActive.Value;
+            }
+
             result.ApiAccountType = (dataModel.ApiAccountType)account.ApiAccountType;
 
             return result;

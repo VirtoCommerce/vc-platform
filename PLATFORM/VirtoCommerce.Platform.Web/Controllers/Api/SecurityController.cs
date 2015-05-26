@@ -203,10 +203,11 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [ResponseType(typeof(ApiAccount))]
         [Route("apiaccounts/new")]
         [CheckPermission(Permission = PredefinedPermissions.SecurityManage)]
-        public IHttpActionResult GenerateNewApiAccount(string name, webModel.ApiAccountType type)
+        public IHttpActionResult GenerateNewApiAccount(webModel.ApiAccountType type)
         {
-            var apiAccount = _apiAccountProvider.GenerateApiCredentials((coreModel.ApiAccountType)type, name);
+            var apiAccount = _apiAccountProvider.GenerateApiCredentials((coreModel.ApiAccountType)type);
             var result = apiAccount.ToWebModel();
+            result.IsActive = null;
             return Ok(result);
         }
 
