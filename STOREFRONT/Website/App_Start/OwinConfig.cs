@@ -129,9 +129,17 @@ namespace VirtoCommerce.Web
                     ctx.Customer = await customerService.GetCustomerAsync(
                         context.Authentication.User.Identity.Name, shop.StoreId);
 
-                    ctx.CustomerId = ctx.Customer.Id;
+                    if (ctx.Customer == null)
+                    {
+                        context.Authentication.SignOut();
+                    }
+                    else
+                    {
+                        ctx.CustomerId = ctx.Customer.Id;    
+                    }
                 }
-                else
+
+                if (ctx.Customer == null)
                 {
                     var cookie = context.Request.Cookies[AnonymousCookie];
 
