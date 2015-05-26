@@ -94,7 +94,7 @@ namespace VirtoCommerce.OrderModule.Web.Controllers.Api
 				throw new NullReferenceException("appropriate paymentMethod not found");
 			}
 
-			var context = new PaymentEvaluationContext
+			var context = new ProcessPaymentEvaluationContext
 			{
 				Order = order,
 				Payment = payment,

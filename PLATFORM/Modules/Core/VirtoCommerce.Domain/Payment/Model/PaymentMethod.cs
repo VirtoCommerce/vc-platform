@@ -37,8 +37,18 @@ namespace VirtoCommerce.Domain.Payment.Model
 
 		public abstract PaymentMethodType PaymentMethodType { get; }
 
-		public abstract ProcessPaymentResult ProcessPayment(IEvaluationContext context);
+		public abstract ProcessPaymentResult ProcessPayment(ProcessPaymentEvaluationContext context);
 
-		public abstract PostProcessPaymentResult PostProcessPayment(IEvaluationContext context);
+		public abstract PostProcessPaymentResult PostProcessPayment(PostProcessPaymentEvaluationContext context);
+
+		public string GetSetting(string settingName)
+		{
+			var setting = Settings.FirstOrDefault(s => s.Name == settingName);
+
+			if (setting == null && setting.Value is string && string.IsNullOrEmpty((string)setting.Value))
+				throw new NullReferenceException(string.Format("{0} setting is not exist or null"));
+
+			return (string)setting.Value;
+		}
 	}
 }

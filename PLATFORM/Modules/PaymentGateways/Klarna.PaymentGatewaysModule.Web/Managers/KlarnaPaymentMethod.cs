@@ -18,21 +18,56 @@ namespace Klarna.PaymentGatewaysModule.Web.Managers
 		private static string KlarnaAppKeyStoreSetting = "Klarna.AppKey";
 		private static string KlarnaAppSecretStoreSetting = "Klarna.AppSecret";
 
+		//Sweden	Swedish	SE	SEK	sv-se
+		//Finland	Finnish	FI	EUR	fi-fi
+		//Finland	Swedish	FI	EUR	sv-fi
+		//Norway	Norwegian	NO	NOK	nb-no
+		//Germany	German	DE	EUR	de-de
+		//Austria	German	AT	EUR	de-at
+
 		public KlarnaPaymentMethod()
 			: base("Klarna")
 		{
 		}
+
+		private string Mode
+		{
+			get
+			{
+				var retVal = GetSetting(KlarnaModeStoreSetting);
+				return retVal;
+			}
+		}
+
+		private string AppKey
+		{
+			get
+			{
+				var retVal = GetSetting(KlarnaAppKeyStoreSetting);
+				return retVal;
+			}
+		}
+
+		private string AppSecret
+		{
+			get
+			{
+				var retVal = GetSetting(KlarnaAppSecretStoreSetting);
+				return retVal;
+			}
+		}
+
 
 		public override PaymentMethodType PaymentMethodType
 		{
 			get { return PaymentMethodType.PreparedForm; }
 		}
 
-		public override ProcessPaymentResult ProcessPayment(VirtoCommerce.Domain.Common.IEvaluationContext context)
+		public override ProcessPaymentResult ProcessPayment(ProcessPaymentEvaluationContext context)
 		{
 			var retVal = new ProcessPaymentResult();
 
-			//var paymentEvaluationContext = context as PaymentEvaluationContext;
+			//var paymentEvaluationContext = context as PostProcessPaymentEvaluationContext;
 
 			//if (paymentEvaluationContext.Order != null && paymentEvaluationContext.Store != null && paymentEvaluationContext.Payment != null)
 			//{
@@ -46,11 +81,11 @@ namespace Klarna.PaymentGatewaysModule.Web.Managers
 			//	};
 
 			//	//Create klarna order
-			//	var connector = Connector.Create(_secretKey);
+			//	var connector = Connector.Create(AppSecret);
 			//	Order order = null;
 			//	var merchant = new Dictionary<string, object>
 			//	{
-			//		{ "id", _appKey.ToString() },
+			//		{ "id", AppKey },
 			//		{ "terms_uri", klarnaPaymentInfo.TermsUrl },
 			//		{ "checkout_uri", klarnaPaymentInfo.CheckoutUrl },
 			//		{ "confirmation_uri", klarnaPaymentInfo.ConfirmationUrl },
@@ -79,16 +114,16 @@ namespace Klarna.PaymentGatewaysModule.Web.Managers
 			return retVal;
 		}
 
-		public override PostProcessPaymentResult PostProcessPayment(VirtoCommerce.Domain.Common.IEvaluationContext context)
+		public override PostProcessPaymentResult PostProcessPayment(PostProcessPaymentEvaluationContext context)
 		{
 			var retVal = new PostProcessPaymentResult();
 
-			var paymentEvaluationContext = context as PaymentEvaluationContext;
+			var paymentEvaluationContext = context as PostProcessPaymentEvaluationContext;
 
 			return retVal;
 		}
 
-		public new List<Dictionary<string, object>> CreateKlarnaCartItems(CustomerOrder order)
+		private List<Dictionary<string, object>> CreateKlarnaCartItems(CustomerOrder order)
 		{
 			var cartItems = new List<Dictionary<string, object>>();
 			foreach (var lineItem in order.Items)
@@ -114,7 +149,5 @@ namespace Klarna.PaymentGatewaysModule.Web.Managers
 
 			return cartItems;
 		}
-
-		//public 
 	}
 }

@@ -66,30 +66,29 @@ namespace PayPal.PaymentGatewaysModule.Web.Managers
 		{
 			get
 			{
-				var retVal = GetSetting(PaypalAPIPasswordStoreSetting);
+				var retVal = GetSetting(PaypalAPISignatureStoreSetting);
 				return retVal;
 			}
 		}
 
-		public override ProcessPaymentResult ProcessPayment(VirtoCommerce.Domain.Common.IEvaluationContext context)
+		public override ProcessPaymentResult ProcessPayment(ProcessPaymentEvaluationContext context)
 		{
 			var retVal = new ProcessPaymentResult();
 
-			var paymentEvaluationContext = context as PaymentEvaluationContext;
-			if (paymentEvaluationContext == null && paymentEvaluationContext.Payment == null)
+			if (context == null && context.Payment == null)
 				throw new ArgumentNullException("paymentEvaluationContext");
 
-			if (paymentEvaluationContext.Order == null)
+			if (context.Order == null)
 				throw new NullReferenceException("no order with this id");
 
-			if (!(paymentEvaluationContext.Store != null && !string.IsNullOrEmpty(paymentEvaluationContext.Store.Url)))
+			if (!(context.Store != null && !string.IsNullOrEmpty(context.Store.Url)))
 				throw new NullReferenceException("no store with this id");
 
-			var config = GetConfigMap(paymentEvaluationContext.Store);
+			var config = GetConfigMap(context.Store);
 
-			var url = paymentEvaluationContext.Store.Url;
+			var url = context.Store.Url;
 
-			var request = CreatePaypalRequest(paymentEvaluationContext.Order, paymentEvaluationContext.Store, paymentEvaluationContext.Payment);
+			var request = CreatePaypalRequest(context.Order, context.Store, context.Payment);
 
 			var service = new PayPalAPIInterfaceServiceService(config);
 
@@ -115,35 +114,34 @@ namespace PayPal.PaymentGatewaysModule.Web.Managers
 			return retVal;
 		}
 
-		public override PostProcessPaymentResult PostProcessPayment(VirtoCommerce.Domain.Common.IEvaluationContext context)
+		public override PostProcessPaymentResult PostProcessPayment(PostProcessPaymentEvaluationContext context)
 		{
 			var retVal = new PostProcessPaymentResult();
 
-			var paymentEvaluationContext = context as PaymentEvaluationContext;
-			if (paymentEvaluationContext == null && paymentEvaluationContext.Payment == null)
+			if (context == null && context.Payment == null)
 				throw new ArgumentNullException("paymentEvaluationContext");
 
-			if (paymentEvaluationContext.Order == null)
+			if (context.Order == null)
 				throw new NullReferenceException("no order with this id");
 
-			if (!(paymentEvaluationContext.Store != null && !string.IsNullOrEmpty(paymentEvaluationContext.Store.Url)))
+			if (!(context.Store != null && !string.IsNullOrEmpty(context.Store.Url)))
 				throw new NullReferenceException("no store with this id");
 
-			var config = GetConfigMap(paymentEvaluationContext.Store);
+			var config = GetConfigMap(context.Store);
 
 			var service = new PayPalAPIInterfaceServiceService(config);
 
 			GetExpressCheckoutDetailsResponseType response = null;
 			DoExpressCheckoutPaymentResponseType doResponse = null;
 
-			var getExpressCheckoutDetailsRequest = GetGetExpressCheckoutDetailsRequest(paymentEvaluationContext.OuterId);
+			var getExpressCheckoutDetailsRequest = GetGetExpressCheckoutDetailsRequest(context.OuterId);
 			try
 			{
 				response = service.GetExpressCheckoutDetails(getExpressCheckoutDetailsRequest);
 
 				CheckResponse(response);
 
-				var doExpressCheckoutPaymentRequest = GetDoExpressCheckoutPaymentRequest(response, paymentEvaluationContext.OuterId);
+				var doExpressCheckoutPaymentRequest = GetDoExpressCheckoutPaymentRequest(response, context.OuterId);
 				doResponse = service.DoExpressCheckoutPayment(doExpressCheckoutPaymentRequest);
 
 				CheckResponse(doResponse);
@@ -156,13 +154,13 @@ namespace PayPal.PaymentGatewaysModule.Web.Managers
 				{
 					retVal.IsSuccess = true;
 					retVal.NewPaymentStatus = PaymentStatus.Paid;
-					retVal.ReturnUrl = string.Format("{0}/checkout/thanks?orderId={1}&isSuccess=true", paymentEvaluationContext.Store.Url, paymentEvaluationContext.Order.Id);
+					retVal.ReturnUrl = string.Format("{0}/checkout/thanks?orderId={1}&isSuccess=true", context.Store.Url, context.Order.Id);
 				}
 			}
 			catch (System.Exception ex)
 			{
 				retVal.Error = ex.Message;
-				retVal.ReturnUrl = string.Format("{0}/checkout/thanks?orderId={1}&isSuccess=false", paymentEvaluationContext.Store.Url, paymentEvaluationContext.Order.Id);
+				retVal.ReturnUrl = string.Format("{0}/checkout/thanks?orderId={1}&isSuccess=false&errorMessage={2}", context.Store.Url, context.Order.Id, ex.Message);
 			}
 
 			return retVal;
@@ -214,16 +212,6 @@ namespace PayPal.PaymentGatewaysModule.Web.Managers
 			return retVal;
 		}
 
-		private string GetSetting(string settingName)
-		{
-			var setting = Settings.FirstOrDefault(s => s.Name == settingName);
-
-			if (setting == null && setting.Value is string && string.IsNullOrEmpty((string)setting.Value))
-				throw new NullReferenceException(string.Format("{0} setting is not exist or null"));
-
-			return (string)setting.Value;
-		}
-
 		private SetExpressCheckoutReq CreatePaypalRequest(CustomerOrder order, Store store, PaymentIn payment)
 		{
 			var retVal = new SetExpressCheckoutReq();
@@ -233,8 +221,8 @@ namespace PayPal.PaymentGatewaysModule.Web.Managers
 			var ecDetails = new SetExpressCheckoutRequestDetailsType
 			{
 				CallbackTimeout = "3",
-				ReturnURL = string.Format("{0}/admin/api/paymentgateway/paypal/push?cancel=false&orderId={1}&redirectUrl={2}", store.Url, order.Id, HttpUtility.UrlEncode(store.Url)),
-				CancelURL = string.Format("{0}/admin/api/paymentgateway/paypal/push?cancel=true&orderId={1}&redirectUrl={2}", store.Url, order.Id, HttpUtility.UrlEncode(store.Url)),
+				ReturnURL = string.Format("{0}/admin/api/paymentcallback?cancel=false&orderId={1}", store.Url, order.Id),
+				CancelURL = string.Format("{0}/admin/api/paymentcallback?cancel=true&orderId={1}", store.Url, order.Id),
 				SolutionType = SolutionTypeType.MARK
 			};
 

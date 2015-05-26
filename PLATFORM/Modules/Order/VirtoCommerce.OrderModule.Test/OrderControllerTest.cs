@@ -60,7 +60,7 @@ namespace VirtoCommerce.OrderModule.Test
 			var mockPaymentManager = new Mock<IPaymentMethodsService>();
 			var gateway = mockPaymentManager.Object.GetAllPaymentMethods().FirstOrDefault(x => x.Code == payment.GatewayCode);
 
-			var paymentEvaluationContext = new PaymentEvaluationContext();
+			var paymentEvaluationContext = new ProcessPaymentEvaluationContext();
 
 			var paymentResult = gateway.ProcessPayment(paymentEvaluationContext);
 

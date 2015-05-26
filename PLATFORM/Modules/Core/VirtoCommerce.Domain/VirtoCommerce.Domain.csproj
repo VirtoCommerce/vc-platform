@@ -186,10 +186,11 @@
     <Compile Include="Order\Services\IShipmentService.cs" />
     <Compile Include="Order\Workflow\OrderStateBasedEvalContext.cs" />
     <Compile Include="Order\Workflow\IOrderWorkflow.cs" />
-    <Compile Include="Payment\Model\PaymentEvaluationContext.cs" />
+    <Compile Include="Payment\Model\PostProcessPaymentEvaluationContext.cs" />
     <Compile Include="Payment\Model\PaymentMethod.cs" />
     <Compile Include="Payment\Model\PaymentStatus.cs" />
     <Compile Include="Payment\Model\PostProcessPaymentResult.cs" />
+    <Compile Include="Payment\Model\ProcessPaymentEvaluationContext.cs" />
     <Compile Include="Payment\Model\ProcessPaymentResult.cs" />
     <Compile Include="Payment\Services\IPaymentService.cs" />
     <Compile Include="Payment\Services\PaymentServiceImpl.cs" />
