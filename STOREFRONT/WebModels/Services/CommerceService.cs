@@ -900,7 +900,7 @@ namespace VirtoCommerce.Web.Models.Services
 
             if (!response.Items.Any()) // no results found
             {
-                return new SearchResults<T>(null);
+                return new SearchResults<T>(Enumerable.Empty<T>());
             }
 
             var allIds = response.Items.ToArray().GetAllVariationIds();

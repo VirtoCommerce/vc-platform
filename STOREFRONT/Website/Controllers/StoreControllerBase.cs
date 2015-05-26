@@ -52,12 +52,6 @@ namespace VirtoCommerce.Web.Controllers
         #endregion
 
         #region Methods
-        protected override void Initialize(RequestContext requestContext)
-        {
-            requestContext.HttpContext.Items["theme"] = this.Context.Theme.ToString();
-            base.Initialize(requestContext);
-        }
-
         protected override ViewResult View(string viewName, string masterName, object model)
         {
             this.Context.Template = viewName;

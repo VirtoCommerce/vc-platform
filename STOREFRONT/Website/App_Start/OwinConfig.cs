@@ -361,10 +361,12 @@ namespace VirtoCommerce.Web
                         store = null;
                     }
                 }
+                    /*
                 else
                 {
                     return null;
                 }
+                     * */
             }
 
             if (store == null)
