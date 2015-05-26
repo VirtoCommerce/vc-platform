@@ -44,7 +44,7 @@ namespace VirtoCommerce.StoreModule.Data.Converters
 			retVal.PaymentMethods = paymentMethods;
 			foreach (var paymentMethod in paymentMethods)
 			{
-				var dbStoredPaymentMethod = dbStore.ShippingMethods.FirstOrDefault(x => x.Code == paymentMethod.Code);
+				var dbStoredPaymentMethod = dbStore.PaymentMethods.FirstOrDefault(x => x.Code == paymentMethod.Code);
 				if (dbStoredPaymentMethod != null)
 				{
 					paymentMethod.InjectFrom(dbStoredPaymentMethod);

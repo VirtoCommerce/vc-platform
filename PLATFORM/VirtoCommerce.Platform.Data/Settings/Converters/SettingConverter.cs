@@ -105,7 +105,7 @@ namespace VirtoCommerce.Platform.Data.Settings.Converters
             {
                 valueEntities.AddRange(setting.ArrayValues);
             }
-            if (setting.Value != null)
+            else if (setting.Value != null)
             {
                 valueEntities.Add(setting.Value);
             }

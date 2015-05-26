@@ -34,14 +34,14 @@
         <group name="Gateway Description">
             <setting>
                 <name>Paypal.Mode</name>
-                <valueType>string</valueType>
-								<allowedValues>
-									<value>Sandbox</value>
-									<value>Live</value>
-								</allowedValues>
-								<defaultValue>Sandbox</defaultValue>
-                <title>Paypal working mode</title>
-                <description>Type of api (sandbox or live)</description>
+				<valueType>string</valueType>
+				<allowedValues>
+					<value>Sandbox</value>
+					<value>Live</value>
+				</allowedValues>
+				<defaultValue>Sandbox</defaultValue>
+				<title>Paypal working mode</title>
+				<description>Type of api (sandbox or live)</description>
             </setting>
             <setting>
                 <name>Paypal.APIUsername</name>
