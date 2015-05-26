@@ -33,7 +33,14 @@ namespace VirtoCommerce.Web.Controllers
             var checkout = await Service.GetCheckoutAsync(SiteContext.Current);
             Context.Checkout = checkout;
 
-            return View("checkout-step-1");
+            if (checkout.RequiresShipping)
+            {
+                return View("checkout-step-1");
+            }
+            else
+            {
+                return RedirectToAction("Step2", "Checkout");
+            }
         }
 
         //
@@ -133,6 +140,11 @@ namespace VirtoCommerce.Web.Controllers
                 {
                     var checkout = await Service.GetCheckoutAsync(SiteContext.Current);
 
+                    if (!checkout.RequiresShipping)
+                    {
+                        checkout.Email = formModel.Email;
+                    }
+
                     var billingAddress = new CustomerAddress
                     {
                         Address1 = formModel.Address1,
@@ -149,7 +161,12 @@ namespace VirtoCommerce.Web.Controllers
                     };
 
                     checkout.BillingAddress = billingAddress;
-                    checkout.ShippingMethod = checkout.ShippingMethods.FirstOrDefault(sm => sm.Handle == formModel.ShippingMethodId);
+
+                    if (checkout.RequiresShipping)
+                    {
+                        checkout.ShippingMethod = checkout.ShippingMethods.FirstOrDefault(sm => sm.Handle == formModel.ShippingMethodId);
+                    }
+
                     checkout.PaymentMethod = checkout.PaymentMethods.FirstOrDefault(pm => pm.Handle == formModel.PaymentMethodId);
 
                     if (User.Identity.IsAuthenticated)
@@ -166,32 +183,33 @@ namespace VirtoCommerce.Web.Controllers
 
                     checkout.Order = dtoOrder.AsWebModel();
 
-                    Context.Checkout = checkout;
+                    var inPayment = dtoOrder.InPayments.FirstOrDefault(); // For test
 
-                    if (dtoOrder.InPayments != null)
+                    if (inPayment != null)
                     {
-                        var inPayment = dtoOrder.InPayments.FirstOrDefault(ip => ip.Properties != null);
+                        var paymentResult = await Service.ProcessPaymentAsync(dtoOrder.Id, inPayment.Id);
 
-                        if (inPayment != null)
+                        if (paymentResult != null)
                         {
-                            var gatewayType = inPayment.Properties.FirstOrDefault(p => p.Name == "GatewayType");
-
-                            if (gatewayType != null)
+                            if(paymentResult.IsSuccess)
                             {
-                                if ((string)gatewayType.Value == "DirectRedirectUrlGateway")
+                                if (!string.IsNullOrEmpty(paymentResult.RedirectUrl))
                                 {
-                                    var redirectUrl = inPayment.Properties.FirstOrDefault(p => p.Name == "RedirectUrl");
-
-                                    if (redirectUrl != null)
-                                    {
-                                        return Redirect(redirectUrl.Value as string);
-                                    }
+                                    return Redirect(paymentResult.RedirectUrl);
                                 }
+                            }
+                            else
+                            {
+                                Context.ErrorMessage = paymentResult.Error;
+
+                                return View("error");
                             }
                         }
                     }
 
-                    return RedirectToAction("Thanks", "checkout", new { @orderId = checkout.OrderId });
+                    Context.Checkout = checkout;
+
+                    return RedirectToAction("Thanks", "checkout", new { @orderId = checkout.OrderId, @isSuccess = true });
                 }
                 else
                 {

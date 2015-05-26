@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Net.Http;
 using System.Threading.Tasks;
+using VirtoCommerce.ApiClient.DataContracts;
 using VirtoCommerce.ApiClient.DataContracts.Cart;
 using VirtoCommerce.ApiClient.DataContracts.Orders;
 using VirtoCommerce.ApiClient.Utilities;
@@ -64,6 +65,13 @@ namespace VirtoCommerce.ApiClient
                 HttpMethod.Post);
         }
 
+        public Task<ProcessPaymentResult> ProcessPayment(string orderId, string paymentMethodId)
+        {
+            return GetAsync<ProcessPaymentResult>(
+                CreateRequestUri(string.Format(RelativePaths.ProcessPayment, orderId, paymentMethodId)),
+                useCache: false);
+        }
+
         #endregion
 
         protected class RelativePaths
@@ -73,6 +81,7 @@ namespace VirtoCommerce.ApiClient
             public const string GetMultipleOrders = "order/customerOrders";
             public const string GetSingleOrder = "order/customerOrders/{0}";
             public const string PostOrder = "order/customerOrders/{0}";
+            public const string ProcessPayment = "order/customerOrders/{0}/processPayment/{1}";
 
             #endregion
         }

@@ -357,7 +357,20 @@ namespace VirtoCommerce.Web.Models.Services
                     // TODO: Discounts
                     // TODO: GiftCards
 
-                    checkout.Email = context.Customer != null ? context.Customer.Email : null;
+                    if (context.Customer != null)
+                    {
+                        checkout.Email = context.Customer.Email;
+                    }
+                    else
+                    {
+                        var firstAddress = dtoCart.Addresses.FirstOrDefault();
+
+                        if (firstAddress != null)
+                        {
+                            checkout.Email = firstAddress.Email;
+                        }
+                    }
+
                     checkout.GuestLogin = dtoCart.IsAnonymous;
                     checkout.Id = dtoCart.Id;
 
@@ -400,8 +413,6 @@ namespace VirtoCommerce.Web.Models.Services
                         }
                     }
 
-                    checkout.RequiresShipping = true; // TODO
-
                     if (dtoCart.Shipments != null)
                     {
                         var dtoShipment = dtoCart.Shipments.FirstOrDefault();
@@ -437,6 +448,11 @@ namespace VirtoCommerce.Web.Models.Services
             }
 
             return checkout;
+        }
+
+        public async Task<ProcessPaymentResult> ProcessPaymentAsync(string orderId, string paymentMethodId)
+        {
+            return await _orderClient.ProcessPayment(orderId, paymentMethodId);
         }
 
         public async Task UpdateCheckoutAsync(SiteContext context, Checkout checkout)
@@ -509,6 +525,11 @@ namespace VirtoCommerce.Web.Models.Services
             billingAddress.Type = AddressType.Billing;
             dtoCart.Addresses.Add(billingAddress);
 
+            var shippingAddress = checkout.ShippingAddress.AsCartServiceModel();
+            shippingAddress.Email = checkout.Email;
+            shippingAddress.Type = AddressType.Shipping;
+            dtoCart.Addresses.Add(shippingAddress);
+
             if (checkout.Discounts != null)
             {
                 foreach (var discount in checkout.Discounts)
@@ -546,8 +567,8 @@ namespace VirtoCommerce.Web.Models.Services
                 ShippingPrice = checkout.ShippingPrice
             });
 
-            var shippingAddress = checkout.ShippingAddress.AsCartServiceModel();
-            shippingAddress.Email = checkout.Email;
+            //var shippingAddress = checkout.ShippingAddress.AsCartServiceModel();
+            //shippingAddress.Email = checkout.Email;
 
             dtoCart.ShippingTotal = checkout.ShippingPrice;
             dtoCart.SubTotal = checkout.SubtotalPrice;

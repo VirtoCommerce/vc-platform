@@ -549,9 +549,6 @@
     <Content Include="Content\themes\metro\fonts\glyphicons-halflings-regular.ttf" />
     <Content Include="Content\themes\metro\fonts\glyphicons-halflings-regular.eot" />
     <Content Include="Scripts\angular-file-upload.min.map" />
-    <Content Include="App_Data\Configuration\connectionStrings.config">
-      <SubType>Designer</SubType>
-    </Content>
     <Content Include="Content\themes\metro\fonts\metroSysIcons.woff" />
     <Content Include="Content\themes\metro\fonts\metroSysIcons.ttf" />
     <Content Include="Content\themes\metro\fonts\iconFont.woff" />
@@ -1408,7 +1405,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\Modules\" />
-    <Folder Include="App_Data\Search\" />
     <Folder Include="Filters\" />
   </ItemGroup>
   <ItemGroup>
