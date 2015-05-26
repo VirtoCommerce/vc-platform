@@ -37,7 +37,7 @@
         var dialog = {
             id: "confirmDelete",
             title: "Delete confirmation",
-            message: "Are you sure you want to delete this API access key?",
+            message: "Are you sure you want to delete this API key?",
             callback: function (remove) {
                 if (remove) {
                     if ($scope.blade.deleteFn) {

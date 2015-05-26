@@ -3,7 +3,7 @@
         <div class="inner-block form">
             <div class="form-group">
                 <label class="form-label">
-                    Name
+                    Key name
                 </label>
                 <div class="form-input">
                     <input ng-model="blade.currentEntity.name" placeholder="Enter name" focus-on>
@@ -11,7 +11,7 @@
             </div>
             <div class="form-group">
                 <label class="form-label">
-                    Account type
+                    Key type
                 </label>
                 <div class="form-input">
                     <ui-select ng-model="blade.currentEntity.apiAccountType">
@@ -24,14 +24,14 @@
             </div>
             <div class="form-group">
                 <label class="form-label">
-                    {{blade.currentEntity.apiAccountType===apiAccountTypes[0]?'AppId':'Key'}}
+                    {{blade.currentEntity.apiAccountType===apiAccountTypes[0]?'App ID':'Key'}}
                 </label>
                 <div class="form-input">
                     <input ng-model="blade.currentEntity.appId" placeholder="Generate..." readonly>
                 </div>
             </div>
             <div class="form-group" ng-if="blade.currentEntity.apiAccountType===apiAccountTypes[0]">
-                <label class="form-label">App secret</label>
+                <label class="form-label">Secret key</label>
                 <div class="form-input">
                     <textarea class="form-control" id="secretKey" ng-model="blade.currentEntity.secretKey" placeholder="Generate secret key" readonly></textarea>
                 </div>

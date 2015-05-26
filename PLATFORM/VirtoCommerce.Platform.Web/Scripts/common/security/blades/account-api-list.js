@@ -8,7 +8,7 @@
 
     $scope.selectNode = function (node) {
         var newBlade = {
-            subtitle: 'API access',
+            subtitle: 'API key',
             origEntity: node,
             deleteFn: function (entry) {
                 var idx = $scope.blade.currentEntities.indexOf(entry);
@@ -40,7 +40,7 @@
            executeMethod: function () {
                $scope.blade.selectedData = undefined;
                var newBlade = {
-                   subtitle: 'New API access',
+                   subtitle: 'New API key',
                    isNew: true,
                    confirmChangesFn: function (entry) {
                        $scope.blade.currentEntities.push(entry);

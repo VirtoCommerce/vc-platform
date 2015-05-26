@@ -6,7 +6,7 @@
         var newBlade = {
             id: "accountChildBlade",
             title: $scope.blade.title,
-            subtitle: 'API access keys',
+            subtitle: 'API keys',
             controller: 'platformWebApp.accountApiListController',
             template: 'Scripts/common/security/blades/account-api-list.tpl.html'
         };
