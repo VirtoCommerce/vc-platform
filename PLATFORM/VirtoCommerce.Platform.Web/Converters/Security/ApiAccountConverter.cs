@@ -36,6 +36,7 @@ namespace VirtoCommerce.Platform.Web.Converters.Security
 
             result.Id = account.Id;
             result.ApiAccountType = (webModel.ApiAccountType)account.ApiAccountType;
+            result.IsActive = account.IsActive;
 
             return result;
         }
@@ -50,7 +51,7 @@ namespace VirtoCommerce.Platform.Web.Converters.Security
             if (target == null)
                 throw new ArgumentNullException("target");
 
-            var patchInjection = new PatchInjection<dataModel.ApiAccountEntity>(x => x.ApiAccountType, x => x.IsActive, x => x.SecretKey, x => x.AppId);
+            var patchInjection = new PatchInjection<dataModel.ApiAccountEntity>(x => x.Name, x => x.ApiAccountType, x => x.IsActive, x => x.SecretKey, x => x.AppId);
             target.InjectFrom(patchInjection, source);
         }
 
