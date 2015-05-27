@@ -102,9 +102,9 @@ namespace VirtoCommerce.OrderModule.Web.Controllers.Api
 			};
 
 			var result = paymentMethod.ProcessPayment(context);
-			if(result.NewPaymentStatus == PaymentStatus.Paid)
+			if(result.NewPaymentStatus == PaymentStatus.Pending)
 			{
-				payment.IsApproved = true;
+				payment.OuterId = result.OuterId;
 				_customerOrderService.Update(new coreModel.CustomerOrder[] { order });
 			}
 			var retVal = new webModel.ProcessPaymentResult();

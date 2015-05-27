@@ -102,6 +102,12 @@ namespace VirtoCommerce.CoreModule.Web.Controllers.Api
 
 				var result = paymentMethod.PostProcessPayment(context);
 
+				if(result.NewPaymentStatus == PaymentStatus.Paid)
+				{
+					payment.IsApproved = true;
+					_customerOrderService.Update(new CustomerOrder[] { order });
+				}
+
 				if (string.IsNullOrEmpty(result.ReturnUrl))
 				{
 					return Ok();
