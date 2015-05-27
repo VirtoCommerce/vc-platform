@@ -108,14 +108,10 @@ namespace VirtoCommerce.CoreModule.Web.Controllers.Api
 					_customerOrderService.Update(new CustomerOrder[] { order });
 				}
 
-				if (string.IsNullOrEmpty(result.ReturnUrl))
-				{
-					return Ok();
-				}
-				return Redirect(result.ReturnUrl);
+				return Ok(result);
 			}
 
-			return Ok();
+			return Ok(new PostProcessPaymentResult { Error = "cancel payment" });
 		}
 
 
