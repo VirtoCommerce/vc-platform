@@ -17,12 +17,12 @@ namespace VirtoCommerce.CoreModule.Data.Payment
 		}
 
 
-		public override ProcessPaymentResult ProcessPayment(Domain.Common.IEvaluationContext context)
+		public override ProcessPaymentResult ProcessPayment(ProcessPaymentEvaluationContext context)
 		{
 			throw new System.NotImplementedException();
 		}
 
-		public override PostProcessPaymentResult PostProcessPayment(Domain.Common.IEvaluationContext context)
+		public override PostProcessPaymentResult PostProcessPayment(PostProcessPaymentEvaluationContext context)
 		{
 			throw new NotImplementedException();
 		}

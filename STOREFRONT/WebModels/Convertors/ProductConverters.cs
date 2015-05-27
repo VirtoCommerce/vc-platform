@@ -25,6 +25,7 @@ namespace VirtoCommerce.Web.Convertors
                                VariantId = variant.Id,
                                Handle = product.Handle,
                                Price = variant.NumericPrice,
+                               RequiresShipping = true,
                                Quantity = 1,
                                Url = product.Url,
                                Title = product.Title,

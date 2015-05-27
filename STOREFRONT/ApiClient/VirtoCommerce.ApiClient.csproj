@@ -88,7 +88,9 @@
     <Compile Include="DataContracts\Orders\OperationProperty.cs" />
     <Compile Include="DataContracts\Orders\PropertyValueType.cs" />
     <Compile Include="DataContracts\Pages\Page.cs" />
+    <Compile Include="DataContracts\PaymentStatus.cs" />
     <Compile Include="DataContracts\Price.cs" />
+    <Compile Include="DataContracts\ProcessPaymentResult.cs" />
     <Compile Include="DataContracts\Security\IdentityResult.cs" />
     <Compile Include="DataContracts\Security\SecurityMessage.cs" />
     <Compile Include="DataContracts\Security\SignInStatus.cs" />

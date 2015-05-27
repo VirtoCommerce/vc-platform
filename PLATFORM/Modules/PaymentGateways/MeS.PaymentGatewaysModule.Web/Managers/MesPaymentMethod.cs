@@ -18,20 +18,16 @@ namespace MeS.PaymentGatewaysModule.Web.Managers
 			get { return PaymentMethodType.Standard; }
 		}
 
-		public override ProcessPaymentResult ProcessPayment(VirtoCommerce.Domain.Common.IEvaluationContext context)
+		public override ProcessPaymentResult ProcessPayment(ProcessPaymentEvaluationContext context)
 		{
 			var retVal = new ProcessPaymentResult();
-
-			var paymentEvaluationContext = context as PaymentEvaluationContext;
 
 			return retVal;
 		}
 
-		public override PostProcessPaymentResult PostProcessPayment(VirtoCommerce.Domain.Common.IEvaluationContext context)
+		public override PostProcessPaymentResult PostProcessPayment(PostProcessPaymentEvaluationContext context)
 		{
 			var retVal = new PostProcessPaymentResult();
-
-			var paymentEvaluationContext = context as PaymentEvaluationContext;
 
 			return retVal;
 		}

@@ -73,7 +73,13 @@ namespace VirtoCommerce.Web.Models
             }
         }
 
-        public bool RequiresShipping { get; set; }
+        public bool RequiresShipping
+        {
+            get
+            {
+                return LineItems != null && LineItems.Any(li => li.RequiresShipping);
+            }
+        }
 
         public CustomerAddress ShippingAddress { get; set; }
 

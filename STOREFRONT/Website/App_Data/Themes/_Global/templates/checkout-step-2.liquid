@@ -7,16 +7,26 @@
                 <h3>Customer information</h3>
             </div>
             <div class="box-content">
-                <p>{{ checkout.email }}</p>
-                <p>
-                    {{ checkout.shipping_address.first_name }} {{ checkout.shipping_address.last_name }}<br />
-                    {{ checkout.shipping_address.company }}
-                    {{ checkout.shipping_address.street }}
-                    {{ checkout.shipping_address.city }}
-                    {{ checkout.shipping_address.province }}
-                    {{ checkout.shipping_address.zip }}
-                    {{ checkout.shipping_address.country }}
-                </p>
+                {% if checkout.requires_shipping %}
+                    <input id="checkout_email" name="checkout[email]" type="hidden" value="{{ checkout.email }}" />
+                    <p>{{ checkout.email }}</p>
+                    <p>
+                        {{ checkout.shipping_address.first_name }} {{ checkout.shipping_address.last_name }}<br />
+                        {{ checkout.shipping_address.company }}
+                        {{ checkout.shipping_address.street }}
+                        {{ checkout.shipping_address.city }}
+                        {{ checkout.shipping_address.province }}
+                        {{ checkout.shipping_address.zip }}
+                        {{ checkout.shipping_address.country }}
+                    </p>
+                {% else %}
+                    <div class="fieldset">
+                        <div class="field">
+                            <label class="control-label" for="checkout_email">Email</label>
+                            <input id="checkout_email" name="checkout[email]" required="required" type="text" />
+                        </div>
+                    </div>
+                {% endif %}
                 <div class="box-inner-header">
                     <h3>Shipping method</h3>
                 </div>
@@ -67,12 +77,14 @@
                 <div class="box-inner-header">
                     <h3>Billing address</h3>
                 </div>
-                <div class="checkbox">
-                    <label>
-                        <input checked="checked" id="billing-address-equals-shipping-address" type="checkbox"> Take billing address from shipping address
-                    </label>
-                </div>
-                <div id="billing-address" style="display: none;">
+                {% if checkout.requires_shipping %}
+                    <div class="checkbox">
+                        <label>
+                            <input checked="checked" id="billing-address-equals-shipping-address" type="checkbox"> Take billing address from shipping address
+                        </label>
+                    </div>
+                {% endif %}
+                <div id="billing-address" style="display: {% if checkout.requires_shipping %} none {% else %} block {% endif %};">
                     <div class="fieldset">
                         <div class="field">
                             <label class="control-label" for="checkout_first_name">First name</label>
