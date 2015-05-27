@@ -194,5 +194,10 @@ namespace Klarna.PaymentGatewaysModule.Web.Managers
 				return localizations.FirstOrDefault(l => l.Currency == currency);
 			}
 		}
+
+		public override ValidatePostProcessRequestResult ValidatePostProcessRequest(object context)
+		{
+			throw new NotImplementedException();
+		}
 	}
 }
