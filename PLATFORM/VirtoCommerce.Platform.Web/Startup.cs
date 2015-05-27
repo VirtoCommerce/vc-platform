@@ -100,7 +100,20 @@ namespace VirtoCommerce.Platform.Web
             }
 
             // Post-initialize
-            OwinConfig.Configure(app, container, connectionStringName);
+            var authenticationOptions = new AuthenticationOptions
+            {
+                CookiesEnabled = GetAppSettingsValue("VirtoCommerce:Authentication:Cookies.Enabled", true),
+                CookiesValidateInterval = GetAppSettingsValue("VirtoCommerce:Authentication:Cookies.ValidateInterval", TimeSpan.FromHours(24)),
+                BearerTokensEnabled = GetAppSettingsValue("VirtoCommerce:Authentication:BearerTokens.Enabled", true),
+                BearerTokensExpireTimeSpan = GetAppSettingsValue("VirtoCommerce:Authentication:BearerTokens.AccessTokenExpireTimeSpan", TimeSpan.FromHours(1)),
+                HmacEnabled = GetAppSettingsValue("VirtoCommerce:Authentication:Hmac.Enabled", true),
+                HmacSignatureValidityPeriod = GetAppSettingsValue("VirtoCommerce:Authentication:Hmac.SignatureValidityPeriod", TimeSpan.FromMinutes(20)),
+                ApiKeysEnabled = GetAppSettingsValue("VirtoCommerce:Authentication:ApiKeys.Enabled", true),
+                ApiKeysHttpHeaderName = GetAppSettingsValue("VirtoCommerce:Authentication:ApiKeys.HttpHeaderName", "api_key"),
+                ApiKeysQueryStringParameterName = GetAppSettingsValue("VirtoCommerce:Authentication:ApiKeys.QueryStringParameterName", "api_key"),
+            };
+
+            OwinConfig.Configure(app, container, connectionStringName, authenticationOptions);
 
             var postInitializeModules = moduleCatalog.CompleteListWithDependencies(moduleCatalog.Modules)
                 .Where(m => m.ModuleInstance != null)
@@ -176,6 +189,7 @@ namespace VirtoCommerce.Platform.Web
             #endregion
 
             #region Notifications
+
             var hubSignalR = GlobalHost.ConnectionManager.GetHubContext<ClientPushHub>();
             var notifier = new InMemoryNotifierImpl(hubSignalR);
             container.RegisterInstance<INotifier>(notifier);
@@ -229,9 +243,12 @@ namespace VirtoCommerce.Platform.Web
             #endregion
 
             #region ChangeLogging
+
             var changeLogService = new ChangeLogService(platformRepositoryFactory);
             container.RegisterInstance<IChangeLogService>(changeLogService);
+
             #endregion
+
             #region Security
 
             var permissionService = new PermissionService(platformRepositoryFactory, manifestProvider, cacheManager);
@@ -258,6 +275,56 @@ namespace VirtoCommerce.Platform.Web
             var relativePath = rootUri.MakeRelativeUri(fullUri).ToString();
             return relativePath;
         }
+
+        private static T GetAppSettingsValue<T>(string name, T defaultValue)
+        {
+            var result = defaultValue;
+
+            var valueType = typeof(T);
+            var stringValue = ConfigurationManager.AppSettings[name];
+
+            if (valueType == typeof(string))
+            {
+                if (stringValue != null)
+                {
+                    result = (T)(object)stringValue;
+                }
+            }
+            else if (valueType == typeof(bool))
+            {
+                bool value;
+                if (bool.TryParse(stringValue, out value))
+                {
+                    result = (T)(object)value;
+                }
+            }
+            else if (valueType == typeof(TimeSpan))
+            {
+                TimeSpan value;
+                if (TimeSpan.TryParse(stringValue, CultureInfo.InvariantCulture, out value))
+                {
+                    result = (T)(object)value;
+                }
+            }
+
+            return result;
+        }
+    }
+
+    public class AuthenticationOptions
+    {
+        public bool CookiesEnabled { get; set; }
+        public TimeSpan CookiesValidateInterval { get; set; }
+
+        public bool BearerTokensEnabled { get; set; }
+        public TimeSpan BearerTokensExpireTimeSpan { get; set; }
+
+        public bool HmacEnabled { get; set; }
+        public TimeSpan HmacSignatureValidityPeriod { get; set; }
+
+        public bool ApiKeysEnabled { get; set; }
+        public string ApiKeysHttpHeaderName { get; set; }
+        public string ApiKeysQueryStringParameterName { get; set; }
     }
 
     public static class HtmlHelperExtensions
