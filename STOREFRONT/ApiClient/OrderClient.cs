@@ -72,11 +72,17 @@ namespace VirtoCommerce.ApiClient
                 useCache: false);
         }
 
-        public Task<PostProcessPaymentResult> PostPaymentProcess(string orderId, string token)
+        public Task<PostProcessPaymentResult> PostPaymentProcess(string orderId, string token, bool cancel)
         {
+            var parameters = new
+            {
+                orderId = orderId,
+                token = token,
+                cancel = cancel
+            };
+
             return GetAsync<PostProcessPaymentResult>(
-                CreateRequestUri(string.Format(RelativePaths.PostPaymentProcess, orderId, token)),
-                useCache: false);
+                CreateRequestUri(RelativePaths.PostPaymentProcess, parameters), useCache: false);
         }
         #endregion
 
@@ -88,7 +94,7 @@ namespace VirtoCommerce.ApiClient
             public const string GetSingleOrder = "order/customerOrders/{0}";
             public const string PostOrder = "order/customerOrders/{0}";
             public const string ProcessPayment = "order/customerOrders/{0}/processPayment/{1}";
-            public const string PostPaymentProcess = "paymentcallback?orderId={0}&token={1}";
+            public const string PostPaymentProcess = "paymentcallback";
 
             #endregion
         }
