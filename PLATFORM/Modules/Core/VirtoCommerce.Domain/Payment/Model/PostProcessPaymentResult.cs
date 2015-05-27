@@ -15,5 +15,7 @@ namespace VirtoCommerce.Domain.Payment.Model
 		public string Error { get; set; }
 
 		public string ReturnUrl { get; set; }
+
+		public string OrderId { get; set; }
 	}
 }

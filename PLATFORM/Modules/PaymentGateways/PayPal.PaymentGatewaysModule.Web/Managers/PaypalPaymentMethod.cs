@@ -134,6 +134,8 @@ namespace PayPal.PaymentGatewaysModule.Web.Managers
 			if (context.Order == null)
 				throw new NullReferenceException("no order with this id");
 
+			retVal.OrderId = context.Order.Id;
+
 			if (!(context.Store != null && !string.IsNullOrEmpty(context.Store.Url)))
 				throw new NullReferenceException("no store with this id");
 
