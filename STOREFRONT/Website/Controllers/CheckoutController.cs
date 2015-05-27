@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
@@ -244,7 +245,8 @@ namespace VirtoCommerce.Web.Controllers
                     {
                         if (postPaymentResult.IsSuccess)
                         {
-                            return RedirectToAction("Thanks", "checkout", new { @orderId = orderId, @isSuccess = true });
+                            Context.Order = await CustomerService.GetOrderAsync(Context.StoreId, Context.CustomerId, orderId);
+                            return View("thanks_page");
                         }
                         else
                         {
@@ -255,34 +257,7 @@ namespace VirtoCommerce.Web.Controllers
                 }
             }
 
-            return null;
-        }
-
-        //
-        // GET: /checkout/thanks
-        [HttpGet]
-        public async Task<ActionResult> Thanks(string orderId, bool isSuccess)
-        {
-            CustomerOrder order = null;
-
-            if (orderId != null)
-            {
-                order = await CustomerService.GetOrderAsync(
-                    Context.StoreId, Context.CustomerId, orderId);
-            }
-
-            if (order == null)
-            {
-                Context.ErrorMessage = string.Format("Order with id {0} was not found.", orderId);
-                return View("error");
-            }
-
-            Context.Set("payment_status_text", isSuccess ?
-                "Success payment!" :
-                "Payment is not successed.");
-            Context.Order = order;
-
-            return View("thanks_page");
+            return View("error");
         }
     }
 }
