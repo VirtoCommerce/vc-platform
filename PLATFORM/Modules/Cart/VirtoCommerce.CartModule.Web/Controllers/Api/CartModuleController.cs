@@ -137,7 +137,7 @@ namespace VirtoCommerce.CartModule.Web.Controllers.Api
 
 			var store = _storeService.GetById(cart.StoreId);
 
-			var retVal = store.PaymentMethods.Select(p => new webModel.PaymentMethod
+			var retVal = store.PaymentMethods.Where(p => p.IsActive).Select(p => new webModel.PaymentMethod
 							{
 								GatewayCode = p.Code,
 								Name = p.Description,
