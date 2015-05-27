@@ -30,6 +30,9 @@ namespace VirtoCommerce.Web.Controllers
                 return RedirectToAction("Index", "Cart");
             }
 
+            var cart = await Service.GetCartAsync(Context.StoreId, Context.CustomerId);
+
+
             var checkout = await Service.GetCheckoutAsync(SiteContext.Current);
             Context.Checkout = checkout;
 
@@ -229,19 +232,13 @@ namespace VirtoCommerce.Web.Controllers
             bool cancel;
             if (bool.TryParse(HttpContext.Request.QueryString["cancel"], out cancel))
             {
-                if (cancel)
-                {
-                    Context.ErrorMessage = "Payment unsuccessful";
-                    return View("error");
-                }
-
                 string orderId = HttpContext.Request.QueryString["orderId"];
                 string token = HttpContext.Request.QueryString["token"];
                 string payerId = HttpContext.Request.QueryString["payerId"];
 
                 if (!string.IsNullOrEmpty(orderId) && !string.IsNullOrEmpty(token) && !string.IsNullOrEmpty(payerId))
                 {
-                    var postPaymentResult = await Service.PostPaymentProcessAsync(orderId, token);
+                    var postPaymentResult = await Service.PostPaymentProcessAsync(orderId, token, cancel);
 
                     if (postPaymentResult != null)
                     {

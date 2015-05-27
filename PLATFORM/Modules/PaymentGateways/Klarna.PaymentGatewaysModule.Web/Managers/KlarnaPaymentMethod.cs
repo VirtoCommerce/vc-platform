@@ -1,9 +1,5 @@
-﻿using Klarna.Checkout;
-using Newtonsoft.Json.Linq;
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using VirtoCommerce.Domain.Order.Model;
 using VirtoCommerce.Domain.Payment.Model;
 
@@ -11,12 +7,12 @@ namespace Klarna.PaymentGatewaysModule.Web.Managers
 {
 	public class KlarnaPaymentMethod : VirtoCommerce.Domain.Payment.Model.PaymentMethod
 	{
-		private static string TestBaseUrl = "https://checkout.testdrive.klarna.com/checkout/orders";
-		private static string ContentType = "application/vnd.klarna.checkout.aggregated-order-v2+json";
+        //private const string _testBaseUrl = "https://checkout.testdrive.klarna.com/checkout/orders";
+        //private const string _contentType = "application/vnd.klarna.checkout.aggregated-order-v2+json";
 
-		private static string KlarnaModeStoreSetting = "Klarna.Mode";
-		private static string KlarnaAppKeyStoreSetting = "Klarna.AppKey";
-		private static string KlarnaAppSecretStoreSetting = "Klarna.AppSecret";
+        private const string _klarnaModeStoreSetting = "Klarna.Mode";
+        private const string _klarnaAppKeyStoreSetting = "Klarna.AppKey";
+        private const string _klarnaAppSecretStoreSetting = "Klarna.AppSecret";
 
 		public KlarnaPaymentMethod()
 			: base("Klarna")
@@ -27,7 +23,7 @@ namespace Klarna.PaymentGatewaysModule.Web.Managers
 		{
 			get
 			{
-				var retVal = GetSetting(KlarnaModeStoreSetting);
+                var retVal = GetSetting(_klarnaModeStoreSetting);
 				return retVal;
 			}
 		}
@@ -36,7 +32,7 @@ namespace Klarna.PaymentGatewaysModule.Web.Managers
 		{
 			get
 			{
-				var retVal = GetSetting(KlarnaAppKeyStoreSetting);
+                var retVal = GetSetting(_klarnaAppKeyStoreSetting);
 				return retVal;
 			}
 		}
@@ -45,7 +41,7 @@ namespace Klarna.PaymentGatewaysModule.Web.Managers
 		{
 			get
 			{
-				var retVal = GetSetting(KlarnaAppSecretStoreSetting);
+                var retVal = GetSetting(_klarnaAppSecretStoreSetting);
 				return retVal;
 			}
 		}
@@ -173,11 +169,11 @@ namespace Klarna.PaymentGatewaysModule.Web.Managers
 		{
 			var retVal = new List<KlarnaLocalization>();
 
-			retVal.Add(new KlarnaLocalization { CountryName = "Sweden", Currency = "SEK", Locale = "sv-se"});
-			retVal.Add(new KlarnaLocalization { CountryName = "Finland", Currency = "EUR", Locale = "fi-fi"});
-			retVal.Add(new KlarnaLocalization { CountryName = "Norway", Currency = "NOK", Locale = "nb-no"});
-			retVal.Add(new KlarnaLocalization { CountryName = "Germany", Currency = "EUR", Locale = "de-de"});
-			retVal.Add(new KlarnaLocalization { CountryName = "Austria", Currency = "EUR", Locale = "de-at"});
+            retVal.Add(new KlarnaLocalization { CountryName = "Sweden", Currency = "SEK", Locale = "sv-se" });
+            retVal.Add(new KlarnaLocalization { CountryName = "Finland", Currency = "EUR", Locale = "fi-fi" });
+            retVal.Add(new KlarnaLocalization { CountryName = "Norway", Currency = "NOK", Locale = "nb-no" });
+            retVal.Add(new KlarnaLocalization { CountryName = "Germany", Currency = "EUR", Locale = "de-de" });
+            retVal.Add(new KlarnaLocalization { CountryName = "Austria", Currency = "EUR", Locale = "de-at" });
 
 			return retVal;
 		}
