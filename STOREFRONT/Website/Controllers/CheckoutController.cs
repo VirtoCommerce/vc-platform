@@ -208,8 +208,6 @@ namespace VirtoCommerce.Web.Controllers
                     }
 
                     Context.Checkout = checkout;
-
-                    return RedirectToAction("Thanks", "checkout", new { @orderId = checkout.OrderId, @isSuccess = true });
                 }
                 else
                 {
@@ -221,6 +219,46 @@ namespace VirtoCommerce.Web.Controllers
             }
 
             return View("error");
+        }
+
+        //
+        // GET: /checkout/externalpaymentcallback
+        [HttpGet]
+        public async Task<ActionResult> ExternalPaymentCallback()
+        {
+            bool cancel;
+            if (bool.TryParse(HttpContext.Request.QueryString["cancel"], out cancel))
+            {
+                if (cancel)
+                {
+                    Context.ErrorMessage = "Payment unsuccessful";
+                    return View("error");
+                }
+
+                string orderId = HttpContext.Request.QueryString["orderId"];
+                string token = HttpContext.Request.QueryString["token"];
+                string payerId = HttpContext.Request.QueryString["payerId"];
+
+                if (!string.IsNullOrEmpty(orderId) && !string.IsNullOrEmpty(token) && !string.IsNullOrEmpty(payerId))
+                {
+                    var postPaymentResult = await Service.PostPaymentProcessAsync(orderId, token);
+
+                    if (postPaymentResult != null)
+                    {
+                        if (postPaymentResult.IsSuccess)
+                        {
+                            return RedirectToAction("Thanks", "checkout", new { @orderId = orderId, @isSuccess = true });
+                        }
+                        else
+                        {
+                            Context.ErrorMessage = postPaymentResult.Error;
+                            return View("error");
+                        }
+                    }
+                }
+            }
+
+            return null;
         }
 
         //
