@@ -31,6 +31,7 @@ namespace PayPal.PaymentGatewaysModule.Web.Managers
 		private static string SandboxPaypalBaseUrlFormat = "https://www.sandbox.paypal.com/cgi-bin/webscr?cmd=_express-checkout&useraction=commit&token={0}";
 		private static string LivePaypalBaseUrlFormat = "https://www.paypal.com/cgi-bin/webscr?cmd=_express-checkout&useraction=commit&token={0}";
 
+
 		public PaypalPaymentMethod()
 			: base("Paypal")
 		{
@@ -168,6 +169,7 @@ namespace PayPal.PaymentGatewaysModule.Web.Managers
 					CheckResponse(doResponse);
 
 					response = service.GetExpressCheckoutDetails(getExpressCheckoutDetailsRequest);
+					status = response.GetExpressCheckoutDetailsResponseDetails.CheckoutStatus;
 				}
 				if (status.Equals("PaymentActionCompleted"))
 				{
@@ -302,7 +304,7 @@ namespace PayPal.PaymentGatewaysModule.Web.Managers
 		{
 			if (response != null)
 			{
-				if (response.Ack.Equals(AckCodeType.FAILURE) || (response.Errors != null && response.Errors.Count > 0))
+				if (response.Ack.Equals(AckCodeType.FAILURE) || (response.Errors != null && response.Errors.Count > 0 && (response.Errors.Count(e => e.ErrorCode == "11607") == 0 && response.Ack.Equals(AckCodeType.SUCCESSWITHWARNING))))
 				{
 					StringBuilder sb = new StringBuilder();
 					foreach (var error in response.Errors)
