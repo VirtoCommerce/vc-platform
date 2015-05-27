@@ -13,6 +13,9 @@ namespace VirtoCommerce.OrderModule.Web.Model
 		[JsonConverter(typeof(StringEnumConverter))]
 		public PaymentStatus NewPaymentStatus { get; set; }
 
+		[JsonConverter(typeof(StringEnumConverter))]
+		public PaymentMethodType PaymentMethodType { get; set; }
+
 		public string RedirectUrl { get; set; }
 
 		public bool IsSuccess { get; set; }

@@ -71,7 +71,7 @@ namespace VirtoCommerce.OrderModule.Web.Controllers.Api
 			return Ok(retVal.ToWebModel());
 		}
 
-		// GET: api/order/customerOrders/{orderId}/processPayment
+		// GET: api/order/customerOrders/{orderId}/processPayment/{paymentId}
 		[HttpGet]
 		[ResponseType(typeof(webModel.CustomerOrder))]
 		[Route("{orderId}/processPayment/{paymentId}")]
@@ -109,6 +109,7 @@ namespace VirtoCommerce.OrderModule.Web.Controllers.Api
 			}
 			var retVal = new webModel.ProcessPaymentResult();
 			retVal.InjectFrom(result);
+			retVal.PaymentMethodType = paymentMethod.PaymentMethodType;
 
 			return Ok(retVal);
 		}
