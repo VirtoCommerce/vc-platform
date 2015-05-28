@@ -364,7 +364,15 @@
 				  {
 				  	name: "Import", icon: 'fa fa-download',
 				  	executeMethod: function () {
-				  		$scope.import(selectedNode);
+				  		var newBlade = {
+				  			id: 'catalogImport',
+				  			title: 'Catalog import',
+				  			catalog: blade.catalog,
+				  			subtitle: 'Choose data format & start import',
+				  			controller: 'virtoCommerce.catalogModule.importerListController',
+				  			template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/import/importers-list.tpl.html'
+				  		};
+				  		bladeNavigationService.showBlade(newBlade, $scope.blade);
 				  	},
 				  	canExecuteMethod: function () {
 				  		return true;
@@ -374,7 +382,7 @@
 				 	name: "Export", icon: 'fa fa-upload',
 				 	executeMethod: function () {
 				 		var newBlade = {
-				 			id: 'exports',
+				 			id: 'catalogExport',
 				 			title: 'Data export',
                             catalog: blade.catalog,
 				 			subtitle: 'Choose data format & start export',

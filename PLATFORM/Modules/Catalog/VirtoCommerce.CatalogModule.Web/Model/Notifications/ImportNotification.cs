@@ -1,22 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
+using System.Text;
+using System.Threading.Tasks;
 using Newtonsoft.Json;
 using VirtoCommerce.Platform.Core.Notification;
 
 namespace VirtoCommerce.CatalogModule.Web.Model.Notifications
 {
-	public class ExportNotification : JobNotificationBase
+	public class ImportNotification : JobNotificationBase
 	{
-		public ExportNotification(string creator)
+		public ImportNotification(string creator)
 			: base(creator)
 		{
-			NotifyType = "CatalogCsvExport";
+			NotifyType = "CatalogCsvImport";
 		}
-
-		[JsonProperty("downloadUrl")]
-		public string DownloadUrl { get; set; }
-		
 	}
 }

@@ -1,0 +1,53 @@
+﻿<div class="blade-static __bottom" ng-include="'Modules/$(VirtoCommerce.Catalog)/Scripts/wizards/common/wizard-ok-action.tpl.html'"></div>
+<div class="blade-content __medium-wide">
+    <div class="blade-inner">
+        <div class="inner-block">
+            <fieldset>
+                <legend class="ng-binding">CSV fields automatically mapped to same product properties</legend>
+                <div class="form-group">
+                    <a class="clear text-mini __link" ng-click="clearPropertyCsvColumns()" ng-if="blade.importConfiguration.propertyCsvColumns.length > 0">Clear all</a>
+                    <ul class="list __inline __choosen">
+                        <li class="list-item" ng-repeat="item in blade.importConfiguration.propertyCsvColumns">
+                            <a class="list-remove" ng-click="removePropertyCsvColumn(item)">×</a>
+                            <span class="list-name">{{item}}</span>
+                        </li>
+                    </ul>
+                </div>
+            </fieldset>
+            <fieldset>
+                <legend class="ng-binding">Chose map CSV columns with product fields</legend>
+                <div class="table-wrapper">
+                    <table class="table hovered">
+                        <thead>
+                            <tr>
+                                <th class="table-col">Product property</th>
+                                <th class="table-col">CSV column</th>
+                               
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="table-item" ng-repeat="mappingItem in blade.importConfiguration.mappingItems">
+                                <td class="table-col __product-name">
+                                    <span>{{mappingItem.entityColumnName}}</span>
+                                </td>
+                                <td class="table-col">
+                                    <ui-select ng-required="mappingItem.isRequired" ng-model="mappingItem.csvColumnName">
+                                        <ui-select-match allow-clear="true" placeholder="Select ...">{{$select.selected}}</ui-select-match>
+                                        <ui-select-choices repeat="x as x in blade.importConfiguration.csvColumns | filter: $select.search ">
+                                            <span ng-bind-html="x | highlight: $select.search"></span>
+                                        </ui-select-choices>
+                                    </ui-select>
+                                </td>
+                                <td class="table-col __product-name">
+                                    <div class="form-input">
+                                        <input ng-model="mappingItem.customValue" placeholder="Default value..." focus-on="">
+                                    </div>
+                                </td>
+                              </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </fieldset>
+        </div>
+    </div>
+</div>

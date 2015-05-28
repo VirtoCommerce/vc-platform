@@ -38,7 +38,7 @@ namespace VirtoCommerce.OrderModule.Data.Services
 				retVal = new SearchResult
 				{
 					TotalCount = query.Count(),
-					CustomerOrders = query.OrderBy(x => x.CreatedDate)
+					CustomerOrders = query.OrderByDescending(x => x.CreatedDate)
 										  .Skip(criteria.Start)
 										  .Take(criteria.Count)
 										  .ToArray()

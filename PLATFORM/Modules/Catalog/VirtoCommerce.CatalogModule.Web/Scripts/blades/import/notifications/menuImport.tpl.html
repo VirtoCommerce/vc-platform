@@ -1,0 +1,7 @@
+﻿<a class="list-link info" href="">
+    <i class="list-ico fa fa-download"></i>
+    <span class="list-t" ng-bind="menuItem.notify.title"></span>
+    <span class="list-descr" ng-bind="menuItem.notify.description"></span>
+    <span class="list-date" am-time-ago="menuItem.notify.created"></span>
+    <span ng-show="!menuItem.notify.finished" class="list-bar progress-bar" data-role="progress-bar" data-value="30"></span>
+</a>
