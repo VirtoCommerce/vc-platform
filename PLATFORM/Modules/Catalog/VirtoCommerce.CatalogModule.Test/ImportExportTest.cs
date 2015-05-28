@@ -96,7 +96,7 @@ namespace VirtoCommerce.CatalogModule.Test
 
 			var product = new coreModel.CatalogProduct();
 			//Auto detect mapping configuration
-			var mappingConfiguration = new string[] { "Name", "Code", "Category", "Reviews" }.Select(x => new webModel.MappingItem { EntityColumnName = x }).ToArray();
+			var mappingConfiguration = new string[] { "Name", "Code", "Category", "Reviews" }.Select(x => new webModel.CsvImportMappingItem { EntityColumnName = x }).ToArray();
 			DoAutoMapping(mappingConfiguration);
 			//Edit mapping configuration in UI
 
@@ -179,7 +179,7 @@ namespace VirtoCommerce.CatalogModule.Test
 			
 		}
 
-		private void DoAutoMapping(webModel.MappingItem[] mappingItems)
+		private void DoAutoMapping(webModel.CsvImportMappingItem[] mappingItems)
 		{
 			using (var reader = new CsvReader(new StreamReader(@"c:\Projects\VCF\vc-community\PLATFORM\Modules\Catalog\VirtoCommerce.CatalogModule.Test\products.csv")))
 			{
@@ -210,7 +210,7 @@ namespace VirtoCommerce.CatalogModule.Test
 
 		public sealed class ProductMap : CsvClassMap<coreModel.CatalogProduct>
 		{
-			public ProductMap(string[] allColumns, webModel.MappingItem[]  mappingConfiguration)
+			public ProductMap(string[] allColumns, webModel.CsvImportMappingItem[]  mappingConfiguration)
 			{
 				var attributePropertyNames = allColumns.Except(mappingConfiguration.Select(x=>x.CsvColumnName));
 				foreach(var mappingConfigurationItem in mappingConfiguration)

@@ -1,11 +1,11 @@
 ﻿angular.module('virtoCommerce.catalogModule')
-.controller('virtoCommerce.catalogModule.exporterListController', ['$scope', 'platformWebApp.bladeNavigationService', 'virtoCommerce.catalogModule.catalogExportService', function ($scope, bladeNavigationService, catalogExportService) {
+.controller('virtoCommerce.catalogModule.importerListController', ['$scope', 'platformWebApp.bladeNavigationService', 'virtoCommerce.catalogModule.catalogImportService', function ($scope, bladeNavigationService, catalogImportService) {
     var blade = $scope.blade;
 
 	$scope.selectedNodeId = null;
 
 	function initializeBlade() {
-	    $scope.registrationsList = catalogExportService.registrationsList;
+		$scope.registrationsList = catalogImportService.registrationsList;
 		blade.isLoading = false;
 	};
 
