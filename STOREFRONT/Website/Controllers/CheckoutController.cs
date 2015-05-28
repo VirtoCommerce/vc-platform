@@ -1,14 +1,17 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using VirtoCommerce.Web.Convertors;
 using VirtoCommerce.Web.Models;
 using VirtoCommerce.Web.Models.FormModels;
+using VirtoCommerce.Web.Models.Routing;
 
 namespace VirtoCommerce.Web.Controllers
 {
+    [Canonicalized(typeof(CheckoutController))]
     public class CheckoutController : StoreControllerBase
     {
         //
@@ -29,6 +32,9 @@ namespace VirtoCommerce.Web.Controllers
             {
                 return RedirectToAction("Index", "Cart");
             }
+
+            var cart = await Service.GetCartAsync(Context.StoreId, Context.CustomerId);
+
 
             var checkout = await Service.GetCheckoutAsync(SiteContext.Current);
             Context.Checkout = checkout;
@@ -208,8 +214,6 @@ namespace VirtoCommerce.Web.Controllers
                     }
 
                     Context.Checkout = checkout;
-
-                    return RedirectToAction("Thanks", "checkout", new { @orderId = checkout.OrderId, @isSuccess = true });
                 }
                 else
                 {
@@ -224,30 +228,38 @@ namespace VirtoCommerce.Web.Controllers
         }
 
         //
-        // GET: /checkout/thanks
+        // GET: /checkout/externalpaymentcallback
         [HttpGet]
-        public async Task<ActionResult> Thanks(string orderId, bool isSuccess)
+        public async Task<ActionResult> ExternalPaymentCallback()
         {
-            CustomerOrder order = null;
-
-            if (orderId != null)
+            bool cancel;
+            if (bool.TryParse(HttpContext.Request.QueryString["cancel"], out cancel))
             {
-                order = await CustomerService.GetOrderAsync(
-                    Context.StoreId, Context.CustomerId, orderId);
+                string orderId = HttpContext.Request.QueryString["orderId"];
+                string token = HttpContext.Request.QueryString["token"];
+                string payerId = HttpContext.Request.QueryString["payerId"];
+
+                if (!string.IsNullOrEmpty(orderId) && !string.IsNullOrEmpty(token) && !string.IsNullOrEmpty(payerId))
+                {
+                    var postPaymentResult = await Service.PostPaymentProcessAsync(orderId, token, cancel);
+
+                    if (postPaymentResult != null)
+                    {
+                        if (postPaymentResult.IsSuccess)
+                        {
+                            Context.Order = await CustomerService.GetOrderAsync(Context.StoreId, Context.CustomerId, orderId);
+                            return View("thanks_page");
+                        }
+                        else
+                        {
+                            Context.ErrorMessage = postPaymentResult.Error;
+                            return View("error");
+                        }
+                    }
+                }
             }
 
-            if (order == null)
-            {
-                Context.ErrorMessage = string.Format("Order with id {0} was not found.", orderId);
-                return View("error");
-            }
-
-            Context.Set("payment_status_text", isSuccess ?
-                "Success payment!" :
-                "Payment is not successed.");
-            Context.Order = order;
-
-            return View("thanks_page");
+            return View("error");
         }
     }
 }

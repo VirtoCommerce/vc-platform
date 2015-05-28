@@ -31,5 +31,10 @@ namespace MeS.PaymentGatewaysModule.Web.Managers
 
 			return retVal;
 		}
+
+		public override ValidatePostProcessRequestResult ValidatePostProcessRequest(object context)
+		{
+			throw new NotImplementedException();
+		}
 	}
 }

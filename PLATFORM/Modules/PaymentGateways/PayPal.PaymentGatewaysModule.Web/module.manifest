@@ -64,6 +64,13 @@
 							<title>API signature</title>
 							<description>merchant api signature credential</description>
 						</setting>
+						<setting>
+							<name>Paypal.PaymentRedirectRelativePath</name>
+							<valueType>string</valueType>
+							<defaultValue>checkout/externalpaymentcallback</defaultValue>
+							<title>Redirect relative path</title>
+							<description>relative path for paypal payment from paypal site to frontend</description>
+						</setting>
         </group>
     </settings>
 </module>

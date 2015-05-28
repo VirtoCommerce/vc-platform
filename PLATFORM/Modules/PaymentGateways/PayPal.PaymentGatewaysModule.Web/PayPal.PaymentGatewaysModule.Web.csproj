@@ -63,9 +63,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\packages\Newtonsoft.Json.6.0.8\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
-    <Reference Include="PayPalCoreSDK, Version=1.6.1.0, Culture=neutral, PublicKeyToken=5b4afc1ccaef40fb, processorArchitecture=MSIL">
+    <Reference Include="PayPalCoreSDK, Version=1.6.2.0, Culture=neutral, PublicKeyToken=5b4afc1ccaef40fb, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\packages\PayPalCoreSDK.1.6.1\lib\net451\PayPalCoreSDK.dll</HintPath>
+      <HintPath>..\..\..\packages\PayPalCoreSDK.1.6.2\lib\net451\PayPalCoreSDK.dll</HintPath>
     </Reference>
     <Reference Include="PayPalMerchantSDK, Version=2.15.117.0, Culture=neutral, PublicKeyToken=5b4afc1ccaef40fb, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>

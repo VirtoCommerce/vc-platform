@@ -48,13 +48,12 @@ namespace VirtoCommerce.Web.Views.Engines.Liquid.ViewEngine
             Template.FileSystem = _fileSystem.GetFileSystem(this.Extensions);
             var view = _viewLocator.LocatePartialView(partialViewName);
 
-            if (view == null)
+            if (view.SearchedLocations != null)
             {
-                return new ViewEngineResult(new[] { "No Suitable view found for 'LiquidViewEngine'" });
+                return new ViewEngineResult(view.SearchedLocations);
             }
 
             return new ViewEngineResult(new DotLiquidView(controllerContext, _viewLocator, view), this);
-
         }
 
         /// <summary>

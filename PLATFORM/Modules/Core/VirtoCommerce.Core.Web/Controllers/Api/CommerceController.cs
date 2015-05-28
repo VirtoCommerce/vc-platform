@@ -23,6 +23,7 @@ namespace VirtoCommerce.CoreModule.Web.Controllers.Api
 		private readonly ICommerceService _commerceService;
 		private readonly ICustomerOrderService _customerOrderService;
 		private readonly IStoreService _storeService;
+
 		public CommerceController(ICommerceService commerceService, ICustomerOrderService customerOrderService, IStoreService storeService)
 		{
 			_commerceService = commerceService;
@@ -102,20 +103,16 @@ namespace VirtoCommerce.CoreModule.Web.Controllers.Api
 
 				var result = paymentMethod.PostProcessPayment(context);
 
-				if(result.NewPaymentStatus == PaymentStatus.Paid)
+				if (result != null && result.NewPaymentStatus == PaymentStatus.Paid)
 				{
 					payment.IsApproved = true;
 					_customerOrderService.Update(new CustomerOrder[] { order });
 				}
 
-				if (string.IsNullOrEmpty(result.ReturnUrl))
-				{
-					return Ok();
-				}
-				return Redirect(result.ReturnUrl);
+				return Ok(result);
 			}
 
-			return Ok();
+			return Ok(new PostProcessPaymentResult { Error = "cancel payment" });
 		}
 
 

@@ -61,6 +61,105 @@ namespace VirtoCommerce.Web.Convertors
             return ret;
         }
 
+        public static Checkout AsCheckoutWebModel(
+            this Data.ShoppingCart cart, VirtoCommerce.ApiClient.DataContracts.Orders.CustomerOrder order = null)
+        {
+            var checkoutModel = new Checkout();
+
+            if (cart.Addresses != null)
+            {
+                var billingAddress = cart.Addresses.FirstOrDefault(a => a.Type == AddressType.Billing);
+                if (billingAddress != null)
+                {
+                    checkoutModel.BillingAddress = billingAddress.AsCartWebModel();
+                }
+
+                var shippingAddress = cart.Addresses.FirstOrDefault(a => a.Type == AddressType.Shipping);
+                if (shippingAddress != null)
+                {
+                    checkoutModel.ShippingAddress = shippingAddress.AsCartWebModel();
+                }
+            }
+
+            checkoutModel.BuyerAcceptsMarketing = true;
+            checkoutModel.Currency = cart.Currency;
+            checkoutModel.CustomerId = cart.CustomerId;
+
+            if (cart.Discounts != null)
+            {
+                checkoutModel.Discounts = new List<VirtoCommerce.Web.Models.Discount>();
+
+                foreach (var discount in cart.Discounts)
+                {
+                    checkoutModel.Discounts.Add(new VirtoCommerce.Web.Models.Discount
+                    {
+                        Amount = (decimal)discount.DiscountAmount,
+                        Code = discount.PromotionId,
+                        Id = discount.Id
+                    });
+                }
+            }
+
+            checkoutModel.Email = "";
+
+            // TODO: Gift cards
+
+            checkoutModel.Email = ""; // TODO
+            checkoutModel.GuestLogin = false; // TODO
+            checkoutModel.Id = cart.Id;
+
+            if (cart.Items != null)
+            {
+                checkoutModel.LineItems = new List<LineItem>();
+
+                foreach (var item in cart.Items)
+                {
+                    checkoutModel.LineItems.Add(item.AsWebModel());
+                }
+            }
+
+            checkoutModel.Name = cart.Name;
+            checkoutModel.Note = cart.Note;
+
+            if (order != null)
+            {
+                checkoutModel.Order = order.AsWebModel();
+            }
+
+            if (cart.Payments != null)
+            {
+                var payment = cart.Payments.FirstOrDefault(); // Remake for multipayment
+
+                if (payment != null)
+                {
+                    checkoutModel.PaymentMethod = new Models.PaymentMethod
+                    {
+                        Handle = payment.PaymentGatewayCode
+                    };
+                }
+            }
+
+            if (cart.Shipments != null)
+            {
+                var shipment = cart.Shipments.FirstOrDefault(); // Remake for multishipment
+
+                if (shipment != null)
+                {
+                    checkoutModel.ShippingMethod = new ShippingMethod
+                    {
+                        Handle = shipment.ShipmentMethodCode,
+                        Price = shipment.ShippingPrice,
+                        Title = shipment.ShipmentMethodCode
+                    };
+                }
+            }
+
+            // Taxes
+            // Transactions
+
+            return checkoutModel;
+        }
+
         public static LineItem AsWebModel(this Data.CartItem item)
         {
             var product = new Product

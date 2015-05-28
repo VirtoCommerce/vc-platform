@@ -21,6 +21,7 @@ namespace PayPal.PaymentGatewaysModule.Web.Managers
 		private static string PaypalAPIUserNameStoreSetting = "Paypal.APIUsername";
 		private static string PaypalAPIPasswordStoreSetting = "Paypal.APIPassword";
 		private static string PaypalAPISignatureStoreSetting = "Paypal.APISignature";
+		private static string PaypalPaymentRedirectRelativePathStoreSetting = "Paypal.PaymentRedirectRelativePath";
 
 		private static string PaypalModeConfigSettingName = "mode";
 		private static string PaypalUsernameConfigSettingName = "account1.apiUsername";
@@ -29,6 +30,7 @@ namespace PayPal.PaymentGatewaysModule.Web.Managers
 
 		private static string SandboxPaypalBaseUrlFormat = "https://www.sandbox.paypal.com/cgi-bin/webscr?cmd=_express-checkout&useraction=commit&token={0}";
 		private static string LivePaypalBaseUrlFormat = "https://www.paypal.com/cgi-bin/webscr?cmd=_express-checkout&useraction=commit&token={0}";
+
 
 		public PaypalPaymentMethod()
 			: base("Paypal")
@@ -69,6 +71,20 @@ namespace PayPal.PaymentGatewaysModule.Web.Managers
 				var retVal = GetSetting(PaypalAPISignatureStoreSetting);
 				return retVal;
 			}
+		}
+
+		private string PaypalPaymentRedirectRelativePath
+		{
+			get
+			{
+				var retVal = GetSetting(PaypalPaymentRedirectRelativePathStoreSetting);
+				return retVal;
+			}
+		}
+
+		public override PaymentMethodType PaymentMethodType
+		{
+			get { return PaymentMethodType.Redirection; }
 		}
 
 		public override ProcessPaymentResult ProcessPayment(ProcessPaymentEvaluationContext context)
@@ -124,6 +140,8 @@ namespace PayPal.PaymentGatewaysModule.Web.Managers
 			if (context.Order == null)
 				throw new NullReferenceException("no order with this id");
 
+			retVal.OrderId = context.Order.Id;
+
 			if (!(context.Store != null && !string.IsNullOrEmpty(context.Store.Url)))
 				throw new NullReferenceException("no store with this id");
 
@@ -141,35 +159,43 @@ namespace PayPal.PaymentGatewaysModule.Web.Managers
 
 				CheckResponse(response);
 
-				var doExpressCheckoutPaymentRequest = GetDoExpressCheckoutPaymentRequest(response, context.OuterId);
-				doResponse = service.DoExpressCheckoutPayment(doExpressCheckoutPaymentRequest);
-
-				CheckResponse(doResponse);
-
-				response = service.GetExpressCheckoutDetails(getExpressCheckoutDetailsRequest);
-
 				var status = response.GetExpressCheckoutDetailsResponseDetails.CheckoutStatus;
 
-				if (response.GetExpressCheckoutDetailsResponseDetails.CheckoutStatus.Equals("PaymentActionCompleted"))
+				if (!status.Equals("PaymentActionCompleted"))
+				{
+					var doExpressCheckoutPaymentRequest = GetDoExpressCheckoutPaymentRequest(response, context.OuterId);
+					doResponse = service.DoExpressCheckoutPayment(doExpressCheckoutPaymentRequest);
+
+					CheckResponse(doResponse);
+
+					response = service.GetExpressCheckoutDetails(getExpressCheckoutDetailsRequest);
+					status = response.GetExpressCheckoutDetailsResponseDetails.CheckoutStatus;
+				}
+				if (status.Equals("PaymentActionCompleted"))
 				{
 					retVal.IsSuccess = true;
 					retVal.NewPaymentStatus = PaymentStatus.Paid;
-					retVal.ReturnUrl = string.Format("{0}/checkout/thanks?orderId={1}&isSuccess=true", context.Store.Url, context.Order.Id);
 				}
 			}
 			catch (System.Exception ex)
 			{
 				retVal.Error = ex.Message;
-				retVal.ReturnUrl = string.Format("{0}/checkout/thanks?orderId={1}&isSuccess=false&errorMessage={2}", context.Store.Url, context.Order.Id, ex.Message);
+				retVal.NewPaymentStatus = PaymentStatus.Pending;
 			}
 
 			return retVal;
 		}
 
-		public override PaymentMethodType PaymentMethodType
+		public override ValidatePostProcessRequestResult ValidatePostProcessRequest(object context)
 		{
-			get { return PaymentMethodType.Redirection; }
+			var retVal = new ValidatePostProcessRequestResult();
+
+			var httpContext = context as HttpContext;
+
+			return retVal;
 		}
+
+		#region Private methods
 
 		private string GetBaseUrl(string mode)
 		{
@@ -221,8 +247,8 @@ namespace PayPal.PaymentGatewaysModule.Web.Managers
 			var ecDetails = new SetExpressCheckoutRequestDetailsType
 			{
 				CallbackTimeout = "3",
-				ReturnURL = string.Format("{0}/admin/api/paymentcallback?cancel=false&orderId={1}", store.Url, order.Id),
-				CancelURL = string.Format("{0}/admin/api/paymentcallback?cancel=true&orderId={1}", store.Url, order.Id),
+				ReturnURL = string.Format("{0}/{1}?cancel=false&orderId={2}", store.Url, PaypalPaymentRedirectRelativePath, order.Id),
+				CancelURL = string.Format("{0}/{1}?cancel=true&orderId={2}", store.Url, PaypalPaymentRedirectRelativePath, order.Id),
 				SolutionType = SolutionTypeType.MARK
 			};
 
@@ -297,6 +323,7 @@ namespace PayPal.PaymentGatewaysModule.Web.Managers
 			return true;
 		}
 
-	
+		#endregion
+
 	}
 }

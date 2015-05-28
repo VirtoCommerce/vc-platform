@@ -5,23 +5,20 @@ using System.Web.Mvc;
 
 namespace VirtoCommerce.Web.Models.Helpers
 {
-
-    #region
-    #endregion
-
     public class ExtensionPartialView : PartialViewResult
     {
         #region Constructors and Destructors
-        public ExtensionPartialView(object model)
+        public ExtensionPartialView(string viewName, object model)
         {
             this.ViewData = new ViewDataDictionary(model);
+            this.ViewName = viewName;
         }
         #endregion
 
         #region Public Methods and Operators
         public override void ExecuteResult(ControllerContext context)
         {
-            var filePath = this.ViewData.Model.ToString();
+            var filePath = this.ViewName;
             var extIndex = filePath.LastIndexOf('.');
             if (extIndex > -1)
             {

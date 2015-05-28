@@ -41,6 +41,8 @@ namespace VirtoCommerce.Domain.Payment.Model
 
 		public abstract PostProcessPaymentResult PostProcessPayment(PostProcessPaymentEvaluationContext context);
 
+		public abstract ValidatePostProcessRequestResult ValidatePostProcessRequest(object context);
+
 		public string GetSetting(string settingName)
 		{
 			var setting = Settings.FirstOrDefault(s => s.Name == settingName);
