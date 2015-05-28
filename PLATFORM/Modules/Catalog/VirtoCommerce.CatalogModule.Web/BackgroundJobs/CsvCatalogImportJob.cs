@@ -159,9 +159,9 @@ namespace VirtoCommerce.CatalogModule.Web.BackgroundJobs
 				finally
 				{
 					//Raise notification each notifyProductSizeLimit category
+					counter++;
 					notification.ProcessedCount = counter;
 					notification.Description = string.Format("Creating products: {0} of {1} created", notification.ProcessedCount, notification.TotalCount);
-					counter++;
 					if (counter % notifyProductSizeLimit == 0)
 					{
 						_notifier.Upsert(notification);
@@ -258,7 +258,7 @@ namespace VirtoCommerce.CatalogModule.Web.BackgroundJobs
 					var content = GetCsvField("Review", x, importConfiguration);
 					if (!String.IsNullOrEmpty(content))
 					{
-						reviews.Add(new coreModel.EditorialReview { LanguageCode = defaultLanguge });
+						reviews.Add(new coreModel.EditorialReview { Content = content, LanguageCode = defaultLanguge });
 					}
 					return reviews;
 

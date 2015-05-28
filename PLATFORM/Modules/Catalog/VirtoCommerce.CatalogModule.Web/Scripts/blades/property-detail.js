@@ -16,20 +16,25 @@
                     b.parentBlade.refresh(data);
                 }
             });
-        } else if(b.categoryId) {
-        	properties.newCategoryProperty({ categoryId: b.categoryId }, function (data) {
+        } else if (b.itemId) {
+            //properties.newItemProperty({ itemId: b.itemId }, function (data) {
+            //    initializeBlade(data);
+            //});
+            initializeBlade({});
+        } else if (b.categoryId) {
+            properties.newCategoryProperty({ categoryId: b.categoryId }, function (data) {
                 initializeBlade(data);
             });
         }
         else if (b.catalogId) {
-        	properties.newCatalogProperty({ catalogId: b.catalogId }, function (data) {
-        		initializeBlade(data);
-        	});
+            properties.newCatalogProperty({ catalogId: b.catalogId }, function (data) {
+                initializeBlade(data);
+            });
         }
     };
 
     $scope.openChild = function (childType) {
-    	var newBlade = { id: "propertyChild" };
+        var newBlade = { id: "propertyChild" };
         newBlade.property = b.currentEntity;
 
         switch (childType) {
@@ -44,7 +49,7 @@
                 newBlade.subtitle = 'Change value type';
                 newBlade.controller = 'virtoCommerce.catalogModule.propertyValueTypeController';
                 newBlade.template = 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/property-valueType.tpl.html';
-               break;
+                break;
             case 'appliesto':
                 newBlade.title = b.origEntity.name ? b.origEntity.name : b.currentEntity.name + ' applies to';
                 newBlade.subtitle = 'Change to what it applies';
@@ -134,7 +139,7 @@
         formScope = form;
     }
 
-    $scope.bladeToolbarCommands = [
+    $scope.blade.toolbarCommands = [
 		{
 		    name: "Save", icon: 'fa fa-save',
 		    executeMethod: function () {

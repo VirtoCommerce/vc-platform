@@ -186,7 +186,7 @@
 		});
 	}
 
-	$scope.bladeToolbarCommands = [
+	$scope.blade.toolbarCommands = [
 		{
 			name: "Add", icon: 'fa fa-plus',
 			executeMethod: function () {
@@ -209,7 +209,7 @@
 		}
 	];
 
-	$scope.bladeHeadIco = 'fa fa-inbox';
+	$scope.blade.headIcon = 'fa fa-inbox';
 
 	blade.initializeBlade();
 }]);

@@ -93,9 +93,9 @@ function ($scope, carts, bladeNavigationService, dialogService) {
         });
     }
 
-    $scope.bladeHeadIco = 'fa-shopping-cart';
+    $scope.blade.headIcon = 'fa-shopping-cart';
 
-    $scope.bladeToolbarCommands = [
+    $scope.blade.toolbarCommands = [
           {
               name: "Refresh", icon: 'fa fa-refresh',
               executeMethod: function () {

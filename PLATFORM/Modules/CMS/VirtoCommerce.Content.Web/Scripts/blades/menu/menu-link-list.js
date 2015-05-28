@@ -11,7 +11,7 @@
             if (blade.newList) {
                 blade.currentEntity = { id: uuid2.newguid(), title: undefined, language: blade.defaultStoreLanguage, storeId: blade.choosenStoreId, menuLinks: [] };
                 blade.choosenListId = blade.currentEntity.id;
-                $scope.bladeToolbarCommands = [{
+                $scope.blade.toolbarCommands = [{
                     name: "Add link", icon: 'fa fa-plus',
                     executeMethod: function () {
                         var newEntity = { id: uuid2.newguid(), url: undefined, title: undefined, type: undefined, priority: 0, isActive: false, language: undefined, menuLinkListId: blade.choosenListId };
@@ -44,7 +44,7 @@
                     blade.currentEntity = angular.copy(data);
                     blade.isLoading = false;
 
-                    $scope.bladeToolbarCommands = [{
+                    $scope.blade.toolbarCommands = [{
                         name: "Add link", icon: 'fa fa-plus',
                         executeMethod: function () {
                             var newEntity = { id: uuid2.newguid(), url: undefined, title: undefined, isActive: false, priority: 0, menuLinkListId: blade.choosenListId };
@@ -233,7 +233,7 @@
         }
     }
 
-    $scope.bladeHeadIco = 'fa fa-archive';
+    $scope.blade.headIcon = 'fa fa-archive';
 
 
 

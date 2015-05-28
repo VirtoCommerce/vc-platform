@@ -1,8 +1,9 @@
-﻿<div class="blade-static __bottom" ng-include="'Modules/$(VirtoCommerce.Catalog)/Scripts/wizards/common/wizard-ok-action.tpl.html'"></div>
+﻿<div class="blade-static __bottom" ng-disabled="!isValid()" ng-include="'Modules/$(VirtoCommerce.Catalog)/Scripts/wizards/common/wizard-ok-action.tpl.html'"></div>
 <div class="blade-content __medium-wide">
     <div class="blade-inner">
         <div class="inner-block">
-            <fieldset>
+            <form name="mappingForm" class="form">
+                <fieldset ng-init="setForm(mappingForm)">
                 <legend class="ng-binding">CSV fields automatically mapped to same product properties</legend>
                 <div class="form-group">
                     <a class="clear text-mini __link" ng-click="clearPropertyCsvColumns()" ng-if="blade.importConfiguration.propertyCsvColumns.length > 0">Clear all</a>
@@ -30,7 +31,7 @@
                                     <span>{{mappingItem.entityColumnName}}</span>
                                 </td>
                                 <td class="table-col">
-                                    <ui-select ng-required="mappingItem.isRequired" ng-model="mappingItem.csvColumnName">
+                                        <ui-select ng-required="!mappingItem.customValue && mappingItem.isRequired" ng-model="mappingItem.csvColumnName">
                                         <ui-select-match allow-clear="true" placeholder="Select ...">{{$select.selected}}</ui-select-match>
                                         <ui-select-choices repeat="x as x in blade.importConfiguration.csvColumns | filter: $select.search ">
                                             <span ng-bind-html="x | highlight: $select.search"></span>
@@ -39,7 +40,7 @@
                                 </td>
                                 <td class="table-col __product-name">
                                     <div class="form-input">
-                                        <input ng-model="mappingItem.customValue" placeholder="Default value..." focus-on="">
+                                            <input ng-required="!mappingItem.csvColumnName && mappingItem.isRequired" ng-model="mappingItem.customValue" placeholder="Default value..." focus-on="">
                                     </div>
                                 </td>
                               </tr>
@@ -47,6 +48,7 @@
                     </table>
                 </div>
             </fieldset>
+            </form>
         </div>
     </div>
 </div>

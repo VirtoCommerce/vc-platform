@@ -32,7 +32,7 @@
 		closeCallback();
 	};
 
-	$scope.bladeHeadIco = 'fa-file-text';
+	$scope.blade.headIcon = 'fa-file-text';
 
 	initializeBlade();
 }]);

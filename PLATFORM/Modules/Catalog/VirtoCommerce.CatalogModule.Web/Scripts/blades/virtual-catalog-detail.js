@@ -84,7 +84,7 @@
 
     function initializeToolbar() {
         if (!$scope.blade.isNew) {
-            $scope.bladeToolbarCommands = [
+            $scope.blade.toolbarCommands = [
                 {
                     name: "Save", icon: 'fa fa-save',
                     executeMethod: function () {

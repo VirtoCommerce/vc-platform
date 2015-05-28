@@ -86,9 +86,9 @@
         dialogService.showConfirmationDialog(dialog);
     }
 
-    $scope.bladeHeadIco = 'fa fa-archive';
+    $scope.blade.headIcon = 'fa fa-archive';
 
-    $scope.bladeToolbarCommands = [
+    $scope.blade.toolbarCommands = [
         {
             name: "Reset", icon: 'fa fa-undo',
             executeMethod: function () {

@@ -22,7 +22,7 @@
 
         // transform simple string to complex object. Simple string isn't editable.
         data.coupons = _.map(data.coupons, function (x) { return { text: x } });
-        
+
         if (data.dynamicExpression) {
             _.each(data.dynamicExpression.children, extendElementBlock);
         }
@@ -46,7 +46,7 @@
         $scope.blade.isLoading = true;
 
         $scope.blade.currentEntity.coupons = _.pluck($scope.blade.currentEntity.coupons, 'text');
-        
+
         _.each($scope.blade.currentEntity.dynamicExpression.children, stripOffUiInformation);
 
         if ($scope.blade.isNew) {
@@ -116,12 +116,12 @@
         });
     }
 
-    $scope.bladeHeadIco = 'fa-area-chart';
+    $scope.blade.headIcon = 'fa-area-chart';
 
     function initializeToolbar() {
-    	if (!$scope.blade.isNew) {
-    		$scope.toolbarTemplate = 'Modules/$(VirtoCommerce.Marketing)/Scripts/promotion/blades/promotion-detail-toolbar.tpl.html';
-            $scope.bladeToolbarCommands = [
+        if (!$scope.blade.isNew) {
+            $scope.blade.toolbarCustomTemplates = ['Modules/$(VirtoCommerce.Marketing)/Scripts/promotion/blades/promotion-detail-toolbar.tpl.html'];
+            $scope.blade.toolbarCommands = [
                 {
                     name: "Save",
                     icon: 'fa fa-save',
@@ -197,5 +197,5 @@
     initializeToolbar();
     $scope.blade.refresh(false);
     $scope.stores = stores.query();
-   
+
 }]);

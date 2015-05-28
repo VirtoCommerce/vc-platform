@@ -84,7 +84,7 @@
 		blade.currentEntity = undefined;
 	}
 
-	$scope.bladeHeadIco = 'fa fa-paperclip';
+	$scope.blade.headIcon = 'fa fa-paperclip';
 
 	blade.initialize();
 }]);

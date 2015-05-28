@@ -43,7 +43,7 @@
         });
     }
 
-    $scope.bladeToolbarCommands = [
+    $scope.blade.toolbarCommands = [
         {
             name: "Refresh", icon: 'fa fa-refresh',
             executeMethod: function () {

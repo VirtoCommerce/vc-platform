@@ -84,9 +84,9 @@
         });
     }
 
-    $scope.bladeHeadIco = 'fa fa-archive';
+    $scope.blade.headIcon = 'fa fa-archive';
 
-    $scope.bladeToolbarCommands = [
+    $scope.blade.toolbarCommands = [
         {
             name: "Save",
             icon: 'fa fa-save',

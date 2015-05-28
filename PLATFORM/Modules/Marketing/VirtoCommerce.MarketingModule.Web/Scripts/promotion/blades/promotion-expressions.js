@@ -16,7 +16,7 @@
             controller: 'virtoCommerce.catalogModule.catalogItemSelectController',
             template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/common/catalog-items-select.tpl.html',
             breadcrumbs: [],
-            bladeToolbarCommands: [
+            toolbarCommands: [
             {
                 name: "Pick selected", icon: 'fa fa-plus',
                 executeMethod: function (blade) {
@@ -66,7 +66,7 @@
             controller: 'virtoCommerce.catalogModule.catalogItemSelectController',
             template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/common/catalog-items-select.tpl.html',
             breadcrumbs: [],
-            bladeToolbarCommands: [
+            toolbarCommands: [
             {
                 name: "Pick selected", icon: 'fa fa-plus',
                 executeMethod: function (blade) {
