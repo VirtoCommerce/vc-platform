@@ -60,8 +60,8 @@
         });
     }
 
-    $scope.bladeHeadIco = 'fa-lock';
-    $scope.toolbarTemplate = 'Scripts/common/security/blades/account-detail-toolbar.tpl.html';
+    $scope.blade.headIcon = 'fa-lock';
+    $scope.blade.toolbarCustomTemplates = ['Scripts/common/security/blades/account-detail-toolbar.tpl.html'];
 
     var userStateCommand = {
         updateName: function () {
@@ -83,7 +83,7 @@
         permission: 'platform:security:manage'
     };
 
-    $scope.bladeToolbarCommands = [
+    $scope.blade.toolbarCommands = [
         {
             name: "Save",
             icon: 'fa fa-save',

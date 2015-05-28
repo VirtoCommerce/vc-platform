@@ -28,7 +28,7 @@
         $scope.selectedItem = data;
     }
 
-    $scope.bladeToolbarCommands = [
+    $scope.blade.toolbarCommands = [
         {
             name: "Edit",
             icon: 'fa fa-edit',

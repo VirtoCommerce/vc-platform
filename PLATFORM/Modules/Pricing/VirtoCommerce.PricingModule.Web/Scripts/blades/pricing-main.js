@@ -25,7 +25,7 @@
         bladeNavigationService.showBlade(newBlade, $scope.blade);
     }
 
-    $scope.bladeHeadIco = 'fa-usd';
+    $scope.blade.headIcon = 'fa-usd';
 
     initializeBlade();
 }]);

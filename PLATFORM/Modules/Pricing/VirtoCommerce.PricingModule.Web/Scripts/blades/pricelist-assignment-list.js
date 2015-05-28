@@ -34,7 +34,7 @@
         });
     }
 
-    $scope.bladeHeadIco = 'fa-usd';
+    $scope.blade.headIcon = 'fa-usd';
 
     $scope.$watch('blade.parentBlade.currentEntity.assignments', function (currentEntities) {
         // $scope.blade.data = currentEntities;

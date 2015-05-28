@@ -13,7 +13,7 @@
         $scope.bladeClose();
     }
 
-    $scope.bladeHeadIco = 'fa fa-wrench';
+    $scope.blade.headIcon = 'fa fa-wrench';
     
     $scope.$watch('blade.currentEntity.countryCode', function (countryCode) {
         if (countryCode) {

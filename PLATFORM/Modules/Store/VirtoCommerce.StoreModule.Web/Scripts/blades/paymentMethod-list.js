@@ -34,7 +34,7 @@
         cursor: "move"
     };
 
-    $scope.bladeHeadIco = 'fa-archive';
+    $scope.blade.headIcon = 'fa-archive';
 
     $scope.$watch('blade.parentBlade.currentEntity.paymentMethods', function (currentEntities) {
         initializeBlade(currentEntities);

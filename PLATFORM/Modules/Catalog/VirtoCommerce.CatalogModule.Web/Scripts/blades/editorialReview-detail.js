@@ -76,7 +76,7 @@
         dialogService.showConfirmationDialog(dialog);
     }
 
-    $scope.bladeToolbarCommands = [
+    $scope.blade.toolbarCommands = [
         {
             name: "Save", icon: 'fa fa-save',
             executeMethod: function () {

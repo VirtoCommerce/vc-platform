@@ -28,7 +28,36 @@ angular.module(moduleName, [])
   }]
 )
 .run(
-  ['platformWebApp.mainMenuService', 'platformWebApp.widgetService', '$state', function (mainMenuService, widgetService, $state) {
+  ['platformWebApp.mainMenuService', 'platformWebApp.widgetService', 'platformWebApp.toolbarService', '$state', function (mainMenuService, widgetService, toolbarService, $state) {
+      // // test toolbar commands and content
+      //toolbarService.register({
+      //    name: "test 1", icon: 'fa fa-cloud',
+      //    executeMethod: function (blade) {
+      //        console.log('test: ' + this.name + this.icon + blade);
+      //    },
+      //    canExecuteMethod: function () { return true; },
+      //    permission: 'catalog:catalogs:manage',
+      //    index: 2
+      //}, 'virtoCommerce.marketingModule.promotionDetailController');
+      //toolbarService.register({
+      //    name: "DO DO DO", icon: 'fa fa-bolt',
+      //    executeMethod: function (blade) {
+      //        console.log('test: ' + this.name + this.icon + blade);
+      //    },
+      //    canExecuteMethod: function () { return true; },
+      //    permission: 'catalog:catalogs:manage',
+      //    index: 0
+      //}, 'virtoCommerce.marketingModule.promotionDetailController');
+
+      //toolbarService.register({
+      //    template: 'Modules/$(VirtoCommerce.Store)/Scripts/blades/toolbar-isActive.tpl.html',
+      //    index: 1
+      //}, 'virtoCommerce.marketingModule.promotionDetailController', true);
+      //toolbarService.register({
+      //    template: 'Modules/$(VirtoCommerce.Orders)/Scripts/blades/operation-detail-toolbar.tpl.html',
+      //    index: 0
+      //}, 'virtoCommerce.marketingModule.promotionDetailController', true);
+
       //Register module in main menu
       var menuItem = {
           path: 'browse/marketing',

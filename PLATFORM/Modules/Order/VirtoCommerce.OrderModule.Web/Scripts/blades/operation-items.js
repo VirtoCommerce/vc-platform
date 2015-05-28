@@ -93,7 +93,7 @@
             template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/common/catalog-items-select.tpl.html',
             options: options,
             breadcrumbs: [],
-            bladeToolbarCommands: [
+            toolbarCommands: [
 			  {
 			      name: "Add selected", icon: 'fa fa-plus',
 			      executeMethod: function (blade) {
@@ -110,9 +110,9 @@
         bladeNavigationService.showBlade(newBlade, $scope.blade);
     }
 
-    $scope.bladeHeadIco = 'fa-file-text';
+    $scope.blade.headIcon = 'fa-file-text';
 
-    $scope.bladeToolbarCommands = [
+    $scope.blade.toolbarCommands = [
         {
             name: "Add item", icon: 'fa fa-plus',
             executeMethod: function () {

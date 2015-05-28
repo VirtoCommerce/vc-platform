@@ -37,7 +37,7 @@
 //        bladeNavigationService.showBlade(newBlade, $scope.blade);
 //    };
 
-//    $scope.bladeHeadIco = 'fa fa-wrench';
+//    $scope.blade.headIcon = 'fa fa-wrench';
 
 
 //    // actions on load

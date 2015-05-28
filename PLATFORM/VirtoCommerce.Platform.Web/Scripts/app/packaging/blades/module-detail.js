@@ -20,7 +20,7 @@
         blade.parentBlade.selectItem(module);
     }
 
-    $scope.bladeToolbarCommands = [
+    $scope.blade.toolbarCommands = [
         {
             name: "Update", icon: 'fa fa-upload',
             executeMethod: function () {
@@ -98,7 +98,7 @@
         dialogService.showConfirmationDialog(dialog);
     }
 
-    $scope.bladeHeadIco = 'fa fa-cubes';
+    $scope.blade.headIcon = 'fa fa-cubes';
 
     // on load
     blade.refresh();

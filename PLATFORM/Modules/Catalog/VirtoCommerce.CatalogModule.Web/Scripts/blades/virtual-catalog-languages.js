@@ -58,7 +58,7 @@
         $scope.bladeClose();
     };
 
-    $scope.bladeHeadIco = 'fa fa-archive';
+    $scope.blade.headIcon = 'fa fa-archive';
 
     $scope.$watch('blade.parentBlade.currentEntity', function (currentEntity) {
         $scope.blade.data = currentEntity;
