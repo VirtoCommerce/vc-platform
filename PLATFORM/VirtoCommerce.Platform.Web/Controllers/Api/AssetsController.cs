@@ -25,15 +25,15 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         }
 
         [HttpPost]
-        [Route("")]
-        public async Task<webModel.BlobInfo[]> UploadAsset()
+		[Route("{folder?}")]
+        public async Task<webModel.BlobInfo[]> UploadAsset(string folder = "tmp")
         {
             if (!Request.Content.IsMimeMultipartContent())
             {
                 throw new HttpResponseException(HttpStatusCode.UnsupportedMediaType);
             }
 
-            var blobMultipartProvider = new BlobStorageMultipartProvider(_blobProvider, _tempPath, "catalog");
+			var blobMultipartProvider = new BlobStorageMultipartProvider(_blobProvider, _tempPath, folder);
             await Request.Content.ReadAsMultipartAsync(blobMultipartProvider);
 
             var retVal = new List<webModel.BlobInfo>();

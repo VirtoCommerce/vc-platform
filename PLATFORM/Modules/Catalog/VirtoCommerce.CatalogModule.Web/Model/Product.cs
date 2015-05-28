@@ -31,13 +31,14 @@ namespace VirtoCommerce.CatalogModule.Web.Model
 			{
 				if (_imgSrc == null)
 				{
-					if (Assets != null)
+					if (Images != null && Images.Any())
 					{
 						var img = Images.FirstOrDefault(x => x.Group == "primaryimage");
-						if (img != null)
+						if (img == null)
 						{
-							_imgSrc = img.Url;
+							img = Images.First();
 						}
+						_imgSrc = img.Url;
 					}
 				}
 				return _imgSrc;

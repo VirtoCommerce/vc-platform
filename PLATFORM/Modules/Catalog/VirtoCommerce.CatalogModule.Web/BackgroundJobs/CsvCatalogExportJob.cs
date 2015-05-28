@@ -43,8 +43,9 @@ namespace VirtoCommerce.CatalogModule.Web.BackgroundJobs
 		{
 			var memoryStream = new MemoryStream();
 			var streamWriter = new StreamWriter(memoryStream);
+			streamWriter.AutoFlush = true;
 			var productPropertyInfos = typeof(CatalogProduct).GetProperties(BindingFlags.Instance | BindingFlags.Public);
-
+			string catalogName = null;
 			using (var csvWriter = new CsvWriter(streamWriter))
 			{
 				csvWriter.Configuration.Delimiter = ";";
@@ -73,6 +74,11 @@ namespace VirtoCommerce.CatalogModule.Web.BackgroundJobs
 					//Write products
 					foreach (var product in products)
 					{
+						if(catalogName == null && product.Catalog != null)
+						{
+							catalogName = product.Catalog.Name;
+						}
+
 						try
 						{
 							foreach (var cfgItem in exportConfiguration)
@@ -111,14 +117,13 @@ namespace VirtoCommerce.CatalogModule.Web.BackgroundJobs
 							_notifier.Upsert(notification);
 						}
 					}
-
 					memoryStream.Position = 0;
 					//Upload result csv to blob storage
 					var uploadInfo = new UploadStreamInfo
 					{
-						FileName = "Catalog-" + catalogId + "-export.csv",
+						FileName = "Catalog-" + (catalogName ?? catalogId) + "-export.csv",
 						FileByteStream = memoryStream,
-						FolderName = "catalog"
+						FolderName = "export"
 					};
 					var blobKey = _blobStorageProvider.Upload(uploadInfo);
 					//Get a download url
@@ -185,9 +190,19 @@ namespace VirtoCommerce.CatalogModule.Web.BackgroundJobs
 				return String.Empty;
 			});
 
-			retVal.Add("ImageSrc", (product) =>
+			retVal.Add("PrimaryImage", (product) =>
 			{
-				var image  = product.Assets.Where(x=>x.Type == ItemAssetType.Image).FirstOrDefault();
+				var image  = product.Assets.Where(x=>x.Type == ItemAssetType.Image && x.Group == "primaryimage").FirstOrDefault();
+				if (image != null)
+				{
+					return image.Url ?? String.Empty;
+				}
+				return String.Empty;
+			});
+
+			retVal.Add("AltImage", (product) =>
+			{
+				var image = product.Assets.Where(x => x.Type == ItemAssetType.Image && x.Group != "primaryimage").FirstOrDefault();
 				if (image != null)
 				{
 					return image.Url ?? String.Empty;
@@ -201,6 +216,34 @@ namespace VirtoCommerce.CatalogModule.Web.BackgroundJobs
 				if (review != null)
 				{
 					return review.Content ?? String.Empty;
+				}
+				return String.Empty;
+			});
+
+			retVal.Add("SeoUrl", (product) =>
+			{
+				var seoInfo = product.SeoInfos.FirstOrDefault();
+				if (seoInfo != null)
+				{
+					return seoInfo.SemanticUrl ?? String.Empty;
+				}
+				return String.Empty;
+			});
+			retVal.Add("SeoTitle", (product) =>
+			{
+				var seoInfo = product.SeoInfos.FirstOrDefault();
+				if (seoInfo != null)
+				{
+					return seoInfo.PageTitle ?? String.Empty;
+				}
+				return String.Empty;
+			});
+			retVal.Add("SeoDescription", (product) =>
+			{
+				var seoInfo = product.SeoInfos.FirstOrDefault();
+				if (seoInfo != null)
+				{
+					return seoInfo.MetaDescription ?? String.Empty;
 				}
 				return String.Empty;
 			});

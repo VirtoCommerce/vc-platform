@@ -16,7 +16,10 @@ namespace VirtoCommerce.CatalogModule.Web.Converters
                 retVal = new webModel.ProductAsset();
             }
             retVal.InjectFrom(asset);
-            retVal.Url = blobUrlResolver.GetAbsoluteUrl(asset.Url);
+			if (!Uri.IsWellFormedUriString(asset.Url, UriKind.Absolute))
+			{
+				retVal.Url = blobUrlResolver.GetAbsoluteUrl(asset.Url);
+			}
 			retVal.RelativeUrl = asset.Url;
             return retVal;
         }
