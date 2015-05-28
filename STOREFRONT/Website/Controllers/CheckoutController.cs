@@ -33,10 +33,7 @@ namespace VirtoCommerce.Web.Controllers
                 return RedirectToAction("Index", "Cart");
             }
 
-            var cart = await Service.GetCartAsync(Context.StoreId, Context.CustomerId);
-
-
-            var checkout = await Service.GetCheckoutAsync(SiteContext.Current);
+            var checkout = await Service.GetCheckoutAsync();
             Context.Checkout = checkout;
 
             if (checkout.RequiresShipping)
@@ -56,7 +53,7 @@ namespace VirtoCommerce.Web.Controllers
         {
             var form = GetForm(formModel.form_type);
 
-            var checkout = await Service.GetCheckoutAsync(SiteContext.Current);
+            var checkout = await Service.GetCheckoutAsync();
 
             if (form != null)
             {
@@ -95,7 +92,7 @@ namespace VirtoCommerce.Web.Controllers
                         }
                     }
 
-                    await Service.UpdateCheckoutAsync(SiteContext.Current, checkout);
+                    await Service.UpdateCheckoutAsync(checkout);
 
                     return RedirectToAction("Step2", "Checkout");
                 }
@@ -119,12 +116,15 @@ namespace VirtoCommerce.Web.Controllers
         [Route("checkout/step-2")]
         public async Task<ActionResult> Step2()
         {
-            var checkout = await Service.GetCheckoutAsync(SiteContext.Current);
+            var checkout = await Service.GetCheckoutAsync();
 
             if (checkout.ShippingAddress == null || !checkout.ShippingAddress.IsFilledCorrectly)
             {
                 return RedirectToAction("Step1", "Checkout");
             }
+
+            checkout.ShippingMethods = await Service.GetShippingMethodsAsync(checkout.Id);
+            checkout.PaymentMethods = await Service.GetPaymentMethodsAsync(checkout.Id);
 
             Context.Checkout = checkout;
 
@@ -144,7 +144,7 @@ namespace VirtoCommerce.Web.Controllers
 
                 if (formErrors == null)
                 {
-                    var checkout = await Service.GetCheckoutAsync(SiteContext.Current);
+                    var checkout = await Service.GetCheckoutAsync();
 
                     if (!checkout.RequiresShipping)
                     {
@@ -168,6 +168,9 @@ namespace VirtoCommerce.Web.Controllers
 
                     checkout.BillingAddress = billingAddress;
 
+                    checkout.ShippingMethods = await Service.GetShippingMethodsAsync(checkout.Id);
+                    checkout.PaymentMethods = await Service.GetPaymentMethodsAsync(checkout.Id);
+
                     if (checkout.RequiresShipping)
                     {
                         checkout.ShippingMethod = checkout.ShippingMethods.FirstOrDefault(sm => sm.Handle == formModel.ShippingMethodId);
@@ -185,9 +188,12 @@ namespace VirtoCommerce.Web.Controllers
                         }
                     }
 
-                    var dtoOrder = await Service.CreateOrderAsync(SiteContext.Current, checkout);
+                    await Service.UpdateCheckoutAsync(checkout);
+
+                    var dtoOrder = await Service.CreateOrderAsync();
 
                     checkout.Order = dtoOrder.AsWebModel();
+                    Context.Checkout = checkout;
 
                     var inPayment = dtoOrder.InPayments.FirstOrDefault(); // For test
 
@@ -212,8 +218,6 @@ namespace VirtoCommerce.Web.Controllers
                             }
                         }
                     }
-
-                    Context.Checkout = checkout;
                 }
                 else
                 {

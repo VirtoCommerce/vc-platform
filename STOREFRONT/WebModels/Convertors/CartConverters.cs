@@ -72,12 +72,14 @@ namespace VirtoCommerce.Web.Convertors
                 if (billingAddress != null)
                 {
                     checkoutModel.BillingAddress = billingAddress.AsCartWebModel();
+                    checkoutModel.Email = billingAddress.Email;
                 }
 
                 var shippingAddress = cart.Addresses.FirstOrDefault(a => a.Type == AddressType.Shipping);
                 if (shippingAddress != null)
                 {
                     checkoutModel.ShippingAddress = shippingAddress.AsCartWebModel();
+                    checkoutModel.Email = shippingAddress.Email;
                 }
             }
 
@@ -104,8 +106,6 @@ namespace VirtoCommerce.Web.Convertors
 
             // TODO: Gift cards
 
-            checkoutModel.Email = ""; // TODO
-            checkoutModel.GuestLogin = false; // TODO
             checkoutModel.Id = cart.Id;
 
             if (cart.Items != null)
@@ -158,6 +158,72 @@ namespace VirtoCommerce.Web.Convertors
             // Transactions
 
             return checkoutModel;
+        }
+
+        public static Data.ShoppingCart AsServiceModel(this Checkout checkoutModel, ref Data.ShoppingCart cart)
+        {
+            cart.Addresses = new List<Data.Address>();
+            if (checkoutModel.BillingAddress != null)
+            {
+                var billingAddress = checkoutModel.BillingAddress.AsCartServiceModel();
+                billingAddress.Email = checkoutModel.Email;
+                billingAddress.Type = AddressType.Billing;
+
+                cart.Addresses.Add(billingAddress);
+            }
+            if (checkoutModel.ShippingAddress != null)
+            {
+                var shippingAddress = checkoutModel.ShippingAddress.AsCartServiceModel();
+                shippingAddress.Email = checkoutModel.Email;
+                shippingAddress.Type = AddressType.Shipping;
+
+                cart.Addresses.Add(shippingAddress);
+            }
+
+            cart.Currency = checkoutModel.Currency;
+            cart.CustomerId = checkoutModel.CustomerId;
+
+            // DISCOUNTS
+
+            if (checkoutModel.LineItems != null)
+            {
+                cart.Items = new List<CartItem>();
+                foreach (var lineItemModel in checkoutModel.LineItems)
+                {
+                    cart.Items.Add(lineItemModel.AsServiceModel());
+                }
+            }
+
+            cart.Note = checkoutModel.Note;
+
+            if (checkoutModel.PaymentMethod != null)
+            {
+                cart.Payments = new List<Payment>();
+                cart.Payments.Add(new Payment
+                {
+                    Currency = checkoutModel.Currency,
+                    PaymentGatewayCode = checkoutModel.PaymentMethod.Handle,
+                    Amount = checkoutModel.TotalPrice
+                });
+            }
+
+            if (checkoutModel.ShippingMethod != null)
+            {
+                cart.Shipments = new List<Shipment>();
+                cart.Shipments.Add(new Shipment
+                {
+                    Currency = checkoutModel.Currency,
+                    ShipmentMethodCode = checkoutModel.ShippingMethod.Handle,
+                    ShippingPrice = checkoutModel.ShippingMethod.Price
+                });
+            }
+
+            cart.ShippingTotal = checkoutModel.ShippingPrice;
+            cart.SubTotal = checkoutModel.SubtotalPrice;
+            cart.TaxTotal = checkoutModel.TaxPrice;
+            cart.Total = checkoutModel.TotalPrice;
+
+            return cart;
         }
 
         public static LineItem AsWebModel(this Data.CartItem item)
