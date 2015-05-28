@@ -72,7 +72,7 @@ namespace VirtoCommerce.Web
         #endregion
 
 
-            #region Public Methods and Operators
+        #region Public Methods and Operators
         public override async Task Invoke(IOwinContext context)
         {
             var customerService = new CustomerService();
@@ -166,7 +166,7 @@ namespace VirtoCommerce.Web
                 ctx.Collections = await commerceService.GetCollectionsAsync(SiteContext.Current);
                 ctx.Pages = new PageCollection();
                 ctx.Forms = commerceService.GetForms();
-                ctx.Blogs = commerceService.GetBlogs(SiteContext.Current);
+               
 
                 var cart = await commerceService.GetCartAsync(SiteContext.Current.StoreId, SiteContext.Current.CustomerId);
                 if (cart == null)
@@ -211,6 +211,8 @@ namespace VirtoCommerce.Web
 
                 // update theme files
                 await commerceService.UpdateThemeCacheAsync(SiteContext.Current);
+
+                ctx.Blogs = commerceService.GetBlogs(SiteContext.Current);
             }
             else
             {
