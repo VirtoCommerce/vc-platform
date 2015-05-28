@@ -124,7 +124,7 @@ namespace VirtoCommerce.Platform.Core.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The ConfigurationStore cannot contain a null value. .
+        ///   Looks up a localized string similar to The ConfigurationStore cannot contain a null value..
         /// </summary>
         internal static string ConfigurationStoreCannotBeNull {
             get {
@@ -178,7 +178,7 @@ namespace VirtoCommerce.Platform.Core.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to ContentControl&apos;s Content property is not empty. .
+        ///   Looks up a localized string similar to ContentControl&apos;s Content property is not empty..
         /// </summary>
         internal static string ContentControlHasContentException {
             get {
@@ -322,7 +322,7 @@ namespace VirtoCommerce.Platform.Core.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to An exception occurred while initializing module &apos;{0}&apos;. .
+        ///   Looks up a localized string similar to An exception occurred while initializing module &apos;{0}&apos;..
         /// </summary>
         internal static string FailedToLoadModule {
             get {
@@ -331,7 +331,7 @@ namespace VirtoCommerce.Platform.Core.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to An exception occurred while initializing module &apos;{0}&apos;. .
+        ///   Looks up a localized string similar to An exception occurred while initializing module &apos;{0}&apos;..
         /// </summary>
         internal static string FailedToLoadModuleNoAssemblyInfo {
             get {
@@ -340,7 +340,7 @@ namespace VirtoCommerce.Platform.Core.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Failed to load type for module {0}. .
+        ///   Looks up a localized string similar to Failed to load type for module {0}..
         /// </summary>
         internal static string FailedToRetrieveModule {
             get {
@@ -349,7 +349,7 @@ namespace VirtoCommerce.Platform.Core.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to HostControl cannot have null value when behavior attaches. .
+        ///   Looks up a localized string similar to HostControl cannot have null value when behavior attaches..
         /// </summary>
         internal static string HostControlCannotBeNull {
             get {
@@ -421,7 +421,7 @@ namespace VirtoCommerce.Platform.Core.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to ItemsControl&apos;s ItemsSource property is not empty. .
+        ///   Looks up a localized string similar to ItemsControl&apos;s ItemsSource property is not empty..
         /// </summary>
         internal static string ItemsControlHasItemsSourceException {
             get {
@@ -556,7 +556,7 @@ namespace VirtoCommerce.Platform.Core.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to An exception has occurred while trying to add a view to region &apos;{0}&apos;. .
+        ///   Looks up a localized string similar to An exception has occurred while trying to add a view to region &apos;{0}&apos;..
         /// </summary>
         internal static string OnViewRegisteredException {
             get {
@@ -610,7 +610,7 @@ namespace VirtoCommerce.Platform.Core.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to An exception occurred while creating a region with name &apos;{0}&apos;. The exception was: {1}. .
+        ///   Looks up a localized string similar to An exception occurred while creating a region with name &apos;{0}&apos;. The exception was: {1}..
         /// </summary>
         internal static string RegionCreationException {
             get {
@@ -907,7 +907,7 @@ namespace VirtoCommerce.Platform.Core.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to An exception occurred while trying to create region objects. .
+        ///   Looks up a localized string similar to An exception occurred while trying to create region objects..
         /// </summary>
         internal static string UpdateRegionException {
             get {

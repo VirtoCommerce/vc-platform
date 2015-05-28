@@ -1,24 +1,17 @@
-﻿using VirtoCommerce.Platform.Core.Modularity;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Web.Optimization;
+using Microsoft.Practices.ServiceLocation;
+using VirtoCommerce.Platform.Core.Modularity;
+using VirtoCommerce.Platform.Core.Modularity.Exceptions;
 
 namespace VirtoCommerce.Platform.Web
 {
-    #region
-
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Web;
-    using System.Web.Optimization;
-
-    using Microsoft.Practices.ServiceLocation;
-
-    #endregion
-
     public class BundleConfig
     {
         // For more information on Bundling, visit http://go.microsoft.com/fwlink/?LinkId=254725
-
-        #region Public Methods and Operators
 
         public static void RegisterBundles(BundleCollection bundles)
         {
@@ -120,47 +113,73 @@ namespace VirtoCommerce.Platform.Web
             // Register styles and scripts listed in module manifests ordered by dependency.
             var moduleCatalog = ServiceLocator.Current.GetInstance<IModuleCatalog>();
             var allModules = moduleCatalog.Modules.ToArray();
-            var manifestModules =
-                moduleCatalog.CompleteListWithDependencies(allModules).OfType<ManifestModuleInfo>().ToArray();
-            var styles = manifestModules.SelectMany(m => m.Styles).ToArray();
-            var scripts = manifestModules.SelectMany(m => m.Scripts).ToArray();
+            var manifestModules = moduleCatalog.CompleteListWithDependencies(allModules)
+                .OfType<ManifestModuleInfo>()
+                .ToArray();
+
+            var styles = manifestModules
+                .SelectMany(m => m.Styles.Select(i => new BundleItem { Module = m, Item = i }))
+                .ToArray();
+
+            var scripts = manifestModules
+                .SelectMany(m => m.Scripts.Select(i => new BundleItem { Module = m, Item = i }))
+                .ToArray();
 
             bundles.Add(new BetterStyleBundle("~/css/modules").Include(styles));
             bundles.Add(new ScriptBundle("~/scripts/modules").Include(scripts));
         }
+    }
 
-        #endregion
+    internal class BundleItem
+    {
+        public ModuleInfo Module { get; set; }
+        public ManifestBundleItem Item { get; set; }
     }
 
     internal static class BundleExtensions
     {
-        #region Public Methods and Operators
-
-        public static Bundle Include(this Bundle bundle, IEnumerable<ManifestBundleItem> items)
+        public static Bundle Include(this Bundle bundle, IEnumerable<BundleItem> items)
         {
             foreach (var item in items)
             {
-                var file = item as ManifestBundleFile;
-                var directory = item as ManifestBundleDirectory;
+                var file = item.Item as ManifestBundleFile;
+                var directory = item.Item as ManifestBundleDirectory;
 
-                if (file != null)
+                try
                 {
-                    bundle.Include(file.VirtualPath);
+                    if (file != null)
+                    {
+                        bundle.Include(file.VirtualPath);
+                    }
+
+                    if (directory != null)
+                    {
+                        bundle.IncludeDirectory(
+                            directory.VirtualPath,
+                            directory.SearchPattern,
+                            directory.SearchSubdirectories);
+                    }
                 }
-
-                if (directory != null)
+                catch (Exception ex)
                 {
-                    bundle.IncludeDirectory(
-                        directory.VirtualPath,
-                        directory.SearchPattern,
-                        directory.SearchSubdirectories);
+                    Exception moduleException;
+
+                    if (item.Module.ModuleInstance != null)
+                    {
+                        var assemblyName = item.Module.ModuleInstance.GetType().Assembly.FullName;
+                        moduleException = new ModuleInitializeException(item.Module.ModuleName, assemblyName, ex.Message, ex);
+                    }
+                    else
+                    {
+                        moduleException = new ModuleInitializeException(item.Module.ModuleName, ex.Message, ex);
+                    }
+
+                    throw moduleException;
                 }
             }
 
             return bundle;
         }
-
-        #endregion
     }
 
     public class BetterStyleBundle : StyleBundle
@@ -212,25 +231,17 @@ namespace VirtoCommerce.Platform.Web
     // This provides files in the same order as they have been added. 
     public class NonOrderingBundleOrderer : IBundleOrderer
     {
-        #region Public Methods and Operators
-
         public IEnumerable<BundleFile> OrderFiles(BundleContext context, IEnumerable<BundleFile> files)
         {
             return files;
         }
-
-        #endregion
     }
 
     public class CssRewriteUrlTransformWrapper : IItemTransform
     {
-        #region Public Methods and Operators
-
         public string Process(string includedVirtualPath, string input)
         {
             return new CssRewriteUrlTransform().Process("~" + VirtualPathUtility.ToAbsolute(includedVirtualPath), input);
         }
-
-        #endregion
     }
 }
