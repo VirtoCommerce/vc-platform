@@ -39,6 +39,10 @@
         $scope.formScope = form;
     }
 
+    $scope.isValid = function () {
+    	return $scope.formScope && $scope.formScope.$valid;
+    };
+
     $scope.saveChanges = function () {
     	$scope.bladeClose();
     };

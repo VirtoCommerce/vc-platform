@@ -35,7 +35,7 @@
                             </td>
                             <td class="table-col" ng-click='selectItem($event, data)'>
                                 <div class="product-img">
-                                    <div class="image" style="background-image: url({{data.imageUrl}})" ng-if="data.type!=='category' && data.imageUrl"></div>
+                                    <div class="image" ng-style="{'background-image': 'url(' + data.imageUrl + ')' }" ng-if="data.type!=='category' && data.imageUrl"></div>
                                     <i class="table-ico fa" ng-class="data.type == 'category' ? ' fa-folder' : ' fa-image'" ng-if="!data.imageUrl"></i>
                                 </div>
                             </td>
