@@ -279,6 +279,7 @@ namespace VirtoCommerce.Web.Models.Services
                 "Idaho", "Wyoming", "Utah", "Oklahoma", "New Mexico", "Arizona",
                 "Alaska", "Hawaii"
             });
+            countries.Add("Germany", new List<string>());
 
             return new CountryOptionTags(countries).ToString();
         }
