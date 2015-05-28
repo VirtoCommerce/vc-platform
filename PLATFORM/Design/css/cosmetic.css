@@ -55,6 +55,8 @@
 a
 {
 	color: #43b0e6;
+	cursor: pointer;
+	font-size: 14px;
 	text-decoration: none;
 }
 
