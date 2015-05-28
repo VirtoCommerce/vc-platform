@@ -7,9 +7,11 @@ using System.Web.Mvc;
 using VirtoCommerce.Web.Convertors;
 using VirtoCommerce.Web.Models;
 using VirtoCommerce.Web.Models.FormModels;
+using VirtoCommerce.Web.Models.Routing;
 
 namespace VirtoCommerce.Web.Controllers
 {
+    [Canonicalized(typeof(CheckoutController))]
     public class CheckoutController : StoreControllerBase
     {
         //

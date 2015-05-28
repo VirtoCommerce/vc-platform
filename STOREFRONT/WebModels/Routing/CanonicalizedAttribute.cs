@@ -130,7 +130,7 @@ namespace VirtoCommerce.Web.Models.Routing
                         //}
 
                         //Order remaining parameters
-                        var otherParams = queryString.AllKeys.Where(k => k != null) /*.Where(key => !parameters.ContainsKey(key)).OrderBy(k => k)*/
+                        var otherParams = queryString.AllKeys.Where(k => k != null) /*.Where(key => !parameters.ContainsKey(key))*/.OrderBy(k => k)
                             .ToDictionary<string, string, object>(key => key, key => queryString[key]);
 
                         if (otherParams.Any())
