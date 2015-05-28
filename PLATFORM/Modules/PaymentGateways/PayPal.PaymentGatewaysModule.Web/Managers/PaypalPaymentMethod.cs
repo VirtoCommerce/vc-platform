@@ -304,7 +304,7 @@ namespace PayPal.PaymentGatewaysModule.Web.Managers
 		{
 			if (response != null)
 			{
-				if (response.Ack.Equals(AckCodeType.FAILURE) || (response.Errors != null && response.Errors.Count > 0 && (response.Errors.Count(e => e.ErrorCode == "11607") == 0 && response.Ack.Equals(AckCodeType.SUCCESSWITHWARNING))))
+				if (response.Ack.Equals(AckCodeType.FAILURE) || (response.Errors != null && response.Errors.Count > 0))
 				{
 					StringBuilder sb = new StringBuilder();
 					foreach (var error in response.Errors)
