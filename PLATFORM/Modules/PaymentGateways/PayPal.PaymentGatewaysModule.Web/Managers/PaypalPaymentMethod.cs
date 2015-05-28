@@ -31,6 +31,7 @@ namespace PayPal.PaymentGatewaysModule.Web.Managers
 		private static string SandboxPaypalBaseUrlFormat = "https://www.sandbox.paypal.com/cgi-bin/webscr?cmd=_express-checkout&useraction=commit&token={0}";
 		private static string LivePaypalBaseUrlFormat = "https://www.paypal.com/cgi-bin/webscr?cmd=_express-checkout&useraction=commit&token={0}";
 
+
 		public PaypalPaymentMethod()
 			: base("Paypal")
 		{
@@ -79,6 +80,11 @@ namespace PayPal.PaymentGatewaysModule.Web.Managers
 				var retVal = GetSetting(PaypalPaymentRedirectRelativePathStoreSetting);
 				return retVal;
 			}
+		}
+
+		public override PaymentMethodType PaymentMethodType
+		{
+			get { return PaymentMethodType.Redirection; }
 		}
 
 		public override ProcessPaymentResult ProcessPayment(ProcessPaymentEvaluationContext context)
@@ -153,16 +159,19 @@ namespace PayPal.PaymentGatewaysModule.Web.Managers
 
 				CheckResponse(response);
 
-				var doExpressCheckoutPaymentRequest = GetDoExpressCheckoutPaymentRequest(response, context.OuterId);
-				doResponse = service.DoExpressCheckoutPayment(doExpressCheckoutPaymentRequest);
-
-				CheckResponse(doResponse);
-
-				response = service.GetExpressCheckoutDetails(getExpressCheckoutDetailsRequest);
-
 				var status = response.GetExpressCheckoutDetailsResponseDetails.CheckoutStatus;
 
-				if (response.GetExpressCheckoutDetailsResponseDetails.CheckoutStatus.Equals("PaymentActionCompleted"))
+				if (!status.Equals("PaymentActionCompleted"))
+				{
+					var doExpressCheckoutPaymentRequest = GetDoExpressCheckoutPaymentRequest(response, context.OuterId);
+					doResponse = service.DoExpressCheckoutPayment(doExpressCheckoutPaymentRequest);
+
+					CheckResponse(doResponse);
+
+					response = service.GetExpressCheckoutDetails(getExpressCheckoutDetailsRequest);
+					status = response.GetExpressCheckoutDetailsResponseDetails.CheckoutStatus;
+				}
+				if (status.Equals("PaymentActionCompleted"))
 				{
 					retVal.IsSuccess = true;
 					retVal.NewPaymentStatus = PaymentStatus.Paid;
@@ -177,10 +186,16 @@ namespace PayPal.PaymentGatewaysModule.Web.Managers
 			return retVal;
 		}
 
-		public override PaymentMethodType PaymentMethodType
+		public override ValidatePostProcessRequestResult ValidatePostProcessRequest(object context)
 		{
-			get { return PaymentMethodType.Redirection; }
+			var retVal = new ValidatePostProcessRequestResult();
+
+			var httpContext = context as HttpContext;
+
+			return retVal;
 		}
+
+		#region Private methods
 
 		private string GetBaseUrl(string mode)
 		{
@@ -289,7 +304,7 @@ namespace PayPal.PaymentGatewaysModule.Web.Managers
 		{
 			if (response != null)
 			{
-				if (response.Ack.Equals(AckCodeType.FAILURE) || (response.Errors != null && response.Errors.Count > 0))
+				if (response.Ack.Equals(AckCodeType.FAILURE) || (response.Errors != null && response.Errors.Count > 0 && (response.Errors.Count(e => e.ErrorCode == "11607") == 0 && response.Ack.Equals(AckCodeType.SUCCESSWITHWARNING))))
 				{
 					StringBuilder sb = new StringBuilder();
 					foreach (var error in response.Errors)
@@ -308,6 +323,7 @@ namespace PayPal.PaymentGatewaysModule.Web.Managers
 			return true;
 		}
 
-	
+		#endregion
+
 	}
 }

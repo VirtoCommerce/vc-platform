@@ -31,5 +31,10 @@ namespace VirtoCommerce.CoreModule.Data.Payment
 		{
 			get { return PaymentMethodType.Standard; }
 		}
+
+		public override ValidatePostProcessRequestResult ValidatePostProcessRequest(object context)
+		{
+			throw new NotImplementedException();
+		}
 	}
 }
