@@ -115,26 +115,6 @@ function ($injector, $rootScope, $scope, catalogs, bladeNavigationService, dialo
 		preventCategoryListingOnce = true;
 	};
 
-	$scope.import = function (node) {
-		if (node) {
-			showImportJobsBlade(node.id, node.name);
-		} else {
-			showImportJobsBlade(null, "All import jobs");
-		}
-	}
-
-	function showImportJobsBlade(id, title) {
-		var newBlade = {
-			catalogId: id,
-			title: title,
-			id: 'importJobs',
-			subtitle: 'manage import jobs',
-			controller: 'virtoCommerce.catalogModule.importJobListController',
-			template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/import/import-job-list.tpl.html'
-		};
-
-		bladeNavigationService.showBlade(newBlade, $scope.blade);
-	}
 
 	function showCatalogBlade(id, data, title) {
 		var newBlade = {

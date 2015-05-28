@@ -97,17 +97,7 @@ namespace VirtoCommerce.Web.Controllers
                 return this.Content(compiledContent, "text/css");
             }
 
-            var extIndex = assetId.LastIndexOf('.');
-            if (extIndex > -1)
-            {
-                var fileExt = assetId.Substring(extIndex);
-                if (!string.IsNullOrEmpty(fileExt) && ExtensionMapper.Contains(fileExt))
-                {
-                    this.HttpContext.Response.ContentType = ExtensionMapper.GetContentType(fileExt);
-                }
-            }
-
-            return this.PartialView(assetId, this.Settings);
+            return new ExtensionPartialView(assetId, this.Settings);
         }
 
         private string GetScss(string virtualPath, string id)

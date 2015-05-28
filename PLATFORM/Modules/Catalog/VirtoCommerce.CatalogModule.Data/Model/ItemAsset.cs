@@ -33,11 +33,7 @@ namespace VirtoCommerce.CatalogModule.Data.Model
 
 		#region Navigation Properties
 
-		[StringLength(128)]
 		public string ItemId { get; set; }
-
-		[ForeignKey("ItemId")]
-		[Parent]
 		public virtual Item CatalogItem { get; set; }
 		#endregion
     }

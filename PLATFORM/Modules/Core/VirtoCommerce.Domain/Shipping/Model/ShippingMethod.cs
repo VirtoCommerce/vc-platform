@@ -15,6 +15,7 @@ namespace VirtoCommerce.Domain.Shipping.Model
 		{
 			Id = Guid.NewGuid().ToString("N");
 			Code = code;
+			IsActive = true;
 		}
 
 		/// <summary>

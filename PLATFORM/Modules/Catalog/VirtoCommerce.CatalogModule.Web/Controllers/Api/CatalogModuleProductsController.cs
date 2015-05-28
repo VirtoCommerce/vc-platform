@@ -22,13 +22,15 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
         private readonly IPropertyService _propertyService;
 		private readonly IBlobUrlResolver _blobUrlResolver;
 		private readonly ICatalogService _catalogService;
+		private readonly ISkuGenerator _skuGenerator;
 
-		public CatalogModuleProductsController(IItemService itemsService, IPropertyService propertyService, IBlobUrlResolver blobUrlResolver, ICatalogService catalogService)
+		public CatalogModuleProductsController(IItemService itemsService, IPropertyService propertyService, IBlobUrlResolver blobUrlResolver, ICatalogService catalogService, ISkuGenerator skuGenerator)
         {
             _itemsService = itemsService;
             _propertyService = propertyService;
 			_blobUrlResolver = blobUrlResolver;
 			_catalogService = catalogService;
+			_skuGenerator = skuGenerator;
         }
 
         // GET: api/catalog/products/5
@@ -69,10 +71,10 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
             {
                 CategoryId = categoryId,
                 CatalogId = catalogId,
-				IsActive = true
+				IsActive = true,
+			
             };
-
-
+		
 			if (catalogId != null)
             {
 				var properites = GetAllCatalogProperies(catalogId, categoryId);
@@ -85,6 +87,9 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 					property.IsReadOnly = property.Type != coreModel.PropertyType.Product && property.Type != coreModel.PropertyType.Variation;
                 }
             }
+
+			retVal.Code = _skuGenerator.GenerateSku(retVal.ToModuleModel(null));
+
             return Ok(retVal);
         }
 
@@ -133,7 +138,7 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
             }
 
 
-            //var retVal = _itemsService.Create(newVariation.ToModuleModel()).ToWebModel();
+			newVariation.Code = _skuGenerator.GenerateSku(newVariation.ToModuleModel(null));
             return Ok(newVariation);
         }
 

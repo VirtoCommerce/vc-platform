@@ -87,11 +87,13 @@
     <Compile Include="Catalog\Model\SearchCriteria.cs" />
     <Compile Include="Catalog\Model\SearchResult.cs" />
     <Compile Include="Catalog\Model\SeoInfo.cs" />
+    <Compile Include="Catalog\Services\DefaultSkuGenerator.cs" />
     <Compile Include="Catalog\Services\ICatalogSearchService.cs" />
     <Compile Include="Catalog\Services\ICatalogService.cs" />
     <Compile Include="Catalog\Services\ICategoryService.cs" />
     <Compile Include="Catalog\Services\IItemService.cs" />
     <Compile Include="Catalog\Services\IPropertyService.cs" />
+    <Compile Include="Catalog\Services\ISkuGenerator.cs" />
     <Compile Include="Commerce\Model\SeoUrlKeyword.cs" />
     <Compile Include="Commerce\Model\SeoUrlKeywordTypes.cs" />
     <Compile Include="Common\EvaluationContextBase.cs" />
@@ -192,6 +194,7 @@
     <Compile Include="Payment\Model\PostProcessPaymentResult.cs" />
     <Compile Include="Payment\Model\ProcessPaymentEvaluationContext.cs" />
     <Compile Include="Payment\Model\ProcessPaymentResult.cs" />
+    <Compile Include="Payment\Model\ValidatePostProcessRequestResult.cs" />
     <Compile Include="Payment\Services\IPaymentService.cs" />
     <Compile Include="Payment\Services\PaymentServiceImpl.cs" />
     <Compile Include="Payment\Model\PaymentMethodType.cs" />

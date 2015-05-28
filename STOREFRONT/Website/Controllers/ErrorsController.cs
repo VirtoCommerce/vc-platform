@@ -18,7 +18,11 @@ namespace VirtoCommerce.Web.Controllers
         [HttpGet]
         public ActionResult Http500(Exception exception)
         {
-            throw new Exception("", exception);
+            Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+            Context.ErrorMessage = string.Format(
+                "<p>{0}</p><p>{1}</p>", exception.Message, exception.StackTrace);
+
+            return View("error");
         }
     }
 }
