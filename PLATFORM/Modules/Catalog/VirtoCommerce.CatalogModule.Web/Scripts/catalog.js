@@ -33,7 +33,7 @@ angular.module(catalogsModuleName, [
   ]
 )
 .run(
-  ['$rootScope', 'platformWebApp.mainMenuService', 'platformWebApp.widgetService', '$state', 'platformWebApp.notificationTemplateResolver', 'platformWebApp.bladeNavigationService', 'virtoCommerce.catalogModule.catalogImportService', 'virtoCommerce.catalogModule.catalogExportService', function ($rootScope, mainMenuService, widgetService, $state, notificationTemplateResolver, bladeNavigationService, catalogImportService, catalogExportService) {
+  ['platformWebApp.authService', 'platformWebApp.mainMenuService', 'platformWebApp.widgetService', '$state', 'platformWebApp.notificationTemplateResolver', 'platformWebApp.bladeNavigationService', 'virtoCommerce.catalogModule.catalogImportService', 'virtoCommerce.catalogModule.catalogExportService', function (authService, mainMenuService, widgetService, $state, notificationTemplateResolver, bladeNavigationService, catalogImportService, catalogExportService) {
       //Register module in main menu
       var menuItem = {
           path: 'browse/catalog',
@@ -103,6 +103,17 @@ angular.module(catalogsModuleName, [
 		};
       notificationTemplateResolver.register(historyImportTemplate);
 	
+      //Register dashboard widgets
+      widgetService.registerWidget({
+          isVisible: function (blade) { return authService.checkPermission('catalog:query'); },
+          controller: 'virtoCommerce.catalogModule.dashboard.catalogsWidgetController',
+          template: 'tile-count.html'
+      }, 'mainDashboard');
+      widgetService.registerWidget({
+          isVisible: function (blade) { return authService.checkPermission('catalog:query'); },
+          controller: 'virtoCommerce.catalogModule.dashboard.productsWidgetController',
+          template: 'tile-count.html'
+      }, 'mainDashboard');
 
       //Register image widget
       var itemImageWidget = {

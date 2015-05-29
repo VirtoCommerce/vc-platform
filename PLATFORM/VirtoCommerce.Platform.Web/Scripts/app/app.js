@@ -158,20 +158,12 @@ angular.module('platformWebApp', AppDependencies).
             template: 'graph.html'
         }, 'mainDashboard');
         widgetService.registerWidget({
-            controller: 'platformWebApp.demo.dashboard.catalogsWidgetController',
-            template: 'tile-count.html'
-        }, 'mainDashboard');
-        widgetService.registerWidget({
-            controller: 'platformWebApp.demo.dashboard.productsWidgetController',
-            template: 'tile-count.html'
-        }, 'mainDashboard');
-        widgetService.registerWidget({
             controller: 'platformWebApp.demo.dashboard.notificationsWidgetController',
             template: 'tile-notifications.html'
         }, 'mainDashboard');
 
         $templateCache.put('graph.html', '<div google-chart chart="chartObject" style="height:100%"></div>');
-        $templateCache.put('tile-count.html', '<div class="gridster-cnt __info"><div class="cnt-inner"><div class="list-count">{{data.count}}</div><div class="list-t">{{data.descr}}</div></div></div>');
+        $templateCache.put('tile-count.html', '<div class="gridster-cnt" ng-click="widgetAction()"><div class="cnt-inner"><div class="list-count">{{data.count}}</div><div class="list-t">{{data.descr}}</div></div></div>');
         $templateCache.put('tile-notifications.html', '<ul class="list __notice">\
             <li class="list-item __info">\
                 <a class="list-link" href="" ng-click="notification(\'info\')">\
