@@ -9,7 +9,7 @@ angular.module(moduleName, [])
 .config(
   ['$stateProvider', function ($stateProvider) {
       $stateProvider
-          .state('workspace.marketingModule', {
+          .state('workspace.marketing', {
               url: '/marketing',
               templateUrl: 'Scripts/common/templates/home.tpl.html',
               controller: [
@@ -28,7 +28,7 @@ angular.module(moduleName, [])
   }]
 )
 .run(
-  ['platformWebApp.mainMenuService', 'platformWebApp.widgetService', 'platformWebApp.toolbarService', '$state', function (mainMenuService, widgetService, toolbarService, $state) {
+  ['platformWebApp.mainMenuService', 'platformWebApp.widgetService', 'platformWebApp.toolbarService', '$state', 'platformWebApp.authService', function (mainMenuService, widgetService, toolbarService, $state, authService) {
       // // test toolbar commands and content
       //toolbarService.register({
       //    name: "test 1", icon: 'fa fa-cloud',
@@ -64,8 +64,15 @@ angular.module(moduleName, [])
           icon: 'fa fa-flag',
           title: 'Marketing',
           priority: 40,
-          action: function () { $state.go('workspace.marketingModule'); },
+          action: function () { $state.go('workspace.marketing'); },
           permission: 'marketing:query'
       };
       mainMenuService.addMenuItem(menuItem);
+
+      //Register dashboard widgets
+      widgetService.registerWidget({
+          isVisible: function (blade) { return authService.checkPermission('marketing:query'); },
+          controller: 'virtoCommerce.marketingModule.dashboard.promotionsWidgetController',
+          template: 'tile-count.html'
+      }, 'mainDashboard');
   }]);

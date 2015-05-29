@@ -114,10 +114,4 @@
         "view": {}
     };
 }])
-.controller('platformWebApp.demo.dashboard.catalogsWidgetController', ['$scope', function ($scope) {
-    $scope.data = { count: 5, descr: 'Catalogs' };
-}])
-.controller('platformWebApp.demo.dashboard.productsWidgetController', ['$scope', function ($scope) {
-    $scope.data = { count: 456, descr: 'Products' };
-}])
 ;
