@@ -6,16 +6,16 @@ using System.Text;
 using System.Threading.Tasks;
 using VirtoCommerce.Domain.Inventory.Model;
 using VirtoCommerce.Domain.Inventory.Services;
+using VirtoCommerce.Domain.Order.Events;
 using VirtoCommerce.Domain.Order.Model;
-using VirtoCommerce.Domain.Order.Workflow;
 using VirtoCommerce.Platform.Core.Common;
 
-namespace VirtoCommerce.OrderModule.Data.Workflow
+namespace VirtoCommerce.OrderModule.Data.Observers
 {
-	public class AdjustInventoryActivity : IObserver<OrderStateBasedEvalContext>
+	public class AdjustInventoryObserver : IObserver<OrderChangeEvent>
 	{
 		private readonly IInventoryService _inventoryService;
-		public AdjustInventoryActivity(IInventoryService inventoryService)
+		public AdjustInventoryObserver(IInventoryService inventoryService)
 		{
 			_inventoryService = inventoryService;
 		}
@@ -29,7 +29,7 @@ namespace VirtoCommerce.OrderModule.Data.Workflow
 		{
 		}
 
-		public void OnNext(OrderStateBasedEvalContext value)
+		public void OnNext(OrderChangeEvent value)
 		{
 			var origStockOutOperations = new IStockOutOperation[] { };
 			var modifiedStockOutOperations = new IStockOutOperation[] { };

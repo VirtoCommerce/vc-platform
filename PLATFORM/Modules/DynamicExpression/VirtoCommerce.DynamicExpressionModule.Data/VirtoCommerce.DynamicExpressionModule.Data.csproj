@@ -46,8 +46,6 @@
   <ItemGroup>
     <Compile Include="BlockConditionAndOr.cs" />
     <Compile Include="Content\BlockContentCondition.cs" />
-    <Compile Include="Common\Conditions\Browse\BlockBrowseCondition.cs" />
-    <Compile Include="Common\Conditions\GeoConditions\BlockGeoCondition.cs" />
     <Compile Include="Common\Conditions\Browse\ConditionStoreSearchedPhrase.cs" />
     <Compile Include="Common\Conditions\GeoConditions\ConditionGeoTimeZone.cs" />
     <Compile Include="Common\Conditions\CompareConditionBase.cs" />

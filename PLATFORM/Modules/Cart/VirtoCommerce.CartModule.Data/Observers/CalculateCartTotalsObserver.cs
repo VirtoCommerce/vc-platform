@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using VirtoCommerce.Domain.Cart.Events;
 using VirtoCommerce.Domain.Cart.Model;
 
-namespace VirtoCommerce.CartModule.Data.Workflow
+namespace VirtoCommerce.CartModule.Data.Observers
 {
-	public class CalculateTotalsActivity : IObserver<ShoppingCart>
+	public class CalculateCartTotalsObserver : IObserver<CartChangeEvent>
 	{
 		#region IObserver<CustomerOrder> Members
 
@@ -19,14 +20,16 @@ namespace VirtoCommerce.CartModule.Data.Workflow
 		{
 		}
 
-		public void OnNext(ShoppingCart value)
+		public void OnNext(CartChangeEvent value)
 		{
 			CalculateCartTotals(value);
 		}
 
 		#endregion
-		private static void CalculateCartTotals(ShoppingCart cart)
+		private static void CalculateCartTotals(CartChangeEvent cartChangeEvent)
 		{
+			var cart = cartChangeEvent.ModifiedCart;
+
 			cart.Total = 0;
 			cart.SubTotal = 0;
 			cart.TaxTotal = 0;

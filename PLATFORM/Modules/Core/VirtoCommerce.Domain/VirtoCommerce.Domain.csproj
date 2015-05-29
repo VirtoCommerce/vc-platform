@@ -49,6 +49,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Cart\Events\CartChangeEvent.cs" />
     <Compile Include="Cart\Model\Address.cs" />
     <Compile Include="Cart\Model\AddressType.cs" />
     <Compile Include="Cart\Model\LineItem.cs" />
@@ -100,15 +101,14 @@
     <Compile Include="Catalog\Services\ISkuGenerator.cs" />
     <Compile Include="Commerce\Model\SeoUrlKeyword.cs" />
     <Compile Include="Commerce\Model\SeoUrlKeywordTypes.cs" />
+    <Compile Include="Common\Events\EventPublisher.cs" />
+    <Compile Include="Common\Events\IEventPublisher.cs" />
     <Compile Include="Common\Expressions\ConditionExpressionTree.cs" />
     <Compile Include="Common\Expressions\DynamicExpression.cs" />
     <Compile Include="Common\EvaluationContextBase.cs" />
     <Compile Include="Common\Expressions\IConditionExpression.cs" />
     <Compile Include="Common\Expressions\IDynamicExpression.cs" />
     <Compile Include="Common\IEvaluationContext.cs" />
-    <Compile Include="Common\IWorkflowService.cs" />
-    <Compile Include="Common\ObservableWorkflowService.cs" />
-    <Compile Include="Common\ObserverFactory.cs" />
     <Compile Include="Customer\Model\Address.cs" />
     <Compile Include="Customer\Model\AddressType.cs" />
     <Compile Include="Customer\Model\Contact.cs" />
@@ -195,8 +195,7 @@
     <Compile Include="Order\Services\ICustomerOrderSearchService.cs" />
     <Compile Include="Order\Services\IPaymentService.cs" />
     <Compile Include="Order\Services\IShipmentService.cs" />
-    <Compile Include="Order\Workflow\OrderStateBasedEvalContext.cs" />
-    <Compile Include="Order\Workflow\IOrderWorkflow.cs" />
+    <Compile Include="Order\Events\OrderChangeEvent.cs" />
     <Compile Include="Payment\Model\PostProcessPaymentEvaluationContext.cs" />
     <Compile Include="Payment\Model\PaymentMethod.cs" />
     <Compile Include="Payment\Model\PaymentStatus.cs" />

@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using VirtoCommerce.Domain.Order.Events;
 using VirtoCommerce.Domain.Order.Model;
-using VirtoCommerce.Domain.Order.Workflow;
 
-namespace VirtoCommerce.OrderModule.Data.Workflow
+namespace VirtoCommerce.OrderModule.Data.Observers
 {
-	public class CalculateTotalsActivity : IObserver<OrderStateBasedEvalContext>
+	public class CalculateTotalsObserver : IObserver<OrderChangeEvent>
 	{
 		#region IObserver<CustomerOrder> Members
 
@@ -20,13 +20,13 @@ namespace VirtoCommerce.OrderModule.Data.Workflow
 		{
 		}
 
-		public void OnNext(OrderStateBasedEvalContext value)
+		public void OnNext(OrderChangeEvent value)
 		{
 			CalculateCustomerOrderTotals(value);
 		}
 
 		#endregion
-		private static void CalculateCustomerOrderTotals(OrderStateBasedEvalContext context)
+		private static void CalculateCustomerOrderTotals(OrderChangeEvent context)
 		{
 			var order = context.ModifiedOrder;
 

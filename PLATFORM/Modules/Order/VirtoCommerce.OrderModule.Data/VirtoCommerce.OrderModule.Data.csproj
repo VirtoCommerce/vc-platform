@@ -86,10 +86,9 @@
     <Compile Include="Repositories\OrderSampleDatabaseInitializer.cs" />
     <Compile Include="Services\CustomerOrderSearchServiceImpl.cs" />
     <Compile Include="Services\CustomerOrderServiceImpl.cs" />
-    <Compile Include="Workflow\CustomerOrderWorkflow.cs" />
     <Compile Include="Services\TimeBasedNumberGeneratorImpl.cs" />
-    <Compile Include="Workflow\AdjustInventoryActivity.cs" />
-    <Compile Include="Workflow\CalculateTotalsActivity.cs" />
+    <Compile Include="Observers\AdjustInventoryObserver.cs" />
+    <Compile Include="Observers\CalculateTotalsObserver.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
