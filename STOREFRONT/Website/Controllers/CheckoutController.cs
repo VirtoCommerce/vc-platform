@@ -205,9 +205,20 @@ namespace VirtoCommerce.Web.Controllers
                         {
                             if(paymentResult.IsSuccess)
                             {
-                                if (!string.IsNullOrEmpty(paymentResult.RedirectUrl))
+                                if (paymentResult.PaymentMethodType == ApiClient.DataContracts.PaymentMethodType.Redirection)
                                 {
-                                    return Redirect(paymentResult.RedirectUrl);
+                                    if (!string.IsNullOrEmpty(paymentResult.RedirectUrl))
+                                    {
+                                        return Redirect(paymentResult.RedirectUrl);
+                                    }
+                                }
+                                if (paymentResult.PaymentMethodType == ApiClient.DataContracts.PaymentMethodType.PreparedForm)
+                                {
+                                    if (!string.IsNullOrEmpty(paymentResult.HtmlForm))
+                                    {
+                                        SiteContext.Current.Set("payment_html_form", paymentResult.HtmlForm);
+                                        return View("payment");
+                                    }
                                 }
                             }
                             else

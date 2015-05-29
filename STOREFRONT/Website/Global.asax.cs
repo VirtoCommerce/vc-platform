@@ -1,5 +1,6 @@
 ﻿#region
 using System;
+using System.Diagnostics;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
@@ -20,7 +21,6 @@ namespace VirtoCommerce.Web
             RouteConfig.RegisterRoutes(RouteTable.Routes);
         }
 
-        #if !DEBUG
         protected void Application_Error(object sender, EventArgs e)
         {
             Exception exception = Server.GetLastError();
@@ -48,7 +48,6 @@ namespace VirtoCommerce.Web
 
             Response.End();
         }
-        #endif
 
         #endregion
     }
