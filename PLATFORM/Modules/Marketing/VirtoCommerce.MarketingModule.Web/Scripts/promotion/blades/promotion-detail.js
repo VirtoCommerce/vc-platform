@@ -47,7 +47,9 @@
 
         $scope.blade.currentEntity.coupons = _.pluck($scope.blade.currentEntity.coupons, 'text');
 
-        _.each($scope.blade.currentEntity.dynamicExpression.children, stripOffUiInformation);
+        if ($scope.blade.currentEntity.dynamicExpression) {
+            _.each($scope.blade.currentEntity.dynamicExpression.children, stripOffUiInformation);
+        }
 
         if ($scope.blade.isNew) {
             marketing_res_promotions.save({}, $scope.blade.currentEntity, function (data) {
@@ -67,26 +69,16 @@
         }
     };
 
-    function stripOffUiInformation(expressionElement) {
-        expressionElement.availableChildren = undefined;
-        expressionElement.displayName = undefined;
-        expressionElement.getValidationError = undefined;
-        expressionElement.newChildLabel = undefined;
-        expressionElement.templateURL = undefined;
-
-        var selectedCategories = _.where(expressionElement.children, { id: 'ExcludingCategoryCondition' });
-        expressionElement.excludingCategoryIds = _.pluck(selectedCategories, 'selectedCategoryId');
-        expressionElement.children = _.difference(expressionElement.children, selectedCategories);
-
-        var selectedProducts = _.where(expressionElement.children, { id: 'ExcludingProductCondition' });
-        expressionElement.excludingProductIds = _.pluck(selectedProducts, 'productId');
-        expressionElement.children = _.difference(expressionElement.children, selectedProducts);
-
-        _.each(expressionElement.children, stripOffUiInformation);
-    };
-
     $scope.setForm = function (form) {
         $scope.formScope = form;
+    }
+    $scope.isValid = function () {
+        return isDirty()
+            && $scope.formScope
+            && $scope.formScope.$valid
+            && (!$scope.blade.currentEntity.dynamicExpression
+             || ($scope.blade.currentEntity.dynamicExpression.children[0].children.length > 0
+              && $scope.blade.currentEntity.dynamicExpression.children[3].children.length > 0));
     }
 
     $scope.blade.onClose = function (closeCallback) {
@@ -128,9 +120,7 @@
                     executeMethod: function () {
                         $scope.saveChanges();
                     },
-                    canExecuteMethod: function () {
-                        return isDirty() && $scope.formScope && $scope.formScope.$valid;
-                    },
+                    canExecuteMethod: $scope.isValid,
                     permission: 'marketing:manage'
                 },
                 {
@@ -169,13 +159,11 @@
     $scope.format = 'shortDate';
 
     // Dynamic ExpressionBlock
-
     function extendElementBlock(expressionBlock) {
         var retVal = dynamicExpressionService.expressions[expressionBlock.id];
         if (!retVal) {
             retVal = { displayName: 'unknown element: ' + expressionBlock.id };
         }
-
 
         _.extend(expressionBlock, retVal);
 
@@ -194,8 +182,26 @@
         return expressionBlock;
     };
 
+    function stripOffUiInformation(expressionElement) {
+        expressionElement.availableChildren = undefined;
+        expressionElement.displayName = undefined;
+        expressionElement.getValidationError = undefined;
+        expressionElement.newChildLabel = undefined;
+        expressionElement.templateURL = undefined;
+
+        var selectedCategories = _.where(expressionElement.children, { id: 'ExcludingCategoryCondition' });
+        expressionElement.excludingCategoryIds = _.pluck(selectedCategories, 'selectedCategoryId');
+        expressionElement.children = _.difference(expressionElement.children, selectedCategories);
+
+        var selectedProducts = _.where(expressionElement.children, { id: 'ExcludingProductCondition' });
+        expressionElement.excludingProductIds = _.pluck(selectedProducts, 'productId');
+        expressionElement.children = _.difference(expressionElement.children, selectedProducts);
+
+        _.each(expressionElement.children, stripOffUiInformation);
+    };
+
+
     initializeToolbar();
     $scope.blade.refresh(false);
     $scope.stores = stores.query();
-
 }]);
