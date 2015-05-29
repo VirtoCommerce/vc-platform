@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -41,7 +42,7 @@ namespace VirtoCommerce.Domain.Payment.Model
 
 		public abstract PostProcessPaymentResult PostProcessPayment(PostProcessPaymentEvaluationContext context);
 
-		public abstract ValidatePostProcessRequestResult ValidatePostProcessRequest(object context);
+		public abstract ValidatePostProcessRequestResult ValidatePostProcessRequest(NameValueCollection queryString);
 
 		public string GetSetting(string settingName)
 		{

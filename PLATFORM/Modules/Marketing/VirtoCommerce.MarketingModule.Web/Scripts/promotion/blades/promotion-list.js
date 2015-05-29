@@ -94,9 +94,9 @@
         });
     }
 
-    $scope.bladeHeadIco = 'fa-area-chart';
+    $scope.blade.headIcon = 'fa-area-chart';
 
-    $scope.bladeToolbarCommands = [
+    $scope.blade.toolbarCommands = [
         {
             name: "Refresh", icon: 'fa fa-refresh',
             executeMethod: function () {

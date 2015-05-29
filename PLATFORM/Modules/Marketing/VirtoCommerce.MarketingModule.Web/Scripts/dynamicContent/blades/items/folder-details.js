@@ -9,7 +9,7 @@
 
     blade.initialize = function () {
         if (!blade.isNew) {
-            $scope.bladeToolbarCommands = [
+            $scope.blade.toolbarCommands = [
 				{
 				    name: "Save", icon: 'fa fa-save',
 				    executeMethod: function () {
@@ -62,7 +62,7 @@
         }
     }
 
-    $scope.bladeHeadIco = 'fa fa-inbox';
+    $scope.blade.headIcon = 'fa fa-inbox';
 
     blade.initialize();
 }]);

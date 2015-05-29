@@ -76,27 +76,27 @@
     }
 
     blade.initializeButtons = function () {
-    	$scope.bladeToolbarCommands = [];
+    	$scope.blade.toolbarCommands = [];
 
     	if(!blade.newPage){
-    		$scope.bladeToolbarCommands.push(
+    		$scope.blade.toolbarCommands.push(
 				{
 				    name: "Save page", icon: 'fa fa-save',
 					executeMethod: function () { $scope.saveChanges(); }, canExecuteMethod: function () { return blade.isDirty(); }, permission: 'content:manage'
 				});
-    		$scope.bladeToolbarCommands.push(
+    		$scope.blade.toolbarCommands.push(
 				{
 				    name: "Reset page", icon: 'fa fa-undo',
 					executeMethod: function () { angular.copy(blade.origEntity, blade.currentEntity); }, canExecuteMethod: function () { return blade.isDirty(); }, permission: 'content:manage'
 				});
-    		$scope.bladeToolbarCommands.push(
+    		$scope.blade.toolbarCommands.push(
 				{
 				    name: "Delete page", icon: 'fa fa-trash-o',
 					executeMethod: function () { blade.deleteEntry(); }, canExecuteMethod: function () { return true; }, permission: 'content:manage'
 				});
             }
             else {
-    		$scope.bladeToolbarCommands.push(
+    		$scope.blade.toolbarCommands.push(
 				{
 				    name: "Create", icon: 'fa fa-save',
 					executeMethod: function () { $scope.saveChanges(); }, canExecuteMethod: function () { return blade.isDirty(); }, permission: 'content:manage'
@@ -224,7 +224,7 @@
         }
     };
 
-    $scope.bladeHeadIco = 'fa fa-archive';
+    $scope.blade.headIcon = 'fa fa-archive';
 
     blade.getFlag = function (lang) {
         switch (lang) {

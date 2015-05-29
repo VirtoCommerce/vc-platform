@@ -83,8 +83,8 @@
         $scope.bladeClose();
     };
 
-    $scope.bladeHeadIco = 'fa fa-wrench';
-    $scope.bladeToolbarCommands = [
+    $scope.blade.headIcon = 'fa fa-wrench';
+    $scope.blade.toolbarCommands = [
         {
             name: "Reset", icon: 'fa fa-undo',
             executeMethod: function () {

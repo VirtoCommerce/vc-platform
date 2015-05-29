@@ -32,9 +32,9 @@
         bladeNavigationService.showBlade(newBlade, $scope.blade);
     }
 
-    $scope.bladeHeadIco = 'fa-lock';
+    $scope.blade.headIcon = 'fa-lock';
 
-    $scope.bladeToolbarCommands = [
+    $scope.blade.toolbarCommands = [
        {
            name: "Add", icon: 'fa fa-plus',
            executeMethod: function () {

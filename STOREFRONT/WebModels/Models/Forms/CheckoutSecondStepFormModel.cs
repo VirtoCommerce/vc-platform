@@ -23,12 +23,14 @@ namespace VirtoCommerce.Web.Models.FormModels
             set { SetValue("email", value); }
         }
 
+        [Required]
         public string ShippingMethodId
         {
             get { return GetValue("shipping_method_id"); }
             set { SetValue("shipping_method_id", value); }
         }
 
+        [Required]
         public string PaymentMethodId
         {
             get { return GetValue("payment_method_id"); }

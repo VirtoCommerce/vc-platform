@@ -17,7 +17,7 @@
 		bladeNavigationService.showBlade(newBlade, blade.parentBlade);
 	}
 
-	$scope.bladeHeadIco = 'fa fa-upload';
+	$scope.blade.headIcon = 'fa fa-upload';
 
 	initializeBlade();
 }]);

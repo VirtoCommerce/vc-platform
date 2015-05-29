@@ -23,5 +23,5 @@
         $scope.formScope = form;
     }
   
-    $scope.bladeHeadIco = 'fa fa-file-archive-o';
+    $scope.blade.headIcon = 'fa fa-file-archive-o';
 }]);

@@ -80,21 +80,24 @@ namespace VirtoCommerce.Web.Views.Contents
 
             var collections = new Dictionary<string, ContentItem[]>();
 
-            // list all directories
-            var collectionFolders =
-                this._fileSystem.Directory.GetDirectories(sourceFolder, "*", SearchOption.TopDirectoryOnly)
-                    .Where(name => !name.EndsWith("includes", StringComparison.OrdinalIgnoreCase));
-
-            // now for each directory get a list of content items
-            foreach (var collectionFolder in collectionFolders)
+            if (this._fileSystem.Directory.Exists(sourceFolder))
             {
-                var items =
-                    this.GetCollectionContentItemsInternal(context, collectionFolder)
-                        .Where(item => item != null)
-                        .ToArray();
+                // list all directories
+                var collectionFolders =
+                    this._fileSystem.Directory.GetDirectories(sourceFolder, "*", SearchOption.TopDirectoryOnly)
+                        .Where(name => !name.EndsWith("includes", StringComparison.OrdinalIgnoreCase));
 
-                var collectionName = this.GetPageTitle(collectionFolder);
-                collections.Add(collectionName, items);
+                // now for each directory get a list of content items
+                foreach (var collectionFolder in collectionFolders)
+                {
+                    var items =
+                        this.GetCollectionContentItemsInternal(context, collectionFolder)
+                            .Where(item => item != null)
+                            .ToArray();
+
+                    var collectionName = this.GetPageTitle(collectionFolder);
+                    collections.Add(collectionName, items);
+                }
             }
 
             // populate collection object

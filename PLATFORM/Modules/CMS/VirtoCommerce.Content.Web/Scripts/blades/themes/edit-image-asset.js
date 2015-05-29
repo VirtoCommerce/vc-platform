@@ -13,7 +13,7 @@
 				blade.origEntity = data;
 			});
 
-			$scope.bladeToolbarCommands = [
+			$scope.blade.toolbarCommands = [
 			{
 				name: "Save", icon: 'fa fa-save',
 				executeMethod: function () {
@@ -49,7 +49,7 @@
 			var data = angular.copy(blade.currentEntity);
 			blade.origEntity = data;
 
-			$scope.bladeToolbarCommands = [
+			$scope.blade.toolbarCommands = [
 			{
 				name: "Save", icon: 'fa fa-save',
 				executeMethod: function () {

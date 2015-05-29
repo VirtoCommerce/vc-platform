@@ -339,7 +339,7 @@
         		});
         	}
 
-        	$scope.bladeToolbarCommands = [
+        	$scope.blade.toolbarCommands = [
                 {
                 	name: "Refresh",
                 	icon: 'fa fa-refresh',
@@ -433,14 +433,14 @@
         					return isItemsChecked();
         				}
         			}
-        			$scope.bladeToolbarCommands.splice(1, 2, mapCommand);
+        			$scope.blade.toolbarCommands.splice(1, 2, mapCommand);
         		} else if (blade.mode === 'newAssociation') {
-        			$scope.bladeToolbarCommands.splice(1, 2);
+        			$scope.blade.toolbarCommands.splice(1, 2);
         		}
         	} else if (authService.checkPermission('catalog:categories:manage')
                    || (authService.checkPermission('catalog:virtual_catalogs:manage') && blade.catalog.virtual)
                    || (authService.checkPermission('catalog:items:manage') && !blade.catalog.virtual)) {
-        		$scope.bladeToolbarCommands.splice(0, 0, {
+        		$scope.blade.toolbarCommands.splice(0, 0, {
         			name: "Add", icon: 'fa fa-plus',
         			executeMethod: function () {
         				closeChildrenBlades();

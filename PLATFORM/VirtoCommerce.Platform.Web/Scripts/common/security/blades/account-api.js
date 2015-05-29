@@ -50,10 +50,10 @@
         dialogService.showConfirmationDialog(dialog);
     }
 
-    $scope.bladeHeadIco = 'fa-lock';
-    $scope.toolbarTemplate = 'Scripts/common/security/blades/account-api-toolbar.tpl.html';
+    $scope.blade.headIcon = 'fa-lock';
+    $scope.blade.toolbarCustomTemplates = ['Scripts/common/security/blades/account-api-toolbar.tpl.html'];
 
-    $scope.bladeToolbarCommands = [
+    $scope.blade.toolbarCommands = [
         {
             name: "Generate", icon: 'fa fa-refresh',
             executeMethod: function () {
@@ -95,7 +95,7 @@
             $scope.blade.isLoading = true;
             parameters = { "type": $scope.blade.currentEntity.apiAccountType };
         }
-        
+
         accounts.generateNewApiAccount(parameters, function (apiAccount) {
             if (isInitialRequest) {
                 apiAccount.isActive = true;
@@ -117,7 +117,7 @@
         secretKey.select();
     };
 
-    $scope.$watch('blade.currentEntity.apiAccountType', function(oldVal, newVal) {
+    $scope.$watch('blade.currentEntity.apiAccountType', function (oldVal, newVal) {
         if (oldVal && newVal && oldVal !== newVal) {
             generateNewApiAccount();
         }

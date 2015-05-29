@@ -84,7 +84,7 @@
         formScope = form;
     }
 
-    $scope.bladeToolbarCommands = [
+    $scope.blade.toolbarCommands = [
 		{
 		    name: "Save", icon: 'fa fa-save',
 		    executeMethod: function () {
@@ -105,6 +105,26 @@
             },
             permission: 'catalog:items:manage'
         }
+        //,
+		//{
+		//    name: "Add property", icon: 'fa fa-plus',
+		//    executeMethod: function () {
+		//        var newBlade = {
+		//            id: 'editItemProperty',
+		//            itemId: $scope.blade.itemId,
+		//            title: 'New item property',
+		//            subtitle: 'enter property information',
+		//            controller: 'virtoCommerce.catalogModule.propertyDetailController',
+		//            template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/property-detail.tpl.html'
+		//        };
+
+		//        bladeNavigationService.showBlade(newBlade, $scope.blade);
+		//    },
+		//    canExecuteMethod: function () {
+		//        return true;
+		//    },
+		//    permission: 'catalog:categories:manage'
+		//}
     ];
 
     $scope.blade.refresh();

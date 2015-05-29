@@ -34,7 +34,7 @@
             contentPublications.get({ id: blade.entity.id }, function (data) {
                 initializeBlade(data);
 
-                $scope.bladeToolbarCommands = [
+                $scope.blade.toolbarCommands = [
 				    {
 				        name: "Save", icon: 'fa fa-save',
 				        executeMethod: function () {
@@ -236,7 +236,7 @@
     $scope.formats = ['shortDate', 'dd-MMMM-yyyy', 'yyyy/MM/dd'];
     $scope.format = $scope.formats[0];
 
-    $scope.bladeHeadIco = 'fa fa-paperclip';
+    $scope.blade.headIcon = 'fa fa-paperclip';
 
     // Dynamic ExpressionBlock
     function extendElementBlock(expressionBlock) {

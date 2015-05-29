@@ -25,7 +25,7 @@
         bladeNavigationService.showBlade(newBlade, $scope.blade);
     }
 
-    $scope.bladeHeadIco = 'fa fa-flag';
+    $scope.blade.headIcon = 'fa fa-flag';
 
     initializeBlade();
 }]);

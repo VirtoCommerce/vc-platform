@@ -35,14 +35,14 @@
             <setting>
                 <name>Klarna.AppKey</name>
                 <valueType>integer</valueType>
-                <defaultValue>1000</defaultValue>
+                <defaultValue>3486</defaultValue>
                 <title>Application key</title>
                 <description>Klarna application key from credentials</description>
             </setting>
             <setting>
                 <name>Klarna.SecretKey</name>
                 <valueType>string</valueType>
-                <defaultValue>qwerty</defaultValue>
+                <defaultValue>EodLR8tBViEpwLo</defaultValue>
                 <title>Secret key</title>
                 <description>Klarna secret key from credentials</description>
             </setting>
@@ -56,6 +56,27 @@
 								</allowedValues>
 								<title>Mode</title>
 								<description>Mode of klarna payment gateway (test or real)</description>
+						</setting>
+						<setting>
+							<name>Klarna.TermsUrl</name>
+							<valueType>string</valueType>
+							<defaultValue>checkout/terms</defaultValue>
+							<title>Secret key</title>
+							<description>Klarna secret key from credentials</description>
+						</setting>
+						<setting>
+							<name>Klarna.CheckoutUrl</name>
+							<valueType>string</valueType>
+							<defaultValue>checkout/step1</defaultValue>
+							<title>Secret key</title>
+							<description>Klarna secret key from credentials</description>
+						</setting>
+						<setting>
+							<name>Klarna.ConfirmationUrl</name>
+							<valueType>string</valueType>
+							<defaultValue>checkout/confirmation</defaultValue>
+							<title>Secret key</title>
+							<description>Klarna secret key from credentials</description>
 						</setting>
         </group>
     </settings>

@@ -23,7 +23,7 @@
         blade.isLoading = false;
 
         if (!$scope.blade.isNew) {
-            $scope.bladeToolbarCommands = [
+            $scope.blade.toolbarCommands = [
                 {
                     name: "Save",
                     icon: 'fa fa-save',
@@ -49,7 +49,7 @@
             ];
 
             if (!blade.isApiSave) {
-                $scope.bladeToolbarCommands.splice(0, 1); // remove save button
+                $scope.blade.toolbarCommands.splice(0, 1); // remove save button
             }
         }
     };
@@ -116,7 +116,7 @@
         }
     };
 
-    $scope.bladeHeadIco = 'fa fa-usd';
+    $scope.blade.headIcon = 'fa fa-usd';
 
     // datepicker
     $scope.datepickers = {

@@ -35,7 +35,7 @@
 		}
 
 		if (!blade.isNew) {
-			$scope.bladeToolbarCommands = [
+			$scope.blade.toolbarCommands = [
 				{
 					name: "Save", icon: 'fa fa-save',
 					executeMethod: function () {
@@ -94,7 +94,7 @@
 		}
 	}
 
-	$scope.bladeHeadIco = 'fa fa-location-arrow';
+	$scope.blade.headIcon = 'fa fa-location-arrow';
 
 	blade.initialize();
 }]);

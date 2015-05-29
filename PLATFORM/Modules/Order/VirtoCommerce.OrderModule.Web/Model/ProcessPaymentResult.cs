@@ -22,6 +22,8 @@ namespace VirtoCommerce.OrderModule.Web.Model
 
 		public string Error { get; set; }
 
+		public string HtmlForm { get; set; }
+
 		public string OuterId { get; set; }
 	}
 }

@@ -44,9 +44,9 @@
                                 </div>
                                 <div class="box-footer">
                                     {% if checkout.shipping_method.handle == shipping_method.handle %}
-                                        <input id="checkout_shipping_method_{{ shipping_method.handle }}" name="checkout[shipping_method_id]" selected="selected" type="radio" value="{{ shipping_method.handle }}" />
+                                        <input id="checkout_shipping_method_{{ shipping_method.handle }}" name="checkout[shipping_method_id]" selected="selected" type="radio" value="{{ shipping_method.handle }}" required="required" />
                                     {% else %}
-                                        <input id="checkout_shipping_method_{{ shipping_method.handle }}" name="checkout[shipping_method_id]" type="radio" value="{{ shipping_method.handle }}" />
+                                        <input id="checkout_shipping_method_{{ shipping_method.handle }}" name="checkout[shipping_method_id]" type="radio" value="{{ shipping_method.handle }}" required="required" />
                                     {% endif %}
                                     <div class="price" >
                                         <strong>
@@ -73,7 +73,7 @@
                                     <h3>{{ payment_method.Handle }}</h3>
                                 </div>
                                 <div class="box-footer">
-                                    <input id="checkout_payment_method_{{ payment_method.handle }}" name="checkout[payment_method_id]" type="radio" value="{{ payment_method.handle }}" />
+                                    <input id="checkout_payment_method_{{ payment_method.handle }}" name="checkout[payment_method_id]" type="radio" value="{{ payment_method.handle }}" required="required" />
                                 </div>
                             </div>
                         </div>

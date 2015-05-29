@@ -101,9 +101,9 @@
         formScope = form;
     }
 
-    $scope.bladeHeadIco = 'fa-usd';
+    $scope.blade.headIcon = 'fa-usd';
 
-    $scope.bladeToolbarCommands = [
+    $scope.blade.toolbarCommands = [
         {
             name: "Add", icon: 'fa fa-plus',
             executeMethod: function () {
@@ -153,7 +153,7 @@
     ];
 
     if (!$scope.blade.isApiSave) {
-        $scope.bladeToolbarCommands.splice(1, 1); // remove save button
+        $scope.blade.toolbarCommands.splice(1, 1); // remove save button
     }
 
     $scope.toggleAll = function () {

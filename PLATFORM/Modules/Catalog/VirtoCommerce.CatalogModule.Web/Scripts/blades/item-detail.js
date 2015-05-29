@@ -32,14 +32,14 @@
     //    }
     //};
 
-    $scope.codeValidator = function(value) {
+    $scope.codeValidator = function (value) {
         var pattern = /[$+;=%{}[\]|\\\/@ ~#!^*&()?:'<>,]/;
         return !pattern.test(value);
     };
 
     function isDirty() {
-    	var retVal = !angular.equals($scope.currentBlade.item, $scope.currentBlade.origItem);
-      	return retVal;
+        var retVal = !angular.equals($scope.currentBlade.item, $scope.currentBlade.origItem);
+        return retVal;
     };
 
     function saveChanges() {
@@ -93,7 +93,7 @@
         formScope = form;
     }
 
-    $scope.bladeToolbarCommands = [
+    $scope.blade.toolbarCommands = [
 	 {
 	     name: "Save", icon: 'fa fa-save',
 	     executeMethod: function () {
@@ -140,5 +140,5 @@
 
 
     $scope.currentBlade.refresh(false);
-    $scope.toolbarTemplate = "Modules/$(VirtoCommerce.Catalog)/Scripts/blades/item-detail-toolbar.tpl.html";
+    $scope.blade.toolbarCustomTemplates = ["Modules/$(VirtoCommerce.Catalog)/Scripts/blades/item-detail-toolbar.tpl.html"];
 }]);

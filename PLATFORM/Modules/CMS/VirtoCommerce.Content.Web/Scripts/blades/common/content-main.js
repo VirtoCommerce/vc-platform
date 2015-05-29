@@ -189,7 +189,7 @@
 		}
 	}
 
-	$scope.bladeHeadIco = 'fa fa-code';
+	$scope.blade.headIcon = 'fa fa-code';
 
 	blade.initialize();
 }]);
