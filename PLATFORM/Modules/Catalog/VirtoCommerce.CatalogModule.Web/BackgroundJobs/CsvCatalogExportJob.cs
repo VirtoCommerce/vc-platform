@@ -195,7 +195,7 @@ namespace VirtoCommerce.CatalogModule.Web.BackgroundJobs
 				var image  = product.Assets.Where(x=>x.Type == ItemAssetType.Image && x.Group == "primaryimage").FirstOrDefault();
 				if (image != null)
 				{
-					return image.Url ?? String.Empty;
+					return _blobUrlResolver.GetAbsoluteUrl(image.Url);
 				}
 				return String.Empty;
 			});
@@ -205,7 +205,7 @@ namespace VirtoCommerce.CatalogModule.Web.BackgroundJobs
 				var image = product.Assets.Where(x => x.Type == ItemAssetType.Image && x.Group != "primaryimage").FirstOrDefault();
 				if (image != null)
 				{
-					return image.Url ?? String.Empty;
+					return  _blobUrlResolver.GetAbsoluteUrl(image.Url);
 				}
 				return String.Empty;
 			});

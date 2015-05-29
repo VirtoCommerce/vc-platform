@@ -5,10 +5,10 @@ using VirtoCommerce.Domain.Marketing.Model;
 using VirtoCommerce.Domain.Marketing.Model.DynamicContent;
 using linq = System.Linq.Expressions;
 
-namespace VirtoCommerce.DynamicExpressionModule.Data.Content
+namespace VirtoCommerce.DynamicExpressionModule.Data.Common
 {
     //Browsing from a time zone -/+ offset from UTC 
-    public class ConditionGeoTimeZone : CompareConditionBase
+    public class ConditionGeoTimeZone : CompareConditionBase<EvaluationContextBase>
     {
         public ConditionGeoTimeZone()
             : base("GeoTimeZone")

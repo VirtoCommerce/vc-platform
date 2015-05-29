@@ -6,7 +6,7 @@ using System.Runtime.Serialization;
 using ExpressionSerialization;
 using System.Xml.Linq;
 
-namespace VirtoCommerce.MarketingModule.Data.Common
+namespace VirtoCommerce.CoreModule.Data.Common
 {
 	public static class SerializationUtil
 	{

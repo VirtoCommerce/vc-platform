@@ -7,7 +7,6 @@ using VirtoCommerce.CustomerModule.Web.Binders;
 using VirtoCommerce.Domain.Marketing.Model;
 using VirtoCommerce.Domain.Marketing.Services;
 using VirtoCommerce.MarketingModule.Data.Promotions;
-using VirtoCommerce.DynamicExpressionModule.Data.Promotion;
 using VirtoCommerce.MarketingModule.Web.Converters;
 using VirtoCommerce.Platform.Core.Security;
 using coreModel = VirtoCommerce.Domain.Marketing.Model;
@@ -38,7 +37,7 @@ namespace VirtoCommerce.MarketingModule.Web.Controllers.Api
 			var retVal = _promotionService.GetPromotionById(id);
 			if(retVal != null)
 			{
-				return Ok(retVal.ToWebModel(_marketingExtensionManager.PromotionDynamicExpressionTree as PromoDynamicExpressionTree)); 
+				return Ok(retVal.ToWebModel(_marketingExtensionManager.PromotionDynamicExpressionTree)); 
 			}
 			return NotFound();
 		}
@@ -53,7 +52,7 @@ namespace VirtoCommerce.MarketingModule.Web.Controllers.Api
             var retVal = new webModel.Promotion
             {
 				Type = typeof(DynamicPromotion).Name,
-				DynamicExpression = _marketingExtensionManager.PromotionDynamicExpressionTree as PromoDynamicExpressionTree,
+				DynamicExpression = _marketingExtensionManager.PromotionDynamicExpressionTree,
 				IsActive = true
             };
             return Ok(retVal);

@@ -36,6 +36,10 @@
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\packages\Newtonsoft.Json.6.0.8\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -96,8 +100,11 @@
     <Compile Include="Catalog\Services\ISkuGenerator.cs" />
     <Compile Include="Commerce\Model\SeoUrlKeyword.cs" />
     <Compile Include="Commerce\Model\SeoUrlKeywordTypes.cs" />
+    <Compile Include="Common\Expressions\ConditionExpressionTree.cs" />
+    <Compile Include="Common\Expressions\DynamicExpression.cs" />
     <Compile Include="Common\EvaluationContextBase.cs" />
-    <Compile Include="Common\IDynamicExpression.cs" />
+    <Compile Include="Common\Expressions\IConditionExpression.cs" />
+    <Compile Include="Common\Expressions\IDynamicExpression.cs" />
     <Compile Include="Common\IEvaluationContext.cs" />
     <Compile Include="Common\IWorkflowService.cs" />
     <Compile Include="Common\ObservableWorkflowService.cs" />
@@ -130,6 +137,8 @@
     <Compile Include="Marketing\Model\DynamicContent\DynamicContentPublication.cs" />
     <Compile Include="Marketing\Model\DynamicContent\Property.cs" />
     <Compile Include="Marketing\Model\DynamicContent\PropertyValueType.cs" />
+    <Compile Include="Marketing\Model\Promotions\Expression\IRewardExpression.cs" />
+    <Compile Include="Marketing\Model\Promotions\Expression\PromoDynamicExpressionTree.cs" />
     <Compile Include="Marketing\Model\Promotions\IMarketingEvent.cs" />
     <Compile Include="Marketing\Model\Promotions\DefaultOrderEventType.cs" />
     <Compile Include="Marketing\Model\Promotions\MarketingEvent.cs" />
@@ -155,7 +164,7 @@
     <Compile Include="Marketing\Services\IMarketingSearchService.cs" />
     <Compile Include="Marketing\Services\IPromotionService.cs" />
     <Compile Include="Marketing\Services\IMarketingExtensionManager.cs" />
-    <Compile Include="Marketing\Services\InMemoryExtensionManagerImpl.cs" />
+    <Compile Include="Marketing\Services\DefaultMarketingExtensionManagerImpl.cs" />
     <Compile Include="Order\Model\Address.cs" />
     <Compile Include="Order\Model\AddressType.cs" />
     <Compile Include="Order\Model\Coupon.cs" />
@@ -202,6 +211,8 @@
     <Compile Include="Pricing\Model\PriceEvaluationContext.cs" />
     <Compile Include="Pricing\Model\Pricelist.cs" />
     <Compile Include="Pricing\Model\PricelistAssignment.cs" />
+    <Compile Include="Pricing\Services\DefaultPricingExtensionManagerImpl.cs" />
+    <Compile Include="Pricing\Services\IPricingExtensionManager.cs" />
     <Compile Include="Pricing\Services\IPricingService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Search\Filters\AttributeFilter.cs" />
@@ -267,6 +278,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <None Include="packages.config" />
     <None Include="Search\Filters\Filters.cd" />
     <None Include="Search\Filters\Filters.xsd">
       <SubType>Designer</SubType>

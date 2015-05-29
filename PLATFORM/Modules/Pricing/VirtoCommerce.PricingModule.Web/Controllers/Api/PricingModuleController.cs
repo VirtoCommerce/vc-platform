@@ -10,6 +10,7 @@ using webModel = VirtoCommerce.PricingModule.Web.Model;
 using coreModel = VirtoCommerce.Domain.Pricing.Model;
 using VirtoCommerce.Domain.Catalog.Services;
 using VirtoCommerce.Platform.Core.Common;
+using VirtoCommerce.Domain.Common;
 
 namespace VirtoCommerce.PricingModule.Web.Controllers.Api
 {
@@ -20,8 +21,10 @@ namespace VirtoCommerce.PricingModule.Web.Controllers.Api
 		private readonly IPricingService _pricingService;
 		private readonly IItemService _itemService;
 		private readonly ICatalogService _catalogService;
-		public PricingModuleController(IPricingService pricingService, IItemService itemService, ICatalogService catalogService)
+		private readonly IPricingExtensionManager _extensionManager;
+		public PricingModuleController(IPricingService pricingService, IItemService itemService, ICatalogService catalogService, IPricingExtensionManager extensionManager)
 		{
+			_extensionManager = extensionManager;
 			_pricingService = pricingService;
 			_itemService = itemService;
 			_catalogService = catalogService;
@@ -38,7 +41,7 @@ namespace VirtoCommerce.PricingModule.Web.Controllers.Api
 			{
 				return NotFound();
 			}
-			return Ok(assignment.ToWebModel());
+			return Ok(assignment.ToWebModel(null, _extensionManager.ConditionExpressionTree as ConditionExpressionTree));
 		}
 
 		// GET: api/pricing/assignments
@@ -60,7 +63,7 @@ namespace VirtoCommerce.PricingModule.Web.Controllers.Api
 		public IHttpActionResult CreatePriceList(webModel.PricelistAssignment assignment)
 		{
 			var retVal = _pricingService.CreatePriceListAssignment(assignment.ToCoreModel());
-			return Ok(retVal.ToWebModel());
+			return Ok(retVal.ToWebModel(null, _extensionManager.ConditionExpressionTree));
 		}
 
 		// PUT: api/pricing/assignments

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Web;
 using VirtoCommerce.Domain.Marketing.Model;
 
-namespace VirtoCommerce.DynamicExpressionModule.Data.Promotion
+namespace VirtoCommerce.Domain.Marketing.Model
 {
 	public interface IRewardExpression
 	{

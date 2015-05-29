@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using VirtoCommerce.Domain.Common;
 using VirtoCommerce.Platform.Core.Common;
 namespace VirtoCommerce.PricingModule.Web.Model
 {
@@ -15,6 +16,6 @@ namespace VirtoCommerce.PricingModule.Web.Model
 		public int Priority { get; set; }
 		public DateTime? StartDate { get; set; }
 		public DateTime? EndDate { get; set; }
-		public string ConditionExpression { get; set; }
+		public ConditionExpressionTree DynamicExpression { get; set; }
 	}
 }

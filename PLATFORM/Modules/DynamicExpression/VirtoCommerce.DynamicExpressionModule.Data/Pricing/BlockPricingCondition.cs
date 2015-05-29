@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace VirtoCommerce.DynamicExpressionModule.Data.Common
+namespace VirtoCommerce.DynamicExpressionModule.Data.Pricing
 {
-	public class BlockContentCondition : BlockConditionAndOr
+	public class BlockPricingCondition : BlockConditionAndOr
 	{
 	}
 }

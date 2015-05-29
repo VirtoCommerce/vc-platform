@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using VirtoCommerce.DynamicExpressionModule.Data.Content;
+using VirtoCommerce.Domain.Common;
 using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.MarketingModule.Web.Model
@@ -22,6 +22,6 @@ namespace VirtoCommerce.MarketingModule.Web.Model
 		public ICollection<DynamicContentItem> ContentItems { get; set; }
 		public ICollection<DynamicContentPlace> ContentPlaces { get; set; }
 
-		public DynamicContentExpressionTree DynamicExpression { get; set; }
+		public ConditionExpressionTree DynamicExpression { get; set; }
 	}
 }
