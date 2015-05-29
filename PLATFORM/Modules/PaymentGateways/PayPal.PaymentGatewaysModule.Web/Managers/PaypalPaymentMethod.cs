@@ -2,6 +2,7 @@
 using PayPal.PayPalAPIInterfaceService.Model;
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Globalization;
 using System.Linq;
 using System.Text;
@@ -186,11 +187,22 @@ namespace PayPal.PaymentGatewaysModule.Web.Managers
 			return retVal;
 		}
 
-		public override ValidatePostProcessRequestResult ValidatePostProcessRequest(object context)
+		public override ValidatePostProcessRequestResult ValidatePostProcessRequest(NameValueCollection queryString)
 		{
 			var retVal = new ValidatePostProcessRequestResult();
 
-			var httpContext = context as HttpContext;
+			var cancel = queryString["cancel"];
+			var token = queryString["token"];
+
+			if(!string.IsNullOrEmpty(cancel) && !string.IsNullOrEmpty(token))
+			{
+				bool cancelValue;
+				if (bool.TryParse(cancel, out cancelValue))
+				{
+					retVal.IsSuccess = !cancelValue;
+					retVal.OuterId = token;
+				}
+			}
 
 			return retVal;
 		}

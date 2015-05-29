@@ -2,6 +2,7 @@
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Linq;
 using VirtoCommerce.Domain.Order.Model;
 using VirtoCommerce.Domain.Payment.Model;
@@ -14,8 +15,8 @@ namespace Klarna.PaymentGatewaysModule.Web.Managers
 		private const string _liveBaseUrl = "https://checkout.klarna.com/checkout/orders";
 		private const string _contentType = "application/vnd.klarna.checkout.aggregated-order-v2+json";
 
-        private const string _klarnaModeStoreSetting = "Klarna.Mode";
-        private const string _klarnaAppKeyStoreSetting = "Klarna.AppKey";
+		private const string _klarnaModeStoreSetting = "Klarna.Mode";
+		private const string _klarnaAppKeyStoreSetting = "Klarna.AppKey";
 		private const string _klarnaAppSecretStoreSetting = "Klarna.SecretKey";
 		private const string _klarnaTermsUrl = "Klarna.TermsUrl";
 		private const string _klarnaCheckoutUrl = "Klarna.CheckoutUrl";
@@ -30,7 +31,7 @@ namespace Klarna.PaymentGatewaysModule.Web.Managers
 		{
 			get
 			{
-                var retVal = GetSetting(_klarnaModeStoreSetting);
+				var retVal = GetSetting(_klarnaModeStoreSetting);
 				return retVal;
 			}
 		}
@@ -39,7 +40,7 @@ namespace Klarna.PaymentGatewaysModule.Web.Managers
 		{
 			get
 			{
-                var retVal = GetSetting(_klarnaAppKeyStoreSetting);
+				var retVal = GetSetting(_klarnaAppKeyStoreSetting);
 				return retVal;
 			}
 		}
@@ -48,7 +49,7 @@ namespace Klarna.PaymentGatewaysModule.Web.Managers
 		{
 			get
 			{
-                var retVal = GetSetting(_klarnaAppSecretStoreSetting);
+				var retVal = GetSetting(_klarnaAppSecretStoreSetting);
 				return retVal;
 			}
 		}
@@ -122,8 +123,8 @@ namespace Klarna.PaymentGatewaysModule.Web.Managers
 						{ "id", AppKey },
 						{ "terms_uri", string.Format("{0}/{1}", context.Store.Url, TermsUrl) },
 						{ "checkout_uri", string.Format("{0}/{1}", context.Store.Url, CheckoutUrl) },
-						{ "confirmation_uri", string.Format("{0}/{1}", context.Store.Url, ConfirmationUrl) + "?sid=123&klarna_order={checkout.order.uri}" },
-						{ "push_uri", string.Format("{0}/{1}", context.Store.Url, "admin/api/paymentcallback") + "?sid=123&klarna_order={checkout.order.uri}" },
+						{ "confirmation_uri", string.Format("{0}/{1}?sid=123&orderId={2}&", context.Store.Url, ConfirmationUrl, context.Order.Id) + "klarna_order={checkout.order.uri}" },
+						{ "push_uri", string.Format("{0}/{1}?sid=123&orderId={2}&", context.Store.Url, "admin/api/paymentcallback", context.Order.Id) + "klarna_order={checkout.order.uri}" },
 						{ "back_to_store_uri", context.Store.Url }
 					};
 
@@ -173,7 +174,49 @@ namespace Klarna.PaymentGatewaysModule.Web.Managers
 		{
 			var retVal = new PostProcessPaymentResult();
 
-			var paymentEvaluationContext = context as PostProcessPaymentEvaluationContext;
+			Uri resourceUri = new Uri(string.Format("https://checkout.testdrive.klarna.com/checkout/orders/{0}", context.OuterId));
+
+			var connector = Connector.Create(AppSecret);
+
+			Order order = new Order(connector, resourceUri)
+			{
+				ContentType = _contentType
+			};
+
+			order.Fetch();
+			var status = order.GetValue("status") as string;
+
+			if (status == "checkout_complete")
+			{
+				var data = new Dictionary<string, object> { { "status", "created" } };
+				order.Update(data);
+			}
+
+			var klarnaCart = order.GetValue("cart") as JObject;
+
+			retVal.IsSuccess = status == "checkout_complete";
+			retVal.NewPaymentStatus = retVal.IsSuccess ? PaymentStatus.Paid : PaymentStatus.Pending;
+			retVal.OrderId = context.Order.Id;
+
+			return retVal;
+		}
+
+		public override ValidatePostProcessRequestResult ValidatePostProcessRequest(NameValueCollection queryString)
+		{
+			var retVal = new ValidatePostProcessRequestResult();
+
+			var klarnaOrder = queryString["klarna_order"];
+			var sig = queryString["sig"];
+
+			if (!string.IsNullOrEmpty(klarnaOrder) && !string.IsNullOrEmpty(sig))
+			{
+				var outerId = klarnaOrder.Split('/').LastOrDefault();
+				if(!string.IsNullOrEmpty(outerId))
+				{
+					retVal.IsSuccess = true;
+					retVal.OuterId = outerId;
+				}
+			}
 
 			return retVal;
 		}
@@ -182,7 +225,7 @@ namespace Klarna.PaymentGatewaysModule.Web.Managers
 		{
 			var retVal = _testBaseUrl;
 
-			if(Mode.ToLower().Equals("live"))
+			if (Mode.ToLower().Equals("live"))
 			{
 				retVal = _liveBaseUrl;
 			}
@@ -255,11 +298,6 @@ namespace Klarna.PaymentGatewaysModule.Web.Managers
 			{
 				return localizations.FirstOrDefault(l => l.Currency == currency);
 			}
-		}
-
-		public override ValidatePostProcessRequestResult ValidatePostProcessRequest(object context)
-		{
-			throw new NotImplementedException();
 		}
 	}
 }
