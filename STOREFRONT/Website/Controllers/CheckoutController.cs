@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
@@ -273,6 +275,55 @@ namespace VirtoCommerce.Web.Controllers
             }
 
             return View("error");
+        }
+
+        //
+        // GET: /checkout/recalculateshippingmethod
+        [HttpGet]
+        public async Task<ActionResult> RecalculateShippingMethod(string id)
+        {
+            var checkout = await Service.GetCheckoutAsync();
+
+            var shippingMethods = await Service.GetShippingMethodsAsync(SiteContext.Current.Cart.Key);
+
+            if (shippingMethods != null)
+            {
+                checkout.ShippingMethod = shippingMethods.FirstOrDefault(sm => sm.Handle == id);
+
+                var locale = SiteContext.Current;
+
+                if (SiteContext.Current.Shop.Currency.Equals("GBP", StringComparison.OrdinalIgnoreCase) ||
+                    SiteContext.Current.Shop.Currency.Equals("USD", StringComparison.OrdinalIgnoreCase))
+                {
+
+                }
+
+                var culture = GetCultureInfoByCurrencyCode(SiteContext.Current.Shop.Currency);
+
+                checkout.StringifiedShippingPrice = checkout.ShippingPrice.ToString("C", culture);
+                checkout.StringifiedTotalPrice = checkout.TotalPrice.ToString("C", culture);
+            }
+
+            return Json(checkout);
+        }
+
+        private CultureInfo GetCultureInfoByCurrencyCode(string currencyCode)
+        {
+            var cultures = CultureInfo.GetCultures(CultureTypes.SpecificCultures);
+
+            var culture = CultureInfo.GetCultureInfo(SiteContext.Current.Shop.DefaultLanguage);
+
+            foreach (var ci in cultures)
+            {
+                var ri = new RegionInfo(ci.LCID);
+
+                if (ri.ISOCurrencySymbol == currencyCode)
+                {
+                    break;
+                }
+            }
+
+            return culture;
         }
     }
 }

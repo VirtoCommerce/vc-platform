@@ -7,9 +7,10 @@
     {{ '//ajax.aspnetcdn.com/ajax/jquery.validate/1.13.0/jquery.validate.min.js' | script_tag }}
     {{ '//ajax.aspnetcdn.com/ajax/mvc/5.1/jquery.validate.unobtrusive.min.js' | script_tag }}
     {{ '//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css' | stylesheet_tag }}
-    {{ 'shopify_common.js' | shopify_asset_url | script_tag }}
     {{ 'style.css' | asset_url | stylesheet_tag }}
     {{ '//fonts.googleapis.com/css?family=Lato' | stylesheet_tag }}
+    {{ 'shopify_common.js' | shopify_asset_url | script_tag }}
+    {{ 'virtocommerce.js' | shopify_asset_url | script_tag }}
     {{ content_for_header }}
     <script>
         $(function () {
@@ -26,7 +27,19 @@
             $("#checkout_zip").val("{{ checkout.shipping_address.zip }}");
             $("#checkout_phone").val("{{ checkout.shipping_address.phone }}");
             $("#shipping-methods .box").on("click", function () {
-                $(this).find("input").prop("checked", true);
+                var input = $(this).find("input");
+                input.prop("checked", true);
+                $.ajax({
+                    type: "GET",
+                    cache: false,
+                    url: VirtoCommerce.url("/checkout/recalculateshippingmethod?id=" + input.val()),
+                    success: function (jsonResponse) {
+                        if (jsonResponse) {
+                            $(".price-list li:eq(1) small").text(jsonResponse.stringified_shipping_price);
+                            $(".price-list li:eq(3) small").text(jsonResponse.stringified_total_price);
+                        }
+                    }
+                });
             });
             $("#payment-methods img").on("click", function () {
                 $(this).siblings("input").prop("checked", true);
