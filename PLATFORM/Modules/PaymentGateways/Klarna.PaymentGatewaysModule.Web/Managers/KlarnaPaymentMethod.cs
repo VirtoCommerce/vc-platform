@@ -193,6 +193,7 @@ namespace Klarna.PaymentGatewaysModule.Web.Managers
 				var data = new Dictionary<string, object> { { "status", "created" } };
 				order.Update(data);
 				order.Fetch();
+				status = order.GetValue("status") as string;
 			}
 
 			//if (status == "created")
@@ -235,7 +236,7 @@ namespace Klarna.PaymentGatewaysModule.Web.Managers
 			if (!string.IsNullOrEmpty(klarnaOrder) && !string.IsNullOrEmpty(sid))
 			{
 				var outerId = HttpUtility.UrlDecode(klarnaOrder).Split('/').LastOrDefault();
-				if(!string.IsNullOrEmpty(outerId))
+				if (!string.IsNullOrEmpty(outerId))
 				{
 					retVal.IsSuccess = true;
 					retVal.OuterId = outerId;
