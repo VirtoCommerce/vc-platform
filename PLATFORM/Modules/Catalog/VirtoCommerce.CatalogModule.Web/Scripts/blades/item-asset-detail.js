@@ -102,7 +102,7 @@
         window.prompt("Copy to clipboard: Ctrl+C, Enter", data.url);
     }
 
-    $scope.bladeToolbarCommands = [
+    $scope.blade.toolbarCommands = [
 
         {
             name: "Save", icon: 'fa fa-save',

@@ -44,7 +44,7 @@
             controller: 'virtoCommerce.catalogModule.catalogItemSelectController',
             template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/common/catalog-items-select.tpl.html',
             breadcrumbs: [],
-            bladeToolbarCommands: [
+            toolbarCommands: [
             {
                 name: "Add selected", icon: 'fa fa-plus',
                 executeMethod: function (blade) {
@@ -93,9 +93,9 @@
         });
     }
 
-    $scope.bladeHeadIco = 'fa-usd';
+    $scope.blade.headIcon = 'fa-usd';
 
-    $scope.bladeToolbarCommands = [
+    $scope.blade.toolbarCommands = [
     {
         name: "Add", icon: 'fa fa-plus',
         executeMethod: function () {

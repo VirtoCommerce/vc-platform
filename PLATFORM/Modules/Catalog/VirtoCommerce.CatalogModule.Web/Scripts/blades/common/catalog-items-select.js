@@ -17,7 +17,6 @@
         allowCheckingItem: true,
         allowCheckingCategory: false
     }, $scope.blade.options);
-    $scope.bladeToolbarCommands = $scope.blade.bladeToolbarCommands;
 
     $scope.selectedAll = false;
     $scope.selectedItem = null;
@@ -144,7 +143,7 @@
             controller: 'virtoCommerce.catalogModule.catalogItemSelectController',
             template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/common/catalog-items-select.tpl.html',
             options: $scope.options,
-            bladeToolbarCommands: $scope.blade.bladeToolbarCommands
+            toolbarCommands: $scope.blade.toolbarCommands
         };
 
 

@@ -136,7 +136,7 @@
 		return true;
 	}
 
-	$scope.bladeHeadIco = 'fa fa-archive';
+	$scope.blade.headIcon = 'fa fa-archive';
 
 	blade.getFlag = function (lang) {
 		switch (lang) {
@@ -163,7 +163,7 @@
 		}
 	}
 
-	$scope.bladeToolbarCommands = [
+	$scope.blade.toolbarCommands = [
         {
         	name: "Add page", icon: 'fa fa-plus',
         	executeMethod: function () {

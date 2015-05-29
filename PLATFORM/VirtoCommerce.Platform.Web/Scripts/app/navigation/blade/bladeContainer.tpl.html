@@ -30,15 +30,15 @@
                 </ul>
             </div>
             <div class="blade-t" ng-class="{'__secondary': blade.subtitle}">
-                <i class="blade-t_ico fa {{bladeHeadIco == 'fa fa-user' ? '__customers' : ''}}" ng-class="bladeHeadIco ? bladeHeadIco : 'fa-folder'">
-                    <i ng-if="bladeHeadIco == 'fa fa-user'"></i>
+                <i class="blade-t_ico fa {{blade.headIcon == 'fa fa-user' ? '__customers' : ''}}" ng-class="blade.headIcon ? blade.headIcon : 'fa-folder'">
+                    <i ng-if="blade.headIcon == 'fa fa-user'"></i>
                 </i>
                 <p class="blade-t_head" ng-if="blade.title" ng-bind="blade.title"></p>
                 <p class="blade-t_subhead" ng-if="blade.subtitle" ng-bind="blade.subtitle"></p>
             </div>
             <div class="blade-toolbar">
                 <ul class="menu __inline">
-                    <li class="menu-item" ng-class="{'__disabled': !toolbarCommand.canExecuteMethod()}" ng-click='executeCommand(toolbarCommand)' ng-repeat="toolbarCommand in bladeToolbarCommands" va-permission="{{toolbarCommand.permission}}">
+                    <li class="menu-item" ng-class="{'__disabled': !toolbarCommand.canExecuteMethod()}" ng-click='executeCommand(toolbarCommand)' ng-repeat="toolbarCommand in resolvedToolbarCommands" va-permission="{{toolbarCommand.permission}}">
                         <button class="menu-btn" ng-disabled="!toolbarCommand.canExecuteMethod()">
                             <i class="menu-ico" ng-class="toolbarCommand.icon"></i>
                             {{toolbarCommand.name}}
@@ -46,7 +46,9 @@
                     </li>
                 </ul>
             </div>
-            <ng-include src="toolbarTemplate" />            
+            <ul class="menu __inline">
+                <li class="menu-item" ng-include="toolbarCustomTemplate" ng-repeat="toolbarCustomTemplate in resolvedToolbarCustomTemplates"></li>
+            </ul>
         </header>
         <div class="loader" ng-show="blade.isLoading">
             <span></span>

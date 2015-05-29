@@ -27,7 +27,7 @@ namespace VirtoCommerce.Domain.Catalog.Services
 			res.Append("-");
 			for (int i = 0; i < 8; i++)
 			{
-				res.Append(digitPart[rnd.Next(leterPart.Length)]);
+				res.Append(digitPart[rnd.Next(digitPart.Length)]);
 			}
 			return res.ToString();
 		}

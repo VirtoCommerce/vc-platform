@@ -97,9 +97,9 @@ function ($scope, order_res_customerOrders, bladeNavigationService, dialogServic
         });
     }
 
-    $scope.bladeHeadIco = 'fa-file-text';
+    $scope.blade.headIcon = 'fa-file-text';
 
-    $scope.bladeToolbarCommands = [
+    $scope.blade.toolbarCommands = [
           {
               name: "Refresh", icon: 'fa fa-refresh',
               executeMethod: function () {

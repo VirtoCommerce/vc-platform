@@ -25,7 +25,7 @@
         bladeNavigationService.showBlade(newBlade, $scope.blade);
     }
 
-    $scope.bladeHeadIco = 'fa fa-lock';
+    $scope.blade.headIcon = 'fa fa-lock';
 
     initializeBlade();
 }]);

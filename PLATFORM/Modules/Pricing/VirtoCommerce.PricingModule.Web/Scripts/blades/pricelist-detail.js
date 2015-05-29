@@ -83,11 +83,11 @@
             });
         }
 
-        $scope.bladeHeadIco = 'fa-anchor';
+        $scope.blade.headIcon = 'fa-anchor';
 
         function initializeToolbar() {
             if (!$scope.blade.isNew) {
-                $scope.bladeToolbarCommands = [
+                $scope.blade.toolbarCommands = [
                     {
                         name: "Save",
                         icon: 'fa fa-save',

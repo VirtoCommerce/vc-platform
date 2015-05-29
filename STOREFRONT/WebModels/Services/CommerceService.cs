@@ -329,125 +329,109 @@ namespace VirtoCommerce.Web.Models.Services
             return cart != null ? cart.AsWebModel() : null;
         }
 
-        public async Task<Checkout> GetCheckoutAsync(SiteContext context)
+        public async Task<Checkout> GetCheckoutAsync()
         {
             var checkout = new Checkout();
 
-            var dtoCart = await _cartClient.GetCartAsync(context.StoreId, context.CustomerId);
+            var dtoCart = await _cartClient.GetCartAsync(SiteContext.Current.StoreId, SiteContext.Current.CustomerId);
+
             if (dtoCart != null)
             {
-                if (dtoCart.Addresses != null)
+                checkout = dtoCart.AsCheckoutWebModel();
+
+                if (HttpContext.Current.User.Identity.IsAuthenticated)
                 {
-                    var billingAddress = dtoCart.Addresses.FirstOrDefault(a => a.Type == AddressType.Billing);
-                    if (billingAddress != null)
+                    checkout.GuestLogin = false;
+                    checkout.Email = SiteContext.Current.Customer.Email;
+                }
+                else
+                {
+                    checkout.GuestLogin = true;
+
+                    var addressWithEmail = dtoCart.Addresses != null ?
+                        dtoCart.Addresses.FirstOrDefault(a => !string.IsNullOrEmpty(a.Email)) : null;
+
+                    if (addressWithEmail != null)
                     {
-                        checkout.BillingAddress = billingAddress.AsCartWebModel();
+                        checkout.Email = addressWithEmail.Email;
                     }
-
-                    var shippingAddress = dtoCart.Addresses.FirstOrDefault(a => a.Type == AddressType.Shipping);
-                    if (shippingAddress != null)
-                    {
-                        checkout.ShippingAddress = shippingAddress.AsCartWebModel();
-                    }
-
-                    checkout.BuyerAcceptsMarketing = true; // TODO
-                    checkout.Currency = dtoCart.Currency;
-                    checkout.CustomerId = dtoCart.CustomerId;
-
-                    // TODO: Discounts
-                    // TODO: GiftCards
-
-                    if (context.Customer != null)
-                    {
-                        checkout.Email = context.Customer.Email;
-                    }
-                    else
-                    {
-                        var firstAddress = dtoCart.Addresses.FirstOrDefault();
-
-                        if (firstAddress != null)
-                        {
-                            checkout.Email = firstAddress.Email;
-                        }
-                    }
-
-                    checkout.GuestLogin = dtoCart.IsAnonymous;
-                    checkout.Id = dtoCart.Id;
-
-                    if (dtoCart.Items != null)
-                    {
-                        checkout.LineItems = new List<LineItem>();
-                        foreach (var dtoItem in dtoCart.Items)
-                        {
-                            checkout.LineItems.Add(dtoItem.AsWebModel());
-                        }
-                    }
-
-                    checkout.Name = dtoCart.Name;
-                    checkout.Note = dtoCart.Note;
-                    checkout.Order = null; // TODO
-
-                    if (dtoCart.Payments != null)
-                    {
-                        var dtoPayment = dtoCart.Payments.FirstOrDefault();
-                        if (dtoPayment != null)
-                        {
-                            checkout.PaymentMethod = new PaymentMethod
-                            {
-                                Handle = dtoPayment.PaymentGatewayCode
-                            };
-                        }
-                    }
-
-                    var dtoPaymentMethods = await _cartClient.GetCartPaymentMethods(dtoCart.Id);
-                    if (dtoPaymentMethods != null)
-                    {
-                        checkout.PaymentMethods = new List<PaymentMethod>();
-
-                        foreach (var dtoPaymentMethod in dtoPaymentMethods)
-                        {
-                            checkout.PaymentMethods.Add(new PaymentMethod
-                            {
-                                Handle = dtoPaymentMethod.GatewayCode
-                            });
-                        }
-                    }
-
-                    if (dtoCart.Shipments != null)
-                    {
-                        var dtoShipment = dtoCart.Shipments.FirstOrDefault();
-                        if (dtoShipment != null)
-                        {
-                            checkout.ShippingMethod = new ShippingMethod
-                            {
-                                Handle = dtoShipment.ShipmentMethodCode,
-                                Price = dtoShipment.ShippingPrice,
-                                Title = dtoShipment.ShipmentMethodCode
-                            };
-                        }
-                    }
-
-                    var dtoShippingMethods = await _cartClient.GetCartShippingMethods(dtoCart.Id);
-                    if (dtoShippingMethods != null)
-                    {
-                        checkout.ShippingMethods = new List<ShippingMethod>();
-                        foreach (var dtoShippingMethod in dtoShippingMethods)
-                        {
-                            checkout.ShippingMethods.Add(new ShippingMethod
-                            {
-                                Handle = dtoShippingMethod.ShipmentMethodCode,
-                                Price = dtoShippingMethod.Price,
-                                Title = dtoShippingMethod.Name
-                            });
-                        }
-                    }
-
-                    // TODO: TaxLines
-                    // TODO: Transactions
                 }
             }
 
             return checkout;
+        }
+
+        public async Task<ICollection<ShippingMethod>> GetShippingMethodsAsync(string cartId)
+        {
+            ICollection<ShippingMethod> shippingMethodModels = null;
+
+            var shippingMethods = await _cartClient.GetCartShippingMethods(cartId);
+
+            if (shippingMethods != null)
+            {
+                shippingMethodModels = new List<ShippingMethod>();
+                foreach (var shippingMethod in shippingMethods)
+                {
+                    shippingMethodModels.Add(new ShippingMethod
+                    {
+                        Handle = shippingMethod.ShipmentMethodCode,
+                        Price = shippingMethod.Price,
+                        Title = shippingMethod.Name
+                    });
+                }
+            }
+
+            return shippingMethodModels;
+        }
+
+        public async Task<ICollection<PaymentMethod>> GetPaymentMethodsAsync(string cartId)
+        {
+            ICollection<PaymentMethod> paymentMethodModels = null;
+
+            var paymentMethods = await _cartClient.GetCartPaymentMethods(cartId);
+
+            if (paymentMethods != null)
+            {
+                paymentMethodModels = new List<PaymentMethod>();
+                foreach (var paymentMethod in paymentMethods)
+                {
+                    paymentMethodModels.Add(new PaymentMethod
+                    {
+                        Handle = paymentMethod.GatewayCode,
+                        IconUrl = paymentMethod.IconUrl,
+                        Title = paymentMethod.Name
+                    });
+                }
+            }
+
+            return paymentMethodModels;
+        }
+
+        public async Task UpdateCheckoutAsync(Checkout checkout)
+        {
+            var cart = await _cartClient.GetCartAsync(SiteContext.Current.StoreId, SiteContext.Current.CustomerId);
+
+            if (cart != null)
+            {
+                checkout.AsServiceModel(ref cart);
+            }
+
+            await _cartClient.UpdateCurrentCartAsync(cart);
+        }
+
+        public async Task<VirtoCommerce.ApiClient.DataContracts.Orders.CustomerOrder> CreateOrderAsync()
+        {
+            VirtoCommerce.ApiClient.DataContracts.Orders.CustomerOrder order = null;
+
+            var cart = await _cartClient.GetCartAsync(SiteContext.Current.StoreId, SiteContext.Current.CustomerId);
+
+            if (cart != null)
+            {
+                order = await _orderClient.CreateOrderAsync(cart.Id);
+                await DeleteCartAsync(cart.Id);
+            }
+
+            return order;
         }
 
         public async Task<ProcessPaymentResult> ProcessPaymentAsync(string orderId, string paymentMethodId)
@@ -458,135 +442,6 @@ namespace VirtoCommerce.Web.Models.Services
         public async Task<PostProcessPaymentResult> PostPaymentProcessAsync(string orderId, string token, bool cancel)
         {
             return await _orderClient.PostPaymentProcess(orderId, token, cancel);
-        }
-
-        public async Task UpdateCheckoutAsync(SiteContext context, Checkout checkout)
-        {
-            var dtoCart = await _cartClient.GetCartAsync(context.StoreId, context.CustomerId);
-
-            dtoCart.Addresses = new List<VirtoCommerce.ApiClient.DataContracts.Cart.Address>();
-
-            if (checkout.BillingAddress != null)
-            {
-                var billingAddress = checkout.BillingAddress.AsCartServiceModel();
-                billingAddress.Email = checkout.Email;
-                billingAddress.Type = AddressType.Billing;
-                dtoCart.Addresses.Add(billingAddress);
-            }
-            if (checkout.ShippingAddress != null)
-            {
-                var shippingAddress = checkout.ShippingAddress.AsCartServiceModel();
-                shippingAddress.Email = checkout.Email;
-                shippingAddress.Type = AddressType.Shipping;
-                dtoCart.Addresses.Add(shippingAddress);
-            }
-
-            dtoCart.Currency = checkout.Currency;
-            dtoCart.CustomerId = checkout.CustomerId;
-
-            // TODO: Discounts
-            // TODO: GiftCards
-
-            if (checkout.LineItems != null)
-            {
-                dtoCart.Items = new List<CartItem>();
-                foreach (var lineItem in checkout.LineItems)
-                {
-                    dtoCart.Items.Add(lineItem.AsServiceModel());
-                }
-            }
-
-            dtoCart.Note = checkout.Note;
-
-            if (checkout.PaymentMethod != null)
-            {
-                dtoCart.Payments = new List<Payment>();
-                dtoCart.Payments.Add(new Payment
-                {
-                    PaymentGatewayCode = checkout.PaymentMethod.Handle
-                });
-            }
-
-            dtoCart.StoreId = context.StoreId;
-
-            dtoCart.ShippingTotal = checkout.ShippingPrice;
-            dtoCart.SubTotal = checkout.SubtotalPrice;
-            dtoCart.TaxTotal = checkout.TaxPrice;
-            dtoCart.Total = checkout.TotalPrice;
-
-            await _cartClient.UpdateCurrentCartAsync(dtoCart);
-        }
-
-        public async Task<VirtoCommerce.ApiClient.DataContracts.Orders.CustomerOrder> CreateOrderAsync(SiteContext context, Checkout checkout)
-        {
-            var dtoCart = await _cartClient.GetCartAsync(context.StoreId, context.CustomerId);
-            dtoCart.Currency = checkout.Currency;
-            dtoCart.CustomerId = checkout.CustomerId;
-
-            dtoCart.Addresses = new List<ApiClient.DataContracts.Cart.Address>();
-
-            var billingAddress = checkout.BillingAddress.AsCartServiceModel();
-            billingAddress.Email = checkout.Email;
-            billingAddress.Type = AddressType.Billing;
-            dtoCart.Addresses.Add(billingAddress);
-
-            var shippingAddress = checkout.ShippingAddress.AsCartServiceModel();
-            shippingAddress.Email = checkout.Email;
-            shippingAddress.Type = AddressType.Shipping;
-            dtoCart.Addresses.Add(shippingAddress);
-
-            if (checkout.Discounts != null)
-            {
-                foreach (var discount in checkout.Discounts)
-                {
-                    dtoCart.Discounts.Add(new ApiClient.DataContracts.Cart.Discount
-                    {
-                        Coupon = new ApiClient.DataContracts.Cart.Coupon { CouponCode = discount.Code },
-                        Currency = dtoCart.Currency,
-                        DiscountAmount = discount.Amount,
-                        Description = discount.Code
-                    });
-                }
-            }
-
-            dtoCart.Items.Clear();
-            foreach (var lineItem in checkout.LineItems)
-            {
-                dtoCart.Items.Add(lineItem.AsServiceModel());
-            }
-
-            dtoCart.Payments.Add(new ApiClient.DataContracts.Cart.Payment
-            {
-                Amount = checkout.TotalPrice,
-                BillingAddress = checkout.BillingAddress.AsCartServiceModel(),
-                Currency = dtoCart.Currency,
-                PaymentGatewayCode = checkout.PaymentMethod.Handle,
-                OuterId = "", // TODO!!!
-            });
-
-            dtoCart.Shipments.Add(new ApiClient.DataContracts.Cart.Shipment
-            {
-                Currency = dtoCart.Currency,
-                RecipientAddress = checkout.ShippingAddress.AsCartServiceModel(),
-                ShipmentMethodCode = checkout.ShippingMethod.Handle,
-                ShippingPrice = checkout.ShippingPrice
-            });
-
-            //var shippingAddress = checkout.ShippingAddress.AsCartServiceModel();
-            //shippingAddress.Email = checkout.Email;
-
-            dtoCart.ShippingTotal = checkout.ShippingPrice;
-            dtoCart.SubTotal = checkout.SubtotalPrice;
-            dtoCart.TaxTotal = checkout.TaxPrice;
-            dtoCart.Total = checkout.TotalPrice;
-
-            dtoCart = await _cartClient.UpdateCurrentCartAsync(dtoCart);
-
-            var order = await _orderClient.CreateOrderAsync(dtoCart.Id);
-
-            await DeleteCartAsync(dtoCart.Id);
-
-            return order;
         }
 
         public SubmitForm GetForm(SiteContext context, string id)

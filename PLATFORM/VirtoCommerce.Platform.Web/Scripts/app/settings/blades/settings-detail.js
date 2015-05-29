@@ -98,8 +98,8 @@
         });
     }
 
-    $scope.bladeHeadIco = 'fa fa-wrench';
-    $scope.bladeToolbarCommands = [
+    $scope.blade.headIcon = 'fa fa-wrench';
+    $scope.blade.toolbarCommands = [
         {
             name: "Save", icon: 'fa fa-save',
             executeMethod: function () {

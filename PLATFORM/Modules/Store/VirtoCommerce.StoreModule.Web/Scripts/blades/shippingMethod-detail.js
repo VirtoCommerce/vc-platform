@@ -1,6 +1,6 @@
 ﻿angular.module('virtoCommerce.storeModule')
 .controller('virtoCommerce.storeModule.shippingMethodDetailController', ['$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', function ($scope, bladeNavigationService, dialogService) {
-    
+
     function initializeBlade(data) {
         $scope.blade.currentEntityId = data.id;
         $scope.blade.title = data.name;
@@ -27,10 +27,10 @@
         $scope.formScope = form;
     }
 
-    $scope.bladeHeadIco = 'fa fa-archive';
-    $scope.toolbarTemplate = 'Modules/$(VirtoCommerce.Store)/Scripts/blades/toolbar-isActive.tpl.html';
+    $scope.blade.headIcon = 'fa fa-archive';
+    $scope.blade.toolbarCustomTemplates = ['Modules/$(VirtoCommerce.Store)/Scripts/blades/toolbar-isActive.tpl.html'];
 
-    $scope.bladeToolbarCommands = [
+    $scope.blade.toolbarCommands = [
         {
             name: "Reset",
             icon: 'fa fa-undo',

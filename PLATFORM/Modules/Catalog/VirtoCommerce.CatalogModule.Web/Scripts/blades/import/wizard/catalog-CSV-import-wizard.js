@@ -7,7 +7,7 @@
 
 
 	$scope.columnDelimiters = [
-        { name: "Auto", value: "?" },
+        { name: "Space", value: " " },
         { name: "Comma", value: "," },
         { name: "Semicolon", value: ";" },
         { name: "Tab", value: "\t" }

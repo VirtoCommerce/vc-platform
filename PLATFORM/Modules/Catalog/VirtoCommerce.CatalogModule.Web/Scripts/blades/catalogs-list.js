@@ -153,7 +153,7 @@ function ($injector, $rootScope, $scope, catalogs, bladeNavigationService, dialo
 
 
 
-	$scope.bladeToolbarCommands = [
+	$scope.blade.toolbarCommands = [
         {
         	name: "Manage", icon: 'fa fa-edit',
         	executeMethod: function () {
@@ -178,7 +178,7 @@ function ($injector, $rootScope, $scope, catalogs, bladeNavigationService, dialo
 	];
 
 	if (authService.checkPermission('catalog:catalogs:manage') || authService.checkPermission('catalog:virtual_catalogs:manage')) {
-		$scope.bladeToolbarCommands.splice(0, 0, {
+		$scope.blade.toolbarCommands.splice(0, 0, {
 			name: "Add",
 			icon: 'fa fa-plus',
 			executeMethod: function () {

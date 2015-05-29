@@ -51,7 +51,7 @@
         $scope.formScope = form;
     }
 
-    $scope.bladeHeadIco = 'fa-lock';
+    $scope.blade.headIcon = 'fa-lock';
 
     // actions on load
     initializeBlade();

@@ -17,9 +17,9 @@
         });
     }
 
-    $scope.bladeHeadIco = 'fa-lock';
+    $scope.blade.headIcon = 'fa-lock';
 
-    $scope.bladeToolbarCommands = [
+    $scope.blade.toolbarCommands = [
            {
                name: "Manage roles", icon: 'fa fa-edit',
                executeMethod: function () {

@@ -26,9 +26,9 @@
         });
     };
 
-    $scope.bladeHeadIco = 'fa-shopping-cart';
+    $scope.blade.headIcon = 'fa-shopping-cart';
 
-    $scope.bladeToolbarCommands = [
+    $scope.blade.toolbarCommands = [
         {
             name: "Save", icon: 'fa fa-save',
             executeMethod: function () {

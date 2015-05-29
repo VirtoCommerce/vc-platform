@@ -8,5 +8,11 @@ namespace VirtoCommerce.Web.Models
     {
         [DataMember]
         public string Handle { get; set; }
+
+        [DataMember]
+        public string IconUrl { get; set; }
+
+        [DataMember]
+        public string Title { get; set; }
     }
 }

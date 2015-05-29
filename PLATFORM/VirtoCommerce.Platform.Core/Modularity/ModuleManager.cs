@@ -115,31 +115,39 @@ namespace VirtoCommerce.Platform.Core.Modularity
             this.LoadModuleTypes(modulesToLoad);
         }
 
-		/// <summary>
-		/// Returns the list of registered <see cref="IModuleTypeLoader"/> instances that will be 
-		/// used to load the types of modules. 
-		/// </summary>
-		/// <value>The module type loaders.</value>
-		public virtual IEnumerable<IModuleTypeLoader> ModuleTypeLoaders
-		{
-			get
-			{
-				if (this.typeLoaders == null)
-				{
-					this.typeLoaders = new List<IModuleTypeLoader>
+        public void PostInitializeModule(ModuleInfo moduleInfo)
+        {
+            if (moduleInfo == null)
+                throw new ArgumentNullException("moduleInfo");
+
+            moduleInitializer.PostInitialize(moduleInfo);
+        }
+
+        /// <summary>
+        /// Returns the list of registered <see cref="IModuleTypeLoader"/> instances that will be 
+        /// used to load the types of modules. 
+        /// </summary>
+        /// <value>The module type loaders.</value>
+        public virtual IEnumerable<IModuleTypeLoader> ModuleTypeLoaders
+        {
+            get
+            {
+                if (this.typeLoaders == null)
+                {
+                    this.typeLoaders = new List<IModuleTypeLoader>
                                           {
                                               new FileModuleTypeLoader()
                                           };
-				}
+                }
 
-				return this.typeLoaders;
-			}
+                return this.typeLoaders;
+            }
 
-			set
-			{
-				this.typeLoaders = value;
-			}
-		}
+            set
+            {
+                this.typeLoaders = value;
+            }
+        }
 
         /// <summary>
         /// Checks if the module needs to be retrieved before it's initialized.
@@ -148,7 +156,8 @@ namespace VirtoCommerce.Platform.Core.Modularity
         /// <returns></returns>
         protected virtual bool ModuleNeedsRetrieval(ModuleInfo moduleInfo)
         {
-            if (moduleInfo == null) throw new ArgumentNullException("moduleInfo");
+            if (moduleInfo == null)
+                throw new ArgumentNullException("moduleInfo");
 
             if (moduleInfo.State == ModuleState.NotStarted)
             {
@@ -223,7 +232,7 @@ namespace VirtoCommerce.Platform.Core.Modularity
                     }
                 }
             }
-        }        
+        }
 
         private void BeginRetrievingModule(ModuleInfo moduleInfo)
         {
@@ -276,7 +285,7 @@ namespace VirtoCommerce.Platform.Core.Modularity
 
         /// <summary>
         /// Handles any exception occurred in the module typeloading process,
-        /// logs the error using the <see cref="ILoggerFacade"/> and throws a <see cref="ModuleTypeLoadingException"/>.
+        /// logs the error using the <see cref="ILog"/> and throws a <see cref="ModuleTypeLoadingException"/>.
         /// This method can be overridden to provide a different behavior. 
         /// </summary>
         /// <param name="moduleInfo">The module metadata where the error happenened.</param>
@@ -285,7 +294,8 @@ namespace VirtoCommerce.Platform.Core.Modularity
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", MessageId = "1")]
         protected virtual void HandleModuleTypeLoadingError(ModuleInfo moduleInfo, Exception exception)
         {
-            if (moduleInfo == null) throw new ArgumentNullException("moduleInfo");
+            if (moduleInfo == null)
+                throw new ArgumentNullException("moduleInfo");
 
             ModuleTypeLoadingException moduleTypeLoadingException = exception as ModuleTypeLoadingException;
 
