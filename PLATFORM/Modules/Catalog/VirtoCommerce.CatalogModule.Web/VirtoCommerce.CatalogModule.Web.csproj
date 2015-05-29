@@ -260,6 +260,7 @@
     <Content Include="Scripts\widgets\editorialReviewWidget.js" />
     <Content Include="Scripts\widgets\editorialReviewWidget.tpl.html" />
     <Content Include="Scripts\widgets\itemAssociationsWidget.js" />
+    <Content Include="Scripts\widgets\dashboard.js" />
     <Content Include="Scripts\widgets\seoWidget.js" />
     <Content Include="Scripts\widgets\itemAssociationsWidget.tpl.html" />
     <Content Include="Scripts\widgets\seoWidget.tpl.html" />
