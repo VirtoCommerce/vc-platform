@@ -41,7 +41,7 @@ namespace VirtoCommerce.PricingModule.Web.Controllers.Api
 			{
 				return NotFound();
 			}
-			return Ok(assignment.ToWebModel(null, _extensionManager.ConditionExpressionTree as ConditionExpressionTree));
+			return Ok(assignment.ToWebModel(null, _extensionManager.ConditionExpressionTree));
 		}
 
 		// GET: api/pricing/assignments
@@ -54,6 +54,21 @@ namespace VirtoCommerce.PricingModule.Web.Controllers.Api
 			var retVal = Ok(assignments.Select(x => x.ToWebModel()).ToArray());
 			return retVal;
 		}
+
+		// GET: api/pricing/assignments/new
+		[HttpGet]
+		[ResponseType(typeof(webModel.PricelistAssignment))]
+		[Route("api/pricing/assignments/new")]
+		public IHttpActionResult GetNewPricelistAssignments()
+		{
+			var retVal = new webModel.PricelistAssignment
+			{
+				DynamicExpression = _extensionManager.ConditionExpressionTree
+			};
+			return Ok(retVal);
+		}
+
+	
 
 		// POST: api/pricing/assignments
 		[HttpPost]
