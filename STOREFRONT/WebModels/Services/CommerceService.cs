@@ -24,6 +24,7 @@ using VirtoCommerce.Web.Views.Engines.Liquid;
 using VirtoCommerce.ApiClient.DataContracts.Cart;
 using VirtoCommerce.ApiClient.DataContracts.Marketing;
 using VirtoCommerce.ApiClient.DataContracts.Contents;
+using System.Collections.Specialized;
 
 #endregion
 
@@ -440,9 +441,9 @@ namespace VirtoCommerce.Web.Models.Services
             return await _orderClient.ProcessPayment(orderId, paymentMethodId);
         }
 
-        public async Task<PostProcessPaymentResult> PostPaymentProcessAsync(string orderId, string token, bool cancel)
+        public async Task<PostProcessPaymentResult> PostPaymentProcessAsync(string requestUrl)
         {
-            return await _orderClient.PostPaymentProcess(orderId, token, cancel);
+            return await _orderClient.PostPaymentProcess(requestUrl);
         }
 
         public SubmitForm GetForm(SiteContext context, string id)

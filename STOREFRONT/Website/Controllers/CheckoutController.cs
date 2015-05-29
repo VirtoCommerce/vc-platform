@@ -247,30 +247,21 @@ namespace VirtoCommerce.Web.Controllers
         [HttpGet]
         public async Task<ActionResult> ExternalPaymentCallback()
         {
-            bool cancel;
-            if (bool.TryParse(HttpContext.Request.QueryString["cancel"], out cancel))
+            var postPaymentResult = await Service.PostPaymentProcessAsync(HttpContext.Request.Url.AbsoluteUri);
+
+            if (postPaymentResult != null)
             {
-                string orderId = HttpContext.Request.QueryString["orderId"];
-                string token = HttpContext.Request.QueryString["token"];
-                string payerId = HttpContext.Request.QueryString["payerId"];
-
-                if (!string.IsNullOrEmpty(orderId) && !string.IsNullOrEmpty(token) && !string.IsNullOrEmpty(payerId))
+                if (postPaymentResult.IsSuccess)
                 {
-                    var postPaymentResult = await Service.PostPaymentProcessAsync(orderId, token, cancel);
+                    string orderId = HttpContext.Request.QueryString["orderId"];
 
-                    if (postPaymentResult != null)
-                    {
-                        if (postPaymentResult.IsSuccess)
-                        {
-                            Context.Order = await CustomerService.GetOrderAsync(Context.StoreId, Context.CustomerId, orderId);
-                            return View("thanks_page");
-                        }
-                        else
-                        {
-                            Context.ErrorMessage = postPaymentResult.Error;
-                            return View("error");
-                        }
-                    }
+                    Context.Order = await CustomerService.GetOrderAsync(Context.StoreId, Context.CustomerId, orderId);
+                    return View("thanks_page");
+                }
+                else
+                {
+                    Context.ErrorMessage = postPaymentResult.Error;
+                    return View("error");
                 }
             }
 

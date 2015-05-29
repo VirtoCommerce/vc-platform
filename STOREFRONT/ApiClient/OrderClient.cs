@@ -72,13 +72,11 @@ namespace VirtoCommerce.ApiClient
                 useCache: false);
         }
 
-        public Task<PostProcessPaymentResult> PostPaymentProcess(string orderId, string token, bool cancel)
+        public Task<PostProcessPaymentResult> PostPaymentProcess(string requestUrl)
         {
             var parameters = new
             {
-                orderId = orderId,
-                token = token,
-                cancel = cancel
+                requestUrl = requestUrl
             };
 
             return GetAsync<PostProcessPaymentResult>(
