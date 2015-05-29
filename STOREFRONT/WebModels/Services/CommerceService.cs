@@ -441,9 +441,9 @@ namespace VirtoCommerce.Web.Models.Services
             return await _orderClient.ProcessPayment(orderId, paymentMethodId);
         }
 
-        public async Task<PostProcessPaymentResult> PostPaymentProcessAsync(string requestUrl)
+        public async Task<PostProcessPaymentResult> PostPaymentProcessAsync(ICollection<KeyValuePair<string, string>> parameters)
         {
-            return await _orderClient.PostPaymentProcess(requestUrl);
+            return await _orderClient.PostPaymentProcess(parameters);
         }
 
         public SubmitForm GetForm(SiteContext context, string id)

@@ -247,7 +247,14 @@ namespace VirtoCommerce.Web.Controllers
         [HttpGet]
         public async Task<ActionResult> ExternalPaymentCallback()
         {
-            var postPaymentResult = await Service.PostPaymentProcessAsync(HttpContext.Request.Url.AbsoluteUri);
+            var parameters = new List<KeyValuePair<string, string>>();
+
+            foreach (var key in HttpContext.Request.QueryString.AllKeys)
+            {
+                parameters.Add(new KeyValuePair<string, string>(key, HttpContext.Request.QueryString[key]));
+            }
+
+            var postPaymentResult = await Service.PostPaymentProcessAsync(parameters);
 
             if (postPaymentResult != null)
             {
