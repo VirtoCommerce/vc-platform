@@ -290,14 +290,6 @@ namespace VirtoCommerce.Web.Controllers
             {
                 checkout.ShippingMethod = shippingMethods.FirstOrDefault(sm => sm.Handle == id);
 
-                var locale = SiteContext.Current;
-
-                if (SiteContext.Current.Shop.Currency.Equals("GBP", StringComparison.OrdinalIgnoreCase) ||
-                    SiteContext.Current.Shop.Currency.Equals("USD", StringComparison.OrdinalIgnoreCase))
-                {
-
-                }
-
                 var culture = GetCultureInfoByCurrencyCode(SiteContext.Current.Shop.Currency);
 
                 checkout.StringifiedShippingPrice = checkout.ShippingPrice.ToString("C", culture);
