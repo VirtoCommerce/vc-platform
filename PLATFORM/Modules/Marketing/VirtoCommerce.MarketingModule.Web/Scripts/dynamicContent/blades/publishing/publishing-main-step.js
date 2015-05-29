@@ -2,26 +2,6 @@
 .controller('virtoCommerce.marketingModule.addPublishingFirstStepController.expressions', ['$scope', 'virtoCommerce.coreModule.common.countries', function ($scope, countries) {
     $scope.timeZones = countries.getTimeZones();
 }])
-.filter('compareConditionToText', function () {
-    return function (input) {
-        var retVal;
-        switch (input) {
-            case 'IsMatching': retVal = 'matching'; break;
-            case 'IsNotMatching': retVal = 'not matching'; break;
-            case 'IsGreaterThan': retVal = 'greater than'; break;
-            case 'IsGreaterThanOrEqual': retVal = 'greater than or equals'; break;
-            case 'IsLessThan': retVal = 'less than'; break;
-            case 'IsLessThanOrEqual': retVal = 'less than or equals'; break;
-            case 'Contains': retVal = 'containing'; break;
-            case 'NotContains': retVal = 'not containing'; break;
-            case 'Matching': retVal = 'matching'; break;
-            case 'NotMatching': retVal = 'not matching'; break;
-            default:
-                retVal = input;
-        }
-        return retVal;
-    };
-})
 .controller('virtoCommerce.marketingModule.addPublishingFirstStepController', ['$scope', 'virtoCommerce.marketingModule.dynamicContent.contentPublications', 'platformWebApp.bladeNavigationService', 'virtoCommerce.coreModule.common.dynamicExpressionService', function ($scope, contentPublications, bladeNavigationService, dynamicExpressionService) {
     $scope.setForm = function (form) {
         $scope.formScope = form;
@@ -265,6 +245,7 @@
         expressionElement.availableChildren = undefined;
         expressionElement.displayName = undefined;
         expressionElement.getValidationError = undefined;
+        expressionElement.groupName = undefined;
         expressionElement.newChildLabel = undefined;
         expressionElement.templateURL = undefined;
 

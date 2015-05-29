@@ -171,8 +171,35 @@ angular.module(moduleName, [])
           displayName: 'Shopper searched for phrase [] in store'
       });
 
+      //Register PRICELIST ASSIGNMENT expressions
+      dynamicExpressionService.registerExpression({
+          id: 'BlockPricingCondition',
+          newChildLabel: '+ add condition'
+      });
+
+
       $http.get('Modules/$(VirtoCommerce.DynamicExpression)/Scripts/all-templates.html').then(function (response) {
           // compile the response, which will put stuff into the cache
           $compile(response.data);
       });
-  }]);
+  }])
+.filter('compareConditionToText', function () {
+    return function (input) {
+        var retVal;
+        switch (input) {
+            case 'IsMatching': retVal = 'matching'; break;
+            case 'IsNotMatching': retVal = 'not matching'; break;
+            case 'IsGreaterThan': retVal = 'greater than'; break;
+            case 'IsGreaterThanOrEqual': retVal = 'greater than or equals'; break;
+            case 'IsLessThan': retVal = 'less than'; break;
+            case 'IsLessThanOrEqual': retVal = 'less than or equals'; break;
+            case 'Contains': retVal = 'containing'; break;
+            case 'NotContains': retVal = 'not containing'; break;
+            case 'Matching': retVal = 'matching'; break;
+            case 'NotMatching': retVal = 'not matching'; break;
+            default:
+                retVal = input;
+        }
+        return retVal;
+    };
+});
