@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 using System.Xml.Linq;
 using ExpressionSerialization;
 using Newtonsoft.Json;
+using VirtoCommerce.CoreModule.Data.Common;
 using VirtoCommerce.Domain.Common;
 using VirtoCommerce.Domain.Marketing.Model;
-using VirtoCommerce.MarketingModule.Data.Common;
 
 namespace VirtoCommerce.MarketingModule.Data.Promotions
 {

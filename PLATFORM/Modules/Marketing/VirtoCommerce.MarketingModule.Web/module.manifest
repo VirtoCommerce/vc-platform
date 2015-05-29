@@ -5,7 +5,6 @@
     <platformVersion>2.0.0</platformVersion>
     <dependencies>
         <dependency id="VirtoCommerce.Core" version="1.0.0" />
-        <dependency id="VirtoCommerce.DynamicExpression" version="1.0.0" />
     </dependencies>
 
     <title>Virto Commerce Marketing</title>

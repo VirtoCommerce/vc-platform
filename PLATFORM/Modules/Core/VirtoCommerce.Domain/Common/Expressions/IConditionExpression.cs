@@ -5,7 +5,7 @@ using System.Web;
 using VirtoCommerce.Domain.Common;
 using VirtoCommerce.Domain.Marketing.Model;
 
-namespace VirtoCommerce.DynamicExpressionModule.Data
+namespace VirtoCommerce.Domain.Common
 {
 	public interface IConditionExpression
 	{

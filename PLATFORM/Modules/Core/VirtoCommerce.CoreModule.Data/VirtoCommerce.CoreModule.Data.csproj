@@ -37,6 +37,9 @@
     <Reference Include="EntityFramework.SqlServer">
       <HintPath>..\..\..\packages\EntityFramework.6.1.1\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
+    <Reference Include="ExpressionSerialization">
+      <HintPath>..\..\..\Shared\ExpressionSerialization.dll</HintPath>
+    </Reference>
     <Reference Include="Omu.ValueInjecter">
       <HintPath>..\..\..\packages\valueinjecter.2.3.3\lib\net35\Omu.ValueInjecter.dll</HintPath>
     </Reference>
@@ -52,6 +55,7 @@
   <ItemGroup>
     <Compile Include="Converters\SeoUrlKeywordConverter.cs" />
     <Compile Include="Converters\FulfillmentCenterConverter.cs" />
+    <Compile Include="Common\SerializationUtil.cs" />
     <Compile Include="Migrations\201504301238451_Initial.cs" />
     <Compile Include="Migrations\201504301238451_Initial.Designer.cs">
       <DependentUpon>201504301238451_Initial.cs</DependentUpon>

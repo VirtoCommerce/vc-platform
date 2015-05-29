@@ -4,7 +4,7 @@ using System.Linq;
 using System.Web;
 using Newtonsoft.Json;
 
-namespace VirtoCommerce.DynamicExpressionModule.Data.Content
+namespace VirtoCommerce.DynamicExpressionModule.Data.Common
 {
 	public class BlockGeoCondition : BlockConditionAndOr
 	{

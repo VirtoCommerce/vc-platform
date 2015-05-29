@@ -5,10 +5,10 @@ using VirtoCommerce.Domain.Marketing.Model;
 using VirtoCommerce.Domain.Marketing.Model.DynamicContent;
 using linq = System.Linq.Expressions;
 
-namespace VirtoCommerce.DynamicExpressionModule.Data.Content
+namespace VirtoCommerce.DynamicExpressionModule.Data.Common
 {
 	//Shopper searched for phrase [] in store
-	public class ConditionStoreSearchedPhrase : MatchedConditionBase
+	public class ConditionStoreSearchedPhrase : MatchedConditionBase<EvaluationContextBase>
 	{
 		public ConditionStoreSearchedPhrase()
 			: base("ShopperSearchedPhraseInStore")

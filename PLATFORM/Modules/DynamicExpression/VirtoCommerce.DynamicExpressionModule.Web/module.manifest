@@ -5,6 +5,8 @@
     <platformVersion>2.0.0</platformVersion>
     <dependencies>
         <dependency id="VirtoCommerce.Core" version="1.0.0" />
+		<dependency id="VirtoCommerce.Pricing" version="1.0.0" />
+		<dependency id="VirtoCommerce.Marketing" version="1.0.0" />
     </dependencies>
 
     <title>Virto Dynamic Expression Library</title>

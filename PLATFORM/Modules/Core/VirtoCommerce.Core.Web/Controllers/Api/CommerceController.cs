@@ -66,28 +66,26 @@ namespace VirtoCommerce.CoreModule.Web.Controllers.Api
 
 		[HttpGet]
 		[Route("paymentcallback")]
-		public IHttpActionResult PostProcessPayment(string orderId, string token, bool? cancel)
+		public IHttpActionResult PostProcessPayment(string orderId)
 		{
-			var isContinue = !cancel.HasValue;
-			if (!isContinue)
+			var order = _customerOrderService.GetById(orderId, CustomerOrderResponseGroup.Full);
+			if (order == null)
 			{
-				isContinue = (cancel.HasValue && !cancel.Value);
+				throw new NullReferenceException("order");
 			}
 
-			if (isContinue)
+			var store = _storeService.GetById(order.StoreId);
+			var paymentMethod = store.PaymentMethods.Where(x => x.IsActive).FirstOrDefault(x => x.ValidatePostProcessRequest(HttpContext.Current.Request.QueryString).IsSuccess);
+			if (paymentMethod != null)
 			{
-				var order = _customerOrderService.GetById(orderId, CustomerOrderResponseGroup.Full);
-				if (order == null)
-				{
-					throw new NullReferenceException("order");
-				}
-				var payment = order.InPayments.FirstOrDefault(x => x.OuterId == token);
+				var paymentOuterId = paymentMethod.ValidatePostProcessRequest(HttpContext.Current.Request.QueryString).OuterId;
+
+				var payment = order.InPayments.FirstOrDefault(x => x.OuterId == paymentOuterId);
 				if (payment == null)
 				{
 					throw new NullReferenceException("payment");
 				}
-				var store = _storeService.GetById(order.StoreId);
-				var paymentMethod = store.PaymentMethods.FirstOrDefault(x => x.Code == payment.GatewayCode);
+
 				if (payment == null)
 				{
 					throw new NullReferenceException("appropriate paymentMethod not found");
@@ -98,7 +96,7 @@ namespace VirtoCommerce.CoreModule.Web.Controllers.Api
 					Order = order,
 					Payment = payment,
 					Store = store,
-					OuterId = token
+					OuterId = paymentOuterId
 				};
 
 				var result = paymentMethod.PostProcessPayment(context);

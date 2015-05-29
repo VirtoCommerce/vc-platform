@@ -15,6 +15,7 @@ using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Data.Infrastructure.Interceptors;
 using Xunit;
 using webModel = VirtoCommerce.MarketingModule.Web.Model;
+using VirtoCommerce.Domain.Common;
 
 namespace VirtoCommerce.MarketingModule.Test
 {
@@ -183,7 +184,7 @@ namespace VirtoCommerce.MarketingModule.Test
 		private static IPromotionService GetMarketingService()
 		{
 			Func<IMarketingRepository> foundationRepositoryFactory = () => new MarketingRepositoryImpl("VirtoCommerce", new EntityPrimaryKeyGeneratorInterceptor(), new AuditableInterceptor());
-			var promotionExtensionManager = new InMemoryExtensionManagerImpl();
+			var promotionExtensionManager = new DefaultMarketingExtensionManagerImpl();
 			var retVal = new PromotionServiceImpl(foundationRepositoryFactory, promotionExtensionManager);
 			return retVal;
 		}
@@ -196,7 +197,7 @@ namespace VirtoCommerce.MarketingModule.Test
 
 		private static IMarketingExtensionManager GetPromotionExtensionManager()
 		{
-			var retVal = new InMemoryExtensionManagerImpl();
+			var retVal = new DefaultMarketingExtensionManagerImpl();
 			retVal.PromotionDynamicExpressionTree = GetDynamicExpression();
 			return retVal;
 		}

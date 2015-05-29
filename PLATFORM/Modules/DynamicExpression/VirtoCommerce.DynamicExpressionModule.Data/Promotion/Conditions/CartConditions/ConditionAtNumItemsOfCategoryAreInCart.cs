@@ -9,7 +9,7 @@ namespace VirtoCommerce.DynamicExpressionModule.Data.Promotion
 	public class ConditionAtNumItemsInCategoryAreInCart : ConditionBase, IConditionExpression
 	{
 	
-		public decimal NumItem { get; set; }
+		public int NumItem { get; set; }
 	
 		public bool Exactly { get; set; }
 

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,9 +9,9 @@ using VirtoCommerce.Domain.Common;
 using VirtoCommerce.Domain.Marketing.Model.DynamicContent;
 using linq = System.Linq.Expressions;
 
-namespace VirtoCommerce.DynamicExpressionModule.Data.Content
+namespace VirtoCommerce.DynamicExpressionModule.Data.Common
 {
-	public abstract class CompareConditionBase : DynamicExpression, IConditionExpression
+	public abstract class CompareConditionBase<T> : DynamicExpression, IConditionExpression where T : IEvaluationContext 
 	{
 		public string Value { get; set; }
 		public string CompareCondition { get; set; }
@@ -26,11 +25,11 @@ namespace VirtoCommerce.DynamicExpressionModule.Data.Content
 
 		#region IConditionExpression Members
 
-		public Expression<Func<Domain.Common.IEvaluationContext, bool>> GetConditionExpression()
+		public linq.Expression<Func<Domain.Common.IEvaluationContext, bool>> GetConditionExpression()
 		{
 			linq.ParameterExpression paramX = linq.Expression.Parameter(typeof(IEvaluationContext), "x");
-			var castOp = linq.Expression.MakeUnary(linq.ExpressionType.Convert, paramX, typeof(DynamicContentEvaluationContext));
-			var propertyValue = linq.Expression.Property(castOp, typeof(DynamicContentEvaluationContext).GetProperty(_propertyName));
+			var castOp = linq.Expression.MakeUnary(linq.ExpressionType.Convert, paramX, typeof(T));
+			var propertyValue = linq.Expression.Property(castOp, typeof(T).GetProperty(_propertyName));
 
 			var valueExpression = linq.Expression.Constant(ParseString(Value));
 			linq.BinaryExpression binaryOp;

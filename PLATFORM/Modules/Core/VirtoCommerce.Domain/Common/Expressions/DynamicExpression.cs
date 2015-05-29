@@ -6,7 +6,7 @@ using Newtonsoft.Json;
 using VirtoCommerce.Domain.Common;
 using VirtoCommerce.Platform.Core.Common;
 
-namespace VirtoCommerce.DynamicExpressionModule.Data
+namespace VirtoCommerce.Domain.Common
 {
 	public abstract class DynamicExpression : IDynamicExpression
 	{

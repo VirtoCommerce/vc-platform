@@ -8,14 +8,14 @@ using VirtoCommerce.Domain.Marketing.Model;
 
 namespace VirtoCommerce.Domain.Marketing.Services
 {
-	public class InMemoryExtensionManagerImpl : IMarketingExtensionManager
+	public class DefaultMarketingExtensionManagerImpl : IMarketingExtensionManager
 	{
 		private List<Promotion> _promotions = new List<Promotion>();
 
 		#region InMemoryExtensionManagerImpl Members
 
-		public IDynamicExpression PromotionDynamicExpressionTree { get; set;	}
-		public IDynamicExpression DynamicContentExpressionTree { get; set; }
+		public PromoDynamicExpressionTree PromotionDynamicExpressionTree { get; set; }
+		public ConditionExpressionTree DynamicContentExpressionTree { get; set; }
 
 		public void RegisterPromotion(Promotion promotion)
 		{
