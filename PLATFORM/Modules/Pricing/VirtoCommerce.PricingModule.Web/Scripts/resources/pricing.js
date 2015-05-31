@@ -13,6 +13,7 @@
     }])
     .factory('virtoCommerce.pricingModule.pricelistAssignments', ['$resource', function ($resource) {
         return $resource('api/pricing/assignments/:id', { id: '@Id' }, {
+            getNew: { url: 'api/pricing/assignments/new' },
             update: { method: 'PUT' }
         });
     }]);

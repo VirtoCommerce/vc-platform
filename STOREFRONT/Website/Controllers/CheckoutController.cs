@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
@@ -205,9 +207,20 @@ namespace VirtoCommerce.Web.Controllers
                         {
                             if(paymentResult.IsSuccess)
                             {
-                                if (!string.IsNullOrEmpty(paymentResult.RedirectUrl))
+                                if (paymentResult.PaymentMethodType == ApiClient.DataContracts.PaymentMethodType.Redirection)
                                 {
-                                    return Redirect(paymentResult.RedirectUrl);
+                                    if (!string.IsNullOrEmpty(paymentResult.RedirectUrl))
+                                    {
+                                        return Redirect(paymentResult.RedirectUrl);
+                                    }
+                                }
+                                if (paymentResult.PaymentMethodType == ApiClient.DataContracts.PaymentMethodType.PreparedForm)
+                                {
+                                    if (!string.IsNullOrEmpty(paymentResult.HtmlForm))
+                                    {
+                                        SiteContext.Current.Set("payment_html_form", paymentResult.HtmlForm);
+                                        return View("payment");
+                                    }
                                 }
                             }
                             else
@@ -236,34 +249,73 @@ namespace VirtoCommerce.Web.Controllers
         [HttpGet]
         public async Task<ActionResult> ExternalPaymentCallback()
         {
-            bool cancel;
-            if (bool.TryParse(HttpContext.Request.QueryString["cancel"], out cancel))
+            var parameters = new List<KeyValuePair<string, string>>();
+
+            foreach (var key in HttpContext.Request.QueryString.AllKeys)
             {
-                string orderId = HttpContext.Request.QueryString["orderId"];
-                string token = HttpContext.Request.QueryString["token"];
-                string payerId = HttpContext.Request.QueryString["payerId"];
+                parameters.Add(new KeyValuePair<string, string>(key, HttpContext.Request.QueryString[key]));
+            }
 
-                if (!string.IsNullOrEmpty(orderId) && !string.IsNullOrEmpty(token) && !string.IsNullOrEmpty(payerId))
+            var postPaymentResult = await Service.PostPaymentProcessAsync(parameters);
+
+            if (postPaymentResult != null)
+            {
+                if (postPaymentResult.IsSuccess)
                 {
-                    var postPaymentResult = await Service.PostPaymentProcessAsync(orderId, token, cancel);
+                    string orderId = HttpContext.Request.QueryString["orderId"];
 
-                    if (postPaymentResult != null)
-                    {
-                        if (postPaymentResult.IsSuccess)
-                        {
-                            Context.Order = await CustomerService.GetOrderAsync(Context.StoreId, Context.CustomerId, orderId);
-                            return View("thanks_page");
-                        }
-                        else
-                        {
-                            Context.ErrorMessage = postPaymentResult.Error;
-                            return View("error");
-                        }
-                    }
+                    Context.Order = await CustomerService.GetOrderAsync(Context.StoreId, Context.CustomerId, orderId);
+                    return View("thanks_page");
+                }
+                else
+                {
+                    Context.ErrorMessage = postPaymentResult.Error;
+                    return View("error");
                 }
             }
 
             return View("error");
+        }
+
+        //
+        // GET: /checkout/recalculateshippingmethod
+        [HttpGet]
+        public async Task<ActionResult> RecalculateShippingMethod(string id)
+        {
+            var checkout = await Service.GetCheckoutAsync();
+
+            var shippingMethods = await Service.GetShippingMethodsAsync(SiteContext.Current.Cart.Key);
+
+            if (shippingMethods != null)
+            {
+                checkout.ShippingMethod = shippingMethods.FirstOrDefault(sm => sm.Handle == id);
+
+                var culture = GetCultureInfoByCurrencyCode(SiteContext.Current.Shop.Currency);
+
+                checkout.StringifiedShippingPrice = checkout.ShippingPrice.ToString("C", culture);
+                checkout.StringifiedTotalPrice = checkout.TotalPrice.ToString("C", culture);
+            }
+
+            return Json(checkout);
+        }
+
+        private CultureInfo GetCultureInfoByCurrencyCode(string currencyCode)
+        {
+            var cultures = CultureInfo.GetCultures(CultureTypes.SpecificCultures);
+
+            var culture = CultureInfo.GetCultureInfo(SiteContext.Current.Shop.DefaultLanguage);
+
+            foreach (var ci in cultures)
+            {
+                var ri = new RegionInfo(ci.LCID);
+
+                if (ri.ISOCurrencySymbol == currencyCode)
+                {
+                    break;
+                }
+            }
+
+            return culture;
         }
     }
 }

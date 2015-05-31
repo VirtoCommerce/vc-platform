@@ -135,6 +135,10 @@ namespace VirtoCommerce.Web.Models
             }
         }
 
+        public string StringifiedShippingPrice { get; set; }
+
+        public string StringifiedTotalPrice { get; set; }
+
         public ICollection<Transaction> Transactions { get; set; }
 
         public string Currency { get; set; }

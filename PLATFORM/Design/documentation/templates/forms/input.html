@@ -1,0 +1,44 @@
+<div class="form-group">
+    <label class="form-label">Form input</label>
+    <div class="form-input">
+        <input type="text">
+    </div>
+</div>
+<div class="form-group">
+    <label class="form-label">Form input with flag country</label>
+    <div class="form-input __langs">
+        <span class="flag flag-us"></span>
+        <input type="text">
+    </div>
+</div>
+<div class="form-group">
+    <label class="form-label">Form input numeric</label>
+    <div class="form-input __number">
+        <input ng-model="testValue" va-number step="1" min="1" type="text">
+    </div>
+</div>
+<div class="form-group">
+    <label class="form-label">Form input mini numeric</label>
+    <div class="form-input __mini __number">
+        <input ng-model="testValue_2" va-number step="1" min="1" type="text">
+    </div>
+</div>
+<div class="form-group">
+    <label class="form-label">Form input file</label>
+    <div class="form-input __file">
+        <input type="file">
+        <input type="text">
+        <button class="btn">
+            <i class="btn-ico fa fa-image"></i>
+        </button>
+    </div>
+</div>
+<div class="form-group" ng-controller="DatepickerDemoCtrl">
+    <label class="form-label">Form input calendar</label>
+    <div class="form-input __calendar">
+        <input type="text" class="form-control" ng-model="blade.currentEntity.birthDate" datepicker-popup="{{format}}" name="bd" is-open="datepickers.bd" max-date="today" datepicker-options="dateOptions" close-text="Close" placeholder="Enter value" />
+        <button class="btn" type="button" ng-click="open($event,'bd')">
+            <i class="btn-ico fa fa-calendar"></i>
+        </button>
+    </div>
+</div>

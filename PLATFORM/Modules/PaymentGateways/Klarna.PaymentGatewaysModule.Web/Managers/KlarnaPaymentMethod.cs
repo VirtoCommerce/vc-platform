@@ -1,9 +1,11 @@
-﻿using Klarna.Checkout;
+﻿using Klarna.Api;
+using Klarna.Checkout;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
+using System.Web;
 using VirtoCommerce.Domain.Order.Model;
 using VirtoCommerce.Domain.Payment.Model;
 
@@ -190,11 +192,34 @@ namespace Klarna.PaymentGatewaysModule.Web.Managers
 			{
 				var data = new Dictionary<string, object> { { "status", "created" } };
 				order.Update(data);
+				order.Fetch();
+				status = order.GetValue("status") as string;
 			}
 
-			var klarnaCart = order.GetValue("cart") as JObject;
+			//if (status == "created")
+			//{
+			//	var reservation = order.GetValue("reservation") as string;
 
-			retVal.IsSuccess = status == "checkout_complete";
+			//	if (!string.IsNullOrEmpty(reservation))
+			//	{
+			//		Configuration configuration = new Configuration(Country.Code.SE, Language.Code.SV, Currency.Code.SEK, Encoding.Sweden)
+			//		{
+			//			Eid = Convert.ToInt32(AppKey),
+			//			Secret = AppSecret,
+			//			IsLiveMode = true
+			//		};
+
+			//		Api.Api api = new Api.Api(configuration);
+
+			//		var response = api.Activate(reservation);
+
+			//		order.Fetch();
+
+			//		var klarnaCart = order.GetValue("cart") as JObject;
+			//	}
+			//}
+
+			retVal.IsSuccess = status == "created";
 			retVal.NewPaymentStatus = retVal.IsSuccess ? PaymentStatus.Paid : PaymentStatus.Pending;
 			retVal.OrderId = context.Order.Id;
 
@@ -206,12 +231,12 @@ namespace Klarna.PaymentGatewaysModule.Web.Managers
 			var retVal = new ValidatePostProcessRequestResult();
 
 			var klarnaOrder = queryString["klarna_order"];
-			var sig = queryString["sig"];
+			var sid = queryString["sid"];
 
-			if (!string.IsNullOrEmpty(klarnaOrder) && !string.IsNullOrEmpty(sig))
+			if (!string.IsNullOrEmpty(klarnaOrder) && !string.IsNullOrEmpty(sid))
 			{
-				var outerId = klarnaOrder.Split('/').LastOrDefault();
-				if(!string.IsNullOrEmpty(outerId))
+				var outerId = HttpUtility.UrlDecode(klarnaOrder).Split('/').LastOrDefault();
+				if (!string.IsNullOrEmpty(outerId))
 				{
 					retVal.IsSuccess = true;
 					retVal.OuterId = outerId;

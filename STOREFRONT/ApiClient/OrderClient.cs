@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using VirtoCommerce.ApiClient.DataContracts;
@@ -72,17 +74,10 @@ namespace VirtoCommerce.ApiClient
                 useCache: false);
         }
 
-        public Task<PostProcessPaymentResult> PostPaymentProcess(string orderId, string token, bool cancel)
+        public Task<PostProcessPaymentResult> PostPaymentProcess(ICollection<KeyValuePair<string, string>> parameters)
         {
-            var parameters = new
-            {
-                orderId = orderId,
-                token = token,
-                cancel = cancel
-            };
-
             return GetAsync<PostProcessPaymentResult>(
-                CreateRequestUri(RelativePaths.PostPaymentProcess, parameters), useCache: false);
+                CreateRequestUri(RelativePaths.PostPaymentProcess, parameters.ToArray()), useCache: false);
         }
         #endregion
 

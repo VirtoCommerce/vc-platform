@@ -198,6 +198,7 @@
     <Content Include="Scripts\promotion\blades\promotion-list.tpl.html" />
     <Content Include="Scripts\marketing.js" />
     <Content Include="Scripts\promotion\resources\marketing.js" />
+    <Content Include="Scripts\promotion\widgets\dashboard.js" />
     <Content Include="web.config" />
     <None Include="web.Debug.config">
       <DependentUpon>web.config</DependentUpon>

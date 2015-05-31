@@ -24,6 +24,7 @@ using VirtoCommerce.Web.Views.Engines.Liquid;
 using VirtoCommerce.ApiClient.DataContracts.Cart;
 using VirtoCommerce.ApiClient.DataContracts.Marketing;
 using VirtoCommerce.ApiClient.DataContracts.Contents;
+using System.Collections.Specialized;
 
 #endregion
 
@@ -279,6 +280,7 @@ namespace VirtoCommerce.Web.Models.Services
                 "Idaho", "Wyoming", "Utah", "Oklahoma", "New Mexico", "Arizona",
                 "Alaska", "Hawaii"
             });
+            countries.Add("Germany", new List<string>());
 
             return new CountryOptionTags(countries).ToString();
         }
@@ -439,9 +441,9 @@ namespace VirtoCommerce.Web.Models.Services
             return await _orderClient.ProcessPayment(orderId, paymentMethodId);
         }
 
-        public async Task<PostProcessPaymentResult> PostPaymentProcessAsync(string orderId, string token, bool cancel)
+        public async Task<PostProcessPaymentResult> PostPaymentProcessAsync(ICollection<KeyValuePair<string, string>> parameters)
         {
-            return await _orderClient.PostPaymentProcess(orderId, token, cancel);
+            return await _orderClient.PostPaymentProcess(parameters);
         }
 
         public SubmitForm GetForm(SiteContext context, string id)

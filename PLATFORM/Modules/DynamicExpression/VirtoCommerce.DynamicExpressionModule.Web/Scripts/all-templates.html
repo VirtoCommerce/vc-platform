@@ -245,6 +245,18 @@
         <li class="menu-item" ng-click='element.all=false;'>any</li>
     </ul>
 </script>
+
+<!--PRICELIST ASSIGNMENT-->
+<script type="text/ng-template" id="expression-BlockPricingCondition.html">
+    If
+    <a class="__link" left-click-menu data-target="allAny_menu{{element.id}}">{{element.all | boolToValue:'all':'any'}}</a> of these conditions are true
+    <ul class="menu __context" role="menu" id="allAny_menu{{element.id}}">
+        <li class="menu-item" ng-click='element.all=true;'>all</li>
+        <li class="menu-item" ng-click='element.all=false;'>any</li>
+    </ul>
+</script>
+
+<!--COMMON, SHARED-->
 <script type="text/ng-template" id="expression-ConditionGeoTimeZone.html">
     Browsing from a time zone -/+ offset from UTC
     <a class="__link" left-click-menu data-target="compareCondition_menu{{element1.id}}">{{element1.compareCondition | compareConditionToText}}</a>
