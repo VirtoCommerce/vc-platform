@@ -69,7 +69,7 @@ namespace VirtoCommerce.Web.Models
         public string FulfillmentStatus { get; set; }
 
         [DataMember]
-        public string FullfillmentStatusLabel { get; set; }
+        public string FulfillmentStatusLabel { get; set; }
 
         [DataMember]
         public string Id { get; set; }
