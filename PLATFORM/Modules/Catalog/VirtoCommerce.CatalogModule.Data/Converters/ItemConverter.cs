@@ -42,6 +42,8 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 
 			retVal.MaxQuantity = (int)dbItem.MaxQuantity;
 			retVal.MinQuantity = (int)dbItem.MinQuantity;
+
+
 			#region Links
 			retVal.Links = dbItem.CategoryItemRelations.Select(x => x.ToCoreModel()).ToList();
 			#endregion
@@ -240,7 +242,9 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 			if (source.MaxQuantity != null)
 				target.MaxQuantity = source.MaxQuantity.Value;
 
-			var patchInjectionPolicy = new PatchInjection<dataModel.Item>(x => x.Name, x => x.Code, x => x.IsBuyable, x=> x.IsActive, x=>x.TrackInventory);
+			var patchInjectionPolicy = new PatchInjection<dataModel.Item>(x => x.Name, x => x.Code, x => x.IsBuyable, x => x.IsActive, x => x.TrackInventory, x => x.ManufacturerPartNumber, x => x.Gtin, x => x.ProductType,
+																		  x => x.WeightUnit, x => x.Weight, x => x.MeasureUnit, x => x.Height, x => x.Length, x => x.Width, x => x.EnableReview, x => x.MaxNumberOfDownload,
+																		  x => x.DownloadExpiration, x => x.DownloadType, x => x.HasUserAgreement, x => x.ShippingType, x => x.TaxType, x => x.Vendor );
 			target.InjectFrom(patchInjectionPolicy, source);
 
 			var dbSource = source.ToDataModel();

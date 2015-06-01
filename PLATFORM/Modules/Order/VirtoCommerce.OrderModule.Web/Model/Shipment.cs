@@ -17,9 +17,21 @@ namespace VirtoCommerce.OrderModule.Web.Model
 		public string Employee { get; set; }
 		public string EmployeeId { get; set; }
 		public decimal DiscountAmount { get; set; }
+
+
+		public string WeightUnit { get; set; }
+		public decimal? Weight { get; set; }
+
+		public string MeasureUnit { get; set; }
+		public decimal? Height { get; set; }
+		public decimal? Length { get; set; }
+		public decimal? Width { get; set; }
+
 		public ICollection<LineItem> Items { get; set; }
 		public ICollection<PaymentIn> InPayments { get; set; }
 		public Address DeliveryAddress { get; set; }
 		public Discount Discount { get; set; }
+
+
 	}
 }

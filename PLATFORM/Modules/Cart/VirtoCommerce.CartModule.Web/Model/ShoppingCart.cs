@@ -31,9 +31,15 @@ namespace VirtoCommerce.CartModule.Web.Model
 		public bool IsRecuring { get; set; }
 		public string Comment { get; set; }
 
-		public Weight Weight { get; set; }
 		public decimal? VolumetricWeight { get; set; }
-		public Dimension Dimension { get; set; }
+		public string WeightUnit { get; set; }
+		public decimal? Weight { get; set; }
+
+		public string MeasureUnit { get; set; }
+		public decimal? Height { get; set; }
+		public decimal? Length { get; set; }
+		public decimal? Width { get; set; }
+
 
 		public decimal Total { get; set; }
 		public decimal SubTotal { get; set; }

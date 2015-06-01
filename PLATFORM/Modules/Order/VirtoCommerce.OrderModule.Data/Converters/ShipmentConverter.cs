@@ -57,25 +57,7 @@ namespace VirtoCommerce.OrderModule.Data.Converters
 			retVal.Sum = shipment.ShippingPrice;
 			retVal.Tax = shipment.TaxTotal;
 
-			if (shipment.Weight != null)
-			{
-				retVal.Weight = new Weight
-				{
-					Unit = shipment.Weight.Unit,
-					Value = shipment.Weight.Value
-				};
-			}
-
-			if (shipment.Dimension != null)
-			{
-				retVal.Dimension = new Dimension
-				{
-					Height = shipment.Dimension.Height,
-					Length = shipment.Dimension.Length,
-					Unit = shipment.Dimension.Unit,
-					Width = shipment.Dimension.Width
-				};
-			}
+		
 		
 			if(shipment.DeliveryAddress != null)
 			{
@@ -129,7 +111,8 @@ namespace VirtoCommerce.OrderModule.Data.Converters
 
 			source.Patch((OperationEntity)target);
 
-			var patchInjectionPolicy = new PatchInjection<ShipmentEntity>(x => x.FulfillmentCenterId, x => x.OrganizationId, x => x.EmployeeId);
+			var patchInjectionPolicy = new PatchInjection<ShipmentEntity>(x => x.FulfillmentCenterId, x => x.OrganizationId, x => x.EmployeeId, x=> x.Height, x=>x.Length,
+																		 x=> x.Width, x=>x.MeasureUnit, x=>x.WeightUnit, x=> x.Weight);
 			target.InjectFrom(patchInjectionPolicy, source);
 
 			if (!source.InPayments.IsNullCollection())

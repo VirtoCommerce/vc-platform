@@ -52,16 +52,16 @@ namespace VirtoCommerce.CartModule.Data.Model
 
 		public bool TaxIncluded { get; set; }
 
-		[StringLength(16)]
-		public string WeightUnit { get; set; }
-		public decimal? WeightValue { get; set; }
 		public decimal? VolumetricWeight { get; set; }
 
-		[StringLength(16)]
-		public string DimensionUnit { get; set; }
-		public decimal? DimensionHeight { get; set; }
-		public decimal? DimensionLength { get; set; }
-		public decimal? DimensionWidth { get; set; }
+		[StringLength(32)]
+		public string WeightUnit { get; set; }
+		public decimal? Weight { get; set; }
+		[StringLength(32)]
+		public string MeasureUnit { get; set; }
+		public decimal? Height { get; set; }
+		public decimal? Length { get; set; }
+		public decimal? Width { get; set; }
 
 		[Column(TypeName = "Money")]
 		public decimal ListPrice { get; set; }

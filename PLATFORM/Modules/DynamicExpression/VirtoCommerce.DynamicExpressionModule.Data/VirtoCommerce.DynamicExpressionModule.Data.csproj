@@ -45,9 +45,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BlockConditionAndOr.cs" />
+    <Compile Include="Common\Conditions\Browse\ConditionLanguageIs.cs" />
+    <Compile Include="Common\Conditions\Browse\ConditionAgeIs.cs" />
+    <Compile Include="Common\Conditions\Browse\ConditionUrlIs.cs" />
+    <Compile Include="Common\Conditions\Browse\ConditionGenderIs.cs" />
+    <Compile Include="Common\Conditions\GeoConditions\ConditionGeoState.cs" />
+    <Compile Include="Common\Conditions\GeoConditions\ConditionGeoCountry.cs" />
+    <Compile Include="Common\Conditions\GeoConditions\ConditionGeoCity.cs" />
     <Compile Include="Content\BlockContentCondition.cs" />
-    <Compile Include="Common\Conditions\Browse\BlockBrowseCondition.cs" />
-    <Compile Include="Common\Conditions\GeoConditions\BlockGeoCondition.cs" />
     <Compile Include="Common\Conditions\Browse\ConditionStoreSearchedPhrase.cs" />
     <Compile Include="Common\Conditions\GeoConditions\ConditionGeoTimeZone.cs" />
     <Compile Include="Common\Conditions\CompareConditionBase.cs" />

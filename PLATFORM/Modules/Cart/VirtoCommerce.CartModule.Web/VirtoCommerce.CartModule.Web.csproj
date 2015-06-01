@@ -110,7 +110,6 @@
     <Compile Include="Model\CardSummary.cs" />
     <Compile Include="Model\LineItem.cs" />
     <Compile Include="Model\Coupon.cs" />
-    <Compile Include="Model\Dimension.cs" />
     <Compile Include="Model\Discount.cs" />
     <Compile Include="Model\Payment.cs" />
     <Compile Include="Model\PaymentMethod.cs" />
@@ -119,7 +118,6 @@
     <Compile Include="Model\Shipment.cs" />
     <Compile Include="Model\ShipmentMethod.cs" />
     <Compile Include="Model\ShoppingCart.cs" />
-    <Compile Include="Model\Weight.cs" />
     <Compile Include="Module.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
