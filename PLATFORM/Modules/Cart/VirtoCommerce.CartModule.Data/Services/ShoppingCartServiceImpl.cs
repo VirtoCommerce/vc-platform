@@ -5,10 +5,11 @@ using System.Text;
 using System.Threading.Tasks;
 using VirtoCommerce.CartModule.Data.Converters;
 using VirtoCommerce.CartModule.Data.Repositories;
-using VirtoCommerce.CartModule.Data.Workflow;
+using VirtoCommerce.Domain.Cart.Events;
 using VirtoCommerce.Domain.Cart.Model;
 using VirtoCommerce.Domain.Cart.Services;
 using VirtoCommerce.Domain.Common;
+using VirtoCommerce.Domain.Common.Events;
 using VirtoCommerce.Platform.Data.Infrastructure;
 
 
@@ -18,12 +19,13 @@ namespace VirtoCommerce.CartModule.Data.Services
 	{
 		private const string _workflowName = "CartRecalculate";
 		private Func<ICartRepository> _repositoryFactory;
-		private readonly IShoppingCartWorkflow _workflowService;
-		public ShoppingCartServiceImpl(Func<ICartRepository> repositoryFactory, IShoppingCartWorkflow workflowService)
+		private readonly IEventPublisher<CartChangeEvent> _eventPublisher;
+		public ShoppingCartServiceImpl(Func<ICartRepository> repositoryFactory, IEventPublisher<CartChangeEvent> eventPublisher)
 		{
 			_repositoryFactory = repositoryFactory;
-			_workflowService = workflowService;
+			_eventPublisher = eventPublisher;
 		}
+
 		#region IShoppingCartService Members
 
 		public ShoppingCart GetById(string cartId)
@@ -36,7 +38,7 @@ namespace VirtoCommerce.CartModule.Data.Services
 				{
 					retVal = entity.ToCoreModel();
 
-					RecalculateCart(retVal);
+					_eventPublisher.Publish(new CartChangeEvent(Platform.Core.Common.EntryState.Unchanged, retVal, retVal));
 				}
 			}
 
@@ -47,7 +49,7 @@ namespace VirtoCommerce.CartModule.Data.Services
 		{
 
 			//Do business logic on temporary  order object
-			RecalculateCart(cart);
+			_eventPublisher.Publish(new CartChangeEvent(Platform.Core.Common.EntryState.Added, null, cart));
 
 			var entity = cart.ToDataModel();
 			ShoppingCart retVal = null;
@@ -57,16 +59,13 @@ namespace VirtoCommerce.CartModule.Data.Services
 				CommitChanges(repository);
 			}
 			retVal = GetById(entity.Id);
-
-			RecalculateCart(retVal);
-
 			return retVal;
 		}
 
 		public void Update(ShoppingCart[] carts)
 		{
 			var changedCarts = new List<ShoppingCart>();
-
+			//Thats need to correct handle partial cart update
 			foreach (var cart in carts)
 			{
 				//Apply changes to temporary  object
@@ -89,8 +88,8 @@ namespace VirtoCommerce.CartModule.Data.Services
 			{
 				foreach (var changedCart in changedCarts)
 				{
-					//Do business logic on temporary  order object
-					RecalculateCart(changedCart);
+					var origCart = GetById(changedCart.Id);
+					_eventPublisher.Publish(new CartChangeEvent(Platform.Core.Common.EntryState.Modified, origCart, changedCart));
 
 					var sourceCartEntity = changedCart.ToDataModel();
 					var targetCartEntity = repository.GetShoppingCartById(changedCart.Id);
@@ -113,6 +112,9 @@ namespace VirtoCommerce.CartModule.Data.Services
 			{
 				foreach (var id in cartIds)
 				{
+					var cart = GetById(id);
+					_eventPublisher.Publish(new CartChangeEvent(Platform.Core.Common.EntryState.Deleted, cart, cart));
+
 					var entity = repository.GetShoppingCartById(id);
 					if (entity != null)
 					{
@@ -125,10 +127,6 @@ namespace VirtoCommerce.CartModule.Data.Services
 
 		#endregion
 
-		private void RecalculateCart(ShoppingCart cart)
-		{
-			var parameters = new Dictionary<string, object>();
-			_workflowService.RunWorkflow(cart);
-		}
+	
 	}
 }

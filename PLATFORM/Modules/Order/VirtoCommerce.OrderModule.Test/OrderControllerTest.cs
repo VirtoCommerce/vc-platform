@@ -10,15 +10,16 @@ using VirtoCommerce.OrderModule.Web.Controllers.Api;
 using coreModel = VirtoCommerce.Domain.Order.Model;
 using webModel = VirtoCommerce.OrderModule.Web.Model;
 using VirtoCommerce.Domain.Payment.Services;
-using VirtoCommerce.OrderModule.Data.Workflow;
 using VirtoCommerce.CartModule.Data.Repositories;
 using VirtoCommerce.Domain.Inventory.Services;
 using VirtoCommerce.Platform.Data.Infrastructure.Interceptors;
 using VirtoCommerce.Domain.Common;
 using VirtoCommerce.CartModule.Data.Services;
 using VirtoCommerce.Platform.Core.Common;
-using VirtoCommerce.CartModule.Data.Workflow;
 using VirtoCommerce.Domain.Payment.Model;
+using VirtoCommerce.Domain.Order.Events;
+using VirtoCommerce.Domain.Common.Events;
+using VirtoCommerce.Domain.Cart.Events;
 
 namespace VirtoCommerce.OrderModule.Test
 {
@@ -326,17 +327,15 @@ namespace VirtoCommerce.OrderModule.Test
 				return new CartRepositoryImpl("VirtoCommerce", new AuditableInterceptor());
 			};
 
-			var mockCartWorkflow = new Mock<IShoppingCartWorkflow>();
-			var cartService = new ShoppingCartServiceImpl(repositoryFactory, mockCartWorkflow.Object);
+			var orderEventPublisher = new EventPublisher<OrderChangeEvent>(Enumerable.Empty<IObserver<OrderChangeEvent>>().ToArray());
+			var cartEventPublisher = new EventPublisher<CartChangeEvent>(Enumerable.Empty<IObserver<CartChangeEvent>>().ToArray());
+			var cartService = new ShoppingCartServiceImpl(repositoryFactory, cartEventPublisher);
 
 			Func<IOrderRepository> orderRepositoryFactory = () => { return new OrderRepositoryImpl("VirtoCommerce", 
 																		   new AuditableInterceptor(),
 																		   new EntityPrimaryKeyGeneratorInterceptor());
 			};
-			var orderWorkflowService = new CustomerOrderWorkflow();
-			//Subscribe to order changes. Calculate totals  
-			orderWorkflowService.Subscribe(new VirtoCommerce.OrderModule.Data.Workflow.CalculateTotalsActivity());
-			var orderService = new CustomerOrderServiceImpl(orderRepositoryFactory, new TimeBasedNumberGeneratorImpl(), orderWorkflowService, cartService);
+			var orderService = new CustomerOrderServiceImpl(orderRepositoryFactory, new TimeBasedNumberGeneratorImpl(), orderEventPublisher, cartService);
 
 			var controller = new OrderModuleController(orderService, null, null, new TimeBasedNumberGeneratorImpl());
 			return controller;

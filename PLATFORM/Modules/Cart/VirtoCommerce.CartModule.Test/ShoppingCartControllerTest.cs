@@ -10,7 +10,6 @@ using VirtoCommerce.Domain.Cart.Services;
 using coreModel = VirtoCommerce.Domain.Cart.Model;
 using dataModel = VirtoCommerce.CartModule.Data.Model;
 using webModel = VirtoCommerce.CartModule.Web.Model;
-using VirtoCommerce.CartModule.Data.Workflow;
 
 namespace VirtoCommerce.CartModule.Test
 {
@@ -186,11 +185,9 @@ namespace VirtoCommerce.CartModule.Test
 															   new EntityPrimaryKeyGeneratorInterceptor());
 			};
 			//Business logic for core model
-			var cartWorkflowService = new ShoppingCartWorflow();
-			//Subscribe to cart changes. Calculate totals  
-			cartWorkflowService.Subscribe(new CalculateTotalsActivity());
+		
 
-			var cartService = new ShoppingCartServiceImpl(repositoryFactory, cartWorkflowService);
+			var cartService = new ShoppingCartServiceImpl(repositoryFactory, null);
 			var searchService = new ShoppingCartSearchServiceImpl(repositoryFactory);
 			//var memoryPaymentGatewayManager = new InMemoryPaymentGatewayManagerImpl();
 

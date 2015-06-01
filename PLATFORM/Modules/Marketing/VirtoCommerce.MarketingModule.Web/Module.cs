@@ -52,7 +52,6 @@ namespace VirtoCommerce.MarketingModule.Web
         }
 
         #endregion
-
 	
         private void EnsureRootFoldersExist(string[] ids)
         {

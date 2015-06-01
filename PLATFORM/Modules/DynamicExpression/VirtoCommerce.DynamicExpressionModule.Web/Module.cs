@@ -47,7 +47,7 @@ namespace VirtoCommerce.DynamicExpressionModule.Web
         #endregion
 		private static ConditionExpressionTree GetPricingDynamicExpression()
 		{
-			var conditions = new DynamicExpression[] { new ConditionGeoTimeZone(), new ConditionGeoZipCode(), new ConditionStoreSearchedPhrase() }.ToList();
+			var conditions = new DynamicExpression[] { new ConditionGeoTimeZone(), new ConditionGeoZipCode(), new ConditionStoreSearchedPhrase(), new ConditionAgeIs(), new ConditionGenderIs(), new ConditionGeoCity(), new ConditionGeoCountry(), new ConditionGeoState(), new ConditionLanguageIs() }.ToList();
 			var rootBlock = new BlockPricingCondition { AvailableChildren = conditions };
 			var retVal = new ConditionExpressionTree()
 			{
@@ -58,7 +58,7 @@ namespace VirtoCommerce.DynamicExpressionModule.Web
 
 		private static ConditionExpressionTree GetContentDynamicExpression()
 		{
-			var conditions = new DynamicExpression[] { new ConditionGeoTimeZone(), new ConditionGeoZipCode(), new ConditionStoreSearchedPhrase() }.ToList();
+			var conditions = new DynamicExpression[] { new ConditionGeoTimeZone(), new ConditionGeoZipCode(), new ConditionStoreSearchedPhrase(), new ConditionAgeIs(), new ConditionGenderIs(), new ConditionGeoCity(), new ConditionGeoCountry(), new ConditionGeoState(), new ConditionLanguageIs() }.ToList();
 			var rootBlock = new BlockContentCondition { AvailableChildren = conditions };
 			var retVal = new ConditionExpressionTree()
 			{

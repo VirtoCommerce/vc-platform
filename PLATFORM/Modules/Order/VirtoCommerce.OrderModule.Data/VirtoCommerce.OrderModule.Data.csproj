@@ -71,6 +71,10 @@
     <Compile Include="Migrations\201505210916250_OperationProperty.Designer.cs">
       <DependentUpon>201505210916250_OperationProperty.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201506011110591_DimensionChanges.cs" />
+    <Compile Include="Migrations\201506011110591_DimensionChanges.Designer.cs">
+      <DependentUpon>201506011110591_DimensionChanges.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Model\AddressEntity.cs" />
     <Compile Include="Model\CustomerOrderEntity.cs" />
@@ -86,10 +90,9 @@
     <Compile Include="Repositories\OrderSampleDatabaseInitializer.cs" />
     <Compile Include="Services\CustomerOrderSearchServiceImpl.cs" />
     <Compile Include="Services\CustomerOrderServiceImpl.cs" />
-    <Compile Include="Workflow\CustomerOrderWorkflow.cs" />
     <Compile Include="Services\TimeBasedNumberGeneratorImpl.cs" />
-    <Compile Include="Workflow\AdjustInventoryActivity.cs" />
-    <Compile Include="Workflow\CalculateTotalsActivity.cs" />
+    <Compile Include="Observers\AdjustInventoryObserver.cs" />
+    <Compile Include="Observers\CalculateTotalsObserver.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -115,6 +118,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201505210916250_OperationProperty.resx">
       <DependentUpon>201505210916250_OperationProperty.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201506011110591_DimensionChanges.resx">
+      <DependentUpon>201506011110591_DimensionChanges.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Repositories\Sql\OrderSampleData.sql" />
   </ItemGroup>
