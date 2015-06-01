@@ -160,6 +160,16 @@ namespace VirtoCommerce.Web.Convertors
             return checkoutModel;
         }
 
+        public static VirtoCommerce.Web.Models.PaymentMethod AsWebModel(this Data.PaymentMethod paymentMethod)
+        {
+            return new VirtoCommerce.Web.Models.PaymentMethod
+            {
+                Handle = paymentMethod.GatewayCode,
+                IconUrl = paymentMethod.IconUrl,
+                Title = paymentMethod.Name
+            };
+        }
+
         public static Data.ShoppingCart AsServiceModel(this Checkout checkoutModel, ref Data.ShoppingCart cart)
         {
             cart.Addresses = new List<Data.Address>();

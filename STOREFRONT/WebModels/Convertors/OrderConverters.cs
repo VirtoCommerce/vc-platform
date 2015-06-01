@@ -54,7 +54,7 @@ namespace VirtoCommerce.Web.Convertors
             }
 
             var inPayment = customerOrder.InPayments != null ?
-                customerOrder.InPayments.FirstOrDefault() : null;
+                customerOrder.InPayments.OrderByDescending(p => p.CreatedDate).FirstOrDefault() : null; // TEST
             var orderShipment = customerOrder.Shipments != null ?
                 customerOrder.Shipments.FirstOrDefault() : null;
             var addressWithEmail = customerOrder.Addresses != null ?
@@ -66,8 +66,8 @@ namespace VirtoCommerce.Web.Convertors
             {
                 if (string.IsNullOrEmpty(inPayment.Status))
                 {
-                    ret.FinancialStatus = inPayment.IsApproved ? "Paid" : "Unpaid";
-                    ret.FinancialStatusLabel = inPayment.IsApproved ? "Paid" : "Unpaid";
+                    ret.FinancialStatus = inPayment.IsApproved ? "Paid" : "Pending";
+                    ret.FinancialStatusLabel = inPayment.IsApproved ? "Paid" : "Pending";
                 }
                 else
                 {
@@ -122,6 +122,7 @@ namespace VirtoCommerce.Web.Convertors
 
             return ret;
         }
+
         public static CustomerAddress AsWebModel(this ApiClient.DataContracts.Orders.Address address)
         {
             var ret = new CustomerAddress

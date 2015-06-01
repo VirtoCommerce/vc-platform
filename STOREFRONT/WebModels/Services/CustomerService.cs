@@ -49,18 +49,10 @@ namespace VirtoCommerce.Web.Models.Services
             return customer;
         }
 
-        public async Task<CustomerOrder> GetOrderAsync(string storeId, string customerId, string orderNumber)
+        public async Task<VirtoCommerce.ApiClient.DataContracts.Orders.CustomerOrder> GetOrderAsync(
+            string storeId, string customerId, string orderNumber)
         {
-            CustomerOrder customerOrder = null;
-
-            var order = await this._orderClient.GetCustomerOrderAsync(customerId, orderNumber);
-
-            if (order != null)
-            {
-                customerOrder = order.AsWebModel();
-            }
-
-            return customerOrder;
+            return await this._orderClient.GetCustomerOrderAsync(customerId, orderNumber);
         }
 
         public async Task<OrderSearchResult> GetOrdersAsync(
@@ -73,6 +65,12 @@ namespace VirtoCommerce.Web.Models.Services
             var response = await this._orderClient.GetCustomerOrdersAsync(storeId, customerId, query, skip, take);
 
             return response;
+        }
+
+        public async Task UpdateOrderAsync(
+            VirtoCommerce.ApiClient.DataContracts.Orders.CustomerOrder order)
+        {
+            await _orderClient.UpdateOrderAsync(order);
         }
 
         public async Task UpdateCustomerAsync(Customer customer)
