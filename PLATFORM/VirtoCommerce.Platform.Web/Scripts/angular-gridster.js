@@ -1415,6 +1415,7 @@
 
 				function dragStart(event) {
 					$el.addClass('gridster-item-moving');
+					$el.parent().addClass('__editing');
 					gridster.movingItem = item;
 
 					gridster.updateHeight(item.sizeY);
@@ -1504,6 +1505,7 @@
 
 				function dragStop(event) {
 					$el.removeClass('gridster-item-moving');
+					$el.parent().removeClass('__editing');
 					var row = gridster.pixelsToRows(elmY);
 					var col = gridster.pixelsToColumns(elmX);
 					if (gridster.pushing !== false || gridster.getItems(row, col, item.sizeX, item.sizeY, item).length === 0) {

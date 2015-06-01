@@ -11,12 +11,10 @@
                             <input required ng-model="data.value" type="password" ng-if="data.valueType==='SecureString'">
                             <input va-number required ng-model="data.value" type="text" min="1" step="1" ng-if="data.valueType==='Integer'">
                             <input va-number required ng-model="data.value" type="text" min="1" step="1" ng-if="data.valueType==='Decimal'">
-                            <div class="form-control __switch">
-                                <label class="form-label" ng-if="data.valueType==='Boolean'">
-                                    <input type="checkbox" ng-model="data.value" />
-                                    <span class="switch"></span>
-                                </label>
-                            </div>
+                            <label class="form-label __switch" ng-if="data.valueType==='Boolean'">
+                                <input type="checkbox" ng-model="data.value" />
+                                <span class="switch"></span>
+                            </label>
                         </div>
                         <div class="form-input" ng-if="data.allowedValues.length>0 && !data.isArray">
                             <ui-select ng-model="data.value">

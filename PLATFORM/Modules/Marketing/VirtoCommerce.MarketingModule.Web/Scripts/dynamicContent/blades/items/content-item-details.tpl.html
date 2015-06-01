@@ -83,12 +83,10 @@
 				</div>
 				<div class="form-group" ng-if="blade.isPropertyShows('newItems')">
 					<label class="form-label">New Items:</label>
-					<div class="form-control __switch">
-						<label class="form-label">
-							<input type="checkbox" ng-model="blade.entity.newItems" />
-							<span class="switch"></span>
-						</label>
-					</div>
+					<label class="form-label __switch">
+						<input type="checkbox" ng-model="blade.entity.newItems" />
+						<span class="switch"></span>
+					</label>
 				</div>
 
 				<div class="form-group" ng-if="blade.isPropertyShows('flashFilePath')">
