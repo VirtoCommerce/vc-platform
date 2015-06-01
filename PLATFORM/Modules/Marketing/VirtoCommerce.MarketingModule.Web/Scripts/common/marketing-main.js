@@ -16,7 +16,7 @@
         $scope.selectedNodeId = data.id;
 
         var newBlade = {
-            id: 'marketingDetails',
+            id: 'marketingMainListChildren',
             title: data.name,
             subtitle: 'Marketing service',
             controller: 'virtoCommerce.marketingModule.' + data.entityName + 'ListController',

@@ -168,12 +168,7 @@ angular.module('platformWebApp')
                     });
                 });
             };
-
-            scope.executeCommand = function (toolbarCommand) {
-                if (toolbarCommand.canExecuteMethod())
-                    toolbarCommand.executeMethod(scope.blade);
-            };
-
+            
             scope.$watch('blade.toolbarCommands', function (toolbarCommands) {
                 scope.resolvedToolbarCommands = toolbarService.resolve(toolbarCommands, scope.blade.controller, false);
             });

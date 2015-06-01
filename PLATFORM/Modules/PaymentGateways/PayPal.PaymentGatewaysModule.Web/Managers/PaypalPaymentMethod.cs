@@ -18,6 +18,8 @@ namespace PayPal.PaymentGatewaysModule.Web.Managers
 {
 	public class PaypalPaymentMethod : VirtoCommerce.Domain.Payment.Model.PaymentMethod
 	{
+
+
 		private static string PaypalAPIModeStoreSetting = "Paypal.Mode";
 		private static string PaypalAPIUserNameStoreSetting = "Paypal.APIUsername";
 		private static string PaypalAPIPasswordStoreSetting = "Paypal.APIPassword";
@@ -194,7 +196,7 @@ namespace PayPal.PaymentGatewaysModule.Web.Managers
 			var cancel = queryString["cancel"];
 			var token = queryString["token"];
 
-			if(!string.IsNullOrEmpty(cancel) && !string.IsNullOrEmpty(token))
+			if (!string.IsNullOrEmpty(cancel) && !string.IsNullOrEmpty(token))
 			{
 				bool cancelValue;
 				if (bool.TryParse(cancel, out cancelValue))
@@ -213,11 +215,11 @@ namespace PayPal.PaymentGatewaysModule.Web.Managers
 		{
 			var retVal = string.Empty;
 
-			if(mode.ToLower().Equals("sandbox"))
+			if (mode.ToLower().Equals("sandbox"))
 			{
 				retVal = SandboxPaypalBaseUrlFormat;
 			}
-			else if(mode.ToLower().Equals("live"))
+			else if (mode.ToLower().Equals("live"))
 			{
 				retVal = LivePaypalBaseUrlFormat;
 			}
