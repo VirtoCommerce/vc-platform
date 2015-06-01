@@ -114,8 +114,6 @@
     <Compile Include="Engines\Liquid\ViewEngine\DotLiquidViewEngine.cs" />
     <Compile Include="Engines\Liquid\ViewEngine\Extensions\StringExtensions.cs" />
     <Compile Include="Engines\Liquid\ViewEngine\Extensions\UrlExtensions.cs" />
-    <Compile Include="Engines\Liquid\ViewEngine\FileSystems\DotLiquidFileSystem.cs" />
-    <Compile Include="Engines\Liquid\ViewEngine\FileSystems\VirtualPathProviderFileSystem.cs" />
     <Compile Include="Engines\Liquid\ViewEngine\FileSystems\ThemeFileSystem.cs" />
     <Compile Include="Engines\Liquid\ViewEngine\Util\VirtualPathProviderHelper.cs" />
     <Compile Include="Engines\Liquid\ViewLocationResult.cs" />

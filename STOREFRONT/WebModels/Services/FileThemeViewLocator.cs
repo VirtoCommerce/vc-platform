@@ -4,7 +4,6 @@ using System.IO;
 using System.Linq;
 using System.Web;
 using Omu.ValueInjecter;
-using VirtoCommerce.Web.Models;
 using VirtoCommerce.Web.Views.Engines.Liquid;
 
 namespace VirtoCommerce.Web.Services
@@ -68,7 +67,7 @@ namespace VirtoCommerce.Web.Services
                     {
                         var tempLocation = this.RemoveBaseDirectory(
                             Path.Combine(this.ThemeDirectory, location));
-                        foundView = allFiles.SingleOrDefault(x => x.Name.EndsWith(tempViewName, StringComparison.OrdinalIgnoreCase) && x.Name.StartsWith(tempLocation));
+                        foundView = allFiles.SingleOrDefault(x => x.Name.EndsWith(tempViewName, StringComparison.OrdinalIgnoreCase) && x.Name.StartsWith(tempLocation, StringComparison.OrdinalIgnoreCase));
                         if (foundView != null)
                         {
                             viewFound = true;
@@ -94,6 +93,26 @@ namespace VirtoCommerce.Web.Services
                     }
 
                     checkedLocations.Add(Path.Combine(this._baseDirectoryPath, fullPath));
+                }
+            }
+
+            // use more flex method to search for asteric
+            if (!viewFound)
+            {
+                var tempViewName = string.Format(fileNameFormat, viewName);
+                if (tempViewName.StartsWith("*"))
+                {
+                    tempViewName = viewName.RemovePrefix("*");
+                    foreach (var location in locations)
+                    {
+                        var tempLocation = this.RemoveBaseDirectory(Path.Combine("_global", location));
+                        foundView = allFiles.SingleOrDefault(x => x.Name.EndsWith(tempViewName, StringComparison.OrdinalIgnoreCase) && x.Name.StartsWith(tempLocation, StringComparison.OrdinalIgnoreCase));
+                        if (foundView != null)
+                        {
+                            viewFound = true;
+                            break;
+                        }
+                    }
                 }
             }
 
