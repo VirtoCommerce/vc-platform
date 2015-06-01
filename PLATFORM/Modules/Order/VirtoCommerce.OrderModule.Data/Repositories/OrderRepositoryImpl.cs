@@ -42,7 +42,7 @@ namespace VirtoCommerce.OrderModule.Data.Repositories
 
 			modelBuilder.Entity<OperationPropertyEntity>().HasRequired(x => x.Operation)
 									   .WithMany(x => x.Properties)
-									   .HasForeignKey(x => x.OperationId);
+									   .HasForeignKey(x => x.OperationId).WillCascadeOnDelete(true);
 			modelBuilder.Entity<OperationPropertyEntity>().ToTable("OrderOperationProperty"); 
 			#endregion
 		
@@ -60,12 +60,12 @@ namespace VirtoCommerce.OrderModule.Data.Repositories
 
 			modelBuilder.Entity<LineItemEntity>().HasOptional(x => x.CustomerOrder)
 									   .WithMany(x => x.Items)
-									   .HasForeignKey(x => x.CustomerOrderId);
+									   .HasForeignKey(x => x.CustomerOrderId).WillCascadeOnDelete(true);
 									   
 
 			modelBuilder.Entity<LineItemEntity>().HasOptional(x => x.Shipment)
 									   .WithMany(x => x.Items)
-									   .HasForeignKey(x => x.ShipmentId);
+									   .HasForeignKey(x => x.ShipmentId).WillCascadeOnDelete(true);
 									   
 
 			modelBuilder.Entity<LineItemEntity>().ToTable("OrderLineItem");
@@ -78,7 +78,7 @@ namespace VirtoCommerce.OrderModule.Data.Repositories
 
 			modelBuilder.Entity<ShipmentEntity>().HasRequired(x => x.CustomerOrder)
 										   .WithMany(x => x.Shipments)
-										   .HasForeignKey(x => x.CustomerOrderId);
+										   .HasForeignKey(x => x.CustomerOrderId).WillCascadeOnDelete(true);
 										   
 
 
@@ -91,17 +91,17 @@ namespace VirtoCommerce.OrderModule.Data.Repositories
 
 			modelBuilder.Entity<AddressEntity>().HasOptional(x => x.CustomerOrder)
 									   .WithMany(x => x.Addresses)
-									   .HasForeignKey(x => x.CustomerOrderId);
+									   .HasForeignKey(x => x.CustomerOrderId).WillCascadeOnDelete(true);
 
 
 			modelBuilder.Entity<AddressEntity>().HasOptional(x => x.Shipment)
 									   .WithMany(x => x.Addresses)
-									   .HasForeignKey(x => x.ShipmentId);
+									   .HasForeignKey(x => x.ShipmentId).WillCascadeOnDelete(true);
 
 
 			modelBuilder.Entity<AddressEntity>().HasOptional(x => x.PaymentIn)
 									   .WithMany(x => x.Addresses)
-									   .HasForeignKey(x => x.PaymentInId);
+									   .HasForeignKey(x => x.PaymentInId).WillCascadeOnDelete(true);
 									  
 
 			modelBuilder.Entity<AddressEntity>().ToTable("OrderAddress");
@@ -113,12 +113,12 @@ namespace VirtoCommerce.OrderModule.Data.Repositories
 
 			modelBuilder.Entity<PaymentInEntity>().HasOptional(x => x.CustomerOrder)
 									   .WithMany(x => x.InPayments)
-									   .HasForeignKey(x => x.CustomerOrderId);
+									   .HasForeignKey(x => x.CustomerOrderId).WillCascadeOnDelete(true);
 
 
 			modelBuilder.Entity<PaymentInEntity>().HasOptional(x => x.Shipment)
 									   .WithMany(x => x.InPayments)
-									   .HasForeignKey(x => x.ShipmentId);
+									   .HasForeignKey(x => x.ShipmentId).WillCascadeOnDelete(true);
 									   
 
 			modelBuilder.Entity<PaymentInEntity>().ToTable("OrderPaymentIn");
@@ -131,15 +131,15 @@ namespace VirtoCommerce.OrderModule.Data.Repositories
 
 			modelBuilder.Entity<DiscountEntity>().HasOptional(x => x.CustomerOrder)
 									   .WithMany(x => x.Discounts)
-									   .HasForeignKey(x => x.CustomerOrderId);
+									   .HasForeignKey(x => x.CustomerOrderId).WillCascadeOnDelete(true);
 									   
 			modelBuilder.Entity<DiscountEntity>().HasOptional(x => x.Shipment)
 									   .WithMany(x => x.Discounts)
-									   .HasForeignKey(x => x.ShipmentId);
+									   .HasForeignKey(x => x.ShipmentId).WillCascadeOnDelete(true);
 
 			modelBuilder.Entity<DiscountEntity>().HasOptional(x => x.LineItem)
 									   .WithMany(x => x.Discounts)
-									   .HasForeignKey(x => x.LineItemId);
+									   .HasForeignKey(x => x.LineItemId).WillCascadeOnDelete(true);
 									  
 
 			modelBuilder.Entity<DiscountEntity>().ToTable("OrderDiscount");

@@ -68,6 +68,10 @@
     <Compile Include="Migrations\201505220955175_RenamePaymentGatewayCodeField.Designer.cs">
       <DependentUpon>201505220955175_RenamePaymentGatewayCodeField.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201506011123083_DimensionChanges.cs" />
+    <Compile Include="Migrations\201506011123083_DimensionChanges.Designer.cs">
+      <DependentUpon>201506011123083_DimensionChanges.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Model\AddressEntity.cs" />
     <Compile Include="Model\LineItemEntity.cs" />
@@ -79,9 +83,7 @@
     <Compile Include="Repositories\CartRepositoryImpl.cs" />
     <Compile Include="Services\ShoppingCartSearchServiceImpl.cs" />
     <Compile Include="Services\ShoppingCartServiceImpl.cs" />
-    <Compile Include="Workflow\CalculateTotalsActivity.cs" />
-    <Compile Include="Workflow\IShoppingCartWorkflow.cs" />
-    <Compile Include="Workflow\ShoppingCartWorkflow.cs" />
+    <Compile Include="Observers\CalculateCartTotalsObserver.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -107,6 +109,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201505220955175_RenamePaymentGatewayCodeField.resx">
       <DependentUpon>201505220955175_RenamePaymentGatewayCodeField.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201506011123083_DimensionChanges.resx">
+      <DependentUpon>201506011123083_DimensionChanges.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

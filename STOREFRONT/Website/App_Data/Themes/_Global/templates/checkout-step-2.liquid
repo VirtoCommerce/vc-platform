@@ -68,15 +68,11 @@
                 <div class="row" id="payment-methods">
                     {% for payment_method in checkout.payment_methods %}
                         <div class="col-md-6" style="cursor: pointer;">
-                            <div class="box inner-box">
-                                <div class="box-header">
-                                    <h3>{{ payment_method.Handle }}</h3>
-                                </div>
-                                <div class="box-footer">
-                                    <input id="checkout_payment_method_{{ payment_method.handle }}" name="checkout[payment_method_id]" type="radio" value="{{ payment_method.handle }}" required="required" />
-                                    <img src="{{ payment_method.icon_url }}" style="margin-left: 20px;" width="150" />
-                                </div>
-                            </div>
+                            <input id="checkout_payment_method_{{ payment_method.handle }}" name="checkout[payment_method_id]" type="radio" value="{{ payment_method.handle }}" required="required" />
+                            <label for="checkout_payment_method_{{ payment_method.handle }}">
+                                
+                            </label>
+                            <img src="{{ payment_method.icon_url }}" width="150" />
                         </div>
                     {% endfor %}
                 </div>

@@ -31,21 +31,19 @@ angular.module(moduleName, [])
   ['platformWebApp.mainMenuService', 'platformWebApp.widgetService', 'platformWebApp.toolbarService', '$state', 'platformWebApp.authService', function (mainMenuService, widgetService, toolbarService, $state, authService) {
       // // test toolbar commands and content
       //toolbarService.register({
-      //    name: "test 1", icon: 'fa fa-cloud',
+      //    name: "ADDITIONAL COMMAND", icon: 'fa fa-cloud',
       //    executeMethod: function (blade) {
       //        console.log('test: ' + this.name + this.icon + blade);
       //    },
       //    canExecuteMethod: function () { return true; },
-      //    permission: 'catalog:catalogs:manage',
       //    index: 2
       //}, 'virtoCommerce.marketingModule.promotionDetailController');
       //toolbarService.register({
-      //    name: "DO DO DO", icon: 'fa fa-bolt',
+      //    name: "TEST ACTION 0", icon: 'fa fa-bolt',
       //    executeMethod: function (blade) {
       //        console.log('test: ' + this.name + this.icon + blade);
       //    },
       //    canExecuteMethod: function () { return true; },
-      //    permission: 'catalog:catalogs:manage',
       //    index: 0
       //}, 'virtoCommerce.marketingModule.promotionDetailController');
 

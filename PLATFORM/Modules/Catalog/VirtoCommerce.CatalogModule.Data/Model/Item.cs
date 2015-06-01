@@ -44,7 +44,6 @@ namespace VirtoCommerce.CatalogModule.Data.Model
 
 		public bool TrackInventory { get; set; }
 
-		public decimal Weight { get; set; }
 
 		[StringLength(128)]
 		public string PackageType { get; set; }
@@ -57,6 +56,37 @@ namespace VirtoCommerce.CatalogModule.Data.Model
 		[Index(IsUnique = true)] 
 		[CustomValidation(typeof(Item), "ValidateItemCode", ErrorMessage = @"Code can't contain $+;=%{}[]|\/@ ~#!^*&()?:'<>, characters")]
 		public string Code { get; set; }
+
+		[StringLength(128)]
+		public string ManufacturerPartNumber { get; set; }
+		[StringLength(64)]
+		public string Gtin { get; set; }
+
+		[StringLength(64)]
+		public string ProductType { get; set; }
+
+		[StringLength(32)]
+		public string WeightUnit { get; set; }
+		public decimal? Weight { get; set; }
+		[StringLength(32)]
+		public string MeasureUnit { get; set; }
+		public decimal? Height { get; set; }
+		public decimal? Length { get; set; }
+		public decimal? Width { get; set; }
+
+		public bool? EnableReview { get; set; }
+
+		public int? MaxNumberOfDownload { get; set; }
+		public DateTime? DownloadExpiration { get; set; }
+		[StringLength(64)]
+		public string DownloadType { get; set; }
+		public bool? HasUserAgreement { get; set; }
+		[StringLength(64)]
+		public string ShippingType { get; set; }
+		[StringLength(64)]
+		public string TaxType { get; set; }
+		[StringLength(128)]
+		public string Vendor { get; set; }
 
         #region Navigation Properties
 

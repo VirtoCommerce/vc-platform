@@ -6,7 +6,6 @@ using VirtoCommerce.Domain.Catalog.Services;
 using VirtoCommerce.Domain.Common;
 using VirtoCommerce.Domain.Marketing.Services;
 using VirtoCommerce.Domain.Order.Services;
-using VirtoCommerce.Domain.Order.Workflow;
 using VirtoCommerce.Domain.Payment.Model;
 using VirtoCommerce.Domain.Payment.Services;
 using VirtoCommerce.Domain.Store.Services;

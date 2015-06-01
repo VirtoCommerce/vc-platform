@@ -56,6 +56,15 @@ namespace VirtoCommerce.OrderModule.Data.Model
 		[StringLength(64)]
 		public string FulfilmentLocationCode { get; set; }
 
+		[StringLength(32)]
+		public string WeightUnit { get; set; }
+		public decimal? Weight { get; set; }
+		[StringLength(32)]
+		public string MeasureUnit { get; set; }
+		public decimal? Height { get; set; }
+		public decimal? Length { get; set; }
+		public decimal? Width { get; set; }
+
 		public virtual ObservableCollection<DiscountEntity> Discounts { get; set; }
 
 		public virtual CustomerOrderEntity CustomerOrder { get; set; }

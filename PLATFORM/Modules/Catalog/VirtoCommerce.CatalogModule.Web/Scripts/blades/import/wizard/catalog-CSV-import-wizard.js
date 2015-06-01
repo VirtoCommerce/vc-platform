@@ -3,8 +3,8 @@
 
 	var blade = $scope.blade;
 	blade.isLoading = false;
-	blade.title = 'Import to catalog ' + blade.catalog.name + ' from csv';
-
+	blade.title = 'Import catalog from csv';
+	blade.subtitle = 'All products will be added to "'+ blade.catalog.name +'" catalog';
 
 	$scope.columnDelimiters = [
         { name: "Space", value: " " },

@@ -241,6 +241,7 @@
     <Content Include="App_Data\Themes\_Global\templates\banners\Product.liquid" />
     <Content Include="App_Data\Themes\_Global\templates\banners\ProductsWithinCategory.liquid" />
     <Content Include="App_Data\Themes\_Global\Snippets\price.liquid" />
+    <Content Include="App_Data\Themes\_Global\assets\style.css.liquid" />
     <None Include="App_Data\Themes\_Global\templates\external_login_confirmation.liquid" />
     <Content Include="App_Data\Themes\_Global\templates\index.liquid" />
     <Content Include="App_Data\Themes\_Global\templates\banner.liquid" />
