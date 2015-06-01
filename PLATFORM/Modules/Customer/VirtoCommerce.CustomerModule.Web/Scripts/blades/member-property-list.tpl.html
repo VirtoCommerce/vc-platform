@@ -30,12 +30,10 @@
                                 <i class="btn-ico fa fa-calendar"></i>
                             </button>
                         </div>
-                        <div class="form-control __switch" ng-if="prop.valueType === 'Boolean'">
-                            <label class="form-label">
-                                <input type="checkbox" ng-model="prop.value">
-                                <span class="switch"></span>
-                            </label>
-                        </div>
+                        <label class="form-label __switch" ng-if="prop.valueType === 'Boolean'">
+                            <input type="checkbox" ng-model="prop.value">
+                            <span class="switch"></span>
+                        </label>
                     </div>
 
                     <div class="text" ng-if="properties.length == 0">None</div>
