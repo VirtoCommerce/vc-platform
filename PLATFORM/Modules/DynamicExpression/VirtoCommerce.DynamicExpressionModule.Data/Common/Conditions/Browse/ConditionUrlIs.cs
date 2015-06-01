@@ -8,12 +8,13 @@ using linq = System.Linq.Expressions;
 
 namespace VirtoCommerce.DynamicExpressionModule.Data.Common
 {
-    //Browsing from zip/postal code []
-	public class ConditionGeoZipCode : MatchedConditionBase<EvaluationContextBase>
-    {
-        public ConditionGeoZipCode()
-            : base(ReflectionUtility.GetPropertyName<EvaluationContextBase>(x=>x.GeoZipCode))
-        {
-        }
-    }
+	//CUrrent url is []
+	public class ConditionUrlIs : MatchedConditionBase<EvaluationContextBase>
+	{
+		public ConditionUrlIs()
+			: base(ReflectionUtility.GetPropertyName<EvaluationContextBase>(x=>x.CurrentUrl))
+		{
+		}
+
+	}
 }

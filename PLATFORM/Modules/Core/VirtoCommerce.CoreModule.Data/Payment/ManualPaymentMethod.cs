@@ -14,6 +14,9 @@ namespace VirtoCommerce.CoreModule.Data.Payment
 		public ManualPaymentMethod(ICollection<SettingEntry> settings)
 			: base("TemporaryPaymentMethod")
 		{
+			Name = "Manual Payment";
+			Description = "Test payment method do not allow real payment from customer";
+			 
 			Settings = settings;
 		}
 
