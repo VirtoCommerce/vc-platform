@@ -59,6 +59,8 @@ namespace VirtoCommerce.Domain.Catalog.Model
 		public string TaxType { get; set; }
 
 		public string Vendor { get; set; }
+	    public DateTime StartDate { get; set; }
+		public DateTime? EndDate { get; set; }
 
 		public ICollection<PropertyValue> PropertyValues { get; set; }
 		public ICollection<ItemAsset> Assets { get; set; }
@@ -67,7 +69,8 @@ namespace VirtoCommerce.Domain.Catalog.Model
 		public ICollection<SeoInfo> SeoInfos { get; set; }
 		public ICollection<EditorialReview> Reviews { get; set; }
 		public ICollection<ProductAssociation> Associations { get; set; }
-	    public DateTime StartDate { get; set; }
-		public DateTime? EndDate { get; set; }
+		public ICollection<Pricing.Model.Price> Prices { get; set; }
+		public ICollection<Inventory.Model.InventoryInfo> Inventories { get; set; }
+
 	}
 }

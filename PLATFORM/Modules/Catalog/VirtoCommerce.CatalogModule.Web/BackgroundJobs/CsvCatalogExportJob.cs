@@ -13,6 +13,11 @@ using CsvHelper;
 using System.Text;
 using System.Reflection;
 using VirtoCommerce.CatalogModule.Web.Model.Notifications;
+using VirtoCommerce.Domain.Pricing.Model;
+using VirtoCommerce.Domain.Pricing.Services;
+using VirtoCommerce.Domain.Inventory.Services;
+using VirtoCommerce.Domain.Inventory.Model;
+using System.Globalization;
 
 namespace VirtoCommerce.CatalogModule.Web.BackgroundJobs
 {
@@ -25,10 +30,13 @@ namespace VirtoCommerce.CatalogModule.Web.BackgroundJobs
 		private readonly CacheManager _cacheManager;
 		private readonly IBlobStorageProvider _blobStorageProvider;
 		private readonly IBlobUrlResolver _blobUrlResolver;
-	
+		private readonly IPricingService _pricingService;
+		private readonly IInventoryService _inventoryService;
+
 		public CsvCatalogExportJob(ICatalogSearchService catalogSearchService,
 								ICategoryService categoryService, IItemService productService,
-								INotifier notifier, CacheManager cacheManager, IBlobStorageProvider blobProvider, IBlobUrlResolver blobUrlResolver)
+								INotifier notifier, CacheManager cacheManager, IBlobStorageProvider blobProvider, IBlobUrlResolver blobUrlResolver,
+								IPricingService pricingService, IInventoryService inventoryService)
 		{
 			_searchService = catalogSearchService;
 			_categoryService = categoryService;
@@ -37,9 +45,11 @@ namespace VirtoCommerce.CatalogModule.Web.BackgroundJobs
 			_cacheManager = cacheManager;
 			_blobStorageProvider = blobProvider;
 			_blobUrlResolver = blobUrlResolver;
+			_pricingService = pricingService;
+			_inventoryService = inventoryService;
 		}
 
-		public virtual void DoExport(string catalogId, ExportNotification notification)
+		public virtual void DoExport(string catalogId, CurrencyCodes currency, string languageCode, ExportNotification notification)
 		{
 			var memoryStream = new MemoryStream();
 			var streamWriter = new StreamWriter(memoryStream);
@@ -58,9 +68,34 @@ namespace VirtoCommerce.CatalogModule.Web.BackgroundJobs
 				{
 					//Load all products to export
 					var products = LoadProducts(catalogId);
+
+					//Notification
+					notification.Description = "loading prices...";
+					_notifier.Upsert(notification);
+					var allProductIds = products.Select(x=>x.Id).ToArray();
+					//Load prices for products
+					var priceEvalContext = new  PriceEvaluationContext {
+						ProductIds = allProductIds,
+						Currency = currency
+					};
+					var allProductPrices = _pricingService.EvaluateProductPrices(priceEvalContext).ToArray();
+					foreach(var product in products)
+					{
+						product.Prices = allProductPrices.Where(x => x.ProductId == product.Id).ToList();
+					}
+					//Load inventories
+					notification.Description = "loading inventory information...";
+					_notifier.Upsert(notification);
+					var allProductInventories = _inventoryService.GetProductsInventoryInfos(allProductIds);
+					foreach (var product in products)
+					{
+						product.Inventories = allProductInventories.Where(x => x.ProductId == product.Id).ToList();
+					}
+
 					notification.TotalCount = products.Count();
-					//Get a export configuration
-					var exportConfiguration = GetProductExportConfiguration(products);
+					//populate export configuration
+					Dictionary<string, Func<CatalogProduct, string>> exportConfiguration = new Dictionary<string, Func<CatalogProduct, string>>();
+					PopulateProductExportConfiguration(exportConfiguration, products);
 
 					//Write header
 					foreach (var cfgItem in exportConfiguration)
@@ -171,15 +206,30 @@ namespace VirtoCommerce.CatalogModule.Web.BackgroundJobs
 			return retVal;
 		}
 
-		private Dictionary<string, Func<CatalogProduct, string>> GetProductExportConfiguration(IEnumerable<CatalogProduct> products)
+		
+		private void PopulateProductExportConfiguration(Dictionary<string, Func<CatalogProduct, string>> configuration, IEnumerable<CatalogProduct> products)
 		{
-			var retVal = new Dictionary<string, Func<CatalogProduct, string>>();
+			
+			configuration.Add("Sku", (product) =>
+			{
+				return product.Code;
+			});
+
+			configuration.Add("ParentSku", (product) =>
+			{
+				return product.MainProduct != null ? product.MainProduct.Code : String.Empty;
+			});
+
 			//Scalar Properties
-			var exportScalarFields = ReflectionUtility.GetPropertyNames<CatalogProduct>(x => x.Name, x => x.Code, x => x.IsActive, x => x.IsBuyable, x => x.TrackInventory);
-			retVal.AddRange(exportScalarFields.Select(x => new KeyValuePair<string, Func<CatalogProduct, string>>(x, null)));
+			var exportScalarFields = ReflectionUtility.GetPropertyNames<CatalogProduct>(x => x.Name, x => x.IsActive, x => x.IsBuyable, x => x.TrackInventory,
+																							  x => x.ManufacturerPartNumber, x => x.Gtin, x => x.MeasureUnit, x => x.WeightUnit, x => x.Weight,
+																							  x => x.Height, x => x.Length, x => x.Width, x => x.TaxType,  x => x.ShippingType,
+																							  x => x.ProductType, x => x.Vendor, x => x.DownloadType, x => x.DownloadExpiration, x => x.HasUserAgreement);
+			configuration.AddRange(exportScalarFields.Select(x => new KeyValuePair<string, Func<CatalogProduct, string>>(x, null)));
+
 
 			//Category
-			retVal.Add("Category", (product) =>
+			configuration.Add("Category", (product) =>
 			{
 				if(product.CategoryId != null)
 				{
@@ -190,7 +240,7 @@ namespace VirtoCommerce.CatalogModule.Web.BackgroundJobs
 				return String.Empty;
 			});
 
-			retVal.Add("PrimaryImage", (product) =>
+			configuration.Add("PrimaryImage", (product) =>
 			{
 				var image  = product.Assets.Where(x=>x.Type == ItemAssetType.Image && x.Group == "primaryimage").FirstOrDefault();
 				if (image != null)
@@ -200,7 +250,7 @@ namespace VirtoCommerce.CatalogModule.Web.BackgroundJobs
 				return String.Empty;
 			});
 
-			retVal.Add("AltImage", (product) =>
+			configuration.Add("AltImage", (product) =>
 			{
 				var image = product.Assets.Where(x => x.Type == ItemAssetType.Image && x.Group != "primaryimage").FirstOrDefault();
 				if (image != null)
@@ -210,7 +260,7 @@ namespace VirtoCommerce.CatalogModule.Web.BackgroundJobs
 				return String.Empty;
 			});
 
-			retVal.Add("Review", (product) =>
+			configuration.Add("Review", (product) =>
 			{
 				var review = product.Reviews.FirstOrDefault();
 				if (review != null)
@@ -220,7 +270,7 @@ namespace VirtoCommerce.CatalogModule.Web.BackgroundJobs
 				return String.Empty;
 			});
 
-			retVal.Add("SeoUrl", (product) =>
+			configuration.Add("SeoUrl", (product) =>
 			{
 				var seoInfo = product.SeoInfos.FirstOrDefault();
 				if (seoInfo != null)
@@ -229,7 +279,7 @@ namespace VirtoCommerce.CatalogModule.Web.BackgroundJobs
 				}
 				return String.Empty;
 			});
-			retVal.Add("SeoTitle", (product) =>
+			configuration.Add("SeoTitle", (product) =>
 			{
 				var seoInfo = product.SeoInfos.FirstOrDefault();
 				if (seoInfo != null)
@@ -238,7 +288,7 @@ namespace VirtoCommerce.CatalogModule.Web.BackgroundJobs
 				}
 				return String.Empty;
 			});
-			retVal.Add("SeoDescription", (product) =>
+			configuration.Add("SeoDescription", (product) =>
 			{
 				var seoInfo = product.SeoInfos.FirstOrDefault();
 				if (seoInfo != null)
@@ -248,12 +298,41 @@ namespace VirtoCommerce.CatalogModule.Web.BackgroundJobs
 				return String.Empty;
 			});
 
+			//Prices
+			configuration.Add("SalePrice", (product) =>
+				{
+					var bestPrice = product.Prices.Any() ? product.Prices.FirstOrDefault() : null;
+					return bestPrice != null ? (bestPrice.Sale != null ? bestPrice.Sale.Value.ToString(CultureInfo.InvariantCulture) : String.Empty) : String.Empty;
+				});
+			configuration.Add("Price", (product) =>
+			{
+				var bestPrice = product.Prices.Any() ? product.Prices.FirstOrDefault() : null;
+				return bestPrice != null ? bestPrice.List.ToString(CultureInfo.InvariantCulture) : String.Empty;
+			});
+			configuration.Add("Currency", (product) =>
+			{
+				var bestPrice = product.Prices.Any() ? product.Prices.FirstOrDefault() : null;
+				return bestPrice != null ? bestPrice.Currency.ToString() : String.Empty;
+			});
+		
+			//Inventories
+			configuration.Add("AllowBackorder", (product) =>
+			{
+				var inventory = product.Inventories.Any() ? product.Inventories.FirstOrDefault() : null;
+				return inventory != null ? inventory.AllowBackorder.ToString() : String.Empty;
+			});
+			configuration.Add("Quantity", (product) =>
+			{
+				var inventory = product.Inventories.Any() ? product.Inventories.FirstOrDefault() : null;
+				return inventory != null ? inventory.InStockQuantity.ToString() : String.Empty;
+			});
+		
 			//Properties
 			foreach (var propertyName in products.SelectMany(x => x.PropertyValues).Select(x => x.PropertyName).Distinct())
 			{
-				if (!retVal.ContainsKey(propertyName))
+				if (!configuration.ContainsKey(propertyName))
 				{
-					retVal.Add(propertyName, (product) =>
+					configuration.Add(propertyName, (product) =>
 					{
 						var propertyValue = product.PropertyValues.FirstOrDefault(x => x.PropertyName == propertyName);
 						if (propertyValue != null)
@@ -264,11 +343,7 @@ namespace VirtoCommerce.CatalogModule.Web.BackgroundJobs
 					});
 				}
 			}
-			
-
-
-			return retVal;
-
+	
 		}
 
 	}

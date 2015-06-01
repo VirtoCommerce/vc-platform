@@ -15,6 +15,12 @@ using System.Reflection;
 using VirtoCommerce.CatalogModule.Web.Model.Notifications;
 using webModel = VirtoCommerce.CatalogModule.Web.Model;
 using CsvHelper.Configuration;
+using VirtoCommerce.Domain.Pricing.Model;
+using System.Globalization;
+using VirtoCommerce.Domain.Inventory.Model;
+using VirtoCommerce.Domain.Pricing.Services;
+using VirtoCommerce.Domain.Inventory.Services;
+using VirtoCommerce.Domain.Commerce.Services;
 
 
 namespace VirtoCommerce.CatalogModule.Web.BackgroundJobs
@@ -28,9 +34,13 @@ namespace VirtoCommerce.CatalogModule.Web.BackgroundJobs
 		private readonly CacheManager _cacheManager;
 		private readonly IBlobStorageProvider _blobStorageProvider;
 		private readonly ISkuGenerator _skuGenerator;
+		private readonly IPricingService _pricingService;
+		private readonly IInventoryService _inventoryService;
+		private readonly ICommerceService _commerceService;
 
 		public CsvCatalogImportJob(ICatalogService catalogService, ICategoryService categoryService, IItemService productService,
-								INotifier notifier, CacheManager cacheManager, IBlobStorageProvider blobProvider, ISkuGenerator skuGenerator)
+								INotifier notifier, CacheManager cacheManager, IBlobStorageProvider blobProvider, ISkuGenerator skuGenerator,
+								IPricingService pricingService, IInventoryService inventoryService, ICommerceService commerceService)
 		{
 			_catalogService = catalogService;
 			_categoryService = categoryService;
@@ -39,6 +49,9 @@ namespace VirtoCommerce.CatalogModule.Web.BackgroundJobs
 			_cacheManager = cacheManager;
 			_blobStorageProvider = blobProvider;
 			_skuGenerator = skuGenerator;
+			_pricingService = pricingService;
+			_inventoryService = inventoryService;
+			_commerceService = commerceService;
 		}
 
 		public virtual void DoImport(webModel.CsvImportConfiguration configuration, ImportNotification notification)
@@ -75,7 +88,8 @@ namespace VirtoCommerce.CatalogModule.Web.BackgroundJobs
 					}
 				}
 
-				SaveProducts(catalog, csvProducts, notification);
+
+				SaveData(catalog, csvProducts, notification);
 			}
 			catch (Exception ex)
 			{
@@ -92,7 +106,7 @@ namespace VirtoCommerce.CatalogModule.Web.BackgroundJobs
 
 		}
 
-		private void SaveProducts(coreModel.Catalog catalog, IEnumerable<coreModel.CatalogProduct> csvProducts, ImportNotification notification)
+		private void SaveData(coreModel.Catalog catalog, IEnumerable<coreModel.CatalogProduct> csvProducts, ImportNotification notification)
 		{
 			var categories = new List<coreModel.Category>();
 
@@ -117,7 +131,6 @@ namespace VirtoCommerce.CatalogModule.Web.BackgroundJobs
 			}
 
 			var newCategories = new List<coreModel.Category>();
-			var counter = 0;
 			//save to db
 			//Categories
 			notification.TotalCount = categories.SelectMany(x => x.Traverse(y => y.Children)).Count();
@@ -126,28 +139,74 @@ namespace VirtoCommerce.CatalogModule.Web.BackgroundJobs
 				SaveCategoryRecursive(newCategories, category, notification);
 			}
 
+			//Save products
+			SaveProducts(csvProducts, catalog, newCategories, notification);
+				
+			notification.Description = "Import finished" + (notification.Errors.Any() ? " with errors" : " successfully");
+			_notifier.Upsert(notification);
+		}
+
+
+		private void SaveCategoryRecursive(List<coreModel.Category> categories, coreModel.Category category, ImportNotification notification)
+		{
+			//save to db
+			//Categories
+			var newCategory = _categoryService.Create(category);
+			categories.Add(newCategory);
+			//TODO: Prevent category creation if it exist
+			foreach (var childCategory in category.Children)
+			{
+				childCategory.ParentId = newCategory.Id;
+				SaveCategoryRecursive(categories, childCategory, notification);
+
+				//Raise notification each notifyCategorySizeLimit category
+				notification.Description = string.Format("Creating categories: {0} of {1} created", notification.ProcessedCount, notification.TotalCount);
+				_notifier.Upsert(notification);
+			}
+		}
+
+		private void SaveProducts(IEnumerable<coreModel.CatalogProduct> csvProducts, coreModel.Catalog catalog, IEnumerable<coreModel.Category> categories, ImportNotification notification)
+		{
+			int counter = 0;
 			var notifyProductSizeLimit = 10;
 			notification.TotalCount = csvProducts.Count();
+
+			var defaultFulfilmentCenter = _commerceService.GetAllFulfillmentCenters().FirstOrDefault();
 			//Products
 			foreach (var csvProduct in csvProducts)
 			{
-				var sameProduct = csvProducts.FirstOrDefault(x => x.Name == csvProduct.Name && !x.IsTransient());
+				var sameProduct = csvProducts.FirstOrDefault(x =>((csvProduct.MainProductId != null && x.Code == csvProduct.MainProductId) || (x.Name == csvProduct.Name)) && !x.IsTransient());
 				if (sameProduct != null)
 				{
 					//Detect variation
 					csvProduct.MainProductId = sameProduct.Id;
 				}
-				var category = newCategories.FirstOrDefault(x => x.Code == csvProduct.Category.Code);
+				var category = categories.FirstOrDefault(x => x.Code == csvProduct.Category.Code);
 				csvProduct.CategoryId = category.Id;
 				csvProduct.CatalogId = catalog.Id;
 
 				try
 				{
-					if(String.IsNullOrEmpty(csvProduct.Code))
+					if (String.IsNullOrEmpty(csvProduct.Code))
 					{
 						csvProduct.Code = _skuGenerator.GenerateSku(csvProduct);
 					}
 					var newProduct = _productService.Create(csvProduct);
+					//Create price in default price list
+					if(csvProduct.Prices != null && csvProduct.Prices.Any())
+					{
+						var price = csvProduct.Prices.First();
+						price.ProductId = newProduct.Id;
+						_pricingService.CreatePrice(price);
+					}
+					//Create inventory
+					if (csvProduct.Inventories != null && csvProduct.Inventories.Any())
+					{
+						var inventory = csvProduct.Inventories.First();
+						inventory.ProductId = newProduct.Id;
+						inventory.FulfillmentCenterId = defaultFulfilmentCenter.Id;
+						_inventoryService.UpsertInventory(csvProduct.Inventories.First());
+					}
 					csvProduct.Id = newProduct.Id;
 				}
 				catch (Exception ex)
@@ -169,27 +228,8 @@ namespace VirtoCommerce.CatalogModule.Web.BackgroundJobs
 				}
 			}
 
-			notification.Description = "Import finished" + (notification.Errors.Any() ? " with errors" : " successfully");
-			_notifier.Upsert(notification);
 		}
 
-		private void SaveCategoryRecursive(List<coreModel.Category> categories, coreModel.Category category, ImportNotification notification)
-		{
-			//save to db
-			//Categories
-			var newCategory = _categoryService.Create(category);
-			categories.Add(newCategory);
-			//TODO: Prevent category creation if it exist
-			foreach (var childCategory in category.Children)
-			{
-				childCategory.ParentId = newCategory.Id;
-				SaveCategoryRecursive(categories, childCategory, notification);
-			
-				//Raise notification each notifyCategorySizeLimit category
-				notification.Description = string.Format("Creating categories: {0} of {1} created", notification.ProcessedCount, notification.TotalCount);
-				_notifier.Upsert(notification);
-			}
-		}
 
 
 		public sealed class ProductMap : CsvClassMap<coreModel.CatalogProduct>
@@ -218,6 +258,18 @@ namespace VirtoCommerce.CatalogModule.Web.BackgroundJobs
 						PropertyMaps.Add(newMap);
 					}
 				}
+
+				//Map Sku -> Code
+				Map(x => x.Code).ConvertUsing(x =>
+				{
+					return GetCsvField("Sku", x, importConfiguration);
+				});
+
+				//Map ParentSku -> main product
+				Map(x => x.MainProductId).ConvertUsing(x =>
+				{
+					return GetCsvField("ParentSku", x, importConfiguration);
+				});
 
 				//Map assets (images)
 				Map(x => x.Assets).ConvertUsing(x =>
@@ -278,6 +330,44 @@ namespace VirtoCommerce.CatalogModule.Web.BackgroundJobs
 						seoInfos.Add(new coreModel.SeoInfo { LanguageCode = defaultLanguge, SemanticUrl = seoUrl.GenerateSlug(), MetaDescription = seoDescription, PageTitle = seoTitle});
 					}
 					return seoInfos; 
+				});
+
+				//Map Prices
+				Map(x => x.Prices).ConvertUsing(x =>
+				{
+					var prices = new List<Price>();
+					var listPrice = GetCsvField("Price", x, importConfiguration);
+					var salePrice = GetCsvField("SalePrice", x, importConfiguration);
+					var currency = GetCsvField("Currency", x, importConfiguration);
+
+					if (!String.IsNullOrEmpty(listPrice) && !String.IsNullOrEmpty(currency))
+					{
+						prices.Add(new Price
+						{
+							List = Convert.ToDecimal(listPrice, CultureInfo.InvariantCulture),
+							Sale = salePrice != null ? (decimal?)Convert.ToDecimal(listPrice, CultureInfo.InvariantCulture) : null,
+							Currency = EnumUtility.SafeParse<CurrencyCodes>(currency, CurrencyCodes.USD)
+						});
+					}
+					return prices;
+				});
+
+				//Map inventories
+				Map(x => x.Inventories).ConvertUsing(x =>
+				{
+					var inventories = new List<InventoryInfo>();
+					var quantity = GetCsvField("Quantity", x, importConfiguration);
+					var allowBackorder = GetCsvField("AllowBackorder", x, importConfiguration);
+
+					if (!String.IsNullOrEmpty(quantity))
+					{
+						inventories.Add(new InventoryInfo
+						{
+							AllowBackorder = allowBackorder != null ? Convert.ToBoolean(allowBackorder) : false,
+							InStockQuantity = Convert.ToInt64(quantity)
+						});
+					}
+					return inventories;
 				});
 
 				//Map properties
