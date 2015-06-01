@@ -126,7 +126,7 @@ namespace VirtoCommerce.Web.Controllers
             }
 
             checkout.ShippingMethods = await Service.GetShippingMethodsAsync(checkout.Id);
-            checkout.PaymentMethods = await Service.GetPaymentMethodsAsync(checkout.Id);
+            checkout.PaymentMethods = await Service.GetCartPaymentMethodsAsync(checkout.Id);
 
             Context.Checkout = checkout;
 
@@ -171,7 +171,7 @@ namespace VirtoCommerce.Web.Controllers
                     checkout.BillingAddress = billingAddress;
 
                     checkout.ShippingMethods = await Service.GetShippingMethodsAsync(checkout.Id);
-                    checkout.PaymentMethods = await Service.GetPaymentMethodsAsync(checkout.Id);
+                    checkout.PaymentMethods = await Service.GetCartPaymentMethodsAsync(checkout.Id);
 
                     if (checkout.RequiresShipping)
                     {
@@ -264,8 +264,13 @@ namespace VirtoCommerce.Web.Controllers
                 {
                     string orderId = HttpContext.Request.QueryString["orderId"];
 
-                    Context.Order = await CustomerService.GetOrderAsync(Context.StoreId, Context.CustomerId, orderId);
-                    return View("thanks_page");
+                    var order = await CustomerService.GetOrderAsync(Context.StoreId, Context.CustomerId, orderId);
+
+                    if (order != null)
+                    {
+                        Context.Order = order.AsWebModel();
+                        return View("thanks_page");
+                    }
                 }
                 else
                 {

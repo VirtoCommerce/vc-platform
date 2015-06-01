@@ -324,9 +324,7 @@
     <Content Include="Scripts\app\settings\blades\settings-list.tpl.html" />
     <Content Include="Scripts\app\settings\resources\setting.js" />
     <Content Include="Scripts\app\settings\settings.js" />
-    <Content Include="Scripts\app\settings\widgets\settingsWidget.js" />
     <Content Include="Scripts\codemirror\addon\mode\overlay.js" />
-    <Content Include="Scripts\app\settings\widgets\settingsWidget.tpl.html" />
     <Content Include="Scripts\codemirror\codemirror.css" />
     <Content Include="Content\fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Content\ng-tags-input.css" />

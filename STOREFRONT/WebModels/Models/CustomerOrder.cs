@@ -102,6 +102,9 @@ namespace VirtoCommerce.Web.Models
         }
 
         [DataMember]
+        public ICollection<PaymentMethod> PaymentMethods { get; set; }
+
+        [DataMember]
         public decimal ShippingPrice { get; set; }
 
         [DataMember]

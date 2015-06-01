@@ -67,6 +67,12 @@ namespace VirtoCommerce.ApiClient
                 HttpMethod.Post);
         }
 
+        public Task UpdateOrderAsync(CustomerOrder order)
+        {
+            return SendAsync<CustomerOrder>(
+                CreateRequestUri(RelativePaths.UpdateOrder), HttpMethod.Put, order);
+        }
+
         public Task<ProcessPaymentResult> ProcessPayment(string orderId, string paymentMethodId)
         {
             return GetAsync<ProcessPaymentResult>(
@@ -88,6 +94,7 @@ namespace VirtoCommerce.ApiClient
             public const string GetMultipleOrders = "order/customerOrders";
             public const string GetSingleOrder = "order/customerOrders/{0}";
             public const string PostOrder = "order/customerOrders/{0}";
+            public const string UpdateOrder = "order/customerOrders";
             public const string ProcessPayment = "order/customerOrders/{0}/processPayment/{1}";
             public const string PostPaymentProcess = "paymentcallback";
 

@@ -131,6 +131,7 @@
     <Compile Include="Models\Forms\ForgotPasswordFormModel.cs" />
     <Compile Include="Models\Forms\LoginFormModel.cs" />
     <Compile Include="Models\Forms\NewAddressFormModel.cs" />
+    <Compile Include="Models\Forms\PayOrderFormModel.cs" />
     <Compile Include="Models\Forms\RegisterFormModel.cs" />
     <Compile Include="Models\Forms\ResetPasswordFormModel.cs" />
     <Compile Include="Models\Forms\SendCodeFormModel.cs" />

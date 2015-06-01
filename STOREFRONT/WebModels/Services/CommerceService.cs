@@ -386,7 +386,7 @@ namespace VirtoCommerce.Web.Models.Services
             return shippingMethodModels;
         }
 
-        public async Task<ICollection<PaymentMethod>> GetPaymentMethodsAsync(string cartId)
+        public async Task<ICollection<PaymentMethod>> GetCartPaymentMethodsAsync(string cartId)
         {
             ICollection<PaymentMethod> paymentMethodModels = null;
 
@@ -397,12 +397,25 @@ namespace VirtoCommerce.Web.Models.Services
                 paymentMethodModels = new List<PaymentMethod>();
                 foreach (var paymentMethod in paymentMethods)
                 {
-                    paymentMethodModels.Add(new PaymentMethod
-                    {
-                        Handle = paymentMethod.GatewayCode,
-                        IconUrl = paymentMethod.IconUrl,
-                        Title = paymentMethod.Name
-                    });
+                    paymentMethodModels.Add(paymentMethod.AsWebModel());
+                }
+            }
+
+            return paymentMethodModels;
+        }
+
+        public async Task<ICollection<PaymentMethod>> GetStorePaymentMethodsAsync(string storeId)
+        {
+            ICollection<PaymentMethod> paymentMethodModels = null;
+
+            var paymentMethods = await _cartClient.GetStorePaymentMethods(storeId);
+
+            if (paymentMethods != null)
+            {
+                paymentMethodModels = new List<PaymentMethod>();
+                foreach (var paymentMethod in paymentMethods)
+                {
+                    paymentMethodModels.Add(paymentMethod.AsWebModel());
                 }
             }
 
@@ -520,6 +533,11 @@ namespace VirtoCommerce.Web.Models.Services
                                {
                                    FormType = "edit_checkout_step_2",
                                    ActionLink = VirtualPathUtility.ToAbsolute("~/checkout/step2"),
+                               },
+                               new SubmitForm
+                               {
+                                   FormType = "pay_order",
+                                   ActionLink = VirtualPathUtility.ToAbsolute("~/account/payorder"),
                                }
                            };
 

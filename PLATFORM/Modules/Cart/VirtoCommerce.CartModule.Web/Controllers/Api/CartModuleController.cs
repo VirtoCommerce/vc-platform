@@ -147,6 +147,24 @@ namespace VirtoCommerce.CartModule.Web.Controllers.Api
 			return this.Ok(retVal);
 		}
 
+        // GET: api/cart/stores/{storeId}/paymentMethods
+        [HttpGet]
+        [ResponseType(typeof(webModel.PaymentMethod[]))]
+        [Route("stores/{storeId}/paymentMethods")]
+        public IHttpActionResult GetPaymentMethodsForStore(string storeId)
+        {
+            var store = _storeService.GetById(storeId);
+
+            var retVal = store.PaymentMethods.Where(p => p.IsActive).Select(p => new webModel.PaymentMethod
+            {
+                GatewayCode = p.Code,
+                Name = p.Description,
+                IconUrl = p.LogoUrl
+            }).ToArray();
+
+            return this.Ok(retVal);
+        }
+
 		// POST: api/cart/carts/{cartId}/coupons/{couponCode}
 		[HttpPost]
 		[ResponseType(typeof(webModel.ShoppingCart))]

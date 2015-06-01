@@ -33,7 +33,7 @@ namespace Klarna.PaymentGatewaysModule.Web
 				{
 					Name = "Klarna",
 					Description = "Klarna payment integration",
-					LogoUrl = "https://cdn.klarna.com/1.0/shared/image/generic/logo/nb_no/basic/blue-black.png?width=200",
+					LogoUrl = "http://virtocommerce.com/Content/images/Blue-black.png",
 					Settings = settingsManager.GetModuleSettings("Klarna.PaymentGateway")
 				};
 			};
