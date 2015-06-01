@@ -32,6 +32,12 @@ namespace VirtoCommerce.Web.Convertors
                 {
                     ret.ShippingAddress = shippingAddress.AsWebModel();
                 }
+
+                // Temporary ordinal case, when billing address == shipping address
+                if (shippingAddress != null && billingAddress == null)
+                {
+                    ret.BillingAddress = shippingAddress.AsWebModel();
+                }
             }
 
             ret.Cancelled = customerOrder.IsCancelled;
@@ -55,10 +61,34 @@ namespace VirtoCommerce.Web.Convertors
                 customerOrder.Addresses.FirstOrDefault(a => !string.IsNullOrEmpty(a.Email)) : null;
 
             ret.Email = addressWithEmail != null ? addressWithEmail.Email : null;
-            ret.FinancialStatus = inPayment != null ? inPayment.Status : null;
-            ret.FinancialStatusLabel = inPayment != null ? inPayment.Status : null;
-            ret.FulfillmentStatus = orderShipment != null ? orderShipment.Status : null;
-            ret.FullfillmentStatusLabel = orderShipment != null ? orderShipment.Status : null;
+
+            if (inPayment != null)
+            {
+                if (string.IsNullOrEmpty(inPayment.Status))
+                {
+                    ret.FinancialStatus = inPayment.IsApproved ? "Paid" : "Unpaid";
+                    ret.FinancialStatusLabel = inPayment.IsApproved ? "Paid" : "Unpaid";
+                }
+                else
+                {
+                    ret.FinancialStatus = inPayment.Status;
+                    ret.FinancialStatusLabel = inPayment.Status;
+                }
+            }
+
+            if (orderShipment != null)
+            {
+                if (string.IsNullOrEmpty(orderShipment.Status))
+                {
+                    ret.FulfillmentStatus = orderShipment.IsApproved ? "Sended" : "Not sended";
+                    ret.FulfillmentStatusLabel = orderShipment.IsApproved ? "Sended" : "Not sended";
+                }
+                else
+                {
+                    ret.FulfillmentStatus = inPayment.Status;
+                    ret.FulfillmentStatusLabel = inPayment.Status;
+                }
+            }
 
             if (customerOrder.Items != null)
             {

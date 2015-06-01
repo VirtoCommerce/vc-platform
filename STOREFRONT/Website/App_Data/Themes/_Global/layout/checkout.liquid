@@ -33,6 +33,10 @@
                     type: "GET",
                     cache: false,
                     url: VirtoCommerce.url("/checkout/recalculateshippingmethod?id=" + input.val()),
+                    beforeSend: function () {
+                        $(".price-list li:eq(1) small").text("Updating...");
+                        $(".price-list li:eq(3) small").text("Updating...");
+                    },
                     success: function (jsonResponse) {
                         if (jsonResponse) {
                             $(".price-list li:eq(1) small").text(jsonResponse.stringified_shipping_price);
