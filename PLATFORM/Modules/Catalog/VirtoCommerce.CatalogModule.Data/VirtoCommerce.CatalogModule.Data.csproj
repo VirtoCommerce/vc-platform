@@ -92,6 +92,10 @@
     <Compile Include="Migrations\201505280853223_ItemCodeComplexIndex.Designer.cs">
       <DependentUpon>201505280853223_ItemCodeComplexIndex.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201506011113284_DimensionChanges.cs" />
+    <Compile Include="Migrations\201506011113284_DimensionChanges.Designer.cs">
+      <DependentUpon>201506011113284_DimensionChanges.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Model\Association.cs" />
     <Compile Include="Model\AssociationGroup.cs" />
@@ -165,6 +169,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201505280853223_ItemCodeComplexIndex.resx">
       <DependentUpon>201505280853223_ItemCodeComplexIndex.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201506011113284_DimensionChanges.resx">
+      <DependentUpon>201506011113284_DimensionChanges.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Repositories\Sql\Association.sql" />
   </ItemGroup>

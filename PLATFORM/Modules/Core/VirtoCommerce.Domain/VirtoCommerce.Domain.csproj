@@ -56,14 +56,12 @@
     <Compile Include="Cart\Model\Coupon.cs" />
     <Compile Include="Cart\Model\Payment.cs" />
     <Compile Include="Cart\Model\SearchCriteria.cs" />
-    <Compile Include="Cart\Model\Dimension.cs" />
     <Compile Include="Cart\Model\Discount.cs" />
     <Compile Include="Cart\Model\SearchResult.cs" />
     <Compile Include="Cart\Model\Shipment.cs" />
     <Compile Include="Cart\Model\PaymentMethod.cs" />
     <Compile Include="Cart\Model\ShipmentMethod.cs" />
     <Compile Include="Cart\Model\ShoppingCart.cs" />
-    <Compile Include="Cart\Model\Weight.cs" />
     <Compile Include="Cart\Services\IShoppingCartSearchService.cs" />
     <Compile Include="Cart\Services\IShoppingCartService.cs" />
     <Compile Include="Catalog\Model\AvailabilityRule.cs" />
@@ -169,7 +167,6 @@
     <Compile Include="Order\Model\AddressType.cs" />
     <Compile Include="Order\Model\Coupon.cs" />
     <Compile Include="Order\Model\CustomerOrder.cs" />
-    <Compile Include="Order\Model\Dimension.cs" />
     <Compile Include="Order\Model\IFinanceInOperation.cs" />
     <Compile Include="Order\Model\IFinanceOperation.cs" />
     <Compile Include="Order\Model\IFinanceOutOperation.cs" />
@@ -181,7 +178,6 @@
     <Compile Include="Order\Model\LineItem.cs" />
     <Compile Include="Order\Model\OperationProperty.cs" />
     <Compile Include="Order\Model\PropertyValueType.cs" />
-    <Compile Include="Order\Model\Weight.cs" />
     <Compile Include="Order\Services\IOperationNumberGenerator.cs" />
     <Compile Include="Order\Model\CustomerOrderResponseGroup.cs" />
     <Compile Include="Order\Model\Discount.cs" />

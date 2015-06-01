@@ -7,6 +7,8 @@ namespace VirtoCommerce.CatalogModule.Web.Model
     public class Product
     {
         public string Id { get; set; }
+		public string ManufacturerPartNumber { get; set; }
+		public string Gtin { get; set; }
         public string Code { get; set; }
         public string Name { get; set; }
 
@@ -23,6 +25,27 @@ namespace VirtoCommerce.CatalogModule.Web.Model
         public bool? TrackInventory { get; set; }
 		public int? MaxQuantity { get; set; }
 		public int? MinQuantity { get; set; }
+
+		public string ProductType { get; set; }
+		public string WeightUnit { get; set; }
+		public decimal? Weight { get; set; }
+
+		public string MeasureUnit { get; set; }
+		public decimal? Height { get; set; }
+		public decimal? Length { get; set; }
+		public decimal? Width { get; set; }
+
+		public bool? EnableReview { get; set; }
+
+		public int? MaxNumberOfDownload { get; set; }
+		public DateTime? DownloadExpiration { get; set; }
+		public string DownloadType { get; set; }
+		public bool? HasUserAgreement { get; set; }
+
+		public string ShippingType { get; set; }
+		public string TaxType { get; set; }
+
+		public string Vendor { get; set; }
 
 		private string _imgSrc;
         public string ImgSrc 

@@ -57,5 +57,14 @@ namespace VirtoCommerce.OrderModule.Web.Model
 		public string FulfilmentLocationCode { get; set; }
 
 		public Discount Discount { get; set; }
+
+
+		public string WeightUnit { get; set; }
+		public decimal? Weight { get; set; }
+
+		public string MeasureUnit { get; set; }
+		public decimal? Height { get; set; }
+		public decimal? Length { get; set; }
+		public decimal? Width { get; set; }
 	}
 }
