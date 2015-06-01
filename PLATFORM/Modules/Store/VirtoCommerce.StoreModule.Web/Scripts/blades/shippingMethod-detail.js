@@ -29,21 +29,6 @@
 
     $scope.blade.headIcon = 'fa fa-archive';
     $scope.blade.toolbarCustomTemplates = ['Modules/$(VirtoCommerce.Store)/Scripts/blades/toolbar-isActive.tpl.html'];
-
-    $scope.blade.toolbarCommands = [
-        {
-            name: "Reset",
-            icon: 'fa fa-undo',
-            executeMethod: function () {
-                angular.copy($scope.blade.origEntity, $scope.blade.currentEntity);
-            },
-            canExecuteMethod: function () {
-                return isDirty();
-            },
-            permission: 'store:manage'
-        }
-    ];
-
-
+    
     initializeBlade($scope.blade.origEntity);
 }]);

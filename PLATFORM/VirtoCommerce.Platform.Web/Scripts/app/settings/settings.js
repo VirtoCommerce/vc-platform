@@ -32,12 +32,5 @@
       //    permission: 'platform:setting:manage'
       //};
       //mainMenuService.addMenuItem(menuItem);
-
-      //Register item prices widget
-      // widgetService.registerWidget({
-      //     controller: 'platformWebApp.settingsWidgetController',
-      //     template: 'Scripts/app/settings/widgets/settingsWidget.tpl.html'
-      // }, 'moduleDetail');
-
   }])
 ;

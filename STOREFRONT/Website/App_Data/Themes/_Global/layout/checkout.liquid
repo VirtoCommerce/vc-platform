@@ -26,7 +26,7 @@
             $("#checkout_province").val("{{ checkout.shipping_address.province }}");
             $("#checkout_zip").val("{{ checkout.shipping_address.zip }}");
             $("#checkout_phone").val("{{ checkout.shipping_address.phone }}");
-            $("#shipping-methods .box").on("click", function () {
+            $("#shipping-methods .col-md-6").on("click", function () {
                 var input = $(this).find("input");
                 input.prop("checked", true);
                 $.ajax({
@@ -45,8 +45,9 @@
                     }
                 });
             });
-            $("#payment-methods img").on("click", function () {
-                $(this).siblings("input").prop("checked", true);
+            $("#payment-methods .col-md-6").on("click", function () {
+                var input = $(this).find("input");
+                input.prop("checked", true);
             });
             $("#billing-address-equals-shipping-address").on("change", function () {
                 if ($(this).is(":checked")) {
