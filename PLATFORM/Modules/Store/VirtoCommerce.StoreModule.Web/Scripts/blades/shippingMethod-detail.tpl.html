@@ -2,28 +2,26 @@
 <div class="blade-content __gray">
     <div class="blade-inner">
         <div class="inner-block clearfix">
+            <div class="columns">
+                <div class="column">
+                    <ul class="list __info">
+                        <li class="list-item">
+                            <div class="list-t">Name</div>
+                            <div class="list-descr">{{blade.currentEntity.name}}</div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="column">
+                    <ul class="list __info">
+                        <li class="list-item">
+                            <div class="list-t">Code</div>
+                            <div class="list-descr">{{blade.currentEntity.code}}</div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
             <form class="form" name="detailForm">
                 <div class="form-group" ng-init="setForm(detailForm)">
-                    <div class="columns clearfix">
-                        <div class="column">
-                            <div class="form-group">
-                                <label class="form-label">Name</label>
-                                <div class="form-input">
-                                    <p class="form-text">{{blade.currentEntity.name}}</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="column">
-                            <div class="form-group">
-                                <label class="form-label">Code</label>
-                                <div class="form-input">
-                                    <p class="form-text">{{blade.currentEntity.code}}</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="form-group">
                     <label class="form-label">Description</label>
                     <div class="form-input">
                         <textarea class="form-control" ng-model="blade.currentEntity.description" placeholder="Enter description"></textarea>

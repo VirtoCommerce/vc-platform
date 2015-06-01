@@ -141,13 +141,13 @@
       <Project>{39afd233-b2f7-4178-817d-0a339c57525d}</Project>
       <Name>VirtoCommerce.Platform.Data</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\Core\VirtoCommerce.CoreModule.Data\VirtoCommerce.CoreModule.Data.csproj">
+      <Project>{3a627001-02c6-4809-ab42-d517c636e7b7}</Project>
+      <Name>VirtoCommerce.CoreModule.Data</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Core\VirtoCommerce.Domain\VirtoCommerce.Domain.csproj">
       <Project>{67c58a78-ddea-4fa3-a969-1cab582918e4}</Project>
       <Name>VirtoCommerce.Domain</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\DynamicExpression\VirtoCommerce.DynamicExpressionModule.Data\VirtoCommerce.DynamicExpressionModule.Data.csproj">
-      <Project>{c0e20ec9-47e5-4f53-8ca5-8e0405baeac8}</Project>
-      <Name>VirtoCommerce.DynamicExpressionModule.Data</Name>
     </ProjectReference>
     <ProjectReference Include="..\VirtoCommerce.MarketingModule.Data\VirtoCommerce.MarketingModule.Data.csproj">
       <Project>{2cd7e474-2ac6-4ce8-a459-616f7e5acd69}</Project>
@@ -198,6 +198,7 @@
     <Content Include="Scripts\promotion\blades\promotion-list.tpl.html" />
     <Content Include="Scripts\marketing.js" />
     <Content Include="Scripts\promotion\resources\marketing.js" />
+    <Content Include="Scripts\promotion\widgets\dashboard.js" />
     <Content Include="web.config" />
     <None Include="web.Debug.config">
       <DependentUpon>web.config</DependentUpon>

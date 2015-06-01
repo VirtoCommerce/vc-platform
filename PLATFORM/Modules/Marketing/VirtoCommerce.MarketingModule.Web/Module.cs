@@ -4,9 +4,6 @@ using VirtoCommerce.Domain.Common;
 using VirtoCommerce.Domain.Marketing.Services;
 using VirtoCommerce.MarketingModule.Data.Repositories;
 using VirtoCommerce.MarketingModule.Data.Services;
-using VirtoCommerce.DynamicExpressionModule.Data;
-using contentExpression = VirtoCommerce.DynamicExpressionModule.Data.Content;
-using VirtoCommerce.DynamicExpressionModule.Data.Promotion;
 using VirtoCommerce.MarketingModule.Web.Model;
 using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Data.Infrastructure;
@@ -38,7 +35,7 @@ namespace VirtoCommerce.MarketingModule.Web
         {
 			_container.RegisterType<IMarketingRepository>(new InjectionFactory(c => new MarketingRepositoryImpl("VirtoCommerce", new EntityPrimaryKeyGeneratorInterceptor(), new AuditableInterceptor())));
           
-            var promotionExtensionManager = new InMemoryExtensionManagerImpl();
+            var promotionExtensionManager = new DefaultMarketingExtensionManagerImpl();
             
             _container.RegisterInstance<IMarketingExtensionManager>(promotionExtensionManager);
             _container.RegisterType<IPromotionService, PromotionServiceImpl>();
@@ -55,7 +52,6 @@ namespace VirtoCommerce.MarketingModule.Web
         }
 
         #endregion
-
 	
         private void EnsureRootFoldersExist(string[] ids)
         {

@@ -2,6 +2,7 @@
 using PayPal.PayPalAPIInterfaceService.Model;
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Globalization;
 using System.Linq;
 using System.Text;
@@ -17,6 +18,8 @@ namespace PayPal.PaymentGatewaysModule.Web.Managers
 {
 	public class PaypalPaymentMethod : VirtoCommerce.Domain.Payment.Model.PaymentMethod
 	{
+
+
 		private static string PaypalAPIModeStoreSetting = "Paypal.Mode";
 		private static string PaypalAPIUserNameStoreSetting = "Paypal.APIUsername";
 		private static string PaypalAPIPasswordStoreSetting = "Paypal.APIPassword";
@@ -186,11 +189,22 @@ namespace PayPal.PaymentGatewaysModule.Web.Managers
 			return retVal;
 		}
 
-		public override ValidatePostProcessRequestResult ValidatePostProcessRequest(object context)
+		public override ValidatePostProcessRequestResult ValidatePostProcessRequest(NameValueCollection queryString)
 		{
 			var retVal = new ValidatePostProcessRequestResult();
 
-			var httpContext = context as HttpContext;
+			var cancel = queryString["cancel"];
+			var token = queryString["token"];
+
+			if (!string.IsNullOrEmpty(cancel) && !string.IsNullOrEmpty(token))
+			{
+				bool cancelValue;
+				if (bool.TryParse(cancel, out cancelValue))
+				{
+					retVal.IsSuccess = !cancelValue;
+					retVal.OuterId = token;
+				}
+			}
 
 			return retVal;
 		}
@@ -201,11 +215,11 @@ namespace PayPal.PaymentGatewaysModule.Web.Managers
 		{
 			var retVal = string.Empty;
 
-			if(mode.ToLower().Equals("sandbox"))
+			if (mode.ToLower().Equals("sandbox"))
 			{
 				retVal = SandboxPaypalBaseUrlFormat;
 			}
-			else if(mode.ToLower().Equals("live"))
+			else if (mode.ToLower().Equals("live"))
 			{
 				retVal = LivePaypalBaseUrlFormat;
 			}
@@ -304,7 +318,7 @@ namespace PayPal.PaymentGatewaysModule.Web.Managers
 		{
 			if (response != null)
 			{
-				if (response.Ack.Equals(AckCodeType.FAILURE) || (response.Errors != null && response.Errors.Count > 0 && (response.Errors.Count(e => e.ErrorCode == "11607") == 0 && response.Ack.Equals(AckCodeType.SUCCESSWITHWARNING))))
+				if (response.Ack.Equals(AckCodeType.FAILURE) || (response.Errors != null && response.Errors.Count > 0))
 				{
 					StringBuilder sb = new StringBuilder();
 					foreach (var error in response.Errors)

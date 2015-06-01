@@ -1,4 +1,6 @@
-﻿<div class="blade-static __bottom" ng-include="'Scripts/common/templates/create.tpl.html'" ng-if="blade.isNew"></div>
+﻿<div class="blade-static __bottom" ng-if="blade.isNew">
+    <button class="btn" ng-click="saveChanges()" ng-disabled="!isValid()">Create</button>
+</div>
 <div class="blade-content __medium-wide">
     <div class="blade-inner">
         <div class="inner-block">
@@ -24,7 +26,7 @@
 
                                     <label class="form-label">Store</label>
                                     <div class="form-input">
-                                        <ui-select ng-model="blade.currentEntity.store" ng-disabled="!blade.isNew">
+                                        <ui-select ng-model="blade.currentEntity.store" ng-disabled="!blade.isNew" required>
                                             <ui-select-match placeholder="Select...">{{$select.selected.name}}</ui-select-match>
                                             <ui-select-choices repeat="store.id as store in stores | filter: { name: $select.search }">
                                                 <span ng-bind-html="store.name | highlight: $select.search"></span>

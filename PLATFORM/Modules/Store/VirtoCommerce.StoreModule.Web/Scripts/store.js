@@ -31,7 +31,7 @@ angular.module(moduleName, [
   }]
 )
 .run(
-  ['$rootScope', 'platformWebApp.mainMenuService', 'platformWebApp.widgetService', '$state', function ($rootScope, mainMenuService, widgetService, $state) {
+  ['platformWebApp.toolbarService', 'platformWebApp.bladeNavigationService', 'platformWebApp.mainMenuService', 'platformWebApp.widgetService', '$state', function (toolbarService, bladeNavigationService, mainMenuService, widgetService, $state) {
       //Register module in main menu
       var menuItem = {
           path: 'browse/store',
@@ -59,7 +59,7 @@ angular.module(moduleName, [
       widgetService.registerWidget({
           controller: 'virtoCommerce.storeModule.storeSettingsWidgetController',
           template: 'Modules/$(VirtoCommerce.Store)/Scripts/widgets/storeSettingsWidget.tpl.html'
-      }, 'storeDetail');      
+      }, 'storeDetail');
       widgetService.registerWidget({
           controller: 'virtoCommerce.storeModule.storePaymentsWidgetController',
           template: 'Modules/$(VirtoCommerce.Store)/Scripts/widgets/storePaymentsWidget.tpl.html'
@@ -69,11 +69,44 @@ angular.module(moduleName, [
           template: 'Modules/$(VirtoCommerce.Store)/Scripts/widgets/storeShippingWidget.tpl.html'
       }, 'storeDetail');
 
-      var settingsWidget = {
-          controller: 'platformWebApp.entitySettingsWidgetController',
-          template: 'Scripts/app/settings/widgets/entitySettingsWidget.tpl.html'
+      var resetCommand = {
+          name: "Reset",
+          icon: 'fa fa-undo',
+          executeMethod: function (blade) {
+              angular.copy(blade.origEntity, blade.currentEntity);
+          },
+          canExecuteMethod: function (blade) {
+              return !angular.equals(blade.origEntity, blade.currentEntity);
+          },
+          permission: 'store:manage',
+          index: 0
       };
-      widgetService.registerWidget(settingsWidget, 'shippingMethodDetail');
-      widgetService.registerWidget(settingsWidget, 'paymentMethodDetail');
+      toolbarService.register(resetCommand, 'virtoCommerce.storeModule.paymentMethodDetailController');
+      toolbarService.register(resetCommand, 'virtoCommerce.storeModule.shippingMethodDetailController');
+
+      var settingsCommand = {
+          name: "Settings", icon: 'fa fa-wrench',
+          executeMethod: function (blade) {
+              var newBlade = {
+                  id: 'entitySettingList',
+                  controller: 'platformWebApp.entitySettingListController',
+                  template: 'Scripts/app/settings/blades/entitySetting-list.tpl.html'
+              };
+              bladeNavigationService.showBlade(newBlade, blade);
+          },
+          canExecuteMethod: function () {
+              return true;
+          },
+          index: 1
+      };
+      toolbarService.register(settingsCommand, 'virtoCommerce.storeModule.paymentMethodDetailController');
+      toolbarService.register(settingsCommand, 'virtoCommerce.storeModule.shippingMethodDetailController');
+
+      //var settingsWidget = {
+      //    controller: 'platformWebApp.entitySettingsWidgetController',
+      //    template: 'Scripts/app/settings/widgets/entitySettingsWidget.tpl.html'
+      //};
+      //widgetService.registerWidget(settingsWidget, 'shippingMethodDetail');
+      //widgetService.registerWidget(settingsWidget, 'paymentMethodDetail');
   }])
 ;

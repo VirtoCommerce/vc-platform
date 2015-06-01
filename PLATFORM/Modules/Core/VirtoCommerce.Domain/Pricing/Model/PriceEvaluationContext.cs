@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using VirtoCommerce.Domain.Common;
 using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.Domain.Pricing.Model
 {
-	public class PriceEvaluationContext : ValueObject<PriceEvaluationContext>
+	public class PriceEvaluationContext : EvaluationContextBase
 	{
 		public string StoreId { get; set; } 
 		public string CatalogId { get; set; }

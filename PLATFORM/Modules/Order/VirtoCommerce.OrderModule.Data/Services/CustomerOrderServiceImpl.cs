@@ -9,29 +9,29 @@ using VirtoCommerce.Domain.Order.Model;
 using VirtoCommerce.Domain.Order.Services;
 using VirtoCommerce.OrderModule.Data.Converters;
 using VirtoCommerce.OrderModule.Data.Repositories;
-using VirtoCommerce.OrderModule.Data.Workflow;
 using VirtoCommerce.OrderModule.Data.Model;
 using System.Collections.ObjectModel;
 using VirtoCommerce.Platform.Data.Infrastructure;
 using VirtoCommerce.Domain.Common;
 using VirtoCommerce.Platform.Core.Common;
-using VirtoCommerce.Domain.Order.Workflow;
+using VirtoCommerce.Domain.Common.Events;
+using VirtoCommerce.Domain.Order.Events;
 
 namespace VirtoCommerce.OrderModule.Data.Services
 {
 	public class CustomerOrderServiceImpl : ServiceBase, ICustomerOrderService
 	{
-		private const string _workflowName = "OrderRecalculate";
 		private readonly Func<IOrderRepository> _repositoryFactory;
 		private readonly IOperationNumberGenerator _operationNumberGenerator;
 		private readonly IShoppingCartService _shoppingCartService;
-		private readonly IWorkflowService _workflowService;
-		public CustomerOrderServiceImpl(Func<IOrderRepository> orderRepositoryFactory, IOperationNumberGenerator operationNumberGenerator, IOrderWorkflow workflowService, IShoppingCartService shoppingCartService)
+		private readonly IEventPublisher<OrderChangeEvent> _eventPublisher;
+
+		public CustomerOrderServiceImpl(Func<IOrderRepository> orderRepositoryFactory, IOperationNumberGenerator operationNumberGenerator, IEventPublisher<OrderChangeEvent> eventPublisher, IShoppingCartService shoppingCartService)
 		{
 			_repositoryFactory = orderRepositoryFactory;
 			_shoppingCartService = shoppingCartService;
 			_operationNumberGenerator = operationNumberGenerator;
-			_workflowService = workflowService;
+			_eventPublisher = eventPublisher;
 		}
 
 		#region ICustomerOrderService Members
@@ -52,8 +52,8 @@ namespace VirtoCommerce.OrderModule.Data.Services
 
 		public virtual CustomerOrder Create(CustomerOrder order)
 		{
-			RecalculateOrder(new OrderStateBasedEvalContext(EntryState.Added, null, order));
-
+			_eventPublisher.Publish(new OrderChangeEvent(EntryState.Added, null, order));
+	
 			EnsureThatAllOperationsHasNumber(order);
 
 			//TODO: for approved sipments need decrease inventory
@@ -96,7 +96,7 @@ namespace VirtoCommerce.OrderModule.Data.Services
 					var origOrder = GetById(order.Id, CustomerOrderResponseGroup.Full);
 
 					//Do business logic on temporary  order object
-					RecalculateOrder(new OrderStateBasedEvalContext(EntryState.Modified, origOrder, order));
+					_eventPublisher.Publish(new OrderChangeEvent(EntryState.Modified, origOrder, order));
 
 					var sourceOrderEntity = order.ToDataModel();
 					var targetOrderEntity = repository.GetCustomerOrderById(order.Id, CustomerOrderResponseGroup.Full);
@@ -169,10 +169,7 @@ namespace VirtoCommerce.OrderModule.Data.Services
 
 			return retVal;
 		}
-		private void RecalculateOrder(OrderStateBasedEvalContext context)
-		{
-			_workflowService.RunWorkflow(context);
-		}
+	
 
 		private void EnsureThatAllOperationsHasNumber(CustomerOrder order)
 		{

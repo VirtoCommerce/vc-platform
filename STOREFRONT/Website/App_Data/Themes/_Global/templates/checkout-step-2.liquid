@@ -27,33 +27,31 @@
                         </div>
                     </div>
                 {% endif %}
+                <div class="checkbox">
+                    <label>
+                        <input checked="checked" id="checkout_buyer_accepts_marketing" name="checkout[buyer_accepts_marketing]" type="checkbox"> I want to receive occasional emails about new products, promotions and other news.
+                    </label>
+                </div>
                 <div class="box-inner-header">
                     <h3>Shipping method</h3>
                 </div>
                 <div class="row" id="shipping-methods">
                     {% for shipping_method in checkout.shipping_methods %}
                         <div class="col-md-6" style="cursor: pointer;">
-                            <div class="box inner-box">
-                                <div class="box-header">
-                                    <h3>{{ shipping_method.title }}</h3>
-                                </div>
-                                <div class="box-footer">
-                                    {% if checkout.shipping_method.handle == shipping_method.handle %}
-                                        <input id="checkout_shipping_method_{{ shipping_method.handle }}" name="checkout[shipping_method_id]" selected="selected" type="radio" value="{{ shipping_method.handle }}" />
-                                    {% else %}
-                                        <input id="checkout_shipping_method_{{ shipping_method.handle }}" name="checkout[shipping_method_id]" type="radio" value="{{ shipping_method.handle }}" />
-                                    {% endif %}
-                                    <div class="price" >
-                                        <strong>
-                                            {% if shipping_method.price == 0 %}
-                                                FREE!
-                                            {% else %}
-                                                {% include 'price' with shipping_method.price %}
-                                            {% endif %}
-                                        </strong>
-                                    </div>
-                                </div>
-                            </div>
+                            <input id="checkout_shipping_method_{{ shipping_method.handle }}" name="checkout[shipping_method_id]" type="radio" value="{{ shipping_method.handle }}" required="required" />
+                            <label for="checkout_shipping_method_{{ shipping_method.handle }}"></label>
+                            <span class="shipping_method_label">
+                                {{ shipping_method.title }}
+                                (<span class="price" >
+                                    <strong>
+                                        {% if shipping_method.price == 0 %}
+                                            FREE!
+                                        {% else %}
+                                            {% include 'price' with shipping_method.price %}
+                                        {% endif %}
+                                    </strong>
+                                </span>)
+                            </span>
                         </div>
                     {% endfor %}
                 </div>
@@ -63,14 +61,9 @@
                 <div class="row" id="payment-methods">
                     {% for payment_method in checkout.payment_methods %}
                         <div class="col-md-6" style="cursor: pointer;">
-                            <div class="box inner-box">
-                                <div class="box-header">
-                                    <h3>{{ payment_method.Handle }}</h3>
-                                </div>
-                                <div class="box-footer">
-                                    <input id="checkout_payment_method_{{ payment_method.handle }}" name="checkout[payment_method_id]" type="radio" value="{{ payment_method.handle }}" />
-                                </div>
-                            </div>
+                            <input id="checkout_payment_method_{{ payment_method.handle }}" name="checkout[payment_method_id]" type="radio" value="{{ payment_method.handle }}" required="required" />
+                            <label for="checkout_payment_method_{{ payment_method.handle }}"></label>
+                            <img src="{{ payment_method.icon_url }}" width="150" />
                         </div>
                     {% endfor %}
                 </div>

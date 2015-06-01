@@ -53,20 +53,33 @@ namespace VirtoCommerce.Platform.Core.Modularity
             if (moduleInfo == null)
                 throw new ArgumentNullException("moduleInfo");
 
-            IModule moduleInstance = null;
             try
             {
-                moduleInstance = CreateModule(moduleInfo);
+                var moduleInstance = CreateModule(moduleInfo);
+                moduleInfo.ModuleInstance = moduleInstance;
                 moduleInstance.SetupDatabase(_options.SampleDataLevel);
                 moduleInstance.Initialize();
-                moduleInfo.ModuleInstance = moduleInstance;
             }
             catch (Exception ex)
             {
-                HandleModuleInitializationError(
-                    moduleInfo,
-                    moduleInstance != null ? moduleInstance.GetType().Assembly.FullName : null,
-                    ex);
+                HandleModuleInitializationError(moduleInfo, ex);
+            }
+        }
+
+        public void PostInitialize(ModuleInfo moduleInfo)
+        {
+            if (moduleInfo == null)
+                throw new ArgumentNullException("moduleInfo");
+
+            var moduleInstance = moduleInfo.ModuleInstance;
+
+            try
+            {
+                moduleInstance.PostInitialize();
+            }
+            catch (Exception ex)
+            {
+                HandleModuleInitializationError(moduleInfo, ex);
             }
         }
 
@@ -76,10 +89,9 @@ namespace VirtoCommerce.Platform.Core.Modularity
         /// This method can be overridden to provide a different behavior. 
         /// </summary>
         /// <param name="moduleInfo">The module metadata where the error happenened.</param>
-        /// <param name="assemblyName">The assembly name.</param>
         /// <param name="exception">The exception thrown that is the cause of the current error.</param>
         /// <exception cref="ModuleInitializeException"></exception>
-        public virtual void HandleModuleInitializationError(ModuleInfo moduleInfo, string assemblyName, Exception exception)
+        public virtual void HandleModuleInitializationError(ModuleInfo moduleInfo, Exception exception)
         {
             if (moduleInfo == null)
                 throw new ArgumentNullException("moduleInfo");
@@ -94,8 +106,9 @@ namespace VirtoCommerce.Platform.Core.Modularity
             }
             else
             {
-                if (!string.IsNullOrEmpty(assemblyName))
+                if (moduleInfo.ModuleInstance != null)
                 {
+                    var assemblyName = moduleInfo.ModuleInstance.GetType().Assembly.FullName;
                     moduleException = new ModuleInitializeException(moduleInfo.ModuleName, assemblyName, exception.Message, exception);
                 }
                 else

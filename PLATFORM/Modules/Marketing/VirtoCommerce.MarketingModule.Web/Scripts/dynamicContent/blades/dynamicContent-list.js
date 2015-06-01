@@ -17,7 +17,7 @@
 		$scope.selectedNodeId = data.id;
 
 		var newBlade = {
-			id: 'marketingDetails',
+			id: 'dynamicContentList',
 			title: data.name,
 			subtitle: 'Marketing service',
 			controller: 'virtoCommerce.marketingModule.' + data.entityName + 'DynamicContentListController',
@@ -26,7 +26,7 @@
 		bladeNavigationService.showBlade(newBlade, blade);
 	}
 
-	$scope.bladeHeadIco = 'fa fa-calendar-o';
+	$scope.blade.headIcon = 'fa fa-calendar-o';
 
 	initializeBlade();
 }]);

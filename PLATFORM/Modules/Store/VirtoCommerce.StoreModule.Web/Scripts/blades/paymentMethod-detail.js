@@ -1,6 +1,6 @@
 ﻿angular.module('virtoCommerce.storeModule')
 .controller('virtoCommerce.storeModule.paymentMethodDetailController', ['$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', function ($scope, bladeNavigationService, dialogService) {
-    
+
     function initializeBlade(data) {
         $scope.blade.currentEntityId = data.id;
         $scope.blade.title = data.name;
@@ -27,23 +27,8 @@
         $scope.formScope = form;
     }
 
-    $scope.bladeHeadIco = 'fa fa-archive';
-    $scope.toolbarTemplate = 'Modules/$(VirtoCommerce.Store)/Scripts/blades/toolbar-isActive.tpl.html';
-
-    $scope.bladeToolbarCommands = [
-        {
-            name: "Reset",
-            icon: 'fa fa-undo',
-            executeMethod: function () {
-                angular.copy($scope.blade.origEntity, $scope.blade.currentEntity);
-            },
-            canExecuteMethod: function () {
-                return isDirty();
-            },
-            permission: 'store:manage'
-        }
-    ];
-
-
+    $scope.blade.headIcon = 'fa fa-archive';
+    $scope.blade.toolbarCustomTemplates = ['Modules/$(VirtoCommerce.Store)/Scripts/blades/toolbar-isActive.tpl.html'];
+    
     initializeBlade($scope.blade.origEntity);
 }]);

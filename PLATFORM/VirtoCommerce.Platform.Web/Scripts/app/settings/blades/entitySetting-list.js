@@ -2,29 +2,28 @@
 .controller('platformWebApp.entitySettingListController', ['$scope', 'platformWebApp.dialogService', 'platformWebApp.bladeNavigationService', function ($scope, dialogService, bladeNavigationService) {
     var blade = $scope.blade;
     blade.title = 'Settings';
-    
+
     function initializeBlade(results) {
         blade.data = results;
 
         // parse values as they all are strings
+        var selectedSettings = _.where(results, { valueType: 'Integer' });
+        _.forEach(selectedSettings, function (setting) {
+            setting.value = parseInt(setting.value, 10);
+            if (setting.allowedValues) {
+                setting.allowedValues = _.map(setting.allowedValues, function (value) { return parseInt(value, 10); });
+            }
+        });
 
-        //var selectedSettings = _.where(results, { valueType: 'Integer' });
-        //_.forEach(selectedSettings, function (setting) {
-        //    setting.value = parseInt(setting.value, 10);
-        //    if (setting.allowedValues) {
-        //        setting.allowedValues = _.map(setting.allowedValues, function (value) { return parseInt(value, 10); });
-        //    }
-        //});
+        selectedSettings = _.where(results, { valueType: 'Decimal' });
+        _.forEach(selectedSettings, function (setting) {
+            setting.value = parseFloat(setting.value);
+            if (setting.allowedValues) {
+                setting.allowedValues = _.map(setting.allowedValues, function (value) { return parseFloat(value); });
+            }
+        });
 
-        //selectedSettings = _.where(results, { valueType: 'Decimal' });
-        //_.forEach(selectedSettings, function (setting) {
-        //    setting.value = parseFloat(setting.value);
-        //    if (setting.allowedValues) {
-        //        setting.allowedValues = _.map(setting.allowedValues, function (value) { return parseFloat(value); });
-        //    }
-        //});
-
-        var selectedSettings = _.where(results, { valueType: 'Boolean' });
+        selectedSettings = _.where(results, { valueType: 'Boolean' });
         _.forEach(selectedSettings, function (setting) {
             setting.value = setting.value.toLowerCase() === 'true';
             if (setting.allowedValues) {
@@ -57,15 +56,16 @@
         };
         bladeNavigationService.showBlade(newBlade, blade);
     }
-    
+
     function isDirty() {
         return !angular.equals(blade.currentEntities, blade.origEntity);
     };
 
     $scope.cancelChanges = function () {
+        angular.copy(blade.origEntity, blade.currentEntities);
         $scope.bladeClose();
     }
-    
+
     $scope.saveChanges = function () {
         blade.isLoading = true;
         var objects = _.flatten(_.map(blade.currentEntities, _.values));
@@ -83,8 +83,8 @@
         $scope.bladeClose();
     };
 
-    $scope.bladeHeadIco = 'fa fa-wrench';
-    $scope.bladeToolbarCommands = [
+    $scope.blade.headIcon = 'fa fa-wrench';
+    $scope.blade.toolbarCommands = [
         {
             name: "Reset", icon: 'fa fa-undo',
             executeMethod: function () {
@@ -102,7 +102,7 @@
             var dialog = {
                 id: "confirmItemChange",
                 title: "Save changes",
-                message: "The settings has been modified. Do you want to save changes?",
+                message: "The settings has been modified. Do you want to confirm changes?",
                 callback: function (needSave) {
                     if (needSave) {
                         $scope.saveChanges();

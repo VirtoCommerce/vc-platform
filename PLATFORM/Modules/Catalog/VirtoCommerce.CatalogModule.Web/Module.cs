@@ -66,17 +66,11 @@ namespace VirtoCommerce.CatalogModule.Web
             _container.RegisterType<ICatalogService, CatalogServiceImpl>();
             _container.RegisterType<IPropertyService, PropertyServiceImpl>();
             _container.RegisterType<ICatalogSearchService, CatalogSearchServiceImpl>();
+			_container.RegisterType<ISkuGenerator, DefaultSkuGenerator>();
 
             #endregion
 
-            #region Import dependencies
-            //Func<IImportRepository> importRepFactory = () => new EFImportingRepository(_connectionStringName);
-
-            //Func<IImportService> imporServiceFactory = () => new ImportService(importRepFactory(), null, catalogRepFactory(), null, null);
-
-            //_container.RegisterType<ImportController>(new InjectionConstructor(importRepFactory, imporServiceFactory, catalogRepFactory, _container.Resolve<INotifier>()));
-
-            #endregion
+      
         }
 
         #endregion

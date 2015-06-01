@@ -32,6 +32,12 @@ namespace VirtoCommerce.Web.Convertors
                 {
                     ret.ShippingAddress = shippingAddress.AsWebModel();
                 }
+
+                // Temporary ordinal case, when billing address == shipping address
+                if (shippingAddress != null && billingAddress == null)
+                {
+                    ret.BillingAddress = shippingAddress.AsWebModel();
+                }
             }
 
             ret.Cancelled = customerOrder.IsCancelled;
@@ -47,11 +53,42 @@ namespace VirtoCommerce.Web.Convertors
                 ret.Discounts.Add(customerOrder.Discount.AsWebModel());
             }
 
-            ret.Email = string.Empty; // TODO
-            ret.FinancialStatus = string.Empty; // TODO
-            ret.FinancialStatusLabel = string.Empty; // TODO
-            ret.FulfillmentStatus = string.Empty; // TODO
-            ret.FullfillmentStatusLabel = string.Empty; // TODO
+            var inPayment = customerOrder.InPayments != null ?
+                customerOrder.InPayments.OrderByDescending(p => p.CreatedDate).FirstOrDefault() : null; // TEST
+            var orderShipment = customerOrder.Shipments != null ?
+                customerOrder.Shipments.FirstOrDefault() : null;
+            var addressWithEmail = customerOrder.Addresses != null ?
+                customerOrder.Addresses.FirstOrDefault(a => !string.IsNullOrEmpty(a.Email)) : null;
+
+            ret.Email = addressWithEmail != null ? addressWithEmail.Email : null;
+
+            if (inPayment != null)
+            {
+                if (string.IsNullOrEmpty(inPayment.Status))
+                {
+                    ret.FinancialStatus = inPayment.IsApproved ? "Paid" : "Pending";
+                    ret.FinancialStatusLabel = inPayment.IsApproved ? "Paid" : "Pending";
+                }
+                else
+                {
+                    ret.FinancialStatus = inPayment.Status;
+                    ret.FinancialStatusLabel = inPayment.Status;
+                }
+            }
+
+            if (orderShipment != null)
+            {
+                if (string.IsNullOrEmpty(orderShipment.Status))
+                {
+                    ret.FulfillmentStatus = orderShipment.IsApproved ? "Sended" : "Not sended";
+                    ret.FulfillmentStatusLabel = orderShipment.IsApproved ? "Sended" : "Not sended";
+                }
+                else
+                {
+                    ret.FulfillmentStatus = inPayment.Status;
+                    ret.FulfillmentStatusLabel = inPayment.Status;
+                }
+            }
 
             if (customerOrder.Items != null)
             {
@@ -85,6 +122,7 @@ namespace VirtoCommerce.Web.Convertors
 
             return ret;
         }
+
         public static CustomerAddress AsWebModel(this ApiClient.DataContracts.Orders.Address address)
         {
             var ret = new CustomerAddress

@@ -57,7 +57,7 @@
         return angular.equals(data, blade.currentEntity);
     }
 
-    $scope.bladeToolbarCommands = [
+    $scope.blade.toolbarCommands = [
         {
             name: "Add", icon: 'fa fa-plus',
             executeMethod: function () {
@@ -70,7 +70,7 @@
         }
     ];
 
-    $scope.bladeHeadIco = 'fa fa-paperclip';
+    $scope.blade.headIcon = 'fa fa-paperclip';
 
     blade.initialize();
 }]);

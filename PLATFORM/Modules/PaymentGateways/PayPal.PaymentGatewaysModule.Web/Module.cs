@@ -6,7 +6,6 @@ using VirtoCommerce.Domain.Catalog.Services;
 using VirtoCommerce.Domain.Common;
 using VirtoCommerce.Domain.Marketing.Services;
 using VirtoCommerce.Domain.Order.Services;
-using VirtoCommerce.Domain.Order.Workflow;
 using VirtoCommerce.Domain.Payment.Model;
 using VirtoCommerce.Domain.Payment.Services;
 using VirtoCommerce.Domain.Store.Services;
@@ -41,7 +40,7 @@ namespace PayPal.PaymentGatewaysModule.Web
 				{
 					Name = "PayPal",
 					Description = "PayPal payment integration",
-					LogoUrl = "https://www.paypalobjects.com/webstatic/mktg/logo/pp_cc_mark_37x23.jpg",
+					LogoUrl = "http://virtocommerce.com/Content/images/PayPal.png",
 					Settings = settingsManager.GetModuleSettings("Paypal.PaymentGateway")
 				};
 			};

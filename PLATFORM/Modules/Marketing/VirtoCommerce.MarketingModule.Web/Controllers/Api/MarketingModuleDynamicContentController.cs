@@ -8,7 +8,8 @@ using VirtoCommerce.MarketingModule.Web.Converters;
 using VirtoCommerce.Platform.Core.Security;
 using webModel = VirtoCommerce.MarketingModule.Web.Model;
 using coreModel = VirtoCommerce.Domain.Marketing.Model;
-using VirtoCommerce.DynamicExpressionModule.Data.Content;
+using VirtoCommerce.Domain.Common;
+
 namespace VirtoCommerce.MarketingModule.Web.Controllers.Api
 {
 	[RoutePrefix("api/marketing")]
@@ -133,7 +134,7 @@ namespace VirtoCommerce.MarketingModule.Web.Controllers.Api
 			{
                 ContentItems = new webModel.DynamicContentItem[] {},
                 ContentPlaces = new webModel.DynamicContentPlace[] {},
-				DynamicExpression = _marketingExtensionManager.DynamicContentExpressionTree as DynamicContentExpressionTree,
+				DynamicExpression = _marketingExtensionManager.DynamicContentExpressionTree as ConditionExpressionTree,
 				IsActive = true
 			};
 			return Ok(retVal);
@@ -148,7 +149,7 @@ namespace VirtoCommerce.MarketingModule.Web.Controllers.Api
 			var retVal = _dynamicContentService.GetPublicationById(id);
 			if (retVal != null)
 			{
-				return Ok(retVal.ToWebModel(_marketingExtensionManager.DynamicContentExpressionTree as DynamicContentExpressionTree));
+				return Ok(retVal.ToWebModel(_marketingExtensionManager.DynamicContentExpressionTree));
 			}
 			return NotFound();
 		}

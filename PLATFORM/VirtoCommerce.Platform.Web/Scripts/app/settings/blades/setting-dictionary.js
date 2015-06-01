@@ -26,8 +26,8 @@
         $scope.selectedItem = listItem;
     };
 
-    $scope.bladeHeadIco = 'fa fa-wrench';
-    $scope.bladeToolbarCommands = [
+    $scope.blade.headIcon = 'fa fa-wrench';
+    $scope.blade.toolbarCommands = [
      {
          name: "Delete", icon: 'fa fa-trash-o',
          executeMethod: function () {

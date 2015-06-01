@@ -8,7 +8,7 @@ namespace VirtoCommerce.DynamicExpressionModule.Data.Promotion
 	//[] [] items are in shopping cart
 	public class ConditionAtNumItemsInCart : ConditionBase, IConditionExpression
 	{
-		public decimal NumItem { get; set; }
+		public int NumItem { get; set; }
 
 		public bool Exactly { get; set; }
 

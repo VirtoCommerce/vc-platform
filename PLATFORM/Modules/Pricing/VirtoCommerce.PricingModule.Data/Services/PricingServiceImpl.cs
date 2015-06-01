@@ -75,6 +75,11 @@ namespace VirtoCommerce.PricingModule.Data.Services
                 {
                     query = query.Where(x => evalContext.PricelistIds.Contains(x.PricelistId));
                 }
+
+				if(evalContext.Currency != null)
+				{
+					query = query.Where(x => x.Pricelist.Currency == evalContext.Currency.ToString());
+				}
                 var prices = query.ToArray().Select(x => x.ToCoreModel());
 
                 foreach (var currencyPricesGroup in prices.GroupBy(x => x.Currency))

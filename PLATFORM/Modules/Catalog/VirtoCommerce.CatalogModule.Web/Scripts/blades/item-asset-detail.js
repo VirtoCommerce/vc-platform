@@ -57,7 +57,7 @@
             var uploader = $scope.uploader = new FileUploader({
                 scope: $scope,
                 headers: { Accept: 'application/json' },
-                url: 'api/assets',
+                url: 'api/assets/catalog',
                 method: 'POST',
                 autoUpload: true,
                 removeAfterUpload: true
@@ -102,7 +102,7 @@
         window.prompt("Copy to clipboard: Ctrl+C, Enter", data.url);
     }
 
-    $scope.bladeToolbarCommands = [
+    $scope.blade.toolbarCommands = [
 
         {
             name: "Save", icon: 'fa fa-save',

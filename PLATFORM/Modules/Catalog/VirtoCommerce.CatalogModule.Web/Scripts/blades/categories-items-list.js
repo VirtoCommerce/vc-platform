@@ -339,7 +339,7 @@
         		});
         	}
 
-        	$scope.bladeToolbarCommands = [
+        	$scope.blade.toolbarCommands = [
                 {
                 	name: "Refresh",
                 	icon: 'fa fa-refresh',
@@ -364,7 +364,15 @@
 				  {
 				  	name: "Import", icon: 'fa fa-download',
 				  	executeMethod: function () {
-				  		$scope.import(selectedNode);
+				  		var newBlade = {
+				  			id: 'catalogImport',
+				  			title: 'Catalog import',
+				  			catalog: blade.catalog,
+				  			subtitle: 'Choose data format & start import',
+				  			controller: 'virtoCommerce.catalogModule.importerListController',
+				  			template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/import/importers-list.tpl.html'
+				  		};
+				  		bladeNavigationService.showBlade(newBlade, $scope.blade);
 				  	},
 				  	canExecuteMethod: function () {
 				  		return true;
@@ -374,7 +382,7 @@
 				 	name: "Export", icon: 'fa fa-upload',
 				 	executeMethod: function () {
 				 		var newBlade = {
-				 			id: 'exports',
+				 			id: 'catalogExport',
 				 			title: 'Data export',
                             catalog: blade.catalog,
 				 			subtitle: 'Choose data format & start export',
@@ -425,14 +433,14 @@
         					return isItemsChecked();
         				}
         			}
-        			$scope.bladeToolbarCommands.splice(1, 2, mapCommand);
+        			$scope.blade.toolbarCommands.splice(1, 2, mapCommand);
         		} else if (blade.mode === 'newAssociation') {
-        			$scope.bladeToolbarCommands.splice(1, 2);
+        			$scope.blade.toolbarCommands.splice(1, 2);
         		}
         	} else if (authService.checkPermission('catalog:categories:manage')
                    || (authService.checkPermission('catalog:virtual_catalogs:manage') && blade.catalog.virtual)
                    || (authService.checkPermission('catalog:items:manage') && !blade.catalog.virtual)) {
-        		$scope.bladeToolbarCommands.splice(0, 0, {
+        		$scope.blade.toolbarCommands.splice(0, 0, {
         			name: "Add", icon: 'fa fa-plus',
         			executeMethod: function () {
         				closeChildrenBlades();

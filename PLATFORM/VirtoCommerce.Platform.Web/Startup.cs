@@ -117,12 +117,11 @@ namespace VirtoCommerce.Platform.Web
 
             var postInitializeModules = moduleCatalog.CompleteListWithDependencies(moduleCatalog.Modules)
                 .Where(m => m.ModuleInstance != null)
-                .Select(m => m.ModuleInstance)
                 .ToArray();
 
             foreach (var module in postInitializeModules)
             {
-                module.PostInitialize();
+                moduleManager.PostInitializeModule(module);
             }
 
             var hubConfiguration = new HubConfiguration();

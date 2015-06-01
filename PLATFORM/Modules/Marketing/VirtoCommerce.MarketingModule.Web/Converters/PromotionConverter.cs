@@ -8,13 +8,12 @@ using ExpressionSerialization;
 using Newtonsoft.Json;
 using Omu.ValueInjecter;
 using VirtoCommerce.Domain.Common;
-using VirtoCommerce.MarketingModule.Data.Common;
 using VirtoCommerce.MarketingModule.Data.Promotions;
 using coreModel = VirtoCommerce.Domain.Marketing.Model;
 using webModel = VirtoCommerce.MarketingModule.Web.Model;
-using VirtoCommerce.DynamicExpressionModule.Data.Promotion;
-using VirtoCommerce.DynamicExpressionModule.Data;
 using VirtoCommerce.Platform.Core.Common;
+using VirtoCommerce.Domain.Marketing.Model;
+using VirtoCommerce.CoreModule.Data.Common;
 
 namespace VirtoCommerce.MarketingModule.Web.Converters
 {

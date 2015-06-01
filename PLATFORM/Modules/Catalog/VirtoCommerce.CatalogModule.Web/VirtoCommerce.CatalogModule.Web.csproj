@@ -109,14 +109,14 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BackgroundJobs\CsvCatalogImportJob.cs" />
     <Compile Include="BackgroundJobs\CsvCatalogExportJob.cs" />
     <Compile Include="Binders\ListEntrySearchCriteriaBinder.cs" />
     <Compile Include="Controllers\Api\CatalogModuleCatalogsController.cs" />
     <Compile Include="Controllers\Api\CatalogModuleCategoriesController.cs" />
-    <Compile Include="Controllers\Api\CatalogModuleExportController.cs" />
+    <Compile Include="Controllers\Api\CatalogModuleExportImportController.cs" />
     <Compile Include="Controllers\Api\CatalogModuleProductsController.cs" />
     <Compile Include="Controllers\Api\CatalogModuleListEntryController.cs" />
-    <Compile Include="Controllers\Api\CatalogModuleImportController.cs" />
     <Compile Include="Controllers\Api\CatalogModulePropertiesController.cs" />
     <Compile Include="Controllers\PredefinedPermissions.cs" />
     <Compile Include="Converters\AssetConverter.cs" />
@@ -138,12 +138,12 @@
     <Compile Include="Model\Catalog.cs" />
     <Compile Include="Model\CategoryLink.cs" />
     <Compile Include="Model\EditorialReview.cs" />
-    <Compile Include="Model\ImportJob.cs" />
-    <Compile Include="Model\JobProgressInfo.cs" />
+    <Compile Include="Model\CsvImportConfiguration.cs" />
     <Compile Include="Model\ListEntryLink.cs" />
-    <Compile Include="Model\MappingItem.cs" />
+    <Compile Include="Model\CsvImportMappingItem.cs" />
     <Compile Include="Model\Notifications\ExportNotification.cs" />
-    <Compile Include="Model\Notifications\ImportNotifyEvent.cs" />
+    <Compile Include="Model\Notifications\ImportNotification.cs" />
+    <Compile Include="Model\Notifications\JobNotificationBase.cs" />
     <Compile Include="Model\ProgressStatus.cs" />
     <Compile Include="Model\ProductAssociation.cs" />
     <Compile Include="Model\PropertyDictionaryValue.cs" />
@@ -166,6 +166,18 @@
     <Compile Include="Model\SeoInfo.cs" />
     <Compile Include="Module.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Content Include="Content\css\catalog.css" />
+    <Content Include="Scripts\blades\import\catalog-CSV-import.js" />
+    <Content Include="Scripts\blades\import\catalog-CSV-import.tpl.html" />
+    <Content Include="Scripts\blades\import\notifications\historyImport.tpl.html" />
+    <Content Include="Scripts\blades\import\notifications\menuImport.tpl.html" />
+    <Content Include="Scripts\blades\import\wizard\catalog-CSV-import-wizard.js" />
+    <Content Include="Scripts\blades\import\catalog-import.js" />
+    <Content Include="Scripts\blades\import\wizard\catalog-CSV-import-wizard.tpl.html" />
+    <Content Include="Scripts\blades\import\wizard\catalog-CSV-import-wizard-mapping-step.js" />
+    <Content Include="Scripts\blades\import\wizard\catalog-CSV-import-wizard-mapping-step.tpl.html" />
+    <Content Include="Scripts\blades\import\importers-list.js" />
+    <Content Include="Scripts\blades\import\importers-list.tpl.html" />
     <Content Include="Scripts\resources\export.js" />
   </ItemGroup>
   <ItemGroup>
@@ -185,7 +197,6 @@
     <Content Include="Scripts\blades\export\exporter-list.tpl.html" />
     <Content Include="Scripts\blades\export\notifications\historyExport.tpl.html" />
     <Content Include="Scripts\blades\export\notifications\menuExport.tpl.html" />
-    <Content Include="Scripts\blades\import\catalog-import.js" />
     <Content Include="Scripts\blades\item-associations-list.js" />
     <Content Include="Scripts\blades\editorialReviews-list.js" />
     <Content Include="Scripts\blades\item-associations-list.tpl.html" />
@@ -196,10 +207,6 @@
     <Content Include="Scripts\blades\category-detail.tpl.html" />
     <Content Include="Scripts\blades\editorialReview-detail.js" />
     <Content Include="Scripts\blades\editorialReview-detail.tpl.html" />
-    <Content Include="Scripts\blades\import\import-job-run.js" />
-    <Content Include="Scripts\blades\import\import-job-list.js" />
-    <Content Include="Scripts\blades\import\import-job-run.tpl.html" />
-    <Content Include="Scripts\blades\import\import-job-list.tpl.html" />
     <Content Include="Scripts\blades\seo-detail.js" />
     <Content Include="Scripts\blades\seo-detail.tpl.html" />
     <Content Include="Scripts\blades\property-attributes.js" />
@@ -242,8 +249,6 @@
     <Content Include="Scripts\catalog.js" />
     <Content Include="Scripts\directives\property2.js" />
     <Content Include="Scripts\directives\property2.tpl.html" />
-    <Content Include="Scripts\blades\import\import-job-progress.js" />
-    <Content Include="Scripts\blades\import\import-job-progress.tpl.html" />
     <Content Include="Scripts\resources\catalogs.js" />
     <Content Include="Scripts\resources\categories.js" />
     <Content Include="Scripts\resources\import.js" />
@@ -256,6 +261,7 @@
     <Content Include="Scripts\widgets\editorialReviewWidget.js" />
     <Content Include="Scripts\widgets\editorialReviewWidget.tpl.html" />
     <Content Include="Scripts\widgets\itemAssociationsWidget.js" />
+    <Content Include="Scripts\widgets\dashboard.js" />
     <Content Include="Scripts\widgets\seoWidget.js" />
     <Content Include="Scripts\widgets\itemAssociationsWidget.tpl.html" />
     <Content Include="Scripts\widgets\seoWidget.tpl.html" />
@@ -270,24 +276,6 @@
     <Content Include="Scripts\widgets\itemVariationWidget.js" />
     <Content Include="Scripts\widgets\itemVariationWidget.tpl.html" />
     <Content Include="Scripts\wizards\common\wizard-ok-action2.tpl.html" />
-    <Content Include="Scripts\wizards\export\export-wizard-format-step.js" />
-    <Content Include="Scripts\wizards\export\export-wizard-format-step.tpl.html" />
-    <Content Include="Scripts\wizards\export\export-wizard-types-step.js" />
-    <Content Include="Scripts\wizards\export\export-wizard-types-step.tpl.html" />
-    <Content Include="Scripts\wizards\export\export-wizard.js" />
-    <Content Include="Scripts\wizards\export\export-wizard.tpl.html" />
-    <Content Include="Scripts\wizards\importWizard\import-job-wizard-mapping-step-edit.js" />
-    <Content Include="Scripts\wizards\importWizard\import-job-wizard-mapping-step.js" />
-    <Content Include="Scripts\wizards\importWizard\import-job-wizard-mapping-step-edit.tpl.html" />
-    <Content Include="Scripts\wizards\importWizard\import-job-wizard-settings-step.js" />
-    <Content Include="Scripts\wizards\importWizard\import-job-wizard-importers-step.js" />
-    <Content Include="Scripts\wizards\importWizard\import-job-wizard-mapping-step.tpl.html" />
-    <Content Include="Scripts\wizards\importWizard\import-job-wizard-settings-step.tpl.html" />
-    <Content Include="Scripts\wizards\importWizard\import-job-wizard-importers-step.tpl.html" />
-    <Content Include="Scripts\wizards\importWizard\import-job-wizard-catalogs-step.tpl.html" />
-    <Content Include="Scripts\wizards\importWizard\import-job-wizard-catalogs-step.js" />
-    <Content Include="Scripts\wizards\importWizard\import-job-wizard.js" />
-    <Content Include="Scripts\wizards\importWizard\import-job-wizard.tpl.html" />
     <Content Include="Scripts\wizards\newAssociation\association-wizard-group-new.js" />
     <Content Include="Scripts\wizards\newAssociation\association-wizard-group-new.tpl.html" />
     <Content Include="Scripts\wizards\newAssociation\association-wizard.js" />

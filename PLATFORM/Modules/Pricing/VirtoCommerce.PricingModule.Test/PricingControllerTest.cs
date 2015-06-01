@@ -61,7 +61,7 @@ namespace VirtoCommerce.PricingModule.Test
 			};
 
 			var pricingService = new PricingServiceImpl(repositoryFactory);
-			var controller = new PricingModuleController(pricingService, null, null);
+			var controller = new PricingModuleController(pricingService, null, null, null);
 			return controller;
 		}
 	}

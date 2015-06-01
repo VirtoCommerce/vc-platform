@@ -45,7 +45,10 @@ namespace VirtoCommerce.PricingModule.Web
         }
 
         public void Initialize()
-        {
+        {          
+            var extensionManager = new DefaultPricingExtensionManagerImpl();
+            _container.RegisterInstance<IPricingExtensionManager>(extensionManager);
+
 			_container.RegisterType<IPricingRepository>(new InjectionFactory(c => new PricingRepositoryImpl("VirtoCommerce", new EntityPrimaryKeyGeneratorInterceptor(), new AuditableInterceptor(), new ChangeLogInterceptor(_container.Resolve<Func<IPlatformRepository>>(), ChangeLogPolicy.Cumulative, new[] { typeof(dataModel.Price).Name }))));
 			_container.RegisterType<IPricingService, PricingServiceImpl>();
 		}

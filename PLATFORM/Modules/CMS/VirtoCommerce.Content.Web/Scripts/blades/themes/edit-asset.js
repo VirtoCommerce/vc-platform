@@ -21,7 +21,7 @@
                 }, 1);
             });
 
-            $scope.bladeToolbarCommands = [
+            $scope.blade.toolbarCommands = [
 			{
 			    name: "Save", icon: 'fa fa-save',
 			    executeMethod: function () {
@@ -54,7 +54,7 @@
 			}];
         }
         else {
-        	$scope.bladeToolbarCommands = [
+        	$scope.blade.toolbarCommands = [
 			{
 				name: "Create", icon: 'fa fa-save',
 				executeMethod: function () {
@@ -186,7 +186,7 @@
         }
     };
 
-    $scope.bladeHeadIco = 'fa fa-archive';
+    $scope.blade.headIcon = 'fa fa-archive';
 
     // Codemirror configuration
     $scope.editorOptions = {

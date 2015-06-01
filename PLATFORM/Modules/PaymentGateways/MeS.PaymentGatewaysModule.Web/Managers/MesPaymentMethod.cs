@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Linq;
 using System.Web;
 using VirtoCommerce.Domain.Payment.Model;
@@ -32,7 +33,7 @@ namespace MeS.PaymentGatewaysModule.Web.Managers
 			return retVal;
 		}
 
-		public override ValidatePostProcessRequestResult ValidatePostProcessRequest(object context)
+		public override ValidatePostProcessRequestResult ValidatePostProcessRequest(NameValueCollection context)
 		{
 			throw new NotImplementedException();
 		}

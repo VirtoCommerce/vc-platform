@@ -10,6 +10,7 @@ using VirtoCommerce.ApiClient.DataContracts.Security;
 using VirtoCommerce.Web.Models;
 using VirtoCommerce.Web.Convertors;
 using VirtoCommerce.Web.Models.FormModels;
+using VirtoCommerce.Web.Models.Forms;
 
 namespace VirtoCommerce.Web.Controllers
 {
@@ -535,10 +536,105 @@ namespace VirtoCommerce.Web.Controllers
         [Route("order/{id}")]
         public async Task<ActionResult> Order(string id)
         {
-            this.Context.Order =
-                await this.CustomerService.GetOrderAsync(this.Context.Shop.StoreId, this.Context.Customer.Email, id);
+            var order = await CustomerService.GetOrderAsync(Context.Shop.StoreId, Context.Customer.Email, id);
+
+            if (order != null)
+            {
+                var orderModel = order.AsWebModel();
+
+                if (orderModel.FinancialStatus == "Pending")
+                {
+                    orderModel.PaymentMethods = await Service.GetStorePaymentMethodsAsync(Context.StoreId);
+                }
+
+                this.Context.Order = orderModel;
+            }
 
             return this.View("customers/order");
+        }
+
+        //
+        // POST: /account/payorder
+        [HttpPost]
+        public async Task<ActionResult> PayOrder(PayOrderFormModel formModel)
+        {
+            var form = GetForm(formModel.form_type);
+
+            if (form != null)
+            {
+                var paymentMethods = await Service.GetStorePaymentMethodsAsync(Context.StoreId);
+
+                if (paymentMethods != null)
+                {
+                    var paymentMethod = paymentMethods.FirstOrDefault(pm => pm.Handle == formModel.PaymentMethodId);
+
+                    if (paymentMethod != null)
+                    {
+                        var order = await CustomerService.GetOrderAsync(Context.StoreId, Context.CustomerId, formModel.OrderId);
+
+                        if (order != null)
+                        {
+                            if (order.InPayments == null)
+                            {
+                                order.InPayments = new List<ApiClient.DataContracts.Orders.PaymentIn>();
+                            }
+                            // TODO: Remake for partial payments
+                            order.InPayments.Add(new ApiClient.DataContracts.Orders.PaymentIn
+                            {
+                                Currency = order.Currency,
+                                CustomerId = Context.CustomerId,
+                                GatewayCode = paymentMethod.Handle,
+                                Sum = order.Sum
+                            });
+
+                            await CustomerService.UpdateOrderAsync(order);
+
+                            order = await CustomerService.GetOrderAsync(Context.StoreId, Context.CustomerId, formModel.OrderId);
+
+                            if (order != null)
+                            {
+                                var inPayment = order.InPayments.Where(p => p.GatewayCode == formModel.PaymentMethodId)
+                                    .OrderByDescending(p => p.CreatedDate).FirstOrDefault(); // For test
+
+                                if (inPayment != null)
+                                {
+                                    var paymentResult = await Service.ProcessPaymentAsync(order.Id, inPayment.Id);
+
+                                    if (paymentResult != null)
+                                    {
+                                        if (paymentResult.IsSuccess)
+                                        {
+                                            if (paymentResult.PaymentMethodType == ApiClient.DataContracts.PaymentMethodType.Redirection)
+                                            {
+                                                if (!string.IsNullOrEmpty(paymentResult.RedirectUrl))
+                                                {
+                                                    return Redirect(paymentResult.RedirectUrl);
+                                                }
+                                            }
+                                            if (paymentResult.PaymentMethodType == ApiClient.DataContracts.PaymentMethodType.PreparedForm)
+                                            {
+                                                if (!string.IsNullOrEmpty(paymentResult.HtmlForm))
+                                                {
+                                                    SiteContext.Current.Set("payment_html_form", paymentResult.HtmlForm);
+                                                    return View("payment");
+                                                }
+                                            }
+                                        }
+                                        else
+                                        {
+                                            Context.ErrorMessage = paymentResult.Error;
+
+                                            return View("error");
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            return View("error");
         }
 
         internal class ChallengeResult : HttpUnauthorizedResult

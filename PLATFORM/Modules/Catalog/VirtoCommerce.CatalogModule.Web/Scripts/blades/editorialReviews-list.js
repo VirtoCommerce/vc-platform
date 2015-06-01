@@ -52,7 +52,7 @@
         $scope.openBlade(data);
     }
 
-    $scope.bladeToolbarCommands = [
+    $scope.blade.toolbarCommands = [
         {
             name: "Add", icon: 'fa fa-plus',
             executeMethod: function () {

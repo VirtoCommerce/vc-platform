@@ -1,4 +1,37 @@
 angular.module('platformWebApp')
+.factory('platformWebApp.toolbarService', function () {
+    var toolbarCommandsMap = [];
+    var toolbarCustomContentsMap = [];
+    return {
+        register: function (command, toolbarName, isCustomContent) {
+            var map = isCustomContent ? toolbarCustomContentsMap : toolbarCommandsMap;
+            if (!map[toolbarName]) {
+                map[toolbarName] = [];
+            }
+
+            map[toolbarName].push(command);
+            map[toolbarName].sort(function (a, b) {
+                return a.index > b.index;
+            });
+        },
+        resolve: function (bladeCommands, toolbarName, isCustomContent) {
+            var map = isCustomContent ? toolbarCustomContentsMap : toolbarCommandsMap;
+            var externalCommands = map[toolbarName];
+            if (externalCommands) {
+                bladeCommands = angular.copy(bladeCommands || []);
+
+                _.each(externalCommands, function (newCommand) {
+                    if (isCustomContent)
+                        bladeCommands.splice(newCommand.index, 0, newCommand.template);
+                    else
+                        bladeCommands.splice(newCommand.index, 0, newCommand);
+                });
+            }
+
+            return bladeCommands;
+        }
+    };
+})
 .directive('vaBladeContainer', ['$compile', 'platformWebApp.bladeNavigationService', function ($compile, bladeNavigationService) {
     return {
         restrict: 'E',
@@ -9,7 +42,7 @@ angular.module('platformWebApp')
         }
     }
 }])
-.directive('vaBlade', ['$compile', 'platformWebApp.bladeNavigationService', '$timeout', function ($compile, bladeNavigationService, $timeout) {
+.directive('vaBlade', ['$compile', 'platformWebApp.bladeNavigationService', 'platformWebApp.toolbarService', '$timeout', function ($compile, bladeNavigationService, toolbarService, $timeout) {
     return {
         terminal: true,
         priority: 100,
@@ -135,11 +168,13 @@ angular.module('platformWebApp')
                     });
                 });
             };
-
-            scope.executeCommand = function (toolbarCommand) {
-                if (toolbarCommand.canExecuteMethod())
-                    toolbarCommand.executeMethod(scope.blade);
-            };
+            
+            scope.$watch('blade.toolbarCommands', function (toolbarCommands) {
+                scope.resolvedToolbarCommands = toolbarService.resolve(toolbarCommands, scope.blade.controller, false);
+            });
+            scope.$watch('blade.toolbarCustomTemplates', function (toolbarCustomTemplates) {
+                scope.resolvedToolbarCustomTemplates = toolbarService.resolve(toolbarCustomTemplates, scope.blade.controller, true);
+            });
         }
     };
 }])

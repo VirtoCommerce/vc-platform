@@ -69,7 +69,7 @@ namespace VirtoCommerce.Web.Models
         public string FulfillmentStatus { get; set; }
 
         [DataMember]
-        public string FullfillmentStatusLabel { get; set; }
+        public string FulfillmentStatusLabel { get; set; }
 
         [DataMember]
         public string Id { get; set; }
@@ -100,6 +100,9 @@ namespace VirtoCommerce.Web.Models
                 return this._shippingMethods ?? (this._shippingMethods = new HashSet<ShippingMethod>());
             }
         }
+
+        [DataMember]
+        public ICollection<PaymentMethod> PaymentMethods { get; set; }
 
         [DataMember]
         public decimal ShippingPrice { get; set; }

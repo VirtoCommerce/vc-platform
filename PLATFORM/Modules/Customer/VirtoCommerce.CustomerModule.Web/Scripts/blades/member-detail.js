@@ -105,9 +105,9 @@
         });
     }
 
-    $scope.bladeHeadIco = $scope.blade.isOrganization ? 'fa fa-university' : 'fa fa-user';
+    $scope.blade.headIcon = $scope.blade.isOrganization ? 'fa fa-university' : 'fa fa-user';
 
-    $scope.bladeToolbarCommands = [
+    $scope.blade.toolbarCommands = [
         {
             name: "Save",
             icon: 'fa fa-save',

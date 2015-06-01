@@ -189,3 +189,5 @@ Shared/VirtoCommerce/VirtoCommerce.PaymentGateways.dll
 /PLATFORM/VirtoCommerce.Platform.Web/App_Data
 /STOREFRONT/Website/App_Data/Themes/AppleStore/Default
 /STOREFRONT/Website/App_Data/Pages
+/PLATFORM/Modules/Catalog/VirtoCommerce.CatalogModule.Test/products.csv
+/PLATFORM/Modules/Marketing/VirtoCommerce.MarketingModule.Data/app.config

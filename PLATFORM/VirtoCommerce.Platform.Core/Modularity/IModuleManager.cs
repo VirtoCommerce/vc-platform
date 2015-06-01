@@ -16,7 +16,13 @@ namespace VirtoCommerce.Platform.Core.Modularity
         /// Loads and initializes the module on the <see cref="ModuleCatalog"/> with the name <paramref name="moduleName"/>.
         /// </summary>
         /// <param name="moduleName">Name of the module requested for initialization.</param>
-        void LoadModule(string moduleName);       
+        void LoadModule(string moduleName);
+
+        /// <summary>
+        /// Initializes the module during second iteration through all modules.
+        /// </summary>
+        /// <param name="moduleInfo"></param>
+        void PostInitializeModule(ModuleInfo moduleInfo);
 
         /// <summary>
         /// Raised repeatedly to provide progress as modules are downloaded.

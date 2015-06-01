@@ -229,9 +229,9 @@
         });
     }
 
-    $scope.bladeHeadIco = 'fa fa-user';
+    $scope.blade.headIcon = 'fa fa-user';
 
-    $scope.bladeToolbarCommands = [
+    $scope.blade.toolbarCommands = [
         {
             name: "Refresh", icon: 'fa fa-refresh',
             executeMethod: function () {

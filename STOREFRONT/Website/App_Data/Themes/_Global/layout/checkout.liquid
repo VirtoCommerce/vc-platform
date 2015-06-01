@@ -7,9 +7,10 @@
     {{ '//ajax.aspnetcdn.com/ajax/jquery.validate/1.13.0/jquery.validate.min.js' | script_tag }}
     {{ '//ajax.aspnetcdn.com/ajax/mvc/5.1/jquery.validate.unobtrusive.min.js' | script_tag }}
     {{ '//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css' | stylesheet_tag }}
+    {{ 'style.css' | asset_url | stylesheet_tag }}
+    {{ '//fonts.googleapis.com/css?family=Lato' | stylesheet_tag }}
     {{ 'shopify_common.js' | shopify_asset_url | script_tag }}
-    {{ '//fonts.googleapis.com/css?family=Lato' | stylesheet_tag }}
-    {{ '//fonts.googleapis.com/css?family=Lato' | stylesheet_tag }}
+    {{ 'virtocommerce.js' | shopify_asset_url | script_tag }}
     {{ content_for_header }}
     <script>
         $(function () {
@@ -25,11 +26,28 @@
             $("#checkout_province").val("{{ checkout.shipping_address.province }}");
             $("#checkout_zip").val("{{ checkout.shipping_address.zip }}");
             $("#checkout_phone").val("{{ checkout.shipping_address.phone }}");
-            $("#shipping-methods .box").on("click", function () {
-                $(this).find("input").prop("checked", true);
+            $("#shipping-methods .col-md-6").on("click", function () {
+                var input = $(this).find("input");
+                input.prop("checked", true);
+                $.ajax({
+                    type: "GET",
+                    cache: false,
+                    url: VirtoCommerce.url("/checkout/recalculateshippingmethod?id=" + input.val()),
+                    beforeSend: function () {
+                        $(".price-list li:eq(1) small").text("Updating...");
+                        $(".price-list li:eq(3) small").text("Updating...");
+                    },
+                    success: function (jsonResponse) {
+                        if (jsonResponse) {
+                            $(".price-list li:eq(1) small").text(jsonResponse.stringified_shipping_price);
+                            $(".price-list li:eq(3) small").text(jsonResponse.stringified_total_price);
+                        }
+                    }
+                });
             });
-            $("#payment-methods .box").on("click", function () {
-                $(this).find("input").prop("checked", true);
+            $("#payment-methods .col-md-6").on("click", function () {
+                var input = $(this).find("input");
+                input.prop("checked", true);
             });
             $("#billing-address-equals-shipping-address").on("change", function () {
                 if ($(this).is(":checked")) {
@@ -50,228 +68,6 @@
             });
         });
     </script>
-    <style>
-        .input-validation-error {
-            border-color: #843534 !important;
-            -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 6px #ce8483 !important;
-            -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 6px #ce8483 !important;
-            box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 6px #ce8483 !important;
-        }
-        body {
-            background-color: #f0f0f0;
-            color: #474948;
-            font-family: 'Lato', Arial, Helvetica, sans-serif;
-            padding: 80px 20px;
-        }
-        .box {
-            background-color: #fff;
-            padding: 20px;
-            -webkit-background-clip: padding-box;
-            -moz-background-clip: padding;
-            background-clip: padding-box;
-            -webkit-border-radius: 2px;
-            -moz-border-radius: 2px;
-            border-radius: 2px;
-            -webkit-box-shadow: 0 1px 2px rgba(71, 73, 72, 0.25);
-            -moz-box-shadow: 0 1px 2px rgba(71, 73, 72, 0.25);
-            box-shadow: 0 1px 2px rgba(71, 73, 72, 0.25);
-        }
-        .box-header {
-            border-bottom: 1px solid #f0f0f0;
-            margin: 0 -20px;
-            padding: 0 20px;
-            padding-bottom: 20px;
-        }
-            .box .box-header h3 {
-                font-size: 16px;
-                font-weight: 700;
-                line-height: 24px;
-                margin: 0;
-            }
-            .box .box-header h5 {
-                color: #939694;
-                font-size: 14px;
-                font-weight: 400;
-                line-height: 21px;
-                margin: 0;
-            }
-        .product-list {
-            list-style-position: inside;
-            margin: 0 0 20px;
-            margin-bottom: -20px;
-            padding: 0;
-        }
-            .product-list li {
-                border-bottom: 1px dotted #f0f0f0;
-                line-height: 20px;
-                list-style: none;
-                margin: 0 -20px;
-                padding: 0 20px;
-                padding-bottom: 15px;
-                padding-top: 15px;
-                position: relative;
-            }
-                .product-list li img {
-                    width: 85px;
-                }
-        .price-list {
-            list-style-position: inside;
-            margin: 0 0 20px;
-            margin-bottom: -20px;
-            padding: 0 0 20px;
-        }
-            .price-list li {
-                border-bottom: 1px dotted #f0f0f0;
-                line-height: 20px;
-                list-style: none;
-                margin: 0 -20px;
-                padding: 0 20px;
-                padding-bottom: 15px;
-                padding-top: 15px;
-                position: relative;
-            }
-            .price-list li.important {
-                color: #286090;
-            }
-                .price-list li strong {
-                    font-size: 15px;
-                    font-weight: 600;
-                    margin-right: 5px;
-                    position: absolute;
-                    right: 20px;
-                }
-        .product-list {
-            list-style-position: inside;
-            margin: 0 0 20px;
-            padding: 0;
-        }
-            .product-list li {
-                border-bottom: 1px dotted #f0f0f0;
-                overflow: hidden;
-            }
-                .product-list li .image {
-                    float: left;
-                    height: 85px;
-                    overflow: hidden;
-                    padding: 5px;
-                    width: 85px;
-                    -webkit-border-radius: 4px;
-                    -moz-border-radius: 4px;
-                    border-radius: 4px;
-                }
-                    .product-list li .image img {
-                        max-width: 100%;
-                    }
-                .product-list li .info {
-                    margin-left: 100px;
-                }
-                    .product-list li .info .price {
-                        float: right;
-                        font-size: 15px;
-                        font-weight: 600;
-                    }
-                    .product-list li .info .name {
-                        margin-right: 100px;
-                    }
-        .box-content {
-            margin-top: 20px;
-            overflow: hidden;
-        }
-        .box .inner-box {
-            border-left: 1px solid #f0f0f0;
-            border-right: 1px solid #f0f0f0;
-            border-top: 1px solid #f0f0f0;
-            margin-bottom: 20px;
-        }
-            .box .inner-box .box-footer {
-                border-top: none;
-                margin: 0 -20px -20px;
-            }
-            .box .inner-box .box-footer input {
-                display: inline-block;
-            }
-            .box .inner-box .box-footer .price {
-                display: inline-block;
-            }
-        .box-inner-header {
-            border-bottom: 1px solid #f0f0f0;
-            margin: 60px -20px 20px;
-            padding: 0 20px;
-            padding-bottom: 20px;
-        }
-            .box-inner-header h3 {
-                font-size: 16px;
-                font-weight: 700;
-                line-height: 24px;
-                margin: 0;
-            }
-        .fieldset {
-            border-bottom: 1px dotted #f0f0f0;
-            display: block;
-            margin-bottom: 10px;
-            overflow: hidden;
-            padding: 10px;
-            -webkit-border-radius: 2px;
-            -moz-border-radius: 2px;
-            border-radius: 2px;
-        }
-            .fieldset .field label {
-                cursor: pointer;
-                float: left;
-                font-weight: 400;
-                margin-top: 7px;
-                width: 35%;
-            }
-            .fieldset .field {
-                vertical-align: middle;
-            }
-                .fieldset .field input,select {
-                    border: 1px solid #ccc;
-                    float: left;
-                    padding: 7px;
-                    width: 65%;
-                    -webkit-border-radius: 2px;
-                    -moz-border-radius: 2px;
-                    border-radius: 2px;
-                }
-                    .fieldset .field input:focus {
-                        border-color: rgba(82, 168, 236, .8) !important;
-                        -webkit-box-shadow: 0px 0px 8px rgba(82,168,236,0.6) !important;
-                        -moz-box-shadow: 0px 0px 8px rgba(82,168,236,0.6) !important;
-                        box-shadow: 0px 0px 8px rgba(82,168,236,0.6) !important;
-                    }
-                .fieldset .field select {
-                    float: left;
-                    margin-top: 1px;
-                    width: 65%;
-                }
-        .box-footer {
-            background-color: #f9f9f9;
-            border-top: 1px solid #f0f0f0;
-            margin: 20px -20px -20px;
-            overflow: hidden;
-            padding: 20px;
-        }
-        .pill-left {
-            float: left;
-        }
-        .pull-right {
-            float: right;
-        }
-        .highlight {
-            border-color: #66afe9;
-            outline: 0;
-            -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 8px rgba(102, 175, 233, .6);
-            box-shadow: inset 0px 1px 1px rgba(0,0,0,0.075), 0px 0px 8px rgba(102,175,233,0.6);
-        }
-        .control-label.required:after {
-            color: red;
-            content: " *";
-        }
-        .btn.btn-primary.themed {
-            background-color: {{ settings.color_primary }};
-        }
-    </style>
 </head>
 <body>
     <div class="container">

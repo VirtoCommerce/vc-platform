@@ -2,6 +2,7 @@
 .controller('virtoCommerce.catalogModule.catalogCSVexportController', ['$scope', 'platformWebApp.bladeNavigationService', 'virtoCommerce.catalogModule.export', 'platformWebApp.notifications', function ($scope, bladeNavigationService, exportResourse, notificationsResource) {
 	var blade = $scope.blade;
 	blade.isLoading = false;
+	blade.title = 'Catalog ' + (blade.catalog ? blade.catalog.name : '') + ' to csv export';
 
     $scope.$on("new-notification-event", function (event, notification) {
     	if (blade.notification && notification.id == blade.notification.id)
@@ -22,5 +23,5 @@
         $scope.formScope = form;
     }
   
-    $scope.bladeHeadIco = 'fa fa-file-archive-o';
+    $scope.blade.headIcon = 'fa fa-file-archive-o';
 }]);

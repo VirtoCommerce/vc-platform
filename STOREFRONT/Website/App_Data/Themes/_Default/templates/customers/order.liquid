@@ -100,9 +100,6 @@
         </tr>
       </tfoot>
     </table>
-
-
-
   </div>
 
   <div class="grid-item one-third medium-down--one-whole">
@@ -125,6 +122,62 @@
       {{ order.billing_address.country }}<br>
       {{ order.billing_address.phone }}
     </p>
+
+    {% if order.financial_status == 'Pending' %}
+        <script>
+            $("body").delegate("div.payment_method", "click", function () {
+                var input = $(this).find("input");
+                input.prop("checked", true);
+            });
+        </script>
+        <style>
+            input[type=radio] {
+                display: none;
+            }
+            input[type=radio] + label {
+                background-color: #fff;
+                border: 1px solid #c1caca;
+                border-radius: 1000px;
+                box-shadow: 0px 1px 2px rgba(0,0,0,0.05), inset 0px -15px 10px -12px rgba(0,0,0,0.05);
+                cursor: pointer;
+                display: inline-block;
+                margin-right: 10px;
+                padding: 9px;
+                position: relative;
+            }
+            input[type=radio]:checked + label {
+                background-color: #ecf2f7;
+                border: 1px solid #92a1ac;
+                box-shadow: 0 1px 2px rgba(0,0,0,.05),inset 0 -15px 10px -12px rgba(0,0,0,.05),inset 15px 10px -12px rgba(255,255,255,.1);
+                color: #243211;
+            }
+            input[type=radio]:checked + label::before {
+                background: #253c4b;
+                border-radius: 100px;
+                box-shadow: inset 0px 15px 23px -10px rgba(187,230,240,0.3), 0px 2px 2px rgba(0,0,0,0.1);
+                content: " ";
+                display: block;
+                height: 12px;
+                left: 3px;
+                opacity: 0.8;
+                position: absolute;
+                top: 3px;
+                width: 12px;
+            }
+        </style>
+
+        {% form 'pay_order' %}
+            <input name="order[order_id]" type="hidden" value="{{ order.id }}" />
+            {% for payment_method in order.payment_methods %}
+                <div class="payment_method" style="cursor: pointer; margin-bottom: 20px;">
+                    <input id="order_payment_method_{{ payment_method.handle }}" name="order[payment_method_id]" type="radio" value="{{ payment_method.handle }}" required="required" />
+                    <label for="order_payment_method_{{ payment_method.handle }}"></label>
+                    <img src="{{ payment_method.icon_url }}" width="150" />
+                </div>
+            {% endfor %}
+            <input class="btn" type="submit" title="Pay order" value="Pay order" />
+        {% endform %}
+    {% endif %}
 
     <h4>{{ 'customer.order.shipping_address' | t }}</h4>
 

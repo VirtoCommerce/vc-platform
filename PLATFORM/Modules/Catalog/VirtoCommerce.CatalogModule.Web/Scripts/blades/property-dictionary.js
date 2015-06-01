@@ -25,7 +25,7 @@
         $scope.selectedItem = listItem;
     };
 
-    $scope.bladeToolbarCommands = [
+    $scope.blade.toolbarCommands = [
      {
          name: "Delete", icon: 'fa fa-trash-o',
          executeMethod: function () {

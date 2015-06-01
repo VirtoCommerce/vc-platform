@@ -80,7 +80,7 @@
         });
     };
 
-    $scope.bladeToolbarCommands = [
+    $scope.blade.toolbarCommands = [
 		{
 		    name: "Remove", icon: 'fa fa-trash-o', executeMethod: function () { $scope.removeAction(); },
 			canExecuteMethod: function () {

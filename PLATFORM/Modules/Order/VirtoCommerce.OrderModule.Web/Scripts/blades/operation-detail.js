@@ -88,9 +88,9 @@
 			        bladeNavigationService.showBlade(newBlade, $scope.blade);
 			    };
 
-			    $scope.bladeHeadIco = 'fa-file-text';
+			    $scope.blade.headIcon = 'fa-file-text';
 
-			    $scope.bladeToolbarCommands = [
+			    $scope.blade.toolbarCommands = [
 					{
 					    name: "New document", icon: 'fa fa-plus',
 					    executeMethod: function () {
@@ -230,7 +230,7 @@
 
 
 			    // actions on load
-			    $scope.toolbarTemplate = 'Modules/$(VirtoCommerce.Orders)/Scripts/blades/operation-detail-toolbar.tpl.html';
+			    $scope.blade.toolbarCustomTemplates = ['Modules/$(VirtoCommerce.Orders)/Scripts/blades/operation-detail-toolbar.tpl.html'];
 			    $scope.blade.refresh($scope.blade.isNew);
 
 			}])
