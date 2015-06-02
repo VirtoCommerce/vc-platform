@@ -8,6 +8,7 @@ namespace VirtoCommerce.PricingModule.Test
 {
     public class MigrationScenarios : MigrationsTestBase
     {
+        [Fact]
         [Trait("Category", "CI")]
         public void Always_fail()
         {
