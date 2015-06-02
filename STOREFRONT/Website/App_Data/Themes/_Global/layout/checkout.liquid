@@ -16,6 +16,11 @@
         $(function () {
             new Shopify.CountryProvinceSelector("checkout_country", "checkout_province", {});
 
+            var selectedShippingMethod = $("#shipping-methods input:checked");
+            if (selectedShippingMethod.length) {
+                updateTotals(selectedShippingMethod.val());
+            }
+
             $("#checkout_first_name").val("{{ checkout.shipping_address.first_name }}");
             $("#checkout_last_name").val("{{ checkout.shipping_address.last_name }}");
             $("#checkout_company").val("{{ checkout.shipping_address.company }}");
@@ -28,22 +33,10 @@
             $("#checkout_phone").val("{{ checkout.shipping_address.phone }}");
             $("#shipping-methods .col-md-6").on("click", function () {
                 var input = $(this).find("input");
-                input.prop("checked", true);
-                $.ajax({
-                    type: "GET",
-                    cache: false,
-                    url: VirtoCommerce.url("/checkout/recalculateshippingmethod?id=" + input.val()),
-                    beforeSend: function () {
-                        $(".price-list li:eq(1) small").text("Updating...");
-                        $(".price-list li:eq(3) small").text("Updating...");
-                    },
-                    success: function (jsonResponse) {
-                        if (jsonResponse) {
-                            $(".price-list li:eq(1) small").text(jsonResponse.stringified_shipping_price);
-                            $(".price-list li:eq(3) small").text(jsonResponse.stringified_total_price);
-                        }
-                    }
-                });
+                if (!input.is(":checked")) {
+                    input.prop("checked", true);
+                    updateTotals(input.val());
+                }
             });
             $("#payment-methods .col-md-6").on("click", function () {
                 var input = $(this).find("input");
@@ -67,6 +60,24 @@
                 }
             });
         });
+
+        function updateTotals(shippingMethodId) {
+            $.ajax({
+                type: "GET",
+                cache: false,
+                url: VirtoCommerce.url("/checkout/recalculateshippingmethod?id=" + shippingMethodId),
+                beforeSend: function () {
+                    $(".price-list li:eq(1) small").text("Updating...");
+                    $(".price-list li:eq(3) small").text("Updating...");
+                },
+                success: function (jsonResponse) {
+                    if (jsonResponse) {
+                        $(".price-list li:eq(1) small").text(jsonResponse.stringified_shipping_price);
+                        $(".price-list li:eq(3) small").text(jsonResponse.stringified_total_price);
+                    }
+                }
+            });
+        }
     </script>
 </head>
 <body>
