@@ -149,12 +149,30 @@ angular.module(moduleName, [])
           displayName: 'Get [] % off shipping []'
       });
 
-      //Register CONTENT PUBLISHING expressions
+      //Register COMMON expressions
       var groupNames = ['Browse behavior', 'Shopper profile', 'Shopping cart', 'Geo location'];
       dynamicExpressionService.registerExpression({
-          id: 'BlockContentCondition',
-          newChildLabel: '+ add condition'
+          groupName: groupNames[0],
+          id: 'ConditionStoreSearchedPhrase',
+          displayName: 'Shopper searched for phrase [] in store'
       });
+      dynamicExpressionService.registerExpression({
+          groupName: groupNames[0],
+          id: 'ConditionLanguageIs',
+          displayName: 'Current language is []'
+      });
+
+      dynamicExpressionService.registerExpression({
+          groupName: groupNames[1],
+          id: 'ConditionAgeIs',
+          displayName: 'Shopper age is []'
+      });
+      dynamicExpressionService.registerExpression({
+          groupName: groupNames[1],
+          id: 'ConditionGenderIs',
+          displayName: 'Shopper gender is []'
+      });
+
       dynamicExpressionService.registerExpression({
           groupName: groupNames[3],
           id: 'ConditionGeoTimeZone',
@@ -166,9 +184,25 @@ angular.module(moduleName, [])
           displayName: 'Browsing from zip/postal code []'
       });
       dynamicExpressionService.registerExpression({
-          groupName: groupNames[0],
-          id: 'ConditionStoreSearchedPhrase',
-          displayName: 'Shopper searched for phrase [] in store'
+          groupName: groupNames[3],
+          id: 'ConditionGeoCity',
+          displayName: 'Browsing from city []'
+      });
+      dynamicExpressionService.registerExpression({
+          groupName: groupNames[3],
+          id: 'ConditionGeoCountry',
+          displayName: 'Browsing from country []'
+      });
+      dynamicExpressionService.registerExpression({
+          groupName: groupNames[3],
+          id: 'ConditionGeoState',
+          displayName: 'Browsing from state []'
+      });
+
+      //Register CONTENT PUBLISHING expressions
+      dynamicExpressionService.registerExpression({
+          id: 'BlockContentCondition',
+          newChildLabel: '+ add condition'
       });
 
       //Register PRICELIST ASSIGNMENT expressions
@@ -183,6 +217,15 @@ angular.module(moduleName, [])
           $compile(response.data);
       });
   }])
+.controller('virtoCommerce.dynamicExpression.conditionLanguageIsController', ['$scope', 'platformWebApp.settings', function ($scope, settings) {
+    $scope.availableLanguages = settings.getValues({ id: 'VirtoCommerce.Core.General.Languages' });
+}])
+.controller('virtoCommerce.dynamicExpression.conditionGeoCountryController', ['$scope', 'virtoCommerce.coreModule.common.countries', function ($scope, countries) {
+    $scope.countries = countries.query();
+}])
+.controller('virtoCommerce.dynamicExpression.conditionGeoTimeZoneController', ['$scope', 'virtoCommerce.coreModule.common.countries', function ($scope, countries) {
+    $scope.timeZones = countries.getTimeZones();
+}])
 .filter('compareConditionToText', function () {
     return function (input) {
         var retVal;

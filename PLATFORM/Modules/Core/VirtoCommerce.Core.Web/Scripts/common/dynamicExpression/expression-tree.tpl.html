@@ -8,9 +8,6 @@
             <li class="list-item" ng-repeat="element1 in element.children">
                 <a class="list-link">
                     <i class="list-ico fa fa-times-circle" ng-click='deleteChild(element1, element.children);'></i>
-                    <!--<div va-templated-expression>
-                        <ng-include src='element1.templateURL'></ng-include>
-                    </div>-->
                     <ng-include src='element1.templateURL'></ng-include>
                     <ul class="list __sub" ng-if="element1.newChildLabel">
                         <li class="list-item" ng-repeat="element in element1.children">
