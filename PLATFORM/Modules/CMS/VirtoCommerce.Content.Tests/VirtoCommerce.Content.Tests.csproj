@@ -89,11 +89,13 @@
     <Otherwise />
   </Choose>
   <ItemGroup>
+    <Compile Include="ContentScenarios.cs" />
     <Compile Include="DatabaseRepositoryTest.cs" />
     <Compile Include="FileSystemRepositoryTest.cs" />
     <Compile Include="GitHubRepositoryTest.cs" />
     <Compile Include="MenuTests\MenuRepositoryTests.cs" />
     <Compile Include="MenuTests\MenuServiceTests.cs" />
+    <Compile Include="MigrationScenarios.cs" />
     <Compile Include="PagesTests\DatabasePagesTests.cs" />
     <Compile Include="PagesTests\FileSystemPagesRepositoryTests.cs" />
     <Compile Include="PagesTests\GitHubPagesRepositoryTests.cs" />
@@ -104,6 +106,10 @@
     <Compile Include="ThemeServiceTests.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\Tests\VirtoCommerce.Platform.Tests\VirtoCommerce.Platform.Tests.csproj">
+      <Project>{A3B5EC9F-A1C9-43FE-8FC9-E11BBACF31BD}</Project>
+      <Name>VirtoCommerce.Platform.Tests</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\..\VirtoCommerce.Platform.Core\VirtoCommerce.Platform.Core.csproj">
       <Project>{f7c9313b-522e-4619-abc9-8c7d4600d6b5}</Project>
       <Name>VirtoCommerce.Platform.Core</Name>

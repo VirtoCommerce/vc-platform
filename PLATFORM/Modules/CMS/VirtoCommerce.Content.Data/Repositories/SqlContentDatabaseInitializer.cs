@@ -297,6 +297,9 @@ namespace VirtoCommerce.Content.Data
 				repository.Add(theme);
 				repository.UnitOfWork.Commit();
 
+			    if (String.IsNullOrEmpty(_themePath))
+			        return;
+
 				var files = Directory.GetFiles(_themePath, "*.*", SearchOption.AllDirectories);
 
 				var items =
