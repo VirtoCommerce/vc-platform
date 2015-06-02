@@ -80,8 +80,8 @@ namespace VirtoCommerce.Web.Convertors
             {
                 if (string.IsNullOrEmpty(orderShipment.Status))
                 {
-                    ret.FulfillmentStatus = orderShipment.IsApproved ? "Sended" : "Not sended";
-                    ret.FulfillmentStatusLabel = orderShipment.IsApproved ? "Sended" : "Not sended";
+                    ret.FulfillmentStatus = orderShipment.IsApproved ? "Sent" : "Not sent";
+                    ret.FulfillmentStatusLabel = orderShipment.IsApproved ? "Sent" : "Not sent";
                 }
                 else
                 {
