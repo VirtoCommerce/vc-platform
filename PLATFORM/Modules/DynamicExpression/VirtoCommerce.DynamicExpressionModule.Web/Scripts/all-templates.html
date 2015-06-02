@@ -260,15 +260,13 @@
 <script type="text/ng-template" id="expression-ConditionGeoTimeZone.html">
     Browsing from a time zone -/+ offset from UTC
     <a class="__link" left-click-menu data-target="compareCondition_menu{{element1.id}}">{{element1.compareCondition | compareConditionToText}}</a>
-    <div class="form-group" ng-controller="virtoCommerce.marketingModule.addPublishingFirstStepController.expressions">
-        <div class="form-input">
-            <ui-select ng-model="element1.value">
-                <ui-select-match placeholder="Select timezone">{{$select.selected.name}}</ui-select-match>
-                <ui-select-choices repeat="x.id as x in timeZones | filter: { name: $select.search }">
-                    <span ng-bind-html="x.name | highlight: $select.search"></span>
-                </ui-select-choices>
-            </ui-select>
-        </div>
+    <div class="form-group" ng-controller="virtoCommerce.dynamicExpression.conditionGeoTimeZoneController">
+        <ui-select ng-model="element1.value">
+            <ui-select-match placeholder="Select timezone">{{$select.selected.name}}</ui-select-match>
+            <ui-select-choices repeat="x.id as x in timeZones | filter: { name: $select.search }">
+                <span ng-bind-html="x.name | highlight: $select.search"></span>
+            </ui-select-choices>
+        </ui-select>
     </div>
     <ul class="menu __context" role="menu" id="compareCondition_menu{{element1.id}}">
         <li class="menu-item" ng-click='element1.compareCondition="IsMatching";'>matching</li>
@@ -294,6 +292,35 @@
         <li class="menu-item" ng-click='element1.matchCondition="NotMatching";'>not matching</li>
     </ul>
 </script>
+<script type="text/ng-template" id="expression-ConditionGeoCity.html">
+    Browsing from city
+    <div class="form-group">
+        <div class="form-input">
+            <input required class="form-control" ng-model="element1.value" placeholder="enter value..." />
+        </div>
+    </div>
+</script>
+<script type="text/ng-template" id="expression-ConditionGeoCountry.html">
+    Browsing from country
+    <div class="form-group" ng-controller="virtoCommerce.dynamicExpression.conditionGeoCountryController">
+        <div class="form-input">
+            <ui-select ng-model="element1.value" required>
+                <ui-select-match placeholder="Select...">{{$select.selected.name}}</ui-select-match>
+                <ui-select-choices repeat="x.code as x in countries | filter: $select.search ">
+                    <span ng-bind-html="x.name | highlight: $select.search"></span>
+                </ui-select-choices>
+            </ui-select>
+        </div>
+    </div>
+</script>
+<script type="text/ng-template" id="expression-ConditionGeoState.html">
+    Browsing from state
+    <div class="form-group">
+        <div class="form-input">
+            <input required class="form-control" ng-model="element1.value" placeholder="enter value..." />
+        </div>
+    </div>
+</script>
 
 <script type="text/ng-template" id="expression-ConditionStoreSearchedPhrase.html">
     Shopper searched in store for phrase
@@ -310,14 +337,21 @@
         <li class="menu-item" ng-click='element1.matchCondition="NotMatching";'>not matching</li>
     </ul>
 </script>
+<script type="text/ng-template" id="expression-ConditionLanguageIs.html">
+    Current language is
+    <a class="__link" left-click-menu data-target="matchString_menu{{element1.id}}">{{element1.value ? element1.value : 'select language' }}</a>
+    <ul class="menu __context" role="menu" id="matchString_menu{{element1.id}}" ng-controller="virtoCommerce.dynamicExpression.conditionLanguageIsController">
+        <li class="menu-item" ng-click='element1.value=x;' ng-repeat="x in availableLanguages">{{x}}</li>
+    </ul>
+</script>
 
 
 <script type="text/ng-template" id="expression-ConditionAgeIs.html">
     Shopper age is
     <a class="__link" left-click-menu data-target="matchString_menu{{element1.id}}">{{element1.matchCondition | compareConditionToText}}</a>
     <div class="form-group">
-        <div class="form-input">
-            <input required class="form-control" ng-model="element1.value" placeholder="enter value..." />
+        <div class="form-input __mini __number">
+            <input va-number required ng-model="element1.value" min="1" step="1">
         </div>
     </div>
     <ul class="menu __context" role="menu" id="compareCondition_menu{{element1.id}}">
@@ -327,5 +361,13 @@
         <li class="menu-item" ng-click='element1.compareCondition="IsGreaterThanOrEqual";'>greater than or equals</li>
         <li class="menu-item" ng-click='element1.compareCondition="IsLessThan";'>less than</li>
         <li class="menu-item" ng-click='element1.compareCondition="IsLessThanOrEqual";'>less than or equals</li>
+    </ul>
+</script>
+<script type="text/ng-template" id="expression-ConditionGenderIs.html">
+    Shopper gender is
+    <a class="__link" left-click-menu data-target="matchString_menu{{element1.id}}">{{element1.value?element1.value:'unspecified'}}</a>
+    <ul class="menu __context" role="menu" id="matchString_menu{{element1.id}}">
+        <li class="menu-item" ng-click='element1.value="female";'>female</li>
+        <li class="menu-item" ng-click='element1.value="male";'>male</li>
     </ul>
 </script>
