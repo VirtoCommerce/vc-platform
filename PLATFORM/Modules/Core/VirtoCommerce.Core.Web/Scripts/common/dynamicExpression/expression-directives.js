@@ -36,21 +36,4 @@
         templateUrl: 'Modules/$(VirtoCommerce.Core)/Scripts/common/dynamicExpression/expression-tree.tpl.html'
     };
 })
-//.directive('vaTemplatedExpression', ['$compile', function ($compile) {
-//    return {
-//        restrict: 'A',
-//        //scope: true,
-//        //scope: {
-//        //    data: '='
-//        //},
-//        terminal: true,
-//        priority: 1000,
-//        link: function (scope, element, attr) {
-//            //element.attr('ng-controller', scope.data.controller);
-//            //element.attr('ng-model', 'data');
-//            element.removeAttr("va-templated-expression");
-//            $compile(element)(scope);
-//        }
-//    }
-//}])
 ;

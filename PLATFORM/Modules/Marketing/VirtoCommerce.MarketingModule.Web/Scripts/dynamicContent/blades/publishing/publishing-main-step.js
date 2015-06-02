@@ -1,7 +1,4 @@
 ﻿angular.module('virtoCommerce.marketingModule')
-.controller('virtoCommerce.marketingModule.addPublishingFirstStepController.expressions', ['$scope', 'virtoCommerce.coreModule.common.countries', function ($scope, countries) {
-    $scope.timeZones = countries.getTimeZones();
-}])
 .controller('virtoCommerce.marketingModule.addPublishingFirstStepController', ['$scope', 'virtoCommerce.marketingModule.dynamicContent.contentPublications', 'platformWebApp.bladeNavigationService', 'virtoCommerce.coreModule.common.dynamicExpressionService', function ($scope, contentPublications, bladeNavigationService, dynamicExpressionService) {
     $scope.setForm = function (form) {
         $scope.formScope = form;
