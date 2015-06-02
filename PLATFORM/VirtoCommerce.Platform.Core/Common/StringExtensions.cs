@@ -17,6 +17,32 @@ namespace VirtoCommerce.Platform.Core.Common
 				.ToDictionary(x => x[0], x => x.Length == 2 ? x[1] : string.Empty, StringComparer.OrdinalIgnoreCase);
 		}
 
+		public static Decimal TryParse(this string u, Decimal defaultValue)
+		{
+			var retVal = defaultValue;
+
+			if (!string.IsNullOrEmpty(u))
+			{
+				Decimal.TryParse(u, NumberStyles.Any, CultureInfo.InvariantCulture, out retVal);
+			}
+
+			return retVal;
+
+		}
+
+		public static bool TryParse(this string u, bool defaultValue)
+		{
+			var retVal = defaultValue;
+
+			if (!string.IsNullOrEmpty(u))
+			{
+				Boolean.TryParse(u, out retVal);
+			}
+
+			return retVal;
+
+		}
+
 		public static int TryParse(this string u, int defaultValue)
 		{
 			var retVal = defaultValue;
