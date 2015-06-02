@@ -74,9 +74,12 @@ namespace VirtoCommerce.SearchModule.Data.Services
             Parallel.ForEach(partition.Keys, parallelOptions, key =>
            {
                //Trace.TraceInformation(string.Format("Processing documents starting {0} of {1} - {2}%", partition.Start, partition.Total, (partition.Start * 100 / partition.Total)));
-               var doc = new ResultDocument();
-               IndexItem(ref doc, key);
-               documents.Add(doc);
+        	   if (key != null)
+			   {
+				   var doc = new ResultDocument();
+				   IndexItem(ref doc, key);
+				   documents.Add(doc);
+			   }
            });
 
             return documents;

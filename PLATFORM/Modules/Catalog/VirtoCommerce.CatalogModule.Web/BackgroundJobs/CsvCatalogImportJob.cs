@@ -77,14 +77,22 @@ namespace VirtoCommerce.CatalogModule.Web.BackgroundJobs
 							var productMap = new ProductMap(reader.FieldHeaders, configuration, catalog);
 							reader.Configuration.RegisterClassMap(productMap);
 							initialized = true;
+
+							//Notification
+							notification.Description = "Reading products from csv...";
+							_notifier.Upsert(notification);
 						}
 
-						//Notification
-						notification.Description = "Reading products from csv...";
-						_notifier.Upsert(notification);
-
-						var csvProduct = reader.GetRecord<coreModel.CatalogProduct>();
-						csvProducts.Add(csvProduct);
+						try
+						{
+							var csvProduct = reader.GetRecord<coreModel.CatalogProduct>();
+							csvProducts.Add(csvProduct);
+						}
+						catch(Exception ex)
+						{
+							notification.ErrorCount++;
+							notification.Errors.Add(ex.ToString());
+						}
 					}
 				}
 
@@ -113,7 +121,7 @@ namespace VirtoCommerce.CatalogModule.Web.BackgroundJobs
 			//project product information to category structure (categories, properties etc)
 			foreach (var csvProduct in csvProducts)
 			{
-				var productCategoryNames = csvProduct.Category.Path.Split('/');
+				var productCategoryNames = csvProduct.Category.Path.Split('/', '|', '\\', '>');
 				ICollection<coreModel.Category> levelCategories = categories;
 				foreach (var categoryName in productCategoryNames)
 				{
@@ -173,14 +181,12 @@ namespace VirtoCommerce.CatalogModule.Web.BackgroundJobs
 
 			var defaultFulfilmentCenter = _commerceService.GetAllFulfillmentCenters().FirstOrDefault();
 			//Products
-			foreach (var csvProduct in csvProducts)
+			foreach (var csvProduct in csvProducts.OrderBy(x=>x.MainProductId ?? ""))
 			{
-				var sameProduct = csvProducts.FirstOrDefault(x =>((csvProduct.MainProductId != null && x.Code == csvProduct.MainProductId) || (x.Name == csvProduct.Name)) && !x.IsTransient());
-				if (sameProduct != null)
-				{
-					//Detect variation
-					csvProduct.MainProductId = sameProduct.Id;
-				}
+				//Try to set parent relations
+				var parentProduct = csvProducts.FirstOrDefault(x =>((csvProduct.MainProductId != null && x.Code == csvProduct.MainProductId) || (x.Name == csvProduct.Name)) && !x.IsTransient());
+				csvProduct.MainProductId = parentProduct != null ? parentProduct.Id : null;
+				
 				var category = categories.FirstOrDefault(x => x.Code == csvProduct.Category.Code);
 				csvProduct.CategoryId = category.Id;
 				csvProduct.CatalogId = catalog.Id;
@@ -268,7 +274,8 @@ namespace VirtoCommerce.CatalogModule.Web.BackgroundJobs
 				//Map ParentSku -> main product
 				Map(x => x.MainProductId).ConvertUsing(x =>
 				{
-					return GetCsvField("ParentSku", x, importConfiguration);
+					var parentSku =  GetCsvField("ParentSku", x, importConfiguration);
+					return !String.IsNullOrEmpty(parentSku) ? parentSku : null;
 				});
 
 				//Map assets (images)
@@ -363,8 +370,8 @@ namespace VirtoCommerce.CatalogModule.Web.BackgroundJobs
 					{
 						inventories.Add(new InventoryInfo
 						{
-							AllowBackorder = allowBackorder != null ? Convert.ToBoolean(allowBackorder) : false,
-							InStockQuantity = Convert.ToInt64(quantity)
+							AllowBackorder = allowBackorder.TryParse(false),
+							InStockQuantity = (long)quantity.TryParse(0.0m)
 						});
 					}
 					return inventories;
