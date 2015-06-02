@@ -36,6 +36,15 @@ namespace VirtoCommerce.Web.Controllers
             }
 
             var checkout = await Service.GetCheckoutAsync();
+
+            if (User.Identity.IsAuthenticated)
+            {
+                if (checkout.ShippingAddress == null)
+                {
+                    checkout.ShippingAddress = Context.Customer.Addresses.LastOrDefault();
+                }
+            }
+
             Context.Checkout = checkout;
 
             if (checkout.RequiresShipping)
@@ -127,6 +136,14 @@ namespace VirtoCommerce.Web.Controllers
 
             checkout.ShippingMethods = await Service.GetShippingMethodsAsync(checkout.Id);
             checkout.PaymentMethods = await Service.GetCartPaymentMethodsAsync(checkout.Id);
+
+            if (User.Identity.IsAuthenticated)
+            {
+                if (checkout.BillingAddress == null)
+                {
+                    checkout.BillingAddress = Context.Customer.Addresses.LastOrDefault();
+                }
+            }
 
             Context.Checkout = checkout;
 
