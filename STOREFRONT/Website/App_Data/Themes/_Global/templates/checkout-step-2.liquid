@@ -38,7 +38,7 @@
                 <div class="row" id="shipping-methods">
                     {% for shipping_method in checkout.shipping_methods %}
                         <div class="col-md-6" style="cursor: pointer;">
-                            <input id="checkout_shipping_method_{{ shipping_method.handle }}" name="checkout[shipping_method_id]" type="radio" value="{{ shipping_method.handle }}" required="required" />
+                            <input id="checkout_shipping_method_{{ shipping_method.handle }}" name="checkout[shipping_method_id]" type="radio" value="{{ shipping_method.handle }}" required="required" {% if checkout.shipping_methods.size == 1 %} checked {% endif %} />
                             <label for="checkout_shipping_method_{{ shipping_method.handle }}"></label>
                             <span class="shipping_method_label">
                                 {{ shipping_method.title }}
@@ -61,7 +61,7 @@
                 <div class="row" id="payment-methods">
                     {% for payment_method in checkout.payment_methods %}
                         <div class="col-md-6" style="cursor: pointer;">
-                            <input id="checkout_payment_method_{{ payment_method.handle }}" name="checkout[payment_method_id]" type="radio" value="{{ payment_method.handle }}" required="required" />
+                            <input id="checkout_payment_method_{{ payment_method.handle }}" name="checkout[payment_method_id]" type="radio" value="{{ payment_method.handle }}" required="required" {% if checkout.payment_methods.size == 1 %} checked {% endif %} />
                             <label for="checkout_payment_method_{{ payment_method.handle }}"></label>
                             <img src="{{ payment_method.icon_url }}" width="150" />
                         </div>
