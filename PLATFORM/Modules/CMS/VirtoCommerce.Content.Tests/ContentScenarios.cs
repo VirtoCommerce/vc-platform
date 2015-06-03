@@ -4,18 +4,25 @@ using VirtoCommerce.Content.Data;
 using VirtoCommerce.Content.Data.Models;
 using VirtoCommerce.Content.Data.Repositories;
 using VirtoCommerce.Content.Data.Services;
-using VirtoCommerce.Platform.Tests.Bases;
+using VirtoCommerce.Platform.Tests.Fixtures;
 using Xunit;
 
 namespace VirtoCommerce.Content.Tests
 {
-    public class ContentScenarios : RepositoryTestBase<DatabaseContentRepositoryImpl, SqlContentDatabaseInitializer>
+    public class ContentScenarios : IClassFixture<RepositoryDatabaseFixture<DatabaseContentRepositoryImpl, SqlContentDatabaseInitializer>>
     {
+        private RepositoryDatabaseFixture<DatabaseContentRepositoryImpl, SqlContentDatabaseInitializer> _fixture;
+        public ContentScenarios(
+            RepositoryDatabaseFixture<DatabaseContentRepositoryImpl, SqlContentDatabaseInitializer> fixture)
+        {
+            _fixture = fixture;
+        }
+
         [Fact]
         [Trait("Category", "CI")]
         public void Can_content_query_menu_lists()
         {
-            var repository = this.GetRepository();
+            var repository = _fixture.Db;
             var service = new MenuServiceImpl(repository);
             var lists = service.GetListsByStoreId("SampleStore");
             Assert.True(lists.Any());
@@ -25,7 +32,7 @@ namespace VirtoCommerce.Content.Tests
         [Trait("Category", "CI")]
         public void Can_content_add_themes()
         {
-            var repository = GetRepository();
+            var repository = _fixture.Db;
 
             var theme1 = new Theme
             {
@@ -55,7 +62,7 @@ namespace VirtoCommerce.Content.Tests
             var fileSystemFileRepository = new FileSystemContentRepositoryImpl(fullPath);
             var item = fileSystemFileRepository.GetContentItem("Apple/Simple/layout/theme.liquid").Result;
 
-            var repository = GetRepository();
+            var repository = _fixture.Db;
 
             var file1 = new ContentItem
             {
