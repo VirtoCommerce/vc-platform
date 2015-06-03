@@ -41,9 +41,9 @@ namespace VirtoCommerce.OrderModule.Web.Controllers.Api
 		[HttpGet]
 		[ResponseType(typeof(webModel.SearchResult))]
 		[Route("")]
-		public IHttpActionResult Search([ModelBinder(typeof(SearchCriteriaBinder))] webModel.SearchCriteria criteria)
+		public IHttpActionResult Search([ModelBinder(typeof(SearchCriteriaBinder))] coreModel.SearchCriteria criteria)
 		{
-			var retVal = _searchService.Search(criteria.ToCoreModel());
+			var retVal = _searchService.Search(criteria);
 			return Ok(retVal.ToWebModel());
 		}
 
