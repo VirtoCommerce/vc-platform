@@ -37,20 +37,20 @@ angular.module(moduleName, [])
       //    },
       //    canExecuteMethod: function () { return true; },
       //    index: 2
-      //}, 'virtoCommerce.marketingModule.promotionDetailController');
+      //}, 'virtoCommerce.marketingModule.itemsDynamicContentListController');
       //toolbarService.register({
-      //    name: "TEST ACTION 0", icon: 'fa fa-bolt',
+      //    name: "EXTERNAL ACTION", icon: 'fa fa-bolt',
       //    executeMethod: function (blade) {
       //        console.log('test: ' + this.name + this.icon + blade);
       //    },
       //    canExecuteMethod: function () { return true; },
       //    index: 0
-      //}, 'virtoCommerce.marketingModule.promotionDetailController');
+      //}, 'virtoCommerce.marketingModule.itemsDynamicContentListController');
 
       //toolbarService.register({
       //    template: 'Modules/$(VirtoCommerce.Store)/Scripts/blades/toolbar-isActive.tpl.html',
       //    index: 1
-      //}, 'virtoCommerce.marketingModule.promotionDetailController', true);
+      //}, 'virtoCommerce.marketingModule.itemsDynamicContentListController', true);
       //toolbarService.register({
       //    template: 'Modules/$(VirtoCommerce.Orders)/Scripts/blades/operation-detail-toolbar.tpl.html',
       //    index: 0

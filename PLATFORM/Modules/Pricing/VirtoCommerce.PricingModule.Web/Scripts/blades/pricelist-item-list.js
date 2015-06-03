@@ -16,7 +16,7 @@
             itemId: selectedNode.productId,
             data: selectedNode,
             currency: $scope.blade.currency,
-            title: 'Prices for ' + selectedNode.name,
+            title: 'Prices for ' + selectedNode.productName,
             subtitle: 'Edit prices',
             controller: 'virtoCommerce.pricingModule.pricesListController',
             template: 'Modules/$(VirtoCommerce.Pricing)/Scripts/blades/prices-list.tpl.html'

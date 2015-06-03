@@ -107,7 +107,6 @@
     <Compile Include="Converters\InPaymentConverter.cs" />
     <Compile Include="Converters\OperationConverter.cs" />
     <Compile Include="Converters\OperationPropertyConverter.cs" />
-    <Compile Include="Converters\SearchCriteriaConverter.cs" />
     <Compile Include="Converters\SearchResultConverter.cs" />
     <Compile Include="Converters\ShipmentConverter.cs" />
     <Compile Include="Model\Address.cs" />
@@ -117,7 +116,6 @@
     <Compile Include="Model\PaymentIn.cs" />
     <Compile Include="Model\LineItem.cs" />
     <Compile Include="Model\ProcessPaymentResult.cs" />
-    <Compile Include="Model\SearchCriteria.cs" />
     <Compile Include="Model\SearchResult.cs" />
     <Compile Include="Model\Shipment.cs" />
     <Compile Include="Model\Operation.cs" />
