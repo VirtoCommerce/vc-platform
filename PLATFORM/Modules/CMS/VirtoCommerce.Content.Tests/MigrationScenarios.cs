@@ -11,7 +11,7 @@ namespace VirtoCommerce.Content.Tests
     {
         [Fact]
         [Trait("Category", "CI")]
-        public void Can_create_content_new_database()
+        public void CanCreateContentNewDatabase()
         {
             DropDatabase();
 

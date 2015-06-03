@@ -11,7 +11,7 @@ namespace VirtoCommerce.Content.Tests
 {
     public class ContentScenarios : IClassFixture<RepositoryDatabaseFixture<DatabaseContentRepositoryImpl, SqlContentDatabaseInitializer>>
     {
-        private RepositoryDatabaseFixture<DatabaseContentRepositoryImpl, SqlContentDatabaseInitializer> _fixture;
+        private readonly RepositoryDatabaseFixture<DatabaseContentRepositoryImpl, SqlContentDatabaseInitializer> _fixture;
         public ContentScenarios(
             RepositoryDatabaseFixture<DatabaseContentRepositoryImpl, SqlContentDatabaseInitializer> fixture)
         {
@@ -20,7 +20,7 @@ namespace VirtoCommerce.Content.Tests
 
         [Fact]
         [Trait("Category", "CI")]
-        public void Can_content_query_menu_lists()
+        public void CanContentQueryMenuLists()
         {
             var repository = _fixture.Db;
             var service = new MenuServiceImpl(repository);
@@ -30,7 +30,7 @@ namespace VirtoCommerce.Content.Tests
 
         [Fact]
         [Trait("Category", "CI")]
-        public void Can_content_add_themes()
+        public void CanContentAddThemes()
         {
             var repository = _fixture.Db;
 
@@ -55,7 +55,7 @@ namespace VirtoCommerce.Content.Tests
 
         [Fact]
         [Trait("Category", "CI")]
-        public void Can_content_add_items()
+        public void CanContentAddItems()
         {
             var fullPath = string.Format("{0}\\Themes\\", Environment.CurrentDirectory.Replace("\\bin\\Debug", string.Empty));
 
