@@ -129,7 +129,8 @@ namespace VirtoCommerce.Web.Controllers
         {
             var checkout = await Service.GetCheckoutAsync();
 
-            if (checkout.ShippingAddress == null || !checkout.ShippingAddress.IsFilledCorrectly)
+            if (checkout.RequiresShipping && checkout.ShippingAddress == null ||
+                checkout.ShippingAddress != null && !checkout.ShippingAddress.IsFilledCorrectly)
             {
                 return RedirectToAction("Step1", "Checkout");
             }
