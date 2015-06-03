@@ -61,15 +61,8 @@
                 }
             });
 
-            {% if checkout.guest_login %}
+            {% if checkout.email == null && checkout.guest_login %}
                 $("#guest-modal").modal("show");
-
-                /*$("#checkout_email").popover({
-                    content: "You can <a href=\"/account/login?returnUrl=/checkout/step-1\"><b>log in</b></a> or continue as guest",
-                    html: true,
-                    placement: "bottom"
-                });
-                $("#checkout_email").popover("show");*/
             {% endif %}
         });
 
