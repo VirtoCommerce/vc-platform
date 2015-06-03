@@ -12,6 +12,7 @@ namespace VirtoCommerce.Content.Tests
     public class ContentScenarios : RepositoryTestBase<DatabaseContentRepositoryImpl, SqlContentDatabaseInitializer>
     {
         [Fact]
+        [Trait("Category", "CI")]
         public void Can_content_query_menu_lists()
         {
             var repository = this.GetRepository();
@@ -21,6 +22,7 @@ namespace VirtoCommerce.Content.Tests
         }
 
         [Fact]
+        [Trait("Category", "CI")]
         public void Can_content_add_themes()
         {
             var repository = GetRepository();
@@ -45,6 +47,7 @@ namespace VirtoCommerce.Content.Tests
         }
 
         [Fact]
+        [Trait("Category", "CI")]
         public void Can_content_add_items()
         {
             var fullPath = string.Format("{0}\\Themes\\", Environment.CurrentDirectory.Replace("\\bin\\Debug", string.Empty));
