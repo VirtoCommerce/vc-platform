@@ -142,8 +142,8 @@
                                 <li class="menu-item" data-type="list_items_text">
                                     <a class="menu-link">List items with text</a>
                                 </li>
-                                <li class="menu-item" data-type="list_choosen">
-                                    <a class="menu-link">List choosen</a>
+                                <li class="menu-item" data-type="list_chosen">
+                                    <a class="menu-link">Selected List</a>
                                 </li>
                                 <li class="menu-item" data-type="list_checkbox">
                                     <a class="menu-link">List with checkboxes</a>
@@ -188,7 +188,7 @@
                             <i class="fa fa-folder"></i>
                         </div>
                         <pre class="code" data-src="templates/icons/basic.html"></pre>
-                        <div class="note">Чтобы она соответствовала стилю, нужно использовать ее в нужном контексте, например таблиц, списков и т д. Тогда код будет следующим, расмотрим на примере <span class="exmpl">.list</span></div>
+                        <div class="note">In order for the icon to correspond to appropriate style it needs to be used in the correct context, for instance table, list etc. In that case the html will be as following example for the list:<span class="exmpl">.list</span></div>
                         <div class="example">
                             <ul class="list __items">
                                 <li class="list-item">
@@ -201,8 +201,8 @@
                     <section>
                         <h1 class="title" id="typography">Typoraphy</h1>
                         <h2 id="headings">Headings</h2>
-                        <p class="note">Можно использовать заголовки <span>&lt;h1&gt;</span> — <span>&lt;h3&gt;</span>, а также классы, с любыми тэгами:
-                        <br>Например <span class="exmpl">&lt;div class="t"&gt;Heading&lt;div&gt;</span></p>
+                        <p class="note">you can use headers <span>&lt;h1&gt;</span> — <span>&lt;h3&gt;</span>, and classes "t", "sub-t" with any tags:
+                        <br>Example <span class="exmpl">&lt;div class="t"&gt;Heading&lt;div&gt;</span></p>
                         <div class="example">
                             <h1>h1. Heading</h1>
                             <h2>h2. Heading</h2>
@@ -212,20 +212,20 @@
                         </div>
                         <pre class="code" data-src="templates/typography/headings.html"></pre>
                         <h2 id="paragraphs">Paragraphs</h2>
-                        <div class="note">Текст поддерживается 5 типов:</div>
+                        <div class="note">5 types of texts are supported:</div>
                         <div class="example">
-                            <p class="text">Обычный текст</p>
-                            <p class="text __debug">Текст для debug</p>
-                            <p class="text __note">Текст для note</p>
-                            <p class="text-mini">Minisize текст</p>
-                            <p class="text __editable">Текст для редактирования</p>
+                            <p class="text">Regular text</p>
+                            <p class="text __debug">Debug text</p>
+                            <p class="text __note">Note text</p>
+                            <p class="text-mini">Minisize text</p>
+                            <p class="text __editable">Editable text</p>
                         </div>
                         <pre class="code" data-src="templates/typography/paragraphs.html"></pre>
                         <h2 id="links">Links</h2>
-                        <div class="note">Ссылки поддерживаются 2 типов:</div>
+                        <div class="note">2 types of links supported:</div>
                         <div class="example">
-                            <a href="#">Обычная ссылка</a><br>
-                            <a class="link" href="#">Ссылка с подчеркиванием</a>
+                            <a href="#">Regular link</a><br>
+                            <a class="link" href="#">Underlined link</a>
                         </div>
                         <pre class="code" data-src="templates/typography/links.html"></pre>
                     </section>
@@ -235,19 +235,19 @@
                         <div class="example">
                             <form class="form">
                                 <div class="form-group">
-                                    <label class="form-label">Имя:</label>
+                                    <label class="form-label">First name:</label>
                                     <div class="form-input">
                                         <input type="text">
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label class="form-label">Фамилия:</label>
+                                    <label class="form-label">Last name:</label>
                                     <div class="form-input">
                                         <input type="text">
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <button class="btn">Отправить</button>
+                                    <button class="btn">Submit</button>
                                 </div>
                             </form>
                         </div>
@@ -257,18 +257,18 @@
                             <form class="form columns clearfix">
                                 <div class="column">
                                     <div class="form-group">
-                                        <label class="form-label">Имя:</label>
+                                        <label class="form-label">First name:</label>
                                         <div class="form-input">
                                             <input type="text">
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                        <button class="btn">Отправить</button>
+                                        <button class="btn">Submit</button>
                                     </div>
                                 </div>
                                 <div class="column">
                                     <div class="form-group">
-                                        <label class="form-label">Фамилия:</label>
+                                        <label class="form-label">Last name:</label>
                                         <div class="form-input">
                                             <input type="text">
                                         </div>
@@ -325,7 +325,7 @@
                                         <input type="text">
                                     </div>
                                 </div>
-                                <div class="note">Чтобы отображался флаг страны, код должен быть в 2-значном формате, например: <span class="exmpl">us, de, es</span></div>
+                                <div class="note">In order for the country flag to display, code needs to be in 2 character format, for example: <span class="exmpl">us, de, es</span></div>
                                 <div class="form-group">
                                     <label class="form-label">Form input with flag country</label>
                                     <div class="form-input __langs">
@@ -490,7 +490,7 @@
                     </section>
                     <section>
                         <h1 class="title" id="buttons">Buttons</h1>
-                        <div class="note">Поддерживаются кнопки 3 видов:</div>
+                        <div class="note">3 types of buttons are supported:</div>
                         <h2 id="bbasic">Basic</h2>
                         <div class="example">
                             <button class="btn">Default button</button>
@@ -548,8 +548,8 @@
                         </div>
                         <pre class="code" data-src="templates/tables/basic.html"></pre>
                         <h2 id="tblimage">Table with images</h2>
-                        <p class="note">Обратите внимание, чтобы название обрезалось, если слишком длинное, нужно использовать модификатор <span class="exmpl">__product-name</span>, тоже самое и для <span class="exmpl">__product-code</span>, ознакомится с полным списком модификаторов можно <a class="link tables-modificators">здесь</a></p>
-                        <p class="note">И конечно чтобы использовать изображения нужно указывать ссылку на картинку в <span class="exmpl">background-image: </span></p>
+                        <p class="note">Please note: to make sure long names fit correctly use the following modifier <span class="exmpl">__product-name</span>, same for <span class="exmpl">__product-code</span>, get the full list of table modifiers <a class="link tables-modificators">here</a></p>
+                        <p class="note">And in order to use images, the link to an image needs to be specified <span class="exmpl">background-image: </span></p>
                         <div class="example">
                             <div class="table-wrapper">
                                 <table class="table">
@@ -588,7 +588,7 @@
                         </div>
                         <pre class="code" data-src="templates/tables/table-with-images.html"></pre>
                         <h2 id="tbltext">Table with text</h2>
-                        <div class="note">Для того, чтобы использовать название и описание, нужно использовать <span class="exmpl">.table-t</span> для названия и <span class="exmpl">.table-descr</span> для описания</div>
+                        <div class="note">In order to use title with description use span <span class="exmpl">.table-t</span> for title and <span class="exmpl">.table-descr</span> for description</div>
                         <div class="example">
                             <div class="table-wrapper">
                                 <table class="table">
@@ -642,39 +642,39 @@
                         </div>
                         <pre class="code" data-src="templates/tables/table-with-text.html"></pre>
                         <h2 id="tblmodificators">List modificatros for table</h2>
-                        <div class="note">Приведу некоторый список модификаторов, которые используются, для конкретных значений</div>
+                        <div class="note">List of modifiers that can be used for specific values</div>
                         <ul class="list __info">
                             <li class="list-item">
                                 <div class="list-t">table-col __author/table-col __version</div>
-                                <div class="list-descr">Используется для выделения автора или версии продукта</div>
+                                <div class="list-descr">Used to display author and product version</div>
                             </li>
                             <li class="list-item">
                                 <div class="list-t">table-col __date</div>
-                                <div class="list-descr">Используется для выделения даты</div>
+                                <div class="list-descr">Used for displaying dates</div>
                             </li>
                             <li class="list-item">
                                 <div class="list-t">table-col __product-range/table-col __product-count</div>
-                                <div class="list-descr">Используется для небольших значений, 1-3 знаков</div>
+                                <div class="list-descr">Used for displaying small values, 1-3 characters</div>
                             </li>
                             <li class="list-item">
                                 <div class="list-t">table-col __lang</div>
-                                <div class="list-descr">Используется для языка</div>
+                                <div class="list-descr">Used to display language</div>
                             </li>
                             <li class="list-item">
                                 <div class="list-t">table-col __product-control</div>
-                                <div class="list-descr">Используется для переключателей (checkbox)</div>
+                                <div class="list-descr">Used for checkboxes</div>
                             </li>
                             <li class="list-item">
                                 <div class="list-t">table-col __product-img</div>
-                                <div class="list-descr">Используется для картинки продукта или иконки</div>
+                                <div class="list-descr">Used for images or icons</div>
                             </li>
                             <li class="list-item">
                                 <div class="list-t">table-col __product-name</div>
-                                <div class="list-descr">Используется для названия продукта</div>
+                                <div class="list-descr">Used for displaying product name</div>
                             </li>
                             <li class="list-item">
                                 <div class="list-t">table-col __product-code</div>
-                                <div class="list-descr">Используется для кодов</div>
+                                <div class="list-descr">Used for displaying product id</div>
                             </li>
                         </ul>
                     </section>
@@ -726,9 +726,9 @@
                     <section>
                         <h1 class="title" id="lists">Lists</h1>
                         <h2 id="list_def">Default</h2>
-                        <div class="note">Расмотрим списки, как они выглядят по умолчанию:</div>
+                        <div class="note">Lets see lists and how they look by default:</div>
                         <div class="example">
-                            <p>Пример простых списков <span class="exmpl">&lt;ul&gt;</span> и <span class="exmpl">&lt;ol&gt;</span></p>
+                            <p>Example of simple lists <span class="exmpl">&lt;ul&gt;</span> и <span class="exmpl">&lt;ol&gt;</span></p>
                             <div class="sub-t">UL list</div>
                             <ul>
                                 <li>First element</li>
@@ -743,7 +743,7 @@
                             </ol>
                         </div>
                         <pre class="code" data-src="templates/lists/default.html"></pre>
-                        <div class="note">Пример информационного списка</div>
+                        <div class="note">Example of informational list</div>
                         <h2 id="list_info">List info</h2>
                         <div class="example">
                             <ul class="list __info">
@@ -775,7 +775,7 @@
                         </div>
                         <pre class="code" data-src="templates/lists/info.html"></pre>
                         <h2 id="list_number">List number</h2>
-                        <div class="note">Пример нумерованного списка</div>
+                        <div class="note">Example of numbered list</div>
                         <div class="example">
                             <ul class="list __number">
                                 <li class="list-item">element</li>
@@ -785,7 +785,7 @@
                         </div>
                         <pre class="code" data-src="templates/lists/number.html"></pre>
                         <h2 id="list_tags">List tags</h2>
-                        <div class="note">Пример списка для тэгов</div>
+                        <div class="note">Example of tag list</div>
                         <div class="example">
                             <ul class="list __tags">
                                 <li class="list-item">
@@ -800,7 +800,7 @@
                         </div>
                         <pre class="code" data-src="templates/lists/tags.html"></pre>
                         <h2 id="list_files">List files</h2>
-                        <div class="note">Пример списка для файловой структуры</div>
+                        <div class="note">Example of file structure list</div>
                         <div class="example">
                             <ul class="list __files">
                                 <li class="list-item">
@@ -853,7 +853,7 @@
                         </div>
                         <pre class="code" data-src="templates/lists/files.html"></pre>
                         <h2 id="list_items">List items</h2>
-                        <div class="note">Пример списка для продуктов</div>
+                        <div class="note">Example of product list</div>
                         <div class="example">
                             <ul class="list __items">
                                 <li class="list-item">
@@ -868,8 +868,8 @@
                         </div>
                         <pre class="code" data-src="templates/lists/items.html"></pre>
                         <h2 id="list_items_text">List items with text</h2>
-                        <div class="note">Пример списка для продуктов с названием и описанием</div>
-                        <div class="note">Чтобы вывести название и описание, нужно использовать <span class="exmpl">.list-t</span> для названия и <span class="exmpl">.list-descr</span> для описания, также можно использовать и иконку <span class="exmpl">&lt;i class="list-ico fa-image"&gt;</span>, если это необходимо. Подробнее о всех иконках <a class="icons">здесь</a></div>
+                        <div class="note">Example of product list with title and description</div>
+                        <div class="note">In order to display title and description, use <span class="exmpl">.list-t</span> for title and <span class="exmpl">.list-descr</span> for description, icon can be added using <span class="exmpl">&lt;i class="list-ico fa-image"&gt;</span>, if necessary. More information about icons <a class="icons">here</a></div>
                         <div class="example">
                             <ul class="list __items">
                                 <li class="list-item">
@@ -890,10 +890,10 @@
                             </ul>
                         </div>
                         <pre class="code" data-src="templates/lists/items-text.html"></pre>
-                        <h2 id="list_choosen">List choosen</h2>
-                        <div class="note">Пример выбранных элементов из списка</div>
+                        <h2 id="list_chosen">List with chosen/selected elements</h2>
+                        <div class="note">Example of selected list elements</div>
                         <div class="example">
-                            <ul class="list __inline __choosen">
+                            <ul class="list __inline __chosen">
                                 <li class="list-item">
                                     <a class="list-remove">×</a>
                                     <span class="list-name">Binding: Electronics</span>
@@ -908,7 +908,7 @@
                                 </li>
                             </ul>
                         </div>
-                        <pre class="code" data-src="templates/lists/choosen.html"></pre>
+                        <pre class="code" data-src="templates/lists/chosen.html"></pre>
                         <h2 id="list_checkbox">List with checkboxes</h2>
                         <div class="example">
                             <div class="list __items">
@@ -965,8 +965,8 @@
                     <section>
                         <h1 class="title" id="tree">Tree</h1>
                         <h2 id="tree_intro">Introduction</h2>
-                        <div class="note">Расмотрим по пунктам</div>
-                        <p>Дерево начинается с <span class="exmpl">&lt;ul class="tree"&gt;</span>, далее идут его дети <span class="exmpl">&lt;li class="tree-item"&gt;</span>, и сообственно сам нод, <span class="exmpl">.tree-block</span></p>
+                        <div class="note">Lets examing in order</div>
+                        <p>Tree starts with <span class="exmpl">&lt;ul class="tree"&gt;</span>, then children <span class="exmpl">&lt;li class="tree-item"&gt;</span>, and then node, <span class="exmpl">.tree-block</span></p>
                         <div class="example">
                             <ul class="tree">
                                 <li class="tree-item first">
@@ -990,7 +990,7 @@
                             </ul>
                         </div>
                         <pre class="code" data-src="templates/tree/intro.html"></pre>
-                        <p>Теперь добавим еще 1 ветку</p>
+                        <p>Now lets add 1 more branch</p>
                         <div class="example">
                             <ul class="tree">
                                 <li class="tree-item first">
@@ -1034,8 +1034,8 @@
                             </ul>
                         </div>
                         <pre class="code" data-src="templates/tree/two-childs.html"></pre>
-                        <div class="note">Примечание: Если всего 2 ветки, то для <span class="exmpl">.tree-node</span>, нужно добавить модфификатор <span class="exmpl">.tree-node.__one-el</span>, для всех остальных случаев не нужно</div>
-                        <p>Расмотрим еще пример с 3 ветками</p>
+                        <div class="note">Note: if only 2 branches exist, then for <span class="exmpl">.tree-node</span> will need to add modifier <span class="exmpl">.tree-node.__one-el</span>, for all other cases modified is not needed</div>
+                        <p>Example with 3 branches</p>
                         <div class="example">
                             <ul class="tree">
                                 <li class="tree-item first">
@@ -1097,8 +1097,8 @@
                             </ul>
                         </div>
                         <pre class="code" data-src="templates/tree/three-childs.html"></pre>
-                        <div class="note">Подсказка: Для того, чтобы добавить детей в новую ветку, мы используем <span class="exmpl">.list-tree</span>, который идет за таким же <span class="exmpl">.list-tree</span>. Если нужно добавить новые ветки, то используем <span class="exmpl">.tree-node</span>, который идет строго после <span class="exmpl">.tree-block</span></div>
-                        <p>А теперь расмотрим более сложный пример</p>
+                        <div class="note">Note: in order to add children to the new branch we use <span class="exmpl">.list-tree</span>, which follows the same <span class="exmpl">.list-tree</span>. If you need to add new branch then use <span class="exmpl">.tree-node</span>, which must strictly follow <span class="exmpl">.tree-block</span></div>
+                        <p>Now lets examing more comlicated case</p>
                         <div class="example">
                             <div class="tree-view">
                                 <div class="tree-scroll">
@@ -1206,9 +1206,9 @@
                             </div>
                         </div>
                         <pre class="code" data-src="templates/tree/multi-nodes.html"></pre>
-                        <div class="note">Чтобы выделить активный нод, нужно добавить <span class="exmpl">.tree-block.__selected</span>, <br>тоесть получится так: <span class="exmpl">&lt;div class="tree-block __selected"&gt;</span></div>
+                        <div class="note">In order to highlight selected leaf add <span class="exmpl">.tree-block.__selected</span>, <br>so it looks like this: <span class="exmpl">&lt;div class="tree-block __selected"&gt;</span></div>
                         <h2 id="tree_v">Tree vertical</h2>
-                        <div class="note">Пример вертикального дерева, по умолчанию, дерево вертикальное, чтобы сделать его горизонтальным, нужно добавить модификатор <span class="exmpl">__horizontal</span>, подробнее можно узнать <a class="tree-horizontal">здесь</a></div>
+                        <div class="note">Example of vertical tree, by default tree is vertical. In order to make tree horizontal add the following modifier <span class="exmpl">__horizontal</span>, more details available <a class="tree-horizontal">here</a></div>
                         <div class="example">
                             <div class="tree-view">
                                 <div class="tree-scroll">
@@ -1275,7 +1275,7 @@
                         </div>
                         <pre class="code" data-src="templates/tree/vertical.html"></pre>
                         <h2 id="tree_h">Tree horizontal</h2>
-                        <div class="note">Пример горизонтального дерева</div>
+                        <div class="note">Example of horizontal tree</div>
                         <div class="example">
                             <ul class="tree __horizontal">
                                 <li class="tree-item first">
@@ -1366,15 +1366,15 @@
                                 </ul>
                             </div>
                         </div>
-                        <p>У виджетов есть несколько основных шаблонов: 1 с названием и количеством, 2 с названием и иконкой</p>
-                        <div class="note">Пример разметки с названием и количеством</div>
+                        <p>Widgets have 2 main templates: 1 with title and quantity, 2 with title and icon</p>
+                        <div class="note">Example using title and quantity template</div>
                         <pre class="code" data-src="templates/widgets/name-count.html"></pre>
-                        <div class="note">Пример разметки с названием и иконкой</div>
+                        <div class="note">Example using title and icon template</div>
                         <pre class="code" data-src="templates/widgets/name-icon.html"></pre>
                     </section>
                     <section class="cblade">
                         <h1 class="title" id="blade">Blade</h1>
-                        <div class="note">Расмотрим пример простого блейда</div>
+                        <div class="note">Example of simple blade</div>
                         <div class="example __center __bg">
                             <div class="blade">
                                 <header class="blade-head"></header>
@@ -1389,7 +1389,7 @@
                         </div>
                         <pre class="code" data-src="templates/blade/basic.html"></pre>
                         <h2 id="blade_constructor">Blade constructor</h2>
-                        <div class="note">Конструктор для блейдов</div>
+                        <div class="note">Create your own blade</div>
                         <div class="settings">
                             <div class="sub-t">Header</div>
                             <div class="form-group">
