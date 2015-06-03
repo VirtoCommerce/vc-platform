@@ -97,14 +97,33 @@ body {
         overflow: hidden;
     }
         .product-list li .image {
+            border: 1px solid #f0f0f0;
             float: left;
-            height: 85px;
+            height: 100px;
+            margin-right: 12px;
             overflow: hidden;
             padding: 5px;
-            width: 85px;
+            position: relative;
+            width: 100px;
             -webkit-border-radius: 4px;
             -moz-border-radius: 4px;
             border-radius: 4px;
+            -webkit-box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            box-sizing: border-box;
+        }
+        .product-list li .image::after {
+            background: #204a80;
+            bottom: 0;
+            color: #fff;
+            content: attr(data-quantity);
+            height: 25px;
+            line-height: 25px;
+            min-width: 30px;
+            max-width: 60px;
+            position: absolute;
+            right: 0;
+            text-align: center;
         }
             .product-list li .image img {
                 max-width: 100%;

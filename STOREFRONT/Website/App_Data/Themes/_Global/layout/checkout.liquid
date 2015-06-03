@@ -4,6 +4,7 @@
     <title>{{ shop.name }} &ndash; Checkout</title>
 
     {{ '//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js' | script_tag }}
+    {{ '//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js' | script_tag }}
     {{ '//ajax.aspnetcdn.com/ajax/jquery.validate/1.13.0/jquery.validate.min.js' | script_tag }}
     {{ '//ajax.aspnetcdn.com/ajax/mvc/5.1/jquery.validate.unobtrusive.min.js' | script_tag }}
     {{ '//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css' | stylesheet_tag }}
@@ -59,6 +60,17 @@
                     $("#billing-address").show();
                 }
             });
+
+            {% if checkout.guest_login %}
+                $("#guest-modal").modal("show");
+
+                /*$("#checkout_email").popover({
+                    content: "You can <a href=\"/account/login?returnUrl=/checkout/step-1\"><b>log in</b></a> or continue as guest",
+                    html: true,
+                    placement: "bottom"
+                });
+                $("#checkout_email").popover("show");*/
+            {% endif %}
         });
 
         function updateTotals(shippingMethodId) {
@@ -81,12 +93,63 @@
     </script>
 </head>
 <body>
+    <div aria-hidden="true" class="modal fade" id="guest-modal" role="dialog">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-md-6" style="border-right: 1px dotted #666;">
+                                <h3>Sign in to your account</h3>
+                                <p>You'll be able to check out faster</p>
+                                {% form 'external_login' %}
+                                    <p class="text-right">
+                                        {% for login_provider in login_providers %}
+                                            <button name="context[authentication_type]" type="submit" value="{{ login_provider.authentication_type }}" style="background: transparent; border: 0; margin-right: 5px; padding: 0;" title="Sign in with {{ login_provider.caption }} account">
+                                                {% assign icon_filename = 'assets/icon_' | append: login_provider.authentication_type | downcase %}
+                                                {% assign icon_fullname = icon_filename | append: '_32.png' %}
+                                                {{ icon_fullname | shopify_asset_url | img_tag }}
+                                            </button>
+                                        {% endfor %}
+                                    </p>
+                                {% endform %}
+                                {% form 'customer_login' %}
+                                    <input id="returnUrl" name="returnUrl" type="hidden" value="/checkout/step-1" />
+                                    <div class="form-group">
+                                        <label for="customer_email">Email address</label>
+                                        <input autofocus class="form-control" id="customer_email" name="customer[email]" required="required" type="email" value="" />
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="customer_password">Password</label>
+                                        <input class="form-control" id="customer_password" name="customer[password]" required="required" type="password" value="" />
+                                    </div>
+                                    <p><a href="/account/login#recover">Forgot password?</a></p><br />
+                                    <button class="btn btn-primary" type="submit">Sign in</button>
+                                {% endform %}
+                            </div>
+                            <div class="col-md-6">
+                                <h3>Continue without signing in</h3>
+                                <p>You'll have the option to register for an account after your purchase.</p>
+                                <p>You can also <a href="/account/register">register for an account now</a>.</p><br />
+                                <p class="text-center"><button class="btn btn-primary" data-dismiss="modal">Continue as a guest</button></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="container">
         <nav class="navbar navbar-default navbar-fixed-top" style="background-color: {{ settings.color_primary }};">
             <div class="container">
                 <div class="navbar-header">
                     <a class="navbar-brand" href="/" style="color: {{ settings.color_header_text }}; font-size: 30px; font-weight: 600;">{{ shop.name }}</a>
                 </div>
+                {% if checkout.guest_login? %}
+                    <ul class="nav navbar-nav navbar-right">
+                        <li><a href="/account" style="color: {{ settings.color_header_text }}; font-weight: 400;">Logged in as <strong>{{ customer.first_name }}</strong></a></li>
+                    </ul>
+                {% endif %}
             </div>
         </nav>
         <div class="row">
