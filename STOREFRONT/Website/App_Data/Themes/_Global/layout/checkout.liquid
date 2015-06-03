@@ -61,7 +61,7 @@
                 }
             });
 
-            {% if checkout.guest_login and checkout.email == null %}
+            {% if checkout.guest_login and checkout.email.size == 0 %}
                 $("#guest-modal").modal("show");
             {% endif %}
         });
