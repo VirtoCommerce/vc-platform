@@ -339,7 +339,7 @@ namespace VirtoCommerce.Platform.Web
             if (_version == null)
             {
                 var assembly = Assembly.GetExecutingAssembly();
-                _version = new MvcHtmlString(String.Format("{0} ({1})", assembly.GetInformationalVersion(), assembly.GetFileVersion()));
+                _version = new MvcHtmlString(String.Format("{0}.{1}", assembly.GetInformationalVersion(), assembly.GetFileVersion()));
             }
 
             return _version;

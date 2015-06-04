@@ -2,7 +2,8 @@
 {
     public enum AddressType
     {
-        Billing,
-        Shipping
+        Billing = 1,
+        Shipping = 2,
+        BillingAndShipping = Billing | Shipping
     }
 }

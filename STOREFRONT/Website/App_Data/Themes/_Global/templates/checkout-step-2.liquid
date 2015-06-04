@@ -151,43 +151,4 @@
         {% endform %}
     </div>
 </div>
-<div class="col-md-5">
-    <div class="box">
-        <div class="box-header">
-            <h3>Order summary</h3>
-        </div>
-        <div class="box-content">
-            <ul class="product-list">
-                {% for line_item in checkout.line_items %}
-                    <li>
-                        <div class="image">
-                            <img alt="{{ line_item.title }}" src="{{ line_item.image }}" />
-                        </div>
-                        <div class="info">
-                            <div class="price">
-                                {% include 'price' with line_item.line_price %}
-                            </div>
-                            <div class="name">
-                                <span class="title">{{ line_item.title }}</span>
-                            </div>
-                        </div>
-                    </li>
-                {% endfor %}
-            </ul>
-            <ul class="price-list">
-                <li>
-                    Subtotal: <strong>{% include 'price' with checkout.subtotal_price %}</strong>
-                </li>
-                <li>
-                    Shipping: <strong>{% include 'price' with checkout.shipping_price %}</strong>
-                </li>
-                <li>
-                    Tax: <strong>{% include 'price' with checkout.tax_price %}</strong>
-                </li>
-                <li class="important">
-                    Total: <strong>{% include 'price' with checkout.total_price %}</strong>
-                </li>
-            </ul>
-        </div>
-    </div>
-</div>
+{% include 'checkout_totals' %}
