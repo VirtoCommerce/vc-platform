@@ -5,7 +5,7 @@
 				<legend class="ng-binding">Chosen content items</legend>
 				<div class="form-group">
 					<a class="clear text-mini __link" ng-click="blade.deleteAllContentItems()" ng-if="blade.entity.contentItems.length > 0">Clear all</a>
-					<ul class="list __inline __choosen">
+					<ul class="list __inline __chosen">
 						<li class="list-item" ng-repeat="item in blade.entity.contentItems">
 							<a class="list-remove" ng-click="blade.deleteContentItem(item)">×</a>
 							<span class="list-name">{{item.path}}\{{item.name}}</span>

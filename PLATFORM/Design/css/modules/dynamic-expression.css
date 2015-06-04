@@ -42,6 +42,10 @@
         .dynamic-expression_b .__link
         {
             display: inline-block;
+        }
+
+        .dynamic-expression_b .form-input
+        {
             vertical-align: middle;
         }
 
@@ -49,6 +53,11 @@
         .dynamic-expression_b .list-descr
         {
             margin: 0 10px;
+        }
+
+        .dynamic-expression_b .form-group
+        {
+            margin: 10px 0 0;
         }
 
         .dynamic-expression_b .list-descr

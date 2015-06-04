@@ -1,4 +1,4 @@
-﻿<div class="blade-content __gray">
+﻿<div class="blade-content">
     <div class="blade-inner">
         <div class="inner-block">
             <div class="inner">
@@ -28,13 +28,44 @@
                     <div class="progress-bar __aqua" ng-style="{'width': uploader.progress + '%'}"></div>
                 </div>
                 
-                <div class="tile-group triple __images-list" ui-sortable="sortableOptions" ng-model="item.images">
+                <!-- <div class="tile-group triple __images-list" ui-sortable="sortableOptions" ng-model="item.assets">
                     <div class="tile" ng-class="{'__selected': data.selected}" ng-repeat="data in item.assets" ng-include="'assetTemplate.html'" ng-click="toggleAssetSelect($event, data)" context-menu="toggleAssetSelect($event, data)" data-target="itemAssetMenu{{$index}}"></div>
+                </div> -->
+
+                <div class="table-wrapper" ng-if="item.assets.length > 0">
+                    <table class="table">
+                        <tr>
+                            <th class="table-col">Type</th>
+                            <th class="table-col">Name</th>
+                            <th class="table-col">Actions</th>
+                        </tr>
+                        <tr class="table-item" ng-repeat="data in item.assets">
+                            <td class="table-col __product-img">
+                                <div class="product-img">
+                                    <i class="table-ico fa {{data.mimeType == 'image/png' || data.mimeType == 'image/jpeg' ? 'fa-image' : 'fa-file-text'}}"></i>
+                                </div>
+                            </td>
+                            <td class="table-col __product-name">{{data.name}}</td>
+                            <td class="table-col __center">
+                                <ul class="menu __actions">
+                                    <li class="menu-item" ng-click="removeAction([data])">
+                                        <a class="menu-link" title="Remove">
+                                            <i class="menu-ico fa fa-trash-o"></i>
+                                        </a>
+                                    </li>
+                                    <li class="menu-item" ng-click="copyUrl(data)">
+                                        <a class="menu-link" title="Copy link">
+                                            <i class="menu-ico fa fa-link"></i>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </td>
+                        </tr>
+                    </table>
                 </div>
             </div>
 
             <script type="text/ng-template" id="assetTemplate.html">
-                <img class="tile-img" src="{{data.url}}" alt="">
                 <ul class="menu __context" id="itemAssetMenu{{$index}}" role="menu" aria-labelledby="dropdownMenu2">
                     <li class="menu-item" ng-click="removeAction([data])">
                         <i class="menu-ico fa fa-trash-o"></i>

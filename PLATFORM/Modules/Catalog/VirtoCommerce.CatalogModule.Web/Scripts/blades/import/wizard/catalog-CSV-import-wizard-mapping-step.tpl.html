@@ -7,7 +7,7 @@
                 <legend class="ng-binding">CSV fields automatically mapped to same product properties</legend>
                 <div class="form-group">
                     <a class="clear text-mini __link" ng-click="clearPropertyCsvColumns()" ng-if="blade.importConfiguration.propertyCsvColumns.length > 0">Clear all</a>
-                    <ul class="list __inline __choosen">
+                    <ul class="list __inline __chosen">
                         <li class="list-item" ng-repeat="item in blade.importConfiguration.propertyCsvColumns">
                             <a class="list-remove" ng-click="removePropertyCsvColumn(item)">×</a>
                             <span class="list-name">{{item}}</span>

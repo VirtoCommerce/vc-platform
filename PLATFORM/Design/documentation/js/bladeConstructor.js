@@ -1,9 +1,27 @@
 var Blade = {
 
     settings: function() {
+        var url = window.location.href.replace('index.html', '');
+        $('#tplblade').load(url + '/templates/settings/blade.html');
+
         $('.settings .form-control input').on('click', function () {
             var type = $(this);
             
+            if(type.prop('id') == 'headNav') {
+                if (type.prop('checked')) {
+                    // $('#tplblade .blade-nav').load(url + '/templates/settings/blade-nav.html');
+                    $('#tplblade .blade-nav').append(123);
+                    //$('.example.__construct .blade-nav').append(bladeNav);
+
+                    Blade.saveCode();
+                }
+                else {
+                    $('#tplblade .blade-nav .menu').remove();
+
+                    Blade.saveCode();
+                }
+            }
+
             if(type.prop('id') == 'headIcon') {
                 if (type.prop('checked')) {
                     $('.example.__construct .blade-t').append("<i class='blade-t_ico fa fa-folder'></i>");
@@ -55,7 +73,16 @@ var Blade = {
 
             if(type.prop('id') == 'headToolbar') {
                 if (type.prop('checked')) {
-                    $('.example.__construct .blade-t').after("<div class='blade-toolbar'><ul class='menu __inline'><li class='menu-item'><a class='menu-btn'><i class='menu-ico fa fa-plus'></i> Add</a></li></ul></div>");
+                    $('.example.__construct .blade-t').after(
+                        "<div class='blade-toolbar'>" +
+                            "<ul class='menu __inline'>" +
+                                "<li class='menu-item'>" +
+                                    "<a class='menu-btn'>" +
+                                        "<i class='menu-ico fa fa-plus'></i> Add" +
+                                    "</a>" +
+                                "</li>" +
+                            "</ul>" +
+                        "</div>");
 
                     Blade.saveCode();
                 }
@@ -153,7 +180,28 @@ var Blade = {
     },
 
     saveCode: function() {
-        var html = $('.example.__construct *').html();
+        var html = $('#tplblade').html();
+        var lines = html.split('\n');
+
+        console.log(html)
+        
+        var firstNotEmptyLine = lines[0];
+
+        for (var i = 0; i < lines.length; i++) {
+            if (lines[i].length > 0) {
+                firstNotEmptyLine = lines[i];
+                break;
+            }
+        }
+
+        var exIndent = firstNotEmptyLine.substring(0, firstNotEmptyLine.indexOf('<'));
+        
+        html = '';
+
+        for (var i = 0; i < lines.length; i++) {
+            lines[i] = lines[i].substring(exIndent.length);
+            html += lines[i] + '\n';
+        }
 
         $('.code.__construct').html('<code class="language-markup">' + Blade.htmlSpecialChars(html) + '</code>');
 
