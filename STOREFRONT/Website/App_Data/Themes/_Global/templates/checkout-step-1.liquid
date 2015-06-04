@@ -31,7 +31,7 @@
                             <button aria-expanded="false" class="btn btn-default dropdown-toggle" data-toggle="dropdown" type="button">
                                 <span class="caret"></span>
                             </button>
-                            <ul class="dropdown-menu" role="menu" aria-labelledby="addresses">
+                            <ul class="dropdown-menu" id="customer-addresses" role="menu" aria-labelledby="addresses">
                                 {% for address in customer.addresses %}
                                     <li data-id="{{ address.id }}" role="presentation">
                                         <a role="menuitem" tabindex="-1" href="#">
