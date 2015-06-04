@@ -199,7 +199,7 @@
                         <pre class="code" data-src="templates/icons/list.html"></pre>
                     </section>
                     <section>
-                        <h1 class="title" id="typography">Typoraphy</h1>
+                        <h1 class="title" id="typography">Typography</h1>
                         <h2 id="headings">Headings</h2>
                         <p class="note">Можно использовать заголовки <span>&lt;h1&gt;</span> — <span>&lt;h3&gt;</span>, а также классы, с любыми тэгами:
                         <br>Например <span class="exmpl">&lt;div class="t"&gt;Heading&lt;div&gt;</span></p>
@@ -1340,7 +1340,7 @@
                     </section>
                     <section class="cwidgets" ng-controller="gridsterController">
                         <h1 class="title" id="widgets">Widgets</h1>
-                        <div class="example __bg">
+                        <div class="example">
                             <script type="text/ng-template" id="tmp1.html">
                                 <div class="gridster-cnt">
                                     <div class="cnt-inner">
@@ -1391,6 +1391,16 @@
                         <h2 id="blade_constructor">Blade constructor</h2>
                         <div class="note">Конструктор для блейдов</div>
                         <div class="settings">
+                            <div class="sub-t">Blade navigation</div>
+                            <div class="form-group">
+                                <div class="form-control __checkbox">
+                                    <label class="form-label">
+                                        <input id="headNav" type="checkbox">
+                                        <span class="check"></span>
+                                        <span class="name"></span>
+                                    </label>
+                                </div>
+                            </div>
                             <div class="sub-t">Header</div>
                             <div class="form-group">
                                 <div class="form-control __checkbox">
@@ -1477,18 +1487,7 @@
                             </div>
                         </div>
                         <div class="example __center __bg __construct">
-                            <div class="blade">
-                                <header class="blade-head">
-                                    <div class="blade-t"></div>
-                                </header>
-                                <div class="blade-container">
-                                    <div class="blade-content">
-                                        <div class="blade-inner">
-                                            <div class="inner-block"></div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                            <div id="tplblade"></div>
                         </div>
                         <div id="codeResult"></div>
                         <pre class="code __construct language-markup"></pre>

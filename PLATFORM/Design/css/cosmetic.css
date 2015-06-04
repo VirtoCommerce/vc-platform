@@ -343,3 +343,35 @@ a:hover,
 	
 	}
 }
+
+@-webkit-keyframes notify
+{
+	0%
+	{
+		background-color: #43b0e6;
+	}
+	80%
+	{
+		background-color: #43b0e6;
+	}
+	100%
+	{
+		background-color: none;
+	}
+}
+
+@keyframes notify
+{
+	0%
+	{
+		background-color: #43b0e6;
+	}
+	80%
+	{
+		background-color: #43b0e6;
+	}
+	100%
+	{
+		background-color: none;
+	}
+}
