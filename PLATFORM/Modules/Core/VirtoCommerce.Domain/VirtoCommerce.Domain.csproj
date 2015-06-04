@@ -101,6 +101,7 @@
     <Compile Include="Commerce\Model\SeoUrlKeywordTypes.cs" />
     <Compile Include="Common\Events\EventPublisher.cs" />
     <Compile Include="Common\Events\IEventPublisher.cs" />
+    <Compile Include="Common\Events\IPriorityObserver.cs" />
     <Compile Include="Common\Expressions\ConditionExpressionTree.cs" />
     <Compile Include="Common\Expressions\DynamicExpression.cs" />
     <Compile Include="Common\EvaluationContextBase.cs" />
