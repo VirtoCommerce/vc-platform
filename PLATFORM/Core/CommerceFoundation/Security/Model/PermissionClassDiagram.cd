@@ -1,0 +1,32 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="VirtoSoftware.CommerceFoundation.Security.Model.PredefinedPermissions">
+    <Position X="10.25" Y="2.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAACAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAA=</HashCode>
+      <FileName>Security\Model\PredefinedPermissions.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="VirtoSoftware.CommerceFoundation.Security.Model.Permission">
+    <Position X="5.25" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAEgAAEIAQCAgAAAIAAAAABAAAAAAA=</HashCode>
+      <FileName>Security\Model\Permission.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="VirtoSoftware.CommerceFoundation.Security.Model.Role">
+    <Position X="3.5" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAEAAAIAAAAAABAAgAAAIAQAAAAAAIAAEAAIAAAACAA=</HashCode>
+      <FileName>Security\Model\Role.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="VirtoSoftware.CommerceFoundation.Security.Model.RoleAssignment">
+    <Position X="7.5" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAIAEAAAABAAEAAAAQgAAQIAAAAAAAAAAAAAEAA=</HashCode>
+      <FileName>Security\Model\RoleAssignment.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

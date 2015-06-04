@@ -1,0 +1,366 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{988CB3E9-2594-499C-90B4-9399EB481C79}</ProjectGuid>
+    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>VirtoCommerce.CatalogModule.Web</RootNamespace>
+    <AssemblyName>VirtoCommerce.CatalogModule.Web</AssemblyName>
+    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
+    <UseIISExpress>true</UseIISExpress>
+    <IISExpressSSLPort />
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="CsvHelper">
+      <HintPath>..\..\..\packages\CsvHelper.2.13.0.0\lib\net40-client\CsvHelper.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\packages\EntityFramework.6.1.1\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\packages\EntityFramework.6.1.1\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="Hangfire.Core">
+      <HintPath>..\..\..\packages\Hangfire.Core.1.3.4\lib\net45\Hangfire.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Practices.ServiceLocation, Version=1.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\packages\CommonServiceLocator.1.2\lib\portable-windows8+net40+sl5+windowsphone8\Microsoft.Practices.ServiceLocation.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Practices.Unity">
+      <HintPath>..\..\..\packages\Unity.3.5.1404.0\lib\net45\Microsoft.Practices.Unity.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Practices.Unity.Configuration">
+      <HintPath>..\..\..\packages\Unity.3.5.1404.0\lib\net45\Microsoft.Practices.Unity.Configuration.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Practices.Unity.RegistrationByConvention">
+      <HintPath>..\..\..\packages\Unity.3.5.1404.0\lib\net45\Microsoft.Practices.Unity.RegistrationByConvention.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\..\..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\packages\Newtonsoft.Json.6.0.8\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="Omu.ValueInjecter, Version=2.3.3.0, Culture=neutral, PublicKeyToken=c7694541b0ac80e4, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\packages\valueinjecter.2.3.3\lib\net35\Omu.ValueInjecter.dll</HintPath>
+    </Reference>
+    <Reference Include="Owin, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f0ebd12fd5e55cc5, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Net.Http.Formatting, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\packages\Microsoft.AspNet.WebApi.Client.5.2.3\lib\net45\System.Net.Http.Formatting.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System.Web.DynamicData" />
+    <Reference Include="System.Web.Entity" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Web.Http, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\packages\Microsoft.AspNet.WebApi.Core.5.2.3\lib\net45\System.Web.Http.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="BackgroundJobs\CsvCatalogImportJob.cs" />
+    <Compile Include="BackgroundJobs\CsvCatalogExportJob.cs" />
+    <Compile Include="Binders\ListEntrySearchCriteriaBinder.cs" />
+    <Compile Include="Controllers\Api\CatalogModuleCatalogsController.cs" />
+    <Compile Include="Controllers\Api\CatalogModuleCategoriesController.cs" />
+    <Compile Include="Controllers\Api\CatalogModuleExportImportController.cs" />
+    <Compile Include="Controllers\Api\CatalogModuleProductsController.cs" />
+    <Compile Include="Controllers\Api\CatalogModuleListEntryController.cs" />
+    <Compile Include="Controllers\Api\CatalogModulePropertiesController.cs" />
+    <Compile Include="Controllers\PredefinedPermissions.cs" />
+    <Compile Include="Converters\AssetConverter.cs" />
+    <Compile Include="Converters\AssociationConverter.cs" />
+    <Compile Include="Converters\CatalogConverter.cs" />
+    <Compile Include="Converters\CatalogLanguageConverter.cs" />
+    <Compile Include="Converters\CategoryConverter.cs" />
+    <Compile Include="Converters\EditorialReviewConverter.cs" />
+    <Compile Include="Converters\ImportJobConverter.cs" />
+    <Compile Include="Converters\ImportMappingItemConverter.cs" />
+    <Compile Include="Converters\LinkConverter.cs" />
+    <Compile Include="Converters\ProductConverter.cs" />
+    <Compile Include="Converters\PropertyAttributeConverter.cs" />
+    <Compile Include="Converters\PropertyConverter.cs" />
+    <Compile Include="Converters\PropertyDictionaryValueConverter.cs" />
+    <Compile Include="Converters\PropertyValueConverter.cs" />
+    <Compile Include="Converters\SearchConverter.cs" />
+    <Compile Include="Converters\SeoInfoConverter.cs" />
+    <Compile Include="Model\Catalog.cs" />
+    <Compile Include="Model\CategoryLink.cs" />
+    <Compile Include="Model\EditorialReview.cs" />
+    <Compile Include="Model\CsvImportConfiguration.cs" />
+    <Compile Include="Model\ListEntryLink.cs" />
+    <Compile Include="Model\CsvImportMappingItem.cs" />
+    <Compile Include="Model\Notifications\ExportNotification.cs" />
+    <Compile Include="Model\Notifications\ImportNotification.cs" />
+    <Compile Include="Model\Notifications\JobNotificationBase.cs" />
+    <Compile Include="Model\ProgressStatus.cs" />
+    <Compile Include="Model\ProductAssociation.cs" />
+    <Compile Include="Model\PropertyDictionaryValue.cs" />
+    <Compile Include="Model\Language.cs" />
+    <Compile Include="Model\ListEntryCategory.cs" />
+    <Compile Include="Model\ListEntryBase.cs" />
+    <Compile Include="Model\Category.cs" />
+    <Compile Include="Model\Product.cs" />
+    <Compile Include="Model\ItemsSearchResult.cs" />
+    <Compile Include="Model\ListEntrySearchResult.cs" />
+    <Compile Include="Model\ListEntryProduct.cs" />
+    <Compile Include="Model\ProductAsset.cs" />
+    <Compile Include="Model\ProductAssetBase.cs" />
+    <Compile Include="Model\ProductImage.cs" />
+    <Compile Include="Model\Property.cs" />
+    <Compile Include="Model\PropertyAttribute.cs" />
+    <Compile Include="Model\PropertyValue.cs" />
+    <Compile Include="Model\ResponseGroup.cs" />
+    <Compile Include="Model\ListEntrySearchCriteria.cs" />
+    <Compile Include="Model\SeoInfo.cs" />
+    <Compile Include="Module.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Content Include="Content\css\catalog.css" />
+    <Content Include="Scripts\blades\import\catalog-CSV-import.js" />
+    <Content Include="Scripts\blades\import\catalog-CSV-import.tpl.html" />
+    <Content Include="Scripts\blades\import\notifications\historyImport.tpl.html" />
+    <Content Include="Scripts\blades\import\notifications\menuImport.tpl.html" />
+    <Content Include="Scripts\blades\import\wizard\catalog-CSV-import-wizard.js" />
+    <Content Include="Scripts\blades\import\catalog-import.js" />
+    <Content Include="Scripts\blades\import\wizard\catalog-CSV-import-wizard.tpl.html" />
+    <Content Include="Scripts\blades\import\wizard\catalog-CSV-import-wizard-mapping-step.js" />
+    <Content Include="Scripts\blades\import\wizard\catalog-CSV-import-wizard-mapping-step.tpl.html" />
+    <Content Include="Scripts\blades\import\importers-list.js" />
+    <Content Include="Scripts\blades\import\importers-list.tpl.html" />
+    <Content Include="Scripts\resources\export.js" />
+  </ItemGroup>
+  <ItemGroup>
+    <!-- <Content Include="Content\css\catalog.css" /> -->
+    <Content Include="Scripts\blades\advanced-search-results.js" />
+    <Content Include="Scripts\blades\advanced-search.js" />
+    <Content Include="Scripts\blades\advanced-search-results.tpl.html" />
+    <Content Include="Scripts\blades\advanced-search.tpl.html" />
+    <Content Include="Scripts\blades\catalog-property-detail.js" />
+    <Content Include="Scripts\blades\catalog-property-detail.tpl.html" />
+    <Content Include="Scripts\blades\common\catalog-items-select.js" />
+    <Content Include="Scripts\blades\common\catalog-items-select.tpl.html" />
+    <Content Include="Scripts\blades\export\catalog-export.js" />
+    <Content Include="Scripts\blades\export\catalog-CSV-export.js" />
+    <Content Include="Scripts\blades\export\exporter-list.js" />
+    <Content Include="Scripts\blades\export\catalog-CSV-export.tpl.html" />
+    <Content Include="Scripts\blades\export\exporter-list.tpl.html" />
+    <Content Include="Scripts\blades\export\notifications\historyExport.tpl.html" />
+    <Content Include="Scripts\blades\export\notifications\menuExport.tpl.html" />
+    <Content Include="Scripts\blades\item-associations-list.js" />
+    <Content Include="Scripts\blades\editorialReviews-list.js" />
+    <Content Include="Scripts\blades\item-associations-list.tpl.html" />
+    <Content Include="Scripts\blades\editorialReviews-list.tpl.html" />
+    <Content Include="Scripts\blades\catalogs-select.js" />
+    <Content Include="Scripts\blades\catalogs-select.tpl.html" />
+    <Content Include="Scripts\blades\category-detail.js" />
+    <Content Include="Scripts\blades\category-detail.tpl.html" />
+    <Content Include="Scripts\blades\editorialReview-detail.js" />
+    <Content Include="Scripts\blades\editorialReview-detail.tpl.html" />
+    <Content Include="Scripts\blades\seo-detail.js" />
+    <Content Include="Scripts\blades\seo-detail.tpl.html" />
+    <Content Include="Scripts\blades\property-attributes.js" />
+    <Content Include="Scripts\blades\property-dictionary.js" />
+    <Content Include="Scripts\blades\property-attributes.tpl.html" />
+    <Content Include="Scripts\blades\property-dictionary.tpl.html" />
+    <Content Include="Scripts\blades\property-valueType.js" />
+    <Content Include="Scripts\blades\property-type.js" />
+    <Content Include="Scripts\blades\property-valueType.tpl.html" />
+    <Content Include="Scripts\blades\property-type.tpl.html" />
+    <Content Include="Scripts\blades\catalog-languages.tpl.html" />
+    <Content Include="Scripts\blades\catalog-languages.js" />
+    <Content Include="Scripts\blades\categories-items-add.js" />
+    <Content Include="Scripts\blades\catalog-add.js" />
+    <Content Include="Scripts\blades\categories-items-add.tpl.html" />
+    <Content Include="Scripts\blades\catalog-detail.js" />
+    <Content Include="Scripts\blades\catalog-add.tpl.html" />
+    <Content Include="Scripts\blades\catalog-detail.tpl.html" />
+    <Content Include="Scripts\blades\catalogs-list.js" />
+    <Content Include="Scripts\blades\categories-items-list.js" />
+    <Content Include="Scripts\blades\categories-items-list.tpl.html" />
+    <Content Include="Scripts\blades\category-property-detail.js" />
+    <Content Include="Scripts\blades\category-property-detail.tpl.html" />
+    <Content Include="Scripts\blades\item-detail-toolbar.tpl.html" />
+    <Content Include="Scripts\blades\item-detail.js" />
+    <Content Include="Scripts\blades\item-detail.tpl.html" />
+    <Content Include="Scripts\blades\item-asset-detail.js" />
+    <Content Include="Scripts\blades\item-image-detail.js" />
+    <Content Include="Scripts\blades\item-asset-detail.tpl.html" />
+    <Content Include="Scripts\blades\item-image-detail.tpl.html" />
+    <Content Include="Scripts\blades\item-property-detail.js" />
+    <Content Include="Scripts\blades\item-property-detail.tpl.html" />
+    <Content Include="Scripts\blades\item-variation-list.js" />
+    <Content Include="Scripts\blades\item-variation-list.tpl.html" />
+    <Content Include="Scripts\blades\catalogs-list.tpl.html" />
+    <Content Include="Scripts\blades\property-detail.js" />
+    <Content Include="Scripts\blades\property-detail.tpl.html" />
+    <Content Include="Scripts\blades\virtual-catalog-detail.js" />
+    <Content Include="Scripts\blades\virtual-catalog-languages.js" />
+    <Content Include="Scripts\catalog.js" />
+    <Content Include="Scripts\directives\property2.js" />
+    <Content Include="Scripts\directives\property2.tpl.html" />
+    <Content Include="Scripts\resources\catalogs.js" />
+    <Content Include="Scripts\resources\categories.js" />
+    <Content Include="Scripts\resources\import.js" />
+    <Content Include="Scripts\resources\items.js" />
+    <Content Include="Scripts\resources\listEntries.js" />
+    <Content Include="Scripts\resources\properties.js" />
+    <Content Include="Scripts\widgets\catalogLanguagesWidget.js" />
+    <Content Include="Scripts\widgets\catalogPropertyWidget.js" />
+    <Content Include="Scripts\widgets\catalogPropertyWidget.tpl.html" />
+    <Content Include="Scripts\widgets\editorialReviewWidget.js" />
+    <Content Include="Scripts\widgets\editorialReviewWidget.tpl.html" />
+    <Content Include="Scripts\widgets\itemAssociationsWidget.js" />
+    <Content Include="Scripts\widgets\dashboard.js" />
+    <Content Include="Scripts\widgets\seoWidget.js" />
+    <Content Include="Scripts\widgets\itemAssociationsWidget.tpl.html" />
+    <Content Include="Scripts\widgets\seoWidget.tpl.html" />
+    <Content Include="Scripts\widgets\itemAssetWidget.js" />
+    <Content Include="Scripts\widgets\itemImageWidget.js" />
+    <Content Include="Scripts\widgets\itemAssetWidget.tpl.html" />
+    <Content Include="Scripts\widgets\itemImageWidget.tpl.html" />
+    <Content Include="Scripts\widgets\categoryPropertyWidget.js" />
+    <Content Include="Scripts\widgets\itemPropertyWidget.js" />
+    <Content Include="Scripts\widgets\categoryPropertyWidget.tpl.html" />
+    <Content Include="Scripts\widgets\itemPropertyWidget.tpl.html" />
+    <Content Include="Scripts\widgets\itemVariationWidget.js" />
+    <Content Include="Scripts\widgets\itemVariationWidget.tpl.html" />
+    <Content Include="Scripts\wizards\common\wizard-ok-action2.tpl.html" />
+    <Content Include="Scripts\wizards\newAssociation\association-wizard-group-new.js" />
+    <Content Include="Scripts\wizards\newAssociation\association-wizard-group-new.tpl.html" />
+    <Content Include="Scripts\wizards\newAssociation\association-wizard.js" />
+    <Content Include="Scripts\wizards\newAssociation\association-wizard.tpl.html" />
+    <Content Include="Scripts\wizards\newAssociation\association-wizard-group-step.js" />
+    <Content Include="Scripts\wizards\newAssociation\association-wizard-group-step.tpl.html" />
+    <Content Include="Scripts\wizards\newCategory\category-wizard-actions.tpl.html" />
+    <Content Include="Scripts\wizards\newCategory\category-wizard.js" />
+    <Content Include="Scripts\wizards\newCategory\category-wizard.tpl.html" />
+    <Content Include="Scripts\wizards\newProduct\new-product-wizard-editorial-review-detail-step.js" />
+    <Content Include="Scripts\wizards\newProduct\new-product-wizard-editorial-reviews.js" />
+    <Content Include="Scripts\wizards\newProduct\new-product-wizard-property-detail-step.js" />
+    <Content Include="Scripts\wizards\common\wizard-ok-action.tpl.html" />
+    <Content Include="Scripts\wizards\newProduct\new-product-wizard-images-step.js" />
+    <Content Include="Scripts\wizards\newProduct\new-product-wizard-actions.tpl.html" />
+    <Content Include="Scripts\wizards\newProduct\new-product-wizard.js" />
+    <Content Include="Scripts\wizards\newProduct\new-product-wizard.tpl.html" />
+    <Content Include="Scripts\wizards\newProduct\new-variation-wizard.tpl.html" />
+    <Content Include="Scripts\wizards\newProduct\new-product-wizard-seo-detail-step.js" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="App_Data\priceRuCategoryTest.yml" />
+    <None Include="app.config">
+      <SubType>Designer</SubType>
+    </None>
+    <Content Include="module.manifest">
+      <SubType>Designer</SubType>
+    </Content>
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
+    <Content Include="web.config" />
+    <None Include="web.Debug.config">
+      <DependentUpon>web.config</DependentUpon>
+    </None>
+    <None Include="web.Release.config">
+      <DependentUpon>web.config</DependentUpon>
+    </None>
+    <Content Include="Scripts\widgets\catalogLanguagesWidget.tpl.html" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\VirtoCommerce.Platform.Core\VirtoCommerce.Platform.Core.csproj">
+      <Project>{f7c9313b-522e-4619-abc9-8c7d4600d6b5}</Project>
+      <Name>VirtoCommerce.Platform.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\VirtoCommerce.Platform.Data\VirtoCommerce.Platform.Data.csproj">
+      <Project>{39afd233-b2f7-4178-817d-0a339c57525d}</Project>
+      <Name>VirtoCommerce.Platform.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Core\VirtoCommerce.Domain\VirtoCommerce.Domain.csproj">
+      <Project>{67c58a78-ddea-4fa3-a969-1cab582918e4}</Project>
+      <Name>VirtoCommerce.Domain</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\VirtoCommerce.CatalogModule.Data\VirtoCommerce.CatalogModule.Data.csproj">
+      <Project>{b8c758d7-822f-40d8-b28c-ef21c873af49}</Project>
+      <Name>VirtoCommerce.CatalogModule.Data</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup />
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != '' And '$(VCModulesOutputDir)' == ''" />
+  <Import Project="$(SolutionDir)\targets\VirtoCommerce.Module.targets" Condition="'$(VCModulesOutputDir)' != ''" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <SaveServerSettingsInUserFile>True</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+  <PropertyGroup>
+    <PostBuildEvent>
+    </PostBuildEvent>
+  </PropertyGroup>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

@@ -1,0 +1,83 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<module>
+    <id>Klarna.PaymentGateway</id>
+    <version>1.0.0</version>
+    <platformVersion>2.0.0</platformVersion>
+    <dependencies>
+        <dependency id="VirtoCommerce.Core" version="1.0.0" />
+    </dependencies>
+
+    <title>Klarna Payment Gateway</title>
+    <description>APIs and UI for klarna payment gateway</description>
+    <authors>
+        <author>Virto Commerce</author>
+    </authors>
+    <owners>
+        <owner>Virto Commerce</owner>
+    </owners>
+    <projectUrl>http://virtocommerce.com/</projectUrl>
+    <iconUrl>http://nuget.org/Content/Images/packageDefaultIcon-50x50.png</iconUrl>
+    <releaseNotes>First version.</releaseNotes>
+    <copyright>Copyright © 2011-2015 Virto Commerce. All rights reserved</copyright>
+    <tags>klarna payment gateway</tags>
+
+    <assemblyFile>Klarna.PaymentGatewaysModule.Web.dll</assemblyFile>
+    <moduleType>Klarna.PaymentGatewaysModule.Web.Module, Klarna.PaymentGatewaysModule.Web</moduleType>
+    <!--<styles>
+		<directory virtualPath="$/Content/css" searchPattern="*.css" searchSubdirectories="true" />
+	</styles>-->
+    <!--<scripts>
+		<directory virtualPath="$/Scripts" searchPattern="*.js" searchSubdirectories="true" />
+	</scripts>-->
+
+    <settings>
+        <group name="Credentials">
+            <setting>
+                <name>Klarna.AppKey</name>
+                <valueType>integer</valueType>
+                <defaultValue>3486</defaultValue>
+                <title>Application key</title>
+                <description>Klarna application key from credentials</description>
+            </setting>
+            <setting>
+                <name>Klarna.SecretKey</name>
+                <valueType>string</valueType>
+                <defaultValue>EodLR8tBViEpwLo</defaultValue>
+                <title>Secret key</title>
+                <description>Klarna secret key from credentials</description>
+            </setting>
+						<setting>
+								<name>Klarna.Mode</name>
+								<valueType>string</valueType>
+								<defaultValue>test</defaultValue>
+								<allowedValues>
+									<value>test</value>
+									<value>real</value>
+								</allowedValues>
+								<title>Mode</title>
+								<description>Mode of klarna payment gateway (test or real)</description>
+						</setting>
+						<setting>
+							<name>Klarna.TermsUrl</name>
+							<valueType>string</valueType>
+							<defaultValue>checkout/terms</defaultValue>
+							<title>Secret key</title>
+							<description>Klarna secret key from credentials</description>
+						</setting>
+						<setting>
+							<name>Klarna.CheckoutUrl</name>
+							<valueType>string</valueType>
+							<defaultValue>checkout/step1</defaultValue>
+							<title>Secret key</title>
+							<description>Klarna secret key from credentials</description>
+						</setting>
+						<setting>
+							<name>Klarna.ConfirmationUrl</name>
+							<valueType>string</valueType>
+							<defaultValue>checkout/externalpaymentcallback</defaultValue>
+							<title>Secret key</title>
+							<description>Klarna secret key from credentials</description>
+						</setting>
+        </group>
+    </settings>
+</module>

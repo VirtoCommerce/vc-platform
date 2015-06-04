@@ -1,0 +1,81 @@
+﻿<div class="blade-content __medium-wide __gray">
+    <div class="blade-inner">
+        <div class="inner-block">
+            <form name="detailForm" class="form">
+                <div class="form-group" ng-init="setForm(detailForm)">
+                    <label class="form-label">SKU</label>
+                    <div class="form-input">
+                        <input ng-class="{'error': detailForm.code.$invalid && !detailForm.code.$pristine}" required class="form-control" ng-model="blade.item.code" name="code" placeholder="Enter item sku" ui-validate=" 'codeValidator($value)' " />
+                    </div>
+                    <div class="form-error" data-ng-show="detailForm.code.$dirty">
+                        <span data-ng-show="detailForm.code.$error.validator">Code can't contain $+;=%{}[]|\/@ ~#!^*&()?:'<>, characters</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Name</label>
+                    <div class="form-input">
+                        <textarea ng-class="{'error': detailForm.itemName.$invalid && !detailForm.itemName.$pristine}" cols="30" rows="2" ng-model="blade.item.name" name="itemName" placeholder="Enter item name"></textarea>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="columns clearfix">
+                        <div class="column">
+                            <div class="form-group">
+                                <div class="form-control __checkbox">
+                                    <label class="form-label">
+                                        <input type="checkbox" ng-model="blade.item.isBuyable">
+                                        <span class="check"></span>
+                                        <span class="name">Can be purchased</span>
+                                    </label>
+                                    <label class="form-label">
+                                        <input type="checkbox" ng-model="blade.item.isActive">
+                                        <span class="check"></span>
+                                        <span class="name">Store visible</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="column">
+                            <div class="form-group">
+                                <div class="form-control __checkbox">
+                                    <label class="form-label">
+                                        <input type="checkbox" ng-model="blade.item.trackInventory">
+                                        <span class="check"></span>
+                                        <span class="name">Track inventory</span>
+                                    </label>
+                                    <label class="form-label">
+                                        <input type="checkbox" ng-model="blade.item.isDigital">
+                                        <span class="check"></span>
+                                        <span class="name">Is digital</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="columns clearfix">
+                        <div class="column">
+                            <div class="form-group">
+                                <label class="form-label">Min. quantity</label>
+                                <div class="form-input __number">
+                                    <input va-number ng-model="blade.item.minQuantity" min="1" step="1">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="column">
+                            <div class="form-group">
+                                <label class="form-label">Max. quantity</label>
+                                <div class="form-input __number">
+                                    <input va-number ng-model="blade.item.maxQuantity" min="0" step="1">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+
+            <va-widget-container group="itemDetail" blade="blade" gridster-opts="{width: 526}"></va-widget-container>
+        </div>
+    </div>
+</div>

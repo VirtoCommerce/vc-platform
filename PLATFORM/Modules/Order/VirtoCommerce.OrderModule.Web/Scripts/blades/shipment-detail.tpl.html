@@ -1,0 +1,77 @@
+﻿<div class="blade-content __medium-wide __gray">
+    <div class="blade-inner">
+        <div class="inner-block">
+            <div class="order-status canceled" ng-if="blade.currentEntity.status">
+                <div class="status" ng-bind="blade.currentEntity.status"></div>
+                <div class="reason" ng-bind="blade.currentEntity.cancelReason" ng-if="blade.currentEntity.isCancelled"></div>
+            </div>
+            <div class="form columns clearfix">
+                <div class="column">
+                    <div class="form-group">
+                        <label class="form-label">Shipment number</label>
+                        <div class="form-input">
+                            <input type="text" ng-model="blade.currentEntity.number">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">
+                            Status
+                            <a href="" ng-click="openStatusSettingManagment()">
+                                <i class="form-ico fa fa-pencil"></i>
+                            </a>
+                        </label>
+                        <div class="form-input">
+                            <ui-select ng-model="blade.currentEntity.status">
+                                <ui-select-match placeholder="Select ...">{{$select.selected}}</ui-select-match>
+                                <ui-select-choices repeat="x as x in statuses | filter: $select.search ">
+                                    <span ng-bind-html="x | highlight: $select.search"></span>
+                                </ui-select-choices>
+                            </ui-select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">
+                            Fulfillment center
+                            <a href="" ng-click="openFulfillmentCentersList()">
+                                <i class="form-ico fa fa-pencil"></i>
+                            </a>
+                        </label>
+                        <div class="form-input">
+                            <ui-select ng-model="blade.currentEntity.fulfillmentCenterId">
+                                <ui-select-match placeholder="Select or search a center...">{{$select.selected.name}}</ui-select-match>
+                                <ui-select-choices repeat="center.id as center in fulfillmentCenters | filter: { name: $select.search }">
+                                    <span ng-bind-html="center.name | highlight: $select.search"></span>
+                                </ui-select-choices>
+                            </ui-select>
+                        </div>
+                    </div>
+                </div>
+                <div class="column">
+                    <div class="form-group">
+                        <label class="form-label">from</label>
+                        <div class="form-input">
+                            <div class="form-text">{{blade.currentEntity.createdDate | date:'short'}}</div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Employee</label>
+                        <div class="form-input">
+                            <select ng-model="blade.currentEntity.employeeId"></select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Shipment amount</label>
+                        <div class="form-input __currency">
+                            <span class="currency">{{blade.currentEntity.currency}}</span>
+                            <input money required type="text" ng-model="blade.currentEntity.sum">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <va-widget-container group="shipmentDetailWidgets" blade="blade" gridster-opts="{width: 526}"></va-widget-container>
+        </div>
+    </div>
+</div>
+
+

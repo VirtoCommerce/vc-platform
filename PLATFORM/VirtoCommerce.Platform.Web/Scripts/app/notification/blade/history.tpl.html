@@ -1,0 +1,22 @@
+<div class="blade-content __medium-wide">
+    <div class="blade-inner">
+        <div class="inner-block">
+            <div class="table-wrapper">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th class="table-col{{$index == 0 ? ' __product-img' : ''}}{{$index == 2 ? ' __date' : ''}}" ng-repeat="column in columns" ng-click="setOrder(column)" ng-class="(column.checked) ? '__sorted' : ''">
+                                {{column.title}}
+                                <i ng-class="column.checked ? (column.reverse ?'sort-up':'sort-down') : ''" class="table-ico fa"></i>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="table-item" ng-class="{' __error': notification.notifyType == 'error', ' __warning': notification.notifyType == 'warning', ' __info': notification.notifyType == 'info'}" ng-click="notification.action(notification)" ng-repeat="notification in notifications" ng-include="notification.template"></tr>
+                    </tbody>
+                </table>
+            </div>
+            <ng-include src='pagerTemplate.html'></ng-include>
+        </div>
+    </div>
+</div>

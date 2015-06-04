@@ -1,0 +1,62 @@
+<!-- /snippets/search-result.liquid -->
+{% comment %}
+
+  This snippet defines the default structure of each search result.
+
+  'item' refers to the result, but typically mimics the product liquid tag,
+  so you can access product liquid tags with {{ item.XXX }}.
+
+  Remember that results aren't specific to products, so don't depend on
+  a featured image or item.type. Pages, for example, have a blank item.type.
+
+  Product liquid tag info:
+   - http://docs.shopify.com/themes/liquid-variables/product
+
+{% endcomment %}
+
+<div class="grid">
+
+  {% if item.featured_image %}
+    {% comment %}
+      We have a featured_image, so it's likely a product
+    {% endcomment %}
+    <div class="grid__item one-third">
+      <a href="{{ item.url }}" title="{{ item.title | escape }}">
+        {{ item.featured_image.src | img_url: 'medium' | img_tag: item.featured_image.alt }}
+      </a>
+    </div>
+  {% endif %}
+
+  {% comment %}
+    If we don't have a featured_image, add a push-- class to keep the alignment the same
+  {% endcomment %}
+  <div class="grid__item two-thirds {% unless item.featured_image %}push--one-third{% endunless %}">
+    <h3>{{ item.title | link_to: item.url }}</h3>
+
+    {% comment %}
+      To show the price, let's pull what was already done on the product page,
+      but change product to item.
+    {% endcomment %}
+    {% if item.compare_at_price > item.price %}
+      <span class="on-sale" itemprop="price">
+        {{ item.price | money }}
+      </span>
+      <small>
+        {{ 'products.product.compare_at' | t }}
+        {{ item.compare_at_price_max | money }}
+      </small>
+    {% else %}
+      <span itemprop="price">
+        {{ item.price | money }}
+      </span>
+    {% endif %}
+
+    {% comment %}
+      Get a brief excerpt of raw text from the page/product
+    {% endcomment %}
+    <p>{{ item.content | strip_html | truncatewords: 50 }}</p>
+  </div>
+
+</div>
+
+{% unless forloop.last %}<hr>{% endunless %}

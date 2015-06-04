@@ -1,0 +1,50 @@
+<!-- /templates/customers/register.liquid -->
+{% comment %}
+
+  This template will be automatically generated for you if the file doesn't exist,
+  but where's the fun in having no control? Define your layout below.
+
+  The 'layout settings.customer_layout' line is inserted at the top of every customer account template.
+  Your theme's settings determine to use the 'default' or 'theme' customer templates.
+  More info:
+    - http://www.tetchi.ca/shopify-theme-from-scratch-part-11/
+
+{% endcomment %}
+
+{% layout settings.customer_layout %}
+
+<div class="grid">
+
+  <div class="grid__item large--one-third push--large--one-third text-center">
+
+    <h1>{{ 'customer.register.title' | t }}</h1>
+
+    {% comment %}
+      This form must use 'create_customer'
+    {% endcomment %}
+    {% form 'create_customer' %}
+
+      {{ form.errors | default_errors }}
+
+      <label for="FirstName" class="label--hidden">{{ 'customer.register.first_name' | t }}</label>
+      <input type="text" name="customer[first_name]" id="FirstName" placeholder="{{ 'customer.register.first_name' | t }}" {% if form.first_name %}value="{{ form.first_name }}"{% endif %} autocapitalize="words" autofocus>
+
+      <label for="LastName" class="label--hidden">{{ 'customer.register.last_name' | t }}</label>
+      <input type="text" name="customer[last_name]" id="LastName" placeholder="{{ 'customer.register.last_name' | t }}" {% if form.last_name %}value="{{ form.last_name }}"{% endif %} autocapitalize="words">
+
+      <label for="Email" class="label--hidden">{{ 'customer.register.email' | t }}</label>
+      <input type="email" name="customer[email]" id="Email" placeholder="{{ 'customer.register.email' | t }}" {% if form.errors contains "email" %} class="error"{% elsif form.email %} value="{{ form.email }}"{% endif %} autocorrect="off" autocapitalize="off">
+
+      <label for="CreatePassword" class="label--hidden">{{ 'customer.register.password' | t }}</label>
+      <input type="password" name="customer[password]" id="CreatePassword" placeholder="{{ 'customer.register.password' | t }}" {% if form.errors contains "password" %} class="error"{% endif %}>
+
+      <p>
+        <input type="submit" value="{{ 'customer.register.submit' | t }}" class="btn">
+      </p>
+      <a href="{{ shop.url }}">{{ 'customer.register.cancel' | t }}</a>
+
+    {% endform %}
+
+  </div>
+
+</div>

@@ -1,0 +1,36 @@
+﻿<div class="blade-static __bottom" ng-include="'Scripts/common/templates/ok-cancel2.tpl.html'"></div>
+<div class="blade-content __gray">
+    <div class="blade-inner">
+        <div class="inner-block clearfix">
+            <div class="columns">
+                <div class="column">
+                    <ul class="list __info">
+                        <li class="list-item">
+                            <div class="list-t">Name</div>
+                            <div class="list-descr">{{blade.currentEntity.name}}</div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="column">
+                    <ul class="list __info">
+                        <li class="list-item">
+                            <div class="list-t">Code</div>
+                            <div class="list-descr">{{blade.currentEntity.code}}</div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <form class="form" name="detailForm">
+                <div class="form-group" ng-init="setForm(detailForm)">
+                    <label class="form-label">Description</label>
+                    <div class="form-input">
+                        <textarea class="form-control" ng-model="blade.currentEntity.description" placeholder="Enter description"></textarea>
+                    </div>
+                </div>
+            </form>
+
+            <!--gridster-opts="{width: 526}"-->
+            <va-widget-container group="paymentMethodDetail" blade="blade"></va-widget-container>
+        </div>
+    </div>
+</div>

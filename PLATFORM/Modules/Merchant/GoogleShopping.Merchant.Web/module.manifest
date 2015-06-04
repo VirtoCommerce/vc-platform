@@ -1,0 +1,64 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<module>
+    <id>GoogleShopping.Merchant</id>
+    <version>1.0.0</version>
+    <platformVersion>2.0.0</platformVersion>
+    <dependencies>
+        <dependency id="VirtoCommerce.Core" version="1.0.0" />
+    </dependencies>
+
+    <title>Google Shopping Merchant</title>
+    <description>APIs and UI for sync with Google Shopping</description>
+    <authors>
+        <author>Virto Commerce</author>
+    </authors>
+    <owners>
+        <owner>Virto Commerce</owner>
+    </owners>
+    <projectUrl>http://virtocommerce.com/</projectUrl>
+    <iconUrl>http://nuget.org/Content/Images/packageDefaultIcon-50x50.png</iconUrl>
+    <releaseNotes>First version.</releaseNotes>
+    <copyright>Copyright © 2011-2015 Virto Commerce. All rights reserved</copyright>
+    <tags>google shopping merchant</tags>
+
+    <!--<assemblyFile>GoogleShopping.MerchantModule.Web.dll</assemblyFile>
+  <moduleType>GoogleShopping.MerchantModule.Web.Module, GoogleShopping.MerchantModule.Web</moduleType>-->
+    <!--<styles>
+		<directory virtualPath="$/Content/css" searchPattern="*.css" searchSubdirectories="true" />
+	</styles>-->
+    <scripts>
+        <directory virtualPath="$/Scripts" searchPattern="*.js" searchSubdirectories="true" />
+    </scripts>
+
+    <settings>
+        <group name="Credentials">
+            <setting>
+                <name>GoogleShopping.Merchant.MerchantId</name>
+                <valueType>integer</valueType>
+                <title>Google Shopping MerchantId</title>
+                <description>Google Shopping MerchantId</description>
+            </setting>
+        </group>
+        <group name="GoogleShopping Description">
+            <setting>
+                <name>GoogleShopping.MerchantModule.Description</name>
+                <valueType>string</valueType>
+                <defaultValue>GoogleShopping public site description</defaultValue>
+                <title>Description</title>
+                <description>Description of GoogleShopping for public site</description>
+            </setting>
+            <setting>
+                <name>GoogleShopping.MerchantModule.LogoUrl</name>
+                <valueType>string</valueType>
+                <defaultValue>http://upload.wikimedia.org/wikipedia/commons/thumb/3/30/Googlelogo.png/800px-Googlelogo.png</defaultValue>
+                <title>Logo url</title>
+                <description>GoogleShopping logo url</description>
+            </setting>
+        </group>
+    </settings>
+    <permissions>
+        <group name="Google Shopping">
+            <permission id="googleShopping:manage" name="Manage Google Shopping" description="Permission to manage Google Shopping Merchant."/>
+        </group>
+    </permissions>
+</module>

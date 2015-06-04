@@ -1,0 +1,43 @@
+﻿<div class="window">
+    <div class="window-status" ng-if="loginProgress">
+        <div class="progress-bar"></div>
+    </div>
+    <header class="window-head">
+        <div class="window-t __logo">Sign in to Virto Commerce Manager</div>
+    </header>
+    <div class="window-cnt">
+        <form class="form" novalidate ng-submit="ok()" name="loginForm">
+            <div class="form-group">
+                <label class="form-label">Login</label>
+                <div class="form-input">
+                    <input type="text" name="login" ng-model="user.email" required autofocus va-autofill>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Password</label>
+                <div class="form-input">
+                    <input name="password" type="password" ng-model="user.password" required va-autofill ui-keydown="{'enter':'ok()'}">
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="form-control __checkbox">
+                    <label class="form-label">
+                        <input type="checkbox" name="c1" checked="" ng-model="user.remember">
+                        <span class="check"></span>
+                        <span class="name">Remember me</span>
+                    </label>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="form-error" ng-if="authError">
+                    {{authError}}
+                </div>
+            </div>
+            <div class="form-group __right">
+                <button class="btn" type="submit" ng-disabled="loginForm.$invalid||loginProgress">
+                    <span>Log in</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

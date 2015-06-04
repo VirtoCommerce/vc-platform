@@ -1,0 +1,74 @@
+﻿<div class="blade-content __medium-wide __gray">
+    <div class="blade-inner">
+        <div class="inner-block">
+            <div class="order-status canceled" ng-if="blade.currentEntity.status">
+                <div class="status" ng-bind="blade.currentEntity.status"></div>
+                <div class="reason" ng-bind="blade.currentEntity.cancelReason" ng-if="blade.currentEntity.isCancelled"></div>
+            </div>
+            <div class="form columns clearfix">
+                <div class="column">
+                    <div class="form-group">
+                        <label class="form-label">Customer order number</label>
+                        <div class="form-input">
+                            <input required type="text" ng-model="blade.currentEntity.number">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">
+                            Status
+                            <a href="" ng-click="openStatusSettingManagment()">
+                                <i class="form-ico fa fa-pencil"></i>
+                            </a>
+
+                        </label>
+                        <div class="form-input">
+                            <ui-select ng-model="blade.currentEntity.status">
+                                <ui-select-match placeholder="Select ...">{{$select.selected}}</ui-select-match>
+                                <ui-select-choices repeat="x as x in statuses | filter: $select.search ">
+                                    <span ng-bind-html="x | highlight: $select.search"></span>
+                                </ui-select-choices>
+                            </ui-select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Store</label>
+                        <div class="form-input">
+                            <ui-select ng-model="blade.currentEntity.storeId" ng-disabled="disabled">
+                                <ui-select-match placeholder="Select or search a country in the list...">{{$select.selected.name}}</ui-select-match>
+                                <ui-select-choices repeat="store.id as store in stores | filter: { name: $select.search }">
+                                    <span ng-bind-html="store.name | highlight: $select.search"></span>
+                                </ui-select-choices>
+                            </ui-select>
+                        </div>
+                    </div>
+                </div>
+                <div class="column">
+                    <div class="form-group">
+                        <label class="form-label">from</label>
+                        <div class="form-input">
+                            <div class="form-text">{{blade.currentEntity.createdDate | date:'short'}}</div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Channel</label>
+                        <div class="form-input">
+                            <select ng-model="blade.currentEntity.channelId">
+                            
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Customer</label>
+                        <div class="form-input">
+                            <input required type="text" ng-model="blade.currentEntity.customerId">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <va-widget-container group="customerOrderDetailWidgets" blade="blade" gridster-opts="{width: 526}"></va-widget-container>
+        </div>
+    </div>
+</div>
+
+

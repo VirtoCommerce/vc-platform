@@ -1,0 +1,453 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>
+    </ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{1AECEEB1-A6DA-4CAF-B8B5-94A779F457A8}</ProjectGuid>
+    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>VirtoCommerce.Web</RootNamespace>
+    <AssemblyName>VirtoCommerce.Website</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <MvcBuildViews>false</MvcBuildViews>
+    <UseIISExpress>true</UseIISExpress>
+    <IISExpressSSLPort />
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <Choose>
+    <When Condition="'$(SITE_BITNESS)' == 'x86'">
+      <PropertyGroup>
+        <PlatformTarget>x86</PlatformTarget>
+      </PropertyGroup>
+      <ItemGroup>
+        <Reference Include="LibSass.x86, Version=0.0.0.0, Culture=neutral">
+          <SpecificVersion>False</SpecificVersion>
+          <HintPath>..\Shared\Win86\LibSass.x86.dll</HintPath>
+        </Reference>
+        <Reference Include="libsassnet, Version=1.0.0.0, Culture=neutral">
+          <SpecificVersion>False</SpecificVersion>
+          <HintPath>..\Shared\Win86\libsassnet.dll</HintPath>
+        </Reference>
+      </ItemGroup>
+    </When>
+    <Otherwise>
+      <PropertyGroup>
+        <PlatformTarget>x64</PlatformTarget>
+      </PropertyGroup>
+      <ItemGroup>
+        <Reference Include="LibSass.x64, Version=0.0.0.0, Culture=neutral">
+          <SpecificVersion>False</SpecificVersion>
+          <HintPath>..\Shared\Win64\LibSass.x64.dll</HintPath>
+        </Reference>
+        <Reference Include="libsassnet, Version=1.0.0.0, Culture=neutral">
+          <SpecificVersion>False</SpecificVersion>
+          <HintPath>..\Shared\Win64\libsassnet.dll</HintPath>
+        </Reference>
+      </ItemGroup>
+    </Otherwise>
+  </Choose>
+  <ItemGroup>
+    <Reference Include="DotLiquid, Version=1.0.0.0, Culture=neutral, PublicKeyToken=82e46016ecf9f07c, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Shared\DotLiquid.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.Identity.Core">
+      <HintPath>..\packages\Microsoft.AspNet.Identity.Core.2.1.0\lib\net45\Microsoft.AspNet.Identity.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.Identity.Owin">
+      <HintPath>..\packages\Microsoft.AspNet.Identity.Owin.2.1.0\lib\net45\Microsoft.AspNet.Identity.Owin.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.Owin">
+      <HintPath>..\packages\Microsoft.Owin.3.0.0\lib\net45\Microsoft.Owin.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Host.SystemWeb">
+      <HintPath>..\packages\Microsoft.Owin.Host.SystemWeb.3.0.0\lib\net45\Microsoft.Owin.Host.SystemWeb.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.Owin.Security.3.0.0\lib\net45\Microsoft.Owin.Security.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security.Cookies">
+      <HintPath>..\packages\Microsoft.Owin.Security.Cookies.2.1.0\lib\net45\Microsoft.Owin.Security.Cookies.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security.Facebook">
+      <HintPath>..\packages\Microsoft.Owin.Security.Facebook.3.0.0\lib\net45\Microsoft.Owin.Security.Facebook.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security.Google">
+      <HintPath>..\packages\Microsoft.Owin.Security.Google.3.0.0\lib\net45\Microsoft.Owin.Security.Google.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security.OAuth">
+      <HintPath>..\packages\Microsoft.Owin.Security.OAuth.2.1.0\lib\net45\Microsoft.Owin.Security.OAuth.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Newtonsoft.Json.6.0.8\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="Omu.ValueInjecter">
+      <HintPath>..\packages\valueinjecter.2.3.3\lib\net35\Omu.ValueInjecter.dll</HintPath>
+    </Reference>
+    <Reference Include="Owin">
+      <HintPath>..\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Net.Http.Formatting, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.5.2.3\lib\net45\System.Net.Http.Formatting.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Web.DynamicData" />
+    <Reference Include="System.Web.Entity" />
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Web.Abstractions" />
+    <Reference Include="System.Web.Routing" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.EnterpriseServices" />
+    <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http">
+    </Reference>
+    <Reference Include="System.Net.Http.WebRequest">
+    </Reference>
+    <Reference Include="System.Web.Helpers, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.2\lib\net45\System.Web.Helpers.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Mvc, Version=__MvcPagesVersion__, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.Mvc.5.2.2\lib\net45\System.Web.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Optimization">
+      <HintPath>..\packages\Microsoft.AspNet.Web.Optimization.1.1.3\lib\net40\System.Web.Optimization.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.Razor.3.2.2\lib\net45\System.Web.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.2\lib\net45\System.Web.WebPages.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Deployment, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.2\lib\net45\System.Web.WebPages.Deployment.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.2\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="WebGrease">
+      <Private>True</Private>
+      <HintPath>..\packages\WebGrease.1.5.2\lib\WebGrease.dll</HintPath>
+    </Reference>
+    <Reference Include="Antlr3.Runtime">
+      <Private>True</Private>
+      <HintPath>..\packages\Antlr.3.4.1.9004\lib\Antlr3.Runtime.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="App_Start\EnginesConfig.cs" />
+    <Compile Include="App_Start\FilterConfig.cs" />
+    <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="App_Start\Startup.cs" />
+    <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\AssetsController.cs" />
+    <Compile Include="Controllers\ErrorsController.cs" />
+    <Compile Include="Controllers\BlogController.cs" />
+    <Compile Include="Controllers\StoreControllerBase.cs" />
+    <Compile Include="Controllers\CartController.cs" />
+    <Compile Include="Controllers\CheckoutController.cs" />
+    <Compile Include="Controllers\CollectionsController.cs" />
+    <Compile Include="Controllers\BannerController.cs" />
+    <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\PageController.cs" />
+    <Compile Include="Controllers\ProductController.cs" />
+    <Compile Include="Controllers\SearchController.cs" />
+    <Compile Include="App_Start\OwinConfig.cs" />
+    <Compile Include="Global.asax.cs">
+      <DependentUpon>Global.asax</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Startup.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="App_Data\Themes\_Default\assets\arrow_switch.png" />
+    <Content Include="App_Data\Themes\_Default\assets\flags.png" />
+    <Content Include="App_Data\Themes\_Global\assets\icon_google_32.png" />
+    <Content Include="App_Data\Themes\_Global\assets\icon_facebook_32.png" />
+    <Content Include="App_Data\Themes\_Global\assets\loader_spinner.gif" />
+    <Content Include="App_Data\Themes\_Global\virtocommerce.js" />
+    <Content Include="App_Data\Themes\_Global\social\shopify-social.svg" />
+    <Content Include="App_Data\Themes\_Global\social\social-icons.css" />
+    <Content Include="App_Data\Themes\_Default\assets\arrow-left.svg" />
+    <Content Include="App_Data\Themes\_Default\assets\arrow-right.svg" />
+    <Content Include="App_Data\Themes\_Default\assets\arrow.svg" />
+    <Content Include="App_Data\Themes\_Default\assets\cart.svg" />
+    <Content Include="App_Data\Themes\_Default\assets\collection-view-grid.svg" />
+    <Content Include="App_Data\Themes\_Default\assets\collection-view-list.svg" />
+    <Content Include="App_Data\Themes\_Default\assets\favicon.png" />
+    <Content Include="App_Data\Themes\_Default\assets\hamburger.svg" />
+    <Content Include="App_Data\Themes\_Default\assets\handlebars.min.js" />
+    <Content Include="App_Data\Themes\_Default\assets\icons.svg" />
+    <Content Include="App_Data\Themes\_Default\assets\jquery.flexslider.min.js" />
+    <Content Include="App_Data\Themes\_Default\assets\jquery.zoom.min.js" />
+    <Content Include="App_Data\Themes\_Default\assets\logo.png" />
+    <Content Include="App_Data\Themes\_Default\assets\modernizr.min.js" />
+    <Content Include="App_Data\Themes\_Default\assets\remove.svg" />
+    <Content Include="App_Data\Themes\_Default\assets\respond-proxy.html" />
+    <Content Include="App_Data\Themes\_Default\assets\respond.min.js" />
+    <Content Include="App_Data\Themes\_Default\assets\slide_1.jpg" />
+    <Content Include="App_Data\Themes\_Default\assets\slide_2.jpg" />
+    <Content Include="App_Data\Themes\_Global\templates\password_reseted.liquid" />
+    <Content Include="App_Data\Themes\_Global\layout\theme.liquid" />
+    <Content Include="App_Data\Themes\_Global\templates\banners\ImageNonClickable.liquid" />
+    <Content Include="App_Data\Themes\_Global\templates\banners\ImageClickable.liquid" />
+    <Content Include="App_Data\Themes\_Global\templates\placeholders.liquid" />
+    <Content Include="App_Data\Themes\_Global\templates\placeholder.liquid" />
+    <Content Include="App_Data\Themes\_Global\templates\banners\Html.liquid" />
+    <Content Include="App_Data\Themes\_Global\templates\banners\Product.liquid" />
+    <Content Include="App_Data\Themes\_Global\templates\banners\ProductsWithinCategory.liquid" />
+    <Content Include="App_Data\Themes\_Global\Snippets\price.liquid" />
+    <Content Include="App_Data\Themes\_Global\templates\customers\account.liquid" />
+    <Content Include="App_Data\Themes\_Global\templates\customers\activate_account.liquid" />
+    <Content Include="App_Data\Themes\_Global\templates\customers\addresses.liquid" />
+    <Content Include="App_Data\Themes\_Global\templates\customers\login.liquid" />
+    <Content Include="App_Data\Themes\_Global\templates\customers\order.liquid" />
+    <Content Include="App_Data\Themes\_Global\templates\customers\register.liquid" />
+    <Content Include="App_Data\Themes\_Global\templates\customers\reset_password.liquid" />
+    <Content Include="App_Data\Themes\_Global\locales\en.default.json" />
+    <Content Include="App_Data\Themes\_Global\Snippets\form-errors-custom.liquid" />
+    <Content Include="App_Data\Themes\_Global\assets\style.css.liquid" />
+    <Content Include="App_Data\Themes\_Global\Snippets\checkout_totals.liquid" />
+    <Content Include="App_Data\Themes\_Global\Snippets\guest_popup.liquid" />
+    <None Include="App_Data\Themes\_Global\templates\external_login_confirmation.liquid" />
+    <Content Include="App_Data\Themes\_Global\templates\index.liquid" />
+    <Content Include="App_Data\Themes\_Global\templates\banner.liquid" />
+    <Content Include="App_Data\Themes\_Global\templates\payment.liquid" />
+    <None Include="App_Data\Themes\_Global\templates\reset-password.liquid" />
+    <Content Include="Content\responsive\css\main.css" />
+    <Content Include="Content\responsive\css\reset.css" />
+    <Content Include="Content\responsive\images\imagedoc-darknoise.png" />
+    <Content Include="Content\responsive\images\pad-land.png" />
+    <Content Include="Content\responsive\images\pad-port.png" />
+    <Content Include="Content\responsive\images\phone-land.png" />
+    <Content Include="Content\responsive\images\phone-port.png" />
+    <Content Include="Content\responsive\images\preloader.gif" />
+    <Content Include="Content\responsive\images\sprite-device.png" />
+    <Content Include="Content\responsive\js\main.js" />
+    <Content Include="favicon.ico" />
+    <Content Include="Global.asax" />
+    <Content Include="index_frame.html" />
+    <Content Include="App_Data\configuration\connectionStrings.config" />
+    <Content Include="App_Data\Themes\_Global\customer_area.js" />
+    <Content Include="App_Data\Themes\_Global\option_selection.js" />
+    <Content Include="App_Data\Themes\_Global\shopify_common.js" />
+    <Content Include="Web.config" />
+    <Content Include="Web.Debug.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </Content>
+    <Content Include="Web.Release.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </Content>
+    <Content Include="App_Data\Themes\_Global\templates\thanks_page.liquid" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ApiClient\VirtoCommerce.ApiClient.csproj">
+      <Project>{84b945b7-85e4-4057-b0df-1f8a03b8d53c}</Project>
+      <Name>VirtoCommerce.ApiClient</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\WebModels\VirtoCommerce.WebModels.csproj">
+      <Project>{0a52dfa2-2ebe-4182-b1e5-1ef88f8dbac5}</Project>
+      <Name>VirtoCommerce.WebModels</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\WebViews\VirtoCommerce.WebViews.csproj">
+      <Project>{6695201C-2168-47FC-A4C0-FDD5AB5CB135}</Project>
+      <Name>VirtoCommerce.WebViews</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="App_Data\Themes\_Default\assets\ajaxify.js.liquid" />
+    <Content Include="App_Data\Themes\_Default\assets\ajaxify.scss.liquid" />
+    <Content Include="App_Data\Themes\_Default\assets\checkout.css.liquid" />
+    <Content Include="App_Data\Themes\_Default\assets\icons.eot" />
+    <Content Include="App_Data\Themes\_Default\assets\icons.ttf" />
+    <Content Include="App_Data\Themes\_Default\assets\icons.woff" />
+    <Content Include="App_Data\Themes\_Default\assets\shop.js.liquid" />
+    <Content Include="App_Data\Themes\_Default\assets\default.scss.liquid" />
+    <Content Include="App_Data\Themes\_Default\config\settings_data.json" />
+    <Content Include="App_Data\Themes\_Default\layout\theme.liquid" />
+    <Content Include="App_Data\Themes\_Default\locales\de.json" />
+    <Content Include="App_Data\Themes\_Default\locales\en.default.json" />
+    <Content Include="App_Data\Themes\_Default\locales\es.json" />
+    <Content Include="App_Data\Themes\_Default\locales\fr.json" />
+    <Content Include="App_Data\Themes\_Default\locales\pt-BR.json" />
+    <Content Include="App_Data\Themes\_Default\locales\pt-PT.json" />
+    <Content Include="App_Data\Themes\_Default\snippets\advanced-tag-loop.liquid" />
+    <Content Include="App_Data\Themes\_Default\snippets\ajax-cart-template.liquid" />
+    <Content Include="App_Data\Themes\_Default\snippets\blog-sidebar.liquid" />
+    <Content Include="App_Data\Themes\_Default\snippets\breadcrumb.liquid" />
+    <Content Include="App_Data\Themes\_Default\snippets\collection-grid-item.liquid" />
+    <Content Include="App_Data\Themes\_Default\snippets\collection-list-item.liquid" />
+    <Content Include="App_Data\Themes\_Default\snippets\collection-sidebar.liquid" />
+    <Content Include="App_Data\Themes\_Default\snippets\collection-sorting.liquid" />
+    <Content Include="App_Data\Themes\_Default\snippets\collection-views.liquid" />
+    <Content Include="App_Data\Themes\_Default\snippets\comment.liquid" />
+    <Content Include="App_Data\Themes\_Default\snippets\featured-collection.liquid" />
+    <Content Include="App_Data\Themes\_Default\snippets\featured-row.liquid" />
+    <Content Include="App_Data\Themes\_Default\snippets\footer.liquid" />
+    <Content Include="App_Data\Themes\_Default\snippets\form-errors-custom.liquid" />
+    <Content Include="App_Data\Themes\_Default\snippets\google-fonts.liquid" />
+    <Content Include="App_Data\Themes\_Default\snippets\newsletter-form.liquid" />
+    <Content Include="App_Data\Themes\_Default\snippets\oldIE-js.liquid" />
+    <Content Include="App_Data\Themes\_Default\snippets\open-graph-tags.liquid" />
+    <Content Include="App_Data\Themes\_Default\snippets\pagination-custom.liquid" />
+    <Content Include="App_Data\Themes\_Default\snippets\price-sale.liquid" />
+    <Content Include="App_Data\Themes\_Default\snippets\price.liquid" />
+    <Content Include="App_Data\Themes\_Default\snippets\product-grid-item.liquid" />
+    <Content Include="App_Data\Themes\_Default\snippets\product-list-item.liquid" />
+    <Content Include="App_Data\Themes\_Default\snippets\related-products.liquid" />
+    <Content Include="App_Data\Themes\_Default\snippets\respond.liquid" />
+    <Content Include="App_Data\Themes\_Default\snippets\search-bar.liquid" />
+    <Content Include="App_Data\Themes\_Default\snippets\search-result-grid.liquid" />
+    <Content Include="App_Data\Themes\_Default\snippets\search-result.liquid" />
+    <Content Include="App_Data\Themes\_Default\snippets\site-nav.liquid" />
+    <Content Include="App_Data\Themes\_Default\snippets\slider.liquid" />
+    <Content Include="App_Data\Themes\_Default\snippets\social-sharing.liquid" />
+    <Content Include="App_Data\Themes\_Default\snippets\tags-article.liquid" />
+    <Content Include="App_Data\Themes\_Default\snippets\toggle-filters.liquid" />
+    <Content Include="App_Data\Themes\_Default\snippets\twitter-card.liquid" />
+    <Content Include="App_Data\Themes\_Default\templates\404.liquid" />
+    <Content Include="App_Data\Themes\_Default\templates\article.liquid" />
+    <Content Include="App_Data\Themes\_Default\templates\blog.liquid" />
+    <Content Include="App_Data\Themes\_Default\templates\cart.liquid" />
+    <Content Include="App_Data\Themes\_Default\templates\collection.liquid" />
+    <Content Include="App_Data\Themes\_Default\templates\collection.list.liquid" />
+    <Content Include="App_Data\Themes\_Default\templates\gift_card.liquid" />
+    <Content Include="App_Data\Themes\_Default\templates\index.liquid" />
+    <Content Include="App_Data\Themes\_Default\templates\list-collections.liquid" />
+    <Content Include="App_Data\Themes\_Default\templates\page.contact.liquid" />
+    <Content Include="App_Data\Themes\_Default\templates\page.liquid" />
+    <Content Include="App_Data\Themes\_Default\templates\product.liquid" />
+    <Content Include="App_Data\Themes\_Default\templates\search.liquid" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="App_Data\Themes\_Global\Snippets\content_header.liquid" />
+    <Content Include="App_Data\Themes\_Global\Snippets\global_paging.liquid" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="App_Data\Themes\_Global\social\shopify-social.eot" />
+    <Content Include="App_Data\Themes\_Global\social\shopify-social.ttf" />
+    <Content Include="App_Data\Themes\_Global\social\shopify-social.woff" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="App_Data\Themes\_Default\templates\customers\account.liquid" />
+    <Content Include="App_Data\Themes\_Default\templates\customers\activate_account.liquid" />
+    <Content Include="App_Data\Themes\_Default\templates\customers\addresses.liquid" />
+    <Content Include="App_Data\Themes\_Default\templates\customers\login.liquid" />
+    <Content Include="App_Data\Themes\_Default\templates\customers\order.liquid" />
+    <Content Include="App_Data\Themes\_Default\templates\customers\register.liquid" />
+    <Content Include="App_Data\Themes\_Default\templates\customers\reset_password.liquid" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="App_Data\Themes\_Global\layout\checkout.liquid" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="App_Data\Themes\_Global\templates\checkout-step-1.liquid" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="App_Data\Themes\_Default\snippets\top-header-selector.liquid">
+      <SubType>Designer</SubType>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="App_Data\Themes\_Global\templates\checkout-step-2.liquid" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="App_Data\Themes\_Global\templates\lockedout.liquid" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="App_Data\Themes\_Global\templates\confirmation-done.liquid" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="App_Data\Themes\_Global\templates\send-code.liquid" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="App_Data\Themes\_Global\templates\error.liquid" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="App_Data\Themes\_Global\templates\verify-code.liquid" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="App_Data\Themes\_Global\templates\confirmation-sent.liquid" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="App_Data\Themes\_Global\templates\confirmation-forgot-password.liquid" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="App_Data\Pages\" />
+  </ItemGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
+  <Target Name="MvcBuildViews" AfterTargets="AfterBuild" Condition="'$(MvcBuildViews)'=='true'">
+    <AspNetCompiler VirtualPath="temp" PhysicalPath="$(WebProjectOutputDir)" />
+  </Target>
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <SaveServerSettingsInUserFile>True</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target> -->
+</Project>

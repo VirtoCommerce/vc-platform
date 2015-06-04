@@ -1,0 +1,138 @@
+﻿<!--<div class="blade-content">
+	<div class="blade-inner">
+		<div class="inner-block">
+			<ul class="list __files" ng-if="blade.currentEntities.length">
+				<li class="list-item" ng-click="blade.folderClick(data)" ng-repeat="data in blade.currentEntities" ng-include="'Modules/$(VirtoCommerce.Marketing)/Scripts/dynamicContent/blades/items/list-items.tpl.html'" context-menu data-target="ipl_menu_{{data.id}}">
+
+				</li>
+			</ul>
+			<p class="text" ng-if="!blade.currentEntities.length">No Items yet</p>
+		</div>
+	</div>
+</div>-->
+
+<div class="blade-static __expanded">
+	<div class="breadcrumbs">
+		<ul class="menu __inline">
+			<li class="menu-item">
+				<a class="menu-link" ng-click="blade.clickDefault(data);">Content placeholders</a>
+			</li>
+			<boo ng-repeat="data in blade.currentEntities" ng-if="blade.checkFolder(data)">
+				<foo>
+					<li class="menu-item __divider"></li>
+					<li class="menu-item">
+						<a class="menu-link" ng-click="event.preventDefault(); blade.folderClick(data);">{{data.name}}</a>
+					</li>
+				</foo>
+				<foo ng-if="blade.checkFolder(data)" ng-repeat="data in data.childrenFolders" ng-include="'Modules/$(VirtoCommerce.Marketing)/Scripts/dynamicContent/blades/placeholders/breadcrumbs-item.tpl.html'">
+
+				</foo>
+			</boo>
+		</ul>
+	</div>
+	<!--<div class="form-group">
+		<div class="form-input __search">
+			<input type="text" placeholder="Search keyword...">
+		</div>
+		<p class="form-count">Count: <span class="count">16</span></p>
+	</div>-->
+</div>
+
+<div class="blade-content __medium-wide">
+	<div class="blade-inner">
+		<div class="inner-block">
+			<div class="table-wrapper">
+				<table class="table" ng-if="!blade.currentEntity && blade.currentEntities.length">
+					<thead>
+						<tr>
+							<th class="table-col">Pic</th>
+							<th class="table-col">Name</th>
+							<th class="table-col">Description</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr class="table-item" ng-repeat="data in blade.currentEntities" ng-click="blade.folderClick(data)" context-menu data-target="ipl_menu_{{data.id}}">
+							<td class="table-col __product-img">
+								<div class="product-img">
+									<i class="table-ico fa fa-folder"></i>
+								</div>
+							</td>
+							<td class="table-col __product-name">
+								{{data.name}}
+								<ul class="menu __context" role="menu" id="ipl_menu_{{data.id}}">
+									<li class="menu-item" ng-click='blade.deleteFolder(data); $event.stopPropagation();'>
+										<i class="menu-ico fa fa-trash-o"></i> Delete
+									</li>
+									<li class="menu-item" ng-click='blade.editFolder(data); $event.stopPropagation();'>
+										<i class="menu-ico fa fa-pencil-square-o"></i> Edit
+									</li>
+								</ul>
+							</td>
+							<td class="table-col">
+								{{data.description}}
+							</td>
+						</tr>
+					</tbody>
+				</table>
+				<table class="table" ng-if="blade.currentEntity && (blade.currentEntity.childrenFolders.length > 0 || blade.currentEntity.placeholders.length > 0)">
+					<thead>
+						<tr>
+							<th class="table-col">Pic</th>
+							<th class="table-col">Name</th>
+							<th class="table-col">Description</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr class="table-item" ng-repeat="data in blade.currentEntity.childrenFolders" ng-click="blade.folderClick(data)" context-menu data-target="ipl_menu_{{data.id}}">
+							<td class="table-col __product-img">
+								<div class="product-img">
+									<i class="table-ico fa fa-folder"></i>
+								</div>
+							</td>
+							<td class="table-col __product-name">
+								{{data.name}}
+								<ul class="menu __context" role="menu" id="ipl_menu_{{data.id}}">
+									<li class="menu-item" ng-click='blade.deleteFolder(data); $event.stopPropagation();'>
+										<i class="menu-ico fa fa-trash-o"></i> Delete
+									</li>
+									<li class="menu-item" ng-click='blade.editFolder(data); $event.stopPropagation();'>
+										<i class="menu-ico fa fa-pencil-square-o"></i> Edit
+									</li>
+								</ul>
+							</td>
+							<td class="table-col">
+								{{data.description}}
+							</td>
+						</tr>
+						<tr class="table-item" ng-repeat="placeholder in blade.currentEntity.placeholders" ng-click="blade.editPlaceholder(placeholder)">
+							<td class="table-col __product-img">
+								<div class="product-img">
+									<div class="image ng-scope" style="background-image: url({{placeholder.imageUrl}})" va-showbigimage image="placeholder.imageUrl"></div>
+								</div>
+							</td>
+							<td class="table-col __product-name">
+								{{placeholder.name}}
+							</td>
+							<td class="table-col">
+								{{placeholder.description}}
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!--<div class="blade-content">
+	<div class="blade-inner">
+		<div class="inner-block">
+			<ul class="list __files" ng-if="blade.currentEntities.length">
+				<li class="list-item" ng-click="blade.folderClick(data)" ng-repeat="data in blade.currentEntities" ng-include="'Modules/$(VirtoCommerce.Marketing)/Scripts/dynamicContent/blades/items/list-items.tpl.html'" context-menu data-target="ipl_menu_{{data.id}}">
+
+				</li>
+			</ul>
+			<p class="text" ng-if="!blade.currentEntities.length">No Items yet</p>
+		</div>
+	</div>
+</div>-->

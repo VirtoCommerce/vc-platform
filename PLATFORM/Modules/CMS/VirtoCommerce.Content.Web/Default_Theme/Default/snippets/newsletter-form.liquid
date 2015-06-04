@@ -1,0 +1,9 @@
+{% comment %}
+Mail Chimp Integration
+{% endcomment %}
+<form action="{{ settings.mailing_list_form_action }}" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" target="_blank" class="input-group">
+  <input type="email" value="{% if customer %}{{ customer.email }}{% endif %}" placeholder="{{ 'layout.footer.newsletter_email_placeholder' | t }}" name="EMAIL" id="mail" class="input-group-field" aria-label="{{ 'layout.footer.newsletter_email_placeholder' | t }}" autocorrect="off" autocapitalize="off">
+  <span class="input-group-btn">
+    <input type="submit" class="btn-secondary btn--small" value="{{ 'layout.footer.newsletter_sign_up' | t }}" name="subscribe" id="subscribe">
+  </span>
+</form>

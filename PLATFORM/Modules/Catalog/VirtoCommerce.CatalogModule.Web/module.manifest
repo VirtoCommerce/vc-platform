@@ -1,0 +1,50 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<module>
+  <id>VirtoCommerce.Catalog</id>
+  <version>1.0.0</version>
+  <platformVersion>2.0.0</platformVersion>
+  <dependencies>
+    <dependency id="VirtoCommerce.Core" version="1.0.0" />
+  </dependencies>
+
+  <title>Virto Commerce Catalog</title>
+  <description>APIs and UI for managing Master &amp; Virtual Catalogs, Products and SKUs</description>
+  <authors>
+    <author>Virto Commerce</author>
+  </authors>
+  <owners>
+    <owner>Virto Commerce</owner>
+  </owners>
+  <projectUrl>http://virtocommerce.com/</projectUrl>
+  <iconUrl>http://nuget.org/Content/Images/packageDefaultIcon-50x50.png</iconUrl>
+  <releaseNotes>First version.</releaseNotes>
+  <copyright>Copyright © 2011-2015 Virto Commerce. All rights reserved</copyright>
+  <tags>catalog</tags>
+
+  <assemblyFile>VirtoCommerce.CatalogModule.Web.dll</assemblyFile>
+  <moduleType>VirtoCommerce.CatalogModule.Web.Module, VirtoCommerce.CatalogModule.Web</moduleType>
+  <styles>
+    <directory virtualPath="$/Content/css" searchPattern="*.css" searchSubdirectories="true" />
+  </styles>
+  <scripts>
+    <directory virtualPath="$/Scripts" searchPattern="*.js" searchSubdirectories="true" />
+  </scripts>
+
+  <permissions>
+    <group name="Catalog">
+      <permission id="catalog:query" name="Browse catalog data" description="Permission to open catalog menu and browse data."/>
+      <permission id="catalog:items:manage" name="Manage catalog items" description="Permission to manage catalog items."/>
+      <permission id="catalog:catalogs:manage" name="Manage catalogs" description="Permission to manage catalogs."/>
+      <permission id="catalog:virtual_catalogs:manage" name="Manage virtual catalogs" description="Permission to manage virtual catalogs."/>
+      <permission id="catalog:categories:manage" name="Manage categories" description="Permission to manage catalog categories."/>
+      <!--"catalog:linked_categories:manage",
+     "catalog:catalog_import_jobs:manage",
+     "catalog:catalog_import_jobs:run",
+     "catalog:item:associations:manage",
+     "catalog:item:editorial_reviews:create_edit",
+     "catalog:item:editorial_reviews:publish",
+     "catalog:item:editorial_reviews:remove",
+     "catalog:customer_reviews:manage",-->
+    </group>
+  </permissions>
+</module>

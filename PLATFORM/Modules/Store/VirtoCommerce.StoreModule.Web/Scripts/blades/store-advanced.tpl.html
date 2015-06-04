@@ -1,0 +1,121 @@
+﻿<div class="blade-content __medium-wide">
+    <div class="blade-inner">
+        <div class="inner-block">
+            <form class="form" name="detailForm">
+                <div class="form columns clearfix" ng-init="setForm(detailForm)">
+                    <div class="form-group">
+                        <label class="form-label">Description</label>
+                        <div class="form-input">
+                            <textarea class="form-control" cols="30" rows="2" ng-model="blade.currentEntity.description" placeholder="Enter description"></textarea>
+                        </div>
+                    </div>
+                    <div class="column">
+                        <div class="form-group">
+                            <label class="form-label">Store URL</label>
+                            <div class="form-input">
+                                <input ng-model="blade.currentEntity.url" type="url" placeholder="Enter URL">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="column">
+                        <div class="form-group">
+                            <label class="form-label">Secure URL</label>
+                            <div class="form-input">
+                                <input ng-model="blade.currentEntity.secureUrl" type="url" placeholder="Enter secure URL">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form columns clearfix">
+                    <div class="column">
+                        <div class="form-group">
+                            <label class="form-label">Store country</label>
+                            <div class="form-input">
+                                <ui-select ng-model="blade.currentEntity.country">
+                                    <ui-select-match placeholder="Select ...">{{$select.selected.name}}</ui-select-match>
+                                    <ui-select-choices repeat="x.code as x in countries | filter: { name: $select.search }">
+                                        <span ng-bind-html="x.name | highlight: $select.search"></span>
+                                    </ui-select-choices>
+                                </ui-select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="column">
+                        <div class="form-group">
+                            <label class="form-label">Store region</label>
+                            <div class="form-input">
+                                <ui-select ng-model="blade.currentEntity.region">
+                                    <ui-select-match placeholder="Select ...">{{$select.selected.name}}</ui-select-match>
+                                    <ui-select-choices repeat="x.id as x in regions | filter: { name: $select.search }">
+                                        <span ng-bind-html="x.name | highlight: $select.search"></span>
+                                    </ui-select-choices>
+                                </ui-select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form columns clearfix">
+                    <div class="column">
+                        <div class="form-group">
+                            <label class="form-label">Store email</label>
+                            <div class="form-input">
+                                <input ng-model="blade.currentEntity.email" type="email" placeholder="Enter value">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="column">
+                        <div class="form-group">
+                            <label class="form-label">Store admin email</label>
+                            <div class="form-input">
+                                <input ng-model="blade.currentEntity.adminEmail" type="email" placeholder="Enter value">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form columns clearfix">
+                    <div class="column">
+                        <div class="form-group">
+                            <label class="form-label">Fulfillment center</label>
+                            <div class="form-input">
+                                <ui-select ng-model="blade.currentEntity.fulfillmentCenter">
+                                    <ui-select-match placeholder="Select...">{{$select.selected.name}}</ui-select-match>
+                                    <ui-select-choices repeat="x in fulfillmentCenters | filter: { name: $select.search }">
+                                        <span ng-bind-html="x.name | highlight: $select.search"></span>
+                                    </ui-select-choices>
+                                </ui-select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="column">
+                        <div class="form-group">
+                            <label class="form-label">Returns Fulfillment center</label>
+                            <div class="form-input">
+                                <ui-select ng-model="blade.currentEntity.returnsFulfillmentCenter">
+                                    <ui-select-match placeholder="Select...">{{$select.selected.name}}</ui-select-match>
+                                    <ui-select-choices repeat="x as x in fulfillmentCenters | filter: { name: $select.search }">
+                                        <span ng-bind-html="x.name | highlight: $select.search"></span>
+                                    </ui-select-choices>
+                                </ui-select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form columns clearfix">
+                    <div class="form-group">
+                        <label class="form-label">Operational timezone</label>
+                        <div class="form-input">
+                            <ui-select ng-model="blade.currentEntity.timeZone">
+                                <ui-select-match placeholder="Select...">{{$select.selected.name}}</ui-select-match>
+                                <ui-select-choices repeat="x.id as x in timeZones | filter: { name: $select.search }">
+                                    <span ng-bind-html="x.name | highlight: $select.search"></span>
+                                </ui-select-choices>
+                            </ui-select>
+                        </div>
+                    </div>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+<div class="blade-static __bottom" ng-include="'Scripts/common/templates/ok-cancel.tpl.html'"></div>

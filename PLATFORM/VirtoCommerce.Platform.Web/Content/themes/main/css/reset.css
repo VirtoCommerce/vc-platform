@@ -1,0 +1,35 @@
+*
+{
+	margin: 0;
+	outline: none;
+	padding: 0;
+}
+
+html,
+body
+{
+	height: 100%;
+	width: 100%;
+}
+
+body
+{
+	background: #eef5f7;
+	color: #333;
+	font-size: 100%;
+	line-height: 1.4;
+}
+
+.clearfix:after
+{
+	clear: both;
+	content: '';
+	display: block;
+	font-size: 0;
+}
+
+body::selection,
+.btn::selection
+{
+	background: none;
+}

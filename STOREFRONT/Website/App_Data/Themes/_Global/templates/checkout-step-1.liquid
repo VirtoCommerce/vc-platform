@@ -1,0 +1,122 @@
+﻿{% layout 'checkout' %}
+
+<div class="col-md-7">
+    <div class="box">
+        {% form 'edit_checkout_step_1', checkout %}
+            <div class="box-header">
+                <h3>Customer information</h3>
+            </div>
+            <div class="box-content">
+                <div class="fieldset">
+                    <div class="field">
+                        <label class="control-label required" for="checkout_email">Email</label>
+                        <input id="checkout_email" name="checkout[email]" required="required" type="email" value="{{ checkout.email }}" />
+                    </div>
+                </div>
+                <div class="box-inner-header">
+                    <h3 style="display: inline-block;">Shipping address</h3>
+                    {% if checkout.guest_login != true %}
+                        <div class="btn-group pull-right" style="margin-right: 10px;">
+                            <button class="btn btn-default" disabled="disabled" id="selected-address" style="opacity: 1; overflow: hidden; text-align: left; text-overflow: ellipsis; white-space: nowrap; width: 350px;">
+                                {{ checkout.shipping_address.city }} {{ checkout.shipping_address.street }},
+                                {{ checkout.shipping_address.country }},
+                                {% if checkout.shipping_address.province != null %}
+                                    {{ checkout.shipping_address.province }},
+                                {% endif %}
+                                {% if checkout.shipping_address.phone != null %}
+                                    {{ checkout.shipping_address.phone }},
+                                {% endif %}
+                                {{ checkout.shipping_address.name }}
+                            </button>
+                            <button aria-expanded="false" class="btn btn-default dropdown-toggle" data-toggle="dropdown" type="button">
+                                <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu" id="customer-addresses" role="menu" aria-labelledby="addresses">
+                                {% for address in customer.addresses %}
+                                    <li data-id="{{ address.id }}" role="presentation">
+                                        <a role="menuitem" tabindex="-1" href="#">
+                                            {{address.city}} {{ address.street }},
+                                            {{ address.country }},
+                                            {% if address.province != null %}
+                                                {{ address.province }},
+                                            {% endif %}
+                                            {{ address.name }}
+                                        </a>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    {% endif %}
+                </div>
+                <div id="new_address">
+                    <div class="fieldset">
+                        <div class="field">
+                            <label class="control-label required" for="checkout_first_name">First name</label>
+                            <input id="checkout_first_name" name="checkout[first_name]" required="required" type="text" value="{{ checkout.shipping_address.first_name }}" />
+                        </div>
+                    </div>
+                    <div class="fieldset">
+                        <div class="field">
+                            <label class="control-label required" for="checkout_last_name">Last name</label>
+                            <input id="checkout_last_name" name="checkout[last_name]" required="required" type="text" value="{{ checkout.shipping_address.last_name }}" />
+                        </div>
+                    </div>
+                    <div class="fieldset">
+                        <div class="field">
+                            <label class="control-label" for="checkout_company">Company</label>
+                            <input id="checkout_company" name="checkout[company]" type="text" value="{{ checkout.shipping_address.company }}" />
+                        </div>
+                    </div>
+                    <div class="fieldset">
+                        <div class="field">
+                            <label class="control-label required" for="checkout_address1">Address line 1</label>
+                            <input id="checkout_address1" name="checkout[address1]" required="required" type="text" value="{{ checkout.shipping_address.address1 }}" />
+                        </div>
+                    </div>
+                    <div class="fieldset">
+                        <div class="field">
+                            <label class="control-label" for="checkout_address2">Address line 2</label>
+                            <input id="checkout_address2" name="checkout[address2]" type="text" value="{{ checkout.shipping_address.address2 }}" />
+                        </div>
+                    </div>
+                    <div class="fieldset">
+                        <div class="field">
+                            <label class="control-label required" for="checkout_city">City</label>
+                            <input id="checkout_city" name="checkout[city]" required="required" type="text" value="{{ checkout.shipping_address.city }}" />
+                        </div>
+                    </div>
+                    <div class="fieldset">
+                        <div class="field">
+                            <label class="control-label required" for="checkout_country">Country</label>
+                            <select id="checkout_country" name="checkout[country]">{{ country_option_tags }}</select>
+                        </div>
+                    </div>
+                    <div class="fieldset">
+                        <div class="field">
+                            <label class="control-label" for="checkout_province">Province</label>
+                            <select id="checkout_province" name="checkout[province]" data-default="{{ form.province }}"></select>
+                        </div>
+                    </div>
+                    <div class="fieldset">
+                        <div class="field">
+                            <label class="control-label required" for="checkout_zip">Postal code</label>
+                            <input id="checkout_zip" name="checkout[zip]" required="required" type="text" value="{{ checkout.shipping_address.zip }}" />
+                        </div>
+                    </div>
+                    <div class="fieldset">
+                        <div class="field">
+                            <label class="control-label required" for="checkout_phone">Phone</label>
+                            <input id="checkout_phone" name="checkout[phone]" type="text" value="{{ checkout.shipping_address.phone }}" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="box-footer">
+                <div class="pull-right">
+                    <button class="btn btn-primary themed" type="submit">Continue</button>
+                </div>
+            </div>
+        {% endform %}
+    </div>
+</div>
+{% include 'checkout_totals' %}

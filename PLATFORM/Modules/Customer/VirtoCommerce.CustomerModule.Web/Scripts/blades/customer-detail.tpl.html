@@ -1,0 +1,43 @@
+﻿<div class="blade-content __gray">
+    <div class="blade-inner">
+        <div class="inner-block clearfix">
+            <form class="form" name="detailForm">
+                <fieldset>
+                    <div class="form-group" ng-init="setForm(detailForm)">
+                        <label class="form-label">Full name</label>
+                        <div class="form-input">
+                            <input ng-model="blade.currentEntity.fullName" focus-on="" required placeholder="Enter value" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <va-widget-container group="customerDetail1" blade="blade" gridster-opts="{width: 396}"></va-widget-container>
+                    </div>
+                </fieldset>
+                <fieldset>
+                    <div class="form-group">
+                        <label class="form-label">Birthday</label>
+                        <div class="form-input __calendar">
+                            <input type="text" class="form-control" ng-model="blade.currentEntity.birthDate" datepicker-popup="{{format}}" name="bd" is-open="datepickers.bd" max-date="today" datepicker-options="dateOptions" close-text="Close" placeholder="Enter value" />
+                            <button class="btn" type="button" ng-click="open($event,'bd')">
+                                <i class="btn-ico fa fa-calendar"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Organization(s)</label>
+                        <!--<ui-select multiple ng-model="blade.currentEntity.organizations">-->
+                        <ui-select ng-model="blade.currentEntity.organization">
+                            <ui-select-match placeholder="Select organization" allow-clear>{{$select.selected.name}}</ui-select-match>
+                            <ui-select-choices repeat="x.id as x in organizations | filter: {name: $select.search}">
+                                <span ng-bind-html="x.name | highlight: $select.search"></span>
+                            </ui-select-choices>
+                        </ui-select>
+                    </div>
+                    <div class="form-group">
+                        <va-widget-container group="customerDetail2" blade="blade" gridster-opts="{width: 396}"></va-widget-container>
+                    </div>
+                </fieldset>
+            </form>
+        </div>
+    </div>
+</div>

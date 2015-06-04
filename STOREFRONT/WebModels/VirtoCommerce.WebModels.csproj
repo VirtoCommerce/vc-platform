@@ -1,0 +1,230 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{0A52DFA2-2EBE-4182-B1E5-1EF88F8DBAC5}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>VirtoCommerce.Web</RootNamespace>
+    <AssemblyName>VirtoCommerce.WebModels</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="DotLiquid">
+      <HintPath>..\Shared\DotLiquid.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.Identity.Core">
+      <HintPath>..\packages\Microsoft.AspNet.Identity.Core.2.1.0\lib\net45\Microsoft.AspNet.Identity.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\packages\Newtonsoft.Json.6.0.8\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="Omu.ValueInjecter">
+      <HintPath>..\packages\valueinjecter.2.3.3\lib\net35\Omu.ValueInjecter.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Helpers, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.2\lib\net45\System.Web.Helpers.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Mvc, Version=5.2.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.AspNet.Mvc.5.2.2\lib\net45\System.Web.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.AspNet.Razor.3.2.2\lib\net45\System.Web.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.2\lib\net45\System.Web.WebPages.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Deployment, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.2\lib\net45\System.Web.WebPages.Deployment.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.2\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Convertors\PagesConverters.cs" />
+    <Compile Include="Models\Cms\Article.cs" />
+    <Compile Include="Models\Banners\Banner.cs" />
+    <Compile Include="Models\Banners\BannerCollection.cs" />
+    <Compile Include="Models\Banners\PlaceHolder.cs" />
+    <Compile Include="Models\Banners\PlaceHolderCollection.cs" />
+    <Compile Include="Models\Cms\Blog.cs" />
+    <Compile Include="Models\Cms\BlogCollection.cs" />
+    <Compile Include="Models\Cart.cs" />
+    <Compile Include="Models\Checkout.cs" />
+    <Compile Include="Models\Collection.cs" />
+    <Compile Include="Models\Collections.cs" />
+    <Compile Include="Models\Cms\Comment.cs" />
+    <Compile Include="Convertors\BannerConverters.cs" />
+    <Compile Include="Convertors\CartConverters.cs" />
+    <Compile Include="Convertors\CollectionConverters.cs" />
+    <Compile Include="Convertors\CustomerConverters.cs" />
+    <Compile Include="Convertors\FacetConverters.cs" />
+    <Compile Include="Convertors\ListConverters.cs" />
+    <Compile Include="Convertors\OrderConverters.cs" />
+    <Compile Include="Convertors\ProductConverters.cs" />
+    <Compile Include="Convertors\ShopConverters.cs" />
+    <Compile Include="Convertors\ThemeConverters.cs" />
+    <Compile Include="Convertors\UserConverters.cs" />
+    <Compile Include="Models\CountryOptionTags.cs" />
+    <Compile Include="Models\CreditCard.cs" />
+    <Compile Include="Models\Customer.cs" />
+    <Compile Include="Models\CustomerAddress.cs" />
+    <Compile Include="Models\CustomerOrder.cs" />
+    <Compile Include="Models\Discount.cs" />
+    <Compile Include="Extensions\CategoryExtensions.cs" />
+    <Compile Include="Extensions\ModelExtensions.cs" />
+    <Compile Include="Extensions\ProductExtensions.cs" />
+    <Compile Include="Extensions\RouteValueDictionaryExtensions.cs" />
+    <Compile Include="Extensions\SiteContextExtensions.cs" />
+    <Compile Include="Extensions\StringExtensions.cs" />
+    <Compile Include="Extensions\UrlHelperExtensions.cs" />
+    <Compile Include="Filters\ModelFilters.cs" />
+    <Compile Include="Filters\TranslationFilter.cs" />
+    <Compile Include="Models\Forms\CheckoutFirstStepFormModel.cs" />
+    <Compile Include="Models\Forms\CheckoutSecondStepFormModel.cs" />
+    <Compile Include="Models\Forms\CustomerAddressFormModel.cs" />
+    <Compile Include="Models\Forms\ExternalLoginConfirmationFormModel.cs" />
+    <Compile Include="Models\Forms\ExternalLoginFormModel.cs" />
+    <Compile Include="Models\Forms\ForgotPasswordFormModel.cs" />
+    <Compile Include="Models\Forms\LoginFormModel.cs" />
+    <Compile Include="Models\Forms\NewAddressFormModel.cs" />
+    <Compile Include="Models\Forms\PayOrderFormModel.cs" />
+    <Compile Include="Models\Forms\RegisterFormModel.cs" />
+    <Compile Include="Models\Forms\ResetPasswordFormModel.cs" />
+    <Compile Include="Models\Forms\SendCodeFormModel.cs" />
+    <Compile Include="Models\Forms\VerifyCodeFormModel.cs" />
+    <Compile Include="Models\Fulfillment.cs" />
+    <Compile Include="Models\GiftCard.cs" />
+    <Compile Include="Helpers\CartHelper.cs" />
+    <Compile Include="Helpers\DownloadResult.cs" />
+    <Compile Include="Helpers\ExtensionMapper.cs" />
+    <Compile Include="Helpers\ExtensionPartialView.cs" />
+    <Compile Include="Models\Image.cs" />
+    <Compile Include="Models\ItemCollection.cs" />
+    <Compile Include="Models\Language.cs" />
+    <Compile Include="Models\LineItem.cs" />
+    <Compile Include="Models\Lists\Link.cs" />
+    <Compile Include="Models\Lists\LinkList.cs" />
+    <Compile Include="Models\Lists\LinkLists.cs" />
+    <Compile Include="Models\LoginProvider.cs" />
+    <Compile Include="Models\MetafieldsCollection.cs" />
+    <Compile Include="Models\Cms\Page.cs" />
+    <Compile Include="Models\Cms\PageCollection.cs" />
+    <Compile Include="Models\PaymentMethod.cs" />
+    <Compile Include="Models\Price.cs" />
+    <Compile Include="Models\Product.cs" />
+    <Compile Include="Models\PropertiesDrop.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Models\Review.cs" />
+    <Compile Include="Routing\CanonicalizedAttribute.cs" />
+    <Compile Include="Routing\Constants.cs" />
+    <Compile Include="Routing\Constraints\BaseRouteConstraint.cs" />
+    <Compile Include="Routing\Constraints\PageRouteConstraint.cs" />
+    <Compile Include="Routing\Constraints\CategoryRouteConstraint.cs" />
+    <Compile Include="Routing\Constraints\ItemRouteConstraint.cs" />
+    <Compile Include="Routing\Constraints\LanguageRouteConstraint.cs" />
+    <Compile Include="Routing\Constraints\StoreRouteConstraint.cs" />
+    <Compile Include="Routing\HttpHandlers\DelegateHttpHandler.cs" />
+    <Compile Include="Routing\HttpHandlers\RedirectHttpHandler.cs" />
+    <Compile Include="Routing\RedirectRouteExtensions.cs" />
+    <Compile Include="Routing\Routes\PageRoute.cs" />
+    <Compile Include="Routing\Routes\CategoryRoute.cs" />
+    <Compile Include="Routing\Routes\ItemRoute.cs" />
+    <Compile Include="Routing\Routes\NormalizeRoute.cs" />
+    <Compile Include="Routing\Routes\RedirectRoute.cs" />
+    <Compile Include="Routing\Routes\StoreRoute.cs" />
+    <Compile Include="Routing\SeoRoutesExtensions.cs" />
+    <Compile Include="Models\Search.cs" />
+    <Compile Include="Searching\FacetFilter.cs" />
+    <Compile Include="Searching\FacetFilterValue.cs" />
+    <Compile Include="Searching\SearchResults.cs" />
+    <Compile Include="Models\Security\AccountModels.cs" />
+    <Compile Include="Models\Security\IdentityModels.cs" />
+    <Compile Include="Models\SeoKeyword.cs" />
+    <Compile Include="Services\CommerceService.cs" />
+    <Compile Include="Services\CustomerService.cs" />
+    <Compile Include="Services\FileStorageCacheService.cs" />
+    <Compile Include="Services\FileThemeViewLocator.cs" />
+    <Compile Include="Services\PagesService.cs" />
+    <Compile Include="Services\SecurityService.cs" />
+    <Compile Include="Models\Settings.cs" />
+    <Compile Include="Models\ShippingMethod.cs" />
+    <Compile Include="Models\Shop.cs" />
+    <Compile Include="SiteContext.cs" />
+    <Compile Include="Models\Storage\FileAsset.cs" />
+    <Compile Include="Models\SubmitForm.cs" />
+    <Compile Include="Models\SubmitFormErrors.cs" />
+    <Compile Include="Models\Tag.cs" />
+    <Compile Include="Models\Forms\Form.cs" />
+    <Compile Include="Models\TaxLine.cs" />
+    <Compile Include="Models\Cms\Theme.cs" />
+    <Compile Include="Models\Cms\ThemeAsset.cs" />
+    <Compile Include="Models\Transaction.cs" />
+    <Compile Include="Models\Variant.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ApiClient\VirtoCommerce.ApiClient.csproj">
+      <Project>{84b945b7-85e4-4057-b0df-1f8a03b8d53c}</Project>
+      <Name>VirtoCommerce.ApiClient</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\WebViews\VirtoCommerce.WebViews.csproj">
+      <Project>{6695201C-2168-47FC-A4C0-FDD5AB5CB135}</Project>
+      <Name>VirtoCommerce.WebViews</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

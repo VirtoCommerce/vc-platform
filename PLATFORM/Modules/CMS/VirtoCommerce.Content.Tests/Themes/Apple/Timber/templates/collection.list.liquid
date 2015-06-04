@@ -1,0 +1,94 @@
+<!-- /templates/collection.list.liquid -->
+{% comment %}
+
+  By using a variation of the 'view all' parameter technique, you can create
+  a custom layout for any template by adding ?view=xxxx
+
+  In this example, you can have a list view of your collection page by going to
+  /collections/all?view=list
+
+  For more information on collection tags:
+    - http://docs.shopify.com/themes/liquid-variables/collection
+
+  For more information on the ?view parameter:
+    - http://docs.shopify.com/support/configuration/store-customization/can-i-show-more-than-50-products-on-my-homepage-can-i-add-a-view-all-function-to-my-collection-pages#add-view-all
+
+{% endcomment %}
+
+{% paginate collection.products by 20 %}
+
+{% include 'breadcrumb' %}
+
+{% comment %}
+  Use .grid--rev so that the collection tags appear below the products on mobile
+{% endcomment %}
+<div class="grid--rev">
+  <div class="grid__item large--three-quarters">
+
+    {% comment %}
+      Different markup if a collection description exists
+    {% endcomment %}
+    {% if collection.description != blank %}
+      <header class="section-header">
+        <h1 class="section-header__title">{{ collection.title }}</h1>
+        <div class="rte rte--header">
+          {{ collection.description }}
+        </div>
+      </header>
+      <hr>
+      <div class="section-header">
+        <div class="section-header__right">
+          {% include 'collection-sorting' %}
+          {% include 'collection-views' %}
+        </div>
+      </div>
+    {% else %}
+      <header class="section-header">
+        <h1 class="section-header__title section-header__left">{{ collection.title }}</h1>
+        <div class="section-header__right">
+          {% include 'collection-sorting' %}
+          {% include 'collection-views' %}
+        </div>
+      </header>
+    {% endif %}
+
+    {% comment %}
+      Use class grid-uniform to have evenly sized columns clear
+      each other properly at each breakpoint.
+    {% endcomment %}
+    <div class="grid-uniform">
+
+      {% comment %}
+        Loop through our products in the current collection.
+        See the snippet 'product-grid-item' for the layout.
+      {% endcomment %}
+      {% for product in collection.products %}
+
+        {% include 'product-list-item' %}
+
+      {% else %}
+
+        <div class="grid__item">
+          <p>{{ 'collections.general.no_matches' | t }}</p>
+        </div>
+
+      {% endfor %}
+
+    </div>
+
+    {% if paginate.pages > 1 %}
+      <hr>
+
+      <div class="text-center">
+        {% include 'pagination-custom' %}
+      </div>
+    {% endif %}
+
+  </div>
+
+  <div class="grid__item large--one-quarter">
+    {% include 'collection-sidebar' %}
+  </div>
+</div>
+
+{% endpaginate %}

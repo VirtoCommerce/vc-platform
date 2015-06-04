@@ -1,0 +1,303 @@
+/* Drag and drop */
+.drag-area
+{
+    background: #dee9f0;
+    border: 2px dashed #a1c0d4;
+    height: 250px;
+    margin: 0 0 20px;
+    padding: 0 20px;
+    text-align: center;
+}
+
+.drag-area::after
+{
+    content: '';
+    display: inline-block;
+    height: 100%;
+    vertical-align: middle;
+}
+
+.drag-area.bd-blue
+{
+    background: #d2e0e8;
+}
+
+.drag-content
+{
+    color: #a1c0d4;
+    display: inline-block;
+    font-size: 18px;
+    text-shadow: 1px 1px 1px #fff;
+    vertical-align: middle;
+}
+
+
+/* Dashboard */
+.dashboard
+{
+    background: #eef5f7;
+    font-family: 'Exo 2';
+    position: relative;
+    z-index: 50;
+}
+
+    .dashboard .dashboard-head
+    {
+        height: 144px;
+        position: relative;
+    }
+
+    .dashboard .dashboard-area
+    {
+        height: calc(100% - 144px);
+        margin: 0 3px 0 0;
+        overflow: hidden;
+        position: relative;
+        width: 950px;
+
+        -webkit-box-sizing: border-box;
+                box-sizing: border-box;
+    }
+
+    .dashboard .dashboard-inner
+    {
+        height: calc(100% - 22px);
+        padding: 22px 90px 0;
+        position: relative;
+    }
+
+        .dashboard .dashboard-inner .gridster-loaded
+        {
+            width: 770px;
+        }
+
+    .dashboard .dashboard-area:hover .dashboard-inner
+    {
+        overflow: auto;
+    }
+
+        .dashboard .dashboard-title,
+        .dashboard .dashboard-account
+        {
+            position: absolute;
+            top: 30px;
+        }
+
+        .dashboard .dashboard-title
+        {
+            font-weight: 300;
+            left: 90px;
+            text-shadow: 
+                2px 2px rgba(255,255,255,.5), 
+                2px -2px rgba(255,255,255,.5), 
+                -2px 2px rgba(255,255,255,.5), 
+                -2px -2px rgba(255,255,255,.5);
+        }
+
+        .dashboard .dashboard-account
+        {
+            background: #fff;
+            border: 2px solid transparent;
+            cursor: pointer;
+            padding: 10px;
+            right: 93px;
+            top: 40px;
+            z-index: 50;
+        }
+
+        .dashboard .dashboard-account:hover
+        {
+            border-color: rgba(0,0,0,.25);
+        }
+
+        .dashboard .dashboard-account:before
+        {
+            background: #bfbfbf;
+            color: #fff;
+            content: '';
+            font-family: 'FontAwesome';
+            font-size: 24px;
+            height: 40px;
+            left: 10px;
+            line-height: 40px;
+            position: absolute;
+            text-align: center;
+            text-shadow: 0 0 1px rgba(0,0,0,.2);
+            width: 40px;
+        }
+
+            .dashboard .dashboard-account .user-name
+            {
+                font-size: 18px;
+                height: 40px;
+                line-height: 1.2;
+                padding: 0 0 0 50px;
+            }
+
+                .dashboard .dashboard-account .last-name
+                {
+                    font-size: 14px;
+                }
+
+            .dashboard .dashboard-account .sign-out
+            {
+                color: rgba(0,0,0,.7);
+                display: none;
+                font-size: 14px;
+                margin: 10px -10px -10px;
+                padding: 5px 10px;
+            }
+
+            .dashboard .dashboard-account .sign-out:hover
+            {
+                background: #ececec;
+            }
+
+            .dashboard .dashboard-account.__opened .sign-out
+            {
+                display: block;
+            }
+
+                .dashboard .dashboard-account .sign-ico
+                {
+                    font-size: 18px;
+                    margin: 0 5px 0 0;
+                    vertical-align: -1px;
+                }
+
+
+/* Log */
+.log
+{
+    border: 1px solid #dee9f0;
+    font-size: 12px;
+    height: 300px;
+    line-height: 1.4;
+    margin: 15px 0;
+    overflow: auto;
+    padding: 20px;
+    white-space: nowrap;
+}
+
+    .log .__info
+    {
+        color: #43b0e6;
+    }
+
+    .log .__warning
+    {
+        color: #f0a30a;
+    }
+
+    .log .__debug
+    {
+        color: #a6a6a6;
+    }
+
+    .log .__error
+    {
+        color: #e51400;
+    }
+
+
+/* Loader */
+.loader
+{
+    display: block;
+    height: 75px;
+    margin: 0 auto;
+    left: 50%;
+    position: absolute;
+    top: 50%;
+    width: 350px;
+
+    -webkit-transform: translate(-50%, -50%);
+            transform: translate(-50%, -50%);
+}
+
+    .loader span
+    {
+        background: #dee9f0;
+        height: 20px;
+        position: absolute;
+        top: 25px;
+        width: 20px;
+
+        -webkit-animation: loader 2.5s infinite ease;
+                animation: loader 2.5s infinite ease;
+    }
+
+    .loader span:nth-child(1)
+    {
+        -webkit-animation-delay: .8s;
+                animation-delay: .8s;
+    }
+
+    .loader span:nth-child(2)
+    {
+        left: 30px;
+
+        -webkit-animation-delay: .6s;
+                animation-delay: .6s;
+    }
+
+    .loader span:nth-child(3)
+    {
+        left: 60px;
+
+        -webkit-animation-delay: .4s;
+                animation-delay: .4s;
+    }
+
+    .loader span:nth-child(4)
+    {
+        left: 90px;
+
+        -webkit-animation-delay: .2s;
+                animation-delay: .2s;
+    }
+
+    .loader span:nth-child(5)
+    {
+        left: 120px;
+    }
+
+.dropdown-content .__customers .list-ico,
+.blade-t .blade-t_ico.__customers
+{
+    text-align: center;
+}
+
+.dropdown-content .__customers .list-ico i,
+.blade-t .blade-t_ico.__customers i
+{
+    bottom: 0;
+    font-style: normal;
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+}
+
+.dropdown-content .__customers .list-ico i:after,
+.dropdown-content .__customers .list-ico i:before,
+.blade-t .blade-t_ico.__customers i:after,
+.blade-t .blade-t_ico.__customers i:before
+{
+    content: '';
+    font-size: 16px;
+    position: absolute;
+    top: 2px;
+}
+
+.dropdown-content .__customers .list-ico i:after,
+.blade-t .blade-t_ico.__customers i:after
+{
+    right: 0;
+}
+
+.dropdown-content .__customers .list-ico i:before,
+.blade-t .blade-t_ico.__customers i:before
+{
+    left: 0;
+}

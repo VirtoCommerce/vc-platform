@@ -1,0 +1,38 @@
+﻿<div class="blade-content __large-wide">
+	<div class="blade-inner">
+		<div class="inner-block">
+			<form class="form">
+
+				<div class="form-group">
+					<label class="form-label">Name:</label>
+					<div class="form-input">
+						<input focus-on="" ng-disabled="!blade.newAsset" required class="form-control" ng-model="blade.currentEntity.name" placeholder="Enter asset name" />
+					</div>
+				</div>
+
+				<div class="form-group">
+					<label class="form-label">Upload new file:</label>
+					<div class="form-input">
+						<input type="file" multiple uploader="uploader" nv-file-select style="z-index: 0;" tabindex="-1">
+						<input type="text" style="z-index: 1; cursor: default;" readonly="">
+						<button class="btn __file" type="button" onclick="$('input[type=file]').trigger('click')">
+							<i class="btn-ico fa fa-image"></i>
+						</button>
+					</div>
+				</div>
+
+			</form>
+
+			<div ng-show="uploader.isUploading">
+				<div class="sub-t">Progress:</div>
+				<div class="progress-bar __aqua" ng-style="{'width': uploader.progress + '%'}"></div>
+			</div>
+
+			<div class="tile-group triple __images-list" ng-if="blade.isImage()">
+				<div class="tile double">
+					<img class="tile-img" ng-src="{{blade.getImage()}}">
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

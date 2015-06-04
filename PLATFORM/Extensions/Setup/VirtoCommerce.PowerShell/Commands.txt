@@ -1,0 +1,77 @@
+﻿-- Entity Framework 6
+// Copy and paste all (or specific to module) lines to Package Manager Console to create initial migrations scripts
+
+Enable-Migrations -ContextTypeName VirtoCommerce.Foundation.Data.Infrastructure.OperationLogContext -MigrationsDirectory Infrastructure\LogMigrations -verbose -ProjectName CommerceFoundation.Data -StartUpProjectName FunctionalTests  -force
+Add-Migration Initial -ConfigurationTypeName VirtoCommerce.Foundation.Data.Infrastructure.LogMigrations.Configuration -ProjectName CommerceFoundation.Data -StartUpProjectName FunctionalTests -verbose
+
+Enable-Migrations -ContextTypeName VirtoCommerce.Foundation.Data.Catalogs.EFCatalogRepository -MigrationsDirectory Catalogs\Migrations -verbose -ProjectName CommerceFoundation.Data -StartUpProjectName FunctionalTests -force
+Add-Migration Initial -ConfigurationTypeName VirtoCommerce.Foundation.Data.Catalogs.Migrations.Configuration -ProjectName CommerceFoundation.Data -StartUpProjectName FunctionalTests -verbose
+
+Enable-Migrations -ContextTypeName VirtoCommerce.Foundation.Data.Importing.EFImportingRepository -MigrationsDirectory Importing\Migrations -verbose -ProjectName CommerceFoundation.Data -StartUpProjectName FunctionalTests -force
+Add-Migration Initial -ConfigurationTypeName VirtoCommerce.Foundation.Data.Importing.Migrations.Configuration -ProjectName CommerceFoundation.Data -StartUpProjectName FunctionalTests -verbose
+
+Enable-Migrations -ContextTypeName VirtoCommerce.Foundation.Data.Orders.EFOrderRepository -MigrationsDirectory Orders\Migrations -verbose -ProjectName CommerceFoundation.Data -StartUpProjectName FunctionalTests -force
+Add-Migration Initial -ConfigurationTypeName VirtoCommerce.Foundation.Data.Orders.Migrations.Configuration -ProjectName CommerceFoundation.Data -StartUpProjectName FunctionalTests -verbose
+
+Enable-Migrations -ContextTypeName VirtoCommerce.Foundation.Data.Customers.EFCustomerRepository -MigrationsDirectory Customers\Migrations -verbose -ProjectName CommerceFoundation.Data -StartUpProjectName FunctionalTests -force
+Add-Migration Initial -ConfigurationTypeName VirtoCommerce.Foundation.Data.Customers.Migrations.Configuration -ProjectName CommerceFoundation.Data -StartUpProjectName FunctionalTests -verbose
+
+Enable-Migrations -ContextTypeName VirtoCommerce.Foundation.Data.Inventories.EFInventoryRepository -MigrationsDirectory Inventories\Migrations -verbose -ProjectName CommerceFoundation.Data -StartUpProjectName FunctionalTests -force
+Add-Migration Initial -ConfigurationTypeName VirtoCommerce.Foundation.Data.Inventories.Migrations.Configuration -ProjectName CommerceFoundation.Data -StartUpProjectName FunctionalTests -verbose
+
+Enable-Migrations -ContextTypeName VirtoCommerce.Foundation.Data.Marketing.EFMarketingRepository -MigrationsDirectory Marketing\Migrations\Promotion -verbose -ProjectName CommerceFoundation.Data -StartUpProjectName FunctionalTests -force
+Add-Migration Initial -ConfigurationTypeName VirtoCommerce.Foundation.Data.Marketing.Migrations.Promotion.Configuration -ProjectName CommerceFoundation.Data -StartUpProjectName FunctionalTests -verbose
+
+Enable-Migrations -ContextTypeName VirtoCommerce.Foundation.Data.Marketing.EFDynamicContentRepository -MigrationsDirectory Marketing\Migrations\Content -verbose -ProjectName CommerceFoundation.Data -StartUpProjectName FunctionalTests -force
+Add-Migration Initial -ConfigurationTypeName VirtoCommerce.Foundation.Data.Marketing.Migrations.Content.Configuration -ProjectName CommerceFoundation.Data -StartUpProjectName FunctionalTests -verbose
+
+Enable-Migrations -ContextTypeName VirtoCommerce.Foundation.Data.Reviews.EFReviewRepository -MigrationsDirectory Reviews\Migrations -verbose -ProjectName CommerceFoundation.Data -StartUpProjectName FunctionalTests -force
+Add-Migration Initial -ConfigurationTypeName VirtoCommerce.Foundation.Data.Reviews.Migrations.Configuration -ProjectName CommerceFoundation.Data -StartUpProjectName FunctionalTests -verbose
+
+Enable-Migrations -ContextTypeName VirtoCommerce.Foundation.Data.Search.EFSearchRepository -MigrationsDirectory Search\Migrations -verbose -ProjectName CommerceFoundation.Data -StartUpProjectName FunctionalTests -force
+Add-Migration Initial -ConfigurationTypeName VirtoCommerce.Foundation.Data.Search.Migrations.Configuration -ProjectName CommerceFoundation.Data -StartUpProjectName FunctionalTests -verbose
+
+Enable-Migrations -ContextTypeName VirtoCommerce.Foundation.Data.Security.EFSecurityRepository -MigrationsDirectory Security\Migrations -verbose -ProjectName CommerceFoundation.Data -StartUpProjectName FunctionalTests -force
+Add-Migration Initial -ConfigurationTypeName VirtoCommerce.Foundation.Data.Security.Migrations.Configuration -ProjectName CommerceFoundation.Data -StartUpProjectName FunctionalTests -verbose
+
+Enable-Migrations -ContextTypeName VirtoCommerce.Foundation.Data.Stores.EFStoreRepository -MigrationsDirectory Stores\Migrations -verbose -ProjectName CommerceFoundation.Data -StartUpProjectName FunctionalTests -force
+Add-Migration Initial -ConfigurationTypeName VirtoCommerce.Foundation.Data.Stores.Migrations.Configuration -ProjectName CommerceFoundation.Data -StartUpProjectName FunctionalTests -verbose
+
+Enable-Migrations -ContextTypeName VirtoCommerce.Foundation.Data.AppConfig.EFAppConfigRepository -MigrationsDirectory AppConfig\Migrations -verbose -ProjectName CommerceFoundation.Data -StartUpProjectName FunctionalTests -force
+Add-Migration Initial -ConfigurationTypeName VirtoCommerce.Foundation.Data.AppConfig.Migrations.Configuration -ProjectName CommerceFoundation.Data -StartUpProjectName FunctionalTests -verbose
+
+
+-- Entity Framework 6
+// Copy and paste all (or specific to module) lines to Package Manager Console to create migrations scripts
+
+Add-Migration -ConfigurationTypeName VirtoCommerce.Foundation.Data.Infrastructure.LogMigrations.Configuration -ProjectName CommerceFoundation.Data -StartUpProjectName FunctionalTests -verbose -ConnectionStringName VirtoCommerce
+Add-Migration -ConfigurationTypeName VirtoCommerce.Foundation.Data.Catalogs.Migrations.Configuration -ProjectName CommerceFoundation.Data -StartUpProjectName FunctionalTests -verbose -ConnectionStringName VirtoCommerce
+Add-Migration -ConfigurationTypeName VirtoCommerce.Foundation.Data.Importing.Migrations.Configuration -ProjectName CommerceFoundation.Data -StartUpProjectName FunctionalTests -verbose -ConnectionStringName VirtoCommerce
+Add-Migration -ConfigurationTypeName VirtoCommerce.Foundation.Data.Orders.Migrations.Configuration -ProjectName CommerceFoundation.Data -StartUpProjectName FunctionalTests -verbose -ConnectionStringName VirtoCommerce
+Add-Migration -ConfigurationTypeName VirtoCommerce.Foundation.Data.Customers.Migrations.Configuration -ProjectName CommerceFoundation.Data -StartUpProjectName FunctionalTests -verbose -ConnectionStringName VirtoCommerce
+Add-Migration -ConfigurationTypeName VirtoCommerce.Foundation.Data.Inventories.Migrations.Configuration -ProjectName CommerceFoundation.Data -StartUpProjectName FunctionalTests -verbose -ConnectionStringName VirtoCommerce
+Add-Migration -ConfigurationTypeName VirtoCommerce.Foundation.Data.Marketing.Migrations.Promotion.Configuration -ProjectName CommerceFoundation.Data -StartUpProjectName FunctionalTests -verbose -ConnectionStringName VirtoCommerce
+Add-Migration -ConfigurationTypeName VirtoCommerce.Foundation.Data.Marketing.Migrations.Content.Configuration -ProjectName CommerceFoundation.Data -StartUpProjectName FunctionalTests -verbose -ConnectionStringName VirtoCommerce
+Add-Migration -ConfigurationTypeName VirtoCommerce.Foundation.Data.Reviews.Migrations.Configuration -ProjectName CommerceFoundation.Data -StartUpProjectName FunctionalTests -verbose -ConnectionStringName VirtoCommerce
+Add-Migration -ConfigurationTypeName VirtoCommerce.Foundation.Data.Search.Migrations.Configuration -ProjectName CommerceFoundation.Data -StartUpProjectName FunctionalTests -verbose -ConnectionStringName VirtoCommerce
+Add-Migration -ConfigurationTypeName VirtoCommerce.Foundation.Data.Security.Migrations.Configuration -ProjectName CommerceFoundation.Data -StartUpProjectName FunctionalTests -verbose -ConnectionStringName VirtoCommerce
+Add-Migration -ConfigurationTypeName VirtoCommerce.Foundation.Data.Stores.Migrations.Configuration -ProjectName CommerceFoundation.Data -StartUpProjectName FunctionalTests -verbose -ConnectionStringName VirtoCommerce
+Add-Migration -ConfigurationTypeName VirtoCommerce.Foundation.Data.AppConfig.Migrations.Configuration -ProjectName CommerceFoundation.Data -StartUpProjectName FunctionalTests -verbose -ConnectionStringName VirtoCommerce
+
+
+-- Entity Framework 6
+// Copy and paste all (or specific to module) lines to Package Manager Console to update your existing database to newest version
+
+Update-Database -ConfigurationTypeName VirtoCommerce.Foundation.Data.Infrastructure.LogMigrations.Configuration -ProjectName CommerceFoundation.Data -StartUpProjectName FunctionalTests -verbose -ConnectionStringName VirtoCommerce
+Update-Database -ConfigurationTypeName VirtoCommerce.Foundation.Data.Catalogs.Migrations.Configuration -ProjectName CommerceFoundation.Data -StartUpProjectName FunctionalTests -verbose -ConnectionStringName VirtoCommerce
+Update-Database -ConfigurationTypeName VirtoCommerce.Foundation.Data.Importing.Migrations.Configuration -ProjectName CommerceFoundation.Data -StartUpProjectName FunctionalTests -verbose -ConnectionStringName VirtoCommerce
+Update-Database -ConfigurationTypeName VirtoCommerce.Foundation.Data.Orders.Migrations.Configuration -ProjectName CommerceFoundation.Data -StartUpProjectName FunctionalTests -verbose -ConnectionStringName VirtoCommerce
+Update-Database -ConfigurationTypeName VirtoCommerce.Foundation.Data.Customers.Migrations.Configuration -ProjectName CommerceFoundation.Data -StartUpProjectName FunctionalTests -verbose -ConnectionStringName VirtoCommerce
+Update-Database -ConfigurationTypeName VirtoCommerce.Foundation.Data.Inventories.Migrations.Configuration -ProjectName CommerceFoundation.Data -StartUpProjectName FunctionalTests -verbose -ConnectionStringName VirtoCommerce
+Update-Database -ConfigurationTypeName VirtoCommerce.Foundation.Data.Marketing.Migrations.Promotion.Configuration -ProjectName CommerceFoundation.Data -StartUpProjectName FunctionalTests -verbose -ConnectionStringName VirtoCommerce
+Update-Database -ConfigurationTypeName VirtoCommerce.Foundation.Data.Marketing.Migrations.Content.Configuration -ProjectName CommerceFoundation.Data -StartUpProjectName FunctionalTests -verbose -ConnectionStringName VirtoCommerce
+Update-Database -ConfigurationTypeName VirtoCommerce.Foundation.Data.Reviews.Migrations.Configuration -ProjectName CommerceFoundation.Data -StartUpProjectName FunctionalTests -verbose -ConnectionStringName VirtoCommerce
+Update-Database -ConfigurationTypeName VirtoCommerce.Foundation.Data.Search.Migrations.Configuration -ProjectName CommerceFoundation.Data -StartUpProjectName FunctionalTests -verbose -ConnectionStringName VirtoCommerce
+Update-Database -ConfigurationTypeName VirtoCommerce.Foundation.Data.Security.Migrations.Configuration -ProjectName CommerceFoundation.Data -StartUpProjectName FunctionalTests -verbose -ConnectionStringName VirtoCommerce
+Update-Database -ConfigurationTypeName VirtoCommerce.Foundation.Data.Stores.Migrations.Configuration -ProjectName CommerceFoundation.Data -StartUpProjectName FunctionalTests -verbose -ConnectionStringName VirtoCommerce
+Update-Database -ConfigurationTypeName VirtoCommerce.Foundation.Data.AppConfig.Migrations.Configuration -ProjectName CommerceFoundation.Data -StartUpProjectName FunctionalTests -verbose -ConnectionStringName VirtoCommerce

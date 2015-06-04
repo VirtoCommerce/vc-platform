@@ -1,0 +1,54 @@
+{% unless current_collection %}
+  {% assign current_collection = collection %}
+{% endunless %}
+
+{% assign on_sale = false %}
+{% if product.compare_at_price > product.price %}
+  {% assign on_sale = true %}
+{% endif %}
+
+{% assign sold_out = true %}
+{% if product.available  %}
+  {% assign sold_out = false %}
+{% endif %}
+
+{% assign image_size = settings.collection_prod_image_sizes %}
+
+<div class="grid-item{% if sold_out %} sold-out{% endif %}{% if on_sale %} on-sale{% endif %}">
+  <a href="{{ product.url | within: current_collection }}" class="product-grid-item product-list-item">
+    <div class="grid">
+      <div class="grid-item large--one-fifth medium--one-third">
+        <img src="{{ product.featured_image.src | img_url: image_size }}" alt="{{ product.featured_image.alt | escape }}">
+      </div>
+      <div class="grid-item large--three-fifths medium--two-thirds">
+        <p class="h6">{{ product.title }}</p>
+        <div class="rte">
+          {% if product.excerpt.size > 0 %}
+            {{ product.excerpt }}
+          {% else %}
+            <p>{{ product.content | strip_html | truncatewords: 30 }}</p>
+          {% endif %}
+        </div>
+      </div>
+      <div class="grid-item large--one-fifth medium--two-thirds">
+        <div class="product-item--price text-center">
+          <p class="h1 medium-down--left">
+            {% include 'price' with product.price %}
+          </p>
+
+          {% if on_sale %}
+            <span class="sale-tag medium-down--right{% if settings.product_reviews_enable %} has-reviews{% endif %}">
+              {% assign compare_price = product.compare_at_price %}
+              {% assign product_price = product.price %}
+              {% include 'price-sale' %}
+            </span>
+          {% endif %}
+
+          {% if settings.product_reviews_enable %}
+            <span class="shopify-product-reviews-badge" data-id="{{ product.id }}"></span>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </a>
+</div>

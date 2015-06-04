@@ -1,0 +1,41 @@
+﻿<div class="blade-static">
+    <div class="form-group">
+        <div class="form-input __search">
+            <input type="text" placeholder="Search Item by name..." ng-model="filter.searchKeyword" ui-keyup="{'enter':'doFilter()'}">
+        </div>
+    </div>
+</div>
+<div class="blade-content __large-wide">
+    <div class="blade-inner">
+        <div class="inner-block">
+            <div class="table-wrapper">
+                <table class="table __normal">
+                    <thead>
+                        <tr>
+                            <th class="table-col __product-name">Item name</th>
+                            <th class="table-col __product-code">Item code</th>
+                            <th class="table-col">Price range</th>
+                            <th class="table-col">Prices count</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="table-item" ng-repeat="data in blade.currentEntities | orderBy:'productName' track by data.productId" ng-class="{'__selected': data.productId === selectedNodeId}" ng-click='selectNode(data)'>
+                            <td class="table-col __product-name">
+                                <span title="{{data.productName}}">{{data.productName}}</span>
+                            </td>
+                            <td class="table-col __product-code">
+                                <span>{{data.productId}}</span>
+                            </td>
+                            <td class="table-col">
+                                <span>{{getPriceRange(data)}}</span>
+                            </td>
+                            <td class="table-col">
+                                {{data.prices.length}}
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

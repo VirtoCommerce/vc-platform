@@ -1,0 +1,62 @@
+﻿<div class="blade-static __bottom" ng-include="'Scripts/common/templates/ok-cancel.tpl.html'" ng-if="!blade.isApiSave"></div>
+<div class="blade-content __medium-wide">
+    <div class="blade-inner">
+        <div class="inner-block">
+            <form name="formScope">
+                <div class="table-wrapper" ng-init="setForm(formScope);">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th class="table-col __product-control">
+                                    <label class="form-control __checkbox">
+                                        <input type="checkbox" ng-model="blade.selectedAll" ng-change="toggleAll()" />
+                                        <span class="check"></span>
+                                    </label>
+                                </th>
+                                <th class="table-col">Currency</th>
+                                <th class="table-col">List price</th>
+                                <th class="table-col">Sale price</th>
+                                <th class="table-col">Min. quantity</th>
+                                <th class="table-col __date">Last modified</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="table-item" ng-repeat="data in blade.currentEntities track by $index" ng-class="{'__selected': data.id === selectedItem.id}" context-menu data-target="pril_menu_{{$index}}" ng-click='selectItem(data)'>
+                                <td class="table-col">
+                                    <label class="form-control __checkbox">
+                                        <input type="checkbox" ng-model="data._selected">
+                                        <span class="check"></span>
+                                    </label>
+                                </td>
+                                <td class="table-col">{{data.currency}}</td>
+                                <td class="table-col">
+                                    <div class="form-input __mini">
+                                        <input money required ng-model="data.list" ng-class="{'error': !isListPriceValid(data)}" />
+                                    </div>
+                                </td>
+                                <td class="table-col">
+                                    <div class="form-input __mini">
+                                        <input money ng-model="data.sale">
+                                    </div>
+                                </td>
+                                <td class="table-col">
+                                    <div class="form-input __mini __number">
+                                        <input va-number required ng-model="data.minQuantity" min="1" step="1" ng-class="{'error': !isUniqueQty(data)}">
+                                    </div>
+                                </td>
+                                <td class="table-col __date">
+                                    <span class="table-date" am-time-ago="data.modifiedDate"></span>
+                                    <ul class="menu __context" role="menu" id="pril_menu_{{$index}}">
+                                        <li class="menu-item" ng-click='delete(data)'>
+                                            <i class="menu-ico fa fa-trash-o"></i> Delete
+                                        </li>
+                                    </ul>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

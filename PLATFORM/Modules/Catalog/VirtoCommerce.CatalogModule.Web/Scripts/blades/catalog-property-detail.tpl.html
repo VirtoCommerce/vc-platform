@@ -1,0 +1,24 @@
+﻿<div class="blade-content">
+    <div class="blade-inner">
+        <div class="inner-block" ng-init="propGroups = [{title:'Catalog properties', type:'Catalog'}, {title:'Category properties', type:'Category'}, {title:'Product properties', type:'Product'}, {title:'Variation properties', type:'Variation'}]">
+            <form name="contextEntityDetailForm" class="form">
+                <fieldset ng-repeat="propGroup in propGroups" ng-init="setForm(contextEntityDetailForm);">
+                    <legend>
+                        {{propGroup.title}}: <span class="count">{{properties.length}}</span>
+                    </legend>
+                    <div class="form-group" ng-repeat="prop in properties = (blade.currentEntity.properties | filter: {type:propGroup.type})">
+                        <label class="form-label" for="">
+                            {{prop.name}}
+                            <a ng-show="prop.isManageable" href="" ng-click="editProperty(prop)">
+                                <i class="form-ico fa fa-pencil"></i>
+                            </a>
+                            <span ng-show="!prop.isManageable">{{prop.name}}</span>
+                        </label>
+                        <va-property2 ng-model="prop" get-prop-values="getPropValues" />
+                    </div>
+                    <div class="text" ng-if="properties.length == 0">None</div>
+                </fieldset>
+            </form>
+        </div>
+    </div>
+</div>

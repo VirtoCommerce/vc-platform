@@ -1,0 +1,65 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="VirtoCommerce.Foundation.Search.Schemas.FilteredBrowsing">
+    <Position X="1.75" Y="0.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAEACAAAQAAAAAACAAAAAAAAAAAAAQAAAAAAAACAAA=</HashCode>
+      <FileName>Search\Schemas\Filters.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="VirtoCommerce.Foundation.Search.Schemas.PriceRangeFilter" BaseTypeListCollapsed="true">
+    <Position X="6.75" Y="1.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AIAAAAAAAAAAAAQAAAAAAIAACAAAAAAAAAAgAAAAAEA=</HashCode>
+      <FileName>Search\Schemas\Filters.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="VirtoCommerce.Foundation.Search.Schemas.AttributeFilter" BaseTypeListCollapsed="true">
+    <Position X="8.5" Y="1.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAACAAAAAAAAAwAAAAAAAAAAAAAAAAAAAAgAAAAAEA=</HashCode>
+      <FileName>Search\Schemas\Filters.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="VirtoCommerce.Foundation.Search.Schemas.RangeFilter" BaseTypeListCollapsed="true">
+    <Position X="5" Y="1.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AIAACAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAgAAAAAEA=</HashCode>
+      <FileName>Search\Schemas\Filters.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="VirtoCommerce.Foundation.Search.Schemas.FilterValueDisplay">
+    <Position X="9.5" Y="4" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CAAAAAAACACABAAAAAAAAAAAAAACAAAAAAAgAAAAAAA=</HashCode>
+      <FileName>Search\Schemas\Filters.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="VirtoCommerce.Foundation.Search.Schemas.AttributeFilterValue" BaseTypeListCollapsed="true">
+    <Position X="5" Y="4" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAACACAAAAAAAAAAAAAAAACACAAAAAgAAAAAAA=</HashCode>
+      <FileName>Search\Schemas\Filters.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="VirtoCommerce.Foundation.Search.Schemas.RangeFilterValue" BaseTypeListCollapsed="true">
+    <Position X="7.5" Y="4" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAQAABAAAAACAAAAAAAAAAAAASAAAAAEgAAAAAA=</HashCode>
+      <FileName>Search\Schemas\Filters.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Interface Name="VirtoCommerce.Foundation.Search.ISearchFilter">
+    <Position X="4.5" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Search\ISearchFilter.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

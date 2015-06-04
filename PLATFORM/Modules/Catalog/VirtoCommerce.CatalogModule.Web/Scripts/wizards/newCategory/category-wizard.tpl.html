@@ -1,0 +1,36 @@
+﻿<div class="blade-static __bottom" ng-include="'Modules/$(VirtoCommerce.Catalog)/Scripts/wizards/newCategory/category-wizard-actions.tpl.html'"></div>
+<div class="blade-content">
+    <div class="blade-inner">
+        <div class="inner-block">
+            <form class="form" name="detailForm">
+                <div class="form-group" ng-init="setForm(detailForm)">
+                    <label class="form-label">Name</label>
+                    <div class="form-input">
+                        <input focus-on="" required class="form-control" ng-model="blade.currentEntity.name" placeholder="Enter category name" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Code</label>
+                    <div class="form-input">
+                        <input required class="form-control" ng-model="blade.currentEntity.code" placeholder="Enter category code" name="code" ui-validate=" 'codeValidator($value)' " />
+                    </div>
+                    <div class="form-error" data-ng-show="detailForm.code.$dirty">
+                        <span data-ng-show="detailForm.code.$error.validator">Code can't contain $+;=%{}[]|\/@ ~#!^*&()?:'<>, characters</span>
+                    </div>
+                </div>
+            </form>
+
+            <!--<ul class="list-extended">
+                <li ng-click="openBlade('properties')" ng-if="blade.item.properties.length > 0">
+                    <span class="title">Add properties</span>
+                    <span class="sub-title">{{ getUnfilledProperties().length }} of {{blade.item.properties.length}} properties filled</span>
+                </li>
+                <li ng-click="openBlade('seo')">
+                    <i class="ico fa fa-bar-chart-o"></i>
+                    <span class="title">Define seo information</span>
+                    <span class="sub-title">seo information {{blade.item.seoInfos.length > 0 ? "defined" : "undefined"}}</span>
+                </li>
+            </ul>-->
+        </div>
+    </div>
+</div>

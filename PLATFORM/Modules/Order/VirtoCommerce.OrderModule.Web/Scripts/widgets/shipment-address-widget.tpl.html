@@ -1,0 +1,7 @@
+﻿<div class="gridster-cnt" ng-click="openAddressesBlade()">
+    <div class="cnt-inner">
+        <div class="list-count" ng-if="!operation.deliveryAddress">N/A</div>
+        <div class="list-t" ng-if="operation.deliveryAddress">Delivery address</div>
+        <div class="list-price">{{ getAddressName(operation.deliveryAddress) | limitTo :40 }}</div>
+    </div>
+</div>

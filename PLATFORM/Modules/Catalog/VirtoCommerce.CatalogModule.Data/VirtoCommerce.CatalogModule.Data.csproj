@@ -1,0 +1,261 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{B8C758D7-822F-40D8-B28C-EF21C873AF49}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>VirtoCommerce.CatalogModule.Data</RootNamespace>
+    <AssemblyName>VirtoCommerce.CatalogModule.Data</AssemblyName>
+    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\..\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="EntityFramework">
+      <HintPath>..\..\..\packages\EntityFramework.6.1.1\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\packages\EntityFramework.6.1.1\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="Omu.ValueInjecter, Version=2.3.3.0, Culture=neutral, PublicKeyToken=c7694541b0ac80e4, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\packages\valueinjecter.2.3.3\lib\net35\Omu.ValueInjecter.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Converters\AssetConverter.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Converters\CatalogConverter.cs" />
+    <Compile Include="Converters\CatalogLanguageConverter.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Converters\CategoryConverter.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Converters\EditorialReviewConverter.cs" />
+    <Compile Include="Converters\LinkConverter.cs" />
+    <Compile Include="Converters\ItemConverter.cs" />
+    <Compile Include="Converters\ProductAssociationConverter.cs" />
+    <Compile Include="Converters\PropertyAttributeConverter.cs" />
+    <Compile Include="Converters\PropertyConverter.cs" />
+    <Compile Include="Converters\PropertyDictionaryValueConverter.cs" />
+    <Compile Include="Converters\PropertyValueConverter.cs" />
+    <Compile Include="Converters\SeoInfoConverter.cs" />
+    <Compile Include="Migrations\201504301302574_Initial.cs" />
+    <Compile Include="Migrations\201504301302574_Initial.Designer.cs">
+      <DependentUpon>201504301302574_Initial.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201505111257502_CategoryRelation.cs" />
+    <Compile Include="Migrations\201505111257502_CategoryRelation.Designer.cs">
+      <DependentUpon>201505111257502_CategoryRelation.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201505130951362_ItemCodeUniqueConstrain.cs" />
+    <Compile Include="Migrations\201505130951362_ItemCodeUniqueConstrain.Designer.cs">
+      <DependentUpon>201505130951362_ItemCodeUniqueConstrain.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201505191514477_ItemParentRelation.cs" />
+    <Compile Include="Migrations\201505191514477_ItemParentRelation.Designer.cs">
+      <DependentUpon>201505191514477_ItemParentRelation.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201505280853223_ItemCodeComplexIndex.cs" />
+    <Compile Include="Migrations\201505280853223_ItemCodeComplexIndex.Designer.cs">
+      <DependentUpon>201505280853223_ItemCodeComplexIndex.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201506011113284_DimensionChanges.cs" />
+    <Compile Include="Migrations\201506011113284_DimensionChanges.Designer.cs">
+      <DependentUpon>201506011113284_DimensionChanges.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Model\Association.cs" />
+    <Compile Include="Model\AssociationGroup.cs" />
+    <Compile Include="Model\Catalog.cs" />
+    <Compile Include="Model\CatalogBase.cs" />
+    <Compile Include="Model\CatalogLanguage.cs" />
+    <Compile Include="Model\CatalogPropertyValue.cs" />
+    <Compile Include="Model\Category.cs" />
+    <Compile Include="Model\CategoryBase.cs" />
+    <Compile Include="Model\CategoryItemRelation.cs" />
+    <Compile Include="Model\CategoryRelation.cs" />
+    <Compile Include="Model\CategoryPropertyValue.cs" />
+    <Compile Include="Model\EditorialReview.cs" />
+    <Compile Include="Model\Item.cs" />
+    <Compile Include="Model\ItemAsset.cs" />
+    <Compile Include="Model\ItemPropertyValue.cs" />
+    <Compile Include="Model\ItemRelation.cs" />
+    <Compile Include="Model\Product.cs" />
+    <Compile Include="Model\Property.cs" />
+    <Compile Include="Model\PropertyAttribute.cs" />
+    <Compile Include="Model\PropertySet.cs" />
+    <Compile Include="Model\PropertySetProperty.cs" />
+    <Compile Include="Model\PropertyValue.cs" />
+    <Compile Include="Model\PropertyValueBase.cs" />
+    <Compile Include="Model\VirtualCatalog.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Repositories\CatalogRepositoryImpl.cs" />
+    <Compile Include="Repositories\ICatalogRepository.cs" />
+    <Compile Include="Repositories\SqlCatalogReducedSampleDatabaseInitializer.cs" />
+    <Compile Include="Repositories\SqlCatalogSampleDatabaseInitializer.cs" />
+    <Compile Include="Services\CatalogSearchServiceImpl.cs" />
+    <Compile Include="Services\CategoryServiceImpl.cs" />
+    <Compile Include="Services\ItemServiceImpl.cs" />
+    <Compile Include="Services\CatalogServiceImpl.cs" />
+    <Compile Include="Services\PropertyServiceImpl.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\VirtoCommerce.Platform.Core\VirtoCommerce.Platform.Core.csproj">
+      <Project>{F7C9313B-522E-4619-ABC9-8C7D4600D6B5}</Project>
+      <Name>VirtoCommerce.Platform.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\VirtoCommerce.Platform.Data\VirtoCommerce.Platform.Data.csproj">
+      <Project>{39afd233-b2f7-4178-817d-0a339c57525d}</Project>
+      <Name>VirtoCommerce.Platform.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Core\VirtoCommerce.Domain\VirtoCommerce.Domain.csproj">
+      <Project>{67c58a78-ddea-4fa3-a969-1cab582918e4}</Project>
+      <Name>VirtoCommerce.Domain</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\201504301302574_Initial.resx">
+      <DependentUpon>201504301302574_Initial.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201505111257502_CategoryRelation.resx">
+      <DependentUpon>201505111257502_CategoryRelation.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201505130951362_ItemCodeUniqueConstrain.resx">
+      <DependentUpon>201505130951362_ItemCodeUniqueConstrain.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201505191514477_ItemParentRelation.resx">
+      <DependentUpon>201505191514477_ItemParentRelation.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201505280853223_ItemCodeComplexIndex.resx">
+      <DependentUpon>201505280853223_ItemCodeComplexIndex.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201506011113284_DimensionChanges.resx">
+      <DependentUpon>201506011113284_DimensionChanges.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Repositories\Sql\Association.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Repositories\Sql\AssociationGroup.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Repositories\Sql\Catalog.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Repositories\Sql\CatalogBase.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Repositories\Sql\CatalogLanguage.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Repositories\Sql\Category.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Repositories\Sql\CategoryBase.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Repositories\Sql\CategoryItemRelation.reduced.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Repositories\Sql\CategoryItemRelation.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Repositories\Sql\EditorialReview.reduced.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Repositories\Sql\EditorialReview.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Repositories\Sql\Item.reduced.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Repositories\Sql\Item.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Repositories\Sql\ItemAsset.reduced.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Repositories\Sql\ItemAsset.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Repositories\Sql\ItemPropertyValue.reduced.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Repositories\Sql\ItemPropertyValue.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Repositories\Sql\ItemRelation.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Repositories\Sql\Property.reduced.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Repositories\Sql\Property.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Repositories\Sql\PropertyAttribute.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Repositories\Sql\PropertySet.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Repositories\Sql\PropertySetProperty.reduced.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Repositories\Sql\PropertySetProperty.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Repositories\Sql\VirtualCatalog.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Repositories\Sql\LinkedCategory.sql" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

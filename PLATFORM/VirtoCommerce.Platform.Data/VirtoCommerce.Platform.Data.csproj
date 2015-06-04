@@ -1,0 +1,274 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{39AFD233-B2F7-4178-817D-0A339C57525D}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>VirtoCommerce.Platform.Data</RootNamespace>
+    <AssemblyName>VirtoCommerce.Platform.Data</AssemblyName>
+    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="EntityFramework">
+      <HintPath>..\packages\EntityFramework.6.1.1\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer">
+      <HintPath>..\packages\EntityFramework.6.1.1\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.Identity.Core, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Identity.Core.2.2.0\lib\net45\Microsoft.AspNet.Identity.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.Identity.EntityFramework, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Identity.EntityFramework.2.1.0\lib\net45\Microsoft.AspNet.Identity.EntityFramework.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.Identity.Owin, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Identity.Owin.2.2.0\lib\net45\Microsoft.AspNet.Identity.Owin.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.SignalR.Core">
+      <HintPath>..\packages\Microsoft.AspNet.SignalR.Core.2.2.0\lib\net45\Microsoft.AspNet.SignalR.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Data.Edm, Version=5.6.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Data.Edm.5.6.0\lib\net40\Microsoft.Data.Edm.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Data.OData, Version=5.6.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Data.OData.5.6.0\lib\net40\Microsoft.Data.OData.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Data.Services.Client, Version=5.6.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Data.Services.Client.5.6.0\lib\net40\Microsoft.Data.Services.Client.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin">
+      <HintPath>..\packages\Microsoft.Owin.3.0.1\lib\net45\Microsoft.Owin.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security">
+      <HintPath>..\packages\Microsoft.Owin.Security.3.0.1\lib\net45\Microsoft.Owin.Security.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security.Cookies, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.Security.Cookies.3.0.1\lib\net45\Microsoft.Owin.Security.Cookies.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security.OAuth, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.Security.OAuth.3.0.1\lib\net45\Microsoft.Owin.Security.OAuth.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.WindowsAzure.Configuration">
+      <HintPath>..\packages\Microsoft.WindowsAzure.ConfigurationManager.2.0.3\lib\net40\Microsoft.WindowsAzure.Configuration.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.WindowsAzure.Storage">
+      <HintPath>..\packages\WindowsAzure.Storage.3.0.1.0\lib\net40\Microsoft.WindowsAzure.Storage.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Newtonsoft.Json.6.0.8\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="Omu.ValueInjecter">
+      <HintPath>..\packages\valueinjecter.2.3.3\lib\net35\Omu.ValueInjecter.dll</HintPath>
+    </Reference>
+    <Reference Include="Owin">
+      <HintPath>..\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.Services.Client" />
+    <Reference Include="System.IO.Compression" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Net.Http.Formatting, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.5.2.3\lib\net45\System.Net.Http.Formatting.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Spatial, Version=5.6.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Spatial.5.6.0\lib\net40\System.Spatial.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Transactions" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Http, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Core.5.2.3\lib\net45\System.Web.Http.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\GlobalAssemblyInfo.cs">
+      <Link>Properties\GlobalAssemblyInfo.cs</Link>
+    </Compile>
+    <Compile Include="Asset\AzureBlobProvider.cs" />
+    <Compile Include="Asset\BlobStorageMultipartStreamProvider.cs" />
+    <Compile Include="Asset\CustomMultipartStreamProvider.cs" />
+    <Compile Include="Asset\FileSystemBlobProvider.cs" />
+    <Compile Include="Caching\CacheEntries.cs" />
+    <Compile Include="Caching\CacheEntry.cs" />
+    <Compile Include="Caching\HttpCacheProvider.cs" />
+    <Compile Include="Caching\InMemoryCacheProvider.cs" />
+    <Compile Include="ChangeLog\ChangeLogConverter.cs" />
+    <Compile Include="ChangeLog\ChangeLogService.cs" />
+    <Compile Include="Common\ConnectionHelper.cs" />
+    <Compile Include="Common\ConventionInjections\CloneInjection.cs" />
+    <Compile Include="Common\ConventionInjections\IgnorePropertiesInjection.cs" />
+    <Compile Include="Common\ConventionInjections\PatchInjection.cs" />
+    <Compile Include="Common\ExceptionExtensions.cs" />
+    <Compile Include="Infrastructure\BasicUnitOfWork.cs" />
+    <Compile Include="Infrastructure\DbMigrationContext.cs" />
+    <Compile Include="Infrastructure\DbMigrationsConfigurationBase.cs" />
+    <Compile Include="Infrastructure\DbMigrator.cs" />
+    <Compile Include="Infrastructure\DbModelBuilderExtensions.cs" />
+    <Compile Include="Infrastructure\EFRepositoryBase.cs" />
+    <Compile Include="Infrastructure\Interceptors\AuditableInterceptor.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Infrastructure\Interceptors\ChangeInterceptor.cs" />
+    <Compile Include="Infrastructure\Interceptors\ChangeLogPolicy.cs" />
+    <Compile Include="Infrastructure\Interceptors\EntityPrimaryKeyGeneratorInterceptor.cs" />
+    <Compile Include="Infrastructure\Interceptors\IInterceptor.cs" />
+    <Compile Include="Infrastructure\Interceptors\InterceptionContext.cs" />
+    <Compile Include="Infrastructure\Interceptors\ChangeLogInterceptor.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Infrastructure\Interceptors\TypeInterceptor.cs" />
+    <Compile Include="Infrastructure\ParrentAttribute.cs" />
+    <Compile Include="Infrastructure\ServiceBase.cs" />
+    <Compile Include="Infrastructure\SetupDatabaseInitializer.cs" />
+    <Compile Include="Model\AccountEntity.cs" />
+    <Compile Include="Model\AccountState.cs" />
+    <Compile Include="Model\ApiAccountEntity.cs" />
+    <Compile Include="Model\ApiAccountType.cs" />
+    <Compile Include="Model\OperationLogEntity.cs" />
+    <Compile Include="Model\PermissionEntity.cs" />
+    <Compile Include="Model\RegisterType.cs" />
+    <Compile Include="Model\RoleAssignmentEntity.cs" />
+    <Compile Include="Model\RoleEntity.cs" />
+    <Compile Include="Model\RolePermissionEntity.cs" />
+    <Compile Include="Model\SettingEntity.cs" />
+    <Compile Include="Model\SettingValueEntity.cs" />
+    <Compile Include="Model\UserDetails.cs" />
+    <Compile Include="Notification\InMemoryNotifierImpl.cs" />
+    <Compile Include="Packaging\SemanticVersion.cs" />
+    <Compile Include="Packaging\ZipPackageService.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Repositories\IPlatformRepository.cs" />
+    <Compile Include="Repositories\Migrations\201504300700222_Initial.cs" />
+    <Compile Include="Repositories\Migrations\201504300700222_Initial.Designer.cs">
+      <DependentUpon>201504300700222_Initial.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Repositories\Migrations\201505080835453_OperationLog.cs" />
+    <Compile Include="Repositories\Migrations\201505080835453_OperationLog.Designer.cs">
+      <DependentUpon>201505080835453_OperationLog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Repositories\Migrations\201505211410074_ObjectForSetting.cs" />
+    <Compile Include="Repositories\Migrations\201505211410074_ObjectForSetting.Designer.cs">
+      <DependentUpon>201505211410074_ObjectForSetting.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Repositories\Migrations\201505250843471_ApiAccountName.cs" />
+    <Compile Include="Repositories\Migrations\201505250843471_ApiAccountName.Designer.cs">
+      <DependentUpon>201505250843471_ApiAccountName.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Repositories\Migrations\Configuration.cs" />
+    <Compile Include="Repositories\PlatformDatabaseInitializer.cs" />
+    <Compile Include="Repositories\PlatformRepository.cs" />
+    <Compile Include="Security\ApiAccountProvider.cs" />
+    <Compile Include="Security\Authentication\ApiAuthenticationHandler.cs" />
+    <Compile Include="Security\Authentication\ApiAuthenticationOptions.cs" />
+    <Compile Include="Security\Authentication\ApiKeys\ApiKeysAuthenticationExtensions.cs" />
+    <Compile Include="Security\Authentication\ApiKeys\ApiKeysAuthenticationHandler.cs" />
+    <Compile Include="Security\Authentication\ApiKeys\ApiKeysAuthenticationMiddleware.cs" />
+    <Compile Include="Security\Authentication\ApiKeys\ApiKeysAuthenticationOptions.cs" />
+    <Compile Include="Security\Authentication\Hmac\HmacAuthenticationExtensions.cs" />
+    <Compile Include="Security\Authentication\Hmac\HmacAuthenticationHandler.cs" />
+    <Compile Include="Security\Authentication\Hmac\HmacAuthenticationMiddleware.cs" />
+    <Compile Include="Security\Authentication\Hmac\HmacAuthenticationOptions.cs" />
+    <Compile Include="Security\Authentication\Hmac\HmacUtility.cs" />
+    <Compile Include="Security\Identity\ApplicationClaimsIdentityProvider.cs" />
+    <Compile Include="Security\Identity\ApplicationSignInManager.cs" />
+    <Compile Include="Security\Identity\ApplicationUser.cs" />
+    <Compile Include="Security\Identity\ApplicationUserManager.cs" />
+    <Compile Include="Security\Identity\ApplicationUserStore.cs" />
+    <Compile Include="Security\IApiAccountProvider.cs" />
+    <Compile Include="Security\Identity\IClaimsIdentityProvider.cs" />
+    <Compile Include="Security\Identity\IdentityDatabaseInitializer.cs" />
+    <Compile Include="Security\Identity\Migrations\201411101625303_InitialCreate.cs" />
+    <Compile Include="Security\Identity\Migrations\201411101625303_InitialCreate.Designer.cs">
+      <DependentUpon>201411101625303_InitialCreate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Security\Identity\Migrations\Configuration.cs" />
+    <Compile Include="Security\Identity\SecurityDbContext.cs" />
+    <Compile Include="Security\PermissionService.cs" />
+    <Compile Include="Security\RoleManagementService.cs" />
+    <Compile Include="Security\SecurityConverters.cs" />
+    <Compile Include="Settings\Converters\ModuleConverter.cs" />
+    <Compile Include="Settings\Converters\SettingConverter.cs" />
+    <Compile Include="Settings\Converters\SettingValueConverter.cs" />
+    <Compile Include="Settings\SettingManager.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\VirtoCommerce.Platform.Core\VirtoCommerce.Platform.Core.csproj">
+      <Project>{f7c9313b-522e-4619-abc9-8c7d4600d6b5}</Project>
+      <Name>VirtoCommerce.Platform.Core</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Repositories\Migrations\201504300700222_Initial.resx">
+      <DependentUpon>201504300700222_Initial.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Repositories\Migrations\201505080835453_OperationLog.resx">
+      <DependentUpon>201505080835453_OperationLog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Repositories\Migrations\201505211410074_ObjectForSetting.resx">
+      <DependentUpon>201505211410074_ObjectForSetting.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Repositories\Migrations\201505250843471_ApiAccountName.resx">
+      <DependentUpon>201505250843471_ApiAccountName.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Security\Identity\Migrations\201411101625303_InitialCreate.resx">
+      <DependentUpon>201411101625303_InitialCreate.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

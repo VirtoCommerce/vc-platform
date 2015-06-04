@@ -1,0 +1,41 @@
+﻿<div class="blade-static __bottom" ng-if="blade.bottomTemplate">
+    <ng-include src='blade.bottomTemplate'> </ng-include>
+</div>
+<div class="blade-content">
+    <div class="blade-inner">
+        <div class="inner-block">
+            <form class="form">
+                <div class="form-group">
+                    <label class="form-label">Type</label>
+                    <div class="form-input">
+                        <!-- <select ng-model="currentEntity.reviewType" ng-options="x for x in types"></select> -->
+
+                        <ui-select ng-model="currentEntity.reviewType" ng-disabled="disabled">
+                            <ui-select-match placeholder="Select type">{{$select.selected}}</ui-select-match>
+                            <ui-select-choices repeat="x in types | filter: $select.search">
+                                <span ng-bind-html="x | highlight: $select.search"></span>
+                            </ui-select-choices>
+                        </ui-select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Language</label>
+                    <div class="form-input">
+                        <!-- <select ng-model="currentEntity.languageCode" ng-options="lang.languageCode as lang.displayName for lang in blade.languages" required></select> -->
+                        
+                        <ui-select ng-model="currentEntity.languageCode" ng-disabled="disabled">
+                            <ui-select-match placeholder="Select language">{{$select.selected.displayName}}</ui-select-match>
+                            <ui-select-choices repeat="lang.languageCode as lang in blade.languages | filter: {displayName: $select.search}">
+                                <span ng-bind-html="lang.displayName | highlight: $select.search"></span>
+                            </ui-select-choices>
+                        </ui-select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Editorial Review content</label>
+                    <div class="editable" text-angular ng-model="currentEntity.content" text-angular-name="myEditor"></div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

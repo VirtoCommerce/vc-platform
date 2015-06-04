@@ -1,0 +1,296 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{67C58A78-DDEA-4FA3-A969-1CAB582918E4}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>VirtoCommerce.Domain</RootNamespace>
+    <AssemblyName>VirtoCommerce.Domain</AssemblyName>
+    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\packages\Newtonsoft.Json.6.0.8\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Cart\Events\CartChangeEvent.cs" />
+    <Compile Include="Cart\Model\Address.cs" />
+    <Compile Include="Cart\Model\AddressType.cs" />
+    <Compile Include="Cart\Model\LineItem.cs" />
+    <Compile Include="Cart\Model\Coupon.cs" />
+    <Compile Include="Cart\Model\Payment.cs" />
+    <Compile Include="Cart\Model\SearchCriteria.cs" />
+    <Compile Include="Cart\Model\Discount.cs" />
+    <Compile Include="Cart\Model\SearchResult.cs" />
+    <Compile Include="Cart\Model\Shipment.cs" />
+    <Compile Include="Cart\Model\PaymentMethod.cs" />
+    <Compile Include="Cart\Model\ShipmentMethod.cs" />
+    <Compile Include="Cart\Model\ShoppingCart.cs" />
+    <Compile Include="Cart\Services\IShoppingCartSearchService.cs" />
+    <Compile Include="Cart\Services\IShoppingCartService.cs" />
+    <Compile Include="Catalog\Model\AvailabilityRule.cs" />
+    <Compile Include="Catalog\Model\Catalog.cs" />
+    <Compile Include="Catalog\Model\CatalogLanguage.cs" />
+    <Compile Include="Catalog\Model\CatalogProduct.cs" />
+    <Compile Include="Catalog\Model\Category.cs" />
+    <Compile Include="Catalog\Model\CategoryLink.cs" />
+    <Compile Include="Catalog\Model\EditorialReview.cs" />
+    <Compile Include="Catalog\Model\ILanguageSupport.cs" />
+    <Compile Include="Catalog\Model\ILinkSupport.cs" />
+    <Compile Include="Catalog\Model\ISeoSupport.cs" />
+    <Compile Include="Catalog\Model\ItemAsset.cs" />
+    <Compile Include="Catalog\Model\ItemAssetType.cs" />
+    <Compile Include="Catalog\Model\ItemResponseGroup.cs" />
+    <Compile Include="Catalog\Model\ProductAssociation.cs" />
+    <Compile Include="Catalog\Model\Property.cs" />
+    <Compile Include="Catalog\Model\PropertyAttribute.cs" />
+    <Compile Include="Catalog\Model\PropertyDictionaryValue.cs" />
+    <Compile Include="Catalog\Model\PropertyDisplayName.cs" />
+    <Compile Include="Catalog\Model\PropertyType.cs" />
+    <Compile Include="Catalog\Model\PropertyValue.cs" />
+    <Compile Include="Catalog\Model\PropertyValueType.cs" />
+    <Compile Include="Catalog\Model\ResponseGroup.cs" />
+    <Compile Include="Catalog\Model\ReviewState.cs" />
+    <Compile Include="Catalog\Model\SearchCriteria.cs" />
+    <Compile Include="Catalog\Model\SearchResult.cs" />
+    <Compile Include="Catalog\Model\SeoInfo.cs" />
+    <Compile Include="Catalog\Services\DefaultSkuGenerator.cs" />
+    <Compile Include="Catalog\Services\ICatalogSearchService.cs" />
+    <Compile Include="Catalog\Services\ICatalogService.cs" />
+    <Compile Include="Catalog\Services\ICategoryService.cs" />
+    <Compile Include="Catalog\Services\IItemService.cs" />
+    <Compile Include="Catalog\Services\IPropertyService.cs" />
+    <Compile Include="Catalog\Services\ISkuGenerator.cs" />
+    <Compile Include="Commerce\Model\SeoUrlKeyword.cs" />
+    <Compile Include="Commerce\Model\SeoUrlKeywordTypes.cs" />
+    <Compile Include="Common\Events\EventPublisher.cs" />
+    <Compile Include="Common\Events\IEventPublisher.cs" />
+    <Compile Include="Common\Events\IPriorityObserver.cs" />
+    <Compile Include="Common\Expressions\ConditionExpressionTree.cs" />
+    <Compile Include="Common\Expressions\DynamicExpression.cs" />
+    <Compile Include="Common\EvaluationContextBase.cs" />
+    <Compile Include="Common\Expressions\IConditionExpression.cs" />
+    <Compile Include="Common\Expressions\IDynamicExpression.cs" />
+    <Compile Include="Common\IEvaluationContext.cs" />
+    <Compile Include="Customer\Model\Address.cs" />
+    <Compile Include="Customer\Model\AddressType.cs" />
+    <Compile Include="Customer\Model\Contact.cs" />
+    <Compile Include="Customer\Model\Note.cs" />
+    <Compile Include="Customer\Model\Organization.cs" />
+    <Compile Include="Customer\Model\Property.cs" />
+    <Compile Include="Customer\Model\PropertyValueType.cs" />
+    <Compile Include="Customer\Model\SearchCriteria.cs" />
+    <Compile Include="Customer\Model\SearchResult.cs" />
+    <Compile Include="Customer\Services\ICustomerSearchService.cs" />
+    <Compile Include="Customer\Services\IContactService.cs" />
+    <Compile Include="Customer\Services\IOrganizationService.cs" />
+    <Compile Include="Commerce\Model\FulfillmentCenter.cs" />
+    <Compile Include="Commerce\Services\ICommerceService.cs" />
+    <Compile Include="Inventory\Model\InventoryInfo.cs" />
+    <Compile Include="Inventory\Model\InventoryStatus.cs" />
+    <Compile Include="Inventory\Services\IInventoryService.cs" />
+    <Compile Include="Marketing\Model\DynamicContent\DynamicContentEvaluationContext.cs" />
+    <Compile Include="Marketing\Model\DynamicContent\DynamicContentFolder.cs" />
+    <Compile Include="Marketing\Model\DynamicContent\IsHasFolder.cs" />
+    <Compile Include="Marketing\Model\DynamicContent\TagSet.cs" />
+    <Compile Include="Marketing\Model\Promotions\CatalogPromotionResult.cs" />
+    <Compile Include="Marketing\Model\Promotions\Coupon.cs" />
+    <Compile Include="Marketing\Model\DynamicContent\DynamicContentItem.cs" />
+    <Compile Include="Marketing\Model\DynamicContent\DynamicContentPlace.cs" />
+    <Compile Include="Marketing\Model\DynamicContent\DynamicContentPublication.cs" />
+    <Compile Include="Marketing\Model\DynamicContent\Property.cs" />
+    <Compile Include="Marketing\Model\DynamicContent\PropertyValueType.cs" />
+    <Compile Include="Marketing\Model\Promotions\Expression\IRewardExpression.cs" />
+    <Compile Include="Marketing\Model\Promotions\Expression\PromoDynamicExpressionTree.cs" />
+    <Compile Include="Marketing\Model\Promotions\IMarketingEvent.cs" />
+    <Compile Include="Marketing\Model\Promotions\DefaultOrderEventType.cs" />
+    <Compile Include="Marketing\Model\Promotions\MarketingEvent.cs" />
+    <Compile Include="Marketing\Model\Promotions\ProductPromoEntry.cs" />
+    <Compile Include="Marketing\Model\Promotions\Promotion.cs" />
+    <Compile Include="Marketing\Model\Promotions\PromotionEvaluationContext.cs" />
+    <Compile Include="Marketing\Model\Promotions\PromotionResult.cs" />
+    <Compile Include="Marketing\Model\Promotions\PromotionUsage.cs" />
+    <Compile Include="Marketing\Model\Promotions\Rewards\AmountBasedReward.cs" />
+    <Compile Include="Marketing\Model\Promotions\Rewards\CartSubtotalReward.cs" />
+    <Compile Include="Marketing\Model\Promotions\Rewards\CatalogItemAmountReward.cs" />
+    <Compile Include="Marketing\Model\Promotions\Rewards\GiftReward.cs" />
+    <Compile Include="Marketing\Model\Promotions\Rewards\PromotionReward.cs" />
+    <Compile Include="Marketing\Model\Promotions\Rewards\RewardAmountType.cs" />
+    <Compile Include="Marketing\Model\Promotions\Rewards\ShipmentReward.cs" />
+    <Compile Include="Marketing\Model\Promotions\Rewards\SpecialOfferReward.cs" />
+    <Compile Include="Marketing\Model\MarketingSearchCriteria.cs" />
+    <Compile Include="Marketing\Model\MarketingSearchResult.cs" />
+    <Compile Include="Marketing\Model\SearchResponseGroup.cs" />
+    <Compile Include="Marketing\Services\IMarketingDynamicContentEvaluator.cs" />
+    <Compile Include="Marketing\Services\IDynamicContentService.cs" />
+    <Compile Include="Marketing\Services\IMarketingPromoEvaluator.cs" />
+    <Compile Include="Marketing\Services\IMarketingSearchService.cs" />
+    <Compile Include="Marketing\Services\IPromotionService.cs" />
+    <Compile Include="Marketing\Services\IMarketingExtensionManager.cs" />
+    <Compile Include="Marketing\Services\DefaultMarketingExtensionManagerImpl.cs" />
+    <Compile Include="Order\Model\Address.cs" />
+    <Compile Include="Order\Model\AddressType.cs" />
+    <Compile Include="Order\Model\Coupon.cs" />
+    <Compile Include="Order\Model\CustomerOrder.cs" />
+    <Compile Include="Order\Model\IFinanceInOperation.cs" />
+    <Compile Include="Order\Model\IFinanceOperation.cs" />
+    <Compile Include="Order\Model\IFinanceOutOperation.cs" />
+    <Compile Include="Order\Model\IOperation.cs" />
+    <Compile Include="Order\Model\IPosition.cs" />
+    <Compile Include="Order\Model\IStockInOperation.cs" />
+    <Compile Include="Order\Model\IStockOperation.cs" />
+    <Compile Include="Order\Model\IStockOutOperation.cs" />
+    <Compile Include="Order\Model\LineItem.cs" />
+    <Compile Include="Order\Model\OperationProperty.cs" />
+    <Compile Include="Order\Model\PropertyValueType.cs" />
+    <Compile Include="Order\Model\ResponseGroup.cs" />
+    <Compile Include="Order\Services\IOperationNumberGenerator.cs" />
+    <Compile Include="Order\Model\CustomerOrderResponseGroup.cs" />
+    <Compile Include="Order\Model\Discount.cs" />
+    <Compile Include="Order\Model\Operation.cs" />
+    <Compile Include="Order\Model\PaymentIn.cs" />
+    <Compile Include="Order\Model\PaymentMethod.cs" />
+    <Compile Include="Order\Model\SearchCriteria.cs" />
+    <Compile Include="Order\Model\SearchResult.cs" />
+    <Compile Include="Order\Model\Shipment.cs" />
+    <Compile Include="Order\Services\ICustomerOrderService.cs" />
+    <Compile Include="Order\Services\ICustomerOrderSearchService.cs" />
+    <Compile Include="Order\Services\IPaymentService.cs" />
+    <Compile Include="Order\Services\IShipmentService.cs" />
+    <Compile Include="Order\Events\OrderChangeEvent.cs" />
+    <Compile Include="Payment\Model\PostProcessPaymentEvaluationContext.cs" />
+    <Compile Include="Payment\Model\PaymentMethod.cs" />
+    <Compile Include="Payment\Model\PaymentStatus.cs" />
+    <Compile Include="Payment\Model\PostProcessPaymentResult.cs" />
+    <Compile Include="Payment\Model\ProcessPaymentEvaluationContext.cs" />
+    <Compile Include="Payment\Model\ProcessPaymentResult.cs" />
+    <Compile Include="Payment\Model\ValidatePostProcessRequestResult.cs" />
+    <Compile Include="Payment\Services\IPaymentService.cs" />
+    <Compile Include="Payment\Services\PaymentServiceImpl.cs" />
+    <Compile Include="Payment\Model\PaymentMethodType.cs" />
+    <Compile Include="Pricing\Model\Price.cs" />
+    <Compile Include="Pricing\Model\PriceEvaluationContext.cs" />
+    <Compile Include="Pricing\Model\Pricelist.cs" />
+    <Compile Include="Pricing\Model\PricelistAssignment.cs" />
+    <Compile Include="Pricing\Services\DefaultPricingExtensionManagerImpl.cs" />
+    <Compile Include="Pricing\Services\IPricingExtensionManager.cs" />
+    <Compile Include="Pricing\Services\IPricingService.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Search\Filters\AttributeFilter.cs" />
+    <Compile Include="Search\Filters\Filters.cs">
+      <DependentUpon>Filters.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="Search\Filters\PriceRangeFilter.cs" />
+    <Compile Include="Search\Filters\RangeFilter.cs" />
+    <Compile Include="Search\ISearchProviderManager.cs" />
+    <Compile Include="Search\Model\CatalogIndexedSearchCriteria.cs" />
+    <Compile Include="Search\Model\CatalogIndexedSearchResults.cs" />
+    <Compile Include="Search\Model\CategoryFilter.cs" />
+    <Compile Include="Search\Model\CategoryFilterValue.cs" />
+    <Compile Include="Search\Model\DocumentField.cs" />
+    <Compile Include="Search\Model\Facet.cs" />
+    <Compile Include="Search\Model\FacetGroup.cs" />
+    <Compile Include="Search\Model\IDocument.cs" />
+    <Compile Include="Search\Model\IDocumentField.cs" />
+    <Compile Include="Search\Model\IDocuments.cs" />
+    <Compile Include="Search\Model\IndexBuildException.cs" />
+    <Compile Include="Search\Model\IndexDataType.cs" />
+    <Compile Include="Search\Model\IndexNotFoundException.cs" />
+    <Compile Include="Search\Model\IndexStore.cs" />
+    <Compile Include="Search\Model\IndexType.cs" />
+    <Compile Include="Search\Model\ISearchConnection.cs" />
+    <Compile Include="Search\Model\ISearchCriteria.cs" />
+    <Compile Include="Search\Model\ISearchFilter.cs" />
+    <Compile Include="Search\Services\ISearchFilterService.cs" />
+    <Compile Include="Search\Model\ISearchFilterValue.cs" />
+    <Compile Include="Search\Services\ISearchIndexBuilder.cs" />
+    <Compile Include="Search\Services\ISearchIndexController.cs" />
+    <Compile Include="Search\Services\ISearchProvider.cs" />
+    <Compile Include="Search\Services\ISearchQueryBuilder.cs" />
+    <Compile Include="Search\Model\ISearchResults.cs" />
+    <Compile Include="Search\Model\KeywordSearchCriteria.cs" />
+    <Compile Include="Search\Model\OperationType.cs" />
+    <Compile Include="Search\Model\Partition.cs" />
+    <Compile Include="Search\Model\ResultDocument.cs" />
+    <Compile Include="Search\Model\ResultDocuments.cs" />
+    <Compile Include="Search\Model\SearchCriteriaBase.cs" />
+    <Compile Include="Search\Model\SearchEventArgs.cs" />
+    <Compile Include="Search\Model\SearchException.cs" />
+    <Compile Include="Search\Model\SearchIndexEventArgs.cs" />
+    <Compile Include="Search\Model\SearchProviders.cs" />
+    <Compile Include="Search\Model\SearchResults.cs" />
+    <Compile Include="Search\Model\SearchSort.cs" />
+    <Compile Include="Search\Model\SearchSortField.cs" />
+    <Compile Include="Search\Services\ISearchService.cs" />
+    <Compile Include="Shipping\Model\ShippingEvaluationContext.cs" />
+    <Compile Include="Shipping\Model\ShippingMethod.cs" />
+    <Compile Include="Shipping\Model\ShippingRate.cs" />
+    <Compile Include="Shipping\Services\IShippingService.cs" />
+    <Compile Include="Shipping\Services\ShippingServiceImpl.cs" />
+    <Compile Include="Store\Model\SeoInfo.cs" />
+    <Compile Include="Store\Model\Store.cs" />
+    <Compile Include="Store\Model\StoreState.cs" />
+    <Compile Include="Store\Services\IStoreService.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\VirtoCommerce.Platform.Core\VirtoCommerce.Platform.Core.csproj">
+      <Project>{f7c9313b-522e-4619-abc9-8c7d4600d6b5}</Project>
+      <Name>VirtoCommerce.Platform.Core</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+    <None Include="Search\Filters\Filters.cd" />
+    <None Include="Search\Filters\Filters.xsd">
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Search\Filters\Filters.xml" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

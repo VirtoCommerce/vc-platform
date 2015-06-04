@@ -1,0 +1,6 @@
+﻿<a class="menu-link" href="" ng-class="[(menuItem.newCount > 0) ? '__counted' : '', (menuItem.incremented) ? '__animated': '']">
+    <span class="menu-ico {{menuItem.newCount > 0 ? 'fa fa-comment' : menuItem.icon}}"></span>
+    <span ng-bind="menuItem.title" class="name"></span>
+    <span ng-if="menuItem.progress" class="progress-bar __mini" data-role="progress-bar"></span>
+    <span class="menu-count" ng-if="menuItem.newCount > 0" ng-bind="menuItem.newCount"></span>
+</a>

@@ -1,0 +1,84 @@
+﻿<div class="blade-static __bottom" ng-if="blade.isNew">
+    <button class="btn" ng-click="blade.saveChanges()" ng-disabled="!blade.availableSave()">
+        <span>Create</span>
+    </button>
+</div>
+
+<div class="blade-content __medium-wide">
+    <div class="blade-inner">
+        <div class="inner-block">
+            <form class="form" name="contextEntityDetailForm">
+                <div class="columns clearfix">
+                    <div class="column">
+                        <div class="form-group" ng-init="setForm(contextEntityDetailForm)">
+                            <label class="form-label">Publishing name</label>
+                            <div class="form-input">
+                                <input focus-on="" required class="form-control" ng-model="blade.entity.name" placeholder="Enter publishing name" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Is active</label>
+                            <label class="form-label __switch">
+                                <input type="checkbox" ng-model="blade.entity.isActive" />
+                                <span class="switch"></span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="column">
+                        <div class="form-group">
+                            <label class="form-label">Publishing description</label>
+                            <div class="form-input">
+                                <textarea required cols="60" rows="30" ng-model="blade.entity.description" placeholder="Enter publishing description"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="columns clearfix">
+                    <div class="column">
+                        <div class="form-group">
+                            <label class="form-label">Start date</label>
+                            <div class="form-input __calendar">
+                                <input type="text" class="form-control" ng-model="blade.entity.startDate" datepicker-popup="{{format}}" name="startDate" is-open="datepickers.startDate" min-date="today" datepicker-options="dateOptions" close-text="Close" placeholder="Enter value" />
+                                <button class="btn" type="button" ng-click="open($event,'startDate')">
+                                    <i class="btn-ico fa fa-calendar"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="column">
+                        <div class="form-group">
+                            <label class="form-label">End date</label>
+                            <div class="form-input __calendar">
+                                <input type="text" class="form-control" ng-model="blade.entity.endDate" datepicker-popup="{{format}}" name="endDate" is-open="datepickers.endDate" min-date="blade.entity.startDate" datepicker-options="dateOptions" close-text="Close" placeholder="Enter value" />
+                                <button class="btn" type="button" ng-click="open($event,'endDate')">
+                                    <i class="btn-ico fa fa-calendar"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+            <ul class="list __items">
+                <li class="list-item" ng-click="blade.addPlaceholders()">
+                    <span class="list-t">Placeholders</span>
+                    <span class="list-descr">Chosen {{blade.entity.contentPlaces.length}} placeholders</span>
+                </li>
+                <li class="list-item" ng-click="blade.addContentItems()">
+                    <span class="list-t">Content items</span>
+                    <span class="list-descr">Chosen {{blade.entity.contentItems.length}} content items</span>
+                </li>
+                <li class="list-item __disabled" ng-click="" ng-disabled="true">
+                    <span class="list-t">Other settings</span>
+                    <span class="list-descr">Define other import settings</span>
+                </li>
+            </ul>
+            
+            <fieldset>
+                <legend>Publishing conditions</legend>
+                <div class="dynamic-expression">
+                    <va-dynamic-expression-tree source="blade.entity.dynamicExpression"></va-dynamic-expression-tree>
+                </div>
+            </fieldset>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,13 @@
+﻿<div class="blade-content">
+    <div class="blade-inner">
+        <div class="inner-block">
+            <ul class="list __items">
+                <label ng-repeat="propertyType in blade.availablePropertyTypes" class="list-item" ng-mouseup="selectOption(propertyType)">
+                    <input type="checkbox" ng-checked="propertyType === blade.parentBlade.currentEntity.type">
+                    <span class="switch"></span>
+                    <span class="list-name">{{propertyType}}</span>
+                </label>
+            </ul>
+        </div>
+    </div>
+</div>

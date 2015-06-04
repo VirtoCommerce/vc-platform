@@ -1,0 +1,34 @@
+﻿<div class="blade-content">
+    <div class="blade-inner">
+        <div class="inner-block">
+            <div class="sub-t __border">Summary</div>
+            <form class="form" name="formScope">
+                <div class="form-group" ng-init="setForm(formScope)">
+                    <label class="form-label">Name</label>
+                    <div class="form-input">
+                        <input ng-model="blade.currentEntity.name" placeholder="Enter name" focus-on required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Description</label>
+                    <div class="form-input">
+                        <textarea class="form-control" cols="30" rows="3" ng-model="blade.currentEntity.description" placeholder="Enter description"></textarea>
+                    </div>
+                </div>
+            </form>
+            <div class="sub-t">Assign permissions</div>
+            <div class="list __items" ng-init="openItems=[]">
+                <div class="list-group" ng-class="{'__opened': openItems[$index]}" ng-click="openItems[$index]=!openItems[$index]" ng-repeat-start="(key,values) in blade.currentEntities">{{key}}</div>
+                <div class="list __sub" ng-repeat-end>
+                    <label class="list-item" ng-repeat="data in values">
+                        <input type="checkbox" ng-model="data.isChecked">
+                        <span class="switch"></span>
+                        <span class="list-name">{{data.name}}</span>
+                        <span class="list-descr">{{data.description}}</span>
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="blade-static __bottom" ng-include="'Scripts/common/templates/create.tpl.html'"></div>

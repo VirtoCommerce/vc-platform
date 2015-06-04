@@ -1,0 +1,45 @@
+{% include 'breadcrumb' %}
+
+<div class="grid">
+
+  <div class="grid-item large--two-thirds push--large--one-sixth">
+
+    <h2>{{ page.title }}</h2>
+
+    <div class="rte">
+      {{ page.content }}
+    </div>
+
+    <div>
+      {% form 'contact' %}
+
+        {% if form.posted_successfully? %}
+          <p class="note form-success">
+            {{ 'contact.form.post_success' | t }}
+          </p>
+        {% endif %}
+
+        {% include 'form-errors-custom' %}
+
+        <div id="contactFormWrapper">
+          <label for="contactFormName" class="hidden-label">{{ 'contact.form.name' | t }}</label>
+          <input type="text" id="contactFormName" name="contact[name]" placeholder="{{ 'contact.form.name' | t }}" autocapitalize="words" value="{% if form.name %}{{ form.name }}{% elsif customer %}{{ customer.name }}{% endif %}">
+
+          <label for="contactFormEmail" class="hidden-label">{{ 'contact.form.email' | t }}</label>
+          <input type="email" id="contactFormEmail" name="contact[email]" placeholder="{{ 'contact.form.email' | t }}" autocorrect="off" autocapitalize="off" value="{% if form.email %}{{ form.email }}{% elsif customer %}{{ customer.email }}{% endif %}">
+
+          <label for="contactFormPhone" class="hidden-label">{{ 'contact.form.phone' | t }}</label>
+          <input type="tel" id="contactFormPhone" name="contact[phone]" placeholder="{{ 'contact.form.phone' | t }}" value="{% if form.phone %}{{ form.phone }}{% elsif customer %}{{ customer.phone }}{% endif %}">
+
+          <label for="contactFormMessage" class="hidden-label">{{ 'contact.form.message' | t }}</label>
+          <textarea rows="10" id="contactFormMessage" name="contact[body]" placeholder="{{ 'contact.form.message' | t }}">{% if form.body %}{{ form.body }}{% endif %}</textarea>
+
+          <input type="submit" class="btn right" value="{{ 'contact.form.send' | t }}">
+        </div>
+
+      {% endform %}
+    </div>
+
+  </div>
+
+</div>

@@ -1,0 +1,46 @@
+﻿<div class="blade-content __medium-wide">
+    <div class="blade-inner">
+        <div class="inner-block">
+            <div class="table-wrapper">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th class="table-col __product-control">
+                                <label class="form-control __checkbox">
+                                    <input type="checkbox" ng-model="blade.selectedAll" ng-change="toggleAll()" />
+                                    <span class="check"></span>
+                                </label>
+                            </th>
+                            <th class="table-col __product-name">Name</th>
+                            <th class="table-col">Catalog</th>
+                            <th class="table-col __product-range">Priority</th>
+                            <th class="table-col __date">Last modified</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="table-item" ng-repeat="data in blade.currentEntities | orderBy:['pricelistId','-priority'] track by data.id" ng-class="{'__selected': data.id === selectedNodeId}">
+                            <td class="table-col">
+                                <label class="form-control __checkbox">
+                                    <input type="checkbox" ng-model="data.selected">
+                                    <span class="check"></span>
+                                </label>
+                            </td>
+                            <td class="table-col __product-name" ng-click='selectNode(data)'>
+                                <span>{{data.name}}</span>
+                            </td>
+                            <td class="table-col" ng-click='selectNode(data)'>
+                                <span>{{data.catalogName}}</span>
+                            </td>
+                            <td class="table-col __product-code" ng-click='selectNode(data)'>
+                                <span>{{data.priority}}</span>
+                            </td>
+                            <td class="table-col" ng-click='selectNode(data)'>
+                                <span class="table-date" am-time-ago="data.modifiedDate"></span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

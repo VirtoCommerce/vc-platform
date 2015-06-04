@@ -1,0 +1,64 @@
+﻿<div class="blade" ng-repeat="blade in blades">
+    <div class="blade-wrapper" va-blade='blade'>
+        <header class="blade-head">
+            <div class="blade-status" ng-class="{'__error': blade.error}">
+                <div class="status-message" ng-if="blade.error">{{blade.error}}</div>
+                <div class="progress-bar" ng-class="{'__loaded': !blade.isLoading}" ng-show="blade.isLoading"></div>
+            </div>
+            <div class="blade-nav">
+                <ul class="menu __inline">
+                    <li class="menu-item">
+                        <button>
+                            <i class="btn-ico fa fa-thumb-tack"></i>
+                        </button>
+                    </li>
+                    <li class="menu-item __minimize" ng-click="bladeRestore()" ng-show="maximized">
+                        <button>
+                            Minimize
+                        </button>
+                    </li>
+                    <li class="menu-item __maximize" ng-click="bladeMaximize()" ng-show="!maximized">
+                        <button>
+                            Maximize
+                        </button>
+                    </li>
+                    <li class="menu-item __close" ng-click="bladeClose()" ng-class="{'__disabled': blade.isClosingDisabled}">
+                        <button ng-disabled="blade.isClosingDisabled">
+                            Close
+                        </button>
+                    </li>
+                </ul>
+            </div>
+            <div class="blade-t" ng-class="{'__secondary': blade.subtitle}">
+                <i class="blade-t_ico fa {{blade.headIcon == 'fa fa-user' ? '__customers' : ''}}" ng-class="blade.headIcon ? blade.headIcon : 'fa-folder'">
+                    <i ng-if="blade.headIcon == 'fa fa-user'"></i>
+                </i>
+                <p class="blade-t_head" ng-if="blade.title" ng-bind="blade.title"></p>
+                <p class="blade-t_subhead" ng-if="blade.subtitle" ng-bind="blade.subtitle"></p>
+            </div>
+            <div class="blade-toolbar">
+                <ul class="menu __inline">
+                    <li class="menu-item" ng-class="{'__disabled': !toolbarCommand.canExecuteMethod(blade)}" ng-click='toolbarCommand.executeMethod(blade)' ng-repeat="toolbarCommand in resolvedToolbarCommands" va-permission="{{toolbarCommand.permission}}">
+                        <button class="menu-btn" ng-disabled="!toolbarCommand.canExecuteMethod(blade)">
+                            <i class="menu-ico" ng-class="toolbarCommand.icon"></i>
+                            {{toolbarCommand.name}}
+                        </button>
+                    </li>
+                </ul>
+            </div>
+            <ul class="menu __inline">
+                <li class="menu-item" ng-include="toolbarCustomTemplate" ng-repeat="toolbarCustomTemplate in resolvedToolbarCustomTemplates"></li>
+            </ul>
+        </header>
+        <div class="loader" ng-show="blade.isLoading">
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+        <div class="blade-container" ng-class="{'__loading': blade.isLoading}">
+            <ng-include src='blade.template'></ng-include>
+        </div>
+    </div>
+</div>

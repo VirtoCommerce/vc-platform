@@ -1,0 +1,39 @@
+﻿<div class="blade-content __medium-wide">
+    <div class="blade-inner">
+        <div class="inner-block">
+            <p class="note">Set the order how payment methods appear sorted in web store. Drag and drop to change the order.</p>
+            <div class="table-wrapper">
+                <table class="table __normal">
+                    <thead>
+                        <tr>
+                            <th class="table-col">Is active</th>
+                            <th class="table-col" colspan="2">Payment method</th>
+                        </tr>
+                    </thead>
+                    <tbody ui-sortable="sortableOptions" ng-model="blade.currentEntities">
+                        <tr class="table-item" ng-repeat="data in blade.currentEntities track by data.code" ng-class="{'__selected': data.code === selectedNodeId}">
+                            <td class="table-col __product-control">
+                                <label class="form-control __checkbox">
+                                    <input type="checkbox" ng-model="data.isActive">
+                                    <span class="check"></span>
+                                </label>
+                            </td>
+                            <td class="table-col __product-control" ng-click='selectNode(data)'>
+                                <div class="product-img">
+                                    <div class="image" style="background-image: url({{data.logoUrl}})" ng-if="data.logoUrl"></div>
+                                    <i class="table-ico fa fa-image" ng-if="!data.logoUrl"></i>
+                                </div>
+                            </td>
+                            <td class="table-col __product-name" ng-click='selectNode(data)'>
+                                <span>
+                                    <div class="table-t">{{data.name}}</div>
+                                    <div class="table-descr">{{data.description}}</div>
+                                </span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

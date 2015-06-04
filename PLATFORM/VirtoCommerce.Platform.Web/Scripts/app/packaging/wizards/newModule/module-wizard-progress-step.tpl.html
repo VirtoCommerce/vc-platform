@@ -1,0 +1,16 @@
+﻿<div class="blade-static __bottom">
+    <button class="btn" ng-click="restarted=true; restart();" ng-disabled="!completed || restarted">
+        <span>Restart</span>
+    </button>
+</div>
+<div class="blade-content">
+    <div class="blade-inner">
+    	<div class="inner-block">
+    		<div class="sub-t">Messages</div>
+		    <div class="log">
+		        <p ng-repeat="x in currentEntity.progressLog" ng-class="{'__info' : x.level==='Info', '__warning': x.level==='Warning', '__debug': x.level==='Debug', '__error': x.level==='Error'}">{{x.message}}</p>
+		    </div>
+		    <p class="text" ng-if="completed">Module installation process completed. <br />Restart the application now or later.</p>
+    	</div>
+    </div>
+</div>

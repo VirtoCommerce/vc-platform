@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<DiagnosticMonitorConfiguration configurationChangePollInterval="PT1M" overallQuotaInMB="4096" xmlns="http://schemas.microsoft.com/ServiceHosting/2010/10/DiagnosticsConfiguration">
+  <DiagnosticInfrastructureLogs />
+  <Directories>
+    <IISLogs container="wad-iis-logfiles" />
+    <CrashDumps container="wad-crash-dumps" />
+  </Directories>
+  <Logs bufferQuotaInMB="1024" scheduledTransferPeriod="PT1M" scheduledTransferLogLevelFilter="Error" />
+  <WindowsEventLog bufferQuotaInMB="1024" scheduledTransferPeriod="PT1M" scheduledTransferLogLevelFilter="Error">
+    <DataSource name="Application!*" />
+  </WindowsEventLog>
+</DiagnosticMonitorConfiguration>

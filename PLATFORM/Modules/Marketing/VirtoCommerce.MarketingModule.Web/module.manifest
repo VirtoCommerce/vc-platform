@@ -1,0 +1,53 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<module>
+    <id>VirtoCommerce.Marketing</id>
+    <version>1.0.0</version>
+    <platformVersion>2.0.0</platformVersion>
+    <dependencies>
+        <dependency id="VirtoCommerce.Core" version="1.0.0" />
+    </dependencies>
+
+    <title>Virto Commerce Marketing</title>
+    <description>UI and API for marketing</description>
+    <authors>
+        <author>Virto Commerce</author>
+    </authors>
+    <owners>
+        <owner>Virto Commerce</owner>
+    </owners>
+    <projectUrl>http://virtocommerce.com/</projectUrl>
+    <iconUrl>http://nuget.org/Content/Images/packageDefaultIcon-50x50.png</iconUrl>
+    <releaseNotes>First version.</releaseNotes>
+    <copyright>Copyright © 2011-2015 Virto Commerce. All rights reserved</copyright>
+    <tags>marketing promotion</tags>
+
+    <assemblyFile>VirtoCommerce.MarketingModule.Web.dll</assemblyFile>
+    <moduleType>VirtoCommerce.MarketingModule.Web.Module, VirtoCommerce.MarketingModule.Web</moduleType>
+    <scripts>
+        <directory virtualPath="$/Scripts" searchPattern="*.js" searchSubdirectories="true" />
+    </scripts>
+
+    <!--<settings>
+    <group>
+      <setting>
+        <name>VirtoCommerce.Marketing.Promotions.Exclusivities</name>
+        <valueType>string</valueType>
+        <defaultValue>None</defaultValue>
+        <title>Promotions exclusivity</title>
+        <description>Exclusivities available for promotion</description>
+        <isArray>true</isArray>
+        <arrayValues>
+          <value>None</value>
+          <value>Global</value>
+          <value>Group</value>
+        </arrayValues>
+      </setting>
+    </group>
+  </settings>-->
+    <permissions>
+        <group name="Marketing">
+            <permission id="marketing:query" name="Browse marketing data" description="Permission to open marketing menu and browse data."/>
+            <permission id="marketing:manage" name="Manage marketing" description="Permission to manage marketing information."/>
+        </group>
+    </permissions>
+</module>

@@ -1,0 +1,19 @@
+﻿<a class="list-block">
+	<i class="list-ico fa" ng-class="{'fa-folder-open': blade.checkFolder(data), 'fa-folder': !blade.checkFolder(data) }"></i>
+	<span class="list-name">{{data.name}}</span>
+	<span class="list-descr">{{data.description}}.</span>
+</a>
+<ul class="list __sub" ng-show="blade.checkFolder(data)">
+	<li class="list-item" ng-click="blade.folderClick(data); $event.stopPropagation();" ng-repeat="data in data.childrenFolders" ng-include="'Modules/$(VirtoCommerce.Marketing)/Scripts/dynamicContent/blades/publishing/placeholders.tpl.html'" context-menu data-target="ipl_menu_{{data.id}}">
+
+	</li>
+	<li ng-repeat="placeholder in data.placeholders" class="list-item" ng-click="blade.addPlaceholder(placeholder); $event.stopPropagation();" ng-if="blade.checkPlaceholder(placeholder)">
+		<a class="list-block">
+			<span class="list-img">
+				<img src="{{placeholder.imageUrl}}" va-showbigimage image="placeholder.imageUrl">
+			</span>
+			<span class="list-name">{{placeholder.name}}</span>
+			<span class="list-descr">{{placeholder.description}}.</span>
+		</a>
+	</li>
+</ul>

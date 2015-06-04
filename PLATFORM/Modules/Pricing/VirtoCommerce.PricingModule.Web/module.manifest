@@ -1,0 +1,38 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<module>
+    <id>VirtoCommerce.Pricing</id>
+    <version>1.0.0</version>
+    <platformVersion>2.0.0</platformVersion>
+    <dependencies>
+        <dependency id="VirtoCommerce.Core" version="1.0.0" />
+    </dependencies>
+
+    <title>Virto Commerce Pricing</title>
+    <description>APIs and UI for pricing managment</description>
+    <authors>
+        <author>Virto Commerce</author>
+    </authors>
+    <owners>
+        <owner>Virto Commerce</owner>
+    </owners>
+    <projectUrl>http://virtocommerce.com/</projectUrl>
+    <iconUrl>http://nuget.org/Content/Images/packageDefaultIcon-50x50.png</iconUrl>
+    <releaseNotes>First version.</releaseNotes>
+    <copyright>Copyright © 2011-2015 Virto Commerce. All rights reserved</copyright>
+    <tags>price pricelist merchandise</tags>
+
+    <assemblyFile>VirtoCommerce.PricingModule.Web.dll</assemblyFile>
+    <moduleType>VirtoCommerce.PricingModule.Web.Module, VirtoCommerce.PricingModule.Web</moduleType>
+    <!--<styles>
+    <directory virtualPath="$/Content/css" searchPattern="*.css" searchSubdirectories="true" />
+  </styles>-->
+    <scripts>
+        <directory virtualPath="$/Scripts" searchPattern="*.js" searchSubdirectories="true" />
+    </scripts>
+    <permissions>
+        <group name="Pricing">
+            <permission id="pricing:query" name="Browse pricing data" description="Permission to open pricing menu and browse data."/>
+            <permission id="pricing:manage" name="Manage pricing data" description="Permission to manage pricing information."/>
+        </group>
+    </permissions>
+</module>

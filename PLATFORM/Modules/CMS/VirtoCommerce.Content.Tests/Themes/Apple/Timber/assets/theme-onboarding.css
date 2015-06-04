@@ -1,0 +1,174 @@
+/*============================================================================
+  This file is loaded in Shopify-built themes and Timber
+    - Handles empty state hover styles with specific markup
+    - Include in your theme with {{ 'theme-onboarding.css' | shopify_asset_url | stylesheet_tag }}
+==============================================================================*/
+@font-face {
+    font-family: 'ProximaNovaLight';
+    src: url( '//cdn.shopify.com/assets/fonts/ProximaNova-Light-webfont.eot' );
+    src: url( '//cdn.shopify.com/assets/fonts/ProximaNova-Light-webfont.eot?#iefix' ) format('embedded-opentype'),
+         url( '//cdn.shopify.com/assets/fonts/ProximaNova-Light-webfont.woff' ) format('woff'),
+         url( '//cdn.shopify.com/assets/fonts/ProximaNova-Light-webfont.ttf' ) format('truetype'),
+         url( '//cdn.shopify.com/assets/fonts/ProximaNova-Light-webfont.svg#ProximaNovaRegular' ) format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+.helper-note {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin-top: -100px;
+  margin-left: -255px;
+  max-width: 510px;
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-size: 13px;
+  background: #31373d;
+  border: none;
+  color: #96a7b6;
+  text-align: left;
+  padding: 30px;
+  z-index: 99999;
+  opacity: 0;
+  -webkit-font-smoothing: initial;
+  filter: alpha(opacity=0);
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  -webkit-transition: opacity 0.3s cubic-bezier(0,0,0.33,1), transform 0.5s cubic-bezier(0.45, 0, 0, 0.95);
+  -moz-transition: opacity 0.3s cubic-bezier(0,0,0.33,1), transform 0.5s cubic-bezier(0.45, 0, 0, 0.95);
+  -ms-transition: opacity 0.3s cubic-bezier(0,0,0.33,1), transform 0.5s cubic-bezier(0.45, 0, 0, 0.95);
+  -o-transition: opacity 0.3s cubic-bezier(0,0,0.33,1), transform 0.5s cubic-bezier(0.45, 0, 0, 0.95);
+  transition: opacity 0.3s cubic-bezier(0,0,0.33,1), transform 0.5s cubic-bezier(0.45, 0, 0, 0.95);
+}
+
+@media only screen and (max-width: 509px) {
+  .helper-note {
+    width: 95%;
+    margin-top: 10%;
+    margin-left: 2.5%;
+    top: 0;
+    left: 0;
+  }
+}
+
+.helper-note p {
+  margin-bottom: 15px;
+  margin-left: 40px;
+  font-size: 13px;
+  line-height: 18px;
+}
+
+.helper-note p:last-child {
+  margin-bottom: 0;
+}
+
+.helper-note h3 {
+  font-family: 'ProximaNovaLight', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-size: 19px;
+  font-weight: normal;
+  color: #fff;
+  margin-left: 40px;
+  text-transform: none;
+}
+
+.helper-note a {
+  color: #fff;
+  text-decoration: underline;
+}
+
+.helper-note a:hover,
+.helper-note a:active {
+  color: #479ccf;
+}
+
+.helper-note a.secondary-action {
+  display: inline-block;
+  line-height: 30px;
+  color: #479ccf;
+}
+
+.helper-note a.secondary-action:hover,
+.helper-note a.secondary-action:focus {
+  opacity: 0.7;
+}
+
+.helper-note a.admin-btn-primary {
+  margin-right: 15px;
+  cursor: pointer;
+  display: inline-block;
+  white-space: normal;
+  min-height: 32px;
+  line-height: 30px;
+  padding: 0 9px;
+  font-size: 13px;
+  border-radius: 4px;
+  text-decoration: none;
+  white-space: nowrap;
+  text-transform: none;
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  vertical-align: middle;
+  background-color: #479ccf;
+  border: 1px solid #2f82b4;
+  color: #fff;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+.helper-note a.admin-btn-primary:hover,
+.helper-note a.admin-btn-primary:focus {
+  opacity: 0.7;
+}
+
+.helper-note a.admin-btn-primary:active {
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1) inset;
+  background-color: #2f82b4;
+  border-color: #24658c;
+}
+
+.helper-note .helper-icon {
+  float: left;
+  margin-top: 4px;
+  width: 24px;
+  height: 24px;
+  background-size: contain;
+  background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDE2IDE2Ij48c3R5bGUgdHlwZT0idGV4dC9jc3MiPmNpcmNsZSwgZWxsaXBzZSwgbGluZSwgcGF0aCwgcG9seWdvbiwgcG9seWxpbmUsIHJlY3QsIHRleHQgeyBmaWxsOiAjOThhN2I1ICFpbXBvcnRhbnQ7IH08L3N0eWxlPjxwYXRoIGZpbGw9IiM1MjYwNjYiIGQ9Ik01IDloLTN2MWgzdi0xem0xLTJoLTR2MWg0di0xem0tNCA1aDN2LTFoLTN2MXptOCAyLjA0NmwtOS4wMDItLjA0Ni0uMDA0LTloMy4wMDZ2LTNoNnYyaDF2LTEuOTU0bC0xLjA4LTEuMDQ2aC02LjkybC0yLjk5OCAyLjk4Ni0uMDAyIDExLjAxNGgxMXYtNGwtMSAxLjA0NnYyem0tNi45OTYtMTEuNjA1djEuNTg2aC0xLjYwOGwxLjYwOC0xLjU4NnptMi45ODcgOS4wNThsMi4yMDYtLjA1OSA2LjgwNS01LjU1NC0xLjY4OS0yLjEwNC02LjgwNSA1LjU1NC0uNTE3IDIuMTYzem0xLjE2OS0xLjcxNWwuODMxLS4xNTYuMTU1LjgzNS0xLjIwMS41NjUuMjE1LTEuMjQ0eiIvPjwvc3ZnPg==");
+  display: inline-block;
+  vertical-align: top;
+}
+
+.helper-section {
+  position: relative;
+  clear: both;
+}
+
+.helper-section:hover .helper-note {
+  opacity: 1;
+  filter: alpha(opacity=100);
+  -webkit-transform: translateY(20px);
+  -moz-transform: translateY(20px);
+  -ms-transform: translateY(20px);
+  -o-transform: translateY(20px);
+  transform: translateY(20px);
+}
+
+.helper-section .helper-content {
+  opacity: 1;
+  filter: alpha(opacity=100);
+  -webkit-transition: opacity 0.25s cubic-bezier(0.67, 0, 1, 1);
+  -moz-transition: opacity 0.25s cubic-bezier(0.67, 0, 1, 1);
+  -ms-transition: opacity 0.25s cubic-bezier(0.67, 0, 1, 1);
+  -o-transition: opacity 0.25s cubic-bezier(0.67, 0, 1, 1);
+  transition: opacity 0.25s cubic-bezier(0.67, 0, 1, 1);
+}
+
+.helper-section:hover .helper-content {
+  opacity: 0.2;
+  filter: alpha(opacity=20);
+  -webkit-transition: opacity 0.3s cubic-bezier(0, 0, 0.33, 1);
+  -moz-transition: opacity 0.3s cubic-bezier(0, 0, 0.33, 1);
+  -ms-transition: opacity 0.3s cubic-bezier(0, 0, 0.33, 1);
+  -o-transition: opacity 0.3s cubic-bezier(0, 0, 0.33, 1);
+  transition: opacity 0.3s cubic-bezier(0, 0, 0.33, 1);
+}

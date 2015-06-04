@@ -1,0 +1,33 @@
+﻿<div class="blade-static __bottom" ng-include="'Scripts/common/templates/ok-cancel2.tpl.html'"></div>
+<div class="blade-content">
+    <div class="blade-inner">
+        <div class="inner-block">
+            <form name="formScope" class="form">
+                <fieldset ng-repeat="groupName in blade.groupNames">
+                    <legend>{{groupName==='undefined'?'General':groupName}}</legend>
+                    <div class="form-group" ng-repeat="data in blade.currentEntities[groupName]">
+                        <label class="form-label">{{data.name}} <a href="" ng-click="editArray(data);" ng-if="data.isArray"><i class="form-ico fa fa-pencil"></i></a></label>
+                        <div class="form-input" ng-class="data.valueType==='Boolean' ? 'switch' : '__number'" ng-if="!(data.allowedValues.length>0) && !data.isArray">
+                            <input required ng-model="data.value" ng-if="data.valueType==='ShortText'" />
+                            <input required ng-model="data.value" type="password" ng-if="data.valueType==='SecureString'">
+                            <input va-number required ng-model="data.value" type="text" min="1" step="1" ng-if="data.valueType==='Integer'">
+                            <input va-number required ng-model="data.value" type="text" min="1" step="1" ng-if="data.valueType==='Decimal'">
+                            <label class="form-label __switch" ng-if="data.valueType==='Boolean'">
+                                <input type="checkbox" ng-model="data.value" />
+                                <span class="switch"></span>
+                            </label>
+                        </div>
+                        <div class="form-input" ng-if="data.allowedValues.length>0 && !data.isArray">
+                            <ui-select ng-model="data.value">
+                                <ui-select-match placeholder="Select ...">{{$select.selected}}</ui-select-match>
+                                <ui-select-choices repeat="x as x in data.allowedValues | filter: $select.search">
+                                    <span ng-bind-html="x | highlight: $select.search"></span>
+                                </ui-select-choices>
+                            </ui-select>
+                        </div>
+                    </div>
+                </fieldset>
+            </form>
+        </div>
+    </div>
+</div>

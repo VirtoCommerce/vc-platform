@@ -1,0 +1,80 @@
+<!-- /snippets/product-list-item.liquid -->
+{% comment %}
+
+  This snippet is used to showcase each product during the loop,
+  'for product in collection.products' in collection.liquid.
+
+  This example has each product on it's own line for all breakpoints.
+
+{% endcomment %}
+
+{% unless current_collection == blank %}
+  {% assign current_collection = collection %}
+{% endunless %}
+
+{% comment %}
+  Check if the product is on sale and set a variable to be used below.
+{% endcomment %}
+{% assign on_sale = false %}
+{% if product.compare_at_price > product.price %}
+  {% assign on_sale = true %}
+{% endif %}
+
+{% comment %}
+  Check if the product is sold out and set a variable to be used below.
+{% endcomment %}
+{% assign sold_out = true %}
+{% if product.available  %}
+  {% assign sold_out = false %}
+{% endif %}
+
+{% comment %}
+  Set a class for sold-out and on-sale items
+{% endcomment %}
+<div class="grid__item{% if sold_out %} sold-out{% endif %}{% if on_sale %} on-sale{% endif %}">
+
+  {% comment %}
+    Link to your product with the 'within: collection' filter for the link to be aware of the collection.
+    This allows you to create collection-based navigation on the product page.
+
+    Results of using 'within: collection':
+    - Instead of a URL with /products/product-handle
+      you would get /collections/collection-handle/products/product-handle
+
+    For more info on navigation within a collection
+      - http://docs.shopify.com/support/your-store/collections/how-to-navigate-within-a-collection
+
+  {% endcomment %}
+  <div class="grid large--display-table">
+    <div class="grid__item large--one-fifth large--display-table-cell medium--one-third">
+      <a href="{{ product.url | within: current_collection }}">
+        <img src="{{ product.featured_image.src | img_url: 'medium' }}" alt="{{ product.featured_image.alt | escape }}" class="grid__image">
+      </a>
+    </div>
+    <div class="grid__item large--three-fifths large--display-table-cell medium--two-thirds">
+      <p class="h6">{{ product.title }}</p>
+      <div class="rte">
+        {% if product.excerpt.size > 0 %}
+          {{ product.excerpt }}
+        {% else %}
+          <p>{{ product.content | strip_html | truncatewords: 30 }}</p>
+        {% endif %}
+      </div>
+    </div>
+    <div class="grid__item large--one-fifth large--display-table-cell medium--two-thirds">
+      {% comment %}
+        You can show a leading 'from' or 'up to' by checking 'product.price_varies'
+        if your variants have different prices.
+      {% endcomment %}
+      {% if product.price_varies %}{{ 'products.general.from' | t }}{% endif %}
+      {{ product.price | money }}
+      {% if sold_out %}
+        <br><strong>{{ 'products.product.sold_out' | t }}</strong>
+      {% endif %}
+      {% if on_sale %}
+        {% assign sale_price =  product.compare_at_price | money %}
+        <br>{{ 'products.product.on_sale_from_html' | t: price: sale_price }}
+      {% endif %}
+    </div>
+  </div>
+</div>

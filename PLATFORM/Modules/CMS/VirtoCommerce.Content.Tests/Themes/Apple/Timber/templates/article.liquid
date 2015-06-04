@@ -1,0 +1,187 @@
+<!-- /templates/article.liquid -->
+{% comment %}
+
+  Comments will not appear right after they are submitted, either to be checked for spam
+  or to await moderation. When a comment is submitted, the browser is redirected to a page
+  that includes the new comment id in its URL.
+    Example: http://shopname.myshopify.com/blogs/news/2022072-my-post?comment=3721372
+
+  More information:
+    - http://docs.shopify.com/themes/liquid-variables/comment
+
+{% endcomment %}
+
+{% comment %}
+  We're going to reference the number of comments below, so let's hold it in a variable.
+{% endcomment %}
+{% assign number_of_comments = article.comments_count %}
+
+{% comment %}
+  If a comment was just submitted and it has no blank fields, we have an extra comment to count.
+{% endcomment %}
+{% if comment and comment.created_at %}
+  {% assign number_of_comments = article.comments_count | plus: 1 %}
+{% endif %}
+
+{% include 'breadcrumb' %}
+
+<div class="grid">
+
+  <article class="grid__item large--three-quarters" itemscope itemtype="http://schema.org/Article">
+
+    <header class="section-header">
+      <div class="section-header__left">
+        <h1>{{ article.title }}</h1>
+        {% capture author %}<strong>{{ article.author }}</strong>{% endcapture %}
+        {% capture date %}<time datetime="{{ article.published_at | date: '%Y-%m-%d' }}">{{ article.published_at | date: format: 'month_day_year' }}</time>{% endcapture %}
+        <p>{{ 'blogs.article.author_on_date_html' | t: author: author, date: date }}</p>
+      </div>
+    </header>
+
+    <div class="rte" itemprop="articleBody">
+      {{ article.content }}
+    </div>
+
+    {% comment %}
+      Show off meta information like comments and tags.
+    {% endcomment %}
+    <ul>
+      {% include 'tags-article' %}
+    </ul>
+
+    {% comment %}
+      Create links to the next and previous articles, if available.
+    {% endcomment %}
+    {% if blog.next_article or blog.previous_article %}
+      <hr>
+      <p class="clearfix">
+        {% if blog.previous_article %}
+          <span class="left">
+            &larr; {{ 'blogs.article.older_post' | t | link_to: blog.previous_article }}
+          </span>
+        {% endif %}
+        {% if blog.next_article %}
+          <span class="right">
+            {{ 'blogs.article.newer_post' | t | link_to: blog.next_article }} &rarr;
+          </span>
+        {% endif %}
+      </p>
+    {% endif %}
+
+    {% if blog.comments_enabled? %}
+      <hr>
+
+      <h3>{{ 'blogs.comments.comments_with_count' | t: count: number_of_comments }}</h3>
+
+      <hr>
+
+      {% comment %}
+        Just like blog.liquid page, define how many comments should be on each page.
+      {% endcomment %}
+      {% paginate article.comments by 5 %}
+        {% comment %}
+          #Comments is required, it is used as an anchor link by Shopify.
+        {% endcomment %}
+        <div id="Comments">
+
+          {% if comment and comment.created_at %}
+            <p class="note form-success">
+              {% if blog.moderated? %}
+                {{ 'blogs.comments.success_moderated' | t }}
+              {% else %}
+                {{ 'blogs.comments.success' | t }}
+              {% endif %}
+            </p>
+          {% endif %}
+
+          {% if number_of_comments > 0 %}
+            <ul>
+              {% comment %}
+                If a comment was just submitted with no blank field, show it.
+              {% endcomment %}
+              {% if comment and comment.created_at %}
+                <li id="{{ comment.id }}" class="comment first{% if article.comments_count == 0 %} last{% endif %}">
+                  {% include 'comment' %}
+                </li>
+              {% endif %}
+
+              {% comment %}
+                Showing the rest of the comments.
+              {% endcomment %}
+              {% for comment in article.comments %}
+                <li id="{{ comment.id }}" class="comment{% unless number_of_comments > article.comments_count %}{% if forloop.first %} first{% endif %}{% endunless %}{% if forloop.last %} last {% endif %}">
+                  {% include 'comment' %}
+                </li>
+              {% endfor %}
+            </ul>
+
+            {% if paginate.pages > 1 %}
+              <hr>
+              <div class="text-center">
+                {% include 'pagination-custom' %}
+              </div>
+            {% endif %}
+
+            <hr>
+
+          {% endif %}
+
+          {% comment %}
+            Comment submission form
+          {% endcomment %}
+          {% form 'new_comment', article %}
+
+            {% comment %}
+              #AddCommentTitle is used simply as an anchor link
+            {% endcomment %}
+            <h3 id="AddCommentTitle">{{ 'blogs.comments.title' | t }}</h3>
+
+            {{ form.errors | default_errors }}
+
+            <div class="grid">
+
+              <div class="grid__item large--one-half">
+                <label for="CommentAuthor" class="label--hidden">{{ 'blogs.comments.name' | t }}</label>
+                <input {% if form.errors contains "author" %} class="error"{% endif %} type="text" name="comment[author]" placeholder="{{ 'blogs.comments.name' | t }}" id="CommentAuthor" value="{{ form.author }}" autocapitalize="words">
+
+                <label for="CommentEmail" class="label--hidden">{{ 'blogs.comments.email' | t }}</label>
+                <input {% if form.errors contains "email" %} class="error"{% endif %} type="email" name="comment[email]" placeholder="{{ 'blogs.comments.email' | t }}" id="CommentEmail" value="{{ form.email }}" autocorrect="off" autocapitalize="off">
+              </div>
+
+              <div class="grid__item">
+                <label for="CommentBody" class="label--hidden">{{ 'blogs.comments.message' | t }}</label>
+                <textarea {% if form.errors contains "body" %} class="error"{% endif %} name="comment[body]" id="CommentBody" placeholder="{{ 'blogs.comments.message' | t }}">{{ form.body }}</textarea>
+              </div>
+
+            </div>
+
+            {% if blog.moderated? %}
+              <p>{{ 'blogs.comments.moderated' | t }}</p>
+            {% endif %}
+
+            <input type="submit" class="btn" value="{{ 'blogs.comments.post' | t }}">
+
+            {% if form.errors %}
+              <script>
+                window.location.hash = '#AddCommentTitle';
+              </script>
+            {% endif %}
+
+            {% if form.posted_successfully? %}
+              <script>
+                window.location.hash = '#Comments';
+              </script>
+            {% endif %}
+
+          {% endform %}
+
+        </div>
+      {% endpaginate %}
+    {% endif %}
+
+  </article>
+
+  <aside class="grid__item large--one-quarter" role="complementary">
+    {% include 'blog-sidebar' %}
+  </aside>
+</div>

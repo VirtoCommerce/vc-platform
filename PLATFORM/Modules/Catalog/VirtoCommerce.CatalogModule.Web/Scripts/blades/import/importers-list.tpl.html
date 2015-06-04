@@ -1,0 +1,15 @@
+﻿<div class="blade-content">
+	<div class="blade-inner">
+		<div class="inner-block">
+			<ul class="list __items">
+                <li class="list-item" ng-click="openBlade(data)" ng-repeat="data in registrationsList track by data.name">
+                    <a class="list-block">
+                        <i class="list-ico {{data.icon}}"></i>
+                        <span class="list-name">{{data.name}}</span>
+                        <span class="list-descr">{{data.description}}.</span>
+                    </a>
+                </li>
+			</ul>
+		</div>
+	</div>
+</div>

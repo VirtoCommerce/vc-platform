@@ -1,0 +1,68 @@
+﻿<div class="blade-content __medium-wide">
+	<div class="blade-inner">
+		<div class="inner-block">
+			<form class="form">
+				<div class="columns clearfix">
+					<div class="column">
+						<div class="form-group">
+							<label class="form-label">Name</label>
+							<div class="form-input">
+								<input focus-on="" required class="form-control" ng-model="blade.currentEntity.name" placeholder="Enter page name" />
+							</div>
+						</div>
+					</div>
+					<div class="column">
+						<div class="form-group">
+							<label class="form-label">Language</label>
+							<div class="form-input">
+								<ui-select ng-model="blade.currentEntity.language">
+									<ui-select-match placeholder="Select...">{{$select.selected}}</ui-select-match>
+									<ui-select-choices repeat="x in blade.languages">
+										<span class="flag flag-{{blade.getFlag(x)}}"></span>
+										<span ng-bind-html="x"></span>
+									</ui-select-choices>
+								</ui-select>
+							</div>
+						</div>
+					</div>
+				</div>
+			</form>
+			<div class="table-wrapper" ng-show="blade.currentEntity.menuLinks.length > 0">
+				<table class="table __normal">
+					<thead>
+						<tr>
+							<th class="table-col">IsActive</th>
+							<th class="table-col">Link Title</th>
+							<th class="table-col">Links to...</th>
+						</tr>
+					</thead>
+					<tbody ui-sortable="sortableOptions" ng-model="blade.currentEntity.menuLinks">
+						<tr class="table-item" ng-repeat="data in blade.currentEntity.menuLinks" ng-class="{'__selected': selected(data.id)}" context-menu data-target="ipl_menu_{{data.id}}" ng-click='blade.selectItem(data.id)'>
+							<td class="table-col">
+								<label class="form-control __checkbox">
+									<input type="checkbox" ng-model="data.isActive">
+									<span class="check"></span>
+								</label>
+								<ul class="menu __context" role="menu" id="ipl_menu_{{data.id}}">
+									<li class="menu-item" ng-click='deleteLink(data)'>
+										<i class="menu-ico fa fa-trash-o"></i> Delete
+									</li>
+								</ul>
+							</td>
+							<td class="table-col">
+								<div data-step="any" class="form-input">
+									<input type="text" ng-model="data.title" required>
+								</div>
+							</td>
+							<td class="table-col">
+								<div class="form-input">
+									<input type="text" ng-model="data.url" required>
+								</div>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+</div>

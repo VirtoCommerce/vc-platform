@@ -1,0 +1,325 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>
+    </ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{2DB42CCF-CF00-4EE1-82AE-E985A0457B05}</ProjectGuid>
+    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>VirtoCommerce.Content.Web</RootNamespace>
+    <AssemblyName>VirtoCommerce.Content.Web</AssemblyName>
+    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
+    <UseIISExpress>true</UseIISExpress>
+    <IISExpressSSLPort />
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="EntityFramework">
+      <HintPath>..\..\..\packages\EntityFramework.6.1.1\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer">
+      <HintPath>..\..\..\packages\EntityFramework.6.1.1\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.Practices.Unity, Version=3.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\packages\Unity.3.5.1404.0\lib\net45\Microsoft.Practices.Unity.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Practices.Unity.Configuration, Version=3.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\packages\Unity.3.5.1404.0\lib\net45\Microsoft.Practices.Unity.Configuration.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Practices.Unity.RegistrationByConvention, Version=3.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\packages\Unity.3.5.1404.0\lib\net45\Microsoft.Practices.Unity.RegistrationByConvention.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Newtonsoft.Json.6.0.8\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Octokit">
+      <HintPath>..\..\..\packages\Octokit.0.6.2\lib\net45\Octokit.dll</HintPath>
+    </Reference>
+    <Reference Include="Omu.ValueInjecter, Version=2.3.3.0, Culture=neutral, PublicKeyToken=c7694541b0ac80e4, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\packages\valueinjecter.2.3.3\lib\net35\Omu.ValueInjecter.dll</HintPath>
+    </Reference>
+    <Reference Include="System.IO.Compression" />
+    <Reference Include="System.IO.Compression.FileSystem" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Net.Http.Formatting, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\packages\Microsoft.AspNet.WebApi.Client.5.2.3\lib\net45\System.Net.Http.Formatting.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.DynamicData" />
+    <Reference Include="System.Web.Entity" />
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Web.Http, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\packages\Microsoft.AspNet.WebApi.Core.5.2.3\lib\net45\System.Web.Http.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.EnterpriseServices" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Default_Theme\Default\assets\arrow_switch.png" />
+    <Content Include="Default_Theme\Default\assets\flags.png" />
+    <Content Include="module.manifest" />
+    <Content Include="Default_Theme\Default\assets\ajaxify.js.liquid" />
+    <Content Include="Default_Theme\Default\assets\ajaxify.scss.liquid" />
+    <Content Include="Default_Theme\Default\assets\checkout.css.liquid" />
+    <Content Include="Default_Theme\Default\assets\default.scss.liquid" />
+    <Content Include="Default_Theme\Default\assets\icons.eot" />
+    <Content Include="Default_Theme\Default\assets\icons.ttf" />
+    <Content Include="Default_Theme\Default\assets\icons.woff" />
+    <Content Include="Default_Theme\Default\assets\shop.js.liquid" />
+    <Content Include="Default_Theme\Default\config\settings_data.json" />
+    <Content Include="Default_Theme\Default\layout\theme.liquid" />
+    <Content Include="Default_Theme\Default\locales\de.json" />
+    <Content Include="Default_Theme\Default\locales\en.default.json" />
+    <Content Include="Default_Theme\Default\locales\es.json" />
+    <Content Include="Default_Theme\Default\locales\fr.json" />
+    <Content Include="Default_Theme\Default\locales\pt-BR.json" />
+    <Content Include="Default_Theme\Default\locales\pt-PT.json" />
+    <Content Include="Default_Theme\Default\snippets\advanced-tag-loop.liquid" />
+    <Content Include="Default_Theme\Default\snippets\ajax-cart-template.liquid" />
+    <Content Include="Default_Theme\Default\snippets\blog-sidebar.liquid" />
+    <Content Include="Default_Theme\Default\snippets\breadcrumb.liquid" />
+    <Content Include="Default_Theme\Default\snippets\collection-grid-item.liquid" />
+    <Content Include="Default_Theme\Default\snippets\collection-list-item.liquid" />
+    <Content Include="Default_Theme\Default\snippets\collection-sidebar.liquid" />
+    <Content Include="Default_Theme\Default\snippets\collection-sorting.liquid" />
+    <Content Include="Default_Theme\Default\snippets\collection-views.liquid" />
+    <Content Include="Default_Theme\Default\snippets\comment.liquid" />
+    <Content Include="Default_Theme\Default\snippets\featured-collection.liquid" />
+    <Content Include="Default_Theme\Default\snippets\featured-row.liquid" />
+    <Content Include="Default_Theme\Default\snippets\footer.liquid" />
+    <Content Include="Default_Theme\Default\snippets\form-errors-custom.liquid" />
+    <Content Include="Default_Theme\Default\snippets\google-fonts.liquid" />
+    <Content Include="Default_Theme\Default\snippets\newsletter-form.liquid" />
+    <Content Include="Default_Theme\Default\snippets\oldIE-js.liquid" />
+    <Content Include="Default_Theme\Default\snippets\open-graph-tags.liquid" />
+    <Content Include="Default_Theme\Default\snippets\pagination-custom.liquid" />
+    <Content Include="Default_Theme\Default\snippets\price-sale.liquid" />
+    <Content Include="Default_Theme\Default\snippets\price.liquid" />
+    <Content Include="Default_Theme\Default\snippets\product-grid-item.liquid" />
+    <Content Include="Default_Theme\Default\snippets\product-list-item.liquid" />
+    <Content Include="Default_Theme\Default\snippets\related-products.liquid" />
+    <Content Include="Default_Theme\Default\snippets\respond.liquid" />
+    <Content Include="Default_Theme\Default\snippets\search-bar.liquid" />
+    <Content Include="Default_Theme\Default\snippets\search-result-grid.liquid" />
+    <Content Include="Default_Theme\Default\snippets\search-result.liquid" />
+    <Content Include="Default_Theme\Default\snippets\site-nav.liquid" />
+    <Content Include="Default_Theme\Default\snippets\slider.liquid" />
+    <Content Include="Default_Theme\Default\snippets\social-sharing.liquid" />
+    <Content Include="Default_Theme\Default\snippets\tags-article.liquid" />
+    <Content Include="Default_Theme\Default\snippets\toggle-filters.liquid" />
+    <Content Include="Default_Theme\Default\snippets\top-header-selector.liquid" />
+    <Content Include="Default_Theme\Default\snippets\twitter-card.liquid" />
+    <Content Include="Default_Theme\Default\templates\404.liquid" />
+    <Content Include="Default_Theme\Default\templates\article.liquid" />
+    <Content Include="Default_Theme\Default\templates\blog.liquid" />
+    <Content Include="Default_Theme\Default\templates\cart.liquid" />
+    <Content Include="Default_Theme\Default\templates\collection.liquid" />
+    <Content Include="Default_Theme\Default\templates\collection.list.liquid" />
+    <Content Include="Default_Theme\Default\templates\customers\account.liquid" />
+    <Content Include="Default_Theme\Default\templates\customers\activate_account.liquid" />
+    <Content Include="Default_Theme\Default\templates\customers\addresses.liquid" />
+    <Content Include="Default_Theme\Default\templates\customers\login.liquid" />
+    <Content Include="Default_Theme\Default\templates\customers\order.liquid" />
+    <Content Include="Default_Theme\Default\templates\customers\register.liquid" />
+    <Content Include="Default_Theme\Default\templates\customers\reset_password.liquid" />
+    <Content Include="Default_Theme\Default\templates\gift_card.liquid" />
+    <Content Include="Default_Theme\Default\templates\index.liquid" />
+    <Content Include="Default_Theme\Default\templates\list-collections.liquid" />
+    <Content Include="Default_Theme\Default\templates\page.contact.liquid" />
+    <Content Include="Default_Theme\Default\templates\page.liquid" />
+    <Content Include="Default_Theme\Default\templates\product.liquid" />
+    <Content Include="Default_Theme\Default\templates\search.liquid" />
+    <Content Include="packages.config">
+      <SubType>Designer</SubType>
+    </Content>
+    <None Include="Web.Debug.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </None>
+    <None Include="Web.Release.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Content\css\pages.css" />
+    <Content Include="Content\css\themes.css" />
+    <Content Include="Default_Theme\Default\assets\arrow-left.svg" />
+    <Content Include="Default_Theme\Default\assets\arrow-right.svg" />
+    <Content Include="Default_Theme\Default\assets\arrow.svg" />
+    <Content Include="Default_Theme\Default\assets\cart.svg" />
+    <Content Include="Default_Theme\Default\assets\collection-view-grid.svg" />
+    <Content Include="Default_Theme\Default\assets\collection-view-list.svg" />
+    <Content Include="Default_Theme\Default\assets\favicon.png" />
+    <Content Include="Default_Theme\Default\assets\hamburger.svg" />
+    <Content Include="Default_Theme\Default\assets\handlebars.min.js" />
+    <Content Include="Default_Theme\Default\assets\icons.svg" />
+    <Content Include="Default_Theme\Default\assets\jquery.flexslider.min.js" />
+    <Content Include="Default_Theme\Default\assets\jquery.zoom.min.js" />
+    <Content Include="Default_Theme\Default\assets\logo.png" />
+    <Content Include="Default_Theme\Default\assets\modernizr.min.js" />
+    <Content Include="Default_Theme\Default\assets\remove.svg" />
+    <Content Include="Default_Theme\Default\assets\respond-proxy.html" />
+    <Content Include="Default_Theme\Default\assets\respond.min.js" />
+    <Content Include="Default_Theme\Default\assets\slide_1.jpg" />
+    <Content Include="Default_Theme\Default\assets\slide_2.jpg" />
+    <Content Include="Scripts\blades\common\content-main.js" />
+    <Content Include="Scripts\blades\common\content-main.tpl.html" />
+    <Content Include="Scripts\blades\themes\add-theme.js" />
+    <Content Include="Scripts\blades\themes\add-theme.tpl.html" />
+    <Content Include="Scripts\blades\themes\edit-asset.js" />
+    <Content Include="Scripts\blades\themes\edit-asset.tpl.html" />
+    <Content Include="Scripts\blades\themes\edit-image-asset.js" />
+    <Content Include="Scripts\blades\themes\edit-image-asset.tpl.html" />
+    <Content Include="Scripts\blades\pages\edit-page.js" />
+    <Content Include="Scripts\blades\pages\edit-page.tpl.html" />
+    <Content Include="Scripts\blades\menu\link-lists.js" />
+    <Content Include="Scripts\blades\menu\link-lists.tpl.html" />
+    <Content Include="Scripts\blades\menu\menu-link-list.js" />
+    <Content Include="Scripts\blades\menu\menu-link-list.tpl.html" />
+    <Content Include="Scripts\blades\pages\pages-list.js" />
+    <Content Include="Scripts\blades\pages\pages-list.tpl.html" />
+    <Content Include="Scripts\blades\themes\theme-asset-list.js" />
+    <Content Include="Scripts\blades\themes\theme-asset-list.tpl.html" />
+    <Content Include="Scripts\blades\themes\themes-list.js" />
+    <Content Include="Scripts\blades\themes\themes-list.tpl.html" />
+    <Content Include="Scripts\content.js" />
+    <Content Include="Scripts\resources\contentResource.js" />
+    <Content Include="Scripts\uuid.js" />
+    <Content Include="Scripts\widgets\menuWidget.js" />
+    <Content Include="Scripts\widgets\menuWidget.tpl.html" />
+    <Content Include="Scripts\widgets\pagesWidget.js" />
+    <Content Include="Scripts\widgets\pagesWidget.tpl.html" />
+    <Content Include="Scripts\widgets\themesWidget.js" />
+    <Content Include="Scripts\widgets\themesWidget.tpl.html" />
+    <Content Include="Web.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Controllers\Api\MenuController.cs" />
+    <Compile Include="Controllers\Api\PagesController.cs" />
+    <Compile Include="Controllers\Api\SyncController.cs" />
+    <Compile Include="Controllers\Api\ThemeController.cs" />
+    <Compile Include="Controllers\PredefinedPermissions.cs" />
+    <Compile Include="Converters\ContentItemConverter.cs" />
+    <Compile Include="Converters\GetPagesCriteriaConverter.cs" />
+    <Compile Include="Converters\GetThemeAssetsCriteriaConverter.cs" />
+    <Compile Include="Converters\MenuLinkConverter.cs" />
+    <Compile Include="Converters\MenuLinkListConverter.cs" />
+    <Compile Include="Converters\PageConverter.cs" />
+    <Compile Include="Converters\SyncAssetConverter.cs" />
+    <Compile Include="Converters\ThemeAssetConverter.cs" />
+    <Compile Include="Converters\ThemeConverter.cs" />
+    <Compile Include="Models\CheckNameResponse.cs" />
+    <Compile Include="Models\ContentItem.cs" />
+    <Compile Include="Models\GetPagesCriteria.cs" />
+    <Compile Include="Models\GetPagesResponse.cs" />
+    <Compile Include="Models\GetThemeAssetsCriteria.cs" />
+    <Compile Include="Models\LoadItemInfo.cs" />
+    <Compile Include="Models\MenuLink.cs" />
+    <Compile Include="Models\MenuLinkList.cs" />
+    <Compile Include="Models\Page.cs" />
+    <Compile Include="Models\PageFolder.cs" />
+    <Compile Include="Models\SyncAssetGroup.cs" />
+    <Compile Include="Models\SyncAsset.cs" />
+    <Compile Include="Models\Theme.cs" />
+    <Compile Include="Models\ThemeAsset.cs" />
+    <Compile Include="Models\ThemeAssetFolder.cs" />
+    <Compile Include="Module.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Utilities\PagesUtility.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Scripts\directives\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\VirtoCommerce.Platform.Core\VirtoCommerce.Platform.Core.csproj">
+      <Project>{f7c9313b-522e-4619-abc9-8c7d4600d6b5}</Project>
+      <Name>VirtoCommerce.Platform.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\VirtoCommerce.Platform.Data\VirtoCommerce.Platform.Data.csproj">
+      <Project>{39afd233-b2f7-4178-817d-0a339c57525d}</Project>
+      <Name>VirtoCommerce.Platform.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\VirtoCommerce.Content.Data\VirtoCommerce.Content.Data.csproj">
+      <Project>{e55e08b5-3af9-467d-8f90-4bef27bafa28}</Project>
+      <Name>VirtoCommerce.Content.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Core\VirtoCommerce.Domain\VirtoCommerce.Domain.csproj">
+      <Project>{67c58a78-ddea-4fa3-a969-1cab582918e4}</Project>
+      <Name>VirtoCommerce.Domain</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != '' And '$(VCModulesOutputDir)' == ''" />
+  <Import Project="$(SolutionDir)\targets\VirtoCommerce.Module.targets" Condition="'$(VCModulesOutputDir)' != ''" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>True</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>54263</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>http://localhost:54263/</IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>False</UseCustomServer>
+          <CustomServerUrl>
+          </CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

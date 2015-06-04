@@ -1,0 +1,44 @@
+﻿<div class="blade-static __bottom" ng-include="'Scripts/common/templates/ok-cancel2.tpl.html'"></div>
+<div class="blade-content">
+    <div class="blade-inner">
+        <div class="inner-block">
+            <form name="formScope" class="form">
+                <fieldset ng-init="setForm(formScope);">
+                    <div class="form-group" ng-repeat="prop in blade.currentEntities as properties">
+                        <label class="form-label" for="">
+                            {{prop.name}}
+                            <a href="" ng-click="editProperty(prop)">
+                                <i class="form-ico fa fa-pencil"></i>
+                            </a>
+                        </label>
+
+                        <div class="form-input" ng-if="prop.valueType === 'ShortText'">
+                            <input ng-model="prop.value" required class="form-control" placeholder="Enter value" />
+                        </div>
+
+                        <div class="form-input" ng-if="prop.valueType === 'LongText'">
+                            <textarea ng-model="prop.value" class="form-control"></textarea>
+                        </div>
+
+                        <div class="form-input" ng-if="prop.valueType === 'Decimal'">
+                            <input money ng-model="prop.value" placeholder="Enter number">
+                        </div>
+
+                        <div class="form-input __calendar" ng-if="prop.valueType === 'DateTime'">
+                            <input placeholder="Choose date" ng-model="prop.value" datepicker-popup="shortDate" is-open="datepickers.str" datepicker-options="dateOptions" close-text="Close" />
+                            <button class="btn" type="button" ng-click="open($event,'str')">
+                                <i class="btn-ico fa fa-calendar"></i>
+                            </button>
+                        </div>
+                        <label class="form-label __switch" ng-if="prop.valueType === 'Boolean'">
+                            <input type="checkbox" ng-model="prop.value">
+                            <span class="switch"></span>
+                        </label>
+                    </div>
+
+                    <div class="text" ng-if="properties.length == 0">None</div>
+                </fieldset>
+            </form>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,30 @@
+﻿<div class="blade-content">
+    <div class="blade-inner">
+        <div class="inner-block">
+            <div class="table-wrapper">
+                <table class="table __normal">
+                    <thead>
+                        <tr>
+                            <th class="table-col __product-img">Is active</th>
+                            <th class="table-col">Name</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="table-item" ng-repeat="data in blade.currentEntities" ng-class="{'__selected': data === blade.selectedData}">
+                            <td class="table-col __product-control">
+                                <label class="form-control __checkbox">
+                                    <input type="checkbox" ng-model="data.isActive">
+                                    <span class="check"></span>
+                                </label>
+                            </td>
+                            <td class="table-col" ng-click='blade.selectedData=data; selectNode(data)'>
+                                <div class="table-t">{{data.name}}</div>
+                                <div class="table-descr">{{data.apiAccountType}}</div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

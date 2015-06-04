@@ -1,0 +1,47 @@
+﻿<nav class="nav-bar">
+    <ul class="menu bar">
+        <li class="menu-item" ng-class="{'__selected': currentMenuItem === menuItem && showSubMenu}" ng-repeat="menuItem in menuItems | filter: {parent: null}" ng-click="selectMenuItem(menuItem)">
+            <a class="menu-link" ng-if="!menuItem.template" href="">
+                <span class="menu-ico" ng-class="menuItem.icon"></span>
+                <span class="name">{{menuItem.title}}</span>
+            </a>
+            <ng-include src='menuItem.template'> </ng-include>
+        </li>
+        <li class="menu-item __logo">
+            <span class="logo-version">{{platformVersion}}</span>
+        </li>
+    </ul>
+    <div class="dropdown" ng-class="{'__opened': showSubMenu}">
+        <a class="dropdown-close" ng-click="showSubMenu = false; counter = 0;">×</a>
+        <div class="dropdown-head" ng-if="!currentMenuItem.headerTemplate">
+            <!-- <ul class="menu __inline">
+                <li class="menu-item">
+                    <a class="menu-link">
+                        <i class="menu-ico fa fa-clock-o"></i>
+                        <span class="menu-name">Everything</span>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a class="menu-link">
+                        <i class="menu-ico fa fa-times-circle"></i>
+                        <span class="menu-name">Clear all recent</span>
+                    </a>
+                </li>
+            </ul> -->
+        </div>
+        <ng-include src='currentMenuItem.headerTemplate'> </ng-include>
+        <div class="dropdown-content">
+            <ul class="list">
+                <li class="list-item" ng-repeat="menuItem in currentMenuItem.children" ng-click="selectMenuItem(menuItem)">
+                    <a class="list-link {{menuItem.icon == 'fa fa-user' ? '__customers' : ''}}" ng-if="!menuItem.template" href="" va-permission="{{menuItem.permission}}">
+                        <i class="list-ico" ng-class="menuItem.icon">
+                            <i ng-if="menuItem.icon == 'fa fa-user'"></i>
+                        </i>
+                        {{menuItem.title}}
+                    </a>
+                    <ng-include src='menuItem.template'> </ng-include>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>

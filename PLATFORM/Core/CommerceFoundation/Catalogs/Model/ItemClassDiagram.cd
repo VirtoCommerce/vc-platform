@@ -1,0 +1,253 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="VirtoCommerce.Foundation.Catalogs.Model.Association" Collapsed="true">
+    <Position X="1.25" Y="2.75" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAIABAAAEhQAAAgAAkAAAEAAYAAAAAAAAAAA=</HashCode>
+      <FileName>Catalogs\Model\Association.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="VirtoCommerce.Foundation.Catalogs.Model.AssociationGroup">
+    <Position X="3.75" Y="1.75" Width="1.75" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <AssociationLine Name="Associations" Type="VirtoCommerce.Foundation.Catalogs.Model.Association">
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="0.006" Y="0.091" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAIAhAAAEhSAAIAQAAAAAEAAEAAAAAAAAAQA=</HashCode>
+      <FileName>Catalogs\Model\AssociationGroup.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="Associations" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="VirtoCommerce.Foundation.Catalogs.Model.EditorialReview">
+    <Position X="1.25" Y="4" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAMAAAAAAoABAAAEwQAAAAACAEAAAAAACAAQAAAAIAA=</HashCode>
+      <FileName>Catalogs\Model\EditorialReview.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="VirtoCommerce.Foundation.Catalogs.Model.Item">
+    <Position X="7" Y="1" Width="2" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <AssociationLine Name="Catalog" Type="VirtoCommerce.Foundation.Catalogs.Model.CatalogBase">
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="0.714" Y="0.05" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <AssociationLine Name="CategoryItemRelations" Type="VirtoCommerce.Foundation.Catalogs.Model.CategoryItemRelation">
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="0.506" Y="0.029" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <AssociationLine Name="ItemPropertyValues" Type="VirtoCommerce.Foundation.Catalogs.Model.ItemPropertyValue">
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="0.308" Y="0.05" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <AssociationLine Name="PropertySet" Type="VirtoCommerce.Foundation.Catalogs.Model.PropertySet">
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="0.256" Y="0.07" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <AssociationLine Name="ItemAssets" Type="VirtoCommerce.Foundation.Catalogs.Model.ItemAsset" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="7.438" Y="5.636" />
+        <Point X="7.438" Y="6.024" />
+        <Point X="5.25" Y="6.024" />
+      </Path>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AMBiYIAAGBABAAQNkAAgoAQhCCEAJAkiBIgAAMEAIhg=</HashCode>
+      <FileName>Catalogs\Model\Item.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Catalog" />
+      <Property Name="PropertySet" />
+    </ShowAsAssociation>
+    <ShowAsCollectionAssociation>
+      <Property Name="AssociationGroups" />
+      <Property Name="CategoryItemRelations" />
+      <Property Name="EditorialReviews" />
+      <Property Name="ItemPropertyValues" />
+      <Property Name="ItemAssets" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="VirtoCommerce.Foundation.Catalogs.Model.ItemAsset">
+    <Position X="3.75" Y="5.5" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAAAhAAAAIABQAAAgBABAAAAAwCAAAAEAAAAAAAAAAE=</HashCode>
+      <FileName>Catalogs\Model\ItemAsset.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="VirtoCommerce.Foundation.Catalogs.Model.ItemRelation">
+    <Position X="12" Y="4" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <AssociationLine Name="ChildItem" Type="VirtoCommerce.Foundation.Catalogs.Model.Item">
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="0.893" Y="-0.005" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <AssociationLine Name="ParentItem" Type="VirtoCommerce.Foundation.Catalogs.Model.Item">
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="0.8" Y="0.027" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAEIAAAACAAAEIRBABAAAAAACAEACAIAAgAAAAAE=</HashCode>
+      <FileName>Catalogs\Model\ItemRelation.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="ChildItem" />
+      <Property Name="ParentItem" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="VirtoCommerce.Foundation.Catalogs.Model.Packaging" Collapsed="true">
+    <Position X="6.5" Y="10.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AACAAAAABAAgAAAAAAAAIEQggAEAAAAkAAAAgIAAABA=</HashCode>
+      <FileName>Catalogs\Model\Packaging.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="VirtoCommerce.Foundation.Catalogs.Model.Catalog" Collapsed="true">
+    <Position X="12" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAABAAAARAABAAAAAAAAAAAAAAAAEAAIAAAAAAAAA=</HashCode>
+      <FileName>Catalogs\Model\Catalog.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="VirtoCommerce.Foundation.Catalogs.Model.CatalogBase" Collapsed="true">
+    <Position X="12" Y="1" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAIAQAAAAQIAAAAIAQAAAAAAAABABAAAAABAAg=</HashCode>
+      <FileName>Catalogs\Model\CatalogBase.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="VirtoCommerce.Foundation.Catalogs.Model.CategoryItemRelation" Collapsed="true">
+    <Position X="11.75" Y="3" Width="1.75" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAIABAgAMgQAAAAABAAAAAAAAAAAAAEiACAg=</HashCode>
+      <FileName>Catalogs\Model\CategoryItemRelation.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="VirtoCommerce.Foundation.Catalogs.Model.ItemPropertyValue" Collapsed="true">
+    <Position X="1.25" Y="1" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAIABAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Catalogs\Model\ItemPropertyValue.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="VirtoCommerce.Foundation.Catalogs.Model.PropertySet" Collapsed="true">
+    <Position X="10.25" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAgAAAACAAAgBAIAAAAIAQBAAAAAAAAAAAAgAAAAAg=</HashCode>
+      <FileName>Catalogs\Model\PropertySet.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="VirtoCommerce.Foundation.Catalogs.Model.TaxCategory" Collapsed="true">
+    <Position X="8.25" Y="10.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAQAAAAAAIAQAAAAAACAAAAAAAAAAAAA=</HashCode>
+      <FileName>Catalogs\Model\TaxCategory.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="VirtoCommerce.Foundation.Catalogs.Model.Bundle" Collapsed="true">
+    <Position X="7.25" Y="9" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Catalogs\Model\Bundle.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="VirtoCommerce.Foundation.Catalogs.Model.DynamicKit" Collapsed="true">
+    <Position X="8.25" Y="8" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Catalogs\Model\DynamicKit.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="VirtoCommerce.Foundation.Catalogs.Model.Package" Collapsed="true">
+    <Position X="8.25" Y="7" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Catalogs\Model\Package.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="VirtoCommerce.Foundation.Catalogs.Model.Product" Collapsed="true">
+    <Position X="6.25" Y="8" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Catalogs\Model\Product.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="VirtoCommerce.Foundation.Catalogs.Model.Sku" Collapsed="true">
+    <Position X="6.25" Y="7" Width="1.5" />
+    <InheritanceLine Type="VirtoCommerce.Foundation.Catalogs.Model.Item" ManuallyRouted="true">
+      <Path>
+        <Point X="8" Y="5.636" />
+        <Point X="8" Y="6.35" />
+        <Point X="7" Y="6.35" />
+        <Point X="7" Y="7" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Catalogs\Model\Sku.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Struct Name="VirtoCommerce.Foundation.Catalogs.Model.ItemRelationType">
+    <Position X="12" Y="7.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAgAAgAAAAAAAAAAAAAAAAEAAAAAAACAA=</HashCode>
+      <FileName>Catalogs\Model\ItemRelationType.cs</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Enum Name="VirtoCommerce.Foundation.Catalogs.Model.AvailabilityRule">
+    <Position X="1.25" Y="9.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AABAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAoAAAAAAA=</HashCode>
+      <FileName>Catalogs\Model\AvailabilityRule.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="VirtoCommerce.Foundation.Catalogs.Model.ReviewState">
+    <Position X="1.25" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAACAAAAAQAAEAAAAAAAAAAAAAAAgAgAAAAAAAAAAA=</HashCode>
+      <FileName>Catalogs\Model\ReviewState.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="VirtoCommerce.Foundation.Catalogs.Model.LengthUnitOfMeasure">
+    <Position X="4.5" Y="10.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAA=</HashCode>
+      <FileName>Catalogs\Model\LengthUnitOfMeasure.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

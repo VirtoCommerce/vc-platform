@@ -1,0 +1,124 @@
+﻿<div class="blade-static">
+    <div class="form-group">
+        <p class="form-count">Count: <span class="count">{{pageSettings.totalItems}}</span></p>
+    </div>
+</div>
+<div class="blade-content __large-wide">
+    <div class="blade-inner">
+        <div class="inner-block">
+            <form name="orderForm" novalidate></form>
+            <div class="table-wrapper">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th class="table-col __product-control">
+                                <label class="form-control __checkbox">
+                                    <input type="checkbox" ng-model="blade.selectedAll" ng-change="checkAll(blade.selectedAll)" />
+                                    <span class="check"></span>
+                                </label>
+                            </th>
+                            <th class="table-col __proudct-img">Item</th>
+                            <th class="table-col">Qty</th>
+                            <th class="table-col">Avail</th>
+                            <th class="table-col">Await</th>
+                            <th class="table-col">Price</th>
+                            <th class="table-col">Discount</th>
+                            <th class="table-col">Tax</th>
+                            <th class="table-col">Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="table-item" ng-repeat-start="data in blade.currentEntity.items" ng-class="{'__selected': data.id === selectedNodeId}" context-menu data-target="col_menu_{{data.id}}" ng-click='selectItem(data)'>
+                            <td class="table-col">
+                                <label class="form-control __checkbox">
+                                    <input type="checkbox" ng-model="data.selected">
+                                    <span class="check"></span>
+                                </label>
+                            </td>
+                            <td class="table-col">
+                                <div class="product-img">
+                                    <div class="image" style="background-image: url({{data.imageUrl}})" ng-if="data.imageUrl" ng-click="openItemDetail(data)"></div>
+                                    <i class="table-ico fa fa-image" ng-if="!data.imageUrl" />
+                                </div>
+                                <ul role="menu" class="menu __context" id="col_menu_{{data.id}}">
+                                    <li class="menu-item" ng-click='edit(data)'>
+                                        <i class="menu-ico fa fa-edit"></i> Manage
+                                    </li>
+                                    <li class="menu-item" ng-click='delete()'>
+                                        <i class="menu-ico fa fa-trash-o"></i> Delete
+                                    </li>
+                                </ul>
+                            </td>
+                            <td class="table-col">
+                                <div class="form-input __mini __number">
+                                    <input va-number required ng-model="data.quantity" min="1" step="1">
+                                </div>
+                            </td>
+                            <td class="table-col">
+                                <span ng-class="{'error': data.avail <= 0}">{{data.avail || 0}}</span>
+                            </td>
+                            <td class="table-col">
+                                <span ng-class="{'error': data.await <= 0 }">{{data.await || 0}}</span>
+                            </td>
+                            <td class="table-col">
+                                <div class="form-input __mini">
+                                    <input name="price" money  required ng-model="data.price" type="text">
+                                </div>
+                            </td>
+                            <td class="table-col">
+                                <div class="form-input __mini">
+                                    <input required money ng-model="data.discountAmount" type="text">
+                                </div>
+                            </td>
+                            <td class="table-col">
+                                <div class="form-input __mini">
+                                    <input required money ng-model="data.tax" type="text">
+                                </div>
+                            </td>
+                            <td class="table-col __total">
+                                <span>{{data._total | number:2 }}</span>
+                            </td>
+                        </tr>
+                        <tr ng-repeat-end class="table-item" ng-class="{'__selected': data.id === selectedNodeId}" context-menu data-target="col_menu_{{data.id}}" ng-click='selectItem(data)'>
+                            <td class="table-head" colspan="9" ng-click="openItemDetail(data)">
+                                {{data.name}}
+                                <ul role="menu" class="menu __context" id="col_menu_{{data.id}}">
+                                    <li class="menu-item" ng-click='edit(data)'>
+                                        <i class="menu-ico fa fa-edit"></i> Manage
+                                    </li>
+                                    <li class="menu-item" ng-click='delete()'>
+                                        <i class="menu-ico fa fa-trash-o"></i> Delete
+                                    </li>
+                                </ul>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <ng-include src="'pagerTemplate.html'"></ng-include>
+            </div>
+            <div class="table-wrapper">
+                <table class="table __collapsed __order-info">
+                    <tr class="table-item">
+                        <td class="table-col">Sub Total</td>
+                        <td class="table-col __price">{{blade.currentEntity._subTotal | number:2}}&nbsp;{{blade.currentEntity.currency}}</td>
+                    </tr>
+                    <tr class="table-item">
+                        <td class="table-col">Discount Total</td>
+                        <td class="table-col __price">{{blade.currentEntity._discountTotal | number:2}}&nbsp;{{blade.currentEntity.currency}}</td>
+                    </tr>
+                    <tr class="table-item">
+                        <td class="table-col">Tax Total</td>
+                        <td class="table-col __price">{{blade.currentEntity._taxTotal | number:2}}&nbsp;{{blade.currentEntity.currency}}</td>
+                    </tr>
+                    <tr class="table-item __total">
+                        <td class="table-col">Total:</td>
+                        <td class="table-col __price">{{blade.currentEntity._total | number:2}}&nbsp;{{blade.currentEntity.currency}}</td>
+                    </tr>
+                </table>
+            </div>
+            <div class="form-group __order-currency">
+             
+            </div>
+        </div>
+    </div>
+</div>

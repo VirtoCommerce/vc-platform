@@ -1,0 +1,17 @@
+﻿<div class="blade-content __gray">
+    <div class="blade-inner">
+        <div class="inner-block">
+            <form class="form" name="formScope">
+                <div class="form-group">
+                    <label class="form-label">Catalog name</label>
+                    <div class="form-input">
+                        <input ng-model="blade.currentEntity.name" placeholder="Enter name" focus-on="" required>
+                    </div>
+                </div>
+            </form>
+
+            <va-widget-container group="catalogDetail" blade="blade" gridster-opts="{width: 396}"></va-widget-container>
+        </div>
+    </div>
+</div>
+<div class="blade-static __bottom" ng-include="'Scripts/common/templates/create.tpl.html'" ng-if="blade.isNew"></div>

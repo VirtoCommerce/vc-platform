@@ -1,0 +1,36 @@
+﻿<div class="blade-content">
+    <div class="blade-inner">
+        <div class="inner-block">
+            <form class="form" name="formScope">
+                <div class="form-group" ng-init="setForm(formScope)">
+                    <label class="form-label">Login</label>
+                    <div class="form-input">
+                        <input ng-model="blade.currentEntity.userName" type="text" placeholder="Enter code" required focus-on="">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Password</label>
+                    <div class="form-input">
+                        <input ng-model="blade.currentEntity.password" required placeholder="Enter new password" type="password">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Repeat password</label>
+                    <div class="form-input">
+                        <input ng-model="blade.currentEntity.newPassword2" required placeholder="Repeat new password" type="password">
+                    </div>
+                </div>
+            </form>
+            <div class="sub-t">Assign roles</div>
+            <div class="list __items">
+                <label class="list-item" ng-repeat="data in blade.currentEntities">
+                    <input type="checkbox" ng-model="data.isChecked">
+                    <span class="switch"></span>
+                    <span class="list-name">{{data.name}}</span>
+                    <span class="list-descr">{{data.description}}</span>
+                </label>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="blade-static __bottom" ng-include="'Scripts/common/templates/create.tpl.html'"></div>

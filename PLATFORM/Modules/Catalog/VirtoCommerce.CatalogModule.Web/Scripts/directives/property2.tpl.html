@@ -1,0 +1,327 @@
+﻿<div>
+
+    <div id='valuePlaceHolder'></div>
+
+    <script type="text/ng-template" id="ShortText.html">
+        <div class="form-input">
+            <input 
+            ng-disabled="currentEntity.isReadOnly"  
+            ng-required="currentEntity.required && !currentEntity.isReadOnly" 
+            ng-model="context.currentPropValues[0].value" 
+            name="{{currentEntity.valueType}}" 
+            placeholder="Please enter short text" 
+            type="text">
+        </div>
+    </script>
+
+    <script type="text/ng-template" id="LongText.html">
+        <div class="form-input">
+            <textarea 
+            ng-disabled="currentEntity.isReadOnly"
+            ng-required="currentEntity.required && !currentEntity.isReadOnly"
+            ng-model="context.currentPropValues[0].value"
+            name="{{currentEntity.valueType}}" 
+            placeholder="Please enter long text" ></textarea>
+        </div>
+    </script>
+
+    <script type="text/ng-template" id="Number.html">
+        <!--<a href="#" editable-number="val.value">{{val.value || "N/A" }}</a>-->
+        <div class="form-input">
+            <input 
+            ng-disabled="currentEntity.isReadOnly"
+            ng-required="currentEntity.required && !currentEntity.isReadOnly"
+            ng-model="context.currentPropValues[0].value" 
+            ng-pattern="/^\d+$/" 
+            ng-class="{'error': context.currentEntity.valueType.$error.pattern}" 
+            name="{{currentEntity.valueType}}" 
+            placeholder="Please enter number" 
+            type="text">
+        </div>
+    </script>
+
+    <script type="text/ng-template" id="DateTime.html">
+        <div class="form-input __calendar">
+            <input 
+            type="text" 
+            datepicker-popup="shortDate"  
+            close-text="Close" 
+            datepicker-options="dateOptions" 
+            min-date="today" 
+            is-open="datepickers.DateTime" 
+            datepicker-popup="shortDate" 
+            ng-model="context.currentPropValues[0].value">
+            <button ng-click="open($event, 'DateTime')" type="button" class="btn">
+                <i class="btn-ico fa fa-calendar"></i>
+            </button>
+        </div>
+    </script>
+
+    <script type="text/ng-template" id="Boolean.html">
+        <label class="form-label __switch">
+            <input type="checkbox" ng-model="context.currentPropValues[0].value">
+            <span class="switch"></span>
+        </label>
+    </script>
+
+    <script type="text/ng-template" id="ShortText-multivalue.html">
+        <tags-input 
+        ng-model="context.currentPropValues"
+        ng-disabled="currentEntity.isReadOnly"
+        min-tags="{{(currentEntity.required && !currentEntity.isReadOnly) ? 1 : undefined}}"
+        add-on-blur="false"
+        name="{{currentEntity.valueType}}"
+        display-property="value"
+        placeholder="Add value">
+        </tags-input>
+    </script>
+    <script type="text/ng-template" id="LongText-multivalue.html">
+        <div class="form-group" ng-repeat="val in context.currentPropValues track by $index">
+            <div class="form-input">
+                <textarea 
+                ng-disabled="currentEntity.isReadOnly"
+                ng-required="currentEntity.required && !currentEntity.isReadOnly"
+                ng-model="val.value"
+                name="{{currentEntity.valueType}}" />
+                <a ng-if="!currentEntity.isReadOnly" ng-click="context.currentPropValues.splice(context.currentPropValues.indexOf(val),1)">remove</a>
+            </div>
+            <a ng-if="!currentEntity.isReadOnly" ng-click="context.currentPropValues.push({value:''})" style="cursor:pointer;">add value</a>
+        </div>
+    </script>
+    <script type="text/ng-template" id="Number-multivalue.html">
+        <tags-input 
+        ng-model="context.currentPropValues"
+        ng-disabled="currentEntity.isReadOnly"
+        min-tags="{{(currentEntity.required && !currentEntity.isReadOnly) ? 1 : undefined}}"
+        add-on-blur="false"
+        allowed-tags-pattern="^[-]?[0-9]+[\.]?[0-9]*$"
+        min-length="1"
+        name="{{currentEntity.valueType}}"
+        display-property="value"
+        placeholder="Add number">
+        </tags-input>
+    </script>
+
+    <script type="text/ng-template" id="ShortText-dictionary.html">
+        <div class="form-input">
+            <ui-select ng-model="context.currentPropValues[0]" ng-disabled="currentEntity.isReadOnly">
+                <ui-select-match placeholder="Select value">{{$select.selected.value}}</ui-select-match>
+                <ui-select-choices repeat="propValue in context.allDictionaryValues | filter: {value: $select.search}">
+                    <span ng-bind-html="propValue.value | highlight: $select.search"></span>
+                </ui-select-choices>
+            </ui-select>
+        </div>
+    </script>
+    <script type="text/ng-template" id="Number-dictionary.html">
+        <div class="form-input">
+            <ui-select ng-model="context.currentPropValues[0]" ng-disabled="currentEntity.isReadOnly">
+                <ui-select-match placeholder="Select value">{{$select.selected.value}}</ui-select-match>
+                <ui-select-choices repeat="propValue in context.allDictionaryValues | filter: {value: $select.search}">
+                    <span ng-bind-html="propValue.value | highlight: $select.search"></span>
+                </ui-select-choices>
+            </ui-select>
+        </div>
+    </script>
+
+
+    <script type="text/ng-template" id="ShortText-dictionary-multivalue.html">
+        <div class="form-input">
+            <ui-select multiple ng-model="context.currentPropValues" ng-disabled="currentEntity.isReadOnly">
+                <ui-select-match placeholder="Select value">{{$item.value}}</ui-select-match>
+                <ui-select-choices repeat="propValue in context.allDictionaryValues | filter: {value: $select.search}">
+                    <span ng-bind-html="propValue.value | highlight: $select.search"></span>
+                </ui-select-choices>
+            </ui-select>
+        </div>
+    </script>
+    <script type="text/ng-template" id="Number-dictionary-multivalue.html">
+        <div class="form-input">
+            <ui-select multiple ng-model="context.currentPropValues[0]" ng-disabled="currentEntity.isReadOnly">
+                <ui-select-match placeholder="Select value">{{$item.value}}</ui-select-match>
+                <ui-select-choices repeat="propValue in context.allDictionaryValues | filter: {value: $select.search}">
+                    <span ng-bind-html="propValue.value | highlight: $select.search"></span>
+                </ui-select-choices>
+            </ui-select>
+        </div>
+    </script>
+
+
+    <script type="text/ng-template" id="ShortText-multilang.html">
+        <div class="form-group" ng-repeat="(language, langValuesGroup) in context.langValuesMap">
+            <div class="form-input __langs">
+                <span class="flag flag-{{language.substr(3).toLowerCase()}}"></span>
+                <input 
+                ng-disabled="currentEntity.isReadOnly"
+                ng-required="currentEntity.required && !currentEntity.isReadOnly"
+                ng-model="langValuesGroup.currentPropValues[0].value"
+                name="{{currentEntity.valueType}}" 
+                placeholder="Please enter value" 
+                type="text">
+            </div>
+        </div>
+    </script>
+    <script type="text/ng-template" id="LongText-multilang.html">
+        <div class="form-group" ng-repeat="(language, langValuesGroup) in context.langValuesMap">
+            <div class="form-input __langs">
+                <span class="flag flag-{{language.substr(3).toLowerCase()}}"></span>
+                <textarea 
+                ng-disabled="currentEntity.isReadOnly" 
+                ng-required="currentEntity.required && !currentEntity.isReadOnly" 
+                ng-model="langValuesGroup.currentPropValues[0].value" 
+                name="{{currentEntity.valueType}}" />
+            </div>
+        </div>
+    </script>
+    <script type="text/ng-template" id="Number-multilang.html">
+        <div class="form-group" ng-repeat="(language, langValuesGroup) in context.langValuesMap">
+            <div class="form-input __number">
+                <input 
+                ng-disabled="currentEntity.isReadOnly" 
+                ng-required="currentEntity.required && !currentEntity.isReadOnly" 
+                ng-model="langValuesGroup.currentPropValues[0].value" 
+                name="{{currentEntity.valueType}}" 
+                placeholder="Please enter number value" 
+                type="text"> 
+            </div>
+        </div>
+    </script>
+
+
+    <script type="text/ng-template" id="ShortText-multivalue-multilang.html">
+        <div class="form-group" ng-repeat="(language, langValuesGroup) in context.langValuesMap">
+            <div class="form-input __langs">
+            <span class="flag flag-{{language.substr(3).toLowerCase()}}"></span>
+                <tags-input 
+                ng-model="langValuesGroup.currentPropValues"
+                ng-disabled="currentEntity.isReadOnly"
+                min-tags="{{(currentEntity.required && !currentEntity.isReadOnly) ? 1 : undefined}}"
+                add-on-blur="false"
+                name="{{currentEntity.valueType}}"
+                display-property="value"
+                placeholder="Add value">
+                </tags-input>
+            </div>
+        </div>
+    </script>
+    <script type="text/ng-template" id="LongText-multivalue-multilang.html">
+        <div class="form-group" ng-repeat="(language, langValuesGroup) in context.langValuesMap">
+            <div class="form-input __langs" ng-repeat="val in langValuesGroup.currentPropValues track by $index">
+                <span class="flag flag-{{language.substr(3).toLowerCase()}}"></span>
+                <textarea 
+                ng-disabled="currentEntity.isReadOnly"
+                ng-required="currentEntity.required && !currentEntity.isReadOnly"
+                ng-model="val.value" />
+                <a ng-if="!currentEntity.isReadOnly" ng-click="langValuesGroup.currentPropValues.splice(langValuesGroup.currentPropValues.indexOf(val),1)">remove</a>
+            </div>
+            <a ng-if="!currentEntity.isReadOnly" ng-click="langValuesGroup.currentPropValues.push({value:'', languageCode:language})" style="cursor:pointer;">add value</a>
+        </div>
+    </script>
+    <script type="text/ng-template" id="Number-multivalue-multilang.html">
+        <div class="form-group" ng-repeat="(language, langValuesGroup) in context.langValuesMap">
+            <div class="form-input __langs">
+            <span class="flag flag-{{language.substr(3).toLowerCase()}}"></span>
+                <tags-input 
+                ng-model="langValuesGroup.currentPropValues"
+                ng-disabled="currentEntity.isReadOnly"
+                min-tags="{{(currentEntity.required && !currentEntity.isReadOnly) ? 1 : undefined}}"
+                add-on-blur="false"
+                allowed-tags-pattern="^[-]?[0-9]+[\.]?[0-9]*$"
+                min-length="1"
+                name="{{currentEntity.valueType}}"
+                display-property="value"
+                placeholder="Add number">
+                </tags-input>
+            </div>
+        </div>
+    </script>
+
+
+    <script type="text/ng-template" id="ShortText-dictionary-multilang.html">
+        <div class="form-group" ng-repeat="(language, langValuesGroup) in context.langValuesMap">
+            <div class="form-input __langs" data-role="input-control">
+                <span class="flag flag-{{language.substr(3).toLowerCase()}}"></span>
+                <ui-select ng-model="langValuesGroup.currentPropValues[0]" ng-disabled="currentEntity.isReadOnly">
+                    <ui-select-match placeholder="Select value">{{$select.selected.value}}</ui-select-match>
+                    <ui-select-choices repeat="propValue in langValuesGroup.allValues | filter: {value: $select.search}">
+                        <span ng-bind-html="propValue.value | highlight: $select.search"></span>
+                    </ui-select-choices>
+                </ui-select>
+            </div>
+        </div>
+    </script>
+    <script type="text/ng-template" id="Number-dictionary-multilang.html">
+        <div class="form-group" ng-repeat="(language, langValuesGroup) in context.langValuesMap">
+            <div class="form-input __langs" data-role="input-control">
+                <span class="flag flag-{{language.substr(3).toLowerCase()}}"></span>
+                <ui-select ng-model="langValuesGroup.currentPropValues[0]" ng-disabled="currentEntity.isReadOnly">
+                    <ui-select-match placeholder="Select value">{{$select.selected.value}}</ui-select-match>
+                    <ui-select-choices repeat="propValue in langValuesGroup.allValues | filter: {value: $select.search}">
+                        <span ng-bind-html="propValue.value | highlight: $select.search"></span>
+                    </ui-select-choices>
+                </ui-select>
+            </div>
+        </div>
+    </script>
+
+
+    <script type="text/ng-template" id="ShortText-dictionary-multivalue-multilang.html">
+        <div class="form-group" ng-repeat="(language, langValuesGroup) in context.langValuesMap">
+            <div class="form-input __langs">
+                <span class="flag flag-{{language.substr(3).toLowerCase()}}"></span>
+                <ui-select multiple ng-model="langValuesGroup.currentPropValues" ng-disabled="currentEntity.isReadOnly">
+                    <ui-select-match placeholder="Select value">{{$item.value}}</ui-select-match>
+                    <ui-select-choices repeat="langValuesGroup in langValuesGroup.allValues | filter: {value: $select.search}">
+                        <span ng-bind-html="langValuesGroup.value | highlight: $select.search"></span>
+                    </ui-select-choices>
+                </ui-select>
+            </div>
+        </div>
+    </script>
+    <script type="text/ng-template" id="Number-dictionary-multivalue-multilang.html">
+        <div class="form-group" ng-repeat="(language, langValuesGroup) in context.langValuesMap">
+            <div class="form-input __langs">
+                <span class="flag flag-{{language.substr(3).toLowerCase()}}"></span>
+                <ui-select multiple ng-model="langValuesGroup.currentPropValues" ng-disabled="currentEntity.isReadOnly">
+                    <ui-select-match placeholder="Select value">{{$item.value}}</ui-select-match>
+                    <ui-select-choices repeat="langValuesGroup in langValuesGroup.allValues | filter: {value: $select.search}">
+                        <span ng-bind-html="langValuesGroup.value | highlight: $select.search"></span>
+                    </ui-select-choices>
+                </ui-select>
+            </div>
+        </div>
+    </script>
+
+    <!--<script type="text/ng-template" id="numberPropType.html">
+        <input ng-if="!currentEntity.multivalue"
+               ng-disabled="currentEntity.isReadOnly"
+               class="form-control"
+               ng-model="currentEntity.values[0].value"
+               type="number"
+               name="{{currentEntity.valueType}}"
+               placeholder="enter number"
+               ng-required="currentEntity.required && !currentEntity.isReadOnly" />
+
+        <tags-input ng-if="currentEntity.multivalue && currentEntity.isReadOnly"
+                    ng-model="currentEntity.values"
+                    allowed-tags-pattern="^[-]?[0-9]+[\.]?[0-9]*$"
+                    min-length="1"
+                    add-on-blur="false"
+                    name="{{currentEntity.valueType}}"
+                    display-property="value"
+                    placeholder="enter number">
+
+        </tags-input>
+    </script>
+    <script type="text/ng-template" id="longTextPropType.html">
+        <span ng-repeat="val in currentEntity.values track by $index">
+            <textarea ng-if="currentEntity.multivalue || $index == 0"
+                      ng-disabled="currentEntity.isReadOnly"
+                      class="form-control"
+                      ng-model="val.value"
+                      name="{{currentEntity.valueType}}"
+                      ng-required="currentEntity.required && !currentEntity.isReadOnly" />
+            <a ng-if="currentEntity.multivalue && $index > 0" ng-click="currentEntity.values.splice(currentEntity.values.indexOf(val.value),1)">remove</a>
+        </span>
+        <a ng-if="currentEntity.multivalue && !currentEntity.isReadOnly" ng-click="currentEntity.values.push({value:''})" style="cursor:pointer;">add value</a>
+    </script>-->
+</div>

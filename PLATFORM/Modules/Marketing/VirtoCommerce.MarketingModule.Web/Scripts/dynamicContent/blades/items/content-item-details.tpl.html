@@ -1,0 +1,154 @@
+﻿<div class="blade-static __bottom" ng-if="blade.isNew">
+	<button class="btn" ng-click="blade.saveChanges()" ng-disabled="formScope.$invalid">
+		<span>Create</span>
+	</button>
+</div>
+
+<div class="blade-content">
+	<div class="blade-inner">
+		<div class="inner-block">
+			<form class="form" name="contextEntityDetailForm">
+				<div class="form-group" ng-init="setForm(contextEntityDetailForm)">
+					<label class="form-label">Content item name:</label>
+					<div class="form-input">
+						<input focus-on="" required class="form-control" ng-model="blade.entity.name" placeholder="Enter content item name" />
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="form-label">Content item description:</label>
+					<div class="form-input">
+						<textarea required cols="60" rows="30" ng-model="blade.entity.description" placeholder="Enter content item description"></textarea>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="form-label">Content type:</label>
+					<div class="form-input">
+						<ui-select ng-model="blade.entity.contentType" ng-disabled="!blade.isNew">
+							<ui-select-match placeholder="Select...">{{$select.selected}}</ui-select-match>
+							<ui-select-choices repeat="x in blade.contentTypes">
+								<span ng-bind-html="x"></span>
+							</ui-select-choices>
+						</ui-select>
+					</div>
+				</div>
+
+				<div class="form-group" ng-if="blade.isPropertyShows('categoryId')">
+					<label class="form-label">Category Id:</label>
+					<div class="form-input">
+						<input focus-on="" required class="form-control" ng-model="blade.entity.categoryId" placeholder="Enter category id" />
+					</div>
+				</div>
+				<div class="form-group" ng-if="blade.isPropertyShows('imageUrl')">
+					<label class="form-label">Image Url:</label>
+					<div class="form-input">
+						<input focus-on="" required class="form-control" ng-model="blade.entity.imageUrl" placeholder="Enter image url" />
+					</div>
+				</div>
+				<div class="form-group" ng-if="blade.isPropertyShows('externalImageUrl')">
+					<label class="form-label">External Image Url:</label>
+					<div class="form-input">
+						<input focus-on="" required class="form-control" ng-model="blade.entity.externalImageUrl" placeholder="Enter external image url" />
+					</div>
+				</div>
+				<div class="form-group" ng-if="blade.isPropertyShows('message')">
+					<label class="form-label">Message:</label>
+					<div class="form-input">
+						<input focus-on="" required class="form-control" ng-model="blade.entity.message" placeholder="Enter message" />
+					</div>
+				</div>
+
+				<div class="form-group" ng-if="blade.isPropertyShows('categoryCode')">
+					<label class="form-label">Category code:</label>
+					<div class="form-input">
+						<input focus-on="" required class="form-control" ng-model="blade.entity.categoryCode" placeholder="Enter category code" />
+					</div>
+				</div>
+				<div class="form-group" ng-if="blade.isPropertyShows('title')">
+					<label class="form-label">Title:</label>
+					<div class="form-input">
+						<input focus-on="" required class="form-control" ng-model="blade.entity.title" placeholder="Enter title" />
+					</div>
+				</div>
+				<div class="form-group" ng-if="blade.isPropertyShows('sortField')">
+					<label class="form-label">Sorting Field:</label>
+					<div class="form-input">
+						<input focus-on="" required class="form-control" ng-model="blade.entity.sortField" placeholder="Enter sorting field" />
+					</div>
+				</div>
+				<div class="form-group" ng-if="blade.isPropertyShows('itemCount')">
+					<label class="form-label">Item count:</label>
+					<div class="form-input __number">
+						<input va-number required ng-model="blade.entity.itemCount" min="1" step="1">
+					</div>
+				</div>
+				<div class="form-group" ng-if="blade.isPropertyShows('newItems')">
+					<label class="form-label">New Items:</label>
+					<label class="form-label __switch">
+						<input type="checkbox" ng-model="blade.entity.newItems" />
+						<span class="switch"></span>
+					</label>
+				</div>
+
+				<div class="form-group" ng-if="blade.isPropertyShows('flashFilePath')">
+					<label class="form-label">Flash File Path:</label>
+					<div class="form-input">
+						<input focus-on="" required class="form-control" ng-model="blade.entity.flashFilePath" placeholder="Enter flash file path" />
+					</div>
+				</div>
+				<div class="form-group" ng-if="blade.isPropertyShows('link1Url')">
+					<label class="form-label">Link 1 Url:</label>
+					<div class="form-input">
+						<input focus-on="" required class="form-control" ng-model="blade.entity.link1Url" placeholder="Enter link 1 url" />
+					</div>
+				</div>
+				<div class="form-group" ng-if="blade.isPropertyShows('link2Url')">
+					<label class="form-label">Link 2 Url:</label>
+					<div class="form-input">
+						<input focus-on="" required class="form-control" ng-model="blade.entity.link2Url" placeholder="Enter link 2 url" />
+					</div>
+				</div>
+				<div class="form-group" ng-if="blade.isPropertyShows('link3Url')">
+					<label class="form-label">Link 3 Url:</label>
+					<div class="form-input">
+						<input focus-on="" required class="form-control" ng-model="blade.entity.link3Url" placeholder="Enter link 3 url" />
+					</div>
+				</div>
+
+				<div class="form-group" ng-if="blade.isPropertyShows('rawHtml')">
+					<label class="form-label">Raw Html:</label>
+					<div class="editable" text-angular ng-model="blade.entity.rawHtml" text-angular-name="myEditor"></div>
+				</div>
+
+			    <div class="form-group" ng-if="blade.isPropertyShows('razorHtml')">
+			        <label class="form-label">Razor Html:</label>
+			        <div class="editable" text-angular ng-model="blade.entity.razorHtml" text-angular-name="myEditor"></div>
+			    </div>
+                
+                <div class="form-group" ng-if="blade.isPropertyShows('liquidHtml')">
+                    <label class="form-label">Razor Html:</label>
+                    <div class="editable" text-angular ng-model="blade.entity.liquidHtml" text-angular-name="myEditor"></div>
+                </div>
+
+			    <div class="form-group" ng-if="blade.isPropertyShows('alternativeText')">
+					<label class="form-label">Alternative Text:</label>
+					<div class="form-input">
+						<input focus-on="" required class="form-control" ng-model="blade.entity.alternativeText" placeholder="Enter alternative text" />
+					</div>
+				</div>
+				<div class="form-group" ng-if="blade.isPropertyShows('targetUrl')">
+					<label class="form-label">Target Url:</label>
+					<div class="form-input">
+						<input focus-on="" required class="form-control" ng-model="blade.entity.targetUrl" placeholder="Enter target url" />
+					</div>
+				</div>
+
+				<div class="form-group" ng-if="blade.isPropertyShows('productCode')">
+					<label class="form-label">Product Code:</label>
+					<div class="form-input">
+						<input focus-on="" required class="form-control" ng-model="blade.entity.productCode" placeholder="Enter product code" />
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>

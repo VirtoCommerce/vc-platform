@@ -1,0 +1,14 @@
+﻿{% assign product = collections.all[banner.productCode] %}
+{% if product != blank %}
+<div class="grid-item large--one-quarter medium--one-third small--one-half on-sale">
+  <a href="{{ product.url }}" class="product-grid-item">
+        <div class="product-grid-image" style="height: 160px;">
+            <div class="product-grid-image--centered">
+                <img src="{{ product.featured_image.src | img_url: image_size }}" alt="{{ product.featured_image.alt | escape }}"/>
+            </div>
+        </div>
+        <p>{{ product.title }}</p>
+      {% include 'price' with product.price %}
+    </a>
+</div>
+{% endif %}

@@ -1,0 +1,66 @@
+{% paginate blog.articles by 5 %}
+
+{% include 'breadcrumb' %}
+
+<div class="grid grid-border">
+
+  <div class="grid-item large--four-fifths">
+    <div class="grid">
+      <div class="grid-item large--ten-twelfths">
+
+        {% if current_tags %}
+          <h1>{{ blog.title | link_to: blog.url }} &mdash; {{ current_tags.first }}</h1>
+        {% else %}
+          <h1>{{ blog.title }}</h1>
+        {% endif %}
+
+        {% for article in blog.articles %}
+
+          <h2><a href="{{ article.url }}">{{ article.title }}</a></h2>
+          <p class="text-light">
+            {% capture date %}<strong><time pubdate datetime="{{ article.published_at | date: '%Y-%m-%d' }}">{{ article.published_at | date: format: 'month_day_year' }}</time></strong>{% endcapture %}
+            {% capture author %}<strong>{{ article.author }}</strong>{% endcapture %}
+            {{ 'blogs.article.author_on_date_html' | t: author: author, date: date }}
+          </p>
+
+          <div class="rte">
+            {% if article.excerpt.size > 0 %}
+              {{ article.excerpt }}
+            {% else %}
+              <p>{{ article.content | strip_html | truncatewords: 100 }}</p>
+            {% endif %}
+          </div>
+
+          <ul>
+            {% if blog.comments_enabled? %}
+            <li>
+              <a href="{{ article.url }}#comments">
+                {{ 'blogs.comments.comments_with_count' | t: count: article.comments_count }}
+              </a>
+            </li>
+            {% endif %}
+
+            {% include 'tags-article' %}
+          </ul>
+
+          <p><a href="{{ article.url }}">{{ 'blogs.article.read_more' | t }} →</a></p>
+
+        {% endfor %}
+
+        {% if paginate.pages > 1 %}
+        <hr>
+        <div class="text-center">
+          {% include 'pagination-custom' %}
+        </div>
+        {% endif %}
+
+      </div>
+    </div>
+  </div>
+
+  <aside class="sidebar grid-item large--one-fifth grid-border--left">
+    {% include 'blog-sidebar' %}
+  </aside>
+</div>
+
+{% endpaginate %}

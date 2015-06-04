@@ -13,6 +13,7 @@
 bin/x64/
 bin/x86/
 build/
+[Bb]in/
 [Bb]in/**/*
 [Oo]bj/
 
@@ -162,8 +163,31 @@ $RECYCLE.BIN/
 /src/Presentation/FrontEnd/StoreWebApp/App_Data/Virto/search
 /src/Presentation/FrontEnd/StoreWebApp/App_Data/Virto/Storage
 /src/Presentation/FrontEnd/StoreWebApp/bin
-#/Tools/ElasticSearch
+/Tools/ElasticSearch/data
+/Tools/ElasticSearch/logs
 /VirtoCommerce.sln.GhostDoc.xml
 /Projects/Initial/src/Presentation/CarombaWebApp/bin
 /Projects/Initial/packages
 /Projects/Initial/src/Presentation/InitialWebApp/bin
+/src/Presentation/WebAdmin/VirtoCommerce.Platform.Web/App_Data/Modules
+/src/Presentation/WebAdmin/VirtoCommerce.Platform.Web/App_Data/SourcePackages
+/src/Presentation/WebAdmin/VirtoCommerce.Platform.Web/App_Data/InstalledPackages
+/src/Presentation/WebAdmin/VirtoCommerce.Platform.Web/bin
+/src/Presentation/WebAdmin/VirtoCommerce.Platform.Web/Content/Uploads
+/src/Presentation/WebAdmin/VirtoCommerce.Platform.Web/Content/Uploads
+/src/Presentation/WebAdmin/Modules/Content
+# VirtoCommerce.PaymentGateways.dll
+Shared/VirtoCommerce/VirtoCommerce.PaymentGateways.dll
+/src/Presentation/WebAdmin/packages
+/artifacts
+/PLATFORM/packages
+/PLATFORM/VirtoCommerce.Platform.Web/App_Data/Modules
+/STOREFRONT/packages
+/STOREFRONT/Website/App_Data/Themes/SampleStore/Default
+/PLATFORM/VirtoCommerce.Platform.Web/App_Data/Assets
+/PLATFORM/VirtoCommerce.Platform.Web/App_Data/Lucene
+/PLATFORM/VirtoCommerce.Platform.Web/App_Data
+/STOREFRONT/Website/App_Data/Themes/AppleStore/Default
+/STOREFRONT/Website/App_Data/Pages
+/PLATFORM/Modules/Catalog/VirtoCommerce.CatalogModule.Test/products.csv
+/PLATFORM/Modules/Marketing/VirtoCommerce.MarketingModule.Data/app.config

@@ -1,0 +1,274 @@
+{
+  "general": {
+    "meta": {
+      "tags": "Tagged \"{{ tags }}\"",
+      "page": "Page {{ page }}"
+    },
+    "404": {
+      "title": "Ooops. Sorry, something has gone wrong.",
+      "hero": "404",
+      "subtext_html": "We can’t find the page that you are looking for. Please try our <a href=\"/\">homepage</a>"
+    },
+    "breadcrumbs": {
+      "home": "Home",
+      "cart": "Cart",
+      "404": "Page Not Found",
+      "search": "Search",
+      "collections_list": "Collections List",
+      "register": "Register",
+      "log_in": "Login",
+      "activate_account": "Activate Account",
+      "account": "My Account",
+      "reset_password": "Reset Password"
+    },
+    "search": {
+      "title": "Search Results",
+      "no_results_html": "No results found for <span>{{ terms }}</span>",
+      "results_html": "Showing results for <span>{{ terms }}</span>",
+      "no_products": "There are no products in this view.",
+      "no_search_html": "No search performed. If you are looking for something, please try our <a href=\"/\">homepage</a>.",
+      "search_form_submit": "Search"
+    }
+  },
+  "blogs": {
+    "article": {
+      "back_link": "Back to posts",
+      "author_meta_html": {
+        "zero": "Posted by <b>{{ author }}</b>",
+        "other": "Posted by <b>{{ author }}</b> in {{ tags }}"
+      }
+    },
+    "comments": {
+      "title": "Post a Comment!",
+      "author_meta": "Posted by {{ author }} on {{ date }}",
+      "success": "Your comment was posted successfully! Thank you!",
+      "success_moderated": "Your comment was posted successfully. We will publish it in a little while, as our blog is moderated.",
+      "name_label": "Your Name",
+      "email_label_html": "Your Email <span>(we never share this)</span>",
+      "email_placeholder": "your@email.ca",
+      "comment_body_label": "Your Comment",
+      "comment_submit": "Post Comment",
+      "comments_with_count": {
+        "one": "{{ count }} Comment",
+        "other": "{{ count }} Comments"
+      }
+    }
+  },
+  "layout": {
+    "general": {
+      "header_cart_title": "My Cart",
+      "header_checkout_text": "Check Out",
+      "menu_title": "Menu"
+    },
+    "onboarding": {
+      "tagline_text": "Head on over to your theme settings to enter a tagline!"
+    },
+    "footer": {
+      "mailing_list_title": "Mailing List",
+      "mailing_list_label": "Your Email Address",
+      "mailing_list_placeholder": "you@email.com",
+      "mailing_list_submit": "Sign Up",
+      "mailing_list_success_message": "Thank you for signing up!",
+      "footer_menu_title": "Quick Links"
+    },
+    "copyright": {
+      "copyright_html": "Copyright &copy; {{ year }}, {{ name }}"
+    }
+  },
+  "cart": {
+    "general": {
+      "title": "My Cart",
+      "continue_link": "« Continue Shopping",
+      "cart_total_html": "Total {{ price }}",
+      "remove": "Remove",
+      "update": "Update",
+      "check_out": "Check Out",
+      "cart_note_placeholder": "Add a note to your order...",
+      "empty_cart_drawer_message": "Your cart is empty.",
+      "empty_cart_message_html": "It appears that your cart is currently empty! <a href=\"/collections/all\">Continue Shopping</a>."
+    },
+    "labels": {
+      "description": "Description",
+      "price": "Price",
+      "quantity": "Qty",
+      "total": "Total"
+    }
+  },
+  "collections": {
+    "general": {
+      "empty_collection_message": "There aren't any products in this collection!"
+    },
+    "collection_sorting": {
+      "collection_sorting_label": "Sort by:",
+      "alphabetical_ascending": "A-Z",
+      "alphabetical_decending": "Z-A",
+      "date_decending": "Newest to Oldest",
+      "date_ascending": "Oldest to Newest",
+      "price_decending": "Price: High to Low",
+      "price_ascending": "Price: Low to High",
+      "featured": "Featured",
+      "best_selling": "Best Selling"
+    },
+    "products": {
+      "from": "From",
+      "sale": "Sale",
+      "sold_out": "Sold Out"
+    },
+    "collection_list": {
+      "collection_list_title": "Product Collections",
+      "items_with_count": {
+        "one": "{{ count }} Product",
+        "other": "{{ count }} Products"
+      }
+    }
+  },
+  "contact": {
+    "form": {
+      "name": "Name:",
+      "email": "Email:",
+      "phone": "Phone:",
+      "message": "Message:",
+      "submit": "Send",
+      "success": "Thanks for contacting us! We'll get back to you as soon as possible."
+    },
+    "errors": {
+      "message_html": "The {{ field }} field {{ error }}",
+      "errors_with_count": {
+        "one": "Oops, sorry. We were unable to submit your inquiry because it contained an error. Please correct the following and submit again",
+        "other": "Oops, sorry. We were unable to submit your inquiry because it contained a few errors. Please correct the following and submit again"
+      }
+    }
+  },
+  "products": {
+    "product": {
+      "on_sale": "Sale",
+      "product_description_label": "Product Description",
+      "second_tab_label": "Shipping Information",
+      "related_products_label": "You might also like...",
+      "add_to_cart": "Add to Cart",
+      "sold_out": "Sold Out",
+      "unavailable": "Unavailable"
+    }
+  },
+  "home_page": {
+    "onboarding": {
+      "no_products_title": "Add a product to the Frontpage collection",
+      "no_products_html": "It takes less than a minute to <a href=\"/admin/products\">add your first product</a> to your store. Make sure you add it to the <strong>Frontpage</strong> collection.",
+      "pick_collection_subtext_html": "You can also pick which collection gets featured in this area or show a banner here by editing your <a href=\"/admin/themes/current/settings\">Theme Settings</a>.",
+      "image_placeholder": "Product image",
+      "test_product_title": "Test Product"
+    }
+  },
+  "customer": {
+    "general": {
+      "return_to_account_link": "Return to Account Details",
+      "or": "or"
+    },
+    "account": {
+      "your_account": "Your Account",
+      "log_in": "Login",
+      "create_account": "Sign Up",
+      "log_out": "Log Out",
+      "orders": "Your Order",
+      "title": "Account Details and Order History",
+      "view_addresses": "Addresses ({{ count }})"
+    },
+    "activate_account": {
+      "title": "Activate Account",
+      "subtext": "Create your password to activate your account.",
+      "password": "Password",
+      "password_confirm": "Confirm Password",
+      "submit": "Activate Account",
+      "cancel": "Decline Invitation"
+    },
+    "addresses": {
+      "title": "Address Book",
+      "default": "(Default)",
+      "add_new": "Add a New Address",
+      "first_name": "First Name",
+      "last_name": "Last Name",
+      "company": "Company",
+      "address1": "Address1",
+      "address2": "Address2",
+      "city": "City",
+      "country": "Country",
+      "province": "Province",
+      "zip": "Postal/Zip Code",
+      "phone": "Phone",
+      "set_default": "Set as default address",
+      "add": "Add Address",
+      "update": "Update Address",
+      "cancel": "Cancel",
+      "edit": "Edit",
+      "delete": "Delete"
+    },
+    "login": {
+      "title": "Login",
+      "email": "Email",
+      "password": "Password",
+      "forgot_password": "Forgot your password?",
+      "forgot_password_submit_button": "Submit",
+      "sign_in": "Sign In",
+      "guest_title": "Guest Login",
+      "guest_submit": "Continue as a guest"
+    },
+    "orders": {
+      "order_number": "Order",
+      "date": "Date",
+      "payment_status": "Payment Status",
+      "fulfillment_status": "Fulfillment Status",
+      "total": "Total",
+      "none": "You haven't placed any orders yet."
+    },
+    "order": {
+      "date": "Placed on {{ date }}",
+      "order_details": "Order Details",
+      "cancelled": "Order Cancelled on {{ date }}",
+      "cancelled_reason": "Reason: {{ reason }}",
+      "billing_address": "Billing Address",
+      "payment_status_html": "<strong>Payment Status:</strong> {{ status }}",
+      "shipping_address": "Shipping Address",
+      "fulfillment_status_html": "<strong>Fulfillment Status:</strong> {{ status }}",
+      "fulfillment_date": "Fulfilled {{ date }}",
+      "item": "Item",
+      "sku": "SKU",
+      "price": "Price",
+      "quantity": "Quantity",
+      "discount": "Discount",
+      "total": "Total"
+    },
+    "recover_password": {
+      "title": "Reset your password",
+      "email": "Email",
+      "cancel": "Cancel",
+      "subtext": "We will send you an email to reset your password."
+    },
+    "reset_password": {
+      "title": "Reset account password",
+      "subtext": "Enter a new password for {{ email }}",
+      "password": "Password",
+      "password_confirm": "Confirm Password",
+      "submit": "Reset Password"
+    },
+    "register": {
+      "title": "Create Account",
+      "first_name": "First Name",
+      "last_name": "Last Name",
+      "email": "Email",
+      "password": "Password",
+      "submit": "Create"
+    }
+  },
+  "gift_cards": {
+    "issued": {
+      "title": "Here's your {{ value }} gift card for {{ shop }}!",
+      "subtext": "Here's your gift card!",
+      "disabled": "Disabled",
+      "expired": "Expired on {{ expiry }}",
+      "active": "Expires on {{ expiry }}",
+      "redeem": "Use this code at checkout to redeem your gift card",
+      "shop_link": "Start shopping",
+      "print": "Print"
+    }
+  }
+}

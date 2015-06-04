@@ -1,0 +1,84 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{F3063592-5FA7-4CE1-A89D-9579AEF64DB6}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>VirtoCommerce.CatalogModule</RootNamespace>
+    <AssemblyName>VirtoCommerce.CatalogModule</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Model\ProductAssociation.cs" />
+    <Compile Include="Model\Catalog.cs" />
+    <Compile Include="Model\CatalogProduct.cs" />
+    <Compile Include="Model\CatalogLanguage.cs" />
+    <Compile Include="Model\Category.cs" />
+    <Compile Include="Model\CategoryLink.cs" />
+    <Compile Include="Model\EditorialReview.cs" />
+    <Compile Include="Model\ILanguageSupport.cs" />
+    <Compile Include="Model\ILinkSupport.cs" />
+    <Compile Include="Model\ISeoSupport.cs" />
+    <Compile Include="Model\ItemAsset.cs" />
+    <Compile Include="Model\ItemAssetType.cs" />
+    <Compile Include="Model\ItemResponseGroup.cs" />
+    <Compile Include="Model\SearchCriteria.cs" />
+    <Compile Include="Model\Property.cs" />
+    <Compile Include="Model\PropertyAttribute.cs" />
+    <Compile Include="Model\PropertyDictionaryValue.cs" />
+    <Compile Include="Model\PropertyDisplayName.cs" />
+    <Compile Include="Model\PropertyType.cs" />
+    <Compile Include="Model\PropertyValue.cs" />
+    <Compile Include="Model\PropertyValueType.cs" />
+    <Compile Include="Model\ResponseGroup.cs" />
+    <Compile Include="Model\SearchResult.cs" />
+    <Compile Include="Model\SeoInfo.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Repositories\IFoundationCatalogRepository.cs" />
+    <Compile Include="Repositories\IFoundationAppConfigRepository.cs" />
+    <Compile Include="Services\ICatalogService.cs" />
+    <Compile Include="Services\ICategoryService.cs" />
+    <Compile Include="Services\ICatalogSearchService.cs" />
+    <Compile Include="Services\IItemService.cs" />
+    <Compile Include="Services\IPropertyService.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\..\Core\CommerceFoundation\CommerceFoundation.csproj">
+      <Project>{e7fc9a51-1b39-4bdc-983a-8a059c5fc58b}</Project>
+      <Name>CommerceFoundation</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

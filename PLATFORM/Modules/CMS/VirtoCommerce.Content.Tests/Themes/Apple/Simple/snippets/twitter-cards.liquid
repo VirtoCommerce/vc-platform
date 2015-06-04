@@ -1,0 +1,28 @@
+{% comment %}
+Twitter Product and Blog Article cards.
+https://dev.twitter.com/docs/cards/types/product-card
+https://dev.twitter.com/docs/cards/types/summary-card
+{% endcomment %}
+ 
+{% if template contains 'product' %}
+  <meta name="twitter:card" content="product" />
+  <meta name="twitter:title" content="{{ product.title | escape }}" />
+  <meta name="twitter:description" content="{{ product.description | strip_html | strip_newlines | truncate: 190, '...' | escape }}" />
+  <meta name="twitter:image" content="http:{{ product.featured_image.src | product_img_url: 'large' }}" />
+  <meta name="twitter:label1" content="PRICE" />
+  <meta name="twitter:data1" content="{% if product.price_varies %}From {% endif %}{{ product.price | money_with_currency | strip_html }}" />
+  <meta name="twitter:label2" content="VENDOR" />
+  <meta name="twitter:data2" content="{{ product.vendor | escape }}" />
+{% elsif template contains 'article' %}
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="{{ article.title | escape }}" />
+  <meta name="twitter:description" content="{{ article.excerpt_or_content | strip_html | truncate: 190, '...' | escape }}" />
+  {% assign img_tag = '<' | append: 'img' %}
+  {% if article.content contains img_tag %}
+    {% assign src = article.content | split: 'src="' %}
+    {% assign src = src[1] | split: '"' | first | remove: 'https:' | remove: 'http:' %}
+    {% if src %}
+    <meta property="twitter:image" content="http:{{ src }}" />
+    {% endif %}
+ {% endif %}
+{% endif %}

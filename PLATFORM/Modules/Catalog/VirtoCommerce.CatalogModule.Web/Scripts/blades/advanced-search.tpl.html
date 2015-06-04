@@ -1,0 +1,136 @@
+﻿<fieldset>
+    <div data-role="input-control" class="input-control text">
+        <input type="text" placeholder="Search keyword..." ng-model="filter.searchKeyword" ui-keyup="{'enter':'blade.refresh()'}">
+        <button tabindex="-1" class="btn-clear" type="button" ng-click="filter.searchKeyword = null;blade.refresh()"></button>
+    </div>
+</fieldset>
+
+<legend>Categories</legend>
+<div class="list-items">
+    <div data-role="input-control" class="input-control checkbox">
+        <label>
+            <input type="checkbox">
+            <span class="check"></span>
+            Electronics
+        </label>
+    </div>
+    <div data-role="input-control" class="input-control checkbox">
+        <label>
+            <input type="checkbox">
+            <span class="check"></span>
+            Apple
+        </label>
+    </div>
+    <div data-role="input-control" class="input-control checkbox">
+        <label>
+            <input type="checkbox">
+            <span class="check"></span>
+            Silver
+        </label>
+    </div>
+
+    <div data-role="input-control" class="input-control">
+        <div data-role="input-control" class="input-control checkbox">
+            <label>
+                <input type="checkbox">
+                <span class="check"></span>
+                Black
+            </label>
+        </div>
+    </div>
+    <div data-role="input-control" class="input-control">
+        <div data-role="input-control" class="input-control checkbox">
+            <label>
+                <input type="checkbox">
+                <span class="check"></span>
+                Blue
+            </label>
+        </div>
+    </div>
+</div>
+
+<legend>Properties</legend>
+<div class="list-selected">
+    <div class="clear">
+        <a href="">Clear all</a>
+    </div>
+    <ul>
+        <li>
+            <span>Binding: Electronics</span>
+            <a class="del">×</a>
+        </li>
+        <li>
+            <span>Brand: Apple</span>
+            <a class="del">×</a>
+        </li>
+        <li>
+            <span>Color: Yellow</span>
+            <a class="del">×</a>
+        </li>
+    </ul>
+</div>
+
+<div class="list-items">
+    <div class="list-i-title">
+        <p class="item-title">Binding</p>
+        <a href="">Show all</a>
+    </div>
+    <div data-role="input-control" class="input-control checkbox">
+        <label>
+            <input type="checkbox">
+            <span class="check"></span>
+            Electronics
+        </label>
+    </div>
+    <div class="list-i-title">
+        <p class="item-title">Brand</p>
+        <a href="">Show all</a>
+    </div>
+    <div data-role="input-control" class="input-control checkbox">
+        <label>
+            <input type="checkbox">
+            <span class="check"></span>
+            Apple
+        </label>
+    </div>
+    <div class="list-i-title">
+        <p class="item-title">Color</p>
+        <a href="">Show all</a>
+    </div>
+    <div data-role="input-control" class="input-control">
+        <div data-role="input-control" class="input-control checkbox">
+            <label>
+                <input type="checkbox">
+                <span class="check"></span>
+                Silver
+            </label>
+        </div>
+    </div>
+    <div data-role="input-control" class="input-control">
+        <div data-role="input-control" class="input-control checkbox">
+            <label>
+                <input type="checkbox">
+                <span class="check"></span>
+                Green
+            </label>
+        </div>
+    </div>
+    <div data-role="input-control" class="input-control">
+        <div data-role="input-control" class="input-control checkbox">
+            <label>
+                <input type="checkbox">
+                <span class="check"></span>
+                Black
+            </label>
+        </div>
+    </div>
+    <div data-role="input-control" class="input-control">
+        <div data-role="input-control" class="input-control checkbox">
+            <label>
+                <input type="checkbox">
+                <span class="check"></span>
+                Blue
+            </label>
+        </div>
+    </div>
+</div>

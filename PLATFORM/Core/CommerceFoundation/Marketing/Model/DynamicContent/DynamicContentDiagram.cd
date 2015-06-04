@@ -1,0 +1,134 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="VirtoCommerce.Foundation.Marketing.Model.DynamicContent.DynamicContentEvaluationContext" BaseTypeListCollapsed="true">
+    <Position X="23.5" Y="1" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>IAAAAAAgACAAAAAABAAAAQAAAAAAABIAAAAAAAAAAAA=</HashCode>
+      <FileName>Marketing\Model\DynamicContent\DynamicContentEvaluationContext.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="VirtoCommerce.Foundation.Marketing.Model.DynamicContent.DynamicContentEvaluator" BaseTypeListCollapsed="true">
+    <Position X="23.5" Y="4" Width="2" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAABAACAAABAAAAABAEAAgEAAAAAAAAQAAAAAAAAAAA=</HashCode>
+      <FileName>Marketing\Model\DynamicContent\DynamicContentEvaluator.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="VirtoCommerce.Foundation.Marketing.Model.DynamicContent.DynamicContentItem">
+    <Position X="17.5" Y="4.75" Width="2" />
+    <Compartments>
+      <Compartment Name="Methods" Collapsed="true" />
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAAAIAAACAAgAAAEAAAAAEQAAQCIAAABAAAAAAACABA=</HashCode>
+      <FileName>Marketing\Model\DynamicContent\DynamicContentItem.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="PropertyValues" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="VirtoCommerce.Foundation.Marketing.Model.DynamicContent.DynamicContentItemProperty">
+    <Position X="20.75" Y="5.25" Width="2.25" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAEAAAJAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Marketing\Model\DynamicContent\DynamicContentItemProperty.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="VirtoCommerce.Foundation.Marketing.Model.DynamicContent.DynamicContentPlace">
+    <Position X="13.75" Y="7.75" Width="2" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAAAIAAAAAAgAAAEAEAAAAQAAAAAAAAAABAAAAAAAAA=</HashCode>
+      <FileName>Marketing\Model\DynamicContent\DynamicContentPlace.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="VirtoCommerce.Foundation.Marketing.Model.DynamicContent.DynamicContentPublishingGroup">
+    <Position X="13.5" Y="0.75" Width="2.75" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <AssociationLine Name="ContentPlaces" Type="VirtoCommerce.Foundation.Marketing.Model.DynamicContent.PublishingGroupContentPlace">
+      <MemberNameLabel ManuallyPlaced="true" ManuallySized="true">
+        <Position X="-0.703" Y="0.322" Height="0.182" Width="1.222" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AQAAIAAAAAAgMAIGEIAAQAQgAAQQAIAGAAAgAEEAAAA=</HashCode>
+      <FileName>Marketing\Model\DynamicContent\DynamicContentPublishingGroup.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="ContentItems" />
+      <Property Name="ContentPlaces" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="VirtoCommerce.Foundation.Marketing.Model.DynamicContent.PropertyValueBase">
+    <Position X="21" Y="0.75" Width="1.75" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAAAABgAEAICAAEEBEQBMCQAAAhkABAAAAAAAAQAkAA=</HashCode>
+      <FileName>Marketing\Model\DynamicContent\PropertyValueBase.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="VirtoCommerce.Foundation.Marketing.Model.DynamicContent.PublishingGroupContentItem">
+    <Position X="17.5" Y="0.75" Width="2.75" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <AssociationLine Name="ContentItem" Type="VirtoCommerce.Foundation.Marketing.Model.DynamicContent.DynamicContentItem">
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="-0.445" Y="0.966" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AACAAAAAAAAAAAAAAAIAAAAEAAAIAAAECAAgAAAAAIA=</HashCode>
+      <FileName>Marketing\Model\DynamicContent\PublishingGroupContentItem.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="ContentItem" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="VirtoCommerce.Foundation.Marketing.Model.DynamicContent.PublishingGroupContentPlace">
+    <Position X="13.5" Y="4.75" Width="2.75" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <AssociationLine Name="ContentPlace" Type="VirtoCommerce.Foundation.Marketing.Model.DynamicContent.DynamicContentPlace">
+      <MemberNameLabel ManuallyPlaced="true" ManuallySized="true">
+        <Position X="-0.667" Y="0.278" Height="0.182" Width="1.15" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AACAAAAgAAAAAAABAAAIAAAAAAIAAAAACBAgAAAAAAA=</HashCode>
+      <FileName>Marketing\Model\DynamicContent\PublishingGroupContentPlace.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="ContentPlace" />
+    </ShowAsAssociation>
+  </Class>
+  <Enum Name="VirtoCommerce.Foundation.Marketing.Model.DynamicContent.DynamicContentType">
+    <Position X="23.5" Y="6.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AIAAAAAAAAAAAAAAARAAAAAAAAAABAAAAAAgAAAIACQ=</HashCode>
+      <FileName>Marketing\Model\DynamicContent\DynamicContentType.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

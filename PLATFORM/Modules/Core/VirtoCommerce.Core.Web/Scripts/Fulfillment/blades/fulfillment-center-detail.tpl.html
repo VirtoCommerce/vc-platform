@@ -1,0 +1,34 @@
+﻿<div class="blade-content __gray">
+    <div class="blade-inner">
+        <div class="inner-block clearfix">
+            <form class="form" name="detailForm">
+                <div class="form-group" ng-init="setForm(detailForm)">
+                    <label class="form-label">Name</label>
+                    <div class="form-input">
+                        <input ng-model="blade.currentEntity.name" focus-on="" required />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Description</label>
+                    <div class="form-input">
+                        <textarea class="form-control" cols="30" rows="3" ng-model="blade.currentEntity.description"></textarea>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Max. releases per pick batch</label>
+                    <div class="form-input __number">
+                        <input va-number required ng-model="blade.currentEntity.maxReleasesPerPickBatch" type="text" min="0" step="1">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Pick delay</label>
+                    <div class="form-input __number">
+                        <input va-number required ng-model="blade.currentEntity.pickDelay" type="text" min="0" step="1">
+                    </div>
+                </div>
+            </form>
+
+            <va-widget-container group="fulfillmentCenterDetail" blade="blade" gridster-opts="{width: 396}"></va-widget-container>
+        </div>
+    </div>
+</div>

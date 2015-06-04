@@ -1,0 +1,385 @@
+<fieldset>
+	<legend>Colors</legend>
+
+	<table>
+		<tr>
+			<td><label for="background_color">Background color</label></td>
+			<td><input name="background_color" class="color" type="text" value="#ffffff" /></td>
+		</tr>
+		<tr>
+			<td><label for="first_color">Primary color<br /><small>Text color, dark borders</small></label></td>
+			<td><input name="first_color" class="color" type="text" value="#333333" /></td>
+		</tr>
+		<tr>
+			<td><label for="second_color">Secondary color<br /><small>Used for links hover states and light text</small></label></td>
+			<td><input name="second_color" class="color" type="text" value="#999999" /></td>
+		</tr>
+		<tr>
+			<td><label for="heading_color">Headings color<br /><small>Used for text headings</small></label></td>
+			<td><input name="heading_color" class="color" type="text" value="#999999" /></td>
+		</tr>
+		<tr>
+			<td><label for="lighter_color">Lighter border color<br /><small>Used for light borders</small></label></td>
+			<td><input name="lighter_color" class="color" type="text" value="#e8e8e8" /></td>
+		</tr>
+		<tr>
+			<td><label for="accent_color">Accent color<br /><small>Sale icon</small></label></td>
+			<td><input name="accent_color" class="color" type="text" value="#ff0000" /></td>
+		</tr>
+	</table>
+
+	<br />
+
+	<h3>Social Media</h3>
+	 <table>
+	  	<tr>
+	    	<td><label for="light_social_icons">Use black social icons<br /></label></td>
+	    	<td><input type="checkbox" id="light_social_icons" name="light_social_icons" /></td>
+	    </tr>
+	 </table>
+</fieldset>
+<fieldset>
+	<legend>Typography</legend>
+	<h3>Fonts</h3>
+	<table>
+		<tr>
+			<td><label for="header_font">Headers</label></td>
+			<td>
+				<select name="header_font" id="header_font">
+					<option value="Times, TimesNewRoman, 'Times New Roman', Baskerville, Georgia, serif" selected="selected">Times</option>
+					<option value="'Helvetica Neue', Arial, Helvetica, Geneva, sans-serif">Helvetica/Arial</option>
+					<option value="'PT Serif', serif">PT Serif</option>
+					<option value="'Cabin', sans-serif">Cabin</option>
+					<option value="'Source Sans Pro', sans-serif">Source Sans Pro</option>
+					<option value="'Open Sans Condensed', sans-serif">Open Sans Condensed</option>
+				</select>
+			</td>
+		</tr>
+		<tr>
+			<td><label for="body_font">Body Font</label></td>
+			<td>
+				<select name="body_font" id="body_font">
+					<option value="'Helvetica Neue', Arial, Helvetica, Geneva, sans-serif" selected="selected">Helvetica/Arial</option>
+					<option value="Times, TimesNewRoman, 'Times New Roman', Baskerville, Georgia, serif" >Times</option>
+					<option value="'Courier New', Courier, 'Lucida Sans Typewriter', 'Lucida Typewriter', monospace" >Courier</option>
+					<option value="'PT Serif', serif">PT Serif</option>
+					<option value="'Source Sans Pro', sans-serif">Source Sans Pro</option>
+					<option value="'Open Sans Condensed', sans-serif">Open Sans Condensed</option>
+				</select>
+			</td>
+		</tr>
+	</table>
+</fieldset>
+<fieldset>
+	<legend>Header</legend>
+	  <h3>Site Title/Logo</h3>
+	  <table>
+	  	<tr>
+	  		<td><label for="use_logo">Use custom logo? <br /><small>Recommended 400px by 172px PNG</small></label></td>
+	  		<td><input type="checkbox" id="use_logo" name="use_logo" /></td>
+	  	</tr>
+	  	<tr>
+	  		<td><label for="logo_image">Upload custom logo</label></td>
+	  		<td><input type="file" name="logo.png" id="logo_image" /></td>
+	  	</tr>
+	  	<tr>
+	  		<td><label for="use_logo_checkout">Use custom logo on checkout? <br /><small>Recommended 400px by 172px PNG</small></label></td>
+	  		<td><input type="checkbox" id="use_logo_checkout" name="use_logo_checkout" /></td>
+	  	</tr>
+	  	<tr>
+	  		<td><label for="logo_image_checkout">Upload custom logo on checkout</label></td>
+	  		<td><input type="file" name="logo_checkout.png" id="logo_image_checkout" /></td>
+	  	</tr>
+	</table>
+
+	<br />
+
+	<h3>Tagline</h3>
+	<table>
+	    <tr>
+	  		<td><label for="use_logo_checkout">Display a tagline in the header of your shop?</label></td>
+	  		<td><input type="checkbox" id="show_tagline" name="show_tagline" /></td>
+	  	</tr>
+	  	<tr>
+			<td><label for="tagline">Store tagline <br /><small>The tagline is displayed to the right of the logo in the header.</small></label></td>
+			<td><input type="text" name="tagline" id="tagline" class="long" /></td>
+	    </tr>
+	  </table>
+
+	<br />
+
+	<h3>Links</h3>
+	<table>
+	  <tr class="horizontal">
+      <th><label for="secondary_menu">Header Links list</label></th>
+      <td>
+          <select class="linklist" name="secondary_menu" />
+      </td>
+    </tr>
+	</table>
+
+	<br />
+
+	<h3>Search</h3>
+	<table>
+	  	<tr>
+	    	<td><label for="light_search_icon">Use white search icon instead</label></td>
+	    	<td><input type="checkbox" id="light_search_icon" name="light_search_icon" /></td>
+	    </tr>
+	  	<tr>
+	    	<td><label for="light_cart_icon">Use white cart icon instead</label></td>
+	    	<td><input type="checkbox" id="light_cart_icon" name="light_cart_icon" /></td>
+	    </tr>
+	</table>
+
+</fieldset>
+
+<fieldset>
+	<legend>Footer</legend>
+
+	<h3>Mailing list signup form</h3>
+	<p><small>You can use Mailchimp or Shopify to handle Email Alerts sign ups. By default, the theme uses Shopify (whenever a user signs up a tagged customer account is created). If you want to use Mailchimp instead, enter your Mailchimp Form Action URL below:</small></p>
+
+	<table>
+	  <tr>
+	    	<td><label for="show_signup_form">Show signup form?</label></td>
+	    	<td><input type="checkbox" id="show_signup_form" name="show_signup_form" /></td>
+	  	</tr>
+		<tr>
+	    	<td><label for="mailchimp_form_action">MailChimp form action URL <a target="_blank" href="http://support.shopify.com/customer/portal/articles/640278">( ? )</a></label></td>
+	    	<td><input type="text" id="mailchimp_form_action" name="mailchimp_form_action" class="long" /></td>
+	  	</tr>
+	</table>
+
+	<br />
+
+	<h3>Footer Content</h3>
+	<p><small>What page content do you want to show in the footer? By default the theme uses the About page.</small></p>
+
+	<table>
+		<tr>
+	    	<td><label for="footer_page">Select page</label></td>
+	    	<td><select class="page" name="footer_page" /></td>
+	    </tr>
+	</table>
+
+	<br />
+
+	<h3>Payment methods:</h3>
+	  <table>
+	    <tr>
+	      <td>
+	        <input type="checkbox" id="show_payment_types" name="show_payment_types" value="1" checked="checked" />
+	        <label for="show_payment_types">Show Credit Card Icons?</label>
+	      </td>
+	    </tr>
+	  </table>
+
+</fieldset>
+<fieldset>
+  <legend>Social Sharing</legend>
+  <table>
+    <tr>
+      <th>
+        <label for="twittercard_handle">Twitter Handle</label>
+      </th>
+      <td><input type="text" id="twittercard_handle" name="twittercard_handle" value="@" /></td>
+    </tr>
+    <tr>
+      <th><label for="social_sharing_products">Enable sharing for products</label></th>
+      <td><input type="checkbox" id="social_sharing_products" name="social_sharing_products" value="1" /></td>
+    </tr>
+    <tr>
+      <th><label for="social_sharing_blog">Enable sharing for blog articles</label></th>
+      <td><input type="checkbox" id="social_sharing_blog" name="social_sharing_blog" value="1" /></td>
+    </tr>
+    <tr>
+      <th>
+        <label for="social_sharing_count">Show shared count</label>
+        <small>Only available for Facebook, Twitter, and Pinterest</small>
+      </th>
+      <td><input type="checkbox" id="social_sharing_count" name="social_sharing_count" value="1" /></td>
+    </tr>
+    <tr>
+      <th><label for="social_sharing_style">Button Style</label></th>
+      <td>
+        <select id="social_sharing_style" name="social_sharing_style">
+          <option value="">Normal</option>
+          <option value="is-large">Large</option>
+          <option value="is-clean">Clean</option>
+        </select>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="2">
+        <table>
+          <tr>
+            <td>
+              <table>
+                <th width="150"><label for="share_facebook">Share on Facebook</label></th>
+                <td><input type="checkbox" id="share_facebook" name="share_facebook" value="1" /></td>
+              </table>
+            </td>
+            <td>
+              <table>
+                <th width="150"><label for="share_twitter">Tweet on Twitter</label></th>
+                <td><input type="checkbox" id="share_twitter" name="share_twitter" value="1" /></td>
+              </table>
+            </td>
+            <td>
+              <table>
+                <th width="150"><label for="share_pinterest">Pin on Pinterest</label></th>
+                <td><input type="checkbox" id="share_pinterest" name="share_pinterest" value="1" /></td>
+              </table>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <table>
+                <th width="150"><label for="share_fancy">Add to Fancy</label></th>
+                <td><input type="checkbox" id="share_fancy" name="share_fancy" value="1" /></td>
+              </table>
+            </td>
+            <td>
+              <table>
+                <th width="150"><label for="share_google">+1 on Google Plus</label></th>
+                <td><input type="checkbox" id="share_google" name="share_google" value="1" /></td>
+              </table>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</fieldset>
+<fieldset>
+ 	<legend>Homepage</legend>
+
+	<h3>Banner Image</h3>
+	<table>
+		<tr>
+			<td><label for="show_frontpage_hero">Show a banner image on the frontpage?</label></td>
+			<td><input type="checkbox" id="show_frontpage_hero" name="show_frontpage_hero" /></td>
+		</tr>
+		<tr>
+			<td><label for="frontpage_hero">Upload banner image<br /><small>Should be at least <strong>950px</strong> wide</small></label></td>
+			<td><input type="file" name="hero.jpg" id="frontpage_hero" /></td>
+		</tr>
+		<tr>
+			<td><label for="banner_url">Banner url<br /><small>Where does the banner image link</small></label></td>
+			<td><input type="text" name="banner_url" id="banner_url" /></td>
+		</tr>
+		<tr>
+			<td><label for="frontpage_hero_alt">Banner ALT text</label></td>
+			<td><input type="text" name="frontpage_hero_alt" id="frontpage_hero_alt" /></td>
+		</tr>
+	</table>
+
+	<br />
+
+	<h3>Featured Products</h3>
+	<table>
+		<tr>
+			<td><label for="frontpage_collection">Frontpage collection <br /><small>Select which product collection will appear on the frontpage of your store.</small></label></td>
+			<td><select class="collection" name="frontpage_collection" /></td>
+		</tr>
+	</table>
+</fieldset>
+
+<fieldset>
+	<legend>Sidebar</legend>
+	<h3>Social Media</h3>
+	<table>
+	    <tr>
+	    	<td><label for="facebook_url">Your Facebook page URL<br /><small>Start the URL with https://</small></label></td>
+	    	<td><input type="text" name="facebook_url" id="facebook_url" /></td>
+	    </tr>
+		<tr>
+			<td><label for="twitter_url">Your Twitter page URL <br /><small>Start the URL with https://</small></label></td>
+			<td><input type="text" name="twitter_url" id="twitter_url" /></td>
+		</tr>
+	    <tr>
+	    	<td><label for="instagram_url">Your Instagram page URL<br /><small>Start the URL with https://</small></label></td>
+	    	<td><input type="text" name="instagram_url" id="instagram_url" /></td>
+	    </tr>
+	    <tr>
+	    	<td><label for="pinterest_url">Your Pinterest page URL<br /><small>Start the URL with https://</small></label></td>
+	    	<td><input type="text" name="pinterest_url" id="pinterest_url" /></td>
+	    </tr>
+	    <tr>
+	    	<td><label for="youtube_url">Your YouTube page URL<br /><small>Start the URL with https://</small></label></td>
+	    	<td><input type="text" name="youtube_url" id="youtube_url" /></td>
+	    </tr>
+	    <tr>
+	    	<td><label for="vimeo_url">Your Vimeo page URL<br /><small>Start the URL with https://</small></label></td>
+	    	<td><input type="text" name="vimeo_url" id="vimeo_url" /></td>
+	    </tr>
+	    <tr>
+	    	<td><label for="flickr_url">Your Flickr page URL<br /><small>Start the URL with https://</small></label></td>
+	    	<td><input type="text" name="flickr_url" id="flickr_url" /></td>
+	    </tr>
+		<tr>
+	    	<td><label for="show_rss">Show RSS?</label></td>
+	    	<td><input type="checkbox" id="show_rss" name="show_rss" /></td>
+	    </tr>
+		<tr>
+	    	<td><label for="main_blog">Your blog </label></td>
+	    	<td><select class="blog" name="main_blog" /></td>
+	    </tr>
+	 </table>
+
+</fieldset>
+
+<fieldset>
+ 	<legend>Product Pages</legend>
+
+	<h3>Page Layout</h3>
+	<table>
+		<tr>
+			<td><label for="product_desc_right">Show product description to the right of the main image?</label></td>
+			<td><input type="checkbox" id="product_desc_right" name="product_desc_right" value="0" /></td>
+		</tr>
+	</table>
+
+	<br />
+
+	<h3>Show an extra tab of info on the product page</h3>
+	<table>
+		<tr>
+	    	<td><label for="show_shipping_tab">Show an extra info tab on the product pages? <small>Great for showing shipping rates</small></label></td>
+	    	<td><input type="checkbox" id="show_shipping_tab" name="show_shipping_tab" /></td>
+	    </tr>
+		<tr>
+	    	<td><label for="shipping_tab_content">Extra tab content<br /><small>Select which page will appear in the shipping tab on the product page.</small></label></td>
+	    	<td><select class="page" name="shipping_tab_content" /></td>
+	  	</tr>
+	</table>
+
+  <br />
+  
+  <h3>Product image enlarge</h3>
+  <table>
+     <tr class="horizontal">
+        <th><label for="image_enlarge">Behaviour for main product image</label></th>
+        <td>
+          <select id="image_enlarge" name="image_enlarge">
+            <option value="lightbox">Lightbox</option>
+            <option value="zoom">Zoom-in</option>
+            <option value="">None</option>
+          </select>
+        </td>
+      </tr>
+  </table>
+
+</fieldset>
+
+<fieldset>
+  <legend>Collection Pages</legend>
+  <h3>Sort</h3>
+  <table>
+    <tr>
+      <td><label for="show_sort_by">Show sort by?</label></td>
+      <td><input type="checkbox" id="show_sort_by" name="show_sort_by" /></td>
+    </tr>
+  </table>
+</fieldset>

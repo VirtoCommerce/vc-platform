@@ -1,0 +1,32 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<module>
+    <id>VirtoCommerce.Search</id>
+    <version>1.0.0</version>
+    <platformVersion>2.0.0</platformVersion>
+    <dependencies>
+        <dependency id="VirtoCommerce.Core" version="1.0.0" />
+    </dependencies>
+
+    <title>Virto Commerce Search</title>
+    <description>APIs and UI for indexed search</description>
+    <authors>
+        <author>Virto Commerce</author>
+    </authors>
+    <owners>
+        <owner>Virto Commerce</owner>
+    </owners>
+    <projectUrl>http://virtocommerce.com/</projectUrl>
+    <iconUrl>http://nuget.org/Content/Images/packageDefaultIcon-50x50.png</iconUrl>
+    <releaseNotes>First version.</releaseNotes>
+    <copyright>Copyright © 2011-2015 Virto Commerce. All rights reserved</copyright>
+    <tags>order system</tags>
+
+    <assemblyFile>VirtoCommerce.SearchModule.Web.dll</assemblyFile>
+    <moduleType>VirtoCommerce.SearchModule.Web.Module, VirtoCommerce.SearchModule.Web</moduleType>
+
+    <permissions>
+        <group name="Search">
+            <permission id="VirtoCommerce.Search:Debug" name="Debug search providers" description="Allows to use low level search API."/>
+        </group>
+    </permissions>
+</module>

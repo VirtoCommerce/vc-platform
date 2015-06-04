@@ -1,0 +1,85 @@
+﻿<div class="blade-static __expanded" ng-if="blade.newPage">
+	<form class="form" name="pageForm">
+		<div class="columns clearfix">
+			<div class="column">
+				<div class="form-group" ng-init="setForm(pageForm)">
+					<label class="form-label">Name</label>
+					<div class="form-input">
+						<input focus-on="" required class="form-control" ng-model="blade.currentEntity.name" placeholder="Enter page name" />
+					</div>
+				</div>
+			</div>
+			<div class="column">
+				<div class="form-group">
+					<label class="form-label">Language</label>
+					<div class="form-input">
+						<ui-select ng-model="blade.currentEntity.language">
+							<ui-select-match placeholder="Select...">{{$select.selected}}</ui-select-match>
+							<ui-select-choices repeat="x in blade.languages">
+								<span class="flag flag-{{blade.getFlag(x)}}"></span>
+								<span ng-bind-html="x"></span>
+							</ui-select-choices>
+						</ui-select>
+					</div>
+				</div>
+			</div>
+		</div>
+	</form>
+</div>
+
+<div class="blade-static __collapsed" ng-if="!blade.newPage">
+	<div class="form-group">
+		<label>{{blade.currentEntity.name}}</label> | <span class="flag flag-{{blade.getFlag(blade.currentEntity.language)}}"></span> <label>{{blade.currentEntity.language}}</label> | Liquid Documentation
+	</div>
+</div>
+
+<div class="blade-content __large-wide" ng-if="blade.isByteContent">
+	<div class="blade-inner">
+		<div class="inner-block">
+			<div class="inner-block">
+				<form class="form">
+					<div ng-show="uploader.isHTML5">
+						<div over-class="bd-blue" nv-file-over="" nv-file-drop="" uploader="uploader" class="drag-area">
+							<div class="drag-content">
+								Drag and drop file here
+							</div>
+						</div>
+					</div>
+
+					<div class="form-input">
+						<input type="file" uploader="uploader" nv-file-select="" style="z-index: 0;" tabindex="-1">
+						<input type="text" style="z-index: 1; cursor: default;" readonly="">
+						<button class="btn __file" type="button" onclick="$('input[type=file]').trigger('click')">
+							<i class="btn-ico fa fa-image"></i>
+						</button>
+					</div>
+				</form>
+
+				<div ng-show="uploader.isUploading">
+					<div class="sub-t">Progress:</div>
+					<div class="progress-bar __aqua" ng-style="{'width': uploader.progress + '%'}"></div>
+				</div>
+
+				<div class="tile-group triple __images-list" ng-if="blade.isImage()">
+					<div class="tile double">
+						<img class="tile-img" ng-src="{{blade.image}}">
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="blade-content __code-editor" style="{{blade.getBladeStyle()}}" ng-if="!blade.isByteContent">
+	<div class="blade-inner" style="padding: 0">
+		<div class="inner-block">
+			<form class="form" style="padding: 0" name="formScope">
+				<div class="form-group">
+					<div class="form-input __expanded">
+						<ui-codemirror required ng-model="blade.currentEntity.content" ui-codemirror-opts="editorOptions"></ui-codemirror>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>

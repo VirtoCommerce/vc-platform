@@ -1,0 +1,41 @@
+-------------------------------------------------------------------------------
+Klarna .NET API
+-------------------------------------------------------------------------------
+
+v4.0.0
+Joakim L <support@klarna.com>
+-------------------------------------------------------------------------------
+
+* Remove ReserveOcrEmail.
+* Convert IncomeExpense to XmlRpcStruct.
+* Add interface for Configuration.
+* Add ClientInfo to Configuration.
+** Using the Optional property enables you to send extra information,
+   e.g. partner name or store name, in the client version.
+* Deprecate Configuration.ApiVersion in favour of ClientInfo.
+
+-------------------------------------------------------------------------------
+
+
+v3.1.0
+Rickard D <support@klarna.com>
+-------------------------------------------------------------------------------
+
+* Implemented GetCustomerNumber, SetCustomerNumber and RemoveCustomerNumber.
+* Removed candice logging support
+-------------------------------------------------------------------------------
+
+
+v3.0.0
+2013-08-01
+Tommy B <support@klarna.com>
+Majid G <support@klarna.com>
+Rickard D <support@klarna.com>
+Christer G <support@klarna.com>
+David K <support@klarna.com>
+-------------------------------------------------------------------------------
+
+The .NET API has been completely refactored in version 3.0.0
+All known issues found in version 2.x.x has been fixed.
+More details can be found in the release notes.
+-------------------------------------------------------------------------------

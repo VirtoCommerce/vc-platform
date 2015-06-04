@@ -1,0 +1,96 @@
+﻿<div class="blade-static __bottom" ng-if="blade.isNew">
+    <button class="btn" ng-click="saveChanges()" ng-disabled="!isValid()">Create</button>
+</div>
+<div class="blade-content __medium-wide">
+    <div class="blade-inner">
+        <div class="inner-block">
+            <form class="form" name="formScope">
+                <fieldset ng-init="setForm(formScope)">
+
+                    <div class="form-group">
+                        <label class="form-label">Promotion name</label>
+                        <div class="form-input">
+                            <input ng-model="blade.currentEntity.name" focus-on="" required placeholder="Please enter name...">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Description</label>
+                        <div class="form-input">
+                            <textarea cols="30" rows="10" ng-model="blade.currentEntity.description" placeholder="Enter description"></textarea>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="columns clearfix">
+                            <div class="column">
+                                <div class="form-group">
+
+                                    <label class="form-label">Store</label>
+                                    <div class="form-input">
+                                        <ui-select ng-model="blade.currentEntity.store" ng-disabled="!blade.isNew" required>
+                                            <ui-select-match placeholder="Select...">{{$select.selected.name}}</ui-select-match>
+                                            <ui-select-choices repeat="store.id as store in stores | filter: { name: $select.search }">
+                                                <span ng-bind-html="store.name | highlight: $select.search"></span>
+                                            </ui-select-choices>
+                                        </ui-select>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="form-label">Start date</label>
+                                    <div class="form-input __calendar">
+                                        <input placeholder="Please choose date..." ng-model="blade.currentEntity.startDate" datepicker-popup="{{format}}" is-open="datepickers.str" datepicker-options="dateOptions" close-text="Close" />
+                                        <button class="btn" type="button" ng-click="open($event,'str')">
+                                            <i class="btn-ico fa fa-calendar"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Usage limit</label>
+                                    <div class="form-input __number">
+                                        <input va-number required ng-model="blade.currentEntity.maxUsageCount" min="0" step="1">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="column">
+                                <div class="form-group">
+                                    <label class="form-label">Coupons</label>
+                                    <div class="form-input">
+                                        <tags-input ng-model="blade.currentEntity.coupons"
+                                                    add-on-blur="false"
+                                                    placeholder="Enter coupon codes...">
+                                        </tags-input>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Expiration date</label>
+                                    <div class="form-input __calendar">
+                                        <input placeholder="Please choose date..." ng-model="blade.currentEntity.endDate" datepicker-popup="{{format}}" is-open="datepickers.end" datepicker-options="dateOptions" close-text="Close" />
+                                        <button class="btn" type="button" ng-click="open($event,'end')">
+                                            <i class="btn-ico fa fa-calendar"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Per customer limit</label>
+                                    <div class="form-input __number">
+                                        <input va-number required ng-model="blade.currentEntity.maxPersonalUsageCount" min="0" step="1">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
+
+                <!--ui-validate=" 'promotionExpressionValidator(blade.isExpresionValid)' " ng-model="blade.isExpresionValid"-->
+                <fieldset ng-if="blade.currentEntity.type==='DynamicPromotion'">
+                    <legend>Promotion conditions</legend>
+                    <div class="dynamic-expression">
+                        <va-dynamic-expression-tree ng-controller="virtoCommerce.marketingModule.promotionExpressionsController" source="blade.currentEntity.dynamicExpression"></va-dynamic-expression-tree>
+                    </div>
+                </fieldset>
+            </form>
+
+            <va-widget-container group="promotionDetail" blade="blade" gridster-opts="{width: 526}"></va-widget-container>
+        </div>
+    </div>
+</div>

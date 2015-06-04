@@ -1,0 +1,46 @@
+﻿<div class="blade-content __medium-wide">
+    <div class="blade-inner">
+        <div class="inner-block">
+            <div class="table-wrapper" ng-if="blade.currentEntity.items.length > 0">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th class="table-col">
+                                <label class="form-control __checkbox">
+                                    <input type="checkbox" ng-model="selectedAll" ng-change="checkAll(selectedAll)" />
+                                    <span class="check"></span>
+                                </label>
+                            </th>
+                            <th class="table-col">Name</th>
+                            <th class="table-col">Price</th>
+                            <th class="table-col">Qty.</th>
+                            <th class="table-col">Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="table-item" ng-repeat="data in blade.currentEntity.items" ng-class="{'selected': data === selectedItem}">
+                            <td class="table-col">
+                                <label class="form-control __checkbox">
+                                    <input type="checkbox" ng-model="data.selected">
+                                    <span class="check"></span>
+                                </label>
+                            </td>
+                            <td class="table-col __product-name">
+                                <span title="{{data.name}}">{{data.name}}</span>
+                            </td>
+                            <td class="table-col">
+                                <span>{{data.placedPrice}}</span>
+                            </td>
+                            <td class="table-col">
+                                {{data.quantity}}
+                            </td>
+                            <td class="table-col">
+                                {{data.extendedPrice}}
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

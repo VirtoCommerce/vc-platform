@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="app">
+    <head>
+        <meta charset="UTF-8">
+        <title>Metro Theme | Refactoring</title>
+
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+        <!-- Google fonts -->
+        <link href='http://fonts.googleapis.com/css?family=Exo+2:400,300,500,600,400italic&amp;subset=latin,cyrillic' rel='stylesheet' type='text/css'>
+
+        <link rel="stylesheet" href="css/reset.css">
+        <link rel="stylesheet" href="ui-grid/ui-grid-unstable.css">
+        <link rel="stylesheet" href="css/base-modules.css">
+        <link rel="stylesheet" href="css/project-modules.css">
+        <link rel="stylesheet" href="css/cosmetic.css">
+        <link rel="stylesheet" href="css/modules/order.css">
+        <link rel="stylesheet" href="css/modules/dynamic-expression.css">
+        <link rel="stylesheet" href="chosen/chosen.css">
+
+        <!-- Gridster CSS -->
+        <link rel="stylesheet" href="css/gridster.css">
+
+    </head>
+    <body>
+
+        <div id="layout">
+            <nav class="nav-bar">
+                <ul class="menu bar">
+                    <li class="menu-item __logo">
+                        <span class="logo-img">Virto Commerce</span>
+                        <span class="logo-version">1.0.0</span>
+                    </li>
+                    <li class="menu-item __home">
+                        <a class="menu-link" href="#">
+                            <span class="menu-ico fa fa-home"></span>
+                            Home
+                        </a>
+                    </li>
+                    <li class="menu-item">
+                        <a class="menu-link" href="#">
+                            <span class="menu-ico fa fa-comments"></span>
+                            Notifications
+                        </a>
+                    </li>
+                    <li class="menu-item">
+                        <a class="menu-link" href="#">
+                            <span class="menu-ico fa fa-search"></span>
+                            Browse
+                        </a>
+                    </li>
+                    <li class="menu-item">
+                        <a class="menu-link" href="#">
+                            <span class="menu-ico fa fa-signal"></span>
+                            Activity
+                        </a>
+                    </li>
+                </ul>
+                <div class="dropdown">
+                    <a class="dropdown-close">×</a>
+                    <div class="dropdown-head">
+                        <ul class="menu __inline">
+                            <li class="menu-item">
+                                <a class="menu-link">
+                                    <i class="menu-ico fa fa-times-circle"></i>
+                                    <span class="menu-name">Clear all recent</span>
+                                </a>
+                            </li>
+                            <li class="menu-item">
+                                <a class="menu-link">
+                                    <i class="menu-ico fa fa-clock-o"></i>
+                                    <span class="menu-name">Everything</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="dropdown-content">
+                        <ul class="list">
+                            <li class="list-item">
+                                <a class="list-link" href="#">
+                                    <i class="list-ico fa fa-folder"></i>
+                                    Catalog
+                                </a>
+                            </li>
+                            <li class="list-item">
+                                <a class="list-link" href="#">
+                                    <i class="list-ico fa fa-shopping-cart"></i>
+                                    Shopping carts
+                                </a>
+                            </li>
+                            <li class="list-item">
+                                <a class="list-link" href="#">
+                                    <i class="list-ico fa fa-cube"></i>
+                                    Module
+                                </a>
+                            </li>
+                            <li class="list-item">
+                                <a class="list-link" href="#">
+                                    <i class="list-ico fa fa-cogs"></i>
+                                    Settings
+                                </a>
+                            </li>
+                            <li class="list-item">
+                                <a class="list-link" href="#">
+                                    <i class="list-ico fa fa-cubes"></i>
+                                    Modules
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+            <article class="cnt" role="main">
+                <div class="cnt-inner">
+                    <div class="dashboard">
+                        <header class="dashboard-head">
+                            <h1 class="dashboard-title">Virto Commerce</h1>
+                            <div class="dashboard-account">
+                                <div class="user-name">
+                                    <div class="first-name">Mikhail</div>
+                                    <div class="last-name">Chirskiy</div>
+                                </div>
+                                <a href="#" class="sign-out">
+                                    <i class="sign-ico fa fa-sign-out"></i>
+                                    Sign out
+                                </a>
+                            </div>
+                        </header>
+                        <div class="dashboard-area">
+                            <div class="dashboard-inner">
+                                
+                            </div>
+                        </div>
+                    </div>
+                    <div class="blade">
+                        <header class="blade-head">
+                            <div class="blade-status">
+                                <div class="progress-bar"></div>
+                            </div>
+                            <div class="blade-nav">
+                                <ul class="menu __inline">
+                                    <li class="menu-item __minimize">
+                                        Minimize
+                                    </li>
+                                    <li class="menu-item __maximize">
+                                        Maximize
+                                    </li>
+                                    <li class="menu-item __close">
+                                        Close
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="blade-t __secondary">
+                                <i class="blade-t_ico fa fa-folder"></i>
+                                <p class="blade-t_head">Catalogs</p>
+                                <p class="blade-t_subhead">Manage catalogs</p>
+                            </div>
+                        </header>
+                        <div class="blade-container">
+                            <div class="blade-content">
+                                <div class="blade-inner">
+                                    <div class="inner-block">
+                                        <ul class="list __items">
+                                            <li class="list-item">
+                                                <i class="list-ico fa fa-cloud"></i>
+                                                <span class="list-name">VendorVirtual (virtual)</span>
+                                            </li>
+                                            <li class="list-item">
+                                                <i class="list-ico fa fa-folder"></i>
+                                                <span class="list-name">Sony</span>
+                                            </li>
+                                            <li class="list-item ng-scope ng-isolate-scope">
+                                                <i class="list-ico fa fa-folder"></i>
+                                                <span class="list-name">Samsung</span>
+                                            </li>
+                                            <li class="list-item ng-scope ng-isolate-scope">
+                                                <i class="list-ico fa fa-folder"></i>
+                                                <span class="list-name">Apple</span>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="blade">
+                        <header class="blade-head">
+                            <div class="blade-status">
+                                <div class="progress-bar"></div>
+                            </div>
+                            <div class="blade-nav">
+                                <ul class="menu __inline">
+                                    <li class="menu-item __minimize">
+                                        Minimize
+                                    </li>
+                                    <li class="menu-item __maximize">
+                                        Maximize
+                                    </li>
+                                    <li class="menu-item __close">
+                                        Close
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="blade-t __secondary">
+                                <i class="blade-t_ico fa fa-folder"></i>
+                                <p class="blade-t_head">Catalogs</p>
+                                <p class="blade-t_subhead">Manage catalogs</p>
+                            </div>
+                        </header>
+                        <div class="blade-container">
+                            <div class="blade-content">
+                                <div class="blade-inner">
+                                    <div class="inner-block">
+                                        <ul class="list __items">
+                                            <li class="list-item">
+                                                <i class="list-ico fa fa-cloud"></i>
+                                                <span class="list-name">VendorVirtual (virtual)</span>
+                                            </li>
+                                            <li class="list-item">
+                                                <i class="list-ico fa fa-folder"></i>
+                                                <span class="list-name">Sony</span>
+                                            </li>
+                                            <li class="list-item ng-scope ng-isolate-scope">
+                                                <i class="list-ico fa fa-folder"></i>
+                                                <span class="list-name">Samsung</span>
+                                            </li>
+                                            <li class="list-item ng-scope ng-isolate-scope">
+                                                <i class="list-ico fa fa-folder"></i>
+                                                <span class="list-name">Apple</span>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="blade __active">
+                        <header class="blade-head">
+                            <div class="blade-status">
+                                <div class="progress-bar"></div>
+                            </div>
+                            <div class="blade-nav">
+                                <ul class="menu __inline">
+                                    <li class="menu-item __minimize">
+                                        Minimize
+                                    </li>
+                                    <li class="menu-item __maximize">
+                                        Maximize
+                                    </li>
+                                    <li class="menu-item __close">
+                                        Close
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="blade-t __secondary">
+                                <i class="blade-t_ico fa fa-folder"></i>
+                                <p class="blade-t_head">Catalogs</p>
+                                <p class="blade-t_subhead">Manage catalogs</p>
+                            </div>
+                        </header>
+                        <div class="blade-container">
+                            <div class="blade-content">
+                                <div class="blade-inner">
+                                    <div class="inner-block">
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="blade">
+                        <header class="blade-head">
+                            <div class="blade-status">
+                                <div class="progress-bar"></div>
+                            </div>
+                            <div class="blade-nav">
+                                <ul class="menu __inline">
+                                    <li class="menu-item __minimize">
+                                        Minimize
+                                    </li>
+                                    <li class="menu-item __maximize">
+                                        Maximize
+                                    </li>
+                                    <li class="menu-item __close">
+                                        Close
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="blade-t __secondary">
+                                <i class="blade-t_ico fa fa-folder"></i>
+                                <p class="blade-t_head">Catalogs</p>
+                                <p class="blade-t_subhead">Manage catalogs</p>
+                            </div>
+                        </header>
+                        <div class="blade-container">
+                            <div class="blade-content">
+                                <div class="blade-inner">
+                                    <div class="inner-block">
+                                        <ul class="list __items">
+                                            <li class="list-item">
+                                                <i class="list-ico fa fa-cloud"></i>
+                                                <span class="list-name">VendorVirtual (virtual)</span>
+                                            </li>
+                                            <li class="list-item">
+                                                <i class="list-ico fa fa-folder"></i>
+                                                <span class="list-name">Sony</span>
+                                            </li>
+                                            <li class="list-item ng-scope ng-isolate-scope">
+                                                <i class="list-ico fa fa-folder"></i>
+                                                <span class="list-name">Samsung</span>
+                                            </li>
+                                            <li class="list-item ng-scope ng-isolate-scope">
+                                                <i class="list-ico fa fa-folder"></i>
+                                                <span class="list-name">Apple</span>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="blade">
+                        <header class="blade-head"></header>
+                        <div class="blade-container">
+                            <div class="blade-content">
+                                <div class="blade-inner">
+                                    <div class="inner-block">
+                                        <div ng-controller="GridController">
+                                            <gridster options="options">
+                                                <gridster-item ng-repeat="item in items track by $index" data-wide="{{ item.wide }}" data-tall="{{ item.tall }}">
+                                                    <div class="gridster-cnt">
+                                                        <div class="cnt-inner">
+                                                            {{ item.template }}
+                                                        </div>
+                                                    </div>
+                                                </gridster-item>
+                                            </gridster>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="blade __active">
+                        <header class="blade-head">
+                            <div class="blade-status">
+                                <div class="progress-bar"></div>
+                            </div>
+                            <div class="blade-nav">
+                                <ul class="menu __inline">
+                                    <li class="menu-item __minimize">
+                                        Minimize
+                                    </li>
+                                    <li class="menu-item __maximize">
+                                        Maximize
+                                    </li>
+                                    <li class="menu-item __close">
+                                        Close
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="blade-t __secondary">
+                                <i class="blade-t_ico fa fa-folder"></i>
+                                <p class="blade-t_head">Catalogs</p>
+                                <p class="blade-t_subhead">Manage catalogs</p>
+                            </div>
+                        </header>
+                        <div class="blade-container">
+                            <div class="blade-content">
+                                <div class="blade-inner">
+                                    <div class="inner-block">
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="blade">
+                        <header class="blade-head">
+                            <div class="blade-status">
+                                <div class="progress-bar"></div>
+                            </div>
+                            <div class="blade-nav">
+                                <ul class="menu __inline">
+                                    <li class="menu-item __minimize">
+                                        Minimize
+                                    </li>
+                                    <li class="menu-item __maximize">
+                                        Maximize
+                                    </li>
+                                    <li class="menu-item __close">
+                                        Close
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="blade-t __secondary">
+                                <i class="blade-t_ico fa fa-folder"></i>
+                                <p class="blade-t_head">Catalogs</p>
+                                <p class="blade-t_subhead">Manage catalogs</p>
+                            </div>
+                        </header>
+                        <div class="blade-container">
+                            <div class="blade-content">
+                                <div class="blade-inner">
+                                    <div class="inner-block">
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </article>
+        </div>
+
+        <script src="http://code.angularjs.org/1.2.7/angular.js"></script>
+        <script src="js/jquery/jquery.min.js"></script>
+        <script src="js/jquery/jquery.mousewheel.js"></script>
+        <script src="chosen/chosen.jquery.min.js"></script>
+        <script src="js/gridster.js"></script>
+        <script src="js/ngGridster.js"></script>
+        <script src="js/main.js"></script>
+        <script src="js/app.js"></script>
+
+        <script src="https://www.google.com/jsapi"></script>
+        <script>
+            $(function () {
+                $('select').chosen();
+
+                $('.__new-blade').on('click', function () {
+                    var blade = $(this).parents('.blade'),
+                        newBlade = $('<div class="blade __animate"><header class="blade-head"><div class="blade-status"></div><div class="blade-nav"><ul class="menu __inline"><li class="menu-item __close"><button>Close</button></li></ul></div></header><div class="blade-container"></div></div>'),
+                        bladeW;
+
+                    blade.after(newBlade);
+                    bladeW = newBlade.width();
+                    $('.blade.__animate').css('margin-left', '-' + bladeW + 'px');
+
+                    setTimeout(function () {
+                        $('.blade.__animate').animate({'margin-left': 0}, 250, function () {
+                            $(this).removeAttr('style').removeClass('__animate');
+                        });
+                    }, 100);
+                });
+
+                $('body').delegate('.blade-nav .menu-item.__close', 'click', function () {
+                    var blade = $(this).parents('.blade'),
+                        bladeW = blade.width();
+
+                    blade.addClass('__animate').animate({'margin-left': '-' + bladeW + 'px'}, 250, function () {
+                        $(this).remove();
+                    });
+                });
+            });
+
+
+        </script>
+        
+
+    </body>
+</html>

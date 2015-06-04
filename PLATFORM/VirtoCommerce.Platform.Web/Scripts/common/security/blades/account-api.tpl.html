@@ -1,0 +1,42 @@
+﻿<div class="blade-content">
+    <div class="blade-inner">
+        <div class="inner-block form">
+            <div class="form-group">
+                <label class="form-label">
+                    Key name
+                </label>
+                <div class="form-input">
+                    <input ng-model="blade.currentEntity.name" placeholder="Enter name" focus-on>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="form-label">
+                    Key type
+                </label>
+                <div class="form-input">
+                    <ui-select ng-model="blade.currentEntity.apiAccountType">
+                        <ui-select-match placeholder="Select...">{{$select.selected}}</ui-select-match>
+                        <ui-select-choices repeat="x as x in apiAccountTypes | filter: $select.search">
+                            <span ng-bind-html="x | highlight: $select.search"></span>
+                        </ui-select-choices>
+                    </ui-select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="form-label">
+                    {{blade.currentEntity.apiAccountType===apiAccountTypes[0]?'App ID':'Key'}}
+                </label>
+                <div class="form-input">
+                    <input ng-model="blade.currentEntity.appId" placeholder="Generate..." readonly>
+                </div>
+            </div>
+            <div class="form-group" ng-if="blade.currentEntity.apiAccountType===apiAccountTypes[0]">
+                <label class="form-label">Secret key</label>
+                <div class="form-input">
+                    <textarea class="form-control" id="secretKey" ng-model="blade.currentEntity.secretKey" placeholder="Generate secret key" readonly></textarea>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="blade-static __bottom" ng-include="'Scripts/common/templates/ok-cancel2.tpl.html'"></div>

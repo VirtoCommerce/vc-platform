@@ -1,0 +1,71 @@
+.dynamic-expression
+{
+
+}
+
+    .dynamic-expression .dynamic-expression_t
+    {
+        margin: 15px 0;
+    }
+
+    .dynamic-expression .dynamic-expression_b
+    {
+        margin: 15px 0 30px;
+        padding: 0 0 0 40px;
+    }
+
+    .dynamic-expression_b .add
+    {
+        font-size: 12px;
+    }
+
+    .dynamic-expression_b .list-item
+    {
+        font-size: 14px;
+        margin: 0 0 15px;
+    }
+
+        .dynamic-expression_b .list-link
+        {
+            color: #4c4c4c;
+        }
+
+        .dynamic-expression_b .list-ico
+        {
+            cursor: pointer;
+            margin: 0 5px 0 0;
+        }
+
+        .dynamic-expression_b .form-input,
+        .dynamic-expression_b .list-ico,
+        .dynamic-expression_b .list-descr,
+        .dynamic-expression_b .__link
+        {
+            display: inline-block;
+        }
+
+        .dynamic-expression_b .form-input
+        {
+            vertical-align: middle;
+        }
+
+        .dynamic-expression_b .form-input,
+        .dynamic-expression_b .list-descr
+        {
+            margin: 0 10px;
+        }
+
+        .dynamic-expression_b .form-group
+        {
+            margin: 10px 0 0;
+        }
+
+        .dynamic-expression_b .list-descr
+        {
+            margin: 0;
+        }
+
+        .dynamic-expression_b .list.__sub
+        {
+            padding: 15px 0 0 20px;
+        }

@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<module>
+    <id>VirtoCommerce.DynamicExpression</id>
+    <version>1.0.0</version>
+    <platformVersion>2.0.0</platformVersion>
+    <dependencies>
+        <dependency id="VirtoCommerce.Core" version="1.0.0" />
+		<dependency id="VirtoCommerce.Pricing" version="1.0.0" />
+		<dependency id="VirtoCommerce.Marketing" version="1.0.0" />
+    </dependencies>
+
+    <title>Virto Dynamic Expression Library</title>
+    <description>Expressions for Marketing and Pricing dynamic condition builders</description>
+    <authors>
+        <author>Virto Commerce</author>
+    </authors>
+    <owners>
+        <owner>Virto Commerce</owner>
+    </owners>
+    <projectUrl>http://virtocommerce.com/</projectUrl>
+    <iconUrl>http://nuget.org/Content/Images/packageDefaultIcon-50x50.png</iconUrl>
+    <releaseNotes>First version.</releaseNotes>
+    <copyright>Copyright © 2011-2015 Virto Commerce. All rights reserved</copyright>
+    <tags>marketing promotion</tags>
+
+    <assemblyFile>VirtoCommerce.DynamicExpressionModule.Web.dll</assemblyFile>
+    <moduleType>VirtoCommerce.DynamicExpressionModule.Web.Module, VirtoCommerce.DynamicExpressionModule.Web</moduleType>
+    <scripts>
+        <directory virtualPath="$/Scripts" searchPattern="*.js" searchSubdirectories="true" />
+    </scripts>
+</module>

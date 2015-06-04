@@ -1,0 +1,203 @@
+<!doctype html>
+<!--[if lt IE 7]><html class="no-js lt-ie9 lt-ie8 lt-ie7" lang="en"> <![endif]-->
+<!--[if IE 7]><html class="no-js lt-ie9 lt-ie8" lang="en"> <![endif]-->
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en"> <![endif]-->
+<!--[if IE 9 ]><html class="ie9 no-js"> <![endif]-->
+<!--[if (gt IE 9)|!(IE)]><!--> <html class="no-js"> <!--<![endif]-->
+<head>
+
+  <!-- Basic page needs ================================================== -->
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+
+  {% if settings.favicon_enable %}
+  <link rel="shortcut icon" href="{{ 'favicon.png' | asset_url }}" type="image/png" />
+  {% endif %}
+
+  <!-- Title and description ================================================== -->
+  <title>
+  {{ page_title }}{% if current_tags %}{% assign meta_tags = current_tags | join: ', ' %} &ndash; {{ 'general.meta.tags' | t: tags: meta_tags }}{% endif %}{% if current_page != 1 %} &ndash; {{ 'general.meta.page' | t: page: current_page }}{% endif %}{% unless page_title contains shop.name %} &ndash; {{ shop.name }}{% endunless %}
+  </title>
+
+  {% if page_description %}
+  <meta name="description" content="{{ page_description | escape }}">
+  {% endif %}
+
+  <!-- Product meta ================================================== -->
+  {% include 'open-graph-tags' %}
+  {% include 'twitter-card' %}
+
+  <!-- Helpers ================================================== -->
+  <link rel="canonical" href="{{ canonical_url }}">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="{{ settings.color_primary }}">
+
+  {% if settings.ajax_cart_enable %}
+  <!-- Ajaxify Cart Plugin ================================================== -->
+  {{ 'ajaxify.scss.css' | asset_url | stylesheet_tag }}
+  {% endif %}
+
+  <!-- CSS ================================================== -->
+  {{ 'timber.scss.css' | asset_url | stylesheet_tag }}
+
+  <!-- Header hook for plugins ================================================== -->
+  {{ content_for_header }}
+
+  {% include 'oldIE-js' %}
+
+  {% comment %}
+    If you store has customers disabled, you can remove the following JS file
+  {% endcomment %}
+  {% if template contains 'customers' %}
+    {{ 'shopify_common.js' | shopify_asset_url | script_tag }}
+  {% endif %}
+
+  {% comment %}
+    Theme dependent JS is loaded at the very bottom of this file for performance reasons.
+    However, jQuery is included here so that it can be used inside the templates, e.g. in product.liquid.
+  {% endcomment %}
+  {{ '//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js' | script_tag }}
+  {{ 'modernizr.min.js' | asset_url | script_tag }}
+
+</head>
+
+{% comment %}
+  Add the page template as a class for easy page or template specific styling.
+{% endcomment %}
+<body id="{{ page_title | handle }}" class="{% if customer %}customer-logged-in {% endif %}template-{{ template | replace: '.', ' ' | truncatewords: 1, '' | handle }}" >
+
+  <header class="site-header" role="banner">
+    <div class="wrapper">
+
+      <div class="grid--full">
+        <div class="grid__item large--one-half">
+          {% comment %}
+            Use the uploaded logo from theme settings if enabled.
+            Site name gets precedence with H1 tag on homepage, div on other pages.
+          {% endcomment %}
+          {% if template == 'index' %}
+            <h1 class="site-header__logo large--left" itemscope itemtype="http://schema.org/Organization">
+          {% else %}
+            <div class="h1 site-header__logo large--left" itemscope itemtype="http://schema.org/Organization">
+          {% endif %}
+            {% if settings.logo_use_image %}
+              <a href="/" itemprop="url">
+                <img src="{{ 'logo.png' | asset_url }}" alt="{{ shop.name }}" itemprop="logo">
+              </a>
+            {% else %}
+              <a href="/" itemprop="url">{{ shop.name }}</a>
+            {% endif %}
+          {% if template == 'index' %}
+            </h1>
+          {% else %}
+            </div>
+          {% endif %}
+        </div>
+        <div class="grid__item large--one-half text-center large--text-right">
+          {% comment %}
+            Show number of items in the cart and total cost in the /cart link
+
+            Ajaxify Cart Notes:
+              - #cartToggle toggles cart visibility (drawer or modal)
+              - #cartCount updates the total number of items in the cart
+              - #cartCost updates the total cost of the cart
+              - Documentation:  http://shopify.com/timber#ajax-cart
+          {% endcomment %}
+          <a href="/cart" id="CartToggle">
+            <span class="icon-fallback-text">
+              <span class="icon icon-cart" aria-hidden="true"></span>
+            </span>
+            {{ 'layout.cart.title' | t }}
+            (<span id="CartCount">{{ cart.item_count }}</span>
+            {{ 'layout.cart.items_count' | t: count: cart.item_count }}
+            <span id="CartCost">{{ cart.total_price | money }}</span>)
+          </a>
+
+          {% comment %}
+            If customer accounts are enabled, provide login and create account links
+          {% endcomment %}
+          {% if shop.customer_accounts_enabled %}
+          <p class="site-header__text-links">
+            {% if customer %}
+              {% if customer.first_name != blank %}
+                {% capture first_name %}<a href="/account">{{ customer.first_name }}</a>{% endcapture %}
+                {{ 'layout.customer.logged_in_as_html' | t: first_name: first_name }}
+              {% else %}
+                <a href="/account">{{ 'layout.customer.account' | t }}</a>
+              {% endif %}
+              | {{ 'layout.customer.log_out' | t | customer_logout_link }}
+            {% else %}
+              {{ 'layout.customer.log_in' | t | customer_login_link }}
+              {% if shop.customer_accounts_optional %}
+              | {{ 'layout.customer.create_account' | t | customer_register_link }}
+              {% endif %}
+            {% endif %}
+          </p>
+          {% endif %}
+        </div>
+      </div>
+
+    </div>
+  </header>
+
+  <nav class="nav-bar" role="navigation">
+    <div class="wrapper">
+      <div class="grid">
+        <div class="grid__item large--two-thirds">
+          {% include 'site-nav' %}
+        </div>
+        <div class="grid__item large--one-third">
+          <div class="nav-search">
+            {% include 'search-bar' %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <main class="wrapper main-content" role="main">
+
+    {{ content_for_layout }}
+
+  </main>
+
+  {% include 'footer' %}
+
+  {% comment %}
+    Helper scripts that you can extend as needed.
+  {% endcomment %}
+  {{ 'shop.js' | asset_url | script_tag }}
+
+  {% comment %}
+    Ajaxify your cart with this plugin. Adding a product will reveal a drawer, modal, or confirmation button. Enabled by default in theme settings.
+
+    Ajaxify Cart Documentation:
+      - http://shopify.com/timber#ajax-cart
+  {% endcomment %}
+  {% if settings.ajax_cart_enable %}
+  {{ 'handlebars.min.js' | asset_url | script_tag }}
+  {% include 'ajax-cart-template' %}
+  {{ 'ajaxify.js' | asset_url | script_tag }}
+  <script>
+  jQuery(function($) {
+    ajaxifyShopify.init({
+      method: '{{ settings.ajax_cart_method }}',
+      wrapperClass: 'wrapper',
+      formSelector: '#AddToCartForm',
+      addToCartSelector: '#AddToCart',
+      cartCountSelector: '#CartCount',
+      cartCostSelector: '#CartCost',
+      toggleCartButton: '#CartToggle',
+      useCartTemplate: true,
+      btnClass: 'btn',
+      moneyFormat: {{ shop.money_format | json }},
+      disableAjaxCart: false,
+      enableQtySelectors: true,
+      prependDrawerTo: 'body'
+    });
+  });
+  </script>
+  {% endif %}
+
+</body>
+</html>

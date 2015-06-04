@@ -1,0 +1,38 @@
+﻿<div class="blade-content">
+    <div class="blade-inner">
+        <div class="inner-block">
+            <ul class="list __items">
+                <label class="list-item" ng-mouseup="selectOption('Boolean')">
+                    <input type="checkbox" ng-checked="'Boolean' ===  blade.valueType">
+                    <span class="switch"></span>
+                    <span class="list-t">Boolean</span>
+                    <span class="list-descr">Switch type.</span>
+                </label>
+                <label class="list-item" ng-mouseup="selectOption('ShortText')">
+                    <input type="checkbox" ng-checked="'ShortText' === blade.valueType">
+                    <span class="switch"></span>
+                    <span class="list-t">Short Text</span>
+                    <span class="list-descr">Text values less than 1024 chars.</span>
+                </label>
+                <label class="list-item" ng-mouseup="selectOption('LongText')">
+                    <input type="checkbox" ng-checked="'LongText' ===  blade.valueType">
+                    <span class="switch"></span>
+                    <span class="list-t">Long Text</span>
+                    <span class="list-descr">Huge amount text without size limit.</span>
+                </label>
+                <label class="list-item" ng-mouseup="selectOption('Decimal')">
+                    <input type="checkbox" ng-checked="'Decimal' ===  blade.valueType">
+                    <span class="switch"></span>
+                    <span class="list-t">Decimal</span>
+                    <span class="list-descr">Digital input with float point.</span>
+                </label>
+                <label class="list-item" ng-mouseup="selectOption('DateTime')">
+                    <input type="checkbox" ng-checked="'DateTime' ===  blade.valueType">
+                    <span class="switch"></span>
+                    <span class="list-t">Date time</span>
+                    <span class="list-descr">Select date.</span>
+                </label>                
+            </ul>
+        </div>
+    </div>
+</div>

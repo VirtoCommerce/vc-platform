@@ -1,0 +1,136 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ shop.name }} &ndash; Checkout</title>
+
+    {{ '//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css' | stylesheet_tag }}
+    {{ 'style.css' | asset_url | stylesheet_tag }}
+    {{ '//fonts.googleapis.com/css?family=Lato' | stylesheet_tag }}
+
+    {{ '//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js' | script_tag }}
+    {{ '//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js' | script_tag }}
+    {{ '//ajax.aspnetcdn.com/ajax/jquery.validate/1.13.0/jquery.validate.min.js' | script_tag }}
+    {{ '//ajax.aspnetcdn.com/ajax/mvc/5.1/jquery.validate.unobtrusive.min.js' | script_tag }}
+    {{ 'shopify_common.js' | shopify_asset_url | script_tag }}
+    {{ 'virtocommerce.js' | shopify_asset_url | script_tag }}
+
+    {{ content_for_header }}
+    <script>
+        $(function () {
+            new Shopify.CountryProvinceSelector("checkout_country", "checkout_province", {});
+
+            var checkout = {% if checkout != null %}{{ checkout | json }}{% else %}null{% endif %};
+            var customer = {% if customer != null %}{{ customer | json }}{% else %}null{% endif %};
+
+            if (checkout.guest_login && !checkout.email) {
+                $("#guest-modal").modal("show");
+            } else {
+                var defaultAddress = customer.addresses.sort(function (a, b) {
+                    return a.id - b.id;
+                })[0];
+                fillAddress(defaultAddress);
+            }
+
+            var selectedShippingMethod = $("#shipping-methods input:checked");
+            if (selectedShippingMethod.length) {
+                updateTotals(selectedShippingMethod.val());
+            }
+
+            $("#customer-addresses li").on("click", function () {
+                var addressId = $(this).data("id");
+                var address = customer.addresses.getElementByVal("id", addressId);
+                if (address) {
+                    fillAddress(address);
+                }
+            });
+
+            $("#shipping-methods .col-md-6").on("click", function () {
+                var input = $(this).find("input");
+                if (!input.is(":checked")) {
+                    input.prop("checked", true);
+                    updateTotals(input.val());
+                }
+            });
+
+            $("#payment-methods .col-md-6").on("click", function () {
+                var input = $(this).find("input");
+                input.prop("checked", true);
+            });
+
+            $("#billing-address-equals-shipping-address").on("change", function () {
+                if ($(this).is(":checked")) {
+                    fillAddress(checkout.shipping_address);
+                    $("#billing-address").hide();
+                } else {
+                    $("#billing-address").show();
+                }
+            });
+        });
+
+        function fillAddress(address) {
+            $("#selected-address").text(stringifyAddress(address));
+            $("#checkout_first_name").val(address.first_name);
+            $("#checkout_last_name").val(address.last_name);
+            $("#checkout_company").val(address.company);
+            $("#checkout_address1").val(address.address1);
+            $("#checkout_address2").val(address.address2);
+            $("#checkout_city").val(address.city);
+            $("#checkout_country").val(address.country);
+            $("#checkout_province").val(address.province);
+            $("#checkout_zip").val(address.zip);
+            $("#checkout_phone").val(address.phone);
+        }
+
+        function stringifyAddress(address) {
+            var addressString = address.city + " " + address.street + ", " + address.country + ", ";
+            if (address.province) {
+                addressString += address.province + ", ";
+            }
+            if (address.phone) {
+                addressString += address.phone + ", ";
+            }
+            addressString += address.name;
+            return addressString;
+        }
+
+        function updateTotals(shippingMethodId) {
+            $.ajax({
+                type: "GET",
+                cache: false,
+                url: VirtoCommerce.url("/checkout/recalculateshippingmethod?id=" + shippingMethodId),
+                beforeSend: function () {
+                    var spinnerTag = '{{ 'assets/loader_spinner.gif' | shopify_asset_url | img_tag }}';
+                    $(".price-list li:eq(1) small").html(spinnerTag);
+                    $(".price-list li:eq(3) small").html(spinnerTag);
+                },
+                success: function (jsonResponse) {
+                    if (jsonResponse) {
+                        $(".price-list li:eq(1) small").text(jsonResponse.stringified_shipping_price);
+                        $(".price-list li:eq(3) small").text(jsonResponse.stringified_total_price);
+                    }
+                }
+            });
+        }
+    </script>
+</head>
+<body>
+    {% include 'guest_popup' %}
+    <div class="container">
+        <nav class="navbar navbar-default navbar-fixed-top" style="background-color: {{ settings.color_primary }};">
+            <div class="container">
+                <div class="navbar-header">
+                    <a class="navbar-brand" href="/" style="color: {{ settings.color_header_text }}; font-size: 30px; font-weight: 600;">{{ shop.name }}</a>
+                </div>
+                {% if checkout.guest_login? %}
+                    <ul class="nav navbar-nav navbar-right">
+                        <li><a href="/account" style="color: {{ settings.color_header_text }}; font-weight: 400;">Logged in as <strong>{{ customer.first_name }}</strong></a></li>
+                    </ul>
+                {% endif %}
+            </div>
+        </nav>
+        <div class="row">
+            {{ content_for_layout }}
+        </div>
+    </div>
+</body>
+</html>

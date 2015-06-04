@@ -1,0 +1,62 @@
+{% layout settings.customer_layout %}
+<!--START BREADCRUMB-->
+<div id="breadcrumb" class="desktop">
+	<a href="/">{{ 'general.breadcrumbs.home' | t }}</a> &mdash; <a href="/account/" class="active">{{ 'general.breadcrumbs.account' | t }}</a>
+</div>
+<!--END BREADCRUMB-->
+<div class="twelve columns alpha omega">
+	<h1 class="accounts-title">{{ 'customer.account.title' | t }}</h1>
+	<div class="eight columns alpha">
+		<section class="order-history">
+			<h2 class="accounts-title">{{ 'customer.account.orders' | t }}</h2>
+			{% if customer.orders.size != 0 %}
+			  <table>
+			    <thead>
+			      <tr>
+			        <th>{{ 'customer.orders.order_number' | t }}</th>
+			        <th class="desktop">{{ 'customer.orders.date' | t }}</th>
+			        <th>{{ 'customer.orders.payment_status' | t }}</th>
+			        <th>{{ 'customer.orders.fulfillment_status' | t }}</th>
+			        <th>{{ 'customer.orders.total' | t }}</th>
+			      </tr>
+			    </thead>
+			    <tbody>
+			      {% for order in customer.orders %}
+			      <tr>
+			        <td>{{ order.name | link_to: order.customer_url }}</td>
+			        <td class="desktop">{{ order.created_at | date: format: 'short' }}</td>
+			        <td>{{ order.financial_status_label }}</td>
+			        <td>{{ order.fulfillment_status_label }}</td>
+			        <td>{{ order.total_price | money }}</td>
+			      </tr>
+			      {% endfor %}
+			    </tbody>
+			  </table>
+			  {% else %}
+			    <p>{{ 'customer.orders.none' | t }}</p>
+			  {% endif %}
+		</section>
+	</div>
+	<div class="three columns offset-by-one omega">
+		<section class="sidebar">
+			<h2 class="accounts-title">{{ 'customer.account.your_account' | t }}</h2>
+			<p><b><span class="customer-name">{{ customer.name}}</span></b>
+			{% if customer.default_address != nil %}
+				<br />
+				{{ customer.default_address.address1 }}<br />
+				{% if customer.default_address.address2 != "" %}
+		          {{ customer.default_address.address2 }}<br />
+		        {% endif %}
+				{{ customer.default_address.city}}<br />
+				{% if address.province_code %}
+					{{customer.default_address.province_code}}<br />
+				{% endif %}
+				{{ customer.default_address.zip | upcase }}<br />
+				{{customer.default_address.country}}
+			</p>
+			<p>{{ customer.default_address.phone }}</p>
+			{% endif %}
+			<p><a href="/account/addresses" class="btn small">{{ 'customer.account.view_addresses' | t: count: customer.addresses_count }}</a></p>
+		</section>
+	</div>
+</div>
