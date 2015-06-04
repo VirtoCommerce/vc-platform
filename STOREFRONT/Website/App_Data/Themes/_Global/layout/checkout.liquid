@@ -61,17 +61,52 @@
                 }
             });
 
+            var addresses = [];
+
             {% if checkout.guest_login %}
                 $("#guest-modal").modal("show");
-
-                /*$("#checkout_email").popover({
-                    content: "You can <a href=\"/account/login?returnUrl=/checkout/step-1\"><b>log in</b></a> or continue as guest",
-                    html: true,
-                    placement: "bottom"
-                });
-                $("#checkout_email").popover("show");*/
+            {% else %}
+                {% if customer != null %}
+                    addresses = {{ customer.addresses | json }};
+                {% endif %}
             {% endif %}
+
+            $(".dropdown-menu li").on("click", function () {
+                var addressId = $(this).data("id");
+                var address = findElement(addresses, "id", addressId);
+                if (address) {
+                    $("#checkout_first_name").val(address.first_name);
+                    $("#checkout_last_name").val(address.last_name);
+                    $("#checkout_company").val(address.company);
+                    $("#checkout_address1").val(address.address1);
+                    $("#checkout_address2").val(address.address2);
+                    $("#checkout_city").val(address.city);
+                    $("#checkout_country").val(address.country);
+                    $("#checkout_province").val(address.province);
+                    $("#checkout_zip").val(address.zip);
+                    $("#checkout_phone").val(address.phone);
+
+                    var addressString = address.city + " " + address.street + ", " + address.country + ", ";
+                    if (address.province) {
+                        addressString += address.province + ", ";
+                    }
+                    if (address.phone) {
+                        addressString += address.phone + ", ";
+                    }
+                    addressString += address.name;
+
+                    $("#selected-address").text(addressString);
+                }
+            });
         });
+
+        function findElement(arr, propName, propValue) {
+            for (var i=0; i < arr.length; i++) {
+                if (arr[i][propName] == propValue) {
+                    return arr[i];
+                }
+            }
+        }
 
         function updateTotals(shippingMethodId) {
             $.ajax({

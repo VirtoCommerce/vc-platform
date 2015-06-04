@@ -14,7 +14,39 @@
                     </div>
                 </div>
                 <div class="box-inner-header">
-                    <h3>Shipping address</h3>
+                    <h3 style="display: inline-block;">Shipping address</h3>
+                    {% if checkout.guest_login != true %}
+                        <div class="btn-group pull-right" style="margin-right: 10px;">
+                            <button class="btn btn-default" disabled="disabled" id="selected-address" style="opacity: 1; overflow: hidden; text-align: left; text-overflow: ellipsis; white-space: nowrap; width: 350px;">
+                                {{ checkout.shipping_address.city }} {{ checkout.shipping_address.street }},
+                                {{ checkout.shipping_address.country }},
+                                {% if checkout.shipping_address.province != null %}
+                                    {{ checkout.shipping_address.province }},
+                                {% endif %}
+                                {% if checkout.shipping_address.phone != null %}
+                                    {{ checkout.shipping_address.phone }},
+                                {% endif %}
+                                {{ checkout.shipping_address.name }}
+                            </button>
+                            <button aria-expanded="false" class="btn btn-default dropdown-toggle" data-toggle="dropdown" type="button">
+                                <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu" role="menu" aria-labelledby="addresses">
+                                {% for address in customer.addresses %}
+                                    <li data-id="{{ address.id }}" role="presentation">
+                                        <a role="menuitem" tabindex="-1" href="#">
+                                            {{address.city}} {{ address.street }},
+                                            {{ address.country }},
+                                            {% if address.province != null %}
+                                                {{ address.province }},
+                                            {% endif %}
+                                            {{ address.name }}
+                                        </a>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    {% endif %}
                 </div>
                 <div id="new_address">
                     <div class="fieldset">
