@@ -85,17 +85,11 @@
         }
     }
 
-    $scope.removeAction = function (selectedAssets) {
-        if (selectedAssets == undefined) {
-            selectedAssets = $filter('filter')($scope.item.assets, { selected: true });
-        }
-
-        angular.forEach(selectedAssets, function (asset) {
-            var idx = $scope.item.assets.indexOf(asset);
-            if (idx >= 0) {
-                $scope.item.assets.splice(idx, 1);
-            }
-        });
+    $scope.removeAction = function (asset) {
+    	var idx = $scope.item.assets.indexOf(asset);
+    	if (idx >= 0) {
+    		$scope.item.assets.splice(idx, 1);
+    	}
     };
 
     $scope.copyUrl = function (data) {
@@ -113,19 +107,7 @@
                 return $scope.isDirty();
             },
             permission: 'catalog:items:manage'
-        },
-		{
-		    name: "Remove", icon: 'fa fa-trash-o', executeMethod: function () { $scope.removeAction(); },
-		    canExecuteMethod: function () {
-		        var retVal = false;
-		        if (angular.isDefined($scope.item.assets)) {
-		            var selectedAssets = $filter('filter')($scope.item.assets, { selected: true });
-		            retVal = selectedAssets.length > 0;
-		        }
-		        return retVal;
-		    },
-		    permission: 'catalog:items:manage'
-		}
+        }		
     ];
 
     initialize();

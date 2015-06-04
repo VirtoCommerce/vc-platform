@@ -112,6 +112,7 @@
     <Compile Include="Common\KeyValuePairExtensions.cs" />
     <Compile Include="Common\ListDictionary.cs" />
     <Compile Include="Common\CollectionExtensions.cs" />
+    <Compile Include="Common\MimeTypeResolver.cs" />
     <Compile Include="Common\NullCollection.cs" />
     <Compile Include="Common\ObjectExtension.cs" />
     <Compile Include="Common\ObservableChangeTracker.cs" />

@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Web;
 using Omu.ValueInjecter;
 using VirtoCommerce.Platform.Core.Asset;
+using VirtoCommerce.Platform.Core.Common;
 using moduleModel = VirtoCommerce.Domain.Catalog.Model;
 using webModel = VirtoCommerce.CatalogModule.Web.Model;
 
@@ -13,12 +15,18 @@ namespace VirtoCommerce.CatalogModule.Web.Converters
             webModel.ProductAssetBase retVal = new webModel.ProductImage();
             if (asset.Type == moduleModel.ItemAssetType.File)
             {
-                retVal = new webModel.ProductAsset();
+                var productAsset  = new webModel.ProductAsset();
+
+				productAsset.Name = HttpUtility.UrlDecode(System.IO.Path.GetFileName(asset.Url));
+				productAsset.MimeType = MimeTypeResolver.ResolveContentType(productAsset.Name);		
+
+				retVal = productAsset;
             }
             retVal.InjectFrom(asset);
 			if (!Uri.IsWellFormedUriString(asset.Url, UriKind.Absolute))
 			{
 				retVal.Url = blobUrlResolver.GetAbsoluteUrl(asset.Url);
+
 			}
 			retVal.RelativeUrl = asset.Url;
             return retVal;

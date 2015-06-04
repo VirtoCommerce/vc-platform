@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Blob;
 using VirtoCommerce.Platform.Core.Asset;
+using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.Platform.Data.Asset
 {
@@ -40,7 +41,7 @@ namespace VirtoCommerce.Platform.Data.Asset
 			}
 
 			var blob = container.GetBlockBlobReference(request.FileName);
-			blob.Properties.ContentType = ResolveContentType(request.FileName);
+			blob.Properties.ContentType = MimeTypeResolver.ResolveContentType(request.FileName);
 
 			using (var memoryStream = new MemoryStream())
 			{
@@ -99,42 +100,6 @@ namespace VirtoCommerce.Platform.Data.Asset
             return cloudStorageAcount;
         }
 
-        private static string ResolveContentType(string fileName)
-        {
-            string result;
-            var mapping = new Dictionary<string, string>();
-            mapping.Add("pdf", "application/pdf");
-            mapping.Add("zip", "application/zip");
-            mapping.Add("gz", "application/x-gzip");
-            mapping.Add("gzip", "application/x-gzip");
-            mapping.Add("m4a", "audio/mp4");
-            mapping.Add("gif", "image/gif");
-            mapping.Add("jpg", "image/jpeg");
-            mapping.Add("jpeg", "image/jpeg");
-            mapping.Add("png", "image/png");
-            mapping.Add("svg", "image/svg+xml");
-            mapping.Add("tif", "image/tiff");
-            mapping.Add("tiff", "image/tiff");
-            mapping.Add("csv", "text/csv");
-            mapping.Add("html", "text/html");
-            mapping.Add("mpg", "video/mpeg");
-            mapping.Add("mpeg", "video/mpeg");
-            mapping.Add("mp4", "video/mp4");
-            mapping.Add("ogg", "video/ogg");
-            mapping.Add("qt", "video/quicktime");
-            mapping.Add("mov", "video/quicktime");
-
-            var ext = Path.GetExtension(fileName).Substring(1).ToLower();
-            if (mapping.ContainsKey(ext))
-            {
-                result = mapping[ext];
-            }
-            else
-            {
-                result = "application/octet-stream";
-            }
-
-            return result;
-        }
+    
     }
 }
