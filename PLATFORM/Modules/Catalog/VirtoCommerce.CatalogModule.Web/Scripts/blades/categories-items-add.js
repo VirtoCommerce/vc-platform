@@ -1,11 +1,12 @@
 ﻿angular.module('virtoCommerce.catalogModule')
 .controller('virtoCommerce.catalogModule.categoriesItemsAddController', ['$scope', 'platformWebApp.bladeNavigationService', 'virtoCommerce.catalogModule.categories', 'virtoCommerce.catalogModule.items', function ($scope, bladeNavigationService, categories, items) {
-    var pb = $scope.blade.parentBlade;
+    var blade = $scope.blade;
+    var pb = blade.parentBlade;
 
     $scope.addCategory = function () {
         categories.newCategory({ catalogId: pb.catalogId, parentCategoryId: pb.categoryId },
             function (data) {
-                $scope.bladeClose(function() {
+                $scope.bladeClose(function () {
                     var newBlade = {
                         id: "newCategoryWizard",
                         currentEntity: data,
@@ -29,34 +30,40 @@
                 controller: 'virtoCommerce.catalogModule.catalogsSelectController',
                 template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/catalogs-select.tpl.html'
             };
-            bladeNavigationService.showBlade(newBlade, $scope.blade.parentBlade);
+            bladeNavigationService.showBlade(newBlade, pb);
         });
     };
 
-    $scope.addProduct = function () {
+    $scope.addProduct = function (productType) {
         if (!angular.isDefined(pb.categoryId)) {
             items.newItemInCatalog({ catalogId: pb.catalogId }, function (data) {
-                $scope.bladeClose(function() {
-                    pb.showNewItemWizard(data);
-                    });
+                data.productType = productType;
+                $scope.bladeClose(function () {
+                    showNewItemWizard(data);
+                });
             });
         }
         else {
             items.newItemInCategory({ catalogId: pb.catalogId, categoryId: pb.categoryId }, function (data) {
+                data.productType = productType;
                 $scope.bladeClose(function () {
-                    pb.showNewItemWizard(data);
+                    showNewItemWizard(data);
                 });
             });
         }
     };
 
-    $scope.addVariation = function () {
-        items.newVariation({ itemId: pb.currentItemId }, function (data) {
-            $scope.bladeClose(function () {
-                pb.showNewVariationWizard(data);
-            });
-        });
+    function showNewItemWizard(data) {
+        var newBlade = {
+            id: 'listItemDetail',
+            item: data,
+            title: "New product",
+            subtitle: 'Fill all product information',
+            controller: 'virtoCommerce.catalogModule.newProductWizardController',
+            template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/wizards/newProduct/new-product-wizard.tpl.html'
+        };
+        bladeNavigationService.showBlade(newBlade, pb);
     };
 
-    $scope.blade.isLoading = false;
+    blade.isLoading = false;
 }]);

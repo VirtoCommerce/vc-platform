@@ -1,10 +1,4 @@
-﻿.input-validation-error {
-    border-color: #843534 !important;
-    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 6px #ce8483 !important;
-    -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 6px #ce8483 !important;
-    box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 6px #ce8483 !important;
-}
-body {
+﻿body {
     background-color: #f0f0f0;
     color: #474948;
     font-family: 'Lato', Arial, Helvetica, sans-serif;
@@ -205,46 +199,6 @@ input[type=radio]:checked + label::before {
         line-height: 24px;
         margin: 0;
     }
-.fieldset {
-    border-bottom: 1px dotted #f0f0f0;
-    display: block;
-    margin-bottom: 10px;
-    overflow: hidden;
-    padding: 10px;
-    -webkit-border-radius: 2px;
-    -moz-border-radius: 2px;
-    border-radius: 2px;
-}
-    .fieldset .field label {
-        cursor: pointer;
-        float: left;
-        font-weight: 400;
-        margin-top: 7px;
-        width: 35%;
-    }
-    .fieldset .field {
-        vertical-align: middle;
-    }
-        .fieldset .field input,select {
-            border: 1px solid #ccc;
-            float: left;
-            padding: 7px;
-            width: 65%;
-            -webkit-border-radius: 2px;
-            -moz-border-radius: 2px;
-            border-radius: 2px;
-        }
-            .fieldset .field input:focus {
-                border-color: rgba(82, 168, 236, .8) !important;
-                -webkit-box-shadow: 0px 0px 8px rgba(82,168,236,0.6) !important;
-                -moz-box-shadow: 0px 0px 8px rgba(82,168,236,0.6) !important;
-                box-shadow: 0px 0px 8px rgba(82,168,236,0.6) !important;
-            }
-        .fieldset .field select {
-            float: left;
-            margin-top: 1px;
-            width: 65%;
-        }
 .box-footer {
     background-color: #f9f9f9;
     border-top: 1px solid #f0f0f0;
@@ -264,9 +218,13 @@ input[type=radio]:checked + label::before {
     -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 8px rgba(102, 175, 233, .6);
     box-shadow: inset 0px 1px 1px rgba(0,0,0,0.075), 0px 0px 8px rgba(102,175,233,0.6);
 }
-.control-label.required:after {
-    color: red;
-    content: " *";
+.form-group .control-label {
+    font-weight: normal;
+    text-align: left;
+}
+.has-feedback .glyphicon {
+    color: #337ab7;
+    font-size: 10px;
 }
 .btn.btn-primary.themed {
     background-color: {{ settings.color_primary }};

@@ -211,6 +211,7 @@
     <Content Include="App_Data\Themes\_Default\assets\flags.png" />
     <Content Include="App_Data\Themes\_Global\assets\icon_google_32.png" />
     <Content Include="App_Data\Themes\_Global\assets\icon_facebook_32.png" />
+    <Content Include="App_Data\Themes\_Global\assets\loader_spinner.gif" />
     <Content Include="App_Data\Themes\_Global\virtocommerce.js" />
     <Content Include="App_Data\Themes\_Global\social\shopify-social.svg" />
     <Content Include="App_Data\Themes\_Global\social\social-icons.css" />
@@ -254,6 +255,7 @@
     <Content Include="App_Data\Themes\_Global\Snippets\form-errors-custom.liquid" />
     <Content Include="App_Data\Themes\_Global\assets\style.css.liquid" />
     <Content Include="App_Data\Themes\_Global\Snippets\checkout_totals.liquid" />
+    <Content Include="App_Data\Themes\_Global\Snippets\guest_popup.liquid" />
     <None Include="App_Data\Themes\_Global\templates\external_login_confirmation.liquid" />
     <Content Include="App_Data\Themes\_Global\templates\index.liquid" />
     <Content Include="App_Data\Themes\_Global\templates\banner.liquid" />

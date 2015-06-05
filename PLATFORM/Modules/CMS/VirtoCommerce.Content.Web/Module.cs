@@ -98,7 +98,6 @@ namespace VirtoCommerce.Content.Web
                                 "VirtoCommerce",
                                 new AuditableInterceptor(),
                                 new EntityPrimaryKeyGeneratorInterceptor()),
-                            this._container.Resolve<IBlobStorageProvider>(),
                             uploadPath); // TODO: It could be not the Azure provider.
 
                     default:

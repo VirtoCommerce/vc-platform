@@ -36,7 +36,7 @@ namespace VirtoCommerce.Domain.Catalog.Model
 		public int? MinQuantity { get; set; }
 
 		/// <summary>
-		/// Can be downloadable or shipped etc..
+        /// Can be Shippable, Digital or Subscription.
 		/// </summary>
 		public string ProductType { get; set; }
 
@@ -50,8 +50,14 @@ namespace VirtoCommerce.Domain.Catalog.Model
 
 		public bool? EnableReview { get; set; }
 
+        /// <summary>
+        /// re-downloads limit
+        /// </summary>
 		public int? MaxNumberOfDownload { get; set; }
 		public DateTime? DownloadExpiration { get; set; }
+        /// <summary>
+        /// DownloadType: {Standard Product, Software, Music}
+        /// </summary>
 		public string DownloadType { get; set; }
 		public bool? HasUserAgreement { get; set; }
 

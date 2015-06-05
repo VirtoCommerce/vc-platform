@@ -18,56 +18,115 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <div class="columns clearfix">
-                        <div class="column">
+                    <div class="list __items" ng-init="openItems=[]">
+                        <div class="list-group" ng-class="{'__opened': openItems[$index]}" ng-click="openItems[$index]=!openItems[$index]">Additional properties</div>
+                        <div class="list __sub">
                             <div class="form-group">
-                                <div class="form-control __checkbox">
-                                    <label class="form-label">
-                                        <input type="checkbox" ng-model="blade.item.isBuyable">
-                                        <span class="check"></span>
-                                        <span class="name">Can be purchased</span>
-                                    </label>
-                                    <label class="form-label">
-                                        <input type="checkbox" ng-model="blade.item.isActive">
-                                        <span class="check"></span>
-                                        <span class="name">Store visible</span>
-                                    </label>
+                                <div class="columns clearfix">
+                                    <div class="column">
+                                        <div class="form-group">
+                                            <div class="form-control __checkbox">
+                                                <label class="form-label">
+                                                    <input type="checkbox" ng-model="blade.item.isBuyable">
+                                                    <span class="check"></span>
+                                                    <span class="name">Can be purchased</span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="column">
+                                        <div class="form-group">
+                                            <div class="form-control __checkbox">
+                                                <label class="form-label">
+                                                    <input type="checkbox" ng-model="blade.item.isActive">
+                                                    <span class="check"></span>
+                                                    <span class="name">Store visible</span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="column">
+                                        <div class="form-group">
+                                            <div class="form-control __checkbox">
+                                                <label class="form-label">
+                                                    <input type="checkbox" ng-model="blade.item.trackInventory">
+                                                    <span class="check"></span>
+                                                    <span class="name">Track inventory</span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="column">
-                            <div class="form-group">
-                                <div class="form-control __checkbox">
-                                    <label class="form-label">
-                                        <input type="checkbox" ng-model="blade.item.trackInventory">
-                                        <span class="check"></span>
-                                        <span class="name">Track inventory</span>
-                                    </label>
-                                    <label class="form-label">
-                                        <input type="checkbox" ng-model="blade.item.isDigital">
-                                        <span class="check"></span>
-                                        <span class="name">Is digital</span>
-                                    </label>
+                            <div class="form-group" ng-if="blade.item.productType==='Shippable'">
+                                <div class="columns clearfix">
+                                    <div class="column">
+                                        <div class="form-group">
+                                            <label class="form-label">Min. quantity</label>
+                                            <div class="form-input __number">
+                                                <input va-number ng-model="blade.item.minQuantity" min="1" step="1">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="column">
+                                        <div class="form-group">
+                                            <label class="form-label">Max. quantity</label>
+                                            <div class="form-input __number">
+                                                <input va-number ng-model="blade.item.maxQuantity" min="0" step="1">
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div class="columns clearfix">
-                        <div class="column">
-                            <div class="form-group">
-                                <label class="form-label">Min. quantity</label>
-                                <div class="form-input __number">
-                                    <input va-number ng-model="blade.item.minQuantity" min="1" step="1">
+                            <div class="form-group" ng-if="blade.item.productType==='Digital'">
+                                <div class="columns clearfix">
+                                    <div class="column">
+                                        <div class="form-group">
+                                            <label class="form-label">Max. number of downloads</label>
+                                            <div class="form-input __number">
+                                                <input va-number ng-model="blade.item.maxNumberOfDownload" min="0" step="1">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="column">
+                                        <div class="form-group">
+                                            <label class="form-label">Download expiration date</label>
+                                            <div class="form-input __calendar">
+                                                <input placeholder="Choose date" ng-model="blade.item.downloadExpiration" datepicker-popup="shortDate" is-open="datepickers.str" close-text="Close" />
+                                                <button class="btn" type="button" ng-click="open($event,'str')">
+                                                    <i class="btn-ico fa fa-calendar"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="column">
-                            <div class="form-group">
-                                <label class="form-label">Max. quantity</label>
-                                <div class="form-input __number">
-                                    <input va-number ng-model="blade.item.maxQuantity" min="0" step="1">
+                            <div class="form-group" ng-if="blade.item.productType==='Digital'">
+                                <div class="columns clearfix">
+                                    <div class="column">
+                                        <div class="form-group">
+                                            <label class="form-label">Download type</label>
+                                            <div class="form-input">
+                                                <ui-select ng-model="blade.item.downloadType" ng-init="downloadTypes=['Standard Product', 'Software', 'Music']">
+                                                    <ui-select-match placeholder="Select...">{{$select.selected}}</ui-select-match>
+                                                    <ui-select-choices repeat="x in downloadTypes | filter: $select.search">
+                                                        <span ng-bind-html="x | highlight: $select.search"></span>
+                                                    </ui-select-choices>
+                                                </ui-select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="column">
+                                        <div class="form-group">
+                                            <div class="form-control __checkbox">
+                                                <label class="form-label">
+                                                    <input type="checkbox" ng-model="blade.item.hasUserAgreement">
+                                                    <span class="check"></span>
+                                                    <span class="name">Has user agreement</span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>

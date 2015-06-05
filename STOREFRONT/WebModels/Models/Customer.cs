@@ -8,11 +8,13 @@ using System.Threading.Tasks;
 using VirtoCommerce.Web.Models.Services;
 using VirtoCommerce.Web.Convertors;
 using VirtoCommerce.Web.Views.Engines.Liquid.Extensions;
+using System.Runtime.Serialization;
 
 #endregion
 
 namespace VirtoCommerce.Web.Models
 {
+    [DataContract]
     public class Customer : Drop, ILoadSlice
     {
         private bool _ordersLoaded;
@@ -26,10 +28,13 @@ namespace VirtoCommerce.Web.Models
         #endregion
 
         #region Public Properties
+        [DataMember]
         public bool AcceptsMarketing { get; set; }
 
+        [DataMember]
         public List<CustomerAddress> Addresses { get; set; }
 
+        [DataMember]
         public int AddressesCount
         {
             get
@@ -38,8 +43,10 @@ namespace VirtoCommerce.Web.Models
             }
         }
 
+        [DataMember]
         public CustomerAddress DefaultAddress { get; set; }
 
+        [DataMember]
         public CustomerAddress NewAddress
         {
             get
@@ -48,20 +55,28 @@ namespace VirtoCommerce.Web.Models
             }
         }
 
+        [DataMember]
         public string Email { get; set; }
 
+        [DataMember]
         public string FirstName { get; set; }
 
+        [DataMember]
         public bool HasAccount { get; set; }
 
+        [DataMember]
         public string Id { get; set; }
 
+        [DataMember]
         public string LastName { get; set; }
 
+        [DataMember]
         public string LastOrder { get; set; }
 
+        [DataMember]
         public string Name { get; set; }
 
+        [DataMember]
         public ItemCollection<CustomerOrder> Orders
         {
             get
@@ -75,6 +90,7 @@ namespace VirtoCommerce.Web.Models
             }
         }
 
+        [DataMember]
         public int OrdersCount
         {
             get
@@ -83,10 +99,13 @@ namespace VirtoCommerce.Web.Models
             }
         }
 
+        [DataMember]
         public CustomerOrder RecentOrder { get; set; }
 
+        [DataMember]
         public ICollection<Tag> Tags { get; set; }
 
+        [DataMember]
         public decimal TotalSpent { get; set; }
         #endregion
 

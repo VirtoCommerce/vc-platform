@@ -1,8 +1,19 @@
-﻿if ((typeof VirtoCommerce) == 'undefined') {
+﻿if ((typeof VirtoCommerce) == "undefined") {
     var VirtoCommerce = {};
 }
 
-VirtoCommerce.changeCurrency = function(currencyCode) {
+Array.prototype.getElementByVal = function (propName, propValue) {
+    var el = null;
+    for (var i = 0; i < this.length; i++) {
+        if (this[i][propName] == propValue) {
+            el = this[i];
+            break;
+        }
+    }
+    return el;
+}
+
+VirtoCommerce.changeCurrency = function (currencyCode) {
     VirtoCommerce.redirect(location.href, { currency: currencyCode });
 };
 
@@ -32,7 +43,7 @@ VirtoCommerce.url = function (url) {
     return baseUrl + url;
 };
 
-VirtoCommerce.renderDynamicContent = function() {
+VirtoCommerce.renderDynamicContent = function () {
     var url = VirtoCommerce.url("/banners");
     var placeholders = $("[data-vccontentid]");
     var placeholderIds = new Array();
@@ -59,4 +70,6 @@ VirtoCommerce.renderDynamicContent = function() {
     }
 };
 
-$(function() { VirtoCommerce.renderDynamicContent(); });
+$(function () {
+    VirtoCommerce.renderDynamicContent();
+});

@@ -1,12 +1,34 @@
-﻿<div class="blade-content">
+﻿<div class="blade-static __bottom">
+	<button class="btn" ng-click="blade.save()" ng-disabled="formScope.$invalid">
+		<span>Create</span>
+	</button>
+</div>
+
+<div class="blade-content">
 	<div class="blade-inner">
 		<div class="inner-block">
-			<form class="form">
+			<form class="form" name="contextEntityDetailForm">
+				<div class="sub-t">Theme name</div>
+
+				<div class="form-group" ng-init="setForm(contextEntityDetailForm)">
+					<div class="form-input">
+						<input focus-on="" required class="form-control" ng-model="blade.name" placeholder="Enter theme name" />
+					</div>
+				</div>
+
+				<div class="sub-t">Load theme</div>
 
 				<div class="form-group">
-					<label class="form-label">Upload new theme:</label>
+					<div class="tile-group triple" ng-show="blade.themeLoaded">
+						<div class="tile triple wide mini __informer">
+							<p>Theme file uploaded</p>
+						</div>
+					</div>
+				</div>
+
+				<div class="form-group">
 					<div class="form-input">
-						<input type="file" multiple uploader="uploader" nv-file-select style="z-index: 0;" tabindex="-1">
+						<input type="file" uploader="uploader" nv-file-select="" style="z-index: 0;" tabindex="-1">
 						<input type="text" style="z-index: 1; cursor: default;" readonly="">
 						<button class="btn __file" type="button" onclick="$('input[type=file]').trigger('click')">
 							<i class="btn-ico fa fa-image"></i>
@@ -14,6 +36,11 @@
 					</div>
 				</div>
 			</form>
+
+			<div ng-show="uploader.isUploading" class="ng-hide">
+				<div class="sub-t">Progress:</div>
+				<div class="progress-bar __aqua" ng-style="{'width': uploader.progress + '%'}" style="width: 0%;"></div>
+			</div>
 		</div>
 	</div>
 </div>

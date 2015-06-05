@@ -94,12 +94,6 @@ namespace PayPal.PaymentGatewaysModule.Web.Managers
 		{
 			var retVal = new ProcessPaymentResult();
 
-			if (context == null && context.Payment == null)
-				throw new ArgumentNullException("paymentEvaluationContext");
-
-			if (context.Order == null)
-				throw new NullReferenceException("no order with this id");
-
 			if (!(context.Store != null && !string.IsNullOrEmpty(context.Store.Url)))
 				throw new NullReferenceException("no store with this id");
 
