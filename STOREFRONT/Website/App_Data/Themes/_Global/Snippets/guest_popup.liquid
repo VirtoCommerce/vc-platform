@@ -1,0 +1,46 @@
+﻿<div aria-hidden="true" class="modal fade" id="guest-modal" role="dialog">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-6" style="border-right: 1px dotted #666;">
+                            <h3>Sign in to your account</h3>
+                            <p>You'll be able to check out faster</p>
+                            {% form 'external_login' %}
+                                <p class="text-right">
+                                    {% for login_provider in login_providers %}
+                                        <button name="context[authentication_type]" type="submit" value="{{ login_provider.authentication_type }}" style="background: transparent; border: 0; margin-right: 5px; padding: 0;" title="Sign in with {{ login_provider.caption }} account">
+                                            {% assign icon_filename = 'assets/icon_' | append: login_provider.authentication_type | downcase %}
+                                            {% assign icon_fullname = icon_filename | append: '_32.png' %}
+                                            {{ icon_fullname | shopify_asset_url | img_tag }}
+                                        </button>
+                                    {% endfor %}
+                                </p>
+                            {% endform %}
+                            {% form 'customer_login' %}
+                                <input id="returnUrl" name="returnUrl" type="hidden" value="/checkout/step-1" />
+                                <div class="form-group">
+                                    <label for="customer_email">Email address</label>
+                                    <input class="form-control" id="customer_email" name="customer[email]" required="required" type="email" value="" />
+                                </div>
+                                <div class="form-group">
+                                    <label for="customer_password">Password</label>
+                                    <input class="form-control" id="customer_password" name="customer[password]" required="required" type="password" value="" />
+                                </div>
+                                <p><a href="/account/login#recover">Forgot password?</a></p><br />
+                                <button class="btn btn-primary" type="submit">Sign in</button>
+                            {% endform %}
+                        </div>
+                        <div class="col-md-6">
+                            <h3>Continue without signing in</h3>
+                            <p>You'll have the option to register for an account after your purchase.</p>
+                            <p>You can also <a href="/account/register">register for an account now</a>.</p><br />
+                            <p class="text-center"><button class="btn btn-primary" data-dismiss="modal">Continue as a guest</button></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -2,21 +2,29 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 
 namespace VirtoCommerce.Web.Models
 {
+    [DataContract]
     public class Checkout : Drop
     {
+        [DataMember]
         public IDictionary<string, string> Attributes { get; set; }
 
+        [DataMember]
         public CustomerAddress BillingAddress { get; set; }
 
+        [DataMember]
         public bool BuyerAcceptsMarketing { get; set; }
 
+        [DataMember]
         public string CustomerId { get; set; }
 
+        [DataMember]
         public ICollection<Discount> Discounts { get; set; }
 
+        [DataMember]
         public decimal DiscountsAmount
         {
             get
@@ -25,6 +33,7 @@ namespace VirtoCommerce.Web.Models
             }
         }
 
+        [DataMember]
         public decimal DiscountsSavings
         {
             get
@@ -33,22 +42,31 @@ namespace VirtoCommerce.Web.Models
             }
         }
 
+        [DataMember]
         public string Email { get; set; }
 
+        [DataMember]
         public ICollection<GiftCard> GiftCards { get; set; }
 
+        [DataMember]
         public decimal GiftCardsAmount { get; set; }
 
+        [DataMember]
         public string Id { get; set; }
 
+        [DataMember]
         public ICollection<LineItem> LineItems { get; set; }
 
+        [DataMember]
         public string Name { get; set; }
 
+        [DataMember]
         public string Note { get; set; }
 
+        [DataMember]
         public CustomerOrder Order { get; set; }
 
+        [DataMember]
         public string OrderId
         {
             get
@@ -57,6 +75,7 @@ namespace VirtoCommerce.Web.Models
             }
         }
 
+        [DataMember]
         public string OrderName
         {
             get
@@ -65,6 +84,7 @@ namespace VirtoCommerce.Web.Models
             }
         }
 
+        [DataMember]
         public int OrderNumber
         {
             get
@@ -73,6 +93,7 @@ namespace VirtoCommerce.Web.Models
             }
         }
 
+        [DataMember]
         public bool RequiresShipping
         {
             get
@@ -81,16 +102,22 @@ namespace VirtoCommerce.Web.Models
             }
         }
 
+        [DataMember]
         public CustomerAddress ShippingAddress { get; set; }
 
+        [DataMember]
         public ShippingMethod ShippingMethod { get; set; }
 
+        [DataMember]
         public ICollection<ShippingMethod> ShippingMethods { get; set; }
 
+        [DataMember]
         public PaymentMethod PaymentMethod { get; set; }
 
+        [DataMember]
         public ICollection<PaymentMethod> PaymentMethods { get; set; }
 
+        [DataMember]
         public decimal ShippingPrice
         {
             get
@@ -109,6 +136,7 @@ namespace VirtoCommerce.Web.Models
             }
         }
 
+        [DataMember]
         public decimal SubtotalPrice
         {
             get
@@ -117,8 +145,10 @@ namespace VirtoCommerce.Web.Models
             }
         }
 
+        [DataMember]
         public ICollection<TaxLine> TaxLines { get; set; }
 
+        [DataMember]
         public decimal TaxPrice
         {
             get
@@ -127,6 +157,7 @@ namespace VirtoCommerce.Web.Models
             }
         }
 
+        [DataMember]
         public decimal TotalPrice
         {
             get
@@ -135,14 +166,19 @@ namespace VirtoCommerce.Web.Models
             }
         }
 
+        [DataMember]
         public string StringifiedShippingPrice { get; set; }
 
+        [DataMember]
         public string StringifiedTotalPrice { get; set; }
 
+        [DataMember]
         public ICollection<Transaction> Transactions { get; set; }
 
+        [DataMember]
         public string Currency { get; set; }
 
+        [DataMember]
         public bool GuestLogin { get; set; }
     }
 }
