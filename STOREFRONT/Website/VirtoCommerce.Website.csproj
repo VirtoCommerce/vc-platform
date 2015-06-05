@@ -212,6 +212,7 @@
     <Content Include="App_Data\Themes\_Global\assets\icon_google_32.png" />
     <Content Include="App_Data\Themes\_Global\assets\icon_facebook_32.png" />
     <Content Include="App_Data\Themes\_Global\assets\loader_spinner.gif" />
+    <Content Include="App_Data\Themes\_Global\validation.js" />
     <Content Include="App_Data\Themes\_Global\virtocommerce.js" />
     <Content Include="App_Data\Themes\_Global\social\shopify-social.svg" />
     <Content Include="App_Data\Themes\_Global\social\social-icons.css" />

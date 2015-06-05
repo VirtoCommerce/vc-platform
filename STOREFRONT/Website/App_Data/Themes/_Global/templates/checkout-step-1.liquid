@@ -11,8 +11,8 @@
                     <div class="form-group has-feedback">
                         <label class="col-sm-4 control-label" for="checkout_email">Email</label>
                         <div class="col-sm-8">
-                            <input class="form-control" data-val="true" data-val-required="The Email field is required." id="checkout_email" name="checkout[email]" required="required" type="email" value="{{ checkout.email }}" />
-                            <span aria-hidden="true" class="glyphicon glyphicon-asterisk form-control-feedback"></span>
+                            <input class="form-control" id="checkout_email" name="checkout[email]" required="required" type="email" value="{{ checkout.email }}" />
+                            <span aria-hidden="true" class="glyphicon glyphicon-exclamation-sign form-control-feedback"></span>
                         </div>
                     </div>
                     <hr />
@@ -42,14 +42,14 @@
                         <label class="col-sm-4 control-label" for="checkout_first_name">First name</label>
                         <div class="col-sm-8">
                             <input class="form-control" id="checkout_first_name" name="checkout[first_name]" required="required" type="text" value="{{ checkout.shipping_address.first_name }}" />
-                            <span aria-hidden="true" class="glyphicon glyphicon-asterisk form-control-feedback"></span>
+                            <span aria-hidden="true" class="glyphicon glyphicon-exclamation-sign form-control-feedback"></span>
                         </div>
                     </div>
                     <div class="form-group has-feedback">
                         <label class="col-sm-4 control-label" for="checkout_last_name">Last name</label>
                         <div class="col-sm-8">
                             <input class="form-control" id="checkout_last_name" name="checkout[last_name]" required="required" type="text" value="{{ checkout.shipping_address.last_name }}" />
-                            <span aria-hidden="true" class="glyphicon glyphicon-asterisk form-control-feedback"></span>
+                            <span aria-hidden="true" class="glyphicon glyphicon-exclamation-sign form-control-feedback"></span>
                         </div>
                     </div>
                     <div class="form-group">
@@ -68,7 +68,7 @@
                         <label class="col-sm-4 control-label" for="checkout_city">City</label>
                         <div class="col-sm-8">
                             <input class="form-control" id="checkout_city" name="checkout[city]" required="required" type="text" value="{{ checkout.shipping_address.city }}" />
-                            <span aria-hidden="true" class="glyphicon glyphicon-asterisk form-control-feedback"></span>
+                            <span aria-hidden="true" class="glyphicon glyphicon-exclamation-sign form-control-feedback"></span>
                         </div>
                     </div>
                     <div class="form-group">
@@ -81,7 +81,7 @@
                         <label class="col-sm-4 control-label" for="checkout_address1">Address line 1</label>
                         <div class="col-sm-8">
                             <input class="form-control" id="checkout_address1" name="checkout[address1]" required="required" type="text" value="{{ checkout.shipping_address.address1 }}" />
-                            <span aria-hidden="true" class="glyphicon glyphicon-asterisk form-control-feedback"></span>
+                            <span aria-hidden="true" class="glyphicon glyphicon-exclamation-sign form-control-feedback"></span>
                         </div>
                     </div>
                     <div class="form-group">
@@ -94,7 +94,7 @@
                         <label class="col-sm-4 control-label" for="checkout_zip">Zip / Postal code</label>
                         <div class="col-sm-8">
                             <input class="form-control" id="checkout_zip" name="checkout[zip]" required="required" type="text" value="{{ checkout.shipping_address.zip }}" />
-                            <span aria-hidden="true" class="glyphicon glyphicon-asterisk form-control-feedback"></span>
+                            <span aria-hidden="true" class="glyphicon glyphicon-exclamation-sign form-control-feedback"></span>
                         </div>
                     </div>
                     <div class="form-group">
