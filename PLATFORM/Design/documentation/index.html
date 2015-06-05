@@ -19,6 +19,7 @@
 
         <!-- Google fonts -->
         <link href='http://fonts.googleapis.com/css?family=Exo+2:400,300,500,600,400italic&amp;subset=latin,cyrillic' rel='stylesheet' type='text/css'>
+        <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,600,700' rel='stylesheet' type='text/css'>
 
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
         
@@ -169,14 +170,6 @@
                         </li>
                         <li class="menu-item" data-type="widgets">
                             <a class="menu-link">Widgets</a>
-                        </li>
-                        <li class="menu-item" data-type="blade">
-                            <a class="menu-link">Blade</a>
-                            <ul class="menu __sub">
-                                <li class="menu-item" data-type="blade_constructor">
-                                    <a class="menu-link">Blade constructor</a>
-                                </li>
-                            </ul>
                         </li>
                     </ul>
                 </div>  
@@ -1372,126 +1365,6 @@
                         <div class="note">Example using title and icon template</div>
                         <pre class="code" data-src="templates/widgets/name-icon.html"></pre>
                     </section>
-                    <section class="cblade">
-                        <h1 class="title" id="blade">Blade</h1>
-                        <div class="note">Example of simple blade</div>
-                        <div class="example __center __bg">
-                            <div class="blade">
-                                <header class="blade-head"></header>
-                                <div class="blade-container">
-                                    <div class="blade-content">
-                                        <div class="blade-inner">
-                                            <div class="inner-block"></div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <pre class="code" data-src="templates/blade/basic.html"></pre>
-                        <h2 id="blade_constructor">Blade constructor</h2>
-                        <div class="note">Create your own blade</div>
-                        <div class="settings">
-                            <div class="sub-t">Blade navigation</div>
-                            <div class="form-group">
-                                <div class="form-control __checkbox">
-                                    <label class="form-label">
-                                        <input id="headNav" type="checkbox">
-                                        <span class="check"></span>
-                                        <span class="name"></span>
-                                    </label>
-                                </div>
-                            </div>
-                            <div class="sub-t">Header</div>
-                            <div class="form-group">
-                                <div class="form-control __checkbox">
-                                    <label class="form-label">
-                                        <input id="headIcon" type="checkbox">
-                                        <span class="check"></span>
-                                        <span class="name">Icon</span>
-                                    </label>
-                                    <label class="form-label">
-                                        <input id="headTitle" type="checkbox">
-                                        <span class="check"></span>
-                                        <span class="name">Title</span>
-                                    </label>
-                                    <label class="form-label __disabled">
-                                        <input id="headDescr" type="checkbox" disabled>
-                                        <span class="check"></span>
-                                        <span class="name">Description</span>
-                                    </label>
-                                </div>
-                            </div>
-                            <div class="sub-t">Toolbar</div>
-                            <div class="form-group">
-                                <div class="form-control __checkbox">
-                                    <label class="form-label">
-                                        <input id="headToolbar" type="checkbox">
-                                        <span class="check"></span>
-                                        <span class="name"></span>
-                                    </label>
-                                </div>
-                            </div>
-                            <div class="sub-t">Static block</div>
-                            <div class="form-group">
-                                <div class="form-control __checkbox">
-                                    <label class="form-label">
-                                        <input id="staticTop" type="checkbox">
-                                        <span class="check"></span>
-                                        <span class="name"></span>
-                                    </label>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <div class="form-control __radio">
-                                    <label class="form-label __disabled">
-                                        <input checked="true" name="staticType" id="normal" type="radio" disabled>
-                                        <span class="check"></span>
-                                        <span class="name">Normal</span>
-                                    </label>
-                                    <label class="form-label __disabled">
-                                        <input name="staticType" id="collapsed" type="radio" disabled>
-                                        <span class="check"></span>
-                                        <span class="name">Collapsed</span>
-                                    </label>
-                                    <label class="form-label __disabled">
-                                        <input name="staticType" id="expanded" type="radio" disabled>
-                                        <span class="check"></span>
-                                        <span class="name">Expanded</span>
-                                    </label>
-                                </div>
-                                <div class="sub-t">Blade size</div>
-                                <div class="form-group">
-                                    <div class="form-control __radio">
-                                        <label class="form-label">
-                                            <input name="bladeWidth" id="wnormal" type="radio">
-                                            <span class="check"></span>
-                                            <span class="name">Normal</span>
-                                        </label>
-                                        <label class="form-label">
-                                            <input name="bladeWidth" id="wmedium" type="radio">
-                                            <span class="check"></span>
-                                            <span class="name">Medium</span>
-                                        </label>
-                                        <label class="form-label">
-                                            <input name="bladeWidth" id="wlarge" type="radio">
-                                            <span class="check"></span>
-                                            <span class="name">Large</span>
-                                        </label>
-                                        <label class="form-label">
-                                            <input name="bladeWidth" id="wxlarge" type="radio">
-                                            <span class="check"></span>
-                                            <span class="name">Xlarge</span>
-                                        </label>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="example __center __bg __construct">
-                            <div id="tplblade"></div>
-                        </div>
-                        <div id="codeResult"></div>
-                        <pre class="code __construct language-markup"></pre>
-                    </section>
                 </div>  
             </article>
             <footer class="footer">
@@ -1507,7 +1380,6 @@
         <script src="js/app.js"></script>
         <script src="js/prism.js"></script>
         <script src="js/main.js"></script>
-        <script src="js/bladeConstructor.js"></script>
         <script src="js/directives/vaNumber.js"></script>
     </body>
 </html>
