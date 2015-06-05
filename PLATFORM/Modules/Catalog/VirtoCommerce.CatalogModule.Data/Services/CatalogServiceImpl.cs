@@ -76,11 +76,7 @@ namespace VirtoCommerce.CatalogModule.Data.Services
 		{
 			using (var repository = _catalogRepositoryFactory())
 			{
-				foreach (var catalogId in catalogIds)
-				{
-					var dbCatalog = repository.GetCatalogById(catalogId);
-					repository.Remove(dbCatalog);
-				}
+				repository.RemoveCatalogs(catalogIds);
 				CommitChanges(repository);
 			}
 		}

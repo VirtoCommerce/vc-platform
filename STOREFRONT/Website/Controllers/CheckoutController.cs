@@ -255,7 +255,7 @@ namespace VirtoCommerce.Web.Controllers
                     form.Errors = formErrors;
                     form.PostedSuccessfully = false;
 
-                    return View("checkout-step-2");
+                    return RedirectToAction("Step2");
                 }
             }
 

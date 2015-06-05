@@ -18,7 +18,7 @@
                     <hr />
                     {% if checkout.guest_login != true %}
                         <div class="form-group">
-                            <label class="col-sm-4 control-label">Shipping addresses</label>
+                            <label class="col-sm-4 control-label" for="checkout_email">Shipping addresses</label>
                             <div class="col-sm-8">
                                 <select class="form-control" id="customer-addresses">
                                     {% for address in customer.addresses %}

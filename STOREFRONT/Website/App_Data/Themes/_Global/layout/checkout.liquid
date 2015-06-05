@@ -135,13 +135,14 @@
 </head>
 <body>
     {% include 'guest_popup' %}
+    {% include 'error_popup' %}
     <div class="container">
         <nav class="navbar navbar-default navbar-fixed-top" style="background-color: {{ settings.color_primary }};">
             <div class="container">
                 <div class="navbar-header">
                     <a class="navbar-brand" href="/" style="color: {{ settings.color_header_text }}; font-size: 30px; font-weight: 600;">{{ shop.name }}</a>
                 </div>
-                {% if checkout.guest_login? %}
+                {% if checkout.guest_login != true %}
                     <ul class="nav navbar-nav navbar-right">
                         <li><a href="/account" style="color: {{ settings.color_header_text }}; font-weight: 400;">Logged in as <strong>{{ customer.first_name }}</strong></a></li>
                     </ul>

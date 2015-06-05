@@ -35,7 +35,10 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
 		void SetItemCategoryRelation(foundation.Item item, foundation.Category category);
 		void SetCatalogProperty(foundation.Catalog catalog, foundation.Property property);
 		void SetCategoryProperty(foundation.Category category, foundation.Property property);
-		void RemoveItems(string[] itemIds);
+		void RemoveItems(string[] ids);
+		void RemoveCategories(string[] ids);
+		void RemoveCatalogs(string[] ids);
+
 		
 
 	}

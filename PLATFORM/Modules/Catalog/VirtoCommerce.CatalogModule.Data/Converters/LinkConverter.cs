@@ -75,8 +75,7 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 			{
 				SourceCategoryId = category.Id,
 				TargetCategoryId = categoryLink.CategoryId,
-				//Only one relation (category or catalog)
-				TargetCatalogId = String.IsNullOrEmpty(categoryLink.CategoryId) ?  categoryLink.CatalogId : null
+				TargetCatalogId =  categoryLink.CatalogId
 			};
 			return retVal;
 		}
