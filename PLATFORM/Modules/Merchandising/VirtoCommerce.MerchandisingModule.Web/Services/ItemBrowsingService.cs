@@ -97,7 +97,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Services
             var items = new List<moduleModel.CatalogProduct>();
             var itemsOrderedList = new List<string>();
 
-            int foundItemCount;
+            var foundItemCount = 0;
             var dbItemCount = 0;
             var searchRetry = 0;
 
@@ -109,10 +109,15 @@ namespace VirtoCommerce.MerchandisingModule.Web.Services
                 // Search using criteria, it will only return IDs of the items
                 var scope = _searchConnection.Scope;
                 var searchResults = _searchProvider.Search(scope, criteria) as SearchResults;
-                var findedItems = searchResults.GetKeyAndOutlineFieldValueMap<string>();
-                results = new CatalogItemSearchResults(myCriteria, findedItems, searchResults);
+                var itemKeyValues = searchResults.GetKeyAndOutlineFieldValueMap<string>();
+                results = new CatalogItemSearchResults(myCriteria, itemKeyValues, searchResults);
 
                 searchRetry++;
+
+                if (results.Items == null)
+                {
+                    continue;
+                }
 
                 //Get only new found itemIds
                 var uniqueKeys = results.Items.Keys.Except(itemsOrderedList).ToArray();
@@ -129,7 +134,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Services
                 var currentItems = _itemService.GetByIds(uniqueKeys.ToArray(), responseGroup);
 
                 var orderedList = currentItems.OrderBy(i => itemsOrderedList.IndexOf(i.Id));
-                items.AddRange((IEnumerable<moduleModel.CatalogProduct>)orderedList);
+                items.AddRange(orderedList);
                 dbItemCount = currentItems.Length;
 
                 //If some items where removed and search is out of sync try getting extra items

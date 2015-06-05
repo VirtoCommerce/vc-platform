@@ -16,6 +16,7 @@ namespace VirtoCommerce.Web
 
         protected void Application_Error(object sender, EventArgs e)
         {
+            /*
             var exception = this.Server.GetLastError();
             this.Server.ClearError();
 
@@ -40,6 +41,7 @@ namespace VirtoCommerce.Web
             controller.Execute(new RequestContext(new HttpContextWrapper(this.Context), routeData));
 
             this.Response.End();
+             * */
         }
 
         protected void Application_Start()
