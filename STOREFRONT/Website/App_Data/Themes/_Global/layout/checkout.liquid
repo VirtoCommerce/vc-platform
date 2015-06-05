@@ -13,16 +13,11 @@
     {{ '//ajax.aspnetcdn.com/ajax/mvc/5.1/jquery.validate.unobtrusive.min.js' | script_tag }}
     {{ 'shopify_common.js' | shopify_asset_url | script_tag }}
     {{ 'virtocommerce.js' | shopify_asset_url | script_tag }}
+    {{ 'validation.js' | shopify_asset_url | script_tag }}
 
     {{ content_for_header }}
     <script>
         $(function () {
-            $.validator.setDefaults({
-                highlight: function (element, error, valid) {
-                    $(element).val("error");
-                }
-            });
-
             new Shopify.CountryProvinceSelector("checkout_country", "checkout_province", {});
 
             var checkout = {% if checkout != null %}{{ checkout | json }}{% else %}null{% endif %};
@@ -34,6 +29,26 @@
                 var defaultAddress = customer.addresses.sort(function (a, b) {
                     return a.id - b.id;
                 })[0];
+                if (checkout.requires_shipping) {
+                    if (checkout.shipping_address != null) {
+                        var matchedAddresses = $.grep(customer.addresses, function(address) {
+                            return (address.first_name === checkout.shipping_address.first_name &&
+                                address.last_name === checkout.shipping_address.last_name &&
+                                address.country === checkout.shipping_address.country &&
+                                address.province === checkout.shipping_address.province &&
+                                address.city === checkout.shipping_address.city &&
+                                address.company === checkout.shipping_address.company &&
+                                address.address1 === checkout.shipping_address.address1 &&
+                                address.address2 === checkout.shipping_address.address2 &&
+                                address.zip === checkout.shipping_address.zip &&
+                                address.phone === checkout.shipping_address.phone);
+                        });
+                        if (matchedAddresses.length) {
+                            defaultAddress = matchedAddresses[0];
+                        }
+                    }
+                }
+
                 fillAddress(defaultAddress);
             }
 
@@ -73,7 +88,7 @@
         });
 
         function fillAddress(address) {
-            $("#selected-address").val(address.id);
+            $("#customer-addresses").val(address.id);
             $("#checkout_first_name").val(address.first_name);
             $("#checkout_last_name").val(address.last_name);
             $("#checkout_company").val(address.company);
