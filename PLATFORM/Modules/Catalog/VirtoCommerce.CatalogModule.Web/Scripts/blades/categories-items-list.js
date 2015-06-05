@@ -125,7 +125,7 @@
                 };
                 bladeNavigationService.showBlade(newBlade, blade);
             };
-            
+
             $scope.delete = function () {
                 if (isItemsChecked()) {
                     deleteChecked();
@@ -260,6 +260,7 @@
                             id: 'itemsList' + (blade.level + (e.ctrlKey ? 1 : 0)),
                             level: blade.level + (e.ctrlKey ? 1 : 0),
                             mode: blade.mode,
+                            isBrowsingLinkedCategory: blade.isBrowsingLinkedCategory || $scope.hasLinks(listItem),
                             breadcrumbs: blade.breadcrumbs,
                             title: 'Categories & Items',
                             subtitle: 'Browsing "' + listItem.name + '"',
@@ -421,6 +422,10 @@
                 //}
             ];
 
+            if (blade.isBrowsingLinkedCategory) {
+                $scope.blade.toolbarCommands.splice(2, 5);
+            }
+
             if (angular.isDefined(blade.mode)) {
                 // mappingSource
                 if (blade.mode === 'mappingSource') {
@@ -431,13 +436,14 @@
                         },
                         canExecuteMethod: isItemsChecked
                     }
-                    $scope.blade.toolbarCommands.splice(1, 2, mapCommand);
+                    $scope.blade.toolbarCommands.splice(1, 6, mapCommand);
                 } else if (blade.mode === 'newAssociation') {
-                    $scope.blade.toolbarCommands.splice(1, 2);
+                    $scope.blade.toolbarCommands.splice(1, 6);
                 }
-            } else if (authService.checkPermission('catalog:categories:manage')
+            } else if (!blade.isBrowsingLinkedCategory
+                   && (authService.checkPermission('catalog:categories:manage')
                    || (authService.checkPermission('catalog:virtual_catalogs:manage') && blade.catalog.virtual)
-                   || (authService.checkPermission('catalog:items:manage') && !blade.catalog.virtual)) {
+                   || (authService.checkPermission('catalog:items:manage') && !blade.catalog.virtual))) {
                 $scope.blade.toolbarCommands.splice(1, 0, {
                     name: "Add", icon: 'fa fa-plus',
                     executeMethod: function () {

@@ -14,8 +14,8 @@
             itemId: $scope.currentBlade.item.id,
             title: $scope.currentBlade.origItem.name,
             subtitle: 'item properties',
-            controller: 'virtoCommerce.catalogModule.itemPropertyController',
-            template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/item-property-detail.tpl.html'
+            controller: 'virtoCommerce.catalogModule.itemPropertyListController',
+            template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/item-property-list.tpl.html'
         };
         bladeNavigationService.showBlade(blade, $scope.currentBlade);
     };
