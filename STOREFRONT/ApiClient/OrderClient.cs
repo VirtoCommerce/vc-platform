@@ -52,7 +52,8 @@ namespace VirtoCommerce.ApiClient
                 site = storeId,
                 customer = customerId,
                 start = skip.ToString(),
-                count = take.ToString()
+                count = take.ToString(),
+                respGroup = "Full"
             };
 
             return GetAsync<OrderSearchResult>(
