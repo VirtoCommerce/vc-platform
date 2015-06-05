@@ -17,7 +17,6 @@ namespace VirtoCommerce.Content.Data.Services
 	{
 		private readonly object _lockObject = new object();
 		private readonly IContentRepository _repository;
-		private readonly IBlobStorageProvider _blobProvider;
 		private readonly string _tempPath;
 
 		public ThemeServiceImpl(IContentRepository repository)
@@ -28,16 +27,12 @@ namespace VirtoCommerce.Content.Data.Services
 			_repository = repository;
 		}
 
-		public ThemeServiceImpl(IContentRepository repository, IBlobStorageProvider blobProvider, string tempPath)
+		public ThemeServiceImpl(IContentRepository repository, string tempPath)
 		{
 			if (repository == null)
 				throw new ArgumentNullException("repository");
 
-			if (blobProvider == null)
-				throw new ArgumentNullException("blobProvider");
-
 			_repository = repository;
-			_blobProvider = blobProvider;
 			_tempPath = HostingEnvironment.MapPath("~/App_Data/Uploads/");
 		}
 
@@ -153,8 +148,8 @@ namespace VirtoCommerce.Content.Data.Services
 					{
 						var asset = new ThemeAsset
 						{
-							AssetName = entry.FullName.Replace(themeName, ""),
-							Id = entry.FullName.Replace(themeName, "")
+							AssetName = PrepareAssetNameAndId(entry.FullName),
+							Id = PrepareAssetNameAndId(entry.FullName)
 						};
 
 						var arr = ReadFully(stream);
@@ -166,5 +161,30 @@ namespace VirtoCommerce.Content.Data.Services
 				}
 			}
 		}
+
+		private string PrepareAssetNameAndId(string fullName)
+		{
+			var retVal = string.Empty;
+
+			var steps = fullName.Split('/');
+
+			if(_defaultFolders.Contains(steps[0]) && steps.Length > 1)
+			{
+				retVal = fullName;
+			}
+			else if (!_defaultFolders.Contains(steps[0]) && steps.Length == 1)
+			{
+				retVal = fullName;
+			}
+			else
+			{
+				retVal = string.Join("/", steps.Skip(1));
+			}
+
+			return retVal;
+		}
+
+		private string[] _defaultFolders = new string[] { "assets", "layout", "templates", "snippets", "config", "locales" };
+
 	}
 }
