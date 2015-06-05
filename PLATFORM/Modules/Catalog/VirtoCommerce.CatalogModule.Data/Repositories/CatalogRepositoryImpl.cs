@@ -69,7 +69,8 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
 			modelBuilder.Entity<dataModel.ItemRelation>().HasRequired(m => m.ChildItem).WithMany().WillCascadeOnDelete(false);
 			// cascade delete Item and Category when PropertySet is deleted. This should happen ONLY when catalog is being deleted.
 			modelBuilder.Entity<dataModel.Item>().HasOptional(m => m.PropertySet).WithMany().WillCascadeOnDelete(false);
-			modelBuilder.Entity<dataModel.Category>().HasOptional(m => m.PropertySet).WithMany().WillCascadeOnDelete(false);
+			modelBuilder.Entity<dataModel.Category>().HasOptional(m => m.PropertySet).WithMany().WillCascadeOnDelete(true);
+			modelBuilder.Entity<dataModel.Catalog>().HasOptional(m => m.PropertySet).WithMany().WillCascadeOnDelete(true);
 
 			base.OnModelCreating(modelBuilder);
 		}
@@ -231,35 +232,6 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
 			}
 			return retVal;
 		}
-
-		//public dataModel.CategoryLink[] GetCategoryLinks(string categoryId)
-		//{
-		//	var retVal = new List<dataModel.CategoryLink>();
-		//	//Load links for both categories (source and target)
-		//	var allLinks = CategoryLinks.AsNoTracking().Include(x=>x.Category).Where(x=> x.CategoryId == categoryId || x.LinkCategoryId == categoryId).ToArray();
-		//	foreach (var link in allLinks)
-		//	{
-		//		//Need to swap link role for both source and target categories
-		//		if (categoryId != link.CategoryId)
-		//		{
-		//			link.LinkCategoryId = link.CategoryId;
-		//			link.LinkCatalogId = link.Category.CatalogId;
-		//		}
-		//		retVal.Add(link);
-			
-		//	}
-		//	return retVal.ToArray();
-		//}
-
-
-		//public dataModel.CategoryLink[] GetCatalogLinks(string catalogId)
-		//{
-		//	var retVal = CategoryLinks.AsNoTracking()
-		//								.Where(x => x.LinkCatalogId == catalogId && x.LinkCategoryId == null)
-		//								.ToArray();
-
-		//	return retVal;
-		//}
 
 		public dataModel.Category[] GetAllCategoryParents(dataModel.Category category)
 		{
@@ -429,7 +401,6 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
 			{
 				var propertySet = new dataModel.PropertySet
 				{
-					CatalogId = catalog.Id,
 					Name = catalog.Name + " property set",
 					TargetType = "Catalog"
 				};
@@ -452,7 +423,6 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
 			{
 				var propertySet = new dataModel.PropertySet
 				{
-					CatalogId = category.CatalogId,
 					Name = category.Name + " property set",
 					TargetType = "Category"
 				};
@@ -486,15 +456,80 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
 			foreach (var item in items)
 			{
 				base.Remove(item);
-				//delete relations
-				foreach (var relation in ItemRelations.Where(x => x.ChildItemId == item.Id || x.ParentItemId == item.Id))
+
+				//Delete all variations
+				var allRelatedItemIds = ItemRelations.Where(x => x.ParentItemId == item.Id).Select(x=>x.ChildItemId).ToArray();
+				RemoveItems(allRelatedItemIds);
+
+				//delete all relations
+				var allItemRelations = ItemRelations.Where(x => x.ChildItemId == item.Id || x.ParentItemId == item.Id);
+				foreach (var relation in allItemRelations)
 				{
 					base.Remove(relation);
 				}
+			
+			}
+		}
+
+		public void RemoveCategories(string[] ids)
+		{
+			foreach(var id in ids)
+			{
+				//Recursive delete all child categories
+				var allChildrenIds = Categories.Where(x => x.ParentCategoryId == id).Select(x => x.Id).ToArray();
+				RemoveCategories(allChildrenIds);
+
+				//Remove all products from category
+				var productsIds = CategoryItemRelations.Where(x => x.CategoryId == id).Select(x=>x.ItemId).ToArray();
+				RemoveItems(productsIds);
+
+				//Remove all categoryRelations
+				foreach(var categoryRelation in CategoryLinks.Where(x=>x.SourceCategoryId == id || x.TargetCategoryId == id))
+				{
+					base.Remove(categoryRelation);
+				}
+				
+				var category = GetCategoryById(id);
+				if (category.PropertySet != null)
+				{
+					//Remove properties
+					foreach (var property in category.PropertySet.PropertySetProperties.Select(x=>x.Property).ToArray())
+					{
+						base.Remove(property);
+					}
+					
+				}
+			
+				base.Remove(category);
+		
+			}
+		}
+
+		public void RemoveCatalogs(string[] ids)
+		{
+			foreach (var id in ids)
+			{
+				//Recursive remove all categories and products
+				var categoriesIds = Categories.Where(x => x.CatalogId == id && x.ParentCategoryId == null).Select(x => x.Id).ToArray();
+				RemoveCategories(categoriesIds);
+
+				//Remove catalog itself
+				var catalogBase = GetCatalogById(id);
+				var catalog = catalogBase as dataModel.Catalog;
+				if(catalog != null && catalog.PropertySet != null)
+				{
+					foreach(var property in catalog.PropertySet.PropertySetProperties.Select(x=>x.Property).ToArray())
+					{
+						base.Remove(property);
+					}
+				}
+
+				base.Remove(catalogBase);
+		
 			}
 		}
 		#endregion
 
-
+	
 	}
 }

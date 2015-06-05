@@ -106,8 +106,10 @@ namespace VirtoCommerce.CatalogModule.Data.Services
                         query = query.Where(x => x.CatalogId == criteria.CatalogId && (x.ParentCategoryId == null || criteria.GetAllCategories));
                         if (isVirtual)
                         {
-                            //Need return all linked categories 
-							var allLinkedCategoriesIds = ((dataModel.VirtualCatalog)dbCatalog).IncommingLinks.Select(x => x.SourceCategoryId);
+                            //Need return only catalog linked categories 
+							var allLinkedCategoriesIds = ((dataModel.VirtualCatalog)dbCatalog).IncommingLinks
+																							  .Where(x=>x.TargetCategoryId == null)
+																							  .Select(x => x.SourceCategoryId);
                             //Search in all catalogs
                             query = repository.Categories;
                             query = query.Where(x => (x.CatalogId == criteria.CatalogId && (x.ParentCategoryId == null || criteria.GetAllCategories)) || allLinkedCategoriesIds.Contains(x.Id));
