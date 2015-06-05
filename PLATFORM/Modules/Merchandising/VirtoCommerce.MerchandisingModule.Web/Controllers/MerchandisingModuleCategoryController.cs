@@ -123,6 +123,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 									   CategoryId = parentId,
 									   Start = 0,
 									   Count = int.MaxValue,
+									   HideDirectLinedCategories = true,
 									   ResponseGroup = moduleModel.ResponseGroup.WithCategories,
 									   GetAllCategories = string.IsNullOrEmpty(parentId)
 								   };

@@ -59,7 +59,7 @@ namespace VirtoCommerce.SearchModule.Tests
             var cacheManager = new CacheManager(new InMemoryCachingProvider(), cacheSettings);
             var searchConnection = new SearchConnection(ConnectionHelper.GetConnectionString("SearchConnectionString"));
             var searchProvider = new LuceneSearchProvider(new LuceneSearchQueryBuilder(), searchConnection);
-            var catalogIndexBuilder = new CatalogItemIndexBuilder(searchProvider, GetSearchService(), GetItemService(), GetPricingService(), GetCategoryService(), GetPropertyService(), GetChangeLogService(), cacheManager);
+            var catalogIndexBuilder = new CatalogItemIndexBuilder(searchProvider, GetSearchService(), GetItemService(), GetPricingService(), GetPropertyService(), GetChangeLogService(),  new CatalogOutlineBuilder(GetCategoryService(), cacheManager));
             var searchController = new SearchIndexController(settingManager.Object, catalogIndexBuilder);
             return searchController;
         }

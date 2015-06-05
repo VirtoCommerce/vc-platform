@@ -265,6 +265,9 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
 
 		public dataModel.Item[] GetItemByIds(string[] itemIds, coreModel.ItemResponseGroup respGroup = coreModel.ItemResponseGroup.ItemLarge)
 		{
+			if(!itemIds.Any())
+				return new dataModel.Item[] { };
+
 			var query = Items.Include(x => x.Catalog).Where(x => itemIds.Contains(x.Id));
 
             if ((respGroup & coreModel.ItemResponseGroup.Categories) == coreModel.ItemResponseGroup.Categories)
@@ -455,11 +458,8 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
 			var items = GetItemByIds(itemIds);
 			foreach (var item in items)
 			{
-				base.Remove(item);
-
 				//Delete all variations
-				var allRelatedItemIds = ItemRelations.Where(x => x.ParentItemId == item.Id).Select(x=>x.ChildItemId).ToArray();
-				RemoveItems(allRelatedItemIds);
+				RemoveItems(Items.Where(x=>x.ParentId == item.Id).Select(x=>x.Id).ToArray());
 
 				//delete all relations
 				var allItemRelations = ItemRelations.Where(x => x.ChildItemId == item.Id || x.ParentItemId == item.Id);
@@ -467,6 +467,8 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
 				{
 					base.Remove(relation);
 				}
+
+				base.Remove(item);
 			
 			}
 		}

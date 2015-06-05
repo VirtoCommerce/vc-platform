@@ -1,7 +1,7 @@
 ﻿angular.module('virtoCommerce.catalogModule')
 .controller('virtoCommerce.catalogModule.catalogCSVimportWizardMappingStepController', ['$scope', 'platformWebApp.bladeNavigationService', function ($scope, bladeNavigationService) {
 	var blade = $scope.blade;
-	blade.isLoading = false;
+	
 
 	//Need automatically tracking 
 	angular.forEach($scope.blade.importConfiguration.mappingItems, function (x) {
@@ -47,6 +47,7 @@
     	$scope.bladeClose();
     };
 
+    blade.isLoading = false;
 }]);
 
 

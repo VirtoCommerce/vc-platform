@@ -242,58 +242,76 @@ namespace VirtoCommerce.CatalogModule.Web.BackgroundJobs
 
 			configuration.Add("PrimaryImage", (product) =>
 			{
-				var image  = product.Assets.Where(x=>x.Type == ItemAssetType.Image && x.Group == "primaryimage").FirstOrDefault();
-				if (image != null)
+				if (product.Assets != null)
 				{
-					return _blobUrlResolver.GetAbsoluteUrl(image.Url);
+					var image = product.Assets.Where(x => x.Type == ItemAssetType.Image && x.Group == "primaryimage").FirstOrDefault();
+					if (image != null)
+					{
+						return _blobUrlResolver.GetAbsoluteUrl(image.Url);
+					}
 				}
 				return String.Empty;
 			});
 
 			configuration.Add("AltImage", (product) =>
 			{
-				var image = product.Assets.Where(x => x.Type == ItemAssetType.Image && x.Group != "primaryimage").FirstOrDefault();
-				if (image != null)
+				if (product.Assets != null)
 				{
-					return  _blobUrlResolver.GetAbsoluteUrl(image.Url);
+					var image = product.Assets.Where(x => x.Type == ItemAssetType.Image && x.Group != "primaryimage").FirstOrDefault();
+					if (image != null)
+					{
+						return _blobUrlResolver.GetAbsoluteUrl(image.Url);
+					}
 				}
 				return String.Empty;
 			});
 
 			configuration.Add("Review", (product) =>
 			{
-				var review = product.Reviews.FirstOrDefault();
-				if (review != null)
+				if (product.Reviews != null)
 				{
-					return review.Content ?? String.Empty;
+					var review = product.Reviews.FirstOrDefault();
+					if (review != null)
+					{
+						return review.Content ?? String.Empty;
+					}
 				}
 				return String.Empty;
 			});
 
 			configuration.Add("SeoUrl", (product) =>
 			{
-				var seoInfo = product.SeoInfos.FirstOrDefault();
-				if (seoInfo != null)
+				if (product.SeoInfos != null)
 				{
-					return seoInfo.SemanticUrl ?? String.Empty;
+					var seoInfo = product.SeoInfos.FirstOrDefault();
+					if (seoInfo != null)
+					{
+						return seoInfo.SemanticUrl ?? String.Empty;
+					}
 				}
 				return String.Empty;
 			});
 			configuration.Add("SeoTitle", (product) =>
 			{
-				var seoInfo = product.SeoInfos.FirstOrDefault();
-				if (seoInfo != null)
+				if (product.SeoInfos != null)
 				{
-					return seoInfo.PageTitle ?? String.Empty;
+					var seoInfo = product.SeoInfos.FirstOrDefault();
+					if (seoInfo != null)
+					{
+						return seoInfo.PageTitle ?? String.Empty;
+					}
 				}
 				return String.Empty;
 			});
 			configuration.Add("SeoDescription", (product) =>
 			{
-				var seoInfo = product.SeoInfos.FirstOrDefault();
-				if (seoInfo != null)
+				if (product.SeoInfos != null)
 				{
-					return seoInfo.MetaDescription ?? String.Empty;
+					var seoInfo = product.SeoInfos.FirstOrDefault();
+					if (seoInfo != null)
+					{
+						return seoInfo.MetaDescription ?? String.Empty;
+					}
 				}
 				return String.Empty;
 			});

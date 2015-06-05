@@ -23,24 +23,22 @@ namespace VirtoCommerce.SearchModule.Data.Services
         private readonly ICatalogSearchService _catalogSearchService;
         private readonly IPricingService _pricingService;
         private readonly IItemService _itemService;
-        private readonly ICategoryService _categoryService;
         private readonly IPropertyService _propertyService;
         private readonly IChangeLogService _changeLogService;
-        private readonly CacheManager _cacheManager;
+  		private readonly CatalogOutlineBuilder _catalogOutlineBuilder;
 
         public CatalogItemIndexBuilder(ISearchProvider searchProvider, ICatalogSearchService catalogSearchService,
                                        IItemService itemService, IPricingService pricingService,
-                                       ICategoryService categoryService, IPropertyService propertyService,
-                                       IChangeLogService changeLogService, CacheManager cacheManager)
+                                       IPropertyService propertyService,
+                                       IChangeLogService changeLogService, CatalogOutlineBuilder catalogOutlineBuilder)
         {
             _searchProvider = searchProvider;
             _itemService = itemService;
             _catalogSearchService = catalogSearchService;
             _pricingService = pricingService;
-            _categoryService = categoryService;
             _propertyService = propertyService;
             _changeLogService = changeLogService;
-            _cacheManager = cacheManager;
+			_catalogOutlineBuilder = catalogOutlineBuilder;
         }
 
         #region ISearchIndexBuilder Members
@@ -133,22 +131,25 @@ namespace VirtoCommerce.SearchModule.Data.Services
             //Index item direct categories links
             if (item.Links != null)
             {
+				var outlines = new List<string>();
                 foreach (var link in item.Links)
                 {
-                    var category = GetCategoryById(link.CategoryId);
-                    if (category != null)
-                    {
-                        IndexCategory(ref doc, category);
-                        foreach (var categoryLink in category.Links)
-                        {
-                            var linkCategory = GetCategoryById(categoryLink.CategoryId);
-                            if (linkCategory != null)
-                            {
-                                IndexCategory(ref doc, linkCategory);
-                            }
-                        }
-                    }
+					if (link.CategoryId != null)
+					{
+						outlines.AddRange(_catalogOutlineBuilder.GetOutlines(link.CategoryId));
+						//doc.Add(new DocumentField(string.Format("sort{0}{1}", link.CatalogId, link.CategoryId), category.Priority, new[] { IndexStore.Yes, IndexType.NotAnalyzed }));
+					}
                 }
+				//Add outlines to search index
+				foreach(var outline in outlines.Distinct())
+				{
+					doc.Add(new DocumentField("__outline", outline.ToLower(), new[] { IndexStore.Yes, IndexType.NotAnalyzed }));
+				}
+				//Add all linked catalogs to search index
+				foreach(var catalogId in outlines.Select(x=>x.Split('/').FirstOrDefault()).Where(x=>x != null).Distinct())
+				{
+					doc.Add(new DocumentField("catalog", catalogId.ToLower(), new[] { IndexStore.Yes, IndexType.NotAnalyzed }));
+				}
             }
 
             // Index custom properties
@@ -201,29 +202,7 @@ namespace VirtoCommerce.SearchModule.Data.Services
             }
         }
 
-        #region Category Indexing
-        private Category GetCategoryById(string categoryId)
-        {
-            var cacheKey = CacheKey.Create("CatalogItemIndexBuilder.GetCategoryById", categoryId);
-            var retVal = _cacheManager.Get(cacheKey, () => _categoryService.GetById(categoryId));
-            return retVal;
-        }
-
-
-        protected virtual void IndexCategory(ref ResultDocument doc, Category category)
-        {
-            doc.Add(new DocumentField(string.Format("sort{0}{1}", category.CatalogId, category.Id), category.Priority, new[] { IndexStore.Yes, IndexType.NotAnalyzed }));
-
-            doc.Add(new DocumentField("catalog", category.CatalogId.ToLower(), new[] { IndexStore.Yes, IndexType.NotAnalyzed }));
-            var outlineParts = new[] { category.CatalogId, category.Id }.Concat(category.Parents.Select(x => x.Id)).Where(x => !String.IsNullOrEmpty(x));
-            // get category path
-            var outline = string.Join("/", outlineParts);
-            doc.Add(new DocumentField("__outline", outline.ToLower(), new[] { IndexStore.Yes, IndexType.NotAnalyzed }));
-
-        }
-
-        #endregion
-
+      
         #region Price Lists Indexing
 
         protected virtual void IndexItemPrices(ref ResultDocument doc, CatalogProduct item)

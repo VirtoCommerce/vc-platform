@@ -34,7 +34,7 @@
                             </td>
                             <td class="table-col" ng-click='selectVariation(data)'>
                                 <div class="product-img">
-                                    <div class="image" style="background-image: url({{data.imgSrc}})" ng-if="data.imgSrc"></div>
+                                    <div class="image" ng-style="{'background-image': 'url(' + data.imgSrc + ')' }" ng-if="data.imgSrc"></div>
                                     <i class="table-ico fa fa-image" ng-if="!data.imgSrc" />
                                 </div>
                             </td>
