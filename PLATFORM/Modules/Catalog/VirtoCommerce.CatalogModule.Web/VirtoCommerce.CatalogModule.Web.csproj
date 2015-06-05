@@ -178,6 +178,8 @@
     <Content Include="Scripts\blades\import\wizard\catalog-CSV-import-wizard-mapping-step.tpl.html" />
     <Content Include="Scripts\blades\import\importers-list.js" />
     <Content Include="Scripts\blades\import\importers-list.tpl.html" />
+    <Content Include="Scripts\blades\item-property-detail.tpl.html" />
+    <Content Include="Scripts\blades\item-property-detail.js" />
     <Content Include="Scripts\resources\export.js" />
   </ItemGroup>
   <ItemGroup>
@@ -237,8 +239,8 @@
     <Content Include="Scripts\blades\item-image-detail.js" />
     <Content Include="Scripts\blades\item-asset-detail.tpl.html" />
     <Content Include="Scripts\blades\item-image-detail.tpl.html" />
-    <Content Include="Scripts\blades\item-property-detail.js" />
-    <Content Include="Scripts\blades\item-property-detail.tpl.html" />
+    <Content Include="Scripts\blades\item-property-list.js" />
+    <Content Include="Scripts\blades\item-property-list.tpl.html" />
     <Content Include="Scripts\blades\item-variation-list.js" />
     <Content Include="Scripts\blades\item-variation-list.tpl.html" />
     <Content Include="Scripts\blades\catalogs-list.tpl.html" />
@@ -287,7 +289,7 @@
     <Content Include="Scripts\wizards\newCategory\category-wizard.tpl.html" />
     <Content Include="Scripts\wizards\newProduct\new-product-wizard-editorial-review-detail-step.js" />
     <Content Include="Scripts\wizards\newProduct\new-product-wizard-editorial-reviews.js" />
-    <Content Include="Scripts\wizards\newProduct\new-product-wizard-property-detail-step.js" />
+    <Content Include="Scripts\wizards\newProduct\new-product-wizard-property-list-step.js" />
     <Content Include="Scripts\wizards\common\wizard-ok-action.tpl.html" />
     <Content Include="Scripts\wizards\newProduct\new-product-wizard-images-step.js" />
     <Content Include="Scripts\wizards\newProduct\new-product-wizard-actions.tpl.html" />

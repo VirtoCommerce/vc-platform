@@ -16,11 +16,6 @@
                     b.parentBlade.refresh(data);
                 }
             });
-        } else if (b.itemId) {
-            //properties.newItemProperty({ itemId: b.itemId }, function (data) {
-            //    initializeBlade(data);
-            //});
-            initializeBlade({});
         } else if (b.categoryId) {
             properties.newCategoryProperty({ categoryId: b.categoryId }, function (data) {
                 initializeBlade(data);

@@ -2,17 +2,15 @@
 .controller('virtoCommerce.catalogModule.newProductWizardController', ['$scope', 'platformWebApp.bladeNavigationService', function ($scope, bladeNavigationService) {
     var blade = $scope.blade;
 
+    var initialName = blade.item.name;
+    var lastGeneratedName = blade.item.name;
+
     $scope.createItem = function () {
         blade.isLoading = true;
 
         blade.item.$updateitem(null,
             function (dbItem) {
-                var bladeToRefresh = blade.parentBlade;
-                //if (bladeToRefresh.controller != 'virtoCommerce.catalogModule.categoriesItemsListController') {
-                //    bladeToRefresh.parentBlade.refresh();
-                //} else {
-                bladeToRefresh.refresh(true);
-                //}
+                blade.parentBlade.refresh(true);
 
                 var newBlade = {
                     id: blade.id,
@@ -36,7 +34,7 @@
                     subtitle: 'item properties',
                     bottomTemplate: 'Modules/$(VirtoCommerce.Catalog)/Scripts/wizards/common/wizard-ok-action.tpl.html',
                     controller: 'virtoCommerce.catalogModule.newProductWizardPropertiesController',
-                    template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/item-property-detail.tpl.html'
+                    template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/item-property-list.tpl.html'
                 };
                 break;
             case 'images':
@@ -101,7 +99,7 @@
     }
 
     $scope.getUnfilledProperties = function () {
-            return _.filter(blade.item.properties, function (p) {
+        return _.filter(blade.item.properties, function (p) {
             return p != undefined && p.values.length > 0 && p.values[0].value.length > 0;
         });
     }
@@ -113,6 +111,18 @@
         }
         return parentBlade.catalog;
     }
+
+    $scope.$watch('blade.item.properties', function (currentEntities) {
+        if (lastGeneratedName === blade.item.name
+        && blade.childrenBlades.length > 0
+        && blade.childrenBlades[0].controller === 'virtoCommerce.catalogModule.newProductWizardPropertiesController') {
+            lastGeneratedName = initialName;
+            _.each(currentEntities, function (x) {
+                lastGeneratedName += ', ' + x.values[0].value;
+            });
+            blade.item.name = lastGeneratedName;
+        }
+    });
 
 
     blade.isLoading = false;
