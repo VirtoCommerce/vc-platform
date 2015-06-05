@@ -64,6 +64,7 @@ p
     .header-t,
     .header-text
     {
+        font-family: 'Open Sans';
         text-shadow: 2px 2px 2px rgba(0,0,0,.15);
         text-transform: uppercase;
     }
@@ -92,9 +93,9 @@ p
             top: 20px;
         }
 
-            .navbar .menu-item
+            .navbar .menu-item.__blade
             {
-                
+                margin: 20px 0 0;
             }
 
                 .navbar .menu-link
@@ -102,7 +103,6 @@ p
                     color: #666;
                     cursor: pointer;
                     display: inline-block;
-                    font-size: 14px;
                     overflow: hidden;
                     padding: 0 0 4px;
                     position: relative;
@@ -131,9 +131,11 @@ p
                     display: block;
                 }
 
-                    .navbar .menu.__sub .menu-item
+                    .navbar .menu.__sub .menu-item.__t,
+                    .menu.__sub .menu-item .form-t
                     {
-                        
+                        color: #999;
+                        font-size: 12px;
                     }
 
                         .navbar .menu.__sub .menu-link
@@ -141,9 +143,19 @@ p
                             font-size: 12px;
                         }
 
-                        .navbar .menu.__sub .__selected .menu-link
+                        .menu.__sub .__selected .menu-link
                         {
                             font-weight: normal;
+                        }
+
+                        .menu.__sub .menu-item .form
+                        {
+                            padding: 5px 0 15px 10px;
+                        }
+
+                        .menu.__sub .menu-item .form-t
+                        {
+                            margin: 0 0 10px;
                         }
 
     .main .content
@@ -156,6 +168,7 @@ p
         .content h3
         {
             padding: 20px 0;
+            text-indent: -4px;
         }
 
         .content h2 + p
@@ -230,7 +243,7 @@ p
             .content .example .blade
             {
                 display: inline-block;
-                height: 400px;
+                height: 600px;
                 text-align: left;
             }
 

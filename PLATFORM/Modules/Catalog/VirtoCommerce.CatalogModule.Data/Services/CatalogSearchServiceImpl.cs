@@ -76,7 +76,7 @@ namespace VirtoCommerce.CatalogModule.Data.Services
 							var allLinkedPhysicalCategoriesIds = dbCategory.IncommingLinks.Select(x => x.SourceCategoryId).ToArray();
 					        query = repository.Categories;
 							if(allLinkedPhysicalCategoriesIds.Any())
-								query = query.Where(x => x.ParentCategoryId == criteria.CategoryId || allLinkedPhysicalCategoriesIds.Contains(x.ParentCategoryId));
+								query = query.Where(x => x.ParentCategoryId == criteria.CategoryId || allLinkedPhysicalCategoriesIds.Contains(x.Id));
 							else
 								query = query.Where(x => x.ParentCategoryId == criteria.CategoryId);
                         }
@@ -177,10 +177,10 @@ namespace VirtoCommerce.CatalogModule.Data.Services
 					if (isVirtual)
 					{
 						var dbCategory = repository.GetCategoryById(criteria.CategoryId);
-						//Need return all items belongs to linked categories
-						var allLinkedPhysicalCategoriesIds = dbCategory.IncommingLinks.Select(x => x.SourceCategoryId).ToArray();
+						////Need return all items belongs to linked categories
+						//var allLinkedPhysicalCategoriesIds = dbCategory.IncommingLinks.Select(x => x.SourceCategoryId).ToArray();
 
-						query = query.Where(x => x.CategoryItemRelations.Any(c => c.CategoryId == criteria.CategoryId || allLinkedPhysicalCategoriesIds.Contains(c.CategoryId)));
+						query = query.Where(x => x.CategoryItemRelations.Any(c => c.CategoryId == criteria.CategoryId));
 					}
 					else
 					{
@@ -219,7 +219,7 @@ namespace VirtoCommerce.CatalogModule.Data.Services
                                    .Select(x => x.Id)
                                    .ToArray();
 
-				var productResponseGroup = coreModel.ItemResponseGroup.ItemInfo | coreModel.ItemResponseGroup.ItemAssets;
+				var productResponseGroup = coreModel.ItemResponseGroup.ItemInfo | coreModel.ItemResponseGroup.ItemAssets | ItemResponseGroup.Categories;
 				if ((criteria.ResponseGroup & coreModel.ResponseGroup.WithProperties) ==coreModel.ResponseGroup.WithProperties)
 				{
 					productResponseGroup |= coreModel.ItemResponseGroup.ItemProperties;
