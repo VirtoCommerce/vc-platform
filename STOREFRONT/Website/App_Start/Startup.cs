@@ -1,15 +1,12 @@
 ﻿#region
 using System;
 using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin;
 using Microsoft.Owin.Security.Cookies;
 using Owin;
-using VirtoCommerce.Web.Models.Security;
 using System.Configuration;
 using Microsoft.Owin.Security.Google;
 using Microsoft.Owin.Security.Facebook;
-using System.Security.Claims;
 
 #endregion
 
