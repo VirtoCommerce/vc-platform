@@ -98,17 +98,18 @@ namespace VirtoCommerce.Web.Views.Contents
                     var collectionName = this.GetPageTitle(collectionFolder);
                     collections.Add(collectionName, items);
                 }
+
+                // populate collection object
+                context.Collections = collections;
+
+                // add to cache
+                var allDirectories = this._fileSystem.Directory.GetDirectories(sourceFolder, "*", SearchOption.AllDirectories);
+                HttpRuntime.Cache.Insert(contextKey, context, new CacheDependency(allDirectories));
             }
-
-            // populate collection object
-            context.Collections = collections;
-
-            // add to cache
-            var allDirectories = this._fileSystem.Directory.GetDirectories(
-                sourceFolder,
-                "*",
-                SearchOption.AllDirectories);
-            HttpRuntime.Cache.Insert(contextKey, context, new CacheDependency(allDirectories));
+            else
+            {
+                context.Collections = collections;
+            }
 
             // return context
             return context;
