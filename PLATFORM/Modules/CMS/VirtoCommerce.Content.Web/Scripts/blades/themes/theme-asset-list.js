@@ -174,6 +174,16 @@
 		return null;
 	}
 
+	blade.isFolder = function (data) {
+		var folder = _.find(blade.folders, function (folder) { return folder.name === data.folderName });
+
+		if (folder !== undefined) {
+			return true;
+		}
+
+		return false;
+	}
+
     $scope.blade.headIcon = 'fa fa-archive';
 
     blade.folders = [
