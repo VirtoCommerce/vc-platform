@@ -22,7 +22,7 @@ using VirtoCommerce.Content.Web.Models;
 namespace VirtoCommerce.Content.Web.Controllers.Api
 {
 	[RoutePrefix("api/cms/{storeId}")]
-    [CheckPermission(Permission = PredefinedPermissions.Query)]
+	[CheckPermission(Permission = PredefinedPermissions.Query)]
 	public class ThemeController : ApiController
 	{
 		#region Fields
@@ -85,7 +85,7 @@ namespace VirtoCommerce.Content.Web.Controllers.Api
 		[HttpDelete]
 		[ResponseType(typeof(void))]
 		[Route("themes/{themeId}")]
-        [CheckPermission(Permission = PredefinedPermissions.Manage)]
+		[CheckPermission(Permission = PredefinedPermissions.Manage)]
 		public async Task<IHttpActionResult> DeleteTheme(string storeId, string themeId)
 		{
 			await this._themeService.DeleteTheme(storeId, themeId);
@@ -115,7 +115,7 @@ namespace VirtoCommerce.Content.Web.Controllers.Api
 
 		[HttpPost]
 		[Route("themes/{themeId}/assets")]
-        [CheckPermission(Permission = PredefinedPermissions.Manage)]
+		[CheckPermission(Permission = PredefinedPermissions.Manage)]
 		public async Task<IHttpActionResult> SaveItem(ThemeAsset asset, string storeId, string themeId)
 		{
 			if (!string.IsNullOrEmpty(asset.AssetUrl))
@@ -130,34 +130,30 @@ namespace VirtoCommerce.Content.Web.Controllers.Api
 
 		[HttpDelete]
 		[Route("themes/{themeId}/assets")]
-        [CheckPermission(Permission = PredefinedPermissions.Manage)]
+		[CheckPermission(Permission = PredefinedPermissions.Manage)]
 		public async Task<IHttpActionResult> DeleteAssets(string storeId, string themeId, [FromUri]string[] assetIds)
 		{
 			await this._themeService.DeleteThemeAssets(storeId, themeId, assetIds);
 			return this.Ok();
 		}
 
-		[HttpPost]
+		[HttpGet]
 		[Route("themes/file")]
-        [CheckPermission(Permission = PredefinedPermissions.Manage)]
-		public async Task<IHttpActionResult> UploadThemeFile(string storeId)
+		[CheckPermission(Permission = PredefinedPermissions.Manage)]
+		public async Task<IHttpActionResult> CreateNewTheme(string storeId, string themeFileUrl, string themeName)
 		{
-			if (!Request.Content.IsMimeMultipartContent())
+			using (var webClient = new WebClient())
 			{
-				throw new HttpResponseException(HttpStatusCode.UnsupportedMediaType);
-			}
+				var filePath = string.Format("~/App_Data/Uploads/{0}.zip", Guid.NewGuid().ToString());
+				var fullFilePath = HostingEnvironment.MapPath(filePath);
+				webClient.DownloadFile(new Uri(themeFileUrl), fullFilePath);
 
-			var provider = new MultipartFileStreamProvider(_pathForMultipart);
-
-			await Request.Content.ReadAsMultipartAsync(provider);
-
-			foreach (var file in provider.FileData)
-			{
-				using (ZipArchive archive = ZipFile.OpenRead(file.LocalFileName))
+				using (ZipArchive archive = ZipFile.OpenRead(fullFilePath))
 				{
-					var fileName = Path.GetFileNameWithoutExtension(file.Headers.ContentDisposition.FileName.Replace("\"", string.Empty));
-					await _themeService.UploadTheme(storeId, archive.Entries.First().FullName, archive);
+					await _themeService.UploadTheme(storeId, themeName, archive);
 				}
+
+				File.Delete(fullFilePath);
 			}
 
 			return Ok();
@@ -165,7 +161,7 @@ namespace VirtoCommerce.Content.Web.Controllers.Api
 
 		[HttpPost]
 		[Route("themes/{themeId}/assets/file/{folderName}")]
-        [CheckPermission(Permission = PredefinedPermissions.Manage)]
+		[CheckPermission(Permission = PredefinedPermissions.Manage)]
 		public async Task<IHttpActionResult> SaveImageItem(string storeId, string themeId, string folderName)
 		{
 			if (!Request.Content.IsMimeMultipartContent())

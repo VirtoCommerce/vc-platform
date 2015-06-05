@@ -2,7 +2,7 @@
 	<div class="blade-inner">
 		<div class="inner-block">
 			<ul class="list __files" ng-if="blade.currentEntities.length">
-				<li class="list-item" ng-click="blade.folderClick(data)" ng-repeat="data in blade.currentEntities | orderBy:blade.folderSorting" ng-class="{'__selected': blade.checkFolder(data) }">
+				<li class="list-item" ng-click="blade.folderClick(data)" ng-repeat="data in blade.currentEntities | orderBy:blade.folderSorting" ng-class="{'__selected': blade.checkFolder(data) }" ng-show="blade.isFolder(data)">
 					<a class="list-block">
 						<i class="list-ico fa" ng-class="{'fa-folder-open': blade.checkFolder(data), 'fa-folder': !blade.checkFolder(data) }"></i>
 						<span class="list-name">{{data.folderName}}</span>
@@ -18,6 +18,12 @@
 							</a>
 						</li>
 					</ul>
+				</li>
+				<li class="list-item" ng-repeat="data in blade.currentEntities | orderBy:blade.folderSorting" ng-show="!blade.isFolder(data)">
+					<a class="list-block">
+						<i class="list-ico fa fa-file"></i>
+						<span class="list-name">{{data.folderName}}</span>
+					</a>
 				</li>
 			</ul>
 			<p class="text" ng-if="!blade.currentEntities.length">No Assets yet</p>

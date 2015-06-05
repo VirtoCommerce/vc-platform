@@ -32,8 +32,6 @@ namespace PayPal.PaymentGatewaysModule.Web
 
 		public void Initialize()
 		{
-			var settingsManager = ServiceLocator.Current.GetInstance<ISettingsManager>();
-
 			Func<PaypalPaymentMethod> paypalPaymentMethodFactory = () =>
 			{
 				return new PaypalPaymentMethod()
@@ -41,11 +39,24 @@ namespace PayPal.PaymentGatewaysModule.Web
 					Name = "PayPal",
 					Description = "PayPal payment integration",
 					LogoUrl = "http://virtocommerce.com/Content/images/PayPal.png",
-					Settings = settingsManager.GetModuleSettings("Paypal.PaymentGateway")
+					Settings = _container.Resolve<ISettingsManager>().GetModuleSettings("Paypal.PaymentGateway")
 				};
 			};
-			var paymentMethodsService = _container.Resolve<IPaymentMethodsService>();
-			paymentMethodsService.RegisterPaymentMethod(paypalPaymentMethodFactory);
+
+			_container.Resolve<IPaymentMethodsService>().RegisterPaymentMethod(paypalPaymentMethodFactory);
+
+			//Func<PaypalBankCardsPaymentMethod> paypalBankCardsPaymentMethodFactory = () =>
+			//{
+			//	return new PaypalBankCardsPaymentMethod()
+			//	{
+			//		Name = "PayPal new",
+			//		Description = "PayPal payment integration",
+			//		LogoUrl = "http://www.credit-card-logos.com/images/multiple_credit-card-logos-2/credit_card_paypal_logos_2.gif",
+			//		Settings = _container.Resolve<ISettingsManager>().GetModuleSettings("Paypal.PaymentGateway")
+			//	};
+			//};
+
+			//_container.Resolve<IPaymentMethodsService>().RegisterPaymentMethod(paypalBankCardsPaymentMethodFactory);
 		}
 
 		public void PostInitialize()

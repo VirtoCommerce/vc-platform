@@ -1,24 +1,28 @@
 ﻿angular.module('virtoCommerce.catalogModule')
 .controller('virtoCommerce.catalogModule.itemDetailController', ['$rootScope', '$scope', 'platformWebApp.bladeNavigationService', '$injector', 'virtoCommerce.catalogModule.items', 'platformWebApp.dialogService', function ($rootScope, $scope, bladeNavigationService, $injector, items, dialogService) {
-    $scope.currentBlade = $scope.blade;
-    $scope.currentBlade.origItem = {};
-    $scope.currentBlade.item = {};
-    $scope.blade.currentEntityId = $scope.currentBlade.itemId;
+    var blade = $scope.blade;
+    blade.origItem = {};
+    blade.item = {};
+    $scope.blade.currentEntityId = blade.itemId;
 
-    $scope.currentBlade.refresh = function (parentRefresh) {
-        $scope.currentBlade.isLoading = true;
+    blade.refresh = function (parentRefresh) {
+        blade.isLoading = true;
 
-        return items.get({ id: $scope.currentBlade.itemId }, function (data) {
-            $scope.currentBlade.itemId = data.id;
-            $scope.currentBlade.title = data.code;
+        return items.get({ id: blade.itemId }, function (data) {
+            blade.itemId = data.id;
+            blade.title = data.code;
+            if (!data.productType) {
+                data.productType = 'Shippable';
+            }
+            blade.subtitle = data.productType + ' item details';
             $scope.isTitular = data.titularItemId == null;
             $scope.isTitularConfirmed = $scope.isTitular;
 
-            $scope.currentBlade.item = angular.copy(data);
-            $scope.currentBlade.origItem = data;
-            $scope.currentBlade.isLoading = false;
+            blade.item = angular.copy(data);
+            blade.origItem = data;
+            blade.isLoading = false;
             if (parentRefresh) {
-                $scope.currentBlade.parentBlade.refresh();
+                blade.parentBlade.refresh();
             }
         });
     }
@@ -26,9 +30,9 @@
     //$scope.onTitularChange = function () {
     //    $scope.isTitular = !$scope.isTitular;
     //    if ($scope.isTitular) {
-    //        $scope.currentBlade.item.titularItemId = null;
+    //        blade.item.titularItemId = null;
     //    } else {
-    //        $scope.currentBlade.item.titularItemId = $scope.currentBlade.origItem.titularItemId;
+    //        blade.item.titularItemId = blade.origItem.titularItemId;
     //    }
     //};
 
@@ -38,28 +42,27 @@
     };
 
     function isDirty() {
-        var retVal = !angular.equals($scope.currentBlade.item, $scope.currentBlade.origItem);
+        var retVal = !angular.equals(blade.item, blade.origItem);
         return retVal;
     };
 
     function saveChanges() {
-        $scope.currentBlade.isLoading = true;
-        //var changes = { id: $scope.currentBlade.item.id, name: $scope.currentBlade.item.name, titularItemId: $scope.currentBlade.item.titularItemId, code: $scope.currentBlade.item.code };
-        items.updateitem({}, $scope.currentBlade.item, function (data, headers) {
-            $scope.currentBlade.refresh(true);
+        blade.isLoading = true;
+        items.updateitem({}, blade.item, function () {
+            blade.refresh(true);
         }, function (error) {
             bladeNavigationService.setError('Error ' + error.status, $scope.blade);
         });
     };
 
     function closeThisBlade(closeCallback) {
-        if ($scope.currentBlade.childrenBlades.length > 0) {
+        if (blade.childrenBlades.length > 0) {
             var callback = function () {
-                if ($scope.currentBlade.childrenBlades.length == 0) {
+                if (blade.childrenBlades.length == 0) {
                     closeCallback();
                 };
             };
-            angular.forEach($scope.currentBlade.childrenBlades, function (child) {
+            angular.forEach(blade.childrenBlades, function (child) {
                 bladeNavigationService.closeBlade(child, callback);
             });
         }
@@ -68,7 +71,7 @@
         }
     };
 
-    $scope.currentBlade.onClose = function (closeCallback) {
+    blade.onClose = function (closeCallback) {
         if (isDirty()) {
             var dialog = {
                 id: "confirmItemChange",
@@ -93,6 +96,8 @@
         formScope = form;
     }
 
+    $scope.blade.toolbarCustomTemplates = ["Modules/$(VirtoCommerce.Catalog)/Scripts/blades/item-detail-toolbar.tpl.html"];
+
     $scope.blade.toolbarCommands = [
 	 {
 	     name: "Save", icon: 'fa fa-save',
@@ -107,38 +112,25 @@
         {
             name: "Reset", icon: 'fa fa-undo',
             executeMethod: function () {
-                angular.copy($scope.currentBlade.origItem, $scope.currentBlade.item);
-                $scope.isTitular = $scope.currentBlade.item.titularItemId == null;
+                angular.copy(blade.origItem, blade.item);
+                $scope.isTitular = blade.item.titularItemId == null;
             },
             canExecuteMethod: function () {
                 return isDirty();
             },
             permission: 'catalog:items:manage'
-        },
-	     {
-	         name: "New variation", icon: 'fa fa-plus',
-	         executeMethod: function () {
-
-	             items.newVariation({ itemId: $scope.currentBlade.item.id }, function (data, headers) {
-	                 var blade = {
-	                     id: "newVariationWizard",
-	                     item: data,
-	                     title: "New variation",
-	                     subtitle: 'Fill variation information',
-	                     controller: 'virtoCommerce.catalogModule.newProductWizardController',
-	                     template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/wizards/newProduct/new-variation-wizard.tpl.html'
-	                 };
-	                 bladeNavigationService.showBlade(blade, $scope.currentBlade);
-	             });
-	         },
-	         canExecuteMethod: function () {
-	             return $scope.isTitularConfirmed;
-	         },
-	         permission: 'catalog:items:manage'
-	     }
+        }
     ];
 
+    // datepicker
+    $scope.datepickers = {}
+    $scope.open = function ($event, which) {
+        $event.preventDefault();
+        $event.stopPropagation();
+        $scope.datepickers[which] = true;
+    };
+    // $scope.dateOptions = { 'year-format': "'yyyy'" };
 
-    $scope.currentBlade.refresh(false);
-    $scope.blade.toolbarCustomTemplates = ["Modules/$(VirtoCommerce.Catalog)/Scripts/blades/item-detail-toolbar.tpl.html"];
+
+    blade.refresh(false);
 }]);
