@@ -1,0 +1,77 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<module>
+  <id>Avalara.Tax</id>
+  <version>1.0.0</version>
+  <platformVersion>2.1.0</platformVersion>
+  <dependencies>
+    <dependency id="VirtoCommerce.Core" version="1.0.0" />
+  </dependencies>
+
+  <title>Avalara tax</title>
+  <description>APIs and UI for Avalara tax integration</description>
+  <authors>
+    <author>Virto Commerce</author>
+  </authors>
+  <owners>
+    <owner>Virto Commerce</owner>
+  </owners>
+  <projectUrl>http://virtocommerce.com/</projectUrl>
+  <iconUrl>http://nuget.org/Content/Images/packageDefaultIcon-50x50.png</iconUrl>
+  <releaseNotes>First version.</releaseNotes>
+  <copyright>Copyright © 2011-2015 Virto Commerce. All rights reserved</copyright>
+  <tags>avalara tax</tags>
+
+  <assemblyFile>AvaTax.TaxModule.Web.dll</assemblyFile>
+  <moduleType>AvaTax.TaxModule.Web.Module, AvaTax.TaxModule.Web</moduleType>
+  <!--<styles>
+		<directory virtualPath="$/Content/css" searchPattern="*.css" searchSubdirectories="true" />
+	</styles>-->
+  <!--<scripts>
+    <directory virtualPath="$/Scripts" searchPattern="*.js" searchSubdirectories="true" />
+  </scripts>-->
+
+  <settings>
+    <group name="Credentials">
+      <setting>
+        <name>Avalara.Tax.Credentials.Username</name>
+        <valueType>secureString</valueType>
+        <title>Avalara API username</title>
+        <description>Avalara API username</description>
+      </setting>
+      <setting>
+        <name>Avalara.Tax.Credentials.Password</name>
+        <valueType>secureString</valueType>
+        <title>Avalara API password</title>
+        <description>Avalara API password</description>
+      </setting>
+    </group>
+    <group name="Avalara Description">
+      <setting>
+        <name>Avalara.Tax.Code</name>
+        <valueType>string</valueType>
+        <defaultValue>Avalara module code</defaultValue>
+        <title>Code</title>
+        <description>Avalara module code</description>
+      </setting>
+      <setting>
+        <name>Avalara.Tax.Description</name>
+        <valueType>string</valueType>
+        <defaultValue>Avalara public site description</defaultValue>
+        <title>Description</title>
+        <description>Description of Avalara for public site</description>
+      </setting>
+      <setting>
+        <name>Avalara.Tax.LogoUrl</name>
+        <valueType>string</valueType>
+        <defaultValue>http://static.mailchimp.com/web/brand-assets/logo-dark.png</defaultValue>
+        <title>Logo url</title>
+        <description>Avalara logo url</description>
+      </setting>
+    </group>
+  </settings>
+  <permissions>
+    <group name="Tax">
+      <permission id="tax:manage" name="Manage tax settings" description="Permission to manage avalara tax."/>
+    </group>
+  </permissions>
+</module>
