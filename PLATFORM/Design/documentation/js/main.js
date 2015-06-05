@@ -178,7 +178,7 @@ $(function (){
             'list_files',
             'list_items',
             'list_items_text',
-            'list_choosen',
+            'list_chosen',
             'list_checkbox',
             'list_radio',
             'tree',
@@ -186,7 +186,6 @@ $(function (){
             'tree_v',
             'tree_h',
             'widgets',
-            'blade',
             'blade_constructor'
         ];
      
@@ -223,7 +222,7 @@ $(function (){
             widgets: {
                 margin: 40
             },
-            blade: {
+            blade_constructor: {
                 margin: 40
             }
         };
