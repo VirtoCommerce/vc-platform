@@ -51,7 +51,6 @@
             id: "listItemDetail",
             itemId: id,
             title: title,
-            subtitle: 'Item details',
             controller: 'virtoCommerce.catalogModule.itemDetailController',
             template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/item-detail.tpl.html'
         };
