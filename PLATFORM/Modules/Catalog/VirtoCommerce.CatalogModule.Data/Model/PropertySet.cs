@@ -24,12 +24,7 @@ namespace VirtoCommerce.CatalogModule.Data.Model
 		public string TargetType { get; set; }
 
 		#region NavigationProperties
-		public string CatalogId { get; set; }
-
-		[Parent]
-		[ForeignKey("CatalogId")]
-		public virtual Catalog Catalog { get; set; }
-
+	
 		public virtual ObservableCollection<PropertySetProperty> PropertySetProperties { get; set; }
 
 		#endregion

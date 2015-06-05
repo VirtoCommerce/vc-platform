@@ -14,7 +14,6 @@ namespace VirtoCommerce.CatalogModule.Data.Model
     {
 		public Catalog()
 		{
-			PropertySets = new NullCollection<PropertySet>();
 			CatalogLanguages = new NullCollection<CatalogLanguage>();
 			CatalogPropertyValues = new NullCollection<CatalogPropertyValue>();
 		
@@ -26,12 +25,7 @@ namespace VirtoCommerce.CatalogModule.Data.Model
 
 		public virtual ObservableCollection<CatalogLanguage> CatalogLanguages { get; set; }
 
-		public virtual ObservableCollection<PropertySet> PropertySets { get; set; }
-
-		[StringLength(128)]
-		[ForeignKey("PropertySet")]
 		public string PropertySetId { get; set; }
-
 		public virtual PropertySet PropertySet { get; set; }
 
 		public virtual ObservableCollection<CatalogPropertyValue> CatalogPropertyValues { get; set; }

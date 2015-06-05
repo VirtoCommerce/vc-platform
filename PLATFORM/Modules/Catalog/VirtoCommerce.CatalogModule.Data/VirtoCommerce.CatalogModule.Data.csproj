@@ -96,6 +96,10 @@
     <Compile Include="Migrations\201506011113284_DimensionChanges.Designer.cs">
       <DependentUpon>201506011113284_DimensionChanges.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201506051154538_RemoveCatalogReferenceFromPropertySet.cs" />
+    <Compile Include="Migrations\201506051154538_RemoveCatalogReferenceFromPropertySet.Designer.cs">
+      <DependentUpon>201506051154538_RemoveCatalogReferenceFromPropertySet.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Model\Association.cs" />
     <Compile Include="Model\AssociationGroup.cs" />
@@ -172,6 +176,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201506011113284_DimensionChanges.resx">
       <DependentUpon>201506011113284_DimensionChanges.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201506051154538_RemoveCatalogReferenceFromPropertySet.resx">
+      <DependentUpon>201506051154538_RemoveCatalogReferenceFromPropertySet.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Repositories\Sql\Association.sql" />
   </ItemGroup>

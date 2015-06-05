@@ -2,6 +2,7 @@ var Blade = {
 
     settings: function() {
         $('.menu.__sub .form input[type=checkbox]').prop('checked', false);
+        $('#bladeContainerStaticNormal').prop('checked', true);
 
         var url = window.location.href.replace('blade-constructor.html', '');
         
@@ -33,6 +34,8 @@ var Blade = {
             'bladeContainerStaticCollapsed',
             'bladeContainerStaticExpanded',
             'bladeContainerBreadcrumbs',
+            'bladeContainerSearch',
+            'bladeContainerSearchCount',
             'bladeContainerStaticBot'
         ];
 
@@ -43,6 +46,8 @@ var Blade = {
             'bladeContainerStaticCollapsed',
             'bladeContainerStaticExpanded',
             'bladeContainerBreadcrumbs',
+            'bladeContainerSearch',
+            'bladeContainerSearchCount',
             'bladeContainerStaticBot'
         ];
 
@@ -85,6 +90,14 @@ var Blade = {
 
         $('#result').load(url + '/templates/settings/blade-static-top.html', function () {
             tplBladeStaticTop = $('#result').html();
+        });
+
+        $('#result').load(url + '/templates/settings/blade-breadcrumbs.html', function () {
+            tplBladeBreadcrumbs = $('#result').html();
+        });
+
+        $('#result').load(url + '/templates/settings/blade-search.html', function () {
+            tplBladeSearch = $('#result').html();
         });
 
         for(var i = 0; i < types.length; i++) {
@@ -250,6 +263,10 @@ var Blade = {
                     if($('#bladeContainerStaticNormal').is(':checked')) {
                         $('#tplblade .blade-static').removeClass('__collapsed');
                         $('#tplblade .blade-static').removeClass('__expanded');
+                        $('#bladeContainerBreadcrumbs, #bladeContainerSearch, #bladeContainerSearchCount').prop('disabled', true);
+                        $('#bladeContainerBreadcrumbs, #bladeContainerSearch, #bladeContainerSearchCount').parent().addClass('__disabled');
+                        $('#tplblade .blade-static').empty();
+                        $('#bladeContainerBreadcrumbs').prop('checked', false);
 
                         Blade.saveCode();
                     }
@@ -259,6 +276,10 @@ var Blade = {
                     if($('#bladeContainerStaticCollapsed').is(':checked')) {
                         $('#tplblade .blade-static').addClass('__collapsed');
                         $('#tplblade .blade-static').removeClass('__expanded');
+                        $('#bladeContainerBreadcrumbs').prop('disabled', false);
+                        $('#bladeContainerBreadcrumbs').parent().removeClass('__disabled');
+                        $('#bladeContainerSearch, #bladeContainerSearchCount').prop('disabled', true);
+                        $('#bladeContainerSearch, #bladeContainerSearchCount').parent().addClass('__disabled');
 
                         Blade.saveCode();
                     }
@@ -268,6 +289,47 @@ var Blade = {
                     if($('#bladeContainerStaticExpanded').is(':checked')) {
                         $('#tplblade .blade-static').addClass('__expanded');
                         $('#tplblade .blade-static').removeClass('__collapsed');
+                        $('#bladeContainerBreadcrumbs').prop('disabled', false);
+                        $('#bladeContainerBreadcrumbs').parent().removeClass('__disabled');
+                        $('#bladeContainerSearch, #bladeContainerSearchCount').prop('disabled', false);
+                        $('#bladeContainerSearch, #bladeContainerSearchCount').parent().removeClass('__disabled');
+
+                        Blade.saveCode();
+                    }
+                }
+
+                if(type == 'bladeContainerBreadcrumbs') {
+                    if($('#bladeContainerBreadcrumbs').is(':checked')) {
+                        $('#tplblade .blade-static').append(tplBladeBreadcrumbs);
+
+                        Blade.saveCode();
+                    }
+                    else {
+                        $('#tplblade .blade-static').empty();
+
+                        Blade.saveCode();
+                    }
+                }
+
+                if(type == 'bladeContainerSearch') {
+                    if($('#bladeContainerSearch').is(':checked')) {
+                        if($('#tplblade .breadcrumbs').length) {
+                            $('#tplblade .breadcrumbs').after(tplBladeSearch);
+                        }
+                        else {
+                            $('#tplblade .blade-static').append(tplBladeSearch);
+                        }
+
+                        Blade.saveCode();
+                    }
+                    else {
+                        if($('#tplblade .breadcrumbs').length) {
+                            $('#tplblade .blade-static').empty();
+                            $('#tplblade .blade-static').prepend(tplBladeBreadcrumbs);
+                        }
+                        else {
+                            $('#tplblade .blade-static').empty();
+                        }
 
                         Blade.saveCode();
                     }
