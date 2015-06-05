@@ -17,12 +17,13 @@ namespace VirtoCommerce.Domain.Common.Events
 
 		public void Publish(T eventMessage)
 		{
-			foreach (var observer in _observers)
+			var observers = _observers.OrderBy(x => x is IPriorityObserver ? ((IPriorityObserver)x).Priority : 0);
+			foreach (var observer in observers)
 			{
 				observer.OnNext(eventMessage);
 			}
 
-			foreach (var observer in _observers)
+			foreach (var observer in observers)
 			{
 				observer.OnCompleted();
 			}

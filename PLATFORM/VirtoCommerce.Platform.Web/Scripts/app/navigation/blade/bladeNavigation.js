@@ -3,20 +3,20 @@ angular.module('platformWebApp')
     var toolbarCommandsMap = [];
     var toolbarCustomContentsMap = [];
     return {
-        register: function (command, toolbarName, isCustomContent) {
+        register: function (toolbarItem, toolbarController, isCustomContent) {
             var map = isCustomContent ? toolbarCustomContentsMap : toolbarCommandsMap;
-            if (!map[toolbarName]) {
-                map[toolbarName] = [];
+            if (!map[toolbarController]) {
+                map[toolbarController] = [];
             }
 
-            map[toolbarName].push(command);
-            map[toolbarName].sort(function (a, b) {
+            map[toolbarController].push(toolbarItem);
+            map[toolbarController].sort(function (a, b) {
                 return a.index > b.index;
             });
         },
-        resolve: function (bladeCommands, toolbarName, isCustomContent) {
+        resolve: function (bladeCommands, toolbarController, isCustomContent) {
             var map = isCustomContent ? toolbarCustomContentsMap : toolbarCommandsMap;
-            var externalCommands = map[toolbarName];
+            var externalCommands = map[toolbarController];
             if (externalCommands) {
                 bladeCommands = angular.copy(bladeCommands || []);
 

@@ -12,7 +12,7 @@ namespace VirtoCommerce.Domain.Order.Model
 		{
 			Count = 20;
 		}
-
+		public ResponseGroup ResponseGroup { get; set; }
 		public string Keyword { get; set; }
 		public string CustomerId { get; set; }
 		public string StoreId { get; set; }

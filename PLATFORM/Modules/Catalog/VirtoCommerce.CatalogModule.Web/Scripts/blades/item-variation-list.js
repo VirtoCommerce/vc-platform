@@ -1,25 +1,26 @@
 ﻿angular.module('virtoCommerce.catalogModule')
 .controller('virtoCommerce.catalogModule.itemVariationListController', ['$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', 'virtoCommerce.catalogModule.items', function ($scope, bladeNavigationService, dialogService, items) {
+    var blade = $scope.blade;
 
-	$scope.blade.refresh = function (parentRefresh) {
-		$scope.blade.isLoading = true;
-        items.get({ id: $scope.blade.itemId }, function (data) {
-            $scope.blade.item = data;
-            $scope.blade.isLoading = false;
+    blade.refresh = function (parentRefresh) {
+        blade.isLoading = true;
+        items.get({ id: blade.itemId }, function (data) {
+            blade.item = data;
+            blade.isLoading = false;
         });
 
         if (angular.isUndefined(parentRefresh)) {
             parentRefresh = true;
         }
         if (parentRefresh) {
-            $scope.blade.parentBlade.refresh();
+            blade.parentBlade.refresh();
         }
     }
 
     $scope.selectVariation = function (listItem) {
         $scope.selectedItem = listItem;
 
-        var blade = {
+        var newBlade = {
             id: 'variationDetail',
             itemId: listItem.id,
             title: listItem.code,
@@ -27,67 +28,86 @@
             controller: 'virtoCommerce.catalogModule.itemDetailController',
             template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/item-detail.tpl.html'
         };
-        bladeNavigationService.showBlade(blade, $scope.blade);
+        bladeNavigationService.showBlade(newBlade, blade);
     };
 
     function closeChildrenBlades() {
-        angular.forEach($scope.blade.childrenBlades.slice(), function (child) {
+        angular.forEach(blade.childrenBlades.slice(), function (child) {
             bladeNavigationService.closeBlade(child);
         });
     }
 
-    $scope.blade.toolbarCommands = [
+    blade.toolbarCommands = [
         {
             name: "Refresh", icon: 'fa fa-refresh',
             executeMethod: function () {
-                $scope.blade.refresh(false);
+                blade.refresh(false);
             },
-            canExecuteMethod: function () {
-                return true;
-            }
+            canExecuteMethod: function () { return true; }
         },
-      {
-          name: "Delete", icon: 'fa fa-trash-o',
-          executeMethod: function () {
-              var dialog = {
-                  id: "confirmDeleteItem",
-                  title: "Delete confirmation",
-                  message: "Are you sure you want to delete selected Variations?",
-                  callback: function (remove) {
-                      if (remove) {
-                          closeChildrenBlades();
+	     {
+	         name: "Add", icon: 'fa fa-plus',
+	         executeMethod: function () {
+	             items.newVariation({ itemId: blade.itemId }, function (data) {
+                     // take variation properties only
+	                 data.properties = _.where(data.properties, { type: 'Variation' });
 
-                          var ids = [];
-                          angular.forEach($scope.blade.item.variations, function (variation) {
-                              if (variation.selected)
-                                  ids.push(variation.id);
-                          });
+	                 var newBlade = {
+	                     id: 'variationDetail',
+	                     item: data,
+	                     title: "New variation",
+	                     subtitle: 'Fill variation information',
+	                     controller: 'virtoCommerce.catalogModule.newProductWizardController',
+	                     template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/wizards/newProduct/new-variation-wizard.tpl.html'
+	                 };
+	                 bladeNavigationService.showBlade(newBlade, blade);
+	             });
+	         },
+	         canExecuteMethod: function () { return true; },
+	         permission: 'catalog:items:manage'
+	     },
+          {
+              name: "Delete", icon: 'fa fa-trash-o',
+              executeMethod: function () {
+                  var dialog = {
+                      id: "confirmDeleteItem",
+                      title: "Delete confirmation",
+                      message: "Are you sure you want to delete selected Variations?",
+                      callback: function (remove) {
+                          if (remove) {
+                              closeChildrenBlades();
 
-                          items.remove({ ids: ids }, function () {
-                              $scope.blade.refresh();
-                          });
+                              var ids = [];
+                              angular.forEach(blade.item.variations, function (variation) {
+                                  if (variation.selected)
+                                      ids.push(variation.id);
+                              });
+
+                              items.remove({ ids: ids }, blade.refresh);
+                          }
                       }
                   }
-              }
 
-              dialogService.showConfirmationDialog(dialog);
-          },
-          canExecuteMethod: function () {
-              var retVal = false;
-              if (angular.isDefined($scope.blade.item)) {
-                  retVal = _.any($scope.blade.item.variations, function (x) { return x.selected; });
+                  dialogService.showConfirmationDialog(dialog);
+              },
+              canExecuteMethod: function () {
+                  var retVal = false;
+                  if (angular.isDefined(blade.item)) {
+                      retVal = _.any(blade.item.variations, function (x) { return x.selected; });
+                  }
+                  return retVal;
               }
-              return retVal;
           }
-      }
     ];
 
     $scope.checkAll = function (selected) {
-        angular.forEach($scope.blade.item.variations, function (variation) {
+        angular.forEach(blade.item.variations, function (variation) {
             variation.selected = selected;
         });
     };
 
+    //// actions on load
+    //$scope.$watch('blade.parentBlade.item.variations', initializeBlade);
 
-    $scope.blade.refresh(false);
+    blade.refresh(false);
 }]);

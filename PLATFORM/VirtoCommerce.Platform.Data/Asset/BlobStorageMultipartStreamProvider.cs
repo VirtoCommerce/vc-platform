@@ -29,12 +29,13 @@ namespace VirtoCommerce.Platform.Data.Asset
 			foreach (var fileData in this.FileData)
 			{
 				var fileInfo = new FileInfo(fileData.LocalFileName);
+				var fileName = fileData.Headers.ContentDisposition.FileName.Replace("\"", string.Empty);
 				using (Stream stream = fileInfo.OpenRead())
 				{
 					var uploadStreamInfo = new UploadStreamInfo
 					{
 						FileByteStream = stream,
-						FileName = fileInfo.Name,
+						FileName = fileName,
 						Length = fileInfo.Length,
 						FolderName = _folder
 					};
@@ -44,7 +45,7 @@ namespace VirtoCommerce.Platform.Data.Asset
 					BlobInfos.Add(new BlobInfo
 					{
 						ContentType = fileData.Headers.ContentType.MediaType,
-						FileName = fileInfo.Name,
+						FileName = fileName,
 						Size = fileInfo.Length,
 						Key = blobKey
 					});
