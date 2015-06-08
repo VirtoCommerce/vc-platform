@@ -194,12 +194,16 @@ namespace VirtoCommerce.CatalogModule.Web.BackgroundJobs
 				{
 					foreach (var categoryId in exportedCategories)
 					{
-						var result = _searchService.Search(new SearchCriteria { CatalogId = catalogId, CategoryId = categoryId, Start = 0, Count = int.MaxValue, ResponseGroup = ResponseGroup.WithProducts });
+						var result = _searchService.Search(new SearchCriteria { CatalogId = catalogId, CategoryId = categoryId, Start = 0, Count = int.MaxValue, ResponseGroup = ResponseGroup.WithProducts | ResponseGroup.WithCategories });
 						productIds.AddRange(result.Products.Select(x => x.Id));
+						if (result.Categories != null && result.Categories.Any())
+						{
+							retVal.AddRange(LoadProducts(catalogId, result.Categories.Select(x => x.Id).ToArray(), null));
+						}
 					}
 				}
 
-				if (exportedCategories == null && exportedProducts == null)
+				if ((exportedCategories == null || !exportedCategories.Any()) && (exportedProducts == null || !exportedProducts.Any()))
 				{
 					var result = _searchService.Search(new SearchCriteria { CatalogId = catalogId, GetAllCategories = true, Start = 0, Count = int.MaxValue, ResponseGroup = ResponseGroup.WithProducts });
 					productIds = result.Products.Select(x => x.Id).ToList();

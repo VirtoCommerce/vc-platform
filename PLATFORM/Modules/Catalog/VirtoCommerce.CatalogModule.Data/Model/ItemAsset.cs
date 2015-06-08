@@ -16,7 +16,7 @@ namespace VirtoCommerce.CatalogModule.Data.Model
 		{
 			Id = Guid.NewGuid().ToString("N");
 		}
-		[StringLength(128)]
+		[StringLength(2083)]
 		[Required]
 		public string AssetId { get; set; }
 

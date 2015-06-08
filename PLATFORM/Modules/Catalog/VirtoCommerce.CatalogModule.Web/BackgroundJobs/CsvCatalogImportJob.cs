@@ -39,11 +39,13 @@ namespace VirtoCommerce.CatalogModule.Web.BackgroundJobs
 		private readonly IPricingService _pricingService;
 		private readonly IInventoryService _inventoryService;
 		private readonly ICommerceService _commerceService;
+		private readonly IPropertyService _propertyService;
 		private object _lockObject = new object();
 
 		public CsvCatalogImportJob(ICatalogService catalogService, ICategoryService categoryService, IItemService productService,
 								INotifier notifier, CacheManager cacheManager, IBlobStorageProvider blobProvider, ISkuGenerator skuGenerator,
-								IPricingService pricingService, IInventoryService inventoryService, ICommerceService commerceService)
+								IPricingService pricingService, IInventoryService inventoryService, ICommerceService commerceService,
+								IPropertyService propertyService)
 		{
 			_catalogService = catalogService;
 			_categoryService = categoryService;
@@ -55,6 +57,7 @@ namespace VirtoCommerce.CatalogModule.Web.BackgroundJobs
 			_pricingService = pricingService;
 			_inventoryService = inventoryService;
 			_commerceService = commerceService;
+			_propertyService = propertyService;
 		}
 
 		public virtual void DoImport(webModel.CsvImportConfiguration configuration, ImportNotification notification)
@@ -178,6 +181,26 @@ namespace VirtoCommerce.CatalogModule.Web.BackgroundJobs
 					if (String.IsNullOrEmpty(csvProduct.Code))
 					{
 						csvProduct.Code = _skuGenerator.GenerateSku(csvProduct);
+					}
+
+					var properties = csvProduct.CategoryId != null ? _propertyService.GetCategoryProperties(csvProduct.CategoryId) : _propertyService.GetCatalogProperties(csvProduct.CatalogId);
+					//Try to fill properties meta information for values
+					foreach(var propertyValue in csvProduct.PropertyValues)
+					{
+						if(propertyValue.Value != null)
+						{
+							var property = properties.FirstOrDefault(x => String.Equals(x.Name, propertyValue.PropertyName));
+							if(property != null)
+							{
+								propertyValue.ValueType = property.ValueType;
+								if(property.Dictionary)
+								{
+									property = _propertyService.GetById(property.Id);
+									var dicValue = property.DictionaryValues.FirstOrDefault(x => String.Equals(x.Value, propertyValue.Value));
+									propertyValue.ValueId = dicValue != null ? dicValue.Id : null;
+								}
+							}
+						}
 					}
 
 					if (!isNewProduct)

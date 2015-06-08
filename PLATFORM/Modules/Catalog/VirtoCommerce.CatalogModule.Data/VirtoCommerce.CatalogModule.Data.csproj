@@ -100,6 +100,10 @@
     <Compile Include="Migrations\201506051154538_RemoveCatalogReferenceFromPropertySet.Designer.cs">
       <DependentUpon>201506051154538_RemoveCatalogReferenceFromPropertySet.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201506081600509_AssetIdMaxLength.cs" />
+    <Compile Include="Migrations\201506081600509_AssetIdMaxLength.Designer.cs">
+      <DependentUpon>201506081600509_AssetIdMaxLength.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Model\Association.cs" />
     <Compile Include="Model\AssociationGroup.cs" />
@@ -179,6 +183,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201506051154538_RemoveCatalogReferenceFromPropertySet.resx">
       <DependentUpon>201506051154538_RemoveCatalogReferenceFromPropertySet.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201506081600509_AssetIdMaxLength.resx">
+      <DependentUpon>201506081600509_AssetIdMaxLength.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Repositories\Sql\Association.sql" />
   </ItemGroup>

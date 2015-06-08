@@ -36,12 +36,13 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 		private readonly IPricingService _pricingService;
 		private readonly IInventoryService _inventoryService;
 		private readonly ICommerceService _commerceService;
+		private readonly IPropertyService _propertyService;
 
 		public CatalogModuleExportImportController(ICatalogService catalogService, ICatalogSearchService catalogSearchService,
 								ICategoryService categoryService, IItemService productService,
 								INotifier notifier, CacheManager cacheManager, IBlobStorageProvider blobProvider,
 								IBlobUrlResolver blobUrlResolver, ISkuGenerator skuGenerator, IPricingService pricingService,
-								IInventoryService inventoryService, ICommerceService commerceService) 
+								IInventoryService inventoryService, ICommerceService commerceService, IPropertyService propertyService) 
 		{
 			_catalogService = catalogService;
 			_searchService = catalogSearchService;
@@ -55,6 +56,7 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 			_pricingService = pricingService;
 			_inventoryService = inventoryService;
 			_commerceService = commerceService;
+			_propertyService = propertyService;
 
 		}
 
@@ -176,7 +178,7 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 			};
 			_notifier.Upsert(notification);
 
-			var importJob = new CsvCatalogImportJob(_catalogService,  _categoryService, _productService, _notifier, _cacheManager, _blobStorageProvider, _skuGenerator, _pricingService, _inventoryService, _commerceService);
+			var importJob = new CsvCatalogImportJob(_catalogService,  _categoryService, _productService, _notifier, _cacheManager, _blobStorageProvider, _skuGenerator, _pricingService, _inventoryService, _commerceService, _propertyService);
 			BackgroundJob.Enqueue(() => importJob.DoImport(importConfiguration, notification));
 
 			return Ok(notification);
