@@ -12,12 +12,15 @@
     });
 
     $scope.startExport = function () {
-     	exportResourse.run({ id: blade.catalog.id }, function (data) {
-     		blade.notification = data;
-     	}, function (error) {
-     		bladeNavigationService.setError('Error ' + error.status, $scope.blade);
-     	});
-	}
+    	exportResourse.run({
+    		catalogId: blade.catalog.id,
+    		categoryIds: _.map(blade.selectedCategories, function (x) { return x.id }),
+    		productIds: _.map(blade.selectedProducts, function (x) { return x.id })
+    	}, function (data) { blade.notification = data; },
+						   function (error) {
+						   	bladeNavigationService.setError('Error ' + error.status, $scope.blade);
+						   });
+    }
 
     $scope.setForm = function (form) {
         $scope.formScope = form;

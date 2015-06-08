@@ -21,12 +21,14 @@ using VirtoCommerce.Domain.Inventory.Model;
 using VirtoCommerce.Domain.Pricing.Services;
 using VirtoCommerce.Domain.Inventory.Services;
 using VirtoCommerce.Domain.Commerce.Services;
+using System.Threading.Tasks;
 
 
 namespace VirtoCommerce.CatalogModule.Web.BackgroundJobs
 {
 	public class CsvCatalogImportJob
 	{
+		private readonly char[] _categoryDelimiters = new char[] { '/', '|', '\\', '>' };
 		private readonly ICatalogService _catalogService;
 		private readonly ICategoryService _categoryService;
 		private readonly IItemService _productService;
@@ -37,6 +39,7 @@ namespace VirtoCommerce.CatalogModule.Web.BackgroundJobs
 		private readonly IPricingService _pricingService;
 		private readonly IInventoryService _inventoryService;
 		private readonly ICommerceService _commerceService;
+		private object _lockObject = new object();
 
 		public CsvCatalogImportJob(ICatalogService catalogService, ICategoryService categoryService, IItemService productService,
 								INotifier notifier, CacheManager cacheManager, IBlobStorageProvider blobProvider, ISkuGenerator skuGenerator,
@@ -96,8 +99,8 @@ namespace VirtoCommerce.CatalogModule.Web.BackgroundJobs
 					}
 				}
 
-
-				SaveData(catalog, csvProducts, notification);
+				SaveCategoryTree(catalog, csvProducts, notification);
+				SaveProducts(catalog, csvProducts, notification);
 			}
 			catch (Exception ex)
 			{
@@ -108,87 +111,66 @@ namespace VirtoCommerce.CatalogModule.Web.BackgroundJobs
 			finally
 			{
 				notification.Finished = DateTime.UtcNow;
+				notification.Description = "Import finished" + (notification.Errors.Any() ? " with errors" : " successfully");
 				_notifier.Upsert(notification);
 			}
 
 
 		}
 
-		private void SaveData(coreModel.Catalog catalog, IEnumerable<coreModel.CatalogProduct> csvProducts, ImportNotification notification)
+	
+
+		private void SaveCategoryTree(coreModel.Catalog catalog, IEnumerable<coreModel.CatalogProduct> csvProducts, ImportNotification notification)
 		{
 			var categories = new List<coreModel.Category>();
-
-			//project product information to category structure (categories, properties etc)
+			csvProducts = csvProducts.Where(x => x.CategoryId == null && x.Category != null);
+			notification.ProcessedCount = 0;
 			foreach (var csvProduct in csvProducts)
 			{
 				var productCategoryNames = csvProduct.Category.Path.Split('/', '|', '\\', '>');
-				ICollection<coreModel.Category> levelCategories = categories;
+				ICollection<coreModel.Category> currentLevelCategories = categories;
+				string parentCategoryId = null;
 				foreach (var categoryName in productCategoryNames)
 				{
-					var category = levelCategories.FirstOrDefault(x => x.Name == categoryName);
+					var category = currentLevelCategories.FirstOrDefault(x => x.Name == categoryName);
 					if (category == null)
 					{
-						category = new coreModel.Category() { Name = categoryName, Code = categoryName.GenerateSlug() };
-						category.CatalogId = catalog.Id;
+						category = _categoryService.Create(new coreModel.Category() { Name = categoryName, Code = categoryName.GenerateSlug(), CatalogId = catalog.Id, ParentId = parentCategoryId });
 						category.Children = new List<coreModel.Category>();
-						levelCategories.Add(category);
+						currentLevelCategories.Add(category);
+
+						//Raise notification each notifyCategorySizeLimit category
+						notification.Description = string.Format("Creating categories: {0} created", ++notification.ProcessedCount);
+						_notifier.Upsert(notification);
 					}
 					csvProduct.Category = category;
-					levelCategories = category.Children;
+					currentLevelCategories = category.Children;
+					parentCategoryId = category.Id;
 				}
 			}
 
-			var newCategories = new List<coreModel.Category>();
-			//save to db
-			//Categories
-			notification.TotalCount = categories.SelectMany(x => x.Traverse(y => y.Children)).Count();
-			foreach (var category in categories)
-			{
-				SaveCategoryRecursive(newCategories, category, notification);
-			}
-
-			//Save products
-			SaveProducts(csvProducts, catalog, newCategories, notification);
-				
-			notification.Description = "Import finished" + (notification.Errors.Any() ? " with errors" : " successfully");
-			_notifier.Upsert(notification);
 		}
 
 
-		private void SaveCategoryRecursive(List<coreModel.Category> categories, coreModel.Category category, ImportNotification notification)
-		{
-			//save to db
-			//Categories
-			var newCategory = _categoryService.Create(category);
-			categories.Add(newCategory);
-			//TODO: Prevent category creation if it exist
-			foreach (var childCategory in category.Children)
-			{
-				childCategory.ParentId = newCategory.Id;
-				SaveCategoryRecursive(categories, childCategory, notification);
-
-				//Raise notification each notifyCategorySizeLimit category
-				notification.Description = string.Format("Creating categories: {0} of {1} created", notification.ProcessedCount, notification.TotalCount);
-				_notifier.Upsert(notification);
-			}
-		}
-
-		private void SaveProducts(IEnumerable<coreModel.CatalogProduct> csvProducts, coreModel.Catalog catalog, IEnumerable<coreModel.Category> categories, ImportNotification notification)
+		private void SaveProducts(coreModel.Catalog catalog, IEnumerable<coreModel.CatalogProduct> csvProducts, ImportNotification notification)
 		{
 			int counter = 0;
 			var notifyProductSizeLimit = 10;
 			notification.TotalCount = csvProducts.Count();
 
 			var defaultFulfilmentCenter = _commerceService.GetAllFulfillmentCenters().FirstOrDefault();
-			//Products
-			foreach (var csvProduct in csvProducts.OrderBy(x=>x.MainProductId ?? ""))
+			var options = new ParallelOptions() 
 			{
+				 MaxDegreeOfParallelism = 10
+			};
+
+			Parallel.ForEach(csvProducts.OrderBy(x => x.MainProductId ?? ""), options, csvProduct =>
+			{
+				var isNewProduct = csvProduct.IsTransient();
 				//Try to set parent relations
-				var parentProduct = csvProducts.FirstOrDefault(x =>((csvProduct.MainProductId != null && x.Code == csvProduct.MainProductId) || (x.Name == csvProduct.Name)) && !x.IsTransient());
+				var parentProduct = csvProducts.FirstOrDefault(x => ((csvProduct.MainProductId != null && (x.Id == csvProduct.MainProductId || x.Code == csvProduct.MainProductId)) || (x.Name == csvProduct.Name)) && !x.IsTransient());
 				csvProduct.MainProductId = parentProduct != null ? parentProduct.Id : null;
-				
-				var category = categories.FirstOrDefault(x => x.Code == csvProduct.Category.Code);
-				csvProduct.CategoryId = category.Id;
+
 				csvProduct.CatalogId = catalog.Id;
 
 				try
@@ -197,42 +179,65 @@ namespace VirtoCommerce.CatalogModule.Web.BackgroundJobs
 					{
 						csvProduct.Code = _skuGenerator.GenerateSku(csvProduct);
 					}
-					var newProduct = _productService.Create(csvProduct);
+
+					if (!isNewProduct)
+					{
+						_productService.Update(new coreModel.CatalogProduct[] { csvProduct });
+					}
+					else
+					{
+						var newProduct = _productService.Create(csvProduct);
+						csvProduct.Id = newProduct.Id;
+					}
+
 					//Create price in default price list
-					if(csvProduct.Prices != null && csvProduct.Prices.Any())
+					if (csvProduct.Prices != null && csvProduct.Prices.Any())
 					{
 						var price = csvProduct.Prices.First();
-						price.ProductId = newProduct.Id;
-						_pricingService.CreatePrice(price);
+						price.ProductId = csvProduct.Id;
+						if (isNewProduct)
+						{
+							_pricingService.CreatePrice(price);
+						}
+						else
+						{
+							_pricingService.UpdatePrices(new Price[] {  price });
+						}
 					}
+
 					//Create inventory
 					if (csvProduct.Inventories != null && csvProduct.Inventories.Any())
 					{
 						var inventory = csvProduct.Inventories.First();
-						inventory.ProductId = newProduct.Id;
+						inventory.ProductId = csvProduct.Id;
 						inventory.FulfillmentCenterId = defaultFulfilmentCenter.Id;
 						_inventoryService.UpsertInventory(csvProduct.Inventories.First());
 					}
-					csvProduct.Id = newProduct.Id;
 				}
 				catch (Exception ex)
 				{
-					notification.ErrorCount++;
-					notification.Errors.Add(ex.ToString());
-					_notifier.Upsert(notification);
-				}
-				finally
-				{
-					//Raise notification each notifyProductSizeLimit category
-					counter++;
-					notification.ProcessedCount = counter;
-					notification.Description = string.Format("Creating products: {0} of {1} created", notification.ProcessedCount, notification.TotalCount);
-					if (counter % notifyProductSizeLimit == 0)
+					lock (_lockObject)
 					{
+						notification.ErrorCount++;
+						notification.Errors.Add(ex.ToString());
 						_notifier.Upsert(notification);
 					}
 				}
-			}
+				finally
+				{
+					lock (_lockObject)
+					{
+						//Raise notification each notifyProductSizeLimit category
+						counter++;
+						notification.ProcessedCount = counter;
+						notification.Description = string.Format("Creating products: {0} of {1} created", notification.ProcessedCount, notification.TotalCount);
+						if (counter % notifyProductSizeLimit == 0)
+						{
+							_notifier.Upsert(notification);
+						}
+					}
+				}
+			});
 
 		}
 
@@ -343,6 +348,7 @@ namespace VirtoCommerce.CatalogModule.Web.BackgroundJobs
 				Map(x => x.Prices).ConvertUsing(x =>
 				{
 					var prices = new List<Price>();
+					var priceId = GetCsvField("PriceId", x, importConfiguration);
 					var listPrice = GetCsvField("Price", x, importConfiguration);
 					var salePrice = GetCsvField("SalePrice", x, importConfiguration);
 					var currency = GetCsvField("Currency", x, importConfiguration);
@@ -351,6 +357,7 @@ namespace VirtoCommerce.CatalogModule.Web.BackgroundJobs
 					{
 						prices.Add(new Price
 						{
+							Id = priceId,
 							List = Convert.ToDecimal(listPrice, CultureInfo.InvariantCulture),
 							Sale = salePrice != null ? (decimal?)Convert.ToDecimal(listPrice, CultureInfo.InvariantCulture) : null,
 							Currency = EnumUtility.SafeParse<CurrencyCodes>(currency, CurrencyCodes.USD)
@@ -378,7 +385,7 @@ namespace VirtoCommerce.CatalogModule.Web.BackgroundJobs
 				});
 
 				//Map properties
-				if (importConfiguration.PropertyCsvColumns != null)
+				if (importConfiguration.PropertyCsvColumns != null && importConfiguration.PropertyCsvColumns.Any())
 				{
 					Map(x => x.PropertyValues).ConvertUsing(x => importConfiguration.PropertyCsvColumns.Select(column => new coreModel.PropertyValue { PropertyName = column, Value = x.GetField<string>(column) }).ToList());
 				}

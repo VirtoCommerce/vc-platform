@@ -49,7 +49,7 @@ namespace VirtoCommerce.CatalogModule.Web.BackgroundJobs
 			_inventoryService = inventoryService;
 		}
 
-		public virtual void DoExport(string catalogId, CurrencyCodes currency, string languageCode, ExportNotification notification)
+		public virtual void DoExport(string catalogId, string[] exportedCategories, string[] exportedProducts, CurrencyCodes currency, string languageCode, ExportNotification notification)
 		{
 			var memoryStream = new MemoryStream();
 			var streamWriter = new StreamWriter(memoryStream);
@@ -67,7 +67,7 @@ namespace VirtoCommerce.CatalogModule.Web.BackgroundJobs
 				try
 				{
 					//Load all products to export
-					var products = LoadProducts(catalogId);
+					var products = LoadProducts(catalogId, exportedCategories, exportedProducts);
 
 					//Notification
 					notification.Description = "loading prices...";
@@ -144,9 +144,9 @@ namespace VirtoCommerce.CatalogModule.Web.BackgroundJobs
 						}
 
 						//Raise notification each notifyProductSizeLimit products
+						counter++;
 						notification.ProcessedCount = counter;
 						notification.Description = string.Format("{0} of {1} products processed", notification.ProcessedCount, notification.TotalCount);
-						counter++;
 						if (counter % notifyProductSizeLimit == 0)
 						{
 							_notifier.Upsert(notification);
@@ -181,16 +181,31 @@ namespace VirtoCommerce.CatalogModule.Web.BackgroundJobs
 			
 		}
 
-		private IEnumerable<CatalogProduct> LoadProducts(string catalogId)
+		private IEnumerable<CatalogProduct> LoadProducts(string catalogId, string[] exportedCategories, string[] exportedProducts)
 		{
 			var retVal = new List<CatalogProduct>();
-			int maxProductCount = 50;
-			int index = 0;
-			var totalCount = 0;
-			do
-			{
-				var result = _searchService.Search(new SearchCriteria { CatalogId = catalogId, GetAllCategories = true, Start = index, Count = maxProductCount, ResponseGroup = ResponseGroup.WithProducts });
-				var products = _productService.GetByIds(result.Products.Select(x => x.Id).ToArray(), ItemResponseGroup.ItemLarge);
+		
+				var productIds = new List<string>();
+				if(exportedProducts != null)
+				{
+					productIds = exportedProducts.ToList();
+				}
+				if (exportedCategories != null && exportedCategories.Any())
+				{
+					foreach (var categoryId in exportedCategories)
+					{
+						var result = _searchService.Search(new SearchCriteria { CatalogId = catalogId, CategoryId = categoryId, Start = 0, Count = int.MaxValue, ResponseGroup = ResponseGroup.WithProducts });
+						productIds.AddRange(result.Products.Select(x => x.Id));
+					}
+				}
+
+				if (exportedCategories == null && exportedProducts == null)
+				{
+					var result = _searchService.Search(new SearchCriteria { CatalogId = catalogId, GetAllCategories = true, Start = 0, Count = int.MaxValue, ResponseGroup = ResponseGroup.WithProducts });
+					productIds = result.Products.Select(x => x.Id).ToList();
+				}
+
+				var products = _productService.GetByIds(productIds.Distinct().ToArray(), ItemResponseGroup.ItemLarge);
 				foreach(var product in products)
 				{
 					retVal.Add(product);
@@ -199,17 +214,14 @@ namespace VirtoCommerce.CatalogModule.Web.BackgroundJobs
 						retVal.AddRange(product.Variations);
 					}
 				}
-				totalCount = result.TotalCount;
-				index += maxProductCount;
-			}
-			while (index < totalCount);
+
 			return retVal;
 		}
 
 		
 		private void PopulateProductExportConfiguration(Dictionary<string, Func<CatalogProduct, string>> configuration, IEnumerable<CatalogProduct> products)
 		{
-			
+
 			configuration.Add("Sku", (product) =>
 			{
 				return product.Code;
@@ -219,14 +231,6 @@ namespace VirtoCommerce.CatalogModule.Web.BackgroundJobs
 			{
 				return product.MainProduct != null ? product.MainProduct.Code : String.Empty;
 			});
-
-			//Scalar Properties
-			var exportScalarFields = ReflectionUtility.GetPropertyNames<CatalogProduct>(x => x.Name, x => x.IsActive, x => x.IsBuyable, x => x.TrackInventory,
-																							  x => x.ManufacturerPartNumber, x => x.Gtin, x => x.MeasureUnit, x => x.WeightUnit, x => x.Weight,
-																							  x => x.Height, x => x.Length, x => x.Width, x => x.TaxType,  x => x.ShippingType,
-																							  x => x.ProductType, x => x.Vendor, x => x.DownloadType, x => x.DownloadExpiration, x => x.HasUserAgreement);
-			configuration.AddRange(exportScalarFields.Select(x => new KeyValuePair<string, Func<CatalogProduct, string>>(x, null)));
-
 
 			//Category
 			configuration.Add("Category", (product) =>
@@ -239,6 +243,14 @@ namespace VirtoCommerce.CatalogModule.Web.BackgroundJobs
 				}
 				return String.Empty;
 			});
+
+
+			//Scalar Properties
+			var exportScalarFields = ReflectionUtility.GetPropertyNames<CatalogProduct>(x=>x.Id, x=>x.MainProductId, x=>x.CategoryId, x => x.Name, x => x.IsActive, x => x.IsBuyable, x => x.TrackInventory,
+																							  x => x.ManufacturerPartNumber, x => x.Gtin, x => x.MeasureUnit, x => x.WeightUnit, x => x.Weight,
+																							  x => x.Height, x => x.Length, x => x.Width, x => x.TaxType,  x => x.ShippingType,
+																							  x => x.ProductType, x => x.Vendor, x => x.DownloadType, x => x.DownloadExpiration, x => x.HasUserAgreement);
+			configuration.AddRange(exportScalarFields.Select(x => new KeyValuePair<string, Func<CatalogProduct, string>>(x, null)));
 
 			configuration.Add("PrimaryImage", (product) =>
 			{
@@ -317,6 +329,11 @@ namespace VirtoCommerce.CatalogModule.Web.BackgroundJobs
 			});
 
 			//Prices
+			configuration.Add("PriceId", (product) =>
+			{
+				var bestPrice = product.Prices.Any() ? product.Prices.FirstOrDefault() : null;
+				return bestPrice != null ? bestPrice.Id : String.Empty;
+			});
 			configuration.Add("SalePrice", (product) =>
 				{
 					var bestPrice = product.Prices.Any() ? product.Prices.FirstOrDefault() : null;

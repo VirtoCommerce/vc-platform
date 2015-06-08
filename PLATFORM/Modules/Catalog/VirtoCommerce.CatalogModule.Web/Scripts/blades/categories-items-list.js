@@ -363,7 +363,9 @@
 				             catalog: blade.catalog,
 				             subtitle: 'Choose data format & start export',
 				             controller: 'virtoCommerce.catalogModule.exporterListController',
-				             template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/export/exporter-list.tpl.html'
+				             template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/export/exporter-list.tpl.html',
+				             selectedProducts: _.filter($scope.items, function (x) { return x.type == 'product' && x.selected == true; }),
+				             selectedCategories: _.filter($scope.items, function (x) { return x.type == 'category' && x.selected == true; })
 				         };
 				         bladeNavigationService.showBlade(newBlade, $scope.blade);
 				     },

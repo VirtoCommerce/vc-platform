@@ -12,6 +12,8 @@
 	$scope.openBlade = function (data) {
 		var newBlade = {};
 		angular.copy(data, newBlade);
+		newBlade.selectedCategories = blade.selectedCategories;
+		newBlade.selectedProducts = blade.selectedProducts;
 		newBlade.catalog = blade.catalog;
 
 		bladeNavigationService.showBlade(newBlade, blade.parentBlade);
