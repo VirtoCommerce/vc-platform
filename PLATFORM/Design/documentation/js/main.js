@@ -132,7 +132,7 @@ $(function (){
     //****** F U N C T I O N S
 
     function Navbar(scrollTop) {
-        if(scrollTop >= 230) {
+        if(scrollTop >= 316) {
             $('.navbar > .menu').addClass('__fixed');
         }
         else {
