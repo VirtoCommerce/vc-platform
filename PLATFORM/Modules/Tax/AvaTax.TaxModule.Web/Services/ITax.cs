@@ -8,5 +8,7 @@ namespace AvaTax.TaxModule.Web.Services
         string Code { get; }
         string Description { get; }
         string LogoUrl { get; }
+        string ServiceUrl { get; }
+        string CompanyCode { get; }
     }
 }

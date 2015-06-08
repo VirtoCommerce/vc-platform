@@ -2,7 +2,7 @@ var Blade = {
 
     settings: function() {
         $('.menu.__sub .form input[type=checkbox]').prop('checked', false);
-        $('#bladeContainerStaticNormal').prop('checked', true);
+        $('#bladeContainerStaticNormal, #bladeSizeNormal').prop('checked', true);
 
         var url = window.location.href.replace('blade-constructor.html', '');
         
@@ -21,7 +21,15 @@ var Blade = {
             tplBladeTitle,
             tplBladeToolbar,
             tplBladeContent,
-            tplBladeStaticTop;
+            tplBladeStaticTop,
+            tplBladeBreadcrumbs,
+            tplBladeSearch,
+            tplBladeSearchSolo,
+            tplBladeSearchCount,
+            tplBladeStaticBot,
+            tplBladeStaticButton,
+            tplBladeTable,
+            tplBladeList;
 
         types = [
             'bladeHeadError',
@@ -31,6 +39,10 @@ var Blade = {
             'bladeHeadTitle',
             'bladeHeadDescr',
             'bladeHeadToolbar',
+            'bladeSizeNormal',
+            'bladeSizeMedium',
+            'bladeSizeLarge',
+            'bladeSizeXLarge',
             'bladeContainerStaticTop',
             'bladeContainerStaticNormal',
             'bladeContainerStaticCollapsed',
@@ -40,6 +52,8 @@ var Blade = {
             'bladeContainerSearchCount',
             'bladeContainerStaticBot',
             'bladeContainerStaticButton',
+            'bladeContainerTable',
+            'bladeContainerList',
         ];
 
         disableTypes = [
@@ -52,7 +66,8 @@ var Blade = {
             'bladeContainerSearch',
             'bladeContainerSearchCount',
             'bladeContainerStaticBot',
-            'bladeContainerStaticButton'
+            'bladeContainerStaticButton',
+            'bladeContainerTable',
         ];
 
         for(var i = 0; i < disableTypes.length; i++) {
@@ -118,6 +133,18 @@ var Blade = {
 
         $('#result').load(url + '/templates/settings/blade-button.html', function () {
             tplBladeStaticButton = $('#result').html();
+        });
+
+        $('#result').load(url + '/templates/settings/blade-table.html', function () {
+            tplBladeTable = $('#result').html();
+        });
+
+        $('#result').load(url + '/templates/settings/blade-list.html', function () {
+            tplBladeList = $('#result').html();
+        });
+
+        $('#result').load(url + '/templates/settings/blade-widgets.html', function () {
+            tplBladeWidgets = $('#result').html();
         });
 
         for(var i = 0; i < types.length; i++) {
@@ -259,6 +286,58 @@ var Blade = {
                     }
                 }
 
+                /* Blade size normal */
+                if(type == 'bladeSizeNormal') {
+                    if($('#bladeSizeNormal').is(':checked')) {
+                        $('#tplblade .blade-content').removeAttr('class').addClass('blade-content');
+                        $('#bladeContainerTable').prop('disabled', true);
+                        $('#bladeContainerTable').parent().addClass('__disabled');
+
+                        Blade.saveCode();
+                    }
+                }
+
+                if(type == 'bladeSizeMedium') {
+                    if($('#bladeSizeMedium').is(':checked')) {
+                        $('#tplblade .blade-content').removeAttr('class').addClass('blade-content __medium-wide');
+                        
+                        if(!$('#bladeContainerList').is(':checked')) {
+                            $('#bladeContainerTable').prop('disabled', false);
+                            $('#bladeContainerTable').parent().removeClass('__disabled');
+                        }
+
+                        Blade.saveCode();
+                    }
+                }
+
+                /* Blade size large */
+                if(type == 'bladeSizeLarge') {
+                    if($('#bladeSizeLarge').is(':checked')) {
+                        $('#tplblade .blade-content').removeAttr('class').addClass('blade-content __large-wide');
+                        
+                        if(!$('#bladeContainerList').is(':checked')) {
+                            $('#bladeContainerTable').prop('disabled', false);
+                            $('#bladeContainerTable').parent().removeClass('__disabled');
+                        }
+
+                        Blade.saveCode();
+                    }
+                }
+
+                /* Blade size xlarge */
+                if(type == 'bladeSizeXLarge') {
+                    if($('#bladeSizeXLarge').is(':checked')) {
+                        $('#tplblade .blade-content').removeAttr('class').addClass('blade-content __xlarge-wide');
+                        
+                        if(!$('#bladeContainerList').is(':checked')) {
+                            $('#bladeContainerTable').prop('disabled', false);
+                            $('#bladeContainerTable').parent().removeClass('__disabled');
+                        }
+
+                        Blade.saveCode();
+                    }
+                }
+
                 /* Blade container static top */
                 if(type == 'bladeContainerStaticTop') {
                     if($('#bladeContainerStaticTop').is(':checked')) {
@@ -267,19 +346,24 @@ var Blade = {
                         $('#bladeContainerStaticBot, #bladeContainerStaticNormal, #bladeContainerStaticCollapsed, #bladeContainerStaticExpanded').parent().removeClass('__disabled');
                         $('#bladeContainerSearch').prop('disabled', false);
                         $('#bladeContainerSearch').parent().removeClass('__disabled');
+                        $('#bladeContainerTable, #bladeContainerList, #bladeContainerWidgets').prop('disabled', true);
+                        $('#bladeContainerTable, #bladeContainerList, #bladeContainerWidgets').parent().addClass('__disabled');
 
                         Blade.saveCode();
                     }
                     else {
                         $('#tplblade .blade-container').empty();
                         $('#tplblade .blade-container').append(tplBladeContent);
-                        $('#bladeContainerStaticBot, #bladeContainerStaticNormal, #bladeContainerStaticCollapsed, #bladeContainerStaticExpanded').prop('disabled', true);
-                        $('#bladeContainerStaticBot, #bladeContainerStaticNormal, #bladeContainerStaticCollapsed, #bladeContainerStaticExpanded').parent().addClass('__disabled');
+                        $('#bladeContainerStaticBot, #bladeContainerStaticNormal, #bladeContainerStaticCollapsed, #bladeContainerStaticExpanded, #bladeContainerStaticButton').prop('disabled', true);
+                        $('#bladeContainerStaticBot, #bladeContainerStaticNormal, #bladeContainerStaticCollapsed, #bladeContainerStaticExpanded, #bladeContainerStaticButton').parent().addClass('__disabled');
                         $('#bladeContainerStaticNormal').prop('checked', true);
+                        $('#bladeContainerStaticBot, #bladeContainerStaticButton').prop('checked', false);
                         $('#bladeContainerSearch').prop('disabled', true);
                         $('#bladeContainerSearch').parent().addClass('__disabled');
+                        $('#bladeContainerTable, #bladeContainerList, #bladeContainerWidgets').prop('disabled', false);
 
                         Blade.saveCode();
+                        $('#bladeContainerTable, #bladeContainerList, #bladeContainerWidgets').parent().removeClass('__disabled');
                     }
                 }
 
@@ -529,6 +613,43 @@ var Blade = {
                     }
                     else {
                         $('#tplblade .blade-static.__bottom').empty();
+
+                        Blade.saveCode();
+                    }
+                }
+
+                if(type == 'bladeContainerTable') {
+                    if($('#bladeContainerTable').is(':checked')) {
+                        $('#tplblade .inner-block').append(tplBladeTable);
+                        $('#bladeSizeNormal, #bladeContainerList').prop('disabled', true);
+                        $('#bladeSizeNormal, #bladeContainerList').parent().addClass('__disabled');
+
+                        Blade.saveCode();
+                    }
+                    else {
+                        $('#tplblade .inner-block').empty();
+                        $('#bladeSizeNormal, #bladeContainerList').prop('disabled', false);
+                        $('#bladeSizeNormal, #bladeContainerList').parent().removeClass('__disabled');
+
+                        Blade.saveCode();
+                    }
+                }
+
+                if(type == 'bladeContainerList') {
+                    if($('#bladeContainerList').is(':checked')) {
+                        $('#tplblade .inner-block').append(tplBladeList);
+                        $('#bladeContainerTable').prop('disabled', true);
+                        $('#bladeContainerTable').parent().addClass('__disabled');
+
+                        Blade.saveCode();
+                    }
+                    else {
+                        $('#tplblade .inner-block').empty();
+                        
+                        if(!$('#bladeSizeNormal').is(':checked')) {
+                            $('#bladeContainerTable').prop('disabled', false);
+                            $('#bladeContainerTable').parent().removeClass('__disabled');
+                        }
 
                         Blade.saveCode();
                     }

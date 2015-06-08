@@ -217,7 +217,7 @@ namespace VirtoCommerce.OrderModule.Web.Controllers.Api
 					}
 					else if (payment != null)
 					{
-						//If payment not belong to order need remove paymnet in shipment
+						//If payment not belong to order need remove payment in shipment
 						if (!order.InPayments.Remove(payment))
 						{
 							var paymentContainsShipment = order.Shipments.FirstOrDefault(x => x.InPayments.Contains(payment));

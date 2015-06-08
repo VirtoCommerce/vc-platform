@@ -1,0 +1,26 @@
+
+                    <script type="text/ng-template" id="tmp1.html">
+                        <div class="gridster-cnt">
+                            <div class="cnt-inner">
+                                <div class="list-count">{{item.data.count}}</div>
+                                <div class="list-t">{{item.data.name}}</div>
+                            </div>
+                        </div>
+                    </script>
+                    <script type="text/ng-template" id="tmp2.html">
+                        <div class="gridster-cnt">
+                            <div class="cnt-inner">
+                                <i class="list-ico fa {{item.data.ico}}"></i>
+                                <div class="list-t">{{item.data.name}}</div>
+                            </div>
+                        </div>
+                    </script>
+                    <script type="text/ng-template" id="graph.html">
+                        <div google-chart chart="item.data.chartObject" style="height:100%"></div>
+                    </script>
+                    <div gridster="gridsterOpts">
+                        <ul class="list">
+                            <li class="list-item" gridster-item="item" ng-repeat="item in standardItems" ng-include="item.template"></li>
+                        </ul>
+                    </div>
+                

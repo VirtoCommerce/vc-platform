@@ -11,6 +11,8 @@ namespace AvaTax.TaxModule.Web
     {
         private const string _usernamePropertyName = "Avalara.Tax.Credentials.Username";
         private const string _passwordPropertyName = "Avalara.Tax.Credentials.Password";
+        private const string _serviceUrlPropertyName = "Avalara.Tax.Credentials.ServiceUrl";
+        private const string _companyCodePropertyName = "Avalara.Tax.Credentials.CompanyCode";
 
         private readonly IUnityContainer _container;
 
@@ -31,13 +33,15 @@ namespace AvaTax.TaxModule.Web
 
             var avalaraUsername = settingsManager.GetValue(_usernamePropertyName, string.Empty);
             var avalaraPassword = settingsManager.GetValue(_passwordPropertyName, string.Empty);
+            var avalaraServiceUrl = settingsManager.GetValue(_serviceUrlPropertyName, string.Empty);
+            var avalaraCompanyCode = settingsManager.GetValue(_companyCodePropertyName, string.Empty);
 
             var avalaraCode = settingsManager.GetValue("Avalara.Tax.Code", string.Empty);
             var avalaraDescription = settingsManager.GetValue("Avalara.Tax.Description", string.Empty);
             var avalaraLogoUrl = settingsManager.GetValue("Avalara.Tax.LogoUrl", string.Empty);
 
 
-            var avalaraTax = new AvaTaxImpl(avalaraUsername, avalaraPassword, avalaraCode, avalaraDescription, avalaraLogoUrl);
+            var avalaraTax = new AvaTaxImpl(avalaraUsername, avalaraPassword, avalaraServiceUrl, avalaraCompanyCode, avalaraCode, avalaraDescription, avalaraLogoUrl);
 
             #region Avalara manager
             _container.RegisterInstance<ITaxManager>(new InMemoryTaxManagerImpl());
@@ -49,10 +53,6 @@ namespace AvaTax.TaxModule.Web
             _container.RegisterType<AvaTaxController>
                 (new InjectionConstructor(
                     avalaraTax));
-
-            _container.RegisterType<AvalaraAuthorizationController>
-                (new InjectionConstructor(
-                    settingsManager));
         }
 
         public void PostInitialize()
