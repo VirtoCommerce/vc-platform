@@ -16,7 +16,7 @@
                         </div>
                     </div>
                     <hr />
-                    {% if checkout.guest_login != true %}
+                    {% if checkout.guest_login != true and customer.addresses.size > 0 %}
                         <div class="form-group">
                             <label class="col-sm-4 control-label" for="checkout_email">Shipping addresses</label>
                             <div class="col-sm-8">
