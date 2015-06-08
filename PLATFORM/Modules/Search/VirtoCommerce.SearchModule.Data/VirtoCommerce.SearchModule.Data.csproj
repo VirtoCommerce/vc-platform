@@ -120,6 +120,7 @@
     <Compile Include="Providers\Lucene\LuceneSearchProvider.cs" />
     <Compile Include="Providers\Lucene\LuceneSearchQueryBuilder.cs" />
     <Compile Include="Providers\Lucene\LuceneSearchResults.cs" />
+    <Compile Include="Services\CatalogOutlineBuilder.cs" />
     <Compile Include="Services\SearchIndexController.cs" />
     <Compile Include="Services\SearchProviderManager.cs" />
   </ItemGroup>

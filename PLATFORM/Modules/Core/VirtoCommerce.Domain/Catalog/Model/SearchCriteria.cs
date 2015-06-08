@@ -17,7 +17,8 @@ namespace VirtoCommerce.Domain.Catalog.Model
         public string CatalogId { get; set; }
 		public string Code { get; set; }
 		public string SeoKeyword { get; set; }
-
+		//Hides direct linked categories in virtual category displayed only linked category content without itself
+		public bool HideDirectLinedCategories { get; set; }
         public List<PropertyValue> PropertyValues { get; set; }
 
         public int Start { get; set; }

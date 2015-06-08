@@ -1,26 +1,22 @@
-﻿<div class="blade-static __bottom" ng-if="blade.bottomTemplate">
-    <ng-include src='blade.bottomTemplate'> </ng-include>
-</div>
+﻿<div class="blade-static __bottom" ng-include="'Scripts/common/templates/create.tpl.html'" ng-if="blade.isNew"></div>
+<div class="blade-static __bottom" ng-include="'Scripts/common/templates/ok-cancel2.tpl.html'" ng-if="!blade.isNew"></div>
 <div class="blade-content">
     <div class="blade-inner">
         <div class="inner-block">
-            <form name="itemProperties" class="form" ng-init="propGroups = [{title:'Product properties', type:'product'}, {title:'Variation properties', type:'variation'}]">
-                <fieldset ng-repeat="propGroup in propGroups" ng-init="setForm(itemProperties)">
-                    <legend>
-                        {{propGroup.title}}: <span class="count">{{properties.length}}</span>
-                    </legend>
-                    <div class="form-group" ng-repeat="prop in properties = (blade.item.properties | filter: {type:propGroup.type})">
-                        <label class="form-label">
-                            {{prop.name}}
-                            <a ng-show="prop.isManageable" href="" ng-click="editProperty(prop)">
-                                <i class="form-ico fa fa-pencil"></i>
-                            </a>
-                        </label>
-                        <va-property2 ng-model="prop" get-prop-values="getPropValues" />
+            <form name="formScope" class="form">
+                <div class="form-group" ng-init="setForm(formScope);">
+                    <label class="form-label" for="">Property name</label>
+                    <div class="form-input">
+                        <input focus-on="" required class="form-control" ng-model="blade.currentEntity.name" />
                     </div>
-                    <div ng-if="properties.length == 0">None</div>
-                </fieldset>
+                </div>
             </form>
+            <ul class="list __items">
+                <li class="list-item" ng-class="{'__selected': currentChild === 'valType'}" ng-click='openChild("valType")'>
+                    <span class="list-t">Value Type</span>
+                    <span class="list-descr">{{blade.currentEntity.valueType}}</span>
+                </li>
+            </ul>
         </div>
     </div>
 </div>

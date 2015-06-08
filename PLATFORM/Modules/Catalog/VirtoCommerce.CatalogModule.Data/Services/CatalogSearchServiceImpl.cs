@@ -75,10 +75,21 @@ namespace VirtoCommerce.CatalogModule.Data.Services
                             //Need return all linked categories also
 							var allLinkedPhysicalCategoriesIds = dbCategory.IncommingLinks.Select(x => x.SourceCategoryId).ToArray();
 					        query = repository.Categories;
-							if(allLinkedPhysicalCategoriesIds.Any())
-								query = query.Where(x => x.ParentCategoryId == criteria.CategoryId || allLinkedPhysicalCategoriesIds.Contains(x.Id));
+							if (allLinkedPhysicalCategoriesIds.Any())
+							{
+								if (criteria.HideDirectLinedCategories)
+								{
+									query = query.Where(x => x.ParentCategoryId == criteria.CategoryId || allLinkedPhysicalCategoriesIds.Contains(x.ParentCategoryId));
+								}
+								else
+								{
+									query = query.Where(x => x.ParentCategoryId == criteria.CategoryId || allLinkedPhysicalCategoriesIds.Contains(x.Id));
+								}
+							}
 							else
+							{
 								query = query.Where(x => x.ParentCategoryId == criteria.CategoryId);
+							}
                         }
                         else
                         {

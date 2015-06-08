@@ -45,7 +45,7 @@
                         <p ng-repeat="error in blade.notification.errors track by $index" class="error">{{error}}</p>
                     </div>
                 </div>
-                <p class="text" ng-if="blade.notification.downloadUrl">Download Url: <a href="{{blade.notification.downloadUrl}}">{{blade.notification.downloadUrl}}</a></p>
+                <p class="text" ng-if="blade.notification.downloadUrl">Download Url: <a href="{{blade.notification.downloadUrl}}" target="_blank">{{blade.notification.downloadUrl}}</a></p>
             </div>
         </div>
     </div>

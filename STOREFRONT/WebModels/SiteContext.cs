@@ -2,6 +2,8 @@
 
 using System;
 using System.Collections.Generic;
+using System.Text;
+using System.Text.RegularExpressions;
 using System.Web;
 using DotLiquid;
 using VirtoCommerce.Web.Models;
@@ -14,17 +16,33 @@ namespace VirtoCommerce.Web
     public class SiteContext : Drop
     {
         #region Fields
-        private readonly Dictionary<string, object> _Storage;
+        private readonly Dictionary<string, object> _storage;
+
+        private readonly string[] _poweredLinks = {
+                                             "<a href=\"http://virtocommerce.com\" rel=\"nofollow\" target=\"_blank\">.NET ecommerce platform</a> by Virto",
+                                             "<a href=\"http://virtocommerce.com/shopping-cart\" rel=\"nofollow\" target=\"_blank\">Shopping Cart</a> by Virto",
+                                             "<a href=\"http://virtocommerce.com/shopping-cart\" rel=\"nofollow\" target=\"_blank\">.NET Shopping Cart</a> by Virto",
+                                             "<a href=\"http://virtocommerce.com/shopping-cart\" rel=\"nofollow\" target=\"_blank\">ASP.NET Shopping Cart</a> by Virto",
+                                             "<a href=\"http://virtocommerce.com\" rel=\"nofollow\" target=\"_blank\">.NET ecommerce</a> by Virto",
+                                             "<a href=\"http://virtocommerce.com\" rel=\"nofollow\" target=\"_blank\">.NET ecommerce framework</a> by Virto",
+                                             "<a href=\"http://virtocommerce.com\" rel=\"nofollow\" target=\"_blank\">ASP.NET ecommerce</a> by Virto Commerce",
+                                             "<a href=\"http://virtocommerce.com\" rel=\"nofollow\" target=\"_blank\">ASP.NET ecommerce platform</a> by Virto",
+                                             "<a href=\"http://virtocommerce.com\" rel=\"nofollow\" target=\"_blank\">ASP.NET ecommerce framework</a> by Virto",
+                                             "<a href=\"http://virtocommerce.com\" rel=\"nofollow\" target=\"_blank\">Enterprise ecommerce</a> by Virto",
+                                             "<a href=\"http://virtocommerce.com\" rel=\"nofollow\" target=\"_blank\">Enterprise ecommerce platform</a> by Virto",
+                                         };
         #endregion
 
         #region Constructors and Destructors
         private SiteContext()
         {
-            this._Storage = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
+            this._storage = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
 
             // set defaults
             this.Layout = "theme";
             this.Template = "index";
+
+            this.PoweredByLink = this.GetPoweredLink();
         }
         #endregion
 
@@ -57,7 +75,7 @@ namespace VirtoCommerce.Web
             get
             {
                 object retValue;
-                return this._Storage.TryGetValue("error_message", out retValue) ? retValue as string : null;
+                return this._storage.TryGetValue("error_message", out retValue) ? retValue as string : null;
             }
             set
             {
@@ -71,7 +89,7 @@ namespace VirtoCommerce.Web
             get
             {
                 object retValue;
-                return this._Storage.TryGetValue("login_providers", out retValue) ? retValue as LoginProvider[] : null;
+                return this._storage.TryGetValue("login_providers", out retValue) ? retValue as LoginProvider[] : null;
             }
             set
             {
@@ -84,7 +102,7 @@ namespace VirtoCommerce.Web
             get
             {
                 object retValue;
-                return this._Storage.TryGetValue("cart", out retValue) ? retValue as Cart : null;
+                return this._storage.TryGetValue("cart", out retValue) ? retValue as Cart : null;
             }
             set
             {
@@ -97,7 +115,7 @@ namespace VirtoCommerce.Web
             get
             {
                 object retValue;
-                return this._Storage.TryGetValue("checkout", out retValue) ? retValue as Checkout : null;
+                return this._storage.TryGetValue("checkout", out retValue) ? retValue as Checkout : null;
             }
             set
             {
@@ -110,7 +128,7 @@ namespace VirtoCommerce.Web
             get
             {
                 object retValue;
-                return this._Storage.TryGetValue("collections", out retValue) ? retValue as Collections : null;
+                return this._storage.TryGetValue("collections", out retValue) ? retValue as Collections : null;
             }
             set
             {
@@ -123,7 +141,7 @@ namespace VirtoCommerce.Web
             get
             {
                 object retValue;
-                return this._Storage.TryGetValue("country_option_tags", out retValue) ? retValue as string : null;
+                return this._storage.TryGetValue("country_option_tags", out retValue) ? retValue as string : null;
             }
             set
             {
@@ -138,7 +156,7 @@ namespace VirtoCommerce.Web
             get
             {
                 object retValue;
-                return this._Storage.TryGetValue("customer", out retValue) ? retValue as Customer : null;
+                return this._storage.TryGetValue("customer", out retValue) ? retValue as Customer : null;
             }
             set
             {
@@ -151,7 +169,7 @@ namespace VirtoCommerce.Web
             get
             {
                 object retValue;
-                return this._Storage.TryGetValue("forms", out retValue) ? retValue as List<SubmitForm> : null;
+                return this._storage.TryGetValue("forms", out retValue) ? retValue as List<SubmitForm> : null;
             }
             set
             {
@@ -164,7 +182,7 @@ namespace VirtoCommerce.Web
             get
             {
                 object retValue;
-                return this._Storage.TryGetValue("language", out retValue) ? retValue as string : null;
+                return this._storage.TryGetValue("language", out retValue) ? retValue as string : null;
             }
             set
             {
@@ -177,7 +195,7 @@ namespace VirtoCommerce.Web
             get
             {
                 object retValue;
-                return this._Storage.TryGetValue("layout", out retValue) ? retValue as string : null;
+                return this._storage.TryGetValue("layout", out retValue) ? retValue as string : null;
             }
             set
             {
@@ -190,7 +208,7 @@ namespace VirtoCommerce.Web
             get
             {
                 object retValue;
-                return this._Storage.TryGetValue("Linklists", out retValue) ? retValue : null;
+                return this._storage.TryGetValue("Linklists", out retValue) ? retValue : null;
             }
             set
             {
@@ -203,7 +221,7 @@ namespace VirtoCommerce.Web
             get
             {
                 object retValue;
-                return this._Storage.TryGetValue("order", out retValue) ? retValue as CustomerOrder : null;
+                return this._storage.TryGetValue("order", out retValue) ? retValue as CustomerOrder : null;
             }
             set
             {
@@ -216,7 +234,7 @@ namespace VirtoCommerce.Web
             get
             {
                 object retValue;
-                return this._Storage.TryGetValue("page_description", out retValue) ? retValue as string : null;
+                return this._storage.TryGetValue("page_description", out retValue) ? retValue as string : null;
             }
             set
             {
@@ -229,7 +247,7 @@ namespace VirtoCommerce.Web
             get
             {
                 object retValue;
-                return this._Storage.TryGetValue("page_title", out retValue) ? retValue as string : null;
+                return this._storage.TryGetValue("page_title", out retValue) ? retValue as string : null;
             }
             set
             {
@@ -242,7 +260,7 @@ namespace VirtoCommerce.Web
             get
             {
                 object retValue;
-                return this._Storage.TryGetValue("page_keywords", out retValue) ? retValue as string : null;
+                return this._storage.TryGetValue("page_keywords", out retValue) ? retValue as string : null;
             }
             set
             {
@@ -255,7 +273,7 @@ namespace VirtoCommerce.Web
             get
             {
                 object retValue;
-                return this._Storage.TryGetValue("pages", out retValue) ? retValue as PageCollection : null;
+                return this._storage.TryGetValue("pages", out retValue) ? retValue as PageCollection : null;
             }
             set
             {
@@ -268,24 +286,11 @@ namespace VirtoCommerce.Web
             get
             {
                 object retValue;
-                return this._Storage.TryGetValue("blogs", out retValue) ? retValue as BlogCollection : null;
+                return this._storage.TryGetValue("blogs", out retValue) ? retValue as BlogCollection : null;
             }
             set
             {
                 this.Set("blogs", value);
-            }
-        }
-
-        public string PoweredByLink
-        {
-            get
-            {
-                object retValue;
-                return this._Storage.TryGetValue("powered_by_link", out retValue) ? retValue as string : null;
-            }
-            set
-            {
-                this.Set("powered_by_link", value);
             }
         }
 
@@ -294,7 +299,7 @@ namespace VirtoCommerce.Web
             get
             {
                 object retValue;
-                return this._Storage.TryGetValue("settings", out retValue) ? retValue as Settings : null;
+                return this._storage.TryGetValue("settings", out retValue) ? retValue as Settings : null;
             }
             set
             {
@@ -307,7 +312,7 @@ namespace VirtoCommerce.Web
             get
             {
                 object retValue;
-                return this._Storage.TryGetValue("shop", out retValue) ? retValue as Shop : null;
+                return this._storage.TryGetValue("shop", out retValue) ? retValue as Shop : null;
             }
             set
             {
@@ -320,7 +325,7 @@ namespace VirtoCommerce.Web
             get
             {
                 object retValue;
-                return this._Storage.TryGetValue("shops", out retValue) ? retValue as IEnumerable<Shop> : null;
+                return this._storage.TryGetValue("shops", out retValue) ? retValue as IEnumerable<Shop> : null;
             }
             set
             {
@@ -341,7 +346,7 @@ namespace VirtoCommerce.Web
             get
             {
                 object retValue;
-                return this._Storage.TryGetValue("template", out retValue) ? retValue as string : null;
+                return this._storage.TryGetValue("template", out retValue) ? retValue as string : null;
             }
             set
             {
@@ -354,7 +359,7 @@ namespace VirtoCommerce.Web
             get
             {
                 object retValue;
-                return this._Storage.TryGetValue("theme", out retValue) ? retValue as Theme : null;
+                return this._storage.TryGetValue("theme", out retValue) ? retValue as Theme : null;
             }
             set
             {
@@ -367,7 +372,7 @@ namespace VirtoCommerce.Web
             get
             {
                 object retValue;
-                return this._Storage.TryGetValue("pricelists", out retValue) ? retValue as string[] : null;
+                return this._storage.TryGetValue("pricelists", out retValue) ? retValue as string[] : null;
             }
             set
             {
@@ -380,7 +385,7 @@ namespace VirtoCommerce.Web
             get
             {
                 object retValue;
-                return this._Storage.TryGetValue("themes", out retValue) ? retValue as Theme[] : null;
+                return this._storage.TryGetValue("themes", out retValue) ? retValue as Theme[] : null;
             }
             set
             {
@@ -388,24 +393,59 @@ namespace VirtoCommerce.Web
             }
         }
 
+        public string PoweredByLink
+        {
+            get
+            {
+                object retValue;
+                return this._storage.TryGetValue("powered_by_link", out retValue) ? retValue as string : null;
+            }
+            set
+            {
+                this.Set("powered_by_link", value);
+            }
+        }
+
+
         #endregion
 
         #region Public Methods and Operators
         public void Set(string key, object val)
         {
-            if (this._Storage.ContainsKey(key))
+            if (this._storage.ContainsKey(key))
             {
-                this._Storage[key] = val;
+                this._storage[key] = val;
             }
             else
             {
-                this._Storage.Add(key, val);
+                this._storage.Add(key, val);
             }
         }
 
         public override object ToLiquid()
         {
-            return Hash.FromDictionary(this._Storage);
+            return Hash.FromDictionary(this._storage);
+        }
+        #endregion
+
+        #region private methods
+
+        private string GetPoweredLink()
+        {
+            if (HttpContext.Current != null)
+            {
+                var host = HttpContext.Current.Request.Url.Host.ToLowerInvariant();
+                var code = (int)host.ToCharArray()[0];
+
+                var l = this._poweredLinks.Length;
+                var c = 26; // latters in english alphabet
+                var term = c / l;
+
+                int index = (code - 61) / term;
+                return index < l ? this._poweredLinks[index] : this._poweredLinks[0];
+            }
+
+            return this._poweredLinks[0];
         }
         #endregion
     }

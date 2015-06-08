@@ -1,57 +1,86 @@
 ﻿angular.module('virtoCommerce.catalogModule')
-.controller('virtoCommerce.catalogModule.itemPropertyController', ['$scope', 'virtoCommerce.catalogModule.items', 'virtoCommerce.catalogModule.properties', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', function ($scope, items, properties, bladeNavigationService, dialogService) {
-    $scope.blade.origItem = {};
-    $scope.blade.item = {};
+.controller('virtoCommerce.catalogModule.itemPropertyDetailController', ['$scope', 'virtoCommerce.catalogModule.categories', 'virtoCommerce.catalogModule.properties', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', function ($scope, categories, properties, bladeNavigationService, dialogService) {
+    var b = $scope.blade;
+    $scope.currentChild = undefined;
 
-    $scope.blade.refresh = function (parentRefresh) {
-        items.get({ id: $scope.blade.itemId }, function (data) {
-            if (data.properties) {
-                var numberProps = _.where(data.properties, { valueType: 'Number', multivalue: false, dictionary: false });
-                _.forEach(numberProps, function (prop) {
-                    _.forEach(prop.values, function (value) {
-                        value.value = parseFloat(value.value);
-                    });
-                });
-            }
-            //if (data.titularItemId != null) {
-            //    $scope.propGroups = [{ title: 'Variation properties', type: 1 }];
-            //} else {
-            //    $scope.propGroups = [{ title: 'Product properties', type: 0 }];
-            //}
+    function initializeBlade(data) {
+        if (data.valueType === 'Number' && data.dictionaryValues) {
+            _.forEach(data.dictionaryValues, function (entry) {
+                entry.value = parseFloat(entry.value);
+            });
+        }
 
-            $scope.blade.item = angular.copy(data);
-            $scope.blade.origItem = data;
-            $scope.blade.isLoading = false;
-            if (parentRefresh) {
-                $scope.blade.parentBlade.refresh();
-            }
-        });
+        b.currentEntity = angular.copy(data);
+        //b.origEntity = data;
+        b.isLoading = false;
+    };
+
+    $scope.openChild = function (childType) {
+        var newBlade = { id: "propertyChild", property: b.currentEntity };
+        
+        switch (childType) {
+            case 'valType':
+                newBlade.title = b.origEntity.name ? b.origEntity.name : b.currentEntity.name + ' value type';
+                newBlade.subtitle = 'Change value type';
+                newBlade.controller = 'virtoCommerce.catalogModule.propertyValueTypeController';
+                newBlade.template = 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/property-valueType.tpl.html';
+                break;
+        }
+        bladeNavigationService.showBlade(newBlade, b);
+        $scope.currentChild = childType;
     }
 
     function isDirty() {
-        return !angular.equals($scope.blade.item, $scope.blade.origItem);
+        return !angular.equals(b.currentEntity, b.origEntity);
     };
 
-    function saveChanges() {
-        $scope.blade.isLoading = true;
-        var changes = { id: $scope.blade.item.id, properties: $scope.blade.item.properties };
-        items.updateitem({}, changes, function (data, headers) {
-            $scope.blade.refresh(true);
+    $scope.cancelChanges = function () {
+        angular.copy(b.origEntity, b.currentEntity);
+        $scope.bladeClose();
+    };
+
+    $scope.saveChanges = function () {
+        angular.copy(b.currentEntity, b.origEntity);
+
+        if (b.isNew) {
+            b.currentEntities.push(b.origEntity);
+        }
+
+        $scope.bladeClose();
+    };
+
+    function removeProperty(prop) {
+        var dialog = {
+            id: "confirmDelete",
+            title: "Delete confirmation",
+            message: "Are you sure you want to delete Property '" + prop.name + "'?",
+            callback: function (remove) {
+                if (remove) {
+                    var idx = b.currentEntities.indexOf(b.origEntity);
+                    b.currentEntities.splice(idx, 1);
+                    $scope.bladeClose();
+                }
+            }
+        }
+        dialogService.showConfirmationDialog(dialog);
+    }
+
+    b.onClose = function (closeCallback) {
+        angular.forEach(b.childrenBlades.slice(), function (child) {
+            bladeNavigationService.closeBlade(child);
         });
-    };
 
-    $scope.blade.onClose = function (closeCallback) {
         if (isDirty()) {
             var dialog = {
                 id: "confirmItemChange",
                 title: "Save changes",
-                message: "The item has been modified. Do you want to save changes?"
-            };
-            dialog.callback = function (needSave) {
-                if (needSave) {
-                    saveChanges();
+                message: "The property has been modified. Do you want to save changes?",
+                callback: function (needSave) {
+                    if (needSave) {
+                        $scope.saveChanges();
+                    }
+                    closeCallback();
                 }
-                closeCallback();
             };
             dialogService.showConfirmationDialog(dialog);
         }
@@ -60,72 +89,35 @@
         }
     };
 
-    $scope.editProperty = function (prop) {
-        var newBlade = {
-            id: 'editCategoryProperty',
-            currentEntityId: prop.id,
-            title: 'Edit category property',
-            subtitle: 'enter property information',
-            controller: 'virtoCommerce.catalogModule.propertyDetailController',
-            template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/property-detail.tpl.html'
-        };
-
-        bladeNavigationService.showBlade(newBlade, $scope.blade);
-    };
-
-    $scope.getPropValues = function (propId, keyword) {
-        return properties.values({ propertyId: propId, keyword: keyword }).$promise.then(function (result) {
-            return result;
-        });
-    };
-
-    var formScope;
     $scope.setForm = function (form) {
-        formScope = form;
+        $scope.formScope = form;
     }
 
-    $scope.blade.toolbarCommands = [
-		{
-		    name: "Save", icon: 'fa fa-save',
-		    executeMethod: function () {
-		        saveChanges();
-		    },
-		    canExecuteMethod: function () {
-		        return isDirty() && formScope && formScope.$valid;
-		    },
-		    permission: 'catalog:items:manage'
-		},
-        {
-            name: "Reset", icon: 'fa fa-undo',
-            executeMethod: function () {
-                angular.copy($scope.origItem, $scope.blade.item);
+    if (!b.isNew) {
+        b.toolbarCommands = [
+            {
+                name: "Reset", icon: 'fa fa-undo',
+                executeMethod: function () {
+                    angular.copy(b.origEntity, b.currentEntity);
+                },
+                canExecuteMethod: function () {
+                    return isDirty();
+                }
             },
-            canExecuteMethod: function () {
-                return isDirty();
-            },
-            permission: 'catalog:items:manage'
-        }
-        //,
-		//{
-		//    name: "Add property", icon: 'fa fa-plus',
-		//    executeMethod: function () {
-		//        var newBlade = {
-		//            id: 'editItemProperty',
-		//            itemId: $scope.blade.itemId,
-		//            title: 'New item property',
-		//            subtitle: 'enter property information',
-		//            controller: 'virtoCommerce.catalogModule.propertyDetailController',
-		//            template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/property-detail.tpl.html'
-		//        };
+            {
+                name: "Delete", icon: 'fa fa-trash-o',
+                executeMethod: function () {
+                    removeProperty(b.origEntity);
+                },
+                canExecuteMethod: function () { return true; }
+            }
+        ];
+    }
 
-		//        bladeNavigationService.showBlade(newBlade, $scope.blade);
-		//    },
-		//    canExecuteMethod: function () {
-		//        return true;
-		//    },
-		//    permission: 'catalog:categories:manage'
-		//}
-    ];
+    $scope.$watch('blade.parentBlade.item.properties', function (data) {
+        b.currentEntities = data;
+    });
 
-    $scope.blade.refresh();
+    // actions on load    
+    initializeBlade(b.origEntity);
 }]);
