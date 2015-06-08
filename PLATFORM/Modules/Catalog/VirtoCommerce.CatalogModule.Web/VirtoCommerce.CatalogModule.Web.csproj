@@ -137,6 +137,7 @@
     <Compile Include="Converters\SeoInfoConverter.cs" />
     <Compile Include="Model\Catalog.cs" />
     <Compile Include="Model\CategoryLink.cs" />
+    <Compile Include="Model\CsvExportInfo.cs" />
     <Compile Include="Model\EditorialReview.cs" />
     <Compile Include="Model\CsvImportConfiguration.cs" />
     <Compile Include="Model\ListEntryLink.cs" />

@@ -23,11 +23,7 @@ namespace VirtoCommerce.CatalogModule.Web.Converters
 				retVal = productAsset;
             }
             retVal.InjectFrom(asset);
-			if (!Uri.IsWellFormedUriString(asset.Url, UriKind.Absolute))
-			{
-				retVal.Url = blobUrlResolver.GetAbsoluteUrl(asset.Url);
-
-			}
+			retVal.Url = blobUrlResolver.GetAbsoluteUrl(asset.Url);
 			retVal.RelativeUrl = asset.Url;
             return retVal;
         }
