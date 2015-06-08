@@ -1,0 +1,25 @@
+﻿<div class="modal-header">
+    <h3 class="modal-title">Delete confirmation</h3>
+</div>
+<div class="modal-body">
+    <div class="form-group">
+        <div class="form-error">
+            WARNING: this change is permanent and can't be undone afterwards. It can lead to data loss.
+        </div>
+    </div>
+    <p>The following will be deleted:</p>
+    <ul>
+        <li ng-if="categoryCount>0">{{categoryCount}} Category(ies) and any content inside it</li>
+        <li ng-if="itemCount>0">{{itemCount}} Item(s)</li>
+        <li ng-if="listCategoryLinkCount>0">{{listCategoryLinkCount}} Linked Category(ies)</li>
+        <li ng-if="listItemLinkCount>0">{{listItemLinkCount}} Linked Item(s)</li>
+    </ul>
+    Enter 'yes' to enable deletion:
+    <div class="form-input __mini">
+        <input ng-model="enteredText" />
+    </div>
+</div>
+<div class="modal-footer">
+    <button class="btn" ng-click="yes()" ng-class="{'__disabled': 'yes'!==enteredText}">Confirm</button>
+    <button class="btn" ng-click="cancel()">Cancel</button>
+</div>

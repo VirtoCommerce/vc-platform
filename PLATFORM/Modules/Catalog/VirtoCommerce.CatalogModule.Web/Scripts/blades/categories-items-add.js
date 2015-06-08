@@ -54,6 +54,9 @@
     };
 
     function showNewItemWizard(data) {
+        // take product and variation properties only
+        data.properties = _.filter(data.properties, function (x) { return x.type === 'Product' || x.type === 'Variation'; });
+
         var newBlade = {
             id: 'listItemDetail',
             item: data,

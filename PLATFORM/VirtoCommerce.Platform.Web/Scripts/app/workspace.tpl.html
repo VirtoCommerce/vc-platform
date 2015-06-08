@@ -1,7 +1,7 @@
 ﻿<va-main-menu></va-main-menu>
 <article class="cnt" role="main">
     <div class="cnt-inner">
-        <div class="dashboard">
+        <div class="dashboard" ng-if="$state.current.name === 'workspace'">
             <header class="dashboard-head">
                 <h1 class="dashboard-title">Virto Commerce</h1>
                 <va-login-toolbar></va-login-toolbar>
