@@ -24,7 +24,7 @@ namespace AvaTax.TaxModule.Test
         [TestMethod]
         public void GetTaxTotals()
         {
-            var testOrder = GetTestOrder("order1");
+            var testOrder = GetTestOrder("order2");
             var result = _controller.Total(testOrder) as OkNegotiatedContentResult<CustomerOrder>;
             Assert.IsNotNull(result.Content);
             Assert.AreNotEqual(result.Content.Tax, 0);
@@ -36,8 +36,8 @@ namespace AvaTax.TaxModule.Test
             {
                 Id = id,
                 Currency = CurrencyCodes.USD,
-                CustomerId = "test customer",
-                EmployeeId = "employe",
+                CustomerId = "Test Customer",
+                EmployeeId = "employee",
                 StoreId = "test store",
                 CreatedDate = DateTime.Now,
                 Addresses = new []
