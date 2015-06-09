@@ -10,7 +10,7 @@ using VirtoCommerce.Domain.Order.Model;
 using VirtoCommerce.Domain.Payment.Model;
 using VirtoCommerce.Domain.Store.Model;
 
-namespace Paypal.BankCards.AdaptivePayments.PaymentGatewayModule.Web.Managers
+namespace BankCards.PaypalAdaptivePayments.Managers
 {
 	public class PaypalBankCardsAdaptivePaymentsPaymentMethod : VirtoCommerce.Domain.Payment.Model.PaymentMethod
 	{

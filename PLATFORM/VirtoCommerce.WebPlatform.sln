@@ -150,11 +150,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tax", "Tax", "{3FE3BA5E-A79
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AvaTax.TaxModule.Web", "Modules\Tax\AvaTax.TaxModule.Web\AvaTax.TaxModule.Web.csproj", "{F7EC3E39-B6DB-4912-BE00-B5A7DB25D3B4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Paypal.BankCards.AdaptivePayments.PaymentGatewayModule.Web", "Modules\PaymentGateways\Paypal.BankCards.AdaptivePayments.PaymentGatewayModule.Web\Paypal.BankCards.AdaptivePayments.PaymentGatewayModule.Web.csproj", "{06AF7027-C874-4732-A8B9-109E838A9704}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AvaTax.TaxModule.Test", "Modules\Tax\AvaTax.TaxModule.Test\AvaTax.TaxModule.Test.csproj", "{60182DDB-2722-4275-BE51-12FCBC7901C0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Paypal.BankCards.ExpressCheckout.PaymentGatewayModule.Web", "Modules\PaymentGateways\Paypal.BankCards.ExpressCheckout.PaymentGatewayModule.Web\Paypal.BankCards.ExpressCheckout.PaymentGatewayModule.Web.csproj", "{B50902A2-2646-4786-BF1E-555DB3DD5CC2}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BankCards.PaypalAdaptivePayments", "Modules\PaymentGateways\BankCards.PaypalAdaptivePayments\BankCards.PaypalAdaptivePayments.csproj", "{06AF7027-C874-4732-A8B9-109E838A9704}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AvaTax.TaxModule.Test", "AvaTax.TaxModule.Test\AvaTax.TaxModule.Test.csproj", "{60182DDB-2722-4275-BE51-12FCBC7901C0}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BankCards.PaypalExpressCheckout", "Modules\PaymentGateways\BankCards.PaypalExpressCheckout\BankCards.PaypalExpressCheckout.csproj", "{B50902A2-2646-4786-BF1E-555DB3DD5CC2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -358,6 +358,10 @@ Global
 		{F7EC3E39-B6DB-4912-BE00-B5A7DB25D3B4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F7EC3E39-B6DB-4912-BE00-B5A7DB25D3B4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F7EC3E39-B6DB-4912-BE00-B5A7DB25D3B4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{60182DDB-2722-4275-BE51-12FCBC7901C0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{60182DDB-2722-4275-BE51-12FCBC7901C0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{60182DDB-2722-4275-BE51-12FCBC7901C0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{60182DDB-2722-4275-BE51-12FCBC7901C0}.Release|Any CPU.Build.0 = Release|Any CPU
 		{06AF7027-C874-4732-A8B9-109E838A9704}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{06AF7027-C874-4732-A8B9-109E838A9704}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{06AF7027-C874-4732-A8B9-109E838A9704}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -366,10 +370,6 @@ Global
 		{B50902A2-2646-4786-BF1E-555DB3DD5CC2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B50902A2-2646-4786-BF1E-555DB3DD5CC2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B50902A2-2646-4786-BF1E-555DB3DD5CC2}.Release|Any CPU.Build.0 = Release|Any CPU
-		{60182DDB-2722-4275-BE51-12FCBC7901C0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{60182DDB-2722-4275-BE51-12FCBC7901C0}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{60182DDB-2722-4275-BE51-12FCBC7901C0}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{60182DDB-2722-4275-BE51-12FCBC7901C0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -441,8 +441,8 @@ Global
 		{C0E20EC9-47E5-4F53-8CA5-8E0405BAEAC8} = {7652F767-6DEC-431A-BB51-DF23320DD711}
 		{3FE3BA5E-A79A-452C-AF84-51FB7AFE29CA} = {A4C0D164-BF77-4B57-8970-B5459B100AC3}
 		{F7EC3E39-B6DB-4912-BE00-B5A7DB25D3B4} = {3FE3BA5E-A79A-452C-AF84-51FB7AFE29CA}
+		{60182DDB-2722-4275-BE51-12FCBC7901C0} = {3FE3BA5E-A79A-452C-AF84-51FB7AFE29CA}
 		{06AF7027-C874-4732-A8B9-109E838A9704} = {4E79CE95-D200-41C9-B191-324B741494BE}
 		{B50902A2-2646-4786-BF1E-555DB3DD5CC2} = {4E79CE95-D200-41C9-B191-324B741494BE}
-		{60182DDB-2722-4275-BE51-12FCBC7901C0} = {3FE3BA5E-A79A-452C-AF84-51FB7AFE29CA}
 	EndGlobalSection
 EndGlobal

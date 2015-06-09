@@ -21,8 +21,8 @@
 		<copyright>Copyright © 2011-2015 Virto Commerce. All rights reserved</copyright>
 		<tags>paypal bank cards payment gateway</tags>
 
-		<assemblyFile>Paypal.BankCards.ExpressCheckout.PaymentGatewayModule.Web.dll</assemblyFile>
-		<moduleType>Paypal.BankCards.ExpressCheckout.PaymentGatewayModule.Web.Module, Paypal.BankCards.ExpressCheckout.PaymentGatewayModule.Web</moduleType>
+		<assemblyFile>BankCards.PaypalExpressCheckout.dll</assemblyFile>
+		<moduleType>BankCards.PaypalExpressCheckout.Module, BankCards.PaypalExpressCheckout</moduleType>
 
 		<settings>
 				<group name="Gateway settings">
