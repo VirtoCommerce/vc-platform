@@ -36,8 +36,8 @@ namespace AvaTax.TaxModule.Test
             {
                 Id = id,
                 Currency = CurrencyCodes.USD,
-                CustomerId = "test customer",
-                EmployeeId = "employe",
+                CustomerId = "Test Customer",
+                EmployeeId = "employee",
                 StoreId = "test store",
                 CreatedDate = DateTime.Now,
                 Addresses = new []
