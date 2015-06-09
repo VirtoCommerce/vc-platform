@@ -1,0 +1,19 @@
+﻿<div class="modal-header">
+    <h3 class="modal-title">Delete confirmation</h3>
+</div>
+<div class="modal-body">
+    <div class="form-group">
+        <div class="form-error">
+            WARNING: this change is permanent and can't be undone afterwards. It can lead to data loss.
+        </div>
+    </div>
+    <p>Are you sure you want to delete catalog '{{name}}'?</p>
+    Enter the first 5 characters of catalog name to delete:
+    <div class="form-input __mini">
+        <input ng-model="enteredText" />
+    </div>
+</div>
+<div class="modal-footer">
+    <button class="btn" ng-click="yes()" ng-class="{'__disabled': name.substring(0,5)!==enteredText}">Confirm</button>
+    <button class="btn" ng-click="cancel()">Cancel</button>
+</div>

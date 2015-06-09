@@ -494,7 +494,7 @@
     <Content Include="Scripts\common\directives\dynamic.js" />
     <Content Include="Scripts\common\directives\htmlTooltip.js" />
     <Content Include="Scripts\common\confirmDialog\confirmDialog.tpl.html" />
-    <Content Include="Scripts\common\confirmDialog\cofirmDialog.js" />
+    <Content Include="Scripts\common\confirmDialog\confirmDialog.js" />
     <Content Include="Scripts\common\directives\angular-moment.js" />
     <Content Include="Scripts\common\directives\inputNumber.js" />
     <Content Include="Scripts\common\directives\left-click-menu.js" />

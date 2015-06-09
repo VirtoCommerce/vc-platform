@@ -81,7 +81,13 @@ namespace VirtoCommerce.Platform.Data.Asset
 
         public string GetAbsoluteUrl(string assetKey)
         {
-            return _publicUrl + assetKey;
+			var retVal = assetKey;
+			if (!Uri.IsWellFormedUriString(assetKey, UriKind.Absolute))
+			{
+				retVal =  _publicUrl + assetKey;
+
+			}
+			return retVal;
         }
 
         #endregion

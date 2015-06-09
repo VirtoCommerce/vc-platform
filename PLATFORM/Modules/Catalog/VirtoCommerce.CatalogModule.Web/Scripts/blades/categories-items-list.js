@@ -146,14 +146,6 @@
             }
 
             function deleteChecked() {
-                var dialog = {
-                    id: "confirmDeleteItem",
-                    title: "Delete confirmation",
-                    message: "Are you sure you want to delete selected Categories or Items?",
-                    callback: function (remove) {
-                        if (remove) {
-                            closeChildrenBlades();
-
                             var selection = $filter('filter')($scope.items, { selected: true }, true);
 
                             var listEntryLinks = [];
@@ -185,6 +177,16 @@
                                     });
                             });
 
+                var dialog = {
+                    id: "confirmDeleteItem",
+                    categoryCount: categoryIds.length,
+                    itemCount: itemIds.length,
+                    listCategoryLinkCount: _.where(listEntryLinks, { listEntryType: 'category' }).length,
+                    listItemLinkCount: listEntryLinks.length - this.listCategoryLinkCount,
+                    callback: function (remove) {
+                        if (remove) {
+                            closeChildrenBlades();
+
                             if (listEntryLinks.length > 0) {
                                 listEntries.deletelinks(listEntryLinks, function (data, headers) {
                                     blade.refresh();
@@ -211,7 +213,7 @@
                         }
                     }
                 }
-                dialogService.showConfirmationDialog(dialog);
+                dialogService.showDialog(dialog, 'Modules/$(VirtoCommerce.Catalog)/Scripts/dialogs/deleteCategoryItem-dialog.tpl.html', 'platformWebApp.confirmDialogController');
             }
 
             function mapChecked() {
@@ -301,7 +303,6 @@
 
             $scope.hasLinks = function (listEntry) {
                 return blade.catalog.virtual && listEntry.links && (listEntry.type === 'category' ? listEntry.links.length > 0 : listEntry.links.length > 1);
-                // return listEntry.links && listEntry.links.length > 0;
             }
 
             blade.onClose = function (closeCallback) {
@@ -338,7 +339,8 @@
                     }
                 },
     			  {
-    			      name: "Import", icon: 'fa fa-download',
+                    name: "Import",
+                    icon: 'fa fa-download',
     			      executeMethod: function () {
     			          var newBlade = {
     			              id: 'catalogImport',
@@ -355,7 +357,8 @@
     			      }
     			  },
 				 {
-				     name: "Export", icon: 'fa fa-upload',
+                    name: "Export",
+                    icon: 'fa fa-upload',
 				     executeMethod: function () {
 				         var newBlade = {
 				             id: 'catalogExport',
@@ -363,21 +366,25 @@
 				             catalog: blade.catalog,
 				             subtitle: 'Choose data format & start export',
 				             controller: 'virtoCommerce.catalogModule.exporterListController',
-				             template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/export/exporter-list.tpl.html'
+				             template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/export/exporter-list.tpl.html',
+				             selectedProducts: _.filter($scope.items, function (x) { return x.type == 'product' && x.selected == true; }),
+				             selectedCategories: _.filter($scope.items, function (x) { return x.type == 'category' && x.selected == true; })
 				         };
 				         bladeNavigationService.showBlade(newBlade, $scope.blade);
 				     },
 				     canExecuteMethod: function () { return true; }
 				 },
                  {
-                     name: "Copy", icon: 'fa fa-files-o',
+                    name: "Copy",
+                    icon: 'fa fa-files-o',
                      executeMethod: function () {
                          $storage.catalogClipboardContent = _.where($scope.items, { selected: true });
                      },
                      canExecuteMethod: isItemsChecked
                  },
                  {
-                     name: "Paste", icon: 'fa fa-clipboard',
+                    name: "Paste",
+                    icon: 'fa fa-clipboard',
                      executeMethod: function () {
                          blade.isLoading = true;
                          listEntries.paste({
@@ -430,7 +437,8 @@
                 // mappingSource
                 if (blade.mode === 'mappingSource') {
                     var mapCommand = {
-                        name: "Map", icon: 'fa fa-link',
+                        name: "Map",
+                        icon: 'fa fa-link',
                         executeMethod: function () {
                             mapChecked();
                         },
@@ -445,7 +453,8 @@
                    || (authService.checkPermission('catalog:virtual_catalogs:manage') && blade.catalog.virtual)
                    || (authService.checkPermission('catalog:items:manage') && !blade.catalog.virtual))) {
                 $scope.blade.toolbarCommands.splice(1, 0, {
-                    name: "Add", icon: 'fa fa-plus',
+                    name: "Add",
+                    icon: 'fa fa-plus',
                     executeMethod: function () {
                         closeChildrenBlades();
 

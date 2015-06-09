@@ -1,7 +1,6 @@
 ﻿angular.module('platformWebApp')
 .controller('platformWebApp.confirmDialogController', ['$scope', '$modalInstance', 'dialog', function ($scope, $modalInstance, dialog) {
-	$scope.message = dialog.message;
-	$scope.title = dialog.title;
+	angular.extend($scope, dialog);
 
     $scope.yes = function () {
         $modalInstance.close(true);

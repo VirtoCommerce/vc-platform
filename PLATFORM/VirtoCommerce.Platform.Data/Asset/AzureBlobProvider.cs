@@ -84,8 +84,14 @@ namespace VirtoCommerce.Platform.Data.Asset
 
         public string GetAbsoluteUrl(string blobKey)
         {
-            var root = _cloudStorageAccount.BlobEndpoint.AbsoluteUri;
-            return String.Format("{0}{1}", root.EndsWith("/") ? root : root + "/", blobKey);
+			var retVal = blobKey;
+			if (!Uri.IsWellFormedUriString(blobKey, UriKind.Absolute))
+			{
+				var root = _cloudStorageAccount.BlobEndpoint.AbsoluteUri;
+				retVal = String.Format("{0}{1}", root.EndsWith("/") ? root : root + "/", blobKey);
+
+			}
+			return retVal;
         }
 
         #endregion

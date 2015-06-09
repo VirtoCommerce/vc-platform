@@ -154,6 +154,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Paypal.BankCards.AdaptivePa
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Paypal.BankCards.ExpressCheckout.PaymentGatewayModule.Web", "Modules\PaymentGateways\Paypal.BankCards.ExpressCheckout.PaymentGatewayModule.Web\Paypal.BankCards.ExpressCheckout.PaymentGatewayModule.Web.csproj", "{B50902A2-2646-4786-BF1E-555DB3DD5CC2}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AvaTax.TaxModule.Test", "AvaTax.TaxModule.Test\AvaTax.TaxModule.Test.csproj", "{60182DDB-2722-4275-BE51-12FCBC7901C0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -364,6 +366,10 @@ Global
 		{B50902A2-2646-4786-BF1E-555DB3DD5CC2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B50902A2-2646-4786-BF1E-555DB3DD5CC2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B50902A2-2646-4786-BF1E-555DB3DD5CC2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{60182DDB-2722-4275-BE51-12FCBC7901C0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{60182DDB-2722-4275-BE51-12FCBC7901C0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{60182DDB-2722-4275-BE51-12FCBC7901C0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{60182DDB-2722-4275-BE51-12FCBC7901C0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -437,5 +443,6 @@ Global
 		{F7EC3E39-B6DB-4912-BE00-B5A7DB25D3B4} = {3FE3BA5E-A79A-452C-AF84-51FB7AFE29CA}
 		{06AF7027-C874-4732-A8B9-109E838A9704} = {4E79CE95-D200-41C9-B191-324B741494BE}
 		{B50902A2-2646-4786-BF1E-555DB3DD5CC2} = {4E79CE95-D200-41C9-B191-324B741494BE}
+		{60182DDB-2722-4275-BE51-12FCBC7901C0} = {3FE3BA5E-A79A-452C-AF84-51FB7AFE29CA}
 	EndGlobalSection
 EndGlobal

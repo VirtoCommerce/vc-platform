@@ -1,5 +1,4 @@
-﻿
-using AvaTax.TaxModule.Web.Services;
+﻿using AvaTax.TaxModule.Web.Services;
 
 namespace AvaTax.TaxModule.Web.Managers
 {
@@ -11,14 +10,18 @@ namespace AvaTax.TaxModule.Web.Managers
             private readonly string _code;
             private readonly string _description;
             private readonly string _logoUrl;
+            private readonly string _companyCode;
+            private readonly string _serviceUrl;
 
-            public AvaTaxImpl(string username, string password, string code, string description, string logoUrl)
+            public AvaTaxImpl(string username, string password, string serviceUrl, string companyCode, string code, string description, string logoUrl)
             {
                 _username = username;
                 _password = password;
                 _code = code;
                 _description = description;
                 _logoUrl = logoUrl;
+                _serviceUrl = serviceUrl;
+                _companyCode = companyCode;
             }
 
             public string Username
@@ -44,6 +47,16 @@ namespace AvaTax.TaxModule.Web.Managers
             public string LogoUrl
             {
                 get { return _logoUrl; }
+            }
+
+            public string ServiceUrl
+            {
+                get { return _serviceUrl; }
+            }
+
+            public string CompanyCode
+            {
+                get { return _companyCode; }
             }
         }
 }

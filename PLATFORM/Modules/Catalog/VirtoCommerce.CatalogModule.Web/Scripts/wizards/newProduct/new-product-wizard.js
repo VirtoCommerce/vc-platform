@@ -118,7 +118,9 @@
         && blade.childrenBlades[0].controller === 'virtoCommerce.catalogModule.newProductWizardPropertiesController') {
             lastGeneratedName = initialName;
             _.each(currentEntities, function (x) {
-                lastGeneratedName += ', ' + x.values[0].value;
+                if (x.values && x.values.length > 0) {
+                    lastGeneratedName += ', ' + x.values[0].value;
+                }
             });
             blade.item.name = lastGeneratedName;
         }
