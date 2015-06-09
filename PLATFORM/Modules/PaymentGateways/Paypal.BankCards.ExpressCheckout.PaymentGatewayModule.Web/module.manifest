@@ -1,0 +1,70 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<module>
+		<id>Paypal.BankCards.ExpressCheckout.PaymentGateway</id>
+		<version>1.0.0</version>
+		<platformVersion>2.0.0</platformVersion>
+		<dependencies>
+				<dependency id="VirtoCommerce.Core" version="1.0.0" />
+		</dependencies>
+
+		<title>Paypal Bank Cards Payment Gateway</title>
+		<description>APIs and UI for paypal bank cards payment gateway</description>
+		<authors>
+				<author>Virto Commerce</author>
+		</authors>
+		<owners>
+				<owner>Virto Commerce</owner>
+		</owners>
+		<projectUrl>http://virtocommerce.com/</projectUrl>
+		<iconUrl>http://nuget.org/Content/Images/packageDefaultIcon-50x50.png</iconUrl>
+		<releaseNotes>First version.</releaseNotes>
+		<copyright>Copyright © 2011-2015 Virto Commerce. All rights reserved</copyright>
+		<tags>paypal bank cards payment gateway</tags>
+
+		<assemblyFile>Paypal.BankCards.ExpressCheckout.PaymentGatewayModule.Web.dll</assemblyFile>
+		<moduleType>Paypal.BankCards.ExpressCheckout.PaymentGatewayModule.Web.Module, Paypal.BankCards.ExpressCheckout.PaymentGatewayModule.Web</moduleType>
+
+		<settings>
+				<group name="Gateway settings">
+						<setting>
+								<name>Paypal.BankCards.ExpressCheckout.Mode</name>
+								<valueType>string</valueType>
+								<allowedValues>
+									<value>Sandbox</value>
+									<value>Live</value>
+								</allowedValues>
+								<defaultValue>Sandbox</defaultValue>
+								<title>Paypal working mode</title>
+								<description>Type of api (sandbox or live)</description>
+						</setting>
+						<setting>
+								<name>Paypal.BankCards.ExpressCheckout.APIUsername</name>
+								<valueType>string</valueType>
+								<defaultValue>evgokhrimenko_api1.gmail.com</defaultValue>
+								<title>API username</title>
+								<description>merchant api username credential</description>
+						</setting>
+						<setting>
+								<name>Paypal.BankCards.ExpressCheckout.APIPassword</name>
+								<valueType>string</valueType>
+								<defaultValue>XMDRC63XDNDQPXAZ</defaultValue>
+								<title>API password</title>
+								<description>merchant api password credential</description>
+						</setting>
+						<setting>
+								<name>Paypal.BankCards.ExpressCheckout.APISignature</name>
+								<valueType>string</valueType>
+								<defaultValue>AiPC9BjkCyDFQXbSkoZcgqH3hpacAddFA7jQMnRzruCFYMSKx38TE0pt</defaultValue>
+								<title>API signature</title>
+								<description>merchant api signature credential</description>
+						</setting>
+						<setting>
+								<name>Paypal.BankCards.ExpressCheckout.PaymentRedirectRelativePath</name>
+								<valueType>string</valueType>
+								<defaultValue>checkout/externalpaymentcallback</defaultValue>
+								<title>Redirect relative path</title>
+								<description>relative path for paypal payment from paypal site to frontend</description>
+						</setting>
+				</group>
+		</settings>
+</module>

@@ -1,34 +1,37 @@
 ﻿using PayPal.AdaptivePayments;
 using PayPal.AdaptivePayments.Model;
-using PayPal.PayPalAPIInterfaceService.Model;
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
+using System.Text;
 using System.Web;
 using VirtoCommerce.Domain.Order.Model;
 using VirtoCommerce.Domain.Payment.Model;
 using VirtoCommerce.Domain.Store.Model;
 
-namespace PayPal.PaymentGatewaysModule.Web.Managers
+namespace Paypal.BankCards.AdaptivePayments.PaymentGatewayModule.Web.Managers
 {
-	public class PaypalBankCardsPaymentMethod : VirtoCommerce.Domain.Payment.Model.PaymentMethod
+	public class PaypalBankCardsAdaptivePaymentsPaymentMethod : VirtoCommerce.Domain.Payment.Model.PaymentMethod
 	{
-		public PaypalBankCardsPaymentMethod() : base ("PayPalBankCards")
+		public PaypalBankCardsAdaptivePaymentsPaymentMethod()
+			: base("Paypal.BankCards.AdaptivePayments")
 		{
 
 		}
 
-		private static string PaypalAPIModeStoreSetting = "Paypal.Mode";
-		private static string PaypalAPIUserNameStoreSetting = "Paypal.APIUsername";
-		private static string PaypalAPIPasswordStoreSetting = "Paypal.APIPassword";
-		private static string PaypalAPISignatureStoreSetting = "Paypal.APISignature";
-		private static string PaypalPaymentRedirectRelativePathStoreSetting = "Paypal.PaymentRedirectRelativePath";
+		private static string PaypalAPIModeStoreSetting = "Paypal.BankCards.AdaptivePayments.Mode";
+		private static string PaypalAPIUserNameStoreSetting = "Paypal.BankCards.AdaptivePayments.APIUsername";
+		private static string PaypalAPIPasswordStoreSetting = "Paypal.BankCards.AdaptivePayments.APIPassword";
+		private static string PaypalAPISignatureStoreSetting = "Paypal.BankCards.AdaptivePayments.APISignature";
+		private static string PaypalAppIdStoreSetting = "Paypal.BankCards.AdaptivePayments.AppId";
+		private static string PaypalPaymentRedirectRelativePathStoreSetting = "Paypal.BankCards.AdaptivePayments.PaymentRedirectRelativePath";
 
 		private static string PaypalModeConfigSettingName = "mode";
 		private static string PaypalUsernameConfigSettingName = "account1.apiUsername";
 		private static string PaypalPasswordConfigSettingName = "account1.apiPassword";
 		private static string PaypalSignatureConfigSettingName = "account1.apiSignature";
+		private static string PaypalAppIdConfigSettingName = "account1.applicationId";
 
 		private static string SandboxPaypalBaseUrlFormat = "https://www.sandbox.paypal.com/cgi-bin/webscr?cmd=_ap-payment&paykey={0}";
 		private static string LivePaypalBaseUrlFormat = "https://www.paypal.com/cgi-bin/webscr?cmd=_ap-payment&paykey={0}";
@@ -78,6 +81,15 @@ namespace PayPal.PaymentGatewaysModule.Web.Managers
 			}
 		}
 
+		private string AppId
+		{
+			get
+			{
+				var retVal = GetSetting(PaypalAppIdStoreSetting);
+				return retVal;
+			}
+		}
+
 		public override PaymentMethodType PaymentMethodType
 		{
 			get { return PaymentMethodType.Redirection; }
@@ -108,10 +120,24 @@ namespace PayPal.PaymentGatewaysModule.Web.Managers
 
 			var response = service.Pay(request);
 
-			retVal.OuterId = response.payKey;
-			retVal.IsSuccess = true;
-			var redirectBaseUrl = GetBaseUrl(Mode);
-			retVal.RedirectUrl = string.Format(redirectBaseUrl, retVal.OuterId);
+			if(response.error != null && response.error.Count > 0)
+			{
+				var sb = new StringBuilder();
+				foreach (var error in response.error)
+				{
+					sb.AppendLine(error.message);
+				}
+				retVal.Error = sb.ToString();
+				retVal.NewPaymentStatus = PaymentStatus.Voided;
+			}
+			else
+			{
+				retVal.OuterId = response.payKey;
+				retVal.IsSuccess = true;
+				var redirectBaseUrl = GetBaseUrl(Mode);
+				retVal.RedirectUrl = string.Format(redirectBaseUrl, retVal.OuterId);
+				retVal.NewPaymentStatus = PaymentStatus.Pending;
+			}
 
 			return retVal;
 		}
@@ -120,24 +146,43 @@ namespace PayPal.PaymentGatewaysModule.Web.Managers
 		{
 			var retVal = new PostProcessPaymentResult();
 
-			if (!(context.Store != null && (!string.IsNullOrEmpty(context.Store.SecureUrl) || !string.IsNullOrEmpty(context.Store.Url))))
-				throw new NullReferenceException("no store with this id");
-
-			var url = string.Empty;
-			if (!string.IsNullOrEmpty(context.Store.SecureUrl))
-			{
-				url = context.Store.SecureUrl;
-			}
-			else
-			{
-				url = context.Store.Url;
-			}
-
 			var config = GetConfigMap();
 
 			var service = new AdaptivePaymentsService(config);
 
+			var response = service.PaymentDetails(new PaymentDetailsRequest 
+			{
+				payKey = context.OuterId,
+				requestEnvelope = new RequestEnvelope { errorLanguage = "en_US" }
+			});
 
+			if (response.status == "COMPLETED")
+			{
+				retVal.IsSuccess = true;
+				retVal.NewPaymentStatus = PaymentStatus.Paid;
+			}
+			else if (response.status == "INCOMPLETE" && response.status == "ERROR" && response.status == "REVERSALERROR")
+			{
+				if (response.error != null && response.error.Count > 0)
+				{
+					var sb = new StringBuilder();
+					foreach (var error in response.error)
+					{
+						sb.AppendLine(error.message);
+					}
+					retVal.Error = sb.ToString();
+				}
+				else
+				{
+					retVal.Error = "payment canceled";
+				}
+
+				retVal.NewPaymentStatus = PaymentStatus.Voided;
+			}
+			else
+			{
+				retVal.NewPaymentStatus = PaymentStatus.Pending;
+			}
 
 			return retVal;
 		}
@@ -188,7 +233,7 @@ namespace PayPal.PaymentGatewaysModule.Web.Managers
 			retVal.Add(PaypalUsernameConfigSettingName, APIUsername);
 			retVal.Add(PaypalPasswordConfigSettingName, APIPassword);
 			retVal.Add(PaypalSignatureConfigSettingName, APISignature);
-			retVal.Add("account1.applicationId", "APP-80W284485P519543T");
+			retVal.Add(PaypalAppIdConfigSettingName, AppId);
 
 			return retVal;
 		}

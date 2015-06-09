@@ -2,6 +2,7 @@
 using MeS.PaymentGatewaysModule.Web.Managers;
 using Microsoft.Practices.ServiceLocation;
 using Microsoft.Practices.Unity;
+using System;
 using VirtoCommerce.Domain.Payment.Services;
 using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Core.Settings;
@@ -25,19 +26,20 @@ namespace MeS.PaymentGatewaysModule.Web
 
         public void Initialize()
         {
-			//var settingsManager = ServiceLocator.Current.GetInstance<ISettingsManager>();
+			var settings = _container.Resolve<ISettingsManager>().GetModuleSettings("MeS.PaymentGateway");
 
-			//var mesAccountId = settingsManager.GetValue("Mes.PaymentGateway.Credentials.AppKey", string.Empty);
+			Func<MesPaymentMethod> meSPaymentMethodFactory = () =>
+			{
+				return new MesPaymentMethod()
+				{
+					Name = "Merchant e-solutions payment gateway",
+					Description = "Merchant e-solutions payment gateway integration",
+					LogoUrl = "http://www.ebs-next.com/images/partners/partners-merchsolutions.jpg",
+					Settings = settings
+				};
+			};
 
-			//var mesGatewayCode = settingsManager.GetValue("Mes.PaymentGateway.GatewayDescription.GatewayCode", string.Empty);
-			//var mesDescription = settingsManager.GetValue("Mes.PaymentGateway.GatewayDescription.Description", string.Empty);
-			//var mesLogoUrl = settingsManager.GetValue("Mes.PaymentGateway.GatewayDescription.LogoUrl", string.Empty);
-
-			//var mesPaymentGateway = new MeSPaymentGatewayImpl(mesAccountId, mesGatewayCode, mesDescription, mesLogoUrl);
-			//var paymentGatewayManager = _container.Resolve<IPaymentGatewayManager>();
-			//paymentGatewayManager.RegisterGateway(mesPaymentGateway);
-
-			//_container.RegisterType<MeSGatewayController>(new InjectionConstructor(mesPaymentGateway, mesAccountId));
+			_container.Resolve<IPaymentMethodsService>().RegisterPaymentMethod(meSPaymentMethodFactory);
         }
 
         public void PostInitialize()

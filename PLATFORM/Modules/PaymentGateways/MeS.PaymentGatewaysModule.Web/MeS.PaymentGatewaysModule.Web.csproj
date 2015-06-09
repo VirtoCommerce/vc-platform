@@ -44,6 +44,9 @@
     <Reference Include="Antlr3.Runtime">
       <HintPath>..\..\..\packages\Antlr.3.5.0.2\lib\Antlr3.Runtime.dll</HintPath>
     </Reference>
+    <Reference Include="MesLibrary">
+      <HintPath>..\..\..\Shared\MesLibrary.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.Practices.ServiceLocation, Version=1.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -137,7 +140,6 @@
   <ItemGroup>
     <Compile Include="Controllers\MeSGatewayController.cs" />
     <Compile Include="Managers\MesPaymentMethod.cs" />
-    <Compile Include="Managers\MeSPaymentGatewayImpl.cs" />
     <Compile Include="Models\CreatePaymentResult.cs" />
     <Compile Include="Models\GetPaymentParametersResult.cs" />
     <Compile Include="Models\MesPaymentInfo.cs" />
