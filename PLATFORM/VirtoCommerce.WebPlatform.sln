@@ -150,9 +150,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tax", "Tax", "{3FE3BA5E-A79
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AvaTax.TaxModule.Web", "Modules\Tax\AvaTax.TaxModule.Web\AvaTax.TaxModule.Web.csproj", "{F7EC3E39-B6DB-4912-BE00-B5A7DB25D3B4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Paypal.BankCards.AdaptivePayments.PaymentGatewayModule.Web", "Modules\PaymentGateways\Paypal.BankCards.AdaptivePayments.PaymentGatewayModule.Web\Paypal.BankCards.AdaptivePayments.PaymentGatewayModule.Web.csproj", "{06AF7027-C874-4732-A8B9-109E838A9704}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BankCards.PaypalAdaptivePayments", "Modules\PaymentGateways\BankCards.PaypalAdaptivePayments\BankCards.PaypalAdaptivePayments.csproj", "{06AF7027-C874-4732-A8B9-109E838A9704}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Paypal.BankCards.ExpressCheckout.PaymentGatewayModule.Web", "Modules\PaymentGateways\Paypal.BankCards.ExpressCheckout.PaymentGatewayModule.Web\Paypal.BankCards.ExpressCheckout.PaymentGatewayModule.Web.csproj", "{B50902A2-2646-4786-BF1E-555DB3DD5CC2}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BankCards.PaypalExpressCheckout", "Modules\PaymentGateways\BankCards.PaypalExpressCheckout\BankCards.PaypalExpressCheckout.csproj", "{B50902A2-2646-4786-BF1E-555DB3DD5CC2}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AvaTax.TaxModule.Test", "AvaTax.TaxModule.Test\AvaTax.TaxModule.Test.csproj", "{60182DDB-2722-4275-BE51-12FCBC7901C0}"
 EndProject

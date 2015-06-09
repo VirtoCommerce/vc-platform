@@ -21,8 +21,8 @@
     <copyright>Copyright © 2011-2015 Virto Commerce. All rights reserved</copyright>
     <tags>paypal bank cards payment gateway</tags>
 
-    <assemblyFile>Paypal.BankCards.AdaptivePayments.PaymentGatewayModule.Web.dll</assemblyFile>
-    <moduleType>Paypal.BankCards.AdaptivePayments.PaymentGatewayModule.Web.Module, Paypal.BankCards.AdaptivePayments.PaymentGatewayModule.Web</moduleType>
+    <assemblyFile>BankCards.PaypalAdaptivePayments.Web.dll</assemblyFile>
+    <moduleType>BankCards.PaypalAdaptivePayments.Web.Module, BankCards.PaypalAdaptivePayments.Web</moduleType>
 
 		<settings>
 				<group name="Gateway settings">
