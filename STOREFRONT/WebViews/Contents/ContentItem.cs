@@ -60,6 +60,8 @@ namespace VirtoCommerce.Web.Views.Contents
 
         public IDictionary<string, dynamic> Settings { get; set; }
 
+        public Published Published { get; set; }
+
         public string Title { get; set; }
 
         public string Url { get; set; }
@@ -105,9 +107,9 @@ namespace VirtoCommerce.Web.Views.Contents
                     }
                     case "published":
                     {
-                        //Published published;
-                        //Enum.TryParse((string)setting.Value, true, out published);
-                        //Published = published;
+                        Published published;
+                        Enum.TryParse((string)setting.Value, true, out published);
+                        Published = published;
                         break;
                     }
                     case "series":
@@ -123,13 +125,15 @@ namespace VirtoCommerce.Web.Views.Contents
                     case "tags":
                     case "keywords":
                     {
-                        //Keywords = (string)setting.Value;
-
+                        Keywords = (string)setting.Value;
                         break;
                     }
                 }
             }
         }
+
+        
+
         #endregion
     }
 }

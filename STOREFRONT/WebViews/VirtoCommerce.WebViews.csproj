@@ -92,6 +92,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Contents\ContentItem.cs" />
+    <Compile Include="Contents\Published.cs" />
     <Compile Include="Contents\PublishingService.cs" />
     <Compile Include="Contents\SiteStaticContentContext.cs" />
     <Compile Include="Engines\Liquid\CommerceFilters.cs" />

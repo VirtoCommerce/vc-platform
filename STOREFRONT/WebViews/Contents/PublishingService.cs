@@ -123,6 +123,11 @@ namespace VirtoCommerce.Web.Views.Contents
             // 1: Read raw contents and meta data. Determine contents format and read it into Contents property, create RawContentItem.
             var rawItem = this.CreateRawItem(path);
 
+            /// if a 'date' property is found in markdown file header, that date will be used instead of the date in the file name
+            var date = DateTime.Now;
+            if (rawItem.Settings.ContainsKey("date"))
+                DateTime.TryParse((string)rawItem.Settings["date"], out date);
+
             // 2: Use convert engines to get html contents and create ContentItem object
             foreach (var templateEngine in this._templateEngines)
             {
@@ -136,6 +141,7 @@ namespace VirtoCommerce.Web.Views.Contents
                     page.Url = rawItem.Settings.ContainsKey("permalink")
                         ? rawItem.Settings["permalink"]
                         : this.EvaluateLink(context, path);
+                    page.Date = date;
                     return page;
                 }
             }
