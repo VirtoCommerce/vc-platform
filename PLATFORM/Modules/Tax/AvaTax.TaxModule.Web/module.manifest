@@ -2,7 +2,7 @@
 <module>
   <id>Avalara.Tax</id>
   <version>1.0.0</version>
-  <platformVersion>2.1.0</platformVersion>
+  <platformVersion>2.0.0</platformVersion>
   <dependencies>
     <dependency id="VirtoCommerce.Core" version="1.0.0" />
   </dependencies>
@@ -33,26 +33,31 @@
   <settings>
     <group name="Credentials">
       <setting>
-        <name>Avalara.Tax.Credentials.Username</name>
-        <valueType>secureString</valueType>
-        <title>Avalara API username</title>
-        <description>Avalara API username</description>
+        <name>Avalara.Tax.Credentials.AccountNumber</name>
+        <valueType>string</valueType>
+        <title>Avalara account number</title>
+        <description>Account number provided by Avalara during registration process</description>
       </setting>
       <setting>
-        <name>Avalara.Tax.Credentials.Password</name>
+        <name>Avalara.Tax.Credentials.LicenseKey</name>
         <valueType>secureString</valueType>
-        <title>Avalara API password</title>
-        <description>Avalara API password</description>
+        <title>Avalara account License Key</title>
+        <description>Account License Key provided by Avalara during registration process</description>
+      </setting>
+      <setting>
+        <name>Avalara.Tax.Credentials.CompanyCode</name>
+        <valueType>string</valueType>
+        <title>Company code in Avalara system</title>
+        <description>Company code that should match with the code provided to the company registered in Avalara admin manager</description>
+      </setting>
+      <setting>
+        <name>Avalara.Tax.Credentials.ServiceUrl</name>
+        <valueType>string</valueType>
+        <title>Link to Avalara API service</title>
+        <description>Link to Avalara API service</description>
       </setting>
     </group>
     <group name="Avalara Description">
-      <setting>
-        <name>Avalara.Tax.Code</name>
-        <valueType>string</valueType>
-        <defaultValue>Avalara module code</defaultValue>
-        <title>Code</title>
-        <description>Avalara module code</description>
-      </setting>
       <setting>
         <name>Avalara.Tax.Description</name>
         <valueType>string</valueType>
@@ -63,7 +68,7 @@
       <setting>
         <name>Avalara.Tax.LogoUrl</name>
         <valueType>string</valueType>
-        <defaultValue>http://static.mailchimp.com/web/brand-assets/logo-dark.png</defaultValue>
+        <defaultValue>http://www.avalara.com/assets/img/logo-tagline-extend-FF6600-@2x.png</defaultValue>
         <title>Logo url</title>
         <description>Avalara logo url</description>
       </setting>

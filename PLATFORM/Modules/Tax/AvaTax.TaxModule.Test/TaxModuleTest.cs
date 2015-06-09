@@ -24,7 +24,7 @@ namespace AvaTax.TaxModule.Test
         [TestMethod]
         public void GetTaxTotals()
         {
-            var testOrder = GetTestOrder("order1");
+            var testOrder = GetTestOrder("order2");
             var result = _controller.Total(testOrder) as OkNegotiatedContentResult<CustomerOrder>;
             Assert.IsNotNull(result.Content);
             Assert.AreNotEqual(result.Content.Tax, 0);
