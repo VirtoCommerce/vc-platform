@@ -11,6 +11,8 @@ namespace VirtoCommerce.CatalogModule.Web.Model
 		public string CatalogId { get; set; }
 		public string[] ProductIds { get; set; }
 		public string[] CategoryIds { get; set; }
+		public string PriceListId { get; set; }
+		public string FulfilmentCenterId { get; set; }
 		public CurrencyCodes? Currency { get; set; }
 	}
 

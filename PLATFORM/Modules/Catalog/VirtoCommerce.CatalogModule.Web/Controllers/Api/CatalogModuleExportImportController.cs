@@ -19,6 +19,7 @@ using System.Collections.Generic;
 using VirtoCommerce.Domain.Pricing.Services;
 using VirtoCommerce.Domain.Inventory.Services;
 using VirtoCommerce.Domain.Commerce.Services;
+using VirtoCommerce.Platform.Core.Settings;
 namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 {
     [RoutePrefix("api/catalog")]
@@ -37,12 +38,14 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 		private readonly IInventoryService _inventoryService;
 		private readonly ICommerceService _commerceService;
 		private readonly IPropertyService _propertyService;
+		private readonly ISettingsManager _settingsManager; 
 
 		public CatalogModuleExportImportController(ICatalogService catalogService, ICatalogSearchService catalogSearchService,
 								ICategoryService categoryService, IItemService productService,
 								INotifier notifier, CacheManager cacheManager, IBlobStorageProvider blobProvider,
 								IBlobUrlResolver blobUrlResolver, ISkuGenerator skuGenerator, IPricingService pricingService,
-								IInventoryService inventoryService, ICommerceService commerceService, IPropertyService propertyService) 
+								IInventoryService inventoryService, ICommerceService commerceService, IPropertyService propertyService,
+								ISettingsManager settingsManager) 
 		{
 			_catalogService = catalogService;
 			_searchService = catalogSearchService;
@@ -57,6 +60,7 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 			_inventoryService = inventoryService;
 			_commerceService = commerceService;
 			_propertyService = propertyService;
+			_settingsManager = settingsManager;
 
 		}
 
@@ -83,8 +87,13 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 			{
 				throw new NullReferenceException("catalog");
 			}
+			var curencySetting = _settingsManager.GetSettingByName("VirtoCommerce.Core.General.Currencies");
+			var defaultCurrency = EnumUtility.SafeParse<CurrencyCodes>(curencySetting.DefaultValue, CurrencyCodes.USD);
+		
 			var exportJob = new CsvCatalogExportJob(_searchService, _categoryService, _productService, _notifier, _cacheManager, _blobStorageProvider, _blobUrlResolver, _pricingService, _inventoryService);
-			BackgroundJob.Enqueue(() => exportJob.DoExport(exportInfo.CatalogId, exportInfo.CategoryIds, exportInfo.ProductIds, exportInfo.Currency ?? CurrencyCodes.USD, catalog.DefaultLanguage.LanguageCode, notification));
+			BackgroundJob.Enqueue(() => exportJob.DoExport(exportInfo.CatalogId, exportInfo.CategoryIds, exportInfo.ProductIds,
+														   exportInfo.PriceListId, exportInfo.FulfilmentCenterId, exportInfo.Currency ?? defaultCurrency, 
+														   catalog.DefaultLanguage.LanguageCode, notification));
 
 			return Ok(notification);
 
@@ -113,7 +122,7 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 			mappingItems.AddRange(ReflectionUtility.GetPropertyNames<coreModel.CatalogProduct>(x => x.Name, x => x.Category).Select(x => new CsvImportMappingItem { EntityColumnName = x, IsRequired = true }));
 
 			mappingItems.AddRange(new string[] {"Sku", "ParentSku", "Review", "PrimaryImage", "AltImage", "SeoUrl", "SeoDescription", "SeoTitle", 
-												"PriceId", "Price", "SalePrice", "Currency", "AllowBackorder", "Quantity" }
+												"PriceId", "Price", "SalePrice", "Currency", "AllowBackorder", "Quantity", "FulfilmentCenterId" }
 								   .Select(x => new CsvImportMappingItem { EntityColumnName = x, IsRequired = false }));
 
 			mappingItems.AddRange(ReflectionUtility.GetPropertyNames<coreModel.CatalogProduct>(x=>x.Id, x=>x.MainProductId, x=>x.CategoryId, x => x.IsActive, x => x.IsBuyable, x => x.TrackInventory,

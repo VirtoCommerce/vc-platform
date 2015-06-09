@@ -221,7 +221,7 @@ namespace VirtoCommerce.CatalogModule.Web.BackgroundJobs
 			}
 		}
 
-		private void SaveProduct(coreModel.Catalog catalog, FulfillmentCenter fulfillmentCenter, coreModel.CatalogProduct csvProduct)
+		private void SaveProduct(coreModel.Catalog catalog, FulfillmentCenter defaultFulfillmentCenter, coreModel.CatalogProduct csvProduct)
 		{
 			var isNewProduct = csvProduct.IsTransient();
 			csvProduct.CatalogId = catalog.Id;
@@ -285,7 +285,7 @@ namespace VirtoCommerce.CatalogModule.Web.BackgroundJobs
 			{
 				var inventory = csvProduct.Inventories.First();
 				inventory.ProductId = csvProduct.Id;
-				inventory.FulfillmentCenterId = fulfillmentCenter.Id;
+				inventory.FulfillmentCenterId = inventory.FulfillmentCenterId ?? defaultFulfillmentCenter.Id;
 				_inventoryService.UpsertInventory(csvProduct.Inventories.First());
 			}
 		}
@@ -419,11 +419,13 @@ namespace VirtoCommerce.CatalogModule.Web.BackgroundJobs
 					var inventories = new List<InventoryInfo>();
 					var quantity = GetCsvField("Quantity", x, importConfiguration);
 					var allowBackorder = GetCsvField("AllowBackorder", x, importConfiguration);
+					var fulfilmentCenterId = GetCsvField("FulfilmentCenterId", x, importConfiguration);
 
 					if (!String.IsNullOrEmpty(quantity))
 					{
 						inventories.Add(new InventoryInfo
 						{
+							FulfillmentCenterId = fulfilmentCenterId,
 							AllowBackorder = allowBackorder.TryParse(false),
 							InStockQuantity = (long)quantity.TryParse(0.0m)
 						});
