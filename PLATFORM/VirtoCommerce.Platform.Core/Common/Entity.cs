@@ -29,6 +29,9 @@ namespace VirtoCommerce.Platform.Core.Common
             if (Object.ReferenceEquals(this, obj))
                 return true;
 
+			if (IsTransient())
+				return false;
+
             return entity.Id == Id;
         }
 

@@ -11,7 +11,7 @@ using VirtoCommerce.Domain.Order.Model;
 using VirtoCommerce.Domain.Payment.Model;
 using VirtoCommerce.Domain.Store.Model;
 
-namespace Paypal.BankCards.ExpressCheckout.PaymentGatewayModule.Web.Managers
+namespace BankCards.PaypalExpressCheckout.Managers
 {
 	public class PaypalBankCardsExpressCheckoutPaymentMethod : VirtoCommerce.Domain.Payment.Model.PaymentMethod
 	{

@@ -7,8 +7,8 @@
 				<dependency id="VirtoCommerce.Core" version="1.0.0" />
 		</dependencies>
 
-		<title>Paypal Bank Cards Payment Gateway</title>
-		<description>APIs and UI for paypal bank cards payment gateway</description>
+		<title>Paypal Bank Cards Express Checkout Gateway</title>
+		<description>APIs and UI for paypal bank cards Express checkout gateway</description>
 		<authors>
 				<author>Virto Commerce</author>
 		</authors>
@@ -19,10 +19,10 @@
 		<iconUrl>http://nuget.org/Content/Images/packageDefaultIcon-50x50.png</iconUrl>
 		<releaseNotes>First version.</releaseNotes>
 		<copyright>Copyright © 2011-2015 Virto Commerce. All rights reserved</copyright>
-		<tags>paypal bank cards payment gateway</tags>
+		<tags>paypal bank cards express checkout payment gateway</tags>
 
-		<assemblyFile>Paypal.BankCards.ExpressCheckout.PaymentGatewayModule.Web.dll</assemblyFile>
-		<moduleType>Paypal.BankCards.ExpressCheckout.PaymentGatewayModule.Web.Module, Paypal.BankCards.ExpressCheckout.PaymentGatewayModule.Web</moduleType>
+		<assemblyFile>BankCards.PaypalExpressCheckout.dll</assemblyFile>
+		<moduleType>BankCards.PaypalExpressCheckout.Module, BankCards.PaypalExpressCheckout</moduleType>
 
 		<settings>
 				<group name="Gateway settings">

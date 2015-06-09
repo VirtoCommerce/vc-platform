@@ -35,6 +35,6 @@ namespace VirtoCommerce.Domain.Shipping.Model
 
 		#endregion
 
-		public abstract ShippingRate CalculateRate(IEvaluationContext context);
+		public abstract IEnumerable<ShippingRate> CalculateRates(IEvaluationContext context);
 	}
 }

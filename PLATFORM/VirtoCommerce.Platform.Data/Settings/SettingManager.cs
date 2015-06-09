@@ -38,6 +38,21 @@ namespace VirtoCommerce.Platform.Data.Settings
             return retVal;
         }
 
+		public SettingEntry GetSettingByName(string name)
+		{
+			if (name == null)
+				throw new ArgumentNullException("name");
+
+			SettingEntry retVal = null;
+			var manifestSetting = LoadSettingFromManifest(name);
+			var storedSetting = GetAllEntities().FirstOrDefault(s => string.Equals(s.Name, name, StringComparison.OrdinalIgnoreCase));
+			if (manifestSetting != null)
+			{
+				retVal = manifestSetting.ToModel(storedSetting, null);
+			}
+			return retVal;
+		}
+
 		public SettingEntry[] GetObjectSettings(string objectType, string objectId)
 		{
 			if (objectType == null)

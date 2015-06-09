@@ -22,6 +22,7 @@ using VirtoCommerce.Domain.Pricing.Services;
 using VirtoCommerce.Domain.Inventory.Services;
 using VirtoCommerce.Domain.Commerce.Services;
 using System.Threading.Tasks;
+using VirtoCommerce.Domain.Commerce.Model;
 
 
 namespace VirtoCommerce.CatalogModule.Web.BackgroundJobs
@@ -146,6 +147,7 @@ namespace VirtoCommerce.CatalogModule.Web.BackgroundJobs
 						notification.Description = string.Format("Creating categories: {0} created", ++notification.ProcessedCount);
 						_notifier.Upsert(notification);
 					}
+					csvProduct.CategoryId = category.Id;
 					csvProduct.Category = category;
 					currentLevelCategories = category.Children;
 					parentCategoryId = category.Id;
@@ -167,104 +169,126 @@ namespace VirtoCommerce.CatalogModule.Web.BackgroundJobs
 				 MaxDegreeOfParallelism = 10
 			};
 
-			Parallel.ForEach(csvProducts.OrderBy(x => x.MainProductId ?? ""), options, csvProduct =>
+			DetectParents(csvProducts);
+			
+			//First need create main products, second will be created variations
+			foreach(var group in new IEnumerable<coreModel.CatalogProduct>[] { csvProducts.Where(x=>x.MainProduct == null), csvProducts.Where(x=>x.MainProduct != null) })
 			{
-				var isNewProduct = csvProduct.IsTransient();
-				//Try to set parent relations
-				var parentProduct = csvProducts.FirstOrDefault(x => ((csvProduct.MainProductId != null && (x.Id == csvProduct.MainProductId || x.Code == csvProduct.MainProductId)) || (x.Name == csvProduct.Name)) && !x.IsTransient());
-				csvProduct.MainProductId = parentProduct != null ? parentProduct.Id : null;
-
-				csvProduct.CatalogId = catalog.Id;
-
-				try
+				Parallel.ForEach(group, options, csvProduct =>
 				{
-					if (String.IsNullOrEmpty(csvProduct.Code))
+					try
 					{
-						csvProduct.Code = _skuGenerator.GenerateSku(csvProduct);
+						SaveProduct(catalog, defaultFulfilmentCenter, csvProduct);
 					}
-
-					var properties = csvProduct.CategoryId != null ? _propertyService.GetCategoryProperties(csvProduct.CategoryId) : _propertyService.GetCatalogProperties(csvProduct.CatalogId);
-					//Try to fill properties meta information for values
-					foreach(var propertyValue in csvProduct.PropertyValues)
+					catch (Exception ex)
 					{
-						if(propertyValue.Value != null)
+						lock (_lockObject)
 						{
-							var property = properties.FirstOrDefault(x => String.Equals(x.Name, propertyValue.PropertyName));
-							if(property != null)
-							{
-								propertyValue.ValueType = property.ValueType;
-								if(property.Dictionary)
-								{
-									property = _propertyService.GetById(property.Id);
-									var dicValue = property.DictionaryValues.FirstOrDefault(x => String.Equals(x.Value, propertyValue.Value));
-									propertyValue.ValueId = dicValue != null ? dicValue.Id : null;
-								}
-							}
-						}
-					}
-
-					if (!isNewProduct)
-					{
-						_productService.Update(new coreModel.CatalogProduct[] { csvProduct });
-					}
-					else
-					{
-						var newProduct = _productService.Create(csvProduct);
-						csvProduct.Id = newProduct.Id;
-					}
-
-					//Create price in default price list
-					if (csvProduct.Prices != null && csvProduct.Prices.Any())
-					{
-						var price = csvProduct.Prices.First();
-						price.ProductId = csvProduct.Id;
-						if (isNewProduct)
-						{
-							_pricingService.CreatePrice(price);
-						}
-						else
-						{
-							_pricingService.UpdatePrices(new Price[] {  price });
-						}
-					}
-
-					//Create inventory
-					if (csvProduct.Inventories != null && csvProduct.Inventories.Any())
-					{
-						var inventory = csvProduct.Inventories.First();
-						inventory.ProductId = csvProduct.Id;
-						inventory.FulfillmentCenterId = defaultFulfilmentCenter.Id;
-						_inventoryService.UpsertInventory(csvProduct.Inventories.First());
-					}
-				}
-				catch (Exception ex)
-				{
-					lock (_lockObject)
-					{
-						notification.ErrorCount++;
-						notification.Errors.Add(ex.ToString());
-						_notifier.Upsert(notification);
-					}
-				}
-				finally
-				{
-					lock (_lockObject)
-					{
-						//Raise notification each notifyProductSizeLimit category
-						counter++;
-						notification.ProcessedCount = counter;
-						notification.Description = string.Format("Creating products: {0} of {1} created", notification.ProcessedCount, notification.TotalCount);
-						if (counter % notifyProductSizeLimit == 0)
-						{
+							notification.ErrorCount++;
+							notification.Errors.Add(ex.ToString());
 							_notifier.Upsert(notification);
 						}
 					}
-				}
-			});
+					finally
+					{
+						lock (_lockObject)
+						{
+							//Raise notification each notifyProductSizeLimit category
+							counter++;
+							notification.ProcessedCount = counter;
+							notification.Description = string.Format("Creating products: {0} of {1} created", notification.ProcessedCount, notification.TotalCount);
+							if (counter % notifyProductSizeLimit == 0)
+							{
+								_notifier.Upsert(notification);
+							}
+						}
+					}
+				});
+			};
+
 
 		}
 
+		private void DetectParents(IEnumerable<coreModel.CatalogProduct> csvProducts)
+		{
+			foreach(var csvProduct in csvProducts)
+			{
+				//Try to set parent relations
+				//By id or code reference
+				var parentProduct = csvProducts.FirstOrDefault(x => csvProduct.MainProductId != null && (x.Id == csvProduct.MainProductId || x.Code == csvProduct.MainProductId));
+				csvProduct.MainProduct = parentProduct;
+				csvProduct.MainProductId = parentProduct != null ? parentProduct.Id : null;
+			}
+		}
 
+		private void SaveProduct(coreModel.Catalog catalog, FulfillmentCenter defaultFulfillmentCenter, coreModel.CatalogProduct csvProduct)
+		{
+			var isNewProduct = csvProduct.IsTransient();
+			csvProduct.CatalogId = catalog.Id;
+
+			if (String.IsNullOrEmpty(csvProduct.Code))
+			{
+				csvProduct.Code = _skuGenerator.GenerateSku(csvProduct);
+			}
+			//Set a parent relations
+			if(csvProduct.MainProductId == null && csvProduct.MainProduct != null)
+			{
+				csvProduct.MainProductId = csvProduct.MainProduct.Id;
+			}
+			var properties = csvProduct.CategoryId != null ? _propertyService.GetCategoryProperties(csvProduct.CategoryId) : _propertyService.GetCatalogProperties(csvProduct.CatalogId);
+			//Try to fill properties meta information for values
+			foreach (var propertyValue in csvProduct.PropertyValues)
+			{
+				if (propertyValue.Value != null)
+				{
+					var property = properties.FirstOrDefault(x => String.Equals(x.Name, propertyValue.PropertyName));
+					if (property != null)
+					{
+						propertyValue.ValueType = property.ValueType;
+						if (property.Dictionary)
+						{
+							property = _propertyService.GetById(property.Id);
+							var dicValue = property.DictionaryValues.FirstOrDefault(x => String.Equals(x.Value, propertyValue.Value));
+							propertyValue.ValueId = dicValue != null ? dicValue.Id : null;
+						}
+					}
+				}
+			}
+
+			if (!isNewProduct)
+			{
+				_productService.Update(new coreModel.CatalogProduct[] { csvProduct });
+			}
+			else
+			{
+				var newProduct = _productService.Create(csvProduct);
+				csvProduct.Id = newProduct.Id;
+			}
+
+			//Create price in default price list
+			if (csvProduct.Prices != null && csvProduct.Prices.Any())
+			{
+				var price = csvProduct.Prices.First();
+				price.ProductId = csvProduct.Id;
+				if (isNewProduct)
+				{
+					_pricingService.CreatePrice(price);
+				}
+				else
+				{
+					_pricingService.UpdatePrices(new Price[] { price });
+				}
+			}
+
+			//Create inventory
+			if (csvProduct.Inventories != null && csvProduct.Inventories.Any())
+			{
+				var inventory = csvProduct.Inventories.First();
+				inventory.ProductId = csvProduct.Id;
+				inventory.FulfillmentCenterId = inventory.FulfillmentCenterId ?? defaultFulfillmentCenter.Id;
+				_inventoryService.UpsertInventory(csvProduct.Inventories.First());
+			}
+		}
 
 		public sealed class ProductMap : CsvClassMap<coreModel.CatalogProduct>
 		{
@@ -395,11 +419,13 @@ namespace VirtoCommerce.CatalogModule.Web.BackgroundJobs
 					var inventories = new List<InventoryInfo>();
 					var quantity = GetCsvField("Quantity", x, importConfiguration);
 					var allowBackorder = GetCsvField("AllowBackorder", x, importConfiguration);
+					var fulfilmentCenterId = GetCsvField("FulfilmentCenterId", x, importConfiguration);
 
 					if (!String.IsNullOrEmpty(quantity))
 					{
 						inventories.Add(new InventoryInfo
 						{
+							FulfillmentCenterId = fulfilmentCenterId,
 							AllowBackorder = allowBackorder.TryParse(false),
 							InStockQuantity = (long)quantity.TryParse(0.0m)
 						});

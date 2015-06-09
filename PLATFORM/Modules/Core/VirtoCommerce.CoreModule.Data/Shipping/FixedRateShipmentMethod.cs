@@ -25,7 +25,7 @@ namespace VirtoCommerce.CoreModule.Data.Shipping
 			}
 		}
 
-		public override ShippingRate CalculateRate(Domain.Common.IEvaluationContext context)
+		public override IEnumerable<ShippingRate> CalculateRates(Domain.Common.IEvaluationContext context)
 		{
 			var shippingEvalContext = context as ShippingEvaluationContext;
 			if(shippingEvalContext == null)
@@ -33,7 +33,7 @@ namespace VirtoCommerce.CoreModule.Data.Shipping
 				throw new NullReferenceException("shippingEvalContext");
 			}
 
-			return new ShippingRate { Rate = Rate, Currency = shippingEvalContext.ShoppingCart.Currency, ShippingMethod = this };
+			return new ShippingRate[] { new ShippingRate { Rate = Rate, Currency = shippingEvalContext.ShoppingCart.Currency, ShippingMethod = this } };
 		}
 	}
 }

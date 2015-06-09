@@ -5,8 +5,23 @@ using System.Web.Http.Results;
 using AvaTax.TaxModule.Web.Controller;
 using AvaTax.TaxModule.Web.Managers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using VirtoCommerce.Domain.Cart.Model;
 using VirtoCommerce.Domain.Order.Model;
 using VirtoCommerce.Platform.Core.Common;
+using Address = VirtoCommerce.Domain.Order.Model.Address;
+using AddressType = VirtoCommerce.Domain.Order.Model.AddressType;
+using Coupon = VirtoCommerce.Domain.Order.Model.Coupon;
+using Discount = VirtoCommerce.Domain.Order.Model.Discount;
+using LineItem = VirtoCommerce.Domain.Order.Model.LineItem;
+using Shipment = VirtoCommerce.Domain.Order.Model.Shipment;
+
+using CartAddressType = VirtoCommerce.Domain.Cart.Model.AddressType;
+using CartAddress = VirtoCommerce.Domain.Cart.Model.Address;
+using CartCoupon = VirtoCommerce.Domain.Cart.Model.Coupon;
+using CartDiscount = VirtoCommerce.Domain.Cart.Model.Discount;
+using CartLineItem = VirtoCommerce.Domain.Cart.Model.LineItem;
+using CartShipment = VirtoCommerce.Domain.Cart.Model.Shipment;
+using CartPayment = VirtoCommerce.Domain.Cart.Model.Payment;
 
 namespace AvaTax.TaxModule.Test
 {
@@ -22,12 +37,21 @@ namespace AvaTax.TaxModule.Test
         }
 
         [TestMethod]
-        public void GetTaxTotals()
+        public void GetOrderTaxTotals()
         {
             var testOrder = GetTestOrder("order1");
             var result = _controller.Total(testOrder) as OkNegotiatedContentResult<CustomerOrder>;
             Assert.IsNotNull(result.Content);
             Assert.AreNotEqual(result.Content.Tax, 0);
+        }
+
+        [TestMethod]
+        public void GetCartTaxTotals()
+        {
+            var testCart = GetTestCart("cart1");
+            var result = _controller.CartTotal(testCart) as OkNegotiatedContentResult<ShoppingCart>;
+            Assert.IsNotNull(result.Content);
+            Assert.AreNotEqual(result.Content.TaxTotal, 0);
         }
 
         private static CustomerOrder GetTestOrder(string id)
@@ -36,8 +60,8 @@ namespace AvaTax.TaxModule.Test
             {
                 Id = id,
                 Currency = CurrencyCodes.USD,
-                CustomerId = "test customer",
-                EmployeeId = "employe",
+                CustomerId = "Test Customer",
+                EmployeeId = "employee",
                 StoreId = "test store",
                 CreatedDate = DateTime.Now,
                 Addresses = new []
@@ -153,10 +177,132 @@ namespace AvaTax.TaxModule.Test
                 Sum = 10,
                 CustomerId = "et"
             };
-            order.InPayments = new List<PaymentIn>();
-            order.InPayments.Add(payment);
+            order.InPayments = new List<PaymentIn> { payment };
 
             return order;
+        }
+
+        private static ShoppingCart GetTestCart(string id)
+        {
+            var cart = new ShoppingCart
+            {
+                Id = id,
+                Currency = CurrencyCodes.USD,
+                CustomerId = "Test Customer",
+                StoreId = "test store",
+                CreatedDate = DateTime.Now,
+                Addresses = new[]
+				{
+					new CartAddress {	
+					AddressType = CartAddressType.Shipping, 
+					Phone = "+68787687",
+					PostalCode = "60602",
+					CountryCode = "US",
+					CountryName = "United states",
+					Email = "user@mail.com",
+					FirstName = "first name",
+					LastName = "last name",
+					Line1 = "45 Fremont Street",
+                    City = "Los Angeles",
+                    RegionId = "CA",
+					Organization = "org1"
+					}
+				}.ToList(),
+                Discounts = new[] { new CartDiscount
+                    {
+                        PromotionId = "testPromotion",
+                        Currency = CurrencyCodes.USD,
+                        DiscountAmount = 12,
+                        
+                    }
+                },
+                Coupon = new CartCoupon
+                {
+                    CouponCode = "ssss"
+                }
+                
+            };
+            var item1 = new CartLineItem
+            {
+                ListPrice = 10,
+                ExtendedPrice = 20,
+                ProductId = "shoes",
+                CatalogId = "catalog",
+                Currency = CurrencyCodes.USD,
+                CategoryId = "category",
+                Name = "shoes",
+                Quantity = 2,
+                ShipmentMethodCode = "EMS",
+                Discounts = new[] { 
+                    new CartDiscount
+                    {
+                        PromotionId = "itemPromotion",
+                        Currency = CurrencyCodes.USD,
+                        DiscountAmount = 12
+                        
+                    }
+                }
+            };
+            var item2 = new CartLineItem
+            {
+                ListPrice = 100,
+                ExtendedPrice = 200,
+                ProductId = "t-shirt",
+                CatalogId = "catalog",
+                CategoryId = "category",
+                Currency = CurrencyCodes.USD,
+                Name = "t-shirt",
+                Quantity = 2,
+                ShipmentMethodCode = "EMS",
+                Discounts = new[]{ 
+                    new CartDiscount
+                    {
+                        PromotionId = "testPromotion",
+                        Currency = CurrencyCodes.USD,
+                        DiscountAmount = 12
+                    }
+                }
+            };
+            cart.Items = new List<CartLineItem> { item1, item2 };
+
+            var shipment = new CartShipment
+            {
+                Currency = CurrencyCodes.USD,
+                DeliveryAddress = new CartAddress
+                {
+                    City = "london",
+                    CountryName = "England",
+                    Phone = "+68787687",
+                    PostalCode = "2222",
+                    CountryCode = "ENG",
+                    Email = "user@mail.com",
+                    FirstName = "first name",
+                    LastName = "last name",
+                    Line1 = "line 1",
+                    Organization = "org1"
+                },
+                Discounts = new[] {
+                    new CartDiscount
+                    {
+                        PromotionId = "testPromotion",
+                        Currency = CurrencyCodes.USD,
+                        DiscountAmount = 12,
+                        
+                    }
+                }
+            };
+            cart.Shipments = new List<CartShipment> { shipment };
+
+            var payment = new CartPayment
+            {
+                PaymentGatewayCode = "PayPal",
+                Currency = CurrencyCodes.USD,
+                Amount = 10,
+                OuterId = "et"
+            };
+            cart.Payments = new List<CartPayment> { payment };
+
+            return cart;
         }
 
         private static AvaTaxController GetTaxController()

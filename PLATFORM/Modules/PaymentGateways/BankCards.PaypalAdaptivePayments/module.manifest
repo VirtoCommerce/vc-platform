@@ -7,8 +7,8 @@
         <dependency id="VirtoCommerce.Core" version="1.0.0" />
     </dependencies>
 
-    <title>Paypal Bank Cards Payment Gateway</title>
-    <description>APIs and UI for paypal bank cards payment gateway</description>
+    <title>Paypal Bank Cards Adaptive Payments Gateway</title>
+    <description>APIs and UI for paypal bank cards Adaptive payments gateway</description>
     <authors>
         <author>Virto Commerce</author>
     </authors>
@@ -19,10 +19,10 @@
     <iconUrl>http://nuget.org/Content/Images/packageDefaultIcon-50x50.png</iconUrl>
     <releaseNotes>First version.</releaseNotes>
     <copyright>Copyright © 2011-2015 Virto Commerce. All rights reserved</copyright>
-    <tags>paypal bank cards payment gateway</tags>
+    <tags>paypal bank cards adaptive payments payment gateway</tags>
 
-    <assemblyFile>Paypal.BankCards.AdaptivePayments.PaymentGatewayModule.Web.dll</assemblyFile>
-    <moduleType>Paypal.BankCards.AdaptivePayments.PaymentGatewayModule.Web.Module, Paypal.BankCards.AdaptivePayments.PaymentGatewayModule.Web</moduleType>
+    <assemblyFile>BankCards.PaypalAdaptivePayments.dll</assemblyFile>
+    <moduleType>BankCards.PaypalAdaptivePayments.Module, BankCards.PaypalAdaptivePayments</moduleType>
 
 		<settings>
 				<group name="Gateway settings">

@@ -7,10 +7,10 @@ using VirtoCommerce.Platform.Core.Settings;
 
 namespace AvaTax.TaxModule.Web
 {
-    public class Module: IModule
+    public class Module: ModuleBase
     {
-        private const string _usernamePropertyName = "Avalara.Tax.Credentials.Username";
-        private const string _passwordPropertyName = "Avalara.Tax.Credentials.Password";
+        private const string _usernamePropertyName = "Avalara.Tax.Credentials.AccountNumber";
+        private const string _passwordPropertyName = "Avalara.Tax.Credentials.LicenseKey";
         private const string _serviceUrlPropertyName = "Avalara.Tax.Credentials.ServiceUrl";
         private const string _companyCodePropertyName = "Avalara.Tax.Credentials.CompanyCode";
 
@@ -22,12 +22,8 @@ namespace AvaTax.TaxModule.Web
         }
 
         #region IModule Members
-
-        public void SetupDatabase(SampleDataLevel sampleDataLevel)
-        {
-        }
-
-        public void Initialize()
+        
+        public override void Initialize()
         {
             var settingsManager = _container.Resolve<ISettingsManager>();
 
@@ -54,11 +50,7 @@ namespace AvaTax.TaxModule.Web
                 (new InjectionConstructor(
                     avalaraTax));
         }
-
-        public void PostInitialize()
-        {
-        }
-
+        
         #endregion
     }
 }
