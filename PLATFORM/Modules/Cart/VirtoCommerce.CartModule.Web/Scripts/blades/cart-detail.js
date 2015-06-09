@@ -10,7 +10,6 @@
             $scope.blade.isLoading = false;
         },
         function (error) {
-            $scope.blade.isLoading = false;
             bladeNavigationService.setError('Error ' + error.status, $scope.blade);
         });
     }
@@ -23,7 +22,8 @@
         $scope.blade.isLoading = true;
         carts.update({}, $scope.blade.currentEntity, function (data, headers) {
             $scope.blade.refresh();
-        });
+        },
+        function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
     };
 
     $scope.blade.headIcon = 'fa-shopping-cart';

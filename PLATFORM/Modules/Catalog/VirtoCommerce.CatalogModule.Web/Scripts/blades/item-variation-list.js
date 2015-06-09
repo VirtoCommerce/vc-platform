@@ -7,7 +7,8 @@
         items.get({ id: blade.itemId }, function (data) {
             blade.item = data;
             blade.isLoading = false;
-        });
+        },
+        function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
 
         if (angular.isUndefined(parentRefresh)) {
             parentRefresh = true;
@@ -49,7 +50,7 @@
 	         name: "Add", icon: 'fa fa-plus',
 	         executeMethod: function () {
 	             items.newVariation({ itemId: blade.itemId }, function (data) {
-                     // take variation properties only
+	                 // take variation properties only
 	                 data.properties = _.where(data.properties, { type: 'Variation' });
 
 	                 var newBlade = {
@@ -61,7 +62,8 @@
 	                     template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/wizards/newProduct/new-variation-wizard.tpl.html'
 	                 };
 	                 bladeNavigationService.showBlade(newBlade, blade);
-	             });
+	             },
+                 function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
 	         },
 	         canExecuteMethod: function () { return true; },
 	         permission: 'catalog:items:manage'
@@ -83,7 +85,7 @@
                                       ids.push(variation.id);
                               });
 
-                              items.remove({ ids: ids }, blade.refresh);
+                              items.remove({ ids: ids }, blade.refresh, function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
                           }
                       }
                   }

@@ -4,7 +4,7 @@
     var codemirrorEditor;
 
     blade.initializeBlade = function () {
-    	blade.origEntity = angular.copy(blade.currentEntity);
+        blade.origEntity = angular.copy(blade.currentEntity);
 
         if (!blade.newAsset) {
             themes.getAsset({ storeId: blade.choosenStoreId, themeId: blade.choosenThemeId, assetId: blade.choosenAssetId }, function (data) {
@@ -14,12 +14,13 @@
 
                 $timeout(function () {
                     if (codemirrorEditor) {
-                    	codemirrorEditor.refresh();
+                        codemirrorEditor.refresh();
                         codemirrorEditor.focus();
                     }
                     blade.origEntity = angular.copy(blade.currentEntity);
                 }, 1);
-            });
+            },
+            function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
 
             $scope.blade.toolbarCommands = [
 			{
@@ -54,16 +55,16 @@
 			}];
         }
         else {
-        	$scope.blade.toolbarCommands = [
+            $scope.blade.toolbarCommands = [
 			{
-				name: "Create", icon: 'fa fa-save',
-				executeMethod: function () {
-					$scope.saveChanges();
-				},
-				canExecuteMethod: function () {
-					return isDirty();
-				},
-				permission: 'content:manage'
+			    name: "Create", icon: 'fa fa-save',
+			    executeMethod: function () {
+			        $scope.saveChanges();
+			    },
+			    canExecuteMethod: function () {
+			        return isDirty();
+			    },
+			    permission: 'content:manage'
 			}];
 
             blade.isLoading = false;
@@ -71,29 +72,30 @@
     };
 
     function isDirty() {
-    	return !angular.equals(blade.currentEntity, blade.origEntity) && !angular.isUndefined(blade.currentEntity.name) && !angular.isUndefined(blade.currentEntity.content);
+        return !angular.equals(blade.currentEntity, blade.origEntity) && !angular.isUndefined(blade.currentEntity.name) && !angular.isUndefined(blade.currentEntity.content);
     };
 
-    $scope.saveChanges = function() {
-    	blade.isLoading = true;
+    $scope.saveChanges = function () {
+        blade.isLoading = true;
 
-    	blade.currentEntity.id = blade.choosenFolder + '/' + blade.currentEntity.name;
+        blade.currentEntity.id = blade.choosenFolder + '/' + blade.currentEntity.name;
 
-    	themes.updateAsset({ storeId: blade.choosenStoreId, themeId: blade.choosenThemeId }, blade.currentEntity, function () {
-    		blade.origEntity = angular.copy(blade.currentEntity);
-        	blade.parentBlade.initialize();
-        	if (blade.newAsset) {
-        		blade.newAsset = false;
-        		bladeNavigationService.closeBlade(blade);
-        	}
-        	else {
-        		blade.choosenAssetId = blade.currentEntity.id;
-        		blade.title = blade.currentEntity.id;
-        		blade.subtitle = 'Edit ' + blade.currentEntity.name;
-        		blade.newAsset = false;
-        		blade.initializeBlade();
-        	}
-        });
+        themes.updateAsset({ storeId: blade.choosenStoreId, themeId: blade.choosenThemeId }, blade.currentEntity, function () {
+            blade.origEntity = angular.copy(blade.currentEntity);
+            blade.parentBlade.initialize();
+            if (blade.newAsset) {
+                blade.newAsset = false;
+                bladeNavigationService.closeBlade(blade);
+            }
+            else {
+                blade.choosenAssetId = blade.currentEntity.id;
+                blade.title = blade.currentEntity.id;
+                blade.subtitle = 'Edit ' + blade.currentEntity.name;
+                blade.newAsset = false;
+                blade.initializeBlade();
+            }
+        },
+        function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
     };
 
     function deleteEntry() {
@@ -108,7 +110,8 @@
                     themes.deleteAsset({ storeId: blade.choosenStoreId, themeId: blade.choosenThemeId, assetIds: blade.choosenAssetId }, function () {
                         $scope.bladeClose();
                         $scope.blade.parentBlade.initialize(true);
-                    });
+                    },
+                    function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
                 }
             }
         }
@@ -204,9 +207,9 @@
     };
 
     blade.getBladeStyle = function () {
-    	var value = $(window).width() - 550;
+        var value = $(window).width() - 550;
 
-    	return 'width:' + value + 'px';
+        return 'width:' + value + 'px';
     }
 
     blade.initializeBlade();

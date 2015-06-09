@@ -29,7 +29,8 @@
         items.updateitem({ id: $scope.blade.parentBlade.currentEntityId, reviews: entriesCopy }, function () {
             angular.copy($scope.currentEntity, $scope.blade.origEntity);
             $scope.blade.parentBlade.refresh(true);
-        });
+        },
+        function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
     };
 
     $scope.blade.onClose = function (closeCallback) {
@@ -68,7 +69,8 @@
                         items.updateitem({ id: $scope.blade.parentBlade.currentEntityId, reviews: entriesCopy }, function () {
                             $scope.bladeClose();
                             $scope.blade.parentBlade.refresh(true);
-                        });
+                        },
+                        function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
                     }
                 }
             }

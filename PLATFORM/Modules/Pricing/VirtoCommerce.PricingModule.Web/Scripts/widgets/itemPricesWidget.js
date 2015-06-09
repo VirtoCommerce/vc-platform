@@ -22,6 +22,8 @@
             } else {
                 $scope.priceRange = 'N/A';
             }
+        }, function (error) {
+            //bladeNavigationService.setError('Error ' + error.status, $scope.blade);
         });
     }
 

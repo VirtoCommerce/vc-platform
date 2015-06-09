@@ -8,7 +8,8 @@
             if (parentRefresh) {
                 $scope.blade.parentBlade.refresh();
             }
-        });
+        },
+        function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
     };
 
     function initializeBlade(data) {
@@ -31,7 +32,8 @@
         $scope.blade.isLoading = true;
         categories.update({}, $scope.blade.currentEntity, function (data, headers) {
             $scope.blade.refresh(true);
-        });
+        },
+        function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
     };
 
     $scope.blade.onClose = function (closeCallback) {

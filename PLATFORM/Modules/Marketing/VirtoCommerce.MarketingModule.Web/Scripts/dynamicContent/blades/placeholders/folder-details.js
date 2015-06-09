@@ -52,13 +52,15 @@
             marketing_dynamicContents_res_folders.save({}, blade.entity, function (data) {
                 bladeNavigationService.closeBlade(blade);
                 blade.parentBlade.updateChoosen();
-            });
+            },
+            function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
         }
         else {
             marketing_dynamicContents_res_folders.update({}, blade.entity, function (data) {
                 blade.originalEntity = angular.copy(blade.entity);
                 blade.parentBlade.updateChoosen();
-            });
+            },
+            function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
         }
     }
 

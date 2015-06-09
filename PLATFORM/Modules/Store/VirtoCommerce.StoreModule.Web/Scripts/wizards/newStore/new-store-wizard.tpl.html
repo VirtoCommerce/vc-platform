@@ -41,7 +41,7 @@
     </div>
 </div>
 <div class="blade-static __bottom">
-    <button ng-click="saveChanges()"  class="btn" ng-class="{'__disabled': formScope != undefined && formScope.$invalid}">
+    <button ng-click="saveChanges()" class="btn" ng-class="{'__disabled': formScope != undefined && formScope.$invalid}" ng-disabled="formScope != undefined && formScope.$invalid">
         <span>Create</span>
     </button>
 </div>

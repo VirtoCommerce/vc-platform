@@ -42,7 +42,8 @@
 		if (!$scope.formScope.$invalid) {
 			themes.createTheme({ storeId: blade.choosenStoreId, themeName: blade.name, themeFileUrl: blade.themeFileUrl }, function (data) {
 				bladeNavigationService.closeBlade(blade);
-			});
+			},
+            function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
 		}
 	}
 

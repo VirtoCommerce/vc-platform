@@ -15,7 +15,8 @@
         stores.save({}, $scope.blade.currentEntity, function (data) {
             $scope.blade.parentBlade.refresh();
             $scope.blade.parentBlade.openBlade(data);
-        });
+        },
+        function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
     };
 
     $scope.setForm = function (form) {

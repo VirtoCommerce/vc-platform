@@ -1,7 +1,7 @@
 ﻿<div class="blade-static">
     <div class="form-group">
         <div class="form-input __search">
-            <input type="text" placeholder="Search keyword..." ng-model="searchText">
+            <input placeholder="Search keyword..." ng-model="searchText">
         </div>
         <p class="form-count">Count: <span class="count">{{filteredEntities.length}}</span></p>
     </div>
@@ -25,7 +25,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr class="table-item" ng-repeat="data in blade.item.variations | filter:searchText as filteredEntities track by data.id" ng-class="{'selected': data === selectedItem}">
+                        <tr class="table-item" ng-repeat="data in blade.item.variations | filter:searchText as filteredEntities track by data.id" ng-class="{'__selected': data === selectedItem}">
                             <td class="table-col">
                                 <label class="form-control __checkbox">
                                     <input type="checkbox" ng-model="data.selected">

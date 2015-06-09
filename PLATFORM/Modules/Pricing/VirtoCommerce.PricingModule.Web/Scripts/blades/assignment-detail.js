@@ -4,9 +4,9 @@
 
     blade.refresh = function (parentRefresh) {
         if (blade.isNew) {
-            assignments.getNew(initializeBlade);
+            assignments.getNew(initializeBlade, function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
         } else if (blade.isApiSave) {
-            assignments.get({ id: blade.currentEntityId }, initializeBlade);
+            assignments.get({ id: blade.currentEntityId }, initializeBlade, function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
             if (parentRefresh) {
                 blade.parentBlade.refresh();
             }

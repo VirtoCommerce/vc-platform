@@ -5,9 +5,15 @@
         $scope.isInstalling = true;
 
         if ($scope.blade.mode === 'install') {
-            modules.install({ fileName: $scope.blade.currentEntity.fileName }, onAfterSubmitted);
+            modules.install({ fileName: $scope.blade.currentEntity.fileName }, onAfterSubmitted, function (error) {
+                $scope.isInstalling = false;
+                bladeNavigationService.setError('Error ' + error.status, $scope.blade);
+            });
         } else if ($scope.blade.mode === 'update') {
-            modules.update({ id: $scope.blade.currentEntity.id, fileName: $scope.blade.currentEntity.fileName }, onAfterSubmitted);
+            modules.update({ id: $scope.blade.currentEntity.id, fileName: $scope.blade.currentEntity.fileName }, onAfterSubmitted, function (error) {
+                $scope.isInstalling = false;
+                bladeNavigationService.setError('Error ' + error.status, $scope.blade);
+            });
         }
     };
 
@@ -56,7 +62,7 @@
             }
 
             uploader.onSuccessItem = function (fileItem, data, status, headers) {
-                if(data.tags) {
+                if (data.tags) {
                     data.tags = data.tags.split(' ');
                 }
                 $scope.blade.currentEntity = data;

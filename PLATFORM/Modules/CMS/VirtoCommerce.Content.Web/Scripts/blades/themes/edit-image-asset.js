@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.contentModule')
-.controller('virtoCommerce.contentModule.editImageAssetController', ['$scope', 'platformWebApp.dialogService', 'virtoCommerce.contentModule.themes', 'FileUploader', function ($scope, dialogService, themes, FileUploader) {
+.controller('virtoCommerce.contentModule.editImageAssetController', ['$scope', 'platformWebApp.dialogService', 'platformWebApp.bladeNavigationService', 'virtoCommerce.contentModule.themes', 'FileUploader', function ($scope, dialogService, bladeNavigationService, themes, FileUploader) {
 	var blade = $scope.blade;
 
 	blade.initializeBlade = function () {
@@ -11,7 +11,8 @@
 
 				blade.currentEntity = angular.copy(data);
 				blade.origEntity = data;
-			});
+			},
+            function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
 
 			$scope.blade.toolbarCommands = [
 			{
@@ -103,7 +104,8 @@
 			blade.subtitle = 'Edit asset';
 			blade.newAsset = false;
 			blade.initializeBlade();
-		});
+		},
+        function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
 	};
 
 	function isDirty() {
@@ -122,7 +124,8 @@
 					themes.deleteAsset({ storeId: blade.choosenStoreId, themeId: blade.choosenThemeId, assetIds: blade.choosenAssetId }, function () {
 						$scope.bladeClose();
 						$scope.blade.parentBlade.initialize(true);
-					});
+					},
+                    function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
 				}
 			}
 		}

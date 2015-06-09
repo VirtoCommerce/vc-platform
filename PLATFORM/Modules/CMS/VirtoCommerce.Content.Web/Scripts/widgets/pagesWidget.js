@@ -6,6 +6,8 @@
 		$scope.pagesCount = '...';
 		return pages.query({ storeId: blade.currentEntityId }, function (data) {
 			$scope.pagesCount = data.length;
+		}, function (error) {
+		    //bladeNavigationService.setError('Error ' + error.status, $scope.blade);
 		});
 	}
 

@@ -35,7 +35,8 @@ function ($scope, carts, bladeNavigationService, dialogService) {
                     }
                 });
             }
-        });
+        },
+        function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
     };
 
     $scope.$watch('pageSettings.currentPage', function (newPage) {
@@ -80,7 +81,8 @@ function ($scope, carts, bladeNavigationService, dialogService) {
                     var itemIds = _.pluck(selection, 'id');
                     carts.remove({ ids: itemIds }, function (data, headers) {
                         $scope.blade.refresh();
-                    });
+                    },
+                    function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
                 }
             }
         }

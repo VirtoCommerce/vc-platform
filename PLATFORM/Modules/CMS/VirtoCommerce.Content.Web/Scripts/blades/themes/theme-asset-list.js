@@ -11,8 +11,10 @@
 			themesStores.get({ id: blade.choosenStoreId }, function (data) {
 				blade.store = data;
 				blade.isLoading = false;
-			});
-		});
+			},
+            function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
+		},
+        function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
 	}
 
 	blade.folderClick = function (data) {

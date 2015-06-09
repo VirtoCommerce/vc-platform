@@ -6,6 +6,8 @@
 		$scope.themesCount = '...';
 		return themes.query({ storeId: blade.currentEntityId }, function (data) {
 			$scope.themesCount = data.length;
+		}, function (error) {
+		    //bladeNavigationService.setError('Error ' + error.status, $scope.blade);
 		});
 	}
 

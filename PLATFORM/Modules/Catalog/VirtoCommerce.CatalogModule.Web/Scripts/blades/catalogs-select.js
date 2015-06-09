@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.catalogModule')
-.controller('virtoCommerce.catalogModule.catalogsSelectController', ['$scope', 'virtoCommerce.catalogModule.catalogs', '$timeout', function ($scope, catalogs, $timeout) {
+.controller('virtoCommerce.catalogModule.catalogsSelectController', ['$scope', 'virtoCommerce.catalogModule.catalogs', 'platformWebApp.bladeNavigationService', function ($scope, catalogs, bladeNavigationService) {
 
     $scope.blade.refresh = function () {
         $scope.blade.isLoading = true;
@@ -12,7 +12,8 @@
             }
 
             $scope.blade.isLoading = false;
-        });
+        },
+        function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
     };
 
     $scope.selectNode = function (selectedNode) {

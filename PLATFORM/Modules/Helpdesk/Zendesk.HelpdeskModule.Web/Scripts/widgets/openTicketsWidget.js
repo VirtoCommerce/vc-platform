@@ -9,13 +9,13 @@
                 $scope.openTickets = data.length;
                 $scope.blade.isLoading = false;
             }, function() {
-                $scope.openTickets = 0;
                 $scope.blade.isLoading = false;
             });
 
             $scope.zendeskLink = "";
             zendeskLink.query({ email: $scope.blade.currentEntity.emails[0] }, function (data) {
                 $scope.zendeskLink = data[0];
+            }, function (error) {
             });
         }
     });

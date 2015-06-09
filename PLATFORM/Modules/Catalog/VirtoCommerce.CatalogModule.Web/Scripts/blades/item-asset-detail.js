@@ -12,7 +12,8 @@
             if (parentRefresh) {
                 $scope.currentBlade.parentBlade.refresh();
             }
-        });
+        },
+        function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
     }
 
     $scope.isDirty = function () {
@@ -48,7 +49,8 @@
     	$scope.currentBlade.isLoading = true;
     	items.updateitem({}, $scope.item, function (data) {
             $scope.currentBlade.refresh(true);
-        });
+    	},
+        function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
     };
 
     function initialize() {

@@ -5,6 +5,7 @@
         $scope.authLink = "";
         authLink.query({}, function (data) {
             $scope.authLink = data[0];
+        }, function (error) {
         });
     }
 

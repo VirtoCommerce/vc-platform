@@ -16,9 +16,10 @@
         });
 
         items.updateitem({ id: $scope.blade.parentBlade.currentEntityId, associations: entriesCopy }, function () {
-            $scope.bladeClose();
-            $scope.blade.parentBlade.refresh();
-        });
+                $scope.bladeClose();
+                $scope.blade.parentBlade.refresh();
+            },
+            function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
     }
 
     $scope.openBlade = function (type) {

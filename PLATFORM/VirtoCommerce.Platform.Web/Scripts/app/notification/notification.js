@@ -117,9 +117,8 @@
     function innerNotification(notification) {
 
         //Group notification by text
-
         notifications.upsert(notification, function (data, status, headers, config) {
-         
+        }, function (error) {
         });
     };
 
@@ -128,6 +127,8 @@
             var notifyMenu = mainMenuService.findByPath('notification');
             notifyMenu.incremented = false;
             notifyMenu.newCount = 0;
+        }, function (error) {
+            //bladeNavigationService.setError('Error ' + error.status, blade);
         });
 
     };

@@ -21,6 +21,8 @@ function ($scope, fulfillments, bladeNavigationService) {
             }
 
             return results;
+        }, function (error) {
+            bladeNavigationService.setError('Error ' + error.status, $scope.blade);
         });
     };
 

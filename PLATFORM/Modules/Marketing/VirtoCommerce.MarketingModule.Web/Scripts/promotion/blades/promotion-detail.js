@@ -2,16 +2,15 @@
 .controller('virtoCommerce.marketingModule.promotionDetailController', ['$scope', 'platformWebApp.bladeNavigationService', 'virtoCommerce.marketingModule.promotions', 'virtoCommerce.catalogModule.catalogs', 'virtoCommerce.storeModule.stores', 'platformWebApp.settings', 'platformWebApp.dialogService', 'virtoCommerce.coreModule.common.dynamicExpressionService', function ($scope, bladeNavigationService, marketing_res_promotions, catalogs, stores, settings, dialogService, dynamicExpressionService) {
     $scope.blade.refresh = function (parentRefresh) {
         if ($scope.blade.isNew) {
-            marketing_res_promotions.getNew({}, function (data) {
-                initializeBlade(data);
-            });
+            marketing_res_promotions.getNew({}, initializeBlade, function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
         } else {
             marketing_res_promotions.get({ id: $scope.blade.currentEntityId }, function (data) {
                 initializeBlade(data);
                 if (parentRefresh) {
                     $scope.blade.parentBlade.refresh();
                 }
-            });
+            },
+            function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
         }
     };
 

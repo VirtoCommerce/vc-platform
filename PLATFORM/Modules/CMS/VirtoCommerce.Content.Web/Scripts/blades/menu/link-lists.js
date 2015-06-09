@@ -9,7 +9,8 @@
 		menus.get({ storeId: blade.storeId }, function (data) {
 			blade.currentEntities = data;
 			blade.isLoading = false;
-		});
+		},
+        function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
 	}
 
 	blade.openBlade = function (data) {

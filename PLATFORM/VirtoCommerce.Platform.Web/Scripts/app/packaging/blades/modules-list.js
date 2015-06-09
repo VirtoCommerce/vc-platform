@@ -8,6 +8,8 @@
         modules.getModules({}, function (results) {
             $scope.blade.isLoading = false;
             $scope.blade.currentEntities = results;
+        }, function (error) {
+            bladeNavigationService.setError('Error ' + error.status, $scope.blade);
         });
     };
 

@@ -8,7 +8,8 @@
                 categoryListBlade.setSelectedItem(data);
                 categoryListBlade.refresh();
             });
-        });
+        },
+        function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
     }
 
     $scope.openBlade = function (type) {

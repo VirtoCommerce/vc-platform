@@ -20,7 +20,8 @@
                     template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/item-detail.tpl.html'
                 };
                 bladeNavigationService.showBlade(newBlade, blade.parentBlade);
-            });
+            },
+            function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
     }
 
     $scope.openBlade = function (type) {

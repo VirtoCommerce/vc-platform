@@ -24,7 +24,8 @@
             if (parentRefresh) {
                 blade.parentBlade.refresh();
             }
-        });
+        },
+        function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
     }
 
     //$scope.onTitularChange = function () {
@@ -50,25 +51,8 @@
         blade.isLoading = true;
         items.updateitem({}, blade.item, function () {
             blade.refresh(true);
-        }, function (error) {
-            bladeNavigationService.setError('Error ' + error.status, $scope.blade);
-        });
-    };
-
-    function closeThisBlade(closeCallback) {
-        if (blade.childrenBlades.length > 0) {
-            var callback = function () {
-                if (blade.childrenBlades.length == 0) {
-                    closeCallback();
-                };
-            };
-            angular.forEach(blade.childrenBlades, function (child) {
-                bladeNavigationService.closeBlade(child, callback);
-            });
-        }
-        else {
-            closeCallback();
-        }
+        },
+        function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
     };
 
     blade.onClose = function (closeCallback) {
@@ -82,12 +66,12 @@
                 if (needSave) {
                     saveChanges();
                 }
-                closeThisBlade(closeCallback);
+                closeCallback();
             };
             dialogService.showConfirmationDialog(dialog);
         }
         else {
-            closeThisBlade(closeCallback);
+            closeCallback();
         }
     };
 
