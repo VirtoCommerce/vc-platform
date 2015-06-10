@@ -53,8 +53,6 @@ angular.module('platformWebApp')
             element.removeAttr("va-blade");
             $compile(element)(scope);
 
-            var speed = (window.navigator.platform == 'MacIntel' ? .5 : 40);
-
             var mainContent = $('.cnt');
             var blade = $(element).parent('.blade');
             var offset = parseInt(blade.offset().left + mainContent.scrollLeft() + blade.width() + 125 - mainContent[0].clientWidth);
@@ -70,68 +68,10 @@ angular.module('platformWebApp')
             }
 
             $timeout(function () {
-
                 if (offset > mainContent.scrollLeft()) {
                     mainContent.animate({ scrollLeft: offset + 'px' }, 500);
                 }
-
-
             }, 0, false);
-
-
-            //Somehow vertical scrollbar does not work initially so need to turn it on
-            // $(element).find('.blade-content').off('mousewheel').on('mousewheel', function (event, delta)
-            // {
-            //     this.scrollTop -= (delta * speed);
-            //     event.preventDefault();
-            // });
-
-            $(element).find('.blade-container').on('mouseenter', function (e) {
-                var blade = $(this),
-                    bladeI = blade.find('.blade-inner'),
-                    bladeH = bladeI.height(),
-                    bladeIh = blade.find('.inner-block').height() + 5;
-
-                if (blade.length) {
-                    if (bladeH <= bladeIh) {
-                        horizontalScroll('off');
-                    }
-                    else {
-                        horizontalScroll('on');
-                    }
-                }
-            }).on('mouseleave', function () {
-                horizontalScroll('on');
-            });
-
-            $('.dashboard-area').on('mouseenter', function (event) {
-                var dashboardA = $(this),
-                    dashboardH = dashboardA.height(),
-                    dashboardIh = dashboardA.find('.dashboard-inner').height();
-
-                if (dashboardA.length) {
-                    if (dashboardH <= dashboardIh) {
-                        horizontalScroll('off');
-                    }
-                    else {
-                        horizontalScroll('on');
-                    }
-                }
-            }).on('mouseleave', function () {
-                horizontalScroll('on');
-            });
-
-            function horizontalScroll(flag) {
-                if (flag != 'off') {
-                    $('.cnt').off('mousewheel').on('mousewheel', function (event, delta) {
-                        this.scrollLeft -= (delta * speed);
-                        event.preventDefault();
-                    });
-                }
-                else {
-                    $('.cnt').unmousewheel();
-                }
-            }
 
             scope.bladeMaximize = function () {
                 scope.maximized = true;
@@ -262,7 +202,7 @@ angular.module('platformWebApp')
                 //Show blade as last one by default
                 blade.xindex = service.stateBlades().length;
             }
-            
+
             var showBlade = function () {
                 if (angular.isDefined(parentBlade)) {
                     blade.xindex = service.stateBlades().indexOf(parentBlade) + 1;
