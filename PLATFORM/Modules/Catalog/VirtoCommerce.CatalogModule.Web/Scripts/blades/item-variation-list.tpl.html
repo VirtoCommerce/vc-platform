@@ -9,7 +9,8 @@
 <div class="blade-content __medium-wide">
     <div class="blade-inner">
         <div class="inner-block">
-            <div class="table-wrapper">
+            <div class="text" ng-if="blade.item.variations.length == 0">No Variations yet</div>
+            <div class="table-wrapper" ng-show="blade.item.variations.length > 0">
                 <table class="table">
                     <thead>
                         <tr>
@@ -20,8 +21,8 @@
                                 </label>
                             </th>
                             <th class="table-col __product-img">Pic</th>
-                            <th class="table-col __product-code">Code</th>
-                            <th class="table-col __product-name">Properties</th>
+                            <th class="table-col __product-name">Name</th>
+                            <th class="table-col __product-code">SKU</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -38,17 +39,11 @@
                                     <i class="table-ico fa fa-image" ng-if="!data.imgSrc" />
                                 </div>
                             </td>
+                            <td class="table-col __product-name" ng-click='selectVariation(data)'>
+                                {{data.name}}
+                            </td>
                             <td class="table-col __product-code" ng-click='selectVariation(data)'>
                                 {{data.code}}
-                            </td>
-                            <td class="table-col __product-name" ng-click='selectVariation(data)'>
-                                <ul class="list __tags">
-                                    <li class="list-item" ng-repeat="property in data.properties | filter: {type:'Variation'}">
-                                        <i class="list-ico fa fa-tags"></i>
-                                        <div class="list-name">{{property.name}}: </div>
-                                        <div class="list-name" ng-repeat="value in property.values">{{value.value}}</div>
-                                    </li>
-                                </ul>
                             </td>
                         </tr>
                     </tbody>
