@@ -263,21 +263,38 @@ angular.module('platformWebApp')
                 blade.xindex = service.stateBlades().length;
             }
 
-            if (angular.isDefined(parentBlade)) {
-                blade.xindex = service.stateBlades().indexOf(parentBlade) + 1;
-                closeChildren(parentBlade);
-                parentBlade.childrenBlades.push(blade);
-            }
+           
 
             var showBlade = function () {
+
+            	if (angular.isDefined(parentBlade)) {
+            		blade.xindex = service.stateBlades().indexOf(parentBlade) + 1;
+            		parentBlade.childrenBlades.push(blade);
+            	}
                 //show blade in same place where it been
                 service.stateBlades().splice(Math.min(blade.xindex, service.stateBlades().length), 0, blade);
                 service.currentBlade = blade;
             };
 
-            if (angular.isDefined(existingBlade) && angular.isUndefined(parentBlade)) {
-                service.closeBlade(existingBlade, showBlade);
-            } else {
+            if (angular.isDefined(parentBlade) && parentBlade.childrenBlades.length > 0)
+            {
+            	if (parentBlade.childrenBlades) {
+            		var childBadesCount = parentBlade.childrenBlades.length;
+            		angular.forEach(parentBlade.childrenBlades.slice(), function (child) {
+	           			service.closeBlade(child, function () {
+            				childBadesCount--;
+							//Only show when all child was closed
+            				if (childBadesCount == 0) {
+            					showBlade();
+            				}
+            			});
+            		});
+            	}
+            }
+			else if (angular.isDefined(existingBlade)) {
+            	service.closeBlade(existingBlade, showBlade);
+            }
+            else {
                 showBlade();
             }
         },
