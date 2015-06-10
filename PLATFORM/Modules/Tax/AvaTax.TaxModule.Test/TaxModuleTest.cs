@@ -41,6 +41,7 @@ namespace AvaTax.TaxModule.Test
         {
             var testOrder = GetTestOrder("order1");
             var result = _controller.Total(testOrder) as OkNegotiatedContentResult<CustomerOrder>;
+            Assert.NotNull(result);
             Assert.NotNull(result.Content);
             Assert.NotEqual(result.Content.Tax, 0);
         }
@@ -51,6 +52,7 @@ namespace AvaTax.TaxModule.Test
         {
             var testCart = GetTestCart("cart1");
             var result = _controller.CartTotal(testCart) as OkNegotiatedContentResult<ShoppingCart>;
+            Assert.NotNull(result);
             Assert.NotNull(result.Content);
             Assert.NotEqual(result.Content.TaxTotal, 0);
         }
