@@ -34,6 +34,11 @@ namespace VirtoCommerce.CatalogModule.Web.BackgroundJobs
 		private readonly IPricingService _pricingService;
 		private readonly IInventoryService _inventoryService;
 
+		internal CsvCatalogExportJob()
+		{
+
+		}
+
 		public CsvCatalogExportJob(ICatalogSearchService catalogSearchService,
 								ICategoryService categoryService, IItemService productService,
 								INotifier notifier, CacheManager cacheManager, IBlobStorageProvider blobProvider, IBlobUrlResolver blobUrlResolver,
