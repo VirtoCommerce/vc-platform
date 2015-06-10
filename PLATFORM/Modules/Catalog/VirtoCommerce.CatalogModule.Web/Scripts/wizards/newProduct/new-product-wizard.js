@@ -66,7 +66,7 @@
                         id: "newProductEditorialReviewsList",
                         currentEntities: blade.item.reviews,
                         title: blade.item.name,
-                        subtitle: 'Product Reviews',
+                        subtitle: 'Product Editorial Reviews',
                         controller: 'virtoCommerce.catalogModule.newProductWizardReviewsController',
                         template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/editorialReviews-list.tpl.html'
                     };
