@@ -2,7 +2,7 @@
     <va-breadcrumb ng-model="blade.breadcrumbs"></va-breadcrumb>
     <div class="form-group">
         <div class="form-input __search">
-            <input type="text" placeholder="Search keyword..." ng-model="filter.searchKeyword" ui-keyup="{'enter':'blade.refresh()'}">
+            <input placeholder="Search keyword..." ng-model="filter.searchKeyword" ui-keyup="{'enter':'blade.refresh()'}">
         </div>
         <p class="form-count">Count: <span class="count">{{pageSettings.totalItems}}</span></p>
     </div>
@@ -22,7 +22,7 @@
                             </th>
                             <th class="table-col __product-img">Pic</th>
                             <th class="table-col __product-name">Name</th>
-                            <th class="table-col __product-code">Code</th>
+                            <th class="table-col __product-code">SKU</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -40,7 +40,6 @@
                                 </div>
                             </td>
                             <td class="table-col __product-name" ng-click='selectItem($event, data)'>
-                                <!-- <i class="table-ico fa fa-link " ng-if="blade.catalog.virtual"></i> -->
                                 <i class="table-ico fa fa-link" ng-if="hasLinks(data)" title="This category is linked"></i>
                                 {{data.name}}
                                 <ul class="menu __context" role="menu" id="cil_menu_{{data.id+blade.level}}">
@@ -53,7 +52,7 @@
                                 </ul>
                             </td>
                             <td class="table-col __product-code" ng-click='selectItem($event, data)'>
-                                {{data.code}}
+                                {{data.type!=='category'?data.code:''}}
                             </td>
                         </tr>
                     </tbody>

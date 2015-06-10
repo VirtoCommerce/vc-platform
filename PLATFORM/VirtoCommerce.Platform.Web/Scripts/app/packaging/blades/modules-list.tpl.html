@@ -3,14 +3,14 @@
         <div class="form-input __search">
             <input placeholder="Search keyword..." ng-model="searchText">
         </div>
-        <p class="form-count">Count: <span class="count">{{(filteredEntities = (blade.currentEntities | filter:searchText)).length}}</span></p>
+        <p class="form-count">Count: <span class="count">{{filteredEntities.length}}</span></p>
     </div>
 </div>
 <div class="blade-content __medium-wide">
     <div class="blade-inner">
         <div class="inner-block">
             <div class="text" ng-if="blade.currentEntities.length == 0">No Modules yet</div>
-            <div class="table-wrapper" ng-if="blade.currentEntities.length > 0">
+            <div class="table-wrapper" ng-show="blade.currentEntities.length > 0">
                 <table class="table __normal">
                     <thead>
                         <tr>
@@ -21,7 +21,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr class="table-item" ng-repeat="data in filteredEntities track by data.id" ng-class="{'__selected': data.id === selectedEntityId}" ng-click='blade.selectItem(data.id)'>
+                        <tr class="table-item" ng-repeat="data in blade.currentEntities | filter:searchText as filteredEntities track by data.id" ng-class="{'__selected': data.id === selectedEntityId}" ng-click='blade.selectItem(data.id)'>
                             <td class="table-col">
                                 <div class="product-img">
                                     <!-- <div class="image" style="background-image: url({{data.iconUrl}})" ng-if="data.iconUrl"></div> -->
@@ -30,7 +30,7 @@
                             </td>
                             <td class="table-col">
                                 <span class="table-t" title="{{data.title}}">{{data.title}}</span>
-                                <span class="table-descr" title="{{data.description}}" class="blade-sw-title" style="overflow: hidden; text-overflow: ellipsis;">{{data.description}}</span>
+                                <span class="table-descr" title="{{data.description}}" style="overflow: hidden; text-overflow: ellipsis;">{{data.description}}</span>
                             </td>
                             <td class="table-col __version">
                                 <span>{{data.version}}</span>

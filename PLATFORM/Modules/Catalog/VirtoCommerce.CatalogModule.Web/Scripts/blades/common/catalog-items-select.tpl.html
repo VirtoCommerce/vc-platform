@@ -22,7 +22,7 @@
                             </th>
                             <th class="table-col __product-img">Pic</th>
                             <th class="table-col __product-name">Name</th>
-                            <th class="table-col __product-code">Code</th>
+                            <th class="table-col __product-code">SKU</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -44,7 +44,7 @@
 
                             </td>
                             <td class="table-col __product-code" ng-click='selectItem($event, data)'>
-                                {{data.code}}
+                                {{data.type!=='category'?data.code:''}}
                             </td>
                         </tr>
                     </tbody>

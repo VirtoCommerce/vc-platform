@@ -8,7 +8,7 @@
                         <input ng-class="{'error': detailForm.code.$invalid && !detailForm.code.$pristine}" required class="form-control" ng-model="blade.item.code" name="code" placeholder="Enter item sku" ui-validate=" 'codeValidator($value)' " />
                     </div>
                     <div class="form-error" data-ng-show="detailForm.code.$dirty">
-                        <span data-ng-show="detailForm.code.$error.validator">Code can't contain $+;=%{}[]|\/@ ~#!^*&()?:'<>, characters</span>
+                        <span data-ng-show="detailForm.code.$error.validator">SKU can't contain $+;=%{}[]|\/@ ~#!^*&()?:'<>, characters</span>
                     </div>
                 </div>
                 <div class="form-group">
@@ -41,7 +41,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="column" ng-if="blade.item.productType==='Shippable'">
+                        <div class="column" ng-if="blade.item.productType==='Physical'">
                             <div class="form-group">
                                 <div class="form-control __checkbox">
                                     <label class="form-label">
@@ -54,7 +54,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="form-group" ng-if="blade.item.productType==='Shippable'">
+                <div class="form-group" ng-if="blade.item.productType==='Physical'">
                     <div class="columns clearfix">
                         <div class="column">
                             <div class="form-group">

@@ -40,21 +40,21 @@
         $scope.blade.refresh();
     });
 
-    $scope.edit = function (listItem) {
-        $scope.selectedItem = listItem;
-        $scope.blade.showItemBlade(listItem.id, listItem.name);
-    };
+    //$scope.edit = function (listItem) {
+    //    $scope.selectedItem = listItem;
+    //    $scope.blade.showItemBlade(listItem.id, listItem.name);
+    //};
 
-    $scope.blade.showItemBlade = function (id, title) {
-        var newBlade = {
-            id: "listItemDetail",
-            itemId: id,
-            title: title,
-            controller: 'virtoCommerce.catalogModule.itemDetailController',
-            template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/item-detail.tpl.html'
-        };
-        bladeNavigationService.showBlade(newBlade, $scope.blade);
-    };
+    //$scope.blade.showItemBlade = function (id, title) {
+    //    var newBlade = {
+    //        id: "listItemDetail",
+    //        itemId: id,
+    //        title: title,
+    //        controller: 'virtoCommerce.catalogModule.itemDetailController',
+    //        template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/item-detail.tpl.html'
+    //    };
+    //    bladeNavigationService.showBlade(newBlade, $scope.blade);
+    //};
 
     $scope.delete = function () {
         if (isItemsChecked()) {

@@ -116,7 +116,7 @@
 
             blade.showItemBlade = function (id, title) {
                 var newBlade = {
-                    id: "listItemDetail",
+                    id: "listItemDetail" + blade.mode,
                     itemId: id,
                     title: title,
                     controller: 'virtoCommerce.catalogModule.itemDetailController',
