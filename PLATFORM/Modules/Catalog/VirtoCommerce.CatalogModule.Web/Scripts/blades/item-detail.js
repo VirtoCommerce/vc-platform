@@ -12,7 +12,7 @@
             blade.itemId = data.id;
             blade.title = data.code;
             if (!data.productType) {
-                data.productType = 'Shippable';
+                data.productType = 'Physical';
             }
             blade.subtitle = data.productType + ' item details';
             $scope.isTitular = data.titularItemId == null;
