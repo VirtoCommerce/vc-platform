@@ -5,12 +5,12 @@ using System.Collections.Generic;
 
 namespace VirtoCommerce.Web.Views.Contents
 {
-
-    #region
-    #endregion
-
     public class SiteStaticContentContext
     {
+        public SiteStaticContentContext()
+        {
+            
+        }
         #region Public Properties
         public Dictionary<string, ContentItem[]> Collections { get; set; }
 

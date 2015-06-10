@@ -7,6 +7,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Caching;
 using MarkdownDeep;
+using VirtoCommerce.Web.Views.Contents.Extensions;
 using VirtoCommerce.Web.Views.Engines.Liquid.Extensions;
 
 #endregion
@@ -16,17 +17,16 @@ namespace VirtoCommerce.Web.Views.Contents
     public class PublishingService
     {
         #region Static Fields
-        private static readonly Markdown Markdown = new Markdown();
+        private static readonly Markdown _markdown = new Markdown();
         #endregion
 
         #region Fields
-        private readonly SiteStaticContentContext Context;
+        private readonly SiteStaticContentContext _context;
 
         private readonly FileSystem _fileSystem;
 
         private readonly ITemplateEngine[] _templateEngines;
 
-        private Dictionary<string, object> _Config;
         #endregion
 
         #region Constructors and Destructors
@@ -36,7 +36,7 @@ namespace VirtoCommerce.Web.Views.Contents
             this._fileSystem = new FileSystem();
 
             // Now lets build the context
-            this.Context = this.BuildSiteContext(sourceFolder);
+            this._context = this.BuildSiteContext(sourceFolder);
         }
         #endregion
 
@@ -44,7 +44,7 @@ namespace VirtoCommerce.Web.Views.Contents
         public ContentItem[] GetCollectionContentItems(string collectioName)
         {
             return
-                this.Context.Collections.Where(col => col.Key.Equals(collectioName, StringComparison.OrdinalIgnoreCase))
+                this._context.Collections.Where(col => col.Key.Equals(collectioName, StringComparison.OrdinalIgnoreCase))
                     .Select(x => x.Value)
                     .SingleOrDefault();
         }
@@ -52,7 +52,7 @@ namespace VirtoCommerce.Web.Views.Contents
         public ContentItem GetContentItem(string name)
         {
             return
-                this.Context.Collections.SelectMany(pages => pages.Value)
+                this._context.Collections.SelectMany(pages => pages.Value)
                     .SingleOrDefault(page => page.Url.Equals(name, StringComparison.OrdinalIgnoreCase));
         }
         #endregion
@@ -60,7 +60,7 @@ namespace VirtoCommerce.Web.Views.Contents
         #region Methods
         private SiteStaticContentContext BuildSiteContext(string sourceFolder)
         {
-            var contextKey = "vc-no-cms";
+            var contextKey = "vc-no-cms" + sourceFolder;
             var value = HttpRuntime.Cache.Get(contextKey);
 
             if (value != null)
@@ -68,15 +68,7 @@ namespace VirtoCommerce.Web.Views.Contents
                 return value as SiteStaticContentContext;
             }
 
-            this._Config = new Dictionary<string, object>();
-            var configPath = Path.Combine(sourceFolder, "config.yml");
-            if (this._fileSystem.File.Exists(configPath))
-            {
-                this._Config =
-                    (Dictionary<string, object>)this._fileSystem.File.ReadAllText(configPath).YamlHeader(true);
-            }
-
-            var context = new SiteStaticContentContext() { SourceFolder = sourceFolder, Config = this._Config };
+            var context = CreateStaticContext(sourceFolder);
 
             var collections = new Dictionary<string, ContentItem[]>();
 
@@ -99,6 +91,10 @@ namespace VirtoCommerce.Web.Views.Contents
                     collections.Add(collectionName, items);
                 }
 
+                // set URLs
+                var allItems = collections.SelectMany(x => x.Value).ToList();
+                allItems.SetPostUrl(context);
+
                 // populate collection object
                 context.Collections = collections;
 
@@ -117,8 +113,7 @@ namespace VirtoCommerce.Web.Views.Contents
 
         private ContentItem CreateContentItem(
             SiteStaticContentContext context,
-            string path,
-            Dictionary<string, object> config)
+            string path)
         {
             // 1: Read raw contents and meta data. Determine contents format and read it into Contents property, create RawContentItem.
             var rawItem = this.CreateRawItem(path);
@@ -147,6 +142,21 @@ namespace VirtoCommerce.Web.Views.Contents
             }
 
             return null;
+        }
+
+        private SiteStaticContentContext CreateStaticContext(string sourceFolder)
+        {
+            var config = new Dictionary<string, object>();
+            var configPath = Path.Combine(sourceFolder, "config.yml");
+            if (this._fileSystem.File.Exists(configPath))
+            {
+                config =
+                    (Dictionary<string, object>)this._fileSystem.File.ReadAllText(configPath).YamlHeader(true);
+            }
+
+            var context = new SiteStaticContentContext() { SourceFolder = sourceFolder, Config = config };
+
+            return context;
         }
 
         private RawContentItem CreateRawItem(string file)
@@ -197,8 +207,8 @@ namespace VirtoCommerce.Web.Views.Contents
             {
                 items.AddRange(
                     this._fileSystem.Directory.GetFiles(collectionFolder, "*.*", SearchOption.AllDirectories)
-                        .Select(file => this.CreateContentItem(context, file, this._Config))
-                        .Where(post => post != null));
+                        .Select(file => this.CreateContentItem(context, file))
+                        .Where(post => post != null).Where(post => post.Published != Published.Private));
             }
 
             return items;
@@ -216,7 +226,7 @@ namespace VirtoCommerce.Web.Views.Contents
             {
                 var contentsWithoutHeader = contents.ExcludeHeader();
                 html = string.Equals(Path.GetExtension(file), ".md", StringComparison.InvariantCultureIgnoreCase)
-                    ? Markdown.Transform(contentsWithoutHeader)
+                    ? _markdown.Transform(contentsWithoutHeader)
                     : contentsWithoutHeader;
 
                 //html = contentTransformers.Aggregate(html, (current, contentTransformer) => contentTransformer.Transform(current));
