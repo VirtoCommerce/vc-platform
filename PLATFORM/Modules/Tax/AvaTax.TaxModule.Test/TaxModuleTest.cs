@@ -4,10 +4,11 @@ using System.Linq;
 using System.Web.Http.Results;
 using AvaTax.TaxModule.Web.Controller;
 using AvaTax.TaxModule.Web.Managers;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using VirtoCommerce.Domain.Cart.Model;
 using VirtoCommerce.Domain.Order.Model;
 using VirtoCommerce.Platform.Core.Common;
+using Xunit;
+
 using Address = VirtoCommerce.Domain.Order.Model.Address;
 using AddressType = VirtoCommerce.Domain.Order.Model.AddressType;
 using Coupon = VirtoCommerce.Domain.Order.Model.Coupon;
@@ -25,33 +26,33 @@ using CartPayment = VirtoCommerce.Domain.Cart.Model.Payment;
 
 namespace AvaTax.TaxModule.Test
 {
-    [TestClass]
     public class TaxModuleTest
     {
-        private AvaTaxController _controller;
+        private readonly AvaTaxController _controller;
 
-        [TestInitialize]
-        public void Initialize()
+        public TaxModuleTest()
         {
             _controller = GetTaxController();
         }
 
-        [TestMethod]
+        [Fact]
+        [Trait("Category", "CI")]
         public void GetOrderTaxTotals()
         {
             var testOrder = GetTestOrder("order1");
             var result = _controller.Total(testOrder) as OkNegotiatedContentResult<CustomerOrder>;
-            Assert.IsNotNull(result.Content);
-            Assert.AreNotEqual(result.Content.Tax, 0);
+            Assert.NotNull(result.Content);
+            Assert.NotEqual(result.Content.Tax, 0);
         }
 
-        [TestMethod]
+        [Fact]
+        [Trait("Category", "CI")]
         public void GetCartTaxTotals()
         {
             var testCart = GetTestCart("cart1");
             var result = _controller.CartTotal(testCart) as OkNegotiatedContentResult<ShoppingCart>;
-            Assert.IsNotNull(result.Content);
-            Assert.AreNotEqual(result.Content.TaxTotal, 0);
+            Assert.NotNull(result.Content);
+            Assert.NotEqual(result.Content.TaxTotal, 0);
         }
 
         private static CustomerOrder GetTestOrder(string id)
