@@ -104,16 +104,16 @@ angular.module(catalogsModuleName, [
       notificationTemplateResolver.register(historyImportTemplate);
 	
       //Register dashboard widgets
-      widgetService.registerWidget({
-          isVisible: function (blade) { return authService.checkPermission('catalog:query'); },
-          controller: 'virtoCommerce.catalogModule.dashboard.catalogsWidgetController',
-          template: 'tile-count.html'
-      }, 'mainDashboard');
-      widgetService.registerWidget({
-          isVisible: function (blade) { return authService.checkPermission('catalog:query'); },
-          controller: 'virtoCommerce.catalogModule.dashboard.productsWidgetController',
-          template: 'tile-count.html'
-      }, 'mainDashboard');
+      //widgetService.registerWidget({
+      //    isVisible: function () { return authService.checkPermission('catalog:query'); },
+      //    controller: 'virtoCommerce.catalogModule.dashboard.catalogsWidgetController',
+      //    template: 'tile-count.html'
+      //}, 'mainDashboard');
+      //widgetService.registerWidget({
+      //    isVisible: function () { return authService.checkPermission('catalog:query'); },
+      //    controller: 'virtoCommerce.catalogModule.dashboard.productsWidgetController',
+      //    template: 'tile-count.html'
+      //}, 'mainDashboard');
 
       //Register image widget
       var itemImageWidget = {

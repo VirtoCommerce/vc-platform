@@ -68,9 +68,9 @@ angular.module(moduleName, [])
       mainMenuService.addMenuItem(menuItem);
 
       //Register dashboard widgets
-      widgetService.registerWidget({
-          isVisible: function (blade) { return authService.checkPermission('marketing:query'); },
-          controller: 'virtoCommerce.marketingModule.dashboard.promotionsWidgetController',
-          template: 'tile-count.html'
-      }, 'mainDashboard');
+      //widgetService.registerWidget({
+      //    isVisible: function (blade) { return authService.checkPermission('marketing:query'); },
+      //    controller: 'virtoCommerce.marketingModule.dashboard.promotionsWidgetController',
+      //    template: 'tile-count.html'
+      //}, 'mainDashboard');
   }]);
