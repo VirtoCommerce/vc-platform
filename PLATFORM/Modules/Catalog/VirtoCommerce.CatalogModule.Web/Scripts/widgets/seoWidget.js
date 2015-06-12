@@ -1,34 +1,34 @@
 ﻿angular.module('virtoCommerce.catalogModule')
 .controller('virtoCommerce.catalogModule.seoWidgetController', ['$scope', 'platformWebApp.bladeNavigationService', function ($scope, bladeNavigationService) {
-    $scope.currentBlade = $scope.widget.blade;
+    var blade = $scope.widget.blade;
 
     $scope.openSeoBlade = function () {
-        var blade = {
+        var newBlade = {
             id: "seoDetail",
             seoUrlKeywordType: getSeoUrlKeywordType(),
-            parentEntity: getParentEntity(),
-            title: $scope.currentBlade.title,
-            subtitle: 'Seo details',
+            isNew: blade.isNew,
+            title: blade.title,
             controller: 'virtoCommerce.catalogModule.seoDetailController',
             template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/seo-detail.tpl.html'
         };
 
-        bladeNavigationService.showBlade(blade, $scope.currentBlade);
+        bladeNavigationService.showBlade(newBlade, blade);
     };
 
     function getSeoUrlKeywordType() {
-        if (angular.isDefined($scope.currentBlade.currentEntity)) {
-            return 0;  // SeoUrlKeywordTypes enum
-        } else {
-            return 1;
+        switch (blade.controller) {
+            case "virtoCommerce.catalogModule.categoryDetailController":
+            case "virtoCommerce.catalogModule.newCategoryWizardController":
+                return 0; // SeoUrlKeywordTypes enum
+            case "virtoCommerce.catalogModule.itemDetailController":
+            case "virtoCommerce.catalogModule.newProductWizardController":
+                return 1;
+            case "virtoCommerce.catalogModule.catalogDetailController":
+            case "virtoCommerce.catalogModule.virtualCatalogDetailController":
+                return 3;
+            default:
+                return null;
         }
     }
 
-    function getParentEntity() {
-        if (angular.isDefined($scope.currentBlade.currentEntity)) {
-            return $scope.currentBlade.currentEntity;
-        } else {
-            return $scope.currentBlade.item;
-        }
-    }
 }]);

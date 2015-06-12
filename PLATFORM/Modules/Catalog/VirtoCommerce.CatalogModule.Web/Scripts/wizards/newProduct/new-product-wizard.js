@@ -55,7 +55,7 @@
                     item: blade.item,
                     title: blade.item.name,
                     subtitle: 'Seo details',
-                    bottomTemplate: 'Modules/$(VirtoCommerce.Catalog)/Scripts/wizards/common/wizard-ok-action.tpl.html',
+                    isNew: true,
                     controller: 'virtoCommerce.catalogModule.newProductSeoDetailController',
                     template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/seo-detail.tpl.html'
                 };
