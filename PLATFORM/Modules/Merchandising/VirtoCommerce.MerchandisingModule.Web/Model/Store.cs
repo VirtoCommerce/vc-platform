@@ -33,6 +33,8 @@ namespace VirtoCommerce.MerchandisingModule.Web.Model
         public string TimeZone { get; set; }
         public string Url { get; set; }
 
+        public string State { get; set; }
+
         #endregion
     }
 }

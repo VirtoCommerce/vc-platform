@@ -4,8 +4,15 @@ using System.Web.Mvc;
 
 namespace VirtoCommerce.Web.Controllers
 {
+    [HandleError]
     public class ErrorsController : StoreControllerBase
     {
+        public ActionResult Index(int code)
+        {
+            Response.StatusCode = code;
+            return View(code);
+        }
+
         [HttpGet]
         public ActionResult Http404()
         {

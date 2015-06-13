@@ -33,9 +33,9 @@ namespace VirtoCommerce.ApiClient
 
         #region Fields
 
-        private readonly HttpClient httpClient;
-        private readonly HttpCache httpCache;
-        private bool disposed;
+        private readonly HttpClient _httpClient;
+        private readonly HttpCache _httpCache;
+        private bool _disposed;
 
         #endregion
 
@@ -49,12 +49,12 @@ namespace VirtoCommerce.ApiClient
         public BaseClient(Uri baseEndpoint, HttpMessageHandler handler = null)
         {
             BaseAddress = baseEndpoint;
-            httpCache = new HttpCache(_store);
-            var cachingHandler = new PrivateCacheHandler(handler ?? new HttpClientHandler(), httpCache);
+            this._httpCache = new HttpCache(_store);
+            var cachingHandler = new PrivateCacheHandler(handler ?? new HttpClientHandler(), this._httpCache);
 
             //httpClient = HttpClientFactory.Create(caheHandler);
-            httpClient = new HttpClient(cachingHandler);
-            disposed = false;
+            this._httpClient = new HttpClient(cachingHandler) { Timeout = TimeSpan.FromSeconds(90) };
+            this._disposed = false;
         }
 
         #endregion
@@ -141,13 +141,13 @@ namespace VirtoCommerce.ApiClient
         {
             if (disposing)
             {
-                if (!disposed)
+                if (!this._disposed)
                 {
-                    httpClient.Dispose();
+                    this._httpClient.Dispose();
                 }
             }
 
-            disposed = true;
+            this._disposed = true;
         }
         
         /// <summary>
@@ -167,7 +167,7 @@ namespace VirtoCommerce.ApiClient
                 message.Headers.Add("Cache-Control", "no-cache, no-, must-revalidate"); 
             }
 
-            using (var response = await httpClient.SendAsync(message))
+            using (var response = await this._httpClient.SendAsync(message))
             {
                 await ThrowIfResponseNotSuccessfulAsync(response);
 
@@ -179,7 +179,7 @@ namespace VirtoCommerce.ApiClient
                 if (!(response.Content is ObjectContent) && taskObject != null)
                 {
                     response.Content = new ObjectContent(typeof(T), taskObject, new JsonMediaTypeFormatter());
-                    await httpCache.StoreResponseAsync(response);
+                    await this._httpCache.StoreResponseAsync(response);
                 }
 
                 return await Task.FromResult((T)taskObject);
@@ -264,7 +264,7 @@ namespace VirtoCommerce.ApiClient
 
         private async Task<TOutput> SendAsync<TOutput>(HttpRequestMessage message, bool hasResult)
         {
-            using (var response = await httpClient.SendAsync(message).ConfigureAwait(false))
+            using (var response = await this._httpClient.SendAsync(message).ConfigureAwait(false))
             {
                 await ThrowIfResponseNotSuccessfulAsync(response);
 

@@ -96,7 +96,7 @@ namespace VirtoCommerce.Web
 
             if (shop == null)
             {
-                using (var reader = new System.IO.StreamReader(HttpContext.Current.Server.MapPath("~/default.html")))
+                using (var reader = new System.IO.StreamReader(HttpContext.Current.Server.MapPath("~/App_data/Help/nostore.html")))
                 {
                     var content = await reader.ReadToEndAsync();
                     await context.Response.WriteAsync(content);
@@ -115,7 +115,7 @@ namespace VirtoCommerce.Web
                     language = shop.DefaultLanguage;
                     if (String.IsNullOrEmpty(language))
                     {
-                        throw new HttpException(404, "Store Language Not Designed");
+                        throw new HttpException(404, "Store language not found");
                     }
 
                     CultureInfo.DefaultThreadCurrentUICulture = new CultureInfo(language);
@@ -269,11 +269,6 @@ namespace VirtoCommerce.Web
                 language = String.Empty;
             }
 
-            //if (string.IsNullOrEmpty(language))
-            //{
-            //    language = SiteContext.Current.Shop.DefaultLanguage;
-            //}
-
             return language;
         }
 
@@ -360,12 +355,6 @@ namespace VirtoCommerce.Web
                         store = null;
                     }
                 }
-                    /*
-                else
-                {
-                    return null;
-                }
-                     * */
             }
 
             if (store == null)
@@ -437,23 +426,10 @@ namespace VirtoCommerce.Web
             return null;
         }
 
-        private ICollection<LoginProvider> GetExternalLoginProviders(IOwinContext context)
+        private IEnumerable<LoginProvider> GetExternalLoginProviders(IOwinContext context)
         {
-            var providersModel = new List<LoginProvider>();
-
             var providers = context.Authentication.GetExternalAuthenticationTypes();
-
-            foreach (var provider in providers)
-            {
-                providersModel.Add(new LoginProvider
-                {
-                    AuthenticationType = provider.AuthenticationType,
-                    Caption = provider.Caption,
-                    Properties = provider.Properties
-                });
-            }
-
-            return providersModel;
+            return providers.Select(provider => new LoginProvider {AuthenticationType = provider.AuthenticationType, Caption = provider.Caption, Properties = provider.Properties}).ToList();
         }
 
         private string GetStoreIdFromRoute(RouteValueDictionary values)
