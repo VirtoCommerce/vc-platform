@@ -8,7 +8,8 @@
 
     catalogs.getCatalogs({}, function (data) {
         $scope.data.count = data.length;
-    });
+    },
+    function (error) { });
 }])
 .controller('virtoCommerce.catalogModule.dashboard.productsWidgetController', ['$scope', '$state', 'virtoCommerce.catalogModule.listEntries', function ($scope, $state, listEntries) {
     $scope.data = { count: '', descr: 'Products' };
@@ -19,6 +20,7 @@
 
     listEntries.listitemssearch({ count: 0 }, function (data) {
         $scope.data.count = data.totalCount;
-    });
+    },
+    function (error) { });
 }])
 ;

@@ -263,6 +263,7 @@
     <Content Include="App_Data\Themes\_Global\templates\banner.liquid" />
     <Content Include="App_Data\Themes\_Global\templates\payment.liquid" />
     <None Include="App_Data\Themes\_Global\templates\reset-password.liquid" />
+    <Content Include="App_Data\Help\nostore.html" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="App_Data\configuration\connectionStrings.config" />

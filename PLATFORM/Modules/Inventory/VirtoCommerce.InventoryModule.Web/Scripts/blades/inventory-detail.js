@@ -36,7 +36,8 @@
         $scope.blade.isLoading = true;
         inventories.update({ id: $scope.blade.itemId }, $scope.blade.currentEntity, function () {
             $scope.blade.refresh();
-        });
+        },
+        function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
     };
 
     $scope.blade.onClose = function (closeCallback) {

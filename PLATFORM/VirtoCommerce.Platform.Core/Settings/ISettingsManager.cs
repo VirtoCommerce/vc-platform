@@ -6,7 +6,7 @@ namespace VirtoCommerce.Platform.Core.Settings
         ModuleDescriptor[] GetModules();
 		SettingEntry[] GetObjectSettings(string objectType, string objectId);
 		void RemoveObjectSettings(string objectType, string objectId);
-
+		SettingEntry GetSettingByName(string name);
 		SettingEntry[] GetModuleSettings(string moduleId);
 		void SaveSettings(SettingEntry[] settings);
 

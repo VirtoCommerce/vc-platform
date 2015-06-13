@@ -28,7 +28,8 @@
 					};
 				
 					bladeNavigationService.showBlade(newBlade);
-				});
+				},
+                function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
 			}
 		};
 
@@ -57,11 +58,10 @@
 				};
 			
 				bladeNavigationService.showBlade(newBlade);
-			});
+			},
+            function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
 		}
-
 	};
-
 
 	$scope.availOperationsMap = {
 		'customerorder': [shipmentOperation, paymentOperation],

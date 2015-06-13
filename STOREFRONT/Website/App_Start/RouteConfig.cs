@@ -17,6 +17,11 @@ namespace VirtoCommerce.Web
             routes.MapSeoRoutes(); // maps seo defined on product, category and store levels in virto commerce
 
             routes.MapRoute(
+              name: "Error",
+              url: "Error/{code}",
+              defaults: new { controller = "Error", action = "Index", code = 500 });
+
+            routes.MapRoute(
                 name: "Default",
                 url: "{controller}/{action}/{id}",
                 defaults:new { controller = "Home", action = "Index", id = UrlParameter.Optional });

@@ -22,7 +22,8 @@ function ($injector, $rootScope, $scope, catalogs, bladeNavigationService, dialo
                 });
             }
             setBreadcrumps();
-        });
+        },
+        function (error) { bladeNavigationService.setError('Error ' +error.status, $scope.blade); });
 
     };
 
@@ -108,7 +109,6 @@ function ($injector, $rootScope, $scope, catalogs, bladeNavigationService, dialo
                         blade.refresh();
                         $scope.refreshItems();
                     }, function (error) {
-                        blade.isLoading = false;
                         bladeNavigationService.setError('Error ' + error.status, blade);
                     });
                 }

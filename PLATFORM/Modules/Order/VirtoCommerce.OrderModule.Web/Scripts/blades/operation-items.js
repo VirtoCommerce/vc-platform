@@ -35,7 +35,6 @@
     function addProductsToOrder(products) {
         angular.forEach(products, function (product) {
             items.get({ id: product.id }, function (data) {
-
                 prices.getProductPrices({ id: product.id }, function (prices) {
                     var price = _.find(prices, function (x) { return x.currency == $scope.blade.currentEntity.currency });
 
@@ -53,10 +52,10 @@
 					    currency: $scope.blade.currentEntity.currency
 					};
                     $scope.blade.currentEntity.items.push(newLineItem);
-                });
-
-            });
-
+                },
+                function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
+            },
+            function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
         });
     };
 

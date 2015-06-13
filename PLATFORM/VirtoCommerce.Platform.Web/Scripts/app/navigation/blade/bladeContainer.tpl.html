@@ -22,8 +22,8 @@
                             Maximize
                         </button>
                     </li>
-                    <li class="menu-item __close" ng-click="bladeClose()" ng-class="{'__disabled': blade.isClosingDisabled}">
-                        <button ng-disabled="blade.isClosingDisabled">
+                    <li class="menu-item __close" ng-click="bladeClose()" ng-class="{'__disabled': blade.isClosingDisabled}" ng-disabled="blade.isClosingDisabled">
+                        <button>
                             Close
                         </button>
                     </li>
@@ -38,8 +38,8 @@
             </div>
             <div class="blade-toolbar">
                 <ul class="menu __inline">
-                    <li class="menu-item" ng-class="{'__disabled': !toolbarCommand.canExecuteMethod(blade)}" ng-click='toolbarCommand.executeMethod(blade)' ng-repeat="toolbarCommand in resolvedToolbarCommands" va-permission="{{toolbarCommand.permission}}">
-                        <button class="menu-btn" ng-disabled="!toolbarCommand.canExecuteMethod(blade)">
+                    <li class="menu-item" ng-class="{'__disabled': !toolbarCommand.canExecuteMethod(blade)}" ng-click='toolbarCommand.executeMethod(blade)' ng-repeat="toolbarCommand in resolvedToolbarCommands" ng-disabled="!toolbarCommand.canExecuteMethod(blade)" va-permission="{{toolbarCommand.permission}}">
+                        <button class="menu-btn">
                             <i class="menu-ico" ng-class="toolbarCommand.icon"></i>
                             {{toolbarCommand.name}}
                         </button>

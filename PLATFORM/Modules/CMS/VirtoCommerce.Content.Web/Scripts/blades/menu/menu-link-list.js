@@ -96,9 +96,11 @@
 					    },
 					    permission: 'content:manage'
 					}];
-                });
+                },
+                function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
             }
-        });
+        },
+        function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
     }
 
     $scope.selected = function (id) {
@@ -116,7 +118,8 @@
                     blade.newList = false;
                     blade.initialize();
                     blade.parentBlade.initialize();
-                });
+                },
+                function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
             }
             else {
                 blade.isLoading = false;
@@ -130,7 +133,8 @@
                 }
                 dialogService.showNotificationDialog(dialog);
             }
-        });
+        },
+        function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
     };
 
     function canSave() {
@@ -156,7 +160,8 @@
                     menus.delete({ storeId: blade.choosenStoreId, listId: blade.choosenListId }, function () {
                         $scope.bladeClose();
                         blade.parentBlade.initialize();
-                    });
+                    },
+                    function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
                 }
             }
         }

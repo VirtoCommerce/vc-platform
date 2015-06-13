@@ -50,7 +50,6 @@
 			    setBreadcrumps();
 
 			}, function (error) {
-			    $scope.blade.isLoading = false;
 			    bladeNavigationService.setError('Error ' + error.status, $scope.blade);
 			});
         }
@@ -63,7 +62,6 @@
                 setBreadcrumps();
 
             }, function (error) {
-                $scope.blade.isLoading = false;
                 bladeNavigationService.setError('Error ' + error.status, $scope.blade);
             });
         }

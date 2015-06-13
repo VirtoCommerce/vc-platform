@@ -9,9 +9,9 @@
     blade.initialize = function () {
         marketing_dynamicContents_res_search.search({ respGroup: '8' }, function (data) {
             blade.currentEntities = data.contentPublications;
-        });
-
-        blade.isLoading = false;
+            blade.isLoading = false;
+        },
+        function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
     };
 
     blade.addNewPublishing = function () {

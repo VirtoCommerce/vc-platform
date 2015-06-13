@@ -81,7 +81,8 @@
             angular.copy($scope.blade.currentEntities, $scope.blade.data.productPrices[0].prices);
             prices.update({ id: $scope.blade.itemId }, $scope.blade.data, function (data) {
                 $scope.blade.refresh(true);
-            });
+            },
+            function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
         } else {
             angular.copy($scope.blade.currentEntities, $scope.blade.data.prices);
             angular.copy($scope.blade.currentEntities, $scope.blade.origEntity);

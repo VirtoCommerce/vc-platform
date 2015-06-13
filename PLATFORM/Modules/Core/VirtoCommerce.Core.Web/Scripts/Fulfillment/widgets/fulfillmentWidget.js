@@ -6,6 +6,8 @@
         $scope.currentNumberInfo = '...';
         return fulfillments.query({}, function (results) {
             $scope.currentNumberInfo = results.length;
+        }, function (error) {
+            //bladeNavigationService.setError('Error ' + error.status, $scope.blade);
         });
     }
 

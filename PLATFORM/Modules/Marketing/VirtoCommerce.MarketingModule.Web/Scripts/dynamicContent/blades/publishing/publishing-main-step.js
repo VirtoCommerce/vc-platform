@@ -44,10 +44,11 @@
 				        permission: 'marketing:manage'
 				    }
                 ];
-            });
+            },
+            function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
         }
         else {
-            contentPublications.getNew(initializeBlade);
+            contentPublications.getNew(initializeBlade, function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
         }
     }
 
@@ -110,7 +111,8 @@
                 blade.initializeBlade();
                 blade.parentBlade.isLoading = true;
                 blade.parentBlade.initialize();
-            });
+            },
+            function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
         }
         else {
             contentPublications.update({}, blade.entity, function (data) {
@@ -121,7 +123,8 @@
                 blade.initializeBlade();
                 blade.parentBlade.isLoading = true;
                 blade.parentBlade.initialize();
-            });
+            },
+            function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
         }
     }
 
@@ -135,7 +138,8 @@
         contentPublications.delete({ ids: [blade.entity.id] }, function () {
             blade.parentBlade.isLoading = true;
             blade.parentBlade.initialize();
-        });
+        },
+        function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
     }
 
     blade.checkDifferense = function () {

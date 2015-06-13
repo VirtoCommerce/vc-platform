@@ -19,44 +19,23 @@ using System.Collections.Generic;
 using VirtoCommerce.Domain.Pricing.Services;
 using VirtoCommerce.Domain.Inventory.Services;
 using VirtoCommerce.Domain.Commerce.Services;
+using VirtoCommerce.Platform.Core.Settings;
 namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 {
-    [RoutePrefix("api/catalog")]
-    public class CatalogModuleExportImportController : ApiController
-    {
+	[RoutePrefix("api/catalog")]
+	public class CatalogModuleExportImportController : ApiController
+	{
 		private readonly ICatalogService _catalogService;
-		private readonly ICatalogSearchService _searchService;
-		private readonly ICategoryService _categoryService;
-		private readonly IItemService _productService;
 		private readonly INotifier _notifier;
-		private readonly CacheManager _cacheManager;
+		private readonly ISettingsManager _settingsManager;
 		private readonly IBlobStorageProvider _blobStorageProvider;
-		private readonly IBlobUrlResolver _blobUrlResolver;
-		private readonly ISkuGenerator _skuGenerator;
-		private readonly IPricingService _pricingService;
-		private readonly IInventoryService _inventoryService;
-		private readonly ICommerceService _commerceService;
-		private readonly IPropertyService _propertyService;
 
-		public CatalogModuleExportImportController(ICatalogService catalogService, ICatalogSearchService catalogSearchService,
-								ICategoryService categoryService, IItemService productService,
-								INotifier notifier, CacheManager cacheManager, IBlobStorageProvider blobProvider,
-								IBlobUrlResolver blobUrlResolver, ISkuGenerator skuGenerator, IPricingService pricingService,
-								IInventoryService inventoryService, ICommerceService commerceService, IPropertyService propertyService) 
+		public CatalogModuleExportImportController(ICatalogService catalogService, INotifier notifier, ISettingsManager settingsManager, IBlobStorageProvider blobStorageProvider)
 		{
 			_catalogService = catalogService;
-			_searchService = catalogSearchService;
-			_categoryService = categoryService;
-			_productService = productService;
 			_notifier = notifier;
-			_cacheManager = cacheManager;
-			_blobStorageProvider = blobProvider;
-			_blobUrlResolver = blobUrlResolver;
-			_skuGenerator = skuGenerator;
-			_pricingService = pricingService;
-			_inventoryService = inventoryService;
-			_commerceService = commerceService;
-			_propertyService = propertyService;
+			_settingsManager = settingsManager;
+			_blobStorageProvider = blobStorageProvider;
 
 		}
 
@@ -79,12 +58,17 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 			_notifier.Upsert(notification);
 
 			var catalog = _catalogService.GetById(exportInfo.CatalogId);
-			if(catalog == null)
+			if (catalog == null)
 			{
 				throw new NullReferenceException("catalog");
 			}
-			var exportJob = new CsvCatalogExportJob(_searchService, _categoryService, _productService, _notifier, _cacheManager, _blobStorageProvider, _blobUrlResolver, _pricingService, _inventoryService);
-			BackgroundJob.Enqueue(() => exportJob.DoExport(exportInfo.CatalogId, exportInfo.CategoryIds, exportInfo.ProductIds, exportInfo.Currency ?? CurrencyCodes.USD, catalog.DefaultLanguage.LanguageCode, notification));
+			var curencySetting = _settingsManager.GetSettingByName("VirtoCommerce.Core.General.Currencies");
+			var defaultCurrency = EnumUtility.SafeParse<CurrencyCodes>(curencySetting.DefaultValue, CurrencyCodes.USD);
+
+			var exportJob = new CsvCatalogExportJob();
+			BackgroundJob.Enqueue(() => exportJob.DoExport(exportInfo.CatalogId, exportInfo.CategoryIds, exportInfo.ProductIds,
+														   exportInfo.PriceListId, exportInfo.FulfilmentCenterId, exportInfo.Currency ?? defaultCurrency,
+														   catalog.DefaultLanguage.LanguageCode, notification));
 
 			return Ok(notification);
 
@@ -113,18 +97,18 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 			mappingItems.AddRange(ReflectionUtility.GetPropertyNames<coreModel.CatalogProduct>(x => x.Name, x => x.Category).Select(x => new CsvImportMappingItem { EntityColumnName = x, IsRequired = true }));
 
 			mappingItems.AddRange(new string[] {"Sku", "ParentSku", "Review", "PrimaryImage", "AltImage", "SeoUrl", "SeoDescription", "SeoTitle", 
-												"PriceId", "Price", "SalePrice", "Currency", "AllowBackorder", "Quantity" }
+												"PriceId", "Price", "SalePrice", "Currency", "AllowBackorder", "Quantity", "FulfilmentCenterId" }
 								   .Select(x => new CsvImportMappingItem { EntityColumnName = x, IsRequired = false }));
 
-			mappingItems.AddRange(ReflectionUtility.GetPropertyNames<coreModel.CatalogProduct>(x=>x.Id, x=>x.MainProductId, x=>x.CategoryId, x => x.IsActive, x => x.IsBuyable, x => x.TrackInventory,
+			mappingItems.AddRange(ReflectionUtility.GetPropertyNames<coreModel.CatalogProduct>(x => x.Id, x => x.MainProductId, x => x.CategoryId, x => x.IsActive, x => x.IsBuyable, x => x.TrackInventory,
 																							  x => x.ManufacturerPartNumber, x => x.Gtin, x => x.MeasureUnit, x => x.WeightUnit, x => x.Weight,
 																							  x => x.Height, x => x.Length, x => x.Width, x => x.TaxType, x => x.ProductType, x => x.ShippingType,
-																							  x=> x.Vendor, x => x.DownloadType, x => x.DownloadExpiration, x => x.HasUserAgreement).Select(x => new CsvImportMappingItem { EntityColumnName = x, IsRequired = false }));
-		
+																							  x => x.Vendor, x => x.DownloadType, x => x.DownloadExpiration, x => x.HasUserAgreement).Select(x => new CsvImportMappingItem { EntityColumnName = x, IsRequired = false }));
+
 
 
 			retVal.MappingItems = mappingItems.ToArray();
-		
+
 
 			//Read csv headers and try to auto map fields by name
 			using (var reader = new CsvReader(new StreamReader(_blobStorageProvider.OpenReadOnly(fileUrl))))
@@ -141,9 +125,9 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 						{
 							var entityColumnName = mappingItem.EntityColumnName;
 							var betterMatchCsvColumn = csvColumns.Select(x => new { csvColumn = x, distance = x.ComputeLevenshteinDistance(entityColumnName) })
-																 .Where(x=>x.distance < 2)
+																 .Where(x => x.distance < 2)
 																 .OrderBy(x => x.distance)
-																 .Select(x=>x.csvColumn)
+																 .Select(x => x.csvColumn)
 																 .FirstOrDefault();
 							if (betterMatchCsvColumn != null)
 							{
@@ -178,7 +162,7 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 			};
 			_notifier.Upsert(notification);
 
-			var importJob = new CsvCatalogImportJob(_catalogService,  _categoryService, _productService, _notifier, _cacheManager, _blobStorageProvider, _skuGenerator, _pricingService, _inventoryService, _commerceService, _propertyService);
+			var importJob = new CsvCatalogImportJob();
 			BackgroundJob.Enqueue(() => importJob.DoImport(importConfiguration, notification));
 
 			return Ok(notification);
@@ -207,5 +191,5 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 		}
 
 
-    }
+	}
 }

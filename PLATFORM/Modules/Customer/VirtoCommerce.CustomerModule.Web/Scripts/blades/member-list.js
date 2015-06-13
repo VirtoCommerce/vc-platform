@@ -41,7 +41,6 @@
 		    //Set navigation breadcrumbs
 		    setBreadcrumps();
 		}, function (error) {
-		    $scope.blade.isLoading = false;
 		    bladeNavigationService.setError('Error ' + error.status, $scope.blade);
 		});
     }
@@ -176,12 +175,14 @@
                     if (organizationIds.length > 0) {
                         organizations.remove({ ids: organizationIds }, function (data) {
                             $scope.blade.refresh();
-                        });
+                        },
+                        function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
                     }
                     if (customerIds.length > 0) {
                         contacts.remove({ ids: customerIds }, function (data) {
                             $scope.blade.refresh();
-                        });
+                        },
+                        function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
                     }
                 }
             }

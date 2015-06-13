@@ -6,6 +6,8 @@
         $scope.currentInventory = '...';
         return inventories.query({ id: blade.itemId }, function (results) {
             $scope.currentInventory = _.reduce(results, function (memo, x) { return memo + x.inStockQuantity; }, 0);
+        }, function (error) {
+            //bladeNavigationService.setError('Error ' + error.status, $scope.blade);
         });
     }
 

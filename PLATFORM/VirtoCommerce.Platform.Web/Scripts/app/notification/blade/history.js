@@ -28,6 +28,8 @@ function ($scope, bladeNavigationService, notificationTemplateResolver, notifica
             $scope.notifications = data.notifyEvents;
             $scope.pageSettings.totalItems = angular.isDefined(data.totalCount) ? data.totalCount : 0;
             $scope.blade.isLoading = false;
+        }, function (error) {
+            bladeNavigationService.setError('Error ' + error.status, $scope.blade);
         });
     };
 

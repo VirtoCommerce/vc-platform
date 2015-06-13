@@ -95,7 +95,7 @@
         },
         "options": {
             "title": "Sales per month",
-            "subtitle": 'Sales: 2013-2014',
+            "subtitle": 'Sales: 2014-2015',
             "isStacked": "false",
             "fill": 20,
             "legend": { position: 'top', maxLines: 3 },

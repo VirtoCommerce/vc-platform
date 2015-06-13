@@ -76,7 +76,8 @@
 		marketing_dynamicContents_res_contentPlaces.delete({ ids: [blade.entity.id] }, function () {
 			blade.parentBlade.updateChoosen();
 			bladeNavigationService.closeBlade(blade);
-		});
+		},
+        function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
 	}
 
 	blade.saveChanges = function () {
@@ -84,13 +85,15 @@
 			marketing_dynamicContents_res_contentPlaces.save({}, blade.entity, function (data) {
 				blade.parentBlade.updateChoosen();
 				bladeNavigationService.closeBlade(blade);
-			});
+			},
+            function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
 		}
 		else {
 			marketing_dynamicContents_res_contentPlaces.update({}, blade.entity, function (data) {
 				blade.parentBlade.updateChoosen();
 				blade.originalEntity = angular.copy(blade.entity);
-			});
+			},
+            function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
 		}
 	}
 

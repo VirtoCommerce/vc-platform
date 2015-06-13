@@ -44,7 +44,6 @@
             $scope.blade.isLoading = false;
         },
         function (error) {
-            $scope.blade.isLoading = false;
             bladeNavigationService.setError('Error ' + error.status, $scope.blade);
         });
     }
@@ -84,6 +83,8 @@
         //console.log('saveChanges3: ' + angular.toJson(objects, true));
         settings.update({}, objects, function (data, headers) {
             $scope.blade.refresh();
+        }, function (error) {
+            bladeNavigationService.setError('Error ' + error.status, $scope.blade);
         });
     };
 

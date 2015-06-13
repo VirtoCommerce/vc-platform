@@ -19,7 +19,9 @@
 //                    }
 //                });
 //            }
-//        });
+//        }, function (error) {
+//bladeNavigationService.setError('Error ' + error.status, $scope.blade);
+//});
 //    };
 
 //    $scope.selectNode = function (node) {

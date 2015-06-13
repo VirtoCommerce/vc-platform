@@ -13,7 +13,7 @@ namespace VirtoCommerce.Web
         #region Public Methods and Operators
         public static void RegisterGlobalFilters(GlobalFilterCollection filters)
         {
-            filters.Add(new HandleErrorAttribute());
+            filters.Add(new HandleErrorAttribute { View = "~/Errors" });
             filters.Add(new JsonNetActionFilter());
         }
         #endregion

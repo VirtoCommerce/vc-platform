@@ -10,12 +10,14 @@
 	blade.initialize = function () {
 		marketing_dynamicContents_res_search.search({ folder: 'ContentItem', respGroup: '18' }, function (data) {
 			blade.currentEntities = data.contentFolders;
-		});
+		},
+        function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
 
 		blade.entity.contentItems.forEach(function (el) {
-			marketing_dynamicContents_res_contentItems.get({ id: el.id }, function (data) {
-				el.path = data.path;
-			})
+		    marketing_dynamicContents_res_contentItems.get({ id: el.id }, function(data) {
+		            el.path = data.path;
+		        },
+		        function(error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
 		});
 
 		blade.isLoading = false;
@@ -44,7 +46,8 @@
 			marketing_dynamicContents_res_search.search({ folder: contentItem.id, respGroup: '18' }, function (data) {
 				contentItem.childrenFolders = data.contentFolders;
 				contentItem.items = data.contentItems;
-			});
+			},
+            function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
 		}
 	}
 

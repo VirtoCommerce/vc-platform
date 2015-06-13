@@ -20,7 +20,8 @@
                     template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/item-detail.tpl.html'
                 };
                 bladeNavigationService.showBlade(newBlade, blade.parentBlade);
-            });
+            },
+            function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
     }
 
     $scope.openBlade = function (type) {
@@ -54,7 +55,7 @@
                     item: blade.item,
                     title: blade.item.name,
                     subtitle: 'Seo details',
-                    bottomTemplate: 'Modules/$(VirtoCommerce.Catalog)/Scripts/wizards/common/wizard-ok-action.tpl.html',
+                    isNew: true,
                     controller: 'virtoCommerce.catalogModule.newProductSeoDetailController',
                     template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/seo-detail.tpl.html'
                 };
@@ -65,7 +66,7 @@
                         id: "newProductEditorialReviewsList",
                         currentEntities: blade.item.reviews,
                         title: blade.item.name,
-                        subtitle: 'Product Reviews',
+                        subtitle: 'Product Editorial Reviews',
                         controller: 'virtoCommerce.catalogModule.newProductWizardReviewsController',
                         template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/editorialReviews-list.tpl.html'
                     };

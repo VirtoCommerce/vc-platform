@@ -11,7 +11,8 @@
                 stopRefresh();
                 $scope.blade.parentBlade.refresh();
             }
-        });
+        },
+        function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
 
     };
 
@@ -29,7 +30,8 @@
     $scope.restart = function () {
         modules.restart({}, function () {
             $window.location.reload();
-        });
+        },
+        function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
     }
 
     $scope.blade.refresh();

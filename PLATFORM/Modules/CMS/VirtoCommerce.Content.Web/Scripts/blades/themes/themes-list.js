@@ -16,8 +16,10 @@
 					blade.defaultThemeName = _.find(blade.store.settings, function (setting) { return setting.name === 'DefaultThemeName'; }).value;
 				}
 				blade.isLoading = false;
-			});
-		});
+			},
+            function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
+		},
+        function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
 	}
 
 	function closeChildrenBlades() {
@@ -87,7 +89,8 @@
 					blade.isLoading = true;
 					themes.deleteTheme({ storeId: blade.storeId, themeId: blade.choosenTheme.name }, function (data) {
 						blade.initialize();
-					});
+					},
+                    function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
 				}
 			}
 		}
@@ -109,7 +112,8 @@
 
 		themesStores.update({ storeId: blade.choosenStoreId }, blade.store, function (data) {
 			blade.initialize();
-		});
+		},
+        function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
 	}
 
 	blade.previewTheme = function () {

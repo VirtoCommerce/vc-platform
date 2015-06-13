@@ -32,7 +32,6 @@
 		        $scope.selectedItem = $scope.findItem($scope.selectedItem.id);
 		    }
 		}, function (error) {
-		    $scope.blade.isLoading = false;
 		    bladeNavigationService.setError('Error ' + error.status, $scope.blade);
 		});
     }
@@ -41,21 +40,21 @@
         $scope.blade.refresh();
     });
 
-    $scope.edit = function (listItem) {
-        $scope.selectedItem = listItem;
-        $scope.blade.showItemBlade(listItem.id, listItem.name);
-    };
+    //$scope.edit = function (listItem) {
+    //    $scope.selectedItem = listItem;
+    //    $scope.blade.showItemBlade(listItem.id, listItem.name);
+    //};
 
-    $scope.blade.showItemBlade = function (id, title) {
-        var newBlade = {
-            id: "listItemDetail",
-            itemId: id,
-            title: title,
-            controller: 'virtoCommerce.catalogModule.itemDetailController',
-            template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/item-detail.tpl.html'
-        };
-        bladeNavigationService.showBlade(newBlade, $scope.blade);
-    };
+    //$scope.blade.showItemBlade = function (id, title) {
+    //    var newBlade = {
+    //        id: "listItemDetail",
+    //        itemId: id,
+    //        title: title,
+    //        controller: 'virtoCommerce.catalogModule.itemDetailController',
+    //        template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/item-detail.tpl.html'
+    //    };
+    //    bladeNavigationService.showBlade(newBlade, $scope.blade);
+    //};
 
     $scope.delete = function () {
         if (isItemsChecked()) {
@@ -74,29 +73,6 @@
         return $scope.items && _.any($scope.items, function (x) { return x.selected; });
     }
 
-    function deleteChecked() {
-        var dialog = {
-            id: "confirmDeleteItem",
-            title: "Delete confirmation",
-            message: "Are you sure you want to delete selected Items?",
-            callback: function (remove) {
-                if (remove) {
-                    var selection = $filter('filter')($scope.items, { selected: true }, true);
-                    var itemIds = [];
-                    angular.forEach(selection, function (listItem) {
-                        itemIds.push(listItem.id);
-                    });
-
-                    if (itemIds.length > 0) {
-                        items.remove({ ids: itemIds }, function (data, headers) {
-                            $scope.blade.refresh();
-                        });
-                    }
-                }
-            }
-        }
-        dialogService.showConfirmationDialog(dialog);
-    }
 
     $scope.selectItem = function (listItem) {
         $scope.selectedItem = listItem;

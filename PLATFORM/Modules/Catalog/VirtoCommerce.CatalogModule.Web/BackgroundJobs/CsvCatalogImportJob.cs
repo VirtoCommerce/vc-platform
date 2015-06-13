@@ -23,6 +23,7 @@ using VirtoCommerce.Domain.Inventory.Services;
 using VirtoCommerce.Domain.Commerce.Services;
 using System.Threading.Tasks;
 using VirtoCommerce.Domain.Commerce.Model;
+using VirtoCommerce.Domain.Catalog.Model;
 
 
 namespace VirtoCommerce.CatalogModule.Web.BackgroundJobs
@@ -41,12 +42,17 @@ namespace VirtoCommerce.CatalogModule.Web.BackgroundJobs
 		private readonly IInventoryService _inventoryService;
 		private readonly ICommerceService _commerceService;
 		private readonly IPropertyService _propertyService;
+		private readonly ICatalogSearchService _searchService;
 		private object _lockObject = new object();
 
+		internal CsvCatalogImportJob()
+		{
+
+		}
 		public CsvCatalogImportJob(ICatalogService catalogService, ICategoryService categoryService, IItemService productService,
 								INotifier notifier, CacheManager cacheManager, IBlobStorageProvider blobProvider, ISkuGenerator skuGenerator,
 								IPricingService pricingService, IInventoryService inventoryService, ICommerceService commerceService,
-								IPropertyService propertyService)
+								IPropertyService propertyService, ICatalogSearchService searchService)
 		{
 			_catalogService = catalogService;
 			_categoryService = categoryService;
@@ -59,6 +65,7 @@ namespace VirtoCommerce.CatalogModule.Web.BackgroundJobs
 			_inventoryService = inventoryService;
 			_commerceService = commerceService;
 			_propertyService = propertyService;
+			_searchService = searchService;
 		}
 
 		public virtual void DoImport(webModel.CsvImportConfiguration configuration, ImportNotification notification)
@@ -139,13 +146,25 @@ namespace VirtoCommerce.CatalogModule.Web.BackgroundJobs
 					var category = currentLevelCategories.FirstOrDefault(x => x.Name == categoryName);
 					if (category == null)
 					{
-						category = _categoryService.Create(new coreModel.Category() { Name = categoryName, Code = categoryName.GenerateSlug(), CatalogId = catalog.Id, ParentId = parentCategoryId });
-						category.Children = new List<coreModel.Category>();
-						currentLevelCategories.Add(category);
+						var searchCriteria = new SearchCriteria
+						{
+							CatalogId = catalog.Id,
+							CategoryId = parentCategoryId,
+							ResponseGroup = ResponseGroup.WithCategories
 
-						//Raise notification each notifyCategorySizeLimit category
-						notification.Description = string.Format("Creating categories: {0} created", ++notification.ProcessedCount);
-						_notifier.Upsert(notification);
+						};
+						var result = _searchService.Search(searchCriteria);
+						category = result.Categories.FirstOrDefault(x => x.Name == categoryName);
+						if (category == null)
+						{
+							category = _categoryService.Create(new coreModel.Category() { Name = categoryName, Code = categoryName.GenerateSlug(), CatalogId = catalog.Id, ParentId = parentCategoryId });
+							category.Children = new List<coreModel.Category>();
+							currentLevelCategories.Add(category);
+
+							//Raise notification each notifyCategorySizeLimit category
+							notification.Description = string.Format("Creating categories: {0} created", ++notification.ProcessedCount);
+							_notifier.Upsert(notification);
+						}
 					}
 					csvProduct.CategoryId = category.Id;
 					csvProduct.Category = category;
@@ -221,9 +240,23 @@ namespace VirtoCommerce.CatalogModule.Web.BackgroundJobs
 			}
 		}
 
-		private void SaveProduct(coreModel.Catalog catalog, FulfillmentCenter fulfillmentCenter, coreModel.CatalogProduct csvProduct)
+		private void SaveProduct(coreModel.Catalog catalog, FulfillmentCenter defaultFulfillmentCenter, coreModel.CatalogProduct csvProduct)
 		{
+			//For new product try to find them by code
+			if (csvProduct.IsTransient() && !String.IsNullOrEmpty(csvProduct.Code))
+			{
+				var criteria = new SearchCriteria
+				{
+					CatalogId = catalog.Id,
+					CategoryId = csvProduct.CategoryId,
+					Code = csvProduct.Code,
+					ResponseGroup = ResponseGroup.WithProducts | ResponseGroup.WithVariations
+				};
+				var result = _searchService.Search(criteria);
+				csvProduct.Id = result.Products.Select(x => x.Id).FirstOrDefault();
+			}
 			var isNewProduct = csvProduct.IsTransient();
+
 			csvProduct.CatalogId = catalog.Id;
 
 			if (String.IsNullOrEmpty(csvProduct.Code))
@@ -236,20 +269,24 @@ namespace VirtoCommerce.CatalogModule.Web.BackgroundJobs
 				csvProduct.MainProductId = csvProduct.MainProduct.Id;
 			}
 			var properties = csvProduct.CategoryId != null ? _propertyService.GetCategoryProperties(csvProduct.CategoryId) : _propertyService.GetCatalogProperties(csvProduct.CatalogId);
-			//Try to fill properties meta information for values
-			foreach (var propertyValue in csvProduct.PropertyValues)
+		
+			if (csvProduct.PropertyValues != null)
 			{
-				if (propertyValue.Value != null)
+				//Try to fill properties meta information for values
+				foreach (var propertyValue in csvProduct.PropertyValues)
 				{
-					var property = properties.FirstOrDefault(x => String.Equals(x.Name, propertyValue.PropertyName));
-					if (property != null)
+					if (propertyValue.Value != null)
 					{
-						propertyValue.ValueType = property.ValueType;
-						if (property.Dictionary)
+						var property = properties.FirstOrDefault(x => String.Equals(x.Name, propertyValue.PropertyName));
+						if (property != null)
 						{
-							property = _propertyService.GetById(property.Id);
-							var dicValue = property.DictionaryValues.FirstOrDefault(x => String.Equals(x.Value, propertyValue.Value));
-							propertyValue.ValueId = dicValue != null ? dicValue.Id : null;
+							propertyValue.ValueType = property.ValueType;
+							if (property.Dictionary)
+							{
+								property = _propertyService.GetById(property.Id);
+								var dicValue = property.DictionaryValues.FirstOrDefault(x => String.Equals(x.Value, propertyValue.Value));
+								propertyValue.ValueId = dicValue != null ? dicValue.Id : null;
+							}
 						}
 					}
 				}
@@ -285,7 +322,7 @@ namespace VirtoCommerce.CatalogModule.Web.BackgroundJobs
 			{
 				var inventory = csvProduct.Inventories.First();
 				inventory.ProductId = csvProduct.Id;
-				inventory.FulfillmentCenterId = fulfillmentCenter.Id;
+				inventory.FulfillmentCenterId = inventory.FulfillmentCenterId ?? defaultFulfillmentCenter.Id;
 				_inventoryService.UpsertInventory(csvProduct.Inventories.First());
 			}
 		}
@@ -419,11 +456,13 @@ namespace VirtoCommerce.CatalogModule.Web.BackgroundJobs
 					var inventories = new List<InventoryInfo>();
 					var quantity = GetCsvField("Quantity", x, importConfiguration);
 					var allowBackorder = GetCsvField("AllowBackorder", x, importConfiguration);
+					var fulfilmentCenterId = GetCsvField("FulfilmentCenterId", x, importConfiguration);
 
 					if (!String.IsNullOrEmpty(quantity))
 					{
 						inventories.Add(new InventoryInfo
 						{
+							FulfillmentCenterId = fulfilmentCenterId,
 							AllowBackorder = allowBackorder.TryParse(false),
 							InStockQuantity = (long)quantity.TryParse(0.0m)
 						});

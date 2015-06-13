@@ -36,7 +36,7 @@ namespace VirtoCommerce.Domain.Catalog.Model
 		public int? MinQuantity { get; set; }
 
 		/// <summary>
-        /// Can be Shippable, Digital or Subscription.
+        /// Can be Physical, Digital or Subscription.
 		/// </summary>
 		public string ProductType { get; set; }
 

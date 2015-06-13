@@ -15,16 +15,19 @@
                 if (parentRefresh) {
                     b.parentBlade.refresh(data);
                 }
-            });
+            },
+            function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
         } else if (b.categoryId) {
             properties.newCategoryProperty({ categoryId: b.categoryId }, function (data) {
                 initializeBlade(data);
-            });
+            },
+            function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
         }
         else if (b.catalogId) {
             properties.newCatalogProperty({ catalogId: b.catalogId }, function (data) {
                 initializeBlade(data);
-            });
+            },
+            function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
         }
     };
 
@@ -84,7 +87,8 @@
         properties.update(b.currentEntity, function (data, headers) {
             b.currentEntityId = data.id;
             b.refresh(true);
-        });
+        },
+        function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
     };
 
     function removeProperty(prop) {
@@ -99,7 +103,8 @@
                     properties.remove({ id: prop.id }, function () {
                         $scope.bladeClose();
                         b.parentBlade.refresh();
-                    });
+                    },
+                    function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
                 }
             }
         }

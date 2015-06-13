@@ -6,6 +6,8 @@
 		$scope.meniLinkListsCount = '...';
 		return menus.query({ storeId: blade.currentEntityId }, function (data) {
 			$scope.meniLinkListsCount = data.length;
+		}, function (error) {
+		    //bladeNavigationService.setError('Error ' + error.status, $scope.blade);
 		});
 	}
 

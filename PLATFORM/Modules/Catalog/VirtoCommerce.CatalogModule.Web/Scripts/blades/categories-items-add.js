@@ -18,7 +18,8 @@
                     bladeNavigationService.showBlade(newBlade, pb);
 
                 });
-            });
+            },
+            function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
     };
 
     $scope.addLinkedCategory = function () {
@@ -41,15 +42,17 @@
                 $scope.bladeClose(function () {
                     showNewItemWizard(data);
                 });
-            });
+            },
+            function (error) { bladeNavigationService.setError('Error ' +error.status, $scope.blade); });
         }
         else {
             items.newItemInCategory({ catalogId: pb.catalogId, categoryId: pb.categoryId }, function (data) {
-                data.productType = productType;
-                $scope.bladeClose(function () {
-                    showNewItemWizard(data);
-                });
-            });
+                        data.productType = productType;
+                        $scope.bladeClose(function () {
+                            showNewItemWizard(data);
+                        });
+                    },
+                    function (error) { bladeNavigationService.setError('Error ' +error.status, $scope.blade); });
         }
     };
 

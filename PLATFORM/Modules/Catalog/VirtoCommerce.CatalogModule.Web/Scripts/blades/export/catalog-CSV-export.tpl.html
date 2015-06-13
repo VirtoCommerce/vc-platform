@@ -9,16 +9,39 @@
             <div class="form">
                 <div class="block">
                     <div>
-                        <p ng-class="{'no-data': blade.notification.description}" ng-if="!blade.notification" class="text">
-                            All catalog products information should be exported to csv file, download url will be available after export will be finished.
-                        </p>
-                        <p ng-if="!blade.notification" class="text __note">
-                            <span>Caution:</span> Sorting your CSV file in a spreadsheet program can cause product variants or image URLs to become dissassociated. Importing a CSV file that has been sorted may overwrite your existing products with bad data, which cannot be recovered.;
-                        </p>
-                        <p class="text">{{blade.notification.description}}</p>
-                    </div>
-                    
-                </div>
+                        <div class="form clearfix" ng-if="!blade.notification">
+                            <div class="form-group">
+                                <label class="form-label">Select fulfillment center for exported inventory</label>
+                                <div class="form-input">
+                                    <ui-select ng-model="blade.fulfilmentCenterId">
+                                        <ui-select-match allow-clear="true" placeholder="Select fulfillment or leave empty for default...">{{$select.selected.name}}</ui-select-match>
+                                        <ui-select-choices repeat="x.id as x in fulfillmentCenters | filter: { name: $select.search }">
+                                            <span ng-bind-html="x.name | highlight: $select.search"></span>
+                                        </ui-select-choices>
+                                    </ui-select>
+                                </div>
+                                <div class="form-group" >
+                                    <label class="form-label">Select price list for exported prices</label>
+                                    <div class="form-input">
+                                        <ui-select ng-model="blade.pricelistId">
+                                            <ui-select-match placeholder="Select price list or leave empty for default...">{{$select.selected.name}}</ui-select-match>
+                                            <ui-select-choices repeat="x.id as x in pricelists | filter: { name: $select.search }">
+                                                <span ng-bind-html="x.name | highlight: $select.search"></span>
+                                            </ui-select-choices>
+                                        </ui-select>
+                                    </div>
+                                </div>
+
+                                <p ng-class="{'no-data': blade.notification.description}" ng-if="!blade.notification" class="text">
+                                    All catalog products information should be exported to csv file, download url will be available after export will be finished.
+                                </p>
+                                <p ng-if="!blade.notification" class="text __note">
+                                    <span>Caution:</span> Sorting your CSV file in a spreadsheet program can cause product variants or image URLs to become dissassociated. Importing a CSV file that has been sorted may overwrite your existing products with bad data, which cannot be recovered.;
+                                </p>
+                                <p class="text">{{blade.notification.description}}</p>
+                            </div>
+
+                        </div>
                 <div class="block" ng-if="blade.notification.created || blade.notification.finished">
                     <p ng-if="blade.notification.created" ng-class="{'no-data': blade.notification.created}" class="text">Start — <i class="fa fa-clock-o"></i> {{blade.notification.created | date : 'mediumTime'}}</p>
                     <p ng-if="blade.notification.finished" ng-class="{'no-data': blade.notification.finished}" class="text">End — <i class="fa fa-clock-o"></i> {{blade.notification.finished | date : 'mediumTime'}}</p>

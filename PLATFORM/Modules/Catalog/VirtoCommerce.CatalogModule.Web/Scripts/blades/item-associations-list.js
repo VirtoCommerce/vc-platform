@@ -68,7 +68,8 @@
                             var undeletedEntries = _.reject($scope.blade.currentEntities, function (x) { return x.selected; });
                             items.updateitem({ id: $scope.blade.currentEntityId, associations: undeletedEntries }, function () {
                                 $scope.blade.refresh();
-                            });
+                            },
+                            function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
                         }
                     }
                 }
@@ -96,7 +97,8 @@
 
             items.updateitem({ id: $scope.blade.currentEntityId, associations: $scope.blade.currentEntities }, function () {
                 $scope.blade.refresh();
-            });
+            },
+            function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
         },
         axis: 'y',
         cursor: "move"

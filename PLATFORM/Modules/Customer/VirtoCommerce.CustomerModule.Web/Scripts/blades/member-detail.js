@@ -11,7 +11,8 @@
                 if (parentRefresh) {
                     $scope.blade.parentBlade.refresh();
                 }
-            });
+            },
+            function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
         } else {
             var newEntity = {
                 properties: [],

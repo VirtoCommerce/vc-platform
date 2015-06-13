@@ -47,7 +47,6 @@
 				blade.isLoading = false;
 			}, function (error) {
 				bladeNavigationService.setError('Error ' + error.status, $scope.blade);
-				blade.isLoading = false;
 			});
 
 
@@ -80,7 +79,6 @@
 
 		blade.importConfiguration.catalogId = blade.catalog.id;
 		importResource.run(blade.importConfiguration, function (notification) {
-
 			var newBlade = {
 				id: "importProgress",
 				catalog: blade.catalog,
@@ -98,7 +96,6 @@
 			bladeNavigationService.showBlade(newBlade, $scope.blade);
 
 		}, function (error) {
-
 			bladeNavigationService.setError('Error ' + error.status, $scope.blade);
 		});
 	};

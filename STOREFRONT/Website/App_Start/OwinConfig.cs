@@ -96,147 +96,153 @@ namespace VirtoCommerce.Web
 
             if (shop == null)
             {
-                throw new HttpException(404, "Store Not Found");
+                using (var reader = new System.IO.StreamReader(HttpContext.Current.Server.MapPath("~/App_data/Help/nostore.html")))
+                {
+                    var content = await reader.ReadToEndAsync();
+                    await context.Response.WriteAsync(content);
+                }
             }
-
-            var currency = GetStoreCurrency(context, shop);
-            shop.Currency = currency;
-            ctx.Shop = shop;
-            ctx.Themes = await commerceService.GetThemesAsync(SiteContext.Current);
-
-            // if language is not set, set it to default shop language
-            if (String.IsNullOrEmpty(ctx.Language))
+            else
             {
-                language = shop.DefaultLanguage;
-                if (String.IsNullOrEmpty(language))
+                var currency = GetStoreCurrency(context, shop);
+                shop.Currency = currency;
+                ctx.Shop = shop;
+                ctx.Themes = await commerceService.GetThemesAsync(SiteContext.Current);
+
+                // if language is not set, set it to default shop language
+                if (String.IsNullOrEmpty(ctx.Language))
                 {
-                    throw new HttpException(404, "Store Language Not Designed");
-                }
-                
-                CultureInfo.DefaultThreadCurrentUICulture = new CultureInfo(language);
-                ctx.Language = language;
-            }
-
-            if (!this.IsResourceFile()) // only load settings for resource files, no need for other contents
-            {
-                // save info to the cookies
-                context.Response.Cookies.Append(StoreCookie, shop.StoreId, new CookieOptions { Expires = DateTime.UtcNow.AddDays(30) });
-                context.Response.Cookies.Append(LanguageCookie, ctx.Language, new CookieOptions { Expires = DateTime.UtcNow.AddDays(30) });
-                context.Response.Cookies.Append(CurrencyCookie, shop.Currency, new CookieOptions { Expires = DateTime.UtcNow.AddDays(30) });
-
-                if (context.Authentication.User != null && context.Authentication.User.Identity.IsAuthenticated)
-                {
-                    ctx.Customer = await customerService.GetCustomerAsync(
-                        context.Authentication.User.Identity.Name, shop.StoreId);
-
-                    if (ctx.Customer == null)
+                    language = shop.DefaultLanguage;
+                    if (String.IsNullOrEmpty(language))
                     {
-                        context.Authentication.SignOut();
+                        throw new HttpException(404, "Store language not found");
                     }
-                    else
-                    {
-                        ctx.CustomerId = ctx.Customer.Id;    
-                    }
+
+                    CultureInfo.DefaultThreadCurrentUICulture = new CultureInfo(language);
+                    ctx.Language = language;
                 }
 
-                if (ctx.Customer == null)
+                if (!this.IsResourceFile()) // only load settings for resource files, no need for other contents
                 {
-                    var cookie = context.Request.Cookies[AnonymousCookie];
+                    // save info to the cookies
+                    context.Response.Cookies.Append(StoreCookie, shop.StoreId, new CookieOptions { Expires = DateTime.UtcNow.AddDays(30) });
+                    context.Response.Cookies.Append(LanguageCookie, ctx.Language, new CookieOptions { Expires = DateTime.UtcNow.AddDays(30) });
+                    context.Response.Cookies.Append(CurrencyCookie, shop.Currency, new CookieOptions { Expires = DateTime.UtcNow.AddDays(30) });
 
-                    if (string.IsNullOrEmpty(cookie))
+                    if (context.Authentication.User != null && context.Authentication.User.Identity.IsAuthenticated)
                     {
-                        cookie = Guid.NewGuid().ToString();
+                        ctx.Customer = await customerService.GetCustomerAsync(
+                            context.Authentication.User.Identity.Name, shop.StoreId);
 
-                        var cookieOptions = new CookieOptions
+                        if (ctx.Customer == null)
                         {
-                            Expires = DateTime.UtcNow.AddDays(30)
-                        };
-
-                        context.Response.Cookies.Append(AnonymousCookie, cookie, cookieOptions);
-                    }
-
-                    ctx.CustomerId = cookie;
-                }
-
-                // TODO: detect if shop exists, user has access
-                // TODO: store anonymous customer id in cookie and update and merge cart once customer is logged in
-
-                ctx.Linklists = await commerceService.GetListsAsync(SiteContext.Current);
-                ctx.PageTitle = ctx.Shop.Name;
-                ctx.Collections = await commerceService.GetCollectionsAsync(SiteContext.Current);
-                ctx.Pages = new PageCollection();
-                ctx.Forms = commerceService.GetForms();
-               
-
-                var cart = await commerceService.GetCartAsync(SiteContext.Current.StoreId, SiteContext.Current.CustomerId);
-                if (cart == null)
-                {
-                    var dtoCart = new ApiClient.DataContracts.Cart.ShoppingCart
-                    {
-                        CreatedBy = ctx.CustomerId,
-                        CreatedDate = DateTime.UtcNow,
-                        Currency = shop.Currency,
-                        CustomerId = ctx.CustomerId,
-                        CustomerName = ctx.Customer != null ? ctx.Customer.Name : null,
-                        LanguageCode = ctx.Language,
-                        Name = "default",
-                        StoreId = shop.StoreId
-                    };
-
-                    await commerceService.CreateCartAsync(dtoCart);
-                    cart = await commerceService.GetCartAsync(SiteContext.Current.StoreId, SiteContext.Current.CustomerId);
-                }
-
-                ctx.Cart = cart;
-
-                if (context.Authentication.User.Identity.IsAuthenticated)
-                {
-                    var anonymousCookie = context.Request.Cookies[AnonymousCookie];
-
-                    if (anonymousCookie != null)
-                    {
-                        var anonymousCart = await commerceService.GetCartAsync(ctx.StoreId, anonymousCookie);
-
-                        if (anonymousCart != null)
+                            context.Authentication.SignOut();
+                        }
+                        else
                         {
-                            ctx.Cart = await commerceService.MergeCartsAsync(anonymousCart);
+                            ctx.CustomerId = ctx.Customer.Id;
                         }
                     }
 
-                    context.Response.Cookies.Delete(AnonymousCookie);
+                    if (ctx.Customer == null)
+                    {
+                        var cookie = context.Request.Cookies[AnonymousCookie];
+
+                        if (string.IsNullOrEmpty(cookie))
+                        {
+                            cookie = Guid.NewGuid().ToString();
+
+                            var cookieOptions = new CookieOptions
+                            {
+                                Expires = DateTime.UtcNow.AddDays(30)
+                            };
+
+                            context.Response.Cookies.Append(AnonymousCookie, cookie, cookieOptions);
+                        }
+
+                        ctx.CustomerId = cookie;
+                    }
+
+                    // TODO: detect if shop exists, user has access
+                    // TODO: store anonymous customer id in cookie and update and merge cart once customer is logged in
+
+                    ctx.Linklists = await commerceService.GetListsAsync(SiteContext.Current);
+                    ctx.PageTitle = ctx.Shop.Name;
+                    ctx.Collections = await commerceService.GetCollectionsAsync(SiteContext.Current);
+                    ctx.Pages = new PageCollection();
+                    ctx.Forms = commerceService.GetForms();
+
+
+                    var cart = await commerceService.GetCartAsync(SiteContext.Current.StoreId, SiteContext.Current.CustomerId);
+                    if (cart == null)
+                    {
+                        var dtoCart = new ApiClient.DataContracts.Cart.ShoppingCart
+                        {
+                            CreatedBy = ctx.CustomerId,
+                            CreatedDate = DateTime.UtcNow,
+                            Currency = shop.Currency,
+                            CustomerId = ctx.CustomerId,
+                            CustomerName = ctx.Customer != null ? ctx.Customer.Name : null,
+                            LanguageCode = ctx.Language,
+                            Name = "default",
+                            StoreId = shop.StoreId
+                        };
+
+                        await commerceService.CreateCartAsync(dtoCart);
+                        cart = await commerceService.GetCartAsync(SiteContext.Current.StoreId, SiteContext.Current.CustomerId);
+                    }
+
+                    ctx.Cart = cart;
+
+                    if (context.Authentication.User.Identity.IsAuthenticated)
+                    {
+                        var anonymousCookie = context.Request.Cookies[AnonymousCookie];
+
+                        if (anonymousCookie != null)
+                        {
+                            var anonymousCart = await commerceService.GetCartAsync(ctx.StoreId, anonymousCookie);
+
+                            if (anonymousCart != null)
+                            {
+                                ctx.Cart = await commerceService.MergeCartsAsync(anonymousCart);
+                            }
+                        }
+
+                        context.Response.Cookies.Delete(AnonymousCookie);
+                    }
+
+                    ctx.PriceLists = await commerceService.GetPriceListsAsync(ctx.Shop.Catalog, shop.Currency, new TagQuery());
+                    ctx.Theme = commerceService.GetTheme(SiteContext.Current, this.ResolveTheme(shop, context));
+
+                    // update theme files
+                    await commerceService.UpdateThemeCacheAsync(SiteContext.Current);
+
+                    ctx.Blogs = commerceService.GetBlogs(SiteContext.Current);
+                }
+                else
+                {
+                    ctx.Theme = commerceService.GetTheme(SiteContext.Current, this.ResolveTheme(shop, context));
                 }
 
-                ctx.PriceLists = await commerceService.GetPriceListsAsync(ctx.Shop.Catalog, shop.Currency, new TagQuery());
-                ctx.Theme = commerceService.GetTheme(SiteContext.Current, this.ResolveTheme(shop, context));
+                ctx.Settings = commerceService.GetSettings(
+                    ctx.Theme.ToString(),
+                    context.Request.Path.HasValue && context.Request.Path.Value.Contains(".scss") ? "''" : null);
 
-                // update theme files
-                await commerceService.UpdateThemeCacheAsync(SiteContext.Current);
+                ctx.CountryOptionTags = commerceService.GetCountryTags();
 
-                ctx.Blogs = commerceService.GetBlogs(SiteContext.Current);
+                if (ctx.Shop.Currency.Equals("GBP", StringComparison.OrdinalIgnoreCase) || ctx.Shop.Currency.Equals("USD", StringComparison.OrdinalIgnoreCase))
+                {
+                    ctx.Shop.MoneyFormat = commerceService.CurrencyDictionary[ctx.Shop.Currency] + "{{ amount }}";
+                }
+                else
+                {
+                    ctx.Shop.MoneyFormat = "{{ amount }} " + commerceService.CurrencyDictionary[ctx.Shop.Currency];
+                }
+
+                context.Set("vc_sitecontext", ctx);
+
+                await this.Next.Invoke(context);
             }
-            else
-            {
-                ctx.Theme = commerceService.GetTheme(SiteContext.Current, this.ResolveTheme(shop, context));
-            }
-
-            ctx.Settings = commerceService.GetSettings(
-                ctx.Theme.ToString(),
-                context.Request.Path.HasValue && context.Request.Path.Value.Contains(".scss") ? "''" : null);
-
-            ctx.CountryOptionTags = commerceService.GetCountryTags();
-
-            if (ctx.Shop.Currency.Equals("GBP", StringComparison.OrdinalIgnoreCase) || ctx.Shop.Currency.Equals("USD", StringComparison.OrdinalIgnoreCase))
-            {
-                ctx.Shop.MoneyFormat = commerceService.CurrencyDictionary[ctx.Shop.Currency] + "{{ amount }}";
-            }
-            else
-            {
-                ctx.Shop.MoneyFormat = "{{ amount }} " + commerceService.CurrencyDictionary[ctx.Shop.Currency];
-            }
-
-            context.Set("vc_sitecontext", ctx);
-
-            await this.Next.Invoke(context);
         }
         #endregion
 
@@ -262,11 +268,6 @@ namespace VirtoCommerce.Web
             {
                 language = String.Empty;
             }
-
-            //if (string.IsNullOrEmpty(language))
-            //{
-            //    language = SiteContext.Current.Shop.DefaultLanguage;
-            //}
 
             return language;
         }
@@ -354,12 +355,6 @@ namespace VirtoCommerce.Web
                         store = null;
                     }
                 }
-                    /*
-                else
-                {
-                    return null;
-                }
-                     * */
             }
 
             if (store == null)
@@ -431,23 +426,10 @@ namespace VirtoCommerce.Web
             return null;
         }
 
-        private ICollection<LoginProvider> GetExternalLoginProviders(IOwinContext context)
+        private IEnumerable<LoginProvider> GetExternalLoginProviders(IOwinContext context)
         {
-            var providersModel = new List<LoginProvider>();
-
             var providers = context.Authentication.GetExternalAuthenticationTypes();
-
-            foreach (var provider in providers)
-            {
-                providersModel.Add(new LoginProvider
-                {
-                    AuthenticationType = provider.AuthenticationType,
-                    Caption = provider.Caption,
-                    Properties = provider.Properties
-                });
-            }
-
-            return providersModel;
+            return providers.Select(provider => new LoginProvider {AuthenticationType = provider.AuthenticationType, Caption = provider.Caption, Properties = provider.Properties}).ToList();
         }
 
         private string GetStoreIdFromRoute(RouteValueDictionary values)

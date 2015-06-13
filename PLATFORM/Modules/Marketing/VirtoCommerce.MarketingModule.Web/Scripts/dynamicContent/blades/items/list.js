@@ -9,7 +9,8 @@
 	blade.initializeBlade = function () {
 		marketing_dynamicContents_res_search.search({ folder: blade.choosenFolder, respGroup: '18' }, function (data) {
 			blade.currentEntities = data.contentFolders;
-		});
+		},
+        function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
 
 		blade.isLoading = false;
 	};
@@ -103,7 +104,8 @@
 			marketing_dynamicContents_res_search.search({ folder: contentItemFolder.id, respGroup: '18' }, function (data) {
 				contentItemFolder.childrenFolders = data.contentFolders;
 				contentItemFolder.items = data.contentItems;
-			});
+			},
+            function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
 		}
 	}
 
@@ -137,13 +139,15 @@
 		if (blade.choosenFolder === 'ContentItem') {
 			marketing_dynamicContents_res_search.search({ folder: blade.choosenFolder, respGroup: '18' }, function (data) {
 				blade.currentEntities = data.contentFolders;
-			});
+			},
+            function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
 		}
 		else {
 			marketing_dynamicContents_res_search.search({ folder: blade.choosenFolder, respGroup: '18' }, function (data) {
 				blade.currentEntity.childrenFolders = data.contentFolders;
 				blade.currentEntity.items = data.contentItems;
-			});
+			},
+            function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
 		}
 	};
 
@@ -182,8 +186,10 @@
 			marketing_dynamicContents_res_search.search({ folder: blade.choosenFolder, respGroup: '18' }, function (data) {
 				blade.currentEntity.childrenFolders = data.contentFolders;
 				blade.currentEntity.items = data.contentItems;
-			});
-		});
+			},
+            function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
+		},
+        function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
 	}
 
 	$scope.blade.toolbarCommands = [

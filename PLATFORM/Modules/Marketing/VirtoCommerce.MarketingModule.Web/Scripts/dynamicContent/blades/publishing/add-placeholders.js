@@ -9,15 +9,16 @@
 	blade.initialize = function () {
 		marketing_dynamicContents_res_search.search({ folder: 'ContentPlace', respGroup: '20' }, function (data) {
 			blade.currentEntities = data.contentFolders;
-		});
+		},
+        function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
 
 		blade.entity.contentPlaces.forEach(function(el) {
-			marketing_dynamicContents_res_contentPlaces.get({ id: el.id }, function (data) {
-				el.path = data.path;
-			})
+		    marketing_dynamicContents_res_contentPlaces.get({ id: el.id }, function(data) {
+		            el.path = data.path;
+		        },
+		        function(error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
 		});
 		
-
 		blade.isLoading = false;
 	}
 
@@ -33,7 +34,8 @@
 			marketing_dynamicContents_res_search.search({ folder: placeholderFolder.id, respGroup: '20' }, function (data) {
 				placeholderFolder.childrenFolders = data.contentFolders;
 				placeholderFolder.placeholders = data.contentPlaces;
-			});
+			},
+            function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
 		}
 		else {
 			blade.choosenFolder = placeholderFolder.parentFolderId;

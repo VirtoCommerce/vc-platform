@@ -62,7 +62,8 @@
 			        $scope.blade.isLoading = true;
 			        order_res_customerOrders.update({}, $scope.blade.customerOrder, function (data, headers) {
 			            $scope.blade.refresh();
-			        });
+			        },
+                    function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
 			    };
 
 			    $scope.openFulfillmentCentersList = function () {
@@ -160,8 +161,6 @@
                                             },
                                             function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
 					                    }
-
-
 					                }
 					            }
 					        };

@@ -45,16 +45,16 @@ angular.module(catalogsModuleName, [
       };
       mainMenuService.addMenuItem(menuItem);
 
-  	//NOTIFICATIONS
-	//Export
-     var menuExportTemplate =
-		 {
-		 	priority: 900,
-		 	satisfy: function (notify, place) { return place == 'menu' && notify.notifyType == 'CatalogCsvExport'; },
-		 	template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/export/notifications/menuExport.tpl.html',
-		 	action: function (notify) { $state.go('notificationsHistory', notify) }
-		 };
-     notificationTemplateResolver.register(menuExportTemplate);
+      //NOTIFICATIONS
+      //Export
+      var menuExportTemplate =
+          {
+              priority: 900,
+              satisfy: function (notify, place) { return place == 'menu' && notify.notifyType == 'CatalogCsvExport'; },
+              template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/export/notifications/menuExport.tpl.html',
+              action: function (notify) { $state.go('notificationsHistory', notify) }
+          };
+      notificationTemplateResolver.register(menuExportTemplate);
 
       var historyExportTemplate =
 		{
@@ -74,46 +74,46 @@ angular.module(catalogsModuleName, [
 		    }
 		};
       notificationTemplateResolver.register(historyExportTemplate);
-  	//Import
+      //Import
       var menuImportTemplate =
 		{
-			priority: 900,
-			satisfy: function (notify, place) { return place == 'menu' && notify.notifyType == 'CatalogCsvImport'; },
-			template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/import/notifications/menuImport.tpl.html',
-			action: function (notify) { $state.go('notificationsHistory', notify) }
+		    priority: 900,
+		    satisfy: function (notify, place) { return place == 'menu' && notify.notifyType == 'CatalogCsvImport'; },
+		    template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/import/notifications/menuImport.tpl.html',
+		    action: function (notify) { $state.go('notificationsHistory', notify) }
 		};
       notificationTemplateResolver.register(menuImportTemplate);
 
       var historyImportTemplate =
 		{
-			priority: 900,
-			satisfy: function (notify, place) { return place == 'history' && notify.notifyType == 'CatalogCsvImport'; },
-			template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/import/notifications/historyImport.tpl.html',
-			action: function (notify) {
-				var blade = {
-					id: 'CatalogCsvImportDetail',
-					title: 'catalog import detail',
-					subtitle: 'detail',
-					template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/import/catalog-CSV-import.tpl.html',
-					controller: 'virtoCommerce.catalogModule.catalogCSVimportController',
-					notification: notify
-				};
-				bladeNavigationService.showBlade(blade);
-			}
+		    priority: 900,
+		    satisfy: function (notify, place) { return place == 'history' && notify.notifyType == 'CatalogCsvImport'; },
+		    template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/import/notifications/historyImport.tpl.html',
+		    action: function (notify) {
+		        var blade = {
+		            id: 'CatalogCsvImportDetail',
+		            title: 'catalog import detail',
+		            subtitle: 'detail',
+		            template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/import/catalog-CSV-import.tpl.html',
+		            controller: 'virtoCommerce.catalogModule.catalogCSVimportController',
+		            notification: notify
+		        };
+		        bladeNavigationService.showBlade(blade);
+		    }
 		};
       notificationTemplateResolver.register(historyImportTemplate);
-	
+
       //Register dashboard widgets
-      widgetService.registerWidget({
-          isVisible: function (blade) { return authService.checkPermission('catalog:query'); },
-          controller: 'virtoCommerce.catalogModule.dashboard.catalogsWidgetController',
-          template: 'tile-count.html'
-      }, 'mainDashboard');
-      widgetService.registerWidget({
-          isVisible: function (blade) { return authService.checkPermission('catalog:query'); },
-          controller: 'virtoCommerce.catalogModule.dashboard.productsWidgetController',
-          template: 'tile-count.html'
-      }, 'mainDashboard');
+      //widgetService.registerWidget({
+      //    isVisible: function () { return authService.checkPermission('catalog:query'); },
+      //    controller: 'virtoCommerce.catalogModule.dashboard.catalogsWidgetController',
+      //    template: 'tile-count.html'
+      //}, 'mainDashboard');
+      //widgetService.registerWidget({
+      //    isVisible: function () { return authService.checkPermission('catalog:query'); },
+      //    controller: 'virtoCommerce.catalogModule.dashboard.productsWidgetController',
+      //    template: 'tile-count.html'
+      //}, 'mainDashboard');
 
       //Register image widget
       var itemImageWidget = {
@@ -180,6 +180,7 @@ angular.module(catalogsModuleName, [
       widgetService.registerWidget(categorySeoWidget, 'categoryDetail');
 
 
+      //Register catalog widgets
       var catalogLanguagesWidget = {
           controller: 'virtoCommerce.catalogModule.catalogLanguagesWidgetController',
           template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/widgets/catalogLanguagesWidget.tpl.html',
@@ -193,13 +194,18 @@ angular.module(catalogsModuleName, [
       };
       widgetService.registerWidget(catalogPropertyWidget, 'catalogDetail');
 
+      widgetService.registerWidget({
+          controller: 'virtoCommerce.catalogModule.seoWidgetController',
+          template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/widgets/seoWidget.tpl.html',
+      }, 'catalogDetail');
+
       // IMPORT / EXPORT
       catalogImportService.register({
-      	name: 'VirtoCommerce CSV import',
-      	description: 'Native VirtoCommerce catalog data import from CSV',
-      	icon: 'fa fa-file-archive-o',
-      	controller: 'virtoCommerce.catalogModule.catalogCSVimportWizardController',
-      	template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/import/wizard/catalog-CSV-import-wizard.tpl.html'
+          name: 'VirtoCommerce CSV import',
+          description: 'Native VirtoCommerce catalog data import from CSV',
+          icon: 'fa fa-file-archive-o',
+          controller: 'virtoCommerce.catalogModule.catalogCSVimportWizardController',
+          template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/import/wizard/catalog-CSV-import-wizard.tpl.html'
       });
       catalogExportService.register({
           name: 'VirtoCommerce CSV export',

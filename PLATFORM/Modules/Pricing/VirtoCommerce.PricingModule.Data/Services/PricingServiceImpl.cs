@@ -75,8 +75,7 @@ namespace VirtoCommerce.PricingModule.Data.Services
                 {
                     query = query.Where(x => evalContext.PricelistIds.Contains(x.PricelistId));
                 }
-
-				if(evalContext.Currency != null)
+				else if (evalContext.Currency != null)
 				{
 					query = query.Where(x => x.Pricelist.Currency == evalContext.Currency.ToString());
 				}

@@ -53,8 +53,6 @@ angular.module('platformWebApp')
             element.removeAttr("va-blade");
             $compile(element)(scope);
 
-            var speed = (window.navigator.platform == 'MacIntel' ? .5 : 40);
-
             var mainContent = $('.cnt');
             var blade = $(element).parent('.blade');
             var offset = parseInt(blade.offset().left + mainContent.scrollLeft() + blade.width() + 125 - mainContent[0].clientWidth);
@@ -70,68 +68,10 @@ angular.module('platformWebApp')
             }
 
             $timeout(function () {
-
                 if (offset > mainContent.scrollLeft()) {
                     mainContent.animate({ scrollLeft: offset + 'px' }, 500);
                 }
-
-
             }, 0, false);
-
-
-            //Somehow vertical scrollbar does not work initially so need to turn it on
-            // $(element).find('.blade-content').off('mousewheel').on('mousewheel', function (event, delta)
-            // {
-            //     this.scrollTop -= (delta * speed);
-            //     event.preventDefault();
-            // });
-
-            $(element).find('.blade-container').on('mouseenter', function (e) {
-                var blade = $(this),
-                    bladeI = blade.find('.blade-inner'),
-                    bladeH = bladeI.height(),
-                    bladeIh = blade.find('.inner-block').height() + 5;
-
-                if (blade.length) {
-                    if (bladeH <= bladeIh) {
-                        horizontalScroll('off');
-                    }
-                    else {
-                        horizontalScroll('on');
-                    }
-                }
-            }).on('mouseleave', function () {
-                horizontalScroll('on');
-            });
-
-            $('.dashboard-area').on('mouseenter', function (event) {
-                var dashboardA = $(this),
-                    dashboardH = dashboardA.height(),
-                    dashboardIh = dashboardA.find('.dashboard-inner').height();
-
-                if (dashboardA.length) {
-                    if (dashboardH <= dashboardIh) {
-                        horizontalScroll('off');
-                    }
-                    else {
-                        horizontalScroll('on');
-                    }
-                }
-            }).on('mouseleave', function () {
-                horizontalScroll('on');
-            });
-
-            function horizontalScroll(flag) {
-                if (flag != 'off') {
-                    $('.cnt').off('mousewheel').on('mousewheel', function (event, delta) {
-                        this.scrollLeft -= (delta * speed);
-                        event.preventDefault();
-                    });
-                }
-                else {
-                    $('.cnt').unmousewheel();
-                }
-            }
 
             scope.bladeMaximize = function () {
                 scope.maximized = true;
@@ -168,7 +108,7 @@ angular.module('platformWebApp')
                     });
                 });
             };
-            
+
             scope.$watch('blade.toolbarCommands', function (toolbarCommands) {
                 scope.resolvedToolbarCommands = toolbarService.resolve(toolbarCommands, scope.blade.controller, false);
             });
@@ -263,21 +203,32 @@ angular.module('platformWebApp')
                 blade.xindex = service.stateBlades().length;
             }
 
-            if (angular.isDefined(parentBlade)) {
-                blade.xindex = service.stateBlades().indexOf(parentBlade) + 1;
-                closeChildren(parentBlade);
-                parentBlade.childrenBlades.push(blade);
-            }
-
             var showBlade = function () {
-                //show blade in same place where it been
+                if (angular.isDefined(parentBlade)) {
+                    blade.xindex = service.stateBlades().indexOf(parentBlade) + 1;
+                    parentBlade.childrenBlades.push(blade);
+                }
+                //show blade in same place where it was
                 service.stateBlades().splice(Math.min(blade.xindex, service.stateBlades().length), 0, blade);
                 service.currentBlade = blade;
             };
 
-            if (angular.isDefined(existingBlade) && angular.isUndefined(parentBlade)) {
+            if (angular.isDefined(parentBlade) && parentBlade.childrenBlades.length > 0) {
+                var childBadesCount = parentBlade.childrenBlades.length;
+                angular.forEach(parentBlade.childrenBlades.slice(), function (child) {
+                    service.closeBlade(child, function () {
+                        childBadesCount--;
+                        //Only show when all children were closed
+                        if (childBadesCount == 0) {
+                            showBlade();
+                        }
+                    });
+                });
+            }
+            else if (angular.isDefined(existingBlade)) {
                 service.closeBlade(existingBlade, showBlade);
-            } else {
+            }
+            else {
                 showBlade();
             }
         },

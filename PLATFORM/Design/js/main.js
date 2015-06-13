@@ -257,6 +257,7 @@ var WebAdmin = {
         
         if (flag != 'off') {
             $('.cnt').off('mousewheel').on('mousewheel', function (event, delta) {
+                console.log(event)
                 this.scrollLeft -= (delta * WebAdmin.Speed);
                 event.preventDefault();
             });
@@ -268,19 +269,23 @@ var WebAdmin = {
 
     GetTreeItems: function(el) {
         el == el || '';
+
         $('.tree-node').each(function () {
-        var node = $(this);
-        if($('.tree-item', node).length <= 1) {
-        $(this).find('.tree-item').addClass('last');
-        }
+            var node = $(this);
+            
+            if($('.tree-item', node).length <= 1) {
+                $(this).find('.tree-item').addClass('last');
+            }
         });
+
         var inW = $('.blade-inner .inner-block').width(),
-        trW = $('.tree').width();
+            trW = $('.tree').width();
+
         if(inW < trW) {
-        $('.tree-scroll').width(trW + 40);
+            $('.tree-scroll').width(trW + 40);
         }
         else {
-        $('.tree-scroll').width('auto');
+            $('.tree-scroll').width('auto');
         }
     },
 

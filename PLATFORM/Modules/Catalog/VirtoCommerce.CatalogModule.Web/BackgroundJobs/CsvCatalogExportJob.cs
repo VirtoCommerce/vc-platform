@@ -18,6 +18,7 @@ using VirtoCommerce.Domain.Pricing.Services;
 using VirtoCommerce.Domain.Inventory.Services;
 using VirtoCommerce.Domain.Inventory.Model;
 using System.Globalization;
+using VirtoCommerce.Platform.Core.Settings;
 
 namespace VirtoCommerce.CatalogModule.Web.BackgroundJobs
 {
@@ -32,6 +33,11 @@ namespace VirtoCommerce.CatalogModule.Web.BackgroundJobs
 		private readonly IBlobUrlResolver _blobUrlResolver;
 		private readonly IPricingService _pricingService;
 		private readonly IInventoryService _inventoryService;
+
+		internal CsvCatalogExportJob()
+		{
+
+		}
 
 		public CsvCatalogExportJob(ICatalogSearchService catalogSearchService,
 								ICategoryService categoryService, IItemService productService,
@@ -49,7 +55,7 @@ namespace VirtoCommerce.CatalogModule.Web.BackgroundJobs
 			_inventoryService = inventoryService;
 		}
 
-		public virtual void DoExport(string catalogId, string[] exportedCategories, string[] exportedProducts, CurrencyCodes currency, string languageCode, ExportNotification notification)
+		public virtual void DoExport(string catalogId, string[] exportedCategories, string[] exportedProducts, string pricelistId, string fulfilmentCenterId, CurrencyCodes currency, string languageCode, ExportNotification notification)
 		{
 			var memoryStream = new MemoryStream();
 			var streamWriter = new StreamWriter(memoryStream);
@@ -76,8 +82,10 @@ namespace VirtoCommerce.CatalogModule.Web.BackgroundJobs
 					//Load prices for products
 					var priceEvalContext = new  PriceEvaluationContext {
 						ProductIds = allProductIds,
+						PricelistIds = pricelistId == null ? null : new string[] { pricelistId },
 						Currency = currency
 					};
+
 					var allProductPrices = _pricingService.EvaluateProductPrices(priceEvalContext).ToArray();
 					foreach(var product in products)
 					{
@@ -89,7 +97,8 @@ namespace VirtoCommerce.CatalogModule.Web.BackgroundJobs
 					var allProductInventories = _inventoryService.GetProductsInventoryInfos(allProductIds);
 					foreach (var product in products)
 					{
-						product.Inventories = allProductInventories.Where(x => x.ProductId == product.Id).ToList();
+						product.Inventories = allProductInventories.Where(x => x.ProductId == product.Id)
+							.Where(x => fulfilmentCenterId == null ? true : x.FulfillmentCenterId == fulfilmentCenterId).ToList();
 					}
 
 					notification.TotalCount = products.Count();
@@ -158,7 +167,7 @@ namespace VirtoCommerce.CatalogModule.Web.BackgroundJobs
 					{
 						FileName = "Catalog-" + (catalogName ?? catalogId) + "-export.csv",
 						FileByteStream = memoryStream,
-						FolderName = "export"
+						FolderName = "temp"
 					};
 					var blobKey = _blobStorageProvider.Upload(uploadInfo);
 					//Get a download url
@@ -181,6 +190,7 @@ namespace VirtoCommerce.CatalogModule.Web.BackgroundJobs
 			
 		}
 
+	
 		private IEnumerable<CatalogProduct> LoadProducts(string catalogId, string[] exportedCategories, string[] exportedProducts)
 		{
 			var retVal = new List<CatalogProduct>();
@@ -355,6 +365,11 @@ namespace VirtoCommerce.CatalogModule.Web.BackgroundJobs
 			});
 		
 			//Inventories
+			configuration.Add("FulfilmentCenterId", (product) =>
+			{
+				var inventory = product.Inventories.Any() ? product.Inventories.FirstOrDefault() : null;
+				return inventory != null ? inventory.FulfillmentCenterId : String.Empty;
+			});
 			configuration.Add("AllowBackorder", (product) =>
 			{
 				var inventory = product.Inventories.Any() ? product.Inventories.FirstOrDefault() : null;

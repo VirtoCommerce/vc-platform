@@ -11,11 +11,10 @@ using VirtoCommerce.Web.Models.Cms;
 
 namespace VirtoCommerce.Web.Controllers
 {
-    [RoutePrefix("blogs")]
     public class BlogController : StoreControllerBase
     {
         #region Public Methods and Operators
-        [Route("{blog}")]
+        [Route("blogs/{blog}")]
         public async Task<ActionResult> DisplayBlogAsync(string blog)
         {
             var context = SiteContext.Current;
@@ -28,7 +27,8 @@ namespace VirtoCommerce.Web.Controllers
             return View("blog");
         }
 
-        [Route("{blog}/{handle}")]
+        [Route("drafts/blogs/{blog}/{handle}")]
+        [Route("blogs/{blog}/{handle}")]
         public async Task<ActionResult> DisplayBlogArticleAsync(string blog, string handle)
         {
             var context = SiteContext.Current;

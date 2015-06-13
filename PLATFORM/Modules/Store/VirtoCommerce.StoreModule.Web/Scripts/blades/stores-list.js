@@ -7,6 +7,8 @@
         stores.query({}, function (data) {
             $scope.blade.isLoading = false;
             $scope.blade.currentEntities = data;
+        }, function (error) {
+            bladeNavigationService.setError('Error ' + error.status, $scope.blade);
         });
     }
 

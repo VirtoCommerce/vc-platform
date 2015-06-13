@@ -1,94 +1,97 @@
 ﻿angular.module('virtoCommerce.marketingModule')
 .controller('virtoCommerce.marketingModule.addContentItemsController', ['$scope', 'virtoCommerce.marketingModule.dynamicContent.contentItems', 'platformWebApp.bladeNavigationService', function ($scope, marketing_dynamicContents_res_contentItems, bladeNavigationService) {
-	$scope.setForm = function (form) {
-		$scope.formScope = form;
-	}
+    $scope.setForm = function (form) {
+        $scope.formScope = form;
+    }
 
-	var blade = $scope.blade;
+    var blade = $scope.blade;
 
-	blade.initialize = function () {
-		if (!blade.isNew) {
-			$scope.blade.toolbarCommands = [
+    blade.initialize = function () {
+        if (!blade.isNew) {
+            $scope.blade.toolbarCommands = [
 				{
-					name: "Save", icon: 'fa fa-save',
-					executeMethod: function () {
-						blade.saveChanges();
-					},
-					canExecuteMethod: function () {
-						return !angular.equals(blade.originalEntity, blade.entity) && !$scope.formScope.$invalid;
-					},
-					permission: 'marketing:manage'
+				    name: "Save", icon: 'fa fa-save',
+				    executeMethod: function () {
+				        blade.saveChanges();
+				    },
+				    canExecuteMethod: function () {
+				        return !angular.equals(blade.originalEntity, blade.entity) && !$scope.formScope.$invalid;
+				    },
+				    permission: 'marketing:manage'
 				},
                 {
-				    name: "Reset", icon: 'fa fa-undo',
-					executeMethod: function () {
-						blade.entity = angular.copy(blade.originalEntity);
-					},
-					canExecuteMethod: function () {
-						return !angular.equals(blade.originalEntity, blade.entity);
-					},
-					permission: 'marketing:manage'
-				},
+                    name: "Reset", icon: 'fa fa-undo',
+                    executeMethod: function () {
+                        blade.entity = angular.copy(blade.originalEntity);
+                    },
+                    canExecuteMethod: function () {
+                        return !angular.equals(blade.originalEntity, blade.entity);
+                    },
+                    permission: 'marketing:manage'
+                },
 				{
-					name: "Delete", icon: 'fa fa-trash',
-					executeMethod: function () {
-						blade.delete();
-					},
-					canExecuteMethod: function () {
-						return true;
-					},
-					permission: 'marketing:manage'
+				    name: "Delete", icon: 'fa fa-trash',
+				    executeMethod: function () {
+				        blade.delete();
+				    },
+				    canExecuteMethod: function () {
+				        return true;
+				    },
+				    permission: 'marketing:manage'
 				}
-			];
+            ];
 
-			blade.unpackingContentItem();
-		}
+            blade.unpackingContentItem();
+        }
 
-		blade.originalEntity = angular.copy(blade.entity);
+        blade.originalEntity = angular.copy(blade.entity);
 
-		blade.isLoading = false;
-	}
+        blade.isLoading = false;
+    }
 
-	blade.delete = function () {
-		marketing_dynamicContents_res_contentItems.delete({ ids: [blade.entity.id] }, function () {
-			blade.parentBlade.updateChoosen();
-			bladeNavigationService.closeBlade(blade);
-		});
-	}
+    blade.delete = function () {
+        marketing_dynamicContents_res_contentItems.delete({ ids: [blade.entity.id] }, function () {
+            blade.parentBlade.updateChoosen();
+            bladeNavigationService.closeBlade(blade);
+        },
+        function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
+    }
 
-	blade.saveChanges = function () {
-		blade.createContentItem();
-		if (blade.isNew) {
-			marketing_dynamicContents_res_contentItems.save({}, blade.entity, function (data) {
-				blade.parentBlade.updateChoosen();
-				bladeNavigationService.closeBlade(blade);
-			});
-		}
-		else {
-			marketing_dynamicContents_res_contentItems.update({}, blade.entity, function (data) {
-				blade.parentBlade.updateChoosen();
-				blade.originalEntity = angular.copy(blade.entity);
-			});
-		}
-	}
+    blade.saveChanges = function () {
+        blade.createContentItem();
+        if (blade.isNew) {
+            marketing_dynamicContents_res_contentItems.save({}, blade.entity, function (data) {
+                blade.parentBlade.updateChoosen();
+                bladeNavigationService.closeBlade(blade);
+            },
+            function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
+        }
+        else {
+            marketing_dynamicContents_res_contentItems.update({}, blade.entity, function (data) {
+                blade.parentBlade.updateChoosen();
+                blade.originalEntity = angular.copy(blade.entity);
+            },
+            function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
+        }
+    }
 
-	blade.unpackingContentItem = function () {
-		for (var i = 0; i < blade.entity.properties.length; i++) {
-			blade.entity[blade.entity.properties[i].name] = blade.entity.properties[i].value;
-		}
-	}
+    blade.unpackingContentItem = function () {
+        for (var i = 0; i < blade.entity.properties.length; i++) {
+            blade.entity[blade.entity.properties[i].name] = blade.entity.properties[i].value;
+        }
+    }
 
-	blade.createContentItem = function () {
-		var properties = blade.properties[blade.entity.contentType];
+    blade.createContentItem = function () {
+        var properties = blade.properties[blade.entity.contentType];
 
-		blade.entity.properties = [];
+        blade.entity.properties = [];
 
-		for (var i = 0; i < properties.length; i++){
-			blade.entity.properties.push({ name: properties[i].name, value: blade.entity[properties[i].name], valueType: properties[i].valueType });
-		}
-	}
+        for (var i = 0; i < properties.length; i++) {
+            blade.entity.properties.push({ name: properties[i].name, value: blade.entity[properties[i].name], valueType: properties[i].valueType });
+        }
+    }
 
-	blade.contentTypes = [
+    blade.contentTypes = [
 		'Html',
         'Flash',
         //'Liquid',
@@ -97,9 +100,9 @@
 		'ImageNonClickable',
 		//'Product',
         'ProductsWithinCategory'
-	];
+    ];
 
-	blade.properties = {
+    blade.properties = {
         /*
 	    Category: [
 			{ name: 'categoryId', valueType: 'ShortText' },
@@ -108,57 +111,57 @@
 			{ name: 'message', valueType: 'LongText' }
 		],
         */
-		ProductsWithinCategory: [
+        ProductsWithinCategory: [
 			{ name: 'categoryCode', valueType: 'ShortText' },
 			{ name: 'title', valueType: 'ShortText' },
 			{ name: 'sortField', valueType: 'ShortText' },
 			{ name: 'itemCount', valueType: 'Integer' },
 			{ name: 'newItems', valueType: 'Boolean' }
-		],
-		Flash: [
+        ],
+        Flash: [
 			{ name: 'flashFilePath', valueType: 'ShortText' },
 			{ name: 'link1Url', valueType: 'ShortText' },
 			{ name: 'link2Url', valueType: 'ShortText' },
 			{ name: 'link3Url', valueType: 'ShortText' }
-		],
-		Html: [
+        ],
+        Html: [
 			{ name: 'rawHtml', valueType: 'LongText' }
-		],
-		Razor: [
+        ],
+        Razor: [
 			{ name: 'razorHtml', valueType: 'LongText' }
-		],
-		Liquid: [
+        ],
+        Liquid: [
 			{ name: 'liquidHtml', valueType: 'LongText' }
-		],
-		ImageClickable: [
+        ],
+        ImageClickable: [
 			{ name: 'alternativeText', valueType: 'LongText' },
 			{ name: 'imageUrl', valueType: 'ShortText' },
 			{ name: 'targetUrl', valueType: 'ShortText' },
 			{ name: 'title', valueType: 'ShortText' }
-		],
-		ImageNonClickable: [
+        ],
+        ImageNonClickable: [
 			{ name: 'alternativeText', valueType: 'LongText' },
 			{ name: 'imageUrl', valueType: 'ShortText' }
-		],
-		Product: [
+        ],
+        Product: [
 			{ name: 'productCode', valueType: 'ShortText' },
-		]
-	}
+        ]
+    }
 
-	blade.isPropertyShows = function (propertyName) {
-		var properties = blade.properties[blade.entity.contentType];
+    blade.isPropertyShows = function (propertyName) {
+        var properties = blade.properties[blade.entity.contentType];
 
-		var retVal = false;
+        var retVal = false;
 
-		for (var i = 0; i < properties.length; i++) {
-			if (properties[i].name === propertyName)
-				retVal = true;
-		}
+        for (var i = 0; i < properties.length; i++) {
+            if (properties[i].name === propertyName)
+                retVal = true;
+        }
 
-		return retVal;
-	}
+        return retVal;
+    }
 
-	$scope.blade.headIcon = 'fa fa-inbox';
+    $scope.blade.headIcon = 'fa fa-inbox';
 
-	blade.initialize();
+    blade.initialize();
 }]);

@@ -42,7 +42,6 @@
                         setBreadcrumps();
                         setCheckedEntries();
                     }, function (error) {
-                        blade.isLoading = false;
                         bladeNavigationService.setError('Error ' + error.status, blade);
                     });
             }
@@ -117,7 +116,7 @@
 
             blade.showItemBlade = function (id, title) {
                 var newBlade = {
-                    id: "listItemDetail",
+                    id: "listItemDetail" + blade.mode,
                     itemId: id,
                     title: title,
                     controller: 'virtoCommerce.catalogModule.itemDetailController',
@@ -146,36 +145,36 @@
             }
 
             function deleteChecked() {
-                            var selection = $filter('filter')($scope.items, { selected: true }, true);
+                var selection = $filter('filter')($scope.items, { selected: true }, true);
 
-                            var listEntryLinks = [];
-                            var categoryIds = [];
-                            var itemIds = [];
-                            angular.forEach(selection, function (listItem) {
-                                var deletingLink = false;
+                var listEntryLinks = [];
+                var categoryIds = [];
+                var itemIds = [];
+                angular.forEach(selection, function (listItem) {
+                    var deletingLink = false;
 
-                                if (listItem.type === 'category') {
-                                    if (blade.catalog.virtual && _.some(listItem.links, function (x) { return x.categoryId === blade.categoryId; })) {
-                                        deletingLink = true;
-                                    } else {
-                                        categoryIds.push(listItem.id);
-                                    }
-                                } else {
-                                    if (blade.catalog.virtual) {
-                                        deletingLink = true;
-                                    } else {
-                                        itemIds.push(listItem.id);
-                                    }
-                                }
+                    if (listItem.type === 'category') {
+                        if (blade.catalog.virtual && _.some(listItem.links, function (x) { return x.categoryId === blade.categoryId; })) {
+                            deletingLink = true;
+                        } else {
+                            categoryIds.push(listItem.id);
+                        }
+                    } else {
+                        if (blade.catalog.virtual) {
+                            deletingLink = true;
+                        } else {
+                            itemIds.push(listItem.id);
+                        }
+                    }
 
-                                if (deletingLink)
-                                    listEntryLinks.push({
-                                        listEntryId: listItem.id,
-                                        listEntryType: listItem.type,
-                                        catalogId: blade.catalogId,
-                                        categoryId: blade.categoryId,
-                                    });
-                            });
+                    if (deletingLink)
+                        listEntryLinks.push({
+                            listEntryId: listItem.id,
+                            listEntryType: listItem.type,
+                            catalogId: blade.catalogId,
+                            categoryId: blade.categoryId,
+                        });
+                });
 
                 var dialog = {
                     id: "confirmDeleteItem",
@@ -240,7 +239,8 @@
                 listEntries.createlinks(listEntryLinks, function () {
                     blade.refresh();
                     blade.parentBlade.refresh();
-                });
+                },
+                function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
                 //}
                 //    }
                 //}
@@ -339,8 +339,8 @@
                     }
                 },
     			  {
-                    name: "Import",
-                    icon: 'fa fa-download',
+    			      name: "Import",
+    			      icon: 'fa fa-download',
     			      executeMethod: function () {
     			          var newBlade = {
     			              id: 'catalogImport',
@@ -352,13 +352,12 @@
     			          };
     			          bladeNavigationService.showBlade(newBlade, $scope.blade);
     			      },
-    			      canExecuteMethod: function () {
-    			          return true;
-    			      }
+    			      canExecuteMethod: function () { return true; },
+    			      permission: 'catalog:items:manage'
     			  },
 				 {
-                    name: "Export",
-                    icon: 'fa fa-upload',
+				     name: "Export",
+				     icon: 'fa fa-upload',
 				     executeMethod: function () {
 				         var newBlade = {
 				             id: 'catalogExport',
@@ -375,16 +374,17 @@
 				     canExecuteMethod: function () { return true; }
 				 },
                  {
-                    name: "Copy",
-                    icon: 'fa fa-files-o',
+                     name: "Copy",
+                     icon: 'fa fa-files-o',
                      executeMethod: function () {
                          $storage.catalogClipboardContent = _.where($scope.items, { selected: true });
                      },
-                     canExecuteMethod: isItemsChecked
+                     canExecuteMethod: isItemsChecked,
+                     permission: 'catalog:items:manage'
                  },
                  {
-                    name: "Paste",
-                    icon: 'fa fa-clipboard',
+                     name: "Paste",
+                     icon: 'fa fa-clipboard',
                      executeMethod: function () {
                          blade.isLoading = true;
                          listEntries.paste({
@@ -395,13 +395,13 @@
                              delete $storage.catalogClipboardContent;
                              blade.refresh();
                          }, function (error) {
-                             blade.isLoading = false;
                              bladeNavigationService.setError('Error ' + error.status, blade);
                          });
                      },
                      canExecuteMethod: function () {
                          return $storage.catalogClipboardContent;
-                     }
+                     },
+                     permission: 'catalog:items:manage'
                  },
                 {
                     name: "Delete",
@@ -409,7 +409,8 @@
                     executeMethod: function () {
                         deleteChecked();
                     },
-                    canExecuteMethod: isItemsChecked
+                    canExecuteMethod: isItemsChecked,
+                    permission: 'catalog:items:manage'
                 }
                 //{
                 //    name: "Advanced search", icon: 'fa fa-search',

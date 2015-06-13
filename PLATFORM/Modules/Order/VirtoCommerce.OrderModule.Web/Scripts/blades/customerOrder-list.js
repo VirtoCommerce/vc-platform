@@ -84,7 +84,8 @@ function ($scope, order_res_customerOrders, bladeNavigationService, dialogServic
                     var itemIds = _.pluck(selection, 'id');
                     order_res_customerOrders.remove({ ids: itemIds }, function (data, headers) {
                         $scope.blade.refresh();
-                    });
+                    },
+                    function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
                 }
             }
         }

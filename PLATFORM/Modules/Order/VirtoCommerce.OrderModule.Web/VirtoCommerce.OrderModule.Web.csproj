@@ -116,6 +116,7 @@
     <Compile Include="Model\PaymentIn.cs" />
     <Compile Include="Model\LineItem.cs" />
     <Compile Include="Model\ProcessPaymentResult.cs" />
+    <Compile Include="Model\DashboardStatisticsResult.cs" />
     <Compile Include="Model\SearchResult.cs" />
     <Compile Include="Model\Shipment.cs" />
     <Compile Include="Model\Operation.cs" />
@@ -171,6 +172,8 @@
     <Content Include="Scripts\resources\stores.js" />
     <Content Include="Scripts\resources\fulfillmentCenters.js" />
     <Content Include="Scripts\services\calculateTotals.js" />
+    <Content Include="Scripts\widgets\dashboard\statistics-templates.html" />
+    <Content Include="Scripts\widgets\dashboard\statistics-widget.js" />
     <Content Include="Scripts\widgets\operation-items-widget.tpl.html" />
     <Content Include="Scripts\widgets\operation-items-widget.js" />
     <Content Include="Scripts\widgets\shipment-address-widget.js" />

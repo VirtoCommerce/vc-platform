@@ -14,7 +14,8 @@
             };
 
             bladeNavigationService.showBlade(newBlade, $scope.blade.parentBlade);
-        });
+        },
+        function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
     };
 
     $scope.addVirtualCatalog = function () {
@@ -28,9 +29,9 @@
                 controller: 'virtoCommerce.catalogModule.virtualCatalogDetailController',
                 template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/catalog-detail.tpl.html'
             };
-
             bladeNavigationService.showBlade(newBlade, $scope.blade.parentBlade);
-        });
+        },
+        function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
     };
     
     $scope.blade.isLoading = false;

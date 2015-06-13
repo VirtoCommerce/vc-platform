@@ -5,7 +5,8 @@
     blade.refresh = function () {
         modules.get({ id: blade.currentEntityId }, function (data) {
             initializeBlade(data);
-        });
+        },
+        function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
     }
 
     function initializeBlade(data) {
@@ -91,6 +92,8 @@
                             template: 'Scripts/app/packaging/wizards/newModule/module-wizard-progress-step.tpl.html'
                         };
                         bladeNavigationService.showBlade(newBlade, blade.parentBlade);
+                    }, function (error) {
+                        bladeNavigationService.setError('Error ' + error.status, blade);
                     });
                 }
             }

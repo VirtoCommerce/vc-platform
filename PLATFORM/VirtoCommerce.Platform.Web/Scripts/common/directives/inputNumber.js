@@ -22,7 +22,7 @@ angular.module('platformWebApp')
                 });
 
                 scope.sum = function (type) {
-                    var sum = parseFloat(ctrl.$modelValue),
+                    var sum = parseFloat(ctrl.$modelValue) || (scope.min > 0 ? scope.min : 0),
                         step = parseFloat(scope.step);
 
                     if(type == 'up') {
@@ -46,7 +46,8 @@ angular.module('platformWebApp')
 
                 //It need for support only numeric input
                 ctrl.$parsers.push(function (inputValue) {
-                	var floatValue = parseFloat(inputValue);
+                	var floatValue = parseFloat(inputValue) || (scope.min > 0 ? scope.min : 0);
+
                 	return floatValue;
                 });
             }

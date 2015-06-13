@@ -5,12 +5,13 @@ using System.Net;
 using System.Web.Http;
 using System.Web.Http.Description;
 using VirtoCommerce.Domain.Pricing.Services;
+using VirtoCommerce.Domain.Store.Model;
 using VirtoCommerce.Domain.Store.Services;
 using VirtoCommerce.MerchandisingModule.Web.Converters;
-using VirtoCommerce.MerchandisingModule.Web.Model;
 using VirtoCommerce.Platform.Core.Caching;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Settings;
+using Store = VirtoCommerce.MerchandisingModule.Web.Model.Store;
 
 namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 {
@@ -27,7 +28,6 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 			_cacheManager = cacheManager;
 		}
 
-
 		[HttpGet]
 		[ResponseType(typeof(Store[]))]
 		[ClientCache(Duration = 60)]
@@ -41,12 +41,10 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 			return Ok(stores);
 		}
 
-		private Store[] GetFullLoadedStoreList()
+		private IEnumerable<Store> GetFullLoadedStoreList()
 		{
 		    var stores = _storeService.GetStoreList();
-		    return stores.Select(store => this._storeService.GetById(store.Id)).Select(fullLoadedStore => fullLoadedStore.ToWebModel()).ToArray();
+		    return stores.Select(fullLoadedStore => fullLoadedStore.ToWebModel());
 		}
-
-
 	}
 }

@@ -22,7 +22,8 @@
             $scope.propertyValueGroups = preparePropertyValueGroups(propertyValues, searchResult.propertyValues);
             propertyValues = searchResult.propertyValues;
             $scope.checkedPropValues = getAllCheckedPropValues(propertyValues);
-        });
+        },
+        function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
     };
 
     $scope.refreshItems = function () {

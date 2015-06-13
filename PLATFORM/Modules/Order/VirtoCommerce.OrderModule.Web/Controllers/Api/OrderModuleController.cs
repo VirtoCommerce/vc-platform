@@ -20,217 +20,233 @@ using Omu.ValueInjecter;
 
 namespace VirtoCommerce.OrderModule.Web.Controllers.Api
 {
-	[RoutePrefix("api/order/customerOrders")]
+    [RoutePrefix("api/order/customerOrders")]
     [CheckPermission(Permission = PredefinedPermissions.Query)]
     public class OrderModuleController : ApiController
     {
-		private readonly ICustomerOrderService _customerOrderService;
-		private readonly ICustomerOrderSearchService _searchService;
-		private readonly IOperationNumberGenerator _operationNumberGenerator;
-		private readonly IStoreService _storeService;
-	
-		public OrderModuleController(ICustomerOrderService customerOrderService, ICustomerOrderSearchService searchService, IStoreService storeService, IOperationNumberGenerator numberGenerator)
-		{
-			_customerOrderService = customerOrderService;
-			_searchService = searchService;
-			_operationNumberGenerator = numberGenerator;
-			_storeService = storeService;
-		}
+        private readonly ICustomerOrderService _customerOrderService;
+        private readonly ICustomerOrderSearchService _searchService;
+        private readonly IOperationNumberGenerator _operationNumberGenerator;
+        private readonly IStoreService _storeService;
 
-		// GET: api/order/customerOrders?q=ddd&site=site1&customer=user1&start=0&count=20
-		[HttpGet]
-		[ResponseType(typeof(webModel.SearchResult))]
-		[Route("")]
-		public IHttpActionResult Search([ModelBinder(typeof(SearchCriteriaBinder))] coreModel.SearchCriteria criteria)
-		{
-			var retVal = _searchService.Search(criteria);
-			return Ok(retVal.ToWebModel());
-		}
+        public OrderModuleController(ICustomerOrderService customerOrderService, ICustomerOrderSearchService searchService, IStoreService storeService, IOperationNumberGenerator numberGenerator)
+        {
+            _customerOrderService = customerOrderService;
+            _searchService = searchService;
+            _operationNumberGenerator = numberGenerator;
+            _storeService = storeService;
+        }
 
-		// GET: api/order/customerOrders/{id}
-		[HttpGet]
-		[ResponseType(typeof(webModel.CustomerOrder))]
-		[Route("{id}")]
-		public IHttpActionResult GetById(string id)
-		{
-			var retVal = _customerOrderService.GetById(id, coreModel.CustomerOrderResponseGroup.Full);
-			if (retVal == null)
-			{
-				return NotFound();
-			}
-			return Ok(retVal.ToWebModel());
-		}
+        // GET: api/order/customerOrders?q=ddd&site=site1&customer=user1&start=0&count=20
+        [HttpGet]
+        [ResponseType(typeof(webModel.SearchResult))]
+        [Route("")]
+        public IHttpActionResult Search([ModelBinder(typeof(SearchCriteriaBinder))] coreModel.SearchCriteria criteria)
+        {
+            var retVal = _searchService.Search(criteria);
+            return Ok(retVal.ToWebModel());
+        }
 
-		// POST: api/order/customerOrders/{cartId}
-		[HttpPost]
-		[ResponseType(typeof(webModel.CustomerOrder))]
-		[Route("{cartId}")]
-		public IHttpActionResult CreateOrderFromCart(string cartId)
-		{
-			var retVal = _customerOrderService.CreateByShoppingCart(cartId);
-			return Ok(retVal.ToWebModel());
-		}
+        // GET: api/order/customerOrders/{id}
+        [HttpGet]
+        [ResponseType(typeof(webModel.CustomerOrder))]
+        [Route("{id}")]
+        public IHttpActionResult GetById(string id)
+        {
+            var retVal = _customerOrderService.GetById(id, coreModel.CustomerOrderResponseGroup.Full);
+            if (retVal == null)
+            {
+                return NotFound();
+            }
+            return Ok(retVal.ToWebModel());
+        }
 
-		// GET: api/order/customerOrders/{orderId}/processPayment/{paymentId}
-		[HttpGet]
-		[ResponseType(typeof(webModel.CustomerOrder))]
-		[Route("{orderId}/processPayment/{paymentId}")]
-		public IHttpActionResult ProcessOrderPayments(string orderId, string paymentId)
-		{
-			var order = _customerOrderService.GetById(orderId, coreModel.CustomerOrderResponseGroup.Full);
-			if(order == null)
-			{
-				throw new NullReferenceException("order");
-			}
-			var payment = order.InPayments.FirstOrDefault(x=>x.Id == paymentId);
-			if(payment == null)
-			{
-				throw new NullReferenceException("payment");
-			}
-			var store = _storeService.GetById(order.StoreId);
-			var paymentMethod = store.PaymentMethods.FirstOrDefault(x => x.Code == payment.GatewayCode);
-			if (payment == null)
-			{
-				throw new NullReferenceException("appropriate paymentMethod not found");
-			}
+        // POST: api/order/customerOrders/{cartId}
+        [HttpPost]
+        [ResponseType(typeof(webModel.CustomerOrder))]
+        [Route("{cartId}")]
+        public IHttpActionResult CreateOrderFromCart(string cartId)
+        {
+            var retVal = _customerOrderService.CreateByShoppingCart(cartId);
+            return Ok(retVal.ToWebModel());
+        }
 
-			var context = new ProcessPaymentEvaluationContext
-			{
-				Order = order,
-				Payment = payment,
-				Store = store
-			};
+        // GET: api/order/customerOrders/{orderId}/processPayment/{paymentId}
+        [HttpGet]
+        [ResponseType(typeof(webModel.CustomerOrder))]
+        [Route("{orderId}/processPayment/{paymentId}")]
+        public IHttpActionResult ProcessOrderPayments(string orderId, string paymentId)
+        {
+            var order = _customerOrderService.GetById(orderId, coreModel.CustomerOrderResponseGroup.Full);
+            if (order == null)
+            {
+                throw new NullReferenceException("order");
+            }
+            var payment = order.InPayments.FirstOrDefault(x => x.Id == paymentId);
+            if (payment == null)
+            {
+                throw new NullReferenceException("payment");
+            }
+            var store = _storeService.GetById(order.StoreId);
+            var paymentMethod = store.PaymentMethods.FirstOrDefault(x => x.Code == payment.GatewayCode);
+            if (payment == null)
+            {
+                throw new NullReferenceException("appropriate paymentMethod not found");
+            }
 
-			var result = paymentMethod.ProcessPayment(context);
-			if(result.NewPaymentStatus == PaymentStatus.Pending)
-			{
-				payment.OuterId = result.OuterId;
-				_customerOrderService.Update(new coreModel.CustomerOrder[] { order });
-			}
-			var retVal = new webModel.ProcessPaymentResult();
-			retVal.InjectFrom(result);
-			retVal.PaymentMethodType = paymentMethod.PaymentMethodType;
+            var context = new ProcessPaymentEvaluationContext
+            {
+                Order = order,
+                Payment = payment,
+                Store = store
+            };
 
-			return Ok(retVal);
-		}
+            var result = paymentMethod.ProcessPayment(context);
+            if (result.NewPaymentStatus == PaymentStatus.Pending)
+            {
+                payment.OuterId = result.OuterId;
+                _customerOrderService.Update(new coreModel.CustomerOrder[] { order });
+            }
+            var retVal = new webModel.ProcessPaymentResult();
+            retVal.InjectFrom(result);
+            retVal.PaymentMethodType = paymentMethod.PaymentMethodType;
 
-		// POST: api/order/customerOrders
-		[HttpPost]
-		[ResponseType(typeof(webModel.CustomerOrder))]
-		[Route("")]
-		public IHttpActionResult CreateOrder(webModel.CustomerOrder customerOrder)
-		{
-			var retVal = _customerOrderService.Create(customerOrder.ToCoreModel());
-			return Ok(retVal.ToWebModel());
-		}
+            return Ok(retVal);
+        }
 
-		// PUT: api/order/customerOrders
-		[HttpPut]
-		[ResponseType(typeof(void))]
-		[Route("")]
+        // POST: api/order/customerOrders
+        [HttpPost]
+        [ResponseType(typeof(webModel.CustomerOrder))]
+        [Route("")]
+        public IHttpActionResult CreateOrder(webModel.CustomerOrder customerOrder)
+        {
+            var retVal = _customerOrderService.Create(customerOrder.ToCoreModel());
+            return Ok(retVal.ToWebModel());
+        }
+
+        // PUT: api/order/customerOrders
+        [HttpPut]
+        [ResponseType(typeof(void))]
+        [Route("")]
         [CheckPermission(Permission = PredefinedPermissions.Manage)]
-		public IHttpActionResult Update(webModel.CustomerOrder order)
-		{
-			var coreOrder = order.ToCoreModel();
-			_customerOrderService.Update(new coreModel.CustomerOrder[] { coreOrder });
-			return StatusCode(HttpStatusCode.NoContent);
-		}
+        public IHttpActionResult Update(webModel.CustomerOrder order)
+        {
+            var coreOrder = order.ToCoreModel();
+            _customerOrderService.Update(new coreModel.CustomerOrder[] { coreOrder });
+            return StatusCode(HttpStatusCode.NoContent);
+        }
 
-		// GET:  api/order/customerOrders/{id}/shipments/new
-		[HttpGet]
-		[ResponseType(typeof(webModel.Shipment))]
-		[Route("{id}/shipments/new")]
-		public IHttpActionResult GetNewShipment(string id)
-		{
-			coreModel.Shipment retVal = null;
-			var order = _customerOrderService.GetById(id, coreModel.CustomerOrderResponseGroup.Full);
-			if(order != null)
-			{
-				retVal = new coreModel.Shipment
-				{
-					Currency = order.Currency
-				};
-				retVal.Number = _operationNumberGenerator.GenerateNumber(retVal);
+        // GET:  api/order/customerOrders/{id}/shipments/new
+        [HttpGet]
+        [ResponseType(typeof(webModel.Shipment))]
+        [Route("{id}/shipments/new")]
+        public IHttpActionResult GetNewShipment(string id)
+        {
+            coreModel.Shipment retVal = null;
+            var order = _customerOrderService.GetById(id, coreModel.CustomerOrderResponseGroup.Full);
+            if (order != null)
+            {
+                retVal = new coreModel.Shipment
+                {
+                    Currency = order.Currency
+                };
+                retVal.Number = _operationNumberGenerator.GenerateNumber(retVal);
 
-				//distribute not shipped items
-				var shippedItems = order.Shipments.SelectMany(x => x.Items).ToArray();
-				retVal.Items = order.Items.Where(x => !shippedItems.Any(y => y.Id == x.Id)).ToList();
-				return Ok(retVal.ToWebModel());
-			}
-		
-			return NotFound();
-		}
+                //distribute not shipped items
+                var shippedItems = order.Shipments.SelectMany(x => x.Items).ToArray();
+                retVal.Items = order.Items.Where(x => !shippedItems.Any(y => y.Id == x.Id)).ToList();
+                return Ok(retVal.ToWebModel());
+            }
 
-		// GET:  api/order/customerOrders/{id}/payments/new
-		[HttpGet]
-		[ResponseType(typeof(webModel.Shipment))]
-		[Route("{id}/payments/new")]
-		public IHttpActionResult GetNewPayment(string id)
-		{
-			coreModel.PaymentIn retVal = null;
-			var order = _customerOrderService.GetById(id, coreModel.CustomerOrderResponseGroup.Full);
-			if (order != null)
-			{
-				retVal = new coreModel.PaymentIn
-				{
-					Id = Guid.NewGuid().ToString(),
-					Currency = order.Currency,
-					CustomerId = order.CustomerId
-				};
-				retVal.Number = _operationNumberGenerator.GenerateNumber(retVal);
-				return Ok(retVal.ToWebModel());
-			}
+            return NotFound();
+        }
 
-			return NotFound();
-		}
+        // GET:  api/order/customerOrders/{id}/payments/new
+        [HttpGet]
+        [ResponseType(typeof(webModel.Shipment))]
+        [Route("{id}/payments/new")]
+        public IHttpActionResult GetNewPayment(string id)
+        {
+            coreModel.PaymentIn retVal = null;
+            var order = _customerOrderService.GetById(id, coreModel.CustomerOrderResponseGroup.Full);
+            if (order != null)
+            {
+                retVal = new coreModel.PaymentIn
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    Currency = order.Currency,
+                    CustomerId = order.CustomerId
+                };
+                retVal.Number = _operationNumberGenerator.GenerateNumber(retVal);
+                return Ok(retVal.ToWebModel());
+            }
+
+            return NotFound();
+        }
 
 
 
-		// DELETE: /api/order/customerOrders?ids=21
-		[HttpDelete]
-		[ResponseType(typeof(void))]
-		[Route("")]
+        // DELETE: /api/order/customerOrders?ids=21
+        [HttpDelete]
+        [ResponseType(typeof(void))]
+        [Route("")]
         [CheckPermission(Permission = PredefinedPermissions.Manage)]
-		public IHttpActionResult Delete([FromUri] string[] ids)
-		{
-			_customerOrderService.Delete(ids);
-			return StatusCode(HttpStatusCode.NoContent);
-		}
+        public IHttpActionResult Delete([FromUri] string[] ids)
+        {
+            _customerOrderService.Delete(ids);
+            return StatusCode(HttpStatusCode.NoContent);
+        }
 
-		// DELETE: /api/order/customerOrders/id/operations/id
-		[HttpDelete]
-		[ResponseType(typeof(void))]
-		[Route("~/api/order/customerOrders/{id}/operations/{operationId}")]
-		public IHttpActionResult Delete(string id, string operationId)
-		{
-			var order = _customerOrderService.GetById(id, coreModel.CustomerOrderResponseGroup.Full);
-			if (order != null)
-			{
-				var operation = ((coreModel.Operation)order).Traverse(x => x.ChildrenOperations).FirstOrDefault(x => x.Id == operationId);
-				if(operation != null)
-				{
-					var shipment = operation as coreModel.Shipment;
-					var payment = operation as coreModel.PaymentIn;
-					if (shipment != null)
-					{
-						order.Shipments.Remove(shipment);
-					}
-					else if (payment != null)
-					{
-						//If payment not belong to order need remove payment in shipment
-						if (!order.InPayments.Remove(payment))
-						{
-							var paymentContainsShipment = order.Shipments.FirstOrDefault(x => x.InPayments.Contains(payment));
-							paymentContainsShipment.InPayments.Remove(payment);
-						}
-					}
-				}
-				_customerOrderService.Update(new coreModel.CustomerOrder[] { order });
-			}
+        // DELETE: /api/order/customerOrders/id/operations/id
+        [HttpDelete]
+        [ResponseType(typeof(void))]
+        [Route("~/api/order/customerOrders/{id}/operations/{operationId}")]
+        public IHttpActionResult Delete(string id, string operationId)
+        {
+            var order = _customerOrderService.GetById(id, coreModel.CustomerOrderResponseGroup.Full);
+            if (order != null)
+            {
+                var operation = ((coreModel.Operation)order).Traverse(x => x.ChildrenOperations).FirstOrDefault(x => x.Id == operationId);
+                if (operation != null)
+                {
+                    var shipment = operation as coreModel.Shipment;
+                    var payment = operation as coreModel.PaymentIn;
+                    if (shipment != null)
+                    {
+                        order.Shipments.Remove(shipment);
+                    }
+                    else if (payment != null)
+                    {
+                        //If payment not belong to order need remove payment in shipment
+                        if (!order.InPayments.Remove(payment))
+                        {
+                            var paymentContainsShipment = order.Shipments.FirstOrDefault(x => x.InPayments.Contains(payment));
+                            paymentContainsShipment.InPayments.Remove(payment);
+                        }
+                    }
+                }
+                _customerOrderService.Update(new coreModel.CustomerOrder[] { order });
+            }
 
-			return StatusCode(HttpStatusCode.NoContent);
-		}
+            return StatusCode(HttpStatusCode.NoContent);
+        }
 
+        // GET:  api/order/dashboardStatistics
+        [HttpGet]
+        [ResponseType(typeof(webModel.DashboardStatisticsResult))]
+        [Route("~/api/order/dashboardStatistics")]
+        public IHttpActionResult GetDashboardStatistics(DateTime start, DateTime end)
+        {
+            var retVal = new webModel.DashboardStatisticsResult();
+            retVal.Revenue = "demo-$128K";
+            retVal.CustomersCount = "demo-78";
+            retVal.RevenuePerCustomer = "demo-$7,865";
+            retVal.OrderValue = "demo-$215";
+            retVal.ItemsPurchased = "demo-6742";
+            retVal.LineitemsPerOrder = "demo-2.7";
+
+            return Ok(retVal);
+        }
 
     }
 }
