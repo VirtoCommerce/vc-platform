@@ -10,7 +10,7 @@ Documentation: http://docs.virtocommerce.com
 
 Frontend Demo: http://demo2.virtocommerce.com
 
-Web Admin Demo: http://demo2.virtocommerce.com/admin
+Commerce Manager Demo: http://demo2.virtocommerce.com/admin
 
 Contributing
 -----------
