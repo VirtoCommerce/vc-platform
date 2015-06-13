@@ -62,7 +62,7 @@ namespace VirtoCommerce.Content.Data
 				MenuLinkListId = footerList.Id,
 				Priority = 30,
 				Title = "About Us",
-				Url = "http://virtocommerce.com/about",
+				Url = "~/about",
 				CreatedDate = DateTime.UtcNow,
 				CreatedBy = "initialize"
 			});

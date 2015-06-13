@@ -202,15 +202,16 @@ namespace VirtoCommerce.Web.Views.Contents
             SiteStaticContentContext context,
             string collectionFolder)
         {
+            var extensions = new HashSet<string>(new[] { ".md", ".markdown", ".html" }, StringComparer.OrdinalIgnoreCase);
             var items = new List<ContentItem>();
-            if (this._fileSystem.Directory.Exists(collectionFolder))
+            if (_fileSystem.Directory.Exists(collectionFolder))
             {
+                var files = _fileSystem.DirectoryInfo.FromDirectoryName(collectionFolder).GetFiles("*", SearchOption.AllDirectories)
+                    .Where(x => extensions.Contains(x.Extension));
                 items.AddRange(
-                    this._fileSystem.Directory.GetFiles(collectionFolder, "*.*", SearchOption.AllDirectories)
-                        .Select(file => this.CreateContentItem(context, file))
-                        .Where(post => post != null).Where(post => post.Published != Published.Private));
+                    files.Select(file => CreateContentItem(context, file.FullName))
+                        .Where(post => post != null));
             }
-
             return items;
         }
 
