@@ -1,14 +1,14 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <module>
-    <id>Paypal.BankCards.AdaptivePayments.PaymentGateway</id>
+    <id>Paypal.AdaptivePayments</id>
     <version>1.0.0</version>
     <platformVersion>2.0.0</platformVersion>
     <dependencies>
         <dependency id="VirtoCommerce.Core" version="1.0.0" />
     </dependencies>
 
-    <title>Paypal Bank Cards Payment Gateway</title>
-    <description>APIs and UI for paypal bank cards payment gateway</description>
+    <title>Paypal Adaptive Payments Module</title>
+    <description>Paypal api adaptive payments integartion</description>
     <authors>
         <author>Virto Commerce</author>
     </authors>
@@ -19,58 +19,58 @@
     <iconUrl>http://nuget.org/Content/Images/packageDefaultIcon-50x50.png</iconUrl>
     <releaseNotes>First version.</releaseNotes>
     <copyright>Copyright © 2011-2015 Virto Commerce. All rights reserved</copyright>
-    <tags>paypal bank cards payment gateway</tags>
+    <tags>paypal adaptive payments</tags>
 
-    <assemblyFile>BankCards.PaypalAdaptivePayments.dll</assemblyFile>
-    <moduleType>BankCards.PaypalAdaptivePayments.Module, BankCards.PaypalAdaptivePayments</moduleType>
+    <assemblyFile>Paypal.AdaptivePayments.dll</assemblyFile>
+    <moduleType>Paypal.AdaptivePayments.Module, Paypal.AdaptivePayments</moduleType>
 
 		<settings>
 				<group name="Gateway settings">
 						<setting>
-								<name>Paypal.BankCards.AdaptivePayments.Mode</name>
+								<name>Paypal.AdaptivePayments.Mode</name>
 								<valueType>string</valueType>
 								<allowedValues>
 									<value>Sandbox</value>
 									<value>Live</value>
 								</allowedValues>
 								<defaultValue>Sandbox</defaultValue>
-								<title>Paypal working mode</title>
-								<description>Type of api (sandbox or live)</description>
+								<title>Paypal api mode</title>
+								<description>Type of api working mode (sandbox or live)</description>
 						</setting>
 						<setting>
-								<name>Paypal.BankCards.AdaptivePayments.APIUsername</name>
+								<name>Paypal.AdaptivePayments.APIUsername</name>
 								<valueType>string</valueType>
 								<defaultValue>evgokhrimenko_api1.gmail.com</defaultValue>
 								<title>API username</title>
-								<description>merchant api username credential</description>
+								<description>Merchant api username credential</description>
 						</setting>
 						<setting>
-								<name>Paypal.BankCards.AdaptivePayments.APIPassword</name>
+								<name>Paypal.AdaptivePayments.APIPassword</name>
 								<valueType>string</valueType>
 								<defaultValue>XMDRC63XDNDQPXAZ</defaultValue>
 								<title>API password</title>
-								<description>merchant api password credential</description>
+								<description>Merchant api password credential</description>
 						</setting>
 						<setting>
-								<name>Paypal.BankCards.AdaptivePayments.APISignature</name>
+								<name>Paypal.AdaptivePayments.APISignature</name>
 								<valueType>string</valueType>
 								<defaultValue>AiPC9BjkCyDFQXbSkoZcgqH3hpacAddFA7jQMnRzruCFYMSKx38TE0pt</defaultValue>
 								<title>API signature</title>
-								<description>merchant api signature credential</description>
+								<description>Merchant api signature credential</description>
 						</setting>
 						<setting>
-								<name>Paypal.BankCards.AdaptivePayments.PaymentRedirectRelativePath</name>
+								<name>Paypal.AdaptivePayments.PaymentRedirectRelativePath</name>
 								<valueType>string</valueType>
 								<defaultValue>checkout/externalpaymentcallback</defaultValue>
 								<title>Redirect relative path</title>
-								<description>relative path for paypal payment from paypal site to frontend</description>
+								<description>Relative path for paypal payment from paypal site to frontend</description>
 						</setting>
 						<setting>
-								<name>Paypal.BankCards.AdaptivePayments.AppId</name>
+								<name>Paypal.AdaptivePayments.AppId</name>
 								<valueType>string</valueType>
 								<defaultValue>APP-80W284485P519543T</defaultValue>
 								<title>Paypal app id</title>
-								<description>merchant application id</description>
+								<description>Merchant application id</description>
 						</setting>
 				</group>
 		</settings>

@@ -194,6 +194,8 @@
     <Compile Include="Order\Services\IPaymentService.cs" />
     <Compile Include="Order\Services\IShipmentService.cs" />
     <Compile Include="Order\Events\OrderChangeEvent.cs" />
+    <Compile Include="Payment\Model\BankCardInfo.cs" />
+    <Compile Include="Payment\Model\PaymentMethodGroupType.cs" />
     <Compile Include="Payment\Model\PostProcessPaymentEvaluationContext.cs" />
     <Compile Include="Payment\Model\PaymentMethod.cs" />
     <Compile Include="Payment\Model\PaymentStatus.cs" />

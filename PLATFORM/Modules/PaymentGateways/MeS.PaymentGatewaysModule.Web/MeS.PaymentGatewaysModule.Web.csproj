@@ -133,17 +133,9 @@
       <HintPath>..\..\..\packages\WebGrease.1.6.0\lib\WebGrease.dll</HintPath>
     </Reference>
   </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
-    <Folder Include="Content\" />
-    <Folder Include="Scripts\" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Controllers\MeSGatewayController.cs" />
     <Compile Include="Managers\MesPaymentMethod.cs" />
-    <Compile Include="Models\CreatePaymentResult.cs" />
-    <Compile Include="Models\GetPaymentParametersResult.cs" />
-    <Compile Include="Models\MesPaymentInfo.cs" />
-    <Compile Include="Models\MeSPushRequestModel.cs" />
     <Compile Include="Module.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

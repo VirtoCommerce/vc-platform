@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Data.Entity;
 using Microsoft.Practices.Unity;
-using VirtoCommerce.CoreModule.Data.Payment;
 using VirtoCommerce.CoreModule.Data.Repositories;
 using VirtoCommerce.CoreModule.Data.Shipping;
 using VirtoCommerce.Domain.Commerce.Services;
@@ -80,7 +79,6 @@ namespace VirtoCommerce.CoreModule.Web
         {
 			var settingManager = _container.Resolve<ISettingsManager>();
 			var shippingService = _container.Resolve<IShippingService>();
-			var paymentService = _container.Resolve<IPaymentMethodsService>();
 
 			shippingService.RegisterShippingMethod(() => new FixedRateShippingMethod(new SettingEntry[] { new SettingEntry { Name = "Rate", ValueType = SettingValueType.Decimal, DefaultValue = "0" } })
 				{
@@ -89,8 +87,6 @@ namespace VirtoCommerce.CoreModule.Web
 					LogoUrl = "http://somelogo.com/logo.png"
 
 				});
-			paymentService.RegisterPaymentMethod(() => new ManualPaymentMethod(settingManager.GetModuleSettings("VirtoCommerce.Core")));
-      
         }
 
 	

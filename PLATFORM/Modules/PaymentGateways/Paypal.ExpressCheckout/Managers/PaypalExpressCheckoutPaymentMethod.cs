@@ -11,15 +11,16 @@ using VirtoCommerce.Domain.Order.Model;
 using VirtoCommerce.Domain.Payment.Model;
 using VirtoCommerce.Domain.Store.Model;
 
-namespace BankCards.PaypalExpressCheckout.Managers
+namespace Paypal.ExpressCheckout.Managers
 {
-	public class PaypalBankCardsExpressCheckoutPaymentMethod : VirtoCommerce.Domain.Payment.Model.PaymentMethod
+	public class PaypalExpressCheckoutPaymentMethod : VirtoCommerce.Domain.Payment.Model.PaymentMethod
 	{
-		private static string PaypalAPIModeStoreSetting = "Paypal.BankCards.ExpressCheckout.Mode";
-		private static string PaypalAPIUserNameStoreSetting = "Paypal.BankCards.ExpressCheckout.APIUsername";
-		private static string PaypalAPIPasswordStoreSetting = "Paypal.BankCards.ExpressCheckout.APIPassword";
-		private static string PaypalAPISignatureStoreSetting = "Paypal.BankCards.ExpressCheckout.APISignature";
-		private static string PaypalPaymentRedirectRelativePathStoreSetting = "Paypal.BankCards.ExpressCheckout.PaymentRedirectRelativePath";
+		private static string PaypalAPIModeStoreSetting = "Paypal.ExpressCheckout.Mode";
+		private static string PaypalPaymentModeStoreSetting = "Paypal.ExpressCheckout.PaymentMode";
+		private static string PaypalAPIUserNameStoreSetting = "Paypal.ExpressCheckout.APIUsername";
+		private static string PaypalAPIPasswordStoreSetting = "Paypal.ExpressCheckout.APIPassword";
+		private static string PaypalAPISignatureStoreSetting = "Paypal.ExpressCheckout.APISignature";
+		private static string PaypalPaymentRedirectRelativePathStoreSetting = "Paypal.ExpressCheckout.PaymentRedirectRelativePath";
 
 		private static string PaypalModeConfigSettingName = "mode";
 		private static string PaypalUsernameConfigSettingName = "account1.apiUsername";
@@ -30,8 +31,8 @@ namespace BankCards.PaypalExpressCheckout.Managers
 		private static string LivePaypalBaseUrlFormat = "https://www.paypal.com/cgi-bin/webscr?cmd=_express-checkout&useraction=commit&token={0}";
 
 
-		public PaypalBankCardsExpressCheckoutPaymentMethod()
-			: base("Paypal.BankCards.ExpressCheckout")
+		public PaypalExpressCheckoutPaymentMethod()
+			: base("Paypal.ExpressCheckout")
 		{
 		}
 
@@ -83,6 +84,11 @@ namespace BankCards.PaypalExpressCheckout.Managers
 		public override PaymentMethodType PaymentMethodType
 		{
 			get { return PaymentMethodType.Redirection; }
+		}
+
+		public override PaymentMethodGroupType PaymentMethodGroupType
+		{
+			get { return PaymentMethodGroupType.BankCard; }
 		}
 
 		public override ProcessPaymentResult ProcessPayment(ProcessPaymentEvaluationContext context)
@@ -251,10 +257,19 @@ namespace BankCards.PaypalExpressCheckout.Managers
 			{
 				CallbackTimeout = "3",
 				ReturnURL = string.Format("{0}/{1}?cancel=false&orderId={2}", store.Url, PaypalPaymentRedirectRelativePath, order.Id),
-				CancelURL = string.Format("{0}/{1}?cancel=true&orderId={2}", store.Url, PaypalPaymentRedirectRelativePath, order.Id),
-				SolutionType = SolutionTypeType.SOLE,
-				LandingPage = LandingPageType.BILLING
+				CancelURL = string.Format("{0}/{1}?cancel=true&orderId={2}", store.Url, PaypalPaymentRedirectRelativePath, order.Id)
 			};
+
+			if (PaypalPaymentModeStoreSetting.Equals("BankCard"))
+			{
+				ecDetails.SolutionType = SolutionTypeType.SOLE;
+				ecDetails.LandingPage = LandingPageType.BILLING;
+			}
+			else
+			{
+				ecDetails.SolutionType = SolutionTypeType.MARK;
+				ecDetails.LandingPage = LandingPageType.LOGIN;
+			}
 
 			var currency = (CurrencyCodeType)Enum.Parse(typeof(CurrencyCodeType), order.Currency.ToString());
 

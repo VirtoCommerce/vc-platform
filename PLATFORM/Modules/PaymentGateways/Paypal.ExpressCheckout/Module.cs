@@ -9,9 +9,9 @@ using VirtoCommerce.Domain.Payment.Services;
 using VirtoCommerce.Domain.Store.Services;
 using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Core.Settings;
-using BankCards.PaypalAdaptivePayments.Managers;
+using Paypal.ExpressCheckout.Managers;
 
-namespace BankCards.PaypalAdaptivePayments
+namespace Paypal.ExpressCheckout
 {
 	public class Module : IModule
 	{
@@ -31,20 +31,20 @@ namespace BankCards.PaypalAdaptivePayments
 
 		public void Initialize()
 		{
-			var settings = _container.Resolve<ISettingsManager>().GetModuleSettings("Paypal.BankCards.AdaptivePayments.PaymentGateway");
+			var settings = _container.Resolve<ISettingsManager>().GetModuleSettings("Paypal.ExpressCheckout");
 
-			Func<PaypalBankCardsAdaptivePaymentsPaymentMethod> paypalBankCardsAdaptivePaymentsPaymentMethodFactory = () =>
+			Func<PaypalExpressCheckoutPaymentMethod> paypalBankCardsExpressCheckoutPaymentMethodFactory = () =>
 			{
-				return new PaypalBankCardsAdaptivePaymentsPaymentMethod()
+				return new PaypalExpressCheckoutPaymentMethod()
 				{
-					Name = "PayPal Bank Cards Adaptive Payments",
-					Description = "PayPal Bank Cards Adaptive Payments integration",
+					Name = "Paypal Express Checkout",
+					Description = "PayPal express checkout integration",
 					LogoUrl = "http://www.credit-card-logos.com/images/multiple_credit-card-logos-2/credit_card_paypal_logos_2.gif",
 					Settings = settings
 				};
 			};
 
-			_container.Resolve<IPaymentMethodsService>().RegisterPaymentMethod(paypalBankCardsAdaptivePaymentsPaymentMethodFactory);
+			_container.Resolve<IPaymentMethodsService>().RegisterPaymentMethod(paypalBankCardsExpressCheckoutPaymentMethodFactory);
 		}
 
 		public void PostInitialize()

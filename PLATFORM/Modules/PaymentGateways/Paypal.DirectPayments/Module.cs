@@ -9,9 +9,9 @@ using VirtoCommerce.Domain.Payment.Services;
 using VirtoCommerce.Domain.Store.Services;
 using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Core.Settings;
-using BankCards.PaypalExpressCheckout.Managers;
+using Paypal.DirectPayments.Managers;
 
-namespace BankCards.PaypalExpressCheckout
+namespace Paypal.DirectPayments
 {
 	public class Module : IModule
 	{
@@ -31,14 +31,14 @@ namespace BankCards.PaypalExpressCheckout
 
 		public void Initialize()
 		{
-			var settings = _container.Resolve<ISettingsManager>().GetModuleSettings("Paypal.BankCards.ExpressCheckout.PaymentGateway");
+			var settings = _container.Resolve<ISettingsManager>().GetModuleSettings("Paypal.DirectPayment");
 
-			Func<PaypalBankCardsExpressCheckoutPaymentMethod> paypalBankCardsExpressCheckoutPaymentMethodFactory = () =>
+			Func<PaypalDirectPaymentsPaymentMethod> paypalBankCardsExpressCheckoutPaymentMethodFactory = () =>
 			{
-				return new PaypalBankCardsExpressCheckoutPaymentMethod()
+				return new PaypalDirectPaymentsPaymentMethod()
 				{
-					Name = "PayPal Bank Cards Express Checkout",
-					Description = "PayPal Bank Cards Express Checkout integration",
+					Name = "Credit Card",
+					Description = "Paypal direct payment integration",
 					LogoUrl = "http://www.credit-card-logos.com/images/multiple_credit-card-logos-2/credit_card_paypal_logos_2.gif",
 					Settings = settings
 				};

@@ -10,22 +10,22 @@ using VirtoCommerce.Domain.Order.Model;
 using VirtoCommerce.Domain.Payment.Model;
 using VirtoCommerce.Domain.Store.Model;
 
-namespace BankCards.PaypalAdaptivePayments.Managers
+namespace Paypal.AdaptivePayments.Managers
 {
-	public class PaypalBankCardsAdaptivePaymentsPaymentMethod : VirtoCommerce.Domain.Payment.Model.PaymentMethod
+	public class PaypalAdaptivePaymentsPaymentMethod : VirtoCommerce.Domain.Payment.Model.PaymentMethod
 	{
-		public PaypalBankCardsAdaptivePaymentsPaymentMethod()
-			: base("Paypal.BankCards.AdaptivePayments")
+		public PaypalAdaptivePaymentsPaymentMethod()
+			: base("Paypal.AdaptivePayments")
 		{
 
 		}
 
-		private static string PaypalAPIModeStoreSetting = "Paypal.BankCards.AdaptivePayments.Mode";
-		private static string PaypalAPIUserNameStoreSetting = "Paypal.BankCards.AdaptivePayments.APIUsername";
-		private static string PaypalAPIPasswordStoreSetting = "Paypal.BankCards.AdaptivePayments.APIPassword";
-		private static string PaypalAPISignatureStoreSetting = "Paypal.BankCards.AdaptivePayments.APISignature";
-		private static string PaypalAppIdStoreSetting = "Paypal.BankCards.AdaptivePayments.AppId";
-		private static string PaypalPaymentRedirectRelativePathStoreSetting = "Paypal.BankCards.AdaptivePayments.PaymentRedirectRelativePath";
+		private static string PaypalAPIModeStoreSetting = "Paypal.AdaptivePayments.Mode";
+		private static string PaypalAPIUserNameStoreSetting = "Paypal.AdaptivePayments.APIUsername";
+		private static string PaypalAPIPasswordStoreSetting = "Paypal.AdaptivePayments.APIPassword";
+		private static string PaypalAPISignatureStoreSetting = "Paypal.AdaptivePayments.APISignature";
+		private static string PaypalAppIdStoreSetting = "Paypal.AdaptivePayments.AppId";
+		private static string PaypalPaymentRedirectRelativePathStoreSetting = "Paypal.AdaptivePayments.PaymentRedirectRelativePath";
 
 		private static string PaypalModeConfigSettingName = "mode";
 		private static string PaypalUsernameConfigSettingName = "account1.apiUsername";
@@ -95,6 +95,11 @@ namespace BankCards.PaypalAdaptivePayments.Managers
 			get { return PaymentMethodType.Redirection; }
 		}
 
+		public override PaymentMethodGroupType PaymentMethodGroupType
+		{
+			get { return PaymentMethodGroupType.Paypal; }
+		}
+
 		public override ProcessPaymentResult ProcessPayment(ProcessPaymentEvaluationContext context)
 		{
 			var retVal = new ProcessPaymentResult();
@@ -103,7 +108,7 @@ namespace BankCards.PaypalAdaptivePayments.Managers
 				throw new NullReferenceException("no store with this id");
 
 			var url = string.Empty;
-			if(!string.IsNullOrEmpty(context.Store.SecureUrl))
+			if (!string.IsNullOrEmpty(context.Store.SecureUrl))
 			{
 				url = context.Store.SecureUrl;
 			}
@@ -120,7 +125,7 @@ namespace BankCards.PaypalAdaptivePayments.Managers
 
 			var response = service.Pay(request);
 
-			if(response.error != null && response.error.Count > 0)
+			if (response.error != null && response.error.Count > 0)
 			{
 				var sb = new StringBuilder();
 				foreach (var error in response.error)
@@ -150,7 +155,7 @@ namespace BankCards.PaypalAdaptivePayments.Managers
 
 			var service = new AdaptivePaymentsService(config);
 
-			var response = service.PaymentDetails(new PaymentDetailsRequest 
+			var response = service.PaymentDetails(new PaymentDetailsRequest
 			{
 				payKey = context.OuterId,
 				requestEnvelope = new RequestEnvelope { errorLanguage = "en_US" }
@@ -210,7 +215,7 @@ namespace BankCards.PaypalAdaptivePayments.Managers
 		private PayRequest CreatePaypalRequest(CustomerOrder order, PaymentIn payment, string url)
 		{
 			var receivers = new List<Receiver>();
-			receivers.Add(new Receiver { amount = payment.Sum, email = "evgokhrimenko@gmail.com", invoiceId = payment.Id});
+			receivers.Add(new Receiver { amount = payment.Sum, email = "evgokhrimenko@gmail.com", invoiceId = payment.Id });
 
 			PayRequest retVal = new PayRequest
 			{

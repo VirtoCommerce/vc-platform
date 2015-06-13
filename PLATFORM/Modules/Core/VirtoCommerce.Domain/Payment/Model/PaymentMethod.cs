@@ -45,6 +45,11 @@ namespace VirtoCommerce.Domain.Payment.Model
 		public abstract PaymentMethodType PaymentMethodType { get; }
 
 		/// <summary>
+		/// Type of payment method group
+		/// </summary>
+		public abstract PaymentMethodGroupType PaymentMethodGroupType { get; }
+
+		/// <summary>
 		/// Method that contains logic of registration payment in external payment system
 		/// </summary>
 		/// <param name="context"></param>
