@@ -1,50 +1,69 @@
 ﻿angular.module('virtoCommerce.catalogModule')
-.controller('virtoCommerce.catalogModule.seoDetailController', ['$scope', 'virtoCommerce.catalogModule.categories', 'virtoCommerce.catalogModule.items', 'platformWebApp.dialogService', 'platformWebApp.bladeNavigationService', function ($scope, categories, items, dialogService, bladeNavigationService) {
-    $scope.blade.origItem = {};
+.controller('virtoCommerce.catalogModule.seoDetailController', ['$scope', 'virtoCommerce.catalogModule.categories', 'virtoCommerce.catalogModule.items', 'virtoCommerce.catalogModule.catalogs', 'platformWebApp.dialogService', 'platformWebApp.bladeNavigationService', function ($scope, categories, items, catalogs, dialogService, bladeNavigationService) {
+    var blade = $scope.blade;
 
-    $scope.blade.refresh = function (parentRefresh) {
-        if (parentRefresh) {
-            $scope.blade.isLoading = true;
-            $scope.blade.parentBlade.refresh().$promise.then(function (data) {
-                $scope.blade.parentEntity = data;
-                initializeBlade(data.seoInfos);
+    function initializeBlade(parentEntity) {
+        if (parentEntity) {
+            if (blade.isNew) {
+                blade.data = parentEntity;
+            }
+            var data = parentEntity.seoInfos || []; // temp workaround for missing property
+            data = data.slice();
+
+            // generate seo for missing languages
+            _.each(getLanguages(parentEntity), function (lang) {
+                if (_.every(data, function (seoInfo) { return seoInfo.languageCode.toLowerCase().indexOf(lang.languageCode.toLowerCase()) < 0; })) {
+                    data.push({ isNew: true, languageCode: lang.languageCode });
+                }
             });
+
+            $scope.seoInfos = angular.copy(data);
+            blade.origItem = data;
+            blade.parentEntityId = parentEntity.id;
+            blade.isLoading = false;
+        }
+    };
+
+    function getLanguages(parentEntity) {
+        if (blade.seoUrlKeywordType == 0 || blade.seoUrlKeywordType == 1) {
+            return parentEntity.catalog.languages;
         } else {
-            initializeBlade($scope.blade.parentEntity.seoInfos);
+            return parentEntity.languages;
+        }
+    };
+
+    $scope.saveChanges = function () {
+        var seoInfos = _.filter($scope.seoInfos, function (data) {
+            return isValid(data);
+        });
+
+        if (blade.isNew) {
+            blade.data.seoInfos = seoInfos;
+            blade.origItem = $scope.seoInfos;
+            $scope.bladeClose();
+        } else {
+            // temp workaround: disable saving until it's confirmed as tested and working
+            //blade.isLoading = true;
+
+            //getUpdateFunction()({ id: blade.parentEntityId, seoInfos: seoInfos },
+            //    blade.parentBlade.refresh, function (error) {
+            //        bladeNavigationService.setError('Error ' + error.status, blade);
+            //    });
         }
     }
 
-    function initializeBlade(data) {
-        data = data.slice();
-        _.each($scope.blade.parentEntity.catalog.languages, function (lang) {
-            if (_.every(data, function (seoInfo) { return seoInfo.languageCode.toLowerCase().indexOf(lang.languageCode.toLowerCase()) < 0; })) {
-                data.push({ isNew: true, languageCode: lang.languageCode });
-            }
-        });
-
-        $scope.seoInfos = angular.copy(data);
-        $scope.blade.origItem = data;
-        $scope.blade.isLoading = false;
-    };
-
-    function saveChanges() {
-        $scope.blade.isLoading = true;
-
-        var seoInfos = _.filter($scope.seoInfos, function (data) { return isValid(data); });
-
-        if ($scope.blade.seoUrlKeywordType === 0) {
-            categories.update({ id: $scope.blade.parentEntity.id, seoInfos: seoInfos }, function () {
-                $scope.blade.refresh(true);
-            }, function (error) {
-                bladeNavigationService.setError('Error ' + error.status, $scope.blade);
-            });
-        } else if ($scope.blade.seoUrlKeywordType === 1) {
-            items.updateitem({ id: $scope.blade.parentEntity.id, seoInfos: seoInfos }, function () {
-                $scope.blade.refresh(true);
-            },
-            function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
+    function getUpdateFunction() {
+        switch (blade.seoUrlKeywordType) {
+            case 0:
+                return categories.update;
+            case 1:
+                return items.updateitem;
+            case 3:
+                return catalogs.update;
+            default:
+                return null;
         }
-    };
+    }
 
     function isValid(data) {
         // check required and valid Url requirements
@@ -58,10 +77,10 @@
     }
 
     function isDirty() {
-        return !angular.equals($scope.seoInfos, $scope.blade.origItem);
+        return !angular.equals($scope.seoInfos, blade.origItem);
     };
 
-    $scope.blade.onClose = function (closeCallback) {
+    blade.onClose = function (closeCallback) {
         if (isDirty()) {
             var dialog = {
                 id: "confirmItemChange",
@@ -70,7 +89,7 @@
             };
             dialog.callback = function (needSave) {
                 if (needSave) {
-                    saveChanges();
+                    $scope.saveChanges();
                 }
                 closeCallback();
             };
@@ -86,29 +105,33 @@
         formScope = form;
     }
 
-    $scope.blade.toolbarCommands = [
-        {
-            name: "Save", icon: 'fa fa-save',
-            executeMethod: function () {
-                saveChanges();
+    if (!blade.isNew) {
+        blade.toolbarCommands = [
+            {
+                name: "Save", icon: 'fa fa-save',
+                executeMethod: function () {
+                    $scope.saveChanges();
+                },
+                canExecuteMethod: function () {
+                    return isDirty() && _.every(_.filter($scope.seoInfos, function (data) { return !data.isNew; }), isValid) && _.some($scope.seoInfos, isValid); // isValid formScope && formScope.$valid;
+                },
+                permission: 'catalog:items:manage'
             },
-            canExecuteMethod: function () {
-                return isDirty() && _.every(_.filter($scope.seoInfos, function (data) { return !data.isNew; }), isValid) && _.some($scope.seoInfos, isValid); // isValid formScope && formScope.$valid;
-            },
-            permission: 'catalog:items:manage'
-        },
-        {
-            name: "Reset", icon: 'fa fa-undo',
-            executeMethod: function () {
-                angular.copy($scope.blade.origItem, $scope.seoInfos);
-            },
-            canExecuteMethod: function () {
-                return isDirty();
-            },
-            permission: 'catalog:items:manage'
-        }
-    ];
+            {
+                name: "Reset", icon: 'fa fa-undo',
+                executeMethod: function () {
+                    angular.copy(blade.origItem, $scope.seoInfos);
+                },
+                canExecuteMethod: function () {
+                    return isDirty();
+                },
+                permission: 'catalog:items:manage'
+            }
+        ];
+    }
 
-    $scope.blade.subtitle = 'SEO information';
-    $scope.blade.refresh(false);
+    blade.subtitle = 'SEO information';
+
+    $scope.$watch('blade.parentBlade.currentEntity', initializeBlade);
+    $scope.$watch('blade.parentBlade.item', initializeBlade);
 }]);

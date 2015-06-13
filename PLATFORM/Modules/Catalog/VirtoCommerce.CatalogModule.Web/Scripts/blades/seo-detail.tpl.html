@@ -1,17 +1,15 @@
-﻿<div class="blade-static __bottom" ng-if="blade.bottomTemplate">
-    <ng-include src='blade.bottomTemplate'> </ng-include>
-</div>
+﻿<div class="blade-static __bottom" ng-if="blade.isNew" ng-include="'Modules/$(VirtoCommerce.Catalog)/Scripts/wizards/common/wizard-ok-action.tpl.html'"></div>
 <div class="blade-content">
     <div class="blade-inner">
         <div class="inner-block">
-            <form name="contextEntityDetailForm" class="form" novalidate>
-                <fieldset ng-init="setForm(contextEntityDetailForm);">
+            <form name="formScope" class="form" novalidate>
+                <fieldset ng-init="setForm(formScope);">
                     <legend>
                         URL keyword
                     </legend>
                     <div class="form-group" ng-repeat="data in seoInfos | orderBy:languageCode">
                         <ng-form name="form">
-                           <div class="form-input __langs">
+                            <div class="form-input __langs">
                                 <span class="flag flag-{{data.languageCode.substr(3).toLowerCase()}}"></span>
                                 <input ng-model="data.semanticUrl" name="semanticUrl{{$index}}" required ui-validate=" 'semanticUrlValidator($value)' " placeholder="Enter keyword" />
                             </div>
