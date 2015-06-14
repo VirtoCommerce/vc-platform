@@ -17,6 +17,7 @@ namespace VirtoCommerce.Web.Models.Cms
 
         public override object BeforeMethod(string method)
         {
+            if (this.Root == null) return null;
             return this.Root.SingleOrDefault(x => x.Handle == method);
         }
     }

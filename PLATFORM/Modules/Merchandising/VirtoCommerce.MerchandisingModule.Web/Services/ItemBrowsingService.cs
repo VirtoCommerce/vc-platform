@@ -68,7 +68,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Services
 
             //TODO need better way to find applied filter values
             var appliedFilters = criteria.CurrentFilters.SelectMany(x => x.GetValues()).Select(x => x.Id).ToArray();
-            response.Facets = results.FacetGroups.Select(g => g.ToWebModel(appliedFilters)).ToArray();
+            response.Facets = results.FacetGroups == null ? null : results.FacetGroups.Select(g => g.ToWebModel(appliedFilters)).ToArray();
             return response;
         }
 
