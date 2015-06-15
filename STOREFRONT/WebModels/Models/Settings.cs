@@ -1,4 +1,5 @@
 ﻿#region
+using System;
 using System.Collections.Generic;
 using DotLiquid;
 
@@ -25,6 +26,7 @@ namespace VirtoCommerce.Web.Models
         #region Public Methods and Operators
         public override object BeforeMethod(string method)
         {
+            if (String.IsNullOrEmpty(method)) return null;
             return this._settings.ContainsKey(method) ? this._settings[method] : this._defaultValue;
         }
         #endregion

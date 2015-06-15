@@ -111,6 +111,7 @@ namespace VirtoCommerce.Web.Controllers
             }
 
             var str = RenderPartialViewToString(this, id.Replace("scss.css", "scss"), this.Settings);
+
             var compiledContent = this._compiler.Compile(str, OutputStyle.Compressed, false);
 
             var rootVirtual = String.Format("~/App_Data/Themes/{0}", this.Context.Theme.Path);
@@ -120,8 +121,6 @@ namespace VirtoCommerce.Web.Controllers
             HttpRuntime.Cache.Insert(contextKey, compiledContent, new CacheDependency(allDirectories));
 
             // create a copy of asset in the folder
-
-
             return compiledContent;
         }
         #endregion
