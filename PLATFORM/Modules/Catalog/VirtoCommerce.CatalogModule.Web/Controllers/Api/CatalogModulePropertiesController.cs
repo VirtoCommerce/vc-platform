@@ -43,6 +43,7 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 				var propValue = new webModel.PropertyValue
 				{
 					Value = dictValue.Value,
+					Alias = dictValue.Alias,
 					ValueId = dictValue.Id,
 					LanguageCode = dictValue.LanguageCode
 				};

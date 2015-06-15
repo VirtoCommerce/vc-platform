@@ -87,11 +87,13 @@
 				controller: 'virtoCommerce.catalogModule.catalogCSVimportController',
 				template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/import/catalog-CSV-import.tpl.html'
 			};
-			$scope.$watch(function ($scope) { return newBlade.notification }, function (newNotification) {
-				if (newNotification && notification.id == newNotification.id) {
-					blade.canImport = angular.isDefined(newNotification.finished);
+
+			$scope.$on("new-notification-event", function (event, notification) {
+				if (notification && notification.id == newBlade.notification.id) {
+					blade.canImport = notification.finished != null;
 				}
 			});
+		
 			blade.canImport = false;
 			bladeNavigationService.showBlade(newBlade, $scope.blade);
 

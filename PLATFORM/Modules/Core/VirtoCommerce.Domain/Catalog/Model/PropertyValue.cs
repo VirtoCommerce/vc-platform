@@ -5,6 +5,7 @@ namespace VirtoCommerce.Domain.Catalog.Model
 	{
 		public string PropertyId { get; set; }
 		public string PropertyName { get; set; }
+		public string Alias { get; set; }
 		public string ValueId { get; set; }
 		public object Value { get; set; }
 		public PropertyValueType ValueType { get; set; }

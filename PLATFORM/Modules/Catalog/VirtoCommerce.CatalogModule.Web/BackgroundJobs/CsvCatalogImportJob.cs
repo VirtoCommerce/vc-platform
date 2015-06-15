@@ -268,7 +268,7 @@ namespace VirtoCommerce.CatalogModule.Web.BackgroundJobs
 			{
 				csvProduct.MainProductId = csvProduct.MainProduct.Id;
 			}
-			var properties = csvProduct.CategoryId != null ? _propertyService.GetCategoryProperties(csvProduct.CategoryId) : _propertyService.GetCatalogProperties(csvProduct.CatalogId);
+			var properties = !String.IsNullOrEmpty(csvProduct.CategoryId) ? _propertyService.GetCategoryProperties(csvProduct.CategoryId) : _propertyService.GetCatalogProperties(csvProduct.CatalogId);
 		
 			if (csvProduct.PropertyValues != null)
 			{

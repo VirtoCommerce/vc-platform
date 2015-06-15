@@ -10,6 +10,7 @@ namespace VirtoCommerce.CatalogModule.Web.Model
 	{
 		public string Id { get; set; }
 		public string PropertyId { get; set; }
+		public string Alias { get; set; }
 		public string LanguageCode { get; set; }
 		public string Value { get; set; }
 	}
