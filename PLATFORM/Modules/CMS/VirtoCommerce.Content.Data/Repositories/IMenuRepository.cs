@@ -7,7 +7,7 @@ using VirtoCommerce.Content.Data.Models;
 
 namespace VirtoCommerce.Content.Data.Repositories
 {
-	public interface IMenuRepository
+    public interface IMenuRepository : IDisposable
 	{
 		IEnumerable<MenuLinkList> GetListsByStoreId(string storeId);
 		MenuLinkList GetListById(string listId);
