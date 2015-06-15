@@ -622,14 +622,14 @@ namespace VirtoCommerce.Web.Models.Services
             var variationIds = product.GetAllVariationIds();
             var prices = await this.GetProductPricesAsync(context.PriceLists, variationIds);
 
-            var price = prices.FirstOrDefault(p => p.ProductId == product.Code);
-            if (product.Variations != null)
-            {
-                foreach (var variation in product.Variations)
-                {
-                    price = prices.FirstOrDefault(p => p.ProductId == variation.Code);
-                }
-            }
+            var price = prices.FirstOrDefault(p => p.ProductId == product.Id);
+            //if (product.Variations != null)
+            //{
+            //    foreach (var variation in product.Variations)
+            //    {
+            //        price = prices.FirstOrDefault(p => p.ProductId == variation.Id);
+            //    }
+            //}
 
             var promoContext = new PromotionEvaluationContext
             {
