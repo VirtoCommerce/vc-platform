@@ -77,7 +77,7 @@ namespace VirtoCommerce.SearchModule.Tests
 
         private IPricingService GetPricingService()
         {
-            return new PricingServiceImpl(GetPricingRepository);
+            return new PricingServiceImpl(GetPricingRepository, null);
         }
 
         private IPropertyService GetPropertyService()

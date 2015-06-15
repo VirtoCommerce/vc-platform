@@ -55,6 +55,7 @@ namespace VirtoCommerce.CatalogModule.Data.Services
 
         private void SearchCategories(coreModel.SearchCriteria criteria, coreModel.SearchResult result)
         {
+
             // TODO: optimize for performance, need to eliminate number of database queries
             // 1. Catalog should either be passed or loaded using caching
             // 2. Categories should be loaded by passing array of ids instead of parallel locading one by one
@@ -62,19 +63,23 @@ namespace VirtoCommerce.CatalogModule.Data.Services
             {
                 if (!String.IsNullOrEmpty(criteria.CatalogId))
                 {
-                    var query = repository.Categories.Where(x => x.CatalogId == criteria.CatalogId);
+                    var query = repository.Categories.OfType<dataModel.Category>().Where(x => x.CatalogId == criteria.CatalogId);
 
 					var dbCatalog =  repository.GetCatalogById(criteria.CatalogId);
 
                     var isVirtual = dbCatalog is dataModel.VirtualCatalog;
-                    if (!String.IsNullOrEmpty(criteria.CategoryId))
+					if (!String.IsNullOrEmpty(criteria.Keyword))
+					{
+						query = query.Where(x => x.Name.Contains(criteria.Keyword) || x.Code.Contains(criteria.Keyword));
+					}
+                    else if (!String.IsNullOrEmpty(criteria.CategoryId))
                     {
                         if (isVirtual)
                         {
 							var dbCategory = repository.GetCategoryById(criteria.CategoryId);
                             //Need return all linked categories also
 							var allLinkedPhysicalCategoriesIds = dbCategory.IncommingLinks.Select(x => x.SourceCategoryId).ToArray();
-					        query = repository.Categories;
+					        query = repository.Categories.OfType<dataModel.Category>();
 							if (allLinkedPhysicalCategoriesIds.Any())
 							{
 								if (criteria.HideDirectLinedCategories)
@@ -122,7 +127,7 @@ namespace VirtoCommerce.CatalogModule.Data.Services
 																							  .Where(x=>x.TargetCategoryId == null)
 																							  .Select(x => x.SourceCategoryId);
                             //Search in all catalogs
-                            query = repository.Categories;
+                            query = repository.Categories.OfType<dataModel.Category>();
                             query = query.Where(x => (x.CatalogId == criteria.CatalogId && (x.ParentCategoryId == null || criteria.GetAllCategories)) || allLinkedCategoriesIds.Contains(x.Id));
                         }
                     }
@@ -171,6 +176,7 @@ namespace VirtoCommerce.CatalogModule.Data.Services
         {
             using (var repository = _catalogRepositoryFactory())
             {
+				var searchInAllCategories = criteria.GetAllCategories || !String.IsNullOrEmpty(criteria.Keyword);
 				var isVirtual = false;
 				if (criteria.CatalogId != null)
 				{
@@ -185,7 +191,7 @@ namespace VirtoCommerce.CatalogModule.Data.Services
 				}
 
 
-				if (!criteria.GetAllCategories && !String.IsNullOrEmpty(criteria.CategoryId))
+				if (!searchInAllCategories && !String.IsNullOrEmpty(criteria.CategoryId))
 				{
 					if (isVirtual)
 					{
@@ -203,7 +209,7 @@ namespace VirtoCommerce.CatalogModule.Data.Services
 				}
 				else if (!String.IsNullOrEmpty(criteria.CatalogId))
 				{
-					query = query.Where(x => x.CatalogId == criteria.CatalogId && ( criteria.GetAllCategories || !x.CategoryItemRelations.Any()));
+					query = query.Where(x => x.CatalogId == criteria.CatalogId && (searchInAllCategories || !x.CategoryItemRelations.Any()));
 
 				}
 
@@ -222,6 +228,10 @@ namespace VirtoCommerce.CatalogModule.Data.Services
 					{
 						query = query.Where(x => x.Id == urlKeyword.KeywordValue);
 					}
+				}
+				else if (!String.IsNullOrEmpty(criteria.Keyword))
+				{
+					query = query.Where(x => x.Name.Contains(criteria.Keyword) || x.Code.Contains(criteria.Keyword));
 				}
 
                 result.TotalCount = query.Count();

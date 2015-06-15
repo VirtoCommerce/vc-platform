@@ -19,8 +19,7 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 		/// </summary>
 		/// <returns></returns>
 		public static coreModel.CatalogProduct ToCoreModel(this dataModel.Item dbItem, coreModel.Catalog catalog,
-														  coreModel.Category category, coreModel.Property[] properties,
-														  SeoUrlKeyword[] seoInfos,
+														  coreModel.Category category, SeoUrlKeyword[] seoInfos,
 														  coreModel.CatalogProduct[] associatedProducts)
 		{
 			var retVal = new coreModel.CatalogProduct();
@@ -48,17 +47,7 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 			retVal.Links = dbItem.CategoryItemRelations.Select(x => x.ToCoreModel()).ToList();
 			#endregion
 
-			#region Variations
-			retVal.Variations = new List<coreModel.CatalogProduct>();
-			foreach (var variation in dbItem.Childrens)
-			{
-				var productVaraition = variation.ToCoreModel(catalog, category, properties,
-															   seoInfos: null, associatedProducts: null);
-				productVaraition.MainProduct = retVal;
-				productVaraition.MainProductId = retVal.Id;
-				retVal.Variations.Add(productVaraition);
-			}
-			#endregion
+		
 
 			#region Assets
 			if (dbItem.ItemAssets != null)
@@ -70,10 +59,25 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 			#region Property values
 			if (dbItem.ItemPropertyValues != null)
 			{
-				retVal.PropertyValues = dbItem.ItemPropertyValues.Select(x => x.ToCoreModel(properties)).ToList();
+				retVal.PropertyValues = dbItem.ItemPropertyValues.OrderBy(x=>x.Name).Select(x => x.ToCoreModel(null)).ToList();
 			}
 			#endregion
 
+		
+
+			#region Variations
+			retVal.Variations = new List<coreModel.CatalogProduct>();
+			foreach (var variation in dbItem.Childrens)
+			{
+				var productVaraition = variation.ToCoreModel(catalog, category, seoInfos: null, associatedProducts: null);
+				productVaraition.MainProduct = retVal;
+				productVaraition.MainProductId = retVal.Id;
+				
+				retVal.Variations.Add(productVaraition);
+			}
+			#endregion
+
+		
 			#region SeoInfo
 			if (seoInfos != null)
 			{
@@ -103,6 +107,50 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 				}
 			}
 			#endregion
+
+			#region Variation property, assets, review inheritance
+			if (dbItem.Parent != null)
+			{
+				var allProductPropertyNames = dbItem.Parent.ItemPropertyValues.Select(x => x.Name).Distinct().ToArray();
+				//Property inheritance
+				if (allProductPropertyNames != null)
+				{
+					//Need copy not overridden property values from main product to variation
+					var overriddenPropertyNames = retVal.PropertyValues.Select(x => x.PropertyName).ToArray();
+					var inheritedPropertyNames = allProductPropertyNames.Except(overriddenPropertyNames);
+					var dbInheritedPropertyValues = dbItem.Parent.ItemPropertyValues.Where(x => inheritedPropertyNames.Contains(x.Name));
+					foreach (var dbInheritedPropertyValue in dbInheritedPropertyValues)
+					{
+						//Reset id for correct value override
+						var propertyValue = dbInheritedPropertyValue.ToCoreModel(null);
+						propertyValue.Id = null;
+						retVal.PropertyValues.Add(propertyValue);
+					}
+				}
+				//Image inheritance
+				if ((retVal.Assets == null || !retVal.Assets.Any()) && dbItem.Parent.ItemAssets != null)
+				{
+					retVal.Assets = dbItem.Parent.ItemAssets.OrderBy(x => x.SortOrder).Select(x => x.ToCoreModel()).ToList();
+					foreach (var asset in retVal.Assets)
+					{
+						//Reset id for correct override
+						asset.Id = null;
+					}
+				}
+				//Review inheritance
+				if ((retVal.Reviews == null  || !retVal.Reviews.Any()) && dbItem.Parent.EditorialReviews != null)
+				{
+					retVal.Reviews = dbItem.Parent.EditorialReviews.Select(x => x.ToCoreModel()).ToList();
+					foreach (var review in retVal.Reviews)
+					{
+						//Reset id for correct override
+						review.Id = null;
+					}
+				}
+
+			}
+			#endregion
+
 			return retVal;
 		}
 

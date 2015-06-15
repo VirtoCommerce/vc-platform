@@ -43,12 +43,12 @@
             $scope.bladeClose();
         } else {
             // temp workaround: disable saving until it's confirmed as tested and working
-            //blade.isLoading = true;
+            blade.isLoading = true;
 
-            //getUpdateFunction()({ id: blade.parentEntityId, seoInfos: seoInfos },
-            //    blade.parentBlade.refresh, function (error) {
-            //        bladeNavigationService.setError('Error ' + error.status, blade);
-            //    });
+            getUpdateFunction()({ id: blade.parentEntityId, seoInfos: seoInfos },
+                blade.parentBlade.refresh, function (error) {
+                    bladeNavigationService.setError('Error ' + error.status, blade);
+                });
         }
     }
 

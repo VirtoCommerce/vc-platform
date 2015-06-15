@@ -77,7 +77,7 @@ namespace VirtoCommerce.CatalogModule.Data.Services
 						var dbCategory = repository.GetCategoryById(dbItem.CategoryItemRelations.OrderBy(x => x.Priority).First().CategoryId);
 						category = dbCategory.ToCoreModel(catalog);
 					}
-					retVal.Add(dbItem.ToCoreModel(catalog: catalog, category: category, properties: null, seoInfos: seoInfos, associatedProducts: associatedProducts.ToArray()));
+					retVal.Add(dbItem.ToCoreModel(catalog: catalog, category: category, seoInfos: seoInfos, associatedProducts: associatedProducts.ToArray()));
 				}
 			}
 

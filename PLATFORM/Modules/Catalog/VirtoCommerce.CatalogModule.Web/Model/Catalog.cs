@@ -5,11 +5,6 @@ namespace VirtoCommerce.CatalogModule.Web.Model
 {
     public class Catalog
     {
-        public Catalog()
-        {
-            Languages = new List<CatalogLanguage>();
-        }
-
         public string Id { get; set; }
         public string Name { get; set; }
         public bool Virtual { get; set; }
@@ -17,7 +12,11 @@ namespace VirtoCommerce.CatalogModule.Web.Model
         {
             get
             {
-                return Languages.FirstOrDefault(x => x.IsDefault);
+				if (Languages != null)
+				{
+					return Languages.FirstOrDefault(x => x.IsDefault);
+				}
+				return null;
             }
         }
         public List<CatalogLanguage> Languages { get; set; }

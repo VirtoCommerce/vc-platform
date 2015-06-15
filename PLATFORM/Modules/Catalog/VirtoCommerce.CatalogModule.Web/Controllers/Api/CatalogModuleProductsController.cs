@@ -115,16 +115,15 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
                 CategoryId = product.CategoryId,
                 CatalogId = product.CatalogId,
                 TitularItemId = product.MainProductId ?? productId,
-				Properties = mainWebProduct.Properties.Where(x => x.Type == coreModel.PropertyType.Product
-					|| x.Type == coreModel.PropertyType.Variation).ToList(),
+				Properties = mainWebProduct.Properties.Where(x => x.Type == coreModel.PropertyType.Variation).ToList(),
             };
 
             foreach (var property in newVariation.Properties)
             {
-                //Need to generated new ids
+                //Need reset value ids
                 foreach (var val in property.Values.ToArray())
                 {
-                    val.Id = Guid.NewGuid().ToString();
+					val.Id = null;
                 }
 
                 // Mark variation property as required
@@ -134,7 +133,6 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
                 }
 
                 property.IsManageable = true;
-				property.IsReadOnly = property.Type != coreModel.PropertyType.Product && property.Type != coreModel.PropertyType.Variation;
             }
 
 

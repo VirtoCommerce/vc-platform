@@ -74,6 +74,10 @@
     <Compile Include="Migrations\201505221405397_PaymentMethod.Designer.cs">
       <DependentUpon>201505221405397_PaymentMethod.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201506151332388_StoreReferencesCascadeDelete.cs" />
+    <Compile Include="Migrations\201506151332388_StoreReferencesCascadeDelete.Designer.cs">
+      <DependentUpon>201506151332388_StoreReferencesCascadeDelete.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Model\Store.cs" />
     <Compile Include="Model\StoreCurrency.cs" />
@@ -116,6 +120,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201505221405397_PaymentMethod.resx">
       <DependentUpon>201505221405397_PaymentMethod.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201506151332388_StoreReferencesCascadeDelete.resx">
+      <DependentUpon>201506151332388_StoreReferencesCascadeDelete.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

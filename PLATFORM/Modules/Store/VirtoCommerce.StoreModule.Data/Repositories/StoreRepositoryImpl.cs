@@ -33,6 +33,14 @@ namespace VirtoCommerce.StoreModule.Data.Repositories
 			MapEntity<StoreLanguage>(modelBuilder, toTable: "StoreLanguage");
 			MapEntity<StorePaymentMethod>(modelBuilder, toTable: "StorePaymentMethod");
 			MapEntity<StoreShippingMethod>(modelBuilder, toTable: "StoreShippingMethod");
+
+			modelBuilder.Entity<StoreShippingMethod>().HasRequired(x => x.Store)
+								   .WithMany(x => x.ShippingMethods)
+								   .HasForeignKey(x => x.StoreId).WillCascadeOnDelete(true);
+
+			modelBuilder.Entity<StorePaymentMethod>().HasRequired(x => x.Store)
+							   .WithMany(x => x.PaymentMethods)
+							   .HasForeignKey(x => x.StoreId).WillCascadeOnDelete(true);
 		
 
 			base.OnModelCreating(modelBuilder);

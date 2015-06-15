@@ -5,6 +5,10 @@ namespace VirtoCommerce.Domain.Catalog.Model
 {
 	public class Category : AuditableEntity, ILinkSupport, ISeoSupport
 	{
+		public Category()
+		{
+			IsActive = true;
+		}
 		public string CatalogId { get; set; }
 		public Catalog Catalog { get; set; }
 
