@@ -90,7 +90,7 @@ namespace Klarna.PaymentGatewaysModule.Web.Managers
 
 		public override PaymentMethodGroupType PaymentMethodGroupType
 		{
-			get { return PaymentMethodGroupType.Custom; }
+			get { return PaymentMethodGroupType.Alternative; }
 		}
 
 		public override ProcessPaymentResult ProcessPayment(ProcessPaymentEvaluationContext context)
