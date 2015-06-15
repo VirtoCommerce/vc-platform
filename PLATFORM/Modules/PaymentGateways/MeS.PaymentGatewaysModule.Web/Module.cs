@@ -1,5 +1,4 @@
-﻿using MeS.PaymentGatewaysModule.Web.Controllers;
-using MeS.PaymentGatewaysModule.Web.Managers;
+﻿using MeS.PaymentGatewaysModule.Web.Managers;
 using Microsoft.Practices.ServiceLocation;
 using Microsoft.Practices.Unity;
 using System;

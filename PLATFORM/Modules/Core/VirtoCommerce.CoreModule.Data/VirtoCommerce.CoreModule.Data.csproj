@@ -63,7 +63,6 @@
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Model\FulfillmentCenter.cs" />
     <Compile Include="Model\SeoUrlKeyword.cs" />
-    <Compile Include="Payment\ManualPaymentMethod.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\CommerceRepositoryImpl.cs" />
     <Compile Include="Repositories\IСommerceRepository.cs" />
@@ -94,7 +93,9 @@
       <DependentUpon>201504301238451_Initial.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Payment\" />
+  </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Repositories\Sql\SeoUrlKeyword.sql" />
   </ItemGroup>

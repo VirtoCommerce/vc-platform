@@ -23,6 +23,11 @@ namespace MeS.PaymentGatewaysModule.Web.Managers
 			get { return PaymentMethodType.Standard; }
 		}
 
+		public override PaymentMethodGroupType PaymentMethodGroupType
+		{
+			get { return PaymentMethodGroupType.BankCard; }
+		}
+
 		private string ProfileId
 		{
 			get

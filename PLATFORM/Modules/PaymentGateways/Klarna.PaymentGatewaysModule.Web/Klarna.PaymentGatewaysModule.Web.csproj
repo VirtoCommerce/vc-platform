@@ -137,17 +137,9 @@
       <HintPath>..\..\..\packages\WebGrease.1.6.0\lib\WebGrease.dll</HintPath>
     </Reference>
   </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
-    <Folder Include="Content\" />
-    <Folder Include="Scripts\" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Controllers\KlarnaGatewayController.cs" />
-    <Compile Include="Managers\KlarnaPaymentGatewayImpl.cs" />
     <Compile Include="Managers\KlarnaPaymentMethod.cs" />
-    <Compile Include="Models\CreatePaymentResult.cs" />
-    <Compile Include="Models\KlarnaPaymentInfo.cs" />
-    <Compile Include="Models\PaymentLineItem.cs" />
     <Compile Include="Module.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

@@ -24,5 +24,7 @@ namespace VirtoCommerce.Domain.Payment.Model
 		public CustomerOrder Order { get; set; }
 
 		public Store.Model.Store Store { get; set; }
+
+		public BankCardInfo Info { get; set; }
 	}
 }
