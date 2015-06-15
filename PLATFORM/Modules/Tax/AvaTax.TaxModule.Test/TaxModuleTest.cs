@@ -35,11 +35,11 @@ namespace AvaTax.TaxModule.Test
             _controller = GetTaxController();
         }
 
-        [Fact(Skip = "Doesn't pass on CI server")]
-        [Trait("Category", "CI")]
+        [Fact]
+        //[Trait("Category", "CI")]
         public void GetOrderTaxTotals()
         {
-            var testOrder = GetTestOrder("order1");
+            var testOrder = GetTestOrder("order18");
             var result = _controller.Total(testOrder) as OkNegotiatedContentResult<CustomerOrder>;
             Assert.NotNull(result);
             Assert.NotNull(result.Content);
@@ -47,8 +47,8 @@ namespace AvaTax.TaxModule.Test
         }
 
 
-        [Fact(Skip = "Doesn't pass on CI server")]
-        [Trait("Category", "CI")]
+        [Fact]
+        //[Trait("Category", "CI")]
         public void GetCartTaxTotals()
         {
             var testCart = GetTestCart("cart1");

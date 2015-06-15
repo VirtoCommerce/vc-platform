@@ -111,6 +111,8 @@
     <Compile Include="AvaTaxClasses\TaxSvc.cs" />
     <Compile Include="AvaTaxClasses\ValidateResult.cs" />
     <Compile Include="Controller\AvaTaxController.cs" />
+    <Compile Include="Converters\ShoppingCartConverter.cs" />
+    <Compile Include="Converters\CustomerOrderConverter.cs" />
     <Compile Include="Managers\AvaTaxImpl.cs" />
     <Compile Include="Module.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
