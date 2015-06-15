@@ -417,7 +417,7 @@ namespace VirtoCommerce.Web
                 if (Regex.IsMatch(
                     languageCandidate,
                     constraintsRegEx,
-                    RegexOptions.CultureInvariant | RegexOptions.IgnoreCase | RegexOptions.Compiled))
+                    RegexOptions.CultureInvariant | RegexOptions.IgnoreCase /*| RegexOptions.Compiled*/))
                 {
                     return languageCandidate.ToLowerInvariant();
                 }

@@ -9,6 +9,7 @@ using System.Net.Http.Formatting;
 using System.Threading.Tasks;
 using System.Web;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 using VirtoCommerce.ApiClient.Caching;
 using VirtoCommerce.ApiClient.DataContracts;
 using VirtoCommerce.ApiClient.Extensions;
@@ -171,18 +172,7 @@ namespace VirtoCommerce.ApiClient
             {
                 await ThrowIfResponseNotSuccessfulAsync(response);
 
-                //return await response.Content.ReadAsAsync<T>();
-
-                var taskObject = await response.Content.ReadAsAsync<T>();
-
-                // the following will reduce number of serializations
-                if (!(response.Content is ObjectContent) && taskObject != null)
-                {
-                    response.Content = new ObjectContent(typeof(T), taskObject, new JsonMediaTypeFormatter());
-                    await this._httpCache.StoreResponseAsync(response);
-                }
-
-                return await Task.FromResult((T)taskObject);
+                return await response.Content.ReadAsAsync<T>();
             }
         }
 
@@ -245,7 +235,7 @@ namespace VirtoCommerce.ApiClient
             return SendAsync<TOutput>(message, true);
         }
 
-        private MediaTypeFormatter CreateMediaTypeFormatter()
+        public static MediaTypeFormatter CreateMediaTypeFormatter()
         {
             //MediaTypeFormatter formatter;
             var formatter = new JsonMediaTypeFormatter
@@ -255,7 +245,8 @@ namespace VirtoCommerce.ApiClient
                     DefaultValueHandling =
                         DefaultValueHandling.Ignore,
                     NullValueHandling =
-                        NullValueHandling.Ignore
+                        NullValueHandling.Ignore,
+                    TraceWriter = new DiagnosticsTraceWriter()
                 }
             };
 
