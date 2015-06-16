@@ -40,7 +40,7 @@
       </setting>
       <setting>
         <name>Avalara.Tax.Credentials.LicenseKey</name>
-        <valueType>secureString</valueType>
+        <valueType>string</valueType>
         <title>Avalara account License Key</title>
         <description>Account License Key provided by Avalara during registration process</description>
       </setting>

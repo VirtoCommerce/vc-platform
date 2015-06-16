@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using AvaTaxCalcREST;
@@ -15,7 +16,7 @@ namespace AvaTax.TaxModule.Web.Converters
             var getTaxRequest = new GetTaxRequest
             {
                 CustomerCode = order.CustomerId,
-                DocDate = order.CreatedDate.ToShortDateString(),
+                DocDate = order.CreatedDate == DateTime.MinValue ? DateTime.UtcNow.ToShortDateString() : order.CreatedDate.ToShortDateString(),
                 CompanyCode = companyCode,
                 Client = "VirtoCommerce",
                 DocCode = order.Id,
@@ -58,7 +59,8 @@ namespace AvaTax.TaxModule.Web.Converters
                     Line1 = address.Value.Line1,
                     City = address.Value.City,
                     Region = address.Value.RegionId,
-                    PostalCode = address.Value.PostalCode
+                    PostalCode = address.Value.PostalCode,
+                    Country = address.Value.CountryName
                 });
 
                 if (address.Value.AddressType == AddressType.Shipping

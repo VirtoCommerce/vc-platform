@@ -65,14 +65,15 @@ namespace AvaTax.TaxModule.Web.Converters
                         Line1 = address.Value.Line1,
                         City = address.Value.City,
                         Region = address.Value.RegionId,
-                        PostalCode = address.Value.PostalCode
+                        PostalCode = address.Value.PostalCode,
+                        Country = address.Value.CountryName
                     });
 
                 if (address.Value.AddressType == AddressType.Shipping
                     || address.Value.AddressType == AddressType.Shipping)
                     destinationAddressIndex = address.Index.ToString();
             }
-
+            
             getTaxRequest.Addresses = addresses.ToArray();
 
             // Line Data

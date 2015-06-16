@@ -81,11 +81,12 @@ namespace VirtoCommerce.Web.Controllers
                         City = formModel.City,
                         Company = !string.IsNullOrEmpty(formModel.Company) ? formModel.Company : null,
                         Country = formModel.Country,
-                        CountryCode = "RUS",
+                        CountryCode = "US", //TODO Set country code by selected country name
                         FirstName = formModel.FirstName,
                         LastName = formModel.LastName,
                         Phone = !string.IsNullOrEmpty(formModel.Phone) ? formModel.Phone : null,
                         Province = formModel.Province,
+                        ProvinceCode = "CA", //TODO Set province code by selected province name
                         Zip = formModel.Zip
                     };
 
@@ -178,11 +179,12 @@ namespace VirtoCommerce.Web.Controllers
                         City = formModel.City,
                         Company = !string.IsNullOrEmpty(formModel.Company) ? formModel.Company : null,
                         Country = formModel.Country,
-                        CountryCode = "RUS",
+                        CountryCode = "US", //TODO Set country code by selected country name
                         FirstName = formModel.FirstName,
                         LastName = formModel.LastName,
                         Phone = !string.IsNullOrEmpty(formModel.Phone) ? formModel.Phone : null,
                         Province = formModel.Province,
+                        ProvinceCode = "CA", //TODO Set province code by selected province name
                         Zip = formModel.Zip
                     };
 
