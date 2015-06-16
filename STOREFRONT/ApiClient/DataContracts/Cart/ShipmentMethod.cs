@@ -27,6 +27,10 @@ namespace VirtoCommerce.ApiClient.DataContracts.Cart
 
         public string ShipmentMethodCode { get; set; }
 
+        public string OptionName { get; set; }
+
+        public string OptionDescription { get; set; }
+
         #endregion
     }
 }
