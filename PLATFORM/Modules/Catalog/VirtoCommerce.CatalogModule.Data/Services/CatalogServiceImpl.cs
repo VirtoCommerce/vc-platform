@@ -10,15 +10,21 @@ using VirtoCommerce.Platform.Core.Caching;
 using VirtoCommerce.Platform.Data.Infrastructure;
 using dataModel = VirtoCommerce.CatalogModule.Data.Model;
 using coreModel = VirtoCommerce.Domain.Catalog.Model;
+using VirtoCommerce.Domain.Commerce.Services;
+using System.Collections.ObjectModel;
+using VirtoCommerce.Domain.Commerce.Model;
+using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.CatalogModule.Data.Services
 {
 	public class CatalogServiceImpl : ServiceBase, ICatalogService
 	{
 		private readonly Func<ICatalogRepository> _catalogRepositoryFactory;
-		public CatalogServiceImpl(Func<ICatalogRepository> catalogRepositoryFactory)
+		private readonly ICommerceService _commerceService;
+		public CatalogServiceImpl(Func<ICatalogRepository> catalogRepositoryFactory, ICommerceService commerceService)
 		{
 			_catalogRepositoryFactory = catalogRepositoryFactory;
+			_commerceService = commerceService;
 		}
 
 		#region ICatalogService Members
@@ -32,7 +38,9 @@ namespace VirtoCommerce.CatalogModule.Data.Services
 
 				var dbProperties = repository.GetCatalogProperties(dbCatalogBase);
 				var properties = dbProperties.Select(x => x.ToCoreModel(dbCatalogBase.ToCoreModel(), null)).ToArray();
-				retVal = dbCatalogBase.ToCoreModel(properties);
+				var seoInfos = _commerceService.GetSeoKeywordsForEntity(catalogId).ToArray();
+				retVal = dbCatalogBase.ToCoreModel(properties, seoInfos);
+
 			}
 			return retVal;
 		}
@@ -43,6 +51,16 @@ namespace VirtoCommerce.CatalogModule.Data.Services
 			coreModel.Catalog retVal = null;
 			using (var repository = _catalogRepositoryFactory())
 			{
+				//Need add seo separately
+				if (catalog.SeoInfos != null)
+				{
+					foreach (var seoInfo in catalog.SeoInfos)
+					{
+						var dbSeoInfo = seoInfo.ToCoreModel(dbCatalog);
+						_commerceService.UpsertSeoKeyword(dbSeoInfo);
+					}
+				}
+
 				repository.Add(dbCatalog);
 				CommitChanges(repository);
 			}
@@ -66,6 +84,17 @@ namespace VirtoCommerce.CatalogModule.Data.Services
 
 					changeTracker.Attach(dbCatalog);
 					dbCatalogChanged.Patch(dbCatalog);
+
+					//Patch SeoInfo  separately
+					if (catalog.SeoInfos != null)
+					{
+						var dbSeoInfos = new ObservableCollection<SeoUrlKeyword>(_commerceService.GetSeoKeywordsForEntity(catalog.Id));
+						var changedSeoInfos = catalog.SeoInfos.Select(x => x.ToCoreModel(dbCatalog)).ToList();
+						dbSeoInfos.ObserveCollection(x => _commerceService.UpsertSeoKeyword(x), x => _commerceService.DeleteSeoKeywords(new string[] { x.Id }));
+
+						changedSeoInfos.Patch(dbSeoInfos, (source, target) => _commerceService.UpsertSeoKeyword(source));
+					}
+		
 				}
 
 				CommitChanges(repository);
