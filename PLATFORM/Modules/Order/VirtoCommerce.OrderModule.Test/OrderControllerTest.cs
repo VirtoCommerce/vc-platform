@@ -20,6 +20,9 @@ using VirtoCommerce.Domain.Payment.Model;
 using VirtoCommerce.Domain.Order.Events;
 using VirtoCommerce.Domain.Common.Events;
 using VirtoCommerce.Domain.Cart.Events;
+using VirtoCommerce.OrderModule.Web.BackgroundJobs;
+using VirtoCommerce.Platform.Core.Caching;
+using VirtoCommerce.Platform.Data.Caching;
 
 namespace VirtoCommerce.OrderModule.Test
 {
@@ -33,6 +36,14 @@ namespace VirtoCommerce.OrderModule.Test
 			_controller = GetCustomerOrderController();
 			//var testOrder = GetTestOrder("order1");
 			//_controller.CreateOrder(testOrder);
+		}
+
+		[TestMethod]
+		public void StatisticTest()
+		{
+			var cacheManager = new CacheManager(new InMemoryCachingProvider(), null);
+			var statisticJob = new CollectOrderStatisticJob(GetOrderRepositoryFactory(), cacheManager);
+			statisticJob.CollectStatistics(DateTime.UtcNow.AddYears(-1), DateTime.UtcNow);
 		}
 
 		[TestMethod]
@@ -319,6 +330,17 @@ namespace VirtoCommerce.OrderModule.Test
 			return order;
 		}
 
+		private static Func<IOrderRepository> GetOrderRepositoryFactory()
+		{
+			Func<IOrderRepository> orderRepositoryFactory = () =>
+			{
+				return new OrderRepositoryImpl("VirtoCommerce",
+					new AuditableInterceptor(),
+					new EntityPrimaryKeyGeneratorInterceptor());
+			};
+			return orderRepositoryFactory;
+		}
+
 		private static OrderModuleController GetCustomerOrderController()
 		{
 			var mockInventory = new Mock<IInventoryService>();
@@ -331,13 +353,10 @@ namespace VirtoCommerce.OrderModule.Test
 			var cartEventPublisher = new EventPublisher<CartChangeEvent>(Enumerable.Empty<IObserver<CartChangeEvent>>().ToArray());
 			var cartService = new ShoppingCartServiceImpl(repositoryFactory, cartEventPublisher);
 
-			Func<IOrderRepository> orderRepositoryFactory = () => { return new OrderRepositoryImpl("VirtoCommerce", 
-																		   new AuditableInterceptor(),
-																		   new EntityPrimaryKeyGeneratorInterceptor());
-			};
-			var orderService = new CustomerOrderServiceImpl(orderRepositoryFactory, new TimeBasedNumberGeneratorImpl(), orderEventPublisher, cartService);
 
-			var controller = new OrderModuleController(orderService, null, null, new TimeBasedNumberGeneratorImpl());
+			var orderService = new CustomerOrderServiceImpl(GetOrderRepositoryFactory(), new TimeBasedNumberGeneratorImpl(), orderEventPublisher, cartService);
+
+			var controller = new OrderModuleController(orderService, null, null, new TimeBasedNumberGeneratorImpl(), null);
 			return controller;
 		}
 

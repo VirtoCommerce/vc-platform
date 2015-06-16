@@ -17,6 +17,9 @@ using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Domain.Store.Services;
 using VirtoCommerce.Domain.Payment.Model;
 using Omu.ValueInjecter;
+using VirtoCommerce.Platform.Core.Caching;
+using Hangfire;
+using VirtoCommerce.OrderModule.Web.BackgroundJobs;
 
 namespace VirtoCommerce.OrderModule.Web.Controllers.Api
 {
@@ -28,13 +31,15 @@ namespace VirtoCommerce.OrderModule.Web.Controllers.Api
         private readonly ICustomerOrderSearchService _searchService;
         private readonly IOperationNumberGenerator _operationNumberGenerator;
         private readonly IStoreService _storeService;
+		private readonly CacheManager _cacheManager;
 
-        public OrderModuleController(ICustomerOrderService customerOrderService, ICustomerOrderSearchService searchService, IStoreService storeService, IOperationNumberGenerator numberGenerator)
+        public OrderModuleController(ICustomerOrderService customerOrderService, ICustomerOrderSearchService searchService, IStoreService storeService, IOperationNumberGenerator numberGenerator, CacheManager cacheManager)
         {
             _customerOrderService = customerOrderService;
             _searchService = searchService;
             _operationNumberGenerator = numberGenerator;
             _storeService = storeService;
+			_cacheManager = cacheManager;
         }
 
         // GET: api/order/customerOrders?q=ddd&site=site1&customer=user1&start=0&count=20
@@ -235,17 +240,18 @@ namespace VirtoCommerce.OrderModule.Web.Controllers.Api
         [HttpGet]
         [ResponseType(typeof(webModel.DashboardStatisticsResult))]
         [Route("~/api/order/dashboardStatistics")]
-        public IHttpActionResult GetDashboardStatistics(DateTime start, DateTime end)
+		public IHttpActionResult GetDashboardStatistics([FromUri]DateTime? start = null, [FromUri]DateTime? end = null)
         {
-            var retVal = new webModel.DashboardStatisticsResult();
-            retVal.Revenue = "demo-$128K";
-            retVal.CustomersCount = "demo-78";
-            retVal.RevenuePerCustomer = "demo-$7,865";
-            retVal.OrderValue = "demo-$215";
-            retVal.ItemsPurchased = "demo-6742";
-            retVal.LineitemsPerOrder = "demo-2.7";
-
-            return Ok(retVal);
+			start = start ?? DateTime.UtcNow.AddYears(-1);
+			end = end ?? DateTime.UtcNow;
+			var cacheKey = CacheKey.Create("Statistic", start.Value.ToString("yyyy-MM-dd"), end.Value.ToString("yyyy-MM-dd"));
+			var retVal = _cacheManager.Get<webModel.DashboardStatisticsResult>(cacheKey);
+			if(retVal == null)
+			{
+				var collectStaticJob = new CollectOrderStatisticJob();
+				BackgroundJob.Enqueue(() => collectStaticJob.CollectStatistics(start.Value, end.Value));
+			}
+	        return Ok(retVal);
         }
 
     }
