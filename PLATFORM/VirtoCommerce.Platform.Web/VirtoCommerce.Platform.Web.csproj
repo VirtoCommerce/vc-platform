@@ -483,6 +483,7 @@
     <Content Include="Scripts\common\confirmDialog\confirmDialog.js" />
     <Content Include="Scripts\common\directives\angular-moment.js" />
     <Content Include="Scripts\common\directives\inputNumber.js" />
+    <Content Include="Scripts\common\directives\showBigImage.js" />
     <Content Include="Scripts\common\directives\left-click-menu.js" />
     <Content Include="Scripts\common\filters.js" />
     <Content Include="Scripts\app\navigation\breadcrumbs\breadcrumbs.js" />
