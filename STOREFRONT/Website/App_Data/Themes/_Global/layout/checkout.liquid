@@ -26,15 +26,18 @@
             if (checkout.guest_login && !checkout.email) {
                 $("#guest-modal").modal("show");
             } else {
-                var defaultAddress = customer.addresses.sort(function (a, b) {
-                    return a.id - b.id;
-                })[0];
-                if (customer.addresses.length == 0) {
+                var defaultAddress = null;
+                if (customer) {
+                    defaultAddress = customer.addresses.sort(function (a, b) {
+                        return a.id - b.id;
+                    })[0];
+                }
+                if (customer && customer.addresses.length == 0) {
                     $("#checkout_first_name").val(customer.first_name);
                     $("#checkout_last_name").val(customer.last_name);
                 }
                 if (checkout.requires_shipping) {
-                    if (checkout.shipping_address != null) {
+                    if (customer && checkout.shipping_address != null) {
                         var matchedAddresses = $.grep(customer.addresses, function(address) {
                             return (address.first_name === checkout.shipping_address.first_name &&
                                 address.last_name === checkout.shipping_address.last_name &&
@@ -53,7 +56,9 @@
                     }
                 }
 
-                fillAddress(defaultAddress);
+                if (defaultAddress) {
+                    fillAddress(defaultAddress);
+                }
             }
 
             var selectedShippingMethod = $("#shipping-methods input:checked");

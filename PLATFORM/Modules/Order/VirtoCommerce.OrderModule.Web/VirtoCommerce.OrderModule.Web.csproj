@@ -97,6 +97,7 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BackgroundJobs\CollectOrderStatisticJob.cs" />
     <Compile Include="Binders\SearchCriteriaBinder.cs" />
     <Compile Include="Controllers\Api\OrderModuleController.cs" />
     <Compile Include="Controllers\PredefinedPermissions.cs" />
@@ -129,9 +130,7 @@
     <Content Include="Scripts\widgets\customerOrder-address-widget.js" />
     <Content Include="Scripts\widgets\customerOrder-address-widget.tpl.html" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="BackgroundJobs\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Content Include="module.manifest" />
     <Content Include="Scripts\blades\customerOrder-list.js" />

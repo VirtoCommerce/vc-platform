@@ -4,7 +4,7 @@
             <i class="gallery-ico fa fa-image"></i>
             <div class="gallery-descr">No images</div>
         </div>
-        <div class="gallery-img __main" ng-repeat="image in currentBlade.item.images | filter: { group: 'primaryimage' } | limitTo : 1  track by image.id">
+        <div class="gallery-img __main" ng-class="{'__solo' :  currentBlade.item.images.length == 1 }" ng-repeat="image in currentBlade.item.images | filter: { group: 'primaryimage' } | limitTo : 1  track by image.id">
             <img ng-src="{{image.url ? image.url : ''}}" />
         </div>
         <div image="image.url" va-showbigimage class="gallery-img" ng-repeat="image in currentBlade.item.images | filter: { group: '!primaryimage' } | limitTo : 11 track by image.id">
