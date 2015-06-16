@@ -193,6 +193,7 @@ namespace VirtoCommerce.Platform.Web
             var notifier = new InMemoryNotifierImpl(hubSignalR);
             container.RegisterInstance<INotifier>(notifier);
 
+
             #endregion
 
             #region Assets
