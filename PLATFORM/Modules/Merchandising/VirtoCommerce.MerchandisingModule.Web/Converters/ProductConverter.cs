@@ -2,7 +2,7 @@
 using System.Linq;
 using Omu.ValueInjecter;
 using VirtoCommerce.Platform.Core.Asset;
-using moduleModel = VirtoCommerce.Domain.Catalog.Model;
+using coreModel = VirtoCommerce.Domain.Catalog.Model;
 using webModel = VirtoCommerce.MerchandisingModule.Web.Model;
 
 namespace VirtoCommerce.MerchandisingModule.Web.Converters
@@ -10,49 +10,11 @@ namespace VirtoCommerce.MerchandisingModule.Web.Converters
     public static class ProductConverter
     {
         #region Public Methods and Operators
-
-        public static moduleModel.CatalogProduct ToModuleModel(this webModel.CatalogItem catalogItem, IBlobUrlResolver blobUrlResolver)
-        {
-            var retVal = new moduleModel.CatalogProduct();
-            retVal.InjectFrom(catalogItem);
-
-            if (catalogItem.Images != null)
-            {
-                retVal.Assets = new List<moduleModel.ItemAsset>();
-                var isMain = true;
-                foreach (var productImage in catalogItem.Images)
-                {
-                    var image = productImage.ToModuleModel(blobUrlResolver);
-                    image.Type = moduleModel.ItemAssetType.Image;
-                    image.Group = isMain ? "primaryimage" : "images";
-                    retVal.Assets.Add(image);
-                    isMain = false;
-                }
-            }
-
-            if (catalogItem.Properties != null)
-            {
-                retVal.PropertyValues = new List<moduleModel.PropertyValue>();
-                foreach (var keyValue in catalogItem.Properties)
-                {
-                    var propValue = new moduleModel.PropertyValue
-                                    {
-                                        PropertyName = keyValue.Key,
-                                        Value = keyValue.Value.ToString()
-                                    };
-                }
-            }
-
-            return retVal;
-        }
-
-        public static webModel.CatalogItem ToWebModel(
-            this moduleModel.CatalogProduct product,
-            IBlobUrlResolver blobUrlResolver = null,
-            webModel.Product parentProduct = null)
+     
+        public static webModel.CatalogItem ToWebModel(this coreModel.CatalogProduct product, IBlobUrlResolver blobUrlResolver = null, coreModel.Property[] properties = null)
         {
             webModel.CatalogItem retVal = new webModel.Product();
-            if (parentProduct != null)
+			if (product.MainProductId != null)
             {
                 retVal = new webModel.ProductVariation();
             }
@@ -60,26 +22,23 @@ namespace VirtoCommerce.MerchandisingModule.Web.Converters
 
             if (product.Assets != null)
             {
-                retVal.Images =
-                    product.Assets.Where(x => x.Type == moduleModel.ItemAssetType.Image)
-                        .Select(x => x.ToWebModel(blobUrlResolver))
-                        .ToArray();
+                retVal.Images = product.Assets.Where(x => x.Type == coreModel.ItemAssetType.Image)
+											  .Select(x => x.ToWebModel(blobUrlResolver))
+											  .ToArray();
             }
 
             if (product.Variations != null && product.Variations.Any())
             {
-                ((webModel.Product)retVal).Variations =
-                    product.Variations.Select(x => x.ToWebModel(blobUrlResolver, (webModel.Product)retVal))
-                        .OfType<webModel.ProductVariation>()
-                        .ToArray();
+                ((webModel.Product)retVal).Variations = product.Variations.Select(x => x.ToWebModel(blobUrlResolver, properties))
+																		  .OfType<webModel.ProductVariation>()
+																		  .ToArray();
             }
 
             if (product.Reviews != null)
             {
-                retVal.EditorialReviews =
-                    product.Reviews.Select(x => new webModel.EditorialReview().InjectFrom(x))
-                        .Cast<webModel.EditorialReview>()
-                        .ToArray();
+                retVal.EditorialReviews = product.Reviews.Select(x => new webModel.EditorialReview().InjectFrom(x))
+													     .Cast<webModel.EditorialReview>()
+													     .ToArray();
             }
 
             if (product.Links != null)
@@ -97,36 +56,34 @@ namespace VirtoCommerce.MerchandisingModule.Web.Converters
                 retVal.Associations = product.Associations.Select(x => x.ToWebModel()).ToArray();
             }
 
-            retVal.Properties = new webModel.PropertyDictionary();
-
-            //Need add property for each meta info
-            /* SASHA: no need to group elements here, simply return one key per value
-			foreach (var propValueGroup in product.PropertyValues.GroupBy(x=>x.PropertyName))
+			
+			if(product.PropertyValues != null)
 			{
-                retVal.Properties.Add(propValueGroup.Key, propValueGroup.Select(g=>g.Value));
+				retVal.Properties = new webModel.PropertyDictionary();
+				retVal.VariationProperties = new webModel.PropertyDictionary();
+				
+				// dictionary properties are returned as object[], all other properties are returned as primitives
+				foreach (var propValueGroup in product.PropertyValues.GroupBy(x => x.PropertyName))
+				{
+					var propertyValue = propValueGroup.FirstOrDefault(x => x.Value != null);
+					var propertyCollection = retVal.Properties;
+					if (propertyValue != null)
+					{
+						if(properties != null)
+						{
+							var propertyMetaInfo = properties.FirstOrDefault(x => string.Equals(propValueGroup.Key, x.Name));
+							if(propertyMetaInfo != null && propertyMetaInfo.Type == coreModel.PropertyType.Variation)
+							{
+								propertyCollection = retVal.VariationProperties;
+							}
+						}
+						propertyCollection.Add(propValueGroup.Key, propertyValue.Value);
+					}
+				}
+
+
 			}
-             * */
-
-            // dictionary properties are returned as object[], all other properties are returned as primitives
-            foreach (var propValueGroup in product.PropertyValues.GroupBy(x => x.PropertyName))
-            {
-                var val = propValueGroup.Select(g => g.Value);
-                if (val.Any())
-                {
-                    retVal.Properties.Add(propValueGroup.Key, val.Count() > 1 ? val : val.First());
-                }
-            }
-
-            /*
-		    foreach (var propValue in product.PropertyValues)
-		    {
-                //TODO create property collection not Dictionary to support multivalues
-                if (retVal.Properties.ContainsKey(propValue.PropertyName))continue;
-		        
-                retVal.Properties.Add(propValue.PropertyName, propValue.Value);
-		    }
-             * */
-
+       
             return retVal;
         }
 

@@ -518,6 +518,10 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
 				var categoriesIds = Categories.Where(x => x.CatalogId == id && x.ParentCategoryId == null).Select(x => x.Id).ToArray();
 				RemoveCategories(categoriesIds);
 
+				//Remove items direct belong to catalog
+				var itemIds = Items.Where(x => x.CatalogId == id).Select(x => x.Id).ToArray();
+				RemoveItems(itemIds);
+
 				//Remove catalog itself
 				var catalogBase = GetCatalogById(id);
 				var catalog = catalogBase as dataModel.Catalog;

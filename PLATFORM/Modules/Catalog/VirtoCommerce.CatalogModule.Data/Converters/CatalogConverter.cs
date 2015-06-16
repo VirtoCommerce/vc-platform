@@ -10,6 +10,7 @@ using VirtoCommerce.Platform.Core.Common;
 using Omu.ValueInjecter;
 using VirtoCommerce.Platform.Data.Common;
 using VirtoCommerce.Platform.Data.Common.ConventionInjections;
+using VirtoCommerce.Domain.Commerce.Model;
 
 
 namespace VirtoCommerce.CatalogModule.Data.Converters
@@ -21,7 +22,7 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
         /// </summary>
         /// <param name="catalogBase"></param>
         /// <returns></returns>
-        public static coreModel.Catalog ToCoreModel(this dataModel.CatalogBase catalogBase, coreModel.Property[] properties = null)
+        public static coreModel.Catalog ToCoreModel(this dataModel.CatalogBase catalogBase, coreModel.Property[] properties = null, SeoUrlKeyword[] seoInfos = null)
         {
             if (catalogBase == null)
                 throw new ArgumentNullException("catalogBase");
@@ -56,6 +57,11 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
                 catalogLanguage.IsDefault = true;
                 retVal.Languages.Add(catalogLanguage);
             }
+
+			if (seoInfos != null)
+			{
+				retVal.SeoInfos = seoInfos.Select(x => x.ToCoreModel()).ToList();
+			}
 
             return retVal;
         }
@@ -108,12 +114,12 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
                     dbCatalogLanguage.CatalogId = retVal.Id;
                     dbCatalog.CatalogLanguages.Add(dbCatalogLanguage);
                 }
+				retVal.DefaultLanguage = catalog.Languages.Where(x => x.IsDefault).Select(x => x.LanguageCode).FirstOrDefault();
             }
-
-            retVal.DefaultLanguage = catalog.Languages.Where(x => x.IsDefault).Select(x => x.LanguageCode).FirstOrDefault();
 
             if (retVal.DefaultLanguage == null)
                 retVal.DefaultLanguage = "undefined";
+
 
             retVal.Name = catalog.Name;
 
