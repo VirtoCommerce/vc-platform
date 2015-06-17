@@ -112,10 +112,16 @@ namespace VirtoCommerce.Web.Convertors
             if (cart.Items != null)
             {
                 checkoutModel.LineItems = new List<LineItem>();
+                checkoutModel.TaxLines = new List<TaxLine>();
 
                 foreach (var item in cart.Items)
                 {
                     checkoutModel.LineItems.Add(item.AsWebModel());
+
+                    if (item.TaxIncluded.HasValue && item.TaxIncluded.Value)
+                    {
+                        checkoutModel.TaxLines.Add(new TaxLine { Price = item.TaxTotal });
+                    }
                 }
             }
 
@@ -155,7 +161,6 @@ namespace VirtoCommerce.Web.Convertors
                 }
             }
 
-            // Taxes
             // Transactions
 
             return checkoutModel;
