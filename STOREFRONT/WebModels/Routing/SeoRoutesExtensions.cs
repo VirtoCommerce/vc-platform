@@ -74,8 +74,7 @@ namespace VirtoCommerce.Web.Models.Routing
                         {
                             { Constants.Language, new LanguageRouteConstraint() },
                             { Constants.Store, new StoreRouteConstraint() },
-                            { Constants.Category, new CategoryRouteConstraint() }//,
-                            //{ Constants.Tags, @"^$|[0-9][0-9]"}
+                            { Constants.Category, new CategoryRouteConstraint() }
                         },
                         new RouteValueDictionary { { "namespaces", new[] { "VirtoCommerce.Web.Controllers" } } },
                         new MvcRouteHandler()));

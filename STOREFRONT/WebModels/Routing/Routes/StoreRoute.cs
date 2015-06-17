@@ -1,5 +1,6 @@
 ﻿#region
 using System;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -111,13 +112,14 @@ namespace VirtoCommerce.Web.Models.Routing.Routes
             //Otherwise lets resolve ourselves
             if (routeData == null)
             {
+                var currentUrl = this.Url;
                 var requestPath = httpContext.Request.AppRelativeCurrentExecutionFilePath.Substring(2)
                                   + httpContext.Request.PathInfo;
                 var pathSegments = requestPath.Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
 
                 //Store route can only have up to 2 segments
                 //Other routes have unlimited number of segments due to category path
-                if (this.GetType() == typeof(StoreRoute) && pathSegments.Length > this.Url.Split(new[] { '/' }).Length)
+                if (this.GetType() == typeof(StoreRoute) && pathSegments.Length > currentUrl.Split(new[] { '/' }).Length)
                 {
                     return null;
                 }
@@ -208,7 +210,7 @@ namespace VirtoCommerce.Web.Models.Routing.Routes
                         }
                     }
 
-                    if (values.Keys.Any(key => !this.Url.Contains(key)))
+                    if (values.Keys.Any(key => !currentUrl.Contains(key)))
                     {
                         return null;
                     }
