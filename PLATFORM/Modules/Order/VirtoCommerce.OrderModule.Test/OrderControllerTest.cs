@@ -356,7 +356,7 @@ namespace VirtoCommerce.OrderModule.Test
 
 			var orderService = new CustomerOrderServiceImpl(GetOrderRepositoryFactory(), new TimeBasedNumberGeneratorImpl(), orderEventPublisher, cartService);
 
-			var controller = new OrderModuleController(orderService, null, null, new TimeBasedNumberGeneratorImpl(), null);
+			var controller = new OrderModuleController(orderService, null, null, new TimeBasedNumberGeneratorImpl(), null, null);
 			return controller;
 		}
 

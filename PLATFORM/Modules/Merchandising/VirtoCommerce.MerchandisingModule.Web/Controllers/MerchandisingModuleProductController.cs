@@ -52,38 +52,37 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 
 
 		#region Public Methods and Operators
+		/// GET: api/mp/products?ids=212&ids=2123&ids=434
+		[HttpGet]
+		[ArrayInput(ParameterName = "ids")]
+		[ResponseType(typeof(CatalogItem[]))]
+		[ClientCache(Duration = 30)]
+		[Route("")]
+		public IHttpActionResult GetProductsByIds([FromUri] string[] ids, [FromUri] coreModel.ItemResponseGroup responseGroup = coreModel.ItemResponseGroup.ItemInfo)
+		{
+			var retVal = InnerGetProductsByIds(ids, responseGroup);
+			return Ok(retVal);
+		}
+
 
 		[HttpGet]
-		[ResponseType(typeof(Product))]
+		[ResponseType(typeof(CatalogItem))]
 		[ClientCache(Duration = 30)]
 		[Route("{product}")]
 		public IHttpActionResult GetProduct(string store, string product, [FromUri] coreModel.ItemResponseGroup responseGroup = coreModel.ItemResponseGroup.ItemLarge, string language = "en-us")
 		{
-			var catalog = _storeService.GetById(store).Catalog;
-			var item = _itemService.GetById(product, responseGroup);
-
-			coreModel.Property[] properties = null;
-			if((responseGroup & ItemResponseGroup.ItemProperties) == ItemResponseGroup.ItemProperties)
+			var products = InnerGetProductsByIds(new string[] { product }, responseGroup);
+			var retVal = products.FirstOrDefault();
+			if(retVal != null)
 			{
-				properties = GetAllItemProperies(item);
+				return Ok(retVal);
 			}
-			if (product != null)
-			{
-				var webModelProduct = item.ToWebModel(_blobUrlResolver, properties);
-				if (item.CategoryId != null)
-				{
-					var category = _categoryService.GetById(item.CategoryId);
-					webModelProduct.Outline = string.Join("/", category.Parents.Select(x => x.Id)) + "/" + category.Id;
-				}
-				return Ok(webModelProduct);
-			}
-
 			return NotFound();
 		}
 
-		/// GET: api/mp/apple/en-us/products?code='22'
+		/// GET: api/mp/products?store=apple&code='22'
 		[HttpGet]
-		[ResponseType(typeof(Product))]
+		[ResponseType(typeof(CatalogItem))]
 		[ClientCache(Duration = 30)]
 		[Route("")]
 		public IHttpActionResult GetProductByCode(string store, [FromUri] string code, [FromUri] coreModel.ItemResponseGroup responseGroup = coreModel.ItemResponseGroup.ItemLarge, string language = "en-us")
@@ -98,15 +97,19 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 			var result = _searchService.Search(searchCriteria);
 			if (result.Products != null && result.Products.Any())
 			{
-				var item = _itemService.GetById(result.Products.First().Id, ItemResponseGroup.ItemLarge);
-				return Ok(item.ToWebModel(_blobUrlResolver));
+				var products = InnerGetProductsByIds(new string[] { result.Products.First().Id }, ItemResponseGroup.ItemLarge);
+				var retVal = products.FirstOrDefault();
+				if (retVal != null)
+				{
+					return Ok(retVal);
+				}
 			}
 
 			return NotFound();
 		}
 
 		[HttpGet]
-		[ResponseType(typeof(Product))]
+		[ResponseType(typeof(CatalogItem))]
 		[ClientCache(Duration = 30)]
 		[Route("")]
 		public IHttpActionResult GetProductByKeyword(string store, [FromUri] string keyword, [FromUri] coreModel.ItemResponseGroup responseGroup = coreModel.ItemResponseGroup.ItemLarge, string language = "en-us")
@@ -120,8 +123,12 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 			var result = _searchService.Search(searchCriteria);
 			if (result.Products != null && result.Products.Any())
 			{
-				var item = _itemService.GetById(result.Products.First().Id, ItemResponseGroup.ItemLarge);
-				return Ok(item.ToWebModel(_blobUrlResolver));
+				var products = InnerGetProductsByIds(new string[] { result.Products.First().Id }, ItemResponseGroup.ItemLarge);
+				var retVal = products.FirstOrDefault();
+				if (retVal != null)
+				{
+					return Ok(retVal);
+				}
 			}
 
 			return NotFound();
@@ -285,7 +292,32 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 			return this.Ok(searchResults);
 		}
 
-		private coreModel.Property[] GetAllItemProperies(coreModel.CatalogProduct product)
+		private IEnumerable<CatalogItem> InnerGetProductsByIds(String[] ids, ItemResponseGroup responseGroup)
+		{
+			var retVal = new List<CatalogItem>();
+			var products = _itemService.GetByIds(ids, responseGroup);
+			foreach (var product in products)
+			{
+				coreModel.Property[] properties = null;
+				if ((responseGroup & ItemResponseGroup.ItemProperties) == ItemResponseGroup.ItemProperties)
+				{
+					properties = GetAllProductProperies(product);
+				}
+				if (product != null)
+				{
+					var webModelProduct = product.ToWebModel(_blobUrlResolver, properties);
+					if (product.CategoryId != null)
+					{
+						var category = _categoryService.GetById(product.CategoryId);
+						webModelProduct.Outline = string.Join("/", category.Parents.Select(x => x.Id)) + "/" + category.Id;
+					}
+					retVal.Add(webModelProduct);
+				}
+			}
+			return retVal;
+		}
+
+		private coreModel.Property[] GetAllProductProperies(coreModel.CatalogProduct product)
 		{
 	
 			coreModel.Property[] retVal = null;

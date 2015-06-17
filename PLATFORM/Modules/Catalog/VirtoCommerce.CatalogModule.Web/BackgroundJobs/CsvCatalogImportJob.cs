@@ -125,12 +125,8 @@ namespace VirtoCommerce.CatalogModule.Web.BackgroundJobs
 				notification.Description = "Import finished" + (notification.Errors.Any() ? " with errors" : " successfully");
 				_notifier.Upsert(notification);
 			}
-
-
 		}
-
 	
-
 		private void SaveCategoryTree(coreModel.Catalog catalog, IEnumerable<coreModel.CatalogProduct> csvProducts, ImportNotification notification)
 		{
 			var categories = new List<coreModel.Category>();
@@ -138,7 +134,7 @@ namespace VirtoCommerce.CatalogModule.Web.BackgroundJobs
 			notification.ProcessedCount = 0;
 			foreach (var csvProduct in csvProducts)
 			{
-				var productCategoryNames = csvProduct.Category.Path.Split('/', '|', '\\', '>');
+				var productCategoryNames = csvProduct.Category.Path.Split(_categoryDelimiters);
 				ICollection<coreModel.Category> currentLevelCategories = categories;
 				string parentCategoryId = null;
 				foreach (var categoryName in productCategoryNames)
