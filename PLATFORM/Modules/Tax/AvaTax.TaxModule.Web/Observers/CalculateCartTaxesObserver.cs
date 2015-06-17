@@ -8,7 +8,7 @@ using VirtoCommerce.Domain.Common.Events;
 
 namespace AvaTax.TaxModule.Web.Observers
 {
-    public class CalculateCartTaxesObserver : IObserver<CartChangeEvent>, IPriorityObserver
+    public class CalculateCartTaxesObserver : IObserver<CartChangeEvent>
 	{
         private readonly ITax _taxSettings;
 
@@ -33,6 +33,7 @@ namespace AvaTax.TaxModule.Web.Observers
 		}
 
 		#endregion
+
 		private void CalculateCustomerOrderTaxes(CartChangeEvent context)
 		{
 			var cart = context.ModifiedCart;
@@ -58,7 +59,6 @@ namespace AvaTax.TaxModule.Web.Observers
                         //{
                         //}
                     }
-                    cart.TaxTotal = getTaxResult.TotalTax;
                 }
             }
             else
@@ -66,12 +66,5 @@ namespace AvaTax.TaxModule.Web.Observers
                 OnError(new Exception("AvaTax credentials not provided"));
             }
 		}
-
-
-
-        public int Priority
-        {
-            get { return 100; }
-        }
     }
 }

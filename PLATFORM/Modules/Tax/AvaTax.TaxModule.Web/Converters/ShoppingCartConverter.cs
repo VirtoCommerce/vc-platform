@@ -64,7 +64,7 @@ namespace AvaTax.TaxModule.Web.Converters
                         AddressCode = address.Index.ToString(),
                         Line1 = address.Value.Line1,
                         City = address.Value.City,
-                        Region = address.Value.RegionId,
+                        Region = address.Value.RegionName,
                         PostalCode = address.Value.PostalCode,
                         Country = address.Value.CountryName
                     });
