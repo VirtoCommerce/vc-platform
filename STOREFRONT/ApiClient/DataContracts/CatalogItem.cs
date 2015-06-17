@@ -103,6 +103,8 @@ namespace VirtoCommerce.ApiClient.DataContracts
         public string TaxType { get; set; }
 
         public string Vendor { get; set; }
+
+        public Asset[] Assets { get; set; }
         #endregion
 
         #region Public Indexers

@@ -20,6 +20,7 @@ using Omu.ValueInjecter;
 using VirtoCommerce.Platform.Core.Caching;
 using Hangfire;
 using VirtoCommerce.OrderModule.Web.BackgroundJobs;
+using VirtoCommerce.OrderModule.Data.Repositories;
 
 namespace VirtoCommerce.OrderModule.Web.Controllers.Api
 {
@@ -32,14 +33,16 @@ namespace VirtoCommerce.OrderModule.Web.Controllers.Api
         private readonly IOperationNumberGenerator _operationNumberGenerator;
         private readonly IStoreService _storeService;
 		private readonly CacheManager _cacheManager;
+		private readonly Func<IOrderRepository> _repositoryFactory;
 
-        public OrderModuleController(ICustomerOrderService customerOrderService, ICustomerOrderSearchService searchService, IStoreService storeService, IOperationNumberGenerator numberGenerator, CacheManager cacheManager)
+		public OrderModuleController(ICustomerOrderService customerOrderService, ICustomerOrderSearchService searchService, IStoreService storeService, IOperationNumberGenerator numberGenerator, CacheManager cacheManager, Func<IOrderRepository> repositoryFactory)
         {
             _customerOrderService = customerOrderService;
             _searchService = searchService;
             _operationNumberGenerator = numberGenerator;
             _storeService = storeService;
 			_cacheManager = cacheManager;
+			_repositoryFactory = repositoryFactory;
         }
 
         // GET: api/order/customerOrders?q=ddd&site=site1&customer=user1&start=0&count=20
@@ -237,22 +240,23 @@ namespace VirtoCommerce.OrderModule.Web.Controllers.Api
         }
 
         // GET:  api/order/dashboardStatistics
-        [HttpGet]
-        [ResponseType(typeof(webModel.DashboardStatisticsResult))]
-        [Route("~/api/order/dashboardStatistics")]
+		[HttpGet]
+		[ResponseType(typeof(webModel.DashboardStatisticsResult))]
+		[Route("~/api/order/dashboardStatistics")]
 		public IHttpActionResult GetDashboardStatistics([FromUri]DateTime? start = null, [FromUri]DateTime? end = null)
-        {
+		{
 			start = start ?? DateTime.UtcNow.AddYears(-1);
 			end = end ?? DateTime.UtcNow;
 			var cacheKey = CacheKey.Create("Statistic", start.Value.ToString("yyyy-MM-dd"), end.Value.ToString("yyyy-MM-dd"));
-			var retVal = _cacheManager.Get<webModel.DashboardStatisticsResult>(cacheKey);
-			if(retVal == null)
+			var retVal = _cacheManager.Get(cacheKey, () =>
 			{
-				var collectStaticJob = new CollectOrderStatisticJob();
-				BackgroundJob.Enqueue(() => collectStaticJob.CollectStatistics(start.Value, end.Value));
-			}
-	        return Ok(retVal);
-        }
+
+				var collectStaticJob = new CollectOrderStatisticJob(_repositoryFactory, _cacheManager);
+				return collectStaticJob.CollectStatistics(start.Value, end.Value);
+
+			});
+			return Ok(retVal);
+		}
 
     }
 }

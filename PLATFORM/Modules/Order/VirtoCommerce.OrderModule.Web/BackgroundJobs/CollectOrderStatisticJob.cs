@@ -23,20 +23,20 @@ namespace VirtoCommerce.OrderModule.Web.BackgroundJobs
 			_cacheManager = cacheManager;
 		}
 
-		public void CollectStatistics(DateTime start, DateTime end)
+		public DashboardStatisticsResult CollectStatistics(DateTime start, DateTime end)
 		{
-			var statistic = new DashboardStatisticsResult();
-			var cacheKey = CacheKey.Create("Statistic", start.ToString("yyyy-MM-dd"), end.ToString("yyyy-MM-dd"));
+			var retVal = new DashboardStatisticsResult();
+		
 			using (var repository = _repositoryFactory())
 			{
-				statistic.OrderCount = repository.CustomerOrders.Where(x => x.CreatedDate >= start && x.CreatedDate <= end)
+				retVal.OrderCount = repository.CustomerOrders.Where(x => x.CreatedDate >= start && x.CreatedDate <= end)
 																.Where(x => !x.IsCancelled).Count();
 				//avg order value
 				var avgValues = repository.CustomerOrders.Where(x => x.CreatedDate >= start && x.CreatedDate <= end)
 														 .GroupBy(x => x.Currency)
 														 .Select(x => new { Currency = x.Key, AvgValue = x.Average(y => y.Sum) })
 														 .ToArray();
-				statistic.AvgOrderValue = avgValues.Select(x=> new Money(x.Currency, x.AvgValue) ).ToList();
+				retVal.AvgOrderValue = avgValues.Select(x=> new Money(x.Currency, x.AvgValue) ).ToList();
 
 
 				//Revenue
@@ -44,13 +44,13 @@ namespace VirtoCommerce.OrderModule.Web.BackgroundJobs
 													.Where(x => !x.IsCancelled)
 													.GroupBy(x => x.Currency).Select(x => new { Currency = x.Key, Value = x.Sum(y => y.Sum) })
 													.ToArray();
-				statistic.Revenue = revenues.Select(x => new Money(x.Currency, x.Value)).ToList();
+				retVal.Revenue = revenues.Select(x => new Money(x.Currency, x.Value)).ToList();
 
 				var currencies = repository.InPayments.Where(x => x.CreatedDate >= start && x.CreatedDate <= end)
 												.Where(x => !x.IsCancelled)
 												.GroupBy(x => x.Currency).Select(x => x.Key);
 
-				statistic.RevenuePeriodDetails = new List<MoneyWithPeriod>();
+				retVal.RevenuePeriodDetails = new List<MoneyWithPeriod>();
 				foreach (var currency in currencies)
 				{
 					for (var currentDate = start; currentDate <= end; currentDate = currentDate.AddMonths(1))
@@ -65,7 +65,7 @@ namespace VirtoCommerce.OrderModule.Web.BackgroundJobs
 							Quarter = quarter,
 							Year = currentDate.Year
 						};
-						statistic.RevenuePeriodDetails.Add(periodStat);
+						retVal.RevenuePeriodDetails.Add(periodStat);
 
 
 					}
@@ -76,26 +76,24 @@ namespace VirtoCommerce.OrderModule.Web.BackgroundJobs
 															   .Where(x => !x.IsCancelled).GroupBy(x => x.Currency)
 															   .Select(x => new { Currency = x.Key, AvgValue = x.GroupBy(y => y.CustomerId).Average(y => y.Sum(z => z.Sum)) })
 															   .ToArray();
-				statistic.RevenuePerCustomer = revenuesPerCustomer.Select(x => new Money(x.Currency, x.AvgValue)).ToList();
+				retVal.RevenuePerCustomer = revenuesPerCustomer.Select(x => new Money(x.Currency, x.AvgValue)).ToList();
 
 				//Items purchased
-				statistic.ItemsPurchased = repository.CustomerOrders.Where(x => x.CreatedDate >= start && x.CreatedDate <= end)
+				retVal.ItemsPurchased = repository.CustomerOrders.Where(x => x.CreatedDate >= start && x.CreatedDate <= end)
 																	.Where(x => !x.IsCancelled).SelectMany(x => x.Items).Count();
 
 				//Line items per order
-                /* blows up when no orders
-				statistic.LineitemsPerOrder = repository.CustomerOrders.Where(x => x.CreatedDate >= start && x.CreatedDate <= end)
-																 .Where(x => !x.IsCancelled).Average(x => x.Items.Count());
+				retVal.LineitemsPerOrder = repository.CustomerOrders.Where(x => x.CreatedDate >= start && x.CreatedDate <= end)
+																 .Where(x => !x.IsCancelled).Select(x=>x.Items.Count()).DefaultIfEmpty(0).Average();
 
-                 * */
 				//Customer count
-				statistic.CustomersCount = repository.CustomerOrders.Where(x => x.CreatedDate >= start && x.CreatedDate <= end)
+				retVal.CustomersCount = repository.CustomerOrders.Where(x => x.CreatedDate >= start && x.CreatedDate <= end)
 																	.Select(x => x.CustomerId).Distinct().Count();
 
 			}
-			statistic.StartDate = start;
-			statistic.EndDate = end;
-			_cacheManager.Put(cacheKey, statistic);
+			retVal.StartDate = start;
+			retVal.EndDate = end;
+			return retVal;
 		}
 	}
 }

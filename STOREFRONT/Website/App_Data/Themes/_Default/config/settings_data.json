@@ -2,6 +2,7 @@
     "current": "Blue",
     "presets": {
         "Blue": {
+            "google_analytics_tracking_id": null,
             "ajax_cart_enable": false,
             "ajax_cart_method": "Modal",
             "cart_notes_enable": false,
@@ -18,7 +19,7 @@
             "color_header_background_top": "#1d4273",
             "color_header_cart_search": "#1c4170",
             "color_header_text": "#fff",
-            "color_head_text_top":  "#999",
+            "color_head_text_top": "#999",
             "color_heading_text": "#000",
             "color_nav_bg": "#000",
             "color_nav_text": "#fff",
@@ -87,10 +88,11 @@
             "store_selector_enable": true
         },
         "Soft Green": {
+            "google_analytics_tracking_id": null,
             "ajax_cart_enable": true,
             "ajax_cart_method": "Modal",
             "cart_notes_enable": false,
-            "collection_prod_image_sizes": "large",            
+            "collection_prod_image_sizes": "large",
             "collection_sidebar_filters": "tags",
             "color_accent": "#49aa9d",
             "color_body_bg": "#fff",
@@ -167,6 +169,7 @@
             "superscript_decimals": true
         },
         "Dark": {
+            "google_analytics_tracking_id": null,
             "ajax_cart_enable": true,
             "ajax_cart_method": "Modal",
             "cart_notes_enable": false,

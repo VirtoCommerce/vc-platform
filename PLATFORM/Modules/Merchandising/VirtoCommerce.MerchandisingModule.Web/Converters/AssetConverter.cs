@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Web;
 using Omu.ValueInjecter;
 using VirtoCommerce.Platform.Core.Asset;
+using VirtoCommerce.Platform.Core.Common;
 using moduleModel = VirtoCommerce.Domain.Catalog.Model;
 using webModel = VirtoCommerce.MerchandisingModule.Web.Model;
 
@@ -10,18 +12,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Converters
     {
         #region Public Methods and Operators
 
-        public static moduleModel.ItemAsset ToModuleModel(this webModel.ItemImage itemInage, IBlobUrlResolver blobUrlResolver)
-        {
-            var retVal = new moduleModel.ItemAsset();
-            retVal.InjectFrom(itemInage);
-            if (String.IsNullOrEmpty(retVal.Group))
-            {
-                retVal.Group = "default";
-            }
-            return retVal;
-        }
-
-		public static webModel.ItemImage ToWebModel(this moduleModel.ItemAsset asset, IBlobUrlResolver blobUrlResolver)
+      	public static webModel.ItemImage ToImageWebModel(this moduleModel.ItemAsset asset, IBlobUrlResolver blobUrlResolver)
         {
             var retVal = new webModel.ItemImage();
             retVal.InjectFrom(asset);
@@ -30,6 +21,18 @@ namespace VirtoCommerce.MerchandisingModule.Web.Converters
             retVal.Name = asset.Group;
             return retVal;
         }
+
+		public static webModel.Asset ToAssetWebModel(this moduleModel.ItemAsset asset, IBlobUrlResolver blobUrlResolver)
+		{
+			var retVal = new webModel.Asset();
+			retVal.InjectFrom(asset);
+
+			retVal.Name = HttpUtility.UrlDecode(System.IO.Path.GetFileName(asset.Url));
+			retVal.MimeType = MimeTypeResolver.ResolveContentType(retVal.Name);
+
+			retVal.Url = blobUrlResolver.GetAbsoluteUrl(asset.Url);
+			return retVal;
+		}
 
         #endregion
     }
