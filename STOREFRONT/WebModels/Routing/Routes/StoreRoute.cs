@@ -112,7 +112,13 @@ namespace VirtoCommerce.Web.Models.Routing.Routes
             //Otherwise lets resolve ourselves
             if (routeData == null)
             {
-                var currentUrl = this.Url;
+                string currentUrl;
+
+                lock (this.thisLock)
+                {
+                    currentUrl = this.Url;
+                }
+
                 var requestPath = httpContext.Request.AppRelativeCurrentExecutionFilePath.Substring(2)
                                   + httpContext.Request.PathInfo;
                 var pathSegments = requestPath.Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
