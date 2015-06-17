@@ -56,7 +56,7 @@ namespace VirtoCommerce.OrderModule.Web.BackgroundJobs
 					for (var currentDate = start; currentDate <= end; currentDate = currentDate.AddMonths(1))
 					{
 						var currentEndDate = currentDate.AddMonths(1);
-						var quarter = (int)(currentDate.Month / 3);
+						var quarter = (int)((currentDate.Month - 1) / 3) + 1;
 						var amount = repository.InPayments.Where(x => x.CreatedDate >= currentDate && x.CreatedDate <= currentEndDate)
 															  .Where(x => !x.IsCancelled & x.Currency == currency).Sum(x => (decimal?)x.Sum) ?? 0;
 						var periodStat = new MoneyWithPeriod(currency, amount)
