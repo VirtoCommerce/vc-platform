@@ -23,7 +23,10 @@ namespace VirtoCommerce.MerchandisingModule.Web.Converters
             if (product.Assets != null)
             {
                 retVal.Images = product.Assets.Where(x => x.Type == coreModel.ItemAssetType.Image)
-											  .Select(x => x.ToWebModel(blobUrlResolver))
+											  .Select(x => x.ToImageWebModel(blobUrlResolver))
+											  .ToArray();
+				retVal.Assets = product.Assets.Where(x => x.Type == coreModel.ItemAssetType.File)
+											  .Select(x => x.ToAssetWebModel(blobUrlResolver))
 											  .ToArray();
             }
 

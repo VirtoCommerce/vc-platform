@@ -42,14 +42,14 @@ namespace VirtoCommerce.Platform.Core.Common
 			{
 				throw new ArgumentNullException("fileName");
 			}
-			var result = "application/octet-stream";
+			string result = null;
 			var ext = Path.GetExtension(fileName).Substring(1).ToLower();
 			if (ext != null)
 			{
 				_mapping.TryGetValue(ext, out result);
 			}
 			
-			return result;
+			return result ??  "application/octet-stream";
 		}
 	}
 }

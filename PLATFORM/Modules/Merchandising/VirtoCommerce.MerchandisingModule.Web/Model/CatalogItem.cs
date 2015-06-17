@@ -28,6 +28,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Model
         public string Id { get; set; }
 
         public ItemImage[] Images { get; set; }
+		public Asset[] Assets { get; set; }
         public string MainProductId { get; set; }
 
         public bool? TrackInventory { get; set; }
