@@ -236,7 +236,7 @@
     </script>
 
 
-    <script type="text/ng-template" id="ShortText-dictionary-multilang.html">
+    <!--<script type="text/ng-template" id="ShortText-dictionary-multilang.html">
         <div class="form-group" ng-repeat="(language, langValuesGroup) in context.langValuesMap">
             <div class="form-input __langs" data-role="input-control">
                 <span class="flag flag-{{language.substr(3).toLowerCase()}}"></span>
@@ -246,6 +246,23 @@
                         <span ng-bind-html="propValue.value | highlight: $select.search"></span>
                     </ui-select-choices>
                 </ui-select>
+            </div>
+        </div>
+    </script>-->
+    <script type="text/ng-template" id="ShortText-dictionary-multilang.html">
+        <div class="form-group">
+            <div class="form-input __langs" data-role="input-control">
+                <span class="flag flag-{{currentEntity.catalog.defaultLanguage.languageCode.substr(3).toLowerCase()}}"></span>
+                <ui-select ng-model="context.langValuesMap[currentEntity.catalog.defaultLanguage.languageCode].currentPropValues[0]" ng-disabled="currentEntity.isReadOnly">
+                    <ui-select-match placeholder="Select value">{{$select.selected.value}}</ui-select-match>
+                    <ui-select-choices repeat="propValue in context.langValuesMap[currentEntity.catalog.defaultLanguage.languageCode].allValues | filter: {value: $select.search}">
+                        <span ng-bind-html="propValue.value | highlight: $select.search"></span>
+                    </ui-select-choices>
+                </ui-select>
+                <div ng-repeat="data in currentEntity.values">
+                    <span class="flag flag-{{data.languageCode.substr(3, 2).toLowerCase()}}"></span>
+                    {{data.value}}
+                </div>
             </div>
         </div>
     </script>

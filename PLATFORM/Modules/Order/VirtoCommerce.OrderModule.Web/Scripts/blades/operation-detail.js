@@ -84,7 +84,7 @@
 			            title: 'Order settings',
 			            //subtitle: '',
 			            controller: 'platformWebApp.settingsDetailController',
-			            template: 'Modules/$(VirtoCommerce.Core)/Scripts/Settings/blades/settings-detail.tpl.html'
+			            template: 'Scripts/app/settings/blades/settings-detail.tpl.html'
 			        };
 			        bladeNavigationService.showBlade(newBlade, $scope.blade);
 			    };

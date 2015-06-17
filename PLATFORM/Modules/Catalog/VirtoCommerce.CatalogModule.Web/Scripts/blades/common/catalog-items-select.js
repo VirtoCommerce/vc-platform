@@ -111,18 +111,6 @@
         $scope.blade.refresh();
     });
 
-    $scope.blade.showItemBlade = function (id, title) {
-        var newBlade = {
-            id: "listItemDetail",
-            itemId: id,
-            title: title,
-            controller: 'virtoCommerce.catalogModule.itemDetailController',
-            template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/item-detail.tpl.html'
-        };
-        bladeNavigationService.showBlade(newBlade, $scope.blade);
-    };
-
-
     $scope.selectItem = function (e, listItem) {
         if ($scope.selectedItem == listItem)
             return;
@@ -160,7 +148,15 @@
             });
         }
         else {
-            $scope.blade.showItemBlade(listItem.id, listItem.name);
+            newBlade = {
+                id: "listItemDetail",
+                itemId: listItem.id,
+                productType: listItem.productType,
+                title: listItem.name,
+                controller: 'virtoCommerce.catalogModule.itemDetailController',
+                template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/item-detail.tpl.html'
+            };
+            bladeNavigationService.showBlade(newBlade, $scope.blade);
         }
 
     };

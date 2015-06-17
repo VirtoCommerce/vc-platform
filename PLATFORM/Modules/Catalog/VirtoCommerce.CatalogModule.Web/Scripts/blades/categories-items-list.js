@@ -114,17 +114,6 @@
                 bladeNavigationService.showBlade(newBlade, blade);
             };
 
-            blade.showItemBlade = function (id, title) {
-                var newBlade = {
-                    id: "listItemDetail" + blade.mode,
-                    itemId: id,
-                    title: title,
-                    controller: 'virtoCommerce.catalogModule.itemDetailController',
-                    template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/item-detail.tpl.html'
-                };
-                bladeNavigationService.showBlade(newBlade, blade);
-            };
-
             $scope.delete = function () {
                 if (isItemsChecked()) {
                     deleteChecked();
@@ -253,12 +242,12 @@
 
             $scope.selectItem = function (e, listItem) {
                 blade.setSelectedItem(listItem);
-
+                var newBlade;
                 if (listItem.type === 'category') {
                     if (preventCategoryListingOnce) {
                         preventCategoryListingOnce = false;
                     } else {
-                        var newBlade = {
+                        newBlade = {
                             id: 'itemsList' + (blade.level + (e.ctrlKey ? 1 : 0)),
                             level: blade.level + (e.ctrlKey ? 1 : 0),
                             mode: blade.mode,
@@ -284,7 +273,15 @@
                         }
                     }
                 } else {
-                    blade.showItemBlade(listItem.id, listItem.name);
+                    newBlade = {
+                        id: "listItemDetail" + blade.mode,
+                        itemId: listItem.id,
+                        productType: listItem.productType,
+                        title: listItem.name,
+                        controller: 'virtoCommerce.catalogModule.itemDetailController',
+                        template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/item-detail.tpl.html'
+                    };
+                    bladeNavigationService.showBlade(newBlade, blade);
                 }
 
                 blade.currentItemId = $scope.selectedItem.type === 'product' ? $scope.selectedItem.id : undefined;

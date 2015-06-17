@@ -42,7 +42,6 @@
             blade.origItem = $scope.seoInfos;
             $scope.bladeClose();
         } else {
-            // temp workaround: disable saving until it's confirmed as tested and working
             blade.isLoading = true;
 
             getUpdateFunction()({ id: blade.parentEntityId, seoInfos: seoInfos },
