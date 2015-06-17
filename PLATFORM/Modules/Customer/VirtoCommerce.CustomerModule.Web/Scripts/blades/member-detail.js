@@ -1,6 +1,7 @@
 ﻿angular.module('virtoCommerce.customerModule')
-.controller('virtoCommerce.customerModule.memberDetailController', ['$scope', 'platformWebApp.bladeNavigationService', 'virtoCommerce.customerModule.contacts', 'virtoCommerce.customerModule.organizations', 'platformWebApp.dialogService', function ($scope, bladeNavigationService, contacts, organizations, dialogService) {
+.controller('virtoCommerce.customerModule.memberDetailController', ['$scope', '$window', 'platformWebApp.bladeNavigationService', 'virtoCommerce.customerModule.contacts', 'virtoCommerce.customerModule.organizations', 'platformWebApp.dialogService', 'virtoCommerce.storeModule.stores', function ($scope, $window, bladeNavigationService, contacts, organizations, dialogService, stores) {
     $scope.blade.currentResource = $scope.blade.isOrganization ? organizations : contacts;
+    var storesPromise = stores.query().$promise;
 
     $scope.blade.refresh = function (parentRefresh) {
         if ($scope.blade.currentEntityId) {
@@ -132,6 +133,26 @@
             permission: 'customer:manage'
         }
     ];
+
+    if (!$scope.blade.isOrganization) {
+        $scope.blade.toolbarCommands.push(
+        {
+            name: "Login on behalf",
+            icon: 'fa fa-key',
+            executeMethod: function () {
+                storesPromise.then(function (promiseData) {
+                    var store = promiseData[0];
+                    // https://{store_secure_url}/{locale}/{store_code}?uid={customer_id}
+                    var url = store.secureUrl + '/' + store.defaultLanguage + '/' + store.id + '?uid=' + $scope.blade.currentEntity.id;
+                    $window.open(url, '_blank');
+                });
+            },
+            canExecuteMethod: function () {
+                return true;
+            },
+            permission: 'customer:manage'
+        });
+    }
 
     // datepicker
     $scope.datepickers = {
