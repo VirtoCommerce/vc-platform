@@ -45,7 +45,11 @@ namespace VirtoCommerce.Web.Models.Routing.Constraints
             }
 
             var storeId = this.GetStoreId(values);
-            if (storeId == null) return false;
+            if (storeId == null)
+            {
+                return false;
+            }
+            
 
             var client = ClientContext.Clients.CreateBrowseClient();
             var category = Task.Run(() => client.GetCategoryByKeywordAsync(storeId, language, childCategorySlug)).Result;

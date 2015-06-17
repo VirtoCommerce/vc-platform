@@ -191,8 +191,8 @@
     <Content Include="Scripts\blades\advanced-search.js" />
     <Content Include="Scripts\blades\advanced-search-results.tpl.html" />
     <Content Include="Scripts\blades\advanced-search.tpl.html" />
-    <Content Include="Scripts\blades\catalog-property-detail.js" />
-    <Content Include="Scripts\blades\catalog-property-detail.tpl.html" />
+    <Content Include="Scripts\blades\catalog-property-list.js" />
+    <Content Include="Scripts\blades\catalog-property-list.tpl.html" />
     <Content Include="Scripts\blades\common\catalog-items-select.js" />
     <Content Include="Scripts\blades\common\catalog-items-select.tpl.html" />
     <Content Include="Scripts\blades\export\catalog-export.js" />

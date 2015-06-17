@@ -15,6 +15,7 @@
                 var newBlade = {
                     id: blade.id,
                     itemId: dbItem.id,
+                    productType: dbItem.productType,
                     title: dbItem.name,
                     controller: 'virtoCommerce.catalogModule.itemDetailController',
                     template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/item-detail.tpl.html'
