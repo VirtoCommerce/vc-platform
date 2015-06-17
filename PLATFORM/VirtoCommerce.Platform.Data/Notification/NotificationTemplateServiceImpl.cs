@@ -31,11 +31,16 @@ namespace VirtoCommerce.Platform.Data.Notification
 
 		public NotificationTemplate Create(NotificationTemplate notificationTemplate)
 		{
-			var entity = notificationTemplate.ToDataModel();
-			entity.Id = Guid.NewGuid().ToString("N");
-			_repository.Add(entity);
-			CommitChanges(_repository);
-			var retVal = GetById(entity.Id);
+			var origEntity = _repository.GetNotificationTemplateByNotification(notificationTemplate.NotificationTypeId, notificationTemplate.ObjectId);
+			if (origEntity == null)
+			{
+				origEntity = notificationTemplate.ToDataModel();
+				origEntity.Id = Guid.NewGuid().ToString("N");
+				_repository.Add(origEntity);
+				CommitChanges(_repository);
+			}
+
+			var retVal = GetById(origEntity.Id);
 
 			return retVal;
 		}

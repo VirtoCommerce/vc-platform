@@ -8,6 +8,11 @@ namespace VirtoCommerce.Platform.Core.Notification
 {
 	public class Notification
 	{
+		public Notification()
+		{
+			NotificationTemplate = new NotificationTemplate();
+		}
+
 		public string Id { get; set; }
 		public DateTime CreatedDate { get; set; }
 		public DateTime? ModifiedDate { get; set; }
@@ -80,5 +85,7 @@ namespace VirtoCommerce.Platform.Core.Notification
 		/// Date of success sent result
 		/// </summary>
 		public DateTime? SentDate { get; set; }
+
+		public NotificationTemplate NotificationTemplate { get; set; }
 	}
 }

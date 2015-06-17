@@ -10,19 +10,16 @@ namespace VirtoCommerce.Platform.Data.Notification
 {
 	public class LiquidNotificationTemplateResolver : INotificationTemplateResolver
 	{
-		public void ResolveSubject(Core.Notification.Notification notification)
+		public void ResolveTemplate(Core.Notification.Notification notification)
 		{
-			Template template = Template.Parse(notification.Subject);
-			notification.Subject = template.Render(Hash.FromAnonymousObject(new
-							{
-								context = notification
-							}));
-		}
+			Template templateSubject = Template.Parse(notification.NotificationTemplate.Subject);
+			notification.Subject = templateSubject.Render(Hash.FromAnonymousObject(new
+			{
+				context = notification
+			}));
 
-		public void ResolveBody(Core.Notification.Notification notification)
-		{
-			Template template = Template.Parse(notification.Body);
-			notification.Body = template.Render(Hash.FromAnonymousObject(new
+			Template templateBody = Template.Parse(notification.NotificationTemplate.Body);
+			notification.Body = templateBody.Render(Hash.FromAnonymousObject(new
 			{
 				context = notification
 			}));

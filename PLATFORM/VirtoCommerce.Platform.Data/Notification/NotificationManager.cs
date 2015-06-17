@@ -12,11 +12,13 @@ namespace VirtoCommerce.Platform.Data.Notification
 	{
 		private INotificationTemplateResolver _resolver;
 		private IPlatformRepository _repository;
+		private INotificationTemplateService _notificationTemplateService;
 
-		public NotificationManager(INotificationTemplateResolver resolver, IPlatformRepository repository)
+		public NotificationManager(INotificationTemplateResolver resolver, IPlatformRepository repository, INotificationTemplateService notificationTemplateService)
 		{
 			_resolver = resolver;
 			_repository = repository;
+			_notificationTemplateService = notificationTemplateService;
 		}
 
 		private List<Func<Core.Notification.Notification>> _notifications = new List<Func<Core.Notification.Notification>>();
@@ -24,8 +26,10 @@ namespace VirtoCommerce.Platform.Data.Notification
 
 		public void SendNotification(Core.Notification.Notification notification)
 		{
-			_resolver.ResolveBody(notification);
-			_resolver.ResolveSubject(notification);
+			var template = _notificationTemplateService.GetByNotification(notification.GetType().FullName, notification.ObjectId);
+			notification.NotificationTemplate = template;
+
+			_resolver.ResolveTemplate(notification);
 
 			notification.Id = Guid.NewGuid().ToString("N");
 			_repository.Add(notification.ToDataModel());
