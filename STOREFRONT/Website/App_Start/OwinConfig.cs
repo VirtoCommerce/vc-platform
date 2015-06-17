@@ -61,8 +61,6 @@ namespace VirtoCommerce.Web
 
         protected virtual string AnonymousCookie { get { return "vcf.AnonymousId"; } }
 
-        protected virtual string GoogleAnalyticsSettingName { get { return "googleAnalyticsTrackingId"; } }
-
         #region Constructors and Destructors
         public SiteContextDataOwinMiddleware(OwinMiddleware next)
             : base(next)
@@ -102,11 +100,6 @@ namespace VirtoCommerce.Web
             }
             else
             {
-                // Google Analytics tracking id
-                object gaTrackingId = null;
-                shop.Metafields["global"].TryGetValue(GoogleAnalyticsSettingName, out gaTrackingId);
-                ctx.Set("ga_tracking_id", gaTrackingId);
-
                 var currency = GetStoreCurrency(context, shop);
                 shop.Currency = currency;
                 ctx.Shop = shop;
