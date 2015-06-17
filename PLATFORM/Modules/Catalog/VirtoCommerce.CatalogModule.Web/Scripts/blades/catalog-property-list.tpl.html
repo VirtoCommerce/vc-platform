@@ -7,7 +7,7 @@
                         {{propGroup.title}}: <span class="count">{{properties.length}}</span>
                     </legend>
                     <div class="form-group" ng-repeat="prop in properties = (blade.currentEntity.properties | filter: {type:propGroup.type})">
-                        <label class="form-label" for="">
+                        <label class="form-label">
                             {{prop.name}}
                             <a ng-show="prop.isManageable" href="" ng-click="editProperty(prop)">
                                 <i class="form-ico fa fa-pencil"></i>

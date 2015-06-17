@@ -23,7 +23,7 @@ namespace VirtoCommerce.Web.Controllers
         {
             var collections = await this.Service.GetCollectionsAsync(SiteContext.Current, sort_by);
 
-            this.Context.Set("Collection", collections.First());
+            this.Context.Set("Collection", collections.Any() ? collections.First() : null);
             this.Context.Set("current_page", page);
             this.Context.Set("current_tags", this.ParseTags(tags));
 

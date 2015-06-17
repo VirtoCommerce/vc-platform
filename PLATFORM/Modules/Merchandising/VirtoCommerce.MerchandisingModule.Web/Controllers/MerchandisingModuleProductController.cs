@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
 using System.Web.Http;
 using System.Web.Http.Description;
 using System.Web.Http.ModelBinding;
@@ -49,7 +48,6 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 			_cacheManager = cacheManager;
 			_propertyService = propertyService;
 		}
-
 
 		#region Public Methods and Operators
 
@@ -276,18 +274,13 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 			#endregion
 
 			//Load ALL products 
-			//var cacheKey = CacheKey.Create("ProductController.Search", criteria.CacheKey);
-			//var searchResults = _cacheManager.Get(cacheKey, () => _browseService.SearchItems(criteria, responseGroup));
 			var searchResults = _browseService.SearchItems(criteria, responseGroup);
-
-
 
 			return this.Ok(searchResults);
 		}
 
 		private coreModel.Property[] GetAllItemProperies(coreModel.CatalogProduct product)
 		{
-	
 			coreModel.Property[] retVal = null;
 			if (!String.IsNullOrEmpty(product.CategoryId))
 			{
@@ -300,7 +293,5 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 			return retVal;
 		}
 		#endregion
-
-
 	}
 }

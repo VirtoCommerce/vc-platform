@@ -70,7 +70,6 @@ namespace VirtoCommerce.Web
         }
         #endregion
 
-
         #region Public Methods and Operators
         public override async Task Invoke(IOwinContext context)
         {
@@ -255,8 +254,9 @@ namespace VirtoCommerce.Web
         {
             string language = null;
 
-            var mvcContext = new HttpContextWrapper(HttpContext.Current);
-            var routeData = RouteTable.Routes.GetRouteData(mvcContext);
+            //var mvcContext = new HttpContextWrapper(HttpContext.Current);
+            var routeData = HttpContext.Current.Request.RequestContext.RouteData;
+            //var routeData = RouteTable.Routes.GetRouteData(mvcContext);
 
             if (routeData != null)
             {
@@ -302,8 +302,9 @@ namespace VirtoCommerce.Web
         protected virtual Shop GetStore(IOwinContext context, string language)
         {
             var loadDefault = true;
-            var mvcContext = new HttpContextWrapper(HttpContext.Current);
-            var routeData = RouteTable.Routes.GetRouteData(mvcContext);
+            //var mvcContext = new HttpContextWrapper(HttpContext.Current);
+            var routeData = HttpContext.Current.Request.RequestContext.RouteData;
+            //var routeData = RouteTable.Routes.GetRouteData(mvcContext);
 
             string storeId = null;
 
@@ -365,7 +366,6 @@ namespace VirtoCommerce.Web
             {
                 if (loadDefault)
                 {
-
                     context.Response.Cookies.Delete(StoreCookie);
                     storeId = ConfigurationManager.AppSettings["DefaultStore"];
                     store =
