@@ -6,8 +6,10 @@ using System.Threading.Tasks;
 
 namespace VirtoCommerce.Platform.Core.Notification
 {
-	public interface INotificationSendingGateway
+	public class SearchNotificationCriteria
 	{
-		SendNotificationResult SendNotification(Notification notification);
+		public int Take { get; set; }
+		public int Skip { get; set; }
+		public string SortOrder { get; set; }
 	}
 }

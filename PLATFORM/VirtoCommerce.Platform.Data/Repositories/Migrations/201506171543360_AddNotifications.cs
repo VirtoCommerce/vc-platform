@@ -3,7 +3,7 @@ namespace VirtoCommerce.Platform.Data.Repositories.Migrations
     using System;
     using System.Data.Entity.Migrations;
     
-    public partial class Notifications : DbMigration
+    public partial class AddNotifications : DbMigration
     {
         public override void Up()
         {
@@ -14,7 +14,6 @@ namespace VirtoCommerce.Platform.Data.Repositories.Migrations
                         Id = c.String(nullable: false, maxLength: 128),
                         IsActive = c.Boolean(nullable: false),
                         IsSuccessSend = c.Boolean(nullable: false),
-                        ObjectId = c.String(),
                         Subject = c.String(),
                         Body = c.String(),
                         Sender = c.String(),

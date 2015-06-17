@@ -6,8 +6,9 @@ using System.Threading.Tasks;
 
 namespace VirtoCommerce.Platform.Core.Notification
 {
-	public interface INotificationSendingGateway
+	public class SendNotificationResult
 	{
-		SendNotificationResult SendNotification(Notification notification);
+		public string ErrorMessage { get; set; }
+		public bool IsSuccess { get; set; }
 	}
 }

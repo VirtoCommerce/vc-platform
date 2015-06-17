@@ -8,9 +8,21 @@ namespace VirtoCommerce.Platform.Core.Notification
 {
 	public class Notification
 	{
+		private readonly INotificationSendingGateway _notificationSendingGateway;
+
 		public Notification()
 		{
+			Id = Guid.NewGuid().ToString("N");
 			NotificationTemplate = new NotificationTemplate();
+			Type = this.GetType().FullName;
+		}
+
+		public Notification(INotificationSendingGateway notificationSendingGateway)
+		{
+			Id = Guid.NewGuid().ToString("N");
+			NotificationTemplate = new NotificationTemplate();
+			_notificationSendingGateway = notificationSendingGateway;
+			Type = this.GetType().FullName;
 		}
 
 		public string Id { get; set; }
@@ -18,6 +30,8 @@ namespace VirtoCommerce.Platform.Core.Notification
 		public DateTime? ModifiedDate { get; set; }
 		public string CreatedBy { get; set; }
 		public string ModifiedBy { get; set; }
+
+		public string Type { get; set; }
 
 		/// <summary>
 		/// Must be made sending
@@ -52,11 +66,6 @@ namespace VirtoCommerce.Platform.Core.Notification
 		public string Recipient { get; set; }
 
 		/// <summary>
-		/// Channel of sending notification
-		/// </summary>
-		public string Channel { get; set; }
-
-		/// <summary>
 		/// Number of current attemp
 		/// </summary>
 		public int AttemptCount { get; set; }
@@ -85,6 +94,8 @@ namespace VirtoCommerce.Platform.Core.Notification
 		/// Date of success sent result
 		/// </summary>
 		public DateTime? SentDate { get; set; }
+
+		public INotificationSendingGateway NotificationSendingGateway { get { return _notificationSendingGateway; } }
 
 		public NotificationTemplate NotificationTemplate { get; set; }
 	}

@@ -6,10 +6,7 @@ using System.Threading.Tasks;
 
 namespace VirtoCommerce.Platform.Core.Notification
 {
-	public enum NotificationSendingGatewayType
+	public interface IEmailNotificationSendingGateway : INotificationSendingGateway
 	{
-		Email,
-		Sms,
-		Custom
 	}
 }

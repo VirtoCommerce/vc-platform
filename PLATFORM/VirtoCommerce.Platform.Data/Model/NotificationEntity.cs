@@ -19,8 +19,6 @@ namespace VirtoCommerce.Platform.Data.Model
 		/// </summary>
 		public bool IsSuccessSend { get; set; }
 
-		public string ObjectId { get; set; }
-
 		/// <summary>
 		/// Subject of notification
 		/// </summary>

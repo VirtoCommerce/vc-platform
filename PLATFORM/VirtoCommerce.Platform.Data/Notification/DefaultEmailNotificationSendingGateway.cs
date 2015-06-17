@@ -7,13 +7,11 @@ using VirtoCommerce.Platform.Core.Notification;
 
 namespace VirtoCommerce.Platform.Data.Notification
 {
-	public class DefaultEmailNotificationSendingGateway : INotificationSendingGateway
+	public class DefaultEmailNotificationSendingGateway : IEmailNotificationSendingGateway
 	{
-		public void SendNotification(Core.Notification.Notification notification)
+		SendNotificationResult INotificationSendingGateway.SendNotification(Core.Notification.Notification notification)
 		{
 			throw new NotImplementedException();
 		}
-
-		public NotificationSendingGatewayType Type { get { return NotificationSendingGatewayType.Email; } }
 	}
 }

@@ -205,9 +205,9 @@
     <Compile Include="Repositories\Migrations\201505250843471_ApiAccountName.Designer.cs">
       <DependentUpon>201505250843471_ApiAccountName.cs</DependentUpon>
     </Compile>
-    <Compile Include="Repositories\Migrations\201506161402381_Notifications.cs" />
-    <Compile Include="Repositories\Migrations\201506161402381_Notifications.Designer.cs">
-      <DependentUpon>201506161402381_Notifications.cs</DependentUpon>
+    <Compile Include="Repositories\Migrations\201506171543360_AddNotifications.cs" />
+    <Compile Include="Repositories\Migrations\201506171543360_AddNotifications.Designer.cs">
+      <DependentUpon>201506171543360_AddNotifications.cs</DependentUpon>
     </Compile>
     <Compile Include="Repositories\Migrations\Configuration.cs" />
     <Compile Include="Repositories\PlatformDatabaseInitializer.cs" />
@@ -273,8 +273,8 @@
     <EmbeddedResource Include="Repositories\Migrations\201505250843471_ApiAccountName.resx">
       <DependentUpon>201505250843471_ApiAccountName.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Repositories\Migrations\201506161402381_Notifications.resx">
-      <DependentUpon>201506161402381_Notifications.cs</DependentUpon>
+    <EmbeddedResource Include="Repositories\Migrations\201506171543360_AddNotifications.resx">
+      <DependentUpon>201506171543360_AddNotifications.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Security\Identity\Migrations\201411101625303_InitialCreate.resx">
       <DependentUpon>201411101625303_InitialCreate.cs</DependentUpon>
