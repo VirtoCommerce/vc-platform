@@ -27,7 +27,9 @@ namespace VirtoCommerce.Platform.Data.Notification
 			_resolver.ResolveBody(notification);
 			_resolver.ResolveSubject(notification);
 
+			notification.Id = Guid.NewGuid().ToString("N");
 			_repository.Add(notification.ToDataModel());
+			_repository.UnitOfWork.Commit();
 		}
 
 		public void RegisterNotification(Func<Core.Notification.Notification> notification)
