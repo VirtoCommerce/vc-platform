@@ -70,7 +70,6 @@ namespace VirtoCommerce.Web
         }
         #endregion
 
-
         #region Public Methods and Operators
         public override async Task Invoke(IOwinContext context)
         {

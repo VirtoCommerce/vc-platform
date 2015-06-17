@@ -83,9 +83,11 @@ namespace VirtoCommerce.OrderModule.Web.BackgroundJobs
 																	.Where(x => !x.IsCancelled).SelectMany(x => x.Items).Count();
 
 				//Line items per order
+                /* blows up when no orders
 				statistic.LineitemsPerOrder = repository.CustomerOrders.Where(x => x.CreatedDate >= start && x.CreatedDate <= end)
 																 .Where(x => !x.IsCancelled).Average(x => x.Items.Count());
 
+                 * */
 				//Customer count
 				statistic.CustomersCount = repository.CustomerOrders.Where(x => x.CreatedDate >= start && x.CreatedDate <= end)
 																	.Select(x => x.CustomerId).Distinct().Count();
