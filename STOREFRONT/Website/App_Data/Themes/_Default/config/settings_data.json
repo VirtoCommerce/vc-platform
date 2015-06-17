@@ -2,7 +2,7 @@
     "current": "Blue",
     "presets": {
         "Blue": {
-            "google_analytics_tracking_id": "UA-64171566-1",
+            "google_analytics_tracking_id": null,
             "ajax_cart_enable": false,
             "ajax_cart_method": "Modal",
             "cart_notes_enable": false,
