@@ -95,7 +95,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 			var result = _searchService.Search(searchCriteria);
 			if (result.Products != null && result.Products.Any())
 			{
-				var products = InnerGetProductsByIds(new string[] { result.Products.First().Id }, ItemResponseGroup.ItemLarge);
+				var products = InnerGetProductsByIds(new string[] { result.Products.First().Id }, responseGroup);
 				var retVal = products.FirstOrDefault();
 				if (retVal != null)
 				{
@@ -121,7 +121,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 			var result = _searchService.Search(searchCriteria);
 			if (result.Products != null && result.Products.Any())
 			{
-				var products = InnerGetProductsByIds(new string[] { result.Products.First().Id }, ItemResponseGroup.ItemLarge);
+				var products = InnerGetProductsByIds(new string[] { result.Products.First().Id }, responseGroup);
 				var retVal = products.FirstOrDefault();
 				if (retVal != null)
 				{
