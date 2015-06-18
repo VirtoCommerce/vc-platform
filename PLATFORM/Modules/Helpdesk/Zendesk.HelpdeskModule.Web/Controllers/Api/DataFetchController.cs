@@ -5,7 +5,6 @@ using VirtoCommerce.Domain.Order.Services;
 
 namespace Zendesk.HelpdeskModule.Web.Controllers.Api
 {
-    [AllowAnonymous]
     [RoutePrefix("api/help")]
     public class DataFetchController: ApiController
     {
