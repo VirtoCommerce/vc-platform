@@ -44,7 +44,9 @@ namespace VirtoCommerce.Web.Convertors
                           Quantity = item.Quantity,
                           ImageUrl = item.Image,
                           CategoryId = "fake",
-                          CatalogId = "fake"
+                          CatalogId = "fake",
+                          TaxIncluded = item.Taxable,
+                          TaxTotal = item.TaxAmount
                       };
 
             return ret;
@@ -276,13 +278,15 @@ namespace VirtoCommerce.Web.Convertors
                           Title = item.Name,
                           Price = item.PlacedPrice,
                           Quantity = item.Quantity,
-                          RequiresShipping = item.RequiredShipping.HasValue ? item.RequiredShipping.Value : true,
+                          RequiresShipping = item.RequiredShipping,
                           Sku = item.ProductCode,
                           VariantId = item.ProductId,
                           Image = item.ImageUrl,
                           Variant = variant,
                           Product = product,
-                          Url = String.Format("/products/{0}", item.ProductId)
+                          Url = String.Format("/products/{0}", item.ProductId),
+                          Taxable = item.TaxIncluded,
+                          TaxAmount = item.TaxTotal
                       };
 
             return ret;
