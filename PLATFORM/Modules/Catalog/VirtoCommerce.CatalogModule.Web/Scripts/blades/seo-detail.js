@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.catalogModule')
-.controller('virtoCommerce.catalogModule.seoDetailController', ['$scope', 'virtoCommerce.catalogModule.categories', 'virtoCommerce.catalogModule.items', 'virtoCommerce.catalogModule.catalogs', 'platformWebApp.dialogService', 'platformWebApp.bladeNavigationService', function ($scope, categories, items, catalogs, dialogService, bladeNavigationService) {
+.controller('virtoCommerce.catalogModule.seoDetailController', ['$scope', 'virtoCommerce.catalogModule.categories', 'virtoCommerce.catalogModule.items', 'platformWebApp.dialogService', 'platformWebApp.bladeNavigationService', function ($scope, categories, items, dialogService, bladeNavigationService) {
     var blade = $scope.blade;
 
     function initializeBlade(parentEntity) {
@@ -7,11 +7,10 @@
             if (blade.isNew) {
                 blade.data = parentEntity;
             }
-            var data = parentEntity.seoInfos || []; // temp workaround for missing property
-            data = data.slice();
+            var data = parentEntity.seoInfos.slice();
 
             // generate seo for missing languages
-            _.each(getLanguages(parentEntity), function (lang) {
+            _.each(parentEntity.catalog.languages, function (lang) {
                 if (_.every(data, function (seoInfo) { return seoInfo.languageCode.toLowerCase().indexOf(lang.languageCode.toLowerCase()) < 0; })) {
                     data.push({ isNew: true, languageCode: lang.languageCode });
                 }
@@ -23,15 +22,7 @@
             blade.isLoading = false;
         }
     };
-
-    function getLanguages(parentEntity) {
-        if (blade.seoUrlKeywordType == 0 || blade.seoUrlKeywordType == 1) {
-            return parentEntity.catalog.languages;
-        } else {
-            return parentEntity.languages;
-        }
-    };
-
+    
     $scope.saveChanges = function () {
         var seoInfos = _.filter($scope.seoInfos, function (data) {
             return isValid(data);
@@ -57,8 +48,6 @@
                 return categories.update;
             case 1:
                 return items.updateitem;
-            case 3:
-                return catalogs.update;
             default:
                 return null;
         }
@@ -131,6 +120,6 @@
 
     blade.subtitle = 'SEO information';
 
-    $scope.$watch('blade.parentBlade.currentEntity', initializeBlade);
-    $scope.$watch('blade.parentBlade.item', initializeBlade);
+    $scope.$watch('blade.parentBlade.currentEntity', initializeBlade); // for category
+    $scope.$watch('blade.parentBlade.item', initializeBlade);          // for item
 }]);

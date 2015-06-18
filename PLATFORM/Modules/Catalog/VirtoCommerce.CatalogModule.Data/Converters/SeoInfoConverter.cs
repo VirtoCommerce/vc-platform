@@ -66,7 +66,7 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 		{
 			var retVal = seoInfo.ToCoreModel();
 			retVal.KeywordValue = catalog.Id;
-			retVal.KeywordType = (int)coreModel.SeoUrlKeywordTypes.Catalog;
+            //retVal.KeywordType = (int)coreModel.SeoUrlKeywordTypes.Catalog;
 			return retVal;
 		}
 
