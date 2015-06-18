@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Text;
 using Lucene.Net.Analysis.Standard;
 using Lucene.Net.Documents;
 using Lucene.Net.Index;
@@ -110,6 +111,29 @@ namespace VirtoCommerce.SearchModule.Data.Providers.Lucene
     public class QueryBuilder
     {
         public Query Query { get; set; }
+
         public Filter Filter { get; set; }
+
+        #region Overrides of Object
+
+        /// <summary>
+        /// Returns a string that represents the current object.
+        /// </summary>
+        /// <returns>
+        /// A string that represents the current object.
+        /// </returns>
+        public override string ToString()
+        {
+            var ret = new StringBuilder();
+            if (this.Query != null)
+                ret.AppendFormat("query:{0}", this.Query.ToString());
+
+            if (this.Filter != null)
+                ret.AppendFormat("filter:{0}", this.Filter.ToString());
+
+            return ret.ToString();
+        }
+
+        #endregion
     }
 }
