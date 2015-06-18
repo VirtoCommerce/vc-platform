@@ -125,6 +125,5 @@
 
     $scope.blade.refresh(false);
     $scope.catalogs = catalogs.getCatalogs();
-    // $scope.storeStates = [{ id: 'Open', name: 'Open' }, { id: 'Closed', name: 'Closed' }, { id: 'RestrictedAccess', name: 'Restricted Access' }];
     $scope.storeStates = settings.getValues({ id: 'Stores.States' });
 }]);
