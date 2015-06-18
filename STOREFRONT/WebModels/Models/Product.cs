@@ -4,7 +4,6 @@ using System.Linq;
 using System.Runtime.Serialization;
 using DotLiquid;
 using System;
-
 #endregion
 
 namespace VirtoCommerce.Web.Models

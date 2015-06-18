@@ -10,6 +10,7 @@ using VirtoCommerce.Web.Convertors;
 using VirtoCommerce.Web.Models;
 using VirtoCommerce.Web.Models.FormModels;
 using VirtoCommerce.Web.Models.Routing;
+using VirtoCommerce.Web.Models.Storage;
 
 namespace VirtoCommerce.Web.Controllers
 {
@@ -288,6 +289,35 @@ namespace VirtoCommerce.Web.Controllers
 
                     if (order != null)
                     {
+                        var productsIds = order.Items.Select(i => i.ProductId);
+                        var catalogItems = await Service.GetCatalogItemsByIdsAsync(productsIds, "ItemAssets");
+
+                        var nonShippingProducts = catalogItems.Where(ci => ci.ProductType == "Digital");
+                        if (nonShippingProducts.Any())
+                        {
+                            var downloadLinks = new List<ProductDownloadLinks>();
+
+                            foreach (var nonShippingProduct in nonShippingProducts)
+                            {
+                                var productLinks = new ProductDownloadLinks
+                                {
+                                    ProductName = nonShippingProduct.Name
+                                };
+
+                                foreach (var asset in nonShippingProduct.Assets)
+                                {
+                                    var url = VirtualPathUtility.ToAbsolute(
+                                        string.Format("~/Home/Download?oid={0}&pid={1}&file={2}", order.Id, nonShippingProduct.Id, asset.Name));
+
+                                    productLinks.Links.Add(url);
+                                }
+
+                                downloadLinks.Add(productLinks);
+                            }
+
+                            Context.Set("download_links", downloadLinks);
+                        }
+
                         Context.Order = order.AsWebModel();
                         return View("thanks_page");
                     }
