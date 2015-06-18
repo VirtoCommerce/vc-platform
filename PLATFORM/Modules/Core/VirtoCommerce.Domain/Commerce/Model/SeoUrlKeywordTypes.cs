@@ -5,7 +5,6 @@ namespace VirtoCommerce.Domain.Catalog.Model
 	{
 		Category,
 		Item,
-		Store,
-        Catalog
+		Store
 	}
 }

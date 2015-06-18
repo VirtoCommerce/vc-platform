@@ -41,7 +41,7 @@
 <script type="text/ng-template" id="order-statistics-lineitemsPerOrder.html">
     <div class="gridster-cnt">
         <div class="cnt-inner">
-            <div class="list-count">{{$storage.ordersDashboardStatistics.lineitemsPerOrder}}</div>
+            <div class="list-count">{{$storage.ordersDashboardStatistics.lineitemsPerOrder| number : 1}}</div>
             <div class="list-t">Lines per order</div>
         </div>
     </div>
@@ -50,5 +50,5 @@
     <div google-chart chart="$storage.ordersDashboardStatistics.chartRevenueByQuarter" style="height:100%"></div>    
 </script>
 <script type="text/ng-template" id="order-statistics-orderValueByQuarter.html">
-    <div google-chart chart="$storage.ordersDashboardStatistics.demoChartObject" style="height:100%"></div>
+    <div google-chart chart="$storage.ordersDashboardStatistics.chartOrderValueByQuarter" style="height:100%"></div>
 </script>

@@ -1,5 +1,5 @@
-﻿angular.module('virtoCommerce.catalogModule')
-.controller('virtoCommerce.catalogModule.seoDetailController', ['$scope', 'virtoCommerce.catalogModule.categories', 'virtoCommerce.catalogModule.items', 'platformWebApp.dialogService', 'platformWebApp.bladeNavigationService', function ($scope, categories, items, dialogService, bladeNavigationService) {
+﻿angular.module('virtoCommerce.storeModule')
+.controller('virtoCommerce.storeModule.seoDetailController', ['$scope', 'virtoCommerce.storeModule.stores', 'platformWebApp.dialogService', 'platformWebApp.bladeNavigationService', function ($scope, stores, dialogService, bladeNavigationService) {
     var blade = $scope.blade;
 
     function initializeBlade(parentEntity) {
@@ -10,9 +10,9 @@
             var data = parentEntity.seoInfos.slice();
 
             // generate seo for missing languages
-            _.each(parentEntity.catalog.languages, function (lang) {
-                if (_.every(data, function (seoInfo) { return seoInfo.languageCode.toLowerCase().indexOf(lang.languageCode.toLowerCase()) < 0; })) {
-                    data.push({ isNew: true, languageCode: lang.languageCode });
+            _.each(parentEntity.languages, function (languageCode) {
+                if (_.every(data, function (seoInfo) { return seoInfo.languageCode.toLowerCase().indexOf(languageCode.toLowerCase()) < 0; })) {
+                    data.push({ isNew: true, languageCode: languageCode });
                 }
             });
 
@@ -35,24 +35,13 @@
         } else {
             blade.isLoading = true;
 
-            getUpdateFunction()({ id: blade.parentEntityId, seoInfos: seoInfos },
+            stores.update({ id: blade.parentEntityId, seoInfos: seoInfos },
                 blade.parentBlade.refresh, function (error) {
                     bladeNavigationService.setError('Error ' + error.status, blade);
                 });
         }
     }
-
-    function getUpdateFunction() {
-        switch (blade.seoUrlKeywordType) {
-            case 0:
-                return categories.update;
-            case 1:
-                return items.updateitem;
-            default:
-                return null;
-        }
-    }
-
+    
     function isValid(data) {
         // check required and valid Url requirements
         return data.semanticUrl && $scope.semanticUrlValidator(data.semanticUrl);
@@ -103,7 +92,7 @@
                 canExecuteMethod: function () {
                     return isDirty() && _.every(_.filter($scope.seoInfos, function (data) { return !data.isNew; }), isValid) && _.some($scope.seoInfos, isValid); // isValid formScope && formScope.$valid;
                 },
-                permission: 'catalog:items:manage'
+                permission: 'store:manage'
             },
             {
                 name: "Reset", icon: 'fa fa-undo',
@@ -113,13 +102,12 @@
                 canExecuteMethod: function () {
                     return isDirty();
                 },
-                permission: 'catalog:items:manage'
+                permission: 'store:manage'
             }
         ];
     }
 
     blade.subtitle = 'SEO information';
 
-    $scope.$watch('blade.parentBlade.currentEntity', initializeBlade); // for category
-    $scope.$watch('blade.parentBlade.item', initializeBlade);          // for item
+    $scope.$watch('blade.parentBlade.currentEntity', initializeBlade);
 }]);

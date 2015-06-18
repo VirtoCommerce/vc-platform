@@ -30,6 +30,7 @@ namespace VirtoCommerce.StoreModule.Web.Controllers.Api
 		[HttpGet]
 		[ResponseType(typeof(webModel.Store[]))]
 		[Route("")]
+        [OverrideAuthorization]
 		public IHttpActionResult GetStores()
 		{
 			var retVal = _storeService.GetStoreList().Select(x => x.ToWebModel()).ToArray();

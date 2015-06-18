@@ -102,7 +102,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Scripts\blades\paymentMethod-detail.js" />
-    <Content Include="Scripts\blades\toolbar-isActive.tpl.html" />
+    <Content Include="Scripts\blades\seo-detail.js" />
+    <Content Include="Scripts\blades\seo-detail.tpl.html" />
     <Content Include="Scripts\blades\shippingMethod-detail.js" />
     <Content Include="Scripts\blades\paymentMethod-detail.tpl.html" />
     <Content Include="Scripts\blades\shippingMethod-detail.tpl.html" />
@@ -123,6 +124,8 @@
     <Content Include="Scripts\blades\store-advanced.js" />
     <Content Include="Scripts\blades\store-detail.js" />
     <Content Include="Scripts\blades\store-advanced.tpl.html" />
+    <Content Include="Scripts\widgets\seoWidget.js" />
+    <Content Include="Scripts\widgets\seoWidget.tpl.html" />
     <Content Include="Scripts\widgets\storeCurrenciesWidget.js" />
     <Content Include="Scripts\widgets\storeCurrenciesWidget.tpl.html" />
     <Content Include="Scripts\widgets\storePaymentsWidget.js" />

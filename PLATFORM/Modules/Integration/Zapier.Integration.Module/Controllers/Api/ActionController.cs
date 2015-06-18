@@ -1,6 +1,4 @@
-﻿using System.Net;
-using System.Net.Http;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Description;
 using VirtoCommerce.Domain.Customer.Model;
@@ -8,7 +6,6 @@ using Zapier.IntegrationModule.Web.Providers.Interfaces;
 
 namespace Zapier.IntegrationModule.Web.Controllers.Api
 {
-    [AllowAnonymous]
     [RoutePrefix("api/zapier")]
     public class ActionController : ApiController
     {

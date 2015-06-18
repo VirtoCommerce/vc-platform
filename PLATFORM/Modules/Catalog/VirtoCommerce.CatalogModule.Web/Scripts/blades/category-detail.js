@@ -69,6 +69,8 @@
         formScope = form;
     }
 
+    $scope.blade.toolbarCustomTemplates = ['Scripts/common/templates/toolbar-isActive.tpl.html'];
+
     $scope.blade.toolbarCommands = [
 		{
 		    name: "Save", icon: 'fa fa-save',

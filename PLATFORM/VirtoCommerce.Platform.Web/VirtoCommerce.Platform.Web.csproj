@@ -312,7 +312,8 @@
     <Content Include="Scripts\common\security\blades\account-api-list.js" />
     <Content Include="Scripts\common\security\blades\account-api-list.tpl.html" />
     <Content Include="Scripts\common\security\blades\account-detail-toolbar.tpl.html" />
-    <Content Include="Scripts\common\security\blades\account-api-toolbar.tpl.html" />
+    <Content Include="Scripts\common\templates\ok.tpl.html" />
+    <Content Include="Scripts\common\templates\toolbar-isActive.tpl.html" />
     <Content Include="Scripts\common\templates\home.tpl.html" />
     <Content Include="Scripts\app\packaging\packaging.js" />
     <Content Include="Scripts\app\packaging\resources\modules.js" />

@@ -51,7 +51,7 @@
     }
 
     $scope.blade.headIcon = 'fa-lock';
-    $scope.blade.toolbarCustomTemplates = ['Scripts/common/security/blades/account-api-toolbar.tpl.html'];
+    $scope.blade.toolbarCustomTemplates = ['Scripts/common/templates/toolbar-isActive.tpl.html'];
 
     $scope.blade.toolbarCommands = [
         {

@@ -193,12 +193,7 @@ angular.module(catalogsModuleName, [
           template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/widgets/catalogPropertyWidget.tpl.html'
       };
       widgetService.registerWidget(catalogPropertyWidget, 'catalogDetail');
-
-      widgetService.registerWidget({
-          controller: 'virtoCommerce.catalogModule.seoWidgetController',
-          template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/widgets/seoWidget.tpl.html',
-      }, 'catalogDetail');
-
+      
       // IMPORT / EXPORT
       catalogImportService.register({
           name: 'VirtoCommerce CSV import',
