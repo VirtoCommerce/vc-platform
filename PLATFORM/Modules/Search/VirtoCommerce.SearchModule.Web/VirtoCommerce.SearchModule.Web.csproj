@@ -113,6 +113,10 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Scripts\blades\rebuildIndex.js" />
+    <Content Include="Scripts\blades\rebuildIndex.tpl.html" />
+    <Content Include="Scripts\resources\search.js" />
+    <Content Include="Scripts\search.js" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>

@@ -35,12 +35,12 @@ namespace VirtoCommerce.SearchModule.Web.Controllers.Api
 
         [HttpGet]
         [Route("catalogitem/rebuild")]
-        [ResponseType(typeof(ISearchResults))]
         [CheckPermission(Permission = "VirtoCommerce.Search:Index:Rebuild")]
         public IHttpActionResult Rebuild()
         {
             var jobId = _scheduler.SheduleRebuildIndex();
-            return Ok(jobId);
+            var result = new { Id = jobId };
+            return Ok(result);
         }
     }
 }
