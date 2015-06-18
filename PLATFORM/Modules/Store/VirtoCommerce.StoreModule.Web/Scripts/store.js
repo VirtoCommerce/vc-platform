@@ -53,6 +53,10 @@ angular.module(moduleName, [
           template: 'Modules/$(VirtoCommerce.Store)/Scripts/widgets/storeCurrenciesWidget.tpl.html'
       }, 'storeDetail');
       widgetService.registerWidget({
+          controller: 'virtoCommerce.storeModule.seoWidgetController',
+          template: 'Modules/$(VirtoCommerce.Store)/Scripts/widgets/seoWidget.tpl.html',
+      }, 'storeDetail');
+      widgetService.registerWidget({
           controller: 'virtoCommerce.storeModule.storeAdvancedWidgetController',
           template: 'Modules/$(VirtoCommerce.Store)/Scripts/widgets/storeAdvancedWidget.tpl.html'
       }, 'storeDetail');
