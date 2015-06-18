@@ -243,6 +243,7 @@ namespace VirtoCommerce.OrderModule.Web.Controllers.Api
 		[HttpGet]
 		[ResponseType(typeof(webModel.DashboardStatisticsResult))]
 		[Route("~/api/order/dashboardStatistics")]
+		[AllowAnonymous]
 		public IHttpActionResult GetDashboardStatistics([FromUri]DateTime? start = null, [FromUri]DateTime? end = null)
 		{
 			start = start ?? DateTime.UtcNow.AddYears(-1);
