@@ -328,6 +328,7 @@ namespace VirtoCommerce.Web.Models.Services
         public async Task<Cart> GetCartAsync(string storeId, string customerId)
         {
             var cart = await this._cartClient.GetCartAsync(storeId, customerId);
+
             return cart != null ? cart.AsWebModel() : null;
         }
 
