@@ -17,6 +17,8 @@ namespace VirtoCommerce.Platform.Data.Notification
 
 			retVal.InjectFrom(notification);
 
+			retVal.SendingGateway = notification.NotificationSendingGateway.GetType().Name;
+
 			return retVal;
 		}
 

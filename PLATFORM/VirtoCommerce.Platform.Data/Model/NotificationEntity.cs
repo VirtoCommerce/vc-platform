@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -22,6 +23,7 @@ namespace VirtoCommerce.Platform.Data.Model
 		/// <summary>
 		/// Subject of notification
 		/// </summary>
+		[StringLength(512)]
 		public string Subject { get; set; }
 
 		/// <summary>
@@ -32,17 +34,20 @@ namespace VirtoCommerce.Platform.Data.Model
 		/// <summary>
 		/// Sender info (e-mail, phone number and etc.) of notification
 		/// </summary>
+		[StringLength(128)]
 		public string Sender { get; set; }
 
 		/// <summary>
 		/// Recipient info (e-mail, phone number and etc.) of notification
 		/// </summary>
+		[StringLength(128)]
 		public string Recipient { get; set; }
 
 		/// <summary>
 		/// Channel of sending notification
 		/// </summary>
-		public string Channel { get; set; }
+		[StringLength(128)]
+		public string SendingGateway { get; set; }
 
 		/// <summary>
 		/// Number of current attemp

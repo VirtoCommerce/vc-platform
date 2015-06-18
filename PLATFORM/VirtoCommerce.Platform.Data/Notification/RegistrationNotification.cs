@@ -10,9 +10,9 @@ namespace VirtoCommerce.Platform.Data.Notification
 {
 	[CLSCompliant(false)]
 	[LiquidType("Email", "FirstName", "LastName")]
-	public class RegistrationNotification : Core.Notification.Notification
+	public class RegistrationEmailNotification : EmailNotification
 	{
-		public RegistrationNotification(IEmailNotificationSendingGateway emailNotificationSendingGateway) : base(emailNotificationSendingGateway)
+		public RegistrationEmailNotification(IEmailNotificationSendingGateway emailNotificationSendingGateway) : base(emailNotificationSendingGateway)
 		{
 
 		}

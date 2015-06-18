@@ -193,6 +193,18 @@ namespace VirtoCommerce.Platform.Web
             var notifier = new InMemoryNotifierImpl(hubSignalR);
             container.RegisterInstance<INotifier>(notifier);
 
+			var resolver = new LiquidNotificationTemplateResolver();
+			var notificationTemplateService = new NotificationTemplateServiceImpl(platformRepositoryFactory);
+			var notificationManager = new NotificationManager(resolver, platformRepositoryFactory, notificationTemplateService);
+			var defaultEmailNotificationSendingGateway = new DefaultEmailNotificationSendingGateway();
+
+			container.RegisterInstance<INotificationTemplateService>(notificationTemplateService);
+			container.RegisterInstance<INotificationManager>(notificationManager);
+			container.RegisterInstance<IEmailNotificationSendingGateway>(defaultEmailNotificationSendingGateway);
+
+			notificationManager.RegisterNotificationType(
+				() => new RegistrationEmailNotification(defaultEmailNotificationSendingGateway)
+			);
 
             #endregion
 

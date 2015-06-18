@@ -3,33 +3,24 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.Platform.Core.Notification
 {
-	public class Notification
+	public class Notification : AuditableEntity
 	{
 		private readonly INotificationSendingGateway _notificationSendingGateway;
 
 		public Notification()
 		{
-			Id = Guid.NewGuid().ToString("N");
-			NotificationTemplate = new NotificationTemplate();
-			Type = this.GetType().FullName;
+			Type = this.GetType().Name;
 		}
 
 		public Notification(INotificationSendingGateway notificationSendingGateway)
 		{
-			Id = Guid.NewGuid().ToString("N");
-			NotificationTemplate = new NotificationTemplate();
 			_notificationSendingGateway = notificationSendingGateway;
-			Type = this.GetType().FullName;
+			Type = this.GetType().Name;
 		}
-
-		public string Id { get; set; }
-		public DateTime CreatedDate { get; set; }
-		public DateTime? ModifiedDate { get; set; }
-		public string CreatedBy { get; set; }
-		public string ModifiedBy { get; set; }
 
 		public string Type { get; set; }
 

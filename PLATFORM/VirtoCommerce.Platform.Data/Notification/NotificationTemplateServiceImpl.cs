@@ -11,51 +11,61 @@ namespace VirtoCommerce.Platform.Data.Notification
 {
 	public class NotificationTemplateServiceImpl : ServiceBase, INotificationTemplateService
 	{
-		private readonly IPlatformRepository _repository;
-		public NotificationTemplateServiceImpl(IPlatformRepository repository)
+		private readonly Func<IPlatformRepository> _repositoryFactory;
+		public NotificationTemplateServiceImpl(Func<IPlatformRepository> repositoryFactory)
 		{
-			_repository = repository;
+			_repositoryFactory = repositoryFactory;
 		}
 
 		public NotificationTemplate GetById(string notificationTemplateId)
 		{
-			var entity = _repository.NotificationTemplates.FirstOrDefault(nt => nt.Id.Equals(notificationTemplateId));
-			return entity.ToCoreModel();
+			using (var repository = _repositoryFactory())
+			{
+				var entity = repository.NotificationTemplates.FirstOrDefault(nt => nt.Id.Equals(notificationTemplateId));
+				return entity.ToCoreModel();
+			}
 		}
 
 		public NotificationTemplate GetByNotification(string notificationTypeId, string objectId)
 		{
-			var entity = _repository.NotificationTemplates.FirstOrDefault(nt => nt.ObjectId.Equals(objectId) && nt.NotificationTypeId.Equals(notificationTypeId));
-			return entity.ToCoreModel();
+			using (var repository = _repositoryFactory())
+			{
+				var entity = repository.NotificationTemplates.FirstOrDefault(nt => nt.ObjectId.Equals(objectId) && nt.NotificationTypeId.Equals(notificationTypeId));
+				return entity.ToCoreModel();
+			}
 		}
 
 		public NotificationTemplate Create(NotificationTemplate notificationTemplate)
 		{
-			var origEntity = _repository.GetNotificationTemplateByNotification(notificationTemplate.NotificationTypeId, notificationTemplate.ObjectId);
-			if (origEntity == null)
+			using (var repository = _repositoryFactory())
 			{
-				origEntity = notificationTemplate.ToDataModel();
-				origEntity.Id = Guid.NewGuid().ToString("N");
-				_repository.Add(origEntity);
-				CommitChanges(_repository);
+				var origEntity = repository.GetNotificationTemplateByNotification(notificationTemplate.NotificationTypeId, notificationTemplate.ObjectId);
+				if (origEntity == null)
+				{
+					origEntity = notificationTemplate.ToDataModel();
+					origEntity.Id = Guid.NewGuid().ToString("N");
+					repository.Add(origEntity);
+					CommitChanges(repository);
+				}
+
+				var retVal = GetById(origEntity.Id);
+
+				return retVal;
 			}
-
-			var retVal = GetById(origEntity.Id);
-
-			return retVal;
 		}
 
 		public void Update(NotificationTemplate[] notificationTemplates)
 		{
-			using (var changeTracker = base.GetChangeTracker(_repository))
+			using (var repository = _repositoryFactory())
+			using (var changeTracker = base.GetChangeTracker(repository))
 			{
 				foreach (var notificationTemplate in notificationTemplates)
 				{
 					var sourceEntity = notificationTemplate.ToDataModel();
-					var targetEntity = _repository.GetNotificationTemplateByNotification(notificationTemplate.NotificationTypeId, notificationTemplate.ObjectId);
+					var targetEntity = repository.GetNotificationTemplateByNotification(notificationTemplate.NotificationTypeId, notificationTemplate.ObjectId);
 					if (targetEntity == null)
 					{
-						_repository.Add(sourceEntity);
+						repository.Add(sourceEntity);
 					}
 					else
 					{
@@ -63,13 +73,24 @@ namespace VirtoCommerce.Platform.Data.Notification
 						sourceEntity.Patch(targetEntity);
 					}
 				}
-				CommitChanges(_repository);
+				CommitChanges(repository);
 			}
 		}
 
 		public void Delete(string[] notificationIds)
 		{
-			throw new NotImplementedException();
+			using (var repository = _repositoryFactory())
+			{
+				foreach(var id in notificationIds)
+				{
+					var deletedEntity = repository.Notifications.FirstOrDefault(x => x.Id == id);
+					if(deletedEntity != null)
+					{
+						repository.Remove(deletedEntity);
+					}
+				}
+				repository.UnitOfWork.Commit();
+			}
 		}
 	}
 }

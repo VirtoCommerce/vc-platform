@@ -1,15 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace VirtoCommerce.Platform.Core.Notification
 {
-	public class SearchNotificationsResult
+	public interface ISmsNotificationSendingGateway : INotificationSendingGateway
 	{
-		public ICollection<Notification> Notifications { get; set; }
-		public int TotalCount { get; set; }
 	}
 }

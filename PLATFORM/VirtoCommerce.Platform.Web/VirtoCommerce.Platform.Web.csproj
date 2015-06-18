@@ -260,6 +260,7 @@
     <Compile Include="Controllers\Api\FrontendSecurityController.cs" />
     <Compile Include="Controllers\Api\ModulesController.cs" />
     <Compile Include="Controllers\Api\NotificationController.cs" />
+    <Compile Include="Controllers\Api\NotificationsController.cs" />
     <Compile Include="Controllers\Api\SecurityController.cs" />
     <Compile Include="Controllers\Api\SettingController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
@@ -1364,6 +1365,8 @@
   <ItemGroup>
     <Folder Include="App_Data\Modules\" />
     <Folder Include="Filters\" />
+    <Folder Include="Model\Notification\" />
+    <Folder Include="Views\Notifications\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config">

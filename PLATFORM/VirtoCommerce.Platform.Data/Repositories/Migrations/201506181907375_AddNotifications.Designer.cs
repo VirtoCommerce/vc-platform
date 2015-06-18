@@ -13,7 +13,7 @@ namespace VirtoCommerce.Platform.Data.Repositories.Migrations
         
         string IMigrationMetadata.Id
         {
-            get { return "201506171543360_AddNotifications"; }
+            get { return "201506181907375_AddNotifications"; }
         }
         
         string IMigrationMetadata.Source

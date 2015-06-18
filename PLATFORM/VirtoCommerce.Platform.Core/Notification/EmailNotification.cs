@@ -1,15 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace VirtoCommerce.Platform.Core.Notification
 {
-	public class SearchNotificationsResult
+	public class EmailNotification : Notification
 	{
-		public ICollection<Notification> Notifications { get; set; }
-		public int TotalCount { get; set; }
+		public EmailNotification(IEmailNotificationSendingGateway gateway) : base(gateway)
+		{
+		}
 	}
 }

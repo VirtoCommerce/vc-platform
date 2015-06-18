@@ -8,5 +8,6 @@ namespace VirtoCommerce.Platform.Core.Notification
 {
 	public interface IEmailNotificationSendingGateway : INotificationSendingGateway
 	{
+		
 	}
 }

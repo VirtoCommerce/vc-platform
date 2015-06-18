@@ -11,22 +11,27 @@ namespace VirtoCommerce.Platform.Data.Notification
 	public class NotificationManager : INotificationManager
 	{
 		private INotificationTemplateResolver _resolver;
-		private IPlatformRepository _repository;
+		private Func<IPlatformRepository> _repositoryFactory;
 		private INotificationTemplateService _notificationTemplateService;
 
-		public NotificationManager(INotificationTemplateResolver resolver, IPlatformRepository repository, INotificationTemplateService notificationTemplateService)
+		public NotificationManager(INotificationTemplateResolver resolver, Func<IPlatformRepository> repositoryFactory, INotificationTemplateService notificationTemplateService)
 		{
 			_resolver = resolver;
-			_repository = repository;
+			_repositoryFactory = repositoryFactory;
 			_notificationTemplateService = notificationTemplateService;
 		}
 
 		private List<Func<Core.Notification.Notification>> _notifications = new List<Func<Core.Notification.Notification>>();
 		private List<Func<INotificationSendingGateway>> _gateways = new List<Func<INotificationSendingGateway>>();
 
-		public void RegisterNotification(Func<Core.Notification.Notification> notification)
+		public void RegisterNotificationType(Func<Core.Notification.Notification> notification)
 		{
-			_notifications.Add(notification);
+			var notificationType = GetNewNotification<Core.Notification.Notification>(notification().Type);
+
+			if (notificationType == null)
+			{
+				_notifications.Add(notification);
+			}
 		}
 
 		public Core.Notification.Notification[] GetNotifications()
@@ -36,10 +41,7 @@ namespace VirtoCommerce.Platform.Data.Notification
 
 		SendNotificationResult INotificationManager.SendNotification(Core.Notification.Notification notification)
 		{
-			var template = _notificationTemplateService.GetByNotification(notification.Type, notification.ObjectId);
-			notification.NotificationTemplate = template;
-
-			_resolver.ResolveTemplate(notification);
+			ResolveTemplate(notification);
 
 			var result = notification.NotificationSendingGateway.SendNotification(notification);
 
@@ -48,52 +50,87 @@ namespace VirtoCommerce.Platform.Data.Notification
 
 		public void SheduleSendNotification(Core.Notification.Notification notification)
 		{
+			ResolveTemplate(notification);
+
+			using (var repository = _repositoryFactory())
+			{
+				notification.Id = Guid.NewGuid().ToString("N");
+				repository.Add(notification.ToDataModel());
+				repository.UnitOfWork.Commit();
+			}
+		}
+
+		private void ResolveTemplate(Core.Notification.Notification notification)
+		{
 			var template = _notificationTemplateService.GetByNotification(notification.Type, notification.ObjectId);
 			notification.NotificationTemplate = template;
 
 			_resolver.ResolveTemplate(notification);
-
-			_repository.Add(notification.ToDataModel());
-			_repository.UnitOfWork.Commit();
 		}
 
 		public Core.Notification.Notification GetNotificationById(string id)
 		{
-			throw new NotImplementedException();
+			Core.Notification.Notification retVal = null;
+			using(var repository = _repositoryFactory())
+			{
+				var notificationEntity = repository.Notifications.FirstOrDefault(x => x.Id == id);
+				if (notificationEntity != null)
+				{
+					retVal =  notificationEntity.ToCoreModel();
+				}
+			}
+
+			return retVal;
 		}
 
 		public T GetNewNotification<T>(string type) where T : Core.Notification.Notification 
 		{
 			var notifications = GetNotifications();
-			return (T) notifications.FirstOrDefault(x => x.GetType().FullName == Type.GetType(type).FullName);
+			return (T)notifications.FirstOrDefault(x => x.GetType().Name == Type.GetType(type).Name);
 		}
 
 		public T GetNewNotification<T>() where T : Core.Notification.Notification
 		{
 			var notifications = GetNotifications();
-			return (T)notifications.FirstOrDefault(x => x.GetType().FullName == typeof(T).FullName);
+			return (T)notifications.FirstOrDefault(x => x.GetType().Name == typeof(T).Name);
 		}
 
-		public void UpdateNotification(Core.Notification.Notification notifications)
+		public void UpdateNotification(Core.Notification.Notification notification)
 		{
-			throw new NotImplementedException();
+			using (var repository = _repositoryFactory())
+			{
+				repository.Update(notification.ToDataModel());
+				repository.UnitOfWork.Commit();
+			}
 		}
 
 		public void DeleteNotification(string id)
 		{
-			throw new NotImplementedException();
+			using (var repository = _repositoryFactory())
+			{
+				var deletedEntity = repository.Notifications.FirstOrDefault(x => x.Id == id);
+				if(deletedEntity != null)
+				{
+					repository.Remove(deletedEntity);
+					repository.UnitOfWork.Commit();
+				}
+			}
 		}
 
-		public SearchNotificatiosnResult SearchNotifications(SearchNotificationCriteria criteria)
+		public SearchNotificationsResult SearchNotifications(SearchNotificationCriteria criteria)
 		{
-			var retVal = new SearchNotificatiosnResult();
+			var retVal = new SearchNotificationsResult();
 
-			var notifications = _repository.Notifications.Take(criteria.Take).Skip(criteria.Skip);
-			foreach(var notification in notifications)
+			using (var repository = _repositoryFactory())
 			{
-				retVal.Notifications.Add(notification.ToCoreModel());
+				retVal.Notifications = new List<Core.Notification.Notification>();
+				var notifications = repository.Notifications.Take(criteria.Take).Skip(criteria.Skip);
+				foreach (var notification in notifications)
+				{
+					retVal.Notifications.Add(notification.ToCoreModel());
+				}
+				retVal.TotalCount = notifications.Count();
 			}
-			retVal.TotalCount = notifications.Count();
 
 			return retVal;
 		}
