@@ -1,75 +1,77 @@
 ﻿<div class="blade-static __bottom">
-    <button class="btn" ng-click="startExport()" ng-disabled="blade.notification">
-        <span>Start export</span>
-    </button>
+	<button class="btn" ng-click="startExport()" ng-disabled="blade.notification">
+		<span>Start export</span>
+	</button>
 </div>
 <div class="blade-content">
-    <div class="blade-inner">
-        <div class="inner-block">
-            <div class="form">
-                <div class="block">
-                    <div>
-                        <div class="form clearfix" ng-if="!blade.notification">
-                            <div class="form-group">
-                                <label class="form-label">Select fulfillment center for exported inventory</label>
-                                <div class="form-input">
-                                    <ui-select ng-model="blade.fulfilmentCenterId">
-                                        <ui-select-match allow-clear="true" placeholder="Select fulfillment or leave empty for default...">{{$select.selected.name}}</ui-select-match>
-                                        <ui-select-choices repeat="x.id as x in fulfillmentCenters | filter: { name: $select.search }">
-                                            <span ng-bind-html="x.name | highlight: $select.search"></span>
-                                        </ui-select-choices>
-                                    </ui-select>
-                                </div>
-                                <div class="form-group" >
-                                    <label class="form-label">Select price list for exported prices</label>
-                                    <div class="form-input">
-                                        <ui-select ng-model="blade.pricelistId">
-                                            <ui-select-match placeholder="Select price list or leave empty for default...">{{$select.selected.name}}</ui-select-match>
-                                            <ui-select-choices repeat="x.id as x in pricelists | filter: { name: $select.search }">
-                                                <span ng-bind-html="x.name | highlight: $select.search"></span>
-                                            </ui-select-choices>
-                                        </ui-select>
-                                    </div>
-                                </div>
+	<div class="blade-inner">
+		<div class="inner-block">
+			<div class="form">
+				<div class="block">
+					<div>
+						<div class="form clearfix" ng-if="!blade.notification">
+							<div class="form-group">
+								<label class="form-label">Select fulfillment center for exported inventory</label>
+								<div class="form-input">
+									<ui-select ng-model="blade.fulfilmentCenterId">
+										<ui-select-match allow-clear="true" placeholder="Select fulfillment or leave empty for default...">{{$select.selected.name}}</ui-select-match>
+										<ui-select-choices repeat="x.id as x in fulfillmentCenters | filter: { name: $select.search }">
+											<span ng-bind-html="x.name | highlight: $select.search"></span>
+										</ui-select-choices>
+									</ui-select>
+								</div>
+								<div class="form-group">
+									<label class="form-label">Select price list for exported prices</label>
+									<div class="form-input">
+										<ui-select ng-model="blade.pricelistId">
+											<ui-select-match placeholder="Select price list or leave empty for default...">{{$select.selected.name}}</ui-select-match>
+											<ui-select-choices repeat="x.id as x in pricelists | filter: { name: $select.search }">
+												<span ng-bind-html="x.name | highlight: $select.search"></span>
+											</ui-select-choices>
+										</ui-select>
+									</div>
+								</div>
 
-                                <p ng-class="{'no-data': blade.notification.description}" ng-if="!blade.notification" class="text">
-                                    All catalog products information should be exported to csv file, download url will be available after export will be finished.
-                                </p>
-                                <p ng-if="!blade.notification" class="text __note">
-                                    <span>Caution:</span> Sorting your CSV file in a spreadsheet program can cause product variants or image URLs to become dissassociated. Importing a CSV file that has been sorted may overwrite your existing products with bad data, which cannot be recovered.;
-                                </p>
-                                <p class="text">{{blade.notification.description}}</p>
-                            </div>
+								<p ng-class="{'no-data': blade.notification.description}" ng-if="!blade.notification" class="text">
+									All catalog products information should be exported to csv file, download url will be available after export will be finished.
+								</p>
+								<p ng-if="!blade.notification" class="text __note">
+									<span>Caution:</span> Sorting your CSV file in a spreadsheet program can cause product variants or image URLs to become dissassociated. Importing a CSV file that has been sorted may overwrite your existing products with bad data, which cannot be recovered.;
+								</p>
+								<p class="text">{{blade.notification.description}}</p>
+							</div>
 
-                        </div>
-                <div class="block" ng-if="blade.notification.created || blade.notification.finished">
-                    <p ng-if="blade.notification.created" ng-class="{'no-data': blade.notification.created}" class="text">Start — <i class="fa fa-clock-o"></i> {{blade.notification.created | date : 'mediumTime'}}</p>
-                    <p ng-if="blade.notification.finished" ng-class="{'no-data': blade.notification.finished}" class="text">End — <i class="fa fa-clock-o"></i> {{blade.notification.finished | date : 'mediumTime'}}</p>
-                </div>
-                <div class="block" ng-if="blade.notification.totalCount || blade.notification.processedCount || blade.notification.errorCount">
-                    <ul class="list __info">
-                        <li class="list-item">
-                            <div class="list-t">Total count</div>
-                            <div class="list-descr">{{blade.notification.totalCount}}</div>
-                        </li>
-                        <li class="list-item">
-                            <div class="list-t">Processed count</div>
-                            <div class="list-descr">{{blade.notification.processedCount}}</div>
-                        </li>
-                        <li class="list-item">
-                            <div class="list-t">Error count</div>
-                            <div class="list-descr">{{blade.notification.errorCount}}</div>
-                        </li>
-                    </ul>
-                </div>
-                <div ng-if="blade.notification.errorCount > 0">
-                    <span class="sub-t">Errors</span>
-                    <div class="log">
-                        <p ng-repeat="error in blade.notification.errors track by $index" class="error">{{error}}</p>
-                    </div>
-                </div>
-                <p class="text" ng-if="blade.notification.downloadUrl">Download Url: <a href="{{blade.notification.downloadUrl}}" target="_blank">{{blade.notification.downloadUrl}}</a></p>
-            </div>
-        </div>
-    </div>
+						</div>
+						<div class="block" ng-if="blade.notification.created || blade.notification.finished">
+							<p ng-if="blade.notification.created" ng-class="{'no-data': blade.notification.created}" class="text">Start — <i class="fa fa-clock-o"></i> {{blade.notification.created | date : 'mediumTime'}}</p>
+							<p ng-if="blade.notification.finished" ng-class="{'no-data': blade.notification.finished}" class="text">End — <i class="fa fa-clock-o"></i> {{blade.notification.finished | date : 'mediumTime'}}</p>
+						</div>
+						<div class="block" ng-if="blade.notification.totalCount || blade.notification.processedCount || blade.notification.errorCount">
+							<ul class="list __info">
+								<li class="list-item">
+									<div class="list-t">Total count</div>
+									<div class="list-descr">{{blade.notification.totalCount}}</div>
+								</li>
+								<li class="list-item">
+									<div class="list-t">Processed count</div>
+									<div class="list-descr">{{blade.notification.processedCount}}</div>
+								</li>
+								<li class="list-item">
+									<div class="list-t">Error count</div>
+									<div class="list-descr">{{blade.notification.errorCount}}</div>
+								</li>
+							</ul>
+						</div>
+						<div ng-if="blade.notification.errorCount > 0">
+							<span class="sub-t">Errors</span>
+							<div class="log">
+								<p ng-repeat="error in blade.notification.errors track by $index" class="error">{{error}}</p>
+							</div>
+						</div>
+						<p class="text" ng-if="blade.notification.downloadUrl">Download Url: <a href="{{blade.notification.downloadUrl}}" target="_blank">{{blade.notification.downloadUrl}}</a></p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 </div>

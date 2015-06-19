@@ -1,0 +1,37 @@
+﻿<div class="blade-content">
+    <div class="blade-inner">
+        <div class="inner-block">
+            <div class="form clearfix" ng-if="!blade.notification">
+                <form name="importForm" class="form">
+                    <fieldset ng-init="setForm(importForm)">
+                        <div class="form-group">
+                            <label class="form-label">Upload file</label>
+                            <div class="form-input">
+                                <input type="file" uploader="uploader" nv-file-select style="z-index: 0;" tabindex="-1">
+                                <input type="text" readonly="" ng-model="blade.fileUrl">
+                                <button class="btn __file" type="button" onclick="$('input[type=file]').trigger('click')">
+                                    <i class="btn-ico fa fa-image"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </fieldset>
+
+                </form>
+                <button class="btn" ng-click="startImport()" ng-disabled="!blade.fileUrl || blade.notification">
+                    <span>Start import</span>
+                </button>
+            </div>
+            <div class="block" ng-if="blade.notification.created || blade.notification.finished">
+                <p ng-if="blade.notification.created" ng-class="{'no-data': blade.notification.created}" class="text">Start — <i class="fa fa-clock-o"></i> {{blade.notification.created | date : 'mediumTime'}}</p>
+                <p ng-if="blade.notification.finished" ng-class="{'no-data': blade.notification.finished}" class="text">End — <i class="fa fa-clock-o"></i> {{blade.notification.finished | date : 'mediumTime'}}</p>
+                <p class="text">{{blade.notification.description}}</p>
+            </div>
+            <div ng-if="blade.notification.errorCount > 0">
+                <span class="sub-t">Errors</span>
+                <div class="log">
+                    <p ng-repeat="error in blade.notification.errors track by $index" class="error">{{error}}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

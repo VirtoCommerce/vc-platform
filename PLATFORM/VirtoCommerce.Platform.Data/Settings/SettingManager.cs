@@ -121,7 +121,7 @@ namespace VirtoCommerce.Platform.Data.Settings
 
         public void SaveSettings(SettingEntry[] settings)
         {
-            if (settings != null)
+            if (settings != null && settings.Any())
             {
                 var settingKeys = settings.Select(x => String.Join("-", x.Name, x.ObjectType, x.ObjectId)).Distinct().ToArray();
 
