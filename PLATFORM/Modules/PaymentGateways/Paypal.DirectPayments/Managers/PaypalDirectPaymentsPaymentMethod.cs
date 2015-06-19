@@ -178,11 +178,11 @@ namespace Paypal.DirectPayments.Managers
         {
             var retVal = new CreditCardDetailsType();
 
-            retVal.CreditCardNumber = context.Info.BankCardNumber;
-            retVal.CreditCardType = GetPaypalCreditCardType(context.Info.BankCardType);
-            retVal.ExpMonth = context.Info.BankCardMonth;
-            retVal.ExpYear = context.Info.BankCardYear;
-            retVal.CVV2 = context.Info.BankCardCVV2;
+            retVal.CreditCardNumber = context.BankCardInfo.BankCardNumber;
+			retVal.CreditCardType = GetPaypalCreditCardType(context.BankCardInfo.BankCardType);
+			retVal.ExpMonth = context.BankCardInfo.BankCardMonth;
+			retVal.ExpYear = context.BankCardInfo.BankCardYear;
+			retVal.CVV2 = context.BankCardInfo.BankCardCVV2;
             retVal.CardOwner = new PayerInfoType();
 
             if (context.Order.Addresses.Any(x => x.AddressType == VirtoCommerce.Domain.Order.Model.AddressType.Billing))

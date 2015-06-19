@@ -80,10 +80,10 @@ namespace VirtoCommerce.OrderModule.Web.Controllers.Api
         }
 
         // GET: api/order/customerOrders/{orderId}/processPayment/{paymentId}
-        [HttpGet]
+        [HttpPost]
         [ResponseType(typeof(webModel.CustomerOrder))]
         [Route("{orderId}/processPayment/{paymentId}")]
-        public IHttpActionResult ProcessOrderPayments(string orderId, string paymentId)
+        public IHttpActionResult ProcessOrderPayments([FromBody]BankCardInfo bankCardInfo, string orderId, string paymentId)
         {
             var order = _customerOrderService.GetById(orderId, coreModel.CustomerOrderResponseGroup.Full);
             if (order == null)
@@ -106,7 +106,8 @@ namespace VirtoCommerce.OrderModule.Web.Controllers.Api
             {
                 Order = order,
                 Payment = payment,
-                Store = store
+                Store = store,
+				BankCardInfo = bankCardInfo
             };
 
             var result = paymentMethod.ProcessPayment(context);
