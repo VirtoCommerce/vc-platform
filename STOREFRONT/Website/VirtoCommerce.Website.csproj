@@ -188,6 +188,7 @@
     <Compile Include="App_Start\Startup.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\AssetsController.cs" />
+    <Compile Include="Controllers\DownloadController.cs" />
     <Compile Include="Controllers\ErrorsController.cs" />
     <Compile Include="Controllers\BlogController.cs" />
     <Compile Include="Controllers\StoreControllerBase.cs" />

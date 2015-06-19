@@ -293,7 +293,7 @@ namespace VirtoCommerce.Web.Controllers
                         var catalogItems = await Service.GetCatalogItemsByIdsAsync(productsIds, "ItemAssets");
 
                         var nonShippingProducts = catalogItems.Where(ci => ci.ProductType == "Digital");
-                        if (nonShippingProducts.Any())
+                        if (nonShippingProducts.Count() > 0)
                         {
                             var downloadLinks = new List<ProductDownloadLinks>();
 
@@ -304,12 +304,18 @@ namespace VirtoCommerce.Web.Controllers
                                     ProductName = nonShippingProduct.Name
                                 };
 
+                                int linkCount = 1;
                                 foreach (var asset in nonShippingProduct.Assets)
                                 {
-                                    var url = VirtualPathUtility.ToAbsolute(
-                                        string.Format("~/Home/Download?oid={0}&pid={1}&file={2}", order.Id, nonShippingProduct.Id, asset.Name));
+                                    var url = Url.Action("Index", "Download", new { @file = asset.Name, @oid = order.Id, @pid = nonShippingProduct.Id }, Request.Url.Scheme);
+                                    productLinks.Links.Add(new DownloadLink
+                                    {
+                                        Filename = asset.Name,
+                                        Text = nonShippingProduct.Assets.Count() > 1 ? String.Format("Download link {0}", linkCount) : "Download link",
+                                        Url = url
+                                    });
 
-                                    productLinks.Links.Add(url);
+                                    linkCount++;
                                 }
 
                                 downloadLinks.Add(productLinks);
