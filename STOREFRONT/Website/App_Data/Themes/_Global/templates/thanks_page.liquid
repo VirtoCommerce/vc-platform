@@ -1,2 +1,13 @@
 ﻿<h1>Thank you!</h1>
 <p>Your order id is: {{ order.name }}</p>
+
+{% if download_links != null  %}
+    {% for product in download_links %}
+        <h3>{{ product.product_name }} download links:</h3>
+        <ul>
+            {% for download_link in product.links %}
+                <li><a href="{{ download_link }}">{{ download_link }}</a></li>
+            {% endfor %}
+        </ul>
+    {% endfor %}
+{% endif %}

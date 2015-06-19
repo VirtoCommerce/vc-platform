@@ -152,24 +152,24 @@ angular.module(moduleName, ['virtoCommerce.catalogModule', 'virtoCommerce.pricin
 
               customerOrders.getDashboardStatistics({ start: startDate, end: now }, function (data) {
                   // prepare statistics
-                  var dataByQuarters = _.groupBy(data.revenuePeriodDetails, function (x) { return x.year + ' Q' + x.quarter; });
-                  var amountByQuarter = _.map(dataByQuarters, function (stats, quarter) {
-                      var sum = _.reduce(stats, function (memo, x) { return memo + x.amount; }, 0);
-                      return { c: [{ v: quarter }, { v: sum }] };
-                  });
+                  var prepareStatistics = function (dataList) {
+                      var dataByQuarters = _.groupBy(dataList, function (x) { return x.year + ' Q' + x.quarter; });
+                      return _.map(dataByQuarters, function (stats, quarter) {
+                          var sum = _.reduce(stats, function (memo, x) { return memo + x.amount; }, 0);
+                          return { c: [{ v: quarter }, { v: sum }] };
+                      });
+                  }
 
                   data.chartRevenueByQuarter = {
                       "type": "LineChart",
                       "data": {
                           "cols": [
                               { id: "quarter", label: "Quarter", type: "string" },
-                              //{ id: "avg-orderValue", label: "Average Order value", type: "number" }
-                              { id: "avg-orderValue", label: "Revenue", type: "number" }
+                              { id: "revenue", label: "Revenue", type: "number" }
                           ],
-                          rows: amountByQuarter
+                          rows: prepareStatistics(data.revenuePeriodDetails)
                       },
                       "options": {
-                          //"title": "Average Order value by quarter",
                           "title": "Revenue by quarter",
                           "legend": { position: 'top' },
                           "vAxis": {
@@ -183,98 +183,24 @@ angular.module(moduleName, ['virtoCommerce.catalogModule', 'virtoCommerce.pricin
                       "formatters": {},
                   };
 
-                  data.demoChartObject = {
+                  data.chartOrderValueByQuarter = {
                       "type": "ColumnChart",
-                      "displayed": true,
                       "data": {
                           "cols": [
-                              {
-                                  "id": "month",
-                                  "label": "Month",
-                                  "type": "string",
-                                  "p": {}
-                              },
-                              {
-                                  "id": "last-year",
-                                  "label": "Last Year",
-                                  "type": "number",
-                                  "p": {}
-                              },
-                              {
-                                  "id": "this-year",
-                                  "label": "This Year",
-                                  "type": "number",
-                                  "p": {}
-                              }
+                              { id: "quarter", label: "Quarter", type: "string" },
+                              { id: "avg-orderValue", label: "Average Order value", type: "number" }
                           ],
-                          "rows": [
-                              {
-                                  "c": [
-                                      {
-                                          "v": "January"
-                                      },
-                                      {
-                                          "v": 1020.12,
-                                          "f": "$1020.12"
-                                      },
-                                      {
-                                          "v": 1100.10,
-                                          "f": "$1500.10"
-                                      }
-                                  ]
-                              },
-                              {
-                                  "c": [
-                                      {
-                                          "v": "February"
-                                      },
-                                      {
-                                          "v": 1210.01,
-                                          "f": "$1210.01"
-
-                                      },
-                                      {
-                                          "v": 1410.61,
-                                          "f": "$1410.61"
-                                      }
-                                  ]
-                              },
-                              {
-                                  "c": [
-                                      {
-                                          "v": "March"
-                                      },
-                                      {
-                                          "v": 1251.82,
-                                          "f": "$1251.82"
-                                      },
-                                      {
-                                          "v": 1300.91,
-                                          "f": "$1300.91"
-                                      }
-                                  ]
-                              }
-                          ]
+                          rows: prepareStatistics(data.avgOrderValuePeriodDetails)
                       },
                       "options": {
-                          "title": "Sales per month",
-                          "subtitle": 'Sales: 2014-2015',
-                          "isStacked": "false",
-                          "fill": 20,
-                          "legend": { position: 'top', maxLines: 3 },
-                          "displayExactValues": true,
+                          "title": "Average Order value by quarter",
+                          "legend": { position: 'top' },
                           "vAxis": {
-                              "title": "Sales unit",
-                              "gridlines": {
-                                  "count": 10
-                              }
+                              "gridlines": { "count": 8 }
                           },
-                          "hAxis": {
-                              "title": "Date"
-                          }
+                          "hAxis": {}
                       },
                       "formatters": {},
-                      "view": {}
                   };
 
                   $localStorage.ordersDashboardStatistics = data;

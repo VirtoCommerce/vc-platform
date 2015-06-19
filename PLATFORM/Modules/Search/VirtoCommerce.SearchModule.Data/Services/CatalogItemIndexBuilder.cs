@@ -179,7 +179,8 @@ namespace VirtoCommerce.SearchModule.Data.Services
                 {
                     case PropertyValueType.LongText:
                     case PropertyValueType.ShortText:
-                        doc.Add(new DocumentField(contentField, propValue.Value.ToString().ToLower(), new[] { IndexStore.Yes, IndexType.Analyzed, IndexDataType.StringCollection }));
+                        if (!String.IsNullOrWhiteSpace(propValue.Value.ToString().ToLower())) // don't index empty values
+                            doc.Add(new DocumentField(contentField, propValue.Value.ToString().ToLower(), new[] { IndexStore.Yes, IndexType.Analyzed, IndexDataType.StringCollection }));
                         break;
                 }
 

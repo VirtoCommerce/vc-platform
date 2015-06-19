@@ -23,6 +23,9 @@
 
     <assemblyFile>VirtoCommerce.SearchModule.Web.dll</assemblyFile>
     <moduleType>VirtoCommerce.SearchModule.Web.Module, VirtoCommerce.SearchModule.Web</moduleType>
+    <scripts>
+        <directory virtualPath="$/Scripts" searchPattern="*.js" searchSubdirectories="true" />
+    </scripts>
 
     <permissions>
         <group name="Search">

@@ -104,7 +104,6 @@
     <Content Include="Scripts\blades\paymentMethod-detail.js" />
     <Content Include="Scripts\blades\seo-detail.js" />
     <Content Include="Scripts\blades\seo-detail.tpl.html" />
-    <Content Include="Scripts\blades\toolbar-isActive.tpl.html" />
     <Content Include="Scripts\blades\shippingMethod-detail.js" />
     <Content Include="Scripts\blades\paymentMethod-detail.tpl.html" />
     <Content Include="Scripts\blades\shippingMethod-detail.tpl.html" />

@@ -188,7 +188,7 @@ namespace VirtoCommerce.ApiClient
                     CreateRequestUri(RelativePaths.Products, query.GetQueryString(parameters))).ConfigureAwait(false);
         }
 
-        public virtual async Task<IEnumerable<CatalogItem>> GetCatalogItemsByIdsAsync(IEnumerable<string> catalogItemsIds)
+        public virtual async Task<IEnumerable<CatalogItem>> GetCatalogItemsByIdsAsync(IEnumerable<string> catalogItemsIds, string responseGroup)
         {
             var ids = new List<string>();
             foreach (var catalogItemId in catalogItemsIds)
@@ -197,6 +197,7 @@ namespace VirtoCommerce.ApiClient
             }
 
             var queryString = string.Join("&", ids);
+            queryString += "&responseGroup=" + responseGroup;
 
             return await GetAsync<IEnumerable<CatalogItem>>(CreateRequestUri(RelativePaths.Products, queryString)).ConfigureAwait(false);
         }

@@ -258,11 +258,11 @@
                     <ui-select-choices repeat="propValue in context.langValuesMap[currentEntity.catalog.defaultLanguage.languageCode].allValues | filter: {value: $select.search}">
                         <span ng-bind-html="propValue.value | highlight: $select.search"></span>
                     </ui-select-choices>
-                </ui-select>
-                <div ng-repeat="data in currentEntity.values">
-                    <span class="flag flag-{{data.languageCode.substr(3, 2).toLowerCase()}}"></span>
-                    {{data.value}}
-                </div>
+                </ui-select>                
+            </div>
+            <div ng-repeat="data in currentEntity.values | filter: {languageCode:'!'+currentEntity.catalog.defaultLanguage.languageCode}">
+                <span class="flag flag-{{data.languageCode.substr(3, 2).toLowerCase()}}"></span>
+                {{data.value}}
             </div>
         </div>
     </script>

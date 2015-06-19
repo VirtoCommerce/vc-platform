@@ -1,7 +1,6 @@
 ﻿angular.module('virtoCommerce.customerModule')
-.controller('virtoCommerce.customerModule.memberDetailController', ['$scope', '$window', 'platformWebApp.bladeNavigationService', 'virtoCommerce.customerModule.contacts', 'virtoCommerce.customerModule.organizations', 'platformWebApp.dialogService', 'virtoCommerce.storeModule.stores', function ($scope, $window, bladeNavigationService, contacts, organizations, dialogService, stores) {
+.controller('virtoCommerce.customerModule.memberDetailController', ['$scope', 'platformWebApp.bladeNavigationService', 'virtoCommerce.customerModule.contacts', 'virtoCommerce.customerModule.organizations', 'platformWebApp.dialogService', function ($scope, bladeNavigationService, contacts, organizations, dialogService) {
     $scope.blade.currentResource = $scope.blade.isOrganization ? organizations : contacts;
-    var storesPromise = stores.query().$promise;
 
     $scope.blade.refresh = function (parentRefresh) {
         if ($scope.blade.currentEntityId) {
@@ -140,16 +139,16 @@
             name: "Login on behalf",
             icon: 'fa fa-key',
             executeMethod: function () {
-                storesPromise.then(function (promiseData) {
-                    var store = promiseData[0];
-                    // https://{store_secure_url}/{locale}/{store_code}?uid={customer_id}
-                    var url = store.secureUrl + '/' + store.defaultLanguage + '/' + store.id + '?uid=' + $scope.blade.currentEntity.id;
-                    $window.open(url, '_blank');
-                });
+                var newBlade = {
+                    id: 'memberDetailChild',
+                    currentEntityId: $scope.blade.currentEntityId,
+                    title: 'Login on behalf of ' + $scope.blade.currentEntity.fullName,
+                    controller: 'virtoCommerce.customerModule.loginOnBehalfListController',
+                    template: 'Modules/$(VirtoCommerce.Customer)/Scripts/blades/loginOnBehalf-list.tpl.html'
+                };
+                bladeNavigationService.showBlade(newBlade, $scope.blade);
             },
-            canExecuteMethod: function () {
-                return true;
-            },
+            canExecuteMethod: function () { return true; },
             permission: 'customer:manage'
         });
     }
