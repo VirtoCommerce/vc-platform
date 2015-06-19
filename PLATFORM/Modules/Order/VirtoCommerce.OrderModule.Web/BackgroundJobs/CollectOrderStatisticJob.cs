@@ -51,33 +51,35 @@ namespace VirtoCommerce.OrderModule.Web.BackgroundJobs
 				retVal.Revenue = revenues.Select(x => new Money(x.Currency, x.Value)).ToList();
 
 
-				retVal.RevenuePeriodDetails = new List<MoneyWithPeriod>();
-				retVal.AvgOrderValuePeriodDetails = new List<MoneyWithPeriod>();
+				retVal.RevenuePeriodDetails = new List<QuarterPeriodMoney>();
+				retVal.AvgOrderValuePeriodDetails = new List<QuarterPeriodMoney>();
+				var endDate = end;
 				foreach (var currency in currencies)
 				{
-					for (var currentDate = start; currentDate <= end; currentDate = currentDate.AddMonths(1))
+					for (var startDate = start; startDate < end; startDate = endDate)
 					{
-						var currentEndDate = currentDate.AddMonths(1);
-						var quarter = (int)((currentDate.Month - 1) / 3) + 1;
-						var amount = repository.InPayments.Where(x => x.CreatedDate >= currentDate && x.CreatedDate <= currentEndDate)
+						endDate = startDate.AddMonths(3 - (startDate.Month % 3));
+						endDate = new DateTime(endDate.Year, endDate.Month, 1).AddMonths(1);
+						endDate = new DateTime(Math.Min(end.Ticks, endDate.Ticks));
+						var quarter = (int)((startDate.Month - 1) / 3) + 1;
+						
+						var amount = repository.InPayments.Where(x => x.CreatedDate >= startDate && x.CreatedDate <= endDate)
 														  .Where(x => !x.IsCancelled & x.Currency == currency).Select(x=>x.Sum).DefaultIfEmpty(0).Sum();
-						var avgOrderValue = repository.CustomerOrders.Where(x => x.CreatedDate >= currentDate && x.CreatedDate <= currentEndDate)
+						var avgOrderValue = repository.CustomerOrders.Where(x => x.CreatedDate >= startDate && x.CreatedDate <= endDate)
 														 .Where(x => x.Currency == currency)
 														 .Select(x=>x.Sum).DefaultIfEmpty(0).Average();
 
-						var periodStat = new MoneyWithPeriod(currency, amount)
+						var periodStat = new QuarterPeriodMoney(currency, amount)
 						{
-							Month = currentDate.Month,
 							Quarter = quarter,
-							Year = currentDate.Year
+							Year = startDate.Year
 						};
 						retVal.RevenuePeriodDetails.Add(periodStat);
 
-						periodStat = new MoneyWithPeriod(currency, avgOrderValue)
+						periodStat = new QuarterPeriodMoney(currency, avgOrderValue)
 						{
-							Month = currentDate.Month,
 							Quarter = quarter,
-							Year = currentDate.Year
+							Year = startDate.Year
 						};
 						retVal.AvgOrderValuePeriodDetails.Add(periodStat);
 
