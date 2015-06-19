@@ -58,8 +58,8 @@ namespace VirtoCommerce.OrderModule.Web.BackgroundJobs
 				{
 					for (var startDate = start; startDate < end; startDate = endDate)
 					{
-						endDate = startDate.AddMonths(3 - (startDate.Month % 3));
-						endDate = new DateTime(endDate.Year, endDate.Month, 1).AddMonths(1);
+						endDate = startDate.AddMonths(3 - ((startDate.Month - 1)% 3));
+						endDate = new DateTime(endDate.Year, endDate.Month, 1);
 						endDate = new DateTime(Math.Min(end.Ticks, endDate.Ticks));
 						var quarter = (int)((startDate.Month - 1) / 3) + 1;
 						
