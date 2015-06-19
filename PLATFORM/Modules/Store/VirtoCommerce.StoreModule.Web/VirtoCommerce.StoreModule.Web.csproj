@@ -204,10 +204,6 @@
       <Project>{39afd233-b2f7-4178-817d-0a339c57525d}</Project>
       <Name>VirtoCommerce.Platform.Data</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Catalog\VirtoCommerce.CatalogModule.Web\VirtoCommerce.CatalogModule.Web.csproj">
-      <Project>{988CB3E9-2594-499C-90B4-9399EB481C79}</Project>
-      <Name>VirtoCommerce.CatalogModule.Web</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\Core\VirtoCommerce.Domain\VirtoCommerce.Domain.csproj">
       <Project>{67c58a78-ddea-4fa3-a969-1cab582918e4}</Project>
       <Name>VirtoCommerce.Domain</Name>

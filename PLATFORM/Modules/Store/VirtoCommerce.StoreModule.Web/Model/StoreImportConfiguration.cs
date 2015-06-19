@@ -1,6 +1,4 @@
-﻿using VirtoCommerce.CatalogModule.Web.Model;
-
-namespace VirtoCommerce.StoreModule.Web.Model
+﻿namespace VirtoCommerce.StoreModule.Web.Model
 {
 	public class StoreImportConfiguration
 	{

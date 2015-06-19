@@ -1,5 +1,4 @@
 ﻿using Newtonsoft.Json;
-using VirtoCommerce.CatalogModule.Web.Model.Notifications;
 
 namespace VirtoCommerce.StoreModule.Web.Model.Notifications
 {

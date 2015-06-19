@@ -1,5 +1,4 @@
-﻿using VirtoCommerce.CatalogModule.Web.Model.Notifications;
-
+﻿
 namespace VirtoCommerce.StoreModule.Web.Model.Notifications
 {
 	public class ImportNotification : JobNotificationBase
