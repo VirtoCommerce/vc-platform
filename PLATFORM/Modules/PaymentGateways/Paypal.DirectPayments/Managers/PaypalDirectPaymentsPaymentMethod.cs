@@ -79,7 +79,7 @@ namespace Paypal.DirectPayments.Managers
 
         public override PaymentMethodType PaymentMethodType
         {
-            get { return PaymentMethodType.Redirection; }
+            get { return PaymentMethodType.Standard; }
         }
 
         public override PaymentMethodGroupType PaymentMethodGroupType

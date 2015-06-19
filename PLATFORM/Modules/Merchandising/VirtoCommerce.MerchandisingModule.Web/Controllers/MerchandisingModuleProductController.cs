@@ -157,8 +157,6 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
                               { "StoreId", store },
                           };
 
-
-
 			var fullLoadedStore = _storeService.GetById(store);
 			if (fullLoadedStore == null)
 			{
@@ -166,21 +164,19 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 			}
 			var catalog = fullLoadedStore.Catalog;
 
-
-
 			string categoryId = null;
 
 			var criteria = new CatalogIndexedSearchCriteria { Locale = language, Catalog = catalog.ToLowerInvariant() };
-
 
 			if (!string.IsNullOrWhiteSpace(outline))
 			{
 				criteria.Outlines.Add(String.Format("{0}/{1}*", catalog, outline));
 				categoryId = outline.Split(new[] { '/' }).Last();
 				context.Add("CategoryId", categoryId);
-			}
+            }
 
-			// Now fill in filters
+            #region Filters
+            // Now fill in filters
 			var filters = _browseFilterService.GetFilters(context);
 
 			// Add all filters
@@ -201,9 +197,11 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 
 					criteria.Apply(appliedFilter);
 				}
-			}
+            }
+            #endregion
 
-			// apply filters
+            #region Facets
+            // apply facet filters
 			var facets = parameters.Facets;
 			if (facets.Count != 0)
 			{
@@ -217,9 +215,10 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 					var appliedFilter = _browseFilterService.Convert(filter, facets[key]);
 					criteria.Apply(appliedFilter);
 				}
-			}
+            }
+            #endregion
 
-			//criteria.ClassTypes.Add("Product");
+            //criteria.ClassTypes.Add("Product");
 			criteria.RecordsToRetrieve = parameters.PageSize == 0 ? 10 : parameters.PageSize;
 			criteria.StartingRecord = parameters.StartingRecord;
 			criteria.Pricelists = priceLists;

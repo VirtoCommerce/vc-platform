@@ -77,7 +77,7 @@
                                     </label>
                                 </td>
                                 <td class="table-col">
-                                    <div ng-repeat="data in group.values">
+                                    <div ng-repeat="data in group.values | orderBy:'languageCode'">
                                         <span class="flag flag-{{data.languageCode.substr(3, 2).toLowerCase()}}"></span>
                                         {{data.value}}
                                     </div>
