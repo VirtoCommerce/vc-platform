@@ -1,6 +1,9 @@
 ﻿#region
 
+using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 using VirtoCommerce.Web.Models;
 
 #endregion
@@ -44,6 +47,22 @@ namespace VirtoCommerce.Web.Extensions
             }
 
             return segments;
+        }
+
+        public static string BuildSearchOutline(this Collection collection, string sep = "/")
+        {
+            var segments = new List<string>();
+
+            //first add parents
+            if (collection.Parents != null)
+            {
+                segments.AddRange(collection.Parents.Select(parent => parent.Id));
+            }
+
+            //Finally add category itself
+            segments.Add(collection.Id);
+
+            return String.Join(sep, segments);
         }
 
         public static Dictionary<string, string> BuildTitleOutline(this Collection collection)
