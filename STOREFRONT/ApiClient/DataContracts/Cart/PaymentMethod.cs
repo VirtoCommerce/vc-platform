@@ -2,14 +2,18 @@
 {
     public class PaymentMethod
     {
-        #region Public Properties
-
         public string GatewayCode { get; set; }
-
-        public string IconUrl { get; set; }
 
         public string Name { get; set; }
 
-        #endregion
+        public string Description { get; set; }
+
+        public string IconUrl { get; set; }
+
+        public int Priority { get; set; }
+
+        public PaymentMethodType Type { get; set; }
+
+        public PaymentMethodGroupType Group { get; set; }
     }
 }

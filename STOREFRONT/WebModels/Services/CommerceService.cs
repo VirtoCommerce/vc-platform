@@ -396,7 +396,8 @@ namespace VirtoCommerce.Web.Models.Services
             if (paymentMethods != null)
             {
                 paymentMethodModels = new List<PaymentMethod>();
-                foreach (var paymentMethod in paymentMethods)
+
+                foreach (var paymentMethod in paymentMethods.OrderBy(pm => pm.Priority))
                 {
                     paymentMethodModels.Add(paymentMethod.AsWebModel());
                 }
@@ -450,9 +451,9 @@ namespace VirtoCommerce.Web.Models.Services
             return order;
         }
 
-        public async Task<ProcessPaymentResult> ProcessPaymentAsync(string orderId, string paymentMethodId)
+        public async Task<ProcessPaymentResult> ProcessPaymentAsync(string orderId, string paymentMethodId, ApiClient.DataContracts.BankCardInfo cardInfo)
         {
-            return await _orderClient.ProcessPayment(orderId, paymentMethodId);
+            return await _orderClient.ProcessPayment(orderId, paymentMethodId, cardInfo);
         }
 
         public async Task<PostProcessPaymentResult> PostPaymentProcessAsync(ICollection<KeyValuePair<string, string>> parameters)

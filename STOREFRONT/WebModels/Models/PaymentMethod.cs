@@ -7,12 +7,36 @@ namespace VirtoCommerce.Web.Models
     public class PaymentMethod : Drop
     {
         [DataMember]
-        public string Handle { get; set; }
+        public string Code { get; set; }
 
         [DataMember]
-        public string IconUrl { get; set; }
+        public string LogoUrl { get; set; }
 
         [DataMember]
         public string Title { get; set; }
+
+        [DataMember]
+        public string Description { get; set; }
+
+        [DataMember]
+        public bool Active { get; set; }
+
+        [DataMember]
+        public int Priority { get; set; }
+
+        [DataMember]
+        public string Type { get; set; }
+
+        [DataMember]
+        public string CardNumber { get; set; }
+
+        [DataMember]
+        public string CardExpirationMonth { get; set; }
+
+        [DataMember]
+        public string CardExpirationYear { get; set; }
+
+        [DataMember]
+        public string CardCvv { get; set; }
     }
 }

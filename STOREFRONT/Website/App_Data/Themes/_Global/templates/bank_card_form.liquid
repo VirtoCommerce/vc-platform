@@ -1,0 +1,28 @@
+﻿<div class="col-md-11 bank-card-form">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4 style="display: inline-block;">Card information</h4>
+            <img id="card-type-logo" src="" style="float: right;" />
+            <div class="row" style="margin-top: 0;">
+                <div class="col-md-12">
+                    <span class="help-block small-font">Card number</span>
+                    <input class="form-control" id="checkout_card_number" name="checkout[card_number]" required="required" type="text" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <span class="help-block small-font">Expiration date</span>
+                    <select class="form-control" id="checkout_card_expiration_month" name="checkout[card_expiration_month]"></select>
+                </div>
+                <div class="col-md-4">
+                    <span class="help-block small-font">&nbsp;</span>
+                    <select class="form-control" id="checkout_card_expiration_year" name="checkout[card_expiration_year]"></select>
+                </div>
+                <div class="col-md-4">
+                    <span class="help-block small-font">CCV</span>
+                    <input class="form-control" id="checkout_card_cvv" name="checkout[card_cvv]" pattern="[0-9]{3}" required="required" type="text" />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

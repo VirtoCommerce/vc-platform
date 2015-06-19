@@ -31,7 +31,7 @@
                     </div>
                     <div class="form-group" id="shipping-methods">
                         {% for shipping_method in checkout.shipping_methods %}
-                            <div class="col-md-6" style="cursor: pointer;">
+                            <div class="col-md-12" style="cursor: pointer;">
                                 <input id="checkout_shipping_method_{{ shipping_method.handle }}" name="checkout[shipping_method_id]" type="radio" value="{{ shipping_method.handle }}" required="required" {% if checkout.shipping_methods.size == 1 %}checked="checked"{% endif %} />
                                 <label for="checkout_shipping_method_{{ shipping_method.handle }}"></label>
                                 <span class="shipping_method_label">
@@ -54,10 +54,16 @@
                     </div>
                     <div class="form-group" id="payment-methods">
                         {% for payment_method in checkout.payment_methods %}
-                            <div class="col-md-6" style="cursor: pointer;">
-                                <input id="checkout_payment_method_{{ payment_method.handle }}" name="checkout[payment_method_id]" type="radio" value="{{ payment_method.handle }}" required="required" {% if checkout.payment_methods.size == 1 %}checked="checked"{% endif %} />
-                                <label for="checkout_payment_method_{{ payment_method.handle }}"></label>
-                                <img src="{{ payment_method.icon_url }}" width="150" />
+                            <div class="col-md-12" style="cursor: pointer;">
+                                <div class="radio-button-group" data-type="{{ payment_method.type }}">
+                                    <input id="checkout_payment_method_{{ payment_method.code }}" name="checkout[payment_method_id]" type="radio" value="{{ payment_method.code }}" required="required" {% if checkout.payment_methods.size == 1 %}checked="checked"{% endif %} />
+                                    <label for="checkout_payment_method_{{ payment_method.code }}"></label>
+                                    <img src="{{ payment_method.logo_url }}" style="float: left; margin-right: 20px;" />
+                                    <span style="display: block; overflow: hidden;">
+                                        <strong>{{ payment_method.title }}</strong><br />
+                                        {{ payment_method.description }}
+                                    </span>
+                                </div>
                             </div>
                         {% endfor %}
                     </div>
