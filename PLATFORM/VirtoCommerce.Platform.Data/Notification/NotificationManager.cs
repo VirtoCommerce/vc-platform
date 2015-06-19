@@ -5,6 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using VirtoCommerce.Platform.Core.Notification;
 using VirtoCommerce.Platform.Data.Repositories;
+using Omu.ValueInjecter;
+using VirtoCommerce.Platform.Data.Model;
 
 namespace VirtoCommerce.Platform.Data.Notification
 {
@@ -26,7 +28,7 @@ namespace VirtoCommerce.Platform.Data.Notification
 
 		public void RegisterNotificationType(Func<Core.Notification.Notification> notification)
 		{
-			var notificationType = GetNewNotification<Core.Notification.Notification>(notification().Type);
+			var notificationType = GetNewNotification(notification().Type);
 
 			if (notificationType == null)
 			{
@@ -76,17 +78,17 @@ namespace VirtoCommerce.Platform.Data.Notification
 				var notificationEntity = repository.Notifications.FirstOrDefault(x => x.Id == id);
 				if (notificationEntity != null)
 				{
-					retVal =  notificationEntity.ToCoreModel();
+					retVal = GetNotificationCoreModel(notificationEntity);
 				}
 			}
 
 			return retVal;
 		}
 
-		public T GetNewNotification<T>(string type) where T : Core.Notification.Notification 
+		public Core.Notification.Notification GetNewNotification(string type)
 		{
 			var notifications = GetNotifications();
-			return (T)notifications.FirstOrDefault(x => x.GetType().Name == Type.GetType(type).Name);
+			return notifications.FirstOrDefault(x => x.Type == type);
 		}
 
 		public T GetNewNotification<T>() where T : Core.Notification.Notification
@@ -127,10 +129,18 @@ namespace VirtoCommerce.Platform.Data.Notification
 				var notifications = repository.Notifications.Take(criteria.Take).Skip(criteria.Skip);
 				foreach (var notification in notifications)
 				{
-					retVal.Notifications.Add(notification.ToCoreModel());
+					retVal.Notifications.Add(GetNotificationCoreModel(notification));
 				}
 				retVal.TotalCount = notifications.Count();
 			}
+
+			return retVal;
+		}
+
+		private Core.Notification.Notification GetNotificationCoreModel(NotificationEntity entity)
+		{
+			var retVal = GetNewNotification(entity.Type);
+			retVal.InjectFrom(entity);
 
 			return retVal;
 		}

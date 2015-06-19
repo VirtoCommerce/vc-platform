@@ -7,13 +7,13 @@ namespace VirtoCommerce.Platform.Data.Repositories.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.1.1-30610")]
-    public sealed partial class AddNotifications : IMigrationMetadata
+    public sealed partial class AddNotificationAndNotificationTemplate : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(AddNotifications));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(AddNotificationAndNotificationTemplate));
         
         string IMigrationMetadata.Id
         {
-            get { return "201506181907375_AddNotifications"; }
+            get { return "201506191401420_AddNotificationAndNotificationTemplate"; }
         }
         
         string IMigrationMetadata.Source

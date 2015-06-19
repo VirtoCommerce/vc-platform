@@ -50,6 +50,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Antlr.3.5.0.2\lib\Antlr3.Runtime.dll</HintPath>
     </Reference>
+    <Reference Include="DotLiquid, Version=1.8.0.0, Culture=neutral, PublicKeyToken=82e46016ecf9f07c, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\DotLiquid.1.8.0\lib\NET45\DotLiquid.dll</HintPath>
+    </Reference>
     <Reference Include="EntityFramework">
       <HintPath>..\packages\EntityFramework.6.1.1\lib\net45\EntityFramework.dll</HintPath>
     </Reference>
@@ -264,6 +268,7 @@
     <Compile Include="Controllers\Api\SecurityController.cs" />
     <Compile Include="Controllers\Api\SettingController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Converters\Notification\NotificationConverter.cs" />
     <Compile Include="Converters\Packaging\ModuleDescriptorConverter.cs" />
     <Compile Include="Converters\Packaging\ProgressMessageConverter.cs" />
     <Compile Include="Converters\Security\ApiAccountConverter.cs" />
@@ -276,6 +281,8 @@
     <Compile Include="Hangfire\UnityBootstrapperConfigurationExtensions.cs" />
     <Compile Include="Hangfire\UnityJobActivator.cs" />
     <Compile Include="Model\Asset\BlobInfo.cs" />
+    <Compile Include="Model\Notification\Notification.cs" />
+    <Compile Include="Model\Notification\NotificationTemplate.cs" />
     <Compile Include="Model\Packaging\ModuleDescriptor.cs" />
     <Compile Include="Model\Packaging\ModuleIdentity.cs" />
     <Compile Include="Model\Packaging\ModuleWorkerJob.cs" />
@@ -299,6 +306,14 @@
     <Content Include="Content\angular-gridster.css" />
     <Content Include="Content\angular-multi-select.css" />
     <Content Include="Scripts\angular-gridster.js" />
+    <Content Include="Scripts\app\newnotifications\blades\notifications-edit-template.js" />
+    <Content Include="Scripts\app\newnotifications\blades\notifications-edit-template.tpl.html" />
+    <Content Include="Scripts\app\newnotifications\blades\notifications-list.tpl.html" />
+    <Content Include="Scripts\app\newnotifications\blades\notifications-list.js" />
+    <Content Include="Scripts\app\newnotifications\blades\notifications-menu.js" />
+    <Content Include="Scripts\app\newnotifications\blades\notifications-menu.tpl.html" />
+    <Content Include="Scripts\app\newnotifications\newnotifications.js" />
+    <Content Include="Scripts\app\newnotifications\resources\newnotifications.js" />
     <Content Include="Scripts\app\packaging\blades\module-detail.js" />
     <Content Include="Scripts\app\packaging\blades\module-detail.tpl.html" />
     <Content Include="Scripts\app\packaging\blades\modules-list.js" />
@@ -1365,7 +1380,6 @@
   <ItemGroup>
     <Folder Include="App_Data\Modules\" />
     <Folder Include="Filters\" />
-    <Folder Include="Model\Notification\" />
     <Folder Include="Views\Notifications\" />
   </ItemGroup>
   <ItemGroup>

@@ -7,7 +7,7 @@ using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.Platform.Core.Notification
 {
-	public class Notification : AuditableEntity
+	public abstract class Notification : AuditableEntity
 	{
 		private readonly INotificationSendingGateway _notificationSendingGateway;
 

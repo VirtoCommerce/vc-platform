@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace VirtoCommerce.Platform.Core.Notification
 {
-	public class EmailNotification : Notification
+	public abstract class EmailNotification : Notification
 	{
 		public EmailNotification(IEmailNotificationSendingGateway gateway) : base(gateway)
 		{

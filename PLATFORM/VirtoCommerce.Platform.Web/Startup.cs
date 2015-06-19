@@ -204,6 +204,15 @@ namespace VirtoCommerce.Platform.Web
 
 			notificationManager.RegisterNotificationType(
 				() => new RegistrationEmailNotification(defaultEmailNotificationSendingGateway)
+				{
+					NotificationTemplate = new NotificationTemplate
+					{
+						Body = @"<p> Dear {{ context.first_name }} {{ context.last_name }}, you has registered on our site</p> <p> Your e-mail  - {{ context.email }} </p>",
+						Subject = @"<p> Thanks for registration {{ context.first_name }} {{ context.last_name }}!!! </p>",
+						NotificationTypeId = "RegistrationEmailNotification",
+						ObjectId = "Platform"
+					}
+				}
 			);
 
             #endregion

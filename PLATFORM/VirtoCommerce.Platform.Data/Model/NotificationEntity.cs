@@ -16,6 +16,12 @@ namespace VirtoCommerce.Platform.Data.Model
 		public bool IsActive { get; set; }
 
 		/// <summary>
+		/// Type of notification
+		/// </summary>
+		[StringLength(128)]
+		public string Type { get; set; }
+
+		/// <summary>
 		/// Notification was successfully sent
 		/// </summary>
 		public bool IsSuccessSend { get; set; }

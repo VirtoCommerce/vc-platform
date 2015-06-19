@@ -22,15 +22,6 @@ namespace VirtoCommerce.Platform.Data.Notification
 			return retVal;
 		}
 
-		public static Core.Notification.Notification ToCoreModel(this NotificationEntity notification)
-		{
-			Core.Notification.Notification retVal = new Core.Notification.Notification();
-
-			retVal.InjectFrom(notification);
-
-			return retVal;
-		}
-
 		public static NotificationTemplateEntity ToDataModel(this Core.Notification.NotificationTemplate notificationTemplate)
 		{
 			NotificationTemplateEntity retVal = new NotificationTemplateEntity();
