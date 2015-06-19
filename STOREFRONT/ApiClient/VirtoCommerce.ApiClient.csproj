@@ -73,6 +73,7 @@
     <Compile Include="Configuration\Security\SecurityConfiguration.cs" />
     <Compile Include="Configuration\Store\StoreConfiguration.cs" />
     <Compile Include="Constants.cs" />
+    <Compile Include="DataContracts\Asset.cs" />
     <Compile Include="DataContracts\Cart\AddressType.cs" />
     <Compile Include="DataContracts\Cart\CartItem.cs" />
     <Compile Include="DataContracts\CustomerService\Address.cs" />

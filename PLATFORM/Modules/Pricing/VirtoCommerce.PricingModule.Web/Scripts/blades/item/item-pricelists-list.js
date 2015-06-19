@@ -4,7 +4,7 @@
 
     $scope.blade.refresh = function () {
         $scope.blade.isLoading = true;
-        return $scope.blade.parentWidget.refresh().$promise.then(function (results) {
+        return $scope.blade.parentWidgetRefresh().$promise.then(function (results) {
             $scope.blade.isLoading = false;
             $scope.blade.currentEntities = results;
             return results;

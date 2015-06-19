@@ -17,6 +17,10 @@ using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Domain.Store.Services;
 using VirtoCommerce.Domain.Payment.Model;
 using Omu.ValueInjecter;
+using VirtoCommerce.Platform.Core.Caching;
+using Hangfire;
+using VirtoCommerce.OrderModule.Web.BackgroundJobs;
+using VirtoCommerce.OrderModule.Data.Repositories;
 
 namespace VirtoCommerce.OrderModule.Web.Controllers.Api
 {
@@ -28,13 +32,17 @@ namespace VirtoCommerce.OrderModule.Web.Controllers.Api
         private readonly ICustomerOrderSearchService _searchService;
         private readonly IOperationNumberGenerator _operationNumberGenerator;
         private readonly IStoreService _storeService;
+		private readonly CacheManager _cacheManager;
+		private readonly Func<IOrderRepository> _repositoryFactory;
 
-        public OrderModuleController(ICustomerOrderService customerOrderService, ICustomerOrderSearchService searchService, IStoreService storeService, IOperationNumberGenerator numberGenerator)
+		public OrderModuleController(ICustomerOrderService customerOrderService, ICustomerOrderSearchService searchService, IStoreService storeService, IOperationNumberGenerator numberGenerator, CacheManager cacheManager, Func<IOrderRepository> repositoryFactory)
         {
             _customerOrderService = customerOrderService;
             _searchService = searchService;
             _operationNumberGenerator = numberGenerator;
             _storeService = storeService;
+			_cacheManager = cacheManager;
+			_repositoryFactory = repositoryFactory;
         }
 
         // GET: api/order/customerOrders?q=ddd&site=site1&customer=user1&start=0&count=20
@@ -72,10 +80,10 @@ namespace VirtoCommerce.OrderModule.Web.Controllers.Api
         }
 
         // GET: api/order/customerOrders/{orderId}/processPayment/{paymentId}
-        [HttpGet]
+        [HttpPost]
         [ResponseType(typeof(webModel.CustomerOrder))]
         [Route("{orderId}/processPayment/{paymentId}")]
-        public IHttpActionResult ProcessOrderPayments(string orderId, string paymentId)
+        public IHttpActionResult ProcessOrderPayments([FromBody]BankCardInfo bankCardInfo, string orderId, string paymentId)
         {
             var order = _customerOrderService.GetById(orderId, coreModel.CustomerOrderResponseGroup.Full);
             if (order == null)
@@ -98,7 +106,8 @@ namespace VirtoCommerce.OrderModule.Web.Controllers.Api
             {
                 Order = order,
                 Payment = payment,
-                Store = store
+                Store = store,
+				BankCardInfo = bankCardInfo
             };
 
             var result = paymentMethod.ProcessPayment(context);
@@ -232,21 +241,24 @@ namespace VirtoCommerce.OrderModule.Web.Controllers.Api
         }
 
         // GET:  api/order/dashboardStatistics
-        [HttpGet]
-        [ResponseType(typeof(webModel.DashboardStatisticsResult))]
-        [Route("~/api/order/dashboardStatistics")]
-        public IHttpActionResult GetDashboardStatistics(DateTime start, DateTime end)
-        {
-            var retVal = new webModel.DashboardStatisticsResult();
-            retVal.Revenue = "demo-$128K";
-            retVal.CustomersCount = "demo-78";
-            retVal.RevenuePerCustomer = "demo-$7,865";
-            retVal.OrderValue = "demo-$215";
-            retVal.ItemsPurchased = "demo-6742";
-            retVal.LineitemsPerOrder = "demo-2.7";
+		[HttpGet]
+		[ResponseType(typeof(webModel.DashboardStatisticsResult))]
+		[Route("~/api/order/dashboardStatistics")]
+        [OverrideAuthorization]
+		public IHttpActionResult GetDashboardStatistics([FromUri]DateTime? start = null, [FromUri]DateTime? end = null)
+		{
+			start = start ?? DateTime.UtcNow.AddYears(-1);
+			end = end ?? DateTime.UtcNow;
+			var cacheKey = CacheKey.Create("Statistic", start.Value.ToString("yyyy-MM-dd"), end.Value.ToString("yyyy-MM-dd"));
+			var retVal = _cacheManager.Get(cacheKey, () =>
+			{
 
-            return Ok(retVal);
-        }
+				var collectStaticJob = new CollectOrderStatisticJob(_repositoryFactory, _cacheManager);
+				return collectStaticJob.CollectStatistics(start.Value, end.Value);
+
+			});
+			return Ok(retVal);
+		}
 
     }
 }

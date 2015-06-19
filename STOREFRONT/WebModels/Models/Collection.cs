@@ -9,6 +9,7 @@ using DotLiquid;
 using VirtoCommerce.ApiClient.DataContracts;
 using VirtoCommerce.ApiClient.DataContracts.Search;
 using VirtoCommerce.Web.Convertors;
+using VirtoCommerce.Web.Extensions;
 using VirtoCommerce.Web.Models.Helpers;
 using VirtoCommerce.Web.Models.Services;
 using VirtoCommerce.Web.Views.Engines.Liquid.Extensions;
@@ -19,7 +20,7 @@ using VirtoCommerce.ApiClient.DataContracts.Marketing;
 namespace VirtoCommerce.Web.Models
 {
     [DataContract]
-    public class Collection : Drop, ILoadSlice
+    public class Collection : Drop
     {
         private int _allProductsCount;
         private ItemCollection<Tag> _allTags;
@@ -166,7 +167,7 @@ namespace VirtoCommerce.Web.Models
                 }
             }
 
-            var searchQuery = new BrowseQuery() { SortProperty = sortProperty, SortDirection = sortDirection, Filters = filters, Skip = from, Take = pageSize.Value, Outline = this.Id };
+            var searchQuery = new BrowseQuery() { SortProperty = sortProperty, SortDirection = sortDirection, Filters = filters, Skip = from, Take = pageSize.Value, Outline = this.BuildSearchOutline() };
             var response =
                 Task.Run(() => service.SearchAsync<Product>(context, 
                     searchQuery, this, responseGroups: ItemResponseGroups.ItemSmall | ItemResponseGroups.Variations)).Result;

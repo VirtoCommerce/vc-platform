@@ -39,11 +39,14 @@ namespace VirtoCommerce.Web.Convertors
                           ProductId = item.ProductId,
                           Name = item.Title,
                           PlacedPrice = item.Price,
+                          RequiredShipping = item.RequiresShipping,
                           ExtendedPrice = item.Price,
                           Quantity = item.Quantity,
                           ImageUrl = item.Image,
                           CategoryId = "fake",
-                          CatalogId = "fake"
+                          CatalogId = "fake",
+                          TaxIncluded = item.Taxable,
+                          TaxTotal = item.TaxAmount
                       };
 
             return ret;
@@ -65,6 +68,8 @@ namespace VirtoCommerce.Web.Convertors
             this Data.ShoppingCart cart, VirtoCommerce.ApiClient.DataContracts.Orders.CustomerOrder order = null)
         {
             var checkoutModel = new Checkout();
+
+            checkoutModel.TaxLines = new List<TaxLine>();
 
             if (cart.Addresses != null)
             {
@@ -116,6 +121,12 @@ namespace VirtoCommerce.Web.Convertors
                 {
                     checkoutModel.LineItems.Add(item.AsWebModel());
                 }
+
+                checkoutModel.TaxLines.Add(new TaxLine
+                {
+                    Title = "Line items taxes",
+                    Price = cart.Items.Sum(i => i.TaxTotal)
+                });
             }
 
             checkoutModel.Name = cart.Name;
@@ -137,6 +148,12 @@ namespace VirtoCommerce.Web.Convertors
                         Handle = payment.PaymentGatewayCode
                     };
                 }
+
+                checkoutModel.TaxLines.Add(new TaxLine
+                {
+                    Title = "Payments taxes",
+                    Price = 0
+                });
             }
 
             if (cart.Shipments != null)
@@ -152,9 +169,14 @@ namespace VirtoCommerce.Web.Convertors
                         Title = shipment.ShipmentMethodCode
                     };
                 }
+
+                checkoutModel.TaxLines.Add(new TaxLine
+                {
+                    Title = "Shipping taxes",
+                    Price = cart.Shipments.Sum(s => s.TaxTotal)
+                });
             }
 
-            // Taxes
             // Transactions
 
             return checkoutModel;
@@ -256,13 +278,15 @@ namespace VirtoCommerce.Web.Convertors
                           Title = item.Name,
                           Price = item.PlacedPrice,
                           Quantity = item.Quantity,
-                          RequiresShipping = true,
+                          RequiresShipping = item.RequiredShipping,
                           Sku = item.ProductCode,
                           VariantId = item.ProductId,
                           Image = item.ImageUrl,
                           Variant = variant,
                           Product = product,
-                          Url = String.Format("/products/{0}", item.ProductId)
+                          Url = String.Format("/products/{0}", item.ProductId),
+                          Taxable = item.TaxIncluded,
+                          TaxAmount = item.TaxTotal
                       };
 
             return ret;

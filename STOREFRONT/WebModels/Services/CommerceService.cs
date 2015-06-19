@@ -328,6 +328,7 @@ namespace VirtoCommerce.Web.Models.Services
         public async Task<Cart> GetCartAsync(string storeId, string customerId)
         {
             var cart = await this._cartClient.GetCartAsync(storeId, customerId);
+
             return cart != null ? cart.AsWebModel() : null;
         }
 
@@ -671,6 +672,11 @@ namespace VirtoCommerce.Web.Models.Services
             GetPromoRewardsAsync(ApiClient.DataContracts.Marketing.PromotionEvaluationContext context)
         {
             return await _marketingClient.GetPromotionRewardsAsync(context);
+        }
+
+        public async Task<IEnumerable<CatalogItem>> GetCatalogItemsByIdsAsync(IEnumerable<string> catalogItemsIds, string responseGroup)
+        {
+            return await _browseClient.GetCatalogItemsByIdsAsync(catalogItemsIds, responseGroup);
         }
 
         public async Task<IEnumerable<ApiClient.DataContracts.Price>> GetProductPricesAsync(string[] priceLists, string[] productIds)

@@ -44,6 +44,7 @@ namespace VirtoCommerce.CartModule.Data.Observers
 
 					cart.DiscountTotal += item.DiscountTotal;
 					cart.SubTotal += item.PlacedPrice * item.Quantity;
+				    cart.TaxTotal += item.TaxTotal;
 				}
 			}
 
@@ -67,6 +68,8 @@ namespace VirtoCommerce.CartModule.Data.Observers
 				}
 			}
 
+		    if (cart.TaxTotal > 0)
+		        cart.TaxIncluded = true;
 			cart.Total = cart.SubTotal + cart.ShippingTotal + cart.TaxTotal - cart.DiscountTotal;
 		}
 
@@ -83,7 +86,8 @@ namespace VirtoCommerce.CartModule.Data.Observers
 				}
 			}
 			lineItem.ExtendedPrice = lineItem.PlacedPrice * lineItem.Quantity;
-		
+		    if (lineItem.TaxTotal > 0)
+		        lineItem.TaxIncluded = true;
 		}
 
 		private static void CalculateShipmentTotals(Shipment shipment)

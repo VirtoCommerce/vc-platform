@@ -25,6 +25,6 @@ namespace VirtoCommerce.Domain.Payment.Model
 
 		public Store.Model.Store Store { get; set; }
 
-		public BankCardInfo Info { get; set; }
+		public BankCardInfo BankCardInfo { get; set; }
 	}
 }

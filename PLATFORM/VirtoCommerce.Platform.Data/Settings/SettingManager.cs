@@ -38,56 +38,60 @@ namespace VirtoCommerce.Platform.Data.Settings
             return retVal;
         }
 
-		public SettingEntry GetSettingByName(string name)
-		{
-			if (name == null)
-				throw new ArgumentNullException("name");
+        public SettingEntry GetSettingByName(string name)
+        {
+            if (name == null)
+                throw new ArgumentNullException("name");
 
-			SettingEntry retVal = null;
-			var manifestSetting = LoadSettingFromManifest(name);
-			var storedSetting = GetAllEntities().FirstOrDefault(s => string.Equals(s.Name, name, StringComparison.OrdinalIgnoreCase));
-			if (manifestSetting != null)
-			{
-				retVal = manifestSetting.ToModel(storedSetting, null);
-			}
-			return retVal;
-		}
+            SettingEntry retVal = null;
+            var manifestSetting = LoadSettingFromManifest(name);
+            var storedSetting = GetAllEntities().FirstOrDefault(s => string.Equals(s.Name, name, StringComparison.OrdinalIgnoreCase));
+            if (manifestSetting != null)
+            {
+                retVal = manifestSetting.ToModel(storedSetting, null);
+            }
+            return retVal;
+        }
 
-		public SettingEntry[] GetObjectSettings(string objectType, string objectId)
-		{
-			if (objectType == null)
-				throw new ArgumentNullException("objectType");
-			if (objectId == null)
-				throw new ArgumentNullException("objectId");
+        public SettingEntry[] GetObjectSettings(string objectType, string objectId)
+        {
+            if (objectType == null)
+                throw new ArgumentNullException("objectType");
+            if (objectId == null)
+                throw new ArgumentNullException("objectId");
 
-			var retVal = new List<SettingEntry>();
-			using(var repository = _repositoryFactory())
-			{
-				var settings = repository.Settings.Include(s => s.SettingValues)
-												  .Where(x => x.ObjectId == objectId && x.ObjectType == objectType).OrderBy(x=>x.Name).ToList();
-				retVal.AddRange(settings.Select(x => x.ToModel()));
-			}
-			return retVal.ToArray();
-		}
+            var retVal = new List<SettingEntry>();
+            using (var repository = _repositoryFactory())
+            {
+                var settings = repository.Settings
+                    .Include(s => s.SettingValues)
+                    .Where(x => x.ObjectId == objectId && x.ObjectType == objectType)
+                    .OrderBy(x => x.Name)
+                    .ToList();
 
-		public void RemoveObjectSettings(string objectType, string objectId)
-		{
-			if (objectType == null)
-				throw new ArgumentNullException("objectType");
-			if (objectId == null)
-				throw new ArgumentNullException("objectId");
-			using (var repository = _repositoryFactory())
-			{
-				var settings = repository.Settings.Include(s => s.SettingValues)
-												  .Where(x => x.ObjectId == objectId && x.ObjectType == objectType).ToList();
-				foreach(var setting in settings)
-				{
-					repository.Remove(setting);
-				}
-				repository.UnitOfWork.Commit();
-			}
+                retVal.AddRange(settings.Select(x => x.ToModel()));
+            }
+            return retVal.ToArray();
+        }
 
-		}
+        public void RemoveObjectSettings(string objectType, string objectId)
+        {
+            if (objectType == null)
+                throw new ArgumentNullException("objectType");
+            if (objectId == null)
+                throw new ArgumentNullException("objectId");
+            using (var repository = _repositoryFactory())
+            {
+                var settings = repository.Settings.Include(s => s.SettingValues)
+                                                  .Where(x => x.ObjectId == objectId && x.ObjectType == objectType).ToList();
+                foreach (var setting in settings)
+                {
+                    repository.Remove(setting);
+                }
+                repository.UnitOfWork.Commit();
+            }
+
+        }
         public SettingEntry[] GetModuleSettings(string moduleId)
         {
             var result = new List<SettingEntry>();
@@ -112,31 +116,33 @@ namespace VirtoCommerce.Platform.Data.Settings
                 }
             }
 
-            return result.OrderBy(x=>x.Name).ToArray();
+            return result.OrderBy(x => x.Name).ToArray();
         }
 
         public void SaveSettings(SettingEntry[] settings)
         {
             if (settings != null && settings.Any())
             {
-				var settingKeys = settings.Select(x => String.Join("-", x.Name, x.ObjectType, x.ObjectId)).Distinct().ToArray();
-           
+                var settingKeys = settings.Select(x => String.Join("-", x.Name, x.ObjectType, x.ObjectId)).Distinct().ToArray();
+
                 using (var repository = _repositoryFactory())
-				using(var changeTracker = new ObservableChangeTracker())
+                using (var changeTracker = new ObservableChangeTracker())
                 {
-					var alreadyExistSettings =  repository.Settings.Include(s => s.SettingValues)
-																   .Where(x => settingKeys.Contains(x.Name + "-" + x.ObjectType + "-" + x.ObjectId)).ToList();
+                    var alreadyExistSettings = repository.Settings
+                        .Include(s => s.SettingValues)
+                        .Where(x => settingKeys.Contains(x.Name + "-" + x.ObjectType + "-" + x.ObjectId))
+                        .ToList();
 
-					changeTracker.AddAction = x=>  repository.Add(x);
-					//Need for real remove object from nested collection (because EF default remove references only)
-					changeTracker.RemoveAction = x => repository.Remove(x);
+                    changeTracker.AddAction = x => repository.Add(x);
+                    //Need for real remove object from nested collection (because EF default remove references only)
+                    changeTracker.RemoveAction = x => repository.Remove(x);
 
-					var target = new { Settings = new ObservableCollection<SettingEntity>(alreadyExistSettings) };
-					var source = new { Settings = new ObservableCollection<SettingEntity>(settings.Select(x => x.ToEntity())) };
-                  
-					changeTracker.Attach(target);
+                    var target = new { Settings = new ObservableCollection<SettingEntity>(alreadyExistSettings) };
+                    var source = new { Settings = new ObservableCollection<SettingEntity>(settings.Select(x => x.ToEntity())) };
+
+                    changeTracker.Attach(target);
                     var settingComparer = AnonymousComparer.Create((SettingEntity x) => String.Join("-", x.Name, x.ObjectType, x.ObjectId));
-					source.Settings.Patch(target.Settings, settingComparer, (sourceSetting, targetSetting) => sourceSetting.Patch(targetSetting));
+                    source.Settings.Patch(target.Settings, settingComparer, (sourceSetting, targetSetting) => sourceSetting.Patch(targetSetting));
 
                     repository.UnitOfWork.Commit();
                 }
@@ -155,7 +161,9 @@ namespace VirtoCommerce.Platform.Data.Settings
             if (repositorySetting != null)
             {
                 result = repositorySetting.SettingValues
-                    .Select(v => (T)v.RawValue())
+                    .Select(v => v.RawValue())
+                    .Where(rv => rv != null)
+                    .Select(rv => (T)rv)
                     .ToArray();
             }
             else

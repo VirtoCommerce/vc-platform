@@ -23,9 +23,6 @@
             case "virtoCommerce.catalogModule.itemDetailController":
             case "virtoCommerce.catalogModule.newProductWizardController":
                 return 1;
-            case "virtoCommerce.catalogModule.catalogDetailController":
-            case "virtoCommerce.catalogModule.virtualCatalogDetailController":
-                return 3;
             default:
                 return null;
         }

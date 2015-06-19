@@ -1,6 +1,7 @@
 ﻿#region
 
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -185,6 +186,20 @@ namespace VirtoCommerce.ApiClient
             return
                 await GetAsync<ProductSearchResult>(
                     CreateRequestUri(RelativePaths.Products, query.GetQueryString(parameters))).ConfigureAwait(false);
+        }
+
+        public virtual async Task<IEnumerable<CatalogItem>> GetCatalogItemsByIdsAsync(IEnumerable<string> catalogItemsIds, string responseGroup)
+        {
+            var ids = new List<string>();
+            foreach (var catalogItemId in catalogItemsIds)
+            {
+                ids.Add(string.Format("ids={0}", catalogItemId));
+            }
+
+            var queryString = string.Join("&", ids);
+            queryString += "&responseGroup=" + responseGroup;
+
+            return await GetAsync<IEnumerable<CatalogItem>>(CreateRequestUri(RelativePaths.Products, queryString)).ConfigureAwait(false);
         }
 
         #endregion

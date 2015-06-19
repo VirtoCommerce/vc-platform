@@ -14,7 +14,13 @@ namespace VirtoCommerce.SearchModule.Web.BackgroundJobs
 
         public void SheduleJobs()
         {
-            RecurringJob.AddOrUpdate<SearchIndexJobs>("CatalogIndexJob", x => x.Process(_searchConnection.Scope, CatalogIndexedSearchCriteria.DocType), "*/1 * * * *");
+            RecurringJob.AddOrUpdate<SearchIndexJobs>("CatalogIndexJob", x => x.Process(_searchConnection.Scope, CatalogIndexedSearchCriteria.DocType, false), "*/1 * * * *");
+        }
+
+        public string SheduleRebuildIndex()
+        {
+            var jobId = BackgroundJob.Enqueue<SearchIndexJobs>(x => x.Process(_searchConnection.Scope, CatalogIndexedSearchCriteria.DocType, true));
+            return jobId;
         }
     }
 }

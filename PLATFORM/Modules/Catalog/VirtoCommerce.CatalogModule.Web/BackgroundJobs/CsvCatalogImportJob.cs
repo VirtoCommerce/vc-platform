@@ -104,8 +104,13 @@ namespace VirtoCommerce.CatalogModule.Web.BackgroundJobs
 						}
 						catch(Exception ex)
 						{
+							var error = ex.Message;
+							if(ex.Data.Contains("CsvHelper"))
+							{
+								error +=  ex.Data["CsvHelper"];
+							}
 							notification.ErrorCount++;
-							notification.Errors.Add(ex.ToString());
+							notification.Errors.Add(error);
 						}
 					}
 				}
@@ -125,51 +130,45 @@ namespace VirtoCommerce.CatalogModule.Web.BackgroundJobs
 				notification.Description = "Import finished" + (notification.Errors.Any() ? " with errors" : " successfully");
 				_notifier.Upsert(notification);
 			}
-
-
 		}
-
 	
-
 		private void SaveCategoryTree(coreModel.Catalog catalog, IEnumerable<coreModel.CatalogProduct> csvProducts, ImportNotification notification)
 		{
 			var categories = new List<coreModel.Category>();
-			csvProducts = csvProducts.Where(x => x.CategoryId == null && x.Category != null);
 			notification.ProcessedCount = 0;
+			var cachedCategoryMap = new Dictionary<string, Category>();
+	
 			foreach (var csvProduct in csvProducts)
 			{
-				var productCategoryNames = csvProduct.Category.Path.Split('/', '|', '\\', '>');
-				ICollection<coreModel.Category> currentLevelCategories = categories;
+				var outline = "";
+				var productCategoryNames = csvProduct.Category.Path.Split(_categoryDelimiters);
 				string parentCategoryId = null;
 				foreach (var categoryName in productCategoryNames)
 				{
-					var category = currentLevelCategories.FirstOrDefault(x => x.Name == categoryName);
-					if (category == null)
+					outline += "\\" + categoryName;
+					Category category;
+					if(!cachedCategoryMap.TryGetValue(outline, out category))
 					{
 						var searchCriteria = new SearchCriteria
 						{
 							CatalogId = catalog.Id,
 							CategoryId = parentCategoryId,
 							ResponseGroup = ResponseGroup.WithCategories
-
 						};
-						var result = _searchService.Search(searchCriteria);
-						category = result.Categories.FirstOrDefault(x => x.Name == categoryName);
-						if (category == null)
-						{
-							category = _categoryService.Create(new coreModel.Category() { Name = categoryName, Code = categoryName.GenerateSlug(), CatalogId = catalog.Id, ParentId = parentCategoryId });
-							category.Children = new List<coreModel.Category>();
-							currentLevelCategories.Add(category);
-
-							//Raise notification each notifyCategorySizeLimit category
-							notification.Description = string.Format("Creating categories: {0} created", ++notification.ProcessedCount);
-							_notifier.Upsert(notification);
-						}
+						category = _searchService.Search(searchCriteria).Categories.FirstOrDefault(x => x.Name == categoryName);
+					}
+		
+					if (category == null)
+					{
+						category = _categoryService.Create(new coreModel.Category() { Name = categoryName, Code = categoryName.GenerateSlug(), CatalogId = catalog.Id, ParentId = parentCategoryId });
+						//Raise notification each notifyCategorySizeLimit category
+						notification.Description = string.Format("Creating categories: {0} created", ++notification.ProcessedCount);
+						_notifier.Upsert(notification);
 					}
 					csvProduct.CategoryId = category.Id;
 					csvProduct.Category = category;
-					currentLevelCategories = category.Children;
 					parentCategoryId = category.Id;
+					cachedCategoryMap[outline] = category;
 				}
 			}
 
@@ -242,6 +241,7 @@ namespace VirtoCommerce.CatalogModule.Web.BackgroundJobs
 
 		private void SaveProduct(coreModel.Catalog catalog, FulfillmentCenter defaultFulfillmentCenter, coreModel.CatalogProduct csvProduct)
 		{
+			coreModel.CatalogProduct alreadyExistProduct = null;
 			//For new product try to find them by code
 			if (csvProduct.IsTransient() && !String.IsNullOrEmpty(csvProduct.Code))
 			{
@@ -253,9 +253,15 @@ namespace VirtoCommerce.CatalogModule.Web.BackgroundJobs
 					ResponseGroup = ResponseGroup.WithProducts | ResponseGroup.WithVariations
 				};
 				var result = _searchService.Search(criteria);
-				csvProduct.Id = result.Products.Select(x => x.Id).FirstOrDefault();
+				alreadyExistProduct = result.Products.FirstOrDefault();
+				csvProduct.Id = alreadyExistProduct != null ? alreadyExistProduct.Id : csvProduct.Id;
 			}
-			var isNewProduct = csvProduct.IsTransient();
+			else if(!csvProduct.IsTransient())
+			{
+				//If id specified need check that product really exist 
+				alreadyExistProduct = _productService.GetById(csvProduct.Id, ItemResponseGroup.ItemInfo);
+			}
+			var isNewProduct = alreadyExistProduct == null;
 
 			csvProduct.CatalogId = catalog.Id;
 
@@ -307,7 +313,8 @@ namespace VirtoCommerce.CatalogModule.Web.BackgroundJobs
 			{
 				var price = csvProduct.Prices.First();
 				price.ProductId = csvProduct.Id;
-				if (isNewProduct)
+
+				if (price.IsTransient() || _pricingService.GetPriceById(price.Id) == null)
 				{
 					_pricingService.CreatePrice(price);
 				}
@@ -340,6 +347,9 @@ namespace VirtoCommerce.CatalogModule.Web.BackgroundJobs
 					if (propertyInfo != null)
 					{
 						var newMap = new CsvPropertyMap(propertyInfo);
+						newMap.TypeConverterOption(CultureInfo.InvariantCulture);
+						newMap.TypeConverterOption(NumberStyles.Any);
+						newMap.TypeConverterOption(true, "yes", "false");
 						//Map fields if mapping specified
 						if (mappingConfigurationItem.CsvColumnName != null)
 						{

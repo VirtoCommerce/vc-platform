@@ -114,6 +114,16 @@
     width: 108px;
 }
 
+.gallery-img.__main.__solo
+{
+    border: none;
+    height: 100%;
+    left: 0;
+    line-height: 220px;
+    top: 0;
+    width: 100%;
+}
+
     .gallery-img *
     {
         display: inline-block;

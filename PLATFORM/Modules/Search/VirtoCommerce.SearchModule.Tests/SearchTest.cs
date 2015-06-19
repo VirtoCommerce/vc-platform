@@ -92,7 +92,7 @@ namespace VirtoCommerce.SearchModule.Tests
 
         private ICatalogService GetCatalogService()
         {
-            return new CatalogServiceImpl(GetCatalogRepository);
+            return new CatalogServiceImpl(GetCatalogRepository, GetCommerceService());
         }
 
         private IItemService GetItemService()

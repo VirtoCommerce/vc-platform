@@ -10,6 +10,7 @@ using VirtoCommerce.Web.Convertors;
 using VirtoCommerce.Web.Models;
 using VirtoCommerce.Web.Models.FormModels;
 using VirtoCommerce.Web.Models.Routing;
+using VirtoCommerce.Web.Models.Storage;
 
 namespace VirtoCommerce.Web.Controllers
 {
@@ -81,11 +82,12 @@ namespace VirtoCommerce.Web.Controllers
                         City = formModel.City,
                         Company = !string.IsNullOrEmpty(formModel.Company) ? formModel.Company : null,
                         Country = formModel.Country,
-                        CountryCode = "RUS",
+                        CountryCode = "US", //TODO Set country code by selected country name
                         FirstName = formModel.FirstName,
                         LastName = formModel.LastName,
                         Phone = !string.IsNullOrEmpty(formModel.Phone) ? formModel.Phone : null,
                         Province = formModel.Province,
+                        ProvinceCode = "CA", //TODO Set province code by selected province name
                         Zip = formModel.Zip
                     };
 
@@ -178,11 +180,12 @@ namespace VirtoCommerce.Web.Controllers
                         City = formModel.City,
                         Company = !string.IsNullOrEmpty(formModel.Company) ? formModel.Company : null,
                         Country = formModel.Country,
-                        CountryCode = "RUS",
+                        CountryCode = "US", //TODO Set country code by selected country name
                         FirstName = formModel.FirstName,
                         LastName = formModel.LastName,
                         Phone = !string.IsNullOrEmpty(formModel.Phone) ? formModel.Phone : null,
                         Province = formModel.Province,
+                        ProvinceCode = "CA", //TODO Set province code by selected province name
                         Zip = formModel.Zip
                     };
 
@@ -286,6 +289,41 @@ namespace VirtoCommerce.Web.Controllers
 
                     if (order != null)
                     {
+                        var productsIds = order.Items.Select(i => i.ProductId);
+                        var catalogItems = await Service.GetCatalogItemsByIdsAsync(productsIds, "ItemAssets");
+
+                        var nonShippingProducts = catalogItems.Where(ci => ci.ProductType == "Digital");
+                        if (nonShippingProducts.Count() > 0)
+                        {
+                            var downloadLinks = new List<ProductDownloadLinks>();
+
+                            foreach (var nonShippingProduct in nonShippingProducts)
+                            {
+                                var productLinks = new ProductDownloadLinks
+                                {
+                                    ProductName = nonShippingProduct.Name
+                                };
+
+                                int linkCount = 1;
+                                foreach (var asset in nonShippingProduct.Assets)
+                                {
+                                    var url = Url.Action("Index", "Download", new { @file = asset.Name, @oid = order.Id, @pid = nonShippingProduct.Id }, Request.Url.Scheme);
+                                    productLinks.Links.Add(new DownloadLink
+                                    {
+                                        Filename = asset.Name,
+                                        Text = nonShippingProduct.Assets.Count() > 1 ? String.Format("Download link {0}", linkCount) : "Download link",
+                                        Url = url
+                                    });
+
+                                    linkCount++;
+                                }
+
+                                downloadLinks.Add(productLinks);
+                            }
+
+                            Context.Set("download_links", downloadLinks);
+                        }
+
                         Context.Order = order.AsWebModel();
                         return View("thanks_page");
                     }

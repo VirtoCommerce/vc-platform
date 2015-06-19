@@ -258,6 +258,7 @@
     <Compile Include="Bootstraper.cs" />
     <Compile Include="Controllers\Api\AssetsController.cs" />
     <Compile Include="Controllers\Api\FrontendSecurityController.cs" />
+    <Compile Include="Controllers\Api\JobsController.cs" />
     <Compile Include="Controllers\Api\ModulesController.cs" />
     <Compile Include="Controllers\Api\NotificationController.cs" />
     <Compile Include="Controllers\Api\SecurityController.cs" />
@@ -275,6 +276,7 @@
     <Compile Include="Hangfire\UnityBootstrapperConfigurationExtensions.cs" />
     <Compile Include="Hangfire\UnityJobActivator.cs" />
     <Compile Include="Model\Asset\BlobInfo.cs" />
+    <Compile Include="Model\Jobs\Job.cs" />
     <Compile Include="Model\Packaging\ModuleDescriptor.cs" />
     <Compile Include="Model\Packaging\ModuleIdentity.cs" />
     <Compile Include="Model\Packaging\ModuleWorkerJob.cs" />
@@ -298,6 +300,7 @@
     <Content Include="Content\angular-gridster.css" />
     <Content Include="Content\angular-multi-select.css" />
     <Content Include="Scripts\angular-gridster.js" />
+    <Content Include="Scripts\app\jobs\resources\jobs.js" />
     <Content Include="Scripts\app\packaging\blades\module-detail.js" />
     <Content Include="Scripts\app\packaging\blades\module-detail.tpl.html" />
     <Content Include="Scripts\app\packaging\blades\modules-list.js" />
@@ -309,7 +312,8 @@
     <Content Include="Scripts\common\security\blades\account-api-list.js" />
     <Content Include="Scripts\common\security\blades\account-api-list.tpl.html" />
     <Content Include="Scripts\common\security\blades\account-detail-toolbar.tpl.html" />
-    <Content Include="Scripts\common\security\blades\account-api-toolbar.tpl.html" />
+    <Content Include="Scripts\common\templates\ok.tpl.html" />
+    <Content Include="Scripts\common\templates\toolbar-isActive.tpl.html" />
     <Content Include="Scripts\common\templates\home.tpl.html" />
     <Content Include="Scripts\app\packaging\packaging.js" />
     <Content Include="Scripts\app\packaging\resources\modules.js" />
@@ -483,6 +487,7 @@
     <Content Include="Scripts\common\confirmDialog\confirmDialog.js" />
     <Content Include="Scripts\common\directives\angular-moment.js" />
     <Content Include="Scripts\common\directives\inputNumber.js" />
+    <Content Include="Scripts\common\directives\showBigImage.js" />
     <Content Include="Scripts\common\directives\left-click-menu.js" />
     <Content Include="Scripts\common\filters.js" />
     <Content Include="Scripts\app\navigation\breadcrumbs\breadcrumbs.js" />

@@ -153,43 +153,37 @@ angular.module('platformWebApp', AppDependencies).
         };
 
         // register dashboard demo widgets and templates
-        widgetService.registerWidget({
-            controller: 'platformWebApp.demo.dashboard.graphWidgetController',
-            size: [3, 2],
-            template: 'graph.html'
-        }, 'mainDashboard');
         //widgetService.registerWidget({
         //    controller: 'platformWebApp.demo.dashboard.notificationsWidgetController',
         //    template: 'tile-notifications.html'
         //}, 'mainDashboard');
 
-        $templateCache.put('graph.html', '<div google-chart chart="chartObject" style="height:100%"></div>');
-        $templateCache.put('tile-count.html', '<div class="gridster-cnt" ng-click="widgetAction()"><div class="cnt-inner"><div class="list-count">{{data.count}}</div><div class="list-t">{{data.descr}}</div></div></div>');
-        $templateCache.put('tile-notifications.html', '<ul class="list __notice">\
-            <li class="list-item __info">\
-                <a class="list-link" href="" ng-click="notification(\'info\')">\
-                    <i class="list-ico fa fa-comments"></i>\
-                Info\
-            </a>\
-        </li>\
-        <li class="list-item __warning">\
-            <a class="list-link" href="" ng-click="notification(\'warning\')">\
-                <i class="list-ico fa fa-warning"></i>\
-                Warning\
-            </a>\
-        </li>\
-        <li class="list-item __task">\
-            <a class="list-link" href="" ng-click="notification(\'task\')">\
-                <i class="list-ico fa fa-tasks"></i>\
-                Task\
-            </a>\
-        </li>\
-        <li class="list-item __error">\
-            <a class="list-link" href="" ng-click="notification(\'error\')">\
-                <i class="list-ico fa fa-warning"></i>\
-                Error\
-            </a>\
-        </li>\
-    </ul>');
+        //$templateCache.put('tile-count.html', '<div class="gridster-cnt" ng-click="widgetAction()"><div class="cnt-inner"><div class="list-count">{{data.count}}</div><div class="list-t">{{data.descr}}</div></div></div>');
+        //    $templateCache.put('tile-notifications.html', '<ul class="list __notice">\
+        //        <li class="list-item __info">\
+        //            <a class="list-link" href="" ng-click="notification(\'info\')">\
+        //                <i class="list-ico fa fa-comments"></i>\
+        //            Info\
+        //        </a>\
+        //    </li>\
+        //    <li class="list-item __warning">\
+        //        <a class="list-link" href="" ng-click="notification(\'warning\')">\
+        //            <i class="list-ico fa fa-warning"></i>\
+        //            Warning\
+        //        </a>\
+        //    </li>\
+        //    <li class="list-item __task">\
+        //        <a class="list-link" href="" ng-click="notification(\'task\')">\
+        //            <i class="list-ico fa fa-tasks"></i>\
+        //            Task\
+        //        </a>\
+        //    </li>\
+        //    <li class="list-item __error">\
+        //        <a class="list-link" href="" ng-click="notification(\'error\')">\
+        //            <i class="list-ico fa fa-warning"></i>\
+        //            Error\
+        //        </a>\
+        //    </li>\
+        //</ul>');
     }
   ]);

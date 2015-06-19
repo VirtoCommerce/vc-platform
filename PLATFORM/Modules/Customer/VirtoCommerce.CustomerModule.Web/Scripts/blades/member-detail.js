@@ -133,6 +133,26 @@
         }
     ];
 
+    if (!$scope.blade.isOrganization) {
+        $scope.blade.toolbarCommands.push(
+        {
+            name: "Login on behalf",
+            icon: 'fa fa-key',
+            executeMethod: function () {
+                var newBlade = {
+                    id: 'memberDetailChild',
+                    currentEntityId: $scope.blade.currentEntityId,
+                    title: 'Login on behalf of ' + $scope.blade.currentEntity.fullName,
+                    controller: 'virtoCommerce.customerModule.loginOnBehalfListController',
+                    template: 'Modules/$(VirtoCommerce.Customer)/Scripts/blades/loginOnBehalf-list.tpl.html'
+                };
+                bladeNavigationService.showBlade(newBlade, $scope.blade);
+            },
+            canExecuteMethod: function () { return true; },
+            permission: 'customer:manage'
+        });
+    }
+
     // datepicker
     $scope.datepickers = {
         bd: false

@@ -28,7 +28,7 @@
     }
 
     $scope.blade.headIcon = 'fa fa-archive';
-    $scope.blade.toolbarCustomTemplates = ['Modules/$(VirtoCommerce.Store)/Scripts/blades/toolbar-isActive.tpl.html'];
+    $scope.blade.toolbarCustomTemplates = ['Scripts/common/templates/toolbar-isActive.tpl.html'];
     
     initializeBlade($scope.blade.origEntity);
 }]);

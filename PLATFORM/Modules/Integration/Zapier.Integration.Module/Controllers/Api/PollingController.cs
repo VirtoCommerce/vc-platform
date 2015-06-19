@@ -2,13 +2,10 @@
 using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Description;
-using Newtonsoft.Json;
-using VirtoCommerce.Domain.Customer.Model;
 using Zapier.IntegrationModule.Web.Providers.Interfaces;
 
 namespace Zapier.IntegrationModule.Web.Controllers.Api
 {
-    [AllowAnonymous]
     [RoutePrefix("api/zapier")]
     public class PollingController : ApiController
     {
@@ -28,15 +25,7 @@ namespace Zapier.IntegrationModule.Web.Controllers.Api
         {
             return Ok();
         }
-
-        [HttpGet]
-        [ResponseType(typeof(void))]
-        [Route("payments")]
-        public IHttpActionResult NewPayments()
-        {
-            return Ok(_contactsProvider.GetNewContacts());
-        }
-
+        
         [HttpGet]
         [ResponseType(typeof(void))]
         [Route("contacts")]

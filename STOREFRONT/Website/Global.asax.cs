@@ -16,6 +16,11 @@ namespace VirtoCommerce.Web
 
         protected void Application_Error(object sender, EventArgs e)
         {
+            //var exception = Server.GetLastError();
+            //if (exception == null)
+            //    return;
+
+            //throw exception;
             /*
             var exception = this.Server.GetLastError();
             this.Server.ClearError();

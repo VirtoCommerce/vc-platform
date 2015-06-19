@@ -1,11 +1,11 @@
 ﻿angular.module('virtoCommerce.pricingModule')
 .controller('virtoCommerce.pricingModule.itemPricesWidgetController', ['$scope', '$filter', 'platformWebApp.bladeNavigationService', 'virtoCommerce.pricingModule.prices', function ($scope, $filter, bladeNavigationService, prices) {
-    $scope.currentBlade = $scope.widget.blade;
+    var blade = $scope.blade;
 
-    $scope.widget.refresh = function () {
+    function refresh() {
         $scope.priceRange = '';
 
-        return prices.query({ id: $scope.currentBlade.itemId }, function (data) {
+        return prices.query({ id: blade.itemId }, function (data) {
             // find the most popular currency and min/max prices in it.
             var pricelists = _.flatten(_.pluck(data, 'productPrices'), true);
             var prices = _.flatten(_.pluck(pricelists, 'prices'), true);
@@ -23,7 +23,7 @@
                 $scope.priceRange = 'N/A';
             }
         }, function (error) {
-            //bladeNavigationService.setError('Error ' + error.status, $scope.blade);
+            //bladeNavigationService.setError('Error ' + error.status, blade);
         });
     }
 
@@ -31,16 +31,16 @@
         if ($scope.priceRange !== '') {
             var newBlade = {
                 id: "itemPricelists",
-                itemId: $scope.currentBlade.itemId,
-                parentWidget: $scope.widget,
-                title: $scope.currentBlade.title,
+                itemId: blade.itemId,
+                parentWidgetRefresh: $scope.refresh,
+                title: blade.title,
                 subtitle: 'Select Price list to manage prices',
                 controller: 'virtoCommerce.pricingModule.itemPricelistsListController',
                 template: 'Modules/$(VirtoCommerce.Pricing)/Scripts/blades/item/item-pricelists-list.tpl.html'
             };
-            bladeNavigationService.showBlade(newBlade, $scope.currentBlade);
+            bladeNavigationService.showBlade(newBlade, blade);
         }
     };
 
-    $scope.widget.refresh();
+    refresh();
 }]);

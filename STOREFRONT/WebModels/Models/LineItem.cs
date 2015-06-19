@@ -54,5 +54,11 @@ namespace VirtoCommerce.Web.Models
 
         [DataMember]
         public string Vendor { get; set; }
+
+        [DataMember]
+        public bool Taxable { get; set; }
+
+        [DataMember]
+        public decimal TaxAmount { get; set; }
     }
 }

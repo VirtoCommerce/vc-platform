@@ -102,7 +102,7 @@ namespace VirtoCommerce.Web.Models
         public string Url { get; set; }
 
         [DataMember]
-        public int Weight { get; set; }
+        public decimal Weight { get; set; }
 
         [DataMember]
         public string WeightUnit { get; set; }

@@ -56,6 +56,20 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 			return retVal;
 		}
 
+		/// <summary>
+		/// Converting to foundation type
+		/// </summary>
+		/// <param name="seoInfo">The seo information.</param>
+		/// <param name="product">The product.</param>
+		/// <returns></returns>
+		public static SeoUrlKeyword ToCoreModel(this coreModel.SeoInfo seoInfo, dataModel.CatalogBase catalog)
+		{
+			var retVal = seoInfo.ToCoreModel();
+			retVal.KeywordValue = catalog.Id;
+            //retVal.KeywordType = (int)coreModel.SeoUrlKeywordTypes.Catalog;
+			return retVal;
+		}
+
 		private static SeoUrlKeyword ToCoreModel(this coreModel.SeoInfo seoInfo)
 		{
 			var retVal = new SeoUrlKeyword();

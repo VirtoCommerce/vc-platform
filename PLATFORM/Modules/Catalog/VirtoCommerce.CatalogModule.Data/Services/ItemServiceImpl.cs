@@ -46,15 +46,17 @@ namespace VirtoCommerce.CatalogModule.Data.Services
 			using (var repository = _catalogRepositoryFactory())
 			{
 				var dbItems = repository.GetItemByIds(itemIds, respGroup);
-				
+
+				SeoUrlKeyword[] seoInfos = null;
+				if ((respGroup & coreModel.ItemResponseGroup.Seo) == coreModel.ItemResponseGroup.Seo)
+				{
+					seoInfos = _commerceService.GetSeoKeywordsForEntities(dbItems.Select(x=>x.Id).ToArray()).ToArray();
+				}
+
+				var categoriesIds = dbItems.SelectMany(x => x.CategoryItemRelations).Select(x => x.CategoryId).Distinct().ToArray();
+				var dbCategories = repository.GetCategoriesByIds(categoriesIds);
 				foreach (var dbItem in dbItems)
 				{
-					SeoUrlKeyword[] seoInfos = null;
-					if ((respGroup & coreModel.ItemResponseGroup.Seo) == coreModel.ItemResponseGroup.Seo)
-					{
-						seoInfos = _commerceService.GetSeoKeywordsForEntity(dbItem.Id).ToArray();
-					}
-
 					var associatedProducts = new List<coreModel.CatalogProduct>();
 					if ((respGroup & coreModel.ItemResponseGroup.ItemAssociations) == coreModel.ItemResponseGroup.ItemAssociations)
 					{
@@ -67,17 +69,18 @@ namespace VirtoCommerce.CatalogModule.Data.Services
 							}
 						}
 					}
-
 					var dbCatalog = repository.GetCatalogById(dbItem.CatalogId);
 
 					var catalog = dbCatalog.ToCoreModel();
 					coreModel.Category category = null;
 					if (dbItem.CategoryItemRelations.Any())
 					{
-						var dbCategory = repository.GetCategoryById(dbItem.CategoryItemRelations.OrderBy(x => x.Priority).First().CategoryId);
+						var itemCategoryId = dbItem.CategoryItemRelations.OrderBy(x => x.Priority).First().CategoryId;
+						var dbCategory = dbCategories.FirstOrDefault(x => x.Id == itemCategoryId);
 						category = dbCategory.ToCoreModel(catalog);
 					}
-					retVal.Add(dbItem.ToCoreModel(catalog: catalog, category: category, seoInfos: seoInfos, associatedProducts: associatedProducts.ToArray()));
+					var itemSeoInfos = seoInfos != null ? seoInfos.Where(x => x.KeywordValue == dbItem.Id).ToArray() : null;
+					retVal.Add(dbItem.ToCoreModel(catalog: catalog, category: category, seoInfos: itemSeoInfos, associatedProducts: associatedProducts.ToArray()));
 				}
 			}
 

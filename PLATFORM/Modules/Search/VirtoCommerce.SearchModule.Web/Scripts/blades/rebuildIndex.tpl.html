@@ -1,0 +1,24 @@
+﻿<div class="blade-static __bottom __expanded">
+    <button class="btn" ng-click="submit()" ng-disabled="isRebuilding">
+        <span>Rebuild Index</span>
+    </button>
+</div>
+<div class="blade-content" ng-if="blade.currentEntity">
+    <div class="blade-inner">
+        <div class="inner-block">
+            <div ng-if="blade.currentEntity">
+                <div class="t __divider">Progress</div>
+                <ul class="list __info">
+                    <li class="list-item">
+                        <div class="list-t">Job</div>
+                        <div class="list-descr">{{blade.currentEntity.id}}</div>
+                    </li>
+                    <li class="list-item">
+                        <div class="list-t">State</div>
+                        <div class="list-descr">{{blade.currentEntity.state}}</div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
