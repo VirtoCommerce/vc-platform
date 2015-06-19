@@ -130,7 +130,7 @@ namespace VirtoCommerce.Web.Convertors
             }
 
             checkoutModel.Name = cart.Name;
-            checkoutModel.Note = cart.Note;
+            //checkoutModel.Note = cart.Note;
 
             if (order != null)
             {
@@ -145,7 +145,7 @@ namespace VirtoCommerce.Web.Convertors
                 {
                     checkoutModel.PaymentMethod = new Models.PaymentMethod
                     {
-                        Handle = payment.PaymentGatewayCode
+                        Code = payment.PaymentGatewayCode
                     };
                 }
 
@@ -186,9 +186,12 @@ namespace VirtoCommerce.Web.Convertors
         {
             return new VirtoCommerce.Web.Models.PaymentMethod
             {
-                Handle = paymentMethod.GatewayCode,
-                IconUrl = paymentMethod.IconUrl,
-                Title = paymentMethod.Name
+                Code = paymentMethod.GatewayCode,
+                Description = paymentMethod.Description,
+                LogoUrl = paymentMethod.IconUrl,
+                Title = String.Format("{0} ({1})", paymentMethod.Name, paymentMethod.Group.ToString()),
+                Priority = paymentMethod.Priority,
+                Type = paymentMethod.Type.ToString()
             };
         }
 
@@ -226,7 +229,7 @@ namespace VirtoCommerce.Web.Convertors
                 }
             }
 
-            cart.Note = checkoutModel.Note;
+            //cart.Note = checkoutModel.Note;
 
             if (checkoutModel.PaymentMethod != null)
             {
@@ -234,7 +237,7 @@ namespace VirtoCommerce.Web.Convertors
                 cart.Payments.Add(new Payment
                 {
                     Currency = checkoutModel.Currency,
-                    PaymentGatewayCode = checkoutModel.PaymentMethod.Handle,
+                    PaymentGatewayCode = checkoutModel.PaymentMethod.Code,
                     Amount = checkoutModel.TotalPrice
                 });
             }

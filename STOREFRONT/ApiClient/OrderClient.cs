@@ -74,11 +74,11 @@ namespace VirtoCommerce.ApiClient
                 CreateRequestUri(RelativePaths.UpdateOrder), HttpMethod.Put, order);
         }
 
-        public Task<ProcessPaymentResult> ProcessPayment(string orderId, string paymentMethodId)
+        public Task<ProcessPaymentResult> ProcessPayment(string orderId, string paymentMethodId, BankCardInfo cardInfo)
         {
-            return GetAsync<ProcessPaymentResult>(
+            return SendAsync<BankCardInfo, ProcessPaymentResult>(
                 CreateRequestUri(string.Format(RelativePaths.ProcessPayment, orderId, paymentMethodId)),
-                useCache: false);
+                HttpMethod.Post, cardInfo);
         }
 
         public Task<PostProcessPaymentResult> PostPaymentProcess(ICollection<KeyValuePair<string, string>> parameters)

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Web.Mvc;
 
 namespace VirtoCommerce.Web.Models.FormModels
 {
@@ -35,6 +36,31 @@ namespace VirtoCommerce.Web.Models.FormModels
         {
             get { return GetValue("payment_method_id"); }
             set { SetValue("payment_method_id", value); }
+        }
+
+        [Remote("ValidateCardNumber", "Checkout", ErrorMessage = "Unknown credit card type")]
+        public string CardNumber
+        {
+            get { return GetValue("card_number"); }
+            set { SetValue("card_number", value); }
+        }
+
+        public string CardExpirationMonth
+        {
+            get { return GetValue("card_expiration_month"); }
+            set { SetValue("card_expiration_month", value); }
+        }
+
+        public string CardExpirationYear
+        {
+            get { return GetValue("card_expiration_year"); }
+            set { SetValue("card_expiration_year", value); }
+        }
+
+        public string CardCvv
+        {
+            get { return GetValue("card_cvv"); }
+            set { SetValue("card_cvv", value); }
         }
 
         [Required]

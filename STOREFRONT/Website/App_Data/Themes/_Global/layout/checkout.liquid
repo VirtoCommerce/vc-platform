@@ -23,6 +23,14 @@
             var checkout = {% if checkout != null %}{{ checkout | json }}{% else %}null{% endif %};
             var customer = {% if customer != null %}{{ customer | json }}{% else %}null{% endif %};
 
+            if (checkout.requires_shipping) {
+                $("#shipping-methods").prev().show();
+                $("#shipping-methods").show();
+            } else {
+                $("#shipping-methods").prev().hide();
+                $("#shipping-methods").hide();
+            }
+
             if (checkout.guest_login && !checkout.email) {
                 $("#guest-modal").modal("show");
             } else {
@@ -66,6 +74,11 @@
                 updateTotals(selectedShippingMethod.val());
             }
 
+            var selectedPaymentMethod = $("#payment-methods input:checked");
+            if (selectedPaymentMethod.length) {
+                selectedPaymentMethod.find(".credit-card-form").show();
+            }
+
             $("#customer-addresses").on("change", function () {
                 var address = customer.addresses.getElementByVal("id", $(this).val());
                 if (address) {
@@ -73,7 +86,7 @@
                 }
             });
 
-            $("#shipping-methods .col-md-6").on("click", function () {
+            $("#shipping-methods .col-md-12").on("click", function () {
                 var input = $(this).find("input");
                 if (!input.is(":checked")) {
                     input.prop("checked", true);
@@ -81,9 +94,17 @@
                 }
             });
 
-            $("#payment-methods .col-md-6").on("click", function () {
-                var input = $(this).find("input");
-                input.prop("checked", true);
+            $("#payment-methods .radio-button-group").on("click", function () {
+                var radioButton = $(this).find("input[type='radio']");
+                radioButton.prop("checked", true);
+                var type = $(this).data("type");
+                if (type === "Standard") {
+                    if (!$(this).find(".bank-card-form").length) {
+                        getBankCardForm($(this));
+                    }
+                } else {
+                    $(".bank-card-form").remove();
+                }
             });
 
             $("#billing-address-equals-shipping-address").on("change", function () {
@@ -95,6 +116,38 @@
                 }
             });
         });
+
+        function populateExpirationDateDropdowns() {
+            var monthesSelects = $("select[name*='card_expiration_month']");
+            var monthes = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+            if (monthesSelects.length) {
+                for (var m = 1; m <= monthes.length; m++) {
+                    monthesSelects.append("<option value=\"" + m + "\">" + monthes[m - 1] + "</option>");
+                }
+            }
+            var yearsSelects = $("select[name*='card_expiration_year']");
+            if (yearsSelects.length) {
+                var currentYear = (new Date()).getFullYear();
+                for (var m = currentYear; m <= currentYear + 5; m++) {
+                    yearsSelects.append("<option value=\"" + m + "\">" + m + "</option>");
+                }
+            }
+        }
+
+        function getBankCardForm(paymentMethod) {
+            $.ajax({
+                type: "GET",
+                cache: false,
+                url: VirtoCommerce.url("/checkout/bankcardform"),
+                success: function (htmlResult) {
+                    if (htmlResult) {
+                        $(".bank-card-form").remove();
+                        paymentMethod.find("span").append(htmlResult);
+                        populateExpirationDateDropdowns();
+                    }
+                }
+            });
+        }
 
         function fillAddress(address) {
             $("#customer-addresses").val(address.id);
