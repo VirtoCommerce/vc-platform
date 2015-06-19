@@ -152,11 +152,12 @@ angular.module(moduleName, ['virtoCommerce.catalogModule', 'virtoCommerce.pricin
 
               customerOrders.getDashboardStatistics({ start: startDate, end: now }, function (data) {
                   // prepare statistics
-                  var prepareStatistics = function (dataList) {
-                      var dataByQuarters = _.groupBy(dataList, function (x) { return x.year + ' Q' + x.quarter; });
-                      return _.map(dataByQuarters, function (stats, quarter) {
-                          var sum = _.reduce(stats, function (memo, x) { return memo + x.amount; }, 0);
-                          return { c: [{ v: quarter }, { v: sum }] };
+                  var statisticsToChartRows = function (statsList) {
+                      return _.map(statsList, function (stats) {
+                          return {
+                              c: [{ v: stats.year + ' Q' + stats.quarter },
+                                  { v: stats.amount }]
+                          };
                       });
                   }
 
@@ -167,7 +168,7 @@ angular.module(moduleName, ['virtoCommerce.catalogModule', 'virtoCommerce.pricin
                               { id: "quarter", label: "Quarter", type: "string" },
                               { id: "revenue", label: "Revenue", type: "number" }
                           ],
-                          rows: prepareStatistics(data.revenuePeriodDetails)
+                          rows: statisticsToChartRows(data.revenuePeriodDetails)
                       },
                       "options": {
                           "title": "Revenue by quarter",
@@ -190,7 +191,7 @@ angular.module(moduleName, ['virtoCommerce.catalogModule', 'virtoCommerce.pricin
                               { id: "quarter", label: "Quarter", type: "string" },
                               { id: "avg-orderValue", label: "Average Order value", type: "number" }
                           ],
-                          rows: prepareStatistics(data.avgOrderValuePeriodDetails)
+                          rows: statisticsToChartRows(data.avgOrderValuePeriodDetails)
                       },
                       "options": {
                           "title": "Average Order value by quarter",

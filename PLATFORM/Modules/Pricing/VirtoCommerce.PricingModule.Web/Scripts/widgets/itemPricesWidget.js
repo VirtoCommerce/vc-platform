@@ -32,7 +32,7 @@
             var newBlade = {
                 id: "itemPricelists",
                 itemId: blade.itemId,
-                parentWidgetRefresh: $scope.refresh,
+                parentWidgetRefresh: refresh,
                 title: blade.title,
                 subtitle: 'Select Price list to manage prices',
                 controller: 'virtoCommerce.pricingModule.itemPricelistsListController',
