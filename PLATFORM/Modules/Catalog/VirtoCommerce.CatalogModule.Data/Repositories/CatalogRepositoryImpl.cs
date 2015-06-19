@@ -287,6 +287,7 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
 			//Used breaking query EF performance concept https://msdn.microsoft.com/en-us/data/hh949853.aspx#8
 			var retVal = Items.Include(x => x.Catalog).Where(x => itemIds.Contains(x.Id)).ToArray();
 
+
 			if ((respGroup & coreModel.ItemResponseGroup.Categories) == coreModel.ItemResponseGroup.Categories)
 			{
 				var relations = CategoryItemRelations.Where(x => itemIds.Contains(x.ItemId)).ToArray();
@@ -312,6 +313,9 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
 				var variationIds = Items.Where(x => itemIds.Contains(x.ParentId)).Select(x => x.Id).ToArray();
 				var variations = GetItemByIds(variationIds, respGroup);
 			}
+			//Load parents
+			var parentIds = retVal.Where(x => x.Parent == null && x.ParentId != null).Select(x => x.ParentId).ToArray();
+			var parents = GetItemByIds(parentIds, respGroup);
 			return retVal;
 		}
 
