@@ -171,7 +171,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BackgroundJobs\Backup.cs" />
-    <Compile Include="BackgroundJobs\BackupStoreJob.cs" />
+    <Compile Include="BackgroundJobs\BackupStoreJob1.cs" />
     <Compile Include="Controllers\Api\StoreModuleBackupController.cs" />
     <Compile Include="Controllers\Api\StoreModuleController.cs" />
     <Compile Include="Controllers\PredefinedPermissions.cs" />

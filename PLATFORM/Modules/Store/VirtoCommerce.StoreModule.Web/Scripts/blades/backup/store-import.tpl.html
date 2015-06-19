@@ -5,6 +5,14 @@
                 <form name="importForm" class="form">
                     <fieldset ng-init="setForm(importForm)">
                         <div class="form-group">
+                            <label class="form-label">Enter Code to change it for importing Store or leave it empty</label>
+                            <div class="form-input">
+                                <input ng-model="blade.newStoreId" type="text" focus-on="" placeholder="Enter code">
+                            </div>
+                            <label class="form-label">Enter Name to change it for importing Store or leave it empty</label>
+                            <div class="form-input">
+                                <input ng-model="blade.newStoreName" type="text" placeholder="Enter name">
+                            </div>
                             <label class="form-label">Upload file</label>
                             <div class="form-input">
                                 <input type="file" uploader="uploader" nv-file-select style="z-index: 0;" tabindex="-1">

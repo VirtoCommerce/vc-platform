@@ -157,7 +157,7 @@ namespace VirtoCommerce.StoreModule.Web.BackgroundJobs
         /// <typeparam name="T"></typeparam>
         /// <param name="fileName"></param>
         /// <returns></returns>
-        public T GetZipObject<T>(string fileName) where T : class
+        public T LoadFromFile<T>(string fileName) where T : class
         {
             ExtractEntry extractEntry = null;
 
@@ -182,11 +182,11 @@ namespace VirtoCommerce.StoreModule.Web.BackgroundJobs
         /// <typeparam name="T"></typeparam>
         /// <param name="fileName"></param>
         /// <returns></returns>
-        public IEnumerable<T> GetZipObjects<T>(string fileName) where T : class
+        public IEnumerable<T> LoadFromFiles<T>(string fileName) where T : class
         {
             return _extpactMap
                 .Where(x => x.FileName.StartsWith(fileName, StringComparison.InvariantCultureIgnoreCase))
-                .Select(o => GetZipObject<T>(o.FileName))
+                .Select(o => LoadFromFile<T>(o.FileName))
                 .ToList();
         }
 

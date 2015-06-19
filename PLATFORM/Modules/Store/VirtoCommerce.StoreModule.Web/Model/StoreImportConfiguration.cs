@@ -3,6 +3,7 @@
 	public class StoreImportConfiguration
 	{
 		public string FileUrl { get; set; }
-		public string StoreId { get; set; }
-	}
+        public string NewStoreId { get; set; }
+        public string NewStoreName { get; set; }
+    }
 }

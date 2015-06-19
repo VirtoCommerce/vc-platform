@@ -48,7 +48,7 @@ namespace VirtoCommerce.StoreModule.Web.Controllers.Api
 			}
 
             var backupStoreJob = new BackupStoreJob();
-            BackgroundJob.Enqueue(() => backupStoreJob.DoExport(store.Id, notification));
+            BackgroundJob.Enqueue(() => backupStoreJob.DoExport(exportConfiguration, notification));
 
 			return Ok(notification);
 
@@ -73,7 +73,8 @@ namespace VirtoCommerce.StoreModule.Web.Controllers.Api
 			_notifier.Upsert(notification);
 
             var importJob = new BackupStoreJob();
-			BackgroundJob.Enqueue(() => importJob.DoImport(importConfiguration.FileUrl, notification));
+		    BackgroundJob.Enqueue(() =>
+		            importJob.DoImport(importConfiguration, notification));
 
 			return Ok(notification);
 		}

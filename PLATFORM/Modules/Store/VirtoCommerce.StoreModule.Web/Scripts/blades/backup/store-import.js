@@ -11,10 +11,11 @@
 	});
 
 	$scope.startImport = function () {
+	    blade.isLoading = true;
 	    importResource.run(
-            { FileUrl: $scope.blade.fileUrl },
-            function (data) { blade.notification = data; blade.parentBlade.refresh(); },
-            function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
+            { FileUrl: $scope.blade.fileUrl, NewStoreId: $scope.blade.newStoreId, NewStoreName: $scope.blade.newStoreName },
+            function (data) { blade.isLoading = false; blade.notification = data; blade.parentBlade.refresh(); },
+            function (error) { blade.isLoading = false; bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
 	}
 
 	$scope.setForm = function (form) {
