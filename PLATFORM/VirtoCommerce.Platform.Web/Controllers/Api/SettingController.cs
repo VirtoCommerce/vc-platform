@@ -23,18 +23,18 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             _settingsManager = settingsManager;
         }
 
-        /// <summary>
-        /// api/settings/modules
-        /// </summary>
-        /// <returns></returns>
-        [HttpGet]
-        [ResponseType(typeof(webModel.ModuleDescriptor[]))]
-        [Route("modules")]
-        public IHttpActionResult GetModules()
-        {
-            var retVal = _settingsManager.GetModules();
-            return Ok(retVal.Select(x => x.ToWebModel()).ToArray());
-        }
+		/// <summary>
+		/// api/settings
+		/// </summary>
+		/// <returns></returns>
+		[HttpGet]
+		[ResponseType(typeof(webModel.Setting[]))]
+		[Route("")]
+		public IHttpActionResult GetAllSettings()
+		{
+			var modules = _settingsManager.GetModules();
+			return Ok(modules.SelectMany(x => _settingsManager.GetModuleSettings(x.Id)).Select(x => x.ToWebModel()).ToArray());
+		}
 
         /// <summary>
         /// api/settings/modules/123

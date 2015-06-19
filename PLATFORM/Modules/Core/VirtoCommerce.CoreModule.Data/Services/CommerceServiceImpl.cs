@@ -71,10 +71,15 @@ namespace VirtoCommerce.CoreModule.Data.Repositories
 
 		public IEnumerable<coreModel.SeoUrlKeyword> GetSeoKeywordsForEntity(string id)
 		{
+			return GetSeoKeywordsForEntities(new string[] { id });
+		}
+
+		public IEnumerable<coreModel.SeoUrlKeyword> GetSeoKeywordsForEntities(string[] ids)
+		{
 			var retVal = new List<coreModel.SeoUrlKeyword>();
 			using (var repository = _repositoryFactory())
 			{
-				retVal = repository.SeoUrlKeywords.Where(x=>x.KeywordValue == id).ToArray()
+				retVal = repository.SeoUrlKeywords.Where(x => ids.Contains(x.KeywordValue)).ToArray()
 								  .Select(x => x.ToCoreModel()).ToList();
 			}
 			return retVal;

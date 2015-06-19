@@ -15,6 +15,7 @@ namespace VirtoCommerce.Domain.Commerce.Services
 
 		IEnumerable<SeoUrlKeyword> GetSeoKeywordsByKeyword(string keyword);
 		IEnumerable<SeoUrlKeyword> GetSeoKeywordsForEntity(string id);
+		IEnumerable<SeoUrlKeyword> GetSeoKeywordsForEntities(string[] ids);
 		SeoUrlKeyword UpsertSeoKeyword(SeoUrlKeyword seoKeyword);
 		void DeleteSeoKeywords(string[] ids);
 

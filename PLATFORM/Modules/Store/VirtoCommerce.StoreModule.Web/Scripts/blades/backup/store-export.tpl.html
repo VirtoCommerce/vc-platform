@@ -1,0 +1,34 @@
+﻿<div class="blade-content">
+    <div class="blade-inner">
+        <div class="inner-block">
+            <div class="form">
+                <div class="block">
+                    <div class="form clearfix" ng-if="!blade.notification">
+                        <div class="form-group">
+
+                            <p ng-class="{'no-data': blade.notification.description}" ng-if="!blade.notification" class="text">
+                                Store information will export to file, download url will be available after the export will be finished.
+                            </p>
+                            <p class="text">{{blade.notification.description}}</p>
+                        </div>
+                        <button class="btn" ng-click="startExport()" ng-disabled="blade.notification">
+                            <span>Start export</span>
+                        </button>
+                    </div>
+                    <div class="block" ng-if="blade.notification.created || blade.notification.finished">
+                        <p ng-if="blade.notification.created" ng-class="{'no-data': blade.notification.created}" class="text">Start — <i class="fa fa-clock-o"></i> {{blade.notification.created | date : 'mediumTime'}}</p>
+                        <p ng-if="blade.notification.finished" ng-class="{'no-data': blade.notification.finished}" class="text">End — <i class="fa fa-clock-o"></i> {{blade.notification.finished | date : 'mediumTime'}}</p>
+                        <p class="text">{{blade.notification.description}}</p>
+                    </div>
+                    <div ng-if="blade.notification.errorCount > 0">
+                        <span class="sub-t">Errors</span>
+                        <div class="log">
+                            <p ng-repeat="error in blade.notification.errors track by $index" class="error">{{error}}</p>
+                        </div>
+                    </div>
+                    <p class="text" ng-if="blade.notification.downloadUrl">Download Url: <a href="{{blade.notification.downloadUrl}}" target="_blank">{{blade.notification.downloadUrl}}</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
