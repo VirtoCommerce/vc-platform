@@ -166,7 +166,11 @@ namespace VirtoCommerce.Content.Data.Repositories
 
 		public Task<bool> DeleteTheme(string path)
 		{
-			throw new NotImplementedException();
+			var retVal = true;
+
+			Directory.Delete(path);
+
+			return Task.FromResult(retVal);
 		}
 
 
@@ -213,21 +217,17 @@ namespace VirtoCommerce.Content.Data.Repositories
 
 			foreach (var language in languages)
 			{
-				var files = Directory.GetFiles(fullPath, "*.*", SearchOption.AllDirectories); ;
+				var files = Directory.GetFiles(language, "*.*", SearchOption.AllDirectories);
 
-				//foreach(var file in files)
-				//{
-				//	var addedPage = 
-				//}
-
-				//list.AddRange(files.Select(f => new Models.ContentPage
-				//{
-				//	Name = Path.GetFileNameWithoutExtension(f),
-				//	ModifiedDate = Directory.GetLastWriteTimeUtc(f),
-				//	Language = GetLanguageFromFullPath(f),
-				//	ByteContent = File.ReadAllBytes(f),
-				//	ContentType
-				//}));
+				list.AddRange(files.Select(f => new Models.ContentPage
+				{
+					Name = Path.GetFileName(f),
+					ModifiedDate = Directory.GetLastWriteTimeUtc(f),
+					Language = GetLanguageFromFullPath(f),
+					ByteContent = File.ReadAllBytes(f),
+					ContentType = ContentTypeUtility.GetContentType(Path.GetFileName(f), File.ReadAllBytes(f)),
+					Path = path
+				}));
 			}
 
 			return list.ToArray();
