@@ -88,7 +88,7 @@ namespace Paypal.ExpressCheckout.Managers
 
 		public override PaymentMethodGroupType PaymentMethodGroupType
 		{
-			get { return PaymentMethodGroupType.BankCard; }
+			get { return PaymentMethodGroupType.Paypal; }
 		}
 
 		public override ProcessPaymentResult ProcessPayment(ProcessPaymentEvaluationContext context)

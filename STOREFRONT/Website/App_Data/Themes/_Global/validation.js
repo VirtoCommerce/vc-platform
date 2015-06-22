@@ -18,6 +18,7 @@ function onError(inputElement, message) {
     } else {
         var options = {
             content: message,
+            container: "body",
             html: true,
             placement: "bottom",
             trigger: "focus"
@@ -25,6 +26,7 @@ function onError(inputElement, message) {
         inputElement.popover("destroy")
             .addClass("error")
             .popover(options);
+        $(".popover").css("overflow", "visible");
     }
 }
 

@@ -189,7 +189,7 @@ namespace VirtoCommerce.Web.Convertors
                 Code = paymentMethod.GatewayCode,
                 Description = paymentMethod.Description,
                 LogoUrl = paymentMethod.IconUrl,
-                Title = String.Format("{0} ({1})", paymentMethod.Name, paymentMethod.Group.ToString()),
+                Title = paymentMethod.Name,
                 Priority = paymentMethod.Priority,
                 Type = paymentMethod.Type.ToString()
             };

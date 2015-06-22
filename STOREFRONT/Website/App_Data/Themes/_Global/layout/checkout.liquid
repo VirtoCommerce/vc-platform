@@ -144,6 +144,28 @@
                         $(".bank-card-form").remove();
                         paymentMethod.find("span").append(htmlResult);
                         populateExpirationDateDropdowns();
+                        $("#checkout_card_number").rules("add", {
+                            required: true,
+                            number: true,
+                            remote: {
+                                type: "GET",
+                                url: VirtoCommerce.url("/checkout/validatecardnumber"),
+                                data: {
+                                    cardNumber: function () {
+                                        return $("#checkout_card_number").val();
+                                    }
+                                }
+                            },
+                            messages: {
+                                remote: "Unknown card type"
+                            }
+                        });
+                        $("#checkout_card_cvv").rules("add", {
+                            required: true,
+                            number: true,
+                            minlength: 3,
+                            maxlength: 4
+                        });
                     }
                 }
             });

@@ -168,7 +168,9 @@ namespace VirtoCommerce.Content.Data.Repositories
 		{
 			var retVal = true;
 
-			Directory.Delete(path);
+			var fullPath = GetFullPath(path);
+
+			Directory.Delete(fullPath, true);
 
 			return Task.FromResult(retVal);
 		}
