@@ -16,6 +16,7 @@ namespace VirtoCommerce.CatalogModule.Web.Converters
 			var retVal = new webModel.Category();
 			retVal.InjectFrom(category);
 			retVal.Catalog = category.Catalog.ToWebModel();
+			retVal.SeoInfos = category.SeoInfos;
 	
 			if(category.Parents != null)
 			{
@@ -26,12 +27,6 @@ namespace VirtoCommerce.CatalogModule.Web.Converters
 			{
 				retVal.Links = category.Links.Select(x => x.ToWebModel()).ToList();
 			}
-
-			if (category.SeoInfos != null)
-			{
-				retVal.SeoInfos = category.SeoInfos.Select(x => x.ToWebModel()).ToList();
-			}
-
 			retVal.Properties = new List<webModel.Property>();
 			//Need add property for each meta info
 			if (properties != null)
@@ -70,17 +65,13 @@ namespace VirtoCommerce.CatalogModule.Web.Converters
 		{
 			var retVal = new moduleModel.Category();
 			retVal.InjectFrom(category);
-
+			retVal.SeoInfos = category.SeoInfos;
 			if (category.Links != null)
 			{
 				retVal.Links = category.Links.Select(x => x.ToModuleModel()).ToList();
 			}
 
-			if (category.SeoInfos != null)
-			{
-				retVal.SeoInfos = category.SeoInfos.Select(x => x.ToModuleModel()).ToList();
-			}
-
+		
 			if (category.Properties != null)
 			{
 				retVal.PropertyValues = new List<moduleModel.PropertyValue>();

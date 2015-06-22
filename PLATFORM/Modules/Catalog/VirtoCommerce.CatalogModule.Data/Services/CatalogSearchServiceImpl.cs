@@ -107,14 +107,14 @@ namespace VirtoCommerce.CatalogModule.Data.Services
 					}
 					else if (!String.IsNullOrEmpty(criteria.SeoKeyword))
 					{
-						var urlKeyword = _commerceService.GetSeoKeywordsByKeyword(criteria.SeoKeyword).Where(x => x.KeywordType == (int)SeoUrlKeywordTypes.Category).FirstOrDefault();
+						var urlKeyword = _commerceService.GetSeoByKeyword(criteria.SeoKeyword).Where(x => x.ObjectType == typeof(coreModel.Category).Name).FirstOrDefault();
 						if(urlKeyword == null)
 						{
 							query = query.Where(x=> false);
 						}
 						else
 						{
-							query = query.Where(x => x.Id == urlKeyword.KeywordValue);
+							query = query.Where(x => x.Id == urlKeyword.ObjectId);
 						}
 					}
                     else if (!String.IsNullOrEmpty(criteria.CatalogId))
@@ -219,14 +219,14 @@ namespace VirtoCommerce.CatalogModule.Data.Services
 				}
 				else if (!String.IsNullOrEmpty(criteria.SeoKeyword))
 				{
-					var urlKeyword = _commerceService.GetSeoKeywordsByKeyword(criteria.SeoKeyword).Where(x => x.KeywordType == (int)SeoUrlKeywordTypes.Item).FirstOrDefault();
+					var urlKeyword = _commerceService.GetSeoByKeyword(criteria.SeoKeyword).Where(x => x.ObjectType == typeof(coreModel.CatalogProduct).Name).FirstOrDefault();
 					if (urlKeyword == null)
 					{
 						query = query.Where(x => false);
 					}
 					else
 					{
-						query = query.Where(x => x.Id == urlKeyword.KeywordValue);
+						query = query.Where(x => x.Id == urlKeyword.ObjectId);
 					}
 				}
 				else if (!String.IsNullOrEmpty(criteria.Keyword))

@@ -16,6 +16,8 @@ using VirtoCommerce.Domain.Shipping.Services;
 using VirtoCommerce.Domain.Shipping.Model;
 using Omu.ValueInjecter;
 using VirtoCommerce.Domain.Payment.Services;
+using System.Collections.ObjectModel;
+using VirtoCommerce.Domain.Commerce.Model;
 
 namespace VirtoCommerce.StoreModule.Data.Services
 {
@@ -53,7 +55,7 @@ namespace VirtoCommerce.StoreModule.Data.Services
 					var fulfillmentCenters = _commerceService.GetAllFulfillmentCenters();
 					retVal.ReturnsFulfillmentCenter = fulfillmentCenters.FirstOrDefault(x => x.Id == entity.ReturnsFulfillmentCenterId);
 					retVal.FulfillmentCenter = fulfillmentCenters.FirstOrDefault(x => x.Id == entity.FulfillmentCenterId);
-					retVal.SeoInfos = _commerceService.GetSeoKeywordsForEntity(id).Select(x => x.ToCoreModel()).ToList();
+					retVal.SeoInfos = _commerceService.GetObjectsSeo(new string[] { id }).ToList();
 
 					LoadObjectSettings(_settingManager, retVal);
 				}
@@ -65,14 +67,25 @@ namespace VirtoCommerce.StoreModule.Data.Services
 
 		public coreModel.Store Create(coreModel.Store store)
 		{
-			var entity = store.ToDataModel();
+			var dbStore = store.ToDataModel();
 			coreModel.Store retVal = null;
 			using (var repository = _repositoryFactory())
 			{
-				repository.Add(entity);
+				repository.Add(dbStore);
 				CommitChanges(repository);
 			}
 
+			//Need add seo separately
+			if (store.SeoInfos != null)
+			{
+				foreach (var seoInfo in store.SeoInfos)
+				{
+					seoInfo.ObjectId = dbStore.Id;
+					seoInfo.ObjectType = typeof(coreModel.Store).Name;
+					_commerceService.UpsertSeo(seoInfo);
+				}
+			}
+			//Deep save settings
 			SaveObjectSettings(_settingManager, store);
 
 			retVal = GetById(store.Id);
@@ -97,8 +110,22 @@ namespace VirtoCommerce.StoreModule.Data.Services
 					sourceEntity.Patch(targetEntity);
 
 					SaveObjectSettings(_settingManager, store);
+
+					//Patch SeoInfo  separately
+					if (store.SeoInfos != null)
+					{
+						foreach(var seoInfo in store.SeoInfos)
+						{
+							seoInfo.ObjectId = store.Id;
+							seoInfo.ObjectType = typeof(coreModel.Store).Name;
+						}
+						var seoInfos = new ObservableCollection<SeoInfo>(_commerceService.GetObjectsSeo(new string[] { store.Id }));
+						seoInfos.ObserveCollection(x => _commerceService.UpsertSeo(x), x => _commerceService.DeleteSeo(new string[] { x.Id }));
+						store.SeoInfos.Patch(seoInfos, (source, target) => _commerceService.UpsertSeo(source));
+					}
 				}
 				CommitChanges(repository);
+
 			}
 
 

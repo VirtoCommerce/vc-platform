@@ -69,32 +69,27 @@ namespace VirtoCommerce.CoreModule.Data.Repositories
 			}
 		}
 
-		public IEnumerable<coreModel.SeoUrlKeyword> GetSeoKeywordsForEntity(string id)
+		public IEnumerable<coreModel.SeoInfo> GetObjectsSeo(string[] ids)
 		{
-			return GetSeoKeywordsForEntities(new string[] { id });
-		}
-
-		public IEnumerable<coreModel.SeoUrlKeyword> GetSeoKeywordsForEntities(string[] ids)
-		{
-			var retVal = new List<coreModel.SeoUrlKeyword>();
+			var retVal = new List<coreModel.SeoInfo>();
 			using (var repository = _repositoryFactory())
 			{
-				retVal = repository.SeoUrlKeywords.Where(x => ids.Contains(x.KeywordValue)).ToArray()
+				retVal = repository.SeoUrlKeywords.Where(x => ids.Contains(x.ObjectId)).ToArray()
 								  .Select(x => x.ToCoreModel()).ToList();
 			}
 			return retVal;
 		}
 
-		public coreModel.SeoUrlKeyword UpsertSeoKeyword(coreModel.SeoUrlKeyword seoKeyword)
+		public coreModel.SeoInfo UpsertSeo(coreModel.SeoInfo seo)
 		{
-			if (seoKeyword == null)
-				throw new ArgumentNullException("seoKeyword");
+			if (seo == null)
+				throw new ArgumentNullException("seo");
 
-			coreModel.SeoUrlKeyword retVal = null;
+			coreModel.SeoInfo retVal = null;
 			using (var repository = _repositoryFactory())
 			{
-				var sourceEntry = seoKeyword.ToDataModel();
-				var targetEntry = repository.SeoUrlKeywords.FirstOrDefault(x => x.Id == seoKeyword.Id);
+				var sourceEntry = seo.ToDataModel();
+				var targetEntry = repository.SeoUrlKeywords.FirstOrDefault(x => x.Id == seo.Id);
 				if (targetEntry == null)
 				{
 					repository.Add(sourceEntry);
@@ -110,7 +105,7 @@ namespace VirtoCommerce.CoreModule.Data.Repositories
 			return retVal;
 		}
 
-		public void DeleteSeoKeywords(string[] ids)
+		public void DeleteSeo(string[] ids)
 		{
 			using (var repository = _repositoryFactory())
 			{
@@ -122,9 +117,9 @@ namespace VirtoCommerce.CoreModule.Data.Repositories
 		}
 
 
-		public IEnumerable<coreModel.SeoUrlKeyword> GetSeoKeywordsByKeyword(string keyword)
+		public IEnumerable<coreModel.SeoInfo> GetSeoByKeyword(string keyword)
 		{
-			var retVal = new List<coreModel.SeoUrlKeyword>();
+			var retVal = new List<coreModel.SeoInfo>();
 			using (var repository = _repositoryFactory())
 			{
 				retVal = repository.SeoUrlKeywords.Where(x => x.Keyword == keyword).ToArray()
@@ -134,5 +129,6 @@ namespace VirtoCommerce.CoreModule.Data.Repositories
 		}
 
 		#endregion
+
 	}
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using Microsoft.Practices.ObjectBuilder2;
+using VirtoCommerce.Domain.Commerce.Model;
 using VirtoCommerce.Domain.Store.Services;
 using VirtoCommerce.Platform.Core.Asset;
 using VirtoCommerce.Platform.Core.Common;
@@ -11,7 +12,6 @@ using VirtoCommerce.Platform.Core.Settings;
 using VirtoCommerce.StoreModule.Web.Model;
 using VirtoCommerce.StoreModule.Web.Model.Notifications;
 using PaymentMethod = VirtoCommerce.Domain.Payment.Model.PaymentMethod;
-using SeoInfo = VirtoCommerce.Domain.Store.Model.SeoInfo;
 using ShippingMethod = VirtoCommerce.Domain.Shipping.Model.ShippingMethod;
 using Store = VirtoCommerce.Domain.Store.Model.Store;
 

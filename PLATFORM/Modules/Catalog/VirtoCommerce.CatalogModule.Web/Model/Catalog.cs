@@ -21,6 +21,5 @@ namespace VirtoCommerce.CatalogModule.Web.Model
         }
         public List<CatalogLanguage> Languages { get; set; }
 		public List<Property> Properties { get; set; }
-		public List<SeoInfo> SeoInfos { get; set; }
     }
 }
