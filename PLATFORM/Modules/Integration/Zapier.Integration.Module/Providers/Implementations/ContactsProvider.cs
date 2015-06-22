@@ -20,7 +20,16 @@ namespace Zapier.IntegrationModule.Web.Providers.Implementations
 
         public IEnumerable<Contact> GetNewContacts()
         {
-            return _customerSearchService.Search(new SearchCriteria()).Contacts.OrderByDescending(c => c.CreatedDate);
+            if (_contactService is ICustomerSearchService)
+            {
+                return
+                    (_contactService as ICustomerSearchService).Search(new SearchCriteria())
+                        .Contacts.OrderByDescending(c => c.CreatedDate);
+            }
+            
+            return
+                _customerSearchService.Search(new SearchCriteria())
+                    .Contacts.OrderByDescending(c => c.CreatedDate);
         }
 
         public Contact NewContact(Contact newContact)

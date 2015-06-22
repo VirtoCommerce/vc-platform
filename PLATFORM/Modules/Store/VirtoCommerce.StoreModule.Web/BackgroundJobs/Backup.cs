@@ -10,13 +10,11 @@ using VirtoCommerce.Platform.Core.Asset;
 
 namespace VirtoCommerce.StoreModule.Web.BackgroundJobs
 {
-
-
     public class Backup
     {
         #region Classes
 
-        public abstract class BackupBaseEntry
+        abstract class BackupBaseEntry
         {
 
             private string[] _ignoreProperties;
@@ -26,29 +24,29 @@ namespace VirtoCommerce.StoreModule.Web.BackgroundJobs
                 set { _ignoreProperties = value ?? new string[0]; }
             }
 
-            public string FileName { get; set; }
+            public string EntryName { get; set; }
 
-            public abstract Type Type { get; }
+            public abstract Type BackupObjectType { get; }
         }
 
-        public class BackupEntry : BackupBaseEntry
+        class BackupEntry : BackupBaseEntry
         {
-            public object Obj { get; set; }
+            public object BackupObject { get; set; }
 
-            public override Type Type
+            public override Type BackupObjectType
             {
-                get { return Obj.GetType(); }
+                get { return BackupObject.GetType(); }
             }
 
         }
 
-        public class ExtractEntry : BackupBaseEntry
+        class ExtractEntry : BackupBaseEntry
         {
-            public string TypeName { get; set; }
+            public string BackupObjectTypeName { get; set; }
 
-            public override Type Type
+            public override Type BackupObjectType
             {
-                get { return Type.GetType(TypeName); }
+                get { return Type.GetType(BackupObjectTypeName); }
             }
         }
 
@@ -61,6 +59,7 @@ namespace VirtoCommerce.StoreModule.Web.BackgroundJobs
         private ZipArchive _zipArchive;
         private List<ExtractEntry> _extpactMap = new List<ExtractEntry>();
         private readonly List<BackupEntry> _backupEntries = new List<BackupEntry>();
+        private const string _mapEntryName = "map.xml";
 
         #endregion
 
@@ -74,26 +73,43 @@ namespace VirtoCommerce.StoreModule.Web.BackgroundJobs
 
         #endregion
 
-        #region Zip
+        #region To backup
 
-        public void Add(string fileName, object obj, string[] ignoreList = null)
+        /// <summary>
+        /// Add object to backup
+        /// </summary>
+        /// <param name="entryName">object backup name</param>
+        /// <param name="backupObject"></param>
+        /// <param name="ignoreList">Object property list to ignore for serialize process.</param>
+        public void AddEntry(string entryName, object backupObject, string[] ignoreList = null)
         {
-            if (obj == null)
+            if (backupObject == null)
             {
-                throw new Exception("obj argument is null. Can't create file from null object.");
+                throw new Exception("backupObject argument is null.");
             }
-            if (string.IsNullOrEmpty(fileName))
+            if (string.IsNullOrEmpty(entryName))
             {
-                throw new Exception("fileName argument is null or empty.");
+                throw new Exception("entryName argument is null or empty.");
             }
-            _backupEntries.Add(new BackupEntry { FileName = fileName, IgnoreProperties = ignoreList, Obj = obj });
+            _backupEntries.Add(new BackupEntry { EntryName = entryName, IgnoreProperties = ignoreList, BackupObject = backupObject });
         }
 
-        public string Save(string fileName, string folderName = "temp")
+        /// <summary>
+        /// Store backup.
+        /// </summary>
+        /// <param name="backupName"></param>
+        /// <param name="folderName"></param>
+        /// <returns></returns>
+        public string Save(string backupName, string folderName = "temp")
         {
-            if (string.IsNullOrEmpty(fileName))
+            if (string.IsNullOrEmpty(backupName))
             {
-                throw new Exception("fileName argument is null or empty.");
+                throw new Exception("backupName argument is null or empty.");
+            }
+
+            if (!_backupEntries.Any())
+            {
+                throw new Exception("Empty buckup.");
             }
 
             using (var outputMemoryStream = new MemoryStream())
@@ -106,15 +122,15 @@ namespace VirtoCommerce.StoreModule.Web.BackgroundJobs
 
                     foreach (var entry in _backupEntries)
                     {
-                        AddToZip(entry, zipStream);
+                        AddToBackup(entry, zipStream);
                     }
-                    AddMapToZip(zipStream);
+                    StoreBackupMap(zipStream);
                 }
 
                 outputMemoryStream.Position = 0;
                 var uploadInfo = new UploadStreamInfo
                 {
-                    FileName = string.Format("{0}.zip", fileName),
+                    FileName = string.Format("{0}.zip", backupName),
                     FileByteStream = outputMemoryStream,
                     FolderName = folderName
                 };
@@ -130,22 +146,22 @@ namespace VirtoCommerce.StoreModule.Web.BackgroundJobs
 
         #endregion
 
-        #region Unzip
+        #region From backup
 
         /// <summary>
         /// Open zip file before extract
         /// </summary>
         /// <param name="fileUrl"></param>
-        public void OpenZip(string fileUrl)
+        public void OpenBackup(string fileUrl)
         {
             _zipArchive = new ZipArchive(_blobStorageProvider.OpenReadOnly(fileUrl), ZipArchiveMode.Read, true);
-            LoadMap();
+            LoadBackupMap();
         }
 
         /// <summary>
         /// Close zip file after extact
         /// </summary>
-        public void CloseZip()
+        public void CloseBackup()
         {
             _zipArchive.Dispose();
             _extpactMap.Clear();
@@ -155,38 +171,38 @@ namespace VirtoCommerce.StoreModule.Web.BackgroundJobs
         /// Serialize xml file to object by given file name
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <param name="fileName"></param>
+        /// <param name="entryName"></param>
         /// <returns></returns>
-        public T LoadFromFile<T>(string fileName) where T : class
+        public T LoadObject<T>(string entryName) where T : class
         {
             ExtractEntry extractEntry = null;
 
             if (_extpactMap != null)
             {
-                extractEntry = _extpactMap.FirstOrDefault(x => x.FileName == fileName);
+                extractEntry = _extpactMap.FirstOrDefault(x => x.EntryName == entryName);
             }
 
             extractEntry = extractEntry
                 ?? new ExtractEntry
                 {
-                    FileName = fileName,
-                    TypeName = typeof(T).AssemblyQualifiedName
+                    EntryName = entryName,
+                    BackupObjectTypeName = typeof(T).AssemblyQualifiedName
                 };
 
-            return GetFromZip<T>(extractEntry);
+            return GetFromBackup<T>(extractEntry);
         }
 
         /// <summary>
         ///  Serialize xml files to objects by given file name mask 
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <param name="fileName"></param>
+        /// <param name="entryMask"></param>
         /// <returns></returns>
-        public IEnumerable<T> LoadFromFiles<T>(string fileName) where T : class
+        public IEnumerable<T> LoadObjectsByMask<T>(string entryMask) where T : class
         {
             return _extpactMap
-                .Where(x => x.FileName.StartsWith(fileName, StringComparison.InvariantCultureIgnoreCase))
-                .Select(o => LoadFromFile<T>(o.FileName))
+                .Where(x => x.EntryName.StartsWith(entryMask, StringComparison.InvariantCultureIgnoreCase))
+                .Select(o => LoadObject<T>(o.EntryName))
                 .ToList();
         }
 
@@ -194,38 +210,49 @@ namespace VirtoCommerce.StoreModule.Web.BackgroundJobs
 
         #region Private methods
         
-        private void AddToZip(BackupEntry backupEntry, ZipOutputStream zipStream)
+        /// <summary>
+        /// Serialize object and add one to backup
+        /// </summary>
+        /// <param name="backupEntry"></param>
+        /// <param name="zipStream"></param>
+        private void AddToBackup(BackupEntry backupEntry, ZipOutputStream zipStream)
         {
             // Serialize BackupEntry
             using (var memoryStream = new MemoryStream())
             {
                 using (var streamWriter = new StreamWriter(memoryStream) { AutoFlush = true })
                 {
-                    var type = backupEntry.Obj.GetType();
+                    var type = backupEntry.BackupObject.GetType();
 
                     // Prepare ignored properties 
                     var xmlOver = GetIgnoreProperties(backupEntry);
                     var serializer = new XmlSerializer(type, xmlOver);
-                    serializer.Serialize(streamWriter, backupEntry.Obj);
+                    serializer.Serialize(streamWriter, backupEntry.BackupObject);
 
                     //Add result to zip
                     memoryStream.Position = 0;
-                    var newEntry = new ZipEntry(backupEntry.FileName) { DateTime = DateTime.Now };
+                    var newEntry = new ZipEntry(backupEntry.EntryName) { DateTime = DateTime.Now };
                     zipStream.PutNextEntry(newEntry);
                     StreamUtils.Copy(memoryStream, zipStream, new byte[4096]);
                     zipStream.CloseEntry();
-                    _extpactMap.Add(new ExtractEntry { TypeName = type.AssemblyQualifiedName, IgnoreProperties = backupEntry.IgnoreProperties, FileName = backupEntry.FileName });
+                    _extpactMap.Add(new ExtractEntry { BackupObjectTypeName = type.AssemblyQualifiedName, IgnoreProperties = backupEntry.IgnoreProperties, EntryName = backupEntry.EntryName });
                 }
             }
         }
 
-        private T GetFromZip<T>(ExtractEntry objectDefinition) where T : class
+        /// <summary>
+        /// Get object from backup and deserialize one.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="objectDefinition"></param>
+        /// <returns></returns>
+        private T GetFromBackup<T>(ExtractEntry objectDefinition) where T : class
         {
-            var entry = _zipArchive.Entries.FirstOrDefault(x => x.Name.Equals(objectDefinition.FileName, StringComparison.InvariantCultureIgnoreCase));
+            var entry = _zipArchive.Entries.FirstOrDefault(x => x.Name.Equals(objectDefinition.EntryName, StringComparison.InvariantCultureIgnoreCase));
 
             using (var reader = entry.Open())
             {
-                var type = objectDefinition.Type;
+                var type = objectDefinition.BackupObjectType;
 
                 // Prepare ignored properties 
                 var xmlOver = GetIgnoreProperties(objectDefinition);
@@ -236,21 +263,36 @@ namespace VirtoCommerce.StoreModule.Web.BackgroundJobs
             }
         }
 
-        private void AddMapToZip(ZipOutputStream zipStream)
+        /// <summary>
+        /// Store backup map
+        /// BackupMap conteins all stored object name and their types of the backup.
+        /// </summary>
+        /// <param name="zipStream"></param>
+        private void StoreBackupMap(ZipOutputStream zipStream)
         {
-            AddToZip(new BackupEntry { FileName = "map.xml", Obj = _extpactMap.ToArray() }, zipStream);
+            AddToBackup(new BackupEntry { EntryName = _mapEntryName, BackupObject = _extpactMap.ToArray() }, zipStream);
         }
  
-        private void LoadMap()
+        /// <summary>
+        /// Load backup map
+        /// BackupMap conteins all stored object name and their types of the backup.
+        /// </summary>
+        private void LoadBackupMap()
         {
             var objectDefinition = new ExtractEntry
             {
-                FileName = "map.xml",
-                TypeName = typeof(ExtractEntry[]).AssemblyQualifiedName
+                EntryName = _mapEntryName,
+                BackupObjectTypeName = typeof(ExtractEntry[]).AssemblyQualifiedName
             };
-            _extpactMap = GetFromZip<ExtractEntry[]>(objectDefinition).ToList();
+            _extpactMap = GetFromBackup<ExtractEntry[]>(objectDefinition).ToList();
         }
 
+        /// <summary>
+        /// Complete fields list to ignore for serialize process.
+        /// Extend given Ignore list with collection properties.
+        /// </summary>
+        /// <param name="entry"></param>
+        /// <returns></returns>
         private XmlAttributeOverrides GetIgnoreProperties(BackupBaseEntry entry)
         {
             var xmlOver = new XmlAttributeOverrides();
@@ -258,7 +300,7 @@ namespace VirtoCommerce.StoreModule.Web.BackgroundJobs
 
             var newIgnorePropertyNames = new List<string>(entry.IgnoreProperties);
 
-            var properties = entry.Type.GetProperties();
+            var properties = entry.BackupObjectType.GetProperties();
 
             // Create XmlAttributeOverrides by given IgnoreProperties and ICollection properties
             foreach (var propertyInfo in properties)

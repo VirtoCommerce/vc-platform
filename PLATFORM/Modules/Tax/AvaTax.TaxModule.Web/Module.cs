@@ -17,6 +17,7 @@ namespace AvaTax.TaxModule.Web
         private const string _passwordPropertyName = "Avalara.Tax.Credentials.LicenseKey";
         private const string _serviceUrlPropertyName = "Avalara.Tax.Credentials.ServiceUrl";
         private const string _companyCodePropertyName = "Avalara.Tax.Credentials.CompanyCode";
+        private const string _isEnabledPropertyName = "Avalara.Tax.IsEnabled";
 
         private readonly IUnityContainer _container;
 
@@ -30,18 +31,15 @@ namespace AvaTax.TaxModule.Web
         public override void Initialize()
         {
             var settingsManager = _container.Resolve<ISettingsManager>();
-
-            var avalaraUsername = settingsManager.GetValue(_usernamePropertyName, string.Empty);
-            var avalaraPassword = settingsManager.GetValue(_passwordPropertyName, string.Empty);
-            var avalaraServiceUrl = settingsManager.GetValue(_serviceUrlPropertyName, string.Empty);
-            var avalaraCompanyCode = settingsManager.GetValue(_companyCodePropertyName, string.Empty);
-
+            
             var avalaraCode = settingsManager.GetValue("Avalara.Tax.Code", string.Empty);
             var avalaraDescription = settingsManager.GetValue("Avalara.Tax.Description", string.Empty);
             var avalaraLogoUrl = settingsManager.GetValue("Avalara.Tax.LogoUrl", string.Empty);
 
+            var settings = _container.Resolve<ISettingsManager>().GetModuleSettings("Avalara.Tax");
 
-            var avalaraTax = new AvaTaxImpl(avalaraUsername, avalaraPassword, avalaraServiceUrl, avalaraCompanyCode, avalaraCode, avalaraDescription, avalaraLogoUrl);
+
+            var avalaraTax = new AvaTaxImpl(_usernamePropertyName, _passwordPropertyName, _serviceUrlPropertyName, _companyCodePropertyName, _isEnabledPropertyName, avalaraCode, avalaraDescription, avalaraLogoUrl, settings);
 
             #region Avalara manager
             _container.RegisterInstance<ITaxManager>(new InMemoryTaxManagerImpl());

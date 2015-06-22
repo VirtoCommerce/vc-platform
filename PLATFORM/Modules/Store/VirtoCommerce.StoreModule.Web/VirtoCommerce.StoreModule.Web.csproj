@@ -176,7 +176,6 @@
     <Compile Include="Controllers\Api\StoreModuleController.cs" />
     <Compile Include="Controllers\PredefinedPermissions.cs" />
     <Compile Include="Converters\FulfillmentConverter.cs" />
-    <Compile Include="Converters\SeoInfoConverter.cs" />
     <Compile Include="Converters\PaymentMethodConverter.cs" />
     <Compile Include="Converters\ShippingMethodConverter.cs" />
     <Compile Include="Converters\StoreConverter.cs" />
@@ -187,7 +186,6 @@
     <Compile Include="Model\Notifications\ExportNotification.cs" />
     <Compile Include="Model\Notifications\ImportNotification.cs" />
     <Compile Include="Model\Notifications\JobNotificationBase.cs" />
-    <Compile Include="Model\SeoInfo.cs" />
     <Compile Include="Model\PaymentMethod.cs" />
     <Compile Include="Model\ShippingMethod.cs" />
     <Compile Include="Model\Store.cs" />

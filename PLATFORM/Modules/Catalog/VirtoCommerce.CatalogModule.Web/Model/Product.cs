@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using VirtoCommerce.Domain.Commerce.Model;
 
 namespace VirtoCommerce.CatalogModule.Web.Model
 {
@@ -68,13 +69,13 @@ namespace VirtoCommerce.CatalogModule.Web.Model
 			}
 		}
 
-        public List<Property> Properties { get; set; }
-        public List<ProductImage> Images { get; set; }
-		public List<ProductAsset> Assets { get; set; }
-        public List<Product> Variations { get; set; }
-        public List<CategoryLink> Links { get; set; }
-		public List<SeoInfo> SeoInfos { get; set; }
-		public List<EditorialReview> Reviews { get; set; }
-		public List<ProductAssociation> Associations { get; set; }
+		public ICollection<Property> Properties { get; set; }
+		public ICollection<ProductImage> Images { get; set; }
+		public ICollection<ProductAsset> Assets { get; set; }
+		public ICollection<Product> Variations { get; set; }
+		public ICollection<CategoryLink> Links { get; set; }
+		public ICollection<SeoInfo> SeoInfos { get; set; }
+		public ICollection<EditorialReview> Reviews { get; set; }
+		public ICollection<ProductAssociation> Associations { get; set; }
     }
 }

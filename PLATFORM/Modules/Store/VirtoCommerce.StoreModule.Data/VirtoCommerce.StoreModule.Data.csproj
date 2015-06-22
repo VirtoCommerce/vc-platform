@@ -54,7 +54,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Converters\SeoInfoConverter.cs" />
     <Compile Include="Converters\SorePaymentMethodConverter.cs" />
     <Compile Include="Converters\SoreShippingMethodConverter.cs" />
     <Compile Include="Converters\StoreConverter.cs" />

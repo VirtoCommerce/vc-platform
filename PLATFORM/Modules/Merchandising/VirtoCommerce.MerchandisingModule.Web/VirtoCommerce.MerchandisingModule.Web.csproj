@@ -108,7 +108,6 @@
     <Compile Include="Converters\CategoryConverter.cs" />
     <Compile Include="Converters\ContentItemConverter.cs" />
     <Compile Include="Converters\FacetConverters.cs" />
-    <Compile Include="Converters\KeywordConverter.cs" />
     <Compile Include="Converters\PriceConverter.cs" />
     <Compile Include="Converters\ProductConverter.cs" />
     <Compile Include="Converters\PromotionConverter.cs" />

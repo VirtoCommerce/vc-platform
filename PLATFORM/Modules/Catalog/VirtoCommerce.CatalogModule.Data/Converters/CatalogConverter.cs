@@ -22,7 +22,7 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
         /// </summary>
         /// <param name="catalogBase"></param>
         /// <returns></returns>
-        public static coreModel.Catalog ToCoreModel(this dataModel.CatalogBase catalogBase, coreModel.Property[] properties = null, SeoUrlKeyword[] seoInfos = null)
+        public static coreModel.Catalog ToCoreModel(this dataModel.CatalogBase catalogBase, coreModel.Property[] properties = null)
         {
             if (catalogBase == null)
                 throw new ArgumentNullException("catalogBase");
@@ -58,11 +58,7 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
                 retVal.Languages.Add(catalogLanguage);
             }
 
-			if (seoInfos != null)
-			{
-				retVal.SeoInfos = seoInfos.Select(x => x.ToCoreModel()).ToList();
-			}
-
+	
             return retVal;
         }
 

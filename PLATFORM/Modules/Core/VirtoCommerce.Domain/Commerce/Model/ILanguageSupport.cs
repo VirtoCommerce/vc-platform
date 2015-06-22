@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace VirtoCommerce.Domain.Catalog.Model
+namespace VirtoCommerce.Domain.Commerce.Model
 {
-	public interface ISeoSupport
+	public interface ILanguageSupport
 	{
-		ICollection<SeoInfo> SeoInfos { get; set; }
+		string LanguageCode { get; set; }
 	}
 }

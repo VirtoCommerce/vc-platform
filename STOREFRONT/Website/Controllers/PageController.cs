@@ -1,5 +1,6 @@
 ﻿#region
 
+using System;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
@@ -29,6 +30,12 @@ namespace VirtoCommerce.Web.Controllers
             Context.Set("page", model);
 
             return View(model.Layout ?? "page");
+        }
+
+        public async Task<ActionResult> DisplayPageAsset(string asset)
+        {
+            var virtualPath = String.Format("~/App_Data/Pages/{0}/{1}/{2}", Context.StoreId, Context.Language, asset);
+            return new DownloadResult(virtualPath);
         }
         #endregion
     }

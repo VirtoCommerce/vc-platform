@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using VirtoCommerce.Domain.Commerce.Model;
 using VirtoCommerce.Domain.Common;
 using VirtoCommerce.Platform.Core.Common;
 

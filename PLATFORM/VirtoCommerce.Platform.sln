@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.31101.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.Platform.Web", "VirtoCommerce.Platform.Web\VirtoCommerce.Platform.Web.csproj", "{B53BA685-B324-42E6-80AD-7B641DD414E7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.Platform.Data", "VirtoCommerce.Platform.Data\VirtoCommerce.Platform.Data.csproj", "{39AFD233-B2F7-4178-817D-0A339C57525D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.Platform.Core", "VirtoCommerce.Platform.Core\VirtoCommerce.Platform.Core.csproj", "{F7C9313B-522E-4619-ABC9-8C7D4600D6B5}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B53BA685-B324-42E6-80AD-7B641DD414E7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B53BA685-B324-42E6-80AD-7B641DD414E7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B53BA685-B324-42E6-80AD-7B641DD414E7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B53BA685-B324-42E6-80AD-7B641DD414E7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{39AFD233-B2F7-4178-817D-0A339C57525D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{39AFD233-B2F7-4178-817D-0A339C57525D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{39AFD233-B2F7-4178-817D-0A339C57525D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{39AFD233-B2F7-4178-817D-0A339C57525D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F7C9313B-522E-4619-ABC9-8C7D4600D6B5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F7C9313B-522E-4619-ABC9-8C7D4600D6B5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F7C9313B-522E-4619-ABC9-8C7D4600D6B5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F7C9313B-522E-4619-ABC9-8C7D4600D6B5}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

@@ -71,7 +71,6 @@
     <Compile Include="Converters\PropertyConverter.cs" />
     <Compile Include="Converters\PropertyDictionaryValueConverter.cs" />
     <Compile Include="Converters\PropertyValueConverter.cs" />
-    <Compile Include="Converters\SeoInfoConverter.cs" />
     <Compile Include="Migrations\201504301302574_Initial.cs" />
     <Compile Include="Migrations\201504301302574_Initial.Designer.cs">
       <DependentUpon>201504301302574_Initial.cs</DependentUpon>

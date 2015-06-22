@@ -10,6 +10,7 @@ using VirtoCommerce.Platform.Core.Security;
 using webModel = VirtoCommerce.CatalogModule.Web.Model;
 using coreModel = VirtoCommerce.Domain.Catalog.Model;
 using VirtoCommerce.Platform.Core.Common;
+using VirtoCommerce.Domain.Commerce.Model;
 
 namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 {
@@ -61,7 +62,7 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
                 CatalogId = catalogId,
                 Catalog = _catalogService.GetById(catalogId).ToWebModel(),
                 Code = Guid.NewGuid().ToString().Substring(0, 5),
-                SeoInfos = new List<webModel.SeoInfo>()
+                SeoInfos = new List<SeoInfo>()
             };
 
             return Ok(retVal);
@@ -84,7 +85,7 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 					{
 						var catalog = _catalogService.GetById(category.CatalogId);
 						var defaultLanguage = catalog.Languages.First(x => x.IsDefault).LanguageCode;
-						coreCategory.SeoInfos = new coreModel.SeoInfo[] { new coreModel.SeoInfo { LanguageCode = defaultLanguage, SemanticUrl = slugUrl } };
+						coreCategory.SeoInfos = new SeoInfo[] { new SeoInfo { LanguageCode = defaultLanguage, SemanticUrl = slugUrl } };
 					}
 				}
 

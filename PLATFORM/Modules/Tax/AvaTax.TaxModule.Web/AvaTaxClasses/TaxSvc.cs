@@ -1,4 +1,6 @@
-﻿namespace AvaTaxCalcREST
+﻿using System.Globalization;
+
+namespace AvaTaxCalcREST
 {
     using System;
     using System.IO;
@@ -62,7 +64,7 @@
         public GeoTaxResult EstimateTax(decimal latitude, decimal longitude, decimal saleAmount)
         {
             // Call the service
-            Uri address = new Uri(svcURL + "tax/" + latitude + "," + longitude + "/get.xml?saleamount=" + saleAmount);
+            Uri address = new Uri(svcURL + "tax/" + latitude.ToString(CultureInfo.InvariantCulture).Replace(',', '.') + "," + longitude.ToString(CultureInfo.InvariantCulture).Replace(',', '.') + "/get.xml?saleamount=" + saleAmount);
             HttpWebRequest request = WebRequest.Create(address) as HttpWebRequest;
             request.Headers.Add(HttpRequestHeader.Authorization, "Basic " + Convert.ToBase64String(ASCIIEncoding.ASCII.GetBytes(accountNum + ":" + license)));
             request.Method = "GET";

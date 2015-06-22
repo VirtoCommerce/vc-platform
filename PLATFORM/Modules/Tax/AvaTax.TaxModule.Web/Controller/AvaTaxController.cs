@@ -59,6 +59,26 @@ namespace AvaTax.TaxModule.Web.Controller
             return Ok(order);
         }
 
+        [HttpGet]
+        [ResponseType(typeof(void))]
+        [Route("ping")]
+        public IHttpActionResult TestConnection()
+        {
+            if (!string.IsNullOrEmpty(_taxSettings.Username) && !string.IsNullOrEmpty(_taxSettings.Password)
+                && !string.IsNullOrEmpty(_taxSettings.ServiceUrl)
+                && !string.IsNullOrEmpty(_taxSettings.CompanyCode))
+            {
+                var taxSvc = new TaxSvc(_taxSettings.Username, _taxSettings.Password, _taxSettings.ServiceUrl);
+                var retVal = taxSvc.Ping();
+                if (retVal.ResultCode.Equals(SeverityLevel.Success))
+                    return Ok(retVal);
+
+                return BadRequest(string.Join(", ", retVal.Messages.Select(m => m.Details)));
+            }
+            
+            return BadRequest("AvaTax credentials not provided");
+        }
+
         [HttpPost]
         [ResponseType(typeof(ShoppingCart))]
         [Route("cart")]

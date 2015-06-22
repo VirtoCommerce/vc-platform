@@ -47,10 +47,10 @@ namespace VirtoCommerce.CatalogModule.Data.Services
 			{
 				var dbItems = repository.GetItemByIds(itemIds, respGroup);
 
-				SeoUrlKeyword[] seoInfos = null;
+				SeoInfo[] seoInfos = null;
 				if ((respGroup & coreModel.ItemResponseGroup.Seo) == coreModel.ItemResponseGroup.Seo)
 				{
-					seoInfos = _commerceService.GetSeoKeywordsForEntities(dbItems.Select(x=>x.Id).ToArray()).ToArray();
+					seoInfos = _commerceService.GetObjectsSeo(dbItems.Select(x=>x.Id).ToArray()).ToArray();
 				}
 
 				var categoriesIds = dbItems.SelectMany(x => x.CategoryItemRelations).Select(x => x.CategoryId).Distinct().ToArray();
@@ -79,8 +79,10 @@ namespace VirtoCommerce.CatalogModule.Data.Services
 						var dbCategory = dbCategories.FirstOrDefault(x => x.Id == itemCategoryId);
 						category = dbCategory.ToCoreModel(catalog);
 					}
-					var itemSeoInfos = seoInfos != null ? seoInfos.Where(x => x.KeywordValue == dbItem.Id).ToArray() : null;
-					retVal.Add(dbItem.ToCoreModel(catalog: catalog, category: category, seoInfos: itemSeoInfos, associatedProducts: associatedProducts.ToArray()));
+					
+					var item = dbItem.ToCoreModel(catalog: catalog, category: category, associatedProducts: associatedProducts.ToArray());
+					item.SeoInfos = seoInfos != null ? seoInfos.Where(x => x.ObjectId == dbItem.Id).ToList() : null;
+					retVal.Add(item);
 				}
 			}
 
@@ -114,8 +116,9 @@ namespace VirtoCommerce.CatalogModule.Data.Services
 			{
 				foreach (var seoInfo in item.SeoInfos)
 				{
-					var dbSeoInfo = seoInfo.ToCoreModel(dbItem);
-					_commerceService.UpsertSeoKeyword(dbSeoInfo);
+					seoInfo.ObjectId = dbItem.Id;
+					seoInfo.ObjectType = typeof(coreModel.CatalogProduct).Name;
+					_commerceService.UpsertSeo(seoInfo);
 				}
 			}
 
@@ -146,11 +149,14 @@ namespace VirtoCommerce.CatalogModule.Data.Services
 					//Patch seoInfo
 					if (item.SeoInfos != null)
 					{
-						var dbSeoInfos = new ObservableCollection<SeoUrlKeyword>(_commerceService.GetSeoKeywordsForEntity(item.Id));
-						var changedSeoInfos = item.SeoInfos.Select(x => x.ToCoreModel(dbItem)).ToList();
-						dbSeoInfos.ObserveCollection(x => _commerceService.UpsertSeoKeyword(x), x => _commerceService.DeleteSeoKeywords(new string[] { x.Id }));
-
-						changedSeoInfos.Patch(dbSeoInfos, (source, target) => _commerceService.UpsertSeoKeyword(source));
+						foreach (var seoInfo in item.SeoInfos)
+						{
+							seoInfo.ObjectId = item.Id;
+							seoInfo.ObjectType = typeof(coreModel.CatalogProduct).Name;
+						}
+						var seoInfos = new ObservableCollection<SeoInfo>(_commerceService.GetObjectsSeo(new string[] { item.Id }));
+						seoInfos.ObserveCollection(x => _commerceService.UpsertSeo(x), x => _commerceService.DeleteSeo(new string[] { x.Id }));
+						item.SeoInfos.Patch(seoInfos, (source, target) => _commerceService.UpsertSeo(source));
 					}
 				}
 				CommitChanges(repository);
