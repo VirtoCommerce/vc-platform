@@ -138,7 +138,7 @@ namespace VirtoCommerce.CatalogModule.Web.BackgroundJobs
 			notification.ProcessedCount = 0;
 			var cachedCategoryMap = new Dictionary<string, Category>();
 	
-			foreach (var csvProduct in csvProducts)
+			foreach (var csvProduct in csvProducts.Where(x=>x.Category != null && !String.IsNullOrEmpty(x.Category.Path)))
 			{
 				var outline = "";
 				var productCategoryNames = csvProduct.Category.Path.Split(_categoryDelimiters);
