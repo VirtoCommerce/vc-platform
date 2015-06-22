@@ -3,10 +3,18 @@
 	var blade = $scope.blade;
 	blade.isLoading = false;
 	blade.title = 'Importing store';
+	$scope.blade.headIcon = 'fa fa-file-archive-o';
 
 	$scope.$on("new-notification-event", function (event, notification) {
 		if (blade.notification && notification.id == blade.notification.id) {
-			angular.copy(notification, blade.notification);
+		    angular.copy(notification, blade.notification);
+
+		    if (notification.finished) {
+		        blade.isLoading = false;
+		        if (notification.errorCount == 0) {
+		            blade.parentBlade.refresh();
+		        }
+		    }
 		}
 	});
 
@@ -14,15 +22,9 @@
 	    blade.isLoading = true;
 	    importResource.run(
             { FileUrl: $scope.blade.fileUrl, NewStoreId: $scope.blade.newStoreId, NewStoreName: $scope.blade.newStoreName },
-            function (data) { blade.isLoading = false; blade.notification = data; blade.parentBlade.refresh(); },
-            function (error) { blade.isLoading = false; bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
+            function (data) { blade.notification = data; },
+            function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
 	}
-
-	$scope.setForm = function (form) {
-		$scope.formScope = form;
-	}
-
-	$scope.blade.headIcon = 'fa fa-file-archive-o';
 
     //Upload
 	if (!$scope.uploader) {

@@ -3,10 +3,14 @@
     var blade = $scope.blade;
     blade.isLoading = false;
     blade.title = 'Export' + (blade.store ? blade.store.name : '');
+    $scope.blade.headIcon = 'fa fa-file-archive-o';
 
     $scope.$on("new-notification-event", function (event, notification) {
         if (blade.notification && notification.id == blade.notification.id) {
             angular.copy(notification, blade.notification);
+            if (notification.finished) {
+                blade.isLoading = false;
+            }
         }
     });
 
@@ -14,13 +18,8 @@
         blade.isLoading = true;
         exportResource.run(
             { storeId: blade.store.id },
-            function (data) { blade.isLoading = false; blade.notification = data; },
-            function (error) { blade.isLoading = false; bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
+            function (data) { blade.notification = data; },
+            function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
     }
 
-    $scope.setForm = function (form) {
-        $scope.formScope = form;
-    }
-
-    $scope.blade.headIcon = 'fa fa-file-archive-o';
 }]);

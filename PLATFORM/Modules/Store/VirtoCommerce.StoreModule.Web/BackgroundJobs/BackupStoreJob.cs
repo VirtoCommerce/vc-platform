@@ -162,7 +162,7 @@ namespace VirtoCommerce.StoreModule.Web.BackgroundJobs
                     var storeSettings = settings.Where(x => x.ObjectId == store.Id).ToArray();
                     
                     // Clear ids of collections to prevent dublicate ids 
-                    //todo check payment and shipping modules
+                    //todo check exists or not added payment and shipping modules
                     if (store.PaymentMethods != null)
                     {
                         store.PaymentMethods.ForEach(x => x.Id = null);
