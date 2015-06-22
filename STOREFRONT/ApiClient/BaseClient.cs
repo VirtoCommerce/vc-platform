@@ -245,8 +245,8 @@ namespace VirtoCommerce.ApiClient
                     DefaultValueHandling =
                         DefaultValueHandling.Ignore,
                     NullValueHandling =
-                        NullValueHandling.Ignore,
-                    TraceWriter = new DiagnosticsTraceWriter()
+                        NullValueHandling.Ignore//,
+                    //TraceWriter = new DiagnosticsTraceWriter()
                 }
             };
 
