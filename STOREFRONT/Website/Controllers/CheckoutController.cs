@@ -234,21 +234,33 @@ namespace VirtoCommerce.Web.Controllers
 
                     if (inPayment != null)
                     {
-                        string cardType = GetCreditCardType(formModel.CardNumber);
+                        VirtoCommerce.ApiClient.DataContracts.ProcessPaymentResult paymentResult = null;
 
-                        if (!String.IsNullOrEmpty(cardType))
+                        if (checkout.PaymentMethod.Type.Equals("Standard"))
                         {
-                            var cardInfo = new ApiClient.DataContracts.BankCardInfo
+                            string cardType = GetCreditCardType(formModel.CardNumber);
+
+                            if (!String.IsNullOrEmpty(cardType))
                             {
-                                BankCardCVV2 = formModel.CardCvv,
-                                BankCardMonth = int.Parse(formModel.CardExpirationMonth),
-                                BankCardNumber = formModel.CardNumber,
-                                BankCardType = cardType,
-                                BankCardYear = int.Parse(formModel.CardExpirationYear)
-                            };
+                                var cardInfo = new ApiClient.DataContracts.BankCardInfo
+                                {
+                                    BankCardCVV2 = formModel.CardCvv,
+                                    BankCardMonth = int.Parse(formModel.CardExpirationMonth),
+                                    BankCardNumber = formModel.CardNumber,
+                                    BankCardType = cardType,
+                                    BankCardYear = int.Parse(formModel.CardExpirationYear)
+                                };
 
-                            var paymentResult = await Service.ProcessPaymentAsync(dtoOrder.Id, inPayment.Id, cardInfo);
+                                paymentResult = await Service.ProcessPaymentAsync(dtoOrder.Id, inPayment.Id, cardInfo);
+                            }
+                        }
+                        else
+                        {
+                            paymentResult = await Service.ProcessPaymentAsync(dtoOrder.Id, inPayment.Id, null);
+                        }
 
+                        if (paymentResult != null)
+                        {
                             if (paymentResult != null)
                             {
                                 if (paymentResult.IsSuccess)
