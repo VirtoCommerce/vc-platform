@@ -10,13 +10,11 @@ using VirtoCommerce.Platform.Core.Asset;
 
 namespace VirtoCommerce.StoreModule.Web.BackgroundJobs
 {
-
-
     public class Backup
     {
         #region Classes
 
-        public abstract class BackupBaseEntry
+        abstract class BackupBaseEntry
         {
 
             private string[] _ignoreProperties;
@@ -31,7 +29,7 @@ namespace VirtoCommerce.StoreModule.Web.BackgroundJobs
             public abstract Type Type { get; }
         }
 
-        public class BackupEntry : BackupBaseEntry
+        class BackupEntry : BackupBaseEntry
         {
             public object Obj { get; set; }
 
@@ -42,7 +40,7 @@ namespace VirtoCommerce.StoreModule.Web.BackgroundJobs
 
         }
 
-        public class ExtractEntry : BackupBaseEntry
+        class ExtractEntry : BackupBaseEntry
         {
             public string TypeName { get; set; }
 

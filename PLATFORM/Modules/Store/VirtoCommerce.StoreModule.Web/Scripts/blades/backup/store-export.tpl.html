@@ -5,7 +5,6 @@
                 <div class="block">
                     <div class="form clearfix" ng-if="!blade.notification">
                         <div class="form-group">
-
                             <p ng-class="{'no-data': blade.notification.description}" ng-if="!blade.notification" class="text">
                                 Store information will export to file, download url will be available after the export will be finished.
                             </p>
@@ -31,4 +30,9 @@
             </div>
         </div>
     </div>
+</div>
+<div class="blade-static __bottom" ng-if="blade.notification.finished">
+    <button class="btn" ng-click="bladeClose();">
+        <span>Close</span>
+    </button>
 </div>
