@@ -71,6 +71,7 @@
     <Compile Include="Catalog\Model\Category.cs" />
     <Compile Include="Catalog\Model\CategoryLink.cs" />
     <Compile Include="Catalog\Model\EditorialReview.cs" />
+    <Compile Include="Catalog\Model\PropertyDisplayName.cs" />
     <Compile Include="Commerce\Model\ILanguageSupport.cs" />
     <Compile Include="Catalog\Model\ILinkSupport.cs" />
     <Compile Include="Commerce\Model\ISeoSupport.cs" />
@@ -81,7 +82,6 @@
     <Compile Include="Catalog\Model\Property.cs" />
     <Compile Include="Catalog\Model\PropertyAttribute.cs" />
     <Compile Include="Catalog\Model\PropertyDictionaryValue.cs" />
-    <Compile Include="Catalog\Model\PropertyDisplayName.cs" />
     <Compile Include="Catalog\Model\PropertyType.cs" />
     <Compile Include="Catalog\Model\PropertyValue.cs" />
     <Compile Include="Catalog\Model\PropertyValueType.cs" />
