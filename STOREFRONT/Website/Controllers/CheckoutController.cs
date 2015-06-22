@@ -454,14 +454,7 @@ namespace VirtoCommerce.Web.Controllers
         {
             string type = GetCreditCardType(cardNumber);
 
-            if (type != null)
-            {
-                return Json(type, JsonRequestBehavior.AllowGet);
-            }
-            else
-            {
-                return Json(false, JsonRequestBehavior.AllowGet);
-            }
+            return Json(type != null, JsonRequestBehavior.AllowGet);
         }
 
         private CultureInfo GetCultureInfoByCurrencyCode(string currencyCode)
