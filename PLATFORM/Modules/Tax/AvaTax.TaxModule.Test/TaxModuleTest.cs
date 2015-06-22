@@ -7,6 +7,7 @@ using AvaTax.TaxModule.Web.Managers;
 using VirtoCommerce.Domain.Cart.Model;
 using VirtoCommerce.Domain.Order.Model;
 using VirtoCommerce.Platform.Core.Common;
+using VirtoCommerce.Platform.Core.Settings;
 using Xunit;
 
 using Address = VirtoCommerce.Domain.Order.Model.Address;
@@ -315,13 +316,48 @@ namespace AvaTax.TaxModule.Test
             var avalaraPassword = "AE5F97FA88A8D87D";
             var avalaraServiceUrl = "https://development.avalara.net";
             var avalaraCompanyCode = "APITrialCompany";
+            
 
             var avalaraCode = "";
             var avalaraDescription = "";
             var avalaraLogoUrl = "";
 
+            const string _usernamePropertyName = "Avalara.Tax.Credentials.AccountNumber";
+            const string _passwordPropertyName = "Avalara.Tax.Credentials.LicenseKey";
+            const string _serviceUrlPropertyName = "Avalara.Tax.Credentials.ServiceUrl";
+            const string _companyCodePropertyName = "Avalara.Tax.Credentials.CompanyCode";
+            const string _isEnabledPropertyName = "Avalara.Tax.IsEnabled";
 
-            var avalaraTax = new AvaTaxImpl(avalaraUsername, avalaraPassword, avalaraServiceUrl, avalaraCompanyCode, avalaraCode, avalaraDescription, avalaraLogoUrl);
+            var settings = new List<SettingEntry>
+            {
+                new SettingEntry
+                {
+                    Value = avalaraUsername,
+                    Name = _usernamePropertyName,
+                    ValueType = SettingValueType.ShortText
+                },
+                new SettingEntry
+                {
+                    Value = avalaraPassword,
+                    Name = _passwordPropertyName,
+                    ValueType = SettingValueType.ShortText
+                },
+                new SettingEntry
+                {
+                    Value = avalaraServiceUrl,
+                    Name = _serviceUrlPropertyName,
+                    ValueType = SettingValueType.ShortText
+                },
+                new SettingEntry
+                {
+                    Value = avalaraCompanyCode,
+                    Name = _companyCodePropertyName,
+                    ValueType = SettingValueType.ShortText
+                },
+                new SettingEntry { Value = "True", Name = _isEnabledPropertyName, ValueType = SettingValueType.Boolean }
+            };
+
+            var avalaraTax = new AvaTaxImpl(_usernamePropertyName, _passwordPropertyName, _serviceUrlPropertyName, _companyCodePropertyName, _isEnabledPropertyName, avalaraCode, avalaraDescription, avalaraLogoUrl, settings);
 
             var controller = new AvaTaxController(avalaraTax);
             return controller;

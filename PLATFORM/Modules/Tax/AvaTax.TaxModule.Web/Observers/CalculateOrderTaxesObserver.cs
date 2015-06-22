@@ -31,7 +31,8 @@ namespace AvaTax.TaxModule.Web.Observers
 
 		public void OnNext(OrderChangeEvent value)
 		{
-			CalculateCustomerOrderTaxes(value);
+            if (_taxSettings.IsEnabled)
+			    CalculateCustomerOrderTaxes(value);
 		}
 
 		#endregion

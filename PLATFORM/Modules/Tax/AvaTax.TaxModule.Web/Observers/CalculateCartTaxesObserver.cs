@@ -29,6 +29,7 @@ namespace AvaTax.TaxModule.Web.Observers
 
 		public void OnNext(CartChangeEvent value)
 		{
+            if (_taxSettings.IsEnabled)
 			CalculateCustomerOrderTaxes(value);
 		}
 

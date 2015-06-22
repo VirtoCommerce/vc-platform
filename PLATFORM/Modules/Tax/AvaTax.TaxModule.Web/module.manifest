@@ -26,9 +26,9 @@
   <!--<styles>
 		<directory virtualPath="$/Content/css" searchPattern="*.css" searchSubdirectories="true" />
 	</styles>-->
-  <!--<scripts>
+  <scripts>
     <directory virtualPath="$/Scripts" searchPattern="*.js" searchSubdirectories="true" />
-  </scripts>-->
+  </scripts>
 
   <settings>
     <group name="Credentials">
@@ -55,6 +55,15 @@
         <valueType>string</valueType>
         <title>Link to Avalara API service</title>
         <description>Link to Avalara API service</description>
+      </setting>
+    </group>
+    <group>
+      <setting>
+        <name>Avalara.Tax.IsEnabled</name>
+        <valueType>boolean</valueType>
+        <defaultValue>True</defaultValue>
+        <title>Is Enabled</title>
+        <description>Enable or disable tax calculation</description>
       </setting>
     </group>
     <group name="Avalara Description">
