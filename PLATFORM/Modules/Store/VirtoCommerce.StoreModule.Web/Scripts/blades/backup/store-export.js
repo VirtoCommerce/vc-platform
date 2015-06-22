@@ -11,10 +11,11 @@
     });
 
     $scope.startExport = function () {
+        blade.isLoading = true;
         exportResource.run(
             { storeId: blade.store.id },
-            function (data) { blade.notification = data; },
-            function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
+            function (data) { blade.isLoading = false; blade.notification = data; },
+            function (error) { blade.isLoading = false; bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
     }
 
     $scope.setForm = function (form) {
