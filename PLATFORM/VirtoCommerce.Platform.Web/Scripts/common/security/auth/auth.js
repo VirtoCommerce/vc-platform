@@ -37,7 +37,8 @@
         $http.get(serviceBase + 'usersession').then(
 			function (results) {
 			    changeAuth(results.data);
-			});
+			},
+            function (error) { });
     };
 
     authContext.login = function (email, password, remember) {
@@ -48,15 +49,9 @@
 			});
     };
     authContext.logout = function () {
+        changeAuth({});
+
         $http.post(serviceBase + 'logout/').then(function (result) {
-
-            authContext.isAuthenticated = false;
-            authContext.userLogin = null;
-            authContext.fullName = null;
-            authContext.permissions = null;
-            authContext.userType = null;
-
-            $rootScope.$broadcast('loginStatusChanged', authContext);
         });
     };
 
