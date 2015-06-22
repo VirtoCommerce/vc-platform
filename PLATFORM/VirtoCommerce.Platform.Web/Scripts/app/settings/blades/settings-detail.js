@@ -2,50 +2,64 @@
 .controller('platformWebApp.settingsDetailController', ['$scope', 'platformWebApp.dialogService', 'platformWebApp.objCompareService', 'platformWebApp.bladeNavigationService', 'platformWebApp.settings', function ($scope, dialogService, objCompareService, bladeNavigationService, settings) {
 
     $scope.blade.refresh = function () {
-        $scope.blade.isLoading = true;
+        if ($scope.blade.moduleId) {
+            $scope.blade.isLoading = true;
 
+            settings.getSettings({ id: $scope.blade.moduleId }, initializeBlade,
+            function (error) {
+                bladeNavigationService.setError('Error ' + error.status, $scope.blade);
+            });
+        } else {
+            initializeBlade(angular.copy($scope.blade.data));
+        }
+    }
+
+    function initializeBlade(results) {
         // parse values as they all are strings
-        settings.getSettings({ id: $scope.blade.moduleId }, function (results) {
-            var selectedSettings = _.where(results, { valueType: 'Integer' });
-            _.forEach(selectedSettings, function (setting) {
-                setting.value = parseInt(setting.value, 10);
-                if (setting.allowedValues) {
-                    setting.allowedValues = _.map(setting.allowedValues, function (value) { return parseInt(value, 10); });
-                }
-            });
-
-            selectedSettings = _.where(results, { valueType: 'Decimal' });
-            _.forEach(selectedSettings, function (setting) {
-                setting.value = parseFloat(setting.value);
-                if (setting.allowedValues) {
-                    setting.allowedValues = _.map(setting.allowedValues, function (value) { return parseFloat(value); });
-                }
-            });
-
-            selectedSettings = _.where(results, { valueType: 'Boolean' });
-            _.forEach(selectedSettings, function (setting) {
-                setting.value = setting.value.toLowerCase() === 'true';
-                if (setting.allowedValues) {
-                    setting.allowedValues = _.map(setting.allowedValues, function (value) { return value.toLowerCase() === 'true'; });
-                }
-            });
-
-            selectedSettings = _.where(results, { isArray: true });
-            _.forEach(selectedSettings, function (setting) {
-                if (setting.arrayValues) {
-                    setting.arrayValues = _.map(setting.arrayValues, function (value) { return { value: value }; });
-                }
-            });
-
-            results = _.groupBy(results, 'groupName');
-            $scope.blade.groupNames = _.keys(results);
-            $scope.blade.currentEntities = angular.copy(results);
-            $scope.blade.origEntity = results;
-            $scope.blade.isLoading = false;
-        },
-        function (error) {
-            bladeNavigationService.setError('Error ' + error.status, $scope.blade);
+        var selectedSettings = _.where(results, { valueType: 'Integer' });
+        _.forEach(selectedSettings, function (setting) {
+            setting.value = parseInt(setting.value, 10);
+            if (setting.allowedValues) {
+                setting.allowedValues = _.map(setting.allowedValues, function (value) { return parseInt(value, 10); });
+            }
         });
+
+        selectedSettings = _.where(results, { valueType: 'Decimal' });
+        _.forEach(selectedSettings, function (setting) {
+            setting.value = parseFloat(setting.value);
+            if (setting.allowedValues) {
+                setting.allowedValues = _.map(setting.allowedValues, function (value) { return parseFloat(value); });
+            }
+        });
+
+        selectedSettings = _.where(results, { valueType: 'Boolean' });
+        _.forEach(selectedSettings, function (setting) {
+            setting.value = setting.value.toLowerCase() === 'true';
+            if (setting.allowedValues) {
+                setting.allowedValues = _.map(setting.allowedValues, function (value) { return value.toLowerCase() === 'true'; });
+            }
+        });
+
+        selectedSettings = _.where(results, { isArray: true });
+        _.forEach(selectedSettings, function (setting) {
+            if (setting.arrayValues) {
+                setting.arrayValues = _.map(setting.arrayValues, function (value) { return { value: value }; });
+            }
+        });
+
+        _.each(results, function (setting) {
+            if (setting.groupName) {
+                var paths = setting.groupName.split('|');
+                setting.groupName = paths[paths.length - 1];
+            }
+        });
+
+
+        results = _.groupBy(results, 'groupName');
+        $scope.blade.groupNames = _.keys(results);
+        $scope.blade.currentEntities = angular.copy(results);
+        $scope.blade.origEntity = results;
+        $scope.blade.isLoading = false;
     }
 
     $scope.editArray = function (node) {
@@ -82,23 +96,17 @@
 
         //console.log('saveChanges3: ' + angular.toJson(objects, true));
         settings.update({}, objects, function (data, headers) {
-            $scope.blade.refresh();
+            if ($scope.blade.moduleId) {
+                $scope.blade.refresh();
+            } else {
+                $scope.blade.origEntity = $scope.blade.currentEntities;
+                $scope.blade.parentBlade.refresh();
+            }
         }, function (error) {
             bladeNavigationService.setError('Error ' + error.status, $scope.blade);
         });
     };
-
-    $scope.blade.onClose = function (closeCallback) {
-        closeChildrenBlades();
-        closeCallback();
-    };
-
-    function closeChildrenBlades() {
-        angular.forEach($scope.blade.childrenBlades.slice(), function (child) {
-            bladeNavigationService.closeBlade(child);
-        });
-    }
-
+    
     $scope.blade.headIcon = 'fa fa-wrench';
     $scope.blade.toolbarCommands = [
         {
