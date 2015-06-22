@@ -31,7 +31,7 @@
     </scripts>
 
     <settings>
-        <group name="Credentials">
+        <group name="Helpdesk|Zendesk|Credentials">
             <setting>
                 <name>Zendesk.Helpdesk.Credentials.AccessToken</name>
                 <valueType>secureString</valueType>
@@ -45,7 +45,7 @@
                 <description>Subdomain name of your Zendesk helpdesk. It should be like 'https://{subdomain}.zendesk.com'</description>
             </setting>
         </group>
-        <group name="Zendesk Description">
+        <group name="Helpdesk|Zendesk|Zendesk Description">
             <setting>
                 <name>Zendesk.Helpdesk.Description</name>
                 <valueType>string</valueType>

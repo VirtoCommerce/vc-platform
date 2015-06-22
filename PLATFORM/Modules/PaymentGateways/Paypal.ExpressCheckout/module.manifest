@@ -25,7 +25,7 @@
 		<moduleType>Paypal.ExpressCheckout.Module, Paypal.ExpressCheckout</moduleType>
 
 		<settings>
-				<group name="Gateway settings">
+				<group name="Payment methods|Paypal|Express checkout|Gateway settings">
 						<setting>
 								<name>Paypal.ExpressCheckout.Mode</name>
 								<valueType>string</valueType>

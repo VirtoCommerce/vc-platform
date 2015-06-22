@@ -31,7 +31,7 @@
   </scripts>-->
 
   <settings>
-    <group name="Credentials">
+    <group name="Taxes|Avalara|Credentials">
       <setting>
         <name>Avalara.Tax.Credentials.AccountNumber</name>
         <valueType>string</valueType>
@@ -57,7 +57,7 @@
         <description>Link to Avalara API service</description>
       </setting>
     </group>
-    <group name="Avalara Description">
+    <group name="Taxes|Avalara|Avalara Description">
       <setting>
         <name>Avalara.Tax.Description</name>
         <valueType>string</valueType>

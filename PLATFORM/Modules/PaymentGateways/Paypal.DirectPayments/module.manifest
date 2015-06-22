@@ -25,7 +25,7 @@
 		<moduleType>Paypal.DirectPayments.Module, Paypal.DirectPayments</moduleType>
 
 		<settings>
-				<group name="Gateway settings">
+				<group name="Payment methods|Paypal|Direct payments|Gateway settings">
 						<setting>
 								<name>Paypal.DirectPayments.Mode</name>
 								<valueType>string</valueType>
