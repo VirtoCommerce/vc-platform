@@ -73,20 +73,20 @@ namespace VirtoCommerce.StoreModule.Web.BackgroundJobs
                 var backup = new Backup(_blobStorageProvider, _blobUrlResolver);
 
                 // Add objects to backup
-                backup.Add(_stopeXmlName, store);
+                backup.AddEntry(_stopeXmlName, store);
                 
                 // Add collections of the same types elements
                 if (!exportConfiguration.IsDisableLanguages)
                 {
-                    backup.Add(_storeLanguagesXmlName, store.Languages.ToArray());
+                    backup.AddEntry(_storeLanguagesXmlName, store.Languages.ToArray());
                 }
                 if (!exportConfiguration.IsDisableCurrencies)
                 {
-                    backup.Add(_storeCurrenciesXmlName, store.Currencies.ToArray());
+                    backup.AddEntry(_storeCurrenciesXmlName, store.Currencies.ToArray());
                 }
                 if (!exportConfiguration.IsDisableSeo)
                 {
-                    backup.Add(_storeSeoXmlName, store.SeoInfos.ToArray());
+                    backup.AddEntry(_storeSeoXmlName, store.SeoInfos.ToArray());
                 }
                 
                 // Add collections of different types elements
@@ -95,7 +95,7 @@ namespace VirtoCommerce.StoreModule.Web.BackgroundJobs
                     foreach (var paymentMethod in store.PaymentMethods.Where(x => x.IsActive))
                     {
                         //don't export Settings because security
-                        backup.Add(string.Format("{0}{1}.xml", _paymentMethodXmlNamePrefix, paymentMethod.Code),
+                        backup.AddEntry(string.Format("{0}{1}.xml", _paymentMethodXmlNamePrefix, paymentMethod.Code),
                             paymentMethod);
                     }
                 }
@@ -103,14 +103,14 @@ namespace VirtoCommerce.StoreModule.Web.BackgroundJobs
                 {
                     foreach (var shippingMethod in store.ShippingMethods.Where(x => x.IsActive))
                     {
-                        backup.Add(string.Format("{0}{1}.xml", _shippingMethodXmlNamePrefix, shippingMethod.Code),
+                        backup.AddEntry(string.Format("{0}{1}.xml", _shippingMethodXmlNamePrefix, shippingMethod.Code),
                             shippingMethod);
                         settings.AddRange(shippingMethod.Settings);
                     }
                 }
 
                 settings.AddRange(store.Settings);
-                backup.Add(_settingsXmlName, settings.ToArray());
+                backup.AddEntry(_settingsXmlName, settings.ToArray());
 
                 // Create backup file
                 var zipUrl = backup.Save("Store-" + (store.Name ?? store.Id) + ".zip");
@@ -146,18 +146,18 @@ namespace VirtoCommerce.StoreModule.Web.BackgroundJobs
             try
             {
                 var backup = new Backup(_blobStorageProvider, null);
-                backup.OpenZip(importConfiguration.FileUrl);
+                backup.OpenBackup(importConfiguration.FileUrl);
 
                 // Extract objects from backup
-                var store = backup.LoadFromFile<Store>(_stopeXmlName);
+                var store = backup.LoadObject<Store>(_stopeXmlName);
                 if (store != null)
                 {
-                    store.Languages = backup.LoadFromFile<string[]>(_storeLanguagesXmlName);
-                    store.Currencies = backup.LoadFromFile<CurrencyCodes[]>(_storeCurrenciesXmlName);
-                    store.SeoInfos = backup.LoadFromFile<SeoInfo[]>(_storeSeoXmlName);
-                    store.PaymentMethods = backup.LoadFromFiles<PaymentMethod>(_paymentMethodXmlNamePrefix).ToArray();
-                    store.ShippingMethods = backup.LoadFromFiles<ShippingMethod>(_shippingMethodXmlNamePrefix).ToArray();
-                    var settings = backup.LoadFromFile<SettingEntry[]>(_settingsXmlName);
+                    store.Languages = backup.LoadObject<string[]>(_storeLanguagesXmlName);
+                    store.Currencies = backup.LoadObject<CurrencyCodes[]>(_storeCurrenciesXmlName);
+                    store.SeoInfos = backup.LoadObject<SeoInfo[]>(_storeSeoXmlName);
+                    store.PaymentMethods = backup.LoadObjectsByMask<PaymentMethod>(_paymentMethodXmlNamePrefix).ToArray();
+                    store.ShippingMethods = backup.LoadObjectsByMask<ShippingMethod>(_shippingMethodXmlNamePrefix).ToArray();
+                    var settings = backup.LoadObject<SettingEntry[]>(_settingsXmlName);
 
                     var storeSettings = settings.Where(x => x.ObjectId == store.Id).ToArray();
                     
@@ -196,7 +196,7 @@ namespace VirtoCommerce.StoreModule.Web.BackgroundJobs
                     _settingsManager.SaveSettings(storeSettings);
                 }
 
-                backup.CloseZip();
+                backup.CloseBackup();
             }
             catch (Exception ex)
             {
