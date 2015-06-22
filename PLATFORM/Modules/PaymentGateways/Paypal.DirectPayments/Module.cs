@@ -31,7 +31,7 @@ namespace Paypal.DirectPayments
 
 		public void Initialize()
 		{
-			var settings = _container.Resolve<ISettingsManager>().GetModuleSettings("Paypal.DirectPayment");
+			var settings = _container.Resolve<ISettingsManager>().GetModuleSettings("Paypal.DirectPayments");
 
 			Func<PaypalDirectPaymentsPaymentMethod> paypalBankCardsExpressCheckoutPaymentMethodFactory = () =>
 			{
