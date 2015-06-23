@@ -111,7 +111,7 @@ namespace AvaTax.TaxModule.Web.Managers
                 var setting = Settings.FirstOrDefault(s => s.Name == settingName);
 
                 if (setting == null || string.IsNullOrEmpty(setting.Value))
-                    throw new NullReferenceException(string.Format("{0} setting does not exist or is null"));
+                    return null;
 
                 return setting.Value;
             }

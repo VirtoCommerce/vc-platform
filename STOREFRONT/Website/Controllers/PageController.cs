@@ -32,9 +32,10 @@ namespace VirtoCommerce.Web.Controllers
             return View(model.Layout ?? "page");
         }
 
+        [Route("~/files/{*asset}")]
         public async Task<ActionResult> DisplayPageAsset(string asset)
         {
-            var virtualPath = String.Format("~/App_Data/Pages/{0}/{1}/{2}", Context.StoreId, Context.Language, asset);
+            var virtualPath = String.Format("~/App_Data/Pages/{0}/{1}", Context.StoreId, asset);
             return new DownloadResult(virtualPath);
         }
         #endregion
