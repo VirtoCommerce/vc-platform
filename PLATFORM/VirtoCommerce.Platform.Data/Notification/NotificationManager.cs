@@ -88,13 +88,19 @@ namespace VirtoCommerce.Platform.Data.Notification
 		public Core.Notification.Notification GetNewNotification(string type)
 		{
 			var notifications = GetNotifications();
-			return notifications.FirstOrDefault(x => x.Type == type);
+			var retVal = notifications.FirstOrDefault(x => x.Type == type);
+			SetNotificationTemplate(retVal);
+
+			return retVal;
 		}
 
 		public T GetNewNotification<T>() where T : Core.Notification.Notification
 		{
 			var notifications = GetNotifications();
-			return (T)notifications.FirstOrDefault(x => x.GetType().Name == typeof(T).Name);
+			var retVal = (T)notifications.FirstOrDefault(x => x.GetType().Name == typeof(T).Name);
+			SetNotificationTemplate(retVal);
+
+			return retVal;
 		}
 
 		public void UpdateNotification(Core.Notification.Notification notification)
@@ -135,6 +141,15 @@ namespace VirtoCommerce.Platform.Data.Notification
 			}
 
 			return retVal;
+		}
+
+		private void SetNotificationTemplate(Core.Notification.Notification notification)
+		{
+			if (notification != null)
+			{
+				var template = _notificationTemplateService.GetByNotification(notification.Type, notification.ObjectId);
+				notification.NotificationTemplate = template;
+			}
 		}
 
 		private Core.Notification.Notification GetNotificationCoreModel(NotificationEntity entity)

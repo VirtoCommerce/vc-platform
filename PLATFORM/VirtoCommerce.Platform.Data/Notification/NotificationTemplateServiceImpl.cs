@@ -28,11 +28,17 @@ namespace VirtoCommerce.Platform.Data.Notification
 
 		public NotificationTemplate GetByNotification(string notificationTypeId, string objectId)
 		{
+			NotificationTemplate retVal = null;
 			using (var repository = _repositoryFactory())
 			{
 				var entity = repository.NotificationTemplates.FirstOrDefault(nt => nt.ObjectId.Equals(objectId) && nt.NotificationTypeId.Equals(notificationTypeId));
-				return entity.ToCoreModel();
+				if (entity != null)
+				{
+					retVal = entity.ToCoreModel();
+				}
 			}
+
+			return retVal;
 		}
 
 		public NotificationTemplate Create(NotificationTemplate notificationTemplate)

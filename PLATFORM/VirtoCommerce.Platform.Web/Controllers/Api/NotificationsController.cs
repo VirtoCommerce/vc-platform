@@ -68,7 +68,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
 		[HttpGet]
 		[ResponseType(typeof(string[]))]
-		[Route("{type}/preparetestdata")]
+		[Route("template/{type}/preparetestdata")]
 		public IHttpActionResult PrepareTest(string type)
 		{
 			var retVal = new string[]{};
@@ -84,8 +84,8 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
 		[HttpPost]
 		[ResponseType(typeof(webModels.Notification))]
-		[Route("{type}/resolvenotification")]
-		public IHttpActionResult ResolveNotification([FromBody]Dictionary<string, string> parameters, string type)
+		[Route("template/{type}/resolvenotification")]
+		public IHttpActionResult ResolveNotification([FromBody]List<KeyValuePair<string, string>> parameters, string type)
 		{
 			var notification = _notificationManager.GetNewNotification(type);
 			foreach(var param in parameters)

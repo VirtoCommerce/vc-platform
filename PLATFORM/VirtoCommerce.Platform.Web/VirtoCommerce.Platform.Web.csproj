@@ -312,6 +312,12 @@
     <Content Include="Scripts\app\newnotifications\blades\notifications-list.js" />
     <Content Include="Scripts\app\newnotifications\blades\notifications-menu.js" />
     <Content Include="Scripts\app\newnotifications\blades\notifications-menu.tpl.html" />
+    <Content Include="Scripts\app\newnotifications\blades\notifications-test-resolve.tpl.html" />
+    <Content Include="Scripts\app\newnotifications\blades\notifications-test-resolve.js" />
+    <Content Include="Scripts\app\newnotifications\blades\notifications-test-send.js" />
+    <Content Include="Scripts\app\newnotifications\blades\notifications-test-send.tpl.html" />
+    <Content Include="Scripts\app\newnotifications\blades\resolve-result.js" />
+    <Content Include="Scripts\app\newnotifications\blades\resolve-result.tpl.html" />
     <Content Include="Scripts\app\newnotifications\newnotifications.js" />
     <Content Include="Scripts\app\newnotifications\resources\newnotifications.js" />
     <Content Include="Scripts\app\packaging\blades\module-detail.js" />

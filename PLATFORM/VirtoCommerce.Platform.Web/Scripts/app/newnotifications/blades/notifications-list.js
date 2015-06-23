@@ -16,14 +16,14 @@
 
 	blade.editTemplate = function (data) {
 		var newBlade = {
-					id: 'editTemplate',
-					title: 'Edit notification template',
-					currentEntityParent: data,
-					controller: 'platformWebApp.editTemplateController',
-					template: 'Scripts/app/newnotifications/blades/notifications-edit-template.tpl.html'
-				};
+			id: 'editTemplate',
+			title: 'Edit notification template',
+			currentEntityParent: data,
+			controller: 'platformWebApp.editTemplateController',
+			template: 'Scripts/app/newnotifications/blades/notifications-edit-template.tpl.html'
+		};
 
-				bladeNavigationService.showBlade(newBlade, blade);
+		bladeNavigationService.showBlade(newBlade, blade);
 	};
 
 	blade.initialize();

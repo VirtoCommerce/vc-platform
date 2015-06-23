@@ -200,11 +200,13 @@ namespace VirtoCommerce.Platform.Web
 
 			container.RegisterInstance<INotificationTemplateService>(notificationTemplateService);
 			container.RegisterInstance<INotificationManager>(notificationManager);
+			container.RegisterInstance<INotificationTemplateResolver>(resolver);
 			container.RegisterInstance<IEmailNotificationSendingGateway>(defaultEmailNotificationSendingGateway);
 
 			notificationManager.RegisterNotificationType(
 				() => new RegistrationEmailNotification(defaultEmailNotificationSendingGateway)
 				{
+					ObjectId = "Platform",
 					NotificationTemplate = new NotificationTemplate
 					{
 						Body = @"<p> Dear {{ context.first_name }} {{ context.last_name }}, you has registered on our site</p> <p> Your e-mail  - {{ context.email }} </p>",
