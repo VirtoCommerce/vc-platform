@@ -2,7 +2,8 @@
 <div class="blade-content">
     <div class="blade-inner">
         <div class="inner-block">
-            <form name="formScope" class="form" novalidate>
+            <p class="note" ng-if="!seoInfos.length">Store doesn't have any language set. Assign some languages first.</p>
+            <form name="formScope" class="form" novalidate ng-if="seoInfos.length">
                 <fieldset ng-init="setForm(formScope);">
                     <legend>
                         URL keyword
