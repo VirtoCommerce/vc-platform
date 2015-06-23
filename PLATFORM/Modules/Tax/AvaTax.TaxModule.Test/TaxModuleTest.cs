@@ -8,6 +8,7 @@ using VirtoCommerce.Domain.Cart.Model;
 using VirtoCommerce.Domain.Order.Model;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Settings;
+using VirtoCommerce.Platform.Data.Settings;
 using Xunit;
 
 using Address = VirtoCommerce.Domain.Order.Model.Address;
@@ -357,7 +358,9 @@ namespace AvaTax.TaxModule.Test
                 new SettingEntry { Value = "True", Name = _isEnabledPropertyName, ValueType = SettingValueType.Boolean }
             };
 
-            var avalaraTax = new AvaTaxImpl(_usernamePropertyName, _passwordPropertyName, _serviceUrlPropertyName, _companyCodePropertyName, _isEnabledPropertyName, avalaraCode, avalaraDescription, avalaraLogoUrl, settings);
+            var settingsManager = new Moq.Mock<ISettingsManager>();
+            
+            var avalaraTax = new AvaTaxImpl(_usernamePropertyName, _passwordPropertyName, _serviceUrlPropertyName, _companyCodePropertyName, _isEnabledPropertyName, settingsManager.Object);
 
             var controller = new AvaTaxController(avalaraTax);
             return controller;
