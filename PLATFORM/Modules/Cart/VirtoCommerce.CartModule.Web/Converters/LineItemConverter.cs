@@ -18,6 +18,8 @@ namespace VirtoCommerce.CartModule.Web.Converters
 			retVal.Currency = cartItem.Currency;
 			if (cartItem.Discounts != null)
 				retVal.Discounts = cartItem.Discounts.Select(x => x.ToWebModel()).ToList();
+
+			retVal.TaxDetails = cartItem.TaxDetails;
 			return retVal;
 		}
 
@@ -30,6 +32,8 @@ namespace VirtoCommerce.CartModule.Web.Converters
 
 			if(cartItem.Discounts != null)
 				retVal.Discounts = cartItem.Discounts.Select(x => x.ToCoreModel()).ToList();
+
+			retVal.TaxDetails = cartItem.TaxDetails;
 			return retVal;
 		}
 

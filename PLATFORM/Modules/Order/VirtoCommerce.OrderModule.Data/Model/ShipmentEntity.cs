@@ -19,6 +19,7 @@ namespace VirtoCommerce.OrderModule.Data.Model
 			InPayments = new NullCollection<PaymentInEntity>();
 			Discounts = new NullCollection<DiscountEntity>();
 			Addresses = new NullCollection<AddressEntity>();
+			TaxDetails = new NullCollection<TaxDetailEntity>();
 		}
 		
 		[StringLength(64)]
@@ -49,6 +50,7 @@ namespace VirtoCommerce.OrderModule.Data.Model
 		public virtual ObservableCollection<AddressEntity> Addresses { get; set; }
 
 		public virtual ObservableCollection<DiscountEntity> Discounts { get; set; }
+		public virtual ObservableCollection<TaxDetailEntity> TaxDetails { get; set; }
 
 		#region IStockOperation Members
 		[NotMapped]

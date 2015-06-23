@@ -73,7 +73,7 @@ namespace AvaTax.TaxModule.Web.Controller
                 if (retVal.ResultCode.Equals(SeverityLevel.Success))
                     return Ok(retVal);
 
-                return BadRequest(string.Join(", ", retVal.Messages.Select(m => m.Details)));
+                return BadRequest(string.Join(", ", retVal.Messages.Select(m => m.Summary)));
             }
             
             return BadRequest("AvaTax credentials not provided");

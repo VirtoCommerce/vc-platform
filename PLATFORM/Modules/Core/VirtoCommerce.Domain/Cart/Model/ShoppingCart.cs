@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using VirtoCommerce.Domain.Commerce.Model;
 using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.Domain.Cart.Model
 {
-	public class ShoppingCart : AuditableEntity
+	public class ShoppingCart : AuditableEntity, IHaveTaxDetalization
 	{
 		public string Name { get; set; }
 		public string StoreId { get; set; }
@@ -17,12 +18,7 @@ namespace VirtoCommerce.Domain.Cart.Model
 		public string CustomerName { get; set; }
 		public string OrganizationId { get; set; }
 		public CurrencyCodes Currency { get; set; }
-		public ICollection<Address> Addresses { get; set; }
-		public ICollection<LineItem> Items { get; set; }
-		public ICollection<Payment> Payments { get; set; }
-		public ICollection<Shipment> Shipments { get; set; }
-		public ICollection<Discount> Discounts { get; set; }
-		public Coupon Coupon { get; set; }
+	
 		public string LanguageCode { get; set; }
 		public bool? TaxIncluded { get; set; }
 		public bool? IsRecuring { get; set; }
@@ -39,6 +35,17 @@ namespace VirtoCommerce.Domain.Cart.Model
 		public decimal HandlingTotal { get; set; }
 		public decimal DiscountTotal { get; set; }
 		public decimal TaxTotal { get; set; }
+
+		public ICollection<Address> Addresses { get; set; }
+		public ICollection<LineItem> Items { get; set; }
+		public ICollection<Payment> Payments { get; set; }
+		public ICollection<Shipment> Shipments { get; set; }
+		public ICollection<Discount> Discounts { get; set; }
+		public Coupon Coupon { get; set; }
+
+		#region IHaveTaxDetalization Members
+		public ICollection<TaxDetail> TaxDetails { get; set; }
+		#endregion
 	
 	}
 }

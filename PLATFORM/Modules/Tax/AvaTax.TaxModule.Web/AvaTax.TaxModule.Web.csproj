@@ -123,9 +123,7 @@
     <Compile Include="Observers\CalculateCartTaxesObserver.cs" />
     <Compile Include="Observers\CalculateOrderTaxesObserver.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Services\InMemoryTaxManagerImpl.cs" />
     <Compile Include="Services\ITax.cs" />
-    <Compile Include="Services\ITaxManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\VirtoCommerce.Platform.Core\VirtoCommerce.Platform.Core.csproj">

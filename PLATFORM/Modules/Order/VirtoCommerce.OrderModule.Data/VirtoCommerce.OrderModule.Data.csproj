@@ -63,6 +63,7 @@
     <Compile Include="Converters\OperationPropertyConverter.cs" />
     <Compile Include="Converters\PaymentInConverter.cs" />
     <Compile Include="Converters\ShipmentConverter.cs" />
+    <Compile Include="Converters\TaxDetailConverter.cs" />
     <Compile Include="Migrations\201504300638236_Initial.cs" />
     <Compile Include="Migrations\201504300638236_Initial.Designer.cs">
       <DependentUpon>201504300638236_Initial.cs</DependentUpon>
@@ -75,6 +76,10 @@
     <Compile Include="Migrations\201506011110591_DimensionChanges.Designer.cs">
       <DependentUpon>201506011110591_DimensionChanges.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201506231439430_TaxDetail.cs" />
+    <Compile Include="Migrations\201506231439430_TaxDetail.Designer.cs">
+      <DependentUpon>201506231439430_TaxDetail.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Model\AddressEntity.cs" />
     <Compile Include="Model\CustomerOrderEntity.cs" />
@@ -84,6 +89,7 @@
     <Compile Include="Model\OperationPropertyEntity.cs" />
     <Compile Include="Model\PaymentInEntity.cs" />
     <Compile Include="Model\ShipmentEntity.cs" />
+    <Compile Include="Model\TaxDetailEntity.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\IOrderRepository.cs" />
     <Compile Include="Repositories\OrderRepositoryImpl.cs" />
@@ -121,6 +127,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201506011110591_DimensionChanges.resx">
       <DependentUpon>201506011110591_DimensionChanges.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201506231439430_TaxDetail.resx">
+      <DependentUpon>201506231439430_TaxDetail.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Repositories\Sql\OrderSampleData.sql" />
   </ItemGroup>

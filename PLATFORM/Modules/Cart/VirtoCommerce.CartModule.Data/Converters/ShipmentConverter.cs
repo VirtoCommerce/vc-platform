@@ -33,7 +33,7 @@ namespace VirtoCommerce.CartModule.Data.Converters
 			{
 				retVal.Items = entity.Items.Select(x => x.ToCoreModel()).ToList();
 			}
-		
+			retVal.TaxDetails = entity.TaxDetails.Select(x => x.ToCoreModel()).ToList();
 			return retVal;
 		}
 
@@ -54,6 +54,11 @@ namespace VirtoCommerce.CartModule.Data.Converters
 			if (shipment.Items != null)
 			{
 				retVal.Items = new ObservableCollection<LineItemEntity>(shipment.Items.Select(x => x.ToDataModel()));
+			}
+			if (shipment.TaxDetails != null)
+			{
+				retVal.TaxDetails = new ObservableCollection<TaxDetailEntity>();
+				retVal.TaxDetails.AddRange(shipment.TaxDetails.Select(x => x.ToDataModel()));
 			}
 			return retVal;
 		}
@@ -84,6 +89,11 @@ namespace VirtoCommerce.CartModule.Data.Converters
 			if (source.Items != null)
 			{
 				source.Items.Patch(target.Items, (sourceItem, targetItem) => sourceItem.Patch(targetItem));
+			}
+			if (!source.TaxDetails.IsNullCollection())
+			{
+				var taxDetailComparer = AnonymousComparer.Create((TaxDetailEntity x) => x.Name);
+				source.TaxDetails.Patch(target.TaxDetails, taxDetailComparer, (sourceTaxDetail, targetTaxDetail) => sourceTaxDetail.Patch(targetTaxDetail));
 			}
 
 		}

@@ -18,14 +18,35 @@ namespace VirtoCommerce.Domain.Common.Events
 		public void Publish(T eventMessage)
 		{
 			var observers = _observers.OrderBy(x => x is IPriorityObserver ? ((IPriorityObserver)x).Priority : 0);
+			var errors = new List<Exception>();
 			foreach (var observer in observers)
 			{
-				observer.OnNext(eventMessage);
+				try
+				{
+					observer.OnNext(eventMessage);
+				}
+				catch(Exception ex)
+				{
+					errors.Add(ex);
+				}
 			}
 
-			foreach (var observer in observers)
+			if (errors.Any())
 			{
-				observer.OnCompleted();
+				foreach (var observer in observers)
+				{
+					foreach(var error in errors)
+					{
+						observer.OnError(error);
+					}
+				}
+			}
+			else
+			{
+				foreach (var observer in observers)
+				{
+					observer.OnCompleted();
+				}
 			}
 		}
 

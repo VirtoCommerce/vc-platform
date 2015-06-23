@@ -5,11 +5,12 @@ using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
+using VirtoCommerce.Domain.Commerce.Model;
 using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.CartModule.Web.Model
 {
-	public class ShoppingCart : AuditableEntity
+	public class ShoppingCart : AuditableEntity, IHaveTaxDetalization
 	{
 		public string Name { get; set; }
 		public string StoreId { get; set; }
@@ -20,11 +21,7 @@ namespace VirtoCommerce.CartModule.Web.Model
 		public string OrganizationId { get; set; }
 		[JsonConverter(typeof(StringEnumConverter))]
 		public CurrencyCodes Currency { get; set; }
-		public ICollection<Address> Addresses { get; set; }
-		public ICollection<LineItem> Items { get; set; }
-		public ICollection<Payment> Payments { get; set; }
-		public ICollection<Shipment> Shipments { get; set; }
-		public ICollection<Discount> Discounts { get; set; }
+	
 		public Coupon Coupon { get; set; }
 		public string LanguageCode { get; set; }
 		public bool TaxIncluded { get; set; }
@@ -47,5 +44,15 @@ namespace VirtoCommerce.CartModule.Web.Model
 		public decimal HandlingTotal { get; set; }
 		public decimal DiscountTotal { get; set; }
 		public decimal TaxTotal { get; set; }
+
+		public ICollection<Address> Addresses { get; set; }
+		public ICollection<LineItem> Items { get; set; }
+		public ICollection<Payment> Payments { get; set; }
+		public ICollection<Shipment> Shipments { get; set; }
+		public ICollection<Discount> Discounts { get; set; }
+
+		#region IHaveTaxDetalization Members
+		public ICollection<TaxDetail> TaxDetails { get; set; }
+		#endregion
 	}
 }

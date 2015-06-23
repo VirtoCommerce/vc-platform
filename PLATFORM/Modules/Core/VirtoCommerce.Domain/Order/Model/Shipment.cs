@@ -1,9 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using VirtoCommerce.Domain.Commerce.Model;
 
 namespace VirtoCommerce.Domain.Order.Model
 {
-	public class Shipment : Operation, IStockOutOperation
+	public class Shipment : Operation, IStockOutOperation, IHaveTaxDetalization
 	{
 		public string OrganizationId { get; set; }
 		public string FulfillmentCenterId { get; set; }
@@ -59,6 +60,12 @@ namespace VirtoCommerce.Domain.Order.Model
 		{
 			get { return Items; }
 		}
+
+		#endregion
+
+		#region ITaxDetailSupport Members
+
+		public ICollection<TaxDetail> TaxDetails { get; set; }
 
 		#endregion
 	}

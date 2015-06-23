@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using VirtoCommerce.Domain.Order.Model;
 using Omu.ValueInjecter;
 using VirtoCommerce.OrderModule.Data.Model;
-using coreModel = VirtoCommerce.Domain.Cart.Model;
+using cartCoreModel = VirtoCommerce.Domain.Cart.Model;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Data.Common.ConventionInjections;
 
@@ -45,10 +45,11 @@ namespace VirtoCommerce.OrderModule.Data.Converters
 				retVal.InPayments = entity.InPayments.Select(x => x.ToCoreModel()).ToList();
 			}
 
+			retVal.TaxDetails = entity.TaxDetails.Select(x => x.ToCoreModel()).ToList();
 			return retVal;
 		}
 
-		public static Shipment ToCoreModel(this coreModel.Shipment shipment)
+		public static Shipment ToCoreModel(this cartCoreModel.Shipment shipment)
 		{
 
 			var retVal = new Shipment();
@@ -67,7 +68,7 @@ namespace VirtoCommerce.OrderModule.Data.Converters
 			{
 				retVal.Items = shipment.Items.Select(x => x.ToCoreModel()).ToList();
 			}
-
+			retVal.TaxDetails = shipment.TaxDetails;
 			return retVal;
 		}
 
@@ -95,6 +96,11 @@ namespace VirtoCommerce.OrderModule.Data.Converters
 			if(shipment.Items != null)
 			{
 				retVal.Items = new ObservableCollection<LineItemEntity>(shipment.Items.Select(x=>x.ToDataModel()));
+			}
+			if (shipment.TaxDetails != null)
+			{
+				retVal.TaxDetails = new ObservableCollection<TaxDetailEntity>();
+				retVal.TaxDetails.AddRange(shipment.TaxDetails.Select(x => x.ToDataModel()));
 			}
 			return retVal;
 		}
@@ -130,6 +136,11 @@ namespace VirtoCommerce.OrderModule.Data.Converters
 			if (!source.Addresses.IsNullCollection())
 			{
 				source.Addresses.Patch(target.Addresses, new AddressComparer(), (sourceAddress, targetAddress) => sourceAddress.Patch(targetAddress));
+			}
+			if (!source.TaxDetails.IsNullCollection())
+			{
+				var taxDetailComparer = AnonymousComparer.Create((TaxDetailEntity x) => x.Name);
+				source.TaxDetails.Patch(target.TaxDetails, taxDetailComparer, (sourceTaxDetail, targetTaxDetail) => sourceTaxDetail.Patch(targetTaxDetail));
 			}
 		}
 	}
