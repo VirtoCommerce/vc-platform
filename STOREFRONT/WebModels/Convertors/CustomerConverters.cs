@@ -29,6 +29,7 @@ namespace VirtoCommerce.Web.Convertors
             address.Phone = customerAddress.Phone;
             address.PostalCode = customerAddress.Zip;
             address.RegionName = customerAddress.Province;
+            address.RegionId = customerAddress.ProvinceCode;
             address.Zip = customerAddress.Zip;
 
             return address;
