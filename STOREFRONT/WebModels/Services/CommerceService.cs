@@ -328,6 +328,7 @@ namespace VirtoCommerce.Web.Models.Services
         public async Task<Cart> GetCartAsync(string storeId, string customerId)
         {
             var cart = await this._cartClient.GetCartAsync(storeId, customerId);
+
             return cart != null ? cart.AsWebModel() : null;
         }
 
@@ -395,7 +396,8 @@ namespace VirtoCommerce.Web.Models.Services
             if (paymentMethods != null)
             {
                 paymentMethodModels = new List<PaymentMethod>();
-                foreach (var paymentMethod in paymentMethods)
+
+                foreach (var paymentMethod in paymentMethods.OrderBy(pm => pm.Priority))
                 {
                     paymentMethodModels.Add(paymentMethod.AsWebModel());
                 }
@@ -449,9 +451,9 @@ namespace VirtoCommerce.Web.Models.Services
             return order;
         }
 
-        public async Task<ProcessPaymentResult> ProcessPaymentAsync(string orderId, string paymentMethodId)
+        public async Task<ProcessPaymentResult> ProcessPaymentAsync(string orderId, string paymentMethodId, ApiClient.DataContracts.BankCardInfo cardInfo)
         {
-            return await _orderClient.ProcessPayment(orderId, paymentMethodId);
+            return await _orderClient.ProcessPayment(orderId, paymentMethodId, cardInfo);
         }
 
         public async Task<PostProcessPaymentResult> PostPaymentProcessAsync(ICollection<KeyValuePair<string, string>> parameters)
@@ -622,14 +624,14 @@ namespace VirtoCommerce.Web.Models.Services
             var variationIds = product.GetAllVariationIds();
             var prices = await this.GetProductPricesAsync(context.PriceLists, variationIds);
 
-            var price = prices.FirstOrDefault(p => p.ProductId == product.Code);
-            if (product.Variations != null)
-            {
-                foreach (var variation in product.Variations)
-                {
-                    price = prices.FirstOrDefault(p => p.ProductId == variation.Code);
-                }
-            }
+            var price = prices.FirstOrDefault(p => p.ProductId == product.Id);
+            //if (product.Variations != null)
+            //{
+            //    foreach (var variation in product.Variations)
+            //    {
+            //        price = prices.FirstOrDefault(p => p.ProductId == variation.Id);
+            //    }
+            //}
 
             var promoContext = new PromotionEvaluationContext
             {
@@ -671,6 +673,11 @@ namespace VirtoCommerce.Web.Models.Services
             GetPromoRewardsAsync(ApiClient.DataContracts.Marketing.PromotionEvaluationContext context)
         {
             return await _marketingClient.GetPromotionRewardsAsync(context);
+        }
+
+        public async Task<IEnumerable<CatalogItem>> GetCatalogItemsByIdsAsync(IEnumerable<string> catalogItemsIds, string responseGroup)
+        {
+            return await _browseClient.GetCatalogItemsByIdsAsync(catalogItemsIds, responseGroup);
         }
 
         public async Task<IEnumerable<ApiClient.DataContracts.Price>> GetProductPricesAsync(string[] priceLists, string[] productIds)

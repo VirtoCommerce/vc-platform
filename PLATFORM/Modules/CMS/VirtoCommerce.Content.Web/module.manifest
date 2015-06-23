@@ -31,7 +31,7 @@
     </scripts>
 
     <settings>
-        <group name="Main Properties">
+        <group name="CMS Content|Main Properties">
             <setting>
                 <name>VirtoCommerce.Content.MainProperties.PagesRepositoryType</name>
                 <valueType>string</valueType>
@@ -59,7 +59,7 @@
             </setting>
         </group>
 
-        <group name="GitHub">
+        <group name="CMS Content|GitHub">
             <setting>
                 <name>VirtoCommerce.Content.GitHub.Login</name>
                 <valueType>string</valueType>

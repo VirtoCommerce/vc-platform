@@ -21,7 +21,7 @@ function ($injector, $rootScope, $scope, catalogs, bladeNavigationService, dialo
                     }
                 });
             }
-            setBreadcrumps();
+            setBreadcrumbs();
         },
         function (error) { bladeNavigationService.setError('Error ' +error.status, $scope.blade); });
 
@@ -43,8 +43,8 @@ function ($injector, $rootScope, $scope, catalogs, bladeNavigationService, dialo
         }
     };
 
-    //Breadcrumps
-    function setBreadcrumps() {
+    //Breadcrumbs
+    function setBreadcrumbs() {
         //Clone array (angular.copy leave a same reference)
         blade.breadcrumbs = blade.breadcrumbs.slice(0);
 
@@ -53,7 +53,7 @@ function ($injector, $rootScope, $scope, catalogs, bladeNavigationService, dialo
             name: "Catalogs",
         };
 
-        //prevent dublicate items
+        //prevent duplicate items
         if (!_.some(blade.breadcrumbs, function (x) { return x.id == breadCrumb.id })) {
             blade.breadcrumbs.push(breadCrumb);
         }

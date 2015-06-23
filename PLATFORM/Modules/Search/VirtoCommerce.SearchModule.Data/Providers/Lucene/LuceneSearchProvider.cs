@@ -248,7 +248,7 @@ namespace VirtoCommerce.SearchModule.Data.Providers.Lucene
                 // filter out empty value
                 var filter = q.Filter.ToString().Equals("BooleanFilter()") ? null : q.Filter;
 
-                Debug.WriteLine("Search Lucene Query:{0}", (object)q.ToString());
+                Debug.WriteLine("Search Lucene Query:{0}", q.ToString());
 
                 TopDocs docs;
 

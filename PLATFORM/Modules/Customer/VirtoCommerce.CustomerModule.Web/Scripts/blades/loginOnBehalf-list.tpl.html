@@ -1,0 +1,15 @@
+﻿<div class="blade-content">
+    <div class="blade-inner">
+        <div class="inner-block">
+            <div class="sub-t">Pick a Store to login</div>
+            <ul class="list __items" ng-if="blade.currentEntities.length">
+                <li class="list-item" ng-click='selectNode(data)' ng-repeat="data in blade.currentEntities | orderBy:name track by data.id" ng-class="{'__selected': data.id === selectedNodeId}">
+                    {{data.name}}
+                    <span class="error" ng-if="!data.secureUrl">Secure URL is missing. Click to open Store details.</span>
+                    <span class="error" ng-if="!data.defaultLanguage">Default language is missing. Click to open Store details.</span>
+                </li>
+            </ul>
+            <p class="text" ng-if="!blade.currentEntities.length">No Stores yet</p>
+        </div>
+    </div>
+</div>

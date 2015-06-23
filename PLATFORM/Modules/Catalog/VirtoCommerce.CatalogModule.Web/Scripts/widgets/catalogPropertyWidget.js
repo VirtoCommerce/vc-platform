@@ -9,8 +9,8 @@
             currentEntity: blade.currentEntity,
             title: blade.title,
             subtitle: 'Catalog properties',
-            controller: 'virtoCommerce.catalogModule.catalogPropertyController',
-            template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/catalog-property-detail.tpl.html'
+            controller: 'virtoCommerce.catalogModule.catalogPropertyListController',
+            template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/catalog-property-list.tpl.html'
         };
         bladeNavigationService.showBlade(newBlade, blade);
     };

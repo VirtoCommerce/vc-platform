@@ -24,6 +24,7 @@
         var newBlade = {
             id: 'variationDetail',
             itemId: listItem.id,
+            productType: listItem.productType,
             title: listItem.code,
             subtitle: 'Variation details',
             controller: 'virtoCommerce.catalogModule.itemDetailController',
@@ -52,6 +53,7 @@
 	             items.newVariation({ itemId: blade.itemId }, function (data) {
 	                 // take variation properties only
 	                 data.properties = _.where(data.properties, { type: 'Variation' });
+	                 data.productType = blade.item.productType;
 
 	                 var newBlade = {
 	                     id: 'variationDetail',

@@ -51,12 +51,14 @@ namespace VirtoCommerce.Web.Views.Engines.Liquid.ViewEngine
         public static Template GetTemplateFromFile(ViewLocationResult path)
         {
             var contextKey = "vc-cms-file-" + path.Location;
+            /*
             var value = HttpRuntime.Cache.Get(contextKey);
 
             if (value != null)
             {
                 return value as Template;
             }
+             * */
 
             if (path.Contents == null)
                 return null;
@@ -64,7 +66,7 @@ namespace VirtoCommerce.Web.Views.Engines.Liquid.ViewEngine
             var contents = path.Contents.Invoke().ReadToEnd();
             var template = Template.Parse(contents);
 
-            HttpRuntime.Cache.Insert(contextKey, template, new CacheDependency(new[] { path.Location}));
+            //HttpRuntime.Cache.Insert(contextKey, template, new CacheDependency(new[] { path.Location}));
 
             return template;
         }
@@ -113,7 +115,6 @@ namespace VirtoCommerce.Web.Views.Engines.Liquid.ViewEngine
 
             var renderParams = new RenderParameters { LocalVariables = Hash.FromDictionary(localVars) };
 
-            //var fileContents = rawContentItem.Content;
             var template = GetTemplateFromFile(this.ViewResult);
 
             if (this.MasterViewResult == null)

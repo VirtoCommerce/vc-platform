@@ -1,0 +1,26 @@
+﻿<div class="blade-static __expanded">
+    <va-breadcrumb ng-model="blade.breadcrumbs"></va-breadcrumb>
+    <div class="form-group">
+        <div class="form-input __search">
+            <input placeholder="Search keyword..." ng-model="blade.searchText">
+        </div>
+        <p class="form-count">Count: <span class="count">{{filteredEntities.length}}</span></p>
+    </div>
+</div>
+<div class="blade-content">
+    <div class="blade-inner">
+        <div class="inner-block clearfix">
+            <ul class="list __items">
+                <li class="list-item" ng-repeat="data in blade.allSettings | filter:blade.searchText | orderBy: 'displayName' as filteredEntities track by data.name" ng-class="{'__selected': data.name === selectedNodeId}" ng-click='selectNode(data)' ng-if="blade.searchText">
+                    <i class="list-ico fa fa-wrench"></i>
+                    <span class="list-t">{{data.displayName}}</span>
+                    <span class="list-descr">{{data.name}}</span>
+                </li>
+                <li class="list-item" ng-repeat="data in blade.currentEntities | orderBy: 'displayName' as filteredEntities track by data.displayName" ng-class="{'__selected': data.displayName === selectedNodeId}" ng-click='selectNode(data)' ng-if="!blade.searchText">
+                    <i class="list-ico fa fa-wrench"></i>
+                    <span class="name">{{data.displayName}}</span>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>

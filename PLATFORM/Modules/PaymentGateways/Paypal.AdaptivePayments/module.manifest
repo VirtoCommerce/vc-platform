@@ -25,7 +25,7 @@
     <moduleType>Paypal.AdaptivePayments.Module, Paypal.AdaptivePayments</moduleType>
 
 		<settings>
-				<group name="Gateway settings">
+				<group name="Payment methods|Paypal|Adaptive payments|Gateway settings">
 						<setting>
 								<name>Paypal.AdaptivePayments.Mode</name>
 								<valueType>string</valueType>

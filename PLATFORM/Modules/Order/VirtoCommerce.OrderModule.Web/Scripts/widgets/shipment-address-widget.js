@@ -28,11 +28,11 @@
 	};
 
 	$scope.getAddressName = function (address) {
-		var retVal = address.name;
-		if (!retVal) {
+
+		if (address) {
 			retVal = [address.countryCode, address.regionName, address.city, address.line1].join(",");
 		}
-		return retVal;
+		return null;
 	};
 
 	$scope.$watch('widget.blade.currentEntity', function (operation) {

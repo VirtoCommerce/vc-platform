@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
+using VirtoCommerce.Domain.Catalog.Services;
 using VirtoCommerce.Domain.Pricing.Services;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Data.Infrastructure;
@@ -15,9 +16,11 @@ namespace VirtoCommerce.PricingModule.Data.Services
     public class PricingServiceImpl : ServiceBase, IPricingService
     {
         private readonly Func<IPricingRepository> _repositoryFactory;
-        public PricingServiceImpl(Func<IPricingRepository> repositoryFactory)
+		private readonly IItemService _productService;
+        public PricingServiceImpl(Func<IPricingRepository> repositoryFactory, IItemService productService)
         {
             _repositoryFactory = repositoryFactory;
+			_productService = productService;
         }
 
         #region IPricingService Members
@@ -63,7 +66,7 @@ namespace VirtoCommerce.PricingModule.Data.Services
             }
 
             var retVal = new List<coreModel.Price>();
-
+		
             using (var repository = _repositoryFactory())
             {
                 //Get a price range satisfying by passing context
@@ -93,6 +96,26 @@ namespace VirtoCommerce.PricingModule.Data.Services
                     var orderedPrices = groupPrices.OrderBy(x => Math.Min(x.Sale.HasValue ? x.Sale.Value : x.List, x.List));
                     retVal.AddRange(orderedPrices);
                 }
+
+				if (_productService != null)
+				{
+					//Variation price inheritance
+					//Need find products without price it may be a variation without implicitly price defined and try to get price from main product
+					var productIdsWithoutPrice = evalContext.ProductIds.Except(retVal.Select(x => x.ProductId).Distinct()).ToArray();
+					if (productIdsWithoutPrice.Any())
+					{
+						var variations = _productService.GetByIds(productIdsWithoutPrice, Domain.Catalog.Model.ItemResponseGroup.ItemInfo).Where(x => x.MainProductId != null);
+						evalContext.ProductIds = variations.Select(x=>x.MainProductId).Distinct().ToArray();
+						foreach (var inheritedPrice in EvaluateProductPrices(evalContext))
+						{
+							var variation = variations.First(x => x.MainProductId == inheritedPrice.ProductId);
+							//For correct override price in possible update 
+							inheritedPrice.Id = null;
+							inheritedPrice.ProductId = variation.Id;
+							retVal.Add(inheritedPrice);
+						}
+					}
+				}
             }
 
             return retVal;

@@ -10,6 +10,11 @@ namespace VirtoCommerce.CoreModule.Data.Shipping
 {
 	public class FixedRateShippingMethod : ShippingMethod
 	{
+		public FixedRateShippingMethod()
+			: base("FixedRate")
+		{
+		}
+
 		public FixedRateShippingMethod(ICollection<SettingEntry> settings)
 			: base("FixedRate")
 		{

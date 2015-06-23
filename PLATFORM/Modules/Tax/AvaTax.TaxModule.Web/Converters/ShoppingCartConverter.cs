@@ -64,15 +64,16 @@ namespace AvaTax.TaxModule.Web.Converters
                         AddressCode = address.Index.ToString(),
                         Line1 = address.Value.Line1,
                         City = address.Value.City,
-                        Region = address.Value.RegionId,
-                        PostalCode = address.Value.PostalCode
+                        Region = address.Value.RegionName,
+                        PostalCode = address.Value.PostalCode,
+                        Country = address.Value.CountryName
                     });
 
                 if (address.Value.AddressType == AddressType.Shipping
                     || address.Value.AddressType == AddressType.Shipping)
                     destinationAddressIndex = address.Index.ToString();
             }
-
+            
             getTaxRequest.Addresses = addresses.ToArray();
 
             // Line Data
@@ -84,7 +85,7 @@ namespace AvaTax.TaxModule.Web.Converters
                     LineNo = li.Index.ToString(CultureInfo.InvariantCulture),
                     ItemCode = li.Value.ProductId,
                     Qty = li.Value.Quantity,
-                    Amount = li.Value.ExtendedPrice,
+                    Amount = li.Value.PlacedPrice,
                     OriginCode = destinationAddressIndex, //TODO set origin address (fulfillment?)
                     DestinationCode = destinationAddressIndex,
                     Description = li.Value.Name,

@@ -10,6 +10,7 @@ using VirtoCommerce.Platform.Core.Common;
 using Omu.ValueInjecter;
 using VirtoCommerce.Platform.Data.Common;
 using VirtoCommerce.Platform.Data.Common.ConventionInjections;
+using VirtoCommerce.Domain.Commerce.Model;
 
 
 namespace VirtoCommerce.CatalogModule.Data.Converters
@@ -57,6 +58,7 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
                 retVal.Languages.Add(catalogLanguage);
             }
 
+	
             return retVal;
         }
 
@@ -108,12 +110,12 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
                     dbCatalogLanguage.CatalogId = retVal.Id;
                     dbCatalog.CatalogLanguages.Add(dbCatalogLanguage);
                 }
+				retVal.DefaultLanguage = catalog.Languages.Where(x => x.IsDefault).Select(x => x.LanguageCode).FirstOrDefault();
             }
-
-            retVal.DefaultLanguage = catalog.Languages.Where(x => x.IsDefault).Select(x => x.LanguageCode).FirstOrDefault();
 
             if (retVal.DefaultLanguage == null)
                 retVal.DefaultLanguage = "undefined";
+
 
             retVal.Name = catalog.Name;
 

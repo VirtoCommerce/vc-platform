@@ -119,12 +119,29 @@
                 return !isDirty();
             },
             permission: 'store:manage'
+        },
+        {
+            name: "Export",
+            icon: 'fa fa-upload',
+            executeMethod: function () {
+                var newBlade = {
+                    id: 'storeExport',
+                    title: 'Store export',
+                    name: 'VirtoCommerce import',
+                    description: 'Native VirtoCommerce store data export',
+                    icon: 'fa fa-file-archive-o',
+                    store: $scope.blade.currentEntity,
+                    controller: 'virtoCommerce.storeModule.storeExportController',
+                    template: 'Modules/$(VirtoCommerce.Store)/Scripts/blades/backup/store-export.tpl.html'
+                };
+                bladeNavigationService.showBlade(newBlade, $scope.blade);
+            },
+            canExecuteMethod: function () { return true; }
         }
     ];
 
 
     $scope.blade.refresh(false);
     $scope.catalogs = catalogs.getCatalogs();
-    // $scope.storeStates = [{ id: 'Open', name: 'Open' }, { id: 'Closed', name: 'Closed' }, { id: 'RestrictedAccess', name: 'Restricted Access' }];
     $scope.storeStates = settings.getValues({ id: 'Stores.States' });
 }]);

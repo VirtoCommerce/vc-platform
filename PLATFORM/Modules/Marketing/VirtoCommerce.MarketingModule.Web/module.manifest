@@ -28,7 +28,7 @@
     </scripts>
 
     <!--<settings>
-    <group>
+    <group name="Marketing|General">
       <setting>
         <name>VirtoCommerce.Marketing.Promotions.Exclusivities</name>
         <valueType>string</valueType>

@@ -31,7 +31,7 @@
 	</scripts>-->
 
     <settings>
-        <group name="Credentials">
+        <group name="Payment methods|Klarna|Credentials">
             <setting>
                 <name>Klarna.AppKey</name>
                 <valueType>integer</valueType>
@@ -61,22 +61,22 @@
 							<name>Klarna.TermsUrl</name>
 							<valueType>string</valueType>
 							<defaultValue>checkout/terms</defaultValue>
-							<title>Secret key</title>
-							<description>Klarna secret key from credentials</description>
+							<title>Terms Url</title>
+							<description>Klarna Terms Url</description>
 						</setting>
 						<setting>
 							<name>Klarna.CheckoutUrl</name>
 							<valueType>string</valueType>
 							<defaultValue>checkout/step1</defaultValue>
-							<title>Secret key</title>
-							<description>Klarna secret key from credentials</description>
+							<title>Checkout Url</title>
+							<description>Klarna Checkout Url</description>
 						</setting>
 						<setting>
 							<name>Klarna.ConfirmationUrl</name>
 							<valueType>string</valueType>
 							<defaultValue>checkout/externalpaymentcallback</defaultValue>
-							<title>Secret key</title>
-							<description>Klarna secret key from credentials</description>
+							<title>Confirmation Url</title>
+							<description>Klarna Confirmation Url</description>
 						</setting>
         </group>
     </settings>

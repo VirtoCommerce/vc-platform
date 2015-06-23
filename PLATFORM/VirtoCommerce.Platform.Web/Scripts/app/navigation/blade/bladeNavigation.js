@@ -127,39 +127,53 @@ angular.module('platformWebApp')
             blade = service.findBlade(blade.id);
 
             // close all children
-            closeChildren(blade);
+            service.closeChildrenBlades(blade, function () {
+                var idx = service.stateBlades().indexOf(blade);
 
-            var idx = service.stateBlades().indexOf(blade);
-
-            var doCloseBlade = function () {
-                if (angular.isFunction(onBeforeClosing)) {
-                    onBeforeClosing(doCloseBladeFinal);
-                } else {
-                    doCloseBladeFinal();
-                }
-            }
-
-            var doCloseBladeFinal = function () {
-                service.stateBlades().splice(idx, 1);
-                //remove blade from children collection
-                if (angular.isDefined(blade.parentBlade)) {
-                    var childIdx = blade.parentBlade.childrenBlades.indexOf(blade);
-                    if (childIdx >= 0) {
-                        blade.parentBlade.childrenBlades.splice(childIdx, 1);
+                var doCloseBlade = function () {
+                    if (angular.isFunction(onBeforeClosing)) {
+                        onBeforeClosing(doCloseBladeFinal);
+                    } else {
+                        doCloseBladeFinal();
                     }
                 }
-                if (angular.isFunction(callback)) {
-                    $timeout(callback);
-                };
-            };
 
-            if (idx >= 0) {
-                if (angular.isFunction(blade.onClose)) {
-                    blade.onClose(doCloseBlade);
+                var doCloseBladeFinal = function () {
+                    service.stateBlades().splice(idx, 1);
+                    //remove blade from children collection
+                    if (angular.isDefined(blade.parentBlade)) {
+                        var childIdx = blade.parentBlade.childrenBlades.indexOf(blade);
+                        if (childIdx >= 0) {
+                            blade.parentBlade.childrenBlades.splice(childIdx, 1);
+                        }
+                    }
+                    if (angular.isFunction(callback)) {
+                        $timeout(callback);
+                    };
+                };
+
+                if (idx >= 0) {
+                    if (angular.isFunction(blade.onClose)) {
+                        blade.onClose(doCloseBlade);
+                    }
+                    else {
+                        doCloseBlade();
+                    }
                 }
-                else {
-                    doCloseBlade();
-                }
+            });
+        },
+        closeChildrenBlades: function (blade, callback) {
+            if (blade && blade.childrenBlades.length > 0) {
+                angular.forEach(blade.childrenBlades.slice(), function (child) {
+                    service.closeBlade(child, function () {
+                        // show only when all children were closed
+                        if (blade.childrenBlades.length == 0 && angular.isFunction(callback)) {
+                            callback();
+                        }
+                    });
+                });
+            } else if (angular.isFunction(callback)) {
+                callback();
             }
         },
         hasBlade: function (id) {
@@ -177,7 +191,6 @@ angular.module('platformWebApp')
             return service.blades[stateName];
         },
         findBlade: function (id) {
-
             var found;
             angular.forEach(service.stateBlades(), function (blade) {
                 if (blade.id == id) {
@@ -214,16 +227,7 @@ angular.module('platformWebApp')
             };
 
             if (angular.isDefined(parentBlade) && parentBlade.childrenBlades.length > 0) {
-                var childBadesCount = parentBlade.childrenBlades.length;
-                angular.forEach(parentBlade.childrenBlades.slice(), function (child) {
-                    service.closeBlade(child, function () {
-                        childBadesCount--;
-                        //Only show when all children were closed
-                        if (childBadesCount == 0) {
-                            showBlade();
-                        }
-                    });
-                });
+                service.closeChildrenBlades(parentBlade, showBlade);
             }
             else if (angular.isDefined(existingBlade)) {
                 service.closeBlade(existingBlade, showBlade);
@@ -237,14 +241,6 @@ angular.module('platformWebApp')
             blade.error = msg;
         }
     };
-
-    function closeChildren(blade) {
-        if (blade && blade.childrenBlades) {
-            angular.forEach(blade.childrenBlades.slice(), function (child) {
-                service.closeBlade(child);
-            });
-        }
-    }
 
     return service;
 }]);

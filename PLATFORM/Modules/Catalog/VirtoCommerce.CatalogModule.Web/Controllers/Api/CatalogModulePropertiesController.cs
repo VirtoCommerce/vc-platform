@@ -85,7 +85,8 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 				Type = moduleModel.PropertyType.Catalog,
 				ValueType = moduleModel.PropertyValueType.ShortText,
 				DictionaryValues = new List<webModel.PropertyDictionaryValue>(),
-				Attributes = new List<webModel.PropertyAttribute>()
+				Attributes = new List<webModel.PropertyAttribute>(),
+				DisplayNames = catalog.Languages.Select(x => new moduleModel.PropertyDisplayName { LanguageCode = x.LanguageCode }).ToList()
 			};
 
 			return Ok(retVal);
@@ -110,7 +111,8 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 				Type = moduleModel.PropertyType.Category,
 				ValueType = moduleModel.PropertyValueType.ShortText,
 				DictionaryValues = new List<webModel.PropertyDictionaryValue>(),
-				Attributes = new List<webModel.PropertyAttribute>()
+				Attributes = new List<webModel.PropertyAttribute>(),
+				DisplayNames = category.Catalog.Languages.Select(x => new moduleModel.PropertyDisplayName { LanguageCode = x.LanguageCode }).ToList()
 			};
 		
             return Ok(retVal);

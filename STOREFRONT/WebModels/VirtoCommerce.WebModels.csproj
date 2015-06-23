@@ -157,6 +157,8 @@
     <Compile Include="Models\Price.cs" />
     <Compile Include="Models\Product.cs" />
     <Compile Include="Models\PropertiesDrop.cs" />
+    <Compile Include="Models\Storage\DownloadLink.cs" />
+    <Compile Include="Models\Storage\ProductDownloadLinks.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Models\Review.cs" />
     <Compile Include="Routing\CanonicalizedAttribute.cs" />

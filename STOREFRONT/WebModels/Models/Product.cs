@@ -4,7 +4,6 @@ using System.Linq;
 using System.Runtime.Serialization;
 using DotLiquid;
 using System;
-
 #endregion
 
 namespace VirtoCommerce.Web.Models
@@ -164,7 +163,7 @@ namespace VirtoCommerce.Web.Models
 
                 return queryString["variant"] != null ?
                     this.Variants.FirstOrDefault(v => v.Id == queryString["variant"]) :
-                    this.Variants.FirstOrDefault();
+                    this.Variants.FirstOrDefault(v => v.Id == Handle);
             }
         }
 

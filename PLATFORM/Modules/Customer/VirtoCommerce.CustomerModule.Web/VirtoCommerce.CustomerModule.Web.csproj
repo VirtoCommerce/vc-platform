@@ -120,6 +120,8 @@
     <Content Include="Scripts\blades\member-property-detail.tpl.html" />
     <Content Include="Scripts\blades\member-property-valueType.js" />
     <Content Include="Scripts\blades\member-property-valueType.tpl.html" />
+    <Content Include="Scripts\blades\loginOnBehalf-list.js" />
+    <Content Include="Scripts\blades\loginOnBehalf-list.tpl.html" />
     <Content Include="Scripts\resources\members.js" />
     <Content Include="Scripts\customer.js" />
     <Content Include="Scripts\widgets\memberPhonesWidget.js" />

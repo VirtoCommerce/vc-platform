@@ -92,7 +92,7 @@ namespace VirtoCommerce.ApiClient.Caching
                 var objectContent = cacheContent.Response.Content as ObjectContent;
                 if (objectContent != null && objectContent.Value != null)
                 {
-                    newResponse.Content = new ObjectContent(objectContent.Value.GetType(), objectContent.Value, new JsonMediaTypeFormatter());
+                    newResponse.Content = new ObjectContent(objectContent.Value.GetType(), objectContent.Value, BaseClient.CreateMediaTypeFormatter());
                 }
                 else
                 {

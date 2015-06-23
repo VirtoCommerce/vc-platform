@@ -70,13 +70,13 @@ namespace VirtoCommerce.StoreModule.Data.Model
 		public string ReturnsFulfillmentCenterId { get; set; }
 
 		#region Navigation Properties
-	
-		public ObservableCollection<StoreLanguage> Languages { get; set; }
 
-		public ObservableCollection<StoreCurrency> Currencies { get; set; }
+		public virtual ObservableCollection<StoreLanguage> Languages { get; set; }
 
-		public ObservableCollection<StorePaymentMethod> PaymentMethods { get; set; }
-		public ObservableCollection<StoreShippingMethod> ShippingMethods { get; set; }
+		public virtual ObservableCollection<StoreCurrency> Currencies { get; set; }
+
+		public virtual ObservableCollection<StorePaymentMethod> PaymentMethods { get; set; }
+		public virtual ObservableCollection<StoreShippingMethod> ShippingMethods { get; set; }
 		#endregion
 
 		public static ValidationResult ValidateStoreId(string value, ValidationContext context)

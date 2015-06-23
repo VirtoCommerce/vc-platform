@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using VirtoCommerce.Domain.Commerce.Model;
 
 namespace VirtoCommerce.CatalogModule.Web.Model
 {
@@ -16,10 +17,10 @@ namespace VirtoCommerce.CatalogModule.Web.Model
         public string Name { get; set; }
         public string Path { get; set; }
 		public Dictionary<string, string> Parents { get; set; }
-        public List<Category> Children { get; set; }
-		public List<Property> Properties { get; set; }
-        public List<CategoryLink> Links { get; set; }
-		public List<SeoInfo> SeoInfos { get; set; }
+        public ICollection<Category> Children { get; set; }
+		public ICollection<Property> Properties { get; set; }
+		public ICollection<CategoryLink> Links { get; set; }
+		public ICollection<SeoInfo> SeoInfos { get; set; }
 	
     }
 }

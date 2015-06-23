@@ -23,7 +23,10 @@ namespace VirtoCommerce.Content.Tests
         public void CanContentQueryMenuLists()
         {
             var repository = _fixture.Db;
-            var service = new MenuServiceImpl(repository);
+            Func<IMenuRepository> menuRepFactory = () =>
+                repository;
+
+            var service = new MenuServiceImpl(menuRepFactory);
             var lists = service.GetListsByStoreId("SampleStore");
             Assert.True(lists.Any());
         }

@@ -38,14 +38,14 @@ namespace VirtoCommerce.CatalogModule.Data.Services
 					var dbCatalog = repository.GetCatalogById(dbCategory.CatalogId);
 					var dbProperties = repository.GetAllCategoryProperties(dbCategory);
 					//var dbLinks = repository.GetCategoryLinks(categoryId);
-					var seoInfos = _commerceService.GetSeoKeywordsForEntity(categoryId).ToArray();
 
 					var catalog = dbCatalog.ToCoreModel();
 					var properties = dbProperties.Select(x => x.ToCoreModel(catalog, dbCategory.ToCoreModel(catalog)))
 												 .ToArray();
 					var allParents = repository.GetAllCategoryParents(dbCategory);
 
-					retVal = dbCategory.ToCoreModel(catalog, properties, seoInfos, allParents);
+					retVal = dbCategory.ToCoreModel(catalog, properties, allParents);
+					retVal.SeoInfos = _commerceService.GetObjectsSeo(new string[] { categoryId }).ToList();
 				}
             }
             return retVal;
@@ -59,22 +59,21 @@ namespace VirtoCommerce.CatalogModule.Data.Services
             var dbCategory = category.ToDataModel();
             coreModel.Category retVal = null;
             using (var repository = _catalogRepositoryFactory())
-            {
-				//Need add seo separately
-				if (category.SeoInfos != null)
-				{
-					foreach(var seoInfo in category.SeoInfos)
-					{
-						var dbSeoInfo = seoInfo.ToCoreModel(dbCategory);
-						_commerceService.UpsertSeoKeyword(dbSeoInfo);
-					}
-				}
-
+            {	
                 repository.Add(dbCategory);
-
                 CommitChanges(repository);
             }
-            retVal = GetById(dbCategory.Id);
+			//Need add seo separately
+			if (category.SeoInfos != null)
+			{
+				foreach (var seoInfo in category.SeoInfos)
+				{
+					seoInfo.ObjectId = dbCategory.Id;
+					seoInfo.ObjectType = typeof(coreModel.Category).Name;
+					_commerceService.UpsertSeo(seoInfo);
+				}
+			}
+       
             return retVal;
         }
 
@@ -95,11 +94,14 @@ namespace VirtoCommerce.CatalogModule.Data.Services
 					//Patch SeoInfo  separately
 					if (category.SeoInfos != null)
 					{
-						var dbSeoInfos = new ObservableCollection<SeoUrlKeyword>(_commerceService.GetSeoKeywordsForEntity(category.Id));
-						var changedSeoInfos = category.SeoInfos.Select(x => x.ToCoreModel(dbCategory)).ToList();
-						dbSeoInfos.ObserveCollection(x => _commerceService.UpsertSeoKeyword(x), x => _commerceService.DeleteSeoKeywords(new string[] { x.Id }));
-
-						changedSeoInfos.Patch(dbSeoInfos, (source, target) => _commerceService.UpsertSeoKeyword(source));
+						foreach(var seoInfo in category.SeoInfos)
+						{
+							seoInfo.ObjectId = category.Id;
+							seoInfo.ObjectType = typeof(coreModel.Category).Name;
+						}
+						var seoInfos = new ObservableCollection<SeoInfo>(_commerceService.GetObjectsSeo(new string[] { category.Id}));
+						seoInfos.ObserveCollection(x => _commerceService.UpsertSeo(x), x => _commerceService.DeleteSeo(new string[] { x.Id }));
+						category.SeoInfos.Patch(seoInfos, (source, target) => _commerceService.UpsertSeo(source));
 					}
 		
 					var dbCategoryChanged = category.ToDataModel();

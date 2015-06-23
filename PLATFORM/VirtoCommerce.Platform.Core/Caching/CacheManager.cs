@@ -37,21 +37,24 @@ namespace VirtoCommerce.Platform.Core.Caching
 			}
 		}
 
-      
 
-        public void Put(CacheKey cacheKey, object cacheValue)
-        {
-            if (cacheKey == null)
-                throw new ArgumentNullException("cacheKey");
 
-            var repository = GetProvider(cacheKey.CacheGroup);
-            if (repository != null)
-            {
-                var expirationTimeout = GetExpirationTimeoutByCacheGroup(cacheKey.CacheGroup);
-                var cachedObj = new CachedObject(cacheValue);
-                repository.Add(cacheKey.Key, cachedObj, expirationTimeout);
-            }
-        }
+		public void Put(CacheKey cacheKey, object cacheValue)
+		{
+			if (cacheKey == null)
+				throw new ArgumentNullException("cacheKey");
+
+			var repository = GetProvider(cacheKey.CacheGroup);
+			if (repository == null)
+			{
+				throw new NullReferenceException("repository");
+			}
+
+			var expirationTimeout = GetExpirationTimeoutByCacheGroup(cacheKey.CacheGroup);
+			var cachedObj = new CachedObject(cacheValue);
+			repository.Add(cacheKey.Key, cachedObj, expirationTimeout);
+
+		}
 
         /// <summary>
         /// Gets the specified cache key.

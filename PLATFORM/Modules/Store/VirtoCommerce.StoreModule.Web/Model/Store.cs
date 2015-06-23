@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
+using VirtoCommerce.Domain.Commerce.Model;
 using VirtoCommerce.Platform.Core.Common;
 using coreModel = VirtoCommerce.Domain.Store.Model;
 

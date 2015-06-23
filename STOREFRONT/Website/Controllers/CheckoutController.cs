@@ -10,6 +10,7 @@ using VirtoCommerce.Web.Convertors;
 using VirtoCommerce.Web.Models;
 using VirtoCommerce.Web.Models.FormModels;
 using VirtoCommerce.Web.Models.Routing;
+using VirtoCommerce.Web.Models.Storage;
 
 namespace VirtoCommerce.Web.Controllers
 {
@@ -81,11 +82,12 @@ namespace VirtoCommerce.Web.Controllers
                         City = formModel.City,
                         Company = !string.IsNullOrEmpty(formModel.Company) ? formModel.Company : null,
                         Country = formModel.Country,
-                        CountryCode = "RUS",
+                        CountryCode = "US", //TODO Set country code by selected country name
                         FirstName = formModel.FirstName,
                         LastName = formModel.LastName,
                         Phone = !string.IsNullOrEmpty(formModel.Phone) ? formModel.Phone : null,
                         Province = formModel.Province,
+                        ProvinceCode = "CA", //TODO Set province code by selected province name
                         Zip = formModel.Zip
                     };
 
@@ -127,6 +129,11 @@ namespace VirtoCommerce.Web.Controllers
         [Route("checkout/step-2")]
         public async Task<ActionResult> Step2()
         {
+            if (Context.Cart.ItemCount == 0)
+            {
+                return RedirectToAction("Index", "Cart");
+            }
+
             var checkout = await Service.GetCheckoutAsync();
 
             if (checkout.RequiresShipping && checkout.ShippingAddress == null ||
@@ -178,11 +185,12 @@ namespace VirtoCommerce.Web.Controllers
                         City = formModel.City,
                         Company = !string.IsNullOrEmpty(formModel.Company) ? formModel.Company : null,
                         Country = formModel.Country,
-                        CountryCode = "RUS",
+                        CountryCode = "US", //TODO Set country code by selected country name
                         FirstName = formModel.FirstName,
                         LastName = formModel.LastName,
                         Phone = !string.IsNullOrEmpty(formModel.Phone) ? formModel.Phone : null,
                         Province = formModel.Province,
+                        ProvinceCode = "CA", //TODO Set province code by selected province name
                         Zip = formModel.Zip
                     };
 
@@ -196,7 +204,14 @@ namespace VirtoCommerce.Web.Controllers
                         checkout.ShippingMethod = checkout.ShippingMethods.FirstOrDefault(sm => sm.Handle == formModel.ShippingMethodId);
                     }
 
-                    checkout.PaymentMethod = checkout.PaymentMethods.FirstOrDefault(pm => pm.Handle == formModel.PaymentMethodId);
+                    checkout.PaymentMethod = checkout.PaymentMethods.FirstOrDefault(pm => pm.Code == formModel.PaymentMethodId);
+                    if (checkout.PaymentMethod.Type.Equals("Standard", StringComparison.OrdinalIgnoreCase))
+                    {
+                        checkout.PaymentMethod.CardNumber = formModel.CardNumber;
+                        checkout.PaymentMethod.CardExpirationMonth = formModel.CardExpirationMonth;
+                        checkout.PaymentMethod.CardExpirationYear = formModel.CardExpirationYear;
+                        checkout.PaymentMethod.CardCvv = formModel.CardCvv;
+                    }
 
                     if (User.Identity.IsAuthenticated)
                     {
@@ -219,33 +234,100 @@ namespace VirtoCommerce.Web.Controllers
 
                     if (inPayment != null)
                     {
-                        var paymentResult = await Service.ProcessPaymentAsync(dtoOrder.Id, inPayment.Id);
+                        VirtoCommerce.ApiClient.DataContracts.ProcessPaymentResult paymentResult = null;
+
+                        if (checkout.PaymentMethod.Type.Equals("Standard"))
+                        {
+                            string cardType = GetCreditCardType(formModel.CardNumber);
+
+                            if (!String.IsNullOrEmpty(cardType))
+                            {
+                                var cardInfo = new ApiClient.DataContracts.BankCardInfo
+                                {
+                                    BankCardCVV2 = formModel.CardCvv,
+                                    BankCardMonth = int.Parse(formModel.CardExpirationMonth),
+                                    BankCardNumber = formModel.CardNumber,
+                                    BankCardType = cardType,
+                                    BankCardYear = int.Parse(formModel.CardExpirationYear)
+                                };
+
+                                paymentResult = await Service.ProcessPaymentAsync(dtoOrder.Id, inPayment.Id, cardInfo);
+                            }
+                        }
+                        else
+                        {
+                            paymentResult = await Service.ProcessPaymentAsync(dtoOrder.Id, inPayment.Id, null);
+                        }
 
                         if (paymentResult != null)
                         {
-                            if(paymentResult.IsSuccess)
+                            if (paymentResult != null)
                             {
-                                if (paymentResult.PaymentMethodType == ApiClient.DataContracts.PaymentMethodType.Redirection)
+                                if (paymentResult.IsSuccess)
                                 {
-                                    if (!string.IsNullOrEmpty(paymentResult.RedirectUrl))
+                                    if (paymentResult.PaymentMethodType == ApiClient.DataContracts.PaymentMethodType.Redirection)
                                     {
-                                        return Redirect(paymentResult.RedirectUrl);
+                                        if (!string.IsNullOrEmpty(paymentResult.RedirectUrl))
+                                        {
+                                            return Redirect(paymentResult.RedirectUrl);
+                                        }
                                     }
-                                }
-                                if (paymentResult.PaymentMethodType == ApiClient.DataContracts.PaymentMethodType.PreparedForm)
-                                {
-                                    if (!string.IsNullOrEmpty(paymentResult.HtmlForm))
+                                    if (paymentResult.PaymentMethodType == ApiClient.DataContracts.PaymentMethodType.PreparedForm)
                                     {
-                                        SiteContext.Current.Set("payment_html_form", paymentResult.HtmlForm);
-                                        return View("payment");
+                                        if (!string.IsNullOrEmpty(paymentResult.HtmlForm))
+                                        {
+                                            SiteContext.Current.Set("payment_html_form", paymentResult.HtmlForm);
+                                            return View("payment");
+                                        }
                                     }
-                                }
-                            }
-                            else
-                            {
-                                Context.ErrorMessage = paymentResult.Error;
+                                    if (paymentResult.PaymentMethodType == ApiClient.DataContracts.PaymentMethodType.Standard)
+                                    {
+                                        var productsIds = dtoOrder.Items.Select(i => i.ProductId);
+                                        var catalogItems = await Service.GetCatalogItemsByIdsAsync(productsIds, "ItemAssets");
 
-                                return View("error");
+                                        var nonShippingProducts = catalogItems.Where(ci => ci.ProductType == "Digital");
+                                        if (nonShippingProducts.Count() > 0)
+                                        {
+                                            var downloadLinks = new List<ProductDownloadLinks>();
+
+                                            foreach (var nonShippingProduct in nonShippingProducts)
+                                            {
+                                                var productLinks = new ProductDownloadLinks
+                                                {
+                                                    ProductName = nonShippingProduct.Name
+                                                };
+
+                                                int linkCount = 1;
+                                                foreach (var asset in nonShippingProduct.Assets)
+                                                {
+                                                    var url = Url.Action("Index", "Download", new { @file = asset.Name, @oid = dtoOrder.Id, @pid = nonShippingProduct.Id }, Request.Url.Scheme);
+                                                    productLinks.Links.Add(new DownloadLink
+                                                    {
+                                                        Filename = asset.Name,
+                                                        Text = nonShippingProduct.Assets.Count() > 1 ? String.Format("Download link {0}", linkCount) : "Download link",
+                                                        Url = url
+                                                    });
+
+                                                    linkCount++;
+                                                }
+
+                                                downloadLinks.Add(productLinks);
+                                            }
+
+                                            Context.Set("download_links", downloadLinks);
+                                        }
+
+                                        Context.Order = dtoOrder.AsWebModel();
+
+                                        return View("thanks_page");
+                                    }
+                                }
+                                else
+                                {
+                                    Context.ErrorMessage = paymentResult.Error;
+
+                                    return View("error");
+                                }
                             }
                         }
                     }
@@ -260,6 +342,14 @@ namespace VirtoCommerce.Web.Controllers
             }
 
             return View("error");
+        }
+
+        //
+        // GET: /checkout/bankcardform
+        [HttpGet]
+        public ActionResult BankCardForm()
+        {
+            return PartialView("bank_card_form");
         }
 
         //
@@ -286,6 +376,41 @@ namespace VirtoCommerce.Web.Controllers
 
                     if (order != null)
                     {
+                        var productsIds = order.Items.Select(i => i.ProductId);
+                        var catalogItems = await Service.GetCatalogItemsByIdsAsync(productsIds, "ItemAssets");
+
+                        var nonShippingProducts = catalogItems.Where(ci => ci.ProductType == "Digital");
+                        if (nonShippingProducts.Count() > 0)
+                        {
+                            var downloadLinks = new List<ProductDownloadLinks>();
+
+                            foreach (var nonShippingProduct in nonShippingProducts)
+                            {
+                                var productLinks = new ProductDownloadLinks
+                                {
+                                    ProductName = nonShippingProduct.Name
+                                };
+
+                                int linkCount = 1;
+                                foreach (var asset in nonShippingProduct.Assets)
+                                {
+                                    var url = Url.Action("Index", "Download", new { @file = asset.Name, @oid = order.Id, @pid = nonShippingProduct.Id }, Request.Url.Scheme);
+                                    productLinks.Links.Add(new DownloadLink
+                                    {
+                                        Filename = asset.Name,
+                                        Text = nonShippingProduct.Assets.Count() > 1 ? String.Format("Download link {0}", linkCount) : "Download link",
+                                        Url = url
+                                    });
+
+                                    linkCount++;
+                                }
+
+                                downloadLinks.Add(productLinks);
+                            }
+
+                            Context.Set("download_links", downloadLinks);
+                        }
+
                         Context.Order = order.AsWebModel();
                         return View("thanks_page");
                     }
@@ -322,6 +447,16 @@ namespace VirtoCommerce.Web.Controllers
             return Json(checkout);
         }
 
+        //
+        // GET: /checkout/validatecardnumber
+        [HttpGet]
+        public JsonResult ValidateCardNumber(string cardNumber)
+        {
+            string type = GetCreditCardType(cardNumber);
+
+            return Json(type != null, JsonRequestBehavior.AllowGet);
+        }
+
         private CultureInfo GetCultureInfoByCurrencyCode(string currencyCode)
         {
             var cultures = CultureInfo.GetCultures(CultureTypes.SpecificCultures);
@@ -339,6 +474,48 @@ namespace VirtoCommerce.Web.Controllers
             }
 
             return culture;
+        }
+
+        private string GetCreditCardType(string cardNumber)
+        {
+            string cardType = null;
+
+            if (cardNumber.All(c => c >= '0' && c <= '9'))
+            {
+                if (cardNumber.Length == 15)
+                {
+                    if (cardNumber[0] == '3' && (cardNumber[1] == '4' || cardNumber[1] == '7'))
+                    {
+                        cardType = "AMERICAN EXPRESS";
+                    }
+                }
+                if (cardNumber.Length == 14)
+                {
+                    int first8Digits = int.Parse(cardNumber.Substring(0, 8));
+                    if (first8Digits >= 60110000 && first8Digits <= 60119999 ||
+                        first8Digits >= 65000000 && first8Digits <= 65999999 ||
+                        first8Digits >= 62212600 && first8Digits <= 62292599)
+                    {
+                        cardType = "DISCOVER";
+                    }
+                }
+                if (cardNumber.Length == 16)
+                {
+                    if (cardNumber[0] == '5' && cardNumber[1] >= '1' && cardNumber[1] <= '5')
+                    {
+                        cardType = "MASTERCARD";
+                    }
+                }
+                if (cardNumber.Length == 13 || cardNumber.Length == 16)
+                {
+                    if (cardNumber[0] == '4')
+                    {
+                        cardType = "VISA";
+                    }
+                }
+            }
+
+            return cardType;
         }
     }
 }

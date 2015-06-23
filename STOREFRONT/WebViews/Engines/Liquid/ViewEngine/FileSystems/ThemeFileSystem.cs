@@ -9,11 +9,11 @@ namespace VirtoCommerce.Web.Views.Engines.Liquid.ViewEngine.FileSystems
 {
     public class ThemeFileSystem : IFileSystem
     {
-        private readonly IViewLocator _locater;
+        private readonly IViewLocator _locator;
 
-        public ThemeFileSystem(IViewLocator locater)
+        public ThemeFileSystem(IViewLocator locator)
         {
-            this._locater = locater;
+            this._locator = locator;
         }
 
         #region Implementation of IFileSystem
@@ -27,7 +27,7 @@ namespace VirtoCommerce.Web.Views.Engines.Liquid.ViewEngine.FileSystems
                 throw new FileSystemException("Error - Illegal template name '{0}'", templatePath);
             }
 
-            var foundView = this._locater.LocatePartialView(templatePath);
+            var foundView = this._locator.LocatePartialView(templatePath);
 
             if (foundView.Contents == null)
                 return String.Format("not found {0}", templateName);

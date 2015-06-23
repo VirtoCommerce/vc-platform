@@ -13,9 +13,9 @@ namespace VirtoCommerce.SearchModule.Web.BackgroundJobs
         }
 
         [DisableConcurrentExecution(60 * 60 * 24)]
-        public void Process(string scope, string documentType)
+        public void Process(string scope, string documentType, bool rebuild)
         {
-            _controller.Process(scope, documentType, false);
+            _controller.Process(scope, documentType, rebuild);
         }
     }
 }

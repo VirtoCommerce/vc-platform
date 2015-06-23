@@ -13,17 +13,26 @@ namespace VirtoCommerce.CoreModule.Data.Converters
 	public static class SeoUrlKeywordConverter
 	{
 
-		public static coreModel.SeoUrlKeyword ToCoreModel(this dataModel.SeoUrlKeyword center)
+		public static coreModel.SeoInfo ToCoreModel(this dataModel.SeoUrlKeyword urlKeyword)
 		{
-			var retVal = new coreModel.SeoUrlKeyword();
-			retVal.InjectFrom(center);
+			var retVal = new coreModel.SeoInfo();
+			retVal.InjectFrom(urlKeyword);
+			retVal.LanguageCode = urlKeyword.Language;
+			retVal.SemanticUrl = urlKeyword.Keyword;
+			retVal.PageTitle = urlKeyword.Title;
 			return retVal;
 		}
 
-		public static dataModel.SeoUrlKeyword ToDataModel(this coreModel.SeoUrlKeyword center)
+		public static dataModel.SeoUrlKeyword ToDataModel(this coreModel.SeoInfo seo)
 		{
 			var retVal = new dataModel.SeoUrlKeyword();
-			retVal.InjectFrom(center);
+			retVal.InjectFrom(seo);
+
+			retVal.Keyword = seo.SemanticUrl;
+			retVal.Language = seo.LanguageCode;
+			retVal.Title = seo.PageTitle;
+			retVal.IsActive = true;
+
 			return retVal;
 		}
 
@@ -38,8 +47,7 @@ namespace VirtoCommerce.CoreModule.Data.Converters
 			if (target == null)
 				throw new ArgumentNullException("target");
 			var patchInjection = new PatchInjection<dataModel.SeoUrlKeyword>(x => x.ImageAltDescription, x => x.IsActive,
-																			   x => x.Keyword, x => x.KeywordType,
-																			   x => x.KeywordValue, x => x.Language,
+																			   x => x.Keyword,  x => x.Language,
 																			   x => x.MetaDescription, x => x.MetaKeywords, x => x.Title);
 			target.InjectFrom(patchInjection, source);
 		}

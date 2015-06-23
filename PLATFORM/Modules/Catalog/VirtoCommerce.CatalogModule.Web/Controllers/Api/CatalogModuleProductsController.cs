@@ -12,6 +12,7 @@ using VirtoCommerce.Platform.Core.Security;
 using coreModel = VirtoCommerce.Domain.Catalog.Model;
 using webModel = VirtoCommerce.CatalogModule.Web.Model;
 using VirtoCommerce.Platform.Core.Common;
+using VirtoCommerce.Domain.Commerce.Model;
 
 namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 {
@@ -115,16 +116,15 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
                 CategoryId = product.CategoryId,
                 CatalogId = product.CatalogId,
                 TitularItemId = product.MainProductId ?? productId,
-				Properties = mainWebProduct.Properties.Where(x => x.Type == coreModel.PropertyType.Product
-					|| x.Type == coreModel.PropertyType.Variation).ToList(),
+				Properties = mainWebProduct.Properties.Where(x => x.Type == coreModel.PropertyType.Variation).ToList(),
             };
 
             foreach (var property in newVariation.Properties)
             {
-                //Need to generated new ids
+                //Need reset value ids
                 foreach (var val in property.Values.ToArray())
                 {
-                    val.Id = Guid.NewGuid().ToString();
+					val.Id = null;
                 }
 
                 // Mark variation property as required
@@ -134,7 +134,6 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
                 }
 
                 property.IsManageable = true;
-				property.IsReadOnly = property.Type != coreModel.PropertyType.Product && property.Type != coreModel.PropertyType.Variation;
             }
 
 
@@ -197,12 +196,12 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 					{
 						var catalog = _catalogService.GetById(product.CatalogId);
 						var defaultLanguageCode = catalog.Languages.First(x => x.IsDefault).LanguageCode;
-						var seoInfo = new coreModel.SeoInfo
+						var seoInfo = new SeoInfo
 						{
 							LanguageCode = defaultLanguageCode,
 							SemanticUrl = slugUrl
 						};
-						moduleProduct.SeoInfos = new coreModel.SeoInfo[] { seoInfo };
+						moduleProduct.SeoInfos = new SeoInfo[] { seoInfo };
 					}
 				}
                 return _itemsService.Create(moduleProduct);

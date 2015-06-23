@@ -10,15 +10,21 @@ using VirtoCommerce.Platform.Core.Caching;
 using VirtoCommerce.Platform.Data.Infrastructure;
 using dataModel = VirtoCommerce.CatalogModule.Data.Model;
 using coreModel = VirtoCommerce.Domain.Catalog.Model;
+using VirtoCommerce.Domain.Commerce.Services;
+using System.Collections.ObjectModel;
+using VirtoCommerce.Domain.Commerce.Model;
+using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.CatalogModule.Data.Services
 {
 	public class CatalogServiceImpl : ServiceBase, ICatalogService
 	{
 		private readonly Func<ICatalogRepository> _catalogRepositoryFactory;
-		public CatalogServiceImpl(Func<ICatalogRepository> catalogRepositoryFactory)
+		private readonly ICommerceService _commerceService;
+		public CatalogServiceImpl(Func<ICatalogRepository> catalogRepositoryFactory, ICommerceService commerceService)
 		{
 			_catalogRepositoryFactory = catalogRepositoryFactory;
+			_commerceService = commerceService;
 		}
 
 		#region ICatalogService Members
@@ -33,6 +39,7 @@ namespace VirtoCommerce.CatalogModule.Data.Services
 				var dbProperties = repository.GetCatalogProperties(dbCatalogBase);
 				var properties = dbProperties.Select(x => x.ToCoreModel(dbCatalogBase.ToCoreModel(), null)).ToArray();
 				retVal = dbCatalogBase.ToCoreModel(properties);
+
 			}
 			return retVal;
 		}
@@ -66,6 +73,7 @@ namespace VirtoCommerce.CatalogModule.Data.Services
 
 					changeTracker.Attach(dbCatalog);
 					dbCatalogChanged.Patch(dbCatalog);
+	
 				}
 
 				CommitChanges(repository);

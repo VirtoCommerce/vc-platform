@@ -17,7 +17,7 @@ namespace VirtoCommerce.StoreModule.Web.Converters
 		{
 			var retVal = new webModel.Store();
 			retVal.InjectFrom(store);
-
+			retVal.SeoInfos = store.SeoInfos;
 			retVal.DefaultCurrency = store.DefaultCurrency;
 			retVal.StoreState = store.StoreState;
 			if (store.Settings != null)
@@ -35,8 +35,6 @@ namespace VirtoCommerce.StoreModule.Web.Converters
 				retVal.ReturnsFulfillmentCenter = store.ReturnsFulfillmentCenter.ToWebModel();
 			if (store.FulfillmentCenter != null)
 				retVal.FulfillmentCenter = store.FulfillmentCenter.ToWebModel();
-			if (store.SeoInfos != null)
-				retVal.SeoInfos = store.SeoInfos.Select(x => x.ToWebModel()).ToList();
 
 			return retVal;
 		}
@@ -45,7 +43,7 @@ namespace VirtoCommerce.StoreModule.Web.Converters
 		{
 			var retVal = new coreModel.Store();
 			retVal.InjectFrom(store);
-
+			retVal.SeoInfos = store.SeoInfos;
 			retVal.StoreState = store.StoreState;
 			if (store.Settings != null)
 				retVal.Settings = store.Settings.Select(x => x.ToCoreModel()).ToList();
@@ -84,8 +82,7 @@ namespace VirtoCommerce.StoreModule.Web.Converters
 				retVal.ReturnsFulfillmentCenter = store.ReturnsFulfillmentCenter.ToCoreModel();
 			if (store.FulfillmentCenter != null)
 				retVal.FulfillmentCenter = store.FulfillmentCenter.ToCoreModel();
-			if (store.SeoInfos != null)
-				retVal.SeoInfos = store.SeoInfos.Select(x => x.ToCoreModel()).ToList();
+			
 
 			return retVal;
 		}

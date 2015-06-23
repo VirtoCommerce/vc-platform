@@ -1,49 +1,50 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using VirtoCommerce.Content.Data.Repositories;
 
 namespace VirtoCommerce.Content.Data.Services
 {
 	public class MenuServiceImpl : IMenuService
 	{
-		private readonly IMenuRepository _menuRepository;
+        private readonly Func<IMenuRepository> _menuRepositoryFactory;
 
-		public MenuServiceImpl(IMenuRepository menuRepository)
+		public MenuServiceImpl(Func<IMenuRepository> menuRepositoryFactory)
 		{
-			if (menuRepository == null)
-				throw new ArgumentNullException("menuRepository");
+            if (menuRepositoryFactory == null)
+                throw new ArgumentNullException("menuRepositoryFactory");
 
-			_menuRepository = menuRepository;
+            _menuRepositoryFactory = menuRepositoryFactory;
 		}
 
 		public IEnumerable<Models.MenuLinkList> GetListsByStoreId(string storeId)
 		{
-			return _menuRepository.GetListsByStoreId(storeId);
+           return _menuRepositoryFactory().GetListsByStoreId(storeId);
 		}
 
-		public Models.MenuLinkList GetListById(string listId)
-		{
-			return _menuRepository.GetListById(listId);
-		}
+	    public Models.MenuLinkList GetListById(string listId)
+	    {
+	        return _menuRepositoryFactory().GetListById(listId);
+	    }
 
-		public void UpdateList(Models.MenuLinkList list)
-		{
-			_menuRepository.UpdateList(list);
-		}
+	    public void UpdateList(Models.MenuLinkList list)
+	    {
+	        _menuRepositoryFactory().UpdateList(list);
+	    }
 
-		public void DeleteList(string listId)
-		{
-			_menuRepository.DeleteList(listId);
-		}
+	    public void DeleteList(string listId)
+	    {
+	        _menuRepositoryFactory().DeleteList(listId);
+	    }
 
-		public bool CheckList(string storeId, string name, string language, string id)
+	    public bool CheckList(string storeId, string name, string language, string id)
 		{
-			var lists = _menuRepository.GetListsByStoreId(storeId);
+	        using (var repository = _menuRepositoryFactory())
+	        {
+	            var lists = repository.GetListsByStoreId(storeId);
 
-			return !lists.Any(l => l.Name == name && l.Language == language && l.Id != id);
+	            return !lists.Any(l => l.Name == name && l.Language == language && l.Id != id);
+	        }
 		}
 	}
 }

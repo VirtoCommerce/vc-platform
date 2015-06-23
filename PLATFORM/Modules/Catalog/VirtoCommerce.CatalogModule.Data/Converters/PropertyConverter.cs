@@ -8,6 +8,7 @@ using Omu.ValueInjecter;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Data.Common;
 using VirtoCommerce.Platform.Data.Common.ConventionInjections;
+using VirtoCommerce.Domain.Catalog.Model;
 
 namespace VirtoCommerce.CatalogModule.Data.Converters
 {
@@ -41,11 +42,25 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 				retVal.Type = propertyType;
 			}
 
+			retVal.DisplayNames = catalog.Languages.Select(x => new PropertyDisplayName { LanguageCode = x.LanguageCode }).ToList();
 			if (dbProperty.PropertyAttributes != null)
 			{
 				retVal.Attributes = new List<coreModel.PropertyAttribute>();
 				retVal.Attributes.AddRange(dbProperty.PropertyAttributes.Select(x => x.ToCoreModel(retVal)));
+
+				//Load display names from attributes
+				foreach (var displayNameAttribute in retVal.Attributes.Where(x => x.Name.StartsWith("DisplayName")))
+				{
+					var languageCode = displayNameAttribute.Name.Substring("DisplayName".Length);
+					var displayName = retVal.DisplayNames.FirstOrDefault(x => String.Equals(x.LanguageCode, languageCode, StringComparison.InvariantCultureIgnoreCase));
+					if(displayName != null)
+					{
+						displayName.Name = displayNameAttribute.Value;
+					}
+				}
+			
 			}
+
 			if (dbProperty.PropertyValues != null)
 			{
 				retVal.DictionaryValues = new List<coreModel.PropertyDictionaryValue>();
@@ -101,6 +116,23 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 				}
 			}
 
+			if (property.DisplayNames != null)
+			{
+				foreach (var displayName in property.DisplayNames.Where(x=> !String.IsNullOrEmpty(x.Name)))
+				{
+					var attributeName = "DisplayName" + displayName.LanguageCode;
+					var existAttribute = retVal.PropertyAttributes.FirstOrDefault(x => x.PropertyAttributeName == attributeName);
+					if(existAttribute == null)
+					{
+						existAttribute = new dataModel.PropertyAttribute
+						{
+							PropertyAttributeName = attributeName,
+						};
+						retVal.PropertyAttributes.Add(existAttribute);
+					}
+					existAttribute.PropertyAttributeValue = displayName.Name;
+				}
+			}
 			return retVal;
 
 		}
@@ -123,7 +155,8 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 			//Attributes patch
 			if (!source.PropertyAttributes.IsNullCollection())
 			{
-				source.PropertyAttributes.Patch(target.PropertyAttributes, (sourceAsset, targetAsset) => sourceAsset.Patch(targetAsset));
+				var attributeComparer = AnonymousComparer.Create((dataModel.PropertyAttribute x) => x.IsTransient() ?  x.PropertyAttributeName : x.Id);
+				source.PropertyAttributes.Patch(target.PropertyAttributes, attributeComparer, (sourceAsset, targetAsset) => sourceAsset.Patch(targetAsset));
 			}
 			//Property dict values
 			if (!source.PropertyValues.IsNullCollection())

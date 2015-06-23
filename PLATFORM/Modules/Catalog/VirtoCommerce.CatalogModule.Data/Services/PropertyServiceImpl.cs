@@ -120,7 +120,7 @@ namespace VirtoCommerce.CatalogModule.Data.Services
 					var property = properties.FirstOrDefault(x => x.Id == dbProperty.Id);
 					if (property != null)
 					{
-						changeTracker.Attach(property);
+						changeTracker.Attach(dbProperty);
 
 						var dbPropertyChanged = property.ToDataModel();
 						dbPropertyChanged.Patch(dbProperty);

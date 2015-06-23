@@ -20,6 +20,7 @@ namespace VirtoCommerce.CatalogModule.Web.Converters
 			{
 				retVal.Languages = catalog.Languages.Select(x=>x.ToWebModel()).ToList();
 			}
+		
 			//Need add property for each meta info
 			if (properties != null)
 			{

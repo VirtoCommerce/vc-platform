@@ -15,6 +15,8 @@ namespace VirtoCommerce.CatalogModule.Web.Converters
             var retVal = new webModel.Product();
             retVal.InjectFrom(product);
 
+			retVal.SeoInfos = product.SeoInfos;
+
             if (product.Catalog != null)
             {
                 retVal.Catalog = product.Catalog.ToWebModel();
@@ -40,11 +42,6 @@ namespace VirtoCommerce.CatalogModule.Web.Converters
             if (product.Links != null)
             {
                 retVal.Links = product.Links.Select(x => x.ToWebModel()).ToList();
-            }
-
-            if (product.SeoInfos != null)
-            {
-                retVal.SeoInfos = product.SeoInfos.Select(x => x.ToWebModel()).ToList();
             }
 
             if (product.Reviews != null)
@@ -96,6 +93,8 @@ namespace VirtoCommerce.CatalogModule.Web.Converters
         {
             var retVal = new moduleModel.CatalogProduct();
             retVal.InjectFrom(product);
+			retVal.SeoInfos = product.SeoInfos;
+
             if (product.Images != null)
             {
                 retVal.Assets = new List<moduleModel.ItemAsset>();
@@ -148,11 +147,6 @@ namespace VirtoCommerce.CatalogModule.Web.Converters
             if (product.Links != null)
             {
                 retVal.Links = product.Links.Select(x => x.ToModuleModel()).ToList();
-            }
-
-            if (product.SeoInfos != null)
-            {
-                retVal.SeoInfos = product.SeoInfos.Select(x => x.ToModuleModel()).ToList();
             }
 
             if (product.Reviews != null)

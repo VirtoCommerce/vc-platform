@@ -47,7 +47,7 @@
 			    }
 
 			    //Set navigation breadcrumbs
-			    setBreadcrumps();
+			    setBreadcrumbs();
 
 			}, function (error) {
 			    bladeNavigationService.setError('Error ' + error.status, $scope.blade);
@@ -59,7 +59,7 @@
 
                 $scope.items = results;
                 //Set navigation breadcrumbs
-                setBreadcrumps();
+                setBreadcrumbs();
 
             }, function (error) {
                 bladeNavigationService.setError('Error ' + error.status, $scope.blade);
@@ -67,12 +67,12 @@
         }
     }
 
-    //Breadcrumps
-    function setBreadcrumps() {
+    //Breadcrumbs
+    function setBreadcrumbs() {
         //Clone array (angular.copy leave a same reference)
         $scope.blade.breadcrumbs = $scope.blade.breadcrumbs.slice(0);
 
-        //catalog breadcrump by default
+        //catalog breadcrumb by default
         var breadCrumb = {
             id: $scope.blade.catalogId ? $scope.blade.catalogId : "All",
             name: $scope.blade.catalog ? $scope.blade.catalog.name : "All",
@@ -86,7 +86,7 @@
             breadCrumb.name = $scope.blade.category.name;
         }
 
-        //prevent dublicate items
+        //prevent duplicate items
         if (!_.some($scope.blade.breadcrumbs, function (x) { return x.id == breadCrumb.id })) {
             $scope.blade.breadcrumbs.push(breadCrumb);
         }
@@ -110,18 +110,6 @@
     $scope.$watch('pageSettings.currentPage', function () {
         $scope.blade.refresh();
     });
-
-    $scope.blade.showItemBlade = function (id, title) {
-        var newBlade = {
-            id: "listItemDetail",
-            itemId: id,
-            title: title,
-            controller: 'virtoCommerce.catalogModule.itemDetailController',
-            template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/item-detail.tpl.html'
-        };
-        bladeNavigationService.showBlade(newBlade, $scope.blade);
-    };
-
 
     $scope.selectItem = function (e, listItem) {
         if ($scope.selectedItem == listItem)
@@ -160,7 +148,15 @@
             });
         }
         else {
-            $scope.blade.showItemBlade(listItem.id, listItem.name);
+            newBlade = {
+                id: "listItemDetail",
+                itemId: listItem.id,
+                productType: listItem.productType,
+                title: listItem.name,
+                controller: 'virtoCommerce.catalogModule.itemDetailController',
+                template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/item-detail.tpl.html'
+            };
+            bladeNavigationService.showBlade(newBlade, $scope.blade);
         }
 
     };

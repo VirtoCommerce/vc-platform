@@ -46,7 +46,8 @@ namespace VirtoCommerce.SearchModule.Data.Services
                     indexBuilder.RemoveAll(scope);
                 }
 
-                var partitions = indexBuilder.GetPartitions(rebuild, lastBuildTime, nowUtc);
+                var startDate = rebuild ? DateTime.MinValue : lastBuildTime;
+                var partitions = indexBuilder.GetPartitions(rebuild, startDate, nowUtc);
 
                 foreach (var partition in partitions)
                 {
@@ -67,7 +68,7 @@ namespace VirtoCommerce.SearchModule.Data.Services
             }
 
             var lastBuildTime2 = _settingManager.GetValue(lastBuildTimeName, DateTime.MinValue);
-            if (lastBuildTime2 == lastBuildTime)
+            if (lastBuildTime2 >= lastBuildTime)
             {
                 _settingManager.SetValue(lastBuildTimeName, nowUtc);
             }

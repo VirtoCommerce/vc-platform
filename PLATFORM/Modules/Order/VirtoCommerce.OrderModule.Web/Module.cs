@@ -9,6 +9,8 @@ using VirtoCommerce.Domain.Order.Services;
 using VirtoCommerce.OrderModule.Data.Observers;
 using VirtoCommerce.OrderModule.Data.Repositories;
 using VirtoCommerce.OrderModule.Data.Services;
+using VirtoCommerce.OrderModule.Web.BackgroundJobs;
+using VirtoCommerce.Platform.Core.Caching;
 using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Data.Infrastructure;
 using VirtoCommerce.Platform.Data.Infrastructure.Interceptors;
@@ -66,6 +68,12 @@ namespace VirtoCommerce.OrderModule.Web
 
         public void PostInitialize()
         {
+			var cacheManager = _container.Resolve<CacheManager>();
+			var cacheSettings = new[] 
+			{
+				new CacheSettings("Statistic", TimeSpan.FromHours(1)),
+			};
+			cacheManager.AddCacheSettings(cacheSettings);
         }
 
         #endregion

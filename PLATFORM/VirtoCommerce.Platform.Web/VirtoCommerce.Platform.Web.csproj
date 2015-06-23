@@ -268,6 +268,7 @@
     <Compile Include="Bootstraper.cs" />
     <Compile Include="Controllers\Api\AssetsController.cs" />
     <Compile Include="Controllers\Api\FrontendSecurityController.cs" />
+    <Compile Include="Controllers\Api\JobsController.cs" />
     <Compile Include="Controllers\Api\ModulesController.cs" />
     <Compile Include="Controllers\Api\NotificationController.cs" />
     <Compile Include="Controllers\Api\NotificationsController.cs" />
@@ -287,6 +288,7 @@
     <Compile Include="Hangfire\UnityBootstrapperConfigurationExtensions.cs" />
     <Compile Include="Hangfire\UnityJobActivator.cs" />
     <Compile Include="Model\Asset\BlobInfo.cs" />
+    <Compile Include="Model\Jobs\Job.cs" />
     <Compile Include="Model\Notification\Notification.cs" />
     <Compile Include="Model\Notification\NotificationTemplate.cs" />
     <Compile Include="Model\Packaging\ModuleDescriptor.cs" />
@@ -326,6 +328,7 @@
     <Content Include="Scripts\app\newnotifications\blades\resolve-result.tpl.html" />
     <Content Include="Scripts\app\newnotifications\newnotifications.js" />
     <Content Include="Scripts\app\newnotifications\resources\newnotifications.js" />
+    <Content Include="Scripts\app\jobs\resources\jobs.js" />
     <Content Include="Scripts\app\packaging\blades\module-detail.js" />
     <Content Include="Scripts\app\packaging\blades\module-detail.tpl.html" />
     <Content Include="Scripts\app\packaging\blades\modules-list.js" />
@@ -337,7 +340,8 @@
     <Content Include="Scripts\common\security\blades\account-api-list.js" />
     <Content Include="Scripts\common\security\blades\account-api-list.tpl.html" />
     <Content Include="Scripts\common\security\blades\account-detail-toolbar.tpl.html" />
-    <Content Include="Scripts\common\security\blades\account-api-toolbar.tpl.html" />
+    <Content Include="Scripts\common\templates\ok.tpl.html" />
+    <Content Include="Scripts\common\templates\toolbar-isActive.tpl.html" />
     <Content Include="Scripts\common\templates\home.tpl.html" />
     <Content Include="Scripts\app\packaging\packaging.js" />
     <Content Include="Scripts\app\packaging\resources\modules.js" />
@@ -348,8 +352,8 @@
     <Content Include="Scripts\app\settings\blades\setting-dictionary.tpl.html" />
     <Content Include="Scripts\app\settings\blades\settings-detail.js" />
     <Content Include="Scripts\app\settings\blades\settings-detail.tpl.html" />
-    <Content Include="Scripts\app\settings\blades\settings-list.js" />
-    <Content Include="Scripts\app\settings\blades\settings-list.tpl.html" />
+    <Content Include="Scripts\app\settings\blades\settingGroup-list.js" />
+    <Content Include="Scripts\app\settings\blades\settingGroup-list.tpl.html" />
     <Content Include="Scripts\app\settings\resources\setting.js" />
     <Content Include="Scripts\app\settings\settings.js" />
     <Content Include="Scripts\codemirror\addon\mode\overlay.js" />
@@ -511,6 +515,7 @@
     <Content Include="Scripts\common\confirmDialog\confirmDialog.js" />
     <Content Include="Scripts\common\directives\angular-moment.js" />
     <Content Include="Scripts\common\directives\inputNumber.js" />
+    <Content Include="Scripts\common\directives\showBigImage.js" />
     <Content Include="Scripts\common\directives\left-click-menu.js" />
     <Content Include="Scripts\common\filters.js" />
     <Content Include="Scripts\app\navigation\breadcrumbs\breadcrumbs.js" />

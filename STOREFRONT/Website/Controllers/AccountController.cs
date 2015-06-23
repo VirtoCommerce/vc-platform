@@ -566,7 +566,7 @@ namespace VirtoCommerce.Web.Controllers
 
                 if (paymentMethods != null)
                 {
-                    var paymentMethod = paymentMethods.FirstOrDefault(pm => pm.Handle == formModel.PaymentMethodId);
+                    var paymentMethod = paymentMethods.FirstOrDefault(pm => pm.Code == formModel.PaymentMethodId);
 
                     if (paymentMethod != null)
                     {
@@ -583,7 +583,7 @@ namespace VirtoCommerce.Web.Controllers
                             {
                                 Currency = order.Currency,
                                 CustomerId = Context.CustomerId,
-                                GatewayCode = paymentMethod.Handle,
+                                GatewayCode = paymentMethod.Code,
                                 Sum = order.Sum
                             });
 
@@ -598,35 +598,35 @@ namespace VirtoCommerce.Web.Controllers
 
                                 if (inPayment != null)
                                 {
-                                    var paymentResult = await Service.ProcessPaymentAsync(order.Id, inPayment.Id);
+                                    //var paymentResult = await Service.ProcessPaymentAsync(order.Id, inPayment.Id);
 
-                                    if (paymentResult != null)
-                                    {
-                                        if (paymentResult.IsSuccess)
-                                        {
-                                            if (paymentResult.PaymentMethodType == ApiClient.DataContracts.PaymentMethodType.Redirection)
-                                            {
-                                                if (!string.IsNullOrEmpty(paymentResult.RedirectUrl))
-                                                {
-                                                    return Redirect(paymentResult.RedirectUrl);
-                                                }
-                                            }
-                                            if (paymentResult.PaymentMethodType == ApiClient.DataContracts.PaymentMethodType.PreparedForm)
-                                            {
-                                                if (!string.IsNullOrEmpty(paymentResult.HtmlForm))
-                                                {
-                                                    SiteContext.Current.Set("payment_html_form", paymentResult.HtmlForm);
-                                                    return View("payment");
-                                                }
-                                            }
-                                        }
-                                        else
-                                        {
-                                            Context.ErrorMessage = paymentResult.Error;
+                                    //if (paymentResult != null)
+                                    //{
+                                    //    if (paymentResult.IsSuccess)
+                                    //    {
+                                    //        if (paymentResult.PaymentMethodType == ApiClient.DataContracts.PaymentMethodType.Redirection)
+                                    //        {
+                                    //            if (!string.IsNullOrEmpty(paymentResult.RedirectUrl))
+                                    //            {
+                                    //                return Redirect(paymentResult.RedirectUrl);
+                                    //            }
+                                    //        }
+                                    //        if (paymentResult.PaymentMethodType == ApiClient.DataContracts.PaymentMethodType.PreparedForm)
+                                    //        {
+                                    //            if (!string.IsNullOrEmpty(paymentResult.HtmlForm))
+                                    //            {
+                                    //                SiteContext.Current.Set("payment_html_form", paymentResult.HtmlForm);
+                                    //                return View("payment");
+                                    //            }
+                                    //        }
+                                    //    }
+                                    //    else
+                                    //    {
+                                    //        Context.ErrorMessage = paymentResult.Error;
 
-                                            return View("error");
-                                        }
-                                    }
+                                    //        return View("error");
+                                    //    }
+                                    //}
                                 }
                             }
                         }

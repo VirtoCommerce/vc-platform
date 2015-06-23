@@ -11,6 +11,7 @@ using coreModel = VirtoCommerce.Domain.Pricing.Model;
 using VirtoCommerce.Domain.Catalog.Services;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Domain.Common;
+using System;
 
 namespace VirtoCommerce.PricingModule.Web.Controllers.Api
 {
@@ -154,6 +155,7 @@ namespace VirtoCommerce.PricingModule.Web.Controllers.Api
         [Route("api/catalog/products/{productId}/pricelists")]
         public IHttpActionResult GetProductPriceLists(string productId)
         {
+			
             var result = new List<webModel.Pricelist>();
             IHttpActionResult retVal = NotFound();
             var priceLists = _pricingService.GetPriceLists();
@@ -161,6 +163,22 @@ namespace VirtoCommerce.PricingModule.Web.Controllers.Api
             {
                 var fullLoadedPriceList = _pricingService.GetPricelistById(priceList.Id);
                 priceList.Prices = fullLoadedPriceList.Prices.Where(x => x.ProductId == productId).ToList();
+				if(!priceList.Prices.Any())
+				{
+					//Price variation inheritance
+					//Try to get price from main product for variation
+					var product = _itemService.GetById(productId, Domain.Catalog.Model.ItemResponseGroup.ItemInfo);
+					if(product.MainProductId != null)
+					{
+						priceList.Prices = fullLoadedPriceList.Prices.Where(x => x.ProductId == product.MainProductId).ToList();
+						foreach(var price in priceList.Prices)
+						{
+							//For correct override price in possible update 
+							price.Id = null;
+							price.ProductId = productId;
+						}
+					}
+				}
                 result.Add(priceList.ToWebModel());
             }
             retVal = Ok(result.ToArray());
@@ -197,6 +215,7 @@ namespace VirtoCommerce.PricingModule.Web.Controllers.Api
         [CheckPermission(Permission = PredefinedPermissions.Manage)]
         public IHttpActionResult UpdateProductPriceLists(string productId, webModel.Pricelist priceList)
         {
+			var product = _itemService.GetById(productId, Domain.Catalog.Model.ItemResponseGroup.ItemInfo);
             var originalPriceList = _pricingService.GetPricelistById(priceList.Id);
             if (originalPriceList != null)
             {
@@ -210,6 +229,19 @@ namespace VirtoCommerce.PricingModule.Web.Controllers.Api
                 //Add changed prices to original pricelist
                 originalPriceList.Prices.AddRange(priceList.ToCoreModel().Prices);
                 _pricingService.UpdatePricelists(new coreModel.Pricelist[] { originalPriceList });
+
+				//need create price list assignment if it not exist
+				var assignment = _pricingService.GetPriceListAssignments().FirstOrDefault(x => x.CatalogId == product.CatalogId);
+				if (assignment == null)
+				{
+					assignment = new coreModel.PricelistAssignment
+					{
+						CatalogId = product.CatalogId,
+						Name = product.Catalog.Name + "_" + priceList.Name + "_assignment",
+						PricelistId = priceList.Id
+					};
+					_pricingService.CreatePriceListAssignment(assignment);
+				}
             }
 
             return StatusCode(HttpStatusCode.NoContent);

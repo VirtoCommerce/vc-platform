@@ -1,6 +1,6 @@
 ﻿angular.module('virtoCommerce.catalogModule')
 .directive('vaProperty2', ['$compile', '$filter', '$parse', '$templateCache', '$http', function ($compile, $filter, $parse, $templateCache, $http) {
-   
+
     return {
         restrict: 'E',
         require: 'ngModel',
@@ -36,7 +36,11 @@
                 if (newValue.length != scope.currentEntity.values.length || difference(newValue, scope.currentEntity.values).length > 0) {
                     //Prevent reflect changing when use null value for empty initial values
                     if (!(scope.currentEntity.values.length == 0 && newValue[0].value == null)) {
-                        scope.currentEntity.values = newValue;
+                        if (scope.currentEntity.multilanguage && !scope.currentEntity.multivalue) {
+                            scope.currentEntity.values = _.where(scope.context.allDictionaryValues, { alias: newValue[0].alias });
+                        } else {
+                            scope.currentEntity.values = newValue;
+                        }
                         ngModelController.$setViewValue(scope.currentEntity);
                     }
                 }
@@ -125,8 +129,8 @@
             };
 
             function getTemplateName(property) {
-            	var result = property.valueType;
-              
+                var result = property.valueType;
+
                 if (property.dictionary) {
                     result += '-dictionary';
                 }
@@ -172,13 +176,13 @@
             scope.toggleWeeks = function () {
                 scope.showWeeks = !scope.showWeeks;
             };
-            
+
             scope.clear = function () {
                 scope.currentEntity.valueType = null;
             };
             scope.today = new Date();
 
-            scope.open = function($event, which) {
+            scope.open = function ($event, which) {
                 $event.preventDefault();
                 $event.stopPropagation();
 

@@ -246,7 +246,7 @@ namespace VirtoCommerce.Content.Data.Repositories
 
 		public Models.MenuLinkList GetListById(string listId)
 		{
-			return MenuLinkLists.Include(s => s.MenuLinks).FirstOrDefault(s => s.Id == listId);
+            return MenuLinkLists.Include(s => s.MenuLinks).FirstOrDefault(s => s.Id == listId);
 		}
 
 		public void UpdateList(Models.MenuLinkList list)

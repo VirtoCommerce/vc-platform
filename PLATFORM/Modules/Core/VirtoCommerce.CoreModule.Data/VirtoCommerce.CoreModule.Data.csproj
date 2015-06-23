@@ -60,6 +60,10 @@
     <Compile Include="Migrations\201504301238451_Initial.Designer.cs">
       <DependentUpon>201504301238451_Initial.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201506221214574_SeoRenaming.cs" />
+    <Compile Include="Migrations\201506221214574_SeoRenaming.Designer.cs">
+      <DependentUpon>201506221214574_SeoRenaming.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Model\FulfillmentCenter.cs" />
     <Compile Include="Model\SeoUrlKeyword.cs" />
@@ -97,6 +101,9 @@
     <Folder Include="Payment\" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Migrations\201506221214574_SeoRenaming.resx">
+      <DependentUpon>201506221214574_SeoRenaming.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Repositories\Sql\SeoUrlKeyword.sql" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

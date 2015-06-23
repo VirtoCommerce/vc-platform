@@ -25,7 +25,8 @@ namespace VirtoCommerce.Web.Convertors
                                VariantId = variant.Id,
                                Handle = product.Handle,
                                Price = variant.NumericPrice,
-                               RequiresShipping = true,
+                               RequiresShipping = String.IsNullOrEmpty(product.Type) ||
+                                    !String.IsNullOrEmpty(product.Type) && product.Type.Equals("Physical", StringComparison.OrdinalIgnoreCase),
                                Quantity = 1,
                                Url = product.Url,
                                Title = product.Title,
@@ -43,7 +44,7 @@ namespace VirtoCommerce.Web.Convertors
 
             var pathTemplate = VirtualPathUtility.ToAbsolute("~/products/{0}");
             var description = product.EditorialReviews != null ?
-                product.EditorialReviews.FirstOrDefault(er => er.ReviewType.Equals("quickreview", StringComparison.OrdinalIgnoreCase)) : null;
+                product.EditorialReviews.FirstOrDefault(er => er.ReviewType != null && er.ReviewType.Equals("quickreview", StringComparison.OrdinalIgnoreCase)) : null;
 
             var fieldsCollection = new MetafieldsCollection("global", product.Properties);
             var options = GetOptions(product.Properties).Select(o => o.Key).ToArray();
@@ -60,7 +61,7 @@ namespace VirtoCommerce.Web.Convertors
             productModel.Tags = null; // TODO
             productModel.TemplateSuffix = null; // TODO
             productModel.Title = product.Name;
-            productModel.Type = null; // TODO
+            productModel.Type = product.ProductType;
             productModel.Url = string.Format(pathTemplate, product.Code);
             productModel.Vendor = fieldsCollection.ContainsKey("brand") ? fieldsCollection["brand"] as string : null;
 
@@ -150,9 +151,9 @@ namespace VirtoCommerce.Web.Convertors
             variantModel.Sku = variation.Properties.ContainsKey("sku") ? variation.Properties["sku"] as string : variation.Code;
             variantModel.Title = variation.Name;
             variantModel.Url = string.Format(pathTemplate, variation.MainProductId, variation.Id);
-            variantModel.Weight = variation.Properties.ContainsKey("weight") ? (int)variation.Properties["weight"] : 0;
+            variantModel.Weight = variation.Weight.HasValue ? variation.Weight.Value : 0;
             variantModel.WeightInUnit = null; // TODO
-            variantModel.WeightUnit = null; // TODO
+            variantModel.WeightUnit = variation.WeightUnit;
 
             return variantModel;
         }
@@ -223,9 +224,9 @@ namespace VirtoCommerce.Web.Convertors
             variantModel.Sku = product.Properties.ContainsKey("sku") ? product.Properties["sku"] as string : product.Code;
             variantModel.Title = product.Name;
             variantModel.Url = string.Format(pathTemplate, product.Id);
-            variantModel.Weight = product.Properties.ContainsKey("weight") ? (int)product.Properties["weight"] : 0;
+            variantModel.Weight = product.Weight.HasValue ? product.Weight.Value : 0;
             variantModel.WeightInUnit = null; // TODO
-            variantModel.WeightUnit = null; // TODO
+            variantModel.WeightUnit = product.WeightUnit;
 
             return variantModel;
         }

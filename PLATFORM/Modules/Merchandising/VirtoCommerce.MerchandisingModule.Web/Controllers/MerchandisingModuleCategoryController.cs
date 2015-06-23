@@ -78,7 +78,6 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
         [Route("")]
 		public IHttpActionResult GetCategoryByKeyword(string store, [FromUri] string keyword, string language = "en-us")
 		{
-
 			var catalog = _storeService.GetById(store).Catalog;
 			var searchCriteria = new SearchCriteria
 			{
@@ -110,32 +109,30 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
         [ResponseType(typeof(webModel.ResponseCollection<webModel.Category>))]
         [ClientCache(Duration = 30)]
         [Route("")]
-		public IHttpActionResult SearchCategory(string store, string language = "en-us", [FromUri] string parentId = null)
-		{
-			var cacheKey = CacheKey.Create("MP", "SearchCategory", store, parentId, language);
-			var retVal = _cacheManager.Get(cacheKey, () =>
-				{
-
-					var catalog = _storeService.GetById(store).Catalog;
-					var criteria = new moduleModel.SearchCriteria
-								   {
-									   CatalogId = catalog,
-									   CategoryId = parentId,
-									   Start = 0,
-									   Count = int.MaxValue,
-									   HideDirectLinedCategories = true,
-									   ResponseGroup = moduleModel.ResponseGroup.WithCategories,
-									   GetAllCategories = string.IsNullOrEmpty(parentId)
-								   };
-					var result = this._searchService.Search(criteria);
-					return new webModel.ResponseCollection<webModel.Category>
-								 {
-									 TotalCount = result.Categories.Count(),
-									 Items = result.Categories.Where(x => x.IsActive).Select(x => x.ToWebModel()).ToList()
-								 };
-				});
-			return this.Ok(retVal);
-		}
-
+        public IHttpActionResult SearchCategory(
+            string store,
+            string language = "en-us",
+            [FromUri] string parentId = null)
+        {
+            var catalog = _storeService.GetById(store).Catalog;
+            var criteria = new moduleModel.SearchCriteria
+                           {
+                               CatalogId = catalog,
+                               CategoryId = parentId,
+                               Start = 0,
+                               Count = int.MaxValue,
+                               HideDirectLinedCategories = true,
+                               ResponseGroup = moduleModel.ResponseGroup.WithCategories,
+                               GetAllCategories = string.IsNullOrEmpty(parentId)
+                           };
+            var result = this._searchService.Search(criteria);
+            var categories = result.Categories.Where(x => x.IsActive);
+            return this.Ok(
+                new webModel.ResponseCollection<webModel.Category>
+                {
+                    TotalCount = categories.Count(),
+                    Items = categories.Select(x => x.ToWebModel()).ToList()
+                });
+        }
     }
 }

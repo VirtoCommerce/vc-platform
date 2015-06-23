@@ -147,7 +147,7 @@ namespace VirtoCommerce.CatalogModule.Test
 
         private ICatalogService GetCatalogService()
         {
-            return new CatalogServiceImpl(() => { return GetRepository(); });
+            return new CatalogServiceImpl(() => { return GetRepository(); }, null);
         }
 
         private IItemService GetItemService()

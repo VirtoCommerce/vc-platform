@@ -81,6 +81,7 @@ angular.module(moduleName, ['virtoCommerce.catalogModule', 'virtoCommerce.pricin
 
       var shipmentTotalWidget = {
           controller: 'virtoCommerce.orderModule.shipmentTotalsWidgetController',
+          size: [2, 1],
           template: 'Modules/$(VirtoCommerce.Orders)/Scripts/widgets/shipment-totals-widget.tpl.html',
       };
       widgetService.registerWidget(shipmentTotalWidget, 'shipmentDetailWidgets');
@@ -127,6 +128,16 @@ angular.module(moduleName, ['virtoCommerce.catalogModule', 'virtoCommerce.pricin
           size: [2, 1],
           template: 'order-statistics-lineitemsPerOrder.html',
       }, 'mainDashboard');
+      widgetService.registerWidget({
+          controller: statisticsController,
+          size: [3, 2],
+          template: 'order-statistics-revenueByQuarter.html',
+      }, 'mainDashboard');
+      widgetService.registerWidget({
+          controller: statisticsController,
+          size: [3, 2],
+          template: 'order-statistics-orderValueByQuarter.html',
+      }, 'mainDashboard');
 
       $http.get('Modules/$(VirtoCommerce.Orders)/Scripts/widgets/dashboard/statistics-templates.html').then(function (response) {
           // compile the response, which will put stuff into the cache
@@ -140,6 +151,59 @@ angular.module(moduleName, ['virtoCommerce.catalogModule', 'virtoCommerce.pricin
               startDate.setFullYear(now.getFullYear() - 1);
 
               customerOrders.getDashboardStatistics({ start: startDate, end: now }, function (data) {
+                  // prepare statistics
+                  var statisticsToChartRows = function (statsList) {
+                      return _.map(statsList, function (stats) {
+                          return {
+                              c: [{ v: stats.year + ' Q' + stats.quarter },
+                                  { v: stats.amount }]
+                          };
+                      });
+                  }
+
+                  data.chartRevenueByQuarter = {
+                      "type": "LineChart",
+                      "data": {
+                          "cols": [
+                              { id: "quarter", label: "Quarter", type: "string" },
+                              { id: "revenue", label: "Revenue", type: "number" }
+                          ],
+                          rows: statisticsToChartRows(data.revenuePeriodDetails)
+                      },
+                      "options": {
+                          "title": "Revenue by quarter",
+                          "legend": { position: 'top' },
+                          "vAxis": {
+                              // "title": "Sales unit",
+                              "gridlines": { "count": 8 }
+                          },
+                          "hAxis": {
+                              // "title": "Date"
+                          }
+                      },
+                      "formatters": {},
+                  };
+
+                  data.chartOrderValueByQuarter = {
+                      "type": "ColumnChart",
+                      "data": {
+                          "cols": [
+                              { id: "quarter", label: "Quarter", type: "string" },
+                              { id: "avg-orderValue", label: "Average Order value", type: "number" }
+                          ],
+                          rows: statisticsToChartRows(data.avgOrderValuePeriodDetails)
+                      },
+                      "options": {
+                          "title": "Average Order value by quarter",
+                          "legend": { position: 'top' },
+                          "vAxis": {
+                              "gridlines": { "count": 8 }
+                          },
+                          "hAxis": {}
+                      },
+                      "formatters": {},
+                  };
+
                   $localStorage.ordersDashboardStatistics = data;
               },
               function (error) {

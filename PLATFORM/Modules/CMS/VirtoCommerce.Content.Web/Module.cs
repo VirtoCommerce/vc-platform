@@ -6,7 +6,6 @@ using VirtoCommerce.Content.Data;
 using VirtoCommerce.Content.Data.Repositories;
 using VirtoCommerce.Content.Data.Services;
 using VirtoCommerce.Content.Web.Controllers.Api;
-using VirtoCommerce.Platform.Core.Asset;
 using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Core.Settings;
 using VirtoCommerce.Platform.Data.Infrastructure.Interceptors;
@@ -34,14 +33,13 @@ namespace VirtoCommerce.Content.Web
 
         public void Initialize()
         {
-			var repository = new DatabaseContentRepositoryImpl(
-                "VirtoCommerce",
-                new AuditableInterceptor(),
-                new EntityPrimaryKeyGeneratorInterceptor());
 
-            var service = new MenuServiceImpl(repository);
+            Func<IMenuRepository> menuRepFactory = () =>
+                new DatabaseContentRepositoryImpl("VirtoCommerce", new AuditableInterceptor(), new EntityPrimaryKeyGeneratorInterceptor());
 
-            this._container.RegisterType<MenuController>(new InjectionConstructor(service));
+            _container.RegisterInstance(menuRepFactory);
+            _container.RegisterType<IMenuService, MenuServiceImpl>();
+           
 
             var settingsManager = this._container.Resolve<ISettingsManager>();
 

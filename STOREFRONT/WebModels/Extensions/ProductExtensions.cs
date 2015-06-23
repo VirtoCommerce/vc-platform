@@ -30,6 +30,7 @@ namespace VirtoCommerce.Web.Extensions
             var productIds = products.Where(i => i.Variations == null).Select(p => p.Id);
             var allIds = new List<string>(variationIds);
             allIds.AddRange(productIds);
+            allIds.AddRange(products.Where(p => p.Variations != null).Select(p => p.Id));
 
             return allIds.ToArray();
         }
