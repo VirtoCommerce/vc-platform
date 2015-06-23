@@ -14,7 +14,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 {
 	[RoutePrefix("api/notification")]
 	public class NotificationsController : ApiController
-    {
+	{
 		private readonly INotificationTemplateService _notificationTemplateService;
 		private readonly INotificationManager _notificationManager;
 		private readonly INotificationTemplateResolver _notificationTemplateResolver;
@@ -44,10 +44,10 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 		public IHttpActionResult GetNotificationTemplate(string type, string objectId)
 		{
 			var retVal = _notificationTemplateService.GetByNotification(type, objectId);
-			if(retVal == null)
+			if (retVal == null)
 			{
 				var notification = _notificationManager.GetNewNotification(type);
-				if(notification != null)
+				if (notification != null)
 				{
 					retVal = notification.NotificationTemplate;
 				}
@@ -71,11 +71,11 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 		[Route("template/{type}/preparetestdata")]
 		public IHttpActionResult PrepareTest(string type)
 		{
-			var retVal = new string[]{};
+			var retVal = new string[] { };
 			var notification = _notificationManager.GetNewNotification(type);
 			var attributeCollection = TypeDescriptor.GetAttributes(notification.GetType());
 			var attribute = (LiquidTypeAttribute)attributeCollection[typeof(LiquidTypeAttribute)];
-			if(attribute != null)
+			if (attribute != null)
 			{
 				retVal = attribute.AllowedMembers;
 			}
@@ -88,14 +88,32 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 		public IHttpActionResult ResolveNotification([FromBody]List<KeyValuePair<string, string>> parameters, string type)
 		{
 			var notification = _notificationManager.GetNewNotification(type);
-			foreach(var param in parameters)
+			foreach (var param in parameters)
 			{
 				var property = notification.GetType().GetProperty(param.Key);
 				property.SetValue(notification, param.Value);
 			}
 			_notificationTemplateResolver.ResolveTemplate(notification);
 
+			//notification.Body = HttpUtility.HtmlDecode(notification.Body);
+
 			return Ok(notification.ToWebModel());
+		}
+
+		[HttpPost]
+		[ResponseType(typeof(string))]
+		[Route("template/{type}/sendnotification")]
+		public IHttpActionResult SendNotification([FromBody]List<KeyValuePair<string, string>> parameters, string type)
+		{
+			var notification = _notificationManager.GetNewNotification(type);
+			foreach (var param in parameters)
+			{
+				var property = notification.GetType().GetProperty(param.Key);
+				property.SetValue(notification, param.Value);
+			}
+			var result = _notificationManager.SendNotification(notification);
+
+			return Ok(result.ErrorMessage);
 		}
 	}
 }

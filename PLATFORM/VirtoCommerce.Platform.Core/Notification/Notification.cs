@@ -89,5 +89,12 @@ namespace VirtoCommerce.Platform.Core.Notification
 		public INotificationSendingGateway NotificationSendingGateway { get { return _notificationSendingGateway; } }
 
 		public NotificationTemplate NotificationTemplate { get; set; }
+
+		public SendNotificationResult SendNotification()
+		{
+			var result = NotificationSendingGateway.SendNotification(this);
+
+			return result;
+		}
 	}
 }

@@ -27,7 +27,7 @@
 
 			var newBlade = {
 				id: 'resolveResult',
-				title: 'Resolve result notification template',
+				title: 'Result of resolving template',
 				notification: notification,
 				controller: 'platformWebApp.resolveResultController',
 				template: 'Scripts/app/newnotifications/blades/resolve-result.tpl.html'
@@ -38,6 +38,8 @@
 			bladeNavigationService.setError('Error ' + error.status, blade);
 		});
 	};
+
+	blade.headIcon = 'fa-play';
 
 	blade.initialize();
 }]);

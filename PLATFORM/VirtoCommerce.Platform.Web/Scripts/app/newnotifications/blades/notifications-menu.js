@@ -24,7 +24,7 @@
 		bladeNavigationService.showBlade(newBlade, blade);
 	}
 
-	blade.headIcon = 'fa fa-flag';
+	blade.headIcon = 'fa fa-envelope';
 
 	initializeBlade();
 

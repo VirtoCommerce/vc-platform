@@ -1,13 +1,17 @@
 ﻿<div class="blade-static __bottom">
 	<button class="btn" ng-click="blade.send()">
-		<span>Test</span>
+		<span>Send</span>
 	</button>
 </div>
 
 <div class="blade-content __medium-wide">
-	<div class="blade-inner" style="padding: 0">
+	<div class="blade-inner">
 		<div class="inner-block">
-			<form class="form" style="padding: 0" name="formScope">
+			<form class="form" name="formScope">
+				<fieldset>
+					<legend>Enter test data</legend>
+				</fieldset>
+
 				<div class="form-group" ng-repeat="data in blade.currentParams">
 					<label class="form-label">{{data}}</label>
 					<div class="form-input">

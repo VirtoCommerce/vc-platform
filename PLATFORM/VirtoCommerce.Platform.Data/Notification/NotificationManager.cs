@@ -45,7 +45,7 @@ namespace VirtoCommerce.Platform.Data.Notification
 		{
 			ResolveTemplate(notification);
 
-			var result = notification.NotificationSendingGateway.SendNotification(notification);
+			var result = notification.SendNotification();
 
 			return result;
 		}
@@ -64,9 +64,7 @@ namespace VirtoCommerce.Platform.Data.Notification
 
 		private void ResolveTemplate(Core.Notification.Notification notification)
 		{
-			var template = _notificationTemplateService.GetByNotification(notification.Type, notification.ObjectId);
-			notification.NotificationTemplate = template;
-
+			SetNotificationTemplate(notification);
 			_resolver.ResolveTemplate(notification);
 		}
 
@@ -148,7 +146,10 @@ namespace VirtoCommerce.Platform.Data.Notification
 			if (notification != null)
 			{
 				var template = _notificationTemplateService.GetByNotification(notification.Type, notification.ObjectId);
-				notification.NotificationTemplate = template;
+				if (template != null)
+				{
+					notification.NotificationTemplate = template;
+				}
 			}
 		}
 

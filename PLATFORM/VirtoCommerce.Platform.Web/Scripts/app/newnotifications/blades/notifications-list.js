@@ -26,5 +26,7 @@
 		bladeNavigationService.showBlade(newBlade, blade);
 	};
 
+	blade.headIcon = 'fa-list';
+
 	blade.initialize();
 }]);

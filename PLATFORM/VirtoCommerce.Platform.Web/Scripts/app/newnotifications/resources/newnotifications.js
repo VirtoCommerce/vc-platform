@@ -6,6 +6,7 @@
 		getTemplate: { method: 'GET', url: 'api/notification/template/:type/:objectId' },
 		updateTemplate: { method: 'POST', url: 'api/notification/template' },
 		prepareTestData: { method: 'GET', url: 'api/notification/template/:type/preparetestdata', isArray: true },
-		resolveNotification: { method: 'POST', url: 'api/notification/template/:type/resolvenotification' }
+		resolveNotification: { method: 'POST', url: 'api/notification/template/:type/resolvenotification' },
+		sendNotification: { method: 'POST', url: 'api/notification/template/:type/sendnotification' }
 	});
 }]);

@@ -36,7 +36,8 @@
 	blade.testResolve = function () {
 		var newBlade = {
 			id: 'testResolve',
-			title: 'Test resolving notification template',
+			title: 'Test resolving template',
+			subtitle: 'Enter test data for ' + blade.currentEntityParent.type,
 			notificationType: blade.currentEntityParent.type,
 			controller: 'platformWebApp.testResolveController',
 			template: 'Scripts/app/newnotifications/blades/notifications-test-resolve.tpl.html'
@@ -46,7 +47,16 @@
 	}
 
 	blade.testSend = function () {
+		var newBlade = {
+			id: 'testSend',
+			title: 'Test sending notification',
+			subtitle: 'Enter test data for ' + blade.currentEntityParent.type,
+			notificationType: blade.currentEntityParent.type,
+			controller: 'platformWebApp.testSendController',
+			template: 'Scripts/app/newnotifications/blades/notifications-test-send.tpl.html'
+		};
 
+		bladeNavigationService.showBlade(newBlade, blade);
 	}
 
 	$scope.blade.toolbarCommands = [
@@ -69,9 +79,18 @@
 			}
 		},
 		{
-			name: "Test template", icon: 'fa fa-plus-square',
+			name: "Test resolve template", icon: 'fa fa-play',
 			executeMethod: function () {
 				blade.testResolve();
+			},
+			canExecuteMethod: function () {
+				return true;
+			}
+		},
+		{
+			name: "Test send notification", icon: 'fa fa-upload',
+			executeMethod: function () {
+				blade.testSend();
 			},
 			canExecuteMethod: function () {
 				return true;
@@ -91,6 +110,8 @@
 		},
 		mode: "liquid-html"
 	};
+
+	blade.headIcon = 'fa-envelope';
 
 	blade.initialize();
 }]);

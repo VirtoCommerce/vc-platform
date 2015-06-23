@@ -9,7 +9,8 @@
 			blade.isLoading = false;
 
 			blade.currentParams = data;
-			blade.currentParams.push('Sender').push('Recipient');
+			blade.currentParams.push('Sender');
+			blade.currentParams.push('Recipient');
 		}, function (error) {
 			bladeNavigationService.setError('Error ' + error.status, blade);
 		});
@@ -17,22 +18,36 @@
 
 	blade.send = function () {
 		blade.isLoading = true;
+		blade.params = [];
 		for (var i = 0; i < blade.currentParams.length; i++) {
 			blade.params.push({ key: blade.currentParams[i], value: blade.obj[blade.currentParams[i]] });
 		}
 
-		notifications.resolveNotification({ type: blade.notificationType }, blade.params, function (notification) {
+		notifications.sendNotification({ type: blade.notificationType }, blade.params, function (errorMessage) {
 			blade.isLoading = false;
-			var dialog = {
-				id: "successSend",
-				title: "Sending success",
-				message: "Email was send successfully!",
-				callback: function (remove) {
+			if (angular.isUndefined(errorMessage) || errorMessage === null || errorMessage === "") {
+				var dialog = {
+					id: "successSend",
+					title: "Sending success",
+					message: "Email was send successfully!",
+					callback: function (remove) {
 
+					}
 				}
+				dialogService.showNotificationDialog(dialog);
 			}
-			dialogService.showNotificationDialog(dialog);
+			else {
+				var dialog = {
+					id: "errorSend",
+					title: "Error in sending",
+					message: errorMessage,
+					callback: function (remove) {
 
+					}
+				}
+				dialogService.showNotificationDialog(dialog);
+				bladeNavigationService.setError('Error ' + error.status, blade);
+			}
 		}, function (error) {
 			blade.isLoading = false;
 			var dialog = {
@@ -47,6 +62,8 @@
 			bladeNavigationService.setError('Error ' + error.status, blade);
 		});
 	}
+
+	blade.headIcon = 'fa-upload';
 
 	blade.initialize();
 }]);

@@ -31,7 +31,7 @@ angular.module(moduleName)
   	//Register module in main menu
   	var menuItem = {
   		path: 'browse/newnotifications',
-  		icon: 'fa fa-cubes',
+  		icon: 'fa fa-envelope',
   		title: 'Notifications',
   		priority: 200,
   		action: function () { $state.go('workspace.newnotifications'); },
