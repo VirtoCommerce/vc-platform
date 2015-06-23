@@ -96,7 +96,9 @@
     <Compile Include="Catalog\Services\IItemService.cs" />
     <Compile Include="Catalog\Services\IPropertyService.cs" />
     <Compile Include="Catalog\Services\ISkuGenerator.cs" />
+    <Compile Include="Commerce\Model\IHaveTaxDetalization.cs" />
     <Compile Include="Commerce\Model\SeoInfo.cs" />
+    <Compile Include="Commerce\Model\TaxDetail.cs" />
     <Compile Include="Common\Events\EventPublisher.cs" />
     <Compile Include="Common\Events\IEventPublisher.cs" />
     <Compile Include="Common\Events\IPriorityObserver.cs" />

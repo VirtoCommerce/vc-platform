@@ -40,7 +40,7 @@ namespace VirtoCommerce.OrderModule.Web.Converters
 			}
 
 			retVal.ChildrenOperations = shipment.ChildrenOperations.Select(x => x.ToWebModel()).ToList();
-
+			retVal.TaxDetails = shipment.TaxDetails;
 			return retVal;
 		}
 
@@ -59,7 +59,7 @@ namespace VirtoCommerce.OrderModule.Web.Converters
 				retVal.Discount = shipment.Discount.ToCoreModel();
 			if (shipment.Items != null)
 				retVal.Items = shipment.Items.Select(x => x.ToCoreModel()).ToList();
-
+			retVal.TaxDetails = shipment.TaxDetails;
 			return retVal;
 		}
 

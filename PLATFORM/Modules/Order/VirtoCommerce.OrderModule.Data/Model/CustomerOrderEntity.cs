@@ -19,6 +19,7 @@ namespace VirtoCommerce.OrderModule.Data.Model
 			Items = new NullCollection<LineItemEntity>();
 			Shipments = new NullCollection<ShipmentEntity>();
 			Discounts = new NullCollection<DiscountEntity>();
+			TaxDetails = new NullCollection<TaxDetailEntity>();
 		}
 
 		[Required]
@@ -36,7 +37,7 @@ namespace VirtoCommerce.OrderModule.Data.Model
 		public string EmployeeId { get; set; }
 
 
-
+		public virtual ObservableCollection<TaxDetailEntity> TaxDetails { get; set; }
 		public virtual ObservableCollection<AddressEntity> Addresses { get; set; }
 		public virtual ObservableCollection<PaymentInEntity> InPayments { get; set; }
 

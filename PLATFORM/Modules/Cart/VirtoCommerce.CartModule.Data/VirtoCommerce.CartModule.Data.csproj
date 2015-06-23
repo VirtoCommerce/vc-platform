@@ -60,6 +60,7 @@
     <Compile Include="Converters\PaymentConverter.cs" />
     <Compile Include="Converters\ShipmentConverter.cs" />
     <Compile Include="Converters\ShoppingCartConverter.cs" />
+    <Compile Include="Converters\TaxDetailConverter.cs" />
     <Compile Include="Migrations\201504300613351_Initial.cs" />
     <Compile Include="Migrations\201504300613351_Initial.Designer.cs">
       <DependentUpon>201504300613351_Initial.cs</DependentUpon>
@@ -72,12 +73,17 @@
     <Compile Include="Migrations\201506011123083_DimensionChanges.Designer.cs">
       <DependentUpon>201506011123083_DimensionChanges.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201506231519133_TaxDetail.cs" />
+    <Compile Include="Migrations\201506231519133_TaxDetail.Designer.cs">
+      <DependentUpon>201506231519133_TaxDetail.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Model\AddressEntity.cs" />
     <Compile Include="Model\LineItemEntity.cs" />
     <Compile Include="Model\PaymentEntity.cs" />
     <Compile Include="Model\ShipmentEntity.cs" />
     <Compile Include="Model\ShoppingCartEntity.cs" />
+    <Compile Include="Model\TaxDetailEntity.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\ICartRepository.cs" />
     <Compile Include="Repositories\CartRepositoryImpl.cs" />
@@ -112,6 +118,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201506011123083_DimensionChanges.resx">
       <DependentUpon>201506011123083_DimensionChanges.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201506231519133_TaxDetail.resx">
+      <DependentUpon>201506231519133_TaxDetail.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

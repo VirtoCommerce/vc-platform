@@ -44,7 +44,7 @@ namespace VirtoCommerce.OrderModule.Web.Converters
 				retVal.Addresses = customerOrder.Addresses.Select(x => x.ToWebModel()).ToList();
 
 			retVal.ChildrenOperations = customerOrder.ChildrenOperations.Select(x => x.ToWebModel()).ToList();
-		
+			retVal.TaxDetails = customerOrder.TaxDetails;
 			return retVal;
 		}
 
@@ -67,7 +67,7 @@ namespace VirtoCommerce.OrderModule.Web.Converters
 
 			if (customerOrder.Discount != null)
 				retVal.Discount = customerOrder.Discount.ToCoreModel();
-
+			retVal.TaxDetails = customerOrder.TaxDetails;
 			return retVal;
 		}
 

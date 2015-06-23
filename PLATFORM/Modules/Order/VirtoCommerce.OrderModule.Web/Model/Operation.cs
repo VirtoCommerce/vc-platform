@@ -4,20 +4,17 @@ using System.Linq;
 using System.Web;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
+using VirtoCommerce.Domain.Commerce.Model;
 using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.OrderModule.Web.Model
 {
-	public class Operation
+	public class Operation : AuditableEntity
 	{
-		public string Id { get; set; }
+	
 		public string OperationType { get; set; }
 
-		public DateTime CreatedDate { get; set; }
-		public string CreatedBy { get; set; }
-		public DateTime? ModifiedDate { get; set; }
-		public string ModifiedBy { get; set; }
-
+		
 		public string Number { get; set; }
 		public bool IsApproved { get; set; }
 		public string Status { get; set; }
@@ -41,6 +38,7 @@ namespace VirtoCommerce.OrderModule.Web.Model
 
 		public IEnumerable<Operation> ChildrenOperations { get; set; }
 		public IEnumerable<OperationProperty> Properties { get; set; }
-		
+
+
 	}
 }

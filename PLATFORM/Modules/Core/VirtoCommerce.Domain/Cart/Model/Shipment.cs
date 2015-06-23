@@ -3,19 +3,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using VirtoCommerce.Domain.Commerce.Model;
 using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.Domain.Cart.Model
 {
-	public class Shipment : Entity
+	public class Shipment : Entity, IHaveTaxDetalization
 	{
 		public string ShipmentMethodCode { get; set; }
 		public string  WarehouseLocation { get; set; }
-		public Address DeliveryAddress { get; set; }
-		public ICollection<Discount> Discounts { get; set; }
-		public ICollection<LineItem> Items { get; set; }
+
 		public CurrencyCodes Currency { get; set; }
-	
 		public decimal? VolumetricWeight { get; set; }
 
 		public string WeightUnit { get; set; }
@@ -35,6 +33,14 @@ namespace VirtoCommerce.Domain.Cart.Model
 		public decimal TaxTotal { get; set; }
 		public decimal ItemSubtotal { get; set; }
 		public decimal Subtotal { get; set; }
+		public Address DeliveryAddress { get; set; }
+
+		public ICollection<Discount> Discounts { get; set; }
+		public ICollection<LineItem> Items { get; set; }
+
+		#region IHaveTaxDetalization Members
+		public ICollection<TaxDetail> TaxDetails { get; set; }
+		#endregion
 		
 	}
 }

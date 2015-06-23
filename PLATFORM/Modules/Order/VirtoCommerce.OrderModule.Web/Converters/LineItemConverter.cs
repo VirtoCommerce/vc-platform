@@ -21,6 +21,7 @@ namespace VirtoCommerce.OrderModule.Web.Converters
 				retVal.Discount = orderItem.Discount.ToWebModel();
 				retVal.DiscountAmount = orderItem.Discount.DiscountAmount;
 			}
+			retVal.TaxDetails = orderItem.TaxDetails;
 			return retVal;
 		}
 
@@ -33,6 +34,7 @@ namespace VirtoCommerce.OrderModule.Web.Converters
 			{
 				retVal.Discount = orderItem.Discount.ToCoreModel();
 			}
+			retVal.TaxDetails = orderItem.TaxDetails;
 			return retVal;
 		}
 

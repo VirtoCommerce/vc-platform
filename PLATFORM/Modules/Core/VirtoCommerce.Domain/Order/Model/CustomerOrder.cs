@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using VirtoCommerce.Domain.Commerce.Model;
 
 namespace VirtoCommerce.Domain.Order.Model
 {
-	public class CustomerOrder : Operation
+	public class CustomerOrder : Operation, IHaveTaxDetalization
 	{
 		public string CustomerId { get; set; }
 		public string ChannelId { get; set; }
@@ -58,5 +59,11 @@ namespace VirtoCommerce.Domain.Order.Model
 				return retVal;
 			}
 		}
+
+		#region ITaxDetailSupport Members
+
+		public ICollection<TaxDetail> TaxDetails { get; set; }
+
+		#endregion
 	}
 }

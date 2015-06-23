@@ -4,10 +4,11 @@ using System.Linq;
 using System.Web;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
+using VirtoCommerce.Domain.Commerce.Model;
 
 namespace VirtoCommerce.OrderModule.Web.Model
 {
-	public class CustomerOrder : Operation
+	public class CustomerOrder : Operation, IHaveTaxDetalization
 	{
 		public string Customer { get; set; }
 		public string CustomerId { get; set; }
@@ -25,5 +26,8 @@ namespace VirtoCommerce.OrderModule.Web.Model
 		public ICollection<Shipment> Shipments { get; set; }
 		public Discount Discount { get; set; }
 
+		#region IHaveTaxDetalization Members
+		public ICollection<TaxDetail> TaxDetails { get; set; }
+		#endregion
 	}
 }

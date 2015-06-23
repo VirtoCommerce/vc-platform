@@ -96,10 +96,31 @@ namespace VirtoCommerce.CartModule.Data.Repositories
 			modelBuilder.Entity<PaymentEntity>().ToTable("CartPayment");
 			#endregion
 
+			#region TaxDetail
+			modelBuilder.Entity<TaxDetailEntity>().HasKey(x => x.Id)
+						.Property(x => x.Id);
+
+
+			modelBuilder.Entity<TaxDetailEntity>().HasOptional(x => x.ShoppingCart)
+									   .WithMany(x => x.TaxDetails)
+									   .HasForeignKey(x => x.ShoppingCartId).WillCascadeOnDelete(false);
+
+			modelBuilder.Entity<TaxDetailEntity>().HasOptional(x => x.Shipment)
+									   .WithMany(x => x.TaxDetails)
+									   .HasForeignKey(x => x.ShipmentId).WillCascadeOnDelete(false);
+
+			modelBuilder.Entity<TaxDetailEntity>().HasOptional(x => x.LineItem)
+									   .WithMany(x => x.TaxDetails)
+									   .HasForeignKey(x => x.LineItemId).WillCascadeOnDelete(false);
+
+
+			modelBuilder.Entity<TaxDetailEntity>().ToTable("CartTaxDetail");
+			#endregion
+
 			base.OnModelCreating(modelBuilder);
 		}
 
-		#region IOrderRepository Members
+		#region ICartRepository Members
 
 		public IQueryable<ShoppingCartEntity> ShoppingCarts
 		{
@@ -113,7 +134,10 @@ namespace VirtoCommerce.CartModule.Data.Repositories
 									 .Include(x => x.Addresses)
 									 .Include(x => x.Payments.Select(y => y.Addresses))
 									 .Include(x => x.Items)
-									 .Include(x => x.Shipments.Select(y=> y.Addresses));
+									 .Include(x => x.Items.Select(y => y.TaxDetails))
+									 .Include(x => x.Shipments.Select(y => y.Addresses))
+									 .Include(x => x.Shipments.Select(y => y.TaxDetails))
+									 .Include(x => x.TaxDetails);
 			return query.FirstOrDefault();
 		}
 		#endregion
