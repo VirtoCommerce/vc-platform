@@ -74,7 +74,7 @@ namespace VirtoCommerce.CatalogModule.Data.Services
 				}
 			}
        
-            return retVal;
+            return GetById(dbCategory.Id);
         }
 
         public void Update(coreModel.Category[] categories)
