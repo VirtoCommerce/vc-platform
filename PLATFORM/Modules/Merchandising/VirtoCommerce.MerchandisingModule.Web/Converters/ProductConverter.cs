@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Omu.ValueInjecter;
 using VirtoCommerce.Platform.Core.Asset;
@@ -76,10 +77,10 @@ namespace VirtoCommerce.MerchandisingModule.Web.Converters
 						if(properties != null)
 						{
 							var propertyMetaInfo = properties.FirstOrDefault(x => string.Equals(propValueGroup.Key, x.Name));
-							if(propertyMetaInfo != null && propertyMetaInfo.DisplayNames != null && propertyMetaInfo.DisplayNames.Any())
+							if(propertyMetaInfo != null && propertyMetaInfo.DisplayNames != null)
 							{
 								//TODO: use display name for specific language
-								displayName = propertyMetaInfo.DisplayNames.FirstOrDefault().Name;
+								displayName = propertyMetaInfo.DisplayNames.Select(x=>x.Name).Where(x=> !String.IsNullOrEmpty(x)).FirstOrDefault() ?? displayName;
 							}
 
 							if(propertyMetaInfo != null && propertyMetaInfo.Type == coreModel.PropertyType.Variation)
