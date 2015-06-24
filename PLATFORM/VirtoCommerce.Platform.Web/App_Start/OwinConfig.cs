@@ -102,7 +102,7 @@ namespace VirtoCommerce.Platform.Web
             app.UseHangfire(config =>
             {
                 config.UseUnityActivator(container);
-                config.UseSqlServerStorage(databaseConnectionStringName, new SqlServerStorageOptions { PrepareSchemaIfNecessary = false });
+                config.UseSqlServerStorage(databaseConnectionStringName, new SqlServerStorageOptions { PrepareSchemaIfNecessary = false, QueuePollInterval = TimeSpan.FromSeconds(60) /* 15 Default value */ });
                 config.UseAuthorizationFilters(new PermissionBasedAuthorizationFilter(permissionService) { Permission = PredefinedPermissions.BackgroundJobsManage });
                 config.UseServer();
             });
