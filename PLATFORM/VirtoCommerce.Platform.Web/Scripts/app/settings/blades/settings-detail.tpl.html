@@ -7,10 +7,10 @@
                     <div class="form-group" ng-repeat="data in blade.currentEntities[groupName]" title="{{data.description}}">
                         <label class="form-label">{{data.title}} <a href="" ng-click="editArray(data);" ng-if="data.isArray"><i class="form-ico fa fa-pencil"></i></a></label>
                         <div class="form-input" ng-class="data.valueType==='Boolean' ? 'switch' : '__number'" ng-if="!(data.allowedValues.length>0) && !data.isArray">
-                            <input required ng-model="data.value" ng-if="data.valueType==='ShortText'" />
-                            <input required ng-model="data.value" type="password" ng-if="data.valueType==='SecureString'">
-                            <input va-number required ng-model="data.value" type="text" min="1" step="1" ng-if="data.valueType==='Integer'">
-                            <input va-number required ng-model="data.value" type="text" min="1" step="1" ng-if="data.valueType==='Decimal'">
+                            <input ng-model="data.value" ng-if="data.valueType==='ShortText'" />
+                            <input ng-model="data.value" type="password" ng-if="data.valueType==='SecureString'">
+                            <input va-number ng-model="data.value" type="text" min="1" step="1" ng-if="data.valueType==='Integer'">
+                            <input va-number ng-model="data.value" type="text" min="1" step="1" ng-if="data.valueType==='Decimal'">
                             <label class="form-label __switch" ng-if="data.valueType==='Boolean'">
                                 <input type="checkbox" ng-model="data.value" />
                                 <span class="switch"></span>
