@@ -32,7 +32,7 @@ namespace VirtoCommerce.SearchModule.Tests
             Func<IPlatformRepository> platformRepositoryFactory = GetPlatformRepository;
 
             var cacheManager = new CacheManager(new InMemoryCachingProvider(), null);
-            var settingManager = new SettingsManager(null, platformRepositoryFactory, cacheManager);
+            var settingManager = new SettingsManager(null, platformRepositoryFactory, cacheManager, null);
 
             var name = Guid.NewGuid().ToString();
 
@@ -59,7 +59,7 @@ namespace VirtoCommerce.SearchModule.Tests
             var cacheManager = new CacheManager(new InMemoryCachingProvider(), cacheSettings);
             var searchConnection = new SearchConnection(ConnectionHelper.GetConnectionString("SearchConnectionString"));
             var searchProvider = new LuceneSearchProvider(new LuceneSearchQueryBuilder(), searchConnection);
-            var catalogIndexBuilder = new CatalogItemIndexBuilder(searchProvider, GetSearchService(), GetItemService(), GetPricingService(), GetPropertyService(), GetChangeLogService(),  new CatalogOutlineBuilder(GetCategoryService(), cacheManager));
+            var catalogIndexBuilder = new CatalogItemIndexBuilder(searchProvider, GetSearchService(), GetItemService(), GetPricingService(), GetPropertyService(), GetChangeLogService(), new CatalogOutlineBuilder(GetCategoryService(), cacheManager));
             var searchController = new SearchIndexController(settingManager.Object, catalogIndexBuilder);
             return searchController;
         }

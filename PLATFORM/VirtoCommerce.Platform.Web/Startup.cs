@@ -236,7 +236,31 @@ namespace VirtoCommerce.Platform.Web
 
             #region Settings
 
-            var settingsManager = new SettingsManager(manifestProvider, platformRepositoryFactory, cacheManager);
+            var platformSettings = new[]
+            {
+                new ModuleManifest
+                {
+                    Settings = new[]
+                    {
+                        new ModuleSettingsGroup
+                        {
+                            Name = "Platform|Test",
+                            Settings = new[]
+                            {
+                                new ModuleSetting
+                                {
+                                    Name = "VirtoCommerce.Platform.Test.TestString",
+                                    ValueType = ModuleSetting.TypeString,
+                                    Title = "Test String",
+                                    Description = "Test String Description",
+                                }
+                            }
+                        }
+                    }
+                }
+            };
+
+            var settingsManager = new SettingsManager(manifestProvider, platformRepositoryFactory, cacheManager, platformSettings);
             container.RegisterInstance<ISettingsManager>(settingsManager);
 
             #endregion
