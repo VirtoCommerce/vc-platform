@@ -9,13 +9,13 @@ namespace VirtoCommerce.Web.Models.Storage
     {
         public ProductDownloadLinks()
         {
-            Links = new List<string>();
+            Links = new List<DownloadLink>();
         }
 
         [DataMember]
         public string ProductName { get; set; }
 
         [DataMember]
-        public ICollection<string> Links { get; set; }
+        public ICollection<DownloadLink> Links { get; set; }
     }
 }

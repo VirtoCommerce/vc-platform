@@ -23,6 +23,7 @@ namespace VirtoCommerce.CartModule.Web.Converters
 			if (shipment.Items != null)
 				retVal.Items = shipment.Items.Select(x => x.ToWebModel()).ToList();
 
+			retVal.TaxDetails = shipment.TaxDetails;
 			return retVal;
 		}
 
@@ -39,6 +40,8 @@ namespace VirtoCommerce.CartModule.Web.Converters
 				retVal.Discounts = shipment.Discounts.Select(x => x.ToCoreModel()).ToList();
 			if (shipment.Items != null)
 				retVal.Items = shipment.Items.Select(x => x.ToCoreModel()).ToList();
+
+			retVal.TaxDetails = shipment.TaxDetails;
 			return retVal;
 		}
 

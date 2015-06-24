@@ -22,7 +22,7 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
         /// <returns></returns>
         /// <exception cref="System.ArgumentNullException">catalog</exception>
         public static coreModel.Category ToCoreModel(this dataModel.CategoryBase dbCategoryBase, coreModel.Catalog catalog,
-                                                    coreModel.Property[] properties = null,  SeoUrlKeyword[] seoInfos = null, dataModel.Category[] allParents = null)
+                                                    coreModel.Property[] properties = null,  dataModel.Category[] allParents = null)
         {
             if (catalog == null)
                 throw new ArgumentNullException("catalog");
@@ -45,11 +45,6 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
             {
                 retVal.Parents = allParents.Select(x => x.ToCoreModel(catalog)).ToArray();
             }		
-
-            if (seoInfos != null)
-            {
-                retVal.SeoInfos = seoInfos.Select(x => x.ToCoreModel()).ToList();
-            }
 
             return retVal;
 

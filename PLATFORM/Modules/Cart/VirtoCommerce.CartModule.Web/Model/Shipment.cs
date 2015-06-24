@@ -5,21 +5,20 @@ using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
+using VirtoCommerce.Domain.Commerce.Model;
 using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.CartModule.Web.Model
 {
-	public class Shipment : AuditableEntity
+	public class Shipment : AuditableEntity, IHaveTaxDetalization
 	{
 		public string ShipmentMethodCode { get; set; }
 		public string FulfilmentCenterId { get; set; }
 		public Address DeliveryAddress { get; set; }
-		public ICollection<Discount> Discounts { get; set; }
 
 		[JsonConverter(typeof(StringEnumConverter))]
 		public CurrencyCodes Currency { get; set; }
 
-		public ICollection<LineItem> Items { get; set; }
 
 		public decimal? VolumetricWeight { get; set; }
 		public string WeightUnit { get; set; }
@@ -40,5 +39,12 @@ namespace VirtoCommerce.CartModule.Web.Model
 		public decimal ItemSubtotal { get; set; }
 		public decimal Subtotal { get; set; }
 
+		public ICollection<Discount> Discounts { get; set; }
+
+		public ICollection<LineItem> Items { get; set; }
+
+		#region IHaveTaxDetalization Members
+		public ICollection<TaxDetail> TaxDetails { get; set; }
+		#endregion
 	}
 }

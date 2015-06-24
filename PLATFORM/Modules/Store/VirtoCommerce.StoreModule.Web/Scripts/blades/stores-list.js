@@ -41,7 +41,7 @@
         };
         bladeNavigationService.showBlade(newBlade, $scope.blade);
     }
-    
+
     $scope.blade.onClose = function (closeCallback) {
         closeChildrenBlades();
         closeCallback();
@@ -74,7 +74,26 @@
                 return true;
             },
             permission: 'store:manage'
-        }
+        },
+        {
+            name: "Import",
+            icon: 'fa fa-download',
+            executeMethod: function () {
+                var newBlade = {
+                    id: 'storeImport',
+                    title: 'Store import',
+                    name: 'VirtoCommerce store import',
+                    description: 'Native VirtoCommerce store data import',
+                    icon: 'fa fa-file-archive-o',
+                    controller: 'virtoCommerce.storeModule.storeImportController',
+                    template: 'Modules/$(VirtoCommerce.store)/Scripts/blades/backup/store-import.tpl.html'
+                };
+                bladeNavigationService.showBlade(newBlade, $scope.blade);
+            },
+            canExecuteMethod: function () { return true; },
+            // todo set: permission: 'store:items:manage'
+        },
+
     ];
 
     $scope.blade.refresh();

@@ -16,6 +16,7 @@ namespace VirtoCommerce.CartModule.Data.Model
 		{
 			Items = new NullCollection<LineItemEntity>();
 			Addresses = new NullCollection<AddressEntity>();
+			TaxDetails = new NullCollection<TaxDetailEntity>();
 		}
 
 		[StringLength(64)]
@@ -47,7 +48,7 @@ namespace VirtoCommerce.CartModule.Data.Model
 
 		public virtual ObservableCollection<AddressEntity> Addresses { get; set; }
 		public virtual ObservableCollection<LineItemEntity> Items { get; set; }
-
+		public virtual ObservableCollection<TaxDetailEntity> TaxDetails { get; set; }
 		public virtual ShoppingCartEntity ShoppingCart { get; set; }
 		public string ShoppingCartId { get; set; }
 		

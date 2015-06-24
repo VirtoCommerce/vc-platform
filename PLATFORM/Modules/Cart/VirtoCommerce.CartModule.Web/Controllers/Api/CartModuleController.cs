@@ -142,8 +142,12 @@ namespace VirtoCommerce.CartModule.Web.Controllers.Api
 			var retVal = store.PaymentMethods.Where(p => p.IsActive).Select(p => new webModel.PaymentMethod
 							{
 								GatewayCode = p.Code,
-								Name = p.Description,
-								IconUrl = p.LogoUrl
+								Name = p.Name,
+								IconUrl = p.LogoUrl,
+								Type = p.PaymentMethodType.ToString(),
+								Group = p.PaymentMethodGroupType.ToString(),
+								Description = p.Description,
+								Priority = p.Priority
 							}).ToArray();
 
 			return this.Ok(retVal);

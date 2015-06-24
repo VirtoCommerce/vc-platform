@@ -138,7 +138,7 @@ namespace VirtoCommerce.CatalogModule.Web.BackgroundJobs
 			notification.ProcessedCount = 0;
 			var cachedCategoryMap = new Dictionary<string, Category>();
 	
-			foreach (var csvProduct in csvProducts)
+			foreach (var csvProduct in csvProducts.Where(x=>x.Category != null && !String.IsNullOrEmpty(x.Category.Path)))
 			{
 				var outline = "";
 				var productCategoryNames = csvProduct.Category.Path.Split(_categoryDelimiters);
@@ -425,7 +425,7 @@ namespace VirtoCommerce.CatalogModule.Web.BackgroundJobs
 				//Map Seo
 				Map(x => x.SeoInfos).ConvertUsing(x =>
 				{
-					var seoInfos = new List<coreModel.SeoInfo>();
+					var seoInfos = new List<SeoInfo>();
 					var seoUrl = GetCsvField("SeoUrl", x, importConfiguration);
 					var seoDescription = GetCsvField("SeoDescription", x, importConfiguration);
 					var seoTitle = GetCsvField("SeoTitle", x, importConfiguration);
@@ -433,7 +433,7 @@ namespace VirtoCommerce.CatalogModule.Web.BackgroundJobs
 					{
 						seoUrl = new string[] { seoUrl, seoDescription, seoTitle }.Where(y => !String.IsNullOrEmpty(y)).FirstOrDefault();
 						seoUrl = seoUrl.Substring(0, Math.Min(seoUrl.Length, 240));
-						seoInfos.Add(new coreModel.SeoInfo { LanguageCode = defaultLanguge, SemanticUrl = seoUrl.GenerateSlug(), MetaDescription = seoDescription, PageTitle = seoTitle});
+						seoInfos.Add(new SeoInfo { LanguageCode = defaultLanguge, SemanticUrl = seoUrl.GenerateSlug(), MetaDescription = seoDescription, PageTitle = seoTitle});
 					}
 					return seoInfos; 
 				});

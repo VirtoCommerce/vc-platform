@@ -3,6 +3,7 @@ using System;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using coreModel = VirtoCommerce.Domain.Catalog.Model;
+using VirtoCommerce.Domain.Catalog.Model;
 
 namespace VirtoCommerce.CatalogModule.Web.Model
 {
@@ -51,9 +52,10 @@ namespace VirtoCommerce.CatalogModule.Web.Model
         public coreModel.PropertyValueType ValueType { get; set; }
 		[JsonConverter(typeof(StringEnumConverter))]
         public coreModel.PropertyType Type { get; set; }
-		public List<PropertyValue> Values { get; set; }
-		public List<PropertyDictionaryValue> DictionaryValues { get; set; }
-        public List<PropertyAttribute> Attributes { get; set; }
+		public ICollection<PropertyValue> Values { get; set; }
+		public ICollection<PropertyDictionaryValue> DictionaryValues { get; set; }
+        public ICollection<PropertyAttribute> Attributes { get; set; }
+		public ICollection<PropertyDisplayName> DisplayNames { get; set; }
 
 		/// <summary>
 		/// Because we not have a direct link beetwen prop values and properties we should

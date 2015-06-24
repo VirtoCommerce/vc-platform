@@ -11,7 +11,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Converters
 {
 	public static class SeoInfoConverter
 	{
-		public static webModel.SeoKeyword ToWebModel(this coreModel.SeoInfo seoInfo)
+		public static webModel.SeoKeyword ToWebModel(this SeoInfo seoInfo)
 		{
 			var retVal = new webModel.SeoKeyword();
 			retVal.InjectFrom(seoInfo);

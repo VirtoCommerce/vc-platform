@@ -8,6 +8,7 @@ using VirtoCommerce.Domain.Cart.Model;
 using Omu.ValueInjecter;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Data.Common.ConventionInjections;
+using System.Collections.ObjectModel;
 
 namespace VirtoCommerce.CartModule.Data.Converters
 {
@@ -21,7 +22,7 @@ namespace VirtoCommerce.CartModule.Data.Converters
 			var retVal = new LineItem();
 			retVal.InjectFrom(entity);
 			retVal.Currency = (CurrencyCodes)Enum.Parse(typeof(CurrencyCodes), entity.Currency);
-
+			retVal.TaxDetails = entity.TaxDetails.Select(x => x.ToCoreModel()).ToList();
 			return retVal;
 		}
 
@@ -33,6 +34,11 @@ namespace VirtoCommerce.CartModule.Data.Converters
 			var retVal = new LineItemEntity();
 			retVal.InjectFrom(lineItem);
 			retVal.Currency = lineItem.Currency.ToString();
+			if (lineItem.TaxDetails != null)
+			{
+				retVal.TaxDetails = new ObservableCollection<TaxDetailEntity>();
+				retVal.TaxDetails.AddRange(lineItem.TaxDetails.Select(x => x.ToDataModel()));
+			}
 			return retVal;
 		}
 
@@ -49,6 +55,11 @@ namespace VirtoCommerce.CartModule.Data.Converters
 			var patchInjection = new PatchInjection<LineItemEntity>(x => x.Quantity, x => x.SalePrice, x => x.PlacedPrice, x => x.ListPrice, x => x.TaxIncluded, x => x.TaxTotal);
 			target.InjectFrom(patchInjection, source);
 
+			if (!source.TaxDetails.IsNullCollection())
+			{
+				var taxDetailComparer = AnonymousComparer.Create((TaxDetailEntity x) => x.Name);
+				source.TaxDetails.Patch(target.TaxDetails, taxDetailComparer, (sourceTaxDetail, targetTaxDetail) => sourceTaxDetail.Patch(targetTaxDetail));
+			}
 		}
 
 	}

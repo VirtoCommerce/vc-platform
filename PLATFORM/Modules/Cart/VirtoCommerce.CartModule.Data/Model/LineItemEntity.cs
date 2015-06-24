@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
@@ -11,6 +12,11 @@ namespace VirtoCommerce.CartModule.Data.Model
 {
 	public class LineItemEntity : AuditableEntity
 	{
+		public LineItemEntity()
+		{
+			TaxDetails = new NullCollection<TaxDetailEntity>();
+		}
+
 		[Required]
 		[StringLength(3)]
 		public string Currency { get; set; }
@@ -81,5 +87,7 @@ namespace VirtoCommerce.CartModule.Data.Model
 
 		public virtual ShipmentEntity Shipment { get; set; }
 		public string ShipmentId { get; set; }
+
+		public virtual ObservableCollection<TaxDetailEntity> TaxDetails { get; set; }
 	}
 }

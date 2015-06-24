@@ -31,7 +31,7 @@
     </scripts>
 
     <settings>
-        <group name="Credentials">
+        <group name="Mailing|MailChimp|Credentials">
             <setting>
                 <name>MailChimp.Mailing.Credentials.AccessToken</name>
                 <valueType>secureString</valueType>
@@ -51,7 +51,7 @@
                 <description>MailChimp subscribers list Id</description>
             </setting>
         </group>
-        <group name="MailChimp Description">
+        <group name="Mailing|MailChimp|MailChimp Description">
             <setting>
                 <name>MailChimp.Mailing.Description</name>
                 <valueType>string</valueType>

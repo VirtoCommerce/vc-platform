@@ -20,11 +20,7 @@ namespace VirtoCommerce.CatalogModule.Web.Converters
 			{
 				retVal.Languages = catalog.Languages.Select(x=>x.ToWebModel()).ToList();
 			}
-			if (catalog.SeoInfos != null)
-			{
-				retVal.SeoInfos = catalog.SeoInfos.Select(x => x.ToWebModel()).ToList();
-			}
-
+		
 			//Need add property for each meta info
 			if (properties != null)
 			{
@@ -64,11 +60,6 @@ namespace VirtoCommerce.CatalogModule.Web.Converters
 			if (catalog.Languages != null)
 			{
 				retVal.Languages = catalog.Languages.Select(x => x.ToModuleModel()).ToList();
-			}
-
-			if (catalog.SeoInfos != null)
-			{
-				retVal.SeoInfos = catalog.SeoInfos.Select(x => x.ToModuleModel()).ToList();
 			}
 
 			if (catalog.Properties != null)

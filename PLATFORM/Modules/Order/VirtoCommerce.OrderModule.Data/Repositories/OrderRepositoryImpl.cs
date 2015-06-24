@@ -145,6 +145,27 @@ namespace VirtoCommerce.OrderModule.Data.Repositories
 			modelBuilder.Entity<DiscountEntity>().ToTable("OrderDiscount");
 			#endregion
 
+			#region TaxDetail
+			modelBuilder.Entity<TaxDetailEntity>().HasKey(x => x.Id)
+						.Property(x => x.Id);
+
+
+			modelBuilder.Entity<TaxDetailEntity>().HasOptional(x => x.CustomerOrder)
+									   .WithMany(x => x.TaxDetails)
+									   .HasForeignKey(x => x.CustomerOrderId).WillCascadeOnDelete(true);
+
+			modelBuilder.Entity<TaxDetailEntity>().HasOptional(x => x.Shipment)
+									   .WithMany(x => x.TaxDetails)
+									   .HasForeignKey(x => x.ShipmentId).WillCascadeOnDelete(true);
+
+			modelBuilder.Entity<TaxDetailEntity>().HasOptional(x => x.LineItem)
+									   .WithMany(x => x.TaxDetails)
+									   .HasForeignKey(x => x.LineItemId).WillCascadeOnDelete(true);
+
+
+			modelBuilder.Entity<TaxDetailEntity>().ToTable("OrderTaxDetail");
+			#endregion
+
 			base.OnModelCreating(modelBuilder);
 		}
 
@@ -169,7 +190,8 @@ namespace VirtoCommerce.OrderModule.Data.Repositories
 		{
 			var query = CustomerOrders.Where(x => x.Id == id)
 									  .Include(x => x.Discounts)
-									  .Include(x => x.Properties);
+									  .Include(x => x.Properties)
+									  .Include(x => x.TaxDetails);
 
 			if ((responseGroup & CustomerOrderResponseGroup.WithAddresses) == CustomerOrderResponseGroup.WithAddresses)
 			{
@@ -182,14 +204,15 @@ namespace VirtoCommerce.OrderModule.Data.Repositories
 			}
 			if ((responseGroup & CustomerOrderResponseGroup.WithItems) == CustomerOrderResponseGroup.WithItems)
 			{
-				query = query.Include(x => x.Items.Select(y => y.Discounts));
+				query = query.Include(x => x.Items.Select(y => y.Discounts)).Include(x => x.Items.Select(y => y.TaxDetails));
 			}
 			if ((responseGroup & CustomerOrderResponseGroup.WithShipments) == CustomerOrderResponseGroup.WithShipments)
 			{
 				query = query.Include(x => x.Shipments.Select(y => y.Discounts))
 							 .Include(x => x.Shipments.Select(y => y.Items))
 							 .Include(x => x.Shipments.Select(y => y.Addresses))
-							 .Include(x => x.Shipments.Select(y => y.Properties));
+							 .Include(x => x.Shipments.Select(y => y.Properties))
+							 .Include(x => x.Shipments.Select(y => y.TaxDetails));
 			}
 			return query.FirstOrDefault();
 		}

@@ -38,8 +38,7 @@ namespace VirtoCommerce.CatalogModule.Data.Services
 
 				var dbProperties = repository.GetCatalogProperties(dbCatalogBase);
 				var properties = dbProperties.Select(x => x.ToCoreModel(dbCatalogBase.ToCoreModel(), null)).ToArray();
-				var seoInfos = _commerceService.GetSeoKeywordsForEntity(catalogId).ToArray();
-				retVal = dbCatalogBase.ToCoreModel(properties, seoInfos);
+				retVal = dbCatalogBase.ToCoreModel(properties);
 
 			}
 			return retVal;
@@ -51,16 +50,6 @@ namespace VirtoCommerce.CatalogModule.Data.Services
 			coreModel.Catalog retVal = null;
 			using (var repository = _catalogRepositoryFactory())
 			{
-				//Need add seo separately
-				if (catalog.SeoInfos != null)
-				{
-					foreach (var seoInfo in catalog.SeoInfos)
-					{
-						var dbSeoInfo = seoInfo.ToCoreModel(dbCatalog);
-						_commerceService.UpsertSeoKeyword(dbSeoInfo);
-					}
-				}
-
 				repository.Add(dbCatalog);
 				CommitChanges(repository);
 			}
@@ -84,17 +73,7 @@ namespace VirtoCommerce.CatalogModule.Data.Services
 
 					changeTracker.Attach(dbCatalog);
 					dbCatalogChanged.Patch(dbCatalog);
-
-					//Patch SeoInfo  separately
-					if (catalog.SeoInfos != null)
-					{
-						var dbSeoInfos = new ObservableCollection<SeoUrlKeyword>(_commerceService.GetSeoKeywordsForEntity(catalog.Id));
-						var changedSeoInfos = catalog.SeoInfos.Select(x => x.ToCoreModel(dbCatalog)).ToList();
-						dbSeoInfos.ObserveCollection(x => _commerceService.UpsertSeoKeyword(x), x => _commerceService.DeleteSeoKeywords(new string[] { x.Id }));
-
-						changedSeoInfos.Patch(dbSeoInfos, (source, target) => _commerceService.UpsertSeoKeyword(source));
-					}
-		
+	
 				}
 
 				CommitChanges(repository);

@@ -28,6 +28,8 @@ namespace VirtoCommerce.CartModule.Web.Converters
 			if(cart.Discounts != null)
 				retVal.Discounts = cart.Discounts.Select(x => x.ToWebModel()).ToList();
 
+			retVal.TaxDetails = cart.TaxDetails;
+
 			return retVal;
 		}
 
@@ -52,6 +54,8 @@ namespace VirtoCommerce.CartModule.Web.Converters
 			{
 				retVal.Coupon = new coreModel.Coupon() { CouponCode = cart.Coupon.CouponCode, InvalidDescription = cart.Coupon.InvalidDescription };
 			}
+
+			retVal.TaxDetails = cart.TaxDetails;
 			return retVal;
 		}
 

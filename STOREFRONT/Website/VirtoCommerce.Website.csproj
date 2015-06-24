@@ -188,6 +188,7 @@
     <Compile Include="App_Start\Startup.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\AssetsController.cs" />
+    <Compile Include="Controllers\DownloadController.cs" />
     <Compile Include="Controllers\ErrorsController.cs" />
     <Compile Include="Controllers\BlogController.cs" />
     <Compile Include="Controllers\StoreControllerBase.cs" />
@@ -258,6 +259,7 @@
     <Content Include="App_Data\Themes\_Global\Snippets\checkout_totals.liquid" />
     <Content Include="App_Data\Themes\_Global\Snippets\guest_popup.liquid" />
     <Content Include="App_Data\Themes\_Global\Snippets\error_popup.liquid" />
+    <Content Include="App_Data\Themes\_Global\templates\bank_card_form.liquid" />
     <None Include="App_Data\Themes\_Global\templates\external_login_confirmation.liquid" />
     <Content Include="App_Data\Themes\_Global\templates\index.liquid" />
     <Content Include="App_Data\Themes\_Global\templates\banner.liquid" />

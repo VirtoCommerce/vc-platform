@@ -12,6 +12,7 @@ using VirtoCommerce.Platform.Core.Security;
 using coreModel = VirtoCommerce.Domain.Catalog.Model;
 using webModel = VirtoCommerce.CatalogModule.Web.Model;
 using VirtoCommerce.Platform.Core.Common;
+using VirtoCommerce.Domain.Commerce.Model;
 
 namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 {
@@ -195,12 +196,12 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 					{
 						var catalog = _catalogService.GetById(product.CatalogId);
 						var defaultLanguageCode = catalog.Languages.First(x => x.IsDefault).LanguageCode;
-						var seoInfo = new coreModel.SeoInfo
+						var seoInfo = new SeoInfo
 						{
 							LanguageCode = defaultLanguageCode,
 							SemanticUrl = slugUrl
 						};
-						moduleProduct.SeoInfos = new coreModel.SeoInfo[] { seoInfo };
+						moduleProduct.SeoInfos = new SeoInfo[] { seoInfo };
 					}
 				}
                 return _itemsService.Create(moduleProduct);

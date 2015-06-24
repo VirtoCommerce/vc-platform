@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Omu.ValueInjecter;
 using VirtoCommerce.Platform.Core.Asset;
@@ -68,6 +69,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Converters
 				// dictionary properties are returned as object[], all other properties are returned as primitives
 				foreach (var propValueGroup in product.PropertyValues.GroupBy(x => x.PropertyName))
 				{
+					var displayName = propValueGroup.Key;
 					var propertyValue = propValueGroup.FirstOrDefault(x => x.Value != null);
 					var propertyCollection = retVal.Properties;
 					if (propertyValue != null)
@@ -75,12 +77,18 @@ namespace VirtoCommerce.MerchandisingModule.Web.Converters
 						if(properties != null)
 						{
 							var propertyMetaInfo = properties.FirstOrDefault(x => string.Equals(propValueGroup.Key, x.Name));
+							if(propertyMetaInfo != null && propertyMetaInfo.DisplayNames != null)
+							{
+								//TODO: use display name for specific language
+								displayName = propertyMetaInfo.DisplayNames.Select(x=>x.Name).Where(x=> !String.IsNullOrEmpty(x)).FirstOrDefault() ?? displayName;
+							}
+
 							if(propertyMetaInfo != null && propertyMetaInfo.Type == coreModel.PropertyType.Variation)
 							{
 								propertyCollection = retVal.VariationProperties;
 							}
 						}
-						propertyCollection.Add(propValueGroup.Key, propertyValue.Value);
+						propertyCollection.Add(displayName, propertyValue.Value);
 					}
 				}
 

@@ -1,127 +1,131 @@
 ﻿angular.module('virtoCommerce.catalogModule')
-.controller('virtoCommerce.catalogModule.catalogCSVimportWizardController', ['$scope', 'platformWebApp.bladeNavigationService', 'FileUploader', 'virtoCommerce.catalogModule.import', function ($scope, bladeNavigationService,  FileUploader, importResource) {
+.controller('virtoCommerce.catalogModule.catalogCSVimportWizardController', ['$scope', '$localStorage', 'platformWebApp.bladeNavigationService', 'FileUploader', 'virtoCommerce.catalogModule.import', function ($scope, $localStorage, bladeNavigationService, FileUploader, importResource) {
 
-	var blade = $scope.blade;
-	blade.isLoading = false;
-	blade.title = 'Import catalog from csv';
-	blade.subtitle = 'All products will be added to "'+ blade.catalog.name +'" catalog';
+    var blade = $scope.blade;
+    blade.isLoading = false;
+    blade.title = 'Import catalog from csv';
+    blade.subtitle = 'All products will be added to "' + blade.catalog.name + '" catalog';
 
-	$scope.columnDelimiters = [
+    $scope.columnDelimiters = [
         { name: "Space", value: " " },
         { name: "Comma", value: "," },
         { name: "Semicolon", value: ";" },
         { name: "Tab", value: "\t" }
-	];
+    ];
 
 
-	if (!$scope.uploader) {
-		// Creates a uploader
-		var uploader = $scope.uploader = new FileUploader({
-			scope: $scope,
-			headers: { Accept: 'application/json' },
-			url: 'api/assets',
-			method: 'POST',
-			autoUpload: true,
-			removeAfterUpload: true
-		});
+    if (!$scope.uploader) {
+        // Creates a uploader
+        var uploader = $scope.uploader = new FileUploader({
+            scope: $scope,
+            headers: { Accept: 'application/json' },
+            url: 'api/assets',
+            method: 'POST',
+            autoUpload: true,
+            removeAfterUpload: true
+        });
 
-		// ADDING FILTERS
-		// Images only
-		uploader.filters.push({
-			name: 'csvFilter',
-			fn: function (i /*{File|FileLikeObject}*/, options) {
-				var type = '|' + i.type.slice(i.type.lastIndexOf('/') + 1) + '|';
-				return '|csv|vnd.ms-excel|'.indexOf(type) !== -1;
-			}
-		});
+        // ADDING FILTERS
+        // Images only
+        uploader.filters.push({
+            name: 'csvFilter',
+            fn: function (i /*{File|FileLikeObject}*/, options) {
+                var type = '|' + i.type.slice(i.type.lastIndexOf('/') + 1) + '|';
+                return '|csv|vnd.ms-excel|'.indexOf(type) !== -1;
+            }
+        });
 
-		uploader.onBeforeUploadItem = function (fileItem) {
-			blade.isLoading = true;
-		};
-	
-		uploader.onSuccessItem = function (fileItem, asset, status, headers) {
-			$scope.blade.csvFileUrl = asset[0].relativeUrl;
+        uploader.onBeforeUploadItem = function (fileItem) {
+            blade.isLoading = true;
+        };
 
-			importResource.getMappingConfiguration({ fileUrl: $scope.blade.csvFileUrl, delimiter: blade.columnDelimiter }, function (data) {
-				blade.importConfiguration = data;
-				blade.isLoading = false;
-			}, function (error) {
-				bladeNavigationService.setError('Error ' + error.status, $scope.blade);
-			});
+        uploader.onSuccessItem = function (fileItem, asset, status, headers) {
+            $scope.blade.csvFileUrl = asset[0].relativeUrl;
 
+            importResource.getMappingConfiguration({ fileUrl: $scope.blade.csvFileUrl, delimiter: blade.columnDelimiter }, function (data) {
+                var localMappings = $localStorage.lastKnownImportMappings;
+                if (localMappings) {
+                    var nonEmptyLocalMappings = _.select(localMappings, function (x) { return x.csvColumnName; });
+                    var nonEmptyMappingsFromServer = _.select(data.mappingItems, function (x) { return x.csvColumnName; });
+                    if (nonEmptyLocalMappings.length > nonEmptyMappingsFromServer.length) {
+                        data.mappingItems = localMappings;
+                    }
+                }
 
-		};
+                blade.importConfiguration = data;
+                blade.isLoading = false;
+            }, function (error) {
+                bladeNavigationService.setError('Error ' + error.status, $scope.blade);
+            });
+        };
+    };
 
-	};
+    $scope.canMapColumns = function () {
+        return blade.importConfiguration && $scope.formScope && $scope.formScope.$valid;
+    }
 
-	$scope.canMapColumns = function () {
-		return blade.importConfiguration && $scope.formScope && $scope.formScope.$valid;
-	}
+    $scope.openMappingStep = function () {
+        var newBlade = {
+            id: "importMapping",
+            importConfiguration: $scope.blade.importConfiguration,
+            title: 'Column mapping',
+            subtitle: 'Manual map product properties to csv columns',
+            controller: 'virtoCommerce.catalogModule.catalogCSVimportWizardMappingStepController',
+            template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/import/wizard/catalog-CSV-import-wizard-mapping-step.tpl.html'
+        };
+        
+        blade.canImport = true;
+        bladeNavigationService.showBlade(newBlade, $scope.blade);
+    };
 
-	$scope.openMappingStep = function () {
+    $scope.startImport = function () {
+        $localStorage.lastKnownImportMappings = blade.importConfiguration.mappingItems;
 
-		var newBlade = {
-			id: "importMapping",
-			importConfiguration: $scope.blade.importConfiguration,
-			title: 'Column mapping',
-			subtitle: 'Manual map product properties to csv columns',
-			controller: 'virtoCommerce.catalogModule.catalogCSVimportWizardMappingStepController',
-			template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/import/wizard/catalog-CSV-import-wizard-mapping-step.tpl.html'
-		};
+        blade.importConfiguration.catalogId = blade.catalog.id;
+        importResource.run(blade.importConfiguration, function (notification) {
+            var newBlade = {
+                id: "importProgress",
+                catalog: blade.catalog,
+                notification: notification,
+                importConfiguration: blade.importConfiguration,
+                controller: 'virtoCommerce.catalogModule.catalogCSVimportController',
+                template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/import/catalog-CSV-import.tpl.html'
+            };
 
+            $scope.$on("new-notification-event", function (event, notification) {
+                if (notification && notification.id == newBlade.notification.id) {
+                    blade.canImport = notification.finished != null;
+                }
+            });
 
-		blade.canImport = true;
-		bladeNavigationService.showBlade(newBlade, $scope.blade);
+            blade.canImport = false;
+            bladeNavigationService.showBlade(newBlade, $scope.blade);
 
-	};
+        }, function (error) {
+            bladeNavigationService.setError('Error ' + error.status, $scope.blade);
+        });
+    };
 
-	$scope.startImport = function () {
+    $scope.setForm = function (form) {
+        $scope.formScope = form;
+    }
 
-		blade.importConfiguration.catalogId = blade.catalog.id;
-		importResource.run(blade.importConfiguration, function (notification) {
-			var newBlade = {
-				id: "importProgress",
-				catalog: blade.catalog,
-				notification: notification,
-				importConfiguration: blade.importConfiguration,
-				controller: 'virtoCommerce.catalogModule.catalogCSVimportController',
-				template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/import/catalog-CSV-import.tpl.html'
-			};
+    $scope.blade.onClose = function (closeCallback) {
 
-			$scope.$on("new-notification-event", function (event, notification) {
-				if (notification && notification.id == newBlade.notification.id) {
-					blade.canImport = notification.finished != null;
-				}
-			});
-		
-			blade.canImport = false;
-			bladeNavigationService.showBlade(newBlade, $scope.blade);
-
-		}, function (error) {
-			bladeNavigationService.setError('Error ' + error.status, $scope.blade);
-		});
-	};
-
-	$scope.setForm = function (form) {
-		$scope.formScope = form;
-	}
-
-	$scope.blade.onClose = function (closeCallback) {
-
-		if ($scope.blade.childrenBlades.length > 0) {
-			var callback = function () {
-				if ($scope.blade.childrenBlades.length == 0) {
-					closeCallback();
-				};
-			};
-			angular.forEach($scope.blade.childrenBlades, function (child) {
-				bladeNavigationService.closeBlade(child, callback);
-			});
-		}
-		else {
-			closeCallback();
-		}
-	};
+        if ($scope.blade.childrenBlades.length > 0) {
+            var callback = function () {
+                if ($scope.blade.childrenBlades.length == 0) {
+                    closeCallback();
+                };
+            };
+            angular.forEach($scope.blade.childrenBlades, function (child) {
+                bladeNavigationService.closeBlade(child, callback);
+            });
+        }
+        else {
+            closeCallback();
+        }
+    };
 
 
 }]);

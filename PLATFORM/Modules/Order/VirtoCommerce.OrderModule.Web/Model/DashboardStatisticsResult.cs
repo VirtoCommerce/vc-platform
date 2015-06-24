@@ -9,12 +9,12 @@ namespace VirtoCommerce.OrderModule.Web.Model
 		public DateTime EndDate { get; set; }
 
 		public ICollection<Money> Revenue { get; set; }
-		public ICollection<MoneyWithPeriod> RevenuePeriodDetails { get; set; }
+		public ICollection<QuarterPeriodMoney> RevenuePeriodDetails { get; set; }
 		public int OrderCount { get; set; }
 		public int CustomersCount { get; set; }
 		public ICollection<Money> RevenuePerCustomer { get; set; }
 		public ICollection<Money> AvgOrderValue { get; set; }
-		public ICollection<MoneyWithPeriod> AvgOrderValuePeriodDetails { get; set; }
+		public ICollection<QuarterPeriodMoney> AvgOrderValuePeriodDetails { get; set; }
 
 		public int ItemsPurchased { get; set; }
 		public double LineitemsPerOrder { get; set; }
@@ -32,16 +32,15 @@ namespace VirtoCommerce.OrderModule.Web.Model
 
 	}
 
-	public class MoneyWithPeriod : Money
+
+	public class QuarterPeriodMoney : Money
 	{
-		public MoneyWithPeriod(string currency, decimal amount)
+		public QuarterPeriodMoney(string currency, decimal amount)
 			:base(currency, amount)
 		{
-
 		}
 		public int Year { get; set; }
-		public int Month { get; set; }
 		public int Quarter { get; set; }
-		public int Day { get; set; }
+
 	}
 }

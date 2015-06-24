@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using VirtoCommerce.Domain.Order.Model;
 using Omu.ValueInjecter;
 using VirtoCommerce.OrderModule.Data.Model;
-using coreModel = VirtoCommerce.Domain.Cart.Model;
+using cartCoreModel = VirtoCommerce.Domain.Cart.Model;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Data.Common.ConventionInjections;
 
@@ -28,11 +28,13 @@ namespace VirtoCommerce.OrderModule.Data.Converters
 			{
 				retVal.Discount = entity.Discounts.First().ToCoreModel();
 			}
+
+			retVal.TaxDetails = entity.TaxDetails.Select(x => x.ToCoreModel()).ToList();
 		
 			return retVal;
 		}
 
-		public static LineItem ToCoreModel(this coreModel.LineItem lineItem)
+		public static LineItem ToCoreModel(this cartCoreModel.LineItem lineItem)
 		{
 			if (lineItem == null)
 				throw new ArgumentNullException("lineItem");
@@ -50,6 +52,7 @@ namespace VirtoCommerce.OrderModule.Data.Converters
 			{
 				retVal.Discount = lineItem.Discounts.Select(x => x.ToCoreModel()).FirstOrDefault();
 			}
+			retVal.TaxDetails = lineItem.TaxDetails;
 			return retVal;
 		}
 
@@ -64,6 +67,11 @@ namespace VirtoCommerce.OrderModule.Data.Converters
 			if(lineItem.Discount != null)
 			{
 				retVal.Discounts = new ObservableCollection<DiscountEntity>(new DiscountEntity[] { lineItem.Discount.ToDataModel() });
+			}
+			if(lineItem.TaxDetails != null)
+			{
+				retVal.TaxDetails = new ObservableCollection<TaxDetailEntity>();
+				retVal.TaxDetails.AddRange(lineItem.TaxDetails.Select(x=>x.ToDataModel()));
 			}
 			return retVal;
 		}
@@ -88,6 +96,12 @@ namespace VirtoCommerce.OrderModule.Data.Converters
 			if (!source.Discounts.IsNullCollection())
 			{
 				source.Discounts.Patch(target.Discounts, new DiscountComparer(), (sourceDiscount, targetDiscount) => sourceDiscount.Patch(targetDiscount));
+			}
+
+			if (!source.TaxDetails.IsNullCollection())
+			{
+				var taxDetailComparer = AnonymousComparer.Create((TaxDetailEntity x) => x.Name);
+				source.TaxDetails.Patch(target.TaxDetails, taxDetailComparer, (sourceTaxDetail, targetTaxDetail) => sourceTaxDetail.Patch(targetTaxDetail));
 			}
 		}
 

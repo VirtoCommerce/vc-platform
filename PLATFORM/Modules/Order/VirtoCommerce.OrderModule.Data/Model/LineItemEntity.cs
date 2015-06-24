@@ -16,6 +16,7 @@ namespace VirtoCommerce.OrderModule.Data.Model
 		public LineItemEntity()
 		{
 			Discounts = new NullCollection<DiscountEntity>();
+			TaxDetails = new NullCollection<TaxDetailEntity>();
 		}
 
 		[Required]
@@ -66,6 +67,8 @@ namespace VirtoCommerce.OrderModule.Data.Model
 		public decimal? Width { get; set; }
 
 		public virtual ObservableCollection<DiscountEntity> Discounts { get; set; }
+
+		public virtual ObservableCollection<TaxDetailEntity> TaxDetails { get; set; }
 
 		public virtual CustomerOrderEntity CustomerOrder { get; set; }
 		public string CustomerOrderId { get; set; }

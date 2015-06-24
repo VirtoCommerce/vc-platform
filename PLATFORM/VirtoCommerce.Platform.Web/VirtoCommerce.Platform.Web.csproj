@@ -324,8 +324,8 @@
     <Content Include="Scripts\app\settings\blades\setting-dictionary.tpl.html" />
     <Content Include="Scripts\app\settings\blades\settings-detail.js" />
     <Content Include="Scripts\app\settings\blades\settings-detail.tpl.html" />
-    <Content Include="Scripts\app\settings\blades\settings-list.js" />
-    <Content Include="Scripts\app\settings\blades\settings-list.tpl.html" />
+    <Content Include="Scripts\app\settings\blades\settingGroup-list.js" />
+    <Content Include="Scripts\app\settings\blades\settingGroup-list.tpl.html" />
     <Content Include="Scripts\app\settings\resources\setting.js" />
     <Content Include="Scripts\app\settings\settings.js" />
     <Content Include="Scripts\codemirror\addon\mode\overlay.js" />

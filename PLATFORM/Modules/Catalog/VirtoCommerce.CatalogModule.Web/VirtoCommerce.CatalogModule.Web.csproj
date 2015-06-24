@@ -134,7 +134,6 @@
     <Compile Include="Converters\PropertyDictionaryValueConverter.cs" />
     <Compile Include="Converters\PropertyValueConverter.cs" />
     <Compile Include="Converters\SearchConverter.cs" />
-    <Compile Include="Converters\SeoInfoConverter.cs" />
     <Compile Include="Model\Catalog.cs" />
     <Compile Include="Model\CategoryLink.cs" />
     <Compile Include="Model\CsvExportInfo.cs" />
@@ -164,7 +163,6 @@
     <Compile Include="Model\PropertyValue.cs" />
     <Compile Include="Model\ResponseGroup.cs" />
     <Compile Include="Model\ListEntrySearchCriteria.cs" />
-    <Compile Include="Model\SeoInfo.cs" />
     <Compile Include="Module.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Content Include="Content\css\catalog.css" />

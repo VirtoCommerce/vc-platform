@@ -5,11 +5,12 @@ using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
+using VirtoCommerce.Domain.Commerce.Model;
 using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.CartModule.Web.Model
 {
-	public class LineItem : AuditableEntity
+	public class LineItem : AuditableEntity, IHaveTaxDetalization
 	{
 		public string ProductId { get; set; }
 		public string CatalogId { get; set; }
@@ -55,6 +56,10 @@ namespace VirtoCommerce.CartModule.Web.Model
 		public decimal ExtendedPrice { get; set; }
 		public decimal DiscountTotal { get; set; }
 		public decimal TaxTotal { get; set; }
+
+		#region IHaveTaxDetalization Members
+		public ICollection<TaxDetail> TaxDetails { get; set; }
+		#endregion
 
 	}
 }

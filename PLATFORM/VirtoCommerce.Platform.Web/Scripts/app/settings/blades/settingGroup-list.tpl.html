@@ -1,0 +1,25 @@
+﻿<div class="blade-static __expanded">
+    <va-breadcrumb ng-model="blade.breadcrumbs"></va-breadcrumb>
+    <div class="form-group">
+        <div class="form-input __search">
+            <input placeholder="Search keyword..." ng-model="blade.searchText">
+        </div>
+    </div>
+</div>
+<div class="blade-content">
+    <div class="blade-inner">
+        <div class="inner-block clearfix">
+            <ul class="list __items">
+                <li class="list-item" ng-repeat="data in blade.allSettings | filter:blade.searchText | orderBy: 'name' track by data.name" ng-class="{'__selected': data.groupName === selectedNodeId}" ng-click='selectNode(data)' ng-if="blade.searchText">
+                    <i class="list-ico fa" ng-class="data.valueType ? 'fa-wrench' : 'fa-gears'"></i>
+                    <span class="list-t">{{data.name}}</span>
+                    <span class="list-descr" ng-if="data.groupName">{{data.groupName}}</span>
+                </li>
+                <li class="list-item" ng-repeat="data in blade.currentEntities | orderBy: 'name' track by data.groupName" ng-class="{'__selected': data.groupName === selectedNodeId}" ng-click='selectNode(data)' ng-if="!blade.searchText">
+                    <i class="list-ico fa fa-gears"></i>
+                    <span class="list-t">{{data.name}}</span>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>

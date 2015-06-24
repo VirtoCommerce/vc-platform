@@ -6,7 +6,7 @@
         <h3>{{ product.product_name }} download links:</h3>
         <ul>
             {% for download_link in product.links %}
-                <li><a href="{{ download_link }}">{{ download_link }}</a></li>
+                <li><a href="{{ download_link.url }}">{{ download_link.text }} ({{ download_link.filename }})</a></li>
             {% endfor %}
         </ul>
     {% endfor %}

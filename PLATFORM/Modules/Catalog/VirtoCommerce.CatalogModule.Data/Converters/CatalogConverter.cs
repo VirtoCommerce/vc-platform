@@ -22,7 +22,7 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
         /// </summary>
         /// <param name="catalogBase"></param>
         /// <returns></returns>
-        public static coreModel.Catalog ToCoreModel(this dataModel.CatalogBase catalogBase, coreModel.Property[] properties = null, SeoUrlKeyword[] seoInfos = null)
+        public static coreModel.Catalog ToCoreModel(this dataModel.CatalogBase catalogBase, coreModel.Property[] properties = null)
         {
             if (catalogBase == null)
                 throw new ArgumentNullException("catalogBase");
@@ -58,11 +58,7 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
                 retVal.Languages.Add(catalogLanguage);
             }
 
-			if (seoInfos != null)
-			{
-				retVal.SeoInfos = seoInfos.Select(x => x.ToCoreModel()).ToList();
-			}
-
+	
             return retVal;
         }
 
@@ -75,6 +71,9 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
         {
             if (catalog == null)
                 throw new ArgumentNullException("catalog");
+
+			if(catalog.DefaultLanguage == null)
+				throw new NullReferenceException("DefaultLanguage");
 
             dataModel.CatalogBase retVal;
             dataModel.Catalog dbCatalog = null;
@@ -105,6 +104,7 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
                 retVal.Id = id;
             }
 
+			retVal.DefaultLanguage = catalog.DefaultLanguage.LanguageCode;
 
             if (dbCatalog != null && catalog.Languages != null)
             {
@@ -114,12 +114,7 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
                     dbCatalogLanguage.CatalogId = retVal.Id;
                     dbCatalog.CatalogLanguages.Add(dbCatalogLanguage);
                 }
-				retVal.DefaultLanguage = catalog.Languages.Where(x => x.IsDefault).Select(x => x.LanguageCode).FirstOrDefault();
             }
-
-            if (retVal.DefaultLanguage == null)
-                retVal.DefaultLanguage = "undefined";
-
 
             retVal.Name = catalog.Name;
 
@@ -151,7 +146,7 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
             }
 
             //Property values
-            if (!sourceCatalog.CatalogPropertyValues.IsNullCollection())
+			if (sourceCatalog != null && !sourceCatalog.CatalogPropertyValues.IsNullCollection())
             {
                 sourceCatalog.CatalogPropertyValues.Patch(targetCatalog.CatalogPropertyValues, (sourcePropValue, targetPropValue) => sourcePropValue.Patch(targetPropValue));
             }

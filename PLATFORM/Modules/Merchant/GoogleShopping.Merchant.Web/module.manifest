@@ -31,7 +31,7 @@
     </scripts>
 
     <settings>
-        <group name="Credentials">
+      <group name="Payment methods|Google Shopping|Credentials">
             <setting>
                 <name>GoogleShopping.Merchant.MerchantId</name>
                 <valueType>integer</valueType>
@@ -39,7 +39,7 @@
                 <description>Google Shopping MerchantId</description>
             </setting>
         </group>
-        <group name="GoogleShopping Description">
+        <group name="Payment methods|Google Shopping|Description">
             <setting>
                 <name>GoogleShopping.MerchantModule.Description</name>
                 <valueType>string</valueType>

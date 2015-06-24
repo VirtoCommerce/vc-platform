@@ -39,19 +39,19 @@
                         }
 
                         //Set navigation breadcrumbs
-                        setBreadcrumps();
+                        setBreadcrumbs();
                         setCheckedEntries();
                     }, function (error) {
                         bladeNavigationService.setError('Error ' + error.status, blade);
                     });
             }
 
-            //Breadcrumps
-            function setBreadcrumps() {
+            //Breadcrumbs
+            function setBreadcrumbs() {
                 //Clone array (angular.copy leave a same reference)
                 blade.breadcrumbs = blade.breadcrumbs.slice(0);
 
-                //catalog breadcrump by default
+                //catalog breadcrumb by default
                 var breadCrumb = {
                     id: blade.catalogId,
                     name: blade.catalog.name,

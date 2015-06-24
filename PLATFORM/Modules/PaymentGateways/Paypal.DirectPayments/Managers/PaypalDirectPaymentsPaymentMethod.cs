@@ -79,7 +79,7 @@ namespace Paypal.DirectPayments.Managers
 
         public override PaymentMethodType PaymentMethodType
         {
-            get { return PaymentMethodType.Redirection; }
+            get { return PaymentMethodType.Standard; }
         }
 
         public override PaymentMethodGroupType PaymentMethodGroupType
@@ -178,11 +178,11 @@ namespace Paypal.DirectPayments.Managers
         {
             var retVal = new CreditCardDetailsType();
 
-            retVal.CreditCardNumber = context.Info.BankCardNumber;
-            retVal.CreditCardType = GetPaypalCreditCardType(context.Info.BankCardType);
-            retVal.ExpMonth = context.Info.BankCardMonth;
-            retVal.ExpYear = context.Info.BankCardYear;
-            retVal.CVV2 = context.Info.BankCardCVV2;
+            retVal.CreditCardNumber = context.BankCardInfo.BankCardNumber;
+			retVal.CreditCardType = GetPaypalCreditCardType(context.BankCardInfo.BankCardType);
+			retVal.ExpMonth = context.BankCardInfo.BankCardMonth;
+			retVal.ExpYear = context.BankCardInfo.BankCardYear;
+			retVal.CVV2 = context.BankCardInfo.BankCardCVV2;
             retVal.CardOwner = new PayerInfoType();
 
             if (context.Order.Addresses.Any(x => x.AddressType == VirtoCommerce.Domain.Order.Model.AddressType.Billing))
@@ -203,10 +203,28 @@ namespace Paypal.DirectPayments.Managers
                 retVal.CardOwner.PayerName.FirstName = billingAddress.FirstName;
                 retVal.CardOwner.PayerName.LastName = billingAddress.LastName;
             }
-            else
+			else if (context.Order.Addresses.Any())
             {
-                throw new NullReferenceException("no billing address");
+				var billingAddress = context.Order.Addresses.FirstOrDefault();
+				retVal.CardOwner.PayerCountry = GetPaypalCountryCodeType(billingAddress.CountryCode);
+
+				retVal.CardOwner.Address = new PayPal.PayPalAPIInterfaceService.Model.AddressType();
+				retVal.CardOwner.Address.Street1 = billingAddress.Line1;
+				retVal.CardOwner.Address.Street2 = billingAddress.Line2;
+				retVal.CardOwner.Address.CityName = billingAddress.City;
+				retVal.CardOwner.Address.StateOrProvince = billingAddress.RegionName;
+
+				retVal.CardOwner.Address.Country = GetPaypalCountryCodeType(billingAddress.CountryCode);
+				retVal.CardOwner.Address.PostalCode = billingAddress.Zip;
+				retVal.CardOwner.Payer = billingAddress.Email;
+				retVal.CardOwner.PayerName = new PersonNameType();
+				retVal.CardOwner.PayerName.FirstName = billingAddress.FirstName;
+				retVal.CardOwner.PayerName.LastName = billingAddress.LastName;
             }
+			else
+			{
+				throw new NullReferenceException("no billing address");
+			}
 
             return retVal;
         }
@@ -214,7 +232,7 @@ namespace Paypal.DirectPayments.Managers
         private CountryCodeType GetPaypalCountryCodeType(string threeLetterCountryCode)
         {
             var regions = CultureInfo.GetCultures(CultureTypes.SpecificCultures).Select(x => new RegionInfo(x.LCID));
-            var region = regions.FirstOrDefault(x => x.ThreeLetterISORegionName.Contains(threeLetterCountryCode));
+            var region = regions.FirstOrDefault(x => x.ThreeLetterISORegionName.Equals(threeLetterCountryCode));
 
             var payerCountry = CountryCodeType.US;
             if (region != null)
@@ -227,6 +245,20 @@ namespace Paypal.DirectPayments.Managers
                 {
                 }
             }
+			else
+			{
+				region = regions.FirstOrDefault(x => x.TwoLetterISORegionName.Equals(threeLetterCountryCode));
+				if(region != null)
+				{
+					try
+					{
+						payerCountry = (CountryCodeType)Enum.Parse(typeof(CountryCodeType), region.TwoLetterISORegionName.ToUpperInvariant());
+					}
+					catch
+					{
+					}
+				}
+			}
             return payerCountry;
         }
 

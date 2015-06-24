@@ -19,8 +19,7 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 		/// </summary>
 		/// <returns></returns>
 		public static coreModel.CatalogProduct ToCoreModel(this dataModel.Item dbItem, coreModel.Catalog catalog,
-														  coreModel.Category category, SeoUrlKeyword[] seoInfos,
-														  coreModel.CatalogProduct[] associatedProducts)
+														  coreModel.Category category, coreModel.CatalogProduct[] associatedProducts)
 		{
 			var retVal = new coreModel.CatalogProduct();
 			retVal.InjectFrom(dbItem);
@@ -69,19 +68,11 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 			retVal.Variations = new List<coreModel.CatalogProduct>();
 			foreach (var variation in dbItem.Childrens)
 			{
-				var productVaraition = variation.ToCoreModel(catalog, category, seoInfos: null, associatedProducts: null);
+				var productVaraition = variation.ToCoreModel(catalog, category, associatedProducts: null);
 				productVaraition.MainProduct = retVal;
 				productVaraition.MainProductId = retVal.Id;
 				
 				retVal.Variations.Add(productVaraition);
-			}
-			#endregion
-
-		
-			#region SeoInfo
-			if (seoInfos != null)
-			{
-				retVal.SeoInfos = seoInfos.Select(x => x.ToCoreModel()).ToList();
 			}
 			#endregion
 

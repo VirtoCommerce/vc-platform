@@ -16,6 +16,9 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
 		IQueryable<foundation.Item> Items { get; }
 		IQueryable<foundation.Property> Properties { get; }
 		IQueryable<foundation.PropertySet> PropertySets { get; }
+		IQueryable<foundation.ItemAsset> ItemAssets { get; }
+		IQueryable<foundation.EditorialReview> EditorialReviews { get; }
+		IQueryable<foundation.ItemPropertyValue> ItemPropertyValues { get; }
 		IQueryable<foundation.ItemRelation> ItemRelations { get; }
 		IQueryable<foundation.CategoryItemRelation> CategoryItemRelations { get; }
 		IQueryable<foundation.Association> Associations { get; }
@@ -24,6 +27,7 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
 		foundation.Category[] GetAllCategoryParents(foundation.Category categoryId);
 		foundation.CatalogBase GetCatalogById(string catalogId);
 		foundation.Category GetCategoryById(string categoryId);
+		foundation.Category[] GetCategoriesByIds(string[] categoryIds);
 		foundation.Item[] GetItemByIds(string[] itemIds, moduleModel.ItemResponseGroup respGroup);
 		foundation.Property[] GetPropertiesByIds(string[] propIds);
 		foundation.Catalog GetPropertyCatalog(string propId);

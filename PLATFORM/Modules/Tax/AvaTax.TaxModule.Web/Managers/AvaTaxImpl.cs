@@ -1,4 +1,5 @@
 ﻿using AvaTax.TaxModule.Web.Services;
+using VirtoCommerce.Platform.Core.Settings;
 
 namespace AvaTax.TaxModule.Web.Managers
 {
@@ -7,56 +8,66 @@ namespace AvaTax.TaxModule.Web.Managers
         {
             private readonly string _username;
             private readonly string _password;
-            private readonly string _code;
-            private readonly string _description;
-            private readonly string _logoUrl;
-            private readonly string _companyCode;
             private readonly string _serviceUrl;
+            private readonly string _companyCode;
+            private readonly string _isEnabled;
 
-            public AvaTaxImpl(string username, string password, string serviceUrl, string companyCode, string code, string description, string logoUrl)
+            private readonly ISettingsManager _settingsManager;
+
+            public AvaTaxImpl(string username, string password, string serviceUrl, string companyCode, string isEnabled, ISettingsManager settingsManager)
             {
                 _username = username;
                 _password = password;
-                _code = code;
-                _description = description;
-                _logoUrl = logoUrl;
                 _serviceUrl = serviceUrl;
                 _companyCode = companyCode;
+                _isEnabled = isEnabled;
+                _settingsManager = settingsManager;
             }
 
             public string Username
             {
-                get { return _username; }
+
+                get
+                {
+                    var retVal = _settingsManager.GetValue(_username, string.Empty);
+                    return retVal;
+                }
             }
 
             public string Password
             {
-                get { return _password; }
+                get
+                {
+                    var retVal = _settingsManager.GetValue(_password, string.Empty);
+                    return retVal;
+                }
             }
-
-            public string Code
-            {
-                get { return _code; }
-            }
-
-            public string Description
-            {
-                get { return _description; }
-            }
-
-            public string LogoUrl
-            {
-                get { return _logoUrl; }
-            }
-
+            
             public string ServiceUrl
             {
-                get { return _serviceUrl; }
+                get
+                {
+                    var retVal = _settingsManager.GetValue(_serviceUrl, string.Empty);
+                    return retVal;
+                }
             }
 
             public string CompanyCode
             {
-                get { return _companyCode; }
+                get 
+                {
+                    var retVal = _settingsManager.GetValue(_companyCode, string.Empty);
+                    return retVal;
+                }
+            }
+
+            public bool IsEnabled
+            {
+                get
+                {
+                    var retVal = _settingsManager.GetValue(_isEnabled, true);
+                    return retVal;
+                }
             }
         }
 }

@@ -22,14 +22,15 @@ namespace VirtoCommerce.CoreModule.Data.Model
 
 		[StringLength(255)]
 		[Required]
-		public string KeywordValue { get; set; }
+		public string ObjectId { get; set; }
 
 
 		[Required]
 		public bool IsActive { get; set; }
 
+		[StringLength(64)]
 		[Required]
-		public int KeywordType { get; set; }
+		public string ObjectType { get; set; }
 
 		[StringLength(255)]
 		public string Title { get; set; }

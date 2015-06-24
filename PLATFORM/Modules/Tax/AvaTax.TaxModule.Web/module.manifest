@@ -26,12 +26,12 @@
   <!--<styles>
 		<directory virtualPath="$/Content/css" searchPattern="*.css" searchSubdirectories="true" />
 	</styles>-->
-  <!--<scripts>
+  <scripts>
     <directory virtualPath="$/Scripts" searchPattern="*.js" searchSubdirectories="true" />
-  </scripts>-->
+  </scripts>
 
   <settings>
-    <group name="Credentials">
+    <group name="Taxes|Avalara|Credentials">
       <setting>
         <name>Avalara.Tax.Credentials.AccountNumber</name>
         <valueType>string</valueType>
@@ -57,7 +57,16 @@
         <description>Link to Avalara API service</description>
       </setting>
     </group>
-    <group name="Avalara Description">
+    <group name="Taxes|Avalara|General">
+      <setting>
+        <name>Avalara.Tax.IsEnabled</name>
+        <valueType>boolean</valueType>
+        <defaultValue>True</defaultValue>
+        <title>Is Enabled</title>
+        <description>Enable or disable tax calculation</description>
+      </setting>
+    </group>
+    <group name="Taxes|Avalara|Avalara Description">
       <setting>
         <name>Avalara.Tax.Description</name>
         <valueType>string</valueType>

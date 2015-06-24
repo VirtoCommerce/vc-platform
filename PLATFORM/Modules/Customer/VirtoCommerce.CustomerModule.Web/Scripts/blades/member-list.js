@@ -39,25 +39,25 @@
 		    }
 
 		    //Set navigation breadcrumbs
-		    setBreadcrumps();
+		    setBreadcrumbs();
 		}, function (error) {
 		    bladeNavigationService.setError('Error ' + error.status, $scope.blade);
 		});
     }
 
-    //Breadcrumps
-    function setBreadcrumps() {
+    //Breadcrumbs
+    function setBreadcrumbs() {
         //Clone array (angular.copy leaves the same reference)
         $scope.blade.breadcrumbs = $scope.blade.breadcrumbs.slice(0);
 
-        //catalog breadcrump by default
+        //catalog breadcrumb by default
         var breadCrumb = {
             id: $scope.blade.currentEntity.id,
             name: $scope.blade.currentEntity.displayName,
             blade: $scope.blade
         };
 
-        //prevent dublicate items
+        //prevent duplicate items
         if (!_.some($scope.blade.breadcrumbs, function (x) { return x.id == breadCrumb.id; })) {
             $scope.blade.breadcrumbs.push(breadCrumb);
         }
@@ -65,6 +65,7 @@
         breadCrumb.navigate = function (breadcrumb) {
             bladeNavigationService.closeBlade($scope.blade,
                 function () {
+                    $scope.blade.disableOpenAnimation = true;
                     bladeNavigationService.showBlade($scope.blade, $scope.blade.parentBlade);
                     $scope.blade.refresh();
                 });
@@ -207,6 +208,7 @@
                     breadcrumbs: $scope.blade.breadcrumbs,
                     subtitle: 'Browsing "' + listItem.displayName + '"',
                     currentEntity: listItem,
+                    disableOpenAnimation: true,
                     controller: $scope.blade.controller,
                     template: $scope.blade.template,
                     isClosingDisabled: true

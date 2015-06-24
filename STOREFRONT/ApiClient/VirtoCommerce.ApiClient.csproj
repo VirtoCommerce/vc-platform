@@ -74,6 +74,7 @@
     <Compile Include="Configuration\Store\StoreConfiguration.cs" />
     <Compile Include="Constants.cs" />
     <Compile Include="DataContracts\Asset.cs" />
+    <Compile Include="DataContracts\BankCardInfo.cs" />
     <Compile Include="DataContracts\Cart\AddressType.cs" />
     <Compile Include="DataContracts\Cart\CartItem.cs" />
     <Compile Include="DataContracts\CustomerService\Address.cs" />
@@ -91,6 +92,7 @@
     <Compile Include="DataContracts\Orders\ResponseGroup.cs" />
     <Compile Include="DataContracts\Orders\SearchCriteria.cs" />
     <Compile Include="DataContracts\Pages\Page.cs" />
+    <Compile Include="DataContracts\PaymentMethodGroupType.cs" />
     <Compile Include="DataContracts\PaymentMethodType.cs" />
     <Compile Include="DataContracts\PaymentStatus.cs" />
     <Compile Include="DataContracts\PostProcessPaymentResult.cs" />
