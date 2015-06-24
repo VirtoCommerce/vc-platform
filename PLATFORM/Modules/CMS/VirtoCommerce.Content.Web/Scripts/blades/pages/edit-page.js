@@ -146,8 +146,12 @@
         blade.isLoading = true;
 
         if (blade.newPage) {
+        	if (blade.isByteContent) {
+        		blade.currentEntity.language = "files";
+        	}
+
             pages.checkName({ storeId: blade.choosenStoreId, pageName: blade.currentEntity.name, language: blade.currentEntity.language }, function (data) {
-                if (Boolean(data.result)) {
+            	if (Boolean(data.result)) {
                     pages.update({ storeId: blade.choosenStoreId }, blade.currentEntity, function () {
                         blade.origEntity = angular.copy(blade.currentEntity);
                         blade.newPage = false;
