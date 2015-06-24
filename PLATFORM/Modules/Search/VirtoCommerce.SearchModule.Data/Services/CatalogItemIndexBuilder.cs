@@ -69,15 +69,15 @@ namespace VirtoCommerce.SearchModule.Data.Services
             var parallelOptions = new ParallelOptions { MaxDegreeOfParallelism = 5 };
 
             Parallel.ForEach(partition.Keys, parallelOptions, key =>
-           {
-               //Trace.TraceInformation(string.Format("Processing documents starting {0} of {1} - {2}%", partition.Start, partition.Total, (partition.Start * 100 / partition.Total)));
-               if (key != null)
-               {
-                   var doc = new ResultDocument();
-                   IndexItem(ref doc, key);
-                   documents.Add(doc);
-               }
-           });
+            {
+                //Trace.TraceInformation(string.Format("Processing documents starting {0} of {1} - {2}%", partition.Start, partition.Total, (partition.Start * 100 / partition.Total)));
+                if (key != null)
+                {
+                    var doc = new ResultDocument();
+                    IndexItem(ref doc, key);
+                    documents.Add(doc);
+                }
+            });
 
             return documents;
         }
@@ -167,11 +167,11 @@ namespace VirtoCommerce.SearchModule.Data.Services
 
         protected virtual void IndexItemCustomProperties(ref ResultDocument doc, CatalogProduct item)
         {
+            var properties = item.CategoryId != null ? _propertyService.GetCategoryProperties(item.CategoryId) : _propertyService.GetCatalogProperties(item.CatalogId);
+
             foreach (var propValue in item.PropertyValues.Where(x => x.Value != null))
             {
-                var properties = item.CategoryId != null ? _propertyService.GetCategoryProperties(item.CategoryId) : _propertyService.GetCatalogProperties(item.CatalogId);
                 var property = properties.FirstOrDefault(x => string.Equals(x.Name, propValue.PropertyName, StringComparison.InvariantCultureIgnoreCase) && x.ValueType == propValue.ValueType);
-
                 var contentField = string.Format("__content{0}", property != null && (property.Multilanguage && !string.IsNullOrWhiteSpace(propValue.LanguageCode)) ? "_" + propValue.LanguageCode.ToLower() : string.Empty);
 
                 switch (propValue.ValueType)
