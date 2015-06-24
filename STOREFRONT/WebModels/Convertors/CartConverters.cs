@@ -13,9 +13,10 @@ namespace VirtoCommerce.Web.Convertors
     public static class CartConverters
     {
         #region Public Methods and Operators
-        public static Data.ShoppingCart AsServiceModel(this Cart cart)
+        public static Data.ShoppingCart AsServiceModel(this Cart cart, string currency)
         {
             var ret = new Data.ShoppingCart { Id = cart.Key };
+            ret.Currency = currency;
 
             if (cart.Items != null && cart.Items.Any())
             {
