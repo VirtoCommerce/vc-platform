@@ -11,12 +11,14 @@
                     {% if checkout.email.size != 0 %}
                         <input id="checkout_email" name="checkout[email]" type="hidden" value="{{ checkout.email }}" />
                         <p>{{ checkout.email }}</p>
-                        <p>
-                            {{ checkout.shipping_address.first_name }} {{ checkout.shipping_address.last_name }}{% if checkout.shipping_address.company.size > 0 %} ({{checkout.shipping_address.company}}){% endif %}<br />
-                            {{ checkout.shipping_address.country }}, {% if checkout.shipping_address.province.size != 0 %}{{ checkout.shipping_address.province }}, {% endif %}{{ checkout.shipping_address.city }}<br />
-                            {{ checkout.shipping_address.zip }}, {{ checkout.shipping_address.street }}
-                            {% if checkout.shipping_address.phone.size != 0 %}<br />{{ checkout.shipping_address.phone }}{% endif %}
-                        </p>
+                        {% if checkout.requires_shipping %}
+                            <p>
+                                {{ checkout.shipping_address.first_name }} {{ checkout.shipping_address.last_name }}{% if checkout.shipping_address.company.size > 0 %} ({{checkout.shipping_address.company}}){% endif %}<br />
+                                {{ checkout.shipping_address.country }}, {% if checkout.shipping_address.province.size != 0 %}{{ checkout.shipping_address.province }}, {% endif %}{{ checkout.shipping_address.city }}<br />
+                                {{ checkout.shipping_address.zip }}, {{ checkout.shipping_address.street }}
+                                {% if checkout.shipping_address.phone.size != 0 %}<br />{{ checkout.shipping_address.phone }}{% endif %}
+                            </p>
+                        {% endif %}
                     {% else %}
                         <div class="form-group has-feedback">
                             <label class="col-sm-4 control-label" for="checkout_email">Email</label>
@@ -82,6 +84,28 @@
                         </div>
                     {% endif %}
                     <div id="billing-address" style="display: {% if checkout.requires_shipping %} none {% else %} block {% endif %};">
+                        {% if checkout.guest_login != true and customer.addresses.size > 0 %}
+                            <div class="form-group">
+                                <label class="col-sm-4 control-label" for="checkout_email">Addresses</label>
+                                <div class="col-sm-8">
+                                    <select class="form-control" id="customer-addresses">
+                                        {% for address in customer.addresses %}
+                                            <option value="{{ address.id }}">
+                                                <a href="#">
+                                                    {{address.city}} {{ address.street }},
+                                                    {{ address.country }},
+                                                    {% if address.province != null %}
+                                                        {{ address.province }},
+                                                    {% endif %}
+                                                    {{ address.name }}
+                                                </a>
+                                            </option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                            <hr />
+                        {% endif %}
                         <div class="form-group has-feedback">
                             <label class="col-sm-4 control-label" for="checkout_first_name">First name</label>
                             <div class="col-sm-8">
