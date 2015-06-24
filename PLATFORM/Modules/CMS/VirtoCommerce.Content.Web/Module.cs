@@ -66,6 +66,8 @@ namespace VirtoCommerce.Content.Web
             var uploadPath = HostingEnvironment.MapPath("~/App_Data/Uploads/");
             var uploadPathFiles = HostingEnvironment.MapPath("~/App_Data/Uploads/Files/");
 
+		
+
 			Func<string, IThemeService> themesFactory = x =>
             {
                 switch (x)
@@ -102,6 +104,10 @@ namespace VirtoCommerce.Content.Web
 						return new ThemeServiceImpl(new FileSystemContentRepositoryImpl(fileSystemMainPath));
                 }
             };
+
+			var chosenThemeRepositoryName = settingsManager.GetValue("VirtoCommerce.Content.MainProperties.ThemesRepositoryType", string.Empty);
+			var currentThemeService = themesFactory(chosenThemeRepositoryName);
+			_container.RegisterInstance<IThemeService>(currentThemeService);
 
             if (!Directory.Exists(fileSystemMainPath))
             {
