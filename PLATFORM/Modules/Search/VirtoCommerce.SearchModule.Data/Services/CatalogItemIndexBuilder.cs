@@ -9,7 +9,6 @@ using VirtoCommerce.Domain.Catalog.Services;
 using VirtoCommerce.Domain.Pricing.Services;
 using VirtoCommerce.Domain.Search.Model;
 using VirtoCommerce.Domain.Search.Services;
-using VirtoCommerce.Platform.Core.Caching;
 using VirtoCommerce.Platform.Core.ChangeLog;
 using VirtoCommerce.Platform.Core.Common;
 
@@ -25,7 +24,7 @@ namespace VirtoCommerce.SearchModule.Data.Services
         private readonly IItemService _itemService;
         private readonly IPropertyService _propertyService;
         private readonly IChangeLogService _changeLogService;
-  		private readonly CatalogOutlineBuilder _catalogOutlineBuilder;
+        private readonly CatalogOutlineBuilder _catalogOutlineBuilder;
 
         public CatalogItemIndexBuilder(ISearchProvider searchProvider, ICatalogSearchService catalogSearchService,
                                        IItemService itemService, IPricingService pricingService,
@@ -38,7 +37,7 @@ namespace VirtoCommerce.SearchModule.Data.Services
             _pricingService = pricingService;
             _propertyService = propertyService;
             _changeLogService = changeLogService;
-			_catalogOutlineBuilder = catalogOutlineBuilder;
+            _catalogOutlineBuilder = catalogOutlineBuilder;
         }
 
         #region ISearchIndexBuilder Members
@@ -72,12 +71,12 @@ namespace VirtoCommerce.SearchModule.Data.Services
             Parallel.ForEach(partition.Keys, parallelOptions, key =>
            {
                //Trace.TraceInformation(string.Format("Processing documents starting {0} of {1} - {2}%", partition.Start, partition.Total, (partition.Start * 100 / partition.Total)));
-        	   if (key != null)
-			   {
-				   var doc = new ResultDocument();
-				   IndexItem(ref doc, key);
-				   documents.Add(doc);
-			   }
+               if (key != null)
+               {
+                   var doc = new ResultDocument();
+                   IndexItem(ref doc, key);
+                   documents.Add(doc);
+               }
            });
 
             return documents;
@@ -131,25 +130,25 @@ namespace VirtoCommerce.SearchModule.Data.Services
             //Index item direct categories links
             if (item.Links != null)
             {
-				var outlines = new List<string>();
+                var outlines = new List<string>();
                 foreach (var link in item.Links)
                 {
-					if (link.CategoryId != null)
-					{
-						outlines.AddRange(_catalogOutlineBuilder.GetOutlines(link.CategoryId));
-						//doc.Add(new DocumentField(string.Format("sort{0}{1}", link.CatalogId, link.CategoryId), category.Priority, new[] { IndexStore.Yes, IndexType.NotAnalyzed }));
-					}
+                    if (link.CategoryId != null)
+                    {
+                        outlines.AddRange(_catalogOutlineBuilder.GetOutlines(link.CategoryId));
+                        //doc.Add(new DocumentField(string.Format("sort{0}{1}", link.CatalogId, link.CategoryId), category.Priority, new[] { IndexStore.Yes, IndexType.NotAnalyzed }));
+                    }
                 }
-				//Add outlines to search index
-				foreach(var outline in outlines.Distinct())
-				{
-					doc.Add(new DocumentField("__outline", outline.ToLower(), new[] { IndexStore.Yes, IndexType.NotAnalyzed }));
-				}
-				//Add all linked catalogs to search index
-				foreach(var catalogId in outlines.Select(x=>x.Split('/').FirstOrDefault()).Where(x=>x != null).Distinct())
-				{
-					doc.Add(new DocumentField("catalog", catalogId.ToLower(), new[] { IndexStore.Yes, IndexType.NotAnalyzed }));
-				}
+                //Add outlines to search index
+                foreach (var outline in outlines.Distinct())
+                {
+                    doc.Add(new DocumentField("__outline", outline.ToLower(), new[] { IndexStore.Yes, IndexType.NotAnalyzed }));
+                }
+                //Add all linked catalogs to search index
+                foreach (var catalogId in outlines.Select(x => x.Split('/').FirstOrDefault()).Where(x => x != null).Distinct())
+                {
+                    doc.Add(new DocumentField("catalog", catalogId.ToLower(), new[] { IndexStore.Yes, IndexType.NotAnalyzed }));
+                }
             }
 
             // Index custom properties
@@ -179,8 +178,13 @@ namespace VirtoCommerce.SearchModule.Data.Services
                 {
                     case PropertyValueType.LongText:
                     case PropertyValueType.ShortText:
-                        if (!String.IsNullOrWhiteSpace(propValue.Value.ToString().ToLower())) // don't index empty values
-                            doc.Add(new DocumentField(contentField, propValue.Value.ToString().ToLower(), new[] { IndexStore.Yes, IndexType.Analyzed, IndexDataType.StringCollection }));
+                        var stringValue = propValue.Value.ToString();
+
+                        if (!string.IsNullOrWhiteSpace(stringValue)) // don't index empty values
+                        {
+                            doc.Add(new DocumentField(contentField, stringValue.ToLower(), new[] { IndexStore.Yes, IndexType.Analyzed, IndexDataType.StringCollection }));
+                        }
+
                         break;
                 }
 
@@ -203,12 +207,12 @@ namespace VirtoCommerce.SearchModule.Data.Services
             }
         }
 
-      
+
         #region Price Lists Indexing
 
         protected virtual void IndexItemPrices(ref ResultDocument doc, CatalogProduct item)
         {
-            var evalContext = new Domain.Pricing.Model.PriceEvaluationContext()
+            var evalContext = new Domain.Pricing.Model.PriceEvaluationContext
             {
                 ProductIds = new[] { item.Id }
             };
