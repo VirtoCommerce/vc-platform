@@ -297,7 +297,7 @@ namespace Klarna.PaymentGatewaysModule.Web.Managers
 		{
 			var retVal = new PostProcessPaymentResult();
 
-			Uri resourceUri = new Uri(string.Format("{0}/{1}", GetCheckoutBaseUrl(context.Payment.Currency.ToString()), context.OuterId));
+			Uri resourceUri = new Uri(string.Format("{0}/{1}", _euroTestBaseUrl, context.OuterId));
 
 			var connector = Connector.Create(AppSecret);
 
@@ -327,7 +327,7 @@ namespace Klarna.PaymentGatewaysModule.Web.Managers
 					{
 						Eid = Convert.ToInt32(AppKey),
 						Secret = AppSecret,
-						IsLiveMode = true
+						IsLiveMode = false
 					};
 
 					Api.Api api = new Api.Api(configuration);
@@ -528,15 +528,17 @@ namespace Klarna.PaymentGatewaysModule.Web.Managers
 
 		private KlarnaLocalization GetLocalization(string currency, string country)
 		{
-			var localizations = GetLocalizations();
-			if (!string.IsNullOrEmpty(country))
-			{
-				return localizations.FirstOrDefault(l => l.Currency == currency && l.FullCountryName == country);
-			}
-			else
-			{
-				return localizations.FirstOrDefault(l => l.Currency == currency);
-			}
+			return new KlarnaLocalization { CountryName = "SE", Currency = "SEK", Locale = "sv-se", FullCountryName = "Sweden" };
+
+			//var localizations = GetLocalizations();
+			//if (!string.IsNullOrEmpty(country))
+			//{
+			//	return localizations.FirstOrDefault(l => l.Currency == currency && l.FullCountryName == country);
+			//}
+			//else
+			//{
+			//	return localizations.FirstOrDefault(l => l.Currency == currency);
+			//}
 		}
 	}
 }
