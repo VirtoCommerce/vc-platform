@@ -94,6 +94,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Scripts\avaTax.js" />
+    <Content Include="Scripts\resources\avaTaxApi.js" />
     <Content Include="Scripts\widgets\avataxWidget.js" />
     <Content Include="Scripts\widgets\avataxWidget.tpl.html" />
     <Content Include="Web.config" />
