@@ -305,6 +305,7 @@ namespace VirtoCommerce.Web.Convertors
                 Company = address.Organization,
                 Country = address.CountryName,
                 CountryCode = address.CountryCode,
+                ProvinceCode = address.RegionId,
                 Province = address.RegionName,
                 FirstName = address.FirstName,
                 LastName = address.LastName,
