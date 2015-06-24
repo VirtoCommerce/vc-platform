@@ -57,7 +57,7 @@ namespace VirtoCommerce.CatalogModule.Data.Services
                 throw new ArgumentNullException("category");
 
             var dbCategory = category.ToDataModel();
-            coreModel.Category retVal = null;
+            
             using (var repository = _catalogRepositoryFactory())
             {	
                 repository.Add(dbCategory);
