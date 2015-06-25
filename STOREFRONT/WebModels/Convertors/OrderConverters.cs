@@ -137,6 +137,7 @@ namespace VirtoCommerce.Web.Convertors
                           LastName = address.LastName,
                           Phone = address.Phone,
                           Province = address.RegionName,
+                          ProvinceCode = address.RegionId,
                           Zip = address.PostalCode
                       };
 

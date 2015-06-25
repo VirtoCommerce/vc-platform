@@ -30,7 +30,7 @@ namespace AvaTax.TaxModule.Web.Controller
         {
             if (!string.IsNullOrEmpty(_taxSettings.Username) && !string.IsNullOrEmpty(_taxSettings.Password)
                 && !string.IsNullOrEmpty(_taxSettings.ServiceUrl)
-                && !string.IsNullOrEmpty(_taxSettings.CompanyCode))
+                && !string.IsNullOrEmpty(_taxSettings.CompanyCode) && _taxSettings.IsEnabled)
             {
                 var taxSvc = new TaxSvc(_taxSettings.Username, _taxSettings.Password, _taxSettings.ServiceUrl);
                 var request = order.ToAvaTaxRequest(_taxSettings.CompanyCode);
@@ -68,10 +68,13 @@ namespace AvaTax.TaxModule.Web.Controller
                 && !string.IsNullOrEmpty(_taxSettings.ServiceUrl)
                 && !string.IsNullOrEmpty(_taxSettings.CompanyCode))
             {
+                if (!_taxSettings.IsEnabled)
+                    return BadRequest("Tax calculation disabled, enable before testing connection");
+
                 var taxSvc = new TaxSvc(_taxSettings.Username, _taxSettings.Password, _taxSettings.ServiceUrl);
                 var retVal = taxSvc.Ping();
                 if (retVal.ResultCode.Equals(SeverityLevel.Success))
-                    return Ok(retVal);
+                    return Ok(new[] {retVal});
 
                 return BadRequest(string.Join(", ", retVal.Messages.Select(m => m.Summary)));
             }
@@ -86,7 +89,7 @@ namespace AvaTax.TaxModule.Web.Controller
         {
             if (!string.IsNullOrEmpty(_taxSettings.Username) && !string.IsNullOrEmpty(_taxSettings.Password)
                 && !string.IsNullOrEmpty(_taxSettings.ServiceUrl)
-                && !string.IsNullOrEmpty(_taxSettings.CompanyCode))
+                && !string.IsNullOrEmpty(_taxSettings.CompanyCode) && _taxSettings.IsEnabled)
             {
                 var taxSvc = new TaxSvc(_taxSettings.Username, _taxSettings.Password, _taxSettings.ServiceUrl);
                 var request = cart.ToAvaTaxRequest(_taxSettings.CompanyCode);

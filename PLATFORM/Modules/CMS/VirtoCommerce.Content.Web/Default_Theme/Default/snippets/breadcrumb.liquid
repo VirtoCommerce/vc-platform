@@ -1,5 +1,3 @@
-{% include 'advanced-tag-loop' %}
-
 {% unless template == 'index' or template == 'cart' %}
 <nav class="breadcrumb" role="navigation" aria-label="breadcrumbs">
   <a href="/" title="{{ 'general.breadcrumbs.home_link_title' | t }}">{{ 'general.breadcrumbs.home' | t }}</a>
@@ -39,18 +37,18 @@
           Track whether the tag gets printed
         {% endcomment %}
         {% assign found_tag = false %}
-
-        {% for cat_item in cat_array %}
+		
+        {% for cat_item in collection.all_tags %}
           {% unless cat_item == '' %}
 
-            {% if tag contains cat_item %}
+            {% if tag contains cat_item.id %}
               {% assign is_advanced_tag = true %}
               {% if additional_tag %}
                 <span>+</span>
               {% endif %}
               {% assign found_tag = true %}
               <span>
-                {{ tag | remove_first: cat_item | remove: '_' }}
+                {{ cat_item.label }}
               </span>
             {% endif %}
           {% endunless %}
@@ -60,7 +58,7 @@
           We have a regular tag that wasn't printed, so print it now
         {% endcomment %}
         {% unless found_tag %}
-          <span>{{ tag }}</span>
+          <!--<span>{{ tag }}</span>-->
         {% endunless %}
 
       {% endfor %}

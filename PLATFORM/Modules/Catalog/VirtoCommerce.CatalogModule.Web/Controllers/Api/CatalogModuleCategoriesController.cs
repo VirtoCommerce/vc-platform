@@ -62,7 +62,8 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
                 CatalogId = catalogId,
                 Catalog = _catalogService.GetById(catalogId).ToWebModel(),
                 Code = Guid.NewGuid().ToString().Substring(0, 5),
-                SeoInfos = new List<SeoInfo>()
+                SeoInfos = new List<SeoInfo>(),
+				IsActive = true
             };
 
             return Ok(retVal);

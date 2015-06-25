@@ -56,7 +56,7 @@ namespace VirtoCommerce.OrderModule.Data.Converters
 		/// <param name="target"></param>
 		public static void Patch(this AddressEntity source, AddressEntity target)
 		{
-			//Nothing todo
+			//Nothing to do
 		}
 
 	}

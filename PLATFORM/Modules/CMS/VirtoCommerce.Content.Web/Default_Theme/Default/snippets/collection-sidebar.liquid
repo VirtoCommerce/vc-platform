@@ -1,20 +1,11 @@
-{% comment %}
-  The code below relies on the advanced-tag-loop snippet.
-  The snippet is already included in snippets/breadrumbs.liquid
-  because it is needed there too, but if you remove
-  breadcrumbs you need to include this:
-
-  {% include 'advanced-tag-loop' %}
-{% endcomment %}
-
-{% if settings.collection_sidebar_filters == 'groups' %}
+{% if settings.collection_sidebar_filters == 'facets' %}
   {% if collection.all_tags.size > 0 %}
 
     <div class="grid-uniform">
       {% comment %}
         Loop through tag categories
       {% endcomment %}
-      {% for cat_item in cat_array %}
+      {% for cat_item in collection.all_tags.groups %}
         {% comment %}
           Ignore if tag category is empty
         {% endcomment %}
@@ -26,15 +17,14 @@
               Loop through collection tags
             {% endcomment %}
             {% for custom_tag in collection.all_tags %}
-              {% if custom_tag contains cat_item %}
+              {% if custom_tag.field == cat_item %}
                 {% comment %}
                   Strip out tag category prefix and add/remove link for tag filtering
                 {% endcomment %}
-			
-                {% if current_tags contains custom_tag %}
-                  <li class="advanced-filter active-filter" data-group="{{ cat_item }}" data-handle="{{ custom_tag | handleize }}">{{ custom_tag | remove_first: cat_item | remove: '_' | link_to_remove_tag: custom_tag }}</li>
+                {% if current_tags contains custom_tag.id %}
+                  <li class="advanced-filter active-filter" data-group="{{ cat_item }}" data-handle="{{ custom_tag.id | handleize }}">{{ custom_tag | link_to_remove_tag: custom_tag }}</li>
                 {% else %}
-                  <li class="advanced-filter" data-group="{{ cat_item }}">{{ custom_tag | remove_first: cat_item | remove: '_' | link_to_add_tag: custom_tag }}</li>
+                  <li class="advanced-filter" data-group="{{ cat_item }}">{{ custom_tag | link_to_add_tag: custom_tag }}</li>
                 {% endif %}
               {% endif %}
             {% endfor %}

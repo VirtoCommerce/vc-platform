@@ -23,7 +23,7 @@ namespace VirtoCommerce.Web.Models
     public class Collection : Drop
     {
         private int _allProductsCount;
-        private ItemCollection<Tag> _allTags;
+        private TagCollection _allTags;
         private ItemCollection<Product> _products;
         private bool _productsLoaded;
 
@@ -41,7 +41,7 @@ namespace VirtoCommerce.Web.Models
             }
         }
 
-        public ItemCollection<Tag> AllTags
+        public TagCollection AllTags
         {
             get
             {
@@ -104,7 +104,7 @@ namespace VirtoCommerce.Web.Models
 
         public string SortBy { get; set; }
 
-        public ItemCollection<Tag> Tags
+        public TagCollection Tags
         {
             get
             {
@@ -176,7 +176,7 @@ namespace VirtoCommerce.Web.Models
             if (response.Facets != null && response.Facets.Any())
             {
                 var values = response.Facets.SelectMany(f => f.Values.Select(v => v.AsWebModel(f.Field)));
-                this.Tags = new ItemCollection<Tag>(values.ToArray());
+                this.Tags = new TagCollection(values);
             }
 
             this.Products = response;

@@ -6,6 +6,7 @@ namespace VirtoCommerce.Domain.Catalog.Model
 	{
 		public string PropertyId { get; set; }
 		public string PropertyName { get; set; }
+		public Property Property { get; set; }
 		public string Alias { get; set; }
 		public string ValueId { get; set; }
 		public object Value { get; set; }
@@ -14,7 +15,7 @@ namespace VirtoCommerce.Domain.Catalog.Model
 
 		public override string ToString()
 		{
-			return PropertyId ?? "unknow" + ":" + ValueId ?? "undef";
+            return (PropertyId ?? "unknown") + ":" + (ValueId ?? "undefined");
 		}
 	}
 }
