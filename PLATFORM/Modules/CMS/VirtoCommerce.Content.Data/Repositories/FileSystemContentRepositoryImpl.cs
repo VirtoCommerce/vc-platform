@@ -151,7 +151,7 @@ namespace VirtoCommerce.Content.Data.Repositories
 
 		private string FixName(string path, string fullPath)
 		{
-			return path.Replace(fullPath, string.Empty).Trim('\\');
+			return path.Replace(fullPath, string.Empty).Replace("\\", "/").TrimStart('/');
 		}
 
 		private string GetFullPath(string path)
@@ -188,11 +188,13 @@ namespace VirtoCommerce.Content.Data.Repositories
 
 				var content = File.ReadAllBytes(fullPath);
 
+				retVal.Name = FixPathName(path);
+				retVal.ModifiedDate = Directory.GetLastWriteTimeUtc(fullPath);
 				retVal.Language = GetLanguageFromFullPath(fullPath);
-				retVal.ByteContent = content;
-				retVal.Name = itemName;
-				retVal.ContentType = ContentTypeUtility.GetContentType(fullPath, content);
-				retVal.Path = path;
+				retVal.ByteContent = File.ReadAllBytes(fullPath);
+				retVal.ContentType = ContentTypeUtility.GetContentType(Path.GetFileName(fullPath), File.ReadAllBytes(fullPath));
+				retVal.Path = RemoveBaseDirectory(fullPath);
+				retVal.Id = RemoveBaseDirectory(fullPath);
 			}
 			else
 			{
@@ -221,15 +223,21 @@ namespace VirtoCommerce.Content.Data.Repositories
 			{
 				var files = Directory.GetFiles(language, "*.*", SearchOption.AllDirectories);
 
-				list.AddRange(files.Select(f => new Models.ContentPage
+				foreach(var file in files)
 				{
-					Name = Path.GetFileName(f),
-					ModifiedDate = Directory.GetLastWriteTimeUtc(f),
-					Language = GetLanguageFromFullPath(f),
-					ByteContent = File.ReadAllBytes(f),
-					ContentType = ContentTypeUtility.GetContentType(Path.GetFileName(f), File.ReadAllBytes(f)),
-					Path = path
-				}));
+					var addedPage = new Models.ContentPage
+					{
+						Name = FixName(file, language),
+						ModifiedDate = Directory.GetLastWriteTimeUtc(file),
+						Language = GetLanguageFromLanguagePath(language),
+						ByteContent = File.ReadAllBytes(file),
+						ContentType = ContentTypeUtility.GetContentType(Path.GetFileName(file), File.ReadAllBytes(file)),
+						Path = RemoveBaseDirectory(file),
+						Id = RemoveBaseDirectory(file)
+					};
+
+					list.Add(addedPage);
+				}
 			}
 
 			return list.ToArray();
@@ -261,12 +269,38 @@ namespace VirtoCommerce.Content.Data.Repositories
 			}
 		}
 
-		private string GetLanguageFromFullPath(string fullPath)
+		private string GetLanguageFromLanguagePath(string languagePath)
 		{
-			var steps = fullPath.Split('\\');
-			var language = steps[steps.Length - 2];
+			var steps = languagePath.Split(new char[] { '\\' }, StringSplitOptions.RemoveEmptyEntries);
+			var language = steps.Last();
 
 			return language;
+		}
+
+		private string GetLanguageFromFullPath(string fullPath)
+		{
+			var path = RemoveBaseDirectory(fullPath);
+			var steps = path.Split(new char[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
+			var language = steps[1];
+
+			return language;
+		}
+
+		private string GetName(string path, string mainPath)
+		{
+			return path.Replace(mainPath, string.Empty).Replace("\\", "/");
+		}
+
+		private string FixPathName(string path)
+		{
+			var retVal = string.Empty;
+			var steps = path.Split(new char[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
+			for (int i = 2; i < steps.Length; i++)
+			{
+				retVal = string.Join("/", retVal, steps[i]);
+			}
+
+			return retVal.Trim('/');
 		}
 	}
 }
