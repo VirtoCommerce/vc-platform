@@ -11,7 +11,7 @@ using DotLiquid;
 namespace VirtoCommerce.Web.Models
 {
     [DataContract]
-    public class ItemCollection<T> : Drop, IEnumerable<T>, ICollection //, IVirtualCollection
+    public class ItemCollection<T> : Drop, IEnumerable<T>, ICollection
     {
         #region Fields
         private readonly IEnumerable<T> _Collection;

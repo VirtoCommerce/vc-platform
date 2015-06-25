@@ -18,7 +18,6 @@ namespace VirtoCommerce.Web.Convertors
 
             var urlTemplate = VirtualPathUtility.ToAbsolute("~/collections/{0}");
 
-            collection.AllTags = null; // TODO
             collection.AllTypes = null; // TODO
             collection.AllVendors = null; // TODO
             collection.CurrentType = null; // TODO
