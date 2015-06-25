@@ -13,6 +13,7 @@ using VirtoCommerce.Web.Services;
 using VirtoCommerce.Web.Views.Engines.Liquid;
 using VirtoCommerce.Web.Views.Engines.Liquid.ViewEngine;
 using VirtoCommerce.Web.Views.Engines.Liquid.ViewEngine.FileSystems;
+using Tag = VirtoCommerce.Web.Models.Tag;
 
 #endregion
 
@@ -25,6 +26,7 @@ namespace VirtoCommerce.Web
         {
             Liquid.UseRubyDateFormat = true;
             Template.RegisterTag<Form>("form");
+            Template.RegisterSafeType(typeof(Tag.TagDrop), o => o.ToString());
 
             var filters = new[] { typeof(ModelFilters), typeof(TranslationFilter) };
             var themesPath = ConfigurationManager.AppSettings["ThemeCacheFolder"];

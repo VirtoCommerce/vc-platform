@@ -789,7 +789,7 @@ namespace VirtoCommerce.Web.Models.Services
 
         public async Task<Cart> SaveChangesAsync(Cart cart)
         {
-            var model = await this._cartClient.UpdateCurrentCartAsync(cart.AsServiceModel());
+            var model = await this._cartClient.UpdateCurrentCartAsync(cart.AsServiceModel(SiteContext.Current.Shop.Currency));
             return model.AsWebModel();
         }
 

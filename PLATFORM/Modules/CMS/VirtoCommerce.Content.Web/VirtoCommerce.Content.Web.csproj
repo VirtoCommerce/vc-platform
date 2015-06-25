@@ -116,7 +116,6 @@
     <Content Include="Default_Theme\Default\locales\fr.json" />
     <Content Include="Default_Theme\Default\locales\pt-BR.json" />
     <Content Include="Default_Theme\Default\locales\pt-PT.json" />
-    <Content Include="Default_Theme\Default\snippets\advanced-tag-loop.liquid" />
     <Content Include="Default_Theme\Default\snippets\ajax-cart-template.liquid" />
     <Content Include="Default_Theme\Default\snippets\blog-sidebar.liquid" />
     <Content Include="Default_Theme\Default\snippets\breadcrumb.liquid" />
