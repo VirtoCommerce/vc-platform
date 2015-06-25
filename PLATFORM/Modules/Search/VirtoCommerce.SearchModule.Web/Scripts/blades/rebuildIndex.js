@@ -23,7 +23,7 @@
         }
     }
 
-    $scope.submit = function () {
+    function rebuild() {
         blade.isLoading = true;
         $scope.isRebuilding = true;
 
@@ -52,5 +52,5 @@
     });
 
     blade.title = "Rebuild Search Index";
-    blade.refresh();
+    rebuild();
 }]);

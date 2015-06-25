@@ -85,10 +85,9 @@ namespace VirtoCommerce.CatalogModule.Web.Converters
 						retVal.PropertyValues.Add(propValue.ToModuleModel());
 					}
 				}
-				
+			
 			}
 
-		    retVal.IsActive = true;
 			return retVal;
 		}
 

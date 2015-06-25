@@ -134,6 +134,18 @@ namespace VirtoCommerce.Web.Models.FormModels
             }
         }
 
+        public string ProvinceCode
+        {
+            get
+            {
+                return GetValue("province_code");
+            }
+            set
+            {
+                SetValue("province_code", value);
+            }
+        }
+
         public string Zip
         {
             get

@@ -19,12 +19,14 @@ namespace VirtoCommerce.Platform.Data.Settings
         private readonly Func<IPlatformRepository> _repositoryFactory;
         private readonly CacheManager _cacheManager;
         private readonly CacheKey _cacheKey = CacheKey.Create(CacheGroups.Settings, "AllSettings");
+        private readonly ModuleManifest[] _predefinedManifests;
 
-        public SettingsManager(IModuleManifestProvider manifestProvider, Func<IPlatformRepository> repositoryFactory, CacheManager cacheManager)
+        public SettingsManager(IModuleManifestProvider manifestProvider, Func<IPlatformRepository> repositoryFactory, CacheManager cacheManager, ModuleManifest[] predefinedManifests)
         {
             _manifestProvider = manifestProvider;
             _repositoryFactory = repositoryFactory;
             _cacheManager = cacheManager;
+            _predefinedManifests = predefinedManifests ?? new ModuleManifest[0];
         }
 
         #region ISettingsManager Members
@@ -214,6 +216,7 @@ namespace VirtoCommerce.Platform.Data.Settings
         private IEnumerable<ModuleManifest> GetModuleManifestsWithSettings()
         {
             return _manifestProvider.GetModuleManifests().Values
+                .Union(_predefinedManifests)
                 .Where(m => m.Settings != null && m.Settings.Any());
         }
 

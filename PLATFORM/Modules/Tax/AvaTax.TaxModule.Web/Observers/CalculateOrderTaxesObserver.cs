@@ -43,7 +43,8 @@ namespace AvaTax.TaxModule.Web.Observers
                 && !string.IsNullOrEmpty(_taxSettings.CompanyCode))
             {
                 var taxSvc = new TaxSvc(_taxSettings.Username, _taxSettings.Password, _taxSettings.ServiceUrl);
-                var request = order.ToAvaTaxRequest(_taxSettings.CompanyCode);
+                var isCommit = order.InPayments != null && order.InPayments.Any() && order.InPayments.All(pi => pi.IsApproved);
+                var request = order.ToAvaTaxRequest(_taxSettings.CompanyCode, isCommit);
                 if (request != null)
                 {
                     var getTaxResult = taxSvc.GetTax(request);
@@ -60,6 +61,7 @@ namespace AvaTax.TaxModule.Web.Observers
                             //foreach (TaxDetail taxDetail in taxLine.TaxDetails ?? Enumerable.Empty<TaxDetail>())
                             //{
                             //}
+                  
                         }
                         order.Tax = getTaxResult.TotalTax;
                     }

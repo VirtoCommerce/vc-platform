@@ -318,11 +318,6 @@ namespace AvaTax.TaxModule.Test
             var avalaraServiceUrl = "https://development.avalara.net";
             var avalaraCompanyCode = "APITrialCompany";
             
-
-            var avalaraCode = "";
-            var avalaraDescription = "";
-            var avalaraLogoUrl = "";
-
             const string _usernamePropertyName = "Avalara.Tax.Credentials.AccountNumber";
             const string _passwordPropertyName = "Avalara.Tax.Credentials.LicenseKey";
             const string _serviceUrlPropertyName = "Avalara.Tax.Credentials.ServiceUrl";
