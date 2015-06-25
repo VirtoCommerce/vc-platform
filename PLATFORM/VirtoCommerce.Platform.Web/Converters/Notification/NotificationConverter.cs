@@ -5,6 +5,7 @@ using System.Linq;
 using System.Web;
 using webModels = VirtoCommerce.Platform.Web.Model.Notification;
 using coreModels = VirtoCommerce.Platform.Core.Notification;
+using VirtoCommerce.Platform.Core.Notification;
 
 namespace VirtoCommerce.Platform.Web.Converters.Notification
 {
@@ -15,6 +16,9 @@ namespace VirtoCommerce.Platform.Web.Converters.Notification
 			webModels.Notification retVal = new webModels.Notification();
 
 			retVal.InjectFrom(notification);
+
+			retVal.IsEmail = notification.NotificationSendingGateway is IEmailNotificationSendingGateway;
+			retVal.IsSms = notification.NotificationSendingGateway is ISmsNotificationSendingGateway;
 
 			return retVal;
 		}

@@ -1,5 +1,5 @@
 ﻿<div class="blade-static __bottom">
-	<button class="btn" ng-click="blade.send()">
+	<button class="btn" ng-click="blade.send()" ng-disabled="formScope.$invalid">
 		<span>Send</span>
 	</button>
 </div>
@@ -7,8 +7,19 @@
 <div class="blade-content __medium-wide">
 	<div class="blade-inner">
 		<div class="inner-block">
-			<form class="form" name="formScope">
-				<fieldset>
+			<form class="form" name="send">
+				<fieldset ng-init="setForm(send)">
+					<legend>Enter sending information</legend>
+				</fieldset>
+
+				<div class="form-group" ng-repeat="data in blade.sendingInfo">
+					<label class="form-label">{{data}}</label>
+					<div class="form-input">
+						<input ng-model="blade.obj[data]" type="text" focus-on="" required="" placeholder="Enter {{data}}" class="form-control">
+					</div>
+				</div>
+
+				<fieldset style="margin-top:25px;">
 					<legend>Enter test data</legend>
 				</fieldset>
 

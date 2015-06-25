@@ -9,7 +9,7 @@ using VirtoCommerce.Platform.Core.Notification;
 namespace VirtoCommerce.Platform.Data.Notification
 {
 	[CLSCompliant(false)]
-	[LiquidType("Email", "FirstName", "LastName")]
+	[LiquidType("Login", "FirstName", "LastName")]
 	public class RegistrationEmailNotification : EmailNotification
 	{
 		public RegistrationEmailNotification(IEmailNotificationSendingGateway emailNotificationSendingGateway) : base(emailNotificationSendingGateway)
@@ -17,7 +17,7 @@ namespace VirtoCommerce.Platform.Data.Notification
 
 		}
 
-		public string Email { get; set; }
+		public string Login { get; set; }
 		public string FirstName { get; set; }
 		public string LastName { get; set; }
 	}

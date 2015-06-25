@@ -7,6 +7,13 @@ namespace VirtoCommerce.Platform.Web.Model.Notification
 {
 	public class Notification
 	{
+		public string DisplayName { get; set; }
+
+		public string Description { get; set; }
+
+		public bool IsEmail { get; set; }
+		public bool IsSms { get; set; }
+
 		public string Type { get; set; }
 
 		public bool IsActive { get; set; }

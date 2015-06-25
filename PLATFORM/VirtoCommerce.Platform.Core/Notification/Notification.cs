@@ -22,6 +22,9 @@ namespace VirtoCommerce.Platform.Core.Notification
 			Type = this.GetType().Name;
 		}
 
+		public string DisplayName { get; set; }
+		public string Description { get; set; }
+
 		public string Type { get; set; }
 
 		/// <summary>

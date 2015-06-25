@@ -3,14 +3,32 @@
 	$scope.selectedEntityId = null;
 	var blade = $scope.blade;
 	var codemirrorEditor;
+	blade.parametersForTemplate = [];
 
 	blade.initialize = function () {
 		blade.isLoading = true;
 
 		notifications.getTemplate({ type: blade.currentEntityParent.type, objectId: blade.currentEntityParent.objectId }, function (data) {
 			blade.origEntity = _.clone(data);
-			blade.isLoading = false;
 			blade.currentEntity = data;
+
+			notifications.prepareTestData({ type: blade.currentEntityParent.type }, function (data) {
+				for (var i = 0; i < data.length; i++) {
+					var words = data[i].match(/([A-Z]?[^A-Z]*)/g).slice(0, -1);
+					var preparedWords = [];
+					for (var j = 0; j < words.length; j++) {
+						preparedWords.push(words[j].toLowerCase());
+					}
+
+					var addedParam = "{{ context." + preparedWords.join("_") + " }}";
+
+					blade.parametersForTemplate.push({ key: data[i], value: addedParam });
+				}
+				blade.isLoading = false;
+
+			}, function (error) {
+				bladeNavigationService.setError('Error ' + error.status, blade);
+			});
 
 			$timeout(function () {
 				if (codemirrorEditor) {
@@ -28,6 +46,7 @@
 		blade.isLoading = true;
 		notifications.updateTemplate({}, blade.currentEntity, function () {
 			blade.isLoading = false;
+			blade.origEntity = _.clone(blade.currentEntity);
 		}, function (error) {
 			bladeNavigationService.setError('Error ' + error.status, blade);
 		});
@@ -36,7 +55,7 @@
 	blade.testResolve = function () {
 		var newBlade = {
 			id: 'testResolve',
-			title: 'Test resolving template',
+			title: 'Preview notification',
 			subtitle: 'Enter test data for ' + blade.currentEntityParent.type,
 			notificationType: blade.currentEntityParent.type,
 			controller: 'platformWebApp.testResolveController',
@@ -49,7 +68,7 @@
 	blade.testSend = function () {
 		var newBlade = {
 			id: 'testSend',
-			title: 'Test sending notification',
+			title: 'Send notification',
 			subtitle: 'Enter test data for ' + blade.currentEntityParent.type,
 			notificationType: blade.currentEntityParent.type,
 			controller: 'platformWebApp.testSendController',
@@ -61,7 +80,7 @@
 
 	$scope.blade.toolbarCommands = [
         {
-        	name: "Save template", icon: 'fa fa-save',
+        	name: "Save", icon: 'fa fa-save',
         	executeMethod: function () {
         		blade.updateTemplate();
         	},
@@ -70,7 +89,7 @@
         	}
         },
 		{
-			name: "Undo changes", icon: 'fa fa-undo',
+			name: "Undo", icon: 'fa fa-undo',
 			executeMethod: function () {
 				blade.currentEntity = _.clone(blade.origEntity);
 			},
@@ -79,21 +98,21 @@
 			}
 		},
 		{
-			name: "Test resolve template", icon: 'fa fa-play',
+			name: "Preview", icon: 'fa fa-eye',
 			executeMethod: function () {
 				blade.testResolve();
 			},
 			canExecuteMethod: function () {
-				return true;
+				return angular.equals(blade.origEntity, blade.currentEntity);
 			}
 		},
 		{
-			name: "Test send notification", icon: 'fa fa-upload',
+			name: "Send", icon: 'fa fa-envelope',
 			executeMethod: function () {
 				blade.testSend();
 			},
 			canExecuteMethod: function () {
-				return true;
+				return angular.equals(blade.origEntity, blade.currentEntity);
 			}
 		}
 	];

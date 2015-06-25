@@ -185,12 +185,14 @@
     <Compile Include="Model\SettingValueEntity.cs" />
     <Compile Include="Model\UserDetails.cs" />
     <Compile Include="Notification\DefaultEmailNotificationSendingGateway.cs" />
+    <Compile Include="Notification\DefaultSmsNotificationSendingGateway.cs" />
     <Compile Include="Notification\InMemoryNotifierImpl.cs" />
     <Compile Include="Notification\LiquidNotificationTemplateResolver.cs" />
     <Compile Include="Notification\NotificationConverter.cs" />
     <Compile Include="Notification\NotificationManager.cs" />
     <Compile Include="Notification\NotificationTemplateServiceImpl.cs" />
-    <Compile Include="Notification\RegistrationNotification.cs" />
+    <Compile Include="Notification\RegistrationEmailNotification.cs" />
+    <Compile Include="Notification\RegistrationSmsNotification.cs" />
     <Compile Include="Packaging\SemanticVersion.cs" />
     <Compile Include="Packaging\ZipPackageService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -2,6 +2,10 @@
 .controller('platformWebApp.testResolveController', ['$rootScope', '$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', 'platformWebApp.newnotifications', function ($rootScope, $scope, bladeNavigationService, dialogService, notifications) {
 	var blade = $scope.blade;
 
+	$scope.setForm = function (form) {
+		$scope.formScope = form;
+	}
+
 	blade.initialize = function () {
 		blade.isLoading = true;
 		blade.isRender = false;
@@ -27,7 +31,7 @@
 
 			var newBlade = {
 				id: 'resolveResult',
-				title: 'Result of resolving template',
+				title: 'Preview result',
 				notification: notification,
 				controller: 'platformWebApp.resolveResultController',
 				template: 'Scripts/app/newnotifications/blades/resolve-result.tpl.html'

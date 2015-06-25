@@ -1,5 +1,5 @@
 ﻿<div class="blade-static __bottom">
-	<button class="btn" ng-click="blade.test()" ng-disabled="">
+	<button class="btn" ng-click="blade.test()" ng-disabled="formScope.$invalid">
 		<span>Test</span>
 	</button>
 </div>
@@ -7,8 +7,8 @@
 <div class="blade-content __medium-wide">
 	<div class="blade-inner">
 		<div class="inner-block">
-			<form class="form" name="formScope">
-				<fieldset>
+			<form class="form" name="test">
+				<fieldset ng-init="setForm(test)">
 					<legend>Enter test data</legend>
 				</fieldset>
 
