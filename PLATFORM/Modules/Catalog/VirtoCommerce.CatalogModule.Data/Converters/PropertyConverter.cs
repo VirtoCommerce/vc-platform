@@ -126,6 +126,7 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 					{
 						existAttribute = new dataModel.PropertyAttribute
 						{
+                            PropertyId = property.Id,
 							PropertyAttributeName = attributeName,
 						};
 						retVal.PropertyAttributes.Add(existAttribute);
