@@ -3,6 +3,7 @@ using System.Linq;
 using AvaTax.TaxModule.Web.Converters;
 using AvaTax.TaxModule.Web.Services;
 using AvaTaxCalcREST;
+using Microsoft.Practices.ObjectBuilder2;
 using VirtoCommerce.Domain.Order.Events;
 using VirtoCommerce.Platform.Core.Common;
 
@@ -29,7 +30,7 @@ namespace AvaTax.TaxModule.Web.Observers
 
 		public void OnNext(OrderChangeEvent value)
 		{
-            if (_taxSettings.IsEnabled && value.ChangeState == EntryState.Modified)
+            if (value.ChangeState == EntryState.Modified)
 			    CalculateCustomerOrderTaxes(value);
 		}
 
@@ -38,7 +39,16 @@ namespace AvaTax.TaxModule.Web.Observers
 		{
 			var order = context.ModifiedOrder;
 
-            if (!string.IsNullOrEmpty(_taxSettings.Username) && !string.IsNullOrEmpty(_taxSettings.Password)
+            if (order.Items.Any())
+                order.Items.ForEach(x =>
+                {
+                    x.Tax = 0;
+                    x.TaxDetails = null;
+                });
+
+		    order.Tax = 0;
+
+            if (_taxSettings.IsEnabled && !string.IsNullOrEmpty(_taxSettings.Username) && !string.IsNullOrEmpty(_taxSettings.Password)
                 && !string.IsNullOrEmpty(_taxSettings.ServiceUrl)
                 && !string.IsNullOrEmpty(_taxSettings.CompanyCode))
             {
@@ -60,6 +70,15 @@ namespace AvaTax.TaxModule.Web.Observers
                             order.Items.ToArray()[Int32.Parse(taxLine.LineNo)].Tax = taxLine.Tax;
                             //foreach (TaxDetail taxDetail in taxLine.TaxDetails ?? Enumerable.Empty<TaxDetail>())
                             //{
+                            //    order.Items.ToArray()[Int32.Parse(taxLine.LineNo)].TaxDetails = new[]
+                            //    {
+                            //        new VirtoCommerce.Domain.Commerce.Model.TaxDetail
+                            //        {
+                            //            Amount = taxDetail.Tax,
+                            //            Name = taxDetail.TaxName,
+                            //            Rate = taxDetail.Rate
+                            //        }
+                            //    };
                             //}
                   
                         }
