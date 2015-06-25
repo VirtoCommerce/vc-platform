@@ -95,10 +95,11 @@ namespace VirtoCommerce.CatalogModule.Data.Services
 
 			using (var repository = _catalogRepositoryFactory())
 			{
+				dataModel.Category dbCategory = null;
 				if (item.CategoryId != null)
 				{
 					//Category relation
-					var dbCategory = repository.GetCategoryById(item.CategoryId);
+					dbCategory = repository.GetCategoryById(item.CategoryId);
 					if (dbCategory == null)
 					{
 						throw new NullReferenceException("dbCategory");
@@ -107,6 +108,23 @@ namespace VirtoCommerce.CatalogModule.Data.Services
 				}
 
 				repository.Add(dbItem);
+				item.Id = dbItem.Id;
+
+				if(item.Variations != null)
+				{
+					foreach(var variation in item.Variations)
+					{
+						variation.MainProductId = dbItem.Id;
+						variation.CatalogId = dbItem.CatalogId;
+						var dbVariation = variation.ToDataModel();
+						if (dbCategory != null)
+						{
+							repository.SetItemCategoryRelation(dbItem, dbCategory);
+						}
+						repository.Add(dbVariation);
+						variation.Id = dbVariation.Id;
+					}
+				}
 
 				CommitChanges(repository);
 			}
@@ -119,6 +137,22 @@ namespace VirtoCommerce.CatalogModule.Data.Services
 					seoInfo.ObjectId = dbItem.Id;
 					seoInfo.ObjectType = typeof(coreModel.CatalogProduct).Name;
 					_commerceService.UpsertSeo(seoInfo);
+				}
+			}
+
+			if(item.Variations != null)
+			{
+				foreach (var variation in item.Variations)
+				{
+					if (variation.SeoInfos != null)
+					{
+						foreach (var seoInfo in variation.SeoInfos)
+						{
+							seoInfo.ObjectId = variation.Id;
+							seoInfo.ObjectType = typeof(coreModel.CatalogProduct).Name;
+							_commerceService.UpsertSeo(seoInfo);
+						}
+					}
 				}
 			}
 

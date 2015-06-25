@@ -73,7 +73,15 @@ namespace VirtoCommerce.Content.Web.Converters
 
 			pages = pages.ToArray();
 
-			var folders = pages.Where(i => i.Id.Split('/').Length > 1).Select(i => i.Id.Split('/')[0]).Distinct();
+			var folders = pages.Where(i => i.Id.Split('/').Length > 1).Select(i => i.Id.Split('/')[0]).Distinct().ToList();
+			if (!folders.Any(f=> f.Equals("pages")))
+			{
+				folders.Add("pages");
+			}
+			if (!folders.Any(f => f.Equals("includes")))
+			{
+				folders.Add("includes");
+			}
 
 			foreach (var folder in folders)
 			{

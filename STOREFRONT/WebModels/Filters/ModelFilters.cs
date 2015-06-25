@@ -149,6 +149,11 @@ namespace VirtoCommerce.Web.Models.Filters
                 return String.Format("<a title=\"Remove all tags\" href=\"{1}\">{0}</a>", input, relativeUri.LocalPath);
             }
 
+            if (tag is Tag)
+            {
+                return LinkToRemoveTag(context, input, tag as Tag);
+            }
+
             var match = TagSyntax.Match(tag.ToString());
 
             if (match.Success)
@@ -172,6 +177,23 @@ namespace VirtoCommerce.Web.Models.Filters
             }
 
             return input.ToString();
+        }
+
+        public static string LinkToRemoveTag(Context context, object input, Tag tag)
+        {
+            var field = tag.Field;
+            var tagName = tag.Label;
+            var val = tag.Value;
+            var count = tag.Count;
+
+            var relativeUri = HttpContext.Current.Request.Url;
+            var url = UpdateWithTags(context, relativeUri, String.Format("{0}_{1}", field, val), true);
+
+            return String.Format(
+                "<a title=\"Remove tag {1}\" href=\"{0}\">{1}{2}</a>",
+                url,
+                tagName,
+                count == 0 ? "" : String.Format(" ({0})", count));
         }
 
         public static string LinkToTag(Context context, object input, object tag)
@@ -221,10 +243,11 @@ namespace VirtoCommerce.Web.Models.Filters
         {
             var field = tag.Field;
             var tagName = tag.Label;
+            var val = tag.Value;
             var count = tag.Count;
 
             var relativeUri = HttpContext.Current.Request.Url;
-            var url = UpdateWithTags(context, relativeUri, String.Format("{0}_{1}", field, tagName));
+            var url = UpdateWithTags(context, relativeUri, String.Format("{0}_{1}", field, val));
 
             return String.Format(
                 "<a title=\"Show products matching tag {1}\" href=\"{0}\">{1}{2}</a>",
