@@ -156,6 +156,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Paypal.ExpressCheckout", "M
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Paypal.DirectPayments", "Modules\PaymentGateways\Paypal.DirectPayments\Paypal.DirectPayments.csproj", "{A52BE0AD-5076-445C-BE57-CC82E1A8921D}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ShopifyImport", "ShopifyImport", "{0DD1BF4C-C0E7-4FC0-9D48-E43D71F4CB58}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Altsoft.ShopifyImportModule.Data", "Modules\ShopifyImport\Altsoft.ShopifyImportModule.Data\Altsoft.ShopifyImportModule.Data.csproj", "{534D3E86-C505-47C4-A6F7-C31BEDE3C905}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Altsoft.ShopifyImportModule.Web", "Modules\ShopifyImport\Altsoft.ShopifyImportModule.Web\Altsoft.ShopifyImportModule.Web.csproj", "{8185D3E9-A0B7-4F2E-87C5-5D3C8728296F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -370,6 +376,14 @@ Global
 		{A52BE0AD-5076-445C-BE57-CC82E1A8921D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A52BE0AD-5076-445C-BE57-CC82E1A8921D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A52BE0AD-5076-445C-BE57-CC82E1A8921D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{534D3E86-C505-47C4-A6F7-C31BEDE3C905}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{534D3E86-C505-47C4-A6F7-C31BEDE3C905}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{534D3E86-C505-47C4-A6F7-C31BEDE3C905}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{534D3E86-C505-47C4-A6F7-C31BEDE3C905}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8185D3E9-A0B7-4F2E-87C5-5D3C8728296F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8185D3E9-A0B7-4F2E-87C5-5D3C8728296F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8185D3E9-A0B7-4F2E-87C5-5D3C8728296F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8185D3E9-A0B7-4F2E-87C5-5D3C8728296F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -444,5 +458,8 @@ Global
 		{06AF7027-C874-4732-A8B9-109E838A9704} = {4E79CE95-D200-41C9-B191-324B741494BE}
 		{B50902A2-2646-4786-BF1E-555DB3DD5CC2} = {4E79CE95-D200-41C9-B191-324B741494BE}
 		{A52BE0AD-5076-445C-BE57-CC82E1A8921D} = {4E79CE95-D200-41C9-B191-324B741494BE}
+		{0DD1BF4C-C0E7-4FC0-9D48-E43D71F4CB58} = {A4C0D164-BF77-4B57-8970-B5459B100AC3}
+		{534D3E86-C505-47C4-A6F7-C31BEDE3C905} = {0DD1BF4C-C0E7-4FC0-9D48-E43D71F4CB58}
+		{8185D3E9-A0B7-4F2E-87C5-5D3C8728296F} = {0DD1BF4C-C0E7-4FC0-9D48-E43D71F4CB58}
 	EndGlobalSection
 EndGlobal

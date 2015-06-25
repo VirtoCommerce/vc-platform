@@ -99,7 +99,7 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 
             if (dbSource != null && dbTarget != null)
             {
-				var patchInjectionPolicy = new PatchInjection<dataModel.Category>(x => x.Code, x=>x.Name);
+				var patchInjectionPolicy = new PatchInjection<dataModel.Category>(x => x.Code, x=>x.Name, x=>x.IsActive);
 				target.InjectFrom(patchInjectionPolicy, source);
 
                 if (!dbSource.CategoryPropertyValues.IsNullCollection())

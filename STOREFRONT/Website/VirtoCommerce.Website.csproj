@@ -315,7 +315,6 @@
     <Content Include="App_Data\Themes\_Default\locales\fr.json" />
     <Content Include="App_Data\Themes\_Default\locales\pt-BR.json" />
     <Content Include="App_Data\Themes\_Default\locales\pt-PT.json" />
-    <Content Include="App_Data\Themes\_Default\snippets\advanced-tag-loop.liquid" />
     <Content Include="App_Data\Themes\_Default\snippets\ajax-cart-template.liquid" />
     <Content Include="App_Data\Themes\_Default\snippets\blog-sidebar.liquid" />
     <Content Include="App_Data\Themes\_Default\snippets\breadcrumb.liquid" />

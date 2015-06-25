@@ -73,7 +73,7 @@ namespace VirtoCommerce.CatalogModule.Data.Services
 					_commerceService.UpsertSeo(seoInfo);
 				}
 			}
-       
+			category.Id = dbCategory.Id;
             return GetById(dbCategory.Id);
         }
 
