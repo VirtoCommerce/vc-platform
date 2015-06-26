@@ -9,7 +9,7 @@ using VirtoCommerce.Platform.Data.Infrastructure;
 using VirtoCommerce.PricingModule.Data.Converters;
 using VirtoCommerce.PricingModule.Data.Repositories;
 using coreModel = VirtoCommerce.Domain.Pricing.Model;
-using foundationModel = VirtoCommerce.PricingModule.Data.Model;
+using dataModel = VirtoCommerce.PricingModule.Data.Model;
 
 namespace VirtoCommerce.PricingModule.Data.Services
 {
@@ -195,33 +195,36 @@ namespace VirtoCommerce.PricingModule.Data.Services
         {
             var entity = price.ToDataModel();
 
-            using (var repository = _repositoryFactory())
-            {
-                if (price.PricelistId == null)
-                {
-                    var defaultPriceListId = GetDefaultPriceListName(price.Currency);
-                    var foundationDefaultPriceList = repository.GetPricelistById(defaultPriceListId);
+			using (var repository = _repositoryFactory())
+			{
+				//Need assign price to default pricelist with same currency or create it if not exist
+				if (price.PricelistId == null)
+				{
+					var defaultPriceListId = GetDefaultPriceListName(price.Currency);
+					var dbDefaultPriceList = repository.GetPricelistById(defaultPriceListId);
 
-                    if (foundationDefaultPriceList == null)
-                    {
-                        var defaultPriceList = new coreModel.Pricelist
-                        {
-                            Id = defaultPriceListId,
-                            Currency = price.Currency,
-                            Name = defaultPriceListId,
-                            Description = defaultPriceListId
-                        };
-                        foundationDefaultPriceList = defaultPriceList.ToDataModel();
-                    }
+					if (dbDefaultPriceList == null)
+					{
+						var defaultPriceList = new coreModel.Pricelist
+						{
+							Id = defaultPriceListId,
+							Currency = price.Currency,
+							Name = defaultPriceListId,
+							Description = defaultPriceListId
+						};
+						dbDefaultPriceList = defaultPriceList.ToDataModel();
+					}
+					entity.PricelistId = dbDefaultPriceList.Id;
+					entity.Pricelist = dbDefaultPriceList;
 
-                    entity.Pricelist = foundationDefaultPriceList;
-                }
-
-                repository.Add(entity);
-                CommitChanges(repository);
-            }
-
-            var retVal = GetPriceById(price.Id);
+					repository.Add(entity);
+					//Automatically create catalog assignment 
+					TryToCreateCatalogAssignment(entity, repository);
+					CommitChanges(repository);
+				}
+			}
+			price.Id = entity.Id;
+			var retVal = GetPriceById(entity.Id);
             return retVal;
         }
 
@@ -266,6 +269,15 @@ namespace VirtoCommerce.PricingModule.Data.Services
             using (var repository = _repositoryFactory())
             using (var changeTracker = GetChangeTracker(repository))
             {
+				changeTracker.AddAction = (x) =>
+				{
+					repository.Add(x);
+					if (x is dataModel.Price)
+					{
+						TryToCreateCatalogAssignment((dataModel.Price)x, repository);
+					}
+				};
+
                 foreach (var priceList in priceLists)
                 {
                     var sourceEntity = priceList.ToDataModel();
@@ -298,29 +310,10 @@ namespace VirtoCommerce.PricingModule.Data.Services
         }
 
 
-        private static string GetDefaultPriceListName(CurrencyCodes currency)
-        {
-            var retVal = "Default" + currency.ToString();
-            return retVal;
-        }
-
-        private void GenericDelete(string[] ids, Func<IPricingRepository, string, Entity> getter)
-        {
-            using (var repository = _repositoryFactory())
-            {
-                foreach (var id in ids)
-                {
-                    var entity = getter(repository, id);
-                    repository.Remove(entity);
-                }
-                CommitChanges(repository);
-            }
-        }
-
-
+     
         public coreModel.PricelistAssignment GetPricelistAssignmentById(string id)
         {
-            foundationModel.PricelistAssignment retVal;
+            dataModel.PricelistAssignment retVal;
 
             using (var repository = _repositoryFactory())
             {
@@ -385,5 +378,41 @@ namespace VirtoCommerce.PricingModule.Data.Services
         }
 
         #endregion
+
+		private void TryToCreateCatalogAssignment(dataModel.Price price, IPricingRepository repository)
+		{
+			//need create price list assignment to catalog if it not exist
+			var product = _productService.GetById(price.ProductId, Domain.Catalog.Model.ItemResponseGroup.ItemInfo);
+			if (!repository.PricelistAssignments.Where(x => x.PricelistId == price.PricelistId && x.CatalogId == product.CatalogId).Any())
+			{
+				var assignment = new coreModel.PricelistAssignment
+				{
+					CatalogId = product.CatalogId,
+					Name = product.Catalog.Name + "-" + price.Pricelist.Name,
+					PricelistId = price.Pricelist.Id
+				};
+				CreatePriceListAssignment(assignment);
+			}
+		}
+		private static string GetDefaultPriceListName(CurrencyCodes currency)
+		{
+			var retVal = "Default" + currency.ToString();
+			return retVal;
+		}
+
+		private void GenericDelete(string[] ids, Func<IPricingRepository, string, Entity> getter)
+		{
+			using (var repository = _repositoryFactory())
+			{
+				foreach (var id in ids)
+				{
+					var entity = getter(repository, id);
+					repository.Remove(entity);
+				}
+				CommitChanges(repository);
+			}
+		}
+
+
     }
 }
