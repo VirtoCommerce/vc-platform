@@ -272,6 +272,17 @@ namespace VirtoCommerce.Web.Convertors
         {
             var options = new Dictionary<string, object>();
 
+            //var meaningOptions = itemProperties != null? itemProperties.Skip(0).Take(3) : null;
+
+            //if (meaningOptions != null)
+            //{
+            //    foreach (var meaningOption in meaningOptions)
+            //    {
+            //        options.Add(meaningOption.Key, meaningOption.Value);
+            //    }
+
+            //}
+
             if (itemProperties.ContainsKey("size"))
             {
                 options.Add("size", itemProperties["size"]);

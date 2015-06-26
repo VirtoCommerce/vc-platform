@@ -229,19 +229,6 @@ namespace VirtoCommerce.PricingModule.Web.Controllers.Api
                 //Add changed prices to original pricelist
                 originalPriceList.Prices.AddRange(priceList.ToCoreModel().Prices);
                 _pricingService.UpdatePricelists(new coreModel.Pricelist[] { originalPriceList });
-
-				//need create price list assignment if it not exist
-				var assignment = _pricingService.GetPriceListAssignments().FirstOrDefault(x => x.CatalogId == product.CatalogId);
-				if (assignment == null)
-				{
-					assignment = new coreModel.PricelistAssignment
-					{
-						CatalogId = product.CatalogId,
-						Name = product.Catalog.Name + "_" + priceList.Name + "_assignment",
-						PricelistId = priceList.Id
-					};
-					_pricingService.CreatePriceListAssignment(assignment);
-				}
             }
 
             return StatusCode(HttpStatusCode.NoContent);

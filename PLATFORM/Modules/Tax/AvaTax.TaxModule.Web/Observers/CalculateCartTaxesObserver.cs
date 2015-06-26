@@ -3,7 +3,9 @@ using System.Linq;
 using AvaTax.TaxModule.Web.Converters;
 using AvaTax.TaxModule.Web.Services;
 using AvaTaxCalcREST;
+using Microsoft.Practices.ObjectBuilder2;
 using VirtoCommerce.Domain.Cart.Events;
+using VirtoCommerce.Domain.Cart.Model;
 using VirtoCommerce.Platform.Core.Common;
 
 namespace AvaTax.TaxModule.Web.Observers
@@ -29,7 +31,7 @@ namespace AvaTax.TaxModule.Web.Observers
 
 		public void OnNext(CartChangeEvent value)
 		{
-            if (_taxSettings.IsEnabled && value.ChangeState == EntryState.Modified)
+            if (value.ChangeState == EntryState.Modified)
 			    CalculateCustomerOrderTaxes(value);
 		}
 
@@ -38,8 +40,15 @@ namespace AvaTax.TaxModule.Web.Observers
 		private void CalculateCustomerOrderTaxes(CartChangeEvent context)
 		{
 			var cart = context.ModifiedCart;
+		    if (cart.Items.Any())
+		    {
+		        cart.Items.ForEach(x => {
+		            x.TaxTotal = 0;
+                    x.TaxDetails = null;
+		        });
+		    }
 
-            if (!string.IsNullOrEmpty(_taxSettings.Username) && !string.IsNullOrEmpty(_taxSettings.Password)
+		    if (_taxSettings.IsEnabled && !string.IsNullOrEmpty(_taxSettings.Username) && !string.IsNullOrEmpty(_taxSettings.Password)
                 && !string.IsNullOrEmpty(_taxSettings.ServiceUrl)
                 && !string.IsNullOrEmpty(_taxSettings.CompanyCode))
             {
@@ -60,6 +69,15 @@ namespace AvaTax.TaxModule.Web.Observers
                             cart.Items.ToArray()[Int32.Parse(taxLine.LineNo)].TaxTotal = taxLine.Tax;
                             //foreach (TaxDetail taxDetail in taxLine.TaxDetails ?? Enumerable.Empty<TaxDetail>())
                             //{
+                            //    cart.Items.ToArray()[Int32.Parse(taxLine.LineNo)].TaxDetails = new[]
+                            //    {
+                            //        new VirtoCommerce.Domain.Commerce.Model.TaxDetail
+                            //        {
+                            //            Amount = taxDetail.Tax,
+                            //            Name = taxDetail.TaxName,
+                            //            Rate = taxDetail.Rate
+                            //        }
+                            //    };
                             //}
                         }
                     }
@@ -67,7 +85,7 @@ namespace AvaTax.TaxModule.Web.Observers
             }
             else
             {
-                OnError(new Exception("AvaTax credentials not provided"));
+                OnError(new Exception("Tax calculation disabled or credentials not provided"));
             }
 		}
     }
