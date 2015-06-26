@@ -24,10 +24,10 @@
   ['$rootScope', 'platformWebApp.mainMenuService', 'platformWebApp.widgetService', '$state', function ($rootScope, mainMenuService, widgetService, $state) {
       //Register module in main menu
       var menuItem = {
-          path: 'browse/settings',
-          icon: 'fa fa-wrench',
+          path: 'settings',
+          icon: 'fa fa-gears',
           title: 'Settings',
-          priority: 196,
+          priority: 1000,
           action: function () { $state.go('workspace.modulesSettings'); },
           permission: 'platform:setting:manage'
       };
