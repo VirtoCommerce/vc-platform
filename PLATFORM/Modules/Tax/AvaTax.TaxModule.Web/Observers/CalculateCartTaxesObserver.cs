@@ -5,9 +5,6 @@ using AvaTax.TaxModule.Web.Services;
 using AvaTaxCalcREST;
 using Microsoft.Practices.ObjectBuilder2;
 using VirtoCommerce.Domain.Cart.Events;
-using VirtoCommerce.Domain.Catalog.Services;
-using VirtoCommerce.Domain.Store.Model;
-using VirtoCommerce.Domain.Store.Services;
 using VirtoCommerce.Platform.Core.Common;
 
 namespace AvaTax.TaxModule.Web.Observers
@@ -15,13 +12,11 @@ namespace AvaTax.TaxModule.Web.Observers
     public class CalculateCartTaxesObserver : IObserver<CartChangeEvent>
 	{
         private readonly ITax _taxSettings;
-        private readonly IStoreService _storeService;
         //private readonly ICatalogSearchService _catalogSearchService;
 
-        public CalculateCartTaxesObserver(ITax taxSettings, IStoreService storeService)
+        public CalculateCartTaxesObserver(ITax taxSettings)
         {
             _taxSettings = taxSettings;
-            _storeService = storeService;
             //_catalogSearchService = catalogService;
         }
 

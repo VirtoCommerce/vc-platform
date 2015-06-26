@@ -88,8 +88,8 @@ namespace VirtoCommerce.Web.Controllers
         [Route("", Order = 2)]
         public async Task<ActionResult> IndexAsync(string tags, int page = 1, string sort_by = "manual")
         {
-            await Task.FromResult<object>(null);
-            Context.Set("current_tags", ParseTags(tags));
+            //await Task.FromResult<object>(null);
+            //Context.Set("current_tags", ParseTags(tags));
             return View("list-collections");
         }
         #endregion
@@ -105,6 +105,25 @@ namespace VirtoCommerce.Web.Controllers
             var tagsArray = tags.Split(new[] { ',' });
             return tagsArray;
         }
+
+        /*
+        private IEnumerable<Tag> ParseTags(string tags, TagCollection allTags)
+        {
+            if (String.IsNullOrEmpty(tags))
+            {
+                return null;
+            }
+
+            if (allTags == null || !allTags.Any())
+            {
+                return null;
+            }
+
+            var tagsArray = tags.Split(new[] { ',' });
+
+            return allTags.Root.Where(x => tagsArray.Contains(x.Id));
+        }
+         * */
         #endregion
     }
 }
