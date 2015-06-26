@@ -27,7 +27,10 @@
             if (!scope.gridsterOpts) { scope.gridsterOpts = {}; }
             scope.$storage = $localStorage;
             scope.widgets = _.filter(widgetService.widgetsMap[scope.group], function (w) { return !angular.isFunction(w.isVisible) || w.isVisible(scope.blade); });
-            angular.forEach(scope.widgets, function (w) { w.blade = scope.blade; });
+            angular.forEach(scope.widgets, function (w) {
+                w.blade = scope.blade;
+                w.widgetsInContainer = scope.widgets;
+            });
 
             scope.getKey = function (prefix, widget) {
                 return (prefix + widget.controller + widget.template).hashCode();

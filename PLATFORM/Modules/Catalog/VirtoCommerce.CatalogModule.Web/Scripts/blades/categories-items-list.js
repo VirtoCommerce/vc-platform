@@ -165,12 +165,13 @@
                         });
                 });
 
+                var listCategoryLinkCount = _.where(listEntryLinks, { listEntryType: 'category' }).length;
                 var dialog = {
                     id: "confirmDeleteItem",
                     categoryCount: categoryIds.length,
                     itemCount: itemIds.length,
-                    listCategoryLinkCount: _.where(listEntryLinks, { listEntryType: 'category' }).length,
-                    listItemLinkCount: listEntryLinks.length - this.listCategoryLinkCount,
+                    listCategoryLinkCount: listCategoryLinkCount,
+                    listItemLinkCount: listEntryLinks.length - listCategoryLinkCount,
                     callback: function (remove) {
                         if (remove) {
                             closeChildrenBlades();

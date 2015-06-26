@@ -24,5 +24,11 @@
         bladeNavigationService.showBlade(newBlade, blade);
     };
 
+    $scope.$watch('blade.origItem.productType', function (productType) {
+        if (productType && productType === 'Digital') {
+            $scope.widget.widgetsInContainer.splice($scope.widget.widgetsInContainer.indexOf($scope.widget), 1);
+        }
+    });
+
     $scope.widget.refresh();
 }]);
