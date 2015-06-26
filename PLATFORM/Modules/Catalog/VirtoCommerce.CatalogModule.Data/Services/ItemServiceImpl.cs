@@ -34,8 +34,8 @@ namespace VirtoCommerce.CatalogModule.Data.Services
 			return results.Any() ? results.First() : null;
 		}
 
-        public coreModel.CatalogProduct[] GetByIds(string[] itemIds, coreModel.ItemResponseGroup respGroup)
-        {
+		public coreModel.CatalogProduct[] GetByIds(string[] itemIds, coreModel.ItemResponseGroup respGroup)
+		{
 			// TODO: Optimize performance (Sasha)
 			// 1. Catalog should be cached and not retrieved every time from the db
 			// 2. SEO info can be retrieved for all items at once instead of one by one
@@ -50,7 +50,7 @@ namespace VirtoCommerce.CatalogModule.Data.Services
 				SeoInfo[] seoInfos = null;
 				if ((respGroup & coreModel.ItemResponseGroup.Seo) == coreModel.ItemResponseGroup.Seo)
 				{
-					seoInfos = _commerceService.GetObjectsSeo(dbItems.Select(x=>x.Id).ToArray()).ToArray();
+					seoInfos = _commerceService.GetObjectsSeo(dbItems.Select(x => x.Id).ToArray()).ToArray();
 				}
 
 				var categoriesIds = dbItems.SelectMany(x => x.CategoryLinks).Select(x => x.CategoryId).Distinct().ToArray();
@@ -77,7 +77,7 @@ namespace VirtoCommerce.CatalogModule.Data.Services
 					{
 						category = dbItem.Category.ToCoreModel(catalog);
 					}
-					
+
 					var item = dbItem.ToCoreModel(catalog: catalog, category: category, associatedProducts: associatedProducts.ToArray());
 					item.SeoInfos = seoInfos != null ? seoInfos.Where(x => x.ObjectId == dbItem.Id).ToList() : null;
 					retVal.Add(item);
@@ -85,7 +85,7 @@ namespace VirtoCommerce.CatalogModule.Data.Services
 			}
 
 			return retVal.ToArray();
-        }
+		}
 
 		public coreModel.CatalogProduct Create(coreModel.CatalogProduct item)
 		{
@@ -93,15 +93,15 @@ namespace VirtoCommerce.CatalogModule.Data.Services
 
 			using (var repository = _catalogRepositoryFactory())
 			{
-				
 				repository.Add(dbItem);
 				item.Id = dbItem.Id;
 
-				if(item.Variations != null)
+				if (item.Variations != null)
 				{
-					foreach(var variation in item.Variations)
+					foreach (var variation in item.Variations)
 					{
 						variation.MainProductId = dbItem.Id;
+						variation.MainProduct = item;
 						variation.CatalogId = dbItem.CatalogId;
 						var dbVariation = variation.ToDataModel();
 						repository.Add(dbVariation);
@@ -123,7 +123,7 @@ namespace VirtoCommerce.CatalogModule.Data.Services
 				}
 			}
 
-			if(item.Variations != null)
+			if (item.Variations != null)
 			{
 				foreach (var variation in item.Variations)
 				{
@@ -152,11 +152,18 @@ namespace VirtoCommerce.CatalogModule.Data.Services
 				var dbItems = repository.GetItemByIds(items.Select(x => x.Id).ToArray(), coreModel.ItemResponseGroup.ItemLarge);
 				foreach (var dbItem in dbItems)
 				{
-					dbItem.ModifiedDate = now;
-					dbItem.ModifiedBy = CurrentPrincipal.GetCurrentUserName();
+
+
 					var item = items.FirstOrDefault(x => x.Id == dbItem.Id);
 					if (item != null)
 					{
+						//Need skip inherited properties without overridden value
+						if (dbItem.ParentId != null && item.PropertyValues != null)
+						{
+							var dbParentItem = repository.GetItemByIds(new string[] { dbItem.ParentId }, coreModel.ItemResponseGroup.ItemProperties).First();
+							item.MainProduct = dbParentItem.ToCoreModel(new coreModel.Catalog { Id = dbItem.CatalogId }, new coreModel.Category { Id = dbItem.CategoryId }, null);
+						}
+
 						changeTracker.Attach(dbItem);
 
 						item.Patch(dbItem);
@@ -190,6 +197,6 @@ namespace VirtoCommerce.CatalogModule.Data.Services
 		}
 
 		#endregion
-	
-    }
+
+	}
 }

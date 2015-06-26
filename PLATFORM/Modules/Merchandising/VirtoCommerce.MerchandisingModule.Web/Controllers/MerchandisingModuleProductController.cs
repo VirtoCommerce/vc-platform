@@ -114,7 +114,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 		{
 			var searchCriteria = new SearchCriteria
 			{
-				ResponseGroup = ResponseGroup.WithProducts,
+				ResponseGroup = ResponseGroup.WithProducts | ResponseGroup.WithVariations,
 				SeoKeyword = keyword,
 			};
 

@@ -15,7 +15,7 @@ namespace VirtoCommerce.Domain.Catalog.Model
 
 		public override string ToString()
 		{
-            return (PropertyId ?? "unknown") + ":" + (ValueId ?? "undefined");
+			return (PropertyName ?? "unknown") + ":" + (Value ?? "undefined");
 		}
 	}
 }

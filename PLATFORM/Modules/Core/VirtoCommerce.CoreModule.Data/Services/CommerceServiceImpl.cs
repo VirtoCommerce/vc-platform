@@ -93,17 +93,14 @@ namespace VirtoCommerce.CoreModule.Data.Repositories
 				if (targetEntry == null)
 				{
 					repository.Add(sourceEntry);
-					seo.Id = sourceEntry.Id;
 				}
 				else
 				{
 					sourceEntry.Patch(targetEntry);
-					seo.Id = targetEntry.Id;
 				}
-
 				CommitChanges(repository);
+				seo.Id = sourceEntry.Id ?? targetEntry.Id;
 				retVal = repository.SeoUrlKeywords.First(x => x.Id == seo.Id).ToCoreModel();
-			
 			}
 			return retVal;
 		}
