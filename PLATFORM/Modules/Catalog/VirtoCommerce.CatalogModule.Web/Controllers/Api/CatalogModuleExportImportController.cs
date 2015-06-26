@@ -140,6 +140,8 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 			}
 			//All not mapped properties may be a product property
 			retVal.PropertyCsvColumns = retVal.CsvColumns.Except(retVal.MappingItems.Where(x => x.CsvColumnName != null).Select(x => x.CsvColumnName)).ToArray();
+			//Generate ETag for identifying csv format
+			retVal.ETag = string.Join(";", retVal.CsvColumns).GetMD5Hash();
 			return Ok(retVal);
 		}
 

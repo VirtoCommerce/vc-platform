@@ -7,6 +7,7 @@ namespace VirtoCommerce.CatalogModule.Web.Model
 {
 	public class CsvImportConfiguration
 	{
+		public string ETag { get; set; }
 		public string FileUrl { get; set; }
 		public string CatalogId { get; set; }
 		public string Delimiter { get; set; }
