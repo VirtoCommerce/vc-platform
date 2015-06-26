@@ -1,34 +1,36 @@
 ﻿angular.module('virtoCommerce.storeModule')
 .controller('virtoCommerce.storeModule.storeLanguagesListController', ['$scope', 'platformWebApp.settings', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', function ($scope, settings, bladeNavigationService, dialogService) {
-    $scope.selectedItem = null;
+    var blade = $scope.blade;
     var promise = settings.getValues({ id: 'VirtoCommerce.Core.General.Languages' }).$promise;
 
     function initializeBlade(data) {
+        blade.data = data;
         promise.then(function (promiseData) {
-            promiseData = _.map(promiseData, function (x) { return { code: x }; });
-            $scope.blade.currentEntities = promiseData;
+            blade.defaultValue = data.defaultLanguage;
 
-            _.each($scope.blade.currentEntities, function (x) {
+            // construct complex objects
+            promiseData = _.map(promiseData, function (x) { return { code: x }; });
+
+            _.each(promiseData, function (x) {
                 x.isChecked = _.some(data.languages, function (curr) { return curr === x.code; });
             });
-            if (data.defaultLanguage) {
-                var defaultLang = _.findWhere($scope.blade.currentEntities, { code: data.defaultLanguage });
-                if (defaultLang) {
-                    defaultLang.isDefault = true;
-                }
-            }
 
-            $scope.blade.origEntity = $scope.blade.currentEntities;
-            $scope.blade.currentEntities = angular.copy($scope.blade.currentEntities);
-            $scope.blade.isLoading = false;
+            blade.origEntity = promiseData;
+            blade.currentEntities = angular.copy(promiseData);
+            blade.isLoading = false;
         });
     };
 
     $scope.selectItem = function (listItem) {
-        $scope.selectedItem = listItem;
+        if (blade.defaultValue !== listItem.code) {
+            listItem.isChecked = !listItem.isChecked;
+            if (listItem.isChecked && !blade.defaultValue) {
+                blade.defaultValue = listItem.code;
+            }
+        }
     };
-
-    $scope.blade.onClose = function (closeCallback) {
+    
+    blade.onClose = function (closeCallback) {
         if (isDirty()) {
             var dialog = {
                 id: "confirmItemChange",
@@ -49,50 +51,30 @@
     };
 
     function isDirty() {
-        return !angular.equals($scope.blade.currentEntities, $scope.blade.origEntity);
+        return !angular.equals(blade.currentEntities, blade.origEntity);
     };
 
     $scope.cancelChanges = function () {
+        blade.currentEntities = blade.origEntity;
         $scope.bladeClose();
     }
 
     $scope.isValid = function () {
-        return true;
+        return blade.defaultValue;
     }
 
     $scope.saveChanges = function () {
-        var checkedEntities = _.where($scope.blade.currentEntities, { isChecked: true });
-        $scope.blade.data.languages = _.pluck(checkedEntities, 'code');
+        var checkedEntities = _.where(blade.currentEntities, { isChecked: true });
+        blade.data.languages = _.pluck(checkedEntities, 'code');
+        blade.data.defaultLanguage = blade.defaultValue;
 
-        var defaultLang = _.findWhere($scope.blade.currentEntities, { isDefault: true });
-        if (defaultLang) {
-            $scope.blade.data.defaultLanguage = defaultLang.code;
-        }
-
-        angular.copy($scope.blade.currentEntities, $scope.blade.origEntity);
+        angular.copy(blade.currentEntities, blade.origEntity);
         $scope.bladeClose();
     };
 
-    $scope.blade.headIcon = 'fa fa-archive';
+    blade.headIcon = 'fa fa-language';
 
-    $scope.blade.toolbarCommands = [
-        {
-            name: "Set default", icon: 'fa fa-edit',
-            executeMethod: function () {
-                _.each($scope.blade.currentEntities, function (x) {
-                    x.isDefault = x.code === $scope.selectedItem.code;
-                });
-            },
-            canExecuteMethod: function () {
-                return $scope.selectedItem && $scope.selectedItem.isChecked;
-            }
-        }
-    ];
-
-    $scope.$watch('blade.parentBlade.currentEntity', function (currentEntity) {
-        $scope.blade.data = currentEntity;
-        initializeBlade($scope.blade.data);
-    });
+    $scope.$watch('blade.parentBlade.currentEntity', initializeBlade);
 
     // on load: 
     // $scope.$watch('blade.parentBlade.currentEntity' gets fired

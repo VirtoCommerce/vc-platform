@@ -2,13 +2,29 @@
 <div class="blade-content">
     <div class="blade-inner">
         <div class="inner-block">
-            <div class="sub-t">Select languages</div>
-            <div class="list __items">
-                <label class="list-item" ng-repeat="data in blade.currentEntities" ng-class="{'__selected': data.isDefault}">
-                    <input type="checkbox" ng-disabled="data.isDefault" ng-model="data.isChecked" ng-click="selectItem(data)">
-                    <span class="switch"></span>
-                    <span class="list-name">{{data.code}}</span>
-                </label>
+            <div class="sub-t">Set default and selected languages</div>
+            <div class="table-wrapper">
+                <table class="table __normal">
+                    <thead>
+                        <tr>
+                            <th class="table-col">Default</th>
+                            <th class="table-col">Language</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="table-item" ng-repeat="data in blade.currentEntities" ng-class="{'__selected': data.isChecked}">
+                            <td class="table-col __product-control">
+                                <label class="form-control __radio">
+                                    <input type="radio" name="defLang" ng-model="blade.defaultValue" ng-change="data.isChecked = true" ng-value="data.code">
+                                    <span class="check"></span>
+                                </label>
+                            </td>
+                            <td class="table-col __product-name" ng-click='selectItem(data)'>
+                                <div class="table-t">{{data.code}}</div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
