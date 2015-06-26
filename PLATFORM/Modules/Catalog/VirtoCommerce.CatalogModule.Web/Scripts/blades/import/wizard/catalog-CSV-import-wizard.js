@@ -43,13 +43,8 @@
             $scope.blade.csvFileUrl = asset[0].relativeUrl;
 
             importResource.getMappingConfiguration({ fileUrl: $scope.blade.csvFileUrl, delimiter: blade.columnDelimiter }, function (data) {
-                var localMappings = $localStorage.lastKnownImportMappings;
-                if (localMappings) {
-                    var nonEmptyLocalMappings = _.select(localMappings, function (x) { return x.csvColumnName; });
-                    var nonEmptyMappingsFromServer = _.select(data.mappingItems, function (x) { return x.csvColumnName; });
-                    if (nonEmptyLocalMappings.length > nonEmptyMappingsFromServer.length) {
-                        data.mappingItems = localMappings;
-                    }
+                if ($localStorage.lastKnownImportData && $localStorage.lastKnownImportData.eTag === data.eTag) {
+                    angular.extend(data, $localStorage.lastKnownImportData);
                 }
 
                 blade.importConfiguration = data;
@@ -73,13 +68,17 @@
             controller: 'virtoCommerce.catalogModule.catalogCSVimportWizardMappingStepController',
             template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/import/wizard/catalog-CSV-import-wizard-mapping-step.tpl.html'
         };
-        
+
         blade.canImport = true;
         bladeNavigationService.showBlade(newBlade, $scope.blade);
     };
 
     $scope.startImport = function () {
-        $localStorage.lastKnownImportMappings = blade.importConfiguration.mappingItems;
+        $localStorage.lastKnownImportData = {
+            eTag: blade.importConfiguration.eTag,
+            mappingItems: blade.importConfiguration.mappingItems,
+            propertyCsvColumns: blade.importConfiguration.propertyCsvColumns
+        };
 
         blade.importConfiguration.catalogId = blade.catalog.id;
         importResource.run(blade.importConfiguration, function (notification) {

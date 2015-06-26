@@ -193,6 +193,50 @@ namespace VirtoCommerce.Platform.Web
             var notifier = new InMemoryNotifierImpl(hubSignalR);
             container.RegisterInstance<INotifier>(notifier);
 
+			var resolver = new LiquidNotificationTemplateResolver();
+			var notificationTemplateService = new NotificationTemplateServiceImpl(platformRepositoryFactory);
+			var notificationManager = new NotificationManager(resolver, platformRepositoryFactory, notificationTemplateService);
+			var defaultEmailNotificationSendingGateway = new DefaultEmailNotificationSendingGateway();
+			var defaultSmsNotificationSendingGateway = new DefaultSmsNotificationSendingGateway();
+
+			container.RegisterInstance<INotificationTemplateService>(notificationTemplateService);
+			container.RegisterInstance<INotificationManager>(notificationManager);
+			container.RegisterInstance<INotificationTemplateResolver>(resolver);
+			container.RegisterInstance<IEmailNotificationSendingGateway>(defaultEmailNotificationSendingGateway);
+			container.RegisterInstance<ISmsNotificationSendingGateway>(defaultSmsNotificationSendingGateway);
+
+			notificationManager.RegisterNotificationType(
+				() => new RegistrationEmailNotification(defaultEmailNotificationSendingGateway)
+				{
+					DisplayName = "Registration notification",
+					Description = "This notification sends by email to client when he finish registration",
+					ObjectId = "Platform",
+					NotificationTemplate = new NotificationTemplate
+					{
+						Body = @"<p> Dear {{ context.first_name }} {{ context.last_name }}, you has registered on our site</p> <p> Your e-mail  - {{ context.email }} </p>",
+						Subject = @"<p> Thanks for registration {{ context.first_name }} {{ context.last_name }}!!! </p>",
+						NotificationTypeId = "RegistrationEmailNotification",
+						ObjectId = "Platform"
+					}
+				}
+			);
+
+			//notificationManager.RegisterNotificationType(
+			//	() => new RegistrationSmsNotification(defaultSmsNotificationSendingGateway)
+			//	{
+			//		DisplayName = "Registration notification",
+			//		Description = "This notification sends by sms to client when he finish registration",
+			//		ObjectId = "Platform",
+			//		NotificationTemplate = new NotificationTemplate
+			//		{
+			//			Body = @"Dear {{ context.first_name }} {{ context.last_name }}, you has registered on our site. Your login  - {{ context.login }} Your login - {{ context.password }}",
+			//			Subject = @"",
+			//			NotificationTypeId = "RegistrationSmsNotification",
+			//			ObjectId = "Platform"
+			//		}
+			//	}
+			//);
+
             #endregion
 
             #region Assets

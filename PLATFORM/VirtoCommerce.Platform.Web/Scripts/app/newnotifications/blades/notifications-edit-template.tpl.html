@@ -1,0 +1,32 @@
+﻿<div class="blade-content __large-wide">
+	<div class="blade-inner">
+		<div class="inner-block">
+			<form class="form">
+				<div class="note">
+					<p>This is list of notification parameters. You can paste this code and value of parameters will be inserted in your template:</p>
+					<br />
+					<p ng-repeat="data in blade.parametersForTemplate">
+						{{ data.key }} - {{ data.value }}
+					</p>
+				</div>
+				<fieldset>
+					<legend>Subject</legend>
+				</fieldset>
+				<div class="form-group" style="margin-top:-15px;">
+					<div class="form-input">
+						<ui-codemirror required ng-model="blade.currentEntity.subject" ui-codemirror-opts="editorOptions"></ui-codemirror>
+					</div>
+				</div>
+
+				<fieldset style="margin-top:20px;">
+					<legend>Body</legend>
+				</fieldset>
+				<div class="form-group" style="margin-top:-15px;">
+					<div class="form-input">
+						<ui-codemirror required ng-model="blade.currentEntity.body" ui-codemirror-opts="editorOptions"></ui-codemirror>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>

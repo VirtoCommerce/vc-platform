@@ -32,6 +32,9 @@
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="DotLiquid">
+      <HintPath>..\packages\DotLiquid.1.8.0\lib\NET45\DotLiquid.dll</HintPath>
+    </Reference>
     <Reference Include="EntityFramework">
       <HintPath>..\packages\EntityFramework.6.1.1\lib\net45\EntityFramework.dll</HintPath>
     </Reference>
@@ -91,6 +94,12 @@
     </Reference>
     <Reference Include="Owin">
       <HintPath>..\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
+    </Reference>
+    <Reference Include="SendGrid.SmtpApi">
+      <HintPath>..\packages\SendGrid.SmtpApi.1.3.1\lib\net40\SendGrid.SmtpApi.dll</HintPath>
+    </Reference>
+    <Reference Include="SendGridMail">
+      <HintPath>..\packages\Sendgrid.6.1.0\lib\SendGridMail.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
@@ -164,6 +173,8 @@
     <Compile Include="Model\AccountState.cs" />
     <Compile Include="Model\ApiAccountEntity.cs" />
     <Compile Include="Model\ApiAccountType.cs" />
+    <Compile Include="Model\NotificationEntity.cs" />
+    <Compile Include="Model\NotificationTemplateEntity.cs" />
     <Compile Include="Model\OperationLogEntity.cs" />
     <Compile Include="Model\PermissionEntity.cs" />
     <Compile Include="Model\RegisterType.cs" />
@@ -173,7 +184,15 @@
     <Compile Include="Model\SettingEntity.cs" />
     <Compile Include="Model\SettingValueEntity.cs" />
     <Compile Include="Model\UserDetails.cs" />
+    <Compile Include="Notification\DefaultEmailNotificationSendingGateway.cs" />
+    <Compile Include="Notification\DefaultSmsNotificationSendingGateway.cs" />
     <Compile Include="Notification\InMemoryNotifierImpl.cs" />
+    <Compile Include="Notification\LiquidNotificationTemplateResolver.cs" />
+    <Compile Include="Notification\NotificationConverter.cs" />
+    <Compile Include="Notification\NotificationManager.cs" />
+    <Compile Include="Notification\NotificationTemplateServiceImpl.cs" />
+    <Compile Include="Notification\RegistrationEmailNotification.cs" />
+    <Compile Include="Notification\RegistrationSmsNotification.cs" />
     <Compile Include="Packaging\SemanticVersion.cs" />
     <Compile Include="Packaging\ZipPackageService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -193,6 +212,10 @@
     <Compile Include="Repositories\Migrations\201505250843471_ApiAccountName.cs" />
     <Compile Include="Repositories\Migrations\201505250843471_ApiAccountName.Designer.cs">
       <DependentUpon>201505250843471_ApiAccountName.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Repositories\Migrations\201506191401420_AddNotificationAndNotificationTemplate.cs" />
+    <Compile Include="Repositories\Migrations\201506191401420_AddNotificationAndNotificationTemplate.Designer.cs">
+      <DependentUpon>201506191401420_AddNotificationAndNotificationTemplate.cs</DependentUpon>
     </Compile>
     <Compile Include="Repositories\Migrations\Configuration.cs" />
     <Compile Include="Repositories\PlatformDatabaseInitializer.cs" />
@@ -257,6 +280,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Repositories\Migrations\201505250843471_ApiAccountName.resx">
       <DependentUpon>201505250843471_ApiAccountName.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Repositories\Migrations\201506191401420_AddNotificationAndNotificationTemplate.resx">
+      <DependentUpon>201506191401420_AddNotificationAndNotificationTemplate.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Security\Identity\Migrations\201411101625303_InitialCreate.resx">
       <DependentUpon>201411101625303_InitialCreate.cs</DependentUpon>
