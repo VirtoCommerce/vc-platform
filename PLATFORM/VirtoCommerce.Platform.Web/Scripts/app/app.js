@@ -83,7 +83,7 @@ angular.module('platformWebApp', AppDependencies).
             path: 'home',
             title: 'Home',
             icon: 'fa fa-home',
-            action: function () { $state.go('workspace') },
+            action: function () { $state.go('workspace'); },
             priority: 0
         };
         mainMenuService.addMenuItem(homeMenuItem);
@@ -96,13 +96,14 @@ angular.module('platformWebApp', AppDependencies).
         };
         mainMenuService.addMenuItem(menuItem);
 
-        var journeyMenuItem = {
-            path: 'active',
-            title: 'Active',
-            icon: 'fa fa-tasks',
-            priority: 999
-        };
-        mainMenuService.addMenuItem(journeyMenuItem);
+        //// remove active button until it is implemented 
+        //var journeyMenuItem = {
+        //    path: 'active',
+        //    title: 'Active',
+        //    icon: 'fa fa-tasks',
+        //    priority: 999
+        //};
+        //mainMenuService.addMenuItem(journeyMenuItem);
 
 
         $rootScope.$on('unauthorized', function (event, rejection) {
