@@ -8,11 +8,11 @@
         $scope.result = "transparent";
         $scope.blade.isLoading = true;
         ping.query(function () {
-            $scope.result = "green";
+            $scope.result = "LightGreen";
             $scope.blade.isLoading = false;
         }, function (error) {
             bladeNavigationService.setError('Error ' + error.status, $scope.blade);
-            $scope.result = "red";
+            $scope.result = "LightCoral";
         });
     }
 

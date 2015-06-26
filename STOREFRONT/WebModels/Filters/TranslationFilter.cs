@@ -50,10 +50,10 @@ namespace VirtoCommerce.Web.Models.Filters
                             templateToken = locs.GetValue(defaultLocs, input + ".one");
                             break;
                         case 0:
-                            templateToken = locs.GetValue(defaultLocs, input + ".zero");
+                            templateToken = locs.GetValue(defaultLocs, input + ".zero", null);
                             break;
                         case 2:
-                            templateToken = locs.GetValue(defaultLocs, input + ".two");
+                            templateToken = locs.GetValue(defaultLocs, input + ".two", null);
                             break;
                         default:
                             templateToken = locs.GetValue(defaultLocs, input + ".other");
@@ -91,7 +91,7 @@ namespace VirtoCommerce.Web.Models.Filters
     public static class LocaleExtensions
     {
         #region Public Methods and Operators
-        public static string GetValue(this JObject source, JObject defaultSource, string key)
+        public static string GetValue(this JObject source, JObject defaultSource, string key, string defaultValue = "")
         {
             JToken token = null;
 
@@ -111,7 +111,7 @@ namespace VirtoCommerce.Web.Models.Filters
                 return token.ToString();
             }
 
-            return key;
+            return defaultValue == "" ? key : defaultValue;
         }
         #endregion
     }
