@@ -1,5 +1,5 @@
 ﻿angular.module('platformWebApp')
-.controller('platformWebApp.testResolveController', ['$rootScope', '$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', 'platformWebApp.newnotifications', function ($rootScope, $scope, bladeNavigationService, dialogService, notifications) {
+.controller('platformWebApp.testResolveController', ['$rootScope', '$scope', '$localStorage', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', 'platformWebApp.newnotifications', function ($rootScope, $scope, $localStorage, bladeNavigationService, dialogService, notifications) {
 	var blade = $scope.blade;
 
 	$scope.setForm = function (form) {
@@ -14,6 +14,12 @@
 			blade.isLoading = false;
 
 			blade.currentParams = data;
+			if (!angular.isUndefined($localStorage.notificationTestResolve) && $localStorage.notificationTestResolve.length > 0) {
+				blade.obj = {};
+				for (var i = 0; i < $localStorage.notificationTestResolve.length; i++) {
+					blade.obj[$localStorage.notificationTestResolve[i].key] = $localStorage.notificationTestResolve[i].value;
+				}
+			}
 		}, function (error) {
 			bladeNavigationService.setError('Error ' + error.status, blade);
 		});
@@ -23,8 +29,10 @@
 		blade.isLoading = true;
 		blade.params = [];
 		for (var i = 0; i < blade.currentParams.length; i++) {
-			blade.params.push({ key: blade.currentParams[i], value: blade.obj[blade.currentParams[i]] });
+			blade.params.push({ key: blade.currentParams[i].parameterName, value: blade.obj[blade.currentParams[i].parameterName] });
 		}
+
+		$localStorage.notificationTestResolve = blade.params;
 
 		notifications.resolveNotification({ type: blade.notificationType }, blade.params, function (notification) {
 			blade.isLoading = false;

@@ -9,14 +9,14 @@ namespace VirtoCommerce.Platform.Core.Notification
 {
 	public abstract class Notification : AuditableEntity
 	{
-		private readonly INotificationSendingGateway _notificationSendingGateway;
+		private readonly Func<INotificationSendingGateway> _notificationSendingGateway;
 
 		public Notification()
 		{
 			Type = this.GetType().Name;
 		}
 
-		public Notification(INotificationSendingGateway notificationSendingGateway)
+		public Notification(Func<INotificationSendingGateway> notificationSendingGateway)
 		{
 			_notificationSendingGateway = notificationSendingGateway;
 			Type = this.GetType().Name;
@@ -89,7 +89,7 @@ namespace VirtoCommerce.Platform.Core.Notification
 		/// </summary>
 		public DateTime? SentDate { get; set; }
 
-		public INotificationSendingGateway NotificationSendingGateway { get { return _notificationSendingGateway; } }
+		public INotificationSendingGateway NotificationSendingGateway { get { return _notificationSendingGateway(); } }
 
 		public NotificationTemplate NotificationTemplate { get; set; }
 

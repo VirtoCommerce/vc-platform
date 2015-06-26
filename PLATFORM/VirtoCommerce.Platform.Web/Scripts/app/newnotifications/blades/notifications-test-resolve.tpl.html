@@ -13,9 +13,9 @@
 				</fieldset>
 
 				<div class="form-group" ng-repeat="data in blade.currentParams">
-					<label class="form-label">{{data}}</label>
+					<label class="form-label">{{data.parameterDescription}}</label>
 					<div class="form-input">
-						<input ng-model="blade.obj[data]" type="text" focus-on="" required="" placeholder="Enter {{data}}" class="form-control">
+						<input ng-model="blade.obj[data.parameterName]" type="text" required="" placeholder="Enter {{data.parameterName}}" class="form-control">
 					</div>
 				</div>
 			</form>

@@ -67,19 +67,14 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
 
 		[HttpGet]
-		[ResponseType(typeof(string[]))]
+		[ResponseType(typeof(NotificationParameter[]))]
 		[Route("template/{type}/preparetestdata")]
 		public IHttpActionResult PrepareTest(string type)
 		{
-			var retVal = new string[] { };
 			var notification = _notificationManager.GetNewNotification(type);
-			var attributeCollection = TypeDescriptor.GetAttributes(notification.GetType());
-			var attribute = (LiquidTypeAttribute)attributeCollection[typeof(LiquidTypeAttribute)];
-			if (attribute != null)
-			{
-				retVal = attribute.AllowedMembers;
-			}
-			return Ok(retVal);
+			var retVal = _notificationTemplateResolver.ResolveNotificationParameters(notification);
+
+			return Ok(retVal.Select(s => s.ToWebModel()).ToArray());
 		}
 
 		[HttpPost]
@@ -94,8 +89,6 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 				property.SetValue(notification, param.Value);
 			}
 			_notificationTemplateResolver.ResolveTemplate(notification);
-
-			//notification.Body = HttpUtility.HtmlDecode(notification.Body);
 
 			return Ok(notification.ToWebModel());
 		}
