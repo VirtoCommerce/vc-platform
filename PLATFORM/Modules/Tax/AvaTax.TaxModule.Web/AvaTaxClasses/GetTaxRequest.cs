@@ -1,4 +1,9 @@
-﻿namespace AvaTaxCalcREST
+﻿using System.Collections.Generic;
+using System.Xml.Serialization;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+
+namespace AvaTaxCalcREST
 {
     using System;
 
@@ -50,21 +55,23 @@
 
         public string CustomerCode { get; set; }
 
-        public Address[] Addresses { get; set; }
+        public ICollection<Address> Addresses { get; set; }
 
-        public Line[] Lines { get; set; }
+        public ICollection<Line> Lines { get; set; }
 
         // Best Practice for tax calculation
         public string Client { get; set; }
 
         public string DocCode { get; set; }
 
+        [JsonConverter(typeof(StringEnumConverter))]
         public DocType DocType { get; set; }
 
         public string CompanyCode { get; set; }
 
         public bool Commit { get; set; }
 
+        [JsonConverter(typeof(StringEnumConverter))]
         public DetailLevel DetailLevel { get; set; }
 
         // Use where appropriate to the situation

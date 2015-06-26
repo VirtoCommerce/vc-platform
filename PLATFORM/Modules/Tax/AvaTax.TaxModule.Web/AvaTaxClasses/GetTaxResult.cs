@@ -1,4 +1,8 @@
-﻿namespace AvaTaxCalcREST
+﻿using System.Collections.Generic;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+
+namespace AvaTaxCalcREST
 {
     using System;
 
@@ -25,14 +29,15 @@
 
         public DateTime TaxDate { get; set; }
 
-        public TaxLine[] TaxLines { get; set; }
+        public ICollection<TaxLine> TaxLines { get; set; }
 
-        public TaxLine[] TaxSummary { get; set; }
+        public ICollection<TaxLine> TaxSummary { get; set; }
 
-        public TaxAddress[] TaxAddresses { get; set; }
+        public ICollection<TaxAddress> TaxAddresses { get; set; }
 
+        [JsonConverter(typeof(StringEnumConverter))]
         public SeverityLevel ResultCode { get; set; }
 
-        public Message[] Messages { get; set; }
+        public ICollection<Message> Messages { get; set; }
     }
 }

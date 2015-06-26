@@ -114,6 +114,7 @@
     <Compile Include="AvaTaxClasses\TaxDetail.cs" />
     <Compile Include="AvaTaxClasses\TaxLine.cs" />
     <Compile Include="AvaTaxClasses\TaxOverrideDef.cs" />
+    <Compile Include="AvaTaxClasses\JsonTaxSvc.cs" />
     <Compile Include="AvaTaxClasses\TaxSvc.cs" />
     <Compile Include="AvaTaxClasses\ValidateResult.cs" />
     <Compile Include="Controller\AvaTaxController.cs" />

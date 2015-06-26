@@ -76,7 +76,7 @@ namespace AvaTax.TaxModule.Web.Converters
                         destinationAddressIndex = address.Index.ToString(CultureInfo.InvariantCulture);
                 }
 
-                getTaxRequest.Addresses = addresses.ToArray();
+                getTaxRequest.Addresses = addresses;
 
                 // Line Data
                 // Required Parameters
@@ -91,7 +91,7 @@ namespace AvaTax.TaxModule.Web.Converters
                         OriginCode = destinationAddressIndex, //TODO set origin address (fulfillment?)
                         DestinationCode = destinationAddressIndex,
                         Description = li.Value.Name,
-                        TaxCode = li.Value.ProductCode
+                        TaxCode = li.Value.Product.TaxType
                     }
                     ).ToArray();
                 return getTaxRequest;

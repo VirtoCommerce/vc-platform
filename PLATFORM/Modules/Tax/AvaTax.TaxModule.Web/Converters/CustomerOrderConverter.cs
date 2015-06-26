@@ -23,8 +23,8 @@ namespace AvaTax.TaxModule.Web.Converters
                             ? DateTime.UtcNow.ToShortDateString()
                             : order.CreatedDate.ToShortDateString(),
                     CompanyCode = companyCode,
-                    Client = "VirtoCommerce",
-                    DocCode = order.Id,
+                    Client = "VirtoCommerce,2.x,VirtoCommerce",
+                    DocCode = order.Number,
                     DetailLevel = DetailLevel.Tax,
                     Commit = commit,
                     DocType = DocType.SalesInvoice
@@ -60,7 +60,7 @@ namespace AvaTax.TaxModule.Web.Converters
                 {
                     addresses.Add(new Address
                     {
-                        AddressCode = address.Index.ToString(),
+                        AddressCode = address.Index.ToString(CultureInfo.InvariantCulture),
                         Line1 = address.Value.Line1,
                         City = address.Value.City,
                         Region = address.Value.RegionName ?? address.Value.RegionId,
@@ -82,13 +82,13 @@ namespace AvaTax.TaxModule.Web.Converters
                     new Line
                     {
                         LineNo = li.Index.ToString(CultureInfo.InvariantCulture),
-                        ItemCode = li.Value.ProductId,
+                        ItemCode = li.Value.Product.Code,
                         Qty = li.Value.Quantity,
                         Amount = li.Value.Price,
                         OriginCode = destinationAddressIndex, //TODO set origin address (fulfillment?)
                         DestinationCode = destinationAddressIndex,
                         Description = li.Value.Name,
-                        TaxCode = li.Value.ProductId
+                        TaxCode = li.Value.Product.TaxType
                     }
                     ).ToArray();
 
