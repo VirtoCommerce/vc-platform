@@ -38,42 +38,13 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
-  <Choose>
-    <When Condition="'$(SITE_BITNESS)' == 'x86'">
-      <PropertyGroup>
-        <PlatformTarget>x86</PlatformTarget>
-      </PropertyGroup>
-      <ItemGroup>
-        <Reference Include="LibSass.x86, Version=0.0.0.0, Culture=neutral">
-          <SpecificVersion>False</SpecificVersion>
-          <HintPath>..\Shared\Win86\LibSass.x86.dll</HintPath>
-        </Reference>
-        <Reference Include="libsassnet, Version=1.0.0.0, Culture=neutral">
-          <SpecificVersion>False</SpecificVersion>
-          <HintPath>..\Shared\Win86\libsassnet.dll</HintPath>
-        </Reference>
-      </ItemGroup>
-    </When>
-    <Otherwise>
-      <PropertyGroup>
-        <PlatformTarget>x64</PlatformTarget>
-      </PropertyGroup>
-      <ItemGroup>
-        <Reference Include="LibSass.x64, Version=0.0.0.0, Culture=neutral">
-          <SpecificVersion>False</SpecificVersion>
-          <HintPath>..\Shared\Win64\LibSass.x64.dll</HintPath>
-        </Reference>
-        <Reference Include="libsassnet, Version=1.0.0.0, Culture=neutral">
-          <SpecificVersion>False</SpecificVersion>
-          <HintPath>..\Shared\Win64\libsassnet.dll</HintPath>
-        </Reference>
-      </ItemGroup>
-    </Otherwise>
-  </Choose>
   <ItemGroup>
     <Reference Include="DotLiquid, Version=1.0.0.0, Culture=neutral, PublicKeyToken=82e46016ecf9f07c, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Shared\DotLiquid.dll</HintPath>
+    </Reference>
+    <Reference Include="LibSassNetProxy">
+      <HintPath>..\Shared\LibSassNetProxy.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.AspNet.Identity.Core">
       <HintPath>..\packages\Microsoft.AspNet.Identity.Core.2.1.0\lib\net45\Microsoft.AspNet.Identity.Core.dll</HintPath>
@@ -266,6 +237,10 @@
     <Content Include="App_Data\Themes\_Global\templates\payment.liquid" />
     <None Include="App_Data\Themes\_Global\templates\reset-password.liquid" />
     <Content Include="App_Data\Help\nostore.html" />
+    <Content Include="App_Data\x64\LibSass.x64.dll" />
+    <Content Include="App_Data\x64\libsassnet.dll" />
+    <Content Include="App_Data\x86\LibSass.x86.dll" />
+    <Content Include="App_Data\x86\libsassnet.dll" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="App_Data\configuration\connectionStrings.config" />
@@ -437,6 +412,11 @@
       </FlavorProperties>
     </VisualStudio>
   </ProjectExtensions>
+  <PropertyGroup>
+    <PostBuildEvent>del $(TargetDir)libsassnet.dll
+del $(TargetDir)LibSass.x64.dll
+del $(TargetDir)LibSass.x86.dll</PostBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

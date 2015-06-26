@@ -93,6 +93,10 @@ IF /I "%APPSETTING_VirtoCommerce_DeployApplications%" NEQ "Web Admin Only" (
 
     call :ExecuteCmd rename "%PUBLISHED_WEBSITES%\VirtoCommerce.Website" store
     IF !ERRORLEVEL! NEQ 0 goto error
+
+    call :ExecuteCmd del "%PUBLISHED_WEBSITES%\store\bin\libsassnet.dll"
+    call :ExecuteCmd del "%PUBLISHED_WEBSITES%\store\bin\LibSass.x64.dll"
+    call :ExecuteCmd del "%PUBLISHED_WEBSITES%\store\bin\LibSass.x86.dll"
 )
 
 :: Build platform
