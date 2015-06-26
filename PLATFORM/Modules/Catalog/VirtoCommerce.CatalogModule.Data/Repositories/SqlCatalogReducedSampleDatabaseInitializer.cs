@@ -16,7 +16,7 @@
 			"LinkedCategory.sql",
 			"Item.reduced.sql",
 			"ItemPropertyValue.reduced.sql",
-			"CategoryItemRelation.reduced.sql",
+		
 			"EditorialReview.reduced.sql",
 			"ItemAsset.reduced.sql",
 			"AssociationGroup.sql",

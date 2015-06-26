@@ -127,10 +127,15 @@ namespace VirtoCommerce.SearchModule.Data.Services
             doc.Add(new DocumentField("catalog", item.CatalogId.ToLower(), new[] { IndexStore.Yes, IndexType.NotAnalyzed, IndexDataType.StringCollection }));
             doc.Add(new DocumentField("__outline", item.CatalogId.ToLower(), new[] { IndexStore.Yes, IndexType.NotAnalyzed, IndexDataType.StringCollection }));
 
+			
+			var outlines = new List<string>();
+			if (item.CategoryId != null)
+			{
+				outlines.AddRange(_catalogOutlineBuilder.GetOutlines(item.CategoryId));
+			}
             //Index item direct categories links
             if (item.Links != null)
             {
-                var outlines = new List<string>();
                 foreach (var link in item.Links)
                 {
                     if (link.CategoryId != null)

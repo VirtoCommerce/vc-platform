@@ -199,17 +199,17 @@ namespace VirtoCommerce.CatalogModule.Data.Services
 						////Need return all items belongs to linked categories
 						//var allLinkedPhysicalCategoriesIds = dbCategory.IncommingLinks.Select(x => x.SourceCategoryId).ToArray();
 
-						query = query.Where(x => x.CategoryItemRelations.Any(c => c.CategoryId == criteria.CategoryId));
+						query = query.Where(x => x.CategoryLinks.Any(c => c.CategoryId == criteria.CategoryId));
 					}
 					else
 					{
-						query = query.Where(x => x.CategoryItemRelations.Any(c => c.CategoryId == criteria.CategoryId));
+						query = query.Where(x => x.CategoryId == criteria.CategoryId);
 					}
 
 				}
 				else if (!String.IsNullOrEmpty(criteria.CatalogId))
 				{
-					query = query.Where(x => x.CatalogId == criteria.CatalogId && (searchInAllCategories || !x.CategoryItemRelations.Any()));
+					query = query.Where(x => x.CatalogId == criteria.CatalogId && (searchInAllCategories || x.CategoryId == null));
 
 				}
 

@@ -53,7 +53,7 @@ namespace VirtoCommerce.CatalogModule.Data.Services
 					seoInfos = _commerceService.GetObjectsSeo(dbItems.Select(x=>x.Id).ToArray()).ToArray();
 				}
 
-				var categoriesIds = dbItems.SelectMany(x => x.CategoryItemRelations).Select(x => x.CategoryId).Distinct().ToArray();
+				var categoriesIds = dbItems.SelectMany(x => x.CategoryLinks).Select(x => x.CategoryId).Distinct().ToArray();
 				var dbCategories = repository.GetCategoriesByIds(categoriesIds);
 				foreach (var dbItem in dbItems)
 				{
@@ -73,11 +73,9 @@ namespace VirtoCommerce.CatalogModule.Data.Services
 
 					var catalog = dbCatalog.ToCoreModel();
 					coreModel.Category category = null;
-					if (dbItem.CategoryItemRelations.Any())
+					if (dbItem.Category != null)
 					{
-						var itemCategoryId = dbItem.CategoryItemRelations.OrderBy(x => x.Priority).First().CategoryId;
-						var dbCategory = dbCategories.FirstOrDefault(x => x.Id == itemCategoryId);
-						category = dbCategory.ToCoreModel(catalog);
+						category = dbItem.Category.ToCoreModel(catalog);
 					}
 					
 					var item = dbItem.ToCoreModel(catalog: catalog, category: category, associatedProducts: associatedProducts.ToArray());
@@ -95,18 +93,7 @@ namespace VirtoCommerce.CatalogModule.Data.Services
 
 			using (var repository = _catalogRepositoryFactory())
 			{
-				dataModel.Category dbCategory = null;
-				if (item.CategoryId != null)
-				{
-					//Category relation
-					dbCategory = repository.GetCategoryById(item.CategoryId);
-					if (dbCategory == null)
-					{
-						throw new NullReferenceException("dbCategory");
-					}
-					repository.SetItemCategoryRelation(dbItem, dbCategory);
-				}
-
+				
 				repository.Add(dbItem);
 				item.Id = dbItem.Id;
 
@@ -117,10 +104,6 @@ namespace VirtoCommerce.CatalogModule.Data.Services
 						variation.MainProductId = dbItem.Id;
 						variation.CatalogId = dbItem.CatalogId;
 						var dbVariation = variation.ToDataModel();
-						if (dbCategory != null)
-						{
-							repository.SetItemCategoryRelation(dbItem, dbCategory);
-						}
 						repository.Add(dbVariation);
 						variation.Id = dbVariation.Id;
 					}
@@ -177,7 +160,6 @@ namespace VirtoCommerce.CatalogModule.Data.Services
 						changeTracker.Attach(dbItem);
 
 						item.Patch(dbItem);
-			
 					}
 
 					//Patch seoInfo

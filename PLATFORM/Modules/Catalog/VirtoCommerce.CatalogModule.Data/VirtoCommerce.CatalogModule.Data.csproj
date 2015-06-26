@@ -103,6 +103,10 @@
     <Compile Include="Migrations\201506081600509_AssetIdMaxLength.Designer.cs">
       <DependentUpon>201506081600509_AssetIdMaxLength.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201506260904060_AddCategoryIdToItem.cs" />
+    <Compile Include="Migrations\201506260904060_AddCategoryIdToItem.Designer.cs">
+      <DependentUpon>201506260904060_AddCategoryIdToItem.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Model\Association.cs" />
     <Compile Include="Model\AssociationGroup.cs" />
@@ -186,6 +190,9 @@
     <EmbeddedResource Include="Migrations\201506081600509_AssetIdMaxLength.resx">
       <DependentUpon>201506081600509_AssetIdMaxLength.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201506260904060_AddCategoryIdToItem.resx">
+      <DependentUpon>201506260904060_AddCategoryIdToItem.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Repositories\Sql\Association.sql" />
   </ItemGroup>
   <ItemGroup>
@@ -205,12 +212,6 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Repositories\Sql\CategoryBase.sql" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Repositories\Sql\CategoryItemRelation.reduced.sql" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Repositories\Sql\CategoryItemRelation.sql" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Repositories\Sql\EditorialReview.reduced.sql" />

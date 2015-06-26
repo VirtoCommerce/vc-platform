@@ -36,7 +36,7 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
 		//foundation.CategoryLink[] GetCatalogLinks(string catalogId);
 		foundation.Property[] GetCatalogProperties(foundation.CatalogBase catalog);
 		foundation.Property[] GetAllCategoryProperties(foundation.Category category);
-		void SetItemCategoryRelation(foundation.Item item, foundation.Category category);
+	
 		void SetCatalogProperty(foundation.Catalog catalog, foundation.Property property);
 		void SetCategoryProperty(foundation.Category category, foundation.Property property);
 		void RemoveItems(string[] ids);

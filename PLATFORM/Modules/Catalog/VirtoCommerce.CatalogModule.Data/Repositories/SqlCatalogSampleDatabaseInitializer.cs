@@ -19,7 +19,7 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
 			"LinkedCategory.sql",
 			"Item.sql",
 			"ItemPropertyValue.sql",
-			"CategoryItemRelation.sql",
+		
 			"EditorialReview.sql",
 			"ItemAsset.sql",
 			"AssociationGroup.sql",

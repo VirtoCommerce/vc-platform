@@ -16,7 +16,7 @@ namespace VirtoCommerce.CatalogModule.Data.Model
 		public Item()
 		{
 			Id = Guid.NewGuid().ToString("N");
-			CategoryItemRelations = new NullCollection<CategoryItemRelation>();
+			CategoryLinks = new NullCollection<CategoryItemRelation>();
 			ItemAssets = new NullCollection<ItemAsset>();
 			AssociationGroups = new NullCollection<AssociationGroup>();
 			EditorialReviews = new NullCollection<EditorialReview>();
@@ -90,7 +90,7 @@ namespace VirtoCommerce.CatalogModule.Data.Model
 
         #region Navigation Properties
 
-		public virtual ObservableCollection<CategoryItemRelation> CategoryItemRelations { get; set; }
+		public virtual ObservableCollection<CategoryItemRelation> CategoryLinks { get; set; }
 
 		public virtual ObservableCollection<ItemAsset> ItemAssets { get; set; }
 
@@ -110,6 +110,8 @@ namespace VirtoCommerce.CatalogModule.Data.Model
 
         public virtual CatalogBase Catalog { get; set; }
 
+		public string CategoryId { get; set; }
+		public virtual Category Category { get; set; }
 
 		[StringLength(128)]
 		public string ParentId { get; set; }

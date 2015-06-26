@@ -69,9 +69,10 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
             modelBuilder.Entity<dataModel.ItemRelation>().HasRequired(m => m.ChildItem).WithMany().WillCascadeOnDelete(false);
             // cascade delete Item and Category when PropertySet is deleted. This should happen ONLY when catalog is being deleted.
             modelBuilder.Entity<dataModel.Item>().HasOptional(m => m.PropertySet).WithMany().WillCascadeOnDelete(false);
+			modelBuilder.Entity<dataModel.Item>().HasOptional(m => m.Category).WithMany().WillCascadeOnDelete(false);
             modelBuilder.Entity<dataModel.Category>().HasOptional(m => m.PropertySet).WithMany().WillCascadeOnDelete(true);
             modelBuilder.Entity<dataModel.Catalog>().HasOptional(m => m.PropertySet).WithMany().WillCascadeOnDelete(true);
-
+			
             base.OnModelCreating(modelBuilder);
         }
 
@@ -147,7 +148,7 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
                 .WithRequired(p => p.CatalogItem);
 
             modelBuilder.Entity<dataModel.Item>()
-                .HasMany(c => c.CategoryItemRelations)
+                .HasMany(c => c.CategoryLinks)
                 .WithRequired(p => p.CatalogItem);
 
             modelBuilder.Entity<dataModel.Item>()
@@ -289,7 +290,7 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
             if (!itemIds.Any())
                 return new dataModel.Item[] { };
             //Used breaking query EF performance concept https://msdn.microsoft.com/en-us/data/hh949853.aspx#8
-            var retVal = Items.Include(x => x.Catalog).Where(x => itemIds.Contains(x.Id)).ToArray();
+            var retVal = Items.Include(x => x.Catalog).Include(x => x.Category).Where(x => itemIds.Contains(x.Id)).ToArray();
 
 
             if ((respGroup & coreModel.ItemResponseGroup.Categories) == coreModel.ItemResponseGroup.Categories)
@@ -455,16 +456,7 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
         }
 
 
-        public void SetItemCategoryRelation(dataModel.Item item, dataModel.Category category)
-        {
-            item.CategoryItemRelations.Add(new dataModel.CategoryItemRelation
-            {
-                CatalogId = category.CatalogId,
-                CategoryId = category.Id,
-                ItemId = item.Id
-            });
-        }
-
+    
         public void RemoveItems(string[] itemIds)
         {
             var items = GetItemByIds(itemIds);

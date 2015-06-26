@@ -25,7 +25,7 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 			retVal.InjectFrom(dbItem);
 			retVal.Catalog = catalog;
 			retVal.CatalogId = catalog.Id;
-		
+
 			if (category != null)
 			{
 				retVal.Category = category;
@@ -43,7 +43,7 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 
 
 			#region Links
-			retVal.Links = dbItem.CategoryItemRelations.Select(x => x.ToCoreModel()).ToList();
+			retVal.Links = dbItem.CategoryLinks.Select(x => x.ToCoreModel()).ToList();
 			#endregion
 
 		
@@ -178,8 +178,8 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 			retVal.MinQuantity = 1;
 			retVal.MaxQuantity = 0;
 		 
-			//Changed fields
 			retVal.CatalogId = product.CatalogId;
+			retVal.CategoryId = product.CategoryId;
 
 			#region ItemPropertyValues
 			if (product.PropertyValues != null)
@@ -209,11 +209,11 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 			}
 			#endregion
 
-			#region CategoryItemRelations
+			#region Links
 			if (product.Links != null)
 			{
-				retVal.CategoryItemRelations = new ObservableCollection<dataModel.CategoryItemRelation>();
-				retVal.CategoryItemRelations.AddRange(product.Links.Select(x => x.ToDataModel(product)));
+				retVal.CategoryLinks = new ObservableCollection<dataModel.CategoryItemRelation>();
+				retVal.CategoryLinks.AddRange(product.Links.Select(x => x.ToDataModel(product)));
 			}
 			#endregion
 
@@ -281,9 +281,9 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 			if (source.MaxQuantity != null)
 				target.MaxQuantity = source.MaxQuantity.Value;
 
-			var patchInjectionPolicy = new PatchInjection<dataModel.Item>(x => x.Name, x => x.Code, x => x.IsBuyable, x => x.IsActive, x => x.TrackInventory, x => x.ManufacturerPartNumber, x => x.Gtin, x => x.ProductType,
+			var patchInjectionPolicy = new PatchInjection<dataModel.Item>(x => x.CategoryId, x => x.Name, x => x.Code, x => x.IsBuyable, x => x.IsActive, x => x.TrackInventory, x => x.ManufacturerPartNumber, x => x.Gtin, x => x.ProductType,
 																		  x => x.WeightUnit, x => x.Weight, x => x.MeasureUnit, x => x.Height, x => x.Length, x => x.Width, x => x.EnableReview, x => x.MaxNumberOfDownload,
-																		  x => x.DownloadExpiration, x => x.DownloadType, x => x.HasUserAgreement, x => x.ShippingType, x => x.TaxType, x => x.Vendor );
+																		  x => x.DownloadExpiration, x => x.DownloadType, x => x.HasUserAgreement, x => x.ShippingType, x => x.TaxType, x => x.Vendor);
 			target.InjectFrom(patchInjectionPolicy, source);
 
 			var dbSource = source.ToDataModel();
@@ -302,10 +302,10 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 
 			#endregion
 
-			#region CategoryItemRelations
-			if (!dbSource.CategoryItemRelations.IsNullCollection())
+			#region Links
+			if (!dbSource.CategoryLinks.IsNullCollection())
 			{
-				dbSource.CategoryItemRelations.Patch(target.CategoryItemRelations, new CategoryItemRelationComparer(),
+				dbSource.CategoryLinks.Patch(target.CategoryLinks, new CategoryItemRelationComparer(),
 										 (sourcePropValue, targetPropValue) => sourcePropValue.Patch(targetPropValue));
 			}
 			#endregion
