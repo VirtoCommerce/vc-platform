@@ -351,10 +351,10 @@ namespace VirtoCommerce.OrderModule.Test
 
 			var orderEventPublisher = new EventPublisher<OrderChangeEvent>(Enumerable.Empty<IObserver<OrderChangeEvent>>().ToArray());
 			var cartEventPublisher = new EventPublisher<CartChangeEvent>(Enumerable.Empty<IObserver<CartChangeEvent>>().ToArray());
-			var cartService = new ShoppingCartServiceImpl(repositoryFactory, cartEventPublisher);
+			var cartService = new ShoppingCartServiceImpl(repositoryFactory, cartEventPublisher, null);
 
 
-			var orderService = new CustomerOrderServiceImpl(GetOrderRepositoryFactory(), new TimeBasedNumberGeneratorImpl(), orderEventPublisher, cartService);
+			var orderService = new CustomerOrderServiceImpl(GetOrderRepositoryFactory(), new TimeBasedNumberGeneratorImpl(), orderEventPublisher, cartService, null);
 
 			var controller = new OrderModuleController(orderService, null, null, new TimeBasedNumberGeneratorImpl(), null, null);
 			return controller;

@@ -16,6 +16,7 @@ using VirtoCommerce.Domain.Common;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Domain.Common.Events;
 using VirtoCommerce.Domain.Order.Events;
+using VirtoCommerce.Domain.Catalog.Services;
 
 namespace VirtoCommerce.OrderModule.Data.Services
 {
@@ -24,14 +25,16 @@ namespace VirtoCommerce.OrderModule.Data.Services
 		private readonly Func<IOrderRepository> _repositoryFactory;
 		private readonly IOperationNumberGenerator _operationNumberGenerator;
 		private readonly IShoppingCartService _shoppingCartService;
+		private readonly IItemService _productService;
 		private readonly IEventPublisher<OrderChangeEvent> _eventPublisher;
 
-		public CustomerOrderServiceImpl(Func<IOrderRepository> orderRepositoryFactory, IOperationNumberGenerator operationNumberGenerator, IEventPublisher<OrderChangeEvent> eventPublisher, IShoppingCartService shoppingCartService)
+		public CustomerOrderServiceImpl(Func<IOrderRepository> orderRepositoryFactory, IOperationNumberGenerator operationNumberGenerator, IEventPublisher<OrderChangeEvent> eventPublisher, IShoppingCartService shoppingCartService, IItemService productService)
 		{
 			_repositoryFactory = orderRepositoryFactory;
 			_shoppingCartService = shoppingCartService;
 			_operationNumberGenerator = operationNumberGenerator;
 			_eventPublisher = eventPublisher;
+			_productService = productService;
 		}
 
 		#region ICustomerOrderService Members
@@ -46,7 +49,21 @@ namespace VirtoCommerce.OrderModule.Data.Services
 				{
 					retVal = orderEntity.ToCoreModel();
 				}
+				if((respGroup & CustomerOrderResponseGroup.WithProducts) == CustomerOrderResponseGroup.WithProducts)
+				{
+					var productIds = retVal.Items.Select(x => x.ProductId).ToArray();
+					var products = _productService.GetByIds(productIds, Domain.Catalog.Model.ItemResponseGroup.ItemInfo);
+					foreach(var lineItem in retVal.Items)
+					{
+						var product = products.FirstOrDefault(x => x.Id == lineItem.ProductId);
+						if(product != null)
+						{
+							lineItem.Product = product;
+						}
+					}
+				}
 			}
+			_eventPublisher.Publish(new OrderChangeEvent(EntryState.Unchanged, null, retVal));
 			return retVal;
 		}
 

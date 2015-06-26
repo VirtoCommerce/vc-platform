@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using VirtoCommerce.Domain.Catalog.Model;
 using VirtoCommerce.Domain.Commerce.Model;
 using VirtoCommerce.Platform.Core.Common;
 
@@ -11,6 +12,7 @@ namespace VirtoCommerce.Domain.Cart.Model
 	public class LineItem : AuditableEntity, IHaveTaxDetalization
 	{
 		public string ProductId { get; set; }
+		public CatalogProduct Product { get; set; }
 		public string CatalogId { get; set; }
 		public string CategoryId { get; set; }
 		public string ProductCode { get; set; }

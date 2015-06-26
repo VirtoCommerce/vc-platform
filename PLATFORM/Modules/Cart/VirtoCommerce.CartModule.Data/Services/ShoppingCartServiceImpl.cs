@@ -8,6 +8,7 @@ using VirtoCommerce.CartModule.Data.Repositories;
 using VirtoCommerce.Domain.Cart.Events;
 using VirtoCommerce.Domain.Cart.Model;
 using VirtoCommerce.Domain.Cart.Services;
+using VirtoCommerce.Domain.Catalog.Services;
 using VirtoCommerce.Domain.Common;
 using VirtoCommerce.Domain.Common.Events;
 using VirtoCommerce.Platform.Data.Infrastructure;
@@ -20,10 +21,13 @@ namespace VirtoCommerce.CartModule.Data.Services
 		private const string _workflowName = "CartRecalculate";
 		private Func<ICartRepository> _repositoryFactory;
 		private readonly IEventPublisher<CartChangeEvent> _eventPublisher;
-		public ShoppingCartServiceImpl(Func<ICartRepository> repositoryFactory, IEventPublisher<CartChangeEvent> eventPublisher)
+		private readonly IItemService _productService;
+
+		public ShoppingCartServiceImpl(Func<ICartRepository> repositoryFactory, IEventPublisher<CartChangeEvent> eventPublisher, IItemService productService)
 		{
 			_repositoryFactory = repositoryFactory;
 			_eventPublisher = eventPublisher;
+			_productService = productService;
 		}
 
 		#region IShoppingCartService Members
@@ -37,6 +41,17 @@ namespace VirtoCommerce.CartModule.Data.Services
 				if (entity != null)
 				{
 					retVal = entity.ToCoreModel();
+
+					var productIds = retVal.Items.Select(x => x.ProductId).ToArray();
+					var products = _productService.GetByIds(productIds, Domain.Catalog.Model.ItemResponseGroup.ItemInfo);
+					foreach (var lineItem in retVal.Items)
+					{
+						var product = products.FirstOrDefault(x => x.Id == lineItem.ProductId);
+						if (product != null)
+						{
+							lineItem.Product = product;
+						}
+					}
 
 					_eventPublisher.Publish(new CartChangeEvent(Platform.Core.Common.EntryState.Unchanged, retVal, retVal));
 				}
@@ -103,7 +118,7 @@ namespace VirtoCommerce.CartModule.Data.Services
 				}
 				CommitChanges(repository);
 			}
-	
+
 		}
 
 		public void Delete(string[] cartIds)
@@ -127,6 +142,6 @@ namespace VirtoCommerce.CartModule.Data.Services
 
 		#endregion
 
-	
+
 	}
 }

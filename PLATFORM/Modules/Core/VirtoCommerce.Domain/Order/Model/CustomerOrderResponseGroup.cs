@@ -13,6 +13,7 @@ namespace VirtoCommerce.Domain.Order.Model
 		WithShipments = 2,
 		WithInPayments = 4,
 		WithAddresses = 8,
-		Full = WithItems | WithShipments | WithInPayments | WithAddresses 
+		WithProducts = 16,
+		Full = WithItems | WithShipments | WithInPayments | WithAddresses | WithProducts
 	}
 }
