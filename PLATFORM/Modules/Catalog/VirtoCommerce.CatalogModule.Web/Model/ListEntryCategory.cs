@@ -13,6 +13,7 @@ namespace VirtoCommerce.CatalogModule.Web.Model
 			ImageUrl = "";
 			Code = category.Code;
 			Name = category.Name;
+			IsActive = category.IsActive;
 			if (category.Links != null)
 			{
 				Links = category.Links.Select(x => new ListEntryLink(x) ).ToArray();

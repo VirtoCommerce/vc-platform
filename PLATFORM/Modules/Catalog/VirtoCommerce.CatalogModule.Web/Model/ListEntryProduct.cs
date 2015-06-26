@@ -14,6 +14,7 @@ namespace VirtoCommerce.CatalogModule.Web.Model
 			Code = product.Code;
 			Name = product.Name;
 			ProductType = product.ProductType;
+			IsActive = product.IsActive ?? true;
 			if (product.Links != null)
 			{
 				Links = product.Links.Select(x => new ListEntryLink(x) ).ToArray();
