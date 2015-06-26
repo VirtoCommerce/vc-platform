@@ -95,16 +95,11 @@ namespace VirtoCommerce.Content.Data.Services
 			}
 		}
 
-		private string GetStorePath(string storeId)
-		{
-			return string.Format("{0}/", storeId);
-		}
-
 		private string GetThemePath(string storeId, string themeName)
 		{
 			if (string.IsNullOrEmpty(themeName))
 			{
-				return string.Format("{0}", storeId);
+				return string.Format("{0}/", storeId);
 			}
 			return string.Format("{0}/{1}", storeId, themeName);
 		}
