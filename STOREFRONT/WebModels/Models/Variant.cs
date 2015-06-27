@@ -17,7 +17,7 @@ namespace VirtoCommerce.Web.Models
         {
             get
             {
-                bool isAvailable = true;
+                var isAvailable = true;
 
                 if (!string.IsNullOrEmpty(InventoryManagement))
                 {
@@ -53,7 +53,7 @@ namespace VirtoCommerce.Web.Models
         {
             get
             {
-                return this.Image != null ? this.Image : null;
+                return this.Image ?? null;
             }
         }
 
@@ -70,13 +70,34 @@ namespace VirtoCommerce.Web.Models
         public long InventoryQuantity { get; set; }
 
         [DataMember]
-        public string Option1 { get; set; }
+        public string[] AllOptions { get; set; }
 
         [DataMember]
-        public string Option2 { get; set; }
+        public string Option1
+        {
+            get
+            {
+                return this.AllOptions.Length >= 1 ? this.AllOptions[0] : null;
+            }
+        }
 
         [DataMember]
-        public string Option3 { get; set; }
+        public string Option2
+        {
+            get
+            {
+                return this.AllOptions.Length >= 2 ? this.AllOptions[1] : null;
+            }
+        }
+
+        [DataMember]
+        public string Option3
+        {
+            get
+            {
+                return this.AllOptions.Length >= 3 ? this.AllOptions[2] : null;
+            }
+        }
 
         public decimal NumericPrice { get; set; }
 
@@ -109,5 +130,33 @@ namespace VirtoCommerce.Web.Models
 
         [DataMember]
         public string WeightInUnit { get; set; }
+
+        #region Public Methods and Operators
+        public override object BeforeMethod(string method)
+        {
+            /*
+            if (method.StartsWith("option", StringComparison.OrdinalIgnoreCase))
+            {
+                if (Options == null || !Options.Any())
+                {
+                    return null;
+                }
+
+                int index;
+                if (Int32.TryParse(method.Substring(6), out index))
+                {
+                    if (Options.Length > index)
+                    {
+                        return Options[index];
+                    }
+                }
+            }
+             * */
+
+            return base.BeforeMethod(method);
+        }
+
+
+        #endregion
     }
 }
