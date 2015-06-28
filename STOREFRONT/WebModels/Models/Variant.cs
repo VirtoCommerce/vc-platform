@@ -77,6 +77,7 @@ namespace VirtoCommerce.Web.Models
         {
             get
             {
+                if (this.AllOptions == null) return null;
                 return this.AllOptions.Length >= 1 ? this.AllOptions[0] : null;
             }
         }
@@ -86,6 +87,7 @@ namespace VirtoCommerce.Web.Models
         {
             get
             {
+                if (this.AllOptions == null) return null;
                 return this.AllOptions.Length >= 2 ? this.AllOptions[1] : null;
             }
         }
@@ -95,6 +97,7 @@ namespace VirtoCommerce.Web.Models
         {
             get
             {
+                if (this.AllOptions == null) return null;
                 return this.AllOptions.Length >= 3 ? this.AllOptions[2] : null;
             }
         }
