@@ -101,6 +101,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AvaTaxClasses\Address.cs" />
+    <Compile Include="AvaTaxClasses\JsonAddressSvc.cs" />
     <Compile Include="AvaTaxClasses\AddressSvc.cs" />
     <Compile Include="AvaTaxClasses\CancelTaxRequest.cs" />
     <Compile Include="AvaTaxClasses\CancelTaxResponse.cs" />
@@ -118,6 +119,7 @@
     <Compile Include="AvaTaxClasses\TaxSvc.cs" />
     <Compile Include="AvaTaxClasses\ValidateResult.cs" />
     <Compile Include="Controller\AvaTaxController.cs" />
+    <Compile Include="Converters\CustomerOrderCancelConverter.cs" />
     <Compile Include="Converters\ShoppingCartConverter.cs" />
     <Compile Include="Converters\CustomerOrderConverter.cs" />
     <Compile Include="Managers\AvaTaxImpl.cs" />

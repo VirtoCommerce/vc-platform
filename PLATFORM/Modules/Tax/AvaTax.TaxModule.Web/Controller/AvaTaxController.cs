@@ -15,12 +15,10 @@ namespace AvaTax.TaxModule.Web.Controller
     public class AvaTaxController : ApiController
     {
         private readonly ITax _taxSettings;
-        //private readonly TaxSvc _taxService;
 
-        public AvaTaxController(ITax taxSettings)//, TaxSvc taxService)
+        public AvaTaxController(ITax taxSettings)
         {
             _taxSettings = taxSettings;
-            //_taxService = taxService;
         }
         
         [HttpPost]
@@ -32,7 +30,7 @@ namespace AvaTax.TaxModule.Web.Controller
                 && !string.IsNullOrEmpty(_taxSettings.ServiceUrl)
                 && !string.IsNullOrEmpty(_taxSettings.CompanyCode) && _taxSettings.IsEnabled)
             {
-                var taxSvc = new TaxSvc(_taxSettings.Username, _taxSettings.Password, _taxSettings.ServiceUrl);
+                var taxSvc = new JsonTaxSvc(_taxSettings.Username, _taxSettings.Password, _taxSettings.ServiceUrl);
                 var request = order.ToAvaTaxRequest(_taxSettings.CompanyCode);
                 var getTaxResult = taxSvc.GetTax(request);
                 if (!getTaxResult.ResultCode.Equals(SeverityLevel.Success))
@@ -71,7 +69,7 @@ namespace AvaTax.TaxModule.Web.Controller
                 if (!_taxSettings.IsEnabled)
                     return BadRequest("Tax calculation disabled, enable before testing connection");
 
-                var taxSvc = new TaxSvc(_taxSettings.Username, _taxSettings.Password, _taxSettings.ServiceUrl);
+                var taxSvc = new JsonTaxSvc(_taxSettings.Username, _taxSettings.Password, _taxSettings.ServiceUrl);
                 var retVal = taxSvc.Ping();
                 if (retVal.ResultCode.Equals(SeverityLevel.Success))
                     return Ok(new[] {retVal});
@@ -91,7 +89,7 @@ namespace AvaTax.TaxModule.Web.Controller
                 && !string.IsNullOrEmpty(_taxSettings.ServiceUrl)
                 && !string.IsNullOrEmpty(_taxSettings.CompanyCode) && _taxSettings.IsEnabled)
             {
-                var taxSvc = new TaxSvc(_taxSettings.Username, _taxSettings.Password, _taxSettings.ServiceUrl);
+                var taxSvc = new JsonTaxSvc(_taxSettings.Username, _taxSettings.Password, _taxSettings.ServiceUrl);
                 var request = cart.ToAvaTaxRequest(_taxSettings.CompanyCode);
                 var getTaxResult = taxSvc.GetTax(request);
                 if (!getTaxResult.ResultCode.Equals(SeverityLevel.Success))
@@ -116,6 +114,30 @@ namespace AvaTax.TaxModule.Web.Controller
                 return BadRequest();
             }
             return Ok(cart);
+        }
+
+        [HttpPost]
+        [ResponseType(typeof(bool))]
+        [Route("cancel")]
+        public IHttpActionResult CancelTax(CustomerOrder order)
+        {
+            if (!string.IsNullOrEmpty(_taxSettings.Username) && !string.IsNullOrEmpty(_taxSettings.Password)
+                && !string.IsNullOrEmpty(_taxSettings.ServiceUrl)
+                && !string.IsNullOrEmpty(_taxSettings.CompanyCode) && _taxSettings.IsEnabled)
+            {
+                var taxSvc = new JsonTaxSvc(_taxSettings.Username, _taxSettings.Password, _taxSettings.ServiceUrl);
+                var request = order.ToAvaTaxCancelRequest(_taxSettings.CompanyCode, CancelCode.DocVoided);
+                var cancelTaxResult = taxSvc.CancelTax(request);
+                if (!cancelTaxResult.ResultCode.Equals(SeverityLevel.Success))
+                {
+                    var error = string.Join(Environment.NewLine, cancelTaxResult.Messages.Select(m => m.Details));
+                    return BadRequest(error);
+                }
+
+                return Ok(cancelTaxResult);
+            }
+            
+            return BadRequest();
         }
     }
 }
