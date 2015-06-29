@@ -138,12 +138,10 @@
     <Compile Include="Controllers\Api\MCAuthorizationController.cs" />
     <Compile Include="Controllers\Api\MailChimpController.cs" />
     <Compile Include="Controllers\PredefinedPermissions.cs" />
-    <Compile Include="Managers\MailChimpMailingImpl.cs" />
+    <Compile Include="Services\MailChimpMailingSettings.cs" />
     <Compile Include="Module.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Services\IMailing.cs" />
-    <Compile Include="Services\IMailingManager.cs" />
-    <Compile Include="Services\InMemoryMailingManagerImpl.cs" />
+    <Compile Include="Services\IMailingSettings.cs" />
     <Compile Include="Services\MailChimpOAuth.cs" />
     <Compile Include="Services\OAuth2.cs" />
   </ItemGroup>

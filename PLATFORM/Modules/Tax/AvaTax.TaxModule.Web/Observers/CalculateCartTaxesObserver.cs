@@ -5,18 +5,19 @@ using AvaTax.TaxModule.Web.Services;
 using AvaTaxCalcREST;
 using Microsoft.Practices.ObjectBuilder2;
 using VirtoCommerce.Domain.Cart.Events;
-using VirtoCommerce.Domain.Cart.Model;
 using VirtoCommerce.Platform.Core.Common;
 
 namespace AvaTax.TaxModule.Web.Observers
 {
     public class CalculateCartTaxesObserver : IObserver<CartChangeEvent>
 	{
-        private readonly ITax _taxSettings;
+        private readonly ITaxSettings _taxSettings;
+        //private readonly ICatalogSearchService _catalogSearchService;
 
-        public CalculateCartTaxesObserver(ITax taxSettings)
+        public CalculateCartTaxesObserver(ITaxSettings taxSettings)
         {
             _taxSettings = taxSettings;
+            //_catalogSearchService = catalogService;
         }
 
 		#region IObserver<ShoppingCart> Members
@@ -47,15 +48,22 @@ namespace AvaTax.TaxModule.Web.Observers
                     x.TaxDetails = null;
 		        });
 		    }
-
+            
 		    if (_taxSettings.IsEnabled && !string.IsNullOrEmpty(_taxSettings.Username) && !string.IsNullOrEmpty(_taxSettings.Password)
                 && !string.IsNullOrEmpty(_taxSettings.ServiceUrl)
                 && !string.IsNullOrEmpty(_taxSettings.CompanyCode))
             {
-                var taxSvc = new TaxSvc(_taxSettings.Username, _taxSettings.Password, _taxSettings.ServiceUrl);
+                var taxSvc = new JsonTaxSvc(_taxSettings.Username, _taxSettings.Password, _taxSettings.ServiceUrl);
                 var request = cart.ToAvaTaxRequest(_taxSettings.CompanyCode);
                 if (request != null)
                 {
+                    //var store = _storeService.GetById(cart.StoreId);
+                    
+                    //if (store != null)
+                    //{
+                    //    request.Addresses.AddDistinct(new Address { AddressCode = "origin", Country = store.Country, Region = store.Region });
+                    //    request.Lines.ForEach(l => l.OriginCode = "origin");
+                    //}
                     var getTaxResult = taxSvc.GetTax(request);
                     if (!getTaxResult.ResultCode.Equals(SeverityLevel.Success))
                     {

@@ -41,7 +41,7 @@
             "home_featured_row4_enable": false,
             "home_content": "",
             "logo_max_width": "305",
-            "logo_use_image": false,
+            "logo_use_image": true,
             "product_image_zoom_enable": false,
             "product_quantity_enable": false,
             "product_reviews_enable": false,

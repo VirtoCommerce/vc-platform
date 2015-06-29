@@ -464,13 +464,14 @@ namespace VirtoCommerce.Web
         {
             #region Preview theme functionality
             var previewTheme = context.Request.Query["previewtheme"];
+            var previewThemeCookie = PreviewThemeCookie + shop.StoreId;
             if (!String.IsNullOrEmpty(previewTheme)) // save in cookie and return
             {
-                context.Response.Cookies.Append(PreviewThemeCookie, previewTheme);
+                context.Response.Cookies.Append(previewThemeCookie, previewTheme/*, new CookieOptions() { Expires = DateTime.MinValue}*/);
             }
             else
             {
-                previewTheme = context.Request.Cookies[PreviewThemeCookie];
+                previewTheme = context.Request.Cookies[previewThemeCookie];
             }
 
             if (!String.IsNullOrEmpty(previewTheme))

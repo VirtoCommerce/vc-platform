@@ -32,15 +32,15 @@
 
         public string Country { get; set; }
 
-        public string County { get; set; } // Output for ValidateAddress only
+        //public string County { get; set; } // Output for ValidateAddress only
 
-        public string FipsCode { get; set; } // Output for ValidateAddress only
+        //public string FipsCode { get; set; } // Output for ValidateAddress only
 
-        public string CarrierRoute { get; set; } // Output for ValidateAddress only
+        //public string CarrierRoute { get; set; } // Output for ValidateAddress only
 
-        public string PostNet { get; set; } // Output for ValidateAddress only
+        //public string PostNet { get; set; } // Output for ValidateAddress only
 
-        public AddressType? AddressType { get; set; } // Output for ValidateAddress only
+        //public AddressType? AddressType { get; set; } // Output for ValidateAddress only
 
         public decimal? Latitude { get; set; } // Input for GetTax only
 

@@ -1,7 +1,7 @@
 ﻿
 namespace AvaTax.TaxModule.Web.Services
 {
-    public interface ITax
+    public interface ITaxSettings
     {
         string Username { get; }
         string Password { get; }

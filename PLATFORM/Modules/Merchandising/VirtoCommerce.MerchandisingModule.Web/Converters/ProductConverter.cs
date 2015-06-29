@@ -76,11 +76,11 @@ namespace VirtoCommerce.MerchandisingModule.Web.Converters
 					{
 						if(properties != null)
 						{
-							var propertyMetaInfo = properties.FirstOrDefault(x => string.Equals(propValueGroup.Key, x.Name));
+							var propertyMetaInfo = properties.FirstOrDefault(x => string.Equals(propValueGroup.Key, x.Name, StringComparison.OrdinalIgnoreCase));
 							if(propertyMetaInfo != null && propertyMetaInfo.DisplayNames != null)
 							{
 								//TODO: use display name for specific language
-								displayName = propertyMetaInfo.DisplayNames.Select(x=>x.Name).Where(x=> !String.IsNullOrEmpty(x)).FirstOrDefault() ?? displayName;
+								displayName = propertyMetaInfo.DisplayNames.Select(x=>x.Name).FirstOrDefault(x => !String.IsNullOrEmpty(x)) ?? displayName;
 							}
 
 							if(propertyMetaInfo != null && propertyMetaInfo.Type == coreModel.PropertyType.Variation)
@@ -91,13 +91,10 @@ namespace VirtoCommerce.MerchandisingModule.Web.Converters
 						propertyCollection.Add(displayName, propertyValue.Value);
 					}
 				}
-
-
 			}
-       
+
             return retVal;
         }
-
         #endregion
     }
 }

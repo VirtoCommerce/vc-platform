@@ -1,6 +1,5 @@
 ﻿using System;
 using AvaTax.TaxModule.Web.Controller;
-using AvaTax.TaxModule.Web.Managers;
 using AvaTax.TaxModule.Web.Observers;
 using AvaTax.TaxModule.Web.Services;
 using Microsoft.Practices.Unity;
@@ -32,7 +31,7 @@ namespace AvaTax.TaxModule.Web
         {
             var settingsManager = _container.Resolve<ISettingsManager>();
             
-            var avalaraTax = new AvaTaxImpl(_usernamePropertyName, _passwordPropertyName, _serviceUrlPropertyName, _companyCodePropertyName, _isEnabledPropertyName, settingsManager);
+            var avalaraTax = new AvaTaxSettings(_usernamePropertyName, _passwordPropertyName, _serviceUrlPropertyName, _companyCodePropertyName, _isEnabledPropertyName, settingsManager);
             
             _container.RegisterType<AvaTaxController>
                 (new InjectionConstructor(

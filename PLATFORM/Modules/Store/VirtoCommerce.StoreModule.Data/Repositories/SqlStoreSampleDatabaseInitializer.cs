@@ -80,7 +80,8 @@ namespace VirtoCommerce.StoreModule.Data.Repositories
 			store.FulfillmentCenterId = "vendor-fulfillment";
 			store.ReturnsFulfillmentCenterId = "vendor-fulfillment";
 
-			var settings = new SettingEntry[] { 
+            
+			var settings = new [] { 
 				new SettingEntry
 			{
 				ObjectId = storeId,
@@ -88,6 +89,14 @@ namespace VirtoCommerce.StoreModule.Data.Repositories
 				 ValueType = SettingValueType.LongText,
 				Value = CreateFiltersXml(),
 				Name = "FilteredBrowsing"
+			},
+            new SettingEntry
+			{
+				ObjectId = storeId,
+				ObjectType = "Store",
+  			    ValueType = SettingValueType.ShortText,
+				Value = "Default",
+				Name = "DefaultThemeName"
 			},
 				new SettingEntry
 			{

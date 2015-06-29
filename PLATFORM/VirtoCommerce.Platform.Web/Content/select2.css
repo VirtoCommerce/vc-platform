@@ -459,7 +459,7 @@ disabled look for disabled choices in the results dropdown
 }
 
 .select2-container-multi .select2-choices .select2-search-field input {
-    padding: 5px;
+    padding: 7px 10px 7px 0;
     margin: 1px 0;
 
     font-family: sans-serif;
@@ -531,6 +531,16 @@ disabled look for disabled choices in the results dropdown
 
 .select2-container-multi .select2-search-choice-close {
     left: 3px;
+}
+
+.select2-container-multi .select2-search-choice-close::after
+{
+    color: #f6f6f6;
+}
+
+.select2-container-multi .select2-search-choice-close:hover::after
+{
+    color: #fff;
 }
 
 .select2-container-multi .select2-choices .select2-search-choice .select2-search-choice-close:hover {

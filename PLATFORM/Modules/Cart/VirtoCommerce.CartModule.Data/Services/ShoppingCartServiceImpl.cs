@@ -104,6 +104,18 @@ namespace VirtoCommerce.CartModule.Data.Services
 				foreach (var changedCart in changedCarts)
 				{
 					var origCart = GetById(changedCart.Id);
+
+                    var productIds = changedCart.Items.Select(x => x.ProductId).ToArray();
+                    var products = _productService.GetByIds(productIds, Domain.Catalog.Model.ItemResponseGroup.ItemInfo);
+                    foreach (var lineItem in changedCart.Items)
+                    {
+                        var product = products.FirstOrDefault(x => x.Id == lineItem.ProductId);
+                        if (product != null)
+                        {
+                            lineItem.Product = product;
+                        }
+                    }
+
 					_eventPublisher.Publish(new CartChangeEvent(Platform.Core.Common.EntryState.Modified, origCart, changedCart));
 
 					var sourceCartEntity = changedCart.ToDataModel();

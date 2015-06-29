@@ -144,7 +144,6 @@ namespace VirtoCommerce.Content.Data.Services
 					contentItem.Path = string.Format("{0}/{1}", storeId, contentItem.Path);
 					contentItem.CreatedDate = DateTime.UtcNow;
 					contentItem.ModifiedDate = DateTime.UtcNow;
-					contentItem.CreatedBy = "initialize";
 
 					await _repository.SaveContentItem(contentItem.Path, contentItem);
 				}
@@ -164,7 +163,7 @@ namespace VirtoCommerce.Content.Data.Services
 		{
 			if (string.IsNullOrEmpty(themeName))
 			{
-				return string.Format("{0}", storeId);
+				return string.Format("{0}/", storeId);
 			}
 			return string.Format("{0}/{1}", storeId, themeName);
 		}

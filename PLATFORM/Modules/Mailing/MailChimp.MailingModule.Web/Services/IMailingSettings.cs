@@ -1,6 +1,6 @@
 ﻿namespace MailChimp.MailingModule.Web.Services
 {
-    public interface IMailing
+    public interface IMailingSettings
     {
         string AccessToken { get; }
         string DataCenter { get; }

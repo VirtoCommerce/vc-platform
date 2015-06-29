@@ -55,7 +55,8 @@ namespace VirtoCommerce.Web.Controllers
         public ActionResult Global(string assetId)
         {
             var virtualPath = String.Format("~/App_Data/Themes/_Global/{0}", assetId);
-            return AssetResult(virtualPath, assetId);
+            var themeVirtualPath = String.Format("~/App_Data/Themes/{0}/assets/{1}", Context.Theme.Path, assetId);
+            return AssetResult(virtualPath, new[] { themeVirtualPath  }, assetId);
         }
 
         [OutputCache(CacheProfile = "AssetsCachingProfile")]
@@ -63,7 +64,7 @@ namespace VirtoCommerce.Web.Controllers
         public ActionResult Images(string assetId)
         {
             var virtualPath = String.Format("~/App_Data/Images/{0}", assetId);
-            return AssetResult(virtualPath, assetId);
+            return AssetResult(virtualPath, null, assetId);
         }
 
         [OutputCache(CacheProfile = "AssetsCachingProfile")]
@@ -71,20 +72,30 @@ namespace VirtoCommerce.Web.Controllers
         public ActionResult Themed(string theme, string asset)
         {
             var virtualPath = String.Format("~/App_Data/Themes/{0}/assets/{1}", Context.Theme.Path, asset);
-            return AssetResult(virtualPath, asset);
+            return AssetResult(virtualPath, null, asset);
         }
 
         #endregion
 
         #region Methods
 
-        private ActionResult AssetResult(string virtualPath, string assetId)
+        private ActionResult AssetResult(string virtualPath, string[] alternativePaths, string assetId)
         {
             //Response.Cache.SetMaxAge(TimeSpan.FromDays(365));
 
             if (HostingEnvironment.VirtualPathProvider.FileExists(virtualPath))
             {
                 return new DownloadResult(virtualPath);
+            }
+            else if(alternativePaths != null) // try alternative paths
+            {
+                foreach (var alternativePath in alternativePaths)
+                {
+                    if (HostingEnvironment.VirtualPathProvider.FileExists(alternativePath))
+                    {
+                        return new DownloadResult(alternativePath);
+                    }                    
+                }
             }
 
             if (assetId.EndsWith("scss.css"))
