@@ -11,9 +11,9 @@ namespace AvaTax.TaxModule.Web.Observers
 {
     public class CalculateOrderTaxesObserver : IObserver<OrderChangeEvent>
 	{
-        private readonly ITax _taxSettings;
+        private readonly ITaxSettings _taxSettings;
 
-        public CalculateOrderTaxesObserver(ITax taxSettings)
+        public CalculateOrderTaxesObserver(ITaxSettings taxSettings)
         {
             _taxSettings = taxSettings;
         }

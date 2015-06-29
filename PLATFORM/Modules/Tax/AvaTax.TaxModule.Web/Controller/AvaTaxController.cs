@@ -14,9 +14,9 @@ namespace AvaTax.TaxModule.Web.Controller
     [RoutePrefix("api/tax/avatax")]
     public class AvaTaxController : ApiController
     {
-        private readonly ITax _taxSettings;
+        private readonly ITaxSettings _taxSettings;
 
-        public AvaTaxController(ITax taxSettings)
+        public AvaTaxController(ITaxSettings taxSettings)
         {
             _taxSettings = taxSettings;
         }

@@ -122,12 +122,12 @@
     <Compile Include="Converters\CustomerOrderCancelConverter.cs" />
     <Compile Include="Converters\ShoppingCartConverter.cs" />
     <Compile Include="Converters\CustomerOrderConverter.cs" />
-    <Compile Include="Managers\AvaTaxImpl.cs" />
+    <Compile Include="Services\AvaTaxSettings.cs" />
     <Compile Include="Module.cs" />
     <Compile Include="Observers\CalculateCartTaxesObserver.cs" />
     <Compile Include="Observers\CalculateOrderTaxesObserver.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Services\ITax.cs" />
+    <Compile Include="Services\ITaxSettings.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\VirtoCommerce.Platform.Core\VirtoCommerce.Platform.Core.csproj">
