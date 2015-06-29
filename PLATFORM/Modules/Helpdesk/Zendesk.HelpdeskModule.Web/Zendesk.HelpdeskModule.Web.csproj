@@ -106,12 +106,10 @@
     <Compile Include="Controllers\Api\ZDAuthorizationController.cs" />
     <Compile Include="Controllers\Api\DataFetchController.cs" />
     <Compile Include="Controllers\Api\ZendeskController.cs" />
-    <Compile Include="Managers\ZendeskHelpdeskImpl.cs" />
+    <Compile Include="Services\ZendeskHelpdeskSettings.cs" />
     <Compile Include="Module.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Services\IHelpdesk.cs" />
-    <Compile Include="Services\IHelpdeskManager.cs" />
-    <Compile Include="Services\InMemoryHelpdeskManager.cs" />
+    <Compile Include="Services\IHelpdeskSettings.cs" />
     <Compile Include="Services\OAuth2.cs" />
     <Compile Include="Services\ZendeskOAuth.cs" />
   </ItemGroup>

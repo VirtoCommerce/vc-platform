@@ -1,9 +1,9 @@
 ﻿
 namespace Zendesk.HelpdeskModule.Web.Services
 {
-    public interface IHelpdesk
+    public interface IHelpdeskSettings
     {
-        string AccessToken { get; }
+        string AccessToken { get; set; }
         string Subdomain { get; }
         string Code { get; }
         string Description { get; }

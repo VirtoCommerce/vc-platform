@@ -62,6 +62,8 @@ namespace AvaTax.TaxModule.Web.Controller
         [Route("ping")]
         public IHttpActionResult TestConnection()
         {
+            var absUri = new Uri(Request.RequestUri, RequestContext.VirtualPathRoot);
+
             if (!string.IsNullOrEmpty(_taxSettings.Username) && !string.IsNullOrEmpty(_taxSettings.Password)
                 && !string.IsNullOrEmpty(_taxSettings.ServiceUrl)
                 && !string.IsNullOrEmpty(_taxSettings.CompanyCode))

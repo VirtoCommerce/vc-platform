@@ -26,13 +26,13 @@ namespace GoogleShopping.MerchantModule.Web.Controllers.Api
     {
         private const string _accessTokenPropertyName = "Google.Shopping.Credentials.AccessToken";
         private readonly IGoogleProductProvider _productProvider;
-        private readonly IShopping _settingsManager;
+        private readonly IShoppingSettings _settingsManager;
         private readonly INotifier _notifier;
         private readonly IDateTimeProvider _dateTimeProvider;
         private readonly ShoppingContentService _contentService;
 
         public GoogleShoppingController(
-            IShopping settingsManager, 
+            IShoppingSettings settingsManager, 
             IGoogleProductProvider productProvider, 
             INotifier notifier, 
             IDateTimeProvider dateTimeProvider,

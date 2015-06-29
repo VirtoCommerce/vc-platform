@@ -11,10 +11,10 @@ namespace Zendesk.HelpdeskModule.Web.Controllers.Api
     [RoutePrefix("api/help")]
     public class ZendeskController: ApiController
     {
-        private readonly IHelpdesk _zendeskSettings;
+        private readonly IHelpdeskSettings _zendeskSettings;
         private ZendeskApi _api;
 
-        public ZendeskController(IHelpdesk zendeskSettings)
+        public ZendeskController(IHelpdeskSettings zendeskSettings)
         {
             _zendeskSettings = zendeskSettings;
             if (!string.IsNullOrEmpty(_zendeskSettings.AccessToken))

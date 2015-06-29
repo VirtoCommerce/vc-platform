@@ -1,7 +1,7 @@
 ﻿
 namespace GoogleShopping.MerchantModule.Web.Services
 {
-    public interface IShopping
+    public interface IShoppingSettings
     {
         ulong MerchantId { get; }
         string Code { get; }
