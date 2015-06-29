@@ -290,6 +290,7 @@
     <Compile Include="Model\Asset\BlobInfo.cs" />
     <Compile Include="Model\Jobs\Job.cs" />
     <Compile Include="Model\Notification\Notification.cs" />
+    <Compile Include="Model\Notification\NotificationParameter.cs" />
     <Compile Include="Model\Notification\NotificationTemplate.cs" />
     <Compile Include="Model\Packaging\ModuleDescriptor.cs" />
     <Compile Include="Model\Packaging\ModuleIdentity.cs" />

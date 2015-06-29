@@ -2,7 +2,7 @@
 	<div class="blade-inner">
 		<div class="inner-block">
 			<div class="form">
-				<div class="tile-group five" ng-repeat="data in blade.currentEntities">
+				<div class="tile-group five" ng-repeat="data in blade.currentEntities | orderBy:'store.name'">
 					<div class="tile double __brand">
 						<div class="tile-descr">{{data.store.name}}</div>
 						<div class="tile-image"></div>
@@ -33,7 +33,7 @@
 							</li>
 						</ul>
 					</div>
-					<div class="tile" ng-click="blade.openThemes(data)">
+					<div class="tile" ng-click="blade.openThemes(data.store.id, data.store.name)">
 						<div class="tile-descr">Themes</div>
 						<div class="tile-count">{{data.themesCount}}</div>
 						<a class="btn" ng-click="blade.addNewTheme(data); $event.stopPropagation();">Add</a>

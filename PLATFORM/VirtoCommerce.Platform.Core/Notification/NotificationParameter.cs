@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace VirtoCommerce.Platform.Core.Notification
 {
-	public abstract class EmailNotification : Notification
+	public class NotificationParameter
 	{
-		public EmailNotification(Func<IEmailNotificationSendingGateway> gateway) : base(gateway)
-		{
-		}
+		public string ParameterName { get; set; }
+		public string ParameterDescription { get; set; }
+		public string ParameterCodeInView { get; set; }
 	}
 }

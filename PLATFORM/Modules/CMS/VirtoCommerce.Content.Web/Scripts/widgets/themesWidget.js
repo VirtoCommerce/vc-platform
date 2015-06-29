@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.contentModule')
-.controller('virtoCommerce.contentModule.themesWidgetController', ['$injector', '$rootScope', '$scope', 'virtoCommerce.contentModule.themes', 'platformWebApp.bladeNavigationService', function ($injector, $rootScope, $scope, themes, bladeNavigationService) {
+.controller('virtoCommerce.contentModule.themesWidgetController', ['$injector', '$state', '$rootScope', '$scope', 'virtoCommerce.contentModule.themes', 'virtoCommerce.contentModule.stores', 'platformWebApp.bladeNavigationService', function ($injector, $state, $rootScope, $scope, themes, stores, bladeNavigationService) {
 	var blade = $scope.widget.blade;
 
 	$scope.widget.initialize = function () {
@@ -12,16 +12,7 @@
 	}
 
 	$scope.openBlade = function () {
-		var newBlade = {
-			id: "themesListBlade",
-			storeId: blade.currentEntityId,
-			parentWidget: $scope.widget,
-			title: blade.title,
-			subtitle: 'Themes List',
-			controller: 'virtoCommerce.contentModule.themesListController',
-			template: 'Modules/$(VirtoCommerce.Content)/Scripts/blades/themes/themes-list.tpl.html'
-		};
-		bladeNavigationService.showBlade(newBlade, blade);
+		$state.go('workspace.content', { storeId: blade.currentEntity.id});
 	};
 
 	$scope.widget.initialize();

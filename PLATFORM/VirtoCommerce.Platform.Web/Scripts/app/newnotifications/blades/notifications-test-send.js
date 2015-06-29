@@ -1,5 +1,5 @@
 ﻿angular.module('platformWebApp')
-.controller('platformWebApp.testSendController', ['$rootScope', '$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', 'platformWebApp.newnotifications', function ($rootScope, $scope, bladeNavigationService, dialogService, notifications) {
+.controller('platformWebApp.testSendController', ['$rootScope', '$scope', '$localStorage', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', 'platformWebApp.newnotifications', function ($rootScope, $scope, $localStorage, bladeNavigationService, dialogService, notifications) {
 	var blade = $scope.blade;
 	blade.sendingInfo = ['Sender', 'Recipient'];
 
@@ -14,6 +14,12 @@
 			blade.isLoading = false;
 
 			blade.currentParams = data;
+			if (!angular.isUndefined($localStorage.notificationTestSend) && $localStorage.notificationTestSend.length > 0) {
+				blade.obj = {};
+				for (var i = 0; i < $localStorage.notificationTestSend.length; i++) {
+					blade.obj[$localStorage.notificationTestSend[i].key] = $localStorage.notificationTestSend[i].value;
+				}
+			}
 		}, function (error) {
 			bladeNavigationService.setError('Error ' + error.status, blade);
 		});
@@ -23,11 +29,13 @@
 		blade.isLoading = true;
 		blade.params = [];
 		for (var i = 0; i < blade.currentParams.length; i++) {
-			blade.params.push({ key: blade.currentParams[i], value: blade.obj[blade.currentParams[i]] });
+			blade.params.push({ key: blade.currentParams[i].parameterName, value: blade.obj[blade.currentParams[i].parameterName] });
 		}
 		for (var i = 0; i < blade.sendingInfo.length; i++) {
 			blade.params.push({ key: blade.sendingInfo[i], value: blade.obj[blade.sendingInfo[i]] });
 		}
+
+		$localStorage.notificationTestSend = blade.params;
 
 
 		notifications.sendNotification({ type: blade.notificationType }, blade.params, function () {

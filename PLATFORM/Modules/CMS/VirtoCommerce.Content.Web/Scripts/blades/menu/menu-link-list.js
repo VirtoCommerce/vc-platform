@@ -115,9 +115,9 @@
         menus.checkList({ storeId: blade.choosenStoreId, id: blade.currentEntity.id, name: blade.currentEntity.name, language: blade.currentEntity.language }, function (data) {
             if (Boolean(data.result)) {
                 menus.update({ storeId: blade.choosenStoreId }, blade.currentEntity, function (data) {
-                    blade.newList = false;
-                    blade.initialize();
-                    blade.parentBlade.initialize();
+                	blade.parentBlade.initialize();
+                	blade.newList = false;
+                	blade.isLoading = false;
                 },
                 function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
             }

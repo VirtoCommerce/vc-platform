@@ -179,6 +179,7 @@
     <Compile Include="Notification\INotifier.cs" />
     <Compile Include="Notification\ISmsNotificationSendingGateway.cs" />
     <Compile Include="Notification\Notification.cs" />
+    <Compile Include="Notification\NotificationParameter.cs" />
     <Compile Include="Notification\NotificationTemplate.cs" />
     <Compile Include="Notification\NotifyEvent.cs" />
     <Compile Include="Notification\NotifySearchCriteria.cs" />

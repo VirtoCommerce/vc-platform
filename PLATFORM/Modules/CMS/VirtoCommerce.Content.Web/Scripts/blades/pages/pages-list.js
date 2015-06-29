@@ -17,7 +17,7 @@
                 blade.currentPageCatalog = _.find(blade.currentPageCatalog.folders, function (folder) { return folder.folderName === blade.steps[i] });
             }
 
-            blade.parentBlade.initialize();
+            blade.parentBlade.refresh(blade.storeId, 'pages');
         },
 	    function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
     }

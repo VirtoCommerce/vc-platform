@@ -29,10 +29,11 @@ namespace VirtoCommerce.Content.Web.Controllers.Api
 		private readonly IThemeService _themeService;
 		private readonly string _pathForMultipart;
 		private readonly string _pathForFiles;
+		private readonly string _defaultThemePath;
 		#endregion
 
 		#region Constructors and Destructors
-		public ThemeController(Func<string, IThemeService> factory, ISettingsManager manager, string pathForMultipart, string pathForFiles)
+		public ThemeController(Func<string, IThemeService> factory, ISettingsManager manager, string pathForMultipart, string pathForFiles, string defaultThemePath)
 		{
 			if (factory == null)
 			{
@@ -56,6 +57,7 @@ namespace VirtoCommerce.Content.Web.Controllers.Api
 
 			_pathForMultipart = pathForMultipart;
 			_pathForFiles = pathForFiles;
+			_defaultThemePath = defaultThemePath;
 
 			var themeService = factory.Invoke(chosenRepository);
 			this._themeService = themeService;
@@ -199,6 +201,24 @@ namespace VirtoCommerce.Content.Web.Controllers.Api
 			}
 
 			return this.Ok(loadItemInfo);
+		}
+
+		[HttpGet]
+		[Route("themes/createdefault")]
+		[ResponseType(typeof(bool))]
+		[CheckPermission(Permission = PredefinedPermissions.Manage)]
+		public async Task<IHttpActionResult> CreateDefaultTheme(string storeId)
+		{
+			var retVal = await _themeService.CreateDefaultTheme(storeId, _defaultThemePath);
+
+			if (!retVal)
+			{
+				return BadRequest();
+			}
+			else
+			{
+				return Ok();
+			}
 		}
 		#endregion
 	}
