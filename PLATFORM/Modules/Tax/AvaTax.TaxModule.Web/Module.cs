@@ -37,11 +37,13 @@ namespace AvaTax.TaxModule.Web
                 (new InjectionConstructor(
                     avalaraTax));
 
+            _container.RegisterInstance<ITaxSettings>(avalaraTax);
+
             //Subscribe to cart changes. Calculate taxes   
-            _container.RegisterType<IObserver<CartChangeEvent>, CalculateCartTaxesObserver>("CalculateCartTaxesObserver", new InjectionConstructor(avalaraTax));
+            _container.RegisterType<IObserver<CartChangeEvent>, CalculateCartTaxesObserver>("CalculateCartTaxesObserver");
 
             //Subscribe to order changes. Calculate taxes   
-            _container.RegisterType<IObserver<OrderChangeEvent>, CalculateOrderTaxesObserver>("CalculateOrderTaxesObserver", new InjectionConstructor(avalaraTax));
+            _container.RegisterType<IObserver<OrderChangeEvent>, CalculateOrderTaxesObserver>("CalculateOrderTaxesObserver");
         }
         
         #endregion

@@ -133,10 +133,10 @@
     <Content Include="Scripts\blades\shippingMethod-list.tpl.html" />
     <Content Include="Scripts\blades\stores-list.js" />
     <Content Include="Scripts\blades\stores-list.tpl.html" />
-    <Content Include="Scripts\blades\store-currencies-list.js" />
-    <Content Include="Scripts\blades\store-languages-list.js" />
-    <Content Include="Scripts\blades\store-currencies-list.tpl.html" />
-    <Content Include="Scripts\blades\store-languages-list.tpl.html" />
+    <Content Include="Scripts\blades\store-currencies.js" />
+    <Content Include="Scripts\blades\store-languages.js" />
+    <Content Include="Scripts\blades\store-currencies.tpl.html" />
+    <Content Include="Scripts\blades\store-languages.tpl.html" />
     <Content Include="Scripts\blades\store-setting-detail.js" />
     <Content Include="Scripts\blades\store-setting-detail.tpl.html" />
     <Content Include="Scripts\blades\store-settings-list.js" />
