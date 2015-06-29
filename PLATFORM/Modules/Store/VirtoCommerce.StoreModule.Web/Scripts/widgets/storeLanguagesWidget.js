@@ -8,8 +8,8 @@
             itemId: blade.itemId,
             title: blade.title,
             subtitle: 'Manage languages',
-            controller: 'virtoCommerce.storeModule.storeLanguagesListController',
-            template: 'Modules/$(VirtoCommerce.Store)/Scripts/blades/store-languages-list.tpl.html'
+            controller: 'virtoCommerce.storeModule.storeLanguagesController',
+            template: 'Modules/$(VirtoCommerce.Store)/Scripts/blades/store-languages.tpl.html'
         };
         bladeNavigationService.showBlade(newBlade, blade);
     };
