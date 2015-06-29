@@ -317,6 +317,8 @@
     <Content Include="Scripts\angular-gridster.js" />
     <Content Include="Scripts\app\newnotifications\blades\notifications-edit-template.js" />
     <Content Include="Scripts\app\newnotifications\blades\notifications-edit-template.tpl.html" />
+    <Content Include="Scripts\app\newnotifications\blades\notifications-journal.js" />
+    <Content Include="Scripts\app\newnotifications\blades\notifications-journal.tpl.html" />
     <Content Include="Scripts\app\newnotifications\blades\notifications-list.tpl.html" />
     <Content Include="Scripts\app\newnotifications\blades\notifications-list.js" />
     <Content Include="Scripts\app\newnotifications\blades\notifications-menu.js" />
