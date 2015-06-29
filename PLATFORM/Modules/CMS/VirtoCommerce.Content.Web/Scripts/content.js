@@ -17,11 +17,16 @@ angular.module(moduleName, ['angularUUID2'])
 		permission: 'content:query'
 	};
 	mainMenuService.addMenuItem(menuItem);
+
+	widgetService.registerWidget({
+		controller: 'virtoCommerce.contentModule.themesWidgetController',
+		template: 'Modules/$(VirtoCommerce.Content)/Scripts/widgets/themesWidget.tpl.html'
+	}, 'storeDetail');
 }])
 .config(['$stateProvider', function ($stateProvider) {
 	$stateProvider
 		.state('workspace.content', {
-			url: '/content',
+			url: '/content/:storeId',
 			templateUrl: 'Scripts/common/templates/home.tpl.html',
 			controller: [
 				'$scope', 'platformWebApp.bladeNavigationService', function ($scope, bladeNavigationService) {

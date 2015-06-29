@@ -95,6 +95,66 @@ namespace VirtoCommerce.Content.Data.Services
 			}
 		}
 
+
+		public async Task UploadTheme(string storeId, string themeName, System.IO.Compression.ZipArchive archive)
+		{
+			foreach (ZipArchiveEntry entry in archive.Entries)
+			{
+				if (!IsFolder(entry))
+				{
+					using (var stream = entry.Open())
+					{
+						var asset = new ThemeAsset
+						{
+							AssetName = PrepareAssetNameAndId(entry.FullName),
+							Id = PrepareAssetNameAndId(entry.FullName)
+						};
+
+						var arr = ReadFully(stream);
+						asset.ByteContent = arr;
+						asset.ContentType = ContentTypeUtility.GetContentType(entry.FullName, arr);
+
+						await SaveThemeAsset(storeId, themeName.Trim('/'), asset);
+					}
+				}
+			}
+		}
+
+		public async Task<bool> CreateDefaultTheme(string storeId, string themePath)
+		{
+			var retVal = false;
+
+			var themesPath = GetThemePath(storeId, string.Empty);
+			var themes = await _repository.GetThemes(themesPath);
+			if (themes.Count() == 0 || !string.IsNullOrEmpty(themePath))
+			{
+				var files = Directory.GetFiles(themePath, "*.*", SearchOption.AllDirectories);
+
+				var items =
+					files.Select(
+						file => new ContentItem { Name = Path.GetFileName(file), Path = RemoveBaseDirectory(file, themePath), ModifiedDate = File.GetLastWriteTimeUtc(file) })
+						.ToList();
+
+				foreach (var contentItem in items)
+				{
+					var fullFile = GetContentItem(contentItem.Path, storeId, themePath);
+					contentItem.Id = Guid.NewGuid().ToString();
+					contentItem.ByteContent = fullFile.ByteContent;
+					contentItem.ContentType = fullFile.ContentType;
+					contentItem.Path = string.Format("{0}/{1}", storeId, contentItem.Path);
+					contentItem.CreatedDate = DateTime.UtcNow;
+					contentItem.ModifiedDate = DateTime.UtcNow;
+					contentItem.CreatedBy = "initialize";
+
+					await _repository.SaveContentItem(contentItem.Path, contentItem);
+				}
+
+				retVal = true;
+			}
+
+			return retVal;
+		}
+
 		private string GetStorePath(string storeId)
 		{
 			return string.Format("{0}/", storeId);
@@ -138,30 +198,6 @@ namespace VirtoCommerce.Content.Data.Services
 			return entry.FullName.EndsWith("/");
 		}
 
-		public async Task UploadTheme(string storeId, string themeName, System.IO.Compression.ZipArchive archive)
-		{
-			foreach (ZipArchiveEntry entry in archive.Entries)
-			{
-				if (!IsFolder(entry))
-				{
-					using (var stream = entry.Open())
-					{
-						var asset = new ThemeAsset
-						{
-							AssetName = PrepareAssetNameAndId(entry.FullName),
-							Id = PrepareAssetNameAndId(entry.FullName)
-						};
-
-						var arr = ReadFully(stream);
-						asset.ByteContent = arr;
-						asset.ContentType = ContentTypeUtility.GetContentType(entry.FullName, arr);
-
-						await SaveThemeAsset(storeId, themeName.Trim('/'), asset);
-					}
-				}
-			}
-		}
-
 		private string PrepareAssetNameAndId(string fullName)
 		{
 			var retVal = string.Empty;
@@ -182,6 +218,30 @@ namespace VirtoCommerce.Content.Data.Services
 			}
 
 			return retVal;
+		}
+
+		private ContentItem GetContentItem(string path, string storeId, string themePath)
+		{
+			var retVal = new ContentItem();
+
+			var fullPath = GetFullPath(path, themePath);
+
+			var itemName = Path.GetFileName(fullPath);
+			retVal.ByteContent = File.ReadAllBytes(fullPath);
+			retVal.Name = itemName;
+			retVal.ContentType = ContentTypeUtility.GetContentType(fullPath, retVal.ByteContent);
+
+			return retVal;
+		}
+
+		private string GetFullPath(string path, string themePath)
+		{
+			return Path.Combine(themePath, path).Replace("/", "\\");
+		}
+
+		private string RemoveBaseDirectory(string path, string themePath)
+		{
+			return path.Replace(themePath, string.Empty).Replace("\\", "/").TrimStart('/');
 		}
 
 		private string[] _defaultFolders = new string[] { "assets", "layout", "templates", "snippets", "config", "locales" };

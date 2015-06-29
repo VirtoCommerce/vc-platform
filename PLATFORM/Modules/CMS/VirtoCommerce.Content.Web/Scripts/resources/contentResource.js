@@ -26,7 +26,8 @@
 		getAsset: { url: 'api/cms/:storeId/themes/:themeId/assets/:assetId', method: 'GET' },
 		updateAsset: { url: 'api/cms/:storeId/themes/:themeId/assets', method: 'POST' },
 		deleteAsset: { url: 'api/cms/:storeId/themes/:themeId/assets', method: 'DELETE' },
-		createTheme: { url: 'api/cms/:storeId/themes/file', method: 'GET' }
+		createTheme: { url: 'api/cms/:storeId/themes/file', method: 'GET' },
+		createDefaultTheme: { url: 'api/cms/:storeId/themes/createdefault', method: 'GET' }
 	});
 }])
 .factory('virtoCommerce.contentModule.stores', ['$resource', function ($resource) {
