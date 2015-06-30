@@ -315,6 +315,8 @@
     <Content Include="Content\angular-gridster.css" />
     <Content Include="Content\angular-multi-select.css" />
     <Content Include="Scripts\angular-gridster.js" />
+    <Content Include="Scripts\app\newnotifications\blades\notification-templates-list.tpl.html" />
+    <Content Include="Scripts\app\newnotifications\blades\notification-templates-list.js" />
     <Content Include="Scripts\app\newnotifications\blades\notifications-edit-template.js" />
     <Content Include="Scripts\app\newnotifications\blades\notifications-edit-template.tpl.html" />
     <Content Include="Scripts\app\newnotifications\blades\notifications-journal.js" />

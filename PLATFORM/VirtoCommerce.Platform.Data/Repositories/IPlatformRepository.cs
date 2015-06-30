@@ -20,6 +20,6 @@ namespace VirtoCommerce.Platform.Data.Repositories
 		IQueryable<NotificationTemplateEntity> NotificationTemplates { get; }
 
 		AccountEntity GetAccountByName(string userName, UserDetails detailsLevel);
-		NotificationTemplateEntity GetNotificationTemplateByNotification(string notificationTypeId, string objectId);
+		NotificationTemplateEntity GetNotificationTemplateByNotification(string notificationTypeId, string objectId, string objectTypeId, string language);
 	}
 }

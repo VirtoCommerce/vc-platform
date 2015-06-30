@@ -1,0 +1,28 @@
+﻿<div class="blade-content ">
+	<div class="blade-inner">
+		<div class="inner-block">
+			<div class="table-wrapper">
+				<table class="table">
+					<thead>
+						<tr>
+							<th class="table-col __product-img"></th>
+							<th class="table-col">Name</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr class="table-item" ng-repeat="data in blade.currentEntities" ng-click="blade.openTemplate(data)">
+							<td class="table-col">
+								<div class="product-img">
+									<i class="table-ico flag flag-{{blade.getFlag(data.language)}}"></i>
+								</div>
+							</td>
+							<td class="table-col">
+								{{data.displayName}}
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+</div>

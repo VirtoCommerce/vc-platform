@@ -43,5 +43,22 @@ namespace VirtoCommerce.Platform.Data.Model
 		/// Body of notification
 		/// </summary>
 		public string Body { get; set; }
+
+		/// <summary>
+		/// Type of object that work with this template
+		/// </summary>
+		[StringLength(128)]
+		public string ObjectTypeId { get; set; }
+
+		/// <summary>
+		/// Language of template
+		/// </summary>
+		[StringLength(10)]
+		public string Language { get; set; }
+
+		/// <summary>
+		/// Is that template default
+		/// </summary>
+		public bool IsDefault { get; set; }
 	}
 }

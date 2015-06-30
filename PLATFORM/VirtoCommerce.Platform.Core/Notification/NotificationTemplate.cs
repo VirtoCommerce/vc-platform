@@ -43,5 +43,9 @@ namespace VirtoCommerce.Platform.Core.Notification
 		/// Body of notification
 		/// </summary>
 		public string Body { get; set; }
+
+		public string ObjectTypeId { get; set; }
+		public string Language { get; set; }
+		public bool IsDefault { get; set; }
 	}
 }
