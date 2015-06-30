@@ -72,15 +72,7 @@ namespace VirtoCommerce.Web.Models
         public string Excerpt { get; set; }
 
         [DataMember]
-        public Image FeaturedImage
-        {
-            get
-            {
-                return this.Images != null ?
-                    this.Images.FirstOrDefault(i => i.Name.Equals("primaryimage", StringComparison.OrdinalIgnoreCase)) :
-                    this.Images.FirstOrDefault();
-            }
-        }
+        public Image FeaturedImage { get; set; }
 
         [DataMember]
         public Variant FirstAvailableVariant

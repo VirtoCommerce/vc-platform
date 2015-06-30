@@ -35,7 +35,7 @@
     function saveChanges() {
         blade.isLoading = true;
         var changes = { id: blade.item.id, properties: blade.item.properties };
-        items.updateitem({}, changes, function (data, headers) {
+        items.update({}, changes, function (data, headers) {
             blade.refresh(true);
         },
         function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });

@@ -237,9 +237,9 @@
     <Content Include="Scripts\blades\item-detail.js" />
     <Content Include="Scripts\blades\item-detail.tpl.html" />
     <Content Include="Scripts\blades\item-asset-detail.js" />
-    <Content Include="Scripts\blades\item-image-detail.js" />
+    <Content Include="Scripts\blades\images.js" />
     <Content Include="Scripts\blades\item-asset-detail.tpl.html" />
-    <Content Include="Scripts\blades\item-image-detail.tpl.html" />
+    <Content Include="Scripts\blades\images.tpl.html" />
     <Content Include="Scripts\blades\item-property-list.js" />
     <Content Include="Scripts\blades\item-property-list.tpl.html" />
     <Content Include="Scripts\blades\item-variation-list.js" />

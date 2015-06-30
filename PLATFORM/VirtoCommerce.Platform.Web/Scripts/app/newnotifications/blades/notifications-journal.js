@@ -1,5 +1,5 @@
 ﻿angular.module('platformWebApp')
-.controller('platformWebApp.editTemplateController', ['$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', 'platformWebApp.newnotifications', function ($scope, bladeNavigationService, dialogService, notifications) {
+.controller('platformWebApp.notificationsJournalController', ['$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', 'platformWebApp.newnotifications', function ($scope, bladeNavigationService, dialogService, notifications) {
 	var blade = $scope.blade;
 	blade.selectedItemId = null;
 	blade.currentEntities = [];

@@ -7,7 +7,7 @@
         newItemInCatalog: { method: 'GET', url: 'api/catalog/:catalogId/products/getnew' },
         newItemInCategory: { method: 'GET', url: 'api/catalog/:catalogId/categories/:categoryId/products/getnew' },
         newVariation: { method: 'GET', url: 'api/catalog/products/:itemId/getnewvariation' },
-        updateitem: { method: 'POST', url: 'api/catalog/products' }
+        update: { method: 'POST', url: 'api/catalog/products' }
     });
 
 }]);

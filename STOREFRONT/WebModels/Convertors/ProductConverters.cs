@@ -52,10 +52,13 @@ namespace VirtoCommerce.Web.Convertors
 
             var keywords = product.Seo != null ? product.Seo.Select(k => k.AsWebModel()) : null;
 
+            var primaryImage = product.PrimaryImage ?? product.Images.FirstOrDefault();
+
             productModel.Description = description != null ? description.Content : null;
             productModel.Handle = product.Code;
             productModel.Id = product.Id;
             productModel.Images = new ItemCollection<Image>(product.Images.Select(i => i.AsWebModel(product.Name, product.Id)));
+            productModel.FeaturedImage = primaryImage.AsWebModel(primaryImage.Name, product.Id);
             productModel.Keywords = keywords;
             productModel.Metafields = new MetaFieldNamespacesCollection(new[] { fieldsCollection });
             productModel.Options = options;
@@ -122,9 +125,7 @@ namespace VirtoCommerce.Web.Convertors
         {
             var variantModel = new Variant();
 
-            var variationImage =
-                variation.Images.FirstOrDefault(i => i.Name.Equals("primaryimage", StringComparison.OrdinalIgnoreCase)) ??
-                variation.Images.FirstOrDefault();
+            var variationImage = variation.PrimaryImage ?? variation.Images.FirstOrDefault();
 
             string variantlUrlParameter = null;// HttpContext.Current.Request.QueryString["variant"];
             string pathTemplate;
@@ -206,7 +207,7 @@ namespace VirtoCommerce.Web.Convertors
 
         public static Image AsWebModel(this Data.ItemImage image, string alt, string productId, int position = 0, ICollection<Variant> variants = null)
         {
-            var imageModel = new Image { Alt = alt, AttachedToVariant = true, Id = image.Id, Name = image.Name, Position = position, ProductId = productId, Src = image.Src, Variants = variants };
+            var imageModel = new Image { Alt = alt, AttachedToVariant = true, Name = image.Name, Position = position, ProductId = productId, Src = image.Src, Variants = variants };
 
             return imageModel;
         }

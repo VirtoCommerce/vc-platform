@@ -42,6 +42,7 @@
                 $scope.blade.currentEntityId = data.id;
                 initializeBlade(data);
                 initializeToolbar();
+                $scope.gridsterOpts.maxRows = 3; // force re-initializing the widgets
                 $scope.blade.refresh(true);
             }, function (error) {
                 bladeNavigationService.setError('Error ' + error.status, $scope.blade);
@@ -109,6 +110,8 @@
             ];
         }
     }
+
+    $scope.gridsterOpts = { width: 396 };
 
     initializeToolbar();
     $scope.blade.refresh(false);

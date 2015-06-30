@@ -1,18 +1,25 @@
 ﻿angular.module('virtoCommerce.catalogModule')
-.controller('virtoCommerce.catalogModule.itemImageWidgetController', ['$injector', '$rootScope', '$scope', 'platformWebApp.bladeNavigationService', function ($injector, $rootScope, $scope, bladeNavigationService) {
+.controller('virtoCommerce.catalogModule.itemImageWidgetController', ['$scope', 'virtoCommerce.catalogModule.items', 'virtoCommerce.catalogModule.categories', 'platformWebApp.bladeNavigationService', function ($scope, items, categories, bladeNavigationService) {
 
-    $scope.currentBlade = $scope.widget.blade;
-
-    $scope.openItemImageBlade = function () {
+    $scope.openBlade = function () {
         var blade = {
             id: "itemImage",
-            itemId: $scope.currentBlade.item.id,
-            title: $scope.currentBlade.origItem.name,
-            subtitle: 'item images',
-            controller: 'virtoCommerce.catalogModule.itemImageController',
-            template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/item-image-detail.tpl.html'
+            currentEntityId: $scope.blade.currentEntityId,
+            title: $scope.blade.title,
+            currentResource: ($scope.blade.currentEntity && angular.isDefined($scope.blade.currentEntity.virtual)) ? categories : items,
+            permission: ($scope.blade.currentEntity && angular.isDefined($scope.blade.currentEntity.virtual)) ? 'catalog:categories:manage' : 'catalog:items:manage',
+            subtitle: 'Manage images',
+            controller: 'virtoCommerce.catalogModule.imagesController',
+            template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/images.tpl.html'
         };
-        bladeNavigationService.showBlade(blade, $scope.currentBlade);
+        bladeNavigationService.showBlade(blade, $scope.blade);
     };
 
+    function setCurrentEntities(images) {
+        if (images) {
+            $scope.currentEntities = images;
+        }
+    }
+    $scope.$watch('blade.item.images', setCurrentEntities);
+    $scope.$watch('blade.currentEntity.images', setCurrentEntities);
 }]);

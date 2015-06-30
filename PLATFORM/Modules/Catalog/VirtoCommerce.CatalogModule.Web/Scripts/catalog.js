@@ -179,6 +179,8 @@ angular.module(catalogsModuleName, [
       };
       widgetService.registerWidget(categorySeoWidget, 'categoryDetail');
 
+      widgetService.registerWidget(itemImageWidget, 'categoryDetail');
+
 
       //Register catalog widgets
       var catalogLanguagesWidget = {

@@ -1,5 +1,6 @@
 ﻿#region
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using VirtoCommerce.Web.Models;
 using Data = VirtoCommerce.ApiClient.DataContracts;
@@ -74,6 +75,19 @@ namespace VirtoCommerce.Web.Convertors
                     ret.FinancialStatus = inPayment.Status;
                     ret.FinancialStatusLabel = inPayment.Status;
                 }
+
+                if (inPayment.TaxIncluded)
+                {
+                    if (ret.TaxLines == null)
+                    {
+                        ret.TaxLines = new List<TaxLine>();
+                    }
+                    ret.TaxLines.Add(new TaxLine
+                    {
+                        Price = inPayment.Tax,
+                        Title = "Payments tax"
+                    });
+                }
             }
 
             if (orderShipment != null)
@@ -88,6 +102,19 @@ namespace VirtoCommerce.Web.Convertors
                     ret.FulfillmentStatus = inPayment.Status;
                     ret.FulfillmentStatusLabel = inPayment.Status;
                 }
+
+                if (orderShipment.TaxIncluded)
+                {
+                    if (ret.TaxLines == null)
+                    {
+                        ret.TaxLines = new List<TaxLine>();
+                    }
+                    ret.TaxLines.Add(new TaxLine
+                    {
+                        Price = orderShipment.Tax,
+                        Title = "Shipping tax"
+                    });
+                }
             }
 
             if (customerOrder.Items != null)
@@ -95,6 +122,20 @@ namespace VirtoCommerce.Web.Convertors
                 foreach (var lineItem in customerOrder.Items)
                 {
                     ret.LineItems.Add(lineItem.AsWebModel());
+                }
+
+                var lineItemsTax = customerOrder.Items.Sum(i => i.Tax);
+                if (lineItemsTax > 0)
+                {
+                    if (ret.TaxLines == null)
+                    {
+                        ret.TaxLines = new List<TaxLine>();
+                    }
+                    ret.TaxLines.Add(new TaxLine
+                    {
+                        Price = lineItemsTax,
+                        Title = "Line items tax"
+                    });
                 }
             }
 
@@ -184,6 +225,7 @@ namespace VirtoCommerce.Web.Convertors
                           Quantity = lineItem.Quantity,
                           RequiresShipping = false,
                           Sku = null,
+                          TaxAmount = lineItem.Tax,
                           Title = lineItem.Name,
                           Url = null,
                           Variant = null,

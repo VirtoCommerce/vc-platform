@@ -1,7 +1,7 @@
 ﻿angular.module('virtoCommerce.catalogModule')
 .controller('virtoCommerce.catalogModule.seoDetailController', ['$scope', 'virtoCommerce.catalogModule.categories', 'virtoCommerce.catalogModule.items', 'platformWebApp.dialogService', 'platformWebApp.bladeNavigationService', function ($scope, categories, items, dialogService, bladeNavigationService) {
     var blade = $scope.blade;
-
+    
     function initializeBlade(parentEntity) {
         if (parentEntity) {
             if (blade.isNew) {
@@ -35,19 +35,19 @@
         } else {
             blade.isLoading = true;
 
-            getUpdateFunction()({ id: blade.parentEntityId, seoInfos: seoInfos },
+            getCurrentResource().update({ id: blade.parentEntityId, seoInfos: seoInfos },
                 blade.parentBlade.refresh, function (error) {
                     bladeNavigationService.setError('Error ' + error.status, blade);
                 });
         }
     }
 
-    function getUpdateFunction() {
+    function getCurrentResource() {
         switch (blade.seoUrlKeywordType) {
             case 0:
-                return categories.update;
+                return categories;
             case 1:
-                return items.updateitem;
+                return items;
             default:
                 return null;
         }
