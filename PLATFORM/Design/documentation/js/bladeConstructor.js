@@ -692,10 +692,30 @@ var Blade = {
           .replace(/>/g, "&gt;")
           .replace(/"/g, "&quot;")
           .replace(/'/g, "&#039;");
+    },
+
+    moreToolbar: function() {
+        $('body').delegate('.menu-item.__more', 'click', function () {
+            var attr  = $(this).parents('.blade-toolbar').attr('style'),
+                count = $(this).parents('.blade-toolbar').find('.menu.__more').length;
+
+            if(count) {
+                if (typeof attr !== typeof undefined && attr !== false) {
+                    $(this).parents('.blade-head').removeClass('__expanded');
+                    $(this).parents('.blade-toolbar').css({height: '50px'});
+                    $(this).parents('.blade-toolbar').removeAttr('style');
+                }
+                else {
+                    $(this).parents('.blade-head').addClass('__expanded');
+                    $(this).parents('.blade-toolbar').css({height: 50 + (count * 50) + 'px'});
+                }
+            }
+        });
     }
 
 };
 
 $(function () {
     Blade.settings();
+    Blade.moreToolbar();
 });
