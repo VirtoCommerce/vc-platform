@@ -26,7 +26,12 @@ namespace VirtoCommerce.Web.Convertors
             collection.Description = null; // TODO
             collection.Handle = category.Code;
             collection.Id = category.Id;
-            collection.Image = null; // TODO
+
+            if (category.Image != null)
+            {
+                collection.Image = category.Image.AsWebModel(category.Image.Name, category.Id);
+            }
+
             collection.Keywords = category.Seo != null ? category.Seo.Select(k => k.AsWebModel()) : null;
             collection.NextProduct = null; // TODO
             collection.Parents = category.Parents != null ? category.Parents.Select(p => p.AsWebModel()) : null;

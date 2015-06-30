@@ -11,6 +11,8 @@
 
     $scope.saveChanges = function () {
         $scope.blade.isLoading = true;
+        $scope.blade.currentEntity.languages = [$scope.blade.currentEntity.defaultLanguage];
+        $scope.blade.currentEntity.currencies = [$scope.blade.currentEntity.defaultCurrency];
 
         stores.save({}, $scope.blade.currentEntity, function (data) {
             $scope.blade.parentBlade.refresh();
@@ -24,6 +26,8 @@
     }
 
     $scope.catalogs = catalogs.getCatalogs();
+    $scope.languages = settings.getValues({ id: 'VirtoCommerce.Core.General.Languages' });
+    $scope.currencies = settings.getValues({ id: 'VirtoCommerce.Core.General.Currencies' });
     $scope.storeStates = settings.getValues({ id: 'Stores.States' });
     initializeBlade($scope.blade.currentEntity);
 }]);
