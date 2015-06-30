@@ -504,7 +504,7 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
                 RemoveCategories(allChildrenIds);
 
                 //Remove all products from category
-                var productsIds = CategoryItemRelations.Where(x => x.CategoryId == id).Select(x => x.ItemId).ToArray();
+                var productsIds = Items.Where(x => x.CategoryId == id).Select(x => x.Id).ToArray();
                 RemoveItems(productsIds);
 
                 //Remove all categoryRelations

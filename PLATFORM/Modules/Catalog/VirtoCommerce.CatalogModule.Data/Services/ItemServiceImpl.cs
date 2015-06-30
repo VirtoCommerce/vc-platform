@@ -101,7 +101,6 @@ namespace VirtoCommerce.CatalogModule.Data.Services
 					foreach (var variation in item.Variations)
 					{
 						variation.MainProductId = dbItem.Id;
-						variation.MainProduct = item;
 						variation.CatalogId = dbItem.CatalogId;
 						var dbVariation = variation.ToDataModel();
 						repository.Add(dbVariation);
