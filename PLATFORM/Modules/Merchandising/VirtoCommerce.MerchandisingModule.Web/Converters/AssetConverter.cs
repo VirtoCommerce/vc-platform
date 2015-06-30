@@ -18,6 +18,10 @@ namespace VirtoCommerce.MerchandisingModule.Web.Converters
 			retVal.InjectFrom(image);
 			retVal.Src = blobUrlResolver.GetAbsoluteUrl(image.Url);
             retVal.ThumbSrc = retVal.Src;
+			if(retVal.Name == null)
+			{
+				retVal.Name = retVal.Group;
+			}
             return retVal;
         }
 
