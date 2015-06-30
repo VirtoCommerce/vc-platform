@@ -16,7 +16,8 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
 		IQueryable<foundation.Item> Items { get; }
 		IQueryable<foundation.Property> Properties { get; }
 		IQueryable<foundation.PropertySet> PropertySets { get; }
-		IQueryable<foundation.ItemAsset> ItemAssets { get; }
+		IQueryable<foundation.Image> Images { get; }
+		IQueryable<foundation.Asset> Assets { get; }
 		IQueryable<foundation.EditorialReview> EditorialReviews { get; }
 		IQueryable<foundation.ItemPropertyValue> ItemPropertyValues { get; }
 		IQueryable<foundation.ItemRelation> ItemRelations { get; }

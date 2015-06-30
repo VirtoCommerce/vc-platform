@@ -52,7 +52,6 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
             #endregion
 
             MapEntity<dataModel.CategoryItemRelation>(modelBuilder, toTable: "CategoryItemRelation");
-            MapEntity<dataModel.ItemAsset>(modelBuilder, toTable: "ItemAsset");
             MapEntity<dataModel.Association>(modelBuilder, toTable: "Association");
             MapEntity<dataModel.AssociationGroup>(modelBuilder, toTable: "AssociationGroup");
             MapEntity<dataModel.CatalogLanguage>(modelBuilder, toTable: "CatalogLanguage");
@@ -63,6 +62,9 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
             MapEntity<dataModel.PropertySet>(modelBuilder, toTable: "PropertySet");
             MapEntity<dataModel.PropertySetProperty>(modelBuilder, toTable: "PropertySetProperty");
 
+			modelBuilder.Entity<dataModel.Image>().ToTable("CatalogImage");
+			modelBuilder.Entity<dataModel.Asset>().ToTable("CatalogAsset");
+
             // Introducing FOREIGN KEY constraint 'FK_dbo.Association_dbo.Item_ItemId' on table 'Association' may cause cycles or multiple cascade paths.
             modelBuilder.Entity<dataModel.Association>().HasRequired(m => m.CatalogItem).WithMany().WillCascadeOnDelete(false);
             modelBuilder.Entity<dataModel.CategoryItemRelation>().HasRequired(p => p.Category).WithMany().WillCascadeOnDelete(false);
@@ -72,7 +74,10 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
 			modelBuilder.Entity<dataModel.Item>().HasOptional(m => m.Category).WithMany().WillCascadeOnDelete(false);
             modelBuilder.Entity<dataModel.Category>().HasOptional(m => m.PropertySet).WithMany().WillCascadeOnDelete(true);
             modelBuilder.Entity<dataModel.Catalog>().HasOptional(m => m.PropertySet).WithMany().WillCascadeOnDelete(true);
-			
+			modelBuilder.Entity<dataModel.CategoryBase>().HasMany(c => c.Images).WithOptional(p => p.Category).HasForeignKey(x=>x.CategoryId).WillCascadeOnDelete(true);
+
+
+
             base.OnModelCreating(modelBuilder);
         }
 
@@ -118,6 +123,7 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
 
             #endregion
 
+	
             #region PropertyValueBase TPC
             modelBuilder.Entity<dataModel.CatalogPropertyValue>().Map(entity =>
             {
@@ -151,9 +157,15 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
                 .HasMany(c => c.CategoryLinks)
                 .WithRequired(p => p.CatalogItem);
 
-            modelBuilder.Entity<dataModel.Item>()
-                .HasMany(c => c.ItemAssets)
-                .WithRequired(p => p.CatalogItem);
+			modelBuilder.Entity<dataModel.Item>()
+				.HasMany(c => c.Images)
+				.WithOptional(p => p.CatalogItem)
+				.HasForeignKey(x => x.ItemId).WillCascadeOnDelete(true);
+
+			modelBuilder.Entity<dataModel.Item>()
+			   .HasMany(c => c.Assets)
+			   .WithOptional(p => p.CatalogItem)
+			   .HasForeignKey(x => x.ItemId).WillCascadeOnDelete(true);
 
             modelBuilder.Entity<dataModel.Item>()
                 .HasMany(c => c.Childrens)
@@ -188,10 +200,14 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
             get { return GetAsQueryable<dataModel.ItemPropertyValue>(); }
         }
 
-        public IQueryable<dataModel.ItemAsset> ItemAssets
-        {
-            get { return GetAsQueryable<dataModel.ItemAsset>(); }
-        }
+		public IQueryable<dataModel.Image> Images 
+		{
+			get { return GetAsQueryable<dataModel.Image>(); }
+		}
+		public IQueryable<dataModel.Asset> Assets
+		{
+			get { return GetAsQueryable<dataModel.Asset>(); }
+		}
 
         public IQueryable<dataModel.Item> Items
         {
@@ -273,6 +289,7 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
                 .Include(x => x.CategoryPropertyValues)
                 .Include(x => x.OutgoingLinks)
                 .Include(x => x.IncommingLinks)
+				.Include(x=> x.Images)
                 .Include(x => x.PropertySet.PropertySetProperties.Select(y => y.Property))
                 .FirstOrDefault(x => x.Id == categoryId);
 
@@ -303,7 +320,8 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
             }
             if ((respGroup & coreModel.ItemResponseGroup.ItemAssets) == coreModel.ItemResponseGroup.ItemAssets)
             {
-                var assets = ItemAssets.Where(x => itemIds.Contains(x.ItemId)).ToArray();
+                var assets = Assets.Where(x => itemIds.Contains(x.ItemId)).ToArray();
+				var images = Images.Where(x => itemIds.Contains(x.ItemId)).ToArray();
             }
             if ((respGroup & coreModel.ItemResponseGroup.ItemEditorialReviews) == coreModel.ItemResponseGroup.ItemEditorialReviews)
             {

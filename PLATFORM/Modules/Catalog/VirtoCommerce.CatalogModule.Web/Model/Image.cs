@@ -6,17 +6,13 @@ using System.Threading.Tasks;
 
 namespace VirtoCommerce.CatalogModule.Web.Model
 {
-	public class ProductImage : ProductAssetBase
+	public class Image : AssetBase
 	{
-		public ProductImage()
+		public Image()
 		{
 			TypeId = "image";
 		    Group = "images";
 		}
 
-	    public bool IsThumb
-	    {
-	        get { return Group.EndsWith(".thumb") || Url.Contains(".thumb."); }
-	    }
 	}
 }

@@ -18,7 +18,7 @@ namespace VirtoCommerce.CatalogModule.Test
         public void WorkingWithCatalogPropertyTest()
         {
             var catalogController = new CatalogModuleCatalogsController(GetCatalogService(), GetSearchService(), null, GetPropertyService(), GetPermissionService());
-            var categoryController = new CatalogModuleCategoriesController(GetSearchService(), GetCategoryService(), GetPropertyService(), GetCatalogService());
+            var categoryController = new CatalogModuleCategoriesController(GetSearchService(), GetCategoryService(), GetPropertyService(), GetCatalogService(), null);
             var propertyController = new CatalogModulePropertiesController(GetPropertyService(), GetCategoryService(), GetCatalogService());
             var productController = new CatalogModuleProductsController(GetItemService(), GetPropertyService(), null, null, null);
             var listEntryController = new CatalogModuleListEntryController(GetSearchService(), GetCategoryService(), GetItemService(), null);
@@ -56,7 +56,7 @@ namespace VirtoCommerce.CatalogModule.Test
         {
 
             var catalogController = new CatalogModuleCatalogsController(GetCatalogService(), GetSearchService(), null, GetPropertyService(), GetPermissionService());
-            var categoryController = new CatalogModuleCategoriesController(GetSearchService(), GetCategoryService(), GetPropertyService(), GetCatalogService());
+            var categoryController = new CatalogModuleCategoriesController(GetSearchService(), GetCategoryService(), GetPropertyService(), GetCatalogService(), null);
             var listEntryController = new CatalogModuleListEntryController(GetSearchService(), GetCategoryService(), GetItemService(), null);
 
             //Create virtual catalog

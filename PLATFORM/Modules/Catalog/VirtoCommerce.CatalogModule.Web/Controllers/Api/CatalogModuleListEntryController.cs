@@ -48,7 +48,7 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
             var count = criteria.Count;
 
             // all categories
-            var categories = serviceResult.Categories.Select(x => new webModel.ListEntryCategory(x.ToWebModel()));
+            var categories = serviceResult.Categories.Select(x => new webModel.ListEntryCategory(x.ToWebModel(_blobUrlResolver)));
             var products = serviceResult.Products.Select(x => new webModel.ListEntryProduct(x.ToWebModel(_blobUrlResolver)));
 
             retVal.TotalCount = categories.Count() + serviceResult.TotalCount;

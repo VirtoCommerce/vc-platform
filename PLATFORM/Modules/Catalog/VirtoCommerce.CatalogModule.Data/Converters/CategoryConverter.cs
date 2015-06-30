@@ -44,7 +44,14 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
             if (allParents != null)
             {
                 retVal.Parents = allParents.Select(x => x.ToCoreModel(catalog)).ToArray();
-            }		
+            }
+
+			#region Images
+			if (dbCategory.Images != null)
+			{
+				retVal.Images = dbCategory.Images.OrderBy(x => x.SortOrder).Select(x => x.ToCoreModel()).ToList();
+			}
+			#endregion
 
             return retVal;
 
@@ -81,6 +88,13 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 				retVal.OutgoingLinks.AddRange(category.Links.Select(x => x.ToDataModel(category)));
             }
 
+			#region Images
+			if (category.Images != null)
+			{
+				retVal.Images = new ObservableCollection<dataModel.Image>(category.Images.Select(x=>x.ToDataModel()));
+			}
+			#endregion
+
             return retVal;
         }
 
@@ -110,6 +124,11 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 				if(!dbSource.OutgoingLinks.IsNullCollection())
 				{
 					dbSource.OutgoingLinks.Patch(dbTarget.OutgoingLinks, new LinkedCategoryComparer(), (sourceLink, targetLink) => sourceLink.Patch(targetLink));
+				}
+
+				if (!dbSource.Images.IsNullCollection())
+				{
+					dbSource.Images.Patch(target.Images, (sourceImage, targetImage) => sourceImage.Patch(targetImage));
 				}
             }
         }

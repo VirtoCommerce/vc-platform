@@ -48,13 +48,18 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 
 		
 
-			#region Assets
-			if (dbItem.ItemAssets != null)
+			#region Images
+			if (dbItem.Images != null)
 			{
-				retVal.Assets = dbItem.ItemAssets.OrderBy(x => x.SortOrder).Select(x => x.ToCoreModel()).ToList();
+				retVal.Images = dbItem.Images.OrderBy(x => x.SortOrder).Select(x => x.ToCoreModel()).ToList();
 			}
 			#endregion
-
+			#region Assets
+			if (dbItem.Assets != null)
+			{
+				retVal.Assets = dbItem.Assets.OrderBy(x=>x.CreatedDate).Select(x => x.ToCoreModel()).ToList();
+			}
+			#endregion
 			#region Property values
 			if (dbItem.ItemPropertyValues != null)
 			{
@@ -119,13 +124,13 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 					}
 				}
 				//Image inheritance
-				if ((retVal.Assets == null || !retVal.Assets.Any()) && dbItem.Parent.ItemAssets != null)
+				if (!retVal.Images.Any() && dbItem.Parent.Images != null)
 				{
-					retVal.Assets = dbItem.Parent.ItemAssets.OrderBy(x => x.SortOrder).Select(x => x.ToCoreModel()).ToList();
-					foreach (var asset in retVal.Assets)
+					retVal.Images = dbItem.Parent.Images.OrderBy(x => x.SortOrder).Select(x => x.ToCoreModel()).ToList();
+					foreach (var image in retVal.Images)
 					{
 						//Reset id for correct override
-						asset.Id = null;
+						image.Id = null;
 					}
 				}
 				//Review inheritance
@@ -199,18 +204,17 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 			}
 			#endregion
 
-			#region ItemAssets
+			#region Assets
 			if (product.Assets != null)
 			{
-				var assets = product.Assets.ToArray();
-				retVal.ItemAssets = new ObservableCollection<dataModel.ItemAsset>();
-				for (int order = 0; order < assets.Length; order++)
-				{
-					var asset = assets[order];
-					var dbAsset = asset.ToDataModel();
-					dbAsset.SortOrder = order;
-					retVal.ItemAssets.Add(dbAsset);
-				}
+				retVal.Assets = new ObservableCollection<dataModel.Asset>(product.Assets.Select(x => x.ToDataModel()));
+			}
+			#endregion
+
+			#region Images
+			if (product.Images != null)
+			{
+				retVal.Images = new ObservableCollection<dataModel.Image>(product.Images.Select(x => x.ToDataModel()));
 			}
 			#endregion
 
@@ -292,10 +296,16 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 			target.InjectFrom(patchInjectionPolicy, source);
 
 			var dbSource = source.ToDataModel();
-			#region ItemAssets
-			if (!dbSource.ItemAssets.IsNullCollection())
+			#region Assets
+			if (!dbSource.Assets.IsNullCollection())
 			{
-				dbSource.ItemAssets.Patch(target.ItemAssets, (sourceAsset, targetAsset) => sourceAsset.Patch(targetAsset));
+				dbSource.Assets.Patch(target.Assets, (sourceAsset, targetAsset) => sourceAsset.Patch(targetAsset));
+			}
+			#endregion
+			#region Images
+			if (!dbSource.Images.IsNullCollection())
+			{
+				dbSource.Images.Patch(target.Images, (sourceImage, targetImage) => sourceImage.Patch(targetImage));
 			}
 			#endregion
 

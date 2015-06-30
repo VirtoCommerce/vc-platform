@@ -107,7 +107,16 @@
     <Compile Include="Migrations\201506260904060_AddCategoryIdToItem.Designer.cs">
       <DependentUpon>201506260904060_AddCategoryIdToItem.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201506291457346_AssetChanges.cs" />
+    <Compile Include="Migrations\201506291457346_AssetChanges.Designer.cs">
+      <DependentUpon>201506291457346_AssetChanges.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201506300702305_AssetAndImagesCascadeDeletion.cs" />
+    <Compile Include="Migrations\201506300702305_AssetAndImagesCascadeDeletion.Designer.cs">
+      <DependentUpon>201506300702305_AssetAndImagesCascadeDeletion.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Model\Asset.cs" />
     <Compile Include="Model\Association.cs" />
     <Compile Include="Model\AssociationGroup.cs" />
     <Compile Include="Model\Catalog.cs" />
@@ -120,8 +129,8 @@
     <Compile Include="Model\CategoryRelation.cs" />
     <Compile Include="Model\CategoryPropertyValue.cs" />
     <Compile Include="Model\EditorialReview.cs" />
+    <Compile Include="Model\Image.cs" />
     <Compile Include="Model\Item.cs" />
-    <Compile Include="Model\ItemAsset.cs" />
     <Compile Include="Model\ItemPropertyValue.cs" />
     <Compile Include="Model\ItemRelation.cs" />
     <Compile Include="Model\Product.cs" />
@@ -192,6 +201,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201506260904060_AddCategoryIdToItem.resx">
       <DependentUpon>201506260904060_AddCategoryIdToItem.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201506291457346_AssetChanges.resx">
+      <DependentUpon>201506291457346_AssetChanges.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201506300702305_AssetAndImagesCascadeDeletion.resx">
+      <DependentUpon>201506300702305_AssetAndImagesCascadeDeletion.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Repositories\Sql\Association.sql" />
   </ItemGroup>

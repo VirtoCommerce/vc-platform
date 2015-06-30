@@ -12,23 +12,31 @@ namespace VirtoCommerce.MerchandisingModule.Web.Converters
     {
         #region Public Methods and Operators
 
-      	public static webModel.ItemImage ToImageWebModel(this moduleModel.ItemAsset asset, IBlobUrlResolver blobUrlResolver)
+      	public static webModel.Image ToWebModel(this moduleModel.Image image, IBlobUrlResolver blobUrlResolver)
         {
-            var retVal = new webModel.ItemImage();
-            retVal.InjectFrom(asset);
-			retVal.Src = blobUrlResolver.GetAbsoluteUrl(asset.Url);
+            var retVal = new webModel.Image();
+			retVal.InjectFrom(image);
+			retVal.Src = blobUrlResolver.GetAbsoluteUrl(image.Url);
             retVal.ThumbSrc = retVal.Src;
-            retVal.Name = asset.Group;
+			if(retVal.Name == null)
+			{
+				retVal.Name = retVal.Group;
+			}
             return retVal;
         }
 
-		public static webModel.Asset ToAssetWebModel(this moduleModel.ItemAsset asset, IBlobUrlResolver blobUrlResolver)
+		public static webModel.Asset ToWebModel(this moduleModel.Asset asset, IBlobUrlResolver blobUrlResolver)
 		{
 			var retVal = new webModel.Asset();
 			retVal.InjectFrom(asset);
-
-			retVal.Name = HttpUtility.UrlDecode(System.IO.Path.GetFileName(asset.Url));
-			retVal.MimeType = MimeTypeResolver.ResolveContentType(retVal.Name);
+			if (asset.Name == null)
+			{
+				retVal.Name = HttpUtility.UrlDecode(System.IO.Path.GetFileName(asset.Url));
+			}
+			if (asset.MimeType == null)
+			{
+				retVal.MimeType = MimeTypeResolver.ResolveContentType(retVal.Name);
+			}
 
 			retVal.Url = blobUrlResolver.GetAbsoluteUrl(asset.Url);
 			return retVal;

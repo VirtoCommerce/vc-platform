@@ -5,6 +5,7 @@ using VirtoCommerce.Domain.Catalog.Model;
 using VirtoCommerce.Domain.Catalog.Services;
 using VirtoCommerce.Domain.Store.Services;
 using VirtoCommerce.MerchandisingModule.Web.Converters;
+using VirtoCommerce.Platform.Core.Asset;
 using VirtoCommerce.Platform.Core.Caching;
 using VirtoCommerce.Platform.Core.Common;
 using moduleModel = VirtoCommerce.Domain.Catalog.Model;
@@ -20,8 +21,9 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
         private readonly ICatalogSearchService _searchService;
 		private readonly IStoreService _storeService;
 		private readonly CacheManager _cacheManager;
+		private readonly IBlobUrlResolver _blobUrlResolver;
         public MerchandisingModuleCategoryController(ICatalogSearchService searchService, ICategoryService categoryService,
-								  IPropertyService propertyService, IStoreService storeService, CacheManager cacheManager)
+								  IPropertyService propertyService, IStoreService storeService, CacheManager cacheManager, IBlobUrlResolver blobUrlResolver)
       
         {
 			_storeService = storeService;
@@ -29,6 +31,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
             _categoryService = categoryService;
             _propertyService = propertyService;
 			_cacheManager = cacheManager;
+			_blobUrlResolver = blobUrlResolver;
         }
 
 		[HttpGet]
@@ -39,7 +42,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 		{
 			var retVal = _categoryService.GetById(category);
 			if (retVal != null)
-				return Ok(retVal.ToWebModel());
+				return Ok(retVal.ToWebModel(_blobUrlResolver));
 			return NotFound();
 		}
 
@@ -64,7 +67,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 				var category = _categoryService.GetById(result.Categories.First().Id);
 				if (category != null)
 				{
-					return Ok(category.ToWebModel());
+					return Ok(category.ToWebModel(_blobUrlResolver));
 				}
 			}
 
@@ -92,7 +95,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 				var category = _categoryService.GetById(result.Categories.First().Id);
 				if (category != null)
 				{
-					return Ok(category.ToWebModel());
+					return Ok(category.ToWebModel(_blobUrlResolver));
 				}
 			}
 			return NotFound();
@@ -131,7 +134,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
                 new webModel.ResponseCollection<webModel.Category>
                 {
                     TotalCount = categories.Count(),
-                    Items = categories.Select(x => x.ToWebModel()).ToList()
+					Items = categories.Select(x => x.ToWebModel(_blobUrlResolver)).ToList()
                 });
         }
     }

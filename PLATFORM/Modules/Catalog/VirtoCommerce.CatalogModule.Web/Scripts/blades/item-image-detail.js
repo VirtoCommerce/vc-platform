@@ -154,17 +154,7 @@
     $scope.sortableOptions = {
         update: function (e, ui)
         {
-            if (ui.item.sortable.dropindex == 0) {
-                angular.forEach($scope.item.images, function (i)
-                {
-                    if (i.id == ui.item.sortable.model.id)
-                    {
-                        i.group = "primaryimage";
-                    } else {
-                        i.group = "images";
-                    }
-                });
-            }
+         
         },
         stop: function (e, ui)
         {

@@ -380,25 +380,21 @@ namespace VirtoCommerce.CatalogModule.Web.BackgroundJobs
 				//Map assets (images)
 				Map(x => x.Assets).ConvertUsing(x =>
 					{
-						var retVal = new List<coreModel.ItemAsset>();
+						var retVal = new List<coreModel.Image>();
 						var primaryImageUrl = GetCsvField("PrimaryImage", x, importConfiguration);
 						var altImageUrl = GetCsvField("AltImage", x, importConfiguration);
 						if (!String.IsNullOrEmpty(primaryImageUrl))
 						{
-							retVal.Add(new coreModel.ItemAsset
+							retVal.Add(new coreModel.Image
 							{
-								Type = coreModel.ItemAssetType.Image,
-								Group = "primaryimage",
 								Url = primaryImageUrl
 							});
 						}
 
 						if (!String.IsNullOrEmpty(altImageUrl))
 						{
-							retVal.Add(new coreModel.ItemAsset
+							retVal.Add(new coreModel.Image
 							{
-								Type = coreModel.ItemAssetType.Image,
-								Group = "image",
 								Url = altImageUrl
 							});
 						}

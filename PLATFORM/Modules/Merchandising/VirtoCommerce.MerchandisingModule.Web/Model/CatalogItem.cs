@@ -26,8 +26,8 @@ namespace VirtoCommerce.MerchandisingModule.Web.Model
 
         [Required]
         public string Id { get; set; }
-
-        public ItemImage[] Images { get; set; }
+		public Image PrimaryImage { get; set; }
+        public Image[] Images { get; set; }
 		public Asset[] Assets { get; set; }
         public string MainProductId { get; set; }
 

@@ -15,6 +15,7 @@ namespace VirtoCommerce.CatalogModule.Data.Model
 		public CategoryBase()
 		{
 			Id = Guid.NewGuid().ToString("N");
+			Images = new NullCollection<Image>();
 		}
 
 		[Required]
@@ -41,6 +42,8 @@ namespace VirtoCommerce.CatalogModule.Data.Model
 		public string ParentCategoryId { get; set; }
 
 		public virtual CategoryBase ParentCategory { get; set; }
+
+		public virtual ObservableCollection<Image> Images { get; set; }
 		#endregion
 
 		public static ValidationResult ValidateCategoryCode(string value, ValidationContext context)

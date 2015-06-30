@@ -37,6 +37,8 @@ namespace VirtoCommerce.ApiClient.DataContracts
 
         public ItemImage[] Images { get; set; }
 
+        public ItemImage PrimaryImage { get; set; }
+
         public string MainProductId { get; set; }
 
         public bool? TrackInventory { get; set; }

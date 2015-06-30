@@ -118,6 +118,7 @@
     <Compile Include="Extensions\ItemServiceExtensions.cs" />
     <Compile Include="Model\Asset.cs" />
     <Compile Include="Model\DynamicContentItemGroup.cs" />
+    <Compile Include="Model\Image.cs" />
     <Compile Include="Model\Price.cs" />
     <Compile Include="Model\Association.cs" />
     <Compile Include="Model\CategoryInfo.cs" />
@@ -139,7 +140,6 @@
     <Compile Include="Model\DynamicContentItem.cs" />
     <Compile Include="Model\ItemCategory.cs" />
     <Compile Include="Model\ItemDisplayOptions.cs" />
-    <Compile Include="Model\ItemImage.cs" />
     <Compile Include="Model\ItemResponseGroups.cs" />
     <Compile Include="Model\Product.cs" />
     <Compile Include="Model\ProductVariation.cs" />

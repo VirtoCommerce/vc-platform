@@ -43,7 +43,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 retVal.Add(new webModel.BlobInfo
                 {
                     Name = blobInfo.FileName,
-                    Size = blobInfo.Size.ToHumanReadableSize(),
+                    Size = blobInfo.Size.ToString(),
                     MimeType = blobInfo.ContentType,
 					RelativeUrl = blobInfo.Key,
                     Url = _urlResolver.GetAbsoluteUrl(blobInfo.Key)
