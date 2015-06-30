@@ -270,7 +270,7 @@ namespace VirtoCommerce.Platform.Web
 					ObjectId = "Platform",
 					NotificationTemplate = new NotificationTemplate
 					{
-						Body = @"<p> Dear {{ context.first_name }} {{ context.last_name }}, you has registered on our site</p> <p> Your e-mail  - {{ context.email }} </p>",
+						Body = @"<p> Dear {{ context.first_name }} {{ context.last_name }}, you has registered on our site</p> <p> Your e-mail  - {{ context.login }} </p>",
 						Subject = @"<p> Thanks for registration {{ context.first_name }} {{ context.last_name }}!!! </p>",
 						NotificationTypeId = "RegistrationEmailNotification",
 						ObjectId = "Platform"

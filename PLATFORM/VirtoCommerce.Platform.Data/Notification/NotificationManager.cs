@@ -56,7 +56,6 @@ namespace VirtoCommerce.Platform.Data.Notification
 
 			using (var repository = _repositoryFactory())
 			{
-				notification.Id = Guid.NewGuid().ToString("N");
 				repository.Add(notification.ToDataModel());
 				repository.UnitOfWork.Commit();
 			}
