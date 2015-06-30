@@ -88,7 +88,7 @@ namespace AvaTax.TaxModule.Web.Converters
                         OriginCode = destinationAddressIndex, //TODO set origin address (fulfillment?)
                         DestinationCode = destinationAddressIndex,
                         Description = li.Value.Name,
-                        TaxCode = li.Value.Product.TaxType
+                        TaxCode = li.Value.Product != null ? li.Value.Product.TaxType : null
                     }
                     ).ToArray();
 

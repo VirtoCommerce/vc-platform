@@ -1,5 +1,5 @@
 ﻿angular.module('platformWebApp')
-.controller('platformWebApp.editTemplateController', ['$rootScope', '$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', 'platformWebApp.newnotifications', function ($rootScope, $scope, bladeNavigationService, dialogService, notifications) {
+.controller('platformWebApp.editTemplateController', ['$rootScope', '$scope', '$timeout', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', 'platformWebApp.newnotifications', function ($rootScope, $scope, $timeout, bladeNavigationService, dialogService, notifications) {
 	$scope.selectedEntityId = null;
 	var blade = $scope.blade;
 	var codemirrorEditor;
@@ -13,17 +13,8 @@
 			blade.currentEntity = data;
 
 			notifications.prepareTestData({ type: blade.currentEntityParent.type }, function (data) {
-				for (var i = 0; i < data.length; i++) {
-					var words = data[i].match(/([A-Z]?[^A-Z]*)/g).slice(0, -1);
-					var preparedWords = [];
-					for (var j = 0; j < words.length; j++) {
-						preparedWords.push(words[j].toLowerCase());
-					}
+				blade.parametersForTemplate = data;
 
-					var addedParam = "{{ context." + preparedWords.join("_") + " }}";
-
-					blade.parametersForTemplate.push({ key: data[i], value: addedParam });
-				}
 				blade.isLoading = false;
 
 			}, function (error) {

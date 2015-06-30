@@ -290,6 +290,7 @@
     <Compile Include="Model\Asset\BlobInfo.cs" />
     <Compile Include="Model\Jobs\Job.cs" />
     <Compile Include="Model\Notification\Notification.cs" />
+    <Compile Include="Model\Notification\NotificationParameter.cs" />
     <Compile Include="Model\Notification\NotificationTemplate.cs" />
     <Compile Include="Model\Packaging\ModuleDescriptor.cs" />
     <Compile Include="Model\Packaging\ModuleIdentity.cs" />
@@ -316,6 +317,8 @@
     <Content Include="Scripts\angular-gridster.js" />
     <Content Include="Scripts\app\newnotifications\blades\notifications-edit-template.js" />
     <Content Include="Scripts\app\newnotifications\blades\notifications-edit-template.tpl.html" />
+    <Content Include="Scripts\app\newnotifications\blades\notifications-journal.js" />
+    <Content Include="Scripts\app\newnotifications\blades\notifications-journal.tpl.html" />
     <Content Include="Scripts\app\newnotifications\blades\notifications-list.tpl.html" />
     <Content Include="Scripts\app\newnotifications\blades\notifications-list.js" />
     <Content Include="Scripts\app\newnotifications\blades\notifications-menu.js" />

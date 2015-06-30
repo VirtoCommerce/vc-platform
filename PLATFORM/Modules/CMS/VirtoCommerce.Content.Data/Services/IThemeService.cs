@@ -18,5 +18,7 @@ namespace VirtoCommerce.Content.Data.Services
 		Task DeleteThemeAssets(string storeId, string themeId, params string[] assetKey);
 
 		Task UploadTheme(string storeId, string themeName, ZipArchive archive);
+
+		Task<bool> CreateDefaultTheme(string storeId, string themePath);
 	}
 }

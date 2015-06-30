@@ -22,10 +22,12 @@
         function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
 	}
 
-	function closeChildrenBlades() {
-		angular.forEach($scope.blade.childrenBlades.slice(), function (child) {
-			bladeNavigationService.closeBlade(child);
-		});
+	blade.closeChildrenBlades = function() {
+		if ($scope.blade.childrenBlades) {
+			angular.forEach($scope.blade.childrenBlades.slice(), function (child) {
+				bladeNavigationService.closeBlade(child);
+			});
+		}
 	}
 
 	$scope.blade.headIcon = 'fa fa-archive';
@@ -83,23 +85,32 @@
 		var dialog = {
 			id: "confirmDelete",
 			title: "Delete confirmation",
-			message: "Are you sure want to delete " + blade.choosenTheme.name + "?",
 			callback: function (remove) {
 				if (remove) {
 					blade.isLoading = true;
 					themes.deleteTheme({ storeId: blade.storeId, themeId: blade.choosenTheme.name }, function (data) {
 						blade.initialize();
+						blade.parentBlade.refresh(blade.storeId, 'themes');
+						blade.closeChildrenBlades();
 					},
                     function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
 				}
 			}
 		}
+
+		if (blade.currentEntities.length > 1) {
+			dialog.message = "Are you sure want to delete " + blade.choosenTheme.name + "?";
+		}
+		else {
+			dialog.message = "This theme is last. If you delete theme you can broke your storefront. Are you sure want to delete " + blade.choosenTheme.name + "?";
+		}
+
 		dialogService.showConfirmationDialog(dialog);
 	}
 
 	blade.setThemeAsActive = function () {
 		blade.isLoading = true;
-				if (_.where(blade.store.settings, { name: "DefaultThemeName" }).length > 0) {
+		if (_.where(blade.store.settings, { name: "DefaultThemeName" }).length > 0) {
 			angular.forEach(blade.store.settings, function (value, key) {
 				if (value.name === "DefaultThemeName") {
 					value.value = blade.choosenTheme.name;
@@ -110,8 +121,9 @@
 			blade.store.settings.push({ name: "DefaultThemeName", value: blade.choosenTheme.name, valueType: "ShortText" })
 		}
 
-		themesStores.update({ storeId: blade.choosenStoreId }, blade.store, function (data) {
+		themesStores.update({ storeId: blade.storeId }, blade.store, function (data) {
 			blade.initialize();
+			blade.parentBlade.refresh(blade.storeId, 'themes');
 		},
         function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
 	}
@@ -150,6 +162,16 @@
 			template: 'Modules/$(VirtoCommerce.Content)/Scripts/blades/themes/theme-asset-list.tpl.html'
 		};
 		bladeNavigationService.showBlade(newBlade, blade);
+	}
+
+	blade.createDefaultTheme = function () {
+		themes.createDefaultTheme({ storeId: blade.storeId }, function (data) {
+			blade.initialize();
+			blade.parentBlade.refresh(blade.storeId, 'themes');
+		},
+        function (error) {
+        	bladeNavigationService.setError('Error ' + error.status, $scope.blade);
+        });
 	}
 
 	blade.themeClass = function (data) {
@@ -196,7 +218,7 @@
 	}
 
 	blade.onClose = function (closeCallback) {
-		closeChildrenBlades();
+		blade.closeChildrenBlades();
 		closeCallback();
 	};
 

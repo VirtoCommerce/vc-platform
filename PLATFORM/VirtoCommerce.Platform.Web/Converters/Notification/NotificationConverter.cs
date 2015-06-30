@@ -40,5 +40,14 @@ namespace VirtoCommerce.Platform.Web.Converters.Notification
 
 			return retVal;
 		}
+
+		public static webModels.NotificationParameter ToWebModel(this coreModels.NotificationParameter notificationParameter)
+		{
+			webModels.NotificationParameter retVal = new webModels.NotificationParameter();
+
+			retVal.InjectFrom(notificationParameter);
+
+			return retVal;
+		}
 	}
 }

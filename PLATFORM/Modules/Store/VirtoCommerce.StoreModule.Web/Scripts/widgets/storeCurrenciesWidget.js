@@ -8,8 +8,8 @@
             itemId: blade.itemId,
             title: blade.title,
             subtitle: 'Manage currencies',
-            controller: 'virtoCommerce.storeModule.storeCurrenciesListController',
-            template: 'Modules/$(VirtoCommerce.Store)/Scripts/blades/store-currencies-list.tpl.html'
+            controller: 'virtoCommerce.storeModule.storeCurrenciesController',
+            template: 'Modules/$(VirtoCommerce.Store)/Scripts/blades/store-currencies.tpl.html'
         };
         bladeNavigationService.showBlade(newBlade, blade);
     };

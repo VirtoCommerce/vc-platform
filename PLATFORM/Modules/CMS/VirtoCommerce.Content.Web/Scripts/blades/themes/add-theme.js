@@ -39,9 +39,12 @@
 	}
 
 	blade.save = function () {
+		blade.isLoading = true;
 		if (!$scope.formScope.$invalid) {
 			themes.createTheme({ storeId: blade.choosenStoreId, themeName: blade.name, themeFileUrl: blade.themeFileUrl }, function (data) {
 				blade.parentBlade.initialize();
+				blade.parentBlade.parentBlade.refresh(blade.choosenStoreId, 'themes');
+				blade.isLoading = false;
 				bladeNavigationService.closeBlade(blade);
 			},
             function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });

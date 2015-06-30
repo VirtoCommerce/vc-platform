@@ -5,9 +5,20 @@
 				<div class="note">
 					<p>This is list of notification parameters. You can paste this code and value of parameters will be inserted in your template:</p>
 					<br />
-					<p ng-repeat="data in blade.parametersForTemplate">
-						{{ data.key }} - {{ data.value }}
-					</p>
+					<table style="border-collapse: collapse;">
+						<tbody>
+							<tr>
+								<td style="border:1px solid #dddddd; padding: 6px; text-align:center;">Parameter name</td>
+								<td style="border:1px solid #dddddd; padding: 6px; text-align:center;">Parameter description</td>
+								<td style="border:1px solid #dddddd; padding: 6px; text-align:center;">Paremeter code in template (copy this code and insert anywhere in your template)</td>
+							</tr>
+							<tr ng-repeat="data in blade.parametersForTemplate">
+								<td style="border:1px solid #dddddd; padding: 6px; text-align:center;">{{ data.parameterName }}</td>
+								<td style="border:1px solid #dddddd; padding: 6px; text-align:center;">{{ data.parameterDescription }}</td>
+								<td style="border:1px solid #dddddd; padding: 6px; text-align:center;">{{ data.parameterCodeInView }}</td>
+							</tr>
+						</tbody>
+					</table>
 				</div>
 				<fieldset>
 					<legend>Subject</legend>

@@ -13,6 +13,15 @@ namespace VirtoCommerce.Platform.Data.Notification
 {
 	public class DefaultEmailNotificationSendingGateway : IEmailNotificationSendingGateway
 	{
+		private readonly string _sendGridUserName;
+		private readonly string _sendGridPassword;
+
+		public DefaultEmailNotificationSendingGateway(string userName, string password)
+		{
+			_sendGridUserName = userName;
+			_sendGridPassword = password;
+		}
+
 		public SendNotificationResult SendNotification(Core.Notification.Notification notification)
 		{
 			var retVal = new SendNotificationResult();
@@ -23,7 +32,7 @@ namespace VirtoCommerce.Platform.Data.Notification
 			mail.Subject = notification.Subject;
 			mail.Html = notification.Body;
 
-			var credentials = new NetworkCredential("azure_de17492e1b941d368b0e890ae805e2b2@azure.com", "j8ddaANMU5Whzcu");
+			var credentials = new NetworkCredential(_sendGridUserName, _sendGridPassword);
 			var transportWeb = new Web(credentials);
 			try
 			{

@@ -10,9 +10,9 @@ namespace MailChimp.MailingModule.Web.Controllers.Api
     [CheckPermission(Permission = PredefinedPermissions.Manage)]
     public class MailChimpController : ApiController
     {
-        private readonly IMailing _mailingSettings;
-        
-        public MailChimpController(IMailing mailingSettings)
+        private readonly IMailingSettings _mailingSettings;
+
+        public MailChimpController(IMailingSettings mailingSettings)
         {
             _mailingSettings = mailingSettings;
         }

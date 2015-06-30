@@ -136,7 +136,11 @@ namespace VirtoCommerce.Content.Web
                     File.Delete(file);
             }
 
-            this._container.RegisterType<ThemeController>(new InjectionConstructor(themesFactory, settingsManager, uploadPath, uploadPathFiles));
+			var options = this._container.Resolve<IModuleInitializerOptions>();
+			var modulePath = options.GetModuleDirectoryPath("VirtoCommerce.Content");
+			var themePath = Path.Combine(modulePath, "Default_Theme");
+
+			this._container.RegisterType<ThemeController>(new InjectionConstructor(themesFactory, settingsManager, uploadPath, uploadPathFiles, themePath));
 
             #endregion
 

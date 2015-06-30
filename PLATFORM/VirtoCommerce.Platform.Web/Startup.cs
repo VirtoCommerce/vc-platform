@@ -187,6 +187,59 @@ namespace VirtoCommerce.Platform.Web
 
             #endregion
 
+			#region Settings
+
+			var platformSettings = new[]
+            {
+                new ModuleManifest
+                {
+                    Settings = new[]
+                    {
+                        new ModuleSettingsGroup
+                        {
+                            Name = "Platform|Test",
+                            Settings = new[]
+                            {
+                                new ModuleSetting
+                                {
+                                    Name = "VirtoCommerce.Platform.Test.TestString",
+                                    ValueType = ModuleSetting.TypeString,
+                                    Title = "Test String",
+                                    Description = "Test String Description",
+                                }
+                            }
+                        },
+
+						new ModuleSettingsGroup
+						{
+							Name = "Platform|Notifications|SendGrid",
+							Settings = new []
+							{
+								new ModuleSetting
+								{
+									Name = "VirtoCommerce.Platform.Notifications.SendGrid.UserName",
+									ValueType = ModuleSetting.TypeString,
+									Title = "SendGrid UserName",
+									Description = "Your SendGrid account username"
+								},
+								new ModuleSetting
+								{
+									Name = "VirtoCommerce.Platform.Notifications.SendGrid.Secret",
+									ValueType = ModuleSetting.TypeString,
+									Title = "SendGrid Password",
+									Description = "Your SendGrid account password"
+								}
+							}
+						}
+                    }
+                }
+            };
+
+			var settingsManager = new SettingsManager(manifestProvider, platformRepositoryFactory, cacheManager, platformSettings);
+			container.RegisterInstance<ISettingsManager>(settingsManager);
+
+			#endregion
+
             #region Notifications
 
             var hubSignalR = GlobalHost.ConnectionManager.GetHubContext<ClientPushHub>();
@@ -196,17 +249,21 @@ namespace VirtoCommerce.Platform.Web
 			var resolver = new LiquidNotificationTemplateResolver();
 			var notificationTemplateService = new NotificationTemplateServiceImpl(platformRepositoryFactory);
 			var notificationManager = new NotificationManager(resolver, platformRepositoryFactory, notificationTemplateService);
-			var defaultEmailNotificationSendingGateway = new DefaultEmailNotificationSendingGateway();
+
+			Func<IEmailNotificationSendingGateway> emailNotificationSendingGatewayFactory =
+				() => new DefaultEmailNotificationSendingGateway(settingsManager.GetSettingByName("VirtoCommerce.Platform.Notifications.SendGrid.UserName").Value,
+																 settingsManager.GetSettingByName("VirtoCommerce.Platform.Notifications.SendGrid.Secret").Value);
+
 			var defaultSmsNotificationSendingGateway = new DefaultSmsNotificationSendingGateway();
 
 			container.RegisterInstance<INotificationTemplateService>(notificationTemplateService);
 			container.RegisterInstance<INotificationManager>(notificationManager);
 			container.RegisterInstance<INotificationTemplateResolver>(resolver);
-			container.RegisterInstance<IEmailNotificationSendingGateway>(defaultEmailNotificationSendingGateway);
+			container.RegisterInstance<IEmailNotificationSendingGateway>(emailNotificationSendingGatewayFactory());
 			container.RegisterInstance<ISmsNotificationSendingGateway>(defaultSmsNotificationSendingGateway);
 
 			notificationManager.RegisterNotificationType(
-				() => new RegistrationEmailNotification(defaultEmailNotificationSendingGateway)
+				() => new RegistrationEmailNotification(emailNotificationSendingGatewayFactory)
 				{
 					DisplayName = "Registration notification",
 					Description = "This notification sends by email to client when he finish registration",
@@ -275,37 +332,6 @@ namespace VirtoCommerce.Platform.Web
             var packageService = new ZipPackageService(manifestProvider, packagesPath, sourcePath);
 
             container.RegisterType<ModulesController>(new InjectionConstructor(packageService, sourcePath));
-
-            #endregion
-
-            #region Settings
-
-            var platformSettings = new[]
-            {
-                new ModuleManifest
-                {
-                    Settings = new[]
-                    {
-                        new ModuleSettingsGroup
-                        {
-                            Name = "Platform|Test",
-                            Settings = new[]
-                            {
-                                new ModuleSetting
-                                {
-                                    Name = "VirtoCommerce.Platform.Test.TestString",
-                                    ValueType = ModuleSetting.TypeString,
-                                    Title = "Test String",
-                                    Description = "Test String Description",
-                                }
-                            }
-                        }
-                    }
-                }
-            };
-
-            var settingsManager = new SettingsManager(manifestProvider, platformRepositoryFactory, cacheManager, platformSettings);
-            container.RegisterInstance<ISettingsManager>(settingsManager);
 
             #endregion
 

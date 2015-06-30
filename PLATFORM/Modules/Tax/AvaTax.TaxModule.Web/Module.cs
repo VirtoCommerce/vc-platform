@@ -1,7 +1,7 @@
 ﻿using System;
 using AvaTax.TaxModule.Web.Controller;
-using AvaTax.TaxModule.Web.Managers;
 using AvaTax.TaxModule.Web.Observers;
+using AvaTax.TaxModule.Web.Services;
 using Microsoft.Practices.Unity;
 using VirtoCommerce.Domain.Cart.Events;
 using VirtoCommerce.Domain.Order.Events;
@@ -31,17 +31,19 @@ namespace AvaTax.TaxModule.Web
         {
             var settingsManager = _container.Resolve<ISettingsManager>();
             
-            var avalaraTax = new AvaTaxImpl(_usernamePropertyName, _passwordPropertyName, _serviceUrlPropertyName, _companyCodePropertyName, _isEnabledPropertyName, settingsManager);
+            var avalaraTax = new AvaTaxSettings(_usernamePropertyName, _passwordPropertyName, _serviceUrlPropertyName, _companyCodePropertyName, _isEnabledPropertyName, settingsManager);
             
             _container.RegisterType<AvaTaxController>
                 (new InjectionConstructor(
                     avalaraTax));
 
+            _container.RegisterInstance<ITaxSettings>(avalaraTax);
+
             //Subscribe to cart changes. Calculate taxes   
-            _container.RegisterType<IObserver<CartChangeEvent>, CalculateCartTaxesObserver>("CalculateCartTaxesObserver", new InjectionConstructor(avalaraTax));
+            _container.RegisterType<IObserver<CartChangeEvent>, CalculateCartTaxesObserver>("CalculateCartTaxesObserver");
 
             //Subscribe to order changes. Calculate taxes   
-            _container.RegisterType<IObserver<OrderChangeEvent>, CalculateOrderTaxesObserver>("CalculateOrderTaxesObserver", new InjectionConstructor(avalaraTax));
+            _container.RegisterType<IObserver<OrderChangeEvent>, CalculateOrderTaxesObserver>("CalculateOrderTaxesObserver");
         }
         
         #endregion

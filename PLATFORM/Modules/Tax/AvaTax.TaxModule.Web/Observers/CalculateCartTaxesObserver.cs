@@ -11,10 +11,10 @@ namespace AvaTax.TaxModule.Web.Observers
 {
     public class CalculateCartTaxesObserver : IObserver<CartChangeEvent>
 	{
-        private readonly ITax _taxSettings;
+        private readonly ITaxSettings _taxSettings;
         //private readonly ICatalogSearchService _catalogSearchService;
 
-        public CalculateCartTaxesObserver(ITax taxSettings)
+        public CalculateCartTaxesObserver(ITaxSettings taxSettings)
         {
             _taxSettings = taxSettings;
             //_catalogSearchService = catalogService;
