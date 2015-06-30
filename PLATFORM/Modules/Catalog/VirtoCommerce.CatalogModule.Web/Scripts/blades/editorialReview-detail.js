@@ -26,7 +26,7 @@
 
         entriesCopy.push($scope.currentEntity);
 
-        items.updateitem({ id: $scope.blade.parentBlade.currentEntityId, reviews: entriesCopy }, function () {
+        items.update({ id: $scope.blade.parentBlade.currentEntityId, reviews: entriesCopy }, function () {
             angular.copy($scope.currentEntity, $scope.blade.origEntity);
             $scope.blade.parentBlade.refresh(true);
         },
@@ -66,7 +66,7 @@
                     if (idx >= 0) {
                         var entriesCopy = $scope.blade.parentBlade.currentEntities.slice();
                         entriesCopy.splice(idx, 1);
-                        items.updateitem({ id: $scope.blade.parentBlade.currentEntityId, reviews: entriesCopy }, function () {
+                        items.update({ id: $scope.blade.parentBlade.currentEntityId, reviews: entriesCopy }, function () {
                             $scope.bladeClose();
                             $scope.blade.parentBlade.refresh(true);
                         },

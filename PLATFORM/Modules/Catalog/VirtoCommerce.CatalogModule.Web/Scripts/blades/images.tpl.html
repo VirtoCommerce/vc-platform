@@ -31,8 +31,8 @@
                 <div class="progress-bar __aqua" ng-style="{'width': uploader.progress + '%'}"></div>
             </div>
             
-            <div class="tile-group triple __images-list" ui-sortable="sortableOptions" ng-model="item.images">
-                <div class="tile" ng-class="{'double': $first, '__selected': image.selected}" ng-click="toggleImageSelect($event, image)" ng-repeat="image in item.images" ng-include="'imageTemplate.html'"></div>
+            <div class="tile-group triple __images-list" ui-sortable="sortableOptions" ng-model="blade.currentEntity.images">
+                <div class="tile" ng-class="{'double': $first, '__selected': image.$selected}" ng-click="toggleImageSelect($event, image)" ng-repeat="image in blade.currentEntity.images" ng-include="'imageTemplate.html'"></div>
             </div>
         </div>
 

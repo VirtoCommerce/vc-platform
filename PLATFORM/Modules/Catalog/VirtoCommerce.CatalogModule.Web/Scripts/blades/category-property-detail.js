@@ -3,7 +3,7 @@
     $scope.blade.origEntity = {};
 
     $scope.blade.refresh = function (parentRefresh) {
-        categories.get({ categoryId: $scope.blade.currentEntityId }, function (data) {
+        categories.get({ id: $scope.blade.currentEntityId }, function (data) {
             initializeBlade(data);
             if (parentRefresh) {
                 $scope.blade.parentBlade.refresh();
