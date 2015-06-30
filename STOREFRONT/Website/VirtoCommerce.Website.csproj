@@ -181,7 +181,6 @@
   <ItemGroup>
     <Content Include="App_Data\Themes\_Default\assets\arrow_switch.png" />
     <Content Include="App_Data\Themes\_Default\assets\flags.png" />
-    <Content Include="App_Data\Themes\_Global\assets\blank.gif" />
     <Content Include="App_Data\Themes\_Global\assets\icon_google_32.png" />
     <Content Include="App_Data\Themes\_Global\assets\icon_facebook_32.png" />
     <Content Include="App_Data\Themes\_Global\assets\loader_spinner.gif" />
