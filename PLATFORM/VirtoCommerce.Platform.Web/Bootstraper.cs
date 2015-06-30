@@ -12,6 +12,7 @@ using System.Web.Routing;
 using Unity.WebApi;
 using VirtoCommerce.Platform.Core;
 using VirtoCommerce.Platform.Core.Modularity;
+using Common.Logging;
 
 namespace VirtoCommerce.Platform.Web
 {
@@ -20,7 +21,7 @@ namespace VirtoCommerce.Platform.Web
         private readonly string _modulesVirtualPath;
         private readonly string _modulesPhysicalPath;
         private readonly string _assembliesPath;
-
+		private static ILog _logger = LogManager.GetLogger("platform");
         public VirtoCommercePlatformWebBootstraper(string modulesVirtualPath, string modulesPhysicalPath, string assembliesPath)
         {
             _modulesVirtualPath = modulesVirtualPath;
@@ -129,12 +130,12 @@ namespace VirtoCommerce.Platform.Web
 
                 try
                 {
-                    Debug.WriteLine("Loading assembly '{0}'.", name);
+					_logger.DebugFormat("Loading assembly '{0}'.", name);
                     result = Assembly.Load(name);
                 }
                 catch (FileLoadException)
                 {
-                    Debug.WriteLine("Cannot load assembly '{0}'.", name);
+					_logger.DebugFormat("Cannot load assembly '{0}'.", name);
                 }
 
                 if (result == null && name.Version != null)

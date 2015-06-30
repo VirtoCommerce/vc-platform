@@ -66,7 +66,7 @@
                             closeChildrenBlades();
 
                             var undeletedEntries = _.reject($scope.blade.currentEntities, function (x) { return x.selected; });
-                            items.updateitem({ id: $scope.blade.currentEntityId, associations: undeletedEntries }, function () {
+                            items.update({ id: $scope.blade.currentEntityId, associations: undeletedEntries }, function () {
                                 $scope.blade.refresh();
                             },
                             function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
@@ -95,7 +95,7 @@
                 $scope.blade.currentEntities[i].priority = i + 1;
             }
 
-            items.updateitem({ id: $scope.blade.currentEntityId, associations: $scope.blade.currentEntities }, function () {
+            items.update({ id: $scope.blade.currentEntityId, associations: $scope.blade.currentEntities }, function () {
                 $scope.blade.refresh();
             },
             function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });

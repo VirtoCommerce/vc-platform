@@ -49,7 +49,7 @@
 
     function saveChanges() {
         blade.isLoading = true;
-        items.updateitem({}, blade.item, function () {
+        items.update({}, blade.item, function () {
             blade.refresh(true);
         },
         function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });

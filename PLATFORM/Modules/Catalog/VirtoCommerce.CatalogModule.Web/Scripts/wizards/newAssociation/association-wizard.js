@@ -15,7 +15,7 @@
             }
         });
 
-        items.updateitem({ id: $scope.blade.parentBlade.currentEntityId, associations: entriesCopy }, function () {
+        items.update({ id: $scope.blade.parentBlade.currentEntityId, associations: entriesCopy }, function () {
                 $scope.bladeClose();
                 $scope.blade.parentBlade.refresh();
             },

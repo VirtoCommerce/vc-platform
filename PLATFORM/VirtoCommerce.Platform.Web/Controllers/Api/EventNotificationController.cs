@@ -10,10 +10,10 @@ using VirtoCommerce.Platform.Core.Notification;
 namespace VirtoCommerce.Platform.Web.Controllers.Api
 {
     [RoutePrefix("api/notifications")]
-    public class NotificationController : ApiController
+    public class EventNotificationController : ApiController
     {
         private readonly INotifier _notifier;
-        public NotificationController(INotifier notifier)
+        public EventNotificationController(INotifier notifier)
         {
             _notifier = notifier;
         }

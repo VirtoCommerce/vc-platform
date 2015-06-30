@@ -1,8 +1,8 @@
 ﻿angular.module('virtoCommerce.catalogModule')
 .controller('virtoCommerce.catalogModule.categoryDetailController', ['$rootScope', '$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.settings', 'virtoCommerce.catalogModule.categories', 'platformWebApp.dialogService', function ($rootScope, $scope, bladeNavigationService, settings, categories, dialogService) {
-    
+
     $scope.blade.refresh = function (parentRefresh) {
-        return categories.get({ categoryId: $scope.blade.currentEntityId }, function (data) {
+        return categories.get({ id: $scope.blade.currentEntityId }, function (data) {
             initializeBlade(data);
             if (parentRefresh) {
                 $scope.blade.parentBlade.refresh();
@@ -18,7 +18,7 @@
         $scope.blade.isLoading = false;
     };
 
-    $scope.codeValidator = function(value) {
+    $scope.codeValidator = function (value) {
         var pattern = /[$+;=%{}[\]|\\\/@ ~#!^*&()?:'<>,]/;
         return !pattern.test(value);
     };
@@ -109,6 +109,6 @@
     } else {
         $scope.blade.refresh();
     }
-    
+
     $scope.taxTypes = settings.getValues({ id: 'VirtoCommerce.Core.General.TaxTypes' });
 }]);

@@ -18,8 +18,6 @@ namespace VirtoCommerce.Web.Models
         private ICollection<LineItem> _lineItems;
 
         private ICollection<ShippingMethod> _shippingMethods;
-
-        private ICollection<TaxLine> _taxLines;
         #endregion
 
         #region Public Properties
@@ -111,13 +109,7 @@ namespace VirtoCommerce.Web.Models
         public decimal SubtotalPrice { get; set; }
 
         [DataMember]
-        public ICollection<TaxLine> TaxLines
-        {
-            get
-            {
-                return this._taxLines ?? (this._taxLines = new HashSet<TaxLine>());
-            }
-        }
+        public ICollection<TaxLine> TaxLines { get; set; }
 
         [DataMember]
         public decimal TaxPrice { get; set; }
