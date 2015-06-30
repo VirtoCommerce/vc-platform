@@ -24,15 +24,18 @@ namespace VirtoCommerce.CatalogModule.Web.Converters
 
             if (product.Category != null)
             {
-                retVal.Category = product.Category.ToWebModel();
+				retVal.Category = product.Category.ToWebModel(blobUrlResolver);
             }
 
-            if (product.Assets != null)
+            if (product.Images != null)
             {
-                var assetBases = product.Assets.Select(x => x.ToWebModel(blobUrlResolver)).ToList();
-                retVal.Images = assetBases.OfType<webModel.ProductImage>().ToList();
-                retVal.Assets = assetBases.OfType<webModel.ProductAsset>().ToList();
+				retVal.Images = product.Images.Select(x => x.ToWebModel(blobUrlResolver)).ToList();
             }
+
+			if(product.Assets != null)
+			{
+				retVal.Assets = product.Assets.Select(x => x.ToWebModel(blobUrlResolver)).ToList();
+			}
 
             if (product.Variations != null)
             {
@@ -97,32 +100,18 @@ namespace VirtoCommerce.CatalogModule.Web.Converters
 
             if (product.Images != null)
             {
-                retVal.Assets = new List<moduleModel.ItemAsset>();
-                bool isMain = true;
-                foreach (var productImage in product.Images)
-                {
-                    var image = productImage.ToModuleModel();
-                    image.Type = moduleModel.ItemAssetType.Image;
-                    image.Group = isMain ? "primaryimage" : "images";
-                    retVal.Assets.Add(image);
-                    isMain = false;
-                }
+				retVal.Images = product.Images.Select(x => x.ToCoreModel()).ToList();
+				var index = 0;
+				foreach(var image in retVal.Images)
+				{
+					image.SortOrder = index++;
+				}
             }
 
-            if (product.Assets != null)
-            {
-                if (retVal.Assets == null)
-                {
-                    retVal.Assets = new List<moduleModel.ItemAsset>();
-                }
-
-                foreach (var productAsset in product.Assets)
-                {
-                    var asset = productAsset.ToModuleModel();
-                    asset.Type = moduleModel.ItemAssetType.File;
-                    retVal.Assets.Add(asset);
-                }
-            }
+			if (product.Assets != null)
+			{
+				retVal.Assets = product.Assets.Select(x => x.ToCoreModel()).ToList();
+			}
 
             if (product.Properties != null)
             {

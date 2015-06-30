@@ -14,6 +14,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Model
         public IEnumerable<Category> Parents { get; set; }
 
         public IEnumerable<SeoKeyword> Seo { get; set; }
+		public Image Image { get; set; }
         public bool Virtual { get; set; }
 
         #endregion

@@ -57,12 +57,7 @@ namespace VirtoCommerce.CatalogModule.Web.Model
 				{
 					if (Images != null && Images.Any())
 					{
-						var img = Images.FirstOrDefault(x => x.Group == "primaryimage");
-						if (img == null)
-						{
-							img = Images.First();
-						}
-						_imgSrc = img.Url;
+						_imgSrc = Images.First().Url;
 					}
 				}
 				return _imgSrc;
@@ -70,8 +65,8 @@ namespace VirtoCommerce.CatalogModule.Web.Model
 		}
 
 		public ICollection<Property> Properties { get; set; }
-		public ICollection<ProductImage> Images { get; set; }
-		public ICollection<ProductAsset> Assets { get; set; }
+		public ICollection<Image> Images { get; set; }
+		public ICollection<Asset> Assets { get; set; }
 		public ICollection<Product> Variations { get; set; }
 		public ICollection<CategoryLink> Links { get; set; }
 		public ICollection<SeoInfo> SeoInfos { get; set; }

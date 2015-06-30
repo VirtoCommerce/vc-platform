@@ -10,7 +10,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Model
 		public string Url { get; set; }
 		public string Group { get; set; }
 		public string Name { get; set; }
-		public string Size { get; set; }
+		public long Size { get; set; }
 		public string MimeType { get; set; }
 	}
 }

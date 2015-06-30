@@ -21,14 +21,14 @@ namespace VirtoCommerce.MerchandisingModule.Web.Converters
             }
             retVal.InjectFrom(product);
 
+			if(product.Images != null && product.Images.Any())
+			{
+				retVal.PrimaryImage = product.Images.First().ToWebModel(blobUrlResolver);
+				retVal.Images = product.Images.Skip(1).Select(x => x.ToWebModel(blobUrlResolver)).ToArray();
+			}
             if (product.Assets != null)
             {
-                retVal.Images = product.Assets.Where(x => x.Type == coreModel.ItemAssetType.Image)
-											  .Select(x => x.ToImageWebModel(blobUrlResolver))
-											  .ToArray();
-				retVal.Assets = product.Assets.Where(x => x.Type == coreModel.ItemAssetType.File)
-											  .Select(x => x.ToAssetWebModel(blobUrlResolver))
-											  .ToArray();
+				retVal.Assets = product.Assets.Select(x => x.ToWebModel(blobUrlResolver)).ToArray();
             }
 
             if (product.Variations != null && product.Variations.Any())

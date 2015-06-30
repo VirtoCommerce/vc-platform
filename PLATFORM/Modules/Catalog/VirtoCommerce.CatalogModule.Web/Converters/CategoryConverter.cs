@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Omu.ValueInjecter;
+using VirtoCommerce.Platform.Core.Asset;
 using moduleModel = VirtoCommerce.Domain.Catalog.Model;
 using webModel = VirtoCommerce.CatalogModule.Web.Model;
 
@@ -11,7 +12,7 @@ namespace VirtoCommerce.CatalogModule.Web.Converters
 {
 	public static class CategoryConverter
 	{
-		public static webModel.Category ToWebModel(this moduleModel.Category category, moduleModel.Property[] properties = null)
+		public static webModel.Category ToWebModel(this moduleModel.Category category, IBlobUrlResolver blobUrlResolver = null, moduleModel.Property[] properties = null)
 		{
 			var retVal = new webModel.Category();
 			retVal.InjectFrom(category);
@@ -58,6 +59,10 @@ namespace VirtoCommerce.CatalogModule.Web.Converters
 				}
 			}
 
+			if (category.Images != null)
+			{
+				retVal.Images = category.Images.Select(x => x.ToWebModel(blobUrlResolver)).ToList();
+			}
 			return retVal;
 		}
 
@@ -85,7 +90,16 @@ namespace VirtoCommerce.CatalogModule.Web.Converters
 						retVal.PropertyValues.Add(propValue.ToModuleModel());
 					}
 				}
-			
+			}
+
+			if (category.Images != null)
+			{
+				retVal.Images = category.Images.Select(x => x.ToCoreModel()).ToList();
+				var index = 0;
+				foreach (var image in retVal.Images)
+				{
+					image.SortOrder = index++;
+				}
 			}
 
 			return retVal;

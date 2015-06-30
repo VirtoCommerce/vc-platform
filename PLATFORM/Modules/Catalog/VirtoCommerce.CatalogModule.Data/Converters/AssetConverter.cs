@@ -18,47 +18,68 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 		/// </summary>
 		/// <param name="catalogBase"></param>
 		/// <returns></returns>
-		public static coreModel.ItemAsset ToCoreModel(this dataModel.ItemAsset dbAsset)
+		public static coreModel.Image ToCoreModel(this dataModel.Image dbImage)
 		{
-			if (dbAsset == null)
-				throw new ArgumentNullException("dbAsset");
+			if (dbImage == null)
+				throw new ArgumentNullException("dbImage");
 
-			var retVal = new coreModel.ItemAsset();
+			var retVal = new coreModel.Image();
 
-			retVal.InjectFrom(dbAsset);
-
-			retVal.Group = dbAsset.GroupName;
-			retVal.Type = (coreModel.ItemAssetType)Enum.Parse(typeof(coreModel.ItemAssetType), dbAsset.AssetType, true);
-			retVal.Url = dbAsset.AssetId;
-
+			retVal.InjectFrom(dbImage);
 			return retVal;
 
 		}
 
 		/// <summary>
+		/// Converting to model type
+		/// </summary>
+		/// <param name="catalogBase"></param>
+		/// <returns></returns>
+		public static coreModel.Asset ToCoreModel(this dataModel.Asset dbAsset)
+		{
+			if (dbAsset == null)
+				throw new ArgumentNullException("dbAsset");
+
+			var retVal = new coreModel.Asset();
+
+			retVal.InjectFrom(dbAsset);
+
+			return retVal;
+
+		}
+		/// <summary>
 		/// Converting to foundation type
 		/// </summary>
-		/// <param name="itemAsset">The item asset.</param>
-		/// <returns></returns>
-		/// <exception cref="System.ArgumentNullException">itemAsset</exception>
-		public static dataModel.ItemAsset ToDataModel(this coreModel.ItemAsset itemAsset)
+		public static dataModel.Image ToDataModel(this coreModel.Image image)
 		{
-			if (itemAsset == null)
-				throw new ArgumentNullException("itemAsset");
+			if (image == null)
+				throw new ArgumentNullException("image");
 
-			var retVal = new dataModel.ItemAsset();
+			var retVal = new dataModel.Image();
 			var id = retVal.Id;
-			retVal.InjectFrom(itemAsset);
-			if(itemAsset.Id == null)
+			retVal.InjectFrom(image);
+			if (image.Id == null)
 			{
 				retVal.Id = id;
 			}
+			return retVal;
+		}
 
-			retVal.AssetId = itemAsset.Url;
-			retVal.GroupName = itemAsset.Group;
-			retVal.AssetType = itemAsset.Type.ToString().ToLower();
+		/// <summary>
+		/// Converting to foundation type
+		/// </summary>
+		public static dataModel.Asset ToDataModel(this coreModel.Asset asset)
+		{
+			if (asset == null)
+				throw new ArgumentNullException("asset");
 
-		
+			var retVal = new dataModel.Asset();
+			var id = retVal.Id;
+			retVal.InjectFrom(asset);
+			if (asset.Id == null)
+			{
+				retVal.Id = id;
+			}
 			return retVal;
 		}
 
@@ -67,12 +88,27 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 		/// </summary>
 		/// <param name="source"></param>
 		/// <param name="target"></param>
-		public static void Patch(this dataModel.ItemAsset source, dataModel.ItemAsset target)
+		public static void Patch(this dataModel.Asset source, dataModel.Asset target)
 		{
 			if (target == null)
 				throw new ArgumentNullException("target");
 			
-			var patchInjectionPolicy = new PatchInjection<dataModel.ItemAsset>(x => x.AssetType, x=> x.SortOrder );
+			var patchInjectionPolicy = new PatchInjection<dataModel.Asset>(x => x.LanguageCode, x=> x.Name );
+			target.InjectFrom(patchInjectionPolicy, source);
+
+		}
+
+		/// <summary>
+		/// Patch changes
+		/// </summary>
+		/// <param name="source"></param>
+		/// <param name="target"></param>
+		public static void Patch(this dataModel.Image source, dataModel.Image target)
+		{
+			if (target == null)
+				throw new ArgumentNullException("target");
+
+			var patchInjectionPolicy = new PatchInjection<dataModel.Image>(x => x.LanguageCode, x => x.Name, x => x.SortOrder);
 			target.InjectFrom(patchInjectionPolicy, source);
 
 		}

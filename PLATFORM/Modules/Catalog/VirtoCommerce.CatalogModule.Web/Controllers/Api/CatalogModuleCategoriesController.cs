@@ -11,6 +11,7 @@ using webModel = VirtoCommerce.CatalogModule.Web.Model;
 using coreModel = VirtoCommerce.Domain.Catalog.Model;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Domain.Commerce.Model;
+using VirtoCommerce.Platform.Core.Asset;
 
 namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 {
@@ -22,15 +23,17 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
         private readonly ICategoryService _categoryService;
         private readonly IPropertyService _propertyService;
         private readonly ICatalogService _catalogService;
+		private readonly IBlobUrlResolver _blobUrlResolver;
 
         public CatalogModuleCategoriesController(ICatalogSearchService searchService,
                                     ICategoryService categoryService,
-                                    IPropertyService propertyService, ICatalogService catalogService)
+									IPropertyService propertyService, ICatalogService catalogService, IBlobUrlResolver blobUrlResolver)
         {
             _searchService = searchService;
             _categoryService = categoryService;
             _propertyService = propertyService;
             _catalogService = catalogService;
+			_blobUrlResolver = blobUrlResolver;
         }
 
         // GET: api/catalog/categories/5
@@ -46,7 +49,7 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
                 return NotFound();
             }
             var allCategoryProperties = _propertyService.GetCategoryProperties(id);
-            var retVal = category.ToWebModel(allCategoryProperties);
+            var retVal = category.ToWebModel(_blobUrlResolver, allCategoryProperties);
             return Ok(retVal);
         }
 
@@ -90,7 +93,7 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 					}
 				}
 
-				var retVal = _categoryService.Create(coreCategory).ToWebModel();
+				var retVal = _categoryService.Create(coreCategory).ToWebModel(_blobUrlResolver);
 				retVal.Catalog = null;
 				return Ok(retVal);
 			}

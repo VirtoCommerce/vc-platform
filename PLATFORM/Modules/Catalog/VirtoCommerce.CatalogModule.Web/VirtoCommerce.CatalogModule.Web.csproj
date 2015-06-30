@@ -155,9 +155,9 @@
     <Compile Include="Model\ItemsSearchResult.cs" />
     <Compile Include="Model\ListEntrySearchResult.cs" />
     <Compile Include="Model\ListEntryProduct.cs" />
-    <Compile Include="Model\ProductAsset.cs" />
-    <Compile Include="Model\ProductAssetBase.cs" />
-    <Compile Include="Model\ProductImage.cs" />
+    <Compile Include="Model\Asset.cs" />
+    <Compile Include="Model\AssetBase.cs" />
+    <Compile Include="Model\Image.cs" />
     <Compile Include="Model\Property.cs" />
     <Compile Include="Model\PropertyAttribute.cs" />
     <Compile Include="Model\PropertyValue.cs" />

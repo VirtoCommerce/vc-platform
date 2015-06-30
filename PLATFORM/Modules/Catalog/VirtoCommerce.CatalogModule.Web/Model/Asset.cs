@@ -6,14 +6,13 @@ using System.Threading.Tasks;
 
 namespace VirtoCommerce.CatalogModule.Web.Model
 {
-	public class ProductAsset : ProductAssetBase
+	public class Asset : AssetBase
 	{
-		public ProductAsset()
+		public Asset()
 		{
 			TypeId = "asset";
 		}
-		public string Name { get; set; }
-		public string Size { get; set; }
+		public long Size { get; set; }
 		public string MimeType { get; set; }
 	}
 }

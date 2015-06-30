@@ -268,22 +268,18 @@ namespace VirtoCommerce.CatalogModule.Web.BackgroundJobs
 
 			configuration.Add("PrimaryImage", (product) =>
 			{
-				if (product.Assets != null)
+				if (product.Images != null)
 				{
-					var image = product.Assets.Where(x => x.Type == ItemAssetType.Image && x.Group == "primaryimage").FirstOrDefault();
-					if (image != null)
-					{
-						return _blobUrlResolver.GetAbsoluteUrl(image.Url);
-					}
+					return _blobUrlResolver.GetAbsoluteUrl(product.Images.First().Url);
 				}
 				return String.Empty;
 			});
 
 			configuration.Add("AltImage", (product) =>
 			{
-				if (product.Assets != null)
+				if (product.Images != null)
 				{
-					var image = product.Assets.Where(x => x.Type == ItemAssetType.Image && x.Group != "primaryimage").FirstOrDefault();
+					var image = product.Images.Skip(1).FirstOrDefault();
 					if (image != null)
 					{
 						return _blobUrlResolver.GetAbsoluteUrl(image.Url);
