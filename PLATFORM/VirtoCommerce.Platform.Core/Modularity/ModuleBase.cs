@@ -13,5 +13,9 @@
         public virtual void PostInitialize()
         {
         }
+
+        public void Uninstall()
+        {
+        }
     }
 }
