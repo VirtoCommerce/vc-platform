@@ -32,6 +32,7 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 			retVal.CatalogId = catalog.Id;
 			retVal.Catalog = catalog;
 			retVal.ParentId = dbCategoryBase.ParentCategoryId;
+			retVal.IsActive = dbCategoryBase.IsActive;
 
             var dbCategory = dbCategoryBase as dataModel.Category;
             if (dbCategory != null)
@@ -75,6 +76,7 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 			retVal.ParentCategoryId = category.ParentId;
 			retVal.EndDate = DateTime.UtcNow.AddYears(100);
 			retVal.StartDate = DateTime.UtcNow;
+			retVal.IsActive = category.IsActive ?? true;
           
             if (category.PropertyValues != null)
             {
@@ -103,17 +105,21 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
         /// </summary>
         /// <param name="source"></param>
         /// <param name="target"></param>
-        public static void Patch(this dataModel.CategoryBase source, dataModel.CategoryBase target)
+		public static void Patch(this coreModel.Category source, dataModel.Category target)
         {
             if (target == null)
                 throw new ArgumentNullException("target");
 
-            var dbSource = source as dataModel.Category;
-            var dbTarget = target as dataModel.Category;
+			//TODO: temporary solution because partial update replaced not nullable properties in db entity
+			if (source.IsActive != null)
+				target.IsActive = source.IsActive.Value;
+
+			var dbSource = source.ToDataModel() as dataModel.Category;
+			var dbTarget = target as dataModel.Category;
 
             if (dbSource != null && dbTarget != null)
             {
-				var patchInjectionPolicy = new PatchInjection<dataModel.Category>(x => x.Code, x=>x.Name, x=>x.IsActive);
+				var patchInjectionPolicy = new PatchInjection<dataModel.Category>(x => x.Code, x=>x.Name);
 				target.InjectFrom(patchInjectionPolicy, source);
 
                 if (!dbSource.CategoryPropertyValues.IsNullCollection())
@@ -128,7 +134,7 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 
 				if (!dbSource.Images.IsNullCollection())
 				{
-					dbSource.Images.Patch(target.Images, (sourceImage, targetImage) => sourceImage.Patch(targetImage));
+					dbSource.Images.Patch(dbTarget.Images, (sourceImage, targetImage) => sourceImage.Patch(targetImage));
 				}
             }
         }

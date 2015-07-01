@@ -23,7 +23,7 @@ namespace VirtoCommerce.Domain.Catalog.Model
 
 	    public int Priority { get; set; }
 
-	    public bool IsActive { get; set; }
+	    public bool? IsActive { get; set; }
 
         public ICollection<Category> Children { get; set; }
 		public ICollection<PropertyValue> PropertyValues { get; set; }
