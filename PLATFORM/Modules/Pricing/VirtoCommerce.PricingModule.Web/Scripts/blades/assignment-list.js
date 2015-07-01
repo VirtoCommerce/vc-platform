@@ -21,7 +21,6 @@ function ($scope, assignments, bladeNavigationService, dialogService) {
 
         var newBlade = {
             id: 'listItemChild',
-            isApiSave: true,
             currentEntityId: selectedNode.id,
             title: selectedNode.name,
             subtitle: $scope.blade.subtitle,
