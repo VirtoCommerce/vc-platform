@@ -36,7 +36,7 @@
 				<fieldset style="margin-top:20px;" ng-if="blade.isNew">
 					<legend>Language</legend>
 				</fieldset>
-				<div class="form-group" ng-if="blade.isNew">
+				<div class="form-group" ng-if="blade.isNew" style="margin-top:-16px;">
 					<div class="form-input">
 						<ui-select ng-model="blade.currentEntity.language">
 							<ui-select-match placeholder="Select...">{{$select.selected}}</ui-select-match>

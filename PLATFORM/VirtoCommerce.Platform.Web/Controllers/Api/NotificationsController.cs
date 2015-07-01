@@ -133,5 +133,13 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
 			return Ok(result.ErrorMessage);
 		}
+
+		[HttpGet]
+		[ResponseType(typeof(Notification[]))]
+		[Route("journal/{objectId}/{objectTypeId}")]
+		public IHttpActionResult GetNotificationJournal(string objectId, string objectTypeId)
+		{
+			return Ok(new Notification[] { });
+		}
 	}
 }

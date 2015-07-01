@@ -9,6 +9,7 @@
 		deleteTemplate: { method: 'DELETE', url: 'api/notification/template/:id' },
 		prepareTestData: { method: 'GET', url: 'api/notification/template/:type/preparetestdata', isArray: true },
 		resolveNotification: { method: 'POST', url: 'api/notification/template/:type/:objectId/:objectTypeId/:language/resolvenotification' },
-		sendNotification: { method: 'POST', url: 'api/notification/template/:type/:objectId/:objectTypeId/:language/sendnotification' }
+		sendNotification: { method: 'POST', url: 'api/notification/template/:type/:objectId/:objectTypeId/:language/sendnotification' },
+		getNotificationJournalList: { method: 'GET', url: 'api/notification/journal/:objectId/:objectTypeId', isArray: true }
 	});
 }]);
