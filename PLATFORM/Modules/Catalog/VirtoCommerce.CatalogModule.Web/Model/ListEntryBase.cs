@@ -17,7 +17,7 @@ namespace VirtoCommerce.CatalogModule.Web.Model
 		}
 		public string Id { get; set; }
 		public string Type { get; set; }
-		public bool IsActive { get; set; }
+		public bool? IsActive { get; set; }
 		public string ImageUrl { get; set; }
 
 		public string Code { get; set; }
