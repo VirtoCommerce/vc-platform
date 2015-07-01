@@ -3,7 +3,8 @@
     return $resource('api/cart/:id', { id: '@Id' }, {
         cartsSearch: { url: 'api/cart/carts' },
         getCart: { url: 'api/cart/carts/:id' },
-        update: { method: 'POST', url: 'api/cart' }
+        update: { method: 'POST', url: 'api/cart' },
+        remove: { method: 'DELETE', url: 'api/cart/carts' }
     });
 
     //return {
