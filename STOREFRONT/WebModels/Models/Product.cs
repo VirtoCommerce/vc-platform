@@ -99,7 +99,7 @@ namespace VirtoCommerce.Web.Models
         public MetaFieldNamespacesCollection Metafields { get; set; }
 
         [DataMember]
-        public ItemCollection<string> Options { get; set; }
+        public string[] Options { get; set; }
 
         [DataMember]
         public decimal Price

@@ -14,14 +14,15 @@ namespace VirtoCommerce.Web.Models
     public class ItemCollection<T> : Drop, IEnumerable<T>, ICollection
     {
         #region Fields
-        private readonly IEnumerable<T> _Collection;
+        private readonly IEnumerable<T> _collection;
         #endregion
 
         #region Constructors and Destructors
-        public ItemCollection(IEnumerable<T> collections)
+        public ItemCollection(IEnumerable<T> collection)
         {
-            this._Collection = collections;
+            this._collection = collection ?? Enumerable.Empty<T>();
         }
+
         #endregion
 
         #region Public Properties
@@ -45,7 +46,7 @@ namespace VirtoCommerce.Web.Models
         {
             get
             {
-                return this._Collection;
+                return this._collection;
             }
         }
 
@@ -53,7 +54,7 @@ namespace VirtoCommerce.Web.Models
         {
             get
             {
-                return this._Collection.Count();
+                return this.Root.Count();
             }
         }
 
@@ -80,14 +81,14 @@ namespace VirtoCommerce.Web.Models
 
         public IEnumerator<T> GetEnumerator()
         {
-            return this._Collection.GetEnumerator();
+            return this.Root.GetEnumerator();
         }
         #endregion
 
         #region Explicit Interface Methods
         IEnumerator IEnumerable.GetEnumerator()
         {
-            return this._Collection.GetEnumerator();
+            return this.Root.GetEnumerator();
         }
         #endregion
     }
