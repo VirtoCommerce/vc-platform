@@ -35,14 +35,12 @@
             <setting>
                 <name>Klarna.AppKey</name>
                 <valueType>integer</valueType>
-                <defaultValue>3486</defaultValue>
                 <title>Application key</title>
                 <description>Klarna application key from credentials</description>
             </setting>
             <setting>
                 <name>Klarna.SecretKey</name>
                 <valueType>string</valueType>
-                <defaultValue>EodLR8tBViEpwLo</defaultValue>
                 <title>Secret key</title>
                 <description>Klarna secret key from credentials</description>
             </setting>

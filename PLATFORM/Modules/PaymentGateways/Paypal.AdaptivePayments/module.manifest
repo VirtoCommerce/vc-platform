@@ -40,21 +40,18 @@
 						<setting>
 								<name>Paypal.AdaptivePayments.APIUsername</name>
 								<valueType>string</valueType>
-								<defaultValue>evgokhrimenko_api1.gmail.com</defaultValue>
 								<title>API username</title>
 								<description>Merchant api username credential</description>
 						</setting>
 						<setting>
 								<name>Paypal.AdaptivePayments.APIPassword</name>
 								<valueType>string</valueType>
-								<defaultValue>XMDRC63XDNDQPXAZ</defaultValue>
 								<title>API password</title>
 								<description>Merchant api password credential</description>
 						</setting>
 						<setting>
 								<name>Paypal.AdaptivePayments.APISignature</name>
 								<valueType>string</valueType>
-								<defaultValue>AiPC9BjkCyDFQXbSkoZcgqH3hpacAddFA7jQMnRzruCFYMSKx38TE0pt</defaultValue>
 								<title>API signature</title>
 								<description>Merchant api signature credential</description>
 						</setting>
@@ -68,7 +65,6 @@
 						<setting>
 								<name>Paypal.AdaptivePayments.AppId</name>
 								<valueType>string</valueType>
-								<defaultValue>APP-80W284485P519543T</defaultValue>
 								<title>Paypal app id</title>
 								<description>Merchant application id</description>
 						</setting>

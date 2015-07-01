@@ -51,21 +51,18 @@
 						<setting>
 								<name>Paypal.ExpressCheckout.APIUsername</name>
 								<valueType>string</valueType>
-								<defaultValue>evgokhrimenko_api1.gmail.com</defaultValue>
 								<title>API username</title>
 								<description>Merchant api username credential</description>
 						</setting>
 						<setting>
 								<name>Paypal.ExpressCheckout.APIPassword</name>
 								<valueType>string</valueType>
-								<defaultValue>XMDRC63XDNDQPXAZ</defaultValue>
 								<title>API password</title>
 								<description>Merchant api password credential</description>
 						</setting>
 						<setting>
 								<name>Paypal.ExpressCheckout.APISignature</name>
 								<valueType>string</valueType>
-								<defaultValue>AiPC9BjkCyDFQXbSkoZcgqH3hpacAddFA7jQMnRzruCFYMSKx38TE0pt</defaultValue>
 								<title>API signature</title>
 								<description>mMerchant api signature credential</description>
 						</setting>

@@ -29,14 +29,12 @@
       <setting>
         <name>Mes.PaymentGateway.Credentials.ProfileId</name>
         <valueType>string</valueType>
-        <defaultValue>94100011811900000286</defaultValue>
         <title>Application Key</title>
         <description>Merchant e-solutions application key</description>
       </setting>
       <setting>
         <name>Mes.PaymentGateway.Credentials.ProfileKey</name>
         <valueType>string</valueType>
-        <defaultValue>blGMSGehNOZCHESLZCFtZKvqJPUzVhbE</defaultValue>
         <title>Profile Key</title>
         <description>Merchant e-solutions profile key</description>
       </setting>
