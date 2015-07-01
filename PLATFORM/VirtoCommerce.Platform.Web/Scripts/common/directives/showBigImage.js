@@ -6,8 +6,9 @@ angular.module('platformWebApp').directive('vaShowbigimage', function () {
         link: function (scope, element, attrs) {
             element.bind('mouseenter', function () {
                 var el = $(this),
-                    elLeft = parseInt(el.offset().left) + 56,
-                    elTop  = parseInt(el.offset().top) - 110;
+                    elW = el.width() + 8,
+                    elLeft = parseInt(el.offset().left) + elW,
+                    elTop  = parseInt(el.offset().top);
 
                 $('body').prepend('<div class="check-image-size"><img src="' + scope.vaShowbigimage + '" alt="" /></div>');
                 
