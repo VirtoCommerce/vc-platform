@@ -15,7 +15,7 @@ namespace VirtoCommerce.Web.Views.Engines.Liquid.ViewEngine.Extensions
         #region Public Methods and Operators
         public static string ContentAbsolute(this UrlHelper url, string contentPath)
         {
-            return new Uri(GetBaseUrl(url), url.Content(contentPath)).AbsoluteUri;
+            return new Uri(GetBaseUrl(url), url.Content(contentPath)).PathAndQuery;
         }
 
         public static Uri GetBaseUrl(this UrlHelper url)
