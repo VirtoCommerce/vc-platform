@@ -91,7 +91,7 @@ namespace Paypal.DirectPayments.Managers
         {
             var retVal = new ProcessPaymentResult();
 
-            if (!(context.Store != null && !string.IsNullOrEmpty(context.Store.Url)))
+            if (!(context.Store != null))
                 throw new NullReferenceException("no store with this id");
 
             var doDirectPaymentRequest = GetDoDirectPaymentRequest(context);

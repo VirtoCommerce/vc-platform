@@ -108,11 +108,14 @@ namespace VirtoCommerce.PricingModule.Data.Services
 						evalContext.ProductIds = variations.Select(x=>x.MainProductId).Distinct().ToArray();
 						foreach (var inheritedPrice in EvaluateProductPrices(evalContext))
 						{
-							var variation = variations.First(x => x.MainProductId == inheritedPrice.ProductId);
-							//For correct override price in possible update 
-							inheritedPrice.Id = null;
-							inheritedPrice.ProductId = variation.Id;
-							retVal.Add(inheritedPrice);
+							foreach(var variation in variations.Where(x=>x.MainProductId == inheritedPrice.ProductId))
+							{
+								var variationPrice = inheritedPrice.Clone() as coreModel.Price;
+								//For correct override price in possible update 
+								variationPrice.Id = null;
+								variationPrice.ProductId = variation.Id;
+								retVal.Add(variationPrice);
+							}
 						}
 					}
 				}

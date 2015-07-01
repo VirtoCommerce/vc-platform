@@ -106,11 +106,9 @@ namespace Paypal.ExpressCheckout.Managers
 
 			var service = new PayPalAPIInterfaceServiceService(config);
 
-			SetExpressCheckoutResponseType setEcResponse = null;
-
-			try
+		    try
 			{
-				setEcResponse = service.SetExpressCheckout(request);
+				var setEcResponse = service.SetExpressCheckout(request);
 
 				CheckResponse(setEcResponse);
 
@@ -147,13 +145,10 @@ namespace Paypal.ExpressCheckout.Managers
 
 			var service = new PayPalAPIInterfaceServiceService(config);
 
-			GetExpressCheckoutDetailsResponseType response = null;
-			DoExpressCheckoutPaymentResponseType doResponse = null;
-
-			var getExpressCheckoutDetailsRequest = GetGetExpressCheckoutDetailsRequest(context.OuterId);
+		    var getExpressCheckoutDetailsRequest = GetGetExpressCheckoutDetailsRequest(context.OuterId);
 			try
 			{
-				response = service.GetExpressCheckoutDetails(getExpressCheckoutDetailsRequest);
+				var response = service.GetExpressCheckoutDetails(getExpressCheckoutDetailsRequest);
 
 				CheckResponse(response);
 
@@ -162,7 +157,7 @@ namespace Paypal.ExpressCheckout.Managers
 				if (!status.Equals("PaymentActionCompleted"))
 				{
 					var doExpressCheckoutPaymentRequest = GetDoExpressCheckoutPaymentRequest(response, context.OuterId);
-					doResponse = service.DoExpressCheckoutPayment(doExpressCheckoutPaymentRequest);
+					var doResponse = service.DoExpressCheckoutPayment(doExpressCheckoutPaymentRequest);
 
 					CheckResponse(doResponse);
 

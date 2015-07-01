@@ -59,8 +59,8 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 								ProductIds = products,
 								PricelistIds = priceLists
 							};
-			var strProducts = priceLists != null ? String.Join(":", priceLists) : string.Empty;
-			var strPriceLists = products != null ? String.Join(":", products) : string.Empty;
+			var strProducts = priceLists != null ? String.Join(":", products) : string.Empty;
+			var strPriceLists = products != null ? String.Join(":", priceLists) : string.Empty;
 			var cacheKey = CacheKey.Create("MP", "GetProductPrices", strProducts, strPriceLists);
 			var prices = _cacheManager.Get(cacheKey, () => _pricingService.EvaluateProductPrices(evalContext));
 			retVal.AddRange(prices.Select(x => x.ToWebModel()));
