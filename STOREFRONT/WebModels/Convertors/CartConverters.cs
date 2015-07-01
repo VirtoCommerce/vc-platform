@@ -192,7 +192,8 @@ namespace VirtoCommerce.Web.Convertors
                 LogoUrl = paymentMethod.IconUrl,
                 Title = paymentMethod.Name,
                 Priority = paymentMethod.Priority,
-                Type = paymentMethod.Type.ToString()
+                Type = paymentMethod.Type,
+                Group = paymentMethod.Group
             };
         }
 

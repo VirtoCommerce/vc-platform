@@ -8,7 +8,7 @@ using VirtoCommerce.Platform.Data.Infrastructure.Interceptors;
 
 namespace VirtoCommerce.InventoryModule.Web
 {
-    public class Module : IModule
+    public class Module : ModuleBase
     {
         private readonly IUnityContainer _container;
 
@@ -19,24 +19,20 @@ namespace VirtoCommerce.InventoryModule.Web
 
         #region IModule Members
 
-        public void SetupDatabase(SampleDataLevel sampleDataLevel)
+        public override void SetupDatabase(SampleDataLevel sampleDataLevel)
         {
-			using (var context = new InventoryRepositoryImpl())
-			{
-				var initializer = new SetupDatabaseInitializer<InventoryRepositoryImpl, VirtoCommerce.InventoryModule.Data.Migrations.Configuration>();
-				initializer.InitializeDatabase(context);
-			}
+            using (var context = new InventoryRepositoryImpl())
+            {
+                var initializer = new SetupDatabaseInitializer<InventoryRepositoryImpl, VirtoCommerce.InventoryModule.Data.Migrations.Configuration>();
+                initializer.InitializeDatabase(context);
+            }
         }
 
-        public void Initialize()
+        public override void Initialize()
         {
-			_container.RegisterType<IInventoryRepository>(new InjectionFactory(c => new InventoryRepositoryImpl("VirtoCommerce", new EntityPrimaryKeyGeneratorInterceptor(), new AuditableInterceptor())));
+            _container.RegisterType<IInventoryRepository>(new InjectionFactory(c => new InventoryRepositoryImpl("VirtoCommerce", new EntityPrimaryKeyGeneratorInterceptor(), new AuditableInterceptor())));
 
             _container.RegisterType<IInventoryService, InventoryServiceImpl>();
-        }
-
-        public void PostInitialize()
-        {
         }
 
         #endregion

@@ -9,7 +9,7 @@ using VirtoCommerce.Platform.Data.Infrastructure.Interceptors;
 
 namespace VirtoCommerce.CustomerModule.Web
 {
-    public class Module : IModule
+    public class Module : ModuleBase
     {
         private readonly IUnityContainer _container;
 
@@ -20,39 +20,35 @@ namespace VirtoCommerce.CustomerModule.Web
 
         #region IModule Members
 
-        public void SetupDatabase(SampleDataLevel sampleDataLevel)
+        public override void SetupDatabase(SampleDataLevel sampleDataLevel)
         {
-			using (var db = new CustomerRepositoryImpl("VirtoCommerce"))
-			{
-				IDatabaseInitializer<CustomerRepositoryImpl> initializer;
+            using (var db = new CustomerRepositoryImpl("VirtoCommerce"))
+            {
+                IDatabaseInitializer<CustomerRepositoryImpl> initializer;
 
-				switch (sampleDataLevel)
-				{
-					case SampleDataLevel.Full:
-					case SampleDataLevel.Reduced:
-						initializer = new SqlCustomerSampleDatabaseInitializer();
-						break;
-					default:
-						initializer = new SetupDatabaseInitializer<CustomerRepositoryImpl, VirtoCommerce.CustomerModule.Data.Migrations.Configuration>();
-						break;
-				}
+                switch (sampleDataLevel)
+                {
+                    case SampleDataLevel.Full:
+                    case SampleDataLevel.Reduced:
+                        initializer = new SqlCustomerSampleDatabaseInitializer();
+                        break;
+                    default:
+                        initializer = new SetupDatabaseInitializer<CustomerRepositoryImpl, VirtoCommerce.CustomerModule.Data.Migrations.Configuration>();
+                        break;
+                }
 
-				initializer.InitializeDatabase(db);
-			}
+                initializer.InitializeDatabase(db);
+            }
 
         }
 
-        public void Initialize()
+        public override void Initialize()
         {
             _container.RegisterType<ICustomerRepository>(new InjectionFactory(c => new CustomerRepositoryImpl("VirtoCommerce", new EntityPrimaryKeyGeneratorInterceptor(), new AuditableInterceptor())));
 
             _container.RegisterType<IOrganizationService, OrganizationServiceImpl>();
             _container.RegisterType<IContactService, ContactServiceImpl>();
             _container.RegisterType<ICustomerSearchService, CustomerSearchServiceImpl>();
-        }
-
-        public void PostInitialize()
-        {
         }
 
         #endregion
