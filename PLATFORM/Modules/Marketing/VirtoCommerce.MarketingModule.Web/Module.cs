@@ -1,6 +1,4 @@
-﻿using System.Linq;
-using Microsoft.Practices.Unity;
-using VirtoCommerce.Domain.Common;
+﻿using Microsoft.Practices.Unity;
 using VirtoCommerce.Domain.Marketing.Services;
 using VirtoCommerce.MarketingModule.Data.Repositories;
 using VirtoCommerce.MarketingModule.Data.Services;
@@ -11,7 +9,7 @@ using VirtoCommerce.Platform.Data.Infrastructure.Interceptors;
 
 namespace VirtoCommerce.MarketingModule.Web
 {
-    public class Module : IModule
+    public class Module : ModuleBase
     {
         private readonly IUnityContainer _container;
 
@@ -22,37 +20,37 @@ namespace VirtoCommerce.MarketingModule.Web
 
         #region IModule Members
 
-        public void SetupDatabase(SampleDataLevel sampleDataLevel)
+        public override void SetupDatabase(SampleDataLevel sampleDataLevel)
         {
-			using (var context = new MarketingRepositoryImpl())
-			{
-				var initializer = new SetupDatabaseInitializer<MarketingRepositoryImpl, VirtoCommerce.MarketingModule.Data.Migrations.Configuration>();
-				initializer.InitializeDatabase(context);
-			}
+            using (var context = new MarketingRepositoryImpl())
+            {
+                var initializer = new SetupDatabaseInitializer<MarketingRepositoryImpl, VirtoCommerce.MarketingModule.Data.Migrations.Configuration>();
+                initializer.InitializeDatabase(context);
+            }
         }
 
-        public void Initialize()
+        public override void Initialize()
         {
-			_container.RegisterType<IMarketingRepository>(new InjectionFactory(c => new MarketingRepositoryImpl("VirtoCommerce", new EntityPrimaryKeyGeneratorInterceptor(), new AuditableInterceptor())));
-          
+            _container.RegisterType<IMarketingRepository>(new InjectionFactory(c => new MarketingRepositoryImpl("VirtoCommerce", new EntityPrimaryKeyGeneratorInterceptor(), new AuditableInterceptor())));
+
             var promotionExtensionManager = new DefaultMarketingExtensionManagerImpl();
-            
+
             _container.RegisterInstance<IMarketingExtensionManager>(promotionExtensionManager);
             _container.RegisterType<IPromotionService, PromotionServiceImpl>();
-			_container.RegisterType<IMarketingDynamicContentEvaluator, DefaultDynamicContentEvaluatorImpl>();
+            _container.RegisterType<IMarketingDynamicContentEvaluator, DefaultDynamicContentEvaluatorImpl>();
             _container.RegisterType<IDynamicContentService, DynamicContentServiceImpl>();
             _container.RegisterType<IMarketingSearchService, MarketingSearchServiceImpl>();
             _container.RegisterType<IMarketingPromoEvaluator, DefaultPromotionEvaluatorImpl>();
         }
 
-        public void PostInitialize()
+        public override void PostInitialize()
         {
-			var promotionExtensionManager = _container.Resolve<IMarketingExtensionManager>();
+            var promotionExtensionManager = _container.Resolve<IMarketingExtensionManager>();
             EnsureRootFoldersExist(new[] { MarketingConstants.ContentPlacesRootFolderId, MarketingConstants.CotentItemRootFolderId });
         }
 
         #endregion
-	
+
         private void EnsureRootFoldersExist(string[] ids)
         {
             var dynamicContentService = _container.Resolve<IDynamicContentService>();

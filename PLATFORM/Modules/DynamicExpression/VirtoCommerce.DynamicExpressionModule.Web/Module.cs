@@ -4,7 +4,6 @@ using VirtoCommerce.Domain.Common;
 using VirtoCommerce.Domain.Marketing.Model;
 using VirtoCommerce.Domain.Marketing.Services;
 using VirtoCommerce.Domain.Pricing.Services;
-using VirtoCommerce.DynamicExpressionModule.Data;
 using VirtoCommerce.DynamicExpressionModule.Data.Common;
 using VirtoCommerce.DynamicExpressionModule.Data.Pricing;
 using VirtoCommerce.DynamicExpressionModule.Data.Promotion;
@@ -12,7 +11,7 @@ using VirtoCommerce.Platform.Core.Modularity;
 
 namespace VirtoCommerce.DynamicExpressionModule.Web
 {
-    public class Module : IModule
+    public class Module : ModuleBase
     {
         private readonly IUnityContainer _container;
 
@@ -23,51 +22,45 @@ namespace VirtoCommerce.DynamicExpressionModule.Web
 
         #region IModule Members
 
-        public void SetupDatabase(SampleDataLevel sampleDataLevel)
+        public override void PostInitialize()
         {
-        }
+            //Marketing expression
+            var promotionExtensionManager = _container.Resolve<IMarketingExtensionManager>();
 
-        public void Initialize()
-        {
-        }
+            promotionExtensionManager.PromotionDynamicExpressionTree = GetPromotionDynamicExpression();
+            promotionExtensionManager.DynamicContentExpressionTree = GetContentDynamicExpression();
 
-        public void PostInitialize()
-        {
-			//Marketing expression
-			var promotionExtensionManager = _container.Resolve<IMarketingExtensionManager>();
-
-			promotionExtensionManager.PromotionDynamicExpressionTree = GetPromotionDynamicExpression();
-			promotionExtensionManager.DynamicContentExpressionTree = GetContentDynamicExpression();
-
-			//Pricing expression
-			var pricingExtensionManager = _container.Resolve<IPricingExtensionManager>();
-			pricingExtensionManager.ConditionExpressionTree = GetPricingDynamicExpression();
+            //Pricing expression
+            var pricingExtensionManager = _container.Resolve<IPricingExtensionManager>();
+            pricingExtensionManager.ConditionExpressionTree = GetPricingDynamicExpression();
         }
 
         #endregion
-		private static ConditionExpressionTree GetPricingDynamicExpression()
-		{
-			var conditions = new DynamicExpression[] { new ConditionGeoTimeZone(), new ConditionGeoZipCode(), new ConditionStoreSearchedPhrase(), new ConditionAgeIs(), new ConditionGenderIs(), new ConditionGeoCity(), new ConditionGeoCountry(), new ConditionGeoState(), new ConditionLanguageIs() }.ToList();
-			var rootBlock = new BlockPricingCondition { AvailableChildren = conditions };
-			var retVal = new ConditionExpressionTree()
-			{
-				Children = new DynamicExpression[] { rootBlock }
-			};
-			return retVal;
-		}
 
-		private static ConditionExpressionTree GetContentDynamicExpression()
-		{
-			var conditions = new DynamicExpression[] { new ConditionGeoTimeZone(), new ConditionGeoZipCode(), new ConditionStoreSearchedPhrase(), new ConditionAgeIs(), new ConditionGenderIs(), new ConditionGeoCity(), new ConditionGeoCountry(), new ConditionGeoState(), new ConditionLanguageIs() }.ToList();
-			var rootBlock = new BlockContentCondition { AvailableChildren = conditions };
-			var retVal = new ConditionExpressionTree()
-			{
-				Children = new DynamicExpression[] { rootBlock }
-			};
-			return retVal;
-		}
 
-		private static PromoDynamicExpressionTree GetPromotionDynamicExpression()
+        private static ConditionExpressionTree GetPricingDynamicExpression()
+        {
+            var conditions = new DynamicExpression[] { new ConditionGeoTimeZone(), new ConditionGeoZipCode(), new ConditionStoreSearchedPhrase(), new ConditionAgeIs(), new ConditionGenderIs(), new ConditionGeoCity(), new ConditionGeoCountry(), new ConditionGeoState(), new ConditionLanguageIs() }.ToList();
+            var rootBlock = new BlockPricingCondition { AvailableChildren = conditions };
+            var retVal = new ConditionExpressionTree()
+            {
+                Children = new DynamicExpression[] { rootBlock }
+            };
+            return retVal;
+        }
+
+        private static ConditionExpressionTree GetContentDynamicExpression()
+        {
+            var conditions = new DynamicExpression[] { new ConditionGeoTimeZone(), new ConditionGeoZipCode(), new ConditionStoreSearchedPhrase(), new ConditionAgeIs(), new ConditionGenderIs(), new ConditionGeoCity(), new ConditionGeoCountry(), new ConditionGeoState(), new ConditionLanguageIs() }.ToList();
+            var rootBlock = new BlockContentCondition { AvailableChildren = conditions };
+            var retVal = new ConditionExpressionTree()
+            {
+                Children = new DynamicExpression[] { rootBlock }
+            };
+            return retVal;
+        }
+
+        private static PromoDynamicExpressionTree GetPromotionDynamicExpression()
         {
             var customerConditionBlock = new BlockCustomerCondition();
             customerConditionBlock.AvailableChildren = new DynamicExpression[] { new ConditionIsEveryone(), new ConditionIsFirstTimeBuyer(), 
@@ -87,13 +80,11 @@ namespace VirtoCommerce.DynamicExpressionModule.Web
 																	   new RewardItemGiftNumItem(), new RewardShippingGetOfAbsShippingMethod(), new RewardShippingGetOfRelShippingMethod ()}.ToList();
 
             var rootBlocks = new DynamicExpression[] { customerConditionBlock, catalogConditionBlock, cartConditionBlock, rewardBlock }.ToList();
-			var retVal = new PromoDynamicExpressionTree()
+            var retVal = new PromoDynamicExpressionTree()
             {
                 Children = rootBlocks,
             };
             return retVal;
         }
-
-    
     }
 }

@@ -4,9 +4,7 @@ using VirtoCommerce.CartModule.Data.Observers;
 using VirtoCommerce.CartModule.Data.Repositories;
 using VirtoCommerce.CartModule.Data.Services;
 using VirtoCommerce.Domain.Cart.Events;
-using VirtoCommerce.Domain.Cart.Model;
 using VirtoCommerce.Domain.Cart.Services;
-using VirtoCommerce.Domain.Common;
 using VirtoCommerce.Domain.Common.Events;
 using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Data.Infrastructure;
@@ -14,7 +12,7 @@ using VirtoCommerce.Platform.Data.Infrastructure.Interceptors;
 
 namespace VirtoCommerce.CartModule.Web
 {
-    public class Module : IModule
+    public class Module : ModuleBase
     {
         private readonly IUnityContainer _container;
 
@@ -25,7 +23,7 @@ namespace VirtoCommerce.CartModule.Web
 
         #region IModule Members
 
-        public void SetupDatabase(SampleDataLevel sampleDataLevel)
+        public override void SetupDatabase(SampleDataLevel sampleDataLevel)
         {
             using (var context = new CartRepositoryImpl())
             {
@@ -35,21 +33,17 @@ namespace VirtoCommerce.CartModule.Web
 
         }
 
-        public void Initialize()
+        public override void Initialize()
         {
-			_container.RegisterType<IEventPublisher<CartChangeEvent>, EventPublisher<CartChangeEvent>>();
+            _container.RegisterType<IEventPublisher<CartChangeEvent>, EventPublisher<CartChangeEvent>>();
 
-			//Subscribe to cart changes. Calculate totals  
-			_container.RegisterType<IObserver<CartChangeEvent>, CalculateCartTotalsObserver>("CalculateCartTotalsObserver");
+            //Subscribe to cart changes. Calculate totals  
+            _container.RegisterType<IObserver<CartChangeEvent>, CalculateCartTotalsObserver>("CalculateCartTotalsObserver");
 
-			_container.RegisterType<ICartRepository>(new InjectionFactory(c => new CartRepositoryImpl("VirtoCommerce", new EntityPrimaryKeyGeneratorInterceptor(), new AuditableInterceptor())));
+            _container.RegisterType<ICartRepository>(new InjectionFactory(c => new CartRepositoryImpl("VirtoCommerce", new EntityPrimaryKeyGeneratorInterceptor(), new AuditableInterceptor())));
 
             _container.RegisterType<IShoppingCartService, ShoppingCartServiceImpl>();
             _container.RegisterType<IShoppingCartSearchService, ShoppingCartSearchServiceImpl>();
-        }
-
-        public void PostInitialize()
-        {
         }
 
         #endregion
