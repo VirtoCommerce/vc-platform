@@ -60,7 +60,7 @@
                                 <div class="radio-button-group" data-type="{{ payment_method.type }}">
                                     <input id="checkout_payment_method_{{ payment_method.code }}" name="checkout[payment_method_id]" type="radio" value="{{ payment_method.code }}" required="required" {% if checkout.payment_methods.size == 1 %}checked="checked"{% endif %} />
                                     <label for="checkout_payment_method_{{ payment_method.code }}"></label>
-                                    <img src="{{ payment_method.logo_url }}" style="float: left; margin-right: 20px;" />
+                                    <img src="{{ payment_method.logo_url }}" style="float: left; margin-right: 20px;max-width:100px;" />
                                     <span style="display: block; overflow: hidden;">
                                         <strong>{{ payment_method.title }}</strong><br />
                                         {{ payment_method.description }}

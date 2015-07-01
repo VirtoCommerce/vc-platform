@@ -104,8 +104,11 @@ namespace Paypal.AdaptivePayments.Managers
 		{
 			var retVal = new ProcessPaymentResult();
 
-			if (!(context.Store != null && (!string.IsNullOrEmpty(context.Store.SecureUrl) || !string.IsNullOrEmpty(context.Store.Url))))
+			if (context.Store == null)
 				throw new NullReferenceException("no store with this id");
+
+            if (!(!string.IsNullOrEmpty(context.Store.SecureUrl) || !string.IsNullOrEmpty(context.Store.Url)))
+                throw new NullReferenceException("store must specify Url or SecureUrl property");
 
 			var url = string.Empty;
 			if (!string.IsNullOrEmpty(context.Store.SecureUrl))

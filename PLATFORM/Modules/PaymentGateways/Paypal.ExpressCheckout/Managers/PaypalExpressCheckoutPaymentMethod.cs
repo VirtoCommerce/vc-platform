@@ -106,11 +106,9 @@ namespace Paypal.ExpressCheckout.Managers
 
 			var service = new PayPalAPIInterfaceServiceService(config);
 
-			SetExpressCheckoutResponseType setEcResponse = null;
-
-			try
+		    try
 			{
-				setEcResponse = service.SetExpressCheckout(request);
+				var setEcResponse = service.SetExpressCheckout(request);
 
 				CheckResponse(setEcResponse);
 
