@@ -13,7 +13,7 @@
 
         var newBlade = {
             id: 'pricelistChildChild',
-            origEntity: selectedNode,
+            currentEntityId: selectedNode.id,
             title: selectedNode.name,
             subtitle: 'Edit catalog assignment',
             controller: 'virtoCommerce.pricingModule.assignmentDetailController',
