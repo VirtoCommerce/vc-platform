@@ -9,7 +9,7 @@ using VirtoCommerce.Platform.Core.Settings;
 
 namespace GoogleShopping.MerchantModule.Web
 {
-    public class Module : IModule
+    public class Module : ModuleBase
     {
         private const string _merchantIdPropertyName = "GoogleShopping.Merchant.MerchantId";
 
@@ -22,14 +22,10 @@ namespace GoogleShopping.MerchantModule.Web
 
         #region IModule Members
 
-        public void SetupDatabase(SampleDataLevel sampleDataLevel)
-        {
-        }
-
-        public void Initialize()
+        public override void Initialize()
         {
             var settingsManager = _container.Resolve<ISettingsManager>();
-            
+
             var googleShoppingCode = settingsManager.GetValue("GoogleShopping.Merchant.Code", string.Empty);
             var googleShoppingDescription = settingsManager.GetValue("GoogleShopping.Merchant.Description", string.Empty);
             var googleShoppingLogoUrl = settingsManager.GetValue("GoogleShopping.Merchant.LogoUrl", string.Empty);
@@ -42,10 +38,6 @@ namespace GoogleShopping.MerchantModule.Web
             _container.RegisterType<IGoogleProductProvider, VCGoogleProductProvider>(new ContainerControlledLifetimeManager());
 
             _container.RegisterType<GoogleShoppingController>();
-        }
-
-        public void PostInitialize()
-        {
         }
 
         #endregion

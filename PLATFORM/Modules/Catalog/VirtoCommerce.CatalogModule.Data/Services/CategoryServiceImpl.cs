@@ -106,8 +106,8 @@ namespace VirtoCommerce.CatalogModule.Data.Services
 		
 					var dbCategoryChanged = category.ToDataModel();
 					changeTracker.Attach(dbCategory);
-				
-					dbCategoryChanged.Patch(dbCategory);
+
+					category.Patch(dbCategory);
 				}
 				CommitChanges(repository);
 
