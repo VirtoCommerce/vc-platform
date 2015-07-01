@@ -268,7 +268,7 @@ namespace VirtoCommerce.CatalogModule.Web.BackgroundJobs
 
 			configuration.Add("PrimaryImage", (product) =>
 			{
-				if (product.Images != null)
+				if (product.Images != null && product.Images.Any())
 				{
 					return _blobUrlResolver.GetAbsoluteUrl(product.Images.First().Url);
 				}
