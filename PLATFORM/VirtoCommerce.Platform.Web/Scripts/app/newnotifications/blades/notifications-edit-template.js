@@ -11,7 +11,7 @@
 			data.type = blade.notificationType;
 			data.objectId = blade.objectId;
 			data.objectTypeId = blade.objectTypeId;
-			if (blade.language === 'undefined') {
+			if (blade.language === 'undefined' && _.indexOf(blade.usedLanguages, data.language) !== -1) {
 				data.language = _.first(blade.languages);
 			}
 			blade.origEntity = _.clone(data);
@@ -66,6 +66,9 @@
 			title: 'Preview notification',
 			subtitle: 'Enter test data for ' + blade.notificationType,
 			notificationType: blade.notificationType,
+			objectId: blade.objectId,
+			objectTypeId: blade.objectTypeId,
+			language: blade.currentEntity.language,
 			controller: 'platformWebApp.testResolveController',
 			template: 'Scripts/app/newnotifications/blades/notifications-test-resolve.tpl.html'
 		};
@@ -79,6 +82,9 @@
 			title: 'Send notification',
 			subtitle: 'Enter test data for ' + blade.notificationType,
 			notificationType: blade.notificationType,
+			objectId: blade.objectId,
+			objectTypeId: blade.objectTypeId,
+			language: blade.currentEntity.language,
 			controller: 'platformWebApp.testSendController',
 			template: 'Scripts/app/newnotifications/blades/notifications-test-send.tpl.html'
 		};
@@ -157,6 +163,19 @@
 				},
 				canExecuteMethod: function () {
 					return !blade.canSave();
+				}
+			}
+		];
+	}
+	else {
+		$scope.blade.toolbarCommands = [
+			{
+				name: "Create", icon: 'fa fa-save',
+				executeMethod: function () {
+					blade.updateTemplate();
+				},
+				canExecuteMethod: function () {
+					return blade.canSave();
 				}
 			}
 		];

@@ -38,7 +38,7 @@
 		$localStorage.notificationTestSend = blade.params;
 
 
-		notifications.sendNotification({ type: blade.notificationType }, blade.params, function () {
+		notifications.sendNotification({ type: blade.notificationType, objectId: blade.objectId, objectTypeId: blade.objectTypeId, language: blade.language }, blade.params, function () {
 			blade.isLoading = false;
 			var dialog = {
 				id: "successSend",

@@ -43,14 +43,12 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 		[Route("template/{type}/{objectId}/{objectTypeId}/{language}")]
 		public IHttpActionResult GetNotificationTemplate(string type, string objectId, string objectTypeId, string language)
 		{
-			var retVal = _notificationTemplateService.GetByNotification(type, objectId, objectTypeId, language);
-			if (retVal == null)
+			NotificationTemplate retVal = new NotificationTemplate();
+			var criteria = new GetNotificationCriteria() { Type = type, ObjectId = objectId, ObjectTypeId = objectTypeId, Language = language };
+			var notification = _notificationManager.GetNewNotification(criteria);
+			if (notification != null)
 			{
-				var notification = _notificationManager.GetNewNotification(type);
-				if (notification != null)
-				{
-					retVal = notification.NotificationTemplate;
-				}
+				retVal = notification.NotificationTemplate;
 			}
 
 			return Ok(retVal.ToWebModel());
@@ -95,7 +93,8 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 		[Route("template/{type}/preparetestdata")]
 		public IHttpActionResult PrepareTest(string type)
 		{
-			var notification = _notificationManager.GetNewNotification(type);
+			var criteria = new GetNotificationCriteria() { Type = type };
+			var notification = _notificationManager.GetNewNotification(criteria);
 			var retVal = _notificationTemplateResolver.ResolveNotificationParameters(notification);
 
 			return Ok(retVal.Select(s => s.ToWebModel()).ToArray());
@@ -103,10 +102,11 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
 		[HttpPost]
 		[ResponseType(typeof(webModels.Notification))]
-		[Route("template/{type}/resolvenotification")]
-		public IHttpActionResult ResolveNotification([FromBody]List<KeyValuePair<string, string>> parameters, string type)
+		[Route("template/{type}/{objectId}/{objectTypeId}/{language}/resolvenotification")]
+		public IHttpActionResult ResolveNotification([FromBody]List<KeyValuePair<string, string>> parameters, string type, string objectId, string objectTypeId, string language)
 		{
-			var notification = _notificationManager.GetNewNotification(type);
+			var criteria = new GetNotificationCriteria() { Type = type, ObjectId = objectId, ObjectTypeId = objectTypeId, Language = language };
+			var notification = _notificationManager.GetNewNotification(criteria);
 			foreach (var param in parameters)
 			{
 				var property = notification.GetType().GetProperty(param.Key);
@@ -119,10 +119,11 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
 		[HttpPost]
 		[ResponseType(typeof(string))]
-		[Route("template/{type}/sendnotification")]
-		public IHttpActionResult SendNotification([FromBody]List<KeyValuePair<string, string>> parameters, string type)
+		[Route("template/{type}/{objectId}/{objectTypeId}/{language}/sendnotification")]
+		public IHttpActionResult SendNotification([FromBody]List<KeyValuePair<string, string>> parameters, string type, string objectId, string objectTypeId, string language)
 		{
-			var notification = _notificationManager.GetNewNotification(type);
+			var criteria = new GetNotificationCriteria() { Type = type, ObjectId = objectId, ObjectTypeId = objectTypeId, Language = language };
+			var notification = _notificationManager.GetNewNotification(criteria);
 			foreach (var param in parameters)
 			{
 				var property = notification.GetType().GetProperty(param.Key);

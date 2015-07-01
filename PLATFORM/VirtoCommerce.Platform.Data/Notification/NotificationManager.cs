@@ -28,7 +28,8 @@ namespace VirtoCommerce.Platform.Data.Notification
 
 		public void RegisterNotificationType(Func<Core.Notification.Notification> notification)
 		{
-			var notificationType = GetNewNotification(notification().Type);
+			var criteria = new GetNotificationCriteria() { Type = notification().Type };
+			var notificationType = GetNewNotification(criteria);
 
 			if (notificationType == null)
 			{
@@ -82,20 +83,32 @@ namespace VirtoCommerce.Platform.Data.Notification
 			return retVal;
 		}
 
-		public Core.Notification.Notification GetNewNotification(string type)
+		public Core.Notification.Notification GetNewNotification(GetNotificationCriteria criteria)
 		{
 			var notifications = GetNotifications();
-			var retVal = notifications.FirstOrDefault(x => x.Type == type);
-			SetNotificationTemplate(retVal);
+			var retVal = notifications.FirstOrDefault(x => x.Type == criteria.Type);
+			if (retVal != null)
+			{
+				retVal.ObjectId = criteria.ObjectId;
+				retVal.ObjectTypeId = criteria.ObjectTypeId;
+				retVal.Language = criteria.Language;
+				SetNotificationTemplate(retVal);
+			}
 
 			return retVal;
 		}
 
-		public T GetNewNotification<T>() where T : Core.Notification.Notification
+		public T GetNewNotification<T>(GetNotificationCriteria criteria) where T : Core.Notification.Notification
 		{
 			var notifications = GetNotifications();
 			var retVal = (T)notifications.FirstOrDefault(x => x.GetType().Name == typeof(T).Name);
-			SetNotificationTemplate(retVal);
+			if (retVal != null)
+			{
+				retVal.ObjectId = criteria.ObjectId;
+				retVal.ObjectTypeId = criteria.ObjectTypeId;
+				retVal.Language = criteria.Language;
+				SetNotificationTemplate(retVal);
+			}
 
 			return retVal;
 		}
@@ -154,7 +167,7 @@ namespace VirtoCommerce.Platform.Data.Notification
 
 		private Core.Notification.Notification GetNotificationCoreModel(NotificationEntity entity)
 		{
-			var retVal = GetNewNotification(entity.Type);
+			var retVal = GetNewNotification(new GetNotificationCriteria { Type = entity.Type });
 			retVal.InjectFrom(entity);
 
 			return retVal;

@@ -178,6 +178,10 @@ namespace VirtoCommerce.Content.Web
                 }
             };
 
+			var chosenPagesRepositoryName = settingsManager.GetValue("VirtoCommerce.Content.MainProperties.PagesRepositoryType", string.Empty);
+			var currentPagesService = pagesFactory(chosenThemeRepositoryName);
+			_container.RegisterInstance<IPagesService>(currentPagesService);
+
             if (!Directory.Exists(fileSystemMainPath))
             {
                 Directory.CreateDirectory(fileSystemMainPath);
