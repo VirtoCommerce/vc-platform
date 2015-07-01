@@ -49,6 +49,23 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             return Ok(retVal.Select(x => x.ToWebModel()).ToArray());
         }
 
+		/// <summary>
+		/// api/settings/modules/123
+		/// </summary>
+		/// <returns></returns>
+		[HttpGet]
+		[ResponseType(typeof(webModel.Setting))]
+		[Route("{id}")]
+		public IHttpActionResult GetSetting(string id)
+		{
+			var retVal = _settingsManager.GetSettingByName(id);
+			if(retVal != null)
+			{
+				return Ok(retVal.ToWebModel());
+			}
+			return NotFound();
+		}
+
         [HttpPost]
         [Route("")]
         [CheckPermission(Permission = PredefinedPermissions.SettingManage)]
