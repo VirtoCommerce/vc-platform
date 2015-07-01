@@ -3,7 +3,7 @@
     <div class="blade-inner">
         <div class="inner-block">
             <form class="form" name="detailForm">
-                <div class="form-group" ng-init="setForm(detailForm)">
+                <div ng-init="setForm(detailForm)">
                     <label class="form-label">SKU</label>
                     <div class="form-input">
                         <input required class="form-control" name="code" ng-model="blade.item.code" ng-class="{'error': detailForm.code.$invalid && !detailForm.code.$pristine}" placeholder="Enter item sku" ui-validate=" 'codeValidator($value)' " />

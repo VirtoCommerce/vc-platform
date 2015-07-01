@@ -1,8 +1,9 @@
-﻿<div class="blade-content">
+﻿<div class="blade-static __bottom" ng-include="'Scripts/common/templates/create.tpl.html'" ng-if="blade.isNew"></div>
+<div class="blade-content">
     <div class="blade-inner">
         <div class="inner-block">
             <form class="form" name="formScope">
-                <div class="form-group">
+                <div>
                     <label class="form-label">Catalog name</label>
                     <div class="form-input">
                         <input ng-model="blade.currentEntity.name" placeholder="Enter name" focus-on="" required>
@@ -14,4 +15,3 @@
         </div>
     </div>
 </div>
-<div class="blade-static __bottom" ng-include="'Scripts/common/templates/create.tpl.html'" ng-if="blade.isNew"></div>

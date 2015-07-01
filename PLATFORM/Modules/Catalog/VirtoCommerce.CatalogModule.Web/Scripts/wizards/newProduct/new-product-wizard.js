@@ -5,6 +5,8 @@
     var initialName = blade.item.name;
     var lastGeneratedName = blade.item.name;
 
+    blade.headIcon = blade.item.productType === 'Digital' ? 'fa fa-file-archive-o' : 'fa fa-truck';
+
     $scope.createItem = function () {
         blade.isLoading = true;
 

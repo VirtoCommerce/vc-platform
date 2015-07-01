@@ -50,7 +50,6 @@
             id: "settingDetailChild",
             currentEntityId: node.name,
             title: blade.title,
-            subtitle: 'Manage dictionary values',
             controller: 'platformWebApp.settingDictionaryController',
             template: 'Scripts/app/settings/blades/setting-dictionary.tpl.html'
         };

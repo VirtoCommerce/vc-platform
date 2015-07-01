@@ -116,13 +116,14 @@
     };
     // $scope.dateOptions = { 'year-format': "'yyyy'" };
 
-    $scope.openCoreSettingsManagement = function () {
+    $scope.openDictionarySettingManagement = function () {
         var newBlade = {
-            id: 'moduleSettingsSection',
-            moduleId: 'VirtoCommerce.Core',
-            title: 'Platform settings',
-            controller: 'platformWebApp.settingsDetailController',
-            template: 'Scripts/app/settings/blades/settings-detail.tpl.html'
+            id: 'settingDetailChild',
+            isApiSave: true,
+            currentEntityId: 'VirtoCommerce.Core.General.TaxTypes',
+            title: 'Tax types',
+            controller: 'platformWebApp.settingDictionaryController',
+            template: 'Scripts/app/settings/blades/setting-dictionary.tpl.html'
         };
         bladeNavigationService.showBlade(newBlade, blade);
     };

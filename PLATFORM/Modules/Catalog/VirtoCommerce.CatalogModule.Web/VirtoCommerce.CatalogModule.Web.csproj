@@ -187,7 +187,6 @@
     <!-- <Content Include="Content\css\catalog.css" /> -->
     <Content Include="Scripts\blades\advanced-search-results.js" />
     <Content Include="Scripts\blades\advanced-search.js" />
-    <Content Include="Scripts\blades\advanced-search-results.tpl.html" />
     <Content Include="Scripts\blades\advanced-search.tpl.html" />
     <Content Include="Scripts\blades\catalog-property-list.js" />
     <Content Include="Scripts\blades\catalog-property-list.tpl.html" />

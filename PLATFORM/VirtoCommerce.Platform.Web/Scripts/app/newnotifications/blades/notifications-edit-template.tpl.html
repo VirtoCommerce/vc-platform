@@ -1,4 +1,9 @@
-﻿<div class="blade-content __large-wide">
+﻿<div class="blade-static __bottom" ng-if="blade.isNew">
+    <button class="btn" ng-click="blade.updateTemplate()" ng-disabled="!blade.canSave()">
+        <span>Create</span>
+    </button>
+</div>
+<div class="blade-content __large-wide">
 	<div class="blade-inner">
 		<div class="inner-block">
 			<form class="form" name="edit">
@@ -68,10 +73,4 @@
 			</form>
 		</div>
 	</div>
-</div>
-
-<div class="blade-static __bottom" ng-if="blade.isNew">
-	<button class="btn" ng-click="blade.updateTemplate()" ng-disabled="!blade.canSave()">
-		<span>Create</span>
-	</button>
 </div>
