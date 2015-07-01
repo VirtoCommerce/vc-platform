@@ -153,6 +153,13 @@
     }
 
     function initializeDictionaryValues(data) {
+        if (pb.currentEntity.multilanguage) {
+            _.each(data, function (x) {
+                if (!x.alias) {
+                    x.alias = x.value;
+                }
+            });
+        }
         dictionaryValues = data;
         $scope.dictionaryValues = data;
         $scope.groupedValues = _.map(_.groupBy(data, 'alias'), function (values, key) {

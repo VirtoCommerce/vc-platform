@@ -32,6 +32,9 @@ namespace VirtoCommerce.ApiClient.DataContracts
         [DataMember(Order = 3)]
         public List<ErrorDetail> Details { get; set; }
 
+        [DataMember]
+        public string StackTrace { get; set; }
+
         [DataMember(Order = 2)]
         public string ExceptionMessage { get; set; }
 

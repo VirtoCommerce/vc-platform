@@ -1,5 +1,5 @@
 ﻿angular.module('platformWebApp')
-.controller('platformWebApp.notificationsListController', ['$rootScope', '$scope', '$stateParams', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', 'platformWebApp.newnotifications', function ($rootScope, $scope, $stateParams, bladeNavigationService, dialogService, notifications) {
+.controller('platformWebApp.notificationsListController', ['$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.newnotifications', function ($scope, bladeNavigationService, notifications) {
 	$scope.selectedEntityId = null;
 	var blade = $scope.blade;
 
@@ -14,13 +14,13 @@
 		});
 	};
 
-	blade.openList = function (type, objectId, objectTypeId) {
+	blade.openList = function (type) {
 		var newBlade = {
 			id: 'templatesList',
 			title: 'Notification templates',
 			notificationType: type,
-			objectId: objectId,
-			objectTypeId: objectTypeId,
+			objectId: blade.objectId,
+			objectTypeId: blade.objectTypeId,
 			controller: 'platformWebApp.notificationTemplatesListController',
 			template: 'Scripts/app/newnotifications/blades/notification-templates-list.tpl.html'
 		};
@@ -28,13 +28,13 @@
 		bladeNavigationService.showBlade(newBlade, blade);
 	}
 
-	blade.editTemplate = function (type, objectId, objectTypeId) {
+	blade.editTemplate = function (type) {
 		var newBlade = {
 			id: 'editTemplate',
 			title: 'Edit notification template',
 			notificationType: type,
-			objectId: objectId,
-			objectTypeId: objectTypeId,
+			objectId: blade.objectId,
+			objectTypeId: blade.objectTypeId,
 			language: 'undefined',
 			isNew: true,
 			isFirst: true,
@@ -47,14 +47,12 @@
 	};
 
 	blade.openNotification = function (type) {
-		var objectId = angular.isUndefined($stateParams.objectId) ? 'Platform' : $stateParams.objectId;
-		var objectTypeId = angular.isUndefined($stateParams.objectTypeId) ? 'Platform': $stateParams.objectTypeId;
-		notifications.getTemplates({ type: type, objectId: objectId, objectTypeId: objectTypeId }, function (data) {
+		notifications.getTemplates({ type: type, objectId: blade.objectId, objectTypeId: blade.objectTypeId }, function (data) {
 			if (data.length > 0) {
-				blade.openList(type, objectId, objectTypeId);
+				blade.openList(type);
 			}
 			else {
-				blade.editTemplate(type, objectId, objectTypeId);
+				blade.editTemplate(type);
 			}
 		});
 	}

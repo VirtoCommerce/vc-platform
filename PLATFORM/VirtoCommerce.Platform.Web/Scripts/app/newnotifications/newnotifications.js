@@ -9,7 +9,7 @@ angular.module(moduleName)
   ['$stateProvider', function ($stateProvider) {
   	$stateProvider
 		.state('workspace.newnotifications', {
-			url: '/newnotifications',
+			url: '/newnotifications?objectId&objectTypeId',
 			templateUrl: 'Scripts/common/templates/home.tpl.html',
 			controller: ['$scope', 'platformWebApp.bladeNavigationService', function ($scope, bladeNavigationService) {
 				var blade = {

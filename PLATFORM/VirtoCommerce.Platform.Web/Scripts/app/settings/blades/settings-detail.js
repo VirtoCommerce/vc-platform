@@ -43,7 +43,7 @@
         selectedSettings = _.where(results, { isArray: true });
         _.forEach(selectedSettings, function (setting) {
             if (setting.arrayValues) {
-                setting.arrayValues = _.map(setting.arrayValues, function (value) { return { value: value }; });
+                setting.arrayValues = _.map(setting.arrayValues, function (x) { return { value: x }; });
             }
         });
 
@@ -67,7 +67,6 @@
             id: "settingDetailChild",
             currentEntityId: node.name,
             title: $scope.blade.title,
-            subtitle: 'Manage dictionary values',
             controller: 'platformWebApp.settingDictionaryController',
             template: 'Scripts/app/settings/blades/setting-dictionary.tpl.html'
         };

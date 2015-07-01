@@ -72,6 +72,10 @@ angular.module(moduleName, [
           controller: 'virtoCommerce.storeModule.storeShippingWidgetController',
           template: 'Modules/$(VirtoCommerce.Store)/Scripts/widgets/storeShippingWidget.tpl.html'
       }, 'storeDetail');
+      widgetService.registerWidget({
+      	  controller: 'virtoCommerce.storeModule.storeNotificationWidgetController',
+		  template: 'Modules/$(VirtoCommerce.Store)/Scripts/widgets/storeNotificationWidget.tpl.html'
+      }, 'storeDetail')
 
       var resetCommand = {
           name: "Reset",

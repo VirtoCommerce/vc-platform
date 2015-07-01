@@ -5,13 +5,11 @@
     blade.refresh = function (parentRefresh) {
         if (blade.isNew) {
             assignments.getNew(initializeBlade, function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
-        } else if (blade.isApiSave) {
+        } else {
             assignments.get({ id: blade.currentEntityId }, initializeBlade, function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
-            if (parentRefresh) {
+            if (parentRefresh && angular.isFunction(blade.parentBlade.refresh)) {
                 blade.parentBlade.refresh();
             }
-        } else {
-            initializeBlade(blade.origEntity);
         }
     };
 
@@ -48,10 +46,6 @@
                     permission: 'pricing:manage'
                 }
             ];
-
-            if (!blade.isApiSave) {
-                $scope.blade.toolbarCommands.splice(0, 1); // remove save button
-            }
         }
     };
 
@@ -79,13 +73,12 @@
 
             assignments.save({}, blade.currentEntity, function (data) {
                 blade.isNew = undefined;
-                blade.isApiSave = true;
                 blade.currentEntityId = data.id;
                 blade.refresh(true);
             }, function (error) {
                 bladeNavigationService.setError('Error ' + error.status, blade);
             });
-        } else if (blade.isApiSave) {
+        } else {
             blade.isLoading = true;
             blade.currentEntity.dynamicExpression.availableChildren = undefined;
             _.each(blade.currentEntity.dynamicExpression.children, stripOffUiInformation);
@@ -95,9 +88,6 @@
             }, function (error) {
                 bladeNavigationService.setError('Error ' + error.status, blade);
             });
-        } else {
-            angular.copy(blade.currentEntity, blade.origEntity);
-            $scope.bladeClose();
         }
     };
 
@@ -183,8 +173,6 @@
 
     // actions on load
     $scope.catalogs = catalogs.query();
-    if (blade.isNew || blade.isApiSave) {
-        $scope.pricelists = pricelists.query();
-    }
+    $scope.pricelists = pricelists.query();
     blade.refresh();
 }]);

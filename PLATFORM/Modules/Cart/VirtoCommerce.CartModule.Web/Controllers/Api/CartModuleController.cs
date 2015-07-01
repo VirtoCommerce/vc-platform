@@ -165,7 +165,11 @@ namespace VirtoCommerce.CartModule.Web.Controllers.Api
             {
                 GatewayCode = p.Code,
                 Name = p.Description,
-                IconUrl = p.LogoUrl
+                IconUrl = p.LogoUrl,
+                Type = p.PaymentMethodType.ToString(),
+                Group = p.PaymentMethodGroupType.ToString(),
+                Description = p.Description,
+                Priority = p.Priority
             }).ToArray();
 
             return this.Ok(retVal);

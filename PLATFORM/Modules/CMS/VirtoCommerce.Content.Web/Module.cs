@@ -12,7 +12,7 @@ using VirtoCommerce.Platform.Data.Infrastructure.Interceptors;
 
 namespace VirtoCommerce.Content.Web
 {
-    public class Module : IModule
+    public class Module : ModuleBase
     {
         #region Fields
 
@@ -24,14 +24,14 @@ namespace VirtoCommerce.Content.Web
 
         public Module(IUnityContainer container)
         {
-            this._container = container;
+            _container = container;
         }
 
         #endregion
 
         #region Public Methods and Operators
 
-        public void Initialize()
+        public override void Initialize()
         {
 
             Func<IMenuRepository> menuRepFactory = () =>
@@ -39,9 +39,9 @@ namespace VirtoCommerce.Content.Web
 
             _container.RegisterInstance(menuRepFactory);
             _container.RegisterType<IMenuService, MenuServiceImpl>();
-           
 
-            var settingsManager = this._container.Resolve<ISettingsManager>();
+
+            var settingsManager = _container.Resolve<ISettingsManager>();
 
             var githubLogin =
                 settingsManager.GetValue("VirtoCommerce.Content.GitHub.Login", string.Empty);
@@ -66,9 +66,9 @@ namespace VirtoCommerce.Content.Web
             var uploadPath = HostingEnvironment.MapPath("~/App_Data/Uploads/");
             var uploadPathFiles = HostingEnvironment.MapPath("~/App_Data/Uploads/Files/");
 
-		
 
-			Func<string, IThemeService> themesFactory = x =>
+
+            Func<string, IThemeService> themesFactory = x =>
             {
                 switch (x)
                 {
@@ -94,20 +94,20 @@ namespace VirtoCommerce.Content.Web
 
                     case "Azure and Database":
                         return new ThemeServiceImpl(
-							new DatabaseContentRepositoryImpl(
+                            new DatabaseContentRepositoryImpl(
                                 "VirtoCommerce",
                                 new AuditableInterceptor(),
                                 new EntityPrimaryKeyGeneratorInterceptor()),
                             uploadPath); // TODO: It could be not the Azure provider.
 
                     default:
-						return new ThemeServiceImpl(new FileSystemContentRepositoryImpl(fileSystemMainPath));
+                        return new ThemeServiceImpl(new FileSystemContentRepositoryImpl(fileSystemMainPath));
                 }
             };
 
-			var chosenThemeRepositoryName = settingsManager.GetValue("VirtoCommerce.Content.MainProperties.ThemesRepositoryType", string.Empty);
-			var currentThemeService = themesFactory(chosenThemeRepositoryName);
-			_container.RegisterInstance<IThemeService>(currentThemeService);
+            var chosenThemeRepositoryName = settingsManager.GetValue("VirtoCommerce.Content.MainProperties.ThemesRepositoryType", string.Empty);
+            var currentThemeService = themesFactory(chosenThemeRepositoryName);
+            _container.RegisterInstance<IThemeService>(currentThemeService);
 
             if (!Directory.Exists(fileSystemMainPath))
             {
@@ -136,11 +136,11 @@ namespace VirtoCommerce.Content.Web
                     File.Delete(file);
             }
 
-			var options = this._container.Resolve<IModuleInitializerOptions>();
-			var modulePath = options.GetModuleDirectoryPath("VirtoCommerce.Content");
-			var themePath = Path.Combine(modulePath, "Default_Theme");
+            var options = _container.Resolve<IModuleInitializerOptions>();
+            var modulePath = options.GetModuleDirectoryPath("VirtoCommerce.Content");
+            var themePath = Path.Combine(modulePath, "Default_Theme");
 
-			this._container.RegisterType<ThemeController>(new InjectionConstructor(themesFactory, settingsManager, uploadPath, uploadPathFiles, themePath));
+            _container.RegisterType<ThemeController>(new InjectionConstructor(themesFactory, settingsManager, uploadPath, uploadPathFiles, themePath));
 
             #endregion
 
@@ -165,7 +165,7 @@ namespace VirtoCommerce.Content.Web
 
                     case "Database":
                         return new PagesServiceImpl(
-							new DatabaseContentRepositoryImpl(
+                            new DatabaseContentRepositoryImpl(
                                 "VirtoCommerce",
                                 new AuditableInterceptor(),
                                 new EntityPrimaryKeyGeneratorInterceptor()));
@@ -174,35 +174,35 @@ namespace VirtoCommerce.Content.Web
                         return new PagesServiceImpl(new FileSystemContentRepositoryImpl(pagesFileSystemMainPath));
 
                     default:
-						return new PagesServiceImpl(new FileSystemContentRepositoryImpl(pagesFileSystemMainPath));
+                        return new PagesServiceImpl(new FileSystemContentRepositoryImpl(pagesFileSystemMainPath));
                 }
             };
+
+			var chosenPagesRepositoryName = settingsManager.GetValue("VirtoCommerce.Content.MainProperties.PagesRepositoryType", string.Empty);
+			var currentPagesService = pagesFactory(chosenThemeRepositoryName);
+			_container.RegisterInstance<IPagesService>(currentPagesService);
 
             if (!Directory.Exists(fileSystemMainPath))
             {
                 Directory.CreateDirectory(fileSystemMainPath);
             }
 
-            this._container.RegisterType<PagesController>(new InjectionConstructor(pagesFactory, settingsManager));
+            _container.RegisterType<PagesController>(new InjectionConstructor(pagesFactory, settingsManager));
 
             #endregion
 
             #region Sync_Initialize
-            this._container.RegisterType<SyncController>(new InjectionConstructor(themesFactory, pagesFactory, settingsManager));
+            _container.RegisterType<SyncController>(new InjectionConstructor(themesFactory, pagesFactory, settingsManager));
             #endregion
         }
 
-        public void PostInitialize()
+        public override void SetupDatabase(SampleDataLevel sampleDataLevel)
         {
-        }
-
-        public void SetupDatabase(SampleDataLevel sampleDataLevel)
-        {
-            var options = this._container.Resolve<IModuleInitializerOptions>();
+            var options = _container.Resolve<IModuleInitializerOptions>();
             var modulePath = options.GetModuleDirectoryPath("VirtoCommerce.Content");
             var themePath = Path.Combine(modulePath, "Default_Theme");
 
-			using (var context = new DatabaseContentRepositoryImpl())
+            using (var context = new DatabaseContentRepositoryImpl())
             {
                 var initializer = new SqlContentDatabaseInitializer(themePath);
                 initializer.InitializeDatabase(context);
