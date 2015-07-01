@@ -74,9 +74,14 @@
                         </div>
                         <div class="column">
                             <div class="form-group">
-                                <label class="form-label">Tax type</label>
+                                <label class="form-label">Tax Type <a href="" ng-click="openCoreSettingsManagement()"><i class="form-ico fa fa-pencil"></i></a></label>
                                 <div class="form-input">
-                                    <input class="form-control" ng-model="blade.item.taxType" placeholder="Enter tax type" />
+                                    <ui-select ng-model="blade.item.taxType">
+                                        <ui-select-match allow-clear="true" placeholder="Select...">{{$select.selected}}</ui-select-match>
+                                        <ui-select-choices repeat="x in taxTypes | filter: $select.search">
+                                            <span ng-bind-html="x | highlight: $select.search"></span>
+                                        </ui-select-choices>
+                                    </ui-select>
                                 </div>
                             </div>
                         </div>
@@ -133,9 +138,14 @@
                         </div>
                         <div class="column">
                             <div class="form-group">
-                                <label class="form-label">Tax type</label>
+                                <label class="form-label">Tax Type <a href="" ng-click="openCoreSettingsManagement()"><i class="form-ico fa fa-pencil"></i></a></label>
                                 <div class="form-input">
-                                    <input class="form-control" ng-model="blade.item.taxType" placeholder="Enter tax type" />
+                                    <ui-select ng-model="blade.item.taxType">
+                                        <ui-select-match allow-clear="true" placeholder="Select...">{{$select.selected}}</ui-select-match>
+                                        <ui-select-choices repeat="x in taxTypes | filter: $select.search">
+                                            <span ng-bind-html="x | highlight: $select.search"></span>
+                                        </ui-select-choices>
+                                    </ui-select>
                                 </div>
                             </div>
                         </div>

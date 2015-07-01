@@ -1,9 +1,9 @@
 ﻿angular.module('virtoCommerce.catalogModule')
-.controller('virtoCommerce.catalogModule.itemDetailController', ['$rootScope', '$scope', 'platformWebApp.bladeNavigationService', '$injector', 'virtoCommerce.catalogModule.items', 'platformWebApp.dialogService', function ($rootScope, $scope, bladeNavigationService, $injector, items, dialogService) {
+.controller('virtoCommerce.catalogModule.itemDetailController', ['$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.settings', 'virtoCommerce.catalogModule.items', 'platformWebApp.dialogService', function ($scope, bladeNavigationService, settings, items, dialogService) {
     var blade = $scope.blade;
     blade.origItem = {};
     blade.item = {};
-    $scope.blade.currentEntityId = blade.itemId;
+    blade.currentEntityId = blade.itemId;
 
     blade.refresh = function (parentRefresh) {
         blade.isLoading = true;
@@ -25,7 +25,7 @@
                 blade.parentBlade.refresh();
             }
         },
-        function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
+        function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
     }
 
     //$scope.onTitularChange = function () {
@@ -52,7 +52,7 @@
         items.update({}, blade.item, function () {
             blade.refresh(true);
         },
-        function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
+        function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
     };
 
     blade.onClose = function (closeCallback) {
@@ -80,9 +80,9 @@
         formScope = form;
     }
 
-    $scope.blade.toolbarCustomTemplates = ["Modules/$(VirtoCommerce.Catalog)/Scripts/blades/item-detail-toolbar.tpl.html"];
+    blade.toolbarCustomTemplates = ["Modules/$(VirtoCommerce.Catalog)/Scripts/blades/item-detail-toolbar.tpl.html"];
 
-    $scope.blade.toolbarCommands = [
+    blade.toolbarCommands = [
 	 {
 	     name: "Save", icon: 'fa fa-save',
 	     executeMethod: function () {
@@ -115,6 +115,17 @@
     };
     // $scope.dateOptions = { 'year-format': "'yyyy'" };
 
+    $scope.openCoreSettingsManagement = function () {
+        var newBlade = {
+            id: 'moduleSettingsSection',
+            moduleId: 'VirtoCommerce.Core',
+            title: 'Platform settings',
+            controller: 'platformWebApp.settingsDetailController',
+            template: 'Scripts/app/settings/blades/settings-detail.tpl.html'
+        };
+        bladeNavigationService.showBlade(newBlade, blade);
+    };
 
+    $scope.taxTypes = settings.getValues({ id: 'VirtoCommerce.Core.General.TaxTypes' });
     blade.refresh(false);
 }]);
